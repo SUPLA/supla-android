@@ -423,7 +423,6 @@ public class AddDeviceWizardActivity extends WizardActivity
 
       showError(R.string.wizard_no_internetwifi);
       return;
-
     }
 
     SuplaApp.getApp().getSuplaClient();
