@@ -57,7 +57,8 @@ class SceneListViewModel @Inject constructor(
     createProfileScenesListUseCase()
       .attach()
       .subscribeBy(
-        onNext = { updateState { state -> state.copy(scenes = it) } }
+        onNext = { updateState { state -> state.copy(scenes = it) } },
+        onError = defaultErrorHandler("loadScenes()")
       )
       .disposeBySelf()
   }
@@ -71,7 +72,7 @@ class SceneListViewModel @Inject constructor(
       }
     }
       .attachSilent()
-      .subscribeBy()
+      .subscribeBy(onError = defaultErrorHandler("onSceneOrderUpdate()"))
       .disposeBySelf()
   }
 
@@ -80,7 +81,8 @@ class SceneListViewModel @Inject constructor(
       .andThen(createProfileScenesListUseCase())
       .attach()
       .subscribeBy(
-        onNext = { updateState { state -> state.copy(scenes = it) } }
+        onNext = { updateState { state -> state.copy(scenes = it) } },
+        onError = defaultErrorHandler("toggleLocationCollapsed($location)")
       )
       .disposeBySelf()
   }

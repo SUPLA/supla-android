@@ -101,7 +101,10 @@ class ThermostatGeneralViewModel @Inject constructor(
   fun observeData(remoteId: Int) {
     updateSubject.attachSilent()
       .debounce(1, TimeUnit.SECONDS)
-      .subscribeBy(onNext = { triggerDataLoad(remoteId) })
+      .subscribeBy(
+        onNext = { triggerDataLoad(remoteId) },
+        onError = defaultErrorHandler("observeData($remoteId)")
+      )
       .disposeBySelf()
 
     Observable.combineLatest(
@@ -118,9 +121,11 @@ class ThermostatGeneralViewModel @Inject constructor(
         weeklySchedule = weeklySchedule.config as SuplaChannelWeeklyScheduleConfig
       )
     }
+      .debounce(50, TimeUnit.MILLISECONDS)
       .attachSilent()
       .subscribeBy(
-        onNext = { handleData(it) }
+        onNext = { handleData(it) },
+        onError = defaultErrorHandler("observeData($remoteId)")
       )
       .disposeBySelf()
   }
@@ -128,7 +133,13 @@ class ThermostatGeneralViewModel @Inject constructor(
   fun triggerDataLoad(remoteId: Int) {
     suplaClientProvider.provide()?.getChannelConfig(remoteId, ChannelConfigType.DEFAULT)
     suplaClientProvider.provide()?.getChannelConfig(remoteId, ChannelConfigType.WEEKLY_SCHEDULE)
-    readChannelWithChildrenUseCase(remoteId).attachSilent().subscribeBy(onSuccess = { channelSubject.onNext(it) }).disposeBySelf()
+    readChannelWithChildrenUseCase(remoteId)
+      .attachSilent()
+      .subscribeBy(
+        onSuccess = { channelSubject.onNext(it) },
+        onError = defaultErrorHandler("triggerDataLoad($remoteId)")
+      )
+      .disposeBySelf()
   }
 
   fun loadTemperature(remoteId: Int) {
@@ -218,7 +229,7 @@ class ThermostatGeneralViewModel @Inject constructor(
         )
       )
         .attachSilent()
-        .subscribeBy()
+        .subscribeBy(onError = defaultErrorHandler("turnOnOffClicked()"))
         .disposeBySelf()
     }
   }
@@ -237,7 +248,7 @@ class ThermostatGeneralViewModel @Inject constructor(
         )
       )
         .attachSilent()
-        .subscribeBy()
+        .subscribeBy(onError = defaultErrorHandler("manualModeClicked()"))
         .disposeBySelf()
     }
   }
@@ -256,7 +267,7 @@ class ThermostatGeneralViewModel @Inject constructor(
         )
       )
         .attachSilent()
-        .subscribeBy()
+        .subscribeBy(onError = defaultErrorHandler("weeklyScheduledModeClicked()"))
         .disposeBySelf()
     }
   }

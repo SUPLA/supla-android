@@ -68,7 +68,8 @@ class ChannelListViewModel @Inject constructor(
     createProfileChannelsListUseCase()
       .attach()
       .subscribeBy(
-        onNext = { updateState { state -> state.copy(channels = it) } }
+        onNext = { updateState { state -> state.copy(channels = it) } },
+        onError = defaultErrorHandler("loadChannels()")
       )
       .disposeBySelf()
   }
@@ -78,7 +79,8 @@ class ChannelListViewModel @Inject constructor(
       .andThen(createProfileChannelsListUseCase())
       .attach()
       .subscribeBy(
-        onNext = { updateState { state -> state.copy(channels = it) } }
+        onNext = { updateState { state -> state.copy(channels = it) } },
+        onError = defaultErrorHandler("toggleLocationCollapsed(${location})")
       )
       .disposeBySelf()
   }
@@ -90,7 +92,9 @@ class ChannelListViewModel @Inject constructor(
 
     channelRepository.reorderChannels(firstItem.id, firstItem.locationId.toInt(), secondItem.id)
       .attach()
-      .subscribeBy()
+      .subscribeBy(
+        onError = defaultErrorHandler("swapItems(..., ...)")
+      )
       .disposeBySelf()
   }
 
@@ -102,6 +106,7 @@ class ChannelListViewModel @Inject constructor(
           when (throwable) {
             is ActionException.ChannelClosedManually -> sendEvent(ChannelListViewEvent.ShowValveDialog(throwable.remoteId))
             is ActionException.ChannelExceedAmperage -> sendEvent(ChannelListViewEvent.ShowAmperageExceededDialog(throwable.remoteId))
+            else -> defaultErrorHandler("performAction($channelId, $buttonType)")(throwable)
           }
         }
       )
@@ -128,7 +133,8 @@ class ChannelListViewModel @Inject constructor(
               .filterIsInstance(ListItem.ChannelItem::class.java)
               .first { it.channelBase.remoteId == channel.remoteId }
               .channelBase = channel
-          }
+          },
+          onError = defaultErrorHandler("updateChannel(${remoteId})")
         )
         .disposeBySelf()
     }
