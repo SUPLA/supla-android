@@ -64,7 +64,8 @@ class GroupListViewModel @Inject constructor(
     createProfileGroupsListUseCase()
       .attach()
       .subscribeBy(
-        onNext = { updateState { state -> state.copy(groups = it) } }
+        onNext = { updateState { state -> state.copy(groups = it) } },
+        onError = defaultErrorHandler("loadGroups()")
       )
       .disposeBySelf()
   }
@@ -74,7 +75,8 @@ class GroupListViewModel @Inject constructor(
       .andThen(createProfileGroupsListUseCase())
       .attach()
       .subscribeBy(
-        onNext = { updateState { state -> state.copy(groups = it) } }
+        onNext = { updateState { state -> state.copy(groups = it) } },
+        onError = defaultErrorHandler("toggleLocationCollapsed($location)")
       )
       .disposeBySelf()
   }
@@ -86,7 +88,9 @@ class GroupListViewModel @Inject constructor(
 
     channelRepository.reorderChannelGroups(firstItem.id, firstItem.locationId.toInt(), secondItem.id)
       .attach()
-      .subscribeBy()
+      .subscribeBy(
+        onError = defaultErrorHandler("swapItems(..., ...)")
+      )
       .disposeBySelf()
   }
 
@@ -98,6 +102,7 @@ class GroupListViewModel @Inject constructor(
           when (throwable) {
             is ActionException.ChannelClosedManually -> sendEvent(GroupListViewEvent.ShowValveDialog(throwable.remoteId))
             is ActionException.ChannelExceedAmperage -> sendEvent(GroupListViewEvent.ShowAmperageExceededDialog(throwable.remoteId))
+            else -> defaultErrorHandler("performAction($channelId, $buttonType)")(throwable)
           }
         }
       )
@@ -124,7 +129,8 @@ class GroupListViewModel @Inject constructor(
               .filterIsInstance(ListItem.ChannelItem::class.java)
               .first { it.channelBase.remoteId == channel.remoteId }
               .channelBase = channel
-          }
+          },
+          onError = defaultErrorHandler("updateGroup($remoteId)")
         )
         .disposeBySelf()
     }

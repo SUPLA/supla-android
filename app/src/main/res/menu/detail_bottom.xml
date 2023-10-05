@@ -15,7 +15,7 @@
   <item
     android:id="@+id/detail_history"
     android:icon="@drawable/ic_history"
-    android:title="@string/details_history"
+    android:title="@string/details_metrics"
     android:visible="false" />
 
   <item

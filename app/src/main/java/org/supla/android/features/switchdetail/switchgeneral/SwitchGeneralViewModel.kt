@@ -56,7 +56,8 @@ class SwitchGeneralViewModel @Inject constructor(
               timerEndDate = getEstimatedCountDownEndTime(channel)
             )
           }
-        }
+        },
+        onError = defaultErrorHandler("loadData($remoteId, $itemType)")
       )
       .disposeBySelf()
   }
@@ -77,7 +78,7 @@ class SwitchGeneralViewModel @Inject constructor(
   private fun performAction(actionId: ActionId, itemType: ItemType, remoteId: Int) {
     executeSimpleActionUseCase(actionId, itemType.subjectType, remoteId)
       .attach()
-      .subscribeBy()
+      .subscribeBy(onError = defaultErrorHandler("performAction($actionId, $itemType, $remoteId)"))
       .disposeBySelf()
   }
 

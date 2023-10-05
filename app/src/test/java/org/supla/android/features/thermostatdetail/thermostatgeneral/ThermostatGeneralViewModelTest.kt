@@ -59,6 +59,7 @@ import org.supla.android.usecases.channel.ChannelChild
 import org.supla.android.usecases.channel.ChannelWithChildren
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
 import org.supla.android.usecases.thermostat.CreateTemperaturesListUseCase
+import java.util.concurrent.TimeUnit
 
 @RunWith(MockitoJUnitRunner::class)
 class ThermostatGeneralViewModelTest :
@@ -97,6 +98,7 @@ class ThermostatGeneralViewModelTest :
   @Before
   override fun setUp() {
     super.setUp()
+    whenever(schedulers.computation).thenReturn(testScheduler)
   }
 
   @Test
@@ -108,6 +110,7 @@ class ThermostatGeneralViewModelTest :
     // when
     viewModel.observeData(remoteId)
     viewModel.triggerDataLoad(remoteId)
+    testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
 
     // then
     assertThat(events).isEmpty()
@@ -167,6 +170,7 @@ class ThermostatGeneralViewModelTest :
     // when
     viewModel.observeData(remoteId)
     viewModel.triggerDataLoad(remoteId)
+    testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
 
     // then
     assertThat(events).isEmpty()
@@ -203,7 +207,9 @@ class ThermostatGeneralViewModelTest :
     // when
     viewModel.observeData(remoteId)
     viewModel.triggerDataLoad(remoteId)
+    testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
     viewModel.setpointTemperatureChanged(0.5f, null)
+    testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
 
     // then
     assertThat(events).isEmpty()
@@ -232,7 +238,9 @@ class ThermostatGeneralViewModelTest :
     // when
     viewModel.observeData(remoteId)
     viewModel.triggerDataLoad(remoteId)
+    testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
     viewModel.setpointTemperatureChanged(0.5f, null)
+    testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
 
     // then
     val state = thermostatDefaultState(remoteId, 22.4f, manualActive = false)
@@ -261,7 +269,9 @@ class ThermostatGeneralViewModelTest :
     // when
     viewModel.observeData(remoteId)
     viewModel.triggerDataLoad(remoteId)
+    testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
     viewModel.setpointTemperatureChanged(null, 0.5f)
+    testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
 
     // then
     assertThat(events).isEmpty()
@@ -290,7 +300,9 @@ class ThermostatGeneralViewModelTest :
     // when
     viewModel.observeData(remoteId)
     viewModel.triggerDataLoad(remoteId)
+    testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
     viewModel.setpointTemperatureChanged(null, 0.5f)
+    testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
 
     // then
     val state = thermostatDefaultState(
@@ -325,7 +337,9 @@ class ThermostatGeneralViewModelTest :
     // when
     viewModel.observeData(remoteId)
     viewModel.triggerDataLoad(remoteId)
+    testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
     viewModel.changeSetpointTemperature(TemperatureCorrection.UP)
+    testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
 
     // then
     assertThat(events).isEmpty()
@@ -361,7 +375,9 @@ class ThermostatGeneralViewModelTest :
     // when
     viewModel.observeData(remoteId)
     viewModel.triggerDataLoad(remoteId)
+    testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
     viewModel.changeSetpointTemperature(TemperatureCorrection.DOWN)
+    testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
 
     // then
     val emittedState = state.viewModelState!!.copy(setpointCoolTemperature = 22.3f)
@@ -397,7 +413,9 @@ class ThermostatGeneralViewModelTest :
     // when
     viewModel.observeData(remoteId)
     viewModel.triggerDataLoad(remoteId)
+    testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
     viewModel.turnOnOffClicked()
+    testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
 
     // then
     assertThat(events).isEmpty()
@@ -430,7 +448,9 @@ class ThermostatGeneralViewModelTest :
     // when
     viewModel.observeData(remoteId)
     viewModel.triggerDataLoad(remoteId)
+    testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
     viewModel.turnOnOffClicked()
+    testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
 
     // then
     assertThat(events).isEmpty()
@@ -463,7 +483,9 @@ class ThermostatGeneralViewModelTest :
     // when
     viewModel.observeData(remoteId)
     viewModel.triggerDataLoad(remoteId)
+    testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
     viewModel.turnOnOffClicked()
+    testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
 
     // then
     assertThat(events).isEmpty()

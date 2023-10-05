@@ -93,7 +93,10 @@ class ScheduleDetailViewModel @Inject constructor(
   fun observeConfig(remoteId: Int) {
     updateSubject.attachSilent()
       .debounce(1, TimeUnit.SECONDS)
-      .subscribeBy(onNext = { reloadConfig(remoteId) })
+      .subscribeBy(
+        onNext = { reloadConfig(remoteId) },
+        onError = defaultErrorHandler("observeConfig($remoteId)")
+      )
       .disposeBySelf()
 
     Observable.combineLatest(
@@ -107,8 +110,10 @@ class ScheduleDetailViewModel @Inject constructor(
         defaultConfig.result
       )
     }
+      .debounce(50, TimeUnit.MILLISECONDS)
       .subscribeBy(
-        onNext = { onConfigLoaded(it) }
+        onNext = { onConfigLoaded(it) },
+        onError = defaultErrorHandler("observeConfig($remoteId)")
       ).disposeBySelf()
 
     updateState { it.copy(loadingState = it.loadingState.changingLoading(true, dateProvider), remoteId = remoteId) }

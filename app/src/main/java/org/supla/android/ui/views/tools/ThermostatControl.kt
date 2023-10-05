@@ -140,9 +140,10 @@ fun ThermostatControl(
     listOf(MaterialTheme.colors.blue, MaterialTheme.colors.blue.copy(alpha = 0.4f))
   }
   val indicatorShadowColor = when {
-    isOff -> DefaultShadowColor
+    isOffline -> DefaultShadowColor
     isHeating -> MaterialTheme.colors.error
     isCooling -> MaterialTheme.colors.blue
+    isOff -> DefaultShadowColor
     else -> primaryColor
   }
 

@@ -150,6 +150,10 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
       .doOnError { Trace.e(TAG, errorMessage("Observable", calledAt, it.message), it) }
   }
 
+  protected fun defaultErrorHandler(method: String): (Throwable) -> Unit = { throwable ->
+    Trace.e(TAG, "Subscription failed! (${this::class.java.name}:$method)", throwable)
+  }
+
   private fun errorMessage(type: String, calledAt: String?, throwableMessage: String?) =
     "$type called at '$calledAt' failed with message: '$throwableMessage'"
 

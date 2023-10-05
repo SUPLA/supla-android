@@ -80,7 +80,7 @@ class ValuesFormatter @Inject constructor(
     if (hours < 1) {
       return { context -> context.getString(R.string.time_just_minutes, minutes) }
     } else {
-      return { context -> context.getString(R.string.time_hours_and_minutes, hours, minutes) }
+      return { context -> context.getString(R.string.time_hours_and_minutes, hours, (minutes % 60)) }
     }
   }
 
