@@ -49,7 +49,7 @@ public abstract class IncrementalMeterChartHelper extends ChartHelper {
   }
 
   @Override
-  public String getFormattedValue(float value, AxisBase axis) {
+  public String getAxisLabel(float value, AxisBase axis) {
 
     value -= 1;
 

@@ -127,6 +127,6 @@ class ListsEventsManager @Inject constructor(
     object Group : State()
   }
 
-  enum class IdType { SCENE, CHANNEL, GROUP }
-  data class Id(val type: IdType, val id: Int)
+  private enum class IdType { SCENE, CHANNEL, GROUP }
+  private data class Id(val type: IdType, val id: Int)
 }

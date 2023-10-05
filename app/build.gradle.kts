@@ -109,6 +109,10 @@ dependencies {
   implementation(Deps.RxJava.RxJava)
   implementation(Deps.RxJava.RxAndroid)
   implementation(Deps.RxJava.RxKotlin)
+  implementation(Deps.Retrofit.Retrofit)
+  implementation(Deps.Retrofit.Gson)
+  implementation(Deps.Retrofit.RxJavaAdapter)
+  implementation(Deps.Retrofit.Logging)
   implementation(Deps.GoogleMaterial)
   implementation(Deps.Androidx.ConstraintLayout)
   implementation(Deps.Androidx.Core.Core)
@@ -128,6 +132,7 @@ dependencies {
   implementation(Deps.Androidx.Worker)
   implementation(Deps.Androidx.RecyclerView)
   implementation(Deps.Hilt.Hilt)
+  implementation(Deps.Hilt.Worker)
   implementation(Deps.FragmentViewBinding)
   implementation(platform(Deps.Firebase.Bom))
   implementation(Deps.Firebase.Messaging)
@@ -140,6 +145,7 @@ dependencies {
   annotationProcessor(Deps.Androidx.Room.Compiler)
 
   kapt(Deps.Hilt.Kapt)
+  kapt(Deps.Hilt.WorkerKapt)
   kapt(Deps.Androidx.Room.Compiler)
 
   testImplementation(Deps.Testing.Androidx.Core)

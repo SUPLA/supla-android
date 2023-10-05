@@ -24,6 +24,7 @@ import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.features.legacydetail.LegacyDetailFragment
 import org.supla.android.features.switchdetail.switchgeneral.SwitchGeneralFragment
 import org.supla.android.features.switchdetail.timersdetail.TimersDetailFragment
+import org.supla.android.features.thermostatdetail.history.HistoryDetailFragment
 import org.supla.android.features.thermostatdetail.scheduledetail.ScheduleDetailFragment
 import org.supla.android.features.thermostatdetail.thermostatgeneral.ThermostatGeneralFragment
 import org.supla.android.usecases.details.LegacyDetailType
@@ -47,7 +48,8 @@ class StandardDetailPagerAdapter(
       arguments = LegacyDetailFragment.bundle(remoteId, LegacyDetailType.EM, itemType)
     }
     DetailPage.THERMOSTAT -> ThermostatGeneralFragment().apply { arguments = ThermostatGeneralFragment.bundle(remoteId) }
-    DetailPage.SCHEDULE -> ScheduleDetailFragment().apply { arguments = ScheduleDetailFragment.bundle(remoteId, itemType) }
+    DetailPage.SCHEDULE -> ScheduleDetailFragment().apply { arguments = ScheduleDetailFragment.bundle(remoteId) }
+    DetailPage.THERMOSTAT_HISTORY -> HistoryDetailFragment().apply { arguments = HistoryDetailFragment.bundle(remoteId) }
     else -> Fragment() // Just an empty fragment
   }
 }
@@ -56,13 +58,11 @@ enum class DetailPage(val menuId: Int) {
   // Switches
   SWITCH(R.id.detail_general),
   TIMER(R.id.detail_timer),
-  HISTORY_IC(R.id.detail_history),
-  HISTORY_EM(R.id.detail_history),
+  HISTORY_IC(R.id.detail_metrics),
+  HISTORY_EM(R.id.detail_metrics),
 
   // Thermostats
   THERMOSTAT(R.id.detail_general),
   SCHEDULE(R.id.detail_schedule),
-
-  // Not used yet
-  SETTINGS(R.id.detail_settings)
+  THERMOSTAT_HISTORY(R.id.detail_history),
 }

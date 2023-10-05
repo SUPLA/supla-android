@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.supla.android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  package="org.supla.android">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -141,6 +141,13 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
+        <provider
+          android:name="androidx.startup.InitializationProvider"
+          android:authorities="org.supla.android.SuplaApp.androidx-startup"
+          tools:node="remove"
+          tools:replace="android:authorities">
+        </provider>
     </application>
 
 </manifest>

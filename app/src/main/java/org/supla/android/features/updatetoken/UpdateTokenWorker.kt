@@ -123,7 +123,7 @@ class UpdateTokenWorker(appContext: Context, workerParameters: WorkerParameters)
 
     private const val RETRY_TIME_IN_SEC = 30L
     const val UPDATE_PAUSE_IN_DAYS = 7
-    const val WORK_ID = "UpdateTokenWorker"
+    val WORK_ID: String = UpdateTokenWorker::class.java.simpleName
 
     fun build(token: String, updateSelf: Boolean): OneTimeWorkRequest {
       val constraints = Constraints.Builder()

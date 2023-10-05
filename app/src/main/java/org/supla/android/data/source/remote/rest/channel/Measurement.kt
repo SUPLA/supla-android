@@ -1,4 +1,4 @@
-package org.supla.android.extensions
+package org.supla.android.data.source.remote.rest.channel
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,15 +17,8 @@ package org.supla.android.extensions
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.content.Context
-import android.content.res.Resources
-import android.util.TypedValue
-import androidx.compose.ui.unit.Dp
+import java.util.Date
 
-fun Dp.toPx(context: Context): Float {
-  return toPx(context.resources)
-}
-
-fun Dp.toPx(resources: Resources): Float {
-  return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value, resources.displayMetrics)
+interface Measurement {
+  val date: Date
 }

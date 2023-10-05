@@ -42,6 +42,9 @@ data class AuthInfo(
   val serverForCurrentAuthMethod: String
     get() = if (emailAuth) serverForEmail else serverForAccessID
 
+  val serverUrlString: String
+    get() = "https://$serverForCurrentAuthMethod"
+
   /**
    A flag indicating if current authentication settings
    are complete (but not necessarily correct).

@@ -1,4 +1,4 @@
-package org.supla.android.extensions
+package org.supla.android.db.room
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,15 +17,18 @@ package org.supla.android.extensions
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.content.Context
-import android.content.res.Resources
-import android.util.TypedValue
-import androidx.compose.ui.unit.Dp
+import androidx.room.TypeConverter
+import java.util.Date
 
-fun Dp.toPx(context: Context): Float {
-  return toPx(context.resources)
-}
+class MeasurementsDatabaseConverters {
 
-fun Dp.toPx(resources: Resources): Float {
-  return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value, resources.displayMetrics)
+  @TypeConverter
+  fun longToDate(value: Long?): Date? {
+    return value?.let { Date(value) }
+  }
+
+  @TypeConverter
+  fun dateToLong(date: Date?): Long? {
+    return date?.time
+  }
 }

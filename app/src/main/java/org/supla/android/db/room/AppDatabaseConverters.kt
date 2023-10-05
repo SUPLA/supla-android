@@ -20,7 +20,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import androidx.room.TypeConverter
 import org.supla.android.data.source.local.entity.ChannelRelationType
 
-class Converters {
+class AppDatabaseConverters {
   @TypeConverter
   fun channelRelationTypeFromInt(value: Int?): ChannelRelationType? {
     return value?.let { ChannelRelationType.from(it.toShort()) }

@@ -1,4 +1,4 @@
-package org.supla.android.db.room
+package org.supla.android.data.source.remote.rest.channel
 /*
 Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,15 +17,10 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import androidx.room.Database
-import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
-import org.supla.android.data.source.local.ChannelRelationDao
-import org.supla.android.data.source.local.entity.ChannelRelationEntity
-import org.supla.android.db.DbHelper
+import com.google.gson.annotations.SerializedName
+import java.util.Date
 
-@Database(entities = [ChannelRelationEntity::class], version = DbHelper.DATABASE_VERSION)
-@TypeConverters(AppDatabaseConverters::class)
-abstract class AppDatabase : RoomDatabase() {
-  abstract fun channelRelationDao(): ChannelRelationDao
-}
+data class TemperatureMeasurement(
+  @SerializedName("date_timestamp") override val date: Date,
+  val temperature: Float
+) : Measurement

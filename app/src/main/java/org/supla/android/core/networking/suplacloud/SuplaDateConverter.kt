@@ -1,4 +1,4 @@
-package org.supla.android.db.room
+package org.supla.android.core.networking.suplacloud
 /*
 Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,15 +17,14 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import androidx.room.Database
-import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
-import org.supla.android.data.source.local.ChannelRelationDao
-import org.supla.android.data.source.local.entity.ChannelRelationEntity
-import org.supla.android.db.DbHelper
+import com.google.gson.JsonDeserializationContext
+import com.google.gson.JsonDeserializer
+import com.google.gson.JsonElement
+import java.lang.reflect.Type
+import java.util.Date
 
-@Database(entities = [ChannelRelationEntity::class], version = DbHelper.DATABASE_VERSION)
-@TypeConverters(AppDatabaseConverters::class)
-abstract class AppDatabase : RoomDatabase() {
-  abstract fun channelRelationDao(): ChannelRelationDao
+class SuplaDateConverter : JsonDeserializer<Date> {
+  override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): Date {
+    return Date(json!!.asLong.times(1000))
+  }
 }

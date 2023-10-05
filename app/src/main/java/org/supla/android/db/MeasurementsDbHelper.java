@@ -34,12 +34,17 @@ import org.supla.android.data.source.local.ImpulseCounterLogDao;
 import org.supla.android.data.source.local.TempHumidityLogDao;
 import org.supla.android.data.source.local.TemperatureLogDao;
 import org.supla.android.data.source.local.ThermostatLogDao;
+import org.supla.android.db.SuplaContract.ElectricityMeterLogEntry;
+import org.supla.android.db.SuplaContract.ImpulseCounterLogEntry;
+import org.supla.android.db.SuplaContract.TempHumidityLogEntry;
+import org.supla.android.db.SuplaContract.TemperatureLogEntry;
+import org.supla.android.db.SuplaContract.ThermostatLogEntry;
 import org.supla.android.di.entrypoints.ProfileIdHolderEntryPoint;
 import org.supla.android.profile.ProfileIdHolder;
 
 public class MeasurementsDbHelper extends BaseDbHelper {
 
-  private static final String M_DATABASE_NAME = "supla_measurements.db";
+  public static final String DATABASE_NAME = "supla_measurements.db";
   private static final Object mutex = new Object();
 
   private static MeasurementsDbHelper instance;
@@ -47,7 +52,7 @@ public class MeasurementsDbHelper extends BaseDbHelper {
   private final MeasurableItemsRepository measurableItemsRepository;
 
   private MeasurementsDbHelper(Context context, ProfileIdProvider profileIdProvider) {
-    super(context, M_DATABASE_NAME, null, DATABASE_VERSION, profileIdProvider);
+    super(context, DATABASE_NAME, null, DATABASE_VERSION, profileIdProvider);
     this.measurableItemsRepository =
         new DefaultMeasurableItemsRepository(
             new ImpulseCounterLogDao(this),
@@ -84,7 +89,7 @@ public class MeasurementsDbHelper extends BaseDbHelper {
 
   @Override
   protected String getDatabaseNameForLog() {
-    return M_DATABASE_NAME;
+    return DATABASE_NAME;
   }
 
   private void createImpulseCounterLogTable(SQLiteDatabase db) {
@@ -98,13 +103,16 @@ public class MeasurementsDbHelper extends BaseDbHelper {
             + SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CHANNELID
             + " INTEGER NOT NULL,"
             + SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_TIMESTAMP
-            + " BIGINT NOT NULL,"
+            + " INTEGER NOT NULL,"
             + SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_COUNTER
-            + " BIGINT NOT NULL,"
+            + " INTEGER NOT NULL,"
             + SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CALCULATEDVALUE
-            + " DOUBLE NOT NULL,"
+            + " REAL NOT NULL,"
             + SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_COMPLEMENT
-            + " INTEGER NOT NULL)";
+            + " INTEGER NOT NULL,"
+            + ImpulseCounterLogEntry.COLUMN_NAME_PROFILEID
+            + " INTEGER NOT NULL"
+            + ")";
 
     execSQL(db, SQL_CREATE_ICLOG_TABLE);
     createIndex(
@@ -131,6 +139,8 @@ public class MeasurementsDbHelper extends BaseDbHelper {
             + SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CHANNELID
             + ", "
             + SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_TIMESTAMP
+            + ", "
+            + ImpulseCounterLogEntry.COLUMN_NAME_PROFILEID
             + ")";
 
     execSQL(db, SQL_CREATE_INDEX);
@@ -192,7 +202,7 @@ public class MeasurementsDbHelper extends BaseDbHelper {
             + SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_CHANNELID
             + " INTEGER NOT NULL,"
             + SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_TIMESTAMP
-            + " BIGINT NOT NULL,"
+            + " INTEGER NOT NULL,"
             + SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE1_FAE
             + " REAL NULL,"
             + SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE1_RAE
@@ -222,7 +232,10 @@ public class MeasurementsDbHelper extends BaseDbHelper {
             + SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_RAE_BALANCED
             + " REAL NULL,"
             + SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_COMPLEMENT
-            + " INTEGER NOT NULL)";
+            + " INTEGER NOT NULL,"
+            + ElectricityMeterLogEntry.COLUMN_NAME_PROFILEID
+            + " INTEGER NOT NULL"
+            + ")";
 
     execSQL(db, SQL_CREATE_EMLOG_TABLE);
     createIndex(
@@ -240,7 +253,8 @@ public class MeasurementsDbHelper extends BaseDbHelper {
         SuplaContract.ElectricityMeterLogEntry.TABLE_NAME,
         SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_COMPLEMENT);
 
-    final String SQL_CREATE_INDEX =
+    execSQL(
+        db,
         "CREATE UNIQUE INDEX "
             + SuplaContract.ElectricityMeterLogEntry.TABLE_NAME
             + "_unique_index ON "
@@ -249,9 +263,9 @@ public class MeasurementsDbHelper extends BaseDbHelper {
             + SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_CHANNELID
             + ", "
             + SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_TIMESTAMP
-            + " )";
-
-    execSQL(db, SQL_CREATE_INDEX);
+            + ", "
+            + SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PROFILEID
+            + " )");
   }
 
   private void createElectricityMeterLogView(SQLiteDatabase db) {
@@ -334,13 +348,16 @@ public class MeasurementsDbHelper extends BaseDbHelper {
             + SuplaContract.ThermostatLogEntry.COLUMN_NAME_CHANNELID
             + " INTEGER NOT NULL,"
             + SuplaContract.ThermostatLogEntry.COLUMN_NAME_TIMESTAMP
-            + " BIGINT NOT NULL,"
+            + " INTEGER NOT NULL,"
             + SuplaContract.ThermostatLogEntry.COLUMN_NAME_ON
             + " INTEGER NOT NULL,"
             + SuplaContract.ThermostatLogEntry.COLUMN_NAME_MEASUREDTEMPERATURE
-            + " DECIMAL(5,2) NULL,"
+            + " REAL NULL,"
             + SuplaContract.ThermostatLogEntry.COLUMN_NAME_PRESETTEMPERATURE
-            + " DECIMAL(5,2) NULL)";
+            + " REAL NULL,"
+            + ThermostatLogEntry.COLUMN_NAME_PROFILEID
+            + " INTEGER NOT NULL"
+            + ")";
 
     execSQL(db, SQL_CREATE_THLOG_TABLE);
     createIndex(
@@ -353,7 +370,8 @@ public class MeasurementsDbHelper extends BaseDbHelper {
         SuplaContract.ThermostatLogEntry.TABLE_NAME,
         SuplaContract.ThermostatLogEntry.COLUMN_NAME_TIMESTAMP);
 
-    final String SQL_CREATE_INDEX =
+    execSQL(
+        db,
         "CREATE UNIQUE INDEX "
             + SuplaContract.ThermostatLogEntry.TABLE_NAME
             + "_unique_index ON "
@@ -362,9 +380,9 @@ public class MeasurementsDbHelper extends BaseDbHelper {
             + SuplaContract.ThermostatLogEntry.COLUMN_NAME_CHANNELID
             + ", "
             + SuplaContract.ThermostatLogEntry.COLUMN_NAME_TIMESTAMP
-            + ")";
-
-    execSQL(db, SQL_CREATE_INDEX);
+            + ", "
+            + ThermostatLogEntry.COLUMN_NAME_PROFILEID
+            + ")");
   }
 
   private void createTempHumidityLogTable(SQLiteDatabase db) {
@@ -377,11 +395,14 @@ public class MeasurementsDbHelper extends BaseDbHelper {
             + SuplaContract.TempHumidityLogEntry.COLUMN_NAME_CHANNELID
             + " INTEGER NOT NULL,"
             + SuplaContract.TempHumidityLogEntry.COLUMN_NAME_TIMESTAMP
-            + " BIGINT NOT NULL,"
+            + " INTEGER NOT NULL,"
             + SuplaContract.TempHumidityLogEntry.COLUMN_NAME_TEMPERATURE
-            + " DECIMAL(8,4) NULL,"
+            + " REAL NULL,"
             + SuplaContract.TempHumidityLogEntry.COLUMN_NAME_HUMIDITY
-            + " DECIMAL(8,4) NULL)";
+            + " REAL NULL,"
+            + TempHumidityLogEntry.COLUMN_NAME_PROFILEID
+            + " INTEGER NOT NULL"
+            + ")";
 
     execSQL(db, SQL_CREATE_THLOG_TABLE);
     createIndex(
@@ -403,6 +424,8 @@ public class MeasurementsDbHelper extends BaseDbHelper {
             + SuplaContract.TempHumidityLogEntry.COLUMN_NAME_CHANNELID
             + ", "
             + SuplaContract.TempHumidityLogEntry.COLUMN_NAME_TIMESTAMP
+            + ", "
+            + TempHumidityLogEntry.COLUMN_NAME_PROFILEID
             + ")";
 
     execSQL(db, SQL_CREATE_INDEX);
@@ -418,9 +441,12 @@ public class MeasurementsDbHelper extends BaseDbHelper {
             + SuplaContract.TemperatureLogEntry.COLUMN_NAME_CHANNELID
             + " INTEGER NOT NULL,"
             + SuplaContract.TemperatureLogEntry.COLUMN_NAME_TIMESTAMP
-            + " BIGINT NOT NULL,"
+            + " INTEGER NOT NULL,"
             + SuplaContract.TemperatureLogEntry.COLUMN_NAME_TEMPERATURE
-            + " DECIMAL(8,4) NULL)";
+            + " REAL NULL,"
+            + TemperatureLogEntry.COLUMN_NAME_PROFILEID
+            + " INTEGER NOT NULL"
+            + ")";
 
     execSQL(db, SQL_CREATE_TLOG_TABLE);
     createIndex(
@@ -442,6 +468,8 @@ public class MeasurementsDbHelper extends BaseDbHelper {
             + SuplaContract.TemperatureLogEntry.COLUMN_NAME_CHANNELID
             + ", "
             + SuplaContract.TemperatureLogEntry.COLUMN_NAME_TIMESTAMP
+            + ", "
+            + TemperatureLogEntry.COLUMN_NAME_PROFILEID
             + ")";
 
     execSQL(db, SQL_CREATE_INDEX);
@@ -454,8 +482,6 @@ public class MeasurementsDbHelper extends BaseDbHelper {
     createThermostatLogTable(db);
     createTempHumidityLogTable(db);
     createTemperatureLogTable(db);
-    upgradeToV22(db);
-    upgradeToV24(db);
 
     // Create views at the end
     createImpulseCounterLogView(db);
@@ -622,6 +648,22 @@ public class MeasurementsDbHelper extends BaseDbHelper {
             + ")");
   }
 
+  private void upgradeToV30(SQLiteDatabase db) {
+    execSQL(db, "DROP TABLE IF EXISTS " + SuplaContract.ImpulseCounterLogEntry.TABLE_NAME);
+    execSQL(db, "DROP TABLE IF EXISTS " + SuplaContract.ElectricityMeterLogEntry.TABLE_NAME);
+    execSQL(db, "DROP TABLE IF EXISTS " + SuplaContract.TemperatureLogEntry.TABLE_NAME);
+    execSQL(db, "DROP TABLE IF EXISTS " + SuplaContract.ThermostatLogEntry.TABLE_NAME);
+    execSQL(db, "DROP TABLE IF EXISTS " + SuplaContract.TempHumidityLogEntry.TABLE_NAME);
+
+    createImpulseCounterLogTable(db);
+    createElectricityMeterLogTable(db);
+    createThermostatLogTable(db);
+    createTempHumidityLogTable(db);
+    createTemperatureLogTable(db);
+
+    recreateViews(db);
+  }
+
   private void recreateViews(SQLiteDatabase db) {
     execSQL(db, "DROP VIEW IF EXISTS " + SuplaContract.ImpulseCounterLogViewEntry.VIEW_NAME);
     execSQL(db, "DROP VIEW IF EXISTS " + SuplaContract.ElectricityMeterLogViewEntry.VIEW_NAME);
@@ -663,9 +705,11 @@ public class MeasurementsDbHelper extends BaseDbHelper {
           case 21:
             upgradeToV22(db);
             break;
-
           case 23:
             upgradeToV24(db);
+            break;
+          case 29:
+            upgradeToV30(db);
             break;
         }
       }

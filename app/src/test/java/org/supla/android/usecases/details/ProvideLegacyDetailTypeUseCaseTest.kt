@@ -241,7 +241,7 @@ class ProvideLegacyDetailTypeUseCaseTest {
   fun `should provide detail for hvac thermostat heat`() {
     testDetailType(
       SUPLA_CHANNELFNC_HVAC_THERMOSTAT,
-      ThermostatDetailType(listOf(DetailPage.THERMOSTAT, DetailPage.SCHEDULE))
+      ThermostatDetailType(listOf(DetailPage.THERMOSTAT, DetailPage.SCHEDULE, DetailPage.THERMOSTAT_HISTORY))
     )
   }
 

@@ -161,7 +161,7 @@ class MainActivity : NavigationActivity(), ToolbarTitleController, LoadableConte
       it.typeface = SuplaApp.getApp().typefaceOpenSansRegular
     }
 
-    MeasurementsDbHelper.getInstance(this) // For upgrade purposes
+    MeasurementsDbHelper.getInstance(this).readableDatabase // For upgrade purposes
     RegisterMessageHandler()
   }
 

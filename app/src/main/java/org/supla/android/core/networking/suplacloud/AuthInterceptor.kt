@@ -1,4 +1,4 @@
-package org.supla.android.extensions
+package org.supla.android.core.networking.suplacloud
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,15 +17,22 @@ package org.supla.android.extensions
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.content.Context
-import android.content.res.Resources
-import android.util.TypedValue
-import androidx.compose.ui.unit.Dp
+import okhttp3.Interceptor
+import okhttp3.Response
+import javax.inject.Inject
+import javax.inject.Singleton
 
-fun Dp.toPx(context: Context): Float {
-  return toPx(context.resources)
-}
+@Singleton
+class AuthInterceptor @Inject constructor(private val suplaCloudConfigHolder: SuplaCloudConfigHolder) : Interceptor {
 
-fun Dp.toPx(resources: Resources): Float {
-  return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value, resources.displayMetrics)
+  override fun intercept(chain: Interceptor.Chain): Response {
+    val requestBuilder = chain.request().newBuilder()
+
+    // If token has been saved, add it to the request
+    suplaCloudConfigHolder.token?.let {
+      requestBuilder.addHeader("Authorization", "Bearer ${it.token}")
+    }
+
+    return chain.proceed(requestBuilder.build())
+  }
 }

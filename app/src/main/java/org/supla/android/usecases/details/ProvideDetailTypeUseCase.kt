@@ -72,7 +72,7 @@ class ProvideDetailTypeUseCase @Inject constructor() {
 //    SuplaConst.SUPLA_CHANNELFNC_HVAC_FAN,
 //    SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_DIFFERENTIAL,
     SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER ->
-      ThermostatDetailType(listOf(DetailPage.THERMOSTAT, DetailPage.SCHEDULE))
+      ThermostatDetailType(listOf(DetailPage.THERMOSTAT, DetailPage.SCHEDULE, DetailPage.THERMOSTAT_HISTORY))
 
     SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL,
     SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL ->
