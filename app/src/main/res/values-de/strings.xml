@@ -474,8 +474,9 @@
   <string name="settings_permissions">Berechtigungen</string>
 
  <string translatable="false" name="details_general">Allgemein</string>
- <string translatable="false" name="details_history">Messungen</string>
+ <string translatable="false" name="details_metrics">Messungen</string>
  <string translatable="false" name="details_settings">Einstellungen</string>
+ <string translatable="false" name="details_history">Historie</string>
  <string name="details_timer_wrong_time">Zeit muss größer als 0 sein</string>
  <string name="details_timer_text">Bestimmen Sie bitte die Zeit, zu der das Gerät ein- oder ausgeschaltet werden sollte</string>
  <string name="details_timer_turn_on_for">Einschalten für</string>
@@ -524,7 +525,7 @@
  <string name="thermostat_detail_program_next">Danach:</string>
  <string name="time_just_minutes">%1$d Min.</string>
  <string name="time_hours_and_minutes">%1$d Std. %2$d Min.</string>
- <string name="thermostat_detail_program_time">Für %1$s</string>
+ <string name="thermostat_detail_program_time">für %1$s</string>
  <plurals name="details_timer_info_on">
   <item quantity="one">eingeschaltet</item>
   <item quantity="other">eingeschaltet</item>

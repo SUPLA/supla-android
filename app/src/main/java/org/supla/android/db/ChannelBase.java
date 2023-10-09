@@ -234,6 +234,7 @@ public abstract class ChannelBase extends DbItem {
       case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROLLERSHUTTER:
       case SuplaConst.SUPLA_CHANNELFNC_MAILSENSOR:
       case SuplaConst.SUPLA_CHANNELFNC_OPENINGSENSOR_WINDOW:
+      case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROOFWINDOW:
       case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
       case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
       case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
@@ -387,6 +388,9 @@ public abstract class ChannelBase extends DbItem {
                     : R.drawable.staircasetimeroff_nightmode;
         }
 
+        break;
+      case SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER:
+        img_idx = R.drawable.ic_thermostat_dhw;
         break;
       case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
         img_idx = R.drawable.thermometer_nightmode;

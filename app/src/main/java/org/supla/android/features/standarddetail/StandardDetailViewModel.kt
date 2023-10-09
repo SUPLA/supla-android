@@ -40,14 +40,20 @@ abstract class StandardDetailViewModel<S : StandardDetailViewState, E : Standard
     getEventsSource(itemType)
       .flatMapMaybe { getDataSource(remoteId, itemType) }
       .attachSilent()
-      .subscribeBy(onNext = { handleChannelBase(it, initialFunction) })
+      .subscribeBy(
+        onNext = { handleChannelBase(it, initialFunction) },
+        onError = defaultErrorHandler("observeUpdates($remoteId, $itemType, $initialFunction)")
+      )
       .disposeBySelf()
   }
 
   fun loadData(remoteId: Int, itemType: ItemType, initialFunction: Int) {
     getDataSource(remoteId, itemType)
       .attach()
-      .subscribeBy(onSuccess = { handleChannelBase(it, initialFunction) })
+      .subscribeBy(
+        onSuccess = { handleChannelBase(it, initialFunction) },
+        onError = defaultErrorHandler("loadData($remoteId, $itemType, $initialFunction)")
+      )
       .disposeBySelf()
   }
 

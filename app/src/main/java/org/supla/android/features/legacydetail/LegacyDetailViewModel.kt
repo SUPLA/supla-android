@@ -23,7 +23,8 @@ class LegacyDetailViewModel @Inject constructor(
     getDataSource(remoteId, itemType)
       .attach()
       .subscribeBy(
-        onSuccess = { sendEvent(LegacyDetailViewEvent.LoadDetailView(it)) }
+        onSuccess = { sendEvent(LegacyDetailViewEvent.LoadDetailView(it)) },
+        onError = defaultErrorHandler("loadData($remoteId, $itemType)")
       )
       .disposeBySelf()
   }

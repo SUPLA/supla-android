@@ -52,7 +52,8 @@ class TimersDetailViewModel @Inject constructor(
     readChannelByRemoteIdUseCase(remoteId)
       .attach()
       .subscribeBy(
-        onSuccess = { handleChannel(it) }
+        onSuccess = { handleChannel(it) },
+        onError = defaultErrorHandler("loadData($remoteId)")
       )
       .disposeBySelf()
   }
@@ -64,6 +65,8 @@ class TimersDetailViewModel @Inject constructor(
         onError = {
           if (it is InvalidTimeException) {
             sendEvent(TimersDetailViewEvent.ShowInvalidTimeToast)
+          } else {
+            defaultErrorHandler("startTimer($remoteId, $turnOn, $durationInSecs)")(it)
           }
         }
       )
@@ -74,7 +77,7 @@ class TimersDetailViewModel @Inject constructor(
     readChannelByRemoteIdUseCase(remoteId)
       .flatMapCompletable { abortCompletable(remoteId, it.value.hiValue()) }
       .attach()
-      .subscribeBy()
+      .subscribeBy(onError = defaultErrorHandler("stopTimer($remoteId)"))
       .disposeBySelf()
   }
 
@@ -82,7 +85,7 @@ class TimersDetailViewModel @Inject constructor(
     readChannelByRemoteIdUseCase(remoteId)
       .flatMapCompletable { abortCompletable(remoteId, it.value.hiValue().not()) }
       .attach()
-      .subscribeBy()
+      .subscribeBy(onError = defaultErrorHandler("cancelTimer($remoteId)"))
       .disposeBySelf()
   }
 
