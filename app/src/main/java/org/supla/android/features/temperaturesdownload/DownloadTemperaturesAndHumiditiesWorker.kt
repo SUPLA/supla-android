@@ -24,68 +24,29 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import org.supla.android.data.source.local.RoomTemperatureAndHumidityLogDao
+import org.supla.android.data.source.TemperatureAndHumidityLogRepository
 import org.supla.android.data.source.local.entity.TemperatureAndHumidityLogEntity
-import org.supla.android.data.source.remote.rest.SuplaCloudService
 import org.supla.android.data.source.remote.rest.channel.TemperatureAndHumidityMeasurement
 import org.supla.android.events.DownloadEventsManager
-import retrofit2.Response
 
 @HiltWorker
 class DownloadTemperaturesAndHumiditiesWorker @AssistedInject constructor(
   @Assisted appContext: Context,
   @Assisted workerParameters: WorkerParameters,
-  suplaCloudServiceProvider: SuplaCloudService.Provider,
   downloadEventsManager: DownloadEventsManager,
-  private val roomTemperatureAndHumidityLogDao: RoomTemperatureAndHumidityLogDao
+  temperatureAndHumidityLogRepository: TemperatureAndHumidityLogRepository
 ) : BaseDownloadLogWorker<TemperatureAndHumidityMeasurement, TemperatureAndHumidityLogEntity>(
   appContext,
   workerParameters,
-  suplaCloudServiceProvider,
-  downloadEventsManager
+  downloadEventsManager,
+  temperatureAndHumidityLogRepository
 ) {
-  override fun getInitialMeasurements(remoteId: Int): Response<List<TemperatureAndHumidityMeasurement>> =
-    cloudService.getInitialThermometerWithHumidityMeasurements(remoteId).execute()
-
-  override fun getMeasurements(remoteId: Int, afterTimestamp: Long): List<TemperatureAndHumidityMeasurement> =
-    cloudService.getThermometerWithHumidityMeasurements(
-      remoteId = remoteId,
-      limit = ITEMS_LIMIT_PER_REQUEST,
-      afterTimestamp = afterTimestamp
-    ).blockingFirst()
-
-  override fun getMinTimestamp(remoteId: Int, profileId: Long): Long? =
-    roomTemperatureAndHumidityLogDao.findMinTimestamp(remoteId, profileId).blockingGet()
-
-  override fun getMaxTimestamp(remoteId: Int, profileId: Long): Long? =
-    roomTemperatureAndHumidityLogDao.findMaxTimestamp(remoteId, profileId).blockingGet()
-
-  override fun cleanMeasurements(remoteId: Int, profileId: Long) {
-    roomTemperatureAndHumidityLogDao.delete(remoteId, profileId)
-  }
-
-  override fun getLocalMeasurementsCount(remoteId: Int, profileId: Long): Int =
-    roomTemperatureAndHumidityLogDao.findCount(remoteId, profileId).blockingGet() ?: 0
-
-  override fun map(entry: TemperatureAndHumidityMeasurement, remoteId: Int, profileId: Long) =
-    TemperatureAndHumidityLogEntity(
-      id = null,
-      channelId = remoteId,
-      date = entry.date,
-      temperature = entry.temperature,
-      humidity = entry.humidity,
-      profileId = profileId
-    )
-
-  override fun insert(entries: List<TemperatureAndHumidityLogEntity>) {
-    roomTemperatureAndHumidityLogDao.insert(entries).blockingAwait()
-  }
 
   companion object {
     val WORK_ID: String = DownloadTemperaturesAndHumiditiesWorker::class.java.simpleName
 
     fun build(remoteId: Int, profileId: Long): OneTimeWorkRequest =
-      OneTimeWorkRequestBuilder<DownloadTemperaturesWorker>()
+      OneTimeWorkRequestBuilder<DownloadTemperaturesAndHumiditiesWorker>()
         .setInputData(data(remoteId, profileId))
         .setConstraints(CONSTRAINTS)
         .build()

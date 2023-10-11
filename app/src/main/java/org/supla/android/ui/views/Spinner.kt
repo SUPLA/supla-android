@@ -20,7 +20,11 @@ package org.supla.android.ui.views
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ExposedDropdownMenuBox
@@ -33,6 +37,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.colorResource
@@ -80,13 +85,61 @@ fun <T> Spinner(label: String, options: Map<T, String>, modifier: Modifier = Mod
   }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
-private fun SpinnerTrailingIcon(expanded: Boolean) =
+fun <T> TextSpinner(
+  label: String,
+  options: Map<T, String>,
+  modifier: Modifier = Modifier,
+  selectedOption: T? = null,
+  onOptionSelected: (selectedId: T) -> Unit
+) {
+  var expanded by remember { mutableStateOf(false) }
+  val selectedOptionText = options[selectedOption ?: options.keys.firstOrNull()] ?: ""
+
+  Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(4.dp)) {
+    Text(
+      text = label.uppercase(),
+      style = MaterialTheme.typography.caption,
+      color = colorResource(id = R.color.gray)
+    )
+    ExposedDropdownMenuBox(
+      expanded = expanded,
+      onExpandedChange = { expanded = !expanded },
+      modifier = Modifier.height(24.dp)
+    ) {
+      Row(verticalAlignment = Alignment.CenterVertically) {
+        Text(text = selectedOptionText, style = MaterialTheme.typography.body2)
+        SpinnerTrailingIcon(
+          expanded = expanded,
+          modifier = Modifier
+            .width(16.dp)
+            .height(8.dp)
+        )
+      }
+      DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+        options.forEach { option ->
+          DropdownMenuItem(
+            onClick = {
+              onOptionSelected(option.key)
+              expanded = false
+            }
+          ) {
+            Text(option.value, style = MaterialTheme.typography.body2)
+          }
+        }
+      }
+    }
+  }
+}
+
+@Composable
+private fun SpinnerTrailingIcon(expanded: Boolean, modifier: Modifier = Modifier) =
   IconButton(modifier = Modifier.clearAndSetSemantics { }, onClick = { }) {
     Icon(
       painter = painterResource(id = R.drawable.ic_dropdown),
       contentDescription = null,
-      Modifier.rotate(
+      modifier.rotate(
         if (expanded) {
           180f
         } else {
@@ -102,6 +155,7 @@ private fun Preview() {
   SuplaTheme {
     Column(Modifier.background(MaterialTheme.colors.surface)) {
       Spinner(label = "Program", options = mapOf(1 to "Cooling", 2 to "Heating"), onOptionSelected = {})
+      TextSpinner(label = "Program", options = mapOf(1 to "Cooling", 2 to "Heating very long"), onOptionSelected = {})
     }
   }
 }

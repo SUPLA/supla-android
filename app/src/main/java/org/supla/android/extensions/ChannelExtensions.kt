@@ -24,11 +24,16 @@ import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.data.source.remote.thermostat.SuplaThermostatFlags
 import org.supla.android.db.Channel
 import org.supla.android.images.ImageCache
+import org.supla.android.lib.SuplaConst
 import org.supla.android.lib.SuplaTimerState
 import org.supla.android.ui.lists.data.IssueIconType
 import org.supla.android.ui.lists.data.SlideableListItemData
 
 fun Channel.getTimerStateValue(): SuplaTimerState? = extendedValue?.extendedValue?.TimerStateValue
+
+fun Channel.hasMeasurements(): Boolean =
+  func == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER ||
+    func == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
 
 fun Channel.toThermostatSlideableListItemData(
   mainThermometerChild: Channel?,

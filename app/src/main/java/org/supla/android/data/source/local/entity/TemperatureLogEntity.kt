@@ -52,7 +52,7 @@ data class TemperatureLogEntity(
   @ColumnInfo(name = _ID)
   val id: Long?,
   @ColumnInfo(name = COLUMN_NAME_CHANNELID) val channelId: Int,
-  @ColumnInfo(name = COLUMN_NAME_TIMESTAMP) val date: Date,
-  @ColumnInfo(name = COLUMN_NAME_TEMPERATURE) val temperature: Float?,
+  @ColumnInfo(name = COLUMN_NAME_TIMESTAMP) override val date: Date,
+  @ColumnInfo(name = COLUMN_NAME_TEMPERATURE) override val temperature: Float?,
   @ColumnInfo(name = COLUMN_NAME_PROFILEID) val profileId: Long
-)
+) : BaseTemperatureEntity

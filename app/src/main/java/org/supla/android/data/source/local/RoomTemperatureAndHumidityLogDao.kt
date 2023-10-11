@@ -22,6 +22,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
+import io.reactivex.rxjava3.core.Observable
 import org.supla.android.data.source.local.entity.TemperatureAndHumidityLogEntity
 
 @Dao
@@ -41,4 +42,9 @@ interface RoomTemperatureAndHumidityLogDao {
 
   @Query("DELETE FROM temphumidity_log WHERE channelid = :channelId AND profileid = :profileId")
   fun delete(channelId: Int, profileId: Long): Completable
+
+  @Query(
+    "SELECT * FROM temphumidity_log WHERE channelid = :channelId AND profileid = :profileId AND date >= :startDate AND date <= :endDate"
+  )
+  fun findMeasurements(channelId: Int, profileId: Long, startDate: Long, endDate: Long): Observable<List<TemperatureAndHumidityLogEntity>>
 }

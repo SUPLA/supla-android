@@ -24,22 +24,19 @@ import androidx.work.NetworkType
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import io.reactivex.rxjava3.kotlin.blockingSubscribeBy
 import org.supla.android.Trace
-import org.supla.android.data.source.remote.rest.SuplaCloudService
+import org.supla.android.data.source.BaseMeasurementRepository
 import org.supla.android.data.source.remote.rest.channel.Measurement
 import org.supla.android.events.DownloadEventsManager
 import org.supla.android.extensions.TAG
 import org.supla.android.extensions.guardLet
-import org.supla.android.extensions.ifLet
-import retrofit2.Response
-
-private const val ALLOWED_TIME_DIFFERENCE = 1800
 
 abstract class BaseDownloadLogWorker<T : Measurement, U> constructor(
   appContext: Context,
   workerParameters: WorkerParameters,
-  private val suplaCloudServiceProvider: SuplaCloudService.Provider,
-  private val downloadEventsManager: DownloadEventsManager
+  private val downloadEventsManager: DownloadEventsManager,
+  private val baseMeasurementRepository: BaseMeasurementRepository<T, U>
 ) : Worker(appContext, workerParameters) {
 
   protected val remoteId: Int?
@@ -51,12 +48,8 @@ abstract class BaseDownloadLogWorker<T : Measurement, U> constructor(
       return@let if (it < 0) null else it
     }
 
-  protected val cloudService by lazy {
-    suplaCloudServiceProvider.provide()
-  }
-
   override fun doWork(): Result {
-    Log.e(TAG, "Worker started")
+    Log.d(TAG, "Worker started with ${baseMeasurementRepository.javaClass.simpleName}")
 
     val (remoteId) = guardLet(remoteId) {
       Trace.w(TAG, "Download temperatures worker failed - remoteId < 0!")
@@ -66,149 +59,31 @@ abstract class BaseDownloadLogWorker<T : Measurement, U> constructor(
       Trace.w(TAG, "Download temperatures worker failed - profileId < 0!")
       return Result.failure()
     }
+    Log.d(TAG, "Worker parameters - remoteId: $remoteId, profileId: $profileId")
 
-    downloadEventsManager.emitProgressState(remoteId, DownloadEventsManager.State.InProgress(0f))
-
-    // Load initial measurements
-    val (initialMeasurementsPair) = guardLet(loadInitialMeasurements(remoteId)) {
-      Trace.e(TAG, "Could not load initial measurements")
-      downloadEventsManager.emitProgressState(remoteId, DownloadEventsManager.State.Failed)
-      return Result.failure()
-    }
-
-    val firstMeasurements = initialMeasurementsPair.first
-    val totalCount = initialMeasurementsPair.second
-    Trace.d(TAG, "Found initial remote entries (count: ${firstMeasurements.size}, total count: $totalCount)")
-
-    // Check cleanup needed
-    val (cleanMeasurements) = guardLet(checkCleanNeeded(firstMeasurements, remoteId, profileId)) {
-      Trace.e(TAG, "Could not verify if clean needed")
-      downloadEventsManager.emitProgressState(remoteId, DownloadEventsManager.State.Failed)
-      return Result.failure()
-    }
-
-    // Perform measurements import
-    return try {
-      performImport(totalCount, cleanMeasurements, remoteId, profileId).also {
-        downloadEventsManager.emitProgressState(remoteId, DownloadEventsManager.State.Finished)
+    var result = Result.failure()
+    baseMeasurementRepository.loadMeasurements(remoteId, profileId)
+      .doOnSubscribe {
+        downloadEventsManager.emitProgressState(remoteId, DownloadEventsManager.State.Started)
       }
-    } catch (ex: Exception) {
-      Trace.e(TAG, "Measurements import failed", ex)
-      downloadEventsManager.emitProgressState(remoteId, DownloadEventsManager.State.Failed)
-      Result.failure()
-    }
-  }
-
-  protected abstract fun getInitialMeasurements(remoteId: Int): Response<List<T>>
-
-  protected abstract fun getMeasurements(remoteId: Int, afterTimestamp: Long): List<T>
-
-  protected abstract fun getMinTimestamp(remoteId: Int, profileId: Long): Long?
-
-  protected abstract fun getMaxTimestamp(remoteId: Int, profileId: Long): Long?
-
-  protected abstract fun cleanMeasurements(remoteId: Int, profileId: Long)
-
-  protected abstract fun getLocalMeasurementsCount(remoteId: Int, profileId: Long): Int
-
-  protected abstract fun insert(entries: List<U>)
-
-  protected abstract fun map(entry: T, remoteId: Int, profileId: Long): U
-
-  private fun loadInitialMeasurements(remoteId: Int): Pair<List<T>, Int>? {
-    try {
-      val firstMeasurementsResponse = getInitialMeasurements(remoteId)
-      if (firstMeasurementsResponse.code() != 200) {
-        Trace.e(TAG, "Initial measurements load failed: ${firstMeasurementsResponse.message()}")
-        return null
-      }
-      val firstMeasurements = firstMeasurementsResponse.body()
-      val totalCount = firstMeasurementsResponse.headers()["X-Total-Count"]?.toInt()
-
-      if (firstMeasurements != null && totalCount != null) {
-        return Pair(firstMeasurements, totalCount)
-      }
-    } catch (ex: Exception) {
-      Trace.e(TAG, "Initial measurements load failed", ex)
-    }
-
-    return null
-  }
-
-  private fun checkCleanNeeded(firstMeasurements: List<T>, remoteId: Int, profileId: Long): Boolean? {
-    try {
-      if (firstMeasurements.isEmpty()) {
-        Trace.d(TAG, "No entries - cleaning measurements")
-        return true
-      } else {
-        ifLet(getMinTimestamp(remoteId, profileId)) { (minTimestamp) ->
-          Trace.d(TAG, "Found local minimal timestamp $minTimestamp")
-          for (entry in firstMeasurements) {
-            if (kotlin.math.abs(minTimestamp - entry.date.time) < ALLOWED_TIME_DIFFERENCE) {
-              Trace.d(TAG, "Entries similar - no cleaning needed")
-              return false
-            }
-          }
-        }
-      }
-      return true
-    } catch (ex: Exception) {
-      Trace.e(TAG, "Could not verify if clean needed", ex)
-      return null
-    }
-  }
-
-  private fun performImport(
-    totalCount: Int,
-    cleanMeasurements: Boolean,
-    remoteId: Int,
-    profileId: Long
-  ): Result {
-    Trace.d(TAG, "Will clean measurements - $cleanMeasurements")
-    if (cleanMeasurements) {
-      cleanMeasurements(remoteId, profileId)
-    }
-
-    val databaseCount = getLocalMeasurementsCount(remoteId, profileId)
-    if (databaseCount == totalCount && !cleanMeasurements) {
-      Trace.i(TAG, "Database and cloud has same size of measurements. Import skipped")
-      return Result.success()
-    }
-
-    Trace.i(TAG, "Temperature measurements import started (db count: $databaseCount, remote count: $totalCount)")
-    iterateAndImport(remoteId, profileId, totalCount, databaseCount)
-
-    return Result.success()
-  }
-
-  private fun iterateAndImport(remoteId: Int, profileId: Long, totalCount: Int, databaseCount: Int) {
-    val entriesToImport = totalCount - databaseCount
-    var importedEntries = 0
-    var afterTimestamp = getMaxTimestamp(remoteId, profileId) ?: 0
-    do {
-      val entries = getMeasurements(remoteId, afterTimestamp)
-
-      if (entries.isEmpty()) {
-        Trace.d(TAG, "Measurements end reached")
-        return
-      }
-
-      Trace.d(TAG, "Measurements fetched ${entries.size}")
-      insert(
-        entries.map {
-          if (it.date.time > afterTimestamp) {
-            afterTimestamp = it.date.time
-          }
-
-          map(it, remoteId, profileId)
+      .blockingSubscribeBy(
+        onNext = {
+          downloadEventsManager.emitProgressState(
+            remoteId = remoteId,
+            state = DownloadEventsManager.State.InProgress(it)
+          )
+          result = Result.success()
+        },
+        onComplete = {
+          downloadEventsManager.emitProgressState(remoteId, DownloadEventsManager.State.Finished)
+        },
+        onError = {
+          Trace.e(TAG, it.message, it)
+          downloadEventsManager.emitProgressState(remoteId, DownloadEventsManager.State.Failed)
         }
       )
-      importedEntries += entries.count()
-      downloadEventsManager.emitProgressState(
-        remoteId = remoteId,
-        state = DownloadEventsManager.State.InProgress(importedEntries / entriesToImport.toFloat())
-      )
-    } while (isStopped.not())
+
+    return result
   }
 
   companion object {
