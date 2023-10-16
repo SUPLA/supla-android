@@ -10,87 +10,115 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.res.ResourcesCompat
+import com.github.mikephil.charting.charts.CombinedChart
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.CombinedData
 import com.github.mikephil.charting.formatter.ValueFormatter
+import com.github.mikephil.charting.utils.ViewPortHandler
 import org.supla.android.R
 import org.supla.android.data.ValuesFormatter
 import org.supla.android.extensions.valuesFormatter
-import org.supla.android.features.thermostatdetail.history.data.ChartRange
+import org.supla.android.ui.views.charts.ChartMarkerView
 import java.util.Date
 
-const val HUMIDITY_SCALE_FACTOR = 2
 
 @Composable
-fun ThermostatChart(data: CombinedData?, range: ChartRange?, emptyChartMessage: String, modifier: Modifier = Modifier) {
+fun ThermostatChart(data: CombinedData?, rangeStart: Float?, rangeEnd: Float?, emptyChartMessage: String, modifier: Modifier = Modifier) {
   val valuesFormatter = LocalContext.current.valuesFormatter
-  val xAxisFormatter by remember { mutableStateOf(AxisXFormatter(range, valuesFormatter)) }
-  xAxisFormatter.range = range
+  val xAxisFormatter by remember { mutableStateOf(AxisXFormatter(valuesFormatter)) }
 
   AndroidView(
     modifier = modifier.fillMaxWidth(),
     factory = { context ->
-      com.github.mikephil.charting.charts.CombinedChart(context).also {
+      CombinedChart(context).also {
+        xAxisFormatter.chart = it
+        xAxisFormatter.handler = it.viewPortHandler
+
+        val colorBlack = ResourcesCompat.getColor(context.resources, R.color.on_background, null)
         it.data = data
         it.background = ColorDrawable(ResourcesCompat.getColor(context.resources, R.color.background, null))
         it.xAxis.setDrawGridLines(false)
         it.xAxis.setDrawAxisLine(false)
         it.legend.isEnabled = false
         it.axisLeft.setDrawAxisLine(false)
+        it.axisLeft.textColor = ResourcesCompat.getColor(context.resources, R.color.dark_red, null)
+        it.axisLeft.gridColor = it.axisLeft.textColor
+        it.axisLeft.zeroLineColor = colorBlack
         it.axisLeft.valueFormatter = object : ValueFormatter() {
           override fun getAxisLabel(value: Float, axis: AxisBase?): String {
             return context.valuesFormatter.getTemperatureString(value)
           }
         }
         it.axisRight.setDrawAxisLine(false)
+        it.axisRight.textColor = ResourcesCompat.getColor(context.resources, R.color.dark_blue, null)
+        it.axisRight.gridColor = it.axisRight.textColor
+        it.axisLeft.zeroLineColor = colorBlack
         it.axisRight.valueFormatter = object : ValueFormatter() {
           override fun getAxisLabel(value: Float, axis: AxisBase?): String {
-            return context.valuesFormatter.getHumidityString(value.times(HUMIDITY_SCALE_FACTOR).toDouble(), withPercentage = true)
+            val originalValue = value.toDouble()
+            if (originalValue > 100) {
+              return ""
+            }
+            return context.valuesFormatter.getHumidityString(originalValue, withPercentage = true)
           }
         }
         it.xAxis.position = XAxis.XAxisPosition.BOTTOM
         it.xAxis.valueFormatter = xAxisFormatter
+        it.axisRight.axisMinimum = 0f
+        it.axisRight.axisMaximum = 100f
         it.description.isEnabled = false
         it.onChartGestureListener
-        it.setNoDataTextColor(ResourcesCompat.getColor(context.resources, R.color.on_background, null))
+        it.setNoDataTextColor(colorBlack)
+        it.marker = ChartMarkerView(context).apply { chartView = it }
+        it.setDrawMarkers(true)
       }
     },
-    update = {
-      it.data = data
-      it.xAxis.setLabelCount(axisCount(range), true)
-      it.notifyDataSetChanged()
-      it.setNoDataText(emptyChartMessage)
-      it.invalidate()
+    update = { chart ->
+      chart.data = data
+      chart.xAxis.labelCount = 6
+      rangeStart?.let { chart.xAxis.axisMinimum = it }
+      rangeEnd?.let { chart.xAxis.axisMaximum = it }
+      chart.notifyDataSetChanged()
+      chart.setNoDataText(emptyChartMessage)
+      chart.invalidate()
+
+      data?.allData?.minOfOrNull { entry -> entry.yMin }?.let { yMin ->
+        chart.axisLeft.axisMinimum = if (yMin > 0) {
+          0f
+        } else {
+          yMin
+        }
+      }
     }
   )
 }
 
-private fun axisCount(range: ChartRange?) =
-  when(range) {
-    ChartRange.DAY -> 6
-    ChartRange.WEEK,
-    ChartRange.MONTH -> 4
-    ChartRange.DAYS_90 -> 5
-    else -> 0
-  }
+private class AxisXFormatter(
+  private val valuesFormatter: ValuesFormatter
+) : ValueFormatter() {
 
-private class AxisXFormatter(var range: ChartRange?, val valuesFormatter: ValuesFormatter): ValueFormatter() {
+  lateinit var chart: CombinedChart
+  lateinit var handler: ViewPortHandler
 
   override fun getAxisLabel(value: Float, axis: AxisBase?): String {
-    return when (range) {
-      ChartRange.DAY -> {
+    val left = chart.getValuesByTouchPoint(handler.contentLeft(), handler.contentBottom(), YAxis.AxisDependency.LEFT)
+    val right = chart.getValuesByTouchPoint(handler.contentRight(), handler.contentBottom(), YAxis.AxisDependency.LEFT)
+
+    val distanceInDays = (right.x - left.x).div(60).div(60).div(24).toInt()
+    return when {
+      distanceInDays <= 1 ->
         valuesFormatter.getHourString(Date(value.times(1000).toLong())) ?: ""
-      }
-      ChartRange.WEEK,
-      ChartRange.MONTH -> {
-        valuesFormatter.getDateString(Date(value.times(1000).toLong())) ?: ""
-      }
-      ChartRange.DAYS_90 -> {
+
+      distanceInDays <= 7 ->
         valuesFormatter.getMonthString(Date(value.times(1000).toLong())) ?: ""
-      }
+
+      distanceInDays <= 31 ->
+        valuesFormatter.getMonthString(Date(value.times(1000).toLong())) ?: ""
+
       else -> {
-        ""
+        valuesFormatter.getMonthString(Date(value.times(1000).toLong())) ?: ""
       }
     }
   }

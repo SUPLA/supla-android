@@ -24,6 +24,8 @@
     <color name="light_blue">#8C9DFF</color>
     <color name="light_green">#B0E0A8</color>
     <color name="light_red">#FFAA8C</color>
+    <color name="dark_blue">#000080</color>
+    <color name="dark_red">#800000</color>
 
     <color name="shadow_start">#1A000000</color>
     <color name="shadow_end">#00000000</color>

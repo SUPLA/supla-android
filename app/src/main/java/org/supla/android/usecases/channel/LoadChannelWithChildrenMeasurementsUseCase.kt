@@ -21,25 +21,31 @@ import com.github.mikephil.charting.data.Entry
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
 import org.supla.android.R
+import org.supla.android.data.model.chart.ChartEntryType
 import org.supla.android.data.source.TemperatureAndHumidityLogRepository
 import org.supla.android.data.source.TemperatureLogRepository
 import org.supla.android.data.source.local.entity.BaseTemperatureEntity
 import org.supla.android.data.source.local.entity.TemperatureAndHumidityLogEntity
 import org.supla.android.db.Channel
-import org.supla.android.db.ChannelBase
 import org.supla.android.extensions.flatMapMerged
 import org.supla.android.extensions.hasMeasurements
 import org.supla.android.extensions.isHvacThermostat
+import org.supla.android.extensions.toTimestamp
 import org.supla.android.extensions.valuesFormatter
 import org.supla.android.features.thermostatdetail.history.HistoryDataSet
 import org.supla.android.features.thermostatdetail.history.data.ChartDataAggregation
 import org.supla.android.images.ImageCache
 import org.supla.android.lib.SuplaConst
 import org.supla.android.profile.ProfileManager
-import org.supla.android.ui.views.HUMIDITY_SCALE_FACTOR
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
+
+
+private const val MAX_ALLOWED_DISTANCE_MULTIPLIER = 1.5f
+
+// Server provides data for each 10 minutes
+private const val AGGREGATING_MINUTES_DISTANCE_SEC = 600.times(MAX_ALLOWED_DISTANCE_MULTIPLIER)
 
 @Singleton
 class LoadChannelWithChildrenMeasurementsUseCase @Inject constructor(
@@ -74,24 +80,32 @@ class LoadChannelWithChildrenMeasurementsUseCase @Inject constructor(
       }
     }
 
-    val colors = Colors()
+    val temperatureColors = TemperatureColors()
+    val humidityColors = HumidityColors()
     val observables = mutableListOf<Observable<List<HistoryDataSet>>>().also { list ->
       channelsWithMeasurements.forEach {
         if (it.func == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER) {
-          val color = colors.nextColor()
+          val color = temperatureColors.nextColor()
           list.add(
             temperatureLogRepository.findMeasurements(it.remoteId, profileId, startDate, endDate)
-              .map { measurements -> listOf(historyDataSet(it, color, measurements).aggregating(aggregation)) }
+              .map { list -> aggregatingTemperature(list, aggregation) }
+              .map { measurements -> listOf(historyDataSet(it, ChartEntryType.TEMPERATURE, color, aggregation, measurements)) }
           )
         } else if (it.func == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE) {
-          val firstColor = colors.nextColor()
-          val secondColor = colors.nextColor()
+          val firstColor = temperatureColors.nextColor()
+          val secondColor = humidityColors.nextColor()
           list.add(
             temperatureAndHumidityLogRepository.findMeasurements(it.remoteId, profileId, startDate, endDate)
               .map { measurements ->
                 listOf(
-                  historyDataSet(it, firstColor, measurements).aggregating(aggregation),
-                  historyDataSetHumidity(it, secondColor, measurements).aggregating(aggregation)
+                  historyDataSet(
+                    it,
+                    ChartEntryType.TEMPERATURE,
+                    firstColor,
+                    aggregation,
+                    aggregatingTemperature(measurements, aggregation)
+                  ),
+                  historyDataSet(it, ChartEntryType.HUMIDITY, secondColor, aggregation, aggregatingHumidity(measurements, aggregation)),
                 )
               }
           )
@@ -110,33 +124,95 @@ class LoadChannelWithChildrenMeasurementsUseCase @Inject constructor(
     }
   }
 
-  private fun <T : BaseTemperatureEntity> historyDataSet(channel: Channel, color: Int, measurements: List<T>) =
+  private fun <T : BaseTemperatureEntity> aggregatingTemperature(
+    measurements: List<T>,
+    aggregation: ChartDataAggregation
+  ): List<AggregatedEntity> {
+    if (aggregation == ChartDataAggregation.MINUTES) {
+      return measurements
+        .filter { it.temperature != null }
+        .map { AggregatedEntity(it.date.toTimestamp(), it.temperature!!) }
+    }
+
+    return measurements
+      .filter { it.temperature != null }
+      .groupBy { item -> item.date.toTimestamp().div(aggregation.timeInSec) }
+      .map { group ->
+        AggregatedEntity(
+          group.key.times(aggregation.timeInSec),
+          group.value.map { it.temperature!! }.average().toFloat()
+        )
+      }
+  }
+
+  private fun aggregatingHumidity(
+    measurements: List<TemperatureAndHumidityLogEntity>,
+    aggregation: ChartDataAggregation
+  ): List<AggregatedEntity> {
+    return measurements.groupBy { item -> item.date.toTimestamp().div(aggregation.timeInSec) }
+      .map { group ->
+        AggregatedEntity(
+          group.key,
+          group.value.filter { it.humidity != null }.map { it.humidity!! }.average().toFloat()
+        )
+      }
+  }
+
+  private fun historyDataSet(
+    channel: Channel,
+    type: ChartEntryType,
+    color: Int,
+    aggregation: ChartDataAggregation,
+    measurements: List<AggregatedEntity>
+  ) =
     HistoryDataSet(
-      setId = HistoryDataSet.Id(channel.remoteId, HistoryDataSet.Type.TEMPERATURE),
+      setId = HistoryDataSet.Id(channel.remoteId, type),
       function = channel.func,
       iconProvider = { context -> ImageCache.getBitmap(context, channel.imageIdx) },
       valueProvider = { context -> context.valuesFormatter.getTemperatureString(channel.value.getTemp(channel.func)) },
       color = color,
-      entries = measurements.filter { entity -> entity.temperature != null }.map { entity ->
-        Entry(entity.date.time.div(1000).toFloat(), entity.temperature!!)
-      }
+      entries = divideSetToSubsets(
+        entities = measurements,
+        type = type,
+        aggregation = aggregation
+      )
     )
 
-  private fun historyDataSetHumidity(channel: Channel, color: Int, measurements: List<TemperatureAndHumidityLogEntity>) =
-    HistoryDataSet(
-      setId = HistoryDataSet.Id(channel.remoteId, HistoryDataSet.Type.HUMIDITY),
-      function = channel.func,
-      iconProvider = { context -> ImageCache.getBitmap(context, channel.getImageIdx(ChannelBase.WhichOne.Second)) },
-      valueProvider = { context -> context.valuesFormatter.getHumidityString(channel.value.humidity) },
-      color = color,
-      entries = measurements.filter { entity -> entity.humidity != null }.map { entity ->
-        Entry(entity.date.time.div(1000).toFloat(), entity.humidity!!.div(HUMIDITY_SCALE_FACTOR))
+  private fun divideSetToSubsets(
+    entities: List<AggregatedEntity>,
+    aggregation: ChartDataAggregation,
+    type: ChartEntryType
+  ): List<List<Entry>> {
+    return mutableListOf<List<Entry>>().also { list ->
+      var set = mutableListOf<Entry>()
+      for (entity in entities) {
+        val entry = Entry(entity.date.toFloat(), entity.value, type)
+
+        set.lastOrNull()?.let {
+          val distance = if (aggregation == ChartDataAggregation.MINUTES) {
+            AGGREGATING_MINUTES_DISTANCE_SEC
+          } else {
+            aggregation.timeInSec.times(MAX_ALLOWED_DISTANCE_MULTIPLIER)
+          }
+
+          if (entry.x - it.x > distance) {
+            list.add(set)
+            set = mutableListOf()
+          }
+        }
+
+        set.add(entry)
       }
-    )
+
+      if (set.isNotEmpty()) {
+        list.add(set)
+      }
+    }
+  }
 }
 
-private data class Colors(
-  private val colors: List<Int> = listOf(R.color.primary, R.color.blue, R.color.red, R.color.violet),
+private abstract class Colors(
+  private val colors: List<Int>,
   private var position: Int = 0
 ) {
   fun nextColor(): Int =
@@ -144,3 +220,11 @@ private data class Colors(
       position++
     }
 }
+
+private class TemperatureColors : Colors(listOf(R.color.red, R.color.dark_red))
+private class HumidityColors : Colors(listOf(R.color.blue, R.color.dark_blue))
+
+private data class AggregatedEntity(
+  val date: Long,
+  val value: Float
+)

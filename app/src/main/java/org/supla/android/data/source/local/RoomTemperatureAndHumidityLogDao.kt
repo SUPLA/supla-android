@@ -19,6 +19,7 @@ package org.supla.android.data.source.local
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
@@ -28,7 +29,7 @@ import org.supla.android.data.source.local.entity.TemperatureAndHumidityLogEntit
 @Dao
 interface RoomTemperatureAndHumidityLogDao {
 
-  @Insert
+  @Insert(onConflict = OnConflictStrategy.REPLACE)
   fun insert(entity: List<TemperatureAndHumidityLogEntity>): Completable
 
   @Query("SELECT MIN(date) FROM temphumidity_log WHERE channelid = :channelId AND profileid = :profileId")
@@ -44,7 +45,7 @@ interface RoomTemperatureAndHumidityLogDao {
   fun delete(channelId: Int, profileId: Long): Completable
 
   @Query(
-    "SELECT * FROM temphumidity_log WHERE channelid = :channelId AND profileid = :profileId AND date >= :startDate AND date <= :endDate"
+    "SELECT * FROM temphumidity_log WHERE channelid = :channelId AND profileid = :profileId AND date >= :startDate AND date <= :endDate ORDER BY date asc"
   )
   fun findMeasurements(channelId: Int, profileId: Long, startDate: Long, endDate: Long): Observable<List<TemperatureAndHumidityLogEntity>>
 }

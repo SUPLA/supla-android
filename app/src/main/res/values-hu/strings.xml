@@ -173,10 +173,10 @@
     <string name="consumption_acording_to_phases">Fogyasztási fázisok szerint</string>
     <string name="temperature">Hőmérséklet</string>
     <string name="humidity">Nedvességtartalom</string>
-    <string name="last24hours">Az elmúlt 24 óra</string>
-    <string name="last7days">Az elmúlt 7 nap</string>
-    <string name="last30days">Az elmúlt 30 nap</string>
-    <string name="last90days">Az elmúlt 90 nap</string>
+    <string name="history_range_last_day">Az elmúlt 24 óra</string>
+    <string name="history_range_last_week">Az elmúlt 7 nap</string>
+    <string name="history_range_last_30_days">Az elmúlt 30 nap</string>
+    <string name="history_range_last_90_days">Az elmúlt 90 nap</string>
     <string name="all_available_history">Az összes elérhető eseménytörténet</string>
     <string name="retrieving_data_from_the_server">Adatok letöltése a szerverről ...</string>
     <string name="no_chart_data_available">A diagramhoz nincs adat.</string>

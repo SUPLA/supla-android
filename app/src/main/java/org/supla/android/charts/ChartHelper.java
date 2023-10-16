@@ -685,10 +685,10 @@ public abstract class ChartHelper extends ValueFormatter {
     ArrayList<String> result = new ArrayList<>();
     Resources r = context.getResources();
 
-    result.add(r.getString(R.string.last24hours));
-    result.add(r.getString(R.string.last7days));
-    result.add(r.getString(R.string.last30days));
-    result.add(r.getString(R.string.last90days));
+    result.add(r.getString(R.string.history_range_last_day));
+    result.add(r.getString(R.string.history_range_last_week));
+    result.add(r.getString(R.string.history_range_last_30_days));
+    result.add(r.getString(R.string.history_range_last_90_days));
     result.add(r.getString(R.string.all_available_history));
 
     if (master != null) {
@@ -737,7 +737,7 @@ public abstract class ChartHelper extends ValueFormatter {
         case Bar_AritmeticBalance_Hours:
         case Bar_VectorBalance_Hours:
           if (lastSelection == null
-              || lastSelection.equals(r.getString(R.string.last24hours))
+              || lastSelection.equals(r.getString(R.string.history_range_last_day))
               || lastSelection.equals(r.getString(R.string.all_available_history))
               || newItems == null) {
             return 1;
@@ -749,7 +749,7 @@ public abstract class ChartHelper extends ValueFormatter {
         case Bar_AritmeticBalance_Days:
         case Bar_VectorBalance_Days:
           if (lastSelection == null
-              || lastSelection.equals(r.getString(R.string.last24hours))
+              || lastSelection.equals(r.getString(R.string.history_range_last_day))
               || lastSelection.equals(r.getString(R.string.all_available_history))
               || newItems == null) {
             return 0;

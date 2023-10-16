@@ -19,28 +19,131 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import java.util.Calendar
 import java.util.Date
+import java.util.GregorianCalendar
 
-fun Date.dayStart(): Date {
+fun Date.dayStart(): Date = startOfDay(this).time
+
+fun Date.dayEnd(): Date = endOfDay(this).time
+
+fun Date.weekStart(): Date =
+  startOfDay(this).let {
+    it.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
+    it.time
+  }
+
+fun Date.weekEnd(): Date =
+  endOfDay(this).let {
+    it.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY)
+    it.time
+  }
+
+fun Date.monthStart(): Date =
+  startOfDay(this).let {
+    it.set(Calendar.DAY_OF_MONTH, 1)
+    it.time
+  }
+
+fun Date.monthEnd(): Date =
+  endOfDay(this).let {
+    it.set(Calendar.DAY_OF_MONTH, it.getActualMaximum(Calendar.DAY_OF_MONTH))
+    it.time
+  }
+
+fun Date.previousMonth(): Date =
+  startOfDay(this).let {
+    it.set(Calendar.MONTH, it.get(Calendar.MONTH) - 1)
+    it.time
+  }
+
+fun Date.nextMonth(): Date =
+  endOfDay(this).let {
+    it.set(Calendar.MONTH, it.get(Calendar.MONTH) + 1)
+    it.time
+  }
+
+fun Date.quarterStart(): Date =
+  startOfDay(this).let {
+    val currentQuarterFirstMonth = it.get(Calendar.MONTH).div(3).times(3)
+    it.set(Calendar.MONTH, currentQuarterFirstMonth)
+    it.set(Calendar.DAY_OF_MONTH, 1)
+    it.time
+  }
+
+fun Date.quarterEnd(): Date =
+  endOfDay(this).let {
+    val currentQuarterFirstMonth = it.get(Calendar.MONTH).div(3).times(3)
+    it.set(Calendar.MONTH, currentQuarterFirstMonth + 2)
+    it.set(Calendar.DAY_OF_MONTH, it.getActualMaximum(Calendar.DAY_OF_MONTH))
+    it.time
+  }
+
+fun Date.yearStart(): Date =
+  startOfDay(this).let {
+    it.set(Calendar.MONTH, Calendar.JANUARY)
+    it.set(Calendar.DAY_OF_MONTH, 1)
+    it.time
+  }
+
+fun Date.yearEnd(): Date =
+  endOfDay(this).let {
+    it.set(Calendar.MONTH, Calendar.DECEMBER)
+    it.set(Calendar.DAY_OF_MONTH, 31)
+    it.time
+  }
+
+fun Date.daysInCurrentMonth(): Int {
   val calendar = Calendar.getInstance()
   calendar.time = this
+  return calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
+}
+
+fun Date.daysInCurrentYear(): Int {
+  val calendar = Calendar.getInstance()
+  calendar.time = this
+  return calendar.getActualMaximum(Calendar.DAY_OF_YEAR)
+}
+
+fun Date.daysInCurrentQuarter(): Int {
+  val calendar = Calendar.getInstance()
+  calendar.time = this
+
+  val currentYear = calendar.get(Calendar.YEAR)
+
+  return when (val currentMonth = calendar.get(Calendar.MONTH)) {
+    in listOf(1, 2, 3) -> getMonthLength(currentYear, listOf(1, 2, 3))
+    in listOf(4, 5, 6) -> getMonthLength(currentYear, listOf(4, 5, 6))
+    in listOf(7, 8, 9) -> getMonthLength(currentYear, listOf(7, 8, 9))
+    in listOf(10, 11, 12) -> getMonthLength(currentYear, listOf(10, 11, 12))
+    else -> throw IllegalStateException("Invalid month `$currentMonth`!")
+  }
+}
+
+fun Date.shift(days: Int): Date =
+  Date(time + days.toLong().times(24).times(60).times(60).times(1000))
+
+fun Date.toTimestamp(): Long = time.div(1000)
+
+private fun getMonthLength(year: Int, months: List<Int>) =
+  months.sumOf { GregorianCalendar(year, it, 1).getActualMaximum(Calendar.DAY_OF_MONTH) }
+
+private fun startOfDay(day: Date): Calendar {
+  val calendar = Calendar.getInstance()
+  calendar.time = day
   calendar.set(Calendar.HOUR_OF_DAY, 0)
   calendar.set(Calendar.MINUTE, 0)
   calendar.set(Calendar.SECOND, 0)
   calendar.set(Calendar.MILLISECOND, 0)
 
-  return calendar.time
+  return calendar
 }
 
-fun Date.dayEnd(): Date {
+private fun endOfDay(day: Date): Calendar {
   val calendar = Calendar.getInstance()
-  calendar.time = this
+  calendar.time = day
   calendar.set(Calendar.HOUR_OF_DAY, 23)
   calendar.set(Calendar.MINUTE, 59)
   calendar.set(Calendar.SECOND, 59)
   calendar.set(Calendar.MILLISECOND, 999)
 
-  return calendar.time
+  return calendar
 }
-
-fun Date.shift(days: Int): Date =
-  Date(time + days.toLong().times(24).times(60).times(60).times(1000))

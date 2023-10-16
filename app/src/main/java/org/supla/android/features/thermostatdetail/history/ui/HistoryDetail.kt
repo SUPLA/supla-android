@@ -74,6 +74,7 @@ import kotlinx.coroutines.flow.StateFlow
 import org.supla.android.R
 import org.supla.android.core.ui.BaseViewProxy
 import org.supla.android.core.ui.theme.SuplaTheme
+import org.supla.android.extensions.toTimestamp
 import org.supla.android.features.thermostatdetail.history.HistoryDataSet
 import org.supla.android.features.thermostatdetail.history.HistoryDetailViewState
 import org.supla.android.features.thermostatdetail.history.data.ChartDataAggregation
@@ -101,7 +102,8 @@ fun HistoryDetail(viewModel: HistoryDetailProxy) {
 
     ThermostatChart(
       data = viewState.combinedData(LocalContext.current.resources),
-      range = viewState.ranges?.selected,
+      rangeStart = viewState.range?.start?.toTimestamp()?.toFloat(),
+      rangeEnd = viewState.range?.end?.toTimestamp()?.toFloat(),
       emptyChartMessage = viewState.emptyChartMessage(LocalContext.current),
       modifier = Modifier
         .weight(1f)

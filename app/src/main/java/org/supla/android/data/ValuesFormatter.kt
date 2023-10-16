@@ -99,9 +99,9 @@ class ValuesFormatter @Inject constructor(
   }
 
   @SuppressLint("SimpleDateFormat")
-  fun getDateString(date: Date?): String? =
+  fun getHourString(date: Date?): String? =
     date?.let {
-      val formatter = SimpleDateFormat("dd.MM.yyyy")
+      val formatter = SimpleDateFormat("HH:mm")
       formatter.format(it)
     }
 
@@ -113,9 +113,30 @@ class ValuesFormatter @Inject constructor(
     }
 
   @SuppressLint("SimpleDateFormat")
-  fun getHourString(date: Date?): String? =
+  fun getDateString(date: Date?): String? =
     date?.let {
-      val formatter = SimpleDateFormat("HH:mm")
+      val formatter = SimpleDateFormat("dd.MM.yyyy")
+      formatter.format(it)
+    }
+
+  @SuppressLint("SimpleDateFormat")
+  fun getFullDateString(date: Date?): String? =
+    date?.let {
+      val formatter = SimpleDateFormat("dd.MM.yyyy HH:mm")
+      formatter.format(it)
+    }
+
+  @SuppressLint("SimpleDateFormat")
+  fun getDayHourDateString(date: Date?): String? =
+    date?.let {
+      val formatter = SimpleDateFormat("EEEE HH:mm")
+      formatter.format(it)
+    }
+
+  @SuppressLint("SimpleDateFormat")
+  fun getDayAndHourDateString(date: Date?): String? =
+    date?.let {
+      val formatter = SimpleDateFormat("dd MMM HH:mm")
       formatter.format(it)
     }
 

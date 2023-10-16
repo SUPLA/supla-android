@@ -173,10 +173,10 @@
     <string name="consumption_acording_to_phases">Расход по фазе</string>
     <string name="temperature">Температура</string>
     <string name="humidity">Влажность</string>
-    <string name="last24hours">Последние 24 часа</string>
-    <string name="last7days">Последние 7 дней</string>
-    <string name="last30days">Последние 30 дней</string>
-    <string name="last90days">Последние 90 дней</string>
+    <string name="history_range_last_day">Последние 24 часа</string>
+    <string name="history_range_last_week">Последние 7 дней</string>
+    <string name="history_range_last_30_days">Последние 30 дней</string>
+    <string name="history_range_last_90_days">Последние 90 дней</string>
     <string name="all_available_history">Вся доступная история</string>
     <string name="retrieving_data_from_the_server">Загрузка данных с сервера ...</string>
     <string name="no_chart_data_available">Нет данных для графика.</string>
