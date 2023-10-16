@@ -149,11 +149,19 @@ class LoadChannelWithChildrenMeasurementsUseCase @Inject constructor(
     measurements: List<TemperatureAndHumidityLogEntity>,
     aggregation: ChartDataAggregation
   ): List<AggregatedEntity> {
-    return measurements.groupBy { item -> item.date.toTimestamp().div(aggregation.timeInSec) }
+    if (aggregation == ChartDataAggregation.MINUTES) {
+      return measurements
+        .filter { it.temperature != null }
+        .map { AggregatedEntity(it.date.toTimestamp(), it.humidity!!) }
+    }
+
+    return measurements
+      .filter { it.humidity != null }
+      .groupBy { item -> item.date.toTimestamp().div(aggregation.timeInSec) }
       .map { group ->
         AggregatedEntity(
-          group.key,
-          group.value.filter { it.humidity != null }.map { it.humidity!! }.average().toFloat()
+          group.key.times(aggregation.timeInSec),
+          group.value.map { it.humidity!! }.average().toFloat()
         )
       }
   }

@@ -249,7 +249,8 @@ private fun BottomPagination(viewState: HistoryDetailViewState, viewModel: Histo
   viewState.rangeText(LocalContext.current)?.let {
     Row(
       verticalAlignment = Alignment.CenterVertically,
-      horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.distance_small))
+      horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.distance_small)),
+      modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.distance_tiny))
     ) {
       Spacer(modifier = Modifier.weight(1f))
       PaginationIcon(onClick = { viewModel.moveRangeLeft() }, modifier = Modifier.rotate(180f))

@@ -29,10 +29,13 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.R
 import org.supla.android.core.infrastructure.DateProvider
+import org.supla.android.core.storage.TemperatureChartState
+import org.supla.android.core.storage.UserStateHolder
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.BitmapProvider
 import org.supla.android.core.ui.StringProvider
@@ -59,6 +62,7 @@ import org.supla.android.features.thermostatdetail.history.data.ChartRange
 import org.supla.android.features.thermostatdetail.history.data.DateRange
 import org.supla.android.features.thermostatdetail.history.data.SelectableList
 import org.supla.android.features.thermostatdetail.history.ui.HistoryDetailProxy
+import org.supla.android.profile.ProfileManager
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.ChannelWithChildren
 import org.supla.android.usecases.channel.DownloadChannelMeasurementsUseCase
@@ -72,22 +76,12 @@ class HistoryDetailViewModel @Inject constructor(
   private val downloadChannelMeasurementsUseCase: DownloadChannelMeasurementsUseCase,
   private val readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
   private val loadChannelWithChildrenMeasurementsUseCase: LoadChannelWithChildrenMeasurementsUseCase,
-  private val dateProvider: DateProvider,
   private val downloadEventsManager: DownloadEventsManager,
+  private val profileManager: ProfileManager,
+  private val userStateHolder: UserStateHolder,
+  private val dateProvider: DateProvider,
   schedulers: SuplaSchedulers
 ) : BaseViewModel<HistoryDetailViewState, HistoryDetailViewEvent>(HistoryDetailViewState(), schedulers), HistoryDetailProxy {
-
-  override fun onViewCreated() {
-    val selectedRange = ChartRange.LAST_DAY
-    val currentDate = dateProvider.currentDate()
-    updateState { state ->
-      state.copy(
-        ranges = SelectableList(selectedRange, ChartRange.values().toList()),
-        aggregations = aggregations(state, selectedRange),
-        range = DateRange(currentDate.shift(-1), currentDate)
-      )
-    }
-  }
 
   fun loadData(remoteId: Int) {
     triggerDataLoad(remoteId)
@@ -162,14 +156,18 @@ class HistoryDetailViewModel @Inject constructor(
         triggerMeasurementsLoad(it)
       }
     }
+
+    updateUserState()
   }
 
   override fun moveRangeLeft() {
     shiftByRange(forward = false)
+    updateUserState()
   }
 
   override fun moveRangeRight() {
     shiftByRange(forward = true)
+    updateUserState()
   }
 
   override fun changeAggregation(aggregation: ChartDataAggregation) {
@@ -178,6 +176,7 @@ class HistoryDetailViewModel @Inject constructor(
         triggerMeasurementsLoad(it)
       }
     }
+    updateUserState()
   }
 
   private fun shiftByRange(forward: Boolean) {
@@ -188,10 +187,15 @@ class HistoryDetailViewModel @Inject constructor(
   }
 
   private fun triggerDataLoad(remoteId: Int) {
-    readChannelWithChildrenUseCase(remoteId)
+    Maybe.zip(
+      readChannelWithChildrenUseCase(remoteId),
+      profileManager.getCurrentProfile().map { userStateHolder.getTemperatureChartState(it.id, remoteId) },
+    ) { first, second ->
+      Pair(first, second)
+    }
       .attachSilent()
       .subscribeBy(
-        onSuccess = { handleData(it) },
+        onSuccess = { handleData(it.first, it.second) },
         onError = defaultErrorHandler("triggerDataLoad")
       )
       .disposeBySelf()
@@ -211,7 +215,20 @@ class HistoryDetailViewModel @Inject constructor(
       .disposeBySelf()
   }
 
-  private fun handleData(channel: ChannelWithChildren) {
+  private fun handleData(channel: ChannelWithChildren, chartState: TemperatureChartState) {
+    val selectedRange = chartState.chartRange
+    val dateRange = chartState.dateRange
+    val currentDate = dateProvider.currentDate()
+
+    updateState { state ->
+      state.copy(
+        profileId = channel.channel.profileId,
+        ranges = SelectableList(selectedRange, ChartRange.values().toList()),
+        aggregations = aggregations(state, selectedRange, chartState.aggregation),
+        range = dateRange ?: DateRange(currentDate.shift(-selectedRange.roundedDaysCount), currentDate)
+      )
+    }
+
     configureDownloadObserver(channel)
     startInitialDataLoad(channel)
   }
@@ -313,7 +330,8 @@ class HistoryDetailViewModel @Inject constructor(
 
   private fun aggregations(
     state: HistoryDetailViewState,
-    currentRange: ChartRange
+    currentRange: ChartRange,
+    selectedAggregation: ChartDataAggregation = ChartDataAggregation.MINUTES
   ): SelectableList<ChartDataAggregation> {
     val maxAggregation = currentRange.maxAggregation.let {
       if (it == null) { // It's custom state, calculate days difference
@@ -331,7 +349,7 @@ class HistoryDetailViewModel @Inject constructor(
     } ?: ChartDataAggregation.YEARS
 
     val newAggregations = SelectableList(
-      selected = state.aggregations?.selected ?: ChartDataAggregation.MINUTES,
+      selected = state.aggregations?.selected ?: selectedAggregation,
       items = ChartDataAggregation.values().filter { it.timeInSec <= maxAggregation.timeInSec }
     )
     if (!newAggregations.items.contains(newAggregations.selected)) {
@@ -340,12 +358,26 @@ class HistoryDetailViewModel @Inject constructor(
 
     return newAggregations
   }
+
+  private fun updateUserState() {
+    val state = currentState()
+    val (aggregation) = guardLet(state.aggregations?.selected) { return }
+    val (chartRange) = guardLet(state.ranges?.selected) { return }
+    val (dateRange) = guardLet(state.range) { return }
+
+    userStateHolder.setTemperatureChartState(
+      state = TemperatureChartState(aggregation, chartRange, dateRange),
+      profileId = state.profileId,
+      remoteId = state.remoteId
+    )
+  }
 }
 
 sealed class HistoryDetailViewEvent : ViewEvent
 
 data class HistoryDetailViewState(
   val remoteId: Int = 0,
+  val profileId: Long = 0,
   val downloadConfigured: Boolean = false,
   val initialLoadStarted: Boolean = false,
   val sets: List<HistoryDataSet> = emptyList(),
