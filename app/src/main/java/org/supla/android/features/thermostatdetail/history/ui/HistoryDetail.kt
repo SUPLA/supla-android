@@ -89,6 +89,7 @@ interface HistoryDetailProxy : BaseViewProxy<HistoryDetailViewState> {
   fun changeAggregation(aggregation: ChartDataAggregation) {}
   fun moveRangeLeft() {}
   fun moveRangeRight() {}
+  fun restoreDefaultRange() {}
 }
 
 @Composable
@@ -167,9 +168,17 @@ private fun FiltersRow(viewState: HistoryDetailViewState, viewModel: HistoryDeta
       options = viewState.aggregationsMap(LocalContext.current.resources),
       onOptionSelected = { viewModel.changeAggregation(it) },
       selectedOption = viewState.aggregations?.selected,
-      modifier = Modifier
-        .padding(end = dimensionResource(id = R.dimen.distance_default))
     )
+    IconButton(
+      onClick = { viewModel.restoreDefaultRange() },
+      modifier = Modifier.padding(end = dimensionResource(id = R.dimen.distance_small))
+    ) {
+      Icon(
+        painter = painterResource(id = R.drawable.ic_restore),
+        contentDescription = null,
+        tint = MaterialTheme.colors.onBackground
+      )
+    }
   }
 
 @Composable

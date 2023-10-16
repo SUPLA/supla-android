@@ -179,6 +179,23 @@ class HistoryDetailViewModel @Inject constructor(
     updateUserState()
   }
 
+  override fun restoreDefaultRange() {
+    val default = TemperatureChartState.default()
+    val currentDate = dateProvider.currentDate()
+
+    updateState { state ->
+      state.copy(
+        ranges = state.ranges?.copy(selected = default.chartRange),
+        aggregations = aggregations(state, default.chartRange).copy(selected = default.aggregation),
+        range = DateRange(currentDate.shift(-default.chartRange.roundedDaysCount), currentDate)
+      ).also {
+        triggerMeasurementsLoad(it)
+      }
+    }
+
+    updateUserState()
+  }
+
   private fun shiftByRange(forward: Boolean) {
     updateState { state ->
       val (range) = guardLet(state.ranges?.selected) { return@updateState state }
