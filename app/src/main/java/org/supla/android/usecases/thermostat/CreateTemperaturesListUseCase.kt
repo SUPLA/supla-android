@@ -17,6 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import org.supla.android.data.ValuesFormatter
 import org.supla.android.db.Channel
 import org.supla.android.db.ChannelBase
 import org.supla.android.extensions.valuesFormatter
@@ -49,12 +50,24 @@ private fun Channel.toTemperatureValue(): MeasurementValue =
   MeasurementValue(
     remoteId = remoteId,
     iconProvider = { ImageCache.getBitmap(it, imageIdx) },
-    valueStringProvider = { it.valuesFormatter.getTemperatureString(value.getTemp(func)) }
+    valueStringProvider = {
+      if (value.onLine) {
+        it.valuesFormatter.getTemperatureString(value.getTemp(func))
+      } else {
+        ValuesFormatter.NO_VALUE_TEXT
+      }
+    }
   )
 
 private fun Channel.toHumidityValue(): MeasurementValue =
   MeasurementValue(
     remoteId = remoteId,
     iconProvider = { ImageCache.getBitmap(it, getImageIdx(ChannelBase.WhichOne.Second)) },
-    valueStringProvider = { it.valuesFormatter.getHumidityString(value.humidity) }
+    valueStringProvider = {
+      if (value.onLine) {
+        it.valuesFormatter.getHumidityString(value.humidity)
+      } else {
+        ValuesFormatter.NO_VALUE_TEXT
+      }
+    }
   )

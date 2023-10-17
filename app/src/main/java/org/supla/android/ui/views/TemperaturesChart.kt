@@ -1,6 +1,7 @@
 package org.supla.android.ui.views
 
 import android.graphics.drawable.ColorDrawable
+import android.view.MotionEvent
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -16,6 +17,8 @@ import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.CombinedData
 import com.github.mikephil.charting.formatter.ValueFormatter
+import com.github.mikephil.charting.listener.ChartTouchListener
+import com.github.mikephil.charting.listener.OnChartGestureListener
 import com.github.mikephil.charting.utils.ViewPortHandler
 import org.supla.android.R
 import org.supla.android.data.ValuesFormatter
@@ -24,7 +27,15 @@ import org.supla.android.ui.views.charts.ChartMarkerView
 import java.util.Date
 
 @Composable
-fun ThermostatChart(data: CombinedData?, rangeStart: Float?, rangeEnd: Float?, emptyChartMessage: String, modifier: Modifier = Modifier) {
+fun TemperaturesChart(
+  data: CombinedData?,
+  rangeStart: Float?,
+  rangeEnd: Float?,
+  emptyChartMessage: String,
+  scaleEvents: (Float, Float) -> Unit,
+  positionEvents: (Float, Float) -> Unit,
+  modifier: Modifier = Modifier
+) {
   val valuesFormatter = LocalContext.current.valuesFormatter
   val xAxisFormatter by remember { mutableStateOf(AxisXFormatter(valuesFormatter)) }
 
@@ -68,7 +79,7 @@ fun ThermostatChart(data: CombinedData?, rangeStart: Float?, rangeEnd: Float?, e
         it.axisRight.axisMinimum = 0f
         it.axisRight.axisMaximum = 100f
         it.description.isEnabled = false
-        it.onChartGestureListener
+        it.onChartGestureListener = ChartObserver(scaleEvents, positionEvents)
         it.setNoDataTextColor(colorBlack)
         it.marker = ChartMarkerView(context).apply { chartView = it }
         it.setDrawMarkers(true)
@@ -121,4 +132,28 @@ private class AxisXFormatter(
       }
     }
   }
+}
+
+private class ChartObserver(private val scaleEvents: (Float, Float) -> Unit, private val positionEvents: (Float, Float) -> Unit) :
+  OnChartGestureListener {
+  override fun onChartGestureStart(me: MotionEvent?, lastPerformedGesture: ChartTouchListener.ChartGesture?) {}
+
+  override fun onChartGestureEnd(me: MotionEvent?, lastPerformedGesture: ChartTouchListener.ChartGesture?) {}
+
+  override fun onChartLongPressed(me: MotionEvent?) {}
+
+  override fun onChartDoubleTapped(me: MotionEvent?) {}
+
+  override fun onChartSingleTapped(me: MotionEvent?) {}
+
+  override fun onChartFling(me1: MotionEvent?, me2: MotionEvent?, velocityX: Float, velocityY: Float) {}
+
+  override fun onChartScale(me: MotionEvent?, scaleX: Float, scaleY: Float) {
+    scaleEvents(scaleX, scaleY)
+  }
+
+  override fun onChartTranslate(me: MotionEvent?, dX: Float, dY: Float) {
+    positionEvents(dX, dY)
+  }
+
 }

@@ -1,4 +1,4 @@
-package org.supla.android.features.switchdetail
+package org.supla.android.features.thermometerdetail
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -26,14 +26,15 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.databinding.FragmentStandardDetailBinding
+import org.supla.android.db.Channel
 import org.supla.android.features.standarddetail.DetailPage
 import org.supla.android.features.standarddetail.StandardDetailFragment
 
 @AndroidEntryPoint
-class SwitchDetailFragment :
-  StandardDetailFragment<SwitchDetailViewState, SwitchDetailViewEvent>(R.layout.fragment_standard_detail) {
+class ThermometerDetailFragment :
+  StandardDetailFragment<ThermometerDetailViewState, ThermometerDetailViewEvent>(R.layout.fragment_standard_detail) {
 
-  override val viewModel: SwitchDetailViewModel by viewModels()
+  override val viewModel: ThermometerDetailViewModel by viewModels()
 
   private val binding by viewBinding(FragmentStandardDetailBinding::bind)
 
@@ -44,13 +45,15 @@ class SwitchDetailFragment :
   override val detailViewPager: ViewPager2
     get() = binding.detailViewPager
 
-  override fun isCloseEvent(event: SwitchDetailViewEvent) = event == SwitchDetailViewEvent.Close
+  override fun handleViewState(state: ThermometerDetailViewState) {
+    super.handleViewState(state)
 
-  override fun updateToolbarTitle(state: SwitchDetailViewState) {
-    state.channelBase?.let {
-      setToolbarTitle(it.getNotEmptyCaption(context))
+    (state.channelBase as? Channel)?.let { channel ->
+      setToolbarTitle(channel.getNotEmptyCaption(context))
     }
   }
+
+  override fun isCloseEvent(event: ThermometerDetailViewEvent) = event == ThermometerDetailViewEvent.Close
 
   companion object {
     fun bundle(remoteId: Int, itemType: ItemType, function: Int, pages: Array<DetailPage>) =

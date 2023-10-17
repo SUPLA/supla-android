@@ -1,4 +1,4 @@
-package org.supla.android.features.thermostatdetail.history.ui
+package org.supla.android.features.detailbase.history.ui
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import org.supla.android.R
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.core.ui.theme.calendarCaption
+import org.supla.android.data.model.chart.DateRange
 import org.supla.android.data.source.local.calendar.DayOfWeek
 import org.supla.android.extensions.dayOfMonth
 import org.supla.android.extensions.monthEnd
@@ -43,7 +44,6 @@ import org.supla.android.extensions.monthStart
 import org.supla.android.extensions.nextDay
 import org.supla.android.extensions.weekEnd
 import org.supla.android.extensions.weekStart
-import org.supla.android.features.thermostatdetail.history.data.DateRange
 import org.supla.android.ui.dialogs.Dialog
 import org.supla.android.ui.views.buttons.IconButton
 import java.util.Date

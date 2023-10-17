@@ -120,6 +120,13 @@ class ValuesFormatter @Inject constructor(
     }
 
   @SuppressLint("SimpleDateFormat")
+  fun getShortDateString(date: Date?): String? =
+    date?.let {
+      val formatter = SimpleDateFormat("dd.MM.yy")
+      formatter.format(it)
+    }
+
+  @SuppressLint("SimpleDateFormat")
   fun getFullDateString(date: Date?): String? =
     date?.let {
       val formatter = SimpleDateFormat("dd.MM.yyyy HH:mm")

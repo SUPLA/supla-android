@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterialApi::class)
 
-package org.supla.android.features.thermostatdetail.history.ui
+package org.supla.android.features.detailbase.history.ui
 /*
 Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -71,13 +71,13 @@ import kotlinx.coroutines.flow.StateFlow
 import org.supla.android.R
 import org.supla.android.core.ui.BaseViewProxy
 import org.supla.android.core.ui.theme.SuplaTheme
+import org.supla.android.data.model.chart.ChartDataAggregation
+import org.supla.android.data.model.chart.ChartRange
+import org.supla.android.data.model.chart.HistoryDataSet
 import org.supla.android.extensions.toTimestamp
-import org.supla.android.features.thermostatdetail.history.HistoryDataSet
-import org.supla.android.features.thermostatdetail.history.HistoryDetailViewState
-import org.supla.android.features.thermostatdetail.history.data.ChartDataAggregation
-import org.supla.android.features.thermostatdetail.history.data.ChartRange
+import org.supla.android.features.detailbase.history.HistoryDetailViewState
 import org.supla.android.ui.views.TextSpinner
-import org.supla.android.ui.views.ThermostatChart
+import org.supla.android.ui.views.TemperaturesChart
 import org.supla.android.ui.views.buttons.IconButton
 
 interface HistoryDetailProxy : BaseViewProxy<HistoryDetailViewState> {
@@ -89,6 +89,8 @@ interface HistoryDetailProxy : BaseViewProxy<HistoryDetailViewState> {
   fun moveRangeRight() {}
   fun moveToDataBegin() {}
   fun moveToDataEnd() {}
+  fun updateChartScale(scaleX: Float, scaleY:Float) {}
+  fun updateChartPosition(dx: Float, dy: Float) {}
 }
 
 @Composable
@@ -100,11 +102,13 @@ fun HistoryDetail(viewModel: HistoryDetailProxy) {
   ) {
     DataSetsAndFilters(viewState = viewState, viewModel = viewModel)
 
-    ThermostatChart(
+    TemperaturesChart(
       data = viewState.combinedData(LocalContext.current.resources),
       rangeStart = viewState.range?.start?.toTimestamp()?.toFloat(),
       rangeEnd = viewState.range?.end?.toTimestamp()?.toFloat(),
       emptyChartMessage = viewState.emptyChartMessage(LocalContext.current),
+      scaleEvents = viewModel::updateChartScale,
+      positionEvents = viewModel::updateChartPosition,
       modifier = Modifier
         .weight(1f)
         .padding(horizontal = dimensionResource(id = R.dimen.distance_default))

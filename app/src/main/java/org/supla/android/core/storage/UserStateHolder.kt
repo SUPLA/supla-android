@@ -20,10 +20,10 @@ package org.supla.android.core.storage
 import android.content.Context
 import com.google.gson.GsonBuilder
 import dagger.hilt.android.qualifiers.ApplicationContext
-import org.supla.android.features.thermostatdetail.history.HistoryDataSet
-import org.supla.android.features.thermostatdetail.history.data.ChartDataAggregation
-import org.supla.android.features.thermostatdetail.history.data.ChartRange
-import org.supla.android.features.thermostatdetail.history.data.DateRange
+import org.supla.android.data.model.chart.ChartDataAggregation
+import org.supla.android.data.model.chart.ChartRange
+import org.supla.android.data.model.chart.DateRange
+import org.supla.android.data.model.chart.HistoryDataSet
 import javax.inject.Inject
 import javax.inject.Singleton
 

@@ -614,6 +614,7 @@
     <string translatable="false" name="history_range_custom">Custom range</string>
     <string translatable="false" name="history_refreshing">Refreshing…</string>
     <string translatable="false" name="history_refreshing_failed">Refresh failed</string>
+    <string translatable="false" name="history_no_data_selected">No data set selected.</string>
 
     <plurals name="details_timer_info_on" translatable="false">
         <item quantity="other">on</item>

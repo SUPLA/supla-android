@@ -20,9 +20,28 @@ package org.supla.android.usecases.details
 import org.supla.android.db.Channel
 import org.supla.android.db.ChannelBase
 import org.supla.android.features.standarddetail.DetailPage
-import org.supla.android.lib.SuplaChannelValue
-import org.supla.android.lib.SuplaConst
+import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS
+import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DIMMER
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_IC_ELECTRICITY_METER
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_IC_GAS_METER
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_IC_HEAT_METER
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_IC_WATER_METER
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNEL_FLAG_COUNTDOWN_TIMER_SUPPORTED
 import java.io.Serializable
 import javax.inject.Inject
@@ -32,50 +51,48 @@ import javax.inject.Singleton
 class ProvideDetailTypeUseCase @Inject constructor() {
 
   operator fun invoke(channelBase: ChannelBase): DetailType? = when (channelBase.func) {
-    SuplaConst.SUPLA_CHANNELFNC_DIMMER,
-    SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING,
-    SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING ->
+    SUPLA_CHANNELFNC_DIMMER,
+    SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING,
+    SUPLA_CHANNELFNC_RGBLIGHTING ->
       LegacyDetailType.RGBW
 
-    SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER,
-    SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW ->
+    SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER,
+    SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW ->
       LegacyDetailType.RS
 
-    SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH,
-    SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH,
-    SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER -> {
+    SUPLA_CHANNELFNC_LIGHTSWITCH,
+    SUPLA_CHANNELFNC_POWERSWITCH,
+    SUPLA_CHANNELFNC_STAIRCASETIMER -> {
       SwitchDetailType(getSwitchDetailPages(channelBase))
     }
 
-    SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER ->
+    SUPLA_CHANNELFNC_ELECTRICITY_METER ->
       LegacyDetailType.EM
 
-    SuplaConst.SUPLA_CHANNELFNC_IC_ELECTRICITY_METER,
-    SuplaConst.SUPLA_CHANNELFNC_IC_GAS_METER,
-    SuplaConst.SUPLA_CHANNELFNC_IC_WATER_METER,
-    SuplaConst.SUPLA_CHANNELFNC_IC_HEAT_METER ->
+    SUPLA_CHANNELFNC_IC_ELECTRICITY_METER,
+    SUPLA_CHANNELFNC_IC_GAS_METER,
+    SUPLA_CHANNELFNC_IC_WATER_METER,
+    SUPLA_CHANNELFNC_IC_HEAT_METER ->
       LegacyDetailType.IC
 
-    SuplaConst.SUPLA_CHANNELFNC_THERMOMETER ->
-      LegacyDetailType.TEMPERATURE
+    SUPLA_CHANNELFNC_THERMOMETER,
+    SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE ->
+      ThermometerDetailType(listOf(DetailPage.THERMOMETER_HISTORY))
 
-    SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE ->
-      LegacyDetailType.TEMPERATURE_HUMIDITY
-
-    SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS ->
+    SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS ->
       LegacyDetailType.THERMOSTAT_HP
 
-    SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT,
+    SUPLA_CHANNELFNC_HVAC_THERMOSTAT,
 //    Temporarily commented out, because is not supported yet.
 //    SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO,
 //    SuplaConst.SUPLA_CHANNELFNC_HVAC_DRYER,
 //    SuplaConst.SUPLA_CHANNELFNC_HVAC_FAN,
 //    SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_DIFFERENTIAL,
-    SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER ->
+    SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER ->
       ThermostatDetailType(listOf(DetailPage.THERMOSTAT, DetailPage.SCHEDULE, DetailPage.THERMOSTAT_HISTORY))
 
-    SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL,
-    SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL ->
+    SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL,
+    SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL ->
       LegacyDetailType.DIGIGLASS
 
     else -> null
@@ -87,9 +104,9 @@ class ProvideDetailTypeUseCase @Inject constructor() {
       if (channelBase.flags.and(SUPLA_CHANNEL_FLAG_COUNTDOWN_TIMER_SUPPORTED) > 0 && channelBase.func != SUPLA_CHANNELFNC_STAIRCASETIMER) {
         list.add(DetailPage.TIMER)
       }
-      if (channelBase.value?.subValueType == SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS.toShort()) {
+      if (channelBase.value?.subValueType == SUBV_TYPE_IC_MEASUREMENTS.toShort()) {
         list.add(DetailPage.HISTORY_IC)
-      } else if (channelBase.value?.subValueType == SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort()) {
+      } else if (channelBase.value?.subValueType == SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort()) {
         list.add(DetailPage.HISTORY_EM)
       }
       list
@@ -117,5 +134,9 @@ data class SwitchDetailType(
 ) : DetailType
 
 data class ThermostatDetailType(
+  val pages: List<DetailPage>
+) : DetailType
+
+data class ThermometerDetailType(
   val pages: List<DetailPage>
 ) : DetailType

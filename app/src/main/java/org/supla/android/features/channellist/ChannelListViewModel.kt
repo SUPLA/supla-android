@@ -38,6 +38,7 @@ import org.supla.android.usecases.channel.*
 import org.supla.android.usecases.details.LegacyDetailType
 import org.supla.android.usecases.details.ProvideDetailTypeUseCase
 import org.supla.android.usecases.details.SwitchDetailType
+import org.supla.android.usecases.details.ThermometerDetailType
 import org.supla.android.usecases.details.ThermostatDetailType
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
@@ -153,6 +154,9 @@ class ChannelListViewModel @Inject constructor(
     when (val detailType = provideDetailTypeUseCase(channel)) {
       is SwitchDetailType -> sendEvent(ChannelListViewEvent.OpenSwitchDetail(channel.remoteId, channel.func, detailType.pages))
       is ThermostatDetailType -> sendEvent(ChannelListViewEvent.OpenThermostatDetail(channel.remoteId, channel.func, detailType.pages))
+      is ThermometerDetailType -> sendEvent(
+        ChannelListViewEvent.OpenThermometerDetailType(channel.remoteId, channel.func, detailType.pages)
+      )
       is LegacyDetailType -> sendEvent(ChannelListViewEvent.OpenLegacyDetails(channel.channelId, detailType))
       else -> {} // no action
     }
@@ -191,6 +195,7 @@ sealed class ChannelListViewEvent : ViewEvent {
   data class OpenLegacyDetails(val remoteId: Int, val type: LegacyDetailType) : ChannelListViewEvent()
   data class OpenSwitchDetail(val remoteId: Int, val function: Int, val pages: List<DetailPage>) : ChannelListViewEvent()
   data class OpenThermostatDetail(val remoteId: Int, val function: Int, val pages: List<DetailPage>) : ChannelListViewEvent()
+  data class OpenThermometerDetailType(var remoteId: Int, val function: Int, val pages: List<DetailPage>) : ChannelListViewEvent()
   object OpenThermostatDetails : ChannelListViewEvent()
   object ReassignAdapter : ChannelListViewEvent()
 }

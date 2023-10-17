@@ -1,4 +1,4 @@
-package org.supla.android.features.thermostatdetail.history
+package org.supla.android.features.detailbase.history
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -19,22 +19,18 @@ package org.supla.android.features.thermostatdetail.history
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.os.bundleOf
-import androidx.fragment.app.viewModels
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
-import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
 import org.supla.android.core.ui.BaseFragment
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.databinding.FragmentComposeBinding
-import org.supla.android.features.thermostatdetail.history.ui.HistoryDetail
+import org.supla.android.features.detailbase.history.ui.HistoryDetail
 
 private const val ARG_REMOTE_ID = "ARG_REMOTE_ID"
 
-@AndroidEntryPoint
-class HistoryDetailFragment : BaseFragment<HistoryDetailViewState, HistoryDetailViewEvent>(R.layout.fragment_compose) {
+abstract class BaseHistoryDetailFragment : BaseFragment<HistoryDetailViewState, HistoryDetailViewEvent>(R.layout.fragment_compose) {
 
-  override val viewModel: HistoryDetailViewModel by viewModels()
+  abstract override val viewModel: BaseHistoryDetailViewModel
   private val binding by viewBinding(FragmentComposeBinding::bind)
 
   private val remoteId: Int by lazy { requireArguments().getInt(ARG_REMOTE_ID) }
@@ -54,9 +50,5 @@ class HistoryDetailFragment : BaseFragment<HistoryDetailViewState, HistoryDetail
   }
 
   override fun handleViewState(state: HistoryDetailViewState) {
-  }
-
-  companion object {
-    fun bundle(remoteId: Int) = bundleOf(ARG_REMOTE_ID to remoteId)
   }
 }

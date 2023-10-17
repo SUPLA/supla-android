@@ -66,16 +66,16 @@ abstract class BaseDownloadLogWorker<T : Measurement, U> constructor(
       .doOnSubscribe {
         downloadEventsManager.emitProgressState(remoteId, DownloadEventsManager.State.Started)
       }
+      .doOnNext {
+        downloadEventsManager.emitProgressState(
+          remoteId = remoteId,
+          state = DownloadEventsManager.State.InProgress(it)
+        )
+      }
       .blockingSubscribeBy(
-        onNext = {
-          downloadEventsManager.emitProgressState(
-            remoteId = remoteId,
-            state = DownloadEventsManager.State.InProgress(it)
-          )
-          result = Result.success()
-        },
         onComplete = {
           downloadEventsManager.emitProgressState(remoteId, DownloadEventsManager.State.Finished)
+          result = Result.success()
         },
         onError = {
           Trace.e(TAG, it.message, it)

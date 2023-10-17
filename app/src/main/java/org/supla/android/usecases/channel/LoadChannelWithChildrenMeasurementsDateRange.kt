@@ -18,13 +18,13 @@ package org.supla.android.usecases.channel
  */
 
 import io.reactivex.rxjava3.core.Maybe
+import org.supla.android.data.model.chart.DateRange
 import org.supla.android.data.source.TemperatureAndHumidityLogRepository
 import org.supla.android.data.source.TemperatureLogRepository
 import org.supla.android.db.Channel
 import org.supla.android.extensions.flatMapMerged
 import org.supla.android.extensions.hasMeasurements
 import org.supla.android.extensions.isHvacThermostat
-import org.supla.android.features.thermostatdetail.history.data.DateRange
 import org.supla.android.lib.SuplaConst
 import org.supla.android.profile.ProfileManager
 import java.util.Date
