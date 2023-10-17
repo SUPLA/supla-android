@@ -64,8 +64,8 @@ import org.supla.android.core.ui.StringProvider
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.source.local.temperature.TemperatureCorrection
 import org.supla.android.events.LoadingTimeoutManager
+import org.supla.android.features.thermostatdetail.thermostatgeneral.MeasurementValue
 import org.supla.android.features.thermostatdetail.thermostatgeneral.ThermostatGeneralViewState
-import org.supla.android.features.thermostatdetail.thermostatgeneral.ThermostatTemperature
 import org.supla.android.features.thermostatdetail.thermostatgeneral.data.ThermostatIssueItem
 import org.supla.android.features.thermostatdetail.thermostatgeneral.data.ThermostatProgramInfo
 import org.supla.android.features.thermostatdetail.ui.ThermometersValues
@@ -449,7 +449,11 @@ private class PreviewProxy(private var initialState: ThermostatGeneralViewState 
       value = initialState.copy(
         loadingState = LoadingTimeoutManager.LoadingState(loading = false),
         temperatures = listOf(
-          ThermostatTemperature(123, { ResourcesCompat.getDrawable(it.resources, R.drawable.thermometer, null)!!.toBitmap() }, "12.3")
+          MeasurementValue(
+            remoteId = 123,
+            iconProvider = { ResourcesCompat.getDrawable(it.resources, R.drawable.thermometer, null)!!.toBitmap() },
+            valueStringProvider = { "12.3" }
+          )
         )
       )
     )

@@ -17,8 +17,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import android.content.Context
-import android.graphics.Bitmap
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -29,6 +27,7 @@ import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.networking.suplaclient.DelayableState
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.ui.BaseViewModel
+import org.supla.android.core.ui.BitmapProvider
 import org.supla.android.core.ui.StringProvider
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
@@ -145,7 +144,7 @@ class ThermostatGeneralViewModel @Inject constructor(
   fun loadTemperature(remoteId: Int) {
     val state = currentState()
 
-    if (state.temperatures.firstOrNull { it.thermometerRemoteId == remoteId } != null) {
+    if (state.temperatures.firstOrNull { it.remoteId == remoteId } != null) {
       state.viewModelState?.remoteId?.let { triggerDataLoad(it) }
     }
   }
@@ -566,7 +565,7 @@ class ThermostatGeneralViewModel @Inject constructor(
 
   private data class LoadedData(
     val channelWithChildren: ChannelWithChildren,
-    val temperatures: List<ThermostatTemperature>,
+    val temperatures: List<MeasurementValue>,
     val config: SuplaChannelHvacConfig,
     val weeklySchedule: SuplaChannelWeeklyScheduleConfig
   )
@@ -577,7 +576,7 @@ sealed class ThermostatGeneralViewEvent : ViewEvent
 data class ThermostatGeneralViewState(
   val viewModelState: ThermostatGeneralViewModelState? = null,
 
-  val temperatures: List<ThermostatTemperature> = emptyList(),
+  val temperatures: List<MeasurementValue> = emptyList(),
 
   val isOffline: Boolean = false,
   val isOff: Boolean = false,
@@ -673,10 +672,10 @@ data class ThermostatGeneralViewState(
     }
 }
 
-data class ThermostatTemperature(
-  val thermometerRemoteId: Int,
-  val iconProvider: (context: Context) -> Bitmap,
-  val temperature: String
+data class MeasurementValue(
+  val remoteId: Int,
+  val iconProvider: BitmapProvider,
+  val valueStringProvider: StringProvider
 )
 
 data class ThermostatGeneralViewModelState(

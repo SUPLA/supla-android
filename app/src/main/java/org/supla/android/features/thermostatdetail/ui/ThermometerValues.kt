@@ -23,13 +23,12 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -44,10 +43,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.AbstractComposeView
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
 import org.supla.android.core.ui.theme.SuplaTheme
-import org.supla.android.features.thermostatdetail.thermostatgeneral.ThermostatTemperature
+import org.supla.android.features.thermostatdetail.thermostatgeneral.MeasurementValue
 
 class ThermometersValues @JvmOverloads constructor(
   context: Context,
@@ -55,7 +55,7 @@ class ThermometersValues @JvmOverloads constructor(
   defStyleAttr: Int = 0
 ) : AbstractComposeView(context, attrs, defStyleAttr) {
 
-  private var temperatures: List<ThermostatTemperature> by mutableStateOf(emptyList())
+  private var temperatures: List<MeasurementValue> by mutableStateOf(emptyList())
 
   @Composable
   override fun Content() {
@@ -66,27 +66,32 @@ class ThermometersValues @JvmOverloads constructor(
 }
 
 @Composable
-fun ThermometersValues(temperatures: List<ThermostatTemperature>) {
+fun ThermometersValues(temperatures: List<MeasurementValue>) {
   val weight = 1f / temperatures.size
-  Column(modifier = Modifier.background(color = MaterialTheme.colors.background)) {
-    Row(horizontalArrangement = Arrangement.spacedBy(2.dp)) {
-      temperatures.forEach { ThermometerCell(temperature = it, weight = weight) }
-      if (temperatures.size == 1) {
-        Box(
-          modifier = Modifier
-            .background(MaterialTheme.colors.surface)
-            .height(80.dp)
-            .padding(top = dimensionResource(id = R.dimen.distance_small))
-            .weight(weight)
-        )
-      }
+  Row(
+    modifier = Modifier
+      .background(color = MaterialTheme.colors.surface)
+      .padding(start = dimensionResource(id = R.dimen.distance_small), end = dimensionResource(id = R.dimen.distance_default)),
+    horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.distance_tiny))
+  ) {
+    temperatures.forEach {
+      TemperatureAndHumidityCell(temperature = it, weight = weight, small = temperatures.size > 3)
+    }
+    if (temperatures.size == 1) {
+      Box(
+        modifier = Modifier
+          .background(MaterialTheme.colors.surface)
+          .height(if (temperatures.size > 3) 56.dp else 68.dp)
+          .padding(top = dimensionResource(id = R.dimen.distance_small))
+          .weight(weight)
+      )
     }
   }
 }
 
 context(RowScope)
 @Composable
-private fun ThermometerCell(temperature: ThermostatTemperature, weight: Float) =
+private fun TemperatureAndHumidityCell(temperature: MeasurementValue, weight: Float, small: Boolean) =
   Row(
     modifier = Modifier
       .background(MaterialTheme.colors.surface)
@@ -96,17 +101,21 @@ private fun ThermometerCell(temperature: ThermostatTemperature, weight: Float) =
     horizontalArrangement = Arrangement.spacedBy(8.dp)
   ) {
     Spacer(modifier = Modifier.weight(1f))
-    ThermometerIcon(icon = temperature.iconProvider(LocalContext.current).asImageBitmap())
-    Text(text = temperature.temperature, style = MaterialTheme.typography.h5)
+    ThermometerIcon(
+      icon = temperature.iconProvider(LocalContext.current).asImageBitmap(),
+      size = if (small) 24.dp else 36.dp
+    )
+    Text(
+      text = temperature.valueStringProvider(LocalContext.current),
+      style = if (small) MaterialTheme.typography.body1 else MaterialTheme.typography.h5
+    )
     Spacer(modifier = Modifier.weight(1f))
   }
 
 @Composable
-private fun ThermometerIcon(icon: ImageBitmap) = Image(
+private fun ThermometerIcon(icon: ImageBitmap, size: Dp = 48.dp) = Image(
   bitmap = icon,
   contentDescription = "",
-  modifier = Modifier
-    .width(48.dp)
-    .height(48.dp),
+  modifier = Modifier.size(size),
   contentScale = ContentScale.Inside
 )
