@@ -43,8 +43,6 @@ import androidx.compose.material.Button
 import androidx.compose.material.ButtonColors
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
@@ -55,17 +53,16 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -81,6 +78,7 @@ import org.supla.android.features.thermostatdetail.history.data.ChartDataAggrega
 import org.supla.android.features.thermostatdetail.history.data.ChartRange
 import org.supla.android.ui.views.TextSpinner
 import org.supla.android.ui.views.ThermostatChart
+import org.supla.android.ui.views.buttons.IconButton
 
 interface HistoryDetailProxy : BaseViewProxy<HistoryDetailViewState> {
   fun refresh() {}
@@ -89,7 +87,8 @@ interface HistoryDetailProxy : BaseViewProxy<HistoryDetailViewState> {
   fun changeAggregation(aggregation: ChartDataAggregation) {}
   fun moveRangeLeft() {}
   fun moveRangeRight() {}
-  fun restoreDefaultRange() {}
+  fun moveToDataBegin() {}
+  fun moveToDataEnd() {}
 }
 
 @Composable
@@ -111,7 +110,15 @@ fun HistoryDetail(viewModel: HistoryDetailProxy) {
         .padding(horizontal = dimensionResource(id = R.dimen.distance_default))
     )
 
-    BottomPagination(viewState = viewState, viewModel = viewModel)
+    if (viewState.showBottomNavigation) {
+      BottomPagination(viewState = viewState, viewModel = viewModel)
+    } else {
+      Spacer(
+        modifier = Modifier
+          .fillMaxWidth()
+          .height(96.dp)
+      )
+    }
   }
 }
 
@@ -168,17 +175,9 @@ private fun FiltersRow(viewState: HistoryDetailViewState, viewModel: HistoryDeta
       options = viewState.aggregationsMap(LocalContext.current.resources),
       onOptionSelected = { viewModel.changeAggregation(it) },
       selectedOption = viewState.aggregations?.selected,
+      modifier = Modifier
+        .padding(end = dimensionResource(id = R.dimen.distance_default))
     )
-    IconButton(
-      onClick = { viewModel.restoreDefaultRange() },
-      modifier = Modifier.padding(end = dimensionResource(id = R.dimen.distance_small))
-    ) {
-      Icon(
-        painter = painterResource(id = R.drawable.ic_restore),
-        contentDescription = null,
-        tint = MaterialTheme.colors.onBackground
-      )
-    }
   }
 
 @Composable
@@ -258,27 +257,50 @@ private fun BottomPagination(viewState: HistoryDetailViewState, viewModel: Histo
   viewState.rangeText(LocalContext.current)?.let {
     Row(
       verticalAlignment = Alignment.CenterVertically,
-      horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.distance_small)),
-      modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.distance_tiny))
+      horizontalArrangement = Arrangement.spacedBy(0.dp),
+      modifier = Modifier.padding(
+        vertical = dimensionResource(id = R.dimen.distance_default),
+        horizontal = dimensionResource(id = R.dimen.distance_tiny)
+      )
     ) {
-      Spacer(modifier = Modifier.weight(1f))
-      PaginationIcon(onClick = { viewModel.moveRangeLeft() }, modifier = Modifier.rotate(180f))
-      Text(text = it, style = MaterialTheme.typography.subtitle2)
-      PaginationIcon(onClick = { viewModel.moveRangeRight() }, enabled = viewState.shiftRightEnabled)
-      Spacer(modifier = Modifier.weight(1f))
+      PaginationIcon(
+        onClick = { viewModel.moveToDataBegin() },
+        icon = R.drawable.ic_double_arrow_right,
+        enabled = viewState.shiftLeftEnabled,
+        rotate = true
+      )
+      PaginationIcon(
+        onClick = { viewModel.moveRangeLeft() },
+        enabled = viewState.shiftLeftEnabled,
+        rotate = true
+      )
+      Text(
+        text = it,
+        style = MaterialTheme.typography.caption,
+        textAlign = TextAlign.Center,
+        modifier = Modifier.weight(1f)
+      )
+      PaginationIcon(
+        onClick = { viewModel.moveRangeRight() },
+        enabled = viewState.shiftRightEnabled
+      )
+      PaginationIcon(
+        onClick = { viewModel.moveToDataEnd() },
+        enabled = viewState.shiftRightEnabled,
+        icon = R.drawable.ic_double_arrow_right
+      )
     }
   }
 
 @Composable
-private fun PaginationIcon(onClick: () -> Unit, modifier: Modifier = Modifier, enabled: Boolean = true) =
-  IconButton(onClick = onClick, enabled = enabled) {
-    Icon(
-      painter = painterResource(id = R.drawable.chevron_right),
-      contentDescription = null,
-      modifier = modifier,
-      tint = if (enabled) MaterialTheme.colors.primary else colorResource(id = R.color.disabled)
-    )
-  }
+private fun PaginationIcon(
+  onClick: () -> Unit,
+  modifier: Modifier = Modifier,
+  icon: Int = R.drawable.ic_arrow_right,
+  enabled: Boolean = true,
+  rotate: Boolean = false
+) =
+  IconButton(icon = icon, onClick = onClick, modifier = modifier, enabled = enabled, rotate = rotate)
 
 @Preview
 @Composable

@@ -25,5 +25,8 @@ enum class ChartDataAggregation(@StringRes val stringRes: Int, val timeInSec: Lo
   HOURS(R.string.hours, 3600),
   DAYS(R.string.days, 86400),
   MONTHS(R.string.months, 2592000),
-  YEARS(R.string.years, 946080000)
+  YEARS(R.string.years, 946080000);
+
+  fun between(min: ChartDataAggregation, max: ChartDataAggregation): Boolean =
+    timeInSec >= min.timeInSec && timeInSec <= max.timeInSec
 }

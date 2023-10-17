@@ -21,9 +21,21 @@ import java.util.Calendar
 import java.util.Date
 import java.util.GregorianCalendar
 
+val Date.dayOfMonth: Int
+  get() = Calendar.getInstance().let {
+    it.time = this
+    it.get(Calendar.DAY_OF_MONTH)
+  }
+
 fun Date.dayStart(): Date = startOfDay(this).time
 
 fun Date.dayEnd(): Date = endOfDay(this).time
+
+fun Date.nextDay(): Date =
+  startOfDay(this).let {
+    it.set(Calendar.DAY_OF_YEAR, it.get(Calendar.DAY_OF_YEAR) + 1)
+    it.time
+  }
 
 fun Date.weekStart(): Date =
   startOfDay(this).let {

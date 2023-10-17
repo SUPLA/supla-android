@@ -23,7 +23,6 @@ import org.supla.android.extensions.valuesFormatter
 import org.supla.android.ui.views.charts.ChartMarkerView
 import java.util.Date
 
-
 @Composable
 fun ThermostatChart(data: CombinedData?, rangeStart: Float?, rangeEnd: Float?, emptyChartMessage: String, modifier: Modifier = Modifier) {
   val valuesFormatter = LocalContext.current.valuesFormatter

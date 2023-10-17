@@ -38,6 +38,21 @@ data class DateRange(
   val daysCount: Int
     get() = (end.time - start.time).div(DAY_IN_MILLIS).toInt()
 
+  val minAggregation: ChartDataAggregation
+    get() = when {
+      daysCount <= 31 -> ChartDataAggregation.MINUTES
+      daysCount <= 92 -> ChartDataAggregation.HOURS
+      else -> ChartDataAggregation.DAYS
+    }
+
+  val maxAggregation: ChartDataAggregation
+    get() = when {
+      daysCount <= 1 -> ChartDataAggregation.HOURS
+      daysCount <= 31 -> ChartDataAggregation.DAYS
+      daysCount <= 420 -> ChartDataAggregation.MONTHS
+      else -> ChartDataAggregation.YEARS
+    }
+
   fun shift(range: ChartRange, forward: Boolean): DateRange =
     when (range) {
       ChartRange.LAST_DAY,

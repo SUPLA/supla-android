@@ -40,11 +40,11 @@ abstract class BaseMeasurementRepository<T : Measurement, U>(
 
   protected abstract fun getMeasurements(cloudService: SuplaCloudService, remoteId: Int, afterTimestamp: Long): Observable<List<T>>
 
-  protected abstract fun findMinTimestamp(remoteId: Int, profileId: Long): Maybe<Long>
-
-  protected abstract fun findMaxTimestamp(remoteId: Int, profileId: Long): Maybe<Long>
-
   protected abstract fun map(entry: T, remoteId: Int, profileId: Long): U
+
+  abstract fun findMinTimestamp(remoteId: Int, profileId: Long): Maybe<Long>
+
+  abstract fun findMaxTimestamp(remoteId: Int, profileId: Long): Maybe<Long>
 
   abstract fun delete(remoteId: Int, profileId: Long): Completable
 

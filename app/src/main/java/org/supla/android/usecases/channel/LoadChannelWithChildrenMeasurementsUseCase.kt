@@ -41,7 +41,6 @@ import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
 
-
 private const val MAX_ALLOWED_DISTANCE_MULTIPLIER = 1.5f
 
 // Server provides data for each 10 minutes
@@ -105,7 +104,7 @@ class LoadChannelWithChildrenMeasurementsUseCase @Inject constructor(
                     aggregation,
                     aggregatingTemperature(measurements, aggregation)
                   ),
-                  historyDataSet(it, ChartEntryType.HUMIDITY, secondColor, aggregation, aggregatingHumidity(measurements, aggregation)),
+                  historyDataSet(it, ChartEntryType.HUMIDITY, secondColor, aggregation, aggregatingHumidity(measurements, aggregation))
                 )
               }
           )

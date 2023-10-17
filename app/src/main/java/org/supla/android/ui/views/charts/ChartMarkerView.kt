@@ -28,7 +28,7 @@ import org.supla.android.R
 import org.supla.android.data.model.chart.ChartEntryType
 import org.supla.android.extensions.toPx
 import org.supla.android.extensions.valuesFormatter
-import java.util.Date
+import org.supla.android.extensions.xAsDate
 
 class ChartMarkerView(context: Context) : MarkerView(context, R.layout.view_chart_marker) {
 
@@ -39,7 +39,7 @@ class ChartMarkerView(context: Context) : MarkerView(context, R.layout.view_char
     super.refreshContent(entry, highlight)
 
     entry?.let {
-      title.text = context.valuesFormatter.getFullDateString(Date(it.x.times(1000).toLong()))
+      title.text = context.valuesFormatter.getFullDateString(it.xAsDate)
       (it.data as? ChartEntryType)?.let { type ->
         text.text = when (type) {
           ChartEntryType.TEMPERATURE -> context.valuesFormatter.getTemperatureString(it.y)

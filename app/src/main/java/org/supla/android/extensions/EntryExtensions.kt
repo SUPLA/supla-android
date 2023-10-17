@@ -1,4 +1,4 @@
-package org.supla.android.ui.views.buttons
+package org.supla.android.extensions
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,18 +17,11 @@ package org.supla.android.ui.views.buttons
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
-import org.supla.android.R
+import com.github.mikephil.charting.data.Entry
+import java.util.Date
 
-@Composable
-fun PlusIconButton(disabled: Boolean, onClick: () -> Unit) {
-  IconButtonFilled(
-    icon = R.drawable.ic_plus,
-    iconTint = Color.White,
-    disabled = disabled,
-    enabledColor = colorResource(id = R.color.primary),
-    onClick = { if (disabled.not()) onClick() }
-  )
-}
+val Entry.xAsDate
+  get() = Date(x.toLong().times(1000))
+
+val Entry.xAsTime
+  get() = x.toLong().times(1000)
