@@ -166,10 +166,10 @@
     <string name="consumption_acording_to_phases">Verbrauch nach Phase</string>
     <string name="temperature">Temperatur</string>
     <string name="humidity">Feuchtigkeit</string>
-    <string name="last24hours">Letzte 24 Stunden</string>
-    <string name="last7days">Die letzten 7 Tage</string>
-    <string name="last30days">Die letzten 30 Tage</string>
-    <string name="last90days">Die letzten 90 Tage</string>
+    <string name="history_range_last_day">Letzte 24 Stunden</string>
+    <string name="history_range_last_week">Die letzten 7 Tage</string>
+    <string name="history_range_last_30_days">Die letzten 30 Tage</string>
+    <string name="history_range_last_90_days">Die letzten 90 Tage</string>
     <string name="all_available_history">Gesamte verfügbare Geschichte</string>
     <string name="retrieving_data_from_the_server">Daten werden vom Server heruntergeladen...</string>
     <string name="no_chart_data_available">Keine Daten für das Diagramm in ausgewälte Zeitraum.</string>

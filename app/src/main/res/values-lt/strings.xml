@@ -147,10 +147,10 @@
     <string name="consumption_acording_to_phases">Suvartojimas pagal fazes</string>
     <string name="temperature">Temperatūra</string>
     <string name="humidity">Drėgmė</string>
-    <string name="last24hours">Pastarosios 24 valandos</string>
-    <string name="last7days">Pastarosios 7 dienos</string>
-    <string name="last30days">Pastarosios 30 dienų</string>
-    <string name="last90days">Pastarosios 90 dienų</string>
+    <string name="history_range_last_day">Pastarosios 24 valandos</string>
+    <string name="history_range_last_week">Pastarosios 7 dienos</string>
+    <string name="history_range_last_30_days">Pastarosios 30 dienų</string>
+    <string name="history_range_last_90_days">Pastarosios 90 dienų</string>
     <string name="all_available_history">Visa prieinama istorija</string>
     <string name="retrieving_data_from_the_server">Duomenų atsisiuntimas iš serverio...</string>
     <string name="no_chart_data_available">Nėra duomenų diagramai.</string>

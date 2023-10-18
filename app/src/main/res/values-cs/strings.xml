@@ -148,10 +148,10 @@
     <string name="consumption_acording_to_phases">Spotřeba podle fáze</string>
     <string name="temperature">Teplota</string>
     <string name="humidity">Vlhkost</string>
-    <string name="last24hours">Posledních 24 hodin</string>
-    <string name="last7days">Posledních 7 dní</string>
-    <string name="last30days">Posledních 30 dní</string>
-    <string name="last90days">Posledních 90 dní</string>
+    <string name="history_range_last_day">Posledních 24 hodin</string>
+    <string name="history_range_last_week">Posledních 7 dní</string>
+    <string name="history_range_last_30_days">Posledních 30 dní</string>
+    <string name="history_range_last_90_days">Posledních 90 dní</string>
     <string name="all_available_history">Kompletní dostupná historie</string>
     <string name="retrieving_data_from_the_server">Stahování dat ze serveru ...</string>
     <string name="no_chart_data_available">Žádné údaje o graf.</string>

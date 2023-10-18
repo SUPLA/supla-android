@@ -27,6 +27,7 @@ import org.mockito.InjectMocks
 import org.mockito.junit.MockitoJUnitRunner
 import org.supla.android.data.source.local.entity.ChannelRelationType
 import org.supla.android.db.Channel
+import org.supla.android.lib.SuplaConst
 import org.supla.android.usecases.channel.ChannelChild
 import org.supla.android.usecases.channel.ChannelWithChildren
 
@@ -51,8 +52,8 @@ class CreateTemperaturesListUseCaseTest {
     // then
     assertThat(temperatures).hasSize(2)
     assertThat(temperatures)
-      .extracting({ it.thermometerRemoteId }, { it.temperature })
-      .containsExactly(tuple(111, "11.0"), tuple(222, "22.0"))
+      .extracting({ it.remoteId })
+      .containsExactly(tuple(111), tuple(222))
   }
 
   private fun createChild(relationType: ChannelRelationType, remoteId: Int, text: String): ChannelChild {
@@ -60,6 +61,7 @@ class CreateTemperaturesListUseCaseTest {
     every { channel.remoteId } returns remoteId
     every { channel.imageIdx } returns mockk()
     every { channel.humanReadableValue } returns text
+    every { channel.func } returns SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
 
     return ChannelChild(relationType, channel)
   }

@@ -213,12 +213,12 @@ class ProvideLegacyDetailTypeUseCaseTest {
 
   @Test
   fun `should provide detail for thermometer`() {
-    testDetailType(SUPLA_CHANNELFNC_THERMOMETER, LegacyDetailType.TEMPERATURE)
+    testDetailType(SUPLA_CHANNELFNC_THERMOMETER, ThermometerDetailType(listOf(DetailPage.THERMOMETER_HISTORY)))
   }
 
   @Test
   fun `should provide detail for thermometer with humidity`() {
-    testDetailType(SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE, LegacyDetailType.TEMPERATURE_HUMIDITY)
+    testDetailType(SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE, ThermometerDetailType(listOf(DetailPage.THERMOMETER_HISTORY)))
   }
 
   @Test
@@ -241,7 +241,7 @@ class ProvideLegacyDetailTypeUseCaseTest {
   fun `should provide detail for hvac thermostat heat`() {
     testDetailType(
       SUPLA_CHANNELFNC_HVAC_THERMOSTAT,
-      ThermostatDetailType(listOf(DetailPage.THERMOSTAT, DetailPage.SCHEDULE))
+      ThermostatDetailType(listOf(DetailPage.THERMOSTAT, DetailPage.SCHEDULE, DetailPage.THERMOSTAT_HISTORY))
     )
   }
 

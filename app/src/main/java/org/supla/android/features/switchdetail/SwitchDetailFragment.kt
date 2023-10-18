@@ -18,7 +18,6 @@ package org.supla.android.features.switchdetail
  */
 
 import android.view.View
-import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -29,11 +28,6 @@ import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.databinding.FragmentStandardDetailBinding
 import org.supla.android.features.standarddetail.DetailPage
 import org.supla.android.features.standarddetail.StandardDetailFragment
-
-private const val ARG_REMOTE_ID = "ARG_REMOTE_ID"
-private const val ARG_ITEM_TYPE = "ARG_ITEM_TYPE"
-private const val ARG_FUNCTION = "ARG_FUNCTION"
-private const val ARG_PAGES = "ARG_PAGES"
 
 @AndroidEntryPoint
 class SwitchDetailFragment :
@@ -59,11 +53,7 @@ class SwitchDetailFragment :
   }
 
   companion object {
-    fun bundle(remoteId: Int, itemType: ItemType, function: Int, pages: Array<DetailPage>) = bundleOf(
-      ARG_REMOTE_ID to remoteId,
-      ARG_ITEM_TYPE to itemType,
-      ARG_FUNCTION to function,
-      ARG_PAGES to pages
-    )
+    fun bundle(remoteId: Int, itemType: ItemType, function: Int, pages: Array<DetailPage>) =
+      StandardDetailFragment.bundle(remoteId, itemType, function, pages)
   }
 }

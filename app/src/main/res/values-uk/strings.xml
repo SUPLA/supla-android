@@ -145,10 +145,10 @@
   <string name="ranking_of_months">Рейтинг місяців</string>
   <string name="consumption_acording_to_phases">Споживання за фазою</string>
   <string name="humidity">Вологість</string>
-  <string name="last24hours">Останні 24 години</string>
-  <string name="last7days">Останні 7 днів</string>
-  <string name="last30days">Останні 30 днів</string>
-  <string name="last90days">Останні 90 днів</string>
+  <string name="history_range_last_day">Останні 24 години</string>
+  <string name="history_range_last_week">Останні 7 днів</string>
+  <string name="history_range_last_30_days">Останні 30 днів</string>
+  <string name="history_range_last_90_days">Останні 90 днів</string>
   <string name="all_available_history">Вся історія доступна</string>
   <string name="retrieving_data_from_the_server">Завантаження даних із сервера...</string>
   <string name="no_chart_data_available">Немає даних для діаграми.</string>

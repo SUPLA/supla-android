@@ -30,4 +30,8 @@
   <fragment
     android:id="@+id/thermostat_detail_fragment"
     android:name="org.supla.android.features.thermostatdetail.ThermostatDetailFragment" />
+
+  <fragment
+    android:id="@+id/thermometer_detail_fragment"
+    android:name="org.supla.android.features.thermometerdetail.ThermometerDetailFragment" />
 </navigation>

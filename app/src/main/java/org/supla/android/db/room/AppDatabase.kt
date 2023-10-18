@@ -24,8 +24,8 @@ import org.supla.android.data.source.local.ChannelRelationDao
 import org.supla.android.data.source.local.entity.ChannelRelationEntity
 import org.supla.android.db.DbHelper
 
-@Database(entities = [ChannelRelationEntity::class], version = DbHelper.DATABASE_VERSION)
-@TypeConverters(Converters::class)
+@Database(entities = [ChannelRelationEntity::class], version = DbHelper.DATABASE_VERSION, exportSchema = false)
+@TypeConverters(AppDatabaseConverters::class)
 abstract class AppDatabase : RoomDatabase() {
   abstract fun channelRelationDao(): ChannelRelationDao
 }

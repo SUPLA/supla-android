@@ -22,6 +22,7 @@ import android.view.MenuItem
 import android.view.View
 import androidx.annotation.CallSuper
 import androidx.annotation.LayoutRes
+import androidx.core.os.bundleOf
 import androidx.core.view.children
 import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
@@ -115,5 +116,14 @@ abstract class StandardDetailFragment<S : StandardDetailViewState, E : StandardD
     } else {
       openedPage
     }
+  }
+
+  companion object {
+    fun bundle(remoteId: Int, itemType: ItemType, function: Int, pages: Array<DetailPage>) = bundleOf(
+      ARG_REMOTE_ID to remoteId,
+      ARG_ITEM_TYPE to itemType,
+      ARG_FUNCTION to function,
+      ARG_PAGES to pages
+    )
   }
 }

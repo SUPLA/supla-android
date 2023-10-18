@@ -17,8 +17,13 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import org.supla.android.features.thermostatdetail.thermostatgeneral.ThermostatTemperature
+import org.supla.android.data.ValuesFormatter
+import org.supla.android.db.Channel
+import org.supla.android.db.ChannelBase
+import org.supla.android.extensions.valuesFormatter
+import org.supla.android.features.thermostatdetail.thermostatgeneral.MeasurementValue
 import org.supla.android.images.ImageCache
+import org.supla.android.lib.SuplaConst
 import org.supla.android.usecases.channel.ChannelWithChildren
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -26,20 +31,43 @@ import javax.inject.Singleton
 @Singleton
 class CreateTemperaturesListUseCase @Inject constructor() {
 
-  operator fun invoke(channelWithChildren: ChannelWithChildren): List<ThermostatTemperature> =
-    mutableListOf<ThermostatTemperature>().apply {
+  operator fun invoke(channelWithChildren: ChannelWithChildren): List<MeasurementValue> =
+    mutableListOf<MeasurementValue>().apply {
       val sortedChildren = channelWithChildren.children
         .filter { it.relationType.isThermometer() }
         .sortedBy { item -> item.relationType.value }
 
       for (child in sortedChildren) {
-        add(
-          ThermostatTemperature(
-            thermometerRemoteId = child.channel.remoteId,
-            iconProvider = { ImageCache.getBitmap(it, child.channel.imageIdx) },
-            temperature = child.channel.humanReadableValue.toString()
-          )
-        )
+        add(child.channel.toTemperatureValue())
+        if (child.channel.func == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE) {
+          add(child.channel.toHumidityValue())
+        }
       }
     }
 }
+
+private fun Channel.toTemperatureValue(): MeasurementValue =
+  MeasurementValue(
+    remoteId = remoteId,
+    iconProvider = { ImageCache.getBitmap(it, imageIdx) },
+    valueStringProvider = {
+      if (value.onLine) {
+        it.valuesFormatter.getTemperatureString(value.getTemp(func))
+      } else {
+        ValuesFormatter.NO_VALUE_TEXT
+      }
+    }
+  )
+
+private fun Channel.toHumidityValue(): MeasurementValue =
+  MeasurementValue(
+    remoteId = remoteId,
+    iconProvider = { ImageCache.getBitmap(it, getImageIdx(ChannelBase.WhichOne.Second)) },
+    valueStringProvider = {
+      if (value.onLine) {
+        it.valuesFormatter.getHumidityString(value.humidity)
+      } else {
+        ValuesFormatter.NO_VALUE_TEXT
+      }
+    }
+  )

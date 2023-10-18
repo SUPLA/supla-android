@@ -24,6 +24,8 @@ import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.features.legacydetail.LegacyDetailFragment
 import org.supla.android.features.switchdetail.switchgeneral.SwitchGeneralFragment
 import org.supla.android.features.switchdetail.timersdetail.TimersDetailFragment
+import org.supla.android.features.thermometerdetail.history.ThermometerHistoryDetailFragment
+import org.supla.android.features.thermostatdetail.history.ThermostatHistoryDetailFragment
 import org.supla.android.features.thermostatdetail.scheduledetail.ScheduleDetailFragment
 import org.supla.android.features.thermostatdetail.thermostatgeneral.ThermostatGeneralFragment
 import org.supla.android.usecases.details.LegacyDetailType
@@ -43,12 +45,20 @@ class StandardDetailPagerAdapter(
     DetailPage.HISTORY_IC -> LegacyDetailFragment().apply {
       arguments = LegacyDetailFragment.bundle(remoteId, LegacyDetailType.IC, itemType)
     }
+
     DetailPage.HISTORY_EM -> LegacyDetailFragment().apply {
       arguments = LegacyDetailFragment.bundle(remoteId, LegacyDetailType.EM, itemType)
     }
+
     DetailPage.THERMOSTAT -> ThermostatGeneralFragment().apply { arguments = ThermostatGeneralFragment.bundle(remoteId) }
-    DetailPage.SCHEDULE -> ScheduleDetailFragment().apply { arguments = ScheduleDetailFragment.bundle(remoteId, itemType) }
-    else -> Fragment() // Just an empty fragment
+    DetailPage.SCHEDULE -> ScheduleDetailFragment().apply { arguments = ScheduleDetailFragment.bundle(remoteId) }
+    DetailPage.THERMOSTAT_HISTORY -> ThermostatHistoryDetailFragment().apply {
+      arguments = ThermostatHistoryDetailFragment.bundle(remoteId)
+    }
+
+    DetailPage.THERMOMETER_HISTORY -> ThermometerHistoryDetailFragment().apply {
+      arguments = ThermometerHistoryDetailFragment.bundle(remoteId)
+    }
   }
 }
 
@@ -56,13 +66,14 @@ enum class DetailPage(val menuId: Int) {
   // Switches
   SWITCH(R.id.detail_general),
   TIMER(R.id.detail_timer),
-  HISTORY_IC(R.id.detail_history),
-  HISTORY_EM(R.id.detail_history),
+  HISTORY_IC(R.id.detail_metrics),
+  HISTORY_EM(R.id.detail_metrics),
 
   // Thermostats
   THERMOSTAT(R.id.detail_general),
   SCHEDULE(R.id.detail_schedule),
+  THERMOSTAT_HISTORY(R.id.detail_history),
 
-  // Not used yet
-  SETTINGS(R.id.detail_settings)
+  // Thermometers
+  THERMOMETER_HISTORY(R.id.detail_history),
 }

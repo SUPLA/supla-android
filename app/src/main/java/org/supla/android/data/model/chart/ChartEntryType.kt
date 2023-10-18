@@ -1,4 +1,4 @@
-package org.supla.android.db.room
+package org.supla.android.data.model.chart
 /*
 Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,17 +17,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import androidx.room.TypeConverter
-import org.supla.android.data.source.local.entity.ChannelRelationType
-
-class Converters {
-  @TypeConverter
-  fun channelRelationTypeFromInt(value: Int?): ChannelRelationType? {
-    return value?.let { ChannelRelationType.from(it.toShort()) }
-  }
-
-  @TypeConverter
-  fun intFromChannelRelationType(value: ChannelRelationType?): Int? {
-    return value?.value?.toInt()
-  }
+enum class ChartEntryType {
+  TEMPERATURE, HUMIDITY
 }

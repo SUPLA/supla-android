@@ -24,13 +24,14 @@ import org.supla.android.db.ChannelBase
 import org.supla.android.db.ChannelGroup
 import org.supla.android.db.Location
 import org.supla.android.events.ListsEventsManager
+import org.supla.android.features.standarddetail.DetailPage
 import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.lib.SuplaConst
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.channel.*
-import org.supla.android.usecases.details.LegacyDetailType
 import org.supla.android.usecases.details.ProvideDetailTypeUseCase
+import org.supla.android.usecases.details.ThermometerDetailType
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
 
@@ -230,17 +231,15 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     every { group.func } returns groupFunction
     every { group.groupId } returns groupId
 
-    val legacyDetailType = LegacyDetailType.TEMPERATURE
-    whenever(provideDetailTypeUseCase(group)).thenReturn(legacyDetailType)
+    val detailType = ThermometerDetailType(listOf(DetailPage.THERMOMETER_HISTORY))
+    whenever(provideDetailTypeUseCase(group)).thenReturn(detailType)
 
     // when
     viewModel.onListItemClick(group)
 
     // then
     Assertions.assertThat(states).isEmpty()
-    Assertions.assertThat(events).containsExactly(
-      GroupListViewEvent.OpenLegacyDetails(groupId, legacyDetailType)
-    )
+    Assertions.assertThat(events).isEmpty()
     verifyZeroInteractionsExcept(provideDetailTypeUseCase)
   }
 

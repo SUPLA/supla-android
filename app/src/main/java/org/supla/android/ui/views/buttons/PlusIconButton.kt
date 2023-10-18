@@ -24,7 +24,7 @@ import org.supla.android.R
 
 @Composable
 fun PlusIconButton(disabled: Boolean, onClick: () -> Unit) {
-  IconButton(
+  IconButtonFilled(
     icon = R.drawable.ic_plus,
     iconTint = Color.White,
     disabled = disabled,

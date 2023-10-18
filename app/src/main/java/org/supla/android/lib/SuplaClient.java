@@ -41,6 +41,7 @@ import org.supla.android.R;
 import org.supla.android.SuplaApp;
 import org.supla.android.Trace;
 import org.supla.android.core.networking.suplaclient.SuplaClientApi;
+import org.supla.android.core.networking.suplacloud.SuplaCloudConfigHolder;
 import org.supla.android.core.notifications.NotificationsHelper;
 import org.supla.android.core.storage.EncryptedPreferences;
 import org.supla.android.data.source.ResultTuple;
@@ -94,6 +95,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   private final MarkChannelRelationsAsRemovableUseCase markChannelRelationsAsRemovableUseCase;
   private final InsertChannelRelationForProfileUseCase insertChannelRelationForProfileUseCase;
   private final DeleteRemovableChannelRelationsUseCase deleteRemovableChannelRelationsUseCase;
+  private final SuplaCloudConfigHolder suplaCloudConfigHolder;
 
   public SuplaClient(
       Context context,
@@ -104,7 +106,8 @@ public class SuplaClient extends Thread implements SuplaClientApi {
       EncryptedPreferences encryptedPreferences,
       MarkChannelRelationsAsRemovableUseCase markChannelRelationsAsRemovableUseCase,
       InsertChannelRelationForProfileUseCase insertChannelRelationForProfileUseCase,
-      DeleteRemovableChannelRelationsUseCase deleteRemovableChannelRelationsUseCase) {
+      DeleteRemovableChannelRelationsUseCase deleteRemovableChannelRelationsUseCase,
+      SuplaCloudConfigHolder suplaCloudConfigHolder) {
     super();
     _context = context;
     this.oneTimePassword = oneTimePassword;
@@ -115,6 +118,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     this.markChannelRelationsAsRemovableUseCase = markChannelRelationsAsRemovableUseCase;
     this.insertChannelRelationForProfileUseCase = insertChannelRelationForProfileUseCase;
     this.deleteRemovableChannelRelationsUseCase = deleteRemovableChannelRelationsUseCase;
+    this.suplaCloudConfigHolder = suplaCloudConfigHolder;
   }
 
   public static SuplaRegisterError getLastRegisterError() {
@@ -959,6 +963,8 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     } else {
       registerPushNotificationClientToken(SUPLA_APP_ID, "");
     }
+
+    suplaCloudConfigHolder.setUrl(profile.getAuthInfo().getServerUrlString());
   }
 
   private void onRegisterError(SuplaRegisterError registerError) {
@@ -1243,10 +1249,12 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     if (token != null && token.getUrl() == null) {
       AuthInfo info = profileManager.getCurrentProfile().blockingGet().getAuthInfo();
       try {
-        token.setUrl(new URL("https://" + info.getServerForCurrentAuthMethod()));
+        token.setUrl(new URL(info.getServerUrlString()));
       } catch (MalformedURLException ignored) {
       }
     }
+
+    suplaCloudConfigHolder.setToken(token);
 
     SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onOAuthTokenRequestResult);
     msg.setOAuthToken(token);

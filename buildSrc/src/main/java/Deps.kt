@@ -16,7 +16,9 @@ object Deps {
 
     object Hilt {
         const val Hilt = "com.google.dagger:hilt-android:${Versions.Hilt}"
+        const val Worker = "androidx.hilt:hilt-work:${Versions.HiltWorker}"
         const val Kapt = "com.google.dagger:hilt-android-compiler:${Versions.Hilt}"
+        const val WorkerKapt = "androidx.hilt:hilt-compiler:${Versions.HiltWorker}"
         const val Classpath = "com.google.dagger:hilt-android-gradle-plugin:${Versions.Hilt}"
     }
 
@@ -69,6 +71,13 @@ object Deps {
         const val RxJava = "io.reactivex.rxjava3:rxjava:${Versions.RxJava.RxJava}"
         const val RxAndroid = "io.reactivex.rxjava3:rxandroid:${Versions.RxJava.RxAndroid}"
         const val RxKotlin = "com.github.reactivex:rxkotlin:${Versions.RxJava.RxKotlin}"
+    }
+
+    object Retrofit {
+        const val Retrofit = "com.squareup.retrofit2:retrofit:${Versions.Retrofit.Retrofit}"
+        const val Gson = "com.squareup.retrofit2:converter-gson:${Versions.Retrofit.Retrofit}"
+        const val RxJavaAdapter = "com.squareup.retrofit2:adapter-rxjava3:${Versions.Retrofit.Retrofit}"
+        const val Logging = "com.squareup.okhttp3:logging-interceptor:${Versions.Retrofit.Logging}"
     }
 
     object Firebase {
