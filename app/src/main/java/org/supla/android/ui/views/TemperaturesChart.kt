@@ -22,6 +22,7 @@ import com.github.mikephil.charting.listener.OnChartGestureListener
 import com.github.mikephil.charting.utils.ViewPortHandler
 import org.supla.android.R
 import org.supla.android.data.ValuesFormatter
+import org.supla.android.data.model.chart.ChartParameters
 import org.supla.android.extensions.valuesFormatter
 import org.supla.android.ui.views.charts.ChartMarkerView
 import java.util.Date
@@ -32,8 +33,10 @@ fun TemperaturesChart(
   rangeStart: Float?,
   rangeEnd: Float?,
   emptyChartMessage: String,
-  scaleEvents: (Float, Float) -> Unit,
-  positionEvents: (Float, Float) -> Unit,
+  withHumidity: Boolean,
+  maxTemperature: Float?,
+  chartParameters: ChartParameters?,
+  positionEvents: (scaleX: Float, scaleY: Float, x: Float, y: Float) -> Unit,
   modifier: Modifier = Modifier
 ) {
   val valuesFormatter = LocalContext.current.valuesFormatter
@@ -79,7 +82,7 @@ fun TemperaturesChart(
         it.axisRight.axisMinimum = 0f
         it.axisRight.axisMaximum = 100f
         it.description.isEnabled = false
-        it.onChartGestureListener = ChartObserver(scaleEvents, positionEvents)
+        it.onChartGestureListener = ChartObserver(positionEvents, it)
         it.setNoDataTextColor(colorBlack)
         it.marker = ChartMarkerView(context).apply { chartView = it }
         it.setDrawMarkers(true)
@@ -87,18 +90,32 @@ fun TemperaturesChart(
     },
     update = { chart ->
       chart.data = data
+      chart.highlightValue(null)
       chart.xAxis.labelCount = 6
       rangeStart?.let { chart.xAxis.axisMinimum = it }
       rangeEnd?.let { chart.xAxis.axisMaximum = it }
-      chart.notifyDataSetChanged()
-      chart.setNoDataText(emptyChartMessage)
-      chart.invalidate()
+      chart.axisRight.isEnabled = withHumidity
 
       data?.allData?.minOfOrNull { entry -> entry.yMin }?.let { yMin ->
         chart.axisLeft.axisMinimum = if (yMin > 0) {
           0f
         } else {
           yMin
+        }
+      }
+      maxTemperature?.let {
+        chart.axisLeft.axisMaximum = it
+      }
+
+      chart.notifyDataSetChanged()
+      chart.setNoDataText(emptyChartMessage)
+      chart.invalidate()
+
+      chartParameters?.apply {
+        if (scaleX == 1f && scaleY == 1f && x == 0f && y == 0f) {
+          chart.fitScreen() // reset scale
+        } else {
+          chart.zoom(scaleX, scaleY, x, y, YAxis.AxisDependency.LEFT)
         }
       }
     }
@@ -134,8 +151,10 @@ private class AxisXFormatter(
   }
 }
 
-private class ChartObserver(private val scaleEvents: (Float, Float) -> Unit, private val positionEvents: (Float, Float) -> Unit) :
-  OnChartGestureListener {
+private class ChartObserver(
+  private val positionEvents: (scaleX: Float, scaleY: Float, x: Float, y: Float) -> Unit,
+  private val chart: CombinedChart
+) : OnChartGestureListener {
   override fun onChartGestureStart(me: MotionEvent?, lastPerformedGesture: ChartTouchListener.ChartGesture?) {}
 
   override fun onChartGestureEnd(me: MotionEvent?, lastPerformedGesture: ChartTouchListener.ChartGesture?) {}
@@ -149,11 +168,14 @@ private class ChartObserver(private val scaleEvents: (Float, Float) -> Unit, pri
   override fun onChartFling(me1: MotionEvent?, me2: MotionEvent?, velocityX: Float, velocityY: Float) {}
 
   override fun onChartScale(me: MotionEvent?, scaleX: Float, scaleY: Float) {
-    scaleEvents(scaleX, scaleY)
+    val centerPoint = chart.viewPortHandler.contentCenter
+    val centerPosition = chart.getValuesByTouchPoint(centerPoint.x, centerPoint.y, YAxis.AxisDependency.LEFT)
+    positionEvents(chart.viewPortHandler.scaleX, chart.viewPortHandler.scaleY, centerPosition.x.toFloat(), centerPosition.y.toFloat())
   }
 
   override fun onChartTranslate(me: MotionEvent?, dX: Float, dY: Float) {
-    positionEvents(dX, dY)
+    val centerPoint = chart.viewPortHandler.contentCenter
+    val centerPosition = chart.getValuesByTouchPoint(centerPoint.x, centerPoint.y, YAxis.AxisDependency.LEFT)
+    positionEvents(chart.viewPortHandler.scaleX, chart.viewPortHandler.scaleY, centerPosition.x.toFloat(), centerPosition.y.toFloat())
   }
-
 }

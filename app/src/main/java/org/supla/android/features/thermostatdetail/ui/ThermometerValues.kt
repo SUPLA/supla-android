@@ -81,7 +81,7 @@ fun ThermometersValues(temperatures: List<MeasurementValue>) {
       Box(
         modifier = Modifier
           .background(MaterialTheme.colors.surface)
-          .height(if (temperatures.size > 3) 56.dp else 68.dp)
+          .height(80.dp)
           .padding(top = dimensionResource(id = R.dimen.distance_small))
           .weight(weight)
       )
@@ -95,6 +95,7 @@ private fun TemperatureAndHumidityCell(temperature: MeasurementValue, weight: Fl
   Row(
     modifier = Modifier
       .background(MaterialTheme.colors.surface)
+      .height(80.dp)
       .padding(vertical = dimensionResource(id = R.dimen.distance_small))
       .weight(weight),
     verticalAlignment = Alignment.CenterVertically,

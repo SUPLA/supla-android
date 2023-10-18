@@ -44,11 +44,14 @@ abstract class BaseLoadMeasurementsUseCase {
 
     return measurements
       .filter { it.temperature != null }
-      .groupBy { item -> item.date.toTimestamp().div(aggregation.timeInSec) }
+      .groupBy { item -> aggregation.aggregator(item.date) }
+      .filter { group -> group.value.isNotEmpty() }
       .map { group ->
         AggregatedEntity(
-          group.key.times(aggregation.timeInSec),
-          group.value.map { it.temperature!! }.average().toFloat()
+          date = aggregation.groupTimeProvider(group.value.firstOrNull()!!.date),
+          value = group.value.map { it.temperature!! }.average().toFloat(),
+          min = group.value.minOf { it.temperature!! },
+          max = group.value.maxOf { it.temperature!! }
         )
       }
   }
@@ -65,11 +68,14 @@ abstract class BaseLoadMeasurementsUseCase {
 
     return measurements
       .filter { it.humidity != null }
-      .groupBy { item -> item.date.toTimestamp().div(aggregation.timeInSec) }
+      .groupBy { item -> aggregation.aggregator(item.date) }
+      .filter { group -> group.value.isNotEmpty() }
       .map { group ->
         AggregatedEntity(
-          group.key.times(aggregation.timeInSec),
-          group.value.map { it.humidity!! }.average().toFloat()
+          date = aggregation.groupTimeProvider(group.value.firstOrNull()!!.date),
+          value = group.value.map { it.humidity!! }.average().toFloat(),
+          min = group.value.minOf { it.humidity!! },
+          max = group.value.maxOf { it.humidity!! }
         )
       }
   }
@@ -83,7 +89,7 @@ abstract class BaseLoadMeasurementsUseCase {
   ) =
     HistoryDataSet(
       setId = HistoryDataSet.Id(channel.remoteId, type),
-      function = channel.func,
+      type = type,
       iconProvider = when (type) {
         ChartEntryType.TEMPERATURE -> { context -> ImageCache.getBitmap(context, channel.imageIdx) }
         ChartEntryType.HUMIDITY -> { context -> ImageCache.getBitmap(context, channel.getImageIdx(ChannelBase.WhichOne.Second)) }
@@ -108,7 +114,7 @@ abstract class BaseLoadMeasurementsUseCase {
     return mutableListOf<List<Entry>>().also { list ->
       var set = mutableListOf<Entry>()
       for (entity in entities) {
-        val entry = Entry(entity.date.toFloat(), entity.value, type)
+        val entry = Entry(entity.date.toFloat(), entity.value, entity.toDetails(type))
 
         set.lastOrNull()?.let {
           val distance = if (aggregation == ChartDataAggregation.MINUTES) {
@@ -155,5 +161,17 @@ internal class HumidityColors : Colors(listOf(R.color.blue, R.color.dark_blue))
 
 internal data class AggregatedEntity(
   val date: Long,
-  val value: Float
+  val value: Float,
+  val min: Float? = null,
+  val max: Float? = null
+) {
+
+  fun toDetails(type: ChartEntryType) =
+    EntryDetails(type, min, max)
+}
+
+data class EntryDetails(
+  val type: ChartEntryType,
+  val min: Float? = null,
+  val max: Float? = null
 )

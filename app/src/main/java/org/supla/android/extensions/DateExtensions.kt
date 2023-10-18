@@ -31,6 +31,19 @@ fun Date.dayStart(): Date = startOfDay(this).time
 
 fun Date.dayEnd(): Date = endOfDay(this).time
 
+fun Date.inHalfOfHour(): Date =
+  Calendar.getInstance().let {
+    it.time = this
+    it.set(Calendar.MINUTE, 30)
+    it.time
+  }
+
+fun Date.dayNoon(): Date =
+  startOfDay(this).let {
+    it.set(Calendar.HOUR_OF_DAY, 12)
+    it.time
+  }
+
 fun Date.nextDay(): Date =
   startOfDay(this).let {
     it.set(Calendar.DAY_OF_YEAR, it.get(Calendar.DAY_OF_YEAR) + 1)

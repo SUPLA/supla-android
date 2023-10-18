@@ -22,11 +22,11 @@ import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.core.infrastructure.DateProvider
-import org.supla.android.core.storage.TemperatureChartState
 import org.supla.android.core.storage.UserStateHolder
 import org.supla.android.data.model.chart.ChartDataAggregation
 import org.supla.android.data.model.chart.DateRange
 import org.supla.android.data.model.chart.HistoryDataSet
+import org.supla.android.data.model.chart.TemperatureChartState
 import org.supla.android.events.DownloadEventsManager
 import org.supla.android.features.detailbase.history.BaseHistoryDetailViewModel
 import org.supla.android.profile.ProfileManager

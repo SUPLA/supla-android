@@ -123,8 +123,6 @@ enum class LegacyDetailType : DetailType {
   RS,
   IC,
   EM,
-  TEMPERATURE,
-  TEMPERATURE_HUMIDITY,
   THERMOSTAT_HP,
   DIGIGLASS
 }

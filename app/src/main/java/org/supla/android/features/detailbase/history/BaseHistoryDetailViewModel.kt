@@ -32,7 +32,6 @@ import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.R
 import org.supla.android.core.infrastructure.DateProvider
-import org.supla.android.core.storage.TemperatureChartState
 import org.supla.android.core.storage.UserStateHolder
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.StringProvider
@@ -40,10 +39,13 @@ import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.model.chart.ChartDataAggregation
 import org.supla.android.data.model.chart.ChartEntryType
+import org.supla.android.data.model.chart.ChartParameters
 import org.supla.android.data.model.chart.ChartRange
 import org.supla.android.data.model.chart.DateRange
 import org.supla.android.data.model.chart.HistoryDataSet
-import org.supla.android.data.model.chart.SelectableList
+import org.supla.android.data.model.chart.TemperatureChartState
+import org.supla.android.data.model.general.HideableValue
+import org.supla.android.data.model.general.SelectableList
 import org.supla.android.events.DownloadEventsManager
 import org.supla.android.extensions.dayEnd
 import org.supla.android.extensions.dayStart
@@ -54,6 +56,7 @@ import org.supla.android.extensions.quarterEnd
 import org.supla.android.extensions.quarterStart
 import org.supla.android.extensions.shift
 import org.supla.android.extensions.toPx
+import org.supla.android.extensions.toTimestamp
 import org.supla.android.extensions.valuesFormatter
 import org.supla.android.extensions.weekEnd
 import org.supla.android.extensions.weekStart
@@ -120,7 +123,8 @@ abstract class BaseHistoryDetailViewModel(
         ranges = state.ranges?.copy(selected = range),
         range = newDateRange,
         aggregations = aggregations(newDateRange, state.aggregations?.selected),
-        sets = state.sets.map { set -> set.copy(entries = emptyList()) }
+        sets = state.sets.map { set -> set.copy(entries = emptyList()) },
+        chartParameters = HideableValue(ChartParameters(1f, 1f, 0f, 0f))
       ).also {
         triggerMeasurementsLoad(it)
       }
@@ -158,6 +162,16 @@ abstract class BaseHistoryDetailViewModel(
       state.copy(aggregations = state.aggregations?.copy(selected = aggregation)).also {
         triggerMeasurementsLoad(it)
       }
+    }
+    updateUserState()
+  }
+
+  override fun updateChartPosition(scaleX: Float, scaleY: Float, x: Float, y: Float) {
+    updateState {
+      val parameters = it.chartParameters?.value?.copy(scaleX = scaleX, scaleY = scaleY, x = x, y = y)?.let { parameters ->
+        HideableValue(parameters, true)
+      } ?: HideableValue(ChartParameters(scaleX, scaleY, x, y))
+      it.copy(chartParameters = parameters)
     }
     updateUserState()
   }
@@ -226,6 +240,9 @@ abstract class BaseHistoryDetailViewModel(
 
   protected fun restoreRange(chartState: TemperatureChartState) {
     val selectedRange = chartState.chartRange
+    val chartParameters = chartState.chartParameters?.let {
+      HideableValue(it)
+    }
 
     val dateRange = when (selectedRange) {
       ChartRange.LAST_DAY,
@@ -240,7 +257,8 @@ abstract class BaseHistoryDetailViewModel(
       state.copy(
         ranges = SelectableList(selectedRange, ChartRange.values().toList()),
         aggregations = aggregations(dateRange, chartState.aggregation),
-        range = dateRange
+        range = dateRange,
+        chartParameters = chartParameters
       )
     }
   }
@@ -250,6 +268,12 @@ abstract class BaseHistoryDetailViewModel(
       state.copy(
         // Update sets visibility
         sets = sets.map { set -> set.copy(active = chartState.visibleSets?.contains(set.setId) ?: true) },
+        withHumidity = sets.firstOrNull { it.type == ChartEntryType.HUMIDITY } != null,
+        maxTemperature = sets
+          .filter { it.type == ChartEntryType.TEMPERATURE }
+          .mapNotNull { set -> set.entries.maxOfOrNull { entries -> entries.maxOf { it.y } } }
+          .maxOfOrNull { it }
+          ?.plus(2), // Adds some additional space on chart
         minDate = dateRange.start,
         maxDate = dateRange.end,
         loading = false
@@ -321,7 +345,7 @@ abstract class BaseHistoryDetailViewModel(
     val visibleSets = state.sets.filter { it.active }.map { it.setId }
 
     userStateHolder.setTemperatureChartState(
-      state = TemperatureChartState(aggregation, chartRange, dateRange, visibleSets),
+      state = TemperatureChartState(aggregation, chartRange, dateRange, state.chartParameters?.value, visibleSets),
       profileId = state.profileId,
       remoteId = state.remoteId
     )
@@ -371,7 +395,10 @@ data class HistoryDetailViewState(
   val downloadState: DownloadEventsManager.State = DownloadEventsManager.State.Idle,
 
   val minDate: Date? = null,
-  val maxDate: Date? = null
+  val maxDate: Date? = null,
+  val withHumidity: Boolean = false,
+  val maxTemperature: Float? = null,
+  val chartParameters: HideableValue<ChartParameters>? = null
 ) : ViewState() {
 
   val shiftRightEnabled: Boolean
@@ -421,6 +448,24 @@ data class HistoryDetailViewState(
       else -> false
     }
 
+  val xMin: Float?
+    get() {
+      if (chartMarginNotNeeded()) {
+        return range?.start?.toTimestamp()?.toFloat()
+      }
+      val (daysCount) = guardLet(range?.daysCount) { return range?.start?.toTimestamp()?.toFloat() }
+      return range?.start?.toTimestamp()?.minus(chartRangeMargin(daysCount))?.toFloat()
+    }
+
+  val xMax: Float?
+    get() {
+      if (chartMarginNotNeeded()) {
+        return range?.end?.toTimestamp()?.toFloat()
+      }
+      val (daysCount) = guardLet(range?.daysCount) { return range?.end?.toTimestamp()?.toFloat() }
+      return range?.end?.toTimestamp()?.plus(chartRangeMargin(daysCount))?.toFloat()
+    }
+
   fun rangesMap(resources: Resources): Map<ChartRange, String> =
     mutableMapOf<ChartRange, String>().also { map ->
       ranges?.items?.forEach {
@@ -451,8 +496,9 @@ data class HistoryDetailViewState(
       ChartRange.WEEK,
       ChartRange.MONTH,
       ChartRange.LAST_QUARTER,
-      ChartRange.QUARTER,
-      ChartRange.YEAR -> dateString(context, dateRange)
+      ChartRange.QUARTER -> dateString(context, dateRange)
+
+      ChartRange.YEAR -> context.valuesFormatter.getYearString(dateRange.start)
 
       ChartRange.CUSTOM -> {
         val days = dateRange.daysCount
@@ -515,6 +561,16 @@ data class HistoryDetailViewState(
     val startString = context.valuesFormatter.getShortDateString(range.start)
     val endString = context.valuesFormatter.getShortDateString(range.end)
     return "$startString - $endString"
+  }
+
+  private fun chartRangeMargin(daysCount: Int) = when {
+    daysCount < 1 -> 60 * 60 // 1 hour in seconds
+    else -> 24 * 60 * 60 // 1 day in seconds
+  }
+
+  private fun chartMarginNotNeeded() = when (ranges?.selected) {
+    ChartRange.LAST_DAY, ChartRange.LAST_WEEK, ChartRange.LAST_MONTH, ChartRange.LAST_QUARTER -> false
+    else -> true
   }
 }
 

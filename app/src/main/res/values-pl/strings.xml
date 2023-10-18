@@ -582,7 +582,7 @@
   <string name="thermostat_detail_program_time">przez %1$s</string>
 
   <string name="history_range_label">Zakres</string>
-  <string name="history_aggregation_label">Granulacja</string>
+  <string name="history_aggregation_label">Agregacja</string>
   <string name="history_range_last_day">Ostatnie 24 godziny</string>
   <string name="history_range_last_week">Ostatnie 7 dni</string>
   <string name="history_range_last_30_days">Ostatnie 30 dni</string>
@@ -596,7 +596,7 @@
   <string name="history_refreshing">Odświeżanie…</string>
   <string name="history_refreshing_failed">Odświeżanie nie powiodło się</string>
   <string name="history_no_data_selected">Nie wybrano danych do wyświetlenia.</string>
-  
+
   <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
     <item quantity="one">włączone</item>
     <item quantity="other">włączy</item>

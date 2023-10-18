@@ -74,11 +74,12 @@ import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.model.chart.ChartDataAggregation
 import org.supla.android.data.model.chart.ChartRange
 import org.supla.android.data.model.chart.HistoryDataSet
-import org.supla.android.extensions.toTimestamp
 import org.supla.android.features.detailbase.history.HistoryDetailViewState
-import org.supla.android.ui.views.TextSpinner
 import org.supla.android.ui.views.TemperaturesChart
+import org.supla.android.ui.views.TextSpinner
 import org.supla.android.ui.views.buttons.IconButton
+import org.supla.android.ui.views.tools.Shadow
+import org.supla.android.ui.views.tools.ShadowOrientation
 
 interface HistoryDetailProxy : BaseViewProxy<HistoryDetailViewState> {
   fun refresh() {}
@@ -89,8 +90,7 @@ interface HistoryDetailProxy : BaseViewProxy<HistoryDetailViewState> {
   fun moveRangeRight() {}
   fun moveToDataBegin() {}
   fun moveToDataEnd() {}
-  fun updateChartScale(scaleX: Float, scaleY:Float) {}
-  fun updateChartPosition(dx: Float, dy: Float) {}
+  fun updateChartPosition(scaleX: Float, scaleY: Float, x: Float, y: Float) {}
 }
 
 @Composable
@@ -102,12 +102,15 @@ fun HistoryDetail(viewModel: HistoryDetailProxy) {
   ) {
     DataSetsAndFilters(viewState = viewState, viewModel = viewModel)
 
+    val chartData = viewState.combinedData(LocalContext.current.resources)
     TemperaturesChart(
-      data = viewState.combinedData(LocalContext.current.resources),
-      rangeStart = viewState.range?.start?.toTimestamp()?.toFloat(),
-      rangeEnd = viewState.range?.end?.toTimestamp()?.toFloat(),
+      data = chartData,
+      rangeStart = viewState.xMin,
+      rangeEnd = viewState.xMax,
       emptyChartMessage = viewState.emptyChartMessage(LocalContext.current),
-      scaleEvents = viewModel::updateChartScale,
+      withHumidity = viewState.withHumidity,
+      maxTemperature = viewState.maxTemperature,
+      chartParameters = if (chartData != null) viewState.chartParameters?.getOptional() else null,
       positionEvents = viewModel::updateChartPosition,
       modifier = Modifier
         .weight(1f)
@@ -146,6 +149,7 @@ private fun DataSetsAndFilters(viewState: HistoryDetailViewState, viewModel: His
           DataSetItem(dataSet = data, onClick = { viewModel.changeSetActive(data.setId) })
         }
       }
+      Shadow(orientation = ShadowOrientation.STARTING_TOP)
       FiltersRow(viewState, viewModel)
     }
 
@@ -160,7 +164,7 @@ private fun DataSetsAndFilters(viewState: HistoryDetailViewState, viewModel: His
 
 @Composable
 private fun FiltersRow(viewState: HistoryDetailViewState, viewModel: HistoryDetailProxy) =
-  Row {
+  Row(modifier = Modifier.padding(top = dimensionResource(id = R.dimen.distance_small))) {
     TextSpinner(
       label = stringResource(id = R.string.history_range_label),
       options = viewState.rangesMap(LocalContext.current.resources),
@@ -190,11 +194,13 @@ private fun DataSetsRow(content: @Composable RowScope.() -> Unit) =
     modifier = Modifier
       .fillMaxWidth()
       .horizontalScroll(rememberScrollState())
+      .background(color = MaterialTheme.colors.surface)
+      .height(80.dp)
       .padding(
-        horizontal = dimensionResource(id = R.dimen.distance_default),
-        vertical = dimensionResource(id = R.dimen.distance_default)
-      )
-      .height(32.dp),
+        start = dimensionResource(id = R.dimen.distance_default),
+        top = dimensionResource(id = R.dimen.distance_default),
+        end = dimensionResource(id = R.dimen.distance_default)
+      ),
     horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.distance_small)),
     content = content
   )

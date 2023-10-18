@@ -52,6 +52,7 @@ import org.supla.android.usecases.channel.*
 import org.supla.android.usecases.details.LegacyDetailType
 import org.supla.android.usecases.details.ProvideDetailTypeUseCase
 import org.supla.android.usecases.details.SwitchDetailType
+import org.supla.android.usecases.details.ThermometerDetailType
 import org.supla.android.usecases.details.ThermostatDetailType
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
@@ -303,10 +304,10 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     val channel = mockk<Channel>()
     every { channel.onLine } returns true
     every { channel.func } returns channelFunction
-    every { channel.channelId } returns channelId
+    every { channel.remoteId } returns channelId
 
-    val legacyDetailType = LegacyDetailType.TEMPERATURE
-    whenever(provideDetailTypeUseCase(channel)).thenReturn(legacyDetailType)
+    val detailType = ThermometerDetailType(listOf(DetailPage.THERMOMETER_HISTORY))
+    whenever(provideDetailTypeUseCase(channel)).thenReturn(detailType)
 
     // when
     viewModel.onListItemClick(channel)
@@ -314,7 +315,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     // then
     assertThat(states).isEmpty()
     assertThat(events).containsExactly(
-      ChannelListViewEvent.OpenLegacyDetails(channelId, legacyDetailType)
+      ChannelListViewEvent.OpenThermometerDetailType(channelId, channelFunction, detailType.pages)
     )
     verifyZeroInteractionsExcept(provideDetailTypeUseCase)
   }

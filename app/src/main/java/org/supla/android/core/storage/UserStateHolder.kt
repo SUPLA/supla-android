@@ -20,10 +20,7 @@ package org.supla.android.core.storage
 import android.content.Context
 import com.google.gson.GsonBuilder
 import dagger.hilt.android.qualifiers.ApplicationContext
-import org.supla.android.data.model.chart.ChartDataAggregation
-import org.supla.android.data.model.chart.ChartRange
-import org.supla.android.data.model.chart.DateRange
-import org.supla.android.data.model.chart.HistoryDataSet
+import org.supla.android.data.model.chart.TemperatureChartState
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -51,21 +48,4 @@ class UserStateHolder @Inject constructor(@ApplicationContext context: Context) 
   private fun getKey(key: String, profileId: Long, remoteId: Int) =
     key.replace("%PROFILE_ID%", profileId.toString())
       .replace("%CHANNEL_ID%", remoteId.toString())
-}
-
-data class TemperatureChartState(
-  val aggregation: ChartDataAggregation,
-  val chartRange: ChartRange,
-  val dateRange: DateRange?,
-  val visibleSets: List<HistoryDataSet.Id>?
-) {
-  companion object {
-    fun default(): TemperatureChartState =
-      TemperatureChartState(
-        aggregation = ChartDataAggregation.MINUTES,
-        chartRange = ChartRange.LAST_WEEK,
-        dateRange = null,
-        visibleSets = null
-      )
-  }
 }

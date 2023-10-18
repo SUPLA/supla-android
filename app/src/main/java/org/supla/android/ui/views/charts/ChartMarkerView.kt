@@ -17,6 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.widget.TextView
 import androidx.compose.ui.unit.dp
@@ -29,27 +30,42 @@ import org.supla.android.data.model.chart.ChartEntryType
 import org.supla.android.extensions.toPx
 import org.supla.android.extensions.valuesFormatter
 import org.supla.android.extensions.xAsDate
+import org.supla.android.usecases.channel.EntryDetails
 
 class ChartMarkerView(context: Context) : MarkerView(context, R.layout.view_chart_marker) {
 
   private val title: TextView = findViewById(R.id.chart_marker_title)
   private val text: TextView = findViewById(R.id.chart_marker_text)
+  private val subtext: TextView = findViewById(R.id.chart_marker_subtext)
 
+  @SuppressLint("SetTextI18n")
   override fun refreshContent(entry: Entry?, highlight: Highlight?) {
-    super.refreshContent(entry, highlight)
-
     entry?.let {
       title.text = context.valuesFormatter.getFullDateString(it.xAsDate)
-      (it.data as? ChartEntryType)?.let { type ->
-        text.text = when (type) {
-          ChartEntryType.TEMPERATURE -> context.valuesFormatter.getTemperatureString(it.y)
-          ChartEntryType.HUMIDITY -> context.valuesFormatter.getHumidityString(it.y.toDouble(), true)
+      (it.data as? EntryDetails)?.let { details ->
+        text.text = getValueString(details.type, it.y)
+
+        if (details.min != null && details.max != null) {
+          val minText = getValueString(details.type, details.min)
+          val maxText = getValueString(details.type, details.max)
+
+          subtext.text = "($minText - $maxText)"
+        } else {
+          subtext.text = ""
         }
       }
     }
+
+    super.refreshContent(entry, highlight)
   }
 
   override fun getOffset(): MPPointF {
     return MPPointF(-width.div(2).toFloat(), -height.toFloat().plus(20.dp.toPx()))
   }
+
+  private fun getValueString(type: ChartEntryType, value: Float) =
+    when (type) {
+      ChartEntryType.TEMPERATURE -> context.valuesFormatter.getTemperatureString(value)
+      ChartEntryType.HUMIDITY -> context.valuesFormatter.getHumidityString(value.toDouble(), true)
+    }
 }

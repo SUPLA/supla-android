@@ -147,6 +147,13 @@ class ValuesFormatter @Inject constructor(
       formatter.format(it)
     }
 
+  @SuppressLint("SimpleDateFormat")
+  fun getYearString(date: Date?): String? =
+    date?.let {
+      val formatter = SimpleDateFormat("yyyy")
+      formatter.format(it)
+    }
+
   fun getPercentageString(value: Float): String =
     "${value.times(100).toInt()}%"
 

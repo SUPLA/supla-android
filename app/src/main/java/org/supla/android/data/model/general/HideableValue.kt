@@ -1,4 +1,4 @@
-package org.supla.android.data.model.chart
+package org.supla.android.data.model.general
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,23 +17,24 @@ package org.supla.android.data.model.chart
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.annotation.ColorRes
-import com.github.mikephil.charting.data.Entry
-import org.supla.android.core.ui.BitmapProvider
-import org.supla.android.core.ui.StringProvider
-
-data class HistoryDataSet(
-  val setId: Id,
-  val type: ChartEntryType,
-  val iconProvider: BitmapProvider,
-  val valueProvider: StringProvider,
-  @ColorRes val color: Int,
-  val entries: List<List<Entry>> = emptyList(),
-  val active: Boolean = true
+data class HideableValue<T>(
+  val value: T,
+  private var hide: Boolean = false,
+  private var visibilityCounter: Int = 1
 ) {
 
-  data class Id(
-    val remoteId: Int,
-    val type: ChartEntryType
-  )
+  fun getOptional(): T? {
+    if (hide) {
+      return null
+    }
+
+    synchronized(this) {
+      visibilityCounter--
+      return if (visibilityCounter >= 0) {
+        value
+      } else {
+        null
+      }
+    }
+  }
 }
