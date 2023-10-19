@@ -564,7 +564,7 @@ data class HistoryDetailViewState(
   }
 
   private fun chartRangeMargin(daysCount: Int) = when {
-    daysCount < 1 -> 60 * 60 // 1 hour in seconds
+    daysCount <= 1 -> 60 * 60 // 1 hour in seconds
     else -> 24 * 60 * 60 // 1 day in seconds
   }
 

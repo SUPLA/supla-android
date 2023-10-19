@@ -148,6 +148,19 @@ fun Date.shift(days: Int): Date =
 
 fun Date.toTimestamp(): Long = time.div(1000)
 
+fun date(year: Int, month: Int = Calendar.JANUARY, day: Int = Calendar.MONDAY, hour: Int = 0, minute: Int = 0, seconds: Int = 0): Date =
+  Calendar.getInstance().let {
+    it.set(Calendar.YEAR, year)
+    it.set(Calendar.MONTH, month)
+    it.set(Calendar.DAY_OF_MONTH, day)
+    it.set(Calendar.HOUR_OF_DAY, hour)
+    it.set(Calendar.MINUTE, minute)
+    it.set(Calendar.SECOND, seconds)
+    it.set(Calendar.MILLISECOND, 0)
+
+    it.time
+  }
+
 private fun getMonthLength(year: Int, months: List<Int>) =
   months.sumOf { GregorianCalendar(year, it, 1).getActualMaximum(Calendar.DAY_OF_MONTH) }
 
