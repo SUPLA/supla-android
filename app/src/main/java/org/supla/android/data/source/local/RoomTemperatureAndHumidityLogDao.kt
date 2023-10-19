@@ -24,6 +24,7 @@ import androidx.room.Query
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 import org.supla.android.data.source.local.entity.TemperatureAndHumidityLogEntity
 
 @Dao
@@ -33,10 +34,10 @@ interface RoomTemperatureAndHumidityLogDao {
   fun insert(entity: List<TemperatureAndHumidityLogEntity>): Completable
 
   @Query("SELECT MIN(date) FROM temphumidity_log WHERE channelid = :channelId AND profileid = :profileId")
-  fun findMinTimestamp(channelId: Int, profileId: Long): Maybe<Long>
+  fun findMinTimestamp(channelId: Int, profileId: Long): Single<Long>
 
   @Query("SELECT MAX(date) FROM temphumidity_log WHERE channelid = :channelId AND profileid = :profileId")
-  fun findMaxTimestamp(channelId: Int, profileId: Long): Maybe<Long>
+  fun findMaxTimestamp(channelId: Int, profileId: Long): Single<Long>
 
   @Query("SELECT COUNT(temperature) FROM temphumidity_log WHERE channelid = :channelId AND profileid = :profileId")
   fun findCount(channelId: Int, profileId: Long): Maybe<Int>

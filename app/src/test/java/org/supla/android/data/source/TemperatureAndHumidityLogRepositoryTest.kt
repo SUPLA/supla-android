@@ -17,11 +17,13 @@ package org.supla.android.data.source
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import androidx.room.rxjava3.EmptyResultSetException
 import io.mockk.every
 import io.mockk.mockk
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 import okhttp3.Headers
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
@@ -126,7 +128,7 @@ class TemperatureAndHumidityLogRepositoryTest {
     val profileId = 234L
     val timestamp = 123L
     whenever(roomTemperatureAndHumidityLogDao.findMinTimestamp(remoteId, profileId))
-      .thenReturn(Maybe.just(timestamp))
+      .thenReturn(Single.just(timestamp))
 
     // when
     val testObserver = repository.findMinTimestamp(remoteId, profileId).test()
@@ -147,7 +149,7 @@ class TemperatureAndHumidityLogRepositoryTest {
     val profileId = 234L
     val timestamp = 123L
     whenever(roomTemperatureAndHumidityLogDao.findMaxTimestamp(remoteId, profileId))
-      .thenReturn(Maybe.just(timestamp))
+      .thenReturn(Single.just(timestamp))
 
     // when
     val testObserver = repository.findMaxTimestamp(remoteId, profileId).test()
@@ -194,11 +196,55 @@ class TemperatureAndHumidityLogRepositoryTest {
     mockMeasurementsCall(measurementDate, lastDbDate, remoteId, cloudService)
 
     whenever(roomTemperatureAndHumidityLogDao.findMinTimestamp(remoteId, profileId))
-      .thenReturn(Maybe.just(date(2023, 10, 1).time))
+      .thenReturn(Single.just(date(2023, 10, 1).time))
     whenever(roomTemperatureAndHumidityLogDao.findMaxTimestamp(remoteId, profileId))
-      .thenReturn(Maybe.just(lastDbDate.time))
+      .thenReturn(Single.just(lastDbDate.time))
 
     whenever(roomTemperatureAndHumidityLogDao.findCount(remoteId, profileId)).thenReturn(Maybe.just(50))
+    whenever(roomTemperatureAndHumidityLogDao.insert(any())).thenReturn(Completable.complete())
+
+    // when
+    val testObserver = repository.loadMeasurements(remoteId, profileId).test()
+
+    // then
+    testObserver.assertComplete()
+
+    verify(suplaCloudServiceProvider).provide()
+    verify(roomTemperatureAndHumidityLogDao).findMinTimestamp(remoteId, profileId)
+    verify(roomTemperatureAndHumidityLogDao).findMaxTimestamp(remoteId, profileId)
+    verify(roomTemperatureAndHumidityLogDao).findCount(remoteId, profileId)
+
+    val captor = argumentCaptor<List<TemperatureAndHumidityLogEntity>>()
+    verify(roomTemperatureAndHumidityLogDao).insert(captor.capture())
+    val result = captor.firstValue
+    assertThat(result).hasSize(1)
+    assertThat(result).containsExactly(
+      TemperatureAndHumidityLogEntity(null, remoteId, measurementDate, 23f, 81f, profileId)
+    )
+
+    verifyNoMoreInteractions(suplaCloudServiceProvider, roomTemperatureAndHumidityLogDao)
+  }
+
+  @Test
+  fun `should load measurements from cloud when local database is empty`() {
+    // given
+    val remoteId = 123
+    val profileId = 321L
+    val lastDbDate = date(2023, 10, 1)
+    val cloudService: SuplaCloudService = mockk()
+
+    whenever(suplaCloudServiceProvider.provide()).thenReturn(cloudService)
+    mockInitialCall(remoteId, cloudService, lastDbDate)
+
+    val measurementDate = date(2023, 10, 1, 3)
+    mockMeasurementsCall(measurementDate, Date(0), remoteId, cloudService)
+
+    whenever(roomTemperatureAndHumidityLogDao.findMinTimestamp(remoteId, profileId))
+      .thenReturn(Single.error(EmptyResultSetException("")))
+    whenever(roomTemperatureAndHumidityLogDao.findMaxTimestamp(remoteId, profileId))
+      .thenReturn(Single.error(EmptyResultSetException("")))
+
+    whenever(roomTemperatureAndHumidityLogDao.findCount(remoteId, profileId)).thenReturn(Maybe.just(0))
     whenever(roomTemperatureAndHumidityLogDao.insert(any())).thenReturn(Completable.complete())
 
     // when
@@ -281,7 +327,7 @@ class TemperatureAndHumidityLogRepositoryTest {
     } returns Observable.just(emptyList())
 
     whenever(roomTemperatureAndHumidityLogDao.findMaxTimestamp(remoteId, profileId))
-      .thenReturn(Maybe.empty())
+      .thenReturn(Single.error(EmptyResultSetException("")))
     whenever(roomTemperatureAndHumidityLogDao.delete(remoteId, profileId)).thenReturn(Completable.complete())
     whenever(roomTemperatureAndHumidityLogDao.findCount(remoteId, profileId)).thenReturn(Maybe.just(50))
 
@@ -314,7 +360,7 @@ class TemperatureAndHumidityLogRepositoryTest {
     mockMeasurementsCall(measurementDate, lastDbDate, remoteId, cloudService)
 
     whenever(roomTemperatureAndHumidityLogDao.findMinTimestamp(remoteId, profileId))
-      .thenReturn(Maybe.just(date(2023, 10, 1).time))
+      .thenReturn(Single.just(date(2023, 10, 1).time))
     whenever(roomTemperatureAndHumidityLogDao.findCount(remoteId, profileId)).thenReturn(Maybe.just(100))
 
     // when
@@ -345,9 +391,9 @@ class TemperatureAndHumidityLogRepositoryTest {
     mockMeasurementsCall(measurementDate, lastDbDate, remoteId, cloudService)
 
     whenever(roomTemperatureAndHumidityLogDao.findMinTimestamp(remoteId, profileId))
-      .thenReturn(Maybe.just(date(2023, 10, 1).time))
+      .thenReturn(Single.just(date(2023, 10, 1).time))
     whenever(roomTemperatureAndHumidityLogDao.findMaxTimestamp(remoteId, profileId))
-      .thenReturn(Maybe.just(lastDbDate.time))
+      .thenReturn(Single.just(lastDbDate.time))
     whenever(roomTemperatureAndHumidityLogDao.delete(remoteId, profileId)).thenReturn(Completable.complete())
     whenever(roomTemperatureAndHumidityLogDao.findCount(remoteId, profileId)).thenReturn(Maybe.just(50))
     whenever(roomTemperatureAndHumidityLogDao.insert(any())).thenReturn(Completable.complete())

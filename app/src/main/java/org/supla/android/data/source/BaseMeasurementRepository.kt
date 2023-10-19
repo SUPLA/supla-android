@@ -17,17 +17,18 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import androidx.room.rxjava3.EmptyResultSetException
 import androidx.work.ListenableWorker
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.ObservableEmitter
+import io.reactivex.rxjava3.core.Single
 import org.supla.android.Trace
 import org.supla.android.data.source.remote.rest.SuplaCloudService
 import org.supla.android.data.source.remote.rest.channel.Measurement
 import org.supla.android.extensions.TAG
 import org.supla.android.extensions.guardLet
-import org.supla.android.extensions.ifLet
 import retrofit2.Response
 
 private const val ALLOWED_TIME_DIFFERENCE = 1800
@@ -42,9 +43,9 @@ abstract class BaseMeasurementRepository<T : Measurement, U>(
 
   protected abstract fun map(entry: T, remoteId: Int, profileId: Long): U
 
-  abstract fun findMinTimestamp(remoteId: Int, profileId: Long): Maybe<Long>
+  abstract fun findMinTimestamp(remoteId: Int, profileId: Long): Single<Long>
 
-  abstract fun findMaxTimestamp(remoteId: Int, profileId: Long): Maybe<Long>
+  abstract fun findMaxTimestamp(remoteId: Int, profileId: Long): Single<Long>
 
   abstract fun delete(remoteId: Int, profileId: Long): Completable
 
@@ -101,16 +102,21 @@ abstract class BaseMeasurementRepository<T : Measurement, U>(
   private fun checkCleanNeeded(firstMeasurements: List<T>, remoteId: Int, profileId: Long): Boolean? {
     try {
       if (firstMeasurements.isEmpty()) {
-        Trace.d(TAG, "No entries - cleaning measurements")
+        Trace.d(TAG, "No entries to get - cleaning measurements")
         return true
       } else {
-        ifLet(findMinTimestamp(remoteId, profileId).blockingGet()) { (minTimestamp) ->
-          Trace.d(TAG, "Found local minimal timestamp $minTimestamp")
-          for (entry in firstMeasurements) {
-            if (kotlin.math.abs(minTimestamp - entry.date.time) < ALLOWED_TIME_DIFFERENCE) {
-              Trace.d(TAG, "Entries similar - no cleaning needed")
-              return false
-            }
+        val minTimestamp = try {
+          findMinTimestamp(remoteId, profileId).blockingGet()
+        } catch (ex: EmptyResultSetException) {
+          Trace.d(TAG, "No entries in DB - no cleaning needed")
+          return false
+        }
+
+        Trace.d(TAG, "Found local minimal timestamp $minTimestamp")
+        for (entry in firstMeasurements) {
+          if (kotlin.math.abs(minTimestamp - entry.date.time) < ALLOWED_TIME_DIFFERENCE) {
+            Trace.d(TAG, "Entries similar - no cleaning needed")
+            return false
           }
         }
       }
@@ -156,7 +162,11 @@ abstract class BaseMeasurementRepository<T : Measurement, U>(
   ) {
     val entriesToImport = totalCount - databaseCount
     var importedEntries = 0
-    var afterTimestamp = findMaxTimestamp(remoteId, profileId).blockingGet() ?: 0
+    var afterTimestamp = try {
+      findMaxTimestamp(remoteId, profileId).blockingGet()
+    } catch (ex: EmptyResultSetException) {
+      0
+    }
     do {
       val entries = getMeasurements(cloudService, remoteId, afterTimestamp.div(1000)).blockingFirst()
 

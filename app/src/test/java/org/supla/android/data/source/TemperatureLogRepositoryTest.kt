@@ -17,11 +17,13 @@ package org.supla.android.data.source
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import androidx.room.rxjava3.EmptyResultSetException
 import io.mockk.every
 import io.mockk.mockk
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 import okhttp3.Headers
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
@@ -126,7 +128,7 @@ class TemperatureLogRepositoryTest {
     val profileId = 234L
     val timestamp = 123L
     whenever(roomTemperatureLogDao.findMinTimestamp(remoteId, profileId))
-      .thenReturn(Maybe.just(timestamp))
+      .thenReturn(Single.just(timestamp))
 
     // when
     val testObserver = repository.findMinTimestamp(remoteId, profileId).test()
@@ -147,7 +149,7 @@ class TemperatureLogRepositoryTest {
     val profileId = 234L
     val timestamp = 123L
     whenever(roomTemperatureLogDao.findMaxTimestamp(remoteId, profileId))
-      .thenReturn(Maybe.just(timestamp))
+      .thenReturn(Single.just(timestamp))
 
     // when
     val testObserver = repository.findMaxTimestamp(remoteId, profileId).test()
@@ -194,9 +196,9 @@ class TemperatureLogRepositoryTest {
     mockMeasurementsCall(measurementDate, lastDbDate, remoteId, cloudService)
 
     whenever(roomTemperatureLogDao.findMinTimestamp(remoteId, profileId))
-      .thenReturn(Maybe.just(date(2023, 10, 1).time))
+      .thenReturn(Single.just(date(2023, 10, 1).time))
     whenever(roomTemperatureLogDao.findMaxTimestamp(remoteId, profileId))
-      .thenReturn(Maybe.just(lastDbDate.time))
+      .thenReturn(Single.just(lastDbDate.time))
 
     whenever(roomTemperatureLogDao.findCount(remoteId, profileId)).thenReturn(Maybe.just(50))
     whenever(roomTemperatureLogDao.insert(any())).thenReturn(Completable.complete())
@@ -281,7 +283,7 @@ class TemperatureLogRepositoryTest {
     } returns Observable.just(emptyList())
 
     whenever(roomTemperatureLogDao.findMaxTimestamp(remoteId, profileId))
-      .thenReturn(Maybe.empty())
+      .thenReturn(Single.error(EmptyResultSetException("")))
     whenever(roomTemperatureLogDao.delete(remoteId, profileId)).thenReturn(Completable.complete())
     whenever(roomTemperatureLogDao.findCount(remoteId, profileId)).thenReturn(Maybe.just(50))
 
@@ -314,7 +316,7 @@ class TemperatureLogRepositoryTest {
     mockMeasurementsCall(measurementDate, lastDbDate, remoteId, cloudService)
 
     whenever(roomTemperatureLogDao.findMinTimestamp(remoteId, profileId))
-      .thenReturn(Maybe.just(date(2023, 10, 1).time))
+      .thenReturn(Single.just(date(2023, 10, 1).time))
     whenever(roomTemperatureLogDao.findCount(remoteId, profileId)).thenReturn(Maybe.just(100))
 
     // when
@@ -345,9 +347,9 @@ class TemperatureLogRepositoryTest {
     mockMeasurementsCall(measurementDate, lastDbDate, remoteId, cloudService)
 
     whenever(roomTemperatureLogDao.findMinTimestamp(remoteId, profileId))
-      .thenReturn(Maybe.just(date(2023, 10, 1).time))
+      .thenReturn(Single.just(date(2023, 10, 1).time))
     whenever(roomTemperatureLogDao.findMaxTimestamp(remoteId, profileId))
-      .thenReturn(Maybe.just(lastDbDate.time))
+      .thenReturn(Single.just(lastDbDate.time))
     whenever(roomTemperatureLogDao.delete(remoteId, profileId)).thenReturn(Completable.complete())
     whenever(roomTemperatureLogDao.findCount(remoteId, profileId)).thenReturn(Maybe.just(50))
     whenever(roomTemperatureLogDao.insert(any())).thenReturn(Completable.complete())

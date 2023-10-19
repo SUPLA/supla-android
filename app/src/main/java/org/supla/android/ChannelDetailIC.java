@@ -72,8 +72,6 @@ public class ChannelDetailIC extends DetailLayout
   private Timer timer1;
   private int masterLastSelectedIdx = -1;
   private int slaveLastSelectedIdx = -1;
-  private int slaveNumItems = -1;
-  private int slaveMaxItems = 5; /* Minutes, Hours, Days, Months, Years */
 
   @Inject ProfileIdHolder profileIdHolder;
 
@@ -142,7 +140,6 @@ public class ChannelDetailIC extends DetailLayout
         chartHelper.getSlaveSpinnerPosition(icSpinnerMaster, previousSelection, itemsList);
     icSpinnerSlave.setSelection(slaveLastSelectedIdx);
 
-    slaveNumItems = items.length;
     icSpinnerSlave.setOnItemSelectedListener(this);
   }
 

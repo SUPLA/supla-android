@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 import org.supla.android.data.source.local.RoomTemperatureLogDao
 import org.supla.android.data.source.local.entity.TemperatureLogEntity
 import org.supla.android.data.source.remote.rest.SuplaCloudService
@@ -62,10 +63,10 @@ class TemperatureLogRepository @Inject constructor(
       afterTimestamp = afterTimestamp
     )
 
-  override fun findMinTimestamp(remoteId: Int, profileId: Long): Maybe<Long> =
+  override fun findMinTimestamp(remoteId: Int, profileId: Long): Single<Long> =
     temperatureLogDao.findMinTimestamp(remoteId, profileId)
 
-  override fun findMaxTimestamp(remoteId: Int, profileId: Long): Maybe<Long> =
+  override fun findMaxTimestamp(remoteId: Int, profileId: Long): Single<Long> =
     temperatureLogDao.findMaxTimestamp(remoteId, profileId)
 
   override fun delete(remoteId: Int, profileId: Long): Completable =

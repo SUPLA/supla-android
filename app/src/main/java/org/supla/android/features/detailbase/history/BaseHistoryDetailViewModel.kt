@@ -28,7 +28,7 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
-import io.reactivex.rxjava3.core.Maybe
+import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.R
 import org.supla.android.core.infrastructure.DateProvider
@@ -37,6 +37,7 @@ import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.StringProvider
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
+import org.supla.android.data.model.Optional
 import org.supla.android.data.model.chart.ChartDataAggregation
 import org.supla.android.data.model.chart.ChartEntryType
 import org.supla.android.data.model.chart.ChartParameters
@@ -180,10 +181,11 @@ abstract class BaseHistoryDetailViewModel(
 
   protected abstract fun measurementsMaybe(
     remoteId: Int,
+    profileId: Long,
     start: Date,
     end: Date,
     aggregation: ChartDataAggregation
-  ): Maybe<Pair<List<HistoryDataSet>, DateRange>>
+  ): Single<Pair<List<HistoryDataSet>, Optional<DateRange>>>
 
   private fun triggerMeasurementsLoad(state: HistoryDetailViewState) {
     val (start, end) = guardLet(state.range?.start, state.range?.end) { return }
@@ -191,7 +193,7 @@ abstract class BaseHistoryDetailViewModel(
     val (profileId) = guardLet(state.profileId) { return }
     val aggregation = state.aggregations?.selected ?: ChartDataAggregation.MINUTES
 
-    measurementsMaybe(remoteId, start, end, aggregation)
+    measurementsMaybe(remoteId, profileId, start, end, aggregation)
       .attachSilent()
       .subscribeBy(
         onSuccess = { handleMeasurements(it.first, it.second, userStateHolder.getTemperatureChartState(profileId, remoteId)) },
@@ -263,7 +265,7 @@ abstract class BaseHistoryDetailViewModel(
     }
   }
 
-  private fun handleMeasurements(sets: List<HistoryDataSet>, dateRange: DateRange, chartState: TemperatureChartState) {
+  private fun handleMeasurements(sets: List<HistoryDataSet>, dateRange: Optional<DateRange>, chartState: TemperatureChartState) {
     updateState { state ->
       state.copy(
         // Update sets visibility
@@ -274,8 +276,8 @@ abstract class BaseHistoryDetailViewModel(
           .mapNotNull { set -> set.entries.maxOfOrNull { entries -> entries.maxOf { it.y } } }
           .maxOfOrNull { it }
           ?.plus(2), // Adds some additional space on chart
-        minDate = dateRange.start,
-        maxDate = dateRange.end,
+        minDate = if (dateRange.isEmpty) state.minDate else dateRange.get().start,
+        maxDate = if (dateRange.isEmpty) state.maxDate else dateRange.get().end,
         loading = false
       )
     }
@@ -300,14 +302,8 @@ abstract class BaseHistoryDetailViewModel(
   protected fun handleDownloadEvents(downloadState: DownloadEventsManager.State) {
     when (downloadState) {
       is DownloadEventsManager.State.InProgress,
-      is DownloadEventsManager.State.Started,
-      is DownloadEventsManager.State.Failed -> {
-        updateState { state ->
-          state.copy(
-            downloadState = downloadState,
-            loading = true
-          )
-        }
+      is DownloadEventsManager.State.Started -> {
+        updateState { it.copy(downloadState = downloadState, loading = true) }
       }
 
       is DownloadEventsManager.State.Finished -> {
@@ -318,7 +314,7 @@ abstract class BaseHistoryDetailViewModel(
       }
 
       else -> {
-        updateState { it.copy(loading = false) }
+        updateState { it.copy(downloadState = downloadState, loading = false) }
       }
     }
   }
@@ -428,6 +424,8 @@ data class HistoryDetailViewState(
           context.getString(R.string.history_refreshing)
         } else if (sets.firstOrNull { it.active } == null) {
           context.getString(R.string.history_no_data_selected)
+        } else if (minDate == null && maxDate == null) {
+          context.getString(R.string.history_no_data_available)
         } else {
           context.getString(R.string.no_chart_data_available)
         }

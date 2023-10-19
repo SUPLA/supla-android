@@ -17,8 +17,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 import org.supla.android.data.model.chart.ChartDataAggregation
 import org.supla.android.data.model.chart.ChartEntryType
 import org.supla.android.data.model.chart.HistoryDataSet
@@ -42,14 +42,15 @@ class LoadChannelWithChildrenMeasurementsUseCase @Inject constructor(
   private val temperatureAndHumidityLogRepository: TemperatureAndHumidityLogRepository
 ) : BaseLoadMeasurementsUseCase() {
 
-  operator fun invoke(remoteId: Int, startDate: Date, endDate: Date, aggregation: ChartDataAggregation): Maybe<List<HistoryDataSet>> =
+  operator fun invoke(remoteId: Int, startDate: Date, endDate: Date, aggregation: ChartDataAggregation): Single<List<HistoryDataSet>> =
     readChannelWithChildrenUseCase(remoteId)
       .flatMapMerged { profileManager.getCurrentProfile() }
+      .toSingle()
       .flatMap {
         if (it.first.channel.isHvacThermostat()) {
-          buildDataSets(it.first, it.second.id, startDate, endDate, aggregation).firstElement()
+          buildDataSets(it.first, it.second.id, startDate, endDate, aggregation).firstOrError()
         } else {
-          Maybe.empty()
+          Single.error(IllegalArgumentException("Channel function not supported (${it.first.channel.func}"))
         }
       }
 
