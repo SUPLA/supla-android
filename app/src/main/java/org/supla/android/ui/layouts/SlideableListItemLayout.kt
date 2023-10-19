@@ -48,6 +48,7 @@ class SlideableListItemLayout @JvmOverloads constructor(
   private var onInfoClick: () -> Unit = { }
   private var onIssueClick: () -> Unit = { }
   private var onTitleLongClick: () -> Unit = { }
+  private var onItemClick: () -> Unit = { }
 
   override var locationCaption: String? = null
 
@@ -109,6 +110,7 @@ class SlideableListItemLayout @JvmOverloads constructor(
     content.onInfoClick = onInfoClick
     content.onIssueClick = onIssueClick
     content.onTitleLongClick = onTitleLongClick
+    content.onItemClick = onItemClick
 
     val (itemType) = guardLet(itemType) { return }
     val (remoteId) = guardLet(remoteId) { return }
@@ -139,7 +141,8 @@ class SlideableListItemLayout @JvmOverloads constructor(
     data: SlideableListItemData,
     onInfoClick: () -> Unit,
     onIssueClick: () -> Unit,
-    onTitleLongClick: () -> Unit
+    onTitleLongClick: () -> Unit,
+    onItemClick: () -> Unit
   ) {
     this.itemType = itemType
     this.remoteId = remoteId
@@ -148,6 +151,7 @@ class SlideableListItemLayout @JvmOverloads constructor(
     this.onInfoClick = onInfoClick
     this.onIssueClick = onIssueClick
     this.onTitleLongClick = onTitleLongClick
+    this.onItemClick = onItemClick
   }
 
   private fun updateLeftItemPosition(item: View) {

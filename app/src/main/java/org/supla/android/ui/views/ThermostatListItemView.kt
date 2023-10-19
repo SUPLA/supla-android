@@ -90,7 +90,8 @@ class ThermostatListItemView : BaseSlideableContent<SlideableListItemData.Thermo
         hasRightButton = hasRightButton,
         onInfoClick = onInfoClick,
         onIssueClick = onIssueClick,
-        onTitleLongClick = onTitleLongClick
+        onTitleLongClick = onTitleLongClick,
+        onItemClick = onItemClick
       )
     }
   }
@@ -116,6 +117,7 @@ fun ThermostatListItemView(
   hasRightButton: Boolean = false,
   onInfoClick: () -> Unit = { },
   onIssueClick: () -> Unit = { },
+  onItemClick: () -> Unit = { },
   onTitleLongClick: () -> Unit = { }
 ) {
   ListItemScaffold(
@@ -128,7 +130,8 @@ fun ThermostatListItemView(
     onTitleLongClick = onTitleLongClick,
     showInfoIcon = showInfoIcon,
     issueIconType = data.issueIconType,
-    onIssueClick = onIssueClick
+    onIssueClick = onIssueClick,
+    onItemClick = onItemClick
   ) {
     Row(
       modifier = Modifier
