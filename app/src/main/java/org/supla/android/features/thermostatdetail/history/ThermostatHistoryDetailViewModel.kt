@@ -20,9 +20,11 @@ package org.supla.android.features.thermostatdetail.history
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.storage.UserStateHolder
+import org.supla.android.data.model.Optional
 import org.supla.android.data.model.chart.ChartDataAggregation
 import org.supla.android.data.model.chart.DateRange
 import org.supla.android.data.model.chart.HistoryDataSet
@@ -69,11 +71,12 @@ class ThermostatHistoryDetailViewModel @Inject constructor(
 
   override fun measurementsMaybe(
     remoteId: Int,
+    profileId: Long,
     start: Date,
     end: Date,
     aggregation: ChartDataAggregation
-  ): Maybe<Pair<List<HistoryDataSet>, DateRange>> =
-    Maybe.zip(
+  ): Single<Pair<List<HistoryDataSet>, Optional<DateRange>>> =
+    Single.zip(
       loadChannelWithChildrenMeasurementsUseCase(remoteId, start, end, aggregation),
       loadChannelWithChildrenMeasurementsDateRange(remoteId)
     ) { first, second -> Pair(first, second) }

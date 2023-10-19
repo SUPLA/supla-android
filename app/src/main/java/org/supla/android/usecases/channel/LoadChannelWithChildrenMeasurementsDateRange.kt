@@ -17,7 +17,8 @@ package org.supla.android.usecases.channel
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import io.reactivex.rxjava3.core.Maybe
+import io.reactivex.rxjava3.core.Single
+import org.supla.android.data.model.Optional
 import org.supla.android.data.model.chart.DateRange
 import org.supla.android.data.source.TemperatureAndHumidityLogRepository
 import org.supla.android.data.source.TemperatureLogRepository
@@ -39,24 +40,25 @@ class LoadChannelWithChildrenMeasurementsDateRange @Inject constructor(
   private val temperatureAndHumidityLogRepository: TemperatureAndHumidityLogRepository
 ) {
 
-  operator fun invoke(remoteId: Int): Maybe<DateRange> =
+  operator fun invoke(remoteId: Int): Single<Optional<DateRange>> =
     readChannelWithChildrenUseCase(remoteId)
       .flatMapMerged { profileManager.getCurrentProfile() }
+      .toSingle()
       .flatMap {
         if (it.first.channel.isHvacThermostat()) {
-          Maybe.zip(
+          Single.zip(
             findMinTime(it.first, it.second.id).map { long -> Date(long) },
             findMaxTime(it.first, it.second.id).map { long -> Date(long) }
-          ) { min, max -> DateRange(min, max) }
+          ) { min, max -> Optional.of(DateRange(min, max)) }
         } else {
-          Maybe.empty()
+          Single.error(IllegalArgumentException("Channel function not supported (${it.first.channel.func}"))
         }
       }
 
   private fun findMinTime(
     channelWithChildren: ChannelWithChildren,
     profileId: Long
-  ): Maybe<Long> {
+  ): Single<Long> {
     val channelsWithMeasurements = mutableListOf<Channel>().also { list ->
       list.addAll(channelWithChildren.children.filter { it.channel.hasMeasurements() }.map { it.channel })
       if (channelWithChildren.channel.hasMeasurements()) {
@@ -64,23 +66,35 @@ class LoadChannelWithChildrenMeasurementsDateRange @Inject constructor(
       }
     }
 
-    val observables = mutableListOf<Maybe<Long>>().also { list ->
+    val observables = mutableListOf<Single<Optional<Long>>>().also { list ->
       channelsWithMeasurements.forEach {
         if (it.func == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER) {
-          list.add(temperatureLogRepository.findMinTimestamp(it.remoteId, profileId))
+          list.add(
+            temperatureLogRepository
+              .findMinTimestamp(it.remoteId, profileId)
+              .map { value -> Optional.of(value) }
+              .onErrorReturnItem(Optional.empty())
+          )
         } else if (it.func == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE) {
-          list.add(temperatureAndHumidityLogRepository.findMinTimestamp(it.remoteId, profileId))
+          list.add(
+            temperatureAndHumidityLogRepository
+              .findMinTimestamp(it.remoteId, profileId)
+              .map { value -> Optional.of(value) }
+              .onErrorReturnItem(Optional.empty())
+          )
         }
       }
     }
 
-    return Maybe.zip(observables) { list -> list.filterIsInstance<Long>().min() }
+    return Single.zip(observables) { list ->
+      list.filterIsInstance<Optional<Long>>().filter { !it.isEmpty }.minOf { it.get() }
+    }
   }
 
   private fun findMaxTime(
     channelWithChildren: ChannelWithChildren,
     profileId: Long
-  ): Maybe<Long> {
+  ): Single<Long> {
     val channelsWithMeasurements = mutableListOf<Channel>().also { list ->
       list.addAll(channelWithChildren.children.filter { it.channel.hasMeasurements() }.map { it.channel })
       if (channelWithChildren.channel.hasMeasurements()) {
@@ -88,16 +102,28 @@ class LoadChannelWithChildrenMeasurementsDateRange @Inject constructor(
       }
     }
 
-    val observables = mutableListOf<Maybe<Long>>().also { list ->
+    val observables = mutableListOf<Single<Optional<Long>>>().also { list ->
       channelsWithMeasurements.forEach {
         if (it.func == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER) {
-          list.add(temperatureLogRepository.findMaxTimestamp(it.remoteId, profileId))
+          list.add(
+            temperatureLogRepository
+              .findMaxTimestamp(it.remoteId, profileId)
+              .map { value -> Optional.of(value) }
+              .onErrorReturnItem(Optional.empty())
+          )
         } else if (it.func == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE) {
-          list.add(temperatureAndHumidityLogRepository.findMaxTimestamp(it.remoteId, profileId))
+          list.add(
+            temperatureAndHumidityLogRepository
+              .findMaxTimestamp(it.remoteId, profileId)
+              .map { value -> Optional.of(value) }
+              .onErrorReturnItem(Optional.empty())
+          )
         }
       }
     }
 
-    return Maybe.zip(observables) { it.filterIsInstance<Long>().max() }
+    return Single.zip(observables) { lists ->
+      lists.filterIsInstance<Optional<Long>>().filter { !it.isEmpty }.maxOf { it.get() }
+    }
   }
 }

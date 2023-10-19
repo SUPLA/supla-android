@@ -17,44 +17,43 @@ package org.supla.android.usecases.channel
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import io.reactivex.rxjava3.core.Maybe
+import io.reactivex.rxjava3.core.Single
+import org.supla.android.data.model.Optional
 import org.supla.android.data.model.chart.DateRange
 import org.supla.android.data.source.TemperatureAndHumidityLogRepository
 import org.supla.android.data.source.TemperatureLogRepository
 import org.supla.android.db.Channel
-import org.supla.android.extensions.flatMapMerged
 import org.supla.android.extensions.isThermometer
 import org.supla.android.lib.SuplaConst
-import org.supla.android.profile.ProfileManager
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class LoadChannelMeasurementsDateRangeUseCase @Inject constructor(
-  private val profileManager: ProfileManager,
   private val readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
   private val temperatureLogRepository: TemperatureLogRepository,
   private val temperatureAndHumidityLogRepository: TemperatureAndHumidityLogRepository
 ) {
-  operator fun invoke(remoteId: Int): Maybe<DateRange> =
+  operator fun invoke(remoteId: Int, profileId: Long): Single<Optional<DateRange>> =
     readChannelByRemoteIdUseCase(remoteId)
-      .flatMapMerged { profileManager.getCurrentProfile() }
+      .toSingle()
       .flatMap {
-        if (it.first.isThermometer()) {
-          Maybe.zip(
-            findMinTime(it.first, it.second.id).map { long -> Date(long) },
-            findMaxTime(it.first, it.second.id).map { long -> Date(long) }
-          ) { min, max -> DateRange(min, max) }
+        if (it.isThermometer()) {
+          Single.zip(
+            findMinTime(it, profileId).map { long -> Date(long) },
+            findMaxTime(it, profileId).map { long -> Date(long) }
+          ) { min, max -> Optional.of(DateRange(min, max)) }
+            .onErrorReturnItem(Optional.empty())
         } else {
-          Maybe.empty()
+          Single.error(IllegalArgumentException("Channel function not supported (${it.func}"))
         }
       }
 
   private fun findMinTime(
     channel: Channel,
     profileId: Long
-  ): Maybe<Long> {
+  ): Single<Long> {
     return when (channel.func) {
       SuplaConst.SUPLA_CHANNELFNC_THERMOMETER ->
         temperatureLogRepository.findMinTimestamp(channel.remoteId, profileId)
@@ -62,14 +61,14 @@ class LoadChannelMeasurementsDateRangeUseCase @Inject constructor(
       SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE ->
         temperatureAndHumidityLogRepository.findMinTimestamp(channel.remoteId, profileId)
 
-      else -> Maybe.empty()
+      else -> Single.error(IllegalArgumentException("Channel function not supported (${channel.func}"))
     }
   }
 
   private fun findMaxTime(
     channel: Channel,
     profileId: Long
-  ): Maybe<Long> {
+  ): Single<Long> {
     return when (channel.func) {
       SuplaConst.SUPLA_CHANNELFNC_THERMOMETER ->
         temperatureLogRepository.findMaxTimestamp(channel.remoteId, profileId)
@@ -77,7 +76,7 @@ class LoadChannelMeasurementsDateRangeUseCase @Inject constructor(
       SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE ->
         temperatureAndHumidityLogRepository.findMaxTimestamp(channel.remoteId, profileId)
 
-      else -> Maybe.empty()
+      else -> Single.error(IllegalArgumentException("Channel function not supported (${channel.func}"))
     }
   }
 }

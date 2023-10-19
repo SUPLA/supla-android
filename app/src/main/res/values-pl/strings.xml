@@ -596,6 +596,7 @@
   <string name="history_refreshing">Odświeżanie…</string>
   <string name="history_refreshing_failed">Odświeżanie nie powiodło się</string>
   <string name="history_no_data_selected">Nie wybrano danych do wyświetlenia.</string>
+  <string name="history_no_data_available">Brak pomiarów</string>
 
   <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
     <item quantity="one">włączone</item>
