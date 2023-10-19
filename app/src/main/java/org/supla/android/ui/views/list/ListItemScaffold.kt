@@ -64,6 +64,7 @@ fun ListItemScaffold(
   onInfoClick: () -> Unit,
   onIssueClick: () -> Unit,
   onTitleLongClick: () -> Unit,
+  onItemClick: () -> Unit,
   showInfoIcon: Boolean,
   issueIconType: IssueIconType?,
   hasLeftButton: Boolean = false,
@@ -100,7 +101,7 @@ fun ListItemScaffold(
         .fillMaxWidth(),
       horizontalAlignment = Alignment.CenterHorizontally
     ) {
-      ListItemTitle(text = itemTitle, onLongClick = onTitleLongClick, scale = scale)
+      ListItemTitle(text = itemTitle, onLongClick = onTitleLongClick, onItemClick = onItemClick, scale = scale)
       Separator()
     }
 
@@ -173,7 +174,7 @@ private fun ListItemIssueIcon(issueIconType: IssueIconType, onClick: () -> Unit)
 }
 
 @Composable
-private fun ListItemTitle(text: String, onLongClick: () -> Unit, scale: Float = 1f) {
+private fun ListItemTitle(text: String, onLongClick: () -> Unit, onItemClick: () -> Unit, scale: Float = 1f) {
   val textSize = MaterialTheme.typography.listItemCaption().fontSize.times(max(scale, 1f))
   Text(
     text = text,
@@ -184,7 +185,7 @@ private fun ListItemTitle(text: String, onLongClick: () -> Unit, scale: Float = 
         vertical = dimensionResource(id = R.dimen.distance_small).times(scale)
       )
       .pointerInput(Unit) {
-        detectTapGestures(onLongPress = { onLongClick() })
+        detectTapGestures(onLongPress = { onLongClick() }, onTap = { onItemClick() })
       },
     maxLines = 1,
     overflow = TextOverflow.Ellipsis,
@@ -206,7 +207,7 @@ private fun Preview() {
           .width(500.dp)
           .height(100.dp)
       ) {
-        ListItemScaffold(itemTitle = "Power Switch", online = true, { }, { }, { }, true, IssueIconType.WARNING) {
+        ListItemScaffold(itemTitle = "Power Switch", online = true, { }, { }, { }, { }, true, IssueIconType.WARNING) {
         }
       }
       Box(
@@ -214,7 +215,7 @@ private fun Preview() {
           .width(500.dp)
           .height(100.dp)
       ) {
-        ListItemScaffold(itemTitle = "Power Switch", online = false, { }, { }, { }, false, null) {
+        ListItemScaffold(itemTitle = "Power Switch", online = false, { }, { }, { }, { }, false, null) {
         }
       }
     }

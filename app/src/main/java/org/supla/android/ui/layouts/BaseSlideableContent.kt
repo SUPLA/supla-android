@@ -35,6 +35,7 @@ abstract class BaseSlideableContent<T : SlideableListItemData> : BaseAbstractCom
   var onInfoClick: () -> Unit = { }
   var onIssueClick: () -> Unit = { }
   var onTitleLongClick: () -> Unit = { }
+  var onItemClick: () -> Unit = { }
 
   protected var data: T? by mutableStateOf(null)
 
