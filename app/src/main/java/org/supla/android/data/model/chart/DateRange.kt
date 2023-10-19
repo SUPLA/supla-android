@@ -27,6 +27,7 @@ import org.supla.android.extensions.shift
 import org.supla.android.extensions.yearEnd
 import org.supla.android.extensions.yearStart
 import java.util.Date
+import kotlin.math.abs
 
 private const val DAY_IN_MILLIS = 24 * 60 * 60 * 1000
 data class DateRange(
@@ -35,7 +36,7 @@ data class DateRange(
 ) {
 
   val daysCount: Int
-    get() = (end.time - start.time).div(DAY_IN_MILLIS).toInt()
+    get() = abs(end.time - start.time).div(DAY_IN_MILLIS).toInt()
 
   val minAggregation: ChartDataAggregation
     get() = when {

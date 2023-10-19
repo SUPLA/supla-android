@@ -12,6 +12,7 @@ import org.mockito.kotlin.*
 import org.supla.android.core.SuplaAppApi
 import org.supla.android.core.SuplaAppProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientApi
+import org.supla.android.core.networking.suplacloud.SuplaCloudConfigHolder
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.db.AuthProfileItem
 import org.supla.android.db.DbHelper
@@ -43,6 +44,9 @@ class MultiAccountProfileManagerTest {
   @Mock
   private lateinit var singleCallProvider: SingleCall.Provider
 
+  @Mock
+  private lateinit var suplaCloudConfigHolder: SuplaCloudConfigHolder
+
   private lateinit var profileManager: MultiAccountProfileManager
 
   @Before
@@ -54,7 +58,8 @@ class MultiAccountProfileManagerTest {
       widgetVisibilityHandler,
       listsEventsManager,
       suplaAppProvider,
-      singleCallProvider
+      singleCallProvider,
+      suplaCloudConfigHolder
     )
   }
 
@@ -238,7 +243,7 @@ class MultiAccountProfileManagerTest {
 
     verify(profileRepository).allProfiles
     verifyNoMoreInteractions(profileRepository)
-    verifyZeroInteractions(profileIdHolder, dbHelper, listsEventsManager, suplaAppProvider)
+    verifyZeroInteractions(profileIdHolder, dbHelper, listsEventsManager, suplaAppProvider, suplaCloudConfigHolder)
   }
 
   @Test
@@ -284,7 +289,8 @@ class MultiAccountProfileManagerTest {
     verify(listsEventsManager).emitGroupUpdate()
     verify(listsEventsManager).emitChannelUpdate()
     verify(suplaAppProvider).provide()
-    verifyNoMoreInteractions(profileRepository, profileIdHolder, dbHelper, listsEventsManager, suplaAppProvider)
+    verify(suplaCloudConfigHolder).clean()
+    verifyNoMoreInteractions(profileRepository, profileIdHolder, dbHelper, listsEventsManager, suplaAppProvider, suplaCloudConfigHolder)
 
     io.mockk.verify {
       suplaApp.CancelAllRestApiClientTasks(true)
@@ -333,7 +339,8 @@ class MultiAccountProfileManagerTest {
     verify(listsEventsManager).emitGroupUpdate()
     verify(listsEventsManager).emitChannelUpdate()
     verify(suplaAppProvider).provide()
-    verifyNoMoreInteractions(profileRepository, profileIdHolder, dbHelper, listsEventsManager, suplaAppProvider)
+    verify(suplaCloudConfigHolder).clean()
+    verifyNoMoreInteractions(profileRepository, profileIdHolder, dbHelper, listsEventsManager, suplaAppProvider, suplaCloudConfigHolder)
 
     io.mockk.verify {
       suplaApp.CancelAllRestApiClientTasks(true)

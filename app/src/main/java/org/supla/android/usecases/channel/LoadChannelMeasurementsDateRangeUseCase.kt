@@ -31,7 +31,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class LoadChannelMeasurementsDateRange @Inject constructor(
+class LoadChannelMeasurementsDateRangeUseCase @Inject constructor(
   private val profileManager: ProfileManager,
   private val readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
   private val temperatureLogRepository: TemperatureLogRepository,

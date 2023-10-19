@@ -98,4 +98,9 @@ class SuplaCloudConfigHolder @Inject constructor() {
         }
       )
     }
+
+  fun clean() {
+    token = null
+    url = null
+  }
 }

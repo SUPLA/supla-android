@@ -32,7 +32,7 @@ import org.supla.android.features.detailbase.history.BaseHistoryDetailViewModel
 import org.supla.android.profile.ProfileManager
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.DownloadChannelMeasurementsUseCase
-import org.supla.android.usecases.channel.LoadChannelMeasurementsDateRange
+import org.supla.android.usecases.channel.LoadChannelMeasurementsDateRangeUseCase
 import org.supla.android.usecases.channel.LoadChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import java.util.Date
@@ -42,7 +42,7 @@ import javax.inject.Inject
 class ThermometerHistoryDetailViewModel @Inject constructor(
   private val downloadChannelMeasurementsUseCase: DownloadChannelMeasurementsUseCase,
   private val loadChannelMeasurementsUseCase: LoadChannelMeasurementsUseCase,
-  private val loadChannelMeasurementsDateRange: LoadChannelMeasurementsDateRange,
+  private val loadChannelMeasurementsDateRangeUseCase: LoadChannelMeasurementsDateRangeUseCase,
   private val downloadEventsManager: DownloadEventsManager,
   private val profileManager: ProfileManager,
   private val readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
@@ -74,7 +74,7 @@ class ThermometerHistoryDetailViewModel @Inject constructor(
   ): Maybe<Pair<List<HistoryDataSet>, DateRange>> =
     Maybe.zip(
       loadChannelMeasurementsUseCase(remoteId, start, end, aggregation),
-      loadChannelMeasurementsDateRange(remoteId)
+      loadChannelMeasurementsDateRangeUseCase(remoteId)
     ) { first, second -> Pair(first, second) }
 
   private fun handleData(channel: Channel, chartState: TemperatureChartState) {
