@@ -270,9 +270,9 @@ abstract class BaseHistoryDetailViewModel(
       state.copy(
         // Update sets visibility
         sets = sets.map { set -> set.copy(active = chartState.visibleSets?.contains(set.setId) ?: true) },
-        withHumidity = sets.firstOrNull { it.type == ChartEntryType.HUMIDITY } != null,
+        withHumidity = sets.firstOrNull { it.setId.type == ChartEntryType.HUMIDITY } != null,
         maxTemperature = sets
-          .filter { it.type == ChartEntryType.TEMPERATURE }
+          .filter { it.setId.type == ChartEntryType.TEMPERATURE }
           .mapNotNull { set -> set.entries.maxOfOrNull { entries -> entries.maxOf { it.y } } }
           .maxOfOrNull { it }
           ?.plus(2), // Adds some additional space on chart

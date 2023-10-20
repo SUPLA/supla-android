@@ -76,7 +76,7 @@ class ThermometerHistoryDetailViewModel @Inject constructor(
     aggregation: ChartDataAggregation
   ): Single<Pair<List<HistoryDataSet>, Optional<DateRange>>> =
     Single.zip(
-      loadChannelMeasurementsUseCase(remoteId, start, end, aggregation),
+      loadChannelMeasurementsUseCase(remoteId, profileId, start, end, aggregation),
       loadChannelMeasurementsDateRangeUseCase(remoteId, profileId)
     ) { first, second -> Pair(first, second) }
 

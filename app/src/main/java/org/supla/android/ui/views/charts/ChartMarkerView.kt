@@ -26,6 +26,7 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.utils.MPPointF
 import org.supla.android.R
+import org.supla.android.data.model.chart.ChartDataAggregation
 import org.supla.android.data.model.chart.ChartEntryType
 import org.supla.android.extensions.toPx
 import org.supla.android.extensions.valuesFormatter
@@ -43,6 +44,13 @@ class ChartMarkerView(context: Context) : MarkerView(context, R.layout.view_char
     entry?.let {
       title.text = context.valuesFormatter.getFullDateString(it.xAsDate)
       (it.data as? EntryDetails)?.let { details ->
+        title.text = when (details.aggregation) {
+          ChartDataAggregation.HOURS -> "${title.text.substring(0, title.text.length - 2)}00"
+          ChartDataAggregation.DAYS -> title.text.substring(0, title.text.length - 5)
+          ChartDataAggregation.MONTHS -> context.valuesFormatter.getMonthAndYearString(it.xAsDate)?.replaceFirstChar(Char::titlecase)
+          ChartDataAggregation.YEARS -> context.valuesFormatter.getYearString(it.xAsDate)
+          else -> title.text
+        }
         text.text = getValueString(details.type, it.y)
 
         if (details.min != null && details.max != null) {

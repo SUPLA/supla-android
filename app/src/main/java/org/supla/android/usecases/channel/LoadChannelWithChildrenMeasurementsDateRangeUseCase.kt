@@ -23,35 +23,32 @@ import org.supla.android.data.model.chart.DateRange
 import org.supla.android.data.source.TemperatureAndHumidityLogRepository
 import org.supla.android.data.source.TemperatureLogRepository
 import org.supla.android.db.Channel
-import org.supla.android.extensions.flatMapMerged
 import org.supla.android.extensions.hasMeasurements
 import org.supla.android.extensions.isHvacThermostat
 import org.supla.android.lib.SuplaConst
-import org.supla.android.profile.ProfileManager
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class LoadChannelWithChildrenMeasurementsDateRange @Inject constructor(
-  private val profileManager: ProfileManager,
+class LoadChannelWithChildrenMeasurementsDateRangeUseCase @Inject constructor(
   private val readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
   private val temperatureLogRepository: TemperatureLogRepository,
   private val temperatureAndHumidityLogRepository: TemperatureAndHumidityLogRepository
 ) {
 
-  operator fun invoke(remoteId: Int): Single<Optional<DateRange>> =
+  operator fun invoke(remoteId: Int, profileId: Long): Single<Optional<DateRange>> =
     readChannelWithChildrenUseCase(remoteId)
-      .flatMapMerged { profileManager.getCurrentProfile() }
       .toSingle()
       .flatMap {
-        if (it.first.channel.isHvacThermostat()) {
+        if (it.channel.isHvacThermostat()) {
           Single.zip(
-            findMinTime(it.first, it.second.id).map { long -> Date(long) },
-            findMaxTime(it.first, it.second.id).map { long -> Date(long) }
+            findMinTime(it, profileId).map { long -> Date(long) },
+            findMaxTime(it, profileId).map { long -> Date(long) }
           ) { min, max -> Optional.of(DateRange(min, max)) }
+            .onErrorReturnItem(Optional.empty())
         } else {
-          Single.error(IllegalArgumentException("Channel function not supported (${it.first.channel.func}"))
+          Single.error(IllegalArgumentException("Channel function not supported (${it.channel.func}"))
         }
       }
 

@@ -25,31 +25,33 @@ import org.supla.android.data.model.chart.HistoryDataSet
 import org.supla.android.data.source.TemperatureAndHumidityLogRepository
 import org.supla.android.data.source.TemperatureLogRepository
 import org.supla.android.db.Channel
-import org.supla.android.extensions.flatMapMerged
 import org.supla.android.extensions.isThermometer
 import org.supla.android.lib.SuplaConst
-import org.supla.android.profile.ProfileManager
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class LoadChannelMeasurementsUseCase @Inject constructor(
-  private val profileManager: ProfileManager,
   private val readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
   private val temperatureLogRepository: TemperatureLogRepository,
   private val temperatureAndHumidityLogRepository: TemperatureAndHumidityLogRepository
 ) : BaseLoadMeasurementsUseCase() {
 
-  operator fun invoke(remoteId: Int, startDate: Date, endDate: Date, aggregation: ChartDataAggregation): Single<List<HistoryDataSet>> =
+  operator fun invoke(
+    remoteId: Int,
+    profileId: Long,
+    startDate: Date,
+    endDate: Date,
+    aggregation: ChartDataAggregation
+  ): Single<List<HistoryDataSet>> =
     readChannelByRemoteIdUseCase(remoteId)
-      .flatMapMerged { profileManager.getCurrentProfile() }
       .toSingle()
       .flatMap {
-        if (it.first.isThermometer()) {
-          buildDataSets(it.first, it.second.id, startDate, endDate, aggregation).firstOrError()
+        if (it.isThermometer()) {
+          buildDataSets(it, profileId, startDate, endDate, aggregation).firstOrError()
         } else {
-          Single.error(IllegalArgumentException("Channel function not supported (${it.first.func}"))
+          Single.error(IllegalArgumentException("Channel function not supported (${it.func}"))
         }
       }
 

@@ -9,7 +9,7 @@ package org.supla.android.usecases.channel
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the``````
  GNU General Public License for more details.
 
  You should have received a copy of the GNU General Public License
@@ -39,7 +39,7 @@ abstract class BaseLoadMeasurementsUseCase {
     if (aggregation == ChartDataAggregation.MINUTES) {
       return measurements
         .filter { it.temperature != null }
-        .map { AggregatedEntity(it.date.toTimestamp(), it.temperature!!) }
+        .map { AggregatedEntity(aggregation, it.date.toTimestamp(), it.temperature!!) }
     }
 
     return measurements
@@ -48,6 +48,7 @@ abstract class BaseLoadMeasurementsUseCase {
       .filter { group -> group.value.isNotEmpty() }
       .map { group ->
         AggregatedEntity(
+          aggregation = aggregation,
           date = aggregation.groupTimeProvider(group.value.firstOrNull()!!.date),
           value = group.value.map { it.temperature!! }.average().toFloat(),
           min = group.value.minOf { it.temperature!! },
@@ -63,7 +64,7 @@ abstract class BaseLoadMeasurementsUseCase {
     if (aggregation == ChartDataAggregation.MINUTES) {
       return measurements
         .filter { it.temperature != null }
-        .map { AggregatedEntity(it.date.toTimestamp(), it.humidity!!) }
+        .map { AggregatedEntity(aggregation, it.date.toTimestamp(), it.humidity!!) }
     }
 
     return measurements
@@ -72,6 +73,7 @@ abstract class BaseLoadMeasurementsUseCase {
       .filter { group -> group.value.isNotEmpty() }
       .map { group ->
         AggregatedEntity(
+          aggregation = aggregation,
           date = aggregation.groupTimeProvider(group.value.firstOrNull()!!.date),
           value = group.value.map { it.humidity!! }.average().toFloat(),
           min = group.value.minOf { it.humidity!! },
@@ -89,7 +91,6 @@ abstract class BaseLoadMeasurementsUseCase {
   ) =
     HistoryDataSet(
       setId = HistoryDataSet.Id(channel.remoteId, type),
-      type = type,
       iconProvider = when (type) {
         ChartEntryType.TEMPERATURE -> { context -> ImageCache.getBitmap(context, channel.imageIdx) }
         ChartEntryType.HUMIDITY -> { context -> ImageCache.getBitmap(context, channel.getImageIdx(ChannelBase.WhichOne.Second)) }
@@ -160,6 +161,7 @@ internal class TemperatureColors : Colors(listOf(R.color.red, R.color.dark_red))
 internal class HumidityColors : Colors(listOf(R.color.blue, R.color.dark_blue))
 
 internal data class AggregatedEntity(
+  val aggregation: ChartDataAggregation,
   val date: Long,
   val value: Float,
   val min: Float? = null,
@@ -167,10 +169,11 @@ internal data class AggregatedEntity(
 ) {
 
   fun toDetails(type: ChartEntryType) =
-    EntryDetails(type, min, max)
+    EntryDetails(aggregation, type, min, max)
 }
 
 data class EntryDetails(
+  val aggregation: ChartDataAggregation,
   val type: ChartEntryType,
   val min: Float? = null,
   val max: Float? = null

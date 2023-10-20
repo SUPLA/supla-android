@@ -18,8 +18,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import dagger.hilt.android.lifecycle.HiltViewModel
+import org.supla.android.db.Channel
 import org.supla.android.db.ChannelBase
 import org.supla.android.events.ListsEventsManager
+import org.supla.android.extensions.isHvacThermostat
 import org.supla.android.features.standarddetail.StandardDetailViewEvent
 import org.supla.android.features.standarddetail.StandardDetailViewModel
 import org.supla.android.features.standarddetail.StandardDetailViewState
@@ -46,6 +48,25 @@ class ThermostatDetailViewModel @Inject constructor(
 
   override fun updatedState(state: ThermostatDetailViewState, channelBase: ChannelBase) =
     state.copy(channelBase = channelBase)
+
+  override fun shouldCloseDetail(channelBase: ChannelBase, initialFunction: Int) =
+    when (channelBase) {
+      is Channel -> {
+        if (channelBase.isHvacThermostat()) {
+          if (super.shouldCloseDetail(channelBase, initialFunction)) {
+            true
+          } else {
+            val subfunction = channelBase.value.asThermostatValue().subfunction
+            val currentSubfunction = (currentState().channelBase as? Channel)?.value?.asThermostatValue()?.subfunction
+            currentSubfunction != null && currentSubfunction != subfunction
+          }
+        } else {
+          super.shouldCloseDetail(channelBase, initialFunction)
+        }
+      }
+
+      else -> super.shouldCloseDetail(channelBase, initialFunction)
+    }
 }
 
 sealed interface ThermostatDetailViewEvent : StandardDetailViewEvent {

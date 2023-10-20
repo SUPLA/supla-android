@@ -148,6 +148,13 @@ class ValuesFormatter @Inject constructor(
     }
 
   @SuppressLint("SimpleDateFormat")
+  fun getMonthAndYearString(date: Date?): String? =
+    date?.let {
+      val formatter = SimpleDateFormat("yyyy MMM")
+      formatter.format(it)
+    }
+
+  @SuppressLint("SimpleDateFormat")
   fun getYearString(date: Date?): String? =
     date?.let {
       val formatter = SimpleDateFormat("yyyy")

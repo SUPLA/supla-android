@@ -61,11 +61,14 @@ abstract class StandardDetailViewModel<S : StandardDetailViewState, E : Standard
 
   protected abstract fun updatedState(state: S, channelBase: ChannelBase): S
 
+  protected open fun shouldCloseDetail(channelBase: ChannelBase, initialFunction: Int) =
+    channelBase.visible == 0 || channelBase.func != initialFunction
+
   private fun handleChannelBase(channelBase: ChannelBase, initialFunction: Int) {
-    if (channelBase.visible > 0 && channelBase.func == initialFunction) {
-      updateState { updatedState(it, channelBase) }
-    } else {
+    if (shouldCloseDetail(channelBase, initialFunction)) {
       sendEvent(closeEvent())
+    } else {
+      updateState { updatedState(it, channelBase) }
     }
   }
 

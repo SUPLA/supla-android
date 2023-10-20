@@ -24,7 +24,6 @@ import org.supla.android.core.ui.StringProvider
 
 data class HistoryDataSet(
   val setId: Id,
-  val type: ChartEntryType,
   val iconProvider: BitmapProvider,
   val valueProvider: StringProvider,
   @ColorRes val color: Int,

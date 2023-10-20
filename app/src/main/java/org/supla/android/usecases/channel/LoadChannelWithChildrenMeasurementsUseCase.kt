@@ -25,32 +25,34 @@ import org.supla.android.data.model.chart.HistoryDataSet
 import org.supla.android.data.source.TemperatureAndHumidityLogRepository
 import org.supla.android.data.source.TemperatureLogRepository
 import org.supla.android.db.Channel
-import org.supla.android.extensions.flatMapMerged
 import org.supla.android.extensions.hasMeasurements
 import org.supla.android.extensions.isHvacThermostat
 import org.supla.android.lib.SuplaConst
-import org.supla.android.profile.ProfileManager
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class LoadChannelWithChildrenMeasurementsUseCase @Inject constructor(
-  private val profileManager: ProfileManager,
   private val readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
   private val temperatureLogRepository: TemperatureLogRepository,
   private val temperatureAndHumidityLogRepository: TemperatureAndHumidityLogRepository
 ) : BaseLoadMeasurementsUseCase() {
 
-  operator fun invoke(remoteId: Int, startDate: Date, endDate: Date, aggregation: ChartDataAggregation): Single<List<HistoryDataSet>> =
+  operator fun invoke(
+    remoteId: Int,
+    profileId: Long,
+    startDate: Date,
+    endDate: Date,
+    aggregation: ChartDataAggregation
+  ): Single<List<HistoryDataSet>> =
     readChannelWithChildrenUseCase(remoteId)
-      .flatMapMerged { profileManager.getCurrentProfile() }
       .toSingle()
       .flatMap {
-        if (it.first.channel.isHvacThermostat()) {
-          buildDataSets(it.first, it.second.id, startDate, endDate, aggregation).firstOrError()
+        if (it.channel.isHvacThermostat()) {
+          buildDataSets(it, profileId, startDate, endDate, aggregation).firstOrError()
         } else {
-          Single.error(IllegalArgumentException("Channel function not supported (${it.first.channel.func}"))
+          Single.error(IllegalArgumentException("Channel function not supported (${it.channel.func}"))
         }
       }
 
@@ -62,7 +64,12 @@ class LoadChannelWithChildrenMeasurementsUseCase @Inject constructor(
     aggregation: ChartDataAggregation
   ): Observable<List<HistoryDataSet>> {
     val channelsWithMeasurements = mutableListOf<Channel>().also { list ->
-      list.addAll(channelWithChildren.children.filter { it.channel.hasMeasurements() }.map { it.channel })
+      list.addAll(
+        channelWithChildren.children
+          .sortedBy { it.relationType.value }
+          .filter { it.channel.hasMeasurements() }
+          .map { it.channel }
+      )
       if (channelWithChildren.channel.hasMeasurements()) {
         list.add(channelWithChildren.channel)
       }
