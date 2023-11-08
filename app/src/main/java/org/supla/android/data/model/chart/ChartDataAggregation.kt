@@ -22,8 +22,9 @@ import androidx.annotation.StringRes
 import org.supla.android.R
 import org.supla.android.extensions.dayNoon
 import org.supla.android.extensions.inHalfOfHour
-import org.supla.android.extensions.monthStart
-import org.supla.android.extensions.yearStart
+import org.supla.android.extensions.monthHalf
+import org.supla.android.extensions.toTimestamp
+import org.supla.android.extensions.yearHalf
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -36,20 +37,20 @@ enum class ChartDataAggregation(
   val aggregator: (Date) -> Long,
   val groupTimeProvider: (Date) -> Long // In seconds
 ) {
-  MINUTES(R.string.minutes, 60, { it.getAggregationString().toLong() }, { it.time.div(1000) }),
-  HOURS(R.string.hours, 3600, { it.getAggregationString().substring(0, 10).toLong() }, { it.inHalfOfHour().time.div(1000) }),
-  DAYS(R.string.days, 86400, { it.getAggregationString().substring(0, 8).toLong() }, { it.dayNoon().time.div(1000) }),
+  MINUTES(R.string.minutes, 60, { it.getAggregationString().toLong() }, { it.toTimestamp() }),
+  HOURS(R.string.hours, 3600, { it.getAggregationString().substring(0, 10).toLong() }, { it.inHalfOfHour().toTimestamp() }),
+  DAYS(R.string.days, 86400, { it.getAggregationString().substring(0, 8).toLong() }, { it.dayNoon().toTimestamp() }),
   MONTHS(
     R.string.months,
     2592000,
     { it.getAggregationString().substring(0, 6).toLong() },
-    { it.monthStart().time.div(1000).plus(15 * 24 * 60 * 60) }
+    { it.monthHalf().toTimestamp() }
   ),
   YEARS(
     R.string.years,
     31536000,
     { it.getAggregationString().substring(0, 4).toLong() },
-    { it.yearStart().time.div(1000).plus(82 * 24 * 60 * 60) }
+    { it.yearHalf().toTimestamp() }
   );
 
   fun between(min: ChartDataAggregation, max: ChartDataAggregation): Boolean =

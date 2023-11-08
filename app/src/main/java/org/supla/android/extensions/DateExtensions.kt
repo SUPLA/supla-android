@@ -74,6 +74,12 @@ fun Date.monthEnd(): Date =
     it.time
   }
 
+fun Date.monthHalf(): Date =
+  startOfDay(this).let {
+    it.set(Calendar.DAY_OF_MONTH, 15)
+    it.time
+  }
+
 fun Date.previousMonth(): Date =
   startOfDay(this).let {
     it.set(Calendar.MONTH, it.get(Calendar.MONTH) - 1)
@@ -113,6 +119,13 @@ fun Date.yearEnd(): Date =
   endOfDay(this).let {
     it.set(Calendar.MONTH, Calendar.DECEMBER)
     it.set(Calendar.DAY_OF_MONTH, 31)
+    it.time
+  }
+
+fun Date.yearHalf(): Date =
+  startOfDay(this).let {
+    it.set(Calendar.MONTH, Calendar.JULY)
+    it.set(Calendar.DAY_OF_MONTH, 1)
     it.time
   }
 

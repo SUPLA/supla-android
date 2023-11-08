@@ -35,7 +35,7 @@ import org.supla.android.profile.ProfileManager
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.ChannelWithChildren
 import org.supla.android.usecases.channel.DownloadChannelMeasurementsUseCase
-import org.supla.android.usecases.channel.LoadChannelWithChildrenMeasurementsDateRange
+import org.supla.android.usecases.channel.LoadChannelWithChildrenMeasurementsDateRangeUseCase
 import org.supla.android.usecases.channel.LoadChannelWithChildrenMeasurementsUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
 import java.util.Date
@@ -46,7 +46,7 @@ class ThermostatHistoryDetailViewModel @Inject constructor(
   private val downloadChannelMeasurementsUseCase: DownloadChannelMeasurementsUseCase,
   private val readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
   private val loadChannelWithChildrenMeasurementsUseCase: LoadChannelWithChildrenMeasurementsUseCase,
-  private val loadChannelWithChildrenMeasurementsDateRange: LoadChannelWithChildrenMeasurementsDateRange,
+  private val loadChannelWithChildrenMeasurementsDateRangeUseCase: LoadChannelWithChildrenMeasurementsDateRangeUseCase,
   private val downloadEventsManager: DownloadEventsManager,
   private val profileManager: ProfileManager,
   private val userStateHolder: UserStateHolder,
@@ -77,8 +77,8 @@ class ThermostatHistoryDetailViewModel @Inject constructor(
     aggregation: ChartDataAggregation
   ): Single<Pair<List<HistoryDataSet>, Optional<DateRange>>> =
     Single.zip(
-      loadChannelWithChildrenMeasurementsUseCase(remoteId, start, end, aggregation),
-      loadChannelWithChildrenMeasurementsDateRange(remoteId)
+      loadChannelWithChildrenMeasurementsUseCase(remoteId, profileId, start, end, aggregation),
+      loadChannelWithChildrenMeasurementsDateRangeUseCase(remoteId, profileId)
     ) { first, second -> Pair(first, second) }
 
   private fun handleData(channel: ChannelWithChildren, chartState: TemperatureChartState) {
