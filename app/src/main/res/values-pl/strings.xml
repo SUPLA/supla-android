@@ -601,6 +601,7 @@
   <string name="thermostat_detail_off_by_window">Wyłączony przez otwarte okno</string>
   <string name="thermostat_detail_off_by_card">Wyłączony z powodu braku karty hotelowej</string>
   <string name="thermostat_detail_off_by_sensor">Wyłączony przez czujnik</string>
+  <string name="channel_caption_alarm_armament">Czujnik uzbrojenia alarmu</string>
 
   <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
     <item quantity="one">włączone</item>

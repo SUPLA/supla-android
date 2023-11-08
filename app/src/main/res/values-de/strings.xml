@@ -530,6 +530,7 @@
  <string name="thermostat_detail_off_by_window">Wegen offenem Fenster ausgeschaltet</string>
  <string name="thermostat_detail_off_by_card">Wegen fehlender Hotelkarte ausgeschaltet</string>
  <string name="thermostat_detail_off_by_sensor">Durch Sensor ausgeschaltet</string>
+ <string name="channel_caption_alarm_armament">Alarmsensor</string>
  <plurals name="details_timer_info_on">
   <item quantity="one">eingeschaltet</item>
   <item quantity="other">eingeschaltet</item>

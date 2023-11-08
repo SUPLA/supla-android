@@ -620,6 +620,7 @@
     <string translatable="false" name="thermostat_detail_off_by_window">Turned off due to open window</string>
     <string translatable="false" name="thermostat_detail_off_by_card">Turned off due to the lack of hotel card</string>
     <string translatable="false" name="thermostat_detail_off_by_sensor">Turned off by sensor</string>
+    <string translatable="false" name="channel_caption_alarm_armament">Alarm armament sensor</string>
 
     <plurals name="details_timer_info_on" translatable="false">
         <item quantity="other">on</item>

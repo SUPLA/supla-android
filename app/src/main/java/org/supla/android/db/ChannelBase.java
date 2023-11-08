@@ -236,6 +236,7 @@ public abstract class ChannelBase extends DbItem {
       case SuplaConst.SUPLA_CHANNELFNC_OPENINGSENSOR_WINDOW:
       case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROOFWINDOW:
       case SuplaConst.SUPLA_CHANNELFNC_HOTELCARDSENSOR:
+      case SuplaConst.SUPLA_CHANNELFNC_ALARMARMAMENTSENSOR:
       case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
       case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
       case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
@@ -458,6 +459,10 @@ public abstract class ChannelBase extends DbItem {
 
       case SuplaConst.SUPLA_CHANNELFNC_HOTELCARDSENSOR:
         img_idx = active == 1 ? R.drawable.fnc_hotel_card_on : R.drawable.fnc_hotel_card_off;
+        break;
+
+      case SuplaConst.SUPLA_CHANNELFNC_ALARMARMAMENTSENSOR:
+        img_idx = active == 1 ? R.drawable.fnc_alarm_armament_on : R.drawable.fnc_alarm_armament_off;
         break;
 
       case SuplaConst.SUPLA_CHANNELFNC_MAILSENSOR:
@@ -745,6 +750,10 @@ public abstract class ChannelBase extends DbItem {
 
       case SuplaConst.SUPLA_CHANNELFNC_HOTELCARDSENSOR:
         img_idx = active == 1 ? R.drawable.fnc_hotel_card_on : R.drawable.fnc_hotel_card_off;
+        break;
+
+      case SuplaConst.SUPLA_CHANNELFNC_ALARMARMAMENTSENSOR:
+        img_idx = active == 1 ? R.drawable.fnc_alarm_armament_on : R.drawable.fnc_alarm_armament_off;
         break;
 
       case SuplaConst.SUPLA_CHANNELFNC_MAILSENSOR:
