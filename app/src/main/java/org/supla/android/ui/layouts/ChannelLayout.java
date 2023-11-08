@@ -744,6 +744,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
         case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROOFWINDOW:
         case SuplaConst.SUPLA_CHANNELFNC_OPENINGSENSOR_WINDOW:
         case SuplaConst.SUPLA_CHANNELFNC_HOTELCARDSENSOR:
+        case SuplaConst.SUPLA_CHANNELFNC_ALARMARMAMENTSENSOR:
         case SuplaConst.SUPLA_CHANNELFNC_MAILSENSOR:
         case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
         case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
