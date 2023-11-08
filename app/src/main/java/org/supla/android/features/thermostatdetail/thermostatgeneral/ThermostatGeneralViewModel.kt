@@ -50,6 +50,7 @@ import org.supla.android.extensions.fromSuplaTemperature
 import org.supla.android.extensions.guardLet
 import org.supla.android.extensions.ifLet
 import org.supla.android.extensions.mapMerged
+import org.supla.android.features.thermostatdetail.thermostatgeneral.data.SensorIssue
 import org.supla.android.features.thermostatdetail.thermostatgeneral.data.ThermostatIssueItem
 import org.supla.android.features.thermostatdetail.thermostatgeneral.data.ThermostatProgramInfo
 import org.supla.android.features.thermostatdetail.thermostatgeneral.data.build
@@ -358,6 +359,8 @@ class ThermostatGeneralViewModel @Inject constructor(
         temporaryChangeActive = channel.onLine && value.flags.contains(SuplaThermostatFlags.WEEKLY_SCHEDULE_TEMPORAL_OVERRIDE),
         temporaryProgramInfo = buildProgramInfo(data.weeklySchedule, value, channel.onLine),
 
+        sensorIssue = SensorIssue.build(value, data.channelWithChildren.children),
+
         issues = createThermostatIssues(value.flags),
 
         loadingState = it.loadingState.changingLoading(false, dateProvider)
@@ -597,6 +600,8 @@ data class ThermostatGeneralViewState(
 
   val temporaryChangeActive: Boolean = false,
   val temporaryProgramInfo: List<ThermostatProgramInfo> = emptyList(),
+
+  val sensorIssue: SensorIssue? = null,
 
   val issues: List<ThermostatIssueItem> = emptyList(),
 

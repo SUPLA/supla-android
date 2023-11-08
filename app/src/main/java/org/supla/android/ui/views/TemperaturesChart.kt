@@ -67,7 +67,7 @@ fun TemperaturesChart(
         it.axisRight.setDrawAxisLine(false)
         it.axisRight.textColor = ResourcesCompat.getColor(context.resources, R.color.dark_blue, null)
         it.axisRight.gridColor = it.axisRight.textColor
-        it.axisLeft.zeroLineColor = colorBlack
+        it.axisRight.zeroLineColor = colorBlack
         it.axisRight.valueFormatter = object : ValueFormatter() {
           override fun getAxisLabel(value: Float, axis: AxisBase?): String {
             val originalValue = value.toDouble()
@@ -79,6 +79,7 @@ fun TemperaturesChart(
         }
         it.xAxis.position = XAxis.XAxisPosition.BOTTOM
         it.xAxis.valueFormatter = xAxisFormatter
+        it.xAxis.labelCount = 6
         it.axisRight.axisMinimum = 0f
         it.axisRight.axisMaximum = 100f
         it.description.isEnabled = false
@@ -91,7 +92,6 @@ fun TemperaturesChart(
     update = { chart ->
       chart.data = data
       chart.highlightValue(null)
-      chart.xAxis.labelCount = 6
       rangeStart?.let { chart.xAxis.axisMinimum = it }
       rangeEnd?.let { chart.xAxis.axisMaximum = it }
       chart.axisRight.isEnabled = withHumidity
@@ -137,12 +137,6 @@ private class AxisXFormatter(
     return when {
       distanceInDays <= 1 ->
         valuesFormatter.getHourString(Date(value.times(1000).toLong())) ?: ""
-
-      distanceInDays <= 7 ->
-        valuesFormatter.getMonthString(Date(value.times(1000).toLong())) ?: ""
-
-      distanceInDays <= 31 ->
-        valuesFormatter.getMonthString(Date(value.times(1000).toLong())) ?: ""
 
       else -> {
         valuesFormatter.getMonthString(Date(value.times(1000).toLong())) ?: ""

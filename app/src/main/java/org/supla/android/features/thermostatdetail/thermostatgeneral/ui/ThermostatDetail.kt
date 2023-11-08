@@ -143,6 +143,8 @@ private fun ThermostatView(viewState: ThermostatGeneralViewState, viewProxy: The
       Column {
         if (viewState.isOff.not() && viewState.isAutoFunction && !viewState.programmedModeActive) {
           HeatingCoolingRow(viewState = viewState, viewProxy = viewProxy)
+        } else if (viewState.sensorIssue != null) {
+          SensorIssueView(sensorIssue = viewState.sensorIssue)
         } else if (viewState.temporaryProgramInfo.isNotEmpty()) {
           ProgramInfoRow(infos = viewState.temporaryProgramInfo)
         } else {

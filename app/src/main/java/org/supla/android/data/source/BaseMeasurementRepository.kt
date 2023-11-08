@@ -18,7 +18,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import androidx.room.rxjava3.EmptyResultSetException
-import androidx.work.ListenableWorker
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
@@ -134,7 +133,7 @@ abstract class BaseMeasurementRepository<T : Measurement, U>(
     profileId: Long,
     cloudService: SuplaCloudService,
     emitter: ObservableEmitter<Float>
-  ): ListenableWorker.Result {
+  ) {
     Trace.d(TAG, "Will clean measurements - $cleanMeasurements")
     if (cleanMeasurements) {
       delete(remoteId, profileId).blockingAwait()
@@ -143,13 +142,11 @@ abstract class BaseMeasurementRepository<T : Measurement, U>(
     val databaseCount = findCount(remoteId, profileId).blockingGet() ?: 0
     if (databaseCount == totalCount && !cleanMeasurements) {
       Trace.i(TAG, "Database and cloud has same size of measurements. Import skipped")
-      return ListenableWorker.Result.success()
+      return
     }
 
-    Trace.i(TAG, "Temperature measurements import started (db count: $databaseCount, remote count: $totalCount)")
+    Trace.i(TAG, "Measurements import started (db count: $databaseCount, remote count: $totalCount)")
     iterateAndImport(remoteId, profileId, totalCount, databaseCount, cloudService, emitter)
-
-    return ListenableWorker.Result.success()
   }
 
   private fun iterateAndImport(
