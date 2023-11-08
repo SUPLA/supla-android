@@ -214,7 +214,7 @@ private fun Preview() {
           data = SlideableListItemData.Thermostat(
             online = true,
             titleProvider = { "Thermostat" },
-            iconProvider = { ResourcesCompat.getDrawable(it.resources, R.drawable.ic_thermostat_cool, null)!!.toBitmap() },
+            iconProvider = { ResourcesCompat.getDrawable(it.resources, R.drawable.fnc_thermostat_cool, null)!!.toBitmap() },
             value = "20,7°C",
             subValue = "21,0°",
             indicatorIcon = R.drawable.ic_cooling,
@@ -233,7 +233,7 @@ private fun Preview() {
           data = SlideableListItemData.Thermostat(
             online = true,
             titleProvider = { "Thermostat" },
-            iconProvider = { ResourcesCompat.getDrawable(it.resources, R.drawable.ic_thermostat_cool, null)!!.toBitmap() },
+            iconProvider = { ResourcesCompat.getDrawable(it.resources, R.drawable.fnc_thermostat_cool, null)!!.toBitmap() },
             value = "20,7°C",
             subValue = "21,0°",
             indicatorIcon = R.drawable.ic_cooling,
@@ -251,7 +251,7 @@ private fun Preview() {
           data = SlideableListItemData.Thermostat(
             online = true,
             titleProvider = { "Thermostat" },
-            iconProvider = { ResourcesCompat.getDrawable(it.resources, R.drawable.ic_thermostat_cool, null)!!.toBitmap() },
+            iconProvider = { ResourcesCompat.getDrawable(it.resources, R.drawable.fnc_thermostat_cool, null)!!.toBitmap() },
             value = "20,7°C",
             subValue = "21,0°",
             indicatorIcon = R.drawable.ic_cooling,
@@ -270,7 +270,7 @@ private fun Preview() {
           data = SlideableListItemData.Thermostat(
             online = true,
             titleProvider = { "Thermostat with very long name which goes out of the screen and must be cut" },
-            iconProvider = { ResourcesCompat.getDrawable(it.resources, R.drawable.ic_thermostat_cool, null)!!.toBitmap() },
+            iconProvider = { ResourcesCompat.getDrawable(it.resources, R.drawable.fnc_thermostat_cool, null)!!.toBitmap() },
             value = "20,7°C",
             subValue = "21,0°",
             indicatorIcon = R.drawable.ic_cooling,

@@ -498,16 +498,8 @@ public class Channel extends ChannelBase {
   }
 
   @Override
-  public ImageId getImageIdx(boolean nightMode, WhichOne whichImage, int active) {
-    if (getFunc() == SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT) {
-      if (getValue().asThermostatValue().getSubfunction() == ThermostatSubfunction.HEAT) {
-        return new ImageId(R.drawable.ic_thermostat_heat);
-      } else {
-        return new ImageId(R.drawable.ic_thermostat_cool);
-      }
-    }
-
-    return super.getImageIdx(nightMode, whichImage, active);
+  public ChannelValue getChannelValue() {
+    return Value;
   }
 
   @Override

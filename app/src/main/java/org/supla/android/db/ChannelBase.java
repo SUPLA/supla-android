@@ -26,6 +26,7 @@ import org.supla.android.R;
 import org.supla.android.SuplaApp;
 import org.supla.android.ValuesFormatterProvider;
 import org.supla.android.data.ValuesFormatter;
+import org.supla.android.data.source.remote.hvac.ThermostatSubfunction;
 import org.supla.android.images.ImageCache;
 import org.supla.android.images.ImageId;
 import org.supla.android.lib.SuplaChannelBase;
@@ -392,7 +393,16 @@ public abstract class ChannelBase extends DbItem {
 
         break;
       case SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER:
-        img_idx = R.drawable.ic_thermostat_dhw;
+        img_idx = R.drawable.fnc_thermostat_dhw_nm;
+        break;
+      case SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT:
+        if (getChannelValue() != null) {
+          if (getChannelValue().asThermostatValue().getSubfunction() == ThermostatSubfunction.HEAT) {
+            img_idx = R.drawable.fnc_thermostat_heat_nm;
+          } else {
+            img_idx = R.drawable.fnc_thermostat_cool_nm;
+          }
+        }
         break;
       case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
         img_idx = R.drawable.thermometer_nightmode;
@@ -458,11 +468,11 @@ public abstract class ChannelBase extends DbItem {
         break;
 
       case SuplaConst.SUPLA_CHANNELFNC_HOTELCARDSENSOR:
-        img_idx = active == 1 ? R.drawable.fnc_hotel_card_on : R.drawable.fnc_hotel_card_off;
+        img_idx = active == 1 ? R.drawable.fnc_hotel_card_on_nm : R.drawable.fnc_hotel_card_off_nm;
         break;
 
       case SuplaConst.SUPLA_CHANNELFNC_ALARMARMAMENTSENSOR:
-        img_idx = active == 1 ? R.drawable.fnc_alarm_armament_on : R.drawable.fnc_alarm_armament_off;
+        img_idx = active == 1 ? R.drawable.fnc_alarm_armament_on_nm : R.drawable.fnc_alarm_armament_off_nm;
         break;
 
       case SuplaConst.SUPLA_CHANNELFNC_MAILSENSOR:
@@ -680,14 +690,17 @@ public abstract class ChannelBase extends DbItem {
 
         break;
       case SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER:
-        img_idx = R.drawable.ic_thermostat_dhw;
+        img_idx = R.drawable.fnc_thermostat_dhw;
         break;
-        //      case SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO:
-        //        img_idx = R.drawable.ic_thermostat_auto;
-        //        break;
-        //      case SuplaConst.SUPLA_CHANNELFNC_HVAC_DRYER:
-        //      case SuplaConst.SUPLA_CHANNELFNC_HVAC_FAN:
-        //      case SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_DIFFERENTIAL:
+      case SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT:
+        if (getChannelValue() != null) {
+          if (getChannelValue().asThermostatValue().getSubfunction() == ThermostatSubfunction.HEAT) {
+            img_idx = R.drawable.fnc_thermostat_heat;
+          } else {
+            img_idx = R.drawable.fnc_thermostat_cool;
+          }
+        }
+        break;
       case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
         img_idx = R.drawable.thermometer;
         break;
@@ -1082,5 +1095,9 @@ public abstract class ChannelBase extends DbItem {
   public enum WhichOne {
     First,
     Second
+  }
+
+  protected ChannelValue getChannelValue() {
+    return null;
   }
 }
