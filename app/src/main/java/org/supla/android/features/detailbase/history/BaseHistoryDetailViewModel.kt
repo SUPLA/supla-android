@@ -74,10 +74,10 @@ abstract class BaseHistoryDetailViewModel(
 ) : BaseViewModel<HistoryDetailViewState, HistoryDetailViewEvent>(HistoryDetailViewState(), schedulers), HistoryDetailProxy {
 
   fun loadData(remoteId: Int) {
-    triggerDataLoad(remoteId)
     updateState { state ->
       state.copy(remoteId = remoteId, loading = true)
     }
+    triggerDataLoad(remoteId)
   }
 
   override fun refresh() {
@@ -573,7 +573,7 @@ data class HistoryDetailViewState(
 }
 
 private fun lineDataSet(set: List<Entry>, @ColorRes colorRes: Int, type: ChartEntryType, resources: Resources) =
-  LineDataSet(set, "Test").apply {
+  LineDataSet(set, "").apply {
     setDrawValues(false)
     mode = LineDataSet.Mode.HORIZONTAL_BEZIER
     cubicIntensity = 0.05f

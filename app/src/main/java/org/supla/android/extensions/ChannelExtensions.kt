@@ -53,6 +53,7 @@ fun Channel.toThermostatSlideableListItemData(
   }
 
   val indicatorIcon = when {
+    onLine && thermostatValue.flags.contains(SuplaThermostatFlags.FORCED_OFF_BY_SENSOR) -> R.drawable.ic_sensor_alert
     onLine && thermostatValue.flags.contains(SuplaThermostatFlags.COOLING) -> R.drawable.ic_cooling
     onLine && thermostatValue.flags.contains(SuplaThermostatFlags.HEATING) -> R.drawable.ic_heating
     onLine && thermostatValue.mode != SuplaHvacMode.OFF -> R.drawable.ic_standby

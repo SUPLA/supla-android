@@ -57,5 +57,5 @@ enum class ChartDataAggregation(
     timeInSec >= min.timeInSec && timeInSec <= max.timeInSec
 }
 
-fun Date.getAggregationString(): String =
+private fun Date.getAggregationString(): String =
   formatter.format(this)

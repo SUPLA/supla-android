@@ -104,6 +104,7 @@ public class SuplaConst {
   public static final int SUPLA_CHANNELFNC_DEPTHSENSOR = 210;
   public static final int SUPLA_CHANNELFNC_DISTANCESENSOR = 220;
   public static final int SUPLA_CHANNELFNC_OPENINGSENSOR_WINDOW = 230;
+  public static final int SUPLA_CHANNELFNC_HOTELCARDSENSOR = 235;
   public static final int SUPLA_CHANNELFNC_MAILSENSOR = 240;
   public static final int SUPLA_CHANNELFNC_WINDSENSOR = 250;
   public static final int SUPLA_CHANNELFNC_PRESSURESENSOR = 260;
@@ -406,6 +407,9 @@ public class SuplaConst {
       case SuplaConst.SUPLA_CHANNELFNC_OPENINGSENSOR_WINDOW:
         idx = R.string.channel_caption_windowopeningsensor;
         break;
+      case SuplaConst.SUPLA_CHANNELFNC_HOTELCARDSENSOR:
+        idx = R.string.channel_caption_hotelcard;
+        break;
       case SuplaConst.SUPLA_CHANNELFNC_MAILSENSOR:
         idx = R.string.channel_caption_mailsensor;
         break;
@@ -537,6 +541,9 @@ public class SuplaConst {
         break;
       case SUPLA_CHANNELFNC_OPENINGSENSOR_WINDOW:
         resId = R.string.channel_func_openingsensor_window;
+        break;
+      case SuplaConst.SUPLA_CHANNELFNC_HOTELCARDSENSOR:
+        resId = R.string.channel_caption_hotelcard;
         break;
       case SUPLA_CHANNELFNC_MAILSENSOR:
         resId = R.string.channel_func_mailsensor;
