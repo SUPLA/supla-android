@@ -329,12 +329,13 @@ class ThermostatGeneralViewModel @Inject constructor(
         viewModelState = ThermostatGeneralViewModelState(
           remoteId = channel.remoteId,
           function = channel.func,
-          lastChangedHeat = it.viewModelState?.lastChangedHeat ?: (setpointHeatTemperature != null),
+          lastChangedHeat = lastChangedHeat(it.viewModelState, value, setpointHeatTemperature),
           setpointHeatTemperature = setpointHeatTemperature,
           setpointCoolTemperature = setpointCoolTemperature,
           configMinTemperature = configMinTemperature,
           configMaxTemperature = configMaxTemperature,
-          mode = value.mode
+          mode = value.mode,
+          subfunction = value.subfunction
         ),
 
         temperatures = data.temperatures,
@@ -566,6 +567,16 @@ class ThermostatGeneralViewModel @Inject constructor(
       modelState.mode
     }
 
+  private fun lastChangedHeat(state: ThermostatGeneralViewModelState?, value: ThermostatValue, setpointHeatTemperature: Float?): Boolean {
+    return if (state == null) {
+      (setpointHeatTemperature != null)
+    } else if (state.subfunction != null && state.subfunction != value.subfunction) {
+      value.subfunction == ThermostatSubfunction.HEAT
+    } else {
+      state.lastChangedHeat
+    }
+  }
+
   private data class LoadedData(
     val channelWithChildren: ChannelWithChildren,
     val temperatures: List<MeasurementValue>,
@@ -692,6 +703,7 @@ data class ThermostatGeneralViewModelState(
   val mode: SuplaHvacMode,
   val setpointHeatTemperature: Float? = null,
   val setpointCoolTemperature: Float? = null,
+  val subfunction: ThermostatSubfunction? = null,
   override val sent: Boolean = false
 ) : DelayableState {
 

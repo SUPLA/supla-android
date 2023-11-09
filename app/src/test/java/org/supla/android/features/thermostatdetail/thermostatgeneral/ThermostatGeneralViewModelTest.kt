@@ -124,7 +124,8 @@ class ThermostatGeneralViewModelTest :
           configMaxTemperature = 40f,
           mode = SuplaHvacMode.HEAT,
           setpointHeatTemperature = 23.4f,
-          setpointCoolTemperature = null
+          setpointCoolTemperature = null,
+          subfunction = ThermostatSubfunction.HEAT
         ),
         currentTemperaturePercentage = 0.17666666f,
         configMinTemperatureString = "10,0",
@@ -184,7 +185,8 @@ class ThermostatGeneralViewModelTest :
           configMaxTemperature = 40f,
           mode = SuplaHvacMode.COOL,
           setpointHeatTemperature = null,
-          setpointCoolTemperature = 20.8f
+          setpointCoolTemperature = 20.8f,
+          subfunction = ThermostatSubfunction.COOL
         ),
         showCoolingIndicator = true,
         currentTemperaturePercentage = 0.17666666f,
@@ -275,7 +277,13 @@ class ThermostatGeneralViewModelTest :
 
     // then
     assertThat(events).isEmpty()
-    val state = thermostatDefaultState(remoteId, setpointTemperatureCool = 22.4f, mode = SuplaHvacMode.COOL, currentlyCooling = true)
+    val state = thermostatDefaultState(
+      remoteId,
+      setpointTemperatureCool = 22.4f,
+      mode = SuplaHvacMode.COOL,
+      currentlyCooling = true,
+      subfunction = ThermostatSubfunction.COOL
+    )
     val emittedState = state.viewModelState!!.copy(setpointCoolTemperature = 25f)
     assertThat(states).containsExactly(
       state,
@@ -310,7 +318,8 @@ class ThermostatGeneralViewModelTest :
       setpointTemperatureCool = 22.4f,
       manualActive = false,
       mode = SuplaHvacMode.COOL,
-      currentlyCooling = true
+      currentlyCooling = true,
+      subfunction = ThermostatSubfunction.COOL
     )
     val emittedState = state.viewModelState!!.copy(setpointCoolTemperature = 25f)
     assertThat(events).isEmpty()
@@ -366,7 +375,8 @@ class ThermostatGeneralViewModelTest :
       setpointTemperatureCool = 22.4f,
       manualActive = false,
       mode = SuplaHvacMode.COOL,
-      currentlyCooling = true
+      currentlyCooling = true,
+      subfunction = ThermostatSubfunction.COOL
     )
     mockCoolThermostat(remoteId, 22.4f, weeklyScheduleActive = true)
     val currentTimestamp = 123L
@@ -506,7 +516,8 @@ class ThermostatGeneralViewModelTest :
     setpointTemperatureCool: Float? = null,
     manualActive: Boolean = true,
     mode: SuplaHvacMode = SuplaHvacMode.HEAT,
-    currentlyCooling: Boolean = false
+    currentlyCooling: Boolean = false,
+    subfunction: ThermostatSubfunction = ThermostatSubfunction.HEAT
   ) =
     ThermostatGeneralViewState(
       viewModelState = ThermostatGeneralViewModelState(
@@ -517,7 +528,8 @@ class ThermostatGeneralViewModelTest :
         configMaxTemperature = 40f,
         mode = mode,
         setpointHeatTemperature = setpointTemperatureHeat,
-        setpointCoolTemperature = setpointTemperatureCool
+        setpointCoolTemperature = setpointTemperatureCool,
+        subfunction = subfunction
       ),
       isOff = mode == SuplaHvacMode.OFF,
       manualModeActive = if (mode == SuplaHvacMode.OFF) false else manualActive,

@@ -69,6 +69,8 @@ import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.core.ui.theme.blue
 import org.supla.android.core.ui.theme.progressPointShadow
 import org.supla.android.extensions.distanceTo
+import org.supla.android.extensions.ifLet
+import org.supla.android.extensions.toPx
 import java.lang.Float.min
 import kotlin.math.PI
 import kotlin.math.abs
@@ -161,6 +163,8 @@ fun ThermostatControl(
 
   var initialTouchPoint by remember { mutableStateOf<Offset?>(null) }
   var currentTouchPoint by remember { mutableStateOf<Offset?>(null) }
+  var outerRadiusState by remember { mutableStateOf<Float?>(null) }
+  var centerPointState by remember { mutableStateOf<Offset?>(null) }
 
   var lastMinSetpoint by remember { mutableStateOf(minSetpoint) }
   var lastMaxSetpoint by remember { mutableStateOf(maxSetpoint) }
@@ -178,7 +182,15 @@ fun ThermostatControl(
         MotionEvent.ACTION_DOWN -> {
           initialTouchPoint = Offset(it.x, it.y)
           currentTouchPoint = Offset(it.x, it.y)
-          onPositionChangeStarted()
+
+          centerPointState?.let { center ->
+            outerRadiusState?.let { radius ->
+              val distance = center.distanceTo(initialTouchPoint)!!
+              if (distance > radius - touchPointRadius.toPx() && distance < radius) {
+                onPositionChangeStarted()
+              }
+            }
+          }
         }
 
         MotionEvent.ACTION_MOVE -> currentTouchPoint = Offset(it.x, it.y)
@@ -195,6 +207,8 @@ fun ThermostatControl(
     val availableRadius = size.width.div(2).minus(paddings.toPx().times(2)) // half of width minus paddings
     val outerRadius = min(desiredRadius.toPx(), availableRadius)
     val center = Offset(center.x, center.y + THERMOSTAT_VERTICAL_POSITION_CORRECTION.toPx())
+    outerRadiusState = outerRadius
+    centerPointState = center
 
     drawControlTemperatureCircle(
       outerRadius = outerRadius,

@@ -397,7 +397,8 @@ public abstract class ChannelBase extends DbItem {
         break;
       case SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT:
         if (getChannelValue() != null) {
-          if (getChannelValue().asThermostatValue().getSubfunction() == ThermostatSubfunction.HEAT) {
+          if (getChannelValue().asThermostatValue().getSubfunction()
+              == ThermostatSubfunction.HEAT) {
             img_idx = R.drawable.fnc_thermostat_heat_nm;
           } else {
             img_idx = R.drawable.fnc_thermostat_cool_nm;
@@ -472,7 +473,10 @@ public abstract class ChannelBase extends DbItem {
         break;
 
       case SuplaConst.SUPLA_CHANNELFNC_ALARMARMAMENTSENSOR:
-        img_idx = active == 1 ? R.drawable.fnc_alarm_armament_on_nm : R.drawable.fnc_alarm_armament_off_nm;
+        img_idx =
+            active == 1
+                ? R.drawable.fnc_alarm_armament_on_nm
+                : R.drawable.fnc_alarm_armament_off_nm;
         break;
 
       case SuplaConst.SUPLA_CHANNELFNC_MAILSENSOR:
@@ -694,7 +698,8 @@ public abstract class ChannelBase extends DbItem {
         break;
       case SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT:
         if (getChannelValue() != null) {
-          if (getChannelValue().asThermostatValue().getSubfunction() == ThermostatSubfunction.HEAT) {
+          if (getChannelValue().asThermostatValue().getSubfunction()
+              == ThermostatSubfunction.HEAT) {
             img_idx = R.drawable.fnc_thermostat_heat;
           } else {
             img_idx = R.drawable.fnc_thermostat_cool;
@@ -766,7 +771,8 @@ public abstract class ChannelBase extends DbItem {
         break;
 
       case SuplaConst.SUPLA_CHANNELFNC_ALARMARMAMENTSENSOR:
-        img_idx = active == 1 ? R.drawable.fnc_alarm_armament_on : R.drawable.fnc_alarm_armament_off;
+        img_idx =
+            active == 1 ? R.drawable.fnc_alarm_armament_on : R.drawable.fnc_alarm_armament_off;
         break;
 
       case SuplaConst.SUPLA_CHANNELFNC_MAILSENSOR:
@@ -893,6 +899,17 @@ public abstract class ChannelBase extends DbItem {
                   (active & 0x1) > 0 ? 2 : ((active & 0x2) > 0 ? 3 : 1),
                   profileId);
           break;
+        case SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT:
+        case SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER:
+          if (getChannelValue() != null) {
+            if (getChannelValue().asThermostatValue().getSubfunction()
+                == ThermostatSubfunction.HEAT) {
+              Id = new ImageId(getUserIconId(), 1, profileId);
+            } else {
+              Id = new ImageId(getUserIconId(), 2, profileId);
+            }
+            break;
+          }
         default:
           Id = new ImageId(getUserIconId(), active + 1, profileId);
           break;
