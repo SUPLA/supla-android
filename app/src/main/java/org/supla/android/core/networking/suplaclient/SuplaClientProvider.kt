@@ -1,7 +1,6 @@
 package org.supla.android.core.networking.suplaclient
 
 import org.supla.android.data.source.remote.ChannelConfigType
-import org.supla.android.data.source.remote.Field
 import org.supla.android.data.source.remote.FieldType
 import org.supla.android.data.source.remote.SuplaChannelConfig
 import org.supla.android.lib.actions.ActionParameters
