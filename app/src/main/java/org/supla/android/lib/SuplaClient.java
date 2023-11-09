@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.EnumSet;
 import java.util.List;
 import javax.net.ssl.HttpsURLConnection;
 import org.jetbrains.annotations.NotNull;
@@ -48,7 +49,9 @@ import org.supla.android.data.source.ResultTuple;
 import org.supla.android.data.source.SceneRepository;
 import org.supla.android.data.source.remote.ConfigResult;
 import org.supla.android.data.source.remote.ChannelConfigType;
+import org.supla.android.data.source.remote.FieldType;
 import org.supla.android.data.source.remote.SuplaChannelConfig;
+import org.supla.android.data.source.remote.SuplaDeviceConfig;
 import org.supla.android.db.AuthProfileItem;
 import org.supla.android.db.Channel;
 import org.supla.android.db.DbHelper;
@@ -239,6 +242,9 @@ public class SuplaClient extends Thread implements SuplaClientApi {
       long _supla_client, int channelId, @NotNull ChannelConfigType type);
 
   private native boolean scSetChannelConfig(long _supla_client, @NotNull SuplaChannelConfig config);
+
+  private native boolean scGetDeviceConfig(
+      long _supla_client, int deviceId, @NotNull EnumSet<FieldType> fieldTypes);
 
   private void sendMessage(SuplaClientMsg msg) {
     if (canceled()) {
@@ -822,6 +828,15 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     long _supla_client_ptr = lockClientPtr();
     try {
       return _supla_client_ptr != 0 && scGetChannelConfig(_supla_client_ptr, channelId, type);
+    } finally {
+      unlockClientPtr();
+    }
+  }
+
+  public boolean getDeviceConfig(int deviceId, @NotNull EnumSet<FieldType> fieldTypes) {
+    long _supla_client_ptr = lockClientPtr();
+    try {
+      return _supla_client_ptr != 0 && scGetDeviceConfig(_supla_client_ptr, deviceId, fieldTypes);
     } finally {
       unlockClientPtr();
     }
@@ -1434,6 +1449,10 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   private void onChannelConfigUpdateOrResult(
       SuplaChannelConfig config, ConfigResult result) {
     configEventsManager.emitConfig(result, config);
+  }
+
+  private void onDeviceConfigUpdateOrResult(
+      SuplaDeviceConfig config, ConfigResult result, boolean eol) {
   }
 
   public synchronized boolean canceled() {
