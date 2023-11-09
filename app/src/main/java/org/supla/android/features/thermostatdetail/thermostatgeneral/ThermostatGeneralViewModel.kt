@@ -35,7 +35,7 @@ import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.local.entity.ChannelRelationType
 import org.supla.android.data.source.local.entity.ThermostatValue
 import org.supla.android.data.source.local.temperature.TemperatureCorrection
-import org.supla.android.data.source.remote.ChannelConfigResult
+import org.supla.android.data.source.remote.ConfigResult
 import org.supla.android.data.source.remote.ChannelConfigType
 import org.supla.android.data.source.remote.hvac.SuplaChannelHvacConfig
 import org.supla.android.data.source.remote.hvac.SuplaChannelWeeklyScheduleConfig
@@ -109,7 +109,7 @@ class ThermostatGeneralViewModel @Inject constructor(
     Observable.combineLatest(
       channelSubject.mapMerged { createTemperaturesListUseCase(it) },
       configEventsManager.observerConfig(remoteId)
-        .filter { it.config is SuplaChannelHvacConfig && it.result == ChannelConfigResult.RESULT_TRUE },
+        .filter { it.config is SuplaChannelHvacConfig && it.result == ConfigResult.RESULT_TRUE },
       configEventsManager.observerConfig(remoteId)
         .filter { it.config is SuplaChannelWeeklyScheduleConfig }
     ) { pair, config, weeklySchedule ->

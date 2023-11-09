@@ -22,14 +22,4 @@ enum class ChannelConfigType(val value: Int) {
   WEEKLY_SCHEDULE(2)
 }
 
-enum class ChannelConfigResult(val value: Int) {
-  RESULT_FALSE(0),
-  RESULT_TRUE(1),
-  DATA_ERROR(2),
-  TYPE_NOT_SUPPORTED(3),
-  FUNCTION_NOT_SUPPORTED(4),
-  LOCAL_CONFIG_DISABLED(5),
-  NOT_ALLOWED(6)
-}
-
 open class SuplaChannelConfig(open val remoteId: Int, open val func: Int?)

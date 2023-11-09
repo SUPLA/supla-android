@@ -40,7 +40,7 @@ import org.supla.android.data.source.local.entity.ChannelRelationType
 import org.supla.android.data.source.local.entity.ThermostatState
 import org.supla.android.data.source.local.entity.ThermostatValue
 import org.supla.android.data.source.local.temperature.TemperatureCorrection
-import org.supla.android.data.source.remote.ChannelConfigResult
+import org.supla.android.data.source.remote.ConfigResult
 import org.supla.android.data.source.remote.hvac.SuplaChannelHvacConfig
 import org.supla.android.data.source.remote.hvac.SuplaChannelWeeklyScheduleConfig
 import org.supla.android.data.source.remote.hvac.SuplaHvacAlgorithm
@@ -149,13 +149,13 @@ class ThermostatGeneralViewModelTest :
     whenever(configEventsManager.observerConfig(remoteId)).thenReturn(
       Observable.just(
         ConfigEventsManager.ConfigEvent(
-          ChannelConfigResult.RESULT_TRUE,
+          ConfigResult.RESULT_TRUE,
           mockSuplaChannelHvacConfig(remoteId, ThermostatSubfunction.COOL)
         )
       ),
       Observable.just(
         ConfigEventsManager.ConfigEvent(
-          ChannelConfigResult.RESULT_TRUE,
+          ConfigResult.RESULT_TRUE,
           mockSuplaChannelWeeklyScheduleConfig(remoteId)
         )
       )
@@ -549,13 +549,13 @@ class ThermostatGeneralViewModelTest :
     whenever(configEventsManager.observerConfig(remoteId)).thenReturn(
       Observable.just(
         ConfigEventsManager.ConfigEvent(
-          ChannelConfigResult.RESULT_TRUE,
+          ConfigResult.RESULT_TRUE,
           mockSuplaChannelHvacConfig(remoteId)
         )
       ),
       Observable.just(
         ConfigEventsManager.ConfigEvent(
-          ChannelConfigResult.RESULT_TRUE,
+          ConfigResult.RESULT_TRUE,
           mockSuplaChannelWeeklyScheduleConfig(remoteId)
         )
       )
@@ -583,13 +583,13 @@ class ThermostatGeneralViewModelTest :
     whenever(configEventsManager.observerConfig(remoteId)).thenReturn(
       Observable.just(
         ConfigEventsManager.ConfigEvent(
-          ChannelConfigResult.RESULT_TRUE,
+          ConfigResult.RESULT_TRUE,
           mockSuplaChannelHvacConfig(remoteId, ThermostatSubfunction.COOL)
         )
       ),
       Observable.just(
         ConfigEventsManager.ConfigEvent(
-          ChannelConfigResult.RESULT_TRUE,
+          ConfigResult.RESULT_TRUE,
           mockSuplaChannelWeeklyScheduleConfig(remoteId)
         )
       )

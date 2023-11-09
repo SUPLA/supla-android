@@ -20,7 +20,7 @@ package org.supla.android.events
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
 import org.supla.android.Trace
-import org.supla.android.data.source.remote.ChannelConfigResult
+import org.supla.android.data.source.remote.ConfigResult
 import org.supla.android.data.source.remote.SuplaChannelConfig
 import org.supla.android.extensions.TAG
 import org.supla.android.extensions.guardLet
@@ -32,7 +32,7 @@ class ConfigEventsManager @Inject constructor() {
 
   private val subjects: MutableMap<Int, PublishSubject<ConfigEvent>> = mutableMapOf()
 
-  fun emitConfig(result: ChannelConfigResult, config: SuplaChannelConfig?) {
+  fun emitConfig(result: ConfigResult, config: SuplaChannelConfig?) {
     val (remoteId) = guardLet(config?.remoteId) {
       Trace.e(TAG, "Got result `$result` without config `$config`")
       return
@@ -58,7 +58,7 @@ class ConfigEventsManager @Inject constructor() {
   }
 
   data class ConfigEvent(
-    val result: ChannelConfigResult,
+    val result: ConfigResult,
     val config: SuplaChannelConfig?
   )
 }

@@ -34,7 +34,7 @@ import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.local.calendar.DayOfWeek
 import org.supla.android.data.source.local.calendar.QuarterOfHour
 import org.supla.android.data.source.local.temperature.TemperatureCorrection
-import org.supla.android.data.source.remote.ChannelConfigResult
+import org.supla.android.data.source.remote.ConfigResult
 import org.supla.android.data.source.remote.ChannelConfigType
 import org.supla.android.data.source.remote.hvac.SuplaChannelHvacConfig
 import org.supla.android.data.source.remote.hvac.SuplaChannelWeeklyScheduleConfig
@@ -446,7 +446,7 @@ class ScheduleDetailViewModel @Inject constructor(
   private fun onConfigLoaded(data: LoadedData) {
     Trace.i(TAG, "Schedule detail got data: $data")
 
-    if (data.weeklyScheduleResult != ChannelConfigResult.RESULT_TRUE || data.defaultResult != ChannelConfigResult.RESULT_TRUE) {
+    if (data.weeklyScheduleResult != ConfigResult.RESULT_TRUE || data.defaultResult != ConfigResult.RESULT_TRUE) {
       return
     }
     val (channelFunction) = guardLet(data.weeklyScheduleConfig.func) {
@@ -490,9 +490,9 @@ class ScheduleDetailViewModel @Inject constructor(
 
   private data class LoadedData(
     val weeklyScheduleConfig: SuplaChannelWeeklyScheduleConfig,
-    val weeklyScheduleResult: ChannelConfigResult,
+    val weeklyScheduleResult: ConfigResult,
     val defaultConfig: SuplaChannelHvacConfig,
-    val defaultResult: ChannelConfigResult
+    val defaultResult: ConfigResult
   )
 }
 

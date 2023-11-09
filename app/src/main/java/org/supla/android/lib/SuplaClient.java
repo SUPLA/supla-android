@@ -46,7 +46,7 @@ import org.supla.android.core.notifications.NotificationsHelper;
 import org.supla.android.core.storage.EncryptedPreferences;
 import org.supla.android.data.source.ResultTuple;
 import org.supla.android.data.source.SceneRepository;
-import org.supla.android.data.source.remote.ChannelConfigResult;
+import org.supla.android.data.source.remote.ConfigResult;
 import org.supla.android.data.source.remote.ChannelConfigType;
 import org.supla.android.data.source.remote.SuplaChannelConfig;
 import org.supla.android.db.AuthProfileItem;
@@ -1432,7 +1432,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   }
 
   private void onChannelConfigUpdateOrResult(
-      SuplaChannelConfig config, ChannelConfigResult result) {
+      SuplaChannelConfig config, ConfigResult result) {
     configEventsManager.emitConfig(result, config);
   }
 
