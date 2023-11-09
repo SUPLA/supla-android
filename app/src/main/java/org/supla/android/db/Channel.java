@@ -24,7 +24,6 @@ import android.content.Context;
 import android.database.Cursor;
 import org.supla.android.R;
 import org.supla.android.ValuesFormatterProvider;
-import org.supla.android.data.source.remote.hvac.ThermostatSubfunction;
 import org.supla.android.images.ImageId;
 import org.supla.android.lib.DigiglassValue;
 import org.supla.android.lib.SuplaChannel;
