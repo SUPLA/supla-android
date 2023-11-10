@@ -30,7 +30,7 @@ enum class FieldType(val value: Int) {
   HOME_SCREEN_CONTENT(1 shl 7)
 }
 
-open class Field(open val type: FieldType);
+sealed class Field(open val type: FieldType)
 
 enum class StatusLedType(val value: Int) {
   ON_WHEN_CONNECTED(0),
@@ -95,4 +95,4 @@ data class HomeScreenContentField(
   val content: HomeScreenContent
 ) : Field(type)
 
-data class SuplaDeviceConfig(val deviceId: Int, val availableFields: EnumSet<FieldType>, val fields: Array<Field>);
+data class SuplaDeviceConfig(val deviceId: Int, val availableFields: EnumSet<FieldType>, val fields: List<Field>)

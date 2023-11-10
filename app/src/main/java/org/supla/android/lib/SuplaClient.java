@@ -47,8 +47,8 @@ import org.supla.android.core.notifications.NotificationsHelper;
 import org.supla.android.core.storage.EncryptedPreferences;
 import org.supla.android.data.source.ResultTuple;
 import org.supla.android.data.source.SceneRepository;
-import org.supla.android.data.source.remote.ConfigResult;
 import org.supla.android.data.source.remote.ChannelConfigType;
+import org.supla.android.data.source.remote.ConfigResult;
 import org.supla.android.data.source.remote.FieldType;
 import org.supla.android.data.source.remote.SuplaChannelConfig;
 import org.supla.android.data.source.remote.SuplaDeviceConfig;
@@ -1446,14 +1446,12 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     sendMessage(msg);
   }
 
-  private void onChannelConfigUpdateOrResult(
-      SuplaChannelConfig config, ConfigResult result) {
+  private void onChannelConfigUpdateOrResult(SuplaChannelConfig config, ConfigResult result) {
     configEventsManager.emitConfig(result, config);
   }
 
   private void onDeviceConfigUpdateOrResult(
-      SuplaDeviceConfig config, ConfigResult result, boolean eol) {
-  }
+      SuplaDeviceConfig config, ConfigResult result, boolean eol) {}
 
   public synchronized boolean canceled() {
     return _canceled;
