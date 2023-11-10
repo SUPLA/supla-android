@@ -56,8 +56,8 @@ data class ButtonVolumeField(
 ) : Field(type)
 
 enum class UIDisabled(val value: Int) {
-  YES(0),
-  NO(1),
+  NO(0),
+  YES(1),
   PARTIAL(2)
 }
 
