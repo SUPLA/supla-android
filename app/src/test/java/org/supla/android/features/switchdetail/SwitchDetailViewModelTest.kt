@@ -36,7 +36,7 @@ import org.supla.android.core.BaseViewModelTest
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.db.Channel
 import org.supla.android.db.ChannelGroup
-import org.supla.android.events.ListsEventsManager
+import org.supla.android.events.UpdateEventsManager
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DIMMER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT
@@ -54,7 +54,7 @@ class SwitchDetailViewModelTest : BaseViewModelTest<SwitchDetailViewState, Switc
   private lateinit var readChannelGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase
 
   @Mock
-  private lateinit var listsEventsManager: ListsEventsManager
+  private lateinit var updateEventsManager: UpdateEventsManager
 
   @Mock
   override lateinit var schedulers: SuplaSchedulers
@@ -86,7 +86,7 @@ class SwitchDetailViewModelTest : BaseViewModelTest<SwitchDetailViewState, Switc
 
     verify(readChannelByRemoteIdUseCase).invoke(remoteId)
     verifyNoMoreInteractions(readChannelByRemoteIdUseCase)
-    verifyZeroInteractions(readChannelGroupByRemoteIdUseCase, listsEventsManager)
+    verifyZeroInteractions(readChannelGroupByRemoteIdUseCase, updateEventsManager)
   }
 
   @Test
@@ -108,7 +108,7 @@ class SwitchDetailViewModelTest : BaseViewModelTest<SwitchDetailViewState, Switc
 
     verify(readChannelByRemoteIdUseCase).invoke(remoteId)
     verifyNoMoreInteractions(readChannelByRemoteIdUseCase)
-    verifyZeroInteractions(readChannelGroupByRemoteIdUseCase, listsEventsManager)
+    verifyZeroInteractions(readChannelGroupByRemoteIdUseCase, updateEventsManager)
   }
 
   @Test
@@ -130,7 +130,7 @@ class SwitchDetailViewModelTest : BaseViewModelTest<SwitchDetailViewState, Switc
 
     verify(readChannelByRemoteIdUseCase).invoke(remoteId)
     verifyNoMoreInteractions(readChannelByRemoteIdUseCase)
-    verifyZeroInteractions(readChannelGroupByRemoteIdUseCase, listsEventsManager)
+    verifyZeroInteractions(readChannelGroupByRemoteIdUseCase, updateEventsManager)
   }
 
   @Test
@@ -152,7 +152,7 @@ class SwitchDetailViewModelTest : BaseViewModelTest<SwitchDetailViewState, Switc
 
     verify(readChannelGroupByRemoteIdUseCase).invoke(remoteId)
     verifyNoMoreInteractions(readChannelGroupByRemoteIdUseCase)
-    verifyZeroInteractions(readChannelByRemoteIdUseCase, listsEventsManager)
+    verifyZeroInteractions(readChannelByRemoteIdUseCase, updateEventsManager)
   }
 
   @Test
@@ -164,7 +164,7 @@ class SwitchDetailViewModelTest : BaseViewModelTest<SwitchDetailViewState, Switc
     every { channel.visible } returns 1
     every { channel.func } returns function
     whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
-    whenever(listsEventsManager.observeChannelUpdates()).thenReturn(Observable.just(Any()))
+    whenever(updateEventsManager.observeChannelsUpdate()).thenReturn(Observable.just(Any()))
 
     // when
     viewModel.observeUpdates(remoteId, ItemType.CHANNEL, function)
@@ -174,8 +174,8 @@ class SwitchDetailViewModelTest : BaseViewModelTest<SwitchDetailViewState, Switc
     assertThat(states).containsExactly(SwitchDetailViewState(channel))
 
     verify(readChannelByRemoteIdUseCase).invoke(remoteId)
-    verify(listsEventsManager).observeChannelUpdates()
-    verifyNoMoreInteractions(readChannelByRemoteIdUseCase, listsEventsManager)
+    verify(updateEventsManager).observeChannelsUpdate()
+    verifyNoMoreInteractions(readChannelByRemoteIdUseCase, updateEventsManager)
     verifyZeroInteractions(readChannelGroupByRemoteIdUseCase)
   }
 
@@ -188,7 +188,7 @@ class SwitchDetailViewModelTest : BaseViewModelTest<SwitchDetailViewState, Switc
     every { group.visible } returns 1
     every { group.func } returns function
     whenever(readChannelGroupByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(group))
-    whenever(listsEventsManager.observeGroupUpdates()).thenReturn(Observable.just(Any()))
+    whenever(updateEventsManager.observeGroupsUpdate()).thenReturn(Observable.just(Any()))
 
     // when
     viewModel.observeUpdates(remoteId, ItemType.GROUP, function)
@@ -198,8 +198,8 @@ class SwitchDetailViewModelTest : BaseViewModelTest<SwitchDetailViewState, Switc
     assertThat(states).containsExactly(SwitchDetailViewState(group))
 
     verify(readChannelGroupByRemoteIdUseCase).invoke(remoteId)
-    verify(listsEventsManager).observeGroupUpdates()
-    verifyNoMoreInteractions(readChannelGroupByRemoteIdUseCase, listsEventsManager)
+    verify(updateEventsManager).observeGroupsUpdate()
+    verifyNoMoreInteractions(readChannelGroupByRemoteIdUseCase, updateEventsManager)
     verifyZeroInteractions(readChannelByRemoteIdUseCase)
   }
 }

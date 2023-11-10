@@ -64,6 +64,22 @@ class CreateTemperaturesListUseCaseTest {
       .containsExactly(tuple(111, "---"), tuple(111, "---"), tuple(222, "---"))
   }
 
+  @Test
+  fun `should make list with one entry even if there is no thermometer`() {
+    // given
+    val channelWithChildren: ChannelWithChildren = mockk()
+    every { channelWithChildren.children } returns emptyList()
+
+    // when
+    val temperatures = useCase(channelWithChildren)
+
+    // then
+    assertThat(temperatures).hasSize(1)
+    assertThat(temperatures)
+      .extracting({ it.remoteId }, { it.valueStringProvider.invoke(mockk()) })
+      .containsExactly(tuple(-1, "---"))
+  }
+
   private fun createChild(
     relationType: ChannelRelationType,
     remoteId: Int,

@@ -33,7 +33,7 @@ import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.networking.suplacloud.SuplaCloudConfigHolder
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.db.DbHelper
-import org.supla.android.events.ListsEventsManager
+import org.supla.android.events.UpdateEventsManager
 import org.supla.android.lib.SuplaClient
 import org.supla.android.lib.SuplaClientMessageHandler
 import org.supla.android.lib.singlecall.SingleCall
@@ -59,7 +59,7 @@ class ApplicationModule {
     profileRepository: ProfileRepository,
     profileIdHolder: ProfileIdHolder,
     widgetVisibilityHandler: WidgetVisibilityHandler,
-    listsEventsManager: ListsEventsManager,
+    updateEventsManager: UpdateEventsManager,
     suplaAppProvider: SuplaAppProvider,
     singleCallProvider: SingleCall.Provider,
     suplaCloudConfigHolder: SuplaCloudConfigHolder
@@ -69,7 +69,7 @@ class ApplicationModule {
       profileRepository,
       profileIdHolder,
       widgetVisibilityHandler,
-      listsEventsManager,
+      updateEventsManager,
       suplaAppProvider,
       singleCallProvider,
       suplaCloudConfigHolder

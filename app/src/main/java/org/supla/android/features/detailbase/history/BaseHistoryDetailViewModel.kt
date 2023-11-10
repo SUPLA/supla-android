@@ -432,7 +432,13 @@ data class HistoryDetailViewState(
       }
 
       is DownloadEventsManager.State.Failed -> { context -> context.getString(R.string.history_refreshing_failed) }
-      else -> { context -> context.getString(R.string.retrieving_data_from_the_server) }
+      else -> { context ->
+        if (loading.not() && sets.isEmpty()) {
+          context.getString(R.string.history_no_data_available)
+        } else {
+          context.getString(R.string.retrieving_data_from_the_server)
+        }
+      }
     }
 
   val showBottomNavigation: Boolean

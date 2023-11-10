@@ -26,7 +26,7 @@ import org.supla.android.data.source.ChannelRepository
 import org.supla.android.db.ChannelBase
 import org.supla.android.db.ChannelGroup
 import org.supla.android.db.Location
-import org.supla.android.events.ListsEventsManager
+import org.supla.android.events.UpdateEventsManager
 import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.lib.SuplaConst
 import org.supla.android.tools.SuplaSchedulers
@@ -47,7 +47,7 @@ class GroupListViewModel @Inject constructor(
   private val toggleLocationUseCase: ToggleLocationUseCase,
   private val provideDetailTypeUseCase: ProvideDetailTypeUseCase,
   private val findGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase,
-  listsEventsManager: ListsEventsManager,
+  updateEventsManager: UpdateEventsManager,
   preferences: Preferences,
   schedulers: SuplaSchedulers
 ) : BaseListViewModel<GroupListViewState, GroupListViewEvent>(preferences, GroupListViewState(), schedulers) {
@@ -57,7 +57,7 @@ class GroupListViewModel @Inject constructor(
   override fun reloadList() = loadGroups()
 
   init {
-    observeUpdates(listsEventsManager.observeGroupUpdates())
+    observeUpdates(updateEventsManager.observeGroupsUpdate())
   }
 
   fun loadGroups() {

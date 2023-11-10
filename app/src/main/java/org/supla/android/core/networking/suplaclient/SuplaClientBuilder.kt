@@ -21,7 +21,7 @@ import android.content.Context
 import org.supla.android.core.networking.suplacloud.SuplaCloudConfigHolder
 import org.supla.android.core.storage.EncryptedPreferences
 import org.supla.android.events.ConfigEventsManager
-import org.supla.android.events.ListsEventsManager
+import org.supla.android.events.UpdateEventsManager
 import org.supla.android.lib.SuplaClient
 import org.supla.android.profile.ProfileManager
 import org.supla.android.usecases.channelrelation.DeleteRemovableChannelRelationsUseCase
@@ -33,7 +33,7 @@ import javax.inject.Singleton
 @Singleton
 class SuplaClientBuilder @Inject constructor(
   private val profileManager: ProfileManager,
-  private val listsEventsManager: ListsEventsManager,
+  private val updateEventsManager: UpdateEventsManager,
   private val configEventsManager: ConfigEventsManager,
   private val encryptedPreferences: EncryptedPreferences,
   private val markChannelRelationsAsRemovableUseCase: MarkChannelRelationsAsRemovableUseCase,
@@ -47,7 +47,7 @@ class SuplaClientBuilder @Inject constructor(
       context,
       oneTimePassword,
       profileManager,
-      listsEventsManager,
+      updateEventsManager,
       configEventsManager,
       encryptedPreferences,
       markChannelRelationsAsRemovableUseCase,

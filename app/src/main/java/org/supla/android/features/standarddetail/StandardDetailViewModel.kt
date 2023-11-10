@@ -23,7 +23,7 @@ import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.db.ChannelBase
-import org.supla.android.events.ListsEventsManager
+import org.supla.android.events.UpdateEventsManager
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.channel.ReadChannelGroupByRemoteIdUseCase
@@ -31,7 +31,7 @@ import org.supla.android.usecases.channel.ReadChannelGroupByRemoteIdUseCase
 abstract class StandardDetailViewModel<S : StandardDetailViewState, E : StandardDetailViewEvent>(
   private val readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
   private val readChannelGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase,
-  private val listsEventsManager: ListsEventsManager,
+  private val updateEventsManager: UpdateEventsManager,
   defaultState: S,
   schedulers: SuplaSchedulers
 ) : BaseViewModel<S, E>(defaultState, schedulers) {
@@ -78,8 +78,8 @@ abstract class StandardDetailViewModel<S : StandardDetailViewState, E : Standard
   }
 
   private fun getEventsSource(itemType: ItemType) = when (itemType) {
-    ItemType.CHANNEL -> listsEventsManager.observeChannelUpdates()
-    ItemType.GROUP -> listsEventsManager.observeGroupUpdates()
+    ItemType.CHANNEL -> updateEventsManager.observeChannelsUpdate()
+    ItemType.GROUP -> updateEventsManager.observeGroupsUpdate()
   }
 }
 

@@ -53,6 +53,7 @@ import org.supla.android.db.Channel
 import org.supla.android.db.ChannelValue
 import org.supla.android.events.ConfigEventsManager
 import org.supla.android.events.LoadingTimeoutManager
+import org.supla.android.events.UpdateEventsManager
 import org.supla.android.lib.SuplaConst
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.ChannelChild
@@ -90,6 +91,9 @@ class ThermostatGeneralViewModelTest :
   lateinit var dateProvider: DateProvider
 
   @Mock
+  lateinit var updateEventsManager: UpdateEventsManager
+
+  @Mock
   override lateinit var schedulers: SuplaSchedulers
 
   @InjectMocks
@@ -99,6 +103,7 @@ class ThermostatGeneralViewModelTest :
   override fun setUp() {
     super.setUp()
     whenever(schedulers.computation).thenReturn(testScheduler)
+    whenever(updateEventsManager.observeChannelsUpdate()).thenReturn(Observable.empty())
   }
 
   @Test

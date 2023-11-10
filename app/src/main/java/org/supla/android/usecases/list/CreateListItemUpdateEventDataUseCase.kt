@@ -19,7 +19,7 @@ package org.supla.android.usecases.list
 
 import io.reactivex.rxjava3.core.Observable
 import org.supla.android.data.source.runtime.ItemType
-import org.supla.android.events.ListsEventsManager
+import org.supla.android.events.UpdateEventsManager
 import org.supla.android.ui.lists.data.SlideableListItemData
 import org.supla.android.usecases.channel.ReadChannelGroupByRemoteIdUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
@@ -29,7 +29,7 @@ import javax.inject.Singleton
 
 @Singleton
 class CreateListItemUpdateEventDataUseCase @Inject constructor(
-  private val eventsManager: ListsEventsManager,
+  private val eventsManager: UpdateEventsManager,
   private val readChannelGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase,
   private val readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
   channelWithChildrenToThermostatUpdateEventMapper: ChannelWithChildrenToThermostatUpdateEventMapper

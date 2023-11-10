@@ -45,6 +45,7 @@ import org.supla.android.data.source.remote.thermostat.SuplaThermostatFlags
 import org.supla.android.db.Channel
 import org.supla.android.events.ConfigEventsManager
 import org.supla.android.events.LoadingTimeoutManager
+import org.supla.android.events.UpdateEventsManager
 import org.supla.android.extensions.TAG
 import org.supla.android.extensions.fromSuplaTemperature
 import org.supla.android.extensions.guardLet
@@ -79,7 +80,8 @@ class ThermostatGeneralViewModel @Inject constructor(
   private val suplaClientProvider: SuplaClientProvider,
   private val loadingTimeoutManager: LoadingTimeoutManager,
   private val dateProvider: DateProvider,
-  private val schedulers: SuplaSchedulers
+  private val schedulers: SuplaSchedulers,
+  private val updateEventsManager: UpdateEventsManager
 ) : BaseViewModel<ThermostatGeneralViewState, ThermostatGeneralViewEvent>(ThermostatGeneralViewState(), schedulers),
   ThermostatGeneralViewProxy {
 
@@ -99,6 +101,14 @@ class ThermostatGeneralViewModel @Inject constructor(
   }
 
   fun observeData(remoteId: Int) {
+    updateEventsManager.observeChannelsUpdate()
+      .debounce(1, TimeUnit.SECONDS)
+      .subscribeBy(
+        onNext = { triggerDataLoad(remoteId) },
+        onError = defaultErrorHandler("observeData($remoteId)")
+      )
+      .disposeBySelf()
+
     updateSubject.attachSilent()
       .debounce(1, TimeUnit.SECONDS)
       .subscribeBy(

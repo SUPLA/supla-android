@@ -41,7 +41,7 @@ import org.supla.android.db.Channel
 import org.supla.android.db.ChannelBase
 import org.supla.android.db.ChannelValue
 import org.supla.android.db.Location
-import org.supla.android.events.ListsEventsManager
+import org.supla.android.events.UpdateEventsManager
 import org.supla.android.features.standarddetail.DetailPage
 import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS
 import org.supla.android.lib.SuplaClientMsg
@@ -79,7 +79,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
   private lateinit var findChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase
 
   @Mock
-  private lateinit var listsEventsManager: ListsEventsManager
+  private lateinit var updateEventsManager: UpdateEventsManager
 
   @Mock
   private lateinit var preferences: Preferences
@@ -95,7 +95,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
       toggleLocationUseCase,
       provideDetailTypeUseCase,
       findChannelByRemoteIdUseCase,
-      listsEventsManager,
+      updateEventsManager,
       preferences,
       schedulers
     )
@@ -105,7 +105,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
 
   @Before
   override fun setUp() {
-    whenever(listsEventsManager.observeChannelUpdates()).thenReturn(listsEventsSubject)
+    whenever(updateEventsManager.observeChannelsUpdate()).thenReturn(listsEventsSubject)
     super.setUp()
   }
 

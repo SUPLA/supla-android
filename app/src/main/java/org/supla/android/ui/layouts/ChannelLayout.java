@@ -50,7 +50,7 @@ import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelExtendedValue;
 import org.supla.android.db.ChannelGroup;
-import org.supla.android.events.ListsEventsManager;
+import org.supla.android.events.UpdateEventsManager;
 import org.supla.android.images.ImageCache;
 import org.supla.android.images.ImageId;
 import org.supla.android.lib.SuplaChannelExtendedValue;
@@ -63,7 +63,7 @@ import org.supla.android.ui.lists.SwapableListItem;
 @AndroidEntryPoint
 public class ChannelLayout extends LinearLayout implements SlideableItem, SwapableListItem {
 
-  @Inject ListsEventsManager eventsManager;
+  @Inject UpdateEventsManager eventsManager;
   @Inject DurationTimerHelper durationTimerHelper;
 
   private ChannelBase channelBase;

@@ -69,7 +69,6 @@ import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.core.ui.theme.blue
 import org.supla.android.core.ui.theme.progressPointShadow
 import org.supla.android.extensions.distanceTo
-import org.supla.android.extensions.ifLet
 import org.supla.android.extensions.toPx
 import java.lang.Float.min
 import kotlin.math.PI

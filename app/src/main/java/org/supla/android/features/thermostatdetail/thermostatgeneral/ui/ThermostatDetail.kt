@@ -126,8 +126,8 @@ fun ThermostatDetail(viewProxy: ThermostatGeneralViewProxy) {
         Shadow(orientation = ShadowOrientation.STARTING_TOP)
       } else {
         // To avoid screen jumping
-        Shadow(orientation = ShadowOrientation.STARTING_TOP)
         EmptyThermometerValues()
+        Shadow(orientation = ShadowOrientation.STARTING_TOP)
       }
 
       ThermostatView(viewState = viewState, viewProxy = viewProxy, modifier = Modifier.weight(1f))
@@ -446,6 +446,7 @@ private fun PowerButton(isOff: Boolean, disabled: Boolean, onClick: () -> Unit) 
 private fun EmptyThermometerValues() = Spacer(
   modifier = Modifier
     .fillMaxWidth()
+    .background(color = MaterialTheme.colors.surface)
     .height(80.dp)
 )
 
