@@ -31,7 +31,7 @@ import javax.inject.Singleton
 */
 
 @Singleton
-class ListsEventsManager @Inject constructor(
+class UpdateEventsManager @Inject constructor(
   private val channelRepository: ChannelRepository,
   private val sceneRepository: SceneRepository
 ) {
@@ -46,27 +46,27 @@ class ListsEventsManager @Inject constructor(
     subjects.clear()
   }
 
-  fun emitSceneChange(sceneId: Int) {
+  fun emitSceneUpdate(sceneId: Int) {
     getSubjectForScene(sceneId).onNext(State.Scene)
   }
 
-  fun emitChannelChange(channelId: Int) {
+  fun emitChannelUpdate(channelId: Int) {
     getSubjectForChannel(channelId).onNext(State.Channel)
   }
 
-  fun emitGroupChange(groupId: Int) {
+  fun emitGroupUpdate(groupId: Int) {
     getSubjectForChannelGroup(groupId).onNext(State.Group)
   }
 
-  fun emitChannelUpdate() {
+  fun emitChannelsUpdate() {
     channelUpdatesSubject.onNext(Any())
   }
 
-  fun emitGroupUpdate() {
+  fun emitGroupsUpdate() {
     groupUpdatesSubject.onNext(Any())
   }
 
-  fun emitSceneUpdate() {
+  fun emitScenesUpdate() {
     sceneUpdatesSubject.onNext(Any())
   }
 
@@ -85,9 +85,9 @@ class ListsEventsManager @Inject constructor(
       .map { channelRepository.getChannelGroup(groupId) }
   }
 
-  fun observeChannelUpdates(): Observable<Any> = channelUpdatesSubject.hide().debounce(200, TimeUnit.MILLISECONDS)
-  fun observeGroupUpdates(): Observable<Any> = groupUpdatesSubject.hide().debounce(200, TimeUnit.MILLISECONDS)
-  fun observeSceneUpdates(): Observable<Any> = sceneUpdatesSubject.hide().debounce(200, TimeUnit.MILLISECONDS)
+  fun observeChannelsUpdate(): Observable<Any> = channelUpdatesSubject.hide().debounce(200, TimeUnit.MILLISECONDS)
+  fun observeGroupsUpdate(): Observable<Any> = groupUpdatesSubject.hide().debounce(200, TimeUnit.MILLISECONDS)
+  fun observeScenesUpdate(): Observable<Any> = sceneUpdatesSubject.hide().debounce(200, TimeUnit.MILLISECONDS)
 
   private fun getSubjectForScene(sceneId: Int): Subject<State> {
     return getSubject(sceneId, IdType.SCENE) {

@@ -9,6 +9,7 @@
 
     <dimen name="button_default_size">48dp</dimen>
     <dimen name="button_small_height">32dp</dimen>
+    <dimen name="icon_big_size">32dp</dimen>
     <dimen name="icon_default_size">24dp</dimen>
     <dimen name="custom_shadow_height">4dp</dimen>
 

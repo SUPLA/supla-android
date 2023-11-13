@@ -16,7 +16,7 @@ import org.supla.android.core.networking.suplacloud.SuplaCloudConfigHolder
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.db.AuthProfileItem
 import org.supla.android.db.DbHelper
-import org.supla.android.events.ListsEventsManager
+import org.supla.android.events.UpdateEventsManager
 import org.supla.android.lib.singlecall.SingleCall
 import org.supla.android.widget.WidgetVisibilityHandler
 
@@ -33,7 +33,7 @@ class MultiAccountProfileManagerTest {
   private lateinit var widgetVisibilityHandler: WidgetVisibilityHandler
 
   @Mock
-  private lateinit var listsEventsManager: ListsEventsManager
+  private lateinit var updateEventsManager: UpdateEventsManager
 
   @Mock
   private lateinit var profileIdHolder: ProfileIdHolder
@@ -56,7 +56,7 @@ class MultiAccountProfileManagerTest {
       profileRepository,
       profileIdHolder,
       widgetVisibilityHandler,
-      listsEventsManager,
+      updateEventsManager,
       suplaAppProvider,
       singleCallProvider,
       suplaCloudConfigHolder
@@ -243,7 +243,7 @@ class MultiAccountProfileManagerTest {
 
     verify(profileRepository).allProfiles
     verifyNoMoreInteractions(profileRepository)
-    verifyZeroInteractions(profileIdHolder, dbHelper, listsEventsManager, suplaAppProvider, suplaCloudConfigHolder)
+    verifyZeroInteractions(profileIdHolder, dbHelper, updateEventsManager, suplaAppProvider, suplaCloudConfigHolder)
   }
 
   @Test
@@ -284,13 +284,13 @@ class MultiAccountProfileManagerTest {
     verify(profileRepository).setProfileActive(newActiveProfileId)
     verify(profileIdHolder).profileId = newActiveProfileId
     verify(dbHelper).loadUserIconsIntoCache()
-    verify(listsEventsManager).cleanup()
-    verify(listsEventsManager).emitSceneUpdate()
-    verify(listsEventsManager).emitGroupUpdate()
-    verify(listsEventsManager).emitChannelUpdate()
+    verify(updateEventsManager).cleanup()
+    verify(updateEventsManager).emitScenesUpdate()
+    verify(updateEventsManager).emitGroupsUpdate()
+    verify(updateEventsManager).emitChannelsUpdate()
     verify(suplaAppProvider).provide()
     verify(suplaCloudConfigHolder).clean()
-    verifyNoMoreInteractions(profileRepository, profileIdHolder, dbHelper, listsEventsManager, suplaAppProvider, suplaCloudConfigHolder)
+    verifyNoMoreInteractions(profileRepository, profileIdHolder, dbHelper, updateEventsManager, suplaAppProvider, suplaCloudConfigHolder)
 
     io.mockk.verify {
       suplaApp.CancelAllRestApiClientTasks(true)
@@ -334,13 +334,13 @@ class MultiAccountProfileManagerTest {
     verify(profileRepository).setProfileActive(activeProfileId)
     verify(profileIdHolder).profileId = activeProfileId
     verify(dbHelper).loadUserIconsIntoCache()
-    verify(listsEventsManager).cleanup()
-    verify(listsEventsManager).emitSceneUpdate()
-    verify(listsEventsManager).emitGroupUpdate()
-    verify(listsEventsManager).emitChannelUpdate()
+    verify(updateEventsManager).cleanup()
+    verify(updateEventsManager).emitScenesUpdate()
+    verify(updateEventsManager).emitGroupsUpdate()
+    verify(updateEventsManager).emitChannelsUpdate()
     verify(suplaAppProvider).provide()
     verify(suplaCloudConfigHolder).clean()
-    verifyNoMoreInteractions(profileRepository, profileIdHolder, dbHelper, listsEventsManager, suplaAppProvider, suplaCloudConfigHolder)
+    verifyNoMoreInteractions(profileRepository, profileIdHolder, dbHelper, updateEventsManager, suplaAppProvider, suplaCloudConfigHolder)
 
     io.mockk.verify {
       suplaApp.CancelAllRestApiClientTasks(true)

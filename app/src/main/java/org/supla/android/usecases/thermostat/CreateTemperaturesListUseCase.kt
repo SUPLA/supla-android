@@ -17,6 +17,9 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.graphics.drawable.toBitmap
+import org.supla.android.R
 import org.supla.android.data.ValuesFormatter
 import org.supla.android.db.Channel
 import org.supla.android.db.ChannelBase
@@ -36,6 +39,16 @@ class CreateTemperaturesListUseCase @Inject constructor() {
       val sortedChildren = channelWithChildren.children
         .filter { it.relationType.isThermometer() }
         .sortedBy { item -> item.relationType.value }
+
+      if (sortedChildren.none { it.relationType.isMainThermometer() }) {
+        add(
+          MeasurementValue(
+            remoteId = -1,
+            iconProvider = { context -> ResourcesCompat.getDrawable(context.resources, R.drawable.ic_unknown_channel, null)!!.toBitmap() },
+            valueStringProvider = { ValuesFormatter.NO_VALUE_TEXT }
+          )
+        )
+      }
 
       for (child in sortedChildren) {
         add(child.channel.toTemperatureValue())

@@ -34,7 +34,7 @@ import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.db.Channel
 import org.supla.android.db.ChannelValue
-import org.supla.android.events.ListsEventsManager
+import org.supla.android.events.UpdateEventsManager
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT
 import org.supla.android.tools.SuplaSchedulers
@@ -52,7 +52,7 @@ class ThermostatDetailViewModelTest :
   private lateinit var readChannelGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase
 
   @Mock
-  private lateinit var listsEventsManager: ListsEventsManager
+  private lateinit var updateEventsManager: UpdateEventsManager
 
   @Mock
   override lateinit var schedulers: SuplaSchedulers

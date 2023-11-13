@@ -23,7 +23,7 @@ import org.supla.android.data.source.ChannelRepository
 import org.supla.android.db.ChannelBase
 import org.supla.android.db.ChannelGroup
 import org.supla.android.db.Location
-import org.supla.android.events.ListsEventsManager
+import org.supla.android.events.UpdateEventsManager
 import org.supla.android.features.standarddetail.DetailPage
 import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.lib.SuplaConst
@@ -57,7 +57,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
   private lateinit var findGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase
 
   @Mock
-  private lateinit var listsEventsManager: ListsEventsManager
+  private lateinit var updateEventsManager: UpdateEventsManager
 
   @Mock
   private lateinit var preferences: Preferences
@@ -73,7 +73,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
       toggleLocationUseCase,
       provideDetailTypeUseCase,
       findGroupByRemoteIdUseCase,
-      listsEventsManager,
+      updateEventsManager,
       preferences,
       schedulers
     )
@@ -83,7 +83,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
 
   @Before
   override fun setUp() {
-    whenever(listsEventsManager.observeGroupUpdates()).thenReturn(listsEventsSubject)
+    whenever(updateEventsManager.observeGroupsUpdate()).thenReturn(listsEventsSubject)
     super.setUp()
   }
 

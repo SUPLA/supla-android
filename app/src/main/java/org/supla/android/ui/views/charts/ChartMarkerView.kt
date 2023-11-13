@@ -42,14 +42,13 @@ class ChartMarkerView(context: Context) : MarkerView(context, R.layout.view_char
   @SuppressLint("SetTextI18n")
   override fun refreshContent(entry: Entry?, highlight: Highlight?) {
     entry?.let {
-      title.text = context.valuesFormatter.getFullDateString(it.xAsDate)
       (it.data as? EntryDetails)?.let { details ->
         title.text = when (details.aggregation) {
-          ChartDataAggregation.HOURS -> "${title.text.substring(0, title.text.length - 2)}00"
-          ChartDataAggregation.DAYS -> title.text.substring(0, title.text.length - 5)
+          ChartDataAggregation.HOURS -> "${context.valuesFormatter.getFullDateString(it.xAsDate)?.substring(0, title.text.length - 2)}00"
+          ChartDataAggregation.DAYS -> context.valuesFormatter.getFullDateString(it.xAsDate)?.substring(0, title.text.length - 5)
           ChartDataAggregation.MONTHS -> context.valuesFormatter.getMonthAndYearString(it.xAsDate)?.replaceFirstChar(Char::titlecase)
           ChartDataAggregation.YEARS -> context.valuesFormatter.getYearString(it.xAsDate)
-          else -> title.text
+          else -> context.valuesFormatter.getFullDateString(it.xAsDate)
         }
         text.text = getValueString(details.type, it.y)
 

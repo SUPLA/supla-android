@@ -8,7 +8,7 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.*
-import org.supla.android.events.ListsEventsManager
+import org.supla.android.events.UpdateEventsManager
 import org.supla.android.lib.SuplaClientMessageHandler
 import org.supla.android.lib.SuplaClientMessageHandler.OnSuplaClientMessageListener
 import org.supla.android.lib.SuplaClientMsg
@@ -16,7 +16,7 @@ import org.supla.android.lib.SuplaClientMsg
 @RunWith(MockitoJUnitRunner::class)
 class ChannelGroupStateObserverUseCaseTest {
   @Mock
-  private lateinit var listsEventsManager: ListsEventsManager
+  private lateinit var updateEventsManager: UpdateEventsManager
 
   @Mock
   private lateinit var messageHandler: SuplaClientMessageHandler
@@ -45,9 +45,9 @@ class ChannelGroupStateObserverUseCaseTest {
     usecase.unregister()
 
     // then
-    verify(listsEventsManager).emitGroupChange(channelGroupId)
+    verify(updateEventsManager).emitGroupUpdate(channelGroupId)
     verify(messageHandler).registerMessageListener(listener)
     verify(messageHandler).unregisterMessageListener(listener)
-    verifyNoMoreInteractions(listsEventsManager, messageHandler)
+    verifyNoMoreInteractions(updateEventsManager, messageHandler)
   }
 }

@@ -20,7 +20,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.supla.android.db.Channel
 import org.supla.android.db.ChannelBase
-import org.supla.android.events.ListsEventsManager
+import org.supla.android.events.UpdateEventsManager
 import org.supla.android.extensions.isHvacThermostat
 import org.supla.android.features.standarddetail.StandardDetailViewEvent
 import org.supla.android.features.standarddetail.StandardDetailViewModel
@@ -34,12 +34,12 @@ import javax.inject.Inject
 class ThermostatDetailViewModel @Inject constructor(
   readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
   readChannelGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase,
-  listsEventsManager: ListsEventsManager,
+  updateEventsManager: UpdateEventsManager,
   schedulers: SuplaSchedulers
 ) : StandardDetailViewModel<ThermostatDetailViewState, ThermostatDetailViewEvent>(
   readChannelByRemoteIdUseCase,
   readChannelGroupByRemoteIdUseCase,
-  listsEventsManager,
+  updateEventsManager,
   ThermostatDetailViewState(),
   schedulers
 ) {

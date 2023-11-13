@@ -26,7 +26,7 @@ import org.supla.android.core.networking.suplacloud.SuplaCloudConfigHolder
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.db.AuthProfileItem
 import org.supla.android.db.DbHelper
-import org.supla.android.events.ListsEventsManager
+import org.supla.android.events.UpdateEventsManager
 import org.supla.android.extensions.TAG
 import org.supla.android.lib.SuplaClient
 import org.supla.android.lib.singlecall.SingleCall
@@ -37,7 +37,7 @@ class MultiAccountProfileManager(
   private val profileRepository: ProfileRepository,
   private val profileIdHolder: ProfileIdHolder,
   private val widgetVisibilityHandler: WidgetVisibilityHandler,
-  private val listsEventsManager: ListsEventsManager,
+  private val updateEventsManager: UpdateEventsManager,
   private val suplaAppProvider: SuplaAppProvider,
   private val singleCallProvider: SingleCall.Provider,
   private val suplaCloudConfigHolder: SuplaCloudConfigHolder
@@ -95,10 +95,10 @@ class MultiAccountProfileManager(
     initiateReconnect()
     dbHelper.loadUserIconsIntoCache()
 
-    listsEventsManager.cleanup()
-    listsEventsManager.emitChannelUpdate()
-    listsEventsManager.emitGroupUpdate()
-    listsEventsManager.emitSceneUpdate()
+    updateEventsManager.cleanup()
+    updateEventsManager.emitChannelsUpdate()
+    updateEventsManager.emitGroupsUpdate()
+    updateEventsManager.emitScenesUpdate()
   }
 
   private fun initiateReconnect() {

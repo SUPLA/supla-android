@@ -45,11 +45,13 @@ import org.supla.android.data.source.remote.thermostat.SuplaThermostatFlags
 import org.supla.android.db.Channel
 import org.supla.android.events.ConfigEventsManager
 import org.supla.android.events.LoadingTimeoutManager
+import org.supla.android.events.UpdateEventsManager
 import org.supla.android.extensions.TAG
 import org.supla.android.extensions.fromSuplaTemperature
 import org.supla.android.extensions.guardLet
 import org.supla.android.extensions.ifLet
 import org.supla.android.extensions.mapMerged
+import org.supla.android.features.thermostatdetail.thermostatgeneral.data.SensorIssue
 import org.supla.android.features.thermostatdetail.thermostatgeneral.data.ThermostatIssueItem
 import org.supla.android.features.thermostatdetail.thermostatgeneral.data.ThermostatProgramInfo
 import org.supla.android.features.thermostatdetail.thermostatgeneral.data.build
@@ -78,7 +80,8 @@ class ThermostatGeneralViewModel @Inject constructor(
   private val suplaClientProvider: SuplaClientProvider,
   private val loadingTimeoutManager: LoadingTimeoutManager,
   private val dateProvider: DateProvider,
-  private val schedulers: SuplaSchedulers
+  private val schedulers: SuplaSchedulers,
+  private val updateEventsManager: UpdateEventsManager
 ) : BaseViewModel<ThermostatGeneralViewState, ThermostatGeneralViewEvent>(ThermostatGeneralViewState(), schedulers),
   ThermostatGeneralViewProxy {
 
@@ -98,6 +101,14 @@ class ThermostatGeneralViewModel @Inject constructor(
   }
 
   fun observeData(remoteId: Int) {
+    updateEventsManager.observeChannelsUpdate()
+      .debounce(1, TimeUnit.SECONDS)
+      .subscribeBy(
+        onNext = { triggerDataLoad(remoteId) },
+        onError = defaultErrorHandler("observeData($remoteId)")
+      )
+      .disposeBySelf()
+
     updateSubject.attachSilent()
       .debounce(1, TimeUnit.SECONDS)
       .subscribeBy(
@@ -328,12 +339,13 @@ class ThermostatGeneralViewModel @Inject constructor(
         viewModelState = ThermostatGeneralViewModelState(
           remoteId = channel.remoteId,
           function = channel.func,
-          lastChangedHeat = it.viewModelState?.lastChangedHeat ?: (setpointHeatTemperature != null),
+          lastChangedHeat = lastChangedHeat(it.viewModelState, value, setpointHeatTemperature),
           setpointHeatTemperature = setpointHeatTemperature,
           setpointCoolTemperature = setpointCoolTemperature,
           configMinTemperature = configMinTemperature,
           configMaxTemperature = configMaxTemperature,
-          mode = value.mode
+          mode = value.mode,
+          subfunction = value.subfunction
         ),
 
         temperatures = data.temperatures,
@@ -357,6 +369,8 @@ class ThermostatGeneralViewModel @Inject constructor(
 
         temporaryChangeActive = channel.onLine && value.flags.contains(SuplaThermostatFlags.WEEKLY_SCHEDULE_TEMPORAL_OVERRIDE),
         temporaryProgramInfo = buildProgramInfo(data.weeklySchedule, value, channel.onLine),
+
+        sensorIssue = SensorIssue.build(value, data.channelWithChildren.children),
 
         issues = createThermostatIssues(value.flags),
 
@@ -563,6 +577,16 @@ class ThermostatGeneralViewModel @Inject constructor(
       modelState.mode
     }
 
+  private fun lastChangedHeat(state: ThermostatGeneralViewModelState?, value: ThermostatValue, setpointHeatTemperature: Float?): Boolean {
+    return if (state == null) {
+      (setpointHeatTemperature != null)
+    } else if (state.subfunction != null && state.subfunction != value.subfunction) {
+      value.subfunction == ThermostatSubfunction.HEAT
+    } else {
+      state.lastChangedHeat
+    }
+  }
+
   private data class LoadedData(
     val channelWithChildren: ChannelWithChildren,
     val temperatures: List<MeasurementValue>,
@@ -597,6 +621,8 @@ data class ThermostatGeneralViewState(
 
   val temporaryChangeActive: Boolean = false,
   val temporaryProgramInfo: List<ThermostatProgramInfo> = emptyList(),
+
+  val sensorIssue: SensorIssue? = null,
 
   val issues: List<ThermostatIssueItem> = emptyList(),
 
@@ -687,6 +713,7 @@ data class ThermostatGeneralViewModelState(
   val mode: SuplaHvacMode,
   val setpointHeatTemperature: Float? = null,
   val setpointCoolTemperature: Float? = null,
+  val subfunction: ThermostatSubfunction? = null,
   override val sent: Boolean = false
 ) : DelayableState {
 

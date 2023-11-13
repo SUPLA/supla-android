@@ -22,7 +22,7 @@ import org.supla.android.core.BaseViewModelTest
 import org.supla.android.data.source.SceneRepository
 import org.supla.android.data.source.local.entity.Scene
 import org.supla.android.db.Location
-import org.supla.android.events.ListsEventsManager
+import org.supla.android.events.UpdateEventsManager
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.location.CollapsedFlag
@@ -42,7 +42,7 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
   private lateinit var createProfileScenesListUseCase: CreateProfileScenesListUseCase
 
   @Mock
-  private lateinit var listsEventsManager: ListsEventsManager
+  private lateinit var updateEventsManager: UpdateEventsManager
 
   @Mock
   private lateinit var preferences: Preferences
@@ -55,7 +55,7 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
       sceneRepository,
       toggleLocationUseCase,
       createProfileScenesListUseCase,
-      listsEventsManager,
+      updateEventsManager,
       preferences,
       schedulers
     )
@@ -65,7 +65,7 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
 
   @Before
   override fun setUp() {
-    whenever(listsEventsManager.observeSceneUpdates()).thenReturn(listsEventsSubject)
+    whenever(updateEventsManager.observeScenesUpdate()).thenReturn(listsEventsSubject)
     super.setUp()
   }
 

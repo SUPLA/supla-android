@@ -30,7 +30,7 @@ import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.db.ChannelGroup
-import org.supla.android.events.ListsEventsManager
+import org.supla.android.events.UpdateEventsManager
 import org.supla.android.ui.lists.data.SlideableListItemData
 import org.supla.android.usecases.channel.ChannelWithChildren
 import org.supla.android.usecases.channel.ReadChannelGroupByRemoteIdUseCase
@@ -41,7 +41,7 @@ import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToThermos
 class CreateListItemUpdateEventDataUseCaseTest {
 
   @Mock
-  lateinit var eventsManager: ListsEventsManager
+  lateinit var eventsManager: UpdateEventsManager
 
   @Mock
   lateinit var readChannelGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase

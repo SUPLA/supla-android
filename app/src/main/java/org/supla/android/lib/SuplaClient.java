@@ -56,7 +56,7 @@ import org.supla.android.db.AuthProfileItem;
 import org.supla.android.db.Channel;
 import org.supla.android.db.DbHelper;
 import org.supla.android.events.ConfigEventsManager;
-import org.supla.android.events.ListsEventsManager;
+import org.supla.android.events.UpdateEventsManager;
 import org.supla.android.lib.actions.ActionId;
 import org.supla.android.lib.actions.ActionParameters;
 import org.supla.android.lib.actions.SubjectType;
@@ -92,7 +92,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   private String oneTimePassword;
   private long _connectingStatusLastTime;
   private final ProfileManager profileManager;
-  private final ListsEventsManager listsEventsManager;
+  private final UpdateEventsManager updateEventsManager;
   private final ConfigEventsManager configEventsManager;
   private final EncryptedPreferences preferences;
   private final MarkChannelRelationsAsRemovableUseCase markChannelRelationsAsRemovableUseCase;
@@ -104,7 +104,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
       Context context,
       String oneTimePassword,
       ProfileManager profileManager,
-      ListsEventsManager listsEventsManager,
+      UpdateEventsManager updateEventsManager,
       ConfigEventsManager configEventsManager,
       EncryptedPreferences encryptedPreferences,
       MarkChannelRelationsAsRemovableUseCase markChannelRelationsAsRemovableUseCase,
@@ -115,7 +115,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     _context = context;
     this.oneTimePassword = oneTimePassword;
     this.profileManager = profileManager;
-    this.listsEventsManager = listsEventsManager;
+    this.updateEventsManager = updateEventsManager;
     this.configEventsManager = configEventsManager;
     this.preferences = encryptedPreferences;
     this.markChannelRelationsAsRemovableUseCase = markChannelRelationsAsRemovableUseCase;
@@ -954,15 +954,15 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
     if (registerResult.ChannelCount == 0 && DbH.setChannelsVisible(0, 2)) {
       onDataChanged();
-      listsEventsManager.emitChannelUpdate();
+      updateEventsManager.emitChannelsUpdate();
     }
     if (registerResult.ChannelGroupCount == 0 && DbH.setChannelGroupsVisible(0, 2)) {
       onDataChanged();
-      listsEventsManager.emitGroupUpdate();
+      updateEventsManager.emitGroupsUpdate();
     }
     if (registerResult.SceneCount == 0 && DbH.getSceneRepository().setScenesVisible(0, 2)) {
       onDataChanged();
-      listsEventsManager.emitSceneUpdate();
+      updateEventsManager.emitScenesUpdate();
     }
 
     SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onRegistered);
@@ -1061,7 +1061,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     }
 
     if (channel.EOL) {
-      listsEventsManager.emitChannelUpdate();
+      updateEventsManager.emitChannelsUpdate();
       _DataChanged = DbH.setChannelsVisible(0, 2);
     }
 
@@ -1100,7 +1100,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     }
 
     if (channel_group.EOL) {
-      listsEventsManager.emitGroupUpdate();
+      updateEventsManager.emitGroupsUpdate();
       _DataChanged = DbH.setChannelGroupsVisible(0, 2);
     }
 
@@ -1127,7 +1127,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
     if (channel_relation.isEol()) {
       deleteRemovableChannelRelationsUseCase.invoke().blockingSubscribe();
-      listsEventsManager.emitChannelUpdate();
+      updateEventsManager.emitChannelsUpdate();
     }
   }
 
@@ -1185,7 +1185,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     }
 
     if (scene.isEol()) {
-      listsEventsManager.emitSceneUpdate();
+      updateEventsManager.emitScenesUpdate();
       sr.setScenesVisible(0, 2);
     }
   }

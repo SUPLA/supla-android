@@ -84,9 +84,13 @@ class ThermostatHistoryDetailViewModel @Inject constructor(
   private fun handleData(channel: ChannelWithChildren, chartState: TemperatureChartState) {
     updateState { it.copy(profileId = channel.channel.profileId) }
 
-    restoreRange(chartState)
-    configureDownloadObserver(channel)
-    startInitialDataLoad(channel)
+    if (channel.children.none { it.relationType.isThermometer() }) {
+      updateState { it.copy(loading = false) }
+    } else {
+      restoreRange(chartState)
+      configureDownloadObserver(channel)
+      startInitialDataLoad(channel)
+    }
   }
 
   private fun startInitialDataLoad(channel: ChannelWithChildren) {

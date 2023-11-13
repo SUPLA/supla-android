@@ -526,6 +526,11 @@
  <string name="time_just_minutes">%1$d Min.</string>
  <string name="time_hours_and_minutes">%1$d Std. %2$d Min.</string>
  <string name="thermostat_detail_program_time">für %1$s</string>
+  <string name="channel_caption_hotelcard">Hotelkartensensor</string>
+ <string name="thermostat_detail_off_by_window">Wegen offenem Fenster ausgeschaltet</string>
+ <string name="thermostat_detail_off_by_card">Wegen fehlender Hotelkarte ausgeschaltet</string>
+ <string name="thermostat_detail_off_by_sensor">Durch Sensor ausgeschaltet</string>
+ <string name="channel_caption_alarm_armament">Alarmsensor</string>
  <plurals name="details_timer_info_on">
   <item quantity="one">eingeschaltet</item>
   <item quantity="other">eingeschaltet</item>
