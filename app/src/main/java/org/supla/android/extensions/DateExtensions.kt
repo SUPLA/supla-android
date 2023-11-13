@@ -17,6 +17,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import org.supla.android.data.model.chart.DateRange
+import org.supla.android.data.source.local.calendar.Hour
 import java.util.Calendar
 import java.util.Date
 import java.util.GregorianCalendar
@@ -25,6 +27,30 @@ val Date.dayOfMonth: Int
   get() = Calendar.getInstance().let {
     it.time = this
     it.get(Calendar.DAY_OF_MONTH)
+  }
+
+val Date.monthNo: Int
+  get() = Calendar.getInstance().let {
+    it.time = this
+    it.get(Calendar.MONTH)
+  }
+
+val Date.yearNo: Int
+  get() = Calendar.getInstance().let {
+    it.time = this
+    it.get(Calendar.YEAR)
+  }
+
+val Date.hourOfDay: Int
+  get() = Calendar.getInstance().let {
+    it.time = this
+    it.get(Calendar.HOUR_OF_DAY)
+  }
+
+val Date.minute: Int
+  get() = Calendar.getInstance().let {
+    it.time = this
+    it.get(Calendar.MINUTE)
   }
 
 fun Date.dayStart(): Date = startOfDay(this).time
@@ -173,6 +199,26 @@ fun date(year: Int, month: Int = Calendar.JANUARY, day: Int = Calendar.MONDAY, h
 
     it.time
   }
+
+fun Date.sameDay(date: Date): Boolean =
+  this.dayOfMonth == date.dayOfMonth && this.monthNo == date.monthNo && this.yearNo == date.yearNo
+
+fun Date.setHour(hour: Int, minute: Int, seconds: Int): Date {
+  return Calendar.getInstance().let {
+    it.time = this
+
+    it.set(Calendar.HOUR_OF_DAY, hour)
+    it.set(Calendar.MINUTE, minute)
+    it.set(Calendar.SECOND, seconds)
+
+    it.time
+  }
+}
+
+fun Date.inside(range: DateRange): Boolean =
+  after(range.start) && before(range.end)
+
+fun Date.hour() = Hour(hourOfDay, minute)
 
 private fun getMonthLength(year: Int, months: List<Int>) =
   months.sumOf { GregorianCalendar(year, it, 1).getActualMaximum(Calendar.DAY_OF_MONTH) }

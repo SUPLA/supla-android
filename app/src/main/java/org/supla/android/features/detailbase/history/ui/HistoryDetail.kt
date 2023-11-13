@@ -74,12 +74,15 @@ import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.model.chart.ChartDataAggregation
 import org.supla.android.data.model.chart.ChartRange
 import org.supla.android.data.model.chart.HistoryDataSet
+import org.supla.android.extensions.ifLet
+import org.supla.android.features.calendarpicker.CalendarPickerDialog
 import org.supla.android.features.detailbase.history.HistoryDetailViewState
 import org.supla.android.ui.views.TemperaturesChart
 import org.supla.android.ui.views.TextSpinner
 import org.supla.android.ui.views.buttons.IconButton
 import org.supla.android.ui.views.tools.Shadow
 import org.supla.android.ui.views.tools.ShadowOrientation
+import java.util.Date
 
 interface HistoryDetailProxy : BaseViewProxy<HistoryDetailViewState> {
   fun refresh() {}
@@ -91,11 +94,24 @@ interface HistoryDetailProxy : BaseViewProxy<HistoryDetailViewState> {
   fun moveToDataBegin() {}
   fun moveToDataEnd() {}
   fun updateChartPosition(scaleX: Float, scaleY: Float, x: Float, y: Float) {}
+  fun dateRangeCancelSelection() {}
+  fun dateRangeDaySelection(startDate: Date?, endDate: Date?) {}
+  fun dateRangeSave() {}
 }
 
 @Composable
 fun HistoryDetail(viewModel: HistoryDetailProxy) {
   val viewState by viewModel.getViewState().collectAsState()
+
+  ifLet(viewState.datePickerState) { (state) ->
+    CalendarPickerDialog(
+      state = state,
+      onSelected = { startDate, endDate -> viewModel.dateRangeDaySelection(startDate, endDate) },
+      onSave = { viewModel.dateRangeSave() },
+      onCancel = { viewModel.dateRangeCancelSelection() },
+      onDismiss = { viewModel.dateRangeCancelSelection() }
+    )
+  }
 
   Column(
     modifier = Modifier.fillMaxSize()
@@ -273,32 +289,36 @@ private fun BottomPagination(viewState: HistoryDetailViewState, viewModel: Histo
         horizontal = dimensionResource(id = R.dimen.distance_tiny)
       )
     ) {
-      PaginationIcon(
-        onClick = { viewModel.moveToDataBegin() },
-        icon = R.drawable.ic_double_arrow_right,
-        enabled = viewState.shiftLeftEnabled,
-        rotate = true
-      )
-      PaginationIcon(
-        onClick = { viewModel.moveRangeLeft() },
-        enabled = viewState.shiftLeftEnabled,
-        rotate = true
-      )
+      if (viewState.allowNavigation) {
+        PaginationIcon(
+          onClick = { viewModel.moveToDataBegin() },
+          icon = R.drawable.ic_double_arrow_right,
+          enabled = viewState.shiftLeftEnabled,
+          rotate = true
+        )
+        PaginationIcon(
+          onClick = { viewModel.moveRangeLeft() },
+          enabled = viewState.shiftLeftEnabled,
+          rotate = true
+        )
+      }
       Text(
         text = it,
         style = MaterialTheme.typography.caption,
         textAlign = TextAlign.Center,
         modifier = Modifier.weight(1f)
       )
-      PaginationIcon(
-        onClick = { viewModel.moveRangeRight() },
-        enabled = viewState.shiftRightEnabled
-      )
-      PaginationIcon(
-        onClick = { viewModel.moveToDataEnd() },
-        enabled = viewState.shiftRightEnabled,
-        icon = R.drawable.ic_double_arrow_right
-      )
+      if (viewState.allowNavigation) {
+        PaginationIcon(
+          onClick = { viewModel.moveRangeRight() },
+          enabled = viewState.shiftRightEnabled
+        )
+        PaginationIcon(
+          onClick = { viewModel.moveToDataEnd() },
+          enabled = viewState.shiftRightEnabled,
+          icon = R.drawable.ic_double_arrow_right
+        )
+      }
     }
   }
 

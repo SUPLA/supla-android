@@ -20,6 +20,8 @@ package org.supla.android.features.detailbase.history
 import android.content.Context
 import android.content.res.Resources
 import androidx.annotation.ColorRes
+import androidx.compose.ui.text.capitalize
+import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import androidx.core.content.res.ResourcesCompat
 import com.github.mikephil.charting.components.YAxis
@@ -63,6 +65,7 @@ import org.supla.android.extensions.weekEnd
 import org.supla.android.extensions.weekStart
 import org.supla.android.extensions.yearEnd
 import org.supla.android.extensions.yearStart
+import org.supla.android.features.calendarpicker.CalendarRangePickerState
 import org.supla.android.features.detailbase.history.ui.HistoryDetailProxy
 import org.supla.android.tools.SuplaSchedulers
 import java.util.Date
@@ -107,31 +110,35 @@ abstract class BaseHistoryDetailViewModel(
   }
 
   override fun changeRange(range: ChartRange) {
-    updateState { state ->
-      val (currentRange) = guardLet(state.range) { return@updateState state }
-      val (maxDate) = guardLet(state.maxDate) { return@updateState state }
-      val currentDate = dateProvider.currentDate()
+    if (range == ChartRange.CUSTOM) {
+      openCustomDateSelectionDialog()
+    } else {
+      updateState { state ->
+        val (currentRange) = guardLet(state.range) { return@updateState state }
+        val (maxDate) = guardLet(state.maxDate) { return@updateState state }
+        val currentDate = dateProvider.currentDate()
 
-      var rangeStart = getStartDateForRange(range, currentRange.end, currentDate, currentRange.start)
-      var rangeEnd = getEndDateForRange(range, currentRange.end, currentDate, currentRange.end)
-      if (rangeStart.after(state.maxDate)) {
-        rangeStart = getStartDateForRange(range, maxDate, currentDate, maxDate.dayStart())
-        rangeEnd = getEndDateForRange(range, maxDate, currentDate, maxDate.dayEnd())
+        var rangeStart = getStartDateForRange(range, currentRange.end, currentDate, currentRange.start)
+        var rangeEnd = getEndDateForRange(range, currentRange.end, currentDate, currentRange.end)
+        if (rangeStart.after(state.maxDate)) {
+          rangeStart = getStartDateForRange(range, maxDate, currentDate, maxDate.dayStart())
+          rangeEnd = getEndDateForRange(range, maxDate, currentDate, maxDate.dayEnd())
+        }
+
+        val newDateRange = DateRange(rangeStart, rangeEnd)
+        state.copy(
+          ranges = state.ranges?.copy(selected = range),
+          range = newDateRange,
+          aggregations = aggregations(newDateRange, state.aggregations?.selected),
+          sets = state.sets.map { set -> set.copy(entries = emptyList()) },
+          chartParameters = HideableValue(ChartParameters(1f, 1f, 0f, 0f))
+        ).also {
+          triggerMeasurementsLoad(it)
+        }
       }
 
-      val newDateRange = DateRange(rangeStart, rangeEnd)
-      state.copy(
-        ranges = state.ranges?.copy(selected = range),
-        range = newDateRange,
-        aggregations = aggregations(newDateRange, state.aggregations?.selected),
-        sets = state.sets.map { set -> set.copy(entries = emptyList()) },
-        chartParameters = HideableValue(ChartParameters(1f, 1f, 0f, 0f))
-      ).also {
-        triggerMeasurementsLoad(it)
-      }
+      updateUserState()
     }
-
-    updateUserState()
   }
 
   override fun moveRangeLeft() {
@@ -177,6 +184,46 @@ abstract class BaseHistoryDetailViewModel(
     updateUserState()
   }
 
+  override fun dateRangeCancelSelection() {
+    updateState {
+      it.copy(datePickerState = null)
+    }
+  }
+
+  override fun dateRangeDaySelection(startDate: Date?, endDate: Date?) {
+    val (start) = guardLet(startDate) {
+      updateState { it.copy(datePickerState = it.datePickerState?.copy(selectedRange = null)) }
+      return
+    }
+
+    updateState {
+      val (pickerState) = guardLet(it.datePickerState) { return@updateState it }
+      if (endDate == null) {
+        it.copy(datePickerState = pickerState.copy(selectedRange = DateRange(start = start, end = start)))
+      } else {
+        it.copy(datePickerState = pickerState.copy(selectedRange = DateRange(start = start, end = endDate)))
+      }
+    }
+  }
+
+  override fun dateRangeSave() {
+    updateState { state ->
+      val (newRange) = guardLet(state.datePickerState?.selectedRange) { return@updateState state }
+
+      state.copy(
+        range = newRange,
+        ranges = state.ranges?.copy(selected = ChartRange.CUSTOM),
+        aggregations = aggregations(newRange, state.aggregations?.selected),
+        datePickerState = null,
+        sets = state.sets.map { set -> set.copy(entries = emptyList()) },
+        chartParameters = HideableValue(ChartParameters(1f, 1f, 0f, 0f))
+      ).also {
+        triggerMeasurementsLoad(it)
+      }
+    }
+    updateUserState()
+  }
+
   protected abstract fun triggerDataLoad(remoteId: Int)
 
   protected abstract fun measurementsMaybe(
@@ -200,6 +247,27 @@ abstract class BaseHistoryDetailViewModel(
         onError = defaultErrorHandler("triggerMeasurementsLoad")
       )
       .disposeBySelf()
+  }
+
+  private fun openCustomDateSelectionDialog() {
+    updateState {
+      val selectedRange = if (it.ranges?.selected == ChartRange.CUSTOM) {
+        it.range
+      } else {
+        null
+      }
+      val selectableRange = if (it.minDate != null && it.maxDate != null) {
+        DateRange(it.minDate, it.maxDate)
+      } else {
+        null
+      }
+      it.copy(
+        datePickerState = CalendarRangePickerState(
+          selectedRange = selectedRange,
+          selectableRange = selectableRange
+        )
+      )
+    }
   }
 
   private fun shiftByRange(forward: Boolean) {
@@ -394,7 +462,9 @@ data class HistoryDetailViewState(
   val maxDate: Date? = null,
   val withHumidity: Boolean = false,
   val maxTemperature: Float? = null,
-  val chartParameters: HideableValue<ChartParameters>? = null
+  val chartParameters: HideableValue<ChartParameters>? = null,
+
+  val datePickerState: CalendarRangePickerState? = null
 ) : ViewState() {
 
   val shiftRightEnabled: Boolean
@@ -447,6 +517,18 @@ data class HistoryDetailViewState(
       ChartRange.WEEK,
       ChartRange.MONTH,
       ChartRange.QUARTER,
+      ChartRange.YEAR,
+      ChartRange.CUSTOM -> true
+
+      else -> false
+    }
+
+  val allowNavigation: Boolean
+    get() = when (ranges?.selected) {
+      ChartRange.DAY,
+      ChartRange.WEEK,
+      ChartRange.MONTH,
+      ChartRange.QUARTER,
       ChartRange.YEAR -> true
 
       else -> false
@@ -473,9 +555,7 @@ data class HistoryDetailViewState(
   fun rangesMap(resources: Resources): Map<ChartRange, String> =
     mutableMapOf<ChartRange, String>().also { map ->
       ranges?.items?.forEach {
-        if (it != ChartRange.CUSTOM) {
-          map[it] = resources.getString(it.stringRes)
-        }
+        map[it] = resources.getString(it.stringRes)
       }
     }
 
@@ -498,19 +578,13 @@ data class HistoryDetailViewState(
       ChartRange.LAST_MONTH -> dayAndHourString(context, dateRange)
 
       ChartRange.WEEK,
-      ChartRange.MONTH,
       ChartRange.LAST_QUARTER,
       ChartRange.QUARTER -> dateString(context, dateRange)
 
+      ChartRange.MONTH -> context.valuesFormatter.getMonthAndYearString(dateRange.start)?.capitalize(Locale.current)
       ChartRange.YEAR -> context.valuesFormatter.getYearString(dateRange.start)
 
-      ChartRange.CUSTOM -> {
-        val days = dateRange.daysCount
-        when {
-          days <= ChartRange.LAST_MONTH.roundedDaysCount -> dayAndHourString(context, dateRange)
-          else -> dateString(context, dateRange)
-        }
-      }
+      ChartRange.CUSTOM -> longDateString(context, dateRange)
     }
   }
 
@@ -567,13 +641,25 @@ data class HistoryDetailViewState(
     return "$startString - $endString"
   }
 
-  private fun chartRangeMargin(daysCount: Int) = when {
-    daysCount <= 1 -> 60 * 60 // 1 hour in seconds
-    else -> 24 * 60 * 60 // 1 day in seconds
+  private fun longDateString(context: Context, range: DateRange): String {
+    val startString = context.valuesFormatter.getFullDateString(range.start)
+    val endString = context.valuesFormatter.getFullDateString(range.end)
+    return "$startString - $endString"
+  }
+
+  private fun chartRangeMargin(daysCount: Int): Int {
+    val (aggregation) = guardLet(aggregations?.selected) {
+      return when {
+        daysCount <= 1 -> 60 * 60 // 1 hour in seconds
+        else -> 24 * 60 * 60 // 1 day in seconds
+      }
+    }
+
+    return aggregation.timeInSec.times(0.6).toInt()
   }
 
   private fun chartMarginNotNeeded() = when (ranges?.selected) {
-    ChartRange.LAST_DAY, ChartRange.LAST_WEEK, ChartRange.LAST_MONTH, ChartRange.LAST_QUARTER -> false
+    ChartRange.LAST_DAY, ChartRange.LAST_WEEK, ChartRange.LAST_MONTH, ChartRange.LAST_QUARTER, ChartRange.CUSTOM -> false
     else -> true
   }
 }
