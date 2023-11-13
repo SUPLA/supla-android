@@ -20,6 +20,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import android.annotation.SuppressLint
 import android.content.Context
 import android.widget.TextView
+import androidx.compose.ui.text.capitalize
+import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import com.github.mikephil.charting.components.MarkerView
 import com.github.mikephil.charting.data.Entry
@@ -41,16 +43,18 @@ class ChartMarkerView(context: Context) : MarkerView(context, R.layout.view_char
 
   @SuppressLint("SetTextI18n")
   override fun refreshContent(entry: Entry?, highlight: Highlight?) {
-    entry?.let {
-      (it.data as? EntryDetails)?.let { details ->
+    entry?.let { entry ->
+      (entry.data as? EntryDetails)?.let { details ->
         title.text = when (details.aggregation) {
-          ChartDataAggregation.HOURS -> "${context.valuesFormatter.getFullDateString(it.xAsDate)?.substring(0, title.text.length - 2)}00"
-          ChartDataAggregation.DAYS -> context.valuesFormatter.getFullDateString(it.xAsDate)?.substring(0, title.text.length - 5)
-          ChartDataAggregation.MONTHS -> context.valuesFormatter.getMonthAndYearString(it.xAsDate)?.replaceFirstChar(Char::titlecase)
-          ChartDataAggregation.YEARS -> context.valuesFormatter.getYearString(it.xAsDate)
-          else -> context.valuesFormatter.getFullDateString(it.xAsDate)
+          ChartDataAggregation.HOURS ->
+            "${context.valuesFormatter.getFullDateString(entry.xAsDate)?.let { it.substring(0, it.length - 2) }}00"
+
+          ChartDataAggregation.DAYS -> context.valuesFormatter.getFullDateString(entry.xAsDate)?.let { it.substring(0, it.length - 5) }
+          ChartDataAggregation.MONTHS -> context.valuesFormatter.getMonthAndYearString(entry.xAsDate)?.capitalize(Locale.current)
+          ChartDataAggregation.YEARS -> context.valuesFormatter.getYearString(entry.xAsDate)
+          else -> context.valuesFormatter.getFullDateString(entry.xAsDate)
         }
-        text.text = getValueString(details.type, it.y)
+        text.text = getValueString(details.type, entry.y)
 
         if (details.min != null && details.max != null) {
           val minText = getValueString(details.type, details.min)

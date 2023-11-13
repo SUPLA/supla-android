@@ -150,7 +150,7 @@ class ValuesFormatter @Inject constructor(
   @SuppressLint("SimpleDateFormat")
   fun getMonthAndYearString(date: Date?): String? =
     date?.let {
-      val formatter = SimpleDateFormat("yyyy MMM")
+      val formatter = SimpleDateFormat("LLLL yyyy")
       formatter.format(it)
     }
 
