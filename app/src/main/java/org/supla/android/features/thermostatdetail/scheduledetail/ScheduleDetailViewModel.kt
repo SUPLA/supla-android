@@ -43,7 +43,7 @@ import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
 import org.supla.android.data.source.remote.hvac.SuplaWeeklyScheduleEntry
 import org.supla.android.data.source.remote.hvac.SuplaWeeklyScheduleProgram
 import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
-import org.supla.android.events.ConfigEventsManager
+import org.supla.android.events.ChannelConfigEventsManager
 import org.supla.android.events.LoadingTimeoutManager
 import org.supla.android.extensions.TAG
 import org.supla.android.extensions.fromSuplaTemperature
@@ -71,7 +71,7 @@ private const val REFRESH_DELAY_MS = 3000L
 class ScheduleDetailViewModel @Inject constructor(
   private val valuesFormatter: ValuesFormatter,
   private val suplaClientProvider: SuplaClientProvider,
-  private val configEventsManager: ConfigEventsManager,
+  private val channelConfigEventsManager: ChannelConfigEventsManager,
   private val delayedWeeklyScheduleConfigSubject: DelayedWeeklyScheduleConfigSubject,
   private val loadingTimeoutManager: LoadingTimeoutManager,
   private val preferences: Preferences,
@@ -100,8 +100,8 @@ class ScheduleDetailViewModel @Inject constructor(
       .disposeBySelf()
 
     Observable.combineLatest(
-      configEventsManager.observerConfig(remoteId).filter { it.config is SuplaChannelWeeklyScheduleConfig },
-      configEventsManager.observerConfig(remoteId).filter { it.config is SuplaChannelHvacConfig }
+      channelConfigEventsManager.observerConfig(remoteId).filter { it.config is SuplaChannelWeeklyScheduleConfig },
+      channelConfigEventsManager.observerConfig(remoteId).filter { it.config is SuplaChannelHvacConfig }
     ) { weeklyConfig, defaultConfig ->
       LoadedData(
         weeklyConfig.config as SuplaChannelWeeklyScheduleConfig,

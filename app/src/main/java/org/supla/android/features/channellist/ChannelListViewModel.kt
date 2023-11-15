@@ -28,6 +28,7 @@ import org.supla.android.db.ChannelBase
 import org.supla.android.db.Location
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.features.standarddetail.DetailPage
+import org.supla.android.features.standarddetail.ItemBundle
 import org.supla.android.lib.SuplaChannelValue
 import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.lib.SuplaConst
@@ -152,11 +153,9 @@ class ChannelListViewModel @Inject constructor(
     }
 
     when (val detailType = provideDetailTypeUseCase(channel)) {
-      is SwitchDetailType -> sendEvent(ChannelListViewEvent.OpenSwitchDetail(channel.remoteId, channel.func, detailType.pages))
-      is ThermostatDetailType -> sendEvent(ChannelListViewEvent.OpenThermostatDetail(channel.remoteId, channel.func, detailType.pages))
-      is ThermometerDetailType -> sendEvent(
-        ChannelListViewEvent.OpenThermometerDetailType(channel.remoteId, channel.func, detailType.pages)
-      )
+      is SwitchDetailType -> sendEvent(ChannelListViewEvent.OpenSwitchDetail(ItemBundle.from(channel), detailType.pages))
+      is ThermostatDetailType -> sendEvent(ChannelListViewEvent.OpenThermostatDetail(ItemBundle.from(channel), detailType.pages))
+      is ThermometerDetailType -> sendEvent(ChannelListViewEvent.OpenThermometerDetail(ItemBundle.from(channel), detailType.pages))
       is LegacyDetailType -> sendEvent(ChannelListViewEvent.OpenLegacyDetails(channel.channelId, detailType))
       else -> {} // no action
     }
@@ -193,9 +192,9 @@ sealed class ChannelListViewEvent : ViewEvent {
   data class ShowValveDialog(val remoteId: Int) : ChannelListViewEvent()
   data class ShowAmperageExceededDialog(val remoteId: Int) : ChannelListViewEvent()
   data class OpenLegacyDetails(val remoteId: Int, val type: LegacyDetailType) : ChannelListViewEvent()
-  data class OpenSwitchDetail(val remoteId: Int, val function: Int, val pages: List<DetailPage>) : ChannelListViewEvent()
-  data class OpenThermostatDetail(val remoteId: Int, val function: Int, val pages: List<DetailPage>) : ChannelListViewEvent()
-  data class OpenThermometerDetailType(var remoteId: Int, val function: Int, val pages: List<DetailPage>) : ChannelListViewEvent()
+  data class OpenSwitchDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) : ChannelListViewEvent()
+  data class OpenThermostatDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) : ChannelListViewEvent()
+  data class OpenThermometerDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) : ChannelListViewEvent()
   object OpenThermostatDetails : ChannelListViewEvent()
   object ReassignAdapter : ChannelListViewEvent()
 }

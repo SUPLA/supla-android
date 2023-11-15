@@ -27,7 +27,7 @@ enum class FieldType(val value: Int) {
   DISABLE_USER_INTERFACE(1 shl 3),
   AUTOMATIC_TIME_SYNC(1 shl 4),
   HOME_SCREEN_OFF_DELAY(1 shl 5),
-  HOME_SCREEN_CONTENT(1 shl 7)
+  HOME_SCREEN_CONTENT(1 shl 6)
 }
 
 sealed class Field(open val type: FieldType)

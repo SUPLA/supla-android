@@ -34,12 +34,16 @@ import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.ui.StringProvider
 import org.supla.android.data.source.local.calendar.DayOfWeek
 import org.supla.android.data.source.local.calendar.QuarterOfHour
+import org.supla.android.data.source.remote.AutomaticTimeSyncField
+import org.supla.android.data.source.remote.FieldType
+import org.supla.android.data.source.remote.SuplaDeviceConfig
 import org.supla.android.data.source.remote.hvac.SuplaChannelWeeklyScheduleConfig
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
 import org.supla.android.data.source.remote.hvac.SuplaWeeklyScheduleEntry
 import org.supla.android.data.source.remote.hvac.SuplaWeeklyScheduleProgram
 import org.supla.android.data.source.remote.thermostat.SuplaThermostatFlags
+import java.util.EnumSet
 
 @RunWith(MockitoJUnitRunner::class)
 class ThermostatProgramInfoTest {
@@ -72,7 +76,7 @@ class ThermostatProgramInfoTest {
     // given
     val builder = ThermostatProgramInfo.Builder()
     builder.dateProvider = dateProvider
-    builder.config = SuplaChannelWeeklyScheduleConfig(123, null, emptyList(), emptyList())
+    builder.weeklyScheduleConfig = SuplaChannelWeeklyScheduleConfig(123, null, emptyList(), emptyList())
 
     // when
     Assertions.assertThatThrownBy {
@@ -85,7 +89,7 @@ class ThermostatProgramInfoTest {
     // given
     val builder = ThermostatProgramInfo.Builder()
     builder.dateProvider = dateProvider
-    builder.config = SuplaChannelWeeklyScheduleConfig(123, null, emptyList(), emptyList())
+    builder.weeklyScheduleConfig = SuplaChannelWeeklyScheduleConfig(123, null, emptyList(), emptyList())
     builder.thermostatFlags = emptyList()
 
     // when
@@ -99,7 +103,7 @@ class ThermostatProgramInfoTest {
     // given
     val builder = ThermostatProgramInfo.Builder()
     builder.dateProvider = dateProvider
-    builder.config = SuplaChannelWeeklyScheduleConfig(123, null, emptyList(), emptyList())
+    builder.weeklyScheduleConfig = SuplaChannelWeeklyScheduleConfig(123, null, emptyList(), emptyList())
     builder.thermostatFlags = emptyList()
     builder.currentMode = SuplaHvacMode.HEAT
 
@@ -114,7 +118,7 @@ class ThermostatProgramInfoTest {
     // given
     val builder = ThermostatProgramInfo.Builder()
     builder.dateProvider = dateProvider
-    builder.config = SuplaChannelWeeklyScheduleConfig(123, null, emptyList(), emptyList())
+    builder.weeklyScheduleConfig = SuplaChannelWeeklyScheduleConfig(123, null, emptyList(), emptyList())
     builder.thermostatFlags = emptyList()
     builder.currentMode = SuplaHvacMode.HEAT
     builder.currentTemperature = 18.4f
@@ -130,7 +134,7 @@ class ThermostatProgramInfoTest {
     // given
     val builder = ThermostatProgramInfo.Builder()
     builder.dateProvider = dateProvider
-    builder.config = mockWeeklyScheduleConfig()
+    builder.weeklyScheduleConfig = mockWeeklyScheduleConfig()
     builder.thermostatFlags = emptyList()
     builder.currentMode = SuplaHvacMode.HEAT
     builder.currentTemperature = 18.4f
@@ -148,7 +152,7 @@ class ThermostatProgramInfoTest {
     // given
     val builder = ThermostatProgramInfo.Builder()
     builder.dateProvider = dateProvider
-    builder.config = mockWeeklyScheduleConfig()
+    builder.weeklyScheduleConfig = mockWeeklyScheduleConfig()
     builder.thermostatFlags = emptyList()
     builder.currentMode = SuplaHvacMode.HEAT
     builder.currentTemperature = 18.4f
@@ -166,7 +170,7 @@ class ThermostatProgramInfoTest {
     // given
     val builder = ThermostatProgramInfo.Builder()
     builder.dateProvider = dateProvider
-    builder.config = mockWeeklyScheduleConfig()
+    builder.weeklyScheduleConfig = mockWeeklyScheduleConfig()
     builder.thermostatFlags = listOf(SuplaThermostatFlags.WEEKLY_SCHEDULE, SuplaThermostatFlags.CLOCK_ERROR)
     builder.currentMode = SuplaHvacMode.HEAT
     builder.currentTemperature = 18.4f
@@ -188,7 +192,7 @@ class ThermostatProgramInfoTest {
     // given
     val builder = ThermostatProgramInfo.Builder()
     builder.dateProvider = dateProvider
-    builder.config = mockWeeklyScheduleConfig()
+    builder.weeklyScheduleConfig = mockWeeklyScheduleConfig()
     builder.thermostatFlags = listOf(SuplaThermostatFlags.WEEKLY_SCHEDULE)
     builder.currentMode = SuplaHvacMode.HEAT
     builder.currentTemperature = 18.4f
@@ -210,7 +214,7 @@ class ThermostatProgramInfoTest {
     // given
     val builder = ThermostatProgramInfo.Builder()
     builder.dateProvider = dateProvider
-    builder.config = mockWeeklyScheduleConfig()
+    builder.weeklyScheduleConfig = mockWeeklyScheduleConfig()
     builder.thermostatFlags = listOf(SuplaThermostatFlags.WEEKLY_SCHEDULE)
     builder.currentMode = SuplaHvacMode.HEAT
     builder.currentTemperature = 18.4f
@@ -232,11 +236,30 @@ class ThermostatProgramInfoTest {
   }
 
   @Test
+  fun `should empty list when time synchronization disabled`() {
+    // given
+    val builder = ThermostatProgramInfo.Builder()
+    builder.dateProvider = dateProvider
+    builder.weeklyScheduleConfig = mockWeeklyScheduleConfig()
+    builder.deviceConfig = mockDeviceConfigWithDisabledTimeSync()
+    builder.thermostatFlags = listOf(SuplaThermostatFlags.WEEKLY_SCHEDULE)
+    builder.currentMode = SuplaHvacMode.HEAT
+    builder.currentTemperature = 18.4f
+    builder.channelOnline = true
+
+    // when
+    val list = builder.build()
+
+    // then
+    assertThat(list).isEmpty()
+  }
+
+  @Test
   fun `should get filled list with active temporary schedule change`() {
     // given
     val builder = ThermostatProgramInfo.Builder()
     builder.dateProvider = dateProvider
-    builder.config = mockWeeklyScheduleConfig()
+    builder.weeklyScheduleConfig = mockWeeklyScheduleConfig()
     builder.thermostatFlags = listOf(SuplaThermostatFlags.WEEKLY_SCHEDULE, SuplaThermostatFlags.WEEKLY_SCHEDULE_TEMPORAL_OVERRIDE)
     builder.currentMode = SuplaHvacMode.HEAT
     builder.currentTemperature = 18.4f
@@ -262,7 +285,7 @@ class ThermostatProgramInfoTest {
     // given
     val builder = ThermostatProgramInfo.Builder()
     builder.dateProvider = dateProvider
-    builder.config = mockWeeklyScheduleConfig(SuplaScheduleProgram.PROGRAM_1)
+    builder.weeklyScheduleConfig = mockWeeklyScheduleConfig(SuplaScheduleProgram.PROGRAM_1)
     builder.thermostatFlags = listOf(SuplaThermostatFlags.WEEKLY_SCHEDULE, SuplaThermostatFlags.WEEKLY_SCHEDULE_TEMPORAL_OVERRIDE)
     builder.currentMode = SuplaHvacMode.HEAT
     builder.currentTemperature = 18.4f
@@ -348,6 +371,12 @@ class ThermostatProgramInfoTest {
         )
       )
     )
+
+  private fun mockDeviceConfigWithDisabledTimeSync() = SuplaDeviceConfig(
+    deviceId = 123,
+    availableFields = EnumSet.of(FieldType.AUTOMATIC_TIME_SYNC),
+    fields = listOf(AutomaticTimeSyncField(FieldType.AUTOMATIC_TIME_SYNC, false))
+  )
 
   private fun assertStringProvider(stringProvider: StringProvider, expectedStringRes: Int) {
     val context = mock(Context::class.java)

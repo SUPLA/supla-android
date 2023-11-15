@@ -37,13 +37,15 @@ import org.supla.android.data.source.local.entity.ThermostatValue
 import org.supla.android.data.source.local.temperature.TemperatureCorrection
 import org.supla.android.data.source.remote.ChannelConfigType
 import org.supla.android.data.source.remote.ConfigResult
+import org.supla.android.data.source.remote.SuplaDeviceConfig
 import org.supla.android.data.source.remote.hvac.SuplaChannelHvacConfig
 import org.supla.android.data.source.remote.hvac.SuplaChannelWeeklyScheduleConfig
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
 import org.supla.android.data.source.remote.thermostat.SuplaThermostatFlags
 import org.supla.android.db.Channel
-import org.supla.android.events.ConfigEventsManager
+import org.supla.android.events.ChannelConfigEventsManager
+import org.supla.android.events.DeviceConfigEventsManager
 import org.supla.android.events.LoadingTimeoutManager
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.extensions.TAG
@@ -76,7 +78,8 @@ class ThermostatGeneralViewModel @Inject constructor(
   private val createTemperaturesListUseCase: CreateTemperaturesListUseCase,
   private val valuesFormatter: ValuesFormatter,
   private val delayedThermostatActionSubject: DelayedThermostatActionSubject,
-  private val configEventsManager: ConfigEventsManager,
+  private val channelConfigEventsManager: ChannelConfigEventsManager,
+  private val deviceConfigEventsManager: DeviceConfigEventsManager,
   private val suplaClientProvider: SuplaClientProvider,
   private val loadingTimeoutManager: LoadingTimeoutManager,
   private val dateProvider: DateProvider,
@@ -100,7 +103,7 @@ class ThermostatGeneralViewModel @Inject constructor(
     }.disposeBySelf()
   }
 
-  fun observeData(remoteId: Int) {
+  fun observeData(remoteId: Int, deviceId: Int) {
     updateEventsManager.observeChannelsUpdate()
       .debounce(1, TimeUnit.SECONDS)
       .subscribeBy(
@@ -119,16 +122,18 @@ class ThermostatGeneralViewModel @Inject constructor(
 
     Observable.combineLatest(
       channelSubject.mapMerged { createTemperaturesListUseCase(it) },
-      configEventsManager.observerConfig(remoteId)
+      channelConfigEventsManager.observerConfig(remoteId)
         .filter { it.config is SuplaChannelHvacConfig && it.result == ConfigResult.RESULT_TRUE },
-      configEventsManager.observerConfig(remoteId)
-        .filter { it.config is SuplaChannelWeeklyScheduleConfig }
-    ) { pair, config, weeklySchedule ->
+      channelConfigEventsManager.observerConfig(remoteId)
+        .filter { it.config is SuplaChannelWeeklyScheduleConfig },
+      deviceConfigEventsManager.observerConfig(deviceId)
+    ) { pair, channelConfig, weeklySchedule, deviceConfig ->
       LoadedData(
         channelWithChildren = pair.first,
         temperatures = pair.second,
-        config = config.config as SuplaChannelHvacConfig,
-        weeklySchedule = weeklySchedule.config as SuplaChannelWeeklyScheduleConfig
+        config = channelConfig.config as SuplaChannelHvacConfig,
+        weeklySchedule = weeklySchedule.config as SuplaChannelWeeklyScheduleConfig,
+        deviceConfig = deviceConfig.config
       )
     }
       .debounce(50, TimeUnit.MILLISECONDS, schedulers.computation)
@@ -140,9 +145,15 @@ class ThermostatGeneralViewModel @Inject constructor(
       .disposeBySelf()
   }
 
-  fun triggerDataLoad(remoteId: Int) {
+  fun loadData(remoteId: Int, deviceId: Int) {
     suplaClientProvider.provide()?.getChannelConfig(remoteId, ChannelConfigType.DEFAULT)
     suplaClientProvider.provide()?.getChannelConfig(remoteId, ChannelConfigType.WEEKLY_SCHEDULE)
+    suplaClientProvider.provide()?.getDeviceConfig(deviceId)
+
+    triggerDataLoad(remoteId)
+  }
+
+  fun triggerDataLoad(remoteId: Int) {
     readChannelWithChildrenUseCase(remoteId)
       .attachSilent()
       .subscribeBy(
@@ -368,7 +379,7 @@ class ThermostatGeneralViewModel @Inject constructor(
         programmedModeActive = channel.onLine && value.flags.contains(SuplaThermostatFlags.WEEKLY_SCHEDULE),
 
         temporaryChangeActive = channel.onLine && value.flags.contains(SuplaThermostatFlags.WEEKLY_SCHEDULE_TEMPORAL_OVERRIDE),
-        temporaryProgramInfo = buildProgramInfo(data.weeklySchedule, value, channel.onLine),
+        temporaryProgramInfo = buildProgramInfo(data.weeklySchedule, data.deviceConfig, value, channel.onLine),
 
         sensorIssue = SensorIssue.build(value, data.channelWithChildren.children),
 
@@ -379,18 +390,24 @@ class ThermostatGeneralViewModel @Inject constructor(
     }
   }
 
-  private fun buildProgramInfo(config: SuplaChannelWeeklyScheduleConfig, value: ThermostatValue, channelOnline: Boolean) =
-    ThermostatProgramInfo.Builder().apply {
-      dateProvider = this@ThermostatGeneralViewModel.dateProvider
-      this.config = config
-      this.thermostatFlags = value.flags
-      this.currentMode = value.mode
-      this.currentTemperature = when (value.subfunction) {
+  private fun buildProgramInfo(
+    weeklyConfig: SuplaChannelWeeklyScheduleConfig,
+    deviceConfig: SuplaDeviceConfig?,
+    value: ThermostatValue,
+    channelOnline: Boolean
+  ) =
+    ThermostatProgramInfo.Builder().also {
+      it.dateProvider = this@ThermostatGeneralViewModel.dateProvider
+      it.weeklyScheduleConfig = weeklyConfig
+      it.deviceConfig = deviceConfig
+      it.thermostatFlags = value.flags
+      it.currentMode = value.mode
+      it.currentTemperature = when (value.subfunction) {
         ThermostatSubfunction.HEAT -> value.setpointTemperatureHeat
         ThermostatSubfunction.COOL -> value.setpointTemperatureCool
         else -> null
       }
-      this.channelOnline = channelOnline
+      it.channelOnline = channelOnline
     }
       .build()
 
@@ -591,7 +608,8 @@ class ThermostatGeneralViewModel @Inject constructor(
     val channelWithChildren: ChannelWithChildren,
     val temperatures: List<MeasurementValue>,
     val config: SuplaChannelHvacConfig,
-    val weeklySchedule: SuplaChannelWeeklyScheduleConfig
+    val weeklySchedule: SuplaChannelWeeklyScheduleConfig,
+    val deviceConfig: SuplaDeviceConfig?
   )
 }
 

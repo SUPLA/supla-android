@@ -24,10 +24,10 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
-import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.databinding.FragmentStandardDetailBinding
 import org.supla.android.db.Channel
 import org.supla.android.features.standarddetail.DetailPage
+import org.supla.android.features.standarddetail.ItemBundle
 import org.supla.android.features.standarddetail.StandardDetailFragment
 
 @AndroidEntryPoint
@@ -56,7 +56,7 @@ class ThermometerDetailFragment :
   override fun isCloseEvent(event: ThermometerDetailViewEvent) = event == ThermometerDetailViewEvent.Close
 
   companion object {
-    fun bundle(remoteId: Int, itemType: ItemType, function: Int, pages: Array<DetailPage>) =
-      StandardDetailFragment.bundle(remoteId, itemType, function, pages)
+    fun bundle(itemBundle: ItemBundle, pages: Array<DetailPage>) =
+      StandardDetailFragment.bundle(itemBundle, pages)
   }
 }

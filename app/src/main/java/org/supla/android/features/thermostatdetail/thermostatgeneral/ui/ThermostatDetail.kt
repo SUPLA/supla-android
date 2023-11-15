@@ -95,7 +95,7 @@ import org.supla.android.ui.views.tools.ThermostatControl
 interface ThermostatGeneralViewProxy : BaseViewProxy<ThermostatGeneralViewState> {
   fun heatingModeChanged()
   fun coolingModeChanged()
-  fun setpointTemperatureChanged(minPercentage: Float?, maxPercentage: Float?)
+  fun setpointTemperatureChanged(heatPercentage: Float?, coolPercentage: Float?)
   fun changeSetpointTemperature(correction: TemperatureCorrection)
   fun turnOnOffClicked()
   fun manualModeClicked()
@@ -104,7 +104,7 @@ interface ThermostatGeneralViewProxy : BaseViewProxy<ThermostatGeneralViewState>
   fun markChanging()
 }
 
-private val INDICATOR_SIZE = 20.dp
+private val indicatorSize = 20.dp
 
 @Composable
 fun ThermostatDetail(viewProxy: ThermostatGeneralViewProxy) {
@@ -150,7 +150,7 @@ private fun ThermostatView(viewState: ThermostatGeneralViewState, viewProxy: The
         HeatingCoolingRowSmallScreen(viewState = viewState, viewProxy = viewProxy)
       }
       TemperatureControlRow(viewState, viewProxy)
-      WarningsRow(viewState.issues, true, modifier = Modifier.align(Alignment.BottomStart))
+      WarningsRow(viewState.issues, smallScreen = true, modifier = Modifier.align(Alignment.BottomStart))
     } else {
       Column {
         if (viewState.isOff.not() && viewState.isAutoFunction && !viewState.programmedModeActive) {
@@ -285,7 +285,7 @@ private fun ThermostatIndicators(viewState: ThermostatGeneralViewState, constrai
   val distanceFromCenterPoint = 94.dp
 
   if (viewState.showHeatingIndicator) {
-    val margin = yCorrection.minus(INDICATOR_SIZE).minus(distanceFromCenterPoint)
+    val margin = yCorrection.minus(indicatorSize).minus(distanceFromCenterPoint)
     IndicatorIcon(
       iconRes = R.drawable.ic_heating,
       modifier = Modifier.constrainAs(heating) {
@@ -298,7 +298,7 @@ private fun ThermostatIndicators(viewState: ThermostatGeneralViewState, constrai
   }
 
   if (viewState.showCoolingIndicator) {
-    val margin = yCorrection.plus(INDICATOR_SIZE).plus(distanceFromCenterPoint)
+    val margin = yCorrection.plus(indicatorSize).plus(distanceFromCenterPoint)
     IndicatorIcon(
       iconRes = R.drawable.ic_cooling,
       modifier = Modifier.constrainAs(cooling) {
@@ -325,7 +325,7 @@ private fun IndicatorIcon(iconRes: Int, modifier: Modifier = Modifier) {
     painter = painterResource(id = iconRes),
     contentDescription = null,
     alpha = alpha,
-    modifier = modifier.size(INDICATOR_SIZE)
+    modifier = modifier.size(indicatorSize)
   )
 }
 
@@ -367,7 +367,7 @@ private fun CoolingIcon(active: Boolean, onClick: () -> Unit) {
 }
 
 @Composable
-private fun WarningsRow(warnings: List<ThermostatIssueItem>, smallScreen: Boolean = false, modifier: Modifier = Modifier) {
+private fun WarningsRow(warnings: List<ThermostatIssueItem>, modifier: Modifier = Modifier, smallScreen: Boolean = false) {
   val defaultPadding = dimensionResource(id = R.dimen.distance_default)
   Column(
     modifier = modifier.padding(start = defaultPadding, end = defaultPadding, bottom = defaultPadding),
@@ -460,7 +460,7 @@ private fun Preview() {
 
 @Preview
 @Composable
-private fun PreviewTemporarOverride() {
+private fun PreviewTemporaryOverride() {
   SuplaTheme {
     ThermostatDetail(
       PreviewProxy(
@@ -475,7 +475,7 @@ private fun PreviewTemporarOverride() {
               { "22.7" },
               true
             ),
-            ThermostatProgramInfo(ThermostatProgramInfo.Type.NEXT, null, R.drawable.ic_power_button, R.color.gray, { "Wyłącz" })
+            ThermostatProgramInfo(ThermostatProgramInfo.Type.NEXT, null, R.drawable.ic_power_button, R.color.gray, { "Turn off" })
           )
         )
       )
@@ -513,7 +513,7 @@ private class PreviewProxy(private var initialState: ThermostatGeneralViewState 
 
   override fun coolingModeChanged() {}
 
-  override fun setpointTemperatureChanged(minPercentage: Float?, maxPercentage: Float?) {}
+  override fun setpointTemperatureChanged(heatPercentage: Float?, coolPercentage: Float?) {}
 
   override fun changeSetpointTemperature(correction: TemperatureCorrection) {}
 

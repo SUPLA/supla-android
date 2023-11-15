@@ -20,7 +20,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import android.content.Context
 import org.supla.android.core.networking.suplacloud.SuplaCloudConfigHolder
 import org.supla.android.core.storage.EncryptedPreferences
-import org.supla.android.events.ConfigEventsManager
+import org.supla.android.events.ChannelConfigEventsManager
+import org.supla.android.events.DeviceConfigEventsManager
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.lib.SuplaClient
 import org.supla.android.profile.ProfileManager
@@ -34,7 +35,8 @@ import javax.inject.Singleton
 class SuplaClientBuilder @Inject constructor(
   private val profileManager: ProfileManager,
   private val updateEventsManager: UpdateEventsManager,
-  private val configEventsManager: ConfigEventsManager,
+  private val channelConfigEventsManager: ChannelConfigEventsManager,
+  private val deviceConfigEventsManager: DeviceConfigEventsManager,
   private val encryptedPreferences: EncryptedPreferences,
   private val markChannelRelationsAsRemovableUseCase: MarkChannelRelationsAsRemovableUseCase,
   private val insertChannelRelationForProfileUseCase: InsertChannelRelationForProfileUseCase,
@@ -48,7 +50,8 @@ class SuplaClientBuilder @Inject constructor(
       oneTimePassword,
       profileManager,
       updateEventsManager,
-      configEventsManager,
+      channelConfigEventsManager,
+      deviceConfigEventsManager,
       encryptedPreferences,
       markChannelRelationsAsRemovableUseCase,
       insertChannelRelationForProfileUseCase,

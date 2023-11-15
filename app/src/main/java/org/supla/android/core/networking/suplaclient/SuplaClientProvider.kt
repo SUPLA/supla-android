@@ -44,4 +44,7 @@ interface SuplaClientApi {
   fun getDeviceConfig(deviceId: Int, type: EnumSet<FieldType>): Boolean
 
   fun oAuthTokenRequest()
+
+  fun getDeviceConfig(deviceId: Int) =
+    getDeviceConfig(deviceId, EnumSet.allOf(FieldType::class.java))
 }

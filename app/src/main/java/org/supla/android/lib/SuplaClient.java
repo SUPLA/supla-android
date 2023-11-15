@@ -55,7 +55,8 @@ import org.supla.android.data.source.remote.SuplaDeviceConfig;
 import org.supla.android.db.AuthProfileItem;
 import org.supla.android.db.Channel;
 import org.supla.android.db.DbHelper;
-import org.supla.android.events.ConfigEventsManager;
+import org.supla.android.events.ChannelConfigEventsManager;
+import org.supla.android.events.DeviceConfigEventsManager;
 import org.supla.android.events.UpdateEventsManager;
 import org.supla.android.lib.actions.ActionId;
 import org.supla.android.lib.actions.ActionParameters;
@@ -93,7 +94,8 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   private long _connectingStatusLastTime;
   private final ProfileManager profileManager;
   private final UpdateEventsManager updateEventsManager;
-  private final ConfigEventsManager configEventsManager;
+  private final ChannelConfigEventsManager channelConfigEventsManager;
+  private final DeviceConfigEventsManager deviceConfigEventsManager;
   private final EncryptedPreferences preferences;
   private final MarkChannelRelationsAsRemovableUseCase markChannelRelationsAsRemovableUseCase;
   private final InsertChannelRelationForProfileUseCase insertChannelRelationForProfileUseCase;
@@ -105,7 +107,8 @@ public class SuplaClient extends Thread implements SuplaClientApi {
       String oneTimePassword,
       ProfileManager profileManager,
       UpdateEventsManager updateEventsManager,
-      ConfigEventsManager configEventsManager,
+      ChannelConfigEventsManager channelConfigEventsManager,
+      DeviceConfigEventsManager deviceConfigEventsManager,
       EncryptedPreferences encryptedPreferences,
       MarkChannelRelationsAsRemovableUseCase markChannelRelationsAsRemovableUseCase,
       InsertChannelRelationForProfileUseCase insertChannelRelationForProfileUseCase,
@@ -116,7 +119,8 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     this.oneTimePassword = oneTimePassword;
     this.profileManager = profileManager;
     this.updateEventsManager = updateEventsManager;
-    this.configEventsManager = configEventsManager;
+    this.channelConfigEventsManager = channelConfigEventsManager;
+    this.deviceConfigEventsManager = deviceConfigEventsManager;
     this.preferences = encryptedPreferences;
     this.markChannelRelationsAsRemovableUseCase = markChannelRelationsAsRemovableUseCase;
     this.insertChannelRelationForProfileUseCase = insertChannelRelationForProfileUseCase;
@@ -1447,11 +1451,13 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   }
 
   private void onChannelConfigUpdateOrResult(SuplaChannelConfig config, ConfigResult result) {
-    configEventsManager.emitConfig(result, config);
+    channelConfigEventsManager.emitConfig(result, config);
   }
 
   private void onDeviceConfigUpdateOrResult(
-      SuplaDeviceConfig config, ConfigResult result, boolean eol) {}
+      SuplaDeviceConfig config, ConfigResult result, boolean eol) {
+    deviceConfigEventsManager.emitConfig(result, config);
+  }
 
   public synchronized boolean canceled() {
     return _canceled;
