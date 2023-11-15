@@ -23,11 +23,12 @@ import org.supla.android.R
 import org.supla.android.data.ValuesFormatter
 import org.supla.android.db.Channel
 import org.supla.android.db.ChannelBase
-import org.supla.android.extensions.valuesFormatter
+import org.supla.android.extensions.getChannelValueUseCase
 import org.supla.android.features.thermostatdetail.thermostatgeneral.MeasurementValue
 import org.supla.android.images.ImageCache
 import org.supla.android.lib.SuplaConst
 import org.supla.android.usecases.channel.ChannelWithChildren
+import org.supla.android.usecases.channel.ValueType
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -63,24 +64,12 @@ private fun Channel.toTemperatureValue(): MeasurementValue =
   MeasurementValue(
     remoteId = remoteId,
     iconProvider = { ImageCache.getBitmap(it, imageIdx) },
-    valueStringProvider = {
-      if (value.onLine) {
-        it.valuesFormatter.getTemperatureString(value.getTemp(func))
-      } else {
-        ValuesFormatter.NO_VALUE_TEXT
-      }
-    }
+    valueStringProvider = { it.getChannelValueUseCase(this) }
   )
 
 private fun Channel.toHumidityValue(): MeasurementValue =
   MeasurementValue(
     remoteId = remoteId,
     iconProvider = { ImageCache.getBitmap(it, getImageIdx(ChannelBase.WhichOne.Second)) },
-    valueStringProvider = {
-      if (value.onLine) {
-        it.valuesFormatter.getHumidityString(value.humidity)
-      } else {
-        ValuesFormatter.NO_VALUE_TEXT
-      }
-    }
+    valueStringProvider = { it.getChannelValueUseCase(this, ValueType.SECOND) }
   )

@@ -26,11 +26,11 @@ import org.supla.android.data.source.local.entity.BaseTemperatureEntity
 import org.supla.android.data.source.local.entity.TemperatureAndHumidityLogEntity
 import org.supla.android.db.Channel
 import org.supla.android.db.ChannelBase
+import org.supla.android.extensions.getChannelValueUseCase
 import org.supla.android.extensions.toTimestamp
-import org.supla.android.extensions.valuesFormatter
 import org.supla.android.images.ImageCache
 
-abstract class BaseLoadMeasurementsUseCase {
+abstract class BaseLoadMeasurementsUseCase(private val getChannelValueUseCase: GetChannelValueUseCase) {
 
   internal fun <T : BaseTemperatureEntity> aggregatingTemperature(
     measurements: List<T>,
@@ -96,8 +96,8 @@ abstract class BaseLoadMeasurementsUseCase {
         ChartEntryType.HUMIDITY -> { context -> ImageCache.getBitmap(context, channel.getImageIdx(ChannelBase.WhichOne.Second)) }
       },
       valueProvider = when (type) {
-        ChartEntryType.TEMPERATURE -> { context -> context.valuesFormatter.getTemperatureString(channel.value.getTemp(channel.func)) }
-        ChartEntryType.HUMIDITY -> { context -> context.valuesFormatter.getHumidityString(channel.value.humidity) }
+        ChartEntryType.TEMPERATURE -> { context -> context.getChannelValueUseCase(channel) }
+        ChartEntryType.HUMIDITY -> { context -> context.getChannelValueUseCase(channel, ValueType.SECOND) }
       },
       color = color,
       entries = divideSetToSubsets(

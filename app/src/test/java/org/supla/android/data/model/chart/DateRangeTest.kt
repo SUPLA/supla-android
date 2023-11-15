@@ -142,7 +142,7 @@ class DateRangeTest {
 
     // then
     assertThat(newRange.start).isEqualTo("2023-10-16 00:00:00.000")
-    assertThat(newRange.end).isEqualTo("2023-10-16 23:59:59.000")
+    assertThat(newRange.end).isEqualTo("2023-10-16 23:59:59.999")
   }
 
   @Test
@@ -158,7 +158,7 @@ class DateRangeTest {
 
     // then
     assertThat(newRange.start).isEqualTo("2023-10-02 00:00:00.000")
-    assertThat(newRange.end).isEqualTo("2023-10-08 23:59:59.000")
+    assertThat(newRange.end).isEqualTo("2023-10-08 23:59:59.999")
   }
 
   @Test

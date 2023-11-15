@@ -56,6 +56,7 @@ object Deps {
         object Compose {
             const val UI = "androidx.compose.ui:ui:${Versions.Androidx.Compose.Core}"
             const val Material = "androidx.compose.material:material:${Versions.Androidx.Compose.Core}"
+            const val Material3 = "androidx.compose.material3:material3:1.1.2"
             const val Tooling = "androidx.compose.ui:ui-tooling:${Versions.Androidx.Compose.Core}"
             const val ConstraintLayout = "androidx.constraintlayout:constraintlayout-compose:${Versions.Androidx.Compose.ConstaintLayout}"
         }

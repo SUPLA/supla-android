@@ -185,6 +185,9 @@ fun Date.daysInCurrentQuarter(): Int {
 fun Date.shift(days: Int): Date =
   Date(time + days.toLong().times(24).times(60).times(60).times(1000))
 
+fun Date.shiftByHour(hour: Int): Date =
+  Date(time + hour.toLong().times(60).times(60).times(1000))
+
 fun Date.toTimestamp(): Long = time.div(1000)
 
 fun date(year: Int, month: Int = Calendar.JANUARY, day: Int = Calendar.MONDAY, hour: Int = 0, minute: Int = 0, seconds: Int = 0): Date =
@@ -210,6 +213,18 @@ fun Date.setHour(hour: Int, minute: Int, seconds: Int): Date {
     it.set(Calendar.HOUR_OF_DAY, hour)
     it.set(Calendar.MINUTE, minute)
     it.set(Calendar.SECOND, seconds)
+
+    it.time
+  }
+}
+
+fun Date.setDay(day: Date): Date {
+  return Calendar.getInstance().let {
+    it.time = this
+
+    it.set(Calendar.YEAR, day.yearNo)
+    it.set(Calendar.MONTH, day.monthNo)
+    it.set(Calendar.DAY_OF_MONTH, day.dayOfMonth)
 
     it.time
   }

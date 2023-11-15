@@ -604,6 +604,7 @@
   <string name="channel_caption_alarm_armament">Czujnik uzbrojenia alarmu</string>
   <string name="calendar_picker_start_hour">Od godziny</string>
   <string name="calendar_picker_end_hour">Do godziny</string>
+  <string name="history_wrong_range">Wybrany zakres dat jest nieprawidłowy.</string>
 
   <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
     <item quantity="one">włączone</item>

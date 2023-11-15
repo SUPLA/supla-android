@@ -533,6 +533,7 @@
  <string name="channel_caption_alarm_armament">Alarmsensor</string>
   <string name="calendar_picker_start_hour">Ab Uhr</string>
  <string name="calendar_picker_end_hour">Bis Uhr</string>
+ <string name="history_wrong_range">Der ausgewählte Zeitraum ist falsch</string>
  <plurals name="details_timer_info_on">
   <item quantity="one">eingeschaltet</item>
   <item quantity="other">eingeschaltet</item>

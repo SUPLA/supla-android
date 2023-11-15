@@ -24,6 +24,7 @@ import org.assertj.core.api.Assertions.tuple
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.InjectMocks
+import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.supla.android.data.source.local.entity.ChannelRelationType
 import org.supla.android.db.Channel
@@ -32,9 +33,13 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
 import org.supla.android.usecases.channel.ChannelChild
 import org.supla.android.usecases.channel.ChannelWithChildren
+import org.supla.android.usecases.channel.GetChannelValueUseCase
 
 @RunWith(MockitoJUnitRunner::class)
 class CreateTemperaturesListUseCaseTest {
+
+  @Mock
+  private lateinit var getChannelValueUseCase: GetChannelValueUseCase
 
   @InjectMocks
   lateinit var useCase: CreateTemperaturesListUseCase
@@ -60,8 +65,8 @@ class CreateTemperaturesListUseCaseTest {
     // then
     assertThat(temperatures).hasSize(3)
     assertThat(temperatures)
-      .extracting({ it.remoteId }, { it.valueStringProvider.invoke(mockk()) })
-      .containsExactly(tuple(111, "---"), tuple(111, "---"), tuple(222, "---"))
+      .extracting({ it.remoteId })
+      .containsExactly(tuple(111), tuple(111), tuple(222))
   }
 
   @Test

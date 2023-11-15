@@ -48,15 +48,20 @@ import org.supla.android.data.model.chart.DateRange
 import org.supla.android.data.model.chart.HistoryDataSet
 import org.supla.android.data.model.chart.TemperatureChartState
 import org.supla.android.data.model.general.HideableValue
+import org.supla.android.data.model.general.RangeValueType
 import org.supla.android.data.model.general.SelectableList
+import org.supla.android.data.source.local.calendar.Hour
 import org.supla.android.events.DownloadEventsManager
 import org.supla.android.extensions.dayEnd
 import org.supla.android.extensions.dayStart
 import org.supla.android.extensions.guardLet
+import org.supla.android.extensions.hour
 import org.supla.android.extensions.monthEnd
 import org.supla.android.extensions.monthStart
 import org.supla.android.extensions.quarterEnd
 import org.supla.android.extensions.quarterStart
+import org.supla.android.extensions.setDay
+import org.supla.android.extensions.setHour
 import org.supla.android.extensions.shift
 import org.supla.android.extensions.toPx
 import org.supla.android.extensions.toTimestamp
@@ -64,8 +69,8 @@ import org.supla.android.extensions.valuesFormatter
 import org.supla.android.extensions.weekEnd
 import org.supla.android.extensions.weekStart
 import org.supla.android.extensions.yearEnd
+import org.supla.android.extensions.yearNo
 import org.supla.android.extensions.yearStart
-import org.supla.android.features.calendarpicker.CalendarRangePickerState
 import org.supla.android.features.detailbase.history.ui.HistoryDetailProxy
 import org.supla.android.tools.SuplaSchedulers
 import java.util.Date
@@ -111,7 +116,7 @@ abstract class BaseHistoryDetailViewModel(
 
   override fun changeRange(range: ChartRange) {
     if (range == ChartRange.CUSTOM) {
-      openCustomDateSelectionDialog()
+      updateState { it.copy(ranges = it.ranges?.copy(selected = range)) }
     } else {
       updateState { state ->
         val (currentRange) = guardLet(state.range) { return@updateState state }
@@ -184,43 +189,75 @@ abstract class BaseHistoryDetailViewModel(
     updateUserState()
   }
 
-  override fun dateRangeCancelSelection() {
+  override fun customRangeEditDate(type: RangeValueType) {
     updateState {
-      it.copy(datePickerState = null)
+      it.copy(editDate = type)
     }
   }
 
-  override fun dateRangeDaySelection(startDate: Date?, endDate: Date?) {
-    val (start) = guardLet(startDate) {
-      updateState { it.copy(datePickerState = it.datePickerState?.copy(selectedRange = null)) }
-      return
-    }
-
+  override fun customRangeEditHour(type: RangeValueType) {
     updateState {
-      val (pickerState) = guardLet(it.datePickerState) { return@updateState it }
-      if (endDate == null) {
-        it.copy(datePickerState = pickerState.copy(selectedRange = DateRange(start = start, end = start)))
-      } else {
-        it.copy(datePickerState = pickerState.copy(selectedRange = DateRange(start = start, end = endDate)))
-      }
+      it.copy(editHour = type)
     }
   }
 
-  override fun dateRangeSave() {
+  override fun customRangeEditDateDismiss() {
+    updateState {
+      it.copy(editDate = null)
+    }
+  }
+
+  override fun customRangeEditHourDismiss() {
+    updateState {
+      it.copy(editHour = null)
+    }
+  }
+
+  override fun customRangeEditDateSave(date: Date) {
     updateState { state ->
-      val (newRange) = guardLet(state.datePickerState?.selectedRange) { return@updateState state }
+      val range = guardLet(state.range) { return@updateState state }.let { (range) ->
+        when (state.editDate) {
+          RangeValueType.START -> range.copy(start = range.start.setDay(date))
+          RangeValueType.END -> range.copy(end = range.end.setDay(date))
+          else -> range
+        }
+      }
 
       state.copy(
-        range = newRange,
-        ranges = state.ranges?.copy(selected = ChartRange.CUSTOM),
-        aggregations = aggregations(newRange, state.aggregations?.selected),
-        datePickerState = null,
+        range = range,
+        editDate = null,
+        aggregations = aggregations(range, state.aggregations?.selected),
         sets = state.sets.map { set -> set.copy(entries = emptyList()) },
         chartParameters = HideableValue(ChartParameters(1f, 1f, 0f, 0f))
       ).also {
         triggerMeasurementsLoad(it)
       }
     }
+
+    updateUserState()
+  }
+
+  override fun customRangeEditHourSave(hour: Hour) {
+    updateState { state ->
+      val range = guardLet(state.range) { return@updateState state }.let { (range) ->
+        when (state.editHour) {
+          RangeValueType.START -> range.copy(start = range.start.setHour(hour.hour, hour.minute, 0))
+          RangeValueType.END -> range.copy(end = range.end.setHour(hour.hour, hour.minute, 59))
+          else -> range
+        }
+      }
+
+      state.copy(
+        range = range,
+        editHour = null,
+        aggregations = aggregations(range, state.aggregations?.selected),
+        sets = state.sets.map { set -> set.copy(entries = emptyList()) },
+        chartParameters = HideableValue(ChartParameters(1f, 1f, 0f, 0f))
+      ).also {
+        triggerMeasurementsLoad(it)
+      }
+    }
+
     updateUserState()
   }
 
@@ -247,27 +284,6 @@ abstract class BaseHistoryDetailViewModel(
         onError = defaultErrorHandler("triggerMeasurementsLoad")
       )
       .disposeBySelf()
-  }
-
-  private fun openCustomDateSelectionDialog() {
-    updateState {
-      val selectedRange = if (it.ranges?.selected == ChartRange.CUSTOM) {
-        it.range
-      } else {
-        null
-      }
-      val selectableRange = if (it.minDate != null && it.maxDate != null) {
-        DateRange(it.minDate, it.maxDate)
-      } else {
-        null
-      }
-      it.copy(
-        datePickerState = CalendarRangePickerState(
-          selectedRange = selectedRange,
-          selectableRange = selectableRange
-        )
-      )
-    }
   }
 
   private fun shiftByRange(forward: Boolean) {
@@ -464,7 +480,8 @@ data class HistoryDetailViewState(
   val maxTemperature: Float? = null,
   val chartParameters: HideableValue<ChartParameters>? = null,
 
-  val datePickerState: CalendarRangePickerState? = null
+  val editDate: RangeValueType? = null,
+  val editHour: RangeValueType? = null
 ) : ViewState() {
 
   val shiftRightEnabled: Boolean
@@ -496,6 +513,8 @@ data class HistoryDetailViewState(
           context.getString(R.string.history_no_data_selected)
         } else if (minDate == null && maxDate == null) {
           context.getString(R.string.history_no_data_available)
+        } else if (range?.start?.after(range.end) == true) {
+          context.getString(R.string.history_wrong_range)
         } else {
           context.getString(R.string.no_chart_data_available)
         }
@@ -512,18 +531,6 @@ data class HistoryDetailViewState(
     }
 
   val showBottomNavigation: Boolean
-    get() = when (ranges?.selected) {
-      ChartRange.DAY,
-      ChartRange.WEEK,
-      ChartRange.MONTH,
-      ChartRange.QUARTER,
-      ChartRange.YEAR,
-      ChartRange.CUSTOM -> true
-
-      else -> false
-    }
-
-  val allowNavigation: Boolean
     get() = when (ranges?.selected) {
       ChartRange.DAY,
       ChartRange.WEEK,
@@ -550,6 +557,26 @@ data class HistoryDetailViewState(
       }
       val (daysCount) = guardLet(range?.daysCount) { return range?.end?.toTimestamp()?.toFloat() }
       return range?.end?.toTimestamp()?.plus(chartRangeMargin(daysCount))?.toFloat()
+    }
+
+  val editDateValue: Date?
+    get() = when (editDate) {
+      RangeValueType.START -> range?.start
+      RangeValueType.END -> range?.end
+      else -> null
+    }
+
+  val editHourValue: Hour?
+    get() = when (editHour) {
+      RangeValueType.START -> range?.start?.hour()
+      RangeValueType.END -> range?.end?.hour()
+      else -> null
+    }
+
+  val yearRange: IntRange?
+    get() {
+      val (min, max) = guardLet(minDate, maxDate) { return null }
+      return IntRange(min.yearNo, max.yearNo)
     }
 
   fun rangesMap(resources: Resources): Map<ChartRange, String> =
@@ -620,6 +647,17 @@ data class HistoryDetailViewState(
       null
     } else {
       CombinedData().apply { setData(LineData(lineDataSets)) }
+    }
+  }
+
+  fun editDayValidator(date: Date): Boolean {
+    val (min, max) = guardLet(minDate, maxDate) { return true }
+    val (range) = guardLet(range) { return min.before(date) && max.after(date) }
+
+    return when (editDate) {
+      RangeValueType.START -> min.before(date) && range.end.after(date)
+      RangeValueType.END -> range.start.before(date) && max.after(date)
+      else -> min.before(date) && max.after(date)
     }
   }
 

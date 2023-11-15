@@ -1,4 +1,4 @@
-package org.supla.android.extensions
+package org.supla.android.di.entrypoints
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,21 +17,13 @@ package org.supla.android.extensions
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.content.Context
-import dagger.hilt.android.EntryPointAccessors
-import org.supla.android.data.ValuesFormatter
-import org.supla.android.di.entrypoints.GetChannelValueUseCaseEntryPoint
-import org.supla.android.di.entrypoints.ValuesFormatterEntryPoint
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import org.supla.android.usecases.channel.GetChannelValueUseCase
 
-val Context.valuesFormatter: ValuesFormatter
-  get() = EntryPointAccessors.fromApplication(
-    applicationContext,
-    ValuesFormatterEntryPoint::class.java
-  ).provideValuesFormatter()
-
-val Context.getChannelValueUseCase: GetChannelValueUseCase
-  get() = EntryPointAccessors.fromApplication(
-    applicationContext,
-    GetChannelValueUseCaseEntryPoint::class.java
-  ).provideGetChannelValueUseCase()
+@EntryPoint
+@InstallIn(SingletonComponent::class)
+interface GetChannelValueUseCaseEntryPoint {
+  fun provideGetChannelValueUseCase(): GetChannelValueUseCase
+}

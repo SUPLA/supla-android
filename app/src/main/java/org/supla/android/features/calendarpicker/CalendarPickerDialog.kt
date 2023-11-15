@@ -42,6 +42,7 @@ import org.supla.android.core.ui.theme.calendarCaption
 import org.supla.android.core.ui.theme.grey
 import org.supla.android.core.ui.theme.primaryLight
 import org.supla.android.data.model.chart.DateRange
+import org.supla.android.data.model.general.RangeValueType
 import org.supla.android.data.source.local.calendar.DayOfWeek
 import org.supla.android.data.source.local.calendar.Hour
 import org.supla.android.extensions.date
@@ -77,10 +78,6 @@ sealed interface CalendarPickerState {
   val initialDate: Date
   val saveEnabled: Boolean
   val selectableRange: DateRange?
-
-  enum class SelectionType {
-    START, END
-  }
 }
 
 data class CalendarRangePickerState(
@@ -280,7 +277,7 @@ private fun CalendarHourInput(
   initialEndHour: Hour,
   startHourCorrect: MutableState<Boolean>,
   endHourCorrect: MutableState<Boolean>,
-  onHourSelected: (Hour, CalendarPickerState.SelectionType?) -> Unit
+  onHourSelected: (Hour, RangeValueType?) -> Unit
 ) {
   if (state is CalendarRangePickerState) {
     val context = LocalContext.current
@@ -303,7 +300,7 @@ private fun CalendarHourInput(
         ) {
           val hour = Hour.from(it)
           if (hour != null) {
-            onHourSelected(hour, CalendarPickerState.SelectionType.START)
+            onHourSelected(hour, RangeValueType.START)
           }
           startHourCorrect.value = hour != null
           startHour = it
@@ -320,7 +317,7 @@ private fun CalendarHourInput(
           val hour = Hour.from(it)
           var correct = false
           if (hour != null) {
-            onHourSelected(hour, CalendarPickerState.SelectionType.END)
+            onHourSelected(hour, RangeValueType.END)
 
             correct = true
             if (state.selectedRange != null) {
@@ -511,7 +508,7 @@ private fun handleDateSelection(
 
 private fun handleHourSelection(
   hour: Hour,
-  selectionType: CalendarPickerState.SelectionType?,
+  selectionType: RangeValueType?,
   startDate: MutableState<Date?>,
   endDate: MutableState<Date?>,
   startHour: MutableState<Hour>,
@@ -519,8 +516,8 @@ private fun handleHourSelection(
   handler: (Date?, Date?) -> Unit
 ) {
   when (selectionType) {
-    CalendarPickerState.SelectionType.START -> startHour.value = hour
-    CalendarPickerState.SelectionType.END -> endHour.value = hour
+    RangeValueType.START -> startHour.value = hour
+    RangeValueType.END -> endHour.value = hour
     else -> {}
   }
   if (startDate.value != null) {
