@@ -31,5 +31,6 @@ enum class ChartRange(val stringRes: Int, val roundedDaysCount: Int) {
   QUARTER(R.string.history_range_current_quarter, 90),
   YEAR(R.string.history_range_current_year, 365),
 
-  CUSTOM(R.string.history_range_custom, -1);
+  CUSTOM(R.string.history_range_custom, -1),
+  ALL_HISTORY(R.string.all_available_history, -1);
 }

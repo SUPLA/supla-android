@@ -70,12 +70,10 @@ data class DateRange(
       ChartRange.MONTH -> if (forward) nextMonth() else previousMonth()
       ChartRange.QUARTER -> if (forward) nextQuarter() else previousQuarter()
       ChartRange.YEAR -> if (forward) nextYear() else previousYear()
-      ChartRange.CUSTOM -> customRangeShift(forward)
-    }
 
-  private fun customRangeShift(forward: Boolean): DateRange {
-    return shift(if (forward) daysCount else -daysCount)
-  }
+      ChartRange.CUSTOM, // Currently no shift supported
+      ChartRange.ALL_HISTORY -> this
+    }
 
   private fun shift(days: Int): DateRange {
     return copy(

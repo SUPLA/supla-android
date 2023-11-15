@@ -120,14 +120,14 @@ abstract class BaseHistoryDetailViewModel(
     } else {
       updateState { state ->
         val (currentRange) = guardLet(state.range) { return@updateState state }
-        val (maxDate) = guardLet(state.maxDate) { return@updateState state }
+        val (maxDate, minDate) = guardLet(state.maxDate, state.minDate) { return@updateState state }
         val currentDate = dateProvider.currentDate()
 
-        var rangeStart = getStartDateForRange(range, currentRange.end, currentDate, currentRange.start)
-        var rangeEnd = getEndDateForRange(range, currentRange.end, currentDate, currentRange.end)
+        var rangeStart = getStartDateForRange(range, currentRange.end, currentDate, currentRange.start, minDate)
+        var rangeEnd = getEndDateForRange(range, currentRange.end, currentDate, currentRange.end, maxDate)
         if (rangeStart.after(state.maxDate)) {
-          rangeStart = getStartDateForRange(range, maxDate, currentDate, maxDate.dayStart())
-          rangeEnd = getEndDateForRange(range, maxDate, currentDate, maxDate.dayEnd())
+          rangeStart = getStartDateForRange(range, maxDate, currentDate, maxDate.dayStart(), minDate)
+          rangeEnd = getEndDateForRange(range, maxDate, currentDate, maxDate.dayEnd(), maxDate)
         }
 
         val newDateRange = DateRange(rangeStart, rangeEnd)
@@ -431,7 +431,7 @@ abstract class BaseHistoryDetailViewModel(
     )
   }
 
-  private fun getStartDateForRange(range: ChartRange, date: Date, currentDate: Date, dateForCustom: Date) = when (range) {
+  private fun getStartDateForRange(range: ChartRange, date: Date, currentDate: Date, dateForCustom: Date, minDate: Date) = when (range) {
     ChartRange.DAY -> date.dayStart()
     ChartRange.LAST_DAY,
     ChartRange.LAST_WEEK,
@@ -443,9 +443,10 @@ abstract class BaseHistoryDetailViewModel(
     ChartRange.QUARTER -> date.quarterStart()
     ChartRange.YEAR -> date.yearStart()
     ChartRange.CUSTOM -> dateForCustom
+    ChartRange.ALL_HISTORY -> minDate
   }
 
-  private fun getEndDateForRange(range: ChartRange, end: Date, currentDate: Date, dateForCustom: Date) = when (range) {
+  private fun getEndDateForRange(range: ChartRange, end: Date, currentDate: Date, dateForCustom: Date, maxDate: Date) = when (range) {
     ChartRange.DAY -> end.dayEnd()
     ChartRange.LAST_DAY,
     ChartRange.LAST_WEEK,
@@ -457,6 +458,7 @@ abstract class BaseHistoryDetailViewModel(
     ChartRange.QUARTER -> end.quarterEnd()
     ChartRange.YEAR -> end.yearEnd()
     ChartRange.CUSTOM -> dateForCustom
+    ChartRange.ALL_HISTORY -> maxDate
   }
 }
 
@@ -530,7 +532,19 @@ data class HistoryDetailViewState(
       }
     }
 
-  val showBottomNavigation: Boolean
+  val showBottomBar: Boolean
+    get() = when (ranges?.selected) {
+      ChartRange.DAY,
+      ChartRange.WEEK,
+      ChartRange.MONTH,
+      ChartRange.QUARTER,
+      ChartRange.YEAR,
+      ChartRange.ALL_HISTORY -> true
+
+      else -> false
+    }
+
+  val allowNavigation: Boolean
     get() = when (ranges?.selected) {
       ChartRange.DAY,
       ChartRange.WEEK,
@@ -611,7 +625,8 @@ data class HistoryDetailViewState(
       ChartRange.MONTH -> context.valuesFormatter.getMonthAndYearString(dateRange.start)?.capitalize(Locale.current)
       ChartRange.YEAR -> context.valuesFormatter.getYearString(dateRange.start)
 
-      ChartRange.CUSTOM -> longDateString(context, dateRange)
+      ChartRange.CUSTOM,
+      ChartRange.ALL_HISTORY -> longDateString(context, dateRange)
     }
   }
 

@@ -150,7 +150,7 @@ fun HistoryDetail(viewModel: HistoryDetailProxy) {
 
     if (viewState.ranges?.selected == ChartRange.CUSTOM) {
       RangeSelection(viewState, viewModel)
-    } else if (viewState.showBottomNavigation) {
+    } else if (viewState.showBottomBar) {
       BottomPagination(viewState = viewState, viewModel = viewModel)
     } else {
       Spacer(
@@ -306,32 +306,36 @@ private fun BottomPagination(viewState: HistoryDetailViewState, viewModel: Histo
         horizontal = dimensionResource(id = R.dimen.distance_tiny)
       )
     ) {
-      PaginationIcon(
-        onClick = { viewModel.moveToDataBegin() },
-        icon = R.drawable.ic_double_arrow_right,
-        enabled = viewState.shiftLeftEnabled,
-        rotate = true
-      )
-      PaginationIcon(
-        onClick = { viewModel.moveRangeLeft() },
-        enabled = viewState.shiftLeftEnabled,
-        rotate = true
-      )
+      if (viewState.allowNavigation) {
+        PaginationIcon(
+          onClick = { viewModel.moveToDataBegin() },
+          icon = R.drawable.ic_double_arrow_right,
+          enabled = viewState.shiftLeftEnabled,
+          rotate = true
+        )
+        PaginationIcon(
+          onClick = { viewModel.moveRangeLeft() },
+          enabled = viewState.shiftLeftEnabled,
+          rotate = true
+        )
+      }
       Text(
         text = it,
         style = MaterialTheme.typography.caption,
         textAlign = TextAlign.Center,
         modifier = Modifier.weight(1f)
       )
-      PaginationIcon(
-        onClick = { viewModel.moveRangeRight() },
-        enabled = viewState.shiftRightEnabled
-      )
-      PaginationIcon(
-        onClick = { viewModel.moveToDataEnd() },
-        enabled = viewState.shiftRightEnabled,
-        icon = R.drawable.ic_double_arrow_right
-      )
+      if (viewState.allowNavigation) {
+        PaginationIcon(
+          onClick = { viewModel.moveRangeRight() },
+          enabled = viewState.shiftRightEnabled
+        )
+        PaginationIcon(
+          onClick = { viewModel.moveToDataEnd() },
+          enabled = viewState.shiftRightEnabled,
+          icon = R.drawable.ic_double_arrow_right
+        )
+      }
     }
   }
 
