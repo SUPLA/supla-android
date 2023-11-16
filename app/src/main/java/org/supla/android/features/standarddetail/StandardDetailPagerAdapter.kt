@@ -49,7 +49,7 @@ class StandardDetailPagerAdapter(
     }
 
     DetailPage.THERMOSTAT -> ThermostatGeneralFragment().apply { arguments = ThermostatGeneralFragment.bundle(itemBundle) }
-    DetailPage.SCHEDULE -> ScheduleDetailFragment().apply { arguments = ScheduleDetailFragment.bundle(itemBundle.remoteId) }
+    DetailPage.SCHEDULE -> ScheduleDetailFragment().apply { arguments = ScheduleDetailFragment.bundle(itemBundle) }
     DetailPage.THERMOSTAT_HISTORY -> ThermostatHistoryDetailFragment().apply {
       arguments = ThermostatHistoryDetailFragment.bundle(itemBundle.remoteId)
     }

@@ -73,7 +73,6 @@ import org.supla.android.features.thermostatdetail.scheduledetail.data.ScheduleD
 import org.supla.android.features.thermostatdetail.scheduledetail.extensions.color
 import org.supla.android.features.thermostatdetail.scheduledetail.ui.PreviewProxy
 import org.supla.android.features.thermostatdetail.scheduledetail.ui.ScheduleDetailViewProxy
-import java.util.Calendar
 
 const val rowsCount = 25
 val columnsCount = DayOfWeek.values().size
@@ -100,7 +99,9 @@ fun ScheduleTable(
   // texts with sizes
   val textMeasurer = rememberTextMeasurer()
   val days = remember { mutableStateListOfDrawableDayOfWeek(context, textMeasurer) }
+  days.forEach { it.isCurrent = it.value == viewState.currentDayOfWeek }
   val hours = remember { mutableStateListOfDrawableHour(textMeasurer) }
+  hours.forEach { it.isCurrent = it.value == viewState.currentHour }
   // positions of elements
   val (viewSize, updateSize) = remember { mutableStateOf<IntSize?>(null) }
   val textWidth = hours.first().textLayoutResult.size.width.plus(boxPadding.toPx()).plus(textPadding.toPx())
@@ -310,7 +311,7 @@ private fun labelText(text: String, textMeasurer: TextMeasurer, useBold: Boolean
 private data class DrawableText<T>(
   val value: T,
   val textLayoutResult: TextLayoutResult,
-  val isCurrent: Boolean
+  var isCurrent: Boolean
 ) {
 
   companion object {
@@ -335,18 +336,14 @@ private data class DrawableText<T>(
 @OptIn(ExperimentalTextApi::class)
 private fun mutableStateListOfDrawableDayOfWeek(context: Context, textMeasurer: TextMeasurer) =
   mutableStateListOf<DrawableText<DayOfWeek>>().also { list ->
-    val calendar = Calendar.getInstance()
-    val currentDay = DayOfWeek.from(calendar.get(Calendar.DAY_OF_WEEK) - 1)
-    DayOfWeek.values().forEach { list.add(DrawableText.get(it, context.resources, textMeasurer, it == currentDay)) }
+    DayOfWeek.values().forEach { list.add(DrawableText.get(it, context.resources, textMeasurer, false)) }
   }
 
 @OptIn(ExperimentalTextApi::class)
 private fun mutableStateListOfDrawableHour(textMeasurer: TextMeasurer) =
   mutableStateListOf<DrawableText<Int>>().also { list ->
-    val calendar = Calendar.getInstance()
-    val currentHour = calendar.get(Calendar.HOUR_OF_DAY)
     for (i in 0..23) {
-      list.add(DrawableText.get(i, textMeasurer, i == currentHour))
+      list.add(DrawableText.get(i, textMeasurer, false))
     }
   }
 

@@ -42,9 +42,11 @@ abstract class BaseLoadMeasurementsUseCase(private val getChannelValueUseCase: G
         .map { AggregatedEntity(aggregation, it.date.toTimestamp(), it.temperature!!) }
     }
 
+    val formatter = ChartDataAggregation.Formatter()
     return measurements
+      .asSequence()
       .filter { it.temperature != null }
-      .groupBy { item -> aggregation.aggregator(item.date) }
+      .groupBy { item -> aggregation.aggregator(item.date, formatter) }
       .filter { group -> group.value.isNotEmpty() }
       .map { group ->
         AggregatedEntity(
@@ -55,6 +57,7 @@ abstract class BaseLoadMeasurementsUseCase(private val getChannelValueUseCase: G
           max = group.value.maxOf { it.temperature!! }
         )
       }
+      .toList()
   }
 
   internal fun aggregatingHumidity(
@@ -67,9 +70,11 @@ abstract class BaseLoadMeasurementsUseCase(private val getChannelValueUseCase: G
         .map { AggregatedEntity(aggregation, it.date.toTimestamp(), it.humidity!!) }
     }
 
+    val formatter = ChartDataAggregation.Formatter()
     return measurements
+      .asSequence()
       .filter { it.humidity != null }
-      .groupBy { item -> aggregation.aggregator(item.date) }
+      .groupBy { item -> aggregation.aggregator(item.date, formatter) }
       .filter { group -> group.value.isNotEmpty() }
       .map { group ->
         AggregatedEntity(
@@ -80,6 +85,7 @@ abstract class BaseLoadMeasurementsUseCase(private val getChannelValueUseCase: G
           max = group.value.maxOf { it.humidity!! }
         )
       }
+      .toList()
   }
 
   internal fun historyDataSet(

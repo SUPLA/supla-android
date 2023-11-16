@@ -47,9 +47,10 @@ fun DatePickerDialog(
   onDismissTap: () -> Unit = {},
   dateValidator: (Date) -> Boolean = { true }
 ) {
+  @Suppress("DEPRECATION")
   val state = rememberDatePickerState(
     yearRange = yearRange ?: DatePickerDefaults.YearRange,
-    initialSelectedDateMillis = selectedDate?.time
+    initialSelectedDateMillis = selectedDate?.time?.minus(selectedDate.timezoneOffset.times(60000))
   )
 
   val colors = DatePickerDefaults.colors(

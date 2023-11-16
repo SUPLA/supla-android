@@ -136,7 +136,8 @@ abstract class BaseHistoryDetailViewModel(
           range = newDateRange,
           aggregations = aggregations(newDateRange, state.aggregations?.selected),
           sets = state.sets.map { set -> set.copy(entries = emptyList()) },
-          chartParameters = HideableValue(ChartParameters(1f, 1f, 0f, 0f))
+          chartParameters = HideableValue(ChartParameters(1f, 1f, 0f, 0f)),
+          loading = true
         ).also {
           triggerMeasurementsLoad(it)
         }
@@ -172,7 +173,11 @@ abstract class BaseHistoryDetailViewModel(
 
   override fun changeAggregation(aggregation: ChartDataAggregation) {
     updateState { state ->
-      state.copy(aggregations = state.aggregations?.copy(selected = aggregation)).also {
+      state.copy(
+        aggregations = state.aggregations?.copy(selected = aggregation),
+        sets = state.sets.map { set -> set.copy(entries = emptyList()) },
+        loading = true
+      ).also {
         triggerMeasurementsLoad(it)
       }
     }
@@ -228,7 +233,8 @@ abstract class BaseHistoryDetailViewModel(
         editDate = null,
         aggregations = aggregations(range, state.aggregations?.selected),
         sets = state.sets.map { set -> set.copy(entries = emptyList()) },
-        chartParameters = HideableValue(ChartParameters(1f, 1f, 0f, 0f))
+        chartParameters = HideableValue(ChartParameters(1f, 1f, 0f, 0f)),
+        loading = true
       ).also {
         triggerMeasurementsLoad(it)
       }
@@ -252,7 +258,8 @@ abstract class BaseHistoryDetailViewModel(
         editHour = null,
         aggregations = aggregations(range, state.aggregations?.selected),
         sets = state.sets.map { set -> set.copy(entries = emptyList()) },
-        chartParameters = HideableValue(ChartParameters(1f, 1f, 0f, 0f))
+        chartParameters = HideableValue(ChartParameters(1f, 1f, 0f, 0f)),
+        loading = true
       ).also {
         triggerMeasurementsLoad(it)
       }
@@ -712,7 +719,12 @@ data class HistoryDetailViewState(
   }
 
   private fun chartMarginNotNeeded() = when (ranges?.selected) {
-    ChartRange.LAST_DAY, ChartRange.LAST_WEEK, ChartRange.LAST_MONTH, ChartRange.LAST_QUARTER, ChartRange.CUSTOM -> false
+    ChartRange.LAST_DAY,
+    ChartRange.LAST_WEEK,
+    ChartRange.LAST_MONTH,
+    ChartRange.LAST_QUARTER,
+    ChartRange.CUSTOM,
+    ChartRange.ALL_HISTORY -> false
     else -> true
   }
 }

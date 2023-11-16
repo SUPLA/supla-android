@@ -236,7 +236,7 @@ class ThermostatProgramInfoTest {
   }
 
   @Test
-  fun `should empty list when time synchronization disabled`() {
+  fun `should get only current program when time sync disabled`() {
     // given
     val builder = ThermostatProgramInfo.Builder()
     builder.dateProvider = dateProvider
@@ -247,11 +247,18 @@ class ThermostatProgramInfoTest {
     builder.currentTemperature = 18.4f
     builder.channelOnline = true
 
+    whenever(dateProvider.currentDayOfWeek()).thenReturn(DayOfWeek.MONDAY)
+    whenever(dateProvider.currentHour()).thenReturn(0)
+    whenever(dateProvider.currentMinute()).thenReturn(35)
+
     // when
     val list = builder.build()
 
     // then
-    assertThat(list).isEmpty()
+    assertThat(list).extracting({ it.type }, { it.icon }, { it.iconColor }, { it.manualActive })
+      .containsExactly(
+        tuple(ThermostatProgramInfo.Type.CURRENT, R.drawable.ic_heat, R.color.red, false)
+      )
   }
 
   @Test

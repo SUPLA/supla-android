@@ -96,3 +96,7 @@ data class HomeScreenContentField(
 ) : Field(type)
 
 data class SuplaDeviceConfig(val deviceId: Int, val availableFields: EnumSet<FieldType>, val fields: List<Field>)
+
+fun SuplaDeviceConfig?.isAutomaticTimeSyncDisabled(): Boolean {
+  return this?.fields?.filterIsInstance(AutomaticTimeSyncField::class.java)?.firstOrNull()?.enabled == false
+}

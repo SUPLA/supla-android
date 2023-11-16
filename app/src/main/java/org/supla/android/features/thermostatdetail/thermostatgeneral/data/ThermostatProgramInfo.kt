@@ -25,12 +25,12 @@ import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.ui.StringProvider
 import org.supla.android.data.source.local.calendar.DayOfWeek
 import org.supla.android.data.source.local.calendar.QuarterOfHour
-import org.supla.android.data.source.remote.AutomaticTimeSyncField
 import org.supla.android.data.source.remote.SuplaDeviceConfig
 import org.supla.android.data.source.remote.hvac.SuplaChannelWeeklyScheduleConfig
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
 import org.supla.android.data.source.remote.hvac.SuplaWeeklyScheduleProgram
+import org.supla.android.data.source.remote.isAutomaticTimeSyncDisabled
 import org.supla.android.data.source.remote.thermostat.SuplaThermostatFlags
 import org.supla.android.extensions.guardLet
 import org.supla.android.extensions.valuesFormatter
@@ -82,10 +82,6 @@ fun ThermostatProgramInfo.Builder.build(): List<ThermostatProgramInfo> {
     return emptyList()
   }
   if (flags.contains(SuplaThermostatFlags.WEEKLY_SCHEDULE).not()) {
-    return emptyList()
-  }
-  // If time synchronization disabled next programs will be not shown
-  if (deviceConfig.isAutomaticTimeSyncDisabled()) {
     return emptyList()
   }
   if (flags.contains(SuplaThermostatFlags.CLOCK_ERROR)) {
@@ -146,6 +142,19 @@ private fun ThermostatProgramInfo.Builder.createList(): List<ThermostatProgramIn
   val nextScheduleProgram = getProgram(foundNextProgram)
   val descriptionProvider: StringProvider = { context -> context.valuesFormatter.getTemperatureString(currentTemperature) }
 
+  // If time synchronization disabled show only current program
+  if (deviceConfig.isAutomaticTimeSyncDisabled()) {
+    return listOf(
+      ThermostatProgramInfo(
+        type = ThermostatProgramInfo.Type.CURRENT,
+        icon = currentMode!!.icon,
+        iconColor = currentMode!!.iconColor,
+        descriptionProvider = if (currentMode == SuplaHvacMode.OFF) null else descriptionProvider,
+        manualActive = thermostatFlags!!.contains(SuplaThermostatFlags.WEEKLY_SCHEDULE_TEMPORAL_OVERRIDE)
+      )
+    )
+  }
+
   return listOf(
     ThermostatProgramInfo(
       type = ThermostatProgramInfo.Type.CURRENT,
@@ -175,7 +184,3 @@ private fun ThermostatProgramInfo.Builder.getProgram(program: SuplaScheduleProgr
   } else {
     weeklyScheduleConfig!!.programConfigurations.firstOrNull { it.program == program }
   }
-
-private fun SuplaDeviceConfig?.isAutomaticTimeSyncDisabled(): Boolean {
-  return this?.fields?.filterIsInstance(AutomaticTimeSyncField::class.java)?.firstOrNull()?.enabled == false
-}
