@@ -845,7 +845,8 @@ public class AddDeviceWizardActivity extends WizardActivity
             || SSID.startsWith("NICE-")
             || SSID.startsWith("HEATPOL-")
             || SSID.startsWith("COMELIT-")
-            || SSID.startsWith("POLIER-"))
+            || SSID.startsWith("POLIER-")
+            || SSID.startsWith("ERGO-"))
         && (mFullPattern.matcher(SSID).find() || mShortPattern.matcher(SSID).find());
   }
 
