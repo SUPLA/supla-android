@@ -27,7 +27,7 @@ enum class FieldType(val value: Int) {
   DISABLE_USER_INTERFACE(1 shl 3),
   AUTOMATIC_TIME_SYNC(1 shl 4),
   HOME_SCREEN_OFF_DELAY(1 shl 5),
-  HOME_SCREEN_CONTENT(1 shl 7)
+  HOME_SCREEN_CONTENT(1 shl 6)
 }
 
 sealed class Field(open val type: FieldType)
@@ -96,3 +96,7 @@ data class HomeScreenContentField(
 ) : Field(type)
 
 data class SuplaDeviceConfig(val deviceId: Int, val availableFields: EnumSet<FieldType>, val fields: List<Field>)
+
+fun SuplaDeviceConfig?.isAutomaticTimeSyncDisabled(): Boolean {
+  return this?.fields?.filterIsInstance(AutomaticTimeSyncField::class.java)?.firstOrNull()?.enabled == false
+}

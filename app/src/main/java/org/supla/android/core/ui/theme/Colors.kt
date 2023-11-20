@@ -81,6 +81,9 @@ val Color.Companion.lightRed: Color
 val Color.Companion.disabled: Color
   get() = Color(0xFFB4B7BA)
 
+val Color.Companion.primaryLight: Color
+  get() = Color(0xFFEDFBEE)
+
 private fun colorResource(context: Context, @ColorRes id: Int): Color {
   return if (Build.VERSION.SDK_INT >= 23) {
     Color(context.resources.getColor(id, context.theme))

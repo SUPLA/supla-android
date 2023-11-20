@@ -1,4 +1,8 @@
-package org.supla.android.data.model.chart
+package org.supla.android.data.source.local.calendar
+
+import android.content.Context
+import org.supla.android.extensions.valuesFormatter
+
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,20 +21,26 @@ package org.supla.android.data.model.chart
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.R
+data class Hour(
+  val hour: Int,
+  val minute: Int
+) {
 
-enum class ChartRange(val stringRes: Int, val roundedDaysCount: Int) {
-  LAST_DAY(R.string.history_range_last_day, 1),
-  LAST_WEEK(R.string.history_range_last_week, 7),
-  LAST_MONTH(R.string.history_range_last_30_days, 30),
-  LAST_QUARTER(R.string.history_range_last_90_days, 90),
+  fun toString(context: Context) = context.valuesFormatter.getHourString(this)
 
-  DAY(R.string.history_range_current_day, 1),
-  WEEK(R.string.history_range_current_week, 7),
-  MONTH(R.string.history_range_current_month, 30),
-  QUARTER(R.string.history_range_current_quarter, 90),
-  YEAR(R.string.history_range_current_year, 365),
+  companion object {
+    fun from(string: String): Hour? {
+      val regex = Regex("(?<hour>[0-9]{1,2}):(?<minute>[0-9]{1,2})")
+      val matchResult = regex.find(string)
 
-  CUSTOM(R.string.history_range_custom, -1),
-  ALL_HISTORY(R.string.all_available_history, -1);
+      if (matchResult?.groups?.size == 3) {
+        return Hour(
+          minute = matchResult.groups["minute"]!!.value.toInt(),
+          hour = matchResult.groups["hour"]!!.value.toInt()
+        )
+      }
+
+      return null
+    }
+  }
 }

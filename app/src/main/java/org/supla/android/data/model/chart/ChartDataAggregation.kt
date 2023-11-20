@@ -34,28 +34,47 @@ private val formatter = SimpleDateFormat("yyyyMMddHHmm")
 enum class ChartDataAggregation(
   @StringRes val stringRes: Int,
   val timeInSec: Long,
-  val aggregator: (Date) -> Long,
+  val aggregator: (Date, Formatter) -> Long,
   val groupTimeProvider: (Date) -> Long // In seconds
 ) {
-  MINUTES(R.string.minutes, 60, { it.getAggregationString().toLong() }, { it.toTimestamp() }),
-  HOURS(R.string.hours, 3600, { it.getAggregationString().substring(0, 10).toLong() }, { it.inHalfOfHour().toTimestamp() }),
-  DAYS(R.string.days, 86400, { it.getAggregationString().substring(0, 8).toLong() }, { it.dayNoon().toTimestamp() }),
+  MINUTES(
+    R.string.minutes,
+    60,
+    { date, formatter -> date.getAggregationString(formatter).toLong() },
+    { it.toTimestamp() }
+  ),
+  HOURS(
+    R.string.hours,
+    3600,
+    { date, formatter -> date.getAggregationString(formatter).substring(0, 10).toLong() },
+    { it.inHalfOfHour().toTimestamp() }
+  ),
+  DAYS(
+    R.string.days,
+    86400,
+    { date, formatter -> date.getAggregationString(formatter).substring(0, 8).toLong() },
+    { it.dayNoon().toTimestamp() }
+  ),
   MONTHS(
     R.string.months,
     2592000,
-    { it.getAggregationString().substring(0, 6).toLong() },
+    { date, formatter -> date.getAggregationString(formatter).substring(0, 6).toLong() },
     { it.monthHalf().toTimestamp() }
   ),
   YEARS(
     R.string.years,
     31536000,
-    { it.getAggregationString().substring(0, 4).toLong() },
+    { date, formatter -> date.getAggregationString(formatter).substring(0, 4).toLong() },
     { it.yearHalf().toTimestamp() }
   );
 
   fun between(min: ChartDataAggregation, max: ChartDataAggregation): Boolean =
     timeInSec >= min.timeInSec && timeInSec <= max.timeInSec
+
+  @SuppressLint("SimpleDateFormat")
+  class Formatter : SimpleDateFormat("yyyyMMddHHmm")
 }
 
-private fun Date.getAggregationString(): String =
-  formatter.format(this)
+private fun Date.getAggregationString(formatter: ChartDataAggregation.Formatter): String {
+  return formatter.format(this)
+}

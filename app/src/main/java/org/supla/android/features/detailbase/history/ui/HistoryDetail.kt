@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalMaterialApi::class)
+@file:OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
 
 package org.supla.android.features.detailbase.history.ui
 /*
@@ -48,6 +48,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -74,12 +75,19 @@ import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.model.chart.ChartDataAggregation
 import org.supla.android.data.model.chart.ChartRange
 import org.supla.android.data.model.chart.HistoryDataSet
+import org.supla.android.data.model.general.RangeValueType
+import org.supla.android.data.source.local.calendar.Hour
+import org.supla.android.extensions.valuesFormatter
 import org.supla.android.features.detailbase.history.HistoryDetailViewState
+import org.supla.android.ui.dialogs.DatePickerDialog
+import org.supla.android.ui.dialogs.TimePickerDialog
 import org.supla.android.ui.views.TemperaturesChart
+import org.supla.android.ui.views.TextField
 import org.supla.android.ui.views.TextSpinner
 import org.supla.android.ui.views.buttons.IconButton
 import org.supla.android.ui.views.tools.Shadow
 import org.supla.android.ui.views.tools.ShadowOrientation
+import java.util.Date
 
 interface HistoryDetailProxy : BaseViewProxy<HistoryDetailViewState> {
   fun refresh() {}
@@ -91,11 +99,34 @@ interface HistoryDetailProxy : BaseViewProxy<HistoryDetailViewState> {
   fun moveToDataBegin() {}
   fun moveToDataEnd() {}
   fun updateChartPosition(scaleX: Float, scaleY: Float, x: Float, y: Float) {}
+  fun customRangeEditDate(type: RangeValueType) {}
+  fun customRangeEditHour(type: RangeValueType) {}
+  fun customRangeEditDateDismiss() {}
+  fun customRangeEditHourDismiss() {}
+  fun customRangeEditDateSave(date: Date) {}
+  fun customRangeEditHourSave(hour: Hour) {}
 }
 
 @Composable
 fun HistoryDetail(viewModel: HistoryDetailProxy) {
   val viewState by viewModel.getViewState().collectAsState()
+
+  if (viewState.editDate != null) {
+    DatePickerDialog(
+      selectedDate = viewState.editDateValue,
+      onConfirmTap = { viewModel.customRangeEditDateSave(it) },
+      onDismissTap = { viewModel.customRangeEditDateDismiss() },
+      dateValidator = { viewState.editDayValidator(it) },
+      yearRange = viewState.yearRange
+    )
+  }
+  if (viewState.editHour != null) {
+    TimePickerDialog(
+      selectedHour = viewState.editHourValue,
+      onConfirmTap = { viewModel.customRangeEditHourSave(it) },
+      onDismissTap = { viewModel.customRangeEditHourDismiss() }
+    )
+  }
 
   Column(
     modifier = Modifier.fillMaxSize()
@@ -117,7 +148,9 @@ fun HistoryDetail(viewModel: HistoryDetailProxy) {
         .padding(horizontal = dimensionResource(id = R.dimen.distance_default))
     )
 
-    if (viewState.showBottomNavigation) {
+    if (viewState.ranges?.selected == ChartRange.CUSTOM) {
+      RangeSelection(viewState, viewModel)
+    } else if (viewState.showBottomBar) {
       BottomPagination(viewState = viewState, viewModel = viewModel)
     } else {
       Spacer(
@@ -273,32 +306,36 @@ private fun BottomPagination(viewState: HistoryDetailViewState, viewModel: Histo
         horizontal = dimensionResource(id = R.dimen.distance_tiny)
       )
     ) {
-      PaginationIcon(
-        onClick = { viewModel.moveToDataBegin() },
-        icon = R.drawable.ic_double_arrow_right,
-        enabled = viewState.shiftLeftEnabled,
-        rotate = true
-      )
-      PaginationIcon(
-        onClick = { viewModel.moveRangeLeft() },
-        enabled = viewState.shiftLeftEnabled,
-        rotate = true
-      )
+      if (viewState.allowNavigation) {
+        PaginationIcon(
+          onClick = { viewModel.moveToDataBegin() },
+          icon = R.drawable.ic_double_arrow_right,
+          enabled = viewState.shiftLeftEnabled,
+          rotate = true
+        )
+        PaginationIcon(
+          onClick = { viewModel.moveRangeLeft() },
+          enabled = viewState.shiftLeftEnabled,
+          rotate = true
+        )
+      }
       Text(
         text = it,
         style = MaterialTheme.typography.caption,
         textAlign = TextAlign.Center,
         modifier = Modifier.weight(1f)
       )
-      PaginationIcon(
-        onClick = { viewModel.moveRangeRight() },
-        enabled = viewState.shiftRightEnabled
-      )
-      PaginationIcon(
-        onClick = { viewModel.moveToDataEnd() },
-        enabled = viewState.shiftRightEnabled,
-        icon = R.drawable.ic_double_arrow_right
-      )
+      if (viewState.allowNavigation) {
+        PaginationIcon(
+          onClick = { viewModel.moveRangeRight() },
+          enabled = viewState.shiftRightEnabled
+        )
+        PaginationIcon(
+          onClick = { viewModel.moveToDataEnd() },
+          enabled = viewState.shiftRightEnabled,
+          icon = R.drawable.ic_double_arrow_right
+        )
+      }
     }
   }
 
@@ -311,6 +348,54 @@ private fun PaginationIcon(
   rotate: Boolean = false
 ) =
   IconButton(icon = icon, onClick = onClick, modifier = modifier, enabled = enabled, rotate = rotate)
+
+@Composable
+private fun RangeSelection(viewState: HistoryDetailViewState, viewModel: HistoryDetailProxy) {
+  Row(
+    verticalAlignment = Alignment.CenterVertically,
+    modifier = Modifier
+      .padding(horizontal = dimensionResource(id = R.dimen.distance_default))
+      .height(96.dp)
+  ) {
+    Spacer(modifier = Modifier.weight(0.01f))
+    DateTextField(date = viewState.range?.start) { viewModel.customRangeEditDate(RangeValueType.START) }
+    HourTextField(date = viewState.range?.start) { viewModel.customRangeEditHour(RangeValueType.START) }
+    Text(text = "-", modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.distance_tiny)))
+    DateTextField(date = viewState.range?.end) { viewModel.customRangeEditDate(RangeValueType.END) }
+    HourTextField(date = viewState.range?.end) { viewModel.customRangeEditHour(RangeValueType.END) }
+    Spacer(modifier = Modifier.weight(0.01f))
+  }
+}
+
+context(RowScope)
+@Composable
+fun DateTextField(date: Date?, onClick: () -> Unit) {
+  TextField(
+    value = LocalContext.current.valuesFormatter.getDateString(date) ?: "",
+    modifier = Modifier
+      .weight(0.3f)
+      .height(36.dp),
+    contentPadding = PaddingValues(8.dp),
+    textStyle = MaterialTheme.typography.body2.copy(textAlign = TextAlign.Center),
+    readOnly = true,
+    onClicked = onClick
+  )
+}
+
+context(RowScope)
+@Composable
+fun HourTextField(date: Date?, onClick: () -> Unit) {
+  TextField(
+    value = LocalContext.current.valuesFormatter.getHourString(date) ?: "",
+    modifier = Modifier
+      .weight(0.18f)
+      .height(36.dp),
+    contentPadding = PaddingValues(8.dp),
+    textStyle = MaterialTheme.typography.body2.copy(textAlign = TextAlign.Center),
+    readOnly = true,
+    onClicked = onClick
+  )
+}
 
 @Preview
 @Composable

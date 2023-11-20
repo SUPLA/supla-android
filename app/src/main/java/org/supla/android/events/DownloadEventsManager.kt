@@ -18,7 +18,7 @@ package org.supla.android.events
  */
 
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.subjects.BehaviorSubject
+import io.reactivex.rxjava3.subjects.PublishSubject
 import io.reactivex.rxjava3.subjects.Subject
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -38,7 +38,7 @@ class DownloadEventsManager @Inject constructor() {
 
   private fun getSubjectForChannel(remoteId: Int): Subject<State> {
     return getSubject(remoteId, IdType.CHANNEL) {
-      BehaviorSubject.create<State>().also { it.onNext(State.Idle) }
+      PublishSubject.create()
     }
   }
 

@@ -1,4 +1,4 @@
-package org.supla.android.extensions
+package org.supla.android.features.standarddetail
 /*
 Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,13 +17,23 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import android.content.res.Resources
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.sp
+import org.supla.android.data.source.runtime.ItemType
+import org.supla.android.db.Channel
+import java.io.Serializable
 
-fun Int.toDp(): Dp {
-  return Dp(this / Resources.getSystem().displayMetrics.density)
+data class ItemBundle(
+  val remoteId: Int,
+  val deviceId: Int,
+  val itemType: ItemType,
+  val function: Int
+) : Serializable {
+  companion object {
+    fun from(channel: Channel): ItemBundle =
+      ItemBundle(
+        remoteId = channel.remoteId,
+        deviceId = channel.deviceID,
+        itemType = ItemType.CHANNEL,
+        function = channel.func
+      )
+  }
 }
-
-val Int.nonScaledSp
-  get() = (this / Resources.getSystem().configuration.fontScale).sp

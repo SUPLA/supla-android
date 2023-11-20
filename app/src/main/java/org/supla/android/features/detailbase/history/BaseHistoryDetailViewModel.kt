@@ -20,6 +20,8 @@ package org.supla.android.features.detailbase.history
 import android.content.Context
 import android.content.res.Resources
 import androidx.annotation.ColorRes
+import androidx.compose.ui.text.capitalize
+import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import androidx.core.content.res.ResourcesCompat
 import com.github.mikephil.charting.components.YAxis
@@ -46,15 +48,20 @@ import org.supla.android.data.model.chart.DateRange
 import org.supla.android.data.model.chart.HistoryDataSet
 import org.supla.android.data.model.chart.TemperatureChartState
 import org.supla.android.data.model.general.HideableValue
+import org.supla.android.data.model.general.RangeValueType
 import org.supla.android.data.model.general.SelectableList
+import org.supla.android.data.source.local.calendar.Hour
 import org.supla.android.events.DownloadEventsManager
 import org.supla.android.extensions.dayEnd
 import org.supla.android.extensions.dayStart
 import org.supla.android.extensions.guardLet
+import org.supla.android.extensions.hour
 import org.supla.android.extensions.monthEnd
 import org.supla.android.extensions.monthStart
 import org.supla.android.extensions.quarterEnd
 import org.supla.android.extensions.quarterStart
+import org.supla.android.extensions.setDay
+import org.supla.android.extensions.setHour
 import org.supla.android.extensions.shift
 import org.supla.android.extensions.toPx
 import org.supla.android.extensions.toTimestamp
@@ -62,6 +69,7 @@ import org.supla.android.extensions.valuesFormatter
 import org.supla.android.extensions.weekEnd
 import org.supla.android.extensions.weekStart
 import org.supla.android.extensions.yearEnd
+import org.supla.android.extensions.yearNo
 import org.supla.android.extensions.yearStart
 import org.supla.android.features.detailbase.history.ui.HistoryDetailProxy
 import org.supla.android.tools.SuplaSchedulers
@@ -107,31 +115,36 @@ abstract class BaseHistoryDetailViewModel(
   }
 
   override fun changeRange(range: ChartRange) {
-    updateState { state ->
-      val (currentRange) = guardLet(state.range) { return@updateState state }
-      val (maxDate) = guardLet(state.maxDate) { return@updateState state }
-      val currentDate = dateProvider.currentDate()
+    if (range == ChartRange.CUSTOM) {
+      updateState { it.copy(ranges = it.ranges?.copy(selected = range)) }
+    } else {
+      updateState { state ->
+        val (currentRange) = guardLet(state.range) { return@updateState state }
+        val (maxDate, minDate) = guardLet(state.maxDate, state.minDate) { return@updateState state }
+        val currentDate = dateProvider.currentDate()
 
-      var rangeStart = getStartDateForRange(range, currentRange.end, currentDate, currentRange.start)
-      var rangeEnd = getEndDateForRange(range, currentRange.end, currentDate, currentRange.end)
-      if (rangeStart.after(state.maxDate)) {
-        rangeStart = getStartDateForRange(range, maxDate, currentDate, maxDate.dayStart())
-        rangeEnd = getEndDateForRange(range, maxDate, currentDate, maxDate.dayEnd())
+        var rangeStart = getStartDateForRange(range, currentRange.end, currentDate, currentRange.start, minDate)
+        var rangeEnd = getEndDateForRange(range, currentRange.end, currentDate, currentRange.end, maxDate)
+        if (rangeStart.after(state.maxDate)) {
+          rangeStart = getStartDateForRange(range, maxDate, currentDate, maxDate.dayStart(), minDate)
+          rangeEnd = getEndDateForRange(range, maxDate, currentDate, maxDate.dayEnd(), maxDate)
+        }
+
+        val newDateRange = DateRange(rangeStart, rangeEnd)
+        state.copy(
+          ranges = state.ranges?.copy(selected = range),
+          range = newDateRange,
+          aggregations = aggregations(newDateRange, state.aggregations?.selected),
+          sets = state.sets.map { set -> set.copy(entries = emptyList()) },
+          chartParameters = HideableValue(ChartParameters(1f, 1f, 0f, 0f)),
+          loading = true
+        ).also {
+          triggerMeasurementsLoad(it)
+        }
       }
 
-      val newDateRange = DateRange(rangeStart, rangeEnd)
-      state.copy(
-        ranges = state.ranges?.copy(selected = range),
-        range = newDateRange,
-        aggregations = aggregations(newDateRange, state.aggregations?.selected),
-        sets = state.sets.map { set -> set.copy(entries = emptyList()) },
-        chartParameters = HideableValue(ChartParameters(1f, 1f, 0f, 0f))
-      ).also {
-        triggerMeasurementsLoad(it)
-      }
+      updateUserState()
     }
-
-    updateUserState()
   }
 
   override fun moveRangeLeft() {
@@ -160,7 +173,11 @@ abstract class BaseHistoryDetailViewModel(
 
   override fun changeAggregation(aggregation: ChartDataAggregation) {
     updateState { state ->
-      state.copy(aggregations = state.aggregations?.copy(selected = aggregation)).also {
+      state.copy(
+        aggregations = state.aggregations?.copy(selected = aggregation),
+        sets = state.sets.map { set -> set.copy(entries = emptyList()) },
+        loading = true
+      ).also {
         triggerMeasurementsLoad(it)
       }
     }
@@ -174,6 +191,80 @@ abstract class BaseHistoryDetailViewModel(
       } ?: HideableValue(ChartParameters(scaleX, scaleY, x, y))
       it.copy(chartParameters = parameters)
     }
+    updateUserState()
+  }
+
+  override fun customRangeEditDate(type: RangeValueType) {
+    updateState {
+      it.copy(editDate = type)
+    }
+  }
+
+  override fun customRangeEditHour(type: RangeValueType) {
+    updateState {
+      it.copy(editHour = type)
+    }
+  }
+
+  override fun customRangeEditDateDismiss() {
+    updateState {
+      it.copy(editDate = null)
+    }
+  }
+
+  override fun customRangeEditHourDismiss() {
+    updateState {
+      it.copy(editHour = null)
+    }
+  }
+
+  override fun customRangeEditDateSave(date: Date) {
+    updateState { state ->
+      val range = guardLet(state.range) { return@updateState state }.let { (range) ->
+        when (state.editDate) {
+          RangeValueType.START -> range.copy(start = range.start.setDay(date))
+          RangeValueType.END -> range.copy(end = range.end.setDay(date))
+          else -> range
+        }
+      }
+
+      state.copy(
+        range = range,
+        editDate = null,
+        aggregations = aggregations(range, state.aggregations?.selected),
+        sets = state.sets.map { set -> set.copy(entries = emptyList()) },
+        chartParameters = HideableValue(ChartParameters(1f, 1f, 0f, 0f)),
+        loading = true
+      ).also {
+        triggerMeasurementsLoad(it)
+      }
+    }
+
+    updateUserState()
+  }
+
+  override fun customRangeEditHourSave(hour: Hour) {
+    updateState { state ->
+      val range = guardLet(state.range) { return@updateState state }.let { (range) ->
+        when (state.editHour) {
+          RangeValueType.START -> range.copy(start = range.start.setHour(hour.hour, hour.minute, 0))
+          RangeValueType.END -> range.copy(end = range.end.setHour(hour.hour, hour.minute, 59))
+          else -> range
+        }
+      }
+
+      state.copy(
+        range = range,
+        editHour = null,
+        aggregations = aggregations(range, state.aggregations?.selected),
+        sets = state.sets.map { set -> set.copy(entries = emptyList()) },
+        chartParameters = HideableValue(ChartParameters(1f, 1f, 0f, 0f)),
+        loading = true
+      ).also {
+        triggerMeasurementsLoad(it)
+      }
+    }
+
     updateUserState()
   }
 
@@ -347,7 +438,7 @@ abstract class BaseHistoryDetailViewModel(
     )
   }
 
-  private fun getStartDateForRange(range: ChartRange, date: Date, currentDate: Date, dateForCustom: Date) = when (range) {
+  private fun getStartDateForRange(range: ChartRange, date: Date, currentDate: Date, dateForCustom: Date, minDate: Date) = when (range) {
     ChartRange.DAY -> date.dayStart()
     ChartRange.LAST_DAY,
     ChartRange.LAST_WEEK,
@@ -359,9 +450,10 @@ abstract class BaseHistoryDetailViewModel(
     ChartRange.QUARTER -> date.quarterStart()
     ChartRange.YEAR -> date.yearStart()
     ChartRange.CUSTOM -> dateForCustom
+    ChartRange.ALL_HISTORY -> minDate
   }
 
-  private fun getEndDateForRange(range: ChartRange, end: Date, currentDate: Date, dateForCustom: Date) = when (range) {
+  private fun getEndDateForRange(range: ChartRange, end: Date, currentDate: Date, dateForCustom: Date, maxDate: Date) = when (range) {
     ChartRange.DAY -> end.dayEnd()
     ChartRange.LAST_DAY,
     ChartRange.LAST_WEEK,
@@ -373,6 +465,7 @@ abstract class BaseHistoryDetailViewModel(
     ChartRange.QUARTER -> end.quarterEnd()
     ChartRange.YEAR -> end.yearEnd()
     ChartRange.CUSTOM -> dateForCustom
+    ChartRange.ALL_HISTORY -> maxDate
   }
 }
 
@@ -394,7 +487,10 @@ data class HistoryDetailViewState(
   val maxDate: Date? = null,
   val withHumidity: Boolean = false,
   val maxTemperature: Float? = null,
-  val chartParameters: HideableValue<ChartParameters>? = null
+  val chartParameters: HideableValue<ChartParameters>? = null,
+
+  val editDate: RangeValueType? = null,
+  val editHour: RangeValueType? = null
 ) : ViewState() {
 
   val shiftRightEnabled: Boolean
@@ -426,6 +522,8 @@ data class HistoryDetailViewState(
           context.getString(R.string.history_no_data_selected)
         } else if (minDate == null && maxDate == null) {
           context.getString(R.string.history_no_data_available)
+        } else if (range?.start?.after(range.end) == true) {
+          context.getString(R.string.history_wrong_range)
         } else {
           context.getString(R.string.no_chart_data_available)
         }
@@ -441,7 +539,19 @@ data class HistoryDetailViewState(
       }
     }
 
-  val showBottomNavigation: Boolean
+  val showBottomBar: Boolean
+    get() = when (ranges?.selected) {
+      ChartRange.DAY,
+      ChartRange.WEEK,
+      ChartRange.MONTH,
+      ChartRange.QUARTER,
+      ChartRange.YEAR,
+      ChartRange.ALL_HISTORY -> true
+
+      else -> false
+    }
+
+  val allowNavigation: Boolean
     get() = when (ranges?.selected) {
       ChartRange.DAY,
       ChartRange.WEEK,
@@ -470,12 +580,30 @@ data class HistoryDetailViewState(
       return range?.end?.toTimestamp()?.plus(chartRangeMargin(daysCount))?.toFloat()
     }
 
+  val editDateValue: Date?
+    get() = when (editDate) {
+      RangeValueType.START -> range?.start
+      RangeValueType.END -> range?.end
+      else -> null
+    }
+
+  val editHourValue: Hour?
+    get() = when (editHour) {
+      RangeValueType.START -> range?.start?.hour()
+      RangeValueType.END -> range?.end?.hour()
+      else -> null
+    }
+
+  val yearRange: IntRange?
+    get() {
+      val (min, max) = guardLet(minDate, maxDate) { return null }
+      return IntRange(min.yearNo, max.yearNo)
+    }
+
   fun rangesMap(resources: Resources): Map<ChartRange, String> =
     mutableMapOf<ChartRange, String>().also { map ->
       ranges?.items?.forEach {
-        if (it != ChartRange.CUSTOM) {
-          map[it] = resources.getString(it.stringRes)
-        }
+        map[it] = resources.getString(it.stringRes)
       }
     }
 
@@ -498,19 +626,14 @@ data class HistoryDetailViewState(
       ChartRange.LAST_MONTH -> dayAndHourString(context, dateRange)
 
       ChartRange.WEEK,
-      ChartRange.MONTH,
       ChartRange.LAST_QUARTER,
       ChartRange.QUARTER -> dateString(context, dateRange)
 
+      ChartRange.MONTH -> context.valuesFormatter.getMonthAndYearString(dateRange.start)?.capitalize(Locale.current)
       ChartRange.YEAR -> context.valuesFormatter.getYearString(dateRange.start)
 
-      ChartRange.CUSTOM -> {
-        val days = dateRange.daysCount
-        when {
-          days <= ChartRange.LAST_MONTH.roundedDaysCount -> dayAndHourString(context, dateRange)
-          else -> dateString(context, dateRange)
-        }
-      }
+      ChartRange.CUSTOM,
+      ChartRange.ALL_HISTORY -> longDateString(context, dateRange)
     }
   }
 
@@ -549,6 +672,17 @@ data class HistoryDetailViewState(
     }
   }
 
+  fun editDayValidator(date: Date): Boolean {
+    val (min, max) = guardLet(minDate, maxDate) { return true }
+    val (range) = guardLet(range) { return min.before(date) && max.after(date) }
+
+    return when (editDate) {
+      RangeValueType.START -> min.before(date) && range.end.after(date)
+      RangeValueType.END -> range.start.before(date) && max.after(date)
+      else -> min.before(date) && max.after(date)
+    }
+  }
+
   private fun weekdayAndHourString(context: Context, range: DateRange): String {
     val rangeStart = context.valuesFormatter.getDayHourDateString(range.start)
     val rangeEnd = context.valuesFormatter.getDayHourDateString(range.end)
@@ -567,13 +701,30 @@ data class HistoryDetailViewState(
     return "$startString - $endString"
   }
 
-  private fun chartRangeMargin(daysCount: Int) = when {
-    daysCount <= 1 -> 60 * 60 // 1 hour in seconds
-    else -> 24 * 60 * 60 // 1 day in seconds
+  private fun longDateString(context: Context, range: DateRange): String {
+    val startString = context.valuesFormatter.getFullDateString(range.start)
+    val endString = context.valuesFormatter.getFullDateString(range.end)
+    return "$startString - $endString"
+  }
+
+  private fun chartRangeMargin(daysCount: Int): Int {
+    val (aggregation) = guardLet(aggregations?.selected) {
+      return when {
+        daysCount <= 1 -> 60 * 60 // 1 hour in seconds
+        else -> 24 * 60 * 60 // 1 day in seconds
+      }
+    }
+
+    return aggregation.timeInSec.times(0.6).toInt()
   }
 
   private fun chartMarginNotNeeded() = when (ranges?.selected) {
-    ChartRange.LAST_DAY, ChartRange.LAST_WEEK, ChartRange.LAST_MONTH, ChartRange.LAST_QUARTER -> false
+    ChartRange.LAST_DAY,
+    ChartRange.LAST_WEEK,
+    ChartRange.LAST_MONTH,
+    ChartRange.LAST_QUARTER,
+    ChartRange.CUSTOM,
+    ChartRange.ALL_HISTORY -> false
     else -> true
   }
 }

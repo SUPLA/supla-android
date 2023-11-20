@@ -20,10 +20,18 @@ package org.supla.android.extensions
 import android.content.Context
 import dagger.hilt.android.EntryPointAccessors
 import org.supla.android.data.ValuesFormatter
+import org.supla.android.di.entrypoints.GetChannelValueUseCaseEntryPoint
 import org.supla.android.di.entrypoints.ValuesFormatterEntryPoint
+import org.supla.android.usecases.channel.GetChannelValueUseCase
 
 val Context.valuesFormatter: ValuesFormatter
   get() = EntryPointAccessors.fromApplication(
     applicationContext,
     ValuesFormatterEntryPoint::class.java
   ).provideValuesFormatter()
+
+val Context.getChannelValueUseCase: GetChannelValueUseCase
+  get() = EntryPointAccessors.fromApplication(
+    applicationContext,
+    GetChannelValueUseCaseEntryPoint::class.java
+  ).provideGetChannelValueUseCase()

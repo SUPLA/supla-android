@@ -1,4 +1,4 @@
-package org.supla.android.data.model.chart
+package org.supla.android.di.entrypoints
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,20 +17,13 @@ package org.supla.android.data.model.chart
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.R
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import org.supla.android.usecases.channel.GetChannelValueUseCase
 
-enum class ChartRange(val stringRes: Int, val roundedDaysCount: Int) {
-  LAST_DAY(R.string.history_range_last_day, 1),
-  LAST_WEEK(R.string.history_range_last_week, 7),
-  LAST_MONTH(R.string.history_range_last_30_days, 30),
-  LAST_QUARTER(R.string.history_range_last_90_days, 90),
-
-  DAY(R.string.history_range_current_day, 1),
-  WEEK(R.string.history_range_current_week, 7),
-  MONTH(R.string.history_range_current_month, 30),
-  QUARTER(R.string.history_range_current_quarter, 90),
-  YEAR(R.string.history_range_current_year, 365),
-
-  CUSTOM(R.string.history_range_custom, -1),
-  ALL_HISTORY(R.string.all_available_history, -1);
+@EntryPoint
+@InstallIn(SingletonComponent::class)
+interface GetChannelValueUseCaseEntryPoint {
+  fun provideGetChannelValueUseCase(): GetChannelValueUseCase
 }

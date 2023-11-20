@@ -17,6 +17,8 @@ package org.supla.android.data.model.chart
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import org.supla.android.extensions.dayEnd
+import org.supla.android.extensions.dayStart
 import org.supla.android.extensions.monthEnd
 import org.supla.android.extensions.monthStart
 import org.supla.android.extensions.nextMonth
@@ -24,6 +26,9 @@ import org.supla.android.extensions.previousMonth
 import org.supla.android.extensions.quarterEnd
 import org.supla.android.extensions.quarterStart
 import org.supla.android.extensions.shift
+import org.supla.android.extensions.shiftByHour
+import org.supla.android.extensions.weekEnd
+import org.supla.android.extensions.weekStart
 import org.supla.android.extensions.yearEnd
 import org.supla.android.extensions.yearStart
 import java.util.Date
@@ -56,26 +61,56 @@ data class DateRange(
   fun shift(range: ChartRange, forward: Boolean): DateRange =
     when (range) {
       ChartRange.LAST_DAY,
-      ChartRange.DAY,
       ChartRange.LAST_WEEK,
-      ChartRange.WEEK,
       ChartRange.LAST_MONTH,
       ChartRange.LAST_QUARTER -> shift(if (forward) range.roundedDaysCount else -range.roundedDaysCount)
 
+      ChartRange.DAY -> if (forward) nextDay() else previousDay()
+      ChartRange.WEEK -> if (forward) nextWeek() else previousWeek()
       ChartRange.MONTH -> if (forward) nextMonth() else previousMonth()
       ChartRange.QUARTER -> if (forward) nextQuarter() else previousQuarter()
       ChartRange.YEAR -> if (forward) nextYear() else previousYear()
-      ChartRange.CUSTOM -> customRangeShift(forward)
-    }
 
-  private fun customRangeShift(forward: Boolean): DateRange {
-    return shift(if (forward) daysCount else -daysCount)
-  }
+      ChartRange.CUSTOM, // Currently no shift supported
+      ChartRange.ALL_HISTORY -> this
+    }
 
   private fun shift(days: Int): DateRange {
     return copy(
       start = start.shift(days),
       end = end.shift(days)
+    )
+  }
+
+  private fun previousDay(): DateRange {
+    val start = start.dayStart().shiftByHour(-1).dayStart()
+    return copy(
+      start = start,
+      end = start.dayEnd()
+    )
+  }
+
+  private fun nextDay(): DateRange {
+    val start = start.dayEnd().shiftByHour(1).dayStart()
+    return copy(
+      start = start,
+      end = start.dayEnd()
+    )
+  }
+
+  private fun previousWeek(): DateRange {
+    val start = start.weekStart().shift(-1).weekStart()
+    return copy(
+      start = start,
+      end = start.weekEnd()
+    )
+  }
+
+  private fun nextWeek(): DateRange {
+    val start = start.weekEnd().shift(1).weekStart()
+    return copy(
+      start = start,
+      end = start.weekEnd()
     )
   }
 

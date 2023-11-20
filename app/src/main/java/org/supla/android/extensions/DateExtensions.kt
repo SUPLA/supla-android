@@ -17,6 +17,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import org.supla.android.data.model.chart.DateRange
+import org.supla.android.data.source.local.calendar.Hour
 import java.util.Calendar
 import java.util.Date
 import java.util.GregorianCalendar
@@ -25,6 +27,30 @@ val Date.dayOfMonth: Int
   get() = Calendar.getInstance().let {
     it.time = this
     it.get(Calendar.DAY_OF_MONTH)
+  }
+
+val Date.monthNo: Int
+  get() = Calendar.getInstance().let {
+    it.time = this
+    it.get(Calendar.MONTH)
+  }
+
+val Date.yearNo: Int
+  get() = Calendar.getInstance().let {
+    it.time = this
+    it.get(Calendar.YEAR)
+  }
+
+val Date.hourOfDay: Int
+  get() = Calendar.getInstance().let {
+    it.time = this
+    it.get(Calendar.HOUR_OF_DAY)
+  }
+
+val Date.minute: Int
+  get() = Calendar.getInstance().let {
+    it.time = this
+    it.get(Calendar.MINUTE)
   }
 
 fun Date.dayStart(): Date = startOfDay(this).time
@@ -159,6 +185,9 @@ fun Date.daysInCurrentQuarter(): Int {
 fun Date.shift(days: Int): Date =
   Date(time + days.toLong().times(24).times(60).times(60).times(1000))
 
+fun Date.shiftByHour(hour: Int): Date =
+  Date(time + hour.toLong().times(60).times(60).times(1000))
+
 fun Date.toTimestamp(): Long = time.div(1000)
 
 fun date(year: Int, month: Int = Calendar.JANUARY, day: Int = Calendar.MONDAY, hour: Int = 0, minute: Int = 0, seconds: Int = 0): Date =
@@ -174,12 +203,45 @@ fun date(year: Int, month: Int = Calendar.JANUARY, day: Int = Calendar.MONDAY, h
     it.time
   }
 
+fun Date.sameDay(date: Date): Boolean =
+  this.dayOfMonth == date.dayOfMonth && this.monthNo == date.monthNo && this.yearNo == date.yearNo
+
+fun Date.setHour(hour: Int, minute: Int, seconds: Int): Date {
+  return Calendar.getInstance().let {
+    it.time = this
+
+    it.set(Calendar.HOUR_OF_DAY, hour)
+    it.set(Calendar.MINUTE, minute)
+    it.set(Calendar.SECOND, seconds)
+
+    it.time
+  }
+}
+
+fun Date.setDay(day: Date): Date {
+  return Calendar.getInstance().let {
+    it.time = this
+
+    it.set(Calendar.YEAR, day.yearNo)
+    it.set(Calendar.MONTH, day.monthNo)
+    it.set(Calendar.DAY_OF_MONTH, day.dayOfMonth)
+
+    it.time
+  }
+}
+
+fun Date.inside(range: DateRange): Boolean =
+  after(range.start) && before(range.end)
+
+fun Date.hour() = Hour(hourOfDay, minute)
+
 private fun getMonthLength(year: Int, months: List<Int>) =
   months.sumOf { GregorianCalendar(year, it, 1).getActualMaximum(Calendar.DAY_OF_MONTH) }
 
 private fun startOfDay(day: Date): Calendar {
   val calendar = Calendar.getInstance()
   calendar.time = day
+  calendar.firstDayOfWeek = Calendar.MONDAY
   calendar.set(Calendar.HOUR_OF_DAY, 0)
   calendar.set(Calendar.MINUTE, 0)
   calendar.set(Calendar.SECOND, 0)
@@ -191,6 +253,7 @@ private fun startOfDay(day: Date): Calendar {
 private fun endOfDay(day: Date): Calendar {
   val calendar = Calendar.getInstance()
   calendar.time = day
+  calendar.firstDayOfWeek = Calendar.MONDAY
   calendar.set(Calendar.HOUR_OF_DAY, 23)
   calendar.set(Calendar.MINUTE, 59)
   calendar.set(Calendar.SECOND, 59)

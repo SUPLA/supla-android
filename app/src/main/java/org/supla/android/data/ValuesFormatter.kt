@@ -21,6 +21,7 @@ import android.annotation.SuppressLint
 import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.core.ui.StringProvider
+import org.supla.android.data.source.local.calendar.Hour
 import org.supla.android.data.source.runtime.appsettings.TemperatureUnit
 import org.supla.android.lib.singlecall.TemperatureAndHumidity
 import java.text.SimpleDateFormat
@@ -96,6 +97,12 @@ class ValuesFormatter @Inject constructor(
     } else {
       return { context -> context.getString(R.string.time_hours_and_minutes, hours, (minutes % 60)) }
     }
+  }
+
+  fun getHourString(hour: Hour): String {
+    val minutes = if (hour.minute < 10) "0${hour.minute}" else "${hour.minute}"
+    val hour = if (hour.hour < 10) "0${hour.hour}" else "${hour.hour}"
+    return "$hour:$minutes"
   }
 
   @SuppressLint("SimpleDateFormat")

@@ -63,12 +63,12 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import org.supla.android.R
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.core.ui.theme.blue
 import org.supla.android.core.ui.theme.progressPointShadow
 import org.supla.android.extensions.distanceTo
+import org.supla.android.extensions.nonScaledSp
 import org.supla.android.extensions.toPx
 import java.lang.Float.min
 import kotlin.math.PI
@@ -92,9 +92,9 @@ private val controlCircleWidth = 16.dp
 private val controlMinMaxStrokeWidth = 6.dp
 private val controlShadowWidth = 20.dp
 
-private val setpointTemperatureSizeBig = 48.sp
-private val setpointTemperatureSizeSmall = 32.sp
-private val configTemperatureSize = 14.sp
+private val setpointTemperatureSizeBig = 48.nonScaledSp
+private val setpointTemperatureSizeSmall = 32.nonScaledSp
+private val configTemperatureSize = 14.nonScaledSp
 private val setpointTemperatureFont = FontFamily(Font(R.font.quicksand_medium))
 private val configTemperatureFont = FontFamily(Font(R.font.quicksand_regular))
 

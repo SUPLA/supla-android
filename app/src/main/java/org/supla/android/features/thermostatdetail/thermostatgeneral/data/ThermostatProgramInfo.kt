@@ -25,10 +25,12 @@ import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.ui.StringProvider
 import org.supla.android.data.source.local.calendar.DayOfWeek
 import org.supla.android.data.source.local.calendar.QuarterOfHour
+import org.supla.android.data.source.remote.SuplaDeviceConfig
 import org.supla.android.data.source.remote.hvac.SuplaChannelWeeklyScheduleConfig
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
 import org.supla.android.data.source.remote.hvac.SuplaWeeklyScheduleProgram
+import org.supla.android.data.source.remote.isAutomaticTimeSyncDisabled
 import org.supla.android.data.source.remote.thermostat.SuplaThermostatFlags
 import org.supla.android.extensions.guardLet
 import org.supla.android.extensions.valuesFormatter
@@ -50,7 +52,8 @@ data class ThermostatProgramInfo(
   class Builder {
     // external
     var dateProvider: DateProvider? = null
-    var config: SuplaChannelWeeklyScheduleConfig? = null
+    var weeklyScheduleConfig: SuplaChannelWeeklyScheduleConfig? = null
+    var deviceConfig: SuplaDeviceConfig? = null
     var thermostatFlags: List<SuplaThermostatFlags>? = null
     var currentMode: SuplaHvacMode? = null
     var currentTemperature: Float? = null
@@ -69,7 +72,7 @@ data class ThermostatProgramInfo(
 
 fun ThermostatProgramInfo.Builder.build(): List<ThermostatProgramInfo> {
   val (dateProvider) = guardLet(dateProvider) { throw IllegalStateException("Date provider cannot be null") }
-  val (config) = guardLet(config) { throw IllegalStateException("Config cannot be null") }
+  val (config) = guardLet(weeklyScheduleConfig) { throw IllegalStateException("Config cannot be null") }
   val (flags) = guardLet(thermostatFlags) { throw IllegalStateException("Thermostat flags cannot be null") }
   guardLet(currentMode) { throw IllegalStateException("Current mode cannot be null") }
   guardLet(currentTemperature) { throw IllegalStateException("Current temperature cannot be null") }
@@ -102,7 +105,7 @@ private fun ThermostatProgramInfo.Builder.identifyPrograms() {
 
   var idx = 0
   while (true) {
-    val entry = config!!.schedule[idx % config!!.schedule.size]
+    val entry = weeklyScheduleConfig!!.schedule[idx % weeklyScheduleConfig!!.schedule.size]
     if (foundCurrentProgram != null) {
       if (entry.program != foundCurrentProgram) {
         foundNextProgram = entry.program
@@ -117,7 +120,7 @@ private fun ThermostatProgramInfo.Builder.identifyPrograms() {
     }
 
     idx++
-    if (idx > config!!.schedule.size.times(2)) {
+    if (idx > weeklyScheduleConfig!!.schedule.size.times(2)) {
       break
     }
   }
@@ -138,6 +141,19 @@ private fun ThermostatProgramInfo.Builder.createList(): List<ThermostatProgramIn
   val minutesToNextProgram = quartersToNextProgram!! * 15 + (15 - (currentMinute!! % 15))
   val nextScheduleProgram = getProgram(foundNextProgram)
   val descriptionProvider: StringProvider = { context -> context.valuesFormatter.getTemperatureString(currentTemperature) }
+
+  // If time synchronization disabled show only current program
+  if (deviceConfig.isAutomaticTimeSyncDisabled()) {
+    return listOf(
+      ThermostatProgramInfo(
+        type = ThermostatProgramInfo.Type.CURRENT,
+        icon = currentMode!!.icon,
+        iconColor = currentMode!!.iconColor,
+        descriptionProvider = if (currentMode == SuplaHvacMode.OFF) null else descriptionProvider,
+        manualActive = thermostatFlags!!.contains(SuplaThermostatFlags.WEEKLY_SCHEDULE_TEMPORAL_OVERRIDE)
+      )
+    )
+  }
 
   return listOf(
     ThermostatProgramInfo(
@@ -166,5 +182,5 @@ private fun ThermostatProgramInfo.Builder.getProgram(program: SuplaScheduleProgr
   if (program == SuplaScheduleProgram.OFF) {
     SuplaWeeklyScheduleProgram.OFF
   } else {
-    config!!.programConfigurations.firstOrNull { it.program == program }
+    weeklyScheduleConfig!!.programConfigurations.firstOrNull { it.program == program }
   }

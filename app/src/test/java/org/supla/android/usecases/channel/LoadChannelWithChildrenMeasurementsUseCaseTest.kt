@@ -55,6 +55,9 @@ class LoadChannelWithChildrenMeasurementsUseCaseTest : BaseLoadMeasurementsUseCa
   @Mock
   private lateinit var temperatureAndHumidityLogRepository: TemperatureAndHumidityLogRepository
 
+  @Mock
+  private lateinit var getChannelValueUseCase: GetChannelValueUseCase
+
   @InjectMocks
   private lateinit var useCase: LoadChannelWithChildrenMeasurementsUseCase
 
