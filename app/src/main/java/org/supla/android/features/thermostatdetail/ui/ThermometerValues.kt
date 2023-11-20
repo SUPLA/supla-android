@@ -32,6 +32,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -41,10 +42,14 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.AbstractComposeView
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.min
 import org.supla.android.R
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.features.thermostatdetail.thermostatgeneral.MeasurementValue
@@ -68,14 +73,18 @@ class ThermometersValues @JvmOverloads constructor(
 @Composable
 fun ThermometersValues(temperatures: List<MeasurementValue>) {
   val weight = 1f / temperatures.size
+  val itemWidth = (LocalConfiguration.current.screenWidthDp - 32 - 8.times(temperatures.size - 1)).div(temperatures.size)
+  val arrangement = if (itemWidth < 100) 0.dp else dimensionResource(id = R.dimen.distance_tiny)
+  val startPadding = if (itemWidth < 100) dimensionResource(id = R.dimen.distance_tiny) else dimensionResource(id = R.dimen.distance_small)
+  val endPadding = if (itemWidth < 100) dimensionResource(id = R.dimen.distance_small) else dimensionResource(id = R.dimen.distance_default)
   Row(
     modifier = Modifier
       .background(color = MaterialTheme.colors.surface)
-      .padding(start = dimensionResource(id = R.dimen.distance_small), end = dimensionResource(id = R.dimen.distance_default)),
-    horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.distance_tiny))
+      .padding(start = startPadding, end = endPadding),
+    horizontalArrangement = Arrangement.spacedBy(arrangement)
   ) {
     temperatures.forEach {
-      TemperatureAndHumidityCell(temperature = it, weight = weight, small = temperatures.size > 3)
+      TemperatureAndHumidityCell(temperature = it, weight = weight, small = temperatures.size > 3, availableWidthDp = itemWidth)
     }
     if (temperatures.size == 1) {
       Box(
@@ -91,7 +100,7 @@ fun ThermometersValues(temperatures: List<MeasurementValue>) {
 
 context(RowScope)
 @Composable
-private fun TemperatureAndHumidityCell(temperature: MeasurementValue, weight: Float, small: Boolean) =
+private fun TemperatureAndHumidityCell(temperature: MeasurementValue, weight: Float, small: Boolean, availableWidthDp: Int) =
   Row(
     modifier = Modifier
       .background(MaterialTheme.colors.surface)
@@ -104,12 +113,14 @@ private fun TemperatureAndHumidityCell(temperature: MeasurementValue, weight: Fl
     Spacer(modifier = Modifier.weight(1f))
     ThermometerIcon(
       icon = temperature.iconProvider(LocalContext.current).asImageBitmap(),
-      size = if (small) 24.dp else 36.dp
+      size = if (small) min(24.dp, availableWidthDp.div(4).dp) else min(36.dp, availableWidthDp.div(4).dp)
     )
-    Text(
-      text = temperature.valueStringProvider(LocalContext.current),
-      style = if (small) MaterialTheme.typography.body1 else MaterialTheme.typography.h5
-    )
+    CompositionLocalProvider(LocalDensity provides Density(LocalDensity.current.density, fontScale = 1f)) {
+      Text(
+        text = temperature.valueStringProvider(LocalContext.current),
+        style = if (small) MaterialTheme.typography.body1 else MaterialTheme.typography.h5
+      )
+    }
     Spacer(modifier = Modifier.weight(1f))
   }
 

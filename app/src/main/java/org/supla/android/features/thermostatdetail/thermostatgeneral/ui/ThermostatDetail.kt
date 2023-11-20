@@ -160,7 +160,7 @@ private fun ThermostatView(viewState: ThermostatGeneralViewState, viewProxy: The
         } else if (viewState.temporaryProgramInfo.isNotEmpty()) {
           ProgramInfoRow(infos = viewState.temporaryProgramInfo)
         } else {
-          Spacer(modifier = Modifier.height(96.dp))
+          Spacer(modifier = Modifier.height(80.dp))
         }
         TemperatureControlRow(viewState, viewProxy)
         WarningsRow(viewState.issues)
@@ -370,7 +370,7 @@ private fun CoolingIcon(active: Boolean, onClick: () -> Unit) {
 private fun WarningsRow(warnings: List<ThermostatIssueItem>, modifier: Modifier = Modifier, smallScreen: Boolean = false) {
   val defaultPadding = dimensionResource(id = R.dimen.distance_default)
   Column(
-    modifier = modifier.padding(start = defaultPadding, end = defaultPadding, bottom = defaultPadding),
+    modifier = modifier.padding(start = defaultPadding, end = defaultPadding),
     verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.distance_tiny))
   ) {
     warnings.forEach {

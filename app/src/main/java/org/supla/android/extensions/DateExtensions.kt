@@ -241,6 +241,7 @@ private fun getMonthLength(year: Int, months: List<Int>) =
 private fun startOfDay(day: Date): Calendar {
   val calendar = Calendar.getInstance()
   calendar.time = day
+  calendar.firstDayOfWeek = Calendar.MONDAY
   calendar.set(Calendar.HOUR_OF_DAY, 0)
   calendar.set(Calendar.MINUTE, 0)
   calendar.set(Calendar.SECOND, 0)
@@ -252,6 +253,7 @@ private fun startOfDay(day: Date): Calendar {
 private fun endOfDay(day: Date): Calendar {
   val calendar = Calendar.getInstance()
   calendar.time = day
+  calendar.firstDayOfWeek = Calendar.MONDAY
   calendar.set(Calendar.HOUR_OF_DAY, 23)
   calendar.set(Calendar.MINUTE, 59)
   calendar.set(Calendar.SECOND, 59)

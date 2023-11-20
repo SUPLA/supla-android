@@ -19,7 +19,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import android.content.res.Resources
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.sp
 
 fun Int.toDp(): Dp {
   return Dp(this / Resources.getSystem().displayMetrics.density)
 }
+
+val Int.nonScaledSp
+  get() = (this / Resources.getSystem().configuration.fontScale).sp
