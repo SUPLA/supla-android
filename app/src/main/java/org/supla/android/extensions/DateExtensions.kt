@@ -22,6 +22,7 @@ import org.supla.android.data.source.local.calendar.Hour
 import java.util.Calendar
 import java.util.Date
 import java.util.GregorianCalendar
+import kotlin.math.abs
 
 val Date.dayOfMonth: Int
   get() = Calendar.getInstance().let {
@@ -234,6 +235,9 @@ fun Date.inside(range: DateRange): Boolean =
   after(range.start) && before(range.end)
 
 fun Date.hour() = Hour(hourOfDay, minute)
+
+fun Date.differenceInSeconds(other: Date): Int =
+  abs(this.time.minus(other.time).div(1000).toInt())
 
 private fun getMonthLength(year: Int, months: List<Int>) =
   months.sumOf { GregorianCalendar(year, it, 1).getActualMaximum(Calendar.DAY_OF_MONTH) }

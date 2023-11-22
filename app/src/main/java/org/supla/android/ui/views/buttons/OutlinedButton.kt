@@ -27,10 +27,10 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun OutlinedButton(
-  onClick: () -> Unit,
+  text: String,
   modifier: Modifier = Modifier,
   enabled: Boolean = true,
-  text: String
+  onClick: () -> Unit
 ) {
   OutlinedButton(
     onClick = onClick,

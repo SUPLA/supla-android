@@ -33,9 +33,13 @@ import org.supla.android.data.source.local.entity.ThermostatValue
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.data.source.remote.thermostat.SuplaThermostatFlags
 import org.supla.android.db.Channel
+import org.supla.android.db.ChannelExtendedValue
 import org.supla.android.db.ChannelValue
+import org.supla.android.extensions.date
+import org.supla.android.lib.SuplaChannelExtendedValue
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO
+import org.supla.android.lib.SuplaTimerState
 import org.supla.android.ui.lists.data.SlideableListItemData
 import org.supla.android.usecases.channel.ChannelChild
 import org.supla.android.usecases.channel.ChannelWithChildren
@@ -88,6 +92,7 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
     every { channel.func } returns SUPLA_CHANNELFNC_HVAC_THERMOSTAT
     every { channel.value } returns channelValue
     every { channel.onLine } returns true
+    every { channel.extendedValue } returns null
 
     val temperatureString = "21.0"
     val thermometerChannel = mockk<Channel>()
@@ -112,15 +117,22 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
   @Test
   fun `should map channel with thermometer to thermostat slideable item (heat mode)`() {
     // given
+    val timerEndDate = date(2023, 10, 11, 12, 33, 15)
     val setpointTemperatureHeat = 23f
     val thermostatValue = mockThermostatValue(setpointTemperatureHeat = setpointTemperatureHeat, mode = SuplaHvacMode.HEAT)
 
     val channelValue = mockk<ChannelValue>().also { every { it.asThermostatValue() } returns thermostatValue }
 
+    val suplaExtendedValue = SuplaChannelExtendedValue()
+    suplaExtendedValue.TimerStateValue = SuplaTimerState(timerEndDate.time.div(1000), null, 1, "")
+    val extendedValue: ChannelExtendedValue = mockk()
+    every { extendedValue.extendedValue } returns suplaExtendedValue
+
     val channel = mockk<Channel>()
     every { channel.func } returns SUPLA_CHANNELFNC_HVAC_THERMOSTAT
     every { channel.value } returns channelValue
     every { channel.onLine } returns true
+    every { channel.extendedValue } returns extendedValue
 
     val temperatureString = "21.0"
     val thermometerChannel = mockk<Channel>()
@@ -140,6 +152,7 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
     assertThat(result.value).isEqualTo(temperatureString)
     assertThat(result.subValue).isEqualTo(setpointTemperatureHeatString)
     assertThat(result.indicatorIcon).isEqualTo(R.drawable.ic_standby)
+    assertThat(result.estimatedTimerEndDate).isEqualTo(timerEndDate)
   }
 
   @Test
@@ -153,6 +166,7 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
     every { channel.func } returns SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO
     every { channel.value } returns channelValue
     every { channel.onLine } returns true
+    every { channel.extendedValue } returns null
 
     val temperatureString = "21.0"
     val thermometerChannel = mockk<Channel>()
@@ -182,6 +196,7 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
     every { channel.func } returns SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO
     every { channel.value } returns channelValue
     every { channel.onLine } returns false
+    every { channel.extendedValue } returns null
 
     val temperatureString = "21.0"
     val thermometerChannel = mockk<Channel>()
@@ -232,6 +247,7 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
     every { channel.func } returns SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO
     every { channel.value } returns channelValue
     every { channel.onLine } returns true
+    every { channel.extendedValue } returns null
 
     val temperatureString = "21.0"
     val thermometerChannel = mockk<Channel>()

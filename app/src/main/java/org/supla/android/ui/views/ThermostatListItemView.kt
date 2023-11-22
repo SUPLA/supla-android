@@ -123,6 +123,7 @@ fun ThermostatListItemView(
   ListItemScaffold(
     itemTitle = data.titleProvider(LocalContext.current),
     online = data.online,
+    estimatedEndDate = data.estimatedTimerEndDate,
     scale = scale,
     hasLeftButton = hasLeftButton,
     hasRightButton = hasRightButton,
@@ -218,7 +219,8 @@ private fun Preview() {
             value = "20,7°C",
             subValue = "21,0°",
             indicatorIcon = R.drawable.ic_cooling,
-            issueIconType = IssueIconType.WARNING
+            issueIconType = IssueIconType.WARNING,
+            estimatedTimerEndDate = null
           ),
           true,
           scale = 1.5f
@@ -237,7 +239,8 @@ private fun Preview() {
             value = "20,7°C",
             subValue = "21,0°",
             indicatorIcon = R.drawable.ic_cooling,
-            issueIconType = IssueIconType.ERROR
+            issueIconType = IssueIconType.ERROR,
+            estimatedTimerEndDate = null
           ),
           false
         )
@@ -255,7 +258,8 @@ private fun Preview() {
             value = "20,7°C",
             subValue = "21,0°",
             indicatorIcon = R.drawable.ic_cooling,
-            issueIconType = null
+            issueIconType = null,
+            estimatedTimerEndDate = null
           ),
           true,
           scale = 0.6f
@@ -274,7 +278,8 @@ private fun Preview() {
             value = "20,7°C",
             subValue = "21,0°",
             indicatorIcon = R.drawable.ic_cooling,
-            issueIconType = IssueIconType.WARNING
+            issueIconType = IssueIconType.WARNING,
+            estimatedTimerEndDate = null
           ),
           false,
           scale = 0.6f

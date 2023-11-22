@@ -1,4 +1,4 @@
-package org.supla.android.extensions
+package org.supla.android.core.ui.theme
 /*
 Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,32 +17,22 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import android.content.res.Resources
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.sp
+import org.supla.android.R
 
-const val DAY_IN_SEC = 24 * 60 * 60
-const val HOUR_IN_SEC = 60 * 60
-const val MINUTE_IN_SEC = 60
+object Distance {
 
-fun Int.toDp(): Dp {
-  return Dp(this / Resources.getSystem().displayMetrics.density)
+  val default: Dp
+    @Composable
+    get() = dimensionResource(id = R.dimen.distance_default)
+
+  val small: Dp
+    @Composable
+    get() = dimensionResource(id = R.dimen.distance_small)
+
+  val tiny: Dp
+    @Composable
+    get() = dimensionResource(id = R.dimen.distance_tiny)
 }
-
-val Int.nonScaledSp
-  get() = (this / Resources.getSystem().configuration.fontScale).sp
-
-val Int.days
-  get() = this.div(DAY_IN_SEC)
-
-val Int.hours
-  get() = this.div(HOUR_IN_SEC)
-
-val Int.hoursInDay
-  get() = this.mod(DAY_IN_SEC).div(HOUR_IN_SEC)
-
-val Int.minutesInHour
-  get() = this.mod(HOUR_IN_SEC).div(MINUTE_IN_SEC)
-
-val Int.secondsInMinute
-  get() = this.mod(MINUTE_IN_SEC)

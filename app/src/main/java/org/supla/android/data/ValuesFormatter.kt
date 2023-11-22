@@ -23,6 +23,10 @@ import org.supla.android.R
 import org.supla.android.core.ui.StringProvider
 import org.supla.android.data.source.local.calendar.Hour
 import org.supla.android.data.source.runtime.appsettings.TemperatureUnit
+import org.supla.android.extensions.days
+import org.supla.android.extensions.hours
+import org.supla.android.extensions.minutesInHour
+import org.supla.android.extensions.secondsInMinute
 import org.supla.android.lib.singlecall.TemperatureAndHumidity
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -100,9 +104,27 @@ class ValuesFormatter @Inject constructor(
   }
 
   fun getHourString(hour: Hour): String {
-    val minutes = if (hour.minute < 10) "0${hour.minute}" else "${hour.minute}"
-    val hour = if (hour.hour < 10) "0${hour.hour}" else "${hour.hour}"
-    return "$hour:$minutes"
+    return getTimeString(hour = hour.hour, minute = hour.minute)
+  }
+
+  fun getTimeString(hour: Int? = null, minute: Int? = null, second: Int? = null): String {
+    var result = ""
+
+    hour?.let { result = if (it < 10) "0$it" else "$it" }
+    minute?.let {
+      if (result.isNotEmpty()) {
+        result += ":"
+      }
+      result += if (it < 10) "0$it" else "$it"
+    }
+    second?.let {
+      if (result.isNotEmpty()) {
+        result += ":"
+      }
+      result += if (it < 10) "0$it" else "$it"
+    }
+
+    return result
   }
 
   @SuppressLint("SimpleDateFormat")
@@ -170,6 +192,15 @@ class ValuesFormatter @Inject constructor(
 
   fun getPercentageString(value: Float): String =
     "${value.times(100).toInt()}%"
+
+  fun getTimerRestTime(time: Int): StringProvider {
+    val days = time.days
+    return if (days > 0) {
+      { it.resources.getQuantityString(R.plurals.day_pattern, days, days) }
+    } else {
+      { getTimeString(time.hours, time.minutesInHour, time.secondsInMinute) }
+    }
+  }
 
   private fun getHumidityString(rawValue: Double?): String {
     return when {

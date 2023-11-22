@@ -153,11 +153,10 @@ public class SceneLayout extends LinearLayout implements SlideableItem, Swapable
     left_onlineStatus.setId(ViewHelper.generateViewId());
     content.addView(left_onlineStatus);
 
-    sceneDurationTimer = durationTimerHelper.createTimerView(context);
+    sceneDurationTimer = durationTimerHelper.createTimerView(context, heightScaleFactor);
     content.addView(sceneDurationTimer);
     sceneDurationTimer.setLayoutParams(
-        durationTimerHelper.getTimerViewLayoutParams(
-            context, right_onlineStatus.getId(), right_onlineStatus.getId()));
+        durationTimerHelper.getTimerViewLayoutParams(context, heightScaleFactor));
 
     RelativeLayout channelIconContainer = new RelativeLayout(context);
     content.addView(channelIconContainer);

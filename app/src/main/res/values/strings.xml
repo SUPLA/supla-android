@@ -624,12 +624,29 @@
     <string translatable="false" name="calendar_picker_start_hour">From hour</string>
     <string translatable="false" name="calendar_picker_end_hour">To hour</string>
     <string translatable="false" name="history_wrong_range">Selected range is wrong.</string>
+    <string translatable="false" name="details_timer_select_mode">Select mode</string>
+    <string translatable="false" name="details_timer_manual_mode">Manual mode</string>
+    <string translatable="false" name="details_timer_info_thermostat_off">Thermostat will stay turned off for\n%1$s</string>
+    <string translatable="false" name="details_timer_info_thermostat_heating">Thermostat will stay in heating mode for\n%1$s</string>
+    <string translatable="false" name="details_timer_info_thermostat_cooling">Thermostat will stay in cooling mode for\n%1$s</string>
+    <string translatable="false" name="details_timer_select_time">Specify time</string>
+    <string translatable="false" name="details_timer_counter">Counter</string>
+    <string translatable="false" name="details_timer_calendar">Calendar</string>
+    <string translatable="false" name="details_timer_min_temp">Temp. min.</string>
+    <string translatable="false" name="details_timer_max_temp">Temp. max.</string>
+    <string translatable="false" name="details_timer_state_label_for_timer_days">State until %1$s</string>
+    <string translatable="false" name="details_timer_cancel_thermostat">Cancel and turn on:</string>
 
     <plurals name="details_timer_info_on" translatable="false">
         <item quantity="other">on</item>
     </plurals>
     <plurals name="details_timer_info_off" translatable="false">
         <item quantity="other">off</item>
+    </plurals>
+    <plurals name="day_pattern" translatable="false">
+        <item quantity="zero">%1$d days</item>
+        <item quantity="one">%1$d day</item>
+        <item quantity="other">%1$d days</item>
     </plurals>
     <plurals name="hour_pattern" translatable="false">
         <item quantity="zero">%1$d hours</item>

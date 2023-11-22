@@ -25,10 +25,10 @@ import androidx.compose.ui.Modifier
 
 @Composable
 fun Button(
+  text: String,
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
-  enabled: Boolean = true,
-  text: String
+  enabled: Boolean = true
 ) {
   Button(
     onClick = onClick,

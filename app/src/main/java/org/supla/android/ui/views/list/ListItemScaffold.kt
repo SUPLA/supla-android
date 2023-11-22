@@ -40,27 +40,41 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.delay
 import org.supla.android.R
+import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
+import org.supla.android.core.ui.theme.grey
 import org.supla.android.core.ui.theme.listItemCaption
+import org.supla.android.extensions.differenceInSeconds
+import org.supla.android.extensions.valuesFormatter
 import org.supla.android.ui.lists.data.IssueIconType
 import org.supla.android.ui.views.Separator
 import java.lang.Float.max
+import java.util.Date
+import kotlin.time.Duration.Companion.seconds
 
 @Composable
 fun ListItemScaffold(
   itemTitle: String,
   online: Boolean,
+  estimatedEndDate: Date?,
   onInfoClick: () -> Unit,
   onIssueClick: () -> Unit,
   onTitleLongClick: () -> Unit,
@@ -79,6 +93,9 @@ fun ListItemScaffold(
   ) {
     if (online && showInfoIcon) {
       ListItemInfoIcon(onInfoClick)
+    }
+    estimatedEndDate?.let {
+      ListItemTimerText(date = it, scale = scale)
     }
     Row(
       modifier = Modifier
@@ -193,6 +210,36 @@ private fun ListItemTitle(text: String, onLongClick: () -> Unit, onItemClick: ()
   )
 }
 
+context (BoxScope)
+@Composable
+private fun ListItemTimerText(date: Date, scale: Float) {
+  var text by remember { mutableStateOf<String?>(null) }
+  val context = LocalContext.current
+
+  LaunchedEffect(date) {
+    var currentDate = Date()
+    do {
+      val leftTimeSeconds = date.differenceInSeconds(currentDate)
+      text = context.valuesFormatter.getTimerRestTime(leftTimeSeconds)(context)
+      delay(1.seconds)
+      currentDate = Date()
+    } while (currentDate.before(date))
+    text = null
+  }
+
+  text?.let {
+    val fontSize = MaterialTheme.typography.body2.fontSize
+    Text(
+      text = it,
+      style = MaterialTheme.typography.body2.copy(fontSize = if (scale < 1) fontSize.times(0.8f) else fontSize),
+      color = MaterialTheme.colors.grey,
+      modifier = Modifier
+        .align(Alignment.TopEnd)
+        .padding(top = Distance.small.times(scale), end = Distance.small)
+    )
+  }
+}
+
 @Composable
 @Preview
 private fun Preview() {
@@ -207,7 +254,7 @@ private fun Preview() {
           .width(500.dp)
           .height(100.dp)
       ) {
-        ListItemScaffold(itemTitle = "Power Switch", online = true, { }, { }, { }, { }, true, IssueIconType.WARNING) {
+        ListItemScaffold(itemTitle = "Power Switch", online = true, null, { }, { }, { }, { }, true, IssueIconType.WARNING) {
         }
       }
       Box(
@@ -215,7 +262,7 @@ private fun Preview() {
           .width(500.dp)
           .height(100.dp)
       ) {
-        ListItemScaffold(itemTitle = "Power Switch", online = false, { }, { }, { }, { }, false, null) {
+        ListItemScaffold(itemTitle = "Power Switch", online = false, null, { }, { }, { }, { }, false, null) {
         }
       }
     }
