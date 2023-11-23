@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import android.content.Context
 import android.util.AttributeSet
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -31,6 +32,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
@@ -80,7 +85,7 @@ class ThermostatListItemView : BaseSlideableContent<SlideableListItemData.Thermo
   override fun Content() {
     val data = this.data ?: SlideableListItemData.Thermostat.default()
     val scale = preferences.channelHeight.div(100f)
-
+    Log.d("!@#", "Rendering ThermostatListItemView")
     SuplaTheme {
       ThermostatListItemView(
         data = data,
@@ -122,15 +127,15 @@ fun ThermostatListItemView(
 ) {
   ListItemScaffold(
     itemTitle = data.titleProvider(LocalContext.current),
-    online = data.online,
-    estimatedEndDate = data.estimatedTimerEndDate,
+    itemOnline = data.online,
+    itemEstimatedEndDate = data.estimatedTimerEndDate,
     scale = scale,
     hasLeftButton = hasLeftButton,
     hasRightButton = hasRightButton,
     onInfoClick = onInfoClick,
     onTitleLongClick = onTitleLongClick,
     showInfoIcon = showInfoIcon,
-    issueIconType = data.issueIconType,
+    itemIssueIconType = data.issueIconType,
     onIssueClick = onIssueClick,
     onItemClick = onItemClick
   ) {
@@ -155,9 +160,7 @@ fun ThermostatListItemView(
 
       if (scale <= 1f) {
         CurrentTemperature(temperature = data.value, scale = scale)
-        Column {
-          SetpointTemperature(data = data, scale = scale)
-        }
+        SetpointTemperature(data = data, scale = scale)
       } else {
         Column {
           CurrentTemperature(temperature = data.value, scale = scale)

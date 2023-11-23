@@ -2,6 +2,7 @@ package org.supla.android.ui.layouts
 
 import android.content.Context
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
 import dagger.hilt.android.AndroidEntryPoint
@@ -18,6 +19,7 @@ import org.supla.android.ui.lists.SwapableListItem
 import org.supla.android.ui.lists.data.SlideableListItemData
 import org.supla.android.usecases.list.CreateListItemUpdateEventDataUseCase
 import java.lang.Integer.min
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 /**
@@ -117,6 +119,7 @@ class SlideableListItemLayout @JvmOverloads constructor(
 
     updateDisposable =
       createListItemUpdateEventDataUseCase(itemType, remoteId)
+        .delay(1, TimeUnit.SECONDS)
         .subscribeOn(schedulers.io)
         .observeOn(schedulers.ui)
         .subscribeBy(
