@@ -50,17 +50,22 @@ import org.supla.android.data.source.remote.hvac.SuplaHvacThermometerType
 import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
 import org.supla.android.data.source.remote.thermostat.SuplaThermostatFlags
 import org.supla.android.db.Channel
+import org.supla.android.db.ChannelExtendedValue
 import org.supla.android.db.ChannelValue
 import org.supla.android.events.ChannelConfigEventsManager
 import org.supla.android.events.DeviceConfigEventsManager
 import org.supla.android.events.LoadingTimeoutManager
 import org.supla.android.events.UpdateEventsManager
+import org.supla.android.extensions.date
+import org.supla.android.lib.SuplaChannelExtendedValue
 import org.supla.android.lib.SuplaConst
+import org.supla.android.lib.SuplaTimerState
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.ChannelChild
 import org.supla.android.usecases.channel.ChannelWithChildren
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
 import org.supla.android.usecases.thermostat.CreateTemperaturesListUseCase
+import java.util.Date
 import java.util.concurrent.TimeUnit
 
 @RunWith(MockitoJUnitRunner::class)
@@ -217,7 +222,8 @@ class ThermostatGeneralViewModelTest :
     // given
     val remoteId = 321
     val deviceId = 321
-    mockHeatThermostat(remoteId, deviceId, 22.4f)
+    val timerEndDate = date(2022, 10, 22)
+    mockHeatThermostat(remoteId, deviceId, 22.4f, timerEndDate = timerEndDate)
     val currentTimestamp = 123L
     whenever(dateProvider.currentTimestamp()).thenReturn(currentTimestamp)
 
@@ -230,7 +236,9 @@ class ThermostatGeneralViewModelTest :
 
     // then
     assertThat(events).isEmpty()
-    val state = thermostatDefaultState(remoteId, 22.4f)
+    val state = thermostatDefaultState(remoteId, 22.4f).let {
+      it.copy(viewModelState = it.viewModelState?.copy(timerEndDate = timerEndDate))
+    }
     val emittedState = state.viewModelState!!.copy(setpointHeatTemperature = 25f)
     assertThat(states).containsExactly(
       state,
@@ -569,7 +577,8 @@ class ThermostatGeneralViewModelTest :
     deviceId: Int,
     setpointTemperatureHeat: Float,
     weeklyScheduleActive: Boolean = false,
-    mode: SuplaHvacMode = SuplaHvacMode.HEAT
+    mode: SuplaHvacMode = SuplaHvacMode.HEAT,
+    timerEndDate: Date? = null
   ) {
     val flags = mutableListOf(SuplaThermostatFlags.SETPOINT_TEMP_MIN_SET)
     if (weeklyScheduleActive) {
@@ -579,7 +588,8 @@ class ThermostatGeneralViewModelTest :
       remoteId = remoteId,
       mode = mode,
       setpointTemperatureHeat = setpointTemperatureHeat,
-      flags = flags
+      flags = flags,
+      timerEndDate = timerEndDate
     )
 
     whenever(channelConfigEventsManager.observerConfig(remoteId)).thenReturn(
@@ -650,7 +660,8 @@ class ThermostatGeneralViewModelTest :
     mode: SuplaHvacMode = SuplaHvacMode.HEAT,
     setpointTemperatureHeat: Float? = null,
     setpointTemperatureCool: Float? = null,
-    flags: List<SuplaThermostatFlags> = listOf(SuplaThermostatFlags.SETPOINT_TEMP_MIN_SET)
+    flags: List<SuplaThermostatFlags> = listOf(SuplaThermostatFlags.SETPOINT_TEMP_MIN_SET),
+    timerEndDate: Date? = null
   ): ChannelWithChildren {
     val thermostatValue = ThermostatValue(
       state = ThermostatState(1),
@@ -668,11 +679,18 @@ class ThermostatGeneralViewModelTest :
     val value: ChannelValue = mockk()
     every { value.asThermostatValue() } returns thermostatValue
 
+    val suplaExtendedValue = SuplaChannelExtendedValue()
+    timerEndDate?.let { suplaExtendedValue.TimerStateValue = SuplaTimerState(it.time.div(1000), null, 0, null) }
+
+    val extendedValue: ChannelExtendedValue = mockk()
+    every { extendedValue.extendedValue } returns suplaExtendedValue
+
     val channel: Channel = mockk()
     every { channel.remoteId } returns remoteId
     every { channel.func } returns func
     every { channel.value } returns value
     every { channel.onLine } returns true
+    every { channel.extendedValue } returns extendedValue
 
     val children = listOf(
       ChannelChild(channel = mockk(), relationType = ChannelRelationType.MAIN_THERMOMETER),

@@ -38,7 +38,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -47,8 +46,8 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
-import org.supla.android.core.ui.theme.grey
 import org.supla.android.features.thermostatdetail.timerdetail.TimerDetailViewState
+import org.supla.android.features.thermostatdetail.ui.TimerHeader
 import org.supla.android.ui.views.TimerProgressView
 import org.supla.android.ui.views.buttons.AnimationMode
 import org.supla.android.ui.views.buttons.RoundedControlButton
@@ -63,7 +62,12 @@ fun ThermostatTimerInProgress(state: TimerDetailViewState, viewProxy: TimerDetai
       .fillMaxHeight()
       .background(MaterialTheme.colors.background)
   ) {
-    TimerState(state, modifier = Modifier.align(Alignment.TopCenter))
+    TimerHeader(
+      state = state,
+      modifier = Modifier
+        .align(Alignment.TopCenter)
+        .padding(top = Distance.default)
+    )
     Column(
       modifier = Modifier.align(Alignment.Center),
       horizontalAlignment = Alignment.CenterHorizontally
@@ -72,33 +76,6 @@ fun ThermostatTimerInProgress(state: TimerDetailViewState, viewProxy: TimerDetai
       EditTimeButton { viewProxy.editTimer() }
     }
     BottomButtons(viewProxy, modifier = Modifier.align(Alignment.BottomCenter))
-  }
-}
-
-@Composable
-private fun TimerState(state: TimerDetailViewState, modifier: Modifier = Modifier) {
-  Row(
-    modifier = modifier.padding(top = Distance.default),
-    horizontalArrangement = Arrangement.spacedBy(4.dp),
-    verticalAlignment = Alignment.CenterVertically
-  ) {
-    Text(
-      text = state.estimatedEndDateText(LocalContext.current).uppercase(),
-      style = MaterialTheme.typography.body2,
-      color = MaterialTheme.colors.grey
-    )
-    state.currentStateIcon?.let {
-      Icon(
-        painter = painterResource(id = it),
-        contentDescription = null,
-        tint = colorResource(id = state.currentStateIconColor),
-        modifier = Modifier.size(16.dp)
-      )
-    }
-    Text(
-      text = state.currentStateTemperature(LocalContext.current),
-      style = MaterialTheme.typography.body2.copy(fontWeight = FontWeight.Bold)
-    )
   }
 }
 
@@ -126,15 +103,18 @@ private fun TimerProgress(state: TimerDetailViewState, viewProxy: TimerDetailVie
 
 @Composable
 private fun EditTimeButton(onClick: () -> Unit) =
-  TextButton(modifier = Modifier.padding(top = Distance.default), onClick = onClick) {
+  TextButton(onClick = onClick) {
     Text(
       text = stringResource(id = R.string.details_timer_edit_time),
-      color = MaterialTheme.colors.onBackground
+      color = MaterialTheme.colors.onBackground,
+      style = MaterialTheme.typography.body2
     )
     Icon(
       painter = painterResource(id = R.drawable.pencil),
       contentDescription = null,
-      modifier = Modifier.padding(start = Distance.tiny)
+      modifier = Modifier
+        .padding(start = Distance.tiny)
+        .size(24.dp)
     )
   }
 

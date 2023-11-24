@@ -196,7 +196,7 @@ class ValuesFormatter @Inject constructor(
   fun getTimerRestTime(time: Int): StringProvider {
     val days = time.days
     return if (days > 0) {
-      { it.resources.getQuantityString(R.plurals.day_pattern, days, days) }
+      { it.resources.getQuantityString(R.plurals.day_pattern, days, days) + " ⏱️" }
     } else {
       { getTimeString(time.hours, time.minutesInHour, time.secondsInMinute) }
     }

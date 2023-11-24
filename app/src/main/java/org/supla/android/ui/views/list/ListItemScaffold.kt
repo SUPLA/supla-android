@@ -85,7 +85,6 @@ fun ListItemScaffold(
   scale: Float = 1f,
   content: @Composable BoxScope.() -> Unit
 ) {
-
   var title by remember { mutableStateOf(itemTitle) }
   var online by remember { mutableStateOf(itemOnline) }
   var estimatedEndDate by remember { mutableStateOf(itemEstimatedEndDate) }
@@ -112,7 +111,8 @@ fun ListItemScaffold(
     Box(
       modifier = Modifier
         .fillMaxHeight()
-        .align(Alignment.Center), content = content
+        .align(Alignment.Center),
+      content = content
     )
     ListItemDotTrading(online, hasRightButton, modifier = Modifier.align(Alignment.CenterEnd))
 

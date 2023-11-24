@@ -41,5 +41,6 @@ abstract class BaseSlideableContent<T : SlideableListItemData> : BaseAbstractCom
 
   fun update(data: T) {
     this.data = data
+    invalidate()
   }
 }

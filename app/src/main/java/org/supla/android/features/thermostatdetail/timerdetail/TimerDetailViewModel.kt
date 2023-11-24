@@ -56,9 +56,9 @@ import org.supla.android.extensions.minutesInHour
 import org.supla.android.extensions.secondsInMinute
 import org.supla.android.extensions.setHour
 import org.supla.android.extensions.shift
-import org.supla.android.extensions.valuesFormatter
 import org.supla.android.extensions.yearNo
 import org.supla.android.features.thermostatdetail.timerdetail.ui.TimerDetailViewProxy
+import org.supla.android.features.thermostatdetail.ui.TimerHeaderState
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT
 import org.supla.android.lib.actions.SubjectType
@@ -247,7 +247,22 @@ class TimerDetailViewModel @Inject constructor(
   }
 
   override fun editTimer() {
-    updateState { it.copy(editTime = true) }
+    updateState {
+      if (it.timerEndDate != null && it.currentDate != null) {
+        val timeDiff = it.timerEndDate.differenceInSeconds(it.currentDate)
+        it.copy(
+          editTime = true,
+          timerDays = timeDiff.days,
+          timerHours = timeDiff.hoursInDay,
+          timerMinutes = timeDiff.minutesInHour,
+          calendarValue = it.timerEndDate,
+          calendarTimeValue = it.timerEndDate.hour(),
+          selectedMode = if (it.currentMode == SuplaHvacMode.OFF) DeviceMode.OFF else DeviceMode.MANUAL
+        )
+      } else {
+        it.copy(editTime = true)
+      }
+    }
   }
 
   override fun editTimerCancel() {
@@ -339,21 +354,18 @@ data class TimerDetailViewState(
   val currentDate: Date? = null,
   val channelFunction: Int? = null,
   val subfunction: ThermostatSubfunction? = null,
-  val minTemperature: Float? = 10f,
-  val maxTemperature: Float? = 40f,
-  val currentTemperature: Float? = 22.2f,
+  val minTemperature: Float? = null,
+  val maxTemperature: Float? = null,
+  val currentTemperature: Float? = null,
   val usingHeatSetpoint: Boolean = false,
   var loadingState: LoadingTimeoutManager.LoadingState = LoadingTimeoutManager.LoadingState(),
 
   val selectedMode: DeviceMode = DeviceMode.OFF,
-  val isTimerOn: Boolean = true,
+  val isTimerOn: Boolean = false,
   val isChannelOnline: Boolean = false,
   val editTime: Boolean = false,
   val showCalendar: Boolean = false,
   val showTimePicker: Boolean = false,
-
-  // Temperature state
-  val temperaturePercentage: Float = 0f,
 
   // Timer state
   val timerDays: Int = 0,
@@ -367,7 +379,7 @@ data class TimerDetailViewState(
   // In progress state
   val timerEndDate: Date? = null
 
-) : ViewState() {
+) : ViewState(), TimerHeaderState {
 
   // Temperature
   val temperaturesRange: ClosedFloatingPointRange<Float>
@@ -430,46 +442,17 @@ data class TimerDetailViewState(
       }
     }
 
-  val estimatedEndDateText: StringProvider
-    get() {
-      val (endDate) = guardLet(timerEndDate) { return { "" } }
+  override val endDateText: StringProvider
+    get() = TimerHeaderState.endDateText(timerEndDate)
 
-      return { context ->
-        val date = context.valuesFormatter.getFullDateString(endDate)
-        context.getString(R.string.details_timer_state_label_for_timer_days, date)
-      }
-    }
+  override val currentStateIcon: Int?
+    get() = TimerHeaderState.currentStateIcon(currentMode)
 
-  val currentStateIcon: Int?
-    get() {
-      return when (currentMode) {
-        SuplaHvacMode.HEAT -> R.drawable.ic_heat
-        SuplaHvacMode.COOL -> R.drawable.ic_cool
-        else -> null
-      }
-    }
+  override val currentStateIconColor: Int
+    get() = TimerHeaderState.currentStateIconColor(currentMode)
 
-  val currentStateIconColor: Int
-    get() {
-      return when (currentMode) {
-        SuplaHvacMode.HEAT -> R.color.red
-        SuplaHvacMode.COOL -> R.color.blue
-        else -> R.color.disabled
-      }
-    }
-
-  val currentStateTemperature: StringProvider
-    get() {
-      return when (currentMode) {
-        SuplaHvacMode.OFF -> { _ -> "OFF" }
-        SuplaHvacMode.HEAT,
-        SuplaHvacMode.COOL -> { context ->
-          context.valuesFormatter.getTemperatureString(currentTemperature)
-        }
-
-        else -> { _ -> "" }
-      }
-    }
+  override val currentStateValue: StringProvider
+    get() = TimerHeaderState.currentStateValue(currentMode, currentTemperature, currentTemperature)
 
   val startEnabled: Boolean =
     isChannelOnline && getTimerDuration(Date())?.let { it > 0 } ?: false
@@ -502,11 +485,11 @@ data class TimerDetailViewState(
       val (calendarDate) = guardLet(calendarValue) { return null }
       val (calendarHour) = guardLet(calendarTimeValue) { return null }
 
-      if (calendarDate.before(currentDate)) {
+      val dateDateWithHour = calendarDate.setHour(calendarHour.hour, calendarHour.minute, 0)
+      if (dateDateWithHour.before(currentDate)) {
         null
       } else {
-        calendarDate.setHour(calendarHour.hour, calendarHour.minute, 0)
-          .differenceInSeconds(currentDate)
+        dateDateWithHour.differenceInSeconds(currentDate)
       }
     } else {
       timerValue

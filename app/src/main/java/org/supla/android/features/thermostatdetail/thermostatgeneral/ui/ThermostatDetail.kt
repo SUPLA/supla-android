@@ -70,6 +70,7 @@ import org.supla.android.features.thermostatdetail.thermostatgeneral.ThermostatG
 import org.supla.android.features.thermostatdetail.thermostatgeneral.data.ThermostatIssueItem
 import org.supla.android.features.thermostatdetail.thermostatgeneral.data.ThermostatProgramInfo
 import org.supla.android.features.thermostatdetail.ui.ThermometersValues
+import org.supla.android.features.thermostatdetail.ui.TimerHeader
 import org.supla.android.ui.views.LoadingScrim
 import org.supla.android.ui.views.buttons.AnimatableButtonType
 import org.supla.android.ui.views.buttons.AnimationMode
@@ -145,6 +146,13 @@ private fun ThermostatView(viewState: ThermostatGeneralViewState, viewProxy: The
           HeatingCoolingRow(viewState = viewState, viewProxy = viewProxy)
         } else if (viewState.sensorIssue != null) {
           SensorIssueView(sensorIssue = viewState.sensorIssue)
+        } else if (viewState.isOffline.not() && viewState.viewModelState?.timerEndDate != null) {
+          TimerHeader(
+            state = viewState,
+            modifier = Modifier
+              .fillMaxWidth()
+              .height(80.dp)
+          )
         } else if (viewState.temporaryProgramInfo.isNotEmpty()) {
           ProgramInfoRow(infos = viewState.temporaryProgramInfo)
         } else {

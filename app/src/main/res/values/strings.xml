@@ -634,7 +634,7 @@
     <string translatable="false" name="details_timer_calendar">Calendar</string>
     <string translatable="false" name="details_timer_min_temp">Temp. min.</string>
     <string translatable="false" name="details_timer_max_temp">Temp. max.</string>
-    <string translatable="false" name="details_timer_state_label_for_timer_days">State until %1$s</string>
+    <string translatable="false" name="details_timer_state_label_for_timer_days">State until %1$s:</string>
     <string translatable="false" name="details_timer_cancel_thermostat">Cancel and turn on:</string>
 
     <plurals name="details_timer_info_on" translatable="false">

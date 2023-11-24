@@ -82,9 +82,10 @@ fun ThermostatTimerConfiguration(state: TimerDetailViewState, viewProxy: TimerDe
       .fillMaxHeight()
       .background(MaterialTheme.colors.surface)
   ) {
+    val bottomPadding = if (state.editTime) 144.dp else 80.dp
     Column(
       modifier = Modifier
-        .padding(start = Distance.default, end = Distance.default, bottom = 80.dp)
+        .padding(start = Distance.default, end = Distance.default, bottom = bottomPadding)
         .verticalScroll(rememberScrollState())
     ) {
       HeaderText(text = stringResource(id = R.string.details_timer_select_mode), modifier = Modifier.padding(top = Distance.default))
@@ -171,7 +172,7 @@ private fun TemperatureSelector(state: TimerDetailViewState, viewProxy: TimerDet
 context(RowScope)
 @Composable
 private fun TemperatureSlider(state: TimerDetailViewState, viewProxy: TimerDetailViewProxy) {
-  val lightGrayColor = colorResource(id = R.color.gray_light)
+  val lightGrayColor = colorResource(id = R.color.separator_light)
   val colors = SliderDefaults.colors(
     activeTrackColor = lightGrayColor,
     disabledActiveTrackColor = lightGrayColor,
