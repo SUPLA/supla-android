@@ -33,6 +33,7 @@ import org.supla.android.databinding.FragmentChannelListBinding
 import org.supla.android.db.Channel
 import org.supla.android.extensions.toPx
 import org.supla.android.features.switchdetail.SwitchDetailFragment
+import org.supla.android.features.thermometerdetail.ThermometerDetailFragment
 import org.supla.android.features.thermostatdetail.ThermostatDetailFragment
 import org.supla.android.lib.SuplaChannelState
 import org.supla.android.lib.SuplaClientMsg
@@ -93,12 +94,17 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
 
       is ChannelListViewEvent.OpenSwitchDetail -> navigator.navigateTo(
         R.id.switch_detail_fragment,
-        SwitchDetailFragment.bundle(event.remoteId, ItemType.CHANNEL, event.function, event.pages.toTypedArray())
+        SwitchDetailFragment.bundle(event.itemBundle, event.pages.toTypedArray())
       )
 
       is ChannelListViewEvent.OpenThermostatDetail -> navigator.navigateTo(
         R.id.thermostat_detail_fragment,
-        ThermostatDetailFragment.bundle(event.remoteId, ItemType.CHANNEL, event.function, event.pages.toTypedArray())
+        ThermostatDetailFragment.bundle(event.itemBundle, event.pages.toTypedArray())
+      )
+
+      is ChannelListViewEvent.OpenThermometerDetail -> navigator.navigateTo(
+        R.id.thermostat_detail_fragment,
+        ThermometerDetailFragment.bundle(event.itemBundle, event.pages.toTypedArray())
       )
 
       else -> {}

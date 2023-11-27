@@ -173,10 +173,10 @@
     <string name="consumption_acording_to_phases">Consumul conform fazelor</string>
     <string name="temperature">Temperatură</string>
     <string name="humidity">Umiditate</string>
-    <string name="last24hours">Ultimele 24 de ore</string>
-    <string name="last7days">Ultimele 7 zile</string>
-    <string name="last30days">Ultimele 30 de zile</string>
-    <string name="last90days">Ultimele 90 de zile</string>
+    <string name="history_range_last_day">Ultimele 24 de ore</string>
+    <string name="history_range_last_week">Ultimele 7 zile</string>
+    <string name="history_range_last_30_days">Ultimele 30 de zile</string>
+    <string name="history_range_last_90_days">Ultimele 90 de zile</string>
     <string name="all_available_history">Tot istoricul disponibil</string>
     <string name="retrieving_data_from_the_server">Descărcare adatelor de pe server...</string>
     <string name="no_chart_data_available">Nu există date pentru grafic.</string>

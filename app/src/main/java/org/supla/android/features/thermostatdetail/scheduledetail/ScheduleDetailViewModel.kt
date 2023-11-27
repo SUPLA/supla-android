@@ -34,8 +34,9 @@ import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.local.calendar.DayOfWeek
 import org.supla.android.data.source.local.calendar.QuarterOfHour
 import org.supla.android.data.source.local.temperature.TemperatureCorrection
-import org.supla.android.data.source.remote.ChannelConfigResult
 import org.supla.android.data.source.remote.ChannelConfigType
+import org.supla.android.data.source.remote.ConfigResult
+import org.supla.android.data.source.remote.SuplaDeviceConfig
 import org.supla.android.data.source.remote.hvac.SuplaChannelHvacConfig
 import org.supla.android.data.source.remote.hvac.SuplaChannelWeeklyScheduleConfig
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
@@ -43,11 +44,14 @@ import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
 import org.supla.android.data.source.remote.hvac.SuplaWeeklyScheduleEntry
 import org.supla.android.data.source.remote.hvac.SuplaWeeklyScheduleProgram
 import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
-import org.supla.android.events.ConfigEventsManager
+import org.supla.android.data.source.remote.isAutomaticTimeSyncDisabled
+import org.supla.android.events.ChannelConfigEventsManager
+import org.supla.android.events.DeviceConfigEventsManager
 import org.supla.android.events.LoadingTimeoutManager
 import org.supla.android.extensions.TAG
 import org.supla.android.extensions.fromSuplaTemperature
 import org.supla.android.extensions.guardLet
+import org.supla.android.extensions.ifFalse
 import org.supla.android.extensions.toSuplaTemperature
 import org.supla.android.features.thermostatdetail.scheduledetail.data.ProgramSettingsData
 import org.supla.android.features.thermostatdetail.scheduledetail.data.QuartersSelectionData
@@ -71,7 +75,8 @@ private const val REFRESH_DELAY_MS = 3000L
 class ScheduleDetailViewModel @Inject constructor(
   private val valuesFormatter: ValuesFormatter,
   private val suplaClientProvider: SuplaClientProvider,
-  private val configEventsManager: ConfigEventsManager,
+  private val channelConfigEventsManager: ChannelConfigEventsManager,
+  private val deviceConfigEventsManager: DeviceConfigEventsManager,
   private val delayedWeeklyScheduleConfigSubject: DelayedWeeklyScheduleConfigSubject,
   private val loadingTimeoutManager: LoadingTimeoutManager,
   private val preferences: Preferences,
@@ -90,29 +95,37 @@ class ScheduleDetailViewModel @Inject constructor(
     }
   }
 
-  fun observeConfig(remoteId: Int) {
+  fun observeConfig(remoteId: Int, deviceId: Int) {
     updateSubject.attachSilent()
       .debounce(1, TimeUnit.SECONDS)
-      .subscribeBy(onNext = { reloadConfig(remoteId) })
+      .subscribeBy(
+        onNext = { reloadConfig(remoteId) },
+        onError = defaultErrorHandler("observeConfig($remoteId)")
+      )
       .disposeBySelf()
 
     Observable.combineLatest(
-      configEventsManager.observerConfig(remoteId).filter { it.config is SuplaChannelWeeklyScheduleConfig },
-      configEventsManager.observerConfig(remoteId).filter { it.config is SuplaChannelHvacConfig }
-    ) { weeklyConfig, defaultConfig ->
+      channelConfigEventsManager.observerConfig(remoteId).filter { it.config is SuplaChannelWeeklyScheduleConfig },
+      channelConfigEventsManager.observerConfig(remoteId).filter { it.config is SuplaChannelHvacConfig },
+      deviceConfigEventsManager.observerConfig(deviceId)
+    ) { weeklyConfig, defaultConfig, deviceConfig ->
       LoadedData(
         weeklyConfig.config as SuplaChannelWeeklyScheduleConfig,
         weeklyConfig.result,
         defaultConfig.config as SuplaChannelHvacConfig,
-        defaultConfig.result
+        defaultConfig.result,
+        deviceConfig.config
       )
     }
+      .debounce(50, TimeUnit.MILLISECONDS)
       .subscribeBy(
-        onNext = { onConfigLoaded(it) }
+        onNext = { onConfigLoaded(it) },
+        onError = defaultErrorHandler("observeConfig($remoteId)")
       ).disposeBySelf()
 
     updateState { it.copy(loadingState = it.loadingState.changingLoading(true, dateProvider), remoteId = remoteId) }
     reloadConfig(remoteId)
+    suplaClientProvider.provide()?.getDeviceConfig(deviceId)
   }
 
   override fun updateSchedule() {
@@ -441,7 +454,7 @@ class ScheduleDetailViewModel @Inject constructor(
   private fun onConfigLoaded(data: LoadedData) {
     Trace.i(TAG, "Schedule detail got data: $data")
 
-    if (data.weeklyScheduleResult != ChannelConfigResult.RESULT_TRUE || data.defaultResult != ChannelConfigResult.RESULT_TRUE) {
+    if (data.weeklyScheduleResult != ConfigResult.RESULT_TRUE || data.defaultResult != ConfigResult.RESULT_TRUE) {
       return
     }
     val (channelFunction) = guardLet(data.weeklyScheduleConfig.func) {
@@ -476,8 +489,8 @@ class ScheduleDetailViewModel @Inject constructor(
         programs = data.weeklyScheduleConfig.viewProgramBoxesList(thermostatFunction),
         configTemperatureMin = configTemperatureMin,
         configTemperatureMax = configTemperatureMax,
-        currentDayOfWeek = DayOfWeek.from(calendar.get(Calendar.DAY_OF_WEEK) - 1),
-        currentHour = calendar.get(Calendar.HOUR_OF_DAY),
+        currentDayOfWeek = data.deviceConfig.isAutomaticTimeSyncDisabled().ifFalse(DayOfWeek.from(calendar.get(Calendar.DAY_OF_WEEK) - 1)),
+        currentHour = data.deviceConfig.isAutomaticTimeSyncDisabled().ifFalse(calendar.get(Calendar.HOUR_OF_DAY)),
         thermostatFunction = thermostatFunction
       )
     }
@@ -485,9 +498,10 @@ class ScheduleDetailViewModel @Inject constructor(
 
   private data class LoadedData(
     val weeklyScheduleConfig: SuplaChannelWeeklyScheduleConfig,
-    val weeklyScheduleResult: ChannelConfigResult,
+    val weeklyScheduleResult: ConfigResult,
     val defaultConfig: SuplaChannelHvacConfig,
-    val defaultResult: ChannelConfigResult
+    val defaultResult: ConfigResult,
+    val deviceConfig: SuplaDeviceConfig?
   )
 }
 

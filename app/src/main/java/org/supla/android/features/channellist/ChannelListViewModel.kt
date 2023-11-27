@@ -26,8 +26,9 @@ import org.supla.android.data.source.ChannelRepository
 import org.supla.android.db.Channel
 import org.supla.android.db.ChannelBase
 import org.supla.android.db.Location
-import org.supla.android.events.ListsEventsManager
+import org.supla.android.events.UpdateEventsManager
 import org.supla.android.features.standarddetail.DetailPage
+import org.supla.android.features.standarddetail.ItemBundle
 import org.supla.android.lib.SuplaChannelValue
 import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.lib.SuplaConst
@@ -38,6 +39,7 @@ import org.supla.android.usecases.channel.*
 import org.supla.android.usecases.details.LegacyDetailType
 import org.supla.android.usecases.details.ProvideDetailTypeUseCase
 import org.supla.android.usecases.details.SwitchDetailType
+import org.supla.android.usecases.details.ThermometerDetailType
 import org.supla.android.usecases.details.ThermostatDetailType
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
@@ -51,7 +53,7 @@ class ChannelListViewModel @Inject constructor(
   private val toggleLocationUseCase: ToggleLocationUseCase,
   private val provideDetailTypeUseCase: ProvideDetailTypeUseCase,
   private val findChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
-  listsEventsManager: ListsEventsManager,
+  updateEventsManager: UpdateEventsManager,
   preferences: Preferences,
   schedulers: SuplaSchedulers
 ) : BaseListViewModel<ChannelListViewState, ChannelListViewEvent>(preferences, ChannelListViewState(), schedulers) {
@@ -61,14 +63,15 @@ class ChannelListViewModel @Inject constructor(
   override fun reloadList() = loadChannels()
 
   init {
-    observeUpdates(listsEventsManager.observeChannelUpdates())
+    observeUpdates(updateEventsManager.observeChannelsUpdate())
   }
 
   fun loadChannels() {
     createProfileChannelsListUseCase()
       .attach()
       .subscribeBy(
-        onNext = { updateState { state -> state.copy(channels = it) } }
+        onNext = { updateState { state -> state.copy(channels = it) } },
+        onError = defaultErrorHandler("loadChannels()")
       )
       .disposeBySelf()
   }
@@ -78,7 +81,8 @@ class ChannelListViewModel @Inject constructor(
       .andThen(createProfileChannelsListUseCase())
       .attach()
       .subscribeBy(
-        onNext = { updateState { state -> state.copy(channels = it) } }
+        onNext = { updateState { state -> state.copy(channels = it) } },
+        onError = defaultErrorHandler("toggleLocationCollapsed($location)")
       )
       .disposeBySelf()
   }
@@ -90,7 +94,9 @@ class ChannelListViewModel @Inject constructor(
 
     channelRepository.reorderChannels(firstItem.id, firstItem.locationId.toInt(), secondItem.id)
       .attach()
-      .subscribeBy()
+      .subscribeBy(
+        onError = defaultErrorHandler("swapItems(..., ...)")
+      )
       .disposeBySelf()
   }
 
@@ -102,6 +108,7 @@ class ChannelListViewModel @Inject constructor(
           when (throwable) {
             is ActionException.ChannelClosedManually -> sendEvent(ChannelListViewEvent.ShowValveDialog(throwable.remoteId))
             is ActionException.ChannelExceedAmperage -> sendEvent(ChannelListViewEvent.ShowAmperageExceededDialog(throwable.remoteId))
+            else -> defaultErrorHandler("performAction($channelId, $buttonType)")(throwable)
           }
         }
       )
@@ -128,7 +135,8 @@ class ChannelListViewModel @Inject constructor(
               .filterIsInstance(ListItem.ChannelItem::class.java)
               .first { it.channelBase.remoteId == channel.remoteId }
               .channelBase = channel
-          }
+          },
+          onError = defaultErrorHandler("updateChannel($remoteId)")
         )
         .disposeBySelf()
     }
@@ -145,8 +153,9 @@ class ChannelListViewModel @Inject constructor(
     }
 
     when (val detailType = provideDetailTypeUseCase(channel)) {
-      is SwitchDetailType -> sendEvent(ChannelListViewEvent.OpenSwitchDetail(channel.remoteId, channel.func, detailType.pages))
-      is ThermostatDetailType -> sendEvent(ChannelListViewEvent.OpenThermostatDetail(channel.remoteId, channel.func, detailType.pages))
+      is SwitchDetailType -> sendEvent(ChannelListViewEvent.OpenSwitchDetail(ItemBundle.from(channel), detailType.pages))
+      is ThermostatDetailType -> sendEvent(ChannelListViewEvent.OpenThermostatDetail(ItemBundle.from(channel), detailType.pages))
+      is ThermometerDetailType -> sendEvent(ChannelListViewEvent.OpenThermometerDetail(ItemBundle.from(channel), detailType.pages))
       is LegacyDetailType -> sendEvent(ChannelListViewEvent.OpenLegacyDetails(channel.channelId, detailType))
       else -> {} // no action
     }
@@ -183,8 +192,9 @@ sealed class ChannelListViewEvent : ViewEvent {
   data class ShowValveDialog(val remoteId: Int) : ChannelListViewEvent()
   data class ShowAmperageExceededDialog(val remoteId: Int) : ChannelListViewEvent()
   data class OpenLegacyDetails(val remoteId: Int, val type: LegacyDetailType) : ChannelListViewEvent()
-  data class OpenSwitchDetail(val remoteId: Int, val function: Int, val pages: List<DetailPage>) : ChannelListViewEvent()
-  data class OpenThermostatDetail(val remoteId: Int, val function: Int, val pages: List<DetailPage>) : ChannelListViewEvent()
+  data class OpenSwitchDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) : ChannelListViewEvent()
+  data class OpenThermostatDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) : ChannelListViewEvent()
+  data class OpenThermometerDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) : ChannelListViewEvent()
   object OpenThermostatDetails : ChannelListViewEvent()
   object ReassignAdapter : ChannelListViewEvent()
 }

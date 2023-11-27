@@ -1,4 +1,21 @@
 package org.supla.android.di
+/*
+ Copyright (C) AC SOFTWARE SP. Z O.O.
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
 
 import android.app.NotificationManager
 import android.appwidget.AppWidgetManager
@@ -13,9 +30,10 @@ import org.supla.android.SuplaApp
 import org.supla.android.core.SuplaAppApi
 import org.supla.android.core.SuplaAppProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
+import org.supla.android.core.networking.suplacloud.SuplaCloudConfigHolder
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.db.DbHelper
-import org.supla.android.events.ListsEventsManager
+import org.supla.android.events.UpdateEventsManager
 import org.supla.android.lib.SuplaClient
 import org.supla.android.lib.SuplaClientMessageHandler
 import org.supla.android.lib.singlecall.SingleCall
@@ -41,18 +59,20 @@ class ApplicationModule {
     profileRepository: ProfileRepository,
     profileIdHolder: ProfileIdHolder,
     widgetVisibilityHandler: WidgetVisibilityHandler,
-    listsEventsManager: ListsEventsManager,
+    updateEventsManager: UpdateEventsManager,
     suplaAppProvider: SuplaAppProvider,
-    singleCallProvider: SingleCall.Provider
+    singleCallProvider: SingleCall.Provider,
+    suplaCloudConfigHolder: SuplaCloudConfigHolder
   ): ProfileManager {
     return MultiAccountProfileManager(
       dbHelper,
       profileRepository,
       profileIdHolder,
       widgetVisibilityHandler,
-      listsEventsManager,
+      updateEventsManager,
       suplaAppProvider,
-      singleCallProvider
+      singleCallProvider,
+      suplaCloudConfigHolder
     )
   }
 

@@ -73,7 +73,6 @@ import org.supla.android.features.thermostatdetail.scheduledetail.data.ScheduleD
 import org.supla.android.features.thermostatdetail.scheduledetail.extensions.color
 import org.supla.android.features.thermostatdetail.scheduledetail.ui.PreviewProxy
 import org.supla.android.features.thermostatdetail.scheduledetail.ui.ScheduleDetailViewProxy
-import java.util.Calendar
 
 const val rowsCount = 25
 val columnsCount = DayOfWeek.values().size
@@ -100,18 +99,20 @@ fun ScheduleTable(
   // texts with sizes
   val textMeasurer = rememberTextMeasurer()
   val days = remember { mutableStateListOfDrawableDayOfWeek(context, textMeasurer) }
+  days.forEach { it.isCurrent = it.value == viewState.currentDayOfWeek }
   val hours = remember { mutableStateListOfDrawableHour(textMeasurer) }
+  hours.forEach { it.isCurrent = it.value == viewState.currentHour }
   // positions of elements
   val (viewSize, updateSize) = remember { mutableStateOf<IntSize?>(null) }
-  val textWidth = hours.first().textLayoutResult.size.width.plus(boxPadding.toPx(context)).plus(textPadding.toPx(context))
+  val textWidth = hours.first().textLayoutResult.size.width.plus(boxPadding.toPx()).plus(textPadding.toPx())
   val gridWidth = remember(viewSize) { viewSize?.width?.toFloat()?.minus(textWidth)?.div(columnsCount) ?: 0f }
   val gridHeight = remember(viewSize) { viewSize?.height?.toFloat()?.div(rowsCount) ?: 0f }
-  val boxSize = remember(viewSize) { createBoxSize(viewSize, gridWidth, gridHeight, context) }
+  val boxSize = remember(viewSize) { createBoxSize(viewSize, gridWidth, gridHeight) }
   val positions: Map<ScheduleDetailEntryBoxKey, Offset> = remember(viewSize) {
-    createBoxesPositions(viewSize, hours, days, textWidth, gridHeight, gridWidth, context)
+    createBoxesPositions(viewSize, hours, days, textWidth, gridHeight, gridWidth)
   }
 
-  val radiusSize = dimensionResource(id = R.dimen.radius_small).toPx(context)
+  val radiusSize = dimensionResource(id = R.dimen.radius_small).toPx()
   val cornerRadius = remember { CornerRadius(radiusSize, radiusSize) }
   val path = remember { Path() }
 
@@ -310,7 +311,7 @@ private fun labelText(text: String, textMeasurer: TextMeasurer, useBold: Boolean
 private data class DrawableText<T>(
   val value: T,
   val textLayoutResult: TextLayoutResult,
-  val isCurrent: Boolean
+  var isCurrent: Boolean
 ) {
 
   companion object {
@@ -335,26 +336,22 @@ private data class DrawableText<T>(
 @OptIn(ExperimentalTextApi::class)
 private fun mutableStateListOfDrawableDayOfWeek(context: Context, textMeasurer: TextMeasurer) =
   mutableStateListOf<DrawableText<DayOfWeek>>().also { list ->
-    val calendar = Calendar.getInstance()
-    val currentDay = DayOfWeek.from(calendar.get(Calendar.DAY_OF_WEEK) - 1)
-    DayOfWeek.values().forEach { list.add(DrawableText.get(it, context.resources, textMeasurer, it == currentDay)) }
+    DayOfWeek.values().forEach { list.add(DrawableText.get(it, context.resources, textMeasurer, false)) }
   }
 
 @OptIn(ExperimentalTextApi::class)
 private fun mutableStateListOfDrawableHour(textMeasurer: TextMeasurer) =
   mutableStateListOf<DrawableText<Int>>().also { list ->
-    val calendar = Calendar.getInstance()
-    val currentHour = calendar.get(Calendar.HOUR_OF_DAY)
     for (i in 0..23) {
-      list.add(DrawableText.get(i, textMeasurer, i == currentHour))
+      list.add(DrawableText.get(i, textMeasurer, false))
     }
   }
 
-private fun createBoxSize(viewSize: IntSize?, gridWidth: Float, gridHeight: Float, context: Context) =
+private fun createBoxSize(viewSize: IntSize?, gridWidth: Float, gridHeight: Float) =
   if (viewSize == null) {
     Size(0f, 0f)
   } else {
-    Size(gridWidth.minus(boxSpacing.toPx(context)), gridHeight.minus(boxSpacing.toPx(context)))
+    Size(gridWidth.minus(boxSpacing.toPx()), gridHeight.minus(boxSpacing.toPx()))
   }
 
 private fun createBoxesPositions(
@@ -363,8 +360,7 @@ private fun createBoxesPositions(
   days: List<DrawableText<DayOfWeek>>,
   textWidth: Float,
   gridHeight: Float,
-  gridWidth: Float,
-  context: Context
+  gridWidth: Float
 ) =
   if (viewSize == null) {
     emptyMap()
@@ -372,9 +368,9 @@ private fun createBoxesPositions(
     mutableMapOf<ScheduleDetailEntryBoxKey, Offset>().apply {
       var y = gridHeight
       for (hour in hours) {
-        var x = textWidth + boxPadding.toPx(context)
+        var x = textWidth + boxPadding.toPx()
         for (day in days) {
-          put(ScheduleDetailEntryBoxKey(day.value, hour.value.toShort()), Offset(x, y.plus(boxPadding.toPx(context))))
+          put(ScheduleDetailEntryBoxKey(day.value, hour.value.toShort()), Offset(x, y.plus(boxPadding.toPx())))
           x += gridWidth
         }
         y += gridHeight

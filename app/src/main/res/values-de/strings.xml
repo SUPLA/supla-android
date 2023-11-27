@@ -166,10 +166,10 @@
     <string name="consumption_acording_to_phases">Verbrauch nach Phase</string>
     <string name="temperature">Temperatur</string>
     <string name="humidity">Feuchtigkeit</string>
-    <string name="last24hours">Letzte 24 Stunden</string>
-    <string name="last7days">Die letzten 7 Tage</string>
-    <string name="last30days">Die letzten 30 Tage</string>
-    <string name="last90days">Die letzten 90 Tage</string>
+    <string name="history_range_last_day">Letzte 24 Stunden</string>
+    <string name="history_range_last_week">Die letzten 7 Tage</string>
+    <string name="history_range_last_30_days">Die letzten 30 Tage</string>
+    <string name="history_range_last_90_days">Die letzten 90 Tage</string>
     <string name="all_available_history">Gesamte verfügbare Geschichte</string>
     <string name="retrieving_data_from_the_server">Daten werden vom Server heruntergeladen...</string>
     <string name="no_chart_data_available">Keine Daten für das Diagramm in ausgewälte Zeitraum.</string>
@@ -474,8 +474,9 @@
   <string name="settings_permissions">Berechtigungen</string>
 
  <string translatable="false" name="details_general">Allgemein</string>
- <string translatable="false" name="details_history">Messungen</string>
+ <string translatable="false" name="details_metrics">Messungen</string>
  <string translatable="false" name="details_settings">Einstellungen</string>
+ <string translatable="false" name="details_history">Historie</string>
  <string name="details_timer_wrong_time">Zeit muss größer als 0 sein</string>
  <string name="details_timer_text">Bestimmen Sie bitte die Zeit, zu der das Gerät ein- oder ausgeschaltet werden sollte</string>
  <string name="details_timer_turn_on_for">Einschalten für</string>
@@ -524,7 +525,15 @@
  <string name="thermostat_detail_program_next">Danach:</string>
  <string name="time_just_minutes">%1$d Min.</string>
  <string name="time_hours_and_minutes">%1$d Std. %2$d Min.</string>
- <string name="thermostat_detail_program_time">Für %1$s</string>
+ <string name="thermostat_detail_program_time">für %1$s</string>
+  <string name="channel_caption_hotelcard">Hotelkartensensor</string>
+ <string name="thermostat_detail_off_by_window">Wegen offenem Fenster ausgeschaltet</string>
+ <string name="thermostat_detail_off_by_card">Wegen fehlender Hotelkarte ausgeschaltet</string>
+ <string name="thermostat_detail_off_by_sensor">Durch Sensor ausgeschaltet</string>
+ <string name="channel_caption_alarm_armament">Alarmsensor</string>
+  <string name="calendar_picker_start_hour">Ab Uhr</string>
+ <string name="calendar_picker_end_hour">Bis Uhr</string>
+ <string name="history_wrong_range">Der ausgewählte Zeitraum ist falsch</string>
  <plurals name="details_timer_info_on">
   <item quantity="one">eingeschaltet</item>
   <item quantity="other">eingeschaltet</item>

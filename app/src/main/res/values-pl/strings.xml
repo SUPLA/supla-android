@@ -219,10 +219,6 @@
     <string name="consumption_acording_to_phases">Zużycie wg. faz</string>
     <string name="temperature">Temperatura</string>
     <string name="humidity">Wilgotność</string>
-    <string name="last24hours">Ostatnie 24 godziny</string>
-    <string name="last7days">Ostatnie 7 dni</string>
-    <string name="last30days">Ostatnie 30 dni</string>
-    <string name="last90days">Ostatnie 90 dni</string>
     <string name="all_available_history">Cała dostępna historia</string>
     <string name="retrieving_data_from_the_server">Pobieranie danych z serwera...</string>
     <string name="no_chart_data_available">Brak danych w wybranym okreisie czasu.</string>
@@ -527,10 +523,11 @@
   <string name="settings_localization">Lokalizacja</string>
   <string name="settings_permissions">Uprawnienia</string>
 
-  <string translatable="false" name="details_general">Ogólne</string>
-  <string translatable="false" name="details_schedule">Tydzień</string>
-  <string translatable="false" name="details_history">Pomiary</string>
-  <string translatable="false" name="details_settings">Ustawienia</string>
+  <string name="details_general">Ogólne</string>
+  <string name="details_schedule">Tydzień</string>
+  <string name="details_metrics">Pomiary</string>
+  <string name="details_settings">Ustawienia</string>
+  <string name="details_history">Historia</string>
   <string name="details_timer_wrong_time">Czas musi być większy od 0</string>
   <string name="details_timer_text">Określ czas, w którym urządzenie powinno być:</string>
   <string name="details_timer_turn_on_for">Włączone</string>
@@ -583,6 +580,32 @@
   <string name="time_just_minutes">%1$d min.</string>
   <string name="time_hours_and_minutes">%1$d godz. %2$d min.</string>
   <string name="thermostat_detail_program_time">przez %1$s</string>
+
+  <string name="history_range_label">Zakres</string>
+  <string name="history_aggregation_label">Agregacja</string>
+  <string name="history_range_last_day">Ostatnie 24 godziny</string>
+  <string name="history_range_last_week">Ostatnie 7 dni</string>
+  <string name="history_range_last_30_days">Ostatnie 30 dni</string>
+  <string name="history_range_last_90_days">Ostatnie 90 dni</string>
+  <string name="history_range_current_day">Dzień</string>
+  <string name="history_range_current_week">Tydzień</string>
+  <string name="history_range_current_month">Miesiąc</string>
+  <string name="history_range_current_quarter">Kwartał</string>
+  <string name="history_range_current_year">Rok</string>
+  <string name="history_range_custom">Inny zakres</string>
+  <string name="history_refreshing">Odświeżanie…</string>
+  <string name="history_refreshing_failed">Odświeżanie nie powiodło się</string>
+  <string name="history_no_data_selected">Nie wybrano danych do wyświetlenia.</string>
+  <string name="history_no_data_available">Brak pomiarów</string>
+  <string name="channel_caption_hotelcard">Czujnik karty hotelowej</string>
+  <string name="thermostat_detail_off_by_window">Wyłączony przez otwarte okno</string>
+  <string name="thermostat_detail_off_by_card">Wyłączony z powodu braku karty hotelowej</string>
+  <string name="thermostat_detail_off_by_sensor">Wyłączony przez czujnik</string>
+  <string name="channel_caption_alarm_armament">Czujnik uzbrojenia alarmu</string>
+  <string name="calendar_picker_start_hour">Od godziny</string>
+  <string name="calendar_picker_end_hour">Do godziny</string>
+  <string name="history_wrong_range">Wybrany zakres dat jest nieprawidłowy.</string>
+
   <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
     <item quantity="one">włączone</item>
     <item quantity="other">włączy</item>

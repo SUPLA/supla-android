@@ -22,6 +22,7 @@ import android.view.MenuItem
 import android.view.View
 import androidx.annotation.CallSuper
 import androidx.annotation.LayoutRes
+import androidx.core.os.bundleOf
 import androidx.core.view.children
 import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
@@ -29,13 +30,10 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import org.supla.android.R
 import org.supla.android.core.storage.RuntimeStateHolder
 import org.supla.android.core.ui.BaseFragment
-import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.extensions.visibleIf
 import javax.inject.Inject
 
-private const val ARG_REMOTE_ID = "ARG_REMOTE_ID"
-private const val ARG_ITEM_TYPE = "ARG_ITEM_TYPE"
-private const val ARG_FUNCTION = "ARG_FUNCTION"
+private const val ARG_SUBJECT_BUNDLE = "ARG_SUBJECT_BUNDLE"
 private const val ARG_PAGES = "ARG_PAGES"
 
 abstract class StandardDetailFragment<S : StandardDetailViewState, E : StandardDetailViewEvent>(@LayoutRes contentLayoutId: Int) :
@@ -45,9 +43,7 @@ abstract class StandardDetailFragment<S : StandardDetailViewState, E : StandardD
   lateinit var runtimeStateHolder: RuntimeStateHolder
 
   @Suppress("DEPRECATION") // Not deprecated method can't be accessed from API 21
-  protected val itemType: ItemType by lazy { requireArguments().getSerializable(ARG_ITEM_TYPE) as ItemType }
-  protected val remoteId: Int by lazy { requireArguments().getInt(ARG_REMOTE_ID) }
-  protected val function: Int by lazy { requireArguments().getInt(ARG_FUNCTION) }
+  protected val item: ItemBundle by lazy { requireArguments().getSerializable(ARG_SUBJECT_BUNDLE) as ItemBundle }
 
   @Suppress("UNCHECKED_CAST", "DEPRECATION") // Not deprecated method can be accessed from API 33
   protected val pages by lazy { (requireArguments().getSerializable(ARG_PAGES) as Array<DetailPage>).asList() }
@@ -72,13 +68,13 @@ abstract class StandardDetailFragment<S : StandardDetailViewState, E : StandardD
     detailBottomBar.visibleIf(pages.count() > 1)
     detailShadow.visibleIf(pages.count() > 1)
 
-    detailViewPager.adapter = StandardDetailPagerAdapter(pages, remoteId, itemType, this)
+    detailViewPager.adapter = StandardDetailPagerAdapter(pages, item, this)
     detailViewPager.setCurrentItem(openedPage, false)
     detailViewPager.registerOnPageChangeCallback(pagerCallback)
     detailViewPager.isUserInputEnabled = false
 
-    viewModel.observeUpdates(remoteId, itemType, function)
-    viewModel.loadData(remoteId, itemType, function)
+    viewModel.observeUpdates(item.remoteId, item.itemType, item.function)
+    viewModel.loadData(item.remoteId, item.itemType, item.function)
   }
 
   @CallSuper
@@ -104,16 +100,23 @@ abstract class StandardDetailFragment<S : StandardDetailViewState, E : StandardD
   private val pagerCallback = object : OnPageChangeCallback() {
     override fun onPageSelected(position: Int) {
       detailBottomBar.selectedItemId = pages[position].menuId
-      runtimeStateHolder.setDetailOpenedPage(remoteId, position)
+      runtimeStateHolder.setDetailOpenedPage(item.remoteId, position)
     }
   }
 
   private fun getOpenedPage(): Int {
-    val openedPage = runtimeStateHolder.getDetailOpenedPage(remoteId)
+    val openedPage = runtimeStateHolder.getDetailOpenedPage(item.remoteId)
     return if (openedPage < 0 || openedPage >= pages.size) {
       0
     } else {
       openedPage
     }
+  }
+
+  companion object {
+    fun bundle(subjectBundle: ItemBundle, pages: Array<DetailPage>) = bundleOf(
+      ARG_SUBJECT_BUNDLE to subjectBundle,
+      ARG_PAGES to pages
+    )
   }
 }

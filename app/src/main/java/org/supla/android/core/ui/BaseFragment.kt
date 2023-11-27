@@ -1,5 +1,6 @@
 package org.supla.android.core.ui
 
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.CallSuper
@@ -16,6 +17,7 @@ import org.supla.android.ui.LoadableContent
 import org.supla.android.ui.ToolbarItemsClickHandler
 import org.supla.android.ui.ToolbarItemsController
 import org.supla.android.ui.ToolbarTitleController
+import java.io.Serializable
 
 abstract class BaseFragment<S : ViewState, E : ViewEvent>(@LayoutRes contentLayoutId: Int) : Fragment(contentLayoutId) {
 
@@ -71,5 +73,14 @@ abstract class BaseFragment<S : ViewState, E : ViewEvent>(@LayoutRes contentLayo
 
   protected fun setToolbarItemVisible(itemId: Int, visible: Boolean) {
     (requireActivity() as? ToolbarItemsController)?.setToolbarItemVisible(itemId, visible)
+  }
+
+  protected fun <T : Serializable> requireSerializable(key: String, clazz: Class<T>): T {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+      requireArguments().getSerializable(key, clazz)!!
+    } else {
+      @Suppress("DEPRECATION", "UNCHECKED_CAST")
+      requireArguments().getSerializable(key) as T
+    }
   }
 }

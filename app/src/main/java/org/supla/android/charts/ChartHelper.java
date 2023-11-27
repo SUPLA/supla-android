@@ -41,7 +41,7 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import dagger.hilt.android.EntryPointAccessors;
@@ -57,7 +57,7 @@ import org.supla.android.db.MeasurementsDbHelper;
 import org.supla.android.di.entrypoints.ProfileManagerEntryPoint;
 import org.supla.android.profile.ProfileManager;
 
-public abstract class ChartHelper implements IAxisValueFormatter {
+public abstract class ChartHelper extends ValueFormatter {
 
   private static final int[] COLORS =
       new int[] {
@@ -179,12 +179,12 @@ public abstract class ChartHelper implements IAxisValueFormatter {
     if (combinedChart != null && combinedChart.getVisibility() == View.VISIBLE) {
       combinedChart.animateY(1000);
     } else if (pieChart != null && pieChart.getVisibility() == View.VISIBLE) {
-      pieChart.spin(500, 0, -360f, Easing.EasingOption.EaseInOutQuad);
+      pieChart.spin(500, 0, -360f, Easing.EaseInOutQuad);
     }
   }
 
   @Override
-  public String getFormattedValue(float value, AxisBase axis) {
+  public String getAxisLabel(float value, AxisBase axis) {
     SimpleDateFormat spf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     return spf.format(new java.util.Date((minTimestamp + (long) (value * 600f)) * 1000));
   }
@@ -685,10 +685,10 @@ public abstract class ChartHelper implements IAxisValueFormatter {
     ArrayList<String> result = new ArrayList<>();
     Resources r = context.getResources();
 
-    result.add(r.getString(R.string.last24hours));
-    result.add(r.getString(R.string.last7days));
-    result.add(r.getString(R.string.last30days));
-    result.add(r.getString(R.string.last90days));
+    result.add(r.getString(R.string.history_range_last_day));
+    result.add(r.getString(R.string.history_range_last_week));
+    result.add(r.getString(R.string.history_range_last_30_days));
+    result.add(r.getString(R.string.history_range_last_90_days));
     result.add(r.getString(R.string.all_available_history));
 
     if (master != null) {
@@ -737,7 +737,7 @@ public abstract class ChartHelper implements IAxisValueFormatter {
         case Bar_AritmeticBalance_Hours:
         case Bar_VectorBalance_Hours:
           if (lastSelection == null
-              || lastSelection.equals(r.getString(R.string.last24hours))
+              || lastSelection.equals(r.getString(R.string.history_range_last_day))
               || lastSelection.equals(r.getString(R.string.all_available_history))
               || newItems == null) {
             return 1;
@@ -749,7 +749,7 @@ public abstract class ChartHelper implements IAxisValueFormatter {
         case Bar_AritmeticBalance_Days:
         case Bar_VectorBalance_Days:
           if (lastSelection == null
-              || lastSelection.equals(r.getString(R.string.last24hours))
+              || lastSelection.equals(r.getString(R.string.history_range_last_day))
               || lastSelection.equals(r.getString(R.string.all_available_history))
               || newItems == null) {
             return 0;

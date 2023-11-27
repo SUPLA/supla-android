@@ -218,10 +218,6 @@
     <string name="consumption_acording_to_phases">Consumption according to phases</string>
     <string name="temperature">Temperature</string>
     <string name="humidity">Humidity</string>
-    <string name="last24hours">Last 24 hours</string>
-    <string name="last7days">Last 7 days</string>
-    <string name="last30days">Last 30 days</string>
-    <string name="last90days">Last 90 days</string>
     <string name="all_available_history">All available history</string>
     <string name="retrieving_data_from_the_server">Retrieving data from the server...</string>
     <string name="no_chart_data_available">No chart data available in selected time period.</string>
@@ -544,8 +540,9 @@
     <string translatable="false" name="details_general">General</string>
     <string translatable="false" name="details_schedule">Week</string>
     <string translatable="false" name="details_timer">Timer</string>
-    <string translatable="false" name="details_history">Metrics</string>
+    <string translatable="false" name="details_metrics">Metrics</string>
     <string translatable="false" name="details_settings">Settings</string>
+    <string translatable="false" name="details_history">History</string>
     <string name="details_timer_wrong_time" translatable="false">Time should be bigger than 0</string>
     <string name="details_timer_text" translatable="false">How long should the device stay:</string>
     <string name="details_timer_turn_on_for" translatable="false">Switched on</string>
@@ -597,11 +594,37 @@
     <string translatable="false" name="thermostat_thermometer_error">Temperature reading error</string>
     <string translatable="false" name="thermostat_clock_error">Clock error</string>
     <string translatable="false" name="channel_not_supported">Not supported function</string>
-    <string translatable="false" name="thermostat_detail_program_current">Current:</string>
+    <string translatable="false" name="thermostat_detail_program_current">Currently:</string>
     <string translatable="false" name="thermostat_detail_program_next">Next:</string>
     <string translatable="false" name="time_just_minutes">%1$d min.</string>
     <string translatable="false" name="time_hours_and_minutes">%1$d hours %2$d min.</string>
     <string translatable="false" name="thermostat_detail_program_time">for %1$s</string>
+
+    <string translatable="false" name="history_range_label">Range</string>
+    <string translatable="false" name="history_aggregation_label">Aggregation</string>
+    <string name="history_range_last_day">Last 24 hours</string>
+    <string name="history_range_last_week">Last 7 days</string>
+    <string name="history_range_last_30_days">Last 30 days</string>
+    <string name="history_range_last_90_days">Last 90 days</string>
+    <string translatable="false" name="history_range_current_day">Current day</string>
+    <string translatable="false" name="history_range_current_week">Current week</string>
+    <string translatable="false" name="history_range_current_month">Current month</string>
+    <string translatable="false" name="history_range_current_quarter">Current quarter</string>
+    <string translatable="false" name="history_range_current_year">Current year</string>
+    <string translatable="false" name="history_range_custom">Custom range</string>
+    <string translatable="false" name="history_refreshing">Refreshing…</string>
+    <string translatable="false" name="history_refreshing_failed">Refresh failed</string>
+    <string translatable="false" name="history_no_data_selected">No data set selected.</string>
+    <string translatable="false" name="history_no_data_available">There are no measurements available yet</string>
+    <string translatable="false" name="channel_caption_hotelcard">Hotel card sensor</string>
+    <string translatable="false" name="thermostat_detail_off_by_window">Turned off due to open window</string>
+    <string translatable="false" name="thermostat_detail_off_by_card">Turned off due to the lack of hotel card</string>
+    <string translatable="false" name="thermostat_detail_off_by_sensor">Turned off by sensor</string>
+    <string translatable="false" name="channel_caption_alarm_armament">Alarm armament sensor</string>
+    <string translatable="false" name="calendar_picker_start_hour">From hour</string>
+    <string translatable="false" name="calendar_picker_end_hour">To hour</string>
+    <string translatable="false" name="history_wrong_range">Selected range is wrong.</string>
+
     <plurals name="details_timer_info_on" translatable="false">
         <item quantity="other">on</item>
     </plurals>

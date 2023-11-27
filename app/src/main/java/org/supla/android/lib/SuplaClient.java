@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.EnumSet;
 import java.util.List;
 import javax.net.ssl.HttpsURLConnection;
 import org.jetbrains.annotations.NotNull;
@@ -41,18 +42,22 @@ import org.supla.android.R;
 import org.supla.android.SuplaApp;
 import org.supla.android.Trace;
 import org.supla.android.core.networking.suplaclient.SuplaClientApi;
+import org.supla.android.core.networking.suplacloud.SuplaCloudConfigHolder;
 import org.supla.android.core.notifications.NotificationsHelper;
 import org.supla.android.core.storage.EncryptedPreferences;
 import org.supla.android.data.source.ResultTuple;
 import org.supla.android.data.source.SceneRepository;
-import org.supla.android.data.source.remote.ChannelConfigResult;
 import org.supla.android.data.source.remote.ChannelConfigType;
+import org.supla.android.data.source.remote.ConfigResult;
+import org.supla.android.data.source.remote.FieldType;
 import org.supla.android.data.source.remote.SuplaChannelConfig;
+import org.supla.android.data.source.remote.SuplaDeviceConfig;
 import org.supla.android.db.AuthProfileItem;
 import org.supla.android.db.Channel;
 import org.supla.android.db.DbHelper;
-import org.supla.android.events.ConfigEventsManager;
-import org.supla.android.events.ListsEventsManager;
+import org.supla.android.events.ChannelConfigEventsManager;
+import org.supla.android.events.DeviceConfigEventsManager;
+import org.supla.android.events.UpdateEventsManager;
 import org.supla.android.lib.actions.ActionId;
 import org.supla.android.lib.actions.ActionParameters;
 import org.supla.android.lib.actions.SubjectType;
@@ -88,33 +93,39 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   private String oneTimePassword;
   private long _connectingStatusLastTime;
   private final ProfileManager profileManager;
-  private final ListsEventsManager listsEventsManager;
-  private final ConfigEventsManager configEventsManager;
+  private final UpdateEventsManager updateEventsManager;
+  private final ChannelConfigEventsManager channelConfigEventsManager;
+  private final DeviceConfigEventsManager deviceConfigEventsManager;
   private final EncryptedPreferences preferences;
   private final MarkChannelRelationsAsRemovableUseCase markChannelRelationsAsRemovableUseCase;
   private final InsertChannelRelationForProfileUseCase insertChannelRelationForProfileUseCase;
   private final DeleteRemovableChannelRelationsUseCase deleteRemovableChannelRelationsUseCase;
+  private final SuplaCloudConfigHolder suplaCloudConfigHolder;
 
   public SuplaClient(
       Context context,
       String oneTimePassword,
       ProfileManager profileManager,
-      ListsEventsManager listsEventsManager,
-      ConfigEventsManager configEventsManager,
+      UpdateEventsManager updateEventsManager,
+      ChannelConfigEventsManager channelConfigEventsManager,
+      DeviceConfigEventsManager deviceConfigEventsManager,
       EncryptedPreferences encryptedPreferences,
       MarkChannelRelationsAsRemovableUseCase markChannelRelationsAsRemovableUseCase,
       InsertChannelRelationForProfileUseCase insertChannelRelationForProfileUseCase,
-      DeleteRemovableChannelRelationsUseCase deleteRemovableChannelRelationsUseCase) {
+      DeleteRemovableChannelRelationsUseCase deleteRemovableChannelRelationsUseCase,
+      SuplaCloudConfigHolder suplaCloudConfigHolder) {
     super();
     _context = context;
     this.oneTimePassword = oneTimePassword;
     this.profileManager = profileManager;
-    this.listsEventsManager = listsEventsManager;
-    this.configEventsManager = configEventsManager;
+    this.updateEventsManager = updateEventsManager;
+    this.channelConfigEventsManager = channelConfigEventsManager;
+    this.deviceConfigEventsManager = deviceConfigEventsManager;
     this.preferences = encryptedPreferences;
     this.markChannelRelationsAsRemovableUseCase = markChannelRelationsAsRemovableUseCase;
     this.insertChannelRelationForProfileUseCase = insertChannelRelationForProfileUseCase;
     this.deleteRemovableChannelRelationsUseCase = deleteRemovableChannelRelationsUseCase;
+    this.suplaCloudConfigHolder = suplaCloudConfigHolder;
   }
 
   public static SuplaRegisterError getLastRegisterError() {
@@ -235,6 +246,9 @@ public class SuplaClient extends Thread implements SuplaClientApi {
       long _supla_client, int channelId, @NotNull ChannelConfigType type);
 
   private native boolean scSetChannelConfig(long _supla_client, @NotNull SuplaChannelConfig config);
+
+  private native boolean scGetDeviceConfig(
+      long _supla_client, int deviceId, @NotNull EnumSet<FieldType> fieldTypes);
 
   private void sendMessage(SuplaClientMsg msg) {
     if (canceled()) {
@@ -823,6 +837,15 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     }
   }
 
+  public boolean getDeviceConfig(int deviceId, @NotNull EnumSet<FieldType> fieldTypes) {
+    long _supla_client_ptr = lockClientPtr();
+    try {
+      return _supla_client_ptr != 0 && scGetDeviceConfig(_supla_client_ptr, deviceId, fieldTypes);
+    } finally {
+      unlockClientPtr();
+    }
+  }
+
   public boolean setChannelConfig(@NotNull SuplaChannelConfig config) {
     long _supla_client_ptr = lockClientPtr();
     try {
@@ -935,15 +958,15 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
     if (registerResult.ChannelCount == 0 && DbH.setChannelsVisible(0, 2)) {
       onDataChanged();
-      listsEventsManager.emitChannelUpdate();
+      updateEventsManager.emitChannelsUpdate();
     }
     if (registerResult.ChannelGroupCount == 0 && DbH.setChannelGroupsVisible(0, 2)) {
       onDataChanged();
-      listsEventsManager.emitGroupUpdate();
+      updateEventsManager.emitGroupsUpdate();
     }
     if (registerResult.SceneCount == 0 && DbH.getSceneRepository().setScenesVisible(0, 2)) {
       onDataChanged();
-      listsEventsManager.emitSceneUpdate();
+      updateEventsManager.emitScenesUpdate();
     }
 
     SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onRegistered);
@@ -959,6 +982,8 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     } else {
       registerPushNotificationClientToken(SUPLA_APP_ID, "");
     }
+
+    suplaCloudConfigHolder.setUrl(profile.getAuthInfo().getServerUrlString());
   }
 
   private void onRegisterError(SuplaRegisterError registerError) {
@@ -1040,7 +1065,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     }
 
     if (channel.EOL) {
-      listsEventsManager.emitChannelUpdate();
+      updateEventsManager.emitChannelsUpdate();
       _DataChanged = DbH.setChannelsVisible(0, 2);
     }
 
@@ -1079,7 +1104,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     }
 
     if (channel_group.EOL) {
-      listsEventsManager.emitGroupUpdate();
+      updateEventsManager.emitGroupsUpdate();
       _DataChanged = DbH.setChannelGroupsVisible(0, 2);
     }
 
@@ -1106,7 +1131,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
     if (channel_relation.isEol()) {
       deleteRemovableChannelRelationsUseCase.invoke().blockingSubscribe();
-      listsEventsManager.emitChannelUpdate();
+      updateEventsManager.emitChannelsUpdate();
     }
   }
 
@@ -1164,7 +1189,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     }
 
     if (scene.isEol()) {
-      listsEventsManager.emitSceneUpdate();
+      updateEventsManager.emitScenesUpdate();
       sr.setScenesVisible(0, 2);
     }
   }
@@ -1243,10 +1268,12 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     if (token != null && token.getUrl() == null) {
       AuthInfo info = profileManager.getCurrentProfile().blockingGet().getAuthInfo();
       try {
-        token.setUrl(new URL("https://" + info.getServerForCurrentAuthMethod()));
+        token.setUrl(new URL(info.getServerUrlString()));
       } catch (MalformedURLException ignored) {
       }
     }
+
+    suplaCloudConfigHolder.setToken(token);
 
     SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onOAuthTokenRequestResult);
     msg.setOAuthToken(token);
@@ -1423,9 +1450,13 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     sendMessage(msg);
   }
 
-  private void onChannelConfigUpdateOrResult(
-      SuplaChannelConfig config, ChannelConfigResult result) {
-    configEventsManager.emitConfig(result, config);
+  private void onChannelConfigUpdateOrResult(SuplaChannelConfig config, ConfigResult result) {
+    channelConfigEventsManager.emitConfig(result, config);
+  }
+
+  private void onDeviceConfigUpdateOrResult(
+      SuplaDeviceConfig config, ConfigResult result, boolean eol) {
+    deviceConfigEventsManager.emitConfig(result, config);
   }
 
   public synchronized boolean canceled() {

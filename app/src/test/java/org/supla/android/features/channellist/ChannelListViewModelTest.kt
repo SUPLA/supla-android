@@ -37,12 +37,14 @@ import org.mockito.kotlin.whenever
 import org.supla.android.Preferences
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.data.source.ChannelRepository
+import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.db.Channel
 import org.supla.android.db.ChannelBase
 import org.supla.android.db.ChannelValue
 import org.supla.android.db.Location
-import org.supla.android.events.ListsEventsManager
+import org.supla.android.events.UpdateEventsManager
 import org.supla.android.features.standarddetail.DetailPage
+import org.supla.android.features.standarddetail.ItemBundle
 import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS
 import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.lib.SuplaConst.*
@@ -52,6 +54,7 @@ import org.supla.android.usecases.channel.*
 import org.supla.android.usecases.details.LegacyDetailType
 import org.supla.android.usecases.details.ProvideDetailTypeUseCase
 import org.supla.android.usecases.details.SwitchDetailType
+import org.supla.android.usecases.details.ThermometerDetailType
 import org.supla.android.usecases.details.ThermostatDetailType
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
@@ -78,7 +81,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
   private lateinit var findChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase
 
   @Mock
-  private lateinit var listsEventsManager: ListsEventsManager
+  private lateinit var updateEventsManager: UpdateEventsManager
 
   @Mock
   private lateinit var preferences: Preferences
@@ -94,7 +97,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
       toggleLocationUseCase,
       provideDetailTypeUseCase,
       findChannelByRemoteIdUseCase,
-      listsEventsManager,
+      updateEventsManager,
       preferences,
       schedulers
     )
@@ -104,7 +107,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
 
   @Before
   override fun setUp() {
-    whenever(listsEventsManager.observeChannelUpdates()).thenReturn(listsEventsSubject)
+    whenever(updateEventsManager.observeChannelsUpdate()).thenReturn(listsEventsSubject)
     super.setUp()
   }
 
@@ -252,6 +255,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
   fun `should open details of switch with EM when item is offline`() {
     // given
     val channelId = 123
+    val deviceId = 321
     val function = SUPLA_CHANNELFNC_LIGHTSWITCH
     val channelValue = mockk<ChannelValue>()
     every { channelValue.subValueType } returns SUBV_TYPE_IC_MEASUREMENTS.toShort()
@@ -262,6 +266,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     every { channel.channelId } returns channelId
     every { channel.remoteId } returns channelId
     every { channel.value } returns channelValue
+    every { channel.deviceID } returns deviceId
 
     val detailType = SwitchDetailType(listOf())
     whenever(provideDetailTypeUseCase(channel)).thenReturn(detailType)
@@ -272,7 +277,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     // then
     assertThat(states).isEmpty()
     assertThat(events).containsExactly(
-      ChannelListViewEvent.OpenSwitchDetail(channelId, function, detailType.pages)
+      ChannelListViewEvent.OpenSwitchDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), detailType.pages)
     )
     verifyZeroInteractionsExcept(provideDetailTypeUseCase)
   }
@@ -299,14 +304,16 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
   fun `should open legacy detail fragment`() {
     // given
     val channelId = 123
-    val channelFunction = SUPLA_CHANNELFNC_THERMOMETER
+    val deviceId = 321
+    val function = SUPLA_CHANNELFNC_THERMOMETER
     val channel = mockk<Channel>()
     every { channel.onLine } returns true
-    every { channel.func } returns channelFunction
-    every { channel.channelId } returns channelId
+    every { channel.func } returns function
+    every { channel.remoteId } returns channelId
+    every { channel.deviceID } returns deviceId
 
-    val legacyDetailType = LegacyDetailType.TEMPERATURE
-    whenever(provideDetailTypeUseCase(channel)).thenReturn(legacyDetailType)
+    val detailType = ThermometerDetailType(listOf(DetailPage.THERMOMETER_HISTORY))
+    whenever(provideDetailTypeUseCase(channel)).thenReturn(detailType)
 
     // when
     viewModel.onListItemClick(channel)
@@ -314,7 +321,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     // then
     assertThat(states).isEmpty()
     assertThat(events).containsExactly(
-      ChannelListViewEvent.OpenLegacyDetails(channelId, legacyDetailType)
+      ChannelListViewEvent.OpenThermometerDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), detailType.pages)
     )
     verifyZeroInteractionsExcept(provideDetailTypeUseCase)
   }
@@ -323,13 +330,15 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
   fun `should open thermostat detail fragment when online`() {
     // given
     val channelId = 123
-    val channelFunction = SUPLA_CHANNELFNC_HVAC_THERMOSTAT
+    val deviceId = 321
+    val function = SUPLA_CHANNELFNC_HVAC_THERMOSTAT
     val channel = mockk<Channel>()
     val pages = emptyList<DetailPage>()
     every { channel.onLine } returns true
-    every { channel.func } returns channelFunction
+    every { channel.func } returns function
     every { channel.channelId } returns channelId
     every { channel.remoteId } returns channelId
+    every { channel.deviceID } returns deviceId
 
     val thermostatDetailType = ThermostatDetailType(pages)
     whenever(provideDetailTypeUseCase(channel)).thenReturn(thermostatDetailType)
@@ -340,7 +349,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     // then
     assertThat(states).isEmpty()
     assertThat(events).containsExactly(
-      ChannelListViewEvent.OpenThermostatDetail(channelId, channelFunction, pages)
+      ChannelListViewEvent.OpenThermostatDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
     )
     verifyZeroInteractionsExcept(provideDetailTypeUseCase)
   }
@@ -349,13 +358,15 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
   fun `should open thermostat detail fragment when offline`() {
     // given
     val channelId = 123
-    val channelFunction = SUPLA_CHANNELFNC_HVAC_THERMOSTAT
+    val deviceId = 321
+    val function = SUPLA_CHANNELFNC_HVAC_THERMOSTAT
     val channel = mockk<Channel>()
     val pages = emptyList<DetailPage>()
     every { channel.onLine } returns false
-    every { channel.func } returns channelFunction
+    every { channel.func } returns function
     every { channel.channelId } returns channelId
     every { channel.remoteId } returns channelId
+    every { channel.deviceID } returns deviceId
 
     val thermostatDetailType = ThermostatDetailType(pages)
     whenever(provideDetailTypeUseCase(channel)).thenReturn(thermostatDetailType)
@@ -366,7 +377,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     // then
     assertThat(states).isEmpty()
     assertThat(events).containsExactly(
-      ChannelListViewEvent.OpenThermostatDetail(channelId, channelFunction, pages)
+      ChannelListViewEvent.OpenThermostatDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
     )
     verifyZeroInteractionsExcept(provideDetailTypeUseCase)
   }

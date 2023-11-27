@@ -50,7 +50,7 @@ import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelExtendedValue;
 import org.supla.android.db.ChannelGroup;
-import org.supla.android.events.ListsEventsManager;
+import org.supla.android.events.UpdateEventsManager;
 import org.supla.android.images.ImageCache;
 import org.supla.android.images.ImageId;
 import org.supla.android.lib.SuplaChannelExtendedValue;
@@ -63,7 +63,7 @@ import org.supla.android.ui.lists.SwapableListItem;
 @AndroidEntryPoint
 public class ChannelLayout extends LinearLayout implements SlideableItem, SwapableListItem {
 
-  @Inject ListsEventsManager eventsManager;
+  @Inject UpdateEventsManager eventsManager;
   @Inject DurationTimerHelper durationTimerHelper;
 
   private ChannelBase channelBase;
@@ -122,6 +122,8 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
     void onRightButtonClick(int channelId);
 
     void onCaptionLongPress(int channelId);
+
+    void onItemClick(ChannelBase channelBase);
   }
 
   public ChannelLayout(Context context) {
@@ -741,6 +743,8 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
         case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROLLERSHUTTER:
         case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROOFWINDOW:
         case SuplaConst.SUPLA_CHANNELFNC_OPENINGSENSOR_WINDOW:
+        case SuplaConst.SUPLA_CHANNELFNC_HOTELCARDSENSOR:
+        case SuplaConst.SUPLA_CHANNELFNC_ALARMARMAMENTSENSOR:
         case SuplaConst.SUPLA_CHANNELFNC_MAILSENSOR:
         case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
         case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
@@ -789,6 +793,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
           listener.onCaptionLongPress(channelBase.getRemoteId());
           return true;
         });
+    caption_text.setOnClickListener(v -> listener.onItemClick(channelBase));
     caption_text.setClickable(false);
     caption_text.setLongClickable(true);
 

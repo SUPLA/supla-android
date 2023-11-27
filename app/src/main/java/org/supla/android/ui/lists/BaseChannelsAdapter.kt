@@ -74,8 +74,10 @@ abstract class BaseChannelsAdapter(
     return when (viewType) {
       R.layout.li_channel_item ->
         ChannelListItemViewHolder(LiChannelItemBinding.inflate(inflater, parent, false))
+
       R.layout.li_thermostat_item ->
         ThermostatListItemViewHolder(LiThermostatItemBinding.inflate(inflater, parent, false))
+
       else -> super.onCreateViewHolder(parent, viewType)
     }
   }
@@ -97,12 +99,17 @@ abstract class BaseChannelsAdapter(
           R.layout.li_channel_item
         }
       }
+
       else -> R.layout.li_location_item
     }
   }
 
   override fun getItemId(position: Int): Long {
     return position.toLong()
+  }
+
+  override fun onItemClick(channelBase: ChannelBase) {
+    listItemClickCallback(channelBase)
   }
 
   private fun onLongPress(viewHolder: ViewHolder): Boolean {
@@ -133,7 +140,8 @@ abstract class BaseChannelsAdapter(
         data = data(item),
         onInfoClick = { infoButtonClickCallback(item.channelBase.remoteId) },
         onIssueClick = { issueButtonClickCallback(getIssueMessage(item)) },
-        onTitleLongClick = { onCaptionLongPress(item.channelBase.remoteId) }
+        onTitleLongClick = { onCaptionLongPress(item.channelBase.remoteId) },
+        onItemClick = { listItemClickCallback(item.channelBase) }
       )
 
       binding.listItemContent.setOnClickListener { listItemClickCallback(item.channelBase) }

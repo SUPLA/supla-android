@@ -1,8 +1,10 @@
 package org.supla.android.core.networking.suplaclient
 
 import org.supla.android.data.source.remote.ChannelConfigType
+import org.supla.android.data.source.remote.FieldType
 import org.supla.android.data.source.remote.SuplaChannelConfig
 import org.supla.android.lib.actions.ActionParameters
+import java.util.EnumSet
 
 interface SuplaClientProvider {
   fun provide(): SuplaClientApi?
@@ -38,4 +40,11 @@ interface SuplaClientApi {
   fun getChannelConfig(remoteId: Int, type: ChannelConfigType): Boolean
 
   fun setChannelConfig(config: SuplaChannelConfig): Boolean
+
+  fun getDeviceConfig(deviceId: Int, type: EnumSet<FieldType>): Boolean
+
+  fun oAuthTokenRequest()
+
+  fun getDeviceConfig(deviceId: Int) =
+    getDeviceConfig(deviceId, EnumSet.allOf(FieldType::class.java))
 }

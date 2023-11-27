@@ -2,7 +2,7 @@ package org.supla.android.features.switchdetail
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.supla.android.db.ChannelBase
-import org.supla.android.events.ListsEventsManager
+import org.supla.android.events.UpdateEventsManager
 import org.supla.android.features.standarddetail.StandardDetailViewEvent
 import org.supla.android.features.standarddetail.StandardDetailViewModel
 import org.supla.android.features.standarddetail.StandardDetailViewState
@@ -15,12 +15,12 @@ import javax.inject.Inject
 class SwitchDetailViewModel @Inject constructor(
   readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
   readChannelGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase,
-  listsEventsManager: ListsEventsManager,
+  updateEventsManager: UpdateEventsManager,
   schedulers: SuplaSchedulers
 ) : StandardDetailViewModel<SwitchDetailViewState, SwitchDetailViewEvent>(
   readChannelByRemoteIdUseCase,
   readChannelGroupByRemoteIdUseCase,
-  listsEventsManager,
+  updateEventsManager,
   SwitchDetailViewState(),
   schedulers
 ) {

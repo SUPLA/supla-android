@@ -136,6 +136,14 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
       .doOnTerminate { loadingState.tryEmit(false) }
   }
 
+  fun <T : Any> Single<T>.attachSilent(): Single<T> {
+    val calledAt = findStackEntryString(Thread.currentThread().stackTrace)
+
+    return subscribeOn(schedulers.io)
+      .observeOn(schedulers.ui)
+      .doOnError { Trace.e(TAG, errorMessage("Maybe", calledAt, it.message), it) }
+  }
+
   fun <T : Any> Observable<T>.attach(): Observable<T> {
     return attachSilent()
       .doOnSubscribe { loadingState.tryEmit(true) }
@@ -148,6 +156,10 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
     return subscribeOn(schedulers.io)
       .observeOn(schedulers.ui)
       .doOnError { Trace.e(TAG, errorMessage("Observable", calledAt, it.message), it) }
+  }
+
+  protected fun defaultErrorHandler(method: String): (Throwable) -> Unit = { throwable ->
+    Trace.e(TAG, "Subscription failed! (${this::class.java.name}:$method)", throwable)
   }
 
   private fun errorMessage(type: String, calledAt: String?, throwableMessage: String?) =

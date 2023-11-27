@@ -40,7 +40,7 @@ import org.supla.android.data.source.local.entity.ChannelRelationType
 import org.supla.android.data.source.local.entity.ThermostatState
 import org.supla.android.data.source.local.entity.ThermostatValue
 import org.supla.android.data.source.local.temperature.TemperatureCorrection
-import org.supla.android.data.source.remote.ChannelConfigResult
+import org.supla.android.data.source.remote.ConfigResult
 import org.supla.android.data.source.remote.hvac.SuplaChannelHvacConfig
 import org.supla.android.data.source.remote.hvac.SuplaChannelWeeklyScheduleConfig
 import org.supla.android.data.source.remote.hvac.SuplaHvacAlgorithm
@@ -51,14 +51,17 @@ import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
 import org.supla.android.data.source.remote.thermostat.SuplaThermostatFlags
 import org.supla.android.db.Channel
 import org.supla.android.db.ChannelValue
-import org.supla.android.events.ConfigEventsManager
+import org.supla.android.events.ChannelConfigEventsManager
+import org.supla.android.events.DeviceConfigEventsManager
 import org.supla.android.events.LoadingTimeoutManager
+import org.supla.android.events.UpdateEventsManager
 import org.supla.android.lib.SuplaConst
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.ChannelChild
 import org.supla.android.usecases.channel.ChannelWithChildren
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
 import org.supla.android.usecases.thermostat.CreateTemperaturesListUseCase
+import java.util.concurrent.TimeUnit
 
 @RunWith(MockitoJUnitRunner::class)
 class ThermostatGeneralViewModelTest :
@@ -77,7 +80,7 @@ class ThermostatGeneralViewModelTest :
   lateinit var delayedThermostatActionSubject: DelayedThermostatActionSubject
 
   @Mock
-  lateinit var configEventsManager: ConfigEventsManager
+  lateinit var channelConfigEventsManager: ChannelConfigEventsManager
 
   @Mock
   lateinit var suplaClientProvider: SuplaClientProvider
@@ -89,6 +92,12 @@ class ThermostatGeneralViewModelTest :
   lateinit var dateProvider: DateProvider
 
   @Mock
+  lateinit var updateEventsManager: UpdateEventsManager
+
+  @Mock
+  lateinit var deviceConfigEventsManager: DeviceConfigEventsManager
+
+  @Mock
   override lateinit var schedulers: SuplaSchedulers
 
   @InjectMocks
@@ -97,17 +106,21 @@ class ThermostatGeneralViewModelTest :
   @Before
   override fun setUp() {
     super.setUp()
+    whenever(schedulers.computation).thenReturn(testScheduler)
+    whenever(updateEventsManager.observeChannelsUpdate()).thenReturn(Observable.empty())
   }
 
   @Test
   fun shouldLoadHeatThermostatInStandbyState() {
     // given
     val remoteId = 123
-    mockHeatThermostat(remoteId, 23.4f)
+    val deviceId = 321
+    mockHeatThermostat(remoteId, deviceId, 23.4f)
 
     // when
-    viewModel.observeData(remoteId)
+    viewModel.observeData(remoteId, deviceId)
     viewModel.triggerDataLoad(remoteId)
+    testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
 
     // then
     assertThat(events).isEmpty()
@@ -121,7 +134,8 @@ class ThermostatGeneralViewModelTest :
           configMaxTemperature = 40f,
           mode = SuplaHvacMode.HEAT,
           setpointHeatTemperature = 23.4f,
-          setpointCoolTemperature = null
+          setpointCoolTemperature = null,
+          subfunction = ThermostatSubfunction.HEAT
         ),
         currentTemperaturePercentage = 0.17666666f,
         configMinTemperatureString = "10,0",
@@ -136,6 +150,7 @@ class ThermostatGeneralViewModelTest :
   fun shouldLoadCoolThermostatInCoolingState() {
     // given
     val remoteId = 123
+    val deviceId = 321
     val channelWithChildren = mockChannelWithChildren(
       remoteId = remoteId,
       mode = SuplaHvacMode.COOL,
@@ -143,19 +158,22 @@ class ThermostatGeneralViewModelTest :
       flags = listOf(SuplaThermostatFlags.SETPOINT_TEMP_MAX_SET, SuplaThermostatFlags.COOLING)
     )
 
-    whenever(configEventsManager.observerConfig(remoteId)).thenReturn(
+    whenever(channelConfigEventsManager.observerConfig(remoteId)).thenReturn(
       Observable.just(
-        ConfigEventsManager.ConfigEvent(
-          ChannelConfigResult.RESULT_TRUE,
+        ChannelConfigEventsManager.ConfigEvent(
+          ConfigResult.RESULT_TRUE,
           mockSuplaChannelHvacConfig(remoteId, ThermostatSubfunction.COOL)
         )
       ),
       Observable.just(
-        ConfigEventsManager.ConfigEvent(
-          ChannelConfigResult.RESULT_TRUE,
+        ChannelConfigEventsManager.ConfigEvent(
+          ConfigResult.RESULT_TRUE,
           mockSuplaChannelWeeklyScheduleConfig(remoteId)
         )
       )
+    )
+    whenever(deviceConfigEventsManager.observerConfig(deviceId)).thenReturn(
+      Observable.just(DeviceConfigEventsManager.ConfigEvent(ConfigResult.RESULT_FALSE, null))
     )
     whenever(readChannelWithChildrenUseCase.invoke(remoteId)).thenReturn(
       Maybe.just(channelWithChildren)
@@ -165,8 +183,9 @@ class ThermostatGeneralViewModelTest :
     whenever(valuesFormatter.getTemperatureString(40f)).thenReturn("40,0")
 
     // when
-    viewModel.observeData(remoteId)
+    viewModel.observeData(remoteId, deviceId)
     viewModel.triggerDataLoad(remoteId)
+    testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
 
     // then
     assertThat(events).isEmpty()
@@ -180,7 +199,8 @@ class ThermostatGeneralViewModelTest :
           configMaxTemperature = 40f,
           mode = SuplaHvacMode.COOL,
           setpointHeatTemperature = null,
-          setpointCoolTemperature = 20.8f
+          setpointCoolTemperature = 20.8f,
+          subfunction = ThermostatSubfunction.COOL
         ),
         showCoolingIndicator = true,
         currentTemperaturePercentage = 0.17666666f,
@@ -196,14 +216,17 @@ class ThermostatGeneralViewModelTest :
   fun `should change heat temperature on setpoint position change`() {
     // given
     val remoteId = 321
-    mockHeatThermostat(remoteId, 22.4f)
+    val deviceId = 321
+    mockHeatThermostat(remoteId, deviceId, 22.4f)
     val currentTimestamp = 123L
     whenever(dateProvider.currentTimestamp()).thenReturn(currentTimestamp)
 
     // when
-    viewModel.observeData(remoteId)
+    viewModel.observeData(remoteId, deviceId)
     viewModel.triggerDataLoad(remoteId)
+    testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
     viewModel.setpointTemperatureChanged(0.5f, null)
+    testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
 
     // then
     assertThat(events).isEmpty()
@@ -225,14 +248,17 @@ class ThermostatGeneralViewModelTest :
   fun `should change heat temperature on setpoint position change in weekly schedule`() {
     // given
     val remoteId = 321
-    mockHeatThermostat(remoteId, 22.4f, weeklyScheduleActive = true)
+    val deviceId = 321
+    mockHeatThermostat(remoteId, deviceId, 22.4f, weeklyScheduleActive = true)
     val currentTimestamp = 123L
     whenever(dateProvider.currentTimestamp()).thenReturn(currentTimestamp)
 
     // when
-    viewModel.observeData(remoteId)
+    viewModel.observeData(remoteId, deviceId)
     viewModel.triggerDataLoad(remoteId)
+    testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
     viewModel.setpointTemperatureChanged(0.5f, null)
+    testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
 
     // then
     val state = thermostatDefaultState(remoteId, 22.4f, manualActive = false)
@@ -254,18 +280,27 @@ class ThermostatGeneralViewModelTest :
   fun `should change cool temperature on setpoint position change`() {
     // given
     val remoteId = 321
-    mockCoolThermostat(remoteId, setpointTemperature = 22.4f)
+    val deviceId = 321
+    mockCoolThermostat(remoteId, deviceId, setpointTemperature = 22.4f)
     val currentTimestamp = 123L
     whenever(dateProvider.currentTimestamp()).thenReturn(currentTimestamp)
 
     // when
-    viewModel.observeData(remoteId)
+    viewModel.observeData(remoteId, deviceId)
     viewModel.triggerDataLoad(remoteId)
+    testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
     viewModel.setpointTemperatureChanged(null, 0.5f)
+    testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
 
     // then
     assertThat(events).isEmpty()
-    val state = thermostatDefaultState(remoteId, setpointTemperatureCool = 22.4f, mode = SuplaHvacMode.COOL, currentlyCooling = true)
+    val state = thermostatDefaultState(
+      remoteId,
+      setpointTemperatureCool = 22.4f,
+      mode = SuplaHvacMode.COOL,
+      currentlyCooling = true,
+      subfunction = ThermostatSubfunction.COOL
+    )
     val emittedState = state.viewModelState!!.copy(setpointCoolTemperature = 25f)
     assertThat(states).containsExactly(
       state,
@@ -283,14 +318,17 @@ class ThermostatGeneralViewModelTest :
   fun `should change cool temperature on setpoint position change in weekly schedule`() {
     // given
     val remoteId = 321
-    mockCoolThermostat(remoteId, 22.4f, weeklyScheduleActive = true)
+    val deviceId = 321
+    mockCoolThermostat(remoteId, deviceId, 22.4f, weeklyScheduleActive = true)
     val currentTimestamp = 123L
     whenever(dateProvider.currentTimestamp()).thenReturn(currentTimestamp)
 
     // when
-    viewModel.observeData(remoteId)
+    viewModel.observeData(remoteId, deviceId)
     viewModel.triggerDataLoad(remoteId)
+    testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
     viewModel.setpointTemperatureChanged(null, 0.5f)
+    testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
 
     // then
     val state = thermostatDefaultState(
@@ -298,7 +336,8 @@ class ThermostatGeneralViewModelTest :
       setpointTemperatureCool = 22.4f,
       manualActive = false,
       mode = SuplaHvacMode.COOL,
-      currentlyCooling = true
+      currentlyCooling = true,
+      subfunction = ThermostatSubfunction.COOL
     )
     val emittedState = state.viewModelState!!.copy(setpointCoolTemperature = 25f)
     assertThat(events).isEmpty()
@@ -318,14 +357,17 @@ class ThermostatGeneralViewModelTest :
   fun `should change heat temperature by step`() {
     // given
     val remoteId = 321
-    mockHeatThermostat(remoteId, 22.4f)
+    val deviceId = 321
+    mockHeatThermostat(remoteId, deviceId, 22.4f)
     val currentTimestamp = 123L
     whenever(dateProvider.currentTimestamp()).thenReturn(currentTimestamp)
 
     // when
-    viewModel.observeData(remoteId)
+    viewModel.observeData(remoteId, deviceId)
     viewModel.triggerDataLoad(remoteId)
+    testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
     viewModel.changeSetpointTemperature(TemperatureCorrection.UP)
+    testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
 
     // then
     assertThat(events).isEmpty()
@@ -347,21 +389,25 @@ class ThermostatGeneralViewModelTest :
   fun `should change cool temperature by step with weekly schedule`() {
     // given
     val remoteId = 321
+    val deviceId = 321
     val state = thermostatDefaultState(
       remoteId,
       setpointTemperatureCool = 22.4f,
       manualActive = false,
       mode = SuplaHvacMode.COOL,
-      currentlyCooling = true
+      currentlyCooling = true,
+      subfunction = ThermostatSubfunction.COOL
     )
-    mockCoolThermostat(remoteId, 22.4f, weeklyScheduleActive = true)
+    mockCoolThermostat(remoteId, deviceId, 22.4f, weeklyScheduleActive = true)
     val currentTimestamp = 123L
     whenever(dateProvider.currentTimestamp()).thenReturn(currentTimestamp)
 
     // when
-    viewModel.observeData(remoteId)
+    viewModel.observeData(remoteId, deviceId)
     viewModel.triggerDataLoad(remoteId)
+    testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
     viewModel.changeSetpointTemperature(TemperatureCorrection.DOWN)
+    testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
 
     // then
     val emittedState = state.viewModelState!!.copy(setpointCoolTemperature = 22.3f)
@@ -383,7 +429,8 @@ class ThermostatGeneralViewModelTest :
   fun `should turn off`() {
     // given
     val remoteId = 321
-    mockHeatThermostat(remoteId, 22.4f)
+    val deviceId = 321
+    mockHeatThermostat(remoteId, deviceId, 22.4f)
     val currentTimestamp = 123L
     whenever(dateProvider.currentTimestamp()).thenReturn(currentTimestamp)
 
@@ -395,9 +442,11 @@ class ThermostatGeneralViewModelTest :
     whenever(delayedThermostatActionSubject.sendImmediately(emittedState)).thenReturn(Completable.complete())
 
     // when
-    viewModel.observeData(remoteId)
+    viewModel.observeData(remoteId, deviceId)
     viewModel.triggerDataLoad(remoteId)
+    testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
     viewModel.turnOnOffClicked()
+    testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
 
     // then
     assertThat(events).isEmpty()
@@ -416,7 +465,8 @@ class ThermostatGeneralViewModelTest :
   fun `should turn on`() {
     // given
     val remoteId = 321
-    mockHeatThermostat(remoteId, 22.4f, mode = SuplaHvacMode.OFF)
+    val deviceId = 321
+    mockHeatThermostat(remoteId, deviceId, 22.4f, mode = SuplaHvacMode.OFF)
     val currentTimestamp = 123L
     whenever(dateProvider.currentTimestamp()).thenReturn(currentTimestamp)
 
@@ -428,9 +478,11 @@ class ThermostatGeneralViewModelTest :
     whenever(delayedThermostatActionSubject.sendImmediately(emittedState)).thenReturn(Completable.complete())
 
     // when
-    viewModel.observeData(remoteId)
+    viewModel.observeData(remoteId, deviceId)
     viewModel.triggerDataLoad(remoteId)
+    testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
     viewModel.turnOnOffClicked()
+    testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
 
     // then
     assertThat(events).isEmpty()
@@ -449,7 +501,8 @@ class ThermostatGeneralViewModelTest :
   fun `should turn off when is off but in weekly schedule`() {
     // given
     val remoteId = 321
-    mockHeatThermostat(remoteId, 22.4f, mode = SuplaHvacMode.OFF, weeklyScheduleActive = true)
+    val deviceId = 321
+    mockHeatThermostat(remoteId, deviceId, 22.4f, mode = SuplaHvacMode.OFF, weeklyScheduleActive = true)
     val currentTimestamp = 123L
     whenever(dateProvider.currentTimestamp()).thenReturn(currentTimestamp)
 
@@ -461,9 +514,11 @@ class ThermostatGeneralViewModelTest :
     whenever(delayedThermostatActionSubject.sendImmediately(emittedState)).thenReturn(Completable.complete())
 
     // when
-    viewModel.observeData(remoteId)
+    viewModel.observeData(remoteId, deviceId)
     viewModel.triggerDataLoad(remoteId)
+    testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
     viewModel.turnOnOffClicked()
+    testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
 
     // then
     assertThat(events).isEmpty()
@@ -484,7 +539,8 @@ class ThermostatGeneralViewModelTest :
     setpointTemperatureCool: Float? = null,
     manualActive: Boolean = true,
     mode: SuplaHvacMode = SuplaHvacMode.HEAT,
-    currentlyCooling: Boolean = false
+    currentlyCooling: Boolean = false,
+    subfunction: ThermostatSubfunction = ThermostatSubfunction.HEAT
   ) =
     ThermostatGeneralViewState(
       viewModelState = ThermostatGeneralViewModelState(
@@ -495,7 +551,8 @@ class ThermostatGeneralViewModelTest :
         configMaxTemperature = 40f,
         mode = mode,
         setpointHeatTemperature = setpointTemperatureHeat,
-        setpointCoolTemperature = setpointTemperatureCool
+        setpointCoolTemperature = setpointTemperatureCool,
+        subfunction = subfunction
       ),
       isOff = mode == SuplaHvacMode.OFF,
       manualModeActive = if (mode == SuplaHvacMode.OFF) false else manualActive,
@@ -509,6 +566,7 @@ class ThermostatGeneralViewModelTest :
 
   private fun mockHeatThermostat(
     remoteId: Int,
+    deviceId: Int,
     setpointTemperatureHeat: Float,
     weeklyScheduleActive: Boolean = false,
     mode: SuplaHvacMode = SuplaHvacMode.HEAT
@@ -524,19 +582,22 @@ class ThermostatGeneralViewModelTest :
       flags = flags
     )
 
-    whenever(configEventsManager.observerConfig(remoteId)).thenReturn(
+    whenever(channelConfigEventsManager.observerConfig(remoteId)).thenReturn(
       Observable.just(
-        ConfigEventsManager.ConfigEvent(
-          ChannelConfigResult.RESULT_TRUE,
+        ChannelConfigEventsManager.ConfigEvent(
+          ConfigResult.RESULT_TRUE,
           mockSuplaChannelHvacConfig(remoteId)
         )
       ),
       Observable.just(
-        ConfigEventsManager.ConfigEvent(
-          ChannelConfigResult.RESULT_TRUE,
+        ChannelConfigEventsManager.ConfigEvent(
+          ConfigResult.RESULT_TRUE,
           mockSuplaChannelWeeklyScheduleConfig(remoteId)
         )
       )
+    )
+    whenever(deviceConfigEventsManager.observerConfig(deviceId)).thenReturn(
+      Observable.just(DeviceConfigEventsManager.ConfigEvent(ConfigResult.RESULT_FALSE, null))
     )
     whenever(readChannelWithChildrenUseCase.invoke(remoteId)).thenReturn(
       Maybe.just(channelWithChildren)
@@ -546,7 +607,7 @@ class ThermostatGeneralViewModelTest :
     whenever(valuesFormatter.getTemperatureString(40f)).thenReturn("40,0")
   }
 
-  private fun mockCoolThermostat(remoteId: Int, setpointTemperature: Float, weeklyScheduleActive: Boolean = false) {
+  private fun mockCoolThermostat(remoteId: Int, deviceId: Int, setpointTemperature: Float, weeklyScheduleActive: Boolean = false) {
     val flags = mutableListOf(SuplaThermostatFlags.SETPOINT_TEMP_MAX_SET, SuplaThermostatFlags.COOLING)
     if (weeklyScheduleActive) {
       flags.add(SuplaThermostatFlags.WEEKLY_SCHEDULE)
@@ -558,19 +619,22 @@ class ThermostatGeneralViewModelTest :
       flags = flags
     )
 
-    whenever(configEventsManager.observerConfig(remoteId)).thenReturn(
+    whenever(channelConfigEventsManager.observerConfig(remoteId)).thenReturn(
       Observable.just(
-        ConfigEventsManager.ConfigEvent(
-          ChannelConfigResult.RESULT_TRUE,
+        ChannelConfigEventsManager.ConfigEvent(
+          ConfigResult.RESULT_TRUE,
           mockSuplaChannelHvacConfig(remoteId, ThermostatSubfunction.COOL)
         )
       ),
       Observable.just(
-        ConfigEventsManager.ConfigEvent(
-          ChannelConfigResult.RESULT_TRUE,
+        ChannelConfigEventsManager.ConfigEvent(
+          ConfigResult.RESULT_TRUE,
           mockSuplaChannelWeeklyScheduleConfig(remoteId)
         )
       )
+    )
+    whenever(deviceConfigEventsManager.observerConfig(deviceId)).thenReturn(
+      Observable.just(DeviceConfigEventsManager.ConfigEvent(ConfigResult.RESULT_FALSE, null))
     )
     whenever(readChannelWithChildrenUseCase.invoke(remoteId)).thenReturn(
       Maybe.just(channelWithChildren)

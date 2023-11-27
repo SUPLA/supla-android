@@ -28,13 +28,16 @@ import android.os.Build;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.hilt.work.HiltWorkerFactory;
 import androidx.lifecycle.ProcessLifecycleOwner;
 import androidx.multidex.MultiDexApplication;
+import androidx.work.Configuration;
 import androidx.work.Constraints;
 import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.NetworkType;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
+import com.github.mikephil.charting.utils.Utils;
 import dagger.hilt.android.HiltAndroidApp;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -84,6 +87,7 @@ public class SuplaApp extends MultiDexApplication
   @Inject NotificationsHelper notificationsHelper;
   @Inject AppLifecycleObserver appLifecycleObserver;
   @Inject SuplaClientBuilder suplaClientBuilder;
+  @Inject HiltWorkerFactory workerFactory;
 
   public SuplaApp() {
     SuplaClientMessageHandler.getGlobalInstance().registerMessageListener(this);
@@ -110,6 +114,9 @@ public class SuplaApp extends MultiDexApplication
     SuplaFormatter.sharedFormatter();
 
     AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+    WorkManager.initialize(
+        this, new Configuration.Builder().setWorkerFactory(workerFactory).build());
+    Utils.init(this);
 
     enqueueWidgetRefresh();
   }

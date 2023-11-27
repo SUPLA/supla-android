@@ -29,7 +29,9 @@ import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.SceneRepository
 import org.supla.android.data.source.local.LocalProfileRepository
 import org.supla.android.db.DbHelper
+import org.supla.android.db.MeasurementsDbHelper
 import org.supla.android.db.room.AppDatabase
+import org.supla.android.db.room.MeasurementsDatabase
 import javax.inject.Singleton
 
 @Module
@@ -43,7 +45,23 @@ class DatabaseModule {
 
   @Provides
   @Singleton
-  fun provideChannelRelationDao(appDatabase: AppDatabase) = appDatabase.channelRelationDao()
+  fun provideChannelRelationDao(appDatabase: AppDatabase) =
+    appDatabase.channelRelationDao()
+
+  @Provides
+  @Singleton
+  fun provideMeasurementsDatabase(@ApplicationContext context: Context) =
+    Room.databaseBuilder(context, MeasurementsDatabase::class.java, MeasurementsDbHelper.DATABASE_NAME).build()
+
+  @Provides
+  @Singleton
+  fun provideTemperatureLogDao(measurementsDatabase: MeasurementsDatabase) =
+    measurementsDatabase.temperatureLogDao()
+
+  @Provides
+  @Singleton
+  fun provideTemperatureAndHumidityLogDao(measurementsDatabase: MeasurementsDatabase) =
+    measurementsDatabase.temperatureAndHumidityLogDao()
 
   @Provides
   @Singleton

@@ -7,8 +7,9 @@ object Versions {
 
     const val Kotlin = "1.8.10"
     const val Hilt = "2.44"
+    const val HiltWorker = "1.0.0"
     const val Multidex = "2.0.1"
-    const val AndroidChart = "v3.0.3"
+    const val AndroidChart = "v3.1.0"
     const val Coroutines = "1.6.4"
     const val GoogleMaterial = "1.0.0"
     const val GoogleServices = "4.3.15"
@@ -43,6 +44,11 @@ object Versions {
         const val RxJava = "3.0.8"
         const val RxAndroid = "3.0.0"
         const val RxKotlin = "3.0.1"
+    }
+
+    object Retrofit {
+        const val Retrofit = "2.9.0"
+        const val Logging = "4.11.0"
     }
 
     object Testing {

@@ -61,7 +61,7 @@ val Colors.progressPointShadow: Color
   get() = Color(0x99B2F4B8)
 
 val Colors.blue: Color
-  get() = Color(0xFF5AC8FA)
+  get() = Color(0xFF007AFF)
 
 val Colors.grey: Color
   get() = Color(0xFF7E8082)
@@ -80,6 +80,9 @@ val Color.Companion.lightRed: Color
 
 val Color.Companion.disabled: Color
   get() = Color(0xFFB4B7BA)
+
+val Color.Companion.primaryLight: Color
+  get() = Color(0xFFEDFBEE)
 
 private fun colorResource(context: Context, @ColorRes id: Int): Color {
   return if (Build.VERSION.SDK_INT >= 23) {

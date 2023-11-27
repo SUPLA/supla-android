@@ -54,7 +54,7 @@ public class SuplaMarkerView extends MarkerView {
     if (e instanceof PieEntry) {
       return ((PieEntry) e).getLabel();
     }
-    return helper.getFormattedValue(e.getX(), null);
+    return helper.getAxisLabel(e.getX(), null);
   }
 
   protected String getValue1(Entry e) {

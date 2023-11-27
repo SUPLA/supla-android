@@ -2,6 +2,7 @@ package org.supla.android.core
 
 import androidx.annotation.CallSuper
 import io.reactivex.rxjava3.schedulers.Schedulers
+import io.reactivex.rxjava3.schedulers.TestScheduler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.drop
@@ -26,6 +27,8 @@ abstract class BaseViewModelTest<S : ViewState, E : ViewEvent, VM : BaseViewMode
 
   protected val states = mutableListOf<S>()
   protected val events = mutableListOf<E>()
+
+  protected val testScheduler = TestScheduler()
 
   @CallSuper
   open fun setUp() {

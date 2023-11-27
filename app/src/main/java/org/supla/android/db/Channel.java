@@ -24,7 +24,6 @@ import android.content.Context;
 import android.database.Cursor;
 import org.supla.android.R;
 import org.supla.android.ValuesFormatterProvider;
-import org.supla.android.data.source.remote.hvac.ThermostatSubfunction;
 import org.supla.android.images.ImageId;
 import org.supla.android.lib.DigiglassValue;
 import org.supla.android.lib.SuplaChannel;
@@ -498,16 +497,8 @@ public class Channel extends ChannelBase {
   }
 
   @Override
-  public ImageId getImageIdx(boolean nightMode, WhichOne whichImage, int active) {
-    if (getFunc() == SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT) {
-      if (getValue().asThermostatValue().getSubfunction() == ThermostatSubfunction.HEAT) {
-        return new ImageId(R.drawable.ic_thermostat_heat);
-      } else {
-        return new ImageId(R.drawable.ic_thermostat_cool);
-      }
-    }
-
-    return super.getImageIdx(nightMode, whichImage, active);
+  public ChannelValue getChannelValue() {
+    return Value;
   }
 
   @Override

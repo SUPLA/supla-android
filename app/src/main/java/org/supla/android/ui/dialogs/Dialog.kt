@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
@@ -38,6 +39,7 @@ import org.supla.android.R
 fun Dialog(
   modifier: Modifier = Modifier,
   usePlatformDefaultWidth: Boolean = true,
+  horizontalAlignment: Alignment.Horizontal = Alignment.Start,
   onDismiss: () -> Unit,
   content: @Composable ColumnScope.() -> Unit
 ) {
@@ -48,6 +50,7 @@ fun Dialog(
       shape = RoundedCornerShape(dimensionResource(id = R.dimen.radius_default))
     ) {
       Column(
+        horizontalAlignment = horizontalAlignment,
         content = content
       )
     }

@@ -44,7 +44,7 @@ import org.supla.android.SuplaChannelStatus;
 import org.supla.android.SuplaChannelStatus.ShapeType;
 import org.supla.android.ViewHelper;
 import org.supla.android.data.source.local.entity.Scene;
-import org.supla.android.events.ListsEventsManager;
+import org.supla.android.events.UpdateEventsManager;
 import org.supla.android.images.ImageCache;
 import org.supla.android.images.ImageId;
 import org.supla.android.ui.lists.SlideableItem;
@@ -53,7 +53,7 @@ import org.supla.android.ui.lists.SwapableListItem;
 @AndroidEntryPoint
 public class SceneLayout extends LinearLayout implements SlideableItem, SwapableListItem {
 
-  @Inject ListsEventsManager eventsManager;
+  @Inject UpdateEventsManager eventsManager;
   @Inject DurationTimerHelper durationTimerHelper;
 
   private RelativeLayout content;

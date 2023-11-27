@@ -17,12 +17,15 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import android.util.Log
+import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
 import org.supla.android.data.source.ChannelRelationRepository
 import org.supla.android.data.source.ChannelRepository
 import org.supla.android.db.AuthProfileItem
 import org.supla.android.db.Channel
 import org.supla.android.db.Location
+import org.supla.android.extensions.TAG
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNEL_FLAG_HAS_PARENT
 import org.supla.android.profile.ProfileManager
 import org.supla.android.ui.lists.ListItem
@@ -45,7 +48,7 @@ class CreateProfileChannelsListUseCase @Inject constructor(
 
   private fun channelsObservable(currentProfile: AuthProfileItem): Observable<List<ListItem>> =
     Observable.fromCallable {
-      val relationMap = channelRelationRepository.findListOfParents(currentProfile.id).blockingFirst()
+      val relationMap = blockingCall(channelRelationRepository.findListOfParents(currentProfile.id))
 
       channelRepository.getAllProfileChannels(currentProfile.id).use { cursor ->
         val channels = mutableListOf<ListItem>()
@@ -72,7 +75,7 @@ class CreateProfileChannelsListUseCase @Inject constructor(
 
             if (location?.isCollapsed(CollapsedFlag.CHANNEL) == false) {
               if (relationMap.contains(channel.channelId)) {
-                val children = findChannelChildrenUseCase(currentProfile.id, channel.remoteId).blockingGet()
+                val children = blockingCall(findChannelChildrenUseCase(currentProfile.id, channel.remoteId))
                 channels.add(ListItem.ChannelItem(channel, location, children))
               } else {
                 channels.add(ListItem.ChannelItem(channel, location))
@@ -84,4 +87,22 @@ class CreateProfileChannelsListUseCase @Inject constructor(
         return@use channels
       }
     }
+
+  private fun <T> blockingCall(observable: Observable<List<T>>): List<T> {
+    return try {
+      observable.blockingFirst()
+    } catch (ex: Exception) {
+      Log.w(TAG, "Could not get blocking call", ex)
+      emptyList()
+    }
+  }
+
+  private fun <T> blockingCall(maybe: Maybe<List<T>>): List<T>? {
+    return try {
+      maybe.blockingGet()
+    } catch (ex: Exception) {
+      Log.w(TAG, "Could not get blocking call", ex)
+      emptyList()
+    }
+  }
 }

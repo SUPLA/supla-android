@@ -170,10 +170,10 @@
     <string name="consumption_acording_to_phases">Consumo in base alle fasi</string>
     <string name="temperature">Temperatura</string>
     <string name="humidity">Umidità</string>
-    <string name="last24hours">Ultime 24 ore</string>
-    <string name="last7days">Ultimi 7 giorni</string>
-    <string name="last30days">Ultimi 30 giorni</string>
-    <string name="last90days">Ultimi 90 giorni</string>
+    <string name="history_range_last_day">Ultime 24 ore</string>
+    <string name="history_range_last_week">Ultimi 7 giorni</string>
+    <string name="history_range_last_30_days">Ultimi 30 giorni</string>
+    <string name="history_range_last_90_days">Ultimi 90 giorni</string>
     <string name="all_available_history">Tutta la cronologia disponibile</string>
     <string name="retrieving_data_from_the_server">Scaricamento dati da server...</string>
     <string name="no_chart_data_available">Nessun dato per il grafico.</string>

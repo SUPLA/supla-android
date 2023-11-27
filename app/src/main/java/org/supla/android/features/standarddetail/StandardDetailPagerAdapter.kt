@@ -20,35 +20,43 @@ package org.supla.android.features.standarddetail
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import org.supla.android.R
-import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.features.legacydetail.LegacyDetailFragment
 import org.supla.android.features.switchdetail.switchgeneral.SwitchGeneralFragment
 import org.supla.android.features.switchdetail.timersdetail.TimersDetailFragment
+import org.supla.android.features.thermometerdetail.history.ThermometerHistoryDetailFragment
+import org.supla.android.features.thermostatdetail.history.ThermostatHistoryDetailFragment
 import org.supla.android.features.thermostatdetail.scheduledetail.ScheduleDetailFragment
 import org.supla.android.features.thermostatdetail.thermostatgeneral.ThermostatGeneralFragment
 import org.supla.android.usecases.details.LegacyDetailType
 
 class StandardDetailPagerAdapter(
   private val pages: List<DetailPage>,
-  private val remoteId: Int,
-  private val itemType: ItemType,
+  private val itemBundle: ItemBundle,
   fragment: Fragment
 ) : FragmentStateAdapter(fragment) {
 
   override fun getItemCount(): Int = pages.size
 
   override fun createFragment(position: Int): Fragment = when (pages[position]) {
-    DetailPage.SWITCH -> SwitchGeneralFragment().apply { arguments = SwitchGeneralFragment.bundle(remoteId, itemType) }
-    DetailPage.TIMER -> TimersDetailFragment().apply { arguments = TimersDetailFragment.bundle(remoteId) }
+    DetailPage.SWITCH -> SwitchGeneralFragment().apply { arguments = SwitchGeneralFragment.bundle(itemBundle) }
+    DetailPage.TIMER -> TimersDetailFragment().apply { arguments = TimersDetailFragment.bundle(itemBundle.remoteId) }
     DetailPage.HISTORY_IC -> LegacyDetailFragment().apply {
-      arguments = LegacyDetailFragment.bundle(remoteId, LegacyDetailType.IC, itemType)
+      arguments = LegacyDetailFragment.bundle(itemBundle.remoteId, LegacyDetailType.IC, itemBundle.itemType)
     }
+
     DetailPage.HISTORY_EM -> LegacyDetailFragment().apply {
-      arguments = LegacyDetailFragment.bundle(remoteId, LegacyDetailType.EM, itemType)
+      arguments = LegacyDetailFragment.bundle(itemBundle.remoteId, LegacyDetailType.EM, itemBundle.itemType)
     }
-    DetailPage.THERMOSTAT -> ThermostatGeneralFragment().apply { arguments = ThermostatGeneralFragment.bundle(remoteId) }
-    DetailPage.SCHEDULE -> ScheduleDetailFragment().apply { arguments = ScheduleDetailFragment.bundle(remoteId, itemType) }
-    else -> Fragment() // Just an empty fragment
+
+    DetailPage.THERMOSTAT -> ThermostatGeneralFragment().apply { arguments = ThermostatGeneralFragment.bundle(itemBundle) }
+    DetailPage.SCHEDULE -> ScheduleDetailFragment().apply { arguments = ScheduleDetailFragment.bundle(itemBundle) }
+    DetailPage.THERMOSTAT_HISTORY -> ThermostatHistoryDetailFragment().apply {
+      arguments = ThermostatHistoryDetailFragment.bundle(itemBundle.remoteId)
+    }
+
+    DetailPage.THERMOMETER_HISTORY -> ThermometerHistoryDetailFragment().apply {
+      arguments = ThermometerHistoryDetailFragment.bundle(itemBundle.remoteId)
+    }
   }
 }
 
@@ -56,13 +64,14 @@ enum class DetailPage(val menuId: Int) {
   // Switches
   SWITCH(R.id.detail_general),
   TIMER(R.id.detail_timer),
-  HISTORY_IC(R.id.detail_history),
-  HISTORY_EM(R.id.detail_history),
+  HISTORY_IC(R.id.detail_metrics),
+  HISTORY_EM(R.id.detail_metrics),
 
   // Thermostats
   THERMOSTAT(R.id.detail_general),
   SCHEDULE(R.id.detail_schedule),
+  THERMOSTAT_HISTORY(R.id.detail_history),
 
-  // Not used yet
-  SETTINGS(R.id.detail_settings)
+  // Thermometers
+  THERMOMETER_HISTORY(R.id.detail_history),
 }

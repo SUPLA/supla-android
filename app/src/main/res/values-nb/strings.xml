@@ -173,10 +173,10 @@
     <string name="consumption_acording_to_phases">Forbruk i forhold til faser</string>
     <string name="temperature">Temperatur</string>
     <string name="humidity">Fuktighet</string>
-    <string name="last24hours">Siste 24 timer</string>
-    <string name="last7days">Siste 7 dager</string>
-    <string name="last30days">Siste 30 dager</string>
-    <string name="last90days">Siste 90 dager</string>
+    <string name="history_range_last_day">Siste 24 timer</string>
+    <string name="history_range_last_week">Siste 7 dager</string>
+    <string name="history_range_last_30_days">Siste 30 dager</string>
+    <string name="history_range_last_90_days">Siste 90 dager</string>
     <string name="all_available_history">Tilgjengelig historie</string>
     <string name="retrieving_data_from_the_server">Nedlasting av data fra serveren...</string>
     <string name="no_chart_data_available">Manglende data for diagrammet.</string>

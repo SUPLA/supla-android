@@ -53,12 +53,22 @@ enum class ChannelRelationType(val value: Short) {
   AUX_THERMOMETER_GENERIC_COOLER(8);
 
   fun isThermometer(): Boolean {
+    return isMainThermometer() || isAuxThermometer()
+  }
+
+  fun isAuxThermometer(): Boolean {
     return when (this) {
-      MAIN_THERMOMETER,
       AUX_THERMOMETER_FLOOR,
       AUX_THERMOMETER_WATER,
       AUX_THERMOMETER_GENERIC_HEATER,
       AUX_THERMOMETER_GENERIC_COOLER -> true
+      else -> false
+    }
+  }
+
+  fun isMainThermometer(): Boolean {
+    return when (this) {
+      MAIN_THERMOMETER -> true
       else -> false
     }
   }

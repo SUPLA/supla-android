@@ -26,14 +26,13 @@ import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
 import org.supla.android.core.ui.BaseFragment
-import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.databinding.FragmentSwitchDetailBinding
 import org.supla.android.db.ChannelBase
+import org.supla.android.features.standarddetail.ItemBundle
 import org.supla.android.images.ImageCache.getBitmap
 import org.supla.android.lib.SuplaClientMsg
 
-private const val ARG_REMOTE_ID = "ARG_REMOTE_ID"
-private const val ARG_ITEM_TYPE = "ARG_ITEM_TYPE"
+private const val ARG_ITEM_BUNDLE = "ARG_ITEM_BUNDLE"
 
 @AndroidEntryPoint
 class SwitchGeneralFragment : BaseFragment<SwitchGeneralViewState, SwitchGeneralViewEvent>(R.layout.fragment_switch_detail) {
@@ -41,19 +40,17 @@ class SwitchGeneralFragment : BaseFragment<SwitchGeneralViewState, SwitchGeneral
   override val viewModel: SwitchGeneralViewModel by viewModels()
   private val binding by viewBinding(FragmentSwitchDetailBinding::bind)
 
-  @Suppress("DEPRECATION") // Not deprecated method can't be accessed from API 21
-  private val itemType: ItemType by lazy { requireArguments().getSerializable(ARG_ITEM_TYPE) as ItemType }
-  private val remoteId: Int by lazy { requireArguments().getInt(ARG_REMOTE_ID) }
+  private val item: ItemBundle by lazy { requireSerializable(ARG_ITEM_BUNDLE, ItemBundle::class.java) }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    binding.switchDetailButtonOn.clickListener = { viewModel.turnOn(remoteId, itemType) }
-    binding.switchDetailButtonOff.clickListener = { viewModel.turnOff(remoteId, itemType) }
+    binding.switchDetailButtonOn.clickListener = { viewModel.turnOn(item.remoteId, item.itemType) }
+    binding.switchDetailButtonOff.clickListener = { viewModel.turnOff(item.remoteId, item.itemType) }
   }
 
   override fun onResume() {
     super.onResume()
-    viewModel.loadData(remoteId, itemType)
+    viewModel.loadData(item.remoteId, item.itemType)
   }
 
   override fun handleEvents(event: SwitchGeneralViewEvent) {
@@ -83,17 +80,16 @@ class SwitchGeneralFragment : BaseFragment<SwitchGeneralViewState, SwitchGeneral
   override fun onSuplaMessage(message: SuplaClientMsg) {
     when (message.type) {
       SuplaClientMsg.onDataChanged -> {
-        if (message.channelId == remoteId && (message.isTimerValue || !message.isExtendedValue)) {
-          viewModel.loadData(remoteId, itemType)
+        if (message.channelId == item.remoteId && (message.isTimerValue || !message.isExtendedValue)) {
+          viewModel.loadData(item.remoteId, item.itemType)
         }
       }
     }
   }
 
   companion object {
-    fun bundle(remoteId: Int, itemType: ItemType) = bundleOf(
-      ARG_REMOTE_ID to remoteId,
-      ARG_ITEM_TYPE to itemType
+    fun bundle(itemBundle: ItemBundle) = bundleOf(
+      ARG_ITEM_BUNDLE to itemBundle
     )
   }
 }

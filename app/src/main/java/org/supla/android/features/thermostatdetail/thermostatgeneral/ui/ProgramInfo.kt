@@ -39,6 +39,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
 import org.supla.android.core.ui.theme.grey
@@ -48,7 +49,7 @@ import org.supla.android.features.thermostatdetail.thermostatgeneral.data.Thermo
 fun ProgramInfoRow(infos: List<ThermostatProgramInfo>) {
   Column(
     modifier = Modifier
-      .height(96.dp)
+      .height(80.dp)
       .padding(
         start = dimensionResource(id = R.dimen.distance_default),
         top = dimensionResource(id = R.dimen.distance_default),
@@ -66,7 +67,13 @@ fun ProgramInfoRow(infos: List<ThermostatProgramInfo>) {
           ProgramInfoDescription(it(LocalContext.current))
         }
         it.time?.let {
-          Text(text = it(LocalContext.current), style = MaterialTheme.typography.body2, color = MaterialTheme.colors.onBackground)
+          Text(
+            text = it(LocalContext.current),
+            style = MaterialTheme.typography.body2,
+            color = MaterialTheme.colors.onBackground,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+          )
         }
         if (it.manualActive) {
           ProgramInfoManual()
