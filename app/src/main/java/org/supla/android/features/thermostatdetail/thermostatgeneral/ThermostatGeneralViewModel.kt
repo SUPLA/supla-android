@@ -328,7 +328,14 @@ class ThermostatGeneralViewModel @Inject constructor(
   private fun handleData(data: LoadedData) {
     val channel = data.channelWithChildren.channel
     val value = channel.value.asThermostatValue()
-    val timerState = channel.getTimerStateValue()
+    val currentDate = dateProvider.currentDate()
+    val timerState = channel.getTimerStateValue()?.let {
+      if (it.countdownEndsAt?.before(currentDate) == true) {
+        null
+      } else {
+        it
+      }
+    }
 
     val setpointHeatTemperature = getSetpointHeatTemperature(channel, value)
     val setpointCoolTemperature = getSetpointCoolTemperature(channel, value)

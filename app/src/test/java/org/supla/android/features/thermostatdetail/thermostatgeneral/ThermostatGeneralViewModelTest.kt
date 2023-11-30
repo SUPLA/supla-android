@@ -57,6 +57,7 @@ import org.supla.android.events.DeviceConfigEventsManager
 import org.supla.android.events.LoadingTimeoutManager
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.extensions.date
+import org.supla.android.extensions.shift
 import org.supla.android.lib.SuplaChannelExtendedValue
 import org.supla.android.lib.SuplaConst
 import org.supla.android.lib.SuplaTimerState
@@ -222,10 +223,12 @@ class ThermostatGeneralViewModelTest :
     // given
     val remoteId = 321
     val deviceId = 321
+    val currentDate = date(2022, 10, 21)
     val timerEndDate = date(2022, 10, 22)
     mockHeatThermostat(remoteId, deviceId, 22.4f, timerEndDate = timerEndDate)
     val currentTimestamp = 123L
     whenever(dateProvider.currentTimestamp()).thenReturn(currentTimestamp)
+    whenever(dateProvider.currentDate()).thenReturn(currentDate)
 
     // when
     viewModel.observeData(remoteId, deviceId)
@@ -539,6 +542,44 @@ class ThermostatGeneralViewModelTest :
 
     verify(delayedThermostatActionSubject).sendImmediately(emittedState)
     verifyNoMoreInteractions(delayedThermostatActionSubject)
+  }
+
+  @Test
+  fun shouldNotShowTimerWhenEndDateBeforeCurrentDate() {
+    // given
+    val remoteId = 123
+    val deviceId = 321
+    val currentDate = date(2023, 11, 10)
+    mockHeatThermostat(remoteId, deviceId, 23.4f, timerEndDate = currentDate.shift(-5))
+    whenever(dateProvider.currentDate()).thenReturn(currentDate)
+
+    // when
+    viewModel.observeData(remoteId, deviceId)
+    viewModel.triggerDataLoad(remoteId)
+    testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
+
+    // then
+    assertThat(events).isEmpty()
+    assertThat(states).containsExactly(
+      ThermostatGeneralViewState(
+        viewModelState = ThermostatGeneralViewModelState(
+          remoteId = remoteId,
+          function = SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT,
+          lastChangedHeat = true,
+          configMinTemperature = 10f,
+          configMaxTemperature = 40f,
+          mode = SuplaHvacMode.HEAT,
+          setpointHeatTemperature = 23.4f,
+          setpointCoolTemperature = null,
+          subfunction = ThermostatSubfunction.HEAT
+        ),
+        currentTemperaturePercentage = 0.17666666f,
+        configMinTemperatureString = "10,0",
+        configMaxTemperatureString = "40,0",
+        manualModeActive = true,
+        loadingState = LoadingTimeoutManager.LoadingState(initialLoading = false, loading = false)
+      )
+    )
   }
 
   private fun thermostatDefaultState(
