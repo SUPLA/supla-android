@@ -524,7 +524,6 @@ public class ChannelDetailThermostatHP extends DetailLayout
 
     if (!isGroup()) {
       chartHelper.load(getRemoteId());
-      chartHelper.moveToEnd();
 
       runDownloadTask();
     }
