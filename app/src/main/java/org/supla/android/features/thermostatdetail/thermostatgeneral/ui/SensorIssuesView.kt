@@ -55,17 +55,28 @@ fun SensorIssueView(sensorIssue: SensorIssue) {
     horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.distance_tiny)),
     verticalAlignment = Alignment.CenterVertically
   ) {
-    Box(modifier = Modifier.size(36.dp)) {
-      Image(
-        bitmap = sensorIssue.iconProvider(LocalContext.current).asImageBitmap(),
-        contentDescription = null,
-        modifier = Modifier.size(dimensionResource(id = R.dimen.icon_big_size)).align(Alignment.TopCenter),
-        contentScale = ContentScale.Fit
-      )
+    val iconProvider = sensorIssue.iconProvider
+    if (iconProvider != null) {
+      Box(modifier = Modifier.size(36.dp)) {
+        Image(
+          bitmap = iconProvider(LocalContext.current).asImageBitmap(),
+          contentDescription = null,
+          modifier = Modifier
+            .size(dimensionResource(id = R.dimen.icon_big_size))
+            .align(Alignment.TopCenter),
+          contentScale = ContentScale.Fit
+        )
+        Image(
+          painter = painterResource(id = R.drawable.ic_sensor_alert_circle),
+          contentDescription = null,
+          modifier = Modifier.align(Alignment.BottomStart)
+        )
+      }
+    } else {
       Image(
         painter = painterResource(id = R.drawable.ic_sensor_alert_circle),
         contentDescription = null,
-        modifier = Modifier.align(Alignment.BottomStart)
+        modifier = Modifier.size(size = dimensionResource(id = R.dimen.icon_small_size))
       )
     }
     Text(

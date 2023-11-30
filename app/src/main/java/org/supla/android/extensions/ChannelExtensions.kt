@@ -73,6 +73,7 @@ fun Channel.toThermostatSlideableListItemData(
     value = mainThermometerChild?.humanReadableValue?.toString() ?: NO_VALUE_TEXT,
     subValue = subValue ?: NO_VALUE_TEXT,
     indicatorIcon = indicatorIcon,
-    issueIconType = issueIconType
+    issueIconType = issueIconType,
+    estimatedTimerEndDate = getTimerStateValue()?.countdownEndsAt
   )
 }

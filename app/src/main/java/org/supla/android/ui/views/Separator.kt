@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import org.supla.android.R
 
 @Composable
-fun Separator(style: SeparatorStyle = SeparatorStyle.DEFAULT, modifier: Modifier = Modifier) {
+fun Separator(modifier: Modifier = Modifier, style: SeparatorStyle = SeparatorStyle.DEFAULT) {
   Spacer(
     modifier = modifier
       .fillMaxWidth()

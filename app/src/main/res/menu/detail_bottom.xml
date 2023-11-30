@@ -7,15 +7,15 @@
     android:visible="false" />
 
   <item
-    android:id="@+id/detail_timer"
-    android:icon="@drawable/ic_timer"
-    android:title="@string/details_timer"
-    android:visible="false" />
-
-  <item
     android:id="@+id/detail_schedule"
     android:icon="@drawable/ic_schedule"
     android:title="@string/details_schedule"
+    android:visible="false" />
+
+  <item
+    android:id="@+id/detail_timer"
+    android:icon="@drawable/ic_timer"
+    android:title="@string/details_timer"
     android:visible="false" />
 
   <item

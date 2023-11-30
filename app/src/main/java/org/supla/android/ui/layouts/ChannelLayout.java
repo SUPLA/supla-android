@@ -202,11 +202,10 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
     left_onlineStatus.setId(ViewHelper.generateViewId());
     content.addView(left_onlineStatus);
 
-    durationTimer = durationTimerHelper.createTimerView(context);
+    durationTimer = durationTimerHelper.createTimerView(context, heightScaleFactor);
     content.addView(durationTimer);
     durationTimer.setLayoutParams(
-        durationTimerHelper.getTimerViewLayoutParams(
-            context, right_onlineStatus.getId(), right_onlineStatus.getId()));
+        durationTimerHelper.getTimerViewLayoutParams(context, heightScaleFactor));
 
     channelIconContainer = new RelativeLayout(context);
     content.addView(channelIconContainer);

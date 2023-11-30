@@ -1,4 +1,4 @@
-package org.supla.android.features.thermostatdetail.history
+package org.supla.android.features.thermostatdetail.historydetail
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 

@@ -534,6 +534,18 @@
   <string name="calendar_picker_start_hour">Ab Uhr</string>
  <string name="calendar_picker_end_hour">Bis Uhr</string>
  <string name="history_wrong_range">Der ausgewählte Zeitraum ist falsch</string>
+ <string name="details_timer_select_mode">Modusauswahl</string>
+ <string name="details_timer_manual_mode">Manuellbetrieb</string>
+ <string name="details_timer_info_thermostat_off">Thermostat bleibt %1$s ausgeschaltet</string>
+ <string name="details_timer_info_thermostat_heating">Thermostat bleibt %1$s im Heizmodus</string>
+ <string name="details_timer_info_thermostat_cooling">Thermostat bleibt %1$s im Kühlmodus</string>
+ <string name="details_timer_select_time">Zeitauswahl</string>
+ <string name="details_timer_counter">Zähler</string>
+ <string name="details_timer_calendar">Kalender</string>
+ <string name="details_timer_min_temp">Temp. min.</string>
+ <string name="details_timer_max_temp">Temp. max.</string>
+ <string name="details_timer_state_label_for_timer_days">Zustand bis %1$s:</string>
+ <string name="details_timer_cancel_thermostat">Abbrechen und einschalten in:</string>
  <plurals name="details_timer_info_on">
   <item quantity="one">eingeschaltet</item>
   <item quantity="other">eingeschaltet</item>
@@ -541,6 +553,10 @@
  <plurals name="details_timer_info_off">
   <item quantity="one">ausgeschaltet</item>
   <item quantity="other">ausgeschaltet</item>
+ </plurals>
+ <plurals name="day_pattern">
+  <item quantity="one">%1$d Tag</item>
+  <item quantity="other">%1$d Tage</item>
  </plurals>
  <plurals name="hour_pattern" tools:ignore="MissingQuantity">
   <item quantity="other">%1$d Std.</item>
