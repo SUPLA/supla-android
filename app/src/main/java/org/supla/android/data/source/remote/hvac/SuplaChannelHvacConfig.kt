@@ -37,8 +37,8 @@ data class SuplaHvacTemperatures(
   val auxMax: Short?,
   val histeresisMin: Short?,
   val histeresisMax: Short?,
-  val autoOffsetMin: Short?,
-  val autoOffsetMax: Short?
+  val heatCoolOffsetMin: Short?,
+  val heatCoolOffsetMax: Short?
 )
 
 enum class SuplaHvacThermometerType(value: Int) {
@@ -65,6 +65,7 @@ enum class ThermostatSubfunction(value: Int) {
 data class SuplaChannelHvacConfig(
   override val remoteId: Int,
   override val func: Int?,
+  override val crc32: Long,
   val mainThermometerRemoteId: Int,
   val auxThermometerRemoteId: Int,
   val auxThermometerType: SuplaHvacThermometerType,
@@ -77,4 +78,4 @@ data class SuplaChannelHvacConfig(
   val subfunction: ThermostatSubfunction,
   val temperatureSetpointChangeSwitchesToManualMode: Boolean,
   val temperatures: SuplaHvacTemperatures
-) : SuplaChannelConfig(remoteId, func)
+) : SuplaChannelConfig(remoteId, func, crc32)

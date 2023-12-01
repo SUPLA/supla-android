@@ -70,7 +70,45 @@ class DownloadChannelMeasurementsUseCaseTest {
 
     // then
     verify(workManagerProxy).enqueueUniqueWork(
-      eq("DownloadTemperaturesAndHumiditiesWorker.$remoteId"),
+      eq("DownloadTemperaturesAndHumidityWorker.$remoteId"),
+      eq(ExistingWorkPolicy.KEEP),
+      any()
+    )
+    verifyNoMoreInteractions(workManagerProxy)
+  }
+
+  @Test
+  fun `should enqueue general purpose measurements download`() {
+    // given
+    val remoteId = 123
+    val profileId = 321L
+    val function = SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT
+
+    // when
+    useCase.invoke(remoteId, profileId, function)
+
+    // then
+    verify(workManagerProxy).enqueueUniqueWork(
+      eq("DownloadGeneralPurposeMeasurementsWorker.$remoteId"),
+      eq(ExistingWorkPolicy.KEEP),
+      any()
+    )
+    verifyNoMoreInteractions(workManagerProxy)
+  }
+
+  @Test
+  fun `should enqueue general purpose counters download`() {
+    // given
+    val remoteId = 123
+    val profileId = 321L
+    val function = SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER
+
+    // when
+    useCase.invoke(remoteId, profileId, function)
+
+    // then
+    verify(workManagerProxy).enqueueUniqueWork(
+      eq("DownloadGeneralPurposeMeterWorker.$remoteId"),
       eq(ExistingWorkPolicy.KEEP),
       any()
     )

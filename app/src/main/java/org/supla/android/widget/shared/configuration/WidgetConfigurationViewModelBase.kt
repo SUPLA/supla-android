@@ -28,11 +28,17 @@ import org.supla.android.Preferences
 import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.SceneRepository
+import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.Scene
-import org.supla.android.db.*
+import org.supla.android.db.AuthProfileItem
+import org.supla.android.db.Channel
+import org.supla.android.db.ChannelBase
+import org.supla.android.db.ChannelGroup
+import org.supla.android.db.DbItem
+import org.supla.android.db.Location
 import org.supla.android.di.CoroutineDispatchers
 import org.supla.android.extensions.isThermometer
-import org.supla.android.lib.SuplaConst.*
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
 import org.supla.android.lib.singlecall.SingleCall
 import org.supla.android.lib.singlecall.TemperatureAndHumidity
 import org.supla.android.profile.ProfileManager
@@ -85,12 +91,15 @@ abstract class WidgetConfigurationViewModelBase(
       widgetId == null -> {
         _confirmationResult.value = Result.failure(InvalidParameterException())
       }
+
       selectedItem == null -> {
         _confirmationResult.value = Result.failure(NoItemSelectedException())
       }
+
       displayName == null || displayName?.isBlank() == true -> {
         _confirmationResult.value = Result.failure(EmptyDisplayNameException())
       }
+
       else -> {
         viewModelScope.launch {
           withContext(dispatchers.io()) {
@@ -232,7 +241,7 @@ abstract class WidgetConfigurationViewModelBase(
 
   private fun getLocationFromChannelCursor(cursor: Cursor): SpinnerItem<DbItem> {
     val captionIndex = cursor.getColumnIndex("section")
-    val idIndex = cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_LOCATIONID)
+    val idIndex = cursor.getColumnIndex(ChannelEntity.COLUMN_LOCATION_ID)
 
     val location = Location()
     location.id = cursor.getInt(idIndex).toLong()
@@ -272,6 +281,7 @@ abstract class WidgetConfigurationViewModelBase(
     val value = when {
       itemType.isChannel() && (selectedItem as Channel).isThermometer() ->
         getWidgetValue(selectedItem as Channel)
+
       itemType.isChannel() -> (selectedItem as Channel).color.toString()
       else -> "0"
     }

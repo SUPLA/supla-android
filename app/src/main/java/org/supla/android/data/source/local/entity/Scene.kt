@@ -22,7 +22,6 @@ import android.content.ContentValues
 import android.database.Cursor
 import org.supla.android.R
 import org.supla.android.db.DbItem
-import org.supla.android.db.SuplaContract
 import org.supla.android.images.ImageCache
 import org.supla.android.images.ImageId
 import org.supla.android.lib.SuplaScene
@@ -46,60 +45,60 @@ data class Scene(
 
   override fun AssignCursorData(cur: Cursor) {
     id = cur.getLong(
-      cur.getColumnIndexOrThrow(SuplaContract.SceneEntry._ID)
+      cur.getColumnIndexOrThrow(SceneEntity.COLUMN_ID)
     )
-    sceneId = cur.getInt(cur.getColumnIndexOrThrow(SuplaContract.SceneEntry.COLUMN_NAME_SCENEID))
+    sceneId = cur.getInt(cur.getColumnIndexOrThrow(SceneEntity.COLUMN_REMOTE_ID))
     locationId =
-      cur.getInt(cur.getColumnIndexOrThrow(SuplaContract.SceneEntry.COLUMN_NAME_LOCATIONID))
-    altIcon = cur.getInt(cur.getColumnIndexOrThrow(SuplaContract.SceneEntry.COLUMN_NAME_ALTICON))
-    userIcon = cur.getInt(cur.getColumnIndexOrThrow(SuplaContract.SceneEntry.COLUMN_NAME_USERICON))
-    caption = cur.getString(cur.getColumnIndexOrThrow(SuplaContract.SceneEntry.COLUMN_NAME_CAPTION))
+      cur.getInt(cur.getColumnIndexOrThrow(SceneEntity.COLUMN_LOCATION_ID))
+    altIcon = cur.getInt(cur.getColumnIndexOrThrow(SceneEntity.COLUMN_ALT_ICON))
+    userIcon = cur.getInt(cur.getColumnIndexOrThrow(SceneEntity.COLUMN_USER_ICON))
+    caption = cur.getString(cur.getColumnIndexOrThrow(SceneEntity.COLUMN_CAPTION))
 
-    var idx = cur.getColumnIndexOrThrow(SuplaContract.SceneEntry.COLUMN_NAME_STARTED_AT)
+    var idx = cur.getColumnIndexOrThrow(SceneEntity.COLUMN_STARTED_AT)
     if (!cur.isNull(idx)) {
       startedAt = dateFromTimestamp(cur.getLong(idx))
     }
-    idx = cur.getColumnIndexOrThrow(SuplaContract.SceneEntry.COLUMN_NAME_EST_END_DATE)
+    idx = cur.getColumnIndexOrThrow(SceneEntity.COLUMN_ESTIMATED_END_DATE)
     if (!cur.isNull(idx)) {
       estimatedEndDate = dateFromTimestamp(cur.getLong(idx))
     }
-    idx = cur.getColumnIndexOrThrow(SuplaContract.SceneEntry.COLUMN_NAME_INITIATOR_ID)
+    idx = cur.getColumnIndexOrThrow(SceneEntity.COLUMN_INITIATOR_ID)
     if (!cur.isNull(idx)) {
       initiatorId = cur.getInt(idx)
     }
-    idx = cur.getColumnIndexOrThrow(SuplaContract.SceneEntry.COLUMN_NAME_INITIATOR_NAME)
+    idx = cur.getColumnIndexOrThrow(SceneEntity.COLUMN_INITIATOR_NAME)
     if (!cur.isNull(idx)) {
       initiatorName = cur.getString(idx)
     }
     sortOrder =
-      cur.getInt(cur.getColumnIndexOrThrow(SuplaContract.SceneEntry.COLUMN_NAME_SORT_ORDER))
+      cur.getInt(cur.getColumnIndexOrThrow(SceneEntity.COLUMN_SORT_ORDER))
     profileId =
-      cur.getLong(cur.getColumnIndexOrThrow(SuplaContract.SceneEntry.COLUMN_NAME_PROFILEID))
-    visible = cur.getInt(cur.getColumnIndexOrThrow(SuplaContract.SceneEntry.COLUMN_NAME_VISIBLE))
+      cur.getLong(cur.getColumnIndexOrThrow(SceneEntity.COLUMN_PROFILE_ID))
+    visible = cur.getInt(cur.getColumnIndexOrThrow(SceneEntity.COLUMN_VISIBLE))
   }
 
   override fun getContentValues(): ContentValues {
     val values = ContentValues()
-    values.put(SuplaContract.SceneEntry.COLUMN_NAME_SCENEID, sceneId)
-    values.put(SuplaContract.SceneEntry.COLUMN_NAME_LOCATIONID, locationId)
-    values.put(SuplaContract.SceneEntry.COLUMN_NAME_ALTICON, altIcon)
-    values.put(SuplaContract.SceneEntry.COLUMN_NAME_USERICON, userIcon)
-    values.put(SuplaContract.SceneEntry.COLUMN_NAME_CAPTION, caption)
-    values.put(SuplaContract.SceneEntry.COLUMN_NAME_SORT_ORDER, sortOrder)
+    values.put(SceneEntity.COLUMN_REMOTE_ID, sceneId)
+    values.put(SceneEntity.COLUMN_LOCATION_ID, locationId)
+    values.put(SceneEntity.COLUMN_ALT_ICON, altIcon)
+    values.put(SceneEntity.COLUMN_USER_ICON, userIcon)
+    values.put(SceneEntity.COLUMN_CAPTION, caption)
+    values.put(SceneEntity.COLUMN_SORT_ORDER, sortOrder)
     if (startedAt != null) {
-      values.put(SuplaContract.SceneEntry.COLUMN_NAME_STARTED_AT, dateToTimestamp(startedAt!!))
+      values.put(SceneEntity.COLUMN_STARTED_AT, dateToTimestamp(startedAt!!))
     } else {
-      values.putNull(SuplaContract.SceneEntry.COLUMN_NAME_STARTED_AT)
+      values.putNull(SceneEntity.COLUMN_STARTED_AT)
     }
     if (estimatedEndDate != null) {
-      values.put(SuplaContract.SceneEntry.COLUMN_NAME_EST_END_DATE, dateToTimestamp(estimatedEndDate!!))
+      values.put(SceneEntity.COLUMN_ESTIMATED_END_DATE, dateToTimestamp(estimatedEndDate!!))
     } else {
-      values.putNull(SuplaContract.SceneEntry.COLUMN_NAME_STARTED_AT)
+      values.putNull(SceneEntity.COLUMN_ESTIMATED_END_DATE)
     }
-    values.put(SuplaContract.SceneEntry.COLUMN_NAME_INITIATOR_ID, initiatorId)
-    values.put(SuplaContract.SceneEntry.COLUMN_NAME_INITIATOR_NAME, initiatorName)
-    values.put(SuplaContract.SceneEntry.COLUMN_NAME_PROFILEID, profileId)
-    values.put(SuplaContract.SceneEntry.COLUMN_NAME_VISIBLE, visible)
+    values.put(SceneEntity.COLUMN_INITIATOR_ID, initiatorId)
+    values.put(SceneEntity.COLUMN_INITIATOR_NAME, initiatorName)
+    values.put(SceneEntity.COLUMN_PROFILE_ID, profileId)
+    values.put(SceneEntity.COLUMN_VISIBLE, visible)
 
     return values
   }

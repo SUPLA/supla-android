@@ -64,6 +64,7 @@ class DownloadEventsManager @Inject constructor() {
     ) : State(2)
     object Failed : State(3)
     object Finished : State(4)
+    object Refresh : State(5)
   }
 
   private enum class IdType { CHANNEL }

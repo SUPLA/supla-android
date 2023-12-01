@@ -27,7 +27,7 @@ import androidx.room.Entity
 data class ChannelRelationEntity(
   @ColumnInfo(name = COLUMN_CHANNEL_ID) val channelId: Int,
   @ColumnInfo(name = COLUMN_PARENT_ID) val parentId: Int,
-  @ColumnInfo(name = COLUMN_CHANNEL_RELATION_TYPE) val channelRelationType: ChannelRelationType,
+  @ColumnInfo(name = COLUMN_CHANNEL_RELATION_TYPE) val relationType: ChannelRelationType,
   @ColumnInfo(name = COLUMN_PROFILE_ID) val profileId: Long,
   @ColumnInfo(name = COLUMN_DELETE_FLAG) val deleteFlag: Boolean
 ) {
@@ -38,6 +38,8 @@ data class ChannelRelationEntity(
     const val COLUMN_CHANNEL_RELATION_TYPE = "channel_relation_type"
     const val COLUMN_PROFILE_ID = "profileid" // Needs to be without underscore because of other tables
     const val COLUMN_DELETE_FLAG = "delete_flag"
+
+    const val ALL_COLUMNS = "$COLUMN_CHANNEL_ID, $COLUMN_PARENT_ID, $COLUMN_CHANNEL_RELATION_TYPE, $COLUMN_PROFILE_ID, $COLUMN_DELETE_FLAG"
   }
 }
 

@@ -1,60 +1,59 @@
 package org.supla.android.usecases.channel
 /*
- Copyright (C) AC SOFTWARE SP. Z O.O.
+Copyright (C) AC SOFTWARE SP. Z O.O.
 
- This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation; either version 2
- of the License, or (at your option) any later version.
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
- You should have received a copy of the GNU General Public License
- along with this program; if not, write to the Free Software
- Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- */
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+*/
 
-import android.util.Log
-import org.supla.android.data.ValuesFormatter
-import org.supla.android.db.Channel
-import org.supla.android.extensions.TAG
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
+import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.usecases.channel.valueprovider.DepthSensorValueProvider
+import org.supla.android.usecases.channel.valueprovider.GpmValueProvider
+import org.supla.android.usecases.channel.valueprovider.HumidityAndTemperatureValueProvider
+import org.supla.android.usecases.channel.valueprovider.ThermometerValueProvider
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class GetChannelValueUseCase @Inject constructor(
-  private val valuesFormatter: ValuesFormatter
+  depthSensorValueProvider: DepthSensorValueProvider,
+  gpmValueProvider: GpmValueProvider,
+  humidityAndTemperatureValueProvider: HumidityAndTemperatureValueProvider,
+  thermometerValueProvider: ThermometerValueProvider
 ) {
 
-  operator fun invoke(channel: Channel, valueType: ValueType = ValueType.FIRST): String {
-    if (channel.value.onLine.not()) {
-      return ValuesFormatter.NO_VALUE_TEXT
-    }
+  private val providers = listOf(
+    depthSensorValueProvider,
+    gpmValueProvider,
+    humidityAndTemperatureValueProvider,
+    thermometerValueProvider
+  )
 
-    return when (channel.func) {
-      SUPLA_CHANNELFNC_THERMOMETER ->
-        valuesFormatter.getTemperatureString(channel.value.getTemp(channel.func))
-
-      SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE ->
-        if (valueType == ValueType.FIRST) {
-          valuesFormatter.getTemperatureString(channel.value.getTemp(channel.func))
-        } else {
-          valuesFormatter.getHumidityString(channel.value.humidity)
-        }
-
-      else -> {
-        Log.w(TAG, "Trying to get value of unsupported channel function `${channel.func}`")
-        ValuesFormatter.NO_VALUE_TEXT
+  @Suppress("UNCHECKED_CAST")
+  operator fun <T> invoke(channel: ChannelDataEntity, valueType: ValueType = ValueType.FIRST): T {
+    providers.forEach {
+      if (it.handle(channel.function)) {
+        return it.value(channel, valueType) as T
       }
     }
+
+    throw IllegalStateException("No value provider for channel function `${channel.function}`")
   }
 }
 
-enum class ValueType {
-  FIRST, SECOND
+interface ChannelValueProvider {
+  fun handle(function: Int): Boolean
+
+  fun value(channelData: ChannelDataEntity, valueType: ValueType): Any
 }

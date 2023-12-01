@@ -21,6 +21,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.database.Cursor;
+import org.supla.android.data.source.local.entity.ChannelGroupRelationEntity;
 import org.supla.android.lib.SuplaChannelGroupRelation;
 
 public class ChannelGroupRelation extends DbItem {
@@ -65,29 +66,23 @@ public class ChannelGroupRelation extends DbItem {
   @SuppressLint("Range")
   public void AssignCursorData(Cursor cursor) {
 
-    setId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ChannelGroupRelationEntry._ID)));
-    setGroupId(
-        cursor.getInt(
-            cursor.getColumnIndex(SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_GROUPID)));
+    setId(cursor.getLong(cursor.getColumnIndex(ChannelGroupRelationEntity.COLUMN_ID)));
+    setGroupId(cursor.getInt(cursor.getColumnIndex(ChannelGroupRelationEntity.COLUMN_GROUP_ID)));
     setChannelId(
-        cursor.getInt(
-            cursor.getColumnIndex(SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_CHANNELID)));
-    setVisible(
-        cursor.getInt(
-            cursor.getColumnIndex(SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_VISIBLE)));
+        cursor.getInt(cursor.getColumnIndex(ChannelGroupRelationEntity.COLUMN_CHANNEL_ID)));
+    setVisible(cursor.getInt(cursor.getColumnIndex(ChannelGroupRelationEntity.COLUMN_VISIBLE)));
     setProfileId(
-        cursor.getLong(
-            cursor.getColumnIndex(SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_PROFILEID)));
+        cursor.getLong(cursor.getColumnIndex(ChannelGroupRelationEntity.COLUMN_PROFILE_ID)));
   }
 
   public ContentValues getContentValues() {
 
     ContentValues values = new ContentValues();
 
-    values.put(SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_GROUPID, getGroupId());
-    values.put(SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_CHANNELID, getChannelId());
-    values.put(SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_VISIBLE, getVisible());
-    values.put(SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_PROFILEID, getProfileId());
+    values.put(ChannelGroupRelationEntity.COLUMN_GROUP_ID, getGroupId());
+    values.put(ChannelGroupRelationEntity.COLUMN_CHANNEL_ID, getChannelId());
+    values.put(ChannelGroupRelationEntity.COLUMN_VISIBLE, getVisible());
+    values.put(ChannelGroupRelationEntity.COLUMN_PROFILE_ID, getProfileId());
 
     return values;
   }

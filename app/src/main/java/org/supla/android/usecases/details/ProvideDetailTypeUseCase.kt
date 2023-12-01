@@ -19,7 +19,7 @@ package org.supla.android.usecases.details
 
 import org.supla.android.db.Channel
 import org.supla.android.db.ChannelBase
-import org.supla.android.features.standarddetail.DetailPage
+import org.supla.android.features.details.detailbase.standarddetail.DetailPage
 import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS
 import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
@@ -29,6 +29,8 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DIMMER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT
@@ -102,6 +104,10 @@ class ProvideDetailTypeUseCase @Inject constructor() {
     SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL ->
       LegacyDetailType.DIGIGLASS
 
+    SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT,
+    SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER ->
+      GpmDetailType(listOf(DetailPage.GPM_HISTORY))
+
     else -> null
   }
 
@@ -143,5 +149,9 @@ data class ThermostatDetailType(
 ) : DetailType
 
 data class ThermometerDetailType(
+  val pages: List<DetailPage>
+) : DetailType
+
+data class GpmDetailType(
   val pages: List<DetailPage>
 ) : DetailType

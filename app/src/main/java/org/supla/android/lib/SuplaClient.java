@@ -42,9 +42,11 @@ import org.supla.android.R;
 import org.supla.android.SuplaApp;
 import org.supla.android.Trace;
 import org.supla.android.core.networking.suplaclient.SuplaClientApi;
+import org.supla.android.core.networking.suplaclient.SuplaClientDependencies;
 import org.supla.android.core.networking.suplacloud.SuplaCloudConfigHolder;
 import org.supla.android.core.notifications.NotificationsHelper;
 import org.supla.android.core.storage.EncryptedPreferences;
+import org.supla.android.data.model.general.EntityUpdateResult;
 import org.supla.android.data.source.ResultTuple;
 import org.supla.android.data.source.SceneRepository;
 import org.supla.android.data.source.remote.ChannelConfigType;
@@ -55,6 +57,8 @@ import org.supla.android.data.source.remote.SuplaDeviceConfig;
 import org.supla.android.db.AuthProfileItem;
 import org.supla.android.db.Channel;
 import org.supla.android.db.DbHelper;
+import org.supla.android.db.room.app.AppDatabase;
+import org.supla.android.db.room.measurements.MeasurementsDatabase;
 import org.supla.android.events.ChannelConfigEventsManager;
 import org.supla.android.events.DeviceConfigEventsManager;
 import org.supla.android.events.UpdateEventsManager;
@@ -62,7 +66,11 @@ import org.supla.android.lib.actions.ActionId;
 import org.supla.android.lib.actions.ActionParameters;
 import org.supla.android.lib.actions.SubjectType;
 import org.supla.android.profile.AuthInfo;
+import org.supla.android.profile.ProfileIdHolder;
 import org.supla.android.profile.ProfileManager;
+import org.supla.android.usecases.channel.UpdateChannelUseCase;
+import org.supla.android.usecases.channel.UpdateChannelValueUseCase;
+import org.supla.android.usecases.channelconfig.InsertChannelConfigUseCase;
 import org.supla.android.usecases.channelrelation.DeleteRemovableChannelRelationsUseCase;
 import org.supla.android.usecases.channelrelation.InsertChannelRelationForProfileUseCase;
 import org.supla.android.usecases.channelrelation.MarkChannelRelationsAsRemovableUseCase;
@@ -101,31 +109,36 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   private final InsertChannelRelationForProfileUseCase insertChannelRelationForProfileUseCase;
   private final DeleteRemovableChannelRelationsUseCase deleteRemovableChannelRelationsUseCase;
   private final SuplaCloudConfigHolder suplaCloudConfigHolder;
+  private final InsertChannelConfigUseCase insertChannelConfigUseCase;
+  private final UpdateChannelUseCase updateChannelUseCase;
+  private final UpdateChannelValueUseCase updateChannelValueUseCase;
+  private final AppDatabase appDatabase;
+  private final MeasurementsDatabase measurementsDatabase;
+  private final ProfileIdHolder profileIdHolder;
 
   public SuplaClient(
-      Context context,
-      String oneTimePassword,
-      ProfileManager profileManager,
-      UpdateEventsManager updateEventsManager,
-      ChannelConfigEventsManager channelConfigEventsManager,
-      DeviceConfigEventsManager deviceConfigEventsManager,
-      EncryptedPreferences encryptedPreferences,
-      MarkChannelRelationsAsRemovableUseCase markChannelRelationsAsRemovableUseCase,
-      InsertChannelRelationForProfileUseCase insertChannelRelationForProfileUseCase,
-      DeleteRemovableChannelRelationsUseCase deleteRemovableChannelRelationsUseCase,
-      SuplaCloudConfigHolder suplaCloudConfigHolder) {
+      Context context, String oneTimePassword, SuplaClientDependencies dependencies) {
     super();
     _context = context;
     this.oneTimePassword = oneTimePassword;
-    this.profileManager = profileManager;
-    this.updateEventsManager = updateEventsManager;
-    this.channelConfigEventsManager = channelConfigEventsManager;
-    this.deviceConfigEventsManager = deviceConfigEventsManager;
-    this.preferences = encryptedPreferences;
-    this.markChannelRelationsAsRemovableUseCase = markChannelRelationsAsRemovableUseCase;
-    this.insertChannelRelationForProfileUseCase = insertChannelRelationForProfileUseCase;
-    this.deleteRemovableChannelRelationsUseCase = deleteRemovableChannelRelationsUseCase;
-    this.suplaCloudConfigHolder = suplaCloudConfigHolder;
+    this.profileManager = dependencies.getProfileManager();
+    this.updateEventsManager = dependencies.getUpdateEventsManager();
+    this.channelConfigEventsManager = dependencies.getChannelConfigEventsManager();
+    this.deviceConfigEventsManager = dependencies.getDeviceConfigEventsManager();
+    this.preferences = dependencies.getEncryptedPreferences();
+    this.markChannelRelationsAsRemovableUseCase =
+        dependencies.getMarkChannelRelationsAsRemovableUseCase();
+    this.insertChannelRelationForProfileUseCase =
+        dependencies.getInsertChannelRelationForProfileUseCase();
+    this.deleteRemovableChannelRelationsUseCase =
+        dependencies.getDeleteRemovableChannelRelationsUseCase();
+    this.suplaCloudConfigHolder = dependencies.getSuplaCloudConfigHolder();
+    this.insertChannelConfigUseCase = dependencies.getInsertChannelConfigUseCase();
+    this.updateChannelUseCase = dependencies.getUpdateChannelUseCase();
+    this.updateChannelValueUseCase = dependencies.getUpdateChannelValueUseCase();
+    this.appDatabase = dependencies.getAppDatabase();
+    this.measurementsDatabase = dependencies.getMeasurementsDatabase();
+    this.profileIdHolder = dependencies.getProfileIdHolder();
   }
 
   public static SuplaRegisterError getLastRegisterError() {
@@ -1056,17 +1069,18 @@ public class SuplaClient extends Thread implements SuplaClientApi {
             + channel.Flags);
 
     // Update channel value before update the channel
-    if (DbH.updateChannelValue(channel.Value, channel.Id, channel.OnLine)) {
-      _DataChanged = true;
-    }
-
-    if (!isChannelExcluded(channel) && DbH.updateChannel(channel)) {
-      _DataChanged = true;
+    if (!isChannelExcluded(channel)) {
+      if (updateChannelValueUseCase.invoke(channel).blockingGet() == EntityUpdateResult.UPDATED) {
+        _DataChanged = true;
+      }
+      if (updateChannelUseCase.invoke(channel).blockingGet() == EntityUpdateResult.UPDATED) {
+        _DataChanged = true;
+      }
     }
 
     if (channel.EOL) {
-      updateEventsManager.emitChannelsUpdate();
       _DataChanged = DbH.setChannelsVisible(0, 2);
+      updateEventsManager.emitChannelsUpdate();
     }
 
     if (_DataChanged) {
@@ -1186,6 +1200,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
       SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onSceneChanged);
       msg.setSceneId(scene.getId());
       sendMessage(msg);
+      updateEventsManager.emitSceneUpdate(scene.getId());
     }
 
     if (scene.isEol()) {
@@ -1216,24 +1231,14 @@ public class SuplaClient extends Thread implements SuplaClientApi {
       SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onSceneChanged);
       msg.setSceneId(state.getSceneId());
       sendMessage(msg);
+      updateEventsManager.emitSceneUpdate(state.getSceneId());
     }
   }
 
   private void channelValueUpdate(SuplaChannelValueUpdate channelValueUpdate) {
 
-    if (DbH.updateChannelValue(channelValueUpdate)) {
-
-      Trace.d(
-          log_tag,
-          "Channel id"
-              + channelValueUpdate.Id
-              + " sub_value type: "
-              + channelValueUpdate.Value.SubValueType
-              + " value updated"
-              + " OnLine: "
-              + channelValueUpdate.OnLine
-              + " value[0]: "
-              + channelValueUpdate.Value.Value[0]);
+    if (updateChannelValueUseCase.invoke(channelValueUpdate).blockingGet()
+        == EntityUpdateResult.UPDATED) {
       onDataChanged(channelValueUpdate.Id, 0);
     }
 
@@ -1386,6 +1391,13 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     msg.setTimerValue(timerValue);
 
     sendMessage(msg);
+
+    if (ChannelId != 0) {
+      updateEventsManager.emitChannelUpdate(ChannelId);
+    }
+    if (GroupId != 0) {
+      updateEventsManager.emitGroupUpdate(GroupId);
+    }
   }
 
   private void onDataChanged(int ChannelId, int GroupId) {
@@ -1452,6 +1464,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
   private void onChannelConfigUpdateOrResult(SuplaChannelConfig config, ConfigResult result) {
     channelConfigEventsManager.emitConfig(result, config);
+    insertChannelConfigUseCase.invoke(config, result).blockingSubscribe();
   }
 
   private void onDeviceConfigUpdateOrResult(
@@ -1545,6 +1558,16 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   }
 
   public void run() {
+
+    // Needed to trigger database migration through Room.
+    appDatabase.getOpenHelper().getReadableDatabase();
+    measurementsDatabase.getOpenHelper().getReadableDatabase();
+
+    // After database is ready - set current profile id
+    AuthProfileItem currentProfile = profileManager.getCurrentProfile().blockingGet();
+    if (currentProfile != null) {
+      profileIdHolder.setProfileId(currentProfile.getId());
+    }
 
     DbH = DbHelper.getInstance(_context);
     DbH.loadUserIconsIntoCache();

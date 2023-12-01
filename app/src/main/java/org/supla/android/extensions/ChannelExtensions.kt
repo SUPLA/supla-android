@@ -17,63 +17,7 @@ package org.supla.android.extensions
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.R
-import org.supla.android.data.ValuesFormatter
-import org.supla.android.data.ValuesFormatter.Companion.NO_VALUE_TEXT
-import org.supla.android.data.source.remote.hvac.SuplaHvacMode
-import org.supla.android.data.source.remote.thermostat.SuplaThermostatFlags
 import org.supla.android.db.Channel
-import org.supla.android.images.ImageCache
-import org.supla.android.lib.SuplaConst
 import org.supla.android.lib.SuplaTimerState
-import org.supla.android.ui.lists.data.IssueIconType
-import org.supla.android.ui.lists.data.SlideableListItemData
 
 fun Channel.getTimerStateValue(): SuplaTimerState? = extendedValue?.extendedValue?.TimerStateValue
-
-fun Channel.hasMeasurements(): Boolean =
-  func == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER ||
-    func == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
-
-fun Channel.toThermostatSlideableListItemData(
-  mainThermometerChild: Channel?,
-  valuesFormatter: ValuesFormatter?
-): SlideableListItemData.Thermostat {
-  val thermostatValue = value.asThermostatValue()
-
-  val temperatureMin = valuesFormatter?.getTemperatureString(thermostatValue.setpointTemperatureHeat, true)
-  val temperatureMax = valuesFormatter?.getTemperatureString(thermostatValue.setpointTemperatureCool, true)
-  val subValue = when {
-    onLine.not() -> ""
-    thermostatValue.mode == SuplaHvacMode.COOL -> temperatureMax
-    thermostatValue.mode == SuplaHvacMode.HEAT_COOL -> "$temperatureMin - $temperatureMax"
-    thermostatValue.mode == SuplaHvacMode.HEAT -> temperatureMin
-    thermostatValue.mode == SuplaHvacMode.OFF -> "Off"
-    else -> ""
-  }
-
-  val indicatorIcon = when {
-    onLine && thermostatValue.flags.contains(SuplaThermostatFlags.FORCED_OFF_BY_SENSOR) -> R.drawable.ic_sensor_alert
-    onLine && thermostatValue.flags.contains(SuplaThermostatFlags.COOLING) -> R.drawable.ic_cooling
-    onLine && thermostatValue.flags.contains(SuplaThermostatFlags.HEATING) -> R.drawable.ic_heating
-    onLine && thermostatValue.mode != SuplaHvacMode.OFF -> R.drawable.ic_standby
-    else -> null
-  }
-
-  val issueIconType = when {
-    onLine && thermostatValue.flags.contains(SuplaThermostatFlags.THERMOMETER_ERROR) -> IssueIconType.ERROR
-    onLine && thermostatValue.flags.contains(SuplaThermostatFlags.CLOCK_ERROR) -> IssueIconType.WARNING
-    else -> null
-  }
-
-  return SlideableListItemData.Thermostat(
-    online = onLine,
-    titleProvider = { getNotEmptyCaption(it) },
-    iconProvider = { ImageCache.getBitmap(it, imageIdx) },
-    value = mainThermometerChild?.humanReadableValue?.toString() ?: NO_VALUE_TEXT,
-    subValue = subValue ?: NO_VALUE_TEXT,
-    indicatorIcon = indicatorIcon,
-    issueIconType = issueIconType,
-    estimatedTimerEndDate = getTimerStateValue()?.countdownEndsAt
-  )
-}

@@ -22,13 +22,9 @@ import android.database.Cursor;
 import java.util.Date;
 import org.supla.android.data.source.local.ElectricityMeterLogDao;
 import org.supla.android.data.source.local.ImpulseCounterLogDao;
-import org.supla.android.data.source.local.TempHumidityLogDao;
-import org.supla.android.data.source.local.TemperatureLogDao;
 import org.supla.android.data.source.local.ThermostatLogDao;
 import org.supla.android.db.ElectricityMeasurementItem;
 import org.supla.android.db.ImpulseCounterMeasurementItem;
-import org.supla.android.db.TempHumidityMeasurementItem;
-import org.supla.android.db.TemperatureMeasurementItem;
 import org.supla.android.db.ThermostatMeasurementItem;
 
 public class DefaultMeasurableItemsRepository implements MeasurableItemsRepository {
@@ -36,20 +32,14 @@ public class DefaultMeasurableItemsRepository implements MeasurableItemsReposito
   private final ImpulseCounterLogDao impulseCounterLogDao;
   private final ElectricityMeterLogDao electricityMeterLogDao;
   private final ThermostatLogDao thermostatLogDao;
-  private final TempHumidityLogDao tempHumidityLogDao;
-  private final TemperatureLogDao temperatureLogDao;
 
   public DefaultMeasurableItemsRepository(
       ImpulseCounterLogDao impulseCounterLogDao,
       ElectricityMeterLogDao electricityMeterLogDao,
-      ThermostatLogDao thermostatLogDao,
-      TempHumidityLogDao tempHumidityLogDao,
-      TemperatureLogDao temperatureLogDao) {
+      ThermostatLogDao thermostatLogDao) {
     this.impulseCounterLogDao = impulseCounterLogDao;
     this.electricityMeterLogDao = electricityMeterLogDao;
     this.thermostatLogDao = thermostatLogDao;
-    this.tempHumidityLogDao = tempHumidityLogDao;
-    this.temperatureLogDao = temperatureLogDao;
   }
 
   @Override
@@ -115,56 +105,6 @@ public class DefaultMeasurableItemsRepository implements MeasurableItemsReposito
   @Override
   public Cursor getThermostatMeasurements(int channelId, Date dateFrom, Date dateTo) {
     return thermostatLogDao.getThermostatMeasurements(channelId, dateFrom, dateTo);
-  }
-
-  @Override
-  public int getTempHumidityMeasurementTimestamp(int channelId, boolean min) {
-    return tempHumidityLogDao.getTempHumidityMeasurementTimestamp(channelId, min);
-  }
-
-  @Override
-  public int getTempHumidityMeasurementTotalCount(int channelId) {
-    return tempHumidityLogDao.getTempHumidityMeasurementTotalCount(channelId);
-  }
-
-  @Override
-  public void deleteTempHumidityMeasurements(int channelId) {
-    tempHumidityLogDao.deleteTempHumidityMeasurements(channelId);
-  }
-
-  @Override
-  public void addTempHumidityMeasurement(TempHumidityMeasurementItem emi) {
-    tempHumidityLogDao.addTempHumidityMeasurement(emi);
-  }
-
-  @Override
-  public Cursor getTempHumidityMeasurements(int channelId, Date dateFrom, Date dateTo) {
-    return tempHumidityLogDao.getTempHumidityMeasurements(channelId, dateFrom, dateTo);
-  }
-
-  @Override
-  public int getTemperatureMeasurementTimestamp(int channelId, boolean min) {
-    return temperatureLogDao.getTemperatureMeasurementTimestamp(channelId, min);
-  }
-
-  @Override
-  public int getTemperatureMeasurementTotalCount(int channelId) {
-    return temperatureLogDao.getTemperatureMeasurementTotalCount(channelId);
-  }
-
-  @Override
-  public void deleteTemperatureMeasurements(int channelId) {
-    temperatureLogDao.deleteTemperatureMeasurements(channelId);
-  }
-
-  @Override
-  public void addTemperatureMeasurement(TemperatureMeasurementItem emi) {
-    temperatureLogDao.addTemperatureMeasurement(emi);
-  }
-
-  @Override
-  public Cursor getTemperatureMeasurements(int channelId, Date dateFrom, Date dateTo) {
-    return temperatureLogDao.getTemperatureMeasurements(channelId, dateFrom, dateTo);
   }
 
   @Override

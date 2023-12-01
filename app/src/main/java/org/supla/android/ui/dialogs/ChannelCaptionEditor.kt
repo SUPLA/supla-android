@@ -17,16 +17,18 @@ class ChannelCaptionEditor(context: Context?) : CaptionEditor(context) {
   override fun getCaption(): String {
     val dbH = DbHelper.getInstance(context)
     val channel = dbH.getChannel(id)
-    return if (channel != null && channel.caption != null) {
-      channel.caption
-    } else ""
+    return if (channel != null && channel.hasCustomCaption()) {
+      channel.getCaption(context)
+    } else {
+      ""
+    }
   }
 
   override fun applyChanged(newCaption: String) {
     val dbH = DbHelper.getInstance(context)
     val channel = dbH.getChannel(id)
     if (channel != null) {
-      channel.caption = newCaption
+      channel.setCaption(newCaption)
       dbH.updateChannel(channel)
       val client = SuplaApp.getApp().getSuplaClient()
       client?.setChannelCaption(id, newCaption)

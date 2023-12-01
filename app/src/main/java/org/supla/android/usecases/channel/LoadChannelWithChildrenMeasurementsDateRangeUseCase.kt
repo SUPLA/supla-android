@@ -22,9 +22,10 @@ import org.supla.android.data.model.Optional
 import org.supla.android.data.model.chart.DateRange
 import org.supla.android.data.source.TemperatureAndHumidityLogRepository
 import org.supla.android.data.source.TemperatureLogRepository
-import org.supla.android.db.Channel
-import org.supla.android.extensions.hasMeasurements
-import org.supla.android.extensions.isHvacThermostat
+import org.supla.android.data.source.local.entity.ChannelEntity
+import org.supla.android.data.source.local.entity.complex.hasMeasurements
+import org.supla.android.data.source.local.entity.complex.isHvacThermostat
+import org.supla.android.data.source.local.entity.hasMeasurements
 import org.supla.android.lib.SuplaConst
 import java.util.Date
 import javax.inject.Inject
@@ -48,7 +49,7 @@ class LoadChannelWithChildrenMeasurementsDateRangeUseCase @Inject constructor(
           ) { min, max -> Optional.of(DateRange(min, max)) }
             .onErrorReturnItem(Optional.empty())
         } else {
-          Single.error(IllegalArgumentException("Channel function not supported (${it.channel.func}"))
+          Single.error(IllegalArgumentException("Channel function not supported (${it.channel.channelEntity.function}"))
         }
       }
 
@@ -56,23 +57,23 @@ class LoadChannelWithChildrenMeasurementsDateRangeUseCase @Inject constructor(
     channelWithChildren: ChannelWithChildren,
     profileId: Long
   ): Single<Long> {
-    val channelsWithMeasurements = mutableListOf<Channel>().also { list ->
+    val channelsWithMeasurements = mutableListOf<ChannelEntity>().also { list ->
       list.addAll(channelWithChildren.children.filter { it.channel.hasMeasurements() }.map { it.channel })
       if (channelWithChildren.channel.hasMeasurements()) {
-        list.add(channelWithChildren.channel)
+        list.add(channelWithChildren.channel.channelEntity)
       }
     }
 
     val observables = mutableListOf<Single<Optional<Long>>>().also { list ->
       channelsWithMeasurements.forEach {
-        if (it.func == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER) {
+        if (it.function == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER) {
           list.add(
             temperatureLogRepository
               .findMinTimestamp(it.remoteId, profileId)
               .map { value -> Optional.of(value) }
               .onErrorReturnItem(Optional.empty())
           )
-        } else if (it.func == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE) {
+        } else if (it.function == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE) {
           list.add(
             temperatureAndHumidityLogRepository
               .findMinTimestamp(it.remoteId, profileId)
@@ -92,23 +93,23 @@ class LoadChannelWithChildrenMeasurementsDateRangeUseCase @Inject constructor(
     channelWithChildren: ChannelWithChildren,
     profileId: Long
   ): Single<Long> {
-    val channelsWithMeasurements = mutableListOf<Channel>().also { list ->
+    val channelsWithMeasurements = mutableListOf<ChannelEntity>().also { list ->
       list.addAll(channelWithChildren.children.filter { it.channel.hasMeasurements() }.map { it.channel })
       if (channelWithChildren.channel.hasMeasurements()) {
-        list.add(channelWithChildren.channel)
+        list.add(channelWithChildren.channel.channelEntity)
       }
     }
 
     val observables = mutableListOf<Single<Optional<Long>>>().also { list ->
       channelsWithMeasurements.forEach {
-        if (it.func == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER) {
+        if (it.function == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER) {
           list.add(
             temperatureLogRepository
               .findMaxTimestamp(it.remoteId, profileId)
               .map { value -> Optional.of(value) }
               .onErrorReturnItem(Optional.empty())
           )
-        } else if (it.func == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE) {
+        } else if (it.function == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE) {
           list.add(
             temperatureAndHumidityLogRepository
               .findMaxTimestamp(it.remoteId, profileId)

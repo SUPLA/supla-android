@@ -62,7 +62,9 @@ fun IconButtonFilled(
         interactionSource = remember { MutableInteractionSource() }
       )
   ) {
-    val colorFilter = if (iconTint == null) null else {
+    val colorFilter = if (iconTint == null) {
+      null
+    } else {
       ColorFilter.tint(iconTint)
     }
     Image(

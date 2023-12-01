@@ -79,7 +79,6 @@ public abstract class ChartHelper extends ValueFormatter {
   private LineDataSet lineDataSet;
   private Double downloadProgress;
   private Preferences prefs;
-  private ZoomSettings persistedZoom;
   private final ProfileManager profileManager;
 
   public ChartHelper(Context context) {
@@ -797,19 +796,6 @@ public abstract class ChartHelper extends ValueFormatter {
     prefs.setChartType(profileId, func, 1, slave.getSelectedItemPosition());
   }
 
-  public void persistSpinner(int func, Spinner master) {
-    int profileId = profileManager.getCurrentProfile().blockingGet().getId().intValue();
-    prefs.setChartType(profileId, func, 3, master.getSelectedItemPosition());
-  }
-
-  public void restoreSpinner(int func, Spinner master) {
-    int profileId = profileManager.getCurrentProfile().blockingGet().getId().intValue();
-    int mct = prefs.getChartType(profileId, func, 3, -1);
-    if (mct > -1) {
-      master.setSelection(mct);
-    }
-  }
-
   private int getCorrectPosition(Spinner spinner, int position) {
     if (spinner != null && spinner.getAdapter() != null && spinner.getAdapter().getCount() > 0) {
       if (position < 0) {
@@ -907,10 +893,6 @@ public abstract class ChartHelper extends ValueFormatter {
     return pieChart != null && pieChart.getVisibility() == View.VISIBLE;
   }
 
-  public Double getDownloadProgress() {
-    return downloadProgress;
-  }
-
   public void setDownloadProgress(Double downloadProgress) {
     this.downloadProgress = downloadProgress;
     updateDescription();
@@ -941,35 +923,5 @@ public abstract class ChartHelper extends ValueFormatter {
     Bar_VectorBalance_Days,
     Bar_VectorBalance_Months,
     Bar_VectorBalance_Years
-  }
-
-  public void persistZoom() {
-    persistedZoom = new ZoomSettings(combinedChart);
-  }
-
-  public void restoreZoom() {
-    if (persistedZoom != null) {
-      persistedZoom.apply(combinedChart);
-      persistedZoom = null;
-    }
-  }
-
-  private class ZoomSettings {
-
-    float scaleX;
-    float scaleY;
-    float x;
-    float y;
-
-    ZoomSettings(CombinedChart chart) {
-      x = (chart.getLowestVisibleX() + chart.getHighestVisibleX()) / 2.0f;
-      y = (chart.getYChartMin() + chart.getYChartMax()) / 2.0f;
-      scaleX = chart.getScaleX();
-      scaleY = chart.getScaleY();
-    }
-
-    void apply(CombinedChart chart) {
-      chart.zoom(scaleX, scaleY, x, y);
-    }
   }
 }

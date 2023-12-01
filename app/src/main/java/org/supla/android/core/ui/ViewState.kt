@@ -22,5 +22,5 @@ import android.graphics.Bitmap
 
 open class ViewState
 
-typealias BitmapProvider = (context: Context) -> Bitmap
+typealias BitmapProvider = (context: Context) -> Bitmap?
 typealias StringProvider = (context: Context) -> String

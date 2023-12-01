@@ -191,6 +191,10 @@ public class Preferences {
     return _prefs.getInt(pref_channel_height, 100);
   }
 
+  public float getScale() {
+    return getChannelHeight() / 100f;
+  }
+
   public void setChannelHeight(int val) {
     SharedPreferences.Editor ed = _prefs.edit();
     ed.putInt(pref_channel_height, val);

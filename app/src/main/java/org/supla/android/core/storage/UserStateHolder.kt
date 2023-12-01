@@ -33,12 +33,12 @@ class UserStateHolder @Inject constructor(@ApplicationContext context: Context) 
   private val preferences = context.getSharedPreferences(USER_STATE_PREFERENCES, Context.MODE_PRIVATE)
   private val gson = GsonBuilder().create()
 
-  fun getTemperatureChartState(profileId: Long, remoteId: Int) =
+  fun getChartState(profileId: Long, remoteId: Int) =
     preferences.getString(getKey(TEMPERATURE_CHART_STATE, profileId, remoteId), null)?.let {
       gson.fromJson(it, TemperatureChartState::class.java)
     } ?: TemperatureChartState.default()
 
-  fun setTemperatureChartState(state: TemperatureChartState, profileId: Long, remoteId: Int) {
+  fun setChartState(state: TemperatureChartState, profileId: Long, remoteId: Int) {
     with(preferences.edit()) {
       putString(getKey(TEMPERATURE_CHART_STATE, profileId, remoteId), gson.toJson(state))
       apply()

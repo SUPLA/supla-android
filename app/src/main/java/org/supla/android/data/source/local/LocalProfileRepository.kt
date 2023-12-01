@@ -24,9 +24,19 @@ import org.supla.android.Preferences
 import org.supla.android.SuplaApp
 import org.supla.android.Trace
 import org.supla.android.data.source.ProfileRepository
+import org.supla.android.data.source.local.entity.ChannelConfigEntity
+import org.supla.android.data.source.local.entity.ChannelEntity
+import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity
+import org.supla.android.data.source.local.entity.ChannelGroupEntity
+import org.supla.android.data.source.local.entity.ChannelGroupRelationEntity
 import org.supla.android.data.source.local.entity.ChannelRelationEntity
+import org.supla.android.data.source.local.entity.ChannelValueEntity
+import org.supla.android.data.source.local.entity.ColorEntity
+import org.supla.android.data.source.local.entity.LocationEntity
+import org.supla.android.data.source.local.entity.ProfileEntity
+import org.supla.android.data.source.local.entity.SceneEntity
+import org.supla.android.data.source.local.entity.UserIconEntity
 import org.supla.android.db.AuthProfileItem
-import org.supla.android.db.SuplaContract
 import org.supla.android.extensions.TAG
 import org.supla.android.lib.SuplaConst
 import org.supla.android.profile.AuthInfo
@@ -39,22 +49,22 @@ class LocalProfileRepository(provider: DatabaseAccessProvider) : ProfileReposito
   override fun createProfile(profile: AuthProfileItem): Long {
     profile.authInfo.guid = encrypted(randomGenerator.nextBytes(SuplaConst.SUPLA_GUID_SIZE))
     profile.authInfo.authKey = encrypted(randomGenerator.nextBytes(SuplaConst.SUPLA_AUTHKEY_SIZE))
-    return insert(profile, SuplaContract.AuthProfileEntry.TABLE_NAME)
+    return insert(profile, ProfileEntity.TABLE_NAME)
   }
 
   override fun getProfile(id: Long): AuthProfileItem? {
     return getItem(
       { makeEmptyAuthItem() },
-      SuplaContract.AuthProfileEntry.ALL_COLUMNS,
-      SuplaContract.AuthProfileEntry.TABLE_NAME,
-      key(SuplaContract.AuthProfileEntry._ID, id)
+      ProfileEntity.ALL_COLUMNS,
+      ProfileEntity.TABLE_NAME,
+      key(ProfileEntity.COLUMN_ID, id)
     )
   }
 
   override fun deleteProfile(id: Long) {
     delete(
-      SuplaContract.AuthProfileEntry.TABLE_NAME,
-      key(SuplaContract.AuthProfileEntry._ID, id)
+      ProfileEntity.TABLE_NAME,
+      key(ProfileEntity.COLUMN_ID, id)
     )
     removeProfileBoundData(id)
   }
@@ -66,8 +76,8 @@ class LocalProfileRepository(provider: DatabaseAccessProvider) : ProfileReposito
     }
     update(
       profile,
-      SuplaContract.AuthProfileEntry.TABLE_NAME,
-      key(SuplaContract.AuthProfileEntry._ID, profile.id)
+      ProfileEntity.TABLE_NAME,
+      key(ProfileEntity.COLUMN_ID, profile.id)
     )
   }
 
@@ -77,13 +87,13 @@ class LocalProfileRepository(provider: DatabaseAccessProvider) : ProfileReposito
         val rv = mutableListOf<AuthProfileItem>()
         val cursor =
           it.query(
-            SuplaContract.AuthProfileEntry.TABLE_NAME,
-            SuplaContract.AuthProfileEntry.ALL_COLUMNS,
+            ProfileEntity.TABLE_NAME,
+            ProfileEntity.ALL_COLUMNS,
             null /*selection*/,
             null /*selectionArgs*/,
             null /*groupBy*/,
             null /*having*/,
-            SuplaContract.AuthProfileEntry._ID /*order by*/,
+            ProfileEntity.COLUMN_ID /*order by*/,
             null /*limit*/
           )
         cursor.moveToFirst()
@@ -104,14 +114,14 @@ class LocalProfileRepository(provider: DatabaseAccessProvider) : ProfileReposito
       db.beginTransaction()
       try {
         val cv1 = ContentValues()
-        cv1.put(SuplaContract.AuthProfileEntry.COLUMN_NAME_IS_ACTIVE, 0)
-        db.update(SuplaContract.AuthProfileEntry.TABLE_NAME, cv1, null, null)
+        cv1.put(ProfileEntity.COLUMN_ACTIVE, 0)
+        db.update(ProfileEntity.TABLE_NAME, cv1, null, null)
         val cv2 = ContentValues()
-        cv2.put(SuplaContract.AuthProfileEntry.COLUMN_NAME_IS_ACTIVE, 1)
+        cv2.put(ProfileEntity.COLUMN_ACTIVE, 1)
         db.update(
-          SuplaContract.AuthProfileEntry.TABLE_NAME,
+          ProfileEntity.TABLE_NAME,
           cv2,
-          SuplaContract.AuthProfileEntry._ID + " = ?",
+          ProfileEntity.COLUMN_ID + " = ?",
           arrayOf(id.toString())
         )
 
@@ -145,20 +155,21 @@ class LocalProfileRepository(provider: DatabaseAccessProvider) : ProfileReposito
   }
 
   private fun removeProfileBoundData(id: Long) {
-    val tables = listOf(
-      SuplaContract.LocationEntry.TABLE_NAME,
-      SuplaContract.ChannelEntry.TABLE_NAME,
-      SuplaContract.ChannelValueEntry.TABLE_NAME,
-      SuplaContract.ChannelExtendedValueEntry.TABLE_NAME,
-      SuplaContract.ColorListItemEntry.TABLE_NAME,
-      SuplaContract.ChannelGroupEntry.TABLE_NAME,
-      SuplaContract.ChannelGroupRelationEntry.TABLE_NAME,
-      SuplaContract.SceneEntry.TABLE_NAME,
-      SuplaContract.UserIconsEntry.TABLE_NAME,
-      ChannelRelationEntity.TABLE_NAME
+    val tables = mapOf(
+      LocationEntity.TABLE_NAME to LocationEntity.COLUMN_PROFILE_ID,
+      ChannelEntity.TABLE_NAME to ChannelEntity.COLUMN_PROFILE_ID,
+      ChannelValueEntity.TABLE_NAME to ChannelValueEntity.COLUMN_PROFILE_ID,
+      ChannelExtendedValueEntity.TABLE_NAME to ChannelExtendedValueEntity.COLUMN_PROFILE_ID,
+      ColorEntity.TABLE_NAME to ColorEntity.COLUMN_PROFILE_ID,
+      ChannelGroupEntity.TABLE_NAME to ChannelGroupEntity.COLUMN_PROFILE_ID,
+      ChannelGroupRelationEntity.TABLE_NAME to ChannelGroupRelationEntity.COLUMN_PROFILE_ID,
+      SceneEntity.TABLE_NAME to SceneEntity.COLUMN_PROFILE_ID,
+      UserIconEntity.TABLE_NAME to UserIconEntity.COLUMN_PROFILE_ID,
+      ChannelRelationEntity.TABLE_NAME to ChannelRelationEntity.COLUMN_PROFILE_ID,
+      ChannelConfigEntity.TABLE_NAME to ChannelConfigEntity.COLUMN_PROFILE_ID
     )
-    for (table in tables) {
-      delete(table, key(SuplaContract.ChannelEntry.COLUMN_NAME_PROFILEID, id))
+    for ((table, column) in tables) {
+      delete(table, key(column, id))
     }
   }
 }

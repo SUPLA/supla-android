@@ -51,7 +51,7 @@ public class ChannelStatePopup
   private int remoteId;
   private Context context;
   private int channelFunc;
-  private int channelFlags;
+  private long channelFlags;
   private SuplaChannelState lastState;
 
   private LinearLayout llChannelID;
@@ -337,7 +337,7 @@ public class ChannelStatePopup
 
     if (channel != null) {
 
-      tvInfoTitle.setText(channel.getNotEmptyCaption(context));
+      tvInfoTitle.setText(channel.getCaption(context));
       channelFunc = channel.getFunc();
       channelFlags = channel.getFlags();
 

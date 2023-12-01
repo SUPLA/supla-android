@@ -8,6 +8,7 @@ steps:
   commands:
     - mv app/drone.google-services.json app/google-services.json
     - mv app/src/internaltest/drone.google-services.json app/src/internaltest/google-services.json
+    - mv app/src/internalTestRelease/drone.google-services.json app/src/internalTestRelease/google-services.json
     - ./gradlew build connectedCheck
 
 # Use in case of problems with unit tests

@@ -5,7 +5,7 @@ plugins {
   kotlin("kapt")
   id("androidx.navigation.safeargs.kotlin")
   id("dagger.hilt.android.plugin")
-    id("com.google.gms.google-services")
+  id("com.google.gms.google-services")
 }
 
 android {
@@ -44,10 +44,18 @@ android {
       initWith(buildTypes.getByName("debug"))
       applicationIdSuffix = ".t"
     }
+    create("internalTestRelease") {
+      initWith(buildTypes.getByName("release"))
+      applicationIdSuffix = ".t"
+      signingConfig = signingConfigs.getByName("debug")
+    }
   }
 
   sourceSets {
     getByName("internaltest") {
+      res.srcDir("internaltest/res")
+    }
+    getByName("internalTestRelease") {
       res.srcDir("internaltest/res")
     }
     getByName("main") {
@@ -184,7 +192,11 @@ spotless {
     target(fileTree("dir" to "src", "include" to "**/*.kt"))
     ktlint(Versions.KtLint).editorConfigOverride(
       mapOf(
-        "disabled_rules" to "no-wildcard-imports, filename",
+        "ktlint_standard_no-wildcard-imports" to "disabled",
+        "ktlint_standard_filename" to "disabled",
+        "ktlint_standard_trailing-comma-on-declaration-site" to "disabled",
+        "ktlint_standard_trailing-comma-on-call-site" to "disabled",
+        "ktlint_experimental" to "disabled",
         "max_line_length" to "140",
         "indent_size" to "2"
       )

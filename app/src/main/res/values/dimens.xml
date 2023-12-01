@@ -1,5 +1,6 @@
 <resources>
 
+    <dimen name="distance_micro">4dp</dimen>
     <dimen name="distance_tiny">8dp</dimen>
     <dimen name="distance_small">16dp</dimen>
     <dimen name="distance_default">24dp</dimen>

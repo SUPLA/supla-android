@@ -30,9 +30,10 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import org.supla.android.R
 import org.supla.android.Trace
+import org.supla.android.data.model.general.IconType
 import org.supla.android.data.source.local.entity.Scene
 import org.supla.android.db.Channel
-import org.supla.android.db.ChannelBase
+import org.supla.android.extensions.getChannelIconUseCase
 import org.supla.android.extensions.isThermometer
 import org.supla.android.images.ImageCache
 import org.supla.android.lib.SuplaConst
@@ -150,14 +151,14 @@ class SingleWidget : WidgetProviderBase() {
         R.id.single_widget_button,
         ImageCache.getBitmap(
           context,
-          channel.getImageIdx(false, ChannelBase.WhichOne.First, active)
+          context.getChannelIconUseCase(channel, IconType.SINGLE, false)
         )
       )
       views.setImageViewBitmap(
         R.id.single_widget_button_night_mode,
         ImageCache.getBitmap(
           context,
-          channel.getImageIdx(true, ChannelBase.WhichOne.First, active)
+          context.getChannelIconUseCase(channel, IconType.SINGLE, true)
         )
       )
       views.setViewVisibility(R.id.single_widget_button, View.VISIBLE)

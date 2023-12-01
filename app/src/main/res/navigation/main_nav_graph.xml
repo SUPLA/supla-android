@@ -11,7 +11,7 @@
 
   <fragment
     android:id="@+id/legacy_detail_fragment"
-    android:name="org.supla.android.features.legacydetail.LegacyDetailFragment" />
+    android:name="org.supla.android.features.details.legacydetail.LegacyDetailFragment" />
 
   <fragment
     android:id="@+id/application_settings_fragment"
@@ -25,13 +25,17 @@
 
   <fragment
     android:id="@+id/switch_detail_fragment"
-    android:name="org.supla.android.features.switchdetail.SwitchDetailFragment" />
+    android:name="org.supla.android.features.details.switchdetail.SwitchDetailFragment" />
 
   <fragment
     android:id="@+id/thermostat_detail_fragment"
-    android:name="org.supla.android.features.thermostatdetail.ThermostatDetailFragment" />
+    android:name="org.supla.android.features.details.thermostatdetail.ThermostatDetailFragment" />
 
   <fragment
     android:id="@+id/thermometer_detail_fragment"
-    android:name="org.supla.android.features.thermometerdetail.ThermometerDetailFragment" />
+    android:name="org.supla.android.features.details.thermometerdetail.ThermometerDetailFragment" />
+
+  <fragment
+    android:id="@+id/gpm_detail_fragment"
+    android:name="org.supla.android.features.details.gpmdetail.GpmDetailFragment" />
 </navigation>

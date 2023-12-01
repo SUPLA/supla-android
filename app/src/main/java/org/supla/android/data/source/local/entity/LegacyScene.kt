@@ -21,7 +21,6 @@ package org.supla.android.data.source.local.entity
 import android.content.ContentValues
 import android.database.Cursor
 import org.supla.android.db.DbItem
-import org.supla.android.db.SuplaContract
 import java.text.DateFormat
 import java.util.*
 
@@ -59,37 +58,32 @@ data class LegacyScene(
   }
 
   override fun AssignCursorData(cur: Cursor) {
-    id = cur.getLong(
-      cur.getColumnIndexOrThrow(SuplaContract.SceneEntry._ID)
-    )
-    sceneId = cur.getInt(cur.getColumnIndexOrThrow(SuplaContract.SceneEntry.COLUMN_NAME_SCENEID))
-    locationId =
-      cur.getInt(cur.getColumnIndexOrThrow(SuplaContract.SceneEntry.COLUMN_NAME_LOCATIONID))
-    altIcon = cur.getInt(cur.getColumnIndexOrThrow(SuplaContract.SceneEntry.COLUMN_NAME_ALTICON))
-    userIcon = cur.getInt(cur.getColumnIndexOrThrow(SuplaContract.SceneEntry.COLUMN_NAME_USERICON))
-    caption = cur.getString(cur.getColumnIndexOrThrow(SuplaContract.SceneEntry.COLUMN_NAME_CAPTION))
+    id = cur.getLong(cur.getColumnIndexOrThrow(SceneEntity.COLUMN_ID))
+    sceneId = cur.getInt(cur.getColumnIndexOrThrow(SceneEntity.COLUMN_REMOTE_ID))
+    locationId = cur.getInt(cur.getColumnIndexOrThrow(SceneEntity.COLUMN_LOCATION_ID))
+    altIcon = cur.getInt(cur.getColumnIndexOrThrow(SceneEntity.COLUMN_ALT_ICON))
+    userIcon = cur.getInt(cur.getColumnIndexOrThrow(SceneEntity.COLUMN_USER_ICON))
+    caption = cur.getString(cur.getColumnIndexOrThrow(SceneEntity.COLUMN_CAPTION))
 
-    var idx = cur.getColumnIndexOrThrow(SuplaContract.SceneEntry.COLUMN_NAME_STARTED_AT)
+    var idx = cur.getColumnIndexOrThrow(SceneEntity.COLUMN_STARTED_AT)
     if (!cur.isNull(idx)) {
       startedAt = dateFromString(cur.getString(idx))
     }
-    idx = cur.getColumnIndexOrThrow(SuplaContract.SceneEntry.COLUMN_NAME_EST_END_DATE)
+    idx = cur.getColumnIndexOrThrow(SceneEntity.COLUMN_ESTIMATED_END_DATE)
     if (!cur.isNull(idx)) {
       estimatedEndDate = dateFromString(cur.getString(idx))
     }
-    idx = cur.getColumnIndexOrThrow(SuplaContract.SceneEntry.COLUMN_NAME_INITIATOR_ID)
+    idx = cur.getColumnIndexOrThrow(SceneEntity.COLUMN_INITIATOR_ID)
     if (!cur.isNull(idx)) {
       initiatorId = cur.getInt(idx)
     }
-    idx = cur.getColumnIndexOrThrow(SuplaContract.SceneEntry.COLUMN_NAME_INITIATOR_NAME)
+    idx = cur.getColumnIndexOrThrow(SceneEntity.COLUMN_INITIATOR_NAME)
     if (!cur.isNull(idx)) {
       initiatorName = cur.getString(idx)
     }
-    sortOrder =
-      cur.getInt(cur.getColumnIndexOrThrow(SuplaContract.SceneEntry.COLUMN_NAME_SORT_ORDER))
-    profileId =
-      cur.getLong(cur.getColumnIndexOrThrow(SuplaContract.SceneEntry.COLUMN_NAME_PROFILEID))
-    visible = cur.getInt(cur.getColumnIndexOrThrow(SuplaContract.SceneEntry.COLUMN_NAME_VISIBLE))
+    sortOrder = cur.getInt(cur.getColumnIndexOrThrow(SceneEntity.COLUMN_SORT_ORDER))
+    profileId = cur.getLong(cur.getColumnIndexOrThrow(SceneEntity.COLUMN_PROFILE_ID))
+    visible = cur.getInt(cur.getColumnIndexOrThrow(SceneEntity.COLUMN_VISIBLE))
   }
 
   override fun getContentValues(): ContentValues {

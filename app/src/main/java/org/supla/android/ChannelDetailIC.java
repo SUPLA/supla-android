@@ -39,7 +39,9 @@ import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelExtendedValue;
 import org.supla.android.db.MeasurementsDbHelper;
+import org.supla.android.extensions.ContextExtensionsKt;
 import org.supla.android.images.ImageCache;
+import org.supla.android.images.ImageId;
 import org.supla.android.lib.SuplaChannelImpulseCounterValue;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaConst;
@@ -149,10 +151,11 @@ public class ChannelDetailIC extends DetailLayout
   private void channelExtendedDataToViews() {
     Channel channel = (Channel) getChannelFromDatabase();
 
-    if (icImgIcon.getTag() == null || !icImgIcon.getTag().equals(channel.getImageIdx())) {
+    ImageId imageId = ContextExtensionsKt.getGetChannelIconUseCase(getContext()).invoke(channel);
+    if (icImgIcon.getTag() == null || !icImgIcon.getTag().equals(imageId)) {
       icImgIcon.setBackgroundColor(Color.TRANSPARENT);
-      icImgIcon.setImageBitmap(ImageCache.getBitmap(getContext(), channel.getImageIdx()));
-      icImgIcon.setTag(channel.getImageIdx());
+      icImgIcon.setImageBitmap(ImageCache.getBitmap(getContext(), imageId));
+      icImgIcon.setTag(imageId);
     }
 
     warningIcon.setChannel(channel);

@@ -22,7 +22,7 @@ import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.database.Cursor;
 import java.util.ArrayList;
-import org.supla.android.images.ImageId;
+import org.supla.android.data.source.local.entity.ChannelGroupEntity;
 import org.supla.android.lib.SuplaConst;
 
 public class ChannelGroup extends ChannelBase {
@@ -58,52 +58,37 @@ public class ChannelGroup extends ChannelBase {
 
   @SuppressLint("Range")
   public void AssignCursorData(Cursor cursor) {
-    setId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry._ID)));
-    setRemoteId(
-        cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_GROUPID)));
-    setFunc(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_FUNC)));
-    setVisible(
-        cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_VISIBLE)));
-    OnLine =
-        cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_ONLINE));
-    setCaption(
-        cursor.getString(
-            cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_CAPTION)));
-    TotalValue =
-        cursor.getString(
-            cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_TOTALVALUE));
-    setLocationId(
-        cursor.getLong(
-            cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_LOCATIONID)));
-    setAltIcon(
-        cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_ALTICON)));
-    setUserIconId(
-        cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON)));
-    setFlags(
-        cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_FLAGS)));
-    setPosition(
-        cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_POSITION)));
-    setProfileId(
-        cursor.getLong(
-            cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_PROFILEID)));
+    setId(cursor.getLong(cursor.getColumnIndex(ChannelGroupEntity.COLUMN_ID)));
+    setRemoteId(cursor.getInt(cursor.getColumnIndex(ChannelGroupEntity.COLUMN_REMOTE_ID)));
+    setFunc(cursor.getInt(cursor.getColumnIndex(ChannelGroupEntity.COLUMN_FUNCTION)));
+    setVisible(cursor.getInt(cursor.getColumnIndex(ChannelGroupEntity.COLUMN_VISIBLE)));
+    OnLine = cursor.getInt(cursor.getColumnIndex(ChannelGroupEntity.COLUMN_ONLINE));
+    setCaption(cursor.getString(cursor.getColumnIndex(ChannelGroupEntity.COLUMN_CAPTION)));
+    TotalValue = cursor.getString(cursor.getColumnIndex(ChannelGroupEntity.COLUMN_TOTAL_VALUE));
+    setLocationId(cursor.getLong(cursor.getColumnIndex(ChannelGroupEntity.COLUMN_LOCATION_ID)));
+    setAltIcon(cursor.getInt(cursor.getColumnIndex(ChannelGroupEntity.COLUMN_ALT_ICON)));
+    setUserIconId(cursor.getInt(cursor.getColumnIndex(ChannelGroupEntity.COLUMN_USER_ICON)));
+    setFlags(cursor.getInt(cursor.getColumnIndex(ChannelGroupEntity.COLUMN_FLAGS)));
+    setPosition(cursor.getInt(cursor.getColumnIndex(ChannelGroupEntity.COLUMN_POSITION)));
+    setProfileId(cursor.getLong(cursor.getColumnIndex(ChannelGroupEntity.COLUMN_PROFILE_ID)));
   }
 
   public ContentValues getContentValues() {
 
     ContentValues values = new ContentValues();
 
-    values.put(SuplaContract.ChannelGroupEntry.COLUMN_NAME_GROUPID, getRemoteId());
-    values.put(SuplaContract.ChannelGroupEntry.COLUMN_NAME_CAPTION, getCaption());
-    values.put(SuplaContract.ChannelGroupEntry.COLUMN_NAME_TOTALVALUE, getTotalValue());
-    values.put(SuplaContract.ChannelGroupEntry.COLUMN_NAME_ONLINE, getOnLinePercent());
-    values.put(SuplaContract.ChannelGroupEntry.COLUMN_NAME_FUNC, getFunc());
-    values.put(SuplaContract.ChannelGroupEntry.COLUMN_NAME_VISIBLE, getVisible());
-    values.put(SuplaContract.ChannelGroupEntry.COLUMN_NAME_LOCATIONID, getLocationId());
-    values.put(SuplaContract.ChannelGroupEntry.COLUMN_NAME_ALTICON, getAltIcon());
-    values.put(SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON, getUserIconId());
-    values.put(SuplaContract.ChannelGroupEntry.COLUMN_NAME_FLAGS, getFlags());
-    values.put(SuplaContract.ChannelGroupEntry.COLUMN_NAME_POSITION, position);
-    values.put(SuplaContract.ChannelGroupEntry.COLUMN_NAME_PROFILEID, getProfileId());
+    values.put(ChannelGroupEntity.COLUMN_REMOTE_ID, getRemoteId());
+    values.put(ChannelGroupEntity.COLUMN_CAPTION, getCaption());
+    values.put(ChannelGroupEntity.COLUMN_TOTAL_VALUE, getTotalValue());
+    values.put(ChannelGroupEntity.COLUMN_ONLINE, getOnLinePercent());
+    values.put(ChannelGroupEntity.COLUMN_FUNCTION, getFunc());
+    values.put(ChannelGroupEntity.COLUMN_VISIBLE, getVisible());
+    values.put(ChannelGroupEntity.COLUMN_LOCATION_ID, getLocationId());
+    values.put(ChannelGroupEntity.COLUMN_ALT_ICON, getAltIcon());
+    values.put(ChannelGroupEntity.COLUMN_USER_ICON, getUserIconId());
+    values.put(ChannelGroupEntity.COLUMN_FLAGS, getFlags());
+    values.put(ChannelGroupEntity.COLUMN_POSITION, position);
+    values.put(ChannelGroupEntity.COLUMN_PROFILE_ID, getProfileId());
 
     return values;
   }
@@ -352,7 +337,6 @@ public class ChannelGroup extends ChannelBase {
   }
 
   public int getActivePercent(int idx) {
-    ArrayList<Integer> result = new ArrayList<>();
     String[] items = getTotalValue().split("\\|");
 
     int sum = 0;
@@ -447,26 +431,6 @@ public class ChannelGroup extends ChannelBase {
 
   public int getActivePercent() {
     return getActivePercent(0);
-  }
-
-  public ImageId getImageIdx(WhichOne whichImage) {
-    int active = 0;
-
-    if (getFunc() == SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING) {
-
-      if (getActivePercent(2) >= 100) {
-        active = 0x1;
-      }
-
-      if (getActivePercent(1) >= 100) {
-        active |= 0x2;
-      }
-
-    } else {
-      active = getActivePercent() >= 100 ? 1 : 0;
-    }
-
-    return super.getImageIdx(whichImage, active);
   }
 
   public CharSequence getHumanReadableValue(WhichOne whichOne) {

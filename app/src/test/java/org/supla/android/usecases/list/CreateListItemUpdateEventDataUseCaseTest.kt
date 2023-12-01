@@ -30,35 +30,44 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
+import org.supla.android.data.source.local.entity.ChannelRelationEntity
 import org.supla.android.data.source.local.entity.ChannelRelationType
+import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
+import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.runtime.ItemType
-import org.supla.android.db.Channel
 import org.supla.android.db.ChannelGroup
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.ui.lists.data.SlideableListItemData
-import org.supla.android.usecases.channel.ChannelChild
 import org.supla.android.usecases.channel.ChannelWithChildren
 import org.supla.android.usecases.channel.ReadChannelGroupByRemoteIdUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
+import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToGpmUpdateEventMapper
+import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToMeasurementUpdateEventMapper
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToThermostatUpdateEventMapper
 
 @RunWith(MockitoJUnitRunner::class)
 class CreateListItemUpdateEventDataUseCaseTest {
 
   @Mock
-  lateinit var eventsManager: UpdateEventsManager
+  private lateinit var eventsManager: UpdateEventsManager
 
   @Mock
-  lateinit var readChannelGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase
+  private lateinit var readChannelGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase
 
   @Mock
-  lateinit var readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase
+  private lateinit var readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase
 
   @Mock
-  lateinit var channelWithCHildrenToThermostatUpdateEventMapper: ChannelWithChildrenToThermostatUpdateEventMapper
+  private lateinit var channelWithChildrenToThermostatUpdateEventMapper: ChannelWithChildrenToThermostatUpdateEventMapper
+
+  @Mock
+  private lateinit var channelWithChildrenToMeasurementUpdateEventMapper: ChannelWithChildrenToMeasurementUpdateEventMapper
+
+  @Mock
+  private lateinit var channelWithChildrenToGpmUpdateEventMapper: ChannelWithChildrenToGpmUpdateEventMapper
 
   @InjectMocks
-  lateinit var useCase: CreateListItemUpdateEventDataUseCase
+  private lateinit var useCase: CreateListItemUpdateEventDataUseCase
 
   @Test
   fun `should map channel`() {
@@ -66,7 +75,7 @@ class CreateListItemUpdateEventDataUseCaseTest {
     val remoteId = 123
     val itemType = ItemType.CHANNEL
 
-    val channel: Channel = mockk()
+    val channel: ChannelDataEntity = mockk()
     every { channel.remoteId } returns remoteId
     val channelWithChildren: ChannelWithChildren = mockk()
     every { channelWithChildren.channel } returns channel
@@ -76,8 +85,8 @@ class CreateListItemUpdateEventDataUseCaseTest {
 
     whenever(eventsManager.observeChannel(remoteId)).thenReturn(Observable.just(mockk()))
     whenever(readChannelWithChildrenUseCase(remoteId)).thenReturn(Maybe.just(channelWithChildren))
-    whenever(channelWithCHildrenToThermostatUpdateEventMapper.handle(channelWithChildren)).thenReturn(true)
-    whenever(channelWithCHildrenToThermostatUpdateEventMapper.map(channelWithChildren)).thenReturn(data)
+    whenever(channelWithChildrenToThermostatUpdateEventMapper.handle(channelWithChildren)).thenReturn(true)
+    whenever(channelWithChildrenToThermostatUpdateEventMapper.map(channelWithChildren)).thenReturn(data)
 
     // when
     val observer = useCase(itemType, remoteId).test()
@@ -88,13 +97,13 @@ class CreateListItemUpdateEventDataUseCaseTest {
 
     verify(eventsManager).observeChannel(remoteId)
     verify(readChannelWithChildrenUseCase, times(2)).invoke(remoteId)
-    verify(channelWithCHildrenToThermostatUpdateEventMapper).handle(channelWithChildren)
-    verify(channelWithCHildrenToThermostatUpdateEventMapper).map(channelWithChildren)
+    verify(channelWithChildrenToThermostatUpdateEventMapper).handle(channelWithChildren)
+    verify(channelWithChildrenToThermostatUpdateEventMapper).map(channelWithChildren)
     verifyNoMoreInteractions(
       eventsManager,
       readChannelGroupByRemoteIdUseCase,
       readChannelWithChildrenUseCase,
-      channelWithCHildrenToThermostatUpdateEventMapper
+      channelWithChildrenToThermostatUpdateEventMapper
     )
   }
 
@@ -105,21 +114,22 @@ class CreateListItemUpdateEventDataUseCaseTest {
     val childId = 234
     val itemType = ItemType.CHANNEL
 
-    val child: Channel = mockk()
+    val child: ChannelDataEntity = mockk()
     every { child.remoteId } returns childId
-    val channel: Channel = mockk()
+    val channel: ChannelDataEntity = mockk()
     every { channel.remoteId } returns remoteId
     val channelWithChildren: ChannelWithChildren = mockk()
     every { channelWithChildren.channel } returns channel
-    every { channelWithChildren.children } returns listOf(ChannelChild(ChannelRelationType.MAIN_THERMOMETER, child))
+    val relation: ChannelRelationEntity = mockk { every { relationType } returns ChannelRelationType.MAIN_THERMOMETER }
+    every { channelWithChildren.children } returns listOf(ChannelChildEntity(relation, child))
 
     val data: SlideableListItemData = mockk()
 
     whenever(eventsManager.observeChannel(remoteId)).thenReturn(Observable.empty())
     whenever(eventsManager.observeChannel(childId)).thenReturn(Observable.just(mockk()))
     whenever(readChannelWithChildrenUseCase(remoteId)).thenReturn(Maybe.just(channelWithChildren))
-    whenever(channelWithCHildrenToThermostatUpdateEventMapper.handle(channelWithChildren)).thenReturn(true)
-    whenever(channelWithCHildrenToThermostatUpdateEventMapper.map(channelWithChildren)).thenReturn(data)
+    whenever(channelWithChildrenToThermostatUpdateEventMapper.handle(channelWithChildren)).thenReturn(true)
+    whenever(channelWithChildrenToThermostatUpdateEventMapper.map(channelWithChildren)).thenReturn(data)
 
     // when
     val observer = useCase(itemType, remoteId).test()
@@ -131,13 +141,13 @@ class CreateListItemUpdateEventDataUseCaseTest {
     verify(eventsManager).observeChannel(remoteId)
     verify(eventsManager).observeChannel(childId)
     verify(readChannelWithChildrenUseCase, times(2)).invoke(remoteId)
-    verify(channelWithCHildrenToThermostatUpdateEventMapper).handle(channelWithChildren)
-    verify(channelWithCHildrenToThermostatUpdateEventMapper).map(channelWithChildren)
+    verify(channelWithChildrenToThermostatUpdateEventMapper).handle(channelWithChildren)
+    verify(channelWithChildrenToThermostatUpdateEventMapper).map(channelWithChildren)
     verifyNoMoreInteractions(
       eventsManager,
       readChannelGroupByRemoteIdUseCase,
       readChannelWithChildrenUseCase,
-      channelWithCHildrenToThermostatUpdateEventMapper
+      channelWithChildrenToThermostatUpdateEventMapper
     )
   }
 
@@ -152,8 +162,8 @@ class CreateListItemUpdateEventDataUseCaseTest {
 
     whenever(eventsManager.observeGroup(remoteId)).thenReturn(Observable.just(mockk()))
     whenever(readChannelGroupByRemoteIdUseCase(remoteId)).thenReturn(Maybe.just(channelGroup))
-    whenever(channelWithCHildrenToThermostatUpdateEventMapper.handle(channelGroup)).thenReturn(true)
-    whenever(channelWithCHildrenToThermostatUpdateEventMapper.map(channelGroup)).thenReturn(data)
+    whenever(channelWithChildrenToThermostatUpdateEventMapper.handle(channelGroup)).thenReturn(true)
+    whenever(channelWithChildrenToThermostatUpdateEventMapper.map(channelGroup)).thenReturn(data)
 
     // when
     val observer = useCase(itemType, remoteId).test()
@@ -164,13 +174,13 @@ class CreateListItemUpdateEventDataUseCaseTest {
 
     verify(eventsManager).observeGroup(remoteId)
     verify(readChannelGroupByRemoteIdUseCase).invoke(remoteId)
-    verify(channelWithCHildrenToThermostatUpdateEventMapper).handle(channelGroup)
-    verify(channelWithCHildrenToThermostatUpdateEventMapper).map(channelGroup)
+    verify(channelWithChildrenToThermostatUpdateEventMapper).handle(channelGroup)
+    verify(channelWithChildrenToThermostatUpdateEventMapper).map(channelGroup)
     verifyNoMoreInteractions(
       eventsManager,
       readChannelGroupByRemoteIdUseCase,
       readChannelWithChildrenUseCase,
-      channelWithCHildrenToThermostatUpdateEventMapper
+      channelWithChildrenToThermostatUpdateEventMapper
     )
   }
 
@@ -180,7 +190,7 @@ class CreateListItemUpdateEventDataUseCaseTest {
     val remoteId = 123
     val itemType = ItemType.CHANNEL
 
-    val channel: Channel = mockk()
+    val channel: ChannelDataEntity = mockk()
     every { channel.remoteId } returns remoteId
     val channelWithChildren: ChannelWithChildren = mockk()
     every { channelWithChildren.channel } returns channel
@@ -197,12 +207,12 @@ class CreateListItemUpdateEventDataUseCaseTest {
 
     verify(eventsManager).observeChannel(remoteId)
     verify(readChannelWithChildrenUseCase, times(2)).invoke(remoteId)
-    verify(channelWithCHildrenToThermostatUpdateEventMapper).handle(channelWithChildren)
+    verify(channelWithChildrenToThermostatUpdateEventMapper).handle(channelWithChildren)
     verifyNoMoreInteractions(
       eventsManager,
       readChannelGroupByRemoteIdUseCase,
       readChannelWithChildrenUseCase,
-      channelWithCHildrenToThermostatUpdateEventMapper
+      channelWithChildrenToThermostatUpdateEventMapper
     )
   }
 }

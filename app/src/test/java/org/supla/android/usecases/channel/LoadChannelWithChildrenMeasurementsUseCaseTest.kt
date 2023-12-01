@@ -17,11 +17,13 @@ package org.supla.android.usecases.channel
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import com.google.gson.Gson
 import io.mockk.every
 import io.mockk.mockk
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
 import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.tuple
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.InjectMocks
@@ -30,19 +32,23 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
+import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.data.model.chart.ChartDataAggregation
 import org.supla.android.data.model.chart.ChartEntryType
 import org.supla.android.data.model.chart.HistoryDataSet
+import org.supla.android.data.model.general.IconType
 import org.supla.android.data.source.TemperatureAndHumidityLogRepository
 import org.supla.android.data.source.TemperatureLogRepository
 import org.supla.android.data.source.local.entity.ChannelRelationType
-import org.supla.android.db.Channel
+import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
+import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.extensions.date
 import org.supla.android.extensions.toTimestamp
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
+import org.supla.android.usecases.icon.GetChannelIconUseCase
 
 @RunWith(MockitoJUnitRunner::class)
 class LoadChannelWithChildrenMeasurementsUseCaseTest : BaseLoadMeasurementsUseCaseTest() {
@@ -56,7 +62,16 @@ class LoadChannelWithChildrenMeasurementsUseCaseTest : BaseLoadMeasurementsUseCa
   private lateinit var temperatureAndHumidityLogRepository: TemperatureAndHumidityLogRepository
 
   @Mock
-  private lateinit var getChannelValueUseCase: GetChannelValueUseCase
+  private lateinit var getChannelValueStringUseCase: GetChannelValueStringUseCase
+
+  @Mock
+  private lateinit var getChannelIconUseCase: GetChannelIconUseCase
+
+  @Mock
+  private lateinit var preferences: Preferences
+
+  @Mock
+  private lateinit var gson: Gson
 
   @InjectMocks
   private lateinit var useCase: LoadChannelWithChildrenMeasurementsUseCase
@@ -70,11 +85,9 @@ class LoadChannelWithChildrenMeasurementsUseCaseTest : BaseLoadMeasurementsUseCa
     val endDate = date(2022, 11, 11)
     val temperatureEntities = mockEntities(10, 10 * MINUTE_IN_MILLIS)
     val temperatureAndHumidityEntities = mockEntitiesWithHumidity(10, 10 * MINUTE_IN_MILLIS)
-    val channel: Channel = mockk()
-    every { channel.remoteId } returns remoteId
-    every { channel.func } returns SUPLA_CHANNELFNC_THERMOMETER
 
-    whenever(readChannelWithChildrenUseCase.invoke(remoteId)).thenReturn(Maybe.just(mockChannelWithChildren()))
+    val channelWithChildren = mockChannelWithChildren()
+    whenever(readChannelWithChildrenUseCase.invoke(remoteId)).thenReturn(Maybe.just(channelWithChildren))
     whenever(temperatureAndHumidityLogRepository.findMeasurements(2, profileId, startDate, endDate))
       .thenReturn(Observable.just(temperatureAndHumidityEntities))
     whenever(temperatureLogRepository.findMeasurements(3, profileId, startDate, endDate))
@@ -90,44 +103,30 @@ class LoadChannelWithChildrenMeasurementsUseCaseTest : BaseLoadMeasurementsUseCa
     val result = testObserver.values()[0]
     Assertions.assertThat(result).extracting({ it.setId }, { it.color }, { it.active })
       .containsExactly(
-        Assertions.tuple(HistoryDataSet.Id(2, ChartEntryType.TEMPERATURE), R.color.chart_temperature_1, true),
-        Assertions.tuple(HistoryDataSet.Id(2, ChartEntryType.HUMIDITY), R.color.chart_humidity_1, true),
-        Assertions.tuple(HistoryDataSet.Id(3, ChartEntryType.TEMPERATURE), R.color.chart_temperature_2, true)
+        tuple(HistoryDataSet.Id(2, ChartEntryType.TEMPERATURE), R.color.chart_temperature_1, true),
+        tuple(HistoryDataSet.Id(2, ChartEntryType.HUMIDITY), R.color.chart_humidity_1, true),
+        tuple(HistoryDataSet.Id(3, ChartEntryType.TEMPERATURE), R.color.chart_temperature_2, true)
       )
 
-    val temperatureEntryDetails = EntryDetails(ChartDataAggregation.MINUTES, ChartEntryType.TEMPERATURE, null, null)
-    Assertions.assertThat(result[0].entries[0])
-      .extracting({ it.x }, { it.y }, { it.data })
+    Assertions.assertThat(result[0].entities[0])
+      .extracting({ it.date }, { it.value }, { it.min }, { it.max }, { it.open }, { it.close }, { it.aggregation }, { it.type })
       .containsExactlyElementsOf(
         temperatureAndHumidityEntities.map {
-          Assertions.tuple(
-            it.date.toTimestamp().toFloat(),
-            it.temperature,
-            temperatureEntryDetails
-          )
+          tuple(it.date.toTimestamp(), it.temperature, null, null, null, null, ChartDataAggregation.MINUTES, ChartEntryType.TEMPERATURE)
         }
       )
-    val humidityEntryDetails = EntryDetails(ChartDataAggregation.MINUTES, ChartEntryType.HUMIDITY, null, null)
-    Assertions.assertThat(result[1].entries[0])
-      .extracting({ it.x }, { it.y }, { it.data })
+    Assertions.assertThat(result[1].entities[0])
+      .extracting({ it.date }, { it.value }, { it.min }, { it.max }, { it.open }, { it.close }, { it.aggregation }, { it.type })
       .containsExactlyElementsOf(
         temperatureAndHumidityEntities.map {
-          Assertions.tuple(
-            it.date.toTimestamp().toFloat(),
-            it.humidity,
-            humidityEntryDetails
-          )
+          tuple(it.date.toTimestamp(), it.humidity, null, null, null, null, ChartDataAggregation.MINUTES, ChartEntryType.HUMIDITY)
         }
       )
-    Assertions.assertThat(result[2].entries[0])
-      .extracting({ it.x }, { it.y }, { it.data })
+    Assertions.assertThat(result[2].entities[0])
+      .extracting({ it.date }, { it.value }, { it.min }, { it.max }, { it.open }, { it.close }, { it.aggregation }, { it.type })
       .containsExactlyElementsOf(
         temperatureEntities.map {
-          Assertions.tuple(
-            it.date.toTimestamp().toFloat(),
-            it.temperature,
-            temperatureEntryDetails
-          )
+          tuple(it.date.toTimestamp(), it.temperature, null, null, null, null, ChartDataAggregation.MINUTES, ChartEntryType.TEMPERATURE)
         }
       )
 
@@ -139,22 +138,30 @@ class LoadChannelWithChildrenMeasurementsUseCaseTest : BaseLoadMeasurementsUseCa
 
   private fun mockChannelWithChildren(): ChannelWithChildren =
     mockk<ChannelWithChildren>().also { channelWithChildren ->
-      every { channelWithChildren.channel } returns mockk<Channel>().also {
+      every { channelWithChildren.channel } returns mockk<ChannelDataEntity>().also {
+        every { it.channelEntity } returns mockk { every { function } returns SUPLA_CHANNELFNC_HVAC_THERMOSTAT }
         every { it.remoteId } returns 1
-        every { it.func } returns SUPLA_CHANNELFNC_HVAC_THERMOSTAT
+        every { it.function } returns SUPLA_CHANNELFNC_HVAC_THERMOSTAT
       }
-      every { channelWithChildren.children } returns listOf(
-        mockChannelChild(ChannelRelationType.MAIN_THERMOMETER, 2, SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE),
-        mockChannelChild(ChannelRelationType.AUX_THERMOMETER_FLOOR, 3, SUPLA_CHANNELFNC_THERMOMETER)
-      )
+      val child1 = mockChannelChild(ChannelRelationType.MAIN_THERMOMETER, 2, SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE)
+      val child2 = mockChannelChild(ChannelRelationType.AUX_THERMOMETER_FLOOR, 3, SUPLA_CHANNELFNC_THERMOMETER)
+      every { channelWithChildren.children } returns listOf(child1, child2)
+
+      whenever(getChannelIconUseCase.getIconProvider(child1.channelDataEntity)).thenReturn { null }
+      whenever(getChannelIconUseCase.getIconProvider(child1.channelDataEntity, IconType.SECOND)).thenReturn { null }
+      whenever(getChannelIconUseCase.getIconProvider(child2.channelDataEntity)).thenReturn { null }
+      whenever(getChannelValueStringUseCase.invoke(child1.channelDataEntity)).thenReturn("")
+      whenever(getChannelValueStringUseCase.invoke(child1.channelDataEntity, ValueType.SECOND)).thenReturn("")
+      whenever(getChannelValueStringUseCase.invoke(child2.channelDataEntity)).thenReturn("")
     }
 
-  private fun mockChannelChild(relation: ChannelRelationType, remoteId: Int, function: Int): ChannelChild =
-    mockk<ChannelChild>().also { channelChild ->
+  private fun mockChannelChild(relation: ChannelRelationType, remoteId: Int, function: Int): ChannelChildEntity =
+    mockk<ChannelChildEntity>().also { channelChild ->
       every { channelChild.relationType } returns relation
-      every { channelChild.channel } returns mockk<Channel>().also {
+      every { channelChild.channel } returns mockk { every { this@mockk.function } returns function }
+      every { channelChild.channelDataEntity } returns mockk<ChannelDataEntity>().also {
         every { it.remoteId } returns remoteId
-        every { it.func } returns function
+        every { it.function } returns function
       }
     }
 }

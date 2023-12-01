@@ -19,8 +19,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import androidx.annotation.NonNull;
+import org.supla.android.data.source.local.entity.ColorEntity;
 import org.supla.android.db.ColorListItem;
-import org.supla.android.db.SuplaContract;
 
 public class ColorListDao extends BaseDao {
 
@@ -30,33 +30,33 @@ public class ColorListDao extends BaseDao {
 
   public ColorListItem getColorListItem(int id, boolean group, int idx) {
     String[] projection = {
-      SuplaContract.ColorListItemEntry._ID,
-      SuplaContract.ColorListItemEntry.COLUMN_NAME_REMOTEID,
-      SuplaContract.ColorListItemEntry.COLUMN_NAME_GROUP,
-      SuplaContract.ColorListItemEntry.COLUMN_NAME_IDX,
-      SuplaContract.ColorListItemEntry.COLUMN_NAME_COLOR,
-      SuplaContract.ColorListItemEntry.COLUMN_NAME_BRIGHTNESS,
+      ColorEntity.COLUMN_ID,
+      ColorEntity.COLUMN_REMOTE_ID,
+      ColorEntity.COLUMN_GROUP,
+      ColorEntity.COLUMN_IDX,
+      ColorEntity.COLUMN_COLOR,
+      ColorEntity.COLUMN_BRIGHTNESS,
     };
 
     return getItem(
         ColorListItem::new,
         projection,
-        SuplaContract.ColorListItemEntry.TABLE_NAME,
-        key(SuplaContract.ColorListItemEntry.COLUMN_NAME_REMOTEID, id),
-        key(SuplaContract.ColorListItemEntry.COLUMN_NAME_GROUP, group ? 1 : 0),
-        key(SuplaContract.ColorListItemEntry.COLUMN_NAME_IDX, idx));
+        ColorEntity.TABLE_NAME,
+        key(ColorEntity.COLUMN_REMOTE_ID, id),
+        key(ColorEntity.COLUMN_GROUP, group ? 1 : 0),
+        key(ColorEntity.COLUMN_IDX, idx));
   }
 
   public void insert(ColorListItem item) {
-    insert(item, SuplaContract.ColorListItemEntry.TABLE_NAME);
+    insert(item, ColorEntity.TABLE_NAME);
   }
 
   public void update(ColorListItem item) {
     update(
         item,
-        SuplaContract.ColorListItemEntry.TABLE_NAME,
-        key(SuplaContract.ColorListItemEntry.COLUMN_NAME_REMOTEID, item.getRemoteId()),
-        key(SuplaContract.ColorListItemEntry.COLUMN_NAME_GROUP, item.getGroup() ? 1 : 0),
-        key(SuplaContract.ColorListItemEntry.COLUMN_NAME_IDX, item.getIdx()));
+        ColorEntity.TABLE_NAME,
+        key(ColorEntity.COLUMN_REMOTE_ID, item.getRemoteId()),
+        key(ColorEntity.COLUMN_GROUP, item.getGroup() ? 1 : 0),
+        key(ColorEntity.COLUMN_IDX, item.getIdx()));
   }
 }

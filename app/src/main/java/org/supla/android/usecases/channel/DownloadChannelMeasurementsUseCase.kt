@@ -21,8 +21,10 @@ import androidx.work.ExistingWorkPolicy
 import org.supla.android.Trace
 import org.supla.android.core.infrastructure.WorkManagerProxy
 import org.supla.android.extensions.TAG
-import org.supla.android.features.temperaturesdownload.DownloadTemperaturesAndHumiditiesWorker
-import org.supla.android.features.temperaturesdownload.DownloadTemperaturesWorker
+import org.supla.android.features.measurementsdownload.workers.DownloadGeneralPurposeMeasurementsWorker
+import org.supla.android.features.measurementsdownload.workers.DownloadGeneralPurposeMeterWorker
+import org.supla.android.features.measurementsdownload.workers.DownloadTemperaturesAndHumidityWorker
+import org.supla.android.features.measurementsdownload.workers.DownloadTemperaturesWorker
 import org.supla.android.lib.SuplaConst
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -43,9 +45,23 @@ class DownloadChannelMeasurementsUseCase @Inject constructor(
 
       SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE ->
         workManagerProxy.enqueueUniqueWork(
-          "${DownloadTemperaturesAndHumiditiesWorker.WORK_ID}.$remoteId",
+          "${DownloadTemperaturesAndHumidityWorker.WORK_ID}.$remoteId",
           ExistingWorkPolicy.KEEP,
-          DownloadTemperaturesAndHumiditiesWorker.build(remoteId, profileId)
+          DownloadTemperaturesAndHumidityWorker.build(remoteId, profileId)
+        )
+
+      SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT ->
+        workManagerProxy.enqueueUniqueWork(
+          "${DownloadGeneralPurposeMeasurementsWorker.WORK_ID}.$remoteId",
+          ExistingWorkPolicy.KEEP,
+          DownloadGeneralPurposeMeasurementsWorker.build(remoteId, profileId)
+        )
+
+      SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER ->
+        workManagerProxy.enqueueUniqueWork(
+          "${DownloadGeneralPurposeMeterWorker.WORK_ID}.$remoteId",
+          ExistingWorkPolicy.KEEP,
+          DownloadGeneralPurposeMeterWorker.build(remoteId, profileId)
         )
 
       else -> Trace.w(TAG, "Tries to download something what is not supported (function: `$function`)")
