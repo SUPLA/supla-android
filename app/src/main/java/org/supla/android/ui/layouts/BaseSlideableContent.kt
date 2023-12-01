@@ -17,27 +17,18 @@ package org.supla.android.ui.layouts
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.content.Context
-import android.util.AttributeSet
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import org.supla.android.ui.lists.data.SlideableListItemData
 
-abstract class BaseSlideableContent<T : SlideableListItemData> : BaseAbstractComposeView {
+interface BaseSlideableContent<T : SlideableListItemData> {
 
-  constructor(context: Context) : super(context, null, 0)
+  var onInfoClick: () -> Unit
+  var onIssueClick: () -> Unit
+  var onTitleLongClick: () -> Unit
+  var onItemClick: () -> Unit
 
-  constructor(context: Context, attrs: AttributeSet?) : super(context, attrs, 0)
+  var data: T?
 
-  constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
-
-  var onInfoClick: () -> Unit = { }
-  var onIssueClick: () -> Unit = { }
-  var onTitleLongClick: () -> Unit = { }
-  var onItemClick: () -> Unit = { }
-
-  protected var data: T? by mutableStateOf(null)
+  fun invalidate()
 
   fun update(data: T) {
     this.data = data

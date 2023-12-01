@@ -17,6 +17,8 @@
     <dimen name="button_elevation">4dp</dimen>
     <dimen name="segmented_button_elevation">4dp</dimen>
 
+    <dimen name="font_size_body2">14sp</dimen>
+
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>

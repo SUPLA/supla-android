@@ -27,15 +27,16 @@ sealed class SlideableListItemData {
   abstract val titleProvider: StringProvider
   abstract val iconProvider: BitmapProvider?
   abstract val issueIconType: IssueIconType?
+  abstract val estimatedTimerEndDate: Date?
 
   data class Thermostat(
     override val online: Boolean,
     override val titleProvider: StringProvider,
     override val iconProvider: BitmapProvider?,
     override val issueIconType: IssueIconType?,
+    override val estimatedTimerEndDate: Date?,
     val value: String,
     val subValue: String,
-    val estimatedTimerEndDate: Date?,
     @DrawableRes val indicatorIcon: Int?
   ) : SlideableListItemData() {
     companion object
@@ -45,7 +46,8 @@ sealed class SlideableListItemData {
     override val online: Boolean,
     override val titleProvider: StringProvider,
     override val iconProvider: BitmapProvider?,
-    override val issueIconType: IssueIconType?
+    override val issueIconType: IssueIconType?,
+    override val estimatedTimerEndDate: Date?
   ) : SlideableListItemData()
 }
 

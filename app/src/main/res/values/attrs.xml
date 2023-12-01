@@ -18,4 +18,9 @@
     <attr name="hasLeftButton" format="boolean" />
     <attr name="hasRightButton" format="boolean" />
   </declare-styleable>
+
+  <declare-styleable name="ListItemScaffoldView">
+    <attr name="leftButtonEnabled" format="boolean" />
+    <attr name="rightButtonEnabled" format="boolean" />
+  </declare-styleable>
 </resources>

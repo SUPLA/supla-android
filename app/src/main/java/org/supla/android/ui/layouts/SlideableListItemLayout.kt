@@ -3,6 +3,7 @@ package org.supla.android.ui.layouts
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
+import android.view.ViewGroup
 import android.widget.LinearLayout
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.disposables.Disposable
@@ -34,15 +35,19 @@ class SlideableListItemLayout @JvmOverloads constructor(
   defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr), SlideableItem, SwapableListItem {
 
-  private val content: BaseSlideableContent<SlideableListItemData> by lazy {
-    findViewById<BaseSlideableContent<SlideableListItemData>>(R.id.list_item_content)
+  private val content: ViewGroup by lazy {
+    findViewById<ViewGroup>(R.id.list_item_content)
       ?: throw IllegalStateException("No content view found")
   }
+  @Suppress("UNCHECKED_CAST")
+  private val slideableContent: BaseSlideableContent<SlideableListItemData>?
+    get() = content as? BaseSlideableContent<SlideableListItemData>
   private val leftItem: View? by lazy { findViewById(R.id.list_item_left_item) }
   private val rightItem: View? by lazy { findViewById(R.id.list_item_right_item) }
 
   private var updateDisposable: Disposable? = null
   private var data: SlideableListItemData? = null
+  private var offsetX: Int? = null
 
   private var remoteId: Int? = null
   private var itemType: ItemType? = null
@@ -83,7 +88,9 @@ class SlideableListItemLayout @JvmOverloads constructor(
       throw IllegalStateException("SlideableLayout expects 1 to 3 views inside but found '$childCount'!")
     }
 
-    updateContentView(data)
+    content.layout(offsetX?.plus(l) ?: l, content.top, offsetX?.plus(r) ?: r, content.height)
+    leftItem?.run { updateLeftItemPosition(this) }
+    rightItem?.run { updateRightItemPosition(this) }
 
     content.elevation = 0f
     leftItem?.elevation = 0f
@@ -91,7 +98,7 @@ class SlideableListItemLayout @JvmOverloads constructor(
   }
 
   override fun slide(position: Int) {
-    val correctedPosition = when {
+    offsetX = when {
       (leftItem == null && rightItem == null) ||
         (leftItem == null && position > 0) ||
         (rightItem == null && position < 0) ||
@@ -100,7 +107,7 @@ class SlideableListItemLayout @JvmOverloads constructor(
       else -> position
     }
 
-    content.layout(correctedPosition, content.top, content.width + correctedPosition, content.height)
+    content.layout(offsetX!!, content.top, content.width + offsetX!!, content.height)
     leftItem?.run { updateLeftItemPosition(this) }
     rightItem?.run { updateRightItemPosition(this) }
   }
@@ -108,10 +115,10 @@ class SlideableListItemLayout @JvmOverloads constructor(
   override fun onAttachedToWindow() {
     super.onAttachedToWindow()
 
-    content.onInfoClick = onInfoClick
-    content.onIssueClick = onIssueClick
-    content.onTitleLongClick = onTitleLongClick
-    content.onItemClick = onItemClick
+    slideableContent?.onInfoClick = onInfoClick
+    slideableContent?.onIssueClick = onIssueClick
+    slideableContent?.onTitleLongClick = onTitleLongClick
+    slideableContent?.onItemClick = onItemClick
 
     val (itemType) = guardLet(itemType) { return }
     val (remoteId) = guardLet(remoteId) { return }
@@ -154,6 +161,8 @@ class SlideableListItemLayout @JvmOverloads constructor(
     this.onIssueClick = onIssueClick
     this.onTitleLongClick = onTitleLongClick
     this.onItemClick = onItemClick
+
+    updateContentView(data)
   }
 
   private fun updateLeftItemPosition(item: View) {
@@ -196,6 +205,6 @@ class SlideableListItemLayout @JvmOverloads constructor(
     }
 
   private fun updateContentView(data: SlideableListItemData?) {
-    ifLet(data) { (data) -> content.update(data = data) }
+    ifLet(data) { (data) -> slideableContent?.update(data = data) }
   }
 }

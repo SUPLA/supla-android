@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto">
+
+  <androidx.appcompat.widget.AppCompatImageView
+    android:id="@+id/list_item_info_icon"
+    android:layout_width="@dimen/channel_state_image_size"
+    android:layout_height="@dimen/channel_state_image_size"
+    android:layout_marginStart="58dp"
+    android:src="@drawable/channelstateinfo"
+    android:visibility="gone"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
+
+  <androidx.appcompat.widget.AppCompatImageView
+    android:id="@+id/list_item_issue_icon"
+    android:layout_width="@dimen/channel_warning_image_size"
+    android:layout_height="@dimen/channel_warning_image_size"
+    android:layout_marginEnd="58dp"
+    android:visibility="gone"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
+
+  <TextView
+    android:id="@+id/list_item_timer"
+    android:layout_width="120dp"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/distance_small"
+    android:layout_marginEnd="@dimen/distance_small"
+    android:textAppearance="@style/AppTheme.TextAppearance.Body2"
+    android:textColor="@color/gray"
+    android:textAlignment="viewEnd"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
+
+  <View
+    android:id="@+id/list_item_leading_dot"
+    android:layout_width="@dimen/channel_dot_size"
+    android:layout_height="@dimen/channel_dot_size"
+    android:layout_marginStart="@dimen/distance_default"
+    android:background="@drawable/background_dot_stroke"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
+
+  <View
+    android:id="@+id/list_item_trading_dot"
+    android:layout_width="@dimen/channel_dot_size"
+    android:layout_height="@dimen/channel_dot_size"
+    android:layout_marginEnd="@dimen/distance_default"
+    android:background="@drawable/background_dot_stroke"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
+
+  <TextView
+    android:id="@+id/list_item_title"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/distance_small"
+    android:ellipsize="end"
+    android:fontFamily="@font/open_sans_bold"
+    android:maxLines="1"
+    android:textColor="@color/channel_caption_text"
+    android:textSize="@dimen/channel_caption_text_size"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent" />
+
+  <View
+    android:layout_width="match_parent"
+    android:layout_height="1dp"
+    android:background="@color/separator"
+    app:layout_constraintBottom_toBottomOf="parent" />
+
+</merge>

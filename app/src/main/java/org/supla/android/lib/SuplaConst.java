@@ -128,6 +128,7 @@ public class SuplaConst {
   public static final int SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER = 426;
   public static final int SUPLA_CHANNELFNC_VALVE_OPENCLOSE = 500;
   public static final int SUPLA_CHANNELFNC_VALVE_PERCENTAGE = 510;
+  public static final int SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT = 510;
   public static final int SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL = 800;
   public static final int SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL = 810;
 

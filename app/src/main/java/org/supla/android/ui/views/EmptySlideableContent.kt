@@ -24,18 +24,20 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import dagger.hilt.android.AndroidEntryPoint
-import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.core.ui.theme.SuplaTheme
+import org.supla.android.ui.layouts.BaseAbstractComposeView
 import org.supla.android.ui.layouts.BaseSlideableContent
 import org.supla.android.ui.lists.data.SlideableListItemData
-import javax.inject.Inject
 
 @AndroidEntryPoint
-class EmptySlideableContent : BaseSlideableContent<SlideableListItemData.Thermostat> {
+class EmptySlideableContent : BaseAbstractComposeView, BaseSlideableContent<SlideableListItemData.Thermostat> {
 
   constructor(context: Context) : super(context, null, 0)
 
@@ -47,8 +49,11 @@ class EmptySlideableContent : BaseSlideableContent<SlideableListItemData.Thermos
     loadAttributes(context, attrs)
   }
 
-  @Inject
-  lateinit var preferences: Preferences
+  override var onInfoClick: () -> Unit = {}
+  override var onIssueClick: () -> Unit = {}
+  override var onTitleLongClick: () -> Unit = {}
+  override var onItemClick: () -> Unit = {}
+  override var data: SlideableListItemData.Thermostat? by mutableStateOf(null)
 
   var hasLeftButton: Boolean = false
   var hasRightButton: Boolean = false

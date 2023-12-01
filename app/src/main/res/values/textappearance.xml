@@ -58,7 +58,7 @@
 
   <style name="AppTheme.TextAppearance.Body2">
     <item name="android:fontFamily">@font/open_sans_regular</item>
-    <item name="android:textSize">14sp</item>
+    <item name="android:textSize">@dimen/font_size_body2</item>
     <item name="android:letterSpacing">0.025</item>
   </style>
 
@@ -84,5 +84,11 @@
     <item name="android:textSize">10sp</item>
     <item name="android:letterSpacing">0.15</item>
     <item name="android:textAllCaps">true</item>
+  </style>
+
+  <style name="AppTheme.TextAppearance.ListItemValue">
+    <item name="android:fontFamily">@font/open_sans_regular</item>
+    <item name="android:textSize">@dimen/channel_imgtext_size</item>
+    <item name="android:textColor">@color/channel_imgtext_color</item>
   </style>
 </resources>

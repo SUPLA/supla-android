@@ -33,6 +33,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -53,6 +54,7 @@ import org.supla.android.R
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.core.ui.theme.listItemValue
 import org.supla.android.extensions.max
+import org.supla.android.ui.layouts.BaseAbstractComposeView
 import org.supla.android.ui.layouts.BaseSlideableContent
 import org.supla.android.ui.lists.data.IssueIconType
 import org.supla.android.ui.lists.data.SlideableListItemData
@@ -61,7 +63,7 @@ import org.supla.android.ui.views.list.ListItemScaffold
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ThermostatListItemView : BaseSlideableContent<SlideableListItemData.Thermostat> {
+class ThermostatListItemView : BaseAbstractComposeView, BaseSlideableContent<SlideableListItemData.Thermostat> {
 
   constructor(context: Context) : super(context, null, 0)
 
@@ -72,6 +74,12 @@ class ThermostatListItemView : BaseSlideableContent<SlideableListItemData.Thermo
   constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
     loadAttributes(context, attrs)
   }
+
+  override var onInfoClick: () -> Unit = {}
+  override var onIssueClick: () -> Unit = {}
+  override var onTitleLongClick: () -> Unit = {}
+  override var onItemClick: () -> Unit = {}
+  override var data: SlideableListItemData.Thermostat? by mutableStateOf(null)
 
   @Inject
   lateinit var preferences: Preferences

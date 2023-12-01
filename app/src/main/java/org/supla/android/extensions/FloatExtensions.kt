@@ -26,3 +26,22 @@ import kotlin.math.roundToInt
  * in the application you're able to change only first position.
  */
 fun Float.toSuplaTemperature() = this.times(10).roundToInt().times(10).toShort()
+
+fun Float.scaled(scale: Float, upperLimit: Float? = null, lowerLimit: Float? = null): Float {
+  upperLimit?.let {
+    return if (scale > it) {
+      this * it
+    } else {
+      this * scale
+    }
+  }
+  lowerLimit?.let {
+    return if (scale < it) {
+      this * it
+    } else {
+      this * scale
+    }
+  }
+
+  return this * scale
+}

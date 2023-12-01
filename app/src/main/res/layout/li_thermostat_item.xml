@@ -11,12 +11,12 @@
     tools:layout_height="100dp"
     tools:layout_width="match_parent">
 
-    <org.supla.android.ui.views.ThermostatListItemView
+    <org.supla.android.ui.views.list.items.ThermostatListItemView
       android:id="@id/list_item_content"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      app:hasLeftButton="true"
-      app:hasRightButton="true" />
+      app:leftButtonEnabled="true"
+      app:rightButtonEnabled="true" />
 
     <Button
       android:id="@id/list_item_left_item"
