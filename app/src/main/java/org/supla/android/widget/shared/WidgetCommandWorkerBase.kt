@@ -25,10 +25,12 @@ import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
+import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import org.supla.android.R
 import org.supla.android.SuplaApp
 import org.supla.android.Trace
+import org.supla.android.core.notifications.NotificationsHelper
 import org.supla.android.extensions.getValuesFormatter
 import org.supla.android.lib.SuplaConst.*
 import org.supla.android.lib.actions.ActionId
@@ -44,12 +46,15 @@ import org.supla.android.widget.shared.configuration.ItemType
 private const val INTERNAL_ERROR = -10
 
 abstract class WidgetCommandWorkerBase(
+  private val notificationsHelper: NotificationsHelper,
   appContext: Context,
   workerParams: WorkerParameters
 ) : WidgetWorkerBase(appContext, workerParams) {
 
   private val handler = Handler(Looper.getMainLooper())
   private val valuesFormatter = getValuesFormatter()
+
+  protected abstract val notificationId: Int
 
   override fun doWork(): Result {
     val widgetIds: IntArray? = inputData.getIntArray(AppWidgetManager.EXTRA_APPWIDGET_IDS)
@@ -65,11 +70,6 @@ abstract class WidgetCommandWorkerBase(
     }
     val widgetId = widgetIds[0]
 
-    if (!isNetworkAvailable()) {
-      showToast(R.string.widget_command_no_connection, Toast.LENGTH_LONG)
-      return Result.failure()
-    }
-
     val configuration = preferences.getWidgetConfiguration(widgetId)
     if (configuration == null) {
       showToast(
@@ -79,6 +79,12 @@ abstract class WidgetCommandWorkerBase(
         ),
         Toast.LENGTH_LONG
       )
+      return Result.failure()
+    }
+    setForegroundAsync(createForegroundInfo(configuration.itemCaption))
+
+    if (!isNetworkAvailable()) {
+      showToast(R.string.widget_command_no_connection, Toast.LENGTH_LONG)
       return Result.failure()
     }
 
@@ -235,18 +241,26 @@ abstract class WidgetCommandWorkerBase(
     val connectivityManager =
       applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      val nw = connectivityManager.activeNetwork ?: return false
-      val actNw = connectivityManager.getNetworkCapabilities(nw)
-        ?: return false
-      return when {
-        actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
-        actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
-        // for other device which are able to connect with Ethernet
-        actNw.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
-        // for check internet over Bluetooths
-        actNw.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH) -> true
-        else -> false
+      connectivityManager.allNetworks.forEach {
+        val actNw = connectivityManager.getNetworkCapabilities(it)
+          ?: return@forEach
+
+        val result = when {
+          actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+          actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+          // for other device which are able to connect with Ethernet
+          actNw.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+          // for check internet over Bluetooths
+          actNw.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH) -> true
+          else -> false
+        }
+
+        if (result) {
+          return true
+        }
       }
+
+      return false
     } else {
       @Suppress("DEPRECATION")
       val nwInfo = connectivityManager.activeNetworkInfo ?: return false
@@ -277,6 +291,11 @@ abstract class WidgetCommandWorkerBase(
     updateWidgetConfiguration(widgetId, configuration.copy(value = temperature))
     updateWidget(widgetId)
     return Result.success()
+  }
+
+  private fun createForegroundInfo(widgetCaption: String?): ForegroundInfo {
+    notificationsHelper.setupBackgroundNotificationChannel(applicationContext)
+    return ForegroundInfo(notificationId, notificationsHelper.createBackgroundNotification(applicationContext, widgetCaption))
   }
 }
 

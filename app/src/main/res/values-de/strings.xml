@@ -546,6 +546,8 @@
  <string name="details_timer_max_temp">Temp. max.</string>
  <string name="details_timer_state_label_for_timer_days">Zustand bis %1$s:</string>
  <string name="details_timer_cancel_thermostat">Abbrechen und einschalten in:</string>
+  <string name="widget_processing_notification_text">Bearbeiten…</string>
+ <string name="widget_processing_notification_title">Hintergruntaufgabe</string>
  <plurals name="details_timer_info_on">
   <item quantity="one">eingeschaltet</item>
   <item quantity="other">eingeschaltet</item>

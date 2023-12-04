@@ -108,6 +108,7 @@
 
     <color name="layout_background">#F5F6F7</color>
     <color name="field_background">#FFFFFF</color>
+    <color name="segmented_field_background">@color/gray_light</color>
     <color name="button_background">@color/supla_green</color>
 
     <color name="widget_text">@color/supla_text_light</color>

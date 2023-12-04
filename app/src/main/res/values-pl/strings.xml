@@ -463,11 +463,11 @@
     <string name="single_button_widget_description">Widżet jednoprzyciskowy</string>
     <string name="widget_app_not_initialized">Proszę się zalogować!</string>
     <string name="widget_command_no_connection">Brak połączenia z internetem!</string>
-    <string name="widget_command_error">Wystąpił błąd! (kod: %1$i)</string>
-    <string name="widget_command_connection_failure">Błąd połączenia! (kod: %1$i)</string>
+    <string name="widget_command_error">Wystąpił błąd! (kod: %1$d)</string>
+    <string name="widget_command_connection_failure">Błąd połączenia! (kod: %1$d)</string>
     <string name="widget_command_subject_offline">%1$s jest offline!</string>
     <string name="widget_command_subject_unavailable">%1$s nie istnieje!</string>
-    <string name="widget_command_no_access">Brak dostępu! (code: %1$i)</string>
+    <string name="widget_command_no_access">Brak dostępu! (code: %1$d)</string>
     <string name="widget_command_started">Wykonano</string>
     <string name="widget_removed_label">Kanał usunięty</string>
     <string name="widget_group">grupa</string>
@@ -617,6 +617,8 @@
   <string name="details_timer_max_temp">Temp. max.</string>
   <string name="details_timer_state_label_for_timer_days">Stan do %1$s:</string>
   <string name="details_timer_cancel_thermostat">Przerwij timer i włącz tryb:</string>
+  <string name="widget_processing_notification_text">Przetwarzanie…</string>
+  <string name="widget_processing_notification_title">Przetwarzanie w tle</string>
 
   <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
     <item quantity="one">włączone</item>

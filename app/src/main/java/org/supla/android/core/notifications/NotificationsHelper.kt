@@ -2,9 +2,11 @@ package org.supla.android.core.notifications
 
 import android.Manifest
 import android.app.Activity
+import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.NotificationManager.IMPORTANCE_HIGH
+import android.app.NotificationManager.IMPORTANCE_LOW
 import android.app.PendingIntent
 import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.content.Context
@@ -35,7 +37,12 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.random.Random
 
+const val MAX_NOTIFICATION_ID = 1000
+const val ON_OFF_WIDGET_NOTIFICATION_ID = 1010
+const val SINGLE_WIDGET_NOTIFICATION_ID = 1011
+
 private const val NOTIFICATION_CHANNEL_ID = BuildConfig.APPLICATION_ID + ".main_channel"
+private const val NOTIFICATION_BACKGROUND_CHANNEL_ID = BuildConfig.APPLICATION_ID + ".background_channel"
 
 @Singleton
 class NotificationsHelper @Inject constructor(
@@ -66,6 +73,18 @@ class NotificationsHelper @Inject constructor(
     if (notificationManager.getNotificationChannel(NOTIFICATION_CHANNEL_ID) == null) {
       val name = context.getString(R.string.app_name)
       val channel = NotificationChannel(NOTIFICATION_CHANNEL_ID, name, IMPORTANCE_HIGH)
+      notificationManager.createNotificationChannel(channel)
+    }
+  }
+
+  fun setupBackgroundNotificationChannel(context: Context) {
+    if (VERSION.SDK_INT < VERSION_CODES.O) {
+      return
+    }
+
+    if (notificationManager.getNotificationChannel(NOTIFICATION_BACKGROUND_CHANNEL_ID) == null) {
+      val name = context.getString(R.string.app_name)
+      val channel = NotificationChannel(NOTIFICATION_BACKGROUND_CHANNEL_ID, name, IMPORTANCE_LOW)
       notificationManager.createNotificationChannel(channel)
     }
   }
@@ -136,12 +155,25 @@ class NotificationsHelper @Inject constructor(
     // when it may happen that's why we always try to create the channel
     setupNotificationChannel(context)
 
+    notificationManager.notify(notificationIdRandomizer.nextInt() % MAX_NOTIFICATION_ID, buildNotification(title, text))
+  }
+
+  fun createBackgroundNotification(context: Context, widgetCaption: String?): Notification {
+    setupBackgroundNotificationChannel(context)
+    return buildNotification(
+      title = widgetCaption ?: context.getString(R.string.widget_processing_notification_title),
+      text = context.getString(R.string.widget_processing_notification_text),
+      channel = NOTIFICATION_BACKGROUND_CHANNEL_ID
+    )
+  }
+
+  private fun buildNotification(title: String, text: String, channel: String = NOTIFICATION_CHANNEL_ID): Notification {
     val intent = Intent(context, StartActivity::class.java).apply {
       flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
     }
     val flag = if (VERSION.SDK_INT >= VERSION_CODES.M) FLAG_IMMUTABLE else 0
 
-    val notification = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
+    return NotificationCompat.Builder(context, channel)
       .setSmallIcon(R.drawable.logo)
       .setContentTitle(title)
       .setContentText(text)
@@ -150,8 +182,6 @@ class NotificationsHelper @Inject constructor(
       .setAutoCancel(true)
       .setStyle(NotificationCompat.BigTextStyle().bigText(text))
       .build()
-
-    notificationManager.notify(notificationIdRandomizer.nextInt(), notification)
   }
 
   private fun tokenUpdateNotNeeded(): Boolean {

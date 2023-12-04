@@ -17,12 +17,10 @@ package org.supla.android.usecases.list
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
 import org.supla.android.data.source.local.entity.ChannelRelationType
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.UpdateEventsManager
-import org.supla.android.extensions.flatMapMerged
 import org.supla.android.ui.lists.data.SlideableListItemData
 import org.supla.android.usecases.channel.ChannelWithChildren
 import org.supla.android.usecases.channel.ReadChannelGroupByRemoteIdUseCase
