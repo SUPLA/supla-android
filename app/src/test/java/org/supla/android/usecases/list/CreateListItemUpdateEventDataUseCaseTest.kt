@@ -17,6 +17,7 @@ package org.supla.android.usecases.list
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import io.mockk.every
 import io.mockk.mockk
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
@@ -25,13 +26,17 @@ import org.junit.runner.RunWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
+import org.supla.android.data.source.local.entity.ChannelRelationType
 import org.supla.android.data.source.runtime.ItemType
+import org.supla.android.db.Channel
 import org.supla.android.db.ChannelGroup
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.ui.lists.data.SlideableListItemData
+import org.supla.android.usecases.channel.ChannelChild
 import org.supla.android.usecases.channel.ChannelWithChildren
 import org.supla.android.usecases.channel.ReadChannelGroupByRemoteIdUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
@@ -61,7 +66,12 @@ class CreateListItemUpdateEventDataUseCaseTest {
     val remoteId = 123
     val itemType = ItemType.CHANNEL
 
+    val channel: Channel = mockk()
+    every { channel.remoteId } returns remoteId
     val channelWithChildren: ChannelWithChildren = mockk()
+    every { channelWithChildren.channel } returns channel
+    every { channelWithChildren.children } returns emptyList()
+
     val data: SlideableListItemData = mockk()
 
     whenever(eventsManager.observeChannel(remoteId)).thenReturn(Observable.just(mockk()))
@@ -77,7 +87,50 @@ class CreateListItemUpdateEventDataUseCaseTest {
     observer.assertResult(data)
 
     verify(eventsManager).observeChannel(remoteId)
-    verify(readChannelWithChildrenUseCase).invoke(remoteId)
+    verify(readChannelWithChildrenUseCase, times(2)).invoke(remoteId)
+    verify(channelWithCHildrenToThermostatUpdateEventMapper).handle(channelWithChildren)
+    verify(channelWithCHildrenToThermostatUpdateEventMapper).map(channelWithChildren)
+    verifyNoMoreInteractions(
+      eventsManager,
+      readChannelGroupByRemoteIdUseCase,
+      readChannelWithChildrenUseCase,
+      channelWithCHildrenToThermostatUpdateEventMapper
+    )
+  }
+
+  @Test
+  fun `should map channel with main temperature children`() {
+    // given
+    val remoteId = 123
+    val childId = 234
+    val itemType = ItemType.CHANNEL
+
+    val child: Channel = mockk()
+    every { child.remoteId } returns childId
+    val channel: Channel = mockk()
+    every { channel.remoteId } returns remoteId
+    val channelWithChildren: ChannelWithChildren = mockk()
+    every { channelWithChildren.channel } returns channel
+    every { channelWithChildren.children } returns listOf(ChannelChild(ChannelRelationType.MAIN_THERMOMETER, child))
+
+    val data: SlideableListItemData = mockk()
+
+    whenever(eventsManager.observeChannel(remoteId)).thenReturn(Observable.empty())
+    whenever(eventsManager.observeChannel(childId)).thenReturn(Observable.just(mockk()))
+    whenever(readChannelWithChildrenUseCase(remoteId)).thenReturn(Maybe.just(channelWithChildren))
+    whenever(channelWithCHildrenToThermostatUpdateEventMapper.handle(channelWithChildren)).thenReturn(true)
+    whenever(channelWithCHildrenToThermostatUpdateEventMapper.map(channelWithChildren)).thenReturn(data)
+
+    // when
+    val observer = useCase(itemType, remoteId).test()
+
+    // then
+    observer.assertComplete()
+    observer.assertResult(data)
+
+    verify(eventsManager).observeChannel(remoteId)
+    verify(eventsManager).observeChannel(childId)
+    verify(readChannelWithChildrenUseCase, times(2)).invoke(remoteId)
     verify(channelWithCHildrenToThermostatUpdateEventMapper).handle(channelWithChildren)
     verify(channelWithCHildrenToThermostatUpdateEventMapper).map(channelWithChildren)
     verifyNoMoreInteractions(
@@ -127,8 +180,11 @@ class CreateListItemUpdateEventDataUseCaseTest {
     val remoteId = 123
     val itemType = ItemType.CHANNEL
 
+    val channel: Channel = mockk()
+    every { channel.remoteId } returns remoteId
     val channelWithChildren: ChannelWithChildren = mockk()
-    val data: SlideableListItemData = mockk()
+    every { channelWithChildren.channel } returns channel
+    every { channelWithChildren.children } returns emptyList()
 
     whenever(eventsManager.observeChannel(remoteId)).thenReturn(Observable.just(mockk()))
     whenever(readChannelWithChildrenUseCase(remoteId)).thenReturn(Maybe.just(channelWithChildren))
@@ -140,7 +196,7 @@ class CreateListItemUpdateEventDataUseCaseTest {
     observer.assertFailure(IllegalStateException::class.java)
 
     verify(eventsManager).observeChannel(remoteId)
-    verify(readChannelWithChildrenUseCase).invoke(remoteId)
+    verify(readChannelWithChildrenUseCase, times(2)).invoke(remoteId)
     verify(channelWithCHildrenToThermostatUpdateEventMapper).handle(channelWithChildren)
     verifyNoMoreInteractions(
       eventsManager,

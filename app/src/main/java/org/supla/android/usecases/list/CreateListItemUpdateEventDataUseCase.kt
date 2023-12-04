@@ -17,10 +17,14 @@ package org.supla.android.usecases.list
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
+import org.supla.android.data.source.local.entity.ChannelRelationType
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.UpdateEventsManager
+import org.supla.android.extensions.flatMapMerged
 import org.supla.android.ui.lists.data.SlideableListItemData
+import org.supla.android.usecases.channel.ChannelWithChildren
 import org.supla.android.usecases.channel.ReadChannelGroupByRemoteIdUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToThermostatUpdateEventMapper
@@ -39,7 +43,7 @@ class CreateListItemUpdateEventDataUseCase @Inject constructor(
 
   operator fun invoke(itemType: ItemType, remoteId: Int): Observable<SlideableListItemData> {
     return when (itemType) {
-      ItemType.CHANNEL -> eventsManager.observeChannel(remoteId).flatMapMaybe { readChannelWithChildrenUseCase(remoteId) }
+      ItemType.CHANNEL -> observeChannel(remoteId)
       ItemType.GROUP -> eventsManager.observeGroup(remoteId).flatMapMaybe { readChannelGroupByRemoteIdUseCase(remoteId) }
     }.map { map(it) }
   }
@@ -52,6 +56,24 @@ class CreateListItemUpdateEventDataUseCase @Inject constructor(
     }
 
     throw IllegalStateException("No mapper found for item '$item'")
+  }
+
+  private fun observeChannel(remoteId: Int): Observable<ChannelWithChildren> {
+    return readChannelWithChildrenUseCase.invoke(remoteId)
+      .flatMapObservable { channelWithChildren ->
+        val ids = mutableListOf<Int>().also { list ->
+          list.add(channelWithChildren.channel.remoteId)
+          channelWithChildren.children.firstOrNull { it.relationType == ChannelRelationType.MAIN_THERMOMETER }?.let {
+            list.add(it.channel.remoteId)
+          }
+        }
+
+        return@flatMapObservable Observable.merge(
+          ids.map { id ->
+            eventsManager.observeChannel(id).flatMapMaybe { readChannelWithChildrenUseCase.invoke(remoteId) }
+          }
+        )
+      }
   }
 
   interface Mapper {
