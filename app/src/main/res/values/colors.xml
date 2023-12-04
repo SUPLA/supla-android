@@ -26,6 +26,10 @@
     <color name="light_red">#FFAA8C</color>
     <color name="dark_blue">#000080</color>
     <color name="dark_red">#800000</color>
+    <color name="chart_temperature_1">@color/red_alert</color>
+    <color name="chart_temperature_2">#FFFF8C53</color>
+    <color name="chart_humidity_1">#FF57A0FF</color>
+    <color name="chart_humidity_2">#FF33FFEC</color>
 
     <color name="shadow_start">#1A000000</color>
     <color name="shadow_end">#00000000</color>
