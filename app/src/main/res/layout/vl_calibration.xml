@@ -281,16 +281,4 @@
             android:gravity="right"
             android:textSize="10sp" />
     </LinearLayout>
-
-
-    <ImageView
-        android:id="@+id/imageView7"
-        android:layout_width="76dp"
-        android:layout_height="57dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/vprosmart" />
 </RelativeLayout>
