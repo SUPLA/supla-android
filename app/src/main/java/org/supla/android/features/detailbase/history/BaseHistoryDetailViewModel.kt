@@ -110,7 +110,7 @@ abstract class BaseHistoryDetailViewModel(
       state.copy(
         sets = sets,
         withHumidity = sets.firstOrNull { it.setId.type == ChartEntryType.HUMIDITY && it.active } != null,
-        withTemperature = sets.firstOrNull { it.setId.type == ChartEntryType.TEMPERATURE && it.active } != null,
+        withTemperature = sets.firstOrNull { it.setId.type == ChartEntryType.TEMPERATURE && it.active } != null
       )
     }
     updateUserState()
