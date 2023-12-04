@@ -37,12 +37,20 @@ android {
 
   buildTypes {
     getByName("release") {
+      buildConfigField("boolean", "NSPANEL_ACTIVE", "false")
       isMinifyEnabled = false
       proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
+    }
+    getByName("debug") {
+      buildConfigField("boolean", "NSPANEL_ACTIVE", "false")
     }
     create("internaltest") {
       initWith(buildTypes.getByName("debug"))
       applicationIdSuffix = ".t"
+    }
+    create("nspanelDebug") {
+      initWith(buildTypes.getByName("debug"))
+      buildConfigField("boolean", "NSPANEL_ACTIVE", "true")
     }
   }
 
@@ -86,6 +94,7 @@ android {
     dataBinding = true
     viewBinding = true
     compose = true
+    buildConfig = true
   }
 
   composeOptions {

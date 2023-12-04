@@ -127,9 +127,9 @@ class CreateAccountFragment : BaseFragment<CreateAccountViewState, CreateAccount
       cfgAdvanced.edServerAddrAutoEmail.isChecked = state.autoServerAddress
       cfgAdvanced.edServerAddrEmail.isEnabled = !state.autoServerAddress
 
-      cfgCreateAccount.visibleIf(state.profileNameVisible.not())
-      dontHaveAccountText.visibleIf(state.profileNameVisible.not())
-      cloudInfoVisible = state.profileNameVisible.not()
+      cfgCreateAccount.visibleIf(state.cloudInfoVisible)
+      dontHaveAccountText.visibleIf(state.cloudInfoVisible)
+      cloudInfoVisible = state.cloudInfoVisible
     }
   }
 

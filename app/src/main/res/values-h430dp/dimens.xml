@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <dimen name="form_field_spacing">47dp</dimen>
+  <dimen name="create_account_title_bottom_margin">50dp</dimen>
+  <dimen name="create_account_advanced_switch_top_margin">71dp</dimen>
+</resources>

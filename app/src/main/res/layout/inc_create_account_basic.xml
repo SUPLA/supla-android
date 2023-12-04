@@ -27,7 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/form_field_spacing"
-            android:layout_marginBottom="50dp"
+            android:layout_marginBottom="@dimen/create_account_title_bottom_margin"
             android:fontFamily="@font/quicksand_regular"
             android:gravity="center_horizontal|top"
             android:text="@string/profile"

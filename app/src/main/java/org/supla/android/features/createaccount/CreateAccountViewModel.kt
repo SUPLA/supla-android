@@ -19,6 +19,7 @@ package org.supla.android.features.createaccount
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.subscribeBy
+import org.supla.android.BuildConfig
 import org.supla.android.Preferences
 import org.supla.android.Trace
 import org.supla.android.core.ui.BaseViewModel
@@ -53,7 +54,8 @@ class CreateAccountViewModel @Inject constructor(
     updateState {
       it.copy(
         profileNameVisible = preferences.isAnyAccountRegistered,
-        deleteButtonVisible = preferences.isAnyAccountRegistered && profileId != null
+        deleteButtonVisible = preferences.isAnyAccountRegistered && profileId != null,
+        cloudInfoVisible = preferences.isAnyAccountRegistered.not() && BuildConfig.NSPANEL_ACTIVE.not()
       )
     }
 

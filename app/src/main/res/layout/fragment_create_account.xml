@@ -3,6 +3,7 @@
   xmlns:app="http://schemas.android.com/apk/res-auto">
 
   <data>
+
     <import type="android.view.View" />
 
     <variable
@@ -16,18 +17,6 @@
     android:layout_height="match_parent"
     android:background="@color/activity_bg"
     android:orientation="vertical">
-
-    <androidx.appcompat.widget.SwitchCompat
-      android:id="@+id/cfg_cb_advanced"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_gravity="end"
-      android:layout_marginTop="71dp"
-      android:layout_marginEnd="@dimen/activity_horizontal_margin"
-      android:fontFamily="@font/open_sans_regular"
-      android:text="@string/advanced_settings"
-      android:textSize="@dimen/default_text_size"
-      app:theme="@style/Switch" />
 
     <FrameLayout
       android:layout_width="match_parent"
@@ -43,6 +32,18 @@
           android:layout_width="match_parent"
           android:layout_height="match_parent"
           android:orientation="vertical">
+
+          <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/cfg_cb_advanced"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="@dimen/create_account_advanced_switch_top_margin"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:fontFamily="@font/open_sans_regular"
+            android:text="@string/advanced_settings"
+            android:textSize="@dimen/default_text_size"
+            app:theme="@style/Switch" />
 
           <RelativeLayout
             android:id="@+id/cfg_content"
@@ -80,7 +81,7 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginLeft="@dimen/activity_horizontal_margin"
-      android:layout_marginTop="@dimen/activity_vertical_margin"
+      android:layout_marginTop="@dimen/distance_tiny"
       android:layout_marginRight="@dimen/activity_horizontal_margin">
 
       <androidx.appcompat.widget.AppCompatButton
