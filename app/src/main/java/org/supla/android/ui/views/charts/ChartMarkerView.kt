@@ -54,11 +54,11 @@ class ChartMarkerView(context: Context) : MarkerView(context, R.layout.view_char
           ChartDataAggregation.YEARS -> context.valuesFormatter.getYearString(entry.xAsDate)
           else -> context.valuesFormatter.getFullDateString(entry.xAsDate)
         }
-        text.text = getValueString(details.type, entry.y)
+        text.text = getValueString(details.type, entry.y, 2)
 
         if (details.min != null && details.max != null) {
-          val minText = getValueString(details.type, details.min)
-          val maxText = getValueString(details.type, details.max)
+          val minText = getValueString(details.type, details.min, 1)
+          val maxText = getValueString(details.type, details.max, 1)
 
           subtext.text = "($minText - $maxText)"
         } else {
@@ -74,9 +74,9 @@ class ChartMarkerView(context: Context) : MarkerView(context, R.layout.view_char
     return MPPointF(-width.div(2).toFloat(), -height.toFloat().plus(20.dp.toPx()))
   }
 
-  private fun getValueString(type: ChartEntryType, value: Float) =
+  private fun getValueString(type: ChartEntryType, value: Float, precision: Int) =
     when (type) {
-      ChartEntryType.TEMPERATURE -> context.valuesFormatter.getTemperatureString(value)
-      ChartEntryType.HUMIDITY -> context.valuesFormatter.getHumidityString(value.toDouble(), true)
+      ChartEntryType.TEMPERATURE -> context.valuesFormatter.getTemperatureString(value, precision = precision)
+      ChartEntryType.HUMIDITY -> context.valuesFormatter.getHumidityString(value.toDouble(), true, precision = precision)
     }
 }
