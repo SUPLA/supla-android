@@ -28,8 +28,8 @@ public class ThermostatHP {
 
   private static final int STATUS_POWERON = 0x01;
   private static final int STATUS_PROGRAMMODE = 0x04;
-  private static final int STATUS_HEATERANDWATERTEST = 0x10;
-  private static final int STATUS_HEATING = 0x20;
+  private static final int STATUS_HEATERANDWATERTEST = 0x40;
+  private static final int STATUS_HEATING = 0x80;
 
   private static final int STATUS2_TURBO_ON = 0x1;
   private static final int STATUS2_ECOREDUCTION_ON = 0x2;
