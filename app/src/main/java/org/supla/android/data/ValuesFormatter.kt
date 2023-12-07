@@ -42,10 +42,13 @@ class ValuesFormatter @Inject constructor(
     return rawValue != null && rawValue > TEMPERATURE_NA_VALUE
   }
 
-  fun getTemperatureString(rawValue: Float?, withUnit: Boolean = false, withDegree: Boolean = true) =
-    getTemperatureString(rawValue?.toDouble(), withUnit, withDegree)
+  fun getTemperatureString(rawValue: Float?, withUnit: Boolean = false, withDegree: Boolean = true, precision: Int = 1) =
+    getTemperatureString(rawValue?.toDouble(), withUnit, withDegree, precision)
 
-  fun getTemperatureString(rawValue: Double?, withUnit: Boolean = false, withDegree: Boolean = true): String {
+  fun getTemperatureString(rawValue: Double?, withUnit: Boolean = false, withDegree: Boolean = true) =
+    getTemperatureString(rawValue, withUnit, withDegree, 1)
+
+  fun getTemperatureString(rawValue: Double?, withUnit: Boolean = false, withDegree: Boolean = true, precision: Int = 1): String {
     return when {
       !isTemperatureDefined(rawValue) && withUnit ->
         String.format("%s%s", NO_VALUE_TEXT, getUnitString())
@@ -54,24 +57,24 @@ class ValuesFormatter @Inject constructor(
         String.format("%s", NO_VALUE_TEXT)
 
       withUnit -> String.format(
-        "%.1f%s",
+        "%.${precision}f%s",
         getTemperatureInConfiguredUnit(rawValue!!),
         getUnitString()
       )
 
       else -> String.format(
-        "%.1f%s",
+        "%.${precision}f%s",
         getTemperatureInConfiguredUnit(rawValue!!),
         if (withDegree) getUnitString().substring(0, 1) else ""
       )
     }
   }
 
-  fun getHumidityString(rawValue: Double?, withPercentage: Boolean = false): String {
+  fun getHumidityString(rawValue: Double?, withPercentage: Boolean = false, precision: Int = 1): String {
     return if (withPercentage) {
-      String.format("%.1f%%", rawValue)
+      String.format("%.${precision}f%%", rawValue)
     } else {
-      String.format("%.1f", rawValue)
+      String.format("%.${precision}f", rawValue)
     }
   }
 

@@ -441,11 +441,11 @@
     <string name="single_button_widget_description">Single-button widget.</string>
     <string name="widget_app_not_initialized">Please login first!</string>
     <string name="widget_command_no_connection">No internet connection!</string>
-    <string translatable="false" name="widget_command_error">Problem occurred! (code: %1$i)</string>
-    <string translatable="false" name="widget_command_connection_failure">Connection failure! (code: %1$i)</string>
+    <string translatable="false" name="widget_command_error">Problem occurred! (code: %1$d)</string>
+    <string translatable="false" name="widget_command_connection_failure">Connection failure! (code: %1$d)</string>
     <string translatable="false" name="widget_command_subject_offline">%1$s is offline!</string>
     <string translatable="false" name="widget_command_subject_unavailable">%1$s doesn\'t exist!</string>
-    <string translatable="false" name="widget_command_no_access">Access missing! (code: %1$i)</string>
+    <string translatable="false" name="widget_command_no_access">Access missing! (code: %1$d)</string>
     <string name="widget_command_started">Done</string>
     <string name="widget_removed_label">Channel removed</string>
     <string translatable="false" name="widget_channel">@string/zwave_supla_channel</string>
@@ -636,6 +636,8 @@
     <string translatable="false" name="details_timer_max_temp">Temp. max.</string>
     <string translatable="false" name="details_timer_state_label_for_timer_days">State until %1$s:</string>
     <string translatable="false" name="details_timer_cancel_thermostat">Cancel and turn on:</string>
+    <string translatable="false" name="widget_processing_notification_text">Processing…</string>
+    <string translatable="false" name="widget_processing_notification_title">Background work</string>
 
     <plurals name="details_timer_info_on" translatable="false">
         <item quantity="other">on</item>

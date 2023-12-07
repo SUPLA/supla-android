@@ -90,9 +90,9 @@ class LoadChannelWithChildrenMeasurementsUseCaseTest : BaseLoadMeasurementsUseCa
     val result = testObserver.values()[0]
     Assertions.assertThat(result).extracting({ it.setId }, { it.color }, { it.active })
       .containsExactly(
-        Assertions.tuple(HistoryDataSet.Id(2, ChartEntryType.TEMPERATURE), R.color.red, true),
-        Assertions.tuple(HistoryDataSet.Id(2, ChartEntryType.HUMIDITY), R.color.blue, true),
-        Assertions.tuple(HistoryDataSet.Id(3, ChartEntryType.TEMPERATURE), R.color.dark_red, true)
+        Assertions.tuple(HistoryDataSet.Id(2, ChartEntryType.TEMPERATURE), R.color.chart_temperature_1, true),
+        Assertions.tuple(HistoryDataSet.Id(2, ChartEntryType.HUMIDITY), R.color.chart_humidity_1, true),
+        Assertions.tuple(HistoryDataSet.Id(3, ChartEntryType.TEMPERATURE), R.color.chart_temperature_2, true)
       )
 
     val temperatureEntryDetails = EntryDetails(ChartDataAggregation.MINUTES, ChartEntryType.TEMPERATURE, null, null)

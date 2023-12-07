@@ -30,7 +30,7 @@ import org.supla.android.extensions.getChannelValueUseCase
 import org.supla.android.extensions.toTimestamp
 import org.supla.android.images.ImageCache
 
-abstract class BaseLoadMeasurementsUseCase(private val getChannelValueUseCase: GetChannelValueUseCase) {
+abstract class BaseLoadMeasurementsUseCase {
 
   internal fun <T : BaseTemperatureEntity> aggregatingTemperature(
     measurements: List<T>,
@@ -163,8 +163,8 @@ internal abstract class Colors(
     }
 }
 
-internal class TemperatureColors : Colors(listOf(R.color.red, R.color.dark_red))
-internal class HumidityColors : Colors(listOf(R.color.blue, R.color.dark_blue))
+internal class TemperatureColors : Colors(listOf(R.color.chart_temperature_1, R.color.chart_temperature_2))
+internal class HumidityColors : Colors(listOf(R.color.chart_humidity_1, R.color.chart_humidity_2))
 
 internal data class AggregatedEntity(
   val aggregation: ChartDataAggregation,

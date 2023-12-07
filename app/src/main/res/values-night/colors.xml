@@ -2,7 +2,8 @@
 <resources>
 
     <color name="layout_background">#171717</color>
-    <color name="field_background">#262627</color>
+    <color name="field_background">#3D3D3E</color>
+    <color name="segmented_field_background">#101010</color>
     <color name="button_background">#2AA75A</color>
 
     <color name="widget_text">#FFFFFF</color>
