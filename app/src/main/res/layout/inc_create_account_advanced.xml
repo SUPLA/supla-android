@@ -54,7 +54,7 @@
 
         <org.supla.android.ui.SegmentedButtonGroup
             android:id="@+id/authType"
-            style="@style/SegmentedButtonGroup"
+            style="@style/SegmentedButtonGroupDayOnly"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/cfg_profile_name"

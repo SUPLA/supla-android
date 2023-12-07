@@ -85,6 +85,10 @@
     <item name="android:background">@drawable/segment_group_background</item>
   </style>
 
+  <style name="SegmentedButtonGroupDayOnly">
+    <item name="android:background">@drawable/segment_group_background_day_only</item>
+  </style>
+
   <style name="SegmentedButton">
     <item name="android:background">@drawable/segmented_button_background</item>
   </style>
