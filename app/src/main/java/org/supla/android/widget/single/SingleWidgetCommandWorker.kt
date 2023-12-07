@@ -18,6 +18,7 @@ package org.supla.android.widget.single
  */
 
 import android.content.Context
+import androidx.hilt.work.HiltWorker
 import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -40,6 +41,7 @@ import org.supla.android.widget.shared.configuration.WidgetAction
  * power switch [SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH]
  * It supports also opening and closing of roller shutters
  */
+@HiltWorker
 class SingleWidgetCommandWorker @AssistedInject constructor(
   notificationsHelper: NotificationsHelper,
   @Assisted appContext: Context,
