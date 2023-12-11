@@ -688,6 +688,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
         case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING:
         case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
         case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
+        case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
           ridx = R.string.channel_btn_on;
           lidx = R.string.channel_btn_off;
           break;
@@ -726,6 +727,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
         case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING:
         case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
         case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
+        case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
           left_onlineStatus.setVisibility(View.VISIBLE);
           right_onlineStatus.setVisibility(View.VISIBLE);
 
@@ -747,7 +749,6 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
         case SuplaConst.SUPLA_CHANNELFNC_MAILSENSOR:
         case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
         case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
-        case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
           left_onlineStatus.setVisibility(View.VISIBLE);
           left_onlineStatus.setShapeType(SuplaChannelStatus.ShapeType.Ring);
           right_onlineStatus.setVisibility(View.VISIBLE);

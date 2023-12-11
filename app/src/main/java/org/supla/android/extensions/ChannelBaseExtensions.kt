@@ -52,3 +52,6 @@ fun ChannelBase.isDoorLock() =
 fun ChannelBase.isThermometer() =
   func == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER ||
     func == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
+
+fun ChannelBase.isThermostat(): Boolean =
+  isHvacThermostat() || func == SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS

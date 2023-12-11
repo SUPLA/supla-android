@@ -165,6 +165,38 @@ class ChannelActionUseCaseTest {
     testOpenClose(channelId, SUPLA_CHANNELFNC_LIGHTSWITCH, ButtonType.LEFT, 0)
   }
 
+  @Test
+  fun `should turn on home plus thermostat`() {
+    val channelId = 234
+
+    testActionExecution(
+      channelId,
+      SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS,
+      ButtonType.RIGHT,
+      0
+    ) {
+      assertThat(it.action).isEqualTo(ActionId.TURN_ON)
+      assertThat(it.subjectType).isEqualTo(SubjectType.CHANNEL)
+      assertThat(it.subjectId).isEqualTo(channelId)
+    }
+  }
+
+  @Test
+  fun `should turn off home plus thermostat`() {
+    val channelId = 234
+
+    testActionExecution(
+      channelId,
+      SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS,
+      ButtonType.LEFT,
+      0
+    ) {
+      assertThat(it.action).isEqualTo(ActionId.TURN_OFF)
+      assertThat(it.subjectType).isEqualTo(SubjectType.CHANNEL)
+      assertThat(it.subjectId).isEqualTo(channelId)
+    }
+  }
+
   private fun testHighAmperageException(channelFunc: Int) {
     // given
     val channelValue: ChannelValue = mockk()
