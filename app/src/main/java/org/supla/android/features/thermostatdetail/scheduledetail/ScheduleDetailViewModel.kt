@@ -93,6 +93,8 @@ class ScheduleDetailViewModel @Inject constructor(
         state.copy(loadingState = state.loadingState.changingLoading(false, dateProvider))
       }
     }
+
+    updateState { it.copy(showHelp = preferences.showThermostatScheduleInfo) }
   }
 
   fun observeConfig(remoteId: Int, deviceId: Int) {
@@ -306,6 +308,11 @@ class ScheduleDetailViewModel @Inject constructor(
     }
   }
 
+  override fun onHelpClosed() {
+    preferences.showThermostatScheduleInfo = false
+    updateState { it.copy(showHelp = false) }
+  }
+
   private fun getProgramForChange(program: SuplaScheduleProgram, state: ScheduleDetailViewState): SuplaScheduleProgram? {
     if (state.activeProgram == program) {
       return null // Deselect active program
@@ -437,12 +444,16 @@ class ScheduleDetailViewModel @Inject constructor(
   private fun programAvailableModes(state: ScheduleDetailViewState) = when {
     state.channelFunction == SUPLA_CHANNELFNC_HVAC_THERMOSTAT && state.thermostatFunction == ThermostatSubfunction.HEAT ->
       listOf(SuplaHvacMode.HEAT)
+
     state.channelFunction == SUPLA_CHANNELFNC_HVAC_THERMOSTAT && state.thermostatFunction == ThermostatSubfunction.COOL ->
       listOf(SuplaHvacMode.COOL)
+
     state.channelFunction == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO ->
       listOf(SuplaHvacMode.AUTO, SuplaHvacMode.HEAT, SuplaHvacMode.COOL)
+
     state.channelFunction == SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER ->
       listOf(SuplaHvacMode.HEAT)
+
     else -> listOf()
   }
 
@@ -525,6 +536,7 @@ data class ScheduleDetailViewState(
   val programSettings: ProgramSettingsData? = null,
   val currentDayOfWeek: DayOfWeek? = null,
   val currentHour: Int? = null,
+  val showHelp: Boolean = false,
   override val sent: Boolean = false
 ) : ViewState(), DelayableState {
 

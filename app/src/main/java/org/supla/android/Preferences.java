@@ -48,6 +48,7 @@ public class Preferences {
 
   private static final String pref_any_account_registered = "pref_any_account_registered";
   private static final String pref_new_gesture_info = "pref_new_gesture_info";
+  private static final String pref_thermostat_schedule_info = "pref_thermostat_schedule_info";
   private static final String pref_notifications_asked = "pref_notifications_asked";
   private static final String pref_should_show_new_gesture_info =
       "pref_should_show_new_gesture_info";
@@ -244,6 +245,14 @@ public class Preferences {
 
   public void setNewGestureInfoPresented(boolean presented) {
     _prefs.edit().putBoolean(pref_new_gesture_info, presented).apply();
+  }
+
+  public boolean getShowThermostatScheduleInfo() {
+    return _prefs.getBoolean(pref_thermostat_schedule_info, true);
+  }
+
+  public void setShowThermostatScheduleInfo(boolean presented) {
+    _prefs.edit().putBoolean(pref_thermostat_schedule_info, presented).apply();
   }
 
   public boolean isNotificationsPopupDisplayed() {
