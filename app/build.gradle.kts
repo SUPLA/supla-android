@@ -21,7 +21,7 @@ android {
     minSdk = Versions.MinSdk
     targetSdk = Versions.TargetSdk
     multiDexEnabled = true
-    versionCode = 205
+    versionCode = 208
     versionName = "23.12"
 
     ndk {
