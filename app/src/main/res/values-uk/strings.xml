@@ -315,11 +315,11 @@
   <string name="single_button_widget_description">"Одно кнопковий віджет "</string>
   <string name="widget_app_not_initialized">Будь ласка, увійдіть!</string>
   <string name="widget_command_no_connection">Немає підключення до Інтернету!</string>
-  <string name="widget_command_error" translatable="false">Сталася помилка! (код: %1$i)</string>
-  <string name="widget_command_connection_failure" translatable="false">Помилка з\'єднання! (код: %1$i)</string>
+  <string name="widget_command_error" translatable="false">Сталася помилка! (код: %1$d)</string>
+  <string name="widget_command_connection_failure" translatable="false">Помилка з\'єднання! (код: %1$d)</string>
   <string name="widget_command_subject_offline" translatable="false">%1$s поза мережею!</string>
   <string name="widget_command_subject_unavailable" translatable="false">%1$s не існує!</string>
-  <string name="widget_command_no_access" translatable="false">Відсутність доступу! (код: %1$i)</string>
+  <string name="widget_command_no_access" translatable="false">Відсутність доступу! (код: %1$d)</string>
   <string name="widget_command_started">Готово</string>
   <string name="widget_removed_label">Канал видалено</string>
   <string name="widget_group" translatable="false">група</string>

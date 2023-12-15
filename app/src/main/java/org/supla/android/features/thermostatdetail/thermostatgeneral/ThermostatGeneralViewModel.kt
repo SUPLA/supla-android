@@ -50,6 +50,7 @@ import org.supla.android.events.LoadingTimeoutManager
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.extensions.TAG
 import org.supla.android.extensions.fromSuplaTemperature
+import org.supla.android.extensions.getTimerStateValue
 import org.supla.android.extensions.guardLet
 import org.supla.android.extensions.ifLet
 import org.supla.android.extensions.mapMerged
@@ -58,6 +59,7 @@ import org.supla.android.features.thermostatdetail.thermostatgeneral.data.Thermo
 import org.supla.android.features.thermostatdetail.thermostatgeneral.data.ThermostatProgramInfo
 import org.supla.android.features.thermostatdetail.thermostatgeneral.data.build
 import org.supla.android.features.thermostatdetail.thermostatgeneral.ui.ThermostatGeneralViewProxy
+import org.supla.android.features.thermostatdetail.ui.TimerHeaderState
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO
@@ -66,6 +68,7 @@ import org.supla.android.ui.lists.data.IssueIconType
 import org.supla.android.usecases.channel.ChannelWithChildren
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
 import org.supla.android.usecases.thermostat.CreateTemperaturesListUseCase
+import java.util.Date
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.math.roundToInt
@@ -325,6 +328,14 @@ class ThermostatGeneralViewModel @Inject constructor(
   private fun handleData(data: LoadedData) {
     val channel = data.channelWithChildren.channel
     val value = channel.value.asThermostatValue()
+    val currentDate = dateProvider.currentDate()
+    val timerState = channel.getTimerStateValue()?.let {
+      if (it.countdownEndsAt?.before(currentDate) == true) {
+        null
+      } else {
+        it
+      }
+    }
 
     val setpointHeatTemperature = getSetpointHeatTemperature(channel, value)
     val setpointCoolTemperature = getSetpointCoolTemperature(channel, value)
@@ -356,7 +367,8 @@ class ThermostatGeneralViewModel @Inject constructor(
           configMinTemperature = configMinTemperature,
           configMaxTemperature = configMaxTemperature,
           mode = value.mode,
-          subfunction = value.subfunction
+          subfunction = value.subfunction,
+          timerEndDate = timerState?.countdownEndsAt
         ),
 
         temperatures = data.temperatures,
@@ -647,7 +659,7 @@ data class ThermostatGeneralViewState(
   val loadingState: LoadingTimeoutManager.LoadingState = LoadingTimeoutManager.LoadingState(),
   val lastInteractionTime: Long? = null,
   val changing: Boolean = false
-) : ViewState() {
+) : ViewState(), TimerHeaderState {
 
   val setpointHeatTemperaturePercentage: Float?
     get() {
@@ -714,6 +726,22 @@ data class ThermostatGeneralViewState(
 
       return false
     }
+
+  override val endDateText: StringProvider
+    get() = TimerHeaderState.endDateText(viewModelState?.timerEndDate)
+
+  override val currentStateIcon: Int?
+    get() = TimerHeaderState.currentStateIcon(viewModelState?.mode)
+
+  override val currentStateIconColor: Int
+    get() = TimerHeaderState.currentStateIconColor(viewModelState?.mode)
+
+  override val currentStateValue: StringProvider
+    get() = TimerHeaderState.currentStateValue(
+      viewModelState?.mode,
+      viewModelState?.setpointHeatTemperature,
+      viewModelState?.setpointCoolTemperature
+    )
 }
 
 data class MeasurementValue(
@@ -732,6 +760,7 @@ data class ThermostatGeneralViewModelState(
   val setpointHeatTemperature: Float? = null,
   val setpointCoolTemperature: Float? = null,
   val subfunction: ThermostatSubfunction? = null,
+  val timerEndDate: Date? = null,
   override val sent: Boolean = false
 ) : DelayableState {
 

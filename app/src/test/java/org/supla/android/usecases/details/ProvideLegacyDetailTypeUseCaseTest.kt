@@ -127,7 +127,7 @@ class ProvideLegacyDetailTypeUseCaseTest {
   fun `should provide detail for light switch with measurement and timer support`() {
     testDetailType(
       SUPLA_CHANNELFNC_LIGHTSWITCH,
-      SwitchDetailType(listOf(DetailPage.SWITCH, DetailPage.TIMER, DetailPage.HISTORY_EM))
+      SwitchDetailType(listOf(DetailPage.SWITCH, DetailPage.SWITCH_TIMER, DetailPage.HISTORY_EM))
     ) { channel ->
       val channelValue: ChannelValue = mockk()
       every { channelValue.subValueType } returns SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort()
@@ -140,7 +140,7 @@ class ProvideLegacyDetailTypeUseCaseTest {
   fun `should provide detail for power switch with measurement and timer support`() {
     testDetailType(
       SUPLA_CHANNELFNC_POWERSWITCH,
-      SwitchDetailType(listOf(DetailPage.SWITCH, DetailPage.TIMER, DetailPage.HISTORY_EM))
+      SwitchDetailType(listOf(DetailPage.SWITCH, DetailPage.SWITCH_TIMER, DetailPage.HISTORY_EM))
     ) { channel ->
       val channelValue: ChannelValue = mockk()
       every { channelValue.subValueType } returns SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort()
@@ -241,7 +241,7 @@ class ProvideLegacyDetailTypeUseCaseTest {
   fun `should provide detail for hvac thermostat heat`() {
     testDetailType(
       SUPLA_CHANNELFNC_HVAC_THERMOSTAT,
-      ThermostatDetailType(listOf(DetailPage.THERMOSTAT, DetailPage.SCHEDULE, DetailPage.THERMOSTAT_HISTORY))
+      ThermostatDetailType(listOf(DetailPage.THERMOSTAT, DetailPage.SCHEDULE, DetailPage.THERMOSTAT_TIMER, DetailPage.THERMOSTAT_HISTORY))
     )
   }
 

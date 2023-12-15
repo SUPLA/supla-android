@@ -9,6 +9,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.res.ResourcesCompat
 import com.github.mikephil.charting.charts.CombinedChart
@@ -23,6 +24,7 @@ import com.github.mikephil.charting.utils.ViewPortHandler
 import org.supla.android.R
 import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.model.chart.ChartParameters
+import org.supla.android.extensions.toPx
 import org.supla.android.extensions.valuesFormatter
 import org.supla.android.ui.views.charts.ChartMarkerView
 import java.util.Date
@@ -34,7 +36,9 @@ fun TemperaturesChart(
   rangeEnd: Float?,
   emptyChartMessage: String,
   withHumidity: Boolean,
+  withTemperature: Boolean,
   maxTemperature: Float?,
+  maxHumidity: Float?,
   chartParameters: ChartParameters?,
   positionEvents: (scaleX: Float, scaleY: Float, x: Float, y: Float) -> Unit,
   modifier: Modifier = Modifier
@@ -50,12 +54,10 @@ fun TemperaturesChart(
         xAxisFormatter.handler = it.viewPortHandler
 
         val colorBlack = ResourcesCompat.getColor(context.resources, R.color.on_background, null)
-        it.data = data
-        it.background = ColorDrawable(ResourcesCompat.getColor(context.resources, R.color.background, null))
-        it.xAxis.setDrawGridLines(false)
-        it.xAxis.setDrawAxisLine(false)
-        it.legend.isEnabled = false
+
+        // Left axis
         it.axisLeft.setDrawAxisLine(false)
+        it.axisLeft.enableGridDashedLine(3.dp.toPx(), 3.dp.toPx(), 6.dp.toPx())
         it.axisLeft.textColor = ResourcesCompat.getColor(context.resources, R.color.dark_red, null)
         it.axisLeft.gridColor = it.axisLeft.textColor
         it.axisLeft.zeroLineColor = colorBlack
@@ -64,7 +66,9 @@ fun TemperaturesChart(
             return context.valuesFormatter.getTemperatureString(value)
           }
         }
+        // Right axis
         it.axisRight.setDrawAxisLine(false)
+        it.axisRight.enableGridDashedLine(3.dp.toPx(), 3.dp.toPx(), 6.dp.toPx())
         it.axisRight.textColor = ResourcesCompat.getColor(context.resources, R.color.dark_blue, null)
         it.axisRight.gridColor = it.axisRight.textColor
         it.axisRight.zeroLineColor = colorBlack
@@ -77,16 +81,31 @@ fun TemperaturesChart(
             return context.valuesFormatter.getHumidityString(originalValue, withPercentage = true)
           }
         }
+        it.axisRight.axisMinimum = 0f
+        it.axisRight.axisMaximum = 100f
+        // X axis
+        it.xAxis.setDrawGridLines(false)
+        it.xAxis.setDrawAxisLine(false)
         it.xAxis.position = XAxis.XAxisPosition.BOTTOM
         it.xAxis.valueFormatter = xAxisFormatter
         it.xAxis.labelCount = 6
-        it.axisRight.axisMinimum = 0f
-        it.axisRight.axisMaximum = 100f
+        // Others
+        it.data = data
+        it.background = ColorDrawable(ResourcesCompat.getColor(context.resources, R.color.background, null))
+        it.legend.isEnabled = false
         it.description.isEnabled = false
         it.onChartGestureListener = ChartObserver(positionEvents, it)
         it.setNoDataTextColor(colorBlack)
         it.marker = ChartMarkerView(context).apply { chartView = it }
         it.setDrawMarkers(true)
+
+        chartParameters?.apply {
+          if (scaleX == 1f && scaleY == 1f && x == 0f && y == 0f) {
+            it.fitScreen() // reset scale
+          } else {
+            it.zoom(scaleX, scaleY, x, y, YAxis.AxisDependency.LEFT)
+          }
+        }
       }
     },
     update = { chart ->
@@ -95,6 +114,7 @@ fun TemperaturesChart(
       rangeStart?.let { chart.xAxis.axisMinimum = it }
       rangeEnd?.let { chart.xAxis.axisMaximum = it }
       chart.axisRight.isEnabled = withHumidity
+      chart.axisLeft.isEnabled = withTemperature
 
       data?.allData?.minOfOrNull { entry -> entry.yMin }?.let { yMin ->
         chart.axisLeft.axisMinimum = if (yMin > 0) {
@@ -105,6 +125,9 @@ fun TemperaturesChart(
       }
       maxTemperature?.let {
         chart.axisLeft.axisMaximum = it
+      }
+      maxHumidity?.let {
+        chart.axisRight.axisMaximum = if (it > 100) it else 100f
       }
 
       chart.notifyDataSetChanged()

@@ -17,6 +17,8 @@ package org.supla.android.extensions
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.content.res.Resources
+import androidx.compose.ui.unit.Dp
 import kotlin.math.roundToInt
 
 /**
@@ -26,3 +28,7 @@ import kotlin.math.roundToInt
  * in the application you're able to change only first position.
  */
 fun Float.toSuplaTemperature() = this.times(10).roundToInt().times(10).toShort()
+
+fun Float.toDp(): Dp {
+  return Dp(this / Resources.getSystem().displayMetrics.density)
+}

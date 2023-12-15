@@ -21,9 +21,28 @@ import android.content.res.Resources
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.sp
 
+const val DAY_IN_SEC = 24 * 60 * 60
+const val HOUR_IN_SEC = 60 * 60
+const val MINUTE_IN_SEC = 60
+
 fun Int.toDp(): Dp {
   return Dp(this / Resources.getSystem().displayMetrics.density)
 }
 
 val Int.nonScaledSp
   get() = (this / Resources.getSystem().configuration.fontScale).sp
+
+val Int.days
+  get() = this.div(DAY_IN_SEC)
+
+val Int.hours
+  get() = this.div(HOUR_IN_SEC)
+
+val Int.hoursInDay
+  get() = this.mod(DAY_IN_SEC).div(HOUR_IN_SEC)
+
+val Int.minutesInHour
+  get() = this.mod(HOUR_IN_SEC).div(MINUTE_IN_SEC)
+
+val Int.secondsInMinute
+  get() = this.mod(MINUTE_IN_SEC)

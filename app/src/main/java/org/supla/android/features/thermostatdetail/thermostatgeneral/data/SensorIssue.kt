@@ -30,7 +30,7 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROOFWINDOW
 import org.supla.android.usecases.channel.ChannelChild
 
 data class SensorIssue(
-  val iconProvider: BitmapProvider,
+  val iconProvider: BitmapProvider?,
   val textProvider: StringProvider
 ) {
 
@@ -56,7 +56,10 @@ data class SensorIssue(
             }
           }
         )
-      }
+      } ?: SensorIssue(
+        iconProvider = null,
+        textProvider = { it.getString(R.string.thermostat_detail_off_by_sensor) }
+      )
     }
   }
 }

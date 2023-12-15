@@ -17,7 +17,7 @@
 
   <org.supla.android.ui.SegmentedButtonGroup
     android:id="@+id/settings_temperature_unit"
-    style="@style/SegmentedButtonGroup"
+    style="@style/SegmentedButtonGroupDayOnly"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_alignParentEnd="true"

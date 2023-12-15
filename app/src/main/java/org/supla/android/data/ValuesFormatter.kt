@@ -23,6 +23,10 @@ import org.supla.android.R
 import org.supla.android.core.ui.StringProvider
 import org.supla.android.data.source.local.calendar.Hour
 import org.supla.android.data.source.runtime.appsettings.TemperatureUnit
+import org.supla.android.extensions.days
+import org.supla.android.extensions.hours
+import org.supla.android.extensions.minutesInHour
+import org.supla.android.extensions.secondsInMinute
 import org.supla.android.lib.singlecall.TemperatureAndHumidity
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -38,10 +42,13 @@ class ValuesFormatter @Inject constructor(
     return rawValue != null && rawValue > TEMPERATURE_NA_VALUE
   }
 
-  fun getTemperatureString(rawValue: Float?, withUnit: Boolean = false, withDegree: Boolean = true) =
-    getTemperatureString(rawValue?.toDouble(), withUnit, withDegree)
+  fun getTemperatureString(rawValue: Float?, withUnit: Boolean = false, withDegree: Boolean = true, precision: Int = 1) =
+    getTemperatureString(rawValue?.toDouble(), withUnit, withDegree, precision)
 
-  fun getTemperatureString(rawValue: Double?, withUnit: Boolean = false, withDegree: Boolean = true): String {
+  fun getTemperatureString(rawValue: Double?, withUnit: Boolean = false, withDegree: Boolean = true) =
+    getTemperatureString(rawValue, withUnit, withDegree, 1)
+
+  fun getTemperatureString(rawValue: Double?, withUnit: Boolean = false, withDegree: Boolean = true, precision: Int = 1): String {
     return when {
       !isTemperatureDefined(rawValue) && withUnit ->
         String.format("%s%s", NO_VALUE_TEXT, getUnitString())
@@ -50,24 +57,24 @@ class ValuesFormatter @Inject constructor(
         String.format("%s", NO_VALUE_TEXT)
 
       withUnit -> String.format(
-        "%.1f%s",
+        "%.${precision}f%s",
         getTemperatureInConfiguredUnit(rawValue!!),
         getUnitString()
       )
 
       else -> String.format(
-        "%.1f%s",
+        "%.${precision}f%s",
         getTemperatureInConfiguredUnit(rawValue!!),
         if (withDegree) getUnitString().substring(0, 1) else ""
       )
     }
   }
 
-  fun getHumidityString(rawValue: Double?, withPercentage: Boolean = false): String {
+  fun getHumidityString(rawValue: Double?, withPercentage: Boolean = false, precision: Int = 1): String {
     return if (withPercentage) {
-      String.format("%.1f%%", rawValue)
+      String.format("%.${precision}f%%", rawValue)
     } else {
-      String.format("%.1f", rawValue)
+      String.format("%.${precision}f", rawValue)
     }
   }
 
@@ -100,9 +107,27 @@ class ValuesFormatter @Inject constructor(
   }
 
   fun getHourString(hour: Hour): String {
-    val minutes = if (hour.minute < 10) "0${hour.minute}" else "${hour.minute}"
-    val hour = if (hour.hour < 10) "0${hour.hour}" else "${hour.hour}"
-    return "$hour:$minutes"
+    return getTimeString(hour = hour.hour, minute = hour.minute)
+  }
+
+  fun getTimeString(hour: Int? = null, minute: Int? = null, second: Int? = null): String {
+    var result = ""
+
+    hour?.let { result = if (it < 10) "0$it" else "$it" }
+    minute?.let {
+      if (result.isNotEmpty()) {
+        result += ":"
+      }
+      result += if (it < 10) "0$it" else "$it"
+    }
+    second?.let {
+      if (result.isNotEmpty()) {
+        result += ":"
+      }
+      result += if (it < 10) "0$it" else "$it"
+    }
+
+    return result
   }
 
   @SuppressLint("SimpleDateFormat")
@@ -170,6 +195,15 @@ class ValuesFormatter @Inject constructor(
 
   fun getPercentageString(value: Float): String =
     "${value.times(100).toInt()}%"
+
+  fun getTimerRestTime(time: Int): StringProvider {
+    val days = time.days
+    return if (days > 0) {
+      { it.resources.getQuantityString(R.plurals.day_pattern, days, days) + " ⏱️" }
+    } else {
+      { getTimeString(time.hours, time.minutesInHour, time.secondsInMinute) }
+    }
+  }
 
   private fun getHumidityString(rawValue: Double?): String {
     return when {

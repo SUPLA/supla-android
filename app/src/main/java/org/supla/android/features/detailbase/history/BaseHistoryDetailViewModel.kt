@@ -22,7 +22,6 @@ import android.content.res.Resources
 import androidx.annotation.ColorRes
 import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.intl.Locale
-import androidx.compose.ui.unit.dp
 import androidx.core.content.res.ResourcesCompat
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.CombinedData
@@ -63,7 +62,6 @@ import org.supla.android.extensions.quarterStart
 import org.supla.android.extensions.setDay
 import org.supla.android.extensions.setHour
 import org.supla.android.extensions.shift
-import org.supla.android.extensions.toPx
 import org.supla.android.extensions.toTimestamp
 import org.supla.android.extensions.valuesFormatter
 import org.supla.android.extensions.weekEnd
@@ -101,14 +99,18 @@ abstract class BaseHistoryDetailViewModel(
 
   override fun changeSetActive(setId: HistoryDataSet.Id) {
     updateState { state ->
-      state.copy(
-        sets = state.sets.map {
-          if (it.setId == setId) {
-            it.copy(active = it.active.not())
-          } else {
-            it
-          }
+      val sets = state.sets.map {
+        if (it.setId == setId) {
+          it.copy(active = it.active.not())
+        } else {
+          it
         }
+      }
+
+      state.copy(
+        sets = sets,
+        withHumidity = sets.firstOrNull { it.setId.type == ChartEntryType.HUMIDITY && it.active } != null,
+        withTemperature = sets.firstOrNull { it.setId.type == ChartEntryType.TEMPERATURE && it.active } != null
       )
     }
     updateUserState()
@@ -358,12 +360,19 @@ abstract class BaseHistoryDetailViewModel(
 
   private fun handleMeasurements(sets: List<HistoryDataSet>, dateRange: Optional<DateRange>, chartState: TemperatureChartState) {
     updateState { state ->
+      val setsWithActiveSet = sets.map { set -> set.copy(active = chartState.visibleSets?.contains(set.setId) ?: true) }
       state.copy(
         // Update sets visibility
-        sets = sets.map { set -> set.copy(active = chartState.visibleSets?.contains(set.setId) ?: true) },
-        withHumidity = sets.firstOrNull { it.setId.type == ChartEntryType.HUMIDITY } != null,
-        maxTemperature = sets
+        sets = setsWithActiveSet,
+        withHumidity = setsWithActiveSet.firstOrNull { it.setId.type == ChartEntryType.HUMIDITY && it.active } != null,
+        withTemperature = setsWithActiveSet.firstOrNull { it.setId.type == ChartEntryType.TEMPERATURE && it.active } != null,
+        maxTemperature = setsWithActiveSet
           .filter { it.setId.type == ChartEntryType.TEMPERATURE }
+          .mapNotNull { set -> set.entries.maxOfOrNull { entries -> entries.maxOf { it.y } } }
+          .maxOfOrNull { it }
+          ?.plus(2), // Adds some additional space on chart
+        maxHumidity = setsWithActiveSet
+          .filter { it.setId.type == ChartEntryType.HUMIDITY }
           .mapNotNull { set -> set.entries.maxOfOrNull { entries -> entries.maxOf { it.y } } }
           .maxOfOrNull { it }
           ?.plus(2), // Adds some additional space on chart
@@ -486,7 +495,9 @@ data class HistoryDetailViewState(
   val minDate: Date? = null,
   val maxDate: Date? = null,
   val withHumidity: Boolean = false,
+  val withTemperature: Boolean = false,
   val maxTemperature: Float? = null,
+  val maxHumidity: Float? = null,
   val chartParameters: HideableValue<ChartParameters>? = null,
 
   val editDate: RangeValueType? = null,
@@ -737,9 +748,15 @@ private fun lineDataSet(set: List<Entry>, @ColorRes colorRes: Int, type: ChartEn
     color = ResourcesCompat.getColor(resources, colorRes, null)
     circleColors = listOf(ResourcesCompat.getColor(resources, colorRes, null))
     setDrawCircleHole(false)
-    circleRadius = 0.5.dp.toPx()
+    setDrawCircles(false)
+    lineWidth = 2f
     axisDependency = when (type) {
       ChartEntryType.TEMPERATURE -> YAxis.AxisDependency.LEFT
       ChartEntryType.HUMIDITY -> YAxis.AxisDependency.RIGHT
     }
+    highLightColor = ResourcesCompat.getColor(resources, R.color.primary_variant, null)
+
+    setDrawFilled(true)
+    fillColor = color
+    fillAlpha = 15
   }

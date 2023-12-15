@@ -441,11 +441,11 @@
     <string name="single_button_widget_description">Single-button widget.</string>
     <string name="widget_app_not_initialized">Please login first!</string>
     <string name="widget_command_no_connection">No internet connection!</string>
-    <string translatable="false" name="widget_command_error">Problem occurred! (code: %1$i)</string>
-    <string translatable="false" name="widget_command_connection_failure">Connection failure! (code: %1$i)</string>
+    <string translatable="false" name="widget_command_error">Problem occurred! (code: %1$d)</string>
+    <string translatable="false" name="widget_command_connection_failure">Connection failure! (code: %1$d)</string>
     <string translatable="false" name="widget_command_subject_offline">%1$s is offline!</string>
     <string translatable="false" name="widget_command_subject_unavailable">%1$s doesn\'t exist!</string>
-    <string translatable="false" name="widget_command_no_access">Access missing! (code: %1$i)</string>
+    <string translatable="false" name="widget_command_no_access">Access missing! (code: %1$d)</string>
     <string name="widget_command_started">Done</string>
     <string name="widget_removed_label">Channel removed</string>
     <string translatable="false" name="widget_channel">@string/zwave_supla_channel</string>
@@ -624,12 +624,34 @@
     <string translatable="false" name="calendar_picker_start_hour">From hour</string>
     <string translatable="false" name="calendar_picker_end_hour">To hour</string>
     <string translatable="false" name="history_wrong_range">Selected range is wrong.</string>
+    <string translatable="false" name="details_timer_select_mode">Select mode</string>
+    <string translatable="false" name="details_timer_manual_mode">Manual mode</string>
+    <string translatable="false" name="details_timer_info_thermostat_off">Thermostat will stay turned off for\n%1$s</string>
+    <string translatable="false" name="details_timer_info_thermostat_heating">Thermostat will stay in heating mode for\n%1$s</string>
+    <string translatable="false" name="details_timer_info_thermostat_cooling">Thermostat will stay in cooling mode for\n%1$s</string>
+    <string translatable="false" name="details_timer_select_time">Specify time</string>
+    <string translatable="false" name="details_timer_counter">Counter</string>
+    <string translatable="false" name="details_timer_calendar">Calendar</string>
+    <string translatable="false" name="details_timer_min_temp">Temp. min.</string>
+    <string translatable="false" name="details_timer_max_temp">Temp. max.</string>
+    <string translatable="false" name="details_timer_state_label_for_timer_days">State until %1$s:</string>
+    <string translatable="false" name="details_timer_cancel_thermostat">Cancel and turn on:</string>
+    <string translatable="false" name="widget_processing_notification_text">Processing…</string>
+    <string translatable="false" name="widget_processing_notification_title">Background work</string>
+    <string translatable="false" name="thermostat_detail_program_info">Tap to select. Press long to modify.</string>
+    <string translatable="false" name="thermostat_detail_box_info">Tap to set selected program. Press long to set quarters.</string>
+    <string translatable="false" name="thermostat_detail_arrow_info">Black corner indicates current day and hour.</string>
 
     <plurals name="details_timer_info_on" translatable="false">
         <item quantity="other">on</item>
     </plurals>
     <plurals name="details_timer_info_off" translatable="false">
         <item quantity="other">off</item>
+    </plurals>
+    <plurals name="day_pattern" translatable="false">
+        <item quantity="zero">%1$d days</item>
+        <item quantity="one">%1$d day</item>
+        <item quantity="other">%1$d days</item>
     </plurals>
     <plurals name="hour_pattern" translatable="false">
         <item quantity="zero">%1$d hours</item>

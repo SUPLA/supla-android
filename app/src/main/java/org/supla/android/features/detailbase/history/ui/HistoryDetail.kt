@@ -71,12 +71,15 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import org.supla.android.R
 import org.supla.android.core.ui.BaseViewProxy
+import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.model.chart.ChartDataAggregation
 import org.supla.android.data.model.chart.ChartRange
 import org.supla.android.data.model.chart.HistoryDataSet
 import org.supla.android.data.model.general.RangeValueType
 import org.supla.android.data.source.local.calendar.Hour
+import org.supla.android.extensions.customOuterShadow
+import org.supla.android.extensions.toPx
 import org.supla.android.extensions.valuesFormatter
 import org.supla.android.features.detailbase.history.HistoryDetailViewState
 import org.supla.android.ui.dialogs.DatePickerDialog
@@ -140,12 +143,14 @@ fun HistoryDetail(viewModel: HistoryDetailProxy) {
       rangeEnd = viewState.xMax,
       emptyChartMessage = viewState.emptyChartMessage(LocalContext.current),
       withHumidity = viewState.withHumidity,
+      withTemperature = viewState.withTemperature,
       maxTemperature = viewState.maxTemperature,
+      maxHumidity = viewState.maxHumidity,
       chartParameters = if (chartData != null) viewState.chartParameters?.getOptional() else null,
       positionEvents = viewModel::updateChartPosition,
       modifier = Modifier
         .weight(1f)
-        .padding(horizontal = dimensionResource(id = R.dimen.distance_default))
+        .padding(horizontal = Distance.tiny)
     )
 
     if (viewState.ranges?.selected == ChartRange.CUSTOM) {
@@ -197,14 +202,13 @@ private fun DataSetsAndFilters(viewState: HistoryDetailViewState, viewModel: His
 
 @Composable
 private fun FiltersRow(viewState: HistoryDetailViewState, viewModel: HistoryDetailProxy) =
-  Row(modifier = Modifier.padding(top = dimensionResource(id = R.dimen.distance_small))) {
+  Row(modifier = Modifier.padding(top = Distance.tiny)) {
     TextSpinner(
       label = stringResource(id = R.string.history_range_label),
       options = viewState.rangesMap(LocalContext.current.resources),
       onOptionSelected = { viewModel.changeRange(it) },
       selectedOption = viewState.ranges?.selected,
-      modifier = Modifier
-        .padding(start = dimensionResource(id = R.dimen.distance_default))
+      modifier = Modifier.padding(start = Distance.default)
     )
     Spacer(
       modifier = Modifier
@@ -216,8 +220,7 @@ private fun FiltersRow(viewState: HistoryDetailViewState, viewModel: HistoryDeta
       options = viewState.aggregationsMap(LocalContext.current.resources),
       onOptionSelected = { viewModel.changeAggregation(it) },
       selectedOption = viewState.aggregations?.selected,
-      modifier = Modifier
-        .padding(end = dimensionResource(id = R.dimen.distance_default))
+      modifier = Modifier.padding(end = Distance.default)
     )
   }
 
@@ -278,14 +281,16 @@ private fun DataSetIcon(bitmap: ImageBitmap) =
   )
 
 @Composable
-private fun DataSetButton(text: String, colors: ButtonColors, borderColor: Color, onClick: () -> Unit) =
+private fun DataSetButton(text: String, colors: ButtonColors, borderColor: Color, onClick: () -> Unit) {
+  val height = dimensionResource(id = R.dimen.button_small_height)
+  val radius = height.div(2)
+
   Button(
     onClick = onClick,
-    modifier = Modifier
-      .height(dimensionResource(id = R.dimen.button_small_height)),
+    modifier = Modifier.height(height).customOuterShadow(borderRadius = radius, height = height.plus(4.dp).toPx()),
     contentPadding = PaddingValues(horizontal = dimensionResource(id = R.dimen.distance_small)),
     colors = colors,
-    shape = RoundedCornerShape(dimensionResource(id = R.dimen.button_small_height).div(2)),
+    shape = RoundedCornerShape(radius),
     border = BorderStroke(2.dp, borderColor)
   ) {
     Text(
@@ -294,6 +299,7 @@ private fun DataSetButton(text: String, colors: ButtonColors, borderColor: Color
       fontFamily = FontFamily(Font(R.font.open_sans_bold))
     )
   }
+}
 
 @Composable
 private fun BottomPagination(viewState: HistoryDetailViewState, viewModel: HistoryDetailProxy) =

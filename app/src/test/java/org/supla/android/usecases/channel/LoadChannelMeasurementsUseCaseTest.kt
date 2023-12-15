@@ -361,7 +361,7 @@ class LoadChannelMeasurementsUseCaseTest : BaseLoadMeasurementsUseCaseTest() {
     val result = testObserver.values()[0]
     assertThat(result).extracting({ it.setId }, { it.color }, { it.active })
       .containsExactly(
-        tuple(HistoryDataSet.Id(remoteId, ChartEntryType.TEMPERATURE), R.color.red, true)
+        tuple(HistoryDataSet.Id(remoteId, ChartEntryType.TEMPERATURE), R.color.chart_temperature_1, true)
       )
 
     val entryDetails = EntryDetails(aggregation, ChartEntryType.TEMPERATURE, null, null)
@@ -403,7 +403,7 @@ class LoadChannelMeasurementsUseCaseTest : BaseLoadMeasurementsUseCaseTest() {
     val result = testObserver.values()[0]
     assertThat(result).extracting({ it.setId }, { it.color }, { it.active })
       .containsExactly(
-        tuple(HistoryDataSet.Id(remoteId, ChartEntryType.TEMPERATURE), R.color.red, true)
+        tuple(HistoryDataSet.Id(remoteId, ChartEntryType.TEMPERATURE), R.color.chart_temperature_1, true)
       )
 
     entriesAssertion(result[0].entries[0])
@@ -443,8 +443,8 @@ class LoadChannelMeasurementsUseCaseTest : BaseLoadMeasurementsUseCaseTest() {
     val result = testObserver.values()[0]
     assertThat(result).extracting({ it.setId }, { it.color }, { it.active })
       .containsExactly(
-        tuple(HistoryDataSet.Id(remoteId, ChartEntryType.TEMPERATURE), R.color.red, true),
-        tuple(HistoryDataSet.Id(remoteId, ChartEntryType.HUMIDITY), R.color.blue, true)
+        tuple(HistoryDataSet.Id(remoteId, ChartEntryType.TEMPERATURE), R.color.chart_temperature_1, true),
+        tuple(HistoryDataSet.Id(remoteId, ChartEntryType.HUMIDITY), R.color.chart_humidity_1, true)
       )
 
     temperatureEntriesAssertion(result[0].entries[0])

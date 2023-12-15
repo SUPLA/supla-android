@@ -89,7 +89,14 @@ class ProvideDetailTypeUseCase @Inject constructor() {
 //    SuplaConst.SUPLA_CHANNELFNC_HVAC_FAN,
 //    SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_DIFFERENTIAL,
     SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER ->
-      ThermostatDetailType(listOf(DetailPage.THERMOSTAT, DetailPage.SCHEDULE, DetailPage.THERMOSTAT_HISTORY))
+      ThermostatDetailType(
+        listOf(
+          DetailPage.THERMOSTAT,
+          DetailPage.SCHEDULE,
+          DetailPage.THERMOSTAT_TIMER,
+          DetailPage.THERMOSTAT_HISTORY
+        )
+      )
 
     SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL,
     SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL ->
@@ -102,7 +109,7 @@ class ProvideDetailTypeUseCase @Inject constructor() {
     return if (channelBase is Channel) {
       val list = mutableListOf(DetailPage.SWITCH)
       if (channelBase.flags.and(SUPLA_CHANNEL_FLAG_COUNTDOWN_TIMER_SUPPORTED) > 0 && channelBase.func != SUPLA_CHANNELFNC_STAIRCASETIMER) {
-        list.add(DetailPage.TIMER)
+        list.add(DetailPage.SWITCH_TIMER)
       }
       if (channelBase.value?.subValueType == SUBV_TYPE_IC_MEASUREMENTS.toShort()) {
         list.add(DetailPage.HISTORY_IC)

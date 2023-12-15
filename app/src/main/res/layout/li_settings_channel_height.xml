@@ -17,7 +17,7 @@
 
   <org.supla.android.ui.SegmentedButtonGroup
     android:id="@+id/settings_channel_height"
-    style="@style/SegmentedButtonGroup"
+    style="@style/SegmentedButtonGroupDayOnly"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_alignParentEnd="true"

@@ -20,6 +20,7 @@ package org.supla.android.ui.lists.data
 import androidx.annotation.DrawableRes
 import org.supla.android.core.ui.BitmapProvider
 import org.supla.android.core.ui.StringProvider
+import java.util.Date
 
 sealed class SlideableListItemData {
   abstract val online: Boolean
@@ -34,6 +35,7 @@ sealed class SlideableListItemData {
     override val issueIconType: IssueIconType?,
     val value: String,
     val subValue: String,
+    val estimatedTimerEndDate: Date?,
     @DrawableRes val indicatorIcon: Int?
   ) : SlideableListItemData() {
     companion object
@@ -55,5 +57,6 @@ fun SlideableListItemData.Thermostat.Companion.default(): SlideableListItemData.
     value = "",
     subValue = "",
     indicatorIcon = null,
-    issueIconType = null
+    issueIconType = null,
+    estimatedTimerEndDate = null
   )
