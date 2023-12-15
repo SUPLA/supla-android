@@ -34,7 +34,11 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -52,6 +56,7 @@ import org.supla.android.extensions.ifLet
 import org.supla.android.features.thermostatdetail.scheduledetail.ScheduleDetailViewState
 import org.supla.android.features.thermostatdetail.scheduledetail.data.ScheduleDetailEntryBoxKey
 import org.supla.android.features.thermostatdetail.scheduledetail.data.ScheduleDetailEntryBoxValue
+import org.supla.android.features.thermostatdetail.scheduledetail.ui.components.ScheduleInfo
 import org.supla.android.features.thermostatdetail.scheduledetail.ui.components.ScheduleProgramButton
 import org.supla.android.features.thermostatdetail.scheduledetail.ui.components.ScheduleTable
 import org.supla.android.features.thermostatdetail.scheduledetail.ui.dialogs.ProgramSettingsDialog
@@ -73,18 +78,24 @@ interface ScheduleDetailViewProxy : BaseViewProxy<ScheduleDetailViewState> {
   fun startProgramDialog(program: SuplaScheduleProgram)
   fun cancelProgramDialog()
   fun saveProgramDialogChanges()
+  fun onHelpClosed() {}
   fun onProgramDialogTemperatureClickChange(
     programMode: SuplaHvacMode,
     modeForTemperature: SuplaHvacMode,
     correction: TemperatureCorrection
   )
 
-  fun onProgramDialogTemperatureManualChange(programMode: SuplaHvacMode, modeForTemperature: SuplaHvacMode, value: String)
+  fun onProgramDialogTemperatureManualChange(
+    programMode: SuplaHvacMode,
+    modeForTemperature: SuplaHvacMode,
+    value: String
+  )
 }
 
 @Composable
 fun ScheduleDetail(viewProxy: ScheduleDetailViewProxy) {
   val viewState by viewProxy.getViewState().collectAsState()
+  var boxSize by remember { mutableStateOf(Size(0f, 0f)) }
 
   Box {
     ifLet(viewState.quarterSelection) { (selection) ->
@@ -126,7 +137,11 @@ fun ScheduleDetail(viewProxy: ScheduleDetailViewProxy) {
           )
         }
       }
-      ScheduleDetailTable(viewState, viewProxy)
+      ScheduleDetailTable(viewState, viewProxy) { boxSize = it }
+    }
+
+    if (viewState.showHelp) {
+      ScheduleInfo(boxSize = boxSize) { viewProxy.onHelpClosed() }
     }
 
     if (viewState.loadingState.loading) {
@@ -162,7 +177,7 @@ private fun ScheduleProgramsRow(content: @Composable RowScope.() -> Unit) =
 
 context(ColumnScope)
 @Composable
-private fun ScheduleDetailTable(viewState: ScheduleDetailViewState, viewProxy: ScheduleDetailViewProxy) =
+private fun ScheduleDetailTable(viewState: ScheduleDetailViewState, viewProxy: ScheduleDetailViewProxy, onBoxSizeChanged: (Size) -> Unit) =
   Box(
     modifier = Modifier
       .fillMaxWidth()
@@ -178,7 +193,8 @@ private fun ScheduleDetailTable(viewState: ScheduleDetailViewState, viewProxy: S
         .fillMaxHeight()
         .fillMaxWidth(),
       viewState = viewState,
-      viewProxy = viewProxy
+      viewProxy = viewProxy,
+      onBoxSizeChanged = onBoxSizeChanged
     )
   }
 

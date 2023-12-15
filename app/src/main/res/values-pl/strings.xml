@@ -619,6 +619,9 @@
   <string name="details_timer_cancel_thermostat">Przerwij timer i włącz tryb:</string>
   <string name="widget_processing_notification_text">Przetwarzanie…</string>
   <string name="widget_processing_notification_title">Przetwarzanie w tle</string>
+  <string name="thermostat_detail_program_info">Dotknij, aby aktywować program. Przytrzymaj aby modyfikować program.</string>
+  <string name="thermostat_detail_box_info">Dotknij, aby ustawić wybrany program. Przytrzymaj, aby ustawić wybrane kwadranse.</string>
+  <string name="thermostat_detail_arrow_info">Czarny narożnik informuje o aktualnej godzinie i dniu.</string>
 
   <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
     <item quantity="one">włączone</item>

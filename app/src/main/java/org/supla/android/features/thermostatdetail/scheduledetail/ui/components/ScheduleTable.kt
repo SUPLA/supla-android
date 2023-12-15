@@ -89,7 +89,8 @@ private val textFontBold = FontFamily(Font(R.font.open_sans_bold))
 fun ScheduleTable(
   modifier: Modifier = Modifier,
   viewState: ScheduleDetailViewState,
-  viewProxy: ScheduleDetailViewProxy
+  viewProxy: ScheduleDetailViewProxy,
+  onBoxSizeChanged: ((Size) -> Unit)? = null
 ) {
   val context = LocalContext.current
   // colors
@@ -107,7 +108,7 @@ fun ScheduleTable(
   val textWidth = hours.first().textLayoutResult.size.width.plus(boxPadding.toPx()).plus(textPadding.toPx())
   val gridWidth = remember(viewSize) { viewSize?.width?.toFloat()?.minus(textWidth)?.div(columnsCount) ?: 0f }
   val gridHeight = remember(viewSize) { viewSize?.height?.toFloat()?.div(rowsCount) ?: 0f }
-  val boxSize = remember(viewSize) { createBoxSize(viewSize, gridWidth, gridHeight) }
+  val boxSize = remember(viewSize) { createBoxSize(viewSize, gridWidth, gridHeight).also { onBoxSizeChanged?.invoke(it) } }
   val positions: Map<ScheduleDetailEntryBoxKey, Offset> = remember(viewSize) {
     createBoxesPositions(viewSize, hours, days, textWidth, gridHeight, gridWidth)
   }

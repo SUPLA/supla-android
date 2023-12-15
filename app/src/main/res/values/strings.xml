@@ -638,6 +638,9 @@
     <string translatable="false" name="details_timer_cancel_thermostat">Cancel and turn on:</string>
     <string translatable="false" name="widget_processing_notification_text">Processing…</string>
     <string translatable="false" name="widget_processing_notification_title">Background work</string>
+    <string translatable="false" name="thermostat_detail_program_info">Tap to select. Press long to modify.</string>
+    <string translatable="false" name="thermostat_detail_box_info">Tap to set selected program. Press long to set quarters.</string>
+    <string translatable="false" name="thermostat_detail_arrow_info">Black corner indicates current day and hour.</string>
 
     <plurals name="details_timer_info_on" translatable="false">
         <item quantity="other">on</item>
