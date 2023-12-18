@@ -62,7 +62,7 @@ import org.supla.android.features.thermostatdetail.thermostatgeneral.ui.Thermost
 import org.supla.android.features.thermostatdetail.ui.TimerHeaderState
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.lists.data.IssueIconType
 import org.supla.android.usecases.channel.ChannelWithChildren
@@ -375,7 +375,7 @@ class ThermostatGeneralViewModel @Inject constructor(
 
         isOffline = !channel.onLine,
         isOff = isOff,
-        isAutoFunction = channel.func == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO,
+        isAutoFunction = channel.func == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL,
         heatingModeActive = isHeatingModeActive(channel, value),
         coolingModeActive = isCoolingModeActive(channel, value),
 
@@ -424,11 +424,11 @@ class ThermostatGeneralViewModel @Inject constructor(
       .build()
 
   private fun isHeatingModeActive(channel: Channel, value: ThermostatValue) =
-    channel.func == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO &&
+    channel.func == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL &&
       (value.mode == SuplaHvacMode.HEAT_COOL || value.mode == SuplaHvacMode.HEAT)
 
   private fun isCoolingModeActive(channel: Channel, value: ThermostatValue) =
-    channel.func == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO &&
+    channel.func == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL &&
       (value.mode == SuplaHvacMode.HEAT_COOL || value.mode == SuplaHvacMode.COOL)
 
   private fun calculateTemperatureControlText(
@@ -483,7 +483,7 @@ class ThermostatGeneralViewModel @Inject constructor(
     if (channel.func == SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER && setpointSet) {
       return thermostatValue.setpointTemperatureHeat
     }
-    if (channel.func == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO && setpointSet) {
+    if (channel.func == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL && setpointSet) {
       return thermostatValue.setpointTemperatureHeat
     }
     val isHeatSubfunction = thermostatValue.subfunction == ThermostatSubfunction.HEAT
@@ -496,7 +496,7 @@ class ThermostatGeneralViewModel @Inject constructor(
 
   private fun getSetpointCoolTemperature(channel: Channel, thermostatValue: ThermostatValue): Float? {
     val setpointSet = thermostatValue.flags.contains(SuplaThermostatFlags.SETPOINT_TEMP_MAX_SET)
-    if (channel.func == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO && setpointSet) {
+    if (channel.func == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL && setpointSet) {
       return thermostatValue.setpointTemperatureCool
     }
     val isCoolSubfunction = thermostatValue.subfunction == ThermostatSubfunction.COOL

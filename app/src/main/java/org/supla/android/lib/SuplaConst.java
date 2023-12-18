@@ -121,7 +121,7 @@ public class SuplaConst {
   public static final int SUPLA_CHANNELFNC_THERMOSTAT = 400;
   public static final int SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS = 410;
   public static final int SUPLA_CHANNELFNC_HVAC_THERMOSTAT = 420;
-  public static final int SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO = 422;
+  public static final int SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL = 422;
   //  public static final int SUPLA_CHANNELFNC_HVAC_DRYER = 423;
   //  public static final int SUPLA_CHANNELFNC_HVAC_FAN = 424;
   //  public static final int SUPLA_CHANNELFNC_HVAC_THERMOSTAT_DIFFERENTIAL = 425;
