@@ -90,7 +90,7 @@ class SuplaChannelWeeklyScheduleConfigExtensionsTest {
         ),
         SuplaWeeklyScheduleProgram(
           program = SuplaScheduleProgram.PROGRAM_4,
-          mode = SuplaHvacMode.AUTO,
+          mode = SuplaHvacMode.HEAT_COOL,
           setpointTemperatureHeat = 2100,
           setpointTemperatureCool = 2300
         )
@@ -134,7 +134,7 @@ class SuplaChannelWeeklyScheduleConfigExtensionsTest {
       ScheduleDetailProgramBox(
         function,
         thermostatFunction,
-        SuplaWeeklyScheduleProgram(SuplaScheduleProgram.PROGRAM_4, SuplaHvacMode.AUTO, 2100, 2300),
+        SuplaWeeklyScheduleProgram(SuplaScheduleProgram.PROGRAM_4, SuplaHvacMode.HEAT_COOL, 2100, 2300),
         null
       ),
       ScheduleDetailProgramBox(

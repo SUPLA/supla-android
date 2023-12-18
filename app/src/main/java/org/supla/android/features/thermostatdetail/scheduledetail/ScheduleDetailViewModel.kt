@@ -338,7 +338,7 @@ class ScheduleDetailViewModel @Inject constructor(
     when {
       programMode == SuplaHvacMode.HEAT -> changeProgramTemperatureMin(temperatureModifier, textProvider, withCorrection)
       programMode == SuplaHvacMode.COOL -> changeProgramTemperatureMax(temperatureModifier, textProvider, withCorrection)
-      programMode == SuplaHvacMode.AUTO && modeForTemperature == SuplaHvacMode.HEAT ->
+      programMode == SuplaHvacMode.HEAT_COOL && modeForTemperature == SuplaHvacMode.HEAT ->
         changeProgramTemperatureMin(
           temperatureModifier,
           textProvider,
@@ -346,7 +346,7 @@ class ScheduleDetailViewModel @Inject constructor(
           state.programSettings?.setpointTemperatureCool
         )
 
-      programMode == SuplaHvacMode.AUTO && modeForTemperature == SuplaHvacMode.COOL ->
+      programMode == SuplaHvacMode.HEAT_COOL && modeForTemperature == SuplaHvacMode.COOL ->
         changeProgramTemperatureMax(
           temperatureModifier,
           textProvider,
@@ -449,7 +449,7 @@ class ScheduleDetailViewModel @Inject constructor(
       listOf(SuplaHvacMode.COOL)
 
     state.channelFunction == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO ->
-      listOf(SuplaHvacMode.AUTO, SuplaHvacMode.HEAT, SuplaHvacMode.COOL)
+      listOf(SuplaHvacMode.HEAT_COOL, SuplaHvacMode.HEAT, SuplaHvacMode.COOL)
 
     state.channelFunction == SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER ->
       listOf(SuplaHvacMode.HEAT)

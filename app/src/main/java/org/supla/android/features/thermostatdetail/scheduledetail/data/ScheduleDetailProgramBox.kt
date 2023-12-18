@@ -53,7 +53,7 @@ data class ScheduleDetailProgramBox(
         channelFunction == SUPLA_CHANNELFNC_HVAC_THERMOSTAT && thermostatFunction == ThermostatSubfunction.HEAT -> SuplaHvacMode.HEAT
         channelFunction == SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER -> SuplaHvacMode.HEAT
         channelFunction == SUPLA_CHANNELFNC_HVAC_THERMOSTAT && thermostatFunction == ThermostatSubfunction.COOL -> SuplaHvacMode.COOL
-        channelFunction == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO -> SuplaHvacMode.AUTO
+        channelFunction == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO -> SuplaHvacMode.HEAT_COOL
         else -> scheduleProgram.mode
       }
     } else {
@@ -114,7 +114,7 @@ data class ScheduleDetailProgramBox(
         ThermostatSubfunction.HEAT,
         SuplaWeeklyScheduleProgram(
           SuplaScheduleProgram.PROGRAM_3,
-          SuplaHvacMode.AUTO,
+          SuplaHvacMode.HEAT_COOL,
           2100,
           2250
         ),

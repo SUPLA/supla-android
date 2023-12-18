@@ -37,7 +37,7 @@ val SuplaWeeklyScheduleProgram.description: StringProvider
         context.valuesFormatter.getTemperatureString(heatTemperature)
       mode == SuplaHvacMode.COOL ->
         context.valuesFormatter.getTemperatureString(coolTemperature)
-      mode == SuplaHvacMode.AUTO -> {
+      mode == SuplaHvacMode.HEAT_COOL -> {
         val minTemperature = context.valuesFormatter.getTemperatureString(heatTemperature)
         val maxTemperature = context.valuesFormatter.getTemperatureString(coolTemperature)
         "$minTemperature - $maxTemperature"

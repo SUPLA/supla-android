@@ -177,7 +177,7 @@ class ThermostatGeneralViewModel @Inject constructor(
   override fun heatingModeChanged() {
     currentState().viewModelState?.let { viewModelState ->
       val newMode = when (val mode = viewModelState.mode) {
-        SuplaHvacMode.AUTO -> SuplaHvacMode.COOL
+        SuplaHvacMode.HEAT_COOL -> SuplaHvacMode.COOL
         SuplaHvacMode.COOL -> SuplaHvacMode.HEAT
         SuplaHvacMode.HEAT -> SuplaHvacMode.COOL
         else -> mode
@@ -192,7 +192,7 @@ class ThermostatGeneralViewModel @Inject constructor(
   override fun coolingModeChanged() {
     currentState().viewModelState?.let { viewModelState ->
       val newMode = when (val mode = viewModelState.mode) {
-        SuplaHvacMode.AUTO -> SuplaHvacMode.HEAT
+        SuplaHvacMode.HEAT_COOL -> SuplaHvacMode.HEAT
         SuplaHvacMode.COOL -> SuplaHvacMode.HEAT
         SuplaHvacMode.HEAT -> SuplaHvacMode.COOL
         else -> mode
@@ -425,11 +425,11 @@ class ThermostatGeneralViewModel @Inject constructor(
 
   private fun isHeatingModeActive(channel: Channel, value: ThermostatValue) =
     channel.func == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO &&
-      (value.mode == SuplaHvacMode.AUTO || value.mode == SuplaHvacMode.HEAT)
+      (value.mode == SuplaHvacMode.HEAT_COOL || value.mode == SuplaHvacMode.HEAT)
 
   private fun isCoolingModeActive(channel: Channel, value: ThermostatValue) =
     channel.func == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO &&
-      (value.mode == SuplaHvacMode.AUTO || value.mode == SuplaHvacMode.COOL)
+      (value.mode == SuplaHvacMode.HEAT_COOL || value.mode == SuplaHvacMode.COOL)
 
   private fun calculateTemperatureControlText(
     isOffline: Boolean,
@@ -669,7 +669,7 @@ data class ThermostatGeneralViewState(
         viewModelState?.configMaxTemperature
       ) { (heat, min, max) ->
         return when {
-          viewModelState?.mode == SuplaHvacMode.HEAT || viewModelState?.mode == SuplaHvacMode.AUTO ->
+          viewModelState?.mode == SuplaHvacMode.HEAT || viewModelState?.mode == SuplaHvacMode.HEAT_COOL ->
             heat.minus(min).div(max - min)
 
           viewModelState?.mode == SuplaHvacMode.OFF && programmedModeActive ->
@@ -689,7 +689,7 @@ data class ThermostatGeneralViewState(
         viewModelState?.configMaxTemperature
       ) { (cool, min, max) ->
         return when {
-          viewModelState?.mode == SuplaHvacMode.COOL || viewModelState?.mode == SuplaHvacMode.AUTO ->
+          viewModelState?.mode == SuplaHvacMode.COOL || viewModelState?.mode == SuplaHvacMode.HEAT_COOL ->
             cool.minus(min).div(max - min)
 
           viewModelState?.mode == SuplaHvacMode.OFF && programmedModeActive ->

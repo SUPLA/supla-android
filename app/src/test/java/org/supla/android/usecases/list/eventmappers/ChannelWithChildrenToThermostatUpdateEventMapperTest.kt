@@ -237,7 +237,7 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
     val thermostatValue = mockThermostatValue(
       setpointTemperatureHeat = setpointTemperatureHeat,
       setpointTemperatureCool = setpointTemperatureCool,
-      mode = SuplaHvacMode.AUTO,
+      mode = SuplaHvacMode.HEAT_COOL,
       flags = flags
     )
 

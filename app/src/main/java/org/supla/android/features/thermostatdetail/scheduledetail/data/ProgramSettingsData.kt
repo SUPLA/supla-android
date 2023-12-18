@@ -61,6 +61,6 @@ data class ProgramSettingsData(
 private fun SuplaHvacMode.captionRes(): Int = when (this) {
   SuplaHvacMode.HEAT -> R.string.hvac_mode_heating
   SuplaHvacMode.COOL -> R.string.hvac_mode_cooling
-  SuplaHvacMode.AUTO -> R.string.hvac_mode_auto
+  SuplaHvacMode.HEAT_COOL -> R.string.hvac_mode_auto
   else -> R.string.hvac_mode_no_caption
 }
