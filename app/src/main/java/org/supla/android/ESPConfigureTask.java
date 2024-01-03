@@ -18,40 +18,47 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import static org.supla.android.core.networking.esp.EspConfigResultKt.RESULT_COMPAT_ERROR;
+import static org.supla.android.core.networking.esp.EspConfigResultKt.RESULT_CONN_ERROR;
+import static org.supla.android.core.networking.esp.EspConfigResultKt.RESULT_FAILED;
+import static org.supla.android.core.networking.esp.EspConfigResultKt.RESULT_PARAM_ERROR;
+import static org.supla.android.core.networking.esp.EspConfigResultKt.RESULT_SUCCESS;
+
 import android.os.AsyncTask;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
+import org.jsoup.helper.Validate;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
+import org.supla.android.core.networking.esp.EspConfigResult;
+import org.supla.android.core.networking.esp.EspHtmlParser;
 
-public class ESPConfigureTask extends AsyncTask<String, Integer, ESPConfigureTask.ConfigResult> {
-
-  public static final int RESULT_PARAM_ERROR = -3;
-  public static final int RESULT_COMPAT_ERROR = -2;
-  public static final int RESULT_CONN_ERROR = -1;
-  public static final int RESULT_FAILED = 0;
-  public static final int RESULT_SUCCESS = 1;
+public class ESPConfigureTask extends AsyncTask<String, Integer, EspConfigResult> {
 
   private AsyncResponse delegate;
+
+  private EspHtmlParser parser;
+
+  public ESPConfigureTask(EspHtmlParser parser) {
+    Validate.notNull(parser);
+    this.parser = parser;
+  }
 
   public void setDelegate(AsyncResponse delegate) {
     this.delegate = delegate;
   }
 
   @Override
-  protected ConfigResult doInBackground(String... params) {
+  protected EspConfigResult doInBackground(String... params) {
 
-    ConfigResult result = new ConfigResult();
+    EspConfigResult result = new EspConfigResult();
 
     if (params.length != 4 || params[0].isEmpty() || params[2].isEmpty() || params[3].isEmpty()) {
 
-      result.resultCode = RESULT_PARAM_ERROR;
+      result.setResultCode(RESULT_PARAM_ERROR);
       return result;
     }
 
@@ -64,59 +71,8 @@ public class ESPConfigureTask extends AsyncTask<String, Integer, ESPConfigureTas
         Thread.sleep(1500);
         Document doc = Jsoup.connect("http://192.168.4.1").get();
 
-        Elements inputs = doc.getElementsByTag("input");
-
-        if (inputs != null) {
-          for (Element element : inputs) {
-            fieldMap.put(element.attr("name"), element.val());
-          }
-        }
-
-        String cloudConfigKey = "no_visible_channels";
-        result.needsCloudConfig =
-            fieldMap.containsKey(cloudConfigKey) && "1".equals(fieldMap.get(cloudConfigKey));
-
-        Elements sel = doc.getElementsByTag("select");
-
-        if (sel != null) {
-          for (Element element : sel) {
-            Elements option = element.select("option[selected]");
-
-            if (option != null && option.hasAttr("selected")) {
-              fieldMap.put(element.attr("name"), option.val());
-            }
-          }
-        }
-
-        Elements h1 = doc.getElementsByTag("h1");
-        if (h1 != null) {
-
-          Elements next = h1.next();
-          if (next != null) {
-
-            for (Element element : next) {
-
-              if (element.html().contains("LAST STATE")) {
-
-                Pattern mPattern =
-                    Pattern.compile(
-                        "^LAST\\ STATE:\\ (.*)\\<br\\>Firmware:\\ (.*)\\<br\\>GUID:\\ (.*)\\<br\\>MAC:\\ (.*)$");
-
-                Matcher matcher = mPattern.matcher(element.html());
-                if (matcher.find() && matcher.groupCount() == 4) {
-
-                  result.deviceName = h1.html();
-                  result.deviceLastState = matcher.group(1);
-                  result.deviceFirmwareVersion = matcher.group(2);
-                  result.deviceGUID = matcher.group(3);
-                  result.deviceMAC = matcher.group(4);
-                }
-
-                break;
-              }
-            }
-          }
-        }
+        fieldMap.putAll(parser.findInputs(doc));
+        result.merge(parser.prepareResult(doc, fieldMap));
 
         retryCount = -1;
 
@@ -129,7 +85,7 @@ public class ESPConfigureTask extends AsyncTask<String, Integer, ESPConfigureTas
 
     if (retryCount > -1) {
 
-      result.resultCode = RESULT_CONN_ERROR;
+      result.setResultCode(RESULT_CONN_ERROR);
       return result;
     }
 
@@ -137,10 +93,10 @@ public class ESPConfigureTask extends AsyncTask<String, Integer, ESPConfigureTas
         || fieldMap.get("wpw") == null
         || fieldMap.get("svr") == null
         || fieldMap.get("eml") == null
-        || result.deviceFirmwareVersion == null
-        || result.deviceFirmwareVersion.isEmpty()) {
+        || result.getDeviceFirmwareVersion() == null
+        || result.getDeviceFirmwareVersion().isEmpty()) {
 
-      result.resultCode = RESULT_COMPAT_ERROR;
+      result.setResultCode(RESULT_COMPAT_ERROR);
       return result;
     }
 
@@ -192,7 +148,7 @@ public class ESPConfigureTask extends AsyncTask<String, Integer, ESPConfigureTas
             e.printStackTrace();
           }
 
-          result.resultCode = RESULT_SUCCESS;
+          result.setResultCode(RESULT_SUCCESS);
           return result;
         }
 
@@ -203,27 +159,16 @@ public class ESPConfigureTask extends AsyncTask<String, Integer, ESPConfigureTas
         e.printStackTrace();
       }
 
-    result.resultCode = RESULT_FAILED;
+    result.setResultCode(RESULT_FAILED);
     return result;
   }
 
   @Override
-  protected void onPostExecute(ConfigResult result) {
+  protected void onPostExecute(EspConfigResult result) {
     delegate.espConfigFinished(result);
   }
 
   public interface AsyncResponse {
-    void espConfigFinished(ConfigResult result);
-  }
-
-  public class ConfigResult {
-    int resultCode;
-
-    String deviceName;
-    String deviceLastState;
-    String deviceFirmwareVersion;
-    String deviceGUID;
-    String deviceMAC;
-    boolean needsCloudConfig;
+    void espConfigFinished(EspConfigResult result);
   }
 }

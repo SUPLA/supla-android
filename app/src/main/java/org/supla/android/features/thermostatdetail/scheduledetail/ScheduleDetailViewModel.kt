@@ -557,8 +557,10 @@ data class ScheduleDetailViewState(
         for (program in programs) {
           if (program.scheduleProgram.program == programToUpdate.program) {
             val icon = when {
-              function == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL && program.scheduleProgram.mode == SuplaHvacMode.HEAT -> R.drawable.ic_heat
-              function == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL && program.scheduleProgram.mode == SuplaHvacMode.COOL -> R.drawable.ic_cool
+              function == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL && program.scheduleProgram.mode == SuplaHvacMode.HEAT ->
+                R.drawable.ic_heat
+              function == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL && program.scheduleProgram.mode == SuplaHvacMode.COOL ->
+                R.drawable.ic_cool
               else -> null
             }
 
