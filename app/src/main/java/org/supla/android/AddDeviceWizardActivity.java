@@ -18,6 +18,12 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import static org.supla.android.core.networking.esp.EspConfigResultKt.RESULT_COMPAT_ERROR;
+import static org.supla.android.core.networking.esp.EspConfigResultKt.RESULT_CONN_ERROR;
+import static org.supla.android.core.networking.esp.EspConfigResultKt.RESULT_FAILED;
+import static org.supla.android.core.networking.esp.EspConfigResultKt.RESULT_PARAM_ERROR;
+import static org.supla.android.core.networking.esp.EspConfigResultKt.RESULT_SUCCESS;
+
 import android.Manifest;
 import android.Manifest.permission;
 import android.app.Activity;
@@ -74,6 +80,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.regex.Pattern;
 import javax.inject.Inject;
+import org.supla.android.core.networking.esp.EspConfigResult;
+import org.supla.android.core.networking.esp.EspHtmlParser;
 import org.supla.android.lib.SuplaConst;
 import org.supla.android.lib.SuplaRegistrationEnabled;
 import org.supla.android.profile.AuthInfo;
@@ -150,6 +158,7 @@ public class AddDeviceWizardActivity extends WizardActivity
   private String CurrrentSSID;
 
   @Inject ProfileManager profileManager;
+  @Inject EspHtmlParser espHtmlParser;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -335,16 +344,16 @@ public class AddDeviceWizardActivity extends WizardActivity
     showError(getResources().getString(msg_id));
   }
 
-  private void showDone(ESPConfigureTask.ConfigResult result) {
+  private void showDone(EspConfigResult result) {
 
-    tvIODevName.setText(result.deviceName, TextView.BufferType.NORMAL);
-    tvIODevFirmware.setText(result.deviceFirmwareVersion, TextView.BufferType.NORMAL);
-    tvIODevMAC.setText(result.deviceMAC, TextView.BufferType.NORMAL);
-    tvIODevLastState.setText(result.deviceLastState, TextView.BufferType.NORMAL);
+    tvIODevName.setText(result.getDeviceName(), TextView.BufferType.NORMAL);
+    tvIODevFirmware.setText(result.getDeviceFirmwareVersion(), TextView.BufferType.NORMAL);
+    tvIODevMAC.setText(result.getDeviceMAC(), TextView.BufferType.NORMAL);
+    tvIODevLastState.setText(result.getDeviceLastState(), TextView.BufferType.NORMAL);
 
     showPage(PAGE_DONE);
 
-    if (result.needsCloudConfig) {
+    if (result.getNeedsCloudConfig()) {
       showCloudFollowupPopup();
     }
   }
@@ -1114,7 +1123,7 @@ public class AddDeviceWizardActivity extends WizardActivity
                     unregisterReceivers();
                     removeConfigTask();
 
-                    espConfigTask = new ESPConfigureTask();
+                    espConfigTask = new ESPConfigureTask(espHtmlParser);
                     espConfigTask.setDelegate(wizard);
 
                     setStep(STEP_CONFIGURE);
@@ -1179,7 +1188,7 @@ public class AddDeviceWizardActivity extends WizardActivity
     unregisterReceivers();
     removeConfigTask();
 
-    espConfigTask = new ESPConfigureTask();
+    espConfigTask = new ESPConfigureTask(espHtmlParser);
     espConfigTask.setDelegate(this);
 
     manager.disconnect();
@@ -1250,12 +1259,12 @@ public class AddDeviceWizardActivity extends WizardActivity
   }
 
   @Override
-  public void espConfigFinished(final ESPConfigureTask.ConfigResult result) {
+  public void espConfigFinished(final EspConfigResult result) {
 
     unregisterReceivers();
     unregisterCallbacks();
 
-    if (result.resultCode == ESPConfigureTask.RESULT_SUCCESS) {
+    if (result.getResultCode() == RESULT_SUCCESS) {
 
       setStep(STEP_RECONNECT);
 
@@ -1298,17 +1307,17 @@ public class AddDeviceWizardActivity extends WizardActivity
 
     } else {
 
-      switch (result.resultCode) {
-        case ESPConfigureTask.RESULT_PARAM_ERROR:
+      switch (result.getResultCode()) {
+        case RESULT_PARAM_ERROR:
           showError(R.string.wizard_result_param_error);
           break;
-        case ESPConfigureTask.RESULT_COMPAT_ERROR:
+        case RESULT_COMPAT_ERROR:
           showError(R.string.wizard_result_compat_error);
           break;
-        case ESPConfigureTask.RESULT_CONN_ERROR:
+        case RESULT_CONN_ERROR:
           showError(R.string.wizard_result_conn_error);
           break;
-        case ESPConfigureTask.RESULT_FAILED:
+        case RESULT_FAILED:
           showError(R.string.wizard_result_failed);
           break;
       }
