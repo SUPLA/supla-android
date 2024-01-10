@@ -286,14 +286,15 @@ public class ElectricityMeasurementItem extends IncrementalMeasurementItem {
     ElectricityMeasurementItem emi = (ElectricityMeasurementItem) item;
 
     for (int phase = 1; phase <= 3; phase++) {
-      setFae(phase, getFae(phase) - emi.getFae(phase));
-      setRae(phase, getRae(phase) - emi.getRae(phase));
-      setFre(phase, getFre(phase) - emi.getFre(phase));
-      setRre(phase, getRre(phase) - emi.getRre(phase));
+
+      setFae(phase, calculateValue(getFae(phase), emi.getFae(phase)));
+      setRae(phase, calculateValue(getRae(phase), emi.getRae(phase)));
+      setFre(phase, calculateValue(getFre(phase), emi.getFre(phase)));
+      setRre(phase, calculateValue(getRre(phase), emi.getRre(phase)));
     }
 
-    setFaeBalanced(getFaeBalanced() - emi.getFaeBalanced());
-    setRaeBalanced(getRaeBalanced() - emi.getRaeBalanced());
+    setFaeBalanced(calculateValue(getFaeBalanced(), emi.getFaeBalanced()));
+    setRaeBalanced(calculateValue(getRaeBalanced(), emi.getRaeBalanced()));
 
     Calculated = true;
   }

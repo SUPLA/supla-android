@@ -108,7 +108,9 @@ public class Channel extends ChannelBase {
 
   public ChannelValue getValue() {
 
-    if (Value == null) Value = new ChannelValue();
+    if (Value == null) {
+      Value = new ChannelValue();
+    }
 
     return Value;
   }
@@ -242,7 +244,9 @@ public class Channel extends ChannelBase {
 
     byte p = Value != null ? Value.getRollerShutterValue().getClosingPercentage() : 0;
 
-    if (p < 100 && getSubValueHi()) p = 100;
+    if (p < 100 && getSubValueHi()) {
+      p = 100;
+    }
 
     return p;
   }
@@ -294,6 +298,7 @@ public class Channel extends ChannelBase {
     return "";
   }
 
+  @SuppressLint("DefaultLocale")
   protected CharSequence getHumanReadableValue(WhichOne whichOne, ChannelValue value) {
 
     switch (getFunc()) {
@@ -301,10 +306,14 @@ public class Channel extends ChannelBase {
       case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
       case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
         if (value.getSubValueType() == SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS) {
-          return String.format("%.1f " + getUnit(), value.getImpulseCounterCalculatedValue(true));
+          double doubleValue = value.getImpulseCounterCalculatedValue(true);
+          return doubleValue > 0
+              ? String.format("%.1f " + getUnit(), doubleValue)
+              : "--- " + getUnit();
         } else if (value.getSubValueType()
             == SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS) {
-          return String.format("%.2f kWh", value.getTotalForwardActiveEnergy(true));
+          double doubleValue = value.getTotalForwardActiveEnergy(true);
+          return doubleValue > 0 ? String.format("%.2f kWh", doubleValue) : "--- kWh" + getUnit();
         }
         break;
     }
@@ -313,9 +322,7 @@ public class Channel extends ChannelBase {
     // 140-issue
     if (getType() == SuplaConst.SUPLA_CHANNELTYPE_IMPULSE_COUNTER) {
       double doubleValue = value.getImpulseCounterCalculatedValue();
-      return doubleValue > 0
-          ? String.format("%.1f " + getUnit(), value.getImpulseCounterCalculatedValue())
-          : "--- " + getUnit();
+      return doubleValue > 0 ? String.format("%.1f " + getUnit(), doubleValue) : "--- " + getUnit();
     }
 
     return super.getHumanReadableValue(whichOne, value);
@@ -440,7 +447,9 @@ public class Channel extends ChannelBase {
                 context.getResources().getString(R.string.dgf_too_long_operation_warning));
           }
           return 2;
-        } else return 0;
+        } else {
+          return 0;
+        }
     }
 
     return 0;

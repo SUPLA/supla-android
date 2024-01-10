@@ -1053,11 +1053,7 @@ public abstract class ChannelBase extends DbItem {
 
       case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
         double doubleValue = value.getTotalForwardActiveEnergy();
-        if (doubleValue > 0) {
-          return String.format("%.2f kWh", value.getTotalForwardActiveEnergy());
-        } else {
-          return "--- kWh";
-        }
+        return doubleValue > 0 ? String.format("%.2f kWh", doubleValue) : "--- kWh";
 
       case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
       case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:

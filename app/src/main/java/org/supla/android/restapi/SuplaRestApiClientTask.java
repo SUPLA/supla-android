@@ -276,13 +276,7 @@ public abstract class SuplaRestApiClientTask extends AsyncTask {
               }
             };
 
-        conn.setHostnameVerifier(
-            new HostnameVerifier() {
-              @Override
-              public boolean verify(String hostname, SSLSession session) {
-                return true;
-              }
-            });
+        conn.setHostnameVerifier((hostname, session) -> true);
       }
 
       sc.init(null, trustSelfSignedCerts, new java.security.SecureRandom());

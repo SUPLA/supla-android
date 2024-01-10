@@ -110,8 +110,12 @@ public class ImpulseCounterMeasurementItem extends IncrementalMeasurementItem {
   public void Calculate(IncrementalMeasurementItem item) {
     ImpulseCounterMeasurementItem ic = (ImpulseCounterMeasurementItem) item;
 
-    setCalculatedValue(getCalculatedValue() - ic.getCalculatedValue());
-    setCounter(getCounter() - ic.getCounter());
+    long diff = getCounter() - ic.getCounter();
+    if (diff >= 0 || Math.abs(diff) <= ic.getCounter() * 0.1) {
+      // Use increment values only in case no reset detected
+      setCalculatedValue(calculateValue(getCalculatedValue(), ic.getCalculatedValue()));
+      setCounter(calculateValue(getCounter(), ic.getCounter()));
+    }
 
     Calculated = true;
   }
