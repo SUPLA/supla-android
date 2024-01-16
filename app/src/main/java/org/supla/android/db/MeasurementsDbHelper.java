@@ -765,8 +765,8 @@ public class MeasurementsDbHelper extends BaseDbHelper {
     measurableItemsRepository.deleteElectricityMeasurements(channelId);
   }
 
-  public Cursor getThermostatMeasurements(int channelId) {
-    return measurableItemsRepository.getThermostatMeasurements(channelId);
+  public Cursor getThermostatMeasurements(int channelId, Date dateFrom, Date dateTo) {
+    return measurableItemsRepository.getThermostatMeasurements(channelId, dateFrom, dateTo);
   }
 
   public int getThermostatMeasurementTimestamp(int channelId, boolean min) {

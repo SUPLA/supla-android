@@ -1,4 +1,5 @@
 package org.supla.android;
+
 /*
 Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -55,9 +56,14 @@ public class Encryption {
   }
 
   public static byte[] encryptData(byte[] data, String password)
-      throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException,
-          InvalidParameterSpecException, IllegalBlockSizeException, BadPaddingException,
-          UnsupportedEncodingException, InvalidKeySpecException,
+      throws NoSuchAlgorithmException,
+          NoSuchPaddingException,
+          InvalidKeyException,
+          InvalidParameterSpecException,
+          IllegalBlockSizeException,
+          BadPaddingException,
+          UnsupportedEncodingException,
+          InvalidKeySpecException,
           InvalidAlgorithmParameterException {
     /* Encrypt the message. */
 

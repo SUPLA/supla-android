@@ -175,7 +175,7 @@ spotless {
   java {
     target(fileTree("dir" to "src", "include" to "**/*.java"))
 
-    googleJavaFormat("1.15.0")
+    googleJavaFormat("1.19.2")
     removeUnusedImports()
     trimTrailingWhitespace()
     endWithNewline()

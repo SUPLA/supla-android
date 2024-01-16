@@ -21,6 +21,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import androidx.annotation.NonNull;
+import java.util.Date;
 import org.supla.android.db.SuplaContract;
 import org.supla.android.db.ThermostatMeasurementItem;
 
@@ -57,7 +58,19 @@ public class ThermostatLogDao extends MeasurementsBaseDao {
     insert(emi, SuplaContract.ThermostatLogEntry.TABLE_NAME, SQLiteDatabase.CONFLICT_IGNORE);
   }
 
-  public Cursor getThermostatMeasurements(int channelId) {
+  public Cursor getThermostatMeasurements(int channelId, Date dateFrom, Date dateTo) {
+    String dates = "";
+    if (dateFrom != null && dateTo != null) {
+      dates =
+          " AND "
+              + SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_TIMESTAMP
+              + " >= "
+              + toMilis(dateFrom)
+              + " AND "
+              + SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_TIMESTAMP
+              + " <= "
+              + toMilis(dateTo);
+    }
     String sql =
         "SELECT "
             + SuplaContract.ThermostatLogEntry.COLUMN_NAME_MEASUREDTEMPERATURE
@@ -71,6 +84,7 @@ public class ThermostatLogDao extends MeasurementsBaseDao {
             + SuplaContract.ThermostatLogEntry.COLUMN_NAME_CHANNELID
             + " = "
             + channelId
+            + dates
             + " ORDER BY "
             + SuplaContract.ThermostatLogEntry.COLUMN_NAME_TIMESTAMP
             + " ASC ";

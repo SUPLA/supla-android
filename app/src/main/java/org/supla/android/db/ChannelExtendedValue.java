@@ -1,4 +1,5 @@
 package org.supla.android.db;
+
 /*
 Copyright (C) AC SOFTWARE SP. Z O.O.
 
