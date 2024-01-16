@@ -29,8 +29,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
-import com.github.mikephil.charting.charts.CombinedChart;
-import com.github.mikephil.charting.charts.PieChart;
 import dagger.hilt.android.AndroidEntryPoint;
 import java.util.List;
 import java.util.Timer;

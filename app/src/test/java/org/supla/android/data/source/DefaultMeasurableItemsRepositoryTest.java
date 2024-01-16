@@ -543,8 +543,7 @@ public class DefaultMeasurableItemsRepositoryTest {
     verify(impulseCounterLogDao)
         .getImpulseCounterMeasurementTotalCount(channelId, withoutComplement);
     verifyNoMoreInteractions(impulseCounterLogDao);
-    verifyNoInteractions(
-        impulseCounterLogDao, electricityMeterLogDao, thermostatLogDao, tempHumidityLogDao);
+    verifyNoInteractions(electricityMeterLogDao, thermostatLogDao, tempHumidityLogDao);
   }
 
   @Test

@@ -23,7 +23,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import org.supla.android.SuplaApp;
 import org.supla.android.db.ChannelBase;
