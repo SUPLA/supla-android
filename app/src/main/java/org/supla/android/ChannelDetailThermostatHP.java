@@ -25,11 +25,15 @@ import android.graphics.Typeface;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import com.github.mikephil.charting.charts.CombinedChart;
 import dagger.hilt.android.AndroidEntryPoint;
@@ -92,6 +96,7 @@ public class ChannelDetailThermostatHP extends DetailLayout
   private LinearLayout llChart;
   private ListView lvChannelList;
   private TextView tvErrorMessage;
+  private Spinner icSpinnerSlave;
 
   @Inject ProfileIdHolder profileIdHolder;
 
@@ -148,23 +153,23 @@ public class ChannelDetailThermostatHP extends DetailLayout
 
     btnOnOff = findViewById(R.id.hpBtnOnOff);
     btnOnOff.setOnClickListener(this);
-    btnOnOff.setTag(Integer.valueOf(0));
+    btnOnOff.setTag(0);
 
     btnNormal = findViewById(R.id.hpBtnNormal);
     btnNormal.setOnClickListener(this);
-    btnNormal.setTag(Integer.valueOf(0));
+    btnNormal.setTag(0);
 
     btnEco = findViewById(R.id.hpBtnEco);
     btnEco.setOnClickListener(this);
-    btnEco.setTag(Integer.valueOf(0));
+    btnEco.setTag(0);
 
     btnAuto = findViewById(R.id.hpBtnAuto);
     btnAuto.setOnClickListener(this);
-    btnAuto.setTag(Integer.valueOf(0));
+    btnAuto.setTag(0);
 
     btnTurbo = findViewById(R.id.hpBtnTurbo);
     btnTurbo.setOnClickListener(this);
-    btnTurbo.setTag(Integer.valueOf(0));
+    btnTurbo.setTag(0);
 
     btnPlus = findViewById(R.id.hpBtnPlus);
     btnPlus.setOnClickListener(this);
@@ -173,7 +178,18 @@ public class ChannelDetailThermostatHP extends DetailLayout
     btnMinus.setOnClickListener(this);
 
     chartHelper = new ThermostatChartHelper(getContext());
-    chartHelper.setCombinedChart((CombinedChart) findViewById(R.id.hpCombinedChart));
+    CombinedChart chart = findViewById(R.id.hpCombinedChart);
+    chartHelper.setCombinedChart(chart);
+
+    ArrayAdapter<String> adapter =
+        new ArrayAdapter<>(
+            this.getContext(),
+            android.R.layout.simple_spinner_item,
+            chartHelper.getSlaveSpinnerItems(null));
+
+    icSpinnerSlave = findViewById(R.id.icSpinnerSlave);
+    icSpinnerSlave.setAdapter(adapter);
+    icSpinnerSlave.setOnItemSelectedListener(dateRangeSelectedListener(chart));
 
     llChart = findViewById(R.id.hpllChart);
 
@@ -242,15 +258,6 @@ public class ChannelDetailThermostatHP extends DetailLayout
     return inflateLayout(R.layout.detail_homeplus);
   }
 
-  private void setTemperatureTextView(TextView tv, Double temp) {
-    if (temp != null && temp > -273) {
-      tv.setText(String.format("%.1f", temp) + (char) 0x00B0);
-    } else {
-      tv.setText("--");
-    }
-    tv.setTag(temp);
-  }
-
   private byte setBtnAppearance(Button btn, int setOn, int textOn, int textOff) {
 
     if (setOn == BTN_SET_TOGGLE) {
@@ -279,12 +286,12 @@ public class ChannelDetailThermostatHP extends DetailLayout
     return setBtnAppearance(btn, setOn, 0, 0);
   }
 
-  private byte setBtnAppearance(Button btn, boolean setOn) {
-    return setBtnAppearance(btn, setOn ? BTN_SET_ON : BTN_SET_OFF, 0, 0);
+  private void setBtnAppearance(Button btn, boolean setOn) {
+    setBtnAppearance(btn, setOn ? BTN_SET_ON : BTN_SET_OFF, 0, 0);
   }
 
   private boolean btnIsOn(Button btn) {
-    return ((Integer) btn.getTag()).intValue() == 1;
+    return (Integer) btn.getTag() == 1;
   }
 
   private void displayTemperature() {
@@ -294,7 +301,7 @@ public class ChannelDetailThermostatHP extends DetailLayout
             .getHumanReadableThermostatTemperature(
                 measuredTemperatureMin,
                 measuredTemperatureMax,
-                Double.valueOf(presetTemperatureMin),
+                (double) presetTemperatureMin,
                 presetTemperatureMax,
                 isGroup() ? 0.6f : 1f,
                 isGroup() ? 0.3f : 0.7f);
@@ -332,25 +339,15 @@ public class ChannelDetailThermostatHP extends DetailLayout
     rlMain.setVisibility(VISIBLE);
   }
 
-  public Integer getCfgValue(int id) {
-    for (CfgItem item : cfgItems) {
-      if (item.idEqualsTo(id)) {
-        return new Integer(item.getValue());
-      }
-    }
-    return null;
-  }
-
   private void updateCalendarComfortLabel(CfgItem item) {
     Resources res = getResources();
     mCalendar.setProgram1Label(
-        res.getText(R.string.hp_calendar_comfort) + " " + Integer.toString(item.value) + "\u00B0");
+        res.getText(R.string.hp_calendar_comfort) + " " + item.value + "\u00B0");
   }
 
   private void updateCalendarECOLabel(CfgItem item) {
     Resources res = getResources();
-    mCalendar.setProgram0Label(
-        res.getText(R.string.hp_calendar_eco) + " " + Integer.toString(item.value) + "\u00B0");
+    mCalendar.setProgram0Label(res.getText(R.string.hp_calendar_eco) + " " + item.value + "\u00B0");
   }
 
   public void setCfgValue(int id, int value) {
@@ -369,7 +366,7 @@ public class ChannelDetailThermostatHP extends DetailLayout
   }
 
   public void setCfgValue(int id, Integer value) {
-    setCfgValue(id, value == null ? 0 : value.intValue());
+    setCfgValue(id, value == null ? 0 : value);
   }
 
   public void setCfgValue(int id, Double value) {
@@ -383,7 +380,7 @@ public class ChannelDetailThermostatHP extends DetailLayout
     presetTemperatureMin = t == null ? 0 : t.intValue();
     presetTemperatureMax = channelGroup.getMaximumPresetTemperature();
     t = channelGroup.getMinimumMeasuredTemperature();
-    measuredTemperatureMin = t == null ? 0.0 : t.doubleValue();
+    measuredTemperatureMin = t == null ? 0.0 : t;
     measuredTemperatureMax = channelGroup.getMaximumMeasuredTemperature();
     displayTemperature();
   }
@@ -452,11 +449,9 @@ public class ChannelDetailThermostatHP extends DetailLayout
     setBtnAppearance(btnEco, thermostat.isEcoRecuctionApplied());
     setBtnAppearance(btnTurbo, thermostat.isTurboOn() ? BTN_SET_ON : BTN_SET_OFF);
 
-    if (!btnIsOn(btnOnOff) || btnIsOn(btnEco) || btnIsOn(btnTurbo) || btnIsOn(btnAuto)) {
-      setBtnAppearance(btnNormal, false);
-    } else {
-      setBtnAppearance(btnNormal, true);
-    }
+    setBtnAppearance(
+        btnNormal,
+        btnIsOn(btnOnOff) && !btnIsOn(btnEco) && !btnIsOn(btnTurbo) && !btnIsOn(btnAuto));
 
     if (!mCalendar.isTouched()) {
       mCalendar.clear();
@@ -570,8 +565,6 @@ public class ChannelDetailThermostatHP extends DetailLayout
       if (item.onClick(view)) {
 
         int idx = 0;
-        Preferences prefs = new Preferences(getContext());
-
         switch (item.getId()) {
           case CfgItem.ID_WATER_MAX:
             idx = 2;
@@ -845,12 +838,12 @@ public class ChannelDetailThermostatHP extends DetailLayout
     public static final int ID_TEMP_COMFORT = 4;
     public static final int ID_TEMP_ECO = 5;
     int value;
-    private int Id;
-    private Button BtnPlus;
-    private Button BtnMinus;
-    private TextView TvValue;
-    private int Min;
-    private int Max;
+    private final int Id;
+    private final Button BtnPlus;
+    private final Button BtnMinus;
+    private final TextView TvValue;
+    private final int Min;
+    private final int Max;
 
     CfgItem(int id, int btnMinus, int btnPlus, int tvValue, int min, int max, int defaultValue) {
       BtnMinus = findViewById(btnMinus);
@@ -877,7 +870,7 @@ public class ChannelDetailThermostatHP extends DetailLayout
       if (TvValue != null) {
         if (Id == ID_TURBO_TIME) {
           TvValue.setText(R.string.hp_hour);
-          TvValue.setText(Integer.toString(value) + " " + TvValue.getText());
+          TvValue.setText(value + " " + TvValue.getText());
         } else {
           TvValue.setText(Integer.toString(value) + (char) 0x00B0);
         }
@@ -926,5 +919,29 @@ public class ChannelDetailThermostatHP extends DetailLayout
       this.value = value;
       displayValue();
     }
+  }
+
+  private OnItemSelectedListener dateRangeSelectedListener(CombinedChart chart) {
+    return new OnItemSelectedListener() {
+      @Override
+      public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        chartHelper.setDateRangeBySpinners(null, icSpinnerSlave);
+        chartHelper.load(getRemoteId(), 0);
+
+        new Handler()
+            .postDelayed(
+                () -> {
+                  if (icSpinnerSlave.getSelectedItemPosition() == 4) {
+                    chartHelper.moveToEnd();
+                  } else if (chart != null) {
+                    chart.fitScreen();
+                  }
+                },
+                100);
+      }
+
+      @Override
+      public void onNothingSelected(AdapterView<?> adapterView) {}
+    };
   }
 }
