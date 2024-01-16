@@ -108,19 +108,6 @@ public abstract class DetailLayout extends FrameLayout {
     return null;
   }
 
-  public int getMargin() {
-
-    ViewGroup.LayoutParams lp = getLayoutParams();
-    return ((MarginLayoutParams) lp).leftMargin;
-  }
-
-  public void setMargin(int margin) {
-
-    ViewGroup.LayoutParams lp = getLayoutParams();
-    ((ViewGroup.MarginLayoutParams) lp).setMargins(margin, 0, -margin, 0);
-    setLayoutParams(lp);
-  }
-
   public int getRemoteId() {
     return mRemoteId;
   }

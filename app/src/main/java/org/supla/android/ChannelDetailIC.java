@@ -105,8 +105,8 @@ public class ChannelDetailIC extends DetailLayout
     warningIcon = findViewById(R.id.icWarningIcon);
 
     chartHelper = new ImpulseCounterChartHelper(getContext());
-    chartHelper.setCombinedChart((CombinedChart) findViewById(R.id.icCombinedChart));
-    chartHelper.setPieChart((PieChart) findViewById(R.id.icPieChart));
+    chartHelper.setCombinedChart(findViewById(R.id.icCombinedChart));
+    chartHelper.setPieChart(findViewById(R.id.icPieChart));
 
     ArrayAdapter<String> adapter =
         new ArrayAdapter<>(

@@ -21,6 +21,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import org.supla.android.tools.UsedFromNativeCode;
 
 public class SuplaChannelElectricityMeterValue implements Serializable {
   private double TotalCost;
@@ -36,6 +37,7 @@ public class SuplaChannelElectricityMeterValue implements Serializable {
   private double TotalForwardActiveEnergyBalanced;
   private double TotalReverseActiveEnergyBalanced;
 
+  @UsedFromNativeCode
   SuplaChannelElectricityMeterValue(
       int MeasuredValues,
       int Period,
@@ -58,32 +60,11 @@ public class SuplaChannelElectricityMeterValue implements Serializable {
     this.TotalReverseActiveEnergyBalanced = TotalReverseActiveEnergyBalanced / 100000.00;
   }
 
-  SuplaChannelElectricityMeterValue(
-      int MeasuredValues,
-      int Period,
-      double TotalCost,
-      double PricePerUnit,
-      String Currency,
-      double TotalForwardActiveEnergyBalanced,
-      double TotalReverseActiveEnergyBalanced) {
-    sumList = new ArrayList<>();
-    mp1List = new ArrayList<>();
-    mp2List = new ArrayList<>();
-    mp3List = new ArrayList<>();
-
-    this.MeasuredValues = MeasuredValues;
-    this.Period = Period;
-    this.TotalCost = TotalCost;
-    this.PricePerUnit = PricePerUnit;
-    this.Currency = Currency;
-    this.TotalForwardActiveEnergyBalanced = TotalForwardActiveEnergyBalanced;
-    this.TotalReverseActiveEnergyBalanced = TotalReverseActiveEnergyBalanced;
-  }
-
   public double getTotalCost() {
     return TotalCost;
   }
 
+  @UsedFromNativeCode
   public void addSummary(int Phase, Summary Sum) {
     if (Phase >= 1 && Phase <= 3) {
       if (sumList.size() >= Phase) {
@@ -93,6 +74,7 @@ public class SuplaChannelElectricityMeterValue implements Serializable {
     }
   }
 
+  @UsedFromNativeCode
   public void addMeasurement(int Phase, Measurement m) {
     switch (Phase) {
       case 1:
@@ -116,10 +98,6 @@ public class SuplaChannelElectricityMeterValue implements Serializable {
         && (getMeasuredValues() & SuplaConst.EM_VAR_CURRENT) == 0;
   }
 
-  public int getPeriod() {
-    return Period;
-  }
-
   public double getPricePerUnit() {
     return PricePerUnit;
   }
@@ -134,18 +112,6 @@ public class SuplaChannelElectricityMeterValue implements Serializable {
 
   public double getTotalReverseActiveEnergyBalanced() {
     return TotalReverseActiveEnergyBalanced;
-  }
-
-  public int getMeasurementSize(int Phase) {
-    switch (Phase) {
-      case 1:
-        return mp1List.size();
-      case 2:
-        return mp2List.size();
-      case 3:
-        return mp3List.size();
-    }
-    return 0;
   }
 
   public Measurement getMeasurement(int Phase, int index) {
@@ -212,6 +178,7 @@ public class SuplaChannelElectricityMeterValue implements Serializable {
     private double PowerFactor;
     private double PhaseAngle;
 
+    @UsedFromNativeCode
     Measurement(
         int Freq,
         int Voltage,
@@ -271,6 +238,7 @@ public class SuplaChannelElectricityMeterValue implements Serializable {
     private double TotalForwardReactiveEnergy;
     private double TotalReverseReactiveEnergy;
 
+    @UsedFromNativeCode
     Summary(
         long TotalForwardActiveEnergy,
         long TotalReverseActiveEnergy,
