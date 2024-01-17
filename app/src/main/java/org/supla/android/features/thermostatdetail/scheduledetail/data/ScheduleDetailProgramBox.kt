@@ -29,7 +29,7 @@ import org.supla.android.features.thermostatdetail.ui.OFF
 import org.supla.android.features.thermostatdetail.ui.description
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL
 
 data class ScheduleDetailProgramBox(
   val channelFunction: Int,
@@ -53,7 +53,7 @@ data class ScheduleDetailProgramBox(
         channelFunction == SUPLA_CHANNELFNC_HVAC_THERMOSTAT && thermostatFunction == ThermostatSubfunction.HEAT -> SuplaHvacMode.HEAT
         channelFunction == SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER -> SuplaHvacMode.HEAT
         channelFunction == SUPLA_CHANNELFNC_HVAC_THERMOSTAT && thermostatFunction == ThermostatSubfunction.COOL -> SuplaHvacMode.COOL
-        channelFunction == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO -> SuplaHvacMode.AUTO
+        channelFunction == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL -> SuplaHvacMode.HEAT_COOL
         else -> scheduleProgram.mode
       }
     } else {
@@ -114,7 +114,7 @@ data class ScheduleDetailProgramBox(
         ThermostatSubfunction.HEAT,
         SuplaWeeklyScheduleProgram(
           SuplaScheduleProgram.PROGRAM_3,
-          SuplaHvacMode.AUTO,
+          SuplaHvacMode.HEAT_COOL,
           2100,
           2250
         ),

@@ -52,7 +52,7 @@ public interface MeasurableItemsRepository {
 
   void addThermostatMeasurement(ThermostatMeasurementItem emi);
 
-  Cursor getThermostatMeasurements(int channelId);
+  Cursor getThermostatMeasurements(int channelId, Date dateFrom, Date dateTo);
 
   int getTempHumidityMeasurementTimestamp(int channelId, boolean min);
 

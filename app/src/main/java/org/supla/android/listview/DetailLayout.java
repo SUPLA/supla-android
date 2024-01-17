@@ -23,7 +23,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import org.supla.android.SuplaApp;
 import org.supla.android.db.ChannelBase;
@@ -106,19 +105,6 @@ public abstract class DetailLayout extends FrameLayout {
     }
 
     return null;
-  }
-
-  public int getMargin() {
-
-    ViewGroup.LayoutParams lp = getLayoutParams();
-    return ((MarginLayoutParams) lp).leftMargin;
-  }
-
-  public void setMargin(int margin) {
-
-    ViewGroup.LayoutParams lp = getLayoutParams();
-    ((ViewGroup.MarginLayoutParams) lp).setMargins(margin, 0, -margin, 0);
-    setLayoutParams(lp);
   }
 
   public int getRemoteId() {

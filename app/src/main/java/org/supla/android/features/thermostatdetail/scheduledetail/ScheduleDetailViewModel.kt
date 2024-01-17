@@ -63,7 +63,7 @@ import org.supla.android.features.thermostatdetail.scheduledetail.extensions.vie
 import org.supla.android.features.thermostatdetail.scheduledetail.ui.ScheduleDetailViewProxy
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL
 import org.supla.android.tools.SuplaSchedulers
 import java.util.Calendar
 import java.util.concurrent.TimeUnit
@@ -338,7 +338,7 @@ class ScheduleDetailViewModel @Inject constructor(
     when {
       programMode == SuplaHvacMode.HEAT -> changeProgramTemperatureMin(temperatureModifier, textProvider, withCorrection)
       programMode == SuplaHvacMode.COOL -> changeProgramTemperatureMax(temperatureModifier, textProvider, withCorrection)
-      programMode == SuplaHvacMode.AUTO && modeForTemperature == SuplaHvacMode.HEAT ->
+      programMode == SuplaHvacMode.HEAT_COOL && modeForTemperature == SuplaHvacMode.HEAT ->
         changeProgramTemperatureMin(
           temperatureModifier,
           textProvider,
@@ -346,7 +346,7 @@ class ScheduleDetailViewModel @Inject constructor(
           state.programSettings?.setpointTemperatureCool
         )
 
-      programMode == SuplaHvacMode.AUTO && modeForTemperature == SuplaHvacMode.COOL ->
+      programMode == SuplaHvacMode.HEAT_COOL && modeForTemperature == SuplaHvacMode.COOL ->
         changeProgramTemperatureMax(
           temperatureModifier,
           textProvider,
@@ -448,8 +448,8 @@ class ScheduleDetailViewModel @Inject constructor(
     state.channelFunction == SUPLA_CHANNELFNC_HVAC_THERMOSTAT && state.thermostatFunction == ThermostatSubfunction.COOL ->
       listOf(SuplaHvacMode.COOL)
 
-    state.channelFunction == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO ->
-      listOf(SuplaHvacMode.AUTO, SuplaHvacMode.HEAT, SuplaHvacMode.COOL)
+    state.channelFunction == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL ->
+      listOf(SuplaHvacMode.HEAT_COOL, SuplaHvacMode.HEAT, SuplaHvacMode.COOL)
 
     state.channelFunction == SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER ->
       listOf(SuplaHvacMode.HEAT)
@@ -557,8 +557,10 @@ data class ScheduleDetailViewState(
         for (program in programs) {
           if (program.scheduleProgram.program == programToUpdate.program) {
             val icon = when {
-              function == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO && program.scheduleProgram.mode == SuplaHvacMode.HEAT -> R.drawable.ic_heat
-              function == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO && program.scheduleProgram.mode == SuplaHvacMode.COOL -> R.drawable.ic_cool
+              function == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL && program.scheduleProgram.mode == SuplaHvacMode.HEAT ->
+                R.drawable.ic_heat
+              function == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL && program.scheduleProgram.mode == SuplaHvacMode.COOL ->
+                R.drawable.ic_cool
               else -> null
             }
 

@@ -58,8 +58,8 @@ fun SuplaChannelWeeklyScheduleConfig.viewProgramBoxesList(subfunction: Thermosta
   mutableListOf<ScheduleDetailProgramBox>().apply {
     for (program in programConfigurations) {
       val icon = when {
-        func == SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO && program.mode == SuplaHvacMode.HEAT -> R.drawable.ic_heat
-        func == SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO && program.mode == SuplaHvacMode.COOL -> R.drawable.ic_cool
+        func == SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL && program.mode == SuplaHvacMode.HEAT -> R.drawable.ic_heat
+        func == SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL && program.mode == SuplaHvacMode.COOL -> R.drawable.ic_cool
         else -> null
       }
       ScheduleDetailProgramBox(

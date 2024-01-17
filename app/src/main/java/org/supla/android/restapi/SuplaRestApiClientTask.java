@@ -35,10 +35,8 @@ import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
-import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
@@ -276,13 +274,7 @@ public abstract class SuplaRestApiClientTask extends AsyncTask {
               }
             };
 
-        conn.setHostnameVerifier(
-            new HostnameVerifier() {
-              @Override
-              public boolean verify(String hostname, SSLSession session) {
-                return true;
-              }
-            });
+        conn.setHostnameVerifier((hostname, session) -> true);
       }
 
       sc.init(null, trustSelfSignedCerts, new java.security.SecureRandom());

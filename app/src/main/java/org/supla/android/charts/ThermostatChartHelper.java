@@ -46,7 +46,7 @@ public class ThermostatChartHelper extends ChartHelper {
 
   @Override
   protected Cursor getCursor(MeasurementsDbHelper DBH, int channelId, String dateFormat) {
-    return DBH.getThermostatMeasurements(channelId);
+    return DBH.getThermostatMeasurements(channelId, dateFrom, dateTo);
   }
 
   @Override

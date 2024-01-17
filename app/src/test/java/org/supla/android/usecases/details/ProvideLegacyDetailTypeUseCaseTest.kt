@@ -247,7 +247,7 @@ class ProvideLegacyDetailTypeUseCaseTest {
 
   @Test
   fun `should not provide detail for hvac thermostat auto`() {
-    testDetailType(SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO, null)
+    testDetailType(SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL, null)
   }
 
   private fun testDetailType(function: Int, result: DetailType?, extraMocks: ((Channel) -> Unit) = { }) {

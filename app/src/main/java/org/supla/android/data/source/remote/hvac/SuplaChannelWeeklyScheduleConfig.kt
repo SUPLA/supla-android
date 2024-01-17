@@ -28,7 +28,7 @@ enum class SuplaHvacMode(val value: Int) {
   OFF(1),
   HEAT(2),
   COOL(3),
-  AUTO(4),
+  HEAT_COOL(4),
   FAN_ONLY(6),
   DRY(7),
   CMD_TURN_ON(8),

@@ -46,7 +46,7 @@ fun Channel.toThermostatSlideableListItemData(
   val subValue = when {
     onLine.not() -> ""
     thermostatValue.mode == SuplaHvacMode.COOL -> temperatureMax
-    thermostatValue.mode == SuplaHvacMode.AUTO -> "$temperatureMin - $temperatureMax"
+    thermostatValue.mode == SuplaHvacMode.HEAT_COOL -> "$temperatureMin - $temperatureMax"
     thermostatValue.mode == SuplaHvacMode.HEAT -> temperatureMin
     thermostatValue.mode == SuplaHvacMode.OFF -> "Off"
     else -> ""

@@ -4,8 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import android.database.Cursor;
@@ -56,7 +56,7 @@ public class DefaultMeasurableItemsRepositoryTest {
 
     verify(impulseCounterLogDao).getLastImpulseCounterMeasurementValue(monthOffset, channelId);
     verifyNoMoreInteractions(impulseCounterLogDao);
-    verifyZeroInteractions(
+    verifyNoInteractions(
         electricityMeterLogDao, thermostatLogDao, tempHumidityLogDao, temperatureLogDao);
   }
 
@@ -82,7 +82,7 @@ public class DefaultMeasurableItemsRepositoryTest {
     verify(electricityMeterLogDao)
         .getLastElectricityMeterMeasurementValue(monthOffset, channelId, production);
     verifyNoMoreInteractions(electricityMeterLogDao);
-    verifyZeroInteractions(
+    verifyNoInteractions(
         impulseCounterLogDao, thermostatLogDao, tempHumidityLogDao, temperatureLogDao);
   }
 
@@ -103,7 +103,7 @@ public class DefaultMeasurableItemsRepositoryTest {
 
     verify(electricityMeterLogDao).getElectricityMeterMeasurementTimestamp(channelId, min);
     verifyNoMoreInteractions(electricityMeterLogDao);
-    verifyZeroInteractions(
+    verifyNoInteractions(
         impulseCounterLogDao, thermostatLogDao, tempHumidityLogDao, temperatureLogDao);
   }
 
@@ -128,7 +128,7 @@ public class DefaultMeasurableItemsRepositoryTest {
     verify(electricityMeterLogDao)
         .getElectricityMeterMeasurementTotalCount(channelId, withoutComplement);
     verifyNoMoreInteractions(electricityMeterLogDao);
-    verifyZeroInteractions(
+    verifyNoInteractions(
         impulseCounterLogDao, thermostatLogDao, tempHumidityLogDao, temperatureLogDao);
   }
 
@@ -143,7 +143,7 @@ public class DefaultMeasurableItemsRepositoryTest {
     // then
     verify(electricityMeterLogDao).addElectricityMeasurement(item);
     verifyNoMoreInteractions(electricityMeterLogDao);
-    verifyZeroInteractions(
+    verifyNoInteractions(
         impulseCounterLogDao, thermostatLogDao, tempHumidityLogDao, temperatureLogDao);
   }
 
@@ -170,7 +170,7 @@ public class DefaultMeasurableItemsRepositoryTest {
     verify(electricityMeterLogDao)
         .getElectricityMeasurementsCursor(channelId, groupByDateFormat, dateFrom, dateTo);
     verifyNoMoreInteractions(electricityMeterLogDao);
-    verifyZeroInteractions(
+    verifyNoInteractions(
         impulseCounterLogDao, thermostatLogDao, tempHumidityLogDao, temperatureLogDao);
   }
 
@@ -185,7 +185,7 @@ public class DefaultMeasurableItemsRepositoryTest {
     // then
     verify(electricityMeterLogDao).deleteElectricityMeasurements(channelId);
     verifyNoMoreInteractions(electricityMeterLogDao);
-    verifyZeroInteractions(
+    verifyNoInteractions(
         impulseCounterLogDao, thermostatLogDao, tempHumidityLogDao, temperatureLogDao);
   }
 
@@ -205,7 +205,7 @@ public class DefaultMeasurableItemsRepositoryTest {
 
     verify(thermostatLogDao).getThermostatMeasurementTimestamp(channelId, min);
     verifyNoMoreInteractions(thermostatLogDao);
-    verifyZeroInteractions(
+    verifyNoInteractions(
         impulseCounterLogDao, electricityMeterLogDao, tempHumidityLogDao, temperatureLogDao);
   }
 
@@ -224,7 +224,7 @@ public class DefaultMeasurableItemsRepositoryTest {
 
     verify(thermostatLogDao).getThermostatMeasurementTotalCount(channelId);
     verifyNoMoreInteractions(thermostatLogDao);
-    verifyZeroInteractions(
+    verifyNoInteractions(
         impulseCounterLogDao, electricityMeterLogDao, tempHumidityLogDao, temperatureLogDao);
   }
 
@@ -239,7 +239,7 @@ public class DefaultMeasurableItemsRepositoryTest {
     // then
     verify(thermostatLogDao).deleteThermostatMeasurements(channelId);
     verifyNoMoreInteractions(thermostatLogDao);
-    verifyZeroInteractions(
+    verifyNoInteractions(
         impulseCounterLogDao, electricityMeterLogDao, tempHumidityLogDao, temperatureLogDao);
   }
 
@@ -254,7 +254,7 @@ public class DefaultMeasurableItemsRepositoryTest {
     // then
     verify(thermostatLogDao).addThermostatMeasurement(item);
     verifyNoMoreInteractions(thermostatLogDao);
-    verifyZeroInteractions(
+    verifyNoInteractions(
         impulseCounterLogDao, electricityMeterLogDao, tempHumidityLogDao, temperatureLogDao);
   }
 
@@ -262,18 +262,22 @@ public class DefaultMeasurableItemsRepositoryTest {
   public void shouldGetThermostatMeasurementsCursor() {
     // given
     int channelId = 2;
+    Date startDate = mock(Date.class);
+    Date endDate = mock(Date.class);
     Cursor expected = mock(Cursor.class);
-    when(thermostatLogDao.getThermostatMeasurements(channelId)).thenReturn(expected);
+    when(thermostatLogDao.getThermostatMeasurements(channelId, startDate, endDate))
+        .thenReturn(expected);
 
     // when
-    Cursor result = measurableItemsRepository.getThermostatMeasurements(channelId);
+    Cursor result =
+        measurableItemsRepository.getThermostatMeasurements(channelId, startDate, endDate);
 
     // then
     assertSame(expected, result);
 
-    verify(thermostatLogDao).getThermostatMeasurements(channelId);
+    verify(thermostatLogDao).getThermostatMeasurements(channelId, startDate, endDate);
     verifyNoMoreInteractions(thermostatLogDao);
-    verifyZeroInteractions(
+    verifyNoInteractions(
         impulseCounterLogDao, electricityMeterLogDao, tempHumidityLogDao, temperatureLogDao);
   }
 
@@ -294,7 +298,7 @@ public class DefaultMeasurableItemsRepositoryTest {
 
     verify(tempHumidityLogDao).getTempHumidityMeasurementTimestamp(channelId, min);
     verifyNoMoreInteractions(tempHumidityLogDao);
-    verifyZeroInteractions(
+    verifyNoInteractions(
         impulseCounterLogDao, electricityMeterLogDao, thermostatLogDao, temperatureLogDao);
   }
 
@@ -313,7 +317,7 @@ public class DefaultMeasurableItemsRepositoryTest {
 
     verify(tempHumidityLogDao).getTempHumidityMeasurementTotalCount(channelId);
     verifyNoMoreInteractions(tempHumidityLogDao);
-    verifyZeroInteractions(
+    verifyNoInteractions(
         impulseCounterLogDao, electricityMeterLogDao, thermostatLogDao, temperatureLogDao);
   }
 
@@ -328,7 +332,7 @@ public class DefaultMeasurableItemsRepositoryTest {
     // then
     verify(tempHumidityLogDao).deleteTempHumidityMeasurements(channelId);
     verifyNoMoreInteractions(tempHumidityLogDao);
-    verifyZeroInteractions(
+    verifyNoInteractions(
         impulseCounterLogDao, electricityMeterLogDao, thermostatLogDao, temperatureLogDao);
   }
 
@@ -343,7 +347,7 @@ public class DefaultMeasurableItemsRepositoryTest {
     // then
     verify(tempHumidityLogDao).addTempHumidityMeasurement(item);
     verifyNoMoreInteractions(tempHumidityLogDao);
-    verifyZeroInteractions(
+    verifyNoInteractions(
         impulseCounterLogDao, electricityMeterLogDao, thermostatLogDao, temperatureLogDao);
   }
 
@@ -366,7 +370,7 @@ public class DefaultMeasurableItemsRepositoryTest {
 
     verify(tempHumidityLogDao).getTempHumidityMeasurements(channelId, dateFrom, dateTo);
     verifyNoMoreInteractions(tempHumidityLogDao);
-    verifyZeroInteractions(
+    verifyNoInteractions(
         impulseCounterLogDao, electricityMeterLogDao, thermostatLogDao, temperatureLogDao);
   }
 
@@ -386,7 +390,7 @@ public class DefaultMeasurableItemsRepositoryTest {
 
     verify(temperatureLogDao).getTemperatureMeasurementTimestamp(channelId, min);
     verifyNoMoreInteractions(temperatureLogDao);
-    verifyZeroInteractions(
+    verifyNoInteractions(
         impulseCounterLogDao, electricityMeterLogDao, thermostatLogDao, tempHumidityLogDao);
   }
 
@@ -405,7 +409,7 @@ public class DefaultMeasurableItemsRepositoryTest {
 
     verify(temperatureLogDao).getTemperatureMeasurementTotalCount(channelId);
     verifyNoMoreInteractions(temperatureLogDao);
-    verifyZeroInteractions(
+    verifyNoInteractions(
         impulseCounterLogDao, electricityMeterLogDao, thermostatLogDao, tempHumidityLogDao);
   }
 
@@ -420,7 +424,7 @@ public class DefaultMeasurableItemsRepositoryTest {
     // then
     verify(temperatureLogDao).deleteTemperatureMeasurements(channelId);
     verifyNoMoreInteractions(temperatureLogDao);
-    verifyZeroInteractions(
+    verifyNoInteractions(
         impulseCounterLogDao, electricityMeterLogDao, thermostatLogDao, tempHumidityLogDao);
   }
 
@@ -435,7 +439,7 @@ public class DefaultMeasurableItemsRepositoryTest {
     // then
     verify(temperatureLogDao).addTemperatureMeasurement(item);
     verifyNoMoreInteractions(temperatureLogDao);
-    verifyZeroInteractions(
+    verifyNoInteractions(
         impulseCounterLogDao, electricityMeterLogDao, thermostatLogDao, tempHumidityLogDao);
   }
 
@@ -458,7 +462,7 @@ public class DefaultMeasurableItemsRepositoryTest {
 
     verify(temperatureLogDao).getTemperatureMeasurements(channelId, dateFrom, dateTo);
     verifyNoMoreInteractions(temperatureLogDao);
-    verifyZeroInteractions(
+    verifyNoInteractions(
         impulseCounterLogDao, electricityMeterLogDao, thermostatLogDao, tempHumidityLogDao);
   }
 
@@ -473,7 +477,7 @@ public class DefaultMeasurableItemsRepositoryTest {
     // then
     verify(impulseCounterLogDao).addImpulseCounterMeasurement(item);
     verifyNoMoreInteractions(impulseCounterLogDao);
-    verifyZeroInteractions(
+    verifyNoInteractions(
         temperatureLogDao, electricityMeterLogDao, thermostatLogDao, tempHumidityLogDao);
   }
 
@@ -494,7 +498,7 @@ public class DefaultMeasurableItemsRepositoryTest {
 
     verify(impulseCounterLogDao).getImpulseCounterMeasurementTimestamp(channelId, min);
     verifyNoMoreInteractions(impulseCounterLogDao);
-    verifyZeroInteractions(
+    verifyNoInteractions(
         temperatureLogDao, electricityMeterLogDao, thermostatLogDao, tempHumidityLogDao);
   }
 
@@ -515,7 +519,7 @@ public class DefaultMeasurableItemsRepositoryTest {
 
     verify(impulseCounterLogDao).impulseCounterMeasurementsStartsWithTheCurrentMonth(channelId);
     verifyNoMoreInteractions(impulseCounterLogDao);
-    verifyZeroInteractions(
+    verifyNoInteractions(
         temperatureLogDao, electricityMeterLogDao, thermostatLogDao, tempHumidityLogDao);
   }
 
@@ -539,8 +543,7 @@ public class DefaultMeasurableItemsRepositoryTest {
     verify(impulseCounterLogDao)
         .getImpulseCounterMeasurementTotalCount(channelId, withoutComplement);
     verifyNoMoreInteractions(impulseCounterLogDao);
-    verifyZeroInteractions(
-        impulseCounterLogDao, electricityMeterLogDao, thermostatLogDao, tempHumidityLogDao);
+    verifyNoInteractions(electricityMeterLogDao, thermostatLogDao, tempHumidityLogDao);
   }
 
   @Test
@@ -566,7 +569,7 @@ public class DefaultMeasurableItemsRepositoryTest {
     verify(impulseCounterLogDao)
         .getImpulseCounterMeasurements(channelId, groupByDateFormat, dateFrom, dateTo);
     verifyNoMoreInteractions(impulseCounterLogDao);
-    verifyZeroInteractions(
+    verifyNoInteractions(
         electricityMeterLogDao, thermostatLogDao, tempHumidityLogDao, temperatureLogDao);
   }
 
@@ -581,7 +584,7 @@ public class DefaultMeasurableItemsRepositoryTest {
     // then
     verify(impulseCounterLogDao).deleteImpulseCounterMeasurements(channelId);
     verifyNoMoreInteractions(impulseCounterLogDao);
-    verifyZeroInteractions(
+    verifyNoInteractions(
         electricityMeterLogDao, thermostatLogDao, tempHumidityLogDao, temperatureLogDao);
   }
 }

@@ -89,7 +89,7 @@ fun ProgramSettingsDialog(
       )
     }
 
-    if (data.selectedMode == SuplaHvacMode.AUTO) {
+    if (data.selectedMode == SuplaHvacMode.HEAT_COOL) {
       TemperatureControlRow(
         headerTextRes = SuplaHvacMode.HEAT.temperatureTextRes(),
         temperature = data.setpointTemperatureHeatString!!,
@@ -141,7 +141,7 @@ fun ProgramSettingsDialog(
         enabled = when (data.selectedMode) {
           SuplaHvacMode.HEAT -> data.temperatureHeatCorrect
           SuplaHvacMode.COOL -> data.temperatureCoolCorrect
-          SuplaHvacMode.AUTO -> data.temperatureHeatCorrect && data.temperatureCoolCorrect
+          SuplaHvacMode.HEAT_COOL -> data.temperatureHeatCorrect && data.temperatureCoolCorrect
           else -> false
         },
         modifier = Modifier.weight(1f)
@@ -249,8 +249,8 @@ private fun PreviewHeat() {
 
 private fun ProgramSettingsData.Companion.auto() = ProgramSettingsData(
   program = SuplaScheduleProgram.PROGRAM_1,
-  modes = listOf(SuplaHvacMode.AUTO, SuplaHvacMode.HEAT, SuplaHvacMode.COOL),
-  selectedMode = SuplaHvacMode.AUTO,
+  modes = listOf(SuplaHvacMode.HEAT_COOL, SuplaHvacMode.HEAT, SuplaHvacMode.COOL),
+  selectedMode = SuplaHvacMode.HEAT_COOL,
   setpointTemperatureCool = 21.0f,
   setpointTemperatureHeat = 22.0f,
   setpointTemperatureCoolString = "21.0",

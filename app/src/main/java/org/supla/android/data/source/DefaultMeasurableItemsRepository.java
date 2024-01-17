@@ -113,8 +113,8 @@ public class DefaultMeasurableItemsRepository implements MeasurableItemsReposito
   }
 
   @Override
-  public Cursor getThermostatMeasurements(int channelId) {
-    return thermostatLogDao.getThermostatMeasurements(channelId);
+  public Cursor getThermostatMeasurements(int channelId, Date dateFrom, Date dateTo) {
+    return thermostatLogDao.getThermostatMeasurements(channelId, dateFrom, dateTo);
   }
 
   @Override

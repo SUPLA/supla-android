@@ -18,7 +18,7 @@ import org.supla.android.features.thermostatdetail.scheduledetail.data.ScheduleD
 import org.supla.android.features.thermostatdetail.scheduledetail.data.ScheduleDetailProgramBox
 import org.supla.android.features.thermostatdetail.ui.OFF
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL
 
 @RunWith(MockitoJUnitRunner::class)
 class SuplaChannelWeeklyScheduleConfigExtensionsTest {
@@ -64,7 +64,7 @@ class SuplaChannelWeeklyScheduleConfigExtensionsTest {
   @Test
   fun `should create program list for schedule detail`() {
     // given
-    val function = SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO
+    val function = SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL
     val thermostatFunction = ThermostatSubfunction.HEAT
     val config = SuplaChannelWeeklyScheduleConfig(
       remoteId = 123,
@@ -90,7 +90,7 @@ class SuplaChannelWeeklyScheduleConfigExtensionsTest {
         ),
         SuplaWeeklyScheduleProgram(
           program = SuplaScheduleProgram.PROGRAM_4,
-          mode = SuplaHvacMode.AUTO,
+          mode = SuplaHvacMode.HEAT_COOL,
           setpointTemperatureHeat = 2100,
           setpointTemperatureCool = 2300
         )
@@ -134,7 +134,7 @@ class SuplaChannelWeeklyScheduleConfigExtensionsTest {
       ScheduleDetailProgramBox(
         function,
         thermostatFunction,
-        SuplaWeeklyScheduleProgram(SuplaScheduleProgram.PROGRAM_4, SuplaHvacMode.AUTO, 2100, 2300),
+        SuplaWeeklyScheduleProgram(SuplaScheduleProgram.PROGRAM_4, SuplaHvacMode.HEAT_COOL, 2100, 2300),
         null
       ),
       ScheduleDetailProgramBox(

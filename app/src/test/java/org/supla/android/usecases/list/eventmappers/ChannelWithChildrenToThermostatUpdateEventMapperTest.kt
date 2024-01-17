@@ -38,7 +38,7 @@ import org.supla.android.db.ChannelValue
 import org.supla.android.extensions.date
 import org.supla.android.lib.SuplaChannelExtendedValue
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL
 import org.supla.android.lib.SuplaTimerState
 import org.supla.android.ui.lists.data.SlideableListItemData
 import org.supla.android.usecases.channel.ChannelChild
@@ -163,7 +163,7 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
     val channelValue = mockk<ChannelValue>().also { every { it.asThermostatValue() } returns thermostatValue }
 
     val channel = mockk<Channel>()
-    every { channel.func } returns SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO
+    every { channel.func } returns SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL
     every { channel.value } returns channelValue
     every { channel.onLine } returns true
     every { channel.extendedValue } returns null
@@ -193,7 +193,7 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
     val channelValue = mockk<ChannelValue>().also { every { it.asThermostatValue() } returns thermostatValue }
 
     val channel = mockk<Channel>()
-    every { channel.func } returns SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO
+    every { channel.func } returns SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL
     every { channel.value } returns channelValue
     every { channel.onLine } returns false
     every { channel.extendedValue } returns null
@@ -237,14 +237,14 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
     val thermostatValue = mockThermostatValue(
       setpointTemperatureHeat = setpointTemperatureHeat,
       setpointTemperatureCool = setpointTemperatureCool,
-      mode = SuplaHvacMode.AUTO,
+      mode = SuplaHvacMode.HEAT_COOL,
       flags = flags
     )
 
     val channelValue = mockk<ChannelValue>().also { every { it.asThermostatValue() } returns thermostatValue }
 
     val channel = mockk<Channel>()
-    every { channel.func } returns SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO
+    every { channel.func } returns SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL
     every { channel.value } returns channelValue
     every { channel.onLine } returns true
     every { channel.extendedValue } returns null

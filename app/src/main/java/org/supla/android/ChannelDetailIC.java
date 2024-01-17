@@ -29,8 +29,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
-import com.github.mikephil.charting.charts.CombinedChart;
-import com.github.mikephil.charting.charts.PieChart;
 import dagger.hilt.android.AndroidEntryPoint;
 import java.util.List;
 import java.util.Timer;
@@ -105,8 +103,8 @@ public class ChannelDetailIC extends DetailLayout
     warningIcon = findViewById(R.id.icWarningIcon);
 
     chartHelper = new ImpulseCounterChartHelper(getContext());
-    chartHelper.setCombinedChart((CombinedChart) findViewById(R.id.icCombinedChart));
-    chartHelper.setPieChart((PieChart) findViewById(R.id.icPieChart));
+    chartHelper.setCombinedChart(findViewById(R.id.icCombinedChart));
+    chartHelper.setPieChart(findViewById(R.id.icPieChart));
 
     ArrayAdapter<String> adapter =
         new ArrayAdapter<>(
