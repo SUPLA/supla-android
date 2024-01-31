@@ -1,4 +1,5 @@
 package org.supla.android.data.source.remote
+
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -19,7 +20,25 @@ package org.supla.android.data.source.remote
 
 enum class ChannelConfigType(val value: Int) {
   DEFAULT(0),
-  WEEKLY_SCHEDULE(2)
+  WEEKLY_SCHEDULE(2),
+  GENERAL_PURPOSE_MEASUREMENT(3),
+  GENERAL_PURPOSE_METER(4);
+
+  companion object {
+    fun from(value: Int): ChannelConfigType {
+      for (type in ChannelConfigType.values()) {
+        if (type.value == value) {
+          return type
+        }
+      }
+
+      throw IllegalArgumentException("Illegal channel config type value: $value")
+    }
+  }
 }
 
-open class SuplaChannelConfig(open val remoteId: Int, open val func: Int?)
+open class SuplaChannelConfig(
+  @Transient open val remoteId: Int,
+  @Transient open val func: Int?,
+  @Transient open val crc32: Long
+)

@@ -25,6 +25,8 @@ import org.supla.android.ui.lists.data.SlideableListItemData
 import org.supla.android.usecases.channel.ChannelWithChildren
 import org.supla.android.usecases.channel.ReadChannelGroupByRemoteIdUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
+import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToGpmUpdateEventMapper
+import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToMeasurementUpdateEventMapper
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToThermostatUpdateEventMapper
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -34,10 +36,16 @@ class CreateListItemUpdateEventDataUseCase @Inject constructor(
   private val eventsManager: UpdateEventsManager,
   private val readChannelGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase,
   private val readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
-  channelWithChildrenToThermostatUpdateEventMapper: ChannelWithChildrenToThermostatUpdateEventMapper
+  channelWithChildrenToThermostatUpdateEventMapper: ChannelWithChildrenToThermostatUpdateEventMapper,
+  channelWithChildrenToMeasurementUpdateEventMapper: ChannelWithChildrenToMeasurementUpdateEventMapper,
+  channelWithChildrenToGpmUpdateEventMapper: ChannelWithChildrenToGpmUpdateEventMapper
 ) {
 
-  private val mappers: List<Mapper> = listOf(channelWithChildrenToThermostatUpdateEventMapper)
+  private val mappers: List<Mapper> = listOf(
+    channelWithChildrenToThermostatUpdateEventMapper,
+    channelWithChildrenToMeasurementUpdateEventMapper,
+    channelWithChildrenToGpmUpdateEventMapper
+  )
 
   operator fun invoke(itemType: ItemType, remoteId: Int): Observable<SlideableListItemData> {
     return when (itemType) {
@@ -59,10 +67,11 @@ class CreateListItemUpdateEventDataUseCase @Inject constructor(
   private fun observeChannel(remoteId: Int): Observable<ChannelWithChildren> {
     return readChannelWithChildrenUseCase.invoke(remoteId)
       .flatMapObservable { channelWithChildren ->
+        // For channel we observe the channel itself but also all children
         val ids = mutableListOf<Int>().also { list ->
           list.add(channelWithChildren.channel.remoteId)
           channelWithChildren.children.firstOrNull { it.relationType == ChannelRelationType.MAIN_THERMOMETER }?.let {
-            list.add(it.channel.remoteId)
+            list.add(it.channelDataEntity.remoteId)
           }
         }
 

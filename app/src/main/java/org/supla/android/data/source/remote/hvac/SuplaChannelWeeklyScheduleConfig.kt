@@ -95,6 +95,7 @@ data class SuplaWeeklyScheduleEntry(
 data class SuplaChannelWeeklyScheduleConfig( /* aka TChannelConfig_WeeklySchedule */
   override val remoteId: Int,
   override val func: Int?,
+  override val crc32: Long,
   val programConfigurations: List<SuplaWeeklyScheduleProgram>,
   val schedule: List<SuplaWeeklyScheduleEntry>
-) : SuplaChannelConfig(remoteId, func)
+) : SuplaChannelConfig(remoteId, func, crc32)

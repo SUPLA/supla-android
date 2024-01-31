@@ -1,667 +1,672 @@
 <resources>
-    <string name="confirm_button_text" translatable="false">OK</string>
-    <string name="dont_have_account_yet">Don\'t have an account in Supla Cloud yet?</string>
+  <string name="confirm_button_text" translatable="false">OK</string>
+  <string name="dont_have_account_yet">Don\'t have an account in Supla Cloud yet?</string>
 
-    <string name="app_name" translatable="false">SUPLA</string>
-    <string name="profiles_title">Accounts</string>
-    <string name="profile_name_label">ACCOUNT NAME</string>
-    <string name="profile_default_name">Default account</string>
-    <string name="profile_select_active">Select active account</string>
-    <string name="profile_act_info">Tap the account to log in.</string>
-    <string name="form_error">Error</string>
-    <string name="form_profile_name_missing">Account name is missing</string>
-    <string name="form_profile_required_data_missing">Required data is missing</string>
-    <string name="form_profile_duplicate">Account by that name already exists</string>
-    <string name="add_account">Add an account</string>
-    <string name="edit_account">Edit account</string>
-    <string name="supla_cloud" translatable="false">Supla Cloud</string>
-    <string name="slogan" translatable="false">YOUR HOME CONNECTED</string>
-    <string name="menubar_title" translatable="false">supla</string>
-    <string name="homepage" translatable="false">www.supla.org</string>
-    <string name="homepage_url" translatable="false">https://www.supla.org</string>
-    <string name="forumpage_url" translatable="false">https://en-forum.supla.org</string>
-    <string name="cloud_url" translatable="false">https://cloud.supla.org</string>
-    <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=L4N7RSWME6LG2</string>
-    <string name="create_url">https://cloud.supla.org/register?lang=en</string>
-    <string name="delete_url">https://{SERVER_ADDRESS}/db99845855b2ecbfecca9a095062b96c3e27703f?lang=en</string>
+  <string name="app_name" translatable="false">SUPLA</string>
+  <string name="profiles_title">Accounts</string>
+  <string name="profile_name_label">ACCOUNT NAME</string>
+  <string name="profile_default_name">Default account</string>
+  <string name="profile_select_active">Select active account</string>
+  <string name="profile_act_info">Tap the account to log in.</string>
+  <string name="form_error">Error</string>
+  <string name="form_profile_name_missing">Account name is missing</string>
+  <string name="form_profile_required_data_missing">Required data is missing</string>
+  <string name="form_profile_duplicate">Account by that name already exists</string>
+  <string name="add_account">Add an account</string>
+  <string name="edit_account">Edit account</string>
+  <string name="supla_cloud" translatable="false">Supla Cloud</string>
+  <string name="slogan" translatable="false">YOUR HOME CONNECTED</string>
+  <string name="menubar_title" translatable="false">supla</string>
+  <string name="homepage" translatable="false">www.supla.org</string>
+  <string name="homepage_url" translatable="false">https://www.supla.org</string>
+  <string name="forumpage_url" translatable="false">https://en-forum.supla.org</string>
+  <string name="cloud_url" translatable="false">https://cloud.supla.org</string>
+  <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=L4N7RSWME6LG2</string>
+  <string name="create_url">https://cloud.supla.org/register?lang=en</string>
+  <string name="delete_url">https://{SERVER_ADDRESS}/db99845855b2ecbfecca9a095062b96c3e27703f?lang=en</string>
 
-    <string name="version">version</string>
+  <string name="version">version</string>
 
-    <string name="about">About</string>
-    <string name="settings">Settings</string>
-    <string name="add_device">Add I/O device</string>
-    <string name="z_wave">Z-Wave bridge</string>
-    <string name="help">Help</string>
+  <string name="about">About</string>
+  <string name="settings">Settings</string>
+  <string name="add_device">Add I/O device</string>
+  <string name="z_wave">Z-Wave bridge</string>
+  <string name="help">Help</string>
 
-    <string name="status_connecting">Connecting...</string>
-    <string name="status_unknown_err">Unknown error</string>
-    <string name="status_temporarily_unavailable">Service temporarily unavailable</string>
-    <string name="status_bad_credentials">Bad credentials</string>
-    <string name="status_climit_exceded">Client limit exceeded</string>
-    <string name="status_version_error">Incompatible server version</string>
-    <string name="status_reg_disabled">New client registration disabled. Please log in to \"Supla Cloud\" and enable “New client registration” in “Smartphone” section of the website.</string>
-    <string name="status_access_id_not_assigned">Client activation required. Please log in to \"Supla Cloud\" and assign an “Access ID” for this device in “Smartphone” section of the website.</string>
-    <string name="status_device_disabled">Device disabled. Please log in to \"Supla Cloud\" and enable this device in “Smartphone” section of the website.</string>
-    <string name="status_accessid_disabled">Access Identifier is disabled</string>
+  <string name="status_connecting">Connecting...</string>
+  <string name="status_unknown_err">Unknown error</string>
+  <string name="status_temporarily_unavailable">Service temporarily unavailable</string>
+  <string name="status_bad_credentials">Bad credentials</string>
+  <string name="status_climit_exceded">Client limit exceeded</string>
+  <string name="status_version_error">Incompatible server version</string>
+  <string name="status_reg_disabled">New client registration disabled. Please log in to \"Supla Cloud\" and enable “New client registration” in “Smartphone” section of the website.</string>
+  <string name="status_access_id_not_assigned">Client activation required. Please log in to \"Supla Cloud\" and assign an “Access ID” for this device in “Smartphone” section of the website.</string>
+  <string name="status_device_disabled">Device disabled. Please log in to \"Supla Cloud\" and enable this device in “Smartphone” section of the website.</string>
+  <string name="status_accessid_disabled">Access Identifier is disabled</string>
 
-    <string name="err_hostnotfound">Host not found. Make sure you are connected to the internet and that an account with the entered email address has been created.</string>
-    <string name="err_cantconnecttohost">Can\'t connect to host</string>
+  <string name="err_hostnotfound">Host not found. Make sure you are connected to the internet and that an account with the entered email address has been created.</string>
+  <string name="err_cantconnecttohost">Can\'t connect to host</string>
 
-    <string name="channel_caption_gateway">Gateway</string>
-    <string name="channel_caption_gate">Gate</string>
-    <string name="channel_caption_garagedoor">Garage door</string>
-    <string name="channel_caption_door">Door</string>
-    <string name="channel_caption_rollershutter">Roller shutter</string>
-    <string name="channel_caption_powerswith">Power switch</string>
-    <string name="channel_caption_lightswith">Lighting switch</string>
-    <string name="channel_caption_thermometer">Thermometer</string>
-    <string name="channel_caption_humidity">Humidity</string>
-    <string name="channel_caption_humidityandtemperature">Temperature and Humidity</string>
-    <string name="channel_caption_windsensor">Wind sensor</string>
-    <string name="channel_caption_pressuresensor">Pressure sensor</string>
-    <string name="channel_caption_rainsensor">Rain sensor</string>
-    <string name="channel_caption_weightsensor">Weight sensor</string>
-    <string name="channel_caption_dimmer">Dimmer</string>
-    <string name="channel_caption_rgblighting">RGB Lighting</string>
-    <string name="channel_caption_dimmerandrgblighting">Dimmer and RGB lighting</string>
-    <string name="channel_caption_noliquidsensor">No liquid sensor</string>
-    <string name="channel_caption_gatewayopeningsensor">Gateway opening sensor</string>
-    <string name="channel_caption_gateopeningsensor">Gate opening sensor</string>
-    <string name="channel_caption_garagedooropeningsensor">Garage door opening sensor</string>
-    <string name="channel_caption_dooropeningsensor">Door opening sensor</string>
-    <string name="channel_caption_rsopeningsensor">Roller shutter opening sensor</string>
-    <string name="channel_caption_depthsensor">Depth sensor</string>
-    <string name="channel_caption_distancesensor">Distance sensor</string>
-    <string name="channel_caption_windowopeningsensor">Window opening sensor</string>
-    <string name="channel_caption_mailsensor">Mail sensor</string>
-    <string name="channel_caption_staircasetimer">Staircase timer</string>
-    <string name="channel_caption_electricitymeter">Electricity Meter</string>
-    <string name="channel_caption_gasmeter">Gas Meter</string>
-    <string name="channel_caption_watermeter">Water Meter</string>
-    <string name="channel_caption_thermostat">Thermostat</string>
-    <string name="channel_caption_thermostat_hp_homeplus">Home+ Heater</string>
+  <string name="channel_caption_gateway">Gateway</string>
+  <string name="channel_caption_gate">Gate</string>
+  <string name="channel_caption_garagedoor">Garage door</string>
+  <string name="channel_caption_door">Door</string>
+  <string name="channel_caption_rollershutter">Roller shutter</string>
+  <string name="channel_caption_powerswith">Power switch</string>
+  <string name="channel_caption_lightswith">Lighting switch</string>
+  <string name="channel_caption_thermometer">Thermometer</string>
+  <string name="channel_caption_humidity">Humidity</string>
+  <string name="channel_caption_humidityandtemperature">Temperature and Humidity</string>
+  <string name="channel_caption_windsensor">Wind sensor</string>
+  <string name="channel_caption_pressuresensor">Pressure sensor</string>
+  <string name="channel_caption_rainsensor">Rain sensor</string>
+  <string name="channel_caption_weightsensor">Weight sensor</string>
+  <string name="channel_caption_dimmer">Dimmer</string>
+  <string name="channel_caption_rgblighting">RGB Lighting</string>
+  <string name="channel_caption_dimmerandrgblighting">Dimmer and RGB lighting</string>
+  <string name="channel_caption_noliquidsensor">No liquid sensor</string>
+  <string name="channel_caption_gatewayopeningsensor">Gateway opening sensor</string>
+  <string name="channel_caption_gateopeningsensor">Gate opening sensor</string>
+  <string name="channel_caption_garagedooropeningsensor">Garage door opening sensor</string>
+  <string name="channel_caption_dooropeningsensor">Door opening sensor</string>
+  <string name="channel_caption_rsopeningsensor">Roller shutter opening sensor</string>
+  <string name="channel_caption_depthsensor">Depth sensor</string>
+  <string name="channel_caption_distancesensor">Distance sensor</string>
+  <string name="channel_caption_windowopeningsensor">Window opening sensor</string>
+  <string name="channel_caption_mailsensor">Mail sensor</string>
+  <string name="channel_caption_staircasetimer">Staircase timer</string>
+  <string name="channel_caption_electricitymeter">Electricity Meter</string>
+  <string name="channel_caption_gasmeter">Gas Meter</string>
+  <string name="channel_caption_watermeter">Water Meter</string>
+  <string name="channel_caption_thermostat">Thermostat</string>
+  <string name="channel_caption_thermostat_hp_homeplus">Home+ Heater</string>
 
-    <string name="channel_btn_open">Open</string>
-    <string name="channel_btn_openclose">Open Close</string>
-    <string name="channel_btn_on">On</string>
-    <string name="channel_btn_off">Off</string>
+  <string name="channel_btn_open">Open</string>
+  <string name="channel_btn_openclose">Open Close</string>
+  <string name="channel_btn_on">On</string>
+  <string name="channel_btn_off">Off</string>
 
-    <string name="event_openedthegateway">opened the gateway</string>
-    <string name="event_openedclosedthegate">opened / closed the gate</string>
-    <string name="event_openedclosedthegatedoors">opened / closed the gate doors</string>
-    <string name="event_openedthedoor">opened the door</string>
-    <string name="event_openedcloserollershutter">opened / closed roller shutter</string>
-    <string name="event_poweronoff">turned the power ON/OFF</string>
-    <string name="event_turnedthelightonoff">turned the light ON/OFF</string>
+  <string name="event_openedthegateway">opened the gateway</string>
+  <string name="event_openedclosedthegate">opened / closed the gate</string>
+  <string name="event_openedclosedthegatedoors">opened / closed the gate doors</string>
+  <string name="event_openedthedoor">opened the door</string>
+  <string name="event_openedcloserollershutter">opened / closed roller shutter</string>
+  <string name="event_poweronoff">turned the power ON/OFF</string>
+  <string name="event_turnedthelightonoff">turned the light ON/OFF</string>
 
-    <string name="server_address">SERVER ADDRESS</string>
-    <string name="access_id">ACCESS IDENTIFIER</string>
-    <string name="password">PASSWORD</string>
-    <string name="email">E-MAIL ADDRESS</string>
-    <string name="advanced_settings">Advanced</string>
-    <string name="create_account">Create</string>
-    <string name="delete_account">Delete</string>
-    <string name="delete_account_confirm_message">Are you sure you want to delete the account?</string>
-    <string translatable="false" name="delete_account_confirm_message_with_widgets">Are you sure you want to delete the account? Confirmation will delete all account related widgets.</string>
+  <string name="server_address">SERVER ADDRESS</string>
+  <string name="access_id">ACCESS IDENTIFIER</string>
+  <string name="password">PASSWORD</string>
+  <string name="email">E-MAIL ADDRESS</string>
+  <string name="advanced_settings">Advanced</string>
+  <string name="create_account">Create</string>
+  <string name="delete_account">Delete</string>
+  <string name="delete_account_confirm_message">Are you sure you want to delete the account?</string>
+  <string name="delete_account_confirm_message_with_widgets" translatable="false">Are you sure you want to delete the account? Confirmation will delete all account related widgets.</string>
 
-    <!-- Configuration screen, profile name of current profile
-	 (editable) -->
-    <string translatable="false" name="cfg_profile_active_indicator">active</string>
-    <!-- default name for a profile (usually assigned for initial
-	 account or when migrating settings from previous version of
-	 the app. -->
+  <!-- Configuration screen, profile name of current profile
+ (editable) -->
+  <string name="cfg_profile_active_indicator" translatable="false">active</string>
+  <!-- default name for a profile (usually assigned for initial
+ account or when migrating settings from previous version of
+ the app. -->
 
-    <string translatable="false" name="cfg_label_email_auth">Email</string>
-    <string name="cfg_label_access_id_auth">Access ID</string>
-    <string translatable="false" name="cfg_checkbox_server_auto">Auto</string>
-    <string name="cfg_channel_height">Channel height</string>
-    <string name="cfg_temperature_unit">Temperature unit</string>
-    <string name="cfg_button_autohide">Auto-hide buttons</string>
+  <string name="cfg_label_email_auth" translatable="false">Email</string>
+  <string name="cfg_label_access_id_auth">Access ID</string>
+  <string name="cfg_checkbox_server_auto" translatable="false">Auto</string>
+  <string name="cfg_channel_height">Channel height</string>
+  <string name="cfg_temperature_unit">Temperature unit</string>
+  <string name="cfg_button_autohide">Auto-hide buttons</string>
 
-    <string name="profile">Your account</string>
-    <string name="profile_plural">Your accounts</string>
-    <string name="menubar_appsettings">App Settings</string>
+  <string name="profile">Your account</string>
+  <string name="profile_plural">Your accounts</string>
+  <string name="menubar_appsettings">App Settings</string>
 
-    <string name="about_app">This program is free software; you can redistribute it and/or   modify it under the terms of the GNU General Public License   as published by the Free Software Foundation; either version 2   of the License, or (at your option) any later version.     This program is distributed in the hope that it will be useful,   but WITHOUT ANY WARRANTY; without even the implied warranty of   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the   GNU General Public License for more details.     You should have received a copy of the GNU General Public License   along with this program; if not, write to the Free Software   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA</string>
+  <string name="about_app">This program is free software; you can redistribute it and/or   modify it under the terms of the GNU General Public License   as published by the Free Software Foundation; either version 2   of the License, or (at your option) any later version.     This program is distributed in the hope that it will be useful,   but WITHOUT ANY WARRANTY; without even the implied warranty of   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the   GNU General Public License for more details.     You should have received a copy of the GNU General Public License   along with this program; if not, write to the Free Software   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA</string>
 
-    <string name="rate_msg">Did you know that Supla is an open, free project developed by the community? If you like the app, spend a moment on rating it. Thank you for your support!</string>
-    <string name="rate_now">Rate Now</string>
-    <string name="rate_later">Later</string>
-    <string name="rate_no_thanks">No thanks</string>
+  <string name="rate_msg">Did you know that Supla is an open, free project developed by the community? If you like the app, spend a moment on rating it. Thank you for your support!</string>
+  <string name="rate_now">Rate Now</string>
+  <string name="rate_later">Later</string>
+  <string name="rate_no_thanks">No thanks</string>
 
-    <string name="rs_percent_caption">Percentage of closing</string>
-    <string name="rs_percent_caption_open">Percentage of opening</string>
-    <string name="calibration">[Calibration]</string>
+  <string name="rs_percent_caption">Percentage of closing</string>
+  <string name="rs_percent_caption_open">Percentage of opening</string>
+  <string name="calibration">[Calibration]</string>
 
-    <string name="add_wizard_is_not_available">Add Wizard is only available when server connection has been set based on the email address. (Disable advanced options in your account settings)</string>
+  <string name="add_wizard_is_not_available">Add Wizard is only available when server connection has been set based on the email address. (Disable advanced options in your account settings)</string>
 
-    <string name="wizard_step1_txt1">Welcome to Add I/O Device Wizard which will help you to add a new device to your system in a few simple steps.</string>
-    <string name="wizard_step1_txt3">Press <b>Next</b> to continue.</string>
-    <string name="next">Next</string>
-    <string name="start">START</string>
-    <string name="stop" translatable="false">STOP</string>
-    <string name="turn_on" translatable="false">Turn on</string>
-    <string name="turn_off" translatable="false">Turn off</string>
-    <string name="wizard_remember_passwd">Remember password</string>
+  <string name="wizard_step1_txt1">Welcome to Add I/O Device Wizard which will help you to add a new device to your system in a few simple steps.</string>
+  <string name="wizard_step1_txt3">Press <b>Next</b> to continue.</string>
+  <string name="next">Next</string>
+  <string name="start">START</string>
+  <string name="stop" translatable="false">STOP</string>
+  <string name="turn_on" translatable="false">Turn on</string>
+  <string name="turn_off" translatable="false">Turn off</string>
+  <string name="wizard_remember_passwd">Remember password</string>
 
-    <string name="wizard_step3_txt1">Power up your I/O Device and make sure it is configuration mode - the status LED should be flashing rapidly.</string>
-    <string name="wizard_step3_txt2">*Configuration mode is enabled by default on brand new products. It can also be enabled manually by pressing and holding <b>CONFIG</b> button or dimmer knob for around 5s.</string>
-    <string name="wizard_step3_txt3">Press <b>START</b> to start configuration.</string>
+  <string name="wizard_step3_txt1">Power up your I/O Device and make sure it is configuration mode - the status LED should be flashing rapidly.</string>
+  <string name="wizard_step3_txt2">*Configuration mode is enabled by default on brand new products. It can also be enabled manually by pressing and holding <b>CONFIG</b> button or dimmer knob for around 5s.</string>
+  <string name="wizard_step3_txt3">Press <b>START</b> to start configuration.</string>
 
-    <string name="wizard_no_internetwifi">Before you start, set up your Internet connection with the WiFi also used by the I/O device when connecting with server.</string>
-    <string name="wizard_wifi_error">WiFi Network is disabled or it is impossible to read its identifier or name!</string>
-    <string name="wizard_location_error">For the Add Device Wizard to work properly, the Location service must be enabled on this device. Go to your system settings, then select „Location” and make sure it\'s turned on.</string>
-    <string name="wizard_addnetwork_error">WiFi Network configuration can not be added!</string>
-    <string name="wizard_wifi_timeout">Current WiFi Network Data timeout. Go to your Android WiFi settings, select Advanced, then check "Turn on WiFi automatically"</string>
-    <string name="wizard_scan_timeout">WiFi Network Scan timeout!</string>
-    <string name="wizard_connect_timeout">I/O Device connection setting timeout!</string>
-    <string name="wizard_configure_timeout">Device Configuration Completion timeout!</string>
-    <string name="wizard_reconnect_timeout">Basic WiFi Network return timeout!</string>
-    <string name="device_reg_request_timeout">Device registration availability information timeout!</string>
+  <string name="wizard_no_internetwifi">Before you start, set up your Internet connection with the WiFi also used by the I/O device when connecting with server.</string>
+  <string name="wizard_wifi_error">WiFi Network is disabled or it is impossible to read its identifier or name!</string>
+  <string name="wizard_location_error">For the Add Device Wizard to work properly, the Location service must be enabled on this device. Go to your system settings, then select „Location” and make sure it\'s turned on.</string>
+  <string name="wizard_addnetwork_error">WiFi Network configuration can not be added!</string>
+  <string name="wizard_wifi_timeout">Current WiFi Network Data timeout. Go to your Android WiFi settings, select Advanced, then check "Turn on WiFi automatically"</string>
+  <string name="wizard_scan_timeout">WiFi Network Scan timeout!</string>
+  <string name="wizard_connect_timeout">I/O Device connection setting timeout!</string>
+  <string name="wizard_configure_timeout">Device Configuration Completion timeout!</string>
+  <string name="wizard_reconnect_timeout">Basic WiFi Network return timeout!</string>
+  <string name="device_reg_request_timeout">Device registration availability information timeout!</string>
 
-    <string name="wizard_iodevice_notfound">No I/O Devices found! Please check if your I/O Device is ON and in configuration mode.</string>
+  <string name="wizard_iodevice_notfound">No I/O Devices found! Please check if your I/O Device is ON and in configuration mode.</string>
 
-    <string name="wizard_done">The settings have been transferred to the I/O device.</string>
-    <string name="wizard_iodev_data">Device parameters</string>
-    <string name="wizard_iodev_name">Name</string>
-    <string name="wizard_iodev_firmware" translatable="false">Firmware</string>
-    <string name="wizard_iodev_mac" translatable="false">MAC</string>
-    <string name="wizard_iodev_laststate">Previous state</string>
+  <string name="wizard_done">The settings have been transferred to the I/O device.</string>
+  <string name="wizard_iodev_data">Device parameters</string>
+  <string name="wizard_iodev_name">Name</string>
+  <string name="wizard_iodev_firmware" translatable="false">Firmware</string>
+  <string name="wizard_iodev_mac" translatable="false">MAC</string>
+  <string name="wizard_iodev_laststate">Previous state</string>
 
-    <string name="wizard_result_param_error">Incorrect input parameters!</string>
-    <string name="wizard_result_compat_error">The connected device is not compatible with this Wizard!</string>
-    <string name="wizard_result_conn_error">Connection with the device cannot be set!</string>
-    <string name="wizard_result_failed">Configuration Failed!</string>
-    <string name="wizard_not_enought_permissions">This application is not fully authorized. Go to the Application Manager in the System Settings. Find %1$s app and activate all the required authorizations.</string>
-    <string name="em_total_forward_avtive_energy">Forward active energy</string>
-    <string name="em_reverse_active_energy">Reverse active energy</string>
-    <string name="em_total_forward_reactive_energy">Forward reactive energy</string>
-    <string name="em_total_reverse_reactive_energy">Reverse reactive energy</string>
-    <string name="em_frequency">Frequency</string>
-    <string name="em_voltage">Voltage</string>
-    <string name="em_current">Current</string>
-    <string name="em_power_active">Active Power</string>
-    <string name="em_power_reactive">Reactive Power</string>
-    <string name="em_power_factor">Power factor</string>
-    <string name="em_phase_angle">Phase angle</string>
-    <string name="em_power_apparent">Apparent Power</string>
-    <string name="em_phase1">Phase 1</string>
-    <string name="em_phase2">Phase 2</string>
-    <string name="em_phase3">Phase 3</string>
-    <string name="hp_on">ON</string>
-    <string name="hp_off">OFF</string>
-    <string name="hp_normal">MANUAL</string>
-    <string name="hp_eco">ECO</string>
-    <string name="hp_turbo">TURBO</string>
-    <string name="hp_auto">AUTO</string>
-    <string name="hp_room_temperature">Room temperature</string>
-    <string name="hp_cfg_turbo_time">Duration of the TURBO mode</string>
-    <string name="hp_cfg_water_max">Maximum water temperature</string>
-    <string name="hp_cfg_eco_reduction">Temperature reduction in ECO mode</string>
-    <string name="hp_cfg_temp_comfort_auto">Higher temperature in AUTO mode</string>
-    <string name="hp_calendar_comfort">Higher</string>
-    <string name="hp_calendar_eco">Lower</string>
-    <string name="hp_cfg_temp_eco">Lower temperature in AUTO mode</string>
-    <string name="hp_hour">h</string>
-    <string name="meter_value">Meter value</string>
-    <string name="total_cost">Total cost</string>
-    <string name="current_cost">The cost in the current month</string>
-    <string name="current_consumption">Consumption in the current month</string>
-    <string name="minutes">Minutes</string>
-    <string name="hours">Hours</string>
-    <string name="days">Days</string>
-    <string name="months">Months</string>
-    <string name="years">Years</string>
-    <string name="ranking_of_hours">Ranking of hours</string>
-    <string name="ranking_of_weekdays">Ranking of weekdays</string>
-    <string name="ranking_of_months">Ranking of months</string>
-    <string name="consumption_acording_to_phases">Consumption according to phases</string>
-    <string name="temperature">Temperature</string>
-    <string name="humidity">Humidity</string>
-    <string name="all_available_history">All available history</string>
-    <string name="retrieving_data_from_the_server">Retrieving data from the server...</string>
-    <string name="no_chart_data_available">No chart data available in selected time period.</string>
-    <string name="em_chart_phase_n">Phase %d</string>
-    <string name="em_chart_all_phases">Phase 1+2+3</string>
-    <string name="comparsion_minmin">Minute to minute comparison</string>
-    <string name="comparsion_hourhour">Hour to hour comparison</string>
-    <string name="comparsion_dayday">Day to day comparison</string>
-    <string name="comparsion_monthmonth">Month to month comparison</string>
-    <string name="comparsion_yearyear">Year to year comparison</string>
-    <string name="hp_error_1">No water</string>
-    <string name="hp_error_2">Burnt heater</string>
-    <string name="hp_error_3">Water temperature sensor error</string>
-    <string name="hp_error_4">Room temperature sensor error</string>
-    <string name="hp_error_5">No network interruptions</string>
-    <string name="current_production">Production in the current month</string>
-    <string name="production_acording_to_phases">Production according to phases</string>
-    <string name="enter_superuser_credentials">Enter superuser credentials</string>
+  <string name="wizard_result_param_error">Incorrect input parameters!</string>
+  <string name="wizard_result_compat_error">The connected device is not compatible with this Wizard!</string>
+  <string name="wizard_result_conn_error">Connection with the device cannot be set!</string>
+  <string name="wizard_result_failed">Configuration Failed!</string>
+  <string name="wizard_not_enought_permissions">This application is not fully authorized. Go to the Application Manager in the System Settings. Find %1$s app and activate all the required authorizations.</string>
+  <string name="em_total_forward_avtive_energy">Forward active energy</string>
+  <string name="em_reverse_active_energy">Reverse active energy</string>
+  <string name="em_total_forward_reactive_energy">Forward reactive energy</string>
+  <string name="em_total_reverse_reactive_energy">Reverse reactive energy</string>
+  <string name="em_frequency">Frequency</string>
+  <string name="em_voltage">Voltage</string>
+  <string name="em_current">Current</string>
+  <string name="em_power_active">Active Power</string>
+  <string name="em_power_reactive">Reactive Power</string>
+  <string name="em_power_factor">Power factor</string>
+  <string name="em_phase_angle">Phase angle</string>
+  <string name="em_power_apparent">Apparent Power</string>
+  <string name="em_phase1">Phase 1</string>
+  <string name="em_phase2">Phase 2</string>
+  <string name="em_phase3">Phase 3</string>
+  <string name="hp_on">ON</string>
+  <string name="hp_off">OFF</string>
+  <string name="hp_normal">MANUAL</string>
+  <string name="hp_eco">ECO</string>
+  <string name="hp_turbo">TURBO</string>
+  <string name="hp_auto">AUTO</string>
+  <string name="hp_room_temperature">Room temperature</string>
+  <string name="hp_cfg_turbo_time">Duration of the TURBO mode</string>
+  <string name="hp_cfg_water_max">Maximum water temperature</string>
+  <string name="hp_cfg_eco_reduction">Temperature reduction in ECO mode</string>
+  <string name="hp_cfg_temp_comfort_auto">Higher temperature in AUTO mode</string>
+  <string name="hp_calendar_comfort">Higher</string>
+  <string name="hp_calendar_eco">Lower</string>
+  <string name="hp_cfg_temp_eco">Lower temperature in AUTO mode</string>
+  <string name="hp_hour">h</string>
+  <string name="meter_value">Meter value</string>
+  <string name="total_cost">Total cost</string>
+  <string name="current_cost">The cost in the current month</string>
+  <string name="current_consumption">Consumption in the current month</string>
+  <string name="minutes">Minutes</string>
+  <string name="hours">Hours</string>
+  <string name="days">Days</string>
+  <string name="months">Months</string>
+  <string name="years">Years</string>
+  <string name="ranking_of_hours">Ranking of hours</string>
+  <string name="ranking_of_weekdays">Ranking of weekdays</string>
+  <string name="ranking_of_months">Ranking of months</string>
+  <string name="consumption_acording_to_phases">Consumption according to phases</string>
+  <string name="temperature">Temperature</string>
+  <string name="humidity">Humidity</string>
+  <string name="all_available_history">All available history</string>
+  <string name="retrieving_data_from_the_server">Retrieving data from the server...</string>
+  <string name="no_chart_data_available">No chart data available in selected time period.</string>
+  <string name="em_chart_phase_n">Phase %d</string>
+  <string name="em_chart_all_phases">Phase 1+2+3</string>
+  <string name="comparsion_minmin">Minute to minute comparison</string>
+  <string name="comparsion_hourhour">Hour to hour comparison</string>
+  <string name="comparsion_dayday">Day to day comparison</string>
+  <string name="comparsion_monthmonth">Month to month comparison</string>
+  <string name="comparsion_yearyear">Year to year comparison</string>
+  <string name="hp_error_1">No water</string>
+  <string name="hp_error_2">Burnt heater</string>
+  <string name="hp_error_3">Water temperature sensor error</string>
+  <string name="hp_error_4">Room temperature sensor error</string>
+  <string name="hp_error_5">No network interruptions</string>
+  <string name="current_production">Production in the current month</string>
+  <string name="production_acording_to_phases">Production according to phases</string>
+  <string name="enter_superuser_credentials">Enter superuser credentials</string>
 
-    <string name="channel_func_none">No function</string>
-    <string name="channel_func_controllingthegatewaylock">Gateway lock operation</string>
-    <string name="channel_func_controllingthegate">Gate operation</string>
-    <string name="channel_func_controllingthegaragedoor">Garage door operation</string>
-    <string name="channel_func_thermometer">Thermometer</string>
-    <string name="channel_func_humidity">Humidity sensor</string>
-    <string name="channel_func_humidityandtemperature">Temperature and humidity sensor</string>
-    <string name="channel_func_opensensor_gateway">Gateway opening sensor</string>
-    <string name="channel_func_opensensor_gate">Gate opening sensor</string>
-    <string name="channel_func_opensensor_garagedoor">Garage door opening sensor</string>
-    <string name="channel_func_noliquidsensor">No liquid sensor</string>
-    <string name="channel_func_controllingthedoorlock">Door lock operation</string>
-    <string name="channel_func_opensensor_door">Door opening sensor</string>
-    <string name="channel_func_controllingtherollershutter">Roller shutter operation</string>
-    <string name="channel_func_opensensor_rollershutter">Roller shutter opening sensor</string>
-    <string name="channel_func_powerswitch">On/Off switch</string>
-    <string name="channel_func_lightswitch">Light switch</string>
-    <string name="channel_func_dimmer">Dimmer</string>
-    <string name="channel_func_rgblighting">RGB lighting</string>
-    <string name="channel_func_dimmerandrgblighting">Dimmer and RGB lighting</string>
-    <string name="channel_func_depthsensor">Depth sensor</string>
-    <string name="channel_func_distancesensor">Distance sensor</string>
-    <string name="channel_func_openingsensor_window">Window opening sensor</string>
-    <string name="channel_func_mailsensor">Mail sensor</string>
-    <string name="channel_func_windsensor">Wind sensor</string>
-    <string name="channel_func_pressuresensor">Pressure sensor</string>
-    <string name="channel_func_rainsensor">Rain sensor</string>
-    <string name="channel_func_weightsensor">Weight sensor</string>
-    <string name="channel_func_weather_station">Weather Station</string>
-    <string name="channel_func_staircasetimer">Staircase timer</string>
-    <string name="channel_func_electricity_meter">Electricity meter</string>
-    <string name="channel_func_gas_meter">Gas meter</string>
-    <string name="channel_func_water_meter">Water meter</string>
-    <string name="channel_func_heat_meter">Heat meter</string>
-    <string name="channel_func_thermostat">Thermostat</string>
-    <string name="channel_func_thermostat_heatpol_homeplus">Home+ Heater</string>
-    <string name="channel_func_valve_openclose">Valve</string>
-    <string name="channel_func_valve_percentage">Valve</string>
+  <string name="channel_func_none">No function</string>
+  <string name="channel_func_controllingthegatewaylock">Gateway lock operation</string>
+  <string name="channel_func_controllingthegate">Gate operation</string>
+  <string name="channel_func_controllingthegaragedoor">Garage door operation</string>
+  <string name="channel_func_thermometer">Thermometer</string>
+  <string name="channel_func_humidity">Humidity sensor</string>
+  <string name="channel_func_humidityandtemperature">Temperature and humidity sensor</string>
+  <string name="channel_func_opensensor_gateway">Gateway opening sensor</string>
+  <string name="channel_func_opensensor_gate">Gate opening sensor</string>
+  <string name="channel_func_opensensor_garagedoor">Garage door opening sensor</string>
+  <string name="channel_func_noliquidsensor">No liquid sensor</string>
+  <string name="channel_func_controllingthedoorlock">Door lock operation</string>
+  <string name="channel_func_opensensor_door">Door opening sensor</string>
+  <string name="channel_func_controllingtherollershutter">Roller shutter operation</string>
+  <string name="channel_func_opensensor_rollershutter">Roller shutter opening sensor</string>
+  <string name="channel_func_powerswitch">On/Off switch</string>
+  <string name="channel_func_lightswitch">Light switch</string>
+  <string name="channel_func_dimmer">Dimmer</string>
+  <string name="channel_func_rgblighting">RGB lighting</string>
+  <string name="channel_func_dimmerandrgblighting">Dimmer and RGB lighting</string>
+  <string name="channel_func_depthsensor">Depth sensor</string>
+  <string name="channel_func_distancesensor">Distance sensor</string>
+  <string name="channel_func_openingsensor_window">Window opening sensor</string>
+  <string name="channel_func_mailsensor">Mail sensor</string>
+  <string name="channel_func_windsensor">Wind sensor</string>
+  <string name="channel_func_pressuresensor">Pressure sensor</string>
+  <string name="channel_func_rainsensor">Rain sensor</string>
+  <string name="channel_func_weightsensor">Weight sensor</string>
+  <string name="channel_func_weather_station">Weather Station</string>
+  <string name="channel_func_staircasetimer">Staircase timer</string>
+  <string name="channel_func_electricity_meter">Electricity meter</string>
+  <string name="channel_func_gas_meter">Gas meter</string>
+  <string name="channel_func_water_meter">Water meter</string>
+  <string name="channel_func_heat_meter">Heat meter</string>
+  <string name="channel_func_thermostat">Thermostat</string>
+  <string name="channel_func_thermostat_heatpol_homeplus">Home+ Heater</string>
+  <string name="channel_func_valve_openclose">Valve</string>
+  <string name="channel_func_valve_percentage">Valve</string>
 
-    <string name="channel_caption_valve">Valve</string>
-    <string name="channel_btn_close">Close</string>
-    <string name="valve_open_warning">The valve has been closed in manual or radio mode. Before you open it, make sure it has not been closed due to flooding. To turn off the warning, open the valve manually. Are you sure you want to open it from the application ?!</string>
-    <string name="valve_warning">The valve has been closed in manual or radio mode. Before you open it, make sure it has not been closed due to flooding. To turn off the warning, open the valve manually.</string>
-    <string name="yes">Yes</string>
-    <string name="no">No</string>
-    <string name="ok" translatable="false">OK</string>
-    <string name="dots" translatable="false">....</string>
-    <string name="exit">Exit</string>
+  <string name="channel_caption_valve">Valve</string>
+  <string name="channel_btn_close">Close</string>
+  <string name="valve_open_warning">The valve has been closed in manual or radio mode. Before you open it, make sure it has not been closed due to flooding. To turn off the warning, open the valve manually. Are you sure you want to open it from the application ?!</string>
+  <string name="valve_warning">The valve has been closed in manual or radio mode. Before you open it, make sure it has not been closed due to flooding. To turn off the warning, open the valve manually.</string>
+  <string name="yes">Yes</string>
+  <string name="no">No</string>
+  <string name="ok" translatable="false">OK</string>
+  <string name="dots" translatable="false">....</string>
+  <string name="exit">Exit</string>
 
-    <string name="channel_caption_heatmeter">Heat Meter</string>
-    <string name="zwave_select_channel">Select the z-wave bridge and then the channel you want to configure.</string>
-    <string name="device_name">Device name</string>
-    <string name="channel_number">Channel number</string>
-    <string name="device_id">Device id</string>
-    <string name="channel_id">Channel id</string>
-    <string name="soft_ver">Software version</string>
+  <string name="channel_caption_heatmeter">Heat Meter</string>
+  <string name="zwave_select_channel">Select the z-wave bridge and then the channel you want to configure.</string>
+  <string name="device_name">Device name</string>
+  <string name="channel_number">Channel number</string>
+  <string name="device_id">Device id</string>
+  <string name="channel_id">Channel id</string>
+  <string name="soft_ver">Software version</string>
 
-    <string name="function">Function</string>
-    <string name="caption">Caption</string>
-    <string name="device">Device</string>
-    <string name="zwave_welcome_title">Z-Wave wizard</string>
-    <string name="zwave_welcome_message">Welcome to the z-wave bridge configuration wizard. It will allow you to connect your z-wave devices to Supla. Tap \"Next\" to continue.</string>
-    <string name="zwave_before_search_title">It will take a while</string>
-    <string name="zwave_before_search_message">Before continuing, make sure that all your z-wave devices are online. Pressing \"Next\" will search your z-wave network, which may take from a few seconds to several minutes.</string>
-    <string name="zwave_dialog_channel_detail_message">Below are the details of the selected channel. Please specify its purpose by selecting the appropriate function.</string>
-    <string name="zwave_error_unexpected_response">Device response not as expected. Method:%1$s Code:%2$s</string>
-    <string name="zwave_error_function_change_error">The channel function change failed. Code %1$s</string>
-    <string name="zwave_error_caption_change_error">The channel caption change failed. Code %1$s</string>
-    <string name="zwave_error_get_basic_cfg_timeout">The waiting time for basic channel configuration data has expired.</string>
-    <string name="zwave_error_set_function_timeout">The waiting time for changing the channel function has expired.</string>
-    <string name="zwave_error_set_caption_timeout">The waiting time for changing the channel caption has expired.</string>
-    <string name="zwave_error_get_assigned_node_id_timeout">The waiting time for the ID of the assigned z-wave device has expired.</string>
-    <string name="zwave_error_get_node_list_timeout">The waiting time for the list of z-wave devices has expired.</string>
-    <string name="zwave_reset_and_clear">Reset network and settings</string>
-    <string name="zwave_add_device">Add device</string>
-    <string name="zwave_remove_device">Delete device</string>
-    <string name="zwave_network">Z-wave network</string>
-    <string name="zwave_select_node">Select the z-wave device that will be associated with the Supla channel.</string>
-    <string name="zwave_supla_channel">Channel</string>
-    <string name="zwave_device">Z-Wave device</string>
-    <string name="zwave_waiting_for_button_press">Waiting for button press on the z-wave device.</string>
-    <string name="zwave_button_press_timeout">The waiting time for pressing the button has elapsed.</string>
-    <string name="zwave_node_searching">Searching the z-wave network to build a list of devices.</string>
-    <string name="zwave_remove_device_timeout">The waiting time to remove the device has expired.</string>
-    <string name="zwave_waiting_for_reset">Waiting for confirmation of resetting the z-wave network together with clearing the settings.</string>
-    <string name="zwave_waiting_for_reset_timeout">The waiting time for the z-wave network reset has expired.</string>
-    <string name="zwave_error_assign_node_id_timeout">The waiting time for the z-wave device assignment to the channel has elapsed.</string>
-    <string name="zwave_bridge_offline">The z-wave bridge is not responding. Check if the bridge is connected to the server.</string>
-    <string name="zwave_waiting_for_add">Waiting for the device to be added to the z-wave network.</string>
-    <string name="zwave_waiting_for_add_timeout">The waiting time for adding the device to the z-wave network has expired.</string>
-    <string name="zwave_reset_confirm_question">Are you sure you want to reset the settings and z-wave network?</string>
-    <string name="zwave_offline">Offline ?</string>
-    <string name="zwave_used">Assigned to:</string>
-    <string name="zwave_node_assign_confirm_question">The selected z-wave device is already associated with another channel. Are you sure you want to move this device to this channel?</string>
-    <string name="zwave_error_common_message">Press back to return to the previous step or \"Exit\" to finish.</string>
-    <string name="zwave_error_slave_mode">This function is not available when the bridge is in slave mode.</string>
-    <string name="zwave_done">Done! Now you can finish the configuration process by pressing \"OK\" or you can press back to configure the next channel or change existing settings.</string>
+  <string name="function">Function</string>
+  <string name="caption">Caption</string>
+  <string name="device">Device</string>
+  <string name="zwave_welcome_title">Z-Wave wizard</string>
+  <string name="zwave_welcome_message">Welcome to the z-wave bridge configuration wizard. It will allow you to connect your z-wave devices to Supla. Tap \"Next\" to continue.</string>
+  <string name="zwave_before_search_title">It will take a while</string>
+  <string name="zwave_before_search_message">Before continuing, make sure that all your z-wave devices are online. Pressing \"Next\" will search your z-wave network, which may take from a few seconds to several minutes.</string>
+  <string name="zwave_dialog_channel_detail_message">Below are the details of the selected channel. Please specify its purpose by selecting the appropriate function.</string>
+  <string name="zwave_error_unexpected_response">Device response not as expected. Method:%1$s Code:%2$s</string>
+  <string name="zwave_error_function_change_error">The channel function change failed. Code %1$s</string>
+  <string name="zwave_error_caption_change_error">The channel caption change failed. Code %1$s</string>
+  <string name="zwave_error_get_basic_cfg_timeout">The waiting time for basic channel configuration data has expired.</string>
+  <string name="zwave_error_set_function_timeout">The waiting time for changing the channel function has expired.</string>
+  <string name="zwave_error_set_caption_timeout">The waiting time for changing the channel caption has expired.</string>
+  <string name="zwave_error_get_assigned_node_id_timeout">The waiting time for the ID of the assigned z-wave device has expired.</string>
+  <string name="zwave_error_get_node_list_timeout">The waiting time for the list of z-wave devices has expired.</string>
+  <string name="zwave_reset_and_clear">Reset network and settings</string>
+  <string name="zwave_add_device">Add device</string>
+  <string name="zwave_remove_device">Delete device</string>
+  <string name="zwave_network">Z-wave network</string>
+  <string name="zwave_select_node">Select the z-wave device that will be associated with the Supla channel.</string>
+  <string name="zwave_supla_channel">Channel</string>
+  <string name="zwave_device">Z-Wave device</string>
+  <string name="zwave_waiting_for_button_press">Waiting for button press on the z-wave device.</string>
+  <string name="zwave_button_press_timeout">The waiting time for pressing the button has elapsed.</string>
+  <string name="zwave_node_searching">Searching the z-wave network to build a list of devices.</string>
+  <string name="zwave_remove_device_timeout">The waiting time to remove the device has expired.</string>
+  <string name="zwave_waiting_for_reset">Waiting for confirmation of resetting the z-wave network together with clearing the settings.</string>
+  <string name="zwave_waiting_for_reset_timeout">The waiting time for the z-wave network reset has expired.</string>
+  <string name="zwave_error_assign_node_id_timeout">The waiting time for the z-wave device assignment to the channel has elapsed.</string>
+  <string name="zwave_bridge_offline">The z-wave bridge is not responding. Check if the bridge is connected to the server.</string>
+  <string name="zwave_waiting_for_add">Waiting for the device to be added to the z-wave network.</string>
+  <string name="zwave_waiting_for_add_timeout">The waiting time for adding the device to the z-wave network has expired.</string>
+  <string name="zwave_reset_confirm_question">Are you sure you want to reset the settings and z-wave network?</string>
+  <string name="zwave_offline">Offline ?</string>
+  <string name="zwave_used">Assigned to:</string>
+  <string name="zwave_node_assign_confirm_question">The selected z-wave device is already associated with another channel. Are you sure you want to move this device to this channel?</string>
+  <string name="zwave_error_common_message">Press back to return to the previous step or \"Exit\" to finish.</string>
+  <string name="zwave_error_slave_mode">This function is not available when the bridge is in slave mode.</string>
+  <string name="zwave_done">Done! Now you can finish the configuration process by pressing \"OK\" or you can press back to configure the next channel or change existing settings.</string>
 
-    <string name="restore_question">Are you sure you want to restore the default settings?</string>
-    <string name="belongs_to_group_error">You cannot change the function of a channel that belongs to a group.</string>
-    <string name="has_schedule_error">You cannot change the function of a channel that has a schedule.</string>
-    <string name="associeted_with_scene_error">You cannot change the function of a channel that is associated with a scene.</string>
-    <string name="event_openedclosedthevalve">opened / closed the valve</string>
-    <string name="bridge">Bridge</string>
-    <string name="em_phase_to_phase_balance">Vector phase-to-phase balancing</string>
+  <string name="restore_question">Are you sure you want to restore the default settings?</string>
+  <string name="belongs_to_group_error">You cannot change the function of a channel that belongs to a group.</string>
+  <string name="has_schedule_error">You cannot change the function of a channel that has a schedule.</string>
+  <string name="associeted_with_scene_error">You cannot change the function of a channel that is associated with a scene.</string>
+  <string name="event_openedclosedthevalve">opened / closed the valve</string>
+  <string name="bridge">Bridge</string>
+  <string name="em_phase_to_phase_balance">Vector phase-to-phase balancing</string>
 
-    <string name="aritmetic_balance_minutes">Arithmetic balance - Minutes</string>
-    <string name="aritmetic_balance_hours">Arithmetic balance - Hours</string>
-    <string name="aritmetic_balance_days">Arithmetic balance - Days</string>
-    <string name="aritmetic_balance_months">Arithmetic balance - Months</string>
-    <string name="aritmetic_balance_years">Arithmetic balance - Years</string>
-    <string name="vector_balance_minutes">Vector balance - Minutes</string>
-    <string name="vector_balance_hours">Vector balance - Hours</string>
-    <string name="vector_balance_days">Vector balance - Days</string>
-    <string name="vector_balance_months">Vector balance - Months</string>
-    <string name="vector_balance_years">Vector balance - Years</string>
-    <string name="wheel">Wheel</string>
-    <string name="slider">Slider</string>
+  <string name="aritmetic_balance_minutes">Arithmetic balance - Minutes</string>
+  <string name="aritmetic_balance_hours">Arithmetic balance - Hours</string>
+  <string name="aritmetic_balance_days">Arithmetic balance - Days</string>
+  <string name="aritmetic_balance_months">Arithmetic balance - Months</string>
+  <string name="aritmetic_balance_years">Arithmetic balance - Years</string>
+  <string name="vector_balance_minutes">Vector balance - Minutes</string>
+  <string name="vector_balance_hours">Vector balance - Hours</string>
+  <string name="vector_balance_days">Vector balance - Days</string>
+  <string name="vector_balance_months">Vector balance - Months</string>
+  <string name="vector_balance_years">Vector balance - Years</string>
+  <string name="wheel">Wheel</string>
+  <string name="slider">Slider</string>
 
-    <string name="vl_cfg_mode">Dimming mode</string>
-    <string name="vl_cfg_auto">AUTO</string>
-    <string name="vl_cfg_mode1">MODE 1</string>
-    <string name="vl_cfg_mode2">MODE 2</string>
-    <string name="vl_cfg_mode3">MODE 3</string>
-    <string name="vl_cfg_yes">YES</string>
-    <string name="vl_cfg_no">NO</string>
-    <string name="cfg_op_range">Operating range</string>
-    <string name="vl_cfg_boost">Boost</string>
+  <string name="vl_cfg_mode">Dimming mode</string>
+  <string name="vl_cfg_auto">AUTO</string>
+  <string name="vl_cfg_mode1">MODE 1</string>
+  <string name="vl_cfg_mode2">MODE 2</string>
+  <string name="vl_cfg_mode3">MODE 3</string>
+  <string name="vl_cfg_yes">YES</string>
+  <string name="vl_cfg_no">NO</string>
+  <string name="cfg_op_range">Operating range</string>
+  <string name="vl_cfg_boost">Boost</string>
 
-    <string name="information">Information</string>
-    <string name="vl_dimmer_info_txt1">Dimmer control</string>
-    <string name="vl_dimmer_info_txt2">Control the dimmer by moving the control button on the brightness slider / wheel.</string>
-    <string name="vl_dimmer_info_txt3">Switch on and off by tapping the on/off button.</string>
-    <string name="vl_dimmer_info_txt4">The dimmer will remember the previous brightness setting.</string>
-    <string name="vl_dimmer_info_txt5">Tap the config icon to adjust dimming settings.</string>
-    <string name="vl_dimmer_cfg_info_txt1">Dimming Mode / Operating Range</string>
-    <string name="vl_dimmer_cfg_info_txt2">Fine tune the performance of your LED lights by selecting a different dimming mode or change the operating range by moving the dark grey sliders around the wheel to adjust the minimum and maximum brightness levels.</string>
-    <string name="vl_dimmer_cfg_info_txt3">Mode 1: V-Pro Trailing-Edge Dimming</string>
-    <string name="vl_dimmer_cfg_info_txt4">Mode 2: Leading-Edge Dimming</string>
-    <string name="vl_dimmer_cfg_info_txt5">Mode 3: Alternative Trailing-Edge Dimming</string>
-    <string name="vl_dimmer_cfg_info_txt6">Boost</string>
-    <string name="vl_dimmer_cfg_info_txt7">This feature helps LED lamps switch on at low brightness settings by providing an initial boost. Move the dark grey slider around the wheel to increase the boost level at switch-on, indicated by the green line. After the boost the brightness will return to the previously set level.</string>
-    <string name="vl_dimmer_cfg_info_txt8">More information on can be found at</string>
-    <string name="vl_dimmer_cfg_info_txt9" translatable="false">https://www.varilight.co.uk/vps001</string>
+  <string name="information">Information</string>
+  <string name="vl_dimmer_info_txt1">Dimmer control</string>
+  <string name="vl_dimmer_info_txt2">Control the dimmer by moving the control button on the brightness slider / wheel.</string>
+  <string name="vl_dimmer_info_txt3">Switch on and off by tapping the on/off button.</string>
+  <string name="vl_dimmer_info_txt4">The dimmer will remember the previous brightness setting.</string>
+  <string name="vl_dimmer_info_txt5">Tap the config icon to adjust dimming settings.</string>
+  <string name="vl_dimmer_cfg_info_txt1">Dimming Mode / Operating Range</string>
+  <string name="vl_dimmer_cfg_info_txt2">Fine tune the performance of your LED lights by selecting a different dimming mode or change the operating range by moving the dark grey sliders around the wheel to adjust the minimum and maximum brightness levels.</string>
+  <string name="vl_dimmer_cfg_info_txt3">Mode 1: V-Pro Trailing-Edge Dimming</string>
+  <string name="vl_dimmer_cfg_info_txt4">Mode 2: Leading-Edge Dimming</string>
+  <string name="vl_dimmer_cfg_info_txt5">Mode 3: Alternative Trailing-Edge Dimming</string>
+  <string name="vl_dimmer_cfg_info_txt6">Boost</string>
+  <string name="vl_dimmer_cfg_info_txt7">This feature helps LED lamps switch on at low brightness settings by providing an initial boost. Move the dark grey slider around the wheel to increase the boost level at switch-on, indicated by the green line. After the boost the brightness will return to the previously set level.</string>
+  <string name="vl_dimmer_cfg_info_txt8">More information on can be found at</string>
+  <string name="vl_dimmer_cfg_info_txt9" translatable="false">https://www.varilight.co.uk/vps001</string>
 
-    <string name="time_exceeded">Time exceeded. Try again.</string>
+  <string name="time_exceeded">Time exceeded. Try again.</string>
 
-    <string name="IP" translatable="false">IP</string>
-    <string name="MAC" translatable="false">MAC</string>
-    <string name="battery_level">Battery level</string>
-    <string name="battery_powered">Battery powered</string>
-    <string name="wifi_rssi">WiFi RSSI</string>
-    <string name="wifi_signal_strength">Wifi signal strength</string>
-    <string name="bridge_node_online">Bridge node - online</string>
-    <string name="bridge_signal_strength">Bridge - signal strength</string>
-    <string name="uptime">Uptime</string>
-    <string name="connection_time">Connection time</string>
-    <string name="battery_health">Battery health</string>
-    <string name="connection_reset_cause">Connection reset cause</string>
-    <string name="light_source_lifespan">Light source lifespan</string>
-    <string name="light_source_operatingtime">Light source operating time</string>
-    <string name="chanel_lightsource_lifespan_settings">Change the light source lifespan settings</string>
-    <string name="light_source_lifespan_hours">Light source lifespan (hours)</string>
-    <string name="reset_lightsource_usage_counter">Reset the light source usage counter</string>
-    <string name="lightsource_warning">The lifespan of the light source is %1$s</string>
-    <string name="uv_warning1">The lifespan of the uv radiator is %1$s. Schedule its replacement.</string>
-    <string name="uv_warning2">The lifespan of the uv radiator is %1$s. Replace the radiator.</string>
-    <string name="wizard_step2_txt1">Enter WiFi Network name and password to use with new I/O Device</string>
-    <string name="enabling_registration_timeout">Timeout for enabling registration has expired!</string>
-    <string name="wifi_throttling">Oops...! It looks like the Android OS WiFi scanning limit has been reached. Setup can be continued after this window closes.</string>
-    <string name="enter_suplaorg_credentails">Please enter your Supla Cloud login details.</string>
-    <string name="save_without_saving">Do you want to quit without saving?</string>
-    <string name="do_you_want_to_save">Do you want to save the settings?</string>
-    <string name="restoring_default_settings">Restoring default settings</string>
-    <string name="mode_change_in_progress">Mode change in progress</string>
-    <string name="wizard_step1_txt2">It is recommended to temporary disable mobile data connection on your device as it may interfere with the configuration process.</string>
-    <string name="wake_up_frequency">Wake up frequency</string>
-    <string name="zwave_change_wake_up_settings">You can also change the wake-up settings by pressing the icon below.</string>
-    <string name="wakeup_info">*) The entered settings will be applied the next time the node wakes up.</string>
-    <string name="zwave_waiting_for_resposne_timeout">Timeout waiting for z-wave bridge response.</string>
-    <string name="zwave_unexpected_answer">Unexpected bridge response. Code: %1$s</string>
-    <string name="seconds">Seconds</string>
-    <string name="zwave_device_communication_error">There is a problem communicating with the z-wave device. Check if the device is within range of the bridge.</string>
+  <string name="IP" translatable="false">IP</string>
+  <string name="MAC" translatable="false">MAC</string>
+  <string name="battery_level">Battery level</string>
+  <string name="battery_powered">Battery powered</string>
+  <string name="wifi_rssi">WiFi RSSI</string>
+  <string name="wifi_signal_strength">Wifi signal strength</string>
+  <string name="bridge_node_online">Bridge node - online</string>
+  <string name="bridge_signal_strength">Bridge - signal strength</string>
+  <string name="uptime">Uptime</string>
+  <string name="connection_time">Connection time</string>
+  <string name="battery_health">Battery health</string>
+  <string name="connection_reset_cause">Connection reset cause</string>
+  <string name="light_source_lifespan">Light source lifespan</string>
+  <string name="light_source_operatingtime">Light source operating time</string>
+  <string name="chanel_lightsource_lifespan_settings">Change the light source lifespan settings</string>
+  <string name="light_source_lifespan_hours">Light source lifespan (hours)</string>
+  <string name="reset_lightsource_usage_counter">Reset the light source usage counter</string>
+  <string name="lightsource_warning">The lifespan of the light source is %1$s</string>
+  <string name="uv_warning1">The lifespan of the uv radiator is %1$s. Schedule its replacement.</string>
+  <string name="uv_warning2">The lifespan of the uv radiator is %1$s. Replace the radiator.</string>
+  <string name="wizard_step2_txt1">Enter WiFi Network name and password to use with new I/O Device</string>
+  <string name="enabling_registration_timeout">Timeout for enabling registration has expired!</string>
+  <string name="wifi_throttling">Oops...! It looks like the Android OS WiFi scanning limit has been reached. Setup can be continued after this window closes.</string>
+  <string name="enter_suplaorg_credentails">Please enter your Supla Cloud login details.</string>
+  <string name="save_without_saving">Do you want to quit without saving?</string>
+  <string name="do_you_want_to_save">Do you want to save the settings?</string>
+  <string name="restoring_default_settings">Restoring default settings</string>
+  <string name="mode_change_in_progress">Mode change in progress</string>
+  <string name="wizard_step1_txt2">It is recommended to temporary disable mobile data connection on your device as it may interfere with the configuration process.</string>
+  <string name="wake_up_frequency">Wake up frequency</string>
+  <string name="zwave_change_wake_up_settings">You can also change the wake-up settings by pressing the icon below.</string>
+  <string name="wakeup_info">*) The entered settings will be applied the next time the node wakes up.</string>
+  <string name="zwave_waiting_for_resposne_timeout">Timeout waiting for z-wave bridge response.</string>
+  <string name="zwave_unexpected_answer">Unexpected bridge response. Code: %1$s</string>
+  <string name="seconds">Seconds</string>
+  <string name="zwave_device_communication_error">There is a problem communicating with the z-wave device. Check if the device is within range of the bridge.</string>
 
-    <string name="widget_configure_title">Widget Configuration</string>
-    <string name="widget_configure_profile_label">Account</string>
-    <string translatable="false" name="widget_configure_type_label">Widget for:</string>
-    <string translatable="false" name="widget_configure_type_channel_label">Channel</string>
-    <string translatable="false" name="widget_configure_type_group_label">Group</string>
-    <string translatable="false" name="widget_configure_type_scene_label">Scene</string>
-    <string name="widget_configure_channel_label">Channel of widget</string>
-    <string translatable="false" name="widget_configure_group_label">Group of widget</string>
-    <string translatable="false" name="widget_configure_scene_label">Scene of widget</string>
-    <string name="widget_configure_action_label">Action</string>
-    <string name="widget_configure_name_label">Display name</string>
-    <string name="widget_configure_error">Could not configure channel…</string>
-    <string name="widget_configure_no_selection">No channel selected</string>
-    <string name="widget_configure_no_channel">No channels available</string>
-    <string translatable="false" name="widget_configure_no_group">No groups available</string>
-    <string translatable="false" name="widget_configure_no_scene">No scenes available</string>
-    <string name="double_button_widget_description">Double-button widget.</string>
-    <string name="single_button_widget_description">Single-button widget.</string>
-    <string name="widget_app_not_initialized">Please login first!</string>
-    <string name="widget_command_no_connection">No internet connection!</string>
-    <string translatable="false" name="widget_command_error">Problem occurred! (code: %1$d)</string>
-    <string translatable="false" name="widget_command_connection_failure">Connection failure! (code: %1$d)</string>
-    <string translatable="false" name="widget_command_subject_offline">%1$s is offline!</string>
-    <string translatable="false" name="widget_command_subject_unavailable">%1$s doesn\'t exist!</string>
-    <string translatable="false" name="widget_command_no_access">Access missing! (code: %1$d)</string>
-    <string name="widget_command_started">Done</string>
-    <string name="widget_removed_label">Channel removed</string>
-    <string translatable="false" name="widget_channel">@string/zwave_supla_channel</string>
-    <string translatable="false" name="widget_group">group</string>
-    <string translatable="false" name="widget_scene">scene</string>
-    <string translatable="false" name="widget_action_toggle">Toggle</string>
+  <string name="widget_configure_title">Widget Configuration</string>
+  <string name="widget_configure_profile_label">Account</string>
+  <string name="widget_configure_type_label" translatable="false">Widget for:</string>
+  <string name="widget_configure_type_channel_label" translatable="false">Channel</string>
+  <string name="widget_configure_type_group_label" translatable="false">Group</string>
+  <string name="widget_configure_type_scene_label" translatable="false">Scene</string>
+  <string name="widget_configure_channel_label">Channel of widget</string>
+  <string name="widget_configure_group_label" translatable="false">Group of widget</string>
+  <string name="widget_configure_scene_label" translatable="false">Scene of widget</string>
+  <string name="widget_configure_action_label">Action</string>
+  <string name="widget_configure_name_label">Display name</string>
+  <string name="widget_configure_error">Could not configure channel…</string>
+  <string name="widget_configure_no_selection">No channel selected</string>
+  <string name="widget_configure_no_channel">No channels available</string>
+  <string name="widget_configure_no_group" translatable="false">No groups available</string>
+  <string name="widget_configure_no_scene" translatable="false">No scenes available</string>
+  <string name="double_button_widget_description">Double-button widget.</string>
+  <string name="single_button_widget_description">Single-button widget.</string>
+  <string name="widget_app_not_initialized">Please login first!</string>
+  <string name="widget_command_no_connection">No internet connection!</string>
+  <string name="widget_command_error" translatable="false">Problem occurred! (code: %1$d)</string>
+  <string name="widget_command_connection_failure" translatable="false">Connection failure! (code: %1$d)</string>
+  <string name="widget_command_subject_offline" translatable="false">%1$s is offline!</string>
+  <string name="widget_command_subject_unavailable" translatable="false">%1$s doesn\'t exist!</string>
+  <string name="widget_command_no_access" translatable="false">Access missing! (code: %1$d)</string>
+  <string name="widget_command_started">Done</string>
+  <string name="widget_removed_label">Channel removed</string>
+  <string name="widget_channel" translatable="false">@string/zwave_supla_channel</string>
+  <string name="widget_group" translatable="false">group</string>
+  <string name="widget_scene" translatable="false">scene</string>
+  <string name="widget_action_toggle" translatable="false">Toggle</string>
 
-    <string name="channel_caption_roofwindowopeningsensor">Roof window opening sensor</string>
-    <string name="channel_caption_roofwindow">Roof window</string>
-    <string name="channel_func_controllingtheroofwindow">Roof window operation</string>
-    <string name="channel_func_opensensor_roofwindow">Roof window opening sensor</string>
-    <string name="event_openedclosedtheroofwindow">opened / closed the roof window</string>
+  <string name="channel_caption_roofwindowopeningsensor">Roof window opening sensor</string>
+  <string name="channel_caption_roofwindow">Roof window</string>
+  <string name="channel_func_controllingtheroofwindow">Roof window operation</string>
+  <string name="channel_func_opensensor_roofwindow">Roof window opening sensor</string>
+  <string name="event_openedclosedtheroofwindow">opened / closed the roof window</string>
 
-    <string name="status_led">Status LED</string>
-    <string name="info_led_on">The LED is on if there is a connection to the server.</string>
-    <string name="info_led_off">The LED is off if there is a connection to the server.</string>
-    <string name="info_led_alwaysoff">The LED is always off, unless the device is in wifi configuration mode (AP Mode).</string>
-    <string name="input">Input</string>
-    <string name="monostable">Monostable</string>
-    <string name="bistable">Bistable</string>
-    <string name="wizard_iodev_connect_failed">The attempt to establish a WiFi connection with the i/o device has failed.</string>
-    <string name="diw_cfg_info_oprange">Change the operating range by moving the dark grey sliders around the wheel to adjust the minimum and maximum brightness levels.</string>
-    <string name="diw_cfg_info_in_options">Input options</string>
-    <string name="diw_cfg_info_mono_option">This option changes the behavior of the input to which the monostable button is connected. In case the option is disabled, the dimmer stops brightening the light when the full brightness level is reached and in case of dimming, at the lowest brightness level. Enabling this option will switch to the minimum level as soon as the maximum brightness is reached, and in the case of dimming to the maximum value, as soon as the minimum is reached. Brightening / dimming will continue as long as the button is pressed.</string>
-    <string name="diw_cfg_info_bi_option">The option changes the behavior of the dimmer when the lighting is turned on by using the bistable button. If the option is enabled, the dimmer will set the full brightness level right after turning on the lighting. If the option is disabled, the dimmer will set the brightness level saved before turning off the lighting.</string>
-    <string translatable="false" name="channel_caption_digiglass">Digiglass</string>
-    <string translatable="false" name="channel_func_digiglass">Digiglass</string>
-    <string name="dgf_too_long_operation_warning">The glass sections are exposed for more than 20 hours, which may adversely affect their life. It is recommended to cover all sections for a minimum of 4 hours in order to regenerate them.</string>
-    <string name="dgf_planned_regeneration_in_progress">Planned regeneration is in progress.</string>
-    <string name="dgf_regeneration_after20h">Regeneration initiated after 20 hours of operation is in progress.</string>
-    <string name="wizard_done_explentations">If your new I/O device fails to appear in the Supla app please run “Add I/O Device” wizard again and refer to the “Previous State” information on this page for troubleshooting. “SSID Not Found” is displayed when the chosen 2.4 GHz network is ether not in range or its name was incorrect.</string>
-    <string name="incorrect_email_or_password">Incorrect Email Address or Password</string>
-    <string name="channel_name">Channel name</string>
-    <string name="location_name">Location name</string>
-    <string translatable="false" name="str_default">Default</string>
-    <string name="overcurrent_warning">The power was turned off after the set threshold of the allowable current was exceeded.</string>
-    <string name="overcurrent_question">The power was turned off after exceeding the set threshold of the allowable current. Are you sure you want to power on?</string>
-    <string name="recalibration_question">Are you sure you want to start calibration?</string>
-    <string name="calibration_failed">Calibration failed.</string>
-    <string name="calibration_lost">Calibration lost.</string>
-    <string name="motor_problem">Motor problem / Unexpected stop.</string>
-    <string name="lastconnectionresetcause_unknown">0: unknown</string>
-    <string name="lastconnectionresetcause_activity_timeout">1: server timeout</string>
-    <string name="lastconnectionresetcause_wifi_connection_lost">2: WiFi connection lost</string>
-    <string name="lastconnectionresetcause_server_connection_lost">3: server connection lost</string>
-    <string name="basic_profile_warning">Setting not available</string>
-    <string name="basic_config_unavailable">Before turning advanced mode off you need to switch to email authentication and enable automatic server detection.</string>
-    <string name="add_device_warning">In Access ID authentication mode you won\'t be able to use automatic "Add device" wizard. However you will still be able to add it by manual "Add device" procedure.</string>
-    <string name="show_channel_info">Show ⓘ button</string>
-    <string name="add_device_needs_cloud_title">Device setup</string>
-    <string name="add_device_needs_cloud_message">This device does not have any channels visible in the application. To finish configuration go to cloud.supla.org</string>
-    <string name="add_device_needs_cloud_dismiss">I understand</string>
-    <string name="add_device_needs_cloud_go">Go to CLOUD</string>
-    <string name="associeted_with_at_error">The function of the channel associated with the action trigger cannot be changed.</string>
-    <string translatable="false" name="associeted_with_push_error">The function of the channel associated with the push notification cannot be changed.</string>
-    <string translatable="false" name="associeted_with_vbt_error">The channel function associated with reactions cannot be changed.</string>
-    <string name="location_ordering">Location order</string>
-    <string name="rs_display_mode">Roller shutter %</string>
-    <string name="rs_display_mode_opening">Opening</string>
-    <string name="rs_display_mode_closing">Closing</string>
-    <string name="status_accessid_inactive">Access Identifier inactive</string>
+  <string name="status_led">Status LED</string>
+  <string name="info_led_on">The LED is on if there is a connection to the server.</string>
+  <string name="info_led_off">The LED is off if there is a connection to the server.</string>
+  <string name="info_led_alwaysoff">The LED is always off, unless the device is in wifi configuration mode (AP Mode).</string>
+  <string name="input">Input</string>
+  <string name="monostable">Monostable</string>
+  <string name="bistable">Bistable</string>
+  <string name="wizard_iodev_connect_failed">The attempt to establish a WiFi connection with the i/o device has failed.</string>
+  <string name="diw_cfg_info_oprange">Change the operating range by moving the dark grey sliders around the wheel to adjust the minimum and maximum brightness levels.</string>
+  <string name="diw_cfg_info_in_options">Input options</string>
+  <string name="diw_cfg_info_mono_option">This option changes the behavior of the input to which the monostable button is connected. In case the option is disabled, the dimmer stops brightening the light when the full brightness level is reached and in case of dimming, at the lowest brightness level. Enabling this option will switch to the minimum level as soon as the maximum brightness is reached, and in the case of dimming to the maximum value, as soon as the minimum is reached. Brightening / dimming will continue as long as the button is pressed.</string>
+  <string name="diw_cfg_info_bi_option">The option changes the behavior of the dimmer when the lighting is turned on by using the bistable button. If the option is enabled, the dimmer will set the full brightness level right after turning on the lighting. If the option is disabled, the dimmer will set the brightness level saved before turning off the lighting.</string>
+  <string name="channel_caption_digiglass" translatable="false">Digiglass</string>
+  <string name="channel_func_digiglass" translatable="false">Digiglass</string>
+  <string name="dgf_too_long_operation_warning">The glass sections are exposed for more than 20 hours, which may adversely affect their life. It is recommended to cover all sections for a minimum of 4 hours in order to regenerate them.</string>
+  <string name="dgf_planned_regeneration_in_progress">Planned regeneration is in progress.</string>
+  <string name="dgf_regeneration_after20h">Regeneration initiated after 20 hours of operation is in progress.</string>
+  <string name="wizard_done_explentations">If your new I/O device fails to appear in the Supla app please run “Add I/O Device” wizard again and refer to the “Previous State” information on this page for troubleshooting. “SSID Not Found” is displayed when the chosen 2.4 GHz network is ether not in range or its name was incorrect.</string>
+  <string name="incorrect_email_or_password">Incorrect Email Address or Password</string>
+  <string name="channel_name">Channel name</string>
+  <string name="location_name">Location name</string>
+  <string name="str_default" translatable="false">Default</string>
+  <string name="overcurrent_warning">The power was turned off after the set threshold of the allowable current was exceeded.</string>
+  <string name="overcurrent_question">The power was turned off after exceeding the set threshold of the allowable current. Are you sure you want to power on?</string>
+  <string name="recalibration_question">Are you sure you want to start calibration?</string>
+  <string name="calibration_failed">Calibration failed.</string>
+  <string name="calibration_lost">Calibration lost.</string>
+  <string name="motor_problem">Motor problem / Unexpected stop.</string>
+  <string name="lastconnectionresetcause_unknown">0: unknown</string>
+  <string name="lastconnectionresetcause_activity_timeout">1: server timeout</string>
+  <string name="lastconnectionresetcause_wifi_connection_lost">2: WiFi connection lost</string>
+  <string name="lastconnectionresetcause_server_connection_lost">3: server connection lost</string>
+  <string name="basic_profile_warning">Setting not available</string>
+  <string name="basic_config_unavailable">Before turning advanced mode off you need to switch to email authentication and enable automatic server detection.</string>
+  <string name="add_device_warning">In Access ID authentication mode you won\'t be able to use automatic "Add device" wizard. However you will still be able to add it by manual "Add device" procedure.</string>
+  <string name="show_channel_info">Show ⓘ button</string>
+  <string name="add_device_needs_cloud_title">Device setup</string>
+  <string name="add_device_needs_cloud_message">This device does not have any channels visible in the application. To finish configuration go to cloud.supla.org</string>
+  <string name="add_device_needs_cloud_dismiss">I understand</string>
+  <string name="add_device_needs_cloud_go">Go to CLOUD</string>
+  <string name="associeted_with_at_error">The function of the channel associated with the action trigger cannot be changed.</string>
+  <string name="associeted_with_push_error" translatable="false">The function of the channel associated with the push notification cannot be changed.</string>
+  <string name="associeted_with_vbt_error" translatable="false">The channel function associated with reactions cannot be changed.</string>
+  <string name="location_ordering">Location order</string>
+  <string name="rs_display_mode">Roller shutter %</string>
+  <string name="rs_display_mode_opening">Opening</string>
+  <string name="rs_display_mode_closing">Closing</string>
+  <string name="status_accessid_inactive">Access Identifier inactive</string>
 
-    <string translatable="false" name="navbar_channels">Channels</string>
-    <string translatable="false" name="navbar_groups">Groups</string>
-    <string translatable="false" name="navbar_scenes">Scenes</string>
-    <string translatable="false" name="btn_execute">Execute</string>
-    <string translatable="false" name="btn_abort">Abort</string>
-    <string translatable="false" name="btn_abort_and_execute">Abort and execute</string>
-    <string translatable="false" name="scene_name">Scene name</string>
+  <string name="navbar_channels" translatable="false">Channels</string>
+  <string name="navbar_groups" translatable="false">Groups</string>
+  <string name="navbar_scenes" translatable="false">Scenes</string>
+  <string name="btn_execute" translatable="false">Execute</string>
+  <string name="btn_abort" translatable="false">Abort</string>
+  <string name="btn_abort_and_execute" translatable="false">Abort and execute</string>
+  <string name="scene_name" translatable="false">Scene name</string>
 
-    <string translatable="false" name="remove_account_title">Delete account?</string>
-    <string translatable="false" name="remove_account_locally">Forget on this device</string>
-    <string translatable="false" name="remove_account_remotely">Forget and remove on cloud</string>
-    <string translatable="false" name="cancel">Cancel</string>
-    <string translatable="false" name="form_profile_removal_failure">Removal of your account failed, please try again</string>
-    <string translatable="false" name="general_failure">Action was not performed successfully</string>
-    <string translatable="false" name="push_notification_limit_exceeded">The push notification limit of %1$s per hour has been exceeded.</string>
+  <string name="remove_account_title" translatable="false">Delete account?</string>
+  <string name="remove_account_locally" translatable="false">Forget on this device</string>
+  <string name="remove_account_remotely" translatable="false">Forget and remove on cloud</string>
+  <string name="cancel" translatable="false">Cancel</string>
+  <string name="form_profile_removal_failure" translatable="false">Removal of your account failed, please try again</string>
+  <string name="general_failure" translatable="false">Action was not performed successfully</string>
+  <string name="push_notification_limit_exceeded" translatable="false">The push notification limit of %1$s per hour has been exceeded.</string>
 
-    <string translatable="false" name="new_gesture_description">Swipe gesture to open details was removed, tap on particular channel to open it.</string>
-    <string translatable="false" name="channel_offline">Channel is offline</string>
-    <string translatable="false" name="notification_info_title">Get notified!</string>
-    <string translatable="false" name="notification_info_message">Turn on notifications if you want to be notified!\n\nYou can setup your notifications in Supla Cloud.</string>
-    <string translatable="false" name="skip">Skip</string>
+  <string name="new_gesture_description" translatable="false">Swipe gesture to open details was removed, tap on particular channel to open it.</string>
+  <string name="channel_offline" translatable="false">Channel is offline</string>
+  <string name="notification_info_title" translatable="false">Get notified!</string>
+  <string name="notification_info_message" translatable="false">Turn on notifications if you want to be notified!\n\nYou can setup your notifications in Supla Cloud.</string>
+  <string name="skip" translatable="false">Skip</string>
 
-    <string translatable="false" name="default_notification_channel_id">org.supla.android.main_channel</string>
-    <string translatable="false" name="settings_notifications">Notifications</string>
-    <string translatable="false" name="notifications_active">✓</string>
-    <string translatable="false" name="notifications_inactive">𐄂</string>
-    <string translatable="false" name="settings_localization">Localization</string>
-    <string translatable="false" name="settings_permissions">Permissions</string>
+  <string name="default_notification_channel_id" translatable="false">org.supla.android.main_channel</string>
+  <string name="settings_notifications" translatable="false">Notifications</string>
+  <string name="notifications_active" translatable="false">✓</string>
+  <string name="notifications_inactive" translatable="false">𐄂</string>
+  <string name="settings_localization" translatable="false">Localization</string>
+  <string name="settings_permissions" translatable="false">Permissions</string>
 
-    <string translatable="false" name="details_general">General</string>
-    <string translatable="false" name="details_schedule">Week</string>
-    <string translatable="false" name="details_timer">Timer</string>
-    <string translatable="false" name="details_metrics">Metrics</string>
-    <string translatable="false" name="details_settings">Settings</string>
-    <string translatable="false" name="details_history">History</string>
-    <string name="details_timer_wrong_time" translatable="false">Time should be bigger than 0</string>
-    <string name="details_timer_text" translatable="false">How long should the device stay:</string>
-    <string name="details_timer_turn_on_for" translatable="false">Switched on</string>
-    <string name="details_timer_turn_off_for" translatable="false">Switched off</string>
-    <string name="details_timer_info" translatable="false">Te device will be switched %1$s for %2$s, and then switch %3$s</string>
+  <string name="details_general" translatable="false">General</string>
+  <string name="details_schedule" translatable="false">Week</string>
+  <string name="details_timer" translatable="false">Timer</string>
+  <string name="details_metrics" translatable="false">Metrics</string>
+  <string name="details_settings" translatable="false">Settings</string>
+  <string name="details_history" translatable="false">History</string>
+  <string name="details_timer_wrong_time" translatable="false">Time should be bigger than 0</string>
+  <string name="details_timer_text" translatable="false">How long should the device stay:</string>
+  <string name="details_timer_turn_on_for" translatable="false">Switched on</string>
+  <string name="details_timer_turn_off_for" translatable="false">Switched off</string>
+  <string name="details_timer_info" translatable="false">Te device will be switched %1$s for %2$s, and then switch %3$s</string>
   <string name="details_timer_leave_it" translatable="false">Leave it %1$s</string>
-    <string name="details_timer_cancel_and" translatable="false">Cancel and switch %1$s</string>
-    <string name="details_timer_format" translatable="false">%1$02d:%2$02d:%3$02d</string>
-    <string name="details_timer_end_hour" translatable="false">until %1$s</string>
-    <string name="hour_string_format">hh:mm:ss a</string>
-    <string name="details_timer_state_label" translatable="false">Current state:</string>
-    <string name="details_timer_state_label_for_timer" translatable="false">State until %s:</string>
-    <string name="details_timer_device_on" translatable="false">on</string>
-    <string name="details_timer_device_off" translatable="false">off</string>
-    <string name="details_timer_edit_time" translatable="false">Edit time</string>
-    <string name="details_timer_edit_header" translatable="false">Edit turned %1$s time</string>
-    <string name="details_timer_start" translatable="false">Start</string>
-    <string name="details_timer_edit_cancel" translatable="false">Cancel editing</string>
-    <string name="save" translatable="false">Save</string>
-    <string name="details_timer_cancel_turn_off" translatable="false">off</string>
-    <string name="details_timer_cancel_turn_on" translatable="false">on</string>
-    <string name="offline" translatable="false">offline</string>
-    <string translatable="false" name="thermostat_detail_off">Off</string>
-    <string translatable="false" name="thermostat_detail_mode_manual">Manual</string>
-    <string translatable="false" name="thermostat_detail_mode_weekly_schedule">Program</string>
-    <string translatable="false" name="monday">Monday</string>
-    <string translatable="false" name="tuesday">Tuesday</string>
-    <string translatable="false" name="wednesday">Wednesday</string>
-    <string translatable="false" name="thursday">Thursday</string>
-    <string translatable="false" name="friday">Friday</string>
-    <string translatable="false" name="saturday">Saturday</string>
-    <string translatable="false" name="sunday">Sunday</string>
-    <string translatable="false" name="schedule_detail_quarters_dialog_header">Time %1$02d:00</string>
-    <string translatable="false" name="schedule_detail_program_dialog_header">Program %1$d Settings</string>
-    <string translatable="false" name="schedule_detail_program_dialog_program">Program</string>
-    <string translatable="false" name="hvac_mode_heating">Heating</string>
-    <string translatable="false" name="hvac_mode_cooling">Cooling</string>
-    <string translatable="false" name="hvac_mode_auto">Heating and cooling</string>
-    <string translatable="false" name="hvac_mode_no_caption">Unknown</string>
-    <string translatable="false" name="hvac_mode_temperature_heating">Heating temperature</string>
-    <string translatable="false" name="hvac_mode_temperature_cooling">Cooling temperature</string>
-    <string translatable="false" name="monday_short">MO</string>
-    <string translatable="false" name="tuesday_short">TU</string>
-    <string translatable="false" name="wednesday_short">WE</string>
-    <string translatable="false" name="thursday_short">TH</string>
-    <string translatable="false" name="friday_short">FR</string>
-    <string translatable="false" name="saturday_short">SA</string>
-    <string translatable="false" name="sunday_short">SU</string>
-    <string translatable="false" name="thermostat_thermometer_error">Temperature reading error</string>
-    <string translatable="false" name="thermostat_clock_error">Clock error</string>
-    <string translatable="false" name="channel_not_supported">Not supported function</string>
-    <string translatable="false" name="thermostat_detail_program_current">Currently:</string>
-    <string translatable="false" name="thermostat_detail_program_next">Next:</string>
-    <string translatable="false" name="time_just_minutes">%1$d min.</string>
-    <string translatable="false" name="time_hours_and_minutes">%1$d hours %2$d min.</string>
-    <string translatable="false" name="thermostat_detail_program_time">for %1$s</string>
+  <string name="details_timer_cancel_and" translatable="false">Cancel and switch %1$s</string>
+  <string name="details_timer_format" translatable="false">%1$02d:%2$02d:%3$02d</string>
+  <string name="details_timer_end_hour" translatable="false">until %1$s</string>
+  <string name="hour_string_format">hh:mm:ss a</string>
+  <string name="details_timer_state_label" translatable="false">Current state:</string>
+  <string name="details_timer_state_label_for_timer" translatable="false">State until %s:</string>
+  <string name="details_timer_device_on" translatable="false">on</string>
+  <string name="details_timer_device_off" translatable="false">off</string>
+  <string name="details_timer_edit_time" translatable="false">Edit time</string>
+  <string name="details_timer_edit_header" translatable="false">Edit turned %1$s time</string>
+  <string name="details_timer_start" translatable="false">Start</string>
+  <string name="details_timer_edit_cancel" translatable="false">Cancel editing</string>
+  <string name="save" translatable="false">Save</string>
+  <string name="details_timer_cancel_turn_off" translatable="false">off</string>
+  <string name="details_timer_cancel_turn_on" translatable="false">on</string>
+  <string name="offline" translatable="false">offline</string>
+  <string name="thermostat_detail_off" translatable="false">Off</string>
+  <string name="thermostat_detail_mode_manual" translatable="false">Manual</string>
+  <string name="thermostat_detail_mode_weekly_schedule" translatable="false">Program</string>
+  <string name="monday" translatable="false">Monday</string>
+  <string name="tuesday" translatable="false">Tuesday</string>
+  <string name="wednesday" translatable="false">Wednesday</string>
+  <string name="thursday" translatable="false">Thursday</string>
+  <string name="friday" translatable="false">Friday</string>
+  <string name="saturday" translatable="false">Saturday</string>
+  <string name="sunday" translatable="false">Sunday</string>
+  <string name="schedule_detail_quarters_dialog_header" translatable="false">Time %1$02d:00</string>
+  <string name="schedule_detail_program_dialog_header" translatable="false">Program %1$d Settings</string>
+  <string name="schedule_detail_program_dialog_program" translatable="false">Program</string>
+  <string name="hvac_mode_heating" translatable="false">Heating</string>
+  <string name="hvac_mode_cooling" translatable="false">Cooling</string>
+  <string name="hvac_mode_auto" translatable="false">Heating and cooling</string>
+  <string name="hvac_mode_no_caption" translatable="false">Unknown</string>
+  <string name="hvac_mode_temperature_heating" translatable="false">Heating temperature</string>
+  <string name="hvac_mode_temperature_cooling" translatable="false">Cooling temperature</string>
+  <string name="monday_short" translatable="false">MO</string>
+  <string name="tuesday_short" translatable="false">TU</string>
+  <string name="wednesday_short" translatable="false">WE</string>
+  <string name="thursday_short" translatable="false">TH</string>
+  <string name="friday_short" translatable="false">FR</string>
+  <string name="saturday_short" translatable="false">SA</string>
+  <string name="sunday_short" translatable="false">SU</string>
+  <string name="thermostat_thermometer_error" translatable="false">Temperature reading error</string>
+  <string name="thermostat_clock_error" translatable="false">Clock error</string>
+  <string name="channel_not_supported" translatable="false">Not supported function</string>
+  <string name="thermostat_detail_program_current" translatable="false">Currently:</string>
+  <string name="thermostat_detail_program_next" translatable="false">Next:</string>
+  <string name="time_just_minutes" translatable="false">%1$d min.</string>
+  <string name="time_hours_and_minutes" translatable="false">%1$d hours %2$d min.</string>
+  <string name="thermostat_detail_program_time" translatable="false">for %1$s</string>
 
-    <string translatable="false" name="history_range_label">Range</string>
-    <string translatable="false" name="history_aggregation_label">Aggregation</string>
-    <string name="history_range_last_day">Last 24 hours</string>
-    <string name="history_range_last_week">Last 7 days</string>
-    <string name="history_range_last_30_days">Last 30 days</string>
-    <string name="history_range_last_90_days">Last 90 days</string>
-    <string translatable="false" name="history_range_current_day">Current day</string>
-    <string translatable="false" name="history_range_current_week">Current week</string>
-    <string translatable="false" name="history_range_current_month">Current month</string>
-    <string translatable="false" name="history_range_current_quarter">Current quarter</string>
-    <string translatable="false" name="history_range_current_year">Current year</string>
-    <string translatable="false" name="history_range_custom">Custom range</string>
-    <string translatable="false" name="history_refreshing">Refreshing…</string>
-    <string translatable="false" name="history_refreshing_failed">Refresh failed</string>
-    <string translatable="false" name="history_no_data_selected">No data set selected.</string>
-    <string translatable="false" name="history_no_data_available">There are no measurements available yet</string>
-    <string translatable="false" name="channel_caption_hotelcard">Hotel card sensor</string>
-    <string translatable="false" name="thermostat_detail_off_by_window">Turned off due to open window</string>
-    <string translatable="false" name="thermostat_detail_off_by_card">Turned off due to the lack of hotel card</string>
-    <string translatable="false" name="thermostat_detail_off_by_sensor">Turned off by sensor</string>
-    <string translatable="false" name="channel_caption_alarm_armament">Alarm armament sensor</string>
-    <string translatable="false" name="calendar_picker_start_hour">From hour</string>
-    <string translatable="false" name="calendar_picker_end_hour">To hour</string>
-    <string translatable="false" name="history_wrong_range">Selected range is wrong.</string>
-    <string translatable="false" name="details_timer_select_mode">Select mode</string>
-    <string translatable="false" name="details_timer_manual_mode">Manual mode</string>
-    <string translatable="false" name="details_timer_info_thermostat_off">Thermostat will stay turned off for\n%1$s</string>
-    <string translatable="false" name="details_timer_info_thermostat_heating">Thermostat will stay in heating mode for\n%1$s</string>
-    <string translatable="false" name="details_timer_info_thermostat_cooling">Thermostat will stay in cooling mode for\n%1$s</string>
-    <string translatable="false" name="details_timer_select_time">Specify time</string>
-    <string translatable="false" name="details_timer_counter">Counter</string>
-    <string translatable="false" name="details_timer_calendar">Calendar</string>
-    <string translatable="false" name="details_timer_min_temp">Temp. min.</string>
-    <string translatable="false" name="details_timer_max_temp">Temp. max.</string>
-    <string translatable="false" name="details_timer_state_label_for_timer_days">State until %1$s:</string>
-    <string translatable="false" name="details_timer_cancel_thermostat">Cancel and turn on:</string>
-    <string translatable="false" name="widget_processing_notification_text">Processing…</string>
-    <string translatable="false" name="widget_processing_notification_title">Background work</string>
-    <string translatable="false" name="thermostat_detail_program_info">Tap to select. Press long to modify.</string>
-    <string translatable="false" name="thermostat_detail_box_info">Tap to set selected program. Press long to set quarters.</string>
-    <string translatable="false" name="thermostat_detail_arrow_info">Black corner indicates current day and hour.</string>
+  <string name="history_range_label" translatable="false">Range</string>
+  <string name="history_aggregation_label" translatable="false">Aggregation</string>
+  <string name="history_range_last_day">Last 24 hours</string>
+  <string name="history_range_last_week">Last 7 days</string>
+  <string name="history_range_last_30_days">Last 30 days</string>
+  <string name="history_range_last_90_days">Last 90 days</string>
+  <string name="history_range_current_day" translatable="false">Current day</string>
+  <string name="history_range_current_week" translatable="false">Current week</string>
+  <string name="history_range_current_month" translatable="false">Current month</string>
+  <string name="history_range_current_quarter" translatable="false">Current quarter</string>
+  <string name="history_range_current_year" translatable="false">Current year</string>
+  <string name="history_range_custom" translatable="false">Custom range</string>
+  <string name="history_refreshing" translatable="false">Refreshing…</string>
+  <string name="history_refreshing_failed" translatable="false">Refresh failed</string>
+  <string name="history_no_data_selected" translatable="false">No data set selected.</string>
+  <string name="history_no_data_available" translatable="false">There are no measurements available yet</string>
+  <string name="channel_caption_hotelcard" translatable="false">Hotel card sensor</string>
+  <string name="thermostat_detail_off_by_window" translatable="false">Turned off due to open window</string>
+  <string name="thermostat_detail_off_by_card" translatable="false">Turned off due to the lack of hotel card</string>
+  <string name="thermostat_detail_off_by_sensor" translatable="false">Turned off by sensor</string>
+  <string name="channel_caption_alarm_armament" translatable="false">Alarm armament sensor</string>
+  <string name="calendar_picker_start_hour" translatable="false">From hour</string>
+  <string name="calendar_picker_end_hour" translatable="false">To hour</string>
+  <string name="history_wrong_range" translatable="false">Selected range is wrong.</string>
+  <string name="details_timer_select_mode" translatable="false">Select mode</string>
+  <string name="details_timer_manual_mode" translatable="false">Manual mode</string>
+  <string name="details_timer_info_thermostat_off" translatable="false">Thermostat will stay turned off for\n%1$s</string>
+  <string name="details_timer_info_thermostat_heating" translatable="false">Thermostat will stay in heating mode for\n%1$s</string>
+  <string name="details_timer_info_thermostat_cooling" translatable="false">Thermostat will stay in cooling mode for\n%1$s</string>
+  <string name="details_timer_select_time" translatable="false">Specify time</string>
+  <string name="details_timer_counter" translatable="false">Counter</string>
+  <string name="details_timer_calendar" translatable="false">Calendar</string>
+  <string name="details_timer_min_temp" translatable="false">Temp. min.</string>
+  <string name="details_timer_max_temp" translatable="false">Temp. max.</string>
+  <string name="details_timer_state_label_for_timer_days" translatable="false">State until %1$s:</string>
+  <string name="details_timer_cancel_thermostat" translatable="false">Cancel and turn on:</string>
+  <string name="widget_processing_notification_text" translatable="false">Processing…</string>
+  <string name="widget_processing_notification_title" translatable="false">Background work</string>
+  <string name="thermostat_detail_program_info" translatable="false">Tap to select. Press long to modify.</string>
+  <string name="thermostat_detail_box_info" translatable="false">Tap to set selected program. Press long to set quarters.</string>
+  <string name="thermostat_detail_arrow_info" translatable="false">Black corner indicates current day and hour.</string>
+  <string name="channel_caption_general_purpose_measurement" translatable="false">Measurement channel</string>
+  <string name="chart_marker_opening" translatable="false">Open</string>
+  <string name="chart_marker_closing" translatable="false">Close</string>
+  <string name="channel_caption_general_purpose_meter" translatable="false">Meter channel</string>
+  <string name="history_disabled" translatable="false">History is disabled for this channel</string>
 
-    <plurals name="details_timer_info_on" translatable="false">
-        <item quantity="other">on</item>
-    </plurals>
-    <plurals name="details_timer_info_off" translatable="false">
-        <item quantity="other">off</item>
-    </plurals>
-    <plurals name="day_pattern" translatable="false">
-        <item quantity="zero">%1$d days</item>
-        <item quantity="one">%1$d day</item>
-        <item quantity="other">%1$d days</item>
-    </plurals>
-    <plurals name="hour_pattern" translatable="false">
-        <item quantity="zero">%1$d hours</item>
-        <item quantity="one">%1$d hour</item>
-        <item quantity="other">%1$d hours</item>
-    </plurals>
-    <plurals name="minute_pattern" translatable="false">
-        <item quantity="other">%1$d min</item>
-    </plurals>
-    <plurals name="second_pattern" translatable="false">
-        <item quantity="other">%1$d sec</item>
-    </plurals>
+  <plurals name="details_timer_info_on" translatable="false">
+    <item quantity="other">on</item>
+  </plurals>
+  <plurals name="details_timer_info_off" translatable="false">
+    <item quantity="other">off</item>
+  </plurals>
+  <plurals name="day_pattern" translatable="false">
+    <item quantity="zero">%1$d days</item>
+    <item quantity="one">%1$d day</item>
+    <item quantity="other">%1$d days</item>
+  </plurals>
+  <plurals name="hour_pattern" translatable="false">
+    <item quantity="zero">%1$d hours</item>
+    <item quantity="one">%1$d hour</item>
+    <item quantity="other">%1$d hours</item>
+  </plurals>
+  <plurals name="minute_pattern" translatable="false">
+    <item quantity="other">%1$d min</item>
+  </plurals>
+  <plurals name="second_pattern" translatable="false">
+    <item quantity="other">%1$d sec</item>
+  </plurals>
 </resources>

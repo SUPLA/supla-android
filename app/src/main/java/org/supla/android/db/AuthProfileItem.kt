@@ -20,6 +20,7 @@ package org.supla.android.db
 
 import android.content.ContentValues
 import android.database.Cursor
+import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.profile.AuthInfo
 
 data class AuthProfileItem(
@@ -58,25 +59,25 @@ data class AuthProfileItem(
 
   fun getContentValuesV22(): ContentValues {
     val vals = ContentValues()
-    vals.put(SuplaContract.AuthProfileEntry.COLUMN_NAME_PROFILE_NAME, name)
-    vals.put(SuplaContract.AuthProfileEntry.COLUMN_NAME_EMAIL_ADDR, authInfo.emailAddress)
-    vals.put(SuplaContract.AuthProfileEntry.COLUMN_NAME_SERVER_ADDR_ACCESS_ID, authInfo.serverForAccessID)
-    vals.put(SuplaContract.AuthProfileEntry.COLUMN_NAME_SERVER_ADDR_EMAIL, authInfo.serverForEmail)
-    vals.put(SuplaContract.AuthProfileEntry.COLUMN_NAME_SERVER_AUTO_DETECT, if (authInfo.serverAutoDetect) 1 else 0)
-    vals.put(SuplaContract.AuthProfileEntry.COLUMN_NAME_EMAIL_AUTH, if (authInfo.emailAuth) 1 else 0)
-    vals.put(SuplaContract.AuthProfileEntry.COLUMN_NAME_ACCESS_ID, authInfo.accessID)
-    vals.put(SuplaContract.AuthProfileEntry.COLUMN_NAME_ACCESS_ID_PWD, authInfo.accessIDpwd)
-    vals.put(SuplaContract.AuthProfileEntry.COLUMN_NAME_PREFERRED_PROTOCOL_VERSION, authInfo.preferredProtocolVersion)
-    vals.put(SuplaContract.AuthProfileEntry.COLUMN_NAME_IS_ACTIVE, if (isActive) 1 else 0)
-    vals.put(SuplaContract.AuthProfileEntry.COLUMN_NAME_IS_ADVANCED_MODE, if (advancedAuthSetup) 1 else 0)
+    vals.put(ProfileEntity.COLUMN_NAME, name)
+    vals.put(ProfileEntity.COLUMN_EMAIL, authInfo.emailAddress)
+    vals.put(ProfileEntity.COLUMN_SERVER_FOR_ACCESS_ID, authInfo.serverForAccessID)
+    vals.put(ProfileEntity.COLUMN_SERVER_FOR_EMAIL, authInfo.serverForEmail)
+    vals.put(ProfileEntity.COLUMN_SERVER_AUTO_DETECT, if (authInfo.serverAutoDetect) 1 else 0)
+    vals.put(ProfileEntity.COLUMN_EMAIL_AUTH, if (authInfo.emailAuth) 1 else 0)
+    vals.put(ProfileEntity.COLUMN_ACCESS_ID, authInfo.accessID)
+    vals.put(ProfileEntity.COLUMN_ACCESS_ID_PASSWORD, authInfo.accessIDpwd)
+    vals.put(ProfileEntity.COLUMN_PREFERRED_PROTOCOL_VERSION, authInfo.preferredProtocolVersion)
+    vals.put(ProfileEntity.COLUMN_ACTIVE, if (isActive) 1 else 0)
+    vals.put(ProfileEntity.COLUMN_ADVANCED_MODE, if (advancedAuthSetup) 1 else 0)
 
     return vals
   }
 
   override fun getContentValues(): ContentValues {
     val vals = getContentValuesV22()
-    vals.put(SuplaContract.AuthProfileEntry.COLUMN_NAME_GUID, authInfo.guid)
-    vals.put(SuplaContract.AuthProfileEntry.COLUMN_NAME_AUTHKEY, authInfo.authKey)
+    vals.put(ProfileEntity.COLUMN_GUID, authInfo.guid)
+    vals.put(ProfileEntity.COLUMN_AUTH_KEY, authInfo.authKey)
 
     return vals
   }

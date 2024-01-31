@@ -1,5 +1,23 @@
 package org.supla.android.data.source;
 
+/*
+Copyright (C) AC SOFTWARE SP. Z O.O.
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+*/
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
@@ -10,8 +28,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import android.database.Cursor;
@@ -23,17 +41,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.supla.android.data.source.local.UserIconDao;
+import org.supla.android.data.source.local.entity.UserIconEntity;
 import org.supla.android.db.ProfileIdProvider;
-import org.supla.android.db.SuplaContract;
-import org.supla.android.db.SuplaContract.UserIconsEntry;
-import org.supla.android.images.ImageCacheProvider;
+import org.supla.android.images.ImageCacheProxy;
 import org.supla.android.images.ImageId;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DefaultUserIconRepositoryTest {
 
   @Mock private UserIconDao userIconDao;
-  @Mock private ImageCacheProvider imageCacheProvider;
+  @Mock private ImageCacheProxy imageCacheProxy;
   @Mock private ProfileIdProvider profileIdProvider;
 
   @InjectMocks private DefaultUserIconRepository userIconRepository;
@@ -52,24 +69,20 @@ public class DefaultUserIconRepositoryTest {
 
     // then
     assertFalse(result);
-    verifyZeroInteractions(userIconDao, imageCacheProvider);
+    verifyNoInteractions(userIconDao, imageCacheProxy);
   }
 
   @Test
   public void shouldNotAddUserIconsWhenAllImageAreNull() {
     // given
     int id = 5;
-    byte[] img1 = null;
-    byte[] img2 = null;
-    byte[] img3 = null;
-    byte[] img4 = null;
 
     // when
-    boolean result = userIconRepository.addUserIcons(id, img1, img2, img3, img4);
+    boolean result = userIconRepository.addUserIcons(id, null, null, null, null);
 
     // then
     assertFalse(result);
-    verifyZeroInteractions(userIconDao, imageCacheProvider);
+    verifyNoInteractions(userIconDao, imageCacheProxy);
   }
 
   @Test
@@ -92,22 +105,22 @@ public class DefaultUserIconRepositoryTest {
     verify(userIconDao).insert(eq(id), insertedImagesCaptor.capture());
     ArgumentCaptor<UserIconDao.Image> cachedImagesCaptor =
         ArgumentCaptor.forClass(UserIconDao.Image.class);
-    verify(imageCacheProvider, times(4)).addImage(eq(id), cachedImagesCaptor.capture());
-    verifyNoMoreInteractions(userIconDao, imageCacheProvider);
+    verify(imageCacheProxy, times(4)).addImage(eq(id), cachedImagesCaptor.capture());
+    verifyNoMoreInteractions(userIconDao, imageCacheProxy);
 
     UserIconDao.Image[] insertedImages = insertedImagesCaptor.getValue();
     assertEquals(4, insertedImages.length);
-    assertImage(insertedImages[0], SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE1, img1, 1);
-    assertImage(insertedImages[1], SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE2, img2, 2);
-    assertImage(insertedImages[2], SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE3, img3, 3);
-    assertImage(insertedImages[3], SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE4, img4, 4);
+    assertImage(insertedImages[0], UserIconEntity.COLUMN_IMAGE_1, img1, 1);
+    assertImage(insertedImages[1], UserIconEntity.COLUMN_IMAGE_2, img2, 2);
+    assertImage(insertedImages[2], UserIconEntity.COLUMN_IMAGE_3, img3, 3);
+    assertImage(insertedImages[3], UserIconEntity.COLUMN_IMAGE_4, img4, 4);
 
     List<UserIconDao.Image> cachedImages = cachedImagesCaptor.getAllValues();
     assertEquals(4, cachedImages.size());
-    assertImage(cachedImages.get(0), SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE1, img1, 1);
-    assertImage(cachedImages.get(1), SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE2, img2, 2);
-    assertImage(cachedImages.get(2), SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE3, img3, 3);
-    assertImage(cachedImages.get(3), SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE4, img4, 4);
+    assertImage(cachedImages.get(0), UserIconEntity.COLUMN_IMAGE_1, img1, 1);
+    assertImage(cachedImages.get(1), UserIconEntity.COLUMN_IMAGE_2, img2, 2);
+    assertImage(cachedImages.get(2), UserIconEntity.COLUMN_IMAGE_3, img3, 3);
+    assertImage(cachedImages.get(3), UserIconEntity.COLUMN_IMAGE_4, img4, 4);
   }
 
   @Test
@@ -117,7 +130,7 @@ public class DefaultUserIconRepositoryTest {
     // then
     verify(userIconDao).delete(5);
     verifyNoMoreInteractions(userIconDao);
-    verifyZeroInteractions(imageCacheProvider);
+    verifyNoInteractions(imageCacheProxy);
   }
 
   @Test
@@ -141,7 +154,7 @@ public class DefaultUserIconRepositoryTest {
     // then
     ArgumentCaptor<ImageId> imageIdArgumentCaptor = ArgumentCaptor.forClass(ImageId.class);
     ArgumentCaptor<byte[]> imageArgumentCaptor = ArgumentCaptor.forClass(byte[].class);
-    verify(imageCacheProvider)
+    verify(imageCacheProxy)
         .addImage(imageIdArgumentCaptor.capture(), imageArgumentCaptor.capture());
 
     ImageId imageId = imageIdArgumentCaptor.getValue();
@@ -172,7 +185,7 @@ public class DefaultUserIconRepositoryTest {
     userIconRepository.loadUserIconsIntoCache();
 
     // then
-    verify(imageCacheProvider, never()).addImage(any(), any());
+    verify(imageCacheProxy, never()).addImage(any(), any());
     verifyCursor(cursor, imageColumnIndex, remoteIdColumnIndex, profileIdColumnIndex);
   }
 
@@ -191,14 +204,11 @@ public class DefaultUserIconRepositoryTest {
       int profileIdColumnIndex) {
     Cursor cursor = mock(Cursor.class);
     when(cursor.moveToFirst()).thenReturn(true);
-    when(cursor.getColumnIndex(SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE1))
-        .thenReturn(imageColumnIndex);
+    when(cursor.getColumnIndex(UserIconEntity.COLUMN_IMAGE_1)).thenReturn(imageColumnIndex);
     when(cursor.getBlob(imageColumnIndex)).thenReturn(image);
-    when(cursor.getColumnIndex(SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID))
-        .thenReturn(remoteIdColumnIndex);
+    when(cursor.getColumnIndex(UserIconEntity.COLUMN_REMOTE_ID)).thenReturn(remoteIdColumnIndex);
     when(cursor.getInt(remoteIdColumnIndex)).thenReturn(id);
-    when(cursor.getColumnIndex(UserIconsEntry.COLUMN_NAME_PROFILEID))
-        .thenReturn(profileIdColumnIndex);
+    when(cursor.getColumnIndex(UserIconEntity.COLUMN_PROFILE_ID)).thenReturn(profileIdColumnIndex);
     when(cursor.getLong(profileIdColumnIndex)).thenReturn(profileId);
     return cursor;
   }
@@ -206,12 +216,12 @@ public class DefaultUserIconRepositoryTest {
   private void verifyCursor(
       Cursor cursor, int imageColumnIndex, int idColumnIndex, int profileIdColumnIndex) {
     verify(cursor).moveToFirst();
-    verify(cursor).getColumnIndex(SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE1);
-    verify(cursor).getColumnIndex(SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE2);
-    verify(cursor).getColumnIndex(SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE3);
-    verify(cursor).getColumnIndex(SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE4);
-    verify(cursor, times(4)).getColumnIndex(UserIconsEntry.COLUMN_NAME_PROFILEID);
-    verify(cursor, times(4)).getColumnIndex(SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID);
+    verify(cursor).getColumnIndex(UserIconEntity.COLUMN_IMAGE_1);
+    verify(cursor).getColumnIndex(UserIconEntity.COLUMN_IMAGE_2);
+    verify(cursor).getColumnIndex(UserIconEntity.COLUMN_IMAGE_3);
+    verify(cursor).getColumnIndex(UserIconEntity.COLUMN_IMAGE_4);
+    verify(cursor, times(4)).getColumnIndex(UserIconEntity.COLUMN_PROFILE_ID);
+    verify(cursor, times(4)).getColumnIndex(UserIconEntity.COLUMN_REMOTE_ID);
     verify(cursor).getBlob(imageColumnIndex);
     verify(cursor, times(3)).getBlob(0);
     verify(cursor, times(4)).getInt(idColumnIndex);

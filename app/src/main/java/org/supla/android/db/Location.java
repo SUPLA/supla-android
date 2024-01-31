@@ -21,6 +21,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.database.Cursor;
+import org.supla.android.data.source.local.entity.LocationEntity;
 import org.supla.android.lib.SuplaLocation;
 
 public class Location extends DbItem {
@@ -95,23 +96,16 @@ public class Location extends DbItem {
   @SuppressLint("Range")
   public void AssignCursorData(Cursor cursor) {
 
-    setId(cursor.getLong(cursor.getColumnIndex(SuplaContract.LocationEntry._ID)));
-    setLocationId(
-        cursor.getInt(cursor.getColumnIndex(SuplaContract.LocationEntry.COLUMN_NAME_LOCATIONID)));
-    setCaption(
-        cursor.getString(cursor.getColumnIndex(SuplaContract.LocationEntry.COLUMN_NAME_CAPTION)));
-    setVisible(
-        cursor.getInt(cursor.getColumnIndex(SuplaContract.LocationEntry.COLUMN_NAME_VISIBLE)));
-    setCollapsed(
-        cursor.getInt(cursor.getColumnIndex(SuplaContract.LocationEntry.COLUMN_NAME_COLLAPSED)));
+    setId(cursor.getLong(cursor.getColumnIndex(LocationEntity.COLUMN_ID)));
+    setLocationId(cursor.getInt(cursor.getColumnIndex(LocationEntity.COLUMN_REMOTE_ID)));
+    setCaption(cursor.getString(cursor.getColumnIndex(LocationEntity.COLUMN_CAPTION)));
+    setVisible(cursor.getInt(cursor.getColumnIndex(LocationEntity.COLUMN_VISIBLE)));
+    setCollapsed(cursor.getInt(cursor.getColumnIndex(LocationEntity.COLUMN_COLLAPSED)));
     setSorting(
         SortingType.fromString(
-            cursor.getString(
-                cursor.getColumnIndex(SuplaContract.LocationEntry.COLUMN_NAME_SORTING))));
-    setSortOrder(
-        cursor.getInt(cursor.getColumnIndex(SuplaContract.LocationEntry.COLUMN_NAME_SORT_ORDER)));
-    setProfileId(
-        cursor.getLong(cursor.getColumnIndex(SuplaContract.LocationEntry.COLUMN_NAME_PROFILEID)));
+            cursor.getString(cursor.getColumnIndex(LocationEntity.COLUMN_SORTING))));
+    setSortOrder(cursor.getInt(cursor.getColumnIndex(LocationEntity.COLUMN_SORT_ORDER)));
+    setProfileId(cursor.getLong(cursor.getColumnIndex(LocationEntity.COLUMN_PROFILE_ID)));
   }
 
   public void AssignSuplaLocation(SuplaLocation location) {
@@ -131,13 +125,13 @@ public class Location extends DbItem {
 
     ContentValues values = new ContentValues();
 
-    values.put(SuplaContract.LocationEntry.COLUMN_NAME_LOCATIONID, getLocationId());
-    values.put(SuplaContract.LocationEntry.COLUMN_NAME_CAPTION, getCaption());
-    values.put(SuplaContract.LocationEntry.COLUMN_NAME_VISIBLE, getVisible());
-    values.put(SuplaContract.LocationEntry.COLUMN_NAME_COLLAPSED, getCollapsed());
-    values.put(SuplaContract.LocationEntry.COLUMN_NAME_SORTING, getSorting().name());
-    values.put(SuplaContract.LocationEntry.COLUMN_NAME_SORT_ORDER, getSortOrder());
-    values.put(SuplaContract.LocationEntry.COLUMN_NAME_PROFILEID, getProfileId());
+    values.put(LocationEntity.COLUMN_REMOTE_ID, getLocationId());
+    values.put(LocationEntity.COLUMN_CAPTION, getCaption());
+    values.put(LocationEntity.COLUMN_VISIBLE, getVisible());
+    values.put(LocationEntity.COLUMN_COLLAPSED, getCollapsed());
+    values.put(LocationEntity.COLUMN_SORTING, getSorting().name());
+    values.put(LocationEntity.COLUMN_SORT_ORDER, getSortOrder());
+    values.put(LocationEntity.COLUMN_PROFILE_ID, getProfileId());
 
     return values;
   }

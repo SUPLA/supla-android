@@ -18,18 +18,32 @@ package org.supla.android.data.model.chart
  */
 
 import androidx.annotation.ColorRes
-import com.github.mikephil.charting.data.Entry
 import org.supla.android.core.ui.BitmapProvider
-import org.supla.android.core.ui.StringProvider
+import org.supla.android.data.model.chart.marker.ChartEntryDetails
+import org.supla.android.usecases.channel.AggregatedEntity
+import org.supla.android.usecases.channel.valueformatter.ChannelValueFormatter
 
 data class HistoryDataSet(
   val setId: Id,
   val iconProvider: BitmapProvider,
-  val valueProvider: StringProvider,
+  val value: String,
+  val valueFormatter: ChannelValueFormatter,
   @ColorRes val color: Int,
-  val entries: List<List<Entry>> = emptyList(),
+  val entities: List<List<AggregatedEntity>> = emptyList(),
   val active: Boolean = true
 ) {
+
+  fun toDetails(entity: AggregatedEntity) =
+    ChartEntryDetails(
+      entity.aggregation,
+      entity.type,
+      entity.date,
+      entity.min,
+      entity.max,
+      entity.open,
+      entity.close,
+      valueFormatter
+    )
 
   data class Id(
     val remoteId: Int,

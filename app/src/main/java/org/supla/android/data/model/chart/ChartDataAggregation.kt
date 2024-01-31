@@ -28,9 +28,6 @@ import org.supla.android.extensions.yearHalf
 import java.text.SimpleDateFormat
 import java.util.Date
 
-@SuppressLint("SimpleDateFormat")
-private val formatter = SimpleDateFormat("yyyyMMddHHmm")
-
 enum class ChartDataAggregation(
   @StringRes val stringRes: Int,
   val timeInSec: Long,
@@ -39,7 +36,7 @@ enum class ChartDataAggregation(
 ) {
   MINUTES(
     R.string.minutes,
-    60,
+    600,
     { date, formatter -> date.getAggregationString(formatter).toLong() },
     { it.toTimestamp() }
   ),

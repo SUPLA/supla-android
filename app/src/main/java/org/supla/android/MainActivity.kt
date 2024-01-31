@@ -29,6 +29,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.core.notifications.NotificationsHelper
 import org.supla.android.core.ui.BackHandleOwner
 import org.supla.android.db.MeasurementsDbHelper
+import org.supla.android.extensions.getChannelIconUseCase
 import org.supla.android.features.notificationinfo.NotificationInfoDialog
 import org.supla.android.images.ImageCache
 import org.supla.android.images.ImageId
@@ -282,14 +283,14 @@ class MainActivity : NavigationActivity(), ToolbarTitleController, LoadableConte
         SuplaConst.SUPLA_EVENT_VALVEOPENCLOSE -> R.string.event_openedclosedthevalve
         else -> return
       }
-      imgId = channel.imageIdx
+      imgId = getChannelIconUseCase(channel)
       msg = resources.getString(msgId)
       @SuppressLint("SimpleDateFormat")
       val sdf = SimpleDateFormat("HH:mm:ss")
       msg = sdf.format(Date()) + " " + event.SenderName + " " + msg
     }
-    if (channel.caption != "") {
-      msg = msg + " (" + channel.caption + ")"
+    if (channel.hasCustomCaption()) {
+      msg = msg + " (" + channel.getCaption(this) + ")"
     }
     showNotificationMessage(msg, imgId, imgResId)
   }

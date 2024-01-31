@@ -17,6 +17,8 @@ package org.supla.android.usecases.list.eventmappers
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.content.Context
+import android.graphics.Bitmap
 import io.mockk.every
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
@@ -26,26 +28,35 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.whenever
-import org.supla.android.R
 import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.local.entity.ChannelRelationType
 import org.supla.android.data.source.local.entity.ThermostatValue
-import org.supla.android.data.source.remote.hvac.SuplaHvacMode
-import org.supla.android.data.source.remote.thermostat.SuplaThermostatFlags
+import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
+import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.db.Channel
-import org.supla.android.db.ChannelExtendedValue
-import org.supla.android.db.ChannelValue
 import org.supla.android.extensions.date
+import org.supla.android.extensions.toTimestamp
 import org.supla.android.lib.SuplaChannelExtendedValue
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL
 import org.supla.android.lib.SuplaTimerState
+import org.supla.android.ui.lists.data.IssueIconType
 import org.supla.android.ui.lists.data.SlideableListItemData
-import org.supla.android.usecases.channel.ChannelChild
 import org.supla.android.usecases.channel.ChannelWithChildren
+import org.supla.android.usecases.channel.GetChannelCaptionUseCase
+import org.supla.android.usecases.channel.GetChannelValueStringUseCase
+import org.supla.android.usecases.icon.GetChannelIconUseCase
 
 @RunWith(MockitoJUnitRunner::class)
 class ChannelWithChildrenToThermostatUpdateEventMapperTest {
+
+  @Mock
+  private lateinit var getChannelCaptionUseCase: GetChannelCaptionUseCase
+
+  @Mock
+  private lateinit var getChannelIconUseCase: GetChannelIconUseCase
+
+  @Mock
+  private lateinit var getChannelValueStringUseCase: GetChannelValueStringUseCase
 
   @Mock
   lateinit var valuesFormatter: ValuesFormatter
@@ -56,8 +67,11 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
   @Test
   fun `should handle channel with children`() {
     // given
-    val channel = mockk<Channel>()
-    every { channel.func } returns SUPLA_CHANNELFNC_HVAC_THERMOSTAT
+    val channel = mockk<ChannelDataEntity> {
+      every { channelEntity } returns mockk {
+        every { function } returns SUPLA_CHANNELFNC_HVAC_THERMOSTAT
+      }
+    }
 
     val channelWithChildren = ChannelWithChildren(channel, emptyList())
 
@@ -81,203 +95,103 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
   }
 
   @Test
-  fun `should map channel with thermometer to thermostat slideable item (cool mode)`() {
+  fun `should map channel with thermometer to thermostat slideable item`() {
     // given
-    val setpointTemperatureCool = 23f
-    val thermostatValue = mockThermostatValue(setpointTemperatureCool = setpointTemperatureCool)
+    val caption = "some title"
+    val icon: Bitmap = mockk()
+    val value = "some value"
+    val subValue = "some sub value"
+    val indicatorIcon = 123
+    val issueIconType = IssueIconType.WARNING
+    val thermostatValue = mockk<ThermostatValue> {
+      every { getSetpointText(valuesFormatter) } returns subValue
+      every { getIndicatorIcon() } returns indicatorIcon
+      every { getIssueIconType() } returns issueIconType
+    }
+    val thermometerChannel = mockk<ChannelDataEntity>()
+    val thermometerChild = mockk<ChannelChildEntity> {
+      every { relationType } returns ChannelRelationType.MAIN_THERMOMETER
+      every { channelDataEntity } returns thermometerChannel
+    }
+    val channel = mockk<ChannelDataEntity> {
+      every { channelEntity } returns mockk {
+        every { function } returns SUPLA_CHANNELFNC_HVAC_THERMOSTAT
+      }
+      every { channelValueEntity } returns mockk {
+        every { online } returns true
+        every { asThermostatValue() } returns thermostatValue
+      }
+      every { channelExtendedValueEntity } returns mockk {
+        every { getSuplaValue() } returns null
+      }
+    }
+    val channelWithChildren = ChannelWithChildren(channel, listOf(thermometerChild))
+    val context: Context = mockk()
 
-    val channelValue = mockk<ChannelValue>().also { every { it.asThermostatValue() } returns thermostatValue }
-
-    val channel = mockk<Channel>()
-    every { channel.func } returns SUPLA_CHANNELFNC_HVAC_THERMOSTAT
-    every { channel.value } returns channelValue
-    every { channel.onLine } returns true
-    every { channel.extendedValue } returns null
-
-    val temperatureString = "21.0"
-    val thermometerChannel = mockk<Channel>()
-    every { thermometerChannel.humanReadableValue } returns temperatureString
-    val channelChild = ChannelChild(ChannelRelationType.MAIN_THERMOMETER, thermometerChannel)
-
-    val channelWithChildren = ChannelWithChildren(channel, listOf(channelChild))
-
-    val setpointTemperatureCoolString = "23.0"
-    whenever(valuesFormatter.getTemperatureString(setpointTemperatureCool, true)).thenReturn(setpointTemperatureCoolString)
+    whenever(getChannelCaptionUseCase.invoke(channel)).thenReturn { caption }
+    whenever(getChannelIconUseCase.getIconProvider(channel)).thenReturn { icon }
+    whenever(getChannelValueStringUseCase(thermometerChannel)).thenReturn(value)
 
     // when
     val result = mapper.map(channelWithChildren) as SlideableListItemData.Thermostat
 
     // then
     assertThat(result.online).isTrue
-    assertThat(result.value).isEqualTo(temperatureString)
-    assertThat(result.subValue).isEqualTo(setpointTemperatureCoolString)
-    assertThat(result.indicatorIcon).isEqualTo(R.drawable.ic_standby)
-  }
-
-  @Test
-  fun `should map channel with thermometer to thermostat slideable item (heat mode)`() {
-    // given
-    val timerEndDate = date(2023, 10, 11, 12, 33, 15)
-    val setpointTemperatureHeat = 23f
-    val thermostatValue = mockThermostatValue(setpointTemperatureHeat = setpointTemperatureHeat, mode = SuplaHvacMode.HEAT)
-
-    val channelValue = mockk<ChannelValue>().also { every { it.asThermostatValue() } returns thermostatValue }
-
-    val suplaExtendedValue = SuplaChannelExtendedValue()
-    suplaExtendedValue.TimerStateValue = SuplaTimerState(timerEndDate.time.div(1000), null, 1, "")
-    val extendedValue: ChannelExtendedValue = mockk()
-    every { extendedValue.extendedValue } returns suplaExtendedValue
-
-    val channel = mockk<Channel>()
-    every { channel.func } returns SUPLA_CHANNELFNC_HVAC_THERMOSTAT
-    every { channel.value } returns channelValue
-    every { channel.onLine } returns true
-    every { channel.extendedValue } returns extendedValue
-
-    val temperatureString = "21.0"
-    val thermometerChannel = mockk<Channel>()
-    every { thermometerChannel.humanReadableValue } returns temperatureString
-    val channelChild = ChannelChild(ChannelRelationType.MAIN_THERMOMETER, thermometerChannel)
-
-    val channelWithChildren = ChannelWithChildren(channel, listOf(channelChild))
-
-    val setpointTemperatureHeatString = "23.0"
-    whenever(valuesFormatter.getTemperatureString(setpointTemperatureHeat, true)).thenReturn(setpointTemperatureHeatString)
-
-    // when
-    val result = mapper.map(channelWithChildren) as SlideableListItemData.Thermostat
-
-    // then
-    assertThat(result.online).isTrue
-    assertThat(result.value).isEqualTo(temperatureString)
-    assertThat(result.subValue).isEqualTo(setpointTemperatureHeatString)
-    assertThat(result.indicatorIcon).isEqualTo(R.drawable.ic_standby)
-    assertThat(result.estimatedTimerEndDate).isEqualTo(timerEndDate)
-  }
-
-  @Test
-  fun `should map channel with thermometer to thermostat slideable item (off mode)`() {
-    // given
-    val thermostatValue = mockThermostatValue(mode = SuplaHvacMode.OFF)
-
-    val channelValue = mockk<ChannelValue>().also { every { it.asThermostatValue() } returns thermostatValue }
-
-    val channel = mockk<Channel>()
-    every { channel.func } returns SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL
-    every { channel.value } returns channelValue
-    every { channel.onLine } returns true
-    every { channel.extendedValue } returns null
-
-    val temperatureString = "21.0"
-    val thermometerChannel = mockk<Channel>()
-    every { thermometerChannel.humanReadableValue } returns temperatureString
-    val channelChild = ChannelChild(ChannelRelationType.MAIN_THERMOMETER, thermometerChannel)
-
-    val channelWithChildren = ChannelWithChildren(channel, listOf(channelChild))
-
-    // when
-    val result = mapper.map(channelWithChildren) as SlideableListItemData.Thermostat
-
-    // then
-    assertThat(result.online).isTrue
-    assertThat(result.value).isEqualTo(temperatureString)
-    assertThat(result.subValue).isEqualTo("Off")
-    assertThat(result.indicatorIcon).isNull()
-  }
-
-  @Test
-  fun `should map channel with thermometer to thermostat slideable item (offline)`() {
-    // given
-    val thermostatValue = mockThermostatValue(mode = SuplaHvacMode.OFF)
-
-    val channelValue = mockk<ChannelValue>().also { every { it.asThermostatValue() } returns thermostatValue }
-
-    val channel = mockk<Channel>()
-    every { channel.func } returns SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL
-    every { channel.value } returns channelValue
-    every { channel.onLine } returns false
-    every { channel.extendedValue } returns null
-
-    val temperatureString = "21.0"
-    val thermometerChannel = mockk<Channel>()
-    every { thermometerChannel.humanReadableValue } returns temperatureString
-    val channelChild = ChannelChild(ChannelRelationType.MAIN_THERMOMETER, thermometerChannel)
-
-    val channelWithChildren = ChannelWithChildren(channel, listOf(channelChild))
-
-    // when
-    val result = mapper.map(channelWithChildren) as SlideableListItemData.Thermostat
-
-    // then
-    assertThat(result.online).isFalse
-    assertThat(result.value).isEqualTo(temperatureString)
-    assertThat(result.subValue).isEqualTo("")
-    assertThat(result.indicatorIcon).isNull()
-  }
-
-  @Test
-  fun `should map channel with thermometer to thermostat slideable item (auto mode)`() {
-    testMappingChannelWithThermometer_autoFunction(emptyList(), R.drawable.ic_standby)
-  }
-
-  @Test
-  fun `should map channel with thermometer to thermostat slideable item (heating)`() {
-    testMappingChannelWithThermometer_autoFunction(listOf(SuplaThermostatFlags.HEATING), R.drawable.ic_heating)
-  }
-
-  @Test
-  fun `should map channel with thermometer to thermostat slideable item (cooling)`() {
-    testMappingChannelWithThermometer_autoFunction(listOf(SuplaThermostatFlags.COOLING), R.drawable.ic_cooling)
-  }
-
-  private fun testMappingChannelWithThermometer_autoFunction(flags: List<SuplaThermostatFlags>, indicatorIcon: Int) {
-    // given
-    val setpointTemperatureHeat = 23f
-    val setpointTemperatureCool = 26f
-    val thermostatValue = mockThermostatValue(
-      setpointTemperatureHeat = setpointTemperatureHeat,
-      setpointTemperatureCool = setpointTemperatureCool,
-      mode = SuplaHvacMode.HEAT_COOL,
-      flags = flags
-    )
-
-    val channelValue = mockk<ChannelValue>().also { every { it.asThermostatValue() } returns thermostatValue }
-
-    val channel = mockk<Channel>()
-    every { channel.func } returns SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL
-    every { channel.value } returns channelValue
-    every { channel.onLine } returns true
-    every { channel.extendedValue } returns null
-
-    val temperatureString = "21.0"
-    val thermometerChannel = mockk<Channel>()
-    every { thermometerChannel.humanReadableValue } returns temperatureString
-    val channelChild = ChannelChild(ChannelRelationType.MAIN_THERMOMETER, thermometerChannel)
-
-    val channelWithChildren = ChannelWithChildren(channel, listOf(channelChild))
-
-    whenever(valuesFormatter.getTemperatureString(setpointTemperatureHeat, true)).thenReturn("23.0")
-    whenever(valuesFormatter.getTemperatureString(setpointTemperatureCool, true)).thenReturn("26.0")
-
-    // when
-    val result = mapper.map(channelWithChildren) as SlideableListItemData.Thermostat
-
-    // then
-    assertThat(result.online).isTrue
-    assertThat(result.value).isEqualTo(temperatureString)
-    assertThat(result.subValue).isEqualTo("23.0 - 26.0")
+    assertThat(result.titleProvider(context)).isEqualTo(caption)
+    assertThat(result.iconProvider!!(context)).isEqualTo(icon)
+    assertThat(result.value).isEqualTo(value)
+    assertThat(result.subValue).isEqualTo(subValue)
     assertThat(result.indicatorIcon).isEqualTo(indicatorIcon)
+    assertThat(result.issueIconType).isEqualTo(issueIconType)
+    assertThat(result.estimatedTimerEndDate).isEqualTo(null)
   }
 
-  private fun mockThermostatValue(
-    mode: SuplaHvacMode = SuplaHvacMode.COOL,
-    setpointTemperatureHeat: Float = 0f,
-    setpointTemperatureCool: Float = 0f,
-    flags: List<SuplaThermostatFlags> = emptyList()
-  ) = mockk<ThermostatValue>().also {
-    every { it.mode } returns mode
-    every { it.setpointTemperatureCool } returns setpointTemperatureCool
-    every { it.setpointTemperatureHeat } returns setpointTemperatureHeat
-    every { it.flags } returns flags
+  @Test
+  fun `should map channel with thermometer to thermostat slideable item without main thermometer`() {
+    // given
+    val caption = "some title"
+    val icon: Bitmap = mockk()
+    val value = ValuesFormatter.NO_VALUE_TEXT
+    val subValue = "some sub value"
+    val indicatorIcon = 123
+    val issueIconType = IssueIconType.WARNING
+    val estimatedEndDate = date(2023, 11, 21)
+    val thermostatValue = mockk<ThermostatValue> {
+      every { getSetpointText(valuesFormatter) } returns subValue
+      every { getIndicatorIcon() } returns indicatorIcon
+      every { getIssueIconType() } returns issueIconType
+    }
+    val channel = mockk<ChannelDataEntity> {
+      every { channelEntity } returns mockk {
+        every { function } returns SUPLA_CHANNELFNC_HVAC_THERMOSTAT
+      }
+      every { channelValueEntity } returns mockk {
+        every { online } returns true
+        every { asThermostatValue() } returns thermostatValue
+      }
+      every { channelExtendedValueEntity } returns mockk {
+        every { getSuplaValue() } returns SuplaChannelExtendedValue().also {
+          it.TimerStateValue = SuplaTimerState(estimatedEndDate.toTimestamp(), null, 11, null)
+        }
+      }
+    }
+    val channelWithChildren = ChannelWithChildren(channel, listOf())
+    val context: Context = mockk()
+
+    whenever(getChannelCaptionUseCase.invoke(channel)).thenReturn { caption }
+    whenever(getChannelIconUseCase.getIconProvider(channel)).thenReturn { icon }
+
+    // when
+    val result = mapper.map(channelWithChildren) as SlideableListItemData.Thermostat
+
+    // then
+    assertThat(result.online).isTrue
+    assertThat(result.titleProvider(context)).isEqualTo(caption)
+    assertThat(result.iconProvider!!(context)).isEqualTo(icon)
+    assertThat(result.value).isEqualTo(value)
+    assertThat(result.subValue).isEqualTo(subValue)
+    assertThat(result.indicatorIcon).isEqualTo(indicatorIcon)
+    assertThat(result.issueIconType).isEqualTo(issueIconType)
+    assertThat(result.estimatedTimerEndDate).isEqualTo(estimatedEndDate)
   }
 }

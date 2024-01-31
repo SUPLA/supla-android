@@ -42,7 +42,8 @@ class SetWeeklyScheduleConfigUseCase @Inject constructor(
         remoteId = remoteId,
         programConfigurations = programConfigurations,
         schedule = schedule,
-        func = null
+        func = null,
+        crc32 = 0
       )
 
       val result = client.setChannelConfig(config)

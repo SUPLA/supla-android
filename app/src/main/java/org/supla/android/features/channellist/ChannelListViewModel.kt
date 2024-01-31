@@ -17,25 +17,39 @@ package org.supla.android.features.channellist
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.os.Bundle
+import androidx.annotation.IdRes
+import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.Preferences
+import org.supla.android.R
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.source.ChannelRepository
-import org.supla.android.db.Channel
+import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.db.ChannelBase
 import org.supla.android.db.Location
+import org.supla.android.di.GSON_FOR_REPO
 import org.supla.android.events.UpdateEventsManager
-import org.supla.android.features.standarddetail.DetailPage
-import org.supla.android.features.standarddetail.ItemBundle
+import org.supla.android.features.details.detailbase.standarddetail.DetailPage
+import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
+import org.supla.android.features.details.gpmdetail.GpmDetailFragment
+import org.supla.android.features.details.switchdetail.SwitchDetailFragment
+import org.supla.android.features.details.thermometerdetail.ThermometerDetailFragment
+import org.supla.android.features.details.thermostatdetail.ThermostatDetailFragment
 import org.supla.android.lib.SuplaChannelValue
 import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.lib.SuplaConst
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.lists.BaseListViewModel
 import org.supla.android.ui.lists.ListItem
-import org.supla.android.usecases.channel.*
+import org.supla.android.usecases.channel.ActionException
+import org.supla.android.usecases.channel.ButtonType
+import org.supla.android.usecases.channel.ChannelActionUseCase
+import org.supla.android.usecases.channel.CreateProfileChannelsListUseCase
+import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
+import org.supla.android.usecases.details.GpmDetailType
 import org.supla.android.usecases.details.LegacyDetailType
 import org.supla.android.usecases.details.ProvideDetailTypeUseCase
 import org.supla.android.usecases.details.SwitchDetailType
@@ -44,6 +58,7 @@ import org.supla.android.usecases.details.ThermostatDetailType
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
 import javax.inject.Inject
+import javax.inject.Named
 
 @HiltViewModel
 class ChannelListViewModel @Inject constructor(
@@ -53,6 +68,7 @@ class ChannelListViewModel @Inject constructor(
   private val toggleLocationUseCase: ToggleLocationUseCase,
   private val provideDetailTypeUseCase: ProvideDetailTypeUseCase,
   private val findChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
+  @Named(GSON_FOR_REPO) private val gson: Gson,
   updateEventsManager: UpdateEventsManager,
   preferences: Preferences,
   schedulers: SuplaSchedulers
@@ -115,8 +131,14 @@ class ChannelListViewModel @Inject constructor(
       .disposeBySelf()
   }
 
-  fun onListItemClick(channel: Channel) {
-    openDetailsByChannelFunction(channel)
+  fun onListItemClick(remoteId: Int) {
+    findChannelByRemoteIdUseCase(remoteId)
+      .attach()
+      .subscribeBy(
+        onSuccess = { openDetailsByChannelFunction(it) },
+        onError = defaultErrorHandler("onListItemClick($remoteId)")
+      )
+      .disposeBySelf()
   }
 
   override fun onSuplaMessage(message: SuplaClientMsg) {
@@ -134,7 +156,7 @@ class ChannelListViewModel @Inject constructor(
             currentState().channels
               .filterIsInstance(ListItem.ChannelItem::class.java)
               .first { it.channelBase.remoteId == channel.remoteId }
-              .channelBase = channel
+              .channelBase = channel.getLegacyChannel()
           },
           onError = defaultErrorHandler("updateChannel($remoteId)")
         )
@@ -142,26 +164,28 @@ class ChannelListViewModel @Inject constructor(
     }
   }
 
-  private fun openDetailsByChannelFunction(channel: Channel) {
-    if (isAvailableInOffline(channel).not() && channel.onLine.not()) {
+  private fun openDetailsByChannelFunction(data: ChannelDataEntity) {
+    if (isAvailableInOffline(data).not() && data.channelValueEntity.online.not()) {
       return // do not open details for offline channels
     }
 
-    if (channel.func == SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT) {
+    if (data.function == SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT) {
       sendEvent(ChannelListViewEvent.OpenThermostatDetails)
       return
     }
 
-    when (val detailType = provideDetailTypeUseCase(channel)) {
-      is SwitchDetailType -> sendEvent(ChannelListViewEvent.OpenSwitchDetail(ItemBundle.from(channel), detailType.pages))
-      is ThermostatDetailType -> sendEvent(ChannelListViewEvent.OpenThermostatDetail(ItemBundle.from(channel), detailType.pages))
-      is ThermometerDetailType -> sendEvent(ChannelListViewEvent.OpenThermometerDetail(ItemBundle.from(channel), detailType.pages))
-      is LegacyDetailType -> sendEvent(ChannelListViewEvent.OpenLegacyDetails(channel.channelId, detailType))
+    val legacyChannel = data.getLegacyChannel()
+    when (val detailType = provideDetailTypeUseCase(legacyChannel)) {
+      is SwitchDetailType -> sendEvent(ChannelListViewEvent.OpenSwitchDetail(ItemBundle.from(legacyChannel), detailType.pages))
+      is ThermostatDetailType -> sendEvent(ChannelListViewEvent.OpenThermostatDetail(ItemBundle.from(legacyChannel), detailType.pages))
+      is ThermometerDetailType -> sendEvent(ChannelListViewEvent.OpenThermometerDetail(ItemBundle.from(legacyChannel), detailType.pages))
+      is GpmDetailType -> sendEvent(ChannelListViewEvent.OpenGpmDetail(ItemBundle.from(legacyChannel), detailType.pages))
+      is LegacyDetailType -> sendEvent(ChannelListViewEvent.OpenLegacyDetails(legacyChannel.channelId, detailType))
       else -> {} // no action
     }
   }
 
-  private fun isAvailableInOffline(channel: Channel) = when (channel.func) {
+  private fun isAvailableInOffline(data: ChannelDataEntity) = when (data.function) {
     SuplaConst.SUPLA_CHANNELFNC_THERMOMETER,
     SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE,
     SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER,
@@ -174,16 +198,21 @@ class ChannelListViewModel @Inject constructor(
 //    SuplaConst.SUPLA_CHANNELFNC_HVAC_FAN,
 //    SuplaConst.SUPLA_CHANNELFNC_HVAC_DRYER,
     SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER,
-    SuplaConst.SUPLA_CHANNELFNC_IC_HEAT_METER -> true
+    SuplaConst.SUPLA_CHANNELFNC_IC_HEAT_METER,
+    SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT,
+    SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER -> true
+
     SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH,
     SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH,
     SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER -> {
-      when (channel.value?.subValueType) {
+      when (data.channelValueEntity.subValueType) {
         SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS.toShort(),
         SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort() -> true
+
         else -> false
       }
     }
+
     else -> false
   }
 }
@@ -192,11 +221,25 @@ sealed class ChannelListViewEvent : ViewEvent {
   data class ShowValveDialog(val remoteId: Int) : ChannelListViewEvent()
   data class ShowAmperageExceededDialog(val remoteId: Int) : ChannelListViewEvent()
   data class OpenLegacyDetails(val remoteId: Int, val type: LegacyDetailType) : ChannelListViewEvent()
-  data class OpenSwitchDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) : ChannelListViewEvent()
-  data class OpenThermostatDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) : ChannelListViewEvent()
-  data class OpenThermometerDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) : ChannelListViewEvent()
+  data class OpenSwitchDetail(private val itemBundle: ItemBundle, private val pages: List<DetailPage>) :
+    OpenStandardDetail(R.id.switch_detail_fragment, SwitchDetailFragment.bundle(itemBundle, pages.toTypedArray()))
+
+  data class OpenThermostatDetail(private val itemBundle: ItemBundle, private val pages: List<DetailPage>) :
+    OpenStandardDetail(R.id.thermostat_detail_fragment, ThermostatDetailFragment.bundle(itemBundle, pages.toTypedArray()))
+
+  data class OpenThermometerDetail(private val itemBundle: ItemBundle, private val pages: List<DetailPage>) :
+    OpenStandardDetail(R.id.thermostat_detail_fragment, ThermometerDetailFragment.bundle(itemBundle, pages.toTypedArray()))
+
+  data class OpenGpmDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) :
+    OpenStandardDetail(R.id.gpm_detail_fragment, GpmDetailFragment.bundle(itemBundle, pages.toTypedArray()))
+
   object OpenThermostatDetails : ChannelListViewEvent()
   object ReassignAdapter : ChannelListViewEvent()
+
+  abstract class OpenStandardDetail(
+    @IdRes val fragmentId: Int,
+    val fragmentArguments: Bundle
+  ) : ChannelListViewEvent()
 }
 
 data class ChannelListViewState(

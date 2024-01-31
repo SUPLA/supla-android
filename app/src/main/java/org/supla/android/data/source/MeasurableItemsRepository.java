@@ -22,8 +22,6 @@ import android.database.Cursor;
 import java.util.Date;
 import org.supla.android.db.ElectricityMeasurementItem;
 import org.supla.android.db.ImpulseCounterMeasurementItem;
-import org.supla.android.db.TempHumidityMeasurementItem;
-import org.supla.android.db.TemperatureMeasurementItem;
 import org.supla.android.db.ThermostatMeasurementItem;
 
 public interface MeasurableItemsRepository {
@@ -53,26 +51,6 @@ public interface MeasurableItemsRepository {
   void addThermostatMeasurement(ThermostatMeasurementItem emi);
 
   Cursor getThermostatMeasurements(int channelId, Date dateFrom, Date dateTo);
-
-  int getTempHumidityMeasurementTimestamp(int channelId, boolean min);
-
-  int getTempHumidityMeasurementTotalCount(int channelId);
-
-  void deleteTempHumidityMeasurements(int channelId);
-
-  void addTempHumidityMeasurement(TempHumidityMeasurementItem emi);
-
-  Cursor getTempHumidityMeasurements(int channelId, Date dateFrom, Date dateTo);
-
-  int getTemperatureMeasurementTimestamp(int channelId, boolean min);
-
-  int getTemperatureMeasurementTotalCount(int channelId);
-
-  void deleteTemperatureMeasurements(int channelId);
-
-  void addTemperatureMeasurement(TemperatureMeasurementItem emi);
-
-  Cursor getTemperatureMeasurements(int channelId, Date dateFrom, Date dateTo);
 
   void addImpulseCounterMeasurement(ImpulseCounterMeasurementItem item);
 

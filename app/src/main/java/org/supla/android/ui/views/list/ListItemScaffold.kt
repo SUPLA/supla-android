@@ -32,9 +32,11 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -48,12 +50,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import org.supla.android.R
@@ -62,6 +68,8 @@ import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.core.ui.theme.grey
 import org.supla.android.core.ui.theme.listItemCaption
 import org.supla.android.extensions.differenceInSeconds
+import org.supla.android.extensions.preferences
+import org.supla.android.extensions.toDp
 import org.supla.android.extensions.valuesFormatter
 import org.supla.android.ui.lists.data.IssueIconType
 import org.supla.android.ui.views.Separator
@@ -78,11 +86,11 @@ fun ListItemScaffold(
   onIssueClick: () -> Unit,
   onTitleLongClick: () -> Unit,
   onItemClick: () -> Unit,
-  showInfoIcon: Boolean,
   itemIssueIconType: IssueIconType?,
   hasLeftButton: Boolean = false,
   hasRightButton: Boolean = false,
-  scale: Float = 1f,
+  scale: Float = LocalContext.current.preferences.scale,
+  showInfoIcon: Boolean = LocalContext.current.preferences.isShowChannelInfo,
   content: @Composable BoxScope.() -> Unit
 ) {
   var title by remember { mutableStateOf(itemTitle) }
@@ -90,15 +98,25 @@ fun ListItemScaffold(
   var estimatedEndDate by remember { mutableStateOf(itemEstimatedEndDate) }
   var issueIconType by remember { mutableStateOf(itemIssueIconType) }
 
-  if (title != itemTitle) { title = itemTitle }
-  if (online != itemOnline) { online = itemOnline }
-  if (estimatedEndDate != itemEstimatedEndDate) { estimatedEndDate = itemEstimatedEndDate }
-  if (issueIconType != itemIssueIconType) { issueIconType = itemIssueIconType }
+  if (title != itemTitle) {
+    title = itemTitle
+  }
+  if (online != itemOnline) {
+    online = itemOnline
+  }
+  if (estimatedEndDate != itemEstimatedEndDate) {
+    estimatedEndDate = itemEstimatedEndDate
+  }
+  if (issueIconType != itemIssueIconType) {
+    issueIconType = itemIssueIconType
+  }
+  var itemSize by remember { mutableStateOf(IntSize.Zero) }
 
   Box(
     modifier = Modifier
       .fillMaxWidth()
       .fillMaxHeight()
+      .onSizeChanged { itemSize = it }
   ) {
     if (online && showInfoIcon) {
       ListItemInfoIcon(onInfoClick)
@@ -110,8 +128,9 @@ fun ListItemScaffold(
     ListItemDotLeading(online, hasLeftButton, modifier = Modifier.align(Alignment.CenterStart))
     Box(
       modifier = Modifier
-        .fillMaxHeight()
-        .align(Alignment.Center),
+        .widthIn(0.dp, getItemBoxMaxWidth(itemSize = itemSize, online = online, showInfoIcon = showInfoIcon))
+        .heightIn(0.dp, getItemBoxMaxHeight(itemSize = itemSize, scale = scale))
+        .align(Alignment.TopCenter),
       content = content
     )
     ListItemDotTrading(online, hasRightButton, modifier = Modifier.align(Alignment.CenterEnd))
@@ -131,11 +150,37 @@ fun ListItemScaffold(
 }
 
 @Composable
+fun getItemBoxMaxWidth(itemSize: IntSize, online: Boolean, showInfoIcon: Boolean): Dp {
+  val spaceForDots = dimensionResource(id = R.dimen.channel_dot_size).plus(Distance.default).times(2)
+
+  return itemSize.width.toDp().let {
+    if (online && showInfoIcon) {
+      val spaceForIcons = dimensionResource(id = R.dimen.channel_state_image_size).plus(Distance.default).times(2)
+      it.minus(spaceForDots.plus(spaceForIcons))
+    } else {
+      it.minus(spaceForDots)
+    }
+  }
+}
+
+@Composable
+private fun getItemBoxMaxHeight(itemSize: IntSize, scale: Float): Dp {
+  val fontHeightSp = MaterialTheme.typography.listItemCaption().fontSize.times(max(scale, 1f))
+  val fontHeightDp = with(LocalDensity.current) {
+    fontHeightSp.toDp()
+  }
+
+  return itemSize.height.toDp()
+    .minus(Distance.small.times(scale).times(2))
+    .minus(fontHeightDp)
+}
+
+@Composable
 private fun ListItemDotLeading(online: Boolean, withButton: Boolean, modifier: Modifier = Modifier) =
   ListItemDot(
     online = online,
     withButton = withButton,
-    paddingValues = PaddingValues(start = dimensionResource(id = R.dimen.distance_default)),
+    paddingValues = PaddingValues(start = Distance.default),
     modifier = modifier
   )
 
@@ -144,7 +189,7 @@ private fun ListItemDotTrading(online: Boolean, withButton: Boolean, modifier: M
   ListItemDot(
     online = online,
     withButton = withButton,
-    paddingValues = PaddingValues(end = dimensionResource(id = R.dimen.distance_default)),
+    paddingValues = PaddingValues(end = Distance.default),
     modifier = modifier
   )
 
@@ -166,7 +211,7 @@ context (BoxScope)
 @Composable
 private fun ListItemInfoIcon(onClick: () -> Unit) {
   val startPadding = dimensionResource(id = R.dimen.channel_dot_size)
-    .plus(dimensionResource(id = R.dimen.distance_default).times(2))
+    .plus(Distance.default.times(2))
 
   Image(
     painter = painterResource(id = R.drawable.channelstateinfo),
@@ -201,8 +246,8 @@ private fun ListItemTitle(
   text: String,
   onLongClick: () -> Unit,
   onItemClick: () -> Unit,
-  scale: Float = 1f,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
+  scale: Float = 1f
 ) {
   val textSize = MaterialTheme.typography.listItemCaption().fontSize.times(max(scale, 1f))
   Text(
@@ -210,8 +255,8 @@ private fun ListItemTitle(
     style = MaterialTheme.typography.listItemCaption(),
     modifier = modifier
       .padding(
-        horizontal = dimensionResource(id = R.dimen.distance_default),
-        vertical = dimensionResource(id = R.dimen.distance_small).times(scale)
+        horizontal = Distance.default,
+        vertical = Distance.small.times(scale)
       )
       .pointerInput(Unit) {
         detectTapGestures(onLongPress = { onLongClick() }, onTap = { onItemClick() })
@@ -268,7 +313,18 @@ private fun Preview() {
           .width(500.dp)
           .height(100.dp)
       ) {
-        ListItemScaffold(itemTitle = "Power Switch", itemOnline = true, null, { }, { }, { }, { }, true, IssueIconType.WARNING) {
+        ListItemScaffold(
+          itemTitle = "Power Switch",
+          itemOnline = true,
+          null,
+          { },
+          { },
+          { },
+          { },
+          IssueIconType.WARNING,
+          scale = 1f,
+          showInfoIcon = true
+        ) {
         }
       }
       Box(
@@ -276,7 +332,7 @@ private fun Preview() {
           .width(500.dp)
           .height(100.dp)
       ) {
-        ListItemScaffold(itemTitle = "Power Switch", itemOnline = false, null, { }, { }, { }, { }, false, null) {
+        ListItemScaffold(itemTitle = "Power Switch", itemOnline = false, null, { }, { }, { }, { }, null, scale = 1f, showInfoIcon = false) {
         }
       }
     }

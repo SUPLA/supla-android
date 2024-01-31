@@ -198,12 +198,8 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity
     mTvInfo.setTypeface(openSansRegular);
   }
 
-  private String getChannelName(Channel channel, Integer func) {
-    return "#"
-        + channel.getChannelId()
-        + " "
-        + SuplaConst.getNotEmptyCaption(
-            channel.getCaption(), func == null ? channel.getFunc() : func, this);
+  private String getChannelName(Channel channel) {
+    return "#" + channel.getChannelId() + " " + channel.getCaption(this);
   }
 
   private Channel getChannelById(int id) {
@@ -345,7 +341,7 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity
       if (mSelectedCahnnel != null && mSelectedCahnnel.getChannelId() == channel.getChannelId()) {
         position = spinnerList.size();
       }
-      spinnerList.add(getChannelName(channel, null));
+      spinnerList.add(getChannelName(channel));
     }
 
     ArrayAdapter<String> adapter =
@@ -540,7 +536,7 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity
         break;
       case PAGE_ZWAVE_DETAILS:
         updateSelectedChannel();
-        mTvChannel.setText(getChannelName(mSelectedCahnnel, mSelectedCahnnel.getFunc()));
+        mTvChannel.setText(getChannelName(mSelectedCahnnel));
         mNodeListSpinner.setAdapter(null);
         hideInfoMessage();
         zwaveGetNodeList();

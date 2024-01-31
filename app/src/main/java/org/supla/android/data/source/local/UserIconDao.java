@@ -22,7 +22,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import androidx.annotation.NonNull;
-import org.supla.android.db.SuplaContract;
+import org.supla.android.data.source.local.entity.UserIconEntity;
 
 public class UserIconDao extends BaseDao {
 
@@ -36,8 +36,8 @@ public class UserIconDao extends BaseDao {
     }
 
     ContentValues values = new ContentValues();
-    values.put(SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID, Id);
-    values.put(SuplaContract.UserIconsEntry.COLUMN_NAME_PROFILEID, getCachedProfileId());
+    values.put(UserIconEntity.COLUMN_REMOTE_ID, Id);
+    values.put(UserIconEntity.COLUMN_PROFILE_ID, getCachedProfileId());
 
     for (Image image : images) {
       if (image.value != null) {
@@ -48,35 +48,30 @@ public class UserIconDao extends BaseDao {
     write(
         sqLiteDatabase -> {
           sqLiteDatabase.insertWithOnConflict(
-              SuplaContract.UserIconsEntry.TABLE_NAME,
-              null,
-              values,
-              SQLiteDatabase.CONFLICT_IGNORE);
+              UserIconEntity.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
         });
   }
 
   public void delete(long profileId) {
-    delete(
-        SuplaContract.UserIconsEntry.TABLE_NAME,
-        key(SuplaContract.UserIconsEntry.COLUMN_NAME_PROFILEID, profileId));
+    delete(UserIconEntity.TABLE_NAME, key(UserIconEntity.COLUMN_PROFILE_ID, profileId));
   }
 
   public Cursor getUserIcons() {
     String sql =
         "SELECT "
-            + SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID
+            + UserIconEntity.COLUMN_REMOTE_ID
             + ", "
-            + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE1
+            + UserIconEntity.COLUMN_IMAGE_1
             + ", "
-            + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE2
+            + UserIconEntity.COLUMN_IMAGE_2
             + ", "
-            + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE3
+            + UserIconEntity.COLUMN_IMAGE_3
             + ", "
-            + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE4
+            + UserIconEntity.COLUMN_IMAGE_4
             + ", "
-            + SuplaContract.UserIconsEntry.COLUMN_NAME_PROFILEID
+            + UserIconEntity.COLUMN_PROFILE_ID
             + " FROM "
-            + SuplaContract.UserIconsEntry.TABLE_NAME;
+            + UserIconEntity.TABLE_NAME;
 
     return read(sqLiteDatabase -> sqLiteDatabase.rawQuery(sql, null));
   }

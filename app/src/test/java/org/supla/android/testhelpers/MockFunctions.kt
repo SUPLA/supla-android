@@ -21,7 +21,9 @@ import io.mockk.every
 import io.mockk.mockk
 import org.supla.android.data.source.local.entity.ChannelRelationType
 import org.supla.android.db.AuthProfileItem
+import org.supla.android.lib.SuplaChannel
 import org.supla.android.lib.SuplaChannelRelation
+import org.supla.android.lib.SuplaChannelValue
 
 fun profileMock(profileId: Long) = mockk<AuthProfileItem>().also {
   every { it.id } returns profileId
@@ -31,4 +33,25 @@ fun relationMock(channelId: Int, parentId: Int, relationType: ChannelRelationTyp
   every { it.channelId } returns channelId
   every { it.parentId } returns parentId
   every { it.relationType } returns relationType.value
+}
+
+fun suplaChannel(
+  locationId: Int? = null,
+  channelId: Int? = null,
+  caption: String = "",
+  function: Int = 0,
+  crc32: Long = 0,
+  value: SuplaChannelValue? = null,
+  online: Boolean = false
+) = SuplaChannel().apply {
+  locationId?.let { LocationID = it }
+  channelId?.let { Id = it }
+  Caption = caption
+  Func = function
+  DefaultConfigCRC32 = crc32
+  value?.let { Value = value }
+  OnLine = online
+}
+
+fun suplaChannelValue() = SuplaChannelValue().apply {
 }

@@ -58,7 +58,7 @@ public class ElectricityChartHelper extends IncrementalMeterChartHelper {
     DbHelper dbh = DbHelper.getInstance(context);
     Channel ch = dbh.getChannel(channelId);
     if (ch != null) {
-      int flags = ch.getFlags();
+      long flags = ch.getFlags();
       singlePhase =
           (flags & SuplaConst.SUPLA_CHANNEL_FLAG_PHASE2_UNSUPPORTED) > 0
               && (flags & SuplaConst.SUPLA_CHANNEL_FLAG_PHASE3_UNSUPPORTED) > 0;

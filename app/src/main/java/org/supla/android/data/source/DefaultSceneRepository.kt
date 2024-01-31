@@ -22,9 +22,9 @@ import android.database.Cursor
 import io.reactivex.rxjava3.core.Observable
 import org.supla.android.data.source.local.SceneDao
 import org.supla.android.data.source.local.entity.Scene
+import org.supla.android.data.source.local.entity.SceneEntity
+import org.supla.android.data.source.local.view.SceneView
 import org.supla.android.db.Location
-import org.supla.android.db.SuplaContract.SceneEntry
-import org.supla.android.db.SuplaContract.SceneViewEntry
 import org.supla.android.lib.SuplaScene
 import org.supla.android.lib.SuplaSceneState
 
@@ -112,9 +112,9 @@ class DefaultSceneRepository(private val dao: SceneDao) : SceneRepository {
   private fun readLocationFromCursor(cursor: Cursor): Location {
     val location = Location()
 
-    var index = cursor.getColumnIndex(SceneEntry.COLUMN_NAME_LOCATIONID)
+    var index = cursor.getColumnIndex(SceneEntity.COLUMN_LOCATION_ID)
     location.locationId = cursor.getInt(index)
-    index = cursor.getColumnIndex(SceneViewEntry.COLUMN_NAME_LOCATION_NAME)
+    index = cursor.getColumnIndex(SceneView.COLUMN_LOCATION_NAME)
     location.caption = cursor.getString(index)
 
     return location

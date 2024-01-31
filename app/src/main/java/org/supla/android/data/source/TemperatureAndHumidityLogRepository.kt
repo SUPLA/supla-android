@@ -21,23 +21,23 @@ import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
-import org.supla.android.data.source.local.RoomTemperatureAndHumidityLogDao
-import org.supla.android.data.source.local.entity.TemperatureAndHumidityLogEntity
+import org.supla.android.data.source.local.dao.measurements.TemperatureAndHumidityLogDao
+import org.supla.android.data.source.local.entity.measurements.TemperatureAndHumidityLogEntity
 import org.supla.android.data.source.remote.rest.SuplaCloudService
 import org.supla.android.data.source.remote.rest.channel.TemperatureAndHumidityMeasurement
-import org.supla.android.features.temperaturesdownload.BaseDownloadLogWorker
+import org.supla.android.features.measurementsdownload.workers.BaseDownloadLogWorker
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class TemperatureAndHumidityLogRepository @Inject constructor(
-  private val roomTemperatureAndHumidityLogDao: RoomTemperatureAndHumidityLogDao,
+  private val temperatureAndHumidityLogDao: TemperatureAndHumidityLogDao,
   suplaCloudServiceProvider: SuplaCloudService.Provider
 ) : BaseMeasurementRepository<TemperatureAndHumidityMeasurement, TemperatureAndHumidityLogEntity>(suplaCloudServiceProvider) {
 
   fun findMeasurements(remoteId: Int, profileId: Long, startDate: Date, endDate: Date): Observable<List<TemperatureAndHumidityLogEntity>> {
-    return roomTemperatureAndHumidityLogDao.findMeasurements(remoteId, profileId, startDate.time, endDate.time)
+    return temperatureAndHumidityLogDao.findMeasurements(remoteId, profileId, startDate.time, endDate.time)
   }
 
   override fun getInitialMeasurements(cloudService: SuplaCloudService, remoteId: Int) =
@@ -55,19 +55,22 @@ class TemperatureAndHumidityLogRepository @Inject constructor(
     )
 
   override fun findMinTimestamp(remoteId: Int, profileId: Long): Single<Long> =
-    roomTemperatureAndHumidityLogDao.findMinTimestamp(remoteId, profileId)
+    temperatureAndHumidityLogDao.findMinTimestamp(remoteId, profileId)
 
   override fun findMaxTimestamp(remoteId: Int, profileId: Long): Single<Long> =
-    roomTemperatureAndHumidityLogDao.findMaxTimestamp(remoteId, profileId)
+    temperatureAndHumidityLogDao.findMaxTimestamp(remoteId, profileId)
+
+  override fun findOldestEntity(remoteId: Int, profileId: Long): Maybe<TemperatureAndHumidityLogEntity> =
+    temperatureAndHumidityLogDao.findOldestEntity(remoteId, profileId)
 
   override fun delete(remoteId: Int, profileId: Long): Completable =
-    roomTemperatureAndHumidityLogDao.delete(remoteId, profileId)
+    temperatureAndHumidityLogDao.delete(remoteId, profileId)
 
   override fun findCount(remoteId: Int, profileId: Long): Maybe<Int> =
-    roomTemperatureAndHumidityLogDao.findCount(remoteId, profileId)
+    temperatureAndHumidityLogDao.findCount(remoteId, profileId)
 
   override fun insert(entries: List<TemperatureAndHumidityLogEntity>): Completable =
-    roomTemperatureAndHumidityLogDao.insert(entries)
+    temperatureAndHumidityLogDao.insert(entries)
 
   override fun map(entry: TemperatureAndHumidityMeasurement, remoteId: Int, profileId: Long) =
     TemperatureAndHumidityLogEntity(

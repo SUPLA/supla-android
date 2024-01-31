@@ -27,6 +27,7 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.hilt.work.HiltWorkerFactory;
 import androidx.lifecycle.ProcessLifecycleOwner;
@@ -47,17 +48,12 @@ import org.supla.android.core.networking.suplaclient.SuplaClientBuilder;
 import org.supla.android.core.notifications.NotificationsHelper;
 import org.supla.android.core.observers.AppLifecycleObserver;
 import org.supla.android.data.ValuesFormatter;
-import org.supla.android.db.AuthProfileItem;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaClientMessageHandler;
 import org.supla.android.lib.SuplaClientMsg;
 import org.supla.android.lib.SuplaOAuthToken;
-import org.supla.android.profile.ProfileIdHolder;
 import org.supla.android.profile.ProfileManager;
 import org.supla.android.restapi.SuplaRestApiClientTask;
-import org.supla.android.usecases.channel.ChannelGroupStateObserverUseCase;
-import org.supla.android.usecases.channel.ChannelStateObserverUseCase;
-import org.supla.android.usecases.scene.SceneStateObserverUseCase;
 import org.supla.android.widget.shared.WidgetReloadWorker;
 
 @HiltAndroidApp
@@ -75,15 +71,11 @@ public class SuplaApp extends MultiDexApplication
   private Typeface mTypefaceOpenSansRegular;
   private Typeface mTypefaceOpenSansBold;
   private SuplaOAuthToken _OAuthToken;
-  private ArrayList<SuplaRestApiClientTask> _RestApiClientTasks = new ArrayList<>();
+  private final ArrayList<SuplaRestApiClientTask> _RestApiClientTasks = new ArrayList<>();
   private static long lastWifiScanTime;
 
   @Inject ProfileManager profileManager;
-  @Inject ProfileIdHolder profileIdHolder;
   @Inject ValuesFormatter valuesFormatter;
-  @Inject SceneStateObserverUseCase sceneStateObserver;
-  @Inject ChannelStateObserverUseCase channelStateObserver;
-  @Inject ChannelGroupStateObserverUseCase groupStateObserver;
   @Inject NotificationsHelper notificationsHelper;
   @Inject AppLifecycleObserver appLifecycleObserver;
   @Inject SuplaClientBuilder suplaClientBuilder;
@@ -101,13 +93,7 @@ public class SuplaApp extends MultiDexApplication
   public void onCreate() {
     super.onCreate();
     SuplaApp._SuplaApp = this;
-    AuthProfileItem currentProfile = profileManager.getCurrentProfile().blockingGet();
-    if (currentProfile != null) {
-      profileIdHolder.setProfileId(currentProfile.getId());
-    }
-    sceneStateObserver.register();
-    channelStateObserver.register();
-    groupStateObserver.register();
+
     notificationsHelper.registerForToken();
     ProcessLifecycleOwner.get().getLifecycle().addObserver(appLifecycleObserver);
 
@@ -119,14 +105,6 @@ public class SuplaApp extends MultiDexApplication
     Utils.init(this);
 
     enqueueWidgetRefresh();
-  }
-
-  @Override
-  public void onTerminate() {
-    super.onTerminate();
-    sceneStateObserver.unregister();
-    channelStateObserver.unregister();
-    groupStateObserver.unregister();
   }
 
   public static void Vibrate(Context context) {
@@ -163,7 +141,7 @@ public class SuplaApp extends MultiDexApplication
     return result;
   }
 
-  public SuplaClient SuplaClientInitIfNeed(Context context) {
+  public SuplaClient SuplaClientInitIfNeed(@NonNull Context context) {
     return SuplaClientInitIfNeed(context, null);
   }
 
@@ -193,10 +171,7 @@ public class SuplaApp extends MultiDexApplication
       if (_OAuthToken != null && _OAuthToken.isAlive()) {
         result = new SuplaOAuthToken(_OAuthToken);
       }
-
       _RestApiClientTasks.add(task);
-      // Trace.d("RegisterRestApiClientTask",
-      //        "taskCount: "+Integer.toString(_RestApiClientTasks.size()));
     }
 
     return result;
@@ -205,9 +180,6 @@ public class SuplaApp extends MultiDexApplication
   public void UnregisterRestApiClientTask(SuplaRestApiClientTask task) {
     synchronized (_lck3) {
       _RestApiClientTasks.remove(task);
-
-      // Trace.d("UnregisterRestApiClientTask",
-      //        "taskCount: "+Integer.toString(_RestApiClientTasks.size()));
     }
   }
 
@@ -288,6 +260,7 @@ public class SuplaApp extends MultiDexApplication
     }
   }
 
+  @NonNull
   public ValuesFormatter getValuesFormatter() {
     return valuesFormatter;
   }
@@ -303,7 +276,7 @@ public class SuplaApp extends MultiDexApplication
         new PeriodicWorkRequest.Builder(WidgetReloadWorker.class, 30, TimeUnit.MINUTES)
             .setConstraints(constraints)
             .build();
-    WorkManager.getInstance()
+    WorkManager.getInstance(this)
         .enqueueUniquePeriodicWork(WORK_ID, ExistingPeriodicWorkPolicy.KEEP, request);
   }
 }

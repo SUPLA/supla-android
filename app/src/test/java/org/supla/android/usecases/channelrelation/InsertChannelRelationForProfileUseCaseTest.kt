@@ -78,7 +78,7 @@ class InsertChannelRelationForProfileUseCaseTest {
     val entity = entityCaptor.value
     assertThat(entity.channelId).isEqualTo(channelId)
     assertThat(entity.parentId).isEqualTo(parentId)
-    assertThat(entity.channelRelationType).isEqualTo(relationType)
+    assertThat(entity.relationType).isEqualTo(relationType)
     assertThat(entity.profileId).isEqualTo(profileId)
     assertThat(entity.deleteFlag).isFalse
 

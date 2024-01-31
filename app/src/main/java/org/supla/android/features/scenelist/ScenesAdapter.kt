@@ -23,7 +23,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import dagger.hilt.android.qualifiers.ActivityContext
 import org.supla.android.Preferences
-import org.supla.android.R
 import org.supla.android.SuplaApp
 import org.supla.android.data.source.local.entity.Scene
 import org.supla.android.databinding.LiSceneItemBinding
@@ -65,7 +64,7 @@ class ScenesAdapter @Inject constructor(
   ): ViewHolder {
     val inflater = LayoutInflater.from(parent.context)
     return when (viewType) {
-      R.layout.li_scene_item -> {
+      ViewType.SCENE_ITEM.identifier -> {
         val binding = LiSceneItemBinding.inflate(inflater, parent, false)
         val holder = SceneListItemViewHolder(binding)
         holder
@@ -89,14 +88,6 @@ class ScenesAdapter @Inject constructor(
   }
 
   override fun isLocationCollapsed(location: Location) = ((location.collapsed and CollapsedFlag.SCENE.value) > 0)
-
-  override fun getItemViewType(pos: Int): Int {
-    return if (items[pos] is ListItem.SceneItem) {
-      R.layout.li_scene_item
-    } else {
-      R.layout.li_location_item
-    }
-  }
 
   override fun getItemId(position: Int): Long {
     return position.toLong()

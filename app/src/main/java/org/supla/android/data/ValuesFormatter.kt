@@ -24,14 +24,17 @@ import org.supla.android.core.ui.StringProvider
 import org.supla.android.data.source.local.calendar.Hour
 import org.supla.android.data.source.runtime.appsettings.TemperatureUnit
 import org.supla.android.extensions.days
+import org.supla.android.extensions.guardLet
 import org.supla.android.extensions.hours
 import org.supla.android.extensions.minutesInHour
 import org.supla.android.extensions.secondsInMinute
 import org.supla.android.lib.singlecall.TemperatureAndHumidity
+import org.supla.android.usecases.channel.valueprovider.ThermometerValueProvider
 import java.text.SimpleDateFormat
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.math.roundToInt
 
 @Singleton
 class ValuesFormatter @Inject constructor(
@@ -53,8 +56,7 @@ class ValuesFormatter @Inject constructor(
       !isTemperatureDefined(rawValue) && withUnit ->
         String.format("%s%s", NO_VALUE_TEXT, getUnitString())
 
-      !isTemperatureDefined(rawValue) ->
-        String.format("%s", NO_VALUE_TEXT)
+      !isTemperatureDefined(rawValue) -> NO_VALUE_TEXT
 
       withUnit -> String.format(
         "%.${precision}f%s",
@@ -75,6 +77,23 @@ class ValuesFormatter @Inject constructor(
       String.format("%.${precision}f%%", rawValue)
     } else {
       String.format("%.${precision}f", rawValue)
+    }
+  }
+
+  fun getDistanceString(rawValue: Double?): String {
+    val (distance) = guardLet(rawValue) { return "$NO_VALUE_TEXT m" }
+    if (distance < 0) {
+      return "$NO_VALUE_TEXT m"
+    }
+
+    return if (distance >= 1000) {
+      String.format("%.2f km", distance / 1000f)
+    } else if (distance >= 1) {
+      String.format("%.2f m", distance)
+    } else if (distance * 100 >= 1) {
+      String.format("%.1f cm", distance.times(100))
+    } else {
+      String.format("%d mm", distance.times(1000).roundToInt())
     }
   }
 
@@ -240,6 +259,6 @@ class ValuesFormatter @Inject constructor(
      * that temperature data is not available. This should be done differently
      * at some point in future.
      */
-    private const val TEMPERATURE_NA_VALUE = -273
+    private const val TEMPERATURE_NA_VALUE = ThermometerValueProvider.UNKNOWN_VALUE
   }
 }

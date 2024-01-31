@@ -11,9 +11,9 @@ import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.whenever
 import org.supla.android.data.source.ChannelRepository
+import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.db.AuthProfileItem
 import org.supla.android.db.Location
-import org.supla.android.db.SuplaContract
 import org.supla.android.profile.ProfileManager
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.location.CollapsedFlag
@@ -43,8 +43,8 @@ class CreateProfileGroupsListUseCaseTest {
     val cursor: Cursor = Mockito.mock(Cursor::class.java)
     whenever(cursor.moveToFirst()).thenReturn(true)
     whenever(cursor.moveToNext()).thenReturn(true, true, true, false)
-    whenever(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_LOCATIONID)).thenReturn(locationColumn)
-    whenever(cursor.getColumnIndex(SuplaContract.ChannelEntry._ID)).thenReturn(idColumn)
+    whenever(cursor.getColumnIndex(ChannelEntity.COLUMN_LOCATION_ID)).thenReturn(locationColumn)
+    whenever(cursor.getColumnIndex(ChannelEntity.COLUMN_ID)).thenReturn(idColumn)
     whenever(cursor.getLong(locationColumn)).thenReturn(firstLocationId, firstLocationId, collapsedLocationId, thirdLocationId)
     whenever(cursor.getLong(idColumn)).thenReturn(11L, 22L, 33L, 44L)
 
@@ -106,8 +106,8 @@ class CreateProfileGroupsListUseCaseTest {
     val cursor: Cursor = Mockito.mock(Cursor::class.java)
     whenever(cursor.moveToFirst()).thenReturn(true)
     whenever(cursor.moveToNext()).thenReturn(true, true, true, false)
-    whenever(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_LOCATIONID)).thenReturn(locationColumn)
-    whenever(cursor.getColumnIndex(SuplaContract.ChannelEntry._ID)).thenReturn(idColumn)
+    whenever(cursor.getColumnIndex(ChannelEntity.COLUMN_LOCATION_ID)).thenReturn(locationColumn)
+    whenever(cursor.getColumnIndex(ChannelEntity.COLUMN_ID)).thenReturn(idColumn)
     whenever(cursor.getLong(locationColumn)).thenReturn(firstLocationId, firstLocationId, secondLocationId, thirdLocationId)
     whenever(cursor.getLong(idColumn)).thenReturn(11L, 22L, 33L, 44L)
 

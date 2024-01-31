@@ -17,20 +17,30 @@ package org.supla.android.usecases.channel
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import com.github.mikephil.charting.data.Entry
+import com.google.gson.Gson
+import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.data.model.chart.ChartDataAggregation
 import org.supla.android.data.model.chart.ChartEntryType
 import org.supla.android.data.model.chart.HistoryDataSet
-import org.supla.android.data.source.local.entity.BaseTemperatureEntity
-import org.supla.android.data.source.local.entity.TemperatureAndHumidityLogEntity
-import org.supla.android.db.Channel
-import org.supla.android.db.ChannelBase
-import org.supla.android.extensions.getChannelValueUseCase
+import org.supla.android.data.model.general.IconType
+import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.measurements.BaseTemperatureEntity
+import org.supla.android.data.source.local.entity.measurements.TemperatureAndHumidityLogEntity
+import org.supla.android.data.source.remote.gpm.SuplaChannelGeneralPurposeBaseConfig
 import org.supla.android.extensions.toTimestamp
-import org.supla.android.images.ImageCache
+import org.supla.android.usecases.channel.valueformatter.ChannelValueFormatter
+import org.supla.android.usecases.channel.valueformatter.GpmValueFormatter
+import org.supla.android.usecases.channel.valueformatter.HumidityValueFormatter
+import org.supla.android.usecases.channel.valueformatter.ThermometerValueFormatter
+import org.supla.android.usecases.icon.GetChannelIconUseCase
 
-abstract class BaseLoadMeasurementsUseCase {
+abstract class BaseLoadMeasurementsUseCase(
+  private val getChannelValueStringUseCase: GetChannelValueStringUseCase,
+  private val getChannelIconUseCase: GetChannelIconUseCase,
+  private val preferences: Preferences,
+  private val gson: Gson // GSON_FOR_REPO
+) {
 
   internal fun <T : BaseTemperatureEntity> aggregatingTemperature(
     measurements: List<T>,
@@ -39,7 +49,7 @@ abstract class BaseLoadMeasurementsUseCase {
     if (aggregation == ChartDataAggregation.MINUTES) {
       return measurements
         .filter { it.temperature != null }
-        .map { AggregatedEntity(aggregation, it.date.toTimestamp(), it.temperature!!) }
+        .map { AggregatedEntity(ChartEntryType.TEMPERATURE, aggregation, it.date.toTimestamp(), it.temperature!!) }
     }
 
     val formatter = ChartDataAggregation.Formatter()
@@ -50,11 +60,14 @@ abstract class BaseLoadMeasurementsUseCase {
       .filter { group -> group.value.isNotEmpty() }
       .map { group ->
         AggregatedEntity(
+          type = ChartEntryType.TEMPERATURE,
           aggregation = aggregation,
           date = aggregation.groupTimeProvider(group.value.firstOrNull()!!.date),
           value = group.value.map { it.temperature!! }.average().toFloat(),
           min = group.value.minOf { it.temperature!! },
-          max = group.value.maxOf { it.temperature!! }
+          max = group.value.maxOf { it.temperature!! },
+          open = group.value.firstOrNull()?.temperature,
+          close = group.value.lastOrNull()?.temperature
         )
       }
       .toList()
@@ -67,7 +80,7 @@ abstract class BaseLoadMeasurementsUseCase {
     if (aggregation == ChartDataAggregation.MINUTES) {
       return measurements
         .filter { it.temperature != null }
-        .map { AggregatedEntity(aggregation, it.date.toTimestamp(), it.humidity!!) }
+        .map { AggregatedEntity(ChartEntryType.HUMIDITY, aggregation, it.date.toTimestamp(), it.humidity!!) }
     }
 
     val formatter = ChartDataAggregation.Formatter()
@@ -78,18 +91,21 @@ abstract class BaseLoadMeasurementsUseCase {
       .filter { group -> group.value.isNotEmpty() }
       .map { group ->
         AggregatedEntity(
+          type = ChartEntryType.HUMIDITY,
           aggregation = aggregation,
           date = aggregation.groupTimeProvider(group.value.firstOrNull()!!.date),
           value = group.value.map { it.humidity!! }.average().toFloat(),
           min = group.value.minOf { it.humidity!! },
-          max = group.value.maxOf { it.humidity!! }
+          max = group.value.maxOf { it.humidity!! },
+          open = group.value.firstOrNull()?.humidity,
+          close = group.value.lastOrNull()?.humidity
         )
       }
       .toList()
   }
 
   internal fun historyDataSet(
-    channel: Channel,
+    channel: ChannelDataEntity,
     type: ChartEntryType,
     color: Int,
     aggregation: ChartDataAggregation,
@@ -98,49 +114,56 @@ abstract class BaseLoadMeasurementsUseCase {
     HistoryDataSet(
       setId = HistoryDataSet.Id(channel.remoteId, type),
       iconProvider = when (type) {
-        ChartEntryType.TEMPERATURE -> { context -> ImageCache.getBitmap(context, channel.imageIdx) }
-        ChartEntryType.HUMIDITY -> { context -> ImageCache.getBitmap(context, channel.getImageIdx(ChannelBase.WhichOne.Second)) }
+        ChartEntryType.HUMIDITY -> getChannelIconUseCase.getIconProvider(channel, IconType.SECOND)
+        else -> getChannelIconUseCase.getIconProvider(channel)
       },
-      valueProvider = when (type) {
-        ChartEntryType.TEMPERATURE -> { context -> context.getChannelValueUseCase(channel) }
-        ChartEntryType.HUMIDITY -> { context -> context.getChannelValueUseCase(channel, ValueType.SECOND) }
+      value = when (type) {
+        ChartEntryType.HUMIDITY -> getChannelValueStringUseCase(channel, ValueType.SECOND)
+        else -> getChannelValueStringUseCase(channel)
       },
+      valueFormatter = getValueFormatter(type, channel),
       color = color,
-      entries = divideSetToSubsets(
+      entities = divideSetToSubsets(
         entities = measurements,
-        type = type,
         aggregation = aggregation
       )
     )
 
+  private fun getValueFormatter(type: ChartEntryType, channel: ChannelDataEntity): ChannelValueFormatter {
+    return when (type) {
+      ChartEntryType.HUMIDITY -> HumidityValueFormatter()
+      ChartEntryType.TEMPERATURE -> ThermometerValueFormatter(preferences)
+      ChartEntryType.GENERAL_PURPOSE_MEASUREMENT,
+      ChartEntryType.GENERAL_PURPOSE_METER ->
+        GpmValueFormatter(channel.configEntity?.toSuplaConfig(gson) as? SuplaChannelGeneralPurposeBaseConfig)
+    }
+  }
+
   private fun divideSetToSubsets(
     entities: List<AggregatedEntity>,
-    aggregation: ChartDataAggregation,
-    type: ChartEntryType
-  ): List<List<Entry>> {
-    return mutableListOf<List<Entry>>().also { list ->
-      var set = mutableListOf<Entry>()
+    aggregation: ChartDataAggregation
+  ): List<List<AggregatedEntity>> {
+    return mutableListOf<List<AggregatedEntity>>().also { list ->
+      var sublist = mutableListOf<AggregatedEntity>()
       for (entity in entities) {
-        val entry = Entry(entity.date.toFloat(), entity.value, entity.toDetails(type))
-
-        set.lastOrNull()?.let {
+        sublist.lastOrNull()?.let {
           val distance = if (aggregation == ChartDataAggregation.MINUTES) {
             AGGREGATING_MINUTES_DISTANCE_SEC
           } else {
             aggregation.timeInSec.times(MAX_ALLOWED_DISTANCE_MULTIPLIER)
           }
 
-          if (entry.x - it.x > distance) {
-            list.add(set)
-            set = mutableListOf()
+          if (entity.date - it.date > distance) {
+            list.add(sublist)
+            sublist = mutableListOf()
           }
         }
 
-        set.add(entry)
+        sublist.add(entity)
       }
 
-      if (set.isNotEmpty()) {
-        list.add(set)
+      if (sublist.isNotEmpty()) {
+        list.add(sublist)
       }
     }
   }
@@ -166,21 +189,13 @@ internal abstract class Colors(
 internal class TemperatureColors : Colors(listOf(R.color.chart_temperature_1, R.color.chart_temperature_2))
 internal class HumidityColors : Colors(listOf(R.color.chart_humidity_1, R.color.chart_humidity_2))
 
-internal data class AggregatedEntity(
+data class AggregatedEntity(
+  val type: ChartEntryType,
   val aggregation: ChartDataAggregation,
   val date: Long,
   val value: Float,
   val min: Float? = null,
-  val max: Float? = null
-) {
-
-  fun toDetails(type: ChartEntryType) =
-    EntryDetails(aggregation, type, min, max)
-}
-
-data class EntryDetails(
-  val aggregation: ChartDataAggregation,
-  val type: ChartEntryType,
-  val min: Float? = null,
-  val max: Float? = null
+  val max: Float? = null,
+  val open: Float? = null,
+  val close: Float? = null
 )

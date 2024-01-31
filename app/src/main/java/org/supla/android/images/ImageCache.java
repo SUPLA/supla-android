@@ -36,7 +36,7 @@ public class ImageCache {
     }
 
     Bitmap result = map.get(imgId);
-    if (result == null && !imgId.isUserImage()) {
+    if (result == null && !imgId.getUserImage()) {
       result = BitmapFactory.decodeResource(context.getResources(), imgId.getId());
       if (result != null) {
         map.put(imgId, result);

@@ -18,13 +18,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import io.reactivex.rxjava3.core.Observable
 import org.supla.android.core.networking.suplacloud.OkHttpClientProvider
 import org.supla.android.core.networking.suplacloud.SuplaCloudConfigHolder
-import org.supla.android.core.networking.suplacloud.SuplaDateConverter
+import org.supla.android.data.source.remote.rest.channel.GeneralPurposeMeasurement
+import org.supla.android.data.source.remote.rest.channel.GeneralPurposeMeter
 import org.supla.android.data.source.remote.rest.channel.TemperatureAndHumidityMeasurement
 import org.supla.android.data.source.remote.rest.channel.TemperatureMeasurement
+import org.supla.android.di.GSON_FOR_API
 import org.supla.android.extensions.guardLet
 import retrofit2.Call
 import retrofit2.Retrofit
@@ -33,8 +34,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
-import java.util.Date
 import javax.inject.Inject
+import javax.inject.Named
 import javax.inject.Singleton
 
 private const val API_VERSION = "2.2.0"
@@ -74,10 +75,45 @@ interface SuplaCloudService {
     @Query("offset") offset: Int = 0
   ): Call<List<TemperatureAndHumidityMeasurement>>
 
+  @GET("/api/$API_VERSION/channels/{remoteId}/measurement-logs")
+  fun getGpmMeasurements(
+    @Path("remoteId") remoteId: Int,
+    @Query("order") order: String = "ASC",
+    @Query("limit") limit: Int? = null,
+    @Query("offset") offset: Int? = null,
+    @Query("afterTimestamp") afterTimestamp: Long? = null
+  ): Observable<List<GeneralPurposeMeasurement>>
+
+  @GET("/api/$API_VERSION/channels/{remoteId}/measurement-logs")
+  fun getInitialGpmMeasurements(
+    @Path("remoteId") remoteId: Int,
+    @Query("order") order: String = "ASC",
+    @Query("limit") limit: Int = 2,
+    @Query("offset") offset: Int = 0
+  ): Call<List<GeneralPurposeMeasurement>>
+
+  @GET("/api/$API_VERSION/channels/{remoteId}/measurement-logs")
+  fun getGpmCounterMeasurements(
+    @Path("remoteId") remoteId: Int,
+    @Query("order") order: String = "ASC",
+    @Query("limit") limit: Int? = null,
+    @Query("offset") offset: Int? = null,
+    @Query("afterTimestamp") afterTimestamp: Long? = null
+  ): Observable<List<GeneralPurposeMeter>>
+
+  @GET("/api/$API_VERSION/channels/{remoteId}/measurement-logs")
+  fun getInitialGpmCounterMeasurements(
+    @Path("remoteId") remoteId: Int,
+    @Query("order") order: String = "ASC",
+    @Query("limit") limit: Int = 2,
+    @Query("offset") offset: Int = 0
+  ): Call<List<GeneralPurposeMeter>>
+
   @Singleton
   class Provider @Inject constructor(
     private val configHolder: SuplaCloudConfigHolder,
-    private val okHttpClientProvider: OkHttpClientProvider
+    private val okHttpClientProvider: OkHttpClientProvider,
+    @Named(GSON_FOR_API) private val gson: Gson
   ) {
 
     private var retrofitInstance: Retrofit? = null
@@ -96,7 +132,7 @@ interface SuplaCloudService {
         } else {
           urlHash = url.hashCode()
           Retrofit.Builder()
-            .addConverterFactory(GsonConverterFactory.create(gsonConverter()))
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
             .baseUrl(url)
             .client(okHttpClientProvider.provide())
@@ -104,8 +140,5 @@ interface SuplaCloudService {
         }
       }
     }
-
-    private fun gsonConverter(): Gson =
-      GsonBuilder().registerTypeAdapter(Date::class.java, SuplaDateConverter()).create()
   }
 }

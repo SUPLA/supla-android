@@ -1,6 +1,22 @@
 package org.supla.android.usecases.channel
+/*
+Copyright (C) AC SOFTWARE SP. Z O.O.
 
-import io.mockk.every
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+*/
+
 import io.mockk.mockk
 import io.reactivex.rxjava3.core.Maybe
 import org.assertj.core.api.Assertions.assertThat
@@ -12,23 +28,19 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
-import org.supla.android.data.source.ChannelRepository
-import org.supla.android.db.AuthProfileItem
-import org.supla.android.db.Channel
-import org.supla.android.profile.ProfileManager
-import org.supla.android.usecases.channelrelation.FindChannelChildrenUseCase
+import org.supla.android.data.source.ChannelRelationRepository
+import org.supla.android.data.source.RoomChannelRepository
+import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
+import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 
 @RunWith(MockitoJUnitRunner::class)
 class ReadChannelWithChildrenUseCaseTest {
 
   @Mock
-  lateinit var profileManager: ProfileManager
+  lateinit var channelRepository: RoomChannelRepository
 
   @Mock
-  lateinit var channelRepository: ChannelRepository
-
-  @Mock
-  lateinit var findChannelChildrenUseCase: FindChannelChildrenUseCase
+  lateinit var channelRelationRepository: ChannelRelationRepository
 
   @InjectMocks
   lateinit var useCase: ReadChannelWithChildrenUseCase
@@ -36,18 +48,13 @@ class ReadChannelWithChildrenUseCaseTest {
   @Test
   fun `should load channel with children`() {
     // given
-    val profileId = 123L
     val remoteId = 234
 
-    val profile = mockk<AuthProfileItem>()
-    every { profile.id } returns profileId
-    whenever(profileManager.getCurrentProfile()).thenReturn(Maybe.just(profile))
+    val entity = mockk<ChannelDataEntity>()
+    whenever(channelRepository.findChannelDataEntity(remoteId)).thenReturn(Maybe.just(entity))
 
-    val children = listOf(mockk<ChannelChild>())
-    whenever(findChannelChildrenUseCase(profileId, remoteId)).thenReturn(Maybe.just(children))
-
-    val channel = mockk<Channel>()
-    whenever(channelRepository.getChannel(remoteId)).thenReturn(channel)
+    val child = mockk<ChannelChildEntity>()
+    whenever(channelRelationRepository.findChildrenForParent(remoteId)).thenReturn(Maybe.just(listOf(child)))
 
     // when
     val observer = useCase.invoke(remoteId).test()
@@ -55,12 +62,12 @@ class ReadChannelWithChildrenUseCaseTest {
     // then
     observer.assertComplete()
     val result = observer.values()[0]
-    assertThat(result.channel).isSameAs(channel)
-    assertThat(result.children).isSameAs(children)
 
-    verify(profileManager).getCurrentProfile()
-    verify(findChannelChildrenUseCase).invoke(profileId, remoteId)
-    verify(channelRepository).getChannel(remoteId)
-    verifyNoMoreInteractions(profileManager, findChannelChildrenUseCase, channelRepository)
+    assertThat(result.channel).isSameAs(entity)
+    assertThat(result.children).containsExactly(child)
+
+    verify(channelRepository).findChannelDataEntity(remoteId)
+    verify(channelRelationRepository).findChildrenForParent(remoteId)
+    verifyNoMoreInteractions(channelRelationRepository, channelRepository)
   }
 }

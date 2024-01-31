@@ -19,7 +19,9 @@ class LocationCaptionEditor(context: Context?) : CaptionEditor(context) {
     val location = dbH.getLocation(id)
     return if (location != null && location.caption != null) {
       location.caption
-    } else ""
+    } else {
+      ""
+    }
   }
 
   override fun applyChanged(newCaption: String) {

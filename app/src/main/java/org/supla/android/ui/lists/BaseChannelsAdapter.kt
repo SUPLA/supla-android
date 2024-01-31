@@ -22,25 +22,16 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import org.supla.android.Preferences
-import org.supla.android.R
 import org.supla.android.SuplaApp
-import org.supla.android.data.ValuesFormatter
-import org.supla.android.data.source.local.entity.ChannelRelationType
-import org.supla.android.data.source.remote.thermostat.SuplaThermostatFlags
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.databinding.LiChannelItemBinding
+import org.supla.android.databinding.LiSingleMeasurementItemBinding
 import org.supla.android.databinding.LiThermostatItemBinding
-import org.supla.android.db.Channel
 import org.supla.android.db.ChannelBase
-import org.supla.android.extensions.guardLet
-import org.supla.android.extensions.isHvacThermostat
-import org.supla.android.extensions.toThermostatSlideableListItemData
 import org.supla.android.ui.layouts.ChannelLayout
-import org.supla.android.ui.lists.data.SlideableListItemData
 
 abstract class BaseChannelsAdapter(
   private val context: Context,
-  private val valuesFormatter: ValuesFormatter,
   preferences: Preferences
 ) : BaseListAdapter<ListItem, ChannelBase>(context, preferences), ChannelLayout.Listener {
 
@@ -57,8 +48,8 @@ abstract class BaseChannelsAdapter(
 
       if (movedItem != replacedItem) {
         swappedElementsCallback(
-          (movedItem as? ListItem.ChannelItem)?.channelBase,
-          (replacedItem as? ListItem.ChannelItem)?.channelBase
+          (movedItem as? ListItem.ChannelBasedItem)?.channelBase,
+          (replacedItem as? ListItem.ChannelBasedItem)?.channelBase
         )
       }
       movementFinishedCallback(channelsOrdered)
@@ -72,11 +63,20 @@ abstract class BaseChannelsAdapter(
   ): ViewHolder {
     val inflater = LayoutInflater.from(parent.context)
     return when (viewType) {
-      R.layout.li_channel_item ->
+      ViewType.CHANNEL_ITEM.identifier ->
         ChannelListItemViewHolder(LiChannelItemBinding.inflate(inflater, parent, false))
 
-      R.layout.li_thermostat_item ->
+      ViewType.HVAC_ITEM.identifier ->
         ThermostatListItemViewHolder(LiThermostatItemBinding.inflate(inflater, parent, false))
+
+      ViewType.MEASUREMENT_ITEM.identifier ->
+        SingleMeasurementListItemViewHolder(LiSingleMeasurementItemBinding.inflate(inflater, parent, false))
+
+      ViewType.GENERAL_PURPOSE_METER_ITEM.identifier ->
+        GpMeterListItemViewHolder(LiSingleMeasurementItemBinding.inflate(inflater, parent, false))
+
+      ViewType.GENERAL_PURPOSE_MEASUREMENT_ITEM.identifier ->
+        GpMeasurementListItemViewHolder(LiSingleMeasurementItemBinding.inflate(inflater, parent, false))
 
       else -> super.onCreateViewHolder(parent, viewType)
     }
@@ -85,22 +85,11 @@ abstract class BaseChannelsAdapter(
   override fun onBindViewHolder(holder: ViewHolder, position: Int) {
     when (holder) {
       is ChannelListItemViewHolder -> holder.bind(items[position] as ListItem.ChannelItem)
-      is ThermostatListItemViewHolder -> holder.bind(items[position] as ListItem.ChannelItem)
+      is ThermostatListItemViewHolder -> holder.bind(items[position] as ListItem.HvacThermostatItem)
+      is SingleMeasurementListItemViewHolder -> holder.bind(items[position] as ListItem.MeasurementItem)
+      is GpMeterListItemViewHolder -> holder.bind(items[position] as ListItem.GeneralPurposeMeterItem)
+      is GpMeasurementListItemViewHolder -> holder.bind(items[position] as ListItem.GeneralPurposeMeasurementItem)
       else -> super.onBindViewHolder(holder, position)
-    }
-  }
-
-  override fun getItemViewType(pos: Int): Int {
-    return when (val item = items[pos]) {
-      is ListItem.ChannelItem -> {
-        if (item.channelBase.isHvacThermostat()) {
-          R.layout.li_thermostat_item
-        } else {
-          R.layout.li_channel_item
-        }
-      }
-
-      else -> R.layout.li_location_item
     }
   }
 
@@ -132,44 +121,76 @@ abstract class BaseChannelsAdapter(
   }
 
   inner class ThermostatListItemViewHolder(val binding: LiThermostatItemBinding) : ViewHolder(binding.root) {
-    fun bind(item: ListItem.ChannelItem) {
+    fun bind(item: ListItem.HvacThermostatItem) {
       binding.listItemRoot.bind(
         itemType = ItemType.CHANNEL,
-        remoteId = item.channelBase.remoteId,
-        locationCaption = item.location.caption,
-        data = data(item),
-        onInfoClick = { infoButtonClickCallback(item.channelBase.remoteId) },
-        onIssueClick = { issueButtonClickCallback(getIssueMessage(item)) },
-        onTitleLongClick = { onCaptionLongPress(item.channelBase.remoteId) },
-        onItemClick = { listItemClickCallback(item.channelBase) }
+        remoteId = item.channel.remoteId,
+        locationCaption = item.locationCaption,
+        data = item.toSlideableListItemData(),
+        onInfoClick = { infoButtonClickCallback(item.channel.remoteId) },
+        onIssueClick = { issueButtonClickCallback(item.issueMessage) },
+        onTitleLongClick = { onCaptionLongPress(item.channel.remoteId) },
+        onItemClick = { listItemClickCallback(item.channel) }
       )
 
-      binding.listItemContent.setOnClickListener { listItemClickCallback(item.channelBase) }
+      binding.listItemContent.setOnClickListener { listItemClickCallback(item.channel) }
       binding.listItemContent.setOnLongClickListener { onLongPress(this) }
-      binding.listItemLeftItem.setOnClickListener { onLeftButtonClick(item.channelBase.remoteId) }
-      binding.listItemRightItem.setOnClickListener { onRightButtonClick(item.channelBase.remoteId) }
+      binding.listItemLeftItem.setOnClickListener { onLeftButtonClick(item.channel.remoteId) }
+      binding.listItemRightItem.setOnClickListener { onRightButtonClick(item.channel.remoteId) }
     }
+  }
 
-    private fun data(item: ListItem.ChannelItem): SlideableListItemData.Thermostat {
-      val (channel) = guardLet(item.channelBase as? Channel) {
-        throw IllegalArgumentException("Expected Channel but got ${item.channelBase}")
-      }
-      val child = item.children?.firstOrNull { it.relationType == ChannelRelationType.MAIN_THERMOMETER }
+  inner class SingleMeasurementListItemViewHolder(val binding: LiSingleMeasurementItemBinding) : ViewHolder(binding.root) {
+    fun bind(item: ListItem.MeasurementItem) {
+      binding.listItemRoot.bind(
+        itemType = ItemType.CHANNEL,
+        remoteId = item.channel.remoteId,
+        locationCaption = item.locationCaption,
+        data = item.toSlideableListItemData(),
+        onInfoClick = { infoButtonClickCallback(item.channel.remoteId) },
+        onIssueClick = { },
+        onTitleLongClick = { onCaptionLongPress(item.channel.remoteId) },
+        onItemClick = { listItemClickCallback(item.channel) }
+      )
 
-      return channel.toThermostatSlideableListItemData(child?.channel, valuesFormatter)
+      binding.listItemContent.setOnClickListener { listItemClickCallback(item.channel) }
+      binding.listItemContent.setOnLongClickListener { onLongPress(this) }
     }
+  }
 
-    private fun getIssueMessage(item: ListItem.ChannelItem): Int? {
-      val (channel) = guardLet(item.channelBase as? Channel) { return null }
-      val value = channel.value.asThermostatValue()
+  inner class GpMeterListItemViewHolder(val binding: LiSingleMeasurementItemBinding) : ViewHolder(binding.root) {
+    fun bind(item: ListItem.GeneralPurposeMeterItem) {
+      binding.listItemRoot.bind(
+        itemType = ItemType.CHANNEL,
+        remoteId = item.channel.remoteId,
+        locationCaption = item.locationCaption,
+        data = item.toSlideableListItemData(),
+        onInfoClick = { infoButtonClickCallback(item.channel.remoteId) },
+        onIssueClick = { },
+        onTitleLongClick = { onCaptionLongPress(item.channel.remoteId) },
+        onItemClick = { listItemClickCallback(item.channel) }
+      )
 
-      return if (value.flags.contains(SuplaThermostatFlags.THERMOMETER_ERROR)) {
-        R.string.thermostat_thermometer_error
-      } else if (value.flags.contains(SuplaThermostatFlags.CLOCK_ERROR)) {
-        R.string.thermostat_clock_error
-      } else {
-        null
-      }
+      binding.listItemContent.setOnClickListener { listItemClickCallback(item.channel) }
+      binding.listItemContent.setOnLongClickListener { onLongPress(this) }
+    }
+  }
+
+  inner class GpMeasurementListItemViewHolder(val binding: LiSingleMeasurementItemBinding) : ViewHolder(binding.root) {
+    fun bind(item: ListItem.GeneralPurposeMeasurementItem) {
+      binding.listItemRoot.bind(
+        itemType = ItemType.CHANNEL,
+        remoteId = item.channel.remoteId,
+        locationCaption = item.locationCaption,
+        data = item.toSlideableListItemData(),
+        onInfoClick = { infoButtonClickCallback(item.channel.remoteId) },
+        onIssueClick = { },
+        onTitleLongClick = { onCaptionLongPress(item.channel.remoteId) },
+        onItemClick = { listItemClickCallback(item.channel) }
+      )
+
+      binding.listItemContent.setOnClickListener { listItemClickCallback(item.channel) }
+      binding.listItemContent.setOnLongClickListener { onLongPress(this) }
     }
   }
 }

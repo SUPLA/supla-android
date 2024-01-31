@@ -30,8 +30,9 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import org.supla.android.R
 import org.supla.android.Trace
+import org.supla.android.data.model.general.IconType
 import org.supla.android.db.Channel
-import org.supla.android.db.ChannelBase
+import org.supla.android.extensions.getChannelIconUseCase
 import org.supla.android.extensions.isThermometer
 import org.supla.android.images.ImageCache
 import org.supla.android.lib.SuplaConst
@@ -132,7 +133,7 @@ class OnOffWidget : WidgetProviderBase() {
       viewId,
       ImageCache.getBitmap(
         context,
-        channel.getImageIdx(false, ChannelBase.WhichOne.First, activeValue)
+        context.getChannelIconUseCase(channel, IconType.SINGLE, false)
       )
     )
 
@@ -147,7 +148,7 @@ class OnOffWidget : WidgetProviderBase() {
         viewIdNightMode,
         ImageCache.getBitmap(
           context,
-          channel.getImageIdx(true, ChannelBase.WhichOne.First, activeValue)
+          context.getChannelIconUseCase(channel, IconType.SINGLE, true)
         )
       )
     }
@@ -159,12 +160,12 @@ class OnOffWidget : WidgetProviderBase() {
     } else {
       views.setImageViewBitmap(
         R.id.on_off_widget_turn_off_button,
-        ImageCache.getBitmap(context, channel.getImageIdx(false, ChannelBase.WhichOne.First, 0))
+        ImageCache.getBitmap(context, context.getChannelIconUseCase(channel, IconType.SINGLE, false))
       )
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
         views.setImageViewBitmap(
           R.id.on_off_widget_turn_off_button_night_mode,
-          ImageCache.getBitmap(context, channel.getImageIdx(true, ChannelBase.WhichOne.First, 0))
+          ImageCache.getBitmap(context, context.getChannelIconUseCase(channel, IconType.SINGLE, true))
         )
       }
       views.setViewVisibility(R.id.on_off_widget_buttons, View.VISIBLE)

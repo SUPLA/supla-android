@@ -40,7 +40,7 @@ fun ChannelRelationEntity.Companion.from(suplaRelation: SuplaChannelRelation, pr
   ChannelRelationEntity(
     channelId = suplaRelation.channelId,
     parentId = suplaRelation.parentId,
-    channelRelationType = ChannelRelationType.from(suplaRelation.relationType),
+    relationType = ChannelRelationType.from(suplaRelation.relationType),
     profileId = profileId,
     deleteFlag = false
   )

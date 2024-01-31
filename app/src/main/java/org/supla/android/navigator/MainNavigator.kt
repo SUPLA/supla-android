@@ -11,7 +11,7 @@ import dagger.hilt.android.qualifiers.ActivityContext
 import dagger.hilt.android.scopes.ActivityScoped
 import org.supla.android.R
 import org.supla.android.data.source.runtime.ItemType
-import org.supla.android.features.legacydetail.LegacyDetailFragment
+import org.supla.android.features.details.legacydetail.LegacyDetailFragment
 import org.supla.android.usecases.details.LegacyDetailType
 import javax.inject.Inject
 
