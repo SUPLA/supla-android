@@ -196,9 +196,9 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
         channelId = remoteId,
         date = measurementDate,
         valueIncrement = 24f,
-        counterIncrement = 124,
+        counterIncrement = 0,
         value = 24f,
-        counter = 124,
+        counter = 0,
         manuallyComplemented = false,
         counterReset = false,
         profileId = profileId
@@ -261,9 +261,9 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
         channelId = remoteId,
         date = measurementDate,
         valueIncrement = 14f,
-        counterIncrement = 114,
+        counterIncrement = 0,
         value = 24f,
-        counter = 124,
+        counter = 0,
         manuallyComplemented = false,
         counterReset = false,
         profileId = profileId
@@ -326,9 +326,9 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
         channelId = remoteId,
         date = date(2023, 10, 1, 0, 10),
         valueIncrement = 4f,
-        counterIncrement = 37,
+        counterIncrement = 0,
         value = 16f,
-        counter = 50,
+        counter = 0,
         manuallyComplemented = true,
         counterReset = false,
         profileId = profileId
@@ -338,9 +338,9 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
         channelId = remoteId,
         date = date(2023, 10, 1, 0, 20),
         valueIncrement = 4f,
-        counterIncrement = 37,
+        counterIncrement = 0,
         value = 20f,
-        counter = 87,
+        counter = 0,
         manuallyComplemented = true,
         counterReset = false,
         profileId = profileId
@@ -350,9 +350,9 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
         channelId = remoteId,
         date = date(2023, 10, 1, 0, 30),
         valueIncrement = 4f,
-        counterIncrement = 37,
+        counterIncrement = 0,
         value = 24f,
-        counter = 124,
+        counter = 0,
         manuallyComplemented = false,
         counterReset = false,
         profileId = profileId
@@ -415,9 +415,9 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
         channelId = remoteId,
         date = measurementDate,
         valueIncrement = -226f,
-        counterIncrement = -126,
+        counterIncrement = 0,
         value = 24f,
-        counter = 124,
+        counter = 0,
         manuallyComplemented = false,
         counterReset = false,
         profileId = profileId
@@ -480,9 +480,9 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
         channelId = remoteId,
         date = measurementDate,
         valueIncrement = 24f,
-        counterIncrement = 124,
+        counterIncrement = 0,
         value = 24f,
-        counter = 124,
+        counter = 0,
         manuallyComplemented = false,
         counterReset = true,
         profileId = profileId
@@ -493,7 +493,7 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
   }
 
   private fun mockMeasurementsCall(measurementDate: Date, lastDbDate: Date, remoteId: Int, cloudService: SuplaCloudService) {
-    val measurement = GeneralPurposeMeter(measurementDate, 24f, 124)
+    val measurement = GeneralPurposeMeter(measurementDate, 24f)
     whenever(generalPurposeMeterLogRepository.getMeasurements(cloudService, remoteId, lastDbDate.toTimestamp()))
       .thenReturn(Observable.just(listOf(measurement)))
     whenever(generalPurposeMeterLogRepository.getMeasurements(cloudService, remoteId, measurementDate.toTimestamp()))

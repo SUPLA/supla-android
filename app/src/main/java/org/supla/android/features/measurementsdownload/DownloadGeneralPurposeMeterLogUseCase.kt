@@ -116,33 +116,31 @@ class DownloadGeneralPurposeMeterLogUseCase @Inject constructor(
     profileId: Long,
     channelConfig: SuplaChannelGeneralPurposeMeterConfig
   ): GeneralPurposeMeterEntity {
-    val counterDiff = entry.counter - oldest.counter
+    val valueDiff = entry.value - oldest.value
     val reset = when (channelConfig.counterType) {
       SuplaChannelConfigMeterCounterType.ALWAYS_INCREMENT ->
-        counterDiff < 0 && abs(counterDiff) > oldest.counter.times(0.1)
+        valueDiff < 0 && abs(valueDiff) > oldest.value.times(0.1)
 
       SuplaChannelConfigMeterCounterType.ALWAYS_DECREMENT ->
-        counterDiff > 0 && counterDiff > oldest.counter.times(0.1)
+        valueDiff > 0 && valueDiff > oldest.value.times(0.1)
 
       SuplaChannelConfigMeterCounterType.INCREMENT_AND_DECREMENT -> false
     }
     val timeDiff = entry.date.toTimestamp() - oldest.date.toTimestamp()
 
     val valueIncrement = if (reset) entry.value else entry.value - oldest.value
-    val counterIncrement = if (reset) entry.counter else entry.counter - oldest.counter
 
     return if (channelConfig.fillMissingData && timeDiff > ChartDataAggregation.MINUTES.timeInSec.times(1.5)) {
       val missingItemsCount = timeDiff.toFloat().div(ChartDataAggregation.MINUTES.timeInSec).roundToInt()
       val valueDivided = valueIncrement.div(missingItemsCount)
-      val counterDivided = counterIncrement.div(missingItemsCount)
-      generateMissingEntities(list, missingItemsCount, entry, valueDivided, counterDivided, remoteId, profileId, reset)
+      generateMissingEntities(list, missingItemsCount, entry, valueDivided, remoteId, profileId, reset)
 
       GeneralPurposeMeterEntity.create(
         entry = entry,
         channelId = remoteId,
         profileId = profileId,
         valueIncrement = valueDivided,
-        counterIncrement = counterDivided,
+        counterIncrement = 0, // to remove
       )
     } else {
       GeneralPurposeMeterEntity.create(
@@ -150,7 +148,7 @@ class DownloadGeneralPurposeMeterLogUseCase @Inject constructor(
         channelId = remoteId,
         profileId = profileId,
         valueIncrement = valueIncrement,
-        counterIncrement = counterIncrement,
+        counterIncrement = 0, // to remove
         counterReset = reset
       )
     }
@@ -162,7 +160,6 @@ class DownloadGeneralPurposeMeterLogUseCase @Inject constructor(
     missingItemsCount: Int,
     entry: GeneralPurposeMeter,
     valueDivided: Float,
-    counterDivided: Int,
     remoteId: Int,
     profileId: Long,
     reset: Boolean
@@ -174,9 +171,9 @@ class DownloadGeneralPurposeMeterLogUseCase @Inject constructor(
           channelId = remoteId,
           date = Date(entry.date.time - ChartDataAggregation.MINUTES.timeInSec.times(1000).times(itemNo)),
           valueIncrement = valueDivided,
-          counterIncrement = counterDivided,
+          counterIncrement = 0, // to remove
           value = entry.value - valueDivided.times(itemNo),
-          counter = entry.counter - counterDivided.times(itemNo),
+          counter = 0, // to remove
           manuallyComplemented = true,
           counterReset = if (itemNo == missingItemsCount - 1) reset else false,
           profileId = profileId

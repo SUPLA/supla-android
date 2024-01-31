@@ -23,5 +23,4 @@ import java.util.Date
 data class GeneralPurposeMeter(
   @SerializedName("date_timestamp") override val date: Date,
   @SerializedName("value") val value: Float,
-  val counter: Int
 ) : Measurement

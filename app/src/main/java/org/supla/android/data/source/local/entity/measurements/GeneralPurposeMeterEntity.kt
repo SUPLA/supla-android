@@ -53,9 +53,13 @@ data class GeneralPurposeMeterEntity(
   @ColumnInfo(name = COLUMN_CHANNEL_ID) val channelId: Int,
   @ColumnInfo(name = COLUMN_DATE) override val date: Date,
   @ColumnInfo(name = COLUMN_VALUE_INCREMENT) val valueIncrement: Float,
-  @ColumnInfo(name = COLUMN_COUNTER_INCREMENT) val counterIncrement: Int,
+  @Deprecated("To remove")
+  @ColumnInfo(name = COLUMN_COUNTER_INCREMENT)
+  val counterIncrement: Int,
   @ColumnInfo(name = COLUMN_VALUE) val value: Float,
-  @ColumnInfo(name = COLUMN_COUNTER) val counter: Int,
+  @Deprecated("To remove")
+  @ColumnInfo(name = COLUMN_COUNTER)
+  val counter: Int,
   @ColumnInfo(name = COLUMN_MANUALLY_COMPLEMENTED) val manuallyComplemented: Boolean,
   @ColumnInfo(name = COLUMN_COUNTER_RESET) val counterReset: Boolean,
   @ColumnInfo(name = COLUMN_PROFILE_ID) val profileId: Long
@@ -111,9 +115,9 @@ data class GeneralPurposeMeterEntity(
       channelId: Int,
       date: Date = entry.date,
       valueIncrement: Float = entry.value,
-      counterIncrement: Int = entry.counter,
+      counterIncrement: Int = 0,
       value: Float = entry.value,
-      counter: Int = entry.counter,
+      counter: Int = 0,
       profileId: Long,
       id: Long? = null,
       manuallyComplemented: Boolean = false,
