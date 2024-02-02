@@ -63,7 +63,6 @@ import org.supla.android.extensions.yearNo
 import org.supla.android.extensions.yearStart
 import org.supla.android.features.details.detailbase.history.ui.HistoryDetailProxy
 import org.supla.android.tools.SuplaSchedulers
-import org.supla.android.usecases.channel.valueformatter.ChannelValueFormatter
 import java.util.Date
 import kotlin.math.min
 
@@ -478,7 +477,6 @@ data class HistoryDetailViewState(
   val remoteId: Int = 0,
   val profileId: Long = 0,
   val channelFunction: Int = 0,
-  val channelValueFormatter: ChannelValueFormatter? = null,
   val downloadConfigured: Boolean = false,
   val initialLoadStarted: Boolean = false,
   val chartData: ChartData = EmptyChartData,

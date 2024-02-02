@@ -128,7 +128,7 @@ class DownloadGeneralPurposeMeterLogUseCase @Inject constructor(
     }
     val timeDiff = entry.date.toTimestamp() - oldest.date.toTimestamp()
 
-    val valueIncrement = if (reset) entry.value else entry.value - oldest.value
+    val valueIncrement = if (reset) entry.value else valueDiff
 
     return if (channelConfig.fillMissingData && timeDiff > ChartDataAggregation.MINUTES.timeInSec.times(1.5)) {
       val missingItemsCount = timeDiff.toFloat().div(ChartDataAggregation.MINUTES.timeInSec).roundToInt()

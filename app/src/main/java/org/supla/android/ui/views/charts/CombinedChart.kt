@@ -19,7 +19,6 @@ import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.listener.ChartTouchListener
 import com.github.mikephil.charting.listener.OnChartGestureListener
-import com.github.mikephil.charting.utils.ViewPortHandler
 import org.supla.android.R
 import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.model.chart.ChartParameters
@@ -54,9 +53,6 @@ fun CombinedChart(
     modifier = modifier.fillMaxWidth(),
     factory = { context ->
       CombinedChart(context).also {
-        xAxisFormatter.chart = it
-        xAxisFormatter.handler = it.viewPortHandler
-
         val colorBlack = ResourcesCompat.getColor(context.resources, R.color.on_background, null)
 
         // Left axis
@@ -154,8 +150,6 @@ private class AxisXFormatter(
   private val valuesFormatter: ValuesFormatter
 ) : ValueFormatter() {
 
-  lateinit var chart: CombinedChart
-  lateinit var handler: ViewPortHandler
   lateinit var converter: ChartData
 
   override fun getAxisLabel(value: Float, axis: AxisBase?): String {

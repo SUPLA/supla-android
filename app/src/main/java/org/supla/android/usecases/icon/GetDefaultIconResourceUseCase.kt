@@ -23,8 +23,6 @@ import org.supla.android.data.model.general.ChannelState
 import org.supla.android.data.model.general.IconType
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DISTANCESENSOR
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HUMIDITY
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_IC_GAS_METER
@@ -44,6 +42,8 @@ import org.supla.android.usecases.icon.producers.ElectricityMeterIconResourcePro
 import org.supla.android.usecases.icon.producers.GarageDoorIconResourceProducer
 import org.supla.android.usecases.icon.producers.GateIconResourceProducer
 import org.supla.android.usecases.icon.producers.GatewayIconResourceProducer
+import org.supla.android.usecases.icon.producers.GenericPurposeMeasurementIconResourceProducer
+import org.supla.android.usecases.icon.producers.GenericPurposeMeterIconResourceProducer
 import org.supla.android.usecases.icon.producers.HotelCardIconResourceProducer
 import org.supla.android.usecases.icon.producers.HumidityAndTemperatureIconResourceProducer
 import org.supla.android.usecases.icon.producers.LightSwitchIconResourceProducer
@@ -101,8 +101,8 @@ class GetDefaultIconResourceUseCase @Inject constructor() {
     ThermostatHomePlusIconResourceProducer(),
     ValveIconResourceProducer(),
     DigiglassIconResourceProducer(),
-    static(SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT, R.drawable.fnc_general_purpose_channel, R.drawable.fnc_general_purpose_channel_nm),
-    static(SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER, R.drawable.fnc_general_purpose_channel, R.drawable.fnc_general_purpose_channel_nm)
+    GenericPurposeMeasurementIconResourceProducer(),
+    GenericPurposeMeterIconResourceProducer()
   )
 
   @DrawableRes

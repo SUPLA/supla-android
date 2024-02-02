@@ -46,14 +46,15 @@ class UpdateChannelValueUseCase @Inject constructor(
     channelValueRepository.findByRemoteId(channelRemoteId)
       .toSingle()
       .flatMap { channelValueEntity ->
-
         if (channelValueEntity.differsFrom(suplaChannelValue, online)) {
+          Trace.d(TAG, "Updating channel value for $channelRemoteId subtype ${suplaChannelValue.SubValueType}")
           update(channelValueEntity, suplaChannelValue, online)
         } else {
           Single.just(EntityUpdateResult.NOP)
         }
       }.onErrorResumeNext { throwable ->
         if (throwable is NoSuchElementException) {
+          Trace.d(TAG, "Inserting channel value for $channelRemoteId subtype ${suplaChannelValue.SubValueType}")
           insert(suplaChannelValue, channelRemoteId, online)
         } else {
           Trace.e(TAG, "Channel value update failed!", throwable)
