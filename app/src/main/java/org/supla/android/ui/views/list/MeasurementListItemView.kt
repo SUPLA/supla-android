@@ -95,7 +95,7 @@ private fun Preview() {
         data = SlideableListItemData.Default(
           online = true,
           titleProvider = { "Channel" },
-          iconProvider = { ResourcesCompat.getDrawable(it.resources, R.drawable.fnc_general_purpose_channel, null)!!.toBitmap() },
+          iconProvider = { ResourcesCompat.getDrawable(it.resources, R.drawable.fnc_gpm_5, null)!!.toBitmap() },
           value = "100 hPa",
           issueIconType = null
         ),
