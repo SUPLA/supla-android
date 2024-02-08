@@ -32,6 +32,7 @@
   <string name="add_device">Add I/O device</string>
   <string name="z_wave">Z-Wave bridge</string>
   <string name="help">Help</string>
+  <string name="menu_notifications" translatable="false">Notifications log</string>
 
   <string name="status_connecting">Connecting...</string>
   <string name="status_unknown_err">Unknown error</string>
@@ -646,6 +647,10 @@
   <string name="chart_marker_closing" translatable="false">Close</string>
   <string name="channel_caption_general_purpose_meter" translatable="false">Meter channel</string>
   <string name="history_disabled" translatable="false">History is disabled for this channel</string>
+  <string name="toolbar_delete_all" translatable="false">Delete all</string>
+  <string name="notification_delete_all_title" translatable="false">Delete all logs?</string>
+  <string name="notification_delete_all_message" translatable="false">Deletion of all log entries is irreversible, do you want to continue?</string>
+  <string name="notification_delete_all_proceed" translatable="false">Delete</string>
 
   <plurals name="details_timer_info_on" translatable="false">
     <item quantity="other">on</item>

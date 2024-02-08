@@ -40,6 +40,7 @@ import org.supla.android.db.room.app.migrations.MIGRATION_28_29
 import org.supla.android.db.room.app.migrations.MIGRATION_29_30
 import org.supla.android.db.room.app.migrations.MIGRATION_30_31
 import org.supla.android.db.room.app.migrations.MIGRATION_31_32
+import org.supla.android.db.room.app.migrations.MIGRATION_32_33
 import org.supla.android.db.room.app.migrations.Migration25to26
 import org.supla.android.db.room.app.migrations.Migration26to27
 import org.supla.android.db.room.app.migrations.Migration27to28
@@ -80,6 +81,7 @@ class DatabaseModule {
         MIGRATION_29_30,
         MIGRATION_30_31,
         MIGRATION_31_32,
+        MIGRATION_32_33
       )
       .build()
 
@@ -142,6 +144,11 @@ class DatabaseModule {
   @Singleton
   fun provideChannelExtendedValueDao(appDatabase: AppDatabase) =
     appDatabase.channelExtendedValueDao()
+
+  @Provides
+  @Singleton
+  fun provideNotificationDao(appDatabase: AppDatabase) =
+    appDatabase.notificationDao()
 
   @Provides
   @Singleton

@@ -148,6 +148,7 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
     return attachSilent()
       .doOnSubscribe { loadingState.tryEmit(true) }
       .doOnTerminate { loadingState.tryEmit(false) }
+      .doOnNext { loadingState.tryEmit(false) }
   }
 
   fun <T : Any> Observable<T>.attachSilent(): Observable<T> {
