@@ -32,6 +32,7 @@ import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.model.Optional
 import org.supla.android.data.model.chart.ChartDataAggregation
+import org.supla.android.data.model.chart.ChartEntryType
 import org.supla.android.data.model.chart.ChartParameters
 import org.supla.android.data.model.chart.ChartRange
 import org.supla.android.data.model.chart.DateRange
@@ -48,6 +49,7 @@ import org.supla.android.extensions.dayEnd
 import org.supla.android.extensions.dayStart
 import org.supla.android.extensions.guardLet
 import org.supla.android.extensions.hour
+import org.supla.android.extensions.ifLet
 import org.supla.android.extensions.monthEnd
 import org.supla.android.extensions.monthStart
 import org.supla.android.extensions.quarterEnd
@@ -64,7 +66,6 @@ import org.supla.android.extensions.yearStart
 import org.supla.android.features.details.detailbase.history.ui.HistoryDetailProxy
 import org.supla.android.tools.SuplaSchedulers
 import java.util.Date
-import kotlin.math.min
 
 abstract class BaseHistoryDetailViewModel(
   private val userStateHolder: UserStateHolder,
@@ -355,21 +356,30 @@ abstract class BaseHistoryDetailViewModel(
         chartData = dataWithActiveSet,
         withRightAxis = dataWithActiveSet.sets.firstOrNull { it.setId.type.rightAxis() && it.active } != null,
         withLeftAxis = dataWithActiveSet.sets.firstOrNull { it.setId.type.leftAxis() && it.active } != null,
-        maxLeftAxis = dataWithActiveSet.sets
-          .filter { it.setId.type.leftAxis() }
-          .mapNotNull { set -> set.entities.maxOfOrNull { entries -> entries.maxOf { it.value } } }
-          .maxOfOrNull { it }
-          ?.let { if (it < 0) 0f else it.times(1.2f) }, // Adds some additional space on chart
-        maxRightAxis = dataWithActiveSet.sets
-          .filter { it.setId.type.rightAxis() }
-          .mapNotNull { set -> set.entities.maxOfOrNull { entries -> entries.maxOf { it.value } } }
-          .maxOfOrNull { it }
-          ?.let { if (it < 0) it.times(0.8f) else it.times(1.2f) }, // Adds some additional space on chart
+        maxLeftAxis = getAxisMax(dataWithActiveSet) { it.leftAxis() },
+        maxRightAxis = getAxisMax(dataWithActiveSet) { it.rightAxis() },
         minDate = if (dateRange.isEmpty) state.minDate else dateRange.get().start,
         maxDate = if (dateRange.isEmpty) state.maxDate else dateRange.get().end,
         loading = false
       )
     }
+  }
+
+  private fun getAxisMax(data: ChartData, filter: (ChartEntryType) -> Boolean): Float? {
+    val maxValue = data.sets
+      .filter { filter(it.setId.type) }
+      .mapNotNull { set -> set.entities.maxOfOrNull { entries -> entries.maxOf { it.value } } }
+      .maxOfOrNull { it }
+    val minValue = data.sets
+      .filter { filter(it.setId.type) }
+      .mapNotNull { set -> set.entities.minOfOrNull { entries -> entries.minOf { it.value } } }
+      .minOfOrNull { it }
+
+    ifLet(minValue, maxValue) { (min, max) ->
+      return max.times(1.2f).minus(min.times(0.2f))
+    }
+
+    return null
   }
 
   protected fun mergeEvents(main: DownloadEventsManager.State, aux: DownloadEventsManager.State?): DownloadEventsManager.State {
