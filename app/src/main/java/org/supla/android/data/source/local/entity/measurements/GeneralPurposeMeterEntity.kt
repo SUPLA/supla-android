@@ -53,13 +53,7 @@ data class GeneralPurposeMeterEntity(
   @ColumnInfo(name = COLUMN_CHANNEL_ID) val channelId: Int,
   @ColumnInfo(name = COLUMN_DATE) override val date: Date,
   @ColumnInfo(name = COLUMN_VALUE_INCREMENT) val valueIncrement: Float,
-  @Deprecated("To remove")
-  @ColumnInfo(name = COLUMN_COUNTER_INCREMENT)
-  val counterIncrement: Int,
   @ColumnInfo(name = COLUMN_VALUE) val value: Float,
-  @Deprecated("To remove")
-  @ColumnInfo(name = COLUMN_COUNTER)
-  val counter: Int,
   @ColumnInfo(name = COLUMN_MANUALLY_COMPLEMENTED) val manuallyComplemented: Boolean,
   @ColumnInfo(name = COLUMN_COUNTER_RESET) val counterReset: Boolean,
   @ColumnInfo(name = COLUMN_PROFILE_ID) val profileId: Long
@@ -71,9 +65,7 @@ data class GeneralPurposeMeterEntity(
     const val COLUMN_CHANNEL_ID = "channel_id"
     const val COLUMN_DATE = "date"
     const val COLUMN_VALUE_INCREMENT = "value_increment"
-    const val COLUMN_COUNTER_INCREMENT = "counter_increment"
     const val COLUMN_VALUE = "value"
-    const val COLUMN_COUNTER = "counter"
     const val COLUMN_MANUALLY_COMPLEMENTED = "manually_complemented"
     const val COLUMN_COUNTER_RESET = "counter_reset"
     const val COLUMN_PROFILE_ID = "profile_id"
@@ -87,9 +79,7 @@ data class GeneralPurposeMeterEntity(
           $COLUMN_CHANNEL_ID INTEGER NOT NULL,
           $COLUMN_DATE INTEGER NOT NULL,
           $COLUMN_VALUE_INCREMENT REAL NOT NULL,
-          $COLUMN_COUNTER_INCREMENT INTEGER NOT NULL,
           $COLUMN_VALUE REAL NOT NULL,
-          $COLUMN_COUNTER INTEGER NOT NULL,
           $COLUMN_MANUALLY_COMPLEMENTED INTEGER NOT NULL,
           $COLUMN_COUNTER_RESET INTEGER NOT NULL,
           $COLUMN_PROFILE_ID INTEGER NOT NULL
@@ -106,7 +96,7 @@ data class GeneralPurposeMeterEntity(
 
     const val ALL_COLUMNS = """
       $COLUMN_ID, $COLUMN_CHANNEL_ID, $COLUMN_DATE, $COLUMN_VALUE_INCREMENT,
-      $COLUMN_COUNTER_INCREMENT, $COLUMN_VALUE, $COLUMN_COUNTER, $COLUMN_MANUALLY_COMPLEMENTED,
+      $COLUMN_VALUE, $COLUMN_MANUALLY_COMPLEMENTED,
       $COLUMN_COUNTER_RESET, $COLUMN_PROFILE_ID
     """
 
@@ -115,9 +105,7 @@ data class GeneralPurposeMeterEntity(
       channelId: Int,
       date: Date = entry.date,
       valueIncrement: Float = entry.value,
-      counterIncrement: Int = 0,
       value: Float = entry.value,
-      counter: Int = 0,
       profileId: Long,
       id: Long? = null,
       manuallyComplemented: Boolean = false,
@@ -128,9 +116,7 @@ data class GeneralPurposeMeterEntity(
         channelId,
         date,
         valueIncrement,
-        counterIncrement,
         value,
-        counter,
         manuallyComplemented,
         counterReset,
         profileId

@@ -991,9 +991,9 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     String token = preferences.getFcmToken();
     if (NotificationsHelper.Companion.areNotificationsEnabled(notificationManager)
         && token != null) {
-      registerPushNotificationClientToken(SUPLA_APP_ID, token);
+      registerPushNotificationClientToken(SUPLA_APP_ID, token, profile.getName());
     } else {
-      registerPushNotificationClientToken(SUPLA_APP_ID, "");
+      registerPushNotificationClientToken(SUPLA_APP_ID, "", profile.getName());
     }
 
     suplaCloudConfigHolder.setUrl(profile.getAuthInfo().getServerUrlString());
@@ -1463,8 +1463,11 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   }
 
   private void onChannelConfigUpdateOrResult(SuplaChannelConfig config, ConfigResult result) {
-    channelConfigEventsManager.emitConfig(result, config);
     insertChannelConfigUseCase.invoke(config, result).blockingSubscribe();
+    channelConfigEventsManager.emitConfig(result, config);
+    if (result == ConfigResult.RESULT_TRUE && config != null) {
+      updateEventsManager.emitChannelUpdate(config.getRemoteId());
+    }
   }
 
   private void onDeviceConfigUpdateOrResult(

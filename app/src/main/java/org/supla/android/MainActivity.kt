@@ -115,7 +115,7 @@ class MainActivity : NavigationActivity(), ToolbarTitleController, LoadableConte
       notificationsHelper.setupNotificationChannel(this)
       notificationsHelper.setupBackgroundNotificationChannel(this)
 
-      // Because for disabled we're sending an empty token, after right is granted we need to update token on server
+      // Because for disabling we're sending an empty token, after right is granted we need to update token on server
       notificationsHelper.updateToken()
     }
   }

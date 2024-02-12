@@ -138,7 +138,7 @@ fun CombinedChart(
       chartParameters?.apply {
         if (scaleX == 1f && scaleY == 1f && x == 0f && y == 0f) {
           chart.fitScreen() // reset scale
-        } else {
+        } else if (chart.scaleX != scaleX || chart.scaleY != scaleY) {
           chart.zoom(scaleX, scaleY, x, y, YAxis.AxisDependency.LEFT)
         }
       }

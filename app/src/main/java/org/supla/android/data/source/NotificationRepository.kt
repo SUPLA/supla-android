@@ -29,11 +29,12 @@ import javax.inject.Singleton
 class NotificationRepository @Inject constructor(
   private val notificationDao: NotificationDao
 ) {
-  fun insert(title: String, message: String): Completable =
+  fun insert(title: String, message: String, profileName: String?): Completable =
     notificationDao.insert(
       NotificationEntity(
         title = title,
         message = message,
+        profileName = profileName,
         date = LocalDateTime.now()
       )
     )

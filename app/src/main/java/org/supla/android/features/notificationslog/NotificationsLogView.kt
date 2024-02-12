@@ -21,8 +21,10 @@ syays GNU General Public License for more details.
 
 import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -49,6 +51,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -139,20 +142,39 @@ private fun NotificationRow(entity: NotificationEntity) {
       .padding(bottom = 1.dp)
       .background(MaterialTheme.colors.surface)
   ) {
-    Box(modifier = Modifier.fillMaxWidth()) {
+    Row(
+      modifier = Modifier
+        .fillMaxWidth()
+        .padding(all = Distance.tiny),
+      horizontalArrangement = Arrangement.spacedBy(2.dp, Alignment.End)
+    ) {
+      entity.profileName?.let {
+        Text(
+          text = stringResource(id = R.string.notifications_log_profile),
+          style = MaterialTheme.typography.caption,
+          fontWeight = FontWeight.SemiBold
+        )
+        Text(
+          text = entity.profileName,
+          style = MaterialTheme.typography.caption,
+          modifier = Modifier.padding(end = Distance.tiny)
+        )
+      }
       Text(
-        text = entity.title,
-        style = MaterialTheme.typography.h6,
-        modifier = Modifier.padding(start = Distance.default, top = Distance.default, end = Distance.default)
+        text = stringResource(id = R.string.notifications_log_date),
+        style = MaterialTheme.typography.caption,
+        fontWeight = FontWeight.SemiBold
       )
       Text(
         text = formatter.format(entity.date),
-        style = MaterialTheme.typography.caption,
-        modifier = Modifier
-          .padding(all = Distance.tiny)
-          .align(Alignment.TopEnd)
+        style = MaterialTheme.typography.caption
       )
     }
+    Text(
+      text = entity.title,
+      style = MaterialTheme.typography.h6,
+      modifier = Modifier.padding(start = Distance.default, end = Distance.default)
+    )
     Text(
       text = entity.message,
       style = MaterialTheme.typography.body2,
@@ -204,6 +226,7 @@ private class PreviewProxy : NotificationsLogViewProxy {
           NotificationEntity(
             title = "Some notification title",
             message = "Some notification message",
+            profileName = "Default",
             date = LocalDateTime.of(2023, 11, 10, 22, 3, 14)
           )
         )

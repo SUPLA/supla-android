@@ -30,6 +30,7 @@ data class NotificationEntity(
   val id: Long = 0,
   @ColumnInfo(name = COLUMN_TITLE) val title: String,
   @ColumnInfo(name = COLUMN_MESSAGE) val message: String,
+  @ColumnInfo(name = COLUMN_PROFILE_NAME) val profileName: String?,
   @ColumnInfo(name = COLUMN_DATE) val date: LocalDateTime
 ) {
 
@@ -38,18 +39,9 @@ data class NotificationEntity(
     const val COLUMN_ID = "id"
     const val COLUMN_TITLE = "title"
     const val COLUMN_MESSAGE = "message"
+    const val COLUMN_PROFILE_NAME = "profile_name"
     const val COLUMN_DATE = "date"
 
-    val SQL = """
-      CREATE TABLE $TABLE_NAME
-      (
-        $COLUMN_ID INTEGER NOT NULL PRIMARY KEY,
-        $COLUMN_TITLE TEXT NOT NULL,
-        $COLUMN_MESSAGE TEXT NOT NULL,
-        $COLUMN_DATE INTEGER NOT NULL
-      )
-    """.trimIndent()
-
-    const val ALL_COLUMNS_STRING = "$COLUMN_ID, $COLUMN_TITLE, $COLUMN_MESSAGE, $COLUMN_DATE"
+    const val ALL_COLUMNS_STRING = "$COLUMN_ID, $COLUMN_TITLE, $COLUMN_MESSAGE, $COLUMN_PROFILE_NAME, $COLUMN_DATE"
   }
 }

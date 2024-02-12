@@ -90,15 +90,14 @@ class DownloadGeneralPurposeMeterLogUseCase @Inject constructor(
       entries.map { entry ->
         val oldest = oldestEntity
 
-        val entity: GeneralPurposeMeterEntity = if (oldest == null) {
-          GeneralPurposeMeterEntity.create(entry = entry, channelId = remoteId, profileId = profileId)
+        if (oldest == null) {
+          oldestEntity = GeneralPurposeMeterEntity.create(entry = entry, channelId = remoteId, profileId = profileId)
         } else {
-          createEntityAndComplementMissing(list, entry, oldest, remoteId, profileId, channelConfig)
-        }
-
-        list.add(entity)
-        if (oldestEntity?.date?.time?.let { it < entity.date.time } != false) {
-          oldestEntity = entity
+          val entity = createEntityAndComplementMissing(list, entry, oldest, remoteId, profileId, channelConfig)
+          list.add(entity)
+          if (oldestEntity?.date?.time?.let { it < entity.date.time } != false) {
+            oldestEntity = entity
+          }
         }
       }
     }
@@ -128,7 +127,13 @@ class DownloadGeneralPurposeMeterLogUseCase @Inject constructor(
     }
     val timeDiff = entry.date.toTimestamp() - oldest.date.toTimestamp()
 
-    val valueIncrement = if (reset) entry.value else valueDiff
+    val valueIncrement = when (channelConfig.counterType) {
+      SuplaChannelConfigMeterCounterType.ALWAYS_INCREMENT ->
+        if (reset || valueDiff < 0) 0f else valueDiff
+      SuplaChannelConfigMeterCounterType.ALWAYS_DECREMENT ->
+        if (reset || valueDiff > 0) 0f else valueDiff
+      SuplaChannelConfigMeterCounterType.INCREMENT_AND_DECREMENT -> valueDiff
+    }
 
     return if (channelConfig.fillMissingData && timeDiff > ChartDataAggregation.MINUTES.timeInSec.times(1.5)) {
       val missingItemsCount = timeDiff.toFloat().div(ChartDataAggregation.MINUTES.timeInSec).roundToInt()
@@ -140,7 +145,6 @@ class DownloadGeneralPurposeMeterLogUseCase @Inject constructor(
         channelId = remoteId,
         profileId = profileId,
         valueIncrement = valueDivided,
-        counterIncrement = 0, // to remove
       )
     } else {
       GeneralPurposeMeterEntity.create(
@@ -148,7 +152,6 @@ class DownloadGeneralPurposeMeterLogUseCase @Inject constructor(
         channelId = remoteId,
         profileId = profileId,
         valueIncrement = valueIncrement,
-        counterIncrement = 0, // to remove
         counterReset = reset
       )
     }
@@ -171,9 +174,7 @@ class DownloadGeneralPurposeMeterLogUseCase @Inject constructor(
           channelId = remoteId,
           date = Date(entry.date.time - ChartDataAggregation.MINUTES.timeInSec.times(1000).times(itemNo)),
           valueIncrement = valueDivided,
-          counterIncrement = 0, // to remove
           value = entry.value - valueDivided.times(itemNo),
-          counter = 0, // to remove
           manuallyComplemented = true,
           counterReset = if (itemNo == missingItemsCount - 1) reset else false,
           profileId = profileId

@@ -23,18 +23,16 @@ import com.google.firebase.messaging.RemoteMessage
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
 import org.supla.android.Trace
-import org.supla.android.data.source.NotificationRepository
 import org.supla.android.extensions.TAG
 import javax.inject.Inject
+
+private const val DATA_KEY_PROFILE_NAME = "profileName"
 
 @AndroidEntryPoint
 class NotificationMessagingService : FirebaseMessagingService() {
 
   @Inject
   lateinit var notificationsHelper: NotificationsHelper
-
-  @Inject
-  lateinit var notificationRepository: NotificationRepository
 
   override fun onMessageReceived(message: RemoteMessage) {
     Trace.d(TAG, "Got FCM message")
@@ -53,8 +51,7 @@ class NotificationMessagingService : FirebaseMessagingService() {
       }
 
       if (text != null) {
-        notificationsHelper.showNotification(baseContext, title, text)
-        notificationRepository.insert(title, text).blockingSubscribe()
+        notificationsHelper.showNotification(baseContext, title, text, message.data[DATA_KEY_PROFILE_NAME])
       }
     }
   }

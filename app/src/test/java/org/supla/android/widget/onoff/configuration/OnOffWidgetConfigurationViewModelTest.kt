@@ -47,6 +47,7 @@ import org.supla.android.lib.SuplaConst
 import org.supla.android.lib.singlecall.SingleCall
 import org.supla.android.profile.ProfileManager
 import org.supla.android.testhelpers.getOrAwaitValue
+import org.supla.android.usecases.channel.LoadChannelConfigUseCase
 import org.supla.android.widget.WidgetPreferences
 import org.supla.android.widget.shared.WidgetConfigurationViewModelTestBase
 import org.supla.android.widget.shared.configuration.EmptyDisplayNameException
@@ -86,6 +87,9 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
   @Mock
   private lateinit var temperatureFormat: ValuesFormatter
 
+  @Mock
+  private lateinit var loadChannelConfigUseCase: LoadChannelConfigUseCase
+
   @Before
   fun setUp() {
     whenever(dispatchers.io()).thenReturn(testDispatcher)
@@ -121,7 +125,8 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
       sceneRepository,
       dispatchers,
       singleCallProvider,
-      temperatureFormat
+      temperatureFormat,
+      loadChannelConfigUseCase
     )
     advanceUntilIdle()
     val channels = viewModel.itemsList.getOrAwaitValue()
@@ -161,7 +166,8 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
       sceneRepository,
       dispatchers,
       singleCallProvider,
-      temperatureFormat
+      temperatureFormat,
+      loadChannelConfigUseCase
     )
     advanceUntilIdle()
     viewModel.changeType(ItemType.GROUP)
@@ -207,7 +213,8 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
       sceneRepository,
       dispatchers,
       singleCallProvider,
-      temperatureFormat
+      temperatureFormat,
+      loadChannelConfigUseCase
     )
     advanceUntilIdle()
     val channels = viewModel.itemsList.getOrAwaitValue()
@@ -253,7 +260,8 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
       sceneRepository,
       dispatchers,
       singleCallProvider,
-      temperatureFormat
+      temperatureFormat,
+      loadChannelConfigUseCase
     )
     advanceUntilIdle()
     viewModel.changeType(ItemType.GROUP)
@@ -296,7 +304,8 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
       sceneRepository,
       dispatchers,
       singleCallProvider,
-      temperatureFormat
+      temperatureFormat,
+      loadChannelConfigUseCase
     )
     advanceUntilIdle()
     val channels = viewModel.itemsList.getOrAwaitValue()
@@ -339,7 +348,8 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
       sceneRepository,
       dispatchers,
       singleCallProvider,
-      temperatureFormat
+      temperatureFormat,
+      loadChannelConfigUseCase
     )
     advanceUntilIdle()
     viewModel.changeType(ItemType.GROUP)
@@ -379,7 +389,8 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
       sceneRepository,
       dispatchers,
       singleCallProvider,
-      temperatureFormat
+      temperatureFormat,
+      loadChannelConfigUseCase
     )
     advanceUntilIdle()
     val channels = viewModel.itemsList.getOrAwaitValue()
@@ -407,7 +418,8 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
       sceneRepository,
       dispatchers,
       singleCallProvider,
-      temperatureFormat
+      temperatureFormat,
+      loadChannelConfigUseCase
     )
 
     // when
@@ -432,7 +444,8 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
       sceneRepository,
       dispatchers,
       singleCallProvider,
-      temperatureFormat
+      temperatureFormat,
+      loadChannelConfigUseCase
     )
     advanceUntilIdle()
 
@@ -460,7 +473,8 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
         sceneRepository,
         dispatchers,
         singleCallProvider,
-        temperatureFormat
+        temperatureFormat,
+        loadChannelConfigUseCase
       )
       advanceUntilIdle()
 
@@ -496,7 +510,8 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
       sceneRepository,
       dispatchers,
       singleCallProvider,
-      temperatureFormat
+      temperatureFormat,
+      loadChannelConfigUseCase
     )
     advanceUntilIdle()
 
@@ -564,7 +579,8 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
       sceneRepository,
       dispatchers,
       singleCallProvider,
-      temperatureFormat
+      temperatureFormat,
+      loadChannelConfigUseCase
     )
     advanceUntilIdle()
     viewModel.changeProfile(secondProfile)

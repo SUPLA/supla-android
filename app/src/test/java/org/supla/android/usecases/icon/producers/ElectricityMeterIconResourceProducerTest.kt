@@ -36,7 +36,7 @@ class ElectricityMeterIconResourceProducerTest : BaseIconResourceProducerTest() 
     test(
       state = ChannelState.Value.NOT_USED,
       function = SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER,
-      expectedIcon = R.drawable.electricitymeter
+      expectedIcon = R.drawable.fnc_electricity_meter
     )
   }
 
@@ -45,7 +45,7 @@ class ElectricityMeterIconResourceProducerTest : BaseIconResourceProducerTest() 
     test(
       state = ChannelState.Value.NOT_USED,
       function = SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER,
-      expectedIcon = R.drawable.electricitymeter_nightmode,
+      expectedIcon = R.drawable.fnc_electricity_meter_nm,
       nightMode = true
     )
   }

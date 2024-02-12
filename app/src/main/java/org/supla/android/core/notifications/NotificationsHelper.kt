@@ -26,13 +26,11 @@ import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.StartActivity
 import org.supla.android.Trace
-import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.infrastructure.WorkManagerProxy
-import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.storage.EncryptedPreferences
+import org.supla.android.data.source.NotificationRepository
 import org.supla.android.extensions.TAG
 import org.supla.android.features.updatetoken.UpdateTokenWorker
-import org.supla.android.lib.SuplaClient
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.random.Random
@@ -50,9 +48,8 @@ class NotificationsHelper @Inject constructor(
   private val encryptedPreferences: EncryptedPreferences,
   private val preferences: Preferences,
   private val notificationManager: NotificationManager,
-  private val suplaClientProvider: SuplaClientProvider,
   private val workManagerProxy: WorkManagerProxy,
-  private val dateProvider: DateProvider
+  private val notificationRepository: NotificationRepository
 ) {
 
   private val notificationIdRandomizer = Random.Default
@@ -101,31 +98,13 @@ class NotificationsHelper @Inject constructor(
   }
 
   fun updateToken(token: String = encryptedPreferences.fcmToken ?: "") {
-    val currentEnabled = areNotificationsEnabled(notificationManager)
-    val previousEnabled = encryptedPreferences.notificationsLastEnabled
-    if (token == encryptedPreferences.fcmToken && tokenUpdateNotNeeded() && currentEnabled == previousEnabled) {
-      Trace.d(TAG, "Token update skipped. Tokens are equal")
-      return
-    }
     Trace.i(TAG, "Updating FCM Token: $token")
     encryptedPreferences.fcmToken = token
-    encryptedPreferences.notificationsLastEnabled = currentEnabled
-
-    var currentProfileUpdated = false
-    suplaClientProvider.provide()?.let {
-      if (it.registered()) {
-        currentProfileUpdated = if (areNotificationsEnabled(notificationManager)) {
-          it.registerPushNotificationClientToken(SuplaClient.SUPLA_APP_ID, token)
-        } else {
-          it.registerPushNotificationClientToken(SuplaClient.SUPLA_APP_ID, "")
-        }
-      }
-    }
 
     val workRequest = if (areNotificationsEnabled(notificationManager)) {
-      UpdateTokenWorker.build(token, currentProfileUpdated.not())
+      UpdateTokenWorker.build(token)
     } else {
-      UpdateTokenWorker.build("", currentProfileUpdated.not())
+      UpdateTokenWorker.build("")
     }
     workManagerProxy.enqueueUniqueWork(UpdateTokenWorker.WORK_ID, ExistingWorkPolicy.KEEP, workRequest)
   }
@@ -136,9 +115,11 @@ class NotificationsHelper @Inject constructor(
       ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED -> {
         // do nothing, we have permission
       }
+
       activity.shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS) -> {
         // do nothing, user blocked notifications
       }
+
       else -> {
         if (preferences.isNotificationsPopupDisplayed.not()) {
           askPermissionCallback()
@@ -147,7 +128,7 @@ class NotificationsHelper @Inject constructor(
     }
   }
 
-  fun showNotification(context: Context, title: String, text: String) {
+  fun showNotification(context: Context, title: String, text: String, profileName: String?) {
     if (VERSION.SDK_INT >= VERSION_CODES.N && !notificationManager.areNotificationsEnabled()) {
       return
     }
@@ -156,6 +137,7 @@ class NotificationsHelper @Inject constructor(
     setupNotificationChannel(context)
 
     notificationManager.notify(notificationIdRandomizer.nextInt() % MAX_NOTIFICATION_ID, buildNotification(title, text))
+    notificationRepository.insert(title, text, profileName).blockingSubscribe()
   }
 
   fun createBackgroundNotification(context: Context, widgetCaption: String?): Notification {
@@ -182,13 +164,6 @@ class NotificationsHelper @Inject constructor(
       .setAutoCancel(true)
       .setStyle(NotificationCompat.BigTextStyle().bigText(text))
       .build()
-  }
-
-  private fun tokenUpdateNotNeeded(): Boolean {
-    return encryptedPreferences.fcmTokenLastUpdate?.let {
-      val pauseTimeInMillis = UpdateTokenWorker.UPDATE_PAUSE_IN_DAYS.times(ONE_DAY_MILLIS)
-      it.time.plus(pauseTimeInMillis) > dateProvider.currentTimestamp()
-    } ?: false
   }
 
   companion object {

@@ -36,5 +36,8 @@ class RoomChannelRepository @Inject constructor(
   fun update(entity: ChannelEntity) = channelDao.update(entity)
 
   fun insert(entity: ChannelEntity) = channelDao.insert(entity)
+
   fun findChannelCountInLocation(locationRemoteId: Int) = channelDao.findChannelCountInLocation(locationRemoteId)
+
+  fun findChannelsCount(profileId: Long) = channelDao.findChannelsCount(profileId)
 }

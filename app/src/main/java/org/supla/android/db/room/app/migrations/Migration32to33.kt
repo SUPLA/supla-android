@@ -23,7 +23,18 @@ import org.supla.android.data.source.local.entity.NotificationEntity
 import org.supla.android.db.room.SqlExecutor
 
 val MIGRATION_32_33: Migration = object : Migration(32, 33), SqlExecutor {
+
+  val CREATE_NOTIFICATION_TABLE = """
+      CREATE TABLE ${NotificationEntity.TABLE_NAME}
+      (
+        ${NotificationEntity.COLUMN_ID} INTEGER NOT NULL PRIMARY KEY,
+        ${NotificationEntity.COLUMN_TITLE} TEXT NOT NULL,
+        ${NotificationEntity.COLUMN_MESSAGE} TEXT NOT NULL,
+        ${NotificationEntity.COLUMN_DATE} INTEGER NOT NULL
+      )
+  """.trimIndent()
+
   override fun migrate(database: SupportSQLiteDatabase) {
-    database.execSQL(NotificationEntity.SQL)
+    execSQL(database, CREATE_NOTIFICATION_TABLE)
   }
 }

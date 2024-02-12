@@ -201,4 +201,15 @@ interface ChannelDao {
   """
   )
   fun findChannelCountInLocation(locationRemoteId: Int): Single<Int>
+
+  @Query(
+    """
+    SELECT COUNT($COLUMN_ID)
+    FROM $TABLE_NAME
+    WHERE ${ChannelEntity.COLUMN_FUNCTION} <> 0
+      AND $COLUMN_PROFILE_ID = :profileId
+      AND $COLUMN_VISIBLE > 0
+  """
+  )
+  fun findChannelsCount(profileId: Long): Single<Int>
 }

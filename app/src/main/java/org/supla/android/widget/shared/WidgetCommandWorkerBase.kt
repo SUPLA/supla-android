@@ -27,18 +27,51 @@ import android.os.Looper
 import android.widget.Toast
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
+import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.SuplaApp
 import org.supla.android.Trace
 import org.supla.android.core.notifications.NotificationsHelper
-import org.supla.android.extensions.getValuesFormatter
-import org.supla.android.lib.SuplaConst.*
+import org.supla.android.data.source.remote.gpm.SuplaChannelGeneralPurposeBaseConfig
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DIMMER
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
+import org.supla.android.lib.SuplaConst.SUPLA_RESULTCODE_ACCESSID_DISABLED
+import org.supla.android.lib.SuplaConst.SUPLA_RESULTCODE_ACCESSID_INACTIVE
+import org.supla.android.lib.SuplaConst.SUPLA_RESULTCODE_ACCESSID_NOT_ASSIGNED
+import org.supla.android.lib.SuplaConst.SUPLA_RESULTCODE_AUTHKEY_ERROR
+import org.supla.android.lib.SuplaConst.SUPLA_RESULTCODE_BAD_CREDENTIALS
+import org.supla.android.lib.SuplaConst.SUPLA_RESULTCODE_CHANNEL_IS_OFFLINE
+import org.supla.android.lib.SuplaConst.SUPLA_RESULTCODE_CLIENT_DISABLED
+import org.supla.android.lib.SuplaConst.SUPLA_RESULTCODE_CLIENT_NOT_EXISTS
+import org.supla.android.lib.SuplaConst.SUPLA_RESULTCODE_FALSE
+import org.supla.android.lib.SuplaConst.SUPLA_RESULTCODE_GUID_ERROR
+import org.supla.android.lib.SuplaConst.SUPLA_RESULTCODE_INCORRECT_PARAMETERS
+import org.supla.android.lib.SuplaConst.SUPLA_RESULTCODE_SUBJECT_NOT_FOUND
+import org.supla.android.lib.SuplaConst.SUPLA_RESULTCODE_TEMPORARILY_UNAVAILABLE
+import org.supla.android.lib.SuplaConst.SUPLA_RESULT_CANT_CONNECT_TO_HOST
+import org.supla.android.lib.SuplaConst.SUPLA_RESULT_HOST_NOT_FOUND
+import org.supla.android.lib.SuplaConst.SUPLA_RESULT_RESPONSE_TIMEOUT
+import org.supla.android.lib.SuplaConst.SUPLA_RESULT_VERSION_ERROR
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.ActionParameters
 import org.supla.android.lib.actions.RgbwActionParameters
 import org.supla.android.lib.actions.SubjectType
+import org.supla.android.lib.singlecall.DoubleValue
 import org.supla.android.lib.singlecall.ResultException
 import org.supla.android.lib.singlecall.TemperatureAndHumidity
+import org.supla.android.usecases.channel.LoadChannelConfigUseCase
+import org.supla.android.usecases.channel.valueformatter.GpmValueFormatter
+import org.supla.android.usecases.channel.valueprovider.GpmValueProvider
 import org.supla.android.widget.WidgetConfiguration
 import org.supla.android.widget.onoff.ARG_TURN_ON
 import org.supla.android.widget.shared.configuration.ItemType
@@ -47,12 +80,13 @@ private const val INTERNAL_ERROR = -10
 
 abstract class WidgetCommandWorkerBase(
   private val notificationsHelper: NotificationsHelper,
+  private val loadChannelConfigUseCase: LoadChannelConfigUseCase,
+  appPreferences: Preferences,
   appContext: Context,
   workerParams: WorkerParameters
-) : WidgetWorkerBase(appContext, workerParams) {
+) : WidgetWorkerBase(appPreferences, appContext, workerParams) {
 
   private val handler = Handler(Looper.getMainLooper())
-  private val valuesFormatter = getValuesFormatter()
 
   protected abstract val notificationId: Int
 
@@ -94,7 +128,7 @@ abstract class WidgetCommandWorkerBase(
   }
 
   protected abstract fun updateWidget(widgetId: Int)
-  protected abstract fun temperatureWithUnit(): Boolean
+  protected abstract fun valueWithUnit(): Boolean
 
   protected open fun perform(
     widgetId: Int,
@@ -115,15 +149,22 @@ abstract class WidgetCommandWorkerBase(
       SUPLA_CHANNELFNC_POWERSWITCH,
       SUPLA_CHANNELFNC_STAIRCASETIMER ->
         callAction(configuration, if (turnOnOrClose) ActionId.TURN_ON else ActionId.TURN_OFF)
+
       SUPLA_CHANNELFNC_DIMMER,
       SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING,
       SUPLA_CHANNELFNC_RGBLIGHTING -> callRgbwAction(configuration, turnOnOrClose)
+
       SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER,
       SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW ->
         callAction(configuration, if (turnOnOrClose) ActionId.SHUT else ActionId.REVEAL)
+
       SUPLA_CHANNELFNC_THERMOMETER,
       SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE ->
         return handleThermometerWidget(widgetId, configuration)
+
+      SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER,
+      SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT ->
+        return handleGpmWidget(widgetId, configuration)
     }
     return Result.success()
   }
@@ -171,6 +212,7 @@ abstract class WidgetCommandWorkerBase(
           applicationContext.resources.getString(R.string.widget_command_error, ex.result),
           Toast.LENGTH_SHORT
         )
+
         SUPLA_RESULT_HOST_NOT_FOUND,
         SUPLA_RESULT_CANT_CONNECT_TO_HOST,
         SUPLA_RESULT_RESPONSE_TIMEOUT -> showToast(
@@ -180,6 +222,7 @@ abstract class WidgetCommandWorkerBase(
           ),
           Toast.LENGTH_LONG
         )
+
         SUPLA_RESULTCODE_CHANNEL_IS_OFFLINE -> showOfflineToast(configuration)
         SUPLA_RESULTCODE_SUBJECT_NOT_FOUND -> showNotFoundToast(configuration)
         SUPLA_RESULTCODE_CLIENT_NOT_EXISTS,
@@ -191,6 +234,7 @@ abstract class WidgetCommandWorkerBase(
           applicationContext.resources.getString(R.string.widget_command_no_access, ex.result),
           Toast.LENGTH_LONG
         )
+
         else -> showToast(
           applicationContext.resources.getString(R.string.widget_command_error, ex.result),
           Toast.LENGTH_SHORT
@@ -277,18 +321,30 @@ abstract class WidgetCommandWorkerBase(
     }
 
   private fun handleThermometerWidget(widgetId: Int, configuration: WidgetConfiguration): Result {
-    val formatter: (temperatureAndHumidity: TemperatureAndHumidity?) -> String =
-      if (configuration.itemFunction == SUPLA_CHANNELFNC_THERMOMETER) {
-        { valuesFormatter.getTemperatureString(it?.temperature, temperatureWithUnit()) }
-      } else {
-        { valuesFormatter.getTemperatureAndHumidityString(it, temperatureWithUnit()) }
-      }
     val temperature = loadTemperatureAndHumidity(
       { (loadValue(configuration) as TemperatureAndHumidity) },
-      formatter
+      getTemperatureAndHumidityFormatter(configuration, valueWithUnit())
     )
 
     updateWidgetConfiguration(widgetId, configuration.copy(value = temperature))
+    updateWidget(widgetId)
+    return Result.success()
+  }
+
+  private fun handleGpmWidget(widgetId: Int, configuration: WidgetConfiguration): Result {
+    val channelConfig = try {
+      loadChannelConfigUseCase(configuration.profileId, configuration.itemId).blockingGet()
+    } catch (ex: Exception) {
+      null
+    }
+    val doubleValue = try {
+      (loadValue(configuration) as DoubleValue).value
+    } catch (ex: Exception) {
+      null
+    } ?: GpmValueProvider.UNKNOWN_VALUE
+
+    val formatter = GpmValueFormatter(channelConfig as? SuplaChannelGeneralPurposeBaseConfig)
+    updateWidgetConfiguration(widgetId, configuration.copy(value = formatter.format(doubleValue, valueWithUnit())))
     updateWidget(widgetId)
     return Result.success()
   }

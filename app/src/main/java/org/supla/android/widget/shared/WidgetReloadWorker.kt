@@ -2,9 +2,12 @@ package org.supla.android.widget.shared
 
 import android.content.ComponentName
 import android.content.Context
+import androidx.hilt.work.HiltWorker
 import androidx.work.WorkerParameters
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
+import org.supla.android.Preferences
 import org.supla.android.extensions.getAppWidgetManager
-import org.supla.android.extensions.getValuesFormatter
 import org.supla.android.lib.SuplaConst
 import org.supla.android.lib.singlecall.TemperatureAndHumidity
 import org.supla.android.widget.WidgetConfiguration
@@ -14,11 +17,14 @@ import org.supla.android.widget.shared.configuration.ItemType
 import org.supla.android.widget.single.SingleWidget
 import org.supla.android.widget.single.updateSingleWidget
 
-class WidgetReloadWorker(context: Context, workerParameters: WorkerParameters) :
-  WidgetWorkerBase(context, workerParameters) {
+@HiltWorker
+class WidgetReloadWorker @AssistedInject constructor(
+  appPreferences: Preferences,
+  @Assisted context: Context,
+  @Assisted workerParameters: WorkerParameters
+) : WidgetWorkerBase(appPreferences, context, workerParameters) {
 
   private val appWidgetManager = getAppWidgetManager()
-  private val valuesFormatter = getValuesFormatter()
 
   override fun doWork(): Result {
     val onOffWidgetIds =
@@ -46,15 +52,9 @@ class WidgetReloadWorker(context: Context, workerParameters: WorkerParameters) :
         continue
       }
 
-      val formatter: (temperatureAndHumidity: TemperatureAndHumidity?) -> String =
-        if (configuration.itemFunction == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER) {
-          { valuesFormatter.getTemperatureString(it?.temperature, temperatureWithUnit) }
-        } else {
-          { valuesFormatter.getTemperatureAndHumidityString(it, temperatureWithUnit) }
-        }
       val temperature = loadTemperatureAndHumidity(
         { (loadValue(configuration) as TemperatureAndHumidity) },
-        formatter
+        getTemperatureAndHumidityFormatter(configuration, temperatureWithUnit)
       )
 
       updateWidgetConfiguration(widgetId, configuration.copy(value = temperature))

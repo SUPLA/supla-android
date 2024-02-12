@@ -22,11 +22,13 @@ import androidx.hilt.work.HiltWorker
 import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import org.supla.android.Preferences
 import org.supla.android.core.notifications.NotificationsHelper
 import org.supla.android.core.notifications.SINGLE_WIDGET_NOTIFICATION_ID
 import org.supla.android.lib.SuplaConst
 import org.supla.android.lib.SuplaConst.*
 import org.supla.android.lib.actions.ActionId
+import org.supla.android.usecases.channel.LoadChannelConfigUseCase
 import org.supla.android.widget.WidgetConfiguration
 import org.supla.android.widget.shared.WidgetCommandWorkerBase
 import org.supla.android.widget.shared.configuration.ItemType
@@ -44,14 +46,16 @@ import org.supla.android.widget.shared.configuration.WidgetAction
 @HiltWorker
 class SingleWidgetCommandWorker @AssistedInject constructor(
   notificationsHelper: NotificationsHelper,
+  loadChannelConfigUseCase: LoadChannelConfigUseCase,
+  appPreferences: Preferences,
   @Assisted appContext: Context,
   @Assisted workerParams: WorkerParameters
-) : WidgetCommandWorkerBase(notificationsHelper, appContext, workerParams) {
+) : WidgetCommandWorkerBase(notificationsHelper, loadChannelConfigUseCase, appPreferences, appContext, workerParams) {
 
   override val notificationId = SINGLE_WIDGET_NOTIFICATION_ID
 
   override fun updateWidget(widgetId: Int) = updateSingleWidget(applicationContext, widgetId)
-  override fun temperatureWithUnit(): Boolean = false
+  override fun valueWithUnit(): Boolean = false
 
   override fun perform(widgetId: Int, configuration: WidgetConfiguration): Result {
     val action = WidgetAction.fromId(configuration.actionId)
