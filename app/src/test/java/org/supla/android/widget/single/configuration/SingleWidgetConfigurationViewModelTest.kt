@@ -50,6 +50,7 @@ import org.supla.android.lib.SuplaConst.*
 import org.supla.android.lib.singlecall.SingleCall
 import org.supla.android.profile.ProfileManager
 import org.supla.android.testhelpers.getOrAwaitValue
+import org.supla.android.usecases.channel.LoadChannelConfigUseCase
 import org.supla.android.widget.WidgetPreferences
 import org.supla.android.widget.shared.WidgetConfigurationViewModelTestBase
 import org.supla.android.widget.shared.configuration.ItemType
@@ -86,6 +87,9 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
 
   @Mock
   private lateinit var valuesFormatter: ValuesFormatter
+
+  @Mock
+  private lateinit var loadChannelConfigUseCase: LoadChannelConfigUseCase
 
   @Before
   fun setUp() {
@@ -124,7 +128,8 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
       sceneRepository,
       dispatchers,
       singleCallProvider,
-      valuesFormatter
+      valuesFormatter,
+      loadChannelConfigUseCase
     )
     advanceUntilIdle()
     val channels = viewModel.itemsList.getOrAwaitValue()
@@ -171,7 +176,8 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
       sceneRepository,
       dispatchers,
       singleCallProvider,
-      valuesFormatter
+      valuesFormatter,
+      loadChannelConfigUseCase
     )
     advanceUntilIdle()
     viewModel.changeType(ItemType.GROUP)
@@ -218,7 +224,8 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
       sceneRepository,
       dispatchers,
       singleCallProvider,
-      valuesFormatter
+      valuesFormatter,
+      loadChannelConfigUseCase
     )
     advanceUntilIdle()
     val channels = viewModel.itemsList.getOrAwaitValue()
@@ -258,7 +265,8 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
       sceneRepository,
       dispatchers,
       singleCallProvider,
-      valuesFormatter
+      valuesFormatter,
+      loadChannelConfigUseCase
     )
     advanceUntilIdle()
     val channels = viewModel.itemsList.getOrAwaitValue()
@@ -289,7 +297,8 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
       sceneRepository,
       dispatchers,
       singleCallProvider,
-      valuesFormatter
+      valuesFormatter,
+      loadChannelConfigUseCase
     )
     viewModel.changeItem(channel)
 
@@ -316,7 +325,8 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
       sceneRepository,
       dispatchers,
       singleCallProvider,
-      valuesFormatter
+      valuesFormatter,
+      loadChannelConfigUseCase
     )
     viewModel.changeItem(channel)
 
@@ -340,7 +350,8 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
       sceneRepository,
       dispatchers,
       singleCallProvider,
-      valuesFormatter
+      valuesFormatter,
+      loadChannelConfigUseCase
     )
     viewModel.changeItem(channel)
 
@@ -366,7 +377,8 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
       sceneRepository,
       dispatchers,
       singleCallProvider,
-      valuesFormatter
+      valuesFormatter,
+      loadChannelConfigUseCase
     )
     viewModel.changeItem(channel)
 

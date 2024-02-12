@@ -107,7 +107,7 @@ class UpdateTokenWorker(appContext: Context, workerParameters: WorkerParameters)
       Trace.i(TAG, "Updating token for profile `${profile.name}` (id: `${profile.id}`)")
       try {
         val singleCall = singleCallProvider.provide(profile.id)
-        singleCall.registerPushNotificationClientToken(SuplaClient.SUPLA_APP_ID, token)
+        singleCall.registerPushNotificationClientToken(SuplaClient.SUPLA_APP_ID, token, profile.name)
       } catch (ex: Exception) {
         Trace.w(TAG, "Token update for profile `${profile.name}` (id: `${profile.id}`) failed!", ex)
         allProfilesUpdated = false

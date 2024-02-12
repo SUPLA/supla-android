@@ -31,7 +31,7 @@ interface SuplaClientApi {
 
   fun executeAction(parameters: ActionParameters): Boolean
 
-  fun registerPushNotificationClientToken(appId: Int, token: String): Boolean
+  fun registerPushNotificationClientToken(appId: Int, token: String, profileName: String): Boolean
 
   fun registered(): Boolean
 

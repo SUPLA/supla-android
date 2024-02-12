@@ -26,11 +26,13 @@ import org.supla.android.db.ChannelBase
 import org.supla.android.db.DbItem
 import org.supla.android.db.Location
 import org.supla.android.di.CoroutineDispatchers
+import org.supla.android.extensions.isGpm
 import org.supla.android.extensions.isRollerShutter
 import org.supla.android.extensions.isSwitch
 import org.supla.android.extensions.isThermometer
 import org.supla.android.lib.singlecall.SingleCall
 import org.supla.android.profile.ProfileManager
+import org.supla.android.usecases.channel.LoadChannelConfigUseCase
 import org.supla.android.widget.WidgetPreferences
 import org.supla.android.widget.shared.configuration.WidgetConfigurationViewModelBase
 import javax.inject.Inject
@@ -44,7 +46,8 @@ class OnOffWidgetConfigurationViewModel @Inject constructor(
   sceneRepository: SceneRepository,
   dispatchers: CoroutineDispatchers,
   singleCallProvider: SingleCall.Provider,
-  valuesFormatter: ValuesFormatter
+  valuesFormatter: ValuesFormatter,
+  loadChannelConfigUseCase: LoadChannelConfigUseCase
 ) : WidgetConfigurationViewModelBase(
   preferences,
   widgetPreferences,
@@ -53,16 +56,20 @@ class OnOffWidgetConfigurationViewModel @Inject constructor(
   sceneRepository,
   dispatchers,
   singleCallProvider,
-  valuesFormatter
+  valuesFormatter,
+  loadChannelConfigUseCase
 ) {
   override fun filterItems(channelBase: DbItem): Boolean {
     return when (channelBase) {
       is Location -> true
-      is ChannelBase -> channelBase.isSwitch() || channelBase.isRollerShutter() ||
-        channelBase.isThermometer()
+      is ChannelBase -> channelBase.isSwitch() ||
+        channelBase.isRollerShutter() ||
+        channelBase.isThermometer() ||
+        channelBase.isGpm()
+
       else -> false
     }
   }
 
-  override fun temperatureWithUnit(): Boolean = true
+  override fun valueWithUnit(): Boolean = true
 }

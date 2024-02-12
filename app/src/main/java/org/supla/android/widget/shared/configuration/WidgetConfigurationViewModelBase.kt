@@ -30,6 +30,7 @@ import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.SceneRepository
 import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.Scene
+import org.supla.android.data.source.remote.gpm.SuplaChannelGeneralPurposeBaseConfig
 import org.supla.android.db.AuthProfileItem
 import org.supla.android.db.Channel
 import org.supla.android.db.ChannelBase
@@ -37,11 +38,16 @@ import org.supla.android.db.ChannelGroup
 import org.supla.android.db.DbItem
 import org.supla.android.db.Location
 import org.supla.android.di.CoroutineDispatchers
+import org.supla.android.extensions.isGpm
 import org.supla.android.extensions.isThermometer
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
+import org.supla.android.lib.singlecall.DoubleValue
 import org.supla.android.lib.singlecall.SingleCall
 import org.supla.android.lib.singlecall.TemperatureAndHumidity
 import org.supla.android.profile.ProfileManager
+import org.supla.android.usecases.channel.LoadChannelConfigUseCase
+import org.supla.android.usecases.channel.valueformatter.GpmValueFormatter
+import org.supla.android.usecases.channel.valueprovider.GpmValueProvider
 import org.supla.android.widget.WidgetConfiguration
 import org.supla.android.widget.WidgetPreferences
 import org.supla.android.widget.shared.loadTemperatureAndHumidity
@@ -55,7 +61,8 @@ abstract class WidgetConfigurationViewModelBase(
   private val sceneRepository: SceneRepository,
   private val dispatchers: CoroutineDispatchers,
   private val singleCallProvider: SingleCall.Provider,
-  private val valuesFormatter: ValuesFormatter
+  private val valuesFormatter: ValuesFormatter,
+  private val loadChannelConfigUseCase: LoadChannelConfigUseCase
 ) : ViewModel() {
   private val _userLoggedIn = MutableLiveData<Boolean>()
   val userLoggedIn: LiveData<Boolean> = _userLoggedIn
@@ -136,7 +143,7 @@ abstract class WidgetConfigurationViewModelBase(
   }
 
   protected abstract fun filterItems(channelBase: DbItem): Boolean
-  protected abstract fun temperatureWithUnit(): Boolean
+  protected abstract fun valueWithUnit(): Boolean
 
   private fun reloadItems() {
     _dataLoading.value = true
@@ -280,7 +287,10 @@ abstract class WidgetConfigurationViewModelBase(
     }
     val value = when {
       itemType.isChannel() && (selectedItem as Channel).isThermometer() ->
-        getWidgetValue(selectedItem as Channel)
+        getThermometerWidgetValue(selectedItem as Channel)
+
+      itemType.isChannel() && (selectedItem as Channel).isGpm() ->
+        getGpmWidgetValue(selectedItem as Channel)
 
       itemType.isChannel() -> (selectedItem as Channel).color.toString()
       else -> "0"
@@ -294,17 +304,33 @@ abstract class WidgetConfigurationViewModelBase(
     _confirmationResult.postValue(Result.success(selectedItem!!))
   }
 
-  private fun getWidgetValue(channel: Channel): String {
+  private fun getThermometerWidgetValue(channel: Channel): String {
     val formatter: (temperatureAndHumidity: TemperatureAndHumidity?) -> String =
       if (channel.func == SUPLA_CHANNELFNC_THERMOMETER) {
-        { valuesFormatter.getTemperatureString(it?.temperature, temperatureWithUnit()) }
+        { valuesFormatter.getTemperatureString(it?.temperature, valueWithUnit()) }
       } else {
-        { valuesFormatter.getTemperatureAndHumidityString(it, temperatureWithUnit()) }
+        { valuesFormatter.getTemperatureAndHumidityString(it, valueWithUnit()) }
       }
     return loadTemperatureAndHumidity(
       { (loadChannelValue(channel.channelId) as TemperatureAndHumidity) },
       formatter
     )
+  }
+
+  private fun getGpmWidgetValue(channel: Channel): String {
+    val channelConfig = try {
+      loadChannelConfigUseCase(channel.profileId, channel.remoteId).blockingGet()
+    } catch (ex: Exception) {
+      null
+    }
+    val doubleValue = try {
+      (loadChannelValue(channel.remoteId) as DoubleValue).value
+    } catch (ex: Exception) {
+      null
+    } ?: GpmValueProvider.UNKNOWN_VALUE
+
+    val formatter = GpmValueFormatter(channelConfig as? SuplaChannelGeneralPurposeBaseConfig)
+    return formatter.format(doubleValue, valueWithUnit())
   }
 
   private fun setWidgetConfiguration(

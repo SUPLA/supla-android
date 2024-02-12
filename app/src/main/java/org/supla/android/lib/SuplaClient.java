@@ -991,9 +991,9 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     String token = preferences.getFcmToken();
     if (NotificationsHelper.Companion.areNotificationsEnabled(notificationManager)
         && token != null) {
-      registerPushNotificationClientToken(SUPLA_APP_ID, token);
+      registerPushNotificationClientToken(SUPLA_APP_ID, token, profile.getName());
     } else {
-      registerPushNotificationClientToken(SUPLA_APP_ID, "");
+      registerPushNotificationClientToken(SUPLA_APP_ID, "", profile.getName());
     }
 
     suplaCloudConfigHolder.setUrl(profile.getAuthInfo().getServerUrlString());

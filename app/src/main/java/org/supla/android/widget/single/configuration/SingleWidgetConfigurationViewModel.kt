@@ -31,11 +31,13 @@ import org.supla.android.db.Location
 import org.supla.android.di.CoroutineDispatchers
 import org.supla.android.extensions.isDoorLock
 import org.supla.android.extensions.isGateController
+import org.supla.android.extensions.isGpm
 import org.supla.android.extensions.isRollerShutter
 import org.supla.android.extensions.isSwitch
 import org.supla.android.extensions.isThermometer
 import org.supla.android.lib.singlecall.SingleCall
 import org.supla.android.profile.ProfileManager
+import org.supla.android.usecases.channel.LoadChannelConfigUseCase
 import org.supla.android.widget.WidgetPreferences
 import org.supla.android.widget.shared.configuration.*
 import javax.inject.Inject
@@ -49,7 +51,8 @@ class SingleWidgetConfigurationViewModel @Inject constructor(
   sceneRepository: SceneRepository,
   dispatchers: CoroutineDispatchers,
   singleCallProvider: SingleCall.Provider,
-  valuesFormatter: ValuesFormatter
+  valuesFormatter: ValuesFormatter,
+  loadChannelConfigUseCase: LoadChannelConfigUseCase
 ) : WidgetConfigurationViewModelBase(
   preferences,
   widgetPreferences,
@@ -58,7 +61,8 @@ class SingleWidgetConfigurationViewModel @Inject constructor(
   sceneRepository,
   dispatchers,
   singleCallProvider,
-  valuesFormatter
+  valuesFormatter,
+  loadChannelConfigUseCase
 ) {
 
   private val _actionsList = MutableLiveData<List<WidgetAction>>()
@@ -71,12 +75,13 @@ class SingleWidgetConfigurationViewModel @Inject constructor(
         channelBase.isDoorLock() ||
         channelBase.isSwitch() ||
         channelBase.isRollerShutter() ||
-        channelBase.isThermometer()
+        channelBase.isThermometer() ||
+        channelBase.isGpm()
       else -> false
     }
   }
 
-  override fun temperatureWithUnit(): Boolean = false
+  override fun valueWithUnit(): Boolean = false
 
   override fun changeItem(channel: DbItem?) {
     super.changeItem(channel)

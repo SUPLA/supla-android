@@ -1,5 +1,6 @@
 package org.supla.android.features.measurementsdownload
 
+import androidx.room.rxjava3.EmptyResultSetException
 import io.mockk.every
 import io.mockk.mockk
 import io.reactivex.rxjava3.core.Completable
@@ -162,8 +163,9 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
     whenever(suplaCloudServiceProvider.provide()).thenReturn(cloudService)
     mockInitialCall(remoteId, cloudService)
 
-    val measurementDate = date(2023, 10, 1, 3)
-    mockMeasurementsCall(measurementDate, Date(0), remoteId, cloudService)
+    val firstMeasurementDate = date(2023, 10, 1, 3)
+    val secondMeasurementDate = date(2023, 10, 1, 4)
+    mockMeasurementsCall(firstMeasurementDate, secondMeasurementDate, Date(0), remoteId, cloudService)
 
     whenever(generalPurposeMeterLogRepository.findOldestEntity(remoteId, profileId))
       .thenReturn(Maybe.empty())
@@ -184,7 +186,7 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
     verify(generalPurposeMeterLogRepository).getInitialMeasurements(cloudService, remoteId)
     verify(generalPurposeMeterLogRepository).delete(remoteId, profileId)
     verify(generalPurposeMeterLogRepository).getMeasurements(cloudService, remoteId, 0)
-    verify(generalPurposeMeterLogRepository).getMeasurements(cloudService, remoteId, measurementDate.toTimestamp())
+    verify(generalPurposeMeterLogRepository).getMeasurements(cloudService, remoteId, secondMeasurementDate.toTimestamp())
 
     val captor = argumentCaptor<List<GeneralPurposeMeterEntity>>()
     verify(generalPurposeMeterLogRepository).insert(captor.capture())
@@ -194,10 +196,10 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
       GeneralPurposeMeterEntity(
         id = null,
         channelId = remoteId,
-        date = measurementDate,
-        valueIncrement = 24f,
+        date = secondMeasurementDate,
+        valueIncrement = 2f,
         counterIncrement = 0,
-        value = 24f,
+        value = 26f,
         counter = 0,
         manuallyComplemented = false,
         counterReset = false,
@@ -226,8 +228,9 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
     whenever(suplaCloudServiceProvider.provide()).thenReturn(cloudService)
     mockInitialCall(remoteId, cloudService, lastDbDate)
 
-    val measurementDate = date(2023, 10, 1, 3)
-    mockMeasurementsCall(measurementDate, lastDbDate, remoteId, cloudService)
+    val firstMeasurementDate = date(2023, 10, 1, 3)
+    val secondMeasurementDate = date(2023, 10, 1, 3)
+    mockMeasurementsCall(firstMeasurementDate, secondMeasurementDate, lastDbDate, remoteId, cloudService)
 
     whenever(generalPurposeMeterLogRepository.findMinTimestamp(remoteId, profileId))
       .thenReturn(Single.just(lastDbDate.time))
@@ -249,20 +252,32 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
     verify(generalPurposeMeterLogRepository).findCount(remoteId, profileId)
     verify(generalPurposeMeterLogRepository).getInitialMeasurements(cloudService, remoteId)
     verify(generalPurposeMeterLogRepository).getMeasurements(cloudService, remoteId, lastDbDate.toTimestamp())
-    verify(generalPurposeMeterLogRepository).getMeasurements(cloudService, remoteId, measurementDate.toTimestamp())
+    verify(generalPurposeMeterLogRepository).getMeasurements(cloudService, remoteId, secondMeasurementDate.toTimestamp())
 
     val captor = argumentCaptor<List<GeneralPurposeMeterEntity>>()
     verify(generalPurposeMeterLogRepository).insert(captor.capture())
     val result = captor.firstValue
-    Assertions.assertThat(result).hasSize(1)
+    Assertions.assertThat(result).hasSize(2)
     Assertions.assertThat(result).containsExactly(
       GeneralPurposeMeterEntity(
         id = null,
         channelId = remoteId,
-        date = measurementDate,
+        date = firstMeasurementDate,
         valueIncrement = 14f,
         counterIncrement = 0,
         value = 24f,
+        counter = 0,
+        manuallyComplemented = false,
+        counterReset = false,
+        profileId = profileId
+      ),
+      GeneralPurposeMeterEntity(
+        id = null,
+        channelId = remoteId,
+        date = secondMeasurementDate,
+        valueIncrement = 2f,
+        counterIncrement = 0,
+        value = 26f,
         counter = 0,
         manuallyComplemented = false,
         counterReset = false,
@@ -291,8 +306,9 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
     whenever(suplaCloudServiceProvider.provide()).thenReturn(cloudService)
     mockInitialCall(remoteId, cloudService, lastDbDate)
 
-    val measurementDate = date(2023, 10, 1, 0, 30)
-    mockMeasurementsCall(measurementDate, lastDbDate, remoteId, cloudService)
+    val firstMeasurementDate = date(2023, 10, 1, 0, 30)
+    val secondMeasurementDate = date(2023, 10, 1, 0, 40)
+    mockMeasurementsCall(firstMeasurementDate, secondMeasurementDate, lastDbDate, remoteId, cloudService)
 
     whenever(generalPurposeMeterLogRepository.findMinTimestamp(remoteId, profileId))
       .thenReturn(Single.just(lastDbDate.time))
@@ -314,12 +330,12 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
     verify(generalPurposeMeterLogRepository).findCount(remoteId, profileId)
     verify(generalPurposeMeterLogRepository).getInitialMeasurements(cloudService, remoteId)
     verify(generalPurposeMeterLogRepository).getMeasurements(cloudService, remoteId, lastDbDate.toTimestamp())
-    verify(generalPurposeMeterLogRepository).getMeasurements(cloudService, remoteId, measurementDate.toTimestamp())
+    verify(generalPurposeMeterLogRepository).getMeasurements(cloudService, remoteId, secondMeasurementDate.toTimestamp())
 
     val captor = argumentCaptor<List<GeneralPurposeMeterEntity>>()
     verify(generalPurposeMeterLogRepository).insert(captor.capture())
     val result = captor.firstValue
-    Assertions.assertThat(result).hasSize(3)
+    Assertions.assertThat(result).hasSize(4)
     Assertions.assertThat(result).containsExactlyInAnyOrder(
       GeneralPurposeMeterEntity(
         id = null,
@@ -356,6 +372,18 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
         manuallyComplemented = false,
         counterReset = false,
         profileId = profileId
+      ),
+      GeneralPurposeMeterEntity(
+        id = null,
+        channelId = remoteId,
+        date = secondMeasurementDate,
+        valueIncrement = 2f,
+        counterIncrement = 0,
+        value = 26f,
+        counter = 0,
+        manuallyComplemented = false,
+        counterReset = false,
+        profileId = profileId
       )
     )
 
@@ -380,8 +408,9 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
     whenever(suplaCloudServiceProvider.provide()).thenReturn(cloudService)
     mockInitialCall(remoteId, cloudService, lastDbDate)
 
-    val measurementDate = date(2023, 10, 1, 3)
-    mockMeasurementsCall(measurementDate, lastDbDate, remoteId, cloudService)
+    val firstMeasurementDate = date(2023, 10, 1, 3)
+    val secondMeasurementDate = date(2023, 10, 1, 4)
+    mockMeasurementsCall(firstMeasurementDate, secondMeasurementDate, lastDbDate, remoteId, cloudService)
 
     whenever(generalPurposeMeterLogRepository.findMinTimestamp(remoteId, profileId))
       .thenReturn(Single.just(lastDbDate.time))
@@ -403,20 +432,32 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
     verify(generalPurposeMeterLogRepository).findCount(remoteId, profileId)
     verify(generalPurposeMeterLogRepository).getInitialMeasurements(cloudService, remoteId)
     verify(generalPurposeMeterLogRepository).getMeasurements(cloudService, remoteId, lastDbDate.toTimestamp())
-    verify(generalPurposeMeterLogRepository).getMeasurements(cloudService, remoteId, measurementDate.toTimestamp())
+    verify(generalPurposeMeterLogRepository).getMeasurements(cloudService, remoteId, secondMeasurementDate.toTimestamp())
 
     val captor = argumentCaptor<List<GeneralPurposeMeterEntity>>()
     verify(generalPurposeMeterLogRepository).insert(captor.capture())
     val result = captor.firstValue
-    Assertions.assertThat(result).hasSize(1)
+    Assertions.assertThat(result).hasSize(2)
     Assertions.assertThat(result).containsExactly(
       GeneralPurposeMeterEntity(
         id = null,
         channelId = remoteId,
-        date = measurementDate,
+        date = firstMeasurementDate,
         valueIncrement = -226f,
         counterIncrement = 0,
         value = 24f,
+        counter = 0,
+        manuallyComplemented = false,
+        counterReset = false,
+        profileId = profileId
+      ),
+      GeneralPurposeMeterEntity(
+        id = null,
+        channelId = remoteId,
+        date = secondMeasurementDate,
+        valueIncrement = 2f,
+        counterIncrement = 0,
+        value = 26f,
         counter = 0,
         manuallyComplemented = false,
         counterReset = false,
@@ -445,8 +486,9 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
     whenever(suplaCloudServiceProvider.provide()).thenReturn(cloudService)
     mockInitialCall(remoteId, cloudService, lastDbDate)
 
-    val measurementDate = date(2023, 10, 1, 3)
-    mockMeasurementsCall(measurementDate, lastDbDate, remoteId, cloudService)
+    val firstMeasurementDate = date(2023, 10, 1, 3)
+    val secondMeasurementDate = date(2023, 10, 1, 4)
+    mockMeasurementsCall(firstMeasurementDate, secondMeasurementDate, lastDbDate, remoteId, cloudService)
 
     whenever(generalPurposeMeterLogRepository.findMinTimestamp(remoteId, profileId))
       .thenReturn(Single.just(lastDbDate.time))
@@ -454,7 +496,7 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
       .thenReturn(Maybe.just(lastEntity))
     whenever(generalPurposeMeterLogRepository.findCount(remoteId, profileId)).thenReturn(Maybe.just(50))
     whenever(generalPurposeMeterLogRepository.insert(any())).thenReturn(Completable.complete())
-    mockChannelConfig(profileId, remoteId, allowReset = true)
+    mockChannelConfig(profileId, remoteId, counterType = SuplaChannelConfigMeterCounterType.ALWAYS_INCREMENT)
 
     // when
     val testObserver = useCase.loadMeasurements(remoteId, profileId).test()
@@ -468,7 +510,77 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
     verify(generalPurposeMeterLogRepository).findCount(remoteId, profileId)
     verify(generalPurposeMeterLogRepository).getInitialMeasurements(cloudService, remoteId)
     verify(generalPurposeMeterLogRepository).getMeasurements(cloudService, remoteId, lastDbDate.toTimestamp())
-    verify(generalPurposeMeterLogRepository).getMeasurements(cloudService, remoteId, measurementDate.toTimestamp())
+    verify(generalPurposeMeterLogRepository).getMeasurements(cloudService, remoteId, secondMeasurementDate.toTimestamp())
+
+    val captor = argumentCaptor<List<GeneralPurposeMeterEntity>>()
+    verify(generalPurposeMeterLogRepository).insert(captor.capture())
+    val result = captor.firstValue
+    Assertions.assertThat(result).hasSize(2)
+    Assertions.assertThat(result).containsExactly(
+      GeneralPurposeMeterEntity(
+        id = null,
+        channelId = remoteId,
+        date = firstMeasurementDate,
+        valueIncrement = 0f,
+        counterIncrement = 0,
+        value = 24f,
+        counter = 0,
+        manuallyComplemented = false,
+        counterReset = true,
+        profileId = profileId
+      ),
+      GeneralPurposeMeterEntity(
+        id = null,
+        channelId = remoteId,
+        date = secondMeasurementDate,
+        valueIncrement = 2f,
+        counterIncrement = 0,
+        value = 26f,
+        counter = 0,
+        manuallyComplemented = false,
+        counterReset = false,
+        profileId = profileId
+      )
+    )
+
+    verifyNoMoreInteractions(suplaCloudServiceProvider, generalPurposeMeterLogRepository)
+  }
+
+  @Test
+  fun `should not store positive values when counter type is decrement`() {
+    // given
+    val remoteId = 123
+    val profileId = 321L
+    val cloudService: SuplaCloudService = mockk()
+
+    whenever(suplaCloudServiceProvider.provide()).thenReturn(cloudService)
+    mockInitialCall(remoteId, cloudService, Date(0))
+
+    val firstMeasurementDate = date(2023, 10, 1, 3)
+    val secondMeasurementDate = date(2023, 10, 1, 4)
+    mockMeasurementsCall(firstMeasurementDate, secondMeasurementDate, Date(0), remoteId, cloudService)
+
+    whenever(generalPurposeMeterLogRepository.findMinTimestamp(remoteId, profileId))
+      .thenReturn(Single.error(EmptyResultSetException("")))
+    whenever(generalPurposeMeterLogRepository.findOldestEntity(remoteId, profileId))
+      .thenReturn(Maybe.empty())
+    whenever(generalPurposeMeterLogRepository.findCount(remoteId, profileId)).thenReturn(Maybe.just(50))
+    whenever(generalPurposeMeterLogRepository.insert(any())).thenReturn(Completable.complete())
+    mockChannelConfig(profileId, remoteId, counterType = SuplaChannelConfigMeterCounterType.ALWAYS_DECREMENT)
+
+    // when
+    val testObserver = useCase.loadMeasurements(remoteId, profileId).test()
+
+    // then
+    testObserver.assertComplete()
+
+    verify(suplaCloudServiceProvider).provide()
+    verify(generalPurposeMeterLogRepository).findMinTimestamp(remoteId, profileId)
+    verify(generalPurposeMeterLogRepository).findOldestEntity(remoteId, profileId)
+    verify(generalPurposeMeterLogRepository).findCount(remoteId, profileId)
+    verify(generalPurposeMeterLogRepository).getInitialMeasurements(cloudService, remoteId)
+    verify(generalPurposeMeterLogRepository).getMeasurements(cloudService, remoteId, 0)
+    verify(generalPurposeMeterLogRepository).getMeasurements(cloudService, remoteId, secondMeasurementDate.toTimestamp())
 
     val captor = argumentCaptor<List<GeneralPurposeMeterEntity>>()
     verify(generalPurposeMeterLogRepository).insert(captor.capture())
@@ -478,13 +590,13 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
       GeneralPurposeMeterEntity(
         id = null,
         channelId = remoteId,
-        date = measurementDate,
-        valueIncrement = 24f,
+        date = secondMeasurementDate,
+        valueIncrement = 0f,
         counterIncrement = 0,
-        value = 24f,
+        value = 26f,
         counter = 0,
         manuallyComplemented = false,
-        counterReset = true,
+        counterReset = false,
         profileId = profileId
       )
     )
@@ -492,11 +604,18 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
     verifyNoMoreInteractions(suplaCloudServiceProvider, generalPurposeMeterLogRepository)
   }
 
-  private fun mockMeasurementsCall(measurementDate: Date, lastDbDate: Date, remoteId: Int, cloudService: SuplaCloudService) {
-    val measurement = GeneralPurposeMeter(measurementDate, 24f)
+  private fun mockMeasurementsCall(
+    firstMeasurementDate: Date,
+    secondMeasurementDate: Date,
+    lastDbDate: Date,
+    remoteId: Int,
+    cloudService: SuplaCloudService
+  ) {
+    val measurement1 = GeneralPurposeMeter(firstMeasurementDate, 24f)
+    val measurement2 = GeneralPurposeMeter(secondMeasurementDate, 26f)
     whenever(generalPurposeMeterLogRepository.getMeasurements(cloudService, remoteId, lastDbDate.toTimestamp()))
-      .thenReturn(Observable.just(listOf(measurement)))
-    whenever(generalPurposeMeterLogRepository.getMeasurements(cloudService, remoteId, measurementDate.toTimestamp()))
+      .thenReturn(Observable.just(listOf(measurement1, measurement2)))
+    whenever(generalPurposeMeterLogRepository.getMeasurements(cloudService, remoteId, secondMeasurementDate.toTimestamp()))
       .thenReturn(Observable.just(emptyList()))
   }
 
@@ -523,13 +642,14 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
     whenever(generalPurposeMeterLogRepository.getInitialMeasurements(cloudService, remoteId)).thenReturn(response)
   }
 
-  private fun mockChannelConfig(profileId: Long, remoteId: Int, allowReset: Boolean = false, fillData: Boolean = false) {
-    val config = mockk<SuplaChannelGeneralPurposeMeterConfig>() {
-      if (allowReset) {
-        every { counterType } returns SuplaChannelConfigMeterCounterType.ALWAYS_INCREMENT
-      } else {
-        every { counterType } returns SuplaChannelConfigMeterCounterType.INCREMENT_AND_DECREMENT
-      }
+  private fun mockChannelConfig(
+    profileId: Long,
+    remoteId: Int,
+    counterType: SuplaChannelConfigMeterCounterType = SuplaChannelConfigMeterCounterType.INCREMENT_AND_DECREMENT,
+    fillData: Boolean = false
+  ) {
+    val config = mockk<SuplaChannelGeneralPurposeMeterConfig> {
+      every { this@mockk.counterType } returns counterType
       every { fillMissingData } returns fillData
     }
     whenever(channelConfigRepository.findGpmConfig(profileId, remoteId, ChannelConfigType.GENERAL_PURPOSE_METER))

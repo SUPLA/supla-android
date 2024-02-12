@@ -63,7 +63,7 @@ class MultiAccountProfileManager(
 
   override fun delete(id: Long): Completable = Completable.fromRunnable {
     try {
-      singleCallProvider.provide(id).registerPushNotificationClientToken(SuplaClient.SUPLA_APP_ID, "")
+      singleCallProvider.provide(id).registerPushNotificationClientToken(SuplaClient.SUPLA_APP_ID, "", "")
     } catch (ex: Exception) {
       Trace.w(TAG, "Token cleanup failed while profile removal (profile id: `$id`)", ex)
     }

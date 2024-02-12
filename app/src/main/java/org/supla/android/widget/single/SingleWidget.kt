@@ -34,14 +34,13 @@ import org.supla.android.data.model.general.IconType
 import org.supla.android.data.source.local.entity.Scene
 import org.supla.android.db.Channel
 import org.supla.android.extensions.getChannelIconUseCase
+import org.supla.android.extensions.isGpm
 import org.supla.android.extensions.isThermometer
 import org.supla.android.images.ImageCache
 import org.supla.android.lib.SuplaConst
 import org.supla.android.widget.WidgetConfiguration
-import org.supla.android.widget.onoff.getActiveValue
 import org.supla.android.widget.shared.WidgetProviderBase
 import org.supla.android.widget.shared.configuration.ItemType
-import org.supla.android.widget.shared.configuration.WidgetAction
 import org.supla.android.widget.shared.getWorkId
 import org.supla.android.widget.shared.isWidgetValid
 
@@ -135,18 +134,12 @@ class SingleWidget : WidgetProviderBase() {
     channel.altIcon = configuration.altIcon
     channel.userIconId = configuration.userIcon
 
-    if (channel.isThermometer()) {
+    if (channel.isThermometer() || channel.isGpm()) {
       views.setTextViewText(R.id.single_widget_text, configuration.value)
       views.setViewVisibility(R.id.single_widget_button, View.GONE)
       views.setViewVisibility(R.id.single_widget_button_night_mode, View.GONE)
       views.setViewVisibility(R.id.single_widget_text, View.VISIBLE)
     } else {
-      val active = if (turnOnOrClose(configuration)) {
-        getActiveValue(configuration.itemFunction)
-      } else {
-        0
-      }
-
       views.setImageViewBitmap(
         R.id.single_widget_button,
         ImageCache.getBitmap(
@@ -189,11 +182,6 @@ internal fun pendingIntent(context: Context, intentAction: String, widgetId: Int
     intent(context, intentAction, widgetId),
     PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
   )
-}
-
-internal fun turnOnOrClose(configuration: WidgetConfiguration): Boolean {
-  return configuration.actionId == WidgetAction.TURN_ON.actionId ||
-    configuration.actionId == WidgetAction.MOVE_DOWN.actionId
 }
 
 fun updateSingleWidget(context: Context, widgetId: Int) =

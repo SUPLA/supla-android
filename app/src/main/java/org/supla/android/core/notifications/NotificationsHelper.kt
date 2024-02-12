@@ -28,11 +28,9 @@ import org.supla.android.StartActivity
 import org.supla.android.Trace
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.infrastructure.WorkManagerProxy
-import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.storage.EncryptedPreferences
 import org.supla.android.extensions.TAG
 import org.supla.android.features.updatetoken.UpdateTokenWorker
-import org.supla.android.lib.SuplaClient
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.random.Random
@@ -50,7 +48,6 @@ class NotificationsHelper @Inject constructor(
   private val encryptedPreferences: EncryptedPreferences,
   private val preferences: Preferences,
   private val notificationManager: NotificationManager,
-  private val suplaClientProvider: SuplaClientProvider,
   private val workManagerProxy: WorkManagerProxy,
   private val dateProvider: DateProvider
 ) {
@@ -111,21 +108,10 @@ class NotificationsHelper @Inject constructor(
     encryptedPreferences.fcmToken = token
     encryptedPreferences.notificationsLastEnabled = currentEnabled
 
-    var currentProfileUpdated = false
-    suplaClientProvider.provide()?.let {
-      if (it.registered()) {
-        currentProfileUpdated = if (areNotificationsEnabled(notificationManager)) {
-          it.registerPushNotificationClientToken(SuplaClient.SUPLA_APP_ID, token)
-        } else {
-          it.registerPushNotificationClientToken(SuplaClient.SUPLA_APP_ID, "")
-        }
-      }
-    }
-
     val workRequest = if (areNotificationsEnabled(notificationManager)) {
-      UpdateTokenWorker.build(token, currentProfileUpdated.not())
+      UpdateTokenWorker.build(token, true)
     } else {
-      UpdateTokenWorker.build("", currentProfileUpdated.not())
+      UpdateTokenWorker.build("", true)
     }
     workManagerProxy.enqueueUniqueWork(UpdateTokenWorker.WORK_ID, ExistingWorkPolicy.KEEP, workRequest)
   }
@@ -136,9 +122,11 @@ class NotificationsHelper @Inject constructor(
       ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED -> {
         // do nothing, we have permission
       }
+
       activity.shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS) -> {
         // do nothing, user blocked notifications
       }
+
       else -> {
         if (preferences.isNotificationsPopupDisplayed.not()) {
           askPermissionCallback()
