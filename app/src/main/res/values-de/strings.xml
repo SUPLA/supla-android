@@ -553,7 +553,11 @@
   <string name="thermostat_detail_arrow_info">Die dunkle Ecke zeigt aktuelles Tag und Zeit.</string>
   <string name="channel_caption_general_purpose_measurement">Messungskanal</string>
   <string name="history_disabled">Der Verlauf ist für diesen Kanal deaktiviert.</string>
-  <plurals name="details_timer_info_on">
+  <string name="toolbar_delete_all">Alles löschen</string>
+ <string name="notification_delete_all_title">Alle Einträge löschen?</string>
+ <string name="notification_delete_all_message">Das Löschen ist unumkehrbar, fortfahren?</string>
+ <string name="notification_delete_all_proceed">Löschen</string>
+ <plurals name="details_timer_info_on">
     <item quantity="one">eingeschaltet</item>
     <item quantity="other">eingeschaltet</item>
   </plurals>

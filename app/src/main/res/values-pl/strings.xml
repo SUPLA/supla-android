@@ -29,6 +29,7 @@
   <string name="about">O programie</string>
   <string name="settings">Ustawienia</string>
   <string name="add_device">Dodaj urządzenie</string>
+  <string name="menu_notifications" translatable="false">Historia notyfikacji</string>
 
   <string name="status_connecting">Łączenie...</string>
   <string name="status_unknown_err">Nieznany błąd</string>
@@ -624,6 +625,10 @@
   <string name="chart_marker_closing">Zamknięcie</string>
   <string name="channel_caption_general_purpose_meter">Kanał licznikowy</string>
   <string name="history_disabled">Historia jest wyłączona dla tego kanału</string>
+  <string name="toolbar_delete_all">Usuń wszystko</string>
+  <string name="notification_delete_all_title">Usunąć wszystko?</string>
+  <string name="notification_delete_all_message">Usunięcie całej historii jest nieodwracalne, kontynuować?</string>
+  <string name="notification_delete_all_proceed">Usuń</string>
 
   <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
     <item quantity="one">włączone</item>

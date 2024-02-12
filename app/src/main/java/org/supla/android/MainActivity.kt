@@ -211,6 +211,7 @@ class MainActivity : NavigationActivity(), ToolbarTitleController, LoadableConte
   private fun configureToolbarOnDestinationChange(destination: NavDestination) {
     lastDestinationId = destination.id
     setAccountItemVisible(profileManager.getAllProfiles().blockingFirst().size > 1 && lastDestinationId == R.id.main_fragment)
+    setDeleteAllVisible(lastDestinationId == R.id.notifications_log_fragment)
 
     if (destination.id != R.id.main_fragment) {
       findViewById<FrameLayout>(R.id.main_content).setPadding(0, 0, 0, 0)
@@ -220,6 +221,7 @@ class MainActivity : NavigationActivity(), ToolbarTitleController, LoadableConte
   override fun onResume() {
     super.onResume()
     setAccountItemVisible(profileManager.getAllProfiles().blockingFirst().size > 1 && lastDestinationId == R.id.main_fragment)
+    setDeleteAllVisible(lastDestinationId == R.id.notifications_log_fragment)
 
     if (SuperuserAuthorizationDialog.lastOneIsStillShowing()) {
       return
@@ -238,6 +240,10 @@ class MainActivity : NavigationActivity(), ToolbarTitleController, LoadableConte
 
   private fun setAccountItemVisible(visible: Boolean) {
     toolbar.menu.findItem(R.id.toolbar_accounts)?.isVisible = visible
+  }
+
+  private fun setDeleteAllVisible(visible: Boolean) {
+    toolbar.menu.findItem(R.id.toolbar_delete)?.isVisible = visible
   }
 
   private fun runDownloadTask() {
@@ -429,6 +435,7 @@ class MainActivity : NavigationActivity(), ToolbarTitleController, LoadableConte
       MenuItemsLayout.BTN_CLOUD -> openCloud()
       MenuItemsLayout.BTN_HOMEPAGE -> openHomepage()
       MenuItemsLayout.BTN_PROFILE -> showProfile(this)
+      MenuItemsLayout.BTN_NOTIFICATIONS -> navigator.navigateTo(R.id.notifications_log_fragment)
     }
   }
 

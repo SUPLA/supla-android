@@ -33,6 +33,7 @@ android {
   compileOptions {
     sourceCompatibility(JavaVersion.VERSION_1_8)
     targetCompatibility(JavaVersion.VERSION_1_8)
+    isCoreLibraryDesugaringEnabled = true
   }
 
   buildTypes {
@@ -150,6 +151,8 @@ dependencies {
   implementation(Deps.Androidx.Compose.Material3)
   implementation(Deps.Androidx.Compose.Tooling)
   implementation(Deps.Androidx.Compose.ConstraintLayout)
+
+  coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
 
   annotationProcessor(Deps.Androidx.Room.Compiler)
 
