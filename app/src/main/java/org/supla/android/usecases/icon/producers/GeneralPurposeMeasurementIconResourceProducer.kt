@@ -22,7 +22,7 @@ import org.supla.android.lib.SuplaConst
 import org.supla.android.usecases.icon.IconData
 import org.supla.android.usecases.icon.IconResourceProducer
 
-class GenericPurposeMeasurementIconResourceProducer : IconResourceProducer {
+class GeneralPurposeMeasurementIconResourceProducer : IconResourceProducer {
   override fun accepts(function: Int): Boolean =
     function == SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT
 

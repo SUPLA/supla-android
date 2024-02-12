@@ -1463,8 +1463,11 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   }
 
   private void onChannelConfigUpdateOrResult(SuplaChannelConfig config, ConfigResult result) {
-    channelConfigEventsManager.emitConfig(result, config);
     insertChannelConfigUseCase.invoke(config, result).blockingSubscribe();
+    channelConfigEventsManager.emitConfig(result, config);
+    if (result == ConfigResult.RESULT_TRUE && config != null) {
+      updateEventsManager.emitChannelUpdate(config.getRemoteId());
+    }
   }
 
   private void onDeviceConfigUpdateOrResult(

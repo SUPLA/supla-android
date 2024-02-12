@@ -49,7 +49,7 @@
             android:layout_centerVertical="true"
             android:layout_marginStart="15dp"
             android:layout_marginLeft="15dp"
-            android:background="@drawable/electricitymeter"
+            android:background="@drawable/fnc_electricity_meter"
             android:visibility="visible" />
 
         <LinearLayout

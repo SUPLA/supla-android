@@ -44,6 +44,7 @@ import org.supla.android.data.source.remote.gpm.SuplaChannelGeneralPurposeBaseCo
 import org.supla.android.data.source.remote.gpm.SuplaChannelGeneralPurposeMeasurementConfig
 import org.supla.android.data.source.remote.gpm.SuplaChannelGeneralPurposeMeterConfig
 import org.supla.android.di.GSON_FOR_REPO
+import org.supla.android.events.ChannelConfigEventsManager
 import org.supla.android.events.DownloadEventsManager
 import org.supla.android.extensions.ifLet
 import org.supla.android.features.details.detailbase.history.BaseHistoryDetailViewModel
@@ -68,10 +69,23 @@ class GpmHistoryDetailViewModel @Inject constructor(
   private val profileManager: ProfileManager,
   private val readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
   private val userStateHolder: UserStateHolder,
+  private val channelConfigEventsManager: ChannelConfigEventsManager,
   @Named(GSON_FOR_REPO) private val gson: Gson,
   dateProvider: DateProvider,
   schedulers: SuplaSchedulers
 ) : BaseHistoryDetailViewModel(userStateHolder, dateProvider, schedulers) {
+
+  override fun loadData(remoteId: Int) {
+    super.loadData(remoteId)
+
+    channelConfigEventsManager.observerConfig(remoteId)
+      .attachSilent()
+      .subscribeBy(
+        onNext = { reloadMeasurements() },
+        onError = defaultErrorHandler("loadData")
+      )
+      .disposeBySelf()
+  }
 
   override fun triggerDataLoad(remoteId: Int) {
     Maybe.zip(

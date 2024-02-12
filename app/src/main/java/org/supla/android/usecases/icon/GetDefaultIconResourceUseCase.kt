@@ -42,8 +42,8 @@ import org.supla.android.usecases.icon.producers.ElectricityMeterIconResourcePro
 import org.supla.android.usecases.icon.producers.GarageDoorIconResourceProducer
 import org.supla.android.usecases.icon.producers.GateIconResourceProducer
 import org.supla.android.usecases.icon.producers.GatewayIconResourceProducer
-import org.supla.android.usecases.icon.producers.GenericPurposeMeasurementIconResourceProducer
-import org.supla.android.usecases.icon.producers.GenericPurposeMeterIconResourceProducer
+import org.supla.android.usecases.icon.producers.GeneralPurposeMeasurementIconResourceProducer
+import org.supla.android.usecases.icon.producers.GeneralPurposeMeterIconResourceProducer
 import org.supla.android.usecases.icon.producers.HotelCardIconResourceProducer
 import org.supla.android.usecases.icon.producers.HumidityAndTemperatureIconResourceProducer
 import org.supla.android.usecases.icon.producers.LightSwitchIconResourceProducer
@@ -95,14 +95,14 @@ class GetDefaultIconResourceUseCase @Inject constructor() {
     AlarmArmamentSensorIconResourceProducer(),
     MailSensorIconResourceProducer(),
     ElectricityMeterIconResourceProducer(),
-    static(SUPLA_CHANNELFNC_IC_GAS_METER, R.drawable.gasmeter, R.drawable.gasmeter_nightmode),
-    static(SUPLA_CHANNELFNC_IC_WATER_METER, R.drawable.watermeter, R.drawable.watermeter_nightmode),
-    static(SUPLA_CHANNELFNC_IC_HEAT_METER, R.drawable.heatmeter, R.drawable.heatmeter_nightmode),
+    static(SUPLA_CHANNELFNC_IC_GAS_METER, R.drawable.fnc_gasmeter, R.drawable.fnc_gasmeter_nm),
+    static(SUPLA_CHANNELFNC_IC_WATER_METER, R.drawable.fnc_watermeter, R.drawable.fnc_watermeter_nm),
+    static(SUPLA_CHANNELFNC_IC_HEAT_METER, R.drawable.fnc_heatmeter, R.drawable.fnc_heatmeter_nm),
     ThermostatHomePlusIconResourceProducer(),
     ValveIconResourceProducer(),
     DigiglassIconResourceProducer(),
-    GenericPurposeMeasurementIconResourceProducer(),
-    GenericPurposeMeterIconResourceProducer()
+    GeneralPurposeMeasurementIconResourceProducer(),
+    GeneralPurposeMeterIconResourceProducer()
   )
 
   @DrawableRes

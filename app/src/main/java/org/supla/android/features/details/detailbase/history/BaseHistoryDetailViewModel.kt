@@ -72,7 +72,7 @@ abstract class BaseHistoryDetailViewModel(
   schedulers: SuplaSchedulers
 ) : BaseViewModel<HistoryDetailViewState, HistoryDetailViewEvent>(HistoryDetailViewState(), schedulers), HistoryDetailProxy {
 
-  fun loadData(remoteId: Int) {
+  open fun loadData(remoteId: Int) {
     updateState { state ->
       state.copy(remoteId = remoteId, loading = true)
     }
