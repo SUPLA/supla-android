@@ -651,6 +651,8 @@
   <string name="notification_delete_all_title" translatable="false">Delete all logs?</string>
   <string name="notification_delete_all_message" translatable="false">Deletion of all log entries is irreversible, do you want to continue?</string>
   <string name="notification_delete_all_proceed" translatable="false">Delete</string>
+  <string name="notifications_log_profile" translatable="false">Profile:</string>
+  <string name="notifications_log_date" translatable="false">Date:</string>
 
   <plurals name="details_timer_info_on" translatable="false">
     <item quantity="other">on</item>

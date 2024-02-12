@@ -75,8 +75,6 @@ open class BaseLoadMeasurementsUseCaseTest {
             date = Date(initialTime.plus(timeDistance * i)),
             value = i.toFloat(),
             valueIncrement = i.toFloat(),
-            counter = i,
-            counterIncrement = i,
             counterReset = false,
             manuallyComplemented = false,
             profileId = 1L

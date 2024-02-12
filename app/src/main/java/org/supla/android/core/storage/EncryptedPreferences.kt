@@ -29,6 +29,7 @@ import javax.inject.Singleton
 private const val FCM_TOKEN_KEY = "FCM_TOKEN_KEY"
 private const val FCM_TOKEN_LAST_UPDATE_KEY = "FCM_TOKEN_LAST_UPDATE_KEY"
 private const val NOTIFICATIONS_LAST_ENABLED = "NOTIFICATIONS_LAST_ENABLED"
+private const val FCM_PROFILE_TOKEN_KEY = "FCM_TOKEN_KEY_"
 
 @Singleton
 class EncryptedPreferences @Inject constructor(
@@ -69,4 +70,15 @@ class EncryptedPreferences @Inject constructor(
       putBoolean(NOTIFICATIONS_LAST_ENABLED, value)
       apply()
     }
+
+  fun getFcmProfileToken(profileId: Long): String? {
+    return preferences.getString(FCM_PROFILE_TOKEN_KEY + profileId, null)
+  }
+
+  fun setFcmProfileToken(profileId: Long, token: String) {
+    with(preferences.edit()) {
+      putString(FCM_PROFILE_TOKEN_KEY + profileId, token)
+      apply()
+    }
+  }
 }

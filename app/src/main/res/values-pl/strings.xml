@@ -29,7 +29,7 @@
   <string name="about">O programie</string>
   <string name="settings">Ustawienia</string>
   <string name="add_device">Dodaj urządzenie</string>
-  <string name="menu_notifications" translatable="false">Historia notyfikacji</string>
+  <string name="menu_notifications" translatable="false">Historia powiadomień</string>
 
   <string name="status_connecting">Łączenie...</string>
   <string name="status_unknown_err">Nieznany błąd</string>
@@ -629,6 +629,8 @@
   <string name="notification_delete_all_title">Usunąć wszystko?</string>
   <string name="notification_delete_all_message">Usunięcie całej historii jest nieodwracalne, kontynuować?</string>
   <string name="notification_delete_all_proceed">Usuń</string>
+  <string name="notifications_log_profile">Profil:</string>
+  <string name="notifications_log_date">Data:</string>
 
   <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
     <item quantity="one">włączone</item>

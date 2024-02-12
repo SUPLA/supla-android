@@ -26,9 +26,9 @@ import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.StartActivity
 import org.supla.android.Trace
-import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.infrastructure.WorkManagerProxy
 import org.supla.android.core.storage.EncryptedPreferences
+import org.supla.android.data.source.NotificationRepository
 import org.supla.android.extensions.TAG
 import org.supla.android.features.updatetoken.UpdateTokenWorker
 import javax.inject.Inject
@@ -49,7 +49,7 @@ class NotificationsHelper @Inject constructor(
   private val preferences: Preferences,
   private val notificationManager: NotificationManager,
   private val workManagerProxy: WorkManagerProxy,
-  private val dateProvider: DateProvider
+  private val notificationRepository: NotificationRepository
 ) {
 
   private val notificationIdRandomizer = Random.Default
@@ -98,20 +98,13 @@ class NotificationsHelper @Inject constructor(
   }
 
   fun updateToken(token: String = encryptedPreferences.fcmToken ?: "") {
-    val currentEnabled = areNotificationsEnabled(notificationManager)
-    val previousEnabled = encryptedPreferences.notificationsLastEnabled
-    if (token == encryptedPreferences.fcmToken && tokenUpdateNotNeeded() && currentEnabled == previousEnabled) {
-      Trace.d(TAG, "Token update skipped. Tokens are equal")
-      return
-    }
     Trace.i(TAG, "Updating FCM Token: $token")
     encryptedPreferences.fcmToken = token
-    encryptedPreferences.notificationsLastEnabled = currentEnabled
 
     val workRequest = if (areNotificationsEnabled(notificationManager)) {
-      UpdateTokenWorker.build(token, true)
+      UpdateTokenWorker.build(token)
     } else {
-      UpdateTokenWorker.build("", true)
+      UpdateTokenWorker.build("")
     }
     workManagerProxy.enqueueUniqueWork(UpdateTokenWorker.WORK_ID, ExistingWorkPolicy.KEEP, workRequest)
   }
@@ -135,7 +128,7 @@ class NotificationsHelper @Inject constructor(
     }
   }
 
-  fun showNotification(context: Context, title: String, text: String) {
+  fun showNotification(context: Context, title: String, text: String, profileName: String?) {
     if (VERSION.SDK_INT >= VERSION_CODES.N && !notificationManager.areNotificationsEnabled()) {
       return
     }
@@ -144,6 +137,7 @@ class NotificationsHelper @Inject constructor(
     setupNotificationChannel(context)
 
     notificationManager.notify(notificationIdRandomizer.nextInt() % MAX_NOTIFICATION_ID, buildNotification(title, text))
+    notificationRepository.insert(title, text, profileName).blockingSubscribe()
   }
 
   fun createBackgroundNotification(context: Context, widgetCaption: String?): Notification {
@@ -170,13 +164,6 @@ class NotificationsHelper @Inject constructor(
       .setAutoCancel(true)
       .setStyle(NotificationCompat.BigTextStyle().bigText(text))
       .build()
-  }
-
-  private fun tokenUpdateNotNeeded(): Boolean {
-    return encryptedPreferences.fcmTokenLastUpdate?.let {
-      val pauseTimeInMillis = UpdateTokenWorker.UPDATE_PAUSE_IN_DAYS.times(ONE_DAY_MILLIS)
-      it.time.plus(pauseTimeInMillis) > dateProvider.currentTimestamp()
-    } ?: false
   }
 
   companion object {

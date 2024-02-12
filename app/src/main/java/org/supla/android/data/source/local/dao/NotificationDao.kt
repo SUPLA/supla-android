@@ -24,6 +24,7 @@ import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import org.supla.android.data.source.local.entity.NotificationEntity
 import org.supla.android.data.source.local.entity.NotificationEntity.Companion.ALL_COLUMNS_STRING
+import org.supla.android.data.source.local.entity.NotificationEntity.Companion.COLUMN_DATE
 import org.supla.android.data.source.local.entity.NotificationEntity.Companion.COLUMN_ID
 import org.supla.android.data.source.local.entity.NotificationEntity.Companion.TABLE_NAME
 
@@ -33,7 +34,7 @@ interface NotificationDao {
   @Insert
   fun insert(notification: NotificationEntity): Completable
 
-  @Query("SELECT $ALL_COLUMNS_STRING FROM $TABLE_NAME")
+  @Query("SELECT $ALL_COLUMNS_STRING FROM $TABLE_NAME ORDER BY $COLUMN_DATE DESC")
   fun loadAll(): Observable<List<NotificationEntity>>
 
   @Query("DELETE FROM $TABLE_NAME WHERE $COLUMN_ID = :id")

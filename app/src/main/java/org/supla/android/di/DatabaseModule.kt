@@ -41,12 +41,14 @@ import org.supla.android.db.room.app.migrations.MIGRATION_29_30
 import org.supla.android.db.room.app.migrations.MIGRATION_30_31
 import org.supla.android.db.room.app.migrations.MIGRATION_31_32
 import org.supla.android.db.room.app.migrations.MIGRATION_32_33
+import org.supla.android.db.room.app.migrations.MIGRATION_33_34
 import org.supla.android.db.room.app.migrations.Migration25to26
 import org.supla.android.db.room.app.migrations.Migration26to27
 import org.supla.android.db.room.app.migrations.Migration27to28
 import org.supla.android.db.room.measurements.MeasurementsDatabase
 import org.supla.android.db.room.measurements.MeasurementsDatabaseCallback
 import org.supla.android.db.room.measurements.migrations.MEASUREMENTS_DB_MIGRATION_31_32
+import org.supla.android.db.room.measurements.migrations.MEASUREMENTS_DB_MIGRATION_32_33
 import org.supla.android.db.room.measurements.migrations.MeasurementsDbMigration29to30
 import javax.inject.Singleton
 
@@ -81,7 +83,8 @@ class DatabaseModule {
         MIGRATION_29_30,
         MIGRATION_30_31,
         MIGRATION_31_32,
-        MIGRATION_32_33
+        MIGRATION_32_33,
+        MIGRATION_33_34
       )
       .build()
 
@@ -168,7 +171,8 @@ class DatabaseModule {
       .addMigrations(
         migration29to30,
         EmptyMigration(30, 31),
-        MEASUREMENTS_DB_MIGRATION_31_32
+        MEASUREMENTS_DB_MIGRATION_31_32,
+        MEASUREMENTS_DB_MIGRATION_32_33
       )
       .build()
 

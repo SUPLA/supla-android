@@ -145,7 +145,6 @@ class DownloadGeneralPurposeMeterLogUseCase @Inject constructor(
         channelId = remoteId,
         profileId = profileId,
         valueIncrement = valueDivided,
-        counterIncrement = 0, // to remove
       )
     } else {
       GeneralPurposeMeterEntity.create(
@@ -153,7 +152,6 @@ class DownloadGeneralPurposeMeterLogUseCase @Inject constructor(
         channelId = remoteId,
         profileId = profileId,
         valueIncrement = valueIncrement,
-        counterIncrement = 0, // to remove
         counterReset = reset
       )
     }
@@ -176,9 +174,7 @@ class DownloadGeneralPurposeMeterLogUseCase @Inject constructor(
           channelId = remoteId,
           date = Date(entry.date.time - ChartDataAggregation.MINUTES.timeInSec.times(1000).times(itemNo)),
           valueIncrement = valueDivided,
-          counterIncrement = 0, // to remove
           value = entry.value - valueDivided.times(itemNo),
-          counter = 0, // to remove
           manuallyComplemented = true,
           counterReset = if (itemNo == missingItemsCount - 1) reset else false,
           profileId = profileId

@@ -198,9 +198,7 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
         channelId = remoteId,
         date = secondMeasurementDate,
         valueIncrement = 2f,
-        counterIncrement = 0,
         value = 26f,
-        counter = 0,
         manuallyComplemented = false,
         counterReset = false,
         profileId = profileId
@@ -219,9 +217,7 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
     val lastEntity = mockk<GeneralPurposeMeterEntity>().apply {
       every { date } returns lastDbDate
       every { valueIncrement } returns 5f
-      every { counterIncrement } returns 5
       every { value } returns 10f
-      every { counter } returns 10
     }
     val cloudService: SuplaCloudService = mockk()
 
@@ -264,9 +260,7 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
         channelId = remoteId,
         date = firstMeasurementDate,
         valueIncrement = 14f,
-        counterIncrement = 0,
         value = 24f,
-        counter = 0,
         manuallyComplemented = false,
         counterReset = false,
         profileId = profileId
@@ -276,9 +270,7 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
         channelId = remoteId,
         date = secondMeasurementDate,
         valueIncrement = 2f,
-        counterIncrement = 0,
         value = 26f,
-        counter = 0,
         manuallyComplemented = false,
         counterReset = false,
         profileId = profileId
@@ -297,9 +289,7 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
     val lastEntity = mockk<GeneralPurposeMeterEntity>().apply {
       every { date } returns lastDbDate
       every { valueIncrement } returns 5f
-      every { counterIncrement } returns 5
       every { value } returns 12f
-      every { counter } returns 12
     }
     val cloudService: SuplaCloudService = mockk()
 
@@ -342,9 +332,7 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
         channelId = remoteId,
         date = date(2023, 10, 1, 0, 10),
         valueIncrement = 4f,
-        counterIncrement = 0,
         value = 16f,
-        counter = 0,
         manuallyComplemented = true,
         counterReset = false,
         profileId = profileId
@@ -354,9 +342,7 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
         channelId = remoteId,
         date = date(2023, 10, 1, 0, 20),
         valueIncrement = 4f,
-        counterIncrement = 0,
         value = 20f,
-        counter = 0,
         manuallyComplemented = true,
         counterReset = false,
         profileId = profileId
@@ -366,9 +352,7 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
         channelId = remoteId,
         date = date(2023, 10, 1, 0, 30),
         valueIncrement = 4f,
-        counterIncrement = 0,
         value = 24f,
-        counter = 0,
         manuallyComplemented = false,
         counterReset = false,
         profileId = profileId
@@ -378,9 +362,7 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
         channelId = remoteId,
         date = secondMeasurementDate,
         valueIncrement = 2f,
-        counterIncrement = 0,
         value = 26f,
-        counter = 0,
         manuallyComplemented = false,
         counterReset = false,
         profileId = profileId
@@ -399,9 +381,7 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
     val lastEntity = mockk<GeneralPurposeMeterEntity>().apply {
       every { date } returns lastDbDate
       every { valueIncrement } returns 5f
-      every { counterIncrement } returns 5
       every { value } returns 250f
-      every { counter } returns 250
     }
     val cloudService: SuplaCloudService = mockk()
 
@@ -444,9 +424,7 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
         channelId = remoteId,
         date = firstMeasurementDate,
         valueIncrement = -226f,
-        counterIncrement = 0,
         value = 24f,
-        counter = 0,
         manuallyComplemented = false,
         counterReset = false,
         profileId = profileId
@@ -456,9 +434,7 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
         channelId = remoteId,
         date = secondMeasurementDate,
         valueIncrement = 2f,
-        counterIncrement = 0,
         value = 26f,
-        counter = 0,
         manuallyComplemented = false,
         counterReset = false,
         profileId = profileId
@@ -477,9 +453,7 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
     val lastEntity = mockk<GeneralPurposeMeterEntity>().apply {
       every { date } returns lastDbDate
       every { valueIncrement } returns 5f
-      every { counterIncrement } returns 5
       every { value } returns 250f
-      every { counter } returns 250
     }
     val cloudService: SuplaCloudService = mockk()
 
@@ -522,9 +496,7 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
         channelId = remoteId,
         date = firstMeasurementDate,
         valueIncrement = 0f,
-        counterIncrement = 0,
         value = 24f,
-        counter = 0,
         manuallyComplemented = false,
         counterReset = true,
         profileId = profileId
@@ -534,9 +506,7 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
         channelId = remoteId,
         date = secondMeasurementDate,
         valueIncrement = 2f,
-        counterIncrement = 0,
         value = 26f,
-        counter = 0,
         manuallyComplemented = false,
         counterReset = false,
         profileId = profileId
@@ -592,9 +562,7 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
         channelId = remoteId,
         date = secondMeasurementDate,
         valueIncrement = 0f,
-        counterIncrement = 0,
         value = 26f,
-        counter = 0,
         manuallyComplemented = false,
         counterReset = false,
         profileId = profileId

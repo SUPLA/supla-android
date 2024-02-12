@@ -1,5 +1,4 @@
-package org.supla.android.db.room.app.migrations
-/*
+package org.supla.android.db.room.measurements.migrations/*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
  This program is free software; you can redistribute it and/or
@@ -19,22 +18,16 @@ package org.supla.android.db.room.app.migrations
 
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import org.supla.android.data.source.local.entity.NotificationEntity
+import org.supla.android.data.source.local.entity.measurements.GeneralPurposeMeterEntity
+import org.supla.android.db.MeasurementsDbHelper
 import org.supla.android.db.room.SqlExecutor
 
-val MIGRATION_32_33: Migration = object : Migration(32, 33), SqlExecutor {
+val MEASUREMENTS_DB_MIGRATION_32_33: Migration = object : Migration(32, 33), SqlExecutor {
 
-  val CREATE_NOTIFICATION_TABLE = """
-      CREATE TABLE ${NotificationEntity.TABLE_NAME}
-      (
-        ${NotificationEntity.COLUMN_ID} INTEGER NOT NULL PRIMARY KEY,
-        ${NotificationEntity.COLUMN_TITLE} TEXT NOT NULL,
-        ${NotificationEntity.COLUMN_MESSAGE} TEXT NOT NULL,
-        ${NotificationEntity.COLUMN_DATE} INTEGER NOT NULL
-      )
-  """.trimIndent()
+  override fun getDatabaseNameForLog(): String = MeasurementsDbHelper.DATABASE_NAME
 
   override fun migrate(database: SupportSQLiteDatabase) {
-    execSQL(database, CREATE_NOTIFICATION_TABLE)
+    execSQL(database, "DROP TABLE ${GeneralPurposeMeterEntity.TABLE_NAME}")
+    execSQL(database, GeneralPurposeMeterEntity.SQL)
   }
 }
