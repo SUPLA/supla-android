@@ -58,7 +58,8 @@ class SingleCall private constructor(
     context: Context,
     authInfo: AuthInfo,
     appId: Int,
-    token: String
+    token: String,
+    profileName: String
   )
 
   @Throws(NoSuchProfileException::class)
@@ -85,8 +86,8 @@ class SingleCall private constructor(
 
   @WorkerThread
   @Throws(NoSuchProfileException::class, ResultException::class)
-  fun registerPushNotificationClientToken(appId: Int, token: String) {
-    registerPushNotificationClientToken(context, getProfile().authInfo, appId, token)
+  fun registerPushNotificationClientToken(appId: Int, token: String, profileName: String) {
+    registerPushNotificationClientToken(context, getProfile().authInfo, appId, token, profileName)
   }
 
   @Singleton

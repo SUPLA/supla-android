@@ -253,7 +253,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   private native boolean scExecuteAction(long _supla_client, @NotNull ActionParameters parameters);
 
   private native boolean scRegisterPushNotificationClientToken(
-      long _supla_client, int appId, String token);
+      long _supla_client, int appId, String token, String profileName);
 
   private native boolean scGetChannelConfig(
       long _supla_client, int channelId, @NotNull ChannelConfigType type);
@@ -831,11 +831,11 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     }
   }
 
-  public boolean registerPushNotificationClientToken(int appId, String token) {
+  public boolean registerPushNotificationClientToken(int appId, String token, String profileName) {
     long _supla_client_ptr = lockClientPtr();
     try {
       return _supla_client_ptr != 0
-          && scRegisterPushNotificationClientToken(_supla_client_ptr, appId, token);
+          && scRegisterPushNotificationClientToken(_supla_client_ptr, appId, token, profileName);
     } finally {
       unlockClientPtr();
     }
