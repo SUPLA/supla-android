@@ -18,6 +18,7 @@ package org.supla.android.db.room.measurements.migrations/*
 
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+import org.supla.android.Trace
 import org.supla.android.data.source.local.entity.measurements.GeneralPurposeMeasurementEntity
 import org.supla.android.data.source.local.entity.measurements.GeneralPurposeMeterEntity
 import org.supla.android.db.MeasurementsDbHelper
@@ -39,6 +40,7 @@ import org.supla.android.db.SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_R
 import org.supla.android.db.SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CALCULATEDVALUE
 import org.supla.android.db.SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_COUNTER
 import org.supla.android.db.room.SqlExecutor
+import org.supla.android.extensions.TAG
 
 val MEASUREMENTS_DB_MIGRATION_31_32: Migration = object : Migration(31, 32), SqlExecutor {
 
@@ -48,8 +50,12 @@ val MEASUREMENTS_DB_MIGRATION_31_32: Migration = object : Migration(31, 32), Sql
     execSQL(database, GeneralPurposeMeterEntity.SQL)
     execSQL(database, GeneralPurposeMeasurementEntity.SQL)
 
-    findAndRemoveChannelsWithNegativeLogEntries(database, SuplaContract.ElectricityMeterLogEntry.TABLE_NAME, emColumns)
-    findAndRemoveChannelsWithNegativeLogEntries(database, SuplaContract.ImpulseCounterLogEntry.TABLE_NAME, icColumns)
+    try {
+      findAndRemoveChannelsWithNegativeLogEntries(database, SuplaContract.ElectricityMeterLogEntry.TABLE_NAME, emColumns)
+      findAndRemoveChannelsWithNegativeLogEntries(database, SuplaContract.ImpulseCounterLogEntry.TABLE_NAME, icColumns)
+    } catch(ex: Exception) {
+      Trace.e(TAG, "Removing data with negative log entries failed!", ex)
+    }
   }
 
   /**

@@ -34,12 +34,9 @@ import org.supla.android.db.MeasurementsDbHelper
 import org.supla.android.db.room.EmptyMigration
 import org.supla.android.db.room.app.AppDatabase
 import org.supla.android.db.room.app.AppDatabaseCallback
-import org.supla.android.db.room.app.migrations.MIGRATION_23_24
 import org.supla.android.db.room.app.migrations.MIGRATION_24_25
 import org.supla.android.db.room.app.migrations.MIGRATION_28_29
-import org.supla.android.db.room.app.migrations.MIGRATION_29_30
 import org.supla.android.db.room.app.migrations.MIGRATION_30_31
-import org.supla.android.db.room.app.migrations.MIGRATION_31_32
 import org.supla.android.db.room.app.migrations.MIGRATION_32_33
 import org.supla.android.db.room.app.migrations.MIGRATION_33_34
 import org.supla.android.db.room.app.migrations.Migration25to26
@@ -66,23 +63,24 @@ class DatabaseModule {
     migration27to28: Migration27to28
   ) =
     Room.databaseBuilder(context, AppDatabase::class.java, DbHelper.DATABASE_NAME)
-      .apply {
+      .let {
         if (!BuildConfig.DEBUG) {
           // Destructive migration should be activated only in production. For development we need to know about all migration failures
-          fallbackToDestructiveMigration()
+          it.fallbackToDestructiveMigration()
+        } else {
+          it
         }
       }
       .addCallback(callback)
       .addMigrations(
-        MIGRATION_23_24,
         MIGRATION_24_25,
         migration25to26,
         migration26to27,
         migration27to28,
         MIGRATION_28_29,
-        MIGRATION_29_30,
+        EmptyMigration(29, 30),
         MIGRATION_30_31,
-        MIGRATION_31_32,
+        EmptyMigration(31, 32),
         MIGRATION_32_33,
         MIGRATION_33_34
       )
@@ -161,14 +159,20 @@ class DatabaseModule {
     migration29to30: MeasurementsDbMigration29to30
   ) =
     Room.databaseBuilder(context, MeasurementsDatabase::class.java, MeasurementsDbHelper.DATABASE_NAME)
-      .apply {
+      .let {
         if (!BuildConfig.DEBUG) {
           // Destructive migration should be activated only in production. For development we need to know about all migration failures
-          fallbackToDestructiveMigration()
+          it.fallbackToDestructiveMigration()
+        } else {
+          it
         }
       }
       .addCallback(callback)
       .addMigrations(
+        EmptyMigration(24, 25),
+        EmptyMigration(25, 26),
+        EmptyMigration(26, 27),
+        EmptyMigration(27, 28),
         EmptyMigration(28, 29),
         migration29to30,
         EmptyMigration(30, 31),

@@ -19,37 +19,34 @@ package org.supla.android.db.room.app.migrations
 
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import org.supla.android.data.source.local.entity.ChannelRelationEntity
+import org.supla.android.data.source.local.entity.ChannelRelationEntity.Companion.COLUMN_CHANNEL_ID
+import org.supla.android.data.source.local.entity.ChannelRelationEntity.Companion.COLUMN_CHANNEL_RELATION_TYPE
+import org.supla.android.data.source.local.entity.ChannelRelationEntity.Companion.COLUMN_DELETE_FLAG
+import org.supla.android.data.source.local.entity.ChannelRelationEntity.Companion.COLUMN_PARENT_ID
+import org.supla.android.data.source.local.entity.ChannelRelationEntity.Companion.COLUMN_PROFILE_ID
+import org.supla.android.data.source.local.entity.ChannelRelationEntity.Companion.TABLE_NAME
 import org.supla.android.db.room.SqlExecutor
 
 val MIGRATION_28_29: Migration = object : Migration(28, 29), SqlExecutor {
+
+  private val CREATE_CHANNEL_RELATION_TABLE_SQL =
+    """
+      CREATE TABLE $TABLE_NAME 
+      (
+        $COLUMN_CHANNEL_ID INTEGER NOT NULL,
+        $COLUMN_PARENT_ID INTEGER NOT NULL,
+        $COLUMN_CHANNEL_RELATION_TYPE INTEGER NOT NULL,
+        $COLUMN_PROFILE_ID INTEGER NOT NULL,
+        $COLUMN_DELETE_FLAG INTEGER NOT NULL,
+        PRIMARY KEY ($COLUMN_CHANNEL_ID, $COLUMN_PARENT_ID, $COLUMN_PROFILE_ID)
+      )
+    """.trimIndent()
+
   override fun migrate(database: SupportSQLiteDatabase) {
     createChannelRelationTable(database)
   }
 
   private fun createChannelRelationTable(db: SupportSQLiteDatabase) {
-    val sql = (
-      "CREATE TABLE " +
-        ChannelRelationEntity.TABLE_NAME +
-        " (" +
-        ChannelRelationEntity.COLUMN_CHANNEL_ID +
-        " INTEGER NOT NULL," +
-        ChannelRelationEntity.COLUMN_PARENT_ID +
-        " INTEGER NOT NULL," +
-        ChannelRelationEntity.COLUMN_CHANNEL_RELATION_TYPE +
-        " INTEGER NOT NULL," +
-        ChannelRelationEntity.COLUMN_PROFILE_ID +
-        " INTEGER NOT NULL," +
-        ChannelRelationEntity.COLUMN_DELETE_FLAG +
-        " INTEGER NOT NULL," +
-        " PRIMARY KEY (" +
-        ChannelRelationEntity.COLUMN_CHANNEL_ID +
-        "," +
-        ChannelRelationEntity.COLUMN_PARENT_ID +
-        "," +
-        ChannelRelationEntity.COLUMN_PROFILE_ID +
-        "))"
-      )
-    execSQL(db, sql)
+    execSQL(db, CREATE_CHANNEL_RELATION_TABLE_SQL)
   }
 }
