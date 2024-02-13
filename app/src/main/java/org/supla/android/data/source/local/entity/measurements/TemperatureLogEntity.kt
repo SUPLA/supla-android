@@ -67,7 +67,7 @@ data class TemperatureLogEntity(
       """
         CREATE TABLE $TABLE_NAME
         (
-          $COLUMN_ID INTEGER PRIMARY KEY
+          $COLUMN_ID INTEGER PRIMARY KEY,
           $COLUMN_CHANNEL_ID INTEGER NOT NULL,
           $COLUMN_TIMESTAMP INTEGER NOT NULL,
           $COLUMN_TEMPERATURE REAL NULL,

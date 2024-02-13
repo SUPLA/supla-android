@@ -169,6 +169,7 @@ class DatabaseModule {
       }
       .addCallback(callback)
       .addMigrations(
+        EmptyMigration(28, 29),
         migration29to30,
         EmptyMigration(30, 31),
         MEASUREMENTS_DB_MIGRATION_31_32,
