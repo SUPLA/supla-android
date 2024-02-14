@@ -18,6 +18,15 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import androidx.room.Dao
+import androidx.room.Query
+import io.reactivex.rxjava3.core.Single
+import org.supla.android.data.source.local.entity.UserIconEntity
+import org.supla.android.data.source.local.entity.UserIconEntity.Companion.ALL_COLUMNS
+import org.supla.android.data.source.local.entity.UserIconEntity.Companion.TABLE_NAME
 
 @Dao
-interface UserIconDao
+interface UserIconDao {
+
+  @Query("SELECT $ALL_COLUMNS FROM $TABLE_NAME")
+  fun loadAllIcons(): Single<List<UserIconEntity>>
+}

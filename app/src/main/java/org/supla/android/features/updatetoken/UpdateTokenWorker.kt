@@ -68,11 +68,6 @@ class UpdateTokenWorker @AssistedInject constructor(
     }
 
     val allProfiles = profileManager.getAllProfiles().blockingFirst()
-    if (allProfiles.size == 1) {
-      Trace.i(TAG, "Token update worker canceled - only one profile found")
-      return Result.success()
-    }
-
     val notificationsEnabled = areNotificationsEnabled(notificationManager)
     val allProfilesUpdated = updateTokenInAllProfiles(token, allProfiles, notificationsEnabled)
     encryptedPreferences.notificationsLastEnabled = notificationsEnabled

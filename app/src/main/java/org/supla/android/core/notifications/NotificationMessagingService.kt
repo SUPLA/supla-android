@@ -27,6 +27,12 @@ import org.supla.android.extensions.TAG
 import javax.inject.Inject
 
 private const val DATA_KEY_PROFILE_NAME = "profileName"
+private const val DATA_KEY_TITLE = "title"
+private const val DATA_KEY_TITLE_LOCALIZED = "title_loc_key"
+private const val DATA_KEY_TITLE_ARGS = "title_loc_arg"
+private const val DATA_KEY_BODY = "body"
+private const val DATA_KEY_BODY_LOCALIZED = "body_loc_key"
+private const val DATA_KEY_BODY_ARGS = "body_loc_arg"
 
 @AndroidEntryPoint
 class NotificationMessagingService : FirebaseMessagingService() {
@@ -36,6 +42,21 @@ class NotificationMessagingService : FirebaseMessagingService() {
 
   override fun onMessageReceived(message: RemoteMessage) {
     Trace.d(TAG, "Got FCM message")
+
+    message.data.let { data ->
+      val title = data[DATA_KEY_TITLE_LOCALIZED]?.let {
+        getLocalizedString(it, getLocalizationParameters(data, DATA_KEY_TITLE_ARGS))
+      } ?: data[DATA_KEY_TITLE] ?: baseContext.getString(R.string.app_name)
+      val body = data[DATA_KEY_BODY_LOCALIZED]?.let {
+        getLocalizedString(it, getLocalizationParameters(data, DATA_KEY_BODY_ARGS))
+      } ?: data[DATA_KEY_BODY]
+
+      if (body != null) {
+        Trace.d(TAG, "Notification shown from data")
+        notificationsHelper.showNotification(baseContext, title, body, message.data[DATA_KEY_PROFILE_NAME])
+        return
+      }
+    }
 
     message.notification?.let {
       val title = if (it.titleLocalizationKey != null) {
@@ -51,6 +72,7 @@ class NotificationMessagingService : FirebaseMessagingService() {
       }
 
       if (text != null) {
+        Trace.d(TAG, "Notification shown from notification")
         notificationsHelper.showNotification(baseContext, title, text, message.data[DATA_KEY_PROFILE_NAME])
       }
     }
@@ -73,5 +95,17 @@ class NotificationMessagingService : FirebaseMessagingService() {
     } else {
       "Key '$key' with args '$args' could not be found!"
     }
+  }
+
+  private fun getLocalizationParameters(data: Map<String, String>, prefix: String): Array<String> {
+    val result = mutableListOf<String>()
+    for (i in 1..3) {
+      val key = "${prefix}$i"
+      if (data.containsKey(key)) {
+        data[key]?.let { result.add(it) }
+      }
+    }
+
+    return result.toTypedArray()
   }
 }

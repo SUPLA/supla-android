@@ -205,10 +205,6 @@ public class DbHelper extends BaseDbHelper {
     return userIconRepository.addUserIcons(id, img1, img2, img3, img4);
   }
 
-  public void loadUserIconsIntoCache() {
-    userIconRepository.loadUserIconsIntoCache();
-  }
-
   public boolean isZWaveBridgeChannelAvailable() {
     return channelRepository.isZWaveBridgeChannelAvailable();
   }

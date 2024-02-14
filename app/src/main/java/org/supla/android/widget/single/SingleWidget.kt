@@ -187,11 +187,17 @@ internal fun pendingIntent(context: Context, intentAction: String, widgetId: Int
 fun updateSingleWidget(context: Context, widgetId: Int) =
   context.sendBroadcast(intent(context, AppWidgetManager.ACTION_APPWIDGET_UPDATE, widgetId))
 
-fun intent(context: Context, intentAction: String, widgetId: Int): Intent {
+fun updateSingleWidgets(context: Context, widgetIds: IntArray) =
+  context.sendBroadcast(intent(context, AppWidgetManager.ACTION_APPWIDGET_UPDATE, widgetIds))
+
+fun intent(context: Context, intentAction: String, widgetId: Int): Intent =
+  intent(context, intentAction, intArrayOf(widgetId))
+
+fun intent(context: Context, intentAction: String, widgetIds: IntArray): Intent {
   Trace.d(SingleWidget::javaClass.name, "Creating intent with action: $intentAction")
   return Intent(context, SingleWidget::class.java).apply {
     action = intentAction
     flags = Intent.FLAG_RECEIVER_FOREGROUND
-    putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, intArrayOf(widgetId))
+    putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, widgetIds)
   }
 }

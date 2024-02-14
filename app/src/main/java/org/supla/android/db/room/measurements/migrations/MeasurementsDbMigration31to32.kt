@@ -53,7 +53,7 @@ val MEASUREMENTS_DB_MIGRATION_31_32: Migration = object : Migration(31, 32), Sql
     try {
       findAndRemoveChannelsWithNegativeLogEntries(database, SuplaContract.ElectricityMeterLogEntry.TABLE_NAME, emColumns)
       findAndRemoveChannelsWithNegativeLogEntries(database, SuplaContract.ImpulseCounterLogEntry.TABLE_NAME, icColumns)
-    } catch(ex: Exception) {
+    } catch (ex: Exception) {
       Trace.e(TAG, "Removing data with negative log entries failed!", ex)
     }
   }

@@ -37,7 +37,7 @@ class ThermometerValueFormatter(private val preferences: Preferences) : ChannelV
     val unit = getUnit()
     val valueForUnit = getTemperature(doubleValue)
     return if (withUnit) {
-      String.format("%.${precision}f $unit", valueForUnit)
+      String.format("%.${precision}f$unit", valueForUnit)
     } else {
       String.format("%.${precision}f°", valueForUnit)
     }

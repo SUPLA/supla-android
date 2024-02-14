@@ -22,17 +22,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
 
-import android.database.Cursor;
 import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,7 +39,6 @@ import org.supla.android.data.source.local.UserIconDao;
 import org.supla.android.data.source.local.entity.UserIconEntity;
 import org.supla.android.db.ProfileIdProvider;
 import org.supla.android.images.ImageCacheProxy;
-import org.supla.android.images.ImageId;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DefaultUserIconRepositoryTest {
@@ -123,111 +117,9 @@ public class DefaultUserIconRepositoryTest {
     assertImage(cachedImages.get(3), UserIconEntity.COLUMN_IMAGE_4, img4, 4);
   }
 
-  @Test
-  public void shouldDeleteUserIcons() {
-    // when
-    userIconRepository.deleteUserIcons(5);
-    // then
-    verify(userIconDao).delete(5);
-    verifyNoMoreInteractions(userIconDao);
-    verifyNoInteractions(imageCacheProxy);
-  }
-
-  @Test
-  public void shouldLoadUserIconsIntoCache() {
-    // given
-    int id = 3;
-    int remoteIdColumnIndex = 2;
-    byte[] image = new byte[1];
-    int imageColumnIndex = 1;
-    int profileId = 1234;
-    int profileIdColumnIndex = 5;
-
-    Cursor cursor =
-        mockCursor(
-            id, remoteIdColumnIndex, image, imageColumnIndex, profileId, profileIdColumnIndex);
-    when(userIconDao.getUserIcons()).thenReturn(cursor);
-
-    // when
-    userIconRepository.loadUserIconsIntoCache();
-
-    // then
-    ArgumentCaptor<ImageId> imageIdArgumentCaptor = ArgumentCaptor.forClass(ImageId.class);
-    ArgumentCaptor<byte[]> imageArgumentCaptor = ArgumentCaptor.forClass(byte[].class);
-    verify(imageCacheProxy)
-        .addImage(imageIdArgumentCaptor.capture(), imageArgumentCaptor.capture());
-
-    ImageId imageId = imageIdArgumentCaptor.getValue();
-    byte[] imageBytes = imageArgumentCaptor.getValue();
-    assertEquals(id, imageId.getId());
-    assertEquals(3, imageId.getId());
-    assertSame(imageBytes, image);
-
-    verifyCursor(cursor, imageColumnIndex, remoteIdColumnIndex, profileIdColumnIndex);
-  }
-
-  @Test
-  public void shouldNotLoadUserIconsIntoCacheWhenImageLengthIsZero() {
-    // given
-    int id = 3;
-    int remoteIdColumnIndex = 2;
-    byte[] image = new byte[0];
-    int imageColumnIndex = 1;
-    int profileId = 5678;
-    int profileIdColumnIndex = 5;
-
-    Cursor cursor =
-        mockCursor(
-            id, remoteIdColumnIndex, image, imageColumnIndex, profileId, profileIdColumnIndex);
-    when(userIconDao.getUserIcons()).thenReturn(cursor);
-
-    // when
-    userIconRepository.loadUserIconsIntoCache();
-
-    // then
-    verify(imageCacheProxy, never()).addImage(any(), any());
-    verifyCursor(cursor, imageColumnIndex, remoteIdColumnIndex, profileIdColumnIndex);
-  }
-
   private void assertImage(UserIconDao.Image image, String column, byte[] value, int subId) {
     assertEquals(column, image.column);
     assertSame(value, image.value);
     assertEquals(subId, image.subId);
-  }
-
-  private Cursor mockCursor(
-      int id,
-      int remoteIdColumnIndex,
-      byte[] image,
-      int imageColumnIndex,
-      long profileId,
-      int profileIdColumnIndex) {
-    Cursor cursor = mock(Cursor.class);
-    when(cursor.moveToFirst()).thenReturn(true);
-    when(cursor.getColumnIndex(UserIconEntity.COLUMN_IMAGE_1)).thenReturn(imageColumnIndex);
-    when(cursor.getBlob(imageColumnIndex)).thenReturn(image);
-    when(cursor.getColumnIndex(UserIconEntity.COLUMN_REMOTE_ID)).thenReturn(remoteIdColumnIndex);
-    when(cursor.getInt(remoteIdColumnIndex)).thenReturn(id);
-    when(cursor.getColumnIndex(UserIconEntity.COLUMN_PROFILE_ID)).thenReturn(profileIdColumnIndex);
-    when(cursor.getLong(profileIdColumnIndex)).thenReturn(profileId);
-    return cursor;
-  }
-
-  private void verifyCursor(
-      Cursor cursor, int imageColumnIndex, int idColumnIndex, int profileIdColumnIndex) {
-    verify(cursor).moveToFirst();
-    verify(cursor).getColumnIndex(UserIconEntity.COLUMN_IMAGE_1);
-    verify(cursor).getColumnIndex(UserIconEntity.COLUMN_IMAGE_2);
-    verify(cursor).getColumnIndex(UserIconEntity.COLUMN_IMAGE_3);
-    verify(cursor).getColumnIndex(UserIconEntity.COLUMN_IMAGE_4);
-    verify(cursor, times(4)).getColumnIndex(UserIconEntity.COLUMN_PROFILE_ID);
-    verify(cursor, times(4)).getColumnIndex(UserIconEntity.COLUMN_REMOTE_ID);
-    verify(cursor).getBlob(imageColumnIndex);
-    verify(cursor, times(3)).getBlob(0);
-    verify(cursor, times(4)).getInt(idColumnIndex);
-    verify(cursor, times(4)).getLong(profileIdColumnIndex);
-    verify(cursor).moveToNext();
-    verify(cursor).close();
-    verifyNoMoreInteractions(cursor);
   }
 }

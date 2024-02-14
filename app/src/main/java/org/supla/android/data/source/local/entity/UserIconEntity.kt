@@ -80,6 +80,9 @@ data class UserIconEntity(
       "CREATE INDEX ${TABLE_NAME}_${COLUMN_PROFILE_ID}_index ON $TABLE_NAME ($COLUMN_PROFILE_ID)",
       "CREATE UNIQUE INDEX ${TABLE_NAME}_unique_index ON $TABLE_NAME ($COLUMN_REMOTE_ID, $COLUMN_PROFILE_ID)",
     )
+
+    const val ALL_COLUMNS = "$COLUMN_ID, $COLUMN_REMOTE_ID, $COLUMN_IMAGE_1, " +
+      "$COLUMN_IMAGE_2, $COLUMN_IMAGE_3, $COLUMN_IMAGE_4, $COLUMN_PROFILE_ID"
   }
 
   override fun equals(other: Any?): Boolean {

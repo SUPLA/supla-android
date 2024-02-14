@@ -74,6 +74,7 @@ import org.supla.android.usecases.channelconfig.InsertChannelConfigUseCase;
 import org.supla.android.usecases.channelrelation.DeleteRemovableChannelRelationsUseCase;
 import org.supla.android.usecases.channelrelation.InsertChannelRelationForProfileUseCase;
 import org.supla.android.usecases.channelrelation.MarkChannelRelationsAsRemovableUseCase;
+import org.supla.android.usecases.icon.LoadUserIconsIntoCacheUseCase;
 
 @SuppressWarnings("unused")
 public class SuplaClient extends Thread implements SuplaClientApi {
@@ -115,6 +116,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   private final AppDatabase appDatabase;
   private final MeasurementsDatabase measurementsDatabase;
   private final ProfileIdHolder profileIdHolder;
+  private final LoadUserIconsIntoCacheUseCase loadUserIconsIntoCacheUseCase;
 
   public SuplaClient(
       Context context, String oneTimePassword, SuplaClientDependencies dependencies) {
@@ -139,6 +141,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     this.appDatabase = dependencies.getAppDatabase();
     this.measurementsDatabase = dependencies.getMeasurementsDatabase();
     this.profileIdHolder = dependencies.getProfileIdHolder();
+    this.loadUserIconsIntoCacheUseCase = dependencies.getLoadUserIconsIntoCacheUseCase();
   }
 
   public static SuplaRegisterError getLastRegisterError() {
@@ -1573,7 +1576,6 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     }
 
     DbH = DbHelper.getInstance(_context);
-    DbH.loadUserIconsIntoCache();
 
     while (!canceled()) {
 
