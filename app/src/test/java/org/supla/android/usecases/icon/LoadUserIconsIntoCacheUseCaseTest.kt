@@ -1,6 +1,6 @@
 package org.supla.android.usecases.icon
 
-import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.core.Observable
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.InjectMocks
@@ -42,7 +42,7 @@ class LoadUserIconsIntoCacheUseCaseTest {
       null,
       profileId
     )
-    whenever(userIconRepository.loadAllIcons()).thenReturn(Single.just(listOf(entity)))
+    whenever(userIconRepository.loadAllIcons()).thenReturn(Observable.just(listOf(entity)))
 
     // when
     val testObserver = useCase.invoke().test()

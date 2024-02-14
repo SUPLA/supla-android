@@ -35,6 +35,7 @@ class LoadUserIconsIntoCacheUseCase @Inject constructor(
 
   operator fun invoke(): Completable =
     userIconRepository.loadAllIcons()
+      .firstElement()
       .map { icons ->
         Trace.d(TAG, "Icons loading started")
         icons.forEach { icon ->
