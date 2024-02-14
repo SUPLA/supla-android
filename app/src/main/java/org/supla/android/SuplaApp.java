@@ -48,6 +48,7 @@ import org.supla.android.core.networking.suplaclient.SuplaClientBuilder;
 import org.supla.android.core.notifications.NotificationsHelper;
 import org.supla.android.core.observers.AppLifecycleObserver;
 import org.supla.android.data.ValuesFormatter;
+import org.supla.android.features.icons.LoadUserIconsIntoCacheWorker;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaClientMessageHandler;
 import org.supla.android.lib.SuplaClientMsg;
@@ -278,5 +279,6 @@ public class SuplaApp extends MultiDexApplication
             .build();
     WorkManager.getInstance(this)
         .enqueueUniquePeriodicWork(WORK_ID, ExistingPeriodicWorkPolicy.KEEP, request);
+    LoadUserIconsIntoCacheWorker.Companion.start(this);
   }
 }

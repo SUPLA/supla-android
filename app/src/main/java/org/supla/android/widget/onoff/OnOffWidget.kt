@@ -30,6 +30,7 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import org.supla.android.R
 import org.supla.android.Trace
+import org.supla.android.data.model.general.ChannelState
 import org.supla.android.data.model.general.IconType
 import org.supla.android.db.Channel
 import org.supla.android.extensions.getChannelIconUseCase
@@ -45,6 +46,7 @@ import org.supla.android.widget.shared.isWidgetValid
 private const val ACTION_TURN_ON = "ACTION_TURN_ON"
 private const val ACTION_TURN_OFF = "ACTION_TURN_OFF"
 private const val ACTION_UPDATE = "ACTION_UPDATE"
+private const val ACTION_REFRESH = "ACTION_REFRESH"
 
 /**
  * Implementation of widgets for on-off operations. It is supporting turning on/off channels with functions of:
@@ -78,7 +80,7 @@ class OnOffWidget : WidgetProviderBase() {
     appWidgetManager.updateAppWidget(widgetId, views)
   }
 
-  override fun onReceive(context: Context?, intent: Intent?) {
+  override fun onReceive(context: Context, intent: Intent?) {
     super.onReceive(context, intent)
     Trace.i(TAG, "Got intent with action: " + intent?.action)
 
@@ -107,7 +109,7 @@ class OnOffWidget : WidgetProviderBase() {
       .build()
 
     // Work for widget ID is unique, so no other worker for the same ID will be started
-    WorkManager.getInstance()
+    WorkManager.getInstance(context)
       .enqueueUniqueWork(getWorkId(widgetIds), ExistingWorkPolicy.KEEP, removeWidgetsWork)
   }
 
@@ -127,14 +129,7 @@ class OnOffWidget : WidgetProviderBase() {
     } else {
       R.id.on_off_widget_turn_on_button
     }
-
-    views.setImageViewBitmap(
-      iconViewId,
-      ImageCache.getBitmap(
-        context,
-        context.getChannelIconUseCase(channel, IconType.SINGLE, false)
-      )
-    )
+    views.setImageViewBitmap(iconViewId, getIcon(context, channel, false, ChannelState.Value.ON))
 
     val viewIdNightMode = if (channel.isThermometer() || channel.isGpm()) {
       R.id.on_off_widget_value_icon_night_mode
@@ -143,13 +138,7 @@ class OnOffWidget : WidgetProviderBase() {
     }
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-      views.setImageViewBitmap(
-        viewIdNightMode,
-        ImageCache.getBitmap(
-          context,
-          context.getChannelIconUseCase(channel, IconType.SINGLE, true)
-        )
-      )
+      views.setImageViewBitmap(viewIdNightMode, getIcon(context, channel, true, ChannelState.Value.ON))
     }
 
     if (channel.isThermometer() || channel.isGpm()) {
@@ -157,14 +146,11 @@ class OnOffWidget : WidgetProviderBase() {
       views.setViewVisibility(R.id.on_off_widget_buttons, View.GONE)
       views.setViewVisibility(R.id.on_off_widget_value, View.VISIBLE)
     } else {
-      views.setImageViewBitmap(
-        R.id.on_off_widget_turn_off_button,
-        ImageCache.getBitmap(context, context.getChannelIconUseCase(channel, IconType.SINGLE, false))
-      )
+      views.setImageViewBitmap(R.id.on_off_widget_turn_off_button, getIcon(context, channel, false, ChannelState.Value.OFF))
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
         views.setImageViewBitmap(
           R.id.on_off_widget_turn_off_button_night_mode,
-          ImageCache.getBitmap(context, context.getChannelIconUseCase(channel, IconType.SINGLE, true))
+          getIcon(context, channel, true, ChannelState.Value.OFF)
         )
       }
       views.setViewVisibility(R.id.on_off_widget_buttons, View.VISIBLE)
@@ -172,17 +158,13 @@ class OnOffWidget : WidgetProviderBase() {
     }
   }
 
+  private fun getIcon(context: Context, channel: Channel, nightMode: Boolean, stateValue: ChannelState.Value) =
+    ImageCache.getBitmap(context, context.getChannelIconUseCase(channel, IconType.SINGLE, nightMode, stateValue))
+
   companion object {
-    private val TAG = OnOffWidget::javaClass.name
+    private val TAG = OnOffWidget::class.simpleName
   }
 }
-
-fun getActiveValue(channelFunction: Int) =
-  if (channelFunction == SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING) {
-    3
-  } else {
-    1
-  }
 
 internal fun buildWidget(context: Context, widgetId: Int): RemoteViews {
   val views = RemoteViews(context.packageName, R.layout.on_off_widget)
@@ -212,11 +194,17 @@ internal fun pendingIntent(context: Context, intentAction: String, widgetId: Int
 fun updateOnOffWidget(context: Context, widgetId: Int) =
   context.sendBroadcast(intent(context, AppWidgetManager.ACTION_APPWIDGET_UPDATE, widgetId))
 
-fun intent(context: Context, intentAction: String, widgetId: Int): Intent {
+fun updateOnOffWidgets(context: Context, widgetIds: IntArray) =
+  context.sendBroadcast(intent(context, AppWidgetManager.ACTION_APPWIDGET_UPDATE, widgetIds))
+
+fun intent(context: Context, intentAction: String, widgetId: Int): Intent =
+  intent(context, intentAction, intArrayOf(widgetId))
+
+fun intent(context: Context, intentAction: String, widgetIds: IntArray): Intent {
   Trace.d(OnOffWidget::javaClass.name, "Creating intent with action: $intentAction")
   return Intent(context, OnOffWidget::class.java).apply {
     action = intentAction
     flags = Intent.FLAG_RECEIVER_FOREGROUND
-    putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, intArrayOf(widgetId))
+    putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, widgetIds)
   }
 }

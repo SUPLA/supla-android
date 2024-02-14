@@ -108,7 +108,7 @@ class SceneDao(dap: DatabaseAccessProvider) : BaseDao(dap) {
       update(
         scene,
         SceneEntity.TABLE_NAME,
-        key(SceneEntity.COLUMN_REMOTE_ID, scene.id)
+        key(SceneEntity.COLUMN_ID, scene.id)
       )
       true
     } catch (e: Exception) {

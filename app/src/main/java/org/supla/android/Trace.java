@@ -9,29 +9,35 @@ public class Trace {
   public static final int ERRORS_WARNINGS_INFO = 3;
   public static final int ERRORS_WARNINGS_INFO_DEBUG = 4;
 
-  private static final int LOGGING_LEVEL = /*ERRORS_ONLY;*/ ERRORS_WARNINGS_INFO_DEBUG;
-
   public static void e(String tag, String msg) {
-    if (LOGGING_LEVEL >= 1) Log.e(tag, msg);
+    if (loggingLevel() >= ERRORS_ONLY) Log.e(tag, msg);
   }
 
   public static void e(String tag, String msg, Throwable e) {
-    if (LOGGING_LEVEL >= 1) Log.e(tag, msg, e);
+    if (loggingLevel() >= ERRORS_ONLY) Log.e(tag, msg, e);
   }
 
   public static void w(String tag, String msg) {
-    if (LOGGING_LEVEL >= 2) Log.w(tag, msg);
+    if (loggingLevel() >= ERRORS_WARNINGS) Log.w(tag, msg);
   }
 
   public static void w(String tag, String msg, Throwable throwable) {
-    if (LOGGING_LEVEL >= 2) Log.w(tag, msg, throwable);
+    if (loggingLevel() >= ERRORS_WARNINGS) Log.w(tag, msg, throwable);
   }
 
   public static void i(String tag, String msg) {
-    if (LOGGING_LEVEL >= 3) Log.i(tag, msg);
+    if (loggingLevel() >= ERRORS_WARNINGS_INFO) Log.i(tag, msg);
   }
 
   public static void d(String tag, String msg) {
-    if (LOGGING_LEVEL >= 4) Log.d(tag, msg);
+    if (loggingLevel() >= ERRORS_WARNINGS_INFO_DEBUG) Log.d(tag, msg);
+  }
+
+  private static int loggingLevel() {
+    if (BuildConfig.DEBUG) {
+      return ERRORS_WARNINGS_INFO_DEBUG;
+    } else {
+      return ERRORS_WARNINGS;
+    }
   }
 }

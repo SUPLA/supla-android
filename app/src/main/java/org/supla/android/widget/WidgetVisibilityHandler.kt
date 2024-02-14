@@ -19,10 +19,15 @@ package org.supla.android.widget
  */
 
 import android.appwidget.AppWidgetManager
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import org.supla.android.extensions.getAllWidgetIds
+import org.supla.android.widget.onoff.OnOffWidget
+import org.supla.android.widget.onoff.updateOnOffWidgets
+import org.supla.android.widget.single.SingleWidget
+import org.supla.android.widget.single.updateSingleWidgets
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -32,6 +37,15 @@ class WidgetVisibilityHandler @Inject constructor(
   private val appWidgetManager: AppWidgetManager,
   private val widgetPreferences: WidgetPreferences
 ) {
+
+  fun updateAllWidgets() {
+    appWidgetManager.getAppWidgetIds(ComponentName(context, OnOffWidget::class.java))?.let {
+      updateOnOffWidgets(context, it)
+    }
+    appWidgetManager.getAppWidgetIds(ComponentName(context, SingleWidget::class.java))?.let {
+      updateSingleWidgets(context, it)
+    }
+  }
 
   fun onProfileRemoved(profileId: Long) {
     appWidgetManager.getAllWidgetIds(context).forEach {

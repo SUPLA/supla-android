@@ -19,7 +19,6 @@ syays GNU General Public License for more details.
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -61,7 +60,6 @@ import org.supla.android.core.ui.BaseViewProxy
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.source.local.entity.NotificationEntity
-import org.supla.android.extensions.TAG
 import org.supla.android.ui.dialogs.AlertDialog
 import org.supla.android.ui.views.buttons.TextButton
 import java.time.LocalDateTime
@@ -103,7 +101,6 @@ fun NotificationsLogView(viewProxy: NotificationsLogViewProxy) {
         var canceled by remember { mutableStateOf(false) }
         val dismissState = rememberDismissState(
           confirmStateChange = {
-            Log.d(TAG, "Dismiss value $it")
             if (it == DismissValue.DismissedToEnd) {
               canceled = false
               viewProxy.delete(currentItem)

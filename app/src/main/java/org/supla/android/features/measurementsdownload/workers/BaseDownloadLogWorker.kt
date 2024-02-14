@@ -18,7 +18,6 @@ package org.supla.android.features.measurementsdownload.workers
  */
 
 import android.content.Context
-import android.util.Log
 import androidx.work.Constraints
 import androidx.work.NetworkType
 import androidx.work.Worker
@@ -50,7 +49,7 @@ abstract class BaseDownloadLogWorker<T : Measurement, U : BaseLogEntity>(
     }
 
   override fun doWork(): Result {
-    Log.d(TAG, "Worker started with ${baseDownloadLogUseCase.javaClass.simpleName}")
+    Trace.d(TAG, "Worker started with ${baseDownloadLogUseCase.javaClass.simpleName}")
 
     val (remoteId) = guardLet(remoteId) {
       Trace.w(TAG, "Download temperatures worker failed - remoteId < 0!")
@@ -60,7 +59,7 @@ abstract class BaseDownloadLogWorker<T : Measurement, U : BaseLogEntity>(
       Trace.w(TAG, "Download temperatures worker failed - profileId < 0!")
       return Result.failure()
     }
-    Log.d(TAG, "Worker parameters - remoteId: $remoteId, profileId: $profileId")
+    Trace.d(TAG, "Worker parameters - remoteId: $remoteId, profileId: $profileId")
 
     var result = Result.failure()
     baseDownloadLogUseCase.loadMeasurements(remoteId, profileId)

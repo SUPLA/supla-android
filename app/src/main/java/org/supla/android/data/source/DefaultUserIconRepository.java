@@ -18,13 +18,10 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import android.annotation.SuppressLint;
-import android.database.Cursor;
 import org.supla.android.data.source.local.UserIconDao;
 import org.supla.android.data.source.local.entity.UserIconEntity;
 import org.supla.android.db.ProfileIdProvider;
 import org.supla.android.images.ImageCacheProxy;
-import org.supla.android.images.ImageId;
 
 public class DefaultUserIconRepository implements UserIconRepository {
 
@@ -65,45 +62,5 @@ public class DefaultUserIconRepository implements UserIconRepository {
       }
     }
     return true;
-  }
-
-  @Override
-  public void deleteUserIcons(long profileId) {
-    userIconDao.delete(profileId);
-  }
-
-  @Override
-  @SuppressLint("Range")
-  public void loadUserIconsIntoCache() {
-    Cursor cursor = userIconDao.getUserIcons();
-    if (cursor.moveToFirst()) {
-      do {
-        for (ImageType imageType : ImageType.values()) {
-          byte[] image = cursor.getBlob(cursor.getColumnIndex(imageType.column));
-          int remoteId = cursor.getInt(cursor.getColumnIndex(UserIconEntity.COLUMN_REMOTE_ID));
-          long profileId = cursor.getLong(cursor.getColumnIndex(UserIconEntity.COLUMN_PROFILE_ID));
-
-          if (image != null && image.length > 0) {
-            imageCacheProxy.addImage(new ImageId(remoteId, imageType.subId, profileId), image);
-          }
-        }
-      } while (cursor.moveToNext());
-    }
-    cursor.close();
-  }
-
-  private enum ImageType {
-    IMAGE1(UserIconEntity.COLUMN_IMAGE_1, 1),
-    IMAGE2(UserIconEntity.COLUMN_IMAGE_2, 2),
-    IMAGE3(UserIconEntity.COLUMN_IMAGE_3, 3),
-    IMAGE4(UserIconEntity.COLUMN_IMAGE_4, 4);
-
-    private final String column;
-    private final int subId;
-
-    ImageType(String column, int subId) {
-      this.column = column;
-      this.subId = subId;
-    }
   }
 }

@@ -19,7 +19,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import android.content.ContentValues;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import androidx.annotation.NonNull;
 import org.supla.android.data.source.local.entity.UserIconEntity;
@@ -50,30 +49,6 @@ public class UserIconDao extends BaseDao {
           sqLiteDatabase.insertWithOnConflict(
               UserIconEntity.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
         });
-  }
-
-  public void delete(long profileId) {
-    delete(UserIconEntity.TABLE_NAME, key(UserIconEntity.COLUMN_PROFILE_ID, profileId));
-  }
-
-  public Cursor getUserIcons() {
-    String sql =
-        "SELECT "
-            + UserIconEntity.COLUMN_REMOTE_ID
-            + ", "
-            + UserIconEntity.COLUMN_IMAGE_1
-            + ", "
-            + UserIconEntity.COLUMN_IMAGE_2
-            + ", "
-            + UserIconEntity.COLUMN_IMAGE_3
-            + ", "
-            + UserIconEntity.COLUMN_IMAGE_4
-            + ", "
-            + UserIconEntity.COLUMN_PROFILE_ID
-            + " FROM "
-            + UserIconEntity.TABLE_NAME;
-
-    return read(sqLiteDatabase -> sqLiteDatabase.rawQuery(sql, null));
   }
 
   public static class Image extends Key<byte[]> {
