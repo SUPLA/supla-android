@@ -92,7 +92,9 @@ class NotificationsLogViewModelTest : BaseViewModelTest<NotificationsLogViewStat
   @Test
   fun `should load all notifications from database`() {
     // given
-    val list = listOf(mockk<NotificationEntity>())
+    val entityId = 123L
+    val entity = mockk<NotificationEntity> { every { id } returns entityId }
+    val list = listOf(entity)
     whenever(loadAllNotificationsUseCase.invoke()).thenReturn(Observable.just(list))
 
     // when
@@ -100,7 +102,7 @@ class NotificationsLogViewModelTest : BaseViewModelTest<NotificationsLogViewStat
 
     // then
     assertThat(states).containsExactly(
-      NotificationsLogViewState(items = list)
+      NotificationsLogViewState(items = listOf(NotificationItem(entity, false)))
     )
   }
 
@@ -128,12 +130,21 @@ class NotificationsLogViewModelTest : BaseViewModelTest<NotificationsLogViewStat
       every { id } returns notificationId
     }
 
+    whenever(loadAllNotificationsUseCase.invoke()).thenReturn(Observable.just(listOf(entity)))
     whenever(deleteNotificationUseCase.invoke(notificationId)).thenReturn(Completable.complete())
 
     // when
+    viewModel.onViewCreated()
     viewModel.delete(entity)
 
     // then
+    assertThat(states).containsExactly(
+      NotificationsLogViewState(items = listOf(NotificationItem(entity, false))),
+      NotificationsLogViewState(items = listOf(NotificationItem(entity, true)))
+    )
+    assertThat(events).containsExactly(NotificationsLogViewEvent.ShowDeleteNotification(notificationId))
+
+    verify(loadAllNotificationsUseCase).invoke()
     verify(deleteNotificationUseCase).invoke(notificationId)
     verifyZeroInteractions(loadAllNotificationsUseCase, deleteAllNotificationsUseCase)
   }

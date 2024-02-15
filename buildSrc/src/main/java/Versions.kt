@@ -29,7 +29,7 @@ object Versions {
         const val ConstraintLayout = "2.1.0"
         const val Core = "1.3.2"
         const val Preferences = "1.1.1"
-        const val Worker = "2.7.1"
+        const val Worker = "2.8.0"
         const val RecyclerView = "1.2.1"
         const val Security = "1.1.0-alpha06"
         const val Room = "2.5.2"

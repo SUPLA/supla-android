@@ -32,6 +32,8 @@ import org.supla.android.usecases.notifications.LoadAllNotificationsUseCase
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
+const val DELETE_DELAY_SECS = 5L
+
 @HiltViewModel
 class NotificationsLogViewModel @Inject constructor(
   private val loadAllNotificationsUseCase: LoadAllNotificationsUseCase,
@@ -47,24 +49,26 @@ class NotificationsLogViewModel @Inject constructor(
     loadAllNotificationsUseCase()
       .attach()
       .subscribeBy(
-        onNext = { items ->
-          updateState { it.copy(items = items) }
-        }
+        onNext = this::setItems
       )
       .disposeBySelf()
   }
 
   override fun delete(entity: NotificationEntity) {
+    sendEvent(NotificationsLogViewEvent.ShowDeleteNotification(entity.id))
     deletionDisposablesMap[entity.id] = Completable.complete()
-      .delay(5, TimeUnit.SECONDS)
+      .delay(DELETE_DELAY_SECS, TimeUnit.SECONDS)
       .andThen(deleteNotificationUseCase(entity.id))
       .attachSilent()
       .doOnTerminate { deletionDisposablesMap.remove(entity.id) }
       .subscribe()
+    invalidateItems()
   }
 
-  override fun cancelDeletion(entity: NotificationEntity) {
-    deletionDisposablesMap[entity.id]?.dispose()
+  override fun cancelDeletion(id: Long) {
+    deletionDisposablesMap[id]?.dispose()
+    deletionDisposablesMap.remove(id)
+    invalidateItems()
   }
 
   override fun askDeleteAll() {
@@ -83,11 +87,30 @@ class NotificationsLogViewModel @Inject constructor(
       )
       .disposeBySelf()
   }
+
+  private fun setItems(items: List<NotificationEntity>) {
+    updateState { state ->
+      state.copy(items = items.map { NotificationItem(it, deletionDisposablesMap.containsKey(it.id)) })
+    }
+  }
+
+  private fun invalidateItems() {
+    updateState { state ->
+      state.copy(items = state.items.map { it.copy(deleted = deletionDisposablesMap.containsKey(it.notificationEntity.id)) })
+    }
+  }
 }
 
-sealed class NotificationsLogViewEvent : ViewEvent
+data class NotificationItem(
+  val notificationEntity: NotificationEntity,
+  val deleted: Boolean
+)
+
+sealed class NotificationsLogViewEvent : ViewEvent {
+  data class ShowDeleteNotification(val id: Long) : NotificationsLogViewEvent()
+}
 
 data class NotificationsLogViewState(
-  val items: List<NotificationEntity> = emptyList(),
+  val items: List<NotificationItem> = emptyList(),
   val showDeletionDialog: Boolean = false
 ) : ViewState()

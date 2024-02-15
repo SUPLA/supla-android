@@ -559,6 +559,8 @@
   <string name="notification_delete_all_proceed">Löschen</string>
   <string name="notifications_log_profile">Konto:</string>
   <string name="notifications_log_date">Datum:</string>
+  <string name="widget_warning_battery_limitations">Die Anwendung hat limitierte Akkunutzung deshalb kann das Widget falsch funktionieren. Die Akkunutzung der App können Sie in Einstellungen ändern.</string>
+  <string name="notification_deleted">Gelöscht</string>
   <plurals name="details_timer_info_on">
     <item quantity="one">eingeschaltet</item>
     <item quantity="other">eingeschaltet</item>
