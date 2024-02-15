@@ -45,7 +45,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -61,13 +60,12 @@ import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.source.local.entity.NotificationEntity
 import org.supla.android.ui.dialogs.AlertDialog
-import org.supla.android.ui.views.buttons.TextButton
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 interface NotificationsLogViewProxy : BaseViewProxy<NotificationsLogViewState> {
   fun delete(entity: NotificationEntity) {}
-  fun cancelDeletion(entity: NotificationEntity) {}
+  fun cancelDeletion(id: Long) {}
   fun askDeleteAll() {}
   fun cancelDeleteAll() {}
   fun deleteAll() {}
@@ -95,35 +93,28 @@ fun NotificationsLogView(viewProxy: NotificationsLogViewProxy) {
   ) {
     items(
       items = viewState.items,
-      key = { it.id },
+      key = { it.notificationEntity.id },
       itemContent = { item ->
         val currentItem by rememberUpdatedState(item)
-        var canceled by remember { mutableStateOf(false) }
         val dismissState = rememberDismissState(
           confirmStateChange = {
             if (it == DismissValue.DismissedToEnd) {
-              canceled = false
-              viewProxy.delete(currentItem)
+              viewProxy.delete(currentItem.notificationEntity)
               return@rememberDismissState true
             }
             false
           }
         )
-        if (canceled && dismissState.isDismissed(DismissDirection.StartToEnd)) {
-          LaunchedEffect(Any()) { dismissState.reset() }
-        }
-        SwipeToDismiss(
-          state = dismissState,
-          directions = setOf(DismissDirection.StartToEnd),
-          dismissThresholds = { FixedThreshold(112.dp) },
-          background = {
-            NotificationRowBackground {
-              canceled = true
-              viewProxy.cancelDeletion(currentItem)
-            }
+        LaunchedEffect(Any()) { dismissState.reset() }
+        if (item.deleted.not()) {
+          SwipeToDismiss(
+            state = dismissState,
+            directions = setOf(DismissDirection.StartToEnd),
+            dismissThresholds = { FixedThreshold(112.dp) },
+            background = { NotificationRowBackground() }
+          ) {
+            NotificationRow(item.notificationEntity)
           }
-        ) {
-          NotificationRow(item)
         }
       }
     )
@@ -181,7 +172,7 @@ private fun NotificationRow(entity: NotificationEntity) {
 }
 
 @Composable
-private fun NotificationRowBackground(onDeleteCancel: () -> Unit) =
+private fun NotificationRowBackground() =
   Box(
     modifier = Modifier
       .fillMaxWidth()
@@ -195,14 +186,6 @@ private fun NotificationRowBackground(onDeleteCancel: () -> Unit) =
       tint = MaterialTheme.colors.onPrimary,
       modifier = Modifier
         .align(Alignment.CenterStart)
-        .padding(all = Distance.default)
-    )
-    TextButton(
-      onClick = onDeleteCancel,
-      color = MaterialTheme.colors.onPrimary,
-      text = stringResource(id = R.string.cancel),
-      modifier = Modifier
-        .align(Alignment.CenterEnd)
         .padding(all = Distance.default)
     )
   }
@@ -220,11 +203,14 @@ private class PreviewProxy : NotificationsLogViewProxy {
     MutableStateFlow(
       value = NotificationsLogViewState(
         items = listOf(
-          NotificationEntity(
-            title = "Some notification title",
-            message = "Some notification message",
-            profileName = "Default",
-            date = LocalDateTime.of(2023, 11, 10, 22, 3, 14)
+          NotificationItem(
+            NotificationEntity(
+              title = "Some notification title",
+              message = "Some notification message",
+              profileName = "Default",
+              date = LocalDateTime.of(2023, 11, 10, 22, 3, 14)
+            ),
+            false
           )
         )
       )

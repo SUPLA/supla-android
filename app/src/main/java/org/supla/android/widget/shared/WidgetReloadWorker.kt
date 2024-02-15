@@ -7,9 +7,16 @@ import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import org.supla.android.Preferences
+import org.supla.android.Trace
+import org.supla.android.data.source.remote.gpm.SuplaChannelGeneralPurposeBaseConfig
+import org.supla.android.extensions.TAG
 import org.supla.android.extensions.getAppWidgetManager
 import org.supla.android.lib.SuplaConst
+import org.supla.android.lib.singlecall.DoubleValue
 import org.supla.android.lib.singlecall.TemperatureAndHumidity
+import org.supla.android.usecases.channel.LoadChannelConfigUseCase
+import org.supla.android.usecases.channel.valueformatter.GpmValueFormatter
+import org.supla.android.usecases.channel.valueprovider.GpmValueProvider
 import org.supla.android.widget.WidgetConfiguration
 import org.supla.android.widget.onoff.OnOffWidget
 import org.supla.android.widget.onoff.updateOnOffWidget
@@ -19,6 +26,7 @@ import org.supla.android.widget.single.updateSingleWidget
 
 @HiltWorker
 class WidgetReloadWorker @AssistedInject constructor(
+  private val loadChannelConfigUseCase: LoadChannelConfigUseCase,
   appPreferences: Preferences,
   @Assisted context: Context,
   @Assisted workerParameters: WorkerParameters
@@ -27,6 +35,7 @@ class WidgetReloadWorker @AssistedInject constructor(
   private val appWidgetManager = getAppWidgetManager()
 
   override fun doWork(): Result {
+    Trace.i(TAG, "Widget reload worker started")
     val onOffWidgetIds =
       appWidgetManager.getAppWidgetIds(ComponentName(applicationContext, OnOffWidget::class.java))
     handleWidgets(onOffWidgetIds, true) { context, widgetId ->
@@ -48,18 +57,51 @@ class WidgetReloadWorker @AssistedInject constructor(
   ) {
     for (widgetId in widgetIds) {
       val configuration = preferences.getWidgetConfiguration(widgetId) ?: continue
-      if (!isThermometer(configuration)) {
-        continue
+      when {
+        isThermometer(configuration) ->
+          handleThermometerWidget(widgetId, configuration, temperatureWithUnit, updateWidget)
+
+        isGpm(configuration) ->
+          handleGpmWidget(widgetId, configuration, temperatureWithUnit, updateWidget)
       }
-
-      val temperature = loadTemperatureAndHumidity(
-        { (loadValue(configuration) as TemperatureAndHumidity) },
-        getTemperatureAndHumidityFormatter(configuration, temperatureWithUnit)
-      )
-
-      updateWidgetConfiguration(widgetId, configuration.copy(value = temperature))
-      updateWidget(applicationContext, widgetId)
     }
+  }
+
+  private fun handleThermometerWidget(
+    widgetId: Int,
+    configuration: WidgetConfiguration,
+    temperatureWithUnit: Boolean,
+    updateWidget: (context: Context, widgetId: Int) -> Unit
+  ) {
+    val temperature = loadTemperatureAndHumidity(
+      { (loadValue(configuration) as TemperatureAndHumidity) },
+      getTemperatureAndHumidityFormatter(configuration, temperatureWithUnit)
+    )
+
+    updateWidgetConfiguration(widgetId, configuration.copy(value = temperature))
+    updateWidget(applicationContext, widgetId)
+  }
+
+  private fun handleGpmWidget(
+    widgetId: Int,
+    configuration: WidgetConfiguration,
+    valueWithUnit: Boolean,
+    updateWidget: (context: Context, widgetId: Int) -> Unit
+  ) {
+    val channelConfig = try {
+      loadChannelConfigUseCase(configuration.profileId, configuration.itemId).blockingGet()
+    } catch (ex: Exception) {
+      null
+    }
+    val doubleValue = try {
+      (loadValue(configuration) as DoubleValue).value
+    } catch (ex: Exception) {
+      null
+    } ?: GpmValueProvider.UNKNOWN_VALUE
+
+    val formatter = GpmValueFormatter(channelConfig as? SuplaChannelGeneralPurposeBaseConfig)
+    updateWidgetConfiguration(widgetId, configuration.copy(value = formatter.format(doubleValue, valueWithUnit)))
+    updateWidget(applicationContext, widgetId)
   }
 
   private fun isThermometer(configuration: WidgetConfiguration): Boolean =
@@ -67,6 +109,13 @@ class WidgetReloadWorker @AssistedInject constructor(
       (
         configuration.itemFunction == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER ||
           configuration.itemFunction == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
+        )
+
+  private fun isGpm(configuration: WidgetConfiguration): Boolean =
+    configuration.itemType == ItemType.CHANNEL &&
+      (
+        configuration.itemFunction == SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT ||
+          configuration.itemFunction == SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER
         )
 
   companion object {

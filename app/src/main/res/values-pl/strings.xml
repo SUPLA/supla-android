@@ -631,6 +631,8 @@
   <string name="notification_delete_all_proceed">Usuń</string>
   <string name="notifications_log_profile">Profil:</string>
   <string name="notifications_log_date">Data:</string>
+  <string name="widget_warning_battery_limitations">Aplikacja ma włączone ograniczenia w wykorzystaniu baterii. Widżet może nie działać prawidłowo. Przejdź do ustawień, aby zmienić na brak ograniczeń.</string>
+  <string name="notification_deleted">Usunięto</string>
 
   <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
     <item quantity="one">włączone</item>

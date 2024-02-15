@@ -19,6 +19,7 @@ package org.supla.android.widget.onoff.configuration
 
 import android.content.Context
 import android.os.Bundle
+import android.widget.RelativeLayout
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import dagger.hilt.android.AndroidEntryPoint
@@ -43,6 +44,9 @@ class OnOffWidgetConfigurationActivity :
   lateinit var widgetPreferences: WidgetPreferences
 
   private val viewModel: OnOffWidgetConfigurationViewModel by viewModels()
+
+  override val widgetWarningView: RelativeLayout
+    get() = binding.widgetOnOffCommon.widgetWarning.widgetWarningContent
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)

@@ -274,11 +274,16 @@ public class SuplaApp extends MultiDexApplication
     Constraints constraints =
         new Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build();
     PeriodicWorkRequest request =
-        new PeriodicWorkRequest.Builder(WidgetReloadWorker.class, 30, TimeUnit.MINUTES)
+        new PeriodicWorkRequest.Builder(
+                WidgetReloadWorker.class,
+                PeriodicWorkRequest.MIN_PERIODIC_INTERVAL_MILLIS,
+                TimeUnit.MINUTES)
             .setConstraints(constraints)
+            .addTag(WORK_ID)
             .build();
     WorkManager.getInstance(this)
-        .enqueueUniquePeriodicWork(WORK_ID, ExistingPeriodicWorkPolicy.KEEP, request);
+        .enqueueUniquePeriodicWork(
+            WORK_ID, ExistingPeriodicWorkPolicy.CANCEL_AND_REENQUEUE, request);
     LoadUserIconsIntoCacheWorker.Companion.start(this);
   }
 }

@@ -33,6 +33,7 @@ import org.supla.android.Trace
 import org.supla.android.data.model.general.ChannelState
 import org.supla.android.data.model.general.IconType
 import org.supla.android.db.Channel
+import org.supla.android.db.ChannelBase
 import org.supla.android.extensions.getChannelIconUseCase
 import org.supla.android.extensions.isGpm
 import org.supla.android.extensions.isThermometer
@@ -129,7 +130,7 @@ class OnOffWidget : WidgetProviderBase() {
     } else {
       R.id.on_off_widget_turn_on_button
     }
-    views.setImageViewBitmap(iconViewId, getIcon(context, channel, false, ChannelState.Value.ON))
+    views.setImageViewBitmap(iconViewId, getIcon(context, channel, false, getChannelDefaultState(channel)))
 
     val viewIdNightMode = if (channel.isThermometer() || channel.isGpm()) {
       R.id.on_off_widget_value_icon_night_mode
@@ -138,7 +139,7 @@ class OnOffWidget : WidgetProviderBase() {
     }
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-      views.setImageViewBitmap(viewIdNightMode, getIcon(context, channel, true, ChannelState.Value.ON))
+      views.setImageViewBitmap(viewIdNightMode, getIcon(context, channel, true, getChannelDefaultState(channel)))
     }
 
     if (channel.isThermometer() || channel.isGpm()) {
@@ -160,6 +161,13 @@ class OnOffWidget : WidgetProviderBase() {
 
   private fun getIcon(context: Context, channel: Channel, nightMode: Boolean, stateValue: ChannelState.Value) =
     ImageCache.getBitmap(context, context.getChannelIconUseCase(channel, IconType.SINGLE, nightMode, stateValue))
+
+  private fun getChannelDefaultState(channel: ChannelBase): ChannelState.Value =
+    if (channel.isThermometer() || channel.isGpm()) {
+      ChannelState.Value.NOT_USED
+    } else {
+      ChannelState.Value.ON
+    }
 
   companion object {
     private val TAG = OnOffWidget::class.simpleName

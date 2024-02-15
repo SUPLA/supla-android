@@ -161,6 +161,7 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
     ll.setLayoutParams(
         new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
     ll.setOrientation(HORIZONTAL);
+    ll.setClickable(true);
     mMainButtonsAreaLayout.addView(ll);
 
     ImageView iv = new ImageView(getContext());
@@ -271,11 +272,11 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
     addButton(BTN_SETTINGS, R.drawable.settings, R.string.settings);
     addButton(BTN_ADD_DEVICE, R.drawable.add_device, R.string.add_device);
     addButton(BTN_Z_WAVE, R.drawable.z_wave_btn, R.string.z_wave);
+    addButton(BTN_NOTIFICATIONS, R.drawable.ic_notification, R.string.menu_notifications);
     addButton(BTN_ABOUT, R.drawable.info, R.string.about);
     // Google Play Policy
     addButton(BTN_HELP, R.drawable.help, R.string.help);
     addButton(BTN_CLOUD, R.drawable.menu_cloud, R.string.supla_cloud);
-    addButton(BTN_NOTIFICATIONS, R.drawable.ic_notification, R.string.menu_notifications);
     addFooter();
   }
 

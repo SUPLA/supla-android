@@ -21,6 +21,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import androidx.fragment.app.viewModels
+import com.google.android.material.snackbar.Snackbar
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
@@ -48,6 +49,14 @@ class NotificationsLogFragment :
   }
 
   override fun handleEvents(event: NotificationsLogViewEvent) {
+    when (event) {
+      is NotificationsLogViewEvent.ShowDeleteNotification -> {
+        Snackbar.make(binding.root, R.string.notification_deleted, DELETE_DELAY_SECS.times(1000).toInt()).apply {
+          setAction(getText(R.string.cancel)) { viewModel.cancelDeletion(event.id) }
+          show()
+        }
+      }
+    }
   }
 
   override fun handleViewState(state: NotificationsLogViewState) {
