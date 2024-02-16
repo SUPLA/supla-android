@@ -21,6 +21,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import org.supla.android.data.source.local.entity.ProfileEntity.Companion.TABLE_NAME
+import org.supla.android.profile.AuthInfo
 
 @Entity(
   tableName = TABLE_NAME,
@@ -41,6 +42,20 @@ data class ProfileEntity(
   @ColumnInfo(name = COLUMN_GUID, typeAffinity = ColumnInfo.BLOB) val guid: ByteArray?,
   @ColumnInfo(name = COLUMN_AUTH_KEY, typeAffinity = ColumnInfo.BLOB) val authKey: ByteArray?,
 ) {
+
+  val authInfo: AuthInfo
+    get() = AuthInfo(
+      emailAuth = this.emailAuth,
+      serverAutoDetect = this.serverAutoDetect,
+      serverForEmail = this.serverForEmail ?: "",
+      serverForAccessID = this.serverForAccessId ?: "",
+      emailAddress = this.email ?: "",
+      accessID = this.accessId ?: 0,
+      accessIDpwd = this.accessIdPassword ?: "",
+      preferredProtocolVersion = this.preferredProtocolVersion ?: 0,
+      guid = this.guid ?: byteArrayOf(),
+      authKey = this.authKey ?: byteArrayOf()
+    )
 
   companion object {
     const val TABLE_NAME = "auth_profile"
