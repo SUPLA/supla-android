@@ -25,4 +25,8 @@ import javax.inject.Singleton
 class RoomProfileRepository @Inject constructor(private val profileDao: ProfileDao) {
 
   fun findActiveProfile() = profileDao.findActiveProfile()
+
+  fun findAllProfiles() = profileDao.findAllProfiles()
+
+  fun findProfile(id: Long) = profileDao.findProfile(id)
 }

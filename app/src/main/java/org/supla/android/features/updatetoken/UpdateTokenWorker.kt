@@ -36,11 +36,11 @@ import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.notifications.NotificationsHelper.Companion.areNotificationsEnabled
 import org.supla.android.core.storage.EncryptedPreferences
 import org.supla.android.data.source.RoomChannelRepository
-import org.supla.android.db.AuthProfileItem
+import org.supla.android.data.source.RoomProfileRepository
+import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.extensions.TAG
 import org.supla.android.lib.SuplaClient
 import org.supla.android.lib.singlecall.SingleCall
-import org.supla.android.profile.ProfileManager
 import java.util.Date
 import java.util.concurrent.TimeUnit
 
@@ -48,8 +48,8 @@ private const val ONE_DAY_MILLIS = 24 * 60 * 60 * 1000
 
 @HiltWorker
 class UpdateTokenWorker @AssistedInject constructor(
-  private val profileManager: ProfileManager,
   private val singleCallProvider: SingleCall.Provider,
+  private val profileRepository: RoomProfileRepository,
   private val encryptedPreferences: EncryptedPreferences,
   private val channelRepository: RoomChannelRepository,
   private val dateProvider: DateProvider,
@@ -67,7 +67,7 @@ class UpdateTokenWorker @AssistedInject constructor(
       return Result.failure()
     }
 
-    val allProfiles = profileManager.getAllProfiles().blockingFirst()
+    val allProfiles = profileRepository.findAllProfiles().blockingFirst()
     val notificationsEnabled = areNotificationsEnabled(notificationManager)
     val allProfilesUpdated = updateTokenInAllProfiles(token, allProfiles, notificationsEnabled)
     encryptedPreferences.notificationsLastEnabled = notificationsEnabled
@@ -82,14 +82,14 @@ class UpdateTokenWorker @AssistedInject constructor(
 
   private fun updateTokenInAllProfiles(
     token: String,
-    allProfiles: List<AuthProfileItem>,
+    allProfiles: List<ProfileEntity>,
     notificationsEnabled: Boolean
   ): Boolean {
     var allProfilesUpdated = true
     allProfiles.forEach { profile ->
 
       val previousEnabled = encryptedPreferences.notificationsLastEnabled
-      val previousToken = encryptedPreferences.getFcmProfileToken(profile.id)
+      val previousToken = encryptedPreferences.getFcmProfileToken(profile.id!!)
 
       if (token == previousToken && tokenUpdateNotNeeded() && notificationsEnabled == previousEnabled) {
         Trace.d(TAG, "Profile `${profile.name}` has active token set - skipping")
@@ -111,7 +111,7 @@ class UpdateTokenWorker @AssistedInject constructor(
       Trace.i(TAG, "Updating token for profile `${profile.name}` (id: `${profile.id}`)")
       try {
         val singleCall = singleCallProvider.provide(profile.id)
-        singleCall.registerPushNotificationClientToken(SuplaClient.SUPLA_APP_ID, token, profile.name)
+        singleCall.registerPushNotificationClientToken(SuplaClient.SUPLA_APP_ID, token, profile)
         encryptedPreferences.setFcmProfileToken(profile.id, token)
       } catch (ex: Exception) {
         Trace.w(TAG, "Token update for profile `${profile.name}` (id: `${profile.id}`) failed!", ex)

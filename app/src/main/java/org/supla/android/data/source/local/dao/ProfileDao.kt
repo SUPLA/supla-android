@@ -19,10 +19,12 @@ package org.supla.android.data.source.local.dao
 
 import androidx.room.Dao
 import androidx.room.Query
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.data.source.local.entity.ProfileEntity.Companion.ALL_COLUMNS_STRING
 import org.supla.android.data.source.local.entity.ProfileEntity.Companion.COLUMN_ACTIVE
+import org.supla.android.data.source.local.entity.ProfileEntity.Companion.COLUMN_ID
 import org.supla.android.data.source.local.entity.ProfileEntity.Companion.TABLE_NAME
 
 @Dao
@@ -36,4 +38,16 @@ interface ProfileDao {
   """
   )
   fun findActiveProfile(): Single<ProfileEntity>
+
+  @Query("SELECT $ALL_COLUMNS_STRING FROM $TABLE_NAME")
+  fun findAllProfiles(): Observable<List<ProfileEntity>>
+
+  @Query(
+    """
+    SELECT $ALL_COLUMNS_STRING 
+    FROM $TABLE_NAME
+    WHERE $COLUMN_ID = :id
+  """
+  )
+  fun findProfile(id: Long): Single<ProfileEntity>
 }
