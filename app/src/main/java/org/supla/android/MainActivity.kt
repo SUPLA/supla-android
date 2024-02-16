@@ -28,7 +28,6 @@ import androidx.navigation.ui.NavigationUI
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.core.notifications.NotificationsHelper
 import org.supla.android.core.ui.BackHandleOwner
-import org.supla.android.db.MeasurementsDbHelper
 import org.supla.android.extensions.getChannelIconUseCase
 import org.supla.android.features.notificationinfo.NotificationInfoDialog
 import org.supla.android.images.ImageCache
@@ -163,7 +162,6 @@ class MainActivity : NavigationActivity(), ToolbarTitleController, LoadableConte
       it.typeface = SuplaApp.getApp().typefaceOpenSansRegular
     }
 
-    MeasurementsDbHelper.getInstance(this).readableDatabase // For upgrade purposes
     RegisterMessageHandler()
   }
 

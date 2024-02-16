@@ -48,6 +48,7 @@ import org.supla.android.core.networking.suplaclient.SuplaClientBuilder;
 import org.supla.android.core.notifications.NotificationsHelper;
 import org.supla.android.core.observers.AppLifecycleObserver;
 import org.supla.android.data.ValuesFormatter;
+import org.supla.android.db.room.app.AppDatabase;
 import org.supla.android.features.icons.LoadUserIconsIntoCacheWorker;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaClientMessageHandler;
@@ -81,6 +82,7 @@ public class SuplaApp extends MultiDexApplication
   @Inject AppLifecycleObserver appLifecycleObserver;
   @Inject SuplaClientBuilder suplaClientBuilder;
   @Inject HiltWorkerFactory workerFactory;
+  @Inject AppDatabase appDatabase;
 
   public SuplaApp() {
     SuplaClientMessageHandler.getGlobalInstance().registerMessageListener(this);
@@ -104,6 +106,9 @@ public class SuplaApp extends MultiDexApplication
     WorkManager.initialize(
         this, new Configuration.Builder().setWorkerFactory(workerFactory).build());
     Utils.init(this);
+
+    // Needed to trigger database migration through Room.
+    appDatabase.getOpenHelper().getReadableDatabase();
 
     enqueueWidgetRefresh();
   }
