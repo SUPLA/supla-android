@@ -1037,7 +1037,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   }
 
   private void locationUpdate(SuplaLocation location) {
-    Trace.d(log_tag, "Location " + Integer.toString(location.Id) + " " + location.Caption);
+    Trace.d(log_tag, "Location " + location.Id + " " + location.Caption);
 
     if (DbH.updateLocation(location)) {
       Trace.d(log_tag, "Location updated");
@@ -1239,7 +1239,16 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   }
 
   private void channelValueUpdate(SuplaChannelValueUpdate channelValueUpdate) {
-
+    Trace.d(
+        log_tag,
+        "Channel value id:"
+            + channelValueUpdate.Id
+            + " value: "
+            + channelValueUpdate.Value
+            + " online:"
+            + channelValueUpdate.OnLine
+            + " EOL:"
+            + channelValueUpdate.EOL);
     if (updateChannelValueUseCase.invoke(channelValueUpdate).blockingGet()
         == EntityUpdateResult.UPDATED) {
       onDataChanged(channelValueUpdate.Id, 0);
