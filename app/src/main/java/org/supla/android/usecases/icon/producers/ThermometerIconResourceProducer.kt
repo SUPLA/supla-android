@@ -18,22 +18,15 @@ package org.supla.android.usecases.icon.producers
  */
 
 import org.supla.android.R
-import org.supla.android.data.model.general.IconType
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
+import org.supla.android.lib.SuplaConst
 import org.supla.android.usecases.icon.IconData
 import org.supla.android.usecases.icon.IconResourceProducer
 
-class HumidityAndTemperatureIconResourceProducer : IconResourceProducer {
+class ThermometerIconResourceProducer : IconResourceProducer {
   override fun accepts(function: Int): Boolean =
-    function == SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
+    function == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
 
   override fun produce(data: IconData): Int =
-    when (data.type) {
-      IconType.SECOND -> data.icon(R.drawable.humidity, R.drawable.humidity_nightmode)
-      else -> thermometerIcon(data)
-    }
-
-  private fun thermometerIcon(data: IconData): Int =
     when (data.altIcon) {
       1 -> data.icon(R.drawable.fnc_thermometer_tap, R.drawable.fnc_thermometer_tap_nm)
       2 -> data.icon(R.drawable.fnc_thermometer_floor, R.drawable.fnc_thermometer_floor_nm)

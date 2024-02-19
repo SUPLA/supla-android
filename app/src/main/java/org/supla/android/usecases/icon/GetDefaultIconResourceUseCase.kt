@@ -30,7 +30,6 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_IC_HEAT_METER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_IC_WATER_METER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_PRESSURESENSOR
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_RAINSENSOR
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_WEIGHTSENSOR
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_WINDSENSOR
 import org.supla.android.usecases.icon.producers.AlarmArmamentSensorIconResourceProducer
@@ -55,6 +54,7 @@ import org.supla.android.usecases.icon.producers.RollerShutterIconResourceProduc
 import org.supla.android.usecases.icon.producers.RoofWindowIconResourceProducer
 import org.supla.android.usecases.icon.producers.StaircaseTimerIconResourceProducer
 import org.supla.android.usecases.icon.producers.StaticIconResourceProducer
+import org.supla.android.usecases.icon.producers.ThermometerIconResourceProducer
 import org.supla.android.usecases.icon.producers.ThermostatHomePlusIconResourceProducer
 import org.supla.android.usecases.icon.producers.ThermostatHvacIconResourceProducer
 import org.supla.android.usecases.icon.producers.ValveIconResourceProducer
@@ -77,7 +77,7 @@ class GetDefaultIconResourceUseCase @Inject constructor() {
     StaircaseTimerIconResourceProducer(),
     static(SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER, R.drawable.fnc_thermostat_dhw, R.drawable.fnc_thermostat_dhw_nm),
     ThermostatHvacIconResourceProducer(),
-    static(SUPLA_CHANNELFNC_THERMOMETER, R.drawable.thermometer, R.drawable.thermometer_nightmode),
+    ThermometerIconResourceProducer(),
     static(SUPLA_CHANNELFNC_HUMIDITY, R.drawable.humidity, R.drawable.humidity_nightmode),
     HumidityAndTemperatureIconResourceProducer(),
     static(SUPLA_CHANNELFNC_WINDSENSOR, R.drawable.wind, R.drawable.wind_nightmode),
