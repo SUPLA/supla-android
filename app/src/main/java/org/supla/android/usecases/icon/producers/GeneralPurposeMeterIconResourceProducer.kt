@@ -29,7 +29,7 @@ class GeneralPurposeMeterIconResourceProducer : IconResourceProducer {
   override fun produce(data: IconData): Int =
     when (data.altIcon) {
       1 -> data.icon(R.drawable.fnc_electricity_meter, R.drawable.fnc_electricity_meter_nm)
-      2 -> data.icon(R.drawable.fnc_gasmeter, R.drawable.fnc_gasmeter_nm)
+      2 -> data.icon(R.drawable.fnc_heatmeter, R.drawable.fnc_heatmeter_nm)
       3 -> data.icon(R.drawable.fnc_watermeter, R.drawable.fnc_watermeter_nm)
       4 -> data.icon(R.drawable.fnc_gasmeter, R.drawable.fnc_gasmeter_nm)
       5 -> data.icon(R.drawable.fnc_gpm_septic_tank_1, R.drawable.fnc_gpm_septic_tank_1_nm)
