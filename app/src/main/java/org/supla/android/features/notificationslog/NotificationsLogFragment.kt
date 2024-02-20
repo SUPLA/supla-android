@@ -67,6 +67,10 @@ class NotificationsLogFragment :
       viewModel.askDeleteAll()
       return true
     }
+    if (menuItem.itemId == R.id.toolbar_delete_older_than_month) {
+      viewModel.askDeleteOlderThanMonth()
+      return true
+    }
 
     return false
   }

@@ -41,6 +41,7 @@ class GeneralPurposeMeterIconResourceProducer : IconResourceProducer {
       11 -> data.icon(R.drawable.fnc_gpm_water_tank_3, R.drawable.fnc_gpm_water_tank_3_nm)
       12 -> data.icon(R.drawable.fnc_gpm_coal, R.drawable.fnc_gpm_coal_nm)
       13 -> data.icon(R.drawable.fnc_gpm_salt, R.drawable.fnc_gpm_salt_nm)
+      14 -> data.icon(R.drawable.fnc_gpm_klop, R.drawable.fnc_gpm_klop_nm)
       else -> data.icon(R.drawable.fnc_gpm_5, R.drawable.fnc_gpm_5_nm)
     }
 }

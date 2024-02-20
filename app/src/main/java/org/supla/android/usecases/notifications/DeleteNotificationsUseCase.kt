@@ -22,9 +22,16 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class DeleteAllNotificationsUseCase @Inject constructor(
+class DeleteNotificationsUseCase @Inject constructor(
   private val notificationRepository: NotificationRepository
 ) {
 
-  operator fun invoke() = notificationRepository.deleteAll()
+  operator fun invoke(action: Action) = when (action) {
+    Action.ALL -> notificationRepository.deleteAll()
+    Action.OLDER_THAN_MONTH -> notificationRepository.deleteOlderThanMonth()
+  }
+
+  enum class Action {
+    ALL, OLDER_THAN_MONTH
+  }
 }

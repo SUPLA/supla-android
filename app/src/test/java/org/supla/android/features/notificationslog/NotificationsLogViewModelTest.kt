@@ -34,8 +34,8 @@ import org.mockito.kotlin.whenever
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.data.source.local.entity.NotificationEntity
 import org.supla.android.tools.SuplaSchedulers
-import org.supla.android.usecases.notifications.DeleteAllNotificationsUseCase
 import org.supla.android.usecases.notifications.DeleteNotificationUseCase
+import org.supla.android.usecases.notifications.DeleteNotificationsUseCase
 import org.supla.android.usecases.notifications.LoadAllNotificationsUseCase
 
 @RunWith(MockitoJUnitRunner::class)
@@ -48,7 +48,7 @@ class NotificationsLogViewModelTest : BaseViewModelTest<NotificationsLogViewStat
   private lateinit var deleteNotificationUseCase: DeleteNotificationUseCase
 
   @Mock
-  private lateinit var deleteAllNotificationsUseCase: DeleteAllNotificationsUseCase
+  private lateinit var deleteNotificationsUseCase: DeleteNotificationsUseCase
 
   @Mock
   override lateinit var schedulers: SuplaSchedulers
@@ -68,9 +68,9 @@ class NotificationsLogViewModelTest : BaseViewModelTest<NotificationsLogViewStat
 
     // then
     assertThat(states).containsExactly(
-      NotificationsLogViewState(showDeletionDialog = true)
+      NotificationsLogViewState(showDeletionDialog = true, deleteAction = DeleteNotificationsUseCase.Action.ALL)
     )
-    verifyZeroInteractions(loadAllNotificationsUseCase, deleteNotificationUseCase, deleteAllNotificationsUseCase)
+    verifyZeroInteractions(loadAllNotificationsUseCase, deleteNotificationUseCase, deleteNotificationsUseCase)
   }
 
   @Test
@@ -83,10 +83,10 @@ class NotificationsLogViewModelTest : BaseViewModelTest<NotificationsLogViewStat
 
     // then
     assertThat(states).containsExactly(
-      NotificationsLogViewState(showDeletionDialog = true),
+      NotificationsLogViewState(showDeletionDialog = true, deleteAction = DeleteNotificationsUseCase.Action.ALL),
       NotificationsLogViewState()
     )
-    verifyZeroInteractions(loadAllNotificationsUseCase, deleteNotificationUseCase, deleteAllNotificationsUseCase)
+    verifyZeroInteractions(loadAllNotificationsUseCase, deleteNotificationUseCase, deleteNotificationsUseCase)
   }
 
   @Test
@@ -110,14 +110,30 @@ class NotificationsLogViewModelTest : BaseViewModelTest<NotificationsLogViewStat
   fun `should delete all notifications`() {
     // given
     viewModel.askDeleteAll()
-    whenever(deleteAllNotificationsUseCase.invoke()).thenReturn(Completable.complete())
+    whenever(deleteNotificationsUseCase.invoke(DeleteNotificationsUseCase.Action.ALL)).thenReturn(Completable.complete())
 
     // when
     viewModel.deleteAll()
 
     // then
     assertThat(states).containsExactly(
-      NotificationsLogViewState(showDeletionDialog = true),
+      NotificationsLogViewState(showDeletionDialog = true, deleteAction = DeleteNotificationsUseCase.Action.ALL),
+      NotificationsLogViewState()
+    )
+  }
+
+  @Test
+  fun `should delete notifications older than month`() {
+    // given
+    viewModel.askDeleteOlderThanMonth()
+    whenever(deleteNotificationsUseCase.invoke(DeleteNotificationsUseCase.Action.OLDER_THAN_MONTH)).thenReturn(Completable.complete())
+
+    // when
+    viewModel.deleteAll()
+
+    // then
+    assertThat(states).containsExactly(
+      NotificationsLogViewState(showDeletionDialog = true, deleteAction = DeleteNotificationsUseCase.Action.OLDER_THAN_MONTH),
       NotificationsLogViewState()
     )
   }
@@ -146,6 +162,6 @@ class NotificationsLogViewModelTest : BaseViewModelTest<NotificationsLogViewStat
 
     verify(loadAllNotificationsUseCase).invoke()
     verify(deleteNotificationUseCase).invoke(notificationId)
-    verifyZeroInteractions(loadAllNotificationsUseCase, deleteAllNotificationsUseCase)
+    verifyZeroInteractions(loadAllNotificationsUseCase, deleteNotificationsUseCase)
   }
 }

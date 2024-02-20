@@ -75,6 +75,8 @@ class SlideableListItemLayout @JvmOverloads constructor(
     }
 
     super.onMeasure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY))
+
+    updateContentView(data)
   }
 
   override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
@@ -82,8 +84,6 @@ class SlideableListItemLayout @JvmOverloads constructor(
     if (childCount !in 1..3) {
       throw IllegalStateException("SlideableLayout expects 1 to 3 views inside but found '$childCount'!")
     }
-
-    updateContentView(data)
 
     content.elevation = 0f
     leftItem?.elevation = 0f

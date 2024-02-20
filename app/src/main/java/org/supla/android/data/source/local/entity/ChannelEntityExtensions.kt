@@ -32,7 +32,8 @@ fun ChannelEntity.hasValue(): Boolean =
   when (function) {
     SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT,
     SuplaConst.SUPLA_CHANNELFNC_THERMOMETER,
-    SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR -> true
+    SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR,
+    SuplaConst.SUPLA_CHANNELFNC_DISTANCESENSOR -> true
 
     else -> false
   }
@@ -41,7 +42,8 @@ fun ChannelEntity.isMeasurement(): Boolean =
   function == SuplaConst.SUPLA_CHANNELFNC_ALARMARMAMENTSENSOR ||
     function == SuplaConst.SUPLA_CHANNELFNC_HOTELCARDSENSOR ||
     function == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER ||
-    function == SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR
+    function == SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR ||
+    function == SuplaConst.SUPLA_CHANNELFNC_DISTANCESENSOR
 
 fun ChannelEntity.isGpm(): Boolean =
   function == SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER ||
