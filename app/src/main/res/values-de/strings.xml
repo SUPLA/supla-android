@@ -554,7 +554,8 @@
   <string name="channel_caption_general_purpose_measurement">Messungskanal</string>
   <string name="history_disabled">Der Verlauf ist für diesen Kanal deaktiviert.</string>
   <string name="toolbar_delete_all">Alles löschen</string>
-  <string name="notification_delete_all_title">Alle Einträge löschen?</string>
+  <string name="toolbar_delete_older_than_month">Älter als 30 Tage löschen</string>
+  <string name="notification_delete_all_title">Einträge löschen?</string>
   <string name="notification_delete_all_message">Das Löschen ist unumkehrbar, fortfahren?</string>
   <string name="notification_delete_all_proceed">Löschen</string>
   <string name="notifications_log_profile">Konto:</string>

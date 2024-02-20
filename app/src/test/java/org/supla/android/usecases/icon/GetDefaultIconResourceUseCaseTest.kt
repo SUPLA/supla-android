@@ -52,13 +52,13 @@ class GetDefaultIconResourceUseCaseTest {
     // given
     val iconData: IconData = mockk {
       every { function } returns SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR
-      every { icon(R.drawable.depthsensor, R.drawable.depthsensor_nightmode) } returns R.drawable.depthsensor
+      every { icon(R.drawable.fnc_depth, R.drawable.fnc_depth_nm) } returns R.drawable.fnc_depth
     }
 
     // when
     val result = useCase.invoke(iconData)
 
     // then
-    assertThat(result).isEqualTo(R.drawable.depthsensor)
+    assertThat(result).isEqualTo(R.drawable.fnc_depth)
   }
 }

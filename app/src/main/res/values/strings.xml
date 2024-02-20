@@ -648,8 +648,9 @@
   <string name="channel_caption_general_purpose_meter" translatable="false">Meter channel</string>
   <string name="history_disabled" translatable="false">History is disabled for this channel</string>
   <string name="toolbar_delete_all" translatable="false">Delete all</string>
-  <string name="notification_delete_all_title" translatable="false">Delete all logs?</string>
-  <string name="notification_delete_all_message" translatable="false">Deletion of all log entries is irreversible, do you want to continue?</string>
+  <string name="toolbar_delete_older_than_month" translatable="false">Delete older than 30 days</string>
+  <string name="notification_delete_all_title" translatable="false">Delete logs?</string>
+  <string name="notification_delete_all_message" translatable="false">This can\'t be undone</string>
   <string name="notification_delete_all_proceed" translatable="false">Delete</string>
   <string name="notifications_log_profile" translatable="false">Profile:</string>
   <string name="notifications_log_date" translatable="false">Date:</string>

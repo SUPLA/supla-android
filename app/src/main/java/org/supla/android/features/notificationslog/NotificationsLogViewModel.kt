@@ -25,9 +25,10 @@ import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.source.local.entity.NotificationEntity
+import org.supla.android.extensions.guardLet
 import org.supla.android.tools.SuplaSchedulers
-import org.supla.android.usecases.notifications.DeleteAllNotificationsUseCase
 import org.supla.android.usecases.notifications.DeleteNotificationUseCase
+import org.supla.android.usecases.notifications.DeleteNotificationsUseCase
 import org.supla.android.usecases.notifications.LoadAllNotificationsUseCase
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -38,7 +39,7 @@ const val DELETE_DELAY_SECS = 5L
 class NotificationsLogViewModel @Inject constructor(
   private val loadAllNotificationsUseCase: LoadAllNotificationsUseCase,
   private val deleteNotificationUseCase: DeleteNotificationUseCase,
-  private val deleteAllNotificationsUseCase: DeleteAllNotificationsUseCase,
+  private val deleteNotificationsUseCase: DeleteNotificationsUseCase,
   schedulers: SuplaSchedulers
 ) : BaseViewModel<NotificationsLogViewState, NotificationsLogViewEvent>(NotificationsLogViewState(), schedulers),
   NotificationsLogViewProxy {
@@ -72,18 +73,24 @@ class NotificationsLogViewModel @Inject constructor(
   }
 
   override fun askDeleteAll() {
-    updateState { it.copy(showDeletionDialog = true) }
+    updateState { it.copy(showDeletionDialog = true, deleteAction = DeleteNotificationsUseCase.Action.ALL) }
+  }
+
+  fun askDeleteOlderThanMonth() {
+    updateState { it.copy(showDeletionDialog = true, deleteAction = DeleteNotificationsUseCase.Action.OLDER_THAN_MONTH) }
   }
 
   override fun cancelDeleteAll() {
-    updateState { it.copy(showDeletionDialog = false) }
+    updateState { it.copy(showDeletionDialog = false, deleteAction = null) }
   }
 
   override fun deleteAll() {
-    deleteAllNotificationsUseCase()
+    val (action) = guardLet(currentState().deleteAction) { return }
+
+    deleteNotificationsUseCase(action)
       .attach()
       .subscribeBy(
-        onComplete = { updateState { it.copy(showDeletionDialog = false) } }
+        onComplete = { updateState { it.copy(showDeletionDialog = false, deleteAction = null) } }
       )
       .disposeBySelf()
   }
@@ -112,5 +119,6 @@ sealed class NotificationsLogViewEvent : ViewEvent {
 
 data class NotificationsLogViewState(
   val items: List<NotificationItem> = emptyList(),
-  val showDeletionDialog: Boolean = false
+  val showDeletionDialog: Boolean = false,
+  val deleteAction: DeleteNotificationsUseCase.Action? = null
 ) : ViewState()
