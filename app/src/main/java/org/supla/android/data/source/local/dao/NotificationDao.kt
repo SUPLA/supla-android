@@ -27,6 +27,7 @@ import org.supla.android.data.source.local.entity.NotificationEntity.Companion.A
 import org.supla.android.data.source.local.entity.NotificationEntity.Companion.COLUMN_DATE
 import org.supla.android.data.source.local.entity.NotificationEntity.Companion.COLUMN_ID
 import org.supla.android.data.source.local.entity.NotificationEntity.Companion.TABLE_NAME
+import java.time.LocalDateTime
 
 @Dao
 interface NotificationDao {
@@ -42,4 +43,7 @@ interface NotificationDao {
 
   @Query("DELETE FROM $TABLE_NAME")
   fun deleteAll(): Completable
+
+  @Query("DELETE FROM $TABLE_NAME WHERE $COLUMN_DATE < :olderThan")
+  fun deleteAll(olderThan: LocalDateTime): Completable
 }

@@ -223,7 +223,7 @@ public abstract class ChannelBase extends DbItem {
   protected CharSequence getHumanReadableValue(WhichOne whichOne, ChannelValue value) {
 
     if (value == null) {
-      return "";
+      return ValuesFormatter.NO_VALUE_TEXT;
     }
 
     if (whichOne == WhichOne.Second) {
@@ -232,7 +232,7 @@ public abstract class ChannelBase extends DbItem {
         if (getOnLine() && value.getHumidity() >= 0) {
           return String.format("%.1f", value.getHumidity());
         } else {
-          return "---";
+          return ValuesFormatter.NO_VALUE_TEXT;
         }
       }
 
@@ -246,7 +246,7 @@ public abstract class ChannelBase extends DbItem {
         if (getOnLine() && getTemperaturePresenter().isTemperatureDefined(temperature)) {
           return getTemperaturePresenter().getTemperatureString(temperature, true, true);
         } else {
-          return "---";
+          return ValuesFormatter.NO_VALUE_TEXT;
         }
 
       case SuplaConst.SUPLA_CHANNELFNC_HUMIDITY:
@@ -255,7 +255,7 @@ public abstract class ChannelBase extends DbItem {
         if (getOnLine() && humidity >= 0) {
           return String.format("%.1f", humidity);
         } else {
-          return "---";
+          return ValuesFormatter.NO_VALUE_TEXT;
         }
 
       case SuplaConst.SUPLA_CHANNELFNC_WINDSENSOR:
@@ -264,7 +264,7 @@ public abstract class ChannelBase extends DbItem {
         if (getOnLine() && wind >= 0) {
           return String.format("%.1f m/s", wind);
         } else {
-          return "--- m/s";
+          return ValuesFormatter.NO_VALUE_TEXT;
         }
       case SuplaConst.SUPLA_CHANNELFNC_PRESSURESENSOR:
         double pressure = value.getDouble(-1);
@@ -272,7 +272,7 @@ public abstract class ChannelBase extends DbItem {
         if (getOnLine() && pressure >= 0) {
           return String.format("%d hPa", (int) pressure);
         } else {
-          return "--- hPa";
+          return ValuesFormatter.NO_VALUE_TEXT;
         }
       case SuplaConst.SUPLA_CHANNELFNC_RAINSENSOR:
         double rain = value.getDouble(-1);
@@ -280,7 +280,7 @@ public abstract class ChannelBase extends DbItem {
         if (getOnLine() && rain >= 0) {
           return String.format("%.2f l/m²", rain / 1000.00);
         } else {
-          return "--- l/m²";
+          return ValuesFormatter.NO_VALUE_TEXT;
         }
       case SuplaConst.SUPLA_CHANNELFNC_WEIGHTSENSOR:
         double weight = value.getDouble(-1);
@@ -292,7 +292,7 @@ public abstract class ChannelBase extends DbItem {
             return String.format("%d g", (int) weight);
           }
         } else {
-          return "--- kg";
+          return ValuesFormatter.NO_VALUE_TEXT;
         }
 
       case SuplaConst.SUPLA_CHANNELFNC_DISTANCESENSOR:
@@ -322,12 +322,14 @@ public abstract class ChannelBase extends DbItem {
           }
 
         } else {
-          return "--- m";
+          return ValuesFormatter.NO_VALUE_TEXT;
         }
 
       case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
         double doubleValue = value.getTotalForwardActiveEnergy();
-        return doubleValue > 0 ? String.format("%.2f kWh", doubleValue) : "--- kWh";
+        return doubleValue > 0
+            ? String.format("%.2f kWh", doubleValue)
+            : ValuesFormatter.NO_VALUE_TEXT;
 
       case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
       case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:

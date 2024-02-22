@@ -209,7 +209,7 @@ class MainActivity : NavigationActivity(), ToolbarTitleController, LoadableConte
   private fun configureToolbarOnDestinationChange(destination: NavDestination) {
     lastDestinationId = destination.id
     setAccountItemVisible(profileManager.getAllProfiles().blockingFirst().size > 1 && lastDestinationId == R.id.main_fragment)
-    setDeleteAllVisible(lastDestinationId == R.id.notifications_log_fragment)
+    setDeleteVisible(lastDestinationId == R.id.notifications_log_fragment)
 
     if (destination.id != R.id.main_fragment) {
       findViewById<FrameLayout>(R.id.main_content).setPadding(0, 0, 0, 0)
@@ -219,7 +219,7 @@ class MainActivity : NavigationActivity(), ToolbarTitleController, LoadableConte
   override fun onResume() {
     super.onResume()
     setAccountItemVisible(profileManager.getAllProfiles().blockingFirst().size > 1 && lastDestinationId == R.id.main_fragment)
-    setDeleteAllVisible(lastDestinationId == R.id.notifications_log_fragment)
+    setDeleteVisible(lastDestinationId == R.id.notifications_log_fragment)
 
     if (SuperuserAuthorizationDialog.lastOneIsStillShowing()) {
       return
@@ -240,8 +240,9 @@ class MainActivity : NavigationActivity(), ToolbarTitleController, LoadableConte
     toolbar.menu.findItem(R.id.toolbar_accounts)?.isVisible = visible
   }
 
-  private fun setDeleteAllVisible(visible: Boolean) {
+  private fun setDeleteVisible(visible: Boolean) {
     toolbar.menu.findItem(R.id.toolbar_delete)?.isVisible = visible
+    toolbar.menu.findItem(R.id.toolbar_delete_older_than_month)?.isVisible = visible
   }
 
   private fun runDownloadTask() {

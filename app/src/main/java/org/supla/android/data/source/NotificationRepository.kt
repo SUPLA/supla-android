@@ -43,5 +43,8 @@ class NotificationRepository @Inject constructor(
     notificationDao.loadAll()
 
   fun delete(id: Long) = notificationDao.delete(id)
+
   fun deleteAll() = notificationDao.deleteAll()
+
+  fun deleteOlderThanMonth() = notificationDao.deleteAll(olderThan = LocalDateTime.now().minusDays(30))
 }

@@ -13,4 +13,10 @@
     android:title="@string/toolbar_delete_all"
     android:visible="false"
     app:showAsAction="never" />
+  <item
+    android:id="@+id/toolbar_delete_older_than_month"
+    android:icon="@drawable/ic_delete"
+    android:title="@string/toolbar_delete_older_than_month"
+    android:visible="false"
+    app:showAsAction="never" />
 </menu>

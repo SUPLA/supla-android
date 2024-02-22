@@ -24,6 +24,7 @@ import android.content.Context;
 import android.database.Cursor;
 import org.supla.android.R;
 import org.supla.android.ValuesFormatterProvider;
+import org.supla.android.data.ValuesFormatter;
 import org.supla.android.data.source.local.entity.ChannelEntity;
 import org.supla.android.lib.DigiglassValue;
 import org.supla.android.lib.SuplaChannelState;
@@ -229,11 +230,13 @@ public class Channel extends ChannelBase {
           double doubleValue = value.getImpulseCounterCalculatedValue(true);
           return doubleValue > 0
               ? String.format("%.1f " + getUnit(), doubleValue)
-              : "--- " + getUnit();
+              : ValuesFormatter.NO_VALUE_TEXT;
         } else if (value.getSubValueType()
             == SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS) {
           double doubleValue = value.getTotalForwardActiveEnergy(true);
-          return doubleValue > 0 ? String.format("%.2f kWh", doubleValue) : "--- kWh" + getUnit();
+          return doubleValue > 0
+              ? String.format("%.2f kWh", doubleValue)
+              : ValuesFormatter.NO_VALUE_TEXT;
         }
         break;
     }
@@ -242,7 +245,9 @@ public class Channel extends ChannelBase {
     // 140-issue
     if (getType() == SuplaConst.SUPLA_CHANNELTYPE_IMPULSE_COUNTER) {
       double doubleValue = value.getImpulseCounterCalculatedValue();
-      return doubleValue > 0 ? String.format("%.1f " + getUnit(), doubleValue) : "--- " + getUnit();
+      return doubleValue > 0
+          ? String.format("%.1f " + getUnit(), doubleValue)
+          : ValuesFormatter.NO_VALUE_TEXT;
     }
 
     return super.getHumanReadableValue(whichOne, value);
