@@ -656,6 +656,7 @@
   <string name="notifications_log_date" translatable="false">Date:</string>
   <string name="widget_warning_battery_limitations" translatable="false">The app has active limits in battery usage. The widget may work incorrect. Go to settings if you want change to no limits.</string>
   <string name="notification_deleted" translatable="false">Deleted</string>
+  <string name="settings_show_labels" translatable="false">Show bottom menu labels</string>
 
   <plurals name="details_timer_info_on" translatable="false">
     <item quantity="other">on</item>

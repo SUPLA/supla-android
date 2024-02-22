@@ -60,6 +60,7 @@ class SettingsViewModel @Inject constructor(
       SettingItem.TemperatureUnitItem(unit = preferences.temperatureUnit, this::updateTemperatureUnit),
       SettingItem.ButtonAutoHide(active = preferences.isButtonAutohide, this::updateButtonAutoHide),
       SettingItem.InfoButton(visible = preferences.isShowChannelInfo, this::updateInfoButton),
+      SettingItem.BottomLabels(visible = preferences.isShowBottomLabel, this::updateBottomLabel),
       SettingItem.RollerShutterOpenClose(showOpeningPercentage = preferences.isShowOpeningPercent, this::updateShowingOpeningPercentage),
       SettingItem.LocalizationOrdering { sendEvent(SettingsViewEvent.NavigateToLocalizationsOrdering) },
 
@@ -92,6 +93,10 @@ class SettingsViewModel @Inject constructor(
 
   private fun updateInfoButton(value: Boolean) {
     preferences.isShowChannelInfo = value
+  }
+
+  private fun updateBottomLabel(value: Boolean) {
+    preferences.isShowBottomLabel = value
   }
 
   private fun updateShowingOpeningPercentage(value: Boolean) {

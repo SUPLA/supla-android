@@ -70,6 +70,7 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
       tuple(SettingItem.TemperatureUnitItem::class.java),
       tuple(SettingItem.ButtonAutoHide::class.java),
       tuple(SettingItem.InfoButton::class.java),
+      tuple(SettingItem.BottomLabels::class.java),
       tuple(SettingItem.RollerShutterOpenClose::class.java),
       tuple(SettingItem.LocalizationOrdering::class.java),
       tuple(SettingItem.HeaderItem::class.java),
@@ -82,10 +83,11 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
     assertThat((settingsList[2] as SettingItem.TemperatureUnitItem).unit).isEqualTo(TemperatureUnit.FAHRENHEIT)
     assertThat((settingsList[3] as SettingItem.ButtonAutoHide).active).isEqualTo(true)
     assertThat((settingsList[4] as SettingItem.InfoButton).visible).isEqualTo(false)
-    assertThat((settingsList[5] as SettingItem.RollerShutterOpenClose).showOpeningPercentage).isEqualTo(true)
-    assertThat((settingsList[7] as SettingItem.HeaderItem).headerResource).isEqualTo(R.string.settings_permissions)
-    assertThat((settingsList[8] as SettingItem.NotificationsItem).allowed).isEqualTo(true)
-    assertThat((settingsList[9] as SettingItem.LocalizationItem).allowed).isEqualTo(true)
+    assertThat((settingsList[5] as SettingItem.BottomLabels).visible).isEqualTo(false)
+    assertThat((settingsList[6] as SettingItem.RollerShutterOpenClose).showOpeningPercentage).isEqualTo(true)
+    assertThat((settingsList[8] as SettingItem.HeaderItem).headerResource).isEqualTo(R.string.settings_permissions)
+    assertThat((settingsList[9] as SettingItem.NotificationsItem).allowed).isEqualTo(true)
+    assertThat((settingsList[10] as SettingItem.LocalizationItem).allowed).isEqualTo(true)
   }
 
   @Test
@@ -165,6 +167,25 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
   }
 
   @Test
+  fun `check if show bottom labels is saved`() {
+    // given
+    mockPreferences()
+    whenever(permissionsHelper.checkPermissionGranted(ACCESS_FINE_LOCATION)).thenReturn(true)
+
+    // when
+    viewModel.loadSettings()
+    val channelSettingItem = states[0].settingsItems[5] as SettingItem.BottomLabels
+    channelSettingItem.callback(true)
+
+    // then
+    assertThat(states.size).isEqualTo(1)
+    assertThat(events).isEmpty()
+    verifyPreferencesMockedCalls()
+    verify(preferences).isShowBottomLabel = true
+    verifyNoMoreInteractions(preferences)
+  }
+
+  @Test
   fun `check if rs showing opening percentage is saved`() {
     // given
     mockPreferences()
@@ -172,7 +193,7 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
 
     // when
     viewModel.loadSettings()
-    val channelSettingItem = states[0].settingsItems[5] as SettingItem.RollerShutterOpenClose
+    val channelSettingItem = states[0].settingsItems[6] as SettingItem.RollerShutterOpenClose
     channelSettingItem.callback(false)
 
     // then
@@ -190,7 +211,7 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
 
     // when
     viewModel.loadSettings()
-    val channelSettingItem = states[0].settingsItems[6] as SettingItem.LocalizationOrdering
+    val channelSettingItem = states[0].settingsItems[7] as SettingItem.LocalizationOrdering
     channelSettingItem.callback()
 
     // then
@@ -207,7 +228,7 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
 
     // when
     viewModel.loadSettings()
-    val channelSettingItem = states[0].settingsItems[8] as SettingItem.NotificationsItem
+    val channelSettingItem = states[0].settingsItems[9] as SettingItem.NotificationsItem
     channelSettingItem.callback()
 
     // then
@@ -224,7 +245,7 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
 
     // when
     viewModel.loadSettings()
-    val channelSettingItem = states[0].settingsItems[9] as SettingItem.LocalizationItem
+    val channelSettingItem = states[0].settingsItems[10] as SettingItem.LocalizationItem
     channelSettingItem.callback()
 
     // then
@@ -247,6 +268,7 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
     verify(preferences).temperatureUnit
     verify(preferences).isButtonAutohide
     verify(preferences).isShowChannelInfo
+    verify(preferences).isShowBottomLabel
     verify(preferences).isShowOpeningPercent
   }
 }
