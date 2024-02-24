@@ -19,7 +19,6 @@ package org.supla.android.features.channellist
 
 import android.os.Bundle
 import androidx.annotation.IdRes
-import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.Preferences
@@ -30,7 +29,6 @@ import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.db.ChannelBase
 import org.supla.android.db.Location
-import org.supla.android.di.GSON_FOR_REPO
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.features.details.detailbase.standarddetail.DetailPage
 import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
@@ -58,7 +56,6 @@ import org.supla.android.usecases.details.ThermostatDetailType
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
 import javax.inject.Inject
-import javax.inject.Named
 
 @HiltViewModel
 class ChannelListViewModel @Inject constructor(
@@ -68,7 +65,6 @@ class ChannelListViewModel @Inject constructor(
   private val toggleLocationUseCase: ToggleLocationUseCase,
   private val provideDetailTypeUseCase: ProvideDetailTypeUseCase,
   private val findChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
-  @Named(GSON_FOR_REPO) private val gson: Gson,
   updateEventsManager: UpdateEventsManager,
   preferences: Preferences,
   schedulers: SuplaSchedulers
@@ -154,9 +150,9 @@ class ChannelListViewModel @Inject constructor(
         .subscribeBy(
           onSuccess = { channel ->
             currentState().channels
-              .filterIsInstance(ListItem.ChannelItem::class.java)
-              .first { it.channelBase.remoteId == channel.remoteId }
-              .channelBase = channel.getLegacyChannel()
+              ?.filterIsInstance(ListItem.ChannelItem::class.java)
+              ?.first { it.channelBase.remoteId == channel.remoteId }
+              ?.channelBase = channel.getLegacyChannel()
           },
           onError = defaultErrorHandler("updateChannel($remoteId)")
         )
@@ -243,5 +239,5 @@ sealed class ChannelListViewEvent : ViewEvent {
 }
 
 data class ChannelListViewState(
-  val channels: List<ListItem> = emptyList()
+  val channels: List<ListItem>? = null
 ) : ViewState()

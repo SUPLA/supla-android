@@ -126,9 +126,9 @@ class GroupListViewModel @Inject constructor(
         .subscribeBy(
           onSuccess = { channel ->
             currentState().groups
-              .filterIsInstance(ListItem.ChannelItem::class.java)
-              .first { it.channelBase.remoteId == channel.remoteId }
-              .channelBase = channel
+              ?.filterIsInstance(ListItem.ChannelItem::class.java)
+              ?.first { it.channelBase.remoteId == channel.remoteId }
+              ?.channelBase = channel
           },
           onError = defaultErrorHandler("updateGroup($remoteId)")
         )
@@ -162,5 +162,5 @@ sealed class GroupListViewEvent : ViewEvent {
 }
 
 data class GroupListViewState(
-  val groups: List<ListItem> = emptyList()
+  val groups: List<ListItem>? = null
 ) : ViewState()

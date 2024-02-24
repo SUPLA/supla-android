@@ -27,6 +27,8 @@ import org.supla.android.SuplaApp
 import org.supla.android.core.ui.BaseFragment
 import org.supla.android.databinding.FragmentSceneListBinding
 import org.supla.android.extensions.toPx
+import org.supla.android.extensions.visibleIf
+import org.supla.android.navigator.MainNavigator
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -39,11 +41,17 @@ class SceneListFragment : BaseFragment<SceneListViewState, SceneListViewEvent>(R
   @Inject
   lateinit var adapter: ScenesAdapter
 
+  @Inject
+  lateinit var navigator: MainNavigator
+
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
 
     binding.scenesList.adapter = adapter
     setupAdapter()
+    binding.scenesEmptyListButton.setOnClickListener {
+      navigator.navigateToCloudExternal()
+    }
   }
 
   override fun onStart() {
@@ -61,13 +69,14 @@ class SceneListFragment : BaseFragment<SceneListViewState, SceneListViewEvent>(R
   }
 
   override fun handleViewState(state: SceneListViewState) {
-    if (state.scenes != null) {
-      adapter.setItems(state.scenes)
+    state.scenes?.let { adapter.setItems(it) }
 
-      if (scrollDownOnReload) {
-        binding.scenesList.smoothScrollBy(0, 50.toPx())
-        scrollDownOnReload = false
-      }
+    binding.scenesEmptyListLabel.visibleIf(state.scenes?.isEmpty() == true)
+    binding.scenesEmptyListButton.visibleIf(state.scenes?.isEmpty() == true)
+
+    if (scrollDownOnReload) {
+      binding.scenesList.smoothScrollBy(0, 50.toPx())
+      scrollDownOnReload = false
     }
   }
 

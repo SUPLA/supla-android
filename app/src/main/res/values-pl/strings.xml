@@ -635,6 +635,9 @@
   <string name="widget_warning_battery_limitations">Aplikacja ma włączone ograniczenia w wykorzystaniu baterii. Widżet może nie działać prawidłowo. Przejdź do ustawień, aby zmienić na brak ograniczeń.</string>
   <string name="notification_deleted">Usunięto</string>
   <string name="settings_show_labels">Pokazuj labelki w dolnym menu</string>
+  <string name="channels_no_entry">Pusto</string>
+  <string name="groups_empty_list_button">Dodaj grupę na Supla Cloud</string>
+  <string name="scenes_empty_list_button">Dodaj scenę na Supla Cloud</string>
 
   <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
     <item quantity="one">włączone</item>

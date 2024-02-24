@@ -562,7 +562,10 @@
   <string name="notifications_log_date">Datum:</string>
   <string name="widget_warning_battery_limitations">Die Anwendung hat limitierte Akkunutzung deshalb kann das Widget falsch funktionieren. Die Akkunutzung der App können Sie in Einstellungen ändern.</string>
   <string name="notification_deleted">Gelöscht</string>
-  <plurals name="details_timer_info_on">
+ <string name="channels_no_entry">Lehr</string>
+ <string name="groups_empty_list_button">Gruppe in cloud.supla.org hinzufügen</string>
+ <string name="scenes_empty_list_button">Szene in cloud.supla.org hinzufügen</string>
+ <plurals name="details_timer_info_on">
     <item quantity="one">eingeschaltet</item>
     <item quantity="other">eingeschaltet</item>
   </plurals>

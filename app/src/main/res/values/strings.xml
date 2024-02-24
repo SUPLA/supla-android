@@ -657,6 +657,9 @@
   <string name="widget_warning_battery_limitations" translatable="false">The app has active limits in battery usage. The widget may work incorrect. Go to settings if you want change to no limits.</string>
   <string name="notification_deleted" translatable="false">Deleted</string>
   <string name="settings_show_labels" translatable="false">Show bottom menu labels</string>
+  <string name="channels_no_entry" translatable="false">Empty</string>
+  <string name="groups_empty_list_button" translatable="false">Add group in Supla Cloud</string>
+  <string name="scenes_empty_list_button" translatable="false">Add scene in Supla Cloud</string>
 
   <plurals name="details_timer_info_on" translatable="false">
     <item quantity="other">on</item>
