@@ -17,6 +17,7 @@ import org.supla.android.data.source.RoomChannelRepository
 import org.supla.android.data.source.local.entity.ChannelRelationEntity
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.images.ImageId
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER
@@ -200,5 +201,6 @@ class CreateProfileChannelsListUseCaseTest {
 
     whenever(getChannelCaptionUseCase.invoke(this)).thenReturn { "caption $channelRemoteId" }
     whenever(getChannelValueStringUseCase.invoke(this)).thenReturn("value $channelRemoteId")
+    whenever(getChannelIconUseCase.invoke(this)).thenReturn(ImageId(channelRemoteId))
   }
 }

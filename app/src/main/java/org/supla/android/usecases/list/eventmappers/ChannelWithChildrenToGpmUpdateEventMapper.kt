@@ -19,12 +19,11 @@ package org.supla.android.usecases.list.eventmappers
 
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.isGpm
-import org.supla.android.extensions.getChannelIconUseCase
-import org.supla.android.images.ImageCache
 import org.supla.android.ui.lists.data.SlideableListItemData
 import org.supla.android.usecases.channel.ChannelWithChildren
 import org.supla.android.usecases.channel.GetChannelCaptionUseCase
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
+import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.list.CreateListItemUpdateEventDataUseCase
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -32,7 +31,8 @@ import javax.inject.Singleton
 @Singleton
 class ChannelWithChildrenToGpmUpdateEventMapper @Inject constructor(
   private val getChannelValueStringUseCase: GetChannelValueStringUseCase,
-  private val getChannelCaptionUseCase: GetChannelCaptionUseCase
+  private val getChannelCaptionUseCase: GetChannelCaptionUseCase,
+  private val getChannelIconUseCase: GetChannelIconUseCase
 ) : CreateListItemUpdateEventDataUseCase.Mapper {
   override fun handle(item: Any): Boolean {
     return (item as? ChannelWithChildren)?.channel?.channelEntity?.isGpm() == true
@@ -47,7 +47,7 @@ class ChannelWithChildrenToGpmUpdateEventMapper @Inject constructor(
     SlideableListItemData.Default(
       online = channelData.channelValueEntity.online,
       titleProvider = getChannelCaptionUseCase(channelData.channelEntity),
-      iconProvider = { ImageCache.getBitmap(it, it.getChannelIconUseCase(channelData)) },
+      icon = getChannelIconUseCase.invoke(channelData),
       value = getChannelValueStringUseCase(channelData),
       issueIconType = null,
       estimatedTimerEndDate = null

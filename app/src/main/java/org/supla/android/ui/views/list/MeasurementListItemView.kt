@@ -13,11 +13,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.res.ResourcesCompat
-import androidx.core.graphics.drawable.toBitmap
 import org.supla.android.R
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.extensions.preferences
+import org.supla.android.images.ImageId
 import org.supla.android.ui.layouts.BaseSlideableContent
 import org.supla.android.ui.lists.data.SlideableListItemData
 import org.supla.android.ui.lists.data.default
@@ -58,8 +57,9 @@ fun MeasurementListItemView(
   onItemClick: () -> Unit = { },
   onTitleLongClick: () -> Unit = { }
 ) {
+  val title = data.titleProvider(LocalContext.current)
   ListItemScaffold(
-    itemTitle = data.titleProvider(LocalContext.current),
+    itemTitle = title,
     itemOnline = data.online,
     itemEstimatedEndDate = data.estimatedTimerEndDate,
     onInfoClick = onInfoClick,
@@ -71,8 +71,8 @@ fun MeasurementListItemView(
     showInfoIcon = showInfoIcon
   ) {
     ListItemMainRow(scale = scale) {
-      data.iconProvider?.let {
-        ListItemIcon(bitmap = it(LocalContext.current), scale = scale)
+      data.icon?.let {
+        ListItemIcon(imageId = it, scale = scale)
       }
       data.value?.let {
         ListItemValue(value = it, scale = scale)
@@ -95,7 +95,7 @@ private fun Preview() {
         data = SlideableListItemData.Default(
           online = true,
           titleProvider = { "Channel" },
-          iconProvider = { ResourcesCompat.getDrawable(it.resources, R.drawable.fnc_gpm_5, null)!!.toBitmap() },
+          icon = ImageId(R.drawable.fnc_gpm_5),
           value = "100 hPa",
           issueIconType = null
         ),

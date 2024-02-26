@@ -102,7 +102,6 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
       toggleLocationUseCase,
       provideDetailTypeUseCase,
       findChannelByRemoteIdUseCase,
-      gson,
       updateEventsManager,
       preferences,
       schedulers

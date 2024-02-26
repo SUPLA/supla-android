@@ -37,13 +37,12 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.res.ResourcesCompat
-import androidx.core.graphics.drawable.toBitmap
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.extensions.max
 import org.supla.android.extensions.preferences
+import org.supla.android.images.ImageId
 import org.supla.android.ui.layouts.BaseSlideableContent
 import org.supla.android.ui.lists.data.IssueIconType
 import org.supla.android.ui.lists.data.SlideableListItemData
@@ -124,8 +123,8 @@ fun ThermostatListItemView(
     scale = scale
   ) {
     ListItemMainRow(scale = scale) {
-      data.iconProvider?.let {
-        ListItemIcon(bitmap = it(LocalContext.current), scale = scale)
+      data.icon?.let {
+        ListItemIcon(imageId = it, scale = scale)
       }
 
       if (scale <= 1f) {
@@ -177,7 +176,7 @@ private fun Preview() {
           data = SlideableListItemData.Thermostat(
             online = true,
             titleProvider = { "Thermostat" },
-            iconProvider = { ResourcesCompat.getDrawable(it.resources, R.drawable.fnc_thermostat_cool, null)!!.toBitmap() },
+            icon = ImageId(R.drawable.fnc_thermostat_cool),
             value = "20,7°C",
             subValue = "21,0°",
             indicatorIcon = R.drawable.ic_cooling,
@@ -198,7 +197,7 @@ private fun Preview() {
           data = SlideableListItemData.Thermostat(
             online = true,
             titleProvider = { "Thermostat" },
-            iconProvider = { ResourcesCompat.getDrawable(it.resources, R.drawable.fnc_thermostat_cool, null)!!.toBitmap() },
+            icon = ImageId(R.drawable.fnc_thermostat_cool),
             value = "20,7°C",
             subValue = "21,0°",
             indicatorIcon = R.drawable.ic_cooling,
@@ -218,7 +217,7 @@ private fun Preview() {
           data = SlideableListItemData.Thermostat(
             online = true,
             titleProvider = { "Thermostat" },
-            iconProvider = { ResourcesCompat.getDrawable(it.resources, R.drawable.fnc_thermostat_cool, null)!!.toBitmap() },
+            icon = ImageId(R.drawable.fnc_thermostat_cool),
             value = "20,7°C",
             subValue = "21,0°",
             indicatorIcon = R.drawable.ic_cooling,
@@ -239,7 +238,7 @@ private fun Preview() {
           data = SlideableListItemData.Thermostat(
             online = true,
             titleProvider = { "Thermostat with very long name which goes out of the screen and must be cut" },
-            iconProvider = { ResourcesCompat.getDrawable(it.resources, R.drawable.fnc_thermostat_cool, null)!!.toBitmap() },
+            icon = ImageId(R.drawable.fnc_thermostat_cool),
             value = "20,7°C",
             subValue = "21,0°",
             indicatorIcon = R.drawable.ic_cooling,

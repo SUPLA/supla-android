@@ -31,7 +31,6 @@ import org.supla.android.data.source.local.entity.complex.isGpMeasurement
 import org.supla.android.data.source.local.entity.complex.isGpMeter
 import org.supla.android.data.source.local.entity.complex.isHvacThermostat
 import org.supla.android.data.source.local.entity.complex.isMeasurement
-import org.supla.android.images.ImageCache
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNEL_FLAG_HAS_PARENT
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.icon.GetChannelIconUseCase
@@ -117,7 +116,7 @@ class CreateProfileChannelsListUseCase @Inject constructor(
       channelData.locationEntity.caption,
       channelData.channelValueEntity.online,
       getChannelCaptionUseCase(channelData),
-      { ImageCache.getBitmap(it, getChannelIconUseCase(channelData)) },
+      getChannelIconUseCase(channelData),
       getChannelValueStringUseCase(channelData)
     )
 
@@ -127,7 +126,7 @@ class CreateProfileChannelsListUseCase @Inject constructor(
       channelData.locationEntity.caption,
       channelData.channelValueEntity.online,
       getChannelCaptionUseCase(channelData),
-      { ImageCache.getBitmap(it, getChannelIconUseCase(channelData)) },
+      getChannelIconUseCase(channelData),
       getChannelValueStringUseCase(channelData)
     )
 
@@ -142,7 +141,7 @@ class CreateProfileChannelsListUseCase @Inject constructor(
       channelData.locationEntity.caption,
       channelData.channelValueEntity.online,
       getChannelCaptionUseCase(channelData),
-      { ImageCache.getBitmap(it, getChannelIconUseCase(channelData)) },
+      getChannelIconUseCase(channelData),
       value
     )
   }
@@ -160,7 +159,7 @@ class CreateProfileChannelsListUseCase @Inject constructor(
       channelData.locationEntity.caption,
       channelData.channelValueEntity.online,
       getChannelCaptionUseCase(channelData),
-      { ImageCache.getBitmap(it, getChannelIconUseCase(channelData)) },
+      getChannelIconUseCase(channelData),
       mainThermometerChild?.channelDataEntity?.let { getChannelValueStringUseCase(it) } ?: ValuesFormatter.NO_VALUE_TEXT,
       thermostatValue.getIssueIconType(),
       channelData.channelExtendedValueEntity?.getSuplaValue()?.TimerStateValue?.countdownEndsAt,

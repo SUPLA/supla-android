@@ -18,7 +18,6 @@ package org.supla.android.ui.lists
  */
 
 import androidx.annotation.DrawableRes
-import org.supla.android.core.ui.BitmapProvider
 import org.supla.android.core.ui.StringProvider
 import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.local.entity.Scene
@@ -26,6 +25,7 @@ import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.db.Channel
 import org.supla.android.db.ChannelBase
 import org.supla.android.db.Location
+import org.supla.android.images.ImageId
 import org.supla.android.ui.lists.data.IssueIconType
 import org.supla.android.ui.lists.data.SlideableListItemData
 import java.util.Date
@@ -41,14 +41,14 @@ sealed interface ListItem {
     val locationCaption: String,
     val online: Boolean,
     val captionProvider: StringProvider,
-    val iconProvider: BitmapProvider,
+    val icon: ImageId,
     val value: String?
   ) : ChannelBasedItem(channel) {
     open fun toSlideableListItemData(): SlideableListItemData {
       return SlideableListItemData.Default(
         online = online,
         titleProvider = captionProvider,
-        iconProvider = iconProvider,
+        icon = icon,
         value = value,
         issueIconType = null,
         estimatedTimerEndDate = null
@@ -67,19 +67,19 @@ sealed interface ListItem {
     locationCaption: String,
     online: Boolean,
     captionProvider: StringProvider,
-    iconProvider: BitmapProvider,
+    icon: ImageId,
     value: String?,
     private val issueIconType: IssueIconType?,
     private val estimatedTimerEndDate: Date?,
     private val subValue: String,
     @DrawableRes private val indicatorIcon: Int?,
     val issueMessage: Int?
-  ) : DefaultItem(channel, locationCaption, online, captionProvider, iconProvider, value) {
+  ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, value) {
     override fun toSlideableListItemData(): SlideableListItemData {
       return SlideableListItemData.Thermostat(
         online = online,
         titleProvider = captionProvider,
-        iconProvider = iconProvider,
+        icon = icon,
         issueIconType = issueIconType,
         estimatedTimerEndDate = estimatedTimerEndDate,
         value = value ?: ValuesFormatter.NO_VALUE_TEXT,
@@ -94,25 +94,25 @@ sealed interface ListItem {
     locationCaption: String,
     online: Boolean,
     captionProvider: StringProvider,
-    iconProvider: BitmapProvider,
+    icon: ImageId,
     value: String?
-  ) : DefaultItem(channel, locationCaption, online, captionProvider, iconProvider, value)
+  ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, value)
 
   class GeneralPurposeMeterItem(
     channel: Channel,
     locationCaption: String,
     online: Boolean,
     captionProvider: StringProvider,
-    iconProvider: BitmapProvider,
+    icon: ImageId,
     value: String
-  ) : DefaultItem(channel, locationCaption, online, captionProvider, iconProvider, value)
+  ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, value)
 
   class GeneralPurposeMeasurementItem(
     channel: Channel,
     locationCaption: String,
     online: Boolean,
     captionProvider: StringProvider,
-    iconProvider: BitmapProvider,
+    icon: ImageId,
     value: String
-  ) : DefaultItem(channel, locationCaption, online, captionProvider, iconProvider, value)
+  ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, value)
 }
