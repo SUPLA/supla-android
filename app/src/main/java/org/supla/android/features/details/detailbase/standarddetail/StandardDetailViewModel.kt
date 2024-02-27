@@ -17,7 +17,9 @@ package org.supla.android.features.details.detailbase.standarddetail
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import com.google.android.material.navigation.NavigationBarView
 import io.reactivex.rxjava3.kotlin.subscribeBy
+import org.supla.android.Preferences
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
@@ -32,6 +34,7 @@ abstract class StandardDetailViewModel<S : StandardDetailViewState, E : Standard
   private val readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
   private val readChannelGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase,
   private val updateEventsManager: UpdateEventsManager,
+  private val preferences: Preferences,
   defaultState: S,
   schedulers: SuplaSchedulers
 ) : BaseViewModel<S, E>(defaultState, schedulers) {
@@ -56,6 +59,13 @@ abstract class StandardDetailViewModel<S : StandardDetailViewState, E : Standard
       )
       .disposeBySelf()
   }
+
+  fun getLabelVisibility() =
+    if (preferences.isShowBottomLabel) {
+      NavigationBarView.LABEL_VISIBILITY_LABELED
+    } else {
+      NavigationBarView.LABEL_VISIBILITY_UNLABELED
+    }
 
   protected abstract fun closeEvent(): E
 

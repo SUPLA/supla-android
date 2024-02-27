@@ -15,13 +15,12 @@ class MainViewModel @Inject constructor(
   schedulers: SuplaSchedulers
 ) : BaseViewModel<MainViewState, MainViewEvent>(MainViewState(), schedulers) {
 
-  fun getLabelVisibility(): Int {
-    return if (preferences.isShowBottomLabel) {
+  fun getLabelVisibility() =
+    if (preferences.isShowBottomLabel) {
       NavigationBarView.LABEL_VISIBILITY_LABELED
     } else {
       NavigationBarView.LABEL_VISIBILITY_UNLABELED
     }
-  }
 }
 
 sealed class MainViewEvent : ViewEvent

@@ -29,7 +29,7 @@
       android:layout_marginStart="@dimen/distance_default"
       android:layout_marginBottom="@dimen/distance_default"
       android:layout_marginEnd="@dimen/distance_default"
-      android:text="@string/channels_no_entry"
+      android:text="@string/main_no_entries"
       android:textAlignment="center"
       android:textAppearance="@style/AppTheme.TextAppearance.Headline4"
       android:textColor="@color/gray"

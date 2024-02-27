@@ -32,6 +32,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.verifyZeroInteractions
 import org.mockito.kotlin.whenever
+import org.supla.android.Preferences
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.runtime.ItemType
@@ -53,6 +54,9 @@ class GpmDetailViewModelTest : BaseViewModelTest<GpmDetailViewState, GpmDetailVi
 
   @Mock
   private lateinit var updateEventsManager: UpdateEventsManager
+
+  @Mock
+  private lateinit var preferences: Preferences
 
   @Mock
   override lateinit var schedulers: SuplaSchedulers
