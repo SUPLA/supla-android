@@ -18,7 +18,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import android.content.Context
-import android.graphics.Bitmap
 import io.mockk.every
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
@@ -30,6 +29,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.whenever
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.db.Channel
+import org.supla.android.images.ImageId
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR
 import org.supla.android.ui.lists.data.SlideableListItemData
 import org.supla.android.usecases.channel.ChannelWithChildren
@@ -90,13 +90,13 @@ class ChannelWithChildrenToMeasurementUpdateEventMapperTest {
     every { channel.channelEntity } returns mockk { every { function } returns SUPLA_CHANNELFNC_DEPTHSENSOR }
     every { channel.channelValueEntity } returns mockk { every { this@mockk.online } returns online }
 
+    val imageId = ImageId(123)
     val channelWithChildren = ChannelWithChildren(channel, emptyList())
     whenever(getChannelValueStringUseCase.invoke(channel)).thenReturn(value)
     whenever(getChannelCaptionUseCase.invoke(channel)).thenReturn { caption }
+    whenever(getChannelIconUseCase.invoke(channel)).thenReturn(imageId)
 
-    val bitmap = mockk<Bitmap>()
     val context: Context = mockk()
-    whenever(getChannelIconUseCase.getIconProvider(channel)).thenReturn { bitmap }
 
     // when
     val result = mapper.map(channelWithChildren)
@@ -106,7 +106,7 @@ class ChannelWithChildrenToMeasurementUpdateEventMapperTest {
 
     assertThat(defaultItem.online).isTrue
     assertThat(defaultItem.titleProvider(context)).isEqualTo(caption)
-    assertThat(defaultItem.iconProvider?.invoke(context)).isEqualTo(bitmap)
+    assertThat(defaultItem.icon).isEqualTo(imageId)
     assertThat(defaultItem.value).isEqualTo(value)
   }
 }

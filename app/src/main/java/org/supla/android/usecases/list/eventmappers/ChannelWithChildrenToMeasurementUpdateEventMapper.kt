@@ -57,7 +57,7 @@ class ChannelWithChildrenToMeasurementUpdateEventMapper @Inject constructor(
     return SlideableListItemData.Default(
       online = channelData.channelValueEntity.online,
       titleProvider = getChannelCaptionUseCase(channelData),
-      iconProvider = getChannelIconUseCase.getIconProvider(channelData),
+      icon = getChannelIconUseCase.invoke(channelData),
       value = value,
       issueIconType = null,
       estimatedTimerEndDate = null

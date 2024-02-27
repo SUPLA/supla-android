@@ -114,7 +114,7 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
     // given
     val location = mockk<Location>()
     whenever(toggleLocationUseCase(location, CollapsedFlag.SCENE)).thenReturn(Completable.complete())
-    val list = emptyList<ListItem.SceneItem>()
+    val list = listOf<ListItem.SceneItem>(mockk())
     whenever(createProfileScenesListUseCase()).thenReturn(Observable.just(list))
 
     // when
@@ -132,7 +132,7 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
   @Test
   fun `should reload list on update`() {
     // given
-    val list = emptyList<ListItem.SceneItem>()
+    val list = listOf<ListItem.SceneItem>(mockk())
     whenever(createProfileScenesListUseCase()).thenReturn(Observable.just(list))
 
     // when

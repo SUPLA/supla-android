@@ -29,14 +29,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -52,13 +51,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
@@ -69,7 +66,6 @@ import org.supla.android.core.ui.theme.grey
 import org.supla.android.core.ui.theme.listItemCaption
 import org.supla.android.extensions.differenceInSeconds
 import org.supla.android.extensions.preferences
-import org.supla.android.extensions.toDp
 import org.supla.android.extensions.valuesFormatter
 import org.supla.android.ui.lists.data.IssueIconType
 import org.supla.android.ui.views.Separator
@@ -118,22 +114,34 @@ fun ListItemScaffold(
       .fillMaxHeight()
       .onSizeChanged { itemSize = it }
   ) {
-    if (online && showInfoIcon) {
-      ListItemInfoIcon(onInfoClick)
-    }
     estimatedEndDate?.let {
       ListItemTimerText(date = it, scale = scale)
     }
 
-    ListItemDotLeading(online, hasLeftButton, modifier = Modifier.align(Alignment.CenterStart))
-    Box(
+    Row(
+      verticalAlignment = Alignment.CenterVertically,
       modifier = Modifier
-        .widthIn(0.dp, getItemBoxMaxWidth(itemSize = itemSize, online = online, showInfoIcon = showInfoIcon))
-        .heightIn(0.dp, getItemBoxMaxHeight(itemSize = itemSize, scale = scale))
-        .align(Alignment.TopCenter),
-      content = content
-    )
-    ListItemDotTrading(online, hasRightButton, modifier = Modifier.align(Alignment.CenterEnd))
+        .fillMaxWidth()
+        .fillMaxHeight()
+    ) {
+      ListItemDotLeading(online, hasLeftButton)
+
+      if (online && showInfoIcon) {
+        ListItemInfoIcon(onInfoClick)
+      }
+
+      Box(
+        modifier = Modifier
+          .fillMaxHeight()
+          .weight(1f)
+          .padding(start = Distance.tiny, end = Distance.tiny),
+        content = content
+      )
+
+      issueIconType?.let { ListItemIssueIcon(it, onIssueClick) } ?: ListItemIssueIconSpacing()
+
+      ListItemDotTrading(online, hasRightButton)
+    }
 
     ListItemTitle(
       text = title,
@@ -144,35 +152,7 @@ fun ListItemScaffold(
     )
 
     Separator(modifier = Modifier.align(Alignment.BottomCenter))
-
-    issueIconType?.let { ListItemIssueIcon(it, onIssueClick) }
   }
-}
-
-@Composable
-fun getItemBoxMaxWidth(itemSize: IntSize, online: Boolean, showInfoIcon: Boolean): Dp {
-  val spaceForDots = dimensionResource(id = R.dimen.channel_dot_size).plus(Distance.default).times(2)
-
-  return itemSize.width.toDp().let {
-    if (online && showInfoIcon) {
-      val spaceForIcons = dimensionResource(id = R.dimen.channel_state_image_size).plus(Distance.default).times(2)
-      it.minus(spaceForDots.plus(spaceForIcons))
-    } else {
-      it.minus(spaceForDots)
-    }
-  }
-}
-
-@Composable
-private fun getItemBoxMaxHeight(itemSize: IntSize, scale: Float): Dp {
-  val fontHeightSp = MaterialTheme.typography.listItemCaption().fontSize.times(max(scale, 1f))
-  val fontHeightDp = with(LocalDensity.current) {
-    fontHeightSp.toDp()
-  }
-
-  return itemSize.height.toDp()
-    .minus(Distance.small.times(scale).times(2))
-    .minus(fontHeightDp)
 }
 
 @Composable
@@ -207,37 +187,36 @@ private fun ListItemDot(online: Boolean, withButton: Boolean, paddingValues: Pad
   )
 }
 
-context (BoxScope)
 @Composable
 private fun ListItemInfoIcon(onClick: () -> Unit) {
-  val startPadding = dimensionResource(id = R.dimen.channel_dot_size)
-    .plus(Distance.default.times(2))
-
   Image(
     painter = painterResource(id = R.drawable.channelstateinfo),
     contentDescription = null,
     modifier = Modifier
-      .align(Alignment.CenterStart)
-      .padding(start = startPadding)
+      .padding(start = Distance.default)
       .size(dimensionResource(id = R.dimen.channel_state_image_size))
       .clickable(interactionSource = MutableInteractionSource(), indication = null, onClick = onClick)
   )
 }
 
-context (BoxScope)
 @Composable
 private fun ListItemIssueIcon(issueIconType: IssueIconType, onClick: () -> Unit) {
-  val endPadding = dimensionResource(id = R.dimen.channel_dot_size)
-    .plus(dimensionResource(id = R.dimen.distance_default).times(2))
-
   Image(
     painter = painterResource(id = issueIconType.icon),
     contentDescription = null,
     modifier = Modifier
-      .align(Alignment.CenterEnd)
-      .padding(end = endPadding)
+      .padding(end = Distance.default)
       .size(dimensionResource(id = R.dimen.channel_warning_image_size))
       .clickable(interactionSource = MutableInteractionSource(), indication = null, onClick = onClick)
+  )
+}
+
+@Composable
+private fun ListItemIssueIconSpacing() {
+  Box(
+    modifier = Modifier
+      .padding(end = Distance.default)
+      .size(dimensionResource(id = R.dimen.channel_warning_image_size))
   )
 }
 

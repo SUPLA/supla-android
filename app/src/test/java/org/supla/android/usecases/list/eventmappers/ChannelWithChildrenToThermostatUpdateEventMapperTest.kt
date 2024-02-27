@@ -18,7 +18,6 @@ package org.supla.android.usecases.list.eventmappers
  */
 
 import android.content.Context
-import android.graphics.Bitmap
 import io.mockk.every
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
@@ -36,6 +35,7 @@ import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.db.Channel
 import org.supla.android.extensions.date
 import org.supla.android.extensions.toTimestamp
+import org.supla.android.images.ImageId
 import org.supla.android.lib.SuplaChannelExtendedValue
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT
 import org.supla.android.lib.SuplaTimerState
@@ -98,7 +98,7 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
   fun `should map channel with thermometer to thermostat slideable item`() {
     // given
     val caption = "some title"
-    val icon: Bitmap = mockk()
+    val icon: ImageId = mockk()
     val value = "some value"
     val subValue = "some sub value"
     val indicatorIcon = 123
@@ -129,7 +129,7 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
     val context: Context = mockk()
 
     whenever(getChannelCaptionUseCase.invoke(channel)).thenReturn { caption }
-    whenever(getChannelIconUseCase.getIconProvider(channel)).thenReturn { icon }
+    whenever(getChannelIconUseCase.invoke(channel)).thenReturn(icon)
     whenever(getChannelValueStringUseCase(thermometerChannel)).thenReturn(value)
 
     // when
@@ -138,7 +138,7 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
     // then
     assertThat(result.online).isTrue
     assertThat(result.titleProvider(context)).isEqualTo(caption)
-    assertThat(result.iconProvider!!(context)).isEqualTo(icon)
+    assertThat(result.icon).isEqualTo(icon)
     assertThat(result.value).isEqualTo(value)
     assertThat(result.subValue).isEqualTo(subValue)
     assertThat(result.indicatorIcon).isEqualTo(indicatorIcon)
@@ -150,7 +150,7 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
   fun `should map channel with thermometer to thermostat slideable item without main thermometer`() {
     // given
     val caption = "some title"
-    val icon: Bitmap = mockk()
+    val icon: ImageId = mockk()
     val value = ValuesFormatter.NO_VALUE_TEXT
     val subValue = "some sub value"
     val indicatorIcon = 123
@@ -179,7 +179,7 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
     val context: Context = mockk()
 
     whenever(getChannelCaptionUseCase.invoke(channel)).thenReturn { caption }
-    whenever(getChannelIconUseCase.getIconProvider(channel)).thenReturn { icon }
+    whenever(getChannelIconUseCase.invoke(channel)).thenReturn(icon)
 
     // when
     val result = mapper.map(channelWithChildren) as SlideableListItemData.Thermostat
@@ -187,7 +187,7 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
     // then
     assertThat(result.online).isTrue
     assertThat(result.titleProvider(context)).isEqualTo(caption)
-    assertThat(result.iconProvider!!(context)).isEqualTo(icon)
+    assertThat(result.icon).isEqualTo(icon)
     assertThat(result.value).isEqualTo(value)
     assertThat(result.subValue).isEqualTo(subValue)
     assertThat(result.indicatorIcon).isEqualTo(indicatorIcon)

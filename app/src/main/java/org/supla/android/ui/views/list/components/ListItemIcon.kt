@@ -22,15 +22,29 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import org.supla.android.R
+import org.supla.android.images.ImageCache
+import org.supla.android.images.ImageId
 
 @Composable
-fun ListItemIcon(bitmap: Bitmap?, scale: Float) =
-  bitmap?.let {
+fun ListItemIcon(imageId: ImageId, scale: Float) {
+  val context = LocalContext.current
+  val imageIdState = remember { mutableStateOf(imageId) }
+  val icon = remember { mutableStateOf<Bitmap?>(ImageCache.getBitmap(context, imageId)) }
+
+  if (imageIdState.value != imageId) {
+    imageIdState.value = imageId
+    icon.value = ImageCache.getBitmap(LocalContext.current, imageId)
+  }
+
+  icon.value?.let {
     Image(
       bitmap = it.asImageBitmap(),
       contentDescription = null,
@@ -41,3 +55,4 @@ fun ListItemIcon(bitmap: Bitmap?, scale: Float) =
       contentScale = ContentScale.Fit
     )
   }
+}

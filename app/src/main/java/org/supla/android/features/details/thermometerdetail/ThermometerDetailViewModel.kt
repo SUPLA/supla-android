@@ -18,6 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import dagger.hilt.android.lifecycle.HiltViewModel
+import org.supla.android.Preferences
 import org.supla.android.db.ChannelBase
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.features.details.detailbase.standarddetail.StandardDetailViewEvent
@@ -33,11 +34,13 @@ class ThermometerDetailViewModel @Inject constructor(
   readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
   readChannelGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase,
   updateEventsManager: UpdateEventsManager,
+  preferences: Preferences,
   schedulers: SuplaSchedulers
 ) : StandardDetailViewModel<ThermometerDetailViewState, ThermometerDetailViewEvent>(
   readChannelByRemoteIdUseCase,
   readChannelGroupByRemoteIdUseCase,
   updateEventsManager,
+  preferences,
   ThermometerDetailViewState(),
   schedulers
 ) {

@@ -428,10 +428,10 @@ class MainActivity : NavigationActivity(), ToolbarTitleController, LoadableConte
     when (MenuItemsLayout.getButtonId(v)) {
       MenuItemsLayout.BTN_SETTINGS -> navigator.navigateTo(R.id.application_settings_fragment)
       MenuItemsLayout.BTN_ABOUT -> showAbout()
-      MenuItemsLayout.BTN_ADD_DEVICE -> showAddWizard()
+      MenuItemsLayout.BTN_ADD_DEVICE -> navigator.navigateToAddWizard()
       MenuItemsLayout.BTN_Z_WAVE -> SuperUserAuthorize(MenuItemsLayout.BTN_Z_WAVE)
       MenuItemsLayout.BTN_HELP -> openForumpage()
-      MenuItemsLayout.BTN_CLOUD -> openCloud()
+      MenuItemsLayout.BTN_CLOUD -> navigator.navigateToCloudExternal()
       MenuItemsLayout.BTN_HOMEPAGE -> openHomepage()
       MenuItemsLayout.BTN_PROFILE -> showProfile(this)
       MenuItemsLayout.BTN_NOTIFICATIONS -> navigator.navigateTo(R.id.notifications_log_fragment)

@@ -62,7 +62,7 @@ class ChannelWithChildrenToThermostatUpdateEventMapper @Inject constructor(
     return SlideableListItemData.Thermostat(
       online = channelData.channelValueEntity.online,
       titleProvider = getChannelCaptionUseCase(channelData),
-      iconProvider = getChannelIconUseCase.getIconProvider(channelData),
+      icon = getChannelIconUseCase.invoke(channelData),
       value = mainThermometerChild?.let { getChannelValueStringUseCase(it) } ?: ValuesFormatter.NO_VALUE_TEXT,
       subValue = thermostatValue.getSetpointText(valuesFormatter),
       indicatorIcon = thermostatValue.getIndicatorIcon(),

@@ -66,6 +66,7 @@ abstract class StandardDetailFragment<S : StandardDetailViewState, E : StandardD
     detailBottomBar.selectedItemId = pages[openedPage].menuId
     detailBottomBar.setOnItemSelectedListener(this::onBottomMenuItemSelected)
     detailBottomBar.visibleIf(pages.count() > 1)
+    detailBottomBar.labelVisibilityMode = viewModel.getLabelVisibility()
     detailShadow.visibleIf(pages.count() > 1)
 
     detailViewPager.adapter = StandardDetailPagerAdapter(pages, item, this)

@@ -18,21 +18,21 @@ package org.supla.android.ui.lists.data
  */
 
 import androidx.annotation.DrawableRes
-import org.supla.android.core.ui.BitmapProvider
 import org.supla.android.core.ui.StringProvider
+import org.supla.android.images.ImageId
 import java.util.Date
 
 sealed class SlideableListItemData {
   abstract val online: Boolean
   abstract val titleProvider: StringProvider
-  abstract val iconProvider: BitmapProvider?
+  abstract val icon: ImageId?
   abstract val issueIconType: IssueIconType?
   abstract val estimatedTimerEndDate: Date?
 
   data class Thermostat(
     override val online: Boolean,
     override val titleProvider: StringProvider,
-    override val iconProvider: BitmapProvider?,
+    override val icon: ImageId?,
     override val issueIconType: IssueIconType?,
     override val estimatedTimerEndDate: Date?,
     val value: String,
@@ -45,7 +45,7 @@ sealed class SlideableListItemData {
   data class Default(
     override val online: Boolean,
     override val titleProvider: StringProvider,
-    override val iconProvider: BitmapProvider?,
+    override val icon: ImageId?,
     override val issueIconType: IssueIconType?,
     override val estimatedTimerEndDate: Date? = null,
     val value: String?
@@ -58,7 +58,7 @@ fun SlideableListItemData.Thermostat.Companion.default(): SlideableListItemData.
   SlideableListItemData.Thermostat(
     online = false,
     titleProvider = { "" },
-    iconProvider = null,
+    icon = null,
     value = "",
     subValue = "",
     indicatorIcon = null,
@@ -70,7 +70,7 @@ fun SlideableListItemData.Default.Companion.default(): SlideableListItemData.Def
   SlideableListItemData.Default(
     online = false,
     titleProvider = { "" },
-    iconProvider = null,
+    icon = null,
     value = "",
     issueIconType = null,
     estimatedTimerEndDate = null
