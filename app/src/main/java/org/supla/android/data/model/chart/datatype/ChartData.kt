@@ -20,13 +20,17 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import android.content.res.Resources
 import com.github.mikephil.charting.data.CombinedData
 import org.supla.android.data.model.chart.ChartDataAggregation
+import org.supla.android.data.model.chart.ChartEntryType
 import org.supla.android.data.model.chart.ChartRange
 import org.supla.android.data.model.chart.DateRange
 import org.supla.android.data.model.chart.HistoryDataSet
 import org.supla.android.extensions.guardLet
+import org.supla.android.extensions.ifLet
 import org.supla.android.extensions.toTimestamp
 import org.supla.android.usecases.channel.valueformatter.ChannelValueFormatter
 import kotlin.math.roundToInt
+
+const val CHART_TOP_MARGIN = 0.2f
 
 /**
  * For bar chart we need to place all values next to each other
@@ -89,6 +93,17 @@ abstract class ChartData(
 
   val distanceInDays: Int? = dateRange?.daysCount
 
+  val isEmpty: Boolean
+    get() {
+      var result = true
+      sets.forEach {
+        if (it.entities.isNotEmpty()) {
+          result = false
+        }
+      }
+      return result
+    }
+
   protected val minDate: Long
     get() = sets.minOfOrNull { set ->
       set.entities.minOfOrNull { entities ->
@@ -119,6 +134,25 @@ abstract class ChartData(
   fun activateSets(setIds: List<HistoryDataSet.Id>?): ChartData =
     newInstance(sets.map { it.copy(active = setIds?.contains(it.setId) ?: true) })
 
+  open fun getAxisMaxValue(filter: (ChartEntryType) -> Boolean): Float? {
+    val maxValue = getAxisMaxValueRaw(filter)
+    val minValue = getAxisMinValueRaw(filter)
+
+    ifLet(minValue, maxValue) { (min, max) ->
+      return if (max == min) {
+        if (max == 0f) {
+          2f
+        } else {
+          max.minus(max.times(CHART_TOP_MARGIN))
+        }
+      } else {
+        max.times(CHART_TOP_MARGIN.plus(1)).minus(min.times(CHART_TOP_MARGIN))
+      }
+    }
+
+    return null
+  }
+
   abstract fun combinedData(resources: Resources): CombinedData?
 
   override fun fromCoordinate(x: Float): Float =
@@ -127,6 +161,18 @@ abstract class ChartData(
   override fun toCoordinate(x: Float): Float = toCoordinate(x as Float?)!!
 
   protected abstract fun newInstance(sets: List<HistoryDataSet>): ChartData
+
+  protected fun getAxisMinValueRaw(filter: (ChartEntryType) -> Boolean): Float? =
+    sets
+      .filter { filter(it.setId.type) }
+      .mapNotNull { set -> set.entities.minOfOrNull { entries -> entries.minOf { it.value } } }
+      .minOfOrNull { it }
+
+  private fun getAxisMaxValueRaw(filter: (ChartEntryType) -> Boolean): Float? =
+    sets
+      .filter { filter(it.setId.type) }
+      .mapNotNull { set -> set.entities.maxOfOrNull { entries -> entries.maxOf { it.value } } }
+      .maxOfOrNull { it }
 
   private fun toCoordinate(x: Float?): Float? = x?.div(divider)?.roundToInt()?.toFloat()
 

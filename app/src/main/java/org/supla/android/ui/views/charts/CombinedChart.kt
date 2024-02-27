@@ -98,7 +98,7 @@ fun CombinedChart(
     update = { chart ->
       chart.data = null
       chart.data = combinedData
-      if (combinedData == null) {
+      if (combinedData == null || data.isEmpty) {
         chart.highlightValue(null)
       }
       data.xMin?.let { chart.xAxis.axisMinimum = it }
