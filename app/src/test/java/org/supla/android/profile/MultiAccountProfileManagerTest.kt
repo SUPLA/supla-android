@@ -19,7 +19,7 @@ import org.supla.android.db.AuthProfileItem
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.lib.singlecall.SingleCall
 import org.supla.android.usecases.icon.LoadUserIconsIntoCacheUseCase
-import org.supla.android.widget.WidgetVisibilityHandler
+import org.supla.android.widget.WidgetManager
 
 @RunWith(MockitoJUnitRunner::class)
 class MultiAccountProfileManagerTest {
@@ -28,7 +28,7 @@ class MultiAccountProfileManagerTest {
   private lateinit var profileRepository: ProfileRepository
 
   @Mock
-  private lateinit var widgetVisibilityHandler: WidgetVisibilityHandler
+  private lateinit var widgetManager: WidgetManager
 
   @Mock
   private lateinit var updateEventsManager: UpdateEventsManager
@@ -55,7 +55,7 @@ class MultiAccountProfileManagerTest {
     profileManager = MultiAccountProfileManager(
       profileRepository,
       profileIdHolder,
-      widgetVisibilityHandler,
+      widgetManager,
       updateEventsManager,
       suplaAppProvider,
       singleCallProvider,
@@ -183,8 +183,8 @@ class MultiAccountProfileManagerTest {
 
     verify(profileRepository).deleteProfile(profileId)
     verify(profileRepository).getProfile(profileId)
-    verify(widgetVisibilityHandler).onProfileRemoved(profileId)
-    verifyNoMoreInteractions(profileRepository, widgetVisibilityHandler)
+    verify(widgetManager).onProfileRemoved(profileId)
+    verifyNoMoreInteractions(profileRepository, widgetManager)
   }
 
   @Test

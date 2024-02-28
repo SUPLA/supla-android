@@ -35,7 +35,7 @@ class LoadChannelConfigUseCase @Inject constructor(
 ) {
 
   operator fun invoke(profileId: Long, remoteId: Int): Single<SuplaChannelConfig> {
-    return channelRepository.findByRemoteId(remoteId)
+    return channelRepository.findByRemoteId(profileId, remoteId)
       .map(this::toConfigType)
       .flatMapSingle { channelConfigRepository.findGpmConfig(profileId, remoteId, it) }
       .toSingle()

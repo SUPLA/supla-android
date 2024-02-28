@@ -50,6 +50,9 @@ import org.supla.android.data.source.remote.ChannelConfigType
 import org.supla.android.db.Location
 import org.supla.android.lib.SuplaConst
 import org.supla.android.testhelpers.suplaChannel
+import org.supla.android.widget.WidgetConfiguration
+import org.supla.android.widget.WidgetManager
+import org.supla.android.widget.WidgetPreferences
 
 @Suppress("UnusedDataClassCopyResult")
 @RunWith(MockitoJUnitRunner::class)
@@ -68,6 +71,12 @@ class UpdateChannelUseCaseTest {
 
   @Mock
   private lateinit var suplaClientProvider: SuplaClientProvider
+
+  @Mock
+  private lateinit var widgetPreferences: WidgetPreferences
+
+  @Mock
+  private lateinit var widgetManager: WidgetManager
 
   @InjectMocks
   private lateinit var useCase: UpdateChannelUseCase
@@ -200,6 +209,7 @@ class UpdateChannelUseCaseTest {
       every { locationId } returns locationRemoteId.toLong()
       every { updatedBy(suplaChannel) } returns this
       every { position } returns 0
+      every { profileId } returns 123
     }
 
     whenever(locationRepository.findByRemoteId(locationRemoteId)).thenReturn(Maybe.just(locationEntity))
@@ -241,8 +251,9 @@ class UpdateChannelUseCaseTest {
       every { locationId } returns 333
       every { updatedBy(suplaChannel) } returns this
       every { position } returns 0
-      every { copy(id = 444, locationId = 333, position = 6) } returns this
+      every { copy(id = 444, locationId = 333, position = 6, profileId = 123) } returns this
       every { id } returns 444
+      every { profileId } returns 123
     }
 
     whenever(locationRepository.findByRemoteId(locationRemoteId)).thenReturn(Maybe.just(locationEntity))
@@ -287,8 +298,9 @@ class UpdateChannelUseCaseTest {
       every { locationId } returns 333
       every { updatedBy(suplaChannel) } returns this
       every { position } returns 5
-      every { copy(id = 444, locationId = 333, position = 0) } returns this
+      every { copy(id = 444, locationId = 333, position = 0, profileId = 123) } returns this
       every { id } returns 444
+      every { profileId } returns 123
     }
 
     whenever(locationRepository.findByRemoteId(locationRemoteId)).thenReturn(Maybe.just(locationEntity))
@@ -331,6 +343,7 @@ class UpdateChannelUseCaseTest {
       every { locationId } returns locationRemoteId.toLong()
       every { updatedBy(suplaChannel) } returns this
       every { position } returns 0
+      every { profileId } returns 123
     }
 
     whenever(locationRepository.findByRemoteId(locationRemoteId)).thenReturn(Maybe.just(locationEntity))
@@ -405,6 +418,7 @@ class UpdateChannelUseCaseTest {
       every { locationId } returns locationRemoteId.toLong()
       every { updatedBy(suplaChannel) } returns this
       every { position } returns 0
+      every { profileId } returns 123
     }
     val channelConfigEntity: ChannelConfigEntity = mockk {
       every { configCrc32 } returns crc32
@@ -458,6 +472,7 @@ class UpdateChannelUseCaseTest {
       every { locationId } returns locationRemoteId.toLong()
       every { updatedBy(suplaChannel) } returns this
       every { position } returns 0
+      every { profileId } returns 123
     }
     val channelConfigEntity: ChannelConfigEntity = mockk {
       every { configCrc32 } returns crc32
@@ -486,6 +501,57 @@ class UpdateChannelUseCaseTest {
 
     verifyNoMoreInteractions(locationRepository, channelRepository, profileRepository, channelConfigRepository)
     verifyZeroInteractions(suplaClientProvider)
+  }
+
+  @Test
+  fun `should update channel and update widget`() {
+    // given
+    val locationRemoteId = 123
+    val channelRemoteId = 234
+    val channelProfileId = 1234L
+    val widgetId = 321
+    val altIcon = 222
+    val userIcon = 444
+
+    val suplaChannel = suplaChannel(locationRemoteId, channelRemoteId, altIcon = altIcon, userIcon = userIcon)
+    val locationEntity: LocationEntity = mockk {
+      every { sorting } returns Location.SortingType.DEFAULT
+    }
+    val channelEntity: ChannelEntity = mockk {
+      every { differsFrom(suplaChannel) } returns true
+      every { locationId } returns locationRemoteId.toLong()
+      every { updatedBy(suplaChannel) } returns this
+      every { position } returns 0
+      every { profileId } returns channelProfileId
+    }
+    val widgetConfiguration: WidgetConfiguration = mockk {
+      every { copy(altIcon = altIcon, userIcon = userIcon) } returns this
+    }
+
+    whenever(locationRepository.findByRemoteId(locationRemoteId)).thenReturn(Maybe.just(locationEntity))
+    whenever(channelRepository.findByRemoteId(channelRemoteId)).thenReturn(Maybe.just(channelEntity))
+    whenever(channelRepository.update(channelEntity)).thenReturn(Completable.complete())
+    whenever(widgetManager.findWidgetConfig(channelProfileId, channelRemoteId)).thenReturn(Pair(widgetId, widgetConfiguration))
+
+    // when
+    val result = useCase.invoke(suplaChannel).test()
+
+    // then
+    result.assertComplete()
+    result.assertResult(EntityUpdateResult.UPDATED)
+
+    verify(locationRepository).findByRemoteId(locationRemoteId)
+    verify(channelRepository).findByRemoteId(channelRemoteId)
+    verify(channelRepository).update(channelEntity)
+    verify(widgetPreferences).setWidgetConfiguration(widgetId, widgetConfiguration)
+    verify(widgetManager).updateWidget(widgetId)
+    io.mockk.verify {
+      channelEntity.updatedBy(suplaChannel)
+      channelEntity.copy(position = 0) wasNot called
+    }
+
+    verifyNoMoreInteractions(locationRepository, channelRepository, profileRepository)
+    verifyZeroInteractions(channelConfigRepository, suplaClientProvider)
   }
 
   @Test
