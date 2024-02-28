@@ -5,7 +5,7 @@ plugins {
   kotlin("kapt")
   id("androidx.navigation.safeargs.kotlin")
   id("dagger.hilt.android.plugin")
-    id("com.google.gms.google-services")
+  id("com.google.gms.google-services")
 }
 
 android {
@@ -21,8 +21,8 @@ android {
     minSdk = Versions.MinSdk
     targetSdk = Versions.TargetSdk
     multiDexEnabled = true
-    versionCode = 209
-    versionName = "24.01"
+    versionCode = 210
+    versionName = "24.02"
 
     ndk {
       moduleName = "suplaclient"
@@ -33,6 +33,7 @@ android {
   compileOptions {
     sourceCompatibility(JavaVersion.VERSION_1_8)
     targetCompatibility(JavaVersion.VERSION_1_8)
+    isCoreLibraryDesugaringEnabled = true
   }
 
   buildTypes {
@@ -44,10 +45,18 @@ android {
       initWith(buildTypes.getByName("debug"))
       applicationIdSuffix = ".t"
     }
+    create("internalTestRelease") {
+      initWith(buildTypes.getByName("release"))
+      applicationIdSuffix = ".t"
+      signingConfig = signingConfigs.getByName("debug")
+    }
   }
 
   sourceSets {
     getByName("internaltest") {
+      res.srcDir("internaltest/res")
+    }
+    getByName("internalTestRelease") {
       res.srcDir("internaltest/res")
     }
     getByName("main") {
@@ -143,6 +152,8 @@ dependencies {
   implementation(Deps.Androidx.Compose.Tooling)
   implementation(Deps.Androidx.Compose.ConstraintLayout)
 
+  coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
+
   annotationProcessor(Deps.Androidx.Room.Compiler)
 
   kapt(Deps.Hilt.Kapt)
@@ -184,7 +195,11 @@ spotless {
     target(fileTree("dir" to "src", "include" to "**/*.kt"))
     ktlint(Versions.KtLint).editorConfigOverride(
       mapOf(
-        "disabled_rules" to "no-wildcard-imports, filename",
+        "ktlint_standard_no-wildcard-imports" to "disabled",
+        "ktlint_standard_filename" to "disabled",
+        "ktlint_standard_trailing-comma-on-declaration-site" to "disabled",
+        "ktlint_standard_trailing-comma-on-call-site" to "disabled",
+        "ktlint_experimental" to "disabled",
         "max_line_length" to "140",
         "indent_size" to "2"
       )

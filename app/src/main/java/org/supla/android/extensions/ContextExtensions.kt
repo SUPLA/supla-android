@@ -19,10 +19,14 @@ package org.supla.android.extensions
 
 import android.content.Context
 import dagger.hilt.android.EntryPointAccessors
+import org.supla.android.Preferences
 import org.supla.android.data.ValuesFormatter
-import org.supla.android.di.entrypoints.GetChannelValueUseCaseEntryPoint
+import org.supla.android.di.entrypoints.GetChannelDefaultCaptionUseCaseEntryPoint
+import org.supla.android.di.entrypoints.GetChannelIconUseCaseEntryPoint
+import org.supla.android.di.entrypoints.PreferencesEntryPoint
 import org.supla.android.di.entrypoints.ValuesFormatterEntryPoint
-import org.supla.android.usecases.channel.GetChannelValueUseCase
+import org.supla.android.usecases.channel.GetChannelDefaultCaptionUseCase
+import org.supla.android.usecases.icon.GetChannelIconUseCase
 
 val Context.valuesFormatter: ValuesFormatter
   get() = EntryPointAccessors.fromApplication(
@@ -30,8 +34,20 @@ val Context.valuesFormatter: ValuesFormatter
     ValuesFormatterEntryPoint::class.java
   ).provideValuesFormatter()
 
-val Context.getChannelValueUseCase: GetChannelValueUseCase
+val Context.preferences: Preferences
   get() = EntryPointAccessors.fromApplication(
     applicationContext,
-    GetChannelValueUseCaseEntryPoint::class.java
-  ).provideGetChannelValueUseCase()
+    PreferencesEntryPoint::class.java
+  ).providePreferences()
+
+val Context.getChannelIconUseCase: GetChannelIconUseCase
+  get() = EntryPointAccessors.fromApplication(
+    applicationContext,
+    GetChannelIconUseCaseEntryPoint::class.java
+  ).provideGetChannelIconUseCase()
+
+val Context.getChannelDefaultCaptionUseCase: GetChannelDefaultCaptionUseCase
+  get() = EntryPointAccessors.fromApplication(
+    applicationContext,
+    GetChannelDefaultCaptionUseCaseEntryPoint::class.java
+  ).provideGetChannelDefaultCaptionUseCase()

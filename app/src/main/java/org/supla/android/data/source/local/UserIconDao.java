@@ -19,10 +19,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import android.content.ContentValues;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import androidx.annotation.NonNull;
-import org.supla.android.db.SuplaContract;
+import org.supla.android.data.source.local.entity.UserIconEntity;
 
 public class UserIconDao extends BaseDao {
 
@@ -36,8 +35,8 @@ public class UserIconDao extends BaseDao {
     }
 
     ContentValues values = new ContentValues();
-    values.put(SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID, Id);
-    values.put(SuplaContract.UserIconsEntry.COLUMN_NAME_PROFILEID, getCachedProfileId());
+    values.put(UserIconEntity.COLUMN_REMOTE_ID, Id);
+    values.put(UserIconEntity.COLUMN_PROFILE_ID, getCachedProfileId());
 
     for (Image image : images) {
       if (image.value != null) {
@@ -48,37 +47,8 @@ public class UserIconDao extends BaseDao {
     write(
         sqLiteDatabase -> {
           sqLiteDatabase.insertWithOnConflict(
-              SuplaContract.UserIconsEntry.TABLE_NAME,
-              null,
-              values,
-              SQLiteDatabase.CONFLICT_IGNORE);
+              UserIconEntity.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
         });
-  }
-
-  public void delete(long profileId) {
-    delete(
-        SuplaContract.UserIconsEntry.TABLE_NAME,
-        key(SuplaContract.UserIconsEntry.COLUMN_NAME_PROFILEID, profileId));
-  }
-
-  public Cursor getUserIcons() {
-    String sql =
-        "SELECT "
-            + SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID
-            + ", "
-            + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE1
-            + ", "
-            + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE2
-            + ", "
-            + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE3
-            + ", "
-            + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE4
-            + ", "
-            + SuplaContract.UserIconsEntry.COLUMN_NAME_PROFILEID
-            + " FROM "
-            + SuplaContract.UserIconsEntry.TABLE_NAME;
-
-    return read(sqLiteDatabase -> sqLiteDatabase.rawQuery(sql, null));
   }
 
   public static class Image extends Key<byte[]> {

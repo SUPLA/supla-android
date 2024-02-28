@@ -42,6 +42,7 @@ public class Preferences {
   private static final String pref_button_autohide = "pref_button_autohide";
   public static final String pref_channel_height = "pref_channel_height_percent";
   private static final String pref_show_channel_info = "pref_show_channel_info";
+  private static final String pref_show_bottom_label = "pref_show_bottom_label";
   private static final String pref_show_opening_percent = "pref_show_opening_percent";
 
   private static final String pref_chart_type = "pref_ct%d_prof%d_%d";
@@ -191,6 +192,10 @@ public class Preferences {
     return _prefs.getInt(pref_channel_height, 100);
   }
 
+  public float getScale() {
+    return getChannelHeight() / 100f;
+  }
+
   public void setChannelHeight(int val) {
     SharedPreferences.Editor ed = _prefs.edit();
     ed.putInt(pref_channel_height, val);
@@ -204,6 +209,16 @@ public class Preferences {
   public void setShowChannelInfo(boolean val) {
     SharedPreferences.Editor ed = _prefs.edit();
     ed.putBoolean(pref_show_channel_info, val);
+    ed.apply();
+  }
+
+  public boolean isShowBottomLabel() {
+    return _prefs.getBoolean(pref_show_bottom_label, true);
+  }
+
+  public void setShowBottomLabel(boolean val) {
+    SharedPreferences.Editor ed = _prefs.edit();
+    ed.putBoolean(pref_show_bottom_label, val);
     ed.apply();
   }
 

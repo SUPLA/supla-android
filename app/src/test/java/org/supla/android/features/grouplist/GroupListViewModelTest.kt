@@ -24,7 +24,7 @@ import org.supla.android.db.ChannelBase
 import org.supla.android.db.ChannelGroup
 import org.supla.android.db.Location
 import org.supla.android.events.UpdateEventsManager
-import org.supla.android.features.standarddetail.DetailPage
+import org.supla.android.features.details.detailbase.standarddetail.DetailPage
 import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.lib.SuplaConst
 import org.supla.android.tools.SuplaSchedulers

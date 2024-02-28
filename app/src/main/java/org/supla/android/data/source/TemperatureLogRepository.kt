@@ -21,18 +21,18 @@ import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
-import org.supla.android.data.source.local.RoomTemperatureLogDao
-import org.supla.android.data.source.local.entity.TemperatureLogEntity
+import org.supla.android.data.source.local.dao.measurements.TemperatureLogDao
+import org.supla.android.data.source.local.entity.measurements.TemperatureLogEntity
 import org.supla.android.data.source.remote.rest.SuplaCloudService
 import org.supla.android.data.source.remote.rest.channel.TemperatureMeasurement
-import org.supla.android.features.temperaturesdownload.BaseDownloadLogWorker
+import org.supla.android.features.measurementsdownload.workers.BaseDownloadLogWorker
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class TemperatureLogRepository @Inject constructor(
-  private val temperatureLogDao: RoomTemperatureLogDao,
+  private val temperatureLogDao: TemperatureLogDao,
   suplaCloudServiceProvider: SuplaCloudService.Provider
 ) : BaseMeasurementRepository<TemperatureMeasurement, TemperatureLogEntity>(suplaCloudServiceProvider) {
 
@@ -68,6 +68,9 @@ class TemperatureLogRepository @Inject constructor(
 
   override fun findMaxTimestamp(remoteId: Int, profileId: Long): Single<Long> =
     temperatureLogDao.findMaxTimestamp(remoteId, profileId)
+
+  override fun findOldestEntity(remoteId: Int, profileId: Long): Maybe<TemperatureLogEntity> =
+    temperatureLogDao.findOldestEntity(remoteId, profileId)
 
   override fun delete(remoteId: Int, profileId: Long): Completable =
     temperatureLogDao.delete(remoteId, profileId)

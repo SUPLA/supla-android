@@ -30,6 +30,7 @@ import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.databinding.FragmentGroupListBinding
 import org.supla.android.db.ChannelGroup
 import org.supla.android.extensions.toPx
+import org.supla.android.extensions.visibleIf
 import org.supla.android.navigator.MainNavigator
 import org.supla.android.ui.dialogs.exceededAmperageDialog
 import org.supla.android.ui.dialogs.valveAlertDialog
@@ -57,6 +58,9 @@ class GroupListFragment : BaseFragment<GroupListViewState, GroupListViewEvent>(R
 
     binding.groupsList.adapter = adapter
     setupAdapter()
+    binding.groupsEmptyListButton.setOnClickListener {
+      navigator.navigateToCloudExternal()
+    }
   }
 
   override fun onStart() {
@@ -86,7 +90,10 @@ class GroupListFragment : BaseFragment<GroupListViewState, GroupListViewEvent>(R
   }
 
   override fun handleViewState(state: GroupListViewState) {
-    adapter.setItems(state.groups)
+    state.groups?.let { adapter.setItems(it) }
+
+    binding.groupsEmptyListLabel.visibleIf(state.groups?.isEmpty() == true)
+    binding.groupsEmptyListButton.visibleIf(state.groups?.isEmpty() == true)
 
     if (scrollDownOnReload) {
       binding.groupsList.smoothScrollBy(0, 50.toPx())

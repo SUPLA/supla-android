@@ -32,9 +32,7 @@ import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.databinding.FragmentChannelListBinding
 import org.supla.android.db.Channel
 import org.supla.android.extensions.toPx
-import org.supla.android.features.switchdetail.SwitchDetailFragment
-import org.supla.android.features.thermometerdetail.ThermometerDetailFragment
-import org.supla.android.features.thermostatdetail.ThermostatDetailFragment
+import org.supla.android.extensions.visibleIf
 import org.supla.android.lib.SuplaChannelState
 import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.navigator.MainNavigator
@@ -66,6 +64,9 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
     binding.channelsList.adapter = adapter
     statePopup = ChannelStatePopup(requireActivity())
     setupAdapter()
+    binding.channelsEmptyListButton.setOnClickListener {
+      navigator.navigateToAddWizard()
+    }
   }
 
   override fun onStart() {
@@ -92,19 +93,9 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
         binding.channelsList.adapter = adapter
       }
 
-      is ChannelListViewEvent.OpenSwitchDetail -> navigator.navigateTo(
-        R.id.switch_detail_fragment,
-        SwitchDetailFragment.bundle(event.itemBundle, event.pages.toTypedArray())
-      )
-
-      is ChannelListViewEvent.OpenThermostatDetail -> navigator.navigateTo(
-        R.id.thermostat_detail_fragment,
-        ThermostatDetailFragment.bundle(event.itemBundle, event.pages.toTypedArray())
-      )
-
-      is ChannelListViewEvent.OpenThermometerDetail -> navigator.navigateTo(
-        R.id.thermostat_detail_fragment,
-        ThermometerDetailFragment.bundle(event.itemBundle, event.pages.toTypedArray())
+      is ChannelListViewEvent.OpenStandardDetail -> navigator.navigateTo(
+        destinationId = event.fragmentId,
+        bundle = event.fragmentArguments
       )
 
       else -> {}
@@ -112,7 +103,10 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
   }
 
   override fun handleViewState(state: ChannelListViewState) {
-    adapter.setItems(state.channels)
+    state.channels?.let { adapter.setItems(it) }
+
+    binding.channelsEmptyListLabel.visibleIf(state.channels?.isEmpty() == true)
+    binding.channelsEmptyListButton.visibleIf(state.channels?.isEmpty() == true)
 
     if (scrollDownOnReload) {
       binding.channelsList.smoothScrollBy(0, 50.toPx())
@@ -137,7 +131,7 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
     }
     adapter.infoButtonClickCallback = { statePopup.show(it) }
     adapter.issueButtonClickCallback = { showAlertPopup(it) }
-    adapter.listItemClickCallback = { viewModel.onListItemClick(it as Channel) }
+    adapter.listItemClickCallback = { viewModel.onListItemClick((it as Channel).remoteId) }
   }
 
   override fun onSuplaMessage(message: SuplaClientMsg) {

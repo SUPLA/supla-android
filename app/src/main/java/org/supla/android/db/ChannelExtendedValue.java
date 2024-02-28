@@ -28,7 +28,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Date;
-import org.supla.android.db.SuplaContract.ChannelExtendedValueEntry;
+import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity;
 import org.supla.android.lib.SuplaChannelExtendedValue;
 
 public class ChannelExtendedValue extends DbItem {
@@ -39,10 +39,10 @@ public class ChannelExtendedValue extends DbItem {
   private SuplaChannelExtendedValue ExtendedValue;
 
   public static boolean valueExists(Cursor cursor) {
-    int vidx = cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_VALUE);
+    int vidx = cursor.getColumnIndex(ChannelExtendedValueEntity.COLUMN_VALUE);
 
-    return cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry._ID) > -1
-        && cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_CHANNELID) > -1
+    return cursor.getColumnIndex(ChannelExtendedValueEntity.COLUMN_ID) > -1
+        && cursor.getColumnIndex(ChannelExtendedValueEntity.COLUMN_CHANNEL_ID) > -1
         && vidx > -1
         && !cursor.isNull(vidx);
   }
@@ -107,24 +107,20 @@ public class ChannelExtendedValue extends DbItem {
 
   @SuppressLint("Range")
   public void AssignCursorData(Cursor cursor) {
-    setId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry._ID)));
+    setId(cursor.getLong(cursor.getColumnIndex(ChannelExtendedValueEntity.COLUMN_ID)));
     setChannelId(
-        cursor.getInt(
-            cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_CHANNELID)));
+        cursor.getInt(cursor.getColumnIndex(ChannelExtendedValueEntity.COLUMN_CHANNEL_ID)));
     setProfileId(
-        cursor.getLong(
-            cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_PROFILEID)));
+        cursor.getLong(cursor.getColumnIndex(ChannelExtendedValueEntity.COLUMN_PROFILE_ID)));
     try {
       setTimerStartTimestamp(
           cursor.getLong(
-              cursor.getColumnIndex(ChannelExtendedValueEntry.COLUMN_NAME_TIMER_START_TIME)));
+              cursor.getColumnIndex(ChannelExtendedValueEntity.COLUMN_TIMER_START_TIME)));
     } catch (Exception ex) {
       setTimerStartTimestamp(null);
     }
 
-    byte[] value =
-        cursor.getBlob(
-            cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_VALUE));
+    byte[] value = cursor.getBlob(cursor.getColumnIndex(ChannelExtendedValueEntity.COLUMN_VALUE));
     Object obj = ByteArrayToObject(value);
 
     if (obj instanceof SuplaChannelExtendedValue) {
@@ -153,12 +149,10 @@ public class ChannelExtendedValue extends DbItem {
 
     ContentValues values = new ContentValues();
 
-    values.put(SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_CHANNELID, getChannelId());
-    values.put(
-        SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_VALUE,
-        ObjectToByteArray(ExtendedValue));
-    values.put(SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_PROFILEID, getProfileId());
-    values.put(ChannelExtendedValueEntry.COLUMN_NAME_TIMER_START_TIME, getTimerStartTimestamp());
+    values.put(ChannelExtendedValueEntity.COLUMN_CHANNEL_ID, getChannelId());
+    values.put(ChannelExtendedValueEntity.COLUMN_VALUE, ObjectToByteArray(ExtendedValue));
+    values.put(ChannelExtendedValueEntity.COLUMN_PROFILE_ID, getProfileId());
+    values.put(ChannelExtendedValueEntity.COLUMN_TIMER_START_TIME, getTimerStartTimestamp());
 
     return values;
   }

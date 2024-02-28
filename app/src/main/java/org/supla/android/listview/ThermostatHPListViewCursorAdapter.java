@@ -82,7 +82,7 @@ public class ThermostatHPListViewCursorAdapter extends ResourceCursorAdapter {
     Channel channel = new Channel();
     channel.AssignCursorData(cursor);
 
-    caption.setText(channel.getNotEmptyCaption(context));
+    caption.setText(channel.getCaption(context));
     status.setPercent(channel.getOnLinePercent());
 
     ThermostatHP thermostat = new ThermostatHP();

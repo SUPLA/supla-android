@@ -1,8 +1,25 @@
 package org.supla.android;
 
+/*
+ Copyright (C) AC SOFTWARE SP. Z O.O.
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+syays GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
+
 import android.content.Context;
 import android.graphics.Color;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -13,6 +30,7 @@ import android.widget.LinearLayout;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
+import androidx.core.content.res.ResourcesCompat;
 import dagger.hilt.android.AndroidEntryPoint;
 import java.util.ArrayList;
 import javax.inject.Inject;
@@ -29,6 +47,7 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
   public static final int BTN_FREE_SPACE = 0x40;
   public static final int BTN_Z_WAVE = 0x80;
   public static final int BTN_CLOUD = 0x90;
+  public static final int BTN_NOTIFICATIONS = 0xA0;
   public static final int BTN_PROFILE = 0x1000;
   public static final int BTN_ALL = 0xFFFF;
   ArrayList<Button> buttons = new ArrayList<>();
@@ -142,6 +161,7 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
     ll.setLayoutParams(
         new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
     ll.setOrientation(HORIZONTAL);
+    ll.setClickable(true);
     mMainButtonsAreaLayout.addView(ll);
 
     ImageView iv = new ImageView(getContext());
@@ -154,16 +174,21 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
     int margin = getResources().getDimensionPixelSize(R.dimen.menuitem_iamge_margin);
     int padding = getResources().getDimensionPixelSize(R.dimen.menuitem_padding);
 
-    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(height, height);
-    params.setMargins(margin, 0, margin, 0);
+    LinearLayout.LayoutParams params;
+    if (iconResId == R.drawable.ic_notification) {
+      int size = getResources().getDimensionPixelSize(R.dimen.icon_big_size);
+      params = new LinearLayout.LayoutParams(size, size);
+      int verticalMargin = getResources().getDimensionPixelSize(R.dimen.distance_tiny);
+      int horizontalMargin = getResources().getDimensionPixelSize(R.dimen.distance_small);
+      params.setMargins(horizontalMargin, verticalMargin, horizontalMargin, verticalMargin);
+    } else {
+      params = new LinearLayout.LayoutParams(height, height);
+      params.setMargins(margin, 0, margin, 0);
+    }
 
     iv.setLayoutParams(params);
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-      iv.setBackground(getResources().getDrawable(iconResId));
-    } else {
-      iv.setBackgroundDrawable(getResources().getDrawable(iconResId));
-    }
+    iv.setImageDrawable(ResourcesCompat.getDrawable(getResources(), iconResId, null));
 
     Button btn = new Button(getContext(), null, R.attr.borderlessButtonStyle);
     btn.setOnClickListener(this);
@@ -247,6 +272,7 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
     addButton(BTN_SETTINGS, R.drawable.settings, R.string.settings);
     addButton(BTN_ADD_DEVICE, R.drawable.add_device, R.string.add_device);
     addButton(BTN_Z_WAVE, R.drawable.z_wave_btn, R.string.z_wave);
+    addButton(BTN_NOTIFICATIONS, R.drawable.ic_notification, R.string.menu_notifications);
     addButton(BTN_ABOUT, R.drawable.info, R.string.about);
     // Google Play Policy
     addButton(BTN_HELP, R.drawable.help, R.string.help);

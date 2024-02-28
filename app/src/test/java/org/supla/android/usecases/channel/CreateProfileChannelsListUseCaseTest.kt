@@ -1,40 +1,54 @@
 package org.supla.android.usecases.channel
 
-import android.database.Cursor
-import io.reactivex.rxjava3.core.Maybe
-import io.reactivex.rxjava3.core.Observable
+import android.content.Context
+import io.mockk.every
+import io.mockk.mockk
+import io.reactivex.rxjava3.core.Single
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
-import org.mockito.Mockito.mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.whenever
+import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.ChannelRelationRepository
-import org.supla.android.data.source.ChannelRepository
-import org.supla.android.db.AuthProfileItem
-import org.supla.android.db.Location
-import org.supla.android.db.SuplaContract
+import org.supla.android.data.source.RoomChannelRepository
+import org.supla.android.data.source.local.entity.ChannelRelationEntity
+import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
+import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.images.ImageId
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HUMIDITY
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNEL_FLAG_HAS_PARENT
-import org.supla.android.profile.ProfileManager
 import org.supla.android.ui.lists.ListItem
-import org.supla.android.usecases.channelrelation.FindChannelChildrenUseCase
+import org.supla.android.ui.lists.data.IssueIconType
+import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.location.CollapsedFlag
 
 @RunWith(MockitoJUnitRunner::class)
 class CreateProfileChannelsListUseCaseTest {
-  @Mock
-  private lateinit var channelRepository: ChannelRepository
-
-  @Mock
-  private lateinit var profileManager: ProfileManager
 
   @Mock
   private lateinit var channelRelationRepository: ChannelRelationRepository
 
   @Mock
-  private lateinit var findChannelChildrenUseCase: FindChannelChildrenUseCase
+  private lateinit var channelRepository: RoomChannelRepository
+
+  @Mock
+  private lateinit var getChannelCaptionUseCase: GetChannelCaptionUseCase
+
+  @Mock
+  private lateinit var getChannelIconUseCase: GetChannelIconUseCase
+
+  @Mock
+  private lateinit var getChannelValueStringUseCase: GetChannelValueStringUseCase
+
+  @Mock
+  private lateinit var valuesFormatter: ValuesFormatter
 
   @InjectMocks
   private lateinit var usecase: CreateProfileChannelsListUseCase
@@ -42,115 +56,49 @@ class CreateProfileChannelsListUseCaseTest {
   @Test
   fun `should create list of channels and locations`() {
     // given
-    val profileId = 987L
+    val first = mockListEntity(11, 12)
+    val second = mockListEntity(21, 12, function = SUPLA_CHANNELFNC_HVAC_THERMOSTAT)
+    val third = mockListEntity(31, 32, locationCollapsed = true)
+    val fourth = mockListEntity(41, 42, function = SUPLA_CHANNELFNC_DEPTHSENSOR)
 
-    val locationColumn = 123
-    val idColumn = 234
-    val flagsColumn = 235
-
-    val firstLocationId = 1L
-    val collapsedLocationId = 2L
-    val thirdLocationId = 3L
-    val cursor: Cursor = mock(Cursor::class.java)
-    whenever(cursor.moveToFirst()).thenReturn(true)
-    whenever(cursor.moveToNext()).thenReturn(true, true, true, true, false)
-    whenever(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_LOCATIONID)).thenReturn(locationColumn)
-    whenever(cursor.getColumnIndex(SuplaContract.ChannelEntry._ID)).thenReturn(idColumn)
-    whenever(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_FLAGS)).thenReturn(flagsColumn)
-    whenever(cursor.getLong(locationColumn)).thenReturn(
-      firstLocationId,
-      firstLocationId,
-      collapsedLocationId,
-      thirdLocationId,
-      thirdLocationId
-    )
-    whenever(cursor.getLong(idColumn)).thenReturn(11L, 22L, 33L, 44L, 55L)
-    whenever(cursor.getInt(flagsColumn)).thenReturn(0, 0, 0, 0, SUPLA_CHANNEL_FLAG_HAS_PARENT)
-    whenever(cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_VALUE)).thenReturn(-1)
-
-    val firstLocation = mock(Location::class.java)
-    whenever(firstLocation.locationId).thenReturn(firstLocationId.toInt())
-    whenever(firstLocation.caption).thenReturn("Caption 1")
-    whenever(channelRepository.getLocation(firstLocationId.toInt())).thenReturn(firstLocation)
-
-    val collapsedLocation = mock(Location::class.java)
-    whenever(collapsedLocation.locationId).thenReturn(collapsedLocationId.toInt())
-    whenever(collapsedLocation.caption).thenReturn("collapsed location")
-    whenever(collapsedLocation.collapsed).thenReturn(0 or CollapsedFlag.CHANNEL.value)
-    whenever(channelRepository.getLocation(collapsedLocationId.toInt())).thenReturn(collapsedLocation)
-
-    val thirdLocation = mock(Location::class.java)
-    whenever(channelRepository.getLocation(thirdLocationId.toInt())).thenReturn(thirdLocation)
-
-    val profile = mock(AuthProfileItem::class.java)
-    whenever(profile.id).thenReturn(profileId)
-    whenever(profileManager.getCurrentProfile()).thenReturn(Maybe.just(profile))
-
-    whenever(channelRepository.getAllProfileChannels(profileId)).thenReturn(cursor)
-    whenever(channelRelationRepository.findListOfParents(profileId)).thenReturn(Observable.just(emptyList()))
+    whenever(channelRepository.findList()).thenReturn(Single.just(listOf(first, second, third, fourth)))
+    whenever(channelRelationRepository.findChildrenToParentsRelations()).thenReturn(Single.just(emptyMap()))
 
     // when
     val testObserver = usecase().test()
 
     // then
     testObserver.assertComplete()
+    val context: Context = mockk()
     val list = testObserver.values()[0]
 
     assertThat(list).hasSize(6)
     assertThat(list[0]).isInstanceOf(ListItem.LocationItem::class.java)
     assertThat(list[1]).isInstanceOf(ListItem.ChannelItem::class.java)
-    assertThat(list[2]).isInstanceOf(ListItem.ChannelItem::class.java)
+    assertThat(list[2]).isInstanceOf(ListItem.HvacThermostatItem::class.java)
     assertThat(list[3]).isInstanceOf(ListItem.LocationItem::class.java)
     assertThat(list[4]).isInstanceOf(ListItem.LocationItem::class.java)
-    assertThat(list[5]).isInstanceOf(ListItem.ChannelItem::class.java)
+    assertThat(list[5]).isInstanceOf(ListItem.MeasurementItem::class.java)
 
-    assertThat((list[1] as ListItem.ChannelItem).channelBase.id).isEqualTo(11)
-    assertThat((list[2] as ListItem.ChannelItem).channelBase.id).isEqualTo(22)
-    assertThat((list[5] as ListItem.ChannelItem).channelBase.id).isEqualTo(44)
+    assertThat((list[1] as ListItem.ChannelItem).channelBase.remoteId).isEqualTo(11)
+    assertThat((list[2] as ListItem.HvacThermostatItem).captionProvider(context)).isEqualTo("caption 21")
+    assertThat((list[5] as ListItem.MeasurementItem).captionProvider(context)).isEqualTo("caption 41")
 
-    assertThat((list[0] as ListItem.LocationItem).location).isEqualTo(firstLocation)
-    assertThat((list[3] as ListItem.LocationItem).location).isEqualTo(collapsedLocation)
-    assertThat((list[4] as ListItem.LocationItem).location).isEqualTo(thirdLocation)
+    assertThat((list[0] as ListItem.LocationItem).location.caption).isEqualTo("12")
+    assertThat((list[3] as ListItem.LocationItem).location.caption).isEqualTo("32")
+    assertThat((list[4] as ListItem.LocationItem).location.caption).isEqualTo("42")
   }
 
   @Test
   fun `should merge location with same name into one`() {
     // given
-    val profileId = 987L
+    val first = mockListEntity(11, 12, function = SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER)
+    val second = mockListEntity(21, 12, function = SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT)
+    val third = mockListEntity(31, 32, locationName = "12")
+    val fourth = mockListEntity(41, 42)
 
-    val locationColumn = 123
-    val idColumn = 234
-
-    val firstLocationId = 1L
-    val secondLocationId = 2L
-    val thirdLocationId = 3L
-    val cursor: Cursor = mock(Cursor::class.java)
-    whenever(cursor.moveToFirst()).thenReturn(true)
-    whenever(cursor.moveToNext()).thenReturn(true, true, true, false)
-    whenever(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_LOCATIONID)).thenReturn(locationColumn)
-    whenever(cursor.getColumnIndex(SuplaContract.ChannelEntry._ID)).thenReturn(idColumn)
-    whenever(cursor.getLong(locationColumn)).thenReturn(firstLocationId, firstLocationId, secondLocationId, thirdLocationId)
-    whenever(cursor.getLong(idColumn)).thenReturn(11L, 22L, 33L, 44L)
-    whenever(cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_VALUE)).thenReturn(-1)
-
-    val firstLocation = mock(Location::class.java)
-    whenever(firstLocation.locationId).thenReturn(firstLocationId.toInt())
-    whenever(firstLocation.caption).thenReturn("Test")
-    whenever(channelRepository.getLocation(firstLocationId.toInt())).thenReturn(firstLocation)
-
-    val secondLocation = mock(Location::class.java)
-    whenever(secondLocation.caption).thenReturn("Test")
-    whenever(channelRepository.getLocation(secondLocationId.toInt())).thenReturn(secondLocation)
-
-    val thirdLocation = mock(Location::class.java)
-    whenever(channelRepository.getLocation(thirdLocationId.toInt())).thenReturn(thirdLocation)
-
-    val profile = mock(AuthProfileItem::class.java)
-    whenever(profile.id).thenReturn(profileId)
-    whenever(profileManager.getCurrentProfile()).thenReturn(Maybe.just(profile))
-
-    whenever(channelRepository.getAllProfileChannels(profileId)).thenReturn(cursor)
-    whenever(channelRelationRepository.findListOfParents(profileId)).thenReturn(Observable.just(emptyList()))
+    whenever(channelRepository.findList()).thenReturn(Single.just(listOf(first, second, third, fourth)))
+    whenever(channelRelationRepository.findChildrenToParentsRelations()).thenReturn(Single.just(emptyMap()))
 
     // when
     val testObserver = usecase().test()
@@ -161,56 +109,33 @@ class CreateProfileChannelsListUseCaseTest {
 
     assertThat(list).hasSize(6)
     assertThat(list[0]).isInstanceOf(ListItem.LocationItem::class.java)
-    assertThat(list[1]).isInstanceOf(ListItem.ChannelItem::class.java)
-    assertThat(list[2]).isInstanceOf(ListItem.ChannelItem::class.java)
+    assertThat(list[1]).isInstanceOf(ListItem.GeneralPurposeMeterItem::class.java)
+    assertThat(list[2]).isInstanceOf(ListItem.GeneralPurposeMeasurementItem::class.java)
     assertThat(list[3]).isInstanceOf(ListItem.ChannelItem::class.java)
     assertThat(list[4]).isInstanceOf(ListItem.LocationItem::class.java)
     assertThat(list[5]).isInstanceOf(ListItem.ChannelItem::class.java)
 
-    assertThat((list[1] as ListItem.ChannelItem).channelBase.id).isEqualTo(11)
-    assertThat((list[2] as ListItem.ChannelItem).channelBase.id).isEqualTo(22)
-    assertThat((list[3] as ListItem.ChannelItem).channelBase.id).isEqualTo(33)
-    assertThat((list[5] as ListItem.ChannelItem).channelBase.id).isEqualTo(44)
+    assertThat((list[1] as ListItem.GeneralPurposeMeterItem).value).isEqualTo("value 11")
+    assertThat((list[2] as ListItem.GeneralPurposeMeasurementItem).value).isEqualTo("value 21")
+    assertThat((list[3] as ListItem.ChannelItem).channelBase.remoteId).isEqualTo(31)
+    assertThat((list[5] as ListItem.ChannelItem).channelBase.remoteId).isEqualTo(41)
 
-    assertThat((list[0] as ListItem.LocationItem).location).isEqualTo(firstLocation)
-    assertThat((list[4] as ListItem.LocationItem).location).isEqualTo(thirdLocation)
+    assertThat((list[0] as ListItem.LocationItem).location.caption).isEqualTo("12")
+    assertThat((list[4] as ListItem.LocationItem).location.caption).isEqualTo("42")
   }
 
   @Test
   fun `should load children`() {
     // given
-    val profileId = 987L
-    val children = emptyList<ChannelChild>()
+    val first = mockListEntity(11, 12)
+    val second = mockListEntity(21, 12, channelFlags = SUPLA_CHANNEL_FLAG_HAS_PARENT)
+    val third = mockListEntity(31, 12)
 
-    val locationColumn = 123
-    val idColumn = 234
-    val flagsColumn = 235
-    val channelIdColumn = 236
-
-    val firstLocationId = 1L
-    val cursor: Cursor = mock(Cursor::class.java)
-    whenever(cursor.moveToFirst()).thenReturn(true)
-    whenever(cursor.moveToNext()).thenReturn(true, false)
-    whenever(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_LOCATIONID)).thenReturn(locationColumn)
-    whenever(cursor.getColumnIndex(SuplaContract.ChannelEntry._ID)).thenReturn(idColumn)
-    whenever(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_FLAGS)).thenReturn(flagsColumn)
-    whenever(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_CHANNELID)).thenReturn(channelIdColumn)
-    whenever(cursor.getLong(locationColumn)).thenReturn(firstLocationId, firstLocationId)
-    whenever(cursor.getLong(idColumn)).thenReturn(11L, 22L)
-    whenever(cursor.getInt(channelIdColumn)).thenReturn(101, 202)
-    whenever(cursor.getColumnIndex(SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_VALUE)).thenReturn(-1)
-
-    val firstLocation = mock(Location::class.java)
-    whenever(firstLocation.locationId).thenReturn(firstLocationId.toInt())
-    whenever(channelRepository.getLocation(firstLocationId.toInt())).thenReturn(firstLocation)
-
-    val profile = mock(AuthProfileItem::class.java)
-    whenever(profile.id).thenReturn(profileId)
-    whenever(profileManager.getCurrentProfile()).thenReturn(Maybe.just(profile))
-
-    whenever(channelRepository.getAllProfileChannels(profileId)).thenReturn(cursor)
-    whenever(channelRelationRepository.findListOfParents(profileId)).thenReturn(Observable.just(listOf(101)))
-    whenever(findChannelChildrenUseCase(profileId, 101)).thenReturn(Maybe.just(children))
+    whenever(channelRepository.findList()).thenReturn(Single.just(listOf(first, second, third)))
+    val childrenRelation = mockk<ChannelRelationEntity> { every { channelId } returns 21 }
+    whenever(channelRelationRepository.findChildrenToParentsRelations()).thenReturn(
+      Single.just(mapOf(11 to listOf(childrenRelation)))
+    )
 
     // when
     val testObserver = usecase().test()
@@ -223,11 +148,59 @@ class CreateProfileChannelsListUseCaseTest {
     assertThat(list[0]).isInstanceOf(ListItem.LocationItem::class.java)
     assertThat(list[1]).isInstanceOf(ListItem.ChannelItem::class.java)
     assertThat(list[2]).isInstanceOf(ListItem.ChannelItem::class.java)
-    assertThat((list[1] as ListItem.ChannelItem).children).isSameAs(children)
+    assertThat((list[1] as ListItem.ChannelItem).children).isEqualTo(listOf(ChannelChildEntity(childrenRelation, second)))
 
-    assertThat((list[1] as ListItem.ChannelItem).channelBase.id).isEqualTo(11)
-    assertThat((list[2] as ListItem.ChannelItem).channelBase.id).isEqualTo(22)
+    assertThat((list[1] as ListItem.ChannelItem).channelBase.remoteId).isEqualTo(11)
+    assertThat((list[2] as ListItem.ChannelItem).channelBase.remoteId).isEqualTo(31)
 
-    assertThat((list[0] as ListItem.LocationItem).location).isEqualTo(firstLocation)
+    assertThat((list[0] as ListItem.LocationItem).location.caption).isEqualTo("12")
+  }
+
+  private fun mockListEntity(
+    channelRemoteId: Int,
+    locationRemoteId: Int,
+    locationName: String = "$locationRemoteId",
+    channelFlags: Long = 0,
+    locationCollapsed: Boolean = false,
+    function: Int = SUPLA_CHANNELFNC_HUMIDITY
+  ): ChannelDataEntity = mockk {
+    every { remoteId } returns channelRemoteId
+    every { locationEntity } returns mockk {
+      every { remoteId } returns locationRemoteId
+      every { caption } returns locationName
+      every { isCollapsed(CollapsedFlag.CHANNEL) } returns locationCollapsed
+      every { toLegacyLocation() } returns mockk {
+        every { caption } returns locationName
+      }
+    }
+    every { channelEntity } returns mockk {
+      every { flags } returns channelFlags
+      every { this@mockk.function } returns function
+      every { remoteId } returns channelRemoteId
+    }
+    every { getLegacyChannel() } returns mockk {
+      every { remoteId } returns channelRemoteId
+    }
+    every { channelValueEntity } returns mockk {
+      every { online } returns true
+      if (function == SUPLA_CHANNELFNC_HVAC_THERMOSTAT) {
+        every { asThermostatValue() } returns mockk {
+          every { getSetpointText(valuesFormatter) } returns "setpoint text"
+          every { getIndicatorIcon() } returns 123
+          every { getIssueIconType() } returns IssueIconType.WARNING
+          every { getIssueMessage() } returns 456
+        }
+      }
+    }
+
+    if (function == SUPLA_CHANNELFNC_HVAC_THERMOSTAT) {
+      every { channelExtendedValueEntity } returns mockk {
+        every { getSuplaValue() } returns null
+      }
+    }
+
+    whenever(getChannelCaptionUseCase.invoke(this)).thenReturn { "caption $channelRemoteId" }
+    whenever(getChannelValueStringUseCase.invoke(this)).thenReturn("value $channelRemoteId")
+    whenever(getChannelIconUseCase.invoke(this)).thenReturn(ImageId(channelRemoteId))
   }
 }

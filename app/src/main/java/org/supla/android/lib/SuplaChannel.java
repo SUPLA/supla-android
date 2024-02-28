@@ -18,6 +18,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import org.supla.android.tools.UsedFromNativeCode;
+
 public class SuplaChannel extends SuplaChannelBase {
 
   public int Type;
@@ -28,6 +30,9 @@ public class SuplaChannel extends SuplaChannelBase {
 
   public SuplaChannelValue Value;
 
+  public long DefaultConfigCRC32;
+
+  @UsedFromNativeCode
   public SuplaChannel() {
     // This constructor is used by native code
   }

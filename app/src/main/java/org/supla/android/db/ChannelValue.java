@@ -23,11 +23,11 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.util.Base64;
 import java.nio.ByteBuffer;
-import java.util.Arrays;
+import org.supla.android.data.source.local.entity.ChannelValueEntity;
 import org.supla.android.data.source.local.entity.ThermostatValue;
+import org.supla.android.data.source.local.view.ChannelGroupValueView;
 import org.supla.android.lib.DigiglassValue;
 import org.supla.android.lib.RollerShutterValue;
-import org.supla.android.lib.SuplaChannelValue;
 import org.supla.android.lib.SuplaConst;
 
 public class ChannelValue extends DbItem {
@@ -38,15 +38,6 @@ public class ChannelValue extends DbItem {
   private byte[] SubValue;
   private short SubValueType;
   private long profileId;
-
-  private boolean ValueDiff(byte[] v1, byte[] v2) {
-
-    if (v1 == null && v2 == null) return false;
-    if (v1 == null && v2 != null) return true;
-    if (v1 != null && v2 == null) return true;
-
-    return !Arrays.equals(v1, v2);
-  }
 
   public int getChannelId() {
     return ChannelId;
@@ -69,7 +60,7 @@ public class ChannelValue extends DbItem {
     return Base64.encodeToString(Value, Base64.DEFAULT);
   }
 
-  void setChannelStringValue(String value) {
+  public void setChannelStringValue(String value) {
     setChannelValue(Base64.decode(value, Base64.DEFAULT));
   }
 
@@ -86,7 +77,7 @@ public class ChannelValue extends DbItem {
     return Base64.encodeToString(SubValue, Base64.DEFAULT);
   }
 
-  void setChannelStringSubValue(String value) {
+  public void setChannelStringSubValue(String value) {
     setChannelSubValue(Base64.decode(value, Base64.DEFAULT));
   }
 
@@ -102,12 +93,12 @@ public class ChannelValue extends DbItem {
 
     ContentValues values = new ContentValues();
 
-    values.put(SuplaContract.ChannelValueEntry.COLUMN_NAME_CHANNELID, getChannelId());
-    values.put(SuplaContract.ChannelValueEntry.COLUMN_NAME_ONLINE, getOnLine());
-    values.put(SuplaContract.ChannelValueEntry.COLUMN_NAME_VALUE, getChannelStringValue());
-    values.put(SuplaContract.ChannelValueEntry.COLUMN_NAME_SUBVALUE, getChannelStringSubValue());
-    values.put(SuplaContract.ChannelValueEntry.COLUMN_NAME_SUBVALUE_TYPE, getSubValueType());
-    values.put(SuplaContract.ChannelValueEntry.COLUMN_NAME_PROFILEID, getProfileId());
+    values.put(ChannelValueEntity.COLUMN_CHANNEL_REMOTE_ID, getChannelId());
+    values.put(ChannelValueEntity.COLUMN_ONLINE, getOnLine());
+    values.put(ChannelValueEntity.COLUMN_VALUE, getChannelStringValue());
+    values.put(ChannelValueEntity.COLUMN_SUB_VALUE, getChannelStringSubValue());
+    values.put(ChannelValueEntity.COLUMN_SUB_VALUE_TYPE, getSubValueType());
+    values.put(ChannelValueEntity.COLUMN_PROFILE_ID, getProfileId());
 
     return values;
   }
@@ -123,69 +114,34 @@ public class ChannelValue extends DbItem {
   @SuppressLint("Range")
   public void AssignCursorData(Cursor cursor) {
 
-    setId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ChannelValueEntry._ID)));
-    setChannelId(
-        cursor.getInt(
-            cursor.getColumnIndex(SuplaContract.ChannelValueEntry.COLUMN_NAME_CHANNELID)));
-    setOnLine(
-        cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelValueEntry.COLUMN_NAME_ONLINE))
-            != 0);
-    setChannelStringValue(
-        cursor.getString(cursor.getColumnIndex(SuplaContract.ChannelValueEntry.COLUMN_NAME_VALUE)));
+    setId(cursor.getLong(cursor.getColumnIndex(ChannelValueEntity.COLUMN_ID)));
+    setChannelId(cursor.getInt(cursor.getColumnIndex(ChannelValueEntity.COLUMN_CHANNEL_REMOTE_ID)));
+    setOnLine(cursor.getInt(cursor.getColumnIndex(ChannelValueEntity.COLUMN_ONLINE)) != 0);
+    setChannelStringValue(cursor.getString(cursor.getColumnIndex(ChannelValueEntity.COLUMN_VALUE)));
     setChannelStringSubValue(
-        cursor.getString(
-            cursor.getColumnIndex(SuplaContract.ChannelValueEntry.COLUMN_NAME_SUBVALUE)));
+        cursor.getString(cursor.getColumnIndex(ChannelValueEntity.COLUMN_SUB_VALUE)));
     setSubValueType(
-        cursor.getShort(
-            cursor.getColumnIndex(SuplaContract.ChannelValueEntry.COLUMN_NAME_SUBVALUE_TYPE)));
-    setProfileId(
-        cursor.getLong(
-            cursor.getColumnIndex(SuplaContract.ChannelValueEntry.COLUMN_NAME_PROFILEID)));
+        cursor.getShort(cursor.getColumnIndex(ChannelValueEntity.COLUMN_SUB_VALUE_TYPE)));
+    setProfileId(cursor.getLong(cursor.getColumnIndex(ChannelValueEntity.COLUMN_PROFILE_ID)));
   }
 
   @SuppressLint("Range")
   public void AssignCursorDataFromGroupView(Cursor cursor) {
 
-    setId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ChannelGroupValueViewEntry._ID)));
+    setId(cursor.getLong(cursor.getColumnIndex(ChannelGroupValueView.COLUMN_ID)));
     setChannelId(
-        cursor.getInt(
-            cursor.getColumnIndex(SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_CHANNELID)));
+        cursor.getInt(cursor.getColumnIndex(ChannelGroupValueView.COLUMN_CHANNEL_REMOTE_ID)));
     setOnLine(
-        cursor.getInt(
-                cursor.getColumnIndex(SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_ONLINE))
-            != 0);
+        cursor.getInt(cursor.getColumnIndex(ChannelGroupValueView.COLUMN_CHANNEL_ONLINE)) != 0);
     setChannelStringValue(
-        cursor.getString(
-            cursor.getColumnIndex(SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_VALUE)));
+        cursor.getString(cursor.getColumnIndex(ChannelGroupValueView.COLUMN_CHANNEL_VALUE)));
     setChannelStringSubValue(
-        cursor.getString(
-            cursor.getColumnIndex(SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_SUBVALUE)));
+        cursor.getString(cursor.getColumnIndex(ChannelGroupValueView.COLUMN_CHANNEL_SUB_VALUE)));
     setSubValueType(
         cursor.getShort(
-            cursor.getColumnIndex(
-                SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_SUBVALUE_TYPE)));
+            cursor.getColumnIndex(ChannelGroupValueView.COLUMN_CHANNEL_SUB_VALUE_TYPE)));
     setProfileId(
-        cursor.getLong(
-            cursor.getColumnIndex(SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_PROFILEID)));
-  }
-
-  public void AssignSuplaChannelValue(SuplaChannelValue channelValue) {
-    setChannelValue(channelValue.Value);
-    setChannelSubValue(channelValue.SubValue);
-    setSubValueType(channelValue.SubValueType);
-    // NOTE: profileId expected to be set by caller
-  }
-
-  public boolean Diff(SuplaChannelValue channelValue) {
-    return ValueDiff(channelValue.Value, Value)
-        || ValueDiff(channelValue.SubValue, SubValue)
-        || channelValue.SubValueType != SubValueType;
-  }
-
-  public boolean Diff(ChannelValue channelValue) {
-    return ValueDiff(channelValue.Value, Value)
-        || ValueDiff(channelValue.SubValue, SubValue)
-        || channelValue.SubValueType != SubValueType;
+        cursor.getLong(cursor.getColumnIndex(ChannelGroupValueView.COLUMN_CHANNEL_PROFILE_ID)));
   }
 
   public boolean getOnLine() {
@@ -466,7 +422,7 @@ public class ChannelValue extends DbItem {
   }
 
   public ThermostatValue asThermostatValue() {
-    return ThermostatValue.Companion.from(Value);
+    return ThermostatValue.Companion.from(getOnLine(), Value);
   }
 
   @Override

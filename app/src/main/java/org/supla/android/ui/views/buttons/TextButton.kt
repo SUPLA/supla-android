@@ -22,12 +22,14 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 
 @Composable
 fun TextButton(
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
   enabled: Boolean = true,
+  color: Color = Color.Unspecified,
   text: String
 ) {
   TextButton(
@@ -35,7 +37,7 @@ fun TextButton(
     modifier = modifier,
     enabled = enabled
   ) {
-    Text(text = text, style = MaterialTheme.typography.button)
+    Text(text = text, color = color, style = MaterialTheme.typography.button)
   }
 }
 

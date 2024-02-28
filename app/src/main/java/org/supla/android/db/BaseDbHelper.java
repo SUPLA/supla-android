@@ -19,15 +19,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import android.content.Context;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import androidx.annotation.Nullable;
-import org.supla.android.Trace;
 import org.supla.android.data.source.local.BaseDao;
+import org.supla.android.db.room.SqlExecutor;
 
 public abstract class BaseDbHelper extends SQLiteOpenHelper
-    implements BaseDao.DatabaseAccessProvider {
+    implements BaseDao.DatabaseAccessProvider, SqlExecutor {
 
   private final Context context;
   private final ProfileIdProvider profileIdProvider;
@@ -46,39 +45,6 @@ public abstract class BaseDbHelper extends SQLiteOpenHelper
   protected Context getContext() {
     return context;
   }
-
-  protected void execSQL(SQLiteDatabase db, String sql) {
-    Trace.d("sql-statments/" + getDatabaseNameForLog(), sql);
-    db.execSQL(sql);
-  }
-
-  protected void createIndex(SQLiteDatabase db, String tableName, String fieldName) {
-    final String SQL_CREATE_INDEX =
-        "CREATE INDEX "
-            + tableName
-            + "_"
-            + fieldName
-            + "_index ON "
-            + tableName
-            + "("
-            + fieldName
-            + ")";
-    execSQL(db, SQL_CREATE_INDEX);
-  }
-
-  protected void addColumn(SQLiteDatabase db, String sql) {
-    try {
-      execSQL(db, sql);
-    } catch (SQLException e) {
-      if (!e.getMessage().contains("duplicate column name:")) {
-        throw e;
-      } else {
-        e.getStackTrace();
-      }
-    }
-  }
-
-  protected abstract String getDatabaseNameForLog();
 
   public Long getCachedProfileId() {
     return profileIdProvider.getCachedProfileId();

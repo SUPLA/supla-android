@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <resources>
-  <string name="app_name">SUPLA(t)</string>
-  <string translatable="false" name="default_notification_channel_id">org.supla.android.t.main_channel</string>
+  <string name="app_name" translatable="false">SUPLA(t)</string>
+  <string name="default_notification_channel_id" translatable="false">org.supla.android.t.main_channel</string>
+  <string name="menubar_title" translatable="false">supla (t)</string>
 </resources>

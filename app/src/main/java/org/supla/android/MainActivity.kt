@@ -28,7 +28,7 @@ import androidx.navigation.ui.NavigationUI
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.core.notifications.NotificationsHelper
 import org.supla.android.core.ui.BackHandleOwner
-import org.supla.android.db.MeasurementsDbHelper
+import org.supla.android.extensions.getChannelIconUseCase
 import org.supla.android.features.notificationinfo.NotificationInfoDialog
 import org.supla.android.images.ImageCache
 import org.supla.android.images.ImageId
@@ -114,7 +114,7 @@ class MainActivity : NavigationActivity(), ToolbarTitleController, LoadableConte
       notificationsHelper.setupNotificationChannel(this)
       notificationsHelper.setupBackgroundNotificationChannel(this)
 
-      // Because for disabled we're sending an empty token, after right is granted we need to update token on server
+      // Because for disabling we're sending an empty token, after right is granted we need to update token on server
       notificationsHelper.updateToken()
     }
   }
@@ -162,7 +162,6 @@ class MainActivity : NavigationActivity(), ToolbarTitleController, LoadableConte
       it.typeface = SuplaApp.getApp().typefaceOpenSansRegular
     }
 
-    MeasurementsDbHelper.getInstance(this).readableDatabase // For upgrade purposes
     RegisterMessageHandler()
   }
 
@@ -210,6 +209,7 @@ class MainActivity : NavigationActivity(), ToolbarTitleController, LoadableConte
   private fun configureToolbarOnDestinationChange(destination: NavDestination) {
     lastDestinationId = destination.id
     setAccountItemVisible(profileManager.getAllProfiles().blockingFirst().size > 1 && lastDestinationId == R.id.main_fragment)
+    setDeleteVisible(lastDestinationId == R.id.notifications_log_fragment)
 
     if (destination.id != R.id.main_fragment) {
       findViewById<FrameLayout>(R.id.main_content).setPadding(0, 0, 0, 0)
@@ -219,6 +219,7 @@ class MainActivity : NavigationActivity(), ToolbarTitleController, LoadableConte
   override fun onResume() {
     super.onResume()
     setAccountItemVisible(profileManager.getAllProfiles().blockingFirst().size > 1 && lastDestinationId == R.id.main_fragment)
+    setDeleteVisible(lastDestinationId == R.id.notifications_log_fragment)
 
     if (SuperuserAuthorizationDialog.lastOneIsStillShowing()) {
       return
@@ -237,6 +238,11 @@ class MainActivity : NavigationActivity(), ToolbarTitleController, LoadableConte
 
   private fun setAccountItemVisible(visible: Boolean) {
     toolbar.menu.findItem(R.id.toolbar_accounts)?.isVisible = visible
+  }
+
+  private fun setDeleteVisible(visible: Boolean) {
+    toolbar.menu.findItem(R.id.toolbar_delete)?.isVisible = visible
+    toolbar.menu.findItem(R.id.toolbar_delete_older_than_month)?.isVisible = visible
   }
 
   private fun runDownloadTask() {
@@ -282,14 +288,14 @@ class MainActivity : NavigationActivity(), ToolbarTitleController, LoadableConte
         SuplaConst.SUPLA_EVENT_VALVEOPENCLOSE -> R.string.event_openedclosedthevalve
         else -> return
       }
-      imgId = channel.imageIdx
+      imgId = getChannelIconUseCase(channel)
       msg = resources.getString(msgId)
       @SuppressLint("SimpleDateFormat")
       val sdf = SimpleDateFormat("HH:mm:ss")
       msg = sdf.format(Date()) + " " + event.SenderName + " " + msg
     }
-    if (channel.caption != "") {
-      msg = msg + " (" + channel.caption + ")"
+    if (channel.hasCustomCaption()) {
+      msg = msg + " (" + channel.getCaption(this) + ")"
     }
     showNotificationMessage(msg, imgId, imgResId)
   }
@@ -422,12 +428,13 @@ class MainActivity : NavigationActivity(), ToolbarTitleController, LoadableConte
     when (MenuItemsLayout.getButtonId(v)) {
       MenuItemsLayout.BTN_SETTINGS -> navigator.navigateTo(R.id.application_settings_fragment)
       MenuItemsLayout.BTN_ABOUT -> showAbout()
-      MenuItemsLayout.BTN_ADD_DEVICE -> showAddWizard()
+      MenuItemsLayout.BTN_ADD_DEVICE -> navigator.navigateToAddWizard()
       MenuItemsLayout.BTN_Z_WAVE -> SuperUserAuthorize(MenuItemsLayout.BTN_Z_WAVE)
       MenuItemsLayout.BTN_HELP -> openForumpage()
-      MenuItemsLayout.BTN_CLOUD -> openCloud()
+      MenuItemsLayout.BTN_CLOUD -> navigator.navigateToCloudExternal()
       MenuItemsLayout.BTN_HOMEPAGE -> openHomepage()
       MenuItemsLayout.BTN_PROFILE -> showProfile(this)
+      MenuItemsLayout.BTN_NOTIFICATIONS -> navigator.navigateTo(R.id.notifications_log_fragment)
     }
   }
 

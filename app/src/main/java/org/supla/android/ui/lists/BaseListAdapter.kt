@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import org.supla.android.Preferences
-import org.supla.android.R
 import org.supla.android.SuplaApp
 import org.supla.android.databinding.LiLocationItemBinding
 import org.supla.android.db.Location
@@ -45,13 +44,27 @@ abstract class BaseListAdapter<T, D>(
     return items.count()
   }
 
+  override fun getItemViewType(pos: Int): Int {
+    return when (items[pos]) {
+      is ListItem.ChannelItem -> ViewType.CHANNEL_ITEM
+      is ListItem.HvacThermostatItem -> ViewType.HVAC_ITEM
+      is ListItem.MeasurementItem -> ViewType.MEASUREMENT_ITEM
+      is ListItem.SceneItem -> ViewType.SCENE_ITEM
+      is ListItem.LocationItem -> ViewType.LOCATION_ITEM
+      is ListItem.GeneralPurposeMeterItem -> ViewType.GENERAL_PURPOSE_METER_ITEM
+      is ListItem.GeneralPurposeMeasurementItem -> ViewType.GENERAL_PURPOSE_MEASUREMENT_ITEM
+
+      else -> throw IllegalStateException("Could find evaluate view item type")
+    }.identifier
+  }
+
   override fun onCreateViewHolder(
     parent: ViewGroup,
     viewType: Int
   ): RecyclerView.ViewHolder {
     val inflater = LayoutInflater.from(parent.context)
     return when (viewType) {
-      R.layout.li_location_item -> LocationListItemViewHolder(LiLocationItemBinding.inflate(inflater, parent, false))
+      ViewType.LOCATION_ITEM.identifier -> LocationListItemViewHolder(LiLocationItemBinding.inflate(inflater, parent, false))
       else -> throw IllegalArgumentException("unsupported view type $viewType")
     }
   }
@@ -131,6 +144,16 @@ abstract class BaseListAdapter<T, D>(
 
   class LocationListItemViewHolder(val binding: LiLocationItemBinding) :
     RecyclerView.ViewHolder(binding.root)
+
+  enum class ViewType(val identifier: Int) {
+    SCENE_ITEM(1),
+    CHANNEL_ITEM(2),
+    LOCATION_ITEM(3),
+    MEASUREMENT_ITEM(4),
+    HVAC_ITEM(5),
+    GENERAL_PURPOSE_METER_ITEM(6),
+    GENERAL_PURPOSE_MEASUREMENT_ITEM(7)
+  }
 
   private fun View.isLocationOnBottom(): Boolean {
     val parentAsGroup = parent as? ViewGroup ?: return false

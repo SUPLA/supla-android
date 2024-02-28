@@ -18,27 +18,23 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import android.annotation.SuppressLint;
-import android.database.Cursor;
 import org.supla.android.data.source.local.UserIconDao;
+import org.supla.android.data.source.local.entity.UserIconEntity;
 import org.supla.android.db.ProfileIdProvider;
-import org.supla.android.db.SuplaContract;
-import org.supla.android.db.SuplaContract.UserIconsEntry;
-import org.supla.android.images.ImageCacheProvider;
-import org.supla.android.images.ImageId;
+import org.supla.android.images.ImageCacheProxy;
 
 public class DefaultUserIconRepository implements UserIconRepository {
 
   private final UserIconDao userIconDao;
-  private final ImageCacheProvider imageCacheProvider;
+  private final ImageCacheProxy imageCacheProxy;
   private final ProfileIdProvider profileIdProvider;
 
   public DefaultUserIconRepository(
       UserIconDao userIconDao,
-      ImageCacheProvider imageCacheProvider,
+      ImageCacheProxy imageCacheProxy,
       ProfileIdProvider profileIdProvider) {
     this.userIconDao = userIconDao;
-    this.imageCacheProvider = imageCacheProvider;
+    this.imageCacheProxy = imageCacheProxy;
     this.profileIdProvider = profileIdProvider;
   }
 
@@ -50,76 +46,21 @@ public class DefaultUserIconRepository implements UserIconRepository {
 
     UserIconDao.Image[] images = {
       new UserIconDao.Image(
-          SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE1,
-          img1,
-          1,
-          profileIdProvider.getCachedProfileId()),
+          UserIconEntity.COLUMN_IMAGE_1, img1, 1, profileIdProvider.getCachedProfileId()),
       new UserIconDao.Image(
-          SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE2,
-          img2,
-          2,
-          profileIdProvider.getCachedProfileId()),
+          UserIconEntity.COLUMN_IMAGE_2, img2, 2, profileIdProvider.getCachedProfileId()),
       new UserIconDao.Image(
-          SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE3,
-          img3,
-          3,
-          profileIdProvider.getCachedProfileId()),
+          UserIconEntity.COLUMN_IMAGE_3, img3, 3, profileIdProvider.getCachedProfileId()),
       new UserIconDao.Image(
-          SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE4,
-          img4,
-          4,
-          profileIdProvider.getCachedProfileId()),
+          UserIconEntity.COLUMN_IMAGE_4, img4, 4, profileIdProvider.getCachedProfileId()),
     };
 
     userIconDao.insert(id, images);
     for (UserIconDao.Image image : images) {
       if (image.value != null) {
-        imageCacheProvider.addImage(id, image);
+        imageCacheProxy.addImage(id, image);
       }
     }
     return true;
-  }
-
-  @Override
-  public void deleteUserIcons(long profileId) {
-    userIconDao.delete(profileId);
-  }
-
-  @Override
-  @SuppressLint("Range")
-  public void loadUserIconsIntoCache() {
-    Cursor cursor = userIconDao.getUserIcons();
-    if (cursor.moveToFirst()) {
-      do {
-        for (ImageType imageType : ImageType.values()) {
-          byte[] image = cursor.getBlob(cursor.getColumnIndex(imageType.column));
-          int remoteId =
-              cursor.getInt(
-                  cursor.getColumnIndex(SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID));
-          long profileId =
-              cursor.getLong(cursor.getColumnIndex(UserIconsEntry.COLUMN_NAME_PROFILEID));
-
-          if (image != null && image.length > 0) {
-            imageCacheProvider.addImage(new ImageId(remoteId, imageType.subId, profileId), image);
-          }
-        }
-      } while (cursor.moveToNext());
-    }
-    cursor.close();
-  }
-
-  private enum ImageType {
-    IMAGE1(SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE1, 1),
-    IMAGE2(SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE2, 2),
-    IMAGE3(SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE3, 3),
-    IMAGE4(SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE4, 4);
-
-    private final String column;
-    private final int subId;
-
-    ImageType(String column, int subId) {
-      this.column = column;
-      this.subId = subId;
-    }
   }
 }

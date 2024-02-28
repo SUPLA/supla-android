@@ -21,6 +21,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.database.Cursor;
+import org.supla.android.data.source.local.entity.ColorEntity;
 
 public class ColorListItem extends DbItem {
 
@@ -73,19 +74,12 @@ public class ColorListItem extends DbItem {
   @SuppressLint("Range")
   public void AssignCursorData(Cursor cursor) {
 
-    setId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ColorListItemEntry._ID)));
-    setRemoteId(
-        cursor.getInt(
-            cursor.getColumnIndex(SuplaContract.ColorListItemEntry.COLUMN_NAME_REMOTEID)));
-    setGroup(
-        cursor.getInt(cursor.getColumnIndex(SuplaContract.ColorListItemEntry.COLUMN_NAME_GROUP))
-            > 0);
-    setIdx(cursor.getInt(cursor.getColumnIndex(SuplaContract.ColorListItemEntry.COLUMN_NAME_IDX)));
-    setColor(
-        cursor.getInt(cursor.getColumnIndex(SuplaContract.ColorListItemEntry.COLUMN_NAME_COLOR)));
-    setBrightness(
-        cursor.getShort(
-            cursor.getColumnIndex(SuplaContract.ColorListItemEntry.COLUMN_NAME_BRIGHTNESS)));
+    setId(cursor.getLong(cursor.getColumnIndex(ColorEntity.COLUMN_ID)));
+    setRemoteId(cursor.getInt(cursor.getColumnIndex(ColorEntity.COLUMN_REMOTE_ID)));
+    setGroup(cursor.getInt(cursor.getColumnIndex(ColorEntity.COLUMN_GROUP)) > 0);
+    setIdx(cursor.getInt(cursor.getColumnIndex(ColorEntity.COLUMN_IDX)));
+    setColor(cursor.getInt(cursor.getColumnIndex(ColorEntity.COLUMN_COLOR)));
+    setBrightness(cursor.getShort(cursor.getColumnIndex(ColorEntity.COLUMN_BRIGHTNESS)));
   }
 
   public void AssignColorListItem(ColorListItem cli) {
@@ -102,11 +96,11 @@ public class ColorListItem extends DbItem {
 
     ContentValues values = new ContentValues();
 
-    values.put(SuplaContract.ColorListItemEntry.COLUMN_NAME_REMOTEID, getRemoteId());
-    values.put(SuplaContract.ColorListItemEntry.COLUMN_NAME_GROUP, getGroup() ? 1 : 0);
-    values.put(SuplaContract.ColorListItemEntry.COLUMN_NAME_IDX, getIdx());
-    values.put(SuplaContract.ColorListItemEntry.COLUMN_NAME_COLOR, getColor());
-    values.put(SuplaContract.ColorListItemEntry.COLUMN_NAME_BRIGHTNESS, getBrightness());
+    values.put(ColorEntity.COLUMN_REMOTE_ID, getRemoteId());
+    values.put(ColorEntity.COLUMN_GROUP, getGroup() ? 1 : 0);
+    values.put(ColorEntity.COLUMN_IDX, getIdx());
+    values.put(ColorEntity.COLUMN_COLOR, getColor());
+    values.put(ColorEntity.COLUMN_BRIGHTNESS, getBrightness());
 
     return values;
   }

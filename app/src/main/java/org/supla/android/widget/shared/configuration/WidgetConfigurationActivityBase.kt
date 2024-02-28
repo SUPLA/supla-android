@@ -20,10 +20,16 @@ package org.supla.android.widget.shared.configuration
 import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.PowerManager
+import android.provider.Settings
 import android.view.View
 import android.widget.AdapterView
+import android.widget.RelativeLayout
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentActivity
 import org.supla.android.R
 import org.supla.android.Trace
@@ -35,6 +41,8 @@ import org.supla.android.db.DbItem
 abstract class WidgetConfigurationActivityBase<T : Any> : FragmentActivity() {
 
   protected lateinit var binding: T
+
+  protected abstract val widgetWarningView: RelativeLayout
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -50,6 +58,25 @@ abstract class WidgetConfigurationActivityBase<T : Any> : FragmentActivity() {
     )
       ?: AppWidgetManager.INVALID_APPWIDGET_ID
     viewModel().widgetId = appWidgetId
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      widgetWarningView.setOnClickListener {
+        Intent().also {
+          it.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
+          it.setData(Uri.parse("package:$packageName"))
+          startActivity(it)
+        }
+      }
+    }
+  }
+
+  override fun onResume() {
+    super.onResume()
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      val powerManager = getSystemService(POWER_SERVICE) as PowerManager
+      widgetWarningView.isVisible = !powerManager.isIgnoringBatteryOptimizations(packageName)
+    }
   }
 
   protected fun profileItemSelectedListener(
@@ -98,10 +125,13 @@ abstract class WidgetConfigurationActivityBase<T : Any> : FragmentActivity() {
           setResult(RESULT_OK, Intent().putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId))
           finish()
         }
+
         it.exceptionOrNull() is NoItemSelectedException ->
           Toast.makeText(this, R.string.widget_configure_no_selection, Toast.LENGTH_SHORT).show()
+
         it.exceptionOrNull() is EmptyDisplayNameException ->
           onWidgetNameError()
+
         else -> {
           Toast.makeText(this, R.string.widget_configure_error, Toast.LENGTH_SHORT).show()
           Trace.e(
@@ -128,7 +158,7 @@ abstract class WidgetConfigurationActivityBase<T : Any> : FragmentActivity() {
   private fun getSelectedChannelCaption(): String {
     val maxLength = resources.getInteger(R.integer.widget_name_max_length)
     val caption = when (val item = viewModel().selectedItem) {
-      is ChannelBase -> item.getNotEmptyCaption(this)
+      is ChannelBase -> item.getCaption(this)
       is Scene -> item.caption
       else -> ""
     }

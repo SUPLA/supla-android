@@ -46,11 +46,13 @@ import org.supla.android.SuplaApp;
 import org.supla.android.SuplaChannelStatus;
 import org.supla.android.SuplaWarningIcon;
 import org.supla.android.ViewHelper;
+import org.supla.android.data.model.general.IconType;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelExtendedValue;
 import org.supla.android.db.ChannelGroup;
 import org.supla.android.events.UpdateEventsManager;
+import org.supla.android.extensions.ContextExtensionsKt;
 import org.supla.android.images.ImageCache;
 import org.supla.android.images.ImageId;
 import org.supla.android.lib.SuplaChannelExtendedValue;
@@ -345,7 +347,9 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
     int size = getResources().getDimensionPixelSize(R.dimen.channel_state_image_size);
     int margin = getResources().getDimensionPixelSize(R.dimen.distance_default);
 
-    if (mFunc == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE) margin = 0;
+    if (mFunc == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE) {
+      margin = 0;
+    }
 
     RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(size, size);
     lp.leftMargin = margin;
@@ -399,9 +403,13 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
 
   public void slide(int delta) {
 
-    if (!LeftButtonEnabled && delta > 0) delta = 0;
+    if (!LeftButtonEnabled && delta > 0) {
+      delta = 0;
+    }
 
-    if (!RightButtonEnabled && delta < 0) delta = 0;
+    if (!RightButtonEnabled && delta < 0) {
+      delta = 0;
+    }
 
     content.layout(delta, content.getTop(), content.getWidth() + delta, content.getHeight());
 
@@ -418,16 +426,23 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
 
     float pr = content.getLeft() * 100 / left_btn.getWidth();
 
-    if (pr <= 0) pr = 0;
-    else if (pr > 100) pr = 100;
+    if (pr <= 0) {
+      pr = 0;
+    } else if (pr > 100) {
+      pr = 100;
+    }
 
     left_btn.setRotationY(90 - 90 * pr / 100);
 
     int left = content.getLeft() / 2 - left_btn.getWidth() / 2;
     int right = left_btn.getWidth() + (content.getLeft() / 2 - left_btn.getWidth() / 2);
 
-    if (left > 0) left = 0;
-    if (right > left_btn.getWidth()) right = left_btn.getWidth();
+    if (left > 0) {
+      left = 0;
+    }
+    if (right > left_btn.getWidth()) {
+      right = left_btn.getWidth();
+    }
 
     left_btn.layout(left, 0, right, left_btn.getHeight());
   }
@@ -436,21 +451,28 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
 
     float pr = (content.getLeft() * -1) * 100 / right_btn.getWidth();
 
-    if (pr <= 0) pr = 0;
-    else if (pr > 100) pr = 100;
+    if (pr <= 0) {
+      pr = 0;
+    } else if (pr > 100) {
+      pr = 100;
+    }
 
     right_btn.setRotationY(-90 + 90 * pr / 100);
 
     int left = getWidth() + (content.getLeft() / 2 - right_btn.getWidth() / 2);
 
-    if (content.getLeft() * -1 > right_btn.getWidth()) left = getWidth() - right_btn.getWidth();
+    if (content.getLeft() * -1 > right_btn.getWidth()) {
+      left = getWidth() - right_btn.getWidth();
+    }
 
     right_btn.layout(left, 0, left + right_btn.getWidth(), right_btn.getHeight());
   }
 
   public void AnimateToRestingPosition(boolean start_pos) {
 
-    if (!start_pos && Anim) return;
+    if (!start_pos && Anim) {
+      return;
+    }
 
     ObjectAnimator btn_animr = null;
     ObjectAnimator btn_animx = null;
@@ -576,7 +598,9 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
 
     super.setBackgroundColor(color);
 
-    if (content != null) content.setBackgroundColor(color);
+    if (content != null) {
+      content.setBackgroundColor(color);
+    }
   }
 
   public ChannelBase getChannelBase() {
@@ -599,8 +623,8 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
     mGroup = cbase instanceof ChannelGroup;
 
     imgl.setImage(
-        cbase.getImageIdx(ChannelBase.WhichOne.First),
-        cbase.getImageIdx(ChannelBase.WhichOne.Second));
+        ContextExtensionsKt.getGetChannelIconUseCase(getContext()).invoke(cbase, IconType.SINGLE),
+        ContextExtensionsKt.getGetChannelIconUseCase(getContext()).invoke(cbase, IconType.SECOND));
 
     imgl.setText1(cbase.getHumanReadableValue());
     imgl.setText2(cbase.getHumanReadableValue(ChannelBase.WhichOne.Second));
@@ -786,7 +810,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
       setLeftButtonEnabled(lenabled && cbase.getOnLine());
       setRightButtonEnabled(renabled && cbase.getOnLine());
     }
-    caption_text.setText(cbase.getNotEmptyCaption(getContext()));
+    caption_text.setText(cbase.getCaption(getContext()));
 
     caption_text.setOnLongClickListener(
         v -> {
@@ -850,6 +874,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
   }
 
   private class AnimParams {
+
     public int content_left;
     public int content_right;
     public int left_btn_rotation;
@@ -862,7 +887,9 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
     public CaptionView(Context context, int imgl_id, float heightScaleFactor) {
       super(context);
       float textSize = getResources().getDimension(R.dimen.channel_caption_text_size);
-      if (heightScaleFactor > 1.0) textSize *= heightScaleFactor;
+      if (heightScaleFactor > 1.0) {
+        textSize *= heightScaleFactor;
+      }
       setTypeface(SuplaApp.getApp().getTypefaceOpenSansBold());
       setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
       setTextColor(getResources().getColor(R.color.channel_caption_text));
@@ -871,7 +898,9 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
       RelativeLayout.LayoutParams lp =
           new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 
-      if (imgl_id != -1) lp.addRule(RelativeLayout.BELOW, imgl_id);
+      if (imgl_id != -1) {
+        lp.addRule(RelativeLayout.BELOW, imgl_id);
+      }
 
       lp.topMargin =
           (int)
@@ -1049,7 +1078,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
 
     public void setImage(ImageId img1Id, ImageId img2Id) {
 
-      if (ImageId.equals(img1Id, Img1Id) && ImageId.equals(img2Id, Img2Id)) {
+      if (ImageId.Companion.equals(img1Id, Img1Id) && ImageId.Companion.equals(img2Id, Img2Id)) {
         return;
       }
 

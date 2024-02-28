@@ -14,8 +14,8 @@ object Versions {
     const val GoogleMaterial = "1.0.0"
     const val GoogleServices = "4.3.15"
 
-    const val Spotless = "6.10.0"
-    const val KtLint = "0.46.1"
+    const val Spotless = "6.23.3"
+    const val KtLint = "0.48.1"
 
     const val FragmentViewBinding = "1.0.2"
 
@@ -29,7 +29,7 @@ object Versions {
         const val ConstraintLayout = "2.1.0"
         const val Core = "1.3.2"
         const val Preferences = "1.1.1"
-        const val Worker = "2.7.1"
+        const val Worker = "2.8.0"
         const val RecyclerView = "1.2.1"
         const val Security = "1.1.0-alpha06"
         const val Room = "2.5.2"

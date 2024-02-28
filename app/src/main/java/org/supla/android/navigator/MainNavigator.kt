@@ -2,6 +2,8 @@ package org.supla.android.navigator
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.annotation.IdRes
 import androidx.navigation.NavController
@@ -9,9 +11,11 @@ import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
 import dagger.hilt.android.qualifiers.ActivityContext
 import dagger.hilt.android.scopes.ActivityScoped
+import org.supla.android.AddDeviceWizardActivity
+import org.supla.android.NavigationActivity
 import org.supla.android.R
 import org.supla.android.data.source.runtime.ItemType
-import org.supla.android.features.legacydetail.LegacyDetailFragment
+import org.supla.android.features.details.legacydetail.LegacyDetailFragment
 import org.supla.android.usecases.details.LegacyDetailType
 import javax.inject.Inject
 
@@ -31,6 +35,19 @@ class MainNavigator @Inject constructor(@ActivityContext private val activityCon
       LegacyDetailFragment.bundle(remoteId, legacyDetailType, itemType),
       animationOptions
     )
+  }
+
+  fun navigateToAddWizard() {
+    val intent = Intent(activityContext, AddDeviceWizardActivity::class.java).also {
+      it.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+      it.putExtra(NavigationActivity.INTENTSENDER, NavigationActivity.INTENTSENDER_MAIN)
+    }
+    activityContext.startActivity(intent)
+    (activityContext as? Activity)?.overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
+  }
+
+  fun navigateToCloudExternal() {
+    activityContext.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(activityContext.resources.getString(R.string.cloud_url))))
   }
 
   fun back(): Boolean = navController.navigateUp()

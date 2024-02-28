@@ -19,107 +19,98 @@ package org.supla.android.usecases.channel
 
 import io.mockk.every
 import io.mockk.mockk
-import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoMoreInteractions
+import org.mockito.kotlin.verifyZeroInteractions
 import org.mockito.kotlin.whenever
-import org.supla.android.data.ValuesFormatter
-import org.supla.android.db.Channel
-import org.supla.android.db.ChannelValue
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
+import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.lib.SuplaConst
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HUMIDITY
+import org.supla.android.usecases.channel.valueprovider.DepthSensorValueProvider
+import org.supla.android.usecases.channel.valueprovider.DistanceSensorValueProvider
+import org.supla.android.usecases.channel.valueprovider.GpmValueProvider
+import org.supla.android.usecases.channel.valueprovider.HumidityAndTemperatureValueProvider
+import org.supla.android.usecases.channel.valueprovider.ThermometerValueProvider
 
 @RunWith(MockitoJUnitRunner::class)
 class GetChannelValueUseCaseTest {
 
   @Mock
-  private lateinit var valuesFormatter: ValuesFormatter
+  private lateinit var depthSensorValueProvider: DepthSensorValueProvider
+
+  @Mock
+  private lateinit var gpmValueProvider: GpmValueProvider
+
+  @Mock
+  private lateinit var humidityAndTemperatureValueProvider: HumidityAndTemperatureValueProvider
+
+  @Mock
+  private lateinit var thermometerValueProvider: ThermometerValueProvider
+
+  @Mock
+  private lateinit var distanceSensorValueProvider: DistanceSensorValueProvider
 
   @InjectMocks
   private lateinit var useCase: GetChannelValueUseCase
 
   @Test
-  fun `should get no value text when channel offline`() {
+  fun `should check all handlers if can handle channel and throw exception that could not provide channel value`() {
     // given
-    val value: ChannelValue = mockk()
-    every { value.onLine } returns false
-
-    val channel: Channel = mockk()
-    every { channel.value } returns value
+    val channel: ChannelDataEntity = mockk {
+      every { function } returns SUPLA_CHANNELFNC_HUMIDITY
+    }
 
     // when
-    val valueText = useCase(channel)
+    Assertions.assertThatThrownBy {
+      useCase.invoke(channel)
+    }
+      .hasMessage("No value provider for channel function `$SUPLA_CHANNELFNC_HUMIDITY`")
+      .isInstanceOf(IllegalStateException::class.java)
 
     // then
-    assertThat(valueText).isEqualTo(ValuesFormatter.NO_VALUE_TEXT)
+    verify(thermometerValueProvider).handle(SUPLA_CHANNELFNC_HUMIDITY)
+    verify(humidityAndTemperatureValueProvider).handle(SUPLA_CHANNELFNC_HUMIDITY)
+    verify(depthSensorValueProvider).handle(SUPLA_CHANNELFNC_HUMIDITY)
+    verify(gpmValueProvider).handle(SUPLA_CHANNELFNC_HUMIDITY)
+    verifyNoMoreInteractions(
+      thermometerValueProvider,
+      humidityAndTemperatureValueProvider,
+      depthSensorValueProvider,
+      gpmValueProvider
+    )
   }
 
   @Test
-  fun `should get temperature for thermometer`() {
+  fun `should return value of first provider which can handle channel`() {
     // given
-    val temperature = 23.2
-    val temperatureString = "23.2"
-    val value: ChannelValue = mockk()
-    every { value.onLine } returns true
-    every { value.getTemp(SUPLA_CHANNELFNC_THERMOMETER) } returns temperature
+    val function = SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
+    val value = 12.4
+    val channel: ChannelDataEntity = mockk {
+      every { this@mockk.function } returns function
+      every { channelValueEntity } returns mockk {
+        every { online } returns true
+      }
+    }
 
-    val channel: Channel = mockk()
-    every { channel.value } returns value
-    every { channel.func } returns SUPLA_CHANNELFNC_THERMOMETER
-
-    whenever(valuesFormatter.getTemperatureString(temperature)).thenReturn(temperatureString)
+    whenever(humidityAndTemperatureValueProvider.handle(function)).thenReturn(true)
+    whenever(humidityAndTemperatureValueProvider.value(channel, ValueType.FIRST)).thenReturn(value)
 
     // when
-    val valueText = useCase(channel)
+    val valueText: Double = useCase(channel)
 
     // then
-    assertThat(valueText).isEqualTo(temperatureString)
-  }
-
-  @Test
-  fun `should get temperature for humidity and temperature`() {
-    // given
-    val temperature = 23.2
-    val temperatureString = "23.2"
-    val value: ChannelValue = mockk()
-    every { value.onLine } returns true
-    every { value.getTemp(SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE) } returns temperature
-
-    val channel: Channel = mockk()
-    every { channel.value } returns value
-    every { channel.func } returns SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
-
-    whenever(valuesFormatter.getTemperatureString(temperature)).thenReturn(temperatureString)
-
-    // when
-    val valueText = useCase(channel)
-
-    // then
-    assertThat(valueText).isEqualTo(temperatureString)
-  }
-
-  @Test
-  fun `should get humidity for humidity and temperature`() {
-    // given
-    val humidity = 23.2
-    val humidityString = "23.2"
-    val value: ChannelValue = mockk()
-    every { value.onLine } returns true
-    every { value.humidity } returns humidity
-
-    val channel: Channel = mockk()
-    every { channel.value } returns value
-    every { channel.func } returns SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
-
-    whenever(valuesFormatter.getHumidityString(humidity)).thenReturn(humidityString)
-
-    // when
-    val valueText = useCase(channel, ValueType.SECOND)
-
-    // then
-    assertThat(valueText).isEqualTo(humidityString)
+    Assertions.assertThat(valueText).isEqualTo(value)
+    verify(depthSensorValueProvider).handle(function)
+    verify(gpmValueProvider).handle(function)
+    verify(humidityAndTemperatureValueProvider).handle(function)
+    verify(humidityAndTemperatureValueProvider).value(channel, ValueType.FIRST)
+    verifyNoMoreInteractions(depthSensorValueProvider, gpmValueProvider, humidityAndTemperatureValueProvider)
+    verifyZeroInteractions(thermometerValueProvider)
   }
 }

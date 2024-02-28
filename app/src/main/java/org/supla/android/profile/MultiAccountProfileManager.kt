@@ -25,22 +25,22 @@ import org.supla.android.core.SuplaAppProvider
 import org.supla.android.core.networking.suplacloud.SuplaCloudConfigHolder
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.db.AuthProfileItem
-import org.supla.android.db.DbHelper
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.extensions.TAG
 import org.supla.android.lib.SuplaClient
 import org.supla.android.lib.singlecall.SingleCall
-import org.supla.android.widget.WidgetVisibilityHandler
+import org.supla.android.usecases.icon.LoadUserIconsIntoCacheUseCase
+import org.supla.android.widget.WidgetManager
 
 class MultiAccountProfileManager(
-  private val dbHelper: DbHelper,
   private val profileRepository: ProfileRepository,
   private val profileIdHolder: ProfileIdHolder,
-  private val widgetVisibilityHandler: WidgetVisibilityHandler,
+  private val widgetManager: WidgetManager,
   private val updateEventsManager: UpdateEventsManager,
   private val suplaAppProvider: SuplaAppProvider,
   private val singleCallProvider: SingleCall.Provider,
-  private val suplaCloudConfigHolder: SuplaCloudConfigHolder
+  private val suplaCloudConfigHolder: SuplaCloudConfigHolder,
+  private val loadUserIconsIntoCacheUseCase: LoadUserIconsIntoCacheUseCase
 ) : ProfileManager {
 
   override fun create(profile: AuthProfileItem): Completable = Completable.fromRunnable {
@@ -62,13 +62,16 @@ class MultiAccountProfileManager(
   }
 
   override fun delete(id: Long): Completable = Completable.fromRunnable {
-    try {
-      singleCallProvider.provide(id).registerPushNotificationClientToken(SuplaClient.SUPLA_APP_ID, "")
-    } catch (ex: Exception) {
-      Trace.w(TAG, "Token cleanup failed while profile removal (profile id: `$id`)", ex)
+    profileRepository.getProfile(id)?.let {
+      try {
+        singleCallProvider.provide(id).registerPushNotificationClientToken(SuplaClient.SUPLA_APP_ID, "", it)
+      } catch (ex: Exception) {
+        Trace.w(TAG, "Token cleanup failed while profile removal (profile id: `$id`)", ex)
+      }
     }
+
     profileRepository.deleteProfile(id)
-    widgetVisibilityHandler.onProfileRemoved(id)
+    widgetManager.onProfileRemoved(id)
   }
 
   override fun getAllProfiles(): Observable<List<AuthProfileItem>> = Observable.fromCallable {
@@ -93,13 +96,12 @@ class MultiAccountProfileManager(
     }
     suplaCloudConfigHolder.clean()
     initiateReconnect()
-    dbHelper.loadUserIconsIntoCache()
 
     updateEventsManager.cleanup()
     updateEventsManager.emitChannelsUpdate()
     updateEventsManager.emitGroupsUpdate()
     updateEventsManager.emitScenesUpdate()
-  }
+  }.andThen(loadUserIconsIntoCacheUseCase())
 
   private fun initiateReconnect() {
     with(suplaAppProvider.provide()) {

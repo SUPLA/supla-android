@@ -3,6 +3,7 @@ package org.supla.android.profile
 import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.mockk
+import io.reactivex.rxjava3.core.Completable
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -15,22 +16,19 @@ import org.supla.android.core.networking.suplaclient.SuplaClientApi
 import org.supla.android.core.networking.suplacloud.SuplaCloudConfigHolder
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.db.AuthProfileItem
-import org.supla.android.db.DbHelper
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.lib.singlecall.SingleCall
-import org.supla.android.widget.WidgetVisibilityHandler
+import org.supla.android.usecases.icon.LoadUserIconsIntoCacheUseCase
+import org.supla.android.widget.WidgetManager
 
 @RunWith(MockitoJUnitRunner::class)
 class MultiAccountProfileManagerTest {
 
   @Mock
-  private lateinit var dbHelper: DbHelper
-
-  @Mock
   private lateinit var profileRepository: ProfileRepository
 
   @Mock
-  private lateinit var widgetVisibilityHandler: WidgetVisibilityHandler
+  private lateinit var widgetManager: WidgetManager
 
   @Mock
   private lateinit var updateEventsManager: UpdateEventsManager
@@ -47,19 +45,22 @@ class MultiAccountProfileManagerTest {
   @Mock
   private lateinit var suplaCloudConfigHolder: SuplaCloudConfigHolder
 
+  @Mock
+  private lateinit var loadUserIconsIntoCacheUseCase: LoadUserIconsIntoCacheUseCase
+
   private lateinit var profileManager: MultiAccountProfileManager
 
   @Before
   fun setUp() {
     profileManager = MultiAccountProfileManager(
-      dbHelper,
       profileRepository,
       profileIdHolder,
-      widgetVisibilityHandler,
+      widgetManager,
       updateEventsManager,
       suplaAppProvider,
       singleCallProvider,
-      suplaCloudConfigHolder
+      suplaCloudConfigHolder,
+      loadUserIconsIntoCacheUseCase
     )
   }
 
@@ -181,8 +182,9 @@ class MultiAccountProfileManagerTest {
     testObserver.assertComplete()
 
     verify(profileRepository).deleteProfile(profileId)
-    verify(widgetVisibilityHandler).onProfileRemoved(profileId)
-    verifyNoMoreInteractions(profileRepository, widgetVisibilityHandler)
+    verify(profileRepository).getProfile(profileId)
+    verify(widgetManager).onProfileRemoved(profileId)
+    verifyNoMoreInteractions(profileRepository, widgetManager)
   }
 
   @Test
@@ -234,6 +236,7 @@ class MultiAccountProfileManagerTest {
       }
     )
     whenever(profileRepository.allProfiles).thenReturn(profiles)
+    whenever(loadUserIconsIntoCacheUseCase.invoke()).thenReturn(Completable.complete())
 
     // when
     val testObserver = profileManager.activateProfile(activeProfileId, false).test()
@@ -243,7 +246,7 @@ class MultiAccountProfileManagerTest {
 
     verify(profileRepository).allProfiles
     verifyNoMoreInteractions(profileRepository)
-    verifyZeroInteractions(profileIdHolder, dbHelper, updateEventsManager, suplaAppProvider, suplaCloudConfigHolder)
+    verifyZeroInteractions(profileIdHolder, updateEventsManager, suplaAppProvider, suplaCloudConfigHolder)
   }
 
   @Test
@@ -274,6 +277,8 @@ class MultiAccountProfileManagerTest {
     every { suplaApp.getSuplaClient() } returns suplaClient
     whenever(suplaAppProvider.provide()).thenReturn(suplaApp)
 
+    whenever(loadUserIconsIntoCacheUseCase.invoke()).thenReturn(Completable.complete())
+
     // when
     val testObserver = profileManager.activateProfile(newActiveProfileId, false).test()
 
@@ -283,14 +288,13 @@ class MultiAccountProfileManagerTest {
     verify(profileRepository).allProfiles
     verify(profileRepository).setProfileActive(newActiveProfileId)
     verify(profileIdHolder).profileId = newActiveProfileId
-    verify(dbHelper).loadUserIconsIntoCache()
     verify(updateEventsManager).cleanup()
     verify(updateEventsManager).emitScenesUpdate()
     verify(updateEventsManager).emitGroupsUpdate()
     verify(updateEventsManager).emitChannelsUpdate()
     verify(suplaAppProvider).provide()
     verify(suplaCloudConfigHolder).clean()
-    verifyNoMoreInteractions(profileRepository, profileIdHolder, dbHelper, updateEventsManager, suplaAppProvider, suplaCloudConfigHolder)
+    verifyNoMoreInteractions(profileRepository, profileIdHolder, updateEventsManager, suplaAppProvider, suplaCloudConfigHolder)
 
     io.mockk.verify {
       suplaApp.CancelAllRestApiClientTasks(true)
@@ -324,6 +328,8 @@ class MultiAccountProfileManagerTest {
     every { suplaApp.getSuplaClient() } returns suplaClient
     whenever(suplaAppProvider.provide()).thenReturn(suplaApp)
 
+    whenever(loadUserIconsIntoCacheUseCase.invoke()).thenReturn(Completable.complete())
+
     // when
     val testObserver = profileManager.activateProfile(activeProfileId, true).test()
 
@@ -333,14 +339,13 @@ class MultiAccountProfileManagerTest {
     verify(profileRepository).allProfiles
     verify(profileRepository).setProfileActive(activeProfileId)
     verify(profileIdHolder).profileId = activeProfileId
-    verify(dbHelper).loadUserIconsIntoCache()
     verify(updateEventsManager).cleanup()
     verify(updateEventsManager).emitScenesUpdate()
     verify(updateEventsManager).emitGroupsUpdate()
     verify(updateEventsManager).emitChannelsUpdate()
     verify(suplaAppProvider).provide()
     verify(suplaCloudConfigHolder).clean()
-    verifyNoMoreInteractions(profileRepository, profileIdHolder, dbHelper, updateEventsManager, suplaAppProvider, suplaCloudConfigHolder)
+    verifyNoMoreInteractions(profileRepository, profileIdHolder, updateEventsManager, suplaAppProvider, suplaCloudConfigHolder)
 
     io.mockk.verify {
       suplaApp.CancelAllRestApiClientTasks(true)

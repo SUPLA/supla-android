@@ -21,6 +21,7 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
+import android.widget.RelativeLayout
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import dagger.hilt.android.AndroidEntryPoint
@@ -42,6 +43,9 @@ class SingleWidgetConfigurationActivity :
   lateinit var widgetPreferences: WidgetPreferences
 
   private val viewModel: SingleWidgetConfigurationViewModel by viewModels()
+
+  override val widgetWarningView: RelativeLayout
+    get() = binding.widgetSingleCommon.widgetWarning.widgetWarningContent
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)

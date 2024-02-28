@@ -29,6 +29,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -48,12 +49,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import org.supla.android.R
@@ -62,6 +65,7 @@ import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.core.ui.theme.grey
 import org.supla.android.core.ui.theme.listItemCaption
 import org.supla.android.extensions.differenceInSeconds
+import org.supla.android.extensions.preferences
 import org.supla.android.extensions.valuesFormatter
 import org.supla.android.ui.lists.data.IssueIconType
 import org.supla.android.ui.views.Separator
@@ -78,11 +82,11 @@ fun ListItemScaffold(
   onIssueClick: () -> Unit,
   onTitleLongClick: () -> Unit,
   onItemClick: () -> Unit,
-  showInfoIcon: Boolean,
   itemIssueIconType: IssueIconType?,
   hasLeftButton: Boolean = false,
   hasRightButton: Boolean = false,
-  scale: Float = 1f,
+  scale: Float = LocalContext.current.preferences.scale,
+  showInfoIcon: Boolean = LocalContext.current.preferences.isShowChannelInfo,
   content: @Composable BoxScope.() -> Unit
 ) {
   var title by remember { mutableStateOf(itemTitle) }
@@ -90,31 +94,54 @@ fun ListItemScaffold(
   var estimatedEndDate by remember { mutableStateOf(itemEstimatedEndDate) }
   var issueIconType by remember { mutableStateOf(itemIssueIconType) }
 
-  if (title != itemTitle) { title = itemTitle }
-  if (online != itemOnline) { online = itemOnline }
-  if (estimatedEndDate != itemEstimatedEndDate) { estimatedEndDate = itemEstimatedEndDate }
-  if (issueIconType != itemIssueIconType) { issueIconType = itemIssueIconType }
+  if (title != itemTitle) {
+    title = itemTitle
+  }
+  if (online != itemOnline) {
+    online = itemOnline
+  }
+  if (estimatedEndDate != itemEstimatedEndDate) {
+    estimatedEndDate = itemEstimatedEndDate
+  }
+  if (issueIconType != itemIssueIconType) {
+    issueIconType = itemIssueIconType
+  }
+  var itemSize by remember { mutableStateOf(IntSize.Zero) }
 
   Box(
     modifier = Modifier
       .fillMaxWidth()
       .fillMaxHeight()
+      .onSizeChanged { itemSize = it }
   ) {
-    if (online && showInfoIcon) {
-      ListItemInfoIcon(onInfoClick)
-    }
     estimatedEndDate?.let {
       ListItemTimerText(date = it, scale = scale)
     }
 
-    ListItemDotLeading(online, hasLeftButton, modifier = Modifier.align(Alignment.CenterStart))
-    Box(
+    Row(
+      verticalAlignment = Alignment.CenterVertically,
       modifier = Modifier
+        .fillMaxWidth()
         .fillMaxHeight()
-        .align(Alignment.Center),
-      content = content
-    )
-    ListItemDotTrading(online, hasRightButton, modifier = Modifier.align(Alignment.CenterEnd))
+    ) {
+      ListItemDotLeading(online, hasLeftButton)
+
+      if (online && showInfoIcon) {
+        ListItemInfoIcon(onInfoClick)
+      }
+
+      Box(
+        modifier = Modifier
+          .fillMaxHeight()
+          .weight(1f)
+          .padding(start = Distance.tiny, end = Distance.tiny),
+        content = content
+      )
+
+      issueIconType?.let { ListItemIssueIcon(it, onIssueClick) } ?: ListItemIssueIconSpacing()
+
+      ListItemDotTrading(online, hasRightButton)
+    }
 
     ListItemTitle(
       text = title,
@@ -125,8 +152,6 @@ fun ListItemScaffold(
     )
 
     Separator(modifier = Modifier.align(Alignment.BottomCenter))
-
-    issueIconType?.let { ListItemIssueIcon(it, onIssueClick) }
   }
 }
 
@@ -135,7 +160,7 @@ private fun ListItemDotLeading(online: Boolean, withButton: Boolean, modifier: M
   ListItemDot(
     online = online,
     withButton = withButton,
-    paddingValues = PaddingValues(start = dimensionResource(id = R.dimen.distance_default)),
+    paddingValues = PaddingValues(start = Distance.default),
     modifier = modifier
   )
 
@@ -144,7 +169,7 @@ private fun ListItemDotTrading(online: Boolean, withButton: Boolean, modifier: M
   ListItemDot(
     online = online,
     withButton = withButton,
-    paddingValues = PaddingValues(end = dimensionResource(id = R.dimen.distance_default)),
+    paddingValues = PaddingValues(end = Distance.default),
     modifier = modifier
   )
 
@@ -162,37 +187,36 @@ private fun ListItemDot(online: Boolean, withButton: Boolean, paddingValues: Pad
   )
 }
 
-context (BoxScope)
 @Composable
 private fun ListItemInfoIcon(onClick: () -> Unit) {
-  val startPadding = dimensionResource(id = R.dimen.channel_dot_size)
-    .plus(dimensionResource(id = R.dimen.distance_default).times(2))
-
   Image(
     painter = painterResource(id = R.drawable.channelstateinfo),
     contentDescription = null,
     modifier = Modifier
-      .align(Alignment.CenterStart)
-      .padding(start = startPadding)
+      .padding(start = Distance.default)
       .size(dimensionResource(id = R.dimen.channel_state_image_size))
       .clickable(interactionSource = MutableInteractionSource(), indication = null, onClick = onClick)
   )
 }
 
-context (BoxScope)
 @Composable
 private fun ListItemIssueIcon(issueIconType: IssueIconType, onClick: () -> Unit) {
-  val endPadding = dimensionResource(id = R.dimen.channel_dot_size)
-    .plus(dimensionResource(id = R.dimen.distance_default).times(2))
-
   Image(
     painter = painterResource(id = issueIconType.icon),
     contentDescription = null,
     modifier = Modifier
-      .align(Alignment.CenterEnd)
-      .padding(end = endPadding)
+      .padding(end = Distance.default)
       .size(dimensionResource(id = R.dimen.channel_warning_image_size))
       .clickable(interactionSource = MutableInteractionSource(), indication = null, onClick = onClick)
+  )
+}
+
+@Composable
+private fun ListItemIssueIconSpacing() {
+  Box(
+    modifier = Modifier
+      .padding(end = Distance.default)
+      .size(dimensionResource(id = R.dimen.channel_warning_image_size))
   )
 }
 
@@ -201,8 +225,8 @@ private fun ListItemTitle(
   text: String,
   onLongClick: () -> Unit,
   onItemClick: () -> Unit,
-  scale: Float = 1f,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
+  scale: Float = 1f
 ) {
   val textSize = MaterialTheme.typography.listItemCaption().fontSize.times(max(scale, 1f))
   Text(
@@ -210,8 +234,8 @@ private fun ListItemTitle(
     style = MaterialTheme.typography.listItemCaption(),
     modifier = modifier
       .padding(
-        horizontal = dimensionResource(id = R.dimen.distance_default),
-        vertical = dimensionResource(id = R.dimen.distance_small).times(scale)
+        horizontal = Distance.default,
+        vertical = Distance.small.times(scale)
       )
       .pointerInput(Unit) {
         detectTapGestures(onLongPress = { onLongClick() }, onTap = { onItemClick() })
@@ -268,7 +292,18 @@ private fun Preview() {
           .width(500.dp)
           .height(100.dp)
       ) {
-        ListItemScaffold(itemTitle = "Power Switch", itemOnline = true, null, { }, { }, { }, { }, true, IssueIconType.WARNING) {
+        ListItemScaffold(
+          itemTitle = "Power Switch",
+          itemOnline = true,
+          null,
+          { },
+          { },
+          { },
+          { },
+          IssueIconType.WARNING,
+          scale = 1f,
+          showInfoIcon = true
+        ) {
         }
       }
       Box(
@@ -276,7 +311,7 @@ private fun Preview() {
           .width(500.dp)
           .height(100.dp)
       ) {
-        ListItemScaffold(itemTitle = "Power Switch", itemOnline = false, null, { }, { }, { }, { }, false, null) {
+        ListItemScaffold(itemTitle = "Power Switch", itemOnline = false, null, { }, { }, { }, { }, null, scale = 1f, showInfoIcon = false) {
         }
       }
     }

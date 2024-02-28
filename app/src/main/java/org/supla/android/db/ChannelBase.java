@@ -22,13 +22,10 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.SpannableString;
 import android.text.style.RelativeSizeSpan;
-import org.supla.android.R;
 import org.supla.android.SuplaApp;
 import org.supla.android.ValuesFormatterProvider;
 import org.supla.android.data.ValuesFormatter;
-import org.supla.android.data.source.remote.hvac.ThermostatSubfunction;
-import org.supla.android.images.ImageCache;
-import org.supla.android.images.ImageId;
+import org.supla.android.extensions.ContextExtensionsKt;
 import org.supla.android.lib.SuplaChannelBase;
 import org.supla.android.lib.SuplaConst;
 
@@ -41,10 +38,10 @@ public abstract class ChannelBase extends DbItem {
   private long LocationId;
   private int AltIcon;
   private int UserIconId;
-  private int Flags;
+  private long Flags;
   private long profileId;
 
-  private ValuesFormatterProvider valuesFormatterProvider;
+  private final ValuesFormatterProvider valuesFormatterProvider;
 
   public ChannelBase() {
     profileId = -1;
@@ -125,12 +122,25 @@ public abstract class ChannelBase extends DbItem {
     RemoteId = id;
   }
 
-  public String getCaption() {
+  protected String getCaption() {
     return Caption;
   }
 
   public void setCaption(String caption) {
     Caption = caption;
+  }
+
+  public String getCaption(Context context) {
+    if (Caption == null || Caption.trim().isEmpty()) {
+      return ContextExtensionsKt.getGetChannelDefaultCaptionUseCase(context)
+          .invoke(Func)
+          .invoke(context);
+    }
+    return Caption;
+  }
+
+  public boolean hasCustomCaption() {
+    return !Caption.trim().isEmpty();
   }
 
   public int getVisible() {
@@ -193,11 +203,11 @@ public abstract class ChannelBase extends DbItem {
     UserIconId = userIconId;
   }
 
-  public int getFlags() {
+  public long getFlags() {
     return Flags;
   }
 
-  public void setFlags(int flags) {
+  public void setFlags(long flags) {
     Flags = flags;
   }
 
@@ -209,747 +219,11 @@ public abstract class ChannelBase extends DbItem {
     profileId = pid;
   }
 
-  public String getNotEmptyCaption(Context context) {
-    return SuplaConst.getNotEmptyCaption(getCaption(), getFunc(), context);
-  }
-
-  protected int imgActive(ChannelValue value) {
-
-    if (value == null || !getOnLine()) {
-      return 0;
-    }
-
-    switch (getFunc()) {
-      case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK:
-      case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE:
-      case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR:
-      case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK:
-      case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
-      case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW:
-        return value.getSubValueHi();
-
-      case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATEWAY:
-      case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATE:
-      case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GARAGEDOOR:
-      case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_DOOR:
-      case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROLLERSHUTTER:
-      case SuplaConst.SUPLA_CHANNELFNC_MAILSENSOR:
-      case SuplaConst.SUPLA_CHANNELFNC_OPENINGSENSOR_WINDOW:
-      case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROOFWINDOW:
-      case SuplaConst.SUPLA_CHANNELFNC_HOTELCARDSENSOR:
-      case SuplaConst.SUPLA_CHANNELFNC_ALARMARMAMENTSENSOR:
-      case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
-      case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
-      case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
-      case SuplaConst.SUPLA_CHANNELFNC_NOLIQUIDSENSOR:
-      case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
-        return value.hiValue() ? 1 : 0;
-
-      case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
-        return value.getBrightness() > 0 ? 1 : 0;
-
-      case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING:
-        return value.getColorBrightness() > 0 ? 1 : 0;
-
-      case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
-        {
-          int result = 0;
-
-          if (value.getBrightness() > 0) {
-            result |= 0x1;
-          }
-
-          if (value.getColorBrightness() > 0) {
-            result |= 0x2;
-          }
-
-          return result;
-        }
-      case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
-        return value.isClosed() ? 1 : 0;
-      case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL:
-      case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL:
-        return value.getDigiglassValue().isAnySectionTransparent() ? 1 : 0;
-    }
-
-    return 0;
-  }
-
-  // We intentionally specify icons with the _nighthtmode
-  // suffix for night mode instead of using the default icons
-  // from the drawable-night directory because not every
-  // part of the application is night mode enabled yet.
-  private int getImageResourceIdForNightMode(WhichOne whichImage, int active, boolean _50percent) {
-    int img_idx = -1;
-
-    switch (getFunc()) {
-      case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATEWAY:
-      case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK:
-        img_idx =
-            active == 1 ? R.drawable.gatewayclosed_nightmode : R.drawable.gatewayopen_nightmode;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATE:
-      case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE:
-        switch (getAltIcon()) {
-          case 1:
-            if (_50percent) {
-              img_idx = R.drawable.gatealt1closed50percent_nightmode;
-            } else {
-              img_idx =
-                  active > 0
-                      ? R.drawable.gatealt1closed_nightmode
-                      : R.drawable.gatealt1open_nightmode;
-            }
-            break;
-          case 2:
-            img_idx =
-                active > 0 ? R.drawable.barierclosed_nightmode : R.drawable.barieropen_nightmode;
-            break;
-          default:
-            if (_50percent) {
-              img_idx = R.drawable.gateclosed50percent_nightmode;
-            } else {
-              img_idx =
-                  active > 0 ? R.drawable.gateclosed_nightmode : R.drawable.gateopen_nightmode;
-            }
-        }
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GARAGEDOOR:
-      case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR:
-        if (_50percent) {
-          img_idx = R.drawable.garagedoorclosed50percent_nightmode;
-        } else {
-          img_idx =
-              active > 0
-                  ? R.drawable.garagedoorclosed_nightmode
-                  : R.drawable.garagedooropen_nightmode;
-        }
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_DOOR:
-      case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK:
-        img_idx = active == 1 ? R.drawable.doorclosed_nightmode : R.drawable.dooropen_nightmode;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROLLERSHUTTER:
-      case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
-        img_idx =
-            active == 1
-                ? R.drawable.rollershutterclosed_nightmode
-                : R.drawable.rollershutteropen_nightmode;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROOFWINDOW:
-      case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW:
-        img_idx =
-            active == 1
-                ? R.drawable.roofwindowclosed_nightmode
-                : R.drawable.roofwindowopen_nightmode;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
-        switch (getAltIcon()) {
-          case 1:
-            img_idx = active == 1 ? R.drawable.tvon_nightmode : R.drawable.tvoff_nightmode;
-            break;
-          case 2:
-            img_idx = active == 1 ? R.drawable.radioon_nightmode : R.drawable.radiooff_nightmode;
-            break;
-          case 3:
-            img_idx = active == 1 ? R.drawable.pcon_nightmode : R.drawable.pcoff_nightmode;
-            break;
-          case 4:
-            img_idx = active == 1 ? R.drawable.fanon_nightmode : R.drawable.fanoff_nightmode;
-            break;
-          default:
-            img_idx = active == 1 ? R.drawable.poweron_nightmode : R.drawable.poweroff_nightmode;
-        }
-
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
-        switch (getAltIcon()) {
-          case 1:
-            img_idx =
-                active == 1 ? R.drawable.xmastreeon_nightmode : R.drawable.xmastreeoff_nightmode;
-            break;
-          case 2:
-            img_idx = active == 1 ? R.drawable.uvon_nightmode : R.drawable.uvoff_nightmode;
-            break;
-          default:
-            img_idx = active == 1 ? R.drawable.lighton_nightmode : R.drawable.lightoff_nightmode;
-        }
-
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
-        switch (getAltIcon()) {
-          case 1:
-            img_idx =
-                active == 1
-                    ? R.drawable.staircasetimeron_1_nightmode
-                    : R.drawable.staircasetimeroff_1_nightmode;
-            break;
-          default:
-            img_idx =
-                active == 1
-                    ? R.drawable.staircasetimeron_nightmode
-                    : R.drawable.staircasetimeroff_nightmode;
-        }
-
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER:
-        img_idx = R.drawable.fnc_thermostat_dhw_nm;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT:
-        if (getChannelValue() != null) {
-          if (getChannelValue().asThermostatValue().getSubfunction()
-              == ThermostatSubfunction.HEAT) {
-            img_idx = R.drawable.fnc_thermostat_heat_nm;
-          } else {
-            img_idx = R.drawable.fnc_thermostat_cool_nm;
-          }
-        }
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
-        img_idx = R.drawable.thermometer_nightmode;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_HUMIDITY:
-        img_idx = R.drawable.humidity_nightmode;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE:
-        img_idx =
-            whichImage == WhichOne.First
-                ? R.drawable.thermometer_nightmode
-                : R.drawable.humidity_nightmode;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_WINDSENSOR:
-        img_idx = R.drawable.wind_nightmode;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_PRESSURESENSOR:
-        img_idx = R.drawable.pressure_nightmode;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_RAINSENSOR:
-        img_idx = R.drawable.rain_nightmode;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_WEIGHTSENSOR:
-        img_idx = R.drawable.weight_nightmode;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_NOLIQUIDSENSOR:
-        img_idx = active == 1 ? R.drawable.liquid_nightmode : R.drawable.noliquid_nightmode;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
-        img_idx = active == 1 ? R.drawable.dimmeron_nightmode : R.drawable.dimmeroff_nightmode;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING:
-        img_idx = active == 1 ? R.drawable.rgbon_nightmode : R.drawable.rgboff_nightmode;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
-        switch (active) {
-          case 0:
-            img_idx = R.drawable.dimmerrgboffoff_nightmode;
-            break;
-          case 1:
-            img_idx = R.drawable.dimmerrgbonoff_nightmode;
-            break;
-          case 2:
-            img_idx = R.drawable.dimmerrgboffon_nightmode;
-            break;
-          case 3:
-            img_idx = R.drawable.dimmerrgbonon_nightmode;
-            break;
-        }
-
-        break;
-
-      case SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR:
-        img_idx = R.drawable.depthsensor_nightmode;
-        break;
-
-      case SuplaConst.SUPLA_CHANNELFNC_DISTANCESENSOR:
-        img_idx = R.drawable.distancesensor_nightmode;
-        break;
-
-      case SuplaConst.SUPLA_CHANNELFNC_OPENINGSENSOR_WINDOW:
-        img_idx = active == 1 ? R.drawable.windowclosed_nightmode : R.drawable.windowopen_nightmode;
-        break;
-
-      case SuplaConst.SUPLA_CHANNELFNC_HOTELCARDSENSOR:
-        img_idx = active == 1 ? R.drawable.fnc_hotel_card_on_nm : R.drawable.fnc_hotel_card_off_nm;
-        break;
-
-      case SuplaConst.SUPLA_CHANNELFNC_ALARMARMAMENTSENSOR:
-        img_idx =
-            active == 1
-                ? R.drawable.fnc_alarm_armament_on_nm
-                : R.drawable.fnc_alarm_armament_off_nm;
-        break;
-
-      case SuplaConst.SUPLA_CHANNELFNC_MAILSENSOR:
-        img_idx = active == 1 ? R.drawable.mail_nightmode : R.drawable.nomail_nightmode;
-        break;
-
-      case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
-      case SuplaConst.SUPLA_CHANNELFNC_IC_ELECTRICITY_METER:
-        switch (getAltIcon()) {
-          case 1:
-            img_idx = R.drawable.powerstation_nightmode;
-            break;
-          default:
-            img_idx = R.drawable.electricitymeter_nightmode;
-        }
-        break;
-
-      case SuplaConst.SUPLA_CHANNELFNC_IC_GAS_METER:
-        img_idx = R.drawable.gasmeter_nightmode;
-        break;
-
-      case SuplaConst.SUPLA_CHANNELFNC_IC_WATER_METER:
-        img_idx = R.drawable.watermeter_nightmode;
-        break;
-
-      case SuplaConst.SUPLA_CHANNELFNC_IC_HEAT_METER:
-        img_idx = R.drawable.heatmeter_nightmode;
-        break;
-
-      case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
-        switch (getAltIcon()) {
-          case 1:
-            img_idx =
-                active == 1
-                    ? R.drawable.thermostaton_1_nightmode
-                    : R.drawable.thermostatoff_1_nightmode;
-            break;
-          case 2:
-            img_idx =
-                active == 1
-                    ? R.drawable.thermostaton_2_nightmode
-                    : R.drawable.thermostatoff_2_nightmode;
-            break;
-          case 3:
-            img_idx =
-                active == 1
-                    ? R.drawable.thermostaton_3_nightmode
-                    : R.drawable.thermostatoff_3_nightmode;
-            break;
-          default:
-            img_idx =
-                active == 1
-                    ? R.drawable.thermostaton_nightmode
-                    : R.drawable.thermostatoff_nightmode;
-        }
-
-        break;
-
-      case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
-        switch (getAltIcon()) {
-          case 1:
-            img_idx =
-                active == 1
-                    ? R.drawable.thermostat_hp_homepluson_1_nightmode
-                    : R.drawable.thermostat_hp_homeplusoff_1_nightmode;
-            break;
-          case 2:
-            img_idx =
-                active == 1
-                    ? R.drawable.thermostat_hp_homepluson_2_nightmode
-                    : R.drawable.thermostat_hp_homeplusoff_2_nightmode;
-            break;
-          case 3:
-            img_idx =
-                active == 1
-                    ? R.drawable.thermostat_hp_homepluson_3_nightmode
-                    : R.drawable.thermostat_hp_homeplusoff_3_nightmode;
-            break;
-          default:
-            img_idx =
-                active == 1
-                    ? R.drawable.thermostat_hp_homepluson_nightmode
-                    : R.drawable.thermostat_hp_homeplusoff_nightmode;
-        }
-
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
-        img_idx = active == 1 ? R.drawable.valveclosed_nightmode : R.drawable.valveopen_nightmode;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL:
-        switch (getAltIcon()) {
-          case 1:
-            img_idx =
-                active == 1
-                    ? R.drawable.digiglasstransparent1_nightmode
-                    : R.drawable.digiglass1_nightmode;
-            break;
-          default:
-            img_idx =
-                active == 1
-                    ? R.drawable.digiglasstransparent_nightmode
-                    : R.drawable.digiglass_nightmode;
-        }
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL:
-        switch (getAltIcon()) {
-          case 1:
-            img_idx =
-                active == 1
-                    ? R.drawable.digiglassvtransparent1_nightmode
-                    : R.drawable.digiglass1_nightmode;
-            break;
-          default:
-            img_idx =
-                active == 1
-                    ? R.drawable.digiglassvtransparent_nightmode
-                    : R.drawable.digiglass_nightmode;
-        }
-        break;
-    }
-
-    return img_idx;
-  }
-
-  private int getImageResourceId(WhichOne whichImage, int active, boolean _50percent) {
-    int img_idx = -1;
-
-    switch (getFunc()) {
-      case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATEWAY:
-      case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK:
-        img_idx = active == 1 ? R.drawable.gatewayclosed : R.drawable.gatewayopen;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATE:
-      case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE:
-        switch (getAltIcon()) {
-          case 1:
-            if (_50percent) {
-              img_idx = R.drawable.gatealt1closed50percent;
-            } else {
-              img_idx = active > 0 ? R.drawable.gatealt1closed : R.drawable.gatealt1open;
-            }
-
-            break;
-          case 2:
-            img_idx = active > 0 ? R.drawable.barierclosed : R.drawable.barieropen;
-            break;
-          default:
-            if (_50percent) {
-              img_idx = R.drawable.gateclosed50percent;
-            } else {
-              img_idx = active > 0 ? R.drawable.gateclosed : R.drawable.gateopen;
-            }
-        }
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GARAGEDOOR:
-      case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR:
-        if (_50percent) {
-          img_idx = R.drawable.garagedoorclosed50percent;
-        } else {
-          img_idx = active > 0 ? R.drawable.garagedoorclosed : R.drawable.garagedooropen;
-        }
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_DOOR:
-      case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK:
-        img_idx = active == 1 ? R.drawable.doorclosed : R.drawable.dooropen;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROLLERSHUTTER:
-      case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
-        img_idx = active == 1 ? R.drawable.rollershutterclosed : R.drawable.rollershutteropen;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROOFWINDOW:
-      case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW:
-        img_idx = active == 1 ? R.drawable.roofwindowclosed : R.drawable.roofwindowopen;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
-        switch (getAltIcon()) {
-          case 1:
-            img_idx = active == 1 ? R.drawable.tvon : R.drawable.tvoff;
-            break;
-          case 2:
-            img_idx = active == 1 ? R.drawable.radioon : R.drawable.radiooff;
-            break;
-          case 3:
-            img_idx = active == 1 ? R.drawable.pcon : R.drawable.pcoff;
-            break;
-          case 4:
-            img_idx = active == 1 ? R.drawable.fanon : R.drawable.fanoff;
-            break;
-          default:
-            img_idx = active == 1 ? R.drawable.poweron : R.drawable.poweroff;
-        }
-
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
-        switch (getAltIcon()) {
-          case 1:
-            img_idx = active == 1 ? R.drawable.xmastreeon : R.drawable.xmastreeoff;
-            break;
-          case 2:
-            img_idx = active == 1 ? R.drawable.uvon : R.drawable.uvoff;
-            break;
-          default:
-            img_idx = active == 1 ? R.drawable.lighton : R.drawable.lightoff;
-        }
-
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
-        switch (getAltIcon()) {
-          case 1:
-            img_idx = active == 1 ? R.drawable.staircasetimeron_1 : R.drawable.staircasetimeroff_1;
-            break;
-          default:
-            img_idx = active == 1 ? R.drawable.staircasetimeron : R.drawable.staircasetimeroff;
-        }
-
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER:
-        img_idx = R.drawable.fnc_thermostat_dhw;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT:
-        if (getChannelValue() != null) {
-          if (getChannelValue().asThermostatValue().getSubfunction()
-              == ThermostatSubfunction.HEAT) {
-            img_idx = R.drawable.fnc_thermostat_heat;
-          } else {
-            img_idx = R.drawable.fnc_thermostat_cool;
-          }
-        }
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
-        img_idx = R.drawable.thermometer;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_HUMIDITY:
-        img_idx = R.drawable.humidity;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE:
-        img_idx = whichImage == WhichOne.First ? R.drawable.thermometer : R.drawable.humidity;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_WINDSENSOR:
-        img_idx = R.drawable.wind;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_PRESSURESENSOR:
-        img_idx = R.drawable.pressure;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_RAINSENSOR:
-        img_idx = R.drawable.rain;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_WEIGHTSENSOR:
-        img_idx = R.drawable.weight;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_NOLIQUIDSENSOR:
-        img_idx = active == 1 ? R.drawable.liquid : R.drawable.noliquid;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
-        img_idx = active == 1 ? R.drawable.dimmeron : R.drawable.dimmeroff;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING:
-        img_idx = active == 1 ? R.drawable.rgbon : R.drawable.rgboff;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
-        switch (active) {
-          case 0:
-            img_idx = R.drawable.dimmerrgboffoff;
-            break;
-          case 1:
-            img_idx = R.drawable.dimmerrgbonoff;
-            break;
-          case 2:
-            img_idx = R.drawable.dimmerrgboffon;
-            break;
-          case 3:
-            img_idx = R.drawable.dimmerrgbonon;
-            break;
-        }
-
-        break;
-
-      case SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR:
-        img_idx = R.drawable.depthsensor;
-        break;
-
-      case SuplaConst.SUPLA_CHANNELFNC_DISTANCESENSOR:
-        img_idx = R.drawable.distancesensor;
-        break;
-
-      case SuplaConst.SUPLA_CHANNELFNC_OPENINGSENSOR_WINDOW:
-        img_idx = active == 1 ? R.drawable.windowclosed : R.drawable.windowopen;
-        break;
-
-      case SuplaConst.SUPLA_CHANNELFNC_HOTELCARDSENSOR:
-        img_idx = active == 1 ? R.drawable.fnc_hotel_card_on : R.drawable.fnc_hotel_card_off;
-        break;
-
-      case SuplaConst.SUPLA_CHANNELFNC_ALARMARMAMENTSENSOR:
-        img_idx =
-            active == 1 ? R.drawable.fnc_alarm_armament_on : R.drawable.fnc_alarm_armament_off;
-        break;
-
-      case SuplaConst.SUPLA_CHANNELFNC_MAILSENSOR:
-        img_idx = active == 1 ? R.drawable.mail : R.drawable.nomail;
-        break;
-
-      case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
-      case SuplaConst.SUPLA_CHANNELFNC_IC_ELECTRICITY_METER:
-        switch (getAltIcon()) {
-          case 1:
-            img_idx = R.drawable.powerstation;
-            break;
-          default:
-            img_idx = R.drawable.electricitymeter;
-        }
-        break;
-
-      case SuplaConst.SUPLA_CHANNELFNC_IC_GAS_METER:
-        img_idx = R.drawable.gasmeter;
-        break;
-
-      case SuplaConst.SUPLA_CHANNELFNC_IC_WATER_METER:
-        img_idx = R.drawable.watermeter;
-        break;
-
-      case SuplaConst.SUPLA_CHANNELFNC_IC_HEAT_METER:
-        img_idx = R.drawable.heatmeter;
-        break;
-
-      case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
-        switch (getAltIcon()) {
-          case 1:
-            img_idx = active == 1 ? R.drawable.thermostaton_1 : R.drawable.thermostatoff_1;
-            break;
-          case 2:
-            img_idx = active == 1 ? R.drawable.thermostaton_2 : R.drawable.thermostatoff_2;
-            break;
-          case 3:
-            img_idx = active == 1 ? R.drawable.thermostaton_3 : R.drawable.thermostatoff_3;
-            break;
-          default:
-            img_idx = active == 1 ? R.drawable.thermostaton : R.drawable.thermostatoff;
-        }
-
-        break;
-
-      case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
-        switch (getAltIcon()) {
-          case 1:
-            img_idx =
-                active == 1
-                    ? R.drawable.thermostat_hp_homepluson_1
-                    : R.drawable.thermostat_hp_homeplusoff_1;
-            break;
-          case 2:
-            img_idx =
-                active == 1
-                    ? R.drawable.thermostat_hp_homepluson_2
-                    : R.drawable.thermostat_hp_homeplusoff_2;
-            break;
-          case 3:
-            img_idx =
-                active == 1
-                    ? R.drawable.thermostat_hp_homepluson_3
-                    : R.drawable.thermostat_hp_homeplusoff_3;
-            break;
-          default:
-            img_idx =
-                active == 1
-                    ? R.drawable.thermostat_hp_homepluson
-                    : R.drawable.thermostat_hp_homeplusoff;
-        }
-
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
-        img_idx = active == 1 ? R.drawable.valveclosed : R.drawable.valveopen;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL:
-        switch (getAltIcon()) {
-          case 1:
-            img_idx = active == 1 ? R.drawable.digiglasstransparent1 : R.drawable.digiglass1;
-            break;
-          default:
-            img_idx = active == 1 ? R.drawable.digiglasstransparent : R.drawable.digiglass;
-        }
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL:
-        switch (getAltIcon()) {
-          case 1:
-            img_idx = active == 1 ? R.drawable.digiglassvtransparent1 : R.drawable.digiglass1;
-            break;
-          default:
-            img_idx = active == 1 ? R.drawable.digiglassvtransparent : R.drawable.digiglass;
-        }
-        break;
-      default:
-        img_idx = R.drawable.ic_unknown_channel;
-    }
-
-    return img_idx;
-  }
-
-  public ImageId getImageIdx(boolean nightMode, WhichOne whichImage, int active) {
-    if (whichImage != WhichOne.First
-        && getFunc() != SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE) {
-      return null;
-    }
-
-    if (getUserIconId() > 0) {
-      ImageId Id;
-
-      switch (getFunc()) {
-        case SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE:
-          Id = new ImageId(getUserIconId(), whichImage == WhichOne.First ? 2 : 1, profileId);
-          break;
-        case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
-          Id = new ImageId(getUserIconId(), 1, profileId);
-          break;
-        case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE:
-        case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR:
-          Id =
-              new ImageId(
-                  getUserIconId(),
-                  (active & 0x1) > 0 ? 2 : ((active & 0x2) > 0 ? 3 : 1),
-                  profileId);
-          break;
-        case SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT:
-        case SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER:
-          if (getChannelValue() != null) {
-            if (getChannelValue().asThermostatValue().getSubfunction()
-                == ThermostatSubfunction.HEAT) {
-              Id = new ImageId(getUserIconId(), 1, profileId);
-            } else {
-              Id = new ImageId(getUserIconId(), 2, profileId);
-            }
-            break;
-          }
-        default:
-          Id = new ImageId(getUserIconId(), active + 1, profileId);
-          break;
-      }
-
-      if (ImageCache.bitmapExists(Id)) {
-        return Id;
-      }
-    }
-
-    boolean _50percent = (active & 0x2) == 0x2 && (active & 0x1) == 0;
-    int img_idx;
-
-    if (nightMode) {
-      img_idx = getImageResourceIdForNightMode(whichImage, active, _50percent);
-    } else {
-      img_idx = getImageResourceId(whichImage, active, _50percent);
-    }
-    return new ImageId(img_idx);
-  }
-
-  public ImageId getImageIdx(WhichOne whichImage, int active) {
-    return getImageIdx(false, whichImage, active);
-  }
-
-  protected ImageId getImageIdx(WhichOne whichImage, ChannelValue value) {
-    return getImageIdx(whichImage, imgActive(value));
-  }
-
-  public abstract ImageId getImageIdx(WhichOne whichImage);
-
-  public ImageId getImageIdx() {
-    return getImageIdx(WhichOne.First);
-  }
-
   @SuppressLint("DefaultLocale")
   protected CharSequence getHumanReadableValue(WhichOne whichOne, ChannelValue value) {
 
     if (value == null) {
-      return "";
+      return ValuesFormatter.NO_VALUE_TEXT;
     }
 
     if (whichOne == WhichOne.Second) {
@@ -958,7 +232,7 @@ public abstract class ChannelBase extends DbItem {
         if (getOnLine() && value.getHumidity() >= 0) {
           return String.format("%.1f", value.getHumidity());
         } else {
-          return "---";
+          return ValuesFormatter.NO_VALUE_TEXT;
         }
       }
 
@@ -972,7 +246,7 @@ public abstract class ChannelBase extends DbItem {
         if (getOnLine() && getTemperaturePresenter().isTemperatureDefined(temperature)) {
           return getTemperaturePresenter().getTemperatureString(temperature, true, true);
         } else {
-          return "---";
+          return ValuesFormatter.NO_VALUE_TEXT;
         }
 
       case SuplaConst.SUPLA_CHANNELFNC_HUMIDITY:
@@ -981,7 +255,7 @@ public abstract class ChannelBase extends DbItem {
         if (getOnLine() && humidity >= 0) {
           return String.format("%.1f", humidity);
         } else {
-          return "---";
+          return ValuesFormatter.NO_VALUE_TEXT;
         }
 
       case SuplaConst.SUPLA_CHANNELFNC_WINDSENSOR:
@@ -990,7 +264,7 @@ public abstract class ChannelBase extends DbItem {
         if (getOnLine() && wind >= 0) {
           return String.format("%.1f m/s", wind);
         } else {
-          return "--- m/s";
+          return ValuesFormatter.NO_VALUE_TEXT;
         }
       case SuplaConst.SUPLA_CHANNELFNC_PRESSURESENSOR:
         double pressure = value.getDouble(-1);
@@ -998,15 +272,15 @@ public abstract class ChannelBase extends DbItem {
         if (getOnLine() && pressure >= 0) {
           return String.format("%d hPa", (int) pressure);
         } else {
-          return "--- hPa";
+          return ValuesFormatter.NO_VALUE_TEXT;
         }
       case SuplaConst.SUPLA_CHANNELFNC_RAINSENSOR:
         double rain = value.getDouble(-1);
 
         if (getOnLine() && rain >= 0) {
-          return String.format("%.2f l/m\u00B2", rain / 1000.00);
+          return String.format("%.2f l/m²", rain / 1000.00);
         } else {
-          return "--- l/m\u00B2";
+          return ValuesFormatter.NO_VALUE_TEXT;
         }
       case SuplaConst.SUPLA_CHANNELFNC_WEIGHTSENSOR:
         double weight = value.getDouble(-1);
@@ -1018,7 +292,7 @@ public abstract class ChannelBase extends DbItem {
             return String.format("%d g", (int) weight);
           }
         } else {
-          return "--- kg";
+          return ValuesFormatter.NO_VALUE_TEXT;
         }
 
       case SuplaConst.SUPLA_CHANNELFNC_DISTANCESENSOR:
@@ -1048,12 +322,14 @@ public abstract class ChannelBase extends DbItem {
           }
 
         } else {
-          return "--- m";
+          return ValuesFormatter.NO_VALUE_TEXT;
         }
 
       case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
         double doubleValue = value.getTotalForwardActiveEnergy();
-        return doubleValue > 0 ? String.format("%.2f kWh", doubleValue) : "--- kWh";
+        return doubleValue > 0
+            ? String.format("%.2f kWh", doubleValue)
+            : ValuesFormatter.NO_VALUE_TEXT;
 
       case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
       case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
@@ -1108,9 +384,5 @@ public abstract class ChannelBase extends DbItem {
   public enum WhichOne {
     First,
     Second
-  }
-
-  protected ChannelValue getChannelValue() {
-    return null;
   }
 }

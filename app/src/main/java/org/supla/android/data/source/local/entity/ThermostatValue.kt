@@ -17,6 +17,9 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import androidx.annotation.DrawableRes
+import org.supla.android.R
+import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
 import org.supla.android.data.source.remote.thermostat.SuplaThermostatFlags
@@ -24,8 +27,11 @@ import org.supla.android.data.source.remote.thermostat.SuplaThermostatFlags.HEAT
 import org.supla.android.extensions.fromSuplaTemperature
 import org.supla.android.extensions.toShort
 import org.supla.android.extensions.toShortVararg
+import org.supla.android.ui.lists.data.IssueIconType
 
-data class ThermostatValue(
+@Suppress("DataClassPrivateConstructor")
+data class ThermostatValue private constructor(
+  val online: Boolean,
   val state: ThermostatState,
   val mode: SuplaHvacMode,
   val setpointTemperatureHeat: Float,
@@ -36,9 +42,48 @@ data class ThermostatValue(
   val subfunction: ThermostatSubfunction
     get() = if (flags.contains(HEAT_OR_COOL)) ThermostatSubfunction.COOL else ThermostatSubfunction.HEAT
 
+  @DrawableRes
+  fun getIndicatorIcon() = when {
+    online && flags.contains(SuplaThermostatFlags.FORCED_OFF_BY_SENSOR) -> R.drawable.ic_sensor_alert
+    online && flags.contains(SuplaThermostatFlags.COOLING) -> R.drawable.ic_cooling
+    online && flags.contains(SuplaThermostatFlags.HEATING) -> R.drawable.ic_heating
+    online && mode != SuplaHvacMode.OFF -> R.drawable.ic_standby
+    else -> null
+  }
+
+  fun getIssueIconType() = when {
+    online && flags.contains(SuplaThermostatFlags.THERMOMETER_ERROR) -> IssueIconType.ERROR
+    online && flags.contains(SuplaThermostatFlags.CLOCK_ERROR) -> IssueIconType.WARNING
+    else -> null
+  }
+
+  fun getSetpointText(valuesFormatter: ValuesFormatter): String {
+    val temperatureMin = valuesFormatter.getTemperatureString(setpointTemperatureHeat, true)
+    val temperatureMax = valuesFormatter.getTemperatureString(setpointTemperatureCool, true)
+    return when {
+      online.not() -> ""
+      mode == SuplaHvacMode.COOL -> temperatureMax
+      mode == SuplaHvacMode.HEAT_COOL -> "$temperatureMin - $temperatureMax"
+      mode == SuplaHvacMode.HEAT -> temperatureMin
+      mode == SuplaHvacMode.OFF -> "Off"
+      else -> ""
+    }
+  }
+
+  fun getIssueMessage(): Int? {
+    return if (flags.contains(SuplaThermostatFlags.THERMOMETER_ERROR)) {
+      R.string.thermostat_thermometer_error
+    } else if (flags.contains(SuplaThermostatFlags.CLOCK_ERROR)) {
+      R.string.thermostat_clock_error
+    } else {
+      null
+    }
+  }
+
   companion object {
-    fun from(bytes: ByteArray): ThermostatValue {
+    fun from(online: Boolean, bytes: ByteArray): ThermostatValue {
       return ThermostatValue(
+        online = online,
         state = ThermostatState(bytes[0].toShort()),
         mode = SuplaHvacMode.from(bytes[1]),
         setpointTemperatureHeat = bytes.toTemperature(2, 3),

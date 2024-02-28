@@ -32,7 +32,6 @@ import org.supla.android.core.SuplaAppProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.networking.suplacloud.SuplaCloudConfigHolder
 import org.supla.android.data.source.ProfileRepository
-import org.supla.android.db.DbHelper
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.lib.SuplaClient
 import org.supla.android.lib.SuplaClientMessageHandler
@@ -40,8 +39,9 @@ import org.supla.android.lib.singlecall.SingleCall
 import org.supla.android.profile.MultiAccountProfileManager
 import org.supla.android.profile.ProfileIdHolder
 import org.supla.android.profile.ProfileManager
+import org.supla.android.usecases.icon.LoadUserIconsIntoCacheUseCase
+import org.supla.android.widget.WidgetManager
 import org.supla.android.widget.WidgetPreferences
-import org.supla.android.widget.WidgetVisibilityHandler
 import javax.inject.Singleton
 
 @Module
@@ -55,24 +55,24 @@ class ApplicationModule {
   @Provides
   @Singleton
   fun provideProfileManager(
-    dbHelper: DbHelper,
     profileRepository: ProfileRepository,
     profileIdHolder: ProfileIdHolder,
-    widgetVisibilityHandler: WidgetVisibilityHandler,
+    widgetManager: WidgetManager,
     updateEventsManager: UpdateEventsManager,
     suplaAppProvider: SuplaAppProvider,
     singleCallProvider: SingleCall.Provider,
-    suplaCloudConfigHolder: SuplaCloudConfigHolder
+    suplaCloudConfigHolder: SuplaCloudConfigHolder,
+    loadUserIconsIntoCacheUseCase: LoadUserIconsIntoCacheUseCase
   ): ProfileManager {
     return MultiAccountProfileManager(
-      dbHelper,
       profileRepository,
       profileIdHolder,
-      widgetVisibilityHandler,
+      widgetManager,
       updateEventsManager,
       suplaAppProvider,
       singleCallProvider,
-      suplaCloudConfigHolder
+      suplaCloudConfigHolder,
+      loadUserIconsIntoCacheUseCase
     )
   }
 

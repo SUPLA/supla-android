@@ -6,5 +6,17 @@
     android:icon="@drawable/account"
     android:title="@string/edit_account"
     android:visible="false"
-    app:showAsAction="always" />
+    app:showAsAction="ifRoom" />
+  <item
+    android:id="@+id/toolbar_delete"
+    android:icon="@drawable/ic_delete"
+    android:title="@string/toolbar_delete_all"
+    android:visible="false"
+    app:showAsAction="never" />
+  <item
+    android:id="@+id/toolbar_delete_older_than_month"
+    android:icon="@drawable/ic_delete"
+    android:title="@string/toolbar_delete_older_than_month"
+    android:visible="false"
+    app:showAsAction="never" />
 </menu>

@@ -128,6 +128,8 @@ public class SuplaConst {
   public static final int SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER = 426;
   public static final int SUPLA_CHANNELFNC_VALVE_OPENCLOSE = 500;
   public static final int SUPLA_CHANNELFNC_VALVE_PERCENTAGE = 510;
+  public static final int SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT = 520;
+  public static final int SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER = 530;
   public static final int SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL = 800;
   public static final int SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL = 810;
 
@@ -151,29 +153,29 @@ public class SuplaConst {
   public static final int SUPLA_CHANNELTYPE_IMPULSE_COUNTER = 5010;
   public static final int SUPLA_CHANNELTYPE_BRIDGE = 8000;
 
-  public static final int SUPLA_CHANNEL_FLAG_ZWAVE_BRIDGE = 0x0001;
-  public static final int SUPLA_CHANNEL_FLAG_IR_BRIDGE = 0x0002;
-  public static final int SUPLA_CHANNEL_FLAG_RF_BRIDGE = 0x0004;
+  public static final long SUPLA_CHANNEL_FLAG_ZWAVE_BRIDGE = 0x0001;
+  public static final long SUPLA_CHANNEL_FLAG_IR_BRIDGE = 0x0002;
+  public static final long SUPLA_CHANNEL_FLAG_RF_BRIDGE = 0x0004;
 
-  public static final int SUPLA_CHANNEL_FLAG_CHART_TYPE_BAR = 0x0010;
-  public static final int SUPLA_CHANNEL_FLAG_CHART_DS_TYPE_DIFFERENTAL = 0x0020;
-  public static final int SUPLA_CHANNEL_FLAG_CHART_INTERPOLATE_MEASUREMENTS = 0x0040;
+  public static final long SUPLA_CHANNEL_FLAG_CHART_TYPE_BAR = 0x0010;
+  public static final long SUPLA_CHANNEL_FLAG_CHART_DS_TYPE_DIFFERENTAL = 0x0020;
+  public static final long SUPLA_CHANNEL_FLAG_CHART_INTERPOLATE_MEASUREMENTS = 0x0040;
 
-  public static final int SUPLA_CHANNEL_FLAG_RS_SBS_AND_STOP_ACTIONS = 0x0080;
-  public static final int SUPLA_CHANNEL_FLAG_RS_AUTO_CALIBRATION = 0x1000;
-  public static final int SUPLA_CHANNEL_FLAG_CALCFG_RESET_COUNTERS = 0x2000;
-  public static final int SUPLA_CHANNEL_FLAG_CALCFG_RECALIBRATE = 0x4000;
-  public static final int SUPLA_CHANNEL_FLAG_CHANNELSTATE = 0x00010000;
-  public static final int SUPLA_CHANNEL_FLAG_PHASE1_UNSUPPORTED = 0x00020000;
-  public static final int SUPLA_CHANNEL_FLAG_PHASE2_UNSUPPORTED = 0x00040000;
-  public static final int SUPLA_CHANNEL_FLAG_PHASE3_UNSUPPORTED = 0x00080000;
-  public static final int SUPLA_CHANNEL_FLAG_TIME_SETTING_NOT_AVAILABLE = 0x00100000;
-  public static final int SUPLA_CHANNEL_FLAG_RSA_ENCRYPTED_PIN_REQUIRED = 0x00200000;
-  public static final int SUPLA_CHANNEL_FLAG_OFFLINE_DURING_REGISTRATION = 0x00400000;
-  public static final int SUPLA_CHANNEL_FLAG_ZIGBEE_BRIDGE = 0x00800000;
-  public static final int SUPLA_CHANNEL_FLAG_COUNTDOWN_TIMER_SUPPORTED = 0x01000000;
-  public static final int SUPLA_CHANNEL_FLAG_LIGHTSOURCELIFESPAN_SETTABLE = 0x02000000;
-  public static final int SUPLA_CHANNEL_FLAG_HAS_PARENT = 0x20000000;
+  public static final long SUPLA_CHANNEL_FLAG_RS_SBS_AND_STOP_ACTIONS = 0x0080;
+  public static final long SUPLA_CHANNEL_FLAG_RS_AUTO_CALIBRATION = 0x1000;
+  public static final long SUPLA_CHANNEL_FLAG_CALCFG_RESET_COUNTERS = 0x2000;
+  public static final long SUPLA_CHANNEL_FLAG_CALCFG_RECALIBRATE = 0x4000;
+  public static final long SUPLA_CHANNEL_FLAG_CHANNELSTATE = 0x00010000;
+  public static final long SUPLA_CHANNEL_FLAG_PHASE1_UNSUPPORTED = 0x00020000;
+  public static final long SUPLA_CHANNEL_FLAG_PHASE2_UNSUPPORTED = 0x00040000;
+  public static final long SUPLA_CHANNEL_FLAG_PHASE3_UNSUPPORTED = 0x00080000;
+  public static final long SUPLA_CHANNEL_FLAG_TIME_SETTING_NOT_AVAILABLE = 0x00100000;
+  public static final long SUPLA_CHANNEL_FLAG_RSA_ENCRYPTED_PIN_REQUIRED = 0x00200000;
+  public static final long SUPLA_CHANNEL_FLAG_OFFLINE_DURING_REGISTRATION = 0x00400000;
+  public static final long SUPLA_CHANNEL_FLAG_ZIGBEE_BRIDGE = 0x00800000;
+  public static final long SUPLA_CHANNEL_FLAG_COUNTDOWN_TIMER_SUPPORTED = 0x01000000;
+  public static final long SUPLA_CHANNEL_FLAG_LIGHTSOURCELIFESPAN_SETTABLE = 0x02000000;
+  public static final long SUPLA_CHANNEL_FLAG_HAS_PARENT = 0x20000000;
   public static final int SUPLA_EVENT_CONTROLLINGTHEGATEWAYLOCK = 10;
   public static final int SUPLA_EVENT_CONTROLLINGTHEGATE = 20;
   public static final int SUPLA_EVENT_CONTROLLINGTHEGARAGEDOOR = 30;
@@ -318,154 +320,6 @@ public class SuplaConst {
 
   public static final int SUPLA_CTR_ROLLER_SHUTTER_OPEN = 10;
   public static final int SUPLA_CTR_ROLLER_SHUTTER_CLOSE = 110;
-
-  public static String getCaption(int func, Context context) {
-
-    int idx = -1;
-
-    switch (func) {
-      case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATEWAY:
-        idx = R.string.channel_caption_gatewayopeningsensor;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK:
-        idx = R.string.channel_caption_gateway;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATE:
-        idx = R.string.channel_caption_gateopeningsensor;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE:
-        idx = R.string.channel_caption_gate;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GARAGEDOOR:
-        idx = R.string.channel_caption_garagedooropeningsensor;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR:
-        idx = R.string.channel_caption_garagedoor;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_DOOR:
-        idx = R.string.channel_caption_dooropeningsensor;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK:
-        idx = R.string.channel_caption_door;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROLLERSHUTTER:
-        idx = R.string.channel_caption_rsopeningsensor;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROOFWINDOW:
-        idx = R.string.channel_caption_roofwindowopeningsensor;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
-        idx = R.string.channel_caption_rollershutter;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW:
-        idx = R.string.channel_caption_roofwindow;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
-        idx = R.string.channel_caption_powerswith;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
-        idx = R.string.channel_caption_lightswith;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
-        idx = R.string.channel_caption_thermometer;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_HUMIDITY:
-        idx = R.string.channel_caption_humidity;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE:
-        idx = R.string.channel_caption_humidityandtemperature;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_WINDSENSOR:
-        idx = R.string.channel_caption_windsensor;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_PRESSURESENSOR:
-        idx = R.string.channel_caption_pressuresensor;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_RAINSENSOR:
-        idx = R.string.channel_caption_rainsensor;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_WEIGHTSENSOR:
-        idx = R.string.channel_caption_weightsensor;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_NOLIQUIDSENSOR:
-        idx = R.string.channel_caption_noliquidsensor;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
-        idx = R.string.channel_caption_dimmer;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING:
-        idx = R.string.channel_caption_rgblighting;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
-        idx = R.string.channel_caption_dimmerandrgblighting;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR:
-        idx = R.string.channel_caption_depthsensor;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_DISTANCESENSOR:
-        idx = R.string.channel_caption_distancesensor;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_OPENINGSENSOR_WINDOW:
-        idx = R.string.channel_caption_windowopeningsensor;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_HOTELCARDSENSOR:
-        idx = R.string.channel_caption_hotelcard;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_ALARMARMAMENTSENSOR:
-        idx = R.string.channel_caption_alarm_armament;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_MAILSENSOR:
-        idx = R.string.channel_caption_mailsensor;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
-        idx = R.string.channel_caption_staircasetimer;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
-      case SuplaConst.SUPLA_CHANNELFNC_IC_ELECTRICITY_METER:
-        idx = R.string.channel_caption_electricitymeter;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_IC_GAS_METER:
-        idx = R.string.channel_caption_gasmeter;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_IC_WATER_METER:
-        idx = R.string.channel_caption_watermeter;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_IC_HEAT_METER:
-        idx = R.string.channel_caption_heatmeter;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT:
-        //      case SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO:
-        //      case SuplaConst.SUPLA_CHANNELFNC_HVAC_DRYER:
-        //      case SuplaConst.SUPLA_CHANNELFNC_HVAC_FAN:
-        //      case SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_DIFFERENTIAL:
-      case SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER:
-      case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
-        idx = R.string.channel_caption_thermostat;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
-        idx = R.string.channel_caption_thermostat_hp_homeplus;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
-        idx = R.string.channel_caption_valve;
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL:
-      case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL:
-        idx = R.string.channel_caption_digiglass;
-        break;
-      default:
-        idx = R.string.channel_not_supported;
-    }
-
-    return context == null ? "" : context.getResources().getString(idx);
-  }
-
-  public static String getNotEmptyCaption(String caption, int func, Context context) {
-    if (context != null && caption.equals("")) {
-      caption = getCaption(func, context);
-    }
-
-    return caption.isEmpty() && func != 0 ? Integer.toString(func) : caption;
-  }
 
   public static String getFunctionName(int func, Context context) {
     int resId = -1;

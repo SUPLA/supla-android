@@ -31,6 +31,11 @@ class MainFragment :
     binding.mainViewPager.isUserInputEnabled = false
   }
 
+  override fun onResume() {
+    super.onResume()
+    binding.mainBottomBar.labelVisibilityMode = viewModel.getLabelVisibility()
+  }
+
   override fun handleEvents(event: MainViewEvent) {
   }
 

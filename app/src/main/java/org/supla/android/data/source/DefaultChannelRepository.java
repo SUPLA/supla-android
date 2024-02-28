@@ -32,18 +32,19 @@ import java.util.Set;
 import org.supla.android.core.infrastructure.DateProvider;
 import org.supla.android.data.source.local.ChannelDao;
 import org.supla.android.data.source.local.LocationDao;
+import org.supla.android.data.source.local.entity.ChannelGroupEntity;
+import org.supla.android.data.source.local.entity.ChannelGroupRelationEntity;
+import org.supla.android.data.source.local.view.ChannelGroupValueView;
+import org.supla.android.data.source.local.view.ChannelView;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelExtendedValue;
 import org.supla.android.db.ChannelGroup;
 import org.supla.android.db.ChannelGroupRelation;
 import org.supla.android.db.ChannelValue;
 import org.supla.android.db.Location;
-import org.supla.android.db.SuplaContract;
-import org.supla.android.lib.SuplaChannel;
 import org.supla.android.lib.SuplaChannelExtendedValue;
 import org.supla.android.lib.SuplaChannelGroup;
 import org.supla.android.lib.SuplaChannelGroupRelation;
-import org.supla.android.lib.SuplaChannelValue;
 import org.supla.android.lib.SuplaLocation;
 
 public class DefaultChannelRepository implements ChannelRepository {
@@ -65,11 +66,6 @@ public class DefaultChannelRepository implements ChannelRepository {
   }
 
   @Override
-  public ChannelValue getChannelValue(int channelId) {
-    return channelDao.getChannelValue(channelId);
-  }
-
-  @Override
   public ChannelGroup getChannelGroup(int groupId) {
     return channelDao.getChannelGroup(groupId);
   }
@@ -82,40 +78,6 @@ public class DefaultChannelRepository implements ChannelRepository {
   @Override
   public void updateChannelGroup(ChannelGroup channelGroup) {
     channelDao.update(channelGroup);
-  }
-
-  @Override
-  public boolean updateChannel(SuplaChannel suplaChannel) {
-    Location location = getLocation(suplaChannel.LocationID);
-    if (location == null) {
-      return false;
-    }
-
-    Channel channel = getChannel(suplaChannel.Id);
-    if (channel == null) {
-      channel = new Channel();
-      channel.Assign(suplaChannel, channelDao.getCachedProfileId().intValue());
-      channel.setVisible(1);
-      updateChannelPosition(location, channel);
-
-      channelDao.insert(channel);
-      return true;
-    } else if (channel.Diff(suplaChannel)
-        || channel.getLocationId() != suplaChannel.LocationID
-        || channel.getVisible() != 1) {
-
-      if (channel.getLocationId() != suplaChannel.LocationID) {
-        // channel changed location - position update needed.
-        updateChannelPosition(location, channel);
-      }
-      channel.Assign(suplaChannel, channelDao.getCachedProfileId().intValue());
-      channel.setVisible(1);
-
-      channelDao.update(channel);
-      return true;
-    }
-
-    return false;
   }
 
   @Override
@@ -150,32 +112,6 @@ public class DefaultChannelRepository implements ChannelRepository {
       channelDao.update(channelGroup);
       return true;
     }
-    return false;
-  }
-
-  @Override
-  public boolean updateChannelValue(SuplaChannelValue channelValue, int channelId, boolean online) {
-    ChannelValue value = getChannelValue(channelId);
-
-    if (value == null) {
-      value = new ChannelValue();
-      value.AssignSuplaChannelValue(channelValue);
-      value.setChannelId(channelId);
-      value.setOnLine(online);
-
-      channelDao.insert(value);
-      return true;
-    } else if (value.Diff(channelValue) || value.getOnLine() != online) {
-
-      if (online) {
-        value.AssignSuplaChannelValue(channelValue);
-      }
-      value.setOnLine(online);
-
-      channelDao.update(value);
-      return true;
-    }
-
     return false;
   }
 
@@ -248,9 +184,7 @@ public class DefaultChannelRepository implements ChannelRepository {
     ChannelGroup channelGroup = null;
     if (c.moveToFirst()) {
       do {
-        int groupId =
-            c.getInt(
-                c.getColumnIndex(SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_GROUPID));
+        int groupId = c.getInt(c.getColumnIndex(ChannelGroupValueView.COLUMN_GROUP_REMOTE_ID));
 
         if (channelGroup == null) {
           channelGroup = getChannelGroup(groupId);
@@ -269,9 +203,7 @@ public class DefaultChannelRepository implements ChannelRepository {
 
         if (!c.isLast()) {
           c.moveToNext();
-          groupId =
-              c.getInt(
-                  c.getColumnIndex(SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_GROUPID));
+          groupId = c.getInt(c.getColumnIndex(ChannelGroupValueView.COLUMN_GROUP_REMOTE_ID));
           c.moveToPrevious();
         }
 
@@ -323,17 +255,17 @@ public class DefaultChannelRepository implements ChannelRepository {
   public Cursor getChannelListCursorForGroup(int groupId) {
     String where =
         "C."
-            + SuplaContract.ChannelViewEntry.COLUMN_NAME_CHANNELID
+            + ChannelView.COLUMN_CHANNEL_REMOTE_ID
             + " IN ( SELECT "
-            + SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_CHANNELID
+            + ChannelGroupRelationEntity.COLUMN_CHANNEL_ID
             + " FROM "
-            + SuplaContract.ChannelGroupRelationEntry.TABLE_NAME
+            + ChannelGroupRelationEntity.TABLE_NAME
             + " WHERE "
-            + SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_GROUPID
+            + ChannelGroupRelationEntity.COLUMN_GROUP_ID
             + " = "
             + groupId
             + " AND "
-            + SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_VISIBLE
+            + ChannelGroupRelationEntity.COLUMN_VISIBLE
             + " > 0 ) ";
 
     return channelDao.getChannelListCursorWithDefaultOrder(where);
@@ -409,10 +341,10 @@ public class DefaultChannelRepository implements ChannelRepository {
   @Override
   public Cursor getAllProfileChannels(Long profileId) {
     return channelDao.getAllChannels(
-        SuplaContract.ChannelViewEntry.COLUMN_NAME_FUNC
+        ChannelView.COLUMN_CHANNEL_FUNCTION
             + " <> 0 "
             + " AND (C."
-            + SuplaContract.ChannelViewEntry.COLUMN_NAME_PROFILEID
+            + ChannelView.COLUMN_CHANNEL_PROFILE_ID
             + " = "
             + profileId
             + ") ");
@@ -421,12 +353,6 @@ public class DefaultChannelRepository implements ChannelRepository {
   @Override
   public Cursor getAllProfileChannelGroups(Long profileId) {
     return channelDao.getAllChannelGroupsForProfileId(profileId);
-  }
-
-  @Override
-  public Cursor getAllExistingProfileChannels(Long profileId) {
-    return channelDao.getAllChannels(
-        "C." + SuplaContract.ChannelViewEntry.COLUMN_NAME_PROFILEID + " = " + profileId);
   }
 
   @NonNull
@@ -454,7 +380,7 @@ public class DefaultChannelRepository implements ChannelRepository {
         do {
           orderedItems.add(
               channelListCursor.getLong(
-                  channelListCursor.getColumnIndex(SuplaContract.ChannelViewEntry._ID)));
+                  channelListCursor.getColumnIndex(ChannelView.COLUMN_CHANNEL_ID)));
         } while (channelListCursor.moveToNext());
       }
     }
@@ -482,7 +408,7 @@ public class DefaultChannelRepository implements ChannelRepository {
         do {
           orderedItems.add(
               channelListCursor.getLong(
-                  channelListCursor.getColumnIndex(SuplaContract.ChannelGroupEntry._ID)));
+                  channelListCursor.getColumnIndex(ChannelGroupEntity.COLUMN_ID)));
         } while (channelListCursor.moveToNext());
       }
     }
@@ -508,14 +434,6 @@ public class DefaultChannelRepository implements ChannelRepository {
     // Shift items in the table
     Long removedId = orderedItems.remove(initialPosition);
     orderedItems.add(finalPosition, removedId);
-  }
-
-  private void updateChannelPosition(Location location, Channel channel) {
-    if (location.getSorting() == Location.SortingType.DEFAULT) {
-      channel.setPosition(0);
-    } else {
-      channel.setPosition(channelDao.getChannelCountForLocation(location.getLocationId()) + 1);
-    }
   }
 
   private void updateChannelGroupPosition(Location location, ChannelGroup channelGroup) {

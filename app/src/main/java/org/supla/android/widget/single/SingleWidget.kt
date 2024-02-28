@@ -30,17 +30,17 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import org.supla.android.R
 import org.supla.android.Trace
+import org.supla.android.data.model.general.IconType
 import org.supla.android.data.source.local.entity.Scene
 import org.supla.android.db.Channel
-import org.supla.android.db.ChannelBase
+import org.supla.android.extensions.getChannelIconUseCase
+import org.supla.android.extensions.isGpm
 import org.supla.android.extensions.isThermometer
 import org.supla.android.images.ImageCache
 import org.supla.android.lib.SuplaConst
 import org.supla.android.widget.WidgetConfiguration
-import org.supla.android.widget.onoff.getActiveValue
 import org.supla.android.widget.shared.WidgetProviderBase
 import org.supla.android.widget.shared.configuration.ItemType
-import org.supla.android.widget.shared.configuration.WidgetAction
 import org.supla.android.widget.shared.getWorkId
 import org.supla.android.widget.shared.isWidgetValid
 
@@ -134,30 +134,24 @@ class SingleWidget : WidgetProviderBase() {
     channel.altIcon = configuration.altIcon
     channel.userIconId = configuration.userIcon
 
-    if (channel.isThermometer()) {
+    if (channel.isThermometer() || channel.isGpm()) {
       views.setTextViewText(R.id.single_widget_text, configuration.value)
       views.setViewVisibility(R.id.single_widget_button, View.GONE)
       views.setViewVisibility(R.id.single_widget_button_night_mode, View.GONE)
       views.setViewVisibility(R.id.single_widget_text, View.VISIBLE)
     } else {
-      val active = if (turnOnOrClose(configuration)) {
-        getActiveValue(configuration.itemFunction)
-      } else {
-        0
-      }
-
       views.setImageViewBitmap(
         R.id.single_widget_button,
         ImageCache.getBitmap(
           context,
-          channel.getImageIdx(false, ChannelBase.WhichOne.First, active)
+          context.getChannelIconUseCase(channel, IconType.SINGLE, false)
         )
       )
       views.setImageViewBitmap(
         R.id.single_widget_button_night_mode,
         ImageCache.getBitmap(
           context,
-          channel.getImageIdx(true, ChannelBase.WhichOne.First, active)
+          context.getChannelIconUseCase(channel, IconType.SINGLE, true)
         )
       )
       views.setViewVisibility(R.id.single_widget_button, View.VISIBLE)
@@ -190,19 +184,20 @@ internal fun pendingIntent(context: Context, intentAction: String, widgetId: Int
   )
 }
 
-internal fun turnOnOrClose(configuration: WidgetConfiguration): Boolean {
-  return configuration.actionId == WidgetAction.TURN_ON.actionId ||
-    configuration.actionId == WidgetAction.MOVE_DOWN.actionId
-}
-
 fun updateSingleWidget(context: Context, widgetId: Int) =
   context.sendBroadcast(intent(context, AppWidgetManager.ACTION_APPWIDGET_UPDATE, widgetId))
 
-fun intent(context: Context, intentAction: String, widgetId: Int): Intent {
+fun updateSingleWidgets(context: Context, widgetIds: IntArray) =
+  context.sendBroadcast(intent(context, AppWidgetManager.ACTION_APPWIDGET_UPDATE, widgetIds))
+
+fun intent(context: Context, intentAction: String, widgetId: Int): Intent =
+  intent(context, intentAction, intArrayOf(widgetId))
+
+fun intent(context: Context, intentAction: String, widgetIds: IntArray): Intent {
   Trace.d(SingleWidget::javaClass.name, "Creating intent with action: $intentAction")
   return Intent(context, SingleWidget::class.java).apply {
     action = intentAction
     flags = Intent.FLAG_RECEIVER_FOREGROUND
-    putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, intArrayOf(widgetId))
+    putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, widgetIds)
   }
 }

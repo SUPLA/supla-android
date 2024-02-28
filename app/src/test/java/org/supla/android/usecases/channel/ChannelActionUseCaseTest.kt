@@ -246,7 +246,7 @@ class ChannelActionUseCaseTest {
     channelId: Int,
     channelFunc: Int,
     buttonType: ButtonType,
-    flags: Int = 0,
+    flags: Long = 0,
     actionAssertion: (ActionParameters) -> Unit
   ) {
     // given

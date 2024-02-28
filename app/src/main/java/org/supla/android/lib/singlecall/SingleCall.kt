@@ -21,8 +21,10 @@ import android.content.Context
 import android.os.Looper
 import android.os.NetworkOnMainThreadException
 import androidx.annotation.WorkerThread
+import androidx.room.rxjava3.EmptyResultSetException
 import dagger.hilt.android.qualifiers.ApplicationContext
-import org.supla.android.data.source.ProfileRepository
+import org.supla.android.data.source.RoomProfileRepository
+import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.db.AuthProfileItem
 import org.supla.android.lib.actions.ActionParameters
 import org.supla.android.profile.AuthInfo
@@ -39,7 +41,7 @@ import javax.inject.Singleton
 class SingleCall private constructor(
   var context: Context,
   var profileId: Long,
-  var profileRepository: ProfileRepository
+  var profileRepository: RoomProfileRepository
 ) {
 
   private external fun executeAction(
@@ -58,17 +60,21 @@ class SingleCall private constructor(
     context: Context,
     authInfo: AuthInfo,
     appId: Int,
-    token: String
+    token: String,
+    profileName: String
   )
 
   @Throws(NoSuchProfileException::class)
-  private fun getProfile(): AuthProfileItem {
+  private fun getProfile(): ProfileEntity {
     if (Thread.currentThread().equals(Looper.getMainLooper().thread)) {
       throw NetworkOnMainThreadException()
     }
 
-    return profileRepository.getProfile(profileId)
-      ?: throw NoSuchProfileException(profileId)
+    return try {
+      profileRepository.findProfile(profileId).blockingGet()
+    } catch (ex: EmptyResultSetException) {
+      throw NoSuchProfileException(profileId)
+    }
   }
 
   @WorkerThread
@@ -85,13 +91,19 @@ class SingleCall private constructor(
 
   @WorkerThread
   @Throws(NoSuchProfileException::class, ResultException::class)
-  fun registerPushNotificationClientToken(appId: Int, token: String) {
-    registerPushNotificationClientToken(context, getProfile().authInfo, appId, token)
+  fun registerPushNotificationClientToken(appId: Int, token: String, profile: ProfileEntity) {
+    registerPushNotificationClientToken(context, profile.authInfo, appId, token, profile.name)
+  }
+
+  @WorkerThread
+  @Throws(NoSuchProfileException::class, ResultException::class)
+  fun registerPushNotificationClientToken(appId: Int, token: String, profile: AuthProfileItem) {
+    registerPushNotificationClientToken(context, profile.authInfo, appId, token, profile.name)
   }
 
   @Singleton
   class Provider @Inject constructor(
-    private val profileRepository: ProfileRepository,
+    private val profileRepository: RoomProfileRepository,
     @ApplicationContext private val context: Context
   ) {
     fun provide(profileId: Long) = SingleCall(context, profileId, profileRepository)

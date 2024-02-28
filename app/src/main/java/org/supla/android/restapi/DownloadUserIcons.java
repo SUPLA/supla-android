@@ -29,7 +29,6 @@ public class DownloadUserIcons extends SuplaRestApiClientTask {
 
   private final int PACKAGE_SIZE = 4;
   private final int DELAY = 2500;
-  private int DownloadCount = 0;
 
   public DownloadUserIcons(Context context) {
     super(context);
@@ -79,10 +78,7 @@ public class DownloadUserIcons extends SuplaRestApiClientTask {
                 byte[] img4 =
                     images.length() > 3 ? Base64.decode(images.getString(3), Base64.DEFAULT) : null;
 
-                boolean added = getDbH().addUserIcons(imgId, img1, img2, img3, img4);
-                if (added) {
-                  DownloadCount++;
-                }
+                getDbH().addUserIcons(imgId, img1, img2, img3, img4);
               }
             } catch (JSONException e) {
               e.printStackTrace();
@@ -95,9 +91,5 @@ public class DownloadUserIcons extends SuplaRestApiClientTask {
     }
 
     return null;
-  }
-
-  public int downloadCount() {
-    return DownloadCount;
   }
 }

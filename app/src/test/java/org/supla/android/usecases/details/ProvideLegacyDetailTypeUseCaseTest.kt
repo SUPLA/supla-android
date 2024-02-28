@@ -9,7 +9,7 @@ import org.mockito.InjectMocks
 import org.mockito.junit.MockitoJUnitRunner
 import org.supla.android.db.Channel
 import org.supla.android.db.ChannelValue
-import org.supla.android.features.standarddetail.DetailPage
+import org.supla.android.features.details.detailbase.standarddetail.DetailPage
 import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS
 import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS
 import org.supla.android.lib.SuplaConst.*
@@ -248,6 +248,16 @@ class ProvideLegacyDetailTypeUseCaseTest {
   @Test
   fun `should not provide detail for hvac thermostat auto`() {
     testDetailType(SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL, null)
+  }
+
+  @Test
+  fun `should provide detail for general purpose measurement`() {
+    testDetailType(SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT, GpmDetailType(listOf(DetailPage.GPM_HISTORY)))
+  }
+
+  @Test
+  fun `should provide detail for general purpose meter`() {
+    testDetailType(SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER, GpmDetailType(listOf(DetailPage.GPM_HISTORY)))
   }
 
   private fun testDetailType(function: Int, result: DetailType?, extraMocks: ((Channel) -> Unit) = { }) {

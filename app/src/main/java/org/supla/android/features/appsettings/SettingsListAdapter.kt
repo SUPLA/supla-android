@@ -125,6 +125,19 @@ sealed class SettingItem(val viewResource: Int) {
     }
   }
 
+  data class BottomLabels(
+    val visible: Boolean,
+    val callback: (Boolean) -> Unit = {}
+  ) : SettingItem(R.layout.li_settings_switch) {
+    override fun bind(holder: SettingItemViewHolder<*>) {
+      (holder.binding as LiSettingsSwitchBinding).apply {
+        settingsSwitchLabel.setText(R.string.settings_show_labels)
+        settingsSwitch.isChecked = visible
+        settingsSwitch.setOnCheckedChangeListener { _, allowed -> callback(allowed) }
+      }
+    }
+  }
+
   data class RollerShutterOpenClose(
     val showOpeningPercentage: Boolean,
     val callback: (Boolean) -> Unit = {}
