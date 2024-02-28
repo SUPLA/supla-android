@@ -41,6 +41,7 @@ class HumidityAndTemperatureIconResourceProducer : IconResourceProducer {
       4 -> data.icon(R.drawable.fnc_thermometer_heating, R.drawable.fnc_thermometer_heating_nm)
       5 -> data.icon(R.drawable.fnc_thermometer_cooling, R.drawable.fnc_thermometer_cooling_nm)
       6 -> data.icon(R.drawable.fnc_thermometer_heater, R.drawable.fnc_thermometer_heater_nm)
+      7 -> data.icon(R.drawable.fnc_thermometer_home, R.drawable.fnc_thermometer_home_nm)
       else -> data.icon(R.drawable.thermometer, R.drawable.thermometer_nightmode)
     }
 }

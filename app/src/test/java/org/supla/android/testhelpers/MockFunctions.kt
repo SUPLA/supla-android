@@ -42,7 +42,9 @@ fun suplaChannel(
   function: Int = 0,
   crc32: Long = 0,
   value: SuplaChannelValue? = null,
-  online: Boolean = false
+  online: Boolean = false,
+  userIcon: Int = 0,
+  altIcon: Int = 0
 ) = SuplaChannel().apply {
   locationId?.let { LocationID = it }
   channelId?.let { Id = it }
@@ -51,6 +53,8 @@ fun suplaChannel(
   DefaultConfigCRC32 = crc32
   value?.let { Value = value }
   OnLine = online
+  UserIcon = userIcon
+  AltIcon = altIcon
 }
 
 fun suplaChannelValue() = SuplaChannelValue().apply {

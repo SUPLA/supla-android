@@ -30,12 +30,12 @@ import org.supla.android.extensions.TAG
 import org.supla.android.lib.SuplaClient
 import org.supla.android.lib.singlecall.SingleCall
 import org.supla.android.usecases.icon.LoadUserIconsIntoCacheUseCase
-import org.supla.android.widget.WidgetVisibilityHandler
+import org.supla.android.widget.WidgetManager
 
 class MultiAccountProfileManager(
   private val profileRepository: ProfileRepository,
   private val profileIdHolder: ProfileIdHolder,
-  private val widgetVisibilityHandler: WidgetVisibilityHandler,
+  private val widgetManager: WidgetManager,
   private val updateEventsManager: UpdateEventsManager,
   private val suplaAppProvider: SuplaAppProvider,
   private val singleCallProvider: SingleCall.Provider,
@@ -71,7 +71,7 @@ class MultiAccountProfileManager(
     }
 
     profileRepository.deleteProfile(id)
-    widgetVisibilityHandler.onProfileRemoved(id)
+    widgetManager.onProfileRemoved(id)
   }
 
   override fun getAllProfiles(): Observable<List<AuthProfileItem>> = Observable.fromCallable {

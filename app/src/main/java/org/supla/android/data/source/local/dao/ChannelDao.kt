@@ -28,6 +28,7 @@ import io.reactivex.rxjava3.core.Single
 import org.supla.android.data.source.local.entity.ChannelConfigEntity
 import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.ChannelEntity.Companion.ALL_COLUMNS
+import org.supla.android.data.source.local.entity.ChannelEntity.Companion.COLUMN_CHANNEL_REMOTE_ID
 import org.supla.android.data.source.local.entity.ChannelEntity.Companion.COLUMN_ID
 import org.supla.android.data.source.local.entity.ChannelEntity.Companion.COLUMN_LOCATION_ID
 import org.supla.android.data.source.local.entity.ChannelEntity.Companion.COLUMN_PROFILE_ID
@@ -57,6 +58,16 @@ interface ChannelDao {
     """
   )
   fun findByRemoteId(remoteId: Int): Maybe<ChannelEntity>
+
+  @Query(
+    """
+    SELECT $ALL_COLUMNS FROM channel
+    WHERE
+      $COLUMN_PROFILE_ID = :profileId
+      AND $COLUMN_CHANNEL_REMOTE_ID = :remoteId
+    """
+  )
+  fun findByRemoteId(profileId: Long, remoteId: Int): Maybe<ChannelEntity>
 
   @Query(
     """

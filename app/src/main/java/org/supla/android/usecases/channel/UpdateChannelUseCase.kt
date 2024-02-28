@@ -34,6 +34,8 @@ import org.supla.android.extensions.TAG
 import org.supla.android.lib.SuplaChannel
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER
+import org.supla.android.widget.WidgetManager
+import org.supla.android.widget.WidgetPreferences
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -43,7 +45,9 @@ class UpdateChannelUseCase @Inject constructor(
   private val channelRepository: RoomChannelRepository,
   private val locationRepository: LocationRepository,
   private val channelConfigRepository: ChannelConfigRepository,
-  private val suplaClientProvider: SuplaClientProvider
+  private val suplaClientProvider: SuplaClientProvider,
+  private val widgetPreferences: WidgetPreferences,
+  private val widgetManager: WidgetManager
 ) {
 
   operator fun invoke(suplaChannel: SuplaChannel): Single<EntityUpdateResult> =
@@ -71,6 +75,7 @@ class UpdateChannelUseCase @Inject constructor(
     updatePosition(locationEntity, channelEntity.updatedBy(suplaChannel), channelEntity.locationChanged(suplaChannel))
       .flatMapCompletable(channelRepository::update)
       .andThen(checkConfigUpdateNeeded(suplaChannel))
+      .andThen(checkWidgetUpdateNeeded(channelEntity.profileId, suplaChannel))
       .andThen(Single.just(EntityUpdateResult.UPDATED))
 
   private fun insertChannel(locationEntity: LocationEntity, suplaChannel: SuplaChannel) =
@@ -117,6 +122,17 @@ class UpdateChannelUseCase @Inject constructor(
         }
     } else {
       Completable.complete()
+    }
+
+  private fun checkWidgetUpdateNeeded(profileId: Long, suplaChannel: SuplaChannel) =
+    Completable.fromRunnable {
+      widgetManager.findWidgetConfig(profileId, suplaChannel.Id)?.let { (widgetId, configuration) ->
+        widgetPreferences.setWidgetConfiguration(
+          widgetId,
+          configuration.copy(userIcon = suplaChannel.UserIcon, altIcon = suplaChannel.AltIcon, itemFunction = suplaChannel.Func)
+        )
+        widgetManager.updateWidget(widgetId)
+      }
     }
 
   private fun checkLocation(locationId: Int, updater: (LocationEntity) -> Single<EntityUpdateResult>) =

@@ -30,19 +30,19 @@ import dagger.assisted.AssistedInject
 import org.supla.android.Trace
 import org.supla.android.extensions.TAG
 import org.supla.android.usecases.icon.LoadUserIconsIntoCacheUseCase
-import org.supla.android.widget.WidgetVisibilityHandler
+import org.supla.android.widget.WidgetManager
 
 @HiltWorker
 class LoadUserIconsIntoCacheWorker @AssistedInject constructor(
   private val loadUserIconsIntoCacheUseCase: LoadUserIconsIntoCacheUseCase,
-  private val widgetVisibilityHandler: WidgetVisibilityHandler,
+  private val widgetManager: WidgetManager,
   @Assisted appContext: Context,
   @Assisted workerParameters: WorkerParameters
 ) : Worker(appContext, workerParameters) {
   override fun doWork(): Result {
     return try {
       loadUserIconsIntoCacheUseCase().blockingSubscribe()
-      widgetVisibilityHandler.updateAllWidgets()
+      widgetManager.updateAllWidgets()
       Result.success()
     } catch (ex: Exception) {
       Trace.e(TAG, "Load user icons into cache worker failed!")

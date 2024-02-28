@@ -60,7 +60,7 @@ class LoadChannelConfigUseCaseTest {
       every { function } returns SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT
     }
     val config: SuplaChannelConfig = mockk()
-    whenever(channelRepository.findByRemoteId(remoteId)).thenReturn(Maybe.just(channelEntity))
+    whenever(channelRepository.findByRemoteId(profileId, remoteId)).thenReturn(Maybe.just(channelEntity))
     whenever(channelConfigRepository.findGpmConfig(profileId, remoteId, ChannelConfigType.GENERAL_PURPOSE_MEASUREMENT))
       .thenReturn(Single.just(config))
 
@@ -81,7 +81,7 @@ class LoadChannelConfigUseCaseTest {
       every { function } returns SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER
     }
     val config: SuplaChannelConfig = mockk()
-    whenever(channelRepository.findByRemoteId(remoteId)).thenReturn(Maybe.just(channelEntity))
+    whenever(channelRepository.findByRemoteId(profileId, remoteId)).thenReturn(Maybe.just(channelEntity))
     whenever(channelConfigRepository.findGpmConfig(profileId, remoteId, ChannelConfigType.GENERAL_PURPOSE_METER))
       .thenReturn(Single.just(config))
 
@@ -102,7 +102,7 @@ class LoadChannelConfigUseCaseTest {
     val channelEntity: ChannelEntity = mockk {
       every { function } returns SUPLA_CHANNELFNC_THERMOSTAT
     }
-    whenever(channelRepository.findByRemoteId(remoteId)).thenReturn(Maybe.just(channelEntity))
+    whenever(channelRepository.findByRemoteId(profileId, remoteId)).thenReturn(Maybe.just(channelEntity))
 
     // when
     val throwable = catchThrowable {

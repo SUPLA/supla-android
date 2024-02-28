@@ -40,8 +40,8 @@ import org.supla.android.profile.MultiAccountProfileManager
 import org.supla.android.profile.ProfileIdHolder
 import org.supla.android.profile.ProfileManager
 import org.supla.android.usecases.icon.LoadUserIconsIntoCacheUseCase
+import org.supla.android.widget.WidgetManager
 import org.supla.android.widget.WidgetPreferences
-import org.supla.android.widget.WidgetVisibilityHandler
 import javax.inject.Singleton
 
 @Module
@@ -57,7 +57,7 @@ class ApplicationModule {
   fun provideProfileManager(
     profileRepository: ProfileRepository,
     profileIdHolder: ProfileIdHolder,
-    widgetVisibilityHandler: WidgetVisibilityHandler,
+    widgetManager: WidgetManager,
     updateEventsManager: UpdateEventsManager,
     suplaAppProvider: SuplaAppProvider,
     singleCallProvider: SingleCall.Provider,
@@ -67,7 +67,7 @@ class ApplicationModule {
     return MultiAccountProfileManager(
       profileRepository,
       profileIdHolder,
-      widgetVisibilityHandler,
+      widgetManager,
       updateEventsManager,
       suplaAppProvider,
       singleCallProvider,
