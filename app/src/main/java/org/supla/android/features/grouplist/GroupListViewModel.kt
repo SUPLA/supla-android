@@ -22,10 +22,10 @@ import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.Preferences
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
+import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.source.ChannelRepository
-import org.supla.android.db.ChannelBase
-import org.supla.android.db.ChannelGroup
-import org.supla.android.db.Location
+import org.supla.android.data.source.local.entity.LocationEntity
+import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.lib.SuplaConst
@@ -70,7 +70,7 @@ class GroupListViewModel @Inject constructor(
       .disposeBySelf()
   }
 
-  fun toggleLocationCollapsed(location: Location) {
+  fun toggleLocationCollapsed(location: LocationEntity) {
     toggleLocationUseCase(location, CollapsedFlag.GROUP)
       .andThen(createProfileGroupsListUseCase())
       .attach()
@@ -81,12 +81,12 @@ class GroupListViewModel @Inject constructor(
       .disposeBySelf()
   }
 
-  fun swapItems(firstItem: ChannelBase?, secondItem: ChannelBase?) {
+  fun swapItems(firstItem: ChannelDataBase?, secondItem: ChannelDataBase?) {
     if (firstItem == null || secondItem == null) {
       return // nothing to swap
     }
 
-    channelRepository.reorderChannelGroups(firstItem.id, firstItem.locationId.toInt(), secondItem.id)
+    channelRepository.reorderChannelGroups(firstItem.id, firstItem.locationId, secondItem.id)
       .attach()
       .subscribeBy(
         onError = defaultErrorHandler("swapItems(..., ...)")
@@ -109,8 +109,14 @@ class GroupListViewModel @Inject constructor(
       .disposeBySelf()
   }
 
-  fun onListItemClick(channelGroup: ChannelGroup) {
-    openDetailsByChannelFunction(channelGroup)
+  fun onListItemClick(remoteId: Int) {
+    findGroupByRemoteIdUseCase(remoteId)
+      .attach()
+      .subscribeBy(
+        onSuccess = { openDetailsByChannelFunction(it) },
+        onError = defaultErrorHandler("onListItemClick($remoteId)")
+      )
+      .disposeBySelf()
   }
 
   override fun onSuplaMessage(message: SuplaClientMsg) {
@@ -136,18 +142,18 @@ class GroupListViewModel @Inject constructor(
     }
   }
 
-  private fun openDetailsByChannelFunction(group: ChannelGroup) {
-    if (group.onLine.not()) {
+  private fun openDetailsByChannelFunction(group: ChannelGroupDataEntity) {
+    if (group.isOnline().not()) {
       return // do not open details for offline channels
     }
 
-    if (group.func == SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT) {
+    if (group.function == SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT) {
       sendEvent(GroupListViewEvent.OpenThermostatDetails)
       return
     }
 
     when (val detailType = provideDetailTypeUseCase(group)) {
-      is LegacyDetailType -> sendEvent(GroupListViewEvent.OpenLegacyDetails(group.groupId, detailType))
+      is LegacyDetailType -> sendEvent(GroupListViewEvent.OpenLegacyDetails(group.remoteId, detailType))
       else -> {} // no action
     }
   }

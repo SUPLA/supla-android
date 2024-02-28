@@ -18,6 +18,7 @@ package org.supla.android.data.source.local.entity.complex
  */
 
 import androidx.room.Embedded
+import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.source.local.entity.ChannelConfigEntity
 import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity
@@ -27,6 +28,7 @@ import org.supla.android.db.Channel
 import org.supla.android.db.ChannelExtendedValue
 import org.supla.android.db.ChannelValue
 import org.supla.android.lib.SuplaChannelExtendedValue
+import org.supla.android.usecases.channel.ValueStateWrapper
 
 data class ChannelDataEntity(
   @Embedded(prefix = "channel_") val channelEntity: ChannelEntity,
@@ -34,13 +36,42 @@ data class ChannelDataEntity(
   @Embedded(prefix = "location_") val locationEntity: LocationEntity,
   @Embedded(prefix = "extended_value_") val channelExtendedValueEntity: ChannelExtendedValueEntity?,
   @Embedded(prefix = "config_") val configEntity: ChannelConfigEntity?
-) {
+) : ChannelDataBase {
 
-  val remoteId: Int
+  override val id: Long?
+    get() = channelEntity.id
+  override val remoteId: Int
     get() = channelEntity.remoteId
-
-  val function: Int
+  override val function: Int
     get() = channelEntity.function
+  override val caption: String
+    get() = channelEntity.caption
+  override val locationId: Int
+    get() = channelEntity.locationId
+  override val visible: Int
+    get() = channelEntity.visible
+  override val flags: Long
+    get() = channelEntity.flags
+  override val userIcon: Int
+    get() = channelEntity.userIcon
+  override val altIcon: Int
+    get() = channelEntity.altIcon
+  override val profileId: Long
+    get() = channelEntity.profileId
+  override val locationCaption: String
+    get() = locationEntity.caption
+
+  override fun isOnline(): Boolean = channelValueEntity.online
+
+  override fun onlinePercentage(): Int =
+    if (channelValueEntity.online) {
+      100
+    } else {
+      0
+    }
+
+  override fun toStateWrapper(): ValueStateWrapper =
+    channelValueEntity.toStateWrapper()
 
   @Deprecated("Please use channelDataEntity if possible")
   fun getLegacyChannel(): Channel = Channel().also { channel ->
@@ -51,7 +82,7 @@ data class ChannelDataEntity(
     channel.func = channelEntity.function
     channel.setCaption(channelEntity.caption)
     channel.visible = channelEntity.visible
-    channel.locationId = channelEntity.locationId
+    channel.locationId = channelEntity.locationId.toLong()
     channel.altIcon = channelEntity.altIcon
     channel.userIconId = channelEntity.userIcon
     channel.manufacturerID = channelEntity.manufacturerId

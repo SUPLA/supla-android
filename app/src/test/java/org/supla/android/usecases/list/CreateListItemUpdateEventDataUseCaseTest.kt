@@ -30,10 +30,12 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
+import org.supla.android.data.source.local.entity.ChannelGroupEntity
 import org.supla.android.data.source.local.entity.ChannelRelationEntity
 import org.supla.android.data.source.local.entity.ChannelRelationType
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.db.ChannelGroup
 import org.supla.android.events.UpdateEventsManager
@@ -157,7 +159,7 @@ class CreateListItemUpdateEventDataUseCaseTest {
     val remoteId = 123
     val itemType = ItemType.GROUP
 
-    val channelGroup: ChannelGroup = mockk()
+    val channelGroup: ChannelGroupDataEntity = mockk()
     val data: SlideableListItemData = mockk()
 
     whenever(eventsManager.observeGroup(remoteId)).thenReturn(Observable.just(mockk()))

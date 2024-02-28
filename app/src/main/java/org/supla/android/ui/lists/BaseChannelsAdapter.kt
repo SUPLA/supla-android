@@ -23,22 +23,22 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import org.supla.android.Preferences
 import org.supla.android.SuplaApp
+import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.databinding.LiChannelItemBinding
 import org.supla.android.databinding.LiSingleMeasurementItemBinding
 import org.supla.android.databinding.LiThermostatItemBinding
-import org.supla.android.db.ChannelBase
 import org.supla.android.ui.layouts.ChannelLayout
 import org.supla.android.ui.lists.data.SlideableListItemData
 
 abstract class BaseChannelsAdapter(
   private val context: Context,
   preferences: Preferences
-) : BaseListAdapter<ListItem, ChannelBase>(context, preferences), ChannelLayout.Listener {
+) : BaseListAdapter<ListItem, ChannelDataBase>(context, preferences), ChannelLayout.Listener {
 
   var infoButtonClickCallback: (id: Int) -> Unit = { _ -> }
   var issueButtonClickCallback: (messageId: Int?) -> Unit = { _ -> }
-  var listItemClickCallback: (channelBase: ChannelBase) -> Unit = { _ -> }
+  var listItemClickCallback: (remoteId: Int) -> Unit = { _ -> }
 
   override val callback = ListCallback(context, this).also {
     it.onMovedListener = { fromPos, toPos -> swapInternally(fromPos, toPos) }
@@ -98,8 +98,8 @@ abstract class BaseChannelsAdapter(
     return position.toLong()
   }
 
-  override fun onItemClick(channelBase: ChannelBase) {
-    listItemClickCallback(channelBase)
+  override fun onItemClick(remoteId: Int) {
+    listItemClickCallback(remoteId)
   }
 
   private fun onLongPress(viewHolder: ViewHolder): Boolean {
@@ -112,11 +112,11 @@ abstract class BaseChannelsAdapter(
 
   inner class ChannelListItemViewHolder(val binding: LiChannelItemBinding) : ViewHolder(binding.root) {
     fun bind(item: ListItem.ChannelItem) {
-      binding.channelLayout.setChannelData(item.channelBase)
-      binding.channelLayout.setLocationCaption(item.location.caption)
+      binding.channelLayout.setChannelData(item.legacyBase)
+      binding.channelLayout.setLocationCaption(item.channelBase.locationCaption)
       binding.channelLayout.setChannelListener(this@BaseChannelsAdapter)
       binding.channelLayout.setOnLongClickListener { onLongPress(this) }
-      binding.channelLayout.setOnClickListener { listItemClickCallback(binding.channelLayout.channelBase) }
+      binding.channelLayout.setOnClickListener { listItemClickCallback(item.channelBase.remoteId) }
       binding.channelLayout.setInfoIconClickListener { infoButtonClickCallback(item.channelBase.remoteId) }
     }
   }
@@ -132,11 +132,11 @@ abstract class BaseChannelsAdapter(
         onInfoClick = { infoButtonClickCallback(item.channel.remoteId) },
         onIssueClick = { issueButtonClickCallback(item.issueMessage) },
         onTitleLongClick = { onCaptionLongPress(item.channel.remoteId) },
-        onItemClick = { listItemClickCallback(item.channel) }
+        onItemClick = { listItemClickCallback(item.channel.remoteId) }
       )
       binding.listItemContent.update(data)
 
-      binding.listItemContent.setOnClickListener { listItemClickCallback(item.channel) }
+      binding.listItemContent.setOnClickListener { listItemClickCallback(item.channel.remoteId) }
       binding.listItemContent.setOnLongClickListener { onLongPress(this) }
       binding.listItemLeftItem.setOnClickListener { onLeftButtonClick(item.channel.remoteId) }
       binding.listItemRightItem.setOnClickListener { onRightButtonClick(item.channel.remoteId) }
@@ -154,11 +154,11 @@ abstract class BaseChannelsAdapter(
         onInfoClick = { infoButtonClickCallback(item.channel.remoteId) },
         onIssueClick = { },
         onTitleLongClick = { onCaptionLongPress(item.channel.remoteId) },
-        onItemClick = { listItemClickCallback(item.channel) }
+        onItemClick = { listItemClickCallback(item.channel.remoteId) }
       )
       binding.listItemContent.update(data)
 
-      binding.listItemContent.setOnClickListener { listItemClickCallback(item.channel) }
+      binding.listItemContent.setOnClickListener { listItemClickCallback(item.channel.remoteId) }
       binding.listItemContent.setOnLongClickListener { onLongPress(this) }
     }
   }
@@ -174,11 +174,11 @@ abstract class BaseChannelsAdapter(
         onInfoClick = { infoButtonClickCallback(item.channel.remoteId) },
         onIssueClick = { },
         onTitleLongClick = { onCaptionLongPress(item.channel.remoteId) },
-        onItemClick = { listItemClickCallback(item.channel) }
+        onItemClick = { listItemClickCallback(item.channel.remoteId) }
       )
       binding.listItemContent.update(data)
 
-      binding.listItemContent.setOnClickListener { listItemClickCallback(item.channel) }
+      binding.listItemContent.setOnClickListener { listItemClickCallback(item.channel.remoteId) }
       binding.listItemContent.setOnLongClickListener { onLongPress(this) }
     }
   }
@@ -194,11 +194,11 @@ abstract class BaseChannelsAdapter(
         onInfoClick = { infoButtonClickCallback(item.channel.remoteId) },
         onIssueClick = { },
         onTitleLongClick = { onCaptionLongPress(item.channel.remoteId) },
-        onItemClick = { listItemClickCallback(item.channel) }
+        onItemClick = { listItemClickCallback(item.channel.remoteId) }
       )
       binding.listItemContent.update(data)
 
-      binding.listItemContent.setOnClickListener { listItemClickCallback(item.channel) }
+      binding.listItemContent.setOnClickListener { listItemClickCallback(item.channel.remoteId) }
       binding.listItemContent.setOnLongClickListener { onLongPress(this) }
     }
   }

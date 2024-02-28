@@ -21,10 +21,11 @@ import com.google.android.material.navigation.NavigationBarView
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.Preferences
 import org.supla.android.core.ui.BaseViewModel
+import org.supla.android.core.ui.StringProvider
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
+import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.source.runtime.ItemType
-import org.supla.android.db.ChannelBase
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
@@ -69,21 +70,21 @@ abstract class StandardDetailViewModel<S : StandardDetailViewState, E : Standard
 
   protected abstract fun closeEvent(): E
 
-  protected abstract fun updatedState(state: S, channelBase: ChannelBase): S
+  protected abstract fun updatedState(state: S, channelDataBase: ChannelDataBase): S
 
-  protected open fun shouldCloseDetail(channelBase: ChannelBase, initialFunction: Int) =
-    channelBase.visible == 0 || channelBase.func != initialFunction
+  protected open fun shouldCloseDetail(channelDataBase: ChannelDataBase, initialFunction: Int) =
+    channelDataBase.visible == 0 || channelDataBase.function != initialFunction
 
-  private fun handleChannelBase(channelBase: ChannelBase, initialFunction: Int) {
-    if (shouldCloseDetail(channelBase, initialFunction)) {
+  private fun handleChannelBase(channelDataBase: ChannelDataBase, initialFunction: Int) {
+    if (shouldCloseDetail(channelDataBase, initialFunction)) {
       sendEvent(closeEvent())
     } else {
-      updateState { updatedState(it, channelBase) }
+      updateState { updatedState(it, channelDataBase) }
     }
   }
 
   private fun getDataSource(remoteId: Int, itemType: ItemType) = when (itemType) {
-    ItemType.CHANNEL -> readChannelByRemoteIdUseCase(remoteId).map { it.getLegacyChannel() }
+    ItemType.CHANNEL -> readChannelByRemoteIdUseCase(remoteId)
     ItemType.GROUP -> readChannelGroupByRemoteIdUseCase(remoteId)
   }
 
@@ -95,4 +96,6 @@ abstract class StandardDetailViewModel<S : StandardDetailViewState, E : Standard
 
 interface StandardDetailViewEvent : ViewEvent
 
-open class StandardDetailViewState() : ViewState()
+open class StandardDetailViewState(
+  open val caption: StringProvider?
+) : ViewState()

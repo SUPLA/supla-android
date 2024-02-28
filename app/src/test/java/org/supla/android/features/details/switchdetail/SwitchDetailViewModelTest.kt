@@ -34,7 +34,10 @@ import org.mockito.kotlin.verifyZeroInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.Preferences
 import org.supla.android.core.BaseViewModelTest
+import org.supla.android.core.ui.StringProvider
+import org.supla.android.data.source.local.entity.ChannelGroupEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.db.Channel
 import org.supla.android.db.ChannelGroup
@@ -43,11 +46,15 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DIMMER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT
 import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.usecases.channel.GetChannelCaptionUseCase
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.channel.ReadChannelGroupByRemoteIdUseCase
 
 @RunWith(MockitoJUnitRunner::class)
 class SwitchDetailViewModelTest : BaseViewModelTest<SwitchDetailViewState, SwitchDetailViewEvent, SwitchDetailViewModel>() {
+
+  @Mock
+  private lateinit var getChannelCaptionUseCase: GetChannelCaptionUseCase
 
   @Mock
   private lateinit var readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase
@@ -77,12 +84,12 @@ class SwitchDetailViewModelTest : BaseViewModelTest<SwitchDetailViewState, Switc
     // given
     val remoteId = 123
     val function = SUPLA_CHANNELFNC_THERMOSTAT
-    val channel: Channel = mockk()
-    every { channel.visible } returns 1
-    every { channel.func } returns function
-    val channelData: ChannelDataEntity = mockk {
-      every { getLegacyChannel() } returns channel
-    }
+    val channelData: ChannelDataEntity = mockk()
+    every { channelData.visible } returns 1
+    every { channelData.function } returns function
+    val captionProvider: StringProvider = mockk()
+
+    whenever(getChannelCaptionUseCase.invoke(channelData)).thenReturn(captionProvider)
     whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channelData))
 
     // when
@@ -90,7 +97,7 @@ class SwitchDetailViewModelTest : BaseViewModelTest<SwitchDetailViewState, Switc
 
     // then
     assertThat(events).isEmpty()
-    assertThat(states).containsExactly(SwitchDetailViewState(channel))
+    assertThat(states).containsExactly(SwitchDetailViewState(captionProvider))
 
     verify(readChannelByRemoteIdUseCase).invoke(remoteId)
     verifyNoMoreInteractions(readChannelByRemoteIdUseCase)
@@ -102,12 +109,9 @@ class SwitchDetailViewModelTest : BaseViewModelTest<SwitchDetailViewState, Switc
     // given
     val remoteId = 123
     val function = SUPLA_CHANNELFNC_THERMOSTAT
-    val channel: Channel = mockk()
-    every { channel.visible } returns 0
-    every { channel.func } returns function
-    val channelData: ChannelDataEntity = mockk {
-      every { getLegacyChannel() } returns channel
-    }
+    val channelData: ChannelDataEntity = mockk()
+    every { channelData.visible } returns 0
+    every { channelData.function } returns function
     whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channelData))
 
     // when
@@ -127,12 +131,9 @@ class SwitchDetailViewModelTest : BaseViewModelTest<SwitchDetailViewState, Switc
     // given
     val remoteId = 123
     val function = SUPLA_CHANNELFNC_THERMOSTAT
-    val channel: Channel = mockk()
-    every { channel.visible } returns 1
-    every { channel.func } returns function
-    val channelData: ChannelDataEntity = mockk {
-      every { getLegacyChannel() } returns channel
-    }
+    val channelData: ChannelDataEntity = mockk()
+    every { channelData.visible } returns 1
+    every { channelData.function } returns function
     whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channelData))
 
     // when
@@ -152,9 +153,12 @@ class SwitchDetailViewModelTest : BaseViewModelTest<SwitchDetailViewState, Switc
     // given
     val remoteId = 123
     val function = SUPLA_CHANNELFNC_DIMMER
-    val group: ChannelGroup = mockk()
+    val group: ChannelGroupDataEntity = mockk()
     every { group.visible } returns 1
-    every { group.func } returns function
+    every { group.function } returns function
+    val captionProvider: StringProvider = mockk()
+
+    whenever(getChannelCaptionUseCase.invoke(group)).thenReturn(captionProvider)
     whenever(readChannelGroupByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(group))
 
     // when
@@ -162,7 +166,7 @@ class SwitchDetailViewModelTest : BaseViewModelTest<SwitchDetailViewState, Switc
 
     // then
     assertThat(events).isEmpty()
-    assertThat(states).containsExactly(SwitchDetailViewState(group))
+    assertThat(states).containsExactly(SwitchDetailViewState(captionProvider))
 
     verify(readChannelGroupByRemoteIdUseCase).invoke(remoteId)
     verifyNoMoreInteractions(readChannelGroupByRemoteIdUseCase)
@@ -174,12 +178,12 @@ class SwitchDetailViewModelTest : BaseViewModelTest<SwitchDetailViewState, Switc
     // given
     val remoteId = 123
     val function = SUPLA_CHANNELFNC_DIMMER
-    val channel: Channel = mockk()
-    every { channel.visible } returns 1
-    every { channel.func } returns function
-    val channelData: ChannelDataEntity = mockk {
-      every { getLegacyChannel() } returns channel
-    }
+    val channelData: ChannelDataEntity = mockk()
+    every { channelData.visible } returns 1
+    every { channelData.function } returns function
+    val captionProvider: StringProvider = mockk()
+
+    whenever(getChannelCaptionUseCase.invoke(channelData)).thenReturn(captionProvider)
     whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channelData))
     whenever(updateEventsManager.observeChannelsUpdate()).thenReturn(Observable.just(Any()))
 
@@ -188,7 +192,7 @@ class SwitchDetailViewModelTest : BaseViewModelTest<SwitchDetailViewState, Switc
 
     // then
     assertThat(events).isEmpty()
-    assertThat(states).containsExactly(SwitchDetailViewState(channel))
+    assertThat(states).containsExactly(SwitchDetailViewState(captionProvider))
 
     verify(readChannelByRemoteIdUseCase).invoke(remoteId)
     verify(updateEventsManager).observeChannelsUpdate()
@@ -201,9 +205,12 @@ class SwitchDetailViewModelTest : BaseViewModelTest<SwitchDetailViewState, Switc
     // given
     val remoteId = 123
     val function = SUPLA_CHANNELFNC_DIMMER
-    val group: ChannelGroup = mockk()
+    val group: ChannelGroupDataEntity = mockk()
     every { group.visible } returns 1
-    every { group.func } returns function
+    every { group.function } returns function
+    val captionProvider: StringProvider = mockk()
+
+    whenever(getChannelCaptionUseCase.invoke(group)).thenReturn(captionProvider)
     whenever(readChannelGroupByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(group))
     whenever(updateEventsManager.observeGroupsUpdate()).thenReturn(Observable.just(Any()))
 
@@ -212,7 +219,7 @@ class SwitchDetailViewModelTest : BaseViewModelTest<SwitchDetailViewState, Switc
 
     // then
     assertThat(events).isEmpty()
-    assertThat(states).containsExactly(SwitchDetailViewState(group))
+    assertThat(states).containsExactly(SwitchDetailViewState(captionProvider))
 
     verify(readChannelGroupByRemoteIdUseCase).invoke(remoteId)
     verify(updateEventsManager).observeGroupsUpdate()

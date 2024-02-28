@@ -19,8 +19,11 @@ import org.mockito.kotlin.verifyZeroInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.Preferences
 import org.supla.android.core.BaseViewModelTest
+import org.supla.android.data.source.RoomSceneRepository
 import org.supla.android.data.source.SceneRepository
+import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.Scene
+import org.supla.android.data.source.local.entity.complex.SceneDataEntity
 import org.supla.android.db.Location
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.tools.SuplaSchedulers
@@ -28,18 +31,19 @@ import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
 import org.supla.android.usecases.scene.CreateProfileScenesListUseCase
+import org.supla.android.usecases.scene.UpdateSceneOrderUseCase
 
 @RunWith(MockitoJUnitRunner::class)
 class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListViewEvent, SceneListViewModel>() {
-
-  @Mock
-  private lateinit var sceneRepository: SceneRepository
 
   @Mock
   private lateinit var toggleLocationUseCase: ToggleLocationUseCase
 
   @Mock
   private lateinit var createProfileScenesListUseCase: CreateProfileScenesListUseCase
+
+  @Mock
+  private lateinit var updateSceneOrderUseCase: UpdateSceneOrderUseCase
 
   @Mock
   private lateinit var updateEventsManager: UpdateEventsManager
@@ -52,9 +56,9 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
 
   override val viewModel: SceneListViewModel by lazy {
     SceneListViewModel(
-      sceneRepository,
       toggleLocationUseCase,
       createProfileScenesListUseCase,
+      updateSceneOrderUseCase,
       updateEventsManager,
       preferences,
       schedulers
@@ -90,10 +94,8 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
   @Test
   fun `should update scenes order`() {
     // given
-    val scenes: List<Scene> = listOf(mockk(), mockk(), mockk())
-    every { scenes[0].sortOrder = 0 } answers { }
-    every { scenes[1].sortOrder = 1 } answers { }
-    every { scenes[2].sortOrder = 2 } answers { }
+    val scenes: List<SceneDataEntity> = listOf(mockk(), mockk(), mockk())
+    whenever(updateSceneOrderUseCase.invoke(scenes)).thenReturn(Completable.complete())
 
     // when
     viewModel.onSceneOrderUpdate(scenes)
@@ -102,17 +104,15 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
     Assertions.assertThat(states).isEmpty()
     Assertions.assertThat(events).isEmpty()
 
-    verify(sceneRepository).updateScene(scenes[0])
-    verify(sceneRepository).updateScene(scenes[1])
-    verify(sceneRepository).updateScene(scenes[2])
-    verifyNoMoreInteractions(sceneRepository)
-    verifyZeroInteractionsExcept(sceneRepository)
+    verify(updateSceneOrderUseCase).invoke(scenes)
+    verifyNoMoreInteractions(updateSceneOrderUseCase)
+    verifyZeroInteractionsExcept(updateSceneOrderUseCase)
   }
 
   @Test
   fun `should toggle location collapsed and reload scenes`() {
     // given
-    val location = mockk<Location>()
+    val location = mockk<LocationEntity>()
     whenever(toggleLocationUseCase(location, CollapsedFlag.SCENE)).thenReturn(Completable.complete())
     val list = listOf<ListItem.SceneItem>(mockk())
     whenever(createProfileScenesListUseCase()).thenReturn(Observable.just(list))
@@ -149,9 +149,9 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
 
   private fun verifyZeroInteractionsExcept(vararg except: Any) {
     val allDependencies = listOf(
-      sceneRepository,
       toggleLocationUseCase,
-      createProfileScenesListUseCase
+      createProfileScenesListUseCase,
+      updateSceneOrderUseCase
     )
     for (dependency in allDependencies) {
       if (!except.contains(dependency)) {

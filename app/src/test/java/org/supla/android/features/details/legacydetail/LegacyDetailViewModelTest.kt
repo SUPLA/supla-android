@@ -28,10 +28,14 @@ import org.junit.runner.RunWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.verifyZeroInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.core.BaseViewModelTest
+import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.db.Channel
 import org.supla.android.db.ChannelGroup
@@ -43,10 +47,7 @@ import org.supla.android.usecases.channel.ReadChannelGroupByRemoteIdUseCase
 class LegacyDetailViewModelTest : BaseViewModelTest<LegacyDetailViewState, LegacyDetailViewEvent, LegacyDetailViewModel>() {
 
   @Mock
-  private lateinit var readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase
-
-  @Mock
-  private lateinit var readChannelGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase
+  private lateinit var channelRepository: ChannelRepository
 
   @Mock
   override lateinit var schedulers: SuplaSchedulers
@@ -66,10 +67,7 @@ class LegacyDetailViewModelTest : BaseViewModelTest<LegacyDetailViewState, Legac
     val itemType = ItemType.CHANNEL
 
     val legacyChannel: Channel = mockk()
-    val channel: ChannelDataEntity = mockk {
-      every { getLegacyChannel() } returns legacyChannel
-    }
-    whenever(readChannelByRemoteIdUseCase(channelId)).thenReturn(Maybe.just(channel))
+    whenever(channelRepository.getChannel(channelId)).thenReturn(legacyChannel)
 
     // when
     viewModel.loadData(channelId, itemType)
@@ -79,7 +77,8 @@ class LegacyDetailViewModelTest : BaseViewModelTest<LegacyDetailViewState, Legac
     Assertions.assertThat(events).containsExactly(
       LegacyDetailViewEvent.LoadDetailView(legacyChannel)
     )
-    verifyZeroInteractions(readChannelGroupByRemoteIdUseCase)
+    verify(channelRepository).getChannel(channelId)
+    verifyNoMoreInteractions(channelRepository)
   }
 
   @Test
@@ -88,8 +87,8 @@ class LegacyDetailViewModelTest : BaseViewModelTest<LegacyDetailViewState, Legac
     val groupId = 234
     val itemType = ItemType.GROUP
 
-    val group: ChannelGroup = mockk()
-    whenever(readChannelGroupByRemoteIdUseCase(groupId)).thenReturn(Maybe.just(group))
+    val legacyGroup: ChannelGroup = mockk()
+    whenever(channelRepository.getChannelGroup(groupId)).thenReturn(legacyGroup)
 
     // when
     viewModel.loadData(groupId, itemType)
@@ -97,8 +96,9 @@ class LegacyDetailViewModelTest : BaseViewModelTest<LegacyDetailViewState, Legac
     // then
     Assertions.assertThat(states).isEmpty()
     Assertions.assertThat(events).containsExactly(
-      LegacyDetailViewEvent.LoadDetailView(group)
+      LegacyDetailViewEvent.LoadDetailView(legacyGroup)
     )
-    verifyZeroInteractions(readChannelByRemoteIdUseCase)
+    verify(channelRepository).getChannelGroup(groupId)
+    verifyNoMoreInteractions(channelRepository)
   }
 }

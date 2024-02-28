@@ -21,6 +21,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import org.supla.android.data.model.general.ChannelBase
 import org.supla.android.data.source.local.entity.ChannelEntity.Companion.COLUMN_CHANNEL_REMOTE_ID
 import org.supla.android.data.source.local.entity.ChannelEntity.Companion.COLUMN_LOCATION_ID
 import org.supla.android.data.source.local.entity.ChannelEntity.Companion.COLUMN_PROFILE_ID
@@ -45,23 +46,23 @@ import org.supla.android.lib.SuplaChannel
   ]
 )
 data class ChannelEntity(
-  @ColumnInfo(name = COLUMN_ID) @PrimaryKey val id: Long?,
-  @ColumnInfo(name = COLUMN_CHANNEL_REMOTE_ID) val remoteId: Int,
+  @ColumnInfo(name = COLUMN_ID) @PrimaryKey override val id: Long?,
+  @ColumnInfo(name = COLUMN_CHANNEL_REMOTE_ID) override val remoteId: Int,
   @ColumnInfo(name = COLUMN_DEVICE_ID) val deviceId: Int?,
-  @ColumnInfo(name = COLUMN_CAPTION) val caption: String,
+  @ColumnInfo(name = COLUMN_CAPTION) override val caption: String,
   @ColumnInfo(name = COLUMN_TYPE) val type: Int,
-  @ColumnInfo(name = COLUMN_FUNCTION) val function: Int,
-  @ColumnInfo(name = COLUMN_VISIBLE) val visible: Int,
-  @ColumnInfo(name = COLUMN_LOCATION_ID) val locationId: Long,
-  @ColumnInfo(name = COLUMN_ALT_ICON) val altIcon: Int,
-  @ColumnInfo(name = COLUMN_USER_ICON) val userIcon: Int,
+  @ColumnInfo(name = COLUMN_FUNCTION) override val function: Int,
+  @ColumnInfo(name = COLUMN_VISIBLE) override val visible: Int,
+  @ColumnInfo(name = COLUMN_LOCATION_ID) override val locationId: Int,
+  @ColumnInfo(name = COLUMN_ALT_ICON) override val altIcon: Int,
+  @ColumnInfo(name = COLUMN_USER_ICON) override val userIcon: Int,
   @ColumnInfo(name = COLUMN_MANUFACTURER_ID) val manufacturerId: Short,
   @ColumnInfo(name = COLUMN_PRODUCT_ID) val productId: Short,
-  @ColumnInfo(name = COLUMN_FLAGS) val flags: Long,
+  @ColumnInfo(name = COLUMN_FLAGS) override val flags: Long,
   @ColumnInfo(name = COLUMN_PROTOCOL_VERSION) val protocolVersion: Int,
   @ColumnInfo(name = COLUMN_POSITION, defaultValue = "0") val position: Int,
-  @ColumnInfo(name = COLUMN_PROFILE_ID) val profileId: Long
-) {
+  @ColumnInfo(name = COLUMN_PROFILE_ID) override val profileId: Long
+) : ChannelBase {
 
   fun updatedBy(suplaChannel: SuplaChannel) =
     ChannelEntity(
@@ -72,7 +73,7 @@ data class ChannelEntity(
       type = suplaChannel.Type,
       function = suplaChannel.Func,
       visible = 1,
-      locationId = suplaChannel.LocationID.toLong(),
+      locationId = suplaChannel.LocationID,
       altIcon = suplaChannel.AltIcon,
       userIcon = suplaChannel.UserIcon,
       manufacturerId = suplaChannel.ManufacturerID,
@@ -88,7 +89,7 @@ data class ChannelEntity(
       deviceId != suplaChannel.DeviceID ||
       caption != suplaChannel.Caption ||
       type != suplaChannel.Type ||
-      locationId != suplaChannel.LocationID.toLong() ||
+      locationId != suplaChannel.LocationID ||
       altIcon != suplaChannel.AltIcon ||
       userIcon != suplaChannel.UserIcon ||
       manufacturerId != suplaChannel.ManufacturerID ||
@@ -159,7 +160,7 @@ data class ChannelEntity(
         type = suplaChannel.Type,
         function = suplaChannel.Func,
         visible = 1,
-        locationId = suplaChannel.LocationID.toLong(),
+        locationId = suplaChannel.LocationID,
         altIcon = suplaChannel.AltIcon,
         userIcon = suplaChannel.UserIcon,
         manufacturerId = suplaChannel.ManufacturerID,

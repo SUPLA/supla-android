@@ -34,23 +34,27 @@ import org.mockito.kotlin.verifyZeroInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.core.infrastructure.DateProvider
+import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity
+import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.db.Channel
-import org.supla.android.db.ChannelExtendedValue
-import org.supla.android.db.ChannelGroup
 import org.supla.android.db.ChannelValue
-import org.supla.android.features.details.switchdetail.switchgeneral.SwitchGeneralViewEvent
-import org.supla.android.features.details.switchdetail.switchgeneral.SwitchGeneralViewModel
-import org.supla.android.features.details.switchdetail.switchgeneral.SwitchGeneralViewState
+import org.supla.android.features.details.switchdetail.general.SwitchGeneralViewEvent
+import org.supla.android.features.details.switchdetail.general.SwitchGeneralViewModel
+import org.supla.android.features.details.switchdetail.general.SwitchGeneralViewState
 import org.supla.android.lib.SuplaChannelExtendedValue
 import org.supla.android.lib.SuplaConst
-import org.supla.android.lib.SuplaTimerState
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.usecases.channel.GetChannelStateUseCase
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.channel.ReadChannelGroupByRemoteIdUseCase
+import org.supla.android.usecases.channel.ValueStateWrapper
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
 import java.util.*
 
@@ -65,6 +69,9 @@ class SwitchGeneralViewModelTest : BaseViewModelTest<SwitchGeneralViewState, Swi
 
   @Mock
   private lateinit var readChannelGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase
+
+  @Mock
+  private lateinit var getChannelStateUseCase: GetChannelStateUseCase
 
   @Mock
   private lateinit var executeSimpleActionUseCase: ExecuteSimpleActionUseCase
@@ -84,26 +91,19 @@ class SwitchGeneralViewModelTest : BaseViewModelTest<SwitchGeneralViewState, Swi
   fun `should load channel`() {
     // given
     val remoteId = 123
+    val function = SUPLA_CHANNELFNC_POWERSWITCH
+    val stateWrapper: ValueStateWrapper = mockk()
+    val channelData: ChannelDataEntity = mockChannelData(function, stateWrapper)
 
-    val channelValue: ChannelValue = mockk()
-    every { channelValue.hiValue() } returns true
-
-    val channel: Channel = mockk()
-    every { channel.value } returns channelValue
-    every { channel.extendedValue } returns null
-    every { channel.func } returns SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH
-
-    val channelData: ChannelDataEntity = mockk {
-      every { getLegacyChannel() } returns channel
-    }
     whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channelData))
+    whenever(getChannelStateUseCase.invoke(function, stateWrapper)).thenReturn(mockk { every { isActive() } returns true })
 
     // when
     viewModel.loadData(remoteId, ItemType.CHANNEL)
 
     // then
     Assertions.assertThat(events).isEmpty()
-    Assertions.assertThat(states).containsExactly(SwitchGeneralViewState(channel, true))
+    Assertions.assertThat(states).containsExactly(SwitchGeneralViewState(channelData, true))
 
     verify(readChannelByRemoteIdUseCase).invoke(remoteId)
     verifyNoMoreInteractions(readChannelByRemoteIdUseCase)
@@ -114,9 +114,12 @@ class SwitchGeneralViewModelTest : BaseViewModelTest<SwitchGeneralViewState, Swi
   fun `should load group`() {
     // given
     val remoteId = 123
-    val group: ChannelGroup = mockk()
-    every { group.func } returns SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH
+    val function = SUPLA_CHANNELFNC_POWERSWITCH
+    val stateWrapper: ValueStateWrapper = mockk()
+    val group: ChannelGroupDataEntity = mockGroupData(function, stateWrapper)
+
     whenever(readChannelGroupByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(group))
+    whenever(getChannelStateUseCase.invoke(function, stateWrapper)).thenReturn(mockk { every { isActive() } returns false })
 
     // when
     viewModel.loadData(remoteId, ItemType.GROUP)
@@ -166,30 +169,22 @@ class SwitchGeneralViewModelTest : BaseViewModelTest<SwitchGeneralViewState, Swi
   fun `should load estimated count down end time`() {
     // given
     val remoteId = 123
-
-    val channelValue: ChannelValue = mockk()
-    every { channelValue.hiValue() } returns true
+    val function = SUPLA_CHANNELFNC_LIGHTSWITCH
+    val stateWrapper: ValueStateWrapper = mockk()
 
     val estimatedEndDate = Date(1000)
     whenever(dateProvider.currentDate()).thenReturn(Date(100))
-    val extendedValue = mockTimerState(estimatedEndDate)
 
-    val channel: Channel = mockk()
-    every { channel.value } returns channelValue
-    every { channel.extendedValue } returns extendedValue
-    every { channel.func } returns SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH
-
-    val channelData: ChannelDataEntity = mockk {
-      every { getLegacyChannel() } returns channel
-    }
+    val channelData: ChannelDataEntity = mockChannelData(function, stateWrapper, estimatedEndDate)
     whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channelData))
+    whenever(getChannelStateUseCase.invoke(function, stateWrapper)).thenReturn(mockk { every { isActive() } returns true })
 
     // when
     viewModel.loadData(remoteId, ItemType.CHANNEL)
 
     // then
     Assertions.assertThat(events).isEmpty()
-    Assertions.assertThat(states).containsExactly(SwitchGeneralViewState(channel, true, estimatedEndDate))
+    Assertions.assertThat(states).containsExactly(SwitchGeneralViewState(channelData, true, estimatedEndDate))
 
     verify(readChannelByRemoteIdUseCase).invoke(remoteId)
     verifyNoMoreInteractions(readChannelByRemoteIdUseCase)
@@ -200,46 +195,50 @@ class SwitchGeneralViewModelTest : BaseViewModelTest<SwitchGeneralViewState, Swi
   fun `shouldn't load estimated countdown end time when time elapsed`() {
     // given
     val remoteId = 123
-
-    val channelValue: ChannelValue = mockk()
-    every { channelValue.hiValue() } returns true
+    val function = SUPLA_CHANNELFNC_LIGHTSWITCH
+    val stateWrapper: ValueStateWrapper = mockk()
 
     val estimatedEndDate = Date(1000)
     whenever(dateProvider.currentDate()).thenReturn(Date(1003))
-    val extendedValue = mockTimerState(estimatedEndDate)
 
-    val channel: Channel = mockk()
-    every { channel.value } returns channelValue
-    every { channel.extendedValue } returns extendedValue
-    every { channel.func } returns SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH
-
-    val channelData: ChannelDataEntity = mockk {
-      every { getLegacyChannel() } returns channel
-    }
+    val channelData: ChannelDataEntity = mockChannelData(function, stateWrapper, estimatedEndDate)
     whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channelData))
+    whenever(getChannelStateUseCase.invoke(function, stateWrapper)).thenReturn(mockk { every { isActive() } returns true })
 
     // when
     viewModel.loadData(remoteId, ItemType.CHANNEL)
 
     // then
     Assertions.assertThat(events).isEmpty()
-    Assertions.assertThat(states).containsExactly(SwitchGeneralViewState(channel, true))
+    Assertions.assertThat(states).containsExactly(SwitchGeneralViewState(channelData, true))
 
     verify(readChannelByRemoteIdUseCase).invoke(remoteId)
     verifyNoMoreInteractions(readChannelByRemoteIdUseCase)
     verifyZeroInteractions(readChannelGroupByRemoteIdUseCase)
   }
 
-  private fun mockTimerState(date: Date): ChannelExtendedValue {
-    val timerStateValue: SuplaTimerState = mockk()
-    every { timerStateValue.countdownEndsAt } returns date
-
+  private fun mockTimerState(date: Date): ChannelExtendedValueEntity {
     val suplaExtendedValue: SuplaChannelExtendedValue = mockk()
-    suplaExtendedValue.TimerStateValue = timerStateValue
+    every { suplaExtendedValue.timerEstimatedEndDate } returns date
 
-    val extendedValue: ChannelExtendedValue = mockk()
-    every { extendedValue.extendedValue } returns suplaExtendedValue
+    val extendedValue: ChannelExtendedValueEntity = mockk()
+    every { extendedValue.getSuplaValue() } returns suplaExtendedValue
 
     return extendedValue
+  }
+
+  private fun mockChannelData(function: Int, stateWrapper: ValueStateWrapper, estimatedEndDate: Date? = null): ChannelDataEntity {
+    return mockk {
+      every { this@mockk.function } returns function
+      every { channelExtendedValueEntity } returns estimatedEndDate?.let { mockTimerState(estimatedEndDate) }
+      every { toStateWrapper() } returns stateWrapper
+    }
+  }
+
+  private fun mockGroupData(function: Int, stateWrapper: ValueStateWrapper): ChannelGroupDataEntity {
+    return mockk {
+      every { this@mockk.function } returns function
+      every { toStateWrapper() } returns stateWrapper
+    }
   }
 }

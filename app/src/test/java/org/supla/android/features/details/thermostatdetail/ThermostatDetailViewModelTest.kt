@@ -30,22 +30,28 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.whenever
 import org.supla.android.Preferences
 import org.supla.android.core.BaseViewModelTest
+import org.supla.android.core.ui.StringProvider
+import org.supla.android.data.source.local.entity.ChannelEntity
+import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.ThermostatValue
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.db.Channel
-import org.supla.android.db.ChannelValue
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT
 import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.usecases.channel.GetChannelCaptionUseCase
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.channel.ReadChannelGroupByRemoteIdUseCase
 
 @RunWith(MockitoJUnitRunner::class)
 class ThermostatDetailViewModelTest :
   BaseViewModelTest<ThermostatDetailViewState, ThermostatDetailViewEvent, ThermostatDetailViewModel>() {
+
+  @Mock
+  private lateinit var getChannelCaptionUseCase: GetChannelCaptionUseCase
 
   @Mock
   private lateinit var readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase
@@ -74,10 +80,11 @@ class ThermostatDetailViewModelTest :
   fun `should close detail when thermostat changed subfunction`() {
     // given
     val remoteId = 123
-    val channelBase1: Channel = mockChannel(ThermostatSubfunction.HEAT)
-    val channelBase2: Channel = mockChannel(ThermostatSubfunction.COOL)
-    val channelData1: ChannelDataEntity = mockk { every { getLegacyChannel() } returns channelBase1 }
-    val channelData2: ChannelDataEntity = mockk { every { getLegacyChannel() } returns channelBase2 }
+    val channelData1: ChannelDataEntity = mockChannel(ThermostatSubfunction.HEAT)
+    val channelData2: ChannelDataEntity = mockChannel(ThermostatSubfunction.COOL)
+    val captionProvider: StringProvider = mockk()
+
+    whenever(getChannelCaptionUseCase.invoke(channelData1)).thenReturn(captionProvider)
     whenever(readChannelByRemoteIdUseCase.invoke(remoteId))
       .thenReturn(Maybe.just(channelData1), Maybe.just(channelData2))
 
@@ -87,7 +94,7 @@ class ThermostatDetailViewModelTest :
 
     // then
     assertThat(states).containsExactly(
-      ThermostatDetailViewState(channelBase1)
+      ThermostatDetailViewState(captionProvider, ThermostatSubfunction.HEAT)
     )
     assertThat(events).containsExactly(
       ThermostatDetailViewEvent.Close
@@ -98,8 +105,7 @@ class ThermostatDetailViewModelTest :
   fun `should close detail when thermostat changed function`() {
     // given
     val remoteId = 123
-    val channelBase1: Channel = mockChannel(ThermostatSubfunction.HEAT)
-    val channelData1: ChannelDataEntity = mockk { every { getLegacyChannel() } returns channelBase1 }
+    val channelData1: ChannelDataEntity = mockChannel(ThermostatSubfunction.HEAT)
     whenever(readChannelByRemoteIdUseCase.invoke(remoteId))
       .thenReturn(Maybe.just(channelData1))
 
@@ -117,8 +123,7 @@ class ThermostatDetailViewModelTest :
   fun `should close detail when thermostat was deleted`() {
     // given
     val remoteId = 123
-    val channelBase1: Channel = mockChannel(ThermostatSubfunction.HEAT, visible = 0)
-    val channelData1: ChannelDataEntity = mockk { every { getLegacyChannel() } returns channelBase1 }
+    val channelData1: ChannelDataEntity = mockChannel(ThermostatSubfunction.HEAT, visible = 0)
     whenever(readChannelByRemoteIdUseCase.invoke(remoteId))
       .thenReturn(Maybe.just(channelData1))
 
@@ -132,15 +137,24 @@ class ThermostatDetailViewModelTest :
     )
   }
 
-  private fun mockChannel(subfunction: ThermostatSubfunction, visible: Int = 1): Channel {
-    val thermostatValue: ThermostatValue = mockk()
-    every { thermostatValue.subfunction } returns subfunction
-    val value: ChannelValue = mockk()
-    every { value.asThermostatValue() } returns thermostatValue
-    return mockk<Channel>().also {
-      every { it.func } returns SUPLA_CHANNELFNC_HVAC_THERMOSTAT
-      every { it.visible } returns visible
-      every { it.value } returns value
+  private fun mockChannel(subfunction: ThermostatSubfunction, visible: Int = 1): ChannelDataEntity {
+    val thermostatValue: ThermostatValue = mockk {
+      every { this@mockk.subfunction } returns subfunction
+    }
+
+    val value: ChannelValueEntity = mockk {
+      every { asThermostatValue() } returns thermostatValue
+    }
+
+    val channel: ChannelEntity = mockk {
+      every { this@mockk.function } returns SUPLA_CHANNELFNC_HVAC_THERMOSTAT
+    }
+
+    return mockk<ChannelDataEntity> {
+      every { this@mockk.channelEntity } returns channel
+      every { this@mockk.function } returns SUPLA_CHANNELFNC_HVAC_THERMOSTAT
+      every { this@mockk.visible } returns visible
+      every { this@mockk.channelValueEntity } returns value
     }
   }
 }

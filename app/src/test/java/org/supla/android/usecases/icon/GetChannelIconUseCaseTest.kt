@@ -577,19 +577,13 @@ class GetChannelIconUseCaseTest {
     profileId: Long,
     stateWrapper: ValueStateWrapper
   ): ChannelDataEntity {
-    val channelEntity: ChannelEntity = mockk {
+
+    return mockk {
+      every { this@mockk.toStateWrapper() } returns stateWrapper
       every { this@mockk.function } returns function
       every { this@mockk.userIcon } returns userIconId
       every { this@mockk.altIcon } returns altIcon
       every { this@mockk.profileId } returns profileId
-    }
-
-    return mockk {
-      every { this@mockk.channelValueEntity } returns mockk {
-        every { toStateWrapper() } returns stateWrapper
-      }
-      every { this@mockk.function } returns function
-      every { this@mockk.channelEntity } returns channelEntity
     }
   }
 }

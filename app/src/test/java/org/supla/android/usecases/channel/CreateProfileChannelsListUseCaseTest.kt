@@ -169,9 +169,6 @@ class CreateProfileChannelsListUseCaseTest {
       every { remoteId } returns locationRemoteId
       every { caption } returns locationName
       every { isCollapsed(CollapsedFlag.CHANNEL) } returns locationCollapsed
-      every { toLegacyLocation() } returns mockk {
-        every { caption } returns locationName
-      }
     }
     every { channelEntity } returns mockk {
       every { flags } returns channelFlags

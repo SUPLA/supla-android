@@ -47,7 +47,7 @@ class SwitchDetailFragment :
   override fun isCloseEvent(event: SwitchDetailViewEvent) = event == SwitchDetailViewEvent.Close
 
   override fun updateToolbarTitle(state: SwitchDetailViewState) {
-    state.channelBase?.let { setToolbarTitle(it.getCaption(requireContext())) }
+    state.caption?.let { setToolbarTitle(it(requireContext())) }
   }
 
   companion object {

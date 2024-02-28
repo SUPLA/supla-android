@@ -116,6 +116,6 @@ class GroupListFragment : BaseFragment<GroupListViewState, GroupListViewEvent>(R
       viewModel.toggleLocationCollapsed(location)
       scrollDownOnReload = scrollDown
     }
-    adapter.listItemClickCallback = { viewModel.onListItemClick(it as ChannelGroup) }
+    adapter.listItemClickCallback = { viewModel.onListItemClick(it) }
   }
 }

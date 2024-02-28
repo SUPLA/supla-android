@@ -43,18 +43,20 @@ import org.supla.android.SuplaApp;
 import org.supla.android.SuplaChannelStatus;
 import org.supla.android.SuplaChannelStatus.ShapeType;
 import org.supla.android.ViewHelper;
-import org.supla.android.data.source.local.entity.Scene;
+import org.supla.android.data.source.local.entity.SceneEntity;
 import org.supla.android.events.UpdateEventsManager;
 import org.supla.android.images.ImageCache;
 import org.supla.android.images.ImageId;
 import org.supla.android.ui.lists.SlideableItem;
 import org.supla.android.ui.lists.SwapableListItem;
+import org.supla.android.usecases.icon.GetSceneIconUseCase;
 
 @AndroidEntryPoint
 public class SceneLayout extends LinearLayout implements SlideableItem, SwapableListItem {
 
   @Inject UpdateEventsManager eventsManager;
   @Inject DurationTimerHelper durationTimerHelper;
+  @Inject GetSceneIconUseCase getSceneIconUseCase;
 
   private RelativeLayout content;
   private FrameLayout right_btn;
@@ -309,7 +311,7 @@ public class SceneLayout extends LinearLayout implements SlideableItem, Swapable
 
   private void UpdateLeftBtn() {
 
-    float pr = content.getLeft() * 100 / left_btn.getWidth();
+    float pr = (float) (content.getLeft() * 100) / left_btn.getWidth();
 
     if (pr <= 0) {
       pr = 0;
@@ -361,15 +363,15 @@ public class SceneLayout extends LinearLayout implements SlideableItem, Swapable
     this.locationCaption = locationCaption;
   }
 
-  public void setScene(Scene scene) {
-    sceneId = scene.getSceneId();
+  public void setScene(SceneEntity scene) {
+    sceneId = scene.getRemoteId();
 
     setupLayout(scene);
     observeStateChanges();
   }
 
-  private void setupLayout(Scene scene) {
-    imgl.setImage(scene.getImageId());
+  private void setupLayout(SceneEntity scene) {
+    imgl.setImage(getSceneIconUseCase.invoke(scene, false));
 
     setRightBtnText(getResources().getString(R.string.btn_execute));
     setLeftBtnText(getResources().getString(R.string.btn_abort));

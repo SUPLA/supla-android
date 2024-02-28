@@ -21,7 +21,7 @@ import android.content.Context
 import dagger.hilt.android.qualifiers.ActivityContext
 import org.supla.android.Preferences
 import org.supla.android.SuplaApp
-import org.supla.android.db.Location
+import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.ui.dialogs.ChannelCaptionEditor
 import org.supla.android.ui.lists.BaseChannelsAdapter
 import javax.inject.Inject
@@ -31,7 +31,7 @@ class ChannelsAdapter @Inject constructor(
   preferences: Preferences
 ) : BaseChannelsAdapter(context, preferences) {
 
-  override fun isLocationCollapsed(location: Location) = ((location.collapsed and 0x1) > 0)
+  override fun isLocationCollapsed(location: LocationEntity) = ((location.collapsed and 0x1) > 0)
 
   override fun onCaptionLongPress(channelId: Int) {
     SuplaApp.Vibrate(context)

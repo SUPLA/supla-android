@@ -131,7 +131,7 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
     }
     adapter.infoButtonClickCallback = { statePopup.show(it) }
     adapter.issueButtonClickCallback = { showAlertPopup(it) }
-    adapter.listItemClickCallback = { viewModel.onListItemClick((it as Channel).remoteId) }
+    adapter.listItemClickCallback = { viewModel.onListItemClick(it) }
   }
 
   override fun onSuplaMessage(message: SuplaClientMsg) {

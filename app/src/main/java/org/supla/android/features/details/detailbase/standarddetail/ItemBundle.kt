@@ -17,6 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.db.Channel
 import java.io.Serializable
@@ -34,6 +35,14 @@ data class ItemBundle(
         deviceId = channel.deviceID,
         itemType = ItemType.CHANNEL,
         function = channel.func
+      )
+
+    fun from(channelData: ChannelDataEntity): ItemBundle =
+      ItemBundle(
+        remoteId = channelData.remoteId,
+        deviceId = channelData.channelEntity.deviceId ?: 0,
+        itemType = ItemType.CHANNEL,
+        function = channelData.function
       )
   }
 }

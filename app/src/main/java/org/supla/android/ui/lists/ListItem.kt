@@ -20,11 +20,11 @@ package org.supla.android.ui.lists
 import androidx.annotation.DrawableRes
 import org.supla.android.core.ui.StringProvider
 import org.supla.android.data.ValuesFormatter
-import org.supla.android.data.source.local.entity.Scene
+import org.supla.android.data.model.general.ChannelDataBase
+import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
-import org.supla.android.db.Channel
-import org.supla.android.db.ChannelBase
-import org.supla.android.db.Location
+import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.complex.SceneDataEntity
 import org.supla.android.images.ImageId
 import org.supla.android.ui.lists.data.IssueIconType
 import org.supla.android.ui.lists.data.SlideableListItemData
@@ -33,11 +33,11 @@ import java.util.Date
 sealed interface ListItem {
 
   abstract class ChannelBasedItem(
-    open val channelBase: ChannelBase
+    open val channelBase: ChannelDataBase
   ) : ListItem
 
   abstract class DefaultItem(
-    val channel: Channel,
+    val channel: ChannelDataEntity,
     val locationCaption: String,
     val online: Boolean,
     val captionProvider: StringProvider,
@@ -56,14 +56,17 @@ sealed interface ListItem {
     }
   }
 
-  data class SceneItem(val scene: Scene, val location: Location) : ListItem
-  data class ChannelItem(override var channelBase: ChannelBase, val location: Location, val children: List<ChannelChildEntity>? = null) :
-    ChannelBasedItem(channelBase)
+  data class SceneItem(val sceneData: SceneDataEntity) : ListItem
+  data class ChannelItem(
+    override var channelBase: ChannelDataBase,
+    val children: List<ChannelChildEntity>? = null,
+    val legacyBase: org.supla.android.db.ChannelBase
+  ) : ChannelBasedItem(channelBase)
 
-  data class LocationItem(val location: Location) : ListItem
+  data class LocationItem(val location: LocationEntity) : ListItem
 
   class HvacThermostatItem(
-    channel: Channel,
+    channel: ChannelDataEntity,
     locationCaption: String,
     online: Boolean,
     captionProvider: StringProvider,
@@ -90,7 +93,7 @@ sealed interface ListItem {
   }
 
   class MeasurementItem(
-    channel: Channel,
+    channel: ChannelDataEntity,
     locationCaption: String,
     online: Boolean,
     captionProvider: StringProvider,
@@ -99,7 +102,7 @@ sealed interface ListItem {
   ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, value)
 
   class GeneralPurposeMeterItem(
-    channel: Channel,
+    channel: ChannelDataEntity,
     locationCaption: String,
     online: Boolean,
     captionProvider: StringProvider,
@@ -108,7 +111,7 @@ sealed interface ListItem {
   ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, value)
 
   class GeneralPurposeMeasurementItem(
-    channel: Channel,
+    channel: ChannelDataEntity,
     locationCaption: String,
     online: Boolean,
     captionProvider: StringProvider,

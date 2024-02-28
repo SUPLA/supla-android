@@ -125,7 +125,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
 
     void onCaptionLongPress(int channelId);
 
-    void onItemClick(ChannelBase channelBase);
+    void onItemClick(int remoteId);
   }
 
   public ChannelLayout(Context context) {
@@ -603,10 +603,6 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
     }
   }
 
-  public ChannelBase getChannelBase() {
-    return channelBase;
-  }
-
   public void setChannelData(ChannelBase cbase) {
     configureBasedOnData(cbase);
     observeChanges();
@@ -817,7 +813,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
           listener.onCaptionLongPress(channelBase.getRemoteId());
           return true;
         });
-    caption_text.setOnClickListener(v -> listener.onItemClick(channelBase));
+    caption_text.setOnClickListener(v -> listener.onItemClick(channelBase.getRemoteId()));
     caption_text.setClickable(false);
     caption_text.setLongClickable(true);
 

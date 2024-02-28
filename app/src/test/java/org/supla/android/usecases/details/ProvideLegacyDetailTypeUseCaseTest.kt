@@ -7,6 +7,9 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.InjectMocks
 import org.mockito.junit.MockitoJUnitRunner
+import org.supla.android.data.model.general.ChannelDataBase
+import org.supla.android.data.source.local.entity.ChannelValueEntity
+import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.db.Channel
 import org.supla.android.db.ChannelValue
 import org.supla.android.features.details.detailbase.standarddetail.DetailPage
@@ -37,12 +40,12 @@ class ProvideLegacyDetailTypeUseCaseTest {
 
   @Test
   fun `should provide detail for roller shutter`() {
-    testDetailType(SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER, LegacyDetailType.RS)
+    testDetailType(SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER, BlindsDetailType(listOf(DetailPage.BLINDS)))
   }
 
   @Test
   fun `should provide detail for roof window`() {
-    testDetailType(SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW, LegacyDetailType.RS)
+    testDetailType(SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW, BlindsDetailType(listOf(DetailPage.BLINDS)))
   }
 
   @Test
@@ -51,10 +54,10 @@ class ProvideLegacyDetailTypeUseCaseTest {
       SUPLA_CHANNELFNC_LIGHTSWITCH,
       SwitchDetailType(listOf(DetailPage.SWITCH, DetailPage.HISTORY_IC))
     ) { channel ->
-      val channelValue: ChannelValue = mockk()
+      val channelValue: ChannelValueEntity = mockk()
       every { channelValue.subValueType } returns SUBV_TYPE_IC_MEASUREMENTS.toShort()
       every { channel.flags } returns 0
-      every { channel.value } returns channelValue
+      every { channel.channelValueEntity } returns channelValue
     }
   }
 
@@ -64,10 +67,10 @@ class ProvideLegacyDetailTypeUseCaseTest {
       SUPLA_CHANNELFNC_POWERSWITCH,
       SwitchDetailType(listOf(DetailPage.SWITCH, DetailPage.HISTORY_IC))
     ) { channel ->
-      val channelValue: ChannelValue = mockk()
+      val channelValue: ChannelValueEntity = mockk()
       every { channelValue.subValueType } returns SUBV_TYPE_IC_MEASUREMENTS.toShort()
       every { channel.flags } returns 0
-      every { channel.value } returns channelValue
+      every { channel.channelValueEntity } returns channelValue
     }
   }
 
@@ -77,10 +80,10 @@ class ProvideLegacyDetailTypeUseCaseTest {
       SUPLA_CHANNELFNC_STAIRCASETIMER,
       SwitchDetailType(listOf(DetailPage.SWITCH, DetailPage.HISTORY_IC))
     ) { channel ->
-      val channelValue: ChannelValue = mockk()
+      val channelValue: ChannelValueEntity = mockk()
       every { channelValue.subValueType } returns SUBV_TYPE_IC_MEASUREMENTS.toShort()
       every { channel.flags } returns 0
-      every { channel.value } returns channelValue
+      every { channel.channelValueEntity } returns channelValue
     }
   }
 
@@ -90,10 +93,10 @@ class ProvideLegacyDetailTypeUseCaseTest {
       SUPLA_CHANNELFNC_LIGHTSWITCH,
       SwitchDetailType(listOf(DetailPage.SWITCH, DetailPage.HISTORY_EM))
     ) { channel ->
-      val channelValue: ChannelValue = mockk()
+      val channelValue: ChannelValueEntity = mockk()
       every { channelValue.subValueType } returns SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort()
       every { channel.flags } returns 0
-      every { channel.value } returns channelValue
+      every { channel.channelValueEntity } returns channelValue
     }
   }
 
@@ -103,10 +106,10 @@ class ProvideLegacyDetailTypeUseCaseTest {
       SUPLA_CHANNELFNC_POWERSWITCH,
       SwitchDetailType(listOf(DetailPage.SWITCH, DetailPage.HISTORY_EM))
     ) { channel ->
-      val channelValue: ChannelValue = mockk()
+      val channelValue: ChannelValueEntity = mockk()
       every { channelValue.subValueType } returns SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort()
       every { channel.flags } returns 0
-      every { channel.value } returns channelValue
+      every { channel.channelValueEntity } returns channelValue
     }
   }
 
@@ -116,10 +119,10 @@ class ProvideLegacyDetailTypeUseCaseTest {
       SUPLA_CHANNELFNC_STAIRCASETIMER,
       SwitchDetailType(listOf(DetailPage.SWITCH, DetailPage.HISTORY_EM))
     ) { channel ->
-      val channelValue: ChannelValue = mockk()
+      val channelValue: ChannelValueEntity = mockk()
       every { channelValue.subValueType } returns SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort()
       every { channel.flags } returns SUPLA_CHANNEL_FLAG_COUNTDOWN_TIMER_SUPPORTED
-      every { channel.value } returns channelValue
+      every { channel.channelValueEntity } returns channelValue
     }
   }
 
@@ -129,10 +132,10 @@ class ProvideLegacyDetailTypeUseCaseTest {
       SUPLA_CHANNELFNC_LIGHTSWITCH,
       SwitchDetailType(listOf(DetailPage.SWITCH, DetailPage.SWITCH_TIMER, DetailPage.HISTORY_EM))
     ) { channel ->
-      val channelValue: ChannelValue = mockk()
+      val channelValue: ChannelValueEntity = mockk()
       every { channelValue.subValueType } returns SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort()
       every { channel.flags } returns SUPLA_CHANNEL_FLAG_COUNTDOWN_TIMER_SUPPORTED
-      every { channel.value } returns channelValue
+      every { channel.channelValueEntity } returns channelValue
     }
   }
 
@@ -142,10 +145,10 @@ class ProvideLegacyDetailTypeUseCaseTest {
       SUPLA_CHANNELFNC_POWERSWITCH,
       SwitchDetailType(listOf(DetailPage.SWITCH, DetailPage.SWITCH_TIMER, DetailPage.HISTORY_EM))
     ) { channel ->
-      val channelValue: ChannelValue = mockk()
+      val channelValue: ChannelValueEntity = mockk()
       every { channelValue.subValueType } returns SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort()
       every { channel.flags } returns SUPLA_CHANNEL_FLAG_COUNTDOWN_TIMER_SUPPORTED
-      every { channel.value } returns channelValue
+      every { channel.channelValueEntity } returns channelValue
     }
   }
 
@@ -155,17 +158,19 @@ class ProvideLegacyDetailTypeUseCaseTest {
       SUPLA_CHANNELFNC_STAIRCASETIMER,
       SwitchDetailType(listOf(DetailPage.SWITCH, DetailPage.HISTORY_EM))
     ) { channel ->
-      val channelValue: ChannelValue = mockk()
+      val channelValue: ChannelValueEntity = mockk()
       every { channelValue.subValueType } returns SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort()
       every { channel.flags } returns 0
-      every { channel.value } returns channelValue
+      every { channel.channelValueEntity } returns channelValue
     }
   }
 
   @Test
   fun `should provide detail for light switch`() {
     testDetailType(SUPLA_CHANNELFNC_LIGHTSWITCH, SwitchDetailType(listOf(DetailPage.SWITCH))) { channel ->
-      every { channel.value } returns null
+      every { channel.channelValueEntity } returns mockk {
+        every { subValueType } returns 0
+      }
       every { channel.flags } returns 0
     }
   }
@@ -173,7 +178,9 @@ class ProvideLegacyDetailTypeUseCaseTest {
   @Test
   fun `should provide detail for power switch`() {
     testDetailType(SUPLA_CHANNELFNC_POWERSWITCH, SwitchDetailType(listOf(DetailPage.SWITCH))) { channel ->
-      every { channel.value } returns null
+      every { channel.channelValueEntity } returns mockk {
+        every { subValueType } returns 0
+      }
       every { channel.flags } returns 0
     }
   }
@@ -181,7 +188,9 @@ class ProvideLegacyDetailTypeUseCaseTest {
   @Test
   fun `should provide detail for stair case timer`() {
     testDetailType(SUPLA_CHANNELFNC_STAIRCASETIMER, SwitchDetailType(listOf(DetailPage.SWITCH))) { channel ->
-      every { channel.value } returns null
+      every { channel.channelValueEntity } returns mockk {
+        every { subValueType } returns 0
+      }
       every { channel.flags } returns 0
     }
   }
@@ -260,10 +269,10 @@ class ProvideLegacyDetailTypeUseCaseTest {
     testDetailType(SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER, GpmDetailType(listOf(DetailPage.GPM_HISTORY)))
   }
 
-  private fun testDetailType(function: Int, result: DetailType?, extraMocks: ((Channel) -> Unit) = { }) {
+  private fun testDetailType(function: Int, result: DetailType?, extraMocks: ((ChannelDataEntity) -> Unit) = { }) {
     // given
-    val channel: Channel = mockk()
-    every { channel.func } returns function
+    val channel: ChannelDataEntity = mockk()
+    every { channel.function } returns function
     extraMocks(channel)
 
     // when

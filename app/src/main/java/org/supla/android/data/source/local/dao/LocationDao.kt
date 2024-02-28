@@ -19,6 +19,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import androidx.room.Dao
 import androidx.room.Query
+import androidx.room.Update
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.LocationEntity.Companion.ALL_COLUMNS
@@ -39,4 +41,7 @@ interface LocationDao {
   """
   )
   fun findByRemoteId(remoteId: Int): Maybe<LocationEntity>
+
+  @Update
+  fun updateLocation(locationEntity: LocationEntity): Completable
 }

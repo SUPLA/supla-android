@@ -44,6 +44,10 @@ public class ChannelGroup extends ChannelBase {
     return getRemoteId();
   }
 
+  public void setTotalValue(String totalValue) {
+    this.TotalValue = totalValue;
+  }
+
   public String getTotalValue() {
     return TotalValue == null ? "" : TotalValue;
   }
@@ -54,6 +58,10 @@ public class ChannelGroup extends ChannelBase {
 
   public int getPosition() {
     return position;
+  }
+
+  public void setOnline(int online) {
+    this.OnLine = online;
   }
 
   @SuppressLint("Range")

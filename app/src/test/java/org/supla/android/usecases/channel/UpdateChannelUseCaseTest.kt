@@ -206,7 +206,7 @@ class UpdateChannelUseCaseTest {
     }
     val channelEntity: ChannelEntity = mockk {
       every { differsFrom(suplaChannel) } returns true
-      every { locationId } returns locationRemoteId.toLong()
+      every { locationId } returns locationRemoteId
       every { updatedBy(suplaChannel) } returns this
       every { position } returns 0
       every { profileId } returns 123
@@ -228,7 +228,6 @@ class UpdateChannelUseCaseTest {
     verify(channelRepository).update(channelEntity)
     io.mockk.verify {
       channelEntity.updatedBy(suplaChannel)
-      channelEntity.copy(position = 0) wasNot called
     }
 
     verifyNoMoreInteractions(locationRepository, channelRepository, profileRepository)
@@ -247,13 +246,20 @@ class UpdateChannelUseCaseTest {
       every { remoteId } returns locationRemoteId
     }
     val channelEntity: ChannelEntity = mockk {
+      every { remoteId } returns channelRemoteId
       every { differsFrom(suplaChannel) } returns true
       every { locationId } returns 333
       every { updatedBy(suplaChannel) } returns this
       every { position } returns 0
-      every { copy(id = 444, locationId = 333, position = 6, profileId = 123) } returns this
+      every { copy(id = 444, remoteId = channelRemoteId, locationId = 333, position = 6, profileId = 123) } returns this
       every { id } returns 444
-      every { profileId } returns 123
+      every { caption } returns ""
+      every { function } returns 0
+      every { visible } returns 0
+      every { altIcon } returns 0
+      every { userIcon } returns 0
+      every { flags } returns 0
+      every { profileId } returns 0
     }
 
     whenever(locationRepository.findByRemoteId(locationRemoteId)).thenReturn(Maybe.just(locationEntity))
@@ -275,7 +281,7 @@ class UpdateChannelUseCaseTest {
 
     io.mockk.verify {
       channelEntity.updatedBy(suplaChannel)
-      channelEntity.copy(position = 6)
+      channelEntity.copy(id = 444, remoteId = channelRemoteId, locationId = 333, position = 6)
     }
 
     verifyNoMoreInteractions(locationRepository, channelRepository, profileRepository)
@@ -294,13 +300,20 @@ class UpdateChannelUseCaseTest {
       every { remoteId } returns locationRemoteId
     }
     val channelEntity: ChannelEntity = mockk {
+      every { remoteId } returns channelRemoteId
       every { differsFrom(suplaChannel) } returns true
       every { locationId } returns 333
       every { updatedBy(suplaChannel) } returns this
       every { position } returns 5
-      every { copy(id = 444, locationId = 333, position = 0, profileId = 123) } returns this
+      every { copy(id = 444, remoteId = channelRemoteId, locationId = 333, position = 0, profileId = 123) } returns this
       every { id } returns 444
-      every { profileId } returns 123
+      every { caption } returns ""
+      every { function } returns 0
+      every { visible } returns 0
+      every { altIcon } returns 0
+      every { userIcon } returns 0
+      every { flags } returns 0
+      every { profileId } returns 0
     }
 
     whenever(locationRepository.findByRemoteId(locationRemoteId)).thenReturn(Maybe.just(locationEntity))
@@ -320,7 +333,7 @@ class UpdateChannelUseCaseTest {
 
     io.mockk.verify {
       channelEntity.updatedBy(suplaChannel)
-      channelEntity.copy(position = 0)
+      channelEntity.copy(id = 444, remoteId = channelRemoteId, locationId = 333, position = 0)
     }
 
     verifyNoMoreInteractions(locationRepository, channelRepository, profileRepository)
@@ -340,7 +353,7 @@ class UpdateChannelUseCaseTest {
     val channelEntity: ChannelEntity = mockk {
       every { differsFrom(suplaChannel) } returns false
       every { visible } returns 0
-      every { locationId } returns locationRemoteId.toLong()
+      every { locationId } returns locationRemoteId
       every { updatedBy(suplaChannel) } returns this
       every { position } returns 0
       every { profileId } returns 123
@@ -362,7 +375,6 @@ class UpdateChannelUseCaseTest {
     verify(channelRepository).update(channelEntity)
     io.mockk.verify {
       channelEntity.updatedBy(suplaChannel)
-      channelEntity.copy(position = 0) wasNot called
     }
 
     verifyNoMoreInteractions(locationRepository, channelRepository, profileRepository)
@@ -415,7 +427,7 @@ class UpdateChannelUseCaseTest {
     }
     val channelEntity: ChannelEntity = mockk {
       every { differsFrom(suplaChannel) } returns true
-      every { locationId } returns locationRemoteId.toLong()
+      every { locationId } returns locationRemoteId
       every { updatedBy(suplaChannel) } returns this
       every { position } returns 0
       every { profileId } returns 123
@@ -448,7 +460,6 @@ class UpdateChannelUseCaseTest {
     verify(suplaClientProvider).provide()
     io.mockk.verify {
       channelEntity.updatedBy(suplaChannel)
-      channelEntity.copy(position = 0) wasNot called
       suplaClient.getChannelConfig(channelRemoteId, ChannelConfigType.DEFAULT)
     }
 
@@ -469,7 +480,7 @@ class UpdateChannelUseCaseTest {
     }
     val channelEntity: ChannelEntity = mockk {
       every { differsFrom(suplaChannel) } returns true
-      every { locationId } returns locationRemoteId.toLong()
+      every { locationId } returns locationRemoteId
       every { updatedBy(suplaChannel) } returns this
       every { position } returns 0
       every { profileId } returns 123
@@ -496,7 +507,6 @@ class UpdateChannelUseCaseTest {
     verify(channelConfigRepository).findForRemoteId(channelRemoteId)
     io.mockk.verify {
       channelEntity.updatedBy(suplaChannel)
-      channelEntity.copy(position = 0) wasNot called
     }
 
     verifyNoMoreInteractions(locationRepository, channelRepository, profileRepository, channelConfigRepository)

@@ -26,7 +26,6 @@ import org.supla.android.lib.SuplaSceneState
 
 interface SceneRepository {
 
-  fun getAllProfileScenes(): Observable<List<Scene>>
   fun getAllScenesForProfile(profileId: Long): List<Pair<Scene, Location>>
   fun getSceneUserIconIdsToDownload(): List<Int>
   fun getScene(id: Int): Scene?

@@ -85,7 +85,7 @@ class CreateProfileChannelsListUseCase @Inject constructor(
 
             if (currentLocation == null || newLocation.caption != currentLocation.caption) {
               location = newLocation
-              channels.add(ListItem.LocationItem(newLocation.toLegacyLocation()))
+              channels.add(ListItem.LocationItem(newLocation))
             }
           }
 
@@ -113,7 +113,7 @@ class CreateProfileChannelsListUseCase @Inject constructor(
 
   private fun toGpMeasurement(channelData: ChannelDataEntity): ListItem.GeneralPurposeMeasurementItem =
     ListItem.GeneralPurposeMeasurementItem(
-      channelData.getLegacyChannel(),
+      channelData,
       channelData.locationEntity.caption,
       channelData.channelValueEntity.online,
       getChannelCaptionUseCase(channelData),
@@ -123,7 +123,7 @@ class CreateProfileChannelsListUseCase @Inject constructor(
 
   private fun toGpMeterItem(channelData: ChannelDataEntity): ListItem.GeneralPurposeMeterItem =
     ListItem.GeneralPurposeMeterItem(
-      channelData.getLegacyChannel(),
+      channelData,
       channelData.locationEntity.caption,
       channelData.channelValueEntity.online,
       getChannelCaptionUseCase(channelData),
@@ -138,7 +138,7 @@ class CreateProfileChannelsListUseCase @Inject constructor(
     }
 
     return ListItem.MeasurementItem(
-      channelData.getLegacyChannel(),
+      channelData,
       channelData.locationEntity.caption,
       channelData.channelValueEntity.online,
       getChannelCaptionUseCase(channelData),
@@ -156,7 +156,7 @@ class CreateProfileChannelsListUseCase @Inject constructor(
       ?.firstOrNull { it?.relationType == ChannelRelationType.MAIN_THERMOMETER }
 
     return ListItem.HvacThermostatItem(
-      channelData.getLegacyChannel(),
+      channelData,
       channelData.locationEntity.caption,
       channelData.channelValueEntity.online,
       getChannelCaptionUseCase(channelData),
@@ -172,8 +172,8 @@ class CreateProfileChannelsListUseCase @Inject constructor(
 
   private fun toChannelItem(channelData: ChannelDataEntity, childrenMap: MutableMap<Int, List<ChannelChildEntity?>>): ListItem.ChannelItem =
     ListItem.ChannelItem(
-      channelData.getLegacyChannel(),
-      channelData.locationEntity.toLegacyLocation(),
-      childrenMap[channelData.remoteId]?.filterNotNull()
+      channelData,
+      childrenMap[channelData.remoteId]?.filterNotNull(),
+      channelData.getLegacyChannel()
     )
 }

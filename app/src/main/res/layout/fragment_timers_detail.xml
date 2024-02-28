@@ -73,7 +73,7 @@
       android:layout_marginBottom="@dimen/distance_default"
       app:layout_constraintBottom_toBottomOf="parent" />
 
-    <org.supla.android.features.details.switchdetail.timersdetail.TimerConfigurationView
+    <org.supla.android.features.details.switchdetail.timer.TimerConfigurationView
       android:id="@+id/details_timer_configuration"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
