@@ -26,11 +26,13 @@ import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.CombinedData
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import org.supla.android.data.model.chart.ChartDataAggregation
+import org.supla.android.data.model.chart.ChartEntryType
 import org.supla.android.data.model.chart.ChartRange
 import org.supla.android.data.model.chart.DateRange
 import org.supla.android.data.model.chart.HistoryDataSet
 import org.supla.android.extensions.DAY_IN_SEC
 import org.supla.android.extensions.guardLet
+import kotlin.math.abs
 
 class BarChartData(
   dateRange: DateRange,
@@ -89,6 +91,21 @@ class BarChartData(
 
   override fun fromCoordinate(x: Float): Float {
     return super.fromCoordinate(x) + minDate
+  }
+
+  override fun getAxisMaxValue(filter: (ChartEntryType) -> Boolean): Float? {
+    val maxValue = super.getAxisMaxValue(filter)
+
+    if (maxValue != null) {
+      if (maxValue <= 0) {
+        val minValue = getAxisMinValueRaw(filter)
+        if (minValue != null) {
+          return abs(minValue).times(CHART_TOP_MARGIN)
+        }
+      }
+    }
+
+    return maxValue
   }
 
   private fun barDataSet(set: List<BarEntry>, @ColorRes colorRes: Int, resources: Resources) =

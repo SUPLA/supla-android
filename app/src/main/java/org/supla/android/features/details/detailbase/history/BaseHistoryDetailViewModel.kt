@@ -32,7 +32,6 @@ import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.model.Optional
 import org.supla.android.data.model.chart.ChartDataAggregation
-import org.supla.android.data.model.chart.ChartEntryType
 import org.supla.android.data.model.chart.ChartParameters
 import org.supla.android.data.model.chart.ChartRange
 import org.supla.android.data.model.chart.DateRange
@@ -49,7 +48,6 @@ import org.supla.android.extensions.dayEnd
 import org.supla.android.extensions.dayStart
 import org.supla.android.extensions.guardLet
 import org.supla.android.extensions.hour
-import org.supla.android.extensions.ifLet
 import org.supla.android.extensions.monthEnd
 import org.supla.android.extensions.monthStart
 import org.supla.android.extensions.quarterEnd
@@ -356,30 +354,13 @@ abstract class BaseHistoryDetailViewModel(
         chartData = dataWithActiveSet,
         withRightAxis = dataWithActiveSet.sets.firstOrNull { it.setId.type.rightAxis() && it.active } != null,
         withLeftAxis = dataWithActiveSet.sets.firstOrNull { it.setId.type.leftAxis() && it.active } != null,
-        maxLeftAxis = getAxisMax(dataWithActiveSet) { it.leftAxis() },
-        maxRightAxis = getAxisMax(dataWithActiveSet) { it.rightAxis() },
+        maxLeftAxis = dataWithActiveSet.getAxisMaxValue { it.leftAxis() },
+        maxRightAxis = dataWithActiveSet.getAxisMaxValue { it.rightAxis() },
         minDate = if (dateRange.isEmpty) state.minDate else dateRange.get().start,
         maxDate = if (dateRange.isEmpty) state.maxDate else dateRange.get().end,
         loading = false
       )
     }
-  }
-
-  private fun getAxisMax(data: ChartData, filter: (ChartEntryType) -> Boolean): Float? {
-    val maxValue = data.sets
-      .filter { filter(it.setId.type) }
-      .mapNotNull { set -> set.entities.maxOfOrNull { entries -> entries.maxOf { it.value } } }
-      .maxOfOrNull { it }
-    val minValue = data.sets
-      .filter { filter(it.setId.type) }
-      .mapNotNull { set -> set.entities.minOfOrNull { entries -> entries.minOf { it.value } } }
-      .minOfOrNull { it }
-
-    ifLet(minValue, maxValue) { (min, max) ->
-      return max.times(1.2f).minus(min.times(0.2f))
-    }
-
-    return null
   }
 
   protected fun mergeEvents(main: DownloadEventsManager.State, aux: DownloadEventsManager.State?): DownloadEventsManager.State {
@@ -648,7 +629,8 @@ data class HistoryDetailViewState(
     }
     return copy(
       ranges = ranges?.copy(selected = newChartRange),
-      range = range?.shift(chartRange, forward)
+      range = range?.shift(chartRange, forward),
+      chartData = chartData.empty()
     )
   }
 
