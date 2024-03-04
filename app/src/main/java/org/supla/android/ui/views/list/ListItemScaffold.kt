@@ -133,8 +133,7 @@ fun ListItemScaffold(
       Box(
         modifier = Modifier
           .fillMaxHeight()
-          .weight(1f)
-          .padding(start = Distance.tiny, end = Distance.tiny),
+          .weight(1f),
         content = content
       )
 
