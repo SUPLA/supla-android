@@ -142,6 +142,10 @@ public class ChannelDetailRS extends DetailLayout
   }
 
   private void setRollerShutterVisible(ChannelBase channelBase) {
+    if (channelBase == null) {
+      return;
+    }
+
     if (channelBase.getFunc() == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW) {
       llRollerShutter.setVisibility(GONE);
       roofWindow.setVisibility(VISIBLE);

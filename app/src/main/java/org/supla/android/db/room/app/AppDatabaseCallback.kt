@@ -19,6 +19,7 @@ package org.supla.android.db.room.app
 
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
+import org.supla.android.Preferences
 import org.supla.android.data.source.local.view.ChannelGroupValueView
 import org.supla.android.data.source.local.view.ChannelView
 import org.supla.android.data.source.local.view.SceneView
@@ -27,11 +28,17 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class AppDatabaseCallback @Inject constructor() : RoomDatabase.Callback(), SqlExecutor {
+class AppDatabaseCallback @Inject constructor(
+  private val preferences: Preferences
+) : RoomDatabase.Callback(), SqlExecutor {
 
   override fun onCreate(db: SupportSQLiteDatabase) {
     execSQL(db, SceneView.SQL)
     execSQL(db, ChannelGroupValueView.SQL)
     execSQL(db, ChannelView.SQL)
+  }
+
+  override fun onDestructiveMigration(db: SupportSQLiteDatabase) {
+    preferences.isAnyAccountRegistered = false
   }
 }

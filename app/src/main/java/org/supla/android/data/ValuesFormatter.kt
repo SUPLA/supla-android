@@ -82,7 +82,7 @@ class ValuesFormatter @Inject constructor(
 
   fun getDistanceString(rawValue: Double?): String {
     val (distance) = guardLet(rawValue) { return "$NO_VALUE_TEXT m" }
-    if (distance < 0) {
+    if (distance < 0 || distance.isNaN()) {
       return "$NO_VALUE_TEXT m"
     }
 
