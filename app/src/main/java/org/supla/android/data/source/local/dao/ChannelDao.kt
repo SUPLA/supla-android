@@ -73,7 +73,7 @@ interface ChannelDao {
     """
     SELECT 
       channel.$COLUMN_ID channel_$COLUMN_ID, 
-      channel.${ChannelEntity.COLUMN_CHANNEL_REMOTE_ID} channel_${ChannelEntity.COLUMN_CHANNEL_REMOTE_ID}, 
+      channel.$COLUMN_CHANNEL_REMOTE_ID channel_$COLUMN_CHANNEL_REMOTE_ID, 
       channel.${ChannelEntity.COLUMN_DEVICE_ID} channel_${ChannelEntity.COLUMN_DEVICE_ID}, 
       channel.${ChannelEntity.COLUMN_CAPTION} channel_${ChannelEntity.COLUMN_CAPTION},
       channel.${ChannelEntity.COLUMN_TYPE} channel_${ChannelEntity.COLUMN_TYPE}, 
@@ -115,16 +115,16 @@ interface ChannelDao {
       config.${ChannelConfigEntity.COLUMN_PROFILE_ID} config_${ChannelConfigEntity.COLUMN_PROFILE_ID}
     FROM $TABLE_NAME channel
     JOIN ${ChannelValueEntity.TABLE_NAME} value
-      ON channel.${ChannelEntity.COLUMN_CHANNEL_REMOTE_ID} = value.${ChannelValueEntity.COLUMN_CHANNEL_REMOTE_ID}
+      ON channel.$COLUMN_CHANNEL_REMOTE_ID = value.${ChannelValueEntity.COLUMN_CHANNEL_REMOTE_ID}
         AND channel.$COLUMN_PROFILE_ID = value.${ChannelValueEntity.COLUMN_PROFILE_ID}
     JOIN ${LocationEntity.TABLE_NAME} location
       ON channel.$COLUMN_LOCATION_ID = location.${LocationEntity.COLUMN_REMOTE_ID}
         AND channel.$COLUMN_PROFILE_ID = location.${LocationEntity.COLUMN_PROFILE_ID}
     LEFT JOIN ${ChannelConfigEntity.TABLE_NAME} config
-      ON channel.${ChannelEntity.COLUMN_CHANNEL_REMOTE_ID} = config.${ChannelConfigEntity.COLUMN_CHANNEL_ID}
+      ON channel.$COLUMN_CHANNEL_REMOTE_ID = config.${ChannelConfigEntity.COLUMN_CHANNEL_ID}
         AND channel.$COLUMN_PROFILE_ID = config.${LocationEntity.COLUMN_PROFILE_ID}
     LEFT JOIN ${ChannelExtendedValueEntity.TABLE_NAME} extended_value
-      ON channel.${ChannelEntity.COLUMN_CHANNEL_REMOTE_ID} = extended_value.${ChannelExtendedValueEntity.COLUMN_CHANNEL_ID}
+      ON channel.$COLUMN_CHANNEL_REMOTE_ID = extended_value.${ChannelExtendedValueEntity.COLUMN_CHANNEL_ID}
         AND channel.$COLUMN_PROFILE_ID = extended_value.${ChannelExtendedValueEntity.COLUMN_PROFILE_ID}
     WHERE channel.${ChannelEntity.COLUMN_FUNCTION} <> 0
       AND channel.$COLUMN_PROFILE_ID = ${ProfileEntity.SUBQUERY_ACTIVE}
@@ -143,7 +143,7 @@ interface ChannelDao {
     """
     SELECT 
       channel.$COLUMN_ID channel_$COLUMN_ID, 
-      channel.${ChannelEntity.COLUMN_CHANNEL_REMOTE_ID} channel_${ChannelEntity.COLUMN_CHANNEL_REMOTE_ID}, 
+      channel.$COLUMN_CHANNEL_REMOTE_ID channel_$COLUMN_CHANNEL_REMOTE_ID, 
       channel.${ChannelEntity.COLUMN_DEVICE_ID} channel_${ChannelEntity.COLUMN_DEVICE_ID}, 
       channel.${ChannelEntity.COLUMN_CAPTION} channel_${ChannelEntity.COLUMN_CAPTION},
       channel.${ChannelEntity.COLUMN_TYPE} channel_${ChannelEntity.COLUMN_TYPE}, 
@@ -185,18 +185,18 @@ interface ChannelDao {
       config.${ChannelConfigEntity.COLUMN_PROFILE_ID} config_${ChannelConfigEntity.COLUMN_PROFILE_ID}
     FROM $TABLE_NAME channel
     JOIN ${ChannelValueEntity.TABLE_NAME} value
-      ON channel.${ChannelEntity.COLUMN_CHANNEL_REMOTE_ID} = value.${ChannelValueEntity.COLUMN_CHANNEL_REMOTE_ID}
+      ON channel.$COLUMN_CHANNEL_REMOTE_ID = value.${ChannelValueEntity.COLUMN_CHANNEL_REMOTE_ID}
         AND channel.$COLUMN_PROFILE_ID = value.${ChannelValueEntity.COLUMN_PROFILE_ID}
     JOIN ${LocationEntity.TABLE_NAME} location
       ON channel.$COLUMN_LOCATION_ID = location.${LocationEntity.COLUMN_REMOTE_ID}
         AND channel.$COLUMN_PROFILE_ID = location.${LocationEntity.COLUMN_PROFILE_ID}
     LEFT JOIN ${ChannelConfigEntity.TABLE_NAME} config
-      ON channel.${ChannelEntity.COLUMN_CHANNEL_REMOTE_ID} = config.${ChannelConfigEntity.COLUMN_CHANNEL_ID}
+      ON channel.$COLUMN_CHANNEL_REMOTE_ID = config.${ChannelConfigEntity.COLUMN_CHANNEL_ID}
         AND channel.$COLUMN_PROFILE_ID = config.${LocationEntity.COLUMN_PROFILE_ID}
     LEFT JOIN ${ChannelExtendedValueEntity.TABLE_NAME} extended_value
-      ON channel.${ChannelEntity.COLUMN_CHANNEL_REMOTE_ID} = extended_value.${ChannelExtendedValueEntity.COLUMN_CHANNEL_ID}
+      ON channel.$COLUMN_CHANNEL_REMOTE_ID = extended_value.${ChannelExtendedValueEntity.COLUMN_CHANNEL_ID}
         AND channel.$COLUMN_PROFILE_ID = extended_value.${ChannelExtendedValueEntity.COLUMN_PROFILE_ID}
-    WHERE channel.${ChannelEntity.COLUMN_CHANNEL_REMOTE_ID} = :channelRemoteId
+    WHERE channel.$COLUMN_CHANNEL_REMOTE_ID = :channelRemoteId
       AND channel.$COLUMN_PROFILE_ID = ${ProfileEntity.SUBQUERY_ACTIVE}
   """
   )

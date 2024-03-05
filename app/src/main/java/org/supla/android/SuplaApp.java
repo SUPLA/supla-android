@@ -48,6 +48,7 @@ import org.supla.android.core.networking.suplaclient.SuplaClientBuilder;
 import org.supla.android.core.notifications.NotificationsHelper;
 import org.supla.android.core.observers.AppLifecycleObserver;
 import org.supla.android.data.ValuesFormatter;
+import org.supla.android.db.DbHelper;
 import org.supla.android.db.room.app.AppDatabase;
 import org.supla.android.features.icons.LoadUserIconsIntoCacheWorker;
 import org.supla.android.lib.SuplaClient;
@@ -83,6 +84,7 @@ public class SuplaApp extends MultiDexApplication
   @Inject SuplaClientBuilder suplaClientBuilder;
   @Inject HiltWorkerFactory workerFactory;
   @Inject AppDatabase appDatabase;
+  @Inject Preferences preferences;
 
   public SuplaApp() {
     SuplaClientMessageHandler.getGlobalInstance().registerMessageListener(this);
@@ -108,7 +110,7 @@ public class SuplaApp extends MultiDexApplication
     Utils.init(this);
 
     // Needed to trigger database migration through Room.
-    appDatabase.getOpenHelper().getReadableDatabase();
+    migrateDatabase();
 
     enqueueWidgetRefresh();
   }
@@ -290,5 +292,28 @@ public class SuplaApp extends MultiDexApplication
         .enqueueUniquePeriodicWork(
             WORK_ID, ExistingPeriodicWorkPolicy.CANCEL_AND_REENQUEUE, request);
     LoadUserIconsIntoCacheWorker.Companion.start(this);
+  }
+
+  private void migrateDatabase() {
+    try {
+      appDatabase.getOpenHelper().getReadableDatabase();
+    } catch (IllegalStateException exception) {
+      if (BuildConfig.DEBUG) {
+        throw exception;
+      }
+
+      Trace.e(
+          SuplaApp.class.getSimpleName(),
+          "Could not migrated database, trying to delete it",
+          exception);
+      boolean result = deleteDatabase(DbHelper.DATABASE_NAME);
+      Trace.e(
+          SuplaApp.class.getSimpleName(),
+          "Database deletion finished with " + (result ? "success" : "failure"));
+
+      if (result) {
+        preferences.setAnyAccountRegistered(false);
+      }
+    }
   }
 }

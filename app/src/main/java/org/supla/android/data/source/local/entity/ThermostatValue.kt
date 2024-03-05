@@ -58,8 +58,8 @@ data class ThermostatValue private constructor(
   }
 
   fun getSetpointText(valuesFormatter: ValuesFormatter): String {
-    val temperatureMin = valuesFormatter.getTemperatureString(setpointTemperatureHeat, true)
-    val temperatureMax = valuesFormatter.getTemperatureString(setpointTemperatureCool, true)
+    val temperatureMin = valuesFormatter.getTemperatureString(setpointTemperatureHeat, false)
+    val temperatureMax = valuesFormatter.getTemperatureString(setpointTemperatureCool, false)
     return when {
       online.not() -> ""
       mode == SuplaHvacMode.COOL -> temperatureMax
