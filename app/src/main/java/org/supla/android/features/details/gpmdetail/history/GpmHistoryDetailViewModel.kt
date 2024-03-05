@@ -136,7 +136,8 @@ class GpmHistoryDetailViewModel @Inject constructor(
               )
             }
           }
-        }
+        },
+        onError = defaultErrorHandler("triggerMeasurementsLoad")
       )
       .disposeBySelf()
   }

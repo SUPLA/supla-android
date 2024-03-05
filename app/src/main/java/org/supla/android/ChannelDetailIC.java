@@ -151,11 +151,14 @@ public class ChannelDetailIC extends DetailLayout
   private void channelExtendedDataToViews() {
     Channel channel = (Channel) getChannelFromDatabase();
 
-    ImageId imageId = ContextExtensionsKt.getGetChannelIconUseCase(getContext()).invoke(channel);
-    if (icImgIcon.getTag() == null || !icImgIcon.getTag().equals(imageId)) {
-      icImgIcon.setBackgroundColor(Color.TRANSPARENT);
-      icImgIcon.setImageBitmap(ImageCache.getBitmap(getContext(), imageId));
-      icImgIcon.setTag(imageId);
+    Context context = getContext();
+    if (context != null) {
+      ImageId imageId = ContextExtensionsKt.getGetChannelIconUseCase(context).invoke(channel);
+      if (icImgIcon.getTag() == null || !icImgIcon.getTag().equals(imageId)) {
+        icImgIcon.setBackgroundColor(Color.TRANSPARENT);
+        icImgIcon.setImageBitmap(ImageCache.getBitmap(getContext(), imageId));
+        icImgIcon.setTag(imageId);
+      }
     }
 
     warningIcon.setChannel(channel);

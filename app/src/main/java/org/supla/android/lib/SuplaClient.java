@@ -1596,7 +1596,6 @@ public class SuplaClient extends Thread implements SuplaClientApi {
       _connectingStatusLastTime = System.currentTimeMillis();
 
       onConnecting();
-      setVisible(0, 2); // Cleanup
       setVisible(2, 1);
       markChannelRelationsAsRemovableUseCase.invoke().blockingSubscribe();
 
