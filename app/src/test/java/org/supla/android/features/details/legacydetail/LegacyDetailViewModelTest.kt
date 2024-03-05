@@ -17,9 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import io.mockk.every
 import io.mockk.mockk
-import io.reactivex.rxjava3.core.Maybe
 import org.assertj.core.api.Assertions
 import org.junit.Assert.*
 import org.junit.Before
@@ -30,18 +28,13 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.verifyZeroInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.data.source.ChannelRepository
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
-import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.db.Channel
 import org.supla.android.db.ChannelGroup
 import org.supla.android.tools.SuplaSchedulers
-import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
-import org.supla.android.usecases.channel.ReadChannelGroupByRemoteIdUseCase
 
 @RunWith(MockitoJUnitRunner::class)
 class LegacyDetailViewModelTest : BaseViewModelTest<LegacyDetailViewState, LegacyDetailViewEvent, LegacyDetailViewModel>() {

@@ -22,7 +22,7 @@ import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.SpringSpec
 import androidx.compose.ui.graphics.Color
 
-class AnimatableColor(val destinationColor: Color, val initialColor: Color) {
+class AnimatableColor(private val destinationColor: Color, private val initialColor: Color) {
   private val animatable = Animatable(initialColor)
   val color: Color
     get() = animatable.value

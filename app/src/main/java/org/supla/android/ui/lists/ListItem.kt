@@ -42,7 +42,9 @@ sealed interface ListItem {
     val online: Boolean,
     val captionProvider: StringProvider,
     val icon: ImageId,
-    val value: String?
+    val value: String?,
+    val issueIconType: IssueIconType?,
+    val issueMessage: Int?
   ) : ChannelBasedItem(channel) {
     open fun toSlideableListItemData(): SlideableListItemData {
       return SlideableListItemData.Default(
@@ -50,7 +52,7 @@ sealed interface ListItem {
         titleProvider = captionProvider,
         icon = icon,
         value = value,
-        issueIconType = null,
+        issueIconType = issueIconType,
         estimatedTimerEndDate = null
       )
     }
@@ -72,12 +74,12 @@ sealed interface ListItem {
     captionProvider: StringProvider,
     icon: ImageId,
     value: String?,
-    private val issueIconType: IssueIconType?,
+    issueIconType: IssueIconType?,
+    issueMessage: Int?,
     private val estimatedTimerEndDate: Date?,
     private val subValue: String,
-    @DrawableRes private val indicatorIcon: Int?,
-    val issueMessage: Int?
-  ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, value) {
+    @DrawableRes private val indicatorIcon: Int?
+  ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, value, issueIconType, issueMessage) {
     override fun toSlideableListItemData(): SlideableListItemData {
       return SlideableListItemData.Thermostat(
         online = online,
@@ -98,8 +100,18 @@ sealed interface ListItem {
     online: Boolean,
     captionProvider: StringProvider,
     icon: ImageId,
-    value: String?
-  ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, value)
+    value: String? = null
+  ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, value, null, null)
+
+  class BlindsItem(
+    channel: ChannelDataEntity,
+    locationCaption: String,
+    online: Boolean,
+    captionProvider: StringProvider,
+    icon: ImageId,
+    issueIconType: IssueIconType?,
+    issueMessage: Int?
+  ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, null, issueIconType, issueMessage)
 
   class GeneralPurposeMeterItem(
     channel: ChannelDataEntity,
@@ -108,7 +120,7 @@ sealed interface ListItem {
     captionProvider: StringProvider,
     icon: ImageId,
     value: String
-  ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, value)
+  ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, value, null, null)
 
   class GeneralPurposeMeasurementItem(
     channel: ChannelDataEntity,
@@ -117,5 +129,5 @@ sealed interface ListItem {
     captionProvider: StringProvider,
     icon: ImageId,
     value: String
-  ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, value)
+  ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, value, null, null)
 }

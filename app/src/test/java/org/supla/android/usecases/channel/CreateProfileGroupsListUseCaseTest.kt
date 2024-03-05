@@ -1,26 +1,20 @@
 package org.supla.android.usecases.channel
 
-import android.database.Cursor
 import io.mockk.every
 import io.mockk.mockk
-import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 import org.assertj.core.api.Assertions
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.whenever
 import org.supla.android.data.source.ChannelGroupRepository
-import org.supla.android.data.source.local.entity.ChannelEntity
-import org.supla.android.data.source.local.entity.ChannelGroupEntity
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
-import org.supla.android.db.AuthProfileItem
-import org.supla.android.db.Location
 import org.supla.android.ui.lists.ListItem
+import org.supla.android.usecases.group.CreateProfileGroupsListUseCase
 import org.supla.android.usecases.location.CollapsedFlag
 
 @RunWith(MockitoJUnitRunner::class)
@@ -113,7 +107,6 @@ class CreateProfileGroupsListUseCaseTest {
     locationCaption: String = "",
     locationCollapsed: Boolean = false
   ): ChannelGroupDataEntity {
-
     val location: LocationEntity = mockk {
       every { remoteId } returns locationRemoteId
       every { caption } returns locationCaption

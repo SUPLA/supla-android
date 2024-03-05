@@ -63,18 +63,19 @@ import org.supla.android.core.ui.BaseViewProxy
 import org.supla.android.core.ui.StringProvider
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.core.ui.theme.blue
+import org.supla.android.data.model.general.ChannelIssueItem
 import org.supla.android.data.model.temperature.TemperatureCorrection
 import org.supla.android.events.LoadingTimeoutManager
 import org.supla.android.features.details.thermostatdetail.general.MeasurementValue
 import org.supla.android.features.details.thermostatdetail.general.ThermostatGeneralViewState
-import org.supla.android.features.details.thermostatdetail.general.data.ThermostatIssueItem
 import org.supla.android.features.details.thermostatdetail.general.data.ThermostatProgramInfo
 import org.supla.android.features.details.thermostatdetail.ui.ThermometersValues
 import org.supla.android.features.details.thermostatdetail.ui.TimerHeader
+import org.supla.android.ui.lists.data.IssueIconType
 import org.supla.android.ui.views.LoadingScrim
-import org.supla.android.ui.views.buttons.AnimatableButtonType
-import org.supla.android.ui.views.buttons.AnimationMode
-import org.supla.android.ui.views.buttons.RoundedControlButton
+import org.supla.android.ui.views.buttons.animatable.AnimatableButtonType
+import org.supla.android.ui.views.buttons.animatable.AnimationMode
+import org.supla.android.ui.views.buttons.animatable.RoundedControlButton
 import org.supla.android.ui.views.thermostat.TemperatureControlButton
 import org.supla.android.ui.views.tools.Shadow
 import org.supla.android.ui.views.tools.ShadowOrientation
@@ -328,7 +329,7 @@ private fun CoolingIcon(active: Boolean, onClick: () -> Unit) {
 }
 
 @Composable
-private fun WarningsRow(warnings: List<ThermostatIssueItem>, modifier: Modifier = Modifier, smallScreen: Boolean = false) {
+private fun WarningsRow(warnings: List<ChannelIssueItem>, modifier: Modifier = Modifier, smallScreen: Boolean = false) {
   val defaultPadding = dimensionResource(id = R.dimen.distance_default)
   Column(
     modifier = modifier.padding(start = defaultPadding, end = defaultPadding),
@@ -437,6 +438,9 @@ private fun PreviewTemporaryOverride() {
               true
             ),
             ThermostatProgramInfo(ThermostatProgramInfo.Type.NEXT, null, R.drawable.ic_power_button, R.color.gray, { "Turn off" })
+          ),
+          issues = listOf(
+            ChannelIssueItem(IssueIconType.WARNING, R.string.thermostat_detail_mode_manual)
           )
         )
       )

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <dimen name="distance_micro">2dp</dimen>
+  <dimen name="distance_tiny">4dp</dimen>
+  <dimen name="distance_small">8dp</dimen>
+  <dimen name="distance_default">16dp</dimen>
+</resources>

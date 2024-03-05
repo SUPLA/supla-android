@@ -29,9 +29,9 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.whenever
 import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.local.entity.ChannelRelationType
-import org.supla.android.data.source.local.entity.ThermostatValue
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.remote.thermostat.ThermostatValue
 import org.supla.android.db.Channel
 import org.supla.android.extensions.date
 import org.supla.android.extensions.toTimestamp

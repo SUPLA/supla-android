@@ -31,12 +31,12 @@ import org.supla.android.core.ui.ViewState
 import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.model.temperature.TemperatureCorrection
 import org.supla.android.data.source.local.calendar.Hour
-import org.supla.android.data.source.local.entity.ThermostatValue
 import org.supla.android.data.source.remote.ChannelConfigType
 import org.supla.android.data.source.remote.ConfigResult
 import org.supla.android.data.source.remote.hvac.SuplaChannelHvacConfig
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
+import org.supla.android.data.source.remote.thermostat.ThermostatValue
 import org.supla.android.db.Channel
 import org.supla.android.events.ChannelConfigEventsManager
 import org.supla.android.events.LoadingTimeoutManager

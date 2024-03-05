@@ -29,4 +29,6 @@ class ChannelGroupRepository @Inject constructor(private val channelGroupDao: Ch
   fun findList() = channelGroupDao.findList()
 
   fun findGroupDataEntity(remoteId: Int) = channelGroupDao.findGroupDataEntity(remoteId)
+
+  fun findGroupOnlineCount(groupId: Long) = channelGroupDao.findGroupOnlineCount(groupId)
 }

@@ -32,9 +32,9 @@ import org.supla.android.core.ui.StringProvider
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.ValuesFormatter
+import org.supla.android.data.model.general.ChannelIssueItem
 import org.supla.android.data.model.temperature.TemperatureCorrection
 import org.supla.android.data.source.local.entity.ChannelRelationType
-import org.supla.android.data.source.local.entity.ThermostatValue
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.remote.ChannelConfigType
 import org.supla.android.data.source.remote.ConfigResult
@@ -43,7 +43,8 @@ import org.supla.android.data.source.remote.hvac.SuplaChannelHvacConfig
 import org.supla.android.data.source.remote.hvac.SuplaChannelWeeklyScheduleConfig
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
-import org.supla.android.data.source.remote.thermostat.SuplaThermostatFlags
+import org.supla.android.data.source.remote.thermostat.SuplaThermostatFlag
+import org.supla.android.data.source.remote.thermostat.ThermostatValue
 import org.supla.android.events.ChannelConfigEventsManager
 import org.supla.android.events.DeviceConfigEventsManager
 import org.supla.android.events.LoadingTimeoutManager
@@ -54,7 +55,6 @@ import org.supla.android.extensions.guardLet
 import org.supla.android.extensions.ifLet
 import org.supla.android.extensions.mapMerged
 import org.supla.android.features.details.thermostatdetail.general.data.SensorIssue
-import org.supla.android.features.details.thermostatdetail.general.data.ThermostatIssueItem
 import org.supla.android.features.details.thermostatdetail.general.data.ThermostatProgramInfo
 import org.supla.android.features.details.thermostatdetail.general.data.build
 import org.supla.android.features.details.thermostatdetail.general.ui.ThermostatGeneralViewProxy
@@ -381,18 +381,18 @@ class ThermostatGeneralViewModel @Inject constructor(
         heatingModeActive = isHeatingModeActive(channelData, thermostatValue),
         coolingModeActive = isCoolingModeActive(channelData, thermostatValue),
 
-        showHeatingIndicator = value.online && thermostatValue.state.isOn() && thermostatValue.flags.contains(SuplaThermostatFlags.HEATING),
-        showCoolingIndicator = value.online && thermostatValue.state.isOn() && thermostatValue.flags.contains(SuplaThermostatFlags.COOLING),
+        showHeatingIndicator = value.online && thermostatValue.state.isOn() && thermostatValue.flags.contains(SuplaThermostatFlag.HEATING),
+        showCoolingIndicator = value.online && thermostatValue.state.isOn() && thermostatValue.flags.contains(SuplaThermostatFlag.COOLING),
 
         configMinTemperatureString = valuesFormatter.getTemperatureString(configMinTemperature),
         configMaxTemperatureString = valuesFormatter.getTemperatureString(configMaxTemperature),
 
         currentTemperaturePercentage = calculateCurrentTemperature(data.channelWithChildren, configMinTemperature, configMaxTemperature),
 
-        manualModeActive = isOff.not() && thermostatValue.flags.contains(SuplaThermostatFlags.WEEKLY_SCHEDULE).not(),
-        programmedModeActive = value.online && thermostatValue.flags.contains(SuplaThermostatFlags.WEEKLY_SCHEDULE),
+        manualModeActive = isOff.not() && thermostatValue.flags.contains(SuplaThermostatFlag.WEEKLY_SCHEDULE).not(),
+        programmedModeActive = value.online && thermostatValue.flags.contains(SuplaThermostatFlag.WEEKLY_SCHEDULE),
 
-        temporaryChangeActive = value.online && thermostatValue.flags.contains(SuplaThermostatFlags.WEEKLY_SCHEDULE_TEMPORAL_OVERRIDE),
+        temporaryChangeActive = value.online && thermostatValue.flags.contains(SuplaThermostatFlag.WEEKLY_SCHEDULE_TEMPORAL_OVERRIDE),
         temporaryProgramInfo = buildProgramInfo(data.weeklySchedule, data.deviceConfig, thermostatValue, value.online),
 
         sensorIssue = SensorIssue.build(thermostatValue, data.channelWithChildren.children),
@@ -481,7 +481,7 @@ class ThermostatGeneralViewModel @Inject constructor(
   }
 
   private fun getSetpointHeatTemperature(channel: ChannelDataEntity, thermostatValue: ThermostatValue): Float? {
-    val setpointSet = thermostatValue.flags.contains(SuplaThermostatFlags.SETPOINT_TEMP_MIN_SET)
+    val setpointSet = thermostatValue.flags.contains(SuplaThermostatFlag.SETPOINT_TEMP_MIN_SET)
     if (channel.function == SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER && setpointSet) {
       return thermostatValue.setpointTemperatureHeat
     }
@@ -497,7 +497,7 @@ class ThermostatGeneralViewModel @Inject constructor(
   }
 
   private fun getSetpointCoolTemperature(channel: ChannelDataEntity, thermostatValue: ThermostatValue): Float? {
-    val setpointSet = thermostatValue.flags.contains(SuplaThermostatFlags.SETPOINT_TEMP_MAX_SET)
+    val setpointSet = thermostatValue.flags.contains(SuplaThermostatFlag.SETPOINT_TEMP_MAX_SET)
     if (channel.function == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL && setpointSet) {
       return thermostatValue.setpointTemperatureCool
     }
@@ -587,13 +587,13 @@ class ThermostatGeneralViewModel @Inject constructor(
     }
   }
 
-  private fun createThermostatIssues(flags: List<SuplaThermostatFlags>): List<ThermostatIssueItem> =
-    mutableListOf<ThermostatIssueItem>().apply {
-      if (flags.contains(SuplaThermostatFlags.THERMOMETER_ERROR)) {
-        add(ThermostatIssueItem(IssueIconType.ERROR, R.string.thermostat_thermometer_error))
+  private fun createThermostatIssues(flags: List<SuplaThermostatFlag>): List<ChannelIssueItem> =
+    mutableListOf<ChannelIssueItem>().apply {
+      if (flags.contains(SuplaThermostatFlag.THERMOMETER_ERROR)) {
+        add(ChannelIssueItem(IssueIconType.ERROR, R.string.thermostat_thermometer_error))
       }
-      if (flags.contains(SuplaThermostatFlags.CLOCK_ERROR)) {
-        add(ThermostatIssueItem(IssueIconType.WARNING, R.string.thermostat_clock_error))
+      if (flags.contains(SuplaThermostatFlag.CLOCK_ERROR)) {
+        add(ChannelIssueItem(IssueIconType.WARNING, R.string.thermostat_clock_error))
       }
     }
 
@@ -656,7 +656,7 @@ data class ThermostatGeneralViewState(
 
   val sensorIssue: SensorIssue? = null,
 
-  val issues: List<ThermostatIssueItem> = emptyList(),
+  val issues: List<ChannelIssueItem> = emptyList(),
 
   val loadingState: LoadingTimeoutManager.LoadingState = LoadingTimeoutManager.LoadingState(),
   val lastInteractionTime: Long? = null,

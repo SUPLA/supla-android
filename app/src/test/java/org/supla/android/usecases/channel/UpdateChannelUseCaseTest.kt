@@ -17,7 +17,6 @@ package org.supla.android.usecases.channel
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import io.mockk.called
 import io.mockk.every
 import io.mockk.mockk
 import io.reactivex.rxjava3.core.Completable
@@ -251,7 +250,7 @@ class UpdateChannelUseCaseTest {
       every { locationId } returns 333
       every { updatedBy(suplaChannel) } returns this
       every { position } returns 0
-      every { copy(id = 444, remoteId = channelRemoteId, locationId = 333, position = 6, profileId = 123) } returns this
+      every { copy(id = 444, remoteId = channelRemoteId, locationId = 333, position = 6) } returns this
       every { id } returns 444
       every { caption } returns ""
       every { function } returns 0
@@ -305,7 +304,7 @@ class UpdateChannelUseCaseTest {
       every { locationId } returns 333
       every { updatedBy(suplaChannel) } returns this
       every { position } returns 5
-      every { copy(id = 444, remoteId = channelRemoteId, locationId = 333, position = 0, profileId = 123) } returns this
+      every { copy(id = 444, remoteId = channelRemoteId, locationId = 333, position = 0) } returns this
       every { id } returns 444
       every { caption } returns ""
       every { function } returns 0
@@ -529,7 +528,7 @@ class UpdateChannelUseCaseTest {
     }
     val channelEntity: ChannelEntity = mockk {
       every { differsFrom(suplaChannel) } returns true
-      every { locationId } returns locationRemoteId.toLong()
+      every { locationId } returns locationRemoteId
       every { updatedBy(suplaChannel) } returns this
       every { position } returns 0
       every { profileId } returns channelProfileId
@@ -557,7 +556,6 @@ class UpdateChannelUseCaseTest {
     verify(widgetManager).updateWidget(widgetId)
     io.mockk.verify {
       channelEntity.updatedBy(suplaChannel)
-      channelEntity.copy(position = 0) wasNot called
     }
 
     verifyNoMoreInteractions(locationRepository, channelRepository, profileRepository)

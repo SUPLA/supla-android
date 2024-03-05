@@ -19,7 +19,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import io.mockk.every
 import io.mockk.mockk
-import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import org.assertj.core.api.Assertions
 import org.junit.Test

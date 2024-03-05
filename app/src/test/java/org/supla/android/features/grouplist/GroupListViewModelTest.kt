@@ -23,9 +23,6 @@ import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
-import org.supla.android.db.ChannelBase
-import org.supla.android.db.ChannelGroup
-import org.supla.android.db.Location
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.features.details.detailbase.standarddetail.DetailPage
 import org.supla.android.lib.SuplaClientMsg
@@ -35,6 +32,8 @@ import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.channel.*
 import org.supla.android.usecases.details.ProvideDetailTypeUseCase
 import org.supla.android.usecases.details.ThermometerDetailType
+import org.supla.android.usecases.group.CreateProfileGroupsListUseCase
+import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
 

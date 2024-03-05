@@ -3,7 +3,6 @@ package org.supla.android.usecases.location
 import io.reactivex.rxjava3.core.Completable
 import org.supla.android.data.source.LocationRepository
 import org.supla.android.data.source.local.entity.LocationEntity
-import org.supla.android.db.Location
 import javax.inject.Inject
 import javax.inject.Singleton
 

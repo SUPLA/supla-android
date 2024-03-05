@@ -29,7 +29,7 @@ import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
-import org.supla.android.usecases.channel.ReadChannelGroupByRemoteIdUseCase
+import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
 
 abstract class StandardDetailViewModel<S : StandardDetailViewState, E : StandardDetailViewEvent>(
   private val readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,

@@ -40,8 +40,6 @@ import org.supla.android.data.model.temperature.TemperatureCorrection
 import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity
 import org.supla.android.data.source.local.entity.ChannelRelationType
 import org.supla.android.data.source.local.entity.ChannelValueEntity
-import org.supla.android.data.source.local.entity.ThermostatState
-import org.supla.android.data.source.local.entity.ThermostatValue
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.remote.ConfigResult
@@ -52,7 +50,9 @@ import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.data.source.remote.hvac.SuplaHvacTemperatures
 import org.supla.android.data.source.remote.hvac.SuplaHvacThermometerType
 import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
-import org.supla.android.data.source.remote.thermostat.SuplaThermostatFlags
+import org.supla.android.data.source.remote.thermostat.SuplaThermostatFlag
+import org.supla.android.data.source.remote.thermostat.ThermostatState
+import org.supla.android.data.source.remote.thermostat.ThermostatValue
 import org.supla.android.events.ChannelConfigEventsManager
 import org.supla.android.events.DeviceConfigEventsManager
 import org.supla.android.events.LoadingTimeoutManager
@@ -165,7 +165,7 @@ class ThermostatGeneralViewModelTest :
       remoteId = remoteId,
       mode = SuplaHvacMode.COOL,
       setpointTemperatureCool = 20.8f,
-      flags = listOf(SuplaThermostatFlags.SETPOINT_TEMP_MAX_SET, SuplaThermostatFlags.COOLING)
+      flags = listOf(SuplaThermostatFlag.SETPOINT_TEMP_MAX_SET, SuplaThermostatFlag.COOLING)
     )
 
     whenever(channelConfigEventsManager.observerConfig(remoteId)).thenReturn(
@@ -625,9 +625,9 @@ class ThermostatGeneralViewModelTest :
     mode: SuplaHvacMode = SuplaHvacMode.HEAT,
     timerEndDate: Date? = null
   ) {
-    val flags = mutableListOf(SuplaThermostatFlags.SETPOINT_TEMP_MIN_SET)
+    val flags = mutableListOf(SuplaThermostatFlag.SETPOINT_TEMP_MIN_SET)
     if (weeklyScheduleActive) {
-      flags.add(SuplaThermostatFlags.WEEKLY_SCHEDULE)
+      flags.add(SuplaThermostatFlag.WEEKLY_SCHEDULE)
     }
     val channelWithChildren = mockChannelWithChildren(
       remoteId = remoteId,
@@ -663,9 +663,9 @@ class ThermostatGeneralViewModelTest :
   }
 
   private fun mockCoolThermostat(remoteId: Int, deviceId: Int, setpointTemperature: Float, weeklyScheduleActive: Boolean = false) {
-    val flags = mutableListOf(SuplaThermostatFlags.SETPOINT_TEMP_MAX_SET, SuplaThermostatFlags.COOLING)
+    val flags = mutableListOf(SuplaThermostatFlag.SETPOINT_TEMP_MAX_SET, SuplaThermostatFlag.COOLING)
     if (weeklyScheduleActive) {
-      flags.add(SuplaThermostatFlags.WEEKLY_SCHEDULE)
+      flags.add(SuplaThermostatFlag.WEEKLY_SCHEDULE)
     }
     val channelWithChildren = mockChannelWithChildren(
       remoteId = remoteId,
@@ -705,7 +705,7 @@ class ThermostatGeneralViewModelTest :
     mode: SuplaHvacMode = SuplaHvacMode.HEAT,
     setpointTemperatureHeat: Float? = null,
     setpointTemperatureCool: Float? = null,
-    flags: List<SuplaThermostatFlags> = listOf(SuplaThermostatFlags.SETPOINT_TEMP_MIN_SET),
+    flags: List<SuplaThermostatFlag> = listOf(SuplaThermostatFlag.SETPOINT_TEMP_MIN_SET),
     timerEndDate: Date? = null
   ): ChannelWithChildren {
     val thermostatValue: ThermostatValue = mockk {
@@ -714,9 +714,9 @@ class ThermostatGeneralViewModelTest :
       every { this@mockk.mode } returns mode
       every { this@mockk.setpointTemperatureHeat } returns (setpointTemperatureHeat ?: 0f)
       every { this@mockk.setpointTemperatureCool } returns (setpointTemperatureCool ?: 0f)
-      every { this@mockk.flags } returns mutableListOf<SuplaThermostatFlags>().apply {
+      every { this@mockk.flags } returns mutableListOf<SuplaThermostatFlag>().apply {
         addAll(flags)
-        setpointTemperatureCool?.let { add(SuplaThermostatFlags.HEAT_OR_COOL) }
+        setpointTemperatureCool?.let { add(SuplaThermostatFlag.HEAT_OR_COOL) }
       }
       every { subfunction } returns (setpointTemperatureCool?.let { ThermostatSubfunction.COOL } ?: ThermostatSubfunction.HEAT)
     }

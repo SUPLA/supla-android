@@ -69,8 +69,6 @@ class GetSceneIconUseCaseTest {
     assertThat(imageId.id).isEqualTo(R.drawable.scene5_nightmode)
   }
 
-
-
   @Test
   fun `should get user icon`() {
     // given

@@ -6,11 +6,11 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
-import org.supla.android.data.source.local.entity.ThermostatState
-import org.supla.android.data.source.local.entity.ThermostatValue
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
-import org.supla.android.data.source.remote.thermostat.SuplaThermostatFlags
+import org.supla.android.data.source.remote.thermostat.SuplaThermostatFlag
+import org.supla.android.data.source.remote.thermostat.ThermostatState
+import org.supla.android.data.source.remote.thermostat.ThermostatValue
 import org.supla.android.db.Channel
 
 @RunWith(MockitoJUnitRunner::class)
@@ -46,10 +46,9 @@ class SensorIssueTest {
       every { mode } returns SuplaHvacMode.OFF
       every { setpointTemperatureHeat } returns 10f
       every { setpointTemperatureCool } returns 10f
-      every { flags } returns listOf(SuplaThermostatFlags.FORCED_OFF_BY_SENSOR)
+      every { flags } returns listOf(SuplaThermostatFlag.FORCED_OFF_BY_SENSOR)
     }
     val children = listOf<ChannelChildEntity>()
-//    val children = listOf(ChannelChild(relationType = ChannelRelationType.DEFAULT, channel = channel))
 
     // when
     val sensorIssue = SensorIssue.build(value, children)

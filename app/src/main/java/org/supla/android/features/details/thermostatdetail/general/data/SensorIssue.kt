@@ -21,9 +21,9 @@ import org.supla.android.R
 import org.supla.android.core.ui.BitmapProvider
 import org.supla.android.core.ui.StringProvider
 import org.supla.android.data.source.local.entity.ChannelRelationType
-import org.supla.android.data.source.local.entity.ThermostatValue
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
-import org.supla.android.data.source.remote.thermostat.SuplaThermostatFlags
+import org.supla.android.data.source.remote.thermostat.SuplaThermostatFlag
+import org.supla.android.data.source.remote.thermostat.ThermostatValue
 import org.supla.android.extensions.getChannelIconUseCase
 import org.supla.android.images.ImageCache
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HOTELCARDSENSOR
@@ -37,7 +37,7 @@ data class SensorIssue(
 
   companion object {
     fun build(value: ThermostatValue, children: List<ChannelChildEntity>): SensorIssue? {
-      if (value.flags.contains(SuplaThermostatFlags.FORCED_OFF_BY_SENSOR).not()) {
+      if (value.flags.contains(SuplaThermostatFlag.FORCED_OFF_BY_SENSOR).not()) {
         return null
       }
 

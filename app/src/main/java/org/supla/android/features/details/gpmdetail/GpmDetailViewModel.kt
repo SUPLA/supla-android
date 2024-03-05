@@ -28,7 +28,7 @@ import org.supla.android.features.details.detailbase.standarddetail.StandardDeta
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.GetChannelCaptionUseCase
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
-import org.supla.android.usecases.channel.ReadChannelGroupByRemoteIdUseCase
+import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
 import javax.inject.Inject
 
 @HiltViewModel

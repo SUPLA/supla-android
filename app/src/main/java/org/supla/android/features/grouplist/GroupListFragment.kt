@@ -28,7 +28,6 @@ import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.ui.BaseFragment
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.databinding.FragmentGroupListBinding
-import org.supla.android.db.ChannelGroup
 import org.supla.android.extensions.toPx
 import org.supla.android.extensions.visibleIf
 import org.supla.android.navigator.MainNavigator
@@ -81,10 +80,17 @@ class GroupListFragment : BaseFragment<GroupListViewState, GroupListViewEvent>(R
           ItemType.GROUP
         )
       }
+
       is GroupListViewEvent.ReassignAdapter -> {
         binding.groupsList.adapter = null
         binding.groupsList.adapter = adapter
       }
+
+      is GroupListViewEvent.OpenStandardDetail -> navigator.navigateTo(
+        destinationId = event.fragmentId,
+        bundle = event.fragmentArguments
+      )
+
       else -> {}
     }
   }

@@ -45,7 +45,6 @@ import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.runtime.ItemType
-import org.supla.android.db.Channel
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.features.details.detailbase.standarddetail.DetailPage
 import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
@@ -55,6 +54,7 @@ import org.supla.android.lib.SuplaConst.*
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.channel.*
+import org.supla.android.usecases.details.BlindsDetailType
 import org.supla.android.usecases.details.GpmDetailType
 import org.supla.android.usecases.details.LegacyDetailType
 import org.supla.android.usecases.details.ProvideDetailTypeUseCase
@@ -470,6 +470,56 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     assertThat(states).isEmpty()
     assertThat(events).containsExactly(
       ChannelListViewEvent.OpenGpmDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
+    )
+    verifyZeroInteractionsExcept(provideDetailTypeUseCase)
+  }
+
+  @Test
+  fun `should open blinds detail fragment when online`() {
+    // given
+    val remoteId = 123
+    val channelId = 123
+    val deviceId = 222
+    val function = SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
+    val pages = emptyList<DetailPage>()
+    val channel = mockChannelData(remoteId, function, deviceId, true)
+    whenever(findChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
+
+    val blindsDetail = BlindsDetailType(pages)
+    whenever(provideDetailTypeUseCase(channel)).thenReturn(blindsDetail)
+
+    // when
+    viewModel.onListItemClick(remoteId)
+
+    // then
+    assertThat(states).isEmpty()
+    assertThat(events).containsExactly(
+      ChannelListViewEvent.OpenBlindsDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
+    )
+    verifyZeroInteractionsExcept(provideDetailTypeUseCase)
+  }
+
+  @Test
+  fun `should open blinds detail fragment when offline`() {
+    // given
+    val remoteId = 123
+    val channelId = 123
+    val deviceId = 222
+    val function = SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
+    val pages = emptyList<DetailPage>()
+    val channel = mockChannelData(remoteId, function, deviceId, false)
+    whenever(findChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
+
+    val blindsDetail = BlindsDetailType(pages)
+    whenever(provideDetailTypeUseCase(channel)).thenReturn(blindsDetail)
+
+    // when
+    viewModel.onListItemClick(remoteId)
+
+    // then
+    assertThat(states).isEmpty()
+    assertThat(events).containsExactly(
+      ChannelListViewEvent.OpenBlindsDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
     )
     verifyZeroInteractionsExcept(provideDetailTypeUseCase)
   }

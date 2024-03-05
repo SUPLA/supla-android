@@ -30,9 +30,9 @@ import androidx.compose.ui.unit.sp
 import org.supla.android.R
 import org.supla.android.features.details.thermostatdetail.schedule.data.ScheduleDetailProgramBox
 import org.supla.android.features.details.thermostatdetail.schedule.extensions.color
-import org.supla.android.ui.views.buttons.AnimatableButtonType
-import org.supla.android.ui.views.buttons.AnimationMode
-import org.supla.android.ui.views.buttons.RoundedControlButton
+import org.supla.android.ui.views.buttons.animatable.AnimatableButtonType
+import org.supla.android.ui.views.buttons.animatable.AnimationMode
+import org.supla.android.ui.views.buttons.animatable.RoundedControlButton
 
 @Composable
 fun ScheduleProgramButton(

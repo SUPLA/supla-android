@@ -26,8 +26,9 @@ import org.supla.android.SuplaApp
 import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.databinding.LiChannelItemBinding
-import org.supla.android.databinding.LiSingleMeasurementItemBinding
-import org.supla.android.databinding.LiThermostatItemBinding
+import org.supla.android.databinding.LiMainBlindsItemBinding
+import org.supla.android.databinding.LiMainMeasurementItemBinding
+import org.supla.android.databinding.LiMainThermostatItemBinding
 import org.supla.android.ui.layouts.ChannelLayout
 import org.supla.android.ui.lists.data.SlideableListItemData
 
@@ -68,16 +69,19 @@ abstract class BaseChannelsAdapter(
         ChannelListItemViewHolder(LiChannelItemBinding.inflate(inflater, parent, false))
 
       ViewType.HVAC_ITEM.identifier ->
-        ThermostatListItemViewHolder(LiThermostatItemBinding.inflate(inflater, parent, false))
+        ThermostatListItemViewHolder(LiMainThermostatItemBinding.inflate(inflater, parent, false))
 
       ViewType.MEASUREMENT_ITEM.identifier ->
-        SingleMeasurementListItemViewHolder(LiSingleMeasurementItemBinding.inflate(inflater, parent, false))
+        SingleMeasurementListItemViewHolder(LiMainMeasurementItemBinding.inflate(inflater, parent, false))
 
       ViewType.GENERAL_PURPOSE_METER_ITEM.identifier ->
-        GpMeterListItemViewHolder(LiSingleMeasurementItemBinding.inflate(inflater, parent, false))
+        GpMeterListItemViewHolder(LiMainMeasurementItemBinding.inflate(inflater, parent, false))
 
       ViewType.GENERAL_PURPOSE_MEASUREMENT_ITEM.identifier ->
-        GpMeasurementListItemViewHolder(LiSingleMeasurementItemBinding.inflate(inflater, parent, false))
+        GpMeasurementListItemViewHolder(LiMainMeasurementItemBinding.inflate(inflater, parent, false))
+
+      ViewType.BLINDS_ITEM.identifier ->
+        BlindsListItemViewHolder(LiMainBlindsItemBinding.inflate(inflater, parent, false))
 
       else -> super.onCreateViewHolder(parent, viewType)
     }
@@ -90,6 +94,7 @@ abstract class BaseChannelsAdapter(
       is SingleMeasurementListItemViewHolder -> holder.bind(items[position] as ListItem.MeasurementItem)
       is GpMeterListItemViewHolder -> holder.bind(items[position] as ListItem.GeneralPurposeMeterItem)
       is GpMeasurementListItemViewHolder -> holder.bind(items[position] as ListItem.GeneralPurposeMeasurementItem)
+      is BlindsListItemViewHolder -> holder.bind(items[position] as ListItem.BlindsItem)
       else -> super.onBindViewHolder(holder, position)
     }
   }
@@ -121,7 +126,7 @@ abstract class BaseChannelsAdapter(
     }
   }
 
-  inner class ThermostatListItemViewHolder(val binding: LiThermostatItemBinding) : ViewHolder(binding.root) {
+  inner class ThermostatListItemViewHolder(val binding: LiMainThermostatItemBinding) : ViewHolder(binding.root) {
     fun bind(item: ListItem.HvacThermostatItem) {
       val data = item.toSlideableListItemData() as SlideableListItemData.Thermostat
       binding.listItemRoot.bind(
@@ -143,7 +148,7 @@ abstract class BaseChannelsAdapter(
     }
   }
 
-  inner class SingleMeasurementListItemViewHolder(val binding: LiSingleMeasurementItemBinding) : ViewHolder(binding.root) {
+  inner class SingleMeasurementListItemViewHolder(val binding: LiMainMeasurementItemBinding) : ViewHolder(binding.root) {
     fun bind(item: ListItem.MeasurementItem) {
       val data = item.toSlideableListItemData() as SlideableListItemData.Default
       binding.listItemRoot.bind(
@@ -163,7 +168,7 @@ abstract class BaseChannelsAdapter(
     }
   }
 
-  inner class GpMeterListItemViewHolder(val binding: LiSingleMeasurementItemBinding) : ViewHolder(binding.root) {
+  inner class GpMeterListItemViewHolder(val binding: LiMainMeasurementItemBinding) : ViewHolder(binding.root) {
     fun bind(item: ListItem.GeneralPurposeMeterItem) {
       val data = item.toSlideableListItemData() as SlideableListItemData.Default
       binding.listItemRoot.bind(
@@ -183,7 +188,7 @@ abstract class BaseChannelsAdapter(
     }
   }
 
-  inner class GpMeasurementListItemViewHolder(val binding: LiSingleMeasurementItemBinding) : ViewHolder(binding.root) {
+  inner class GpMeasurementListItemViewHolder(val binding: LiMainMeasurementItemBinding) : ViewHolder(binding.root) {
     fun bind(item: ListItem.GeneralPurposeMeasurementItem) {
       val data = item.toSlideableListItemData() as SlideableListItemData.Default
       binding.listItemRoot.bind(
@@ -200,6 +205,28 @@ abstract class BaseChannelsAdapter(
 
       binding.listItemContent.setOnClickListener { listItemClickCallback(item.channel.remoteId) }
       binding.listItemContent.setOnLongClickListener { onLongPress(this) }
+    }
+  }
+
+  inner class BlindsListItemViewHolder(val binding: LiMainBlindsItemBinding) : ViewHolder(binding.root) {
+    fun bind(item: ListItem.BlindsItem) {
+      val data = item.toSlideableListItemData() as SlideableListItemData.Default
+      binding.listItemRoot.bind(
+        itemType = ItemType.CHANNEL,
+        remoteId = item.channel.remoteId,
+        locationCaption = item.locationCaption,
+        data = data,
+        onInfoClick = { infoButtonClickCallback(item.channel.remoteId) },
+        onIssueClick = { issueButtonClickCallback(item.issueMessage) },
+        onTitleLongClick = { onCaptionLongPress(item.channel.remoteId) },
+        onItemClick = { listItemClickCallback(item.channel.remoteId) }
+      )
+      binding.listItemContent.update(data)
+
+      binding.listItemContent.setOnClickListener { listItemClickCallback(item.channel.remoteId) }
+      binding.listItemContent.setOnLongClickListener { onLongPress(this) }
+      binding.listItemLeftItem.setOnClickListener { onLeftButtonClick(item.channel.remoteId) }
+      binding.listItemRightItem.setOnClickListener { onRightButtonClick(item.channel.remoteId) }
     }
   }
 }

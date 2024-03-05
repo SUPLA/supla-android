@@ -148,6 +148,7 @@ dependencies {
   implementation(Deps.Androidx.Security.Crypto)
   implementation(Deps.Androidx.Compose.UI)
   implementation(Deps.Androidx.Compose.Material)
+  implementation(Deps.Androidx.Compose.Icons)
   implementation(Deps.Androidx.Compose.Material3)
   implementation(Deps.Androidx.Compose.Tooling)
   implementation(Deps.Androidx.Compose.ConstraintLayout)

@@ -31,7 +31,7 @@ import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
 import org.supla.android.data.source.remote.hvac.SuplaWeeklyScheduleProgram
 import org.supla.android.data.source.remote.isAutomaticTimeSyncDisabled
-import org.supla.android.data.source.remote.thermostat.SuplaThermostatFlags
+import org.supla.android.data.source.remote.thermostat.SuplaThermostatFlag
 import org.supla.android.extensions.guardLet
 import org.supla.android.extensions.valuesFormatter
 import org.supla.android.features.details.thermostatdetail.ui.OFF
@@ -54,7 +54,7 @@ data class ThermostatProgramInfo(
     var dateProvider: DateProvider? = null
     var weeklyScheduleConfig: SuplaChannelWeeklyScheduleConfig? = null
     var deviceConfig: SuplaDeviceConfig? = null
-    var thermostatFlags: List<SuplaThermostatFlags>? = null
+    var thermostatFlags: List<SuplaThermostatFlag>? = null
     var currentMode: SuplaHvacMode? = null
     var currentTemperature: Float? = null
     var channelOnline: Boolean? = null
@@ -81,10 +81,10 @@ fun ThermostatProgramInfo.Builder.build(): List<ThermostatProgramInfo> {
   if (isOnline.not() || config.schedule.isEmpty() || config.programConfigurations.isEmpty()) {
     return emptyList()
   }
-  if (flags.contains(SuplaThermostatFlags.WEEKLY_SCHEDULE).not()) {
+  if (flags.contains(SuplaThermostatFlag.WEEKLY_SCHEDULE).not()) {
     return emptyList()
   }
-  if (flags.contains(SuplaThermostatFlags.CLOCK_ERROR)) {
+  if (flags.contains(SuplaThermostatFlag.CLOCK_ERROR)) {
     return clockErrorList()
   }
   currentDayOfWeek = dateProvider.currentDayOfWeek()
@@ -150,7 +150,7 @@ private fun ThermostatProgramInfo.Builder.createList(): List<ThermostatProgramIn
         icon = currentMode!!.icon,
         iconColor = currentMode!!.iconColor,
         descriptionProvider = if (currentMode == SuplaHvacMode.OFF) null else descriptionProvider,
-        manualActive = thermostatFlags!!.contains(SuplaThermostatFlags.WEEKLY_SCHEDULE_TEMPORAL_OVERRIDE)
+        manualActive = thermostatFlags!!.contains(SuplaThermostatFlag.WEEKLY_SCHEDULE_TEMPORAL_OVERRIDE)
       )
     )
   }
@@ -167,7 +167,7 @@ private fun ThermostatProgramInfo.Builder.createList(): List<ThermostatProgramIn
       icon = currentMode!!.icon,
       iconColor = currentMode!!.iconColor,
       descriptionProvider = if (currentMode == SuplaHvacMode.OFF) null else descriptionProvider,
-      manualActive = thermostatFlags!!.contains(SuplaThermostatFlags.WEEKLY_SCHEDULE_TEMPORAL_OVERRIDE)
+      manualActive = thermostatFlags!!.contains(SuplaThermostatFlag.WEEKLY_SCHEDULE_TEMPORAL_OVERRIDE)
     ),
     ThermostatProgramInfo(
       type = ThermostatProgramInfo.Type.NEXT,

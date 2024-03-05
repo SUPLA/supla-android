@@ -18,6 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.db.Channel
 import java.io.Serializable
@@ -42,6 +43,14 @@ data class ItemBundle(
         remoteId = channelData.remoteId,
         deviceId = channelData.channelEntity.deviceId ?: 0,
         itemType = ItemType.CHANNEL,
+        function = channelData.function
+      )
+
+    fun from(channelData: ChannelGroupDataEntity): ItemBundle =
+      ItemBundle(
+        remoteId = channelData.remoteId,
+        deviceId = 0,
+        itemType = ItemType.GROUP,
         function = channelData.function
       )
   }

@@ -30,6 +30,7 @@ import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.events.UpdateEventsManager
+import org.supla.android.features.details.blindsdetail.BlindsDetailFragment
 import org.supla.android.features.details.detailbase.standarddetail.DetailPage
 import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
 import org.supla.android.features.details.gpmdetail.GpmDetailFragment
@@ -47,6 +48,7 @@ import org.supla.android.usecases.channel.ButtonType
 import org.supla.android.usecases.channel.ChannelActionUseCase
 import org.supla.android.usecases.channel.CreateProfileChannelsListUseCase
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
+import org.supla.android.usecases.details.BlindsDetailType
 import org.supla.android.usecases.details.GpmDetailType
 import org.supla.android.usecases.details.LegacyDetailType
 import org.supla.android.usecases.details.ProvideDetailTypeUseCase
@@ -175,6 +177,7 @@ class ChannelListViewModel @Inject constructor(
       is ThermostatDetailType -> sendEvent(ChannelListViewEvent.OpenThermostatDetail(ItemBundle.from(data), detailType.pages))
       is ThermometerDetailType -> sendEvent(ChannelListViewEvent.OpenThermometerDetail(ItemBundle.from(data), detailType.pages))
       is GpmDetailType -> sendEvent(ChannelListViewEvent.OpenGpmDetail(ItemBundle.from(data), detailType.pages))
+      is BlindsDetailType -> sendEvent(ChannelListViewEvent.OpenBlindsDetail(ItemBundle.from(data), detailType.pages))
       is LegacyDetailType -> sendEvent(ChannelListViewEvent.OpenLegacyDetails(data.remoteId, detailType))
       else -> {} // no action
     }
@@ -195,7 +198,8 @@ class ChannelListViewModel @Inject constructor(
     SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER,
     SuplaConst.SUPLA_CHANNELFNC_IC_HEAT_METER,
     SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT,
-    SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER -> true
+    SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER,
+    SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER -> true
 
     SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH,
     SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH,
@@ -227,6 +231,9 @@ sealed class ChannelListViewEvent : ViewEvent {
 
   data class OpenGpmDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) :
     OpenStandardDetail(R.id.gpm_detail_fragment, GpmDetailFragment.bundle(itemBundle, pages.toTypedArray()))
+
+  data class OpenBlindsDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) :
+    OpenStandardDetail(R.id.blinds_detail_fragment, BlindsDetailFragment.bundle(itemBundle, pages.toTypedArray()))
 
   object OpenThermostatDetails : ChannelListViewEvent()
   object ReassignAdapter : ChannelListViewEvent()

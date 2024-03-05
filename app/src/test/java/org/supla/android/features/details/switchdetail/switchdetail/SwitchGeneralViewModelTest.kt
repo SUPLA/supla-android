@@ -35,17 +35,13 @@ import org.mockito.kotlin.whenever
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity
-import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.data.source.runtime.ItemType
-import org.supla.android.db.Channel
-import org.supla.android.db.ChannelValue
 import org.supla.android.features.details.switchdetail.general.SwitchGeneralViewEvent
 import org.supla.android.features.details.switchdetail.general.SwitchGeneralViewModel
 import org.supla.android.features.details.switchdetail.general.SwitchGeneralViewState
 import org.supla.android.lib.SuplaChannelExtendedValue
-import org.supla.android.lib.SuplaConst
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH
 import org.supla.android.lib.actions.ActionId
@@ -53,9 +49,9 @@ import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.GetChannelStateUseCase
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
-import org.supla.android.usecases.channel.ReadChannelGroupByRemoteIdUseCase
 import org.supla.android.usecases.channel.ValueStateWrapper
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
+import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
 import java.util.*
 
 @RunWith(MockitoJUnitRunner::class)

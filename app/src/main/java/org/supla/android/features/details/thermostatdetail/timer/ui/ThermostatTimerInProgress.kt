@@ -49,9 +49,9 @@ import org.supla.android.core.ui.theme.Distance
 import org.supla.android.features.details.thermostatdetail.timer.TimerDetailViewState
 import org.supla.android.features.details.thermostatdetail.ui.TimerHeader
 import org.supla.android.ui.views.TimerProgressView
-import org.supla.android.ui.views.buttons.AnimationMode
-import org.supla.android.ui.views.buttons.RoundedControlButton
 import org.supla.android.ui.views.buttons.TextButton
+import org.supla.android.ui.views.buttons.animatable.AnimationMode
+import org.supla.android.ui.views.buttons.animatable.RoundedControlButton
 import kotlin.time.Duration.Companion.milliseconds
 
 @Composable

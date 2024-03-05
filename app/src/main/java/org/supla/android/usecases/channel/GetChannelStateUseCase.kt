@@ -222,7 +222,7 @@ class ChannelValueEntityStateWrapper(private val channelValueEntity: ChannelValu
     get() = channelValueEntity.asThermostatValue().subfunction
   override val rollerShutterClosed: Boolean
     get() {
-      val percentage = channelValueEntity.asRollerShutterValue().closingPercentage
+      val percentage = channelValueEntity.asRollerShutterValue().position
       val subValueHi = channelValueEntity.getSubValueHi()
       return (subValueHi > 0 && percentage < 100) || percentage >= 100
     }
@@ -246,7 +246,6 @@ class ChannelGroupEntityStateWrapper(private val group: ChannelGroupEntity) : Va
   override val rollerShutterClosed: Boolean
     get() = group.getActivePercentage() >= 100
 }
-
 
 class ChannelValueStateWrapper(private val value: ChannelValue?) : ValueStateWrapper {
   override val online: Boolean

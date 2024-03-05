@@ -24,17 +24,14 @@ import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.model.general.ChannelDataBase
-import org.supla.android.data.model.general.ChannelState
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.runtime.ItemType
-import org.supla.android.db.Channel
-import org.supla.android.extensions.asDate
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.GetChannelStateUseCase
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
-import org.supla.android.usecases.channel.ReadChannelGroupByRemoteIdUseCase
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
+import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
 import java.util.*
 import javax.inject.Inject
 

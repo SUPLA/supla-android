@@ -30,7 +30,6 @@ import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.ui.BaseFragment
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.databinding.FragmentChannelListBinding
-import org.supla.android.db.Channel
 import org.supla.android.extensions.toPx
 import org.supla.android.extensions.visibleIf
 import org.supla.android.lib.SuplaChannelState

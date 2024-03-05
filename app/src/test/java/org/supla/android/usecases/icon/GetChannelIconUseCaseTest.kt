@@ -30,7 +30,6 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.whenever
 import org.supla.android.data.model.general.ChannelState
 import org.supla.android.data.model.general.IconType
-import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.db.ChannelBase
 import org.supla.android.images.ImageCacheProxy
@@ -577,7 +576,6 @@ class GetChannelIconUseCaseTest {
     profileId: Long,
     stateWrapper: ValueStateWrapper
   ): ChannelDataEntity {
-
     return mockk {
       every { this@mockk.toStateWrapper() } returns stateWrapper
       every { this@mockk.function } returns function

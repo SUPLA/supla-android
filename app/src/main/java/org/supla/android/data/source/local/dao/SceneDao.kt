@@ -82,9 +82,9 @@ interface SceneDao {
         location.${LocationEntity.COLUMN_PROFILE_ID} location_${LocationEntity.COLUMN_PROFILE_ID}
       FROM $TABLE_NAME scene
       JOIN ${LocationEntity.TABLE_NAME} location
-        ON scene.${COLUMN_LOCATION_ID} = location.${LocationEntity.COLUMN_REMOTE_ID}
-          AND scene.${COLUMN_PROFILE_ID} = location.${LocationEntity.COLUMN_PROFILE_ID}
-      WHERE scene.${COLUMN_PROFILE_ID} = ${ProfileEntity.SUBQUERY_ACTIVE} AND
+        ON scene.$COLUMN_LOCATION_ID = location.${LocationEntity.COLUMN_REMOTE_ID}
+          AND scene.$COLUMN_PROFILE_ID = location.${LocationEntity.COLUMN_PROFILE_ID}
+      WHERE scene.$COLUMN_PROFILE_ID = ${ProfileEntity.SUBQUERY_ACTIVE} AND
         scene.$COLUMN_VISIBLE > 0
       ORDER BY location.${LocationEntity.COLUMN_SORT_ORDER},
         location.${LocationEntity.COLUMN_CAPTION} COLLATE LOCALIZED,

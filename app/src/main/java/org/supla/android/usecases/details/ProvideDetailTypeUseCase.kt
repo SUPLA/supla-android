@@ -58,9 +58,11 @@ class ProvideDetailTypeUseCase @Inject constructor() {
     SUPLA_CHANNELFNC_RGBLIGHTING ->
       LegacyDetailType.RGBW
 
-    SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER,
-    SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW ->
+    SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER ->
       BlindsDetailType(listOf(DetailPage.BLINDS))
+
+    SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW ->
+      LegacyDetailType.RS
 
     SUPLA_CHANNELFNC_LIGHTSWITCH,
     SUPLA_CHANNELFNC_POWERSWITCH,
@@ -114,7 +116,7 @@ class ProvideDetailTypeUseCase @Inject constructor() {
   private fun getSwitchDetailPages(channelDataBase: ChannelDataBase): List<DetailPage> {
     return if (channelDataBase is ChannelDataEntity) {
       val list = mutableListOf(DetailPage.SWITCH)
-      if (channelDataBase.flags.and(SUPLA_CHANNEL_FLAG_COUNTDOWN_TIMER_SUPPORTED) > 0 && channelDataBase.function != SUPLA_CHANNELFNC_STAIRCASETIMER) {
+      if (supportsTimer(channelDataBase)) {
         list.add(DetailPage.SWITCH_TIMER)
       }
       if (channelDataBase.channelValueEntity.subValueType == SUBV_TYPE_IC_MEASUREMENTS.toShort()) {
@@ -127,6 +129,10 @@ class ProvideDetailTypeUseCase @Inject constructor() {
       listOf(DetailPage.SWITCH)
     }
   }
+
+  private fun supportsTimer(channelDataBase: ChannelDataBase) =
+    channelDataBase.flags.and(SUPLA_CHANNEL_FLAG_COUNTDOWN_TIMER_SUPPORTED) > 0 &&
+      channelDataBase.function != SUPLA_CHANNELFNC_STAIRCASETIMER
 }
 
 sealed interface DetailType : Serializable

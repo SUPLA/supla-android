@@ -1,6 +1,5 @@
 package org.supla.android.features.scenelist
 
-import io.mockk.every
 import io.mockk.mockk
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
@@ -19,12 +18,8 @@ import org.mockito.kotlin.verifyZeroInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.Preferences
 import org.supla.android.core.BaseViewModelTest
-import org.supla.android.data.source.RoomSceneRepository
-import org.supla.android.data.source.SceneRepository
 import org.supla.android.data.source.local.entity.LocationEntity
-import org.supla.android.data.source.local.entity.Scene
 import org.supla.android.data.source.local.entity.complex.SceneDataEntity
-import org.supla.android.db.Location
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.lists.ListItem

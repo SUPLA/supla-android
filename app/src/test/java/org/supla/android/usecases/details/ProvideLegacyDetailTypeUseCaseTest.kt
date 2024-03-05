@@ -7,11 +7,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.InjectMocks
 import org.mockito.junit.MockitoJUnitRunner
-import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
-import org.supla.android.db.Channel
-import org.supla.android.db.ChannelValue
 import org.supla.android.features.details.detailbase.standarddetail.DetailPage
 import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS
 import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS
@@ -45,7 +42,7 @@ class ProvideLegacyDetailTypeUseCaseTest {
 
   @Test
   fun `should provide detail for roof window`() {
-    testDetailType(SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW, BlindsDetailType(listOf(DetailPage.BLINDS)))
+    testDetailType(SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW, LegacyDetailType.RS)
   }
 
   @Test

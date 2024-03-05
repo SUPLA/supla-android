@@ -96,7 +96,7 @@
   <string name="rate_no_thanks">Ні, дякую</string>
   <string name="rs_percent_caption">Відсоток закриття</string>
   <string name="rs_percent_caption_open">Відсоток відкриття</string>
-  <string name="calibration">[Калібрування]</string>
+  <string name="blinds_calibration">Калібрування…</string>
   <string name="add_wizard_is_not_available">Майстер додавання доступний лише тоді, коли встановлено з’єднання з сервером на основі введеної електронної адреси! (Вимкніть додаткові параметри в налаштуваннях облікового запису)</string>
   <string name="next">Далі</string>
   <string name="wizard_step3_txt1">Підключіть пристрій до джерела живлення. За замовчуванням пристрій має працювати в режимі конфігурації, сигналізуючи про це блиманням світлодіода стану наступним чином</string>
@@ -445,7 +445,7 @@
   <string name="str_default" translatable="false">За замовчуванням</string>
   <string name="overcurrent_warning">Відключення живлення відбулося після перевищення встановленого порогу допустимої сили струму.</string>
   <string name="overcurrent_question">Живлення відключено після перевищення встановленого порогу допустимої сили струму. Ви впевнені, що хочете увімкнути живлення ?</string>
-  <string name="recalibration_question">Ви впевнені, що хочете почати калібрування?</string>
+  <string name="blinds_start_calibration_message">Ви впевнені, що хочете почати калібрування?</string>
   <string name="calibration_failed">Помилка калібрування.</string>
   <string name="calibration_lost">Калібрування втрачено.</string>
   <string name="motor_problem">Проблема з двигуном / Несподівана зупинка.</string>
@@ -453,4 +453,5 @@
   <string name="delete_url">https://{SERVER_ADDRESS}/db99845855b2ecbfecca9a095062b96c3e27703f?lang=uk</string>
   <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=QYN932S5UQG8N</string>
   <string name="hour_string_format">HH:mm:ss</string>
+  <string name="blinds_start_calibration_title">Калібрування</string>
 </resources>

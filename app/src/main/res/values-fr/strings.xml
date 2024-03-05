@@ -85,7 +85,7 @@
   <string name="rate_later">Plus tard</string>
   <string name="rate_no_thanks">Non, merci</string>
   <string name="rs_percent_caption">Pourcentage fermeture</string>
-  <string name="calibration">[Calibration]</string>
+  <string name="blinds_calibration">Calibration…</string>
   <string name="add_wizard_is_not_available">L\'assistant d\'ajout n\'est disponible que lorsqu\'une connexion au serveur a été établie sur la base de l\'adresse électronique saisie ! (Désactivez les options avancées dans la configuration de votre compte)</string>
   <string name="wizard_step1_txt3">Pour continuer, appuyez sur <b>Continuer</b>.</string>
   <string name="add_device">Ajoutez un dispositif</string>
@@ -431,7 +431,7 @@
   <string name="location_name">Nom de la localisation</string>
   <string name="overcurrent_warning">L\'alimentation a été coupée après avoir dépassé le seuil de limite de courant fixé.</string>
   <string name="overcurrent_question">L\'alimentation a été coupée lorsque la limite de courant fixée a été dépassée. Êtes-vous sûr de vouloir mettre l\'appareil sous tension ?</string>
-  <string name="recalibration_question">Êtes-vous sûr de vouloir commencer le calibrage ?</string>
+  <string name="blinds_start_calibration_message">Êtes-vous sûr de vouloir commencer le calibrage ?</string>
   <string name="calibration_failed">Le calibrage a échoué.</string>
   <string name="calibration_lost">Le calibrage a été perdu.</string>
   <string name="motor_problem">Problème de moteur / Arrêt inattendu.</string>
@@ -454,4 +454,5 @@
   <string name="rs_display_mode_closing">Fermetures</string>
   <string name="status_accessid_inactive">ID d\'accès inactif</string>
   <string name="hour_string_format">HH:mm:ss</string>
+ <string name="blinds_start_calibration_title">Calibration</string>
 </resources>

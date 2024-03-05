@@ -18,7 +18,6 @@ import org.supla.android.data.source.local.entity.SceneEntity
 import org.supla.android.data.source.local.entity.complex.SceneDataEntity
 import org.supla.android.db.Location
 
-
 @RunWith(MockitoJUnitRunner::class)
 class UpdateSceneOrderUseCaseTest {
 
@@ -49,7 +48,9 @@ class UpdateSceneOrderUseCaseTest {
     assertThat(argumentCaptor.firstValue)
       .extracting({ it.id }, { it.sortOrder })
       .containsExactly(
-        tuple(1L, 0), tuple(2L, 1), tuple(3L, 2)
+        tuple(1L, 0),
+        tuple(2L, 1),
+        tuple(3L, 2)
       )
   }
 

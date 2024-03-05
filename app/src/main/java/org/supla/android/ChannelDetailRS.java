@@ -180,7 +180,7 @@ public class ChannelDetailRS extends DetailLayout
       roofWindow.setClosingPercentage(rsValue.getClosingPercentage());
 
       if (rsValue.getClosingPercentage() < 0) {
-        tvPercent.setText(R.string.calibration);
+        tvPercent.setText(R.string.blinds_calibration);
         rsTvPressTime.setVisibility(VISIBLE);
       } else {
         tvPercent.setText((int) mappedPercentage(rsValue.getClosingPercentage()) + "%");
@@ -247,7 +247,7 @@ public class ChannelDetailRS extends DetailLayout
         rollerShutter.setMarkers(null);
         roofWindow.setClosingPercentage(0);
         roofWindow.setMarkers(null);
-        tvPercent.setText(R.string.calibration);
+        tvPercent.setText(R.string.blinds_calibration);
       } else {
         rollerShutter.setPercent(0);
         rollerShutter.setMarkers(positions);
@@ -387,7 +387,7 @@ public class ChannelDetailRS extends DetailLayout
       authDialog.close();
 
       AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-      builder.setMessage(R.string.recalibration_question);
+      builder.setMessage(R.string.blinds_start_calibration_message);
 
       builder.setPositiveButton(
           R.string.yes,
