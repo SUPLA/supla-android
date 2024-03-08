@@ -128,6 +128,8 @@ fun ListItemScaffold(
 
       if (online && showInfoIcon) {
         ListItemInfoIcon(onInfoClick)
+      } else {
+        ListItemIssueIconSpacing()
       }
 
       Box(

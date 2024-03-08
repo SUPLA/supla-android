@@ -154,6 +154,35 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
   }
 
   @Test
+  fun `should load data when header with total count contains only small letters`() {
+    // given
+    val remoteId = 123
+    val profileId = 321L
+    val lastDbDate = date(2023, 10, 1)
+    val cloudService: SuplaCloudService = mockk()
+
+    whenever(suplaCloudServiceProvider.provide()).thenReturn(cloudService)
+    mockInitialCall(remoteId, cloudService, lastDbDate, totalCountHeader = "x-total-count")
+
+    whenever(generalPurposeMeterLogRepository.findMinTimestamp(remoteId, profileId))
+      .thenReturn(Single.just(date(2023, 10, 1).time))
+    whenever(generalPurposeMeterLogRepository.findCount(remoteId, profileId)).thenReturn(Maybe.just(100))
+
+    // when
+    val testObserver = useCase.loadMeasurements(remoteId, profileId).test()
+
+    // then
+    testObserver.assertComplete()
+
+    verify(suplaCloudServiceProvider).provide()
+    verify(generalPurposeMeterLogRepository).findMinTimestamp(remoteId, profileId)
+    verify(generalPurposeMeterLogRepository).findCount(remoteId, profileId)
+    verify(generalPurposeMeterLogRepository).getInitialMeasurements(cloudService, remoteId)
+
+    verifyNoMoreInteractions(suplaCloudServiceProvider, generalPurposeMeterLogRepository)
+  }
+
+  @Test
   fun `should load measurements from cloud when db is empty`() {
     // given
     val remoteId = 123
@@ -592,7 +621,8 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
     cloudService: SuplaCloudService,
     date: Date? = null,
     totalCount: Int? = 100,
-    httpCode: Int = 200
+    httpCode: Int = 200,
+    totalCountHeader: String = "X-Total-Count"
   ) {
     val response: Response<List<GeneralPurposeMeter>> = mockk()
     every { response.code() } returns httpCode
@@ -604,7 +634,7 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
       every { response.body() } returns emptyList()
     }
     if (totalCount != null) {
-      every { response.headers() } returns Headers.headersOf("X-Total-Count", "$totalCount")
+      every { response.headers() } returns Headers.headersOf(totalCountHeader, "$totalCount")
     }
 
     whenever(generalPurposeMeterLogRepository.getInitialMeasurements(cloudService, remoteId)).thenReturn(response)

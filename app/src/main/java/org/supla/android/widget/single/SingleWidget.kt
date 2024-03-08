@@ -30,6 +30,7 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import org.supla.android.R
 import org.supla.android.Trace
+import org.supla.android.data.model.general.ChannelState
 import org.supla.android.data.model.general.IconType
 import org.supla.android.data.source.local.entity.Scene
 import org.supla.android.db.Channel
@@ -41,6 +42,7 @@ import org.supla.android.lib.SuplaConst
 import org.supla.android.widget.WidgetConfiguration
 import org.supla.android.widget.shared.WidgetProviderBase
 import org.supla.android.widget.shared.configuration.ItemType
+import org.supla.android.widget.shared.configuration.WidgetAction
 import org.supla.android.widget.shared.getWorkId
 import org.supla.android.widget.shared.isWidgetValid
 
@@ -140,18 +142,24 @@ class SingleWidget : WidgetProviderBase() {
       views.setViewVisibility(R.id.single_widget_button_night_mode, View.GONE)
       views.setViewVisibility(R.id.single_widget_text, View.VISIBLE)
     } else {
+      val state = if (turnOnOrClose(configuration)) {
+        ChannelState.getActiveValue(channel.func)
+      } else {
+        ChannelState.getInactiveValue(channel.func)
+      }
+
       views.setImageViewBitmap(
         R.id.single_widget_button,
         ImageCache.getBitmap(
           context,
-          context.getChannelIconUseCase(channel, IconType.SINGLE, false)
+          context.getChannelIconUseCase(channel, IconType.SINGLE, false, state)
         )
       )
       views.setImageViewBitmap(
         R.id.single_widget_button_night_mode,
         ImageCache.getBitmap(
           context,
-          context.getChannelIconUseCase(channel, IconType.SINGLE, true)
+          context.getChannelIconUseCase(channel, IconType.SINGLE, true, state)
         )
       )
       views.setViewVisibility(R.id.single_widget_button, View.VISIBLE)
@@ -182,6 +190,11 @@ internal fun pendingIntent(context: Context, intentAction: String, widgetId: Int
     intent(context, intentAction, widgetId),
     PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
   )
+}
+
+internal fun turnOnOrClose(configuration: WidgetConfiguration): Boolean {
+  return configuration.actionId == WidgetAction.TURN_ON.actionId ||
+    configuration.actionId == WidgetAction.MOVE_DOWN.actionId
 }
 
 fun updateSingleWidget(context: Context, widgetId: Int) =

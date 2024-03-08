@@ -998,8 +998,6 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     } else {
       registerPushNotificationClientToken(SUPLA_APP_ID, "", profile.getName());
     }
-
-    suplaCloudConfigHolder.setUrl(profile.getAuthInfo().getServerUrlString());
   }
 
   private void onRegisterError(SuplaRegisterError registerError) {
