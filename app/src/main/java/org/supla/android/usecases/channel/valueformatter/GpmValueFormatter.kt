@@ -35,7 +35,7 @@ class GpmValueFormatter(
     beforeValue = config?.unitBeforeValue?.let { if (config.noSpaceBeforeValue) it else "$it " } ?: ""
     afterValue = config?.unitAfterValue?.let { if (config.noSpaceAfterValue) it else " $it" } ?: ""
     valueFormatter = DecimalFormat().apply {
-      minimumFractionDigits = 0
+      minimumFractionDigits = config?.valuePrecision ?: 2
       maximumFractionDigits = config?.valuePrecision ?: 2
     }
   }
