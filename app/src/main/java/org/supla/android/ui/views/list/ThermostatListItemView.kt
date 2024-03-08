@@ -35,6 +35,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dagger.hilt.android.AndroidEntryPoint
@@ -205,7 +206,8 @@ private fun Preview() {
             estimatedTimerEndDate = null
           ),
           false,
-          showInfoIcon = true
+          showInfoIcon = true,
+          scale = 1.0f
         )
       }
       Column(
@@ -248,6 +250,56 @@ private fun Preview() {
           false,
           showInfoIcon = true,
           scale = 0.6f
+        )
+      }
+    }
+  }
+}
+
+@Preview(device = Devices.NEXUS_5)
+@Composable
+private fun Preview_Narrow() {
+  SuplaTheme {
+    Column(modifier = Modifier.background(MaterialTheme.colors.background).width(350.dp)) {
+      Column(
+        modifier = Modifier
+          .height(dimensionResource(id = R.dimen.channel_layout_height).times(1.5f))
+      ) {
+        ThermostatListItemView(
+          data = SlideableListItemData.Thermostat(
+            online = true,
+            titleProvider = { "Thermostat" },
+            icon = ImageId(R.drawable.fnc_thermostat_cool),
+            value = "20,7°C",
+            subValue = "21,0°",
+            indicatorIcon = R.drawable.ic_cooling,
+            issueIconType = IssueIconType.WARNING,
+            estimatedTimerEndDate = null
+          ),
+          true,
+          showInfoIcon = true,
+          scale = 1.5f
+        )
+      }
+
+      Column(
+        modifier = Modifier
+          .height(dimensionResource(id = R.dimen.channel_layout_height))
+      ) {
+        ThermostatListItemView(
+          data = SlideableListItemData.Thermostat(
+            online = true,
+            titleProvider = { "Thermostat" },
+            icon = ImageId(R.drawable.fnc_thermostat_cool),
+            value = "20,7°C",
+            subValue = "21,0°",
+            indicatorIcon = R.drawable.ic_cooling,
+            issueIconType = IssueIconType.ERROR,
+            estimatedTimerEndDate = null
+          ),
+          false,
+          showInfoIcon = true,
+          scale = 1.0f
         )
       }
     }
