@@ -40,7 +40,10 @@ class SuplaCloudConfigHolder @Inject constructor() {
 
   var token: SuplaOAuthToken? = null
 
-  var url: String? = null
+  val url: String?
+    get() = token?.let { token ->
+      token.url?.let { "${it.protocol}://${it.authority}/${it.path}" }
+    }
 
   val socketFactory: SSLSocketFactory?
     get() {
@@ -92,8 +95,8 @@ class SuplaCloudConfigHolder @Inject constructor() {
             }
           }
 
-          override fun getAcceptedIssuers(): Array<X509Certificate>? {
-            return null
+          override fun getAcceptedIssuers(): Array<X509Certificate> {
+            return arrayOf()
           }
         }
       )
@@ -101,6 +104,5 @@ class SuplaCloudConfigHolder @Inject constructor() {
 
   fun clean() {
     token = null
-    url = null
   }
 }

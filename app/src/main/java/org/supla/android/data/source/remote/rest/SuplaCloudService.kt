@@ -17,8 +17,10 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import androidx.annotation.WorkerThread
 import com.google.gson.Gson
 import io.reactivex.rxjava3.core.Observable
+import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.networking.suplacloud.OkHttpClientProvider
 import org.supla.android.core.networking.suplacloud.SuplaCloudConfigHolder
 import org.supla.android.data.source.remote.rest.channel.GeneralPurposeMeasurement
@@ -26,7 +28,6 @@ import org.supla.android.data.source.remote.rest.channel.GeneralPurposeMeter
 import org.supla.android.data.source.remote.rest.channel.TemperatureAndHumidityMeasurement
 import org.supla.android.data.source.remote.rest.channel.TemperatureMeasurement
 import org.supla.android.di.GSON_FOR_API
-import org.supla.android.extensions.guardLet
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
@@ -113,14 +114,16 @@ interface SuplaCloudService {
   class Provider @Inject constructor(
     private val configHolder: SuplaCloudConfigHolder,
     private val okHttpClientProvider: OkHttpClientProvider,
+    private val suplaClientProvider: SuplaClientProvider,
     @Named(GSON_FOR_API) private val gson: Gson
   ) {
 
     private var retrofitInstance: Retrofit? = null
     private var urlHash = 0
 
+    @WorkerThread
     fun provide(): SuplaCloudService {
-      val (url) = guardLet(configHolder.url) { throw IllegalStateException("Server URL missing!") }
+      val url = requireUrl()
       return provideRetrofit(url).create(SuplaCloudService::class.java)
     }
 
@@ -139,6 +142,20 @@ interface SuplaCloudService {
             .build().also { retrofitInstance = it }
         }
       }
+    }
+
+    @WorkerThread
+    private fun requireUrl(): String {
+      suplaClientProvider.provide()?.oAuthTokenRequest()
+
+      for (i in 0..50) {
+        configHolder.url?.let {
+          return it
+        }
+        Thread.sleep(100)
+      }
+
+      throw IllegalStateException("Server token missing!")
     }
   }
 }

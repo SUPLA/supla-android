@@ -28,6 +28,7 @@ import org.supla.android.data.source.remote.rest.channel.Measurement
 import org.supla.android.extensions.TAG
 import org.supla.android.extensions.guardLet
 import org.supla.android.extensions.toTimestamp
+import retrofit2.Response
 
 private const val ALLOWED_TIME_DIFFERENCE = 1800
 
@@ -70,7 +71,7 @@ abstract class BaseDownloadLogUseCase<T : Measurement, U : BaseLogEntity>(
         return null
       }
       val firstMeasurements = firstMeasurementsResponse.body()
-      val totalCount = firstMeasurementsResponse.headers()["X-Total-Count"]?.toInt()
+      val totalCount = getTotalCount(firstMeasurementsResponse)
 
       if (firstMeasurements != null && totalCount != null) {
         return Pair(firstMeasurements, totalCount)
@@ -169,5 +170,12 @@ abstract class BaseDownloadLogUseCase<T : Measurement, U : BaseLogEntity>(
       importedEntries += entries.count()
       emitter.onNext(importedEntries / entriesToImport.toFloat())
     } while (emitter.isDisposed.not())
+  }
+
+  private fun getTotalCount(firstMeasurementsResponse: Response<List<T>>): Int? {
+    firstMeasurementsResponse.headers()["X-Total-Count"]?.let { return it.toInt() }
+    firstMeasurementsResponse.headers()["x-total-count"]?.let { return it.toInt() }
+
+    return null
   }
 }
