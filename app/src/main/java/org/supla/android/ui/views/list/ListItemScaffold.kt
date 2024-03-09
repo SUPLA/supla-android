@@ -128,7 +128,7 @@ fun ListItemScaffold(
 
       if (online && showInfoIcon) {
         ListItemInfoIcon(onInfoClick)
-      } else {
+      } else if (issueIconType != null) {
         ListItemIssueIconSpacing()
       }
 
@@ -139,7 +139,13 @@ fun ListItemScaffold(
         content = content
       )
 
-      issueIconType?.let { ListItemIssueIcon(it, onIssueClick) } ?: ListItemIssueIconSpacing()
+      issueIconType.let {
+        if (it != null) {
+          ListItemIssueIcon(it, onIssueClick)
+        } else if (online && showInfoIcon) {
+          ListItemIssueIconSpacing()
+        }
+      }
 
       ListItemDotTrading(online, hasRightButton)
     }
@@ -161,7 +167,7 @@ private fun ListItemDotLeading(online: Boolean, withButton: Boolean, modifier: M
   ListItemDot(
     online = online,
     withButton = withButton,
-    paddingValues = PaddingValues(start = Distance.default),
+    paddingValues = PaddingValues(start = dimensionResource(id = R.dimen.list_horizontal_spacing)),
     modifier = modifier
   )
 
@@ -170,7 +176,7 @@ private fun ListItemDotTrading(online: Boolean, withButton: Boolean, modifier: M
   ListItemDot(
     online = online,
     withButton = withButton,
-    paddingValues = PaddingValues(end = Distance.default),
+    paddingValues = PaddingValues(end = dimensionResource(id = R.dimen.list_horizontal_spacing)),
     modifier = modifier
   )
 
@@ -194,7 +200,7 @@ private fun ListItemInfoIcon(onClick: () -> Unit) {
     painter = painterResource(id = R.drawable.channelstateinfo),
     contentDescription = null,
     modifier = Modifier
-      .padding(start = Distance.default)
+      .padding(start = dimensionResource(id = R.dimen.list_horizontal_spacing))
       .size(dimensionResource(id = R.dimen.channel_state_image_size))
       .clickable(interactionSource = MutableInteractionSource(), indication = null, onClick = onClick)
   )
@@ -206,7 +212,7 @@ private fun ListItemIssueIcon(issueIconType: IssueIconType, onClick: () -> Unit)
     painter = painterResource(id = issueIconType.icon),
     contentDescription = null,
     modifier = Modifier
-      .padding(end = Distance.default)
+      .padding(end = dimensionResource(id = R.dimen.list_horizontal_spacing))
       .size(dimensionResource(id = R.dimen.channel_warning_image_size))
       .clickable(interactionSource = MutableInteractionSource(), indication = null, onClick = onClick)
   )
@@ -216,7 +222,7 @@ private fun ListItemIssueIcon(issueIconType: IssueIconType, onClick: () -> Unit)
 private fun ListItemIssueIconSpacing() {
   Box(
     modifier = Modifier
-      .padding(end = Distance.default)
+      .padding(end = dimensionResource(id = R.dimen.list_horizontal_spacing))
       .size(dimensionResource(id = R.dimen.channel_warning_image_size))
   )
 }
