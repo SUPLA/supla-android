@@ -328,7 +328,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
         new RelativeLayout.LayoutParams(
             mGroup ? dot_size / 2 : dot_size, mGroup ? dot_size * 2 : dot_size);
 
-    int margin = getResources().getDimensionPixelSize(R.dimen.distance_default);
+    int margin = getResources().getDimensionPixelSize(R.dimen.list_horizontal_spacing);
 
     if (right) {
       lp.rightMargin = margin;
@@ -345,7 +345,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
   protected RelativeLayout.LayoutParams getChannelStateImageLayoutParams() {
 
     int size = getResources().getDimensionPixelSize(R.dimen.channel_state_image_size);
-    int margin = getResources().getDimensionPixelSize(R.dimen.distance_default);
+    int margin = getResources().getDimensionPixelSize(R.dimen.list_horizontal_spacing);
 
     if (mFunc == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE) {
       margin = 0;

@@ -166,15 +166,13 @@ public class SceneLayout extends LinearLayout implements SlideableItem, Swapable
     right_ActiveStatus.setSingleColor(true);
     right_ActiveStatus.setOnlineColor(getResources().getColor(R.color.primary));
 
-    {
-      int dot_size = getResources().getDimensionPixelSize(R.dimen.channel_dot_size);
-      RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(dot_size / 2, dot_size * 2);
+    int dot_size = getResources().getDimensionPixelSize(R.dimen.channel_dot_size);
+    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(dot_size / 2, dot_size * 2);
 
-      lp.addRule(RelativeLayout.LEFT_OF, right_onlineStatus.getId());
-      lp.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
+    lp.addRule(RelativeLayout.LEFT_OF, right_onlineStatus.getId());
+    lp.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
 
-      right_ActiveStatus.setLayoutParams(lp);
-    }
+    right_ActiveStatus.setLayoutParams(lp);
 
     right_ActiveStatus.setVisibility(View.GONE);
     content.addView(right_ActiveStatus);
@@ -264,7 +262,7 @@ public class SceneLayout extends LinearLayout implements SlideableItem, Swapable
 
     RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(dot_size, dot_size);
 
-    int margin = getResources().getDimensionPixelSize(R.dimen.distance_default);
+    int margin = getResources().getDimensionPixelSize(R.dimen.list_horizontal_spacing);
 
     if (right) {
       lp.rightMargin = margin;
