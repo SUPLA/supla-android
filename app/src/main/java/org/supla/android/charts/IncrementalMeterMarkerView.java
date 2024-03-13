@@ -41,4 +41,9 @@ public class IncrementalMeterMarkerView extends SuplaMarkerView {
 
     return "";
   }
+
+  @Override
+  protected String getValue2(Entry e) {
+    return String.format("%.3f " + getString(helper.getUnit()), e.getY());
+  }
 }

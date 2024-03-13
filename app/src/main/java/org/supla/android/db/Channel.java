@@ -229,7 +229,7 @@ public class Channel extends ChannelBase {
         if (value.getSubValueType() == SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS) {
           double doubleValue = value.getImpulseCounterCalculatedValue(true);
           return doubleValue > 0
-              ? String.format("%.1f " + getUnit(), doubleValue)
+              ? String.format("%.2f " + getUnit(), doubleValue)
               : ValuesFormatter.NO_VALUE_TEXT;
         } else if (value.getSubValueType()
             == SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS) {
@@ -246,7 +246,7 @@ public class Channel extends ChannelBase {
     if (getType() == SuplaConst.SUPLA_CHANNELTYPE_IMPULSE_COUNTER) {
       double doubleValue = value.getImpulseCounterCalculatedValue();
       return doubleValue > 0
-          ? String.format("%.1f " + getUnit(), doubleValue)
+          ? String.format("%.2f " + getUnit(), doubleValue)
           : ValuesFormatter.NO_VALUE_TEXT;
     }
 

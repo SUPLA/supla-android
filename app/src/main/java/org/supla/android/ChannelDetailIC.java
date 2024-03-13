@@ -193,8 +193,8 @@ public class ChannelDetailIC extends DetailLayout
 
       tvCurrentCost.setText(String.format("%.2f " + ic.getCurrency(), currentCost));
 
-      tvMeterValue.setText(String.format("%.2f " + channel.getUnit(), ic.getCalculatedValue()));
-      tvCurrentConsumption.setText(String.format("%.2f " + channel.getUnit(), currentConsumption));
+      tvMeterValue.setText(String.format("%.3f " + channel.getUnit(), ic.getCalculatedValue()));
+      tvCurrentConsumption.setText(String.format("%.3f " + channel.getUnit(), currentConsumption));
       tvTotalCost.setText(String.format("%.2f " + ic.getCurrency(), ic.getTotalCost()));
       chartHelper.setPricePerUnit(ic.getPricePerUnit());
       chartHelper.setCurrency(ic.getCurrency());
