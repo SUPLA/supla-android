@@ -21,5 +21,14 @@ class SuplaChannelRelation(
   val channelId: Int,
   val parentId: Int,
   val relationType: Short,
-  val isEol: Boolean
-)
+  val EOL: Byte
+) {
+  fun isEol() : Boolean {
+    return EOL.toInt() and 0x1 > 0
+  }
+
+  fun isSol() : Boolean {
+    return EOL.toInt() and 0x2 > 0
+  }
+}
+
