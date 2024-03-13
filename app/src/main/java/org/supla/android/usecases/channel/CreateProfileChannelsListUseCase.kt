@@ -31,7 +31,6 @@ import org.supla.android.data.source.local.entity.complex.isGpMeasurement
 import org.supla.android.data.source.local.entity.complex.isGpMeter
 import org.supla.android.data.source.local.entity.complex.isHvacThermostat
 import org.supla.android.data.source.local.entity.complex.isMeasurement
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNEL_FLAG_HAS_PARENT
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.location.CollapsedFlag
@@ -58,9 +57,11 @@ class CreateProfileChannelsListUseCase @Inject constructor(
         val channels = mutableListOf<ListItem>()
 
         val channelsMap = mutableMapOf<Int, ChannelDataEntity>().also { map -> entities.forEach { map[it.remoteId] = it } }
+        val allChildrenIds = mutableListOf<Int>()
         val childrenMap = mutableMapOf<Int, List<ChannelChildEntity?>>().also { map ->
           relationMap.forEach { relation ->
             map[relation.key] = relation.value.map { entry ->
+              allChildrenIds.add(entry.channelId)
               channelsMap[entry.channelId]?.let {
                 ChannelChildEntity(
                   entry,
@@ -73,7 +74,7 @@ class CreateProfileChannelsListUseCase @Inject constructor(
 
         var location: LocationEntity? = null
         entities.forEach {
-          if (it.channelEntity.flags and SUPLA_CHANNEL_FLAG_HAS_PARENT > 0) {
+          if (allChildrenIds.contains(it.remoteId)) {
             // Skip channels which have parent ID.
             return@forEach
           }
