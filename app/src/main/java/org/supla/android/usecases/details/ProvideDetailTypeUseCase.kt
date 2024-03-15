@@ -58,11 +58,9 @@ class ProvideDetailTypeUseCase @Inject constructor() {
     SUPLA_CHANNELFNC_RGBLIGHTING ->
       LegacyDetailType.RGBW
 
-    SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER ->
-      BlindsDetailType(listOf(DetailPage.BLINDS))
-
+    SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER,
     SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW ->
-      LegacyDetailType.RS
+      BlindsDetailType(listOf(DetailPage.BLINDS))
 
     SUPLA_CHANNELFNC_LIGHTSWITCH,
     SUPLA_CHANNELFNC_POWERSWITCH,
@@ -139,7 +137,6 @@ sealed interface DetailType : Serializable
 
 enum class LegacyDetailType : DetailType {
   RGBW,
-  RS,
   IC,
   EM,
   THERMOSTAT_HP,

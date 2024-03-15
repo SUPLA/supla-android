@@ -86,12 +86,12 @@ class BlindGeneralViewModel @Inject constructor(
   fun handleAction(action: BlindsAction, remoteId: Int, itemType: ItemType) {
     when (action) {
       is BlindsAction.Open -> {
-        updateState { it.copy(moveStartTime = null, viewState = it.viewState.copy(touchTime = null)) }
+        updateState { it.copy(moveStartTime = null, viewState = it.viewState.copy(touchTime = null), manualMoving = false) }
         executeSimpleActionUseCase.invoke(ActionId.REVEAL, itemType.toSubjectType(), remoteId).runIt()
       }
 
       is BlindsAction.Close -> {
-        updateState { it.copy(moveStartTime = null, viewState = it.viewState.copy(touchTime = null)) }
+        updateState { it.copy(moveStartTime = null, viewState = it.viewState.copy(touchTime = null), manualMoving = false) }
         executeSimpleActionUseCase.invoke(ActionId.SHUT, itemType.toSubjectType(), remoteId).runIt()
       }
 
@@ -106,11 +106,12 @@ class BlindGeneralViewModel @Inject constructor(
       }
 
       is BlindsAction.Stop -> {
-        updateState { it.calculateMoveTime(dateProvider) }
+        updateState { it.calculateMoveTime(dateProvider).copy(manualMoving = false) }
         executeSimpleActionUseCase.invoke(ActionId.STOP, itemType.toSubjectType(), remoteId).runIt()
       }
 
-      BlindsAction.Calibrate -> updateState { it.copy(showCalibrationDialog = true) }
+      BlindsAction.Calibrate -> updateState { it.copy(showCalibrationDialog = true, manualMoving = false) }
+
       is BlindsAction.OpenAt -> {
         updateState {
           if (it.viewState.calibrating) {
@@ -120,6 +121,7 @@ class BlindGeneralViewModel @Inject constructor(
             executeBlindsActionUseCase.invoke(ActionId.SHUT_PARTIALLY, itemType.toSubjectType(), remoteId, action.position).runIt()
             it.copy(
               moveStartTime = null,
+              manualMoving = false,
               viewState = it.viewState.copy(touchTime = null)
             )
           }
@@ -132,12 +134,13 @@ class BlindGeneralViewModel @Inject constructor(
           it
         } else {
           it.copy(
-            rollerState = it.rollerState.copy(position = action.position),
+            rollerState = it.rollerState.copy(position = action.position, markers = emptyList()),
             viewState = it.viewState.copy(
               touchTime = null,
               positionUnknown = false,
               positionText = String.format("%.0f%%", if (it.viewState.showClosingPercentage) action.position else 100f - action.position)
-            )
+            ),
+            manualMoving = true
           )
         }
       }
@@ -192,6 +195,9 @@ class BlindGeneralViewModel @Inject constructor(
 
   private fun handleChannel(channel: ChannelDataEntity) {
     updateState {
+      if (it.manualMoving) {
+        return@updateState it // Skip position updating when moving by finger
+      }
       val value = channel.channelValueEntity.asRollerShutterValue()
       val position = if (value.hasValidPosition()) value.position else 0
       val showOpening = preferences.isShowOpeningPercent
@@ -218,8 +224,12 @@ class BlindGeneralViewModel @Inject constructor(
 
   private fun handleGroup(group: GroupData) {
     updateState {
+      if (it.manualMoving) {
+        return@updateState it // Skip position updating when moving by finger
+      }
+
       val positions = group.groupDataEntity.channelGroupEntity.getRollerShutterPositions()
-      val overallPosition = getGroupPercentage(positions)
+      val overallPosition = getGroupPercentage(positions, it.rollerState.markers.isNotEmpty())
       val showOpening = preferences.isShowOpeningPercent
 
       it.copy(
@@ -253,7 +263,7 @@ class BlindGeneralViewModel @Inject constructor(
       .disposeBySelf()
   }
 
-  private fun getGroupPercentage(positions: List<Float>): GroupPercentage {
+  private fun getGroupPercentage(positions: List<Float>, hadMarkers: Boolean): GroupPercentage {
     var percentage: Float? = null
     var minPercentage: Float? = null
     var maxPercentage: Float? = null
@@ -275,7 +285,9 @@ class BlindGeneralViewModel @Inject constructor(
       GroupPercentage.Invalid
     } else {
       ifLet(minPercentage, maxPercentage) { (min, max) ->
-        if (abs(min - max) > 5) {
+        if (hadMarkers && abs(min - max) > 3) {
+          return GroupPercentage.Different(min, max)
+        } else if (abs(min - max) > 5) {
           return GroupPercentage.Different(min, max)
         }
       }
@@ -322,6 +334,7 @@ data class BlindsGeneralModelState(
   val viewState: BlindsGeneralViewState = BlindsGeneralViewState(),
 
   val moveStartTime: Long? = null,
+  val manualMoving: Boolean = false,
 
   val showCalibrationDialog: Boolean = false,
 

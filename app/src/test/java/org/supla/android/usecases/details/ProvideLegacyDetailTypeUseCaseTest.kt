@@ -42,7 +42,7 @@ class ProvideLegacyDetailTypeUseCaseTest {
 
   @Test
   fun `should provide detail for roof window`() {
-    testDetailType(SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW, LegacyDetailType.RS)
+    testDetailType(SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW, BlindsDetailType(listOf(DetailPage.BLINDS)))
   }
 
   @Test

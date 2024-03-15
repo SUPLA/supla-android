@@ -38,6 +38,8 @@ class IconValueListItemView : BaseSlideableContent<SlideableListItemData.Default
     SuplaTheme {
       IconValueListItemView(
         data = data,
+        hasLeftButton = hasLeftButton,
+        hasRightButton = hasRightButton,
         onInfoClick = onInfoClick,
         onIssueClick = onIssueClick,
         onTitleLongClick = onTitleLongClick,

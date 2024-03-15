@@ -459,7 +459,8 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
     assertThat(states).containsExactly(
       BlindsGeneralModelState(
         rollerState = WindowState(45f),
-        viewState = BlindsGeneralViewState(positionText = "55%")
+        viewState = BlindsGeneralViewState(positionText = "55%"),
+        manualMoving = true
       )
     )
     verifyZeroInteractions(executeBlindsActionUseCase, executeSimpleActionUseCase)
