@@ -1,4 +1,4 @@
-package org.supla.android.features.details.blindsdetail.ui
+package org.supla.android.features.details.blindsdetail.general.ui.blinds
 /*
 Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -52,6 +52,9 @@ import androidx.compose.ui.unit.dp
 import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
+import org.supla.android.features.details.blindsdetail.general.ui.MoveState
+import org.supla.android.features.details.blindsdetail.general.ui.WindowColors
+import org.supla.android.features.details.blindsdetail.general.ui.WindowState
 import kotlin.math.ceil
 
 private val WINDOW_DIMENS = object {
@@ -88,25 +91,25 @@ private val slatPaint = Paint().asFrameworkPaint().apply {
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun WindowView(
-  rollerState: BlindRollerState,
+  windowState: WindowState,
   modifier: Modifier = Modifier,
   colors: WindowColors = WindowColors.standard(),
   onPositionChanging: ((Float) -> Unit)? = null,
   onPositionChanged: ((Float) -> Unit)? = null
 ) {
-  val (windowDimens, updateDimens) = remember { mutableStateOf<WindowViewState?>(null) }
+  val (windowDimens, updateDimens) = remember { mutableStateOf<WindowViewDimens?>(null) }
   val moveState = remember { mutableStateOf(MoveState()) }
 
   Canvas(
     modifier = modifier
-      .onSizeChanged { updateDimens(WindowViewState.make(viewSize = it)) }
+      .onSizeChanged { updateDimens(WindowViewDimens.make(viewSize = it)) }
       .pointerInteropFilter { event ->
         if (windowDimens != null) {
           when (event.action) {
             MotionEvent.ACTION_DOWN ->
               moveState.value = moveState.value.copy(
                 initialPoint = Offset(event.x, event.y),
-                initialPercentage = rollerState.position
+                initialPercentage = windowState.position
               )
 
             MotionEvent.ACTION_MOVE -> {
@@ -115,7 +118,7 @@ fun WindowView(
             }
 
             MotionEvent.ACTION_UP ->
-              onPositionChanged?.let { it(rollerState.position) }
+              onPositionChanged?.let { it(windowState.position) }
           }
         }
         true
@@ -125,12 +128,12 @@ fun WindowView(
       return@Canvas // Skip drawing when view size is not set yet
     }
 
-    drawWindow(windowViewState = windowDimens, colors = colors, rollerState = rollerState)
+    drawWindow(windowViewDimens = windowDimens, colors = colors, rollerState = windowState)
   }
 }
 
 context(DrawScope)
-private fun drawWindow(windowViewState: WindowViewState, colors: WindowColors, rollerState: BlindRollerState) {
+private fun drawWindow(windowViewDimens: WindowViewDimens, colors: WindowColors, rollerState: WindowState) {
   windowPaint.apply {
     color = colors.window.toArgb()
     setShadowLayer(windowShadowRadius.toPx(), 0f, 2.dp.toPx(), colors.shadow.toArgb())
@@ -140,85 +143,85 @@ private fun drawWindow(windowViewState: WindowViewState, colors: WindowColors, r
     setShadowLayer(slatShadowRadius.toPx(), 0f, 1.5.dp.toPx(), colors.shadow.toArgb())
   }
 
-  val windowFrameRadius = 4.dp.toPx().times(windowViewState.scale)
+  val windowFrameRadius = 4.dp.toPx().times(windowViewDimens.scale)
 
   drawContext.canvas.nativeCanvas.drawRoundRect(
-    windowViewState.windowRect.left,
-    windowViewState.windowRect.top,
-    windowViewState.windowRect.right,
-    windowViewState.windowRect.bottom,
+    windowViewDimens.windowRect.left,
+    windowViewDimens.windowRect.top,
+    windowViewDimens.windowRect.right,
+    windowViewDimens.windowRect.bottom,
     windowFrameRadius,
     windowFrameRadius,
     windowPaint
   )
 
-  drawGlasses(windowViewState, colors)
-  drawSlats(rollerState, windowViewState, colors)
+  drawGlasses(windowViewDimens, colors)
+  drawSlats(rollerState, windowViewDimens, colors)
 
   drawContext.canvas.nativeCanvas.drawRect(
-    windowViewState.topLineRect.left,
-    windowViewState.topLineRect.top,
-    windowViewState.topLineRect.right,
-    windowViewState.topLineRect.bottom,
+    windowViewDimens.topLineRect.left,
+    windowViewDimens.topLineRect.top,
+    windowViewDimens.topLineRect.right,
+    windowViewDimens.topLineRect.bottom,
     windowPaint
   )
 
   rollerState.markers.forEach { position ->
-    val topPosition = windowViewState.topLineRect.bottom
-      .plus(windowViewState.blindRollerHeight.minus(windowViewState.slatDistance).times(position).div(100f))
+    val topPosition = windowViewDimens.topLineRect.bottom
+      .plus(windowViewDimens.blindRollerHeight.minus(windowViewDimens.slatDistance).times(position).div(100f))
 
-    drawMarker(Offset(0f, topPosition), windowViewState, colors)
+    drawMarker(Offset(0f, topPosition), windowViewDimens, colors)
   }
 }
 
 context (DrawScope)
-private fun drawSlats(rollerState: BlindRollerState, windowViewState: WindowViewState, colors: WindowColors) {
+private fun drawSlats(rollerState: WindowState, windowViewDimens: WindowViewDimens, colors: WindowColors) {
   // 0 ... 1 -> 0 ... 100%
   val positionCorrectedByBottomPosition = rollerState.position
     .div(rollerState.bottomPosition)
     .let { if (it > 1) 1f else it }
 
   val topCorrection = positionCorrectedByBottomPosition
-    .times(windowViewState.blindRollerHeight)
-    .minus(windowViewState.slatsDistances)
-    .plus(windowViewState.slatDistance.times(1.5f)) // Needed to align slats bottom with window bottom
+    .times(windowViewDimens.blindRollerHeight)
+    .minus(windowViewDimens.slatsDistances)
+    .plus(windowViewDimens.slatDistance.times(1.5f)) // Needed to align slats bottom with window bottom
 
   // When the blinds position is bigger then bottom position we need to start "closing slats".
   // Here the available space for "opened" slats is calculated
   val availableSpaceForSlatDistances = if (rollerState.position > rollerState.bottomPosition) {
-    windowViewState.slatsDistances
+    windowViewDimens.slatsDistances
       .times(100f.minus(rollerState.position))
       .div(100f.minus(rollerState.bottomPosition))
   } else {
     null
   }
-  var slatsCorrection = availableSpaceForSlatDistances?.let { windowViewState.slatsDistances.minus(it) } ?: 0f
+  var slatsCorrection = availableSpaceForSlatDistances?.let { windowViewDimens.slatsDistances.minus(it) } ?: 0f
 
-  windowViewState.slats.forEachIndexed { idx, slat ->
+  windowViewDimens.slats.forEachIndexed { idx, slat ->
     if (availableSpaceForSlatDistances != null) {
-      val summarizedDistance = idx.times(windowViewState.slatDistance)
+      val summarizedDistance = idx.times(windowViewDimens.slatDistance)
       // When the summarized distance used between slats is bigger then available,
       // add additional slat correction, to make slats displayed next to each other (without distance)
       if (summarizedDistance > availableSpaceForSlatDistances) {
         slatsCorrection -= summarizedDistance.minus(availableSpaceForSlatDistances).let {
           // Remove max one slat distance for each slat
-          if (it > windowViewState.slatDistance) windowViewState.slatDistance else it
+          if (it > windowViewDimens.slatDistance) windowViewDimens.slatDistance else it
         }
       }
     }
-    drawSlat(topCorrection - windowViewState.blindRollerHeight + slatsCorrection, slat, windowViewState, colors)
+    drawSlat(topCorrection - windowViewDimens.blindRollerHeight + slatsCorrection, slat, windowViewDimens, colors)
   }
 }
 
 context(DrawScope)
-private fun drawSlat(topCorrection: Float, rect: Rect, windowViewState: WindowViewState, colors: WindowColors) {
+private fun drawSlat(topCorrection: Float, rect: Rect, windowViewDimens: WindowViewDimens, colors: WindowColors) {
   val bottom = rect.bottom + topCorrection
-  if (bottom < windowViewState.topLineRect.bottom) {
+  if (bottom < windowViewDimens.topLineRect.bottom) {
     // skip slats over screen
     return
   }
   val top = rect.top.plus(topCorrection).let {
-    if (it < windowViewState.topLineRect.bottom) windowViewState.topLineRect.bottom else it
+    if (it < windowViewDimens.topLineRect.bottom) windowViewDimens.topLineRect.bottom else it
   }
   drawContext.canvas.nativeCanvas.drawRect(
     rect.left,
@@ -236,7 +239,7 @@ private fun drawSlat(topCorrection: Float, rect: Rect, windowViewState: WindowVi
 }
 
 context(DrawScope)
-private fun drawGlasses(dimens: WindowViewState, colors: WindowColors) {
+private fun drawGlasses(dimens: WindowViewDimens, colors: WindowColors) {
   val glassHorizontalMargin = WINDOW_DIMENS.glassHorizontalMargin.times(dimens.scale)
   val glassVerticalMargin = WINDOW_DIMENS.glassVerticalMargin.times(dimens.scale)
   val glassMiddleMargin = WINDOW_DIMENS.glassMiddleMargin.times(dimens.scale)
@@ -265,47 +268,22 @@ private fun drawGlasses(dimens: WindowViewState, colors: WindowColors) {
 }
 
 context (DrawScope)
-private fun drawMarker(offset: Offset, windowViewState: WindowViewState, windowColors: WindowColors) {
-  windowViewState.markerPath.translate(offset)
+private fun drawMarker(offset: Offset, windowViewDimens: WindowViewDimens, windowColors: WindowColors) {
+  windowViewDimens.markerPath.translate(offset)
   drawPath(
-    path = windowViewState.markerPath,
+    path = windowViewDimens.markerPath,
     color = windowColors.markerBackground,
     style = Fill
   )
   drawPath(
-    path = windowViewState.markerPath,
+    path = windowViewDimens.markerPath,
     color = windowColors.markerBorder,
     style = Stroke(width = 1.dp.toPx())
   )
-  windowViewState.markerPath.translate(offset.times(-1f))
+  windowViewDimens.markerPath.translate(offset.times(-1f))
 }
 
-private data class MoveState(
-  val initialPoint: Offset = Offset(0f, 0f),
-  val initialPercentage: Float = 0f,
-  val lastPoint: Offset = Offset(0f, 0f)
-)
-
-data class BlindRollerState(
-  /**
-   * The whole blind roller position in percentage
-   * 0 - open
-   * 100 - closed
-   */
-  val position: Float,
-
-  /**
-   * Position as percentage of [position] when blind roller is touching the parapet but the are still gaps between slats
-   */
-  val bottomPosition: Float = 100f,
-
-  /**
-   * Used for groups - shows positions of single blinds
-   */
-  val markers: List<Float> = emptyList()
-)
-
-private data class WindowViewState(
+private data class WindowViewDimens(
   val canvasRect: Rect,
   val topLineRect: Rect,
   val windowRect: Rect,
@@ -339,7 +317,7 @@ private data class WindowViewState(
 
   companion object {
 
-    fun make(viewSize: IntSize): WindowViewState {
+    fun make(viewSize: IntSize): WindowViewDimens {
       val canvasRect = canvasRect(viewSize = viewSize)
       val scale = canvasRect.width / WINDOW_DIMENS.width
       val topLineRect = Rect(
@@ -350,7 +328,7 @@ private data class WindowViewState(
       val slats = slats(scale, canvasRect, topLineRect)
       val slatDistance = WINDOW_DIMENS.slatDistance.times(scale)
 
-      return WindowViewState(
+      return WindowViewDimens(
         canvasRect = canvasRect,
         topLineRect = topLineRect,
         windowRect = windowRect,
@@ -441,7 +419,7 @@ private fun Preview_Normal() {
           .background(color = colorResource(id = R.color.background))
       ) {
         WindowView(
-          rollerState = BlindRollerState(75f),
+          windowState = WindowState(75f),
           modifier = Modifier
             .fillMaxSize()
             .padding(all = Distance.small)
@@ -454,7 +432,7 @@ private fun Preview_Normal() {
           .background(color = colorResource(id = R.color.background))
       ) {
         WindowView(
-          rollerState = BlindRollerState(50f, markers = listOf(0f, 10f, 50f, 100f)),
+          windowState = WindowState(50f, markers = listOf(0f, 10f, 50f, 100f)),
           modifier = Modifier
             .fillMaxSize()
             .padding(all = Distance.small)
@@ -467,7 +445,7 @@ private fun Preview_Normal() {
           .background(color = colorResource(id = R.color.background))
       ) {
         WindowView(
-          rollerState = BlindRollerState(25f),
+          windowState = WindowState(25f),
           modifier = Modifier
             .fillMaxSize()
             .padding(all = Distance.small)

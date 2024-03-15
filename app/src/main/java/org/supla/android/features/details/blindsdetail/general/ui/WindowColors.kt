@@ -1,4 +1,4 @@
-package org.supla.android.features.details.blindsdetail.ui
+package org.supla.android.features.details.blindsdetail.general.ui
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 

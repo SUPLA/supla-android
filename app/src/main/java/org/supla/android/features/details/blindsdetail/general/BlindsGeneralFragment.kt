@@ -71,7 +71,7 @@ class BlindsGeneralFragment : BaseFragment<BlindsGeneralModelState, BlindsGenera
         }
 
         BlindsGeneralView(
-          rollerState = modelState.rollerState,
+          windowState = modelState.rollerState,
           viewState = modelState.viewState
         ) {
           viewModel.handleAction(it, item.remoteId, item.itemType)

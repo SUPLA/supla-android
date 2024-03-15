@@ -33,7 +33,10 @@ import org.supla.android.data.source.local.entity.custom.GroupOnlineSummary
 import org.supla.android.data.source.remote.rollershutter.RollerShutterValue
 import org.supla.android.data.source.remote.rollershutter.SuplaRollerShutterFlag
 import org.supla.android.data.source.runtime.ItemType
-import org.supla.android.features.details.blindsdetail.ui.BlindRollerState
+import org.supla.android.features.details.blindsdetail.general.ui.WindowState
+import org.supla.android.features.details.blindsdetail.general.ui.WindowType
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaSchedulers
@@ -114,7 +117,7 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
     assertThat(states).containsExactly(
       BlindsGeneralModelState(
         remoteId = remoteId,
-        rollerState = BlindRollerState(position.toFloat(), bottomPosition.toFloat()),
+        rollerState = WindowState(position.toFloat(), bottomPosition.toFloat()),
         viewState = BlindsGeneralViewState(
           issues = listOf(ChannelIssueItem(IssueIconType.ERROR, R.string.motor_problem)),
           enabled = true,
@@ -142,7 +145,7 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
     assertThat(states).containsExactly(
       BlindsGeneralModelState(
         remoteId = remoteId,
-        rollerState = BlindRollerState(position = 0f, markers = listOf(100f, 100f, 20f)),
+        rollerState = WindowState(position = 0f, markers = listOf(100f, 100f, 20f)),
         viewState = BlindsGeneralViewState(
           enabled = true,
           showClosingPercentage = true,
@@ -171,7 +174,7 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
     assertThat(states).containsExactly(
       BlindsGeneralModelState(
         remoteId = remoteId,
-        rollerState = BlindRollerState(position = 25f, markers = emptyList()),
+        rollerState = WindowState(position = 25f, markers = emptyList()),
         viewState = BlindsGeneralViewState(
           enabled = true,
           showClosingPercentage = true,
@@ -204,6 +207,7 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
     }
     val channelData: ChannelDataEntity = mockk {
       every { this@mockk.remoteId } returns remoteId
+      every { function } returns SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW
       every { channelValueEntity } returns value
     }
     whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channelData))
@@ -215,7 +219,7 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
     assertThat(states).containsExactly(
       BlindsGeneralModelState(
         remoteId = remoteId,
-        rollerState = BlindRollerState(25f, bottomPosition.toFloat()),
+        rollerState = WindowState(25f, bottomPosition.toFloat()),
         viewState = BlindsGeneralViewState(
           issues = listOf(),
           enabled = false,
@@ -223,7 +227,8 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
           positionUnknown = true,
           calibrationPossible = true,
           calibrating = true,
-          positionText = "0%"
+          positionText = "0%",
+          windowType = WindowType.ROOF_WINDOW
         )
       )
     )
@@ -292,7 +297,7 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
     verify(executeSimpleActionUseCase).invoke(ActionId.REVEAL, SubjectType.CHANNEL, remoteId)
     val state = BlindsGeneralModelState(
       remoteId = remoteId,
-      rollerState = BlindRollerState(0f),
+      rollerState = WindowState(0f),
       viewState = BlindsGeneralViewState(
         issues = emptyList(),
         enabled = true,
@@ -341,7 +346,7 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
     verify(executeSimpleActionUseCase).invoke(ActionId.SHUT, SubjectType.CHANNEL, remoteId)
     val state = BlindsGeneralModelState(
       remoteId = remoteId,
-      rollerState = BlindRollerState(0f),
+      rollerState = WindowState(0f),
       viewState = BlindsGeneralViewState(
         issues = emptyList(),
         enabled = true,
@@ -395,7 +400,7 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
     verify(executeSimpleActionUseCase).invoke(ActionId.STOP, SubjectType.CHANNEL, remoteId)
     val state = BlindsGeneralModelState(
       remoteId = remoteId,
-      rollerState = BlindRollerState(0f),
+      rollerState = WindowState(0f),
       viewState = BlindsGeneralViewState(
         issues = emptyList(),
         enabled = true,
@@ -452,7 +457,10 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
 
     // then
     assertThat(states).containsExactly(
-      BlindsGeneralModelState(rollerState = BlindRollerState(45f))
+      BlindsGeneralModelState(
+        rollerState = WindowState(45f),
+        viewState = BlindsGeneralViewState(positionText = "55%")
+      )
     )
     verifyZeroInteractions(executeBlindsActionUseCase, executeSimpleActionUseCase)
   }
@@ -470,7 +478,7 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
     // then
     val state = BlindsGeneralModelState(
       remoteId = remoteId,
-      rollerState = BlindRollerState(0f),
+      rollerState = WindowState(0f),
       viewState = BlindsGeneralViewState(
         issues = emptyList(),
         enabled = true,
@@ -497,7 +505,7 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
     // then
     val state = BlindsGeneralModelState(
       remoteId = remoteId,
-      rollerState = BlindRollerState(0f),
+      rollerState = WindowState(0f),
       viewState = BlindsGeneralViewState(
         issues = emptyList(),
         enabled = true,
@@ -575,7 +583,7 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
     // then
     val state = BlindsGeneralModelState(
       remoteId = remoteId,
-      rollerState = BlindRollerState(0f),
+      rollerState = WindowState(0f),
       viewState = BlindsGeneralViewState(
         issues = emptyList(),
         enabled = true,
@@ -595,7 +603,8 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
     position: Int = 0,
     bottomPosition: Int = 100,
     flags: List<SuplaRollerShutterFlag> = listOf(),
-    hasValidPosition: Boolean = true
+    hasValidPosition: Boolean = true,
+    function: Int = SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
   ) {
     val rollerShutterValue: RollerShutterValue = mockk {
       every { this@mockk.position } returns position
@@ -609,6 +618,7 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
     }
     val channelData: ChannelDataEntity = mockk {
       every { this@mockk.remoteId } returns remoteId
+      every { this@mockk.function } returns function
       every { channelValueEntity } returns value
     }
 
@@ -626,6 +636,7 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
     val groupData: ChannelGroupDataEntity = mockk {
       every { id } returns groupId
       every { this@mockk.remoteId } returns remoteId
+      every { this@mockk.function } returns SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
       every { channelGroupEntity } returns group
       every { isOnline() } returns true
     }

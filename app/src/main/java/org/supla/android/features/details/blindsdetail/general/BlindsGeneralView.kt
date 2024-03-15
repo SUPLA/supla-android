@@ -56,10 +56,12 @@ import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.core.ui.theme.grey
 import org.supla.android.data.model.general.ChannelIssueItem
-import org.supla.android.features.details.blindsdetail.ui.BlindRollerState
-import org.supla.android.features.details.blindsdetail.ui.WINDOW_VIEW_RATIO
-import org.supla.android.features.details.blindsdetail.ui.WindowColors
-import org.supla.android.features.details.blindsdetail.ui.WindowView
+import org.supla.android.features.details.blindsdetail.general.ui.WindowColors
+import org.supla.android.features.details.blindsdetail.general.ui.WindowState
+import org.supla.android.features.details.blindsdetail.general.ui.WindowType
+import org.supla.android.features.details.blindsdetail.general.ui.blinds.WINDOW_VIEW_RATIO
+import org.supla.android.features.details.blindsdetail.general.ui.blinds.WindowView
+import org.supla.android.features.details.blindsdetail.general.ui.roofwindow.RoofWindowView
 import org.supla.android.ui.lists.data.IssueIconType
 import org.supla.android.ui.views.buttons.animatable.CircleControlButton
 import org.supla.android.ui.views.buttons.animatable.ControlButtonIcon
@@ -92,7 +94,8 @@ data class BlindsGeneralViewState(
   val touchTime: Float? = null,
   val isGroup: Boolean = false,
   val onlineStatusString: String? = null,
-  val positionText: String = ""
+  val positionText: String = "",
+  val windowType: WindowType = WindowType.BLINDS_WINDOW
 )
 
 private val TOP_MENU_HEIGHT_SMALL_SCREEN = 64.dp
@@ -100,7 +103,7 @@ private val TOP_MENU_HEIGHT_NORMAL_SCREEN = 80.dp
 
 @Composable
 fun BlindsGeneralView(
-  rollerState: BlindRollerState,
+  windowState: WindowState,
   viewState: BlindsGeneralViewState,
   onAction: (BlindsAction) -> Unit
 ) {
@@ -112,19 +115,16 @@ fun BlindsGeneralView(
         .fillMaxSize()
     ) {
       Top(
-        height = getTopHeight(height),
-        blindRollerState = rollerState,
         viewState = viewState,
+        height = getTopHeight(height),
         onAction = onAction
       )
 
       BlindsScreen(
         availableHeight = height,
         availableWidth = width,
-        rollerState = rollerState,
-        enabled = viewState.enabled,
-        issues = viewState.issues,
-        touchTime = viewState.touchTime,
+        windowState = windowState,
+        viewState = viewState,
         onAction = onAction
       )
     }
@@ -135,27 +135,22 @@ fun BlindsGeneralView(
 private fun BlindsScreen(
   availableHeight: Dp,
   availableWidth: Dp,
-  enabled: Boolean,
-  rollerState: BlindRollerState,
-  issues: List<ChannelIssueItem>,
-  touchTime: Float?,
+  viewState: BlindsGeneralViewState,
+  windowState: WindowState,
   onAction: (BlindsAction) -> Unit
 ) {
   if (isSmallScreen(availableHeight)) {
     BlindsSmallScreen(
-      enabled = enabled,
-      rollerState = rollerState,
-      issues = issues,
+      viewState = viewState,
+      windowState = windowState,
       onAction = onAction
     )
   } else {
     BlindsNormalScreen(
       availableWidth = availableWidth,
       availableHeight = availableHeight,
-      enabled = enabled,
-      rollerState = rollerState,
-      issues = issues,
-      touchTime = touchTime,
+      viewState = viewState,
+      windowState = windowState,
       onAction = onAction
     )
   }
@@ -172,9 +167,8 @@ private fun getTopHeight(availableHeight: Dp) =
 
 @Composable
 private fun BlindsSmallScreen(
-  enabled: Boolean,
-  rollerState: BlindRollerState,
-  issues: List<ChannelIssueItem>,
+  viewState: BlindsGeneralViewState,
+  windowState: WindowState,
   onAction: (BlindsAction) -> Unit
 ) {
   Column(
@@ -193,37 +187,28 @@ private fun BlindsSmallScreen(
       horizontalArrangement = Arrangement.spacedBy(Distance.tiny),
       verticalAlignment = Alignment.CenterVertically
     ) {
-      HoldToMoveButtons(enabled, onAction = onAction)
+      HoldToMoveButtons(viewState.enabled, onAction = onAction)
 
       WindowView(
-        rollerState = rollerState,
-        colors = if (enabled) WindowColors.standard() else WindowColors.offline(),
+        viewState = viewState,
+        windowState = windowState,
+        onAction = onAction,
         modifier = Modifier
           .weight(1f)
-          .fillMaxHeight(),
-        onPositionChanging = {
-          if (enabled) {
-            onAction(BlindsAction.MoveTo(it))
-          }
-        },
-        onPositionChanged = {
-          if (enabled) {
-            onAction(BlindsAction.OpenAt(it))
-          }
-        }
+          .fillMaxHeight()
       )
 
       Column(
         verticalArrangement = Arrangement.spacedBy(Distance.small)
       ) {
-        OpenButton(enabled = enabled, onAction = onAction)
-        StopMoveButton(enabled, onAction = onAction)
-        CloseButton(enabled = enabled, onAction = onAction)
+        OpenButton(enabled = viewState.enabled, onAction = onAction)
+        StopMoveButton(viewState.enabled, onAction = onAction)
+        CloseButton(enabled = viewState.enabled, onAction = onAction)
       }
     }
 
-    if (issues.isNotEmpty()) {
-      IssuesView(issues = issues)
+    if (viewState.issues.isNotEmpty()) {
+      IssuesView(issues = viewState.issues)
     }
   }
 }
@@ -232,10 +217,8 @@ private fun BlindsSmallScreen(
 private fun BlindsNormalScreen(
   availableWidth: Dp,
   availableHeight: Dp,
-  enabled: Boolean,
-  rollerState: BlindRollerState,
-  issues: List<ChannelIssueItem>,
-  touchTime: Float?,
+  viewState: BlindsGeneralViewState,
+  windowState: WindowState,
   onAction: (BlindsAction) -> Unit
 ) {
   Column(
@@ -258,8 +241,8 @@ private fun BlindsNormalScreen(
       .minus(Distance.default) // Distance between window and buttons
       .minus(Distance.default)
       .let {
-        if (issues.isNotEmpty()) {
-          it.minus(dimensionResource(id = R.dimen.channel_warning_image_size).times(issues.count()))
+        if (viewState.issues.isNotEmpty()) {
+          it.minus(dimensionResource(id = R.dimen.channel_warning_image_size).times(viewState.issues.count()))
             .minus(Distance.default) // Distance between buttons and issues
         } else {
           it
@@ -267,13 +250,12 @@ private fun BlindsNormalScreen(
       }
 
     WindowView(
-      rollerState = rollerState,
-      colors = if (enabled) WindowColors.standard() else WindowColors.offline(),
+      viewState = viewState,
+      windowState = windowState,
+      onAction = onAction,
       modifier = Modifier
         .width(min(availableWidth, 300.dp))
-        .height(min(heightForWindow, 300.dp.div(WINDOW_VIEW_RATIO))),
-      onPositionChanging = { if (enabled) onAction(BlindsAction.MoveTo(it)) },
-      onPositionChanged = { if (enabled) onAction(BlindsAction.OpenAt(it)) }
+        .height(min(heightForWindow, 300.dp.div(WINDOW_VIEW_RATIO)))
     )
 
     Box(modifier = Modifier.weight(1f)) {
@@ -282,12 +264,12 @@ private fun BlindsNormalScreen(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.align(Alignment.Center)
       ) {
-        HoldToMoveButtons(enabled, onAction = onAction)
-        StopMoveButton(enabled, onAction = onAction)
-        PressToMoveButtons(enabled, onAction = onAction)
+        HoldToMoveButtons(viewState.enabled, onAction = onAction)
+        StopMoveButton(viewState.enabled, onAction = onAction)
+        PressToMoveButtons(viewState.enabled, onAction = onAction)
       }
 
-      touchTime?.let { time ->
+      viewState.touchTime?.let { time ->
         Column(modifier = Modifier.align(Alignment.TopCenter), horizontalAlignment = Alignment.CenterHorizontally) {
           Icon(painter = painterResource(id = R.drawable.ic_touch_hand), contentDescription = null)
           Text(text = String.format("%.1fs", time), style = MaterialTheme.typography.body2)
@@ -295,8 +277,38 @@ private fun BlindsNormalScreen(
       }
     }
 
-    if (issues.isNotEmpty()) {
-      IssuesView(issues = issues)
+    if (viewState.issues.isNotEmpty()) {
+      IssuesView(issues = viewState.issues)
+    }
+  }
+}
+
+@Composable
+private fun WindowView(
+  viewState: BlindsGeneralViewState,
+  windowState: WindowState,
+  onAction: (BlindsAction) -> Unit,
+  modifier: Modifier = Modifier
+) {
+  when (viewState.windowType) {
+    WindowType.ROOF_WINDOW -> {
+      RoofWindowView(
+        windowState = windowState,
+        colors = if (viewState.enabled) WindowColors.standard() else WindowColors.offline(),
+        modifier = modifier,
+        onPositionChanging = { if (viewState.enabled) onAction(BlindsAction.MoveTo(it)) },
+        onPositionChanged = { if (viewState.enabled) onAction(BlindsAction.OpenAt(it)) }
+      )
+    }
+
+    WindowType.BLINDS_WINDOW -> {
+      WindowView(
+        windowState = windowState,
+        colors = if (viewState.enabled) WindowColors.standard() else WindowColors.offline(),
+        modifier = modifier,
+        onPositionChanging = { if (viewState.enabled) onAction(BlindsAction.MoveTo(it)) },
+        onPositionChanged = { if (viewState.enabled) onAction(BlindsAction.OpenAt(it)) }
+      )
     }
   }
 }
@@ -406,7 +418,6 @@ private fun IssuesView(issues: List<ChannelIssueItem>, modifier: Modifier = Modi
 
 @Composable
 private fun Top(
-  blindRollerState: BlindRollerState,
   viewState: BlindsGeneralViewState,
   height: Dp = 80.dp,
   onAction: (BlindsAction) -> Unit
@@ -500,7 +511,7 @@ private fun Preview() {
         .height(700.dp)
     ) {
       BlindsGeneralView(
-        rollerState = BlindRollerState(75f, 90f),
+        windowState = WindowState(75f, 90f),
         viewState = BlindsGeneralViewState(
           enabled = true,
           issues = listOf(ChannelIssueItem(IssueIconType.WARNING, R.string.motor_problem)),
@@ -525,7 +536,7 @@ private fun Preview_High() {
         .height(900.dp)
     ) {
       BlindsGeneralView(
-        rollerState = BlindRollerState(75f, 90f),
+        windowState = WindowState(75f, 90f),
         viewState = BlindsGeneralViewState(
           enabled = true,
           issues = listOf(ChannelIssueItem(IssueIconType.WARNING, R.string.motor_problem)),
@@ -550,7 +561,7 @@ private fun Preview_Small() {
         .height(450.dp)
     ) {
       BlindsGeneralView(
-        rollerState = BlindRollerState(75f, 90f),
+        windowState = WindowState(75f, 90f),
         viewState = BlindsGeneralViewState(
           enabled = true,
           issues = listOf(ChannelIssueItem(IssueIconType.WARNING, R.string.motor_problem)),

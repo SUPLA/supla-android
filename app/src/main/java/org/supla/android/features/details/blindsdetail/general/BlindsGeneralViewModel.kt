@@ -25,6 +25,7 @@ import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientMessageHandlerWrapper
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.ui.ViewEvent
+import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.model.general.ChannelIssueItem
 import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.data.source.local.entity.ChannelGroupEntity
@@ -35,7 +36,9 @@ import org.supla.android.data.source.remote.rollershutter.SuplaRollerShutterFlag
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.extensions.guardLet
 import org.supla.android.extensions.ifLet
-import org.supla.android.features.details.blindsdetail.ui.BlindRollerState
+import org.supla.android.features.details.blindsdetail.general.ui.WindowState
+import org.supla.android.features.details.blindsdetail.general.ui.WindowType
+import org.supla.android.lib.SuplaConst
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.dialogs.AuthorizationDialogState
@@ -130,7 +133,11 @@ class BlindGeneralViewModel @Inject constructor(
         } else {
           it.copy(
             rollerState = it.rollerState.copy(position = action.position),
-            viewState = it.viewState.copy(touchTime = null, positionUnknown = false)
+            viewState = it.viewState.copy(
+              touchTime = null,
+              positionUnknown = false,
+              positionText = String.format("%.0f%%", if (it.viewState.showClosingPercentage) action.position else 100f - action.position)
+            )
           )
         }
       }
@@ -191,7 +198,7 @@ class BlindGeneralViewModel @Inject constructor(
 
       it.copy(
         remoteId = channel.remoteId,
-        rollerState = BlindRollerState(
+        rollerState = WindowState(
           position = if (value.online) position.toFloat() else 25f,
           bottomPosition = value.bottomPosition.toFloat()
         ),
@@ -202,7 +209,8 @@ class BlindGeneralViewModel @Inject constructor(
           positionUnknown = value.hasValidPosition().not(),
           calibrating = value.flags.contains(SuplaRollerShutterFlag.CALIBRATION_IN_PROGRESS),
           calibrationPossible = true,
-          positionText = String.format("%d%%", if (showOpening) 100 - position else position)
+          positionText = String.format("%d%%", if (showOpening) 100 - position else position),
+          windowType = getWindowType(channel)
         ),
       )
     }
@@ -216,7 +224,7 @@ class BlindGeneralViewModel @Inject constructor(
 
       it.copy(
         remoteId = group.groupDataEntity.remoteId,
-        rollerState = BlindRollerState(
+        rollerState = WindowState(
           position = overallPosition.position,
           markers = if (overallPosition is GroupPercentage.Different) positions else emptyList(),
         ),
@@ -228,7 +236,8 @@ class BlindGeneralViewModel @Inject constructor(
           calibrationPossible = false,
           isGroup = true,
           onlineStatusString = "${group.onlineSummary.onlineCount}/${group.onlineSummary.count}",
-          positionText = overallPosition.toString(showOpening)
+          positionText = overallPosition.toString(showOpening),
+          windowType = getWindowType(group.groupDataEntity)
         ),
       )
     }
@@ -275,6 +284,14 @@ class BlindGeneralViewModel @Inject constructor(
     }
   }
 
+  private fun getWindowType(data: ChannelDataBase): WindowType {
+    return if (data.function == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW) {
+      WindowType.ROOF_WINDOW
+    } else {
+      WindowType.BLINDS_WINDOW
+    }
+  }
+
   private sealed class GroupPercentage(val position: Float) {
 
     open fun toString(showOpening: Boolean): String = String.format("%.0f%%", if (showOpening) 100f - position else position)
@@ -301,7 +318,7 @@ sealed class BlindsGeneralViewEvent : ViewEvent
 
 data class BlindsGeneralModelState(
   val remoteId: Int? = null,
-  val rollerState: BlindRollerState = BlindRollerState(0f, 100f),
+  val rollerState: WindowState = WindowState(0f, 100f),
   val viewState: BlindsGeneralViewState = BlindsGeneralViewState(),
 
   val moveStartTime: Long? = null,
