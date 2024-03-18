@@ -37,7 +37,6 @@ import org.supla.android.features.details.gpmdetail.GpmDetailFragment
 import org.supla.android.features.details.switchdetail.SwitchDetailFragment
 import org.supla.android.features.details.thermometerdetail.ThermometerDetailFragment
 import org.supla.android.features.details.thermostatdetail.ThermostatDetailFragment
-import org.supla.android.lib.SuplaChannelValue
 import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.lib.SuplaConst
 import org.supla.android.tools.SuplaSchedulers
@@ -163,7 +162,7 @@ class ChannelListViewModel @Inject constructor(
   }
 
   private fun openDetailsByChannelFunction(data: ChannelDataEntity) {
-    if (isAvailableInOffline(data).not() && data.isOnline().not()) {
+    if (isAvailableInOffline(data.function, data.channelValueEntity.subValueType).not() && data.isOnline().not()) {
       return // do not open details for offline channels
     }
 
@@ -181,38 +180,6 @@ class ChannelListViewModel @Inject constructor(
       is LegacyDetailType -> sendEvent(ChannelListViewEvent.OpenLegacyDetails(data.remoteId, detailType))
       else -> {} // no action
     }
-  }
-
-  private fun isAvailableInOffline(data: ChannelDataEntity) = when (data.function) {
-    SuplaConst.SUPLA_CHANNELFNC_THERMOMETER,
-    SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE,
-    SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER,
-    SuplaConst.SUPLA_CHANNELFNC_IC_ELECTRICITY_METER,
-    SuplaConst.SUPLA_CHANNELFNC_IC_GAS_METER,
-    SuplaConst.SUPLA_CHANNELFNC_IC_WATER_METER,
-    SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT,
-//    SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO,
-//    SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_DIFFERENTIAL,
-//    SuplaConst.SUPLA_CHANNELFNC_HVAC_FAN,
-//    SuplaConst.SUPLA_CHANNELFNC_HVAC_DRYER,
-    SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER,
-    SuplaConst.SUPLA_CHANNELFNC_IC_HEAT_METER,
-    SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT,
-    SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER,
-    SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER -> true
-
-    SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH,
-    SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH,
-    SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER -> {
-      when (data.channelValueEntity.subValueType) {
-        SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS.toShort(),
-        SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort() -> true
-
-        else -> false
-      }
-    }
-
-    else -> false
   }
 }
 

@@ -23,13 +23,16 @@ import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
+import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.features.details.detailbase.standarddetail.DetailPage
+import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
 import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.lib.SuplaConst
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.channel.*
+import org.supla.android.usecases.details.BlindsDetailType
 import org.supla.android.usecases.details.ProvideDetailTypeUseCase
 import org.supla.android.usecases.details.ThermometerDetailType
 import org.supla.android.usecases.group.CreateProfileGroupsListUseCase
@@ -271,6 +274,32 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     // then
     Assertions.assertThat(states).isEmpty()
     Assertions.assertThat(events).isEmpty()
+    verifyZeroInteractionsExcept(provideDetailTypeUseCase)
+  }
+
+  @Test
+  fun `should open blinds detail when item is offline`() {
+    // given
+    val remoteId = 123
+    val function = SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
+    val groupData: ChannelGroupDataEntity = mockk()
+    every { groupData.remoteId } returns remoteId
+    every { groupData.function } returns function
+    every { groupData.isOnline() } returns false
+
+    val detailType = BlindsDetailType(listOf(DetailPage.BLINDS))
+    whenever(provideDetailTypeUseCase(groupData)).thenReturn(detailType)
+
+    whenever(findGroupByRemoteIdUseCase(remoteId)).thenReturn(Maybe.just(groupData))
+
+    // when
+    viewModel.onListItemClick(remoteId)
+
+    // then
+    Assertions.assertThat(states).isEmpty()
+    Assertions.assertThat(events).containsExactly(
+      GroupListViewEvent.OpenBlindsDetail(ItemBundle(remoteId, 0, ItemType.GROUP, function), detailType.pages)
+    )
     verifyZeroInteractionsExcept(provideDetailTypeUseCase)
   }
 

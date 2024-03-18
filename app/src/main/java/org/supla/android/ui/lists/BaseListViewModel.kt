@@ -9,8 +9,10 @@ import org.supla.android.Preferences
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
+import org.supla.android.lib.SuplaChannelValue
 import org.supla.android.lib.SuplaClientMessageHandler.OnSuplaClientMessageListener
 import org.supla.android.lib.SuplaClientMsg
+import org.supla.android.lib.SuplaConst
 import org.supla.android.tools.SuplaSchedulers
 
 abstract class BaseListViewModel<S : ViewState, E : ViewEvent>(
@@ -51,5 +53,33 @@ abstract class BaseListViewModel<S : ViewState, E : ViewEvent>(
         onNext = { reloadList() }
       )
       .disposeBySelf()
+  }
+
+  protected fun isAvailableInOffline(function: Int, subValueType: Short?) = when (function) {
+    SuplaConst.SUPLA_CHANNELFNC_THERMOMETER,
+    SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE,
+    SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER,
+    SuplaConst.SUPLA_CHANNELFNC_IC_ELECTRICITY_METER,
+    SuplaConst.SUPLA_CHANNELFNC_IC_GAS_METER,
+    SuplaConst.SUPLA_CHANNELFNC_IC_WATER_METER,
+    SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT,
+    SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER,
+    SuplaConst.SUPLA_CHANNELFNC_IC_HEAT_METER,
+    SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT,
+    SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER,
+    SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER -> true
+
+    SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH,
+    SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH,
+    SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER -> {
+      when (subValueType) {
+        SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS.toShort(),
+        SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort() -> true
+
+        else -> false
+      }
+    }
+
+    else -> false
   }
 }
