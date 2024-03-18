@@ -54,6 +54,7 @@ fun TextField(
   onValueChange: (String) -> Unit = { },
   onClicked: (() -> Unit)? = null,
   keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+  visualTransformation: VisualTransformation = VisualTransformation.None,
   enabled: Boolean = true,
   readOnly: Boolean = false,
   isError: Boolean = false,
@@ -82,7 +83,6 @@ fun TextField(
 
   val shape = RoundedCornerShape(dimensionResource(id = R.dimen.radius_default))
   val interactionSource = remember { MutableInteractionSource() }
-  val visualTransformation = VisualTransformation.None
   val textColor = LocalTextStyle.current.color.takeOrElse {
     colors.textColor(enabled).value
   }

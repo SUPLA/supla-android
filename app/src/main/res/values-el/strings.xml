@@ -79,7 +79,7 @@
   <string name="rate_later">Αργότερα</string>
   <string name="rate_no_thanks">Όχι, ευχαριστώ</string>
   <string name="rs_percent_caption">Ποσοστό κλεισίματος</string>
-  <string name="calibration">[Βαθμονόμηση]</string>
+  <string name="blinds_calibration">Βαθμονόμηση…</string>
 
   <string name="add_wizard_is_not_available">Ο Οδηγός εγκατάστασης είναι διαθέσιμος μόνο όταν έχει δημιουργηθεί σύνδεση με τον διακομιστή με βάση τη διεύθυνση e-mail που είχατε εισαγάγει! (Απενεργοποιήστε τις σύνθετες επιλογές στη διαμόρφωση του λογαριασμού σας)</string>
 
@@ -428,7 +428,7 @@
   <string name="location_name">Όνομα τοποθεσίας</string>
   <string name="overcurrent_warning">Η παροχή ρεύματος απενεργοποιήθηκε όταν ξεπεράστηκε το καθορισμένο όριο επιτρεπόμενου ρεύματος.</string>
   <string name="overcurrent_question">Η παροχή ρεύματος απενεργοποιήθηκε όταν ξεπεράστηκε το καθορισμένο όριο επιτρεπόμενου ρεύματος. Είστε βέβαιοι ότι θέλετε να ενεργοποιήσετε την παροχή ρεύματος;</string>
-  <string name="recalibration_question">Είστε βέβαιοι ότι θέλετε να ξεκινήσετε τη βαθμονόμηση;</string>
+  <string name="blinds_start_calibration_message">Είστε βέβαιοι ότι θέλετε να ξεκινήσετε τη βαθμονόμηση;</string>
   <string name="calibration_failed">Η βαθμονόμηση απέτυχε.</string>
   <string name="calibration_lost">Η βαθμονόμηση έχει χαθεί.</string>
   <string name="motor_problem">Πρόβλημα κινητήρα / Απροσδόκητη διακοπή.</string>
@@ -451,4 +451,5 @@
   <string name="rs_display_mode_closing">Κλείσιμο</string>
   <string name="status_accessid_inactive">Ανενεργό αναγνωριστικό πρόσβασης</string>
   <string name="hour_string_format">HH:mm:ss</string>
+  <string name="blinds_start_calibration_title">Βαθμονόμηση</string>
 </resources>

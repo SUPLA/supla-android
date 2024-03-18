@@ -19,7 +19,6 @@ package org.supla.android.data.source
  */
 
 import android.database.Cursor
-import io.reactivex.rxjava3.core.Observable
 import org.supla.android.data.source.local.SceneDao
 import org.supla.android.data.source.local.entity.Scene
 import org.supla.android.data.source.local.entity.SceneEntity
@@ -29,10 +28,6 @@ import org.supla.android.lib.SuplaScene
 import org.supla.android.lib.SuplaSceneState
 
 class DefaultSceneRepository(private val dao: SceneDao) : SceneRepository {
-
-  override fun getAllProfileScenes(): Observable<List<Scene>> = Observable.fromCallable {
-    loadScenes()
-  }
 
   override fun getAllScenesForProfile(profileId: Long): List<Pair<Scene, Location>> {
     return parseScenesCursor(dao.sceneCursor(profileId))
@@ -89,10 +84,6 @@ class DefaultSceneRepository(private val dao: SceneDao) : SceneRepository {
 
   override fun getSceneUserIconIdsToDownload(): List<Int> {
     return dao.getSceneUserIconIdsToDownload()
-  }
-
-  private fun loadScenes(): List<Scene> {
-    return parseScenesCursor(dao.sceneCursor()).map { it.first }
   }
 
   private fun parseScenesCursor(cursor: Cursor): List<Pair<Scene, Location>> {

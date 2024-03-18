@@ -8,8 +8,8 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import org.supla.android.Preferences
 import org.supla.android.SuplaApp
+import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.databinding.LiLocationItemBinding
-import org.supla.android.db.Location
 import org.supla.android.ui.dialogs.LocationCaptionEditor
 
 abstract class BaseListAdapter<T, D>(
@@ -24,7 +24,7 @@ abstract class BaseListAdapter<T, D>(
   var movementFinishedCallback: (items: List<D>) -> Unit = { }
   var swappedElementsCallback: (firstItem: D?, secondItem: D?) -> Unit = { _, _ -> }
   var reloadCallback: () -> Unit = { }
-  var toggleLocationCallback: (location: Location, scrollDown: Boolean) -> Unit = { _, _ -> }
+  var toggleLocationCallback: (location: LocationEntity, scrollDown: Boolean) -> Unit = { _, _ -> }
 
   var leftButtonClickCallback: (id: Int) -> Unit = { _ -> }
   var rightButtonClickCallback: (id: Int) -> Unit = { _ -> }
@@ -53,6 +53,7 @@ abstract class BaseListAdapter<T, D>(
       is ListItem.LocationItem -> ViewType.LOCATION_ITEM
       is ListItem.GeneralPurposeMeterItem -> ViewType.GENERAL_PURPOSE_METER_ITEM
       is ListItem.GeneralPurposeMeasurementItem -> ViewType.GENERAL_PURPOSE_MEASUREMENT_ITEM
+      is ListItem.BlindsItem -> ViewType.BLINDS_ITEM
 
       else -> throw IllegalStateException("Could find evaluate view item type")
     }.identifier
@@ -77,7 +78,7 @@ abstract class BaseListAdapter<T, D>(
           callback.closeWhenSwiped(withAnimation = false)
           toggleLocationCallback(location, it.isLocationOnBottom())
         }
-        holder.binding.container.setOnLongClickListener { changeLocationCaption(location.locationId) }
+        holder.binding.container.setOnLongClickListener { changeLocationCaption(location.remoteId) }
         holder.binding.tvSectionCaption.text = location.caption
         holder.binding.ivSectionCollapsed.visibility = if (isLocationCollapsed(location)) {
           RecyclerView.VISIBLE
@@ -88,7 +89,7 @@ abstract class BaseListAdapter<T, D>(
     }
   }
 
-  protected abstract fun isLocationCollapsed(location: Location): Boolean
+  protected abstract fun isLocationCollapsed(location: LocationEntity): Boolean
 
   fun setItems(items: List<T>) {
     this.items.clear()
@@ -149,10 +150,12 @@ abstract class BaseListAdapter<T, D>(
     SCENE_ITEM(1),
     CHANNEL_ITEM(2),
     LOCATION_ITEM(3),
+
     MEASUREMENT_ITEM(4),
     HVAC_ITEM(5),
     GENERAL_PURPOSE_METER_ITEM(6),
-    GENERAL_PURPOSE_MEASUREMENT_ITEM(7)
+    GENERAL_PURPOSE_MEASUREMENT_ITEM(7),
+    BLINDS_ITEM(8)
   }
 
   private fun View.isLocationOnBottom(): Boolean {

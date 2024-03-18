@@ -1134,14 +1134,12 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   }
 
   private void channelRelationUpdate(SuplaChannelRelation channel_relation) {
-    Trace.d(
-        log_tag,
-        "Channel Relation channel ID: "
-            + channel_relation.getChannelId()
-            + " parent ID: "
-            + channel_relation.getParentId()
-            + " relation type: "
-            + channel_relation.getRelationType());
+    Trace.d(log_tag, "Channel Relation Update: " + channel_relation.toString());
+
+    if (channel_relation.isSol()) {
+      markChannelRelationsAsRemovableUseCase.invoke().blockingSubscribe();
+    }
+
     insertChannelRelationForProfileUseCase.invoke(channel_relation).blockingSubscribe();
 
     if (channel_relation.isEol()) {

@@ -47,7 +47,7 @@ class GpmDetailFragment :
   override fun isCloseEvent(event: GpmDetailViewEvent) = event == GpmDetailViewEvent.Close
 
   override fun updateToolbarTitle(state: GpmDetailViewState) {
-    state.channelBase?.let { setToolbarTitle(it.getCaption(requireContext())) }
+    state.caption?.let { setToolbarTitle(it(requireContext())) }
   }
 
   companion object {

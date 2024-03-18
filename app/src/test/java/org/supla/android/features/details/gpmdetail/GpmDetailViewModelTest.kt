@@ -34,17 +34,21 @@ import org.mockito.kotlin.verifyZeroInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.Preferences
 import org.supla.android.core.BaseViewModelTest
+import org.supla.android.core.ui.StringProvider
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.runtime.ItemType
-import org.supla.android.db.Channel
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.lib.SuplaConst
 import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.usecases.channel.GetChannelCaptionUseCase
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
-import org.supla.android.usecases.channel.ReadChannelGroupByRemoteIdUseCase
+import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
 
 @RunWith(MockitoJUnitRunner::class)
 class GpmDetailViewModelTest : BaseViewModelTest<GpmDetailViewState, GpmDetailViewEvent, GpmDetailViewModel>() {
+
+  @Mock
+  private lateinit var getChannelCaptionUseCase: GetChannelCaptionUseCase
 
   @Mock
   private lateinit var readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase
@@ -74,12 +78,12 @@ class GpmDetailViewModelTest : BaseViewModelTest<GpmDetailViewState, GpmDetailVi
     // given
     val remoteId = 123
     val function = SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER
-    val channel: Channel = mockk()
-    every { channel.visible } returns 1
-    every { channel.func } returns function
-    val channelData: ChannelDataEntity = mockk {
-      every { getLegacyChannel() } returns channel
-    }
+    val channelData: ChannelDataEntity = mockk()
+    every { channelData.visible } returns 1
+    every { channelData.function } returns function
+    val captionProvider: StringProvider = mockk()
+
+    whenever(getChannelCaptionUseCase.invoke(channelData)).thenReturn(captionProvider)
     whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channelData))
 
     // when
@@ -87,7 +91,7 @@ class GpmDetailViewModelTest : BaseViewModelTest<GpmDetailViewState, GpmDetailVi
 
     // then
     Assertions.assertThat(events).isEmpty()
-    Assertions.assertThat(states).containsExactly(GpmDetailViewState(channel))
+    Assertions.assertThat(states).containsExactly(GpmDetailViewState(captionProvider))
 
     verify(readChannelByRemoteIdUseCase).invoke(remoteId)
     verifyNoMoreInteractions(readChannelByRemoteIdUseCase)
@@ -99,12 +103,9 @@ class GpmDetailViewModelTest : BaseViewModelTest<GpmDetailViewState, GpmDetailVi
     // given
     val remoteId = 123
     val function = SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER
-    val channel: Channel = mockk()
-    every { channel.visible } returns 0
-    every { channel.func } returns function
-    val channelData: ChannelDataEntity = mockk {
-      every { getLegacyChannel() } returns channel
-    }
+    val channelData: ChannelDataEntity = mockk()
+    every { channelData.visible } returns 0
+    every { channelData.function } returns function
     whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channelData))
 
     // when
@@ -124,12 +125,9 @@ class GpmDetailViewModelTest : BaseViewModelTest<GpmDetailViewState, GpmDetailVi
     // given
     val remoteId = 123
     val function = SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER
-    val channel: Channel = mockk()
-    every { channel.visible } returns 1
-    every { channel.func } returns function
-    val channelData: ChannelDataEntity = mockk {
-      every { getLegacyChannel() } returns channel
-    }
+    val channelData: ChannelDataEntity = mockk()
+    every { channelData.visible } returns 1
+    every { channelData.function } returns function
     whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channelData))
 
     // when
@@ -149,21 +147,21 @@ class GpmDetailViewModelTest : BaseViewModelTest<GpmDetailViewState, GpmDetailVi
     // given
     val remoteId = 123
     val function = SuplaConst.SUPLA_CHANNELFNC_DIMMER
-    val channel: Channel = mockk()
-    every { channel.visible } returns 1
-    every { channel.func } returns function
-    val channelData: ChannelDataEntity = mockk {
-      every { getLegacyChannel() } returns channel
-    }
+    val channelData: ChannelDataEntity = mockk()
+    every { channelData.visible } returns 1
+    every { channelData.function } returns function
     whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channelData))
     whenever(updateEventsManager.observeChannelsUpdate()).thenReturn(Observable.just(Any()))
+
+    val captionProvider: StringProvider = mockk()
+    whenever(getChannelCaptionUseCase.invoke(channelData)).thenReturn(captionProvider)
 
     // when
     viewModel.observeUpdates(remoteId, ItemType.CHANNEL, function)
 
     // then
     Assertions.assertThat(events).isEmpty()
-    Assertions.assertThat(states).containsExactly(GpmDetailViewState(channel))
+    Assertions.assertThat(states).containsExactly(GpmDetailViewState(captionProvider))
 
     verify(readChannelByRemoteIdUseCase).invoke(remoteId)
     verify(updateEventsManager).observeChannelsUpdate()

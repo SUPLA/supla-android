@@ -23,8 +23,9 @@ import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.ui.lists.data.SlideableListItemData
 import org.supla.android.usecases.channel.ChannelWithChildren
-import org.supla.android.usecases.channel.ReadChannelGroupByRemoteIdUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
+import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
+import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToBlindsUpdateEventMapper
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToGpmUpdateEventMapper
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToMeasurementUpdateEventMapper
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToThermostatUpdateEventMapper
@@ -38,13 +39,15 @@ class CreateListItemUpdateEventDataUseCase @Inject constructor(
   private val readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
   channelWithChildrenToThermostatUpdateEventMapper: ChannelWithChildrenToThermostatUpdateEventMapper,
   channelWithChildrenToMeasurementUpdateEventMapper: ChannelWithChildrenToMeasurementUpdateEventMapper,
-  channelWithChildrenToGpmUpdateEventMapper: ChannelWithChildrenToGpmUpdateEventMapper
+  channelWithChildrenToGpmUpdateEventMapper: ChannelWithChildrenToGpmUpdateEventMapper,
+  channelWithChildrenToBlindsUpdateEventMapper: ChannelWithChildrenToBlindsUpdateEventMapper
 ) {
 
   private val mappers: List<Mapper> = listOf(
     channelWithChildrenToThermostatUpdateEventMapper,
     channelWithChildrenToMeasurementUpdateEventMapper,
-    channelWithChildrenToGpmUpdateEventMapper
+    channelWithChildrenToGpmUpdateEventMapper,
+    channelWithChildrenToBlindsUpdateEventMapper
   )
 
   operator fun invoke(itemType: ItemType, remoteId: Int): Observable<SlideableListItemData> {

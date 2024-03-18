@@ -22,15 +22,20 @@ import android.util.AttributeSet
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import org.supla.android.R
 import org.supla.android.ui.lists.data.SlideableListItemData
 
 abstract class BaseSlideableContent<T : SlideableListItemData> : BaseAbstractComposeView {
 
   constructor(context: Context) : super(context, null, 0)
 
-  constructor(context: Context, attrs: AttributeSet?) : super(context, attrs, 0)
+  constructor(context: Context, attrs: AttributeSet?) : super(context, attrs, 0) {
+    loadAttributes(context, attrs)
+  }
 
-  constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
+  constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+    loadAttributes(context, attrs)
+  }
 
   var onInfoClick: () -> Unit = { }
   var onIssueClick: () -> Unit = { }
@@ -38,9 +43,22 @@ abstract class BaseSlideableContent<T : SlideableListItemData> : BaseAbstractCom
   var onItemClick: () -> Unit = { }
 
   protected var data: T? by mutableStateOf(null)
+  protected var hasLeftButton: Boolean = false
+  protected var hasRightButton: Boolean = false
 
   fun update(data: T) {
     this.data = data
     invalidate()
+  }
+
+  private fun loadAttributes(context: Context, attrs: AttributeSet?) {
+    context.theme.obtainStyledAttributes(attrs, R.styleable.ThermostatListItemView, 0, 0).apply {
+      try {
+        hasLeftButton = getBoolean(R.styleable.ThermostatListItemView_hasLeftButton, false)
+        hasRightButton = getBoolean(R.styleable.ThermostatListItemView_hasRightButton, false)
+      } finally {
+        recycle()
+      }
+    }
   }
 }

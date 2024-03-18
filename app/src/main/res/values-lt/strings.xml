@@ -67,7 +67,7 @@
   <string name="rate_later">Vėliau</string>
   <string name="rate_no_thanks">Ne, ačiū</string>
   <string name="rs_percent_caption">Uždengimo procentas</string>
-  <string name="calibration">[Kalibravimas]</string>
+  <string name="blinds_calibration">Kalibravimas…</string>
   <string name="add_wizard_is_not_available">Pridėjimo vedlys prieinamas tik tada, kai pagal įvestą el. pašto adresą užmegztas ryšys su serveriu! (Savo paskyros konfigūracijoje išjunkite išplėstines parinktis)</string>
   <string name="wizard_step1_txt1">Sveiki atvykę į įrenginių pridėjimo vedlį, kuris padės Jums lengvai ir greitai pridėti naujus įrenginius prie sistemos.</string>
   <string name="wizard_step1_txt3">Norėdami tęsti, paspauskite <b>Toliau</b>.</string>
@@ -409,7 +409,7 @@
   <string name="location_name">Vietos pavadinimas</string>
   <string name="overcurrent_warning">Maitinimas buvo atjungtas viršijus nustatytą leistinos elektros srovės ribą.</string>
   <string name="overcurrent_question">Maitinimas buvo atjungtas viršijus nustatytą leistinos elektros srovės ribą. Ar tikrai norite įjungti maitinimą?</string>
-  <string name="recalibration_question">Ar tikrai norite pradėti kalibravimą?</string>
+  <string name="blinds_start_calibration_message">Ar tikrai norite pradėti kalibravimą?</string>
   <string name="calibration_failed">Kalibravimas nepavyko.</string>
   <string name="calibration_lost">Kalibravimas buvo prarastas.</string>
   <string name="motor_problem">Variklio problema / Netikėtas sustojimas.</string>
@@ -432,4 +432,5 @@
   <string name="rs_display_mode_closing">Uždarymo</string>
   <string name="status_accessid_inactive">Prieigos identifikatorius neaktyvus</string>
   <string name="hour_string_format">HH:mm:ss</string>
+  <string name="blinds_start_calibration_title">Kalibravimas</string>
 </resources>

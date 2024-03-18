@@ -18,14 +18,12 @@ package org.supla.android.features.scenelist
  */
 
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.Preferences
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
-import org.supla.android.data.source.SceneRepository
-import org.supla.android.data.source.local.entity.Scene
-import org.supla.android.db.Location
+import org.supla.android.data.source.local.entity.LocationEntity
+import org.supla.android.data.source.local.entity.complex.SceneDataEntity
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.lists.BaseListViewModel
@@ -33,13 +31,14 @@ import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
 import org.supla.android.usecases.scene.CreateProfileScenesListUseCase
+import org.supla.android.usecases.scene.UpdateSceneOrderUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class SceneListViewModel @Inject constructor(
-  private val sceneRepository: SceneRepository,
   private val toggleLocationUseCase: ToggleLocationUseCase,
   private val createProfileScenesListUseCase: CreateProfileScenesListUseCase,
+  private val updateSceneOrderUseCase: UpdateSceneOrderUseCase,
   updateEventsManager: UpdateEventsManager,
   preferences: Preferences,
   schedulers: SuplaSchedulers
@@ -63,20 +62,14 @@ class SceneListViewModel @Inject constructor(
       .disposeBySelf()
   }
 
-  fun onSceneOrderUpdate(scenes: List<Scene>) {
-    Completable.fromRunnable {
-      var sceneIndex = 0
-      for (s in scenes) {
-        s.sortOrder = sceneIndex++
-        sceneRepository.updateScene(s)
-      }
-    }
+  fun onSceneOrderUpdate(scenes: List<SceneDataEntity>) {
+    updateSceneOrderUseCase(scenes)
       .attachSilent()
       .subscribeBy(onError = defaultErrorHandler("onSceneOrderUpdate()"))
       .disposeBySelf()
   }
 
-  fun toggleLocationCollapsed(location: Location) {
+  fun toggleLocationCollapsed(location: LocationEntity) {
     toggleLocationUseCase(location, CollapsedFlag.SCENE)
       .andThen(createProfileScenesListUseCase())
       .attach()

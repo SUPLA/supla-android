@@ -47,4 +47,10 @@ interface SuplaClientApi {
 
   fun getDeviceConfig(deviceId: Int) =
     getDeviceConfig(deviceId, EnumSet.allOf(FieldType::class.java))
+
+  fun isSuperUserAuthorized(): Boolean
+
+  fun superUserAuthorizationRequest(email: String, password: String)
+
+  fun deviceCalCfgRequest(remoteId: Int, isGroup: Boolean, command: Int, dataType: Int, data: ByteArray?): Boolean
 }

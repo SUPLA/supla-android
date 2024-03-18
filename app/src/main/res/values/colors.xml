@@ -15,12 +15,10 @@
     <color name="separator_light">#DCDEE0</color>
 
     <color name="red">#FF0000</color>
-    <color name="orange">#FC9B27</color>
     <color name="light_orange">#FFD19A</color>
     <color name="gray">#7E8082</color>
     <color name="gray_light">#EFEFF0</color>
     <color name="blue">#007AFF</color>
-    <color name="violet">#AF52DE</color>
     <color name="light_blue">#8C9DFF</color>
     <color name="light_green">#B0E0A8</color>
     <color name="light_red">#FFAA8C</color>
@@ -31,8 +29,6 @@
     <color name="chart_humidity_1">#FF57A0FF</color>
     <color name="chart_humidity_2">#FF33FFEC</color>
     <color name="chart_gpm">#FF01C2FB</color>
-    <color name="chart_gpm_shadow">#3398c4ca</color>
-    <color name="chart_gpm_border">#005f6e</color>
     <color name="chart_gpm_axis_left">#003037</color>
 
     <color name="shadow_start">#1A000000</color>
@@ -43,6 +39,12 @@
     <color name="supla_text_light">#000000</color>
     
     <color name="dialog_scrim">#80F5F6F7</color>
+
+    <!-- Blinds -->
+    <color name="blinds_window_color">#FFFFFF</color>
+    <color name="blinds_glass_top_color">#C9EEFF</color>
+    <color name="blinds_glass_bottom_color">#D8F3FF</color>
+
     <!-- new color definitions end here -->
 
     <color name="splash_bg">#12a71e</color>
@@ -72,9 +74,6 @@
     <color name="chart_color_value_positive">#e74c3c</color>
     <color name="chart_color_value_negative">#2dcc71</color>
 
-    <color name="th_humidity">#00a0fc</color>
-    <color name="th_temperature_fill_color">#fcf7ca</color>
-    <color name="th_temperature_line_color">#fd4a4d</color>
     <color name="hp_error_background_color">#FFC107</color>
     <color name="hp_error_text_color">#fd4a4d</color>
     <color name="vl_settings_bg">#ffededed</color>

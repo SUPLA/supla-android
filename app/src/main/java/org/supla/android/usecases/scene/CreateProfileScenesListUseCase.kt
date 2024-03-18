@@ -18,44 +18,41 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import io.reactivex.rxjava3.core.Observable
-import org.supla.android.data.source.ChannelRepository
-import org.supla.android.data.source.SceneRepository
-import org.supla.android.data.source.local.entity.Scene
-import org.supla.android.db.Location
+import org.supla.android.data.source.RoomSceneRepository
+import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.location.CollapsedFlag
-import org.supla.android.usecases.location.isCollapsed
+import java.util.Collections
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class CreateProfileScenesListUseCase @Inject constructor(
-  private val sceneRepository: SceneRepository,
-  private val channelRepository: ChannelRepository
+  private val roomSceneRepository: RoomSceneRepository
 ) {
   operator fun invoke(): Observable<List<ListItem>> =
-    sceneRepository.getAllProfileScenes()
-      .map(this::sceneToListItem)
+    roomSceneRepository.findList().map { entities ->
+      val result = mutableListOf<ListItem>()
 
-  private fun sceneToListItem(scenes: List<Scene>): List<ListItem> {
-    val result = mutableListOf<ListItem>()
+      var location: LocationEntity? = null
+      entities.forEach {
+        val currentLocation = location
+        if (currentLocation == null || currentLocation.remoteId != it.locationEntity.remoteId) {
+          val newLocation = it.locationEntity
 
-    var location: Location? = null
-    for (scene in scenes) {
-      if (location == null || location.locationId != scene.locationId) {
-        val newLocation = channelRepository.getLocation(scene.locationId)
+          if (currentLocation == null || newLocation.caption != currentLocation.caption) {
+            location = newLocation
+            result.add(ListItem.LocationItem(newLocation))
+          }
+        }
 
-        if (location == null || newLocation.caption != location.caption) {
-          location = newLocation
-          result.add(ListItem.LocationItem(location))
+        location?.let { locationEntity ->
+          if (!locationEntity.isCollapsed(CollapsedFlag.SCENE)) {
+            result.add(ListItem.SceneItem(it))
+          }
         }
       }
 
-      if (location?.isCollapsed(CollapsedFlag.SCENE) == false) {
-        result.add(ListItem.SceneItem(scene, location))
-      }
-    }
-
-    return result
-  }
+      Collections.unmodifiableList(result)
+    }.toObservable()
 }

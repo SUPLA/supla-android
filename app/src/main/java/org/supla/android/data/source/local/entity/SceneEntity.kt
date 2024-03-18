@@ -59,6 +59,21 @@ data class SceneEntity(
   @ColumnInfo(name = COLUMN_PROFILE_ID) val profileId: String?
 ) {
 
+  fun isExecuting(): Boolean {
+    startedAt?.let { startTime ->
+      val currentTime = Date()
+      if (startTime < currentTime) {
+        estimatedEndDate?.let { endTime ->
+          if (endTime > currentTime) {
+            return true
+          }
+        }
+      }
+    }
+
+    return false
+  }
+
   companion object {
     const val TABLE_NAME = "scene"
     const val COLUMN_ID = "_id"

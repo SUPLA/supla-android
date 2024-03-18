@@ -24,6 +24,7 @@ import org.supla.android.data.source.local.entity.isGpMeter
 import org.supla.android.data.source.local.entity.isGpm
 import org.supla.android.data.source.local.entity.isHvacThermostat
 import org.supla.android.data.source.local.entity.isMeasurement
+import org.supla.android.data.source.local.entity.isRollerShutter
 import org.supla.android.data.source.local.entity.isThermometer
 
 fun ChannelDataEntity.isMeasurement() = channelEntity.isMeasurement()
@@ -41,3 +42,5 @@ fun ChannelDataEntity.hasMeasurements() = channelEntity.hasMeasurements()
 fun ChannelDataEntity.hasValue() = channelEntity.hasValue()
 
 fun ChannelDataEntity.isThermometer() = channelEntity.isThermometer()
+
+fun ChannelDataEntity.isRollerShutter() = channelEntity.isRollerShutter()

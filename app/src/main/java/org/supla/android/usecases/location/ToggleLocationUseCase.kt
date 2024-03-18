@@ -1,28 +1,27 @@
 package org.supla.android.usecases.location
 
 import io.reactivex.rxjava3.core.Completable
-import org.supla.android.data.source.ChannelRepository
-import org.supla.android.db.Location
+import org.supla.android.data.source.LocationRepository
+import org.supla.android.data.source.local.entity.LocationEntity
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class ToggleLocationUseCase @Inject constructor(
-  private val channelRepository: ChannelRepository
+  private val locationRepository: LocationRepository
 ) {
 
-  operator fun invoke(location: Location, flag: CollapsedFlag): Completable = Completable.fromRunnable {
+  operator fun invoke(location: LocationEntity, flag: CollapsedFlag): Completable =
     if (location.isCollapsed(flag)) {
-      location.collapsed = (location.collapsed and flag.value.inv())
+      locationRepository.updateLocation(
+        location.copy(collapsed = (location.collapsed and flag.value.inv()))
+      )
     } else {
-      location.collapsed = (location.collapsed or flag.value)
+      locationRepository.updateLocation(
+        location.copy(collapsed = (location.collapsed or flag.value))
+      )
     }
-
-    channelRepository.updateLocation(location)
-  }
 }
-
-fun Location.isCollapsed(flag: CollapsedFlag): Boolean = (collapsed and flag.value > 0)
 
 enum class CollapsedFlag(val value: Int) {
   CHANNEL(0x1),

@@ -47,7 +47,7 @@ class ThermometerDetailFragment :
   override fun isCloseEvent(event: ThermometerDetailViewEvent) = event == ThermometerDetailViewEvent.Close
 
   override fun updateToolbarTitle(state: ThermometerDetailViewState) {
-    state.channelBase?.let { setToolbarTitle(it.getCaption(requireContext())) }
+    state.caption?.let { setToolbarTitle(it(requireContext())) }
   }
 
   companion object {

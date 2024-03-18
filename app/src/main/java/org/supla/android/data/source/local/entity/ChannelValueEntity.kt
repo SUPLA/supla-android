@@ -25,8 +25,9 @@ import androidx.room.PrimaryKey
 import org.supla.android.data.source.local.entity.ChannelValueEntity.Companion.COLUMN_CHANNEL_REMOTE_ID
 import org.supla.android.data.source.local.entity.ChannelValueEntity.Companion.COLUMN_PROFILE_ID
 import org.supla.android.data.source.local.entity.ChannelValueEntity.Companion.TABLE_NAME
+import org.supla.android.data.source.remote.rollershutter.RollerShutterValue
+import org.supla.android.data.source.remote.thermostat.ThermostatValue
 import org.supla.android.lib.DigiglassValue
-import org.supla.android.lib.RollerShutterValue
 import org.supla.android.lib.SuplaChannelValue
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELVALUE_SIZE
 import org.supla.android.usecases.channel.ChannelValueEntityStateWrapper
@@ -63,7 +64,7 @@ data class ChannelValueEntity(
 
   fun asDigiglassValue() = DigiglassValue(getValueAsByteArray())
 
-  fun asRollerShutterValue() = RollerShutterValue(getValueAsByteArray())
+  fun asRollerShutterValue() = RollerShutterValue.from(online, getValueAsByteArray())
 
   fun getSubValueHi(): Byte {
     return getSubValueAsByteArray().let {

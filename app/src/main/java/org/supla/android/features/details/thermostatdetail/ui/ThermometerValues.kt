@@ -52,7 +52,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.min
 import org.supla.android.R
 import org.supla.android.core.ui.theme.SuplaTheme
-import org.supla.android.features.details.thermostatdetail.thermostatgeneral.MeasurementValue
+import org.supla.android.features.details.thermostatdetail.general.MeasurementValue
 
 class ThermometersValues @JvmOverloads constructor(
   context: Context,

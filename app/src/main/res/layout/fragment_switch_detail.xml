@@ -11,7 +11,7 @@
       android:id="@+id/switch_detail_device_state"
       layout="@layout/inc_device_state" />
 
-    <org.supla.android.ui.views.buttons.CircleControlButtonView
+    <org.supla.android.ui.views.buttons.animatable.CircleControlButtonView
       android:id="@+id/switch_detail_button_off"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
@@ -23,7 +23,7 @@
       app:text="@string/channel_btn_off"
       app:type="negative" />
 
-    <org.supla.android.ui.views.buttons.CircleControlButtonView
+    <org.supla.android.ui.views.buttons.animatable.CircleControlButtonView
       android:id="@+id/switch_detail_button_on"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"

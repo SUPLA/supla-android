@@ -186,10 +186,6 @@ data class Scene(
     }
   }
 
-  fun getImageId(): ImageId {
-    return getImageId(false)
-  }
-
   private fun dateFromTimestamp(timestamp: Long): Date {
     return Date(timestamp)
   }

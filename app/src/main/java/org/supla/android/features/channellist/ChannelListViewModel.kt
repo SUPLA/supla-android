@@ -25,11 +25,12 @@ import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
+import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.source.ChannelRepository
+import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
-import org.supla.android.db.ChannelBase
-import org.supla.android.db.Location
 import org.supla.android.events.UpdateEventsManager
+import org.supla.android.features.details.blindsdetail.BlindsDetailFragment
 import org.supla.android.features.details.detailbase.standarddetail.DetailPage
 import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
 import org.supla.android.features.details.gpmdetail.GpmDetailFragment
@@ -47,6 +48,7 @@ import org.supla.android.usecases.channel.ButtonType
 import org.supla.android.usecases.channel.ChannelActionUseCase
 import org.supla.android.usecases.channel.CreateProfileChannelsListUseCase
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
+import org.supla.android.usecases.details.BlindsDetailType
 import org.supla.android.usecases.details.GpmDetailType
 import org.supla.android.usecases.details.LegacyDetailType
 import org.supla.android.usecases.details.ProvideDetailTypeUseCase
@@ -88,7 +90,7 @@ class ChannelListViewModel @Inject constructor(
       .disposeBySelf()
   }
 
-  fun toggleLocationCollapsed(location: Location) {
+  fun toggleLocationCollapsed(location: LocationEntity) {
     toggleLocationUseCase(location, CollapsedFlag.CHANNEL)
       .andThen(createProfileChannelsListUseCase())
       .attach()
@@ -99,12 +101,12 @@ class ChannelListViewModel @Inject constructor(
       .disposeBySelf()
   }
 
-  fun swapItems(firstItem: ChannelBase?, secondItem: ChannelBase?) {
+  fun swapItems(firstItem: ChannelDataBase?, secondItem: ChannelDataBase?) {
     if (firstItem == null || secondItem == null) {
       return // nothing to swap
     }
 
-    channelRepository.reorderChannels(firstItem.id, firstItem.locationId.toInt(), secondItem.id)
+    channelRepository.reorderChannels(firstItem.id, firstItem.locationId, secondItem.id)
       .attach()
       .subscribeBy(
         onError = defaultErrorHandler("swapItems(..., ...)")
@@ -152,7 +154,7 @@ class ChannelListViewModel @Inject constructor(
             currentState().channels
               ?.filterIsInstance(ListItem.ChannelItem::class.java)
               ?.first { it.channelBase.remoteId == channel.remoteId }
-              ?.channelBase = channel.getLegacyChannel()
+              ?.channelBase = channel
           },
           onError = defaultErrorHandler("updateChannel($remoteId)")
         )
@@ -161,7 +163,7 @@ class ChannelListViewModel @Inject constructor(
   }
 
   private fun openDetailsByChannelFunction(data: ChannelDataEntity) {
-    if (isAvailableInOffline(data).not() && data.channelValueEntity.online.not()) {
+    if (isAvailableInOffline(data).not() && data.isOnline().not()) {
       return // do not open details for offline channels
     }
 
@@ -170,13 +172,13 @@ class ChannelListViewModel @Inject constructor(
       return
     }
 
-    val legacyChannel = data.getLegacyChannel()
-    when (val detailType = provideDetailTypeUseCase(legacyChannel)) {
-      is SwitchDetailType -> sendEvent(ChannelListViewEvent.OpenSwitchDetail(ItemBundle.from(legacyChannel), detailType.pages))
-      is ThermostatDetailType -> sendEvent(ChannelListViewEvent.OpenThermostatDetail(ItemBundle.from(legacyChannel), detailType.pages))
-      is ThermometerDetailType -> sendEvent(ChannelListViewEvent.OpenThermometerDetail(ItemBundle.from(legacyChannel), detailType.pages))
-      is GpmDetailType -> sendEvent(ChannelListViewEvent.OpenGpmDetail(ItemBundle.from(legacyChannel), detailType.pages))
-      is LegacyDetailType -> sendEvent(ChannelListViewEvent.OpenLegacyDetails(legacyChannel.channelId, detailType))
+    when (val detailType = provideDetailTypeUseCase(data)) {
+      is SwitchDetailType -> sendEvent(ChannelListViewEvent.OpenSwitchDetail(ItemBundle.from(data), detailType.pages))
+      is ThermostatDetailType -> sendEvent(ChannelListViewEvent.OpenThermostatDetail(ItemBundle.from(data), detailType.pages))
+      is ThermometerDetailType -> sendEvent(ChannelListViewEvent.OpenThermometerDetail(ItemBundle.from(data), detailType.pages))
+      is GpmDetailType -> sendEvent(ChannelListViewEvent.OpenGpmDetail(ItemBundle.from(data), detailType.pages))
+      is BlindsDetailType -> sendEvent(ChannelListViewEvent.OpenBlindsDetail(ItemBundle.from(data), detailType.pages))
+      is LegacyDetailType -> sendEvent(ChannelListViewEvent.OpenLegacyDetails(data.remoteId, detailType))
       else -> {} // no action
     }
   }
@@ -196,7 +198,8 @@ class ChannelListViewModel @Inject constructor(
     SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER,
     SuplaConst.SUPLA_CHANNELFNC_IC_HEAT_METER,
     SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT,
-    SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER -> true
+    SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER,
+    SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER -> true
 
     SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH,
     SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH,
@@ -224,10 +227,13 @@ sealed class ChannelListViewEvent : ViewEvent {
     OpenStandardDetail(R.id.thermostat_detail_fragment, ThermostatDetailFragment.bundle(itemBundle, pages.toTypedArray()))
 
   data class OpenThermometerDetail(private val itemBundle: ItemBundle, private val pages: List<DetailPage>) :
-    OpenStandardDetail(R.id.thermostat_detail_fragment, ThermometerDetailFragment.bundle(itemBundle, pages.toTypedArray()))
+    OpenStandardDetail(R.id.thermometer_detail_fragment, ThermometerDetailFragment.bundle(itemBundle, pages.toTypedArray()))
 
   data class OpenGpmDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) :
     OpenStandardDetail(R.id.gpm_detail_fragment, GpmDetailFragment.bundle(itemBundle, pages.toTypedArray()))
+
+  data class OpenBlindsDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) :
+    OpenStandardDetail(R.id.blinds_detail_fragment, BlindsDetailFragment.bundle(itemBundle, pages.toTypedArray()))
 
   object OpenThermostatDetails : ChannelListViewEvent()
   object ReassignAdapter : ChannelListViewEvent()

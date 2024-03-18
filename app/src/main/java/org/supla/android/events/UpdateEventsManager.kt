@@ -1,11 +1,12 @@
 package org.supla.android.events
 
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.Subject
 import org.supla.android.data.source.ChannelRepository
-import org.supla.android.data.source.SceneRepository
-import org.supla.android.data.source.local.entity.Scene
+import org.supla.android.data.source.RoomSceneRepository
+import org.supla.android.data.source.local.entity.SceneEntity
 import org.supla.android.db.Channel
 import org.supla.android.db.ChannelGroup
 import java.util.concurrent.TimeUnit
@@ -33,7 +34,7 @@ import javax.inject.Singleton
 @Singleton
 class UpdateEventsManager @Inject constructor(
   private val channelRepository: ChannelRepository,
-  private val sceneRepository: SceneRepository
+  private val sceneRepository: RoomSceneRepository
 ) {
 
   private val subjects: MutableMap<Id, Subject<State>> = mutableMapOf()
@@ -70,9 +71,10 @@ class UpdateEventsManager @Inject constructor(
     sceneUpdatesSubject.onNext(Any())
   }
 
-  fun observerScene(sceneId: Int): Observable<Scene> {
+  fun observerScene(sceneId: Int): Observable<SceneEntity> {
     return getSubjectForScene(sceneId).hide()
-      .map { sceneRepository.getScene(sceneId)!! }
+      .observeOn(Schedulers.io())
+      .flatMap { sceneRepository.findByRemoteId(sceneId).toObservable() }
   }
 
   fun observeChannel(channelId: Int): Observable<Channel> {

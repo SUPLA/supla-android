@@ -58,3 +58,7 @@ fun ChannelEntity.isGpMeter(): Boolean =
 fun ChannelEntity.isThermometer() =
   function == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER ||
     function == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
+
+fun ChannelEntity.isRollerShutter() =
+  function == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER ||
+    function == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW

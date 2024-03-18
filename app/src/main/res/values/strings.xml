@@ -132,7 +132,7 @@
 
   <string name="rs_percent_caption">Percentage of closing</string>
   <string name="rs_percent_caption_open">Percentage of opening</string>
-  <string name="calibration">[Calibration]</string>
+  <string name="blinds_calibration">Calibration…</string>
 
   <string name="add_wizard_is_not_available">Add Wizard is only available when server connection has been set based on the email address. (Disable advanced options in your account settings)</string>
 
@@ -484,7 +484,7 @@
   <string name="str_default" translatable="false">Default</string>
   <string name="overcurrent_warning">The power was turned off after the set threshold of the allowable current was exceeded.</string>
   <string name="overcurrent_question">The power was turned off after exceeding the set threshold of the allowable current. Are you sure you want to power on?</string>
-  <string name="recalibration_question">Are you sure you want to start calibration?</string>
+  <string name="blinds_start_calibration_message">Are you sure you want to start calibration?</string>
   <string name="calibration_failed">Calibration failed.</string>
   <string name="calibration_lost">Calibration lost.</string>
   <string name="motor_problem">Motor problem / Unexpected stop.</string>
@@ -660,6 +660,10 @@
   <string name="main_no_entries" translatable="false">Empty</string>
   <string name="groups_empty_list_button" translatable="false">Add group in Supla Cloud</string>
   <string name="scenes_empty_list_button" translatable="false">Add scene in Supla Cloud</string>
+  <string name="blinds_closing_percentage" translatable="false">Zamknięcie:</string>
+  <string name="blinds_opening_percentage" translatable="false">Otwarcie:</string>
+  <string name="blinds_start_calibration_title" translatable="false">Calibration</string>
+  <string name="blinds_calibration_needed" translatable="false">Calibration needed</string>
 
   <plurals name="details_timer_info_on" translatable="false">
     <item quantity="other">on</item>

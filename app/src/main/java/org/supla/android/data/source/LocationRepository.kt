@@ -18,6 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import org.supla.android.data.source.local.dao.LocationDao
+import org.supla.android.data.source.local.entity.LocationEntity
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -27,4 +28,6 @@ class LocationRepository @Inject constructor(
 ) {
 
   fun findByRemoteId(remoteId: Int) = locationDao.findByRemoteId(remoteId)
+
+  fun updateLocation(locationEntity: LocationEntity) = locationDao.updateLocation(locationEntity)
 }

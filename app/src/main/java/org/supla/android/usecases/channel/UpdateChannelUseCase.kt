@@ -62,6 +62,7 @@ class UpdateChannelUseCase @Inject constructor(
             Single.just(EntityUpdateResult.NOP)
           }
         }.onErrorResumeNext { throwable ->
+          throwable.printStackTrace()
           if (throwable is NoSuchElementException) {
             insertChannel(locationEntity, suplaChannel)
           } else {
@@ -151,5 +152,5 @@ class UpdateChannelUseCase @Inject constructor(
       suplaChannel.Func == SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT
 
   private fun ChannelEntity.locationChanged(suplaChannel: SuplaChannel) =
-    locationId != suplaChannel.LocationID.toLong()
+    locationId != suplaChannel.LocationID
 }

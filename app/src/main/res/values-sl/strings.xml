@@ -79,7 +79,7 @@
   <string name="rate_later">Pozneje</string>
   <string name="rate_no_thanks">Ne, hvala</string>
   <string name="rs_percent_caption">Odstotek zapiranja</string>
-  <string name="calibration">[Kalibracija]</string>
+  <string name="blinds_calibration">Kalibracija…</string>
 
   <string name="add_wizard_is_not_available">Čarovnik za dodajanje je na voljo le, če je na podlagi vnesenega e-poštnega naslova vzpostavljena povezava s strežnikom! (Onemogočite napredne možnosti v konfiguraciji računa)</string>
 
@@ -431,7 +431,7 @@
   <string name="location_name">Ime lokacije</string>
   <string name="overcurrent_warning">Napeljava je bila onemogočena po prekoračitvi nastavljenega praga dovoljenega električnega toka.</string>
   <string name="overcurrent_question">Napajanje je bilo izključeno po prekoračitvi nastavljenega praga dovoljenega električnega toka. Ste prepričani, da želite vključiti napajanje?</string>
-  <string name="recalibration_question">Ali ste prepričani, da želite začeti umerjanje?</string>
+  <string name="blinds_start_calibration_message">Ali ste prepričani, da želite začeti umerjanje?</string>
   <string name="calibration_failed">Umerjanje ni bilo uspešno.</string>
   <string name="calibration_lost">Umerjanje je bilo izgubljeno.</string>
   <string name="motor_problem">Težava z motorjem / Nepričakovana zaustavitev.</string>
@@ -454,4 +454,5 @@
   <string name="rs_display_mode_closing">Zapiranja</string>
   <string name="status_accessid_inactive">Identifikator dostopa ni aktiven</string>
   <string name="hour_string_format">HH:mm:ss</string>
+  <string name="blinds_start_calibration_title">Kalibracija</string>
 </resources>

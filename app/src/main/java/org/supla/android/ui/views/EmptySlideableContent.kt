@@ -28,7 +28,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.Preferences
-import org.supla.android.R
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.ui.layouts.BaseSlideableContent
 import org.supla.android.ui.lists.data.SlideableListItemData
@@ -39,19 +38,12 @@ class EmptySlideableContent : BaseSlideableContent<SlideableListItemData.Thermos
 
   constructor(context: Context) : super(context, null, 0)
 
-  constructor(context: Context, attrs: AttributeSet?) : super(context, attrs, 0) {
-    loadAttributes(context, attrs)
-  }
+  constructor(context: Context, attrs: AttributeSet?) : super(context, attrs, 0)
 
-  constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
-    loadAttributes(context, attrs)
-  }
+  constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
   @Inject
   lateinit var preferences: Preferences
-
-  var hasLeftButton: Boolean = false
-  var hasRightButton: Boolean = false
 
   @Composable
   override fun Content() {
@@ -62,17 +54,6 @@ class EmptySlideableContent : BaseSlideableContent<SlideableListItemData.Thermos
           .fillMaxWidth()
           .fillMaxHeight()
       )
-    }
-  }
-
-  private fun loadAttributes(context: Context, attrs: AttributeSet?) {
-    context.theme.obtainStyledAttributes(attrs, R.styleable.ThermostatListItemView, 0, 0).apply {
-      try {
-        hasLeftButton = getBoolean(R.styleable.ThermostatListItemView_hasLeftButton, false)
-        hasRightButton = getBoolean(R.styleable.ThermostatListItemView_hasRightButton, false)
-      } finally {
-        recycle()
-      }
     }
   }
 }

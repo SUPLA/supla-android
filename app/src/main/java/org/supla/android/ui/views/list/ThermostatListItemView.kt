@@ -57,16 +57,9 @@ class ThermostatListItemView : BaseSlideableContent<SlideableListItemData.Thermo
 
   constructor(context: Context) : super(context, null, 0)
 
-  constructor(context: Context, attrs: AttributeSet?) : super(context, attrs, 0) {
-    loadAttributes(context, attrs)
-  }
+  constructor(context: Context, attrs: AttributeSet?) : super(context, attrs, 0)
 
-  constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
-    loadAttributes(context, attrs)
-  }
-
-  private var hasLeftButton: Boolean = false
-  private var hasRightButton: Boolean = false
+  constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
   @Composable
   override fun Content() {
@@ -82,17 +75,6 @@ class ThermostatListItemView : BaseSlideableContent<SlideableListItemData.Thermo
         onTitleLongClick = onTitleLongClick,
         onItemClick = onItemClick
       )
-    }
-  }
-
-  private fun loadAttributes(context: Context, attrs: AttributeSet?) {
-    context.theme.obtainStyledAttributes(attrs, R.styleable.ThermostatListItemView, 0, 0).apply {
-      try {
-        hasLeftButton = getBoolean(R.styleable.ThermostatListItemView_hasLeftButton, false)
-        hasRightButton = getBoolean(R.styleable.ThermostatListItemView_hasRightButton, false)
-      } finally {
-        recycle()
-      }
     }
   }
 }
