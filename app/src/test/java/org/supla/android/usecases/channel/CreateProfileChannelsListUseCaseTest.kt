@@ -24,7 +24,6 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASURE
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HUMIDITY
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNEL_FLAG_HAS_PARENT
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.ui.lists.data.IssueIconType
 import org.supla.android.usecases.icon.GetChannelIconUseCase
@@ -58,10 +57,10 @@ class CreateProfileChannelsListUseCaseTest {
   fun `should create list of channels and locations`() {
     // given
     val first = mockListEntity(11, 12)
-    val second = mockListEntity(21, 12, function = SUPLA_CHANNELFNC_HVAC_THERMOSTAT)
+    val second = mockListEntity(21, 12, channelFunction = SUPLA_CHANNELFNC_HVAC_THERMOSTAT)
     val third = mockListEntity(31, 32, locationCollapsed = true)
-    val fourth = mockListEntity(41, 42, function = SUPLA_CHANNELFNC_DEPTHSENSOR)
-    val fifth = mockListEntity(51, 42, function = SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER)
+    val fourth = mockListEntity(41, 42, channelFunction = SUPLA_CHANNELFNC_DEPTHSENSOR)
+    val fifth = mockListEntity(51, 42, channelFunction = SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER)
 
     whenever(channelRepository.findList()).thenReturn(Single.just(listOf(first, second, third, fourth, fifth)))
     whenever(channelRelationRepository.findChildrenToParentsRelations()).thenReturn(Single.just(emptyMap()))
@@ -96,8 +95,8 @@ class CreateProfileChannelsListUseCaseTest {
   @Test
   fun `should merge location with same name into one`() {
     // given
-    val first = mockListEntity(11, 12, function = SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER)
-    val second = mockListEntity(21, 12, function = SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT)
+    val first = mockListEntity(11, 12, channelFunction = SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER)
+    val second = mockListEntity(21, 12, channelFunction = SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT)
     val third = mockListEntity(31, 32, locationName = "12")
     val fourth = mockListEntity(41, 42)
 
@@ -132,7 +131,7 @@ class CreateProfileChannelsListUseCaseTest {
   fun `should load children`() {
     // given
     val first = mockListEntity(11, 12)
-    val second = mockListEntity(21, 12, channelFlags = SUPLA_CHANNEL_FLAG_HAS_PARENT)
+    val second = mockListEntity(21, 12)
     val third = mockListEntity(31, 12)
 
     whenever(channelRepository.findList()).thenReturn(Single.just(listOf(first, second, third)))
@@ -164,9 +163,8 @@ class CreateProfileChannelsListUseCaseTest {
     channelRemoteId: Int,
     locationRemoteId: Int,
     locationName: String = "$locationRemoteId",
-    channelFlags: Long = 0,
     locationCollapsed: Boolean = false,
-    function: Int = SUPLA_CHANNELFNC_HUMIDITY
+    channelFunction: Int = SUPLA_CHANNELFNC_HUMIDITY
   ): ChannelDataEntity = mockk {
     every { remoteId } returns channelRemoteId
     every { locationEntity } returns mockk {
@@ -175,8 +173,7 @@ class CreateProfileChannelsListUseCaseTest {
       every { isCollapsed(CollapsedFlag.CHANNEL) } returns locationCollapsed
     }
     every { channelEntity } returns mockk {
-      every { flags } returns channelFlags
-      every { this@mockk.function } returns function
+      every { function } returns channelFunction
       every { remoteId } returns channelRemoteId
     }
     every { getLegacyChannel() } returns mockk {
@@ -184,7 +181,7 @@ class CreateProfileChannelsListUseCaseTest {
     }
     every { channelValueEntity } returns mockk {
       every { online } returns true
-      if (function == SUPLA_CHANNELFNC_HVAC_THERMOSTAT) {
+      if (channelFunction == SUPLA_CHANNELFNC_HVAC_THERMOSTAT) {
         every { asThermostatValue() } returns mockk {
           every { getSetpointText(valuesFormatter) } returns "setpoint text"
           every { getIndicatorIcon() } returns 123
@@ -192,7 +189,7 @@ class CreateProfileChannelsListUseCaseTest {
           every { getIssueMessage() } returns 456
         }
       }
-      if (function == SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER) {
+      if (channelFunction == SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER) {
         every { asRollerShutterValue() } returns mockk {
           every { getIssueIconType() } returns null
           every { getIssueMessage() } returns null
@@ -200,7 +197,7 @@ class CreateProfileChannelsListUseCaseTest {
       }
     }
 
-    if (function == SUPLA_CHANNELFNC_HVAC_THERMOSTAT) {
+    if (channelFunction == SUPLA_CHANNELFNC_HVAC_THERMOSTAT) {
       every { channelExtendedValueEntity } returns mockk {
         every { getSuplaValue() } returns null
       }

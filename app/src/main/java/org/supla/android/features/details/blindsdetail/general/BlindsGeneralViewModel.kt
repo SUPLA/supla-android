@@ -32,6 +32,7 @@ import org.supla.android.data.source.local.entity.ChannelGroupEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.data.source.local.entity.custom.GroupOnlineSummary
+import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.data.source.remote.rollershutter.SuplaRollerShutterFlag
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.extensions.guardLet
@@ -45,10 +46,10 @@ import org.supla.android.ui.dialogs.AuthorizationDialogState
 import org.supla.android.ui.dialogs.authorize.AuthorizationModelState
 import org.supla.android.ui.dialogs.authorize.BaseAuthorizationViewModel
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
-import org.supla.android.usecases.client.CallConfigCommandUseCase
+import org.supla.android.usecases.client.CallSuplaClientOperationUseCase
 import org.supla.android.usecases.client.ExecuteBlindsActionUseCase
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
-import org.supla.android.usecases.client.SuplaConfigCommand
+import org.supla.android.usecases.client.SuplaClientOperation
 import org.supla.android.usecases.group.GetGroupOnlineSummaryUseCase
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
 import javax.inject.Inject
@@ -58,7 +59,7 @@ import kotlin.math.abs
 class BlindGeneralViewModel @Inject constructor(
   private val executeBlindsActionUseCase: ExecuteBlindsActionUseCase,
   private val executeSimpleActionUseCase: ExecuteSimpleActionUseCase,
-  private val callConfigCommandUseCase: CallConfigCommandUseCase,
+  private val callSuplaClientOperationUseCase: CallSuplaClientOperationUseCase,
   private val readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
   private val readChannelGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase,
   private val getGroupOnlineSummaryUseCase: GetGroupOnlineSummaryUseCase,
@@ -97,12 +98,12 @@ class BlindGeneralViewModel @Inject constructor(
 
       is BlindsAction.MoveUp -> {
         updateState { it.updateMoveStartTime(dateProvider) }
-        executeSimpleActionUseCase.invoke(ActionId.REVEAL, itemType.toSubjectType(), remoteId).runIt()
+        callSuplaClientOperationUseCase.invoke(remoteId, itemType, SuplaClientOperation.MoveUp).runIt()
       }
 
       is BlindsAction.MoveDown -> {
         updateState { it.updateMoveStartTime(dateProvider) }
-        executeSimpleActionUseCase.invoke(ActionId.SHUT, itemType.toSubjectType(), remoteId).runIt()
+        callSuplaClientOperationUseCase.invoke(remoteId, itemType, SuplaClientOperation.MoveDown).runIt()
       }
 
       is BlindsAction.Stop -> {
@@ -164,7 +165,7 @@ class BlindGeneralViewModel @Inject constructor(
     hideAuthorizationDialog()
 
     val (remoteId) = guardLet(currentState().remoteId) { return }
-    callConfigCommandUseCase(remoteId, ItemType.CHANNEL, SuplaConfigCommand.RECALIBRATE)
+    callSuplaClientOperationUseCase(remoteId, ItemType.CHANNEL, SuplaClientOperation.Command.Recalibrate)
       .attachSilent()
       .subscribeBy(
         onError = defaultErrorHandler("onAuthorized")
@@ -214,7 +215,7 @@ class BlindGeneralViewModel @Inject constructor(
           showClosingPercentage = showOpening.not(),
           positionUnknown = value.hasValidPosition().not(),
           calibrating = value.flags.contains(SuplaRollerShutterFlag.CALIBRATION_IN_PROGRESS),
-          calibrationPossible = true,
+          calibrationPossible = SuplaChannelFlag.CALCFG_RECALIBRATE inside channel.flags,
           positionText = String.format("%d%%", if (showOpening) 100 - position else position),
           windowType = getWindowType(channel)
         ),

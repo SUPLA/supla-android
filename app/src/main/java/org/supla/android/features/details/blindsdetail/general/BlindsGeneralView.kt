@@ -156,7 +156,7 @@ private fun BlindsScreen(
   }
 }
 
-private fun isSmallScreen(availableHeight: Dp) = availableHeight < 550.dp
+private fun isSmallScreen(availableHeight: Dp) = availableHeight < 480.dp
 
 private fun getTopHeight(availableHeight: Dp) =
   if (isSmallScreen(availableHeight)) {
@@ -558,7 +558,7 @@ private fun Preview_Small() {
     Box(
       modifier = Modifier
         .background(MaterialTheme.colors.background)
-        .height(450.dp)
+        .height(480.dp)
     ) {
       BlindsGeneralView(
         windowState = WindowState(75f, 90f),

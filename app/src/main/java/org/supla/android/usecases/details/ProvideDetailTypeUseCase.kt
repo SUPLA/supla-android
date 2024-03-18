@@ -19,6 +19,7 @@ package org.supla.android.usecases.details
 
 import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.features.details.detailbase.standarddetail.DetailPage
 import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS
 import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS
@@ -44,7 +45,6 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNEL_FLAG_COUNTDOWN_TIMER_SUPPORTED
 import java.io.Serializable
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -129,7 +129,7 @@ class ProvideDetailTypeUseCase @Inject constructor() {
   }
 
   private fun supportsTimer(channelDataBase: ChannelDataBase) =
-    channelDataBase.flags.and(SUPLA_CHANNEL_FLAG_COUNTDOWN_TIMER_SUPPORTED) > 0 &&
+    SuplaChannelFlag.COUNTDOWN_TIMER_SUPPORTED inside channelDataBase.flags &&
       channelDataBase.function != SUPLA_CHANNELFNC_STAIRCASETIMER
 }
 
