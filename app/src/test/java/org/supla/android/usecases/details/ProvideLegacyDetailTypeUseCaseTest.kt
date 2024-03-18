@@ -9,6 +9,7 @@ import org.mockito.InjectMocks
 import org.mockito.junit.MockitoJUnitRunner
 import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.features.details.detailbase.standarddetail.DetailPage
 import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS
 import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS
@@ -118,7 +119,7 @@ class ProvideLegacyDetailTypeUseCaseTest {
     ) { channel ->
       val channelValue: ChannelValueEntity = mockk()
       every { channelValue.subValueType } returns SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort()
-      every { channel.flags } returns SUPLA_CHANNEL_FLAG_COUNTDOWN_TIMER_SUPPORTED
+      every { channel.flags } returns SuplaChannelFlag.COUNTDOWN_TIMER_SUPPORTED.rawValue
       every { channel.channelValueEntity } returns channelValue
     }
   }
@@ -131,7 +132,7 @@ class ProvideLegacyDetailTypeUseCaseTest {
     ) { channel ->
       val channelValue: ChannelValueEntity = mockk()
       every { channelValue.subValueType } returns SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort()
-      every { channel.flags } returns SUPLA_CHANNEL_FLAG_COUNTDOWN_TIMER_SUPPORTED
+      every { channel.flags } returns SuplaChannelFlag.COUNTDOWN_TIMER_SUPPORTED.rawValue
       every { channel.channelValueEntity } returns channelValue
     }
   }
@@ -144,7 +145,7 @@ class ProvideLegacyDetailTypeUseCaseTest {
     ) { channel ->
       val channelValue: ChannelValueEntity = mockk()
       every { channelValue.subValueType } returns SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort()
-      every { channel.flags } returns SUPLA_CHANNEL_FLAG_COUNTDOWN_TIMER_SUPPORTED
+      every { channel.flags } returns SuplaChannelFlag.COUNTDOWN_TIMER_SUPPORTED.rawValue
       every { channel.channelValueEntity } returns channelValue
     }
   }

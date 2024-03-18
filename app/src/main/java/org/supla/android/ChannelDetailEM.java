@@ -44,6 +44,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import javax.inject.Inject;
 import org.supla.android.charts.ElectricityChartHelper;
+import org.supla.android.data.source.remote.channel.SuplaChannelFlag;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
 import org.supla.android.db.ChannelExtendedValue;
@@ -322,8 +323,8 @@ public class ChannelDetailEM extends DetailLayout
     } else {
       long flags = getChannelBase() != null ? getChannelBase().getFlags() : 0;
       boolean singlePhase =
-          (flags & SuplaConst.SUPLA_CHANNEL_FLAG_PHASE2_UNSUPPORTED) > 0
-              && (flags & SuplaConst.SUPLA_CHANNEL_FLAG_PHASE3_UNSUPPORTED) > 0;
+          SuplaChannelFlag.PHASE2_UNSUPPORTED.inside(flags)
+              && SuplaChannelFlag.PHASE3_UNSUPPORTED.inside(flags);
       llDetails.setVisibility(VISIBLE);
       llOffline.setVisibility(online ? View.GONE : View.VISIBLE);
       chartHelper.setVisibility(GONE);

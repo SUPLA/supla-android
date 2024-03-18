@@ -16,6 +16,7 @@ import org.mockito.kotlin.whenever
 import org.supla.android.core.networking.suplaclient.SuplaClientApi
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.data.source.ChannelRepository
+import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.db.Channel
 import org.supla.android.db.ChannelValue
 import org.supla.android.lib.SuplaConst.*
@@ -127,7 +128,7 @@ class ChannelActionUseCaseTest {
       channelId,
       SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER,
       ButtonType.RIGHT,
-      SUPLA_CHANNEL_FLAG_RS_SBS_AND_STOP_ACTIONS
+      SuplaChannelFlag.RS_SBS_AND_STOP_ACTIONS
     ) {
       assertThat(it.action).isEqualTo(ActionId.UP_OR_STOP)
       assertThat(it.subjectType).isEqualTo(SubjectType.CHANNEL)
@@ -143,7 +144,7 @@ class ChannelActionUseCaseTest {
       channelId,
       SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW,
       ButtonType.LEFT,
-      SUPLA_CHANNEL_FLAG_RS_SBS_AND_STOP_ACTIONS
+      SuplaChannelFlag.RS_SBS_AND_STOP_ACTIONS
     ) {
       assertThat(it.action).isEqualTo(ActionId.DOWN_OR_STOP)
       assertThat(it.subjectType).isEqualTo(SubjectType.CHANNEL)
@@ -172,8 +173,7 @@ class ChannelActionUseCaseTest {
     testActionExecution(
       channelId,
       SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS,
-      ButtonType.RIGHT,
-      0
+      ButtonType.RIGHT
     ) {
       assertThat(it.action).isEqualTo(ActionId.TURN_ON)
       assertThat(it.subjectType).isEqualTo(SubjectType.CHANNEL)
@@ -188,8 +188,7 @@ class ChannelActionUseCaseTest {
     testActionExecution(
       channelId,
       SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS,
-      ButtonType.LEFT,
-      0
+      ButtonType.LEFT
     ) {
       assertThat(it.action).isEqualTo(ActionId.TURN_OFF)
       assertThat(it.subjectType).isEqualTo(SubjectType.CHANNEL)
@@ -246,7 +245,7 @@ class ChannelActionUseCaseTest {
     channelId: Int,
     channelFunc: Int,
     buttonType: ButtonType,
-    flags: Long = 0,
+    flag: SuplaChannelFlag? = null,
     actionAssertion: (ActionParameters) -> Unit
   ) {
     // given
@@ -254,7 +253,7 @@ class ChannelActionUseCaseTest {
     every { channel.channelId } returns channelId
     every { channel.remoteId } returns channelId
     every { channel.func } returns channelFunc
-    every { channel.flags } returns flags
+    every { channel.flags } returns (flag?.rawValue ?: 0L)
 
     whenever(channelRepository.getChannel(channelId)).thenReturn(channel)
 

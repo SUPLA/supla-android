@@ -31,11 +31,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import org.supla.android.R;
+import org.supla.android.data.source.remote.channel.SuplaChannelFlag;
 import org.supla.android.db.Channel;
 import org.supla.android.db.DbHelper;
 import org.supla.android.db.MeasurementsDbHelper;
 import org.supla.android.db.SuplaContract;
-import org.supla.android.lib.SuplaConst;
 
 public class ElectricityChartHelper extends IncrementalMeterChartHelper {
 
@@ -60,8 +60,8 @@ public class ElectricityChartHelper extends IncrementalMeterChartHelper {
     if (ch != null) {
       long flags = ch.getFlags();
       singlePhase =
-          (flags & SuplaConst.SUPLA_CHANNEL_FLAG_PHASE2_UNSUPPORTED) > 0
-              && (flags & SuplaConst.SUPLA_CHANNEL_FLAG_PHASE3_UNSUPPORTED) > 0;
+          SuplaChannelFlag.PHASE2_UNSUPPORTED.inside(flags)
+              && SuplaChannelFlag.PHASE3_UNSUPPORTED.inside(flags);
     } else {
       singlePhase = false;
     }

@@ -1,4 +1,21 @@
 package org.supla.android.features.details.blindsdetail.general
+/*
+ Copyright (C) AC SOFTWARE SP. Z O.O.
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
 
 import io.mockk.every
 import io.mockk.mockk
@@ -30,6 +47,7 @@ import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.data.source.local.entity.custom.GroupOnlineSummary
+import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.data.source.remote.rollershutter.RollerShutterValue
 import org.supla.android.data.source.remote.rollershutter.SuplaRollerShutterFlag
 import org.supla.android.data.source.runtime.ItemType
@@ -44,10 +62,10 @@ import org.supla.android.tools.VibrationHelper
 import org.supla.android.ui.dialogs.AuthorizationDialogState
 import org.supla.android.ui.lists.data.IssueIconType
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
-import org.supla.android.usecases.client.CallConfigCommandUseCase
+import org.supla.android.usecases.client.CallSuplaClientOperationUseCase
 import org.supla.android.usecases.client.ExecuteBlindsActionUseCase
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
-import org.supla.android.usecases.client.SuplaConfigCommand
+import org.supla.android.usecases.client.SuplaClientOperation
 import org.supla.android.usecases.group.GetGroupOnlineSummaryUseCase
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
 
@@ -61,7 +79,7 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
   lateinit var executeSimpleActionUseCase: ExecuteSimpleActionUseCase
 
   @Mock
-  lateinit var callConfigCommandUseCase: CallConfigCommandUseCase
+  lateinit var callSuplaClientOperationUseCase: CallSuplaClientOperationUseCase
 
   @Mock
   lateinit var readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase
@@ -108,7 +126,13 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
     val position = 33
     val bottomPosition = 87
 
-    mockOnlineChannel(remoteId, position, bottomPosition, listOf(SuplaRollerShutterFlag.MOTOR_PROBLEM))
+    mockOnlineChannel(
+      remoteId,
+      position,
+      bottomPosition,
+      listOf(SuplaRollerShutterFlag.MOTOR_PROBLEM),
+      listOf(SuplaChannelFlag.CALCFG_RECALIBRATE)
+    )
 
     // when
     viewModel.loadData(remoteId, ItemType.CHANNEL)
@@ -209,6 +233,7 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
       every { this@mockk.remoteId } returns remoteId
       every { function } returns SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW
       every { channelValueEntity } returns value
+      every { flags } returns 0
     }
     whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channelData))
 
@@ -225,7 +250,6 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
           enabled = false,
           showClosingPercentage = true,
           positionUnknown = true,
-          calibrationPossible = true,
           calibrating = true,
           positionText = "0%",
           windowType = WindowType.ROOF_WINDOW
@@ -268,14 +292,14 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
   fun `should move up blinds`() {
     // given
     val remoteId = 122
-    whenever(executeSimpleActionUseCase.invoke(ActionId.REVEAL, SubjectType.CHANNEL, remoteId))
+    whenever(callSuplaClientOperationUseCase.invoke(remoteId, ItemType.GROUP, SuplaClientOperation.MoveUp))
       .thenReturn(Completable.complete())
 
     // when
-    viewModel.handleAction(BlindsAction.MoveUp, remoteId, ItemType.CHANNEL)
+    viewModel.handleAction(BlindsAction.MoveUp, remoteId, ItemType.GROUP)
 
     // then
-    verify(executeSimpleActionUseCase).invoke(ActionId.REVEAL, SubjectType.CHANNEL, remoteId)
+    verify(callSuplaClientOperationUseCase).invoke(remoteId, ItemType.GROUP, SuplaClientOperation.MoveUp)
     assertThat(states).isEmpty()
   }
 
@@ -284,7 +308,7 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
     // given
     val remoteId = 122
     val timestamp = 22232L
-    whenever(executeSimpleActionUseCase.invoke(ActionId.REVEAL, SubjectType.CHANNEL, remoteId))
+    whenever(callSuplaClientOperationUseCase.invoke(remoteId, ItemType.CHANNEL, SuplaClientOperation.MoveUp))
       .thenReturn(Completable.complete())
     whenever(dateProvider.currentTimestamp()).thenReturn(timestamp)
     mockOnlineChannel(remoteId, hasValidPosition = false)
@@ -294,7 +318,7 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
     viewModel.handleAction(BlindsAction.MoveUp, remoteId, ItemType.CHANNEL)
 
     // then
-    verify(executeSimpleActionUseCase).invoke(ActionId.REVEAL, SubjectType.CHANNEL, remoteId)
+    verify(callSuplaClientOperationUseCase).invoke(remoteId, ItemType.CHANNEL, SuplaClientOperation.MoveUp)
     val state = BlindsGeneralModelState(
       remoteId = remoteId,
       rollerState = WindowState(0f),
@@ -302,7 +326,6 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
         issues = emptyList(),
         enabled = true,
         showClosingPercentage = true,
-        calibrationPossible = true,
         positionUnknown = true,
         positionText = "0%"
       )
@@ -317,14 +340,14 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
   fun `should move down blinds`() {
     // given
     val remoteId = 122
-    whenever(executeSimpleActionUseCase.invoke(ActionId.SHUT, SubjectType.CHANNEL, remoteId))
+    whenever(callSuplaClientOperationUseCase.invoke(remoteId, ItemType.CHANNEL, SuplaClientOperation.MoveDown))
       .thenReturn(Completable.complete())
 
     // when
     viewModel.handleAction(BlindsAction.MoveDown, remoteId, ItemType.CHANNEL)
 
     // then
-    verify(executeSimpleActionUseCase).invoke(ActionId.SHUT, SubjectType.CHANNEL, remoteId)
+    verify(callSuplaClientOperationUseCase).invoke(remoteId, ItemType.CHANNEL, SuplaClientOperation.MoveDown)
     assertThat(states).isEmpty()
   }
 
@@ -333,17 +356,17 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
     // given
     val remoteId = 122
     val timestamp = 22232L
-    whenever(executeSimpleActionUseCase.invoke(ActionId.SHUT, SubjectType.CHANNEL, remoteId))
+    whenever(callSuplaClientOperationUseCase.invoke(remoteId, ItemType.CHANNEL, SuplaClientOperation.MoveDown))
       .thenReturn(Completable.complete())
     whenever(dateProvider.currentTimestamp()).thenReturn(timestamp)
-    mockOnlineChannel(remoteId, hasValidPosition = false)
+    mockOnlineChannel(remoteId, hasValidPosition = false, channelFlags = listOf(SuplaChannelFlag.CALCFG_RECALIBRATE))
 
     // when
     viewModel.loadData(remoteId, ItemType.CHANNEL)
     viewModel.handleAction(BlindsAction.MoveDown, remoteId, ItemType.CHANNEL)
 
     // then
-    verify(executeSimpleActionUseCase).invoke(ActionId.SHUT, SubjectType.CHANNEL, remoteId)
+    verify(callSuplaClientOperationUseCase).invoke(remoteId, ItemType.CHANNEL, SuplaClientOperation.MoveDown)
     val state = BlindsGeneralModelState(
       remoteId = remoteId,
       rollerState = WindowState(0f),
@@ -383,7 +406,7 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
     val remoteId = 122
     val timestamp = 22232L
     val afterTimestamp = 25232L
-    whenever(executeSimpleActionUseCase.invoke(ActionId.SHUT, SubjectType.CHANNEL, remoteId))
+    whenever(callSuplaClientOperationUseCase.invoke(remoteId, ItemType.CHANNEL, SuplaClientOperation.MoveDown))
       .thenReturn(Completable.complete())
     whenever(executeSimpleActionUseCase.invoke(ActionId.STOP, SubjectType.CHANNEL, remoteId))
       .thenReturn(Completable.complete())
@@ -396,7 +419,7 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
     viewModel.handleAction(BlindsAction.Stop, remoteId, ItemType.CHANNEL)
 
     // then
-    verify(executeSimpleActionUseCase).invoke(ActionId.SHUT, SubjectType.CHANNEL, remoteId)
+    verify(callSuplaClientOperationUseCase).invoke(remoteId, ItemType.CHANNEL, SuplaClientOperation.MoveDown)
     verify(executeSimpleActionUseCase).invoke(ActionId.STOP, SubjectType.CHANNEL, remoteId)
     val state = BlindsGeneralModelState(
       remoteId = remoteId,
@@ -405,7 +428,6 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
         issues = emptyList(),
         enabled = true,
         showClosingPercentage = true,
-        calibrationPossible = true,
         positionUnknown = true,
         positionText = "0%"
       )
@@ -470,7 +492,7 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
   fun `shouldn't change roller position when calibrating`() {
     // given
     val remoteId = 122
-    mockOnlineChannel(remoteId, flags = listOf(SuplaRollerShutterFlag.CALIBRATION_IN_PROGRESS))
+    mockOnlineChannel(remoteId, valueFlags = listOf(SuplaRollerShutterFlag.CALIBRATION_IN_PROGRESS))
 
     // when
     viewModel.loadData(remoteId, ItemType.CHANNEL)
@@ -484,7 +506,6 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
         issues = emptyList(),
         enabled = true,
         showClosingPercentage = true,
-        calibrationPossible = true,
         calibrating = true,
         positionText = "0%"
       )
@@ -497,7 +518,7 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
   fun `shouldn't change roller position on view when calibrating`() {
     // given
     val remoteId = 122
-    mockOnlineChannel(remoteId, flags = listOf(SuplaRollerShutterFlag.CALIBRATION_IN_PROGRESS))
+    mockOnlineChannel(remoteId, valueFlags = listOf(SuplaRollerShutterFlag.CALIBRATION_IN_PROGRESS))
 
     // when
     viewModel.loadData(remoteId, ItemType.CHANNEL)
@@ -511,7 +532,6 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
         issues = emptyList(),
         enabled = true,
         showClosingPercentage = true,
-        calibrationPossible = true,
         calibrating = true,
         positionText = "0%"
       )
@@ -574,7 +594,7 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
     // given
     val remoteId = 122
     mockOnlineChannel(remoteId)
-    whenever(callConfigCommandUseCase.invoke(remoteId, ItemType.CHANNEL, SuplaConfigCommand.RECALIBRATE))
+    whenever(callSuplaClientOperationUseCase.invoke(remoteId, ItemType.CHANNEL, SuplaClientOperation.Command.Recalibrate))
       .thenReturn(Completable.complete())
 
     // when
@@ -589,13 +609,12 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
         issues = emptyList(),
         enabled = true,
         showClosingPercentage = true,
-        calibrationPossible = true,
         positionUnknown = false,
         positionText = "0%"
       )
     )
     assertThat(states).containsExactly(state)
-    verify(callConfigCommandUseCase).invoke(remoteId, ItemType.CHANNEL, SuplaConfigCommand.RECALIBRATE)
+    verify(callSuplaClientOperationUseCase).invoke(remoteId, ItemType.CHANNEL, SuplaClientOperation.Command.Recalibrate)
     verifyZeroInteractions(executeBlindsActionUseCase, executeSimpleActionUseCase)
   }
 
@@ -603,14 +622,15 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
     remoteId: Int,
     position: Int = 0,
     bottomPosition: Int = 100,
-    flags: List<SuplaRollerShutterFlag> = listOf(),
+    valueFlags: List<SuplaRollerShutterFlag> = emptyList(),
+    channelFlags: List<SuplaChannelFlag> = emptyList(),
     hasValidPosition: Boolean = true,
     function: Int = SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
   ) {
     val rollerShutterValue: RollerShutterValue = mockk {
       every { this@mockk.position } returns position
       every { this@mockk.bottomPosition } returns bottomPosition
-      every { this@mockk.flags } returns flags
+      every { this@mockk.flags } returns valueFlags
       every { hasValidPosition() } returns hasValidPosition
       every { online } returns true
     }
@@ -621,6 +641,7 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
       every { this@mockk.remoteId } returns remoteId
       every { this@mockk.function } returns function
       every { channelValueEntity } returns value
+      every { flags } returns channelFlags.fold(0L) { result, flag -> result or flag.rawValue }
     }
 
     whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channelData))

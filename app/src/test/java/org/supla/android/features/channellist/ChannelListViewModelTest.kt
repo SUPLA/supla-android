@@ -631,9 +631,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
       every { this@mockk.deviceId } returns deviceId
     }
     val channelValueEntity: ChannelValueEntity = mockk {
-      subValueType?.let {
-        every { this@mockk.subValueType } returns it
-      }
+      every { this@mockk.subValueType } returns (subValueType ?: 0)
     }
     val channel = mockk<ChannelDataEntity> {
       every { this@mockk.function } returns function
