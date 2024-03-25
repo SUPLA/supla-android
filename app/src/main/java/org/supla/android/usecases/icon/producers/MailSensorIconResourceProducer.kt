@@ -29,10 +29,7 @@ class MailSensorIconResourceProducer : IconResourceProducer {
 
   override fun produce(data: IconData): Int =
     when (data.state.value) {
-      ChannelState.Value.ON ->
-        data.icon(R.drawable.mail, R.drawable.mail_nightmode)
-
-      else ->
-        data.icon(R.drawable.nomail, R.drawable.nomail_nightmode)
+      ChannelState.Value.ON -> R.drawable.mail
+      else -> R.drawable.nomail
     }
 }

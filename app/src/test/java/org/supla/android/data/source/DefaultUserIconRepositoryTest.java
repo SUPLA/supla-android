@@ -99,7 +99,7 @@ public class DefaultUserIconRepositoryTest {
     verify(userIconDao).insert(eq(id), insertedImagesCaptor.capture());
     ArgumentCaptor<UserIconDao.Image> cachedImagesCaptor =
         ArgumentCaptor.forClass(UserIconDao.Image.class);
-    verify(imageCacheProxy, times(4)).addImage(eq(id), cachedImagesCaptor.capture());
+    verify(imageCacheProxy, times(4)).addUserImage(eq(id), cachedImagesCaptor.capture());
     verifyNoMoreInteractions(userIconDao, imageCacheProxy);
 
     UserIconDao.Image[] insertedImages = insertedImagesCaptor.getValue();

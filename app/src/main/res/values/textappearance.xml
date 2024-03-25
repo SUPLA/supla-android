@@ -2,6 +2,7 @@
 <resources>
   <style name="AppTheme.TextAppearance">
     <item name="android:fontFamily">@font/open_sans_regular</item>
+    <item name="android:textColor">@color/on_background</item>
   </style>
 
   <style name="AppTheme.TextAppearance.Headline1">

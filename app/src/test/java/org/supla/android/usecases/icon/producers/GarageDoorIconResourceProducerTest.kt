@@ -57,34 +57,4 @@ class GarageDoorIconResourceProducerTest : BaseIconResourceProducerTest() {
       expectedIcon = R.drawable.garagedoorclosed50percent
     )
   }
-
-  @Test
-  fun `should produce open icon (night mode)`() {
-    test(
-      state = ChannelState.Value.OPEN,
-      function = SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR,
-      expectedIcon = R.drawable.garagedooropen_nightmode,
-      nightMode = true
-    )
-  }
-
-  @Test
-  fun `should produce closed icon (night mode)`() {
-    test(
-      state = ChannelState.Value.CLOSED,
-      function = SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR,
-      expectedIcon = R.drawable.garagedoorclosed_nightmode,
-      nightMode = true
-    )
-  }
-
-  @Test
-  fun `should produce partially opened icon (night mode)`() {
-    test(
-      state = ChannelState.Value.PARTIALLY_OPENED,
-      function = SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GARAGEDOOR,
-      expectedIcon = R.drawable.garagedoorclosed50percent_nightmode,
-      nightMode = true
-    )
-  }
 }

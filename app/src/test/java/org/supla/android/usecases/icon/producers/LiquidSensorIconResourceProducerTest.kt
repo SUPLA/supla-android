@@ -48,24 +48,4 @@ class LiquidSensorIconResourceProducerTest : BaseIconResourceProducerTest() {
       expectedIcon = R.drawable.noliquid
     )
   }
-
-  @Test
-  fun `should produce on icon (night mode)`() {
-    test(
-      state = ChannelState.Value.ON,
-      function = SuplaConst.SUPLA_CHANNELFNC_NOLIQUIDSENSOR,
-      expectedIcon = R.drawable.liquid_nightmode,
-      nightMode = true
-    )
-  }
-
-  @Test
-  fun `should produce off icon (night mode)`() {
-    test(
-      state = ChannelState.Value.OFF,
-      function = SuplaConst.SUPLA_CHANNELFNC_NOLIQUIDSENSOR,
-      expectedIcon = R.drawable.noliquid_nightmode,
-      nightMode = true
-    )
-  }
 }

@@ -888,7 +888,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
       }
       setTypeface(SuplaApp.getApp().getTypefaceOpenSansBold());
       setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
-      setTextColor(getResources().getColor(R.color.channel_caption_text));
+      setTextColor(getResources().getColor(R.color.on_background));
       setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL);
 
       RelativeLayout.LayoutParams lp =
@@ -979,7 +979,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
 
       Text.setMaxLines(1);
 
-      Text.setTextColor(getResources().getColor(R.color.channel_imgtext_color));
+      Text.setTextColor(getResources().getColor(R.color.on_background));
       Text.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
 
       return Text;

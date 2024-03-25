@@ -444,7 +444,7 @@
   <string name="location_name">Názov miesta</string>
   <string name="overcurrent_warning">Napájanie bolo vypnuté po prekročení nastavenej prahovej hodnoty povoleného prúdu.</string>
   <string name="overcurrent_question">Napájanie bolo vypnuté po prekročení nastavenej prahovej hodnoty povoleného prúdu. Naozaj chcete zapnúť napájanie?</string>
-  <string name="blinds_start_calibration_message">Naozaj chcete spustiť kalibráciu?</string>
+  <string name="roller_shutter_start_calibration_message">Naozaj chcete spustiť kalibráciu?</string>
   <string name="calibration_failed">Kalibrácia zlyhala.</string>
   <string name="calibration_lost">Kalibrácia bola odstránená.</string>
   <string name="motor_problem">Problém s motorom / Neočakávané zastavenie.</string>
@@ -467,5 +467,5 @@
   <string name="rs_display_mode_closing">Zatvorenia</string>
   <string name="status_accessid_inactive">Prístupový identifikátor nie je aktívny</string>
   <string name="hour_string_format">HH:mm:ss</string>
- <string name="blinds_start_calibration_title">Kalibrácia</string>
+ <string name="roller_shutter_calibration">Kalibrácia</string>
 </resources>

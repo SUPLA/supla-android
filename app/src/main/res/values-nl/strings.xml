@@ -431,7 +431,7 @@
   <string name="location_name">Naam van de plaats</string>
   <string name="overcurrent_warning">De stroomvoorziening werd uitgeschakeld toen de ingestelde stroomlimiet werd overschreden.</string>
   <string name="overcurrent_question">De stroomvoorziening werd uitgeschakeld toen de ingestelde stroomlimiet werd overschreden. Weet je zeker dat je de stroom aan wilt zetten ?</string>
-  <string name="blinds_start_calibration_message">Weet je zeker dat je met het ijken wilt beginnen?</string>
+  <string name="roller_shutter_start_calibration_message">Weet je zeker dat je met het ijken wilt beginnen?</string>
   <string name="calibration_failed">De ijking is mislukt.</string>
   <string name="calibration_lost">De ijking is verloren gegaan.</string>
   <string name="motor_problem">Motorprobleem / Onverwachte stilstand.</string>
@@ -454,5 +454,5 @@
   <string name="rs_display_mode_closing">Sluitingen</string>
   <string name="status_accessid_inactive">Toegangs ID inactief</string>
   <string name="hour_string_format">HH:mm:ss</string>
-  <string name="blinds_start_calibration_title">Kalibratie</string>
+  <string name="roller_shutter_calibration">Kalibratie</string>
 </resources>

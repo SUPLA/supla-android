@@ -36,15 +36,15 @@ class DigiglassIconResourceProducer : IconResourceProducer {
   override fun produce(data: IconData): Int =
     when (data.altIcon) {
       1 -> if (data.state.value == ChannelState.Value.OPAQUE) {
-        data.icon(R.drawable.digiglass1, R.drawable.digiglass1_nightmode)
+        R.drawable.digiglass1
       } else {
-        data.icon(R.drawable.digiglasstransparent1, R.drawable.digiglasstransparent1_nightmode)
+        R.drawable.digiglasstransparent1
       }
 
       else -> if (data.state.value == ChannelState.Value.OPAQUE) {
-        data.icon(R.drawable.digiglass, R.drawable.digiglass_nightmode)
+        R.drawable.digiglass
       } else {
-        data.icon(R.drawable.digiglasstransparent, R.drawable.digiglasstransparent_nightmode)
+        R.drawable.digiglasstransparent
       }
     }
 }

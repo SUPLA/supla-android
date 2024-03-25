@@ -53,8 +53,8 @@ class BlindsGeneralFragment : BaseFragment<BlindsGeneralModelState, BlindsGenera
       SuplaTheme {
         if (modelState.showCalibrationDialog) {
           AlertDialog(
-            title = stringResource(id = R.string.blinds_start_calibration_title),
-            message = stringResource(id = R.string.blinds_start_calibration_message),
+            title = stringResource(id = R.string.roller_shutter_calibration),
+            message = stringResource(id = R.string.roller_shutter_start_calibration_message),
             positiveButtonTitle = stringResource(id = R.string.yes),
             negativeButtonTitle = stringResource(id = R.string.no),
             onPositiveClick = { viewModel.startCalibration() },

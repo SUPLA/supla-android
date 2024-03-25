@@ -394,7 +394,7 @@
   <string name="dgf_too_long_operation_warning">Le sezioni di vetro sono esposte per più di 20 ore, questo può influire negativamente sulla loro durata. Si consiglia di coprire tutte le sezioni per un minimo di 4 ore per rigenerarle.</string>
   <string name="dgf_planned_regeneration_in_progress">Rigenerazione pianificata in corso.</string>
   <string name="dgf_regeneration_after20h">Rigenerazione avviata dopo 20 ore di funzionamento in corso.</string>
-  <string name="blinds_start_calibration_message">Confermi di voler avviare la calibrazione?</string>
+  <string name="roller_shutter_start_calibration_message">Confermi di voler avviare la calibrazione?</string>
   <string name="calibration_failed">Calibrazione fallita.</string>
   <string name="calibration_lost">Calibrazione persa.</string>
   <string name="motor_problem">Problema al motore / Arresto inaspettato.</string>
@@ -468,6 +468,6 @@
   <string name="btn_abort">Stop</string>
   <string name="btn_abort_and_execute">Stop &amp; start</string>
   <string name="hour_string_format">HH:mm:ss</string>
- <string name="blinds_start_calibration_title">Calibrazione</string>
+ <string name="roller_shutter_calibration">Calibrazione</string>
 
 </resources>

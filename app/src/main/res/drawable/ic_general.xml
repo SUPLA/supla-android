@@ -5,5 +5,5 @@
     android:viewportHeight="21">
   <path
       android:pathData="M1.875,19.25H6.563V11.958H13.438V19.25H18.125V7.875L10,2.188L1.875,7.875V19.25ZM0,21V7L10,0L20,7V21H11.563V13.708H8.438V21H0Z"
-      android:fillColor="@color/supla_text_light"/>
+      android:fillColor="@color/on_background"/>
 </vector>

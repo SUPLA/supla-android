@@ -55,21 +55,6 @@ class GetSceneIconUseCaseTest {
   }
 
   @Test
-  fun `should get night icon`() {
-    // given
-    val scene: SceneEntity = mockk {
-      every { userIcon } returns 0
-      every { altIcon } returns 5
-    }
-
-    // when
-    val imageId = useCase.invoke(scene, true)
-
-    // then
-    assertThat(imageId.id).isEqualTo(R.drawable.scene5_nightmode)
-  }
-
-  @Test
   fun `should get user icon`() {
     // given
     val userIconId = 3
@@ -83,7 +68,7 @@ class GetSceneIconUseCaseTest {
     whenever(imageCacheProxy.bitmapExists(eq(ImageId(userIconId, 1, 123L)))).thenReturn(true)
 
     // when
-    val imageId = useCase.invoke(scene, true)
+    val imageId = useCase.invoke(scene)
 
     // then
     assertThat(imageId.id).isEqualTo(userIconId)

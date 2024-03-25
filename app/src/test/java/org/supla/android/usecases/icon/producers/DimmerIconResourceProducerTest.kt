@@ -48,24 +48,4 @@ class DimmerIconResourceProducerTest : BaseIconResourceProducerTest() {
       expectedIcon = R.drawable.dimmeroff
     )
   }
-
-  @Test
-  fun `should produce on icon (night mode)`() {
-    test(
-      state = ChannelState.Value.ON,
-      function = SuplaConst.SUPLA_CHANNELFNC_DIMMER,
-      expectedIcon = R.drawable.dimmeron_nightmode,
-      nightMode = true
-    )
-  }
-
-  @Test
-  fun `should produce off icon (night mode)`() {
-    test(
-      state = ChannelState.Value.OFF,
-      function = SuplaConst.SUPLA_CHANNELFNC_DIMMER,
-      expectedIcon = R.drawable.dimmeroff_nightmode,
-      nightMode = true
-    )
-  }
 }

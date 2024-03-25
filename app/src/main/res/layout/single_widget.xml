@@ -13,7 +13,7 @@
       android:ellipsize="end"
       android:gravity="center"
       android:maxLines="1"
-      android:textColor="@color/widget_text"
+      android:textColor="@color/on_background"
       android:textSize="12sp" />
 
   <ImageButton
@@ -47,7 +47,7 @@
       android:layout_centerInParent="true"
       android:gravity="center"
       android:text="@string/widget_removed_label"
-      android:textColor="@color/widget_text"
+      android:textColor="@color/on_background"
       android:textSize="16sp"
       android:visibility="gone" />
 

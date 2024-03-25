@@ -14,7 +14,7 @@
     android:id="@+id/cfg"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/activity_bg"
+    android:background="@color/background"
     android:orientation="vertical">
 
     <androidx.appcompat.widget.SwitchCompat
@@ -65,13 +65,13 @@
 
           <View
             android:layout_width="match_parent"
-            android:layout_height="50dp" />
+            android:layout_height="25dp" />
         </LinearLayout>
       </ScrollView>
 
       <View
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="25dp"
         android:layout_gravity="bottom"
         android:background="@drawable/gradient_shape" />
     </FrameLayout>
@@ -95,13 +95,12 @@
 
       <TextView
         android:id="@+id/dont_have_account_text"
-        style="@style/FormLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/cfg_save"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="0dp"
-        android:fontFamily="@font/open_sans_regular"
+        android:textAppearance="@style/AppTheme.TextAppearance.Body2"
         android:gravity="center_horizontal"
         android:singleLine="false"
         android:text="@string/dont_have_account_yet" />

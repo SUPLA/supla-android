@@ -10,5 +10,5 @@
     android:lineSpacingExtra="4dp"
     android:maxLines="2"
     android:padding="5dp"
-    android:textColor="@color/widget_text"
+    android:textColor="@color/on_background"
     android:textSize="13sp" />

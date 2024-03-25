@@ -48,24 +48,4 @@ class MailSensorIconResourceProducerTest : BaseIconResourceProducerTest() {
       expectedIcon = R.drawable.nomail
     )
   }
-
-  @Test
-  fun `should produce on icon (night mode)`() {
-    test(
-      state = ChannelState.Value.ON,
-      function = SuplaConst.SUPLA_CHANNELFNC_MAILSENSOR,
-      expectedIcon = R.drawable.mail_nightmode,
-      nightMode = true
-    )
-  }
-
-  @Test
-  fun `should produce off icon (night mode)`() {
-    test(
-      state = ChannelState.Value.OFF,
-      function = SuplaConst.SUPLA_CHANNELFNC_MAILSENSOR,
-      expectedIcon = R.drawable.nomail_nightmode,
-      nightMode = true
-    )
-  }
 }

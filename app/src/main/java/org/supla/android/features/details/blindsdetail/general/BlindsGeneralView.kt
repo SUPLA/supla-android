@@ -447,13 +447,11 @@ private fun Top(
       } else if (!viewState.positionUnknown) {
         PercentageLabelView(showClosingPercentage = viewState.showClosingPercentage)
         PercentageValueView(viewState.positionText)
+      } else if (viewState.isGroup) {
+        PercentageLabelView(showClosingPercentage = viewState.showClosingPercentage)
+        PercentageValueView("---")
       } else {
-        if (viewState.isGroup) {
-          PercentageLabelView(showClosingPercentage = viewState.showClosingPercentage)
-          PercentageValueView("---")
-        } else {
-          TopTextLabelView(text = stringResource(id = R.string.blinds_calibration_needed))
-        }
+        TopTextLabelView(text = stringResource(id = R.string.blinds_calibration_needed))
       }
 
       Spacer(modifier = Modifier.weight(1f))

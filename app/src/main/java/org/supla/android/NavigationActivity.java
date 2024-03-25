@@ -182,7 +182,7 @@ public class NavigationActivity extends BaseActivity
 
       ContentLayout = new RelativeLayout(this);
       ContentLayout.setId(ViewHelper.generateViewId());
-      ContentLayout.setBackgroundColor(getResources().getColor(R.color.activity_bg));
+      ContentLayout.setBackgroundColor(getResources().getColor(R.color.background));
 
       RelativeLayout.LayoutParams lp =
           new RelativeLayout.LayoutParams(

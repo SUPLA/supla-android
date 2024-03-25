@@ -10,9 +10,10 @@ fun SuplaTheme(
   darkMode: Boolean = isSystemInDarkTheme(),
   content: @Composable () -> Unit
 ) {
+  val colors = if (darkMode) SuplaDarkColors(LocalContext.current).toMaterial() else SuplaLightColors(LocalContext.current).toMaterial()
   MaterialTheme(
-    colors = if (darkMode) SuplaDarkColors(LocalContext.current).toMaterial() else SuplaLightColors(LocalContext.current).toMaterial(),
-    typography = SuplaTypography,
+    colors = colors,
+    typography = SuplaTypography(colors),
     content = content
   )
 }

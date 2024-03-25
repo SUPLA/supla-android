@@ -1,94 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@color/background"
+  android:clickable="true"
+  android:focusableInTouchMode="true"
+  tools:context="org.supla.android.CfgActivity">
+
+  <TextView
+    android:id="@+id/cfg_label_svr_address"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/about_project_name"
+    android:layout_alignParentEnd="true"
+    android:layout_alignParentRight="true"
+    android:layout_marginTop="10dp"
+    android:gravity="center_horizontal"
+    android:text="@string/version"
+    android:textColor="@color/on_background"
+    android:textSize="25sp" />
+
+  <androidx.appcompat.widget.AppCompatImageView
+    android:id="@+id/imageView"
+    android:layout_width="350dp"
+    android:layout_height="350dp"
+    android:layout_alignParentLeft="false"
+    android:layout_alignParentTop="true"
+    android:layout_alignParentRight="false"
+    android:layout_centerHorizontal="true"
+    android:layout_marginTop="50dp"
+    android:src="@drawable/logosupla"
+    tools:ignore="ContentDescription"
+    android:tint="@color/on_primary" />
+
+  <TextView
+    android:id="@+id/about_project_name"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/imageView"
+    android:layout_centerHorizontal="true"
+    android:layout_marginTop="10dp"
+    android:gravity="center_horizontal"
+    android:text="@string/menubar_title"
+    android:textColor="@color/on_background"
+    android:textSize="60sp" />
+
+  <RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/activity_bg"
-    android:clickable="true"
-    android:focusableInTouchMode="true"
-    tools:context="org.supla.android.CfgActivity">
+    android:layout_below="@+id/cfg_label_svr_address">
 
-    <TextView
-        android:id="@+id/cfg_label_svr_address"
+    <ScrollView
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_above="@+id/about_homepage"
+      android:layout_alignParentStart="false"
+      android:layout_alignParentLeft="false"
+      android:layout_alignParentEnd="false"
+      android:layout_alignParentRight="false"
+      android:layout_alignParentBottom="false"
+      android:layout_centerHorizontal="true"
+      android:layout_marginLeft="10dp"
+      android:layout_marginTop="5dp"
+      android:layout_marginRight="10dp"
+      android:layout_marginBottom="5dp"
+      android:fillViewport="true"
+      android:scrollbars="vertical">
+
+      <TextView
+        android:id="@+id/about_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/about_project_name"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="10dp"
         android:gravity="center_horizontal"
-        android:text="@string/version"
-        android:textColor="@android:color/black"
-        android:textSize="25sp" />
+        android:text="@string/about_app"
+        android:textColor="@color/on_background"
+        android:textSize="18sp" />
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="350dp"
-        android:layout_height="350dp"
-        android:layout_alignParentLeft="false"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="false"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
-        android:background="@drawable/logosupla"
-        tools:ignore="ContentDescription" />
+    </ScrollView>
 
-    <TextView
-        android:id="@+id/about_project_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/imageView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:gravity="center_horizontal"
-        android:text="@string/menubar_title"
-        android:textColor="@android:color/black"
-        android:textSize="60sp" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/cfg_label_svr_address">
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/about_homepage"
-            android:layout_alignParentStart="false"
-            android:layout_alignParentLeft="false"
-            android:layout_alignParentEnd="false"
-            android:layout_alignParentRight="false"
-            android:layout_alignParentBottom="false"
-            android:layout_centerHorizontal="true"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="5dp"
-            android:fillViewport="true"
-            android:scrollbars="vertical">
-
-            <TextView
-                android:id="@+id/about_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:text="@string/about_app"
-                android:textColor="@android:color/black"
-                android:textSize="18sp" />
-
-        </ScrollView>
-
-        <Button
-            android:id="@+id/about_homepage"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="32dp"
-            android:background="@color/activity_bg"
-            android:text="@string/homepage"
-            android:textSize="20sp" />
-    </RelativeLayout>
+    <Button
+      android:id="@+id/about_homepage"
+      style="?android:attr/borderlessButtonStyle"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignParentBottom="true"
+      android:layout_centerHorizontal="true"
+      android:layout_marginBottom="32dp"
+      android:background="@color/background"
+      android:text="@string/homepage"
+      android:textSize="20sp" />
+  </RelativeLayout>
 
 </RelativeLayout>

@@ -35,10 +35,7 @@ class RoofWindowIconResourceProducer : IconResourceProducer {
 
   override fun produce(data: IconData): Int =
     when (data.state.value) {
-      ChannelState.Value.OPEN ->
-        data.icon(R.drawable.roofwindowopen, R.drawable.roofwindowopen_nightmode)
-
-      else ->
-        data.icon(R.drawable.roofwindowclosed, R.drawable.roofwindowclosed_nightmode)
+      ChannelState.Value.OPEN -> R.drawable.roofwindowopen
+      else -> R.drawable.roofwindowclosed
     }
 }

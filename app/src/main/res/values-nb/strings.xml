@@ -431,7 +431,7 @@
   <string name="location_name">Stedsnavn</string>
   <string name="overcurrent_warning">Strømmen ble slått av etter at den innstilte terskelen for den tillatte strømmen ble overskredet.</string>
   <string name="overcurrent_question">Strømmen ble slått av etter at den innstilte terskelen for den tillatte strømmen ble overskredet. Er du sikker på at du vil slå på?</string>
-  <string name="blinds_start_calibration_message">Er du sikker på at du vil starte kalibrering?</string>
+  <string name="roller_shutter_start_calibration_message">Er du sikker på at du vil starte kalibrering?</string>
   <string name="calibration_failed">Kalibrering mislyktes.</string>
   <string name="calibration_lost">Kalibrering tapt.</string>
   <string name="motor_problem">Motorproblem / Uventet stopp.</string>
@@ -454,5 +454,5 @@
   <string name="rs_display_mode_closing">Nedleggelser</string>
   <string name="status_accessid_inactive">Tilgangs-ID inaktiv</string>
   <string name="hour_string_format">HH:mm:ss</string>
-  <string name="blinds_start_calibration_title">Kalibrering</string>
+  <string name="roller_shutter_calibration">Kalibrering</string>
 </resources>

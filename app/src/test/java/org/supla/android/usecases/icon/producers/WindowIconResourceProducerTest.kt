@@ -48,24 +48,4 @@ class WindowIconResourceProducerTest : BaseIconResourceProducerTest() {
       expectedIcon = R.drawable.windowclosed
     )
   }
-
-  @Test
-  fun `should produce open icon (night mode)`() {
-    test(
-      state = ChannelState.Value.OPEN,
-      function = SuplaConst.SUPLA_CHANNELFNC_OPENINGSENSOR_WINDOW,
-      expectedIcon = R.drawable.windowopen_nightmode,
-      nightMode = true
-    )
-  }
-
-  @Test
-  fun `should produce closed icon (night mode)`() {
-    test(
-      state = ChannelState.Value.CLOSED,
-      function = SuplaConst.SUPLA_CHANNELFNC_OPENINGSENSOR_WINDOW,
-      expectedIcon = R.drawable.windowclosed_nightmode,
-      nightMode = true
-    )
-  }
 }

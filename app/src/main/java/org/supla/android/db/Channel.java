@@ -424,7 +424,7 @@ public class Channel extends ChannelBase {
           }
         }
 
-        return R.drawable.channelstateinfo;
+        return R.drawable.ic_info;
       }
     }
 

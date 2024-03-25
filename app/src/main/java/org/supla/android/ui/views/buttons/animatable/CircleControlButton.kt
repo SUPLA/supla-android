@@ -26,6 +26,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -41,7 +42,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
 import org.supla.android.core.ui.theme.SuplaTheme
-import org.supla.android.core.ui.theme.SuplaTypography
 import org.supla.android.ui.views.buttons.IconWrapper
 
 // special colors
@@ -112,7 +112,7 @@ fun CircleControlButton(
     ) {
       IconWrapper(bitmap = icon, painter = iconPainter)
       text?.let {
-        Text(text = text, style = SuplaTypography.button, color = textColor)
+        Text(text = text, style = MaterialTheme.typography.button, color = textColor)
       }
     }
 

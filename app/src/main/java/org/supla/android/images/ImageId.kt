@@ -21,7 +21,8 @@ data class ImageId(
   val id: Int,
   val subId: Int = 0,
   val profileId: Long = 0,
-  val userImage: Boolean = false
+  val userImage: Boolean = false,
+  var nightMode: Boolean = false
 ) {
 
   constructor(id: Int) : this(id, 0, 0, false)

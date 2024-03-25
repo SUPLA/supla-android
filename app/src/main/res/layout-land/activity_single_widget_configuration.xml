@@ -27,7 +27,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:text="@string/widget_configure_title"
-        android:textColor="@color/widget_text"
+        android:textColor="@color/on_background"
         android:textSize="34sp"
         app:layout_constraintEnd_toStartOf="@+id/widget_single_configure_close"
         app:layout_constraintTop_toTopOf="parent" />

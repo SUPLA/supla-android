@@ -58,31 +58,4 @@ class HumidityAndTemperatureIconResourceProducerTest : BaseIconResourceProducerT
       expectedIcon = R.drawable.thermometer
     )
   }
-
-  @Test
-  fun `should produce humidity icon (night mode)`() {
-    test(
-      data = mockIconData(stateValue = ChannelState.Value.NOT_USED, type = IconType.SECOND, nightMode = true),
-      function = SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE,
-      expectedIcon = R.drawable.humidity_nightmode
-    )
-  }
-
-  @Test
-  fun `should produce thermometer icon (night mode)`() {
-    test(
-      data = mockIconData(stateValue = ChannelState.Value.NOT_USED, type = IconType.FIRST, nightMode = true),
-      function = SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE,
-      expectedIcon = R.drawable.thermometer_nightmode
-    )
-  }
-
-  @Test
-  fun `should produce thermometer icon also for single type (night mode)`() {
-    test(
-      data = mockIconData(stateValue = ChannelState.Value.NOT_USED, type = IconType.SINGLE, nightMode = true),
-      function = SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE,
-      expectedIcon = R.drawable.thermometer_nightmode
-    )
-  }
 }

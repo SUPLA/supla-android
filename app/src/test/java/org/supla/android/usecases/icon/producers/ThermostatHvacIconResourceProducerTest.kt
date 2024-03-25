@@ -17,7 +17,6 @@ package org.supla.android.usecases.icon.producers
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.InjectMocks
@@ -55,8 +54,7 @@ class ThermostatHvacIconResourceProducerTest : BaseIconResourceProducerTest() {
     test(
       state = ChannelState.Value.HEAT,
       function = SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT,
-      expectedIcon = R.drawable.fnc_thermostat_heat_nm,
-      nightMode = true
+      expectedIcon = R.drawable.fnc_thermostat_heat
     )
   }
 
@@ -65,8 +63,7 @@ class ThermostatHvacIconResourceProducerTest : BaseIconResourceProducerTest() {
     test(
       state = ChannelState.Value.COOL,
       function = SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT,
-      expectedIcon = R.drawable.fnc_thermostat_cool_nm,
-      nightMode = true
+      expectedIcon = R.drawable.fnc_thermostat_cool
     )
   }
 }

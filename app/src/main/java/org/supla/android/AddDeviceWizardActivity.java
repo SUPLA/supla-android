@@ -981,7 +981,7 @@ public class AddDeviceWizardActivity extends WizardActivity
     }
 
     ArrayAdapter<String> spinnerArrayAdapter =
-        new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, spinnerArray);
+        new ArrayAdapter<>(this, R.layout.li_spinner_text, spinnerArray);
     spWifiList.setAdapter(spinnerArrayAdapter);
     onWifiSelectionChange();
 

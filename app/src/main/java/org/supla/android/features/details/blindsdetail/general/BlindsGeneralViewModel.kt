@@ -116,7 +116,7 @@ class BlindGeneralViewModel @Inject constructor(
       is BlindsAction.OpenAt -> {
         updateState {
           if (it.viewState.calibrating) {
-            // When calibration open/close time is not known so it's not possible to open window at expected position
+            // During calibration the open/close time is not known so it's not possible to open window at expected position
             it
           } else {
             executeBlindsActionUseCase.invoke(ActionId.SHUT_PARTIALLY, itemType.toSubjectType(), remoteId, action.position).runIt()
@@ -236,7 +236,7 @@ class BlindGeneralViewModel @Inject constructor(
       it.copy(
         remoteId = group.groupDataEntity.remoteId,
         rollerState = WindowState(
-          position = overallPosition.position,
+          position = if (group.groupDataEntity.isOnline()) overallPosition.position else 25f,
           markers = if (overallPosition is GroupPercentage.Different) positions else emptyList(),
         ),
         viewState = it.viewState.copy(
@@ -286,9 +286,7 @@ class BlindGeneralViewModel @Inject constructor(
       GroupPercentage.Invalid
     } else {
       ifLet(minPercentage, maxPercentage) { (min, max) ->
-        if (hadMarkers && abs(min - max) > 3) {
-          return GroupPercentage.Different(min, max)
-        } else if (abs(min - max) > 5) {
+        if ((hadMarkers && abs(min - max) > 3) || abs(min - max) > 5) {
           return GroupPercentage.Different(min, max)
         }
       }

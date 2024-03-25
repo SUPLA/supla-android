@@ -29,10 +29,7 @@ class AlarmArmamentSensorIconResourceProducer : IconResourceProducer {
 
   override fun produce(data: IconData): Int =
     when (data.state.value) {
-      ChannelState.Value.ON ->
-        data.icon(R.drawable.fnc_alarm_armament_on, R.drawable.fnc_alarm_armament_on_nm)
-
-      else ->
-        data.icon(R.drawable.fnc_alarm_armament_off, R.drawable.fnc_alarm_armament_off_nm)
+      ChannelState.Value.ON -> R.drawable.fnc_alarm_armament_on
+      else -> R.drawable.fnc_alarm_armament_off
     }
 }

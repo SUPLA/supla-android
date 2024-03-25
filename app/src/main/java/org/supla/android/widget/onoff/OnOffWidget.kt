@@ -129,7 +129,7 @@ class OnOffWidget : WidgetProviderBase() {
     } else {
       R.id.on_off_widget_turn_on_button
     }
-    views.setImageViewBitmap(iconViewId, getIcon(context, channel, false, ChannelState.getActiveValue(channel.func)))
+    views.setImageViewBitmap(iconViewId, getIcon(context, channel, ChannelState.getActiveValue(channel.func)))
 
     val viewIdNightMode = if (channel.isThermometer() || channel.isGpm()) {
       R.id.on_off_widget_value_icon_night_mode
@@ -138,7 +138,7 @@ class OnOffWidget : WidgetProviderBase() {
     }
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-      views.setImageViewBitmap(viewIdNightMode, getIcon(context, channel, true, ChannelState.getActiveValue(channel.func)))
+      views.setImageViewBitmap(viewIdNightMode, getIcon(context, channel, ChannelState.getActiveValue(channel.func)))
     }
 
     if (channel.isThermometer() || channel.isGpm()) {
@@ -148,12 +148,12 @@ class OnOffWidget : WidgetProviderBase() {
     } else {
       views.setImageViewBitmap(
         R.id.on_off_widget_turn_off_button,
-        getIcon(context, channel, false, ChannelState.getInactiveValue(channel.func))
+        getIcon(context, channel, ChannelState.getInactiveValue(channel.func))
       )
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
         views.setImageViewBitmap(
           R.id.on_off_widget_turn_off_button_night_mode,
-          getIcon(context, channel, true, ChannelState.getInactiveValue(channel.func))
+          getIcon(context, channel, ChannelState.getInactiveValue(channel.func))
         )
       }
       views.setViewVisibility(R.id.on_off_widget_buttons, View.VISIBLE)
@@ -161,8 +161,8 @@ class OnOffWidget : WidgetProviderBase() {
     }
   }
 
-  private fun getIcon(context: Context, channel: Channel, nightMode: Boolean, stateValue: ChannelState.Value) =
-    ImageCache.getBitmap(context, context.getChannelIconUseCase(channel, IconType.SINGLE, nightMode, stateValue))
+  private fun getIcon(context: Context, channel: Channel, stateValue: ChannelState.Value) =
+    ImageCache.getBitmap(context, context.getChannelIconUseCase.invoke(channel, IconType.SINGLE, stateValue))
 
   companion object {
     private val TAG = OnOffWidget::class.simpleName
