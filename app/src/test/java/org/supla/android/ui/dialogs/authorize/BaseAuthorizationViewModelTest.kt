@@ -3,6 +3,7 @@ package org.supla.android.ui.dialogs.authorize
 import android.content.Context
 import io.mockk.every
 import io.mockk.mockk
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.tuple
@@ -12,8 +13,6 @@ import org.junit.runner.RunWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.any
-import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoMoreInteractions
@@ -22,19 +21,16 @@ import org.mockito.kotlin.whenever
 import org.supla.android.R
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.core.networking.suplaclient.SuplaClientApi
-import org.supla.android.core.networking.suplaclient.SuplaClientMessageHandlerWrapper
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.data.source.local.entity.ProfileEntity
-import org.supla.android.lib.SuplaClientMessageHandler.OnSuplaClientMessageListener
-import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.lib.SuplaConst.SUPLA_RESULTCODE_CLIENT_LIMITEXCEEDED
-import org.supla.android.lib.SuplaConst.SUPLA_RESULTCODE_TEMPORARILY_UNAVAILABLE
-import org.supla.android.lib.SuplaConst.SUPLA_RESULTCODE_UNAUTHORIZED
-import org.supla.android.lib.SuplaRegisterError
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.dialogs.AuthorizationDialogState
+import org.supla.android.usecases.client.AuthorizationException
+import org.supla.android.usecases.client.AuthorizeUseCase
+import org.supla.android.usecases.client.LoginUseCase
 
 @RunWith(MockitoJUnitRunner::class)
 class BaseAuthorizationViewModelTest :
@@ -47,7 +43,10 @@ class BaseAuthorizationViewModelTest :
   private lateinit var profileRepository: RoomProfileRepository
 
   @Mock
-  private lateinit var suplaClientMessageHandlerWrapper: SuplaClientMessageHandlerWrapper
+  private lateinit var loginUseCase: LoginUseCase
+
+  @Mock
+  private lateinit var authorizeUseCase: AuthorizeUseCase
 
   @Mock
   override lateinit var schedulers: SuplaSchedulers
@@ -86,7 +85,7 @@ class BaseAuthorizationViewModelTest :
     verify(suplaClientProvider, times(2)).provide()
     verify(profileRepository).findActiveProfile()
     verifyNoMoreInteractions(suplaClientProvider, profileRepository)
-    verifyZeroInteractions(suplaClientMessageHandlerWrapper)
+    verifyZeroInteractions(loginUseCase, authorizeUseCase)
   }
 
   @Test
@@ -109,13 +108,19 @@ class BaseAuthorizationViewModelTest :
     )
     verify(suplaClientProvider).provide()
     verifyNoMoreInteractions(suplaClientProvider)
-    verifyZeroInteractions(suplaClientMessageHandlerWrapper, profileRepository)
+    verifyZeroInteractions(loginUseCase, authorizeUseCase, profileRepository)
   }
 
   @Test
   fun `shouldn't authorize when there is no supla client`() {
+    // given
+    val username = "username"
+    val password = "password"
+    whenever(authorizeUseCase.invoke(username, password))
+      .thenReturn(Completable.error(IllegalStateException("SuplaClient is null")))
+
     // when
-    viewModel.authorize("test", "test")
+    viewModel.authorize(username, password)
 
     // then
     assertThat(states)
@@ -123,9 +128,9 @@ class BaseAuthorizationViewModelTest :
       .containsExactly(tuple(0, 1, null))
     assertThat(states[0].errors[0]).isInstanceOfAny(IllegalStateException::class.java)
 
-    verify(suplaClientProvider).provide()
-    verifyNoMoreInteractions(suplaClientProvider)
-    verifyZeroInteractions(suplaClientMessageHandlerWrapper, profileRepository)
+    verify(authorizeUseCase).invoke(username, password)
+    verifyNoMoreInteractions(loginUseCase)
+    verifyZeroInteractions(suplaClientProvider, authorizeUseCase, profileRepository)
   }
 
   @Test
@@ -133,21 +138,7 @@ class BaseAuthorizationViewModelTest :
     // given
     val userName = "test@supla.org"
     val password = "password"
-
-    val suplaClient: SuplaClientApi = mockk {
-      every { superUserAuthorizationRequest(userName, password) } answers {}
-    }
-    whenever(suplaClientProvider.provide()).thenReturn(suplaClient)
-
-    val message: SuplaClientMsg = mockk {
-      every { type } returns SuplaClientMsg.onSuperuserAuthorizationResult
-      every { isSuccess } returns true
-    }
-    var listener: OnSuplaClientMessageListener? = null
-    doAnswer {
-      listener = it.arguments[0] as OnSuplaClientMessageListener
-      listener?.onSuplaClientMessageReceived(message)
-    }.whenever(suplaClientMessageHandlerWrapper).registerMessageListener(any())
+    whenever(authorizeUseCase.invoke(userName, password)).thenReturn(Completable.complete())
 
     // when
     viewModel.authorize(userName, password)
@@ -158,44 +149,56 @@ class BaseAuthorizationViewModelTest :
         authorizationsCount = 1
       )
     )
-    verify(suplaClientProvider).provide()
-    verify(suplaClientMessageHandlerWrapper).registerMessageListener(listener!!)
-    verify(suplaClientMessageHandlerWrapper, times(2)).unregisterMessageListener(listener!!)
-    verifyNoMoreInteractions(suplaClientProvider, suplaClientMessageHandlerWrapper)
-    verifyZeroInteractions(profileRepository)
+    verify(authorizeUseCase).invoke(userName, password)
+    verifyNoMoreInteractions(authorizeUseCase)
+    verifyZeroInteractions(loginUseCase, suplaClientProvider, profileRepository)
   }
 
   @Test
-  fun `should authorize with unauthorized error`() {
-    val message: SuplaClientMsg = mockk {
-      every { type } returns SuplaClientMsg.onSuperuserAuthorizationResult
-      every { isSuccess } returns false
-      every { code } returns SUPLA_RESULTCODE_UNAUTHORIZED
+  fun `should authorize with error`() {
+    // given
+    val userName = "test@supla.org"
+    val password = "password"
+    whenever(authorizeUseCase.invoke(userName, password))
+      .thenReturn(Completable.error(AuthorizationException(R.string.incorrect_email_or_password)))
+
+    val profile: ProfileEntity = mockk {
+      every { email } returns userName
+      every { serverForEmail } returns "cloud.supla.org"
     }
+    whenever(profileRepository.findActiveProfile()).thenReturn(Single.just(profile))
 
-    doAuthorizationTestWithError(message, R.string.incorrect_email_or_password)
-  }
-
-  @Test
-  fun `should authorize with temporarily unavailable error`() {
-    val message: SuplaClientMsg = mockk {
-      every { type } returns SuplaClientMsg.onSuperuserAuthorizationResult
-      every { isSuccess } returns false
-      every { code } returns SUPLA_RESULTCODE_TEMPORARILY_UNAVAILABLE
+    val suplaClient: SuplaClientApi = mockk {
+      every { registered() } returns false
     }
+    whenever(suplaClientProvider.provide()).thenReturn(suplaClient)
 
-    doAuthorizationTestWithError(message, R.string.status_temporarily_unavailable)
-  }
+    // when
+    viewModel.showAuthorizationDialog()
+    viewModel.authorize(userName, password)
 
-  @Test
-  fun `should authorize with unknown error`() {
-    val message: SuplaClientMsg = mockk {
-      every { type } returns SuplaClientMsg.onSuperuserAuthorizationResult
-      every { isSuccess } returns false
-      every { code } returns 0
+    // then
+    val context: Context = mockk {
+      every { getString(any()) } answers { "${it.invocation.args.first()}" }
     }
-
-    doAuthorizationTestWithError(message, R.string.status_unknown_err)
+    assertThat(states)
+      .extracting(
+        { it.authorizationDialogState?.error?.let { it(context) }?.toInt() },
+        { it.authorizationDialogState?.processing },
+        { it.errors.count() },
+        { it.authorizationsCount }
+      )
+      .containsExactly(
+        tuple(null, false, 0, 0),
+        tuple(null, true, 0, 0),
+        tuple(null, false, 0, 0),
+        tuple(R.string.incorrect_email_or_password, false, 0, 0)
+      )
+    verify(suplaClientProvider, times(2)).provide()
+    verify(profileRepository).findActiveProfile()
+    verify(authorizeUseCase).invoke(userName, password)
+    verifyNoMoreInteractions(suplaClientProvider, authorizeUseCase, profileRepository)
+    verifyZeroInteractions(loginUseCase)
   }
 
   @Test
@@ -203,20 +206,7 @@ class BaseAuthorizationViewModelTest :
     // given
     val userName = "test@supla.org"
     val password = "password"
-
-    val suplaClient: SuplaClientApi = mockk {
-      every { superUserAuthorizationRequest(userName, password) } answers {}
-    }
-    whenever(suplaClientProvider.provide()).thenReturn(suplaClient)
-
-    val message: SuplaClientMsg = mockk {
-      every { type } returns SuplaClientMsg.onRegistered
-    }
-    var listener: OnSuplaClientMessageListener? = null
-    doAnswer {
-      listener = it.arguments[0] as OnSuplaClientMessageListener
-      listener?.onSuplaClientMessageReceived(message)
-    }.whenever(suplaClientMessageHandlerWrapper).registerMessageListener(any())
+    whenever(loginUseCase.invoke(userName, password)).thenReturn(Completable.complete())
 
     // when
     viewModel.login(userName, password)
@@ -227,11 +217,9 @@ class BaseAuthorizationViewModelTest :
         authorizationsCount = 1
       )
     )
-    verify(suplaClientProvider).provide()
-    verify(suplaClientMessageHandlerWrapper).registerMessageListener(listener!!)
-    verify(suplaClientMessageHandlerWrapper, times(2)).unregisterMessageListener(listener!!)
-    verifyNoMoreInteractions(suplaClientProvider, suplaClientMessageHandlerWrapper)
-    verifyZeroInteractions(profileRepository)
+    verify(loginUseCase).invoke(userName, password)
+    verifyNoMoreInteractions(loginUseCase)
+    verifyZeroInteractions(authorizeUseCase, suplaClientProvider, profileRepository)
   }
 
   @Test
@@ -239,6 +227,8 @@ class BaseAuthorizationViewModelTest :
     // given
     val userName = "test@supla.org"
     val password = "password"
+    whenever(loginUseCase.invoke(userName, password))
+      .thenReturn(Completable.error(AuthorizationException(SUPLA_RESULTCODE_CLIENT_LIMITEXCEEDED)))
 
     val profile: ProfileEntity = mockk {
       every { email } returns userName
@@ -248,22 +238,8 @@ class BaseAuthorizationViewModelTest :
 
     val suplaClient: SuplaClientApi = mockk {
       every { registered() } returns false
-      every { superUserAuthorizationRequest(userName, password) } answers {}
     }
     whenever(suplaClientProvider.provide()).thenReturn(suplaClient)
-
-    val message: SuplaClientMsg = mockk {
-      every { type } returns SuplaClientMsg.onRegisterError
-      every { registerError } returns SuplaRegisterError().also {
-        it.ResultCode = SUPLA_RESULTCODE_CLIENT_LIMITEXCEEDED
-      }
-      every { code } returns SUPLA_RESULTCODE_UNAUTHORIZED
-    }
-    var listener: OnSuplaClientMessageListener? = null
-    doAnswer {
-      listener = it.arguments[0] as OnSuplaClientMessageListener
-      listener?.onSuplaClientMessageReceived(message)
-    }.whenever(suplaClientMessageHandlerWrapper).registerMessageListener(any())
 
     // when
     viewModel.showAuthorizationDialog()
@@ -285,131 +261,30 @@ class BaseAuthorizationViewModelTest :
       .containsExactly(
         tuple(null, false, 0, 0),
         tuple(null, true, 0, 0),
-        tuple(R.string.status_climit_exceded, true, 0, 0),
+        tuple(null, false, 0, 0),
         tuple(R.string.status_climit_exceded, false, 0, 0)
       )
-    verify(suplaClientProvider, times(3)).provide()
-    verify(suplaClientMessageHandlerWrapper).registerMessageListener(listener!!)
-    verify(suplaClientMessageHandlerWrapper, times(2)).unregisterMessageListener(listener!!)
+    verify(suplaClientProvider, times(2)).provide()
     verify(profileRepository).findActiveProfile()
-    verifyNoMoreInteractions(suplaClientProvider, suplaClientMessageHandlerWrapper, profileRepository)
-  }
-
-  @Test
-  fun `should authorize with timeout`() {
-    // given
-    val userName = "test@supla.org"
-    val password = "password"
-
-    val profile: ProfileEntity = mockk {
-      every { email } returns userName
-      every { serverForEmail } returns "cloud.supla.org"
-    }
-    whenever(profileRepository.findActiveProfile()).thenReturn(Single.just(profile))
-
-    val suplaClient: SuplaClientApi = mockk {
-      every { registered() } returns false
-      every { superUserAuthorizationRequest(userName, password) } answers {}
-    }
-    whenever(suplaClientProvider.provide()).thenReturn(suplaClient)
-
-    var listener: OnSuplaClientMessageListener? = null
-    doAnswer {
-      listener = it.arguments[0] as OnSuplaClientMessageListener
-    }.whenever(suplaClientMessageHandlerWrapper).registerMessageListener(any())
-
-    // when
-    viewModel.showAuthorizationDialog()
-    viewModel.authorize(userName, password)
-
-    // then
-    val context: Context = mockk {
-      every { getString(any()) } answers { "${it.invocation.args.first()}" }
-    }
-    assertThat(states)
-      .extracting(
-        { it.authorizationDialogState?.error?.let { it(context) }?.toInt() },
-        { it.authorizationDialogState?.processing },
-        { it.errors.count() },
-        { it.authorizationsCount }
-      )
-      .containsExactly(
-        tuple(null, false, 0, 0),
-        tuple(null, true, 0, 0),
-        tuple(R.string.time_exceeded, true, 0, 0),
-        tuple(R.string.time_exceeded, false, 0, 0)
-      )
-    verify(suplaClientProvider, times(3)).provide()
-    verify(suplaClientMessageHandlerWrapper).registerMessageListener(listener!!)
-    verify(suplaClientMessageHandlerWrapper).unregisterMessageListener(listener!!)
-    verify(profileRepository).findActiveProfile()
-    verifyNoMoreInteractions(suplaClientProvider, suplaClientMessageHandlerWrapper, profileRepository)
-  }
-
-  private fun doAuthorizationTestWithError(message: SuplaClientMsg, errorMessage: Int) {
-    // given
-    val userName = "test@supla.org"
-    val password = "password"
-
-    val profile: ProfileEntity = mockk {
-      every { email } returns userName
-      every { serverForEmail } returns "cloud.supla.org"
-    }
-    whenever(profileRepository.findActiveProfile()).thenReturn(Single.just(profile))
-
-    val suplaClient: SuplaClientApi = mockk {
-      every { registered() } returns false
-      every { superUserAuthorizationRequest(userName, password) } answers {}
-    }
-    whenever(suplaClientProvider.provide()).thenReturn(suplaClient)
-
-    var listener: OnSuplaClientMessageListener? = null
-    doAnswer {
-      listener = it.arguments[0] as OnSuplaClientMessageListener
-      listener?.onSuplaClientMessageReceived(message)
-    }.whenever(suplaClientMessageHandlerWrapper).registerMessageListener(any())
-
-    // when
-    viewModel.showAuthorizationDialog()
-    viewModel.authorize(userName, password)
-
-    // then
-    val context: Context = mockk {
-      every { getString(any()) } answers { "${it.invocation.args.first()}" }
-    }
-    assertThat(states)
-      .extracting(
-        { it.authorizationDialogState?.error?.let { it(context) }?.toInt() },
-        { it.authorizationDialogState?.processing },
-        { it.errors.count() },
-        { it.authorizationsCount }
-      )
-      .containsExactly(
-        tuple(null, false, 0, 0),
-        tuple(null, true, 0, 0),
-        tuple(errorMessage, true, 0, 0),
-        tuple(errorMessage, false, 0, 0)
-      )
-    verify(suplaClientProvider, times(3)).provide()
-    verify(suplaClientMessageHandlerWrapper).registerMessageListener(listener!!)
-    verify(suplaClientMessageHandlerWrapper, times(2)).unregisterMessageListener(listener!!)
-    verify(profileRepository).findActiveProfile()
-    verifyNoMoreInteractions(suplaClientProvider, suplaClientMessageHandlerWrapper, profileRepository)
+    verify(loginUseCase).invoke(userName, password)
+    verifyNoMoreInteractions(suplaClientProvider, loginUseCase, profileRepository)
+    verifyZeroInteractions(authorizeUseCase)
   }
 }
 
 class TestAuthorizationViewModel(
   suplaClientProvider: SuplaClientProvider,
   profileRepository: RoomProfileRepository,
-  suplaClientMessageHandlerWrapper: SuplaClientMessageHandlerWrapper,
+  loginUseCase: LoginUseCase,
+  authorizeUseCase: AuthorizeUseCase,
   schedulers: SuplaSchedulers
 ) : BaseAuthorizationViewModel<TestAuthorizationModelState, TestAuthorizationViewEvent>(
   suplaClientProvider,
   profileRepository,
-  suplaClientMessageHandlerWrapper,
+  loginUseCase,
+  authorizeUseCase,
   TestAuthorizationModelState(),
-  schedulers,
-  1L
+  schedulers
 ) {
   override fun updateDialogState(updater: (AuthorizationDialogState?) -> AuthorizationDialogState?) {
     updateState { it.copy(authorizationDialogState = updater(it.authorizationDialogState)) }

@@ -90,7 +90,8 @@ fun CircleControlButton(
   animationMode: AnimationMode = AnimationMode.Pressed,
   width: Dp = 140.dp,
   height: Dp = 140.dp,
-  padding: Dp = 10.dp
+  padding: Dp = 10.dp,
+  iconColor: Color? = null
 ) {
   SimpleButtonColorAnimatable(
     modifier = Modifier.width(width),
@@ -110,7 +111,7 @@ fun CircleControlButton(
       verticalArrangement = Arrangement.Center,
       horizontalAlignment = Alignment.CenterHorizontally
     ) {
-      IconWrapper(bitmap = icon, painter = iconPainter)
+      IconWrapper(bitmap = icon, painter = iconPainter, color = iconColor)
       text?.let {
         Text(text = text, style = MaterialTheme.typography.button, color = textColor)
       }

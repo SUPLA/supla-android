@@ -1,4 +1,4 @@
-package org.supla.android.features.details.blindsdetail.general.ui
+package org.supla.android.core.infrastructure
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,10 +17,12 @@ package org.supla.android.features.details.blindsdetail.general.ui
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.compose.ui.geometry.Offset
+import javax.inject.Inject
+import javax.inject.Singleton
 
-data class MoveState(
-  val initialPoint: Offset? = null,
-  val initialPercentage: Float = 0f,
-  val lastPoint: Offset = Offset(0f, 0f)
-)
+@Singleton
+class ThreadHandler @Inject constructor() {
+  fun sleep(millis: Long) {
+    Thread.sleep(millis)
+  }
+}

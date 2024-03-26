@@ -361,7 +361,8 @@ private fun StopMoveButton(enabled: Boolean, onAction: (BlindsAction) -> Unit) =
     height = 64.dp,
     padding = 0.dp,
     disabled = !enabled,
-    onClick = { onAction(BlindsAction.Stop) }
+    onClick = { onAction(BlindsAction.Stop) },
+    iconColor = MaterialTheme.colors.onBackground
   )
 
 @Composable
@@ -372,7 +373,8 @@ private fun OpenButton(enabled: Boolean, onAction: (BlindsAction) -> Unit) =
     height = 64.dp,
     padding = 0.dp,
     disabled = !enabled,
-    onClick = { onAction(BlindsAction.Open) }
+    onClick = { onAction(BlindsAction.Open) },
+    iconColor = MaterialTheme.colors.onBackground
   )
 
 @Composable
@@ -383,7 +385,8 @@ private fun CloseButton(enabled: Boolean, onAction: (BlindsAction) -> Unit) =
     height = 64.dp,
     padding = 0.dp,
     disabled = !enabled,
-    onClick = { onAction(BlindsAction.Close) }
+    onClick = { onAction(BlindsAction.Close) },
+    iconColor = MaterialTheme.colors.onBackground
   )
 
 @Composable
@@ -458,7 +461,7 @@ private fun Top(
 
       if (viewState.calibrationPossible) {
         CircleControlButton(
-          iconPainter = painterResource(id = R.drawable.recalibrate),
+          iconPainter = painterResource(id = R.drawable.ic_recalibrate),
           width = 48.dp,
           height = 48.dp,
           padding = 0.dp,

@@ -22,7 +22,6 @@ import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.Preferences
 import org.supla.android.core.infrastructure.DateProvider
-import org.supla.android.core.networking.suplaclient.SuplaClientMessageHandlerWrapper
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.data.model.general.ChannelDataBase
@@ -46,9 +45,11 @@ import org.supla.android.ui.dialogs.AuthorizationDialogState
 import org.supla.android.ui.dialogs.authorize.AuthorizationModelState
 import org.supla.android.ui.dialogs.authorize.BaseAuthorizationViewModel
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
+import org.supla.android.usecases.client.AuthorizeUseCase
 import org.supla.android.usecases.client.CallSuplaClientOperationUseCase
 import org.supla.android.usecases.client.ExecuteBlindsActionUseCase
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
+import org.supla.android.usecases.client.LoginUseCase
 import org.supla.android.usecases.client.SuplaClientOperation
 import org.supla.android.usecases.group.GetGroupOnlineSummaryUseCase
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
@@ -67,12 +68,14 @@ class BlindGeneralViewModel @Inject constructor(
   private val dateProvider: DateProvider,
   suplaClientProvider: SuplaClientProvider,
   profileRepository: RoomProfileRepository,
-  suplaClientMessageHandlerWrapper: SuplaClientMessageHandlerWrapper,
+  loginUseCase: LoginUseCase,
+  authorizeUseCase: AuthorizeUseCase,
   schedulers: SuplaSchedulers
 ) : BaseAuthorizationViewModel<BlindsGeneralModelState, BlindsGeneralViewEvent>(
   suplaClientProvider,
   profileRepository,
-  suplaClientMessageHandlerWrapper,
+  loginUseCase,
+  authorizeUseCase,
   BlindsGeneralModelState(),
   schedulers
 ) {

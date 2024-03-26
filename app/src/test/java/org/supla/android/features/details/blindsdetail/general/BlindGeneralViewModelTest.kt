@@ -37,7 +37,6 @@ import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.core.infrastructure.DateProvider
-import org.supla.android.core.networking.suplaclient.SuplaClientMessageHandlerWrapper
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.data.model.general.ChannelIssueItem
 import org.supla.android.data.source.RoomProfileRepository
@@ -62,9 +61,11 @@ import org.supla.android.tools.VibrationHelper
 import org.supla.android.ui.dialogs.AuthorizationDialogState
 import org.supla.android.ui.lists.data.IssueIconType
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
+import org.supla.android.usecases.client.AuthorizeUseCase
 import org.supla.android.usecases.client.CallSuplaClientOperationUseCase
 import org.supla.android.usecases.client.ExecuteBlindsActionUseCase
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
+import org.supla.android.usecases.client.LoginUseCase
 import org.supla.android.usecases.client.SuplaClientOperation
 import org.supla.android.usecases.group.GetGroupOnlineSummaryUseCase
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
@@ -106,7 +107,10 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
   lateinit var profileRepository: RoomProfileRepository
 
   @Mock
-  lateinit var suplaClientMessageHandlerWrapper: SuplaClientMessageHandlerWrapper
+  lateinit var loginUseCase: LoginUseCase
+
+  @Mock
+  lateinit var authorizeUseCase: AuthorizeUseCase
 
   @Mock
   override lateinit var schedulers: SuplaSchedulers

@@ -52,6 +52,7 @@ import androidx.compose.ui.unit.dp
 import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
+import org.supla.android.extensions.guardLet
 import org.supla.android.features.details.blindsdetail.general.ui.MoveState
 import org.supla.android.features.details.blindsdetail.general.ui.WindowColors
 import org.supla.android.features.details.blindsdetail.general.ui.WindowState
@@ -106,19 +107,25 @@ fun WindowView(
       .pointerInteropFilter { event ->
         if (windowDimens != null) {
           when (event.action) {
-            MotionEvent.ACTION_DOWN ->
-              moveState.value = moveState.value.copy(
-                initialPoint = Offset(event.x, event.y),
-                initialPercentage = windowState.position
-              )
+            MotionEvent.ACTION_DOWN -> {
+              val point = Offset(event.x, event.y)
+              if (windowDimens.windowRect.contains(point)) {
+                moveState.value = moveState.value.copy(
+                  initialPoint = Offset(event.x, event.y),
+                  initialPercentage = windowState.position
+                )
+              }
+            }
 
             MotionEvent.ACTION_MOVE -> {
               moveState.value = moveState.value.copy(lastPoint = Offset(event.x, event.y))
-              onPositionChanging?.let { it(windowDimens.getPositionFromState(moveState.value)) }
+              windowDimens.getPositionFromState(moveState.value)?.let { position -> onPositionChanging?.let { it(position) } }
             }
 
-            MotionEvent.ACTION_UP ->
+            MotionEvent.ACTION_UP -> {
               onPositionChanged?.let { it(windowState.position) }
+              moveState.value = moveState.value.copy(initialPoint = null)
+            }
           }
         }
         true
@@ -297,9 +304,11 @@ private data class WindowViewDimens(
   val blindRollerHeight: Float
     get() = canvasRect.height - topLineRect.height
 
-  fun getPositionFromState(state: MoveState): Float {
+  fun getPositionFromState(state: MoveState): Float? {
+    val (initialY) = guardLet(state.initialPoint?.y) { return null }
+
     val positionDiffAsPercentage =
-      state.lastPoint.y.minus(state.initialPoint.y)
+      state.lastPoint.y.minus(initialY)
         .div(blindRollerHeight)
         .times(100f)
 
