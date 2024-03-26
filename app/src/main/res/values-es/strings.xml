@@ -86,7 +86,7 @@
   <string name="rate_later">Más tarde</string>
   <string name="rate_no_thanks">No, gracias</string>
   <string name="rs_percent_caption">Porcentaje de cierre</string>
-  <string name="blinds_calibration">Calibración…</string>
+  <string name="roller_shutter_calibrating">Calibración…</string>
   <string name="add_wizard_is_not_available">¡El Asistente para agregar solo está disponible cuando se ha establecido una conexión con el servidor según la dirección de correo electrónico ingresada! (Desactiva las opciones avanzadas en la configuración de tu cuenta)</string>
   <string name="wizard_step1_txt3">Para continuar presiona <b>Siguiente</b>.</string>
   <string name="add_device">Añadir dispositivo</string>

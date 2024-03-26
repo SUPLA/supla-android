@@ -79,7 +79,7 @@
   <string name="rate_later">Later</string>
   <string name="rate_no_thanks">Nee, dank je</string>
   <string name="rs_percent_caption">Percentage van sluiting</string>
-  <string name="blinds_calibration">Kalibratie…</string>
+  <string name="roller_shutter_calibrating">Kalibratie…</string>
 
   <string name="add_wizard_is_not_available">De Toevoegen-Wizard is alleen beschikbaar als er op basis van het ingevoerde e-mailadres! een verbinding met de server tot stand is gebracht (Schakel geavanceerde opties in uw accountconfiguratie uit)</string>
 

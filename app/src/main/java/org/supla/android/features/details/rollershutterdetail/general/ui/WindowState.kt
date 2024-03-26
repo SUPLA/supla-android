@@ -1,4 +1,4 @@
-package org.supla.android.features.details.blindsdetail.general.ui
+package org.supla.android.features.details.rollershutterdetail.general.ui
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -31,7 +31,7 @@ data class WindowState(
   val bottomPosition: Float = 100f,
 
   /**
-   * Used for groups - shows positions of single blinds
+   * Used for groups - shows positions of single roller shutter
    */
   val markers: List<Float> = emptyList()
 )

@@ -1,4 +1,4 @@
-package org.supla.android.features.details.blindsdetail.general.ui.blinds
+package org.supla.android.features.details.rollershutterdetail.general.ui.rollershutter
 /*
 Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -53,9 +53,9 @@ import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.extensions.guardLet
-import org.supla.android.features.details.blindsdetail.general.ui.MoveState
-import org.supla.android.features.details.blindsdetail.general.ui.WindowColors
-import org.supla.android.features.details.blindsdetail.general.ui.WindowState
+import org.supla.android.features.details.rollershutterdetail.general.ui.MoveState
+import org.supla.android.features.details.rollershutterdetail.general.ui.WindowColors
+import org.supla.android.features.details.rollershutterdetail.general.ui.WindowState
 import kotlin.math.ceil
 
 private val WINDOW_DIMENS = object {
@@ -175,7 +175,7 @@ private fun drawWindow(windowViewDimens: WindowViewDimens, colors: WindowColors,
 
   rollerState.markers.forEach { position ->
     val topPosition = windowViewDimens.topLineRect.bottom
-      .plus(windowViewDimens.blindRollerHeight.minus(windowViewDimens.slatDistance).times(position).div(100f))
+      .plus(windowViewDimens.rollerShutterHeight.minus(windowViewDimens.slatDistance).times(position).div(100f))
 
     drawMarker(Offset(0f, topPosition), windowViewDimens, colors)
   }
@@ -189,11 +189,11 @@ private fun drawSlats(rollerState: WindowState, windowViewDimens: WindowViewDime
     .let { if (it > 1) 1f else it }
 
   val topCorrection = positionCorrectedByBottomPosition
-    .times(windowViewDimens.blindRollerHeight)
+    .times(windowViewDimens.rollerShutterHeight)
     .minus(windowViewDimens.slatsDistances)
     .plus(windowViewDimens.slatDistance.times(1.5f)) // Needed to align slats bottom with window bottom
 
-  // When the blinds position is bigger then bottom position we need to start "closing slats".
+  // When the roller shutter position is bigger then bottom position we need to start "closing slats".
   // Here the available space for "opened" slats is calculated
   val availableSpaceForSlatDistances = if (rollerState.position > rollerState.bottomPosition) {
     windowViewDimens.slatsDistances
@@ -216,7 +216,7 @@ private fun drawSlats(rollerState: WindowState, windowViewDimens: WindowViewDime
         }
       }
     }
-    drawSlat(topCorrection - windowViewDimens.blindRollerHeight + slatsCorrection, slat, windowViewDimens, colors)
+    drawSlat(topCorrection - windowViewDimens.rollerShutterHeight + slatsCorrection, slat, windowViewDimens, colors)
   }
 }
 
@@ -301,7 +301,7 @@ private data class WindowViewDimens(
   val markerPath: Path
 ) {
 
-  val blindRollerHeight: Float
+  val rollerShutterHeight: Float
     get() = canvasRect.height - topLineRect.height
 
   fun getPositionFromState(state: MoveState): Float? {
@@ -309,7 +309,7 @@ private data class WindowViewDimens(
 
     val positionDiffAsPercentage =
       state.lastPoint.y.minus(initialY)
-        .div(blindRollerHeight)
+        .div(rollerShutterHeight)
         .times(100f)
 
     return state.initialPercentage.plus(positionDiffAsPercentage).let {

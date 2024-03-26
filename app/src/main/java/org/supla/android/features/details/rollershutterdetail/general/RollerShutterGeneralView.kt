@@ -1,4 +1,4 @@
-package org.supla.android.features.details.blindsdetail.general
+package org.supla.android.features.details.rollershutterdetail.general
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -56,12 +56,12 @@ import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.core.ui.theme.grey
 import org.supla.android.data.model.general.ChannelIssueItem
-import org.supla.android.features.details.blindsdetail.general.ui.WindowColors
-import org.supla.android.features.details.blindsdetail.general.ui.WindowState
-import org.supla.android.features.details.blindsdetail.general.ui.WindowType
-import org.supla.android.features.details.blindsdetail.general.ui.blinds.WINDOW_VIEW_RATIO
-import org.supla.android.features.details.blindsdetail.general.ui.blinds.WindowView
-import org.supla.android.features.details.blindsdetail.general.ui.roofwindow.RoofWindowView
+import org.supla.android.features.details.rollershutterdetail.general.ui.WindowColors
+import org.supla.android.features.details.rollershutterdetail.general.ui.WindowState
+import org.supla.android.features.details.rollershutterdetail.general.ui.WindowType
+import org.supla.android.features.details.rollershutterdetail.general.ui.rollershutter.WINDOW_VIEW_RATIO
+import org.supla.android.features.details.rollershutterdetail.general.ui.rollershutter.WindowView
+import org.supla.android.features.details.rollershutterdetail.general.ui.roofwindow.RoofWindowView
 import org.supla.android.ui.lists.data.IssueIconType
 import org.supla.android.ui.views.buttons.animatable.CircleControlButton
 import org.supla.android.ui.views.buttons.animatable.ControlButtonIcon
@@ -72,19 +72,19 @@ import org.supla.android.ui.views.buttons.animatable.UpDownControlButton
 import org.supla.android.ui.views.tools.Shadow
 import org.supla.android.ui.views.tools.ShadowOrientation
 
-sealed interface BlindsAction {
-  object Open : BlindsAction
-  object Close : BlindsAction
-  object Stop : BlindsAction
-  object MoveUp : BlindsAction
-  object MoveDown : BlindsAction
-  object Calibrate : BlindsAction
+sealed interface RollerShutterAction {
+  object Open : RollerShutterAction
+  object Close : RollerShutterAction
+  object Stop : RollerShutterAction
+  object MoveUp : RollerShutterAction
+  object MoveDown : RollerShutterAction
+  object Calibrate : RollerShutterAction
 
-  data class OpenAt(val position: Float) : BlindsAction
-  data class MoveTo(val position: Float) : BlindsAction
+  data class OpenAt(val position: Float) : RollerShutterAction
+  data class MoveTo(val position: Float) : RollerShutterAction
 }
 
-data class BlindsGeneralViewState(
+data class RollerShutterGeneralViewState(
   val issues: List<ChannelIssueItem> = emptyList(),
   val enabled: Boolean = false,
   val showClosingPercentage: Boolean = false,
@@ -95,17 +95,17 @@ data class BlindsGeneralViewState(
   val isGroup: Boolean = false,
   val onlineStatusString: String? = null,
   val positionText: String = "",
-  val windowType: WindowType = WindowType.BLINDS_WINDOW
+  val windowType: WindowType = WindowType.ROLLER_SHUTTER_WINDOW
 )
 
 private val TOP_MENU_HEIGHT_SMALL_SCREEN = 64.dp
 private val TOP_MENU_HEIGHT_NORMAL_SCREEN = 80.dp
 
 @Composable
-fun BlindsGeneralView(
+fun RollerShutterGeneralView(
   windowState: WindowState,
-  viewState: BlindsGeneralViewState,
-  onAction: (BlindsAction) -> Unit
+  viewState: RollerShutterGeneralViewState,
+  onAction: (RollerShutterAction) -> Unit
 ) {
   BoxWithConstraints {
     val height = maxHeight
@@ -120,7 +120,7 @@ fun BlindsGeneralView(
         onAction = onAction
       )
 
-      BlindsScreen(
+      RollerShutterScreen(
         availableHeight = height,
         availableWidth = width,
         windowState = windowState,
@@ -132,21 +132,21 @@ fun BlindsGeneralView(
 }
 
 @Composable
-private fun BlindsScreen(
+private fun RollerShutterScreen(
   availableHeight: Dp,
   availableWidth: Dp,
-  viewState: BlindsGeneralViewState,
+  viewState: RollerShutterGeneralViewState,
   windowState: WindowState,
-  onAction: (BlindsAction) -> Unit
+  onAction: (RollerShutterAction) -> Unit
 ) {
   if (isSmallScreen(availableHeight)) {
-    BlindsSmallScreen(
+    RollerShutterSmallScreen(
       viewState = viewState,
       windowState = windowState,
       onAction = onAction
     )
   } else {
-    BlindsNormalScreen(
+    RollerShutterNormalScreen(
       availableWidth = availableWidth,
       availableHeight = availableHeight,
       viewState = viewState,
@@ -166,10 +166,10 @@ private fun getTopHeight(availableHeight: Dp) =
   }
 
 @Composable
-private fun BlindsSmallScreen(
-  viewState: BlindsGeneralViewState,
+private fun RollerShutterSmallScreen(
+  viewState: RollerShutterGeneralViewState,
   windowState: WindowState,
-  onAction: (BlindsAction) -> Unit
+  onAction: (RollerShutterAction) -> Unit
 ) {
   Column(
     modifier = Modifier
@@ -214,12 +214,12 @@ private fun BlindsSmallScreen(
 }
 
 @Composable
-private fun BlindsNormalScreen(
+private fun RollerShutterNormalScreen(
   availableWidth: Dp,
   availableHeight: Dp,
-  viewState: BlindsGeneralViewState,
+  viewState: RollerShutterGeneralViewState,
   windowState: WindowState,
-  onAction: (BlindsAction) -> Unit
+  onAction: (RollerShutterAction) -> Unit
 ) {
   Column(
     modifier = Modifier
@@ -285,9 +285,9 @@ private fun BlindsNormalScreen(
 
 @Composable
 private fun WindowView(
-  viewState: BlindsGeneralViewState,
+  viewState: RollerShutterGeneralViewState,
   windowState: WindowState,
-  onAction: (BlindsAction) -> Unit,
+  onAction: (RollerShutterAction) -> Unit,
   modifier: Modifier = Modifier
 ) {
   when (viewState.windowType) {
@@ -296,18 +296,18 @@ private fun WindowView(
         windowState = windowState,
         colors = if (viewState.enabled) WindowColors.standard() else WindowColors.offline(),
         modifier = modifier,
-        onPositionChanging = { if (viewState.enabled) onAction(BlindsAction.MoveTo(it)) },
-        onPositionChanged = { if (viewState.enabled) onAction(BlindsAction.OpenAt(it)) }
+        onPositionChanging = { if (viewState.enabled) onAction(RollerShutterAction.MoveTo(it)) },
+        onPositionChanged = { if (viewState.enabled) onAction(RollerShutterAction.OpenAt(it)) }
       )
     }
 
-    WindowType.BLINDS_WINDOW -> {
+    WindowType.ROLLER_SHUTTER_WINDOW -> {
       WindowView(
         windowState = windowState,
         colors = if (viewState.enabled) WindowColors.standard() else WindowColors.offline(),
         modifier = modifier,
-        onPositionChanging = { if (viewState.enabled) onAction(BlindsAction.MoveTo(it)) },
-        onPositionChanged = { if (viewState.enabled) onAction(BlindsAction.OpenAt(it)) }
+        onPositionChanging = { if (viewState.enabled) onAction(RollerShutterAction.MoveTo(it)) },
+        onPositionChanged = { if (viewState.enabled) onAction(RollerShutterAction.OpenAt(it)) }
       )
     }
   }
@@ -324,68 +324,68 @@ private fun CloseControlIcon(textColor: Color) =
   ControlButtonIcon(iconRes = R.drawable.ic_arrow_open, textColor = textColor, rotate = 180f)
 
 @Composable
-private fun HoldToMoveButtons(enabled: Boolean, onAction: (BlindsAction) -> Unit) =
+private fun HoldToMoveButtons(enabled: Boolean, onAction: (RollerShutterAction) -> Unit) =
   UpDownControlButton(
     disabled = !enabled,
     upContent = { UpControlIcon(textColor = it) },
     downContent = { DownControlIcon(textColor = it) },
     upEventHandler = {
       handleEvents(
-        onTouchDown = { onAction(BlindsAction.MoveUp) },
-        onTouchUp = { onAction(BlindsAction.Stop) }
+        onTouchDown = { onAction(RollerShutterAction.MoveUp) },
+        onTouchUp = { onAction(RollerShutterAction.Stop) }
       )
     },
     downEventHandler = {
       handleEvents(
-        onTouchDown = { onAction(BlindsAction.MoveDown) },
-        onTouchUp = { onAction(BlindsAction.Stop) }
+        onTouchDown = { onAction(RollerShutterAction.MoveDown) },
+        onTouchUp = { onAction(RollerShutterAction.Stop) }
       )
     }
   )
 
 @Composable
-private fun PressToMoveButtons(enabled: Boolean, onAction: (BlindsAction) -> Unit) =
+private fun PressToMoveButtons(enabled: Boolean, onAction: (RollerShutterAction) -> Unit) =
   UpDownControlButton(
     disabled = !enabled,
     upContent = { OpenControlIcon(textColor = it) },
     downContent = { CloseControlIcon(textColor = it) },
-    upEventHandler = { handleEvents(onClick = { onAction(BlindsAction.Open) }) },
-    downEventHandler = { handleEvents(onClick = { onAction(BlindsAction.Close) }) }
+    upEventHandler = { handleEvents(onClick = { onAction(RollerShutterAction.Open) }) },
+    downEventHandler = { handleEvents(onClick = { onAction(RollerShutterAction.Close) }) }
   )
 
 @Composable
-private fun StopMoveButton(enabled: Boolean, onAction: (BlindsAction) -> Unit) =
+private fun StopMoveButton(enabled: Boolean, onAction: (RollerShutterAction) -> Unit) =
   CircleControlButton(
     iconPainter = painterResource(id = R.drawable.ic_stop),
     width = 64.dp,
     height = 64.dp,
     padding = 0.dp,
     disabled = !enabled,
-    onClick = { onAction(BlindsAction.Stop) },
+    onClick = { onAction(RollerShutterAction.Stop) },
     iconColor = MaterialTheme.colors.onBackground
   )
 
 @Composable
-private fun OpenButton(enabled: Boolean, onAction: (BlindsAction) -> Unit) =
+private fun OpenButton(enabled: Boolean, onAction: (RollerShutterAction) -> Unit) =
   CircleControlButton(
     iconPainter = painterResource(id = R.drawable.ic_arrow_open),
     width = 64.dp,
     height = 64.dp,
     padding = 0.dp,
     disabled = !enabled,
-    onClick = { onAction(BlindsAction.Open) },
+    onClick = { onAction(RollerShutterAction.Open) },
     iconColor = MaterialTheme.colors.onBackground
   )
 
 @Composable
-private fun CloseButton(enabled: Boolean, onAction: (BlindsAction) -> Unit) =
+private fun CloseButton(enabled: Boolean, onAction: (RollerShutterAction) -> Unit) =
   CircleControlButton(
     iconPainter = painterResource(id = R.drawable.ic_arrow_close),
     width = 64.dp,
     height = 64.dp,
     padding = 0.dp,
     disabled = !enabled,
-    onClick = { onAction(BlindsAction.Close) },
+    onClick = { onAction(RollerShutterAction.Close) },
     iconColor = MaterialTheme.colors.onBackground
   )
 
@@ -421,9 +421,9 @@ private fun IssuesView(issues: List<ChannelIssueItem>, modifier: Modifier = Modi
 
 @Composable
 private fun Top(
-  viewState: BlindsGeneralViewState,
+  viewState: RollerShutterGeneralViewState,
   height: Dp = 80.dp,
-  onAction: (BlindsAction) -> Unit
+  onAction: (RollerShutterAction) -> Unit
 ) {
   Row(
     modifier = Modifier
@@ -446,7 +446,7 @@ private fun Top(
     } else {
       if (viewState.calibrating) {
         CircularProgressIndicator(modifier = Modifier.size(dimensionResource(id = R.dimen.icon_default_size)))
-        TopTextLabelView(text = stringResource(id = R.string.blinds_calibration))
+        TopTextLabelView(text = stringResource(id = R.string.roller_shutter_calibrating))
       } else if (!viewState.positionUnknown) {
         PercentageLabelView(showClosingPercentage = viewState.showClosingPercentage)
         PercentageValueView(viewState.positionText)
@@ -454,7 +454,7 @@ private fun Top(
         PercentageLabelView(showClosingPercentage = viewState.showClosingPercentage)
         PercentageValueView("---")
       } else {
-        TopTextLabelView(text = stringResource(id = R.string.blinds_calibration_needed))
+        TopTextLabelView(text = stringResource(id = R.string.roller_shutter_calibration_needed))
       }
 
       Spacer(modifier = Modifier.weight(1f))
@@ -465,7 +465,7 @@ private fun Top(
           width = 48.dp,
           height = 48.dp,
           padding = 0.dp,
-          onClick = { onAction(BlindsAction.Calibrate) }
+          onClick = { onAction(RollerShutterAction.Calibrate) }
         )
       } else if (viewState.onlineStatusString != null) {
         TopTextLabelView(text = "ONLINE:")
@@ -479,9 +479,9 @@ private fun Top(
 @Composable
 private fun PercentageLabelView(showClosingPercentage: Boolean) {
   if (showClosingPercentage) {
-    TopTextLabelView(text = stringResource(id = R.string.blinds_closing_percentage))
+    TopTextLabelView(text = stringResource(id = R.string.roller_shutter_closing_percentage))
   } else {
-    TopTextLabelView(text = stringResource(id = R.string.blinds_opening_percentage))
+    TopTextLabelView(text = stringResource(id = R.string.roller_shutter_opening_percentage))
   }
 }
 
@@ -511,9 +511,9 @@ private fun Preview() {
         .background(MaterialTheme.colors.background)
         .height(700.dp)
     ) {
-      BlindsGeneralView(
+      RollerShutterGeneralView(
         windowState = WindowState(75f, 90f),
-        viewState = BlindsGeneralViewState(
+        viewState = RollerShutterGeneralViewState(
           enabled = true,
           issues = listOf(ChannelIssueItem(IssueIconType.WARNING, R.string.motor_problem)),
           showClosingPercentage = false,
@@ -536,9 +536,9 @@ private fun Preview_High() {
         .background(MaterialTheme.colors.background)
         .height(900.dp)
     ) {
-      BlindsGeneralView(
+      RollerShutterGeneralView(
         windowState = WindowState(75f, 90f),
-        viewState = BlindsGeneralViewState(
+        viewState = RollerShutterGeneralViewState(
           enabled = true,
           issues = listOf(ChannelIssueItem(IssueIconType.WARNING, R.string.motor_problem)),
           showClosingPercentage = false,
@@ -561,9 +561,9 @@ private fun Preview_Small() {
         .background(MaterialTheme.colors.background)
         .height(480.dp)
     ) {
-      BlindsGeneralView(
+      RollerShutterGeneralView(
         windowState = WindowState(75f, 90f),
-        viewState = BlindsGeneralViewState(
+        viewState = RollerShutterGeneralViewState(
           enabled = true,
           issues = listOf(ChannelIssueItem(IssueIconType.WARNING, R.string.motor_problem)),
           showClosingPercentage = false,

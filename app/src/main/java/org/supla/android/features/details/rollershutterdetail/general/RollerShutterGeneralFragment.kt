@@ -1,4 +1,4 @@
-package org.supla.android.features.details.blindsdetail.general
+package org.supla.android.features.details.rollershutterdetail.general
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -38,9 +38,10 @@ import org.supla.android.ui.dialogs.AuthorizationDialog
 private const val ARG_ITEM_BUNDLE = "ARG_ITEM_BUNDLE"
 
 @AndroidEntryPoint
-class BlindsGeneralFragment : BaseFragment<BlindsGeneralModelState, BlindsGeneralViewEvent>(R.layout.fragment_compose) {
+class RollerShutterGeneralFragment :
+  BaseFragment<RollerShutterGeneralModelState, RollerShutterGeneralViewEvent>(R.layout.fragment_compose) {
 
-  override val viewModel: BlindGeneralViewModel by viewModels()
+  override val viewModel: RollerShutterGeneralViewModel by viewModels()
   private val binding by viewBinding(FragmentComposeBinding::bind)
 
   private val item: ItemBundle by lazy { requireSerializable(ARG_ITEM_BUNDLE, ItemBundle::class.java) }
@@ -70,7 +71,7 @@ class BlindsGeneralFragment : BaseFragment<BlindsGeneralModelState, BlindsGenera
           )
         }
 
-        BlindsGeneralView(
+        RollerShutterGeneralView(
           windowState = modelState.rollerState,
           viewState = modelState.viewState
         ) {
@@ -86,10 +87,10 @@ class BlindsGeneralFragment : BaseFragment<BlindsGeneralModelState, BlindsGenera
     viewModel.loadData(item.remoteId, item.itemType)
   }
 
-  override fun handleEvents(event: BlindsGeneralViewEvent) {
+  override fun handleEvents(event: RollerShutterGeneralViewEvent) {
   }
 
-  override fun handleViewState(state: BlindsGeneralModelState) {
+  override fun handleViewState(state: RollerShutterGeneralModelState) {
   }
 
   override fun onSuplaMessage(message: SuplaClientMsg) {

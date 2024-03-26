@@ -60,7 +60,7 @@ class ProvideDetailTypeUseCase @Inject constructor() {
 
     SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER,
     SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW ->
-      BlindsDetailType(listOf(DetailPage.BLINDS))
+      RollerShutterDetailType(listOf(DetailPage.ROLLER_SHUTTER))
 
     SUPLA_CHANNELFNC_LIGHTSWITCH,
     SUPLA_CHANNELFNC_POWERSWITCH,
@@ -159,6 +159,6 @@ data class GpmDetailType(
   val pages: List<DetailPage>
 ) : DetailType
 
-data class BlindsDetailType(
+data class RollerShutterDetailType(
   val pages: List<DetailPage>
 ) : DetailType

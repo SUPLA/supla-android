@@ -79,7 +79,7 @@
   <string name="rate_later">Később</string>
   <string name="rate_no_thanks">Nem, köszönöm</string>
   <string name="rs_percent_caption">A bezárás százaléka</string>
-  <string name="blinds_calibration">Kalibrálás…</string>
+  <string name="roller_shutter_calibrating">Kalibrálás…</string>
 
   <string name="add_wizard_is_not_available">A Hozzáadás varázsló csak akkor érhető el, ha a megadott e-mail cím alapján létrejött a kapcsolat a szerverrel! (A speciális beállítások letiltása a fiókkonfigurációban)</string>
 

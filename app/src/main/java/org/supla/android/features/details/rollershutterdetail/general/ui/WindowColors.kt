@@ -1,4 +1,4 @@
-package org.supla.android.features.details.blindsdetail.general.ui
+package org.supla.android.features.details.rollershutterdetail.general.ui
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -36,10 +36,10 @@ data class WindowColors(
     @Composable
     fun standard() =
       WindowColors(
-        window = colorResource(id = R.color.blinds_window_color),
+        window = colorResource(id = R.color.roller_shutter_window_color),
         shadow = colorResource(id = R.color.shadow_start),
-        glassTop = colorResource(id = R.color.blinds_glass_top_color),
-        glassBottom = colorResource(id = R.color.blinds_glass_bottom_color),
+        glassTop = colorResource(id = R.color.roller_shutter_glass_top_color),
+        glassBottom = colorResource(id = R.color.roller_shutter_glass_bottom_color),
         slatBackground = colorResource(id = R.color.separator_light),
         slatBorder = colorResource(id = R.color.disabled),
         markerBorder = colorResource(id = R.color.on_background),
@@ -49,7 +49,7 @@ data class WindowColors(
     @Composable
     fun offline() =
       WindowColors(
-        window = colorResource(id = R.color.blinds_window_color),
+        window = colorResource(id = R.color.roller_shutter_window_color),
         shadow = colorResource(id = R.color.shadow_start),
         glassTop = Color(0xffeffaff),
         glassBottom = Color(0xfff3fbff),

@@ -20,7 +20,7 @@ import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.VibrationHelper
 
 @RunWith(MockitoJUnitRunner::class)
-class ExecuteBlindsActionUseCaseTest {
+class ExecuteRollerShutterActionUseCaseTest {
 
   @Mock
   private lateinit var suplaClientProvider: SuplaClientProvider
@@ -29,7 +29,7 @@ class ExecuteBlindsActionUseCaseTest {
   private lateinit var vibrationHelper: VibrationHelper
 
   @InjectMocks
-  private lateinit var useCase: ExecuteBlindsActionUseCase
+  private lateinit var useCase: ExecuteRollerShutterActionUseCase
 
   @Test
   fun `should execute action and vibrate`() {

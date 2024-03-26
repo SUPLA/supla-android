@@ -53,7 +53,7 @@ abstract class BaseListAdapter<T, D>(
       is ListItem.LocationItem -> ViewType.LOCATION_ITEM
       is ListItem.GeneralPurposeMeterItem -> ViewType.GENERAL_PURPOSE_METER_ITEM
       is ListItem.GeneralPurposeMeasurementItem -> ViewType.GENERAL_PURPOSE_MEASUREMENT_ITEM
-      is ListItem.BlindsItem -> ViewType.BLINDS_ITEM
+      is ListItem.RollerShutterItem -> ViewType.ROLLER_SHUTTER_ITEM
 
       else -> throw IllegalStateException("Could find evaluate view item type")
     }.identifier
@@ -155,7 +155,7 @@ abstract class BaseListAdapter<T, D>(
     HVAC_ITEM(5),
     GENERAL_PURPOSE_METER_ITEM(6),
     GENERAL_PURPOSE_MEASUREMENT_ITEM(7),
-    BLINDS_ITEM(8)
+    ROLLER_SHUTTER_ITEM(8)
   }
 
   private fun View.isLocationOnBottom(): Boolean {

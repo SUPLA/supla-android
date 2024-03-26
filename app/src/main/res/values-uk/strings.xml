@@ -96,7 +96,7 @@
   <string name="rate_no_thanks">Ні, дякую</string>
   <string name="rs_percent_caption">Відсоток закриття</string>
   <string name="rs_percent_caption_open">Відсоток відкриття</string>
-  <string name="blinds_calibration">Калібрування…</string>
+  <string name="roller_shutter_calibrating">Калібрування…</string>
   <string name="add_wizard_is_not_available">Майстер додавання доступний лише тоді, коли встановлено з’єднання з сервером на основі введеної електронної адреси! (Вимкніть додаткові параметри в налаштуваннях облікового запису)</string>
   <string name="next">Далі</string>
   <string name="wizard_step3_txt1">Підключіть пристрій до джерела живлення. За замовчуванням пристрій має працювати в режимі конфігурації, сигналізуючи про це блиманням світлодіода стану наступним чином</string>

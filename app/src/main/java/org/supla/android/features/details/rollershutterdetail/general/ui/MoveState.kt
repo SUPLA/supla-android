@@ -1,4 +1,4 @@
-package org.supla.android.features.details.blindsdetail.general.ui
+package org.supla.android.features.details.rollershutterdetail.general.ui
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,7 +17,10 @@ package org.supla.android.features.details.blindsdetail.general.ui
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-enum class WindowType {
-  BLINDS_WINDOW,
-  ROOF_WINDOW
-}
+import androidx.compose.ui.geometry.Offset
+
+data class MoveState(
+  val initialPoint: Offset? = null,
+  val initialPercentage: Float = 0f,
+  val lastPoint: Offset = Offset(0f, 0f)
+)

@@ -1,4 +1,4 @@
-package org.supla.android.features.details.blindsdetail.general
+package org.supla.android.features.details.rollershutterdetail.general
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -36,8 +36,8 @@ import org.supla.android.data.source.remote.rollershutter.SuplaRollerShutterFlag
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.extensions.guardLet
 import org.supla.android.extensions.ifLet
-import org.supla.android.features.details.blindsdetail.general.ui.WindowState
-import org.supla.android.features.details.blindsdetail.general.ui.WindowType
+import org.supla.android.features.details.rollershutterdetail.general.ui.WindowState
+import org.supla.android.features.details.rollershutterdetail.general.ui.WindowType
 import org.supla.android.lib.SuplaConst
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.tools.SuplaSchedulers
@@ -47,7 +47,7 @@ import org.supla.android.ui.dialogs.authorize.BaseAuthorizationViewModel
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.client.AuthorizeUseCase
 import org.supla.android.usecases.client.CallSuplaClientOperationUseCase
-import org.supla.android.usecases.client.ExecuteBlindsActionUseCase
+import org.supla.android.usecases.client.ExecuteRollerShutterActionUseCase
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
 import org.supla.android.usecases.client.LoginUseCase
 import org.supla.android.usecases.client.SuplaClientOperation
@@ -57,8 +57,8 @@ import javax.inject.Inject
 import kotlin.math.abs
 
 @HiltViewModel
-class BlindGeneralViewModel @Inject constructor(
-  private val executeBlindsActionUseCase: ExecuteBlindsActionUseCase,
+class RollerShutterGeneralViewModel @Inject constructor(
+  private val executeRollerShutterActionUseCase: ExecuteRollerShutterActionUseCase,
   private val executeSimpleActionUseCase: ExecuteSimpleActionUseCase,
   private val callSuplaClientOperationUseCase: CallSuplaClientOperationUseCase,
   private val readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
@@ -71,12 +71,12 @@ class BlindGeneralViewModel @Inject constructor(
   loginUseCase: LoginUseCase,
   authorizeUseCase: AuthorizeUseCase,
   schedulers: SuplaSchedulers
-) : BaseAuthorizationViewModel<BlindsGeneralModelState, BlindsGeneralViewEvent>(
+) : BaseAuthorizationViewModel<RollerShutterGeneralModelState, RollerShutterGeneralViewEvent>(
   suplaClientProvider,
   profileRepository,
   loginUseCase,
   authorizeUseCase,
-  BlindsGeneralModelState(),
+  RollerShutterGeneralModelState(),
   schedulers
 ) {
 
@@ -87,42 +87,42 @@ class BlindGeneralViewModel @Inject constructor(
     }
   }
 
-  fun handleAction(action: BlindsAction, remoteId: Int, itemType: ItemType) {
+  fun handleAction(action: RollerShutterAction, remoteId: Int, itemType: ItemType) {
     when (action) {
-      is BlindsAction.Open -> {
+      is RollerShutterAction.Open -> {
         updateState { it.copy(moveStartTime = null, viewState = it.viewState.copy(touchTime = null), manualMoving = false) }
         executeSimpleActionUseCase.invoke(ActionId.REVEAL, itemType.toSubjectType(), remoteId).runIt()
       }
 
-      is BlindsAction.Close -> {
+      is RollerShutterAction.Close -> {
         updateState { it.copy(moveStartTime = null, viewState = it.viewState.copy(touchTime = null), manualMoving = false) }
         executeSimpleActionUseCase.invoke(ActionId.SHUT, itemType.toSubjectType(), remoteId).runIt()
       }
 
-      is BlindsAction.MoveUp -> {
+      is RollerShutterAction.MoveUp -> {
         updateState { it.updateMoveStartTime(dateProvider) }
         callSuplaClientOperationUseCase.invoke(remoteId, itemType, SuplaClientOperation.MoveUp).runIt()
       }
 
-      is BlindsAction.MoveDown -> {
+      is RollerShutterAction.MoveDown -> {
         updateState { it.updateMoveStartTime(dateProvider) }
         callSuplaClientOperationUseCase.invoke(remoteId, itemType, SuplaClientOperation.MoveDown).runIt()
       }
 
-      is BlindsAction.Stop -> {
+      is RollerShutterAction.Stop -> {
         updateState { it.calculateMoveTime(dateProvider).copy(manualMoving = false) }
         executeSimpleActionUseCase.invoke(ActionId.STOP, itemType.toSubjectType(), remoteId).runIt()
       }
 
-      BlindsAction.Calibrate -> updateState { it.copy(showCalibrationDialog = true, manualMoving = false) }
+      RollerShutterAction.Calibrate -> updateState { it.copy(showCalibrationDialog = true, manualMoving = false) }
 
-      is BlindsAction.OpenAt -> {
+      is RollerShutterAction.OpenAt -> {
         updateState {
           if (it.viewState.calibrating) {
             // During calibration the open/close time is not known so it's not possible to open window at expected position
             it
           } else {
-            executeBlindsActionUseCase.invoke(ActionId.SHUT_PARTIALLY, itemType.toSubjectType(), remoteId, action.position).runIt()
+            executeRollerShutterActionUseCase.invoke(ActionId.SHUT_PARTIALLY, itemType.toSubjectType(), remoteId, action.position).runIt()
             it.copy(
               moveStartTime = null,
               manualMoving = false,
@@ -132,7 +132,7 @@ class BlindGeneralViewModel @Inject constructor(
         }
       }
 
-      is BlindsAction.MoveTo -> updateState {
+      is RollerShutterAction.MoveTo -> updateState {
         if (it.viewState.calibrating) {
           // When calibration open/close time is not known so it's not possible to open window at expected position
           it
@@ -302,7 +302,7 @@ class BlindGeneralViewModel @Inject constructor(
     return if (data.function == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW) {
       WindowType.ROOF_WINDOW
     } else {
-      WindowType.BLINDS_WINDOW
+      WindowType.ROLLER_SHUTTER_WINDOW
     }
   }
 
@@ -328,12 +328,12 @@ class BlindGeneralViewModel @Inject constructor(
   )
 }
 
-sealed class BlindsGeneralViewEvent : ViewEvent
+sealed class RollerShutterGeneralViewEvent : ViewEvent
 
-data class BlindsGeneralModelState(
+data class RollerShutterGeneralModelState(
   val remoteId: Int? = null,
   val rollerState: WindowState = WindowState(0f, 100f),
-  val viewState: BlindsGeneralViewState = BlindsGeneralViewState(),
+  val viewState: RollerShutterGeneralViewState = RollerShutterGeneralViewState(),
 
   val moveStartTime: Long? = null,
   val manualMoving: Boolean = false,
@@ -344,7 +344,7 @@ data class BlindsGeneralModelState(
   override val authorizationDialogState: AuthorizationDialogState? = null
 ) : AuthorizationModelState() {
 
-  fun updateMoveStartTime(dateProvider: DateProvider): BlindsGeneralModelState {
+  fun updateMoveStartTime(dateProvider: DateProvider): RollerShutterGeneralModelState {
     if (viewState.positionUnknown) {
       return copy(
         moveStartTime = dateProvider.currentTimestamp(),
@@ -355,7 +355,7 @@ data class BlindsGeneralModelState(
     return this
   }
 
-  fun calculateMoveTime(dateProvider: DateProvider): BlindsGeneralModelState {
+  fun calculateMoveTime(dateProvider: DateProvider): RollerShutterGeneralModelState {
     if (viewState.positionUnknown) {
       val (startTime) = guardLet(moveStartTime) { return this }
       return copy(

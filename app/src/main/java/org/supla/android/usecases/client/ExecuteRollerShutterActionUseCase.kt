@@ -27,7 +27,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ExecuteBlindsActionUseCase @Inject constructor(
+class ExecuteRollerShutterActionUseCase @Inject constructor(
   private val suplaClientProvider: SuplaClientProvider,
   private val vibrationHelper: VibrationHelper
 ) {

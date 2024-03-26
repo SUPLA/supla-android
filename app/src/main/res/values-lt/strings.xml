@@ -67,7 +67,7 @@
   <string name="rate_later">Vėliau</string>
   <string name="rate_no_thanks">Ne, ačiū</string>
   <string name="rs_percent_caption">Uždengimo procentas</string>
-  <string name="blinds_calibration">Kalibravimas…</string>
+  <string name="roller_shutter_calibrating">Kalibravimas…</string>
   <string name="add_wizard_is_not_available">Pridėjimo vedlys prieinamas tik tada, kai pagal įvestą el. pašto adresą užmegztas ryšys su serveriu! (Savo paskyros konfigūracijoje išjunkite išplėstines parinktis)</string>
   <string name="wizard_step1_txt1">Sveiki atvykę į įrenginių pridėjimo vedlį, kuris padės Jums lengvai ir greitai pridėti naujus įrenginius prie sistemos.</string>
   <string name="wizard_step1_txt3">Norėdami tęsti, paspauskite <b>Toliau</b>.</string>

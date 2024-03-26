@@ -29,7 +29,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ChannelWithChildrenToBlindsUpdateEventMapper @Inject constructor(
+class ChannelWithChildrenToRollerShutterUpdateEventMapper @Inject constructor(
   private val getChannelCaptionUseCase: GetChannelCaptionUseCase,
   private val getChannelIconUseCase: GetChannelIconUseCase
 ) : CreateListItemUpdateEventDataUseCase.Mapper {

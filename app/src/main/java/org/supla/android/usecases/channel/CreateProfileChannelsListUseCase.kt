@@ -109,7 +109,7 @@ class CreateProfileChannelsListUseCase @Inject constructor(
       channelData.isGpMeter() -> toGpMeterItem(channelData)
       channelData.isMeasurement() -> toMeasurementItem(channelData)
       channelData.isHvacThermostat() -> toThermostatItem(channelData, childrenMap)
-      channelData.isRollerShutter() -> toBlindsItem(channelData)
+      channelData.isRollerShutter() -> toRollerShutterItem(channelData)
       else -> toChannelItem(channelData, childrenMap)
     }
 
@@ -172,9 +172,9 @@ class CreateProfileChannelsListUseCase @Inject constructor(
     )
   }
 
-  private fun toBlindsItem(channelData: ChannelDataEntity): ListItem.BlindsItem {
+  private fun toRollerShutterItem(channelData: ChannelDataEntity): ListItem.RollerShutterItem {
     val rollerShutterValue = channelData.channelValueEntity.asRollerShutterValue()
-    return ListItem.BlindsItem(
+    return ListItem.RollerShutterItem(
       channelData,
       channelData.locationEntity.caption,
       channelData.channelValueEntity.online,

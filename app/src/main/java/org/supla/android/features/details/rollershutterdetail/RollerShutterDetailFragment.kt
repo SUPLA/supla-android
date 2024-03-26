@@ -1,4 +1,4 @@
-package org.supla.android.features.details.blindsdetail
+package org.supla.android.features.details.rollershutterdetail
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -30,8 +30,10 @@ import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
 import org.supla.android.features.details.detailbase.standarddetail.StandardDetailFragment
 
 @AndroidEntryPoint
-class BlindsDetailFragment : StandardDetailFragment<BlindsDetailViewState, BlindsDetailViewEvent>(R.layout.fragment_standard_detail) {
-  override val viewModel: BlindDetailViewModel by viewModels()
+class RollerShutterDetailFragment : StandardDetailFragment<RollerShutterDetailViewState, RollerShutterDetailViewEvent>(
+  R.layout.fragment_standard_detail
+) {
+  override val viewModel: RollerShutterDetailViewModel by viewModels()
 
   private val binding by viewBinding(FragmentStandardDetailBinding::bind)
 
@@ -42,9 +44,9 @@ class BlindsDetailFragment : StandardDetailFragment<BlindsDetailViewState, Blind
   override val detailViewPager: ViewPager2
     get() = binding.detailViewPager
 
-  override fun isCloseEvent(event: BlindsDetailViewEvent) = event == BlindsDetailViewEvent.Close
+  override fun isCloseEvent(event: RollerShutterDetailViewEvent) = event == RollerShutterDetailViewEvent.Close
 
-  override fun updateToolbarTitle(state: BlindsDetailViewState) {
+  override fun updateToolbarTitle(state: RollerShutterDetailViewState) {
     state.caption?.let { setToolbarTitle(it(requireContext())) }
   }
 

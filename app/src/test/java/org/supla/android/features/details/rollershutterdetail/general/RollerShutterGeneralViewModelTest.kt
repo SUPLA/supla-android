@@ -1,4 +1,4 @@
-package org.supla.android.features.details.blindsdetail.general
+package org.supla.android.features.details.rollershutterdetail.general
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -50,8 +50,8 @@ import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.data.source.remote.rollershutter.RollerShutterValue
 import org.supla.android.data.source.remote.rollershutter.SuplaRollerShutterFlag
 import org.supla.android.data.source.runtime.ItemType
-import org.supla.android.features.details.blindsdetail.general.ui.WindowState
-import org.supla.android.features.details.blindsdetail.general.ui.WindowType
+import org.supla.android.features.details.rollershutterdetail.general.ui.WindowState
+import org.supla.android.features.details.rollershutterdetail.general.ui.WindowType
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW
 import org.supla.android.lib.actions.ActionId
@@ -63,7 +63,7 @@ import org.supla.android.ui.lists.data.IssueIconType
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.client.AuthorizeUseCase
 import org.supla.android.usecases.client.CallSuplaClientOperationUseCase
-import org.supla.android.usecases.client.ExecuteBlindsActionUseCase
+import org.supla.android.usecases.client.ExecuteRollerShutterActionUseCase
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
 import org.supla.android.usecases.client.LoginUseCase
 import org.supla.android.usecases.client.SuplaClientOperation
@@ -71,10 +71,11 @@ import org.supla.android.usecases.group.GetGroupOnlineSummaryUseCase
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
 
 @RunWith(MockitoJUnitRunner::class)
-class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, BlindsGeneralViewEvent, BlindGeneralViewModel>() {
+class RollerShutterGeneralViewModelTest :
+  BaseViewModelTest<RollerShutterGeneralModelState, RollerShutterGeneralViewEvent, RollerShutterGeneralViewModel>() {
 
   @Mock
-  lateinit var executeBlindsActionUseCase: ExecuteBlindsActionUseCase
+  lateinit var executeRollerShutterActionUseCase: ExecuteRollerShutterActionUseCase
 
   @Mock
   lateinit var executeSimpleActionUseCase: ExecuteSimpleActionUseCase
@@ -116,7 +117,7 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
   override lateinit var schedulers: SuplaSchedulers
 
   @InjectMocks
-  override lateinit var viewModel: BlindGeneralViewModel
+  override lateinit var viewModel: RollerShutterGeneralViewModel
 
   @Before
   override fun setUp() {
@@ -143,10 +144,10 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
 
     // then
     assertThat(states).containsExactly(
-      BlindsGeneralModelState(
+      RollerShutterGeneralModelState(
         remoteId = remoteId,
         rollerState = WindowState(position.toFloat(), bottomPosition.toFloat()),
-        viewState = BlindsGeneralViewState(
+        viewState = RollerShutterGeneralViewState(
           issues = listOf(ChannelIssueItem(IssueIconType.ERROR, R.string.motor_problem)),
           enabled = true,
           showClosingPercentage = true,
@@ -171,10 +172,10 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
 
     // then
     assertThat(states).containsExactly(
-      BlindsGeneralModelState(
+      RollerShutterGeneralModelState(
         remoteId = remoteId,
         rollerState = WindowState(position = 0f, markers = listOf(100f, 100f, 20f)),
-        viewState = BlindsGeneralViewState(
+        viewState = RollerShutterGeneralViewState(
           enabled = true,
           showClosingPercentage = true,
           positionUnknown = false,
@@ -200,10 +201,10 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
 
     // then
     assertThat(states).containsExactly(
-      BlindsGeneralModelState(
+      RollerShutterGeneralModelState(
         remoteId = remoteId,
         rollerState = WindowState(position = 25f, markers = emptyList()),
-        viewState = BlindsGeneralViewState(
+        viewState = RollerShutterGeneralViewState(
           enabled = true,
           showClosingPercentage = true,
           positionUnknown = false,
@@ -246,10 +247,10 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
 
     // then
     assertThat(states).containsExactly(
-      BlindsGeneralModelState(
+      RollerShutterGeneralModelState(
         remoteId = remoteId,
         rollerState = WindowState(25f, bottomPosition.toFloat()),
-        viewState = BlindsGeneralViewState(
+        viewState = RollerShutterGeneralViewState(
           issues = listOf(),
           enabled = false,
           showClosingPercentage = true,
@@ -263,14 +264,14 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
   }
 
   @Test
-  fun `should reveal blinds`() {
+  fun `should reveal roller shutter`() {
     // given
     val remoteId = 122
     whenever(executeSimpleActionUseCase.invoke(ActionId.REVEAL, SubjectType.CHANNEL, remoteId))
       .thenReturn(Completable.complete())
 
     // when
-    viewModel.handleAction(BlindsAction.Open, remoteId, ItemType.CHANNEL)
+    viewModel.handleAction(RollerShutterAction.Open, remoteId, ItemType.CHANNEL)
 
     // then
     verify(executeSimpleActionUseCase).invoke(ActionId.REVEAL, SubjectType.CHANNEL, remoteId)
@@ -278,14 +279,14 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
   }
 
   @Test
-  fun `should shut blinds`() {
+  fun `should shut roller shutter`() {
     // given
     val remoteId = 122
     whenever(executeSimpleActionUseCase.invoke(ActionId.SHUT, SubjectType.CHANNEL, remoteId))
       .thenReturn(Completable.complete())
 
     // when
-    viewModel.handleAction(BlindsAction.Close, remoteId, ItemType.CHANNEL)
+    viewModel.handleAction(RollerShutterAction.Close, remoteId, ItemType.CHANNEL)
 
     // then
     verify(executeSimpleActionUseCase).invoke(ActionId.SHUT, SubjectType.CHANNEL, remoteId)
@@ -293,14 +294,14 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
   }
 
   @Test
-  fun `should move up blinds`() {
+  fun `should move up roller shutter`() {
     // given
     val remoteId = 122
     whenever(callSuplaClientOperationUseCase.invoke(remoteId, ItemType.GROUP, SuplaClientOperation.MoveUp))
       .thenReturn(Completable.complete())
 
     // when
-    viewModel.handleAction(BlindsAction.MoveUp, remoteId, ItemType.GROUP)
+    viewModel.handleAction(RollerShutterAction.MoveUp, remoteId, ItemType.GROUP)
 
     // then
     verify(callSuplaClientOperationUseCase).invoke(remoteId, ItemType.GROUP, SuplaClientOperation.MoveUp)
@@ -308,7 +309,7 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
   }
 
   @Test
-  fun `should move up blinds and set start timer`() {
+  fun `should move up roller shutter and set start timer`() {
     // given
     val remoteId = 122
     val timestamp = 22232L
@@ -319,14 +320,14 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
 
     // when
     viewModel.loadData(remoteId, ItemType.CHANNEL)
-    viewModel.handleAction(BlindsAction.MoveUp, remoteId, ItemType.CHANNEL)
+    viewModel.handleAction(RollerShutterAction.MoveUp, remoteId, ItemType.CHANNEL)
 
     // then
     verify(callSuplaClientOperationUseCase).invoke(remoteId, ItemType.CHANNEL, SuplaClientOperation.MoveUp)
-    val state = BlindsGeneralModelState(
+    val state = RollerShutterGeneralModelState(
       remoteId = remoteId,
       rollerState = WindowState(0f),
-      viewState = BlindsGeneralViewState(
+      viewState = RollerShutterGeneralViewState(
         issues = emptyList(),
         enabled = true,
         showClosingPercentage = true,
@@ -341,14 +342,14 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
   }
 
   @Test
-  fun `should move down blinds`() {
+  fun `should move down roller shutter`() {
     // given
     val remoteId = 122
     whenever(callSuplaClientOperationUseCase.invoke(remoteId, ItemType.CHANNEL, SuplaClientOperation.MoveDown))
       .thenReturn(Completable.complete())
 
     // when
-    viewModel.handleAction(BlindsAction.MoveDown, remoteId, ItemType.CHANNEL)
+    viewModel.handleAction(RollerShutterAction.MoveDown, remoteId, ItemType.CHANNEL)
 
     // then
     verify(callSuplaClientOperationUseCase).invoke(remoteId, ItemType.CHANNEL, SuplaClientOperation.MoveDown)
@@ -356,7 +357,7 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
   }
 
   @Test
-  fun `should move down blinds and set start time`() {
+  fun `should move down roller shutter and set start time`() {
     // given
     val remoteId = 122
     val timestamp = 22232L
@@ -367,14 +368,14 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
 
     // when
     viewModel.loadData(remoteId, ItemType.CHANNEL)
-    viewModel.handleAction(BlindsAction.MoveDown, remoteId, ItemType.CHANNEL)
+    viewModel.handleAction(RollerShutterAction.MoveDown, remoteId, ItemType.CHANNEL)
 
     // then
     verify(callSuplaClientOperationUseCase).invoke(remoteId, ItemType.CHANNEL, SuplaClientOperation.MoveDown)
-    val state = BlindsGeneralModelState(
+    val state = RollerShutterGeneralModelState(
       remoteId = remoteId,
       rollerState = WindowState(0f),
-      viewState = BlindsGeneralViewState(
+      viewState = RollerShutterGeneralViewState(
         issues = emptyList(),
         enabled = true,
         showClosingPercentage = true,
@@ -390,14 +391,14 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
   }
 
   @Test
-  fun `should stop blinds`() {
+  fun `should stop roller shutter`() {
     // given
     val remoteId = 122
     whenever(executeSimpleActionUseCase.invoke(ActionId.STOP, SubjectType.CHANNEL, remoteId))
       .thenReturn(Completable.complete())
 
     // when
-    viewModel.handleAction(BlindsAction.Stop, remoteId, ItemType.CHANNEL)
+    viewModel.handleAction(RollerShutterAction.Stop, remoteId, ItemType.CHANNEL)
 
     // then
     verify(executeSimpleActionUseCase).invoke(ActionId.STOP, SubjectType.CHANNEL, remoteId)
@@ -405,7 +406,7 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
   }
 
   @Test
-  fun `should move down blinds then stop and calculate time`() {
+  fun `should move down roller shutter then stop and calculate time`() {
     // given
     val remoteId = 122
     val timestamp = 22232L
@@ -419,16 +420,16 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
 
     // when
     viewModel.loadData(remoteId, ItemType.CHANNEL)
-    viewModel.handleAction(BlindsAction.MoveDown, remoteId, ItemType.CHANNEL)
-    viewModel.handleAction(BlindsAction.Stop, remoteId, ItemType.CHANNEL)
+    viewModel.handleAction(RollerShutterAction.MoveDown, remoteId, ItemType.CHANNEL)
+    viewModel.handleAction(RollerShutterAction.Stop, remoteId, ItemType.CHANNEL)
 
     // then
     verify(callSuplaClientOperationUseCase).invoke(remoteId, ItemType.CHANNEL, SuplaClientOperation.MoveDown)
     verify(executeSimpleActionUseCase).invoke(ActionId.STOP, SubjectType.CHANNEL, remoteId)
-    val state = BlindsGeneralModelState(
+    val state = RollerShutterGeneralModelState(
       remoteId = remoteId,
       rollerState = WindowState(0f),
-      viewState = BlindsGeneralViewState(
+      viewState = RollerShutterGeneralViewState(
         issues = emptyList(),
         enabled = true,
         showClosingPercentage = true,
@@ -449,27 +450,27 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
     val remoteId = 122
 
     // when
-    viewModel.handleAction(BlindsAction.Calibrate, remoteId, ItemType.CHANNEL)
+    viewModel.handleAction(RollerShutterAction.Calibrate, remoteId, ItemType.CHANNEL)
 
     // then
     assertThat(states).containsExactly(
-      BlindsGeneralModelState(showCalibrationDialog = true)
+      RollerShutterGeneralModelState(showCalibrationDialog = true)
     )
-    verifyZeroInteractions(executeSimpleActionUseCase, executeBlindsActionUseCase)
+    verifyZeroInteractions(executeSimpleActionUseCase, executeRollerShutterActionUseCase)
   }
 
   @Test
-  fun `should open blinds at specified position`() {
+  fun `should open roller shutter at specified position`() {
     // given
     val remoteId = 122
-    whenever(executeBlindsActionUseCase.invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, 45f))
+    whenever(executeRollerShutterActionUseCase.invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, 45f))
       .thenReturn(Completable.complete())
 
     // when
-    viewModel.handleAction(BlindsAction.OpenAt(45f), remoteId, ItemType.CHANNEL)
+    viewModel.handleAction(RollerShutterAction.OpenAt(45f), remoteId, ItemType.CHANNEL)
 
     // then
-    verify(executeBlindsActionUseCase).invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, 45f)
+    verify(executeRollerShutterActionUseCase).invoke(ActionId.SHUT_PARTIALLY, SubjectType.CHANNEL, remoteId, 45f)
     assertThat(states).isEmpty()
   }
 
@@ -479,17 +480,17 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
     val remoteId = 122
 
     // when
-    viewModel.handleAction(BlindsAction.MoveTo(45f), remoteId, ItemType.CHANNEL)
+    viewModel.handleAction(RollerShutterAction.MoveTo(45f), remoteId, ItemType.CHANNEL)
 
     // then
     assertThat(states).containsExactly(
-      BlindsGeneralModelState(
+      RollerShutterGeneralModelState(
         rollerState = WindowState(45f),
-        viewState = BlindsGeneralViewState(positionText = "55%"),
+        viewState = RollerShutterGeneralViewState(positionText = "55%"),
         manualMoving = true
       )
     )
-    verifyZeroInteractions(executeBlindsActionUseCase, executeSimpleActionUseCase)
+    verifyZeroInteractions(executeRollerShutterActionUseCase, executeSimpleActionUseCase)
   }
 
   @Test
@@ -500,13 +501,13 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
 
     // when
     viewModel.loadData(remoteId, ItemType.CHANNEL)
-    viewModel.handleAction(BlindsAction.OpenAt(45f), remoteId, ItemType.CHANNEL)
+    viewModel.handleAction(RollerShutterAction.OpenAt(45f), remoteId, ItemType.CHANNEL)
 
     // then
-    val state = BlindsGeneralModelState(
+    val state = RollerShutterGeneralModelState(
       remoteId = remoteId,
       rollerState = WindowState(0f),
-      viewState = BlindsGeneralViewState(
+      viewState = RollerShutterGeneralViewState(
         issues = emptyList(),
         enabled = true,
         showClosingPercentage = true,
@@ -515,7 +516,7 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
       )
     )
     assertThat(states).containsExactly(state)
-    verifyZeroInteractions(executeBlindsActionUseCase, executeSimpleActionUseCase)
+    verifyZeroInteractions(executeRollerShutterActionUseCase, executeSimpleActionUseCase)
   }
 
   @Test
@@ -526,13 +527,13 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
 
     // when
     viewModel.loadData(remoteId, ItemType.CHANNEL)
-    viewModel.handleAction(BlindsAction.MoveTo(45f), remoteId, ItemType.CHANNEL)
+    viewModel.handleAction(RollerShutterAction.MoveTo(45f), remoteId, ItemType.CHANNEL)
 
     // then
-    val state = BlindsGeneralModelState(
+    val state = RollerShutterGeneralModelState(
       remoteId = remoteId,
       rollerState = WindowState(0f),
-      viewState = BlindsGeneralViewState(
+      viewState = RollerShutterGeneralViewState(
         issues = emptyList(),
         enabled = true,
         showClosingPercentage = true,
@@ -541,7 +542,7 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
       )
     )
     assertThat(states).containsExactly(state)
-    verifyZeroInteractions(executeBlindsActionUseCase, executeSimpleActionUseCase)
+    verifyZeroInteractions(executeRollerShutterActionUseCase, executeSimpleActionUseCase)
   }
 
   @Test
@@ -550,15 +551,15 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
     val remoteId = 122
 
     // when
-    viewModel.handleAction(BlindsAction.Calibrate, remoteId, ItemType.CHANNEL)
+    viewModel.handleAction(RollerShutterAction.Calibrate, remoteId, ItemType.CHANNEL)
     viewModel.cancelCalibration()
 
     // then
     assertThat(states).containsExactly(
-      BlindsGeneralModelState(showCalibrationDialog = true),
-      BlindsGeneralModelState(showCalibrationDialog = false)
+      RollerShutterGeneralModelState(showCalibrationDialog = true),
+      RollerShutterGeneralModelState(showCalibrationDialog = false)
     )
-    verifyZeroInteractions(executeSimpleActionUseCase, executeBlindsActionUseCase)
+    verifyZeroInteractions(executeSimpleActionUseCase, executeRollerShutterActionUseCase)
   }
 
   @Test
@@ -573,14 +574,14 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
     whenever(profileRepository.findActiveProfile()).thenReturn(Single.just(profile))
 
     // when
-    viewModel.handleAction(BlindsAction.Calibrate, remoteId, ItemType.CHANNEL)
+    viewModel.handleAction(RollerShutterAction.Calibrate, remoteId, ItemType.CHANNEL)
     viewModel.startCalibration()
 
     // then
     assertThat(states).containsExactly(
-      BlindsGeneralModelState(showCalibrationDialog = true),
-      BlindsGeneralModelState(showCalibrationDialog = false),
-      BlindsGeneralModelState(
+      RollerShutterGeneralModelState(showCalibrationDialog = true),
+      RollerShutterGeneralModelState(showCalibrationDialog = false),
+      RollerShutterGeneralModelState(
         authorizationDialogState = AuthorizationDialogState(
           userName = "some-email@supla.org",
           isCloudAccount = true,
@@ -589,7 +590,7 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
       )
     )
     verify(profileRepository).findActiveProfile()
-    verifyZeroInteractions(executeSimpleActionUseCase, executeBlindsActionUseCase)
+    verifyZeroInteractions(executeSimpleActionUseCase, executeRollerShutterActionUseCase)
     verifyNoMoreInteractions(profileRepository)
   }
 
@@ -606,10 +607,10 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
     viewModel.onAuthorized()
 
     // then
-    val state = BlindsGeneralModelState(
+    val state = RollerShutterGeneralModelState(
       remoteId = remoteId,
       rollerState = WindowState(0f),
-      viewState = BlindsGeneralViewState(
+      viewState = RollerShutterGeneralViewState(
         issues = emptyList(),
         enabled = true,
         showClosingPercentage = true,
@@ -619,7 +620,7 @@ class BlindGeneralViewModelTest : BaseViewModelTest<BlindsGeneralModelState, Bli
     )
     assertThat(states).containsExactly(state)
     verify(callSuplaClientOperationUseCase).invoke(remoteId, ItemType.CHANNEL, SuplaClientOperation.Command.Recalibrate)
-    verifyZeroInteractions(executeBlindsActionUseCase, executeSimpleActionUseCase)
+    verifyZeroInteractions(executeRollerShutterActionUseCase, executeSimpleActionUseCase)
   }
 
   private fun mockOnlineChannel(

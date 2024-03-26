@@ -68,7 +68,7 @@
   <string name="rate_later">Později</string>
   <string name="rate_no_thanks">Ne, děkuji</string>
   <string name="rs_percent_caption">Procento uzavření</string>
-  <string name="blinds_calibration">Kalibrace…</string>
+  <string name="roller_shutter_calibrating">Kalibrace…</string>
   <string name="add_wizard_is_not_available">Průvodce přidáním je dostupný pouze v případě, že bylo navázáno připojení k serveru na základě zadané e-mailové adresy! (vypněte možnost pokročilé konfigurace účtu)</string>
   <string name="wizard_step1_txt1">Vítejte v Průvodci přidáním zařízení, který vám pomůže rychle a snadno přidat nové zařízení do vašeho systému.</string>
   <string name="wizard_step1_txt3">Chcete-li pokračovat, stiskněte tlačítko <b>Další</b>.</string>

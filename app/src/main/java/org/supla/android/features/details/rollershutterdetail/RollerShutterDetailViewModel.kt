@@ -1,4 +1,4 @@
-package org.supla.android.features.details.blindsdetail
+package org.supla.android.features.details.rollershutterdetail
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -32,31 +32,31 @@ import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
 import javax.inject.Inject
 
 @HiltViewModel
-class BlindDetailViewModel @Inject constructor(
+class RollerShutterDetailViewModel @Inject constructor(
   private val getChannelCaptionUseCase: GetChannelCaptionUseCase,
   readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
   readChannelGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase,
   updateEventsManager: UpdateEventsManager,
   preferences: Preferences,
   schedulers: SuplaSchedulers
-) : StandardDetailViewModel<BlindsDetailViewState, BlindsDetailViewEvent>(
+) : StandardDetailViewModel<RollerShutterDetailViewState, RollerShutterDetailViewEvent>(
   readChannelByRemoteIdUseCase,
   readChannelGroupByRemoteIdUseCase,
   updateEventsManager,
   preferences,
-  BlindsDetailViewState(),
+  RollerShutterDetailViewState(),
   schedulers
 ) {
-  override fun closeEvent(): BlindsDetailViewEvent = BlindsDetailViewEvent.Close
+  override fun closeEvent(): RollerShutterDetailViewEvent = RollerShutterDetailViewEvent.Close
 
-  override fun updatedState(state: BlindsDetailViewState, channelDataBase: ChannelDataBase) =
+  override fun updatedState(state: RollerShutterDetailViewState, channelDataBase: ChannelDataBase) =
     state.copy(caption = getChannelCaptionUseCase(channelDataBase))
 }
 
-sealed interface BlindsDetailViewEvent : StandardDetailViewEvent {
-  object Close : BlindsDetailViewEvent
+sealed interface RollerShutterDetailViewEvent : StandardDetailViewEvent {
+  object Close : RollerShutterDetailViewEvent
 }
 
-data class BlindsDetailViewState(
+data class RollerShutterDetailViewState(
   override val caption: StringProvider? = null
 ) : StandardDetailViewState(caption)

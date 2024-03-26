@@ -79,7 +79,7 @@
   <string name="rate_later">Mai târziu</string>
   <string name="rate_no_thanks">Nu, mulțumesc</string>
   <string name="rs_percent_caption">Procentul de închidere</string>
-  <string name="blinds_calibration">Calibrare…</string>
+  <string name="roller_shutter_calibrating">Calibrare…</string>
 
   <string name="add_wizard_is_not_available">Add Wizard este disponibil numai atunci când conexiunea la server a fost stabilită pe baza adresei de e-mail introdusă! (Dezactivați opțiunile avansate în configurația contului dvs.)</string>
 

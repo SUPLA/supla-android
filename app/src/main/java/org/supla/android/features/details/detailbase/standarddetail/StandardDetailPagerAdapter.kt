@@ -20,9 +20,9 @@ package org.supla.android.features.details.detailbase.standarddetail
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import org.supla.android.R
-import org.supla.android.features.details.blindsdetail.general.BlindsGeneralFragment
 import org.supla.android.features.details.gpmdetail.history.GpmHistoryDetailFragment
 import org.supla.android.features.details.legacydetail.LegacyDetailFragment
+import org.supla.android.features.details.rollershutterdetail.general.RollerShutterGeneralFragment
 import org.supla.android.features.details.switchdetail.general.SwitchGeneralFragment
 import org.supla.android.features.details.switchdetail.timer.TimersDetailFragment
 import org.supla.android.features.details.thermometerdetail.history.ThermometerHistoryDetailFragment
@@ -64,7 +64,7 @@ class StandardDetailPagerAdapter(
 
     DetailPage.GPM_HISTORY -> GpmHistoryDetailFragment().apply { arguments = GpmHistoryDetailFragment.bundle(itemBundle.remoteId) }
 
-    DetailPage.BLINDS -> BlindsGeneralFragment().apply { arguments = BlindsGeneralFragment.bundle(itemBundle) }
+    DetailPage.ROLLER_SHUTTER -> RollerShutterGeneralFragment().apply { arguments = RollerShutterGeneralFragment.bundle(itemBundle) }
   }
 }
 
@@ -87,6 +87,6 @@ enum class DetailPage(val menuId: Int) {
   // GPM
   GPM_HISTORY(R.id.detail_history),
 
-  // Blinds
-  BLINDS(R.id.detail_general)
+  // Roller shutter
+  ROLLER_SHUTTER(R.id.detail_general)
 }

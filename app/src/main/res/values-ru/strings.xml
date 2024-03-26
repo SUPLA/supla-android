@@ -91,7 +91,7 @@
   <string name="rate_no_thanks">Спасибо, не надо</string>
 
   <string name="rs_percent_caption">Процент закрытия</string>
-  <string name="blinds_calibration">калибровка…</string>
+  <string name="roller_shutter_calibrating">калибровка…</string>
   <string name="add_wizard_is_not_available">Мастер добавления доступен только при подключении к серверу на основе введенного адреса электронной почты! (Отключите дополнительные параметры в настройках вашей учетной записи)</string>
   <string name="wizard_step1_txt3">Для продолжения нажмите <b>Далее</b>.</string>
   <string name="add_device">Добавить устройство</string>

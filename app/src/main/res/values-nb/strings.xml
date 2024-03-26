@@ -79,7 +79,7 @@
   <string name="rate_later">Senere</string>
   <string name="rate_no_thanks">Nei takk</string>
   <string name="rs_percent_caption">Prosent av stenging</string>
-  <string name="blinds_calibration">Kalibrering…</string>
+  <string name="roller_shutter_calibrating">Kalibrering…</string>
 
   <string name="add_wizard_is_not_available">Veiviseren legg er kun tilgjengelig når tilkobling til serveren er etablert basert på e-postadressen som er angitt! (Deaktiver avanserte innstillinger i kontokonfigurasjonen din).</string>
 

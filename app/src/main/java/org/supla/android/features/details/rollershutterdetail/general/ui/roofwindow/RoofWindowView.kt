@@ -1,4 +1,4 @@
-package org.supla.android.features.details.blindsdetail.general.ui.roofwindow
+package org.supla.android.features.details.rollershutterdetail.general.ui.roofwindow
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -54,9 +54,9 @@ import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.extensions.guardLet
-import org.supla.android.features.details.blindsdetail.general.ui.MoveState
-import org.supla.android.features.details.blindsdetail.general.ui.WindowColors
-import org.supla.android.features.details.blindsdetail.general.ui.WindowState
+import org.supla.android.features.details.rollershutterdetail.general.ui.MoveState
+import org.supla.android.features.details.rollershutterdetail.general.ui.WindowColors
+import org.supla.android.features.details.rollershutterdetail.general.ui.WindowState
 
 private const val MAX_OPENED_OFFSET = 35f
 

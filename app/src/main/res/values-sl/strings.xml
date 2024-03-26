@@ -79,7 +79,7 @@
   <string name="rate_later">Pozneje</string>
   <string name="rate_no_thanks">Ne, hvala</string>
   <string name="rs_percent_caption">Odstotek zapiranja</string>
-  <string name="blinds_calibration">Kalibracija…</string>
+  <string name="roller_shutter_calibrating">Kalibracija…</string>
 
   <string name="add_wizard_is_not_available">Čarovnik za dodajanje je na voljo le, če je na podlagi vnesenega e-poštnega naslova vzpostavljena povezava s strežnikom! (Onemogočite napredne možnosti v konfiguraciji računa)</string>
 

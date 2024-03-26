@@ -1,4 +1,4 @@
-package org.supla.android.features.details.blindsdetail.general.ui.roofwindow
+package org.supla.android.features.details.rollershutterdetail.general.ui.roofwindow
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
