@@ -109,7 +109,7 @@ fun <T> TextSpinner(
       modifier = Modifier.height(24.dp)
     ) {
       Row(verticalAlignment = Alignment.CenterVertically) {
-        Text(text = selectedOptionText, style = MaterialTheme.typography.body2)
+        Text(text = selectedOptionText, style = MaterialTheme.typography.body2, color = MaterialTheme.colors.onBackground)
         SpinnerTrailingIcon(
           expanded = expanded,
           modifier = Modifier
@@ -139,7 +139,8 @@ private fun SpinnerTrailingIcon(expanded: Boolean, modifier: Modifier = Modifier
     Icon(
       painter = painterResource(id = R.drawable.ic_dropdown),
       contentDescription = null,
-      modifier.rotate(
+      tint = MaterialTheme.colors.onBackground,
+      modifier = modifier.rotate(
         if (expanded) {
           180f
         } else {

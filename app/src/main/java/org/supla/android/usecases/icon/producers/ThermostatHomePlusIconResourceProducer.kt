@@ -30,27 +30,27 @@ class ThermostatHomePlusIconResourceProducer : IconResourceProducer {
   override fun produce(data: IconData): Int =
     when (data.altIcon) {
       1 -> if (data.state.value == ChannelState.Value.ON) {
-        data.icon(R.drawable.thermostat_hp_homepluson_1, R.drawable.thermostat_hp_homepluson_1_nightmode)
+        R.drawable.thermostat_hp_homepluson_1
       } else {
-        data.icon(R.drawable.thermostat_hp_homeplusoff_1, R.drawable.thermostat_hp_homeplusoff_1_nightmode)
+        R.drawable.thermostat_hp_homeplusoff_1
       }
 
       2 -> if (data.state.value == ChannelState.Value.ON) {
-        data.icon(R.drawable.thermostat_hp_homepluson_2, R.drawable.thermostat_hp_homepluson_2_nightmode)
+        R.drawable.thermostat_hp_homepluson_2
       } else {
-        data.icon(R.drawable.thermostat_hp_homeplusoff_2, R.drawable.thermostat_hp_homeplusoff_2_nightmode)
+        R.drawable.thermostat_hp_homeplusoff_2
       }
 
       3 -> if (data.state.value == ChannelState.Value.ON) {
-        data.icon(R.drawable.thermostat_hp_homepluson_3, R.drawable.thermostat_hp_homepluson_3_nightmode)
+        R.drawable.thermostat_hp_homepluson_3
       } else {
-        data.icon(R.drawable.thermostat_hp_homeplusoff_3, R.drawable.thermostat_hp_homeplusoff_3_nightmode)
+        R.drawable.thermostat_hp_homeplusoff_3
       }
 
       else -> if (data.state.value == ChannelState.Value.ON) {
-        data.icon(R.drawable.thermostat_hp_homepluson, R.drawable.thermostat_hp_homepluson_nightmode)
+        R.drawable.thermostat_hp_homepluson
       } else {
-        data.icon(R.drawable.thermostat_hp_homeplusoff, R.drawable.thermostat_hp_homeplusoff_nightmode)
+        R.drawable.thermostat_hp_homeplusoff
       }
     }
 }

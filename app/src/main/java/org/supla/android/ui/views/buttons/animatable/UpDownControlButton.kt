@@ -50,7 +50,7 @@ import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.extensions.innerShadow
 import org.supla.android.ui.views.buttons.animatable.upanddown.UpDownControlButtonScope
 
-val TOTAL_HEIGHT = 200.dp
+val TOTAL_HEIGHT = 188.dp
 private val BUTTON_WIDTH = 64.dp
 private val BUTTON_HEIGHT = TOTAL_HEIGHT.div(2)
 private val CORNER_RADIUS = BUTTON_WIDTH.div(2)

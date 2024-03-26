@@ -42,31 +42,12 @@ class GetSceneIconUseCase @Inject constructor(
     R.drawable.scene18, R.drawable.scene19
   )
 
-  private val iconsNightMode = intArrayOf(
-    R.drawable.scene0_nightmode, R.drawable.scene1_nightmode,
-    R.drawable.scene2_nightmode, R.drawable.scene3_nightmode,
-    R.drawable.scene4_nightmode, R.drawable.scene5_nightmode,
-    R.drawable.scene6_nightmode, R.drawable.scene7_nightmode,
-    R.drawable.scene8_nightmode, R.drawable.scene9_nightmode,
-    R.drawable.scene10_nightmode, R.drawable.scene11_nightmode,
-    R.drawable.scene12_nightmode, R.drawable.scene13_nightmode,
-    R.drawable.scene14_nightmode, R.drawable.scene15_nightmode,
-    R.drawable.scene16_nightmode, R.drawable.scene17_nightmode,
-    R.drawable.scene18_nightmode, R.drawable.scene19_nightmode
-  )
-
-  operator fun invoke(sceneEntity: SceneEntity, nightMode: Boolean = false): ImageId {
+  operator fun invoke(sceneEntity: SceneEntity): ImageId {
     if (sceneEntity.userIcon != 0) {
       val id = ImageId(sceneEntity.userIcon, 1, sceneEntity.profileId!!.toLong())
       if (imageCacheProxy.bitmapExists(id)) {
         return id
       }
-    }
-
-    val icons = if (nightMode) {
-      iconsNightMode
-    } else {
-      icons
     }
 
     return if (sceneEntity.altIcon >= icons.size) {

@@ -36,31 +36,21 @@ class GateIconResourceProducer : IconResourceProducer {
   override fun produce(data: IconData): Int =
     when (data.altIcon) {
       1 -> when (data.state.value) {
-        ChannelState.Value.PARTIALLY_OPENED ->
-          data.icon(R.drawable.gatealt1closed50percent, R.drawable.gatealt1closed50percent_nightmode)
-
-        ChannelState.Value.OPEN ->
-          data.icon(R.drawable.gatealt1open, R.drawable.gatealt1open_nightmode)
-
-        else ->
-          data.icon(R.drawable.gatealt1closed, R.drawable.gatealt1closed_nightmode)
+        ChannelState.Value.PARTIALLY_OPENED -> R.drawable.gatealt1closed50percent
+        ChannelState.Value.OPEN -> R.drawable.gatealt1open
+        else -> R.drawable.gatealt1closed
       }
 
       2 -> if (data.state.value == ChannelState.Value.OPEN) {
-        data.icon(R.drawable.barieropen, R.drawable.barieropen_nightmode)
+        R.drawable.barieropen
       } else {
-        data.icon(R.drawable.barierclosed, R.drawable.barierclosed_nightmode)
+        R.drawable.barierclosed
       }
 
       else -> when (data.state.value) {
-        ChannelState.Value.PARTIALLY_OPENED ->
-          data.icon(R.drawable.gateclosed50percent, R.drawable.gateclosed50percent_nightmode)
-
-        ChannelState.Value.OPEN ->
-          data.icon(R.drawable.gateopen, R.drawable.gateopen_nightmode)
-
-        else ->
-          data.icon(R.drawable.gateclosed, R.drawable.gateclosed_nightmode)
+        ChannelState.Value.PARTIALLY_OPENED -> R.drawable.gateclosed50percent
+        ChannelState.Value.OPEN -> R.drawable.gateopen
+        else -> R.drawable.gateclosed
       }
     }
 }

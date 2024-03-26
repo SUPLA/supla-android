@@ -79,7 +79,7 @@
   <string name="rate_later">Mai târziu</string>
   <string name="rate_no_thanks">Nu, mulțumesc</string>
   <string name="rs_percent_caption">Procentul de închidere</string>
-  <string name="blinds_calibration">Calibrare…</string>
+  <string name="roller_shutter_calibrating">Calibrare…</string>
 
   <string name="add_wizard_is_not_available">Add Wizard este disponibil numai atunci când conexiunea la server a fost stabilită pe baza adresei de e-mail introdusă! (Dezactivați opțiunile avansate în configurația contului dvs.)</string>
 
@@ -431,7 +431,7 @@
   <string name="location_name">Denumirea locației</string>
   <string name="overcurrent_warning">Alimentarea a fost oprită după depăşirea pragului stabilit de intensitate admisibilă a curentului.</string>
   <string name="overcurrent_question">Alimentarea a fost oprită după depășirea pragului setat al intensității curentului admisibil. Ești sigur că vrei să pornești alimentarea?</string>
-  <string name="blinds_start_calibration_message">Sigur vrei să începi calibrarea?</string>
+  <string name="roller_shutter_start_calibration_message">Sigur vrei să începi calibrarea?</string>
   <string name="calibration_failed">Calibrare a eșuat.</string>
   <string name="calibration_lost">Calibrare pierdută.</string>
   <string name="motor_problem">Problemă cu motorul / Oprire  neașteptată.</string>
@@ -454,5 +454,5 @@
   <string name="rs_display_mode_closing">Închidere</string>
   <string name="status_accessid_inactive">Identificator de acces inactiv</string>
   <string name="hour_string_format">HH:mm:ss</string>
-  <string name="blinds_start_calibration_title">Calibrare</string>
+  <string name="roller_shutter_calibration">Calibrare</string>
 </resources>

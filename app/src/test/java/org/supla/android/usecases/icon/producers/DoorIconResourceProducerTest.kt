@@ -48,24 +48,4 @@ class DoorIconResourceProducerTest : BaseIconResourceProducerTest() {
       expectedIcon = R.drawable.doorclosed
     )
   }
-
-  @Test
-  fun `should produce open icon (night mode)`() {
-    test(
-      state = ChannelState.Value.OPEN,
-      function = SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_DOOR,
-      expectedIcon = R.drawable.dooropen_nightmode,
-      nightMode = true
-    )
-  }
-
-  @Test
-  fun `should produce closed icon (night mode)`() {
-    test(
-      state = ChannelState.Value.CLOSED,
-      function = SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK,
-      expectedIcon = R.drawable.doorclosed_nightmode,
-      nightMode = true
-    )
-  }
 }

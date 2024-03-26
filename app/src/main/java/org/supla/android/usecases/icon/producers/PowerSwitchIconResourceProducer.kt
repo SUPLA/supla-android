@@ -33,33 +33,33 @@ class PowerSwitchIconResourceProducer : IconResourceProducer {
   override fun produce(data: IconData): Int =
     when (data.altIcon) {
       1 -> if (data.state.value == ChannelState.Value.ON) {
-        data.icon(R.drawable.tvon, R.drawable.tvon_nightmode)
+        R.drawable.tvon
       } else {
-        data.icon(R.drawable.tvoff, R.drawable.tvoff_nightmode)
+        R.drawable.tvoff
       }
 
       2 -> if (data.state.value == ChannelState.Value.ON) {
-        data.icon(R.drawable.radioon, R.drawable.radioon_nightmode)
+        R.drawable.radioon
       } else {
-        data.icon(R.drawable.radiooff, R.drawable.radiooff_nightmode)
+        R.drawable.radiooff
       }
 
       3 -> if (data.state.value == ChannelState.Value.ON) {
-        data.icon(R.drawable.pcon, R.drawable.pcon_nightmode)
+        R.drawable.pcon
       } else {
-        data.icon(R.drawable.pcoff, R.drawable.pcoff_nightmode)
+        R.drawable.pcoff
       }
 
       4 -> if (data.state.value == ChannelState.Value.ON) {
-        data.icon(R.drawable.fanon, R.drawable.fanon_nightmode)
+        R.drawable.fanon
       } else {
-        data.icon(R.drawable.fanoff, R.drawable.fanoff_nightmode)
+        R.drawable.fanoff
       }
 
       else -> if (data.state.value == ChannelState.Value.ON) {
-        data.icon(R.drawable.poweron, R.drawable.poweron_nightmode)
+        R.drawable.poweron
       } else {
-        data.icon(R.drawable.poweroff, R.drawable.poweroff_nightmode)
+        R.drawable.poweroff
       }
     }
 }

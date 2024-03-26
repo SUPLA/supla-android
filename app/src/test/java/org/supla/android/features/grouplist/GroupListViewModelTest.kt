@@ -32,8 +32,8 @@ import org.supla.android.lib.SuplaConst
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.channel.*
-import org.supla.android.usecases.details.BlindsDetailType
 import org.supla.android.usecases.details.ProvideDetailTypeUseCase
+import org.supla.android.usecases.details.RollerShutterDetailType
 import org.supla.android.usecases.details.ThermometerDetailType
 import org.supla.android.usecases.group.CreateProfileGroupsListUseCase
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
@@ -278,7 +278,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
   }
 
   @Test
-  fun `should open blinds detail when item is offline`() {
+  fun `should open roller shutter detail when item is offline`() {
     // given
     val remoteId = 123
     val function = SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
@@ -287,7 +287,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     every { groupData.function } returns function
     every { groupData.isOnline() } returns false
 
-    val detailType = BlindsDetailType(listOf(DetailPage.BLINDS))
+    val detailType = RollerShutterDetailType(listOf(DetailPage.ROLLER_SHUTTER))
     whenever(provideDetailTypeUseCase(groupData)).thenReturn(detailType)
 
     whenever(findGroupByRemoteIdUseCase(remoteId)).thenReturn(Maybe.just(groupData))
@@ -298,7 +298,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     // then
     Assertions.assertThat(states).isEmpty()
     Assertions.assertThat(events).containsExactly(
-      GroupListViewEvent.OpenBlindsDetail(ItemBundle(remoteId, 0, ItemType.GROUP, function), detailType.pages)
+      GroupListViewEvent.OpenRollerShutterDetail(ItemBundle(remoteId, 0, ItemType.GROUP, function), detailType.pages)
     )
     verifyZeroInteractionsExcept(provideDetailTypeUseCase)
   }

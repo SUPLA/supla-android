@@ -23,7 +23,7 @@
       android:padding="8dp"
       android:scaleType="fitCenter"
       android:src="@drawable/ic_close"
-      android:tint="@color/widget_text"
+      android:tint="@color/on_background"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintTop_toTopOf="parent" />
 
@@ -95,7 +95,7 @@
           android:layout_height="wrap_content"
           android:layout_weight="1"
           android:text="@string/widget_configure_type_channel_label"
-          android:textColor="@color/widget_text" />
+          android:textColor="@color/on_background" />
 
         <org.supla.android.ui.SegmentedButton
           style="@style/Widget.SegmentedButton.Texted"
@@ -103,7 +103,7 @@
           android:layout_height="wrap_content"
           android:layout_weight="1"
           android:text="@string/widget_configure_type_group_label"
-          android:textColor="@color/widget_text" />
+          android:textColor="@color/on_background" />
       </org.supla.android.ui.SegmentedButtonGroup>
 
       <TextView
@@ -139,7 +139,7 @@
         android:layout_marginVertical="8dp"
         android:gravity="center"
         android:text="@{viewmodel.itemsType == ItemType.CHANNEL ? @string/widget_configure_no_channel : @string/widget_configure_no_group }"
-        android:textColor="@color/widget_text"
+        android:textColor="@color/on_background"
         android:textSize="16sp"
         app:visibility="@{!viewmodel.dataLoading &amp; viewmodel.itemsList.size() == 0}" />
 
@@ -163,19 +163,15 @@
 
     <EditText
       android:id="@+id/widget_on_off_configure_name"
+      style="@style/AppTheme.EditText"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginHorizontal="16dp"
       android:layout_marginVertical="4dp"
-      android:background="@drawable/background_widget_configuration_field"
       android:importantForAutofill="no"
       android:inputType="text"
       android:maxLength="@integer/widget_name_max_length"
-      android:maxLines="1"
       android:onTextChanged="@{viewmodel::onDisplayNameChanged}"
-      android:padding="12dp"
-      android:textColor="@color/widget_text"
-      android:textSize="16sp"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toBottomOf="@id/widget_on_off_configure_name_label"
       app:visibility="@{!viewmodel.dataLoading &amp; viewmodel.itemsList.size() > 0}" />

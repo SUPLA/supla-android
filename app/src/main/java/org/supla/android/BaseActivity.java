@@ -54,7 +54,7 @@ public class BaseActivity extends FragmentActivity
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     SuplaApp.getApp().initTypefaceCollection(this);
-    setStatusBarColor(R.color.splash_bg);
+    setStatusBarColor(R.color.primary);
   }
 
   @Override

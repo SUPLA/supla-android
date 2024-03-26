@@ -33,15 +33,15 @@ class StaircaseTimerIconResourceProducer : IconResourceProducer {
   override fun produce(data: IconData): Int =
     when (data.altIcon) {
       1 -> if (data.state.value == ChannelState.Value.ON) {
-        data.icon(R.drawable.staircasetimeron_1, R.drawable.staircasetimeron_1_nightmode)
+        R.drawable.staircasetimeron_1
       } else {
-        data.icon(R.drawable.staircasetimeroff_1, R.drawable.staircasetimeroff_1_nightmode)
+        R.drawable.staircasetimeroff_1
       }
 
       else -> if (data.state.value == ChannelState.Value.ON) {
-        data.icon(R.drawable.staircasetimeron, R.drawable.staircasetimeron_nightmode)
+        R.drawable.staircasetimeron
       } else {
-        data.icon(R.drawable.staircasetimeroff, R.drawable.staircasetimeroff_nightmode)
+        R.drawable.staircasetimeroff
       }
     }
 }

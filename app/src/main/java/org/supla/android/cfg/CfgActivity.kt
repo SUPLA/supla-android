@@ -76,7 +76,7 @@ class CfgActivity : BaseActivity() {
     window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
     window.statusBarColor = ResourcesCompat.getColor(
       resources,
-      R.color.splash_bg,
+      R.color.primary,
       null
     )
 

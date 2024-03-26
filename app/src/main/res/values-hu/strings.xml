@@ -79,7 +79,7 @@
   <string name="rate_later">Később</string>
   <string name="rate_no_thanks">Nem, köszönöm</string>
   <string name="rs_percent_caption">A bezárás százaléka</string>
-  <string name="blinds_calibration">Kalibrálás…</string>
+  <string name="roller_shutter_calibrating">Kalibrálás…</string>
 
   <string name="add_wizard_is_not_available">A Hozzáadás varázsló csak akkor érhető el, ha a megadott e-mail cím alapján létrejött a kapcsolat a szerverrel! (A speciális beállítások letiltása a fiókkonfigurációban)</string>
 
@@ -431,7 +431,7 @@
   <string name="location_name">Helyszín neve</string>
   <string name="overcurrent_warning">Az áramellátás a megengedett áramerősség beállított küszöbértékének túllépése után kikapcsolt.</string>
   <string name="overcurrent_question">Az áramellátás a megengedett áramerősség beállított küszöbértékének túllépése után kikapcsolt. Biztos benne, hogy be akarja kapcsolni az áramellátást?</string>
-  <string name="blinds_start_calibration_message">Biztosan el akarja kezdeni a kalibrálást?</string>
+  <string name="roller_shutter_start_calibration_message">Biztosan el akarja kezdeni a kalibrálást?</string>
   <string name="calibration_failed">Kalibrálás sikertelen.</string>
   <string name="calibration_lost">Kalibrálás elveszett.</string>
   <string name="motor_problem">Motorhiba / Váratlan leállás.</string>
@@ -454,5 +454,5 @@
   <string name="rs_display_mode_closing">Bezárások</string>
   <string name="status_accessid_inactive">A hozzáférési azonosító inaktív </string>
   <string name="hour_string_format">HH:mm:ss</string>
-  <string name="blinds_start_calibration_title">Kalibrálás</string>
+  <string name="roller_shutter_calibration">Kalibrálás</string>
 </resources>

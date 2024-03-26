@@ -38,12 +38,12 @@ class ProvideLegacyDetailTypeUseCaseTest {
 
   @Test
   fun `should provide detail for roller shutter`() {
-    testDetailType(SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER, BlindsDetailType(listOf(DetailPage.BLINDS)))
+    testDetailType(SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER, RollerShutterDetailType(listOf(DetailPage.ROLLER_SHUTTER)))
   }
 
   @Test
   fun `should provide detail for roof window`() {
-    testDetailType(SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW, BlindsDetailType(listOf(DetailPage.BLINDS)))
+    testDetailType(SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW, RollerShutterDetailType(listOf(DetailPage.ROLLER_SHUTTER)))
   }
 
   @Test

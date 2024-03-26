@@ -20,7 +20,7 @@
             android:layout_centerVertical="false"
             android:layout_gravity="center"
             android:layout_marginTop="40dp"
-            android:background="@drawable/error"
+            android:src="@drawable/ic_error"
             tools:ignore="ContentDescription" />
 
         <TextView
@@ -123,6 +123,6 @@
         android:mirrorForRtl="false"
         android:nestedScrollingEnabled="false"
         android:progress="50"
-        android:secondaryProgressTint="@color/activity_bg" />
+        android:secondaryProgressTint="@color/background" />
 
 </RelativeLayout>

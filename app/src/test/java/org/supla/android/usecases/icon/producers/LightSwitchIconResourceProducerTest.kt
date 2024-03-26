@@ -51,31 +51,11 @@ class LightSwitchIconResourceProducerTest : BaseIconResourceProducerTest() {
   }
 
   @Test
-  fun `should produce on icon (night mode)`() {
-    test(
-      state = ChannelState.Value.ON,
-      function = SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH,
-      expectedIcon = R.drawable.lighton_nightmode,
-      nightMode = true
-    )
-  }
-
-  @Test
-  fun `should produce off icon (night mode)`() {
-    test(
-      state = ChannelState.Value.OFF,
-      function = SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH,
-      expectedIcon = R.drawable.lightoff_nightmode,
-      nightMode = true
-    )
-  }
-
-  @Test
   fun `should produce on icon (alt1)`() {
     test(
       state = ChannelState.Value.ON,
-      function = SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH,
       altIcon = 1,
+      function = SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH,
       expectedIcon = R.drawable.xmastreeon
     )
   }
@@ -84,31 +64,9 @@ class LightSwitchIconResourceProducerTest : BaseIconResourceProducerTest() {
   fun `should produce off icon (alt1)`() {
     test(
       state = ChannelState.Value.OFF,
-      function = SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH,
       altIcon = 1,
+      function = SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH,
       expectedIcon = R.drawable.xmastreeoff
-    )
-  }
-
-  @Test
-  fun `should produce on icon (alt1, night mode)`() {
-    test(
-      state = ChannelState.Value.ON,
-      function = SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH,
-      altIcon = 1,
-      expectedIcon = R.drawable.xmastreeon_nightmode,
-      nightMode = true
-    )
-  }
-
-  @Test
-  fun `should produce off icon (alt1, night mode)`() {
-    test(
-      state = ChannelState.Value.OFF,
-      function = SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH,
-      altIcon = 1,
-      expectedIcon = R.drawable.xmastreeoff_nightmode,
-      nightMode = true
     )
   }
 
@@ -116,8 +74,8 @@ class LightSwitchIconResourceProducerTest : BaseIconResourceProducerTest() {
   fun `should produce on icon (alt2)`() {
     test(
       state = ChannelState.Value.ON,
-      function = SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH,
       altIcon = 2,
+      function = SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH,
       expectedIcon = R.drawable.uvon
     )
   }
@@ -126,31 +84,9 @@ class LightSwitchIconResourceProducerTest : BaseIconResourceProducerTest() {
   fun `should produce off icon (alt2)`() {
     test(
       state = ChannelState.Value.OFF,
-      function = SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH,
       altIcon = 2,
+      function = SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH,
       expectedIcon = R.drawable.uvoff
-    )
-  }
-
-  @Test
-  fun `should produce on icon (alt2, night mode)`() {
-    test(
-      state = ChannelState.Value.ON,
-      function = SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH,
-      altIcon = 2,
-      expectedIcon = R.drawable.uvon_nightmode,
-      nightMode = true
-    )
-  }
-
-  @Test
-  fun `should produce off icon (alt2, night mode)`() {
-    test(
-      state = ChannelState.Value.OFF,
-      function = SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH,
-      altIcon = 2,
-      expectedIcon = R.drawable.uvoff_nightmode,
-      nightMode = true
     )
   }
 }

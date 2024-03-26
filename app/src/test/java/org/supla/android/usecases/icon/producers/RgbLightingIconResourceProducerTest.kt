@@ -48,24 +48,4 @@ class RgbLightingIconResourceProducerTest : BaseIconResourceProducerTest() {
       expectedIcon = R.drawable.rgboff
     )
   }
-
-  @Test
-  fun `should produce on icon (night mode)`() {
-    test(
-      state = ChannelState.Value.ON,
-      function = SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING,
-      expectedIcon = R.drawable.rgbon_nightmode,
-      nightMode = true
-    )
-  }
-
-  @Test
-  fun `should produce off icon (night mode)`() {
-    test(
-      state = ChannelState.Value.OFF,
-      function = SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING,
-      expectedIcon = R.drawable.rgboff_nightmode,
-      nightMode = true
-    )
-  }
 }

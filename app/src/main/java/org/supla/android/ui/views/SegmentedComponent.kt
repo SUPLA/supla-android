@@ -26,7 +26,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
 import org.supla.android.core.ui.theme.SuplaTheme
-import org.supla.android.core.ui.theme.SuplaTypography
 
 class SegmentedComponent @JvmOverloads constructor(
   context: Context,
@@ -64,20 +63,20 @@ fun SegmentedComponent(
   Row(
     verticalAlignment = Alignment.CenterVertically,
     modifier = modifier
-      .background(color = colorResource(id = R.color.gray_light), shape = RoundedCornerShape(6.dp))
+      .background(color = colorResource(id = R.color.segmented_field_background), shape = RoundedCornerShape(6.dp))
       .padding(2.dp),
     horizontalArrangement = Arrangement.spacedBy(10.dp)
   ) {
     for ((i, item) in items.withIndex()) {
       val textModifier = if (activeItem == i) {
-        Modifier.background(MaterialTheme.colors.onPrimary, shape = RoundedCornerShape(6.dp))
+        Modifier.background(colorResource(id = R.color.field_background), shape = RoundedCornerShape(6.dp))
       } else {
         Modifier
       }
 
       ClickableText(
         text = AnnotatedString(item),
-        style = SuplaTypography.body2.copy(
+        style = MaterialTheme.typography.body2.copy(
           color = if (disabled) colorResource(id = R.color.item_unselected) else MaterialTheme.colors.onBackground,
           textAlign = TextAlign.Center
         ),

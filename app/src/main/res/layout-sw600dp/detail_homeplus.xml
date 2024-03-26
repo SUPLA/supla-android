@@ -515,7 +515,7 @@
                     android:layout_marginBottom="10dp"
                     android:indeterminateOnly="true"
                     android:scaleY="1"
-                    android:secondaryProgressTint="@color/activity_bg" />
+                    android:secondaryProgressTint="@color/background" />
 
                 <FrameLayout
                     android:layout_width="match_parent"

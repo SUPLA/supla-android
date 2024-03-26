@@ -54,8 +54,7 @@ class HotelCardIconResourceProducerTest : BaseIconResourceProducerTest() {
     test(
       state = ChannelState.Value.ON,
       function = SuplaConst.SUPLA_CHANNELFNC_HOTELCARDSENSOR,
-      expectedIcon = R.drawable.fnc_hotel_card_on_nm,
-      nightMode = true
+      expectedIcon = R.drawable.fnc_hotel_card_on
     )
   }
 
@@ -64,8 +63,7 @@ class HotelCardIconResourceProducerTest : BaseIconResourceProducerTest() {
     test(
       state = ChannelState.Value.OFF,
       function = SuplaConst.SUPLA_CHANNELFNC_HOTELCARDSENSOR,
-      expectedIcon = R.drawable.fnc_hotel_card_off_nm,
-      nightMode = true
+      expectedIcon = R.drawable.fnc_hotel_card_off
     )
   }
 }

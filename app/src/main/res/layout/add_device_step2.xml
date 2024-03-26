@@ -37,7 +37,8 @@
       android:layout_weight="1"
       android:background="@android:color/white"
       android:padding="5dp"
-      android:textSize="18dp" />
+      android:textSize="18dp"
+      android:textColor="#000000" />
 
     <EditText
       android:id="@+id/wizard_wifi_name"
@@ -49,7 +50,8 @@
       android:inputType="text"
       android:padding="5dp"
       android:textSize="18dp"
-      android:visibility="gone" />
+      android:visibility="gone"
+      android:textColor="#000000"/>
 
     <Button
       android:id="@+id/wizard_edit_button"
@@ -80,7 +82,8 @@
       android:background="@color/notification_bg"
       android:inputType="textPassword"
       android:padding="5dp"
-      android:textSize="18dp" />
+      android:textSize="18dp"
+      android:textColor="#000000" />
 
     <Button
       android:id="@+id/wizard_look_button"

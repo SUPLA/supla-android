@@ -50,31 +50,11 @@ class ThermostatHomePlusIconResourceProducerTest : BaseIconResourceProducerTest(
   }
 
   @Test
-  fun `should produce on icon (night mode)`() {
-    test(
-      state = ChannelState.Value.ON,
-      function = SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS,
-      expectedIcon = R.drawable.thermostat_hp_homepluson_nightmode,
-      nightMode = true
-    )
-  }
-
-  @Test
-  fun `should produce off icon (night mode)`() {
-    test(
-      state = ChannelState.Value.OFF,
-      function = SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS,
-      expectedIcon = R.drawable.thermostat_hp_homeplusoff_nightmode,
-      nightMode = true
-    )
-  }
-
-  @Test
   fun `should produce on icon (alt 1)`() {
     test(
       state = ChannelState.Value.ON,
-      function = SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS,
       altIcon = 1,
+      function = SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS,
       expectedIcon = R.drawable.thermostat_hp_homepluson_1
     )
   }
@@ -83,31 +63,9 @@ class ThermostatHomePlusIconResourceProducerTest : BaseIconResourceProducerTest(
   fun `should produce off icon (alt 1)`() {
     test(
       state = ChannelState.Value.OFF,
-      function = SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS,
       altIcon = 1,
+      function = SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS,
       expectedIcon = R.drawable.thermostat_hp_homeplusoff_1
-    )
-  }
-
-  @Test
-  fun `should produce on icon (alt 1, night mode)`() {
-    test(
-      state = ChannelState.Value.ON,
-      function = SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS,
-      altIcon = 1,
-      expectedIcon = R.drawable.thermostat_hp_homepluson_1_nightmode,
-      nightMode = true
-    )
-  }
-
-  @Test
-  fun `should produce off icon (alt 1, night mode)`() {
-    test(
-      state = ChannelState.Value.OFF,
-      function = SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS,
-      altIcon = 1,
-      expectedIcon = R.drawable.thermostat_hp_homeplusoff_1_nightmode,
-      nightMode = true
     )
   }
 
@@ -115,8 +73,8 @@ class ThermostatHomePlusIconResourceProducerTest : BaseIconResourceProducerTest(
   fun `should produce on icon (alt 2)`() {
     test(
       state = ChannelState.Value.ON,
-      function = SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS,
       altIcon = 2,
+      function = SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS,
       expectedIcon = R.drawable.thermostat_hp_homepluson_2
     )
   }
@@ -125,31 +83,9 @@ class ThermostatHomePlusIconResourceProducerTest : BaseIconResourceProducerTest(
   fun `should produce off icon (alt 2)`() {
     test(
       state = ChannelState.Value.OFF,
-      function = SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS,
       altIcon = 2,
+      function = SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS,
       expectedIcon = R.drawable.thermostat_hp_homeplusoff_2
-    )
-  }
-
-  @Test
-  fun `should produce on icon (alt 2, night mode)`() {
-    test(
-      state = ChannelState.Value.ON,
-      function = SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS,
-      altIcon = 2,
-      expectedIcon = R.drawable.thermostat_hp_homepluson_2_nightmode,
-      nightMode = true
-    )
-  }
-
-  @Test
-  fun `should produce off icon (alt 2, night mode)`() {
-    test(
-      state = ChannelState.Value.OFF,
-      function = SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS,
-      altIcon = 2,
-      expectedIcon = R.drawable.thermostat_hp_homeplusoff_2_nightmode,
-      nightMode = true
     )
   }
 
@@ -157,8 +93,8 @@ class ThermostatHomePlusIconResourceProducerTest : BaseIconResourceProducerTest(
   fun `should produce on icon (alt 3)`() {
     test(
       state = ChannelState.Value.ON,
-      function = SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS,
       altIcon = 3,
+      function = SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS,
       expectedIcon = R.drawable.thermostat_hp_homepluson_3
     )
   }
@@ -167,31 +103,9 @@ class ThermostatHomePlusIconResourceProducerTest : BaseIconResourceProducerTest(
   fun `should produce off icon (alt 3)`() {
     test(
       state = ChannelState.Value.OFF,
-      function = SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS,
       altIcon = 3,
+      function = SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS,
       expectedIcon = R.drawable.thermostat_hp_homeplusoff_3
-    )
-  }
-
-  @Test
-  fun `should produce on icon (alt 3, night mode)`() {
-    test(
-      state = ChannelState.Value.ON,
-      function = SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS,
-      altIcon = 3,
-      expectedIcon = R.drawable.thermostat_hp_homepluson_3_nightmode,
-      nightMode = true
-    )
-  }
-
-  @Test
-  fun `should produce off icon (alt 3, night mode)`() {
-    test(
-      state = ChannelState.Value.OFF,
-      function = SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS,
-      altIcon = 3,
-      expectedIcon = R.drawable.thermostat_hp_homeplusoff_3_nightmode,
-      nightMode = true
     )
   }
 }

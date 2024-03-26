@@ -50,31 +50,11 @@ class DigiglassIconResourceProducerTest : BaseIconResourceProducerTest() {
   }
 
   @Test
-  fun `should produce opaque icon (night mode)`() {
-    test(
-      state = ChannelState.Value.OPAQUE,
-      function = SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL,
-      expectedIcon = R.drawable.digiglass_nightmode,
-      nightMode = true
-    )
-  }
-
-  @Test
-  fun `should produce transparent icon (night mode)`() {
-    test(
-      state = ChannelState.Value.TRANSPARENT,
-      function = SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL,
-      expectedIcon = R.drawable.digiglasstransparent_nightmode,
-      nightMode = true
-    )
-  }
-
-  @Test
   fun `should produce opaque icon (alt1)`() {
     test(
       state = ChannelState.Value.OPAQUE,
-      function = SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL,
       altIcon = 1,
+      function = SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL,
       expectedIcon = R.drawable.digiglass1
     )
   }
@@ -83,31 +63,9 @@ class DigiglassIconResourceProducerTest : BaseIconResourceProducerTest() {
   fun `should produce transparent icon (alt1)`() {
     test(
       state = ChannelState.Value.TRANSPARENT,
+      altIcon = 1,
       function = SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL,
-      altIcon = 1,
       expectedIcon = R.drawable.digiglasstransparent1
-    )
-  }
-
-  @Test
-  fun `should produce opaque icon (alt1, night mode)`() {
-    test(
-      state = ChannelState.Value.OPAQUE,
-      function = SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL,
-      altIcon = 1,
-      expectedIcon = R.drawable.digiglass1_nightmode,
-      nightMode = true
-    )
-  }
-
-  @Test
-  fun `should produce transparent icon (alt1, night mode)`() {
-    test(
-      state = ChannelState.Value.TRANSPARENT,
-      function = SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL,
-      altIcon = 1,
-      expectedIcon = R.drawable.digiglasstransparent1_nightmode,
-      nightMode = true
     )
   }
 }

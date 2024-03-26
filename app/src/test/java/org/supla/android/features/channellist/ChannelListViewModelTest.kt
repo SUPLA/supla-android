@@ -54,10 +54,10 @@ import org.supla.android.lib.SuplaConst.*
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.channel.*
-import org.supla.android.usecases.details.BlindsDetailType
 import org.supla.android.usecases.details.GpmDetailType
 import org.supla.android.usecases.details.LegacyDetailType
 import org.supla.android.usecases.details.ProvideDetailTypeUseCase
+import org.supla.android.usecases.details.RollerShutterDetailType
 import org.supla.android.usecases.details.SwitchDetailType
 import org.supla.android.usecases.details.ThermometerDetailType
 import org.supla.android.usecases.details.ThermostatDetailType
@@ -475,7 +475,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
   }
 
   @Test
-  fun `should open blinds detail fragment when online`() {
+  fun `should open roller shutter detail fragment when online`() {
     // given
     val remoteId = 123
     val channelId = 123
@@ -485,8 +485,8 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     val channel = mockChannelData(remoteId, function, deviceId, true)
     whenever(findChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
 
-    val blindsDetail = BlindsDetailType(pages)
-    whenever(provideDetailTypeUseCase(channel)).thenReturn(blindsDetail)
+    val rollerShutterDetail = RollerShutterDetailType(pages)
+    whenever(provideDetailTypeUseCase(channel)).thenReturn(rollerShutterDetail)
 
     // when
     viewModel.onListItemClick(remoteId)
@@ -494,13 +494,13 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     // then
     assertThat(states).isEmpty()
     assertThat(events).containsExactly(
-      ChannelListViewEvent.OpenBlindsDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
+      ChannelListViewEvent.OpenRollerShutterDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
     )
     verifyZeroInteractionsExcept(provideDetailTypeUseCase)
   }
 
   @Test
-  fun `should open blinds detail fragment when offline`() {
+  fun `should open roller shutter detail fragment when offline`() {
     // given
     val remoteId = 123
     val channelId = 123
@@ -510,8 +510,8 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     val channel = mockChannelData(remoteId, function, deviceId, false)
     whenever(findChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
 
-    val blindsDetail = BlindsDetailType(pages)
-    whenever(provideDetailTypeUseCase(channel)).thenReturn(blindsDetail)
+    val rollerShutterDetail = RollerShutterDetailType(pages)
+    whenever(provideDetailTypeUseCase(channel)).thenReturn(rollerShutterDetail)
 
     // when
     viewModel.onListItemClick(remoteId)
@@ -519,7 +519,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     // then
     assertThat(states).isEmpty()
     assertThat(events).containsExactly(
-      ChannelListViewEvent.OpenBlindsDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
+      ChannelListViewEvent.OpenRollerShutterDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
     )
     verifyZeroInteractionsExcept(provideDetailTypeUseCase)
   }

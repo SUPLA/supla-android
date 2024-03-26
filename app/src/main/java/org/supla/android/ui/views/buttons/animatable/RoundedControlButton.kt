@@ -38,6 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.AbstractComposeView
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
@@ -47,11 +48,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
 import org.supla.android.core.ui.theme.SuplaTheme
-import org.supla.android.core.ui.theme.SuplaTypography
 import org.supla.android.ui.views.buttons.IconWrapper
-
-// special colors
-private val disabledOverlay = Color(0xDDFFFFFF)
 
 class RoundedControlButtonView @JvmOverloads constructor(
   context: Context,
@@ -122,13 +119,15 @@ fun RoundedControlButton(
     }
   ) { textColor ->
     Row(
-      modifier = Modifier.align(Alignment.Center).padding(contentPadding),
+      modifier = Modifier
+        .align(Alignment.Center)
+        .padding(contentPadding),
       horizontalArrangement = Arrangement.spacedBy(4.dp),
       verticalAlignment = Alignment.CenterVertically
     ) {
       IconWrapper(painter = icon, color = if (iconAndTextColorSynced) textColor else iconColor)
       text?.let {
-        Text(text = text, style = SuplaTypography.button, color = textColor, fontSize = fontSize, fontFamily = fontFamily)
+        Text(text = text, style = MaterialTheme.typography.button, color = textColor, fontSize = fontSize, fontFamily = fontFamily)
       }
     }
 
@@ -136,7 +135,7 @@ fun RoundedControlButton(
       Box(
         modifier = Modifier
           .fillMaxSize()
-          .background(color = disabledOverlay)
+          .background(color = colorResource(id = R.color.disabledOverlay))
       )
     }
   }

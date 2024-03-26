@@ -53,20 +53,20 @@ fun CombinedChart(
     modifier = modifier.fillMaxWidth(),
     factory = { context ->
       CombinedChart(context).also {
-        val colorBlack = ResourcesCompat.getColor(context.resources, R.color.on_background, null)
+        val onBackgroundColor = ResourcesCompat.getColor(context.resources, R.color.on_background, null)
 
         // Left axis
         it.axisLeft.setDrawAxisLine(false)
         it.axisLeft.enableGridDashedLine(3.dp.toPx(), 3.dp.toPx(), 6.dp.toPx())
         it.axisLeft.textColor = ResourcesCompat.getColor(context.resources, chartStyle.leftAxisColor, null)
         it.axisLeft.gridColor = it.axisLeft.textColor
-        it.axisLeft.zeroLineColor = colorBlack
+        it.axisLeft.zeroLineColor = onBackgroundColor
         // Right axis
         it.axisRight.setDrawAxisLine(false)
         it.axisRight.enableGridDashedLine(3.dp.toPx(), 3.dp.toPx(), 6.dp.toPx())
         it.axisRight.textColor = ResourcesCompat.getColor(context.resources, chartStyle.rightAxisColor, null)
         it.axisRight.gridColor = it.axisRight.textColor
-        it.axisRight.zeroLineColor = colorBlack
+        it.axisRight.zeroLineColor = onBackgroundColor
         it.axisRight.axisMinimum = 0f
         it.axisRight.axisMaximum = 100f
         // X axis
@@ -75,13 +75,14 @@ fun CombinedChart(
         it.xAxis.position = XAxis.XAxisPosition.BOTTOM
         it.xAxis.valueFormatter = xAxisFormatter
         it.xAxis.labelCount = 6
+        it.xAxis.textColor = onBackgroundColor
         // Others
         it.data = combinedData
         it.background = ColorDrawable(ResourcesCompat.getColor(context.resources, R.color.background, null))
         it.legend.isEnabled = false
         it.description.isEnabled = false
         it.onChartGestureListener = ChartObserver(positionEvents, it)
-        it.setNoDataTextColor(colorBlack)
+        it.setNoDataTextColor(onBackgroundColor)
         it.marker = ChartMarkerView(context).apply { chartView = it }
         it.setDrawMarkers(true)
         it.setDrawBarShadow(chartStyle.drawBarShadow)

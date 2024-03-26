@@ -58,7 +58,7 @@ public class DefaultUserIconRepository implements UserIconRepository {
     userIconDao.insert(id, images);
     for (UserIconDao.Image image : images) {
       if (image.value != null) {
-        imageCacheProxy.addImage(id, image);
+        imageCacheProxy.addUserImage(id, image);
       }
     }
     return true;

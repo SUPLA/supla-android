@@ -59,41 +59,11 @@ class GateIconResourceProducerTest : BaseIconResourceProducerTest() {
   }
 
   @Test
-  fun `should produce open icon (night mode)`() {
-    test(
-      state = ChannelState.Value.OPEN,
-      function = SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATE,
-      expectedIcon = R.drawable.gateopen_nightmode,
-      nightMode = true
-    )
-  }
-
-  @Test
-  fun `should produce closed icon (night mode)`() {
-    test(
-      state = ChannelState.Value.CLOSED,
-      function = SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE,
-      expectedIcon = R.drawable.gateclosed_nightmode,
-      nightMode = true
-    )
-  }
-
-  @Test
-  fun `should produce partially opened icon (night mode)`() {
-    test(
-      state = ChannelState.Value.PARTIALLY_OPENED,
-      function = SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE,
-      expectedIcon = R.drawable.gateclosed50percent_nightmode,
-      nightMode = true
-    )
-  }
-
-  @Test
   fun `should produce open icon (alt 1)`() {
     test(
       state = ChannelState.Value.OPEN,
-      function = SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATE,
       altIcon = 1,
+      function = SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATE,
       expectedIcon = R.drawable.gatealt1open
     )
   }
@@ -102,8 +72,8 @@ class GateIconResourceProducerTest : BaseIconResourceProducerTest() {
   fun `should produce closed icon (alt 1)`() {
     test(
       state = ChannelState.Value.CLOSED,
-      function = SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE,
       altIcon = 1,
+      function = SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE,
       expectedIcon = R.drawable.gatealt1closed
     )
   }
@@ -112,42 +82,9 @@ class GateIconResourceProducerTest : BaseIconResourceProducerTest() {
   fun `should produce partially opened icon (alt 1)`() {
     test(
       state = ChannelState.Value.PARTIALLY_OPENED,
-      function = SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE,
       altIcon = 1,
+      function = SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE,
       expectedIcon = R.drawable.gatealt1closed50percent
-    )
-  }
-
-  @Test
-  fun `should produce open icon (alt 1, night mode)`() {
-    test(
-      state = ChannelState.Value.OPEN,
-      function = SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATE,
-      altIcon = 1,
-      expectedIcon = R.drawable.gatealt1open_nightmode,
-      nightMode = true
-    )
-  }
-
-  @Test
-  fun `should produce closed icon (alt 1, night mode)`() {
-    test(
-      state = ChannelState.Value.CLOSED,
-      function = SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE,
-      altIcon = 1,
-      expectedIcon = R.drawable.gatealt1closed_nightmode,
-      nightMode = true
-    )
-  }
-
-  @Test
-  fun `should produce partially opened icon (alt 1, night mode)`() {
-    test(
-      state = ChannelState.Value.PARTIALLY_OPENED,
-      function = SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE,
-      altIcon = 1,
-      expectedIcon = R.drawable.gatealt1closed50percent_nightmode,
-      nightMode = true
     )
   }
 
@@ -155,8 +92,8 @@ class GateIconResourceProducerTest : BaseIconResourceProducerTest() {
   fun `should produce open icon (alt 2)`() {
     test(
       state = ChannelState.Value.OPEN,
-      function = SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATE,
       altIcon = 2,
+      function = SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATE,
       expectedIcon = R.drawable.barieropen
     )
   }
@@ -165,31 +102,9 @@ class GateIconResourceProducerTest : BaseIconResourceProducerTest() {
   fun `should produce closed icon (alt 2)`() {
     test(
       state = ChannelState.Value.CLOSED,
-      function = SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE,
       altIcon = 2,
+      function = SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE,
       expectedIcon = R.drawable.barierclosed
-    )
-  }
-
-  @Test
-  fun `should produce open icon (alt 2, night mode)`() {
-    test(
-      state = ChannelState.Value.OPEN,
-      function = SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATE,
-      altIcon = 2,
-      expectedIcon = R.drawable.barieropen_nightmode,
-      nightMode = true
-    )
-  }
-
-  @Test
-  fun `should produce closed icon (alt 2, night mode)`() {
-    test(
-      state = ChannelState.Value.CLOSED,
-      function = SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE,
-      altIcon = 2,
-      expectedIcon = R.drawable.barierclosed_nightmode,
-      nightMode = true
     )
   }
 }

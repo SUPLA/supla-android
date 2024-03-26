@@ -49,24 +49,4 @@ class GatewayIconResourceProducerTest : BaseIconResourceProducerTest() {
       expectedIcon = R.drawable.gatewayclosed
     )
   }
-
-  @Test
-  fun `should produce open icon (night mode)`() {
-    test(
-      state = ChannelState.Value.OPEN,
-      function = SUPLA_CHANNELFNC_OPENSENSOR_GATEWAY,
-      expectedIcon = R.drawable.gatewayopen_nightmode,
-      nightMode = true
-    )
-  }
-
-  @Test
-  fun `should produce closed icon (night mode)`() {
-    test(
-      state = ChannelState.Value.CLOSED,
-      function = SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK,
-      expectedIcon = R.drawable.gatewayclosed_nightmode,
-      nightMode = true
-    )
-  }
 }

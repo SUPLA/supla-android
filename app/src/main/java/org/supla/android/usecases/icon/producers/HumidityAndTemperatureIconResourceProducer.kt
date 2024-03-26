@@ -29,19 +29,19 @@ class HumidityAndTemperatureIconResourceProducer : IconResourceProducer {
 
   override fun produce(data: IconData): Int =
     when (data.type) {
-      IconType.SECOND -> data.icon(R.drawable.humidity, R.drawable.humidity_nightmode)
+      IconType.SECOND -> R.drawable.humidity
       else -> thermometerIcon(data)
     }
 
   private fun thermometerIcon(data: IconData): Int =
     when (data.altIcon) {
-      1 -> data.icon(R.drawable.fnc_thermometer_tap, R.drawable.fnc_thermometer_tap_nm)
-      2 -> data.icon(R.drawable.fnc_thermometer_floor, R.drawable.fnc_thermometer_floor_nm)
-      3 -> data.icon(R.drawable.fnc_thermometer_water, R.drawable.fnc_thermometer_water_nm)
-      4 -> data.icon(R.drawable.fnc_thermometer_heating, R.drawable.fnc_thermometer_heating_nm)
-      5 -> data.icon(R.drawable.fnc_thermometer_cooling, R.drawable.fnc_thermometer_cooling_nm)
-      6 -> data.icon(R.drawable.fnc_thermometer_heater, R.drawable.fnc_thermometer_heater_nm)
-      7 -> data.icon(R.drawable.fnc_thermometer_home, R.drawable.fnc_thermometer_home_nm)
-      else -> data.icon(R.drawable.thermometer, R.drawable.thermometer_nightmode)
+      1 -> R.drawable.fnc_thermometer_tap
+      2 -> R.drawable.fnc_thermometer_floor
+      3 -> R.drawable.fnc_thermometer_water
+      4 -> R.drawable.fnc_thermometer_heating
+      5 -> R.drawable.fnc_thermometer_cooling
+      6 -> R.drawable.fnc_thermometer_heater
+      7 -> R.drawable.fnc_thermometer_home
+      else -> R.drawable.thermometer
     }
 }

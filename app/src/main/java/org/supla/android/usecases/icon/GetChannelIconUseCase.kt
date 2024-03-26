@@ -18,6 +18,7 @@ package org.supla.android.usecases.icon
  */
 
 import org.supla.android.core.ui.BitmapProvider
+import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.model.general.ChannelState
 import org.supla.android.data.model.general.IconType
 import org.supla.android.db.ChannelBase
@@ -42,7 +43,7 @@ class GetChannelIconUseCase @Inject constructor(
 ) {
 
   fun getIconProvider(
-    channelData: org.supla.android.data.model.general.ChannelDataBase,
+    channelData: ChannelDataBase,
     iconType: IconType = IconType.SINGLE
   ): BitmapProvider =
     { imageCacheProxy.getBitmap(it, invoke(channelData, iconType)) }
@@ -52,9 +53,8 @@ class GetChannelIconUseCase @Inject constructor(
   // from the drawable-night directory because not every
   // part of the application is night mode enabled yet.
   operator fun invoke(
-    channelDataBase: org.supla.android.data.model.general.ChannelDataBase,
+    channelDataBase: ChannelDataBase,
     type: IconType = IconType.SINGLE,
-    nightMode: Boolean = false,
     channelStateValue: ChannelState.Value? = null
   ): ImageId {
     if (type != IconType.SINGLE && channelDataBase.function != SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE) {
@@ -72,8 +72,7 @@ class GetChannelIconUseCase @Inject constructor(
       function = channelDataBase.function,
       altIcon = channelDataBase.altIcon,
       state = state,
-      type = type,
-      nightMode = nightMode
+      type = type
     )
     return ImageId(getDefaultIconResourceUseCase(iconData))
   }
@@ -81,7 +80,6 @@ class GetChannelIconUseCase @Inject constructor(
   operator fun invoke(
     channelBase: ChannelBase,
     type: IconType = IconType.SINGLE,
-    nightMode: Boolean = false,
     channelStateValue: ChannelState.Value? = null
   ): ImageId? {
     if (type != IconType.SINGLE && channelBase.func != SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE) {
@@ -103,8 +101,7 @@ class GetChannelIconUseCase @Inject constructor(
       function = channelBase.func,
       altIcon = channelBase.altIcon,
       state = state,
-      type = type,
-      nightMode = nightMode
+      type = type
     )
 
     return ImageId(getDefaultIconResourceUseCase(iconData))
@@ -118,20 +115,20 @@ class GetChannelIconUseCase @Inject constructor(
 
     val id = when (channelBase.func) {
       SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE ->
-        ImageId(userIconId, if (iconType == IconType.SECOND) 1 else 2, channelBase.profileId)
+        ImageId(userIconId, if (iconType == IconType.SECOND) 1 else 2, channelBase.profileId, userImage = true)
 
       SUPLA_CHANNELFNC_THERMOMETER ->
-        ImageId(userIconId, 1, profileId = channelBase.profileId)
+        ImageId(userIconId, 1, profileId = channelBase.profileId, userImage = true)
 
       SUPLA_CHANNELFNC_CONTROLLINGTHEGATE,
       SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR ->
         when (state.value) {
-          ChannelState.Value.PARTIALLY_OPENED -> ImageId(userIconId, 3, profileId = channelBase.profileId)
-          ChannelState.Value.OPEN -> ImageId(userIconId, 1, profileId = channelBase.profileId)
-          else -> ImageId(userIconId, 2, profileId = channelBase.profileId)
+          ChannelState.Value.PARTIALLY_OPENED -> ImageId(userIconId, 3, profileId = channelBase.profileId, userImage = true)
+          ChannelState.Value.OPEN -> ImageId(userIconId, 1, profileId = channelBase.profileId, userImage = true)
+          else -> ImageId(userIconId, 2, profileId = channelBase.profileId, userImage = true)
         }
 
-      else -> ImageId(userIconId, if (state.isActive()) 2 else 1, channelBase.profileId)
+      else -> ImageId(userIconId, if (state.isActive()) 2 else 1, channelBase.profileId, userImage = true)
     }
 
     return if (imageCacheProxy.bitmapExists(id)) {
@@ -142,7 +139,7 @@ class GetChannelIconUseCase @Inject constructor(
   }
 
   private fun findUserIcon(
-    channelEntity: org.supla.android.data.model.general.ChannelDataBase,
+    channelEntity: ChannelDataBase,
     iconType: IconType,
     state: ChannelState
   ): ImageId? {
@@ -178,10 +175,10 @@ class GetChannelIconUseCase @Inject constructor(
 
   // for java
   fun invoke(channelBase: ChannelBase): ImageId? {
-    return invoke(channelBase, IconType.SINGLE, false, null)
+    return invoke(channelBase, IconType.SINGLE, null)
   }
 
   fun invoke(channelBase: ChannelBase, type: IconType): ImageId? {
-    return invoke(channelBase, type, false, null)
+    return invoke(channelBase, type, null)
   }
 }

@@ -29,10 +29,7 @@ class HotelCardIconResourceProducer : IconResourceProducer {
 
   override fun produce(data: IconData): Int =
     when (data.state.value) {
-      ChannelState.Value.ON ->
-        data.icon(R.drawable.fnc_hotel_card_on, R.drawable.fnc_hotel_card_on_nm)
-
-      else ->
-        data.icon(R.drawable.fnc_hotel_card_off, R.drawable.fnc_hotel_card_off_nm)
+      ChannelState.Value.ON -> R.drawable.fnc_hotel_card_on
+      else -> R.drawable.fnc_hotel_card_off
     }
 }

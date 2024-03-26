@@ -193,7 +193,7 @@ private fun ListItemDot(online: Boolean, withButton: Boolean, paddingValues: Pad
 @Composable
 private fun ListItemInfoIcon(onClick: () -> Unit) {
   Image(
-    painter = painterResource(id = R.drawable.channelstateinfo),
+    painter = painterResource(id = R.drawable.ic_info),
     contentDescription = null,
     modifier = Modifier
       .padding(start = dimensionResource(id = R.dimen.list_horizontal_spacing))

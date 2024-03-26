@@ -47,7 +47,7 @@ data class RollerShutterValue(
 
   companion object {
     private const val INVALID_POSITION = -1
-    private const val INVALID_BOTTOM_POSITION = 0 // more precisely < 0
+    private const val INVALID_BOTTOM_POSITION = 0 // more precisely <= 0
     private const val MAX_POSITION = 100
 
     fun from(online: Boolean, bytes: ByteArray): RollerShutterValue {

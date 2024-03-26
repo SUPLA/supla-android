@@ -106,7 +106,7 @@ private val controlCirclePaint = Paint().asFrameworkPaint().apply {
 private val temperatureCirclePaint = Paint().asFrameworkPaint().apply {
   style = android.graphics.Paint.Style.FILL
 }
-private val shaderColors = listOf(Color(0xFFD2D2D2), Color.White, Color.White, Color(0xFFD2D2D2))
+private val shaderColors = mutableListOf(Color(0xFFD2D2D2), Color.White, Color.White, Color(0xFFD2D2D2))
 private val shaderPositions = listOf(0.85f, 0.9f, 0.95f, 1f)
 
 @OptIn(ExperimentalTextApi::class, ExperimentalComposeUiApi::class)
@@ -126,6 +126,8 @@ fun ThermostatControl(
   onPositionChangeStarted: () -> Unit,
   onPositionChangeEnded: (Float?, Float?) -> Unit
 ) {
+  val surfaceColor = MaterialTheme.colors.surface
+  val shaderOuterColor = colorResource(id = R.color.thermostat_control_circle_background)
   val primaryColor = colorResource(id = R.color.primary)
   val disabledColor = colorResource(id = R.color.disabled)
   val textColor = MaterialTheme.colors.onBackground
@@ -217,7 +219,9 @@ fun ThermostatControl(
       maxTemperatureSize = maxTemperatureTextSize,
       textColor = textColor,
       center = center,
-      isOffline = isOffline
+      isOffline = isOffline,
+      shaderOuterColor = shaderOuterColor,
+      shaderInnerColor = surfaceColor
     )
 
     val mainTemperatureText = mainTemperatureTextProvider(lastMinSetpoint, lastMaxSetpoint)
@@ -229,7 +233,8 @@ fun ThermostatControl(
       textSize = temperatureControlTextSize,
       shadowColor = indicatorShadowColor,
       outerRadius = outerRadius,
-      center = center
+      center = center,
+      surfaceColor = surfaceColor
     )
 
     drawControlPoints(
@@ -256,7 +261,9 @@ fun drawControlTemperatureCircle(
   maxTemperatureSize: IntSize,
   textColor: Color,
   center: Offset,
-  isOffline: Boolean
+  isOffline: Boolean,
+  shaderInnerColor: Color,
+  shaderOuterColor: Color
 ) {
   val centerRadius = outerRadius - controlCircleWidth.toPx().div(2)
   val circleInnerRadius = outerRadius - controlCircleWidth.toPx()
@@ -287,7 +294,7 @@ fun drawControlTemperatureCircle(
   controlCirclePaint.shader = RadialGradientShader(
     Offset(x = center.x, y = center.y + 1.dp.toPx()),
     outerRadius + 2.dp.toPx(),
-    shaderColors,
+    shaderColors(shaderInnerColor, shaderOuterColor),
     shaderPositions
   )
 
@@ -323,7 +330,8 @@ fun drawSetTemperatureCircle(
   textColor: Color,
   shadowColor: Color,
   outerRadius: Float,
-  center: Offset
+  center: Offset,
+  surfaceColor: Color
 ) {
   val shadowWidth = controlShadowWidth.toPx()
   val shadowColorWithAlpha = shadowColor.copy(alpha = 0.2f).toArgb()
@@ -336,7 +344,7 @@ fun drawSetTemperatureCircle(
   drawContext.canvas.nativeCanvas.drawCircle(center.x, center.y, radius, temperatureCirclePaint)
 
   // white circle over shadow
-  drawCircle(color = Color.White, radius = radius, style = Fill, center = center)
+  drawCircle(color = surfaceColor, radius = radius, style = Fill, center = center)
 
   // temperature text inside of the circle
   drawText(text, textColor, topLeft = Offset(center.x - textSize.width.div(2f), center.y - textSize.height.div(2f)))
@@ -521,6 +529,15 @@ private fun getPositionOnCircle(angle: Float, radius: Float, center: Offset): Of
   val y = radius * sin(alpha).toFloat() + center.y
 
   return Offset(x, y)
+}
+
+private fun shaderColors(innerColor: Color, outerColor: Color): List<Color> {
+  shaderColors[0] = outerColor
+  shaderColors[1] = innerColor
+  shaderColors[2] = innerColor
+  shaderColors[3] = outerColor
+
+  return shaderColors
 }
 
 private data class ControlPointConfig(

@@ -41,9 +41,9 @@ import org.supla.android.ui.lists.data.SlideableListItemData
 import org.supla.android.usecases.channel.ChannelWithChildren
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
-import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToBlindsUpdateEventMapper
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToGpmUpdateEventMapper
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToMeasurementUpdateEventMapper
+import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToRollerShutterUpdateEventMapper
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToThermostatUpdateEventMapper
 
 @RunWith(MockitoJUnitRunner::class)
@@ -68,7 +68,7 @@ class CreateListItemUpdateEventDataUseCaseTest {
   private lateinit var channelWithChildrenToGpmUpdateEventMapper: ChannelWithChildrenToGpmUpdateEventMapper
 
   @Mock
-  private lateinit var channelWithChildrenToBlindsUpdateEventMapper: ChannelWithChildrenToBlindsUpdateEventMapper
+  private lateinit var channelWithChildrenToRollerShutterUpdateEventMapper: ChannelWithChildrenToRollerShutterUpdateEventMapper
 
   @InjectMocks
   private lateinit var useCase: CreateListItemUpdateEventDataUseCase

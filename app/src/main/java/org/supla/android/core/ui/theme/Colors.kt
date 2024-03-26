@@ -14,9 +14,9 @@ class SuplaLightColors(context: Context) {
   val PrimaryVariant = colorResource(context, R.color.primary_variant)
   val OnPrimary = colorResource(context, R.color.on_primary)
   val Background = colorResource(context, R.color.background)
-  val OnBackground = Color(0xFF000000)
+  val OnBackground = colorResource(context, R.color.on_background)
   val Surface = colorResource(context, R.color.surface)
-  val OnSurface = Color(0xFF000000)
+  val OnSurface = colorResource(context, R.color.on_background)
   val Error = colorResource(context, R.color.red_alert)
   val OnError = Color(0xFFFFFFFF)
 
@@ -38,9 +38,9 @@ class SuplaDarkColors(context: Context) {
   val PrimaryVariant = colorResource(context, R.color.primary_variant)
   val OnPrimary = colorResource(context, R.color.on_primary)
   val Background = colorResource(context, R.color.background)
-  val OnBackground = Color(0xFF000000)
+  val OnBackground = colorResource(context, R.color.on_background)
   val Surface = colorResource(context, R.color.surface)
-  val OnSurface = Color(0xFF000000)
+  val OnSurface = colorResource(context, R.color.on_background)
   val Error = colorResource(context, R.color.red_alert)
   val OnError = Color(0xFFF5F6F7)
 

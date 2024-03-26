@@ -85,7 +85,7 @@
   <string name="rate_later">Mais tarde</string>
   <string name="rate_no_thanks">Não, obrigado</string>
   <string name="rs_percent_caption">Percentagem do fecho</string>
-  <string name="blinds_calibration">Calibrar…</string>
+  <string name="roller_shutter_calibrating">Calibrar…</string>
   <string name="add_wizard_is_not_available">A Opção Adicionar Assistente só está disponível quando for estabelecida uma ligação ao servidor com base no endereço de e-mail inscrito! (Desative as opções avançadas na configuração da sua conta)</string>
   <string name="wizard_step1_txt3">Para continuar carregue em <b>Continuar</b>.</string>
   <string name="add_device">Adicionar um dispositivo</string>
@@ -429,7 +429,7 @@
   <string name="location_name">Nome da localização</string>
   <string name="overcurrent_warning">A potência foi desligada quando o limiar definido de corrente admissível foi ultrapassado.</string>
   <string name="overcurrent_question">A potência foi desligada quando o limiar definido de corrente admissível foi ultrapassado. Tem certeza que quer ligar a energia?</string>
-  <string name="blinds_start_calibration_message">Tem certeza que quer começar a calibrar?</string>
+  <string name="roller_shutter_start_calibration_message">Tem certeza que quer começar a calibrar?</string>
   <string name="calibration_failed">A calibração falhou.</string>
   <string name="calibration_lost">A calibração perdeu-se.</string>
   <string name="motor_problem">Problema do motor / Paragem inesperada.</string>
@@ -454,5 +454,5 @@
   <string name="em_chart_phase_n">Fase %d</string>
   <string name="rs_display_mode">Persianas %</string>
   <string name="hour_string_format">HH:mm:ss</string>
- <string name="blinds_start_calibration_title">Calibrar</string>
+ <string name="roller_shutter_calibration">Calibrar</string>
 </resources>

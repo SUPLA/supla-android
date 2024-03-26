@@ -371,7 +371,7 @@ public class SceneLayout extends LinearLayout implements SlideableItem, Swapable
   }
 
   private void setupLayout(SceneEntity scene) {
-    imgl.setImage(getSceneIconUseCase.invoke(scene, false));
+    imgl.setImage(getSceneIconUseCase.invoke(scene));
 
     setRightBtnText(getResources().getString(R.string.btn_execute));
     setLeftBtnText(getResources().getString(R.string.btn_abort));
@@ -468,7 +468,7 @@ public class SceneLayout extends LinearLayout implements SlideableItem, Swapable
       }
       setTypeface(SuplaApp.getApp().getTypefaceOpenSansBold());
       setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
-      setTextColor(getResources().getColor(R.color.channel_caption_text));
+      setTextColor(getResources().getColor(R.color.on_background));
       setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL);
 
       RelativeLayout.LayoutParams lp =

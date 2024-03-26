@@ -50,31 +50,11 @@ class StaircaseTimerIconResourceProducerTest : BaseIconResourceProducerTest() {
   }
 
   @Test
-  fun `should produce on icon (night mode)`() {
-    test(
-      state = ChannelState.Value.ON,
-      function = SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER,
-      expectedIcon = R.drawable.staircasetimeron_nightmode,
-      nightMode = true
-    )
-  }
-
-  @Test
-  fun `should produce off icon (night mode)`() {
-    test(
-      state = ChannelState.Value.OFF,
-      function = SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER,
-      expectedIcon = R.drawable.staircasetimeroff_nightmode,
-      nightMode = true
-    )
-  }
-
-  @Test
   fun `should produce on icon (alt1)`() {
     test(
       state = ChannelState.Value.ON,
-      function = SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER,
       altIcon = 1,
+      function = SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER,
       expectedIcon = R.drawable.staircasetimeron_1
     )
   }
@@ -83,31 +63,9 @@ class StaircaseTimerIconResourceProducerTest : BaseIconResourceProducerTest() {
   fun `should produce off icon (alt1)`() {
     test(
       state = ChannelState.Value.OFF,
-      function = SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER,
       altIcon = 1,
+      function = SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER,
       expectedIcon = R.drawable.staircasetimeroff_1
-    )
-  }
-
-  @Test
-  fun `should produce on icon (alt1, night mode)`() {
-    test(
-      state = ChannelState.Value.ON,
-      function = SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER,
-      altIcon = 1,
-      expectedIcon = R.drawable.staircasetimeron_1_nightmode,
-      nightMode = true
-    )
-  }
-
-  @Test
-  fun `should produce off icon (alt1, night mode)`() {
-    test(
-      state = ChannelState.Value.OFF,
-      function = SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER,
-      altIcon = 1,
-      expectedIcon = R.drawable.staircasetimeroff_1_nightmode,
-      nightMode = true
     )
   }
 }

@@ -66,7 +66,7 @@ class GetChannelIconUseCaseTest {
     val type: IconType = IconType.SECOND
 
     // when
-    val imageId = useCase(channelBase, type)
+    val imageId = useCase.invoke(channelBase, type)
 
     // then
     assertThat(imageId).isNull()
@@ -105,7 +105,7 @@ class GetChannelIconUseCaseTest {
     whenever(getChannelStateUseCase(function, stateWrapper)).thenReturn(channelState)
 
     // when
-    val imageId = useCase(channelBase)
+    val imageId = useCase.invoke(channelBase)
 
     // then
     assertThat(imageId).isNotNull
@@ -153,11 +153,11 @@ class GetChannelIconUseCaseTest {
     val channelBase = mockChannelBase(function, userIconId, altIcon, profileId, stateWrapper)
 
     whenever(getChannelStateUseCase(function, stateWrapper)).thenReturn(channelState)
-    val expectedImageId = ImageId(userIconId, 2, profileId)
+    val expectedImageId = ImageId(userIconId, 2, profileId, userImage = true)
     whenever(imageCacheProxy.bitmapExists(expectedImageId)).thenReturn(true)
 
     // when
-    val imageId = useCase(channelBase)
+    val imageId = useCase.invoke(channelBase)
 
     // then
     assertThat(imageId).isNotNull
@@ -205,11 +205,11 @@ class GetChannelIconUseCaseTest {
     val channelBase = mockChannelBase(function, userIconId, altIcon, profileId, stateWrapper)
 
     whenever(getChannelStateUseCase(function, stateWrapper)).thenReturn(channelState)
-    val expectedImageId = ImageId(userIconId, 1, profileId)
+    val expectedImageId = ImageId(userIconId, 1, profileId, userImage = true)
     whenever(imageCacheProxy.bitmapExists(expectedImageId)).thenReturn(true)
 
     // when
-    val imageId = useCase(channelBase)
+    val imageId = useCase.invoke(channelBase)
 
     // then
     assertThat(imageId).isNotNull
@@ -257,11 +257,11 @@ class GetChannelIconUseCaseTest {
     val channelBase = mockChannelBase(function, userIconId, altIcon, profileId, stateWrapper)
 
     whenever(getChannelStateUseCase(function, stateWrapper)).thenReturn(channelState)
-    val expectedImageId = ImageId(userIconId, 2, profileId)
+    val expectedImageId = ImageId(userIconId, 2, profileId, userImage = true)
     whenever(imageCacheProxy.bitmapExists(expectedImageId)).thenReturn(true)
 
     // when
-    val imageId = useCase(channelBase)
+    val imageId = useCase.invoke(channelBase)
 
     // then
     assertThat(imageId).isNotNull
@@ -309,11 +309,11 @@ class GetChannelIconUseCaseTest {
     val channelBase = mockChannelBase(function, userIconId, altIcon, profileId, stateWrapper)
 
     whenever(getChannelStateUseCase(function, stateWrapper)).thenReturn(channelState)
-    val expectedImageId = ImageId(userIconId, 1, profileId)
+    val expectedImageId = ImageId(userIconId, 1, profileId, userImage = true)
     whenever(imageCacheProxy.bitmapExists(expectedImageId)).thenReturn(true)
 
     // when
-    val imageId = useCase(channelBase, type = IconType.SECOND)
+    val imageId = useCase.invoke(channelBase, type = IconType.SECOND)
 
     // then
     assertThat(imageId).isNotNull
@@ -361,11 +361,11 @@ class GetChannelIconUseCaseTest {
     val channelBase = mockChannelBase(function, userIconId, altIcon, profileId, stateWrapper)
 
     whenever(getChannelStateUseCase(function, stateWrapper)).thenReturn(channelState)
-    val expectedImageId = ImageId(userIconId, 1, profileId)
+    val expectedImageId = ImageId(userIconId, 1, profileId, userImage = true)
     whenever(imageCacheProxy.bitmapExists(expectedImageId)).thenReturn(true)
 
     // when
-    val imageId = useCase(channelBase)
+    val imageId = useCase.invoke(channelBase)
 
     // then
     assertThat(imageId).isNotNull
@@ -413,11 +413,11 @@ class GetChannelIconUseCaseTest {
     val channelBase = mockChannelBase(function, userIconId, altIcon, profileId, stateWrapper)
 
     whenever(getChannelStateUseCase(function, stateWrapper)).thenReturn(channelState)
-    val expectedImageId = ImageId(userIconId, 2, profileId)
+    val expectedImageId = ImageId(userIconId, 2, profileId, userImage = true)
     whenever(imageCacheProxy.bitmapExists(expectedImageId)).thenReturn(true)
 
     // when
-    val imageId = useCase(channelBase)
+    val imageId = useCase.invoke(channelBase)
 
     // then
     assertThat(imageId).isNotNull
@@ -465,11 +465,11 @@ class GetChannelIconUseCaseTest {
     val channelBase = mockChannelBase(function, userIconId, altIcon, profileId, stateWrapper)
 
     whenever(getChannelStateUseCase(function, stateWrapper)).thenReturn(channelState)
-    val expectedImageId = ImageId(userIconId, 1, profileId)
+    val expectedImageId = ImageId(userIconId, 1, profileId, userImage = true)
     whenever(imageCacheProxy.bitmapExists(expectedImageId)).thenReturn(true)
 
     // when
-    val imageId = useCase(channelBase)
+    val imageId = useCase.invoke(channelBase)
 
     // then
     assertThat(imageId).isNotNull
@@ -517,11 +517,11 @@ class GetChannelIconUseCaseTest {
     val channelBase = mockChannelBase(function, userIconId, altIcon, profileId, stateWrapper)
 
     whenever(getChannelStateUseCase(function, stateWrapper)).thenReturn(channelState)
-    val expectedImageId = ImageId(userIconId, 3, profileId)
+    val expectedImageId = ImageId(userIconId, 3, profileId, userImage = true)
     whenever(imageCacheProxy.bitmapExists(expectedImageId)).thenReturn(true)
 
     // when
-    val imageId = useCase(channelBase)
+    val imageId = useCase.invoke(channelBase)
 
     // then
     assertThat(imageId).isNotNull
