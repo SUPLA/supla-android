@@ -24,11 +24,13 @@ import androidx.core.content.res.ResourcesCompat.getColor
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import org.supla.android.R
+import org.supla.android.data.model.general.NightModeSetting
 import org.supla.android.data.source.runtime.appsettings.ChannelHeight
 import org.supla.android.data.source.runtime.appsettings.TemperatureUnit
 import org.supla.android.databinding.LiSettingsArrowButtonBinding
 import org.supla.android.databinding.LiSettingsChannelHeightBinding
 import org.supla.android.databinding.LiSettingsHeaderBinding
+import org.supla.android.databinding.LiSettingsNightModeBinding
 import org.supla.android.databinding.LiSettingsPermissionBinding
 import org.supla.android.databinding.LiSettingsRollerShutterBinding
 import org.supla.android.databinding.LiSettingsSwitchBinding
@@ -151,6 +153,18 @@ sealed class SettingItem(val viewResource: Int) {
     }
   }
 
+  data class NightMode(
+    val nightModeSetting: NightModeSetting,
+    val callback: (NightModeSetting) -> Unit = {}
+  ) : SettingItem(R.layout.li_settings_night_mode) {
+    override fun bind(holder: SettingItemViewHolder<*>) {
+      (holder.binding as LiSettingsNightModeBinding).apply {
+        settingsNightMode.position = nightModeSetting.value
+        settingsNightMode.setOnPositionChangedListener { callback(NightModeSetting.from(it)) }
+      }
+    }
+  }
+
   data class LocalizationOrdering(
     val callback: () -> Unit = {}
   ) : SettingItem(R.layout.li_settings_arrow_button) {
@@ -222,6 +236,9 @@ data class SettingItemViewHolder<T : ViewBinding>(val binding: T) : RecyclerView
         }
         R.layout.li_settings_header -> {
           SettingItemViewHolder(LiSettingsHeaderBinding.inflate(inflater, parent, false))
+        }
+        R.layout.li_settings_night_mode -> {
+          SettingItemViewHolder(LiSettingsNightModeBinding.inflate(inflater, parent, false))
         }
         else -> throw IllegalArgumentException("Unsupported view type $viewId")
       }

@@ -20,11 +20,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import static org.supla.android.widget.shared.WidgetReloadWorker.WORK_ID;
 
+import android.app.UiModeManager;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.media.AudioAttributes;
 import android.net.wifi.WifiManager;
 import android.os.Build;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import androidx.annotation.NonNull;
@@ -32,7 +35,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.hilt.work.HiltWorkerFactory;
 import androidx.lifecycle.ProcessLifecycleOwner;
 import androidx.multidex.MultiDexApplication;
-import androidx.work.Configuration;
+import androidx.work.Configuration.Builder;
 import androidx.work.Constraints;
 import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.NetworkType;
@@ -48,6 +51,7 @@ import org.supla.android.core.networking.suplaclient.SuplaClientBuilder;
 import org.supla.android.core.notifications.NotificationsHelper;
 import org.supla.android.core.observers.AppLifecycleObserver;
 import org.supla.android.data.ValuesFormatter;
+import org.supla.android.data.model.general.NightModeSetting;
 import org.supla.android.db.DbHelper;
 import org.supla.android.db.room.app.AppDatabase;
 import org.supla.android.features.icons.LoadUserIconsIntoCacheWorker;
@@ -85,6 +89,7 @@ public class SuplaApp extends MultiDexApplication
   @Inject HiltWorkerFactory workerFactory;
   @Inject AppDatabase appDatabase;
   @Inject Preferences preferences;
+  @Inject UiModeManager modeManager;
 
   public SuplaApp() {
     SuplaClientMessageHandler.getGlobalInstance().registerMessageListener(this);
@@ -97,6 +102,17 @@ public class SuplaApp extends MultiDexApplication
   @Override
   public void onCreate() {
     super.onCreate();
+    NightModeSetting nightModeSetting = preferences.getNightMode();
+    if (VERSION.SDK_INT < VERSION_CODES.S) {
+      AppCompatDelegate.setDefaultNightMode(nightModeSetting.appCompatDelegateValue());
+    }
+    if (nightModeSetting == NightModeSetting.UNSET) {
+      preferences.setNightMode(NightModeSetting.NEVER);
+      if (VERSION.SDK_INT >= VERSION_CODES.S) {
+        // If unset, expected is that the app will start without night mode.
+        modeManager.setApplicationNightMode(nightModeSetting.modeManagerValue());
+      }
+    }
     SuplaApp._SuplaApp = this;
 
     notificationsHelper.registerForToken();
@@ -105,8 +121,7 @@ public class SuplaApp extends MultiDexApplication
     SuplaFormatter.sharedFormatter();
 
     AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
-    WorkManager.initialize(
-        this, new Configuration.Builder().setWorkerFactory(workerFactory).build());
+    WorkManager.initialize(this, new Builder().setWorkerFactory(workerFactory).build());
     Utils.init(this);
 
     // Needed to trigger database migration through Room.

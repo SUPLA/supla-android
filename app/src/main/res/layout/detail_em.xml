@@ -180,7 +180,7 @@
             android:orientation="horizontal"
             tools:ignore="NotSibling">
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/embtn_Phase1"
                 android:layout_width="80dp"
                 android:layout_height="35dp"
@@ -191,7 +191,7 @@
                 android:text="@string/em_phase1"
                 android:textSize="12sp" />
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/embtn_Phase2"
                 android:layout_width="80dp"
                 android:layout_height="35dp"
@@ -202,7 +202,7 @@
                 android:text="@string/em_phase2"
                 android:textSize="12sp" />
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/embtn_Phase3"
                 android:layout_width="80dp"
                 android:layout_height="35dp"
@@ -213,7 +213,7 @@
                 android:text="@string/em_phase3"
                 android:textSize="12sp" />
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/embtn_Phase123"
                 android:layout_width="80dp"
                 android:layout_height="35dp"

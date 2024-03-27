@@ -40,8 +40,8 @@ data class WindowColors(
         shadow = colorResource(id = R.color.shadow_start),
         glassTop = colorResource(id = R.color.roller_shutter_glass_top_color),
         glassBottom = colorResource(id = R.color.roller_shutter_glass_bottom_color),
-        slatBackground = colorResource(id = R.color.separator_light),
-        slatBorder = colorResource(id = R.color.disabled),
+        slatBackground = colorResource(id = R.color.roller_shutter_slat_background),
+        slatBorder = colorResource(id = R.color.roller_shutter_slat_border),
         markerBorder = colorResource(id = R.color.on_background),
         markerBackground = colorResource(id = R.color.primary_variant)
       )
@@ -51,10 +51,10 @@ data class WindowColors(
       WindowColors(
         window = colorResource(id = R.color.roller_shutter_window_color),
         shadow = colorResource(id = R.color.shadow_start),
-        glassTop = Color(0xffeffaff),
-        glassBottom = Color(0xfff3fbff),
-        slatBackground = Color(0xfff5f5f6),
-        slatBorder = Color(0xffe9e9ea),
+        glassTop = colorResource(id = R.color.roller_shutter_disabled_glass_top_color),
+        glassBottom = colorResource(id = R.color.roller_shutter_disabled_glass_bottom_color),
+        slatBackground = colorResource(id = R.color.roller_shutter_disabled_slat_background),
+        slatBorder = colorResource(id = R.color.roller_shutter_disabled_slat_border),
         markerBorder = colorResource(id = R.color.disabled),
         markerBackground = Color(0xffb3f1cb)
       )

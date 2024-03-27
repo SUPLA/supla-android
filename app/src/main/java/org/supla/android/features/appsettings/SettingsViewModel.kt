@@ -20,8 +20,10 @@ package org.supla.android.features.appsettings
 import android.Manifest.permission.ACCESS_COARSE_LOCATION
 import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.app.NotificationManager
+import android.app.UiModeManager
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
+import androidx.appcompat.app.AppCompatDelegate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -31,6 +33,7 @@ import org.supla.android.core.permissions.PermissionsHelper
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
+import org.supla.android.data.model.general.NightModeSetting
 import org.supla.android.data.source.runtime.appsettings.ChannelHeight
 import org.supla.android.data.source.runtime.appsettings.TemperatureUnit
 import org.supla.android.tools.SuplaSchedulers
@@ -41,6 +44,7 @@ class SettingsViewModel @Inject constructor(
   private val preferences: Preferences,
   private val notificationManager: NotificationManager,
   private val permissionsHelper: PermissionsHelper,
+  private val modeManager: UiModeManager,
   schedulers: SuplaSchedulers
 ) : BaseViewModel<SettingsViewState, SettingsViewEvent>(SettingsViewState(), schedulers) {
 
@@ -62,6 +66,7 @@ class SettingsViewModel @Inject constructor(
       SettingItem.InfoButton(visible = preferences.isShowChannelInfo, this::updateInfoButton),
       SettingItem.BottomLabels(visible = preferences.isShowBottomLabel, this::updateBottomLabel),
       SettingItem.RollerShutterOpenClose(showOpeningPercentage = preferences.isShowOpeningPercent, this::updateShowingOpeningPercentage),
+      SettingItem.NightMode(nightModeSetting = preferences.nightMode, this::updateNightMode),
       SettingItem.LocalizationOrdering { sendEvent(SettingsViewEvent.NavigateToLocalizationsOrdering) },
 
       SettingItem.HeaderItem(headerResource = R.string.settings_permissions),
@@ -101,6 +106,15 @@ class SettingsViewModel @Inject constructor(
 
   private fun updateShowingOpeningPercentage(value: Boolean) {
     preferences.isShowOpeningPercent = value
+  }
+
+  private fun updateNightMode(setting: NightModeSetting) {
+    preferences.nightMode = setting
+    if (VERSION.SDK_INT >= VERSION_CODES.S) {
+      modeManager.setApplicationNightMode(setting.modeManagerValue())
+    } else {
+      AppCompatDelegate.setDefaultNightMode(setting.appCompatDelegateValue())
+    }
   }
 
   private fun goToSettings() {

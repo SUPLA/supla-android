@@ -642,6 +642,7 @@
   <string name="roller_shutter_opening_percentage">Otwarcie:</string>
   <string name="roller_shutter_calibration">Kalibracja</string>
   <string name="roller_shutter_calibration_needed">Wymagana kalibracja</string>
+  <string name="cfg_night_mode">Tryb nocny</string>
 
   <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
     <item quantity="one">włączone</item>

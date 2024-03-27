@@ -569,6 +569,7 @@
   <string name="roller_shutter_opening_percentage">Geöffnet:</string>
   <string name="roller_shutter_calibration">Kalibrierung</string>
   <string name="roller_shutter_calibration_needed">Kalibrierung nötig</string>
+  <string name="cfg_night_mode">Nacht-Modus</string>
   <plurals name="details_timer_info_on">
     <item quantity="one">eingeschaltet</item>
     <item quantity="other">eingeschaltet</item>

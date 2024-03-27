@@ -33,6 +33,17 @@
     <color name="channel_section_cell">#253F24</color>
     <color name="channel_cell">@color/surface</color>
 
+    <!-- Roller shutter -->
+    <color name="roller_shutter_window_color">#363738</color>
+    <color name="roller_shutter_glass_top_color">#011C2B</color>
+    <color name="roller_shutter_glass_bottom_color">#5A6781</color>
+    <color name="roller_shutter_slat_background">#7E8082</color>
+    <color name="roller_shutter_slat_border">#000000</color>
+    <color name="roller_shutter_disabled_glass_top_color">#01141e</color>
+    <color name="roller_shutter_disabled_glass_bottom_color">#3f485a</color>
+    <color name="roller_shutter_disabled_slat_background">#585a5b</color>
+    <color name="roller_shutter_disabled_slat_border">#000000</color>
+
     <!-- Thermostat -->
     <color name="thermostat_control_circle_background">#313131</color>
     <color name="thermostat_control_button_background">#313131</color>

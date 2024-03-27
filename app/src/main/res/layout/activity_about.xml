@@ -32,7 +32,7 @@
     android:layout_marginTop="10dp"
     android:src="@drawable/logosupla"
     tools:ignore="ContentDescription"
-    android:tint="@color/on_primary" />
+    android:tint="@color/on_background" />
 
   <TextView
     android:id="@+id/about_project_name"
@@ -79,7 +79,7 @@
 
     </ScrollView>
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
       android:id="@+id/about_homepage"
       style="?android:attr/borderlessButtonStyle"
       android:layout_width="match_parent"

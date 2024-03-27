@@ -35,7 +35,7 @@
       android:textColor="@color/gray"
       app:layout_constraintBottom_toTopOf="@id/scenes_vertical_center_guideline" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
       android:id="@+id/scenes_empty_list_button"
       style="@style/AppTheme.Button.Outlined"
       android:layout_marginTop="@dimen/distance_default"

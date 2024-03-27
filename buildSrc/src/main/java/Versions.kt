@@ -33,6 +33,7 @@ object Versions {
         const val RecyclerView = "1.2.1"
         const val Security = "1.1.0-alpha06"
         const val Room = "2.5.2"
+        const val AppCompat = "1.5.1"
 
         object Compose {
             const val Core = "1.4.3"
