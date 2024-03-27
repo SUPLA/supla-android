@@ -21,7 +21,7 @@
             android:textColor="@color/vl_infotitle"
             android:textSize="30sp" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnClose"
             android:layout_width="50dp"
             android:layout_height="50dp"

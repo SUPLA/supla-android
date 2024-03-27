@@ -150,20 +150,20 @@ class GetChannelIconUseCase @Inject constructor(
 
     val id = when (channelEntity.function) {
       SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE ->
-        ImageId(userIconId, if (iconType == IconType.SECOND) 1 else 2, channelEntity.profileId)
+        ImageId(userIconId, if (iconType == IconType.SECOND) 1 else 2, channelEntity.profileId, userImage = true)
 
       SUPLA_CHANNELFNC_THERMOMETER ->
-        ImageId(userIconId, 1, profileId = channelEntity.profileId)
+        ImageId(userIconId, 1, profileId = channelEntity.profileId, userImage = true)
 
       SUPLA_CHANNELFNC_CONTROLLINGTHEGATE,
       SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR ->
         when (state.value) {
-          ChannelState.Value.PARTIALLY_OPENED -> ImageId(userIconId, 3, profileId = channelEntity.profileId)
-          ChannelState.Value.OPEN -> ImageId(userIconId, 1, profileId = channelEntity.profileId)
-          else -> ImageId(userIconId, 2, profileId = channelEntity.profileId)
+          ChannelState.Value.PARTIALLY_OPENED -> ImageId(userIconId, 3, profileId = channelEntity.profileId, userImage = true)
+          ChannelState.Value.OPEN -> ImageId(userIconId, 1, profileId = channelEntity.profileId, userImage = true)
+          else -> ImageId(userIconId, 2, profileId = channelEntity.profileId, userImage = true)
         }
 
-      else -> ImageId(userIconId, if (state.isActive()) 2 else 1, channelEntity.profileId)
+      else -> ImageId(userIconId, if (state.isActive()) 2 else 1, channelEntity.profileId, userImage = true)
     }
 
     return if (imageCacheProxy.bitmapExists(id)) {

@@ -44,7 +44,7 @@
             android:layout_weight="1"
             android:orientation="horizontal">
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/status_btn"
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="160dp"
@@ -63,7 +63,7 @@
                 android:topLeftRadius="10dp"
                 android:topRightRadius="10dp" />
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/retry_btn"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
@@ -91,7 +91,7 @@
             android:layout_weight="1"
             android:orientation="horizontal">
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/cloud_btn"
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="200dp"

@@ -28,6 +28,7 @@ object Deps {
         const val Preferences = "androidx.preference:preference-ktx:${Versions.Androidx.Preferences}"
         const val Worker = "androidx.work:work-runtime-ktx:${Versions.Androidx.Worker}"
         const val RecyclerView = "androidx.recyclerview:recyclerview:${Versions.Androidx.RecyclerView}"
+        const val AppCompat = "androidx.appcompat:appcompat:${Versions.Androidx.AppCompat}"
 
         object Core {
             const val Core = "androidx.core:core:${Versions.Androidx.Core}"

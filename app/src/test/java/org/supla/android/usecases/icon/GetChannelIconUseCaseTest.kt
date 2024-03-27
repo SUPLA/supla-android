@@ -179,7 +179,7 @@ class GetChannelIconUseCaseTest {
     val channelDataEntity = mockChannelDataEntity(function, userIconId, altIcon, profileId, stateWrapper)
 
     whenever(getChannelStateUseCase(function, stateWrapper)).thenReturn(channelState)
-    val expectedImageId = ImageId(userIconId, 2, profileId)
+    val expectedImageId = ImageId(userIconId, 2, profileId, userImage = true)
     whenever(imageCacheProxy.bitmapExists(expectedImageId)).thenReturn(true)
 
     // when
@@ -231,7 +231,7 @@ class GetChannelIconUseCaseTest {
     val channelDataEntity = mockChannelDataEntity(function, userIconId, altIcon, profileId, stateWrapper)
 
     whenever(getChannelStateUseCase(function, stateWrapper)).thenReturn(channelState)
-    val expectedImageId = ImageId(userIconId, 1, profileId)
+    val expectedImageId = ImageId(userIconId, 1, profileId, userImage = true)
     whenever(imageCacheProxy.bitmapExists(expectedImageId)).thenReturn(true)
 
     // when
@@ -283,7 +283,7 @@ class GetChannelIconUseCaseTest {
     val channelDataEntity = mockChannelDataEntity(function, userIconId, altIcon, profileId, stateWrapper)
 
     whenever(getChannelStateUseCase(function, stateWrapper)).thenReturn(channelState)
-    val expectedImageId = ImageId(userIconId, 2, profileId)
+    val expectedImageId = ImageId(userIconId, 2, profileId, userImage = true)
     whenever(imageCacheProxy.bitmapExists(expectedImageId)).thenReturn(true)
 
     // when
@@ -335,7 +335,7 @@ class GetChannelIconUseCaseTest {
     val channelDataEntity = mockChannelDataEntity(function, userIconId, altIcon, profileId, stateWrapper)
 
     whenever(getChannelStateUseCase(function, stateWrapper)).thenReturn(channelState)
-    val expectedImageId = ImageId(userIconId, 1, profileId)
+    val expectedImageId = ImageId(userIconId, 1, profileId, userImage = true)
     whenever(imageCacheProxy.bitmapExists(expectedImageId)).thenReturn(true)
 
     // when
@@ -387,7 +387,7 @@ class GetChannelIconUseCaseTest {
     val channelDataEntity = mockChannelDataEntity(function, userIconId, altIcon, profileId, stateWrapper)
 
     whenever(getChannelStateUseCase(function, stateWrapper)).thenReturn(channelState)
-    val expectedImageId = ImageId(userIconId, 1, profileId)
+    val expectedImageId = ImageId(userIconId, 1, profileId, userImage = true)
     whenever(imageCacheProxy.bitmapExists(expectedImageId)).thenReturn(true)
 
     // when
@@ -439,7 +439,7 @@ class GetChannelIconUseCaseTest {
     val channelDataEntity = mockChannelDataEntity(function, userIconId, altIcon, profileId, stateWrapper)
 
     whenever(getChannelStateUseCase(function, stateWrapper)).thenReturn(channelState)
-    val expectedImageId = ImageId(userIconId, 2, profileId)
+    val expectedImageId = ImageId(userIconId, 2, profileId, userImage = true)
     whenever(imageCacheProxy.bitmapExists(expectedImageId)).thenReturn(true)
 
     // when
@@ -491,7 +491,7 @@ class GetChannelIconUseCaseTest {
     val channelDataEntity = mockChannelDataEntity(function, userIconId, altIcon, profileId, stateWrapper)
 
     whenever(getChannelStateUseCase(function, stateWrapper)).thenReturn(channelState)
-    val expectedImageId = ImageId(userIconId, 1, profileId)
+    val expectedImageId = ImageId(userIconId, 1, profileId, userImage = true)
     whenever(imageCacheProxy.bitmapExists(expectedImageId)).thenReturn(true)
 
     // when
@@ -543,7 +543,7 @@ class GetChannelIconUseCaseTest {
     val channelDataEntity = mockChannelDataEntity(function, userIconId, altIcon, profileId, stateWrapper)
 
     whenever(getChannelStateUseCase(function, stateWrapper)).thenReturn(channelState)
-    val expectedImageId = ImageId(userIconId, 3, profileId)
+    val expectedImageId = ImageId(userIconId, 3, profileId, userImage = true)
     whenever(imageCacheProxy.bitmapExists(expectedImageId)).thenReturn(true)
 
     // when

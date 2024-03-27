@@ -130,6 +130,7 @@ dependencies {
   implementation(Deps.Androidx.Lifecycle.Viewmodel)
   implementation(Deps.Androidx.Room.Runtime)
   implementation(Deps.Androidx.Room.RxJava)
+  implementation(Deps.Androidx.AppCompat)
   implementation(Deps.Kotlin)
   implementation(Deps.Coroutines)
   implementation(Deps.Androidx.Fragment)
