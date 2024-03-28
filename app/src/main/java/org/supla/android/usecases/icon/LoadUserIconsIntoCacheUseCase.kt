@@ -48,7 +48,7 @@ class LoadUserIconsIntoCacheUseCase @Inject constructor(
   private fun addImage(icon: UserIconEntity, type: ImageType) {
     val image = type.provider(icon)
     if (image != null && image.isNotEmpty()) {
-      imageCacheProxy.addImage(ImageId(icon.remoteId, type.subId, icon.profileId, true), image)
+      imageCacheProxy.addImage(ImageId(icon.remoteId, type.subId, icon.profileId), image)
     }
   }
 
