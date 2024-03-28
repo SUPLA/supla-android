@@ -50,6 +50,10 @@ data class UserIconEntity(
   @ColumnInfo(name = COLUMN_IMAGE_2) val image2: ByteArray?,
   @ColumnInfo(name = COLUMN_IMAGE_3) val image3: ByteArray?,
   @ColumnInfo(name = COLUMN_IMAGE_4) val image4: ByteArray?,
+  @ColumnInfo(name = COLUMN_IMAGE_1_DARK) val image1Dark: ByteArray?,
+  @ColumnInfo(name = COLUMN_IMAGE_2_DARK) val image2Dark: ByteArray?,
+  @ColumnInfo(name = COLUMN_IMAGE_3_DARK) val image3Dark: ByteArray?,
+  @ColumnInfo(name = COLUMN_IMAGE_4_DARK) val image4Dark: ByteArray?,
   @ColumnInfo(name = COLUMN_PROFILE_ID) val profileId: Long,
 
 ) {
@@ -61,6 +65,10 @@ data class UserIconEntity(
     const val COLUMN_IMAGE_2 = "image2"
     const val COLUMN_IMAGE_3 = "image3"
     const val COLUMN_IMAGE_4 = "image4"
+    const val COLUMN_IMAGE_1_DARK = "image1_dark"
+    const val COLUMN_IMAGE_2_DARK = "image2_dark"
+    const val COLUMN_IMAGE_3_DARK = "image3_dark"
+    const val COLUMN_IMAGE_4_DARK = "image4_dark"
     const val COLUMN_PROFILE_ID = "profileid"
 
     val SQL = arrayOf(
@@ -73,6 +81,10 @@ data class UserIconEntity(
           $COLUMN_IMAGE_2 BLOB,
           $COLUMN_IMAGE_3 BLOB,
           $COLUMN_IMAGE_4 BLOB,
+          $COLUMN_IMAGE_1_DARK BLOB,
+          $COLUMN_IMAGE_2_DARK BLOB,
+          $COLUMN_IMAGE_3_DARK BLOB,
+          $COLUMN_IMAGE_4_DARK BLOB,
           $COLUMN_PROFILE_ID INTEGER NOT NULL
         )
       """.trimIndent(),
@@ -81,8 +93,9 @@ data class UserIconEntity(
       "CREATE UNIQUE INDEX ${TABLE_NAME}_unique_index ON $TABLE_NAME ($COLUMN_REMOTE_ID, $COLUMN_PROFILE_ID)",
     )
 
-    const val ALL_COLUMNS = "$COLUMN_ID, $COLUMN_REMOTE_ID, $COLUMN_IMAGE_1, " +
-      "$COLUMN_IMAGE_2, $COLUMN_IMAGE_3, $COLUMN_IMAGE_4, $COLUMN_PROFILE_ID"
+    const val ALL_COLUMNS = "$COLUMN_ID, $COLUMN_REMOTE_ID, " +
+      "$COLUMN_IMAGE_1, $COLUMN_IMAGE_2, $COLUMN_IMAGE_3, $COLUMN_IMAGE_4, " +
+      "$COLUMN_IMAGE_1_DARK, $COLUMN_IMAGE_2_DARK, $COLUMN_IMAGE_3_DARK, $COLUMN_IMAGE_4_DARK, $COLUMN_PROFILE_ID"
   }
 
   override fun equals(other: Any?): Boolean {
@@ -97,6 +110,10 @@ data class UserIconEntity(
     if (!image2.contentEquals(other.image2)) return false
     if (!image3.contentEquals(other.image3)) return false
     if (!image4.contentEquals(other.image4)) return false
+    if (!image1Dark.contentEquals(other.image1Dark)) return false
+    if (!image2Dark.contentEquals(other.image2Dark)) return false
+    if (!image3Dark.contentEquals(other.image3Dark)) return false
+    if (!image4Dark.contentEquals(other.image4Dark)) return false
     return profileId == other.profileId
   }
 
@@ -107,6 +124,10 @@ data class UserIconEntity(
     result = 31 * result + image2.contentHashCode()
     result = 31 * result + image3.contentHashCode()
     result = 31 * result + image4.contentHashCode()
+    result = 31 * result + image1Dark.contentHashCode()
+    result = 31 * result + image2Dark.contentHashCode()
+    result = 31 * result + image3Dark.contentHashCode()
+    result = 31 * result + image4Dark.contentHashCode()
     result = 31 * result + profileId.hashCode()
     return result
   }
