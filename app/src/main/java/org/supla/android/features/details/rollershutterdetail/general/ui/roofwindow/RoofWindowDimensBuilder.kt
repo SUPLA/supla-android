@@ -78,7 +78,7 @@ internal object RoofWindowDimensBuilder {
       Offset(windowLeftSide + windowFrameWidth, windowTopSide + windowFrameWidth),
       Offset(windowRightSide - windowFrameWidth, windowTopSide + windowFrameWidth),
       Offset(windowRightSide - windowFrameWidth, windowBottomSide - windowFrameWidth),
-      Offset(windowLeftSide + windowFrameWidth, windowBottomSide - windowFrameWidth),
+      Offset(windowLeftSide + windowFrameWidth, windowBottomSide - windowFrameWidth)
     )
   }
 
@@ -97,7 +97,7 @@ internal object RoofWindowDimensBuilder {
       Offset(windowLeftSide + frameAndCoverWidth, windowTopSide + frameAndCoverWidth),
       Offset(windowRightSide - frameAndCoverWidth, windowTopSide + frameAndCoverWidth),
       Offset(windowRightSide - frameAndCoverWidth, windowBottomSide - frameAndCoverWidth),
-      Offset(windowLeftSide + frameAndCoverWidth, windowBottomSide - frameAndCoverWidth),
+      Offset(windowLeftSide + frameAndCoverWidth, windowBottomSide - frameAndCoverWidth)
     )
   }
 

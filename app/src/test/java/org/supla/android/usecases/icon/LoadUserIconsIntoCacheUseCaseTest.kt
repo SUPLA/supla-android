@@ -49,8 +49,8 @@ class LoadUserIconsIntoCacheUseCaseTest {
 
     // then
     testObserver.assertComplete()
-    verify(imageCacheProxy).addImage(ImageId(iconRemoteId, 1, profileId, true), firstImage)
-    verify(imageCacheProxy).addImage(ImageId(iconRemoteId, 3, profileId, true), thirdImage)
+    verify(imageCacheProxy).addImage(ImageId(iconRemoteId, 1, profileId), firstImage)
+    verify(imageCacheProxy).addImage(ImageId(iconRemoteId, 3, profileId), thirdImage)
     verify(userIconRepository).loadAllIcons()
     verifyNoMoreInteractions(imageCacheProxy, userIconRepository)
   }

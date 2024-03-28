@@ -17,16 +17,17 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-data class ImageId(
+@Suppress("DataClassPrivateConstructor")
+data class ImageId private constructor(
   val id: Int,
-  val subId: Int = 0,
-  val profileId: Long = 0,
-  val userImage: Boolean = false,
+  val subId: Int,
+  val profileId: Long,
+  val userImage: Boolean,
   var nightMode: Boolean = false
 ) {
 
   constructor(id: Int) : this(id, 0, 0, false)
-  constructor(id: Int, subId: Int, profileId: Long) : this(id, subId, profileId, false)
+  constructor(id: Int, subId: Int, profileId: Long) : this(id, subId, profileId, true)
 
   companion object {
     fun equals(id1: ImageId?, id2: ImageId?): Boolean {
