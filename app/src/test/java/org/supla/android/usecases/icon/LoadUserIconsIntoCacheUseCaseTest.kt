@@ -33,12 +33,17 @@ class LoadUserIconsIntoCacheUseCaseTest {
     val profileId = 345L
     val firstImage = byteArrayOf(0)
     val thirdImage = byteArrayOf(1, 2)
+    val nightImage = byteArrayOf(1, 2)
     val entity = UserIconEntity(
       123L,
       iconRemoteId,
       firstImage,
       byteArrayOf(),
       thirdImage,
+      null,
+      nightImage,
+      null,
+      null,
       null,
       profileId
     )
@@ -51,6 +56,7 @@ class LoadUserIconsIntoCacheUseCaseTest {
     testObserver.assertComplete()
     verify(imageCacheProxy).addImage(ImageId(iconRemoteId, 1, profileId), firstImage)
     verify(imageCacheProxy).addImage(ImageId(iconRemoteId, 3, profileId), thirdImage)
+    verify(imageCacheProxy).addImage(ImageId(iconRemoteId, 1, profileId).setNightMode(true), nightImage)
     verify(userIconRepository).loadAllIcons()
     verifyNoMoreInteractions(imageCacheProxy, userIconRepository)
   }

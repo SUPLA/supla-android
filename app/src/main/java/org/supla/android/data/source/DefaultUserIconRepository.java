@@ -39,7 +39,16 @@ public class DefaultUserIconRepository implements UserIconRepository {
   }
 
   @Override
-  public boolean addUserIcons(int id, byte[] img1, byte[] img2, byte[] img3, byte[] img4) {
+  public boolean addUserIcons(
+      int id,
+      byte[] img1,
+      byte[] img2,
+      byte[] img3,
+      byte[] img4,
+      byte[] img1dark,
+      byte[] img2dark,
+      byte[] img3dark,
+      byte[] img4dark) {
     if (id <= 0 || (img1 == null && img2 == null && img3 == null && img4 == null)) {
       return false;
     }
@@ -53,6 +62,14 @@ public class DefaultUserIconRepository implements UserIconRepository {
           UserIconEntity.COLUMN_IMAGE_3, img3, 3, profileIdProvider.getCachedProfileId()),
       new UserIconDao.Image(
           UserIconEntity.COLUMN_IMAGE_4, img4, 4, profileIdProvider.getCachedProfileId()),
+      new UserIconDao.Image(
+          UserIconEntity.COLUMN_IMAGE_1_DARK, img1dark, 1, profileIdProvider.getCachedProfileId()),
+      new UserIconDao.Image(
+          UserIconEntity.COLUMN_IMAGE_2_DARK, img2dark, 2, profileIdProvider.getCachedProfileId()),
+      new UserIconDao.Image(
+          UserIconEntity.COLUMN_IMAGE_3_DARK, img3dark, 3, profileIdProvider.getCachedProfileId()),
+      new UserIconDao.Image(
+          UserIconEntity.COLUMN_IMAGE_4_DARK, img4dark, 4, profileIdProvider.getCachedProfileId()),
     };
 
     userIconDao.insert(id, images);

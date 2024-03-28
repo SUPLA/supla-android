@@ -51,7 +51,7 @@ import org.supla.android.profile.ProfileIdHolder;
 
 public class DbHelper extends BaseDbHelper {
 
-  public static final int DATABASE_VERSION = 34;
+  public static final int DATABASE_VERSION = 35;
   public static final String DATABASE_NAME = "supla.db";
   private static final Object mutex = new Object();
 
@@ -201,8 +201,18 @@ public class DbHelper extends BaseDbHelper {
     return new ArrayList<>(result);
   }
 
-  public boolean addUserIcons(int id, byte[] img1, byte[] img2, byte[] img3, byte[] img4) {
-    return userIconRepository.addUserIcons(id, img1, img2, img3, img4);
+  public boolean addUserIcons(
+      int id,
+      byte[] img1,
+      byte[] img2,
+      byte[] img3,
+      byte[] img4,
+      byte[] img1dark,
+      byte[] img2dark,
+      byte[] img3dark,
+      byte[] img4dark) {
+    return userIconRepository.addUserIcons(
+        id, img1, img2, img3, img4, img1dark, img2dark, img3dark, img4dark);
   }
 
   public boolean isZWaveBridgeChannelAvailable() {

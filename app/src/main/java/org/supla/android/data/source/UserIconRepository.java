@@ -20,5 +20,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 public interface UserIconRepository {
 
-  boolean addUserIcons(int id, byte[] img1, byte[] img2, byte[] img3, byte[] img4);
+  boolean addUserIcons(
+      int id,
+      byte[] img1,
+      byte[] img2,
+      byte[] img3,
+      byte[] img4,
+      byte[] img1dark,
+      byte[] img2dark,
+      byte[] img3dark,
+      byte[] img4dark);
 }

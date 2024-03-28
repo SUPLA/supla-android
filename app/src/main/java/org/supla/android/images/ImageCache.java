@@ -37,11 +37,15 @@ public class ImageCache {
       return null;
     }
 
-    if (!imgId.getUserImage()) {
-      Configuration configuration = context.getResources().getConfiguration();
-      imgId.setNightMode(
-          (configuration.uiMode & Configuration.UI_MODE_NIGHT_MASK)
-              == Configuration.UI_MODE_NIGHT_YES);
+    Configuration configuration = context.getResources().getConfiguration();
+    boolean nightMode =
+        (configuration.uiMode & Configuration.UI_MODE_NIGHT_MASK)
+            == Configuration.UI_MODE_NIGHT_YES;
+    imgId.setNightMode(nightMode);
+
+    if (imgId.getUserImage() && nightMode && !map.containsKey(imgId)) {
+      // If there is no user image for night mode, use the default
+      imgId.setNightMode(false);
     }
 
     Bitmap result = map.get(imgId);
