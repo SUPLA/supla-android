@@ -23,11 +23,16 @@ data class ImageId private constructor(
   val subId: Int,
   val profileId: Long,
   val userImage: Boolean,
-  var nightMode: Boolean = false
+  private var nightMode: Boolean = false
 ) {
 
   constructor(id: Int) : this(id, 0, 0, false)
   constructor(id: Int, subId: Int, profileId: Long) : this(id, subId, profileId, true)
+
+  fun setNightMode(nightMode: Boolean): ImageId {
+    this.nightMode = nightMode
+    return this
+  }
 
   companion object {
     fun equals(id1: ImageId?, id2: ImageId?): Boolean {

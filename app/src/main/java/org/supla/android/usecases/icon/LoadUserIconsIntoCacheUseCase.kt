@@ -48,14 +48,18 @@ class LoadUserIconsIntoCacheUseCase @Inject constructor(
   private fun addImage(icon: UserIconEntity, type: ImageType) {
     val image = type.provider(icon)
     if (image != null && image.isNotEmpty()) {
-      imageCacheProxy.addImage(ImageId(icon.remoteId, type.subId, icon.profileId), image)
+      imageCacheProxy.addImage(ImageId(icon.remoteId, type.subId, icon.profileId).setNightMode(type.forNightMode), image)
     }
   }
 
-  private enum class ImageType(val subId: Int, val provider: (UserIconEntity) -> ByteArray?) {
-    IMAGE1(1, { it.image1 }),
-    IMAGE2(2, { it.image2 }),
-    IMAGE3(3, { it.image3 }),
-    IMAGE4(4, { it.image4 })
+  private enum class ImageType(val subId: Int, val forNightMode: Boolean, val provider: (UserIconEntity) -> ByteArray?) {
+    IMAGE1(1, false, { it.image1 }),
+    IMAGE2(2, false, { it.image2 }),
+    IMAGE3(3, false, { it.image3 }),
+    IMAGE4(4, false, { it.image4 }),
+    IMAGE1_DARK(1, true, { it.image1Dark }),
+    IMAGE2_DARK(2, true, { it.image2Dark }),
+    IMAGE3_DARK(3, true, { it.image3Dark }),
+    IMAGE4_DARK(4, true, { it.image4Dark })
   }
 }
