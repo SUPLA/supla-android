@@ -19,7 +19,7 @@
       android:gravity="center_vertical"
       android:maxLines="1"
       android:textAppearance="@style/AppTheme.TextAppearance.Headline5"
-      android:textColor="@color/channel_section_text"
+      android:textColor="@color/on_background"
       app:layout_constraintEnd_toStartOf="@+id/ivSectionCollapsed"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent" />

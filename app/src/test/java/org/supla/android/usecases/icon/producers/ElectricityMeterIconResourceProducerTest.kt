@@ -45,8 +45,7 @@ class ElectricityMeterIconResourceProducerTest : BaseIconResourceProducerTest() 
     test(
       state = ChannelState.Value.NOT_USED,
       function = SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER,
-      expectedIcon = R.drawable.fnc_electricity_meter_nm,
-      nightMode = true
+      expectedIcon = R.drawable.fnc_electricity_meter
     )
   }
 
@@ -54,20 +53,9 @@ class ElectricityMeterIconResourceProducerTest : BaseIconResourceProducerTest() 
   fun `should produce icon (alt 1)`() {
     test(
       state = ChannelState.Value.NOT_USED,
-      function = SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER,
       altIcon = 1,
+      function = SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER,
       expectedIcon = R.drawable.powerstation
-    )
-  }
-
-  @Test
-  fun `should produce icon (alt 1, night mode)`() {
-    test(
-      state = ChannelState.Value.NOT_USED,
-      function = SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER,
-      altIcon = 1,
-      expectedIcon = R.drawable.powerstation_nightmode,
-      nightMode = true
     )
   }
 }

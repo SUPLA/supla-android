@@ -37,12 +37,14 @@ import org.mockito.kotlin.verifyZeroInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.Preferences
 import org.supla.android.core.BaseViewModelTest
+import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.source.ChannelRepository
+import org.supla.android.data.source.local.entity.ChannelConfigEntity
+import org.supla.android.data.source.local.entity.ChannelEntity
+import org.supla.android.data.source.local.entity.ChannelValueEntity
+import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.runtime.ItemType
-import org.supla.android.db.Channel
-import org.supla.android.db.ChannelBase
-import org.supla.android.db.Location
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.features.details.detailbase.standarddetail.DetailPage
 import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
@@ -55,6 +57,7 @@ import org.supla.android.usecases.channel.*
 import org.supla.android.usecases.details.GpmDetailType
 import org.supla.android.usecases.details.LegacyDetailType
 import org.supla.android.usecases.details.ProvideDetailTypeUseCase
+import org.supla.android.usecases.details.RollerShutterDetailType
 import org.supla.android.usecases.details.SwitchDetailType
 import org.supla.android.usecases.details.ThermometerDetailType
 import org.supla.android.usecases.details.ThermostatDetailType
@@ -137,7 +140,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
   @Test
   fun `should toggle location collapsed and reload channels`() {
     // given
-    val location = mockk<Location>()
+    val location = mockk<LocationEntity>()
     whenever(toggleLocationUseCase(location, CollapsedFlag.CHANNEL)).thenReturn(Completable.complete())
     val list = listOf(mockk<ListItem.ChannelItem>())
     whenever(createProfileChannelsListUseCase()).thenReturn(Observable.just(list))
@@ -159,12 +162,12 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     // given
     val firstItemId = 123L
     val firstItemLocationId = 234
-    val firstItem = mockk<ChannelBase>()
+    val firstItem = mockk<ChannelDataBase>()
     every { firstItem.id } returns firstItemId
-    every { firstItem.locationId } returns firstItemLocationId.toLong()
+    every { firstItem.locationId } returns firstItemLocationId
 
     val secondItemId = 345L
-    val secondItem = mockk<ChannelBase>()
+    val secondItem = mockk<ChannelDataBase>()
     every { secondItem.id } returns secondItemId
 
     whenever(channelRepository.reorderChannels(firstItemId, firstItemLocationId, secondItemId)).thenReturn(Completable.complete())
@@ -221,10 +224,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
   fun `should not open RGB details when item is offline`() {
     // given
     val remoteId = 123
-    val channel = mockk<ChannelDataEntity> {
-      every { channelValueEntity } returns mockk { every { online } returns false }
-      every { function } returns SUPLA_CHANNELFNC_RGBLIGHTING
-    }
+    val channel = mockChannelData(remoteId, SUPLA_CHANNELFNC_RGBLIGHTING)
     whenever(findChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
 
     // when
@@ -241,20 +241,11 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     // given
     val remoteId = 123
     val channelId = 123
-    val legacyChannel = mockk<Channel> {
-      every { this@mockk.channelId } returns channelId
-    }
-    val channel = mockk<ChannelDataEntity> {
-      every { channelValueEntity } returns mockk { every { online } returns false }
-      every { function } returns SUPLA_CHANNELFNC_ELECTRICITY_METER
-      every { this@mockk.remoteId } returns remoteId
-      every { getLegacyChannel() } returns legacyChannel
-      every { configEntity } returns null
-    }
+    val channel = mockChannelData(remoteId, SUPLA_CHANNELFNC_ELECTRICITY_METER)
     whenever(findChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
 
     val detailType = LegacyDetailType.EM
-    whenever(provideDetailTypeUseCase(legacyChannel)).thenReturn(detailType)
+    whenever(provideDetailTypeUseCase(channel)).thenReturn(detailType)
 
     // when
     viewModel.onListItemClick(remoteId)
@@ -274,26 +265,11 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     val channelId = 123
     val deviceId = 222
     val function = SUPLA_CHANNELFNC_LIGHTSWITCH
-    val legacyChannel = mockk<Channel> {
-      every { this@mockk.remoteId } returns remoteId
-      every { this@mockk.channelId } returns channelId
-      every { this@mockk.deviceID } returns deviceId
-      every { this@mockk.func } returns function
-    }
-    val channel = mockk<ChannelDataEntity> {
-      every { channelValueEntity } returns mockk {
-        every { online } returns false
-        every { subValueType } returns SUBV_TYPE_IC_MEASUREMENTS.toShort()
-      }
-      every { this@mockk.function } returns function
-      every { this@mockk.remoteId } returns remoteId
-      every { getLegacyChannel() } returns legacyChannel
-      every { configEntity } returns null
-    }
+    val channel = mockChannelData(remoteId, function, deviceId, subValueType = SUBV_TYPE_IC_MEASUREMENTS.toShort())
     whenever(findChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
 
     val detailType = SwitchDetailType(listOf())
-    whenever(provideDetailTypeUseCase(legacyChannel)).thenReturn(detailType)
+    whenever(provideDetailTypeUseCase(channel)).thenReturn(detailType)
 
     // when
     viewModel.onListItemClick(remoteId)
@@ -310,10 +286,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
   fun `should open thermostat details for channel with thermostat function`() {
     // given
     val remoteId = 123
-    val channel = mockk<ChannelDataEntity> {
-      every { channelValueEntity } returns mockk { every { online } returns true }
-      every { function } returns SUPLA_CHANNELFNC_THERMOSTAT
-    }
+    val channel = mockChannelData(remoteId, SUPLA_CHANNELFNC_THERMOSTAT, online = true)
     whenever(findChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
 
     // when
@@ -334,22 +307,11 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     val channelId = 123
     val deviceId = 222
     val function = SUPLA_CHANNELFNC_THERMOMETER
-    val legacyChannel = mockk<Channel> {
-      every { this@mockk.remoteId } returns remoteId
-      every { this@mockk.channelId } returns channelId
-      every { this@mockk.deviceID } returns deviceId
-      every { this@mockk.func } returns function
-    }
-    val channel = mockk<ChannelDataEntity> {
-      every { this@mockk.function } returns function
-      every { this@mockk.remoteId } returns remoteId
-      every { getLegacyChannel() } returns legacyChannel
-      every { configEntity } returns null
-    }
+    val channel = mockChannelData(remoteId, function, deviceId)
     whenever(findChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
 
     val detailType = ThermometerDetailType(listOf(DetailPage.THERMOMETER_HISTORY))
-    whenever(provideDetailTypeUseCase(legacyChannel)).thenReturn(detailType)
+    whenever(provideDetailTypeUseCase(channel)).thenReturn(detailType)
 
     // when
     viewModel.onListItemClick(remoteId)
@@ -370,23 +332,11 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     val deviceId = 222
     val function = SUPLA_CHANNELFNC_HVAC_THERMOSTAT
     val pages = emptyList<DetailPage>()
-    val legacyChannel = mockk<Channel> {
-      every { this@mockk.remoteId } returns remoteId
-      every { this@mockk.channelId } returns channelId
-      every { this@mockk.deviceID } returns deviceId
-      every { this@mockk.func } returns function
-    }
-    val channel = mockk<ChannelDataEntity> {
-      every { this@mockk.function } returns function
-      every { this@mockk.remoteId } returns remoteId
-      every { getLegacyChannel() } returns legacyChannel
-      every { channelValueEntity } returns mockk { every { online } returns true }
-      every { configEntity } returns null
-    }
+    val channel = mockChannelData(remoteId, function, deviceId, true)
     whenever(findChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
 
     val thermostatDetailType = ThermostatDetailType(pages)
-    whenever(provideDetailTypeUseCase(legacyChannel)).thenReturn(thermostatDetailType)
+    whenever(provideDetailTypeUseCase(channel)).thenReturn(thermostatDetailType)
 
     // when
     viewModel.onListItemClick(remoteId)
@@ -407,23 +357,11 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     val deviceId = 222
     val function = SUPLA_CHANNELFNC_HVAC_THERMOSTAT
     val pages = emptyList<DetailPage>()
-    val legacyChannel = mockk<Channel> {
-      every { this@mockk.remoteId } returns remoteId
-      every { this@mockk.channelId } returns channelId
-      every { this@mockk.deviceID } returns deviceId
-      every { this@mockk.func } returns function
-    }
-    val channel = mockk<ChannelDataEntity> {
-      every { this@mockk.function } returns function
-      every { this@mockk.remoteId } returns remoteId
-      every { getLegacyChannel() } returns legacyChannel
-      every { channelValueEntity } returns mockk { every { online } returns false }
-      every { configEntity } returns null
-    }
+    val channel = mockChannelData(remoteId, function, deviceId)
     whenever(findChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
 
     val thermostatDetailType = ThermostatDetailType(pages)
-    whenever(provideDetailTypeUseCase(legacyChannel)).thenReturn(thermostatDetailType)
+    whenever(provideDetailTypeUseCase(channel)).thenReturn(thermostatDetailType)
 
     // when
     viewModel.onListItemClick(remoteId)
@@ -444,23 +382,11 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     val deviceId = 222
     val function = SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT
     val pages = emptyList<DetailPage>()
-    val legacyChannel = mockk<Channel> {
-      every { this@mockk.remoteId } returns remoteId
-      every { this@mockk.channelId } returns channelId
-      every { this@mockk.deviceID } returns deviceId
-      every { this@mockk.func } returns function
-    }
-    val channel = mockk<ChannelDataEntity> {
-      every { this@mockk.function } returns function
-      every { this@mockk.remoteId } returns remoteId
-      every { getLegacyChannel() } returns legacyChannel
-      every { channelValueEntity } returns mockk { every { online } returns true }
-      every { configEntity } returns null
-    }
+    val channel = mockChannelData(remoteId, function, deviceId, true)
     whenever(findChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
 
     val gpmDetailType = GpmDetailType(pages)
-    whenever(provideDetailTypeUseCase(legacyChannel)).thenReturn(gpmDetailType)
+    whenever(provideDetailTypeUseCase(channel)).thenReturn(gpmDetailType)
 
     // when
     viewModel.onListItemClick(remoteId)
@@ -481,23 +407,11 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     val deviceId = 222
     val function = SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT
     val pages = emptyList<DetailPage>()
-    val legacyChannel = mockk<Channel> {
-      every { this@mockk.remoteId } returns remoteId
-      every { this@mockk.channelId } returns channelId
-      every { this@mockk.deviceID } returns deviceId
-      every { this@mockk.func } returns function
-    }
-    val channel = mockk<ChannelDataEntity> {
-      every { this@mockk.function } returns function
-      every { this@mockk.remoteId } returns remoteId
-      every { getLegacyChannel() } returns legacyChannel
-      every { channelValueEntity } returns mockk { every { online } returns false }
-      every { configEntity } returns null
-    }
+    val channel = mockChannelData(remoteId, function, deviceId)
     whenever(findChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
 
     val gpmDetailType = GpmDetailType(pages)
-    whenever(provideDetailTypeUseCase(legacyChannel)).thenReturn(gpmDetailType)
+    whenever(provideDetailTypeUseCase(channel)).thenReturn(gpmDetailType)
 
     // when
     viewModel.onListItemClick(remoteId)
@@ -518,23 +432,11 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     val deviceId = 222
     val function = SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER
     val pages = emptyList<DetailPage>()
-    val legacyChannel = mockk<Channel> {
-      every { this@mockk.remoteId } returns remoteId
-      every { this@mockk.channelId } returns channelId
-      every { this@mockk.deviceID } returns deviceId
-      every { this@mockk.func } returns function
-    }
-    val channel = mockk<ChannelDataEntity> {
-      every { this@mockk.function } returns function
-      every { this@mockk.remoteId } returns remoteId
-      every { getLegacyChannel() } returns legacyChannel
-      every { channelValueEntity } returns mockk { every { online } returns true }
-      every { configEntity } returns null
-    }
+    val channel = mockChannelData(remoteId, function, deviceId, true)
     whenever(findChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
 
     val gpmDetailType = GpmDetailType(pages)
-    whenever(provideDetailTypeUseCase(legacyChannel)).thenReturn(gpmDetailType)
+    whenever(provideDetailTypeUseCase(channel)).thenReturn(gpmDetailType)
 
     // when
     viewModel.onListItemClick(remoteId)
@@ -555,23 +457,11 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     val deviceId = 222
     val function = SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER
     val pages = emptyList<DetailPage>()
-    val legacyChannel = mockk<Channel> {
-      every { this@mockk.remoteId } returns remoteId
-      every { this@mockk.channelId } returns channelId
-      every { this@mockk.deviceID } returns deviceId
-      every { this@mockk.func } returns function
-    }
-    val channel = mockk<ChannelDataEntity> {
-      every { this@mockk.function } returns function
-      every { this@mockk.remoteId } returns remoteId
-      every { getLegacyChannel() } returns legacyChannel
-      every { channelValueEntity } returns mockk { every { online } returns false }
-      every { configEntity } returns null
-    }
+    val channel = mockChannelData(remoteId, function, deviceId)
     whenever(findChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
 
     val gpmDetailType = GpmDetailType(pages)
-    whenever(provideDetailTypeUseCase(legacyChannel)).thenReturn(gpmDetailType)
+    whenever(provideDetailTypeUseCase(channel)).thenReturn(gpmDetailType)
 
     // when
     viewModel.onListItemClick(remoteId)
@@ -585,14 +475,61 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
   }
 
   @Test
+  fun `should open roller shutter detail fragment when online`() {
+    // given
+    val remoteId = 123
+    val channelId = 123
+    val deviceId = 222
+    val function = SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
+    val pages = emptyList<DetailPage>()
+    val channel = mockChannelData(remoteId, function, deviceId, true)
+    whenever(findChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
+
+    val rollerShutterDetail = RollerShutterDetailType(pages)
+    whenever(provideDetailTypeUseCase(channel)).thenReturn(rollerShutterDetail)
+
+    // when
+    viewModel.onListItemClick(remoteId)
+
+    // then
+    assertThat(states).isEmpty()
+    assertThat(events).containsExactly(
+      ChannelListViewEvent.OpenRollerShutterDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
+    )
+    verifyZeroInteractionsExcept(provideDetailTypeUseCase)
+  }
+
+  @Test
+  fun `should open roller shutter detail fragment when offline`() {
+    // given
+    val remoteId = 123
+    val channelId = 123
+    val deviceId = 222
+    val function = SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
+    val pages = emptyList<DetailPage>()
+    val channel = mockChannelData(remoteId, function, deviceId, false)
+    whenever(findChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
+
+    val rollerShutterDetail = RollerShutterDetailType(pages)
+    whenever(provideDetailTypeUseCase(channel)).thenReturn(rollerShutterDetail)
+
+    // when
+    viewModel.onListItemClick(remoteId)
+
+    // then
+    assertThat(states).isEmpty()
+    assertThat(events).containsExactly(
+      ChannelListViewEvent.OpenRollerShutterDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
+    )
+    verifyZeroInteractionsExcept(provideDetailTypeUseCase)
+  }
+
+  @Test
   fun `should not open detail fragment when it is not supported`() {
     // given
     val remoteId = 123
     val channelFunction = SUPLA_CHANNELFNC_NONE
-    val channel = mockk<ChannelDataEntity> {
-      every { channelValueEntity } returns mockk { every { online } returns false }
-      every { function } returns channelFunction
-    }
+    val channel = mockChannelData(remoteId, channelFunction)
     whenever(findChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
 
     // when
@@ -626,12 +563,9 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
   fun `should load channel on update`() {
     // given
     val channelId = 223
-    val legacyChannel: Channel = mockk()
-    every { legacyChannel.remoteId } returns channelId
 
     val channel: ChannelDataEntity = mockk()
     every { channel.remoteId } returns channelId
-    every { channel.getLegacyChannel() } returns legacyChannel
     whenever(findChannelByRemoteIdUseCase.invoke(channelId)).thenReturn(Maybe.just(channel))
 
     val suplaMessage: SuplaClientMsg = mockk()
@@ -639,8 +573,8 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     every { suplaMessage.type } returns SuplaClientMsg.onDataChanged
 
     val list = listOf(mockk<ListItem.ChannelItem>())
-    every { list[0].channelBase } returns legacyChannel
-    every { list[0].channelBase = legacyChannel } answers { }
+    every { list[0].channelBase } returns channel
+    every { list[0].channelBase = channel } answers { }
     whenever(createProfileChannelsListUseCase()).thenReturn(Observable.just(list))
 
     // when
@@ -651,7 +585,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     assertThat(states).containsExactly(ChannelListViewState(channels = list))
     assertThat(events).isEmpty()
     verifyZeroInteractionsExcept(createProfileChannelsListUseCase, findChannelByRemoteIdUseCase)
-    io.mockk.verify { list[0].channelBase = legacyChannel }
+    io.mockk.verify { list[0].channelBase = channel }
   }
 
   @Test
@@ -683,5 +617,31 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
         verifyZeroInteractions(dependency)
       }
     }
+  }
+
+  private fun mockChannelData(
+    remoteId: Int,
+    function: Int,
+    deviceId: Int? = null,
+    online: Boolean = false,
+    configEntity: ChannelConfigEntity? = null,
+    subValueType: Short? = null
+  ): ChannelDataEntity {
+    val channelEntity: ChannelEntity = mockk {
+      every { this@mockk.deviceId } returns deviceId
+    }
+    val channelValueEntity: ChannelValueEntity = mockk {
+      every { this@mockk.subValueType } returns (subValueType ?: 0)
+    }
+    val channel = mockk<ChannelDataEntity> {
+      every { this@mockk.function } returns function
+      every { this@mockk.remoteId } returns remoteId
+      every { this@mockk.channelEntity } returns channelEntity
+      every { this@mockk.channelValueEntity } returns channelValueEntity
+      every { this@mockk.configEntity } returns configEntity
+      every { isOnline() } returns online
+    }
+
+    return channel
   }
 }

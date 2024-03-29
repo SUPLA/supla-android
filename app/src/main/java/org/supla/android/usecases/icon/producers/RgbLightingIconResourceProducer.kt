@@ -29,10 +29,7 @@ class RgbLightingIconResourceProducer : IconResourceProducer {
 
   override fun produce(data: IconData): Int =
     when (data.state.value) {
-      ChannelState.Value.ON ->
-        data.icon(R.drawable.rgbon, R.drawable.rgbon_nightmode)
-
-      else ->
-        data.icon(R.drawable.rgboff, R.drawable.rgboff_nightmode)
+      ChannelState.Value.ON -> R.drawable.rgbon
+      else -> R.drawable.rgboff
     }
 }

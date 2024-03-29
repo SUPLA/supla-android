@@ -91,7 +91,7 @@
   <string name="rate_no_thanks">Спасибо, не надо</string>
 
   <string name="rs_percent_caption">Процент закрытия</string>
-  <string name="calibration">[калибровка]</string>
+  <string name="roller_shutter_calibrating">калибровка…</string>
   <string name="add_wizard_is_not_available">Мастер добавления доступен только при подключении к серверу на основе введенного адреса электронной почты! (Отключите дополнительные параметры в настройках вашей учетной записи)</string>
   <string name="wizard_step1_txt3">Для продолжения нажмите <b>Далее</b>.</string>
   <string name="add_device">Добавить устройство</string>
@@ -437,7 +437,7 @@
   <string name="location_name">Название локализации</string>
   <string name="overcurrent_warning">Питание отключено после превышения установленного порога допустимого тока.</string>
   <string name="overcurrent_question">Питание отключено после превышения установленного порога допустимого тока. Вы уверены, что хотите включить питание?</string>
-  <string name="recalibration_question">Вы уверены, что хотите начать калибровку?</string>
+  <string name="roller_shutter_start_calibration_message">Вы уверены, что хотите начать калибровку?</string>
   <string name="calibration_failed">Калибровка не удалась.</string>
   <string name="calibration_lost">Калибровка потеряна.</string>
   <string name="motor_problem">Проблема с двигателем / Неожиданная остановка.</string>
@@ -460,5 +460,6 @@
   <string name="rs_display_mode_closing">Закрытия</string>
   <string name="status_accessid_inactive">Идентификатор доступа неактивен</string>
   <string name="hour_string_format">HH:mm:ss</string>
+ <string name="roller_shutter_calibration">калибровка</string>
 </resources>
 

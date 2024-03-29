@@ -31,6 +31,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import java.util.Timer;
 import java.util.TimerTask;
+import org.supla.android.data.source.remote.channel.SuplaChannelFlag;
 import org.supla.android.db.Channel;
 import org.supla.android.db.DbHelper;
 import org.supla.android.lib.SuplaChannelState;
@@ -181,7 +182,7 @@ public class ChannelStatePopup
 
     cancelRefreshTimer();
 
-    if ((channelFlags & SuplaConst.SUPLA_CHANNEL_FLAG_CHANNELSTATE) != 0) {
+    if (SuplaChannelFlag.CHANNEL_STATE.inside(channelFlags)) {
       refreshTimer = new Timer();
       refreshTimer.schedule(
           new TimerTask() {
@@ -310,7 +311,7 @@ public class ChannelStatePopup
           tvLightSourceLifespan.setText(state.getLightSourceLifespanString());
         }
 
-        if ((channelFlags & SuplaConst.SUPLA_CHANNEL_FLAG_LIGHTSOURCELIFESPAN_SETTABLE) > 0) {
+        if (SuplaChannelFlag.LIGHT_SOURCE_LIFESPAN_SETTABLE.inside(channelFlags)) {
           btnReset.setVisibility(View.VISIBLE);
         }
       }
@@ -341,7 +342,7 @@ public class ChannelStatePopup
       channelFunc = channel.getFunc();
       channelFlags = channel.getFlags();
 
-      if ((channelFlags & SuplaConst.SUPLA_CHANNEL_FLAG_CHANNELSTATE) == 0) {
+      if (SuplaChannelFlag.CHANNEL_STATE.notInside(channelFlags)) {
         lastState = channel.getChannelState();
       }
 

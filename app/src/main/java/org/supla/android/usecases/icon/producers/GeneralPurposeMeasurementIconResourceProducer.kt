@@ -28,37 +28,37 @@ class GeneralPurposeMeasurementIconResourceProducer : IconResourceProducer {
 
   override fun produce(data: IconData): Int =
     when (data.altIcon) {
-      1 -> data.icon(R.drawable.fnc_gpm_1, R.drawable.fnc_gpm_1_nm)
-      2 -> data.icon(R.drawable.fnc_gpm_2, R.drawable.fnc_gpm_2_nm)
-      3 -> data.icon(R.drawable.fnc_gpm_3, R.drawable.fnc_gpm_3_nm)
-      4 -> data.icon(R.drawable.fnc_gpm_4, R.drawable.fnc_gpm_4_nm)
-      5 -> data.icon(R.drawable.fnc_gpm_air_1, R.drawable.fnc_gpm_air_1_nm)
-      6 -> data.icon(R.drawable.fnc_gpm_air_2, R.drawable.fnc_gpm_air_2_nm)
-      7 -> data.icon(R.drawable.fnc_gpm_air_3, R.drawable.fnc_gpm_air_3_nm)
-      8 -> data.icon(R.drawable.fnc_gpm_chimnay, R.drawable.fnc_gpm_chimnay_nm)
-      9 -> data.icon(R.drawable.fnc_gpm_current_1, R.drawable.fnc_gpm_current_1_nm)
-      10 -> data.icon(R.drawable.fnc_gpm_current_2, R.drawable.fnc_gpm_current_2_nm)
-      11 -> data.icon(R.drawable.fnc_gpm_fan_1, R.drawable.fnc_gpm_fan_1_nm)
-      12 -> data.icon(R.drawable.fnc_gpm_fan_2, R.drawable.fnc_gpm_fan_2_nm)
-      13 -> data.icon(R.drawable.fnc_gpm_insolation_1, R.drawable.fnc_gpm_insolation_1_nm)
-      14 -> data.icon(R.drawable.fnc_gpm_insolation_2, R.drawable.fnc_gpm_insolation_2_nm)
-      15 -> data.icon(R.drawable.fnc_gpm_multimeter, R.drawable.fnc_gpm_multimeter_nm)
-      16 -> data.icon(R.drawable.fnc_gpm_pm_1, R.drawable.fnc_gpm_pm_1_nm)
-      17 -> data.icon(R.drawable.fnc_gpm_pm_2_5, R.drawable.fnc_gpm_pm_2_5_nm)
-      18 -> data.icon(R.drawable.fnc_gpm_pm_10, R.drawable.fnc_gpm_pm_10_nm)
-      19 -> data.icon(R.drawable.fnc_gpm_processor, R.drawable.fnc_gpm_processor_nm)
-      20 -> data.icon(R.drawable.fnc_gpm_smog_1, R.drawable.fnc_gpm_smog_1_nm)
-      21 -> data.icon(R.drawable.fnc_gpm_smog_2, R.drawable.fnc_gpm_smog_2_nm)
-      22 -> data.icon(R.drawable.fnc_gpm_smog_3, R.drawable.fnc_gpm_smog_3_nm)
-      23 -> data.icon(R.drawable.fnc_gpm_smog_4, R.drawable.fnc_gpm_smog_4_nm)
-      24 -> data.icon(R.drawable.fnc_gpm_smog_5, R.drawable.fnc_gpm_smog_5_nm)
-      25 -> data.icon(R.drawable.fnc_gpm_smog_6, R.drawable.fnc_gpm_smog_6_nm)
-      26 -> data.icon(R.drawable.fnc_gpm_sound_1, R.drawable.fnc_gpm_sound_1_nm)
-      27 -> data.icon(R.drawable.fnc_gpm_sound_2, R.drawable.fnc_gpm_sound_2_nm)
-      28 -> data.icon(R.drawable.fnc_gpm_sound_3, R.drawable.fnc_gpm_sound_3_nm)
-      29 -> data.icon(R.drawable.fnc_gpm_transfer, R.drawable.fnc_gpm_transfer_nm)
-      30 -> data.icon(R.drawable.fnc_gpm_voltage_1, R.drawable.fnc_gpm_voltage_1_nm)
-      31 -> data.icon(R.drawable.fnc_gpm_voltage_2, R.drawable.fnc_gpm_voltage_2_nm)
-      else -> data.icon(R.drawable.fnc_gpm_5, R.drawable.fnc_gpm_5_nm)
+      1 -> R.drawable.fnc_gpm_1
+      2 -> R.drawable.fnc_gpm_2
+      3 -> R.drawable.fnc_gpm_3
+      4 -> R.drawable.fnc_gpm_4
+      5 -> R.drawable.fnc_gpm_air_1
+      6 -> R.drawable.fnc_gpm_air_2
+      7 -> R.drawable.fnc_gpm_air_3
+      8 -> R.drawable.fnc_gpm_chimnay
+      9 -> R.drawable.fnc_gpm_current_1
+      10 -> R.drawable.fnc_gpm_current_2
+      11 -> R.drawable.fnc_gpm_fan_1
+      12 -> R.drawable.fnc_gpm_fan_2
+      13 -> R.drawable.fnc_gpm_insolation_1
+      14 -> R.drawable.fnc_gpm_insolation_2
+      15 -> R.drawable.fnc_gpm_multimeter
+      16 -> R.drawable.fnc_gpm_pm_1
+      17 -> R.drawable.fnc_gpm_pm_2_5
+      18 -> R.drawable.fnc_gpm_pm_10
+      19 -> R.drawable.fnc_gpm_processor
+      20 -> R.drawable.fnc_gpm_smog_1
+      21 -> R.drawable.fnc_gpm_smog_2
+      22 -> R.drawable.fnc_gpm_smog_3
+      23 -> R.drawable.fnc_gpm_smog_4
+      24 -> R.drawable.fnc_gpm_smog_5
+      25 -> R.drawable.fnc_gpm_smog_6
+      26 -> R.drawable.fnc_gpm_sound_1
+      27 -> R.drawable.fnc_gpm_sound_2
+      28 -> R.drawable.fnc_gpm_sound_3
+      29 -> R.drawable.fnc_gpm_transfer
+      30 -> R.drawable.fnc_gpm_voltage_1
+      31 -> R.drawable.fnc_gpm_voltage_2
+      else -> R.drawable.fnc_gpm_5
     }
 }

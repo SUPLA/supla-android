@@ -18,6 +18,7 @@ package org.supla.android.di
  */
 
 import android.app.NotificationManager
+import android.app.UiModeManager
 import android.appwidget.AppWidgetManager
 import android.content.Context
 import dagger.Module
@@ -111,4 +112,8 @@ class ApplicationModule {
   @Provides
   fun provideNotificationManager(@ApplicationContext context: Context) =
     context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+  @Provides
+  fun provideModeManager(@ApplicationContext context: Context) =
+    context.getSystemService(Context.UI_MODE_SERVICE) as UiModeManager
 }

@@ -29,7 +29,7 @@ class ThermostatHvacIconResourceProducer : IconResourceProducer {
 
   override fun produce(data: IconData): Int =
     when (data.state.value) {
-      ChannelState.Value.HEAT -> data.icon(R.drawable.fnc_thermostat_heat, R.drawable.fnc_thermostat_heat_nm)
-      else -> data.icon(R.drawable.fnc_thermostat_cool, R.drawable.fnc_thermostat_cool_nm)
+      ChannelState.Value.HEAT -> R.drawable.fnc_thermostat_heat
+      else -> R.drawable.fnc_thermostat_cool
     }
 }

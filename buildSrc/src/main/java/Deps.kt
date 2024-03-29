@@ -28,6 +28,7 @@ object Deps {
         const val Preferences = "androidx.preference:preference-ktx:${Versions.Androidx.Preferences}"
         const val Worker = "androidx.work:work-runtime-ktx:${Versions.Androidx.Worker}"
         const val RecyclerView = "androidx.recyclerview:recyclerview:${Versions.Androidx.RecyclerView}"
+        const val AppCompat = "androidx.appcompat:appcompat:${Versions.Androidx.AppCompat}"
 
         object Core {
             const val Core = "androidx.core:core:${Versions.Androidx.Core}"
@@ -56,6 +57,7 @@ object Deps {
         object Compose {
             const val UI = "androidx.compose.ui:ui:${Versions.Androidx.Compose.Core}"
             const val Material = "androidx.compose.material:material:${Versions.Androidx.Compose.Core}"
+            const val Icons = "androidx.compose.material:material-icons-extended:${Versions.Androidx.Compose.Core}"
             const val Material3 = "androidx.compose.material3:material3:1.1.2"
             const val Tooling = "androidx.compose.ui:ui-tooling:${Versions.Androidx.Compose.Core}"
             const val ConstraintLayout = "androidx.constraintlayout:constraintlayout-compose:${Versions.Androidx.Compose.ConstaintLayout}"

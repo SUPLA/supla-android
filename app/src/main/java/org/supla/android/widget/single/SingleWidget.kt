@@ -76,12 +76,12 @@ class SingleWidget : WidgetProviderBase() {
         )
         views.setImageViewBitmap(
           R.id.single_widget_button,
-          ImageCache.getBitmap(context, scene.getImageId(false))
+          ImageCache.getBitmap(context, scene.getImageId())
         )
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
           views.setImageViewBitmap(
             R.id.single_widget_button_night_mode,
-            ImageCache.getBitmap(context, scene.getImageId(true))
+            ImageCache.getBitmap(context, scene.getImageId())
           )
           views.setViewVisibility(R.id.single_widget_button_night_mode, View.VISIBLE)
         } else {
@@ -152,14 +152,14 @@ class SingleWidget : WidgetProviderBase() {
         R.id.single_widget_button,
         ImageCache.getBitmap(
           context,
-          context.getChannelIconUseCase(channel, IconType.SINGLE, false, state)
+          context.getChannelIconUseCase.invoke(channel, IconType.SINGLE, state)
         )
       )
       views.setImageViewBitmap(
         R.id.single_widget_button_night_mode,
         ImageCache.getBitmap(
           context,
-          context.getChannelIconUseCase(channel, IconType.SINGLE, true, state)
+          context.getChannelIconUseCase.invoke(channel, IconType.SINGLE, state)
         )
       )
       views.setViewVisibility(R.id.single_widget_button, View.VISIBLE)

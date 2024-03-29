@@ -86,7 +86,7 @@
   <string name="rate_later">Más tarde</string>
   <string name="rate_no_thanks">No, gracias</string>
   <string name="rs_percent_caption">Porcentaje de cierre</string>
-  <string name="calibration">[Calibración]</string>
+  <string name="roller_shutter_calibrating">Calibración…</string>
   <string name="add_wizard_is_not_available">¡El Asistente para agregar solo está disponible cuando se ha establecido una conexión con el servidor según la dirección de correo electrónico ingresada! (Desactiva las opciones avanzadas en la configuración de tu cuenta)</string>
   <string name="wizard_step1_txt3">Para continuar presiona <b>Siguiente</b>.</string>
   <string name="add_device">Añadir dispositivo</string>
@@ -432,7 +432,7 @@
   <string name="location_name">Nombre de la localización</string>
   <string name="overcurrent_warning">La alimentación se desactivo al superar el umbral establecido de corriente permitida.</string>
   <string name="overcurrent_question">La alimentación se desactivo al superar el umbral establecido de corriente permitida. ¿Estás seguro de que deseas encenderlo?</string>
-  <string name="recalibration_question">¿Está seguro de que desea iniciar la calibración?</string>
+  <string name="roller_shutter_start_calibration_message">¿Está seguro de que desea iniciar la calibración?</string>
   <string name="calibration_failed">La calibración falló.</string>
   <string name="calibration_lost">Calibración perdida.</string>
   <string name="motor_problem">Problema de motor / Parada inesperada.</string>
@@ -455,4 +455,5 @@
   <string name="rs_display_mode_closing">Cierres</string>
   <string name="status_accessid_inactive">Identificación de acceso inactiva</string>
   <string name="hour_string_format">HH:mm:ss</string>
+ <string name="roller_shutter_calibration">Calibración</string>
 </resources>

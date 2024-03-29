@@ -21,7 +21,7 @@ import android.content.Context
 import dagger.hilt.android.qualifiers.ActivityContext
 import org.supla.android.Preferences
 import org.supla.android.SuplaApp
-import org.supla.android.db.Location
+import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.ui.dialogs.ChannelGroupCaptionEditor
 import org.supla.android.ui.layouts.ChannelLayout
 import org.supla.android.ui.lists.BaseChannelsAdapter
@@ -32,7 +32,7 @@ class GroupsAdapter @Inject constructor(
   preferences: Preferences
 ) : BaseChannelsAdapter(context, preferences), ChannelLayout.Listener {
 
-  override fun isLocationCollapsed(location: Location) = ((location.collapsed and 0x2) > 0)
+  override fun isLocationCollapsed(location: LocationEntity) = ((location.collapsed and 0x2) > 0)
 
   override fun onCaptionLongPress(groupId: Int) {
     SuplaApp.Vibrate(context)

@@ -23,7 +23,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import org.supla.android.R
@@ -62,17 +61,6 @@ fun AlertDialog(
     }
   }
 }
-
-@Composable
-private fun DialogHeader(title: String) =
-  Text(
-    text = title,
-    style = MaterialTheme.typography.h6,
-    textAlign = TextAlign.Center,
-    modifier = Modifier
-      .padding(all = dimensionResource(id = R.dimen.distance_default))
-      .fillMaxWidth()
-  )
 
 @Composable
 private fun DialogMessage(message: String) =

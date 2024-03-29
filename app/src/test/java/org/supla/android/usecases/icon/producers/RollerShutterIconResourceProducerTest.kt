@@ -48,24 +48,4 @@ class RollerShutterIconResourceProducerTest : BaseIconResourceProducerTest() {
       expectedIcon = R.drawable.rollershutterclosed
     )
   }
-
-  @Test
-  fun `should produce open icon (night mode)`() {
-    test(
-      state = ChannelState.Value.OPEN,
-      function = SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER,
-      expectedIcon = R.drawable.rollershutteropen_nightmode,
-      nightMode = true
-    )
-  }
-
-  @Test
-  fun `should produce closed icon (night mode)`() {
-    test(
-      state = ChannelState.Value.CLOSED,
-      function = SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER,
-      expectedIcon = R.drawable.rollershutterclosed_nightmode,
-      nightMode = true
-    )
-  }
 }

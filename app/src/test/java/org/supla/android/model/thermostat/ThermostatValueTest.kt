@@ -22,9 +22,9 @@ import org.assertj.core.data.Offset
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
-import org.supla.android.data.source.local.entity.ThermostatValue
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
-import org.supla.android.data.source.remote.thermostat.SuplaThermostatFlags
+import org.supla.android.data.source.remote.thermostat.SuplaThermostatFlag
+import org.supla.android.data.source.remote.thermostat.ThermostatValue
 
 @RunWith(MockitoJUnitRunner::class)
 class ThermostatValueTest {
@@ -43,7 +43,7 @@ class ThermostatValueTest {
     assertThat(values.mode).isEqualTo(SuplaHvacMode.HEAT)
     assertThat(values.setpointTemperatureHeat).isEqualTo(1.2f, Offset.offset(0.001f))
     assertThat(values.setpointTemperatureCool).isEqualTo(0.8f, Offset.offset(0.001f))
-    assertThat(values.flags).containsExactly(SuplaThermostatFlags.COOLING)
+    assertThat(values.flags).containsExactly(SuplaThermostatFlag.COOLING)
   }
 
   @Test
@@ -60,6 +60,6 @@ class ThermostatValueTest {
     assertThat(values.mode).isEqualTo(SuplaHvacMode.HEAT)
     assertThat(values.setpointTemperatureHeat).isEqualTo(1.2f, Offset.offset(0.001f))
     assertThat(values.setpointTemperatureCool).isEqualTo(0.8f, Offset.offset(0.001f))
-    assertThat(values.flags).containsExactly(SuplaThermostatFlags.COOLING, SuplaThermostatFlags.FORCED_OFF_BY_SENSOR)
+    assertThat(values.flags).containsExactly(SuplaThermostatFlag.COOLING, SuplaThermostatFlag.FORCED_OFF_BY_SENSOR)
   }
 }

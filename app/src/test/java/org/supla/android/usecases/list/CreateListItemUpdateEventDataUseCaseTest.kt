@@ -34,15 +34,16 @@ import org.supla.android.data.source.local.entity.ChannelRelationEntity
 import org.supla.android.data.source.local.entity.ChannelRelationType
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.data.source.runtime.ItemType
-import org.supla.android.db.ChannelGroup
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.ui.lists.data.SlideableListItemData
 import org.supla.android.usecases.channel.ChannelWithChildren
-import org.supla.android.usecases.channel.ReadChannelGroupByRemoteIdUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
+import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToGpmUpdateEventMapper
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToMeasurementUpdateEventMapper
+import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToRollerShutterUpdateEventMapper
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToThermostatUpdateEventMapper
 
 @RunWith(MockitoJUnitRunner::class)
@@ -65,6 +66,9 @@ class CreateListItemUpdateEventDataUseCaseTest {
 
   @Mock
   private lateinit var channelWithChildrenToGpmUpdateEventMapper: ChannelWithChildrenToGpmUpdateEventMapper
+
+  @Mock
+  private lateinit var channelWithChildrenToRollerShutterUpdateEventMapper: ChannelWithChildrenToRollerShutterUpdateEventMapper
 
   @InjectMocks
   private lateinit var useCase: CreateListItemUpdateEventDataUseCase
@@ -157,7 +161,7 @@ class CreateListItemUpdateEventDataUseCaseTest {
     val remoteId = 123
     val itemType = ItemType.GROUP
 
-    val channelGroup: ChannelGroup = mockk()
+    val channelGroup: ChannelGroupDataEntity = mockk()
     val data: SlideableListItemData = mockk()
 
     whenever(eventsManager.observeGroup(remoteId)).thenReturn(Observable.just(mockk()))

@@ -17,16 +17,22 @@ package org.supla.android.features.grouplist
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.os.Bundle
+import androidx.annotation.IdRes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.Preferences
+import org.supla.android.R
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
+import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.source.ChannelRepository
-import org.supla.android.db.ChannelBase
-import org.supla.android.db.ChannelGroup
-import org.supla.android.db.Location
+import org.supla.android.data.source.local.entity.LocationEntity
+import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.events.UpdateEventsManager
+import org.supla.android.features.details.detailbase.standarddetail.DetailPage
+import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
+import org.supla.android.features.details.rollershutterdetail.RollerShutterDetailFragment
 import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.lib.SuplaConst
 import org.supla.android.tools.SuplaSchedulers
@@ -35,6 +41,9 @@ import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.channel.*
 import org.supla.android.usecases.details.LegacyDetailType
 import org.supla.android.usecases.details.ProvideDetailTypeUseCase
+import org.supla.android.usecases.details.RollerShutterDetailType
+import org.supla.android.usecases.group.CreateProfileGroupsListUseCase
+import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
 import javax.inject.Inject
@@ -70,7 +79,7 @@ class GroupListViewModel @Inject constructor(
       .disposeBySelf()
   }
 
-  fun toggleLocationCollapsed(location: Location) {
+  fun toggleLocationCollapsed(location: LocationEntity) {
     toggleLocationUseCase(location, CollapsedFlag.GROUP)
       .andThen(createProfileGroupsListUseCase())
       .attach()
@@ -81,12 +90,12 @@ class GroupListViewModel @Inject constructor(
       .disposeBySelf()
   }
 
-  fun swapItems(firstItem: ChannelBase?, secondItem: ChannelBase?) {
+  fun swapItems(firstItem: ChannelDataBase?, secondItem: ChannelDataBase?) {
     if (firstItem == null || secondItem == null) {
       return // nothing to swap
     }
 
-    channelRepository.reorderChannelGroups(firstItem.id, firstItem.locationId.toInt(), secondItem.id)
+    channelRepository.reorderChannelGroups(firstItem.id, firstItem.locationId, secondItem.id)
       .attach()
       .subscribeBy(
         onError = defaultErrorHandler("swapItems(..., ...)")
@@ -109,8 +118,14 @@ class GroupListViewModel @Inject constructor(
       .disposeBySelf()
   }
 
-  fun onListItemClick(channelGroup: ChannelGroup) {
-    openDetailsByChannelFunction(channelGroup)
+  fun onListItemClick(remoteId: Int) {
+    findGroupByRemoteIdUseCase(remoteId)
+      .attach()
+      .subscribeBy(
+        onSuccess = { openDetailsByChannelFunction(it) },
+        onError = defaultErrorHandler("onListItemClick($remoteId)")
+      )
+      .disposeBySelf()
   }
 
   override fun onSuplaMessage(message: SuplaClientMsg) {
@@ -136,18 +151,19 @@ class GroupListViewModel @Inject constructor(
     }
   }
 
-  private fun openDetailsByChannelFunction(group: ChannelGroup) {
-    if (group.onLine.not()) {
+  private fun openDetailsByChannelFunction(group: ChannelGroupDataEntity) {
+    if (isAvailableInOffline(group.function, null).not() && group.isOnline().not()) {
       return // do not open details for offline channels
     }
 
-    if (group.func == SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT) {
+    if (group.function == SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT) {
       sendEvent(GroupListViewEvent.OpenThermostatDetails)
       return
     }
 
     when (val detailType = provideDetailTypeUseCase(group)) {
-      is LegacyDetailType -> sendEvent(GroupListViewEvent.OpenLegacyDetails(group.groupId, detailType))
+      is LegacyDetailType -> sendEvent(GroupListViewEvent.OpenLegacyDetails(group.remoteId, detailType))
+      is RollerShutterDetailType -> sendEvent(GroupListViewEvent.OpenRollerShutterDetail(ItemBundle.from(group), detailType.pages))
       else -> {} // no action
     }
   }
@@ -159,6 +175,14 @@ sealed class GroupListViewEvent : ViewEvent {
   data class OpenLegacyDetails(val remoteId: Int, val type: LegacyDetailType) : GroupListViewEvent()
   object OpenThermostatDetails : GroupListViewEvent()
   object ReassignAdapter : GroupListViewEvent()
+
+  data class OpenRollerShutterDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) :
+    OpenStandardDetail(R.id.roller_shutter_detail_fragment, RollerShutterDetailFragment.bundle(itemBundle, pages.toTypedArray()))
+
+  abstract class OpenStandardDetail(
+    @IdRes val fragmentId: Int,
+    val fragmentArguments: Bundle
+  ) : GroupListViewEvent()
 }
 
 data class GroupListViewState(

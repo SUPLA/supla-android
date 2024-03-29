@@ -52,7 +52,6 @@ class GetDefaultIconResourceUseCaseTest {
     // given
     val iconData: IconData = mockk {
       every { function } returns SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR
-      every { icon(R.drawable.fnc_depth, R.drawable.fnc_depth_nm) } returns R.drawable.fnc_depth
     }
 
     // when

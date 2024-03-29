@@ -22,7 +22,7 @@
             android:textColor="@color/vl_infotitle"
             android:textSize="30sp" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnClose"
             android:layout_width="50dp"
             android:layout_height="50dp"
@@ -206,7 +206,7 @@
                 android:text="@string/vl_dimmer_cfg_info_txt8"
                 android:textColor="@color/vl_infotext" />
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnUrl"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

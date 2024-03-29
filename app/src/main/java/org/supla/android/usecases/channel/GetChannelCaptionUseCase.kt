@@ -19,8 +19,7 @@ package org.supla.android.usecases.channel
 
 import android.content.Context
 import org.supla.android.core.ui.StringProvider
-import org.supla.android.data.source.local.entity.ChannelEntity
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.model.general.ChannelBase
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -29,7 +28,7 @@ class GetChannelCaptionUseCase @Inject constructor(
   private val getChannelDefaultCaptionUseCase: GetChannelDefaultCaptionUseCase
 ) {
 
-  operator fun invoke(channelEntity: ChannelEntity): StringProvider {
+  operator fun invoke(channelEntity: ChannelBase): StringProvider {
     if (channelEntity.caption.trim().isEmpty()) {
       return getChannelDefaultCaptionUseCase(channelEntity.function)
     } else {
@@ -37,17 +36,11 @@ class GetChannelCaptionUseCase @Inject constructor(
     }
   }
 
-  operator fun invoke(channelDataEntity: ChannelDataEntity) =
-    invoke(channelDataEntity.channelEntity)
-
-  operator fun invoke(channelEntity: ChannelEntity, context: Context): String {
+  operator fun invoke(channelEntity: ChannelBase, context: Context): String {
     return if (channelEntity.caption.trim().isEmpty()) {
       getChannelDefaultCaptionUseCase(channelEntity.function)(context)
     } else {
       channelEntity.caption
     }
   }
-
-  operator fun invoke(channelDataEntity: ChannelDataEntity, context: Context) =
-    invoke(channelDataEntity.channelEntity, context)
 }

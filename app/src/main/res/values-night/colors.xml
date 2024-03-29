@@ -1,14 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <color name="supla_green">#12a71e</color>
+
+    <color name="primary">@color/supla_green</color>
+    <color name="primary_variant">@color/supla</color>
+    <color name="on_primary">#ffffff</color>
+    <color name="surface">#262627</color>
+    <color name="background">#171717</color>
+    <color name="on_background">#F5F6F7</color>
+
+    <color name="disabled">#363738</color>
+    <color name="disabledOverlay">#DD000000</color>
+    <color name="separator">#000000</color>
+
+    <color name="gray_light">#3D3D3E</color>
+    <color name="light_orange">#cca77b</color>
+    <color name="light_blue">#707ecc</color>
+    <color name="light_green">#8db386</color>
+    <color name="light_red">#cc8870</color>
+    <color name="dark_blue">#333399</color>
+
     <color name="layout_background">#171717</color>
     <color name="field_background">#3D3D3E</color>
     <color name="segmented_field_background">#101010</color>
     <color name="button_background">#2AA75A</color>
 
-    <color name="widget_text">#FFFFFF</color>
-    <color name="widget_background">#171717</color>
     <color name="widget_fields_border">#4E5255</color>
     <color name="widget_spinner_location_background">#2AA75A</color>
     <color name="widget_spinner_item_background">#262627</color>
+
+    <color name="channel_section_cell">#253F24</color>
+    <color name="channel_cell">@color/surface</color>
+
+    <!-- Roller shutter -->
+    <color name="roller_shutter_window_color">#363738</color>
+    <color name="roller_shutter_glass_top_color">#011C2B</color>
+    <color name="roller_shutter_glass_bottom_color">#5A6781</color>
+    <color name="roller_shutter_slat_background">#7E8082</color>
+    <color name="roller_shutter_slat_border">#000000</color>
+    <color name="roller_shutter_disabled_glass_top_color">#01141e</color>
+    <color name="roller_shutter_disabled_glass_bottom_color">#3f485a</color>
+    <color name="roller_shutter_disabled_slat_background">#585a5b</color>
+    <color name="roller_shutter_disabled_slat_border">#000000</color>
+
+    <!-- Thermostat -->
+    <color name="thermostat_control_circle_background">#313131</color>
+    <color name="thermostat_control_button_background">#313131</color>
 </resources>

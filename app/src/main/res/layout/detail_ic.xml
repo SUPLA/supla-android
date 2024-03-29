@@ -104,7 +104,7 @@
             android:layout_marginBottom="-10dp"
             android:indeterminateOnly="true"
             android:scaleY="5"
-            android:secondaryProgressTint="@color/activity_bg" />
+            android:secondaryProgressTint="@color/background" />
 
         <View
             android:id="@+id/view"

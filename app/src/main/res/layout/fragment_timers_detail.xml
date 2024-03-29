@@ -41,7 +41,7 @@
       app:layout_constraintStart_toStartOf="@id/details_timer_progress"
       app:layout_constraintTop_toBottomOf="@id/details_timer_progress_time" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
       android:id="@+id/details_timer_edit_time"
       style="@style/AppTheme.Button.Text"
       android:layout_width="wrap_content"
@@ -55,7 +55,7 @@
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toBottomOf="@+id/details_timer_progress" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
       android:id="@+id/details_timer_stop_button"
       style="@style/AppTheme.Button.Outlined"
       android:layout_width="match_parent"
@@ -64,7 +64,7 @@
       android:layout_marginBottom="@dimen/distance_small"
       app:layout_constraintBottom_toTopOf="@+id/details_timer_cancel_button" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
       android:id="@+id/details_timer_cancel_button"
       style="@style/AppTheme.Button.Contained"
       android:layout_width="match_parent"
@@ -73,7 +73,7 @@
       android:layout_marginBottom="@dimen/distance_default"
       app:layout_constraintBottom_toBottomOf="parent" />
 
-    <org.supla.android.features.details.switchdetail.timersdetail.TimerConfigurationView
+    <org.supla.android.features.details.switchdetail.timer.TimerConfigurationView
       android:id="@+id/details_timer_configuration"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"

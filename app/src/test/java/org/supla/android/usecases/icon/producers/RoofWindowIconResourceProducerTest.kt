@@ -48,24 +48,4 @@ class RoofWindowIconResourceProducerTest : BaseIconResourceProducerTest() {
       expectedIcon = R.drawable.roofwindowclosed
     )
   }
-
-  @Test
-  fun `should produce open icon (night mode)`() {
-    test(
-      state = ChannelState.Value.OPEN,
-      function = SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW,
-      expectedIcon = R.drawable.roofwindowopen_nightmode,
-      nightMode = true
-    )
-  }
-
-  @Test
-  fun `should produce closed icon (night mode)`() {
-    test(
-      state = ChannelState.Value.CLOSED,
-      function = SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW,
-      expectedIcon = R.drawable.roofwindowclosed_nightmode,
-      nightMode = true
-    )
-  }
 }

@@ -37,7 +37,11 @@ fun OutlinedButton(
     modifier = modifier,
     enabled = enabled
   ) {
-    Text(text = text, style = MaterialTheme.typography.button)
+    Text(
+      text = text,
+      style = MaterialTheme.typography.button,
+      color = MaterialTheme.colors.primary
+    )
   }
 }
 

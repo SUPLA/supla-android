@@ -17,8 +17,9 @@ package org.supla.android.usecases.details
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.db.Channel
-import org.supla.android.db.ChannelBase
+import org.supla.android.data.model.general.ChannelDataBase
+import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.features.details.detailbase.standarddetail.DetailPage
 import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS
 import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS
@@ -44,7 +45,6 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNEL_FLAG_COUNTDOWN_TIMER_SUPPORTED
 import java.io.Serializable
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -52,7 +52,7 @@ import javax.inject.Singleton
 @Singleton
 class ProvideDetailTypeUseCase @Inject constructor() {
 
-  operator fun invoke(channelBase: ChannelBase): DetailType? = when (channelBase.func) {
+  operator fun invoke(channelDataBase: ChannelDataBase): DetailType? = when (channelDataBase.function) {
     SUPLA_CHANNELFNC_DIMMER,
     SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING,
     SUPLA_CHANNELFNC_RGBLIGHTING ->
@@ -60,12 +60,12 @@ class ProvideDetailTypeUseCase @Inject constructor() {
 
     SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER,
     SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW ->
-      LegacyDetailType.RS
+      RollerShutterDetailType(listOf(DetailPage.ROLLER_SHUTTER))
 
     SUPLA_CHANNELFNC_LIGHTSWITCH,
     SUPLA_CHANNELFNC_POWERSWITCH,
     SUPLA_CHANNELFNC_STAIRCASETIMER -> {
-      SwitchDetailType(getSwitchDetailPages(channelBase))
+      SwitchDetailType(getSwitchDetailPages(channelDataBase))
     }
 
     SUPLA_CHANNELFNC_ELECTRICITY_METER ->
@@ -111,15 +111,15 @@ class ProvideDetailTypeUseCase @Inject constructor() {
     else -> null
   }
 
-  private fun getSwitchDetailPages(channelBase: ChannelBase): List<DetailPage> {
-    return if (channelBase is Channel) {
+  private fun getSwitchDetailPages(channelDataBase: ChannelDataBase): List<DetailPage> {
+    return if (channelDataBase is ChannelDataEntity) {
       val list = mutableListOf(DetailPage.SWITCH)
-      if (channelBase.flags.and(SUPLA_CHANNEL_FLAG_COUNTDOWN_TIMER_SUPPORTED) > 0 && channelBase.func != SUPLA_CHANNELFNC_STAIRCASETIMER) {
+      if (supportsTimer(channelDataBase)) {
         list.add(DetailPage.SWITCH_TIMER)
       }
-      if (channelBase.value?.subValueType == SUBV_TYPE_IC_MEASUREMENTS.toShort()) {
+      if (channelDataBase.channelValueEntity.subValueType == SUBV_TYPE_IC_MEASUREMENTS.toShort()) {
         list.add(DetailPage.HISTORY_IC)
-      } else if (channelBase.value?.subValueType == SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort()) {
+      } else if (channelDataBase.channelValueEntity.subValueType == SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort()) {
         list.add(DetailPage.HISTORY_EM)
       }
       list
@@ -127,13 +127,16 @@ class ProvideDetailTypeUseCase @Inject constructor() {
       listOf(DetailPage.SWITCH)
     }
   }
+
+  private fun supportsTimer(channelDataBase: ChannelDataBase) =
+    SuplaChannelFlag.COUNTDOWN_TIMER_SUPPORTED inside channelDataBase.flags &&
+      channelDataBase.function != SUPLA_CHANNELFNC_STAIRCASETIMER
 }
 
 sealed interface DetailType : Serializable
 
 enum class LegacyDetailType : DetailType {
   RGBW,
-  RS,
   IC,
   EM,
   THERMOSTAT_HP,
@@ -153,5 +156,9 @@ data class ThermometerDetailType(
 ) : DetailType
 
 data class GpmDetailType(
+  val pages: List<DetailPage>
+) : DetailType
+
+data class RollerShutterDetailType(
   val pages: List<DetailPage>
 ) : DetailType

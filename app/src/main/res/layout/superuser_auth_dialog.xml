@@ -58,7 +58,7 @@
         android:ems="10"
         android:inputType="textPassword" />
 
-      <Button
+      <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnViewPassword"
         android:layout_width="30dp"
         android:layout_height="30dp"
@@ -83,14 +83,14 @@
       android:layout_marginTop="15dp"
       android:orientation="horizontal">
 
-      <Button
+      <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnDialogCancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="@android:string/cancel" />
 
-      <Button
+      <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnDialogOK"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

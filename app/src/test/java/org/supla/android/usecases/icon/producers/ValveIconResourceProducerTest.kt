@@ -48,24 +48,4 @@ class ValveIconResourceProducerTest : BaseIconResourceProducerTest() {
       expectedIcon = R.drawable.valveclosed
     )
   }
-
-  @Test
-  fun `should produce open icon (night mode)`() {
-    test(
-      state = ChannelState.Value.OPEN,
-      function = SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE,
-      expectedIcon = R.drawable.valveopen_nightmode,
-      nightMode = true
-    )
-  }
-
-  @Test
-  fun `should produce close icon (night mode)`() {
-    test(
-      state = ChannelState.Value.CLOSED,
-      function = SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE,
-      expectedIcon = R.drawable.valveclosed_nightmode,
-      nightMode = true
-    )
-  }
 }

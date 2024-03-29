@@ -18,6 +18,7 @@ package org.supla.android.usecases.channel
  */
 
 import org.supla.android.data.model.general.ChannelState
+import org.supla.android.data.source.local.entity.ChannelGroupEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
 import org.supla.android.db.Channel
@@ -221,10 +222,29 @@ class ChannelValueEntityStateWrapper(private val channelValueEntity: ChannelValu
     get() = channelValueEntity.asThermostatValue().subfunction
   override val rollerShutterClosed: Boolean
     get() {
-      val percentage = channelValueEntity.asRollerShutterValue().closingPercentage
+      val percentage = channelValueEntity.asRollerShutterValue().position
       val subValueHi = channelValueEntity.getSubValueHi()
       return (subValueHi > 0 && percentage < 100) || percentage >= 100
     }
+}
+
+class ChannelGroupEntityStateWrapper(private val group: ChannelGroupEntity) : ValueStateWrapper {
+  override val online: Boolean
+    get() = group.online > 0
+  override val subValueHi: Int
+    get() = if (group.getActivePercentage() >= 100) 1 else 0
+  override val isClosed: Boolean
+    get() = group.getActivePercentage() >= 100
+  override val brightness: Int
+    get() = if (group.getActivePercentage(2) >= 100) 1 else 0
+  override val colorBrightness: Int
+    get() = if (group.getActivePercentage(1) >= 100) 1 else 0
+  override val transparent: Boolean
+    get() = false
+  override val thermostatSubfunction: ThermostatSubfunction?
+    get() = null
+  override val rollerShutterClosed: Boolean
+    get() = group.getActivePercentage() >= 100
 }
 
 class ChannelValueStateWrapper(private val value: ChannelValue?) : ValueStateWrapper {

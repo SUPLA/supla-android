@@ -75,29 +75,29 @@ class GetDefaultIconResourceUseCase @Inject constructor() {
     PowerSwitchIconResourceProducer(),
     LightSwitchIconResourceProducer(),
     StaircaseTimerIconResourceProducer(),
-    static(SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER, R.drawable.fnc_thermostat_dhw, R.drawable.fnc_thermostat_dhw_nm),
+    static(SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER, R.drawable.fnc_thermostat_dhw),
     ThermostatHvacIconResourceProducer(),
     ThermometerIconResourceProducer(),
-    static(SUPLA_CHANNELFNC_HUMIDITY, R.drawable.humidity, R.drawable.humidity_nightmode),
+    static(SUPLA_CHANNELFNC_HUMIDITY, R.drawable.humidity),
     HumidityAndTemperatureIconResourceProducer(),
-    static(SUPLA_CHANNELFNC_WINDSENSOR, R.drawable.wind, R.drawable.wind_nightmode),
-    static(SUPLA_CHANNELFNC_PRESSURESENSOR, R.drawable.pressure, R.drawable.pressure_nightmode),
-    static(SUPLA_CHANNELFNC_RAINSENSOR, R.drawable.rain, R.drawable.rain_nightmode),
-    static(SUPLA_CHANNELFNC_WEIGHTSENSOR, R.drawable.weight, R.drawable.weight_nightmode),
+    static(SUPLA_CHANNELFNC_WINDSENSOR, R.drawable.wind),
+    static(SUPLA_CHANNELFNC_PRESSURESENSOR, R.drawable.pressure),
+    static(SUPLA_CHANNELFNC_RAINSENSOR, R.drawable.rain),
+    static(SUPLA_CHANNELFNC_WEIGHTSENSOR, R.drawable.weight),
     LiquidSensorIconResourceProducer(),
     DimmerIconResourceProducer(),
     RgbLightingIconResourceProducer(),
     DimmerAndRgbIconResourceProducer(),
-    static(SUPLA_CHANNELFNC_DEPTHSENSOR, R.drawable.fnc_depth, R.drawable.fnc_depth_nm),
-    static(SUPLA_CHANNELFNC_DISTANCESENSOR, R.drawable.fnc_distance, R.drawable.fnc_distance_nm),
+    static(SUPLA_CHANNELFNC_DEPTHSENSOR, R.drawable.fnc_depth),
+    static(SUPLA_CHANNELFNC_DISTANCESENSOR, R.drawable.fnc_distance),
     WindowIconResourceProducer(),
     HotelCardIconResourceProducer(),
     AlarmArmamentSensorIconResourceProducer(),
     MailSensorIconResourceProducer(),
     ElectricityMeterIconResourceProducer(),
-    static(SUPLA_CHANNELFNC_IC_GAS_METER, R.drawable.fnc_gasmeter, R.drawable.fnc_gasmeter_nm),
-    static(SUPLA_CHANNELFNC_IC_WATER_METER, R.drawable.fnc_watermeter, R.drawable.fnc_watermeter_nm),
-    static(SUPLA_CHANNELFNC_IC_HEAT_METER, R.drawable.fnc_heatmeter, R.drawable.fnc_heatmeter_nm),
+    static(SUPLA_CHANNELFNC_IC_GAS_METER, R.drawable.fnc_gasmeter),
+    static(SUPLA_CHANNELFNC_IC_WATER_METER, R.drawable.fnc_watermeter),
+    static(SUPLA_CHANNELFNC_IC_HEAT_METER, R.drawable.fnc_heatmeter),
     ThermostatHomePlusIconResourceProducer(),
     ValveIconResourceProducer(),
     DigiglassIconResourceProducer(),
@@ -130,13 +130,8 @@ data class IconData(
   val function: Int,
   val altIcon: Int,
   val state: ChannelState = ChannelState(ChannelState.Value.NOT_USED),
-  val type: IconType = IconType.SINGLE,
-  val nightMode: Boolean = false
-) {
+  val type: IconType = IconType.SINGLE
+)
 
-  fun icon(@DrawableRes day: Int, @DrawableRes night: Int): Int =
-    if (nightMode) night else day
-}
-
-private fun static(function: Int, @DrawableRes day: Int, @DrawableRes night: Int) =
-  StaticIconResourceProducer(function, day, night)
+private fun static(function: Int, @DrawableRes day: Int) =
+  StaticIconResourceProducer(function, day)

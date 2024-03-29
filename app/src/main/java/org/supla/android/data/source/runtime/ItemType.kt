@@ -21,5 +21,14 @@ import org.supla.android.lib.actions.SubjectType
 import java.io.Serializable
 
 enum class ItemType(val subjectType: SubjectType) : Serializable {
-  CHANNEL(SubjectType.CHANNEL), GROUP(SubjectType.GROUP)
+  CHANNEL(SubjectType.CHANNEL),
+  GROUP(SubjectType.GROUP);
+
+  fun isGroup() = this == GROUP
+
+  fun toSubjectType(): SubjectType =
+    when (this) {
+      CHANNEL -> SubjectType.CHANNEL
+      GROUP -> SubjectType.GROUP
+    }
 }

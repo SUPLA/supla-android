@@ -17,9 +17,17 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-class SuplaChannelRelation(
+data class SuplaChannelRelation(
   val channelId: Int,
   val parentId: Int,
   val relationType: Short,
-  val isEol: Boolean
-)
+  val EOL: Byte
+) {
+  fun isEol(): Boolean {
+    return EOL.toInt() and 0x1 > 0
+  }
+
+  fun isSol(): Boolean {
+    return EOL.toInt() and 0x2 > 0
+  }
+}

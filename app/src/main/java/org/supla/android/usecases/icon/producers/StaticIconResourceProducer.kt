@@ -23,11 +23,9 @@ import org.supla.android.usecases.icon.IconResourceProducer
 
 class StaticIconResourceProducer(
   private val function: Int,
-  @DrawableRes private val day: Int,
-  @DrawableRes private val night: Int
+  @DrawableRes private val day: Int
 ) : IconResourceProducer {
   override fun accepts(function: Int): Boolean = function == this.function
 
-  override fun produce(data: IconData): Int =
-    data.icon(day, night)
+  override fun produce(data: IconData): Int = day
 }

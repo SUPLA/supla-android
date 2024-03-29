@@ -19,19 +19,24 @@ import org.mockito.kotlin.verifyZeroInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.Preferences
 import org.supla.android.core.BaseViewModelTest
+import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.source.ChannelRepository
-import org.supla.android.db.ChannelBase
-import org.supla.android.db.ChannelGroup
-import org.supla.android.db.Location
+import org.supla.android.data.source.local.entity.LocationEntity
+import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
+import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.features.details.detailbase.standarddetail.DetailPage
+import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
 import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.lib.SuplaConst
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.channel.*
 import org.supla.android.usecases.details.ProvideDetailTypeUseCase
+import org.supla.android.usecases.details.RollerShutterDetailType
 import org.supla.android.usecases.details.ThermometerDetailType
+import org.supla.android.usecases.group.CreateProfileGroupsListUseCase
+import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
 
@@ -108,7 +113,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
   @Test
   fun `should toggle location collapsed and reload groups`() {
     // given
-    val location = mockk<Location>()
+    val location = mockk<LocationEntity>()
     whenever(toggleLocationUseCase(location, CollapsedFlag.GROUP)).thenReturn(Completable.complete())
     val list = listOf(mockk<ListItem.ChannelItem>())
     whenever(createProfileGroupsListUseCase()).thenReturn(Observable.just(list))
@@ -130,12 +135,12 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     // given
     val firstItemId = 123L
     val firstItemLocationId = 234
-    val firstItem = mockk<ChannelBase>()
+    val firstItem = mockk<ChannelDataBase>()
     every { firstItem.id } returns firstItemId
-    every { firstItem.locationId } returns firstItemLocationId.toLong()
+    every { firstItem.locationId } returns firstItemLocationId
 
     val secondItemId = 345L
-    val secondItem = mockk<ChannelBase>()
+    val secondItem = mockk<ChannelDataBase>()
     every { secondItem.id } returns secondItemId
 
     whenever(channelRepository.reorderChannelGroups(firstItemId, firstItemLocationId, secondItemId)).thenReturn(Completable.complete())
@@ -191,11 +196,14 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
   @Test
   fun `should not open details when item is offline`() {
     // given
-    val group = mockk<ChannelGroup>()
-    every { group.onLine } returns false
+    val remoteId = 123
+    val groupData: ChannelGroupDataEntity = mockk()
+    every { groupData.isOnline() } returns false
+
+    whenever(findGroupByRemoteIdUseCase(remoteId)).thenReturn(Maybe.just(groupData))
 
     // when
-    viewModel.onListItemClick(group)
+    viewModel.onListItemClick(remoteId)
 
     // then
     Assertions.assertThat(states).isEmpty()
@@ -206,12 +214,15 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
   @Test
   fun `should open thermostat details for channel with thermostat function`() {
     // given
-    val group = mockk<ChannelGroup>()
-    every { group.onLine } returns true
-    every { group.func } returns SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT
+    val remoteId = 123
+    val groupData: ChannelGroupDataEntity = mockk()
+    every { groupData.isOnline() } returns true
+    every { groupData.function } returns SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT
+
+    whenever(findGroupByRemoteIdUseCase(remoteId)).thenReturn(Maybe.just(groupData))
 
     // when
-    viewModel.onListItemClick(group)
+    viewModel.onListItemClick(remoteId)
 
     // then
     Assertions.assertThat(states).isEmpty()
@@ -224,18 +235,20 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
   @Test
   fun `should open legacy detail fragment`() {
     // given
-    val groupId = 123
+    val remoteId = 123
     val groupFunction = SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
-    val group = mockk<ChannelGroup>()
-    every { group.onLine } returns true
-    every { group.func } returns groupFunction
-    every { group.groupId } returns groupId
+    val groupData: ChannelGroupDataEntity = mockk()
+    every { groupData.remoteId } returns remoteId
+    every { groupData.isOnline() } returns true
+    every { groupData.function } returns groupFunction
 
     val detailType = ThermometerDetailType(listOf(DetailPage.THERMOMETER_HISTORY))
-    whenever(provideDetailTypeUseCase(group)).thenReturn(detailType)
+    whenever(provideDetailTypeUseCase(groupData)).thenReturn(detailType)
+
+    whenever(findGroupByRemoteIdUseCase(remoteId)).thenReturn(Maybe.just(groupData))
 
     // when
-    viewModel.onListItemClick(group)
+    viewModel.onListItemClick(remoteId)
 
     // then
     Assertions.assertThat(states).isEmpty()
@@ -246,19 +259,47 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
   @Test
   fun `should not open detail fragment when it is not supported`() {
     // given
-    val groupId = 123
-    val groupFunction = SuplaConst.SUPLA_CHANNELFNC_NONE
-    val group = mockk<ChannelGroup>()
-    every { group.onLine } returns true
-    every { group.func } returns groupFunction
-    every { group.groupId } returns groupId
+    val remoteId = 123
+    val groupFunction = SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
+    val groupData: ChannelGroupDataEntity = mockk()
+    every { groupData.remoteId } returns remoteId
+    every { groupData.isOnline() } returns true
+    every { groupData.function } returns groupFunction
+
+    whenever(findGroupByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(groupData))
 
     // when
-    viewModel.onListItemClick(group)
+    viewModel.onListItemClick(remoteId)
 
     // then
     Assertions.assertThat(states).isEmpty()
     Assertions.assertThat(events).isEmpty()
+    verifyZeroInteractionsExcept(provideDetailTypeUseCase)
+  }
+
+  @Test
+  fun `should open roller shutter detail when item is offline`() {
+    // given
+    val remoteId = 123
+    val function = SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
+    val groupData: ChannelGroupDataEntity = mockk()
+    every { groupData.remoteId } returns remoteId
+    every { groupData.function } returns function
+    every { groupData.isOnline() } returns false
+
+    val detailType = RollerShutterDetailType(listOf(DetailPage.ROLLER_SHUTTER))
+    whenever(provideDetailTypeUseCase(groupData)).thenReturn(detailType)
+
+    whenever(findGroupByRemoteIdUseCase(remoteId)).thenReturn(Maybe.just(groupData))
+
+    // when
+    viewModel.onListItemClick(remoteId)
+
+    // then
+    Assertions.assertThat(states).isEmpty()
+    Assertions.assertThat(events).containsExactly(
+      GroupListViewEvent.OpenRollerShutterDetail(ItemBundle(remoteId, 0, ItemType.GROUP, function), detailType.pages)
+    )
     verifyZeroInteractionsExcept(provideDetailTypeUseCase)
   }
 
@@ -284,7 +325,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
   fun `should load group on update`() {
     // given
     val groupId = 223
-    val group: ChannelGroup = mockk()
+    val group: ChannelGroupDataEntity = mockk()
     every { group.remoteId } returns groupId
     whenever(findGroupByRemoteIdUseCase(groupId)).thenReturn(Maybe.just(group))
 

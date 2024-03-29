@@ -19,18 +19,21 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.supla.android.Preferences
-import org.supla.android.db.ChannelBase
+import org.supla.android.core.ui.StringProvider
+import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.features.details.detailbase.standarddetail.StandardDetailViewEvent
 import org.supla.android.features.details.detailbase.standarddetail.StandardDetailViewModel
 import org.supla.android.features.details.detailbase.standarddetail.StandardDetailViewState
 import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.usecases.channel.GetChannelCaptionUseCase
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
-import org.supla.android.usecases.channel.ReadChannelGroupByRemoteIdUseCase
+import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class ThermometerDetailViewModel @Inject constructor(
+  private val getChannelCaptionUseCase: GetChannelCaptionUseCase,
   readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
   readChannelGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase,
   updateEventsManager: UpdateEventsManager,
@@ -47,8 +50,8 @@ class ThermometerDetailViewModel @Inject constructor(
 
   override fun closeEvent() = ThermometerDetailViewEvent.Close
 
-  override fun updatedState(state: ThermometerDetailViewState, channelBase: ChannelBase) =
-    state.copy(channelBase = channelBase)
+  override fun updatedState(state: ThermometerDetailViewState, channelDataBase: ChannelDataBase) =
+    state.copy(caption = getChannelCaptionUseCase(channelDataBase))
 }
 
 sealed interface ThermometerDetailViewEvent : StandardDetailViewEvent {
@@ -56,5 +59,5 @@ sealed interface ThermometerDetailViewEvent : StandardDetailViewEvent {
 }
 
 data class ThermometerDetailViewState(
-  val channelBase: ChannelBase? = null
-) : StandardDetailViewState()
+  override val caption: StringProvider? = null
+) : StandardDetailViewState(caption)

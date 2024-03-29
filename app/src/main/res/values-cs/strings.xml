@@ -68,7 +68,7 @@
   <string name="rate_later">Později</string>
   <string name="rate_no_thanks">Ne, děkuji</string>
   <string name="rs_percent_caption">Procento uzavření</string>
-  <string name="calibration">[Kalibrace]</string>
+  <string name="roller_shutter_calibrating">Kalibrace…</string>
   <string name="add_wizard_is_not_available">Průvodce přidáním je dostupný pouze v případě, že bylo navázáno připojení k serveru na základě zadané e-mailové adresy! (vypněte možnost pokročilé konfigurace účtu)</string>
   <string name="wizard_step1_txt1">Vítejte v Průvodci přidáním zařízení, který vám pomůže rychle a snadno přidat nové zařízení do vašeho systému.</string>
   <string name="wizard_step1_txt3">Chcete-li pokračovat, stiskněte tlačítko <b>Další</b>.</string>
@@ -411,7 +411,7 @@
   <string name="location_name">Název umístění</string>
   <string name="overcurrent_warning">Při překročení nastaveného proudového limitu došlo k vypnutí napájení.</string>
   <string name="overcurrent_question">Při překročení nastaveného proudového limitu došlo k vypnutí napájení. Jste si jisti, že chcete zapnout napájení?</string>
-  <string name="recalibration_question">Určitě chcete začít s kalibrací?</string>
+  <string name="roller_shutter_start_calibration_message">Určitě chcete začít s kalibrací?</string>
   <string name="calibration_failed">Kalibrace se nezdařila.</string>
   <string name="calibration_lost">Kalibrace byla zrušena.</string>
   <string name="motor_problem">Problém s motorem / Neočekávané zastavení.</string>
@@ -434,4 +434,5 @@
   <string name="rs_display_mode_closing">Zavření</string>
   <string name="status_accessid_inactive">Identifikátor přístupu není aktivní</string>
   <string name="hour_string_format">HH:mm:ss</string>
+  <string name="roller_shutter_calibration">Kalibrace</string>
 </resources>

@@ -25,7 +25,7 @@ import javax.inject.Singleton
 
 @Singleton
 class ImageCacheProxy @Inject constructor() {
-  fun addImage(id: Int, image: UserIconDao.Image) {
+  fun addUserImage(id: Int, image: UserIconDao.Image) {
     ImageCache.addImage(ImageId(id, image.subId, image.profileId), image.value)
   }
 

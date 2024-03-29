@@ -18,10 +18,9 @@ package org.supla.android.usecases.icon
  */
 
 import org.supla.android.core.ui.BitmapProvider
+import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.model.general.ChannelState
 import org.supla.android.data.model.general.IconType
-import org.supla.android.data.source.local.entity.ChannelEntity
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.db.ChannelBase
 import org.supla.android.extensions.guardLet
 import org.supla.android.extensions.ifLet
@@ -43,7 +42,10 @@ class GetChannelIconUseCase @Inject constructor(
   private val imageCacheProxy: ImageCacheProxy
 ) {
 
-  fun getIconProvider(channelData: ChannelDataEntity, iconType: IconType = IconType.SINGLE): BitmapProvider =
+  fun getIconProvider(
+    channelData: ChannelDataBase,
+    iconType: IconType = IconType.SINGLE
+  ): BitmapProvider =
     { imageCacheProxy.getBitmap(it, invoke(channelData, iconType)) }
 
   // We intentionally specify icons with the _nighthtmode
@@ -51,28 +53,26 @@ class GetChannelIconUseCase @Inject constructor(
   // from the drawable-night directory because not every
   // part of the application is night mode enabled yet.
   operator fun invoke(
-    channelData: ChannelDataEntity,
+    channelDataBase: ChannelDataBase,
     type: IconType = IconType.SINGLE,
-    nightMode: Boolean = false,
     channelStateValue: ChannelState.Value? = null
   ): ImageId {
-    if (type != IconType.SINGLE && channelData.function != SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE) {
-      throw IllegalArgumentException("Wrong icon type (iconType: '$type', function: '${channelData.function}')!")
+    if (type != IconType.SINGLE && channelDataBase.function != SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE) {
+      throw IllegalArgumentException("Wrong icon type (iconType: '$type', function: '${channelDataBase.function}')!")
     }
 
-    val stateWrapper = channelData.channelValueEntity.toStateWrapper()
-    val state = channelStateValue?.let { ChannelState(it) } ?: getChannelStateUseCase(channelData.function, stateWrapper)
+    val stateWrapper = channelDataBase.toStateWrapper()
+    val state = channelStateValue?.let { ChannelState(it) } ?: getChannelStateUseCase(channelDataBase.function, stateWrapper)
 
-    ifLet(findUserIcon(channelData.channelEntity, type, state)) { (id) ->
+    ifLet(findUserIcon(channelDataBase, type, state)) { (id) ->
       return id
     }
 
     val iconData = IconData(
-      function = channelData.function,
-      altIcon = channelData.channelEntity.altIcon,
+      function = channelDataBase.function,
+      altIcon = channelDataBase.altIcon,
       state = state,
-      type = type,
-      nightMode = nightMode
+      type = type
     )
     return ImageId(getDefaultIconResourceUseCase(iconData))
   }
@@ -80,7 +80,6 @@ class GetChannelIconUseCase @Inject constructor(
   operator fun invoke(
     channelBase: ChannelBase,
     type: IconType = IconType.SINGLE,
-    nightMode: Boolean = false,
     channelStateValue: ChannelState.Value? = null
   ): ImageId? {
     if (type != IconType.SINGLE && channelBase.func != SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE) {
@@ -102,8 +101,7 @@ class GetChannelIconUseCase @Inject constructor(
       function = channelBase.func,
       altIcon = channelBase.altIcon,
       state = state,
-      type = type,
-      nightMode = nightMode
+      type = type
     )
 
     return ImageId(getDefaultIconResourceUseCase(iconData))
@@ -140,7 +138,11 @@ class GetChannelIconUseCase @Inject constructor(
     }
   }
 
-  private fun findUserIcon(channelEntity: ChannelEntity, iconType: IconType, state: ChannelState): ImageId? {
+  private fun findUserIcon(
+    channelEntity: ChannelDataBase,
+    iconType: IconType,
+    state: ChannelState
+  ): ImageId? {
     val (userIconId) = guardLet(channelEntity.userIcon) { return null }
     if (userIconId == 0) {
       return null
@@ -173,10 +175,10 @@ class GetChannelIconUseCase @Inject constructor(
 
   // for java
   fun invoke(channelBase: ChannelBase): ImageId? {
-    return invoke(channelBase, IconType.SINGLE, false, null)
+    return invoke(channelBase, IconType.SINGLE, null)
   }
 
   fun invoke(channelBase: ChannelBase, type: IconType): ImageId? {
-    return invoke(channelBase, type, false, null)
+    return invoke(channelBase, type, null)
   }
 }

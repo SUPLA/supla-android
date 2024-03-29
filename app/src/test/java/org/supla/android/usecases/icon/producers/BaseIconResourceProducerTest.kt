@@ -29,31 +29,27 @@ abstract class BaseIconResourceProducerTest {
 
   protected fun mockIconData(
     stateValue: ChannelState.Value = ChannelState.Value.NOT_USED,
-    nightMode: Boolean = false,
     altIcon: Int = 0,
     type: IconType = IconType.SINGLE
-  ) =
-    mockIconData(ChannelState(stateValue), nightMode, altIcon, type)
+  ) = mockIconData(ChannelState(stateValue), altIcon, type)
 
   protected fun mockIconData(
     state: ChannelState = ChannelState(ChannelState.Value.NOT_USED),
-    nightMode: Boolean = false,
     altIcon: Int = 0,
     type: IconType = IconType.SINGLE
   ) =
     IconData(
       function = 0,
       altIcon = altIcon,
-      type = type,
       state = state,
-      nightMode = nightMode
+      type = type
     )
 
-  protected fun test(state: ChannelState.Value, altIcon: Int, function: Int, expectedIcon: Int, nightMode: Boolean = false) =
-    test(mockIconData(ChannelState(state), nightMode, altIcon), function, expectedIcon)
+  protected fun test(state: ChannelState.Value, altIcon: Int, function: Int, expectedIcon: Int) =
+    test(mockIconData(ChannelState(state), altIcon), function, expectedIcon)
 
-  protected fun test(state: ChannelState.Value, function: Int, expectedIcon: Int, nightMode: Boolean = false) =
-    test(mockIconData(ChannelState(state), nightMode), function, expectedIcon)
+  protected fun test(state: ChannelState.Value, function: Int, expectedIcon: Int) =
+    test(mockIconData(ChannelState(state)), function, expectedIcon)
 
   protected fun test(data: IconData, function: Int, expectedIcon: Int?) {
     // when

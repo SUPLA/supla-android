@@ -2,6 +2,7 @@ package org.supla.android.usecases.location
 
 import io.mockk.every
 import io.mockk.mockk
+import io.reactivex.rxjava3.core.Completable
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -10,14 +11,15 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoMoreInteractions
-import org.supla.android.data.source.ChannelRepository
-import org.supla.android.db.Location
+import org.mockito.kotlin.whenever
+import org.supla.android.data.source.LocationRepository
+import org.supla.android.data.source.local.entity.LocationEntity
 
 @RunWith(MockitoJUnitRunner::class)
 class ToggleLocationUseCaseTest {
 
   @Mock
-  private lateinit var channelRepository: ChannelRepository
+  private lateinit var locationRepository: LocationRepository
 
   @InjectMocks
   private lateinit var useCase: ToggleLocationUseCase
@@ -58,21 +60,24 @@ class ToggleLocationUseCaseTest {
     testLocationToggle(0 or type.value, 0, type)
   }
 
-  private fun testLocationToggle(initialValue: Int, resultValue: Int, type: CollapsedFlag) {
+  private fun testLocationToggle(initialValue: Int, resultValue: Int, flag: CollapsedFlag) {
     // given
-    val location: Location = mockk()
-    every { location.collapsed } returns initialValue
-    every { location.collapsed = resultValue } answers { }
+    val location: LocationEntity = mockk {
+      every { isCollapsed(flag) } returns (initialValue and flag.value > 0)
+      every { collapsed } returns initialValue
+    }
+    val locationResult: LocationEntity = mockk()
+    every { location.copy(collapsed = resultValue) } returns locationResult
+
+    whenever(locationRepository.updateLocation(locationResult)).thenReturn(Completable.complete())
 
     // when
-    val testObserver = useCase(location, type).test()
+    val testObserver = useCase(location, flag).test()
 
     // then
     testObserver.assertComplete()
 
-    verify(channelRepository).updateLocation(location)
-    verifyNoMoreInteractions(channelRepository)
-
-    io.mockk.verify { location.collapsed = resultValue }
+    verify(locationRepository).updateLocation(locationResult)
+    verifyNoMoreInteractions(locationRepository)
   }
 }

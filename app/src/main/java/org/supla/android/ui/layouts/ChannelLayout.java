@@ -125,7 +125,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
 
     void onCaptionLongPress(int channelId);
 
-    void onItemClick(ChannelBase channelBase);
+    void onItemClick(int remoteId);
   }
 
   public ChannelLayout(Context context) {
@@ -603,10 +603,6 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
     }
   }
 
-  public ChannelBase getChannelBase() {
-    return channelBase;
-  }
-
   public void setChannelData(ChannelBase cbase) {
     configureBasedOnData(cbase);
     observeChanges();
@@ -817,7 +813,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
           listener.onCaptionLongPress(channelBase.getRemoteId());
           return true;
         });
-    caption_text.setOnClickListener(v -> listener.onItemClick(channelBase));
+    caption_text.setOnClickListener(v -> listener.onItemClick(channelBase.getRemoteId()));
     caption_text.setClickable(false);
     caption_text.setLongClickable(true);
 
@@ -892,7 +888,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
       }
       setTypeface(SuplaApp.getApp().getTypefaceOpenSansBold());
       setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
-      setTextColor(getResources().getColor(R.color.channel_caption_text));
+      setTextColor(getResources().getColor(R.color.on_background));
       setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL);
 
       RelativeLayout.LayoutParams lp =
@@ -983,7 +979,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
 
       Text.setMaxLines(1);
 
-      Text.setTextColor(getResources().getColor(R.color.channel_imgtext_color));
+      Text.setTextColor(getResources().getColor(R.color.on_background));
       Text.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
 
       return Text;

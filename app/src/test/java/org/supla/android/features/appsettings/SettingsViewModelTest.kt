@@ -2,6 +2,7 @@ package org.supla.android.features.appsettings
 
 import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.app.NotificationManager
+import android.app.UiModeManager
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.tuple
 import org.junit.Before
@@ -17,6 +18,7 @@ import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.core.permissions.PermissionsHelper
+import org.supla.android.data.model.general.NightModeSetting
 import org.supla.android.data.source.runtime.appsettings.ChannelHeight
 import org.supla.android.data.source.runtime.appsettings.TemperatureUnit
 import org.supla.android.tools.SuplaSchedulers
@@ -34,6 +36,9 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
   private lateinit var permissionsHelper: PermissionsHelper
 
   @Mock
+  private lateinit var modeManager: UiModeManager
+
+  @Mock
   override lateinit var schedulers: SuplaSchedulers
 
   override val viewModel: SettingsViewModel by lazy {
@@ -41,6 +46,7 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
       preferences,
       notificationManager,
       permissionsHelper,
+      modeManager,
       schedulers
     )
   }
@@ -72,6 +78,7 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
       tuple(SettingItem.InfoButton::class.java),
       tuple(SettingItem.BottomLabels::class.java),
       tuple(SettingItem.RollerShutterOpenClose::class.java),
+      tuple(SettingItem.NightMode::class.java),
       tuple(SettingItem.LocalizationOrdering::class.java),
       tuple(SettingItem.HeaderItem::class.java),
       tuple(SettingItem.NotificationsItem::class.java),
@@ -85,9 +92,10 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
     assertThat((settingsList[4] as SettingItem.InfoButton).visible).isEqualTo(false)
     assertThat((settingsList[5] as SettingItem.BottomLabels).visible).isEqualTo(false)
     assertThat((settingsList[6] as SettingItem.RollerShutterOpenClose).showOpeningPercentage).isEqualTo(true)
-    assertThat((settingsList[8] as SettingItem.HeaderItem).headerResource).isEqualTo(R.string.settings_permissions)
-    assertThat((settingsList[9] as SettingItem.NotificationsItem).allowed).isEqualTo(true)
-    assertThat((settingsList[10] as SettingItem.LocalizationItem).allowed).isEqualTo(true)
+    assertThat((settingsList[7] as SettingItem.NightMode).nightModeSetting).isEqualTo(NightModeSetting.NEVER)
+    assertThat((settingsList[9] as SettingItem.HeaderItem).headerResource).isEqualTo(R.string.settings_permissions)
+    assertThat((settingsList[10] as SettingItem.NotificationsItem).allowed).isEqualTo(true)
+    assertThat((settingsList[11] as SettingItem.LocalizationItem).allowed).isEqualTo(true)
   }
 
   @Test
@@ -205,13 +213,31 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
   }
 
   @Test
+  fun `check if night mode setting is saved`() {
+    // given
+    mockPreferences()
+
+    // when
+    viewModel.loadSettings()
+    val channelSettingItem = states[0].settingsItems[7] as SettingItem.NightMode
+    channelSettingItem.callback(NightModeSetting.ALWAYS)
+
+    // then
+    assertThat(states.size).isEqualTo(1)
+    assertThat(events).isEmpty()
+    verifyPreferencesMockedCalls()
+    verify(preferences).nightMode = NightModeSetting.ALWAYS
+    verifyNoMoreInteractions(preferences)
+  }
+
+  @Test
   fun `should open localization ordering when clicked on localization ordering`() {
     mockPreferences()
     whenever(permissionsHelper.checkPermissionGranted(ACCESS_FINE_LOCATION)).thenReturn(true)
 
     // when
     viewModel.loadSettings()
-    val channelSettingItem = states[0].settingsItems[7] as SettingItem.LocalizationOrdering
+    val channelSettingItem = states[0].settingsItems[8] as SettingItem.LocalizationOrdering
     channelSettingItem.callback()
 
     // then
@@ -228,7 +254,7 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
 
     // when
     viewModel.loadSettings()
-    val channelSettingItem = states[0].settingsItems[9] as SettingItem.NotificationsItem
+    val channelSettingItem = states[0].settingsItems[10] as SettingItem.NotificationsItem
     channelSettingItem.callback()
 
     // then
@@ -245,7 +271,7 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
 
     // when
     viewModel.loadSettings()
-    val channelSettingItem = states[0].settingsItems[10] as SettingItem.LocalizationItem
+    val channelSettingItem = states[0].settingsItems[11] as SettingItem.LocalizationItem
     channelSettingItem.callback()
 
     // then
@@ -261,6 +287,7 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
     whenever(preferences.isButtonAutohide).thenReturn(true)
     whenever(preferences.isShowChannelInfo).thenReturn(false)
     whenever(preferences.isShowOpeningPercent).thenReturn(true)
+    whenever(preferences.nightMode).thenReturn(NightModeSetting.NEVER)
   }
 
   private fun verifyPreferencesMockedCalls() {
@@ -270,5 +297,6 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
     verify(preferences).isShowChannelInfo
     verify(preferences).isShowBottomLabel
     verify(preferences).isShowOpeningPercent
+    verify(preferences).nightMode
   }
 }

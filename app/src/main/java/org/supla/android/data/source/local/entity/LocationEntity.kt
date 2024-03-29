@@ -53,17 +53,6 @@ data class LocationEntity(
 
   fun isCollapsed(flag: CollapsedFlag): Boolean = (collapsed and flag.value > 0)
 
-  fun toLegacyLocation(): Location = Location().also {
-    it.id = id
-    it.locationId = remoteId
-    it.caption = caption
-    it.visible = visible
-    it.collapsed = collapsed
-    it.sorting = sorting
-    it.sortOrder = sortOrder
-    it.profileId = profileId
-  }
-
   companion object {
     const val TABLE_NAME = "location"
     const val COLUMN_ID = "_id"

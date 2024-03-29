@@ -11,16 +11,15 @@
     <color name="on_background">#000000</color>
 
     <color name="disabled">#B4B7BA</color>
+    <color name="disabledOverlay">#DDFFFFFF</color>
     <color name="separator">#AAAAAA</color>
     <color name="separator_light">#DCDEE0</color>
 
     <color name="red">#FF0000</color>
-    <color name="orange">#FC9B27</color>
     <color name="light_orange">#FFD19A</color>
     <color name="gray">#7E8082</color>
     <color name="gray_light">#EFEFF0</color>
     <color name="blue">#007AFF</color>
-    <color name="violet">#AF52DE</color>
     <color name="light_blue">#8C9DFF</color>
     <color name="light_green">#B0E0A8</color>
     <color name="light_red">#FFAA8C</color>
@@ -31,8 +30,6 @@
     <color name="chart_humidity_1">#FF57A0FF</color>
     <color name="chart_humidity_2">#FF33FFEC</color>
     <color name="chart_gpm">#FF01C2FB</color>
-    <color name="chart_gpm_shadow">#3398c4ca</color>
-    <color name="chart_gpm_border">#005f6e</color>
     <color name="chart_gpm_axis_left">#003037</color>
 
     <color name="shadow_start">#1A000000</color>
@@ -40,23 +37,32 @@
 
     <color name="item_unselected">#dadbdc</color>
 
-    <color name="supla_text_light">#000000</color>
-    
     <color name="dialog_scrim">#80F5F6F7</color>
+
+    <!-- Roller shutter -->
+    <color name="roller_shutter_window_color">#FFFFFF</color>
+    <color name="roller_shutter_glass_top_color">#C9EEFF</color>
+    <color name="roller_shutter_glass_bottom_color">#D8F3FF</color>
+    <color name="roller_shutter_slat_background">#DCDEE0</color>
+    <color name="roller_shutter_slat_border">#B4B7BA</color>
+    <color name="roller_shutter_disabled_glass_top_color">#EFFAFF</color>
+    <color name="roller_shutter_disabled_glass_bottom_color">#F3FBFF</color>
+    <color name="roller_shutter_disabled_slat_background">#F5F5F6</color>
+    <color name="roller_shutter_disabled_slat_border">#E9E9EA</color>
+
+    <!-- Thermostat -->
+    <color name="thermostat_control_circle_background">#D2D2D2</color>
+    <color name="thermostat_control_button_background">#F4F4F4</color>
+
     <!-- new color definitions end here -->
 
-    <color name="splash_bg">#12a71e</color>
     <color name="channel_cell">#fafbfc</color>
     <color name="channel_section_cell">#edfbee</color>
     <color name="detail_rs_marker">#12a71e</color>
-    <color name="activity_bg">#fafbfc</color>
     <color name="activity_status_bg_err">#fee700</color>
     <color name="activity_status_bg_normal">#12a71e</color>
 
     <color name="channel_btn_text">#FFFFFF</color>
-    <color name="channel_caption_text">#000000</color>
-    <color name="channel_section_text">#000000</color>
-    <color name="channel_imgtext_color">#000000</color>
     <color name="menubar">#12a71e</color>
     <color name="menuseparator">#fafbfc</color>
     <color name="notification_bg">#fee700</color>
@@ -72,9 +78,6 @@
     <color name="chart_color_value_positive">#e74c3c</color>
     <color name="chart_color_value_negative">#2dcc71</color>
 
-    <color name="th_humidity">#00a0fc</color>
-    <color name="th_temperature_fill_color">#fcf7ca</color>
-    <color name="th_temperature_line_color">#fd4a4d</color>
     <color name="hp_error_background_color">#FFC107</color>
     <color name="hp_error_text_color">#fd4a4d</color>
     <color name="vl_settings_bg">#ffededed</color>
@@ -91,8 +94,6 @@
     <color name="zwave_info_table_bg">@color/background</color>
     <color name="zwave_info_table_text">#000000</color>
 
-    <color name="channelstate_infotitle">#000000</color>
-    <color name="channelstate_infotext">#000000</color>
     <color name="channelstate_infoline">@color/disabled</color>
 
     <color name="lifespan_infotitle">#000000</color>
@@ -102,8 +103,7 @@
 
     <color name="red_alert">#EB3A28</color>
 
-    <color name="cell_bg_new">#FAFBFC</color>
-    <color name="popup_profile_cell_bg">#FFFFFF</color>
+    <color name="cell_bg_new">@color/surface</color>
     <color name="supla">#00d151</color>
     <color name="ripple_light">#4400d151</color>
     <color name="ripple_dark">#AB00d151</color>
@@ -115,8 +115,6 @@
     <color name="segmented_field_background">@color/gray_light</color>
     <color name="button_background">@color/supla_green</color>
 
-    <color name="widget_text">@color/supla_text_light</color>
-    <color name="widget_background">@color/background</color>
     <color name="widget_fields_border">#3078801F</color>
     <color name="widget_spinner_location_background">@color/channel_section_cell</color>
     <color name="widget_spinner_item_background">@color/background</color>

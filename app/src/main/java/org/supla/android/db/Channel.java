@@ -26,6 +26,7 @@ import org.supla.android.R;
 import org.supla.android.ValuesFormatterProvider;
 import org.supla.android.data.ValuesFormatter;
 import org.supla.android.data.source.local.entity.ChannelEntity;
+import org.supla.android.data.source.remote.channel.SuplaChannelFlag;
 import org.supla.android.lib.DigiglassValue;
 import org.supla.android.lib.SuplaChannelState;
 import org.supla.android.lib.SuplaChannelValue;
@@ -229,7 +230,7 @@ public class Channel extends ChannelBase {
         if (value.getSubValueType() == SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS) {
           double doubleValue = value.getImpulseCounterCalculatedValue(true);
           return doubleValue > 0
-              ? String.format("%.1f " + getUnit(), doubleValue)
+              ? String.format("%.2f " + getUnit(), doubleValue)
               : ValuesFormatter.NO_VALUE_TEXT;
         } else if (value.getSubValueType()
             == SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS) {
@@ -246,7 +247,7 @@ public class Channel extends ChannelBase {
     if (getType() == SuplaConst.SUPLA_CHANNELTYPE_IMPULSE_COUNTER) {
       double doubleValue = value.getImpulseCounterCalculatedValue();
       return doubleValue > 0
-          ? String.format("%.1f " + getUnit(), doubleValue)
+          ? String.format("%.2f " + getUnit(), doubleValue)
           : ValuesFormatter.NO_VALUE_TEXT;
     }
 
@@ -408,11 +409,11 @@ public class Channel extends ChannelBase {
   public int getChannelStateIcon() {
     if ((getOnLine()
         || (getType() == SuplaConst.SUPLA_CHANNELTYPE_BRIDGE
-            && (getFlags() & SuplaConst.SUPLA_CHANNEL_FLAG_CHANNELSTATE) > 0
-            && (getFlags() & SuplaConst.SUPLA_CHANNEL_FLAG_OFFLINE_DURING_REGISTRATION) > 0))) {
+            && SuplaChannelFlag.CHANNEL_STATE.inside(getFlags())
+            && SuplaChannelFlag.OFFLINE_DURING_REGISTRATION.inside(getFlags())))) {
       SuplaChannelState state = getChannelState();
 
-      if (state != null || (getFlags() & SuplaConst.SUPLA_CHANNEL_FLAG_CHANNELSTATE) != 0) {
+      if (state != null || SuplaChannelFlag.CHANNEL_STATE.inside(getFlags())) {
         if (state != null && (state.getFields() & state.getDefaultIconField()) != 0) {
           switch (state.getDefaultIconField()) {
             case SuplaChannelState.FIELD_BATTERYPOWERED:
@@ -423,7 +424,7 @@ public class Channel extends ChannelBase {
           }
         }
 
-        return R.drawable.channelstateinfo;
+        return R.drawable.ic_info;
       }
     }
 

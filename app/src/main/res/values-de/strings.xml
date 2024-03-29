@@ -79,7 +79,7 @@
   <string name="rate_no_thanks">Nein danke</string>
 
   <string name="rs_percent_caption">Prozentsatz des Abschlusses</string>
-  <string name="calibration">[Kalibrierung]</string>
+  <string name="roller_shutter_calibrating">Kalibrierung…</string>
   <string name="add_wizard_is_not_available">Der Hinzufügen-Assistent ist nur verfügbar, wenn die Verbindung zum Server basierend auf der eingegebenen E-Mail-Adresse hergestellt wurde! (Erweiterte Optionen in Ihrer Kontokonfiguration deaktivieren)</string>
   <string name="wizard_step1_txt3">Um fortzusetzen, drücken Sie <b>Weiter</b>.</string>
   <string name="add_device">Gerät hinzufügen</string>
@@ -434,7 +434,7 @@
   <string name="location_name">Name der Lokalisierung</string>
   <string name="overcurrent_warning">Die Versorgung wurde nach dem Überschreiten der eingestellten zulässigen Stromstärke abgeschaltet.</string>
   <string name="overcurrent_question">Die Versorgung wurde nach dem Überschreiten der eingestellten zulässigen Stromstärke abgeschaltet. Möchten Sie wirklich die Versorgung einschalten?</string>
-  <string name="recalibration_question">Wollen Sie wirklich die Kalibrierung beginnen?</string>
+  <string name="roller_shutter_start_calibration_message">Wollen Sie wirklich die Kalibrierung beginnen?</string>
   <string name="calibration_failed">Kalibrierung ist nicht gelungen.</string>
   <string name="calibration_lost">Kalibrierung wurde verloren.</string>
   <string name="motor_problem">Problem mit dem Motor / Unerwartetes Anhalten</string>
@@ -562,10 +562,15 @@
   <string name="notifications_log_date">Datum:</string>
   <string name="widget_warning_battery_limitations">Die Anwendung hat limitierte Akkunutzung deshalb kann das Widget falsch funktionieren. Die Akkunutzung der App können Sie in Einstellungen ändern.</string>
   <string name="notification_deleted">Gelöscht</string>
- <string name="main_no_entries">Lehr</string>
- <string name="groups_empty_list_button">Gruppe in Supla Cloud hinzufügen</string>
- <string name="scenes_empty_list_button">Szene in Supla Cloud hinzufügen</string>
- <plurals name="details_timer_info_on">
+  <string name="main_no_entries">Lehr</string>
+  <string name="groups_empty_list_button">Gruppe in Supla Cloud hinzufügen</string>
+  <string name="scenes_empty_list_button">Szene in Supla Cloud hinzufügen</string>
+  <string name="roller_shutter_closing_percentage">Geschlossen:</string>
+  <string name="roller_shutter_opening_percentage">Geöffnet:</string>
+  <string name="roller_shutter_calibration">Kalibrierung</string>
+  <string name="roller_shutter_calibration_needed">Kalibrierung nötig</string>
+  <string name="cfg_night_mode">Nacht-Modus</string>
+  <plurals name="details_timer_info_on">
     <item quantity="one">eingeschaltet</item>
     <item quantity="other">eingeschaltet</item>
   </plurals>

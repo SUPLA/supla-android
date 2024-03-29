@@ -23,7 +23,7 @@ import org.supla.android.R
 import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.model.general.IconType
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
-import org.supla.android.features.details.thermostatdetail.thermostatgeneral.MeasurementValue
+import org.supla.android.features.details.thermostatdetail.general.MeasurementValue
 import org.supla.android.lib.SuplaConst
 import org.supla.android.usecases.channel.ChannelWithChildren
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase

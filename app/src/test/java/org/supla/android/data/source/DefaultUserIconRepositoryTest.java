@@ -57,9 +57,15 @@ public class DefaultUserIconRepositoryTest {
     byte[] img2 = new byte[0];
     byte[] img3 = new byte[0];
     byte[] img4 = new byte[0];
+    byte[] img1Dark = new byte[0];
+    byte[] img2Dark = new byte[0];
+    byte[] img3Dark = new byte[0];
+    byte[] img4Dark = new byte[0];
 
     // when
-    boolean result = userIconRepository.addUserIcons(id, img1, img2, img3, img4);
+    boolean result =
+        userIconRepository.addUserIcons(
+            id, img1, img2, img3, img4, img1Dark, img2Dark, img3Dark, img4Dark);
 
     // then
     assertFalse(result);
@@ -72,7 +78,8 @@ public class DefaultUserIconRepositoryTest {
     int id = 5;
 
     // when
-    boolean result = userIconRepository.addUserIcons(id, null, null, null, null);
+    boolean result =
+        userIconRepository.addUserIcons(id, null, null, null, null, null, null, null, null);
 
     // then
     assertFalse(result);
@@ -87,9 +94,15 @@ public class DefaultUserIconRepositoryTest {
     byte[] img2 = new byte[0];
     byte[] img3 = new byte[0];
     byte[] img4 = new byte[0];
+    byte[] img1Dark = new byte[0];
+    byte[] img2Dark = new byte[0];
+    byte[] img3Dark = new byte[0];
+    byte[] img4Dark = new byte[0];
 
     // when
-    boolean result = userIconRepository.addUserIcons(id, img1, img2, img3, img4);
+    boolean result =
+        userIconRepository.addUserIcons(
+            id, img1, img2, img3, img4, img1Dark, img2Dark, img3Dark, img4Dark);
 
     // then
     assertTrue(result);
@@ -99,22 +112,30 @@ public class DefaultUserIconRepositoryTest {
     verify(userIconDao).insert(eq(id), insertedImagesCaptor.capture());
     ArgumentCaptor<UserIconDao.Image> cachedImagesCaptor =
         ArgumentCaptor.forClass(UserIconDao.Image.class);
-    verify(imageCacheProxy, times(4)).addImage(eq(id), cachedImagesCaptor.capture());
+    verify(imageCacheProxy, times(8)).addUserImage(eq(id), cachedImagesCaptor.capture());
     verifyNoMoreInteractions(userIconDao, imageCacheProxy);
 
     UserIconDao.Image[] insertedImages = insertedImagesCaptor.getValue();
-    assertEquals(4, insertedImages.length);
+    assertEquals(8, insertedImages.length);
     assertImage(insertedImages[0], UserIconEntity.COLUMN_IMAGE_1, img1, 1);
     assertImage(insertedImages[1], UserIconEntity.COLUMN_IMAGE_2, img2, 2);
     assertImage(insertedImages[2], UserIconEntity.COLUMN_IMAGE_3, img3, 3);
     assertImage(insertedImages[3], UserIconEntity.COLUMN_IMAGE_4, img4, 4);
+    assertImage(insertedImages[4], UserIconEntity.COLUMN_IMAGE_1_DARK, img1Dark, 1);
+    assertImage(insertedImages[5], UserIconEntity.COLUMN_IMAGE_2_DARK, img2Dark, 2);
+    assertImage(insertedImages[6], UserIconEntity.COLUMN_IMAGE_3_DARK, img3Dark, 3);
+    assertImage(insertedImages[7], UserIconEntity.COLUMN_IMAGE_4_DARK, img4Dark, 4);
 
     List<UserIconDao.Image> cachedImages = cachedImagesCaptor.getAllValues();
-    assertEquals(4, cachedImages.size());
+    assertEquals(8, cachedImages.size());
     assertImage(cachedImages.get(0), UserIconEntity.COLUMN_IMAGE_1, img1, 1);
     assertImage(cachedImages.get(1), UserIconEntity.COLUMN_IMAGE_2, img2, 2);
     assertImage(cachedImages.get(2), UserIconEntity.COLUMN_IMAGE_3, img3, 3);
     assertImage(cachedImages.get(3), UserIconEntity.COLUMN_IMAGE_4, img4, 4);
+    assertImage(cachedImages.get(4), UserIconEntity.COLUMN_IMAGE_1_DARK, img1Dark, 1);
+    assertImage(cachedImages.get(5), UserIconEntity.COLUMN_IMAGE_2_DARK, img2Dark, 2);
+    assertImage(cachedImages.get(6), UserIconEntity.COLUMN_IMAGE_3_DARK, img3Dark, 3);
+    assertImage(cachedImages.get(7), UserIconEntity.COLUMN_IMAGE_4_DARK, img4Dark, 4);
   }
 
   private void assertImage(UserIconDao.Image image, String column, byte[] value, int subId) {

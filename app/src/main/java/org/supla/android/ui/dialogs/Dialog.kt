@@ -26,10 +26,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -58,11 +61,23 @@ fun Dialog(
 }
 
 @Composable
+fun DialogHeader(title: String) =
+  Text(
+    text = title,
+    style = MaterialTheme.typography.h6,
+    textAlign = TextAlign.Center,
+    modifier = Modifier
+      .padding(all = dimensionResource(id = R.dimen.distance_default))
+      .fillMaxWidth()
+  )
+
+@Composable
 fun DialogButtonsRow(content: @Composable RowScope.() -> Unit) =
   Row(
     modifier = Modifier
       .fillMaxWidth()
       .padding(all = dimensionResource(id = R.dimen.distance_default)),
     content = content,
-    horizontalArrangement = Arrangement.spacedBy(16.dp)
+    horizontalArrangement = Arrangement.spacedBy(16.dp),
+    verticalAlignment = Alignment.CenterVertically
   )

@@ -54,8 +54,7 @@ class AlarmArmamentSensorIconResourceProducerTest : BaseIconResourceProducerTest
     test(
       state = ChannelState.Value.ON,
       function = SuplaConst.SUPLA_CHANNELFNC_ALARMARMAMENTSENSOR,
-      expectedIcon = R.drawable.fnc_alarm_armament_on_nm,
-      nightMode = true
+      expectedIcon = R.drawable.fnc_alarm_armament_on
     )
   }
 
@@ -64,8 +63,7 @@ class AlarmArmamentSensorIconResourceProducerTest : BaseIconResourceProducerTest
     test(
       state = ChannelState.Value.OFF,
       function = SuplaConst.SUPLA_CHANNELFNC_ALARMARMAMENTSENSOR,
-      expectedIcon = R.drawable.fnc_alarm_armament_off_nm,
-      nightMode = true
+      expectedIcon = R.drawable.fnc_alarm_armament_off
     )
   }
 }

@@ -3,7 +3,7 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:background="@color/activity_bg"
+  android:background="@color/background"
   android:layout_marginTop="@dimen/top_bar_height"
   android:clickable="true"
   android:focusable="true"
@@ -26,7 +26,7 @@
     android:layout_marginTop="5dp"
     android:layout_marginRight="5dp"
     android:indeterminateOnly="true"
-    android:secondaryProgressTint="@color/activity_bg"
+    android:secondaryProgressTint="@color/background"
     tools:layout_editor_absoluteX="133dp"
     tools:layout_editor_absoluteY="247dp" />
 

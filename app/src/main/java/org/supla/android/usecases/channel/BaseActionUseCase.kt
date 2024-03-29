@@ -19,6 +19,7 @@ package org.supla.android.usecases.channel
 
 import io.reactivex.rxjava3.core.Completable
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
+import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.db.ChannelBase
 import org.supla.android.extensions.isThermostat
 import org.supla.android.lib.SuplaConst
@@ -38,7 +39,7 @@ open class BaseActionUseCase<T : ChannelBase>(
     if (isRGBW(channelBase.func)) {
       client.executeAction(ActionParameters(getTurnOnOffActionId(buttonType), getSubjectType(forGroup), channelBase.remoteId))
     } else if (isRollerShutter(channelBase.func)) {
-      if (channelBase.flags.and(SuplaConst.SUPLA_CHANNEL_FLAG_RS_SBS_AND_STOP_ACTIONS) > 0) {
+      if (SuplaChannelFlag.RS_SBS_AND_STOP_ACTIONS inside channelBase.flags) {
         client.executeAction(ActionParameters(getRevealShutStopActionId(buttonType), getSubjectType(forGroup), channelBase.remoteId))
       } else {
         client.executeAction(ActionParameters(getRevealShutActionId(buttonType), getSubjectType(forGroup), channelBase.remoteId))

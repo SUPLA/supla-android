@@ -20,11 +20,11 @@ package org.supla.android.ui.lists
 import androidx.annotation.DrawableRes
 import org.supla.android.core.ui.StringProvider
 import org.supla.android.data.ValuesFormatter
-import org.supla.android.data.source.local.entity.Scene
+import org.supla.android.data.model.general.ChannelDataBase
+import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
-import org.supla.android.db.Channel
-import org.supla.android.db.ChannelBase
-import org.supla.android.db.Location
+import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.complex.SceneDataEntity
 import org.supla.android.images.ImageId
 import org.supla.android.ui.lists.data.IssueIconType
 import org.supla.android.ui.lists.data.SlideableListItemData
@@ -33,16 +33,18 @@ import java.util.Date
 sealed interface ListItem {
 
   abstract class ChannelBasedItem(
-    open val channelBase: ChannelBase
+    open val channelBase: ChannelDataBase
   ) : ListItem
 
   abstract class DefaultItem(
-    val channel: Channel,
+    val channel: ChannelDataEntity,
     val locationCaption: String,
     val online: Boolean,
     val captionProvider: StringProvider,
     val icon: ImageId,
-    val value: String?
+    val value: String?,
+    val issueIconType: IssueIconType?,
+    val issueMessage: Int?
   ) : ChannelBasedItem(channel) {
     open fun toSlideableListItemData(): SlideableListItemData {
       return SlideableListItemData.Default(
@@ -50,31 +52,34 @@ sealed interface ListItem {
         titleProvider = captionProvider,
         icon = icon,
         value = value,
-        issueIconType = null,
+        issueIconType = issueIconType,
         estimatedTimerEndDate = null
       )
     }
   }
 
-  data class SceneItem(val scene: Scene, val location: Location) : ListItem
-  data class ChannelItem(override var channelBase: ChannelBase, val location: Location, val children: List<ChannelChildEntity>? = null) :
-    ChannelBasedItem(channelBase)
+  data class SceneItem(val sceneData: SceneDataEntity) : ListItem
+  data class ChannelItem(
+    override var channelBase: ChannelDataBase,
+    val children: List<ChannelChildEntity>? = null,
+    val legacyBase: org.supla.android.db.ChannelBase
+  ) : ChannelBasedItem(channelBase)
 
-  data class LocationItem(val location: Location) : ListItem
+  data class LocationItem(val location: LocationEntity) : ListItem
 
   class HvacThermostatItem(
-    channel: Channel,
+    channel: ChannelDataEntity,
     locationCaption: String,
     online: Boolean,
     captionProvider: StringProvider,
     icon: ImageId,
     value: String?,
-    private val issueIconType: IssueIconType?,
+    issueIconType: IssueIconType?,
+    issueMessage: Int?,
     private val estimatedTimerEndDate: Date?,
     private val subValue: String,
-    @DrawableRes private val indicatorIcon: Int?,
-    val issueMessage: Int?
-  ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, value) {
+    @DrawableRes private val indicatorIcon: Int?
+  ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, value, issueIconType, issueMessage) {
     override fun toSlideableListItemData(): SlideableListItemData {
       return SlideableListItemData.Thermostat(
         online = online,
@@ -90,29 +95,39 @@ sealed interface ListItem {
   }
 
   class MeasurementItem(
-    channel: Channel,
+    channel: ChannelDataEntity,
     locationCaption: String,
     online: Boolean,
     captionProvider: StringProvider,
     icon: ImageId,
-    value: String?
-  ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, value)
+    value: String? = null
+  ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, value, null, null)
+
+  class RollerShutterItem(
+    channel: ChannelDataEntity,
+    locationCaption: String,
+    online: Boolean,
+    captionProvider: StringProvider,
+    icon: ImageId,
+    issueIconType: IssueIconType?,
+    issueMessage: Int?
+  ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, null, issueIconType, issueMessage)
 
   class GeneralPurposeMeterItem(
-    channel: Channel,
+    channel: ChannelDataEntity,
     locationCaption: String,
     online: Boolean,
     captionProvider: StringProvider,
     icon: ImageId,
     value: String
-  ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, value)
+  ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, value, null, null)
 
   class GeneralPurposeMeasurementItem(
-    channel: Channel,
+    channel: ChannelDataEntity,
     locationCaption: String,
     online: Boolean,
     captionProvider: StringProvider,
     icon: ImageId,
     value: String
-  ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, value)
+  ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, value, null, null)
 }

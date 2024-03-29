@@ -1,7 +1,7 @@
 <resources>
 
   <!-- Base application theme. -->
-  <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+  <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
     <!-- Customize your theme here. -->
     <item name="toolbarNavigationButtonStyle">@style/SuplaToolbarNavigationButtonStyle</item>
     <item name="windowActionBar">false</item>
@@ -41,30 +41,12 @@
     <item name="android:paddingBottom">10dp</item>
   </style>
 
-  <style name="title" parent="@style/MenuBarTitle" />
-
-  <style name="your_account">
-    <item name="android:textSize">34sp</item>
-
-    <item name="android:letterSpacing">-0.01</item>
-
-    <item name="android:textColor">#000000</item>
-
-  </style>
-
-  <style name="LinkButton" parent="android:Widget.Button">
-    <item name="android:background">@android:color/transparent</item>
-    <item name="android:textColor">?linkColor</item>
-    <item name="android:textSize">14sp</item>
-    <item name="android:textAllCaps">false</item>
-  </style>
-
-  <style name="ChevronButton" parent="android:Widget.Button">
-    <item name="android:background">@android:color/transparent</item>
-    <item name="android:textColor">?labelColor</item>
-    <item name="android:textSize">14sp</item>
-    <item name="android:gravity">left|center_vertical</item>
-    <item name="android:textAllCaps">false</item>
+  <style name="AppTheme.EditText">
+    <item name="android:background">@drawable/background_widget_configuration_field</item>
+    <item name="android:maxLines">1</item>
+    <item name="android:singleLine">true</item>
+    <item name="android:textAppearance">@style/AppTheme.TextAppearance.Subtitle1</item>
+    <item name="android:padding">12dp</item>
   </style>
 
   <style name="Switch" parent="">
@@ -76,10 +58,6 @@
 
   <style name="CheckBox" parent="">
     <item name="android:buttonTint">@color/primary</item>
-  </style>
-
-  <style name="FormLabel" parent="">
-    <item name="android:textColor">@color/disabled</item>
   </style>
 
   <style name="SegmentedButtonGroup">
@@ -94,13 +72,7 @@
     <item name="android:background">@drawable/segmented_button_background</item>
   </style>
 
-  <style name="SegmentedButton.Texted">
-    <item name="android:layout_margin">8dp</item>
-    <item name="android:padding">4dp</item>
-    <item name="android:textSize">16sp</item>
-  </style>
-
-  <style name="Widget"></style>
+  <style name="Widget" />
 
   <style name="Widget.SegmentedButton">
     <item name="android:background">@drawable/segmented_button_widget_background</item>
@@ -114,5 +86,6 @@
 
   <style name="SuplaNumberPicker" parent="Theme.AppCompat.Light">
     <item name="colorControlNormal">@android:color/transparent</item>
+    <item name="android:textColorPrimary">@color/on_background</item>
   </style>
 </resources>

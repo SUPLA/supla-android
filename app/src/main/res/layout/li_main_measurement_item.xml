@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools">
+
+  <org.supla.android.ui.layouts.SlideableListItemLayout
+    android:id="@+id/list_item_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/channel_cell"
+    tools:layout_height="100dp"
+    tools:layout_width="match_parent">
+
+    <org.supla.android.ui.views.list.IconValueListItemView
+      android:id="@id/list_item_content"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent" />
+  </org.supla.android.ui.layouts.SlideableListItemLayout>
+</layout>

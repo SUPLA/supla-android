@@ -22,13 +22,14 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import org.supla.android.R
 import org.supla.android.features.details.gpmdetail.history.GpmHistoryDetailFragment
 import org.supla.android.features.details.legacydetail.LegacyDetailFragment
-import org.supla.android.features.details.switchdetail.switchgeneral.SwitchGeneralFragment
-import org.supla.android.features.details.switchdetail.timersdetail.TimersDetailFragment
+import org.supla.android.features.details.rollershutterdetail.general.RollerShutterGeneralFragment
+import org.supla.android.features.details.switchdetail.general.SwitchGeneralFragment
+import org.supla.android.features.details.switchdetail.timer.TimersDetailFragment
 import org.supla.android.features.details.thermometerdetail.history.ThermometerHistoryDetailFragment
-import org.supla.android.features.details.thermostatdetail.historydetail.ThermostatHistoryDetailFragment
-import org.supla.android.features.details.thermostatdetail.scheduledetail.ScheduleDetailFragment
-import org.supla.android.features.details.thermostatdetail.thermostatgeneral.ThermostatGeneralFragment
-import org.supla.android.features.details.thermostatdetail.timerdetail.TimerDetailFragment
+import org.supla.android.features.details.thermostatdetail.general.ThermostatGeneralFragment
+import org.supla.android.features.details.thermostatdetail.history.ThermostatHistoryDetailFragment
+import org.supla.android.features.details.thermostatdetail.schedule.ScheduleDetailFragment
+import org.supla.android.features.details.thermostatdetail.timer.TimerDetailFragment
 import org.supla.android.usecases.details.LegacyDetailType
 
 class StandardDetailPagerAdapter(
@@ -62,6 +63,8 @@ class StandardDetailPagerAdapter(
     }
 
     DetailPage.GPM_HISTORY -> GpmHistoryDetailFragment().apply { arguments = GpmHistoryDetailFragment.bundle(itemBundle.remoteId) }
+
+    DetailPage.ROLLER_SHUTTER -> RollerShutterGeneralFragment().apply { arguments = RollerShutterGeneralFragment.bundle(itemBundle) }
   }
 }
 
@@ -82,5 +85,8 @@ enum class DetailPage(val menuId: Int) {
   THERMOMETER_HISTORY(R.id.detail_history),
 
   // GPM
-  GPM_HISTORY(R.id.detail_history)
+  GPM_HISTORY(R.id.detail_history),
+
+  // Roller shutter
+  ROLLER_SHUTTER(R.id.detail_general)
 }

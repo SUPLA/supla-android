@@ -7,7 +7,7 @@
     android:background="@color/menubar">
 
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/menubutton"
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="45dp"
@@ -62,7 +62,7 @@
         android:layout_centerVertical="true"
         android:layout_marginRight="10dp">
 
-      <Button
+      <androidx.appcompat.widget.AppCompatButton
           android:id="@+id/profilebutton"
           style="?android:attr/borderlessButtonStyle"
           android:layout_marginLeft="10dp"

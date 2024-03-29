@@ -19,20 +19,24 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.supla.android.Preferences
-import org.supla.android.db.Channel
-import org.supla.android.db.ChannelBase
+import org.supla.android.core.ui.StringProvider
+import org.supla.android.data.model.general.ChannelDataBase
+import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.complex.isHvacThermostat
+import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
 import org.supla.android.events.UpdateEventsManager
-import org.supla.android.extensions.isHvacThermostat
 import org.supla.android.features.details.detailbase.standarddetail.StandardDetailViewEvent
 import org.supla.android.features.details.detailbase.standarddetail.StandardDetailViewModel
 import org.supla.android.features.details.detailbase.standarddetail.StandardDetailViewState
 import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.usecases.channel.GetChannelCaptionUseCase
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
-import org.supla.android.usecases.channel.ReadChannelGroupByRemoteIdUseCase
+import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class ThermostatDetailViewModel @Inject constructor(
+  private val getChannelCaptionUseCase: GetChannelCaptionUseCase,
   readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
   readChannelGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase,
   updateEventsManager: UpdateEventsManager,
@@ -49,26 +53,30 @@ class ThermostatDetailViewModel @Inject constructor(
 
   override fun closeEvent() = ThermostatDetailViewEvent.Close
 
-  override fun updatedState(state: ThermostatDetailViewState, channelBase: ChannelBase) =
-    state.copy(channelBase = channelBase)
+  override fun updatedState(state: ThermostatDetailViewState, channelDataBase: ChannelDataBase) =
+    state.copy(
+      caption = getChannelCaptionUseCase(channelDataBase),
+      subfunction = (channelDataBase as? ChannelDataEntity)?.channelValueEntity?.asThermostatValue()?.subfunction
+    )
 
-  override fun shouldCloseDetail(channelBase: ChannelBase, initialFunction: Int) =
-    when (channelBase) {
-      is Channel -> {
-        if (channelBase.isHvacThermostat()) {
-          if (super.shouldCloseDetail(channelBase, initialFunction)) {
+  override fun shouldCloseDetail(channelDataBase: ChannelDataBase, initialFunction: Int) =
+    when (channelDataBase) {
+      is ChannelDataEntity -> {
+        if (channelDataBase.isHvacThermostat()) {
+          if (super.shouldCloseDetail(channelDataBase, initialFunction)) {
             true
           } else {
-            val subfunction = channelBase.value.asThermostatValue().subfunction
-            val currentSubfunction = (currentState().channelBase as? Channel)?.value?.asThermostatValue()?.subfunction
+            val subfunction = channelDataBase.channelValueEntity.asThermostatValue().subfunction
+            val currentSubfunction = currentState().subfunction
+
             currentSubfunction != null && currentSubfunction != subfunction
           }
         } else {
-          super.shouldCloseDetail(channelBase, initialFunction)
+          super.shouldCloseDetail(channelDataBase, initialFunction)
         }
       }
 
-      else -> super.shouldCloseDetail(channelBase, initialFunction)
+      else -> super.shouldCloseDetail(channelDataBase, initialFunction)
     }
 }
 
@@ -77,5 +85,6 @@ sealed interface ThermostatDetailViewEvent : StandardDetailViewEvent {
 }
 
 data class ThermostatDetailViewState(
-  val channelBase: ChannelBase? = null
-) : StandardDetailViewState()
+  override val caption: StringProvider? = null,
+  val subfunction: ThermostatSubfunction? = null
+) : StandardDetailViewState(caption)

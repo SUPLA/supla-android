@@ -20,7 +20,7 @@
             android:layout_centerVertical="false"
             android:layout_gravity="center"
             android:layout_marginTop="40dp"
-            android:background="@drawable/error"
+            android:src="@drawable/ic_error"
             tools:ignore="ContentDescription" />
 
         <TextView
@@ -44,7 +44,7 @@
             android:layout_weight="1"
             android:orientation="horizontal">
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/status_btn"
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="250dp"
@@ -63,7 +63,7 @@
                 android:topLeftRadius="10dp"
                 android:topRightRadius="10dp" />
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/retry_btn"
                 android:layout_width="85dp"
                 android:layout_height="85dp"
@@ -91,7 +91,7 @@
             android:layout_weight="1"
             android:orientation="horizontal">
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/cloud_btn"
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="340dp"
@@ -123,6 +123,6 @@
         android:mirrorForRtl="false"
         android:nestedScrollingEnabled="false"
         android:progress="50"
-        android:secondaryProgressTint="@color/activity_bg" />
+        android:secondaryProgressTint="@color/background" />
 
 </RelativeLayout>

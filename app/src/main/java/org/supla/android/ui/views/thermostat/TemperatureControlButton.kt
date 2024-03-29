@@ -54,12 +54,13 @@ fun TemperatureControlButton(
   size: Dp = 56.dp,
   onClick: () -> Unit
 ) {
+  val outerGradient = colorResource(id = R.color.thermostat_control_button_background)
   Box(
     modifier = modifier
       .width(size)
       .height(size)
       .shadow(elevation = 4.dp, shape = CircleShape)
-      .background(Brush.radialGradient(listOf(MaterialTheme.colors.surface, Color(0xFFF4F4F4))))
+      .background(Brush.radialGradient(listOf(MaterialTheme.colors.surface, outerGradient)))
       .border(1.dp, if (disabled) colorResource(id = R.color.disabled) else color, CircleShape)
       .clickable(
         onClick = { onClick() },

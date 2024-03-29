@@ -18,21 +18,20 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
+import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.db.ChannelBase
 import org.supla.android.tools.SuplaSchedulers
-import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
-import org.supla.android.usecases.channel.ReadChannelGroupByRemoteIdUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class LegacyDetailViewModel @Inject constructor(
-  private val readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
-  private val readChannelGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase,
+  private val channelRepository: ChannelRepository,
   schedulers: SuplaSchedulers
 ) : BaseViewModel<LegacyDetailViewState, LegacyDetailViewEvent>(LegacyDetailViewState(), schedulers) {
 
@@ -47,8 +46,8 @@ class LegacyDetailViewModel @Inject constructor(
   }
 
   private fun getDataSource(remoteId: Int, itemType: ItemType) = when (itemType) {
-    ItemType.CHANNEL -> readChannelByRemoteIdUseCase(remoteId).map { it.getLegacyChannel() }
-    ItemType.GROUP -> readChannelGroupByRemoteIdUseCase(remoteId)
+    ItemType.CHANNEL -> Maybe.fromCallable { channelRepository.getChannel(remoteId) }
+    ItemType.GROUP -> Maybe.fromCallable { channelRepository.getChannelGroup(remoteId) }
   }
 }
 

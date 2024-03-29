@@ -19,6 +19,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -28,11 +29,23 @@ import java.io.ByteArrayInputStream;
 import java.util.LinkedHashMap;
 
 public class ImageCache {
+
   private static final LinkedHashMap<ImageId, Bitmap> map = new LinkedHashMap<>();
 
   public static synchronized Bitmap getBitmap(Context context, ImageId imgId) {
     if (imgId == null) {
       return null;
+    }
+
+    Configuration configuration = context.getResources().getConfiguration();
+    boolean nightMode =
+        (configuration.uiMode & Configuration.UI_MODE_NIGHT_MASK)
+            == Configuration.UI_MODE_NIGHT_YES;
+    imgId.setNightMode(nightMode);
+
+    if (imgId.getUserImage() && nightMode && !map.containsKey(imgId)) {
+      // If there is no user image for night mode, use the default
+      imgId.setNightMode(false);
     }
 
     Bitmap result = map.get(imgId);

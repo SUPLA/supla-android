@@ -29,10 +29,7 @@ class DimmerIconResourceProducer : IconResourceProducer {
 
   override fun produce(data: IconData): Int =
     when (data.state.value) {
-      ChannelState.Value.ON ->
-        data.icon(R.drawable.dimmeron, R.drawable.dimmeron_nightmode)
-
-      else ->
-        data.icon(R.drawable.dimmeroff, R.drawable.dimmeroff_nightmode)
+      ChannelState.Value.ON -> R.drawable.dimmeron
+      else -> R.drawable.dimmeroff
     }
 }

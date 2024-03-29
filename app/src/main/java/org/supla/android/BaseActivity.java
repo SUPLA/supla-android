@@ -26,8 +26,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager.LayoutParams;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
-import androidx.fragment.app.FragmentActivity;
 import org.supla.android.db.DbHelper;
 import org.supla.android.lib.SuplaChannelBasicCfg;
 import org.supla.android.lib.SuplaChannelState;
@@ -43,7 +43,7 @@ import org.supla.android.lib.ZWaveNode;
 import org.supla.android.lib.ZWaveWakeUpSettings;
 
 @SuppressLint("registered")
-public class BaseActivity extends FragmentActivity
+public class BaseActivity extends AppCompatActivity
     implements SuplaClientMessageHandler.OnSuplaClientMessageListener {
 
   protected static Activity CurrentActivity = null;
@@ -54,7 +54,7 @@ public class BaseActivity extends FragmentActivity
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     SuplaApp.getApp().initTypefaceCollection(this);
-    setStatusBarColor(R.color.splash_bg);
+    setStatusBarColor(R.color.primary);
   }
 
   @Override

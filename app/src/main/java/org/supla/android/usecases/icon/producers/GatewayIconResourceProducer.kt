@@ -35,9 +35,9 @@ class GatewayIconResourceProducer : IconResourceProducer {
 
   override fun produce(data: IconData): Int {
     return if (data.state.value == ChannelState.Value.OPEN) {
-      data.icon(R.drawable.gatewayopen, R.drawable.gatewayopen_nightmode)
+      R.drawable.gatewayopen
     } else {
-      data.icon(R.drawable.gatewayclosed, R.drawable.gatewayclosed_nightmode)
+      R.drawable.gatewayclosed
     }
   }
 }

@@ -24,14 +24,17 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.supla.android.features.icons.LoadUserIconsIntoCacheWorker;
 
 public class DownloadUserIcons extends SuplaRestApiClientTask {
 
   private final int PACKAGE_SIZE = 4;
   private final int DELAY = 2500;
+  private final Context context;
 
   public DownloadUserIcons(Context context) {
     super(context);
+    this.context = context;
   }
 
   @Override
@@ -78,7 +81,35 @@ public class DownloadUserIcons extends SuplaRestApiClientTask {
                 byte[] img4 =
                     images.length() > 3 ? Base64.decode(images.getString(3), Base64.DEFAULT) : null;
 
-                getDbH().addUserIcons(imgId, img1, img2, img3, img4);
+                try {
+                  JSONArray darkImages = obj.getJSONArray("imagesDark");
+
+                  byte[] img1Dark =
+                      darkImages.length() > 0
+                          ? Base64.decode(darkImages.getString(0), Base64.DEFAULT)
+                          : null;
+
+                  byte[] img2Dark =
+                      darkImages.length() > 1
+                          ? Base64.decode(darkImages.getString(1), Base64.DEFAULT)
+                          : null;
+
+                  byte[] img3Dark =
+                      darkImages.length() > 2
+                          ? Base64.decode(darkImages.getString(2), Base64.DEFAULT)
+                          : null;
+
+                  byte[] img4Dark =
+                      darkImages.length() > 3
+                          ? Base64.decode(darkImages.getString(3), Base64.DEFAULT)
+                          : null;
+
+                  getDbH()
+                      .addUserIcons(
+                          imgId, img1, img2, img3, img4, img1Dark, img2Dark, img3Dark, img4Dark);
+                } catch (JSONException ex) {
+                  getDbH().addUserIcons(imgId, img1, img2, img3, img4, null, null, null, null);
+                }
               }
             } catch (JSONException e) {
               e.printStackTrace();
@@ -89,6 +120,8 @@ public class DownloadUserIcons extends SuplaRestApiClientTask {
         package_ids = "";
       }
     }
+
+    LoadUserIconsIntoCacheWorker.Companion.start(context);
 
     return null;
   }

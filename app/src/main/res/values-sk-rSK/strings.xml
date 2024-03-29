@@ -92,7 +92,7 @@
   <string name="rate_later">Neskôr</string>
   <string name="rate_no_thanks">Nie, ďakujem</string>
   <string name="rs_percent_caption">Percento zatvorenia</string>
-  <string name="calibration">[Kalibrácia]</string>
+  <string name="roller_shutter_calibrating">Kalibrácia…</string>
 
   <string name="add_wizard_is_not_available">Sprievodca pridávaním je dostupný len po nadviazaní spojenia so serverom na základe zadanej e-mailovej adresy! (Vypnite pokročilé možnosti v nastavení svojho účtu)</string>
 
@@ -444,7 +444,7 @@
   <string name="location_name">Názov miesta</string>
   <string name="overcurrent_warning">Napájanie bolo vypnuté po prekročení nastavenej prahovej hodnoty povoleného prúdu.</string>
   <string name="overcurrent_question">Napájanie bolo vypnuté po prekročení nastavenej prahovej hodnoty povoleného prúdu. Naozaj chcete zapnúť napájanie?</string>
-  <string name="recalibration_question">Naozaj chcete spustiť kalibráciu?</string>
+  <string name="roller_shutter_start_calibration_message">Naozaj chcete spustiť kalibráciu?</string>
   <string name="calibration_failed">Kalibrácia zlyhala.</string>
   <string name="calibration_lost">Kalibrácia bola odstránená.</string>
   <string name="motor_problem">Problém s motorom / Neočakávané zastavenie.</string>
@@ -467,4 +467,5 @@
   <string name="rs_display_mode_closing">Zatvorenia</string>
   <string name="status_accessid_inactive">Prístupový identifikátor nie je aktívny</string>
   <string name="hour_string_format">HH:mm:ss</string>
+ <string name="roller_shutter_calibration">Kalibrácia</string>
 </resources>

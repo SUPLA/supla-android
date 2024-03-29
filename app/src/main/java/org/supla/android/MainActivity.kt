@@ -288,7 +288,7 @@ class MainActivity : NavigationActivity(), ToolbarTitleController, LoadableConte
         SuplaConst.SUPLA_EVENT_VALVEOPENCLOSE -> R.string.event_openedclosedthevalve
         else -> return
       }
-      imgId = getChannelIconUseCase(channel)
+      imgId = getChannelIconUseCase.invoke(channel)
       msg = resources.getString(msgId)
       @SuppressLint("SimpleDateFormat")
       val sdf = SimpleDateFormat("HH:mm:ss")
