@@ -29,6 +29,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.core.content.res.ResourcesCompat;
 
 public class SuplaRangeCalibrationWheel extends View {
 
@@ -106,6 +107,8 @@ public class SuplaRangeCalibrationWheel extends View {
     if (res == null) {
       borderLineWidth = (float) 1.5;
     } else {
+      setBackgroundColor(ResourcesCompat.getColor(res, R.color.surface, null));
+
       DisplayMetrics metrics = res.getDisplayMetrics();
       borderLineWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1.5F, metrics);
     }

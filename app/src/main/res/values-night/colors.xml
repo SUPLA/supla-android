@@ -48,4 +48,8 @@
     <!-- Thermostat -->
     <color name="thermostat_control_circle_background">#313131</color>
     <color name="thermostat_control_button_background">#313131</color>
+
+    <!-- Other -->
+    <color name="vl_infotext">#808080</color>
+    <color name="rgbw_button_border">#F5F6F7</color>
 </resources>

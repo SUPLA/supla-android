@@ -4,7 +4,7 @@
     android:id="@+id/rlRgbVLCalibration"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/vl_settings_bg">
+    android:background="@color/background">
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/vlBtnInfo"
@@ -56,7 +56,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/vl_cfg_mode"
-            android:textColor="@android:color/black" />
+            android:textColor="@color/on_background" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -121,7 +121,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/vl_cfg_boost"
-            android:textColor="@android:color/black" />
+            android:textColor="@color/on_background" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -231,7 +231,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/status_led"
-            android:textColor="@android:color/black" />
+            android:textColor="@color/on_background" />
 
         <LinearLayout
             android:layout_width="match_parent"

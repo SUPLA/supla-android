@@ -21,11 +21,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -35,6 +33,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import androidx.appcompat.widget.AppCompatImageButton;
+import androidx.core.content.res.ResourcesCompat;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -62,8 +62,8 @@ public class ChannelDetailRGBW extends DetailLayout
   private ViewGroup tabs;
   private ViewGroup pickerTypeTabs;
   private ViewGroup llExtraButtons;
-  private Button btnSettings;
-  private Button btnInfo;
+  private AppCompatImageButton btnSettings;
+  private AppCompatImageButton btnInfo;
   private RelativeLayout rlMain;
   private DimmerCalibrationTool dimmerCalibrationTool = null;
   private long remoteUpdateTime;
@@ -103,8 +103,6 @@ public class ChannelDetailRGBW extends DetailLayout
 
     tabs = findViewById(R.id.llTabs);
     pickerTypeTabs = findViewById(R.id.llPickerTypeTabs);
-
-    Resources r = getResources();
 
     status = findViewById(R.id.rgbwstatus);
     status.setOnlineColor(getResources().getColor(R.color.primary));
@@ -279,7 +277,6 @@ public class ChannelDetailRGBW extends DetailLayout
 
   private void channelDataToViews() {
 
-    int id = 0;
     cbPicker.setColorMarkers(null);
     cbPicker.setBrightnessMarkers(null);
 
@@ -357,14 +354,8 @@ public class ChannelDetailRGBW extends DetailLayout
   }
 
   private void setBtnBackground(Button btn, int id) {
-
-    Drawable d = id == 0 ? null : getResources().getDrawable(id);
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-      btn.setBackground(d);
-    } else {
-      btn.setBackgroundDrawable(d);
-    }
+    Drawable d = id == 0 ? null : ResourcesCompat.getDrawable(getResources(), id, null);
+    btn.setBackground(d);
   }
 
   private void setPowerBtnOn(boolean on) {
@@ -490,36 +481,38 @@ public class ChannelDetailRGBW extends DetailLayout
 
   @Override
   public void onClick(View v) {
+    int onBackgroundColor = ResourcesCompat.getColor(getResources(), R.color.on_background, null);
+    int onPrimaryColor = ResourcesCompat.getColor(getResources(), R.color.on_primary, null);
     if (v == tabRGB) {
       showRGB();
 
       setBtnBackground(tabRGB, R.drawable.rounded_sel_btn);
       setBtnBackground(tabDimmer, 0);
 
-      tabRGB.setTextColor(Color.WHITE);
-      tabDimmer.setTextColor(Color.BLACK);
+      tabRGB.setTextColor(onPrimaryColor);
+      tabDimmer.setTextColor(onBackgroundColor);
     } else if (v == tabDimmer) {
       showDimmer();
 
       setBtnBackground(tabDimmer, R.drawable.rounded_sel_btn);
       setBtnBackground(tabRGB, 0);
 
-      tabRGB.setTextColor(Color.BLACK);
-      tabDimmer.setTextColor(Color.WHITE);
+      tabRGB.setTextColor(onBackgroundColor);
+      tabDimmer.setTextColor(onPrimaryColor);
     } else if (v == tabWheel) {
       setBtnBackground(tabWheel, R.drawable.rounded_sel_btn);
       setBtnBackground(tabSlider, 0);
 
-      tabWheel.setTextColor(Color.WHITE);
-      tabSlider.setTextColor(Color.BLACK);
+      tabWheel.setTextColor(onPrimaryColor);
+      tabSlider.setTextColor(onBackgroundColor);
       btnPowerOnOff.setVisibility(GONE);
 
     } else if (v == tabSlider) {
       setBtnBackground(tabWheel, 0);
       setBtnBackground(tabSlider, R.drawable.rounded_sel_btn);
 
-      tabWheel.setTextColor(Color.BLACK);
-      tabSlider.setTextColor(Color.WHITE);
+      tabWheel.setTextColor(onBackgroundColor);
+      tabSlider.setTextColor(onPrimaryColor);
       btnPowerOnOff.setVisibility(VISIBLE);
     } else if (v == btnSettings && dimmerCalibrationTool != null) {
       dimmerCalibrationTool.Show();

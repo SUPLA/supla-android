@@ -22,6 +22,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -29,6 +30,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import androidx.appcompat.widget.AppCompatImageView;
+import androidx.core.content.res.ResourcesCompat;
 import java.util.Timer;
 import java.util.TimerTask;
 import org.supla.android.lib.SuplaClientMessageHandler;
@@ -214,58 +216,40 @@ public abstract class DimmerCalibrationTool
       return;
     }
 
-    Drawable d = resid == 0 ? null : getResources().getDrawable(resid);
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-      btn.setBackground(d);
-    } else {
-      btn.setBackgroundDrawable(d);
-    }
-
+    Drawable d = resid == 0 ? null : ResourcesCompat.getDrawable(getResources(), resid, null);
+    btn.setBackground(d);
     btn.setTextColor(textColor);
   }
 
-  protected void setLedBtnApparance(
-      AppCompatImageView img, boolean selected, int resIdNormal, int resIdSelected) {
+  protected void setLedBtnApparance(AppCompatImageView img, boolean selected, int resIdNormal) {
     if (img == null) {
       return;
     }
 
     Drawable bg =
-        getResources()
-            .getDrawable(
-                selected ? R.drawable.rounded_led_sel_btn : R.drawable.rounded_led_normal_btn);
+        ResourcesCompat.getDrawable(
+            getResources(),
+            selected ? R.drawable.rounded_led_sel_btn : R.drawable.rounded_led_normal_btn,
+            null);
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-      img.setBackground(bg);
-    } else {
-      img.setBackgroundDrawable(bg);
-    }
+    img.setBackground(bg);
 
-    // float p = 5 * detailRGB.getResources().getSystem().getDisplayMetrics().density;
-
-    img.setImageResource(selected ? resIdSelected : resIdNormal);
-    // img.setPadding(0,(int)p,0,p);
+    img.setImageResource(resIdNormal);
+    img.setImageTintList(
+        ColorStateList.valueOf(
+            ResourcesCompat.getColor(
+                getResources(), selected ? R.color.on_primary : R.color.on_background, null)));
   }
 
   protected void setLedConfig(int ledConfig) {
     setLedBtnApparance(
-        imgLedOn,
-        ledConfig == DeviceCfgParameters.LED_ON_WHEN_CONNECTED,
-        R.drawable.ledon,
-        R.drawable.ledonwhite);
+        imgLedOn, ledConfig == DeviceCfgParameters.LED_ON_WHEN_CONNECTED, R.drawable.ledon);
 
     setLedBtnApparance(
-        imgLedOff,
-        ledConfig == DeviceCfgParameters.LED_OFF_WHEN_CONNECTED,
-        R.drawable.ledoff,
-        R.drawable.ledoffwhite);
+        imgLedOff, ledConfig == DeviceCfgParameters.LED_OFF_WHEN_CONNECTED, R.drawable.ledoff);
 
     setLedBtnApparance(
-        imgLedAlwaysOff,
-        ledConfig == DeviceCfgParameters.LED_ALWAYS_OFF,
-        R.drawable.ledalwaysoff,
-        R.drawable.ledalwaysoffwhite);
+        imgLedAlwaysOff, ledConfig == DeviceCfgParameters.LED_ALWAYS_OFF, R.drawable.ledalwaysoff);
   }
 
   protected void setLedConfig(DeviceCfgParameters params) {
@@ -314,8 +298,9 @@ public abstract class DimmerCalibrationTool
 
       long delayTime = 1;
 
-      if (System.currentTimeMillis() - lastCalCfgTime < MIN_SEND_DELAY_TIME)
+      if (System.currentTimeMillis() - lastCalCfgTime < MIN_SEND_DELAY_TIME) {
         delayTime = MIN_SEND_DELAY_TIME - (System.currentTimeMillis() - lastCalCfgTime) + 1;
+      }
 
       delayTimer1 = new Timer();
 
@@ -339,8 +324,9 @@ public abstract class DimmerCalibrationTool
 
       long delayTime = 1;
 
-      if (System.currentTimeMillis() - lastCalCfgTime < DISPLAY_DELAY_TIME)
+      if (System.currentTimeMillis() - lastCalCfgTime < DISPLAY_DELAY_TIME) {
         delayTime = DISPLAY_DELAY_TIME - (System.currentTimeMillis() - lastCalCfgTime) + 1;
+      }
 
       delayTimer2 = new Timer();
 
@@ -501,6 +487,7 @@ public abstract class DimmerCalibrationTool
   }
 
   private class DisplayDelayedTask extends TimerTask {
+
     private final int msg;
 
     DisplayDelayedTask(int msg) {

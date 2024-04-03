@@ -81,11 +81,10 @@
 
     <color name="hp_error_background_color">#FFC107</color>
     <color name="hp_error_text_color">#fd4a4d</color>
-    <color name="vl_settings_bg">#ffededed</color>
     <color name="vl_btn_disabled">#CECECE</color>
-    <color name="vl_infotitle">#000000</color>
     <color name="vl_infotext">#606060</color>
     <color name="vl_infoline">@color/disabled</color>
+    <color name="rgbw_button_border">#FFFFFF</color>
 
     <color name="diw_settings_bg">#ffededed</color>
 
