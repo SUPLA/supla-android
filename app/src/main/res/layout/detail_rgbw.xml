@@ -1,166 +1,173 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/rlRgbRootLayout"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:id="@+id/rlRgbRootLayout"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@color/background">
+
+  <RelativeLayout
+    android:id="@+id/rlRgbwMain"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background">
+    android:visibility="visible">
 
-    <RelativeLayout
-        android:id="@+id/rlRgbwMain"
+    <org.supla.android.SuplaChannelStatus
+      android:id="@+id/rgbwstatus"
+      android:layout_width="10dp"
+      android:layout_height="50dp"
+      android:layout_marginLeft="15dp"
+      android:layout_marginTop="80dp" />
+
+    <LinearLayout
+      android:id="@+id/llHeader"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignParentTop="true"
+      android:layout_marginTop="20dp"
+      android:orientation="vertical">
+
+      <LinearLayout
+        android:id="@+id/llTabs"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="visible">
-
-        <org.supla.android.SuplaChannelStatus
-            android:id="@+id/rgbwstatus"
-            android:layout_width="10dp"
-            android:layout_height="50dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="80dp" />
-
-        <LinearLayout
-            android:id="@+id/llHeader"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="20dp"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:id="@+id/llTabs"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:background="@drawable/rounded_tab_background"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:padding="2dp"
-                android:visibility="visible"
-                android:weightSum="2">
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/rgbTabBtn_RGB"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:layout_weight="1"
-                    android:background="@android:color/transparent"
-                    android:text="RGB"
-                    android:textSize="@dimen/rgb_detail_tab_btn_text" />
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/rgbTabBtn_Dimmer"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/rounded_sel_btn"
-                    android:text="@string/channel_caption_dimmer"
-                    android:textColor="@android:color/white"
-                    android:textSize="@dimen/rgb_detail_tab_btn_text" />
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <org.supla.android.SuplaColorBrightnessPicker
-            android:id="@+id/cbPicker"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_above="@id/llFooteer"
-            android:layout_below="@id/llHeader"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="20dp" />
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/rounded_tab_background"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="2dp"
+        android:visibility="visible"
+        android:weightSum="2">
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/rgbwBtnPowerOnOff"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_alignRight="@id/cbPicker"
-            android:layout_alignBottom="@id/cbPicker"
-            android:layout_marginBottom="10dp"
-            android:layout_weight="0"
-            android:background="@drawable/rgbwpoweroff" />
+          android:id="@+id/rgbTabBtn_RGB"
+          android:layout_width="wrap_content"
+          android:layout_height="30dp"
+          android:layout_weight="1"
+          android:background="@android:color/transparent"
+          android:text="RGB"
+          android:textSize="@dimen/rgb_detail_tab_btn_text" />
 
-        <LinearLayout
-            android:id="@+id/llFooteer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:orientation="vertical">
+        <androidx.appcompat.widget.AppCompatButton
+          android:id="@+id/rgbTabBtn_Dimmer"
+          android:layout_width="wrap_content"
+          android:layout_height="30dp"
+          android:layout_weight="1"
+          android:background="@drawable/rounded_sel_btn"
+          android:text="@string/channel_caption_dimmer"
+          android:textColor="@android:color/white"
+          android:textSize="@dimen/rgb_detail_tab_btn_text" />
+      </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/llExtraButtons"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginBottom="20dp"
-                android:orientation="horizontal"
-                android:visibility="visible"
-                android:weightSum="0">
+    </LinearLayout>
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/rgbwBtnInfo"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_weight="0"
-                    android:background="@drawable/rgbwinfo" />
+    <org.supla.android.SuplaColorBrightnessPicker
+      android:id="@+id/cbPicker"
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent"
+      android:layout_above="@id/llFooteer"
+      android:layout_below="@id/llHeader"
+      android:layout_marginLeft="20dp"
+      android:layout_marginRight="20dp"
+      android:layout_marginBottom="20dp" />
 
-                <View
-                    android:id="@+id/view7"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2" />
+    <androidx.appcompat.widget.AppCompatButton
+      android:id="@+id/rgbwBtnPowerOnOff"
+      android:layout_width="60dp"
+      android:layout_height="60dp"
+      android:layout_alignRight="@id/cbPicker"
+      android:layout_alignBottom="@id/cbPicker"
+      android:layout_marginBottom="10dp"
+      android:layout_weight="0"
+      android:background="@drawable/rgbwpoweroff" />
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/rgbwBtnSettings"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_weight="0"
-                    android:background="@drawable/rgbwsettings" />
-            </LinearLayout>
+    <LinearLayout
+      android:id="@+id/llFooteer"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignParentBottom="true"
+      android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/llPickerTypeTabs"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginBottom="40dp"
-                android:background="@drawable/rounded_tab_background"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:padding="2dp"
-                android:visibility="visible"
-                android:weightSum="2">
+      <LinearLayout
+        android:id="@+id/llExtraButtons"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="20dp"
+        android:orientation="horizontal"
+        android:visibility="visible"
+        android:weightSum="0">
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/rgbTabBtn_Wheel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/rounded_sel_btn"
-                    android:text="@string/wheel"
-                    android:textColor="@android:color/white"
-                    android:textSize="@dimen/rgb_detail_tab_btn_text" />
+        <androidx.appcompat.widget.AppCompatImageButton
+          android:id="@+id/rgbwBtnInfo"
+          android:layout_width="60dp"
+          android:layout_height="60dp"
+          android:layout_weight="0"
+          android:background="@drawable/rgbw_button_background"
+          android:scaleType="fitCenter"
+          android:src="@drawable/rgbwinfo"
+          android:tint="@color/on_background" />
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/rgbTabBtn_Slider"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:layout_weight="1"
-                    android:background="@android:color/transparent"
-                    android:text="@string/slider"
-                    android:textSize="@dimen/rgb_detail_tab_btn_text" />
-            </LinearLayout>
+        <View
+          android:id="@+id/view7"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:layout_weight="2" />
 
-            <org.supla.android.SuplaColorListPicker
-                android:id="@+id/clPicker"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginBottom="40dp" />
-        </LinearLayout>
-    </RelativeLayout>
+        <androidx.appcompat.widget.AppCompatImageButton
+          android:id="@+id/rgbwBtnSettings"
+          android:layout_width="60dp"
+          android:layout_height="60dp"
+          android:layout_weight="0"
+          android:background="@drawable/rgbw_button_background"
+          android:scaleType="fitCenter"
+          android:src="@drawable/rgbwsettings"
+          android:tint="@color/on_background" />
+      </LinearLayout>
+
+      <LinearLayout
+        android:id="@+id/llPickerTypeTabs"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="40dp"
+        android:background="@drawable/rounded_tab_background"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="2dp"
+        android:visibility="visible"
+        android:weightSum="2">
+
+        <androidx.appcompat.widget.AppCompatButton
+          android:id="@+id/rgbTabBtn_Wheel"
+          android:layout_width="wrap_content"
+          android:layout_height="30dp"
+          android:layout_weight="1"
+          android:background="@drawable/rounded_sel_btn"
+          android:text="@string/wheel"
+          android:textColor="@android:color/white"
+          android:textSize="@dimen/rgb_detail_tab_btn_text" />
+
+        <androidx.appcompat.widget.AppCompatButton
+          android:id="@+id/rgbTabBtn_Slider"
+          android:layout_width="wrap_content"
+          android:layout_height="30dp"
+          android:layout_weight="1"
+          android:background="@android:color/transparent"
+          android:text="@string/slider"
+          android:textSize="@dimen/rgb_detail_tab_btn_text" />
+      </LinearLayout>
+
+      <org.supla.android.SuplaColorListPicker
+        android:id="@+id/clPicker"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="40dp" />
+    </LinearLayout>
+  </RelativeLayout>
 </RelativeLayout>

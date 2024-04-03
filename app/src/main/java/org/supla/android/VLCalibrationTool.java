@@ -2,7 +2,6 @@ package org.supla.android;
 
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.view.LayoutInflater;
@@ -10,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import androidx.core.content.res.ResourcesCompat;
 import java.util.Timer;
 import java.util.TimerTask;
 import org.supla.android.lib.SuplaConst;
@@ -192,27 +192,29 @@ public class VLCalibrationTool extends DimmerCalibrationTool
   }
 
   private void setMode(int mode) {
+    int inactiveColor = ResourcesCompat.getColor(getResources(), R.color.on_background, null);
     setBtnApparance(
         btnDmAuto,
         0,
-        cfgParameters.isModeDisabled(VLCfgParameters.MODE_AUTO) ? mColorDisabled : Color.BLACK);
+        cfgParameters.isModeDisabled(VLCfgParameters.MODE_AUTO) ? mColorDisabled : inactiveColor);
 
     setBtnApparance(
         btnDm1,
         0,
-        cfgParameters.isModeDisabled(VLCfgParameters.MODE_1) ? mColorDisabled : Color.BLACK);
+        cfgParameters.isModeDisabled(VLCfgParameters.MODE_1) ? mColorDisabled : inactiveColor);
 
     setBtnApparance(
         btnDm2,
         0,
-        cfgParameters.isModeDisabled(VLCfgParameters.MODE_2) ? mColorDisabled : Color.BLACK);
+        cfgParameters.isModeDisabled(VLCfgParameters.MODE_2) ? mColorDisabled : inactiveColor);
 
     setBtnApparance(
         btnDm3,
         0,
-        cfgParameters.isModeDisabled(VLCfgParameters.MODE_3) ? mColorDisabled : Color.BLACK);
+        cfgParameters.isModeDisabled(VLCfgParameters.MODE_3) ? mColorDisabled : inactiveColor);
 
-    setBtnApparance(modeToBtn(mode), R.drawable.rounded_sel_btn, Color.WHITE);
+    int activeColor = ResourcesCompat.getColor(getResources(), R.color.on_primary, null);
+    setBtnApparance(modeToBtn(mode), R.drawable.rounded_sel_btn, activeColor);
   }
 
   private void setMode() {
@@ -220,22 +222,24 @@ public class VLCalibrationTool extends DimmerCalibrationTool
   }
 
   private void setBoost(int boost) {
+    int inactiveColor = ResourcesCompat.getColor(getResources(), R.color.on_background, null);
     setBtnApparance(
         btnBoostAuto,
         0,
-        cfgParameters.isBoostDisabled(VLCfgParameters.BOOST_AUTO) ? mColorDisabled : Color.BLACK);
+        cfgParameters.isBoostDisabled(VLCfgParameters.BOOST_AUTO) ? mColorDisabled : inactiveColor);
 
     setBtnApparance(
         btnBoostYes,
         0,
-        cfgParameters.isBoostDisabled(VLCfgParameters.BOOST_YES) ? mColorDisabled : Color.BLACK);
+        cfgParameters.isBoostDisabled(VLCfgParameters.BOOST_YES) ? mColorDisabled : inactiveColor);
 
     setBtnApparance(
         btnBoostNo,
         0,
-        cfgParameters.isBoostDisabled(VLCfgParameters.BOOST_NO) ? mColorDisabled : Color.BLACK);
+        cfgParameters.isBoostDisabled(VLCfgParameters.BOOST_NO) ? mColorDisabled : inactiveColor);
 
-    setBtnApparance(boostToBtn(boost), R.drawable.rounded_sel_btn, Color.WHITE);
+    int activeColor = ResourcesCompat.getColor(getResources(), R.color.on_primary, null);
+    setBtnApparance(boostToBtn(boost), R.drawable.rounded_sel_btn, activeColor);
 
     if (boost == VLCfgParameters.BOOST_YES) {
       btnBoost.setVisibility(View.VISIBLE);
@@ -255,13 +259,14 @@ public class VLCalibrationTool extends DimmerCalibrationTool
   }
 
   private void displayOpRange(boolean display) {
+    int color = ResourcesCompat.getColor(getResources(), R.color.on_background, null);
     if (display) {
-      setBtnApparance(btnOpRange, R.drawable.vl_tab, Color.BLACK);
-      setBtnApparance(btnBoost, 0, Color.BLACK);
+      setBtnApparance(btnOpRange, R.drawable.vl_tab, color);
+      setBtnApparance(btnBoost, 0, color);
       calibrationWheel.setBoostVisible(false);
     } else {
-      setBtnApparance(btnOpRange, 0, Color.BLACK);
-      setBtnApparance(btnBoost, R.drawable.vl_tab, Color.BLACK);
+      setBtnApparance(btnOpRange, 0, color);
+      setBtnApparance(btnBoost, R.drawable.vl_tab, color);
       calibrationWheel.setBoostVisible(true);
     }
   }
