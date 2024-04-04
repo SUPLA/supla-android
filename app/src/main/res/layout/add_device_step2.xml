@@ -1,123 +1,127 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:background="@color/menubar">
 
-  <CheckBox
-    android:id="@+id/wizard_cb_save_pwd"
-    android:layout_width="wrap_content"
-    android:layout_height="20dp"
-    android:layout_below="@+id/llPassword"
-    android:layout_alignStart="@+id/llPassword"
-    android:layout_alignLeft="@+id/llPassword"
-    android:layout_marginTop="10dp"
-    android:buttonTint="@android:color/white"
-    android:text="@string/wizard_remember_passwd"
-    android:textColor="@android:color/white"
-    android:textSize="12dp" />
-
-  <LinearLayout
-    android:id="@+id/llWifiName"
+  <RelativeLayout
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_below="@id/wizard_step2_txt1"
-    android:layout_centerHorizontal="true"
-    android:layout_marginLeft="40dp"
-    android:layout_marginTop="10dp"
-    android:layout_marginRight="40dp"
-    android:orientation="horizontal">
+    android:layout_height="wrap_content">
 
-    <Spinner
-      android:id="@+id/wizard_wifi_list"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:layout_below="@+id/wizard_step2_txt1"
-      android:layout_weight="1"
-      android:background="@android:color/white"
-      android:padding="5dp"
-      android:textSize="18dp"
-      android:textColor="#000000" />
+    <CheckBox
+      android:id="@+id/wizard_cb_save_pwd"
+      android:layout_width="wrap_content"
+      android:layout_height="20dp"
+      android:layout_below="@+id/llPassword"
+      android:layout_alignStart="@+id/llPassword"
+      android:layout_alignLeft="@+id/llPassword"
+      android:layout_marginTop="10dp"
+      android:buttonTint="@android:color/white"
+      android:text="@string/wizard_remember_passwd"
+      android:textColor="@android:color/white"
+      android:textSize="12dp" />
 
-    <EditText
-      android:id="@+id/wizard_wifi_name"
+    <LinearLayout
+      android:id="@+id/llWifiName"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_below="@id/wizard_wifi_list"
-      android:layout_weight="1"
-      android:background="@android:color/white"
-      android:inputType="text"
-      android:padding="5dp"
-      android:textSize="18dp"
-      android:visibility="gone"
-      android:textColor="#000000"/>
+      android:layout_below="@id/wizard_step2_txt1"
+      android:layout_centerHorizontal="true"
+      android:layout_marginLeft="40dp"
+      android:layout_marginTop="10dp"
+      android:layout_marginRight="40dp"
+      android:orientation="horizontal">
 
-    <androidx.appcompat.widget.AppCompatButton
-      android:id="@+id/wizard_edit_button"
-      android:layout_width="30dp"
-      android:layout_height="30dp"
-      android:layout_centerHorizontal="false"
-      android:layout_gravity="center"
-      android:layout_marginLeft="5dp"
-      android:background="@drawable/editingoff" />
-  </LinearLayout>
+      <Spinner
+        android:id="@+id/wizard_wifi_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/wizard_step2_txt1"
+        android:layout_weight="1"
+        android:background="@android:color/white"
+        android:padding="5dp"
+        android:textColor="#000000"
+        android:textSize="18dp" />
 
-  <LinearLayout
-    android:id="@+id/llPassword"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_below="@id/llWifiName"
-    android:layout_centerHorizontal="true"
-    android:layout_marginLeft="40dp"
-    android:layout_marginTop="10dp"
-    android:layout_marginRight="40dp"
-    android:orientation="horizontal">
+      <EditText
+        android:id="@+id/wizard_wifi_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/wizard_wifi_list"
+        android:layout_weight="1"
+        android:background="@android:color/white"
+        android:inputType="text"
+        android:padding="5dp"
+        android:textColor="#000000"
+        android:textSize="18dp"
+        android:visibility="gone" />
 
-    <EditText
-      android:id="@+id/wizard_password"
+      <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/wizard_edit_button"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_centerHorizontal="false"
+        android:layout_gravity="center"
+        android:layout_marginLeft="5dp"
+        android:background="@drawable/editingoff" />
+    </LinearLayout>
+
+    <LinearLayout
+      android:id="@+id/llPassword"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_weight="1"
-      android:background="@color/notification_bg"
-      android:inputType="textPassword"
-      android:padding="5dp"
-      android:textSize="18dp"
-      android:textColor="#000000" />
+      android:layout_below="@id/llWifiName"
+      android:layout_centerHorizontal="true"
+      android:layout_marginLeft="40dp"
+      android:layout_marginTop="10dp"
+      android:layout_marginRight="40dp"
+      android:orientation="horizontal">
 
-    <androidx.appcompat.widget.AppCompatButton
-      android:id="@+id/wizard_look_button"
-      android:layout_width="30dp"
-      android:layout_height="30dp"
-      android:layout_centerHorizontal="false"
-      android:layout_gravity="center"
-      android:layout_marginLeft="5dp"
-      android:background="@drawable/look" />
+      <EditText
+        android:id="@+id/wizard_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@color/notification_bg"
+        android:inputType="textPassword"
+        android:padding="5dp"
+        android:textColor="#000000"
+        android:textSize="18dp" />
 
-  </LinearLayout>
+      <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/wizard_look_button"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_centerHorizontal="false"
+        android:layout_gravity="center"
+        android:layout_marginLeft="5dp"
+        android:background="@drawable/look" />
 
-  <TextView
-    android:id="@+id/wizard_step2_txt1"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_below="@+id/imageView4"
-    android:layout_centerHorizontal="true"
-    android:layout_marginLeft="20dp"
-    android:layout_marginTop="@dimen/distance_default"
-    android:layout_marginRight="20dp"
-    android:gravity="center_horizontal"
-    android:text="@string/wizard_step2_txt1"
-    android:textColor="@android:color/white"
-    android:textSize="18dp" />
+    </LinearLayout>
 
-  <ImageView
-    android:id="@+id/imageView4"
-    android:layout_width="140dp"
-    android:layout_height="140dp"
-    android:layout_alignParentTop="true"
-    android:layout_centerHorizontal="true"
-    android:layout_marginTop="30dp"
-    android:background="@drawable/wifi"
-    tools:ignore="ContentDescription" />
+    <TextView
+      android:id="@+id/wizard_step2_txt1"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@+id/imageView4"
+      android:layout_centerHorizontal="true"
+      android:layout_marginLeft="20dp"
+      android:layout_marginTop="@dimen/distance_default"
+      android:layout_marginRight="20dp"
+      android:gravity="center_horizontal"
+      android:text="@string/wizard_step2_txt1"
+      android:textColor="@android:color/white"
+      android:textSize="18dp" />
 
-</RelativeLayout>
+    <ImageView
+      android:id="@+id/imageView4"
+      android:layout_width="140dp"
+      android:layout_height="140dp"
+      android:layout_alignParentTop="true"
+      android:layout_centerHorizontal="true"
+      android:layout_marginTop="30dp"
+      android:background="@drawable/wifi"
+      tools:ignore="ContentDescription" />
+  </RelativeLayout>
+</ScrollView>
