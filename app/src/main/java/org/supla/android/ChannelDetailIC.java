@@ -267,6 +267,10 @@ public class ChannelDetailIC extends DetailLayout
       timer1.cancel();
       timer1 = null;
     }
+    DownloadImpulseCounterMeasurements dtm = this.dtm;
+    if (dtm != null) {
+      dtm.setDelegate(null);
+    }
 
     chartHelper.persistSpinners(getChannelBase().getFunc(), icSpinnerMaster, icSpinnerSlave);
   }

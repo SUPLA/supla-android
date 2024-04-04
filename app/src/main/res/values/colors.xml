@@ -2,6 +2,7 @@
 <resources>
     <!-- new color definitions start here -->
     <color name="supla_green">#12a71e</color>
+    <color name="supla">#00d151</color>
 
     <color name="primary">@color/supla_green</color>
     <color name="primary_variant">@color/supla</color>
@@ -10,6 +11,8 @@
     <color name="surface">#ffffff</color>
     <color name="background">#F5F6F7</color>
     <color name="on_background">#000000</color>
+    <color name="red_alert">#EB3A28</color>
+    <color name="dialog_scrim">#80F5F6F7</color>
 
     <color name="disabled">#B4B7BA</color>
     <color name="disabledOverlay">#DDFFFFFF</color>
@@ -20,7 +23,8 @@
     <color name="red">#FF0000</color>
     <color name="light_orange">#FFD19A</color>
     <color name="gray">#7E8082</color>
-    <color name="gray_light">#EFEFF0</color>
+    <color name="gray_light">#DCDEE0</color>
+    <color name="gray_lighter">#EFEFF0</color>
     <color name="blue">#007AFF</color>
     <color name="light_blue">#8C9DFF</color>
     <color name="light_green">#B0E0A8</color>
@@ -39,7 +43,6 @@
 
     <color name="item_unselected">#dadbdc</color>
 
-    <color name="dialog_scrim">#80F5F6F7</color>
 
     <!-- Roller shutter -->
     <color name="roller_shutter_window_color">#FFFFFF</color>
@@ -102,10 +105,7 @@
 
     <color name="wake_up_settings_infotitle">#000000</color>
 
-    <color name="red_alert">#EB3A28</color>
-
     <color name="cell_bg_new">@color/surface</color>
-    <color name="supla">#00d151</color>
     <color name="ripple_light">#4400d151</color>
     <color name="ripple_dark">#AB00d151</color>
 
@@ -113,7 +113,7 @@
 
     <color name="layout_background">#F5F6F7</color>
     <color name="field_background">#FFFFFF</color>
-    <color name="segmented_field_background">@color/gray_light</color>
+    <color name="segmented_field_background">@color/gray_lighter</color>
     <color name="button_background">@color/supla_green</color>
 
     <color name="widget_fields_border">#3078801F</color>

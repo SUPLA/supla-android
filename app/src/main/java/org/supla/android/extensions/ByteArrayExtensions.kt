@@ -29,3 +29,9 @@ fun ByteArray.toShort(byteIndices: IntArray): Short {
   byteIndices.sorted().forEachIndexed { index, byte -> bytes[index] = this[byte] }
   return ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN).short
 }
+
+fun ByteArray.toTemperature(vararg byteIndices: Int): Float {
+  val bytes = ByteArray(byteIndices.size)
+  byteIndices.sorted().forEachIndexed { index, byte -> bytes[index] = this[byte] }
+  return toShort(byteIndices).fromSuplaTemperature()
+}

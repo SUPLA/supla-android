@@ -44,7 +44,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
-import org.supla.android.core.ui.theme.grey
+import org.supla.android.core.ui.theme.gray
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -77,8 +77,8 @@ fun TextField(
     unfocusedIndicatorColor = Color.Transparent,
     errorCursorColor = MaterialTheme.colors.error,
     errorIndicatorColor = Color.Transparent,
-    trailingIconColor = MaterialTheme.colors.grey,
-    focusedTrailingIconColor = MaterialTheme.colors.grey
+    trailingIconColor = MaterialTheme.colors.gray,
+    focusedTrailingIconColor = MaterialTheme.colors.gray
   )
 
   val shape = RoundedCornerShape(dimensionResource(id = R.dimen.radius_default))
@@ -105,7 +105,7 @@ fun TextField(
       .background(colors.backgroundColor(enabled).value, shape)
       .border(
         width = 1.dp,
-        color = if (isError) MaterialTheme.colors.error else colorResource(id = R.color.gray_light),
+        color = if (isError) MaterialTheme.colors.error else colorResource(id = R.color.gray_lighter),
         shape = RoundedCornerShape(dimensionResource(id = R.dimen.radius_default))
       ),
     onValueChange = onValueChange,

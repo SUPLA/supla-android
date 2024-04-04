@@ -15,7 +15,6 @@
     <dimen name="icon_small_size">19dp</dimen>
     <dimen name="custom_shadow_height">4dp</dimen>
 
-    <dimen name="button_elevation">4dp</dimen>
     <dimen name="segmented_button_elevation">4dp</dimen>
 
     <!-- Overridden on w380dp. Smaller to small devices to display correct long list items -->

@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="supla_green">#12a71e</color>
-
     <color name="primary">@color/supla_green</color>
     <color name="primary_variant">@color/supla</color>
     <color name="primary_light">#2f3230</color>
@@ -16,7 +14,8 @@
     <color name="separator">#000000</color>
     <color name="old_switch_track">#42d3d2d2</color>
 
-    <color name="gray_light">#3D3D3E</color>
+    <color name="gray_light">#424343</color>
+    <color name="gray_lighter">#3D3D3E</color>
     <color name="light_orange">#cca77b</color>
     <color name="light_blue">#707ecc</color>
     <color name="light_green">#8db386</color>

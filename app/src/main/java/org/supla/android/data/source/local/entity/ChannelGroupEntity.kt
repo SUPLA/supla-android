@@ -40,6 +40,8 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE
+import org.supla.android.usecases.group.totalvalue.GroupTotalValue
+import org.supla.android.usecases.group.totalvalue.GroupValue
 
 @Entity(
   tableName = TABLE_NAME,
@@ -73,6 +75,9 @@ data class ChannelGroupEntity(
   @ColumnInfo(name = COLUMN_POSITION, defaultValue = "0") val position: Int,
   @ColumnInfo(name = COLUMN_PROFILE_ID) override val profileId: Long
 ) : ChannelBase {
+
+  val groupTotalValues: List<GroupValue>
+    get() = GroupTotalValue.parse(function, totalValue)
 
   fun getActivePercentage(idx: Int = 0): Int {
     totalValue?.let { totalValue ->

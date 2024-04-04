@@ -33,7 +33,7 @@ import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.features.details.detailbase.standarddetail.DetailPage
 import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
-import org.supla.android.features.details.rollershutterdetail.RollerShutterDetailFragment
+import org.supla.android.features.details.windowdetail.WindowDetailFragment
 import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.lists.BaseListViewModel
@@ -41,7 +41,7 @@ import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.channel.*
 import org.supla.android.usecases.details.LegacyDetailType
 import org.supla.android.usecases.details.ProvideDetailTypeUseCase
-import org.supla.android.usecases.details.RollerShutterDetailType
+import org.supla.android.usecases.details.WindowDetailType
 import org.supla.android.usecases.group.CreateProfileGroupsListUseCase
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
 import org.supla.android.usecases.location.CollapsedFlag
@@ -170,7 +170,7 @@ class GroupListViewModel @Inject constructor(
 
     when (val detailType = provideDetailTypeUseCase(group)) {
       is LegacyDetailType -> sendEvent(GroupListViewEvent.OpenLegacyDetails(group.remoteId, detailType))
-      is RollerShutterDetailType -> sendEvent(GroupListViewEvent.OpenRollerShutterDetail(ItemBundle.from(group), detailType.pages))
+      is WindowDetailType -> sendEvent(GroupListViewEvent.OpenRollerShutterDetail(ItemBundle.from(group), detailType.pages))
       else -> {} // no action
     }
   }
@@ -185,7 +185,7 @@ sealed class GroupListViewEvent : ViewEvent {
   data class NavigateToPrivateCloud(val url: Uri) : GroupListViewEvent()
 
   data class OpenRollerShutterDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) :
-    OpenStandardDetail(R.id.roller_shutter_detail_fragment, RollerShutterDetailFragment.bundle(itemBundle, pages.toTypedArray()))
+    OpenStandardDetail(R.id.window_detail_fragment, WindowDetailFragment.bundle(itemBundle, pages.toTypedArray()))
 
   abstract class OpenStandardDetail(
     @IdRes val fragmentId: Int,

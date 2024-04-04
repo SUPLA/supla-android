@@ -58,6 +58,7 @@ private val DISABLED_OVERLAY = Color(0xDDFFFFFF)
 
 @Composable
 fun UpDownControlButton(
+  modifier: Modifier = Modifier,
   disabled: Boolean = false,
   animationMode: AnimationMode = AnimationMode.Pressed,
   upContent: @Composable BoxScope.(text: Color) -> Unit,
@@ -72,7 +73,7 @@ fun UpDownControlButton(
     val downHandler = downEventHandler?.let { it() }
 
     Column(
-      modifier = Modifier
+      modifier = modifier
     ) {
       UpButton(
         disabled = disabled,
@@ -194,14 +195,17 @@ private fun ControlButton(
   val colorDisabled = colorResource(id = R.color.disabled)
 
   val upInteractionSource = remember { MutableInteractionSource() }
-
-  LaunchedEffect(upInteractionSource) {
+  LaunchedEffect(upInteractionSource, disabled) {
     launch {
       upInteractionSource.interactions.collect { interaction ->
         if (interaction is PressInteraction.Press) {
-          onTouchDown?.let { it() }
+          if (!disabled) {
+            onTouchDown?.let { it() }
+          }
         } else {
-          onTouchUp?.let { it() }
+          if (!disabled) {
+            onTouchUp?.let { it() }
+          }
         }
       }
     }

@@ -39,7 +39,7 @@ import androidx.compose.ui.unit.dp
 import org.supla.android.R
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.core.ui.theme.calendarCaption
-import org.supla.android.core.ui.theme.grey
+import org.supla.android.core.ui.theme.gray
 import org.supla.android.core.ui.theme.primaryLight
 import org.supla.android.data.model.chart.DateRange
 import org.supla.android.data.model.general.RangeValueType
@@ -357,7 +357,7 @@ private fun CalendarHourTextField(
   Text(
     text = label.uppercase(),
     style = MaterialTheme.typography.caption,
-    color = MaterialTheme.colors.grey,
+    color = MaterialTheme.colors.gray,
     modifier = Modifier.padding(
       start = horizontalPadding.plus(12.dp),
       top = dimensionResource(id = R.dimen.distance_default),

@@ -22,9 +22,9 @@ import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.util.Base64;
+import androidx.annotation.NonNull;
 import java.nio.ByteBuffer;
 import org.supla.android.data.source.local.entity.ChannelValueEntity;
-import org.supla.android.data.source.local.view.ChannelGroupValueView;
 import org.supla.android.data.source.remote.thermostat.ThermostatValue;
 import org.supla.android.lib.DigiglassValue;
 import org.supla.android.lib.RollerShutterValue;
@@ -123,25 +123,6 @@ public class ChannelValue extends DbItem {
     setSubValueType(
         cursor.getShort(cursor.getColumnIndex(ChannelValueEntity.COLUMN_SUB_VALUE_TYPE)));
     setProfileId(cursor.getLong(cursor.getColumnIndex(ChannelValueEntity.COLUMN_PROFILE_ID)));
-  }
-
-  @SuppressLint("Range")
-  public void AssignCursorDataFromGroupView(Cursor cursor) {
-
-    setId(cursor.getLong(cursor.getColumnIndex(ChannelGroupValueView.COLUMN_ID)));
-    setChannelId(
-        cursor.getInt(cursor.getColumnIndex(ChannelGroupValueView.COLUMN_CHANNEL_REMOTE_ID)));
-    setOnLine(
-        cursor.getInt(cursor.getColumnIndex(ChannelGroupValueView.COLUMN_CHANNEL_ONLINE)) != 0);
-    setChannelStringValue(
-        cursor.getString(cursor.getColumnIndex(ChannelGroupValueView.COLUMN_CHANNEL_VALUE)));
-    setChannelStringSubValue(
-        cursor.getString(cursor.getColumnIndex(ChannelGroupValueView.COLUMN_CHANNEL_SUB_VALUE)));
-    setSubValueType(
-        cursor.getShort(
-            cursor.getColumnIndex(ChannelGroupValueView.COLUMN_CHANNEL_SUB_VALUE_TYPE)));
-    setProfileId(
-        cursor.getLong(cursor.getColumnIndex(ChannelGroupValueView.COLUMN_CHANNEL_PROFILE_ID)));
   }
 
   public boolean getOnLine() {
@@ -423,6 +404,7 @@ public class ChannelValue extends DbItem {
     return ThermostatValue.Companion.from(getOnLine(), Value);
   }
 
+  @NonNull
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();

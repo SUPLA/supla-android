@@ -42,7 +42,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
-import org.supla.android.core.ui.theme.grey
+import org.supla.android.core.ui.theme.gray
 import org.supla.android.features.details.thermostatdetail.general.data.ThermostatProgramInfo
 
 @Composable
@@ -89,7 +89,7 @@ private fun ProgramInfoLabel(label: String) =
     modifier = Modifier.defaultMinSize(minWidth = 80.dp),
     text = label.uppercase(),
     style = MaterialTheme.typography.body2,
-    color = MaterialTheme.colors.grey
+    color = MaterialTheme.colors.gray
   )
 
 @Composable

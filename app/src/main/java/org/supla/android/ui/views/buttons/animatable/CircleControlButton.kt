@@ -74,13 +74,14 @@ class CircleControlButtonView @JvmOverloads constructor(
   @Composable
   override fun Content() {
     SuplaTheme {
-      CircleControlButton(icon, text, type = type, onClick = clickListener, disabled = disabled)
+      CircleControlButton(icon = icon, text = text, type = type, onClick = clickListener, disabled = disabled)
     }
   }
 }
 
 @Composable
 fun CircleControlButton(
+  modifier: Modifier = Modifier,
   icon: Bitmap? = null,
   text: String? = null,
   iconPainter: Painter? = null,
@@ -94,7 +95,7 @@ fun CircleControlButton(
   iconColor: Color? = null
 ) {
   SimpleButtonColorAnimatable(
-    modifier = Modifier.width(width),
+    modifier = modifier.width(width),
     type = type,
     height = height,
     padding = padding,

@@ -40,8 +40,8 @@
     android:name="org.supla.android.features.details.gpmdetail.GpmDetailFragment" />
 
   <fragment
-    android:id="@+id/roller_shutter_detail_fragment"
-    android:name="org.supla.android.features.details.rollershutterdetail.RollerShutterDetailFragment" />
+    android:id="@+id/window_detail_fragment"
+    android:name="org.supla.android.features.details.windowdetail.WindowDetailFragment" />
 
   <fragment
     android:id="@+id/notifications_log_fragment"

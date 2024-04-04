@@ -110,5 +110,9 @@ object Deps {
             const val JUnitExtension = "androidx.test.ext:junit:${Versions.Testing.Androidx.JUnitExtension}"
             const val ArchCore = "androidx.arch.core:core-testing:${Versions.Testing.Androidx.ArchCore}"
         }
+
+        object Kotlin {
+            const val Reflect = "org.jetbrains.kotlin:kotlin-reflect:${Versions.Kotlin}"
+        }
     }
 }

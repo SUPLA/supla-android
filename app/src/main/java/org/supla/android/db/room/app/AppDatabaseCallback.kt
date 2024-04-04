@@ -23,10 +23,10 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import org.supla.android.Preferences
 import org.supla.android.Trace
 import org.supla.android.data.source.local.entity.ProfileEntity
-import org.supla.android.data.source.local.view.ChannelGroupValueView
 import org.supla.android.data.source.local.view.ChannelView
 import org.supla.android.data.source.local.view.SceneView
 import org.supla.android.db.room.SqlExecutor
+import org.supla.android.db.room.app.migrations.CHANNEL_GROUP_VALUE_VIEW_NAME
 import org.supla.android.extensions.TAG
 import org.supla.android.profile.ProfileMigrator
 import javax.inject.Inject
@@ -42,7 +42,6 @@ class AppDatabaseCallback @Inject constructor(
 
   override fun onCreate(db: SupportSQLiteDatabase) {
     execSQL(db, SceneView.SQL)
-    execSQL(db, ChannelGroupValueView.SQL)
     execSQL(db, ChannelView.SQL)
   }
 
@@ -67,10 +66,9 @@ class AppDatabaseCallback @Inject constructor(
     preferences.isAnyAccountRegistered = false
 
     silentSql(db, "DROP VIEW ${SceneView.NAME}")
-    silentSql(db, "DROP VIEW ${ChannelGroupValueView.NAME}")
+    silentSql(db, "DROP VIEW $CHANNEL_GROUP_VALUE_VIEW_NAME")
     silentSql(db, "DROP VIEW ${ChannelView.NAME}")
     execSQL(db, SceneView.SQL)
-    execSQL(db, ChannelGroupValueView.SQL)
     execSQL(db, ChannelView.SQL)
   }
 
