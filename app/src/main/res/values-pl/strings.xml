@@ -634,7 +634,7 @@
   <string name="notifications_log_date">Data:</string>
   <string name="widget_warning_battery_limitations">Aplikacja ma włączone ograniczenia w wykorzystaniu baterii. Widżet może nie działać prawidłowo. Przejdź do ustawień, aby zmienić na brak ograniczeń.</string>
   <string name="notification_deleted">Usunięto</string>
-  <string name="settings_show_labels">Pokazuj labelki w dolnym menu</string>
+  <string name="settings_show_labels">Pokazuj etykiety w dolnym menu</string>
   <string name="main_no_entries">Pusto</string>
   <string name="groups_empty_list_button">Dodaj grupę na Supla Cloud</string>
   <string name="scenes_empty_list_button">Dodaj scenę na Supla Cloud</string>
@@ -644,6 +644,10 @@
   <string name="roller_shutter_calibration_needed">Wymagana kalibracja</string>
   <string name="cfg_night_mode">Tryb nocny</string>
   <string name="menu_device_catalog">Katalog urządzeń</string>
+  <string name="facade_blind_slat_tilt">Nachylenie:</string>
+  <string name="channel_caption_facade_blinds">Żaluzja fasadowa</string>
+  <string name="channel_loading_error">Błąd ładowania kanału</string>
+  <string name="facade_blinds_no_tilt">Brak konfiguracji</string>
 
   <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
     <item quantity="one">włączone</item>

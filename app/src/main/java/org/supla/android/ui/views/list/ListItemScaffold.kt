@@ -60,7 +60,7 @@ import kotlinx.coroutines.delay
 import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
-import org.supla.android.core.ui.theme.grey
+import org.supla.android.core.ui.theme.gray
 import org.supla.android.core.ui.theme.listItemCaption
 import org.supla.android.extensions.differenceInSeconds
 import org.supla.android.extensions.preferences
@@ -273,7 +273,7 @@ private fun ListItemTimerText(date: Date, scale: Float) {
     Text(
       text = it,
       style = MaterialTheme.typography.body2.copy(fontSize = if (scale < 1) fontSize.times(0.8f) else fontSize),
-      color = MaterialTheme.colors.grey,
+      color = MaterialTheme.colors.gray,
       modifier = Modifier
         .align(Alignment.TopEnd)
         .padding(top = Distance.small.times(scale), end = Distance.small)

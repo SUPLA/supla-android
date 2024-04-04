@@ -27,6 +27,7 @@ import org.supla.android.db.ChannelGroup
 import org.supla.android.db.ChannelValue
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_ALARMARMAMENTSENSOR
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK
@@ -72,7 +73,8 @@ class GetChannelStateUseCase @Inject constructor() {
       SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK -> getOpenClose(value.subValueHi)
 
       SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER,
-      SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW ->
+      SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW,
+      SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND ->
         if (value.rollerShutterClosed) ChannelState(ChannelState.Value.CLOSED) else ChannelState(ChannelState.Value.OPEN)
 
       SUPLA_CHANNELFNC_OPENSENSOR_GATEWAY,

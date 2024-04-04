@@ -22,7 +22,6 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import org.supla.android.R
 import org.supla.android.features.details.gpmdetail.history.GpmHistoryDetailFragment
 import org.supla.android.features.details.legacydetail.LegacyDetailFragment
-import org.supla.android.features.details.rollershutterdetail.general.RollerShutterGeneralFragment
 import org.supla.android.features.details.switchdetail.general.SwitchGeneralFragment
 import org.supla.android.features.details.switchdetail.timer.TimersDetailFragment
 import org.supla.android.features.details.thermometerdetail.history.ThermometerHistoryDetailFragment
@@ -30,6 +29,9 @@ import org.supla.android.features.details.thermostatdetail.general.ThermostatGen
 import org.supla.android.features.details.thermostatdetail.history.ThermostatHistoryDetailFragment
 import org.supla.android.features.details.thermostatdetail.schedule.ScheduleDetailFragment
 import org.supla.android.features.details.thermostatdetail.timer.TimerDetailFragment
+import org.supla.android.features.details.windowdetail.facadeblinds.FacadeBlindsFragment
+import org.supla.android.features.details.windowdetail.rollershutter.RollerShutterFragment
+import org.supla.android.features.details.windowdetail.roofwindow.RoofWindowFragment
 import org.supla.android.usecases.details.LegacyDetailType
 
 class StandardDetailPagerAdapter(
@@ -64,7 +66,9 @@ class StandardDetailPagerAdapter(
 
     DetailPage.GPM_HISTORY -> GpmHistoryDetailFragment().apply { arguments = GpmHistoryDetailFragment.bundle(itemBundle.remoteId) }
 
-    DetailPage.ROLLER_SHUTTER -> RollerShutterGeneralFragment().apply { arguments = RollerShutterGeneralFragment.bundle(itemBundle) }
+    DetailPage.ROLLER_SHUTTER -> RollerShutterFragment().apply { arguments = RollerShutterFragment.bundle(itemBundle) }
+    DetailPage.ROOF_WINDOW -> RoofWindowFragment().apply { arguments = RoofWindowFragment.bundle(itemBundle) }
+    DetailPage.FACADE_BLINDS -> FacadeBlindsFragment().apply { arguments = FacadeBlindsFragment.bundle(itemBundle) }
   }
 }
 
@@ -87,6 +91,8 @@ enum class DetailPage(val menuId: Int) {
   // GPM
   GPM_HISTORY(R.id.detail_history),
 
-  // Roller shutter
-  ROLLER_SHUTTER(R.id.detail_general)
+  // Window details
+  ROLLER_SHUTTER(R.id.detail_general),
+  ROOF_WINDOW(R.id.detail_general),
+  FACADE_BLINDS(R.id.detail_general)
 }

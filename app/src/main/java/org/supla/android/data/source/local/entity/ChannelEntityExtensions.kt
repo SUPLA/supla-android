@@ -61,4 +61,5 @@ fun ChannelEntity.isThermometer() =
 
 fun ChannelEntity.isRollerShutter() =
   function == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER ||
-    function == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW
+    function == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW ||
+    function == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND

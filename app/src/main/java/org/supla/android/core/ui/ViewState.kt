@@ -19,8 +19,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import android.content.Context
 import android.graphics.Bitmap
+import org.supla.android.events.LoadingTimeoutManager
 
 open class ViewState
+
+open class LoadableViewState(
+  open val loadingState: LoadingTimeoutManager.LoadingState = LoadingTimeoutManager.LoadingState()
+) : ViewState()
 
 typealias BitmapProvider = (context: Context) -> Bitmap?
 typealias StringProvider = (context: Context) -> String

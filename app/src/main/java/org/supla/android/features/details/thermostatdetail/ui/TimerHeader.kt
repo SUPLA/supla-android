@@ -34,7 +34,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
 import org.supla.android.core.ui.StringProvider
-import org.supla.android.core.ui.theme.grey
+import org.supla.android.core.ui.theme.gray
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.extensions.guardLet
 import org.supla.android.extensions.valuesFormatter
@@ -97,7 +97,7 @@ fun TimerHeader(state: TimerHeaderState, modifier: Modifier = Modifier) {
     Text(
       text = state.endDateText(LocalContext.current).uppercase(),
       style = MaterialTheme.typography.body2,
-      color = MaterialTheme.colors.grey
+      color = MaterialTheme.colors.gray
     )
     state.currentStateIcon?.let {
       Icon(

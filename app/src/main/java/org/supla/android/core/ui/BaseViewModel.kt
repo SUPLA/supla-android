@@ -88,6 +88,10 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
     return viewState.value
   }
 
+  protected open fun setLoading(loading: Boolean) {
+    throw IllegalStateException("Using `attachLoadable()` needs to override this method!")
+  }
+
   open fun onViewCreated() {}
 
   fun Disposable.disposeBySelf() {
@@ -157,6 +161,19 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
     return subscribeOn(schedulers.io)
       .observeOn(schedulers.ui)
       .doOnError { Trace.e(TAG, errorMessage("Observable", calledAt, it.message), it) }
+  }
+
+  fun <T> Maybe<T>.attachLoadable(): Maybe<T> {
+    return attachSilent()
+      .doOnSubscribe { setLoading(true) }
+      .doOnTerminate { setLoading(false) }
+  }
+
+  fun <T : Any> Observable<T>.attachLoadable(): Observable<T> {
+    return attachSilent()
+      .doOnSubscribe { setLoading(true) }
+      .doOnTerminate { setLoading(false) }
+      .doOnNext { setLoading(false) }
   }
 
   protected fun defaultErrorHandler(method: String): (Throwable) -> Unit = { throwable ->

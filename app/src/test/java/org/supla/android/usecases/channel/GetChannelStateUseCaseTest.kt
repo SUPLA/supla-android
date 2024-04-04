@@ -26,6 +26,7 @@ import org.mockito.InjectMocks
 import org.mockito.junit.MockitoJUnitRunner
 import org.supla.android.data.model.general.ChannelState
 import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK
@@ -106,6 +107,32 @@ class GetChannelStateUseCaseTest {
   fun `should get open state for roller shutter`() {
     // given
     val function = SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW
+    val stateWrapper = mockState(rollerShutterClosed = false)
+
+    // when
+    val state = useCase(function, stateWrapper)
+
+    // then
+    assertThat(state.value).isEqualTo(ChannelState.Value.OPEN)
+  }
+
+  @Test
+  fun `should get closed state for facade blind`() {
+    // given
+    val function = SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND
+    val stateWrapper = mockState(rollerShutterClosed = true)
+
+    // when
+    val state = useCase(function, stateWrapper)
+
+    // then
+    assertThat(state.value).isEqualTo(ChannelState.Value.CLOSED)
+  }
+
+  @Test
+  fun `should get open state for facade blind`() {
+    // given
+    val function = SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND
     val stateWrapper = mockState(rollerShutterClosed = false)
 
     // when

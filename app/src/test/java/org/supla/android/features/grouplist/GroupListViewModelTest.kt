@@ -35,8 +35,8 @@ import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.channel.*
 import org.supla.android.usecases.details.ProvideDetailTypeUseCase
-import org.supla.android.usecases.details.RollerShutterDetailType
 import org.supla.android.usecases.details.ThermometerDetailType
+import org.supla.android.usecases.details.WindowDetailType
 import org.supla.android.usecases.group.CreateProfileGroupsListUseCase
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
 import org.supla.android.usecases.location.CollapsedFlag
@@ -274,7 +274,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     every { groupData.function } returns function
     every { groupData.isOnline() } returns false
 
-    val detailType = RollerShutterDetailType(listOf(DetailPage.ROLLER_SHUTTER))
+    val detailType = WindowDetailType(listOf(DetailPage.ROLLER_SHUTTER))
     whenever(provideDetailTypeUseCase(groupData)).thenReturn(detailType)
 
     whenever(findGroupByRemoteIdUseCase(remoteId)).thenReturn(Maybe.just(groupData))

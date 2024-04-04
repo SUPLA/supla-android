@@ -168,7 +168,7 @@ private fun ScheduleProgramsRow(content: @Composable RowScope.() -> Unit) =
   FlowRow(
     modifier = Modifier
       .fillMaxWidth()
-      .background(color = colorResource(id = R.color.gray_light))
+      .background(color = colorResource(id = R.color.gray_lighter))
       .padding(
         horizontal = dimensionResource(id = R.dimen.distance_default),
         vertical = dimensionResource(id = R.dimen.distance_tiny)

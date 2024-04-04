@@ -571,6 +571,10 @@
   <string name="roller_shutter_calibration_needed">Kalibrierung nötig</string>
   <string name="cfg_night_mode">Nacht-Modus</string>
   <string name="menu_device_catalog">Gerätekatalog</string>
+  <string name="facade_blind_slat_tilt">Neigung:</string>
+  <string name="channel_caption_facade_blinds">Fassadenjalousien</string>
+  <string name="channel_loading_error">Ladefehler</string>
+  <string name="facade_blinds_no_tilt">Fehlende Konfiguration</string>
   <plurals name="details_timer_info_on">
     <item quantity="one">eingeschaltet</item>
     <item quantity="other">eingeschaltet</item>

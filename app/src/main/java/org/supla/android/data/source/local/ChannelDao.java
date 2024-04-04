@@ -34,7 +34,6 @@ import org.supla.android.data.source.local.entity.ChannelGroupRelationEntity;
 import org.supla.android.data.source.local.entity.ChannelValueEntity;
 import org.supla.android.data.source.local.entity.LocationEntity;
 import org.supla.android.data.source.local.entity.UserIconEntity;
-import org.supla.android.data.source.local.view.ChannelGroupValueView;
 import org.supla.android.data.source.local.view.ChannelView;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelExtendedValue;
@@ -56,25 +55,6 @@ public class ChannelDao extends BaseDao {
         ChannelView.INSTANCE.getALL_COLUMNS(),
         ChannelView.NAME,
         key(ChannelView.COLUMN_CHANNEL_REMOTE_ID, channelId),
-        key(ChannelValueEntity.COLUMN_PROFILE_ID, getCachedProfileId()));
-  }
-
-  public ChannelValue getChannelValue(int channelId) {
-    String[] projection = {
-      ChannelValueEntity.COLUMN_ID,
-      ChannelValueEntity.COLUMN_CHANNEL_REMOTE_ID,
-      ChannelValueEntity.COLUMN_ONLINE,
-      ChannelValueEntity.COLUMN_SUB_VALUE_TYPE,
-      ChannelValueEntity.COLUMN_SUB_VALUE,
-      ChannelValueEntity.COLUMN_VALUE,
-      ChannelValueEntity.COLUMN_PROFILE_ID
-    };
-
-    return getItem(
-        ChannelValue::new,
-        projection,
-        ChannelValueEntity.TABLE_NAME,
-        key(ChannelValueEntity.COLUMN_CHANNEL_REMOTE_ID, channelId),
         key(ChannelValueEntity.COLUMN_PROFILE_ID, getCachedProfileId()));
   }
 
@@ -136,36 +116,6 @@ public class ChannelDao extends BaseDao {
         ChannelExtendedValueEntity.TABLE_NAME,
         key(ChannelExtendedValueEntity.COLUMN_CHANNEL_ID, channelId),
         key(ChannelValueEntity.COLUMN_PROFILE_ID, getCachedProfileId()));
-  }
-
-  public Cursor getChannelGroupValueViewEntryCursor() {
-    return read(
-        sqLiteDatabase -> {
-          String[] projection = {
-            ChannelGroupValueView.COLUMN_ID,
-            ChannelGroupValueView.COLUMN_GROUP_FUNCTION,
-            ChannelGroupValueView.COLUMN_GROUP_REMOTE_ID,
-            ChannelGroupValueView.COLUMN_CHANNEL_REMOTE_ID,
-            ChannelGroupValueView.COLUMN_CHANNEL_ONLINE,
-            ChannelGroupValueView.COLUMN_CHANNEL_SUB_VALUE_TYPE,
-            ChannelGroupValueView.COLUMN_CHANNEL_SUB_VALUE,
-            ChannelGroupValueView.COLUMN_CHANNEL_VALUE,
-            ChannelGroupValueView.COLUMN_CHANNEL_PROFILE_ID
-          };
-
-          String selection = ChannelGroupValueView.COLUMN_CHANNEL_PROFILE_ID + " = ?";
-
-          String[] selectionArgs = {String.valueOf(getCachedProfileId())};
-
-          return sqLiteDatabase.query(
-              ChannelGroupValueView.NAME,
-              projection,
-              selection,
-              selectionArgs,
-              null,
-              null,
-              ChannelGroupValueView.COLUMN_GROUP_REMOTE_ID);
-        });
   }
 
   public void insert(Channel channel) {
@@ -235,12 +185,9 @@ public class ChannelDao extends BaseDao {
         key(ChannelValueEntity.COLUMN_PROFILE_ID, channelGroupRelation.getProfileId()));
   }
 
-  public int getChannelCountForLocation(int locationId) {
-    return getChannelCount(key(ChannelEntity.COLUMN_LOCATION_ID, locationId));
-  }
-
   public int getChannelCount() {
-    return getChannelCount(null);
+    return getCount(
+        ChannelEntity.TABLE_NAME, null, key(ChannelEntity.COLUMN_PROFILE_ID, getCachedProfileId()));
   }
 
   public boolean setChannelsVisible(int visible, int whereVisible) {
@@ -896,11 +843,6 @@ public class ChannelDao extends BaseDao {
 
           return sqLiteDatabase.rawQuery(sql, null);
         });
-  }
-
-  private int getChannelCount(@Nullable Key<?> key) {
-    return getCount(
-        ChannelEntity.TABLE_NAME, key, key(ChannelEntity.COLUMN_PROFILE_ID, getCachedProfileId()));
   }
 
   private boolean setVisible(String table, int visible, Key<Integer> key) {

@@ -19,6 +19,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import androidx.room.Dao
 import androidx.room.Query
+import androidx.room.Update
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 import org.supla.android.data.source.local.entity.ChannelGroupEntity
@@ -141,6 +143,7 @@ interface ChannelGroupDao {
               AND value.${ChannelValueEntity.COLUMN_PROFILE_ID} = relation.${ChannelGroupRelationEntity.COLUMN_PROFILE_ID}
           WHERE relation.${ChannelGroupRelationEntity.COLUMN_GROUP_ID} = channel_group.$COLUMN_REMOTE_ID
             AND relation.${ChannelGroupRelationEntity.COLUMN_PROFILE_ID} = channel_group.$COLUMN_PROFILE_ID
+            AND relation.${ChannelGroupRelationEntity.COLUMN_VISIBLE} > 0
             AND value.${ChannelValueEntity.COLUMN_ONLINE} = 1
           GROUP BY relation.${ChannelGroupRelationEntity.COLUMN_GROUP_ID}
         ) channel_online_count,
@@ -149,6 +152,7 @@ interface ChannelGroupDao {
           FROM ${ChannelGroupRelationEntity.TABLE_NAME} relation
           WHERE relation.${ChannelGroupRelationEntity.COLUMN_GROUP_ID} = channel_group.$COLUMN_REMOTE_ID
             AND relation.${ChannelGroupRelationEntity.COLUMN_PROFILE_ID} = channel_group.$COLUMN_PROFILE_ID
+            AND relation.${ChannelGroupRelationEntity.COLUMN_VISIBLE} > 0
           GROUP BY relation.${ChannelGroupRelationEntity.COLUMN_GROUP_ID}
         ) channel_count
       FROM $TABLE_NAME channel_group
@@ -156,4 +160,7 @@ interface ChannelGroupDao {
     """
   )
   fun findGroupOnlineCount(groupId: Long): Maybe<GroupOnlineSummary>
+
+  @Update
+  fun update(groups: List<ChannelGroupEntity>): Completable
 }

@@ -23,9 +23,8 @@ import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
 import org.supla.android.data.source.remote.thermostat.SuplaThermostatFlag.HEAT_OR_COOL
-import org.supla.android.extensions.fromSuplaTemperature
-import org.supla.android.extensions.toShort
 import org.supla.android.extensions.toShortVararg
+import org.supla.android.extensions.toTemperature
 import org.supla.android.ui.lists.data.IssueIconType
 
 @Suppress("DataClassPrivateConstructor")
@@ -96,10 +95,4 @@ data class ThermostatValue private constructor(
 data class ThermostatState(val value: Short) {
   fun isOn() = value > 0
   fun isOff() = value.toInt() == 0
-}
-
-private fun ByteArray.toTemperature(vararg byteIndices: Int): Float {
-  val bytes = ByteArray(byteIndices.size)
-  byteIndices.sorted().forEachIndexed { index, byte -> bytes[index] = this[byte] }
-  return toShort(byteIndices).fromSuplaTemperature()
 }

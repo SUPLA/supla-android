@@ -34,13 +34,11 @@ import org.supla.android.data.source.local.ChannelDao;
 import org.supla.android.data.source.local.LocationDao;
 import org.supla.android.data.source.local.entity.ChannelGroupEntity;
 import org.supla.android.data.source.local.entity.ChannelGroupRelationEntity;
-import org.supla.android.data.source.local.view.ChannelGroupValueView;
 import org.supla.android.data.source.local.view.ChannelView;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelExtendedValue;
 import org.supla.android.db.ChannelGroup;
 import org.supla.android.db.ChannelGroupRelation;
-import org.supla.android.db.ChannelValue;
 import org.supla.android.db.Location;
 import org.supla.android.lib.SuplaChannelExtendedValue;
 import org.supla.android.lib.SuplaChannelGroup;
@@ -173,57 +171,6 @@ public class DefaultChannelRepository implements ChannelRepository {
       return true;
     }
     return false;
-  }
-
-  @Override
-  @SuppressLint("Range")
-  public List<Integer> updateAllChannelGroups() {
-    ArrayList<Integer> result = new ArrayList<>();
-
-    Cursor c = channelDao.getChannelGroupValueViewEntryCursor();
-    ChannelGroup channelGroup = null;
-    if (c.moveToFirst()) {
-      do {
-        int groupId = c.getInt(c.getColumnIndex(ChannelGroupValueView.COLUMN_GROUP_REMOTE_ID));
-
-        if (channelGroup == null) {
-          channelGroup = getChannelGroup(groupId);
-          if (channelGroup == null) {
-            break;
-          }
-
-          channelGroup.resetBuffer();
-        }
-
-        if (channelGroup.getGroupId() == groupId) {
-          ChannelValue val = new ChannelValue();
-          val.AssignCursorDataFromGroupView(c);
-          channelGroup.addValueToBuffer(val);
-        }
-
-        if (!c.isLast()) {
-          c.moveToNext();
-          groupId = c.getInt(c.getColumnIndex(ChannelGroupValueView.COLUMN_GROUP_REMOTE_ID));
-          c.moveToPrevious();
-        }
-
-        if (c.isLast() || channelGroup.getGroupId() != groupId) {
-          if (channelGroup.DiffWithBuffer()) {
-            channelGroup.assignBuffer();
-            channelDao.update(channelGroup);
-            result.add(channelGroup.getGroupId());
-          }
-
-          if (!c.isLast()) {
-            channelGroup = null;
-          }
-        }
-
-      } while (c.moveToNext());
-    }
-    c.close();
-
-    return result;
   }
 
   @Override

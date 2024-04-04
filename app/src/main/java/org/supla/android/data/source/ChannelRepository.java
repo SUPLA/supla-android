@@ -46,8 +46,6 @@ public interface ChannelRepository {
 
   boolean updateChannelGroupRelation(SuplaChannelGroupRelation suplaChannelGroupRelation);
 
-  List<Integer> updateAllChannelGroups();
-
   int getChannelCount();
 
   boolean setChannelsVisible(int visible, int whereVisible);

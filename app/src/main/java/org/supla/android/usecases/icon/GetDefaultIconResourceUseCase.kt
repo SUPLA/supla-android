@@ -38,6 +38,7 @@ import org.supla.android.usecases.icon.producers.DimmerAndRgbIconResourceProduce
 import org.supla.android.usecases.icon.producers.DimmerIconResourceProducer
 import org.supla.android.usecases.icon.producers.DoorIconResourceProducer
 import org.supla.android.usecases.icon.producers.ElectricityMeterIconResourceProducer
+import org.supla.android.usecases.icon.producers.FacadeBlindIconResourceProducer
 import org.supla.android.usecases.icon.producers.GarageDoorIconResourceProducer
 import org.supla.android.usecases.icon.producers.GateIconResourceProducer
 import org.supla.android.usecases.icon.producers.GatewayIconResourceProducer
@@ -72,6 +73,7 @@ class GetDefaultIconResourceUseCase @Inject constructor() {
     DoorIconResourceProducer(),
     RollerShutterIconResourceProducer(),
     RoofWindowIconResourceProducer(),
+    FacadeBlindIconResourceProducer(),
     PowerSwitchIconResourceProducer(),
     LightSwitchIconResourceProducer(),
     StaircaseTimerIconResourceProducer(),

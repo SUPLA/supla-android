@@ -74,6 +74,7 @@ import org.supla.android.usecases.channelconfig.InsertChannelConfigUseCase;
 import org.supla.android.usecases.channelrelation.DeleteRemovableChannelRelationsUseCase;
 import org.supla.android.usecases.channelrelation.InsertChannelRelationForProfileUseCase;
 import org.supla.android.usecases.channelrelation.MarkChannelRelationsAsRemovableUseCase;
+import org.supla.android.usecases.group.UpdateChannelGroupTotalValueUseCase;
 import org.supla.android.usecases.icon.LoadUserIconsIntoCacheUseCase;
 
 @SuppressWarnings("unused")
@@ -117,6 +118,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   private final MeasurementsDatabase measurementsDatabase;
   private final ProfileIdHolder profileIdHolder;
   private final LoadUserIconsIntoCacheUseCase loadUserIconsIntoCacheUseCase;
+  private final UpdateChannelGroupTotalValueUseCase updateChannelGroupTotalValueUseCase;
 
   public SuplaClient(
       Context context, String oneTimePassword, SuplaClientDependencies dependencies) {
@@ -142,6 +144,8 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     this.measurementsDatabase = dependencies.getMeasurementsDatabase();
     this.profileIdHolder = dependencies.getProfileIdHolder();
     this.loadUserIconsIntoCacheUseCase = dependencies.getLoadUserIconsIntoCacheUseCase();
+    this.updateChannelGroupTotalValueUseCase =
+        dependencies.getUpdateChannelGroupTotalValueUseCase();
   }
 
   public static SuplaRegisterError getLastRegisterError() {
@@ -1091,7 +1095,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   }
 
   private void onChannelGroupValueChanged() {
-    List<Integer> groupIds = DbH.updateChannelGroups();
+    List<Integer> groupIds = updateChannelGroupTotalValueUseCase.invoke().blockingGet();
     for (int groupId : groupIds) {
       onDataChanged(0, groupId);
     }

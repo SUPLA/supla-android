@@ -23,6 +23,7 @@ import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.features.details.detailbase.standarddetail.DetailPage
 import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS
 import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL
@@ -58,9 +59,12 @@ class ProvideDetailTypeUseCase @Inject constructor() {
     SUPLA_CHANNELFNC_RGBLIGHTING ->
       LegacyDetailType.RGBW
 
-    SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER,
+    SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER ->
+      WindowDetailType(listOf(DetailPage.ROLLER_SHUTTER))
     SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW ->
-      RollerShutterDetailType(listOf(DetailPage.ROLLER_SHUTTER))
+      WindowDetailType(listOf(DetailPage.ROOF_WINDOW))
+    SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND ->
+      WindowDetailType(listOf(DetailPage.FACADE_BLINDS))
 
     SUPLA_CHANNELFNC_LIGHTSWITCH,
     SUPLA_CHANNELFNC_POWERSWITCH,
@@ -159,6 +163,6 @@ data class GpmDetailType(
   val pages: List<DetailPage>
 ) : DetailType
 
-data class RollerShutterDetailType(
+data class WindowDetailType(
   val pages: List<DetailPage>
 ) : DetailType

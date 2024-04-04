@@ -39,5 +39,5 @@ fun Separator(modifier: Modifier = Modifier, style: SeparatorStyle = SeparatorSt
 }
 
 enum class SeparatorStyle(@ColorRes val backgroundColor: Int) {
-  DEFAULT(R.color.separator), LIGHT(R.color.separator_light)
+  DEFAULT(R.color.separator), LIGHT(R.color.gray_light)
 }

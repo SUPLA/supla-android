@@ -17,7 +17,7 @@
     <item name="brandPrimaryBackgroundColor">@color/supla_green</item>
     <item name="linkColor">#007AFF</item>
     <item name="labelColor">@color/gray</item>
-    <item name="switcherBackgroundColor">@color/gray_light</item>
+    <item name="switcherBackgroundColor">@color/gray_lighter</item>
     <item name="drawerArrowStyle">@style/AppTheme.ToolbarArrow</item>
   </style>
 

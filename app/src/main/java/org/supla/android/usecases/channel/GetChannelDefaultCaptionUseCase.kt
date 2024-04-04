@@ -22,6 +22,7 @@ import org.supla.android.R
 import org.supla.android.core.ui.StringProvider
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_ALARMARMAMENTSENSOR
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK
@@ -85,6 +86,7 @@ class GetChannelDefaultCaptionUseCase @Inject constructor() {
       SUPLA_CHANNELFNC_OPENSENSOR_ROOFWINDOW -> string(R.string.channel_caption_roofwindowopeningsensor)
       SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER -> string(R.string.channel_caption_rollershutter)
       SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW -> string(R.string.channel_caption_roofwindow)
+      SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND -> string(R.string.channel_caption_facade_blinds)
       SUPLA_CHANNELFNC_POWERSWITCH -> string(R.string.channel_caption_powerswith)
       SUPLA_CHANNELFNC_LIGHTSWITCH -> string(R.string.channel_caption_lightswith)
       SUPLA_CHANNELFNC_THERMOMETER -> string(R.string.channel_caption_thermometer)
