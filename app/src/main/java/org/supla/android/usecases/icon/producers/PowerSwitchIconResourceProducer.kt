@@ -57,9 +57,9 @@ class PowerSwitchIconResourceProducer : IconResourceProducer {
       }
 
       else -> if (data.state.value == ChannelState.Value.ON) {
-        R.drawable.poweron
+        R.drawable.fnc_switch_on
       } else {
-        R.drawable.poweroff
+        R.drawable.fnc_switch_off
       }
     }
 }

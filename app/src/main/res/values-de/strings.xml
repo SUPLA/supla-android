@@ -470,7 +470,7 @@
   <string name="notification_info_message">Schalte die Notifikationen ein, um auf dem Laufenden zu halten! Um sie Ihnen zu zeigen, brauchen wir Ihre Zustimmung.\n\nDie Notifikation können Sie in Supla Cloud konfigurieren.</string>
   <string name="skip">Überspringen</string>
   <string name="settings_notifications">Notifikationen</string>
-  <string name="settings_localization">Lokalization</string>
+  <string name="settings_localization">Standort (genau)</string>
   <string name="settings_permissions">Berechtigungen</string>
 
   <string name="details_general" translatable="false">Allgemein</string>

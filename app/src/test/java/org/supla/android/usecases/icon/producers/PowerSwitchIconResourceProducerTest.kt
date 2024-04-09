@@ -36,7 +36,7 @@ class PowerSwitchIconResourceProducerTest : BaseIconResourceProducerTest() {
     test(
       state = ChannelState.Value.ON,
       function = SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH,
-      expectedIcon = R.drawable.poweron
+      expectedIcon = R.drawable.fnc_switch_on
     )
   }
 
@@ -45,7 +45,7 @@ class PowerSwitchIconResourceProducerTest : BaseIconResourceProducerTest() {
     test(
       state = ChannelState.Value.OFF,
       function = SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH,
-      expectedIcon = R.drawable.poweroff
+      expectedIcon = R.drawable.fnc_switch_off
     )
   }
 

@@ -15,6 +15,7 @@
     <color name="disabledOverlay">#DDFFFFFF</color>
     <color name="separator">#AAAAAA</color>
     <color name="separator_light">#DCDEE0</color>
+    <color name="old_switch_track">#42221f1f</color>
 
     <color name="red">#FF0000</color>
     <color name="light_orange">#FFD19A</color>
