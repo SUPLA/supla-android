@@ -1,4 +1,4 @@
-package org.supla.android.usecases.account
+package org.supla.android.usecases.profile
 
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -13,13 +13,14 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class DeleteAccountUseCase @Inject constructor(
+class DeleteProfileUseCase @Inject constructor(
   @ApplicationContext private val context: Context,
   private val profileManager: ProfileManager,
   private val suplaClientProvider: SuplaClientProvider,
   private val suplaAppProvider: SuplaAppProvider,
   private val preferences: Preferences,
-  private val profileIdHolder: ProfileIdHolder
+  private val profileIdHolder: ProfileIdHolder,
+  private val activateProfileUseCase: ActivateProfileUseCase
 ) {
   operator fun invoke(profileId: Long): Completable =
     profileManager.read(profileId).toSingle()
@@ -58,7 +59,7 @@ class DeleteAccountUseCase @Inject constructor(
       )
 
   private fun removeAndActivate(toRemove: AuthProfileItem, toActivate: AuthProfileItem): Completable =
-    profileManager.activateProfile(toActivate.id, true)
+    activateProfileUseCase(toActivate.id, true)
       .andThen(profileManager.delete(toRemove.id))
 
   private fun stopClient() {

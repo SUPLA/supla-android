@@ -8,16 +8,19 @@ import androidx.recyclerview.widget.RecyclerView
 import org.supla.android.R
 import org.supla.android.SuplaApp
 import org.supla.android.cfg.ProfileItemViewModel
+import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.databinding.LiProfileChooserBinding
 import org.supla.android.databinding.ProfileChooserBinding
-import org.supla.android.db.AuthProfileItem
+import org.supla.android.usecases.profile.ActivateProfileUseCase
+import org.supla.android.usecases.profile.ReadAllProfilesUseCase
 
 class ProfileChooser(
   private val context: Context,
-  private val profileManager: ProfileManager
+  private val activateProfileUseCase: ActivateProfileUseCase,
+  readAllProfilesUseCase: ReadAllProfilesUseCase
 ) {
 
-  private val profiles: Array<AuthProfileItem>
+  private val profiles: List<ProfileEntity> = readAllProfilesUseCase().blockingFirst()
   private var dialog: AlertDialog? = null
 
   interface Listener {
@@ -25,10 +28,6 @@ class ProfileChooser(
   }
 
   var listener: Listener? = null
-
-  init {
-    profiles = profileManager.getAllProfiles().blockingFirst().toTypedArray()
-  }
 
   fun show() {
     val inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -54,7 +53,7 @@ class ProfileChooser(
 
   fun selectProfile(idx: Int) {
     val activated = try {
-      profileManager.activateProfile(profiles[idx].id, false).blockingAwait()
+      activateProfileUseCase(profiles[idx].id!!, false).blockingAwait()
       true
     } catch (throwable: Throwable) {
       false
@@ -67,7 +66,7 @@ class ProfileChooser(
   }
 
   class Adapter(
-    private val profiles: Array<AuthProfileItem>,
+    private val profiles: List<ProfileEntity>,
     private val host: ProfileChooser
   ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -94,7 +93,7 @@ class ProfileChooser(
     ) {
       val itm = profiles.get(pos)
       if (vh is ItemViewHolder) {
-        vh.binding.viewModel = ItemViewModel(itm.name, itm.isActive)
+        vh.binding.viewModel = ItemViewModel(itm.name, itm.active == true)
         vh.binding.root.setOnClickListener {
           host.selectProfile(pos)
         }

@@ -35,6 +35,8 @@ import org.supla.android.cfg.CfgActivity;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.profile.ProfileChooser;
 import org.supla.android.profile.ProfileManager;
+import org.supla.android.usecases.profile.ActivateProfileUseCase;
+import org.supla.android.usecases.profile.ReadAllProfilesUseCase;
 
 @SuppressLint("registered")
 @AndroidEntryPoint
@@ -47,6 +49,8 @@ public class NavigationActivity extends BaseActivity
   public static final String INTENTSENDER_MAIN = "main";
 
   @Inject ProfileManager profileManager;
+  @Inject ActivateProfileUseCase activateProfileUseCase;
+  @Inject ReadAllProfilesUseCase readAllProfilesUseCase;
   private RelativeLayout RootLayout;
   private RelativeLayout ContentLayout;
   private RelativeLayout MenuBarLayout;
@@ -263,16 +267,9 @@ public class NavigationActivity extends BaseActivity
   }
 
   protected void showProfileSelector() {
-    profileChooser = new ProfileChooser(this, profileManager);
+    profileChooser = new ProfileChooser(this, activateProfileUseCase, readAllProfilesUseCase);
     profileChooser.setListener(this);
     profileChooser.show();
-  }
-
-  public void dismissProfileSelector() {
-    if (profileChooser != null) {
-      profileChooser.dismiss();
-      profileChooser = null;
-    }
   }
 
   private void setBtnBackground(Button btn, int imgResId) {

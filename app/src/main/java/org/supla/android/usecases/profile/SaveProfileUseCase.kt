@@ -1,4 +1,21 @@
-package org.supla.android.usecases.account
+package org.supla.android.usecases.profile
+/*
+Copyright (C) AC SOFTWARE SP. Z O.O.
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+*/
 
 import io.reactivex.rxjava3.core.Completable
 import org.supla.android.Preferences
@@ -9,7 +26,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class SaveAccountUseCase @Inject constructor(
+class SaveProfileUseCase @Inject constructor(
   private val profileManager: ProfileManager,
   private val preferences: Preferences,
   private val profileIdHolder: ProfileIdHolder
@@ -55,9 +72,17 @@ class SaveAccountUseCase @Inject constructor(
     }
   }
 
-  sealed class SaveAccountException(message: String? = null, parent: RuntimeException? = null) : RuntimeException(message, parent) {
-    object EmptyName : SaveAccountException()
-    object DuplicatedName : SaveAccountException()
-    object DataIncomplete : SaveAccountException()
+  sealed class SaveAccountException : RuntimeException(null, null) {
+    object EmptyName : SaveAccountException() {
+      private fun readResolve(): Any = EmptyName
+    }
+
+    object DuplicatedName : SaveAccountException() {
+      private fun readResolve(): Any = DuplicatedName
+    }
+
+    object DataIncomplete : SaveAccountException() {
+      private fun readResolve(): Any = DataIncomplete
+    }
   }
 }

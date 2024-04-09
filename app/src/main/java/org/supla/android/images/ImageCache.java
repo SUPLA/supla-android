@@ -24,6 +24,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.widget.RemoteViews;
 import androidx.core.content.ContextCompat;
 import java.io.ByteArrayInputStream;
 import java.util.LinkedHashMap;
@@ -70,6 +71,29 @@ public class ImageCache {
     }
 
     return result;
+  }
+
+  public static synchronized void loadBitmapForWidgetView(
+      ImageId imgId, RemoteViews view, int viewId, boolean nightMode) {
+    if (imgId == null) {
+      return;
+    }
+
+    imgId.setNightMode(nightMode);
+
+    if (imgId.getUserImage()) {
+      if (nightMode && !map.containsKey(imgId)) {
+        // If there is no user image for night mode, use the default
+        imgId.setNightMode(false);
+      }
+
+      Bitmap result = map.get(imgId);
+      if (result != null) {
+        view.setImageViewBitmap(viewId, result);
+      }
+    } else {
+      view.setImageViewResource(viewId, imgId.getId());
+    }
   }
 
   public static synchronized boolean bitmapExists(ImageId imgId) {

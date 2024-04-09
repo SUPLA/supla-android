@@ -19,6 +19,8 @@ package org.supla.android.data.source.local.dao
 
 import androidx.room.Dao
 import androidx.room.Query
+import androidx.room.Transaction
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import org.supla.android.data.source.local.entity.ProfileEntity
@@ -28,7 +30,7 @@ import org.supla.android.data.source.local.entity.ProfileEntity.Companion.COLUMN
 import org.supla.android.data.source.local.entity.ProfileEntity.Companion.TABLE_NAME
 
 @Dao
-interface ProfileDao {
+abstract class ProfileDao {
 
   @Query(
     """
@@ -37,10 +39,10 @@ interface ProfileDao {
     WHERE $COLUMN_ACTIVE = 1
   """
   )
-  fun findActiveProfile(): Single<ProfileEntity>
+  abstract fun findActiveProfile(): Single<ProfileEntity>
 
   @Query("SELECT $ALL_COLUMNS_STRING FROM $TABLE_NAME")
-  fun findAllProfiles(): Observable<List<ProfileEntity>>
+  abstract fun findAllProfiles(): Observable<List<ProfileEntity>>
 
   @Query(
     """
@@ -49,5 +51,21 @@ interface ProfileDao {
     WHERE $COLUMN_ID = :id
   """
   )
-  fun findProfile(id: Long): Single<ProfileEntity>
+  abstract fun findProfile(id: Long): Single<ProfileEntity>
+
+  fun activateProfile(id: Long): Completable = Completable.fromRunnable {
+    activateProfileTransaction(id)
+  }
+
+  @Transaction
+  protected open fun activateProfileTransaction(profileId: Long) {
+    deactivateProfilesIntern()
+    activateProfileIntern(profileId)
+  }
+
+  @Query("UPDATE $TABLE_NAME SET $COLUMN_ACTIVE = 0")
+  protected abstract fun deactivateProfilesIntern()
+
+  @Query("UPDATE $TABLE_NAME SET $COLUMN_ACTIVE = 1 WHERE $COLUMN_ID = :profileId")
+  protected abstract fun activateProfileIntern(profileId: Long)
 }

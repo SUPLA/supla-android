@@ -27,8 +27,8 @@ import org.supla.android.extensions.TAG
 import org.supla.android.features.deleteaccountweb.DeleteAccountWebFragment
 import org.supla.android.profile.ProfileManager
 import org.supla.android.tools.SuplaSchedulers
-import org.supla.android.usecases.account.DeleteAccountUseCase
-import org.supla.android.usecases.account.SaveAccountUseCase
+import org.supla.android.usecases.profile.DeleteProfileUseCase
+import org.supla.android.usecases.profile.SaveProfileUseCase
 import javax.inject.Inject
 
 /**
@@ -45,8 +45,8 @@ class CreateAccountViewModel @Inject constructor(
   private val profileManager: ProfileManager,
   private val preferences: Preferences,
   schedulers: SuplaSchedulers,
-  private val saveAccountUseCase: SaveAccountUseCase,
-  private val deleteAccountUseCase: DeleteAccountUseCase
+  private val saveProfileUseCase: SaveProfileUseCase,
+  private val deleteProfileUseCase: DeleteProfileUseCase
 ) : BaseViewModel<CreateAccountViewState, CreateAccountViewEvent>(CreateAccountViewState(), schedulers) {
 
   fun loadProfile(profileId: Long?) {
@@ -172,7 +172,7 @@ class CreateAccountViewModel @Inject constructor(
             profile.name = defaultName
           }
 
-          saveAccountUseCase(profile)
+          saveProfileUseCase(profile)
             .andThen(Single.just(SaveBackInfo(profile.isActive)))
         }
     } else {
@@ -183,18 +183,18 @@ class CreateAccountViewModel @Inject constructor(
           val authSettingsChanged = authSettingChanged(profile, state)
           state.updateProfile(profile)
 
-          saveAccountUseCase(profile)
+          saveProfileUseCase(profile)
             .andThen(Single.just(SaveBackInfo(authSettingsChanged)))
         }
     }
   }
 
   private fun handleSaveError(error: Throwable) = when (error) {
-    is SaveAccountUseCase.SaveAccountException.EmptyName ->
+    is SaveProfileUseCase.SaveAccountException.EmptyName ->
       sendEvent(CreateAccountViewEvent.ShowEmptyNameDialog)
-    is SaveAccountUseCase.SaveAccountException.DuplicatedName ->
+    is SaveProfileUseCase.SaveAccountException.DuplicatedName ->
       sendEvent(CreateAccountViewEvent.ShowDuplicatedNameDialog)
-    is SaveAccountUseCase.SaveAccountException.DataIncomplete ->
+    is SaveProfileUseCase.SaveAccountException.DataIncomplete ->
       sendEvent(CreateAccountViewEvent.ShowRequiredDataMissingDialog)
     else -> sendEvent(CreateAccountViewEvent.ShowUnknownErrorDialog)
   }
@@ -266,7 +266,7 @@ class CreateAccountViewModel @Inject constructor(
   }
 
   private fun deleteAndGetReturnInfo(profile: AuthProfileItem): Single<RemovalBackInfo> =
-    deleteAccountUseCase(profile.id)
+    deleteProfileUseCase(profile.id)
       .andThen(Single.just(RemovalBackInfo(profile.isActive, profile.authInfo.serverAddress)))
 
   private fun Int.toAccessIdentifierString(): String = if (this == 0) {

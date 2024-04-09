@@ -6,7 +6,9 @@ import androidx.annotation.ColorRes
 import androidx.compose.material.Colors
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import org.supla.android.R
 
 class SuplaLightColors(context: Context) {
@@ -82,7 +84,8 @@ val Color.Companion.disabled: Color
   get() = Color(0xFFB4B7BA)
 
 val Color.Companion.primaryLight: Color
-  get() = Color(0xFFEDFBEE)
+  @Composable
+  get() = colorResource(LocalContext.current, R.color.primary_light)
 
 private fun colorResource(context: Context, @ColorRes id: Int): Color {
   return if (Build.VERSION.SDK_INT >= 23) {

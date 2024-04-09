@@ -46,5 +46,5 @@
   <fragment
     android:id="@+id/notifications_log_fragment"
     android:name="org.supla.android.features.notificationslog.NotificationsLogFragment"
-    android:label="@string/menu_notifications"/>
+    android:label="@string/menu_notifications" />
 </navigation>
