@@ -5,6 +5,7 @@
 
     <color name="primary">@color/supla_green</color>
     <color name="primary_variant">@color/supla</color>
+    <color name="primary_light">#EDFBEE</color>
     <color name="on_primary">#ffffff</color>
     <color name="surface">#ffffff</color>
     <color name="background">#F5F6F7</color>

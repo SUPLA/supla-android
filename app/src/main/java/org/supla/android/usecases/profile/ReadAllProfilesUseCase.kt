@@ -1,4 +1,4 @@
-package org.supla.android.data.source
+package org.supla.android.usecases.profile
 /*
 Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,18 +17,14 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import org.supla.android.data.source.local.dao.ProfileDao
+import org.supla.android.data.source.RoomProfileRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class RoomProfileRepository @Inject constructor(private val profileDao: ProfileDao) {
+class ReadAllProfilesUseCase @Inject constructor(
+  private val profileRepository: RoomProfileRepository
+) {
 
-  fun findActiveProfile() = profileDao.findActiveProfile()
-
-  fun findAllProfiles() = profileDao.findAllProfiles()
-
-  fun findProfile(id: Long) = profileDao.findProfile(id)
-
-  fun activateProfile(id: Long) = profileDao.activateProfile(id)
+  operator fun invoke() = profileRepository.findAllProfiles()
 }

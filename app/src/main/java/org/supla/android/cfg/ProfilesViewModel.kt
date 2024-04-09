@@ -17,55 +17,48 @@ package org.supla.android.cfg
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import org.supla.android.db.AuthProfileItem
-import org.supla.android.profile.ProfileManager
+import io.reactivex.rxjava3.kotlin.subscribeBy
+import org.supla.android.core.ui.BaseViewModel
+import org.supla.android.core.ui.ViewEvent
+import org.supla.android.core.ui.ViewState
+import org.supla.android.data.source.local.entity.ProfileEntity
+import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.usecases.profile.ActivateProfileUseCase
+import org.supla.android.usecases.profile.ReadAllProfilesUseCase
 import javax.inject.Inject
 
 @HiltViewModel
-class ProfilesViewModel @Inject constructor(private val profileManager: ProfileManager) :
-  ViewModel(), EditableProfileItemViewModel.EditActionHandler {
+class ProfilesViewModel @Inject constructor(
+  private val readAllProfilesUseCase: ReadAllProfilesUseCase,
+  private val activateProfileUseCase: ActivateProfileUseCase,
+  schedulers: SuplaSchedulers
+) : BaseViewModel<ProfilesViewState, ProfilesViewEvent>(ProfilesViewState(), schedulers) {
 
-  private val _uiState: MutableLiveData<ProfilesUiState> = MutableLiveData(ProfilesUiState.ListProfiles(emptyList()))
-  val uiState: LiveData<ProfilesUiState> = _uiState
-  val profilesAdapter = ProfilesAdapter(this)
-
-  init {
-    reload()
+  override fun onViewCreated() {
+    readAllProfilesUseCase()
+      .attach()
+      .subscribeBy(
+        onNext = { profiles -> updateState { it.copy(profiles = profiles) } }
+      )
+      .disposeBySelf()
   }
 
-  fun onNewProfile() {
-    _uiState.value = ProfilesUiState.EditProfile(null)
-  }
-
-  override fun onEditProfile(profileId: Long) {
-    _uiState.value = ProfilesUiState.EditProfile(profileId)
-  }
-
-  fun onActivateProfile(profileId: Long) {
-    val activated = try {
-      profileManager.activateProfile(profileId, true).blockingAwait()
-      true
-    } catch (throwable: Throwable) {
-      false
-    }
-
-    if (activated) {
-      _uiState.value = ProfilesUiState.ProfileActivation(profileId)
-    }
-  }
-
-  fun reload() {
-    val profiles = profileManager.getAllProfiles().blockingFirst()
-    _uiState.value = ProfilesUiState.ListProfiles(profiles)
+  fun activateProfile(profileId: Long) {
+    activateProfileUseCase(profileId, force = true)
+      .attach()
+      .subscribeBy(
+        onComplete = { sendEvent(ProfilesViewEvent.Finish) },
+        onError = defaultErrorHandler("activateProfile")
+      )
+      .disposeBySelf()
   }
 }
 
-sealed class ProfilesUiState {
-  data class ListProfiles(val profiles: List<AuthProfileItem>) : ProfilesUiState()
-  data class EditProfile(val profileId: Long?) : ProfilesUiState()
-  data class ProfileActivation(val profileId: Long) : ProfilesUiState()
+sealed class ProfilesViewEvent : ViewEvent {
+  object Finish : ProfilesViewEvent()
 }
+
+data class ProfilesViewState(
+  val profiles: List<ProfileEntity> = emptyList()
+) : ViewState()

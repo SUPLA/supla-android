@@ -74,15 +74,11 @@ class SingleWidget : WidgetProviderBase() {
           altIcon = configuration.altIcon,
           userIcon = configuration.userIcon
         )
-        views.setImageViewBitmap(
-          R.id.single_widget_button,
-          ImageCache.getBitmap(context, scene.getImageId())
-        )
+
+        val icon = scene.getImageId()
+        ImageCache.loadBitmapForWidgetView(icon, views, R.id.single_widget_button, false)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-          views.setImageViewBitmap(
-            R.id.single_widget_button_night_mode,
-            ImageCache.getBitmap(context, scene.getImageId())
-          )
+          ImageCache.loadBitmapForWidgetView(icon, views, R.id.single_widget_button_night_mode, true)
           views.setViewVisibility(R.id.single_widget_button_night_mode, View.VISIBLE)
         } else {
           views.setViewVisibility(R.id.single_widget_button_night_mode, View.GONE)
@@ -148,20 +144,10 @@ class SingleWidget : WidgetProviderBase() {
         ChannelState.getInactiveValue(channel.func)
       }
 
-      views.setImageViewBitmap(
-        R.id.single_widget_button,
-        ImageCache.getBitmap(
-          context,
-          context.getChannelIconUseCase.invoke(channel, IconType.SINGLE, state)
-        )
-      )
-      views.setImageViewBitmap(
-        R.id.single_widget_button_night_mode,
-        ImageCache.getBitmap(
-          context,
-          context.getChannelIconUseCase.invoke(channel, IconType.SINGLE, state)
-        )
-      )
+      val icon = context.getChannelIconUseCase.invoke(channel, IconType.SINGLE, state)
+      ImageCache.loadBitmapForWidgetView(icon, views, R.id.single_widget_button, false)
+      ImageCache.loadBitmapForWidgetView(icon, views, R.id.single_widget_button_night_mode, true)
+
       views.setViewVisibility(R.id.single_widget_button, View.VISIBLE)
       views.setViewVisibility(R.id.single_widget_button_night_mode, View.VISIBLE)
       views.setViewVisibility(R.id.single_widget_text, View.GONE)

@@ -73,6 +73,9 @@ class LocalProfileRepository(provider: DatabaseAccessProvider) : ProfileReposito
     val prev = getProfile(profile.id)
     if (prev != null && prev.authInfoChanged(profile)) {
       removeProfileBoundData(profile.id)
+      if (profile.authInfo.emailAddress != prev.authInfo.emailAddress && profile.authInfo.serverAutoDetect) {
+        profile.authInfo = profile.authInfo.copy(serverForEmail = "")
+      }
     }
     update(
       profile,

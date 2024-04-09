@@ -3,16 +3,13 @@ package org.supla.android.profile
 import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.mockk
-import io.reactivex.rxjava3.core.Completable
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.*
-import org.supla.android.core.SuplaAppApi
 import org.supla.android.core.SuplaAppProvider
-import org.supla.android.core.networking.suplaclient.SuplaClientApi
 import org.supla.android.core.networking.suplacloud.SuplaCloudConfigHolder
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.db.AuthProfileItem
@@ -52,16 +49,7 @@ class MultiAccountProfileManagerTest {
 
   @Before
   fun setUp() {
-    profileManager = MultiAccountProfileManager(
-      profileRepository,
-      profileIdHolder,
-      widgetManager,
-      updateEventsManager,
-      suplaAppProvider,
-      singleCallProvider,
-      suplaCloudConfigHolder,
-      loadUserIconsIntoCacheUseCase
-    )
+    profileManager = MultiAccountProfileManager(profileRepository, widgetManager, singleCallProvider)
   }
 
   @Test
@@ -221,138 +209,5 @@ class MultiAccountProfileManagerTest {
 
     verify(profileRepository).allProfiles
     verifyNoMoreInteractions(profileRepository)
-  }
-
-  @Test
-  fun `should skip activation when profile active and force is false`() {
-    // given
-    val activeProfileId = 123L
-    val profiles = listOf(
-      mockk<AuthProfileItem>().apply { every { isActive } returns false },
-      mockk<AuthProfileItem>().apply { every { isActive } returns false },
-      mockk<AuthProfileItem>().apply {
-        every { id } returns activeProfileId
-        every { isActive } returns true
-      }
-    )
-    whenever(profileRepository.allProfiles).thenReturn(profiles)
-    whenever(loadUserIconsIntoCacheUseCase.invoke()).thenReturn(Completable.complete())
-
-    // when
-    val testObserver = profileManager.activateProfile(activeProfileId, false).test()
-
-    // then
-    testObserver.assertComplete()
-
-    verify(profileRepository).allProfiles
-    verifyNoMoreInteractions(profileRepository)
-    verifyZeroInteractions(profileIdHolder, updateEventsManager, suplaAppProvider, suplaCloudConfigHolder)
-  }
-
-  @Test
-  fun `should activate other profile`() {
-    // given
-    val activeProfileId = 123L
-    val newActiveProfileId = 234L
-    val profiles = listOf(
-      mockk<AuthProfileItem>().apply { every { isActive } returns false },
-      mockk<AuthProfileItem>().apply {
-        every { id } returns newActiveProfileId
-        every { isActive } returns false
-      },
-      mockk<AuthProfileItem>().apply {
-        every { id } returns activeProfileId
-        every { isActive } returns true
-      }
-    )
-    whenever(profileRepository.allProfiles).thenReturn(profiles)
-    whenever(profileRepository.setProfileActive(newActiveProfileId)).thenReturn(true)
-
-    val suplaClient = mockk<SuplaClientApi>()
-    every { suplaClient.reconnect() } answers { }
-
-    val suplaApp = mockk<SuplaAppApi>()
-    every { suplaApp.CancelAllRestApiClientTasks(true) } answers { }
-    every { suplaApp.cleanupToken() } answers { }
-    every { suplaApp.getSuplaClient() } returns suplaClient
-    whenever(suplaAppProvider.provide()).thenReturn(suplaApp)
-
-    whenever(loadUserIconsIntoCacheUseCase.invoke()).thenReturn(Completable.complete())
-
-    // when
-    val testObserver = profileManager.activateProfile(newActiveProfileId, false).test()
-
-    // then
-    testObserver.assertComplete()
-
-    verify(profileRepository).allProfiles
-    verify(profileRepository).setProfileActive(newActiveProfileId)
-    verify(profileIdHolder).profileId = newActiveProfileId
-    verify(updateEventsManager).cleanup()
-    verify(updateEventsManager).emitScenesUpdate()
-    verify(updateEventsManager).emitGroupsUpdate()
-    verify(updateEventsManager).emitChannelsUpdate()
-    verify(suplaAppProvider).provide()
-    verify(suplaCloudConfigHolder).clean()
-    verifyNoMoreInteractions(profileRepository, profileIdHolder, updateEventsManager, suplaAppProvider, suplaCloudConfigHolder)
-
-    io.mockk.verify {
-      suplaApp.CancelAllRestApiClientTasks(true)
-      suplaApp.cleanupToken()
-      suplaApp.getSuplaClient()
-      suplaClient.reconnect()
-    }
-    confirmVerified(suplaApp, suplaClient)
-  }
-
-  @Test
-  fun `should reactivate same profile with force`() {
-    // given
-    val activeProfileId = 123L
-    val profiles = listOf(
-      mockk<AuthProfileItem>().apply { every { isActive } returns false },
-      mockk<AuthProfileItem>().apply {
-        every { id } returns activeProfileId
-        every { isActive } returns true
-      }
-    )
-    whenever(profileRepository.allProfiles).thenReturn(profiles)
-    whenever(profileRepository.setProfileActive(activeProfileId)).thenReturn(true)
-
-    val suplaClient = mockk<SuplaClientApi>()
-    every { suplaClient.reconnect() } answers { }
-
-    val suplaApp = mockk<SuplaAppApi>()
-    every { suplaApp.CancelAllRestApiClientTasks(true) } answers { }
-    every { suplaApp.cleanupToken() } answers { }
-    every { suplaApp.getSuplaClient() } returns suplaClient
-    whenever(suplaAppProvider.provide()).thenReturn(suplaApp)
-
-    whenever(loadUserIconsIntoCacheUseCase.invoke()).thenReturn(Completable.complete())
-
-    // when
-    val testObserver = profileManager.activateProfile(activeProfileId, true).test()
-
-    // then
-    testObserver.assertComplete()
-
-    verify(profileRepository).allProfiles
-    verify(profileRepository).setProfileActive(activeProfileId)
-    verify(profileIdHolder).profileId = activeProfileId
-    verify(updateEventsManager).cleanup()
-    verify(updateEventsManager).emitScenesUpdate()
-    verify(updateEventsManager).emitGroupsUpdate()
-    verify(updateEventsManager).emitChannelsUpdate()
-    verify(suplaAppProvider).provide()
-    verify(suplaCloudConfigHolder).clean()
-    verifyNoMoreInteractions(profileRepository, profileIdHolder, updateEventsManager, suplaAppProvider, suplaCloudConfigHolder)
-
-    io.mockk.verify {
-      suplaApp.CancelAllRestApiClientTasks(true)
-      suplaApp.cleanupToken()
-      suplaApp.getSuplaClient()
-      suplaClient.reconnect()
-    }
-    confirmVerified(suplaApp, suplaClient)
   }
 }

@@ -46,7 +46,6 @@ import org.supla.android.widget.shared.isWidgetValid
 private const val ACTION_TURN_ON = "ACTION_TURN_ON"
 private const val ACTION_TURN_OFF = "ACTION_TURN_OFF"
 private const val ACTION_UPDATE = "ACTION_UPDATE"
-private const val ACTION_REFRESH = "ACTION_REFRESH"
 
 /**
  * Implementation of widgets for on-off operations. It is supporting turning on/off channels with functions of:
@@ -129,7 +128,8 @@ class OnOffWidget : WidgetProviderBase() {
     } else {
       R.id.on_off_widget_turn_on_button
     }
-    views.setImageViewBitmap(iconViewId, getIcon(context, channel, ChannelState.getActiveValue(channel.func)))
+    val activeIcon = context.getChannelIconUseCase.invoke(channel, IconType.SINGLE, ChannelState.getActiveValue(channel.func))
+    ImageCache.loadBitmapForWidgetView(activeIcon, views, iconViewId, false)
 
     val viewIdNightMode = if (channel.isThermometer() || channel.isGpm()) {
       R.id.on_off_widget_value_icon_night_mode
@@ -138,7 +138,7 @@ class OnOffWidget : WidgetProviderBase() {
     }
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-      views.setImageViewBitmap(viewIdNightMode, getIcon(context, channel, ChannelState.getActiveValue(channel.func)))
+      ImageCache.loadBitmapForWidgetView(activeIcon, views, viewIdNightMode, true)
     }
 
     if (channel.isThermometer() || channel.isGpm()) {
@@ -146,23 +146,15 @@ class OnOffWidget : WidgetProviderBase() {
       views.setViewVisibility(R.id.on_off_widget_buttons, View.GONE)
       views.setViewVisibility(R.id.on_off_widget_value, View.VISIBLE)
     } else {
-      views.setImageViewBitmap(
-        R.id.on_off_widget_turn_off_button,
-        getIcon(context, channel, ChannelState.getInactiveValue(channel.func))
-      )
+      val inactiveIcon = context.getChannelIconUseCase.invoke(channel, IconType.SINGLE, ChannelState.getInactiveValue(channel.func))
+      ImageCache.loadBitmapForWidgetView(inactiveIcon, views, R.id.on_off_widget_turn_off_button, false)
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-        views.setImageViewBitmap(
-          R.id.on_off_widget_turn_off_button_night_mode,
-          getIcon(context, channel, ChannelState.getInactiveValue(channel.func))
-        )
+        ImageCache.loadBitmapForWidgetView(inactiveIcon, views, R.id.on_off_widget_turn_off_button_night_mode, true)
       }
       views.setViewVisibility(R.id.on_off_widget_buttons, View.VISIBLE)
       views.setViewVisibility(R.id.on_off_widget_value, View.GONE)
     }
   }
-
-  private fun getIcon(context: Context, channel: Channel, stateValue: ChannelState.Value) =
-    ImageCache.getBitmap(context, context.getChannelIconUseCase.invoke(channel, IconType.SINGLE, stateValue))
 
   companion object {
     private val TAG = OnOffWidget::class.simpleName

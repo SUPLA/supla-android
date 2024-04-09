@@ -4,9 +4,6 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.schedulers.Schedulers
-import junit.framework.TestCase.*
-import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.test.*
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Rule
@@ -23,8 +20,8 @@ import org.supla.android.features.deleteaccountweb.DeleteAccountWebFragment
 import org.supla.android.profile.AuthInfo
 import org.supla.android.profile.ProfileManager
 import org.supla.android.tools.SuplaSchedulers
-import org.supla.android.usecases.account.DeleteAccountUseCase
-import org.supla.android.usecases.account.SaveAccountUseCase
+import org.supla.android.usecases.profile.DeleteProfileUseCase
+import org.supla.android.usecases.profile.SaveProfileUseCase
 
 @RunWith(MockitoJUnitRunner::class)
 class CreateAccountViewModelTest : BaseViewModelTest<CreateAccountViewState, CreateAccountViewEvent, CreateAccountViewModel>() {
@@ -42,10 +39,10 @@ class CreateAccountViewModelTest : BaseViewModelTest<CreateAccountViewState, Cre
   override lateinit var schedulers: SuplaSchedulers
 
   @Mock
-  private lateinit var saveAccountUseCase: SaveAccountUseCase
+  private lateinit var saveProfileUseCase: SaveProfileUseCase
 
   @Mock
-  private lateinit var deleteAccountUseCase: DeleteAccountUseCase
+  private lateinit var deleteProfileUseCase: DeleteProfileUseCase
 
   @InjectMocks
   override lateinit var viewModel: CreateAccountViewModel
@@ -308,7 +305,7 @@ class CreateAccountViewModelTest : BaseViewModelTest<CreateAccountViewState, Cre
   @Test
   fun `should save new profile as active when no other profile exists`() {
     // given
-    whenever(saveAccountUseCase(any())).thenReturn(Completable.complete())
+    whenever(saveProfileUseCase(any())).thenReturn(Completable.complete())
 
     val defaultName = "default profile"
     val email = "test@supla.org"
@@ -326,7 +323,7 @@ class CreateAccountViewModelTest : BaseViewModelTest<CreateAccountViewState, Cre
       CreateAccountViewEvent.Reconnect
     )
 
-    verify(saveAccountUseCase, times(1)).invoke(
+    verify(saveProfileUseCase, times(1)).invoke(
       argThat { profile ->
         profile.isActive && profile.name == defaultName && profile.authInfo.emailAuth &&
           profile.authInfo.emailAddress == email && profile.advancedAuthSetup.not()
@@ -337,7 +334,7 @@ class CreateAccountViewModelTest : BaseViewModelTest<CreateAccountViewState, Cre
   @Test
   fun `should save new profile as inactive when other profile exist`() {
     // given
-    whenever(saveAccountUseCase(any())).thenReturn(Completable.complete())
+    whenever(saveProfileUseCase(any())).thenReturn(Completable.complete())
     whenever(preferences.isAnyAccountRegistered).thenReturn(true)
 
     val defaultName = "default profile"
@@ -356,7 +353,7 @@ class CreateAccountViewModelTest : BaseViewModelTest<CreateAccountViewState, Cre
     assertThat(events).containsExactly(
       CreateAccountViewEvent.Close
     )
-    verify(saveAccountUseCase, times(1)).invoke(
+    verify(saveProfileUseCase, times(1)).invoke(
       argThat { profile ->
         profile.isActive.not() && profile.name.isEmpty() && profile.authInfo.emailAuth &&
           profile.authInfo.emailAddress == email && profile.advancedAuthSetup.not()
@@ -367,7 +364,7 @@ class CreateAccountViewModelTest : BaseViewModelTest<CreateAccountViewState, Cre
   @Test
   fun `should update profile without reconnect when no authorized data changed`() {
     // given
-    whenever(saveAccountUseCase(any())).thenReturn(Completable.complete())
+    whenever(saveProfileUseCase(any())).thenReturn(Completable.complete())
     whenever(preferences.isAnyAccountRegistered).thenReturn(true)
 
     val profileId = 123L
@@ -391,7 +388,7 @@ class CreateAccountViewModelTest : BaseViewModelTest<CreateAccountViewState, Cre
     assertThat(events).containsExactly(
       CreateAccountViewEvent.Close
     )
-    verify(saveAccountUseCase, times(1)).invoke(
+    verify(saveProfileUseCase, times(1)).invoke(
       argThat { arg ->
         arg.isActive.not() && arg.authInfo.emailAuth &&
           arg.name == newName && arg.advancedAuthSetup.not()
@@ -402,7 +399,7 @@ class CreateAccountViewModelTest : BaseViewModelTest<CreateAccountViewState, Cre
   @Test
   fun `should update profile with reconnect when email changed`() {
     // given
-    whenever(saveAccountUseCase(any())).thenReturn(Completable.complete())
+    whenever(saveProfileUseCase(any())).thenReturn(Completable.complete())
     whenever(preferences.isAnyAccountRegistered).thenReturn(true)
 
     val profileId = 123L
@@ -426,7 +423,7 @@ class CreateAccountViewModelTest : BaseViewModelTest<CreateAccountViewState, Cre
     assertThat(events).containsExactly(
       CreateAccountViewEvent.Reconnect
     )
-    verify(saveAccountUseCase, times(1)).invoke(
+    verify(saveProfileUseCase, times(1)).invoke(
       argThat { arg ->
         arg.isActive.not() && arg.authInfo.emailAuth &&
           arg.authInfo.emailAddress == newEmail && arg.advancedAuthSetup.not()
@@ -502,7 +499,7 @@ class CreateAccountViewModelTest : BaseViewModelTest<CreateAccountViewState, Cre
 
   private fun testAuthorizationDataChange(profile: AuthProfileItem, action: (CreateAccountViewModel) -> Unit) {
     // given
-    whenever(saveAccountUseCase(any())).thenReturn(Completable.complete())
+    whenever(saveProfileUseCase(any())).thenReturn(Completable.complete())
     whenever(preferences.isAnyAccountRegistered).thenReturn(true)
 
     val profileId = 123L
@@ -518,13 +515,13 @@ class CreateAccountViewModelTest : BaseViewModelTest<CreateAccountViewState, Cre
     assertThat(events).containsExactly(
       CreateAccountViewEvent.Reconnect
     )
-    verify(saveAccountUseCase, times(1)).invoke(profile)
+    verify(saveProfileUseCase, times(1)).invoke(profile)
   }
 
   @Test
   fun `should show empty name dialog`() {
     testSaveFailure(
-      Completable.error(SaveAccountUseCase.SaveAccountException.EmptyName),
+      Completable.error(SaveProfileUseCase.SaveAccountException.EmptyName),
       CreateAccountViewEvent.ShowEmptyNameDialog
     )
   }
@@ -532,7 +529,7 @@ class CreateAccountViewModelTest : BaseViewModelTest<CreateAccountViewState, Cre
   @Test
   fun `should show duplicated name dialog`() {
     testSaveFailure(
-      Completable.error(SaveAccountUseCase.SaveAccountException.DuplicatedName),
+      Completable.error(SaveProfileUseCase.SaveAccountException.DuplicatedName),
       CreateAccountViewEvent.ShowDuplicatedNameDialog
     )
   }
@@ -540,7 +537,7 @@ class CreateAccountViewModelTest : BaseViewModelTest<CreateAccountViewState, Cre
   @Test
   fun `should show incomplete data dialog`() {
     testSaveFailure(
-      Completable.error(SaveAccountUseCase.SaveAccountException.DataIncomplete),
+      Completable.error(SaveProfileUseCase.SaveAccountException.DataIncomplete),
       CreateAccountViewEvent.ShowRequiredDataMissingDialog
     )
   }
@@ -555,7 +552,7 @@ class CreateAccountViewModelTest : BaseViewModelTest<CreateAccountViewState, Cre
 
   private fun testSaveFailure(saveResult: Completable, expectedEvent: CreateAccountViewEvent) {
     // given
-    whenever(saveAccountUseCase(any())).thenReturn(saveResult)
+    whenever(saveProfileUseCase(any())).thenReturn(saveResult)
     whenever(preferences.isAnyAccountRegistered).thenReturn(true)
 
     val profileId = 123L
@@ -573,7 +570,7 @@ class CreateAccountViewModelTest : BaseViewModelTest<CreateAccountViewState, Cre
       state.copy(emailAddress = profile.authInfo.emailAddress, accountName = profile.name)
     )
     assertThat(events).containsExactly(expectedEvent)
-    verify(saveAccountUseCase, times(1)).invoke(profile)
+    verify(saveProfileUseCase, times(1)).invoke(profile)
   }
 
   @Test
@@ -600,7 +597,7 @@ class CreateAccountViewModelTest : BaseViewModelTest<CreateAccountViewState, Cre
     val profileId = 123L
     profile.id = profileId
     whenever(profileManager.read(profileId)).thenReturn(Maybe.just(profile))
-    whenever(deleteAccountUseCase(profileId)).thenReturn(Completable.complete())
+    whenever(deleteProfileUseCase(profileId)).thenReturn(Completable.complete())
 
     // when
     viewModel.deleteProfile(profileId)
@@ -608,7 +605,7 @@ class CreateAccountViewModelTest : BaseViewModelTest<CreateAccountViewState, Cre
     // then
     assertThat(states).isEmpty()
     assertThat(events).containsExactly(event)
-    verify(deleteAccountUseCase, times(1)).invoke(profileId)
+    verify(deleteProfileUseCase, times(1)).invoke(profileId)
   }
 
   @Test
@@ -652,7 +649,7 @@ class CreateAccountViewModelTest : BaseViewModelTest<CreateAccountViewState, Cre
     val profileId = 123L
     profile.id = profileId
     whenever(profileManager.read(profileId)).thenReturn(Maybe.just(profile))
-    whenever(deleteAccountUseCase(profileId)).thenReturn(Completable.complete())
+    whenever(deleteProfileUseCase(profileId)).thenReturn(Completable.complete())
 
     // when
     viewModel.deleteProfileWithCloud(profileId)
@@ -660,7 +657,7 @@ class CreateAccountViewModelTest : BaseViewModelTest<CreateAccountViewState, Cre
     // then
     assertThat(states).isEmpty()
     assertThat(events).containsExactly(event)
-    verify(deleteAccountUseCase, times(1)).invoke(profileId)
+    verify(deleteProfileUseCase, times(1)).invoke(profileId)
   }
 
   private fun profileMock(): AuthProfileItem {
