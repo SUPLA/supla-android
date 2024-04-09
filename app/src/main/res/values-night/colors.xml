@@ -14,6 +14,7 @@
     <color name="disabled">#363738</color>
     <color name="disabledOverlay">#DD000000</color>
     <color name="separator">#000000</color>
+    <color name="old_switch_track">#42d3d2d2</color>
 
     <color name="gray_light">#3D3D3E</color>
     <color name="light_orange">#cca77b</color>
@@ -33,6 +34,8 @@
 
     <color name="channel_section_cell">#253F24</color>
     <color name="channel_cell">@color/surface</color>
+
+    <color name="dialog_scrim">#BB171717</color>
 
     <!-- Roller shutter -->
     <color name="roller_shutter_window_color">#363738</color>

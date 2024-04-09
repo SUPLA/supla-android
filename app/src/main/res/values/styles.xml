@@ -53,7 +53,8 @@
     <item name="colorControlActivated">@color/primary</item>
     <item name="android:buttonTint">@color/primary</item>
     <item name="colorSwitchThumbNormal">#f1f1f1</item>
-    <item name="android:colorForeground">#42221f1f</item>
+    <item name="android:colorForeground">@color/old_switch_track</item>
+    <item name="trackTint">@color/old_switch_track</item>
   </style>
 
   <style name="CheckBox" parent="">

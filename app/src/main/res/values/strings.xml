@@ -535,7 +535,7 @@
   <string name="settings_notifications" translatable="false">Notifications</string>
   <string name="notifications_active" translatable="false">✓</string>
   <string name="notifications_inactive" translatable="false">𐄂</string>
-  <string name="settings_localization" translatable="false">Localization</string>
+  <string name="settings_localization" translatable="false">Localization (fine)</string>
   <string name="settings_permissions" translatable="false">Permissions</string>
 
   <string name="details_general" translatable="false">General</string>

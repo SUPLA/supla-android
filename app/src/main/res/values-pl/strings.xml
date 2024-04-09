@@ -518,7 +518,7 @@
   <string name="notification_info_message">Włącz powiadomienia, aby być na bieżąco z informacjami z Twojego domu! Potrzebujemy Twojej zgody, aby wyświetlać je na Twoim urządzeniu.\n\nPowiadomienia możesz skonfigurować w Supla Cloud.</string>
   <string name="skip">Pomiń</string>
   <string name="settings_notifications">Powiadomienia</string>
-  <string name="settings_localization">Lokalizacja</string>
+  <string name="settings_localization">Lokalizacja (dokładna)</string>
   <string name="settings_permissions">Uprawnienia</string>
 
   <string name="details_general">Ogólne</string>
