@@ -72,7 +72,7 @@
       android:layout_marginRight="20dp"
       android:layout_marginBottom="20dp" />
 
-    <androidx.appcompat.widget.AppCompatButton
+    <androidx.appcompat.widget.AppCompatImageButton
       android:id="@+id/rgbwBtnPowerOnOff"
       android:layout_width="60dp"
       android:layout_height="60dp"
@@ -80,7 +80,8 @@
       android:layout_alignBottom="@id/cbPicker"
       android:layout_marginBottom="10dp"
       android:layout_weight="0"
-      android:background="@drawable/rgbwpoweroff" />
+      android:background="@drawable/rgbw_button_background"
+      android:src="@drawable/ic_power_button"/>
 
     <LinearLayout
       android:id="@+id/llFooteer"

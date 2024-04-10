@@ -14,11 +14,14 @@ import org.supla.android.lib.SuplaClientMessageHandler.OnSuplaClientMessageListe
 import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.lib.SuplaConst
 import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.usecases.profile.CloudUrl
+import org.supla.android.usecases.profile.LoadActiveProfileUrlUseCase
 
 abstract class BaseListViewModel<S : ViewState, E : ViewEvent>(
   private val preferences: Preferences,
   defaultState: S,
-  schedulers: SuplaSchedulers
+  schedulers: SuplaSchedulers,
+  private val loadActiveProfileUrlUseCase: LoadActiveProfileUrlUseCase? = null,
 ) : BaseViewModel<S, E>(defaultState, schedulers) {
 
   private val preferencesChangeListener = OnSharedPreferenceChangeListener { _, key ->
@@ -81,5 +84,15 @@ abstract class BaseListViewModel<S : ViewState, E : ViewEvent>(
     }
 
     else -> false
+  }
+
+  protected fun loadServerUrl(handler: (CloudUrl) -> Unit) {
+    loadActiveProfileUrlUseCase?.invoke()
+      ?.attach()
+      ?.subscribeBy(
+        onSuccess = handler,
+        onError = defaultErrorHandler("loadServerUrl")
+      )
+      ?.disposeBySelf()
   }
 }

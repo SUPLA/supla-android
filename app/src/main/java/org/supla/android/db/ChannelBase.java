@@ -331,7 +331,6 @@ public abstract class ChannelBase extends DbItem {
             ? String.format("%.2f kWh", doubleValue)
             : ValuesFormatter.NO_VALUE_TEXT;
 
-      case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
       case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
         return getHumanReadableThermostatTemperature(
             getOnLine() ? value.getMeasuredTemp(getFunc()) : null,

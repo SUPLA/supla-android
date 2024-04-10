@@ -1,85 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@color/menubar">
+
+  <TextView
+    android:id="@+id/tv_select_channel_title"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerHorizontal="false"
+    android:layout_marginLeft="20dp"
+    android:layout_marginTop="60dp"
+    android:layout_marginRight="20dp"
+    android:text="@string/zwave_supla_channel"
+    android:textColor="@android:color/white"
+    android:textSize="40dp" />
+
+  <TextView
+    android:id="@+id/tv_select_channel_description"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/tv_select_channel_title"
+    android:layout_centerHorizontal="true"
+    android:layout_marginLeft="20dp"
+    android:layout_marginTop="10dp"
+    android:layout_marginRight="20dp"
+    android:text="@string/zwave_select_channel"
+    android:textColor="@android:color/white"
+    android:textSize="18sp" />
+
+  <TextView
+    android:id="@+id/tv_device_list_title"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/tv_select_channel_description"
+    android:layout_centerHorizontal="false"
+    android:layout_marginLeft="20dp"
+    android:layout_marginTop="80dp"
+    android:layout_marginRight="20dp"
+    android:text="@string/bridge"
+    android:textColor="@android:color/white"
+    android:textSize="18sp" />
+
+  <Spinner
+    android:id="@+id/zwave_device_list"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/menubar">
+    android:layout_height="wrap_content"
+    android:layout_below="@id/tv_device_list_title"
+    android:layout_centerHorizontal="true"
+    android:layout_marginLeft="20dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginRight="20dp"
+    android:background="@drawable/background_spinner"
+    android:padding="5dp"
+    android:textSize="18sp" />
 
-    <TextView
-        android:id="@+id/tv_select_channel_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="false"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="60dp"
-        android:layout_marginRight="20dp"
-        android:text="@string/zwave_supla_channel"
-        android:textColor="@android:color/white"
-        android:textSize="40dp" />
+  <TextView
+    android:id="@+id/tv_channel_list_title"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/zwave_device_list"
+    android:layout_centerHorizontal="false"
+    android:layout_marginLeft="20dp"
+    android:layout_marginTop="30dp"
+    android:layout_marginRight="20dp"
+    android:text="@string/zwave_supla_channel"
+    android:textColor="@android:color/white"
+    android:textSize="18sp" />
 
-    <TextView
-        android:id="@+id/tv_select_channel_description"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_select_channel_title"
-        android:layout_centerHorizontal="true"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="20dp"
-        android:text="@string/zwave_select_channel"
-        android:textColor="@android:color/white"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/tv_device_list_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_select_channel_description"
-        android:layout_centerHorizontal="false"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="80dp"
-        android:layout_marginRight="20dp"
-        android:text="@string/bridge"
-        android:textColor="@android:color/white"
-        android:textSize="18sp" />
-
-    <Spinner
-        android:id="@+id/zwave_device_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_device_list_title"
-        android:layout_centerHorizontal="true"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginRight="20dp"
-        android:background="@drawable/rounded_spinner"
-        android:padding="5dp"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/tv_channel_list_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/zwave_device_list"
-        android:layout_centerHorizontal="false"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginRight="20dp"
-        android:text="@string/zwave_supla_channel"
-        android:textColor="@android:color/white"
-        android:textSize="18sp" />
-
-    <Spinner
-        android:id="@+id/zwave_channel_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_channel_list_title"
-        android:layout_centerHorizontal="true"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginRight="20dp"
-        android:background="@drawable/rounded_spinner"
-        android:padding="5dp"
-        android:textSize="18sp" />
+  <Spinner
+    android:id="@+id/zwave_channel_list"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/tv_channel_list_title"
+    android:layout_centerHorizontal="true"
+    android:layout_marginLeft="20dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginRight="20dp"
+    android:background="@drawable/background_spinner"
+    android:padding="5dp"
+    android:textSize="18sp" />
 
 
 </RelativeLayout>

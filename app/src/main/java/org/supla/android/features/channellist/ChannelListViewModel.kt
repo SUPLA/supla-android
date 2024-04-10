@@ -38,7 +38,6 @@ import org.supla.android.features.details.switchdetail.SwitchDetailFragment
 import org.supla.android.features.details.thermometerdetail.ThermometerDetailFragment
 import org.supla.android.features.details.thermostatdetail.ThermostatDetailFragment
 import org.supla.android.lib.SuplaClientMsg
-import org.supla.android.lib.SuplaConst
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.lists.BaseListViewModel
 import org.supla.android.ui.lists.ListItem
@@ -166,11 +165,6 @@ class ChannelListViewModel @Inject constructor(
       return // do not open details for offline channels
     }
 
-    if (data.function == SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT) {
-      sendEvent(ChannelListViewEvent.OpenThermostatDetails)
-      return
-    }
-
     when (val detailType = provideDetailTypeUseCase(data)) {
       is SwitchDetailType -> sendEvent(ChannelListViewEvent.OpenSwitchDetail(ItemBundle.from(data), detailType.pages))
       is ThermostatDetailType -> sendEvent(ChannelListViewEvent.OpenThermostatDetail(ItemBundle.from(data), detailType.pages))
@@ -202,7 +196,6 @@ sealed class ChannelListViewEvent : ViewEvent {
   data class OpenRollerShutterDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) :
     OpenStandardDetail(R.id.roller_shutter_detail_fragment, RollerShutterDetailFragment.bundle(itemBundle, pages.toTypedArray()))
 
-  object OpenThermostatDetails : ChannelListViewEvent()
   object ReassignAdapter : ChannelListViewEvent()
 
   abstract class OpenStandardDetail(

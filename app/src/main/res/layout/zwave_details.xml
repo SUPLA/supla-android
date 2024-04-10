@@ -1,250 +1,260 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@color/menubar">
+
+
+  <TextView
+    android:id="@+id/tv_details_title"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerHorizontal="false"
+    android:layout_marginLeft="20dp"
+    android:layout_marginTop="15dp"
+    android:layout_marginRight="20dp"
+    android:text="@string/device"
+    android:textColor="@android:color/white"
+    android:textSize="40sp" />
+
+  <TextView
+    android:id="@+id/tv_details_description"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/tv_details_title"
+    android:layout_marginLeft="20dp"
+    android:layout_marginTop="15dp"
+    android:layout_marginRight="20dp"
+    android:text="@string/zwave_select_node"
+    android:textColor="@android:color/white"
+    android:textSize="18sp" />
+
+  <LinearLayout
+    android:id="@+id/llList"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/menubar">
-
-
-    <TextView
-        android:id="@+id/tv_details_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="false"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginRight="20dp"
-        android:text="@string/device"
-        android:textColor="@android:color/white"
-        android:textSize="40sp" />
+    android:layout_height="wrap_content"
+    android:layout_below="@id/tv_details_description"
+    android:layout_marginLeft="20dp"
+    android:layout_marginTop="15dp"
+    android:layout_marginRight="20dp"
+    android:orientation="vertical">
 
     <TextView
-        android:id="@+id/tv_details_description"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_details_title"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginRight="20dp"
-        android:text="@string/zwave_select_node"
-        android:textColor="@android:color/white"
+      android:id="@+id/tv_details_channel_title"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/zwave_supla_channel"
+      android:textColor="@android:color/white" />
+
+    <TextView
+      android:id="@+id/tv_details_channel_text"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:gravity="center_vertical"
+      android:text="ABCD"
+      android:textColor="@android:color/white"
+      android:textSize="18sp" />
+
+    <TextView
+      android:id="@+id/tv_details_device_title"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="6dp"
+      android:text="@string/zwave_device"
+      android:textColor="@android:color/white" />
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:gravity="center"
+      android:orientation="horizontal">
+
+      <Spinner
+        android:id="@+id/zwave_node_list"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_weight="1"
+        android:background="@drawable/background_spinner"
         android:textSize="18sp" />
 
-    <LinearLayout
-        android:id="@+id/llList"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_details_description"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginRight="20dp"
-        android:orientation="vertical">
+      <FrameLayout
+        android:layout_width="35dp"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="2dp"
+        android:layout_weight="0"
+        android:background="@drawable/rounded_white_btn">
 
-        <TextView
-            android:id="@+id/tv_details_channel_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/zwave_supla_channel"
-            android:textColor="@android:color/white" />
-
-        <TextView
-            android:id="@+id/tv_details_channel_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:text="ABCD"
-            android:textColor="@android:color/white"
-            android:textSize="18sp" />
-
-        <TextView
-            android:id="@+id/tv_details_device_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:text="@string/zwave_device"
-            android:textColor="@android:color/white" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <Spinner
-                android:id="@+id/zwave_node_list"
-                android:layout_width="match_parent"
-                android:layout_height="35dp"
-                android:layout_weight="1"
-                android:background="@drawable/rounded_spinner"
-                android:textSize="18sp" />
-
-            <FrameLayout
-                android:layout_width="35dp"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="2dp"
-                android:layout_weight="0"
-                android:background="@drawable/rounded_white_btn">
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btnGetNodeList"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0"
-                    android:background="@drawable/refresh" />
-            </FrameLayout>
-        </LinearLayout>
+        <androidx.appcompat.widget.AppCompatButton
+          android:id="@+id/btnGetNodeList"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:layout_weight="0"
+          android:background="@drawable/refresh" />
+      </FrameLayout>
     </LinearLayout>
+  </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/llButtons"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/llList"
-        android:layout_alignParentBottom="false"
-        android:layout_marginTop="20dp"
-        android:background="@android:color/white"
-        android:orientation="vertical"
-        android:padding="5dp">
-
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:text="@string/zwave_network"
-            android:textColor="@android:color/black" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginRight="20dp"
-            android:orientation="horizontal">
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btnAddNodeLeft"
-                android:layout_width="50dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0"
-                android:background="@drawable/zwave_add" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btnAddNodeRight"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_weight="1"
-                android:background="@android:color/transparent"
-                android:gravity="left|center_vertical"
-                android:text="@string/zwave_add_device" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="20dp"
-            android:orientation="horizontal">
-
-            <View
-                android:id="@+id/view3"
-                android:layout_width="50dp"
-                android:layout_height="1dp"
-                android:layout_weight="0" />
-
-            <View
-                android:id="@+id/view4"
-                android:layout_width="wrap_content"
-                android:layout_height="1dp"
-                android:layout_weight="1"
-                android:background="@color/disabled" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_weight="0"
-            android:orientation="horizontal">
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btnRemoveNodeLeft"
-                android:layout_width="50dp"
-                android:layout_height="wrap_content"
-                android:background="@drawable/zwave_remove" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btnRemoveNodeRight"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_weight="1"
-                android:background="@android:color/transparent"
-                android:gravity="left|center_vertical"
-                android:text="@string/zwave_remove_device" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="20dp"
-            android:layout_weight="0"
-            android:orientation="horizontal">
-
-            <View
-                android:id="@+id/view5"
-                android:layout_width="50dp"
-                android:layout_height="1dp"
-                android:layout_weight="0" />
-
-            <View
-                android:id="@+id/view6"
-                android:layout_width="wrap_content"
-                android:layout_height="1dp"
-                android:layout_weight="1"
-                android:background="@color/disabled" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="5dp"
-            android:orientation="horizontal">
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btnResetAndClearLeft"
-                android:layout_width="50dp"
-                android:layout_height="wrap_content"
-                android:background="@drawable/zwave_reset"
-                android:textColor="#ffff0000" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btnResetAndClearRight"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_weight="1"
-                android:background="@android:color/transparent"
-                android:gravity="left"
-                android:text="@string/zwave_reset_and_clear"
-                android:textColor="#ffff0000" />
-        </LinearLayout>
-
-    </LinearLayout>
+  <LinearLayout
+    android:id="@+id/llButtons"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/llList"
+    android:layout_alignParentBottom="false"
+    android:layout_marginTop="20dp"
+    android:background="@color/surface"
+    android:orientation="vertical"
+    android:padding="5dp">
 
     <TextView
-        android:id="@+id/tv_info"
+      android:id="@+id/textView"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginLeft="20dp"
+      android:text="@string/zwave_network"
+      android:textColor="@color/on_background" />
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="50dp"
+      android:layout_marginLeft="20dp"
+      android:layout_marginTop="5dp"
+      android:layout_marginRight="20dp"
+      android:orientation="horizontal">
+
+      <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/btnAddNodeLeft"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:background="@android:color/transparent"
+        android:src="@drawable/zwave_add"
+        android:scaleType="fitCenter"
+        android:tint="@color/on_background" />
+
+      <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnAddNodeRight"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_below="@id/llButtons"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginRight="20dp"
-        android:background="@drawable/zwave_info_box"
-        android:gravity="center"
-        android:text="Upłunął czas oczekiwania na naciśnięcie przycisku."
-        android:textColor="@color/zwave_info_label_text" />
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_weight="1"
+        android:background="@android:color/transparent"
+        android:gravity="left|center_vertical"
+        android:textColor="@color/on_background"
+        android:text="@string/zwave_add_device" />
+
+    </LinearLayout>
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_marginLeft="20dp"
+      android:orientation="horizontal">
+
+      <View
+        android:id="@+id/view3"
+        android:layout_width="50dp"
+        android:layout_height="1dp"
+        android:layout_weight="0" />
+
+      <View
+        android:id="@+id/view4"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:layout_weight="1"
+        android:background="@color/disabled" />
+    </LinearLayout>
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="50dp"
+      android:layout_marginLeft="20dp"
+      android:layout_marginRight="20dp"
+      android:layout_weight="0"
+      android:orientation="horizontal">
+
+      <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/btnRemoveNodeLeft"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:src="@drawable/zwave_remove"
+        android:scaleType="fitCenter"
+        android:tint="@color/on_background"/>
+
+      <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnRemoveNodeRight"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_weight="1"
+        android:background="@android:color/transparent"
+        android:gravity="left|center_vertical"
+        android:text="@string/zwave_remove_device"
+        android:textColor="@color/on_background"/>
+    </LinearLayout>
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_marginLeft="20dp"
+      android:layout_weight="0"
+      android:orientation="horizontal">
+
+      <View
+        android:id="@+id/view5"
+        android:layout_width="50dp"
+        android:layout_height="1dp"
+        android:layout_weight="0" />
+
+      <View
+        android:id="@+id/view6"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:layout_weight="1"
+        android:background="@color/disabled" />
+    </LinearLayout>
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="50dp"
+      android:layout_marginLeft="20dp"
+      android:layout_marginRight="20dp"
+      android:layout_marginBottom="5dp"
+      android:orientation="horizontal">
+
+      <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/btnResetAndClearLeft"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:src="@drawable/zwave_reset"
+        android:scaleType="fitCenter"
+        android:tint="@color/on_background" />
+
+      <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnResetAndClearRight"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_weight="1"
+        android:background="@android:color/transparent"
+        android:gravity="left"
+        android:text="@string/zwave_reset_and_clear"
+        android:textColor="@color/red" />
+    </LinearLayout>
+
+  </LinearLayout>
+
+  <TextView
+    android:id="@+id/tv_info"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:layout_below="@id/llButtons"
+    android:layout_marginLeft="20dp"
+    android:layout_marginTop="30dp"
+    android:layout_marginRight="20dp"
+    android:background="@drawable/zwave_info_box"
+    android:gravity="center"
+    android:text="Upłunął czas oczekiwania na naciśnięcie przycisku."
+    android:textColor="@color/zwave_info_label_text" />
 </RelativeLayout>

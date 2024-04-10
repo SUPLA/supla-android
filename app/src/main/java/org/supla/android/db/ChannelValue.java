@@ -213,8 +213,7 @@ public class ChannelValue extends DbItem {
       } else if (func == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER) {
 
         return getDouble(-275);
-      } else if (func == SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT
-          || func == SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS) {
+      } else if (func == SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS) {
 
         byte[] t = getChannelValue();
         if (t.length >= 4) {
@@ -236,8 +235,7 @@ public class ChannelValue extends DbItem {
 
   public double getPresetTemp(int func) {
     if (Value != null) {
-      if (func == SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT
-          || func == SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS) {
+      if (func == SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS) {
 
         byte[] t = getChannelValue();
         if (t.length >= 6) {

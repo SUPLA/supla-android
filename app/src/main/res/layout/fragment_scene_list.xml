@@ -22,13 +22,23 @@
       app:layout_constraintGuide_percent="0.5"
       app:layout_constraintTop_toTopOf="parent" />
 
+    <androidx.appcompat.widget.AppCompatImageView
+      android:id="@+id/scenes_empty_list_icon"
+      android:layout_width="64dp"
+      android:layout_height="64dp"
+      android:src="@drawable/ic_empty"
+      android:tint="@color/gray"
+      app:layout_constraintBottom_toTopOf="@id/scenes_empty_list_label"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent" />
+
     <TextView
       android:id="@+id/scenes_empty_list_label"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginStart="@dimen/distance_default"
       android:layout_marginEnd="@dimen/distance_default"
-      android:layout_marginBottom="@dimen/distance_default"
+      android:layout_marginBottom="@dimen/distance_small"
       android:text="@string/main_no_entries"
       android:textAlignment="center"
       android:textAppearance="@style/AppTheme.TextAppearance.Headline4"
@@ -38,7 +48,7 @@
     <androidx.appcompat.widget.AppCompatButton
       android:id="@+id/scenes_empty_list_button"
       style="@style/AppTheme.Button.Outlined"
-      android:layout_marginTop="@dimen/distance_default"
+      android:layout_marginTop="@dimen/distance_small"
       android:text="@string/scenes_empty_list_button"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"

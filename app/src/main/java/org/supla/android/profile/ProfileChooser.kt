@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
+import io.reactivex.rxjava3.schedulers.Schedulers
 import org.supla.android.R
 import org.supla.android.SuplaApp
 import org.supla.android.cfg.ProfileItemViewModel
@@ -53,7 +54,9 @@ class ProfileChooser(
 
   fun selectProfile(idx: Int) {
     val activated = try {
-      activateProfileUseCase(profiles[idx].id!!, false).blockingAwait()
+      activateProfileUseCase(profiles[idx].id!!, false)
+        .subscribeOn(Schedulers.io())
+        .blockingAwait()
       true
     } catch (throwable: Throwable) {
       false

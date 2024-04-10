@@ -151,10 +151,10 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
       return;
     }
 
-    if (buttons.size() > 0) {
-      addShortSeparator();
-    } else {
+    if (buttons.isEmpty()) {
       addLongSeparator();
+    } else {
+      addShortSeparator();
     }
 
     LinearLayout ll = new LinearLayout(getContext());

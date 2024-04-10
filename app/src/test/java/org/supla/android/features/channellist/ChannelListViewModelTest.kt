@@ -283,24 +283,6 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
   }
 
   @Test
-  fun `should open thermostat details for channel with thermostat function`() {
-    // given
-    val remoteId = 123
-    val channel = mockChannelData(remoteId, SUPLA_CHANNELFNC_THERMOSTAT, online = true)
-    whenever(findChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
-
-    // when
-    viewModel.onListItemClick(remoteId)
-
-    // then
-    assertThat(states).isEmpty()
-    assertThat(events).containsExactly(
-      ChannelListViewEvent.OpenThermostatDetails
-    )
-    verifyZeroInteractionsExcept()
-  }
-
-  @Test
   fun `should open legacy detail fragment`() {
     // given
     val remoteId = 123
