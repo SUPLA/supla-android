@@ -362,7 +362,6 @@ public class ChannelGroup extends ChannelBase {
         case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
         case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
         case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
-        case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
         case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
           try {
             sum += Integer.valueOf(items[a]).intValue() > 0 ? 1 : 0;

@@ -61,7 +61,6 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_RAINSENSOR
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_WEIGHTSENSOR
@@ -114,8 +113,7 @@ class GetChannelDefaultCaptionUseCase @Inject constructor() {
       SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT -> string(R.string.channel_caption_general_purpose_measurement)
       SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER -> string(R.string.channel_caption_general_purpose_meter)
       SUPLA_CHANNELFNC_HVAC_THERMOSTAT,
-      SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER,
-      SUPLA_CHANNELFNC_THERMOSTAT -> string(R.string.channel_caption_thermostat)
+      SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER -> string(R.string.channel_caption_thermostat)
 
       SUPLA_CHANNELFNC_ELECTRICITY_METER,
       SUPLA_CHANNELFNC_IC_ELECTRICITY_METER -> string(R.string.channel_caption_electricitymeter)

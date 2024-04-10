@@ -38,7 +38,6 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE
 
@@ -91,7 +90,6 @@ data class ChannelGroupEntity(
         SUPLA_CHANNELFNC_LIGHTSWITCH,
         SUPLA_CHANNELFNC_STAIRCASETIMER,
         SUPLA_CHANNELFNC_DIMMER,
-        SUPLA_CHANNELFNC_THERMOSTAT,
         SUPLA_CHANNELFNC_VALVE_OPENCLOSE -> {
           val sum = items.sumOf { item -> (item.toIntOrNull()?.let { if (it > 0) 1 else 0 } ?: 0).toInt() }
           return sum.times(100).div(items.count())

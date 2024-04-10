@@ -41,7 +41,6 @@ import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DIMMER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.GetChannelCaptionUseCase
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
@@ -80,7 +79,7 @@ class SwitchDetailViewModelTest : BaseViewModelTest<SwitchDetailViewState, Switc
   fun `should load channel`() {
     // given
     val remoteId = 123
-    val function = SUPLA_CHANNELFNC_THERMOSTAT
+    val function = SUPLA_CHANNELFNC_DIMMER
     val channelData: ChannelDataEntity = mockk()
     every { channelData.visible } returns 1
     every { channelData.function } returns function
@@ -105,7 +104,7 @@ class SwitchDetailViewModelTest : BaseViewModelTest<SwitchDetailViewState, Switc
   fun `should close activity when loaded channel is not visible`() {
     // given
     val remoteId = 123
-    val function = SUPLA_CHANNELFNC_THERMOSTAT
+    val function = SUPLA_CHANNELFNC_DIMMER
     val channelData: ChannelDataEntity = mockk()
     every { channelData.visible } returns 0
     every { channelData.function } returns function
@@ -127,7 +126,7 @@ class SwitchDetailViewModelTest : BaseViewModelTest<SwitchDetailViewState, Switc
   fun `should close activity when loaded channel has different function`() {
     // given
     val remoteId = 123
-    val function = SUPLA_CHANNELFNC_THERMOSTAT
+    val function = SUPLA_CHANNELFNC_DIMMER
     val channelData: ChannelDataEntity = mockk()
     every { channelData.visible } returns 1
     every { channelData.function } returns function

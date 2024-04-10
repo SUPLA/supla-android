@@ -118,7 +118,6 @@ public class SuplaConst {
   public static final int SUPLA_CHANNELFNC_IC_GAS_METER = 320;
   public static final int SUPLA_CHANNELFNC_IC_WATER_METER = 330;
   public static final int SUPLA_CHANNELFNC_IC_HEAT_METER = 340;
-  public static final int SUPLA_CHANNELFNC_THERMOSTAT = 400;
   public static final int SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS = 410;
   public static final int SUPLA_CHANNELFNC_HVAC_THERMOSTAT = 420;
   public static final int SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL = 422;
@@ -425,7 +424,6 @@ public class SuplaConst {
       case SUPLA_CHANNELFNC_IC_HEAT_METER:
         resId = R.string.channel_func_heat_meter;
         break;
-      case SUPLA_CHANNELFNC_THERMOSTAT:
       case SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT:
         //      case SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO:
         //      case SuplaConst.SUPLA_CHANNELFNC_HVAC_DRYER:

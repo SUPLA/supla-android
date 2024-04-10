@@ -50,6 +50,10 @@ class MainNavigator @Inject constructor(@ActivityContext private val activityCon
     activityContext.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(activityContext.resources.getString(R.string.cloud_url))))
   }
 
+  fun navigateToWebView(url: String) {
+    activityContext.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+  }
+
   fun back(): Boolean = navController.navigateUp()
 
   private val animationOptions = NavOptions.Builder()

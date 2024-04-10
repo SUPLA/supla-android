@@ -768,7 +768,6 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
         case SuplaConst.SUPLA_CHANNELFNC_ALARMARMAMENTSENSOR:
         case SuplaConst.SUPLA_CHANNELFNC_MAILSENSOR:
         case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
-        case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
           left_onlineStatus.setVisibility(View.VISIBLE);
           left_onlineStatus.setShapeType(SuplaChannelStatus.ShapeType.Ring);
           right_onlineStatus.setVisibility(View.VISIBLE);

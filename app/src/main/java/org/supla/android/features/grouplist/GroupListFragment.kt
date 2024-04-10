@@ -57,9 +57,7 @@ class GroupListFragment : BaseFragment<GroupListViewState, GroupListViewEvent>(R
 
     binding.groupsList.adapter = adapter
     setupAdapter()
-    binding.groupsEmptyListButton.setOnClickListener {
-      navigator.navigateToCloudExternal()
-    }
+    binding.groupsEmptyListButton.setOnClickListener { viewModel.onAddGroupClick() }
   }
 
   override fun onStart() {
@@ -70,6 +68,8 @@ class GroupListFragment : BaseFragment<GroupListViewState, GroupListViewEvent>(R
   override fun handleEvents(event: GroupListViewEvent) {
     val suplaClient = suplaClientProvider.provide()
     when (event) {
+      is GroupListViewEvent.NavigateToPrivateCloud -> navigator.navigateToWebView(event.url)
+      is GroupListViewEvent.NavigateToSuplaCloud -> navigator.navigateToCloudExternal()
       is GroupListViewEvent.ShowValveDialog -> valveAlertDialog(event.remoteId, suplaClient).show()
       is GroupListViewEvent.ShowAmperageExceededDialog -> exceededAmperageDialog(event.remoteId, suplaClient).show()
       is GroupListViewEvent.OpenLegacyDetails -> {
@@ -90,14 +90,13 @@ class GroupListFragment : BaseFragment<GroupListViewState, GroupListViewEvent>(R
         destinationId = event.fragmentId,
         bundle = event.fragmentArguments
       )
-
-      else -> {}
     }
   }
 
   override fun handleViewState(state: GroupListViewState) {
     state.groups?.let { adapter.setItems(it) }
 
+    binding.groupsEmptyListIcon.visibleIf(state.groups?.isEmpty() == true)
     binding.groupsEmptyListLabel.visibleIf(state.groups?.isEmpty() == true)
     binding.groupsEmptyListButton.visibleIf(state.groups?.isEmpty() == true)
 

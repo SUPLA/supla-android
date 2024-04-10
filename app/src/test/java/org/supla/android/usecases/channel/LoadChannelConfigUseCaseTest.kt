@@ -35,9 +35,9 @@ import org.supla.android.data.source.RoomChannelRepository
 import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.remote.ChannelConfigType
 import org.supla.android.data.source.remote.SuplaChannelConfig
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_ALARM
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT
 
 @RunWith(MockitoJUnitRunner::class)
 class LoadChannelConfigUseCaseTest {
@@ -100,7 +100,7 @@ class LoadChannelConfigUseCaseTest {
     val profileId = 213L
     val remoteId = 123
     val channelEntity: ChannelEntity = mockk {
-      every { function } returns SUPLA_CHANNELFNC_THERMOSTAT
+      every { function } returns SUPLA_CHANNELFNC_ALARM
     }
     whenever(channelRepository.findByRemoteId(profileId, remoteId)).thenReturn(Maybe.just(channelEntity))
 
@@ -112,6 +112,6 @@ class LoadChannelConfigUseCaseTest {
     // then
     assertThat(throwable)
       .isInstanceOf(IllegalArgumentException::class.java)
-      .hasMessage("Channel not supported (function: `$SUPLA_CHANNELFNC_THERMOSTAT`)")
+      .hasMessage("Channel not supported (function: `$SUPLA_CHANNELFNC_ALARM`)")
   }
 }

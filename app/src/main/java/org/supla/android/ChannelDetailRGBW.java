@@ -21,6 +21,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
@@ -75,7 +76,7 @@ public class ChannelDetailRGBW extends DetailLayout
   private int lastColor;
   private int lastColorBrightness;
   private int lastBrightness;
-  private Button btnPowerOnOff;
+  private AppCompatImageButton btnPowerOnOff;
   private Boolean varilight;
   private Boolean zamel;
   private Boolean comelit;
@@ -360,7 +361,9 @@ public class ChannelDetailRGBW extends DetailLayout
 
   private void setPowerBtnOn(boolean on) {
     cbPicker.setPowerButtonOn(on);
-    setBtnBackground(btnPowerOnOff, on ? R.drawable.rgbwpoweron : R.drawable.rgbwpoweroff);
+    int color =
+        ResourcesCompat.getColor(getResources(), on ? R.color.primary : R.color.red_alert, null);
+    btnPowerOnOff.setImageTintList(ColorStateList.valueOf(color));
   }
 
   private boolean isAnyOn() {
@@ -455,15 +458,7 @@ public class ChannelDetailRGBW extends DetailLayout
     builder.setView(dialogView);
     final AlertDialog alertDialog = builder.create();
 
-    dialogView
-        .findViewById(R.id.btnClose)
-        .setOnClickListener(
-            new OnClickListener() {
-              @Override
-              public void onClick(View v) {
-                alertDialog.dismiss();
-              }
-            });
+    dialogView.findViewById(R.id.btnClose).setOnClickListener(v -> alertDialog.dismiss());
 
     Typeface quicksand = SuplaApp.getApp().getTypefaceQuicksandRegular();
     Typeface opensansbold = SuplaApp.getApp().getTypefaceOpenSansBold();
