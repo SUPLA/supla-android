@@ -38,6 +38,7 @@ object Versions {
         object Compose {
             const val Core = "1.4.3"
             const val ConstaintLayout = "1.0.1"
+            const val Material3 = "1.1.2"
         }
     }
 
