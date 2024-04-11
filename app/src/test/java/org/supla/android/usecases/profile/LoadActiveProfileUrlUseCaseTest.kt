@@ -1,5 +1,6 @@
 package org.supla.android.usecases.profile
 
+import android.net.Uri
 import io.mockk.every
 import io.mockk.mockk
 import io.reactivex.rxjava3.core.Single
@@ -10,7 +11,9 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoMoreInteractions
+import org.mockito.kotlin.verifyZeroInteractions
 import org.mockito.kotlin.whenever
+import org.supla.android.core.infrastructure.UriProxy
 import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.data.source.local.entity.ProfileEntity
 
@@ -19,6 +22,9 @@ class LoadActiveProfileUrlUseCaseTest {
 
   @Mock
   private lateinit var profileRepository: RoomProfileRepository
+
+  @Mock
+  private lateinit var uriProxy: UriProxy
 
   @InjectMocks
   private lateinit var useCase: LoadActiveProfileUrlUseCase
@@ -42,6 +48,7 @@ class LoadActiveProfileUrlUseCaseTest {
 
     verify(profileRepository).findActiveProfile()
     verifyNoMoreInteractions(profileRepository)
+    verifyZeroInteractions(uriProxy)
   }
 
   @Test
@@ -52,6 +59,8 @@ class LoadActiveProfileUrlUseCaseTest {
       every { emailAuth } returns true
       every { serverForEmail } returns url
     }
+    val uri: Uri = mockk()
+    whenever(uriProxy.toUri("https://$url")).thenReturn(uri)
     whenever(profileRepository.findActiveProfile()).thenReturn(Single.just(profile))
 
     // when
@@ -59,10 +68,11 @@ class LoadActiveProfileUrlUseCaseTest {
 
     // then
     observer.assertComplete()
-    observer.assertResult(CloudUrl.PrivateCloud("https://$url"))
+    observer.assertResult(CloudUrl.PrivateCloud(uri))
 
     verify(profileRepository).findActiveProfile()
-    verifyNoMoreInteractions(profileRepository)
+    verify(uriProxy).toUri("https://$url")
+    verifyNoMoreInteractions(profileRepository, uriProxy)
   }
 
   @Test
@@ -84,6 +94,7 @@ class LoadActiveProfileUrlUseCaseTest {
 
     verify(profileRepository).findActiveProfile()
     verifyNoMoreInteractions(profileRepository)
+    verifyZeroInteractions(uriProxy)
   }
 
   @Test
@@ -94,6 +105,8 @@ class LoadActiveProfileUrlUseCaseTest {
       every { emailAuth } returns false
       every { serverForAccessId } returns url
     }
+    val uri: Uri = mockk()
+    whenever(uriProxy.toUri("https://$url")).thenReturn(uri)
     whenever(profileRepository.findActiveProfile()).thenReturn(Single.just(profile))
 
     // when
@@ -101,9 +114,10 @@ class LoadActiveProfileUrlUseCaseTest {
 
     // then
     observer.assertComplete()
-    observer.assertResult(CloudUrl.PrivateCloud("https://$url"))
+    observer.assertResult(CloudUrl.PrivateCloud(uri))
 
     verify(profileRepository).findActiveProfile()
-    verifyNoMoreInteractions(profileRepository)
+    verify(uriProxy).toUri("https://$url")
+    verifyNoMoreInteractions(profileRepository, uriProxy)
   }
 }

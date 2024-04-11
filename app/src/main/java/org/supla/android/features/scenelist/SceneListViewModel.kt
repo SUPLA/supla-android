@@ -17,6 +17,7 @@ package org.supla.android.features.scenelist
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.net.Uri
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.Preferences
@@ -96,7 +97,7 @@ class SceneListViewModel @Inject constructor(
 sealed class SceneListViewEvent : ViewEvent {
   object ReassignAdapter : SceneListViewEvent()
   object NavigateToSuplaCloud : SceneListViewEvent()
-  data class NavigateToPrivateCloud(val url: String) : SceneListViewEvent()
+  data class NavigateToPrivateCloud(val url: Uri) : SceneListViewEvent()
 }
 
 data class SceneListViewState(

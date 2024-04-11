@@ -67,7 +67,7 @@
             android:layout_marginLeft="10dp"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:background="@drawable/profile"
+            android:background="@drawable/ic_account"
             android:clickable="true" />
     </LinearLayout>
 

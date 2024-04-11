@@ -24,6 +24,7 @@
   <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=L4N7RSWME6LG2</string>
   <string name="create_url">https://cloud.supla.org/register?lang=en</string>
   <string name="delete_url">https://{SERVER_ADDRESS}/db99845855b2ecbfecca9a095062b96c3e27703f?lang=en</string>
+  <string name="devices_list_url" translatable="false">https://www.supla.org/pl/</string>
 
   <string name="version">version</string>
 
@@ -666,6 +667,7 @@
   <string name="roller_shutter_calibration_needed" translatable="false">Calibration needed</string>
   <string name="cfg_night_mode" translatable="false">Night mode</string>
   <string name="auto" translatable="false">Auto</string>
+  <string name="menu_devices_list" translatable="false">Device catalog</string>
 
   <plurals name="details_timer_info_on" translatable="false">
     <item quantity="other">on</item>

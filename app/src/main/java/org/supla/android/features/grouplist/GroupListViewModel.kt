@@ -17,6 +17,7 @@ package org.supla.android.features.grouplist
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.net.Uri
 import android.os.Bundle
 import androidx.annotation.IdRes
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -181,7 +182,7 @@ sealed class GroupListViewEvent : ViewEvent {
   data class OpenLegacyDetails(val remoteId: Int, val type: LegacyDetailType) : GroupListViewEvent()
   object ReassignAdapter : GroupListViewEvent()
   object NavigateToSuplaCloud : GroupListViewEvent()
-  data class NavigateToPrivateCloud(val url: String) : GroupListViewEvent()
+  data class NavigateToPrivateCloud(val url: Uri) : GroupListViewEvent()
 
   data class OpenRollerShutterDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) :
     OpenStandardDetail(R.id.roller_shutter_detail_fragment, RollerShutterDetailFragment.bundle(itemBundle, pages.toTypedArray()))

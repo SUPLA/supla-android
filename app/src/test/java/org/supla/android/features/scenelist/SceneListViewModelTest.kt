@@ -1,5 +1,6 @@
 package org.supla.android.features.scenelist
 
+import android.net.Uri
 import io.mockk.mockk
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
@@ -167,7 +168,7 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
   @Test
   fun `on add group click should open private cloud`() {
     // given
-    val url = "url"
+    val url: Uri = mockk()
     whenever(loadActiveProfileUrlUseCase.invoke()).thenReturn(Single.just(CloudUrl.PrivateCloud(url)))
 
     // when
