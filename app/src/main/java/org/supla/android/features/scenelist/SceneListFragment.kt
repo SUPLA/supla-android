@@ -63,7 +63,7 @@ class SceneListFragment : BaseFragment<SceneListViewState, SceneListViewEvent>(R
         binding.scenesList.adapter = null
         binding.scenesList.adapter = adapter
       }
-      is SceneListViewEvent.NavigateToPrivateCloud -> navigator.navigateToWebView(event.url)
+      is SceneListViewEvent.NavigateToPrivateCloud -> navigator.navigateToWeb(event.url)
       is SceneListViewEvent.NavigateToSuplaCloud -> navigator.navigateToCloudExternal()
     }
   }

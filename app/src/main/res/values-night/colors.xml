@@ -21,7 +21,8 @@
     <color name="light_blue">#707ecc</color>
     <color name="light_green">#8db386</color>
     <color name="light_red">#cc8870</color>
-    <color name="dark_blue">#333399</color>
+    <color name="dark_blue">#6666b3</color>
+    <color name="dark_red">#b36666</color>
 
     <color name="layout_background">#171717</color>
     <color name="field_background">#3D3D3E</color>

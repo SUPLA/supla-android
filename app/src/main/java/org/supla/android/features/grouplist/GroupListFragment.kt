@@ -68,7 +68,7 @@ class GroupListFragment : BaseFragment<GroupListViewState, GroupListViewEvent>(R
   override fun handleEvents(event: GroupListViewEvent) {
     val suplaClient = suplaClientProvider.provide()
     when (event) {
-      is GroupListViewEvent.NavigateToPrivateCloud -> navigator.navigateToWebView(event.url)
+      is GroupListViewEvent.NavigateToPrivateCloud -> navigator.navigateToWeb(event.url)
       is GroupListViewEvent.NavigateToSuplaCloud -> navigator.navigateToCloudExternal()
       is GroupListViewEvent.ShowValveDialog -> valveAlertDialog(event.remoteId, suplaClient).show()
       is GroupListViewEvent.ShowAmperageExceededDialog -> exceededAmperageDialog(event.remoteId, suplaClient).show()

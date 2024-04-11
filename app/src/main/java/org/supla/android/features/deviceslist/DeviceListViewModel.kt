@@ -1,4 +1,4 @@
-package org.supla.android.features.deleteaccountweb
+package org.supla.android.features.deviceslist
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,6 +17,8 @@ package org.supla.android.features.deleteaccountweb
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.net.Uri
+import android.webkit.WebResourceRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.features.webcontent.WebContentViewModel
@@ -25,34 +27,22 @@ import org.supla.android.tools.SuplaSchedulers
 import javax.inject.Inject
 
 @HiltViewModel
-class DeleteAccountWebViewModel @Inject constructor(
+class DevicesListViewModel @Inject constructor(
   schedulers: SuplaSchedulers
-) : WebContentViewModel<DeleteAccountWebViewState, DeleteAccountWebViewEvent>(DeleteAccountWebViewState(), schedulers) {
-
-  override fun urlLoaded(url: String?) {
-    super.urlLoaded(url)
-
-    if (url?.endsWith(REMOVAL_FINISHED_SUFIX) == true) {
-      sendEvent(DeleteAccountWebViewEvent.CloseClicked)
-    }
-  }
+) : WebContentViewModel<DevicesListViewState, DeviceListViewEvent>(DevicesListViewState(), schedulers) {
 
   override fun loadingState(loading: Boolean) = currentState().copy(loading = loading)
 
-  fun getUrl(internationalizedUrl: String, serverAddress: String?): String =
-    if (serverAddress == null || serverAddress.isEmpty()) {
-      internationalizedUrl.replace("{SERVER_ADDRESS}", "cloud.supla.org")
-    } else {
-      internationalizedUrl.replace("{SERVER_ADDRESS}", serverAddress)
+  override fun allowRequest(request: WebResourceRequest?): Boolean {
+    request?.let {
+      sendEvent(DeviceListViewEvent.OpenUrl(it.url))
     }
-
-  companion object {
-    private const val REMOVAL_FINISHED_SUFIX = "ack=true"
+    return false
   }
 }
 
-sealed class DeleteAccountWebViewEvent : ViewEvent {
-  object CloseClicked : DeleteAccountWebViewEvent()
+sealed class DeviceListViewEvent : ViewEvent {
+  data class OpenUrl(val url: Uri) : DeviceListViewEvent()
 }
 
-data class DeleteAccountWebViewState(override val loading: Boolean = true) : WebContentViewState(loading)
+data class DevicesListViewState(override val loading: Boolean = true) : WebContentViewState(loading)

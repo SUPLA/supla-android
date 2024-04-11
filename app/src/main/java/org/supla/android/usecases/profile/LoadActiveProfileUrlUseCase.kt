@@ -17,31 +17,36 @@ package org.supla.android.usecases.profile
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.net.Uri
 import io.reactivex.rxjava3.core.Single
+import org.supla.android.core.infrastructure.UriProxy
 import org.supla.android.data.source.RoomProfileRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 
 sealed class CloudUrl {
   object SuplaCloud : CloudUrl()
-  data class PrivateCloud(val url: String) : CloudUrl()
+  data class PrivateCloud(val url: Uri) : CloudUrl()
 }
 
 @Singleton
-class LoadActiveProfileUrlUseCase @Inject constructor(private val profileRepository: RoomProfileRepository) {
+class LoadActiveProfileUrlUseCase @Inject constructor(
+  private val profileRepository: RoomProfileRepository,
+  private val uriProxy: UriProxy
+) {
 
   operator fun invoke(): Single<CloudUrl> =
     profileRepository.findActiveProfile()
       .map { profile ->
         if (profile.emailAuth) {
           if (profile.serverForEmail?.endsWith("supla.org") == false) {
-            CloudUrl.PrivateCloud("https://${profile.serverForEmail}")
+            CloudUrl.PrivateCloud(uriProxy.toUri("https://${profile.serverForEmail}"))
           } else {
             CloudUrl.SuplaCloud
           }
         } else {
           if (profile.serverForAccessId?.endsWith("supla.org") == false) {
-            CloudUrl.PrivateCloud("https://${profile.serverForAccessId}")
+            CloudUrl.PrivateCloud(uriProxy.toUri("https://${profile.serverForAccessId}"))
           } else {
             CloudUrl.SuplaCloud
           }

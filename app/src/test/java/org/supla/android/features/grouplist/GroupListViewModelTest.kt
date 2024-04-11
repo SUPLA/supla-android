@@ -1,5 +1,6 @@
 package org.supla.android.features.grouplist
 
+import android.net.Uri
 import io.mockk.every
 import io.mockk.mockk
 import io.reactivex.rxjava3.core.Completable
@@ -370,7 +371,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
   @Test
   fun `on add group click should open private cloud`() {
     // given
-    val url = "url"
+    val url: Uri = mockk()
     whenever(loadActiveProfileUrlUseCase.invoke()).thenReturn(Single.just(CloudUrl.PrivateCloud(url)))
 
     // when
