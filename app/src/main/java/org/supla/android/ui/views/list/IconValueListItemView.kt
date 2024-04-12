@@ -74,7 +74,7 @@ fun IconValueListItemView(
     hasLeftButton = hasLeftButton,
     hasRightButton = hasRightButton,
     scale = scale,
-    showInfoIcon = showInfoIcon
+    showInfoIcon = showInfoIcon && data.infoSupported
   ) {
     ListItemMainRow(scale = scale) {
       data.icon?.let {
@@ -103,7 +103,8 @@ private fun Preview() {
           titleProvider = { "Channel" },
           icon = ImageId(R.drawable.fnc_gpm_5),
           value = "100 hPa",
-          issueIconType = null
+          issueIconType = null,
+          infoSupported = true
         ),
         scale = 1f,
         showInfoIcon = true

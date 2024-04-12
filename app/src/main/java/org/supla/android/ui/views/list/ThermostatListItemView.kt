@@ -99,7 +99,7 @@ fun ThermostatListItemView(
     hasRightButton = hasRightButton,
     onInfoClick = onInfoClick,
     onTitleLongClick = onTitleLongClick,
-    showInfoIcon = showInfoIcon,
+    showInfoIcon = showInfoIcon && data.infoSupported,
     itemIssueIconType = data.issueIconType,
     onIssueClick = onIssueClick,
     onItemClick = onItemClick,
@@ -164,7 +164,8 @@ private fun Preview() {
             subValue = "21,0°",
             indicatorIcon = R.drawable.ic_cooling,
             issueIconType = IssueIconType.WARNING,
-            estimatedTimerEndDate = null
+            estimatedTimerEndDate = null,
+            infoSupported = true
           ),
           true,
           showInfoIcon = true,
@@ -185,7 +186,8 @@ private fun Preview() {
             subValue = "21,0°",
             indicatorIcon = R.drawable.ic_cooling,
             issueIconType = IssueIconType.ERROR,
-            estimatedTimerEndDate = null
+            estimatedTimerEndDate = null,
+            infoSupported = true
           ),
           false,
           showInfoIcon = true,
@@ -206,7 +208,8 @@ private fun Preview() {
             subValue = "21,0°",
             indicatorIcon = R.drawable.ic_cooling,
             issueIconType = null,
-            estimatedTimerEndDate = null
+            estimatedTimerEndDate = null,
+            infoSupported = true
           ),
           true,
           showInfoIcon = true,
@@ -227,7 +230,8 @@ private fun Preview() {
             subValue = "21,0°",
             indicatorIcon = R.drawable.ic_cooling,
             issueIconType = IssueIconType.WARNING,
-            estimatedTimerEndDate = null
+            estimatedTimerEndDate = null,
+            infoSupported = true
           ),
           false,
           showInfoIcon = true,
@@ -242,7 +246,9 @@ private fun Preview() {
 @Composable
 private fun Preview_Narrow() {
   SuplaTheme {
-    Column(modifier = Modifier.background(MaterialTheme.colors.background).width(350.dp)) {
+    Column(modifier = Modifier
+      .background(MaterialTheme.colors.background)
+      .width(350.dp)) {
       Column(
         modifier = Modifier
           .height(dimensionResource(id = R.dimen.channel_layout_height).times(1.5f))
@@ -256,7 +262,8 @@ private fun Preview_Narrow() {
             subValue = "21,0°",
             indicatorIcon = R.drawable.ic_cooling,
             issueIconType = IssueIconType.WARNING,
-            estimatedTimerEndDate = null
+            estimatedTimerEndDate = null,
+            infoSupported = true
           ),
           true,
           showInfoIcon = true,
@@ -277,7 +284,8 @@ private fun Preview_Narrow() {
             subValue = "21,0°",
             indicatorIcon = R.drawable.ic_cooling,
             issueIconType = IssueIconType.ERROR,
-            estimatedTimerEndDate = null
+            estimatedTimerEndDate = null,
+            infoSupported = true
           ),
           false,
           showInfoIcon = true,
