@@ -667,7 +667,7 @@
   <string name="roller_shutter_calibration_needed" translatable="false">Calibration needed</string>
   <string name="cfg_night_mode" translatable="false">Night mode</string>
   <string name="auto" translatable="false">Auto</string>
-  <string name="menu_devices_list" translatable="false">Device catalog</string>
+  <string name="menu_device_catalog" translatable="false">Device catalog</string>
 
   <plurals name="details_timer_info_on" translatable="false">
     <item quantity="other">on</item>

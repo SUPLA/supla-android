@@ -435,7 +435,7 @@ class MainActivity : NavigationActivity(), ToolbarTitleController, LoadableConte
       MenuItemsLayout.BTN_HOMEPAGE -> openHomepage()
       MenuItemsLayout.BTN_PROFILE -> showProfile(this)
       MenuItemsLayout.BTN_NOTIFICATIONS -> navigator.navigateTo(R.id.notifications_log_fragment)
-      MenuItemsLayout.BTN_DEVICES_LIST -> navigator.navigateTo(R.id.devices_list_fragment)
+      MenuItemsLayout.BTN_DEVICE_CATALOG -> navigator.navigateTo(R.id.device_catalog_fragment)
     }
   }
 
