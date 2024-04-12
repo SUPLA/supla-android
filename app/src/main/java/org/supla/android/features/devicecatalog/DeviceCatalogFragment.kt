@@ -1,4 +1,4 @@
-package org.supla.android.features.deviceslist
+package org.supla.android.features.devicecatalog
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -28,10 +28,10 @@ import org.supla.android.navigator.MainNavigator
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class DevicesListFragment : WebContentFragment<DevicesListViewState, DeviceListViewEvent>() {
+class DeviceCatalogFragment : WebContentFragment<DeviceCatalogViewState, DeviceCatalogViewEvent>() {
 
   override val url: String by lazy { getString(R.string.devices_list_url) }
-  override val viewModel: DevicesListViewModel by viewModels()
+  override val viewModel: DeviceCatalogViewModel by viewModels()
 
   @Inject
   internal lateinit var navigator: MainNavigator
@@ -42,7 +42,7 @@ class DevicesListFragment : WebContentFragment<DevicesListViewState, DeviceListV
     (binding.root.layoutParams as FrameLayout.LayoutParams).topMargin = 0
   }
 
-  override fun handleEvents(event: DeviceListViewEvent) = when (event) {
-    is DeviceListViewEvent.OpenUrl -> navigator.navigateToWeb(event.url)
+  override fun handleEvents(event: DeviceCatalogViewEvent) = when (event) {
+    is DeviceCatalogViewEvent.OpenUrl -> navigator.navigateToWeb(event.url)
   }
 }

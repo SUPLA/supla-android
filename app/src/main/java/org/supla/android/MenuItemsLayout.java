@@ -50,7 +50,7 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
   public static final int BTN_Z_WAVE = 0x80;
   public static final int BTN_CLOUD = 0x90;
   public static final int BTN_NOTIFICATIONS = 0x100;
-  public static final int BTN_DEVICES_LIST = 0x200;
+  public static final int BTN_DEVICE_CATALOG = 0x200;
   public static final int BTN_PROFILE = 0x1000;
   public static final int BTN_ALL = 0xFFFF;
   ArrayList<Button> buttons = new ArrayList<>();
@@ -268,7 +268,7 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
     addButton(BTN_SETTINGS, R.drawable.ic_menu_settings, R.string.settings);
     addButton(BTN_ADD_DEVICE, R.drawable.ic_menu_add_device, R.string.add_device);
     if (Menu.DEVICES_OPTION_VISIBLE) {
-      addButton(BTN_DEVICES_LIST, R.drawable.ic_menu_devices_list, R.string.menu_devices_list);
+      addButton(BTN_DEVICE_CATALOG, R.drawable.ic_menu_device_catalog, R.string.menu_device_catalog);
     }
     if (Menu.Z_WAVE_OPTION_VISIBLE) {
       addButton(BTN_Z_WAVE, R.drawable.ic_menu_z_wave, R.string.z_wave);

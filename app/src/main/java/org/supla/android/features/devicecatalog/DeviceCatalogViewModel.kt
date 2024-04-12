@@ -1,4 +1,4 @@
-package org.supla.android.features.deviceslist
+package org.supla.android.features.devicecatalog
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -27,22 +27,22 @@ import org.supla.android.tools.SuplaSchedulers
 import javax.inject.Inject
 
 @HiltViewModel
-class DevicesListViewModel @Inject constructor(
+class DeviceCatalogViewModel @Inject constructor(
   schedulers: SuplaSchedulers
-) : WebContentViewModel<DevicesListViewState, DeviceListViewEvent>(DevicesListViewState(), schedulers) {
+) : WebContentViewModel<DeviceCatalogViewState, DeviceCatalogViewEvent>(DeviceCatalogViewState(), schedulers) {
 
   override fun loadingState(loading: Boolean) = currentState().copy(loading = loading)
 
   override fun allowRequest(request: WebResourceRequest?): Boolean {
     request?.let {
-      sendEvent(DeviceListViewEvent.OpenUrl(it.url))
+      sendEvent(DeviceCatalogViewEvent.OpenUrl(it.url))
     }
     return false
   }
 }
 
-sealed class DeviceListViewEvent : ViewEvent {
-  data class OpenUrl(val url: Uri) : DeviceListViewEvent()
+sealed class DeviceCatalogViewEvent : ViewEvent {
+  data class OpenUrl(val url: Uri) : DeviceCatalogViewEvent()
 }
 
-data class DevicesListViewState(override val loading: Boolean = true) : WebContentViewState(loading)
+data class DeviceCatalogViewState(override val loading: Boolean = true) : WebContentViewState(loading)
