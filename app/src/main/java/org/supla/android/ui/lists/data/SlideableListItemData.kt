@@ -28,6 +28,7 @@ sealed class SlideableListItemData {
   abstract val icon: ImageId?
   abstract val issueIconType: IssueIconType?
   abstract val estimatedTimerEndDate: Date?
+  abstract val infoSupported: Boolean
 
   data class Thermostat(
     override val online: Boolean,
@@ -35,6 +36,7 @@ sealed class SlideableListItemData {
     override val icon: ImageId?,
     override val issueIconType: IssueIconType?,
     override val estimatedTimerEndDate: Date?,
+    override val infoSupported: Boolean,
     val value: String,
     val subValue: String,
     @DrawableRes val indicatorIcon: Int?
@@ -48,6 +50,7 @@ sealed class SlideableListItemData {
     override val icon: ImageId?,
     override val issueIconType: IssueIconType?,
     override val estimatedTimerEndDate: Date? = null,
+    override val infoSupported: Boolean,
     val value: String?
   ) : SlideableListItemData() {
     companion object
@@ -63,7 +66,8 @@ fun SlideableListItemData.Thermostat.Companion.default(): SlideableListItemData.
     subValue = "",
     indicatorIcon = null,
     issueIconType = null,
-    estimatedTimerEndDate = null
+    estimatedTimerEndDate = null,
+    infoSupported = false
   )
 
 fun SlideableListItemData.Default.Companion.default(): SlideableListItemData.Default =
@@ -73,5 +77,6 @@ fun SlideableListItemData.Default.Companion.default(): SlideableListItemData.Def
     icon = null,
     value = "",
     issueIconType = null,
-    estimatedTimerEndDate = null
+    estimatedTimerEndDate = null,
+    infoSupported = false
   )

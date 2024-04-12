@@ -25,6 +25,7 @@ import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.SceneDataEntity
+import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.images.ImageId
 import org.supla.android.ui.lists.data.IssueIconType
 import org.supla.android.ui.lists.data.SlideableListItemData
@@ -53,7 +54,8 @@ sealed interface ListItem {
         icon = icon,
         value = value,
         issueIconType = issueIconType,
-        estimatedTimerEndDate = null
+        estimatedTimerEndDate = null,
+        infoSupported = SuplaChannelFlag.CHANNEL_STATE.inside(channel.flags)
       )
     }
   }
@@ -89,7 +91,8 @@ sealed interface ListItem {
         estimatedTimerEndDate = estimatedTimerEndDate,
         value = value ?: ValuesFormatter.NO_VALUE_TEXT,
         subValue = subValue,
-        indicatorIcon = indicatorIcon
+        indicatorIcon = indicatorIcon,
+        infoSupported = SuplaChannelFlag.CHANNEL_STATE.inside(channel.flags)
       )
     }
   }
