@@ -20,9 +20,16 @@ package org.supla.android.profile
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Base64
 import androidx.preference.PreferenceManager
+import dagger.hilt.android.qualifiers.ApplicationContext
+import org.supla.android.Encryption
+import org.supla.android.Preferences
+import org.supla.android.R
 import org.supla.android.SuplaApp
-import org.supla.android.db.AuthProfileItem
+import org.supla.android.data.source.local.entity.ProfileEntity
+import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
 ProfileMigrator is a utility class which only task is
@@ -31,33 +38,29 @@ from legacy settings (i.e. authentication settings
 stored in application preferences) or for usage in
 new app installations.
  */
-class ProfileMigrator(ctx: Context) {
+@Singleton
+class ProfileMigrator @Inject constructor(
+  @ApplicationContext private val context: Context
+) {
 
   companion object {
-    private const val pref_serveraddr = "pref_serveraddr"
-    private const val pref_accessid = "pref_accessid"
-    private const val pref_accessidpwd = "pref_accessidpwd"
-    private const val pref_email = "pref_email"
-    private const val pref_advanced = "pref_advanced"
-    private const val pref_proto_ver = "pref_proto_ver"
+    private const val PREF_SERVER_ADDRESS = "pref_serveraddr"
+    private const val PREF_ACCESS_ID = "pref_accessid"
+    private const val PREF_ACCESS_ID_PASSWORD = "pref_accessidpwd"
+    private const val PREF_EMAIL = "pref_email"
+    private const val PREF_IS_ADVANCED = "pref_advanced"
+    private const val PREF_PROTOCOL_VERSION = "pref_proto_ver"
+    private const val PREF_GUID = "pref_guid"
   }
 
-  private val prefs: SharedPreferences
+  private val defaultSharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
 
-  init {
-    prefs = PreferenceManager.getDefaultSharedPreferences(ctx)
-  }
-
-  /**
-   @returns a profile item object populated with
-   values derived from application preferences.
-   */
-  fun makeProfileUsingPreferences(): AuthProfileItem? {
-    val serverAddr = prefs.getString(pref_serveraddr, "") ?: ""
-    val accessID = prefs.getInt(pref_accessid, 0)
-    val accessIDpwd = prefs.getString(pref_accessidpwd, "") ?: ""
-    val email = prefs.getString(pref_email, "") ?: ""
-    val isAdvanced = prefs.getBoolean(pref_advanced, false)
+  fun makeProfileUsingPreferences(): ProfileEntity? {
+    val serverAddr = defaultSharedPreferences.getString(PREF_SERVER_ADDRESS, "") ?: ""
+    val accessID = defaultSharedPreferences.getInt(PREF_ACCESS_ID, 0)
+    val accessIDpwd = defaultSharedPreferences.getString(PREF_ACCESS_ID_PASSWORD, "") ?: ""
+    val email = defaultSharedPreferences.getString(PREF_EMAIL, "") ?: ""
+    val isAdvanced = defaultSharedPreferences.getBoolean(PREF_IS_ADVANCED, false)
 
     if (serverAddr.isEmpty() && accessID == 0 && accessIDpwd.isEmpty() && email.isEmpty()) {
       // nothing stored, no profile should be crated
@@ -65,23 +68,45 @@ class ProfileMigrator(ctx: Context) {
     }
 
     val client = SuplaApp.getApp().getSuplaClient()
-    val protoVer = prefs.getInt(pref_proto_ver, client?.maxProtoVersion ?: 0)
+    val protoVer = defaultSharedPreferences.getInt(PREF_PROTOCOL_VERSION, client?.maxProtoVersion ?: 0)
 
-    val ai = AuthInfo(
-      emailAuth = !isAdvanced,
-      emailAddress = email,
-      serverAutoDetect = !isAdvanced,
+    return ProfileEntity(
+      id = null,
+      name = context.getString(R.string.profile_default_name),
+      email = email,
+      serverForAccessId = if (isAdvanced) serverAddr else "",
       serverForEmail = if (isAdvanced) "" else serverAddr,
-      serverForAccessID = if (isAdvanced) serverAddr else "",
-      accessID = accessID,
-      accessIDpwd = accessIDpwd,
-      preferredProtocolVersion = protoVer
+      serverAutoDetect = !isAdvanced,
+      emailAuth = !isAdvanced,
+      accessId = accessID,
+      accessIdPassword = accessIDpwd,
+      preferredProtocolVersion = protoVer,
+      active = true,
+      advancedMode = isAdvanced,
+      guid = getClientGUID(),
+      // because of a bug in old version we need to take guid as auth key
+      // see for more: https://github.com/SUPLA/supla-android/commit/22a741cef3ae3805fcf8eca19c55aa6b160ccd4b
+      authKey = getClientGUID()
     )
+  }
 
-    return AuthProfileItem(
-      authInfo = ai,
-      advancedAuthSetup = isAdvanced,
-      isActive = true
-    )
+  private fun getClientGUID(): ByteArray {
+    val key = PREF_GUID
+    var result: ByteArray = Base64.decode(defaultSharedPreferences.getString(key, ""), Base64.DEFAULT)
+
+    if (!defaultSharedPreferences.getBoolean(key + "_encrypted_gcm", false)) {
+      if (defaultSharedPreferences.getBoolean(key + "_encrypted", false)) {
+        result = Encryption.decryptDataWithNullOnException(result, Preferences.getDeviceID(context), true)
+      }
+    } else {
+      result = Encryption.decryptDataWithNullOnException(result, Preferences.getDeviceID(context))
+    }
+
+    return encrypted(result)
+  }
+
+  private fun encrypted(bytes: ByteArray): ByteArray {
+    val key = Preferences.getDeviceID(SuplaApp.getApp())
+    return Encryption.encryptDataWithNullOnException(bytes, key)
   }
 }

@@ -24,7 +24,6 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
-import android.util.Base64;
 import org.supla.android.data.model.general.NightModeSetting;
 import org.supla.android.data.source.runtime.appsettings.TemperatureUnit;
 
@@ -32,8 +31,6 @@ public class Preferences {
 
   private static final String TAG = Preferences.class.getSimpleName();
 
-  private static final String pref_guid = "pref_guid";
-  private static final String pref_authkey = "pref_authkey";
   private static final String pref_wizard_save_password = "pref_wizard_save_password";
   private static final String pref_wizard_password = "pref_wizard_password";
   private static final String pref_wizard_selected_wifi = "pref_wizard_selected_wifi";
@@ -56,12 +53,10 @@ public class Preferences {
   private static final String pref_should_show_new_gesture_info =
       "pref_should_show_new_gesture_info";
 
-  private final Context _context;
   private final SharedPreferences _prefs;
 
   public Preferences(Context context) {
     _prefs = PreferenceManager.getDefaultSharedPreferences(context);
-    _context = context;
     context.getContentResolver();
   }
 
@@ -80,37 +75,7 @@ public class Preferences {
       Trace.e(TAG, "getDeviceID error", e);
     }
 
-    return (id == null || id.length() == 0) ? "unknown" : id;
-  }
-
-  private String getDeviceID() {
-    return Preferences.getDeviceID(_context);
-  }
-
-  private byte[] getRandom(String pref_key) {
-    byte[] result = Base64.decode(_prefs.getString(pref_key, ""), Base64.DEFAULT);
-
-    if (!_prefs.getBoolean(pref_key + "_encrypted_gcm", false)) {
-      if (_prefs.getBoolean(pref_key + "_encrypted", false)) {
-        result = Encryption.decryptDataWithNullOnException(result, getDeviceID(), true);
-      }
-    } else {
-      result = Encryption.decryptDataWithNullOnException(result, getDeviceID());
-    }
-
-    return result;
-  }
-
-  /** Legacy method. Should not be used in new code. */
-  @Deprecated
-  public byte[] getClientGUID() {
-    return getRandom(pref_guid);
-  }
-
-  /** Legacy method. Should not be used in new code. */
-  @Deprecated
-  public byte[] getAuthKey() {
-    return getRandom(pref_authkey);
+    return id == null ? "unknown" : id;
   }
 
   public boolean wizardSavePasswordEnabled(String SSID) {
@@ -158,13 +123,7 @@ public class Preferences {
 
   public TemperatureUnit getTemperatureUnit() {
     String v = _prefs.getString(pref_temperature_unit, "C");
-    if (v.length() < 1) v = "C";
-    switch (v.charAt(0)) {
-      case 'F':
-        return TemperatureUnit.FAHRENHEIT;
-      default:
-        return TemperatureUnit.CELSIUS;
-    }
+    return v.charAt(0) == 'F' ? TemperatureUnit.FAHRENHEIT : TemperatureUnit.CELSIUS;
   }
 
   public void setTemperatureUnit(TemperatureUnit u) {
