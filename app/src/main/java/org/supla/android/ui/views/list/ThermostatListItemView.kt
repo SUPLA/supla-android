@@ -246,9 +246,11 @@ private fun Preview() {
 @Composable
 private fun Preview_Narrow() {
   SuplaTheme {
-    Column(modifier = Modifier
-      .background(MaterialTheme.colors.background)
-      .width(350.dp)) {
+    Column(
+      modifier = Modifier
+        .background(MaterialTheme.colors.background)
+        .width(350.dp)
+    ) {
       Column(
         modifier = Modifier
           .height(dimensionResource(id = R.dimen.channel_layout_height).times(1.5f))

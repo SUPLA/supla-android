@@ -268,7 +268,8 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
     addButton(BTN_SETTINGS, R.drawable.ic_menu_settings, R.string.settings);
     addButton(BTN_ADD_DEVICE, R.drawable.ic_menu_add_device, R.string.add_device);
     if (Menu.DEVICES_OPTION_VISIBLE) {
-      addButton(BTN_DEVICE_CATALOG, R.drawable.ic_menu_device_catalog, R.string.menu_device_catalog);
+      addButton(
+          BTN_DEVICE_CATALOG, R.drawable.ic_menu_device_catalog, R.string.menu_device_catalog);
     }
     if (Menu.Z_WAVE_OPTION_VISIBLE) {
       addButton(BTN_Z_WAVE, R.drawable.ic_menu_z_wave, R.string.z_wave);
