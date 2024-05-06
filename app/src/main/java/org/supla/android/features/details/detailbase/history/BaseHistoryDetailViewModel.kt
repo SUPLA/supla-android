@@ -63,9 +63,11 @@ import org.supla.android.extensions.yearNo
 import org.supla.android.extensions.yearStart
 import org.supla.android.features.details.detailbase.history.ui.HistoryDetailProxy
 import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.usecases.channel.DeleteChannelMeasurementsUseCase
 import java.util.Date
 
 abstract class BaseHistoryDetailViewModel(
+  private val deleteChannelMeasurementsUseCase: DeleteChannelMeasurementsUseCase,
   private val userStateHolder: UserStateHolder,
   private val dateProvider: DateProvider,
   schedulers: SuplaSchedulers
@@ -254,6 +256,30 @@ abstract class BaseHistoryDetailViewModel(
     }
 
     updateUserState()
+  }
+
+  fun deleteAndDownloadData(remoteId: Int) {
+    if (currentState().downloadState is DownloadEventsManager.State.InProgress) {
+      // Delete allowed only when no download in progress
+      sendEvent(HistoryDetailViewEvent.ShowDownloadInProgressToast)
+      return
+    }
+
+    updateState {
+      it.copy(
+        loading = true,
+        initialLoadStarted = false,
+        chartData = it.chartData.empty()
+      )
+    }
+
+    deleteChannelMeasurementsUseCase.invoke(remoteId)
+      .attachSilent()
+      .subscribeBy(
+        onComplete = { triggerDataLoad(remoteId) },
+        onError = defaultErrorHandler("deleteAndDownloadData")
+      )
+      .disposeBySelf()
   }
 
   protected abstract fun triggerDataLoad(remoteId: Int)
@@ -462,7 +488,9 @@ abstract class BaseHistoryDetailViewModel(
   }
 }
 
-sealed class HistoryDetailViewEvent : ViewEvent
+sealed class HistoryDetailViewEvent : ViewEvent {
+  object ShowDownloadInProgressToast : HistoryDetailViewEvent()
+}
 
 data class HistoryDetailViewState(
   val remoteId: Int = 0,

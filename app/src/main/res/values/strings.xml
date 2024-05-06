@@ -672,6 +672,8 @@
   <string name="channel_loading_error" translatable="false">Channel loading error</string>
   <string name="facade_blind_slat_tilt" translatable="false">Tilt: </string>
   <string name="facade_blinds_no_tilt" translatable="false">Missing configuration</string>
+  <string name="toolbar_delete_chart_history" translatable="false">Delete history and download</string>
+  <string name="history_wait_for_download_completed" translatable="false">Download in progress…</string>
 
   <plurals name="details_timer_info_on" translatable="false">
     <item quantity="other">on</item>

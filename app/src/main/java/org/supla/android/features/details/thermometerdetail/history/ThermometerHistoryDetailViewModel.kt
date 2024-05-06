@@ -35,6 +35,7 @@ import org.supla.android.events.DownloadEventsManager
 import org.supla.android.features.details.detailbase.history.BaseHistoryDetailViewModel
 import org.supla.android.profile.ProfileManager
 import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.usecases.channel.DeleteChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.DownloadChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.LoadChannelMeasurementsDataRangeUseCase
 import org.supla.android.usecases.channel.LoadChannelMeasurementsUseCase
@@ -51,9 +52,10 @@ class ThermometerHistoryDetailViewModel @Inject constructor(
   private val profileManager: ProfileManager,
   private val readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
   private val userStateHolder: UserStateHolder,
+  deleteChannelMeasurementsUseCase: DeleteChannelMeasurementsUseCase,
   dateProvider: DateProvider,
   schedulers: SuplaSchedulers
-) : BaseHistoryDetailViewModel(userStateHolder, dateProvider, schedulers) {
+) : BaseHistoryDetailViewModel(deleteChannelMeasurementsUseCase, userStateHolder, dateProvider, schedulers) {
 
   override fun triggerDataLoad(remoteId: Int) {
     Maybe.zip(

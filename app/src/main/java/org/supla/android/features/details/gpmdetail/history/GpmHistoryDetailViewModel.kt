@@ -50,6 +50,7 @@ import org.supla.android.extensions.ifLet
 import org.supla.android.features.details.detailbase.history.BaseHistoryDetailViewModel
 import org.supla.android.profile.ProfileManager
 import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.usecases.channel.DeleteChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.DownloadChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.LoadChannelConfigUseCase
 import org.supla.android.usecases.channel.LoadChannelMeasurementsDataRangeUseCase
@@ -71,9 +72,10 @@ class GpmHistoryDetailViewModel @Inject constructor(
   private val userStateHolder: UserStateHolder,
   private val channelConfigEventsManager: ChannelConfigEventsManager,
   @Named(GSON_FOR_REPO) private val gson: Gson,
+  deleteChannelMeasurementsUseCase: DeleteChannelMeasurementsUseCase,
   dateProvider: DateProvider,
   schedulers: SuplaSchedulers
-) : BaseHistoryDetailViewModel(userStateHolder, dateProvider, schedulers) {
+) : BaseHistoryDetailViewModel(deleteChannelMeasurementsUseCase, userStateHolder, dateProvider, schedulers) {
 
   override fun loadData(remoteId: Int) {
     super.loadData(remoteId)

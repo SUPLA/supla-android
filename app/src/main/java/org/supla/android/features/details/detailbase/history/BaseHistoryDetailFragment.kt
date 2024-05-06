@@ -18,17 +18,22 @@ package org.supla.android.features.details.detailbase.history
  */
 
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import org.supla.android.R
 import org.supla.android.core.ui.BaseFragment
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.databinding.FragmentComposeBinding
 import org.supla.android.features.details.detailbase.history.ui.HistoryDetail
+import org.supla.android.ui.ToolbarItemsClickHandler
 
 private const val ARG_REMOTE_ID = "ARG_REMOTE_ID"
 
-abstract class BaseHistoryDetailFragment : BaseFragment<HistoryDetailViewState, HistoryDetailViewEvent>(R.layout.fragment_compose) {
+abstract class BaseHistoryDetailFragment :
+  BaseFragment<HistoryDetailViewState, HistoryDetailViewEvent>(R.layout.fragment_compose),
+  ToolbarItemsClickHandler {
 
   abstract override val viewModel: BaseHistoryDetailViewModel
   private val binding by viewBinding(FragmentComposeBinding::bind)
@@ -46,9 +51,32 @@ abstract class BaseHistoryDetailFragment : BaseFragment<HistoryDetailViewState, 
     }
   }
 
+  override fun onResume() {
+    super.onResume()
+    setToolbarItemVisible(R.id.toolbar_delete_chart_history, true)
+  }
+
+  override fun onPause() {
+    super.onPause()
+    setToolbarItemVisible(R.id.toolbar_delete_chart_history, false)
+  }
+
   override fun handleEvents(event: HistoryDetailViewEvent) {
+    when (event) {
+      is HistoryDetailViewEvent.ShowDownloadInProgressToast ->
+        Toast.makeText(requireContext(), R.string.history_wait_for_download_completed, Toast.LENGTH_SHORT).show()
+    }
   }
 
   override fun handleViewState(state: HistoryDetailViewState) {
+  }
+
+  override fun onMenuItemClick(menuItem: MenuItem): Boolean {
+    if (menuItem.itemId == R.id.toolbar_delete_chart_history) {
+      viewModel.deleteAndDownloadData(remoteId)
+      return true
+    }
+
+    return false
   }
 }
