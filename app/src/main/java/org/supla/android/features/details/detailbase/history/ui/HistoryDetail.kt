@@ -321,7 +321,7 @@ private fun DataSetButton(text: String, colors: ButtonColors, borderColor: Color
       text = text,
       fontSize = 14.sp,
       fontFamily = FontFamily(Font(R.font.open_sans_bold)),
-      color = MaterialTheme.colors.onPrimary
+      color = colors.contentColor(enabled = true).value
     )
   }
 }
