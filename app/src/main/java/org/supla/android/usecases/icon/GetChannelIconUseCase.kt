@@ -28,6 +28,7 @@ import org.supla.android.images.ImageCacheProxy
 import org.supla.android.images.ImageId
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
 import org.supla.android.usecases.channel.GetChannelStateUseCase
@@ -113,28 +114,12 @@ class GetChannelIconUseCase @Inject constructor(
       return null
     }
 
-    val id = when (channelBase.func) {
-      SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE ->
-        ImageId(userIconId, if (iconType == IconType.SECOND) 1 else 2, channelBase.profileId)
-
-      SUPLA_CHANNELFNC_THERMOMETER ->
-        ImageId(userIconId, 1, profileId = channelBase.profileId)
-
-      SUPLA_CHANNELFNC_CONTROLLINGTHEGATE,
-      SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR ->
-        when (state.value) {
-          ChannelState.Value.PARTIALLY_OPENED -> ImageId(userIconId, 3, profileId = channelBase.profileId)
-          ChannelState.Value.OPEN -> ImageId(userIconId, 1, profileId = channelBase.profileId)
-          else -> ImageId(userIconId, 2, profileId = channelBase.profileId)
-        }
-
-      else -> ImageId(userIconId, if (state.isActive()) 2 else 1, channelBase.profileId)
-    }
-
-    return if (imageCacheProxy.bitmapExists(id)) {
-      id
-    } else {
-      null
+    return userImageId(channelBase.func, userIconId, iconType, state, channelBase.profileId).let {
+      if (imageCacheProxy.bitmapExists(it)) {
+        it
+      } else {
+        null
+      }
     }
   }
 
@@ -148,30 +133,48 @@ class GetChannelIconUseCase @Inject constructor(
       return null
     }
 
-    val id = when (channelEntity.function) {
+    return userImageId(channelEntity.function, userIconId, iconType, state, channelEntity.profileId).let {
+      if (imageCacheProxy.bitmapExists(it)) {
+        it
+      } else {
+        null
+      }
+    }
+  }
+
+  private fun userImageId(
+    function: Int,
+    userIconId: Int,
+    iconType: IconType,
+    state: ChannelState,
+    profileId: Long
+  ): ImageId =
+    when (function) {
       SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE ->
-        ImageId(userIconId, if (iconType == IconType.SECOND) 1 else 2, channelEntity.profileId)
+        ImageId(userIconId, if (iconType == IconType.SECOND) 1 else 2, profileId)
 
       SUPLA_CHANNELFNC_THERMOMETER ->
-        ImageId(userIconId, 1, profileId = channelEntity.profileId)
+        ImageId(userIconId, 1, profileId = profileId)
 
       SUPLA_CHANNELFNC_CONTROLLINGTHEGATE,
       SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR ->
         when (state.value) {
-          ChannelState.Value.PARTIALLY_OPENED -> ImageId(userIconId, 3, profileId = channelEntity.profileId)
-          ChannelState.Value.OPEN -> ImageId(userIconId, 1, profileId = channelEntity.profileId)
-          else -> ImageId(userIconId, 2, profileId = channelEntity.profileId)
+          ChannelState.Value.PARTIALLY_OPENED -> ImageId(userIconId, 3, profileId = profileId)
+          ChannelState.Value.OPEN -> ImageId(userIconId, 1, profileId = profileId)
+          else -> ImageId(userIconId, 2, profileId = profileId)
         }
 
-      else -> ImageId(userIconId, if (state.isActive()) 2 else 1, channelEntity.profileId)
-    }
+      SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING ->
+        when (state.complex) {
+          listOf(ChannelState.Value.OFF, ChannelState.Value.OFF) -> ImageId(userIconId, 1, profileId)
+          listOf(ChannelState.Value.ON, ChannelState.Value.OFF) -> ImageId(userIconId, 2, profileId)
+          listOf(ChannelState.Value.OFF, ChannelState.Value.ON) -> ImageId(userIconId, 3, profileId)
+          listOf(ChannelState.Value.ON, ChannelState.Value.ON) -> ImageId(userIconId, 4, profileId)
+          else -> ImageId(userIconId, if (state.isActive()) 4 else 1, profileId)
+        }
 
-    return if (imageCacheProxy.bitmapExists(id)) {
-      id
-    } else {
-      null
+      else -> ImageId(userIconId, if (state.isActive()) 2 else 1, profileId)
     }
-  }
 
   // for java
   fun invoke(channelBase: ChannelBase): ImageId? {

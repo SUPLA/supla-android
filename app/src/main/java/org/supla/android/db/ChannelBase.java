@@ -370,16 +370,6 @@ public abstract class ChannelBase extends DbItem {
         || base.UserIcon != getUserIconId();
   }
 
-  public boolean Diff(ChannelBase base) {
-
-    return base.getRemoteId() != getRemoteId()
-        || !base.getCaption().equals(getCaption())
-        || base.getOnLine() != getOnLine()
-        || base.getFlags() != getFlags()
-        || base.getAltIcon() != getAltIcon()
-        || base.getUserIconId() != getUserIconId();
-  }
-
   public enum WhichOne {
     First,
     Second

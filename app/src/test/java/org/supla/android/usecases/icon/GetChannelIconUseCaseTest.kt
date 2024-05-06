@@ -35,6 +35,7 @@ import org.supla.android.db.ChannelBase
 import org.supla.android.images.ImageCacheProxy
 import org.supla.android.images.ImageId
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
@@ -554,6 +555,131 @@ class GetChannelIconUseCaseTest {
     assertThat(imageId.id).isEqualTo(userIconId)
     assertThat(imageId.profileId).isEqualTo(profileId)
     assertThat(imageId.subId).isEqualTo(3)
+  }
+
+  @Test
+  fun `should get user icon (dimmer and rgb - off off)`() {
+    // given
+    val function = SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING
+    val userIconId = 5
+    val channelState = ChannelState(ChannelState.Value.COMPLEX, listOf(ChannelState.Value.OFF, ChannelState.Value.OFF))
+    val profileId = 212L
+
+    val stateWrapper: ValueStateWrapper = mockk()
+    val channelDataEntity = mockChannelDataEntity(function, userIconId, 0, profileId, stateWrapper)
+
+    whenever(getChannelStateUseCase(function, stateWrapper)).thenReturn(channelState)
+    val expectedImageId = ImageId(userIconId, 1, profileId)
+    whenever(imageCacheProxy.bitmapExists(expectedImageId)).thenReturn(true)
+
+    // when
+    val imageId = useCase(channelDataEntity)
+
+    // then
+    assertThat(imageId).isNotNull
+    assertThat(imageId.id).isEqualTo(userIconId)
+    assertThat(imageId.profileId).isEqualTo(profileId)
+    assertThat(imageId.subId).isEqualTo(1)
+  }
+
+  @Test
+  fun `should get user icon (dimmer and rgb - on off)`() {
+    // given
+    val function = SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING
+    val userIconId = 5
+    val channelState = ChannelState(ChannelState.Value.COMPLEX, listOf(ChannelState.Value.ON, ChannelState.Value.OFF))
+    val profileId = 212L
+
+    val stateWrapper: ValueStateWrapper = mockk()
+    val channelDataEntity = mockChannelDataEntity(function, userIconId, 0, profileId, stateWrapper)
+
+    whenever(getChannelStateUseCase(function, stateWrapper)).thenReturn(channelState)
+    val expectedImageId = ImageId(userIconId, 2, profileId)
+    whenever(imageCacheProxy.bitmapExists(expectedImageId)).thenReturn(true)
+
+    // when
+    val imageId = useCase(channelDataEntity)
+
+    // then
+    assertThat(imageId).isNotNull
+    assertThat(imageId.id).isEqualTo(userIconId)
+    assertThat(imageId.profileId).isEqualTo(profileId)
+    assertThat(imageId.subId).isEqualTo(2)
+  }
+
+  @Test
+  fun `should get user icon (dimmer and rgb - off on)`() {
+    // given
+    val function = SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING
+    val userIconId = 5
+    val channelState = ChannelState(ChannelState.Value.COMPLEX, listOf(ChannelState.Value.OFF, ChannelState.Value.ON))
+    val profileId = 212L
+
+    val stateWrapper: ValueStateWrapper = mockk()
+    val channelDataEntity = mockChannelDataEntity(function, userIconId, 0, profileId, stateWrapper)
+
+    whenever(getChannelStateUseCase(function, stateWrapper)).thenReturn(channelState)
+    val expectedImageId = ImageId(userIconId, 3, profileId)
+    whenever(imageCacheProxy.bitmapExists(expectedImageId)).thenReturn(true)
+
+    // when
+    val imageId = useCase(channelDataEntity)
+
+    // then
+    assertThat(imageId).isNotNull
+    assertThat(imageId.id).isEqualTo(userIconId)
+    assertThat(imageId.profileId).isEqualTo(profileId)
+    assertThat(imageId.subId).isEqualTo(3)
+  }
+
+  @Test
+  fun `should get user icon (dimmer and rgb - on on)`() {
+    // given
+    val function = SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING
+    val userIconId = 5
+    val channelState = ChannelState(ChannelState.Value.COMPLEX, listOf(ChannelState.Value.ON, ChannelState.Value.ON))
+    val profileId = 212L
+
+    val stateWrapper: ValueStateWrapper = mockk()
+    val channelDataEntity = mockChannelDataEntity(function, userIconId, 0, profileId, stateWrapper)
+
+    whenever(getChannelStateUseCase(function, stateWrapper)).thenReturn(channelState)
+    val expectedImageId = ImageId(userIconId, 4, profileId)
+    whenever(imageCacheProxy.bitmapExists(expectedImageId)).thenReturn(true)
+
+    // when
+    val imageId = useCase(channelDataEntity)
+
+    // then
+    assertThat(imageId).isNotNull
+    assertThat(imageId.id).isEqualTo(userIconId)
+    assertThat(imageId.profileId).isEqualTo(profileId)
+    assertThat(imageId.subId).isEqualTo(4)
+  }
+
+  @Test
+  fun `should get user icon (dimmer and rgb - unclear)`() {
+    // given
+    val function = SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING
+    val userIconId = 5
+    val channelState = ChannelState(ChannelState.Value.ON)
+    val profileId = 212L
+
+    val stateWrapper: ValueStateWrapper = mockk()
+    val channelDataEntity = mockChannelDataEntity(function, userIconId, 0, profileId, stateWrapper)
+
+    whenever(getChannelStateUseCase(function, stateWrapper)).thenReturn(channelState)
+    val expectedImageId = ImageId(userIconId, 4, profileId)
+    whenever(imageCacheProxy.bitmapExists(expectedImageId)).thenReturn(true)
+
+    // when
+    val imageId = useCase(channelDataEntity)
+
+    // then
+    assertThat(imageId).isNotNull
+    assertThat(imageId.id).isEqualTo(userIconId)
+    assertThat(imageId.profileId).isEqualTo(profileId)
+    assertThat(imageId.subId).isEqualTo(4)
   }
 
   private fun mockChannelBase(function: Int, userIconId: Int, altIcon: Int, profileId: Long, stateWrapper: ValueStateWrapper): ChannelBase {
