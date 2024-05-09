@@ -261,7 +261,7 @@ class FacadeBlindsViewModel @Inject constructor(
       updateGroup(state, group.groupDataEntity, group.onlineSummary) {
         it.copy(
           remoteId = group.groupDataEntity.remoteId,
-          windowState = FacadeBlindWindowState(
+          windowState = it.windowState.copy(
             position = if (group.groupDataEntity.isOnline()) overallPosition else WindowGroupedValue.Similar(25f),
             slatTilt = if (group.groupDataEntity.isOnline()) overallTilt else WindowGroupedValue.Similar(50f),
             markers = if (group.groupDataEntity.isOnline()) markers else emptyList(),

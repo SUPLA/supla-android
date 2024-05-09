@@ -36,6 +36,4 @@ data class RollerShutterWindowState(
   val markers: List<Float> = emptyList(),
 
   override val positionTextFormat: WindowGroupedValueFormat = WindowGroupedValueFormat.PERCENTAGE,
-) : WindowState() {
-  override fun updating(position: WindowGroupedValue): WindowState = copy(position = position)
-}
+) : WindowState()

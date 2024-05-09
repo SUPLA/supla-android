@@ -31,6 +31,4 @@ data class RoofWindowState(
   val markers: List<Float> = emptyList(),
 
   override val positionTextFormat: WindowGroupedValueFormat = WindowGroupedValueFormat.PERCENTAGE,
-) : WindowState() {
-  override fun updating(position: WindowGroupedValue): WindowState = copy(position = position, markers = emptyList())
-}
+) : WindowState()

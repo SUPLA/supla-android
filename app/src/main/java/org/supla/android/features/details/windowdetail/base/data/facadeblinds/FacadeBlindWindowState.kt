@@ -50,8 +50,6 @@ data class FacadeBlindWindowState(
   val tiltTextFormat: WindowGroupedValueFormat = WindowGroupedValueFormat.DEGREE
 ) : WindowState() {
 
-  override fun updating(position: WindowGroupedValue): WindowState = copy(position = position, markers = emptyList())
-
   val slatTiltDegrees: Float?
     get() {
       val (tilt) = guardLet(slatTilt) { return null }

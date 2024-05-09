@@ -789,6 +789,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
 
         case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
         case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW:
+        case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND:
           lenabled = true;
           renabled = true;
 

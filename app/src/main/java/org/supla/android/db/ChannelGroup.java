@@ -22,8 +22,12 @@ import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.database.Cursor;
 import java.util.ArrayList;
+import java.util.List;
 import org.supla.android.data.source.local.entity.ChannelGroupEntity;
 import org.supla.android.lib.SuplaConst;
+import org.supla.android.usecases.group.totalvalue.FacadeBlindGroupValue;
+import org.supla.android.usecases.group.totalvalue.GroupTotalValue;
+import org.supla.android.usecases.group.totalvalue.GroupValue;
 
 public class ChannelGroup extends ChannelBase {
 
@@ -202,6 +206,17 @@ public class ChannelGroup extends ChannelBase {
   }
 
   public int getActivePercent(int idx) {
+    if (getFunc() == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND) {
+      List<GroupValue> values = GroupTotalValue.Companion.parse(getFunc(), getTotalValue());
+      if (values.isEmpty()) {
+        return 0;
+      }
+      int activeCount =
+          values.stream()
+              .map(groupValue -> ((FacadeBlindGroupValue) groupValue).getPosition())
+              .reduce(0, (sum, value) -> value >= 100 ? sum + 1 : sum);
+      return activeCount * 100 / values.size();
+    }
     String[] items = getTotalValue().split("\\|");
 
     int sum = 0;
