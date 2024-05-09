@@ -36,13 +36,12 @@ class FacadeBlindsFragment : BaseWindowFragment<FacadeBlindsViewModelState>() {
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    viewModel.observeConfig(item.remoteId)
-    viewModel.loadConfig(item.remoteId)
+    viewModel.observeConfig(item.remoteId, item.itemType)
   }
 
   override fun onResume() {
     super.onResume()
-    viewModel.loadConfig(item.remoteId)
+    viewModel.loadConfig(item.remoteId, item.itemType)
   }
 
   companion object {

@@ -209,18 +209,22 @@ class FacadeBlindsViewModel @Inject constructor(
     }
   }
 
-  fun observeConfig(remoteId: Int) {
-    channelConfigEventsManager.observerConfig(remoteId).filter { it.config is SuplaChannelFacadeBlindConfig }
-      .attachSilent()
-      .subscribeBy(
-        onNext = { handleConfig(it) },
-        onError = defaultErrorHandler("loadChannelData")
-      )
-      .disposeBySelf()
+  fun observeConfig(remoteId: Int, itemType: ItemType) {
+    if (itemType == ItemType.CHANNEL) {
+      channelConfigEventsManager.observerConfig(remoteId).filter { it.config is SuplaChannelFacadeBlindConfig }
+        .attachSilent()
+        .subscribeBy(
+          onNext = { handleConfig(it) },
+          onError = defaultErrorHandler("loadChannelData")
+        )
+        .disposeBySelf()
+    }
   }
 
-  fun loadConfig(remoteId: Int) {
-    suplaClientProvider.provide()?.getChannelConfig(remoteId, ChannelConfigType.DEFAULT)
+  fun loadConfig(remoteId: Int, itemType: ItemType) {
+    if (itemType == ItemType.CHANNEL) {
+      suplaClientProvider.provide()?.getChannelConfig(remoteId, ChannelConfigType.DEFAULT)
+    }
   }
 
   override fun handleChannel(channel: ChannelDataEntity) {

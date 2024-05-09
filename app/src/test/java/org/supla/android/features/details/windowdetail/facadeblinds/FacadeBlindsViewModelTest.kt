@@ -233,7 +233,7 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
       .thenReturn(Observable.just(ChannelConfigEventsManager.ConfigEvent(ConfigResult.RESULT_TRUE, config)))
 
     // when
-    viewModel.observeConfig(remoteId)
+    viewModel.observeConfig(remoteId, ItemType.CHANNEL)
 
     // then
     assertThat(states).containsExactly(
