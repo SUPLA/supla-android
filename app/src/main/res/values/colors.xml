@@ -19,6 +19,7 @@
     <color name="separator">#AAAAAA</color>
     <color name="separator_light">#DCDEE0</color>
     <color name="old_switch_track">#42221f1f</color>
+    <color name="control_button_background">#FFF4F4F4</color>
 
     <color name="red">#FF0000</color>
     <color name="light_orange">#FFD19A</color>
@@ -26,6 +27,7 @@
     <color name="gray_light">#DCDEE0</color>
     <color name="gray_lighter">#EFEFF0</color>
     <color name="blue">#007AFF</color>
+    <color name="black">#000000</color>
     <color name="light_blue">#8C9DFF</color>
     <color name="light_green">#B0E0A8</color>
     <color name="light_red">#FFAA8C</color>
@@ -63,12 +65,9 @@
 
     <color name="channel_cell">#fafbfc</color>
     <color name="channel_section_cell">#edfbee</color>
-    <color name="detail_rs_marker">#12a71e</color>
     <color name="activity_status_bg_err">#fee700</color>
-    <color name="activity_status_bg_normal">#12a71e</color>
 
     <color name="channel_btn_text">#FFFFFF</color>
-    <color name="menubar">#12a71e</color>
     <color name="menuseparator">#fafbfc</color>
     <color name="notification_bg">#fee700</color>
 
@@ -92,7 +91,6 @@
 
     <color name="diw_settings_bg">#ffededed</color>
 
-    <color name="wizart_next_btn_text_enabled">#12a71e</color>
     <color name="zwave_info_label_bg">#FFE804</color>
     <color name="zwave_info_label_text">#000000</color>
     <color name="zwave_info_table_bg">@color/background</color>
@@ -114,7 +112,6 @@
     <color name="layout_background">#F5F6F7</color>
     <color name="field_background">#FFFFFF</color>
     <color name="segmented_field_background">@color/gray_lighter</color>
-    <color name="button_background">@color/supla_green</color>
 
     <color name="widget_fields_border">#3078801F</color>
     <color name="widget_spinner_location_background">@color/channel_section_cell</color>

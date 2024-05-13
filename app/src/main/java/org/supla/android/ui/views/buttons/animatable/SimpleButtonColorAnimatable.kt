@@ -28,7 +28,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -48,7 +47,7 @@ fun SimpleButtonColorAnimatable(
   padding: Dp,
   type: AnimatableButtonType,
   disabled: Boolean,
-  backgroundColor: Color = MaterialTheme.colors.surface,
+  backgroundColor: Color = colorResource(id = R.color.control_button_background),
   animationMode: AnimationMode = AnimationMode.Pressed,
   onClick: () -> Unit,
   onLongClick: (() -> Unit)? = null,

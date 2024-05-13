@@ -219,7 +219,8 @@ private fun EditModeButton(state: TimerDetailViewState, onClick: () -> Unit) =
     Icon(
       painter = if (state.showCalendar) painterResource(id = R.drawable.ic_timer) else painterResource(id = R.drawable.ic_schedule),
       contentDescription = null,
-      modifier = Modifier.padding(end = Distance.tiny)
+      modifier = Modifier.padding(end = Distance.tiny),
+      tint = colorResource(id = R.color.primary_variant)
     )
     Text(
       text = if (state.showCalendar) stringResource(R.string.details_timer_counter) else stringResource(R.string.details_timer_calendar),

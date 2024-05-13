@@ -75,7 +75,7 @@ public class ThermostatHPListViewCursorAdapter extends ResourceCursorAdapter {
     setOn(auto, false);
     setOn(turbo, false);
 
-    status.setOnlineColor(context.getResources().getColor(R.color.primary));
+    status.setOnlineColor(context.getResources().getColor(R.color.primary_variant));
     status.setOfflineColor(context.getResources().getColor(R.color.red));
     status.setShapeType(SuplaChannelStatus.ShapeType.Dot);
 

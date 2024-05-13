@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/menubar">
+    android:background="@color/primary">
 
     <ImageView
         android:id="@+id/img_welcome"
