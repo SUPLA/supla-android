@@ -2,7 +2,6 @@ package org.supla.android.ui.views.buttons.animatable
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -25,7 +24,7 @@ fun ViewColorAnimatable(
   animationMode: AnimationMode = AnimationMode.Pressed,
   content: @Composable (borderColor: Color, outerShadowColor: Color, innerShadowColor: Color, textColor: Color) -> Unit
 ) {
-  val onSurfaceColor = MaterialTheme.colors.onSurface
+  val onSurfaceColor = colorResource(id = type.inactiveColor)
   val colorDisabled = colorResource(id = R.color.disabled)
   val pressedColor = colorResource(id = type.pressedColor)
   val textColorRes = colorResource(id = type.textColor)

@@ -178,7 +178,7 @@ private fun ListItemDotTrading(online: Boolean, withButton: Boolean, modifier: M
 
 @Composable
 private fun ListItemDot(online: Boolean, withButton: Boolean, paddingValues: PaddingValues, modifier: Modifier = Modifier) {
-  val color = if (online) colorResource(id = R.color.primary) else colorResource(id = R.color.red)
+  val color = if (online) colorResource(id = R.color.primary_variant) else colorResource(id = R.color.red)
   val background = if (withButton) color else Color.Transparent
   Box(
     modifier = modifier

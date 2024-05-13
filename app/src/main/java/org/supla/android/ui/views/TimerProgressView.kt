@@ -31,9 +31,11 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.AbstractComposeView
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
+import org.supla.android.R
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.core.ui.theme.progressPointShadow
 import org.supla.android.ui.views.tools.drawControlPoint
@@ -72,7 +74,8 @@ private val progressRadius = 100.dp
 @Composable
 fun TimerProgressView(progress: Float, indeterminate: Boolean) {
   val progressBackgroundColor = MaterialTheme.colors.surface
-  val progressColor = MaterialTheme.colors.primaryVariant
+  val progressColor = MaterialTheme.colors.primary
+  val progressPointColor = colorResource(id = R.color.supla_green)
   val pointShadowColor = MaterialTheme.colors.progressPointShadow
   val progressAlpha = convertProgressToAngle(progress)
   val position = remember {
@@ -103,7 +106,7 @@ fun TimerProgressView(progress: Float, indeterminate: Boolean) {
       )
       timerProgressPoint(
         progressAlpha = progressAlpha,
-        progressColor = progressColor,
+        progressColor = progressPointColor,
         pointShadowColor = pointShadowColor
       )
     } else {

@@ -19,14 +19,14 @@
 
   <style name="AppTheme.Button.Outlined">
     <item name="android:background">@drawable/background_button_outlined</item>
-    <item name="android:textColor">@color/primary</item>
+    <item name="android:textColor">@color/primary_variant</item>
     <item name="android:paddingStart">16dp</item>
     <item name="android:paddingEnd">16dp</item>
   </style>
 
   <style name="AppTheme.Button.Text">
     <item name="android:background">@drawable/background_button_text</item>
-    <item name="android:textColor">@color/primary</item>
+    <item name="android:textColor">@color/primary_variant</item>
     <item name="android:paddingStart">8dp</item>
     <item name="android:paddingEnd">8dp</item>
   </style>
@@ -35,6 +35,7 @@
     <item name="android:layout_width">@dimen/channel_layout_button_width</item>
     <item name="android:layout_height">match_parent</item>
     <item name="android:background">@color/primary</item>
+    <item name="android:textColor">@color/on_primary</item>
     <item name="android:textAppearance">@style/AppTheme.TextAppearance.ListButton</item>
   </style>
 </resources>

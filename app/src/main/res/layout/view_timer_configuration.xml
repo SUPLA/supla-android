@@ -99,7 +99,7 @@
       android:layout_marginEnd="@dimen/distance_default"
       android:text="@string/details_timer_edit_cancel" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
       android:id="@+id/details_timer_start_button"
       style="@style/AppTheme.Button.Contained"
       android:layout_width="match_parent"

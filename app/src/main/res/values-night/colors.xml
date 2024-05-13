@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="primary">@color/supla_green</color>
+    <color name="primary">#003A03</color>
     <color name="primary_variant">@color/supla</color>
     <color name="primary_light">#2f3230</color>
     <color name="on_primary">#ffffff</color>
-    <color name="surface">#262627</color>
+    <color name="surface">#1F211F</color>
     <color name="background">#171717</color>
-    <color name="on_background">#F5F6F7</color>
+    <color name="on_background">#B4B7BA</color>
 
-    <color name="disabled">#363738</color>
-    <color name="disabledOverlay">#DD000000</color>
+    <color name="disabled">#4E5255</color>
+    <color name="disabledOverlay">#BB242725</color>
     <color name="separator">#000000</color>
     <color name="old_switch_track">#42d3d2d2</color>
+    <color name="control_button_background">#FF242725</color>
 
     <color name="gray_light">#424343</color>
     <color name="gray_lighter">#3D3D3E</color>
@@ -26,13 +27,12 @@
     <color name="layout_background">#171717</color>
     <color name="field_background">#3D3D3E</color>
     <color name="segmented_field_background">#101010</color>
-    <color name="button_background">#2AA75A</color>
 
     <color name="widget_fields_border">#4E5255</color>
     <color name="widget_spinner_location_background">#2AA75A</color>
     <color name="widget_spinner_item_background">#262627</color>
 
-    <color name="channel_section_cell">#253F24</color>
+    <color name="channel_section_cell">#242725</color>
     <color name="channel_cell">@color/surface</color>
 
     <color name="dialog_scrim">#BB171717</color>

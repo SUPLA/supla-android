@@ -37,16 +37,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.AbstractComposeView
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.ui.views.buttons.IconWrapper
-
-// special colors
-
-private val disabledOverlay = Color(0xDDFFFFFF)
 
 class CircleControlButtonView @JvmOverloads constructor(
   context: Context,
@@ -122,7 +119,7 @@ fun CircleControlButton(
       Box(
         modifier = Modifier
           .fillMaxSize()
-          .background(color = disabledOverlay)
+          .background(color = colorResource(id = R.color.disabledOverlay))
       )
     }
   }

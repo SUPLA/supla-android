@@ -130,8 +130,8 @@ public class StatusActivity extends NavigationActivity {
     if (mode != 2) {
       mode = 2;
 
-      setStatusBarColor(R.color.activity_status_bg_normal);
-      rlStatus.setBackgroundColor(getResources().getColor(R.color.activity_status_bg_normal));
+      setStatusBarColor(R.color.primary);
+      rlStatus.setBackgroundColor(getResources().getColor(R.color.primary));
       btnCloud.setVisibility(View.INVISIBLE);
 
       btnSettings.setBackground(
@@ -142,7 +142,7 @@ public class StatusActivity extends NavigationActivity {
               ResourcesCompat.getColor(getResources(), R.color.on_primary, null)));
 
       btnRetry.setVisibility(View.GONE);
-      btnSettings.setTextColor(getResources().getColor(R.color.activity_status_bg_normal));
+      btnSettings.setTextColor(getResources().getColor(R.color.primary));
       msg.setTextColor(Color.WHITE);
       msg.setText(getResources().getText(R.string.status_connecting));
       progress.setVisibility(View.VISIBLE);
