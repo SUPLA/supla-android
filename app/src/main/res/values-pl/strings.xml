@@ -649,7 +649,7 @@
   <string name="channel_loading_error">Błąd ładowania kanału</string>
   <string name="facade_blinds_no_tilt">Brak konfiguracji</string>
   <string name="toolbar_delete_chart_history">Usuń historię i pobierz ponownie</string>
-  <string name="history_wait_for_download_completed">Pobieranie w trakcie…</string>
+  <string name="history_wait_for_download_completed">Proszę czekać, pobieram…</string>
 
   <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
     <item quantity="one">włączone</item>

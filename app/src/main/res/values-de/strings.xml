@@ -576,7 +576,7 @@
   <string name="channel_loading_error">Ladefehler</string>
   <string name="facade_blinds_no_tilt">Fehlende Konfiguration</string>
   <string name="toolbar_delete_chart_history">Historie löschen und neuladen</string>
-  <string name="history_wait_for_download_completed">Herunterladen läuft…</string>
+  <string name="history_wait_for_download_completed">Bitte warten, herunterladen…</string>
   <plurals name="details_timer_info_on">
     <item quantity="one">eingeschaltet</item>
     <item quantity="other">eingeschaltet</item>

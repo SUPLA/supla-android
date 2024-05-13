@@ -44,7 +44,7 @@ class DeleteChannelMeasurementsUseCase @Inject constructor(
   private val generalPurposeMeterLogRepository: GeneralPurposeMeterLogRepository
 ) {
 
-  operator fun invoke(remoteId: Int) =
+  operator fun invoke(remoteId: Int): Completable =
     channelRepository.findByRemoteId(remoteId)
       .flatMap { channelEntity ->
         when (channelEntity.function) {
