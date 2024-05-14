@@ -60,8 +60,9 @@ class GroupTotalValue {
       return valueString.map {
         when (function) {
           SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER,
-          SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW ->
-            RollerShutterGroupValue(it)
+          SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW,
+          SuplaConst.SUPLA_CHANNELFNC_TERRACE_AWNING ->
+            ShadingSystemGroupValue(it)
 
           SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND ->
             FacadeBlindGroupValue(it)

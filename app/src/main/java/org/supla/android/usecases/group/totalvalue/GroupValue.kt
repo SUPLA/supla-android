@@ -27,7 +27,7 @@ sealed class GroupValue {
   }
 }
 
-data class RollerShutterGroupValue(
+data class ShadingSystemGroupValue(
   val position: Int,
   val openSensorActive: Boolean
 ) : GroupValue() {
@@ -39,12 +39,12 @@ data class RollerShutterGroupValue(
     )
 
   companion object {
-    operator fun invoke(stringValue: String): RollerShutterGroupValue {
+    operator fun invoke(stringValue: String): ShadingSystemGroupValue {
       val values = stringValue.split(SEPARATOR)
       if (values.size != 2) {
         throw IllegalArgumentException("Given string value is not correct `$stringValue`")
       }
-      return RollerShutterGroupValue(values[0].toInt(), values[1].toInt() == 1)
+      return ShadingSystemGroupValue(values[0].toInt(), values[1].toInt() == 1)
     }
   }
 }

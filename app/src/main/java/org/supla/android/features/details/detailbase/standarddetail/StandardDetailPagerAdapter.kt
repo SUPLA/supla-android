@@ -32,6 +32,7 @@ import org.supla.android.features.details.thermostatdetail.timer.TimerDetailFrag
 import org.supla.android.features.details.windowdetail.facadeblinds.FacadeBlindsFragment
 import org.supla.android.features.details.windowdetail.rollershutter.RollerShutterFragment
 import org.supla.android.features.details.windowdetail.roofwindow.RoofWindowFragment
+import org.supla.android.features.details.windowdetail.terraceawning.TerraceAwningFragment
 import org.supla.android.usecases.details.LegacyDetailType
 
 class StandardDetailPagerAdapter(
@@ -69,6 +70,7 @@ class StandardDetailPagerAdapter(
     DetailPage.ROLLER_SHUTTER -> RollerShutterFragment().apply { arguments = RollerShutterFragment.bundle(itemBundle) }
     DetailPage.ROOF_WINDOW -> RoofWindowFragment().apply { arguments = RoofWindowFragment.bundle(itemBundle) }
     DetailPage.FACADE_BLINDS -> FacadeBlindsFragment().apply { arguments = FacadeBlindsFragment.bundle(itemBundle) }
+    DetailPage.TERRACE_AWNING -> TerraceAwningFragment().apply { arguments = TerraceAwningFragment.bundle(itemBundle) }
   }
 }
 
@@ -94,5 +96,6 @@ enum class DetailPage(val menuId: Int) {
   // Window details
   ROLLER_SHUTTER(R.id.detail_general),
   ROOF_WINDOW(R.id.detail_general),
-  FACADE_BLINDS(R.id.detail_general)
+  FACADE_BLINDS(R.id.detail_general),
+  TERRACE_AWNING(R.id.detail_general)
 }

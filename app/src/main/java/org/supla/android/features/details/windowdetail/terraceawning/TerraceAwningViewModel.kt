@@ -1,4 +1,4 @@
-package org.supla.android.features.details.windowdetail.rollershutter
+package org.supla.android.features.details.windowdetail.terraceawning
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -27,7 +27,7 @@ import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.extensions.guardLet
 import org.supla.android.features.details.windowdetail.base.BaseWindowViewModel
 import org.supla.android.features.details.windowdetail.base.BaseWindowViewModelState
-import org.supla.android.features.details.windowdetail.base.data.RollerShutterWindowState
+import org.supla.android.features.details.windowdetail.base.data.TerraceAwningState
 import org.supla.android.features.details.windowdetail.base.data.WindowGroupedValue
 import org.supla.android.features.details.windowdetail.base.ui.WindowViewState
 import org.supla.android.tools.SuplaSchedulers
@@ -44,7 +44,7 @@ import org.supla.android.usecases.group.totalvalue.ShadingSystemGroupValue
 import javax.inject.Inject
 
 @HiltViewModel
-class RollerShutterViewModel @Inject constructor(
+class TerraceAwningViewModel @Inject constructor(
   executeShadingSystemActionUseCase: ExecuteShadingSystemActionUseCase,
   executeSimpleActionUseCase: ExecuteSimpleActionUseCase,
   callSuplaClientOperationUseCase: CallSuplaClientOperationUseCase,
@@ -58,7 +58,7 @@ class RollerShutterViewModel @Inject constructor(
   loginUseCase: LoginUseCase,
   authorizeUseCase: AuthorizeUseCase,
   schedulers: SuplaSchedulers
-) : BaseWindowViewModel<RollerShutterViewModelState>(
+) : BaseWindowViewModel<TerraceAwningViewModelState>(
   executeShadingSystemActionUseCase,
   executeSimpleActionUseCase,
   callSuplaClientOperationUseCase,
@@ -71,22 +71,22 @@ class RollerShutterViewModel @Inject constructor(
   profileRepository,
   loginUseCase,
   authorizeUseCase,
-  RollerShutterViewModelState(),
+  TerraceAwningViewModelState(),
   schedulers
 ) {
 
-  override fun updatePosition(state: RollerShutterViewModelState, position: Float) =
+  override fun updatePosition(state: TerraceAwningViewModelState, position: Float) =
     state.copy(windowState = state.windowState.copy(position = WindowGroupedValue.Similar(position)))
 
   override fun stateCopy(
-    state: RollerShutterViewModelState,
+    state: TerraceAwningViewModelState,
     remoteId: Int?,
     moveStartTime: Long?,
     manualMoving: Boolean,
     showCalibrationDialog: Boolean,
     authorizationDialogState: AuthorizationDialogState?,
     viewStateUpdater: (WindowViewState) -> WindowViewState
-  ): RollerShutterViewModelState =
+  ): TerraceAwningViewModelState =
     state.copy(
       remoteId = remoteId,
       moveStartTime = moveStartTime,
@@ -108,7 +108,6 @@ class RollerShutterViewModel @Inject constructor(
         it.copy(
           windowState = it.windowState.copy(
             position = WindowGroupedValue.Similar(if (value.online) position.toFloat() else 25f),
-            bottomPosition = value.bottomPosition.toFloat(),
             positionTextFormat = positionTextFormat
           )
         )
@@ -153,9 +152,9 @@ private fun ChannelGroupEntity.getRollerShutterPositions(): List<Float> =
     }
   }
 
-data class RollerShutterViewModelState(
+data class TerraceAwningViewModelState(
   override val remoteId: Int? = null,
-  override val windowState: RollerShutterWindowState = RollerShutterWindowState(WindowGroupedValue.Similar(0f)),
+  override val windowState: TerraceAwningState = TerraceAwningState(WindowGroupedValue.Similar(0f)),
   override val viewState: WindowViewState = WindowViewState(),
   override val moveStartTime: Long? = null,
   override val manualMoving: Boolean = false,

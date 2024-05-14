@@ -44,6 +44,7 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_RING
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_TERRACE_AWNING
 
 @RunWith(MockitoJUnitRunner::class)
 class GetChannelStateUseCaseTest {
@@ -133,6 +134,32 @@ class GetChannelStateUseCaseTest {
   fun `should get open state for facade blind`() {
     // given
     val function = SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND
+    val stateWrapper = mockState(rollerShutterClosed = false)
+
+    // when
+    val state = useCase(function, stateWrapper)
+
+    // then
+    assertThat(state.value).isEqualTo(ChannelState.Value.OPEN)
+  }
+
+  @Test
+  fun `should get closed state for terrace awning`() {
+    // given
+    val function = SUPLA_CHANNELFNC_TERRACE_AWNING
+    val stateWrapper = mockState(rollerShutterClosed = true)
+
+    // when
+    val state = useCase(function, stateWrapper)
+
+    // then
+    assertThat(state.value).isEqualTo(ChannelState.Value.CLOSED)
+  }
+
+  @Test
+  fun `should get open state for terrace awning`() {
+    // given
+    val function = SUPLA_CHANNELFNC_TERRACE_AWNING
     val stateWrapper = mockState(rollerShutterClosed = false)
 
     // when
