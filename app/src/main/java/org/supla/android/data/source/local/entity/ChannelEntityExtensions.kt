@@ -59,7 +59,8 @@ fun ChannelEntity.isThermometer() =
   function == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER ||
     function == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
 
-fun ChannelEntity.isRollerShutter() =
+fun ChannelEntity.isShadingSystem() =
   function == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER ||
     function == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW ||
-    function == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND
+    function == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND ||
+    function == SuplaConst.SUPLA_CHANNELFNC_TERRACE_AWNING

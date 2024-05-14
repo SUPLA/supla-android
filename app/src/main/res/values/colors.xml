@@ -17,7 +17,6 @@
     <color name="disabled">#B4B7BA</color>
     <color name="disabledOverlay">#DDFFFFFF</color>
     <color name="separator">#AAAAAA</color>
-    <color name="separator_light">#DCDEE0</color>
     <color name="old_switch_track">#42221f1f</color>
     <color name="control_button_background">#FFF4F4F4</color>
 
@@ -50,8 +49,8 @@
     <color name="roller_shutter_window_color">#FFFFFF</color>
     <color name="roller_shutter_glass_top_color">#C9EEFF</color>
     <color name="roller_shutter_glass_bottom_color">#D8F3FF</color>
-    <color name="roller_shutter_slat_background">#DCDEE0</color>
-    <color name="roller_shutter_slat_border">#B4B7BA</color>
+    <color name="roller_shutter_slat_background">@color/gray_light</color>
+    <color name="roller_shutter_slat_border">@color/disabled</color>
     <color name="roller_shutter_disabled_glass_top_color">#EFFAFF</color>
     <color name="roller_shutter_disabled_glass_bottom_color">#F3FBFF</color>
     <color name="roller_shutter_disabled_slat_background">#F5F5F6</color>

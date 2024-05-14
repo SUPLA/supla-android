@@ -35,13 +35,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.NativePaint
 import androidx.compose.ui.graphics.asAndroidPath
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.nativeCanvas
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.res.colorResource
@@ -55,6 +53,7 @@ import org.supla.android.features.details.windowdetail.base.data.RollerShutterWi
 import org.supla.android.features.details.windowdetail.base.data.WindowGroupedValue
 import org.supla.android.features.details.windowdetail.base.ui.MoveState
 import org.supla.android.features.details.windowdetail.base.ui.WindowColors
+import org.supla.android.features.details.windowdetail.base.ui.applyForSlat
 import org.supla.android.features.details.windowdetail.base.ui.windowview.RuntimeWindowDimens
 import org.supla.android.features.details.windowdetail.base.ui.windowview.RuntimeWindowDimens.Companion.canvasRect
 import org.supla.android.features.details.windowdetail.base.ui.windowview.RuntimeWindowDimens.Companion.getMarkerPath
@@ -215,14 +214,6 @@ private object WindowDrawer : WindowDrawerBase<RollerShutterWindowState>() {
     )
     runtimeWindowDimens.markerPath.translate(offset.times(-1f))
   }
-}
-
-context(DrawScope)
-private fun NativePaint.applyForSlat(colors: WindowColors) {
-  style = android.graphics.Paint.Style.FILL
-  strokeCap = android.graphics.Paint.Cap.SQUARE
-  color = colors.slatBackground.toArgb()
-  setShadowLayer(slatShadowRadius.toPx(), 0f, 1.5.dp.toPx(), colors.shadow.toArgb())
 }
 
 private fun makeDimens(viewSize: IntSize): RuntimeWindowDimens {

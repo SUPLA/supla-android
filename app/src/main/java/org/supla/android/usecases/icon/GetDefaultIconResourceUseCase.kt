@@ -55,6 +55,7 @@ import org.supla.android.usecases.icon.producers.RollerShutterIconResourceProduc
 import org.supla.android.usecases.icon.producers.RoofWindowIconResourceProducer
 import org.supla.android.usecases.icon.producers.StaircaseTimerIconResourceProducer
 import org.supla.android.usecases.icon.producers.StaticIconResourceProducer
+import org.supla.android.usecases.icon.producers.TerraceAwningIconResourceProducer
 import org.supla.android.usecases.icon.producers.ThermometerIconResourceProducer
 import org.supla.android.usecases.icon.producers.ThermostatHomePlusIconResourceProducer
 import org.supla.android.usecases.icon.producers.ThermostatHvacIconResourceProducer
@@ -104,7 +105,8 @@ class GetDefaultIconResourceUseCase @Inject constructor() {
     ValveIconResourceProducer(),
     DigiglassIconResourceProducer(),
     GeneralPurposeMeasurementIconResourceProducer(),
-    GeneralPurposeMeterIconResourceProducer()
+    GeneralPurposeMeterIconResourceProducer(),
+    TerraceAwningIconResourceProducer()
   )
 
   @DrawableRes

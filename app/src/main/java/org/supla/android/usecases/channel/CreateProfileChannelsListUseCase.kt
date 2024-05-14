@@ -31,7 +31,7 @@ import org.supla.android.data.source.local.entity.complex.isGpMeasurement
 import org.supla.android.data.source.local.entity.complex.isGpMeter
 import org.supla.android.data.source.local.entity.complex.isHvacThermostat
 import org.supla.android.data.source.local.entity.complex.isMeasurement
-import org.supla.android.data.source.local.entity.complex.isRollerShutter
+import org.supla.android.data.source.local.entity.complex.isShadingSystem
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.location.CollapsedFlag
@@ -109,7 +109,7 @@ class CreateProfileChannelsListUseCase @Inject constructor(
       channelData.isGpMeter() -> toGpMeterItem(channelData)
       channelData.isMeasurement() -> toMeasurementItem(channelData)
       channelData.isHvacThermostat() -> toThermostatItem(channelData, childrenMap)
-      channelData.isRollerShutter() -> toRollerShutterItem(channelData)
+      channelData.isShadingSystem() -> toRollerShutterItem(channelData)
       else -> toChannelItem(channelData, childrenMap)
     }
 

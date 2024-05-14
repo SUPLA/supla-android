@@ -52,6 +52,7 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROOFWINDOW
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_TERRACE_AWNING
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_VALVE_PERCENTAGE
@@ -74,7 +75,8 @@ class GetChannelStateUseCase @Inject constructor() {
 
       SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER,
       SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW,
-      SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND ->
+      SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND,
+      SUPLA_CHANNELFNC_TERRACE_AWNING ->
         if (value.rollerShutterClosed) ChannelState(ChannelState.Value.CLOSED) else ChannelState(ChannelState.Value.OPEN)
 
       SUPLA_CHANNELFNC_OPENSENSOR_GATEWAY,

@@ -60,6 +60,7 @@ import org.supla.android.core.ui.theme.gray
 import org.supla.android.data.model.general.ChannelIssueItem
 import org.supla.android.features.details.windowdetail.base.data.RollerShutterWindowState
 import org.supla.android.features.details.windowdetail.base.data.RoofWindowState
+import org.supla.android.features.details.windowdetail.base.data.TerraceAwningState
 import org.supla.android.features.details.windowdetail.base.data.WindowGroupedValue
 import org.supla.android.features.details.windowdetail.base.data.WindowState
 import org.supla.android.features.details.windowdetail.base.data.facadeblinds.FacadeBlindWindowState
@@ -68,6 +69,7 @@ import org.supla.android.features.details.windowdetail.base.ui.facadeblinds.Slat
 import org.supla.android.features.details.windowdetail.base.ui.facadeblinds.SlatTiltSliderDimens
 import org.supla.android.features.details.windowdetail.base.ui.rollershutter.RollerShutterWindowView
 import org.supla.android.features.details.windowdetail.base.ui.roofwindow.RoofWindowView
+import org.supla.android.features.details.windowdetail.base.ui.terraceawning.TerraceAwningView
 import org.supla.android.features.details.windowdetail.base.ui.windowview.WindowDimens
 import org.supla.android.ui.lists.data.IssueIconType
 import org.supla.android.ui.views.buttons.animatable.CircleControlButton
@@ -356,6 +358,14 @@ private fun WindowView(
         modifier = modifier,
         onPositionChanging = { tilt, position -> if (viewState.enabled) onAction(ShadingSystemAction.MoveAndTiltTo(position, tilt)) },
         onPositionChanged = { tilt, position -> if (viewState.enabled) onAction(ShadingSystemAction.MoveAndTiltSetTo(position, tilt)) }
+      )
+    is TerraceAwningState ->
+      TerraceAwningView(
+        windowState = windowState,
+        colors = if (viewState.enabled) WindowColors.standard() else WindowColors.offline(),
+        modifier = modifier,
+        onPositionChanging = { position -> if (viewState.enabled) onAction(ShadingSystemAction.MoveTo(position)) },
+        onPositionChanged = { position -> if (viewState.enabled) onAction(ShadingSystemAction.OpenAt(position)) }
       )
   }
 }

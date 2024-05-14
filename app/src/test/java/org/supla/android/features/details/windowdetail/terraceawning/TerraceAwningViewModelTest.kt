@@ -1,6 +1,23 @@
 @file:Suppress("SameParameterValue")
+/*
+ Copyright (C) AC SOFTWARE SP. Z O.O.
 
-package org.supla.android.features.details.windowdetail.roofwindow
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
+
+package org.supla.android.features.details.windowdetail.terraceawning
 
 import io.mockk.every
 import io.mockk.mockk
@@ -31,7 +48,7 @@ import org.supla.android.data.source.remote.shadingsystem.SuplaShadingSystemFlag
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.LoadingTimeoutManager
 import org.supla.android.features.details.windowdetail.base.BaseWindowViewEvent
-import org.supla.android.features.details.windowdetail.base.data.RoofWindowState
+import org.supla.android.features.details.windowdetail.base.data.TerraceAwningState
 import org.supla.android.features.details.windowdetail.base.data.WindowGroupedValue
 import org.supla.android.features.details.windowdetail.base.ui.WindowViewState
 import org.supla.android.lib.SuplaConst
@@ -49,8 +66,7 @@ import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
 import org.supla.android.usecases.group.totalvalue.GroupTotalValue
 
 @RunWith(MockitoJUnitRunner::class)
-class RoofWindowViewModelTest :
-  BaseViewModelTest<RoofWindowViewModelState, BaseWindowViewEvent, RoofWindowViewModel>() {
+class TerraceAwningViewModelTest : BaseViewModelTest<TerraceAwningViewModelState, BaseWindowViewEvent, TerraceAwningViewModel>() {
 
   @Mock
   lateinit var loadingTimeoutManager: LoadingTimeoutManager
@@ -98,7 +114,7 @@ class RoofWindowViewModelTest :
   override lateinit var schedulers: SuplaSchedulers
 
   @InjectMocks
-  override lateinit var viewModel: RoofWindowViewModel
+  override lateinit var viewModel: TerraceAwningViewModel
 
   @Before
   override fun setUp() {
@@ -123,9 +139,9 @@ class RoofWindowViewModelTest :
 
     // then
     Assertions.assertThat(states).containsExactly(
-      RoofWindowViewModelState(
+      TerraceAwningViewModelState(
         remoteId = remoteId,
-        windowState = RoofWindowState(WindowGroupedValue.Similar(position.toFloat())),
+        windowState = TerraceAwningState(WindowGroupedValue.Similar(position.toFloat())),
         viewState = WindowViewState(
           issues = listOf(ChannelIssueItem(IssueIconType.ERROR, R.string.motor_problem)),
           enabled = true,
@@ -150,9 +166,9 @@ class RoofWindowViewModelTest :
 
     // then
     Assertions.assertThat(states).containsExactly(
-      RoofWindowViewModelState(
+      TerraceAwningViewModelState(
         remoteId = remoteId,
-        windowState = RoofWindowState(
+        windowState = TerraceAwningState(
           position = WindowGroupedValue.Different(min = 20.0f, max = 100.0f),
           markers = listOf(100f, 100f, 20f)
         ),
@@ -176,7 +192,7 @@ class RoofWindowViewModelTest :
     valueFlags: List<SuplaShadingSystemFlag> = emptyList(),
     channelFlags: List<SuplaChannelFlag> = emptyList(),
     hasValidPosition: Boolean = true,
-    function: Int = SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW
+    function: Int = SuplaConst.SUPLA_CHANNELFNC_TERRACE_AWNING
   ) {
     val rollerShutterValue: RollerShutterValue = mockk {
       every { this@mockk.position } returns position
@@ -206,12 +222,12 @@ class RoofWindowViewModelTest :
     val group: ChannelGroupEntity = mockk {
       every {
         this@mockk.groupTotalValues
-      } returns GroupTotalValue.parse(SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER, totalValue)
+      } returns GroupTotalValue.parse(SuplaConst.SUPLA_CHANNELFNC_TERRACE_AWNING, totalValue)
     }
     val groupData: ChannelGroupDataEntity = mockk {
       every { id } returns groupId
       every { this@mockk.remoteId } returns remoteId
-      every { this@mockk.function } returns SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
+      every { this@mockk.function } returns SuplaConst.SUPLA_CHANNELFNC_TERRACE_AWNING
       every { channelGroupEntity } returns group
       every { isOnline() } returns true
     }

@@ -43,7 +43,7 @@ import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToGpmUpdateEventMapper
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToMeasurementUpdateEventMapper
-import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToRollerShutterUpdateEventMapper
+import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToShadingSystemUpdateEventMapper
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToThermostatUpdateEventMapper
 
 @RunWith(MockitoJUnitRunner::class)
@@ -68,7 +68,7 @@ class CreateListItemUpdateEventDataUseCaseTest {
   private lateinit var channelWithChildrenToGpmUpdateEventMapper: ChannelWithChildrenToGpmUpdateEventMapper
 
   @Mock
-  private lateinit var channelWithChildrenToRollerShutterUpdateEventMapper: ChannelWithChildrenToRollerShutterUpdateEventMapper
+  private lateinit var channelWithChildrenToShadingSystemUpdateEventMapper: ChannelWithChildrenToShadingSystemUpdateEventMapper
 
   @InjectMocks
   private lateinit var useCase: CreateListItemUpdateEventDataUseCase

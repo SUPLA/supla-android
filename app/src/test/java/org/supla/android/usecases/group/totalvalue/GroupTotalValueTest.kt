@@ -30,11 +30,11 @@ class GroupTotalValueTest {
   fun `should convert to string and back - roller shutter group`() {
     // given
     val totalValue = GroupTotalValue()
-    totalValue.add(RollerShutterGroupValue(position = 80, openSensorActive = true), online = true)
-    totalValue.add(RollerShutterGroupValue(position = 50, openSensorActive = false), online = true)
+    totalValue.add(ShadingSystemGroupValue(position = 80, openSensorActive = true), online = true)
+    totalValue.add(ShadingSystemGroupValue(position = 50, openSensorActive = false), online = true)
     // offline items should be not added
-    totalValue.add(RollerShutterGroupValue(position = 50, openSensorActive = false), online = false)
-    totalValue.add(RollerShutterGroupValue(position = 50, openSensorActive = false), online = false)
+    totalValue.add(ShadingSystemGroupValue(position = 50, openSensorActive = false), online = false)
+    totalValue.add(ShadingSystemGroupValue(position = 50, openSensorActive = false), online = false)
 
     // when
     val totalValueString = totalValue.asString()
@@ -44,8 +44,8 @@ class GroupTotalValueTest {
     assertThat(totalValue.online).isEqualTo(50)
     assertThat(totalValueString).isEqualTo("80:1|50:0")
     assertThat(values).containsExactly(
-      RollerShutterGroupValue(position = 80, openSensorActive = true),
-      RollerShutterGroupValue(position = 50, openSensorActive = false)
+      ShadingSystemGroupValue(position = 80, openSensorActive = true),
+      ShadingSystemGroupValue(position = 50, openSensorActive = false)
     )
   }
 
@@ -53,11 +53,11 @@ class GroupTotalValueTest {
   fun `should convert to string and back - roof window group`() {
     // given
     val totalValue = GroupTotalValue()
-    totalValue.add(RollerShutterGroupValue(position = 80, openSensorActive = true), online = true)
-    totalValue.add(RollerShutterGroupValue(position = 50, openSensorActive = false), online = true)
+    totalValue.add(ShadingSystemGroupValue(position = 80, openSensorActive = true), online = true)
+    totalValue.add(ShadingSystemGroupValue(position = 50, openSensorActive = false), online = true)
     // offline items should be not added
-    totalValue.add(RollerShutterGroupValue(position = 50, openSensorActive = false), online = false)
-    totalValue.add(RollerShutterGroupValue(position = 50, openSensorActive = false), online = false)
+    totalValue.add(ShadingSystemGroupValue(position = 50, openSensorActive = false), online = false)
+    totalValue.add(ShadingSystemGroupValue(position = 50, openSensorActive = false), online = false)
 
     // when
     val totalValueString = totalValue.asString()
@@ -67,8 +67,8 @@ class GroupTotalValueTest {
     assertThat(totalValue.online).isEqualTo(50)
     assertThat(totalValueString).isEqualTo("80:1|50:0")
     assertThat(values).containsExactly(
-      RollerShutterGroupValue(position = 80, openSensorActive = true),
-      RollerShutterGroupValue(position = 50, openSensorActive = false)
+      ShadingSystemGroupValue(position = 80, openSensorActive = true),
+      ShadingSystemGroupValue(position = 50, openSensorActive = false)
     )
   }
 

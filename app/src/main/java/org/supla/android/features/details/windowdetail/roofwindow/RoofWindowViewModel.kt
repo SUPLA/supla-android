@@ -40,7 +40,7 @@ import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
 import org.supla.android.usecases.client.LoginUseCase
 import org.supla.android.usecases.group.GetGroupOnlineSummaryUseCase
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
-import org.supla.android.usecases.group.totalvalue.RollerShutterGroupValue
+import org.supla.android.usecases.group.totalvalue.ShadingSystemGroupValue
 import javax.inject.Inject
 
 @HiltViewModel
@@ -143,7 +143,7 @@ class RoofWindowViewModel @Inject constructor(
 
 private fun ChannelGroupEntity.getRollerShutterPositions(): List<Float> =
   groupTotalValues.mapNotNull {
-    val (value) = guardLet(it as? RollerShutterGroupValue) { return@mapNotNull null }
+    val (value) = guardLet(it as? ShadingSystemGroupValue) { return@mapNotNull null }
 
     if (value.position < 100 && value.openSensorActive) {
       100f

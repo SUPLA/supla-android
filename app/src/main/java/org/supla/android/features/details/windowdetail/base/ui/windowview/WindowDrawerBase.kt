@@ -20,17 +20,14 @@ package org.supla.android.features.details.windowdetail.base.ui.windowview
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.NativePaint
 import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.nativeCanvas
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
 import org.supla.android.features.details.windowdetail.base.data.WindowState
 import org.supla.android.features.details.windowdetail.base.ui.WindowColors
-
-private val windowShadowRadius = 4.dp
+import org.supla.android.features.details.windowdetail.base.ui.applyForWindow
 
 abstract class WindowDrawerBase<S : WindowState> {
 
@@ -45,7 +42,7 @@ abstract class WindowDrawerBase<S : WindowState> {
 
   context(DrawScope)
   fun drawWindow(runtimeWindowDimens: RuntimeWindowDimens, colors: WindowColors, rollerState: S) {
-    val windowFrameRadius = 4.dp.toPx().times(runtimeWindowDimens.scale)
+    val windowFrameRadius = WINDOW_FRAME_RADIUS.dp.toPx().times(runtimeWindowDimens.scale)
 
     paint.applyForWindow(colors)
     drawContext.canvas.nativeCanvas.drawRoundRect(
@@ -101,12 +98,4 @@ abstract class WindowDrawerBase<S : WindowState> {
       size = Size(singleGlassWidth, height)
     )
   }
-}
-
-context(DrawScope)
-private fun NativePaint.applyForWindow(colors: WindowColors) {
-  style = android.graphics.Paint.Style.FILL
-  strokeCap = android.graphics.Paint.Cap.SQUARE
-  color = colors.window.toArgb()
-  setShadowLayer(windowShadowRadius.toPx(), 0f, 2.dp.toPx(), colors.shadow.toArgb())
 }

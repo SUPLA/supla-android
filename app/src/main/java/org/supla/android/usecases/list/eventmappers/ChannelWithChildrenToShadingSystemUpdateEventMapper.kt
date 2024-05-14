@@ -18,7 +18,7 @@ package org.supla.android.usecases.list.eventmappers
  */
 
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
-import org.supla.android.data.source.local.entity.complex.isRollerShutter
+import org.supla.android.data.source.local.entity.complex.isShadingSystem
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.extensions.guardLet
 import org.supla.android.ui.lists.data.SlideableListItemData
@@ -30,13 +30,13 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ChannelWithChildrenToRollerShutterUpdateEventMapper @Inject constructor(
+class ChannelWithChildrenToShadingSystemUpdateEventMapper @Inject constructor(
   private val getChannelCaptionUseCase: GetChannelCaptionUseCase,
   private val getChannelIconUseCase: GetChannelIconUseCase
 ) : CreateListItemUpdateEventDataUseCase.Mapper {
 
   override fun handle(item: Any): Boolean {
-    return (item as? ChannelWithChildren)?.channel?.isRollerShutter() == true
+    return (item as? ChannelWithChildren)?.channel?.isShadingSystem() == true
   }
 
   override fun map(item: Any): SlideableListItemData {
