@@ -25,7 +25,9 @@ import androidx.room.PrimaryKey
 import org.supla.android.data.source.local.entity.ChannelValueEntity.Companion.COLUMN_CHANNEL_REMOTE_ID
 import org.supla.android.data.source.local.entity.ChannelValueEntity.Companion.COLUMN_PROFILE_ID
 import org.supla.android.data.source.local.entity.ChannelValueEntity.Companion.TABLE_NAME
+import org.supla.android.data.source.remote.facadeblind.FacadeBlindValue
 import org.supla.android.data.source.remote.rollershutter.RollerShutterValue
+import org.supla.android.data.source.remote.thermostat.HeatpolThermostatValue
 import org.supla.android.data.source.remote.thermostat.ThermostatValue
 import org.supla.android.lib.DigiglassValue
 import org.supla.android.lib.SuplaChannelValue
@@ -58,13 +60,27 @@ data class ChannelValueEntity(
 
   fun asThermostatValue() = ThermostatValue.from(online, getValueAsByteArray())
 
-  fun asBrightness() = asShortValue(0)?.let { if (it > 100) 100 else it } ?: 0
+  fun asBrightness() = asShortValue(0)?.let { if (it > 100) 0 else it } ?: 0
 
-  fun asBrightnessColor() = asShortValue(1)?.let { if (it > 100) 100 else it } ?: 0
+  fun asBrightnessColor() = asShortValue(1)?.let { if (it > 100) 0 else it } ?: 0
+
+  fun asColor(): Int = getValueAsByteArray().let {
+    if (it.size < 5) {
+      return@let 0
+    }
+
+    return@let (it[2].toInt() and 0x00000FF) or
+      ((it[3].toInt() shl 8) and 0x0000FF00) or
+      ((it[4].toInt() shl 16) and 0x00FF0000)
+  }
 
   fun asDigiglassValue() = DigiglassValue(getValueAsByteArray())
 
   fun asRollerShutterValue() = RollerShutterValue.from(online, getValueAsByteArray())
+
+  fun asFacadeBlindValue() = FacadeBlindValue.from(online, getValueAsByteArray())
+
+  fun asHeatpolThermostatValue() = HeatpolThermostatValue.from(online, getValueAsByteArray())
 
   fun getSubValueHi(): Byte {
     return getSubValueAsByteArray().let {
@@ -79,6 +95,12 @@ data class ChannelValueEntity(
       }
 
       return@let result
+    }
+  }
+
+  fun getValueHi(): Boolean {
+    return getValueAsByteArray().let {
+      return@let it.isNotEmpty() && it[0].toInt() == 1
     }
   }
 

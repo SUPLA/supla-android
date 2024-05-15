@@ -470,7 +470,7 @@
   <string name="notification_info_message">Schalte die Notifikationen ein, um auf dem Laufenden zu halten! Um sie Ihnen zu zeigen, brauchen wir Ihre Zustimmung.\n\nDie Notifikation können Sie in Supla Cloud konfigurieren.</string>
   <string name="skip">Überspringen</string>
   <string name="settings_notifications">Notifikationen</string>
-  <string name="settings_localization">Lokalization</string>
+  <string name="settings_localization">Standort (genau)</string>
   <string name="settings_permissions">Berechtigungen</string>
 
   <string name="details_general" translatable="false">Allgemein</string>
@@ -570,6 +570,13 @@
   <string name="roller_shutter_calibration">Kalibrierung</string>
   <string name="roller_shutter_calibration_needed">Kalibrierung nötig</string>
   <string name="cfg_night_mode">Nacht-Modus</string>
+  <string name="menu_device_catalog">Gerätekatalog</string>
+  <string name="facade_blind_slat_tilt">Neigung:</string>
+  <string name="channel_caption_facade_blinds">Fassadenjalousien</string>
+  <string name="channel_loading_error">Ladefehler</string>
+  <string name="facade_blinds_no_tilt">Fehlende Konfiguration</string>
+  <string name="toolbar_delete_chart_history">Historie löschen und neuladen</string>
+  <string name="history_wait_for_download_completed">Bitte warten, herunterladen…</string>
   <plurals name="details_timer_info_on">
     <item quantity="one">eingeschaltet</item>
     <item quantity="other">eingeschaltet</item>

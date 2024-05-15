@@ -51,7 +51,7 @@ import org.supla.android.profile.ProfileIdHolder;
 
 public class DbHelper extends BaseDbHelper {
 
-  public static final int DATABASE_VERSION = 35;
+  public static final int DATABASE_VERSION = 36;
   public static final String DATABASE_NAME = "supla.db";
   private static final Object mutex = new Object();
 
@@ -188,10 +188,6 @@ public class DbHelper extends BaseDbHelper {
 
   public void updateColorListItemValue(ColorListItem item) {
     colorListRepository.updateColorListItemValue(item);
-  }
-
-  public List<Integer> updateChannelGroups() {
-    return channelRepository.updateAllChannelGroups();
   }
 
   public List<Integer> iconsToDownload() {

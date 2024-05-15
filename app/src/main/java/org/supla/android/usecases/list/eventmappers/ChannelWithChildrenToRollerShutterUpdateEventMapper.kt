@@ -19,6 +19,7 @@ package org.supla.android.usecases.list.eventmappers
 
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.isRollerShutter
+import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.extensions.guardLet
 import org.supla.android.ui.lists.data.SlideableListItemData
 import org.supla.android.usecases.channel.ChannelWithChildren
@@ -53,7 +54,8 @@ class ChannelWithChildrenToRollerShutterUpdateEventMapper @Inject constructor(
       icon = getChannelIconUseCase.invoke(channelData),
       value = null,
       issueIconType = value.getIssueIconType(),
-      estimatedTimerEndDate = null
+      estimatedTimerEndDate = null,
+      infoSupported = SuplaChannelFlag.CHANNEL_STATE.inside(channelData.flags)
     )
   }
 }

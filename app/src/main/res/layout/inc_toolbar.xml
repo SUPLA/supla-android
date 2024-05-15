@@ -11,6 +11,7 @@
 
       <org.supla.android.ui.AppBar
         android:id="@+id/supla_toolbar"
+        android:theme="@style/SuplaToolbarStyle"
         android:layout_width="match_parent"
         android:layout_height="@dimen/top_bar_height">
 

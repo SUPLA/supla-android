@@ -54,10 +54,10 @@ val TOTAL_HEIGHT = 188.dp
 private val BUTTON_WIDTH = 64.dp
 private val BUTTON_HEIGHT = TOTAL_HEIGHT.div(2)
 private val CORNER_RADIUS = BUTTON_WIDTH.div(2)
-private val DISABLED_OVERLAY = Color(0xDDFFFFFF)
 
 @Composable
 fun UpDownControlButton(
+  modifier: Modifier = Modifier,
   disabled: Boolean = false,
   animationMode: AnimationMode = AnimationMode.Pressed,
   upContent: @Composable BoxScope.(text: Color) -> Unit,
@@ -72,7 +72,7 @@ fun UpDownControlButton(
     val downHandler = downEventHandler?.let { it() }
 
     Column(
-      modifier = Modifier
+      modifier = modifier
     ) {
       UpButton(
         disabled = disabled,
@@ -194,14 +194,17 @@ private fun ControlButton(
   val colorDisabled = colorResource(id = R.color.disabled)
 
   val upInteractionSource = remember { MutableInteractionSource() }
-
-  LaunchedEffect(upInteractionSource) {
+  LaunchedEffect(upInteractionSource, disabled) {
     launch {
       upInteractionSource.interactions.collect { interaction ->
         if (interaction is PressInteraction.Press) {
-          onTouchDown?.let { it() }
+          if (!disabled) {
+            onTouchDown?.let { it() }
+          }
         } else {
-          onTouchUp?.let { it() }
+          if (!disabled) {
+            onTouchUp?.let { it() }
+          }
         }
       }
     }
@@ -243,7 +246,7 @@ private fun ControlButton(
           bottomLeftRadius = bottomStartCornerRadius,
           bottomRightRadius = bottomEndCornerRadius
         )
-        .background(MaterialTheme.colors.surface, shape = shape)
+        .background(colorResource(id = R.color.control_button_background), shape = shape)
         .clickable(
           interactionSource = upInteractionSource,
           indication = null,
@@ -261,7 +264,7 @@ private fun ControlButton(
         Box(
           modifier = Modifier
             .fillMaxSize()
-            .background(color = DISABLED_OVERLAY, shape = shape)
+            .background(color = colorResource(id = R.color.disabledOverlay), shape = shape)
         )
       }
     }

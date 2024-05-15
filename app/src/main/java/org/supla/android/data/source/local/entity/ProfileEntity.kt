@@ -17,6 +17,7 @@ package org.supla.android.data.source.local.entity
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.content.ContentValues
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -56,6 +57,23 @@ data class ProfileEntity(
       guid = this.guid ?: byteArrayOf(),
       authKey = this.authKey ?: byteArrayOf()
     )
+
+  val contentValues: ContentValues
+    get() = ContentValues().apply {
+      put(COLUMN_NAME, name)
+      put(COLUMN_EMAIL, email)
+      put(COLUMN_SERVER_FOR_ACCESS_ID, serverForAccessId)
+      put(COLUMN_SERVER_FOR_EMAIL, serverForEmail)
+      put(COLUMN_SERVER_AUTO_DETECT, serverAutoDetect)
+      put(COLUMN_EMAIL_AUTH, emailAuth)
+      put(COLUMN_ACCESS_ID, accessId)
+      put(COLUMN_ACCESS_ID_PASSWORD, accessIdPassword)
+      put(COLUMN_PREFERRED_PROTOCOL_VERSION, preferredProtocolVersion)
+      put(COLUMN_ACTIVE, active)
+      put(COLUMN_ADVANCED_MODE, advancedMode)
+      put(COLUMN_GUID, guid)
+      put(COLUMN_AUTH_KEY, authKey)
+    }
 
   companion object {
     const val TABLE_NAME = "auth_profile"

@@ -18,12 +18,12 @@
       app:hasLeftButton="true"
       app:hasRightButton="true" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
       android:id="@id/list_item_left_item"
       style="@style/AppTheme.Button.ListButton"
       android:text="@string/channel_btn_close" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
       android:id="@id/list_item_right_item"
       style="@style/AppTheme.Button.ListButton"
       android:text="@string/channel_btn_open" />

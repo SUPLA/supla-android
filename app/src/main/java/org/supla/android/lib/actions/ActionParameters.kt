@@ -45,6 +45,8 @@ enum class ActionId(val value: Int) {
   UP_OR_STOP(140),
   DOWN_OR_STOP(150),
   STEP_BY_STEP(160),
+  UP(170),
+  DOWN(180),
   SET_HVAC_PARAMETERS(230),
   EXECUTE(3000),
   INTERRUPT(3001),

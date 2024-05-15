@@ -25,6 +25,7 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.view.View;
 import android.widget.Spinner;
+import androidx.core.content.res.ResourcesCompat;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.charts.CombinedChart;
@@ -263,7 +264,15 @@ public abstract class ChartHelper extends ValueFormatter {
     combinedChart.setVisibility(View.VISIBLE);
     combinedChart.getXAxis().setValueFormatter(this);
     combinedChart.getXAxis().setLabelCount(3);
+    combinedChart
+        .getXAxis()
+        .setTextColor(
+            ResourcesCompat.getColor(combinedChart.getResources(), R.color.on_background, null));
     combinedChart.getAxisLeft().setDrawLabels(false);
+    combinedChart
+        .getAxisRight()
+        .setTextColor(
+            ResourcesCompat.getColor(combinedChart.getResources(), R.color.on_background, null));
     combinedChart.getLegend().setEnabled(false);
     combinedChart.setData(null);
     combinedChart.clear();

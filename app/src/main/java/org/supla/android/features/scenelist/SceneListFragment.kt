@@ -49,9 +49,7 @@ class SceneListFragment : BaseFragment<SceneListViewState, SceneListViewEvent>(R
 
     binding.scenesList.adapter = adapter
     setupAdapter()
-    binding.scenesEmptyListButton.setOnClickListener {
-      navigator.navigateToCloudExternal()
-    }
+    binding.scenesEmptyListButton.setOnClickListener { viewModel.onAddGroupClick() }
   }
 
   override fun onStart() {
@@ -61,16 +59,19 @@ class SceneListFragment : BaseFragment<SceneListViewState, SceneListViewEvent>(R
 
   override fun handleEvents(event: SceneListViewEvent) {
     when (event) {
-      SceneListViewEvent.ReassignAdapter -> {
+      is SceneListViewEvent.ReassignAdapter -> {
         binding.scenesList.adapter = null
         binding.scenesList.adapter = adapter
       }
+      is SceneListViewEvent.NavigateToPrivateCloud -> navigator.navigateToWeb(event.url)
+      is SceneListViewEvent.NavigateToSuplaCloud -> navigator.navigateToCloudExternal()
     }
   }
 
   override fun handleViewState(state: SceneListViewState) {
     state.scenes?.let { adapter.setItems(it) }
 
+    binding.scenesEmptyListIcon.visibleIf(state.scenes?.isEmpty() == true)
     binding.scenesEmptyListLabel.visibleIf(state.scenes?.isEmpty() == true)
     binding.scenesEmptyListButton.visibleIf(state.scenes?.isEmpty() == true)
 

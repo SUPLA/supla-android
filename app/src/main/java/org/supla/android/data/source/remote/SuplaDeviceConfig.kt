@@ -81,12 +81,12 @@ data class HomeScreenOffDelayField(
 
 enum class HomeScreenContent(val value: Int) {
   NONE(1 shl 0),
-  TEMPERATURE(1 shl 0),
-  TEMPERATURE_AND_HUMIDITY(1 shl 1),
-  TIME(1 shl 2),
-  TIME_DATE(1 shl 3),
-  TEMPERATURE_TIME(1 shl 4),
-  MAIN_AND_AUX_TEMPERATURE(1 shl 5)
+  TEMPERATURE(1 shl 1),
+  TEMPERATURE_AND_HUMIDITY(1 shl 2),
+  TIME(1 shl 3),
+  TIME_DATE(1 shl 4),
+  TEMPERATURE_TIME(1 shl 5),
+  MAIN_AND_AUX_TEMPERATURE(1 shl 6)
 }
 
 data class HomeScreenContentField(

@@ -46,6 +46,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -399,7 +400,7 @@ private fun PowerButton(isOff: Boolean, disabled: Boolean, onClick: () -> Unit) 
     modifier = Modifier.width(dimensionResource(id = R.dimen.button_default_size)),
     onClick = onClick,
     icon = painterResource(id = R.drawable.ic_power_button),
-    iconColor = if (isOff) MaterialTheme.colors.error else MaterialTheme.colors.primary,
+    iconColor = if (isOff) MaterialTheme.colors.error else colorResource(id = R.color.supla_green),
     disabled = disabled
   )
 }

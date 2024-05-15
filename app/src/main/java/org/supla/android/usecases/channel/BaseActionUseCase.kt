@@ -21,6 +21,7 @@ import io.reactivex.rxjava3.core.Completable
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.db.ChannelBase
+import org.supla.android.extensions.isRollerShutter
 import org.supla.android.extensions.isThermostat
 import org.supla.android.lib.SuplaConst
 import org.supla.android.lib.actions.ActionId
@@ -38,7 +39,7 @@ open class BaseActionUseCase<T : ChannelBase>(
     val client = suplaClientProvider.provide() ?: return
     if (isRGBW(channelBase.func)) {
       client.executeAction(ActionParameters(getTurnOnOffActionId(buttonType), getSubjectType(forGroup), channelBase.remoteId))
-    } else if (isRollerShutter(channelBase.func)) {
+    } else if (channelBase.isRollerShutter()) {
       if (SuplaChannelFlag.RS_SBS_AND_STOP_ACTIONS inside channelBase.flags) {
         client.executeAction(ActionParameters(getRevealShutStopActionId(buttonType), getSubjectType(forGroup), channelBase.remoteId))
       } else {
@@ -54,10 +55,6 @@ open class BaseActionUseCase<T : ChannelBase>(
       client.open(channelBase.remoteId, forGroup, getOnOffValue(buttonType))
     }
   }
-
-  private fun isRollerShutter(function: Int): Boolean =
-    function == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER ||
-      function == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW
 
   private fun isRGBW(function: Int): Boolean =
     function == SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING ||

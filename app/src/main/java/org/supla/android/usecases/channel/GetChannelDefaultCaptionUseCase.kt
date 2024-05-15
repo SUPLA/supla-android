@@ -22,6 +22,7 @@ import org.supla.android.R
 import org.supla.android.core.ui.StringProvider
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_ALARMARMAMENTSENSOR
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK
@@ -61,7 +62,6 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_RAINSENSOR
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_WEIGHTSENSOR
@@ -86,6 +86,7 @@ class GetChannelDefaultCaptionUseCase @Inject constructor() {
       SUPLA_CHANNELFNC_OPENSENSOR_ROOFWINDOW -> string(R.string.channel_caption_roofwindowopeningsensor)
       SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER -> string(R.string.channel_caption_rollershutter)
       SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW -> string(R.string.channel_caption_roofwindow)
+      SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND -> string(R.string.channel_caption_facade_blinds)
       SUPLA_CHANNELFNC_POWERSWITCH -> string(R.string.channel_caption_powerswith)
       SUPLA_CHANNELFNC_LIGHTSWITCH -> string(R.string.channel_caption_lightswith)
       SUPLA_CHANNELFNC_THERMOMETER -> string(R.string.channel_caption_thermometer)
@@ -114,8 +115,7 @@ class GetChannelDefaultCaptionUseCase @Inject constructor() {
       SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT -> string(R.string.channel_caption_general_purpose_measurement)
       SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER -> string(R.string.channel_caption_general_purpose_meter)
       SUPLA_CHANNELFNC_HVAC_THERMOSTAT,
-      SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER,
-      SUPLA_CHANNELFNC_THERMOSTAT -> string(R.string.channel_caption_thermostat)
+      SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER -> string(R.string.channel_caption_thermostat)
 
       SUPLA_CHANNELFNC_ELECTRICITY_METER,
       SUPLA_CHANNELFNC_IC_ELECTRICITY_METER -> string(R.string.channel_caption_electricitymeter)

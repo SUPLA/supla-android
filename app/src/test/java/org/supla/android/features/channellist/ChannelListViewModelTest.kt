@@ -57,10 +57,10 @@ import org.supla.android.usecases.channel.*
 import org.supla.android.usecases.details.GpmDetailType
 import org.supla.android.usecases.details.LegacyDetailType
 import org.supla.android.usecases.details.ProvideDetailTypeUseCase
-import org.supla.android.usecases.details.RollerShutterDetailType
 import org.supla.android.usecases.details.SwitchDetailType
 import org.supla.android.usecases.details.ThermometerDetailType
 import org.supla.android.usecases.details.ThermostatDetailType
+import org.supla.android.usecases.details.WindowDetailType
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
 
@@ -283,24 +283,6 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
   }
 
   @Test
-  fun `should open thermostat details for channel with thermostat function`() {
-    // given
-    val remoteId = 123
-    val channel = mockChannelData(remoteId, SUPLA_CHANNELFNC_THERMOSTAT, online = true)
-    whenever(findChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
-
-    // when
-    viewModel.onListItemClick(remoteId)
-
-    // then
-    assertThat(states).isEmpty()
-    assertThat(events).containsExactly(
-      ChannelListViewEvent.OpenThermostatDetails
-    )
-    verifyZeroInteractionsExcept()
-  }
-
-  @Test
   fun `should open legacy detail fragment`() {
     // given
     val remoteId = 123
@@ -485,7 +467,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     val channel = mockChannelData(remoteId, function, deviceId, true)
     whenever(findChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
 
-    val rollerShutterDetail = RollerShutterDetailType(pages)
+    val rollerShutterDetail = WindowDetailType(pages)
     whenever(provideDetailTypeUseCase(channel)).thenReturn(rollerShutterDetail)
 
     // when
@@ -494,7 +476,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     // then
     assertThat(states).isEmpty()
     assertThat(events).containsExactly(
-      ChannelListViewEvent.OpenRollerShutterDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
+      ChannelListViewEvent.OpenWindowDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
     )
     verifyZeroInteractionsExcept(provideDetailTypeUseCase)
   }
@@ -510,7 +492,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     val channel = mockChannelData(remoteId, function, deviceId, false)
     whenever(findChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
 
-    val rollerShutterDetail = RollerShutterDetailType(pages)
+    val rollerShutterDetail = WindowDetailType(pages)
     whenever(provideDetailTypeUseCase(channel)).thenReturn(rollerShutterDetail)
 
     // when
@@ -519,7 +501,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     // then
     assertThat(states).isEmpty()
     assertThat(events).containsExactly(
-      ChannelListViewEvent.OpenRollerShutterDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
+      ChannelListViewEvent.OpenWindowDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
     )
     verifyZeroInteractionsExcept(provideDetailTypeUseCase)
   }

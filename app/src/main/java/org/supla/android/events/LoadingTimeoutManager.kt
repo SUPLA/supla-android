@@ -29,6 +29,7 @@ private const val TIMEOUT_MS = 5000
 class LoadingTimeoutManager @Inject constructor() {
 
   private val timeoutWatcher = Observable.interval(100, TimeUnit.MILLISECONDS)
+  private var timeout = TIMEOUT_MS
 
   fun watch(stateProvider: () -> LoadingState, onTimeout: () -> Unit): Disposable {
     return timeoutWatcher.subscribeBy(
@@ -42,7 +43,7 @@ class LoadingTimeoutManager @Inject constructor() {
           return@subscribeBy
         }
         state.lastLoadingStartTimestamp?.let { startTime ->
-          if (System.currentTimeMillis() > startTime.plus(TIMEOUT_MS)) {
+          if (System.currentTimeMillis() > startTime.plus(timeout)) {
             onTimeout()
           }
         }

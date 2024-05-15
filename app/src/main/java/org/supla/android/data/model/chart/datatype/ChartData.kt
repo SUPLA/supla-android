@@ -89,7 +89,7 @@ abstract class ChartData(
     get() = sets.firstOrNull { it.setId.type.leftAxis() }?.valueFormatter ?: DefaultValueFormatter()
 
   val rightAxisFormatter: ChannelValueFormatter
-    get() = sets.firstOrNull { it.setId.type.leftAxis() }?.valueFormatter ?: DefaultValueFormatter()
+    get() = sets.firstOrNull { it.setId.type.rightAxis() }?.valueFormatter ?: DefaultValueFormatter()
 
   val distanceInDays: Int? = dateRange?.daysCount
 

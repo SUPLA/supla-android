@@ -60,9 +60,4 @@ interface ProfileManager {
    * Gets a profile which currently is set as active
    */
   fun getCurrentProfile(): Maybe<AuthProfileItem>
-
-  /**
-   * Activates profile with the given ID in the DB
-   */
-  fun activateProfile(id: Long, force: Boolean = false): Completable
 }

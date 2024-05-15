@@ -22,18 +22,18 @@ import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.database.Cursor;
 import java.util.ArrayList;
+import java.util.List;
 import org.supla.android.data.source.local.entity.ChannelGroupEntity;
 import org.supla.android.lib.SuplaConst;
+import org.supla.android.usecases.group.totalvalue.FacadeBlindGroupValue;
+import org.supla.android.usecases.group.totalvalue.GroupTotalValue;
+import org.supla.android.usecases.group.totalvalue.GroupValue;
 
 public class ChannelGroup extends ChannelBase {
 
   private String TotalValue;
   private int OnLine;
 
-  private int BufferOnLineCount;
-  private int BufferOnLine;
-  private int BufferCounter;
-  private String BufferTotalValue;
   private int position;
 
   protected int _getOnLine() {
@@ -99,145 +99,6 @@ public class ChannelGroup extends ChannelBase {
     values.put(ChannelGroupEntity.COLUMN_PROFILE_ID, getProfileId());
 
     return values;
-  }
-
-  public boolean DiffWithBuffer() {
-
-    return OnLine != BufferOnLine || TotalValue == null || !TotalValue.equals(BufferTotalValue);
-  }
-
-  public void resetBuffer() {
-    BufferTotalValue = "";
-    BufferOnLine = 0;
-    BufferOnLineCount = 0;
-    BufferCounter = 0;
-  }
-
-  public void assignBuffer() {
-
-    OnLine = BufferOnLine;
-    TotalValue = BufferTotalValue;
-
-    resetBuffer();
-  }
-
-  public void addValueToBuffer(ChannelValue value) {
-
-    switch (getFunc()) {
-      case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK:
-      case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK:
-      case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE:
-      case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR:
-      case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
-      case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW:
-      case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
-      case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
-      case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
-      case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING:
-      case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
-      case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
-      case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
-      case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
-        break;
-      default:
-        return;
-    }
-
-    BufferCounter++;
-    if (value.getOnLine()) {
-      BufferOnLineCount++;
-    }
-
-    BufferOnLine = BufferOnLineCount * 100 / BufferCounter;
-
-    if (!value.getOnLine()) {
-      return;
-    }
-
-    if (!BufferTotalValue.isEmpty()) {
-      BufferTotalValue += "|";
-    }
-
-    switch (getFunc()) {
-      case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK:
-      case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK:
-      case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE:
-      case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR:
-        BufferTotalValue += Integer.toString((value.getSubValueHi() & 0x1) == 0x1 ? 1 : 0);
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
-      case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
-      case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
-      case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
-        BufferTotalValue += Integer.toString(value.hiValue() ? 1 : 0);
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
-      case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW:
-        BufferTotalValue += Integer.toString(value.getRollerShutterValue().getClosingPercentage());
-        BufferTotalValue += ":";
-        BufferTotalValue += Integer.toString((value.getSubValueHi() & 0x1) == 0x1 ? 1 : 0);
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
-        BufferTotalValue += Integer.toString(value.getBrightness());
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING:
-        BufferTotalValue += Integer.toString(value.getColor());
-        BufferTotalValue += ":";
-        BufferTotalValue += Integer.toString(value.getColorBrightness());
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
-        BufferTotalValue += Integer.toString(value.getColor());
-        BufferTotalValue += ":";
-        BufferTotalValue += Integer.toString(value.getColorBrightness());
-        BufferTotalValue += ":";
-        BufferTotalValue += Integer.toString(value.getBrightness());
-        break;
-      case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
-        BufferTotalValue += Integer.toString(value.hiValue() ? 1 : 0);
-        BufferTotalValue += ":";
-        BufferTotalValue += Double.toString(value.getMeasuredTemp(getFunc()));
-        BufferTotalValue += ":";
-        BufferTotalValue += Double.toString(value.getPresetTemp(getFunc()));
-        break;
-    }
-  }
-
-  public ArrayList<Integer> getIntegersFromTotalValue() {
-    ArrayList<Integer> result = new ArrayList<>();
-    String[] items = getTotalValue().split("|");
-
-    for (int a = 0; a < items.length; a++) {
-      try {
-        result.add(Integer.valueOf(items[a]));
-      } catch (NumberFormatException e) {
-      }
-    }
-
-    return result;
-  }
-
-  public ArrayList<Float> getRollerShutterPositions() {
-    ArrayList<Float> result = new ArrayList<>();
-    String[] items = getTotalValue().split("\\|");
-
-    for (int a = 0; a < items.length; a++) {
-      String[] n = items[a].split(":");
-      if (n.length == 2) {
-        try {
-          float pos = Integer.valueOf(n[0]).intValue();
-          int sensor = Integer.valueOf(n[1]).intValue();
-
-          if (pos < 100 && sensor == 1) {
-            pos = 100;
-          }
-
-          result.add(Float.valueOf(pos));
-        } catch (NumberFormatException e) {
-        }
-      }
-    }
-
-    return result;
   }
 
   public ArrayList<Double> getDoubleValues() {
@@ -345,6 +206,17 @@ public class ChannelGroup extends ChannelBase {
   }
 
   public int getActivePercent(int idx) {
+    if (getFunc() == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND) {
+      List<GroupValue> values = GroupTotalValue.Companion.parse(getFunc(), getTotalValue());
+      if (values.isEmpty()) {
+        return 0;
+      }
+      int activeCount =
+          values.stream()
+              .map(groupValue -> ((FacadeBlindGroupValue) groupValue).getPosition())
+              .reduce(0, (sum, value) -> value >= 100 ? sum + 1 : sum);
+      return activeCount * 100 / values.size();
+    }
     String[] items = getTotalValue().split("\\|");
 
     int sum = 0;
@@ -362,7 +234,6 @@ public class ChannelGroup extends ChannelBase {
         case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
         case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
         case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
-        case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
         case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
           try {
             sum += Integer.valueOf(items[a]).intValue() > 0 ? 1 : 0;

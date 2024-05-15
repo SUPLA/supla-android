@@ -10,10 +10,19 @@ fun SuplaTheme(
   darkMode: Boolean = isSystemInDarkTheme(),
   content: @Composable () -> Unit
 ) {
-  val colors = if (darkMode) SuplaDarkColors(LocalContext.current).toMaterial() else SuplaLightColors(LocalContext.current).toMaterial()
+  val suplaDarkColors = SuplaDarkColors(LocalContext.current)
+  val suplaLightColors = SuplaLightColors(LocalContext.current)
+  val colors = if (darkMode) suplaDarkColors.toMaterial() else suplaLightColors.toMaterial()
+  val colorScheme = if (darkMode) suplaDarkColors.toMaterial3() else suplaLightColors.toMaterial3()
+
   MaterialTheme(
     colors = colors,
     typography = SuplaTypography(colors),
-    content = content
+    content = {
+      androidx.compose.material3.MaterialTheme(
+        colorScheme = colorScheme,
+        content = content
+      )
+    }
   )
 }

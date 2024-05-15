@@ -21,26 +21,17 @@ import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
 import org.supla.android.Trace
-import org.supla.android.core.SuplaAppProvider
-import org.supla.android.core.networking.suplacloud.SuplaCloudConfigHolder
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.db.AuthProfileItem
-import org.supla.android.events.UpdateEventsManager
 import org.supla.android.extensions.TAG
 import org.supla.android.lib.SuplaClient
 import org.supla.android.lib.singlecall.SingleCall
-import org.supla.android.usecases.icon.LoadUserIconsIntoCacheUseCase
 import org.supla.android.widget.WidgetManager
 
 class MultiAccountProfileManager(
   private val profileRepository: ProfileRepository,
-  private val profileIdHolder: ProfileIdHolder,
   private val widgetManager: WidgetManager,
-  private val updateEventsManager: UpdateEventsManager,
-  private val suplaAppProvider: SuplaAppProvider,
   private val singleCallProvider: SingleCall.Provider,
-  private val suplaCloudConfigHolder: SuplaCloudConfigHolder,
-  private val loadUserIconsIntoCacheUseCase: LoadUserIconsIntoCacheUseCase
 ) : ProfileManager {
 
   override fun create(profile: AuthProfileItem): Completable = Completable.fromRunnable {
@@ -83,31 +74,5 @@ class MultiAccountProfileManager(
       emitter.onSuccess(it)
     }
     emitter.onComplete()
-  }
-
-  override fun activateProfile(id: Long, force: Boolean): Completable = Completable.fromRunnable {
-    val current = profileRepository.allProfiles.firstOrNull { it.isActive }
-    if (current != null && current.id == id && !force) {
-      return@fromRunnable
-    }
-
-    if (profileRepository.setProfileActive(id)) {
-      profileIdHolder.profileId = id
-    }
-    suplaCloudConfigHolder.clean()
-    initiateReconnect()
-
-    updateEventsManager.cleanup()
-    updateEventsManager.emitChannelsUpdate()
-    updateEventsManager.emitGroupsUpdate()
-    updateEventsManager.emitScenesUpdate()
-  }.andThen(loadUserIconsIntoCacheUseCase())
-
-  private fun initiateReconnect() {
-    with(suplaAppProvider.provide()) {
-      CancelAllRestApiClientTasks(true)
-      cleanupToken()
-      getSuplaClient()?.reconnect()
-    }
   }
 }

@@ -54,7 +54,8 @@ fun ChannelBase.isSwitch() =
 
 fun ChannelBase.isRollerShutter() =
   func == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER ||
-    func == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW
+    func == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW ||
+    func == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND
 
 fun ChannelBase.isGateController() =
   func == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE ||

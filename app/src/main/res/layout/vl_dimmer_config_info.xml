@@ -19,7 +19,7 @@
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:text="@string/information"
-            android:textColor="@color/vl_infotitle"
+            android:textColor="@color/on_background"
             android:textSize="30sp" />
 
         <androidx.appcompat.widget.AppCompatButton
@@ -56,7 +56,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:text="@string/vl_dimmer_cfg_info_txt1"
-                android:textColor="@color/vl_infotitle"
+                android:textColor="@color/on_background"
                 android:textStyle="bold" />
 
             <TextView
@@ -99,7 +99,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:text="@string/vl_dimmer_cfg_info_txt6"
-                android:textColor="@color/vl_infotitle"
+                android:textColor="@color/on_background"
                 android:textStyle="bold" />
 
             <TextView
@@ -115,7 +115,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:text="@string/status_led"
-                android:textColor="@color/vl_infotitle"
+                android:textColor="@color/on_background"
                 android:textStyle="bold" />
 
             <LinearLayout
@@ -215,7 +215,7 @@
                 android:gravity="left|center_vertical"
                 android:text="@string/vl_dimmer_cfg_info_txt9"
                 android:textAllCaps="false"
-                android:textColor="@color/menubar" />
+                android:textColor="@color/primary" />
 
         </LinearLayout>
     </ScrollView>

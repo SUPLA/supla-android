@@ -128,7 +128,7 @@ fun ThermostatControl(
 ) {
   val surfaceColor = MaterialTheme.colors.surface
   val shaderOuterColor = colorResource(id = R.color.thermostat_control_circle_background)
-  val primaryColor = colorResource(id = R.color.primary)
+  val greenColor = colorResource(id = R.color.supla_green)
   val disabledColor = colorResource(id = R.color.disabled)
   val textColor = MaterialTheme.colors.onBackground
   val pointShadowColor = MaterialTheme.colors.progressPointShadow
@@ -147,7 +147,7 @@ fun ThermostatControl(
     isHeating -> MaterialTheme.colors.error
     isCooling -> MaterialTheme.colors.blue
     isOff -> DefaultShadowColor
-    else -> primaryColor
+    else -> greenColor
   }
 
   val paddings = dimensionResource(id = R.dimen.distance_default)
@@ -173,7 +173,7 @@ fun ThermostatControl(
     lastMinSetpoint = minSetpoint
     lastMaxSetpoint = maxSetpoint
   }
-  val currentPointConfig = ControlPointConfig.build(currentValue, primaryColor, pointShadowColor)
+  val currentPointConfig = ControlPointConfig.build(currentValue, greenColor, pointShadowColor)
   val minPointConfig = ControlPointConfig.build(minSetpoint, minPointColor, minPointShadowColor, minPointIcon) { lastMinSetpoint = it }
   val maxPointConfig = ControlPointConfig.build(maxSetpoint, maxPointColor, maxPointShadowColor, maxPointIcon) { lastMaxSetpoint = it }
 
@@ -242,7 +242,7 @@ fun ThermostatControl(
       maxSetpointConfig = maxPointConfig,
       minSetpointConfig = minPointConfig,
       currentPointConfig = currentPointConfig,
-      primaryColor = primaryColor,
+      primaryColor = greenColor,
       center = center,
       initialPoint = initialTouchPoint,
       movingPoint = currentTouchPoint,

@@ -38,9 +38,10 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE
+import org.supla.android.usecases.group.totalvalue.GroupTotalValue
+import org.supla.android.usecases.group.totalvalue.GroupValue
 
 @Entity(
   tableName = TABLE_NAME,
@@ -75,6 +76,9 @@ data class ChannelGroupEntity(
   @ColumnInfo(name = COLUMN_PROFILE_ID) override val profileId: Long
 ) : ChannelBase {
 
+  val groupTotalValues: List<GroupValue>
+    get() = GroupTotalValue.parse(function, totalValue)
+
   fun getActivePercentage(idx: Int = 0): Int {
     totalValue?.let { totalValue ->
       val items = totalValue.split("\\|")
@@ -91,7 +95,6 @@ data class ChannelGroupEntity(
         SUPLA_CHANNELFNC_LIGHTSWITCH,
         SUPLA_CHANNELFNC_STAIRCASETIMER,
         SUPLA_CHANNELFNC_DIMMER,
-        SUPLA_CHANNELFNC_THERMOSTAT,
         SUPLA_CHANNELFNC_VALVE_OPENCLOSE -> {
           val sum = items.sumOf { item -> (item.toIntOrNull()?.let { if (it > 0) 1 else 0 } ?: 0).toInt() }
           return sum.times(100).div(items.count())

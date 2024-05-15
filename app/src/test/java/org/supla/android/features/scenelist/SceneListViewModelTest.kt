@@ -1,12 +1,13 @@
 package org.supla.android.features.scenelist
 
+import android.net.Uri
 import io.mockk.mockk
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.subjects.PublishSubject
 import io.reactivex.rxjava3.subjects.Subject
 import org.assertj.core.api.Assertions
-import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -25,6 +26,8 @@ import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
+import org.supla.android.usecases.profile.CloudUrl
+import org.supla.android.usecases.profile.LoadActiveProfileUrlUseCase
 import org.supla.android.usecases.scene.CreateProfileScenesListUseCase
 import org.supla.android.usecases.scene.UpdateSceneOrderUseCase
 
@@ -44,6 +47,9 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
   private lateinit var updateEventsManager: UpdateEventsManager
 
   @Mock
+  private lateinit var loadActiveProfileUrlUseCase: LoadActiveProfileUrlUseCase
+
+  @Mock
   private lateinit var preferences: Preferences
 
   @Mock
@@ -54,6 +60,7 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
       toggleLocationUseCase,
       createProfileScenesListUseCase,
       updateSceneOrderUseCase,
+      loadActiveProfileUrlUseCase,
       updateEventsManager,
       preferences,
       schedulers
@@ -140,6 +147,39 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
     )
     Assertions.assertThat(events).isEmpty()
     verifyZeroInteractionsExcept(createProfileScenesListUseCase)
+  }
+
+  @Test
+  fun `on add group click should open supla cloud`() {
+    // given
+    whenever(loadActiveProfileUrlUseCase.invoke()).thenReturn(Single.just(CloudUrl.SuplaCloud))
+
+    // when
+    viewModel.onAddGroupClick()
+
+    // then
+    Assertions.assertThat(states).isEmpty()
+    Assertions.assertThat(events).containsExactly(SceneListViewEvent.NavigateToSuplaCloud)
+    verify(loadActiveProfileUrlUseCase).invoke()
+    verifyNoMoreInteractions(loadActiveProfileUrlUseCase)
+    verifyZeroInteractionsExcept(loadActiveProfileUrlUseCase)
+  }
+
+  @Test
+  fun `on add group click should open private cloud`() {
+    // given
+    val url: Uri = mockk()
+    whenever(loadActiveProfileUrlUseCase.invoke()).thenReturn(Single.just(CloudUrl.PrivateCloud(url)))
+
+    // when
+    viewModel.onAddGroupClick()
+
+    // then
+    Assertions.assertThat(states).isEmpty()
+    Assertions.assertThat(events).containsExactly(SceneListViewEvent.NavigateToPrivateCloud(url))
+    verify(loadActiveProfileUrlUseCase).invoke()
+    verifyNoMoreInteractions(loadActiveProfileUrlUseCase)
+    verifyZeroInteractionsExcept(loadActiveProfileUrlUseCase)
   }
 
   private fun verifyZeroInteractionsExcept(vararg except: Any) {

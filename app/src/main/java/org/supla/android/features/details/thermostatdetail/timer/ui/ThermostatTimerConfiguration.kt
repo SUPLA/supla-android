@@ -57,7 +57,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
-import org.supla.android.core.ui.theme.grey
+import org.supla.android.core.ui.theme.gray
 import org.supla.android.data.model.temperature.TemperatureCorrection
 import org.supla.android.extensions.valuesFormatter
 import org.supla.android.features.details.thermostatdetail.timer.DeviceMode
@@ -127,7 +127,7 @@ fun ThermostatTimerConfiguration(state: TimerDetailViewState, viewProxy: TimerDe
 private fun HeaderText(text: String, modifier: Modifier = Modifier) =
   Text(
     text = text.uppercase(),
-    color = MaterialTheme.colors.grey,
+    color = MaterialTheme.colors.gray,
     style = MaterialTheme.typography.body2,
     modifier = modifier
   )
@@ -172,7 +172,7 @@ private fun TemperatureSelector(state: TimerDetailViewState, viewProxy: TimerDet
 context(RowScope)
 @Composable
 private fun TemperatureSlider(state: TimerDetailViewState, viewProxy: TimerDetailViewProxy) {
-  val lightGrayColor = colorResource(id = R.color.separator_light)
+  val lightGrayColor = colorResource(id = R.color.gray_light)
   val colors = SliderDefaults.colors(
     activeTrackColor = lightGrayColor,
     disabledActiveTrackColor = lightGrayColor,
@@ -219,7 +219,8 @@ private fun EditModeButton(state: TimerDetailViewState, onClick: () -> Unit) =
     Icon(
       painter = if (state.showCalendar) painterResource(id = R.drawable.ic_timer) else painterResource(id = R.drawable.ic_schedule),
       contentDescription = null,
-      modifier = Modifier.padding(end = Distance.tiny)
+      modifier = Modifier.padding(end = Distance.tiny),
+      tint = colorResource(id = R.color.primary_variant)
     )
     Text(
       text = if (state.showCalendar) stringResource(R.string.details_timer_counter) else stringResource(R.string.details_timer_calendar),
@@ -242,7 +243,7 @@ private fun InfoText(state: TimerDetailViewState) =
   Text(
     text = state.timerInfoText(LocalContext.current),
     style = MaterialTheme.typography.body2,
-    color = MaterialTheme.colors.grey,
+    color = MaterialTheme.colors.gray,
     textAlign = TextAlign.Center,
     modifier = Modifier
       .fillMaxWidth()
@@ -296,7 +297,7 @@ private fun CaptionText(text: String, modifier: Modifier = Modifier) =
   Text(
     text = text.uppercase(),
     style = MaterialTheme.typography.caption,
-    color = MaterialTheme.colors.grey,
+    color = MaterialTheme.colors.gray,
     modifier = modifier
   )
 
@@ -310,7 +311,7 @@ fun TimerSelectorCounter(viewState: TimerDetailViewState, viewProxy: TimerDetail
         .height(40.dp)
         .fillMaxWidth()
         .background(
-          color = colorResource(id = R.color.gray_light),
+          color = colorResource(id = R.color.gray_lighter),
           shape = RoundedCornerShape(dimensionResource(id = R.dimen.radius_default))
         )
         .align(Alignment.Center)

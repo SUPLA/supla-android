@@ -1,60 +1,52 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-    <data>
-        <import type="android.view.View" />
-        <variable
-            name="viewModel"
-            type="org.supla.android.cfg.ProfilesViewModel" />
-    </data>
-    <LinearLayout
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto">
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin">
+
+    <TextView
+      android:id="@+id/cfg_label_profile"
       android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:paddingTop="@dimen/activity_vertical_margin"
-      android:paddingBottom="@dimen/activity_vertical_margin"
-      android:background="@color/background"
-      android:orientation="vertical">
-        <TextView
-            android:id="@+id/cfg_label_profile"
-            android:layout_marginTop="@dimen/form_field_spacing"
-            android:layout_marginBottom="6dp"
-            android:paddingTop="@dimen/new_screen_margin"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:paddingLeft="@dimen/new_screen_margin"
-            android:paddingRight="@dimen/new_screen_margin"
-            android:textAllCaps="true"
-            app:layout_constraintVertical_chainStyle="spread_inside"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/sep1"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:text="@string/profiles_title" />
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/form_field_spacing"
+      android:layout_marginBottom="6dp"
+      android:paddingLeft="@dimen/new_screen_margin"
+      android:paddingTop="@dimen/new_screen_margin"
+      android:paddingRight="@dimen/new_screen_margin"
+      android:text="@string/profiles_title"
+      android:textAllCaps="true"
+      app:layout_constraintBottom_toTopOf="@id/sep1"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintVertical_chainStyle="spread_inside" />
 
-        <TextView
-            android:id="@+id/cfg_label_profile_act_info"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:paddingLeft="@dimen/new_screen_margin"
-            android:paddingRight="@dimen/new_screen_margin"
-            android:text="@string/profile_act_info"
-/>
+    <TextView
+      android:id="@+id/cfg_label_profile_act_info"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:paddingLeft="@dimen/new_screen_margin"
+      android:paddingRight="@dimen/new_screen_margin"
+      android:text="@string/profile_act_info" />
 
-        <View 
-            android:id="@+id/sep1"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/list_separator_thickness"
-            android:background="@color/separator" />
+    <View
+      android:id="@+id/sep1"
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/list_separator_thickness"
+      android:background="@color/separator" />
 
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/profilesList"
-        	  android:layout_width="match_parent"
-            android:layout_marginTop="12dp"
-	          android:layout_height="wrap_content"
-            android:layout_weight="1"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:adapter="@{viewModel.profilesAdapter}"/>
+    <androidx.recyclerview.widget.RecyclerView
+      android:id="@+id/profilesList"
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      android:layout_marginTop="12dp"
+      android:layout_weight="1"
+      app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
   </LinearLayout>
 </layout>

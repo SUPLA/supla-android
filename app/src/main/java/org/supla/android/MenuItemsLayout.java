@@ -19,6 +19,7 @@ syays GNU General Public License for more details.
  */
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -34,6 +35,7 @@ import androidx.core.content.res.ResourcesCompat;
 import dagger.hilt.android.AndroidEntryPoint;
 import java.util.ArrayList;
 import javax.inject.Inject;
+import org.supla.android.core.branding.Configuration.Menu;
 import org.supla.android.profile.ProfileManager;
 
 @AndroidEntryPoint
@@ -47,7 +49,8 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
   public static final int BTN_FREE_SPACE = 0x40;
   public static final int BTN_Z_WAVE = 0x80;
   public static final int BTN_CLOUD = 0x90;
-  public static final int BTN_NOTIFICATIONS = 0xA0;
+  public static final int BTN_NOTIFICATIONS = 0x100;
+  public static final int BTN_DEVICE_CATALOG = 0x200;
   public static final int BTN_PROFILE = 0x1000;
   public static final int BTN_ALL = 0xFFFF;
   ArrayList<Button> buttons = new ArrayList<>();
@@ -79,7 +82,7 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
 
   public static int getButtonId(View v) {
     if (v != null && v.getTag() instanceof Integer) {
-      return ((Integer) v.getTag()).intValue();
+      return (Integer) v.getTag();
     }
     return 0;
   }
@@ -98,7 +101,7 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
           new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
       mMainButtonsAreaLayout.setLayoutParams(params);
       mMainButtonsAreaLayout.setOrientation(VERTICAL);
-      mMainButtonsAreaLayout.setBackgroundColor(getResources().getColor(R.color.menubar));
+      mMainButtonsAreaLayout.setBackgroundColor(getResources().getColor(R.color.primary));
       addView(mMainButtonsAreaLayout);
     }
   }
@@ -151,10 +154,10 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
       return;
     }
 
-    if (buttons.size() > 0) {
-      addShortSeparator();
-    } else {
+    if (buttons.isEmpty()) {
       addLongSeparator();
+    } else {
+      addShortSeparator();
     }
 
     LinearLayout ll = new LinearLayout(getContext());
@@ -170,25 +173,17 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
     iv.setOnClickListener(this);
     ll.addView(iv);
 
-    int height = getResources().getDimensionPixelSize(R.dimen.menuitem_height);
-    int margin = getResources().getDimensionPixelSize(R.dimen.menuitem_iamge_margin);
-    int padding = getResources().getDimensionPixelSize(R.dimen.menuitem_padding);
-
-    LinearLayout.LayoutParams params;
-    if (iconResId == R.drawable.ic_notification) {
-      int size = getResources().getDimensionPixelSize(R.dimen.icon_big_size);
-      params = new LinearLayout.LayoutParams(size, size);
-      int verticalMargin = getResources().getDimensionPixelSize(R.dimen.distance_tiny);
-      int horizontalMargin = getResources().getDimensionPixelSize(R.dimen.distance_small);
-      params.setMargins(horizontalMargin, verticalMargin, horizontalMargin, verticalMargin);
-    } else {
-      params = new LinearLayout.LayoutParams(height, height);
-      params.setMargins(margin, 0, margin, 0);
-    }
+    int size = getResources().getDimensionPixelSize(R.dimen.icon_big_size);
+    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(size, size);
+    int verticalMargin = getResources().getDimensionPixelSize(R.dimen.distance_tiny);
+    int horizontalMargin = getResources().getDimensionPixelSize(R.dimen.distance_small);
+    params.setMargins(horizontalMargin, verticalMargin, horizontalMargin, verticalMargin);
 
     iv.setLayoutParams(params);
 
-    iv.setImageDrawable(ResourcesCompat.getDrawable(getResources(), iconResId, null));
+    iv.setImageResource(iconResId);
+    iv.setImageTintList(
+        ColorStateList.valueOf(ResourcesCompat.getColor(getResources(), R.color.on_primary, null)));
 
     Button btn = new Button(getContext(), null, R.attr.borderlessButtonStyle);
     btn.setOnClickListener(this);
@@ -197,7 +192,8 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
         TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.menuitem_text_size));
     btn.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
     btn.setTextColor(Color.WHITE);
-    btn.setPadding(0, 0, 0, padding);
+
+    btn.setPadding(0, 0, 0, getResources().getDimensionPixelSize(R.dimen.menuitem_padding));
     btn.setTransformationMethod(null);
     btn.setText(getResources().getString(textResId).toUpperCase());
     btn.setBackgroundColor(0);
@@ -267,16 +263,26 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
 
     addButton(
         BTN_PROFILE,
-        R.drawable.profile,
+        R.drawable.ic_menu_profiles,
         hasManyAccounts ? R.string.profile_plural : R.string.profile);
-    addButton(BTN_SETTINGS, R.drawable.settings, R.string.settings);
-    addButton(BTN_ADD_DEVICE, R.drawable.add_device, R.string.add_device);
-    addButton(BTN_Z_WAVE, R.drawable.z_wave_btn, R.string.z_wave);
+    addButton(BTN_SETTINGS, R.drawable.ic_menu_settings, R.string.settings);
+    addButton(BTN_ADD_DEVICE, R.drawable.ic_menu_add_device, R.string.add_device);
+    if (Menu.DEVICES_OPTION_VISIBLE) {
+      addButton(
+          BTN_DEVICE_CATALOG, R.drawable.ic_menu_device_catalog, R.string.menu_device_catalog);
+    }
+    if (Menu.Z_WAVE_OPTION_VISIBLE) {
+      addButton(BTN_Z_WAVE, R.drawable.ic_menu_z_wave, R.string.z_wave);
+    }
     addButton(BTN_NOTIFICATIONS, R.drawable.ic_notification, R.string.menu_notifications);
-    addButton(BTN_ABOUT, R.drawable.info, R.string.about);
+    if (Menu.ABOUT_OPTION_VISIBLE) {
+      addButton(BTN_ABOUT, R.drawable.ic_menu_about, R.string.about);
+    }
     // Google Play Policy
-    addButton(BTN_HELP, R.drawable.help, R.string.help);
-    addButton(BTN_CLOUD, R.drawable.menu_cloud, R.string.supla_cloud);
+    if (Menu.HELP_OPTION_VISIBLE) {
+      addButton(BTN_HELP, R.drawable.ic_menu_help, R.string.help);
+    }
+    addButton(BTN_CLOUD, R.drawable.ic_menu_cloud, R.string.supla_cloud);
     addFooter();
   }
 

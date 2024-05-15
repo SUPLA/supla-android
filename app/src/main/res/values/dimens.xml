@@ -15,7 +15,6 @@
     <dimen name="icon_small_size">19dp</dimen>
     <dimen name="custom_shadow_height">4dp</dimen>
 
-    <dimen name="button_elevation">4dp</dimen>
     <dimen name="segmented_button_elevation">4dp</dimen>
 
     <!-- Overridden on w380dp. Smaller to small devices to display correct long list items -->
@@ -68,5 +67,5 @@
     <dimen name="segmented_button_width">80dp</dimen>
     <dimen name="list_separator_thickness">1dp</dimen>
     <dimen name="advanced_top_offset">4dp</dimen>
-    <dimen name="settings_cell_height">44dp</dimen>
+    <dimen name="settings_cell_height">@dimen/button_default_size</dimen>
 </resources>

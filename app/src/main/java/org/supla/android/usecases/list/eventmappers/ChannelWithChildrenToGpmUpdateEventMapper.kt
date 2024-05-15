@@ -19,6 +19,7 @@ package org.supla.android.usecases.list.eventmappers
 
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.isGpm
+import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.ui.lists.data.SlideableListItemData
 import org.supla.android.usecases.channel.ChannelWithChildren
 import org.supla.android.usecases.channel.GetChannelCaptionUseCase
@@ -50,6 +51,7 @@ class ChannelWithChildrenToGpmUpdateEventMapper @Inject constructor(
       icon = getChannelIconUseCase.invoke(channelData),
       value = getChannelValueStringUseCase(channelData),
       issueIconType = null,
-      estimatedTimerEndDate = null
+      estimatedTimerEndDate = null,
+      infoSupported = SuplaChannelFlag.CHANNEL_STATE.inside(channelData.flags)
     )
 }

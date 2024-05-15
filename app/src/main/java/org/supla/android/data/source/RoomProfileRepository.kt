@@ -29,4 +29,6 @@ class RoomProfileRepository @Inject constructor(private val profileDao: ProfileD
   fun findAllProfiles() = profileDao.findAllProfiles()
 
   fun findProfile(id: Long) = profileDao.findProfile(id)
+
+  fun activateProfile(id: Long) = profileDao.activateProfile(id)
 }

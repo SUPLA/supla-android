@@ -104,6 +104,7 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
   override fun handleViewState(state: ChannelListViewState) {
     state.channels?.let { adapter.setItems(it) }
 
+    binding.channelsEmptyListIcon.visibleIf(state.channels?.isEmpty() == true)
     binding.channelsEmptyListLabel.visibleIf(state.channels?.isEmpty() == true)
     binding.channelsEmptyListButton.visibleIf(state.channels?.isEmpty() == true)
 

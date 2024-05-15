@@ -17,6 +17,7 @@ package org.supla.android.features.grouplist
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.net.Uri
 import android.os.Bundle
 import androidx.annotation.IdRes
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -32,20 +33,21 @@ import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.features.details.detailbase.standarddetail.DetailPage
 import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
-import org.supla.android.features.details.rollershutterdetail.RollerShutterDetailFragment
+import org.supla.android.features.details.windowdetail.WindowDetailFragment
 import org.supla.android.lib.SuplaClientMsg
-import org.supla.android.lib.SuplaConst
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.lists.BaseListViewModel
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.channel.*
 import org.supla.android.usecases.details.LegacyDetailType
 import org.supla.android.usecases.details.ProvideDetailTypeUseCase
-import org.supla.android.usecases.details.RollerShutterDetailType
+import org.supla.android.usecases.details.WindowDetailType
 import org.supla.android.usecases.group.CreateProfileGroupsListUseCase
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
+import org.supla.android.usecases.profile.CloudUrl
+import org.supla.android.usecases.profile.LoadActiveProfileUrlUseCase
 import javax.inject.Inject
 
 @HiltViewModel
@@ -56,10 +58,11 @@ class GroupListViewModel @Inject constructor(
   private val toggleLocationUseCase: ToggleLocationUseCase,
   private val provideDetailTypeUseCase: ProvideDetailTypeUseCase,
   private val findGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase,
+  loadActiveProfileUrlUseCase: LoadActiveProfileUrlUseCase,
   updateEventsManager: UpdateEventsManager,
   preferences: Preferences,
   schedulers: SuplaSchedulers
-) : BaseListViewModel<GroupListViewState, GroupListViewEvent>(preferences, GroupListViewState(), schedulers) {
+) : BaseListViewModel<GroupListViewState, GroupListViewEvent>(preferences, GroupListViewState(), schedulers, loadActiveProfileUrlUseCase) {
 
   override fun sendReassignEvent() = sendEvent(GroupListViewEvent.ReassignAdapter)
 
@@ -128,6 +131,15 @@ class GroupListViewModel @Inject constructor(
       .disposeBySelf()
   }
 
+  fun onAddGroupClick() {
+    loadServerUrl {
+      when (it) {
+        is CloudUrl.SuplaCloud -> sendEvent(GroupListViewEvent.NavigateToSuplaCloud)
+        is CloudUrl.PrivateCloud -> sendEvent(GroupListViewEvent.NavigateToPrivateCloud(it.url))
+      }
+    }
+  }
+
   override fun onSuplaMessage(message: SuplaClientMsg) {
     when (message.type) {
       SuplaClientMsg.onDataChanged -> updateGroup(message.channelGroupId)
@@ -156,14 +168,9 @@ class GroupListViewModel @Inject constructor(
       return // do not open details for offline channels
     }
 
-    if (group.function == SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT) {
-      sendEvent(GroupListViewEvent.OpenThermostatDetails)
-      return
-    }
-
     when (val detailType = provideDetailTypeUseCase(group)) {
       is LegacyDetailType -> sendEvent(GroupListViewEvent.OpenLegacyDetails(group.remoteId, detailType))
-      is RollerShutterDetailType -> sendEvent(GroupListViewEvent.OpenRollerShutterDetail(ItemBundle.from(group), detailType.pages))
+      is WindowDetailType -> sendEvent(GroupListViewEvent.OpenRollerShutterDetail(ItemBundle.from(group), detailType.pages))
       else -> {} // no action
     }
   }
@@ -173,11 +180,12 @@ sealed class GroupListViewEvent : ViewEvent {
   data class ShowValveDialog(val remoteId: Int) : GroupListViewEvent()
   data class ShowAmperageExceededDialog(val remoteId: Int) : GroupListViewEvent()
   data class OpenLegacyDetails(val remoteId: Int, val type: LegacyDetailType) : GroupListViewEvent()
-  object OpenThermostatDetails : GroupListViewEvent()
   object ReassignAdapter : GroupListViewEvent()
+  object NavigateToSuplaCloud : GroupListViewEvent()
+  data class NavigateToPrivateCloud(val url: Uri) : GroupListViewEvent()
 
   data class OpenRollerShutterDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) :
-    OpenStandardDetail(R.id.roller_shutter_detail_fragment, RollerShutterDetailFragment.bundle(itemBundle, pages.toTypedArray()))
+    OpenStandardDetail(R.id.window_detail_fragment, WindowDetailFragment.bundle(itemBundle, pages.toTypedArray()))
 
   abstract class OpenStandardDetail(
     @IdRes val fragmentId: Int,

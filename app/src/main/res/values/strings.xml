@@ -24,6 +24,7 @@
   <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=L4N7RSWME6LG2</string>
   <string name="create_url">https://cloud.supla.org/register?lang=en</string>
   <string name="delete_url">https://{SERVER_ADDRESS}/db99845855b2ecbfecca9a095062b96c3e27703f?lang=en</string>
+  <string name="devices_list_url" translatable="false">https://www.supla.org/pl/</string>
 
   <string name="version">version</string>
 
@@ -535,7 +536,7 @@
   <string name="settings_notifications" translatable="false">Notifications</string>
   <string name="notifications_active" translatable="false">✓</string>
   <string name="notifications_inactive" translatable="false">𐄂</string>
-  <string name="settings_localization" translatable="false">Localization</string>
+  <string name="settings_localization" translatable="false">Localization (fine)</string>
   <string name="settings_permissions" translatable="false">Permissions</string>
 
   <string name="details_general" translatable="false">General</string>
@@ -666,6 +667,13 @@
   <string name="roller_shutter_calibration_needed" translatable="false">Calibration needed</string>
   <string name="cfg_night_mode" translatable="false">Night mode</string>
   <string name="auto" translatable="false">Auto</string>
+  <string name="menu_device_catalog" translatable="false">Device catalog</string>
+  <string name="channel_caption_facade_blinds" translatable="false">Facade blinds</string>
+  <string name="channel_loading_error" translatable="false">Channel loading error</string>
+  <string name="facade_blind_slat_tilt" translatable="false">Tilt: </string>
+  <string name="facade_blinds_no_tilt" translatable="false">Missing configuration</string>
+  <string name="toolbar_delete_chart_history" translatable="false">Delete history and download again</string>
+  <string name="history_wait_for_download_completed" translatable="false">Please wait, downloading…</string>
 
   <plurals name="details_timer_info_on" translatable="false">
     <item quantity="other">on</item>

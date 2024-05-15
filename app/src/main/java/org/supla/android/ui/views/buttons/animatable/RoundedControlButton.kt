@@ -86,7 +86,7 @@ fun RoundedControlButton(
   icon: Painter? = null,
   iconColor: Color? = null,
   text: String? = null,
-  backgroundColor: Color = MaterialTheme.colors.surface,
+  backgroundColor: Color = colorResource(id = R.color.control_button_background),
   type: AnimatableButtonType = AnimatableButtonType.POSITIVE,
   disabled: Boolean = false,
   animationMode: AnimationMode = AnimationMode.Pressed,

@@ -210,6 +210,7 @@ class MainActivity : NavigationActivity(), ToolbarTitleController, LoadableConte
     lastDestinationId = destination.id
     setAccountItemVisible(profileManager.getAllProfiles().blockingFirst().size > 1 && lastDestinationId == R.id.main_fragment)
     setDeleteVisible(lastDestinationId == R.id.notifications_log_fragment)
+    setDeleteHistoryVisible(lastDestinationId == R.id.thermometer_detail_fragment || lastDestinationId == R.id.gpm_detail_fragment)
 
     if (destination.id != R.id.main_fragment) {
       findViewById<FrameLayout>(R.id.main_content).setPadding(0, 0, 0, 0)
@@ -243,6 +244,10 @@ class MainActivity : NavigationActivity(), ToolbarTitleController, LoadableConte
   private fun setDeleteVisible(visible: Boolean) {
     toolbar.menu.findItem(R.id.toolbar_delete)?.isVisible = visible
     toolbar.menu.findItem(R.id.toolbar_delete_older_than_month)?.isVisible = visible
+  }
+
+  private fun setDeleteHistoryVisible(visible: Boolean) {
+    toolbar.menu.findItem(R.id.toolbar_delete_chart_history)?.isVisible = visible
   }
 
   private fun runDownloadTask() {
@@ -435,6 +440,7 @@ class MainActivity : NavigationActivity(), ToolbarTitleController, LoadableConte
       MenuItemsLayout.BTN_HOMEPAGE -> openHomepage()
       MenuItemsLayout.BTN_PROFILE -> showProfile(this)
       MenuItemsLayout.BTN_NOTIFICATIONS -> navigator.navigateTo(R.id.notifications_log_fragment)
+      MenuItemsLayout.BTN_DEVICE_CATALOG -> navigator.navigateTo(R.id.device_catalog_fragment)
     }
   }
 

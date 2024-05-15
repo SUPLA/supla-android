@@ -18,6 +18,7 @@ package org.supla.android.data.source
  */
 
 import org.supla.android.data.source.local.dao.ChannelGroupDao
+import org.supla.android.data.source.local.entity.ChannelGroupEntity
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -31,4 +32,6 @@ class ChannelGroupRepository @Inject constructor(private val channelGroupDao: Ch
   fun findGroupDataEntity(remoteId: Int) = channelGroupDao.findGroupDataEntity(remoteId)
 
   fun findGroupOnlineCount(groupId: Long) = channelGroupDao.findGroupOnlineCount(groupId)
+
+  fun update(groups: List<ChannelGroupEntity>) = channelGroupDao.update(groups)
 }

@@ -1,10 +1,12 @@
 package org.supla.android.features.grouplist
 
+import android.net.Uri
 import io.mockk.every
 import io.mockk.mockk
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.subjects.PublishSubject
 import io.reactivex.rxjava3.subjects.Subject
 import org.assertj.core.api.Assertions
@@ -33,12 +35,14 @@ import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.channel.*
 import org.supla.android.usecases.details.ProvideDetailTypeUseCase
-import org.supla.android.usecases.details.RollerShutterDetailType
 import org.supla.android.usecases.details.ThermometerDetailType
+import org.supla.android.usecases.details.WindowDetailType
 import org.supla.android.usecases.group.CreateProfileGroupsListUseCase
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
+import org.supla.android.usecases.profile.CloudUrl
+import org.supla.android.usecases.profile.LoadActiveProfileUrlUseCase
 
 @RunWith(MockitoJUnitRunner::class)
 class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListViewEvent, GroupListViewModel>() {
@@ -65,6 +69,9 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
   private lateinit var updateEventsManager: UpdateEventsManager
 
   @Mock
+  private lateinit var loadActiveProfileUrlUseCase: LoadActiveProfileUrlUseCase
+
+  @Mock
   private lateinit var preferences: Preferences
 
   @Mock
@@ -78,6 +85,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
       toggleLocationUseCase,
       provideDetailTypeUseCase,
       findGroupByRemoteIdUseCase,
+      loadActiveProfileUrlUseCase,
       updateEventsManager,
       preferences,
       schedulers
@@ -212,27 +220,6 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
   }
 
   @Test
-  fun `should open thermostat details for channel with thermostat function`() {
-    // given
-    val remoteId = 123
-    val groupData: ChannelGroupDataEntity = mockk()
-    every { groupData.isOnline() } returns true
-    every { groupData.function } returns SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT
-
-    whenever(findGroupByRemoteIdUseCase(remoteId)).thenReturn(Maybe.just(groupData))
-
-    // when
-    viewModel.onListItemClick(remoteId)
-
-    // then
-    Assertions.assertThat(states).isEmpty()
-    Assertions.assertThat(events).containsExactly(
-      GroupListViewEvent.OpenThermostatDetails
-    )
-    verifyZeroInteractionsExcept()
-  }
-
-  @Test
   fun `should open legacy detail fragment`() {
     // given
     val remoteId = 123
@@ -287,7 +274,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     every { groupData.function } returns function
     every { groupData.isOnline() } returns false
 
-    val detailType = RollerShutterDetailType(listOf(DetailPage.ROLLER_SHUTTER))
+    val detailType = WindowDetailType(listOf(DetailPage.ROLLER_SHUTTER))
     whenever(provideDetailTypeUseCase(groupData)).thenReturn(detailType)
 
     whenever(findGroupByRemoteIdUseCase(remoteId)).thenReturn(Maybe.just(groupData))
@@ -365,13 +352,47 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     verifyZeroInteractionsExcept()
   }
 
+  @Test
+  fun `on add group click should open supla cloud`() {
+    // given
+    whenever(loadActiveProfileUrlUseCase.invoke()).thenReturn(Single.just(CloudUrl.SuplaCloud))
+
+    // when
+    viewModel.onAddGroupClick()
+
+    // then
+    Assertions.assertThat(states).isEmpty()
+    Assertions.assertThat(events).containsExactly(GroupListViewEvent.NavigateToSuplaCloud)
+    verify(loadActiveProfileUrlUseCase).invoke()
+    verifyNoMoreInteractions(loadActiveProfileUrlUseCase)
+    verifyZeroInteractionsExcept(loadActiveProfileUrlUseCase)
+  }
+
+  @Test
+  fun `on add group click should open private cloud`() {
+    // given
+    val url: Uri = mockk()
+    whenever(loadActiveProfileUrlUseCase.invoke()).thenReturn(Single.just(CloudUrl.PrivateCloud(url)))
+
+    // when
+    viewModel.onAddGroupClick()
+
+    // then
+    Assertions.assertThat(states).isEmpty()
+    Assertions.assertThat(events).containsExactly(GroupListViewEvent.NavigateToPrivateCloud(url))
+    verify(loadActiveProfileUrlUseCase).invoke()
+    verifyNoMoreInteractions(loadActiveProfileUrlUseCase)
+    verifyZeroInteractionsExcept(loadActiveProfileUrlUseCase)
+  }
+
   private fun verifyZeroInteractionsExcept(vararg except: Any) {
     val allDependencies = listOf(
       channelRepository,
       createProfileGroupsListUseCase,
       groupActionUseCase,
       toggleLocationUseCase,
-      provideDetailTypeUseCase
+      provideDetailTypeUseCase,
+      loadActiveProfileUrlUseCase
     )
     for (dependency in allDependencies) {
       if (!except.contains(dependency)) {

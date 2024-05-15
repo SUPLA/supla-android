@@ -1,79 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout 
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto">
 
-  <data>
-    <import type="android.view.View" />
-    <variable name="viewModel"
-              type="org.supla.android.cfg.EditableProfileItemViewModel"
-              />
-  </data>
-
-  <RelativeLayout 
-      android:background="@color/cell_bg_new"
-      android:layout_width="match_parent"
-      android:layout_height="@dimen/settings_cell_height">
+  <RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/settings_cell_height"
+    android:background="@color/cell_bg_new">
 
     <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/profileIconSelected"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="@dimen/new_screen_margin"
-        android:visibility="@{viewModel.active ? View.VISIBLE : View.INVISIBLE}"
-        android:layout_centerVertical="true"
-        app:srcCompat="@drawable/profile_selected" />
-
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/profileIconUnselected"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="@dimen/new_screen_margin"
-        android:visibility="@{viewModel.active ? View.INVISIBLE:View.VISIBLE}"
-        android:layout_centerVertical="true"
-        app:srcCompat="@drawable/profile_unselected" />
-
+      android:id="@+id/profileIcon"
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent"
+      android:layout_alignParentStart="true"
+      android:layout_centerVertical="true"
+      android:layout_marginStart="@dimen/new_screen_margin"
+      app:srcCompat="@drawable/profile_selected" />
 
     <TextView
-        android:id="@+id/profileLabel"
-        android:layout_marginLeft="@dimen/menuitem_iamge_margin"
-        android:layout_toRightOf="@id/profileIconSelected"
-        android:layout_centerVertical="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" 
-        app:text="@{viewModel.title}"
-        />
+      android:id="@+id/profileLabel"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_centerVertical="true"
+      android:layout_marginStart="@dimen/menuitem_iamge_margin"
+      android:layout_toEndOf="@id/profileIcon"
+      android:textAppearance="@style/AppTheme.TextAppearance.Body2" />
 
     <ImageButton
-        android:id="@+id/accountDetailsEdit"
-        android:background="@android:color/transparent"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_alignParentRight="true"
-        android:paddingRight="@dimen/new_screen_margin"
-        android:paddingLeft="@dimen/new_screen_margin"
-        android:layout_centerVertical="true"
-        android:onClick="@{() -> viewModel.onEditProfile()}"
-        app:srcCompat="@drawable/pencil" />
+      android:id="@+id/accountDetailsEdit"
+      android:layout_width="@dimen/button_default_size"
+      android:layout_height="@dimen/button_default_size"
+      android:layout_alignParentEnd="true"
+      android:layout_centerVertical="true"
+      android:background="@android:color/transparent"
+      app:srcCompat="@drawable/pencil" />
 
     <TextView
-        android:id="@+id/activeIndicator"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/channelstate_infoline"
-        android:text="@string/cfg_profile_active_indicator"
-        android:visibility="@{viewModel.active ? View.VISIBLE : View.GONE}"
-        android:layout_centerVertical="true"
-        android:layout_toLeftOf="@id/accountDetailsEdit" />
-    
-    <View android:layout_width="match_parent"
-          android:layout_height="@dimen/list_separator_thickness"
-          android:layout_alignParentLeft="true"
-          android:layout_alignParentBottom="true"
-          android:background="@color/separator" />
-    
+      android:id="@+id/activeIndicator"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_centerVertical="true"
+      android:layout_toStartOf="@id/accountDetailsEdit"
+      android:text="@string/cfg_profile_active_indicator"
+      android:textAppearance="@style/AppTheme.TextAppearance.Body2"
+      android:textColor="@color/channelstate_infoline" />
+
+    <View
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/list_separator_thickness"
+      android:layout_alignParentStart="true"
+      android:layout_alignParentBottom="true"
+      android:background="@color/separator" />
+
   </RelativeLayout>
 
 </layout>

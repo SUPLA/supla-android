@@ -21,8 +21,8 @@ android {
     minSdk = Versions.MinSdk
     targetSdk = Versions.TargetSdk
     multiDexEnabled = true
-    versionCode = 222
-    versionName = "24.03.01"
+    versionCode = 223
+    versionName = "24.05"
 
     ndk {
       moduleName = "suplaclient"
@@ -175,6 +175,7 @@ dependencies {
   testImplementation(Deps.Testing.Coroutines)
   testImplementation(Deps.Testing.Mockk)
   testImplementation(Deps.Testing.AssertJ)
+  testImplementation(Deps.Testing.Kotlin.Reflect)
   androidTestImplementation(Deps.Testing.Androidx.Navigation)
 
   implementation(files("src/main/libs/jsoup-1.13.1.jar"))

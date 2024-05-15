@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="85dp"
     android:layout_alignParentTop="true"
-    android:background="@color/menubar">
+    android:background="@color/primary">
 
 
     <androidx.appcompat.widget.AppCompatButton
@@ -67,7 +67,7 @@
             android:layout_marginLeft="10dp"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:background="@drawable/profile"
+            android:background="@drawable/ic_account"
             android:clickable="true" />
     </LinearLayout>
 

@@ -17,6 +17,7 @@ package org.supla.android.features.scenelist
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.net.Uri
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.Preferences
@@ -30,6 +31,8 @@ import org.supla.android.ui.lists.BaseListViewModel
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
+import org.supla.android.usecases.profile.CloudUrl
+import org.supla.android.usecases.profile.LoadActiveProfileUrlUseCase
 import org.supla.android.usecases.scene.CreateProfileScenesListUseCase
 import org.supla.android.usecases.scene.UpdateSceneOrderUseCase
 import javax.inject.Inject
@@ -39,10 +42,11 @@ class SceneListViewModel @Inject constructor(
   private val toggleLocationUseCase: ToggleLocationUseCase,
   private val createProfileScenesListUseCase: CreateProfileScenesListUseCase,
   private val updateSceneOrderUseCase: UpdateSceneOrderUseCase,
+  loadActiveProfileUrlUseCase: LoadActiveProfileUrlUseCase,
   updateEventsManager: UpdateEventsManager,
   preferences: Preferences,
   schedulers: SuplaSchedulers
-) : BaseListViewModel<SceneListViewState, SceneListViewEvent>(preferences, SceneListViewState(), schedulers) {
+) : BaseListViewModel<SceneListViewState, SceneListViewEvent>(preferences, SceneListViewState(), schedulers, loadActiveProfileUrlUseCase) {
 
   override fun sendReassignEvent() = sendEvent(SceneListViewEvent.ReassignAdapter)
 
@@ -79,10 +83,21 @@ class SceneListViewModel @Inject constructor(
       )
       .disposeBySelf()
   }
+
+  fun onAddGroupClick() {
+    loadServerUrl {
+      when (it) {
+        is CloudUrl.SuplaCloud -> sendEvent(SceneListViewEvent.NavigateToSuplaCloud)
+        is CloudUrl.PrivateCloud -> sendEvent(SceneListViewEvent.NavigateToPrivateCloud(it.url))
+      }
+    }
+  }
 }
 
 sealed class SceneListViewEvent : ViewEvent {
   object ReassignAdapter : SceneListViewEvent()
+  object NavigateToSuplaCloud : SceneListViewEvent()
+  data class NavigateToPrivateCloud(val url: Uri) : SceneListViewEvent()
 }
 
 data class SceneListViewState(

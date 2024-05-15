@@ -1,7 +1,25 @@
 package org.supla.android.features.webcontent
+/*
+ Copyright (C) AC SOFTWARE SP. Z O.O.
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+syays GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
 
 import android.os.Bundle
 import android.view.View
+import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.annotation.CallSuper
@@ -16,11 +34,16 @@ abstract class WebContentFragment<S : WebContentViewState, E : ViewEvent> : Base
 
   protected abstract val url: String
 
+  abstract override val viewModel: WebContentViewModel<S, E>
   protected val binding by viewBinding(FragmentWebContentBinding::bind)
 
   private val client = object : WebViewClient() {
     override fun onPageFinished(view: WebView?, url: String?) {
-      (viewModel as WebContentViewModel).urlLoaded(url)
+      viewModel.urlLoaded(url)
+    }
+
+    override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
+      return viewModel.allowRequest(request).not()
     }
   }
 

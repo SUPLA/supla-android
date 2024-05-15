@@ -31,6 +31,7 @@ import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.local.entity.ChannelRelationType
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.data.source.remote.thermostat.ThermostatValue
 import org.supla.android.db.Channel
 import org.supla.android.extensions.date
@@ -124,6 +125,7 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
       every { channelExtendedValueEntity } returns mockk {
         every { getSuplaValue() } returns null
       }
+      every { flags } returns SuplaChannelFlag.CHANNEL_STATE.rawValue
     }
     val channelWithChildren = ChannelWithChildren(channel, listOf(thermometerChild))
     val context: Context = mockk()
@@ -144,6 +146,7 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
     assertThat(result.indicatorIcon).isEqualTo(indicatorIcon)
     assertThat(result.issueIconType).isEqualTo(issueIconType)
     assertThat(result.estimatedTimerEndDate).isEqualTo(null)
+    assertThat(result.infoSupported).isEqualTo(true)
   }
 
   @Test
@@ -174,6 +177,7 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
           it.TimerStateValue = SuplaTimerState(estimatedEndDate.toTimestamp(), null, 11, null)
         }
       }
+      every { flags } returns 0
     }
     val channelWithChildren = ChannelWithChildren(channel, listOf())
     val context: Context = mockk()
@@ -193,5 +197,6 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
     assertThat(result.indicatorIcon).isEqualTo(indicatorIcon)
     assertThat(result.issueIconType).isEqualTo(issueIconType)
     assertThat(result.estimatedTimerEndDate).isEqualTo(estimatedEndDate)
+    assertThat(result.infoSupported).isEqualTo(false)
   }
 }

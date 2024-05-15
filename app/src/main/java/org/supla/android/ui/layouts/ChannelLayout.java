@@ -225,7 +225,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
 
     right_ActiveStatus = new SuplaChannelStatus(context);
     right_ActiveStatus.setSingleColor(true);
-    right_ActiveStatus.setOnlineColor(getResources().getColor(R.color.supla_green));
+    right_ActiveStatus.setOnlineColor(getResources().getColor(R.color.primary_variant));
 
     {
       int dot_size = getResources().getDimensionPixelSize(R.dimen.channel_dot_size);
@@ -388,7 +388,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
 
     result.setLayoutParams(getOnlineStatusLayoutParams(right));
     result.setOfflineColor(getResources().getColor(R.color.red));
-    result.setOnlineColor(getResources().getColor(R.color.supla_green));
+    result.setOnlineColor(getResources().getColor(R.color.primary_variant));
 
     return result;
   }
@@ -768,7 +768,6 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
         case SuplaConst.SUPLA_CHANNELFNC_ALARMARMAMENTSENSOR:
         case SuplaConst.SUPLA_CHANNELFNC_MAILSENSOR:
         case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
-        case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT:
           left_onlineStatus.setVisibility(View.VISIBLE);
           left_onlineStatus.setShapeType(SuplaChannelStatus.ShapeType.Ring);
           right_onlineStatus.setVisibility(View.VISIBLE);
@@ -790,6 +789,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
 
         case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
         case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW:
+        case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND:
           lenabled = true;
           renabled = true;
 

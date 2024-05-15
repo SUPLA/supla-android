@@ -89,6 +89,7 @@ class ChannelWithChildrenToMeasurementUpdateEventMapperTest {
     val channel = mockk<ChannelDataEntity>()
     every { channel.channelEntity } returns mockk { every { function } returns SUPLA_CHANNELFNC_DEPTHSENSOR }
     every { channel.channelValueEntity } returns mockk { every { this@mockk.online } returns online }
+    every { channel.flags } returns 0
 
     val imageId = ImageId(123)
     val channelWithChildren = ChannelWithChildren(channel, emptyList())
@@ -108,5 +109,6 @@ class ChannelWithChildrenToMeasurementUpdateEventMapperTest {
     assertThat(defaultItem.titleProvider(context)).isEqualTo(caption)
     assertThat(defaultItem.icon).isEqualTo(imageId)
     assertThat(defaultItem.value).isEqualTo(value)
+    assertThat(defaultItem.infoSupported).isEqualTo(false)
   }
 }

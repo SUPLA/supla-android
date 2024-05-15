@@ -17,7 +17,6 @@ package org.supla.android.features.appsettings
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.Manifest.permission.ACCESS_COARSE_LOCATION
 import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.app.NotificationManager
 import android.app.UiModeManager
@@ -122,8 +121,7 @@ class SettingsViewModel @Inject constructor(
   }
 
   private fun isLocationPermissionGranted() =
-    permissionsHelper.checkPermissionGranted(ACCESS_FINE_LOCATION) ||
-      permissionsHelper.checkPermissionGranted(ACCESS_COARSE_LOCATION)
+    permissionsHelper.checkPermissionGranted(ACCESS_FINE_LOCATION)
 }
 
 sealed class SettingsViewEvent : ViewEvent {

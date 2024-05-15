@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/menubar">
+    android:background="@color/primary">
 
     <TextView
         android:id="@+id/wizard_step3_txt1"

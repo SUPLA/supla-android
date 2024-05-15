@@ -3,7 +3,7 @@
   xmlns:app="http://schemas.android.com/apk/res-auto">
   <item
     android:id="@+id/toolbar_accounts"
-    android:icon="@drawable/account"
+    android:icon="@drawable/ic_account"
     android:title="@string/edit_account"
     android:visible="false"
     app:showAsAction="ifRoom" />
@@ -17,6 +17,12 @@
     android:id="@+id/toolbar_delete_older_than_month"
     android:icon="@drawable/ic_delete"
     android:title="@string/toolbar_delete_older_than_month"
+    android:visible="false"
+    app:showAsAction="never" />
+  <item
+    android:id="@+id/toolbar_delete_chart_history"
+    android:icon="@drawable/ic_delete"
+    android:title="@string/toolbar_delete_chart_history"
     android:visible="false"
     app:showAsAction="never" />
 </menu>
