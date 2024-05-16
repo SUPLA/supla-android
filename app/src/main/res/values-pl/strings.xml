@@ -651,6 +651,7 @@
   <string name="toolbar_delete_chart_history">Usuń historię i pobierz ponownie</string>
   <string name="history_wait_for_download_completed">Proszę czekać, pobieram…</string>
   <string name="channel_caption_terrace_awning">Markiza tarasowa</string>
+  <string name="channel_caption_projector_screen">Ekran projekcyjny</string>
 
   <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
     <item quantity="one">włączone</item>

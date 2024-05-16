@@ -56,7 +56,6 @@ import org.supla.android.features.details.windowdetail.base.data.WindowGroupedVa
 import org.supla.android.features.details.windowdetail.base.data.facadeblinds.FacadeBlindMarker
 import org.supla.android.features.details.windowdetail.base.data.facadeblinds.FacadeBlindWindowState
 import org.supla.android.features.details.windowdetail.base.ui.MoveState
-import org.supla.android.features.details.windowdetail.base.ui.WindowColors
 import org.supla.android.features.details.windowdetail.base.ui.windowview.RuntimeWindowDimens
 import org.supla.android.features.details.windowdetail.base.ui.windowview.RuntimeWindowDimens.Companion.canvasRect
 import org.supla.android.features.details.windowdetail.base.ui.windowview.RuntimeWindowDimens.Companion.getMarkerPath
@@ -74,7 +73,7 @@ private const val HORIZONTAL_MOVE_HYSTERESIS = 20
 fun FacadeBlindsWindowView(
   windowState: FacadeBlindWindowState,
   modifier: Modifier = Modifier,
-  colors: WindowColors = WindowColors.standard(),
+  colors: FacadeBlindColors = FacadeBlindColors.standard(),
   onPositionChanging: ((tilt: Float, position: Float) -> Unit)? = null,
   onPositionChanged: ((tilt: Float, position: Float) -> Unit)? = null
 ) {
@@ -130,7 +129,7 @@ fun FacadeBlindsWindowView(
   }
 }
 
-private object WindowDrawer : WindowDrawerBase<FacadeBlindWindowState>() {
+private object WindowDrawer : WindowDrawerBase<FacadeBlindWindowState, FacadeBlindColors>() {
 
   private val maxTilt = 8.dp.toPx()
   private val tiltInitialCorrection = 1.dp.toPx()
@@ -138,7 +137,7 @@ private object WindowDrawer : WindowDrawerBase<FacadeBlindWindowState>() {
   private const val TILT_HALF_RANGE = 90f
 
   context (DrawScope)
-  override fun drawSlats(rollerState: FacadeBlindWindowState, runtimeWindowDimens: RuntimeWindowDimens, colors: WindowColors) {
+  override fun drawSlats(rollerState: FacadeBlindWindowState, runtimeWindowDimens: RuntimeWindowDimens, colors: FacadeBlindColors) {
     val topCorrection = rollerState.position.value.div(100f)
       .times(runtimeWindowDimens.rollerShutterHeight)
       .plus(runtimeWindowDimens.slatDistance.times(1.5f)) // Needed to align slats bottom with window bottom
@@ -162,7 +161,7 @@ private object WindowDrawer : WindowDrawerBase<FacadeBlindWindowState>() {
   override fun drawMarkers(
     rollerState: FacadeBlindWindowState,
     runtimeWindowDimens: RuntimeWindowDimens,
-    colors: WindowColors
+    colors: FacadeBlindColors
   ) {
     rollerState.markers.forEach { marker ->
       val topPosition = runtimeWindowDimens.topLineRect.bottom
@@ -183,7 +182,13 @@ private object WindowDrawer : WindowDrawerBase<FacadeBlindWindowState>() {
   }
 
   context(DrawScope)
-  private fun drawSlat(topCorrection: Float, rect: Rect, runtimeWindowDimens: RuntimeWindowDimens, colors: WindowColors, tilt: Float?) {
+  private fun drawSlat(
+    topCorrection: Float,
+    rect: Rect,
+    runtimeWindowDimens: RuntimeWindowDimens,
+    colors: FacadeBlindColors,
+    tilt: Float?
+  ) {
     val horizontalSlatCorrection: Float
     val verticalSlatCorrection: Float
     if (tilt != null) {
@@ -220,7 +225,7 @@ private object WindowDrawer : WindowDrawerBase<FacadeBlindWindowState>() {
   }
 
   context (DrawScope)
-  private fun drawMarker(offset: Offset, tilt: Float, runtimeWindowDimens: RuntimeWindowDimens, windowColors: WindowColors) {
+  private fun drawMarker(offset: Offset, tilt: Float, runtimeWindowDimens: RuntimeWindowDimens, windowColors: FacadeBlindColors) {
     drawCircle(color = windowColors.slatBackground, radius = runtimeWindowDimens.markerInfoRadius, center = offset)
     drawCircle(
       color = windowColors.slatBorder,
@@ -249,7 +254,7 @@ private object WindowDrawer : WindowDrawerBase<FacadeBlindWindowState>() {
 }
 
 context(DrawScope)
-private fun NativePaint.applyForSlat(colors: WindowColors) {
+private fun NativePaint.applyForSlat(colors: FacadeBlindColors) {
   style = android.graphics.Paint.Style.FILL
   strokeCap = android.graphics.Paint.Cap.SQUARE
   color = colors.slatBackground.toArgb()

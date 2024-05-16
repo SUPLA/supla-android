@@ -133,6 +133,7 @@ public class SuplaConst {
   public static final int SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL = 810;
   public static final int SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND = 900;
   public static final int SUPLA_CHANNELFNC_TERRACE_AWNING = 910;
+  public static final int SUPLA_CHANNELFNC_PROJECTOR_SCREEN = 920;
 
   public static final int SUPLA_BIT_FUNC_CONTROLLINGTHEGATEWAYLOCK = 0x0000001;
   public static final int SUPLA_BIT_FUNC_CONTROLLINGTHEGATE = 0x0000002;

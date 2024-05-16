@@ -42,6 +42,7 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_IC_HEAT_METER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_IC_WATER_METER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_PROJECTOR_SCREEN
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_TERRACE_AWNING
@@ -68,6 +69,8 @@ class ProvideDetailTypeUseCase @Inject constructor() {
       WindowDetailType(listOf(DetailPage.FACADE_BLINDS))
     SUPLA_CHANNELFNC_TERRACE_AWNING ->
       WindowDetailType(listOf(DetailPage.TERRACE_AWNING))
+    SUPLA_CHANNELFNC_PROJECTOR_SCREEN ->
+      WindowDetailType(listOf(DetailPage.PROJECTOR_SCREEN))
 
     SUPLA_CHANNELFNC_LIGHTSWITCH,
     SUPLA_CHANNELFNC_POWERSWITCH,

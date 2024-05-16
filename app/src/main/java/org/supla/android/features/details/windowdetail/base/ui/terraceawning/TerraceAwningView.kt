@@ -55,7 +55,6 @@ import org.supla.android.extensions.guardLet
 import org.supla.android.features.details.windowdetail.base.data.TerraceAwningState
 import org.supla.android.features.details.windowdetail.base.data.WindowGroupedValue
 import org.supla.android.features.details.windowdetail.base.ui.MoveState
-import org.supla.android.features.details.windowdetail.base.ui.WindowColors
 import org.supla.android.features.details.windowdetail.base.ui.applyForAwningMarker
 import org.supla.android.features.details.windowdetail.base.ui.applyForShadow
 import org.supla.android.features.details.windowdetail.base.ui.applyForSlat
@@ -67,7 +66,7 @@ import org.supla.android.features.details.windowdetail.base.ui.windowview.WINDOW
 fun TerraceAwningView(
   windowState: TerraceAwningState,
   modifier: Modifier = Modifier,
-  colors: WindowColors = WindowColors.standard(),
+  colors: TerraceAwningColors = TerraceAwningColors.standard(),
   onPositionChanging: ((Float) -> Unit)? = null,
   onPositionChanged: ((Float) -> Unit)? = null
 ) {
@@ -134,10 +133,10 @@ private object TerraceAwningDrawer {
   private val path = Path()
 
   context(DrawScope)
-  fun window(windowDimens: RuntimeDimens, colors: WindowColors) {
+  fun window(windowDimens: RuntimeDimens, colors: TerraceAwningColors) {
     val windowFrameRadius = WINDOW_FRAME_RADIUS.times(windowDimens.scale)
 
-    paint.applyForWindow(colors)
+    paint.applyForWindow(colors.window, colors.shadow)
     drawContext.canvas.nativeCanvas.drawRoundRect(
       windowDimens.windowRect.left,
       windowDimens.windowRect.top,
@@ -152,7 +151,7 @@ private object TerraceAwningDrawer {
   }
 
   context(DrawScope)
-  private fun glasses(windowDimens: RuntimeDimens, colors: WindowColors) {
+  private fun glasses(windowDimens: RuntimeDimens, colors: TerraceAwningColors) {
     val glassMargin = TerraceAwningDimens.GLASS_MARGIN.times(windowDimens.scale)
     val glassWidth = windowDimens.windowRect.width.minus(glassMargin.times(3f)).div(2f)
     val glassHeight = windowDimens.windowRect.height.minus(glassMargin.times(2f))
@@ -178,7 +177,7 @@ private object TerraceAwningDrawer {
   }
 
   context(DrawScope)
-  fun awning(windowDimens: RuntimeDimens, colors: WindowColors, position: Float) {
+  fun awning(windowDimens: RuntimeDimens, colors: TerraceAwningColors, position: Float) {
     val awningMinWidth = windowDimens.awningClosedWidth
     val awningMaxWidth = windowDimens.awningOpenedWidth
     val awningLeftMargin = windowDimens.canvasRect.width.minus(awningMinWidth).div(2)
@@ -196,19 +195,19 @@ private object TerraceAwningDrawer {
     path.relativeLineTo(-maxWidthByPosition, 0f)
     path.close()
 
-    paint.applyForSlat(colors)
+    paint.applyForSlat(colors.awningBackground, colors.shadow)
     drawContext.canvas.nativeCanvas.drawPath(path.asAndroidPath(), paint)
-    drawPath(path = path, color = colors.slatBorder, style = Stroke(width = 1.dp.toPx()))
+    drawPath(path = path, color = colors.awningBorder, style = Stroke(width = 1.dp.toPx()))
 
     val frontHeight = frontMinHeight.plus(windowDimens.awningFrontHeight.minus(frontMinHeight).times(position).div(100f))
     val frontOffset = Offset(maxWidthMarginByPosition, deepByPosition)
     val frontSize = Size(maxWidthByPosition, frontHeight)
-    drawRect(color = colors.slatBackground, topLeft = frontOffset, size = frontSize)
-    drawRect(color = colors.slatBorder, topLeft = frontOffset, size = frontSize, style = Stroke(width = 1.dp.toPx()))
+    drawRect(color = colors.awningBackground, topLeft = frontOffset, size = frontSize)
+    drawRect(color = colors.awningBorder, topLeft = frontOffset, size = frontSize, style = Stroke(width = 1.dp.toPx()))
   }
 
   context(DrawScope)
-  fun awningShadow(windowDimens: RuntimeDimens, colors: WindowColors, position: Float) {
+  fun awningShadow(windowDimens: RuntimeDimens, colors: TerraceAwningColors, position: Float) {
     val shadowMinWidth = windowDimens.awningClosedWidth
     val shadowMaxWidth = windowDimens.awningOpenedWidth
     val shadowTopMargin = windowDimens.canvasRect.width.minus(shadowMinWidth).div(2)
@@ -224,12 +223,12 @@ private object TerraceAwningDrawer {
     path.relativeLineTo(-maxWidthByPosition, 0f)
     path.close()
 
-    paint.applyForShadow(colors)
+    paint.applyForShadow(colors.awningBackground)
     drawContext.canvas.nativeCanvas.drawPath(path.asAndroidPath(), paint)
   }
 
   context(DrawScope)
-  fun awningLikeMarker(windowDimens: RuntimeDimens, colors: WindowColors, position: Float, withFront: Boolean) {
+  fun awningLikeMarker(windowDimens: RuntimeDimens, colors: TerraceAwningColors, position: Float, withFront: Boolean) {
     val awningMinWidth = windowDimens.awningClosedWidth
     val awningMaxWidth = windowDimens.awningOpenedWidth
     val awningTopMargin = windowDimens.canvasRect.width.minus(awningMinWidth).div(2)
@@ -248,19 +247,19 @@ private object TerraceAwningDrawer {
     path.relativeLineTo(-maxWidthByPosition, 0f)
     path.close()
 
-    paint.applyForAwningMarker(colors)
+    paint.applyForAwningMarker(colors.awningBackground)
     drawContext.canvas.nativeCanvas.drawPath(path.asAndroidPath(), paint)
-    drawPath(path = path, color = colors.slatBorder, style = Stroke(width = 1.dp.toPx()))
+    drawPath(path = path, color = colors.awningBorder, style = Stroke(width = 1.dp.toPx()))
 
     val frontHeight = frontMinHeight.plus(windowDimens.awningFrontHeight.minus(frontMinHeight).times(position).div(100f))
     if (withFront) {
       drawRect(
-        color = colors.slatBackground,
+        color = colors.awningBackground,
         topLeft = Offset(maxWidthMarginByPosition, deepByPosition),
         size = Size(maxWidthByPosition, frontHeight)
       )
       drawRect(
-        color = colors.slatBorder,
+        color = colors.awningBorder,
         topLeft = Offset(maxWidthMarginByPosition, deepByPosition),
         size = Size(maxWidthByPosition, frontHeight),
         style = Stroke(width = 1.dp.toPx())

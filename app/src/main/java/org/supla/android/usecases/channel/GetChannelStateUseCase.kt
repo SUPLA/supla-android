@@ -50,6 +50,7 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATEWAY
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROLLERSHUTTER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROOFWINDOW
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_PROJECTOR_SCREEN
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_TERRACE_AWNING
@@ -78,6 +79,9 @@ class GetChannelStateUseCase @Inject constructor() {
       SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND,
       SUPLA_CHANNELFNC_TERRACE_AWNING ->
         if (value.rollerShutterClosed) ChannelState(ChannelState.Value.CLOSED) else ChannelState(ChannelState.Value.OPEN)
+
+      SUPLA_CHANNELFNC_PROJECTOR_SCREEN ->
+        if (value.projectorScreenClosed) ChannelState(ChannelState.Value.CLOSED) else ChannelState(ChannelState.Value.OPEN)
 
       SUPLA_CHANNELFNC_OPENSENSOR_GATEWAY,
       SUPLA_CHANNELFNC_OPENSENSOR_GATE,
@@ -208,6 +212,7 @@ interface ValueStateWrapper {
   val transparent: Boolean
   val thermostatSubfunction: ThermostatSubfunction?
   val rollerShutterClosed: Boolean
+  val projectorScreenClosed: Boolean
 }
 
 class ChannelValueEntityStateWrapper(private val channelValueEntity: ChannelValueEntity) : ValueStateWrapper {
@@ -231,6 +236,11 @@ class ChannelValueEntityStateWrapper(private val channelValueEntity: ChannelValu
       val subValueHi = channelValueEntity.getSubValueHi()
       return (subValueHi > 0 && percentage < 100) || percentage >= 100
     }
+  override val projectorScreenClosed: Boolean
+    get() {
+      val percentage = channelValueEntity.asRollerShutterValue().position
+      return percentage <= 0
+    }
 }
 
 class ChannelGroupEntityStateWrapper(private val group: ChannelGroupEntity) : ValueStateWrapper {
@@ -250,6 +260,8 @@ class ChannelGroupEntityStateWrapper(private val group: ChannelGroupEntity) : Va
     get() = null
   override val rollerShutterClosed: Boolean
     get() = group.getActivePercentage() >= 100
+  override val projectorScreenClosed: Boolean
+    get() = group.getActivePercentage() <= 0
 }
 
 class ChannelValueStateWrapper(private val value: ChannelValue?) : ValueStateWrapper {
@@ -273,6 +285,11 @@ class ChannelValueStateWrapper(private val value: ChannelValue?) : ValueStateWra
       val subValueHi = value?.subValueHi ?: 0
       return (subValueHi > 0 && percentage < 100) || percentage >= 100
     }
+  override val projectorScreenClosed: Boolean
+    get() {
+      val percentage = value?.rollerShutterValue?.closingPercentage ?: 0
+      return percentage <= 100
+    }
 }
 
 class ChannelGroupStateWrapper(private val group: ChannelGroup) : ValueStateWrapper {
@@ -292,6 +309,8 @@ class ChannelGroupStateWrapper(private val group: ChannelGroup) : ValueStateWrap
     get() = null
   override val rollerShutterClosed: Boolean
     get() = group.activePercent >= 100
+  override val projectorScreenClosed: Boolean
+    get() = group.activePercent <= 0
 }
 
 val ChannelBase.stateWrapper: ValueStateWrapper?

@@ -26,25 +26,24 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.unit.dp
 import org.supla.android.features.details.windowdetail.base.data.WindowState
-import org.supla.android.features.details.windowdetail.base.ui.WindowColors
 import org.supla.android.features.details.windowdetail.base.ui.applyForWindow
 
-abstract class WindowDrawerBase<S : WindowState> {
+abstract class WindowDrawerBase<S : WindowState, C : WindowColorsBase> {
 
   protected val paint = Paint().asFrameworkPaint()
   protected val path = Path()
 
   context(DrawScope)
-  protected abstract fun drawSlats(rollerState: S, runtimeWindowDimens: RuntimeWindowDimens, colors: WindowColors)
+  protected abstract fun drawSlats(rollerState: S, runtimeWindowDimens: RuntimeWindowDimens, colors: C)
 
   context(DrawScope)
-  protected abstract fun drawMarkers(rollerState: S, runtimeWindowDimens: RuntimeWindowDimens, colors: WindowColors)
+  protected abstract fun drawMarkers(rollerState: S, runtimeWindowDimens: RuntimeWindowDimens, colors: C)
 
   context(DrawScope)
-  fun drawWindow(runtimeWindowDimens: RuntimeWindowDimens, colors: WindowColors, rollerState: S) {
+  fun drawWindow(runtimeWindowDimens: RuntimeWindowDimens, colors: C, rollerState: S) {
     val windowFrameRadius = WINDOW_FRAME_RADIUS.dp.toPx().times(runtimeWindowDimens.scale)
 
-    paint.applyForWindow(colors)
+    paint.applyForWindow(colors.window, colors.shadow)
     drawContext.canvas.nativeCanvas.drawRoundRect(
       runtimeWindowDimens.windowRect.left,
       runtimeWindowDimens.windowRect.top,
@@ -58,7 +57,7 @@ abstract class WindowDrawerBase<S : WindowState> {
     drawGlasses(runtimeWindowDimens, colors)
     drawSlats(rollerState, runtimeWindowDimens, colors)
 
-    paint.applyForWindow(colors)
+    paint.applyForWindow(colors.window, colors.shadow)
     drawContext.canvas.nativeCanvas.drawRect(
       runtimeWindowDimens.topLineRect.left,
       runtimeWindowDimens.topLineRect.top,
@@ -71,7 +70,7 @@ abstract class WindowDrawerBase<S : WindowState> {
   }
 
   context(DrawScope)
-  private fun drawGlasses(dimens: RuntimeWindowDimens, colors: WindowColors) {
+  private fun drawGlasses(dimens: RuntimeWindowDimens, colors: C) {
     val glassHorizontalMargin = WindowDimens.GLASS_HORIZONTAL_MARGIN.times(dimens.scale)
     val glassVerticalMargin = WindowDimens.GLASS_VERTICAL_MARGIN.times(dimens.scale)
     val glassMiddleMargin = WindowDimens.GLASS_MIDDLE_MARGIN.times(dimens.scale)

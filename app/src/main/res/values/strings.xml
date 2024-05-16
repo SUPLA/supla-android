@@ -675,6 +675,7 @@
   <string name="toolbar_delete_chart_history" translatable="false">Delete history and download again</string>
   <string name="history_wait_for_download_completed" translatable="false">Please wait, downloading…</string>
   <string name="channel_caption_terrace_awning" translatable="false">Terrace awning</string>
+  <string name="channel_caption_projector_screen" translatable="false">Projector screen</string>
 
   <plurals name="details_timer_info_on" translatable="false">
     <item quantity="other">on</item>

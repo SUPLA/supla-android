@@ -1,4 +1,4 @@
-package org.supla.android.features.details.windowdetail.base.ui
+package org.supla.android.features.details.windowdetail.base.ui.projectorscreen
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -22,41 +22,29 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import org.supla.android.R
 
-data class WindowColors(
+data class ProjectorScreenColors(
   val window: Color,
   val shadow: Color,
-  val glassTop: Color,
-  val glassBottom: Color,
-  val slatBackground: Color,
-  val slatBorder: Color,
-  val markerBorder: Color,
-  val markerBackground: Color
+  val bottomRect: Color,
+  val topRect: Color
 ) {
   companion object {
     @Composable
     fun standard() =
-      WindowColors(
+      ProjectorScreenColors(
         window = colorResource(id = R.color.roller_shutter_window_color),
         shadow = colorResource(id = R.color.shadow_start),
-        glassTop = colorResource(id = R.color.roller_shutter_glass_top_color),
-        glassBottom = colorResource(id = R.color.roller_shutter_glass_bottom_color),
-        slatBackground = colorResource(id = R.color.roller_shutter_slat_background),
-        slatBorder = colorResource(id = R.color.roller_shutter_slat_border),
-        markerBorder = colorResource(id = R.color.on_background),
-        markerBackground = colorResource(id = R.color.primary_variant)
+        bottomRect = colorResource(id = R.color.roller_shutter_slat_background),
+        topRect = colorResource(id = R.color.gray)
       )
 
     @Composable
     fun offline() =
-      WindowColors(
+      ProjectorScreenColors(
         window = colorResource(id = R.color.roller_shutter_window_color),
         shadow = colorResource(id = R.color.shadow_start),
-        glassTop = colorResource(id = R.color.roller_shutter_disabled_glass_top_color),
-        glassBottom = colorResource(id = R.color.roller_shutter_disabled_glass_bottom_color),
-        slatBackground = colorResource(id = R.color.roller_shutter_disabled_slat_background),
-        slatBorder = colorResource(id = R.color.roller_shutter_disabled_slat_border),
-        markerBorder = colorResource(id = R.color.disabled),
-        markerBackground = Color(0xffb3f1cb)
+        bottomRect = colorResource(id = R.color.roller_shutter_slat_background),
+        topRect = colorResource(id = R.color.disabled)
       )
   }
 }

@@ -67,6 +67,9 @@ class GroupTotalValue {
           SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND ->
             FacadeBlindGroupValue(it)
 
+          SuplaConst.SUPLA_CHANNELFNC_PROJECTOR_SCREEN ->
+            ProjectorScreenGroupValue(it)
+
           else -> throw IllegalStateException("Parse not supported for function `$function`")
         }
       }

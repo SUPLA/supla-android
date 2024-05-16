@@ -167,6 +167,7 @@ class CreateProfileChannelsListUseCaseTest {
     channelFunction: Int = SUPLA_CHANNELFNC_HUMIDITY
   ): ChannelDataEntity = mockk {
     every { remoteId } returns channelRemoteId
+    every { function } returns channelFunction
     every { locationEntity } returns mockk {
       every { remoteId } returns locationRemoteId
       every { caption } returns locationName

@@ -17,6 +17,7 @@ package org.supla.android.features.details.windowdetail.base.ui
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.NativePaint
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.toArgb
@@ -26,37 +27,37 @@ import org.supla.android.features.details.windowdetail.base.ui.rollershutter.sla
 private val windowShadowRadius = 4.dp
 
 context(DrawScope)
-fun NativePaint.applyForWindow(colors: WindowColors) {
-  style = android.graphics.Paint.Style.FILL
-  strokeCap = android.graphics.Paint.Cap.SQUARE
-  color = colors.window.toArgb()
-  alpha = 255
-  setShadowLayer(windowShadowRadius.toPx(), 0f, 2.dp.toPx(), colors.shadow.toArgb())
+fun NativePaint.applyForWindow(color: Color, shadow: Color) {
+  this.style = android.graphics.Paint.Style.FILL
+  this.strokeCap = android.graphics.Paint.Cap.SQUARE
+  this.color = color.toArgb()
+  this.alpha = 255
+  setShadowLayer(windowShadowRadius.toPx(), 0f, 2.dp.toPx(), shadow.toArgb())
 }
 
 context(DrawScope)
-fun NativePaint.applyForSlat(colors: WindowColors) {
-  style = android.graphics.Paint.Style.FILL
-  strokeCap = android.graphics.Paint.Cap.SQUARE
-  color = colors.slatBackground.toArgb()
-  alpha = 255
-  setShadowLayer(slatShadowRadius.toPx(), 0f, 1.5.dp.toPx(), colors.shadow.toArgb())
+fun NativePaint.applyForSlat(color: Color, shadow: Color) {
+  this.style = android.graphics.Paint.Style.FILL
+  this.strokeCap = android.graphics.Paint.Cap.SQUARE
+  this.color = color.toArgb()
+  this.alpha = 255
+  setShadowLayer(slatShadowRadius.toPx(), 0f, 1.5.dp.toPx(), shadow.toArgb())
 }
 
 context(DrawScope)
-fun NativePaint.applyForShadow(colors: WindowColors) {
-  style = android.graphics.Paint.Style.FILL
-  strokeCap = android.graphics.Paint.Cap.SQUARE
-  color = colors.slatBackground.toArgb()
-  alpha = 61
-  setShadowLayer(0f, 0f, 0f, colors.shadow.toArgb())
+fun NativePaint.applyForShadow(color: Color) {
+  this.style = android.graphics.Paint.Style.FILL
+  this.strokeCap = android.graphics.Paint.Cap.SQUARE
+  this.color = color.toArgb()
+  this.alpha = 61
+  setShadowLayer(0f, 0f, 0f, Color.White.toArgb())
 }
 
 context(DrawScope)
-fun NativePaint.applyForAwningMarker(colors: WindowColors) {
-  style = android.graphics.Paint.Style.FILL
-  strokeCap = android.graphics.Paint.Cap.SQUARE
-  color = colors.slatBackground.toArgb()
-  alpha = 100
-  setShadowLayer(0f, 0f, 0f, colors.shadow.toArgb())
+fun NativePaint.applyForAwningMarker(color: Color) {
+  this.style = android.graphics.Paint.Style.FILL
+  this.strokeCap = android.graphics.Paint.Cap.SQUARE
+  this.color = color.toArgb()
+  this.alpha = 100
+  setShadowLayer(0f, 0f, 0f, Color.White.toArgb())
 }
