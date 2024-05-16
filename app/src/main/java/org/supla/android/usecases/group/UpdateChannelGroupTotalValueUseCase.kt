@@ -30,6 +30,7 @@ import org.supla.android.usecases.group.totalvalue.GeneralGroupValue
 import org.supla.android.usecases.group.totalvalue.GroupTotalValue
 import org.supla.android.usecases.group.totalvalue.GroupValue
 import org.supla.android.usecases.group.totalvalue.IntegerValue
+import org.supla.android.usecases.group.totalvalue.ProjectorScreenGroupValue
 import org.supla.android.usecases.group.totalvalue.ShadingSystemGroupValue
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -101,6 +102,9 @@ private fun ChannelGroupEntity.getGroupValue(value: ChannelValueEntity): GroupVa
     SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW,
     SuplaConst.SUPLA_CHANNELFNC_TERRACE_AWNING ->
       ShadingSystemGroupValue(value.asRollerShutterValue().alwaysValidPosition, (value.getSubValueHi() and 0x1) == 0x1)
+
+    SuplaConst.SUPLA_CHANNELFNC_PROJECTOR_SCREEN ->
+      ProjectorScreenGroupValue(value.asRollerShutterValue().alwaysValidPosition)
 
     SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND ->
       value.asFacadeBlindValue().let { FacadeBlindGroupValue(it.alwaysValidPosition, it.alwaysValidTilt) }

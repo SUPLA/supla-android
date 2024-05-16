@@ -57,7 +57,6 @@ import org.supla.android.extensions.guardLet
 import org.supla.android.features.details.windowdetail.base.data.RoofWindowState
 import org.supla.android.features.details.windowdetail.base.data.WindowGroupedValue
 import org.supla.android.features.details.windowdetail.base.ui.MoveState
-import org.supla.android.features.details.windowdetail.base.ui.WindowColors
 
 private const val MAX_OPENED_OFFSET = 35f
 
@@ -82,7 +81,7 @@ private val windowPaint = Paint().asFrameworkPaint().apply {
 fun RoofWindowView(
   windowState: RoofWindowState,
   modifier: Modifier = Modifier,
-  colors: WindowColors = WindowColors.standard(),
+  colors: RoofWindowColors = RoofWindowColors.standard(),
   onPositionChanging: ((Float) -> Unit)? = null,
   onPositionChanged: ((Float) -> Unit)? = null
 ) {

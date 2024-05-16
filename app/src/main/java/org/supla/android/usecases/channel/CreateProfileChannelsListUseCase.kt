@@ -32,6 +32,7 @@ import org.supla.android.data.source.local.entity.complex.isGpMeter
 import org.supla.android.data.source.local.entity.complex.isHvacThermostat
 import org.supla.android.data.source.local.entity.complex.isMeasurement
 import org.supla.android.data.source.local.entity.complex.isShadingSystem
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_PROJECTOR_SCREEN
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.location.CollapsedFlag
@@ -110,6 +111,7 @@ class CreateProfileChannelsListUseCase @Inject constructor(
       channelData.isMeasurement() -> toMeasurementItem(channelData)
       channelData.isHvacThermostat() -> toThermostatItem(channelData, childrenMap)
       channelData.isShadingSystem() -> toRollerShutterItem(channelData)
+      channelData.function == SUPLA_CHANNELFNC_PROJECTOR_SCREEN -> toProjectorScreenItem(channelData)
       else -> toChannelItem(channelData, childrenMap)
     }
 
@@ -175,6 +177,19 @@ class CreateProfileChannelsListUseCase @Inject constructor(
   private fun toRollerShutterItem(channelData: ChannelDataEntity): ListItem.RollerShutterItem {
     val rollerShutterValue = channelData.channelValueEntity.asRollerShutterValue()
     return ListItem.RollerShutterItem(
+      channelData,
+      channelData.locationEntity.caption,
+      channelData.channelValueEntity.online,
+      getChannelCaptionUseCase(channelData),
+      getChannelIconUseCase(channelData),
+      rollerShutterValue.getIssueIconType(),
+      rollerShutterValue.getIssueMessage()
+    )
+  }
+
+  private fun toProjectorScreenItem(channelData: ChannelDataEntity): ListItem.ProjectorScreenItem {
+    val rollerShutterValue = channelData.channelValueEntity.asRollerShutterValue()
+    return ListItem.ProjectorScreenItem(
       channelData,
       channelData.locationEntity.caption,
       channelData.channelValueEntity.online,

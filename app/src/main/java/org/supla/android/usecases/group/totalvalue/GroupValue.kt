@@ -49,6 +49,24 @@ data class ShadingSystemGroupValue(
   }
 }
 
+data class ProjectorScreenGroupValue(
+  val position: Int
+) : GroupValue() {
+
+  override val values: List<Value<*>>
+    get() = listOf(IntegerValue(position))
+
+  companion object {
+    operator fun invoke(stringValue: String): ProjectorScreenGroupValue {
+      val values = stringValue.split(SEPARATOR)
+      if (values.size != 1) {
+        throw IllegalArgumentException("Given string value is not correct `$stringValue`")
+      }
+      return ProjectorScreenGroupValue(values[0].toInt())
+    }
+  }
+}
+
 data class FacadeBlindGroupValue(
   val position: Int,
   val tilt: Int

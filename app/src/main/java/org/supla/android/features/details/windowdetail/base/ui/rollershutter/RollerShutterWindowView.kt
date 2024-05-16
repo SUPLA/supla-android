@@ -52,7 +52,6 @@ import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.features.details.windowdetail.base.data.RollerShutterWindowState
 import org.supla.android.features.details.windowdetail.base.data.WindowGroupedValue
 import org.supla.android.features.details.windowdetail.base.ui.MoveState
-import org.supla.android.features.details.windowdetail.base.ui.WindowColors
 import org.supla.android.features.details.windowdetail.base.ui.applyForSlat
 import org.supla.android.features.details.windowdetail.base.ui.windowview.RuntimeWindowDimens
 import org.supla.android.features.details.windowdetail.base.ui.windowview.RuntimeWindowDimens.Companion.canvasRect
@@ -69,7 +68,7 @@ val slatShadowRadius = 1.dp
 fun RollerShutterWindowView(
   windowState: RollerShutterWindowState,
   modifier: Modifier = Modifier,
-  colors: WindowColors = WindowColors.standard(),
+  colors: RollerShutterColors = RollerShutterColors.standard(),
   onPositionChanging: ((Float) -> Unit)? = null,
   onPositionChanged: ((Float) -> Unit)? = null
 ) {
@@ -116,10 +115,10 @@ fun RollerShutterWindowView(
   }
 }
 
-private object WindowDrawer : WindowDrawerBase<RollerShutterWindowState>() {
+private object WindowDrawer : WindowDrawerBase<RollerShutterWindowState, RollerShutterColors>() {
 
   context (DrawScope)
-  override fun drawSlats(rollerState: RollerShutterWindowState, runtimeWindowDimens: RuntimeWindowDimens, colors: WindowColors) {
+  override fun drawSlats(rollerState: RollerShutterWindowState, runtimeWindowDimens: RuntimeWindowDimens, colors: RollerShutterColors) {
     // 0 ... 1 -> 0 ... 100%
     val positionCorrectedByBottomPosition = rollerState.position.value
       .div(rollerState.bottomPosition)
@@ -166,7 +165,7 @@ private object WindowDrawer : WindowDrawerBase<RollerShutterWindowState>() {
   override fun drawMarkers(
     rollerState: RollerShutterWindowState,
     runtimeWindowDimens: RuntimeWindowDimens,
-    colors: WindowColors
+    colors: RollerShutterColors
   ) {
     rollerState.markers.forEach { position ->
       val topPosition = runtimeWindowDimens.topLineRect.bottom
@@ -177,7 +176,7 @@ private object WindowDrawer : WindowDrawerBase<RollerShutterWindowState>() {
   }
 
   context(DrawScope)
-  private fun drawSlat(topCorrection: Float, rect: Rect, runtimeWindowDimens: RuntimeWindowDimens, colors: WindowColors) {
+  private fun drawSlat(topCorrection: Float, rect: Rect, runtimeWindowDimens: RuntimeWindowDimens, colors: RollerShutterColors) {
     val bottom = rect.bottom + topCorrection
     if (bottom < runtimeWindowDimens.topLineRect.bottom) {
       // skip slats over screen
@@ -194,13 +193,13 @@ private object WindowDrawer : WindowDrawerBase<RollerShutterWindowState>() {
     path.lineTo(rect.left, bottom)
     path.close()
 
-    paint.applyForSlat(colors)
+    paint.applyForSlat(colors.slatBackground, colors.shadow)
     drawContext.canvas.nativeCanvas.drawPath(path.asAndroidPath(), paint)
     drawPath(path = path, color = colors.slatBorder, style = Stroke(width = 1.dp.toPx()))
   }
 
   context (DrawScope)
-  private fun drawMarker(offset: Offset, runtimeWindowDimens: RuntimeWindowDimens, windowColors: WindowColors) {
+  private fun drawMarker(offset: Offset, runtimeWindowDimens: RuntimeWindowDimens, windowColors: RollerShutterColors) {
     runtimeWindowDimens.markerPath.translate(offset)
     drawPath(
       path = runtimeWindowDimens.markerPath,
