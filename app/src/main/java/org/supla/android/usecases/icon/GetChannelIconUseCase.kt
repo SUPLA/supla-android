@@ -32,7 +32,6 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
 import org.supla.android.usecases.channel.GetChannelStateUseCase
-import org.supla.android.usecases.channel.stateWrapper
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -62,8 +61,7 @@ class GetChannelIconUseCase @Inject constructor(
       throw IllegalArgumentException("Wrong icon type (iconType: '$type', function: '${channelDataBase.function}')!")
     }
 
-    val stateWrapper = channelDataBase.toStateWrapper()
-    val state = channelStateValue?.let { ChannelState(it) } ?: getChannelStateUseCase(channelDataBase.function, stateWrapper)
+    val state = channelStateValue?.let { ChannelState(it) } ?: getChannelStateUseCase(channelDataBase)
 
     ifLet(findUserIcon(channelDataBase, type, state)) { (id) ->
       return id
@@ -88,11 +86,8 @@ class GetChannelIconUseCase @Inject constructor(
       // throw IllegalArgumentException("Wrong icon type (iconType: '$type', function: '${channelBase.func}')!")
       return null
     }
-    val (stateWrapper) = guardLet(channelBase.stateWrapper) {
-      throw IllegalArgumentException("Could not get state wrapper from the given channel base!")
-    }
 
-    val state = channelStateValue?.let { ChannelState(it) } ?: getChannelStateUseCase(channelBase.func, stateWrapper)
+    val state = channelStateValue?.let { ChannelState(it) } ?: getChannelStateUseCase(channelBase)
 
     ifLet(findUserIcon(channelBase, type, state)) { (id) ->
       return id

@@ -22,8 +22,6 @@ import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.source.local.entity.ChannelGroupEntity
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.db.ChannelGroup
-import org.supla.android.usecases.channel.ChannelGroupEntityStateWrapper
-import org.supla.android.usecases.channel.ValueStateWrapper
 
 data class ChannelGroupDataEntity(
   @Embedded(prefix = "group_") val channelGroupEntity: ChannelGroupEntity,
@@ -62,9 +60,6 @@ data class ChannelGroupDataEntity(
     } else {
       channelGroupEntity.online
     }
-
-  override fun toStateWrapper(): ValueStateWrapper =
-    ChannelGroupEntityStateWrapper(channelGroupEntity)
 
   @Deprecated("Please use ChannelGroupDataEntity if possible")
   fun getLegacyGroup(): ChannelGroup = ChannelGroup().also {
