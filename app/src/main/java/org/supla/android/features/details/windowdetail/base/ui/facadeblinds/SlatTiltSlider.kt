@@ -18,6 +18,7 @@ package org.supla.android.features.details.windowdetail.base.ui.facadeblinds
  */
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.DragInteraction
@@ -34,6 +35,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ripple.rememberRipple
@@ -139,6 +141,11 @@ private fun Thumb(
       .background(
         color = MaterialTheme.colors.surface,
         shape = CircleShape
+      )
+      .border(
+        width = 1.dp,
+        color = colorResource(id = R.color.disabled),
+        shape = RoundedCornerShape(corner = CornerSize(SlatTiltSliderDimens.thumbSize.div(2)))
       )
   ) {
     if (enabled) {

@@ -48,7 +48,7 @@ sealed class WindowGroupedValue private constructor(open val value: Float) {
   ) : WindowGroupedValue(0f) {
 
     override fun asString(format: WindowGroupedValueFormat, value0: Float?, value100: Float?): String = when (format) {
-      WindowGroupedValueFormat.OPENING_PERCENTAGE -> String.format("%.0f%% - %.0f%%", 100f - min, 100f - max)
+      WindowGroupedValueFormat.OPENING_PERCENTAGE -> String.format("%.0f%% - %.0f%%", 100f - max, 100f - min)
       WindowGroupedValueFormat.PERCENTAGE -> String.format("%.0f%% - %.0f%%", min, max)
       WindowGroupedValueFormat.DEGREE -> {
         ifLet(value0, value100) { (value0, value100) ->
