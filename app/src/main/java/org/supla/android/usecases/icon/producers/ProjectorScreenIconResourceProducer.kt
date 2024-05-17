@@ -23,7 +23,7 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_PROJECTOR_SCREEN
 import org.supla.android.usecases.icon.IconData
 import org.supla.android.usecases.icon.IconResourceProducer
 
-class ProjectorScreenResourceProducer : IconResourceProducer {
+class ProjectorScreenIconResourceProducer : IconResourceProducer {
   override fun accepts(function: Int): Boolean =
     function == SUPLA_CHANNELFNC_PROJECTOR_SCREEN
 

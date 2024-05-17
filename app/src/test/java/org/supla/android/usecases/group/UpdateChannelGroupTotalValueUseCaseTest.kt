@@ -264,6 +264,62 @@ class UpdateChannelGroupTotalValueUseCaseTest {
   }
 
   @Test
+  fun `should build total string - terrace awning`() {
+    // given
+    val terraceAwning = mockTerraceAwning(2, online = true, position = 30)
+
+    whenever(channelGroupRelationRepository.findAllVisibleRelations()).thenReturn(
+      Single.just(listOf(terraceAwning))
+    )
+    whenever(channelGroupRepository.update(any())).thenReturn(Completable.complete())
+
+    // when
+    val observer = useCase.invoke().test()
+
+    // then
+    observer.assertComplete()
+    observer.assertResult(listOf(2))
+
+    val captor = argumentCaptor<List<ChannelGroupEntity>>()
+    verify(channelGroupRepository).update(captor.capture())
+    verify(channelGroupRelationRepository).findAllVisibleRelations()
+    verifyNoMoreInteractions(channelGroupRepository, channelGroupRelationRepository)
+
+    val groups = captor.firstValue
+    assertThat(groups)
+      .extracting({ it.remoteId }, { it.online }, { it.totalValue })
+      .containsExactly(tuple(2, 100, "30:0"))
+  }
+
+  @Test
+  fun `should build total string - projector screen`() {
+    // given
+    val projectorScreen = mockProjectorScreen(2, online = true, position = 45)
+
+    whenever(channelGroupRelationRepository.findAllVisibleRelations()).thenReturn(
+      Single.just(listOf(projectorScreen))
+    )
+    whenever(channelGroupRepository.update(any())).thenReturn(Completable.complete())
+
+    // when
+    val observer = useCase.invoke().test()
+
+    // then
+    observer.assertComplete()
+    observer.assertResult(listOf(2))
+
+    val captor = argumentCaptor<List<ChannelGroupEntity>>()
+    verify(channelGroupRepository).update(captor.capture())
+    verify(channelGroupRelationRepository).findAllVisibleRelations()
+    verifyNoMoreInteractions(channelGroupRepository, channelGroupRelationRepository)
+
+    val groups = captor.firstValue
+    assertThat(groups)
+      .extracting({ it.remoteId }, { it.online }, { it.totalValue })
+      .containsExactly(tuple(2, 100, "45"))
+  }
+
+  @Test
   fun `should not crash when function is not supported`() {
     // given
     val relation = mockRelationData(1, SuplaConst.SUPLA_CHANNELFNC_ALARM) {}
@@ -290,7 +346,7 @@ class UpdateChannelGroupTotalValueUseCaseTest {
 
   private fun mockDoorLock(groupId: Int, open: Boolean = false) =
     mockRelationData(groupId, SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK, true) {
-      every { it.getSubValueHi() } returns (if (open) 1 else 0).toByte()
+      every { it.getSubValueHi() } returns (if (open) 1 else 0)
     }
 
   private fun mockPowerSwitch(groupId: Int, on: Boolean = false) =
@@ -303,7 +359,7 @@ class UpdateChannelGroupTotalValueUseCaseTest {
       every { it.asRollerShutterValue() } returns mockk {
         every { this@mockk.alwaysValidPosition } returns position
       }
-      every { it.getSubValueHi() } returns sensor.toByte()
+      every { it.getSubValueHi() } returns sensor
     }
 
   private fun mockRoofWindow(groupId: Int, online: Boolean = false, position: Int = 0, sensor: Int = 0) =
@@ -311,7 +367,7 @@ class UpdateChannelGroupTotalValueUseCaseTest {
       every { it.asRollerShutterValue() } returns mockk {
         every { this@mockk.alwaysValidPosition } returns position
       }
-      every { it.getSubValueHi() } returns sensor.toByte()
+      every { it.getSubValueHi() } returns sensor
     }
 
   private fun mockFacadeBlind(groupId: Int, online: Boolean = false, position: Int = 0, tilt: Int = 0) =
@@ -324,20 +380,35 @@ class UpdateChannelGroupTotalValueUseCaseTest {
 
   private fun mockDimmer(groupId: Int, brightness: Int = 0) =
     mockRelationData(groupId, SuplaConst.SUPLA_CHANNELFNC_DIMMER, true) {
-      every { it.asBrightness() } returns brightness.toShort()
+      every { it.asBrightness() } returns brightness
     }
 
   private fun mockRgb(groupId: Int, color: Int = 0, brightness: Int = 0) =
     mockRelationData(groupId, SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING, true) {
       every { it.asColor() } returns color
-      every { it.asBrightnessColor() } returns brightness.toShort()
+      every { it.asBrightnessColor() } returns brightness
     }
 
   private fun mockDimmerAndRgb(groupId: Int, color: Int = 0, brightnessColor: Int = 0, brightness: Int = 0) =
     mockRelationData(groupId, SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING, true) {
       every { it.asColor() } returns color
-      every { it.asBrightnessColor() } returns brightnessColor.toShort()
-      every { it.asBrightness() } returns brightness.toShort()
+      every { it.asBrightnessColor() } returns brightnessColor
+      every { it.asBrightness() } returns brightness
+    }
+
+  private fun mockTerraceAwning(groupId: Int, online: Boolean = false, position: Int = 0, sensor: Int = 0) =
+    mockRelationData(groupId, SuplaConst.SUPLA_CHANNELFNC_TERRACE_AWNING, online) {
+      every { it.asRollerShutterValue() } returns mockk {
+        every { this@mockk.alwaysValidPosition } returns position
+      }
+      every { it.getSubValueHi() } returns sensor
+    }
+
+  private fun mockProjectorScreen(groupId: Int, online: Boolean = false, position: Int = 0) =
+    mockRelationData(groupId, SuplaConst.SUPLA_CHANNELFNC_PROJECTOR_SCREEN, online) {
+      every { it.asRollerShutterValue() } returns mockk {
+        every { this@mockk.alwaysValidPosition } returns position
+      }
     }
 
   private fun mockRelationData(

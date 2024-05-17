@@ -32,8 +32,6 @@ import org.supla.android.data.source.remote.thermostat.ThermostatValue
 import org.supla.android.lib.DigiglassValue
 import org.supla.android.lib.SuplaChannelValue
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELVALUE_SIZE
-import org.supla.android.usecases.channel.ChannelValueEntityStateWrapper
-import org.supla.android.usecases.channel.ValueStateWrapper
 
 @Entity(
   tableName = TABLE_NAME,
@@ -60,9 +58,9 @@ data class ChannelValueEntity(
 
   fun asThermostatValue() = ThermostatValue.from(online, getValueAsByteArray())
 
-  fun asBrightness() = asShortValue(0)?.let { if (it > 100) 0 else it } ?: 0
+  fun asBrightness() = asShortValue(0)?.let { if (it > 100) 0 else it }?.toInt() ?: 0
 
-  fun asBrightnessColor() = asShortValue(1)?.let { if (it > 100) 0 else it } ?: 0
+  fun asBrightnessColor() = asShortValue(1)?.let { if (it > 100) 0 else it }?.toInt() ?: 0
 
   fun asColor(): Int = getValueAsByteArray().let {
     if (it.size < 5) {
@@ -82,8 +80,8 @@ data class ChannelValueEntity(
 
   fun asHeatpolThermostatValue() = HeatpolThermostatValue.from(online, getValueAsByteArray())
 
-  fun getSubValueHi(): Byte {
-    return getSubValueAsByteArray().let {
+  fun getSubValueHi(): Int =
+    getSubValueAsByteArray().let {
       var result: Byte = 0
 
       if (it.isNotEmpty() && it[0].toInt() == 1) {
@@ -95,8 +93,7 @@ data class ChannelValueEntity(
       }
 
       return@let result
-    }
-  }
+    }.toInt()
 
   fun getValueHi(): Boolean {
     return getValueAsByteArray().let {
@@ -132,9 +129,6 @@ data class ChannelValueEntity(
       value = Companion.toString(suplaChannelValue.Value),
       profileId = profileId
     )
-
-  fun toStateWrapper(): ValueStateWrapper =
-    ChannelValueEntityStateWrapper(this)
 
   private fun getSubValueAsByteArray(): ByteArray = toByteArray(subValue)
 

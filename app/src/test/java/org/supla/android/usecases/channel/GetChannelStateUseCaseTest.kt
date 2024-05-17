@@ -23,13 +23,15 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.InjectMocks
+import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.supla.android.data.model.general.ChannelState
+import org.supla.android.data.source.local.entity.ChannelValueEntity
+import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL
@@ -38,16 +40,20 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DIMMER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_MAILSENSOR
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATE
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATEWAY
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_PROJECTOR_SCREEN
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_RING
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_TERRACE_AWNING
+import org.supla.android.usecases.group.GetGroupActivePercentageUseCase
 
 @RunWith(MockitoJUnitRunner::class)
 class GetChannelStateUseCaseTest {
+
+  @Mock
+  private lateinit var getGroupActivePercentageUseCase: GetGroupActivePercentageUseCase
 
   @InjectMocks
   private lateinit var useCase: GetChannelStateUseCase
@@ -55,11 +61,10 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get closed state from sub value`() {
     // given
-    val function = SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK
-    val stateWrapper = mockState(subValueHi = 1)
+    val channelData = mockChannelDataEntity(SUPLA_CHANNELFNC_CONTROLLINGTHEGATE, subValueHi = 1)
 
     // when
-    val state = useCase(function, stateWrapper)
+    val state = useCase(channelData)
 
     // then
     assertThat(state.value).isEqualTo(ChannelState.Value.CLOSED)
@@ -68,11 +73,10 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get open state from sub value`() {
     // given
-    val function = SUPLA_CHANNELFNC_CONTROLLINGTHEGATE
-    val stateWrapper = mockState(subValueHi = 0)
+    val channelData = mockChannelDataEntity(SUPLA_CHANNELFNC_CONTROLLINGTHEGATE, subValueHi = 0)
 
     // when
-    val state = useCase(function, stateWrapper)
+    val state = useCase(channelData)
 
     // then
     assertThat(state.value).isEqualTo(ChannelState.Value.OPEN)
@@ -81,11 +85,10 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get partially open state from sub value`() {
     // given
-    val function = SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR
-    val stateWrapper = mockState(subValueHi = 2)
+    val channelData = mockChannelDataEntity(SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR, subValueHi = 2)
 
     // when
-    val state = useCase(function, stateWrapper)
+    val state = useCase(channelData)
 
     // then
     assertThat(state.value).isEqualTo(ChannelState.Value.PARTIALLY_OPENED)
@@ -94,11 +97,10 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get closed state for roller shutter`() {
     // given
-    val function = SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
-    val stateWrapper = mockState(rollerShutterClosed = true)
+    val channelData = mockChannelDataEntity(SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER, rollerShutterPosition = 100)
 
     // when
-    val state = useCase(function, stateWrapper)
+    val state = useCase(channelData)
 
     // then
     assertThat(state.value).isEqualTo(ChannelState.Value.CLOSED)
@@ -107,11 +109,10 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get open state for roller shutter`() {
     // given
-    val function = SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW
-    val stateWrapper = mockState(rollerShutterClosed = false)
+    val channelData = mockChannelDataEntity(SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW, rollerShutterPosition = 0)
 
     // when
-    val state = useCase(function, stateWrapper)
+    val state = useCase(channelData)
 
     // then
     assertThat(state.value).isEqualTo(ChannelState.Value.OPEN)
@@ -120,11 +121,10 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get closed state for facade blind`() {
     // given
-    val function = SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND
-    val stateWrapper = mockState(rollerShutterClosed = true)
+    val channelData = mockChannelDataEntity(SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND, rollerShutterPosition = 100)
 
     // when
-    val state = useCase(function, stateWrapper)
+    val state = useCase(channelData)
 
     // then
     assertThat(state.value).isEqualTo(ChannelState.Value.CLOSED)
@@ -133,11 +133,10 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get open state for facade blind`() {
     // given
-    val function = SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND
-    val stateWrapper = mockState(rollerShutterClosed = false)
+    val channelData = mockChannelDataEntity(SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND, rollerShutterPosition = 0)
 
     // when
-    val state = useCase(function, stateWrapper)
+    val state = useCase(channelData)
 
     // then
     assertThat(state.value).isEqualTo(ChannelState.Value.OPEN)
@@ -146,11 +145,10 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get closed state for terrace awning`() {
     // given
-    val function = SUPLA_CHANNELFNC_TERRACE_AWNING
-    val stateWrapper = mockState(rollerShutterClosed = true)
+    val channelData = mockChannelDataEntity(SUPLA_CHANNELFNC_TERRACE_AWNING, rollerShutterPosition = 100)
 
     // when
-    val state = useCase(function, stateWrapper)
+    val state = useCase(channelData)
 
     // then
     assertThat(state.value).isEqualTo(ChannelState.Value.CLOSED)
@@ -159,24 +157,46 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get open state for terrace awning`() {
     // given
-    val function = SUPLA_CHANNELFNC_TERRACE_AWNING
-    val stateWrapper = mockState(rollerShutterClosed = false)
+    val channelData = mockChannelDataEntity(SUPLA_CHANNELFNC_TERRACE_AWNING, rollerShutterPosition = 0)
 
     // when
-    val state = useCase(function, stateWrapper)
+    val state = useCase(channelData)
 
     // then
     assertThat(state.value).isEqualTo(ChannelState.Value.OPEN)
   }
 
   @Test
-  fun `should get closed state from is closed property`() {
+  fun `should get closed state for projector screen`() {
     // given
-    val function = SUPLA_CHANNELFNC_OPENSENSOR_GATEWAY
-    val stateWrapper = mockState(isClosed = true)
+    val channelData = mockChannelDataEntity(SUPLA_CHANNELFNC_PROJECTOR_SCREEN, rollerShutterPosition = 100)
 
     // when
-    val state = useCase(function, stateWrapper)
+    val state = useCase(channelData)
+
+    // then
+    assertThat(state.value).isEqualTo(ChannelState.Value.OPEN)
+  }
+
+  @Test
+  fun `should get open state for projector screen`() {
+    // given
+    val channelData = mockChannelDataEntity(SUPLA_CHANNELFNC_PROJECTOR_SCREEN, rollerShutterPosition = 0)
+
+    // when
+    val state = useCase(channelData)
+
+    // then
+    assertThat(state.value).isEqualTo(ChannelState.Value.CLOSED)
+  }
+
+  @Test
+  fun `should get closed state from is closed property`() {
+    // given
+    val channelData = mockChannelDataEntity(SUPLA_CHANNELFNC_OPENSENSOR_GATEWAY, isClosed = true)
+
+    // when
+    val state = useCase(channelData)
 
     // then
     assertThat(state.value).isEqualTo(ChannelState.Value.CLOSED)
@@ -185,11 +205,10 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get open state from is closed property`() {
     // given
-    val function = SUPLA_CHANNELFNC_OPENSENSOR_GATE
-    val stateWrapper = mockState(isClosed = false)
+    val channelData = mockChannelDataEntity(SUPLA_CHANNELFNC_OPENSENSOR_GATEWAY, isClosed = false)
 
     // when
-    val state = useCase(function, stateWrapper)
+    val state = useCase(channelData)
 
     // then
     assertThat(state.value).isEqualTo(ChannelState.Value.OPEN)
@@ -198,11 +217,10 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get off state from is closed property`() {
     // given
-    val function = SUPLA_CHANNELFNC_POWERSWITCH
-    val stateWrapper = mockState(isClosed = false)
+    val channelData = mockChannelDataEntity(SUPLA_CHANNELFNC_POWERSWITCH, isClosed = false)
 
     // when
-    val state = useCase(function, stateWrapper)
+    val state = useCase(channelData)
 
     // then
     assertThat(state.value).isEqualTo(ChannelState.Value.OFF)
@@ -211,11 +229,10 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get on state from is closed property`() {
     // given
-    val function = SUPLA_CHANNELFNC_STAIRCASETIMER
-    val stateWrapper = mockState(isClosed = true)
+    val channelData = mockChannelDataEntity(SUPLA_CHANNELFNC_STAIRCASETIMER, isClosed = true)
 
     // when
-    val state = useCase(function, stateWrapper)
+    val state = useCase(channelData)
 
     // then
     assertThat(state.value).isEqualTo(ChannelState.Value.ON)
@@ -224,11 +241,10 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get off state for dimmer`() {
     // given
-    val function = SUPLA_CHANNELFNC_DIMMER
-    val stateWrapper = mockState(brightness = 0)
+    val channelData = mockChannelDataEntity(SUPLA_CHANNELFNC_DIMMER, brightness = 0)
 
     // when
-    val state = useCase(function, stateWrapper)
+    val state = useCase(channelData)
 
     // then
     assertThat(state.value).isEqualTo(ChannelState.Value.OFF)
@@ -237,11 +253,10 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get on state for dimmer`() {
     // given
-    val function = SUPLA_CHANNELFNC_DIMMER
-    val stateWrapper = mockState(brightness = 5)
+    val channelData = mockChannelDataEntity(SUPLA_CHANNELFNC_DIMMER, brightness = 5)
 
     // when
-    val state = useCase(function, stateWrapper)
+    val state = useCase(channelData)
 
     // then
     assertThat(state.value).isEqualTo(ChannelState.Value.ON)
@@ -250,11 +265,10 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get off state for rgb`() {
     // given
-    val function = SUPLA_CHANNELFNC_RGBLIGHTING
-    val stateWrapper = mockState(colorBrightness = 0)
+    val channelData = mockChannelDataEntity(SUPLA_CHANNELFNC_RGBLIGHTING, colorBrightness = 0)
 
     // when
-    val state = useCase(function, stateWrapper)
+    val state = useCase(channelData)
 
     // then
     assertThat(state.value).isEqualTo(ChannelState.Value.OFF)
@@ -263,11 +277,10 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get on state for rgb`() {
     // given
-    val function = SUPLA_CHANNELFNC_RGBLIGHTING
-    val stateWrapper = mockState(colorBrightness = 5)
+    val channelData = mockChannelDataEntity(SUPLA_CHANNELFNC_RGBLIGHTING, colorBrightness = 5)
 
     // when
-    val state = useCase(function, stateWrapper)
+    val state = useCase(channelData)
 
     // then
     assertThat(state.value).isEqualTo(ChannelState.Value.ON)
@@ -276,11 +289,10 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get off off state for dimmer and rgb`() {
     // given
-    val function = SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING
-    val stateWrapper = mockState(colorBrightness = 0, brightness = 0)
+    val channelData = mockChannelDataEntity(SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING, colorBrightness = 0, brightness = 0)
 
     // when
-    val state = useCase(function, stateWrapper)
+    val state = useCase(channelData)
 
     // then
     assertThat(state.value).isEqualTo(ChannelState.Value.COMPLEX)
@@ -290,11 +302,10 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get off on state for dimmer and rgb`() {
     // given
-    val function = SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING
-    val stateWrapper = mockState(colorBrightness = 3, brightness = 0)
+    val channelData = mockChannelDataEntity(SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING, colorBrightness = 3, brightness = 0)
 
     // when
-    val state = useCase(function, stateWrapper)
+    val state = useCase(channelData)
 
     // then
     assertThat(state.value).isEqualTo(ChannelState.Value.COMPLEX)
@@ -304,11 +315,10 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get on off state for dimmer and rgb`() {
     // given
-    val function = SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING
-    val stateWrapper = mockState(colorBrightness = 0, brightness = 3)
+    val channelData = mockChannelDataEntity(SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING, colorBrightness = 0, brightness = 3)
 
     // when
-    val state = useCase(function, stateWrapper)
+    val state = useCase(channelData)
 
     // then
     assertThat(state.value).isEqualTo(ChannelState.Value.COMPLEX)
@@ -318,11 +328,10 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get on on state for dimmer and rgb`() {
     // given
-    val function = SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING
-    val stateWrapper = mockState(colorBrightness = 4, brightness = 3)
+    val channelData = mockChannelDataEntity(SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING, colorBrightness = 4, brightness = 3)
 
     // when
-    val state = useCase(function, stateWrapper)
+    val state = useCase(channelData)
 
     // then
     assertThat(state.value).isEqualTo(ChannelState.Value.COMPLEX)
@@ -332,11 +341,10 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get transparent state for digiglass`() {
     // given
-    val function = SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL
-    val stateWrapper = mockState(transparent = true)
+    val channelData = mockChannelDataEntity(SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL, transparent = true)
 
     // when
-    val state = useCase(function, stateWrapper)
+    val state = useCase(channelData)
 
     // then
     assertThat(state.value).isEqualTo(ChannelState.Value.TRANSPARENT)
@@ -345,11 +353,10 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get opaque state for digiglass`() {
     // given
-    val function = SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL
-    val stateWrapper = mockState(transparent = false)
+    val channelData = mockChannelDataEntity(SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL, transparent = false)
 
     // when
-    val state = useCase(function, stateWrapper)
+    val state = useCase(channelData)
 
     // then
     assertThat(state.value).isEqualTo(ChannelState.Value.OPAQUE)
@@ -358,11 +365,10 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get thermostat heat`() {
     // given
-    val function = SUPLA_CHANNELFNC_HVAC_THERMOSTAT
-    val stateWrapper = mockState(thermostatSubfunction = ThermostatSubfunction.HEAT)
+    val channelData = mockChannelDataEntity(SUPLA_CHANNELFNC_HVAC_THERMOSTAT, thermostatSubfunction = ThermostatSubfunction.HEAT)
 
     // when
-    val state = useCase(function, stateWrapper)
+    val state = useCase(channelData)
 
     // then
     assertThat(state.value).isEqualTo(ChannelState.Value.HEAT)
@@ -371,11 +377,10 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get thermostat cool`() {
     // given
-    val function = SUPLA_CHANNELFNC_HVAC_THERMOSTAT
-    val stateWrapper = mockState(thermostatSubfunction = ThermostatSubfunction.COOL)
+    val channelData = mockChannelDataEntity(SUPLA_CHANNELFNC_HVAC_THERMOSTAT, thermostatSubfunction = ThermostatSubfunction.COOL)
 
     // when
-    val state = useCase(function, stateWrapper)
+    val state = useCase(channelData)
 
     // then
     assertThat(state.value).isEqualTo(ChannelState.Value.COOL)
@@ -384,11 +389,10 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get offline state for open-close function`() {
     // given
-    val function = SUPLA_CHANNELFNC_OPENSENSOR_GATEWAY
-    val stateWrapper = mockState(online = false)
+    val channelData = mockChannelDataEntity(SUPLA_CHANNELFNC_OPENSENSOR_GATEWAY, online = false)
 
     // when
-    val state = useCase(function, stateWrapper)
+    val state = useCase(channelData)
 
     // then
     assertThat(state.value).isEqualTo(ChannelState.Value.OPEN)
@@ -397,11 +401,10 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get offline state for on-off function`() {
     // given
-    val function = SUPLA_CHANNELFNC_MAILSENSOR
-    val stateWrapper = mockState(online = false)
+    val channelData = mockChannelDataEntity(SUPLA_CHANNELFNC_MAILSENSOR, online = false)
 
     // when
-    val state = useCase(function, stateWrapper)
+    val state = useCase(channelData)
 
     // then
     assertThat(state.value).isEqualTo(ChannelState.Value.OFF)
@@ -410,11 +413,10 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get offline state for complex state`() {
     // given
-    val function = SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING
-    val stateWrapper = mockState(online = false)
+    val channelData = mockChannelDataEntity(SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING, online = false)
 
     // when
-    val state = useCase(function, stateWrapper)
+    val state = useCase(channelData)
 
     // then
     assertThat(state.value).isEqualTo(ChannelState.Value.COMPLEX)
@@ -424,11 +426,10 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get offline state for transparent-opaque function`() {
     // given
-    val function = SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL
-    val stateWrapper = mockState(online = false)
+    val channelData = mockChannelDataEntity(SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL, online = false)
 
     // when
-    val state = useCase(function, stateWrapper)
+    val state = useCase(channelData)
 
     // then
     assertThat(state.value).isEqualTo(ChannelState.Value.OPAQUE)
@@ -437,11 +438,11 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get offline state for heat thermostat`() {
     // given
-    val function = SUPLA_CHANNELFNC_HVAC_THERMOSTAT
-    val stateWrapper = mockState(online = false, thermostatSubfunction = ThermostatSubfunction.HEAT)
+    val channelData =
+      mockChannelDataEntity(SUPLA_CHANNELFNC_HVAC_THERMOSTAT, online = false, thermostatSubfunction = ThermostatSubfunction.HEAT)
 
     // when
-    val state = useCase(function, stateWrapper)
+    val state = useCase(channelData)
 
     // then
     assertThat(state.value).isEqualTo(ChannelState.Value.HEAT)
@@ -450,11 +451,11 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get offline state for cool thermostat`() {
     // given
-    val function = SUPLA_CHANNELFNC_HVAC_THERMOSTAT
-    val stateWrapper = mockState(online = false, thermostatSubfunction = ThermostatSubfunction.COOL)
+    val channelData =
+      mockChannelDataEntity(SUPLA_CHANNELFNC_HVAC_THERMOSTAT, online = false, thermostatSubfunction = ThermostatSubfunction.COOL)
 
     // when
-    val state = useCase(function, stateWrapper)
+    val state = useCase(channelData)
 
     // then
     assertThat(state.value).isEqualTo(ChannelState.Value.COOL)
@@ -463,11 +464,10 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get not used state`() {
     // given
-    val function = SUPLA_CHANNELFNC_RING
-    val stateWrapper = mockState(online = true)
+    val channelData = mockChannelDataEntity(SUPLA_CHANNELFNC_RING)
 
     // when
-    val state = useCase(function, stateWrapper)
+    val state = useCase(channelData)
 
     // then
     assertThat(state.value).isEqualTo(ChannelState.Value.NOT_USED)
@@ -476,35 +476,40 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get not used state for offline`() {
     // given
-    val function = SUPLA_CHANNELFNC_RING
-    val stateWrapper = mockState(online = false)
+    val channelData = mockChannelDataEntity(SUPLA_CHANNELFNC_RING, online = false)
 
     // when
-    val state = useCase(function, stateWrapper)
+    val state = useCase(channelData)
 
     // then
     assertThat(state.value).isEqualTo(ChannelState.Value.NOT_USED)
   }
 
-  private fun mockState(
+  private fun mockChannelDataEntity(
+    function: Int,
     online: Boolean = true,
     subValueHi: Int = 0,
-    rollerShutterClosed: Boolean = false,
+    rollerShutterPosition: Int = 0,
     isClosed: Boolean = false,
     brightness: Int = 0,
     colorBrightness: Int = 0,
     transparent: Boolean = false,
-    thermostatSubfunction: ThermostatSubfunction? = null
-  ): ValueStateWrapper {
-    return mockk<ValueStateWrapper>().also {
-      every { it.online } returns online
-      every { it.subValueHi } returns subValueHi
-      every { it.rollerShutterClosed } returns rollerShutterClosed
-      every { it.isClosed } returns isClosed
-      every { it.brightness } returns brightness
-      every { it.colorBrightness } returns colorBrightness
-      every { it.transparent } returns transparent
-      every { it.thermostatSubfunction } returns thermostatSubfunction
+    thermostatSubfunction: ThermostatSubfunction? = null,
+  ): ChannelDataEntity =
+    mockk {
+      every { this@mockk.function } returns function
+      every { channelValueEntity } returns mockk<ChannelValueEntity>().also {
+        every { it.online } returns online
+        every { it.getSubValueHi() } returns subValueHi
+        every { it.isClosed() } returns isClosed
+        every { it.asBrightness() } returns brightness
+        every { it.asBrightnessColor() } returns colorBrightness
+        every { it.asDigiglassValue() } returns mockk { every { isAnySectionTransparent } returns transparent }
+        if (thermostatSubfunction != null) {
+          every { it.asThermostatValue() } returns mockk { every { subfunction } returns thermostatSubfunction }
+        }
+        every { it.asRollerShutterValue() } returns mockk { every { position } returns rollerShutterPosition }
+        every { it.asFacadeBlindValue() } returns mockk { every { position } returns rollerShutterPosition }
+      }
     }
-  }
 }

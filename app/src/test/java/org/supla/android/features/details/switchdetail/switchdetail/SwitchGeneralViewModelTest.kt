@@ -49,10 +49,9 @@ import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.GetChannelStateUseCase
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
-import org.supla.android.usecases.channel.ValueStateWrapper
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
-import java.util.*
+import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)
 class SwitchGeneralViewModelTest : BaseViewModelTest<SwitchGeneralViewState, SwitchGeneralViewEvent, SwitchGeneralViewModel>() {
@@ -88,11 +87,10 @@ class SwitchGeneralViewModelTest : BaseViewModelTest<SwitchGeneralViewState, Swi
     // given
     val remoteId = 123
     val function = SUPLA_CHANNELFNC_POWERSWITCH
-    val stateWrapper: ValueStateWrapper = mockk()
-    val channelData: ChannelDataEntity = mockChannelData(function, stateWrapper)
+    val channelData: ChannelDataEntity = mockChannelData(function)
 
     whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channelData))
-    whenever(getChannelStateUseCase.invoke(function, stateWrapper)).thenReturn(mockk { every { isActive() } returns true })
+    whenever(getChannelStateUseCase.invoke(channelData)).thenReturn(mockk { every { isActive() } returns true })
 
     // when
     viewModel.loadData(remoteId, ItemType.CHANNEL)
@@ -111,11 +109,10 @@ class SwitchGeneralViewModelTest : BaseViewModelTest<SwitchGeneralViewState, Swi
     // given
     val remoteId = 123
     val function = SUPLA_CHANNELFNC_POWERSWITCH
-    val stateWrapper: ValueStateWrapper = mockk()
-    val group: ChannelGroupDataEntity = mockGroupData(function, stateWrapper)
+    val group: ChannelGroupDataEntity = mockk { every { this@mockk.function } returns function }
 
     whenever(readChannelGroupByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(group))
-    whenever(getChannelStateUseCase.invoke(function, stateWrapper)).thenReturn(mockk { every { isActive() } returns false })
+    whenever(getChannelStateUseCase.invoke(group)).thenReturn(mockk { every { isActive() } returns false })
 
     // when
     viewModel.loadData(remoteId, ItemType.GROUP)
@@ -166,14 +163,13 @@ class SwitchGeneralViewModelTest : BaseViewModelTest<SwitchGeneralViewState, Swi
     // given
     val remoteId = 123
     val function = SUPLA_CHANNELFNC_LIGHTSWITCH
-    val stateWrapper: ValueStateWrapper = mockk()
 
     val estimatedEndDate = Date(1000)
     whenever(dateProvider.currentDate()).thenReturn(Date(100))
 
-    val channelData: ChannelDataEntity = mockChannelData(function, stateWrapper, estimatedEndDate)
+    val channelData: ChannelDataEntity = mockChannelData(function, estimatedEndDate)
     whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channelData))
-    whenever(getChannelStateUseCase.invoke(function, stateWrapper)).thenReturn(mockk { every { isActive() } returns true })
+    whenever(getChannelStateUseCase.invoke(channelData)).thenReturn(mockk { every { isActive() } returns true })
 
     // when
     viewModel.loadData(remoteId, ItemType.CHANNEL)
@@ -192,14 +188,13 @@ class SwitchGeneralViewModelTest : BaseViewModelTest<SwitchGeneralViewState, Swi
     // given
     val remoteId = 123
     val function = SUPLA_CHANNELFNC_LIGHTSWITCH
-    val stateWrapper: ValueStateWrapper = mockk()
 
     val estimatedEndDate = Date(1000)
     whenever(dateProvider.currentDate()).thenReturn(Date(1003))
 
-    val channelData: ChannelDataEntity = mockChannelData(function, stateWrapper, estimatedEndDate)
+    val channelData: ChannelDataEntity = mockChannelData(function, estimatedEndDate)
     whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channelData))
-    whenever(getChannelStateUseCase.invoke(function, stateWrapper)).thenReturn(mockk { every { isActive() } returns true })
+    whenever(getChannelStateUseCase.invoke(channelData)).thenReturn(mockk { every { isActive() } returns true })
 
     // when
     viewModel.loadData(remoteId, ItemType.CHANNEL)
@@ -223,18 +218,10 @@ class SwitchGeneralViewModelTest : BaseViewModelTest<SwitchGeneralViewState, Swi
     return extendedValue
   }
 
-  private fun mockChannelData(function: Int, stateWrapper: ValueStateWrapper, estimatedEndDate: Date? = null): ChannelDataEntity {
+  private fun mockChannelData(function: Int, estimatedEndDate: Date? = null): ChannelDataEntity {
     return mockk {
       every { this@mockk.function } returns function
       every { channelExtendedValueEntity } returns estimatedEndDate?.let { mockTimerState(estimatedEndDate) }
-      every { toStateWrapper() } returns stateWrapper
-    }
-  }
-
-  private fun mockGroupData(function: Int, stateWrapper: ValueStateWrapper): ChannelGroupDataEntity {
-    return mockk {
-      every { this@mockk.function } returns function
-      every { toStateWrapper() } returns stateWrapper
     }
   }
 }

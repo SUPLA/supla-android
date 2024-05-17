@@ -22,12 +22,8 @@ import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.database.Cursor;
 import java.util.ArrayList;
-import java.util.List;
 import org.supla.android.data.source.local.entity.ChannelGroupEntity;
 import org.supla.android.lib.SuplaConst;
-import org.supla.android.usecases.group.totalvalue.FacadeBlindGroupValue;
-import org.supla.android.usecases.group.totalvalue.GroupTotalValue;
-import org.supla.android.usecases.group.totalvalue.GroupValue;
 
 public class ChannelGroup extends ChannelBase {
 
@@ -106,11 +102,11 @@ public class ChannelGroup extends ChannelBase {
     ArrayList<Double> result = new ArrayList<>();
     String[] items = getTotalValue().split("\\|");
 
-    for (int a = 0; a < items.length; a++) {
-
+    for (String item : items) {
       try {
-        result.add(Double.valueOf(items[a]));
+        result.add(Double.valueOf(item));
       } catch (NumberFormatException e) {
+        // Skip if fails
       }
     }
     return result;
@@ -121,12 +117,13 @@ public class ChannelGroup extends ChannelBase {
     ArrayList<Double> result = new ArrayList<>();
     String[] items = getTotalValue().split("\\|");
 
-    for (int a = 0; a < items.length; a++) {
-      String[] n = items[a].split(":");
+    for (String item : items) {
+      String[] n = item.split(":");
       if (idx < n.length) {
         try {
           result.add(Double.valueOf(n[idx]));
         } catch (NumberFormatException e) {
+          // Skip if fails
         }
       }
     }
@@ -167,15 +164,14 @@ public class ChannelGroup extends ChannelBase {
     String[] items = getTotalValue().split("\\|");
     int idx = preset ? 2 : 1;
 
-    for (int a = 0; a < items.length; a++) {
-      String[] n = items[a].split(":");
+    for (String item : items) {
+      String[] n = item.split(":");
       if (idx < n.length) {
         try {
-          Double v = Double.valueOf(n[idx]);
+          double v = Double.parseDouble(n[idx]);
 
           if (result != null) {
-            if ((min && v.doubleValue() < result.doubleValue())
-                || (!min && v.doubleValue() > result.doubleValue())) {
+            if ((min && v < result) || (!min && v > result)) {
               result = v;
             }
           } else {
@@ -183,6 +179,7 @@ public class ChannelGroup extends ChannelBase {
           }
 
         } catch (NumberFormatException e) {
+          // Skip if fails
         }
       }
     }
@@ -203,113 +200,6 @@ public class ChannelGroup extends ChannelBase {
 
   public Double getMaximumPresetTemperature() {
     return getMinMaxTemperature(true, false);
-  }
-
-  public int getActivePercent(int idx) {
-    if (getFunc() == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND) {
-      List<GroupValue> values = GroupTotalValue.Companion.parse(getFunc(), getTotalValue());
-      if (values.isEmpty()) {
-        return 0;
-      }
-      int activeCount =
-          values.stream()
-              .map(groupValue -> ((FacadeBlindGroupValue) groupValue).getPosition())
-              .reduce(0, (sum, value) -> value >= 100 ? sum + 1 : sum);
-      return activeCount * 100 / values.size();
-    }
-    String[] items = getTotalValue().split("\\|");
-
-    int sum = 0;
-    int count = 0;
-    String[] n;
-
-    for (int a = 0; a < items.length; a++) {
-
-      switch (getFunc()) {
-        case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK:
-        case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK:
-        case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE:
-        case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR:
-        case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
-        case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
-        case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
-        case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
-        case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
-          try {
-            sum += Integer.valueOf(items[a]).intValue() > 0 ? 1 : 0;
-          } catch (NumberFormatException e) {
-          }
-          count++;
-          break;
-        case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING:
-          n = items[a].split(":");
-          if (n.length == 2) {
-            try {
-              sum += Integer.valueOf(n[1]).intValue() > 0 ? 1 : 0;
-            } catch (NumberFormatException e) {
-            }
-          }
-
-          count++;
-          break;
-        case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
-          n = items[a].split(":");
-          if (n.length == 3) {
-            try {
-              if (idx == 0 || idx == 1) {
-                sum += Integer.valueOf(n[1]).intValue() > 0 ? 1 : 0;
-              }
-
-              if (idx == 0 || idx == 2) {
-                sum += Integer.valueOf(n[2]).intValue() > 0 ? 1 : 0;
-              }
-
-            } catch (NumberFormatException e) {
-            }
-          }
-
-          if (idx == 0) {
-            count += 2;
-          } else {
-            count++;
-          }
-
-          break;
-
-        case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
-        case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW:
-          n = items[a].split(":");
-          if (n.length == 2) {
-            try {
-              if (Integer.valueOf(n[0]).intValue() >= 100 // percent
-                  || Integer.valueOf(n[1]).intValue() > 0) { // sensor
-                sum++;
-              }
-            } catch (NumberFormatException e) {
-            }
-          }
-          count++;
-          break;
-
-        case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
-          n = items[a].split(":");
-          if (n.length == 3) {
-            try {
-              sum += Integer.valueOf(n[0]).intValue() > 0 ? 1 : 0;
-            } catch (NumberFormatException e) {
-            }
-          }
-
-          count++;
-          break;
-      }
-    }
-
-    return count == 0 ? 0 : sum * 100 / count;
-  }
-
-  public int getActivePercent() {
-    return getActivePercent(0);
   }
 
   public CharSequence getHumanReadableValue(WhichOne whichOne) {

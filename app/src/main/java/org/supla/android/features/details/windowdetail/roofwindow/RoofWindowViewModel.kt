@@ -145,7 +145,7 @@ private fun ChannelGroupEntity.getRollerShutterPositions(): List<Float> =
   groupTotalValues.mapNotNull {
     val (value) = guardLet(it as? ShadingSystemGroupValue) { return@mapNotNull null }
 
-    if (value.position < 100 && value.openSensorActive) {
+    if (value.position < 100 && value.closeSensorActive) {
       100f
     } else {
       value.position.toFloat()
