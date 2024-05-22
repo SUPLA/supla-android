@@ -282,6 +282,11 @@ class ProvideLegacyDetailTypeUseCaseTest {
     testDetailType(SUPLA_CHANNELFNC_PROJECTOR_SCREEN, WindowDetailType(listOf(DetailPage.PROJECTOR_SCREEN)))
   }
 
+  @Test
+  fun `should provide detail for curtain`() {
+    testDetailType(SUPLA_CHANNELFNC_CURTAIN, WindowDetailType(listOf(DetailPage.CURTAIN)))
+  }
+
   private fun testDetailType(function: Int, result: DetailType?, extraMocks: ((ChannelDataEntity) -> Unit) = { }) {
     // given
     val channel: ChannelDataEntity = mockk()

@@ -22,7 +22,7 @@ import android.graphics.Bitmap
 import android.util.AttributeSet
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.width
@@ -37,7 +37,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.AbstractComposeView
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -91,6 +90,41 @@ fun CircleControlButton(
   padding: Dp = 10.dp,
   iconColor: Color? = null
 ) {
+  CircleControlButton(
+    modifier = modifier,
+    type = type,
+    onClick = onClick,
+    disabled = disabled,
+    animationMode = animationMode,
+    width = width,
+    height = height,
+    padding = padding,
+  ) { textColor ->
+    Column(
+      modifier = Modifier.fillMaxSize(),
+      verticalArrangement = Arrangement.Center,
+      horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+      IconWrapper(bitmap = icon, painter = iconPainter, color = iconColor)
+      text?.let {
+        Text(text = it, style = MaterialTheme.typography.button, color = textColor)
+      }
+    }
+  }
+}
+
+@Composable
+fun CircleControlButton(
+  modifier: Modifier = Modifier,
+  type: AnimatableButtonType = AnimatableButtonType.POSITIVE,
+  onClick: () -> Unit,
+  disabled: Boolean = false,
+  animationMode: AnimationMode = AnimationMode.Pressed,
+  width: Dp = 140.dp,
+  height: Dp = 140.dp,
+  padding: Dp = 10.dp,
+  content: @Composable BoxScope.(textColor: Color) -> Unit
+) {
   SimpleButtonColorAnimatable(
     modifier = modifier.width(width),
     type = type,
@@ -104,24 +138,7 @@ fun CircleControlButton(
       }
     }
   ) { textColor ->
-    Column(
-      modifier = Modifier.fillMaxSize(),
-      verticalArrangement = Arrangement.Center,
-      horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-      IconWrapper(bitmap = icon, painter = iconPainter, color = iconColor)
-      text?.let {
-        Text(text = text, style = MaterialTheme.typography.button, color = textColor)
-      }
-    }
-
-    if (disabled) {
-      Box(
-        modifier = Modifier
-          .fillMaxSize()
-          .background(color = colorResource(id = R.color.disabledOverlay))
-      )
-    }
+    content(textColor)
   }
 }
 
@@ -129,7 +146,7 @@ fun CircleControlButton(
 @Composable
 private fun Preview() {
   SuplaTheme {
-    Column(modifier = Modifier.background(color = Color(0xFFF5F6F7))) {
+    Column(modifier = Modifier.background(color = MaterialTheme.colors.background)) {
       CircleControlButton(onClick = {})
       CircleControlButton(text = "Turn on", onClick = {})
       CircleControlButton(text = "Turn on", onClick = {}, disabled = true)

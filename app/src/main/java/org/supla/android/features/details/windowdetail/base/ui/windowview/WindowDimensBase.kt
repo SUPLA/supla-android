@@ -20,24 +20,17 @@ package org.supla.android.features.details.windowdetail.base.ui.windowview
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.unit.IntSize
 import org.supla.android.extensions.guardLet
 import org.supla.android.features.details.windowdetail.base.ui.MoveState
 
-data class RuntimeWindowDimens(
-  val canvasRect: Rect,
-  val topLineRect: Rect,
-  val windowRect: Rect,
-  val slats: List<Rect>,
-  val scale: Float,
-  val slatDistance: Float,
-  val slatsDistances: Float,
-  val markerInfoRadius: Float,
-  val markerPath: Path
-) {
+interface WindowDimensBase {
+  val canvasRect: Rect
+  val topLineRect: Rect
+  val windowRect: Rect
+  val scale: Float
 
-  val rollerShutterHeight: Float
+  val movementLimit: Float
     get() = canvasRect.height - topLineRect.height
 
   fun getPositionFromState(state: MoveState): Offset? {
@@ -50,7 +43,7 @@ data class RuntimeWindowDimens(
 
     val verticalDiffAsPercentage =
       state.lastPoint.y.minus(initial.y)
-        .div(rollerShutterHeight)
+        .div(movementLimit)
         .times(100f)
 
     val x = state.initialHorizontalPercentage.plus(horizontalDiffAsPercentage).let {
@@ -83,7 +76,6 @@ data class RuntimeWindowDimens(
   }
 
   companion object {
-
     fun canvasRect(viewSize: IntSize): Rect {
       val size = getSize(viewSize = viewSize)
       return Rect(
@@ -102,23 +94,6 @@ data class RuntimeWindowDimens(
       val windowOffset = Offset(canvasRect.left.plus(windowHorizontalMargin), windowTop)
 
       return Rect(windowOffset, windowSize)
-    }
-
-    fun getMarkerPath(scale: Float): Path {
-      val startsAt = WindowDimens.WINDOW_HORIZONTAL_MARGIN.times(scale)
-
-      val height = WindowDimens.MARKER_HEIGHT.times(scale)
-      val halfHeight = height.div(2f)
-      val width = WindowDimens.MARKER_WIDTH.times(scale)
-      val path = Path()
-      path.moveTo(startsAt, 0f)
-      path.lineTo(startsAt + halfHeight, -halfHeight) // (top) -> /
-      path.lineTo(startsAt + width, -halfHeight) // (top) -> /‾‾‾
-      path.lineTo(startsAt + width, halfHeight) // (top) -> /‾‾‾|
-      path.lineTo(startsAt + halfHeight, halfHeight) // (bottom) -> ___|
-      path.close()
-
-      return path
     }
 
     private fun getSize(viewSize: IntSize): Size {

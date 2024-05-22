@@ -102,7 +102,8 @@ private fun ChannelGroupEntity.getGroupValue(value: ChannelValueEntity): GroupVa
 
     SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER,
     SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW,
-    SuplaConst.SUPLA_CHANNELFNC_TERRACE_AWNING ->
+    SuplaConst.SUPLA_CHANNELFNC_TERRACE_AWNING,
+    SuplaConst.SUPLA_CHANNELFNC_CURTAIN ->
       ShadingSystemGroupValue(value.asRollerShutterValue().alwaysValidPosition, (value.getSubValueHi() and 0x1) == 0x1)
 
     SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND ->

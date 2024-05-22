@@ -56,11 +56,9 @@ import org.supla.android.features.details.windowdetail.base.data.WindowGroupedVa
 import org.supla.android.features.details.windowdetail.base.data.facadeblinds.FacadeBlindMarker
 import org.supla.android.features.details.windowdetail.base.data.facadeblinds.FacadeBlindWindowState
 import org.supla.android.features.details.windowdetail.base.ui.MoveState
-import org.supla.android.features.details.windowdetail.base.ui.windowview.RuntimeWindowDimens
-import org.supla.android.features.details.windowdetail.base.ui.windowview.RuntimeWindowDimens.Companion.canvasRect
-import org.supla.android.features.details.windowdetail.base.ui.windowview.RuntimeWindowDimens.Companion.getMarkerPath
-import org.supla.android.features.details.windowdetail.base.ui.windowview.RuntimeWindowDimens.Companion.windowRect
+import org.supla.android.features.details.windowdetail.base.ui.windowview.SlatDimens
 import org.supla.android.features.details.windowdetail.base.ui.windowview.WindowDimens
+import org.supla.android.features.details.windowdetail.base.ui.windowview.WindowDimensBase
 import org.supla.android.features.details.windowdetail.base.ui.windowview.WindowDrawerBase
 import kotlin.math.abs
 import kotlin.math.ceil
@@ -77,12 +75,12 @@ fun FacadeBlindsWindowView(
   onPositionChanging: ((tilt: Float, position: Float) -> Unit)? = null,
   onPositionChanged: ((tilt: Float, position: Float) -> Unit)? = null
 ) {
-  val (windowDimens, updateDimens) = remember { mutableStateOf<RuntimeWindowDimens?>(null) }
+  val (windowDimens, updateDimens) = remember { mutableStateOf<RuntimeDimens?>(null) }
   val moveState = remember { mutableStateOf(MoveState()) }
 
   Canvas(
     modifier = modifier
-      .onSizeChanged { updateDimens(makeDimens(viewSize = it)) }
+      .onSizeChanged { updateDimens(RuntimeDimens(viewSize = it)) }
       .pointerInteropFilter { event ->
         if (windowDimens != null) {
           when (event.action) {
@@ -125,11 +123,11 @@ fun FacadeBlindsWindowView(
       return@Canvas // Skip drawing when view size is not set yet
     }
 
-    WindowDrawer.drawWindow(runtimeWindowDimens = windowDimens, colors = colors, rollerState = windowState)
+    WindowDrawer.drawWindow(runtimeDimens = windowDimens, colors = colors, windowState = windowState)
   }
 }
 
-private object WindowDrawer : WindowDrawerBase<FacadeBlindWindowState, FacadeBlindColors>() {
+private object WindowDrawer : WindowDrawerBase<RuntimeDimens, FacadeBlindWindowState, FacadeBlindColors>() {
 
   private val maxTilt = 8.dp.toPx()
   private val tiltInitialCorrection = 1.dp.toPx()
@@ -137,45 +135,45 @@ private object WindowDrawer : WindowDrawerBase<FacadeBlindWindowState, FacadeBli
   private const val TILT_HALF_RANGE = 90f
 
   context (DrawScope)
-  override fun drawSlats(rollerState: FacadeBlindWindowState, runtimeWindowDimens: RuntimeWindowDimens, colors: FacadeBlindColors) {
-    val topCorrection = rollerState.position.value.div(100f)
-      .times(runtimeWindowDimens.rollerShutterHeight)
-      .plus(runtimeWindowDimens.slatDistance.times(1.5f)) // Needed to align slats bottom with window bottom
+  override fun drawShadowingElements(windowState: FacadeBlindWindowState, runtimeDimens: RuntimeDimens, colors: FacadeBlindColors) {
+    val topCorrection = windowState.position.value.div(100f)
+      .times(runtimeDimens.movementLimit)
+      .plus(runtimeDimens.slatDistance.times(1.5f)) // Needed to align slats bottom with window bottom
 
     // When the roller shutter position is bigger then bottom position we need to start "closing slats".
     // Here the available space for "opened" slats is calculated
-    val slatsCount = runtimeWindowDimens.slats.size
-    val progression = rollerState.slatTiltDegrees?.let { if (it > 50) 1..slatsCount else null } ?: (slatsCount downTo 1)
+    val slatsCount = runtimeDimens.slats.size
+    val progression = windowState.slatTiltDegrees?.let { if (it > 50) 1..slatsCount else null } ?: (slatsCount downTo 1)
     for (i in progression) {
       drawSlat(
-        topCorrection = topCorrection - runtimeWindowDimens.rollerShutterHeight,
-        rect = runtimeWindowDimens.slats[i - 1],
-        runtimeWindowDimens = runtimeWindowDimens,
+        topCorrection = topCorrection - runtimeDimens.movementLimit,
+        rect = runtimeDimens.slats[i - 1],
+        runtimeDimens = runtimeDimens,
         colors = colors,
-        tilt = rollerState.slatTiltDegrees
+        tilt = windowState.slatTiltDegrees
       )
     }
   }
 
   context(DrawScope)
   override fun drawMarkers(
-    rollerState: FacadeBlindWindowState,
-    runtimeWindowDimens: RuntimeWindowDimens,
+    windowState: FacadeBlindWindowState,
+    runtimeDimens: RuntimeDimens,
     colors: FacadeBlindColors
   ) {
-    rollerState.markers.forEach { marker ->
-      val topPosition = runtimeWindowDimens.topLineRect.bottom
-        .plus(runtimeWindowDimens.rollerShutterHeight.minus(runtimeWindowDimens.slatDistance).times(marker.position).div(100f))
+    windowState.markers.forEach { marker ->
+      val topPosition = runtimeDimens.topLineRect.bottom
+        .plus(runtimeDimens.movementLimit.minus(runtimeDimens.slatDistance).times(marker.position).div(100f))
 
-      val tilt0 = rollerState.tilt0Angle ?: FacadeBlindWindowState.DEFAULT_TILT_0_ANGLE
-      val tilt100 = rollerState.tilt100Angle ?: FacadeBlindWindowState.DEFAULT_TILT_100_ANGLE
+      val tilt0 = windowState.tilt0Angle ?: FacadeBlindWindowState.DEFAULT_TILT_0_ANGLE
+      val tilt100 = windowState.tilt100Angle ?: FacadeBlindWindowState.DEFAULT_TILT_100_ANGLE
       val degrees = tilt0.plus(tilt100.minus(tilt0).times(marker.tilt).div(100))
       val trimmed = SlatTiltSliderDimens.trimAngle(degrees)
 
       drawMarker(
-        Offset(runtimeWindowDimens.windowRect.left, topPosition),
+        Offset(runtimeDimens.windowRect.left, topPosition),
         trimmed,
-        runtimeWindowDimens,
+        runtimeDimens,
         colors
       )
     }
@@ -185,7 +183,7 @@ private object WindowDrawer : WindowDrawerBase<FacadeBlindWindowState, FacadeBli
   private fun drawSlat(
     topCorrection: Float,
     rect: Rect,
-    runtimeWindowDimens: RuntimeWindowDimens,
+    runtimeDimens: RuntimeDimens,
     colors: FacadeBlindColors,
     tilt: Float?
   ) {
@@ -204,12 +202,12 @@ private object WindowDrawer : WindowDrawerBase<FacadeBlindWindowState, FacadeBli
     }
 
     val bottom = rect.bottom + topCorrection - verticalSlatCorrection
-    if (bottom < runtimeWindowDimens.topLineRect.bottom) {
+    if (bottom < runtimeDimens.topLineRect.bottom) {
       // skip slats over screen
       return
     }
     val top = rect.top.plus(topCorrection).plus(verticalSlatCorrection).let {
-      if (it < runtimeWindowDimens.topLineRect.bottom) runtimeWindowDimens.topLineRect.bottom else it
+      if (it < runtimeDimens.topLineRect.bottom) runtimeDimens.topLineRect.bottom else it
     }
 
     path.reset()
@@ -225,15 +223,15 @@ private object WindowDrawer : WindowDrawerBase<FacadeBlindWindowState, FacadeBli
   }
 
   context (DrawScope)
-  private fun drawMarker(offset: Offset, tilt: Float, runtimeWindowDimens: RuntimeWindowDimens, windowColors: FacadeBlindColors) {
-    drawCircle(color = windowColors.slatBackground, radius = runtimeWindowDimens.markerInfoRadius, center = offset)
+  private fun drawMarker(offset: Offset, tilt: Float, runtimeDimens: RuntimeDimens, windowColors: FacadeBlindColors) {
+    drawCircle(color = windowColors.slatBackground, radius = runtimeDimens.markerInfoRadius, center = offset)
     drawCircle(
       color = windowColors.slatBorder,
-      radius = runtimeWindowDimens.markerInfoRadius,
+      radius = runtimeDimens.markerInfoRadius,
       center = offset,
       style = Stroke(width = 1.5.dp.toPx())
     )
-    val lineOffset = runtimeWindowDimens.markerInfoRadius / 2
+    val lineOffset = runtimeDimens.markerInfoRadius / 2
 
     val lines = listOf(
       offset.minus(Offset(0f, 2.5.dp.toPx())),
@@ -261,44 +259,59 @@ private fun NativePaint.applyForSlat(colors: FacadeBlindColors) {
   setShadowLayer(slatShadowRadius.toPx(), 0f, 1.5.dp.toPx(), colors.shadow.toArgb())
 }
 
-private fun makeDimens(viewSize: IntSize): RuntimeWindowDimens {
-  val canvasRect = canvasRect(viewSize = viewSize)
-  val scale = canvasRect.width / WindowDimens.WIDTH
-  val topLineRect = Rect(
-    Offset(canvasRect.left, canvasRect.top),
-    Size(canvasRect.width, WindowDimens.TOP_LINE_HEIGHT.times(scale))
-  )
-  val windowRect = windowRect(scale, canvasRect, topLineRect)
-  val slats = slats(scale, canvasRect, topLineRect)
-  val slatDistance = WindowDimens.SLAT_DISTANCE.times(scale)
+private data class RuntimeDimens(
+  override val canvasRect: Rect,
+  override val topLineRect: Rect,
+  override val windowRect: Rect,
+  override val scale: Float,
+  val slats: List<Rect>,
+  val slatDistance: Float,
+  val slatsDistances: Float,
+  val markerInfoRadius: Float
+) : WindowDimensBase {
 
-  return RuntimeWindowDimens(
-    canvasRect = canvasRect,
-    topLineRect = topLineRect,
-    windowRect = windowRect,
-    slats = slats,
-    scale = scale,
-    slatDistance = slatDistance,
-    slatsDistances = (slats.size - 1) * slatDistance,
-    markerInfoRadius = WindowDimens.MARKER_INFO_RADIUS.times(scale),
-    markerPath = getMarkerPath(scale)
-  )
-}
+  companion object {
+    const val MARKER_INFO_RADIUS = 12f
 
-private fun slats(scale: Float, canvasRect: Rect, topLineRect: Rect): List<Rect> {
-  val slatHorizontalMargin = WindowDimens.SLAT_HORIZONTAL_MARGIN.times(scale)
-  val slatSize = Size(
-    canvasRect.width.minus(slatHorizontalMargin.times(2)),
-    WindowDimens.SLAT_HEIGHT.times(scale)
-  )
+    operator fun invoke(viewSize: IntSize): RuntimeDimens {
+      val canvasRect = WindowDimensBase.canvasRect(viewSize = viewSize)
+      val scale = canvasRect.width / WindowDimens.WIDTH
+      val topLineRect = Rect(
+        Offset(canvasRect.left, canvasRect.top),
+        Size(canvasRect.width, WindowDimens.TOP_LINE_HEIGHT.times(scale))
+      )
+      val windowRect = WindowDimensBase.windowRect(scale, canvasRect, topLineRect)
+      val slats = slats(scale, canvasRect, topLineRect)
+      val slatDistance = SlatDimens.SLAT_DISTANCE.times(scale)
 
-  val slatSpace = slatSize.height.minus(2.dp.toPx())
-  val slatsCount = ceil(canvasRect.height.minus(topLineRect.height).div(slatSpace)).toInt()
-  val top = topLineRect.bottom - slatSpace
+      return RuntimeDimens(
+        canvasRect = canvasRect,
+        topLineRect = topLineRect,
+        windowRect = windowRect,
+        slats = slats,
+        scale = scale,
+        slatDistance = slatDistance,
+        slatsDistances = (slats.size - 1) * slatDistance,
+        markerInfoRadius = MARKER_INFO_RADIUS.times(scale),
+      )
+    }
 
-  return mutableListOf<Rect>().also {
-    for (i in 0 until slatsCount) {
-      it.add(Rect(Offset(canvasRect.left.plus(slatHorizontalMargin), top.plus(slatSpace.times(i))), slatSize))
+    private fun slats(scale: Float, canvasRect: Rect, topLineRect: Rect): List<Rect> {
+      val slatHorizontalMargin = SlatDimens.SLAT_HORIZONTAL_MARGIN.times(scale)
+      val slatSize = Size(
+        canvasRect.width.minus(slatHorizontalMargin.times(2)),
+        SlatDimens.SLAT_HEIGHT.times(scale)
+      )
+
+      val slatSpace = slatSize.height.minus(2.dp.toPx())
+      val slatsCount = ceil(canvasRect.height.minus(topLineRect.height).div(slatSpace)).toInt()
+      val top = topLineRect.bottom - slatSpace
+
+      return mutableListOf<Rect>().also {
+        for (i in 0 until slatsCount) {
+          it.add(Rect(Offset(canvasRect.left.plus(slatHorizontalMargin), top.plus(slatSpace.times(i))), slatSize))
+        }
+      }
     }
   }
 }

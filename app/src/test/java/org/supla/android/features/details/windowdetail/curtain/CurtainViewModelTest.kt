@@ -1,4 +1,6 @@
 @file:Suppress("SameParameterValue")
+
+package org.supla.android.features.details.windowdetail.curtain
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -16,8 +18,6 @@
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-
-package org.supla.android.features.details.windowdetail.projectorscreen
 
 import io.mockk.every
 import io.mockk.mockk
@@ -48,9 +48,10 @@ import org.supla.android.data.source.remote.shadingsystem.SuplaShadingSystemFlag
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.LoadingTimeoutManager
 import org.supla.android.features.details.windowdetail.base.BaseWindowViewEvent
-import org.supla.android.features.details.windowdetail.base.data.ProjectorScreenState
+import org.supla.android.features.details.windowdetail.base.data.CurtainWindowState
 import org.supla.android.features.details.windowdetail.base.data.WindowGroupedValue
 import org.supla.android.features.details.windowdetail.base.ui.WindowViewState
+import org.supla.android.features.details.windowdetail.base.ui.windowview.ShadingSystemOrientation
 import org.supla.android.lib.SuplaConst
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.tools.VibrationHelper
@@ -66,7 +67,7 @@ import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
 import org.supla.android.usecases.group.totalvalue.GroupTotalValue
 
 @RunWith(MockitoJUnitRunner::class)
-class ProjectorScreenViewModelTest : BaseViewModelTest<ProjectorScreenViewModelState, BaseWindowViewEvent, ProjectorScreenViewModel>() {
+class CurtainViewModelTest : BaseViewModelTest<CurtainViewModelState, BaseWindowViewEvent, CurtainViewModel>() {
 
   @Mock
   lateinit var loadingTimeoutManager: LoadingTimeoutManager
@@ -114,7 +115,7 @@ class ProjectorScreenViewModelTest : BaseViewModelTest<ProjectorScreenViewModelS
   override lateinit var schedulers: SuplaSchedulers
 
   @InjectMocks
-  override lateinit var viewModel: ProjectorScreenViewModel
+  override lateinit var viewModel: CurtainViewModel
 
   @Before
   override fun setUp() {
@@ -139,16 +140,17 @@ class ProjectorScreenViewModelTest : BaseViewModelTest<ProjectorScreenViewModelS
 
     // then
     Assertions.assertThat(states).containsExactly(
-      ProjectorScreenViewModelState(
+      CurtainViewModelState(
         remoteId = remoteId,
-        windowState = ProjectorScreenState(WindowGroupedValue.Similar(position.toFloat())),
+        windowState = CurtainWindowState(WindowGroupedValue.Similar(position.toFloat())),
         viewState = WindowViewState(
           issues = listOf(ChannelIssueItem(IssueIconType.ERROR, R.string.motor_problem)),
           enabled = true,
           showClosingPercentage = true,
           positionUnknown = false,
           calibrationPossible = true,
-          calibrating = false
+          calibrating = false,
+          orientation = ShadingSystemOrientation.HORIZONTAL
         )
       )
     )
@@ -159,18 +161,18 @@ class ProjectorScreenViewModelTest : BaseViewModelTest<ProjectorScreenViewModelS
     // given
     val remoteId = 133
 
-    mockOnlineGroup(remoteId, "10|80|20")
+    mockOnlineGroup(remoteId, "10:1|80:1|20:0")
 
     // when
     viewModel.loadData(remoteId, ItemType.GROUP)
 
     // then
     Assertions.assertThat(states).containsExactly(
-      ProjectorScreenViewModelState(
+      CurtainViewModelState(
         remoteId = remoteId,
-        windowState = ProjectorScreenState(
-          position = WindowGroupedValue.Different(min = 10.0f, max = 80.0f),
-          markers = listOf(10f, 80f, 20f)
+        windowState = CurtainWindowState(
+          position = WindowGroupedValue.Different(min = 20.0f, max = 100.0f),
+          markers = listOf(100f, 100f, 20f)
         ),
         viewState = WindowViewState(
           enabled = true,
@@ -180,6 +182,7 @@ class ProjectorScreenViewModelTest : BaseViewModelTest<ProjectorScreenViewModelS
           calibrating = false,
           isGroup = true,
           onlineStatusString = "2/4",
+          orientation = ShadingSystemOrientation.HORIZONTAL
         )
       )
     )
@@ -192,7 +195,7 @@ class ProjectorScreenViewModelTest : BaseViewModelTest<ProjectorScreenViewModelS
     valueFlags: List<SuplaShadingSystemFlag> = emptyList(),
     channelFlags: List<SuplaChannelFlag> = emptyList(),
     hasValidPosition: Boolean = true,
-    function: Int = SuplaConst.SUPLA_CHANNELFNC_TERRACE_AWNING
+    function: Int = SuplaConst.SUPLA_CHANNELFNC_CURTAIN
   ) {
     val rollerShutterValue: RollerShutterValue = mockk {
       every { this@mockk.position } returns position
@@ -222,12 +225,12 @@ class ProjectorScreenViewModelTest : BaseViewModelTest<ProjectorScreenViewModelS
     val group: ChannelGroupEntity = mockk {
       every {
         this@mockk.groupTotalValues
-      } returns GroupTotalValue.parse(SuplaConst.SUPLA_CHANNELFNC_PROJECTOR_SCREEN, totalValue)
+      } returns GroupTotalValue.parse(SuplaConst.SUPLA_CHANNELFNC_CURTAIN, totalValue)
     }
     val groupData: ChannelGroupDataEntity = mockk {
       every { id } returns groupId
       every { this@mockk.remoteId } returns remoteId
-      every { this@mockk.function } returns SuplaConst.SUPLA_CHANNELFNC_PROJECTOR_SCREEN
+      every { this@mockk.function } returns SuplaConst.SUPLA_CHANNELFNC_CURTAIN
       every { channelGroupEntity } returns group
       every { isOnline() } returns true
     }

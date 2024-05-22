@@ -1,4 +1,4 @@
-package org.supla.android.features.details.windowdetail.base.ui.windowview
+package org.supla.android.features.details.windowdetail.base.data
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,22 +17,23 @@ package org.supla.android.features.details.windowdetail.base.ui.windowview
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-const val WINDOW_FRAME_RADIUS = 4
+data class CurtainWindowState(
+  /**
+   * The whole blind roller position in percentage
+   * 0 - open
+   * 100 - closed
+   */
+  override val position: WindowGroupedValue,
 
-object WindowDimens {
-  const val WIDTH = 288f
-  const val HEIGHT = 336f
-  const val RATIO = WIDTH / HEIGHT
+  /**
+   * Position as percentage of [position] when blind roller is touching the parapet but the are still gaps between slats
+   */
+  val bottomPosition: Float = 100f,
 
-  const val TOP_LINE_HEIGHT = 16f
-  const val WINDOW_HORIZONTAL_MARGIN = 16f
-  const val GLASS_MIDDLE_MARGIN = 20f
-  const val GLASS_HORIZONTAL_MARGIN = 18f
-  const val GLASS_VERTICAL_MARGIN = 24f
-}
+  /**
+   * Used for groups - shows positions of single roller shutter
+   */
+  val markers: List<Float> = emptyList(),
 
-object SlatDimens {
-  const val SLAT_HEIGHT = 24f
-  const val SLAT_DISTANCE = 5f
-  const val SLAT_HORIZONTAL_MARGIN = 8f
-}
+  override val positionTextFormat: WindowGroupedValueFormat = WindowGroupedValueFormat.PERCENTAGE,
+) : WindowState()

@@ -1,4 +1,4 @@
-package org.supla.android.features.details.windowdetail.base.ui.windowview
+package org.supla.android.ui.views.buttons.animatable.controlbutton
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,22 +17,23 @@ package org.supla.android.features.details.windowdetail.base.ui.windowview
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-const val WINDOW_FRAME_RADIUS = 4
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 
-object WindowDimens {
-  const val WIDTH = 288f
-  const val HEIGHT = 336f
-  const val RATIO = WIDTH / HEIGHT
-
-  const val TOP_LINE_HEIGHT = 16f
-  const val WINDOW_HORIZONTAL_MARGIN = 16f
-  const val GLASS_MIDDLE_MARGIN = 20f
-  const val GLASS_HORIZONTAL_MARGIN = 18f
-  const val GLASS_VERTICAL_MARGIN = 24f
-}
-
-object SlatDimens {
-  const val SLAT_HEIGHT = 24f
-  const val SLAT_DISTANCE = 5f
-  const val SLAT_HORIZONTAL_MARGIN = 8f
-}
+@Composable
+fun ControlButtonIcon(
+  iconRes: Int,
+  modifier: Modifier = Modifier,
+  textColor: Color = MaterialTheme.colors.onSurface,
+  rotate: Float = 0f
+) = Icon(
+  painter = painterResource(id = iconRes),
+  contentDescription = null,
+  tint = textColor,
+  modifier = modifier.rotate(rotate)
+)

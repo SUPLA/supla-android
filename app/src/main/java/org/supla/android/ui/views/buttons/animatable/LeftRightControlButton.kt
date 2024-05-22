@@ -27,8 +27,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
@@ -51,42 +51,41 @@ import org.supla.android.extensions.innerShadow
 import org.supla.android.ui.views.buttons.animatable.controlbutton.ControlButtonIcon
 import org.supla.android.ui.views.buttons.animatable.controlbutton.ControlButtonScope
 
-val TOTAL_HEIGHT = 188.dp
-private val BUTTON_WIDTH = 64.dp
-private val BUTTON_HEIGHT = TOTAL_HEIGHT.div(2)
-private val CORNER_RADIUS = BUTTON_WIDTH.div(2)
-private val MIDDLE_BUTTON_HEIGHT = 64.dp
+private val BUTTON_WIDTH = 94.dp
+private val BUTTON_HEIGHT = 64.dp
+private val CORNER_RADIUS = BUTTON_HEIGHT.div(2)
 
 @Composable
-fun UpDownControlButton(
+fun LeftRightControlButton(
   modifier: Modifier = Modifier,
   disabled: Boolean = false,
   animationMode: AnimationMode = AnimationMode.Pressed,
-  upContent: @Composable BoxScope.(text: Color) -> Unit,
-  downContent: @Composable BoxScope.(text: Color) -> Unit,
+  leftContent: @Composable BoxScope.(text: Color) -> Unit,
+  rightContent: @Composable BoxScope.(text: Color) -> Unit,
   middleContent: (@Composable BoxScope.(text: Color) -> Unit)? = null,
-  upEventHandler: (ControlButtonScope.() -> ControlButtonScope.OnEventHandler)? = null,
+  leftEventHandler: (ControlButtonScope.() -> ControlButtonScope.OnEventHandler)? = null,
   middleEventHandler: (ControlButtonScope.() -> ControlButtonScope.OnEventHandler)? = null,
-  downEventHandler: (ControlButtonScope.() -> ControlButtonScope.OnEventHandler)? = null
+  rightEventHandler: (ControlButtonScope.() -> ControlButtonScope.OnEventHandler)? = null
 ) {
   val type = AnimatableButtonType.POSITIVE
 
   ControlButtonScope {
-    val upHandler = upEventHandler?.let { it() }
-    val downHandler = downEventHandler?.let { it() }
+    val upHandler = leftEventHandler?.let { it() }
+    val downHandler = rightEventHandler?.let { it() }
     val middleHandler = middleEventHandler?.let { it() }
 
-    Column(
+    Row(
       modifier = modifier
     ) {
-      UpButton(
+      LeftButton(
         disabled = disabled,
         animationMode = animationMode,
         type = type,
-        content = upContent,
+        content = leftContent,
         onClick = upHandler?.onClick(),
         onTouchDown = upHandler?.onTouchDown(),
-        onTouchUp = upHandler?.onTouchUp()
+        onTouchUp = upHandler?.onTouchUp(),
+        modifier = Modifier.weight(1f)
       )
 
       middleContent?.let {
@@ -101,14 +100,15 @@ fun UpDownControlButton(
         )
       }
 
-      DownButton(
+      RightButton(
         disabled = disabled,
         animationMode = animationMode,
         type = type,
-        content = downContent,
+        content = rightContent,
         onClick = downHandler?.onClick(),
         onTouchDown = downHandler?.onTouchDown(),
-        onTouchUp = downHandler?.onTouchUp()
+        onTouchUp = downHandler?.onTouchUp(),
+        modifier = Modifier.weight(1f)
       )
     }
   }
@@ -116,42 +116,33 @@ fun UpDownControlButton(
 
 context(BoxScope)
 @Composable
-fun UpControlIcon(textColor: Color) =
+fun LeftControlIcon(textColor: Color) =
   ControlButtonIcon(
     iconRes = R.drawable.ic_arrow_right,
     textColor = textColor,
-    rotate = 270f,
+    rotate = 180f,
     modifier = Modifier.align(Alignment.Center)
   )
 
 context(BoxScope)
 @Composable
-fun StopControlIcon(textColor: Color) =
-  ControlButtonIcon(
-    iconRes = R.drawable.ic_stop,
-    textColor = textColor,
-    modifier = Modifier.align(Alignment.Center)
-  )
-
-context (BoxScope)
-@Composable
-fun DownControlIcon(textColor: Color) =
+fun RightControlIcon(textColor: Color) =
   ControlButtonIcon(
     iconRes = R.drawable.ic_arrow_right,
     textColor = textColor,
-    rotate = 90f,
     modifier = Modifier.align(Alignment.Center)
   )
 
 @Composable
-private fun UpButton(
+private fun LeftButton(
   disabled: Boolean,
   animationMode: AnimationMode,
   type: AnimatableButtonType,
   content: @Composable BoxScope.(text: Color) -> Unit,
   onClick: (() -> Unit)?,
   onTouchDown: (() -> Unit)?,
-  onTouchUp: (() -> Unit)?
+  onTouchUp: (() -> Unit)?,
+  modifier: Modifier = Modifier
 ) {
   ControlButton(
     disabled = disabled,
@@ -161,8 +152,9 @@ private fun UpButton(
     onClick = onClick,
     onTouchDown = onTouchDown,
     onTouchUp = onTouchUp,
+    modifier = modifier,
     topStartCornerRadius = CORNER_RADIUS,
-    topEndCornerRadius = CORNER_RADIUS
+    bottomStartCornerRadius = CORNER_RADIUS
   )
 }
 
@@ -174,7 +166,8 @@ private fun MiddleButton(
   content: @Composable BoxScope.(text: Color) -> Unit,
   onClick: (() -> Unit)?,
   onTouchDown: (() -> Unit)?,
-  onTouchUp: (() -> Unit)?
+  onTouchUp: (() -> Unit)?,
+  modifier: Modifier = Modifier
 ) {
   ControlButton(
     disabled = disabled,
@@ -184,19 +177,20 @@ private fun MiddleButton(
     onClick = onClick,
     onTouchDown = onTouchDown,
     onTouchUp = onTouchUp,
-    height = MIDDLE_BUTTON_HEIGHT
+    modifier = modifier
   )
 }
 
 @Composable
-private fun DownButton(
+private fun RightButton(
   disabled: Boolean,
   animationMode: AnimationMode,
   type: AnimatableButtonType,
   content: @Composable BoxScope.(text: Color) -> Unit,
   onClick: (() -> Unit)?,
   onTouchDown: (() -> Unit)?,
-  onTouchUp: (() -> Unit)?
+  onTouchUp: (() -> Unit)?,
+  modifier: Modifier = Modifier
 ) {
   ControlButton(
     disabled = disabled,
@@ -206,7 +200,8 @@ private fun DownButton(
     onClick = onClick,
     onTouchDown = onTouchDown,
     onTouchUp = onTouchUp,
-    bottomStartCornerRadius = CORNER_RADIUS,
+    modifier = modifier,
+    topEndCornerRadius = CORNER_RADIUS,
     bottomEndCornerRadius = CORNER_RADIUS
   )
 }
@@ -220,7 +215,7 @@ private fun ControlButton(
   onClick: (() -> Unit)?,
   onTouchDown: (() -> Unit)?,
   onTouchUp: (() -> Unit)?,
-  height: Dp = BUTTON_HEIGHT,
+  modifier: Modifier = Modifier,
   topStartCornerRadius: Dp = 0.dp,
   topEndCornerRadius: Dp = 0.dp,
   bottomStartCornerRadius: Dp = 0.dp,
@@ -251,7 +246,6 @@ private fun ControlButton(
     interactionSource = upInteractionSource,
     disabled = disabled
   ) { borderColor, outerShadowColor, innerShadowColor, textColor ->
-
     val shape = RoundedCornerShape(
       topStart = topStartCornerRadius,
       topEnd = topEndCornerRadius,
@@ -259,9 +253,9 @@ private fun ControlButton(
       bottomEnd = bottomEndCornerRadius
     )
     Box(
-      modifier = Modifier
-        .width(BUTTON_WIDTH)
-        .height(height)
+      modifier = modifier
+        .defaultMinSize(minWidth = BUTTON_WIDTH)
+        .height(BUTTON_HEIGHT)
         .border(
           width = 1.dp,
           color = if (animationMode.isActiveState()) pressedColor else borderColor,
@@ -304,27 +298,33 @@ private fun ControlButton(
 @Composable
 private fun Preview() {
   SuplaTheme {
-    Row(
-      horizontalArrangement = Arrangement.spacedBy(8.dp),
+    Box(
       modifier = Modifier
+        .width(300.dp)
+        .height(300.dp)
         .background(MaterialTheme.colors.background)
-        .padding(24.dp)
     ) {
-      UpDownControlButton(
-        upContent = { UpControlIcon(textColor = it) },
-        downContent = { DownControlIcon(textColor = it) }
-      )
-      UpDownControlButton(
-        disabled = true,
-        upContent = { UpControlIcon(textColor = it) },
-        downContent = { DownControlIcon(textColor = it) }
-      )
-      UpDownControlButton(
-        disabled = true,
-        upContent = { UpControlIcon(textColor = it) },
-        downContent = { DownControlIcon(textColor = it) },
-        middleContent = { StopControlIcon(textColor = it) }
-      )
+      Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        LeftRightControlButton(
+          leftContent = { LeftControlIcon(textColor = it) },
+          rightContent = { RightControlIcon(textColor = it) }
+        )
+        LeftRightControlButton(
+          middleContent = {
+            ControlButtonIcon(iconRes = R.drawable.ic_stop, textColor = it, rotate = 180f, modifier = Modifier.align(Alignment.Center))
+          },
+          leftContent = { LeftControlIcon(textColor = it) },
+          rightContent = { RightControlIcon(textColor = it) }
+        )
+        LeftRightControlButton(
+          disabled = true,
+          middleContent = {
+            ControlButtonIcon(iconRes = R.drawable.ic_stop, textColor = it, rotate = 180f, modifier = Modifier.align(Alignment.Center))
+          },
+          leftContent = { LeftControlIcon(textColor = it) },
+          rightContent = { RightControlIcon(textColor = it) }
+        )
+      }
     }
   }
 }
