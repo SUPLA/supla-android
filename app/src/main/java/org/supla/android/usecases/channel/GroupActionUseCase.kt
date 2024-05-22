@@ -20,19 +20,19 @@ package org.supla.android.usecases.channel
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
-import org.supla.android.data.source.ChannelRepository
-import org.supla.android.db.ChannelGroup
+import org.supla.android.data.source.ChannelGroupRepository
+import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class GroupActionUseCase @Inject constructor(
-  private val channelRepository: ChannelRepository,
+  private val channelGroupRepository: ChannelGroupRepository,
   suplaClientProvider: SuplaClientProvider
-) : BaseActionUseCase<ChannelGroup>(suplaClientProvider) {
+) : BaseActionUseCase<ChannelGroupDataEntity>(suplaClientProvider) {
 
   operator fun invoke(groupId: Int, buttonType: ButtonType): Completable =
     getGroup(groupId).flatMapCompletable { performActionCompletable(it, buttonType, true) }
 
-  private fun getGroup(groupId: Int): Maybe<ChannelGroup> = Maybe.fromCallable { channelRepository.getChannelGroup(groupId) }
+  private fun getGroup(groupId: Int): Maybe<ChannelGroupDataEntity> = channelGroupRepository.findGroupDataEntity(groupId)
 }

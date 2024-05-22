@@ -118,7 +118,7 @@ fun ProjectorScreenView(
     val cornerRadius = CornerRadius(radius, radius)
 
     // screen
-    drawRect(colors.window, topLeft = windowDimens.screenTopLeft, size = Size(windowDimens.screenWidth, screenHeight))
+    drawRect(colors.screen, topLeft = windowDimens.screenTopLeft, size = Size(windowDimens.screenWidth, screenHeight))
     // Top part
     ProjectorScreenDrawer.drawTopRectWithShadow(windowDimens, colors)
     // Logo
@@ -265,15 +265,15 @@ data class RuntimeDimens(
     }
 
     private fun topRect(scale: Float, canvasRect: Rect): Rect {
-      val windowSize = Size(canvasRect.width, DefaultDimens.TOP_RECT_HEIGHT.times(scale))
-      return Rect(canvasRect.topLeft, windowSize)
+      val size = Size(canvasRect.width, DefaultDimens.TOP_RECT_HEIGHT.times(scale))
+      return Rect(canvasRect.topLeft, size)
     }
 
     private fun bottomRect(scale: Float, topRect: Rect): Rect {
-      val windowSize = Size(DefaultDimens.BOTTOM_RECT_WIDTH.times(scale), DefaultDimens.BOTTOM_RECT_HEIGHT.times(scale))
-      val left = topRect.left.plus(topRect.width.minus(windowSize.width).div(2))
+      val size = Size(DefaultDimens.BOTTOM_RECT_WIDTH.times(scale), DefaultDimens.BOTTOM_RECT_HEIGHT.times(scale))
+      val left = topRect.left.plus(topRect.width.minus(size.width).div(2))
       val topLeft = Offset(left, topRect.bottom)
-      return Rect(topLeft, windowSize)
+      return Rect(topLeft, size)
     }
 
     private fun logoRect(scale: Float, topRect: Rect): Rect {

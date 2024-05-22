@@ -17,18 +17,22 @@ package org.supla.android.data.source.local.entity
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import org.supla.android.data.model.general.ChannelBase
 import org.supla.android.lib.SuplaConst
 
-fun ChannelEntity.isHvacThermostat() =
+fun ChannelBase.isHvacThermostat() =
   function == SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT ||
     function == SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER
 
-fun ChannelEntity.hasMeasurements(): Boolean =
+fun ChannelBase.isThermostat(): Boolean =
+  isHvacThermostat() || function == SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS
+
+fun ChannelBase.hasMeasurements(): Boolean =
   function == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER ||
     function == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE ||
     function == SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR
 
-fun ChannelEntity.hasValue(): Boolean =
+fun ChannelBase.hasValue(): Boolean =
   when (function) {
     SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT,
     SuplaConst.SUPLA_CHANNELFNC_THERMOMETER,
@@ -38,29 +42,32 @@ fun ChannelEntity.hasValue(): Boolean =
     else -> false
   }
 
-fun ChannelEntity.isMeasurement(): Boolean =
+fun ChannelBase.isMeasurement(): Boolean =
   function == SuplaConst.SUPLA_CHANNELFNC_ALARMARMAMENTSENSOR ||
     function == SuplaConst.SUPLA_CHANNELFNC_HOTELCARDSENSOR ||
     function == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER ||
     function == SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR ||
     function == SuplaConst.SUPLA_CHANNELFNC_DISTANCESENSOR
 
-fun ChannelEntity.isGpm(): Boolean =
+fun ChannelBase.isGpm(): Boolean =
   function == SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER ||
     function == SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT
 
-fun ChannelEntity.isGpMeasurement(): Boolean =
+fun ChannelBase.isGpMeasurement(): Boolean =
   function == SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT
 
-fun ChannelEntity.isGpMeter(): Boolean =
+fun ChannelBase.isGpMeter(): Boolean =
   function == SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER
 
-fun ChannelEntity.isThermometer() =
+fun ChannelBase.isThermometer() =
   function == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER ||
     function == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
 
-fun ChannelEntity.isShadingSystem() =
+fun ChannelBase.isShadingSystem() =
   function == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER ||
     function == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW ||
     function == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND ||
     function == SuplaConst.SUPLA_CHANNELFNC_TERRACE_AWNING
+
+fun ChannelBase.isProjectorScreen() =
+  function == SuplaConst.SUPLA_CHANNELFNC_PROJECTOR_SCREEN

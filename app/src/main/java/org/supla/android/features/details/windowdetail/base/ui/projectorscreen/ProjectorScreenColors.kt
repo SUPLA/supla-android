@@ -23,7 +23,7 @@ import androidx.compose.ui.res.colorResource
 import org.supla.android.R
 
 data class ProjectorScreenColors(
-  val window: Color,
+  val screen: Color,
   val shadow: Color,
   val bottomRect: Color,
   val topRect: Color
@@ -32,7 +32,7 @@ data class ProjectorScreenColors(
     @Composable
     fun standard() =
       ProjectorScreenColors(
-        window = colorResource(id = R.color.roller_shutter_window_color),
+        screen = colorResource(id = R.color.roller_shutter_window_color),
         shadow = colorResource(id = R.color.shadow_start),
         bottomRect = colorResource(id = R.color.roller_shutter_slat_background),
         topRect = colorResource(id = R.color.gray)
@@ -41,7 +41,7 @@ data class ProjectorScreenColors(
     @Composable
     fun offline() =
       ProjectorScreenColors(
-        window = colorResource(id = R.color.roller_shutter_window_color),
+        screen = colorResource(id = R.color.roller_shutter_window_color),
         shadow = colorResource(id = R.color.shadow_start),
         bottomRect = colorResource(id = R.color.roller_shutter_slat_background),
         topRect = colorResource(id = R.color.disabled)

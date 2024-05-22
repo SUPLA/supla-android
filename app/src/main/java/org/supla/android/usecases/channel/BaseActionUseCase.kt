@@ -19,16 +19,17 @@ package org.supla.android.usecases.channel
 
 import io.reactivex.rxjava3.core.Completable
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
+import org.supla.android.data.model.general.ChannelDataBase
+import org.supla.android.data.source.local.entity.isProjectorScreen
+import org.supla.android.data.source.local.entity.isShadingSystem
+import org.supla.android.data.source.local.entity.isThermostat
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
-import org.supla.android.db.ChannelBase
-import org.supla.android.extensions.isRollerShutter
-import org.supla.android.extensions.isThermostat
 import org.supla.android.lib.SuplaConst
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.ActionParameters
 import org.supla.android.lib.actions.SubjectType
 
-open class BaseActionUseCase<T : ChannelBase>(
+open class BaseActionUseCase<T : ChannelDataBase>(
   private val suplaClientProvider: SuplaClientProvider
 ) {
 
@@ -37,9 +38,9 @@ open class BaseActionUseCase<T : ChannelBase>(
 
   protected open fun performAction(channelBase: T, buttonType: ButtonType, forGroup: Boolean) {
     val client = suplaClientProvider.provide() ?: return
-    if (isRGBW(channelBase.func)) {
+    if (isRGBW(channelBase.function)) {
       client.executeAction(ActionParameters(getTurnOnOffActionId(buttonType), getSubjectType(forGroup), channelBase.remoteId))
-    } else if (channelBase.isRollerShutter()) {
+    } else if (channelBase.isShadingSystem() || channelBase.isProjectorScreen()) {
       if (SuplaChannelFlag.RS_SBS_AND_STOP_ACTIONS inside channelBase.flags) {
         client.executeAction(ActionParameters(getRevealShutStopActionId(buttonType), getSubjectType(forGroup), channelBase.remoteId))
       } else {

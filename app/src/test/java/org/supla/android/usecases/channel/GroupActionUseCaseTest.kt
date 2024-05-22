@@ -3,6 +3,7 @@ package org.supla.android.usecases.channel
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
+import io.reactivex.rxjava3.core.Maybe
 import org.assertj.core.api.Assertions
 import org.junit.Assert.*
 import org.junit.Test
@@ -15,8 +16,8 @@ import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.core.networking.suplaclient.SuplaClientApi
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
-import org.supla.android.data.source.ChannelRepository
-import org.supla.android.db.ChannelGroup
+import org.supla.android.data.source.ChannelGroupRepository
+import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.lib.SuplaConst
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.ActionParameters
@@ -25,7 +26,7 @@ import org.supla.android.lib.actions.SubjectType
 @RunWith(MockitoJUnitRunner::class)
 class GroupActionUseCaseTest {
   @Mock
-  private lateinit var channelRepository: ChannelRepository
+  private lateinit var channelGroupRepository: ChannelGroupRepository
 
   @Mock
   private lateinit var suplaClientProvider: SuplaClientProvider
@@ -104,13 +105,12 @@ class GroupActionUseCaseTest {
 
   private fun testActionExecution(groupId: Int, channelFunc: Int, buttonType: ButtonType, actionAssertion: (ActionParameters) -> Unit) {
     // given
-    val group: ChannelGroup = mockk()
-    every { group.groupId } returns groupId
+    val group: ChannelGroupDataEntity = mockk()
     every { group.remoteId } returns groupId
-    every { group.func } returns channelFunc
+    every { group.function } returns channelFunc
     every { group.flags } returns 0
 
-    whenever(channelRepository.getChannelGroup(groupId)).thenReturn(group)
+    whenever(channelGroupRepository.findGroupDataEntity(groupId)).thenReturn(Maybe.just(group))
 
     val parametersSlot = slot<ActionParameters>()
     val suplaClient: SuplaClientApi = mockk()
@@ -126,19 +126,18 @@ class GroupActionUseCaseTest {
 
     actionAssertion(parametersSlot.captured)
 
-    verify(channelRepository).getChannelGroup(groupId)
+    verify(channelGroupRepository).findGroupDataEntity(groupId)
     verify(suplaClientProvider).provide()
-    verifyNoMoreInteractions(channelRepository, suplaClientProvider)
+    verifyNoMoreInteractions(channelGroupRepository, suplaClientProvider)
   }
 
   private fun testOpenClose(groupId: Int, channelFunc: Int, buttonType: ButtonType, openValue: Int) {
     // given
-    val group: ChannelGroup = mockk()
-    every { group.groupId } returns groupId
+    val group: ChannelGroupDataEntity = mockk()
     every { group.remoteId } returns groupId
-    every { group.func } returns channelFunc
+    every { group.function } returns channelFunc
 
-    whenever(channelRepository.getChannelGroup(groupId)).thenReturn(group)
+    whenever(channelGroupRepository.findGroupDataEntity(groupId)).thenReturn(Maybe.just(group))
 
     val suplaClient: SuplaClientApi = mockk()
     every { suplaClient.open(groupId, true, openValue) } returns true
@@ -151,8 +150,8 @@ class GroupActionUseCaseTest {
     // then
     testObserver.assertComplete()
 
-    verify(channelRepository).getChannelGroup(groupId)
+    verify(channelGroupRepository).findGroupDataEntity(groupId)
     verify(suplaClientProvider).provide()
-    verifyNoMoreInteractions(channelRepository, suplaClientProvider)
+    verifyNoMoreInteractions(channelGroupRepository, suplaClientProvider)
   }
 }
