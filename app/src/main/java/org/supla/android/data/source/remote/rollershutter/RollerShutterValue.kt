@@ -35,7 +35,7 @@ data class RollerShutterValue(
 
     fun from(online: Boolean, bytes: ByteArray): RollerShutterValue {
       if (bytes.size < ROLLER_SHUTTER_VALUE_LENGTH) {
-        return RollerShutterValue(online, INVALID_VALUE, 0, listOf())
+        return RollerShutterValue(online, INVALID_VALUE, 0, emptyList())
       }
 
       return RollerShutterValue(

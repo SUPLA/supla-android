@@ -26,9 +26,11 @@ import org.supla.android.data.source.local.entity.ChannelValueEntity.Companion.C
 import org.supla.android.data.source.local.entity.ChannelValueEntity.Companion.COLUMN_PROFILE_ID
 import org.supla.android.data.source.local.entity.ChannelValueEntity.Companion.TABLE_NAME
 import org.supla.android.data.source.remote.facadeblind.FacadeBlindValue
+import org.supla.android.data.source.remote.relay.RelayValue
 import org.supla.android.data.source.remote.rollershutter.RollerShutterValue
 import org.supla.android.data.source.remote.thermostat.HeatpolThermostatValue
 import org.supla.android.data.source.remote.thermostat.ThermostatValue
+import org.supla.android.data.source.remote.valve.ValveValue
 import org.supla.android.lib.DigiglassValue
 import org.supla.android.lib.SuplaChannelValue
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELVALUE_SIZE
@@ -79,6 +81,10 @@ data class ChannelValueEntity(
   fun asFacadeBlindValue() = FacadeBlindValue.from(online, getValueAsByteArray())
 
   fun asHeatpolThermostatValue() = HeatpolThermostatValue.from(online, getValueAsByteArray())
+
+  fun asRelayValue() = RelayValue.from(online, getValueAsByteArray())
+
+  fun asValveValue() = ValveValue.from(online, getValueAsByteArray())
 
   fun getSubValueHi(): Int =
     getSubValueAsByteArray().let {

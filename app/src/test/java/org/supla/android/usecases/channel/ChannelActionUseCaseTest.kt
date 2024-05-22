@@ -3,6 +3,7 @@ package org.supla.android.usecases.channel
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
+import io.reactivex.rxjava3.core.Maybe
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -15,11 +16,24 @@ import org.mockito.kotlin.verifyZeroInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.core.networking.suplaclient.SuplaClientApi
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
-import org.supla.android.data.source.ChannelRepository
+import org.supla.android.data.source.RoomChannelRepository
+import org.supla.android.data.source.local.entity.ChannelValueEntity
+import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
-import org.supla.android.db.Channel
-import org.supla.android.db.ChannelValue
-import org.supla.android.lib.SuplaConst.*
+import org.supla.android.data.source.remote.relay.SuplaRelayFlag
+import org.supla.android.data.source.remote.valve.SuplaValveFlag
+import org.supla.android.data.source.remote.valve.ValveValue
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DIMMER
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_VALVE_PERCENTAGE
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.ActionParameters
 import org.supla.android.lib.actions.SubjectType
@@ -27,7 +41,7 @@ import org.supla.android.lib.actions.SubjectType
 @RunWith(MockitoJUnitRunner::class)
 class ChannelActionUseCaseTest {
   @Mock
-  private lateinit var channelRepository: ChannelRepository
+  private lateinit var channelRepository: RoomChannelRepository
 
   @Mock
   private lateinit var suplaClientProvider: SuplaClientProvider
@@ -53,15 +67,14 @@ class ChannelActionUseCaseTest {
   @Test
   fun `should not open valve channel when closed and flooding`() {
     testValveException(SUPLA_CHANNELFNC_VALVE_OPENCLOSE) {
-      every { it.flooding() } returns true
+      every { it.flags } returns listOf(SuplaValveFlag.FLOODING)
     }
   }
 
   @Test
   fun `should not open valve channel when closed and closed manually`() {
     testValveException(SUPLA_CHANNELFNC_VALVE_PERCENTAGE) {
-      every { it.flooding() } returns false
-      every { it.isManuallyClosed } returns true
+      every { it.flags } returns listOf(SuplaValveFlag.FLOODING, SuplaValveFlag.MANUALLY_CLOSED)
     }
   }
 
@@ -198,17 +211,19 @@ class ChannelActionUseCaseTest {
 
   private fun testHighAmperageException(channelFunc: Int) {
     // given
-    val channelValue: ChannelValue = mockk()
-    every { channelValue.hiValue() } returns false
-    every { channelValue.overcurrentRelayOff() } returns true
+    val channelValue: ChannelValueEntity = mockk()
+    every { channelValue.asRelayValue() } returns mockk {
+      every { flags } returns listOf(SuplaRelayFlag.OVERCURRENT_RELAY_OFF)
+      every { on } returns false
+    }
 
     val channelId = 123
-    val channel: Channel = mockk()
-    every { channel.channelId } returns channelId
-    every { channel.value } returns channelValue
-    every { channel.func } returns channelFunc
+    val channel: ChannelDataEntity = mockk()
+    every { channel.remoteId } returns channelId
+    every { channel.channelValueEntity } returns channelValue
+    every { channel.function } returns channelFunc
 
-    whenever(channelRepository.getChannel(channelId)).thenReturn(channel)
+    whenever(channelRepository.findChannelDataEntity(channelId)).thenReturn(Maybe.just(channel))
 
     // when
     val testObserver = useCase(channelId, ButtonType.RIGHT).test()
@@ -218,20 +233,22 @@ class ChannelActionUseCaseTest {
     verifyZeroInteractions(suplaClientProvider)
   }
 
-  private fun testValveException(channelFunc: Int, channelValueSetup: (ChannelValue) -> Unit) {
+  private fun testValveException(channelFunc: Int, channelValueSetup: (ValveValue) -> Unit) {
     // given
     val channelId = 123
-    val channel: Channel = mockk()
-    every { channel.channelId } returns channelId
+    val channel: ChannelDataEntity = mockk()
     every { channel.remoteId } returns channelId
-    every { channel.func } returns channelFunc
+    every { channel.function } returns channelFunc
 
-    val channelValue: ChannelValue = mockk()
-    every { channelValue.isClosed } returns true
-    channelValueSetup(channelValue)
-    every { channel.value } returns channelValue
+    val valveValue: ValveValue = mockk()
+    every { valveValue.isClosed() } returns true
+    channelValueSetup(valveValue)
 
-    whenever(channelRepository.getChannel(channelId)).thenReturn(channel)
+    val channelValue: ChannelValueEntity = mockk()
+    every { channelValue.asValveValue() } returns valveValue
+    every { channel.channelValueEntity } returns channelValue
+
+    whenever(channelRepository.findChannelDataEntity(channelId)).thenReturn(Maybe.just(channel))
 
     // when
     val testObserver = useCase(channelId, ButtonType.LEFT).test()
@@ -249,13 +266,12 @@ class ChannelActionUseCaseTest {
     actionAssertion: (ActionParameters) -> Unit
   ) {
     // given
-    val channel: Channel = mockk()
-    every { channel.channelId } returns channelId
+    val channel: ChannelDataEntity = mockk()
     every { channel.remoteId } returns channelId
-    every { channel.func } returns channelFunc
+    every { channel.function } returns channelFunc
     every { channel.flags } returns (flag?.rawValue ?: 0L)
 
-    whenever(channelRepository.getChannel(channelId)).thenReturn(channel)
+    whenever(channelRepository.findChannelDataEntity(channelId)).thenReturn(Maybe.just(channel))
 
     val parametersSlot = slot<ActionParameters>()
     val suplaClient: SuplaClientApi = mockk()
@@ -271,24 +287,25 @@ class ChannelActionUseCaseTest {
 
     actionAssertion(parametersSlot.captured)
 
-    verify(channelRepository).getChannel(channelId)
+    verify(channelRepository).findChannelDataEntity(channelId)
     verify(suplaClientProvider).provide()
     verifyNoMoreInteractions(channelRepository, suplaClientProvider)
   }
 
   private fun testOpenClose(channelId: Int, channelFunc: Int, buttonType: ButtonType, openValue: Int) {
     // given
-    val channelValue: ChannelValue = mockk()
-    every { channelValue.hiValue() } returns false
-    every { channelValue.overcurrentRelayOff() } returns false
+    val channelValue: ChannelValueEntity = mockk()
+    every { channelValue.asRelayValue() } returns mockk {
+      every { flags } returns emptyList()
+      every { on } returns false
+    }
 
-    val channel: Channel = mockk()
-    every { channel.channelId } returns channelId
+    val channel: ChannelDataEntity = mockk()
     every { channel.remoteId } returns channelId
-    every { channel.func } returns channelFunc
-    every { channel.value } returns channelValue
+    every { channel.function } returns channelFunc
+    every { channel.channelValueEntity } returns channelValue
 
-    whenever(channelRepository.getChannel(channelId)).thenReturn(channel)
+    whenever(channelRepository.findChannelDataEntity(channelId)).thenReturn(Maybe.just(channel))
 
     val suplaClient: SuplaClientApi = mockk()
     every { suplaClient.open(channelId, false, openValue) } returns true
@@ -301,7 +318,7 @@ class ChannelActionUseCaseTest {
     // then
     testObserver.assertComplete()
 
-    verify(channelRepository).getChannel(channelId)
+    verify(channelRepository).findChannelDataEntity(channelId)
     verify(suplaClientProvider).provide()
     verifyNoMoreInteractions(channelRepository, suplaClientProvider)
   }
