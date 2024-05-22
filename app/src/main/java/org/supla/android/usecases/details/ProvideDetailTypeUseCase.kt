@@ -26,6 +26,7 @@ import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CURTAIN
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DIMMER
@@ -71,6 +72,8 @@ class ProvideDetailTypeUseCase @Inject constructor() {
       WindowDetailType(listOf(DetailPage.TERRACE_AWNING))
     SUPLA_CHANNELFNC_PROJECTOR_SCREEN ->
       WindowDetailType(listOf(DetailPage.PROJECTOR_SCREEN))
+    SUPLA_CHANNELFNC_CURTAIN ->
+      WindowDetailType(listOf(DetailPage.CURTAIN))
 
     SUPLA_CHANNELFNC_LIGHTSWITCH,
     SUPLA_CHANNELFNC_POWERSWITCH,

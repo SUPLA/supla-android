@@ -28,6 +28,7 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CURTAIN
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL
@@ -127,6 +128,7 @@ class GetChannelDefaultCaptionUseCase @Inject constructor() {
 
       SUPLA_CHANNELFNC_TERRACE_AWNING -> string(R.string.channel_caption_terrace_awning)
       SUPLA_CHANNELFNC_PROJECTOR_SCREEN -> string(R.string.channel_caption_projector_screen)
+      SUPLA_CHANNELFNC_CURTAIN -> string(R.string.channel_caption_curtain)
 
       else -> string(R.string.channel_not_supported)
     }

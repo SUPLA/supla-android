@@ -34,6 +34,7 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOO
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CURTAIN
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DIMMER
@@ -188,6 +189,30 @@ class GetChannelStateUseCaseTest {
 
     // then
     assertThat(state.value).isEqualTo(ChannelState.Value.CLOSED)
+  }
+
+  @Test
+  fun `should get closed state for curtain`() {
+    // given
+    val channelData = mockChannelDataEntity(SUPLA_CHANNELFNC_CURTAIN, rollerShutterPosition = 100)
+
+    // when
+    val state = useCase(channelData)
+
+    // then
+    assertThat(state.value).isEqualTo(ChannelState.Value.CLOSED)
+  }
+
+  @Test
+  fun `should get open state for curtain`() {
+    // given
+    val channelData = mockChannelDataEntity(SUPLA_CHANNELFNC_CURTAIN, rollerShutterPosition = 0)
+
+    // when
+    val state = useCase(channelData)
+
+    // then
+    assertThat(state.value).isEqualTo(ChannelState.Value.OPEN)
   }
 
   @Test

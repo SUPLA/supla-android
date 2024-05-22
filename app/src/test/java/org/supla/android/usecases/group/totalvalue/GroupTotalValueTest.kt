@@ -142,6 +142,29 @@ class GroupTotalValueTest {
   }
 
   @Test
+  fun `should convert to string and back - curtain group`() {
+    // given
+    val totalValue = GroupTotalValue()
+    totalValue.add(ShadingSystemGroupValue(position = 80, closeSensorActive = true), online = true)
+    totalValue.add(ShadingSystemGroupValue(position = 50, closeSensorActive = false), online = true)
+    // offline items should be not added
+    totalValue.add(ShadingSystemGroupValue(position = 50, closeSensorActive = false), online = false)
+    totalValue.add(ShadingSystemGroupValue(position = 50, closeSensorActive = false), online = false)
+
+    // when
+    val totalValueString = totalValue.asString()
+    val values = GroupTotalValue.parse(SuplaConst.SUPLA_CHANNELFNC_CURTAIN, totalValueString)
+
+    // then
+    assertThat(totalValue.online).isEqualTo(50)
+    assertThat(totalValueString).isEqualTo("80:1|50:0")
+    assertThat(values).containsExactly(
+      ShadingSystemGroupValue(position = 80, closeSensorActive = true),
+      ShadingSystemGroupValue(position = 50, closeSensorActive = false)
+    )
+  }
+
+  @Test
   fun `should convert to string and back - empty list`() {
     // given
     val totalValue = GroupTotalValue()

@@ -1,4 +1,4 @@
-package org.supla.android.features.details.windowdetail.projectorscreen
+package org.supla.android.features.details.windowdetail.curtain
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -27,9 +27,10 @@ import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.extensions.guardLet
 import org.supla.android.features.details.windowdetail.base.BaseWindowViewModel
 import org.supla.android.features.details.windowdetail.base.BaseWindowViewModelState
-import org.supla.android.features.details.windowdetail.base.data.ProjectorScreenState
+import org.supla.android.features.details.windowdetail.base.data.CurtainWindowState
 import org.supla.android.features.details.windowdetail.base.data.WindowGroupedValue
 import org.supla.android.features.details.windowdetail.base.ui.WindowViewState
+import org.supla.android.features.details.windowdetail.base.ui.windowview.ShadingSystemOrientation
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.dialogs.AuthorizationDialogState
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
@@ -40,11 +41,11 @@ import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
 import org.supla.android.usecases.client.LoginUseCase
 import org.supla.android.usecases.group.GetGroupOnlineSummaryUseCase
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
-import org.supla.android.usecases.group.totalvalue.ProjectorScreenGroupValue
+import org.supla.android.usecases.group.totalvalue.ShadingSystemGroupValue
 import javax.inject.Inject
 
 @HiltViewModel
-class ProjectorScreenViewModel @Inject constructor(
+class CurtainViewModel @Inject constructor(
   executeShadingSystemActionUseCase: ExecuteShadingSystemActionUseCase,
   executeSimpleActionUseCase: ExecuteSimpleActionUseCase,
   callSuplaClientOperationUseCase: CallSuplaClientOperationUseCase,
@@ -58,7 +59,7 @@ class ProjectorScreenViewModel @Inject constructor(
   loginUseCase: LoginUseCase,
   authorizeUseCase: AuthorizeUseCase,
   schedulers: SuplaSchedulers
-) : BaseWindowViewModel<ProjectorScreenViewModelState>(
+) : BaseWindowViewModel<CurtainViewModelState>(
   executeShadingSystemActionUseCase,
   executeSimpleActionUseCase,
   callSuplaClientOperationUseCase,
@@ -71,22 +72,22 @@ class ProjectorScreenViewModel @Inject constructor(
   profileRepository,
   loginUseCase,
   authorizeUseCase,
-  ProjectorScreenViewModelState(),
+  CurtainViewModelState(),
   schedulers
 ) {
 
-  override fun updatePosition(state: ProjectorScreenViewModelState, position: Float) =
+  override fun updatePosition(state: CurtainViewModelState, position: Float) =
     state.copy(windowState = state.windowState.copy(position = WindowGroupedValue.Similar(position)))
 
   override fun stateCopy(
-    state: ProjectorScreenViewModelState,
+    state: CurtainViewModelState,
     remoteId: Int?,
     moveStartTime: Long?,
     manualMoving: Boolean,
     showCalibrationDialog: Boolean,
     authorizationDialogState: AuthorizationDialogState?,
     viewStateUpdater: (WindowViewState) -> WindowViewState
-  ): ProjectorScreenViewModelState =
+  ): CurtainViewModelState =
     state.copy(
       remoteId = remoteId,
       moveStartTime = moveStartTime,
@@ -121,7 +122,7 @@ class ProjectorScreenViewModel @Inject constructor(
         return@updateState state // Skip position updating when moving by finger
       }
 
-      val positions = group.groupDataEntity.channelGroupEntity.getProjectorScreenPositions()
+      val positions = group.groupDataEntity.channelGroupEntity.getCurtainPositions()
       val overallPosition = getGroupValues(positions, state.windowState.markers.isNotEmpty())
 
       updateGroup(state, group.groupDataEntity, group.onlineSummary) {
@@ -141,16 +142,21 @@ class ProjectorScreenViewModel @Inject constructor(
   }
 }
 
-private fun ChannelGroupEntity.getProjectorScreenPositions(): List<Float> =
+private fun ChannelGroupEntity.getCurtainPositions(): List<Float> =
   groupTotalValues.mapNotNull {
-    val (value) = guardLet(it as? ProjectorScreenGroupValue) { return@mapNotNull null }
-    value.position.toFloat()
+    val (value) = guardLet(it as? ShadingSystemGroupValue) { return@mapNotNull null }
+
+    if (value.position < 100 && value.closeSensorActive) {
+      100f
+    } else {
+      value.position.toFloat()
+    }
   }
 
-data class ProjectorScreenViewModelState(
+data class CurtainViewModelState(
   override val remoteId: Int? = null,
-  override val windowState: ProjectorScreenState = ProjectorScreenState(WindowGroupedValue.Similar(0f)),
-  override val viewState: WindowViewState = WindowViewState(),
+  override val windowState: CurtainWindowState = CurtainWindowState(WindowGroupedValue.Similar(0f)),
+  override val viewState: WindowViewState = WindowViewState(orientation = ShadingSystemOrientation.HORIZONTAL),
   override val moveStartTime: Long? = null,
   override val manualMoving: Boolean = false,
   override val showCalibrationDialog: Boolean = false,

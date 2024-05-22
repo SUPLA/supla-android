@@ -1,4 +1,4 @@
-package org.supla.android.ui.views.buttons.animatable.upanddown
+package org.supla.android.ui.views.buttons.animatable.controlbutton
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -23,12 +23,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 
 @Composable
-fun UpDownControlButtonScope(content: @Composable UpDownControlButtonScope.() -> Unit) {
-  val scope by remember { mutableStateOf(UpDownControlButtonScope()) }
+fun ControlButtonScope(content: @Composable ControlButtonScope.() -> Unit) {
+  val scope by remember { mutableStateOf(ControlButtonScope()) }
   content(scope)
 }
 
-class UpDownControlButtonScope {
+class ControlButtonScope {
   fun handleEvents(
     onClick: (() -> Unit)? = null,
     onTouchDown: (() -> Unit)? = null,

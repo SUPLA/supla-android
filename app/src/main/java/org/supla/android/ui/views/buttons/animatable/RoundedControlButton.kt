@@ -21,11 +21,9 @@ import android.content.Context
 import android.util.AttributeSet
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -130,14 +128,6 @@ fun RoundedControlButton(
         Text(text = text, style = MaterialTheme.typography.button, color = textColor, fontSize = fontSize, fontFamily = fontFamily)
       }
     }
-
-    if (disabled) {
-      Box(
-        modifier = Modifier
-          .fillMaxSize()
-          .background(color = colorResource(id = R.color.disabledOverlay))
-      )
-    }
   }
 }
 
@@ -145,7 +135,7 @@ fun RoundedControlButton(
 @Composable
 private fun Preview() {
   SuplaTheme {
-    Column(modifier = Modifier.background(color = Color(0xFFF5F6F7))) {
+    Column(modifier = Modifier.background(color = MaterialTheme.colors.background)) {
       RoundedControlButton(onClick = {})
       RoundedControlButton(icon = painterResource(id = R.drawable.ic_power_button), text = "Turn on", onClick = {})
       RoundedControlButton(text = "Turn on", onClick = {}, disabled = true)

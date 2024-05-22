@@ -9,7 +9,8 @@ object ShadingSystemGroupActivePercentageProvider : GroupActivePercentageProvide
   override fun handleFunction(function: Int) = when (function) {
     SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER,
     SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW,
-    SuplaConst.SUPLA_CHANNELFNC_TERRACE_AWNING -> true
+    SuplaConst.SUPLA_CHANNELFNC_TERRACE_AWNING,
+    SuplaConst.SUPLA_CHANNELFNC_CURTAIN -> true
 
     else -> false
   }

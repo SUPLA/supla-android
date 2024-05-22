@@ -67,7 +67,8 @@ fun ChannelBase.isShadingSystem() =
   function == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER ||
     function == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW ||
     function == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND ||
-    function == SuplaConst.SUPLA_CHANNELFNC_TERRACE_AWNING
+    function == SuplaConst.SUPLA_CHANNELFNC_TERRACE_AWNING ||
+    function == SuplaConst.SUPLA_CHANNELFNC_CURTAIN
 
 fun ChannelBase.isProjectorScreen() =
   function == SuplaConst.SUPLA_CHANNELFNC_PROJECTOR_SCREEN

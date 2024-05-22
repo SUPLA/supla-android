@@ -28,49 +28,49 @@ import androidx.compose.ui.unit.dp
 import org.supla.android.features.details.windowdetail.base.data.WindowState
 import org.supla.android.features.details.windowdetail.base.ui.applyForWindow
 
-abstract class WindowDrawerBase<S : WindowState, C : WindowColorsBase> {
+abstract class WindowDrawerBase<D : WindowDimensBase, S : WindowState, C : WindowColorsBase> {
 
   protected val paint = Paint().asFrameworkPaint()
   protected val path = Path()
 
   context(DrawScope)
-  protected abstract fun drawSlats(rollerState: S, runtimeWindowDimens: RuntimeWindowDimens, colors: C)
+  protected abstract fun drawShadowingElements(windowState: S, runtimeDimens: D, colors: C)
 
   context(DrawScope)
-  protected abstract fun drawMarkers(rollerState: S, runtimeWindowDimens: RuntimeWindowDimens, colors: C)
+  protected abstract fun drawMarkers(windowState: S, runtimeDimens: D, colors: C)
 
   context(DrawScope)
-  fun drawWindow(runtimeWindowDimens: RuntimeWindowDimens, colors: C, rollerState: S) {
-    val windowFrameRadius = WINDOW_FRAME_RADIUS.dp.toPx().times(runtimeWindowDimens.scale)
+  fun drawWindow(runtimeDimens: D, colors: C, windowState: S) {
+    val windowFrameRadius = WINDOW_FRAME_RADIUS.dp.toPx().times(runtimeDimens.scale)
 
     paint.applyForWindow(colors.window, colors.shadow)
     drawContext.canvas.nativeCanvas.drawRoundRect(
-      runtimeWindowDimens.windowRect.left,
-      runtimeWindowDimens.windowRect.top,
-      runtimeWindowDimens.windowRect.right,
-      runtimeWindowDimens.windowRect.bottom,
+      runtimeDimens.windowRect.left,
+      runtimeDimens.windowRect.top,
+      runtimeDimens.windowRect.right,
+      runtimeDimens.windowRect.bottom,
       windowFrameRadius,
       windowFrameRadius,
       paint
     )
 
-    drawGlasses(runtimeWindowDimens, colors)
-    drawSlats(rollerState, runtimeWindowDimens, colors)
+    drawGlasses(runtimeDimens, colors)
+    drawShadowingElements(windowState, runtimeDimens, colors)
 
     paint.applyForWindow(colors.window, colors.shadow)
     drawContext.canvas.nativeCanvas.drawRect(
-      runtimeWindowDimens.topLineRect.left,
-      runtimeWindowDimens.topLineRect.top,
-      runtimeWindowDimens.topLineRect.right,
-      runtimeWindowDimens.topLineRect.bottom,
+      runtimeDimens.topLineRect.left,
+      runtimeDimens.topLineRect.top,
+      runtimeDimens.topLineRect.right,
+      runtimeDimens.topLineRect.bottom,
       paint
     )
 
-    drawMarkers(rollerState, runtimeWindowDimens, colors)
+    drawMarkers(windowState, runtimeDimens, colors)
   }
 
   context(DrawScope)
-  private fun drawGlasses(dimens: RuntimeWindowDimens, colors: C) {
+  private fun drawGlasses(dimens: D, colors: C) {
     val glassHorizontalMargin = WindowDimens.GLASS_HORIZONTAL_MARGIN.times(dimens.scale)
     val glassVerticalMargin = WindowDimens.GLASS_VERTICAL_MARGIN.times(dimens.scale)
     val glassMiddleMargin = WindowDimens.GLASS_MIDDLE_MARGIN.times(dimens.scale)

@@ -71,7 +71,8 @@ class GroupTotalValue {
 
           SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER,
           SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW,
-          SuplaConst.SUPLA_CHANNELFNC_TERRACE_AWNING ->
+          SuplaConst.SUPLA_CHANNELFNC_TERRACE_AWNING,
+          SuplaConst.SUPLA_CHANNELFNC_CURTAIN ->
             ShadingSystemGroupValue(it)
 
           SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND ->

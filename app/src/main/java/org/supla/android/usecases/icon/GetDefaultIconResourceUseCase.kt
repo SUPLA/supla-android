@@ -33,6 +33,7 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_RAINSENSOR
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_WEIGHTSENSOR
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_WINDSENSOR
 import org.supla.android.usecases.icon.producers.AlarmArmamentSensorIconResourceProducer
+import org.supla.android.usecases.icon.producers.CurtainIconResourceProducer
 import org.supla.android.usecases.icon.producers.DigiglassIconResourceProducer
 import org.supla.android.usecases.icon.producers.DimmerAndRgbIconResourceProducer
 import org.supla.android.usecases.icon.producers.DimmerIconResourceProducer
@@ -108,7 +109,8 @@ class GetDefaultIconResourceUseCase @Inject constructor() {
     GeneralPurposeMeasurementIconResourceProducer(),
     GeneralPurposeMeterIconResourceProducer(),
     TerraceAwningIconResourceProducer(),
-    ProjectorScreenIconResourceProducer()
+    ProjectorScreenIconResourceProducer(),
+    CurtainIconResourceProducer()
   )
 
   @DrawableRes
