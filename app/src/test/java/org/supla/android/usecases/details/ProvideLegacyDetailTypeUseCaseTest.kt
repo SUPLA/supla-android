@@ -287,6 +287,11 @@ class ProvideLegacyDetailTypeUseCaseTest {
     testDetailType(SUPLA_CHANNELFNC_CURTAIN, WindowDetailType(listOf(DetailPage.CURTAIN)))
   }
 
+  @Test
+  fun `should provide detail for vertical blind`() {
+    testDetailType(SUPLA_CHANNELFNC_VERTICAL_BLIND, WindowDetailType(listOf(DetailPage.VERTICAL_BLIND)))
+  }
+
   private fun testDetailType(function: Int, result: DetailType?, extraMocks: ((ChannelDataEntity) -> Unit) = { }) {
     // given
     val channel: ChannelDataEntity = mockk()

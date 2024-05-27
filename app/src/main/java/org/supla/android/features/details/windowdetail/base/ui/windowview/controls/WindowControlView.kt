@@ -26,6 +26,7 @@ import org.supla.android.features.details.windowdetail.base.data.RoofWindowState
 import org.supla.android.features.details.windowdetail.base.data.TerraceAwningState
 import org.supla.android.features.details.windowdetail.base.data.WindowState
 import org.supla.android.features.details.windowdetail.base.data.facadeblinds.FacadeBlindWindowState
+import org.supla.android.features.details.windowdetail.base.data.verticalblinds.VerticalBlindWindowState
 import org.supla.android.features.details.windowdetail.base.ui.ShadingSystemAction
 import org.supla.android.features.details.windowdetail.base.ui.WindowViewState
 import org.supla.android.features.details.windowdetail.base.ui.curtain.CurtainColors
@@ -40,6 +41,8 @@ import org.supla.android.features.details.windowdetail.base.ui.roofwindow.RoofWi
 import org.supla.android.features.details.windowdetail.base.ui.roofwindow.RoofWindowView
 import org.supla.android.features.details.windowdetail.base.ui.terraceawning.TerraceAwningColors
 import org.supla.android.features.details.windowdetail.base.ui.terraceawning.TerraceAwningView
+import org.supla.android.features.details.windowdetail.base.ui.verticalblinds.VerticalBlindColors
+import org.supla.android.features.details.windowdetail.base.ui.verticalblinds.VerticalBlindsWindowView
 
 @Composable
 fun WindowControlView(
@@ -101,6 +104,15 @@ fun WindowControlView(
         modifier = modifier,
         onPositionChanging = { position -> if (viewState.enabled) onAction(ShadingSystemAction.MoveTo(position)) },
         onPositionChanged = { position -> if (viewState.enabled) onAction(ShadingSystemAction.OpenAt(position)) }
+      )
+
+    is VerticalBlindWindowState ->
+      VerticalBlindsWindowView(
+        windowState = windowState,
+        colors = if (viewState.enabled) VerticalBlindColors.standard() else VerticalBlindColors.offline(),
+        modifier = modifier,
+        onPositionChanging = { tilt, position -> if (viewState.enabled) onAction(ShadingSystemAction.MoveAndTiltTo(position, tilt)) },
+        onPositionChanged = { tilt, position -> if (viewState.enabled) onAction(ShadingSystemAction.MoveAndTiltSetTo(position, tilt)) }
       )
   }
 }

@@ -72,11 +72,12 @@ class GroupTotalValue {
           SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER,
           SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW,
           SuplaConst.SUPLA_CHANNELFNC_TERRACE_AWNING,
-          SuplaConst.SUPLA_CHANNELFNC_CURTAIN ->
+          SuplaConst.SUPLA_CHANNELFNC_CURTAIN,
+          SuplaConst.SUPLA_CHANNELFNC_VERTICAL_BLIND ->
             ShadingSystemGroupValue(it)
 
           SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND ->
-            FacadeBlindGroupValue(it)
+            ShadowingBlindGroupValue(it)
 
           SuplaConst.SUPLA_CHANNELFNC_PROJECTOR_SCREEN ->
             ProjectorScreenGroupValue(it)

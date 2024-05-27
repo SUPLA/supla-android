@@ -76,11 +76,11 @@ class GroupTotalValueTest {
   fun `should convert to string and back - facade blind group`() {
     // given
     val totalValue = GroupTotalValue()
-    totalValue.add(FacadeBlindGroupValue(position = 80, tilt = 50), online = true)
-    totalValue.add(FacadeBlindGroupValue(position = 50, tilt = 15), online = true)
+    totalValue.add(ShadowingBlindGroupValue(position = 80, tilt = 50), online = true)
+    totalValue.add(ShadowingBlindGroupValue(position = 50, tilt = 15), online = true)
     // offline items should be not added
-    totalValue.add(FacadeBlindGroupValue(position = 50, tilt = 0), online = false)
-    totalValue.add(FacadeBlindGroupValue(position = 50, tilt = 10), online = false)
+    totalValue.add(ShadowingBlindGroupValue(position = 50, tilt = 0), online = false)
+    totalValue.add(ShadowingBlindGroupValue(position = 50, tilt = 10), online = false)
 
     // when
     val totalValueString = totalValue.asString()
@@ -90,8 +90,8 @@ class GroupTotalValueTest {
     assertThat(totalValue.online).isEqualTo(50)
     assertThat(totalValueString).isEqualTo("80:50|50:15")
     assertThat(values).containsExactly(
-      FacadeBlindGroupValue(position = 80, tilt = 50),
-      FacadeBlindGroupValue(position = 50, tilt = 15)
+      ShadowingBlindGroupValue(position = 80, tilt = 50),
+      ShadowingBlindGroupValue(position = 50, tilt = 15)
     )
   }
 
@@ -154,6 +154,29 @@ class GroupTotalValueTest {
     // when
     val totalValueString = totalValue.asString()
     val values = GroupTotalValue.parse(SuplaConst.SUPLA_CHANNELFNC_CURTAIN, totalValueString)
+
+    // then
+    assertThat(totalValue.online).isEqualTo(50)
+    assertThat(totalValueString).isEqualTo("80:1|50:0")
+    assertThat(values).containsExactly(
+      ShadingSystemGroupValue(position = 80, closeSensorActive = true),
+      ShadingSystemGroupValue(position = 50, closeSensorActive = false)
+    )
+  }
+
+  @Test
+  fun `should convert to string and back - vertical blind`() {
+    // given
+    val totalValue = GroupTotalValue()
+    totalValue.add(ShadingSystemGroupValue(position = 80, closeSensorActive = true), online = true)
+    totalValue.add(ShadingSystemGroupValue(position = 50, closeSensorActive = false), online = true)
+    // offline items should be not added
+    totalValue.add(ShadingSystemGroupValue(position = 50, closeSensorActive = false), online = false)
+    totalValue.add(ShadingSystemGroupValue(position = 50, closeSensorActive = false), online = false)
+
+    // when
+    val totalValueString = totalValue.asString()
+    val values = GroupTotalValue.parse(SuplaConst.SUPLA_CHANNELFNC_VERTICAL_BLIND, totalValueString)
 
     // then
     assertThat(totalValue.online).isEqualTo(50)

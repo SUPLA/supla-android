@@ -67,7 +67,7 @@ data class ProjectorScreenGroupValue(
   }
 }
 
-data class FacadeBlindGroupValue(
+data class ShadowingBlindGroupValue(
   val position: Int,
   val tilt: Int
 ) : GroupValue() {
@@ -78,12 +78,12 @@ data class FacadeBlindGroupValue(
     )
 
   companion object {
-    operator fun invoke(stringValue: String): FacadeBlindGroupValue {
+    operator fun invoke(stringValue: String): ShadowingBlindGroupValue {
       val values = stringValue.split(SEPARATOR)
       if (values.size != 2) {
         throw IllegalArgumentException("Given string value is not correct `$stringValue`")
       }
-      return FacadeBlindGroupValue(values[0].toInt(), values[1].toInt())
+      return ShadowingBlindGroupValue(values[0].toInt(), values[1].toInt())
     }
   }
 }

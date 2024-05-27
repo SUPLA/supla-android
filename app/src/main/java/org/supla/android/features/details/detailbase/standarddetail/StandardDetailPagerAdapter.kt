@@ -35,6 +35,7 @@ import org.supla.android.features.details.windowdetail.projectorscreen.Projector
 import org.supla.android.features.details.windowdetail.rollershutter.RollerShutterFragment
 import org.supla.android.features.details.windowdetail.roofwindow.RoofWindowFragment
 import org.supla.android.features.details.windowdetail.terraceawning.TerraceAwningFragment
+import org.supla.android.features.details.windowdetail.verticalblinds.VerticalBlindsFragment
 import org.supla.android.usecases.details.LegacyDetailType
 
 class StandardDetailPagerAdapter(
@@ -75,6 +76,7 @@ class StandardDetailPagerAdapter(
     DetailPage.TERRACE_AWNING -> TerraceAwningFragment().apply { arguments = TerraceAwningFragment.bundle(itemBundle) }
     DetailPage.PROJECTOR_SCREEN -> ProjectorScreenFragment().apply { arguments = ProjectorScreenFragment.bundle(itemBundle) }
     DetailPage.CURTAIN -> CurtainFragment().apply { arguments = CurtainFragment.bundle(itemBundle) }
+    DetailPage.VERTICAL_BLIND -> VerticalBlindsFragment().apply { arguments = VerticalBlindsFragment.bundle(itemBundle) }
   }
 }
 
@@ -103,5 +105,6 @@ enum class DetailPage(val menuId: Int) {
   FACADE_BLINDS(R.id.detail_general),
   TERRACE_AWNING(R.id.detail_general),
   PROJECTOR_SCREEN(R.id.detail_general),
-  CURTAIN(R.id.detail_general)
+  CURTAIN(R.id.detail_general),
+  VERTICAL_BLIND(R.id.detail_general)
 }

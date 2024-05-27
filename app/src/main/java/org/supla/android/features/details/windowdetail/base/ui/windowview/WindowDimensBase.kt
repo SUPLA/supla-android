@@ -22,6 +22,7 @@ import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.unit.IntSize
 import org.supla.android.extensions.guardLet
+import org.supla.android.extensions.limit
 import org.supla.android.features.details.windowdetail.base.ui.MoveState
 
 interface WindowDimensBase {
@@ -33,45 +34,44 @@ interface WindowDimensBase {
   val movementLimit: Float
     get() = canvasRect.height - topLineRect.height
 
-  fun getPositionFromState(state: MoveState): Offset? {
+  fun getPositionFromState(state: MoveState, bidirectional: Boolean = false): Offset? {
     val (initial) = guardLet(state.initialPoint) { return null }
 
     val horizontalDiffAsPercentage =
       state.lastPoint.x.minus(initial.x)
         .div(windowRect.width.div(2))
         .times(100f)
+        .let {
+          if (bidirectional.not()) {
+            it
+          } else if (initial.x < windowRect.center.x) {
+            it
+          } else {
+            -it
+          }
+        }
 
     val verticalDiffAsPercentage =
       state.lastPoint.y.minus(initial.y)
         .div(movementLimit)
         .times(100f)
 
-    val x = state.initialHorizontalPercentage.plus(horizontalDiffAsPercentage).let {
-      // Trim to 0% - 100%
-      if (it < 0f) {
-        0f
-      } else if (it > 100f) {
-        100f
-      } else {
-        it
-      }
-    }
+    val x = state.initialHorizontalPercentage
+      .plus(horizontalDiffAsPercentage)
+      .limit(max = 100f)
 
-    val y = state.initialVerticalPercentage.plus(verticalDiffAsPercentage).let {
-      // Trim to 0% - 100%
-      if (it < 0f) {
-        0f
-      } else if (it > 100f) {
-        100f
-      } else {
-        it
-      }
-    }
+    val y = state.initialVerticalPercentage
+      .plus(verticalDiffAsPercentage)
+      .limit(max = 100f)
 
-    return if (state.horizontalAllowed) {
+    return if (state.horizontalAllowed && state.verticalAllowed) {
       Offset(x, y)
-    } else {
+    } else if (state.horizontalAllowed) {
+      Offset(x, state.initialVerticalPercentage)
+    } else if (state.verticalAllowed) {
       Offset(state.initialHorizontalPercentage, y)
+    } else {
+      Offset(state.initialHorizontalPercentage, state.initialVerticalPercentage)
     }
   }
 

@@ -32,3 +32,13 @@ fun Float.toSuplaTemperature() = this.times(10).roundToInt().times(10).toShort()
 fun Float.toDp(): Dp {
   return Dp(this / Resources.getSystem().displayMetrics.density)
 }
+
+fun Float.limit(min: Float = 0f, max: Float = 1f): Float {
+  return if (this < min) {
+    min
+  } else if (this > max) {
+    max
+  } else {
+    this
+  }
+}

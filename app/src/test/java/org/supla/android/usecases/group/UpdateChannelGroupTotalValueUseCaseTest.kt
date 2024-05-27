@@ -348,6 +348,34 @@ class UpdateChannelGroupTotalValueUseCaseTest {
   }
 
   @Test
+  fun `should build total string - vertical blind`() {
+    // given
+    val curtain = mockVerticalBlind(2, online = true, position = 30)
+
+    whenever(channelGroupRelationRepository.findAllVisibleRelations()).thenReturn(
+      Single.just(listOf(curtain))
+    )
+    whenever(channelGroupRepository.update(any())).thenReturn(Completable.complete())
+
+    // when
+    val observer = useCase.invoke().test()
+
+    // then
+    observer.assertComplete()
+    observer.assertResult(listOf(2))
+
+    val captor = argumentCaptor<List<ChannelGroupEntity>>()
+    verify(channelGroupRepository).update(captor.capture())
+    verify(channelGroupRelationRepository).findAllVisibleRelations()
+    verifyNoMoreInteractions(channelGroupRepository, channelGroupRelationRepository)
+
+    val groups = captor.firstValue
+    assertThat(groups)
+      .extracting({ it.remoteId }, { it.online }, { it.totalValue })
+      .containsExactly(tuple(2, 100, "30:0"))
+  }
+
+  @Test
   fun `should not crash when function is not supported`() {
     // given
     val relation = mockRelationData(1, SuplaConst.SUPLA_CHANNELFNC_ALARM) {}
@@ -445,6 +473,14 @@ class UpdateChannelGroupTotalValueUseCaseTest {
       every { it.asRollerShutterValue() } returns mockk {
         every { this@mockk.alwaysValidPosition } returns position
       }
+    }
+
+  private fun mockVerticalBlind(groupId: Int, online: Boolean = false, position: Int = 0, sensor: Int = 0) =
+    mockRelationData(groupId, SuplaConst.SUPLA_CHANNELFNC_VERTICAL_BLIND, online) {
+      every { it.asRollerShutterValue() } returns mockk {
+        every { this@mockk.alwaysValidPosition } returns position
+      }
+      every { it.getSubValueHi() } returns sensor
     }
 
   private fun mockRelationData(

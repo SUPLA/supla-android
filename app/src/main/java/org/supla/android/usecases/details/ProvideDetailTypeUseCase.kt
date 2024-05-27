@@ -49,6 +49,7 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_TERRACE_AWNING
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_VERTICAL_BLIND
 import java.io.Serializable
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -74,6 +75,8 @@ class ProvideDetailTypeUseCase @Inject constructor() {
       WindowDetailType(listOf(DetailPage.PROJECTOR_SCREEN))
     SUPLA_CHANNELFNC_CURTAIN ->
       WindowDetailType(listOf(DetailPage.CURTAIN))
+    SUPLA_CHANNELFNC_VERTICAL_BLIND ->
+      WindowDetailType(listOf(DetailPage.VERTICAL_BLIND))
 
     SUPLA_CHANNELFNC_LIGHTSWITCH,
     SUPLA_CHANNELFNC_POWERSWITCH,
