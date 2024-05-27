@@ -48,6 +48,7 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_RING
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_TERRACE_AWNING
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_VERTICAL_BLIND
 import org.supla.android.usecases.group.GetGroupActivePercentageUseCase
 
 @RunWith(MockitoJUnitRunner::class)
@@ -207,6 +208,30 @@ class GetChannelStateUseCaseTest {
   fun `should get open state for curtain`() {
     // given
     val channelData = mockChannelDataEntity(SUPLA_CHANNELFNC_CURTAIN, rollerShutterPosition = 0)
+
+    // when
+    val state = useCase(channelData)
+
+    // then
+    assertThat(state.value).isEqualTo(ChannelState.Value.OPEN)
+  }
+
+  @Test
+  fun `should get closed state for vertical blind`() {
+    // given
+    val channelData = mockChannelDataEntity(SUPLA_CHANNELFNC_VERTICAL_BLIND, rollerShutterPosition = 100)
+
+    // when
+    val state = useCase(channelData)
+
+    // then
+    assertThat(state.value).isEqualTo(ChannelState.Value.CLOSED)
+  }
+
+  @Test
+  fun `should get open state for vertical blind`() {
+    // given
+    val channelData = mockChannelDataEntity(SUPLA_CHANNELFNC_VERTICAL_BLIND, rollerShutterPosition = 0)
 
     // when
     val state = useCase(channelData)

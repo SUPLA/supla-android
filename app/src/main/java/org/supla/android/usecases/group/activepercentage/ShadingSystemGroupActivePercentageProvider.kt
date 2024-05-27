@@ -10,7 +10,8 @@ object ShadingSystemGroupActivePercentageProvider : GroupActivePercentageProvide
     SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER,
     SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW,
     SuplaConst.SUPLA_CHANNELFNC_TERRACE_AWNING,
-    SuplaConst.SUPLA_CHANNELFNC_CURTAIN -> true
+    SuplaConst.SUPLA_CHANNELFNC_CURTAIN,
+    SuplaConst.SUPLA_CHANNELFNC_VERTICAL_BLIND -> true
 
     else -> false
   }

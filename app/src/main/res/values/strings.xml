@@ -677,6 +677,7 @@
   <string name="channel_caption_terrace_awning" translatable="false">Terrace awning</string>
   <string name="channel_caption_projector_screen" translatable="false">Projector screen</string>
   <string name="channel_caption_curtain" translatable="false">Curtain</string>
+  <string name="channel_caption_vertical_blinds" translatable="false">Vertical Blinds</string>
 
   <plurals name="details_timer_info_on" translatable="false">
     <item quantity="other">on</item>

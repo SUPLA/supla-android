@@ -45,7 +45,10 @@ import org.supla.android.ui.lists.data.IssueIconType
 
 @Composable
 @SuppressLint("DefaultLocale")
-fun PressTimeInfo(touchTime: Float?, modifier: Modifier = Modifier) {
+fun PressTimeInfo(
+  touchTime: Float?,
+  modifier: Modifier = Modifier
+) {
   touchTime?.let { time ->
     Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
       Icon(painter = painterResource(id = R.drawable.ic_touch_hand), contentDescription = null)

@@ -18,7 +18,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import io.reactivex.rxjava3.core.Single
-import okhttp3.internal.and
 import org.supla.android.data.source.ChannelGroupRelationRepository
 import org.supla.android.data.source.ChannelGroupRepository
 import org.supla.android.data.source.local.entity.ChannelGroupEntity
@@ -26,7 +25,6 @@ import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.lib.SuplaConst
 import org.supla.android.usecases.group.totalvalue.DimmerAndRgbGroupValue
 import org.supla.android.usecases.group.totalvalue.DimmerGroupValue
-import org.supla.android.usecases.group.totalvalue.FacadeBlindGroupValue
 import org.supla.android.usecases.group.totalvalue.GroupTotalValue
 import org.supla.android.usecases.group.totalvalue.GroupValue
 import org.supla.android.usecases.group.totalvalue.HeatpolThermostatGroupValue
@@ -34,6 +32,7 @@ import org.supla.android.usecases.group.totalvalue.OpenedClosedGroupValue
 import org.supla.android.usecases.group.totalvalue.ProjectorScreenGroupValue
 import org.supla.android.usecases.group.totalvalue.RgbGroupValue
 import org.supla.android.usecases.group.totalvalue.ShadingSystemGroupValue
+import org.supla.android.usecases.group.totalvalue.ShadowingBlindGroupValue
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -103,11 +102,12 @@ private fun ChannelGroupEntity.getGroupValue(value: ChannelValueEntity): GroupVa
     SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER,
     SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW,
     SuplaConst.SUPLA_CHANNELFNC_TERRACE_AWNING,
-    SuplaConst.SUPLA_CHANNELFNC_CURTAIN ->
+    SuplaConst.SUPLA_CHANNELFNC_CURTAIN,
+    SuplaConst.SUPLA_CHANNELFNC_VERTICAL_BLIND ->
       ShadingSystemGroupValue(value.asRollerShutterValue().alwaysValidPosition, (value.getSubValueHi() and 0x1) == 0x1)
 
     SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND ->
-      value.asFacadeBlindValue().let { FacadeBlindGroupValue(it.alwaysValidPosition, it.alwaysValidTilt) }
+      value.asFacadeBlindValue().let { ShadowingBlindGroupValue(it.alwaysValidPosition, it.alwaysValidTilt) }
 
     SuplaConst.SUPLA_CHANNELFNC_PROJECTOR_SCREEN ->
       ProjectorScreenGroupValue(value.asRollerShutterValue().alwaysValidPosition)

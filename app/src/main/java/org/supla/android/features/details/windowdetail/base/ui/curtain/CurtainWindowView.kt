@@ -47,7 +47,6 @@ import androidx.compose.ui.unit.dp
 import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
-import org.supla.android.extensions.guardLet
 import org.supla.android.features.details.windowdetail.base.data.CurtainWindowState
 import org.supla.android.features.details.windowdetail.base.data.WindowGroupedValue
 import org.supla.android.features.details.windowdetail.base.ui.MoveState
@@ -86,7 +85,7 @@ fun CurtainWindowView(
             MotionEvent.ACTION_MOVE -> {
               moveState.value = moveState.value.copy(lastPoint = Offset(event.x, event.y))
               windowDimens
-                .getPositionFromState(moveState.value)
+                .getPositionFromState(moveState.value, bidirectional = true)
                 ?.let { position -> onPositionChanging?.let { it(position.x) } }
             }
 
@@ -161,60 +160,11 @@ private data class RuntimeDimens(
   override val topLineRect: Rect,
   override val windowRect: Rect,
   override val scale: Float,
-  var curtainMinWidth: Float,
-  var leftCurtainRect: Rect,
-  var rightCurtainRect: Rect,
+  val curtainMinWidth: Float,
+  val leftCurtainRect: Rect,
+  val rightCurtainRect: Rect,
   val markerPath: Path
 ) : WindowDimensBase {
-
-  override fun getPositionFromState(state: MoveState): Offset? {
-    val (initial) = guardLet(state.initialPoint) { return null }
-
-    val horizontalDiffAsPercentage =
-      state.lastPoint.x.minus(initial.x)
-        .div(windowRect.width.div(2))
-        .times(100f)
-        .let {
-          if (initial.x < windowRect.center.x) {
-            it
-          } else {
-            -it
-          }
-        }
-
-    val verticalDiffAsPercentage =
-      state.lastPoint.y.minus(initial.y)
-        .div(movementLimit)
-        .times(100f)
-
-    val x = state.initialHorizontalPercentage.plus(horizontalDiffAsPercentage).let {
-      // Trim to 0% - 100%
-      if (it < 0f) {
-        0f
-      } else if (it > 100f) {
-        100f
-      } else {
-        it
-      }
-    }
-
-    val y = state.initialVerticalPercentage.plus(verticalDiffAsPercentage).let {
-      // Trim to 0% - 100%
-      if (it < 0f) {
-        0f
-      } else if (it > 100f) {
-        100f
-      } else {
-        it
-      }
-    }
-
-    return if (state.horizontalAllowed) {
-      Offset(x, y)
-    } else {
-      Offset(state.initialHorizontalPercentage, y)
-    }
-  }
 
   companion object {
     const val CURTAIN_WIDTH = 142

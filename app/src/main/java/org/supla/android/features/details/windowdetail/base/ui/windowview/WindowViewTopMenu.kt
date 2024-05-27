@@ -47,6 +47,7 @@ import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.gray
 import org.supla.android.features.details.windowdetail.base.data.WindowState
 import org.supla.android.features.details.windowdetail.base.data.facadeblinds.FacadeBlindWindowState
+import org.supla.android.features.details.windowdetail.base.data.verticalblinds.VerticalBlindWindowState
 import org.supla.android.features.details.windowdetail.base.ui.ShadingSystemAction
 import org.supla.android.features.details.windowdetail.base.ui.WindowViewState
 import org.supla.android.ui.views.buttons.animatable.CircleControlButton
@@ -89,6 +90,9 @@ fun WindowViewTopMenu(
         Column(verticalArrangement = Arrangement.Absolute.spacedBy(Distance.tiny)) {
           OpenClosePercentageLabel(viewState.showClosingPercentage, windowState.positionText())
           (windowState as? FacadeBlindWindowState)?.let {
+            SlatsTiltLabel(value = windowState.slatTiltText()(LocalContext.current))
+          }
+          (windowState as? VerticalBlindWindowState)?.let {
             SlatsTiltLabel(value = windowState.slatTiltText()(LocalContext.current))
           }
         }

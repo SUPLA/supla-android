@@ -1,4 +1,4 @@
-package org.supla.android.features.details.windowdetail.facadeblinds
+package org.supla.android.features.details.windowdetail.verticalblinds
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -35,10 +35,12 @@ import org.supla.android.extensions.guardLet
 import org.supla.android.features.details.windowdetail.base.BaseWindowViewModel
 import org.supla.android.features.details.windowdetail.base.BaseWindowViewModelState
 import org.supla.android.features.details.windowdetail.base.data.WindowGroupedValue
-import org.supla.android.features.details.windowdetail.base.data.facadeblinds.FacadeBlindMarker
 import org.supla.android.features.details.windowdetail.base.data.facadeblinds.FacadeBlindWindowState
+import org.supla.android.features.details.windowdetail.base.data.verticalblinds.VerticalBlindMarker
+import org.supla.android.features.details.windowdetail.base.data.verticalblinds.VerticalBlindWindowState
 import org.supla.android.features.details.windowdetail.base.ui.ShadingSystemAction
 import org.supla.android.features.details.windowdetail.base.ui.WindowViewState
+import org.supla.android.features.details.windowdetail.base.ui.windowview.ShadingSystemOrientation
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.dialogs.AuthorizationDialogState
@@ -57,7 +59,7 @@ import kotlin.math.max
 import kotlin.math.min
 
 @HiltViewModel
-class FacadeBlindsViewModel @Inject constructor(
+class VerticalBlindsViewModel @Inject constructor(
   private val channelConfigEventsManager: ChannelConfigEventsManager,
   private val executeShadingSystemActionUseCase: ExecuteShadingSystemActionUseCase,
   private val suplaClientProvider: SuplaClientProvider,
@@ -72,7 +74,7 @@ class FacadeBlindsViewModel @Inject constructor(
   loginUseCase: LoginUseCase,
   authorizeUseCase: AuthorizeUseCase,
   schedulers: SuplaSchedulers
-) : BaseWindowViewModel<FacadeBlindsViewModelState>(
+) : BaseWindowViewModel<VerticalBlindsViewModelState>(
   executeShadingSystemActionUseCase,
   executeSimpleActionUseCase,
   callSuplaClientOperationUseCase,
@@ -85,22 +87,22 @@ class FacadeBlindsViewModel @Inject constructor(
   profileRepository,
   loginUseCase,
   authorizeUseCase,
-  FacadeBlindsViewModelState(),
+  VerticalBlindsViewModelState(),
   schedulers
 ) {
 
-  override fun updatePosition(state: FacadeBlindsViewModelState, position: Float) =
+  override fun updatePosition(state: VerticalBlindsViewModelState, position: Float) =
     state.copy(windowState = state.windowState.copy(position = WindowGroupedValue.Similar(position)))
 
   override fun stateCopy(
-    state: FacadeBlindsViewModelState,
+    state: VerticalBlindsViewModelState,
     remoteId: Int?,
     moveStartTime: Long?,
     manualMoving: Boolean,
     showCalibrationDialog: Boolean,
     authorizationDialogState: AuthorizationDialogState?,
     viewStateUpdater: (WindowViewState) -> WindowViewState
-  ): FacadeBlindsViewModelState =
+  ): VerticalBlindsViewModelState =
     state.copy(
       remoteId = remoteId,
       moveStartTime = moveStartTime,
@@ -123,7 +125,7 @@ class FacadeBlindsViewModel @Inject constructor(
                 emptyList()
 
               it.windowState.position is WindowGroupedValue.Different ->
-                it.windowState.markers.map { marker -> FacadeBlindMarker(marker.position, action.tilt) }
+                it.windowState.markers.map { marker -> VerticalBlindMarker(marker.position, action.tilt) }
 
               else -> emptyList()
             }
@@ -256,11 +258,11 @@ class FacadeBlindsViewModel @Inject constructor(
         return@updateState state // Skip position updating when moving by finger
       }
 
-      val positions = group.groupDataEntity.channelGroupEntity.getFacadeBlindPositions()
+      val positions = group.groupDataEntity.channelGroupEntity.getVerticalBlindPositions()
       val overallPosition = getGroupValues(positions, state.windowState.markers.isNotEmpty()) { it.position.toFloat() }
       val overallTilt = getGroupValues(positions, state.windowState.markers.isNotEmpty()) { it.tilt.toFloat() }
       val markers = (if (overallPosition is WindowGroupedValue.Different) positions else emptyList())
-        .map { FacadeBlindMarker(it.position.toFloat(), it.tilt.toFloat()) }
+        .map { VerticalBlindMarker(it.position.toFloat(), it.tilt.toFloat()) }
 
       updateGroup(state, group.groupDataEntity, group.onlineSummary) {
         it.copy(
@@ -280,7 +282,7 @@ class FacadeBlindsViewModel @Inject constructor(
     }
   }
 
-  override fun canShowMoveTime(state: FacadeBlindsViewModelState) =
+  override fun canShowMoveTime(state: VerticalBlindsViewModelState) =
     state.viewState.positionUnknown || state.windowState.slatTilt == null
 
   private fun handleConfig(config: ChannelConfigEventsManager.ConfigEvent) {
@@ -306,7 +308,7 @@ class FacadeBlindsViewModel @Inject constructor(
     }
   }
 
-  private fun limitTilt(tilt: Float, position: Float, state: FacadeBlindsViewModelState): Float {
+  private fun limitTilt(tilt: Float, position: Float, state: VerticalBlindsViewModelState): Float {
     val (tiltingTime, openingTime, closingTime, lastPosition) =
       guardLet(state.tiltingTime, state.openingTime, state.closingTime, state.lastPosition) { return tilt }
 
@@ -324,10 +326,10 @@ class FacadeBlindsViewModel @Inject constructor(
   }
 }
 
-private fun ChannelGroupEntity.getFacadeBlindPositions(): List<ShadowingBlindGroupValue> =
+private fun ChannelGroupEntity.getVerticalBlindPositions(): List<ShadowingBlindGroupValue> =
   groupTotalValues.mapNotNull { it as? ShadowingBlindGroupValue }
 
-data class FacadeBlindsViewModelState(
+data class VerticalBlindsViewModelState(
   val facadeBlindType: SuplaTiltControlType? = null,
   val tiltingTime: Int? = null,
   val openingTime: Int? = null,
@@ -335,8 +337,8 @@ data class FacadeBlindsViewModelState(
   val lastPosition: Int? = null,
 
   override val remoteId: Int? = null,
-  override val windowState: FacadeBlindWindowState = FacadeBlindWindowState(WindowGroupedValue.Similar(0f)),
-  override val viewState: WindowViewState = WindowViewState(),
+  override val windowState: VerticalBlindWindowState = VerticalBlindWindowState(WindowGroupedValue.Similar(0f)),
+  override val viewState: WindowViewState = WindowViewState(orientation = ShadingSystemOrientation.HORIZONTAL),
   override val moveStartTime: Long? = null,
   override val manualMoving: Boolean = false,
   override val showCalibrationDialog: Boolean = false,

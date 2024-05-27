@@ -17,6 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -27,7 +28,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,6 +48,7 @@ import org.supla.android.features.details.windowdetail.base.data.RollerShutterWi
 import org.supla.android.features.details.windowdetail.base.data.WindowGroupedValue
 import org.supla.android.features.details.windowdetail.base.data.WindowState
 import org.supla.android.features.details.windowdetail.base.data.facadeblinds.FacadeBlindWindowState
+import org.supla.android.features.details.windowdetail.base.data.verticalblinds.VerticalBlindWindowState
 import org.supla.android.features.details.windowdetail.base.ui.ShadingSystemAction
 import org.supla.android.features.details.windowdetail.base.ui.WindowViewState
 import org.supla.android.features.details.windowdetail.base.ui.facadeblinds.SlatTiltSlider
@@ -202,9 +206,10 @@ private fun HorizontalControlButtons(
     horizontalAlignment = Alignment.CenterHorizontally,
     verticalArrangement = Arrangement.Absolute.spacedBy(Distance.small)
   ) {
+    PressTimeInfoHorizontal(touchTime = viewState.touchTime)
     HoldToMoveHorizontalButtons(viewState.enabled, onAction = onAction)
     PressToMoveHorizontalButtons(viewState.enabled, onAction = onAction)
-    (windowState as? FacadeBlindWindowState)?.let {
+    (windowState as? VerticalBlindWindowState)?.let {
       SlatTiltSlider(
         value = windowState.slatTilt?.value ?: 0f,
         modifier = Modifier.width(240.dp),
@@ -262,13 +267,13 @@ private fun PressToMoveHorizontalButtons(enabled: Boolean, modifier: Modifier = 
     middleContent = { ControlButtonIcon(iconRes = R.drawable.ic_stop, textColor = it, modifier = Modifier.align(Alignment.Center)) },
     leftEventHandler = {
       handleEvents(
-        onTouchDown = { onAction(ShadingSystemAction.MoveUp) },
+        onTouchDown = { onAction(ShadingSystemAction.Open) },
         onTouchUp = { onAction(ShadingSystemAction.Stop) }
       )
     },
     rightEventHandler = {
       handleEvents(
-        onTouchDown = { onAction(ShadingSystemAction.MoveDown) },
+        onTouchDown = { onAction(ShadingSystemAction.Close) },
         onTouchUp = { onAction(ShadingSystemAction.Stop) }
       )
     },
@@ -309,6 +314,19 @@ private fun StopMoveButton(enabled: Boolean, modifier: Modifier = Modifier, onAc
     modifier = modifier
   )
 
+@Composable
+@SuppressLint("DefaultLocale")
+fun PressTimeInfoHorizontal(touchTime: Float?) {
+  if (touchTime != null) {
+    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.height(26.dp)) {
+      Icon(painter = painterResource(id = R.drawable.ic_touch_hand), contentDescription = null)
+      Text(text = String.format("%.1fs", touchTime), style = MaterialTheme.typography.body2)
+    }
+  } else {
+    Box(modifier = Modifier.height(26.dp))
+  }
+}
+
 @Preview
 @Composable
 private fun Preview_Vertical() {
@@ -343,9 +361,9 @@ private fun Preview_Horizontal() {
       WindowViewNormalContent(
         availableWidth = 350.dp,
         availableHeight = 500.dp,
-        viewState = WindowViewState(enabled = true, orientation = ShadingSystemOrientation.HORIZONTAL),
-        windowState = RollerShutterWindowState(position = WindowGroupedValue.Similar(10f)),
-        onAction = { }
+        viewState = WindowViewState(enabled = true, orientation = ShadingSystemOrientation.HORIZONTAL, touchTime = 12.3f),
+        windowState = FacadeBlindWindowState(position = WindowGroupedValue.Similar(10f)),
+        onAction = { },
       )
     }
   }

@@ -1,4 +1,4 @@
-package org.supla.android.features.details.windowdetail.base.ui
+package org.supla.android.usecases.icon.producers
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,14 +17,19 @@ package org.supla.android.features.details.windowdetail.base.ui
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.compose.ui.geometry.Offset
+import org.supla.android.R
+import org.supla.android.data.model.general.ChannelState
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_VERTICAL_BLIND
+import org.supla.android.usecases.icon.IconData
+import org.supla.android.usecases.icon.IconResourceProducer
 
-data class MoveState(
-  val initialPoint: Offset? = null,
-  val initialVerticalPercentage: Float = 0f,
-  val initialHorizontalPercentage: Float = 0f,
-  val lastPoint: Offset = Offset(0f, 0f),
+object VerticalBlindsIconResourceProducer : IconResourceProducer {
+  override fun accepts(function: Int): Boolean =
+    function == SUPLA_CHANNELFNC_VERTICAL_BLIND
 
-  val horizontalAllowed: Boolean = false,
-  val verticalAllowed: Boolean = true
-)
+  override fun produce(data: IconData): Int =
+    when (data.state.value) {
+      ChannelState.Value.OPEN -> R.drawable.fnc_vertical_blinds_open
+      else -> R.drawable.fnc_vertical_blinds_close
+    }
+}

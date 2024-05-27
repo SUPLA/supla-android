@@ -1,4 +1,4 @@
-package org.supla.android.features.details.windowdetail.facadeblinds
+package org.supla.android.features.details.windowdetail.verticalblinds
 /*
 Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -54,10 +54,11 @@ import org.supla.android.events.ChannelConfigEventsManager
 import org.supla.android.features.details.windowdetail.base.BaseWindowViewEvent
 import org.supla.android.features.details.windowdetail.base.data.WindowGroupedValue
 import org.supla.android.features.details.windowdetail.base.data.WindowGroupedValueFormat
-import org.supla.android.features.details.windowdetail.base.data.facadeblinds.FacadeBlindMarker
-import org.supla.android.features.details.windowdetail.base.data.facadeblinds.FacadeBlindWindowState
+import org.supla.android.features.details.windowdetail.base.data.verticalblinds.VerticalBlindMarker
+import org.supla.android.features.details.windowdetail.base.data.verticalblinds.VerticalBlindWindowState
 import org.supla.android.features.details.windowdetail.base.ui.ShadingSystemAction
 import org.supla.android.features.details.windowdetail.base.ui.WindowViewState
+import org.supla.android.features.details.windowdetail.base.ui.windowview.ShadingSystemOrientation
 import org.supla.android.lib.SuplaConst
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
@@ -75,7 +76,7 @@ import kotlin.reflect.full.memberProperties
 import kotlin.reflect.jvm.isAccessible
 
 @RunWith(MockitoJUnitRunner::class)
-class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, BaseWindowViewEvent, FacadeBlindsViewModel>() {
+class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelState, BaseWindowViewEvent, VerticalBlindsViewModel>() {
 
   @Mock
   private lateinit var channelConfigEventsManager: ChannelConfigEventsManager
@@ -120,7 +121,7 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
   override lateinit var schedulers: SuplaSchedulers
 
   @InjectMocks
-  override lateinit var viewModel: FacadeBlindsViewModel
+  override lateinit var viewModel: VerticalBlindsViewModel
 
   @Before
   override fun setUp() {
@@ -143,16 +144,17 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
 
     // then
     assertThat(states).containsExactly(
-      FacadeBlindsViewModelState(
+      VerticalBlindsViewModelState(
         remoteId = remoteId,
-        windowState = FacadeBlindWindowState(
+        windowState = VerticalBlindWindowState(
           position = WindowGroupedValue.Similar(position.toFloat()),
           slatTilt = WindowGroupedValue.Similar(tilt.toFloat()),
           positionTextFormat = WindowGroupedValueFormat.PERCENTAGE
         ),
         viewState = WindowViewState(
           enabled = true,
-          showClosingPercentage = true
+          showClosingPercentage = true,
+          orientation = ShadingSystemOrientation.HORIZONTAL
         ),
         lastPosition = position
       )
@@ -175,16 +177,17 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
 
     // then
     assertThat(states).containsExactly(
-      FacadeBlindsViewModelState(
+      VerticalBlindsViewModelState(
         remoteId = remoteId,
-        windowState = FacadeBlindWindowState(
+        windowState = VerticalBlindWindowState(
           position = WindowGroupedValue.Similar(25f),
           slatTilt = WindowGroupedValue.Similar(50f),
           positionTextFormat = WindowGroupedValueFormat.PERCENTAGE
         ),
         viewState = WindowViewState(
           enabled = false,
-          showClosingPercentage = true
+          showClosingPercentage = true,
+          orientation = ShadingSystemOrientation.HORIZONTAL
         ),
         lastPosition = position
       )
@@ -207,16 +210,17 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
 
     // then
     assertThat(states).containsExactly(
-      FacadeBlindsViewModelState(
+      VerticalBlindsViewModelState(
         remoteId = remoteId,
-        windowState = FacadeBlindWindowState(
+        windowState = VerticalBlindWindowState(
           position = WindowGroupedValue.Similar(10f),
           slatTilt = null,
           positionTextFormat = WindowGroupedValueFormat.PERCENTAGE
         ),
         viewState = WindowViewState(
           enabled = true,
-          showClosingPercentage = true
+          showClosingPercentage = true,
+          orientation = ShadingSystemOrientation.HORIZONTAL
         ),
         lastPosition = position
       )
@@ -237,8 +241,8 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
 
     // then
     assertThat(states).containsExactly(
-      FacadeBlindsViewModelState(
-        windowState = FacadeBlindWindowState(
+      VerticalBlindsViewModelState(
+        windowState = VerticalBlindWindowState(
           position = WindowGroupedValue.Similar(0f),
           tilt0Angle = 0f,
           tilt100Angle = 180f,
@@ -255,8 +259,8 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
   fun `should change tilt when tilting changes position`() {
     // given
     val remoteId = 123
-    val initialState = FacadeBlindsViewModelState(
-      windowState = FacadeBlindWindowState(
+    val initialState = VerticalBlindsViewModelState(
+      windowState = VerticalBlindWindowState(
         position = WindowGroupedValue.Similar(10f),
         slatTilt = WindowGroupedValue.Similar(33f)
       ),
@@ -285,8 +289,8 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
   fun `should change tilt and position when tilts only when fully closed`() {
     // given
     val remoteId = 123
-    val initialState = FacadeBlindsViewModelState(
-      windowState = FacadeBlindWindowState(
+    val initialState = VerticalBlindsViewModelState(
+      windowState = VerticalBlindWindowState(
         position = WindowGroupedValue.Similar(10f),
         slatTilt = WindowGroupedValue.Similar(33f)
       ),
@@ -325,8 +329,8 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
     viewModel.handleAction(ShadingSystemAction.TiltSetTo(95f), remoteId, ItemType.CHANNEL)
 
     // then
-    val state1 = FacadeBlindsViewModelState(
-      windowState = FacadeBlindWindowState(
+    val state1 = VerticalBlindsViewModelState(
+      windowState = VerticalBlindWindowState(
         position = WindowGroupedValue.Similar(0f),
         slatTilt = WindowGroupedValue.Similar(95f),
         positionTextFormat = WindowGroupedValueFormat.PERCENTAGE
@@ -346,8 +350,8 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
   fun `should change position and tilt when tilting changes position`() {
     // given
     val remoteId = 123
-    val initialState = FacadeBlindsViewModelState(
-      windowState = FacadeBlindWindowState(
+    val initialState = VerticalBlindsViewModelState(
+      windowState = VerticalBlindWindowState(
         position = WindowGroupedValue.Similar(10f),
         slatTilt = WindowGroupedValue.Similar(33f)
       ),
@@ -377,8 +381,8 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
   fun `should change position and correct tilt when tilts changes position (low position)`() {
     // given
     val remoteId = 123
-    val initialState = FacadeBlindsViewModelState(
-      windowState = FacadeBlindWindowState(
+    val initialState = VerticalBlindsViewModelState(
+      windowState = VerticalBlindWindowState(
         position = WindowGroupedValue.Similar(10f),
         slatTilt = WindowGroupedValue.Similar(33f)
       ),
@@ -408,8 +412,8 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
   fun `should change position and correct tilt when tilts changes position (up position)`() {
     // given
     val remoteId = 123
-    val initialState = FacadeBlindsViewModelState(
-      windowState = FacadeBlindWindowState(
+    val initialState = VerticalBlindsViewModelState(
+      windowState = VerticalBlindWindowState(
         position = WindowGroupedValue.Similar(10f),
         slatTilt = WindowGroupedValue.Similar(33f)
       ),
@@ -439,8 +443,8 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
   fun `should change position without tilt when tilting only when fully closed and not closed`() {
     // given
     val remoteId = 123
-    val initialState = FacadeBlindsViewModelState(
-      windowState = FacadeBlindWindowState(
+    val initialState = VerticalBlindsViewModelState(
+      windowState = VerticalBlindWindowState(
         position = WindowGroupedValue.Similar(10f),
         slatTilt = WindowGroupedValue.Similar(0f)
       ),
@@ -469,8 +473,8 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
   fun `should change position and tilt when tilting only when fully closed and closed`() {
     // given
     val remoteId = 123
-    val initialState = FacadeBlindsViewModelState(
-      windowState = FacadeBlindWindowState(
+    val initialState = VerticalBlindsViewModelState(
+      windowState = VerticalBlindWindowState(
         position = WindowGroupedValue.Similar(10f),
         slatTilt = WindowGroupedValue.Similar(0f)
       ),
@@ -500,8 +504,8 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
   fun `should set position and tilt when tilting changes position`() {
     // given
     val remoteId = 123
-    val initialState = FacadeBlindsViewModelState(
-      windowState = FacadeBlindWindowState(
+    val initialState = VerticalBlindsViewModelState(
+      windowState = VerticalBlindWindowState(
         position = WindowGroupedValue.Similar(10f),
         slatTilt = WindowGroupedValue.Similar(33f)
       ),
@@ -530,8 +534,8 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
   fun `should set position and correct tilt when tilts changes position (low position)`() {
     // given
     val remoteId = 123
-    val initialState = FacadeBlindsViewModelState(
-      windowState = FacadeBlindWindowState(
+    val initialState = VerticalBlindsViewModelState(
+      windowState = VerticalBlindWindowState(
         position = WindowGroupedValue.Similar(10f),
         slatTilt = WindowGroupedValue.Similar(33f)
       ),
@@ -562,8 +566,8 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
   fun `should set position and correct tilt when tilts changes position (up position)`() {
     // given
     val remoteId = 123
-    val initialState = FacadeBlindsViewModelState(
-      windowState = FacadeBlindWindowState(
+    val initialState = VerticalBlindsViewModelState(
+      windowState = VerticalBlindWindowState(
         position = WindowGroupedValue.Similar(10f),
         slatTilt = WindowGroupedValue.Similar(33f)
       ),
@@ -593,8 +597,8 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
   fun `should set position without tilt when tilting only when fully closed and not closed`() {
     // given
     val remoteId = 123
-    val initialState = FacadeBlindsViewModelState(
-      windowState = FacadeBlindWindowState(
+    val initialState = VerticalBlindsViewModelState(
+      windowState = VerticalBlindWindowState(
         position = WindowGroupedValue.Similar(10f),
         slatTilt = WindowGroupedValue.Similar(0f)
       ),
@@ -625,8 +629,8 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
   fun `should set position and tilt when tilting only when fully closed and closed`() {
     // given
     val remoteId = 123
-    val initialState = FacadeBlindsViewModelState(
-      windowState = FacadeBlindWindowState(
+    val initialState = VerticalBlindsViewModelState(
+      windowState = VerticalBlindWindowState(
         position = WindowGroupedValue.Similar(10f),
         slatTilt = WindowGroupedValue.Similar(0f)
       ),
@@ -668,19 +672,20 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
 
     // then
     assertThat(states).containsExactly(
-      FacadeBlindsViewModelState(
+      VerticalBlindsViewModelState(
         remoteId = remoteId,
-        windowState = FacadeBlindWindowState(
+        windowState = VerticalBlindWindowState(
           position = WindowGroupedValue.Different(30f, 50f),
           slatTilt = WindowGroupedValue.Different(25f, 85f),
-          markers = listOf(FacadeBlindMarker(50f, 85f), FacadeBlindMarker(30f, 25f)),
+          markers = listOf(VerticalBlindMarker(50f, 85f), VerticalBlindMarker(30f, 25f)),
           positionTextFormat = WindowGroupedValueFormat.PERCENTAGE
         ),
         viewState = WindowViewState(
           enabled = true,
           showClosingPercentage = true,
           isGroup = true,
-          onlineStatusString = "2/5"
+          onlineStatusString = "2/5",
+          orientation = ShadingSystemOrientation.HORIZONTAL
         ),
         lastPosition = 0
       )
@@ -703,9 +708,9 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
 
     // then
     assertThat(states).containsExactly(
-      FacadeBlindsViewModelState(
+      VerticalBlindsViewModelState(
         remoteId = remoteId,
-        windowState = FacadeBlindWindowState(
+        windowState = VerticalBlindWindowState(
           position = WindowGroupedValue.Similar(25f),
           slatTilt = WindowGroupedValue.Similar(50f),
           markers = emptyList(),
@@ -714,7 +719,8 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
         viewState = WindowViewState(
           showClosingPercentage = true,
           isGroup = true,
-          onlineStatusString = "2/5"
+          onlineStatusString = "2/5",
+          orientation = ShadingSystemOrientation.HORIZONTAL
         ),
         lastPosition = 0
       )
@@ -783,12 +789,12 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
 }
 
 @Suppress("UNCHECKED_CAST")
-fun FacadeBlindsViewModel.setState(state: FacadeBlindsViewModelState) {
+fun VerticalBlindsViewModel.setState(state: VerticalBlindsViewModelState) {
   BaseViewModel::class.memberProperties
     .find { it.name == "viewState" }
     ?.let {
       it.isAccessible = true
-      val viewState = it.getter.call(this) as MutableStateFlow<FacadeBlindsViewModelState>
+      val viewState = it.getter.call(this) as MutableStateFlow<VerticalBlindsViewModelState>
       viewState.tryEmit(state)
     }
 }

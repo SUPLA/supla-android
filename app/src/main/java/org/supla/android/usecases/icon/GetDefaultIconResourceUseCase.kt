@@ -62,6 +62,7 @@ import org.supla.android.usecases.icon.producers.ThermometerIconResourceProducer
 import org.supla.android.usecases.icon.producers.ThermostatHomePlusIconResourceProducer
 import org.supla.android.usecases.icon.producers.ThermostatHvacIconResourceProducer
 import org.supla.android.usecases.icon.producers.ValveIconResourceProducer
+import org.supla.android.usecases.icon.producers.VerticalBlindsIconResourceProducer
 import org.supla.android.usecases.icon.producers.WindowIconResourceProducer
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -110,7 +111,8 @@ class GetDefaultIconResourceUseCase @Inject constructor() {
     GeneralPurposeMeterIconResourceProducer(),
     TerraceAwningIconResourceProducer(),
     ProjectorScreenIconResourceProducer(),
-    CurtainIconResourceProducer()
+    CurtainIconResourceProducer(),
+    VerticalBlindsIconResourceProducer
   )
 
   @DrawableRes

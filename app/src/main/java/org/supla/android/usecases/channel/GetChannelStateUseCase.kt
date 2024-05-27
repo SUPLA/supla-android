@@ -61,6 +61,7 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_TERRACE_AWNING
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_VALVE_PERCENTAGE
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_VERTICAL_BLIND
 import org.supla.android.usecases.group.GetGroupActivePercentageUseCase
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -108,7 +109,8 @@ class GetChannelStateUseCase @Inject constructor(
       SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW,
       SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND,
       SUPLA_CHANNELFNC_TERRACE_AWNING,
-      SUPLA_CHANNELFNC_CURTAIN ->
+      SUPLA_CHANNELFNC_CURTAIN,
+      SUPLA_CHANNELFNC_VERTICAL_BLIND ->
         if (value.rollerShutterClosed) ChannelState(ChannelState.Value.CLOSED) else ChannelState(ChannelState.Value.OPEN)
 
       SUPLA_CHANNELFNC_PROJECTOR_SCREEN ->
@@ -181,7 +183,8 @@ class GetChannelStateUseCase @Inject constructor(
       SUPLA_CHANNELFNC_VALVE_OPENCLOSE,
       SUPLA_CHANNELFNC_VALVE_PERCENTAGE,
       SUPLA_CHANNELFNC_TERRACE_AWNING,
-      SUPLA_CHANNELFNC_CURTAIN -> ChannelState(ChannelState.Value.OPEN)
+      SUPLA_CHANNELFNC_CURTAIN,
+      SUPLA_CHANNELFNC_VERTICAL_BLIND -> ChannelState(ChannelState.Value.OPEN)
 
       SUPLA_CHANNELFNC_PROJECTOR_SCREEN -> ChannelState(ChannelState.Value.CLOSED)
 

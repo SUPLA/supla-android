@@ -580,6 +580,7 @@
   <string name="channel_caption_terrace_awning">Terrassenmarkise</string>
   <string name="channel_caption_projector_screen">Leinwand</string>
   <string name="channel_caption_curtain">Vorhang</string>
+  <string name="channel_caption_vertical_blinds">Vertikaljalousien</string>
   <plurals name="details_timer_info_on">
     <item quantity="one">eingeschaltet</item>
     <item quantity="other">eingeschaltet</item>

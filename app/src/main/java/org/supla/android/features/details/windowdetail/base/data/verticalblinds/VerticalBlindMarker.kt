@@ -1,4 +1,4 @@
-package org.supla.android.features.details.windowdetail.base.ui
+package org.supla.android.features.details.windowdetail.base.data.verticalblinds
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,14 +17,7 @@ package org.supla.android.features.details.windowdetail.base.ui
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.compose.ui.geometry.Offset
-
-data class MoveState(
-  val initialPoint: Offset? = null,
-  val initialVerticalPercentage: Float = 0f,
-  val initialHorizontalPercentage: Float = 0f,
-  val lastPoint: Offset = Offset(0f, 0f),
-
-  val horizontalAllowed: Boolean = false,
-  val verticalAllowed: Boolean = true
+data class VerticalBlindMarker(
+  val position: Float,
+  val tilt: Float
 )
