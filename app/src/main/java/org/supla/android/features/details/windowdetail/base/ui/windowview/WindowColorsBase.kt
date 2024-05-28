@@ -24,4 +24,5 @@ interface WindowColorsBase {
   val shadow: Color
   val glassTop: Color
   val glassBottom: Color
+  val disabledOverlay: Color
 }

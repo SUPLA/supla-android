@@ -66,7 +66,7 @@ import org.supla.android.features.details.windowdetail.base.ui.applyForWindow
 fun ProjectorScreenView(
   windowState: ProjectorScreenState,
   modifier: Modifier = Modifier,
-  colors: ProjectorScreenColors = ProjectorScreenColors.standard(),
+  enabled: Boolean = false,
   onPositionChanging: ((Float) -> Unit)? = null,
   onPositionChanged: ((Float) -> Unit)? = null
 ) {
@@ -74,6 +74,7 @@ fun ProjectorScreenView(
   val moveState = remember { mutableStateOf(MoveState()) }
   val logoPainter = painterResource(id = R.drawable.logo)
   val logoColor = colorResource(id = R.color.primary_variant)
+  val colors = ProjectorScreenColors.standard()
 
   Canvas(
     modifier = modifier
@@ -137,6 +138,10 @@ fun ProjectorScreenView(
           drawHandle(markerColor, markerBottomRect)
         }
       }
+    }
+
+    if (enabled.not()) {
+      drawRect(colors.disabledOverlay)
     }
   }
 }
@@ -259,7 +264,7 @@ data class RuntimeDimens(
     private fun canvasRect(viewSize: IntSize): Rect {
       val size = getSize(viewSize = viewSize)
       return Rect(
-        Offset(viewSize.width.minus(size.width).div(2), 0f),
+        Offset(viewSize.width.minus(size.width).div(2), viewSize.height.minus(size.height).div(2)),
         size
       )
     }
@@ -279,7 +284,7 @@ data class RuntimeDimens(
     private fun logoRect(scale: Float, topRect: Rect): Rect {
       val logoWidth = DefaultDimens.LOGO_WIDTH.times(scale)
       val logoHeight = DefaultDimens.LOGO_HEIGHT.times(scale)
-      val left = topRect.width.minus(logoWidth).div(2)
+      val left = topRect.left.plus(topRect.width.minus(logoWidth).div(2))
       val topLeft = Offset(left, topRect.bottom.plus(DefaultDimens.LOGO_TOP_MARGIN.times(scale)))
       return Rect(topLeft, Size(logoWidth, logoHeight))
     }
@@ -313,6 +318,7 @@ private fun Preview_Normal() {
       ) {
         ProjectorScreenView(
           windowState = ProjectorScreenState(WindowGroupedValue.Similar(75f)),
+          enabled = true,
           modifier = Modifier
             .fillMaxSize()
             .padding(all = Distance.small)
@@ -328,7 +334,6 @@ private fun Preview_Normal() {
           windowState = ProjectorScreenState(WindowGroupedValue.Similar(50f), markers = listOf(0f, 10f, 50f, 100f)),
           modifier = Modifier
             .fillMaxSize()
-          // .padding(all = Distance.small)
         )
       }
       Box(
@@ -338,7 +343,8 @@ private fun Preview_Normal() {
           .background(color = colorResource(id = R.color.background))
       ) {
         ProjectorScreenView(
-          windowState = ProjectorScreenState(WindowGroupedValue.Similar(25f)),
+          windowState = ProjectorScreenState(WindowGroupedValue.Similar(45f)),
+          enabled = true,
           modifier = Modifier
             .fillMaxSize()
             .padding(all = Distance.small)

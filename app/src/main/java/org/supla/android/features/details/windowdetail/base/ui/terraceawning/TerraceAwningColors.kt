@@ -21,15 +21,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import org.supla.android.R
+import org.supla.android.features.details.windowdetail.base.ui.windowview.WindowColorsBase
 
 data class TerraceAwningColors(
-  val window: Color,
-  val shadow: Color,
-  val glassTop: Color,
-  val glassBottom: Color,
+  override val window: Color,
+  override val shadow: Color,
+  override val glassTop: Color,
+  override val glassBottom: Color,
+  override val disabledOverlay: Color,
   val awningBackground: Color,
   val awningBorder: Color
-) {
+) : WindowColorsBase {
   companion object {
     @Composable
     fun standard() =
@@ -38,19 +40,9 @@ data class TerraceAwningColors(
         shadow = colorResource(id = R.color.shadow_start),
         glassTop = colorResource(id = R.color.roller_shutter_glass_top_color),
         glassBottom = colorResource(id = R.color.roller_shutter_glass_bottom_color),
+        disabledOverlay = colorResource(id = R.color.roller_shutter_disabled_overlay),
         awningBackground = colorResource(id = R.color.roller_shutter_slat_background),
         awningBorder = colorResource(id = R.color.roller_shutter_slat_border)
-      )
-
-    @Composable
-    fun offline() =
-      TerraceAwningColors(
-        window = colorResource(id = R.color.roller_shutter_window_color),
-        shadow = colorResource(id = R.color.shadow_start),
-        glassTop = colorResource(id = R.color.roller_shutter_disabled_glass_top_color),
-        glassBottom = colorResource(id = R.color.roller_shutter_disabled_glass_bottom_color),
-        awningBackground = colorResource(id = R.color.roller_shutter_disabled_slat_background),
-        awningBorder = colorResource(id = R.color.roller_shutter_disabled_slat_border),
       )
   }
 }

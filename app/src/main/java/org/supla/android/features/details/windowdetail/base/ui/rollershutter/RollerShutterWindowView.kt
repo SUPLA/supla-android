@@ -67,12 +67,13 @@ val slatShadowRadius = 1.dp
 fun RollerShutterWindowView(
   windowState: RollerShutterWindowState,
   modifier: Modifier = Modifier,
-  colors: RollerShutterColors = RollerShutterColors.standard(),
+  enabled: Boolean = false,
   onPositionChanging: ((Float) -> Unit)? = null,
   onPositionChanged: ((Float) -> Unit)? = null
 ) {
   val (windowDimens, updateDimens) = remember { mutableStateOf<RuntimeDimens?>(null) }
   val moveState = remember { mutableStateOf(MoveState()) }
+  val colors = RollerShutterColors.standard()
 
   Canvas(
     modifier = modifier
@@ -111,6 +112,9 @@ fun RollerShutterWindowView(
     }
 
     WindowDrawer.drawWindow(runtimeDimens = windowDimens, colors = colors, windowState = windowState)
+    if (enabled.not()) {
+      drawRect(colors.disabledOverlay)
+    }
   }
 }
 

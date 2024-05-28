@@ -47,7 +47,7 @@ import org.supla.android.lib.SuplaConst
 import org.supla.android.lib.singlecall.SingleCall
 import org.supla.android.profile.ProfileManager
 import org.supla.android.testhelpers.getOrAwaitValue
-import org.supla.android.usecases.channel.LoadChannelConfigUseCase
+import org.supla.android.usecases.channelconfig.LoadChannelConfigUseCase
 import org.supla.android.widget.WidgetPreferences
 import org.supla.android.widget.shared.WidgetConfigurationViewModelTestBase
 import org.supla.android.widget.shared.configuration.EmptyDisplayNameException

@@ -50,10 +50,7 @@
     <color name="roller_shutter_glass_bottom_color">#D8F3FF</color>
     <color name="roller_shutter_slat_background">@color/gray_light</color>
     <color name="roller_shutter_slat_border">@color/disabled</color>
-    <color name="roller_shutter_disabled_glass_top_color">#EFFAFF</color>
-    <color name="roller_shutter_disabled_glass_bottom_color">#F3FBFF</color>
-    <color name="roller_shutter_disabled_slat_background">#F5F5F6</color>
-    <color name="roller_shutter_disabled_slat_border">#E9E9EA</color>
+    <color name="roller_shutter_disabled_overlay">#8FF5F6F7</color>
 
     <!-- Garage door -->
     <color name="garage_door_wall">@color/disabled</color>

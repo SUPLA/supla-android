@@ -1,4 +1,4 @@
-package org.supla.android.features.details.windowdetail.base.data.facadeblinds
+package org.supla.android.features.details.windowdetail.base.data
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,7 +17,9 @@ package org.supla.android.features.details.windowdetail.base.data.facadeblinds
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-data class FacadeBlindMarker(
-  val position: Float,
-  val tilt: Float
-)
+abstract class ShadingBlindWindowState : WindowState() {
+
+  abstract val slatTilt: WindowGroupedValue?
+
+  abstract val markers: List<ShadingBlindMarker>
+}

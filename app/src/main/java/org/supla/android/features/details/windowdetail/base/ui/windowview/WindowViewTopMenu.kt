@@ -49,6 +49,7 @@ import org.supla.android.features.details.windowdetail.base.data.WindowState
 import org.supla.android.features.details.windowdetail.base.data.facadeblinds.FacadeBlindWindowState
 import org.supla.android.features.details.windowdetail.base.data.verticalblinds.VerticalBlindWindowState
 import org.supla.android.features.details.windowdetail.base.ui.ShadingSystemAction
+import org.supla.android.features.details.windowdetail.base.ui.ShadingSystemPositionPresentation
 import org.supla.android.features.details.windowdetail.base.ui.WindowViewState
 import org.supla.android.ui.views.buttons.animatable.CircleControlButton
 import org.supla.android.ui.views.tools.Shadow
@@ -88,7 +89,7 @@ fun WindowViewTopMenu(
         TopTextLabelView(text = stringResource(id = R.string.roller_shutter_calibrating))
       } else if (!viewState.positionUnknown) {
         Column(verticalArrangement = Arrangement.Absolute.spacedBy(Distance.tiny)) {
-          OpenClosePercentageLabel(viewState.showClosingPercentage, windowState.positionText())
+          OpenClosePercentageLabel(viewState.positionPresentation, windowState.positionText())
           (windowState as? FacadeBlindWindowState)?.let {
             SlatsTiltLabel(value = windowState.slatTiltText()(LocalContext.current))
           }
@@ -97,7 +98,7 @@ fun WindowViewTopMenu(
           }
         }
       } else if (viewState.isGroup) {
-        OpenClosePercentageLabel(viewState.showClosingPercentage, "---")
+        OpenClosePercentageLabel(viewState.positionPresentation, "---")
       } else {
         TopTextLabelView(text = stringResource(id = R.string.roller_shutter_calibration_needed))
       }
@@ -133,9 +134,9 @@ object WindowViewTopMenu {
 }
 
 @Composable
-private fun OpenClosePercentageLabel(showClosing: Boolean, value: String) {
+private fun OpenClosePercentageLabel(positionPresentation: ShadingSystemPositionPresentation, value: String) {
   Row(horizontalArrangement = Arrangement.spacedBy(Distance.tiny)) {
-    PercentageLabelView(showClosingPercentage = showClosing)
+    TopTextLabelView(text = stringResource(id = positionPresentation.stringRes))
     PercentageValueView(value)
   }
 }
@@ -145,15 +146,6 @@ private fun SlatsTiltLabel(value: String) {
   Row(horizontalArrangement = Arrangement.spacedBy(Distance.tiny)) {
     TopTextLabelView(text = stringResource(id = R.string.facade_blind_slat_tilt))
     PercentageValueView(value)
-  }
-}
-
-@Composable
-private fun PercentageLabelView(showClosingPercentage: Boolean) {
-  if (showClosingPercentage) {
-    TopTextLabelView(text = stringResource(id = R.string.roller_shutter_closing_percentage))
-  } else {
-    TopTextLabelView(text = stringResource(id = R.string.roller_shutter_opening_percentage))
   }
 }
 

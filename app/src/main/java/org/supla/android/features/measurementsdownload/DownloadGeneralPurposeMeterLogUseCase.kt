@@ -58,7 +58,7 @@ class DownloadGeneralPurposeMeterLogUseCase @Inject constructor(
     var importedEntries = 0
     var lastEntity = generalPurposeMeterLogRepository.findOldestEntity(remoteId, profileId).blockingGet()
     var afterTimestamp = lastEntity?.date?.toTimestamp() ?: 0
-    val channelConfig = channelConfigRepository.findGpmConfig(profileId, remoteId, ChannelConfigType.GENERAL_PURPOSE_METER)
+    val channelConfig = channelConfigRepository.findChannelConfig(profileId, remoteId, ChannelConfigType.GENERAL_PURPOSE_METER)
       .blockingGet() as SuplaChannelGeneralPurposeMeterConfig
     do {
       val entries = generalPurposeMeterLogRepository.getMeasurements(cloudService, remoteId, afterTimestamp).blockingFirst()

@@ -52,11 +52,12 @@ import org.supla.android.data.source.remote.shadingsystem.SuplaShadingSystemFlag
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.ChannelConfigEventsManager
 import org.supla.android.features.details.windowdetail.base.BaseWindowViewEvent
+import org.supla.android.features.details.windowdetail.base.data.ShadingBlindMarker
 import org.supla.android.features.details.windowdetail.base.data.WindowGroupedValue
 import org.supla.android.features.details.windowdetail.base.data.WindowGroupedValueFormat
-import org.supla.android.features.details.windowdetail.base.data.verticalblinds.VerticalBlindMarker
 import org.supla.android.features.details.windowdetail.base.data.verticalblinds.VerticalBlindWindowState
 import org.supla.android.features.details.windowdetail.base.ui.ShadingSystemAction
+import org.supla.android.features.details.windowdetail.base.ui.ShadingSystemPositionPresentation
 import org.supla.android.features.details.windowdetail.base.ui.WindowViewState
 import org.supla.android.features.details.windowdetail.base.ui.windowview.ShadingSystemOrientation
 import org.supla.android.lib.SuplaConst
@@ -71,6 +72,7 @@ import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
 import org.supla.android.usecases.client.LoginUseCase
 import org.supla.android.usecases.group.GetGroupOnlineSummaryUseCase
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
+import org.supla.android.usecases.group.ReadGroupTiltingDetailsUseCase
 import org.supla.android.usecases.group.totalvalue.ShadowingBlindGroupValue
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.jvm.isAccessible
@@ -83,6 +85,9 @@ class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelSta
 
   @Mock
   private lateinit var executeShadingSystemActionUseCase: ExecuteShadingSystemActionUseCase
+
+  @Mock
+  private lateinit var readGroupTiltingDetailsUseCase: ReadGroupTiltingDetailsUseCase
 
   @Mock
   private lateinit var suplaClientProvider: SuplaClientProvider
@@ -153,7 +158,7 @@ class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelSta
         ),
         viewState = WindowViewState(
           enabled = true,
-          showClosingPercentage = true,
+          positionPresentation = ShadingSystemPositionPresentation.AS_CLOSED,
           orientation = ShadingSystemOrientation.HORIZONTAL
         ),
         lastPosition = position
@@ -186,7 +191,7 @@ class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelSta
         ),
         viewState = WindowViewState(
           enabled = false,
-          showClosingPercentage = true,
+          positionPresentation = ShadingSystemPositionPresentation.AS_CLOSED,
           orientation = ShadingSystemOrientation.HORIZONTAL
         ),
         lastPosition = position
@@ -219,7 +224,7 @@ class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelSta
         ),
         viewState = WindowViewState(
           enabled = true,
-          showClosingPercentage = true,
+          positionPresentation = ShadingSystemPositionPresentation.AS_CLOSED,
           orientation = ShadingSystemOrientation.HORIZONTAL
         ),
         lastPosition = position
@@ -247,7 +252,7 @@ class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelSta
           tilt0Angle = 0f,
           tilt100Angle = 180f,
         ),
-        facadeBlindType = SuplaTiltControlType.CHANGES_POSITION_WHILE_TILTING,
+        tiltControlType = SuplaTiltControlType.CHANGES_POSITION_WHILE_TILTING,
         tiltingTime = 2000,
         openingTime = 20000,
         closingTime = 20000
@@ -264,7 +269,7 @@ class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelSta
         position = WindowGroupedValue.Similar(10f),
         slatTilt = WindowGroupedValue.Similar(33f)
       ),
-      facadeBlindType = SuplaTiltControlType.CHANGES_POSITION_WHILE_TILTING,
+      tiltControlType = SuplaTiltControlType.CHANGES_POSITION_WHILE_TILTING,
       tiltingTime = 2000,
       openingTime = 20000,
       closingTime = 20000,
@@ -294,7 +299,7 @@ class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelSta
         position = WindowGroupedValue.Similar(10f),
         slatTilt = WindowGroupedValue.Similar(33f)
       ),
-      facadeBlindType = SuplaTiltControlType.TILTS_ONLY_WHEN_FULLY_CLOSED,
+      tiltControlType = SuplaTiltControlType.TILTS_ONLY_WHEN_FULLY_CLOSED,
       tiltingTime = 2000,
       openingTime = 20000,
       closingTime = 20000,
@@ -355,7 +360,7 @@ class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelSta
         position = WindowGroupedValue.Similar(10f),
         slatTilt = WindowGroupedValue.Similar(33f)
       ),
-      facadeBlindType = SuplaTiltControlType.CHANGES_POSITION_WHILE_TILTING,
+      tiltControlType = SuplaTiltControlType.CHANGES_POSITION_WHILE_TILTING,
       tiltingTime = 2000,
       openingTime = 20000,
       closingTime = 20000,
@@ -386,7 +391,7 @@ class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelSta
         position = WindowGroupedValue.Similar(10f),
         slatTilt = WindowGroupedValue.Similar(33f)
       ),
-      facadeBlindType = SuplaTiltControlType.CHANGES_POSITION_WHILE_TILTING,
+      tiltControlType = SuplaTiltControlType.CHANGES_POSITION_WHILE_TILTING,
       tiltingTime = 2000,
       openingTime = 20000,
       closingTime = 20000,
@@ -417,7 +422,7 @@ class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelSta
         position = WindowGroupedValue.Similar(10f),
         slatTilt = WindowGroupedValue.Similar(33f)
       ),
-      facadeBlindType = SuplaTiltControlType.CHANGES_POSITION_WHILE_TILTING,
+      tiltControlType = SuplaTiltControlType.CHANGES_POSITION_WHILE_TILTING,
       tiltingTime = 2000,
       openingTime = 20000,
       closingTime = 20000,
@@ -448,7 +453,7 @@ class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelSta
         position = WindowGroupedValue.Similar(10f),
         slatTilt = WindowGroupedValue.Similar(0f)
       ),
-      facadeBlindType = SuplaTiltControlType.TILTS_ONLY_WHEN_FULLY_CLOSED,
+      tiltControlType = SuplaTiltControlType.TILTS_ONLY_WHEN_FULLY_CLOSED,
       tiltingTime = 2000,
       openingTime = 20000,
       closingTime = 20000,
@@ -478,7 +483,7 @@ class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelSta
         position = WindowGroupedValue.Similar(10f),
         slatTilt = WindowGroupedValue.Similar(0f)
       ),
-      facadeBlindType = SuplaTiltControlType.TILTS_ONLY_WHEN_FULLY_CLOSED,
+      tiltControlType = SuplaTiltControlType.TILTS_ONLY_WHEN_FULLY_CLOSED,
       tiltingTime = 2000,
       openingTime = 20000,
       closingTime = 20000,
@@ -509,7 +514,7 @@ class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelSta
         position = WindowGroupedValue.Similar(10f),
         slatTilt = WindowGroupedValue.Similar(33f)
       ),
-      facadeBlindType = SuplaTiltControlType.CHANGES_POSITION_WHILE_TILTING,
+      tiltControlType = SuplaTiltControlType.CHANGES_POSITION_WHILE_TILTING,
       tiltingTime = 2000,
       openingTime = 20000,
       closingTime = 20000,
@@ -539,7 +544,7 @@ class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelSta
         position = WindowGroupedValue.Similar(10f),
         slatTilt = WindowGroupedValue.Similar(33f)
       ),
-      facadeBlindType = SuplaTiltControlType.CHANGES_POSITION_WHILE_TILTING,
+      tiltControlType = SuplaTiltControlType.CHANGES_POSITION_WHILE_TILTING,
       tiltingTime = 2000,
       openingTime = 20000,
       closingTime = 20000,
@@ -571,7 +576,7 @@ class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelSta
         position = WindowGroupedValue.Similar(10f),
         slatTilt = WindowGroupedValue.Similar(33f)
       ),
-      facadeBlindType = SuplaTiltControlType.CHANGES_POSITION_WHILE_TILTING,
+      tiltControlType = SuplaTiltControlType.CHANGES_POSITION_WHILE_TILTING,
       tiltingTime = 2000,
       openingTime = 20000,
       closingTime = 20000,
@@ -602,7 +607,7 @@ class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelSta
         position = WindowGroupedValue.Similar(10f),
         slatTilt = WindowGroupedValue.Similar(0f)
       ),
-      facadeBlindType = SuplaTiltControlType.TILTS_ONLY_WHEN_FULLY_CLOSED,
+      tiltControlType = SuplaTiltControlType.TILTS_ONLY_WHEN_FULLY_CLOSED,
       tiltingTime = 2000,
       openingTime = 20000,
       closingTime = 20000,
@@ -634,7 +639,7 @@ class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelSta
         position = WindowGroupedValue.Similar(10f),
         slatTilt = WindowGroupedValue.Similar(0f)
       ),
-      facadeBlindType = SuplaTiltControlType.TILTS_ONLY_WHEN_FULLY_CLOSED,
+      tiltControlType = SuplaTiltControlType.TILTS_ONLY_WHEN_FULLY_CLOSED,
       tiltingTime = 2000,
       openingTime = 20000,
       closingTime = 20000,
@@ -676,13 +681,13 @@ class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelSta
         remoteId = remoteId,
         windowState = VerticalBlindWindowState(
           position = WindowGroupedValue.Different(30f, 50f),
-          slatTilt = WindowGroupedValue.Different(25f, 85f),
-          markers = listOf(VerticalBlindMarker(50f, 85f), VerticalBlindMarker(30f, 25f)),
+          slatTilt = WindowGroupedValue.Similar(85f),
+          markers = listOf(ShadingBlindMarker(50f, 85f), ShadingBlindMarker(30f, 25f)),
           positionTextFormat = WindowGroupedValueFormat.PERCENTAGE
         ),
         viewState = WindowViewState(
           enabled = true,
-          showClosingPercentage = true,
+          positionPresentation = ShadingSystemPositionPresentation.AS_CLOSED,
           isGroup = true,
           onlineStatusString = "2/5",
           orientation = ShadingSystemOrientation.HORIZONTAL
@@ -717,7 +722,7 @@ class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelSta
           positionTextFormat = WindowGroupedValueFormat.PERCENTAGE
         ),
         viewState = WindowViewState(
-          showClosingPercentage = true,
+          positionPresentation = ShadingSystemPositionPresentation.AS_CLOSED,
           isGroup = true,
           onlineStatusString = "2/5",
           orientation = ShadingSystemOrientation.HORIZONTAL

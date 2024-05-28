@@ -28,7 +28,7 @@ import org.supla.android.core.notifications.SINGLE_WIDGET_NOTIFICATION_ID
 import org.supla.android.lib.SuplaConst
 import org.supla.android.lib.SuplaConst.*
 import org.supla.android.lib.actions.ActionId
-import org.supla.android.usecases.channel.LoadChannelConfigUseCase
+import org.supla.android.usecases.channelconfig.LoadChannelConfigUseCase
 import org.supla.android.widget.WidgetConfiguration
 import org.supla.android.widget.shared.WidgetCommandWorkerBase
 import org.supla.android.widget.shared.configuration.ItemType

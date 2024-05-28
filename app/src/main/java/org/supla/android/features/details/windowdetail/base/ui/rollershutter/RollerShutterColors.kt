@@ -28,6 +28,7 @@ data class RollerShutterColors(
   override val shadow: Color,
   override val glassTop: Color,
   override val glassBottom: Color,
+  override val disabledOverlay: Color,
   val slatBackground: Color,
   val slatBorder: Color,
   val markerBorder: Color,
@@ -41,23 +42,11 @@ data class RollerShutterColors(
         shadow = colorResource(id = R.color.shadow_start),
         glassTop = colorResource(id = R.color.roller_shutter_glass_top_color),
         glassBottom = colorResource(id = R.color.roller_shutter_glass_bottom_color),
+        disabledOverlay = colorResource(id = R.color.roller_shutter_disabled_overlay),
         slatBackground = colorResource(id = R.color.roller_shutter_slat_background),
         slatBorder = colorResource(id = R.color.roller_shutter_slat_border),
         markerBorder = colorResource(id = R.color.on_background),
         markerBackground = colorResource(id = R.color.primary_variant)
-      )
-
-    @Composable
-    fun offline() =
-      RollerShutterColors(
-        window = colorResource(id = R.color.roller_shutter_window_color),
-        shadow = colorResource(id = R.color.shadow_start),
-        glassTop = colorResource(id = R.color.roller_shutter_disabled_glass_top_color),
-        glassBottom = colorResource(id = R.color.roller_shutter_disabled_glass_bottom_color),
-        slatBackground = colorResource(id = R.color.roller_shutter_disabled_slat_background),
-        slatBorder = colorResource(id = R.color.roller_shutter_disabled_slat_border),
-        markerBorder = colorResource(id = R.color.disabled),
-        markerBackground = Color(0xffb3f1cb)
       )
   }
 }

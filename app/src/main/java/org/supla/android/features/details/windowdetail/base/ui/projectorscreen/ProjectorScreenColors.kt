@@ -26,7 +26,8 @@ data class ProjectorScreenColors(
   val screen: Color,
   val shadow: Color,
   val bottomRect: Color,
-  val topRect: Color
+  val topRect: Color,
+  val disabledOverlay: Color
 ) {
   companion object {
     @Composable
@@ -35,16 +36,8 @@ data class ProjectorScreenColors(
         screen = colorResource(id = R.color.roller_shutter_window_color),
         shadow = colorResource(id = R.color.shadow_start),
         bottomRect = colorResource(id = R.color.roller_shutter_slat_background),
-        topRect = colorResource(id = R.color.gray)
-      )
-
-    @Composable
-    fun offline() =
-      ProjectorScreenColors(
-        screen = colorResource(id = R.color.roller_shutter_window_color),
-        shadow = colorResource(id = R.color.shadow_start),
-        bottomRect = colorResource(id = R.color.roller_shutter_slat_background),
-        topRect = colorResource(id = R.color.disabled)
+        topRect = colorResource(id = R.color.gray),
+        disabledOverlay = colorResource(id = R.color.roller_shutter_disabled_overlay)
       )
   }
 }

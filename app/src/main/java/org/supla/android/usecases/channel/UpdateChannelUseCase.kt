@@ -20,20 +20,16 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import org.supla.android.Trace
-import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.data.model.general.EntityUpdateResult
-import org.supla.android.data.source.ChannelConfigRepository
 import org.supla.android.data.source.LocationRepository
 import org.supla.android.data.source.RoomChannelRepository
 import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.LocationEntity
-import org.supla.android.data.source.remote.ChannelConfigType
 import org.supla.android.db.Location
 import org.supla.android.extensions.TAG
 import org.supla.android.lib.SuplaChannel
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER
+import org.supla.android.usecases.channelconfig.RequestChannelConfigUseCase
 import org.supla.android.widget.WidgetManager
 import org.supla.android.widget.WidgetPreferences
 import javax.inject.Inject
@@ -41,11 +37,10 @@ import javax.inject.Singleton
 
 @Singleton
 class UpdateChannelUseCase @Inject constructor(
+  private val requestChannelConfigUseCase: RequestChannelConfigUseCase,
   private val profileRepository: RoomProfileRepository,
   private val channelRepository: RoomChannelRepository,
   private val locationRepository: LocationRepository,
-  private val channelConfigRepository: ChannelConfigRepository,
-  private val suplaClientProvider: SuplaClientProvider,
   private val widgetPreferences: WidgetPreferences,
   private val widgetManager: WidgetManager
 ) {
@@ -75,7 +70,7 @@ class UpdateChannelUseCase @Inject constructor(
   private fun updateChannel(locationEntity: LocationEntity, channelEntity: ChannelEntity, suplaChannel: SuplaChannel) =
     updatePosition(locationEntity, channelEntity.updatedBy(suplaChannel), channelEntity.locationChanged(suplaChannel))
       .flatMapCompletable(channelRepository::update)
-      .andThen(checkConfigUpdateNeeded(suplaChannel))
+      .andThen(requestChannelConfigUseCase(suplaChannel))
       .andThen(checkWidgetUpdateNeeded(channelEntity.profileId, suplaChannel))
       .andThen(Single.just(EntityUpdateResult.UPDATED))
 
@@ -85,7 +80,7 @@ class UpdateChannelUseCase @Inject constructor(
         updatePosition(locationEntity, ChannelEntity.from(suplaChannel, it.id!!), false)
           .flatMapCompletable(channelRepository::insert)
       }
-      .andThen(checkConfigUpdateNeeded(suplaChannel))
+      .andThen(requestChannelConfigUseCase(suplaChannel))
       .andThen(Single.just(EntityUpdateResult.UPDATED))
 
   private fun updatePosition(locationEntity: LocationEntity, channelEntity: ChannelEntity, locationChanged: Boolean) =
@@ -99,30 +94,6 @@ class UpdateChannelUseCase @Inject constructor(
       Single.just(channelEntity.copy(position = 0))
     } else {
       Single.just(channelEntity)
-    }
-
-  private fun checkConfigUpdateNeeded(suplaChannel: SuplaChannel) =
-    if (shouldObserveChannelConfig(suplaChannel)) {
-      channelConfigRepository.findForRemoteId(suplaChannel.Id)
-        .toSingle()
-        .doOnSuccess { config ->
-          Trace.i(TAG, "Channel config found (remoteId: `${suplaChannel.Id}`)")
-          if (config.configCrc32 != suplaChannel.DefaultConfigCRC32) {
-            Trace.i(TAG, "Channel config asked (remoteId: `${suplaChannel.Id}`)")
-            suplaClientProvider.provide()?.getChannelConfig(suplaChannel.Id, ChannelConfigType.DEFAULT)
-          }
-        }
-        .ignoreElement()
-        .onErrorResumeNext {
-          Completable.fromRunnable {
-            if (it is NoSuchElementException) {
-              Trace.i(TAG, "Channel config not found (remoteId: `${suplaChannel.Id}`)")
-              suplaClientProvider.provide()?.getChannelConfig(suplaChannel.Id, ChannelConfigType.DEFAULT)
-            }
-          }
-        }
-    } else {
-      Completable.complete()
     }
 
   private fun checkWidgetUpdateNeeded(profileId: Long, suplaChannel: SuplaChannel) =
@@ -146,10 +117,6 @@ class UpdateChannelUseCase @Inject constructor(
         }
         Single.just(EntityUpdateResult.ERROR)
       }
-
-  private fun shouldObserveChannelConfig(suplaChannel: SuplaChannel) =
-    suplaChannel.Func == SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER ||
-      suplaChannel.Func == SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT
 
   private fun ChannelEntity.locationChanged(suplaChannel: SuplaChannel) =
     locationId != suplaChannel.LocationID

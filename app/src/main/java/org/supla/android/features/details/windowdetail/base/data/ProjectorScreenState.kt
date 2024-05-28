@@ -31,4 +31,5 @@ data class ProjectorScreenState(
   val markers: List<Float> = emptyList(),
 
   override val positionTextFormat: WindowGroupedValueFormat = WindowGroupedValueFormat.PERCENTAGE,
+
 ) : WindowState()

@@ -52,10 +52,10 @@ import org.supla.android.profile.ProfileManager
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.DeleteChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.DownloadChannelMeasurementsUseCase
-import org.supla.android.usecases.channel.LoadChannelConfigUseCase
 import org.supla.android.usecases.channel.LoadChannelMeasurementsDataRangeUseCase
 import org.supla.android.usecases.channel.LoadChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
+import org.supla.android.usecases.channelconfig.LoadChannelConfigUseCase
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named

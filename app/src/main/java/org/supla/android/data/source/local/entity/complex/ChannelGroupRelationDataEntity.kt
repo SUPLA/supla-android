@@ -18,10 +18,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import androidx.room.Embedded
+import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.ChannelGroupEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity
 
 data class ChannelGroupRelationDataEntity(
   @Embedded(prefix = "group_") val channelGroupEntity: ChannelGroupEntity,
+  @Embedded(prefix = "channel_") val channelEntity: ChannelEntity,
   @Embedded(prefix = "value_") val channelValueEntity: ChannelValueEntity,
 )

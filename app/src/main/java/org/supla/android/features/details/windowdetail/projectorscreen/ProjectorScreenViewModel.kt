@@ -29,6 +29,7 @@ import org.supla.android.features.details.windowdetail.base.BaseWindowViewModel
 import org.supla.android.features.details.windowdetail.base.BaseWindowViewModelState
 import org.supla.android.features.details.windowdetail.base.data.ProjectorScreenState
 import org.supla.android.features.details.windowdetail.base.data.WindowGroupedValue
+import org.supla.android.features.details.windowdetail.base.ui.ShadingSystemPositionPresentation
 import org.supla.android.features.details.windowdetail.base.ui.WindowViewState
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.dialogs.AuthorizationDialogState
@@ -107,9 +108,9 @@ class ProjectorScreenViewModel @Inject constructor(
       updateChannel(state, channel, value) {
         it.copy(
           windowState = it.windowState.copy(
-            position = WindowGroupedValue.Similar(if (value.online) position.toFloat() else 25f),
-            positionTextFormat = positionTextFormat
-          )
+            position = WindowGroupedValue.Similar(if (value.online) position.toFloat() else 25f)
+          ),
+          viewState = it.viewState.copy(positionPresentation = ShadingSystemPositionPresentation.AS_EXTENSION)
         )
       }
     }
@@ -129,11 +130,11 @@ class ProjectorScreenViewModel @Inject constructor(
           remoteId = group.groupDataEntity.remoteId,
           windowState = it.windowState.copy(
             position = if (group.groupDataEntity.isOnline()) overallPosition else WindowGroupedValue.Similar(25f),
-            markers = if (overallPosition is WindowGroupedValue.Different) positions else emptyList(),
-            positionTextFormat = positionTextFormat
+            markers = if (overallPosition is WindowGroupedValue.Different) positions else emptyList()
           ),
           viewState = it.viewState.copy(
             positionUnknown = overallPosition is WindowGroupedValue.Invalid,
+            positionPresentation = ShadingSystemPositionPresentation.AS_EXTENSION
           ),
         )
       }

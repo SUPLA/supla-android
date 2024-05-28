@@ -68,13 +68,14 @@ import kotlin.math.ceil
 fun GarageDoorScreenView(
   windowState: GarageDoorState,
   modifier: Modifier = Modifier,
-  colors: GarageDoorScreenColors = GarageDoorScreenColors.standard(),
+  enabled: Boolean = false,
   onPositionChanging: ((Float) -> Unit)? = null,
   onPositionChanged: ((Float) -> Unit)? = null
 ) {
   val (windowDimens, updateDimens) = remember { mutableStateOf<RuntimeDimens?>(null) }
   val moveState = remember { mutableStateOf(MoveState()) }
   val garageContentPainter = painterResource(id = R.drawable.garage_content)
+  val colors = GarageDoorScreenColors.standard()
 
   Canvas(
     modifier = modifier
@@ -125,6 +126,10 @@ fun GarageDoorScreenView(
         drawPath(windowDimens.markerPath, colors.markerBackground)
         drawPath(windowDimens.markerPath, colors.markerBorder, style = Stroke(1.dp.toPx()))
       }
+    }
+
+    if (enabled.not()) {
+      drawRect(colors.disabledOverlay)
     }
   }
 }
@@ -244,7 +249,7 @@ data class RuntimeDimens(
     private fun canvasRect(viewSize: IntSize): Rect {
       val size = getSize(viewSize = viewSize)
       return Rect(
-        Offset(viewSize.width.minus(size.width).div(2), 0f),
+        Offset(viewSize.width.minus(size.width).div(2), viewSize.height.minus(size.height).div(2)),
         size
       )
     }
@@ -315,6 +320,7 @@ private fun Preview_Normal() {
       ) {
         GarageDoorScreenView(
           windowState = GarageDoorState(WindowGroupedValue.Similar(75f)),
+          enabled = true,
           modifier = Modifier
             .fillMaxSize()
             .padding(all = Distance.small)
@@ -341,6 +347,7 @@ private fun Preview_Normal() {
       ) {
         GarageDoorScreenView(
           windowState = GarageDoorState(WindowGroupedValue.Similar(25f)),
+          enabled = true,
           modifier = Modifier
             .fillMaxSize()
             .padding(all = Distance.small)

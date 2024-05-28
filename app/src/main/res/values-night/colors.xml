@@ -43,10 +43,7 @@
     <color name="roller_shutter_glass_bottom_color">#5A6781</color>
     <color name="roller_shutter_slat_background">#7E8082</color>
     <color name="roller_shutter_slat_border">#000000</color>
-    <color name="roller_shutter_disabled_glass_top_color">#01141e</color>
-    <color name="roller_shutter_disabled_glass_bottom_color">#3f485a</color>
-    <color name="roller_shutter_disabled_slat_background">#585a5b</color>
-    <color name="roller_shutter_disabled_slat_border">#000000</color>
+    <color name="roller_shutter_disabled_overlay">#BB171717</color>
 
     <!-- Garage door -->
     <color name="garage_door_car">#191C19</color>

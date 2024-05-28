@@ -20,9 +20,10 @@ package org.supla.android.features.details.windowdetail.base.data.facadeblinds
 import org.supla.android.R
 import org.supla.android.core.ui.StringProvider
 import org.supla.android.extensions.guardLet
+import org.supla.android.features.details.windowdetail.base.data.ShadingBlindMarker
+import org.supla.android.features.details.windowdetail.base.data.ShadingBlindWindowState
 import org.supla.android.features.details.windowdetail.base.data.WindowGroupedValue
 import org.supla.android.features.details.windowdetail.base.data.WindowGroupedValueFormat
-import org.supla.android.features.details.windowdetail.base.data.WindowState
 
 data class FacadeBlindWindowState(
   /**
@@ -35,7 +36,7 @@ data class FacadeBlindWindowState(
   /**
    * Slat tilt as percentage - 0 up to 100
    */
-  val slatTilt: WindowGroupedValue? = null,
+  override val slatTilt: WindowGroupedValue? = null,
 
   val tilt0Angle: Float? = null,
 
@@ -44,11 +45,11 @@ data class FacadeBlindWindowState(
   /**
    * Used for groups - shows positions of single roller shutter
    */
-  val markers: List<FacadeBlindMarker> = emptyList(),
+  override val markers: List<ShadingBlindMarker> = emptyList(),
 
   override val positionTextFormat: WindowGroupedValueFormat = WindowGroupedValueFormat.PERCENTAGE,
   val tiltTextFormat: WindowGroupedValueFormat = WindowGroupedValueFormat.DEGREE
-) : WindowState() {
+) : ShadingBlindWindowState() {
 
   val slatTiltDegrees: Float?
     get() {

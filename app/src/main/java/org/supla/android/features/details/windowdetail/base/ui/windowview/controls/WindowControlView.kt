@@ -30,21 +30,13 @@ import org.supla.android.features.details.windowdetail.base.data.facadeblinds.Fa
 import org.supla.android.features.details.windowdetail.base.data.verticalblinds.VerticalBlindWindowState
 import org.supla.android.features.details.windowdetail.base.ui.ShadingSystemAction
 import org.supla.android.features.details.windowdetail.base.ui.WindowViewState
-import org.supla.android.features.details.windowdetail.base.ui.curtain.CurtainColors
 import org.supla.android.features.details.windowdetail.base.ui.curtain.CurtainWindowView
-import org.supla.android.features.details.windowdetail.base.ui.facadeblinds.FacadeBlindColors
 import org.supla.android.features.details.windowdetail.base.ui.facadeblinds.FacadeBlindsWindowView
-import org.supla.android.features.details.windowdetail.base.ui.garagedoor.GarageDoorScreenColors
 import org.supla.android.features.details.windowdetail.base.ui.garagedoor.GarageDoorScreenView
-import org.supla.android.features.details.windowdetail.base.ui.projectorscreen.ProjectorScreenColors
 import org.supla.android.features.details.windowdetail.base.ui.projectorscreen.ProjectorScreenView
-import org.supla.android.features.details.windowdetail.base.ui.rollershutter.RollerShutterColors
 import org.supla.android.features.details.windowdetail.base.ui.rollershutter.RollerShutterWindowView
-import org.supla.android.features.details.windowdetail.base.ui.roofwindow.RoofWindowColors
 import org.supla.android.features.details.windowdetail.base.ui.roofwindow.RoofWindowView
-import org.supla.android.features.details.windowdetail.base.ui.terraceawning.TerraceAwningColors
 import org.supla.android.features.details.windowdetail.base.ui.terraceawning.TerraceAwningView
-import org.supla.android.features.details.windowdetail.base.ui.verticalblinds.VerticalBlindColors
 import org.supla.android.features.details.windowdetail.base.ui.verticalblinds.VerticalBlindsWindowView
 
 @Composable
@@ -58,7 +50,7 @@ fun WindowControlView(
     is RoofWindowState ->
       RoofWindowView(
         windowState = windowState,
-        colors = if (viewState.enabled) RoofWindowColors.standard() else RoofWindowColors.offline(),
+        enabled = viewState.enabled,
         modifier = modifier,
         onPositionChanging = { if (viewState.enabled) onAction(ShadingSystemAction.MoveTo(it)) },
         onPositionChanged = { if (viewState.enabled) onAction(ShadingSystemAction.OpenAt(it)) }
@@ -67,7 +59,7 @@ fun WindowControlView(
     is RollerShutterWindowState ->
       RollerShutterWindowView(
         windowState = windowState,
-        colors = if (viewState.enabled) RollerShutterColors.standard() else RollerShutterColors.offline(),
+        enabled = viewState.enabled,
         modifier = modifier,
         onPositionChanging = { if (viewState.enabled) onAction(ShadingSystemAction.MoveTo(it)) },
         onPositionChanged = { if (viewState.enabled) onAction(ShadingSystemAction.OpenAt(it)) }
@@ -76,7 +68,7 @@ fun WindowControlView(
     is FacadeBlindWindowState ->
       FacadeBlindsWindowView(
         windowState = windowState,
-        colors = if (viewState.enabled) FacadeBlindColors.standard() else FacadeBlindColors.offline(),
+        enabled = viewState.enabled,
         modifier = modifier,
         onPositionChanging = { tilt, position -> if (viewState.enabled) onAction(ShadingSystemAction.MoveAndTiltTo(position, tilt)) },
         onPositionChanged = { tilt, position -> if (viewState.enabled) onAction(ShadingSystemAction.MoveAndTiltSetTo(position, tilt)) }
@@ -85,7 +77,7 @@ fun WindowControlView(
     is TerraceAwningState ->
       TerraceAwningView(
         windowState = windowState,
-        colors = if (viewState.enabled) TerraceAwningColors.standard() else TerraceAwningColors.offline(),
+        enabled = viewState.enabled,
         modifier = modifier,
         onPositionChanging = { position -> if (viewState.enabled) onAction(ShadingSystemAction.MoveTo(position)) },
         onPositionChanged = { position -> if (viewState.enabled) onAction(ShadingSystemAction.OpenAt(position)) }
@@ -94,7 +86,7 @@ fun WindowControlView(
     is ProjectorScreenState ->
       ProjectorScreenView(
         windowState = windowState,
-        colors = if (viewState.enabled) ProjectorScreenColors.standard() else ProjectorScreenColors.offline(),
+        enabled = viewState.enabled,
         modifier = modifier,
         onPositionChanging = { position -> if (viewState.enabled) onAction(ShadingSystemAction.MoveTo(position)) },
         onPositionChanged = { position -> if (viewState.enabled) onAction(ShadingSystemAction.OpenAt(position)) }
@@ -103,7 +95,7 @@ fun WindowControlView(
     is CurtainWindowState ->
       CurtainWindowView(
         windowState = windowState,
-        colors = if (viewState.enabled) CurtainColors.standard() else CurtainColors.offline(),
+        enabled = viewState.enabled,
         modifier = modifier,
         onPositionChanging = { position -> if (viewState.enabled) onAction(ShadingSystemAction.MoveTo(position)) },
         onPositionChanged = { position -> if (viewState.enabled) onAction(ShadingSystemAction.OpenAt(position)) }
@@ -112,7 +104,7 @@ fun WindowControlView(
     is VerticalBlindWindowState ->
       VerticalBlindsWindowView(
         windowState = windowState,
-        colors = if (viewState.enabled) VerticalBlindColors.standard() else VerticalBlindColors.offline(),
+        enabled = viewState.enabled,
         modifier = modifier,
         onPositionChanging = { tilt, position -> if (viewState.enabled) onAction(ShadingSystemAction.MoveAndTiltTo(position, tilt)) },
         onPositionChanged = { tilt, position -> if (viewState.enabled) onAction(ShadingSystemAction.MoveAndTiltSetTo(position, tilt)) }
@@ -121,7 +113,7 @@ fun WindowControlView(
     is GarageDoorState ->
       GarageDoorScreenView(
         windowState = windowState,
-        colors = if (viewState.enabled) GarageDoorScreenColors.standard() else GarageDoorScreenColors.offline(),
+        enabled = viewState.enabled,
         modifier = modifier,
         onPositionChanging = { position -> if (viewState.enabled) onAction(ShadingSystemAction.MoveTo(position)) },
         onPositionChanged = { position -> if (viewState.enabled) onAction(ShadingSystemAction.OpenAt(position)) }

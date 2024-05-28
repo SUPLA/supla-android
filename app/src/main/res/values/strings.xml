@@ -505,7 +505,7 @@
   <string name="associeted_with_push_error" translatable="false">The function of the channel associated with the push notification cannot be changed.</string>
   <string name="associeted_with_vbt_error" translatable="false">The channel function associated with reactions cannot be changed.</string>
   <string name="location_ordering">Location order</string>
-  <string name="rs_display_mode">Roller shutter %</string>
+  <string name="rs_display_mode">Roller shutter, facade blind, curtain %</string>
   <string name="rs_display_mode_opening">Opening</string>
   <string name="rs_display_mode_closing">Closing</string>
   <string name="status_accessid_inactive">Access Identifier inactive</string>
@@ -677,8 +677,9 @@
   <string name="channel_caption_terrace_awning" translatable="false">Terrace awning</string>
   <string name="channel_caption_projector_screen" translatable="false">Projector screen</string>
   <string name="channel_caption_curtain" translatable="false">Curtain</string>
-  <string name="channel_caption_vertical_blinds" translatable="false">Vertical Blinds</string>
-  <string name="channel_caption_roller_garage_door" translatable="false">Garage Door</string>
+  <string name="channel_caption_vertical_blinds" translatable="false">Vertical blinds</string>
+  <string name="channel_caption_roller_garage_door" translatable="false">Garage door</string>
+  <string name="shading_system_extension" translatable="false">Extension:</string>
 
   <plurals name="details_timer_info_on" translatable="false">
     <item quantity="other">on</item>

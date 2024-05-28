@@ -52,8 +52,8 @@ import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.extensions.toPx
+import org.supla.android.features.details.windowdetail.base.data.ShadingBlindMarker
 import org.supla.android.features.details.windowdetail.base.data.WindowGroupedValue
-import org.supla.android.features.details.windowdetail.base.data.facadeblinds.FacadeBlindMarker
 import org.supla.android.features.details.windowdetail.base.data.facadeblinds.FacadeBlindWindowState
 import org.supla.android.features.details.windowdetail.base.ui.MoveState
 import org.supla.android.features.details.windowdetail.base.ui.windowview.SlatDimens
@@ -71,12 +71,13 @@ private const val HORIZONTAL_MOVE_HYSTERESIS = 20
 fun FacadeBlindsWindowView(
   windowState: FacadeBlindWindowState,
   modifier: Modifier = Modifier,
-  colors: FacadeBlindColors = FacadeBlindColors.standard(),
+  enabled: Boolean = false,
   onPositionChanging: ((tilt: Float, position: Float) -> Unit)? = null,
   onPositionChanged: ((tilt: Float, position: Float) -> Unit)? = null
 ) {
   val (windowDimens, updateDimens) = remember { mutableStateOf<RuntimeDimens?>(null) }
   val moveState = remember { mutableStateOf(MoveState()) }
+  val colors = FacadeBlindColors.standard()
 
   Canvas(
     modifier = modifier
@@ -124,6 +125,9 @@ fun FacadeBlindsWindowView(
     }
 
     WindowDrawer.drawWindow(runtimeDimens = windowDimens, colors = colors, windowState = windowState)
+    if (enabled.not()) {
+      drawRect(colors.disabledOverlay)
+    }
   }
 }
 
@@ -329,6 +333,7 @@ private fun Preview_Normal() {
       ) {
         FacadeBlindsWindowView(
           windowState = FacadeBlindWindowState(WindowGroupedValue.Similar(75f)),
+          enabled = true,
           modifier = Modifier
             .fillMaxSize()
             .padding(all = Distance.small)
@@ -340,7 +345,7 @@ private fun Preview_Normal() {
           .height(350.dp)
           .background(color = colorResource(id = R.color.background))
       ) {
-        val markers = listOf(FacadeBlindMarker(0f, 50f), FacadeBlindMarker(35f, 25f))
+        val markers = listOf(ShadingBlindMarker(0f, 50f), ShadingBlindMarker(35f, 25f))
         FacadeBlindsWindowView(
           windowState = FacadeBlindWindowState(WindowGroupedValue.Similar(75f), markers = markers),
           modifier = Modifier
@@ -356,6 +361,7 @@ private fun Preview_Normal() {
       ) {
         FacadeBlindsWindowView(
           windowState = FacadeBlindWindowState(WindowGroupedValue.Similar(25f)),
+          enabled = true,
           modifier = Modifier
             .fillMaxSize()
             .padding(all = Distance.small)

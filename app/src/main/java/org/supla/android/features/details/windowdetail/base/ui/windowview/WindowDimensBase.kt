@@ -79,19 +79,19 @@ interface WindowDimensBase {
     fun canvasRect(viewSize: IntSize): Rect {
       val size = getSize(viewSize = viewSize)
       return Rect(
-        Offset(viewSize.width.minus(size.width).div(2), 0f),
+        Offset(viewSize.width.minus(size.width).div(2), viewSize.height.minus(size.height).div(2)),
         size
       )
     }
 
     fun windowRect(scale: Float, canvasRect: Rect, topLineRect: Rect): Rect {
       val windowHorizontalMargin = WindowDimens.WINDOW_HORIZONTAL_MARGIN.times(scale)
-      val windowTop = topLineRect.height.div(2)
+      val windowTopMargin = topLineRect.height.div(2)
       val windowSize = Size(
         canvasRect.width.minus(windowHorizontalMargin.times(2)),
-        canvasRect.height.minus(windowTop)
+        canvasRect.height.minus(windowTopMargin)
       )
-      val windowOffset = Offset(canvasRect.left.plus(windowHorizontalMargin), windowTop)
+      val windowOffset = Offset(canvasRect.left.plus(windowHorizontalMargin), canvasRect.top.plus(windowTopMargin))
 
       return Rect(windowOffset, windowSize)
     }

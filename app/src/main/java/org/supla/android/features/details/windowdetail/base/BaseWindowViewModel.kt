@@ -38,6 +38,7 @@ import org.supla.android.features.details.windowdetail.base.data.WindowGroupedVa
 import org.supla.android.features.details.windowdetail.base.data.WindowGroupedValueFormat
 import org.supla.android.features.details.windowdetail.base.data.WindowState
 import org.supla.android.features.details.windowdetail.base.ui.ShadingSystemAction
+import org.supla.android.features.details.windowdetail.base.ui.ShadingSystemPositionPresentation
 import org.supla.android.features.details.windowdetail.base.ui.WindowViewState
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.tools.SuplaSchedulers
@@ -249,11 +250,6 @@ abstract class BaseWindowViewModel<S : BaseWindowViewModelState>(
     }
   }
 
-  protected data class GroupData(
-    val groupDataEntity: ChannelGroupDataEntity,
-    val onlineSummary: GroupOnlineSummary
-  )
-
   protected open fun canShowMoveTime(state: S): Boolean =
     state.viewState.positionUnknown
 
@@ -283,7 +279,7 @@ abstract class BaseWindowViewModel<S : BaseWindowViewModelState>(
         it.copy(
           issues = createIssues(value.flags),
           enabled = value.online,
-          showClosingPercentage = preferences.isShowOpeningPercent.not(),
+          positionPresentation = getPositionPresentation(),
           positionUnknown = value.hasValidPosition().not(),
           calibrating = value.flags.contains(SuplaShadingSystemFlag.CALIBRATION_IN_PROGRESS),
           calibrationPossible = SuplaChannelFlag.CALCFG_RECALIBRATE inside channel.flags
@@ -301,7 +297,7 @@ abstract class BaseWindowViewModel<S : BaseWindowViewModelState>(
       stateCopy(state, remoteId = group.remoteId) {
         it.copy(
           enabled = group.isOnline(),
-          showClosingPercentage = preferences.isShowOpeningPercent.not(),
+          positionPresentation = getPositionPresentation(),
           calibrating = false,
           calibrationPossible = false,
           isGroup = true,
@@ -313,6 +309,14 @@ abstract class BaseWindowViewModel<S : BaseWindowViewModelState>(
   private fun createIssues(flags: List<SuplaShadingSystemFlag>) =
     flags.filter { it.isIssueFlag() }
       .map { ChannelIssueItem(it.getIssueIconType()!!, it.getIssueMessage()!!) }
+
+  private fun getPositionPresentation() =
+    if (preferences.isShowOpeningPercent) ShadingSystemPositionPresentation.AS_OPENED else ShadingSystemPositionPresentation.AS_CLOSED
+
+  protected data class GroupData(
+    val groupDataEntity: ChannelGroupDataEntity,
+    val onlineSummary: GroupOnlineSummary
+  )
 }
 
 sealed class BaseWindowViewEvent : ViewEvent {
