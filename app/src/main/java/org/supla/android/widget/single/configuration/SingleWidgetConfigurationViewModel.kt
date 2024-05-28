@@ -37,7 +37,7 @@ import org.supla.android.extensions.isSwitch
 import org.supla.android.extensions.isThermometer
 import org.supla.android.lib.singlecall.SingleCall
 import org.supla.android.profile.ProfileManager
-import org.supla.android.usecases.channel.LoadChannelConfigUseCase
+import org.supla.android.usecases.channelconfig.LoadChannelConfigUseCase
 import org.supla.android.widget.WidgetPreferences
 import org.supla.android.widget.shared.configuration.*
 import javax.inject.Inject

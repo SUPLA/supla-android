@@ -1,0 +1,66 @@
+package org.supla.android.usecases.channelconfig
+/*
+ Copyright (C) AC SOFTWARE SP. Z O.O.
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
+
+import io.reactivex.rxjava3.core.Completable
+import org.supla.android.Trace
+import org.supla.android.core.networking.suplaclient.SuplaClientProvider
+import org.supla.android.data.source.ChannelConfigRepository
+import org.supla.android.data.source.remote.ChannelConfigType
+import org.supla.android.extensions.TAG
+import org.supla.android.lib.SuplaChannel
+import org.supla.android.lib.SuplaConst
+import javax.inject.Inject
+import javax.inject.Singleton
+
+@Singleton
+class RequestChannelConfigUseCase @Inject constructor(
+  private val channelConfigRepository: ChannelConfigRepository,
+  private val suplaClientProvider: SuplaClientProvider
+) {
+
+  operator fun invoke(suplaChannel: SuplaChannel): Completable =
+    if (shouldObserveChannelConfig(suplaChannel)) {
+      channelConfigRepository.findForRemoteId(suplaChannel.Id)
+        .toSingle()
+        .doOnSuccess { config ->
+          Trace.i(TAG, "Channel config found (remoteId: `${suplaChannel.Id}`)")
+          if (config.configCrc32 != suplaChannel.DefaultConfigCRC32) {
+            Trace.i(TAG, "Channel config asked (remoteId: `${suplaChannel.Id}`)")
+            suplaClientProvider.provide()?.getChannelConfig(suplaChannel.Id, ChannelConfigType.DEFAULT)
+          }
+        }
+        .ignoreElement()
+        .onErrorResumeNext {
+          Completable.fromRunnable {
+            if (it is NoSuchElementException) {
+              Trace.i(TAG, "Channel config not found (remoteId: `${suplaChannel.Id}`)")
+              suplaClientProvider.provide()?.getChannelConfig(suplaChannel.Id, ChannelConfigType.DEFAULT)
+            }
+          }
+        }
+    } else {
+      Completable.complete()
+    }
+
+  private fun shouldObserveChannelConfig(suplaChannel: SuplaChannel) =
+    suplaChannel.Func == SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER ||
+      suplaChannel.Func == SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT ||
+      suplaChannel.Func == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND ||
+      suplaChannel.Func == SuplaConst.SUPLA_CHANNELFNC_VERTICAL_BLIND
+}

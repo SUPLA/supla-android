@@ -28,7 +28,8 @@ data class GarageDoorScreenColors(
   val slatBackground: Color,
   val slatBorder: Color,
   val markerBorder: Color,
-  val markerBackground: Color
+  val markerBackground: Color,
+  val disabledOverlay: Color
 ) {
   companion object {
     @Composable
@@ -39,18 +40,8 @@ data class GarageDoorScreenColors(
         slatBackground = colorResource(id = R.color.roller_shutter_slat_background),
         slatBorder = colorResource(id = R.color.roller_shutter_slat_border),
         markerBorder = colorResource(id = R.color.on_background),
-        markerBackground = colorResource(id = R.color.primary_variant)
-      )
-
-    @Composable
-    fun offline() =
-      GarageDoorScreenColors(
-        building = colorResource(id = R.color.roller_shutter_window_color),
-        shadow = colorResource(id = R.color.shadow_start),
-        slatBackground = colorResource(id = R.color.roller_shutter_disabled_slat_background),
-        slatBorder = colorResource(id = R.color.roller_shutter_disabled_slat_border),
-        markerBorder = colorResource(id = R.color.disabled),
-        markerBackground = Color(0xffb3f1cb)
+        markerBackground = colorResource(id = R.color.primary_variant),
+        disabledOverlay = colorResource(id = R.color.roller_shutter_disabled_overlay)
       )
   }
 }

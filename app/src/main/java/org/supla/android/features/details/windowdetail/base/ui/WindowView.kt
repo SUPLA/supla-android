@@ -41,26 +41,10 @@ import org.supla.android.features.details.windowdetail.base.ui.windowview.Window
 import org.supla.android.features.details.windowdetail.base.ui.windowview.WindowViewTopMenu
 import org.supla.android.ui.lists.data.IssueIconType
 
-sealed interface ShadingSystemAction {
-  object Open : ShadingSystemAction
-  object Close : ShadingSystemAction
-  object Stop : ShadingSystemAction
-  object MoveUp : ShadingSystemAction
-  object MoveDown : ShadingSystemAction
-  object Calibrate : ShadingSystemAction
-
-  data class OpenAt(val position: Float) : ShadingSystemAction
-  data class MoveTo(val position: Float) : ShadingSystemAction
-  data class TiltTo(val tilt: Float) : ShadingSystemAction
-  data class TiltSetTo(val tilt: Float) : ShadingSystemAction
-  data class MoveAndTiltTo(val position: Float, val tilt: Float) : ShadingSystemAction
-  data class MoveAndTiltSetTo(val position: Float, val tilt: Float) : ShadingSystemAction
-}
-
 data class WindowViewState(
   val issues: List<ChannelIssueItem> = emptyList(),
   val enabled: Boolean = false,
-  val showClosingPercentage: Boolean = false,
+  val positionPresentation: ShadingSystemPositionPresentation = ShadingSystemPositionPresentation.AS_OPENED,
   val calibrating: Boolean = false,
   val positionUnknown: Boolean = false,
   val calibrationPossible: Boolean = false,
@@ -69,6 +53,12 @@ data class WindowViewState(
   val onlineStatusString: String? = null,
   val orientation: ShadingSystemOrientation = ShadingSystemOrientation.VERTICAL
 )
+
+enum class ShadingSystemPositionPresentation(val stringRes: Int) {
+  AS_OPENED(R.string.roller_shutter_opening_percentage),
+  AS_CLOSED(R.string.roller_shutter_closing_percentage),
+  AS_EXTENSION(R.string.shading_system_extension)
+}
 
 @Composable
 fun WindowView(
@@ -140,7 +130,7 @@ private fun Preview() {
         viewState = WindowViewState(
           enabled = true,
           issues = listOf(ChannelIssueItem(IssueIconType.WARNING, R.string.motor_problem)),
-          showClosingPercentage = false,
+          positionPresentation = ShadingSystemPositionPresentation.AS_CLOSED,
           calibrating = false,
           positionUnknown = false,
           calibrationPossible = true,
@@ -165,7 +155,7 @@ private fun Preview_Horizontal() {
         viewState = WindowViewState(
           enabled = true,
           issues = listOf(ChannelIssueItem(IssueIconType.WARNING, R.string.motor_problem)),
-          showClosingPercentage = false,
+          positionPresentation = ShadingSystemPositionPresentation.AS_OPENED,
           calibrating = false,
           positionUnknown = false,
           calibrationPossible = true,
@@ -191,7 +181,7 @@ private fun Preview_High() {
         viewState = WindowViewState(
           enabled = true,
           issues = listOf(ChannelIssueItem(IssueIconType.WARNING, R.string.motor_problem)),
-          showClosingPercentage = false,
+          positionPresentation = ShadingSystemPositionPresentation.AS_CLOSED,
           calibrating = false,
           positionUnknown = false,
           calibrationPossible = true,
@@ -216,7 +206,7 @@ private fun Preview_Small() {
         viewState = WindowViewState(
           enabled = true,
           issues = listOf(ChannelIssueItem(IssueIconType.WARNING, R.string.motor_problem)),
-          showClosingPercentage = false,
+          positionPresentation = ShadingSystemPositionPresentation.AS_CLOSED,
           calibrating = true,
           positionUnknown = true,
           calibrationPossible = true,
@@ -241,7 +231,7 @@ private fun Preview_Small_Horizontal() {
         viewState = WindowViewState(
           enabled = true,
           issues = listOf(ChannelIssueItem(IssueIconType.WARNING, R.string.motor_problem)),
-          showClosingPercentage = false,
+          positionPresentation = ShadingSystemPositionPresentation.AS_CLOSED,
           calibrating = true,
           positionUnknown = true,
           calibrationPossible = true,

@@ -81,7 +81,7 @@ private val windowPaint = Paint().asFrameworkPaint().apply {
 fun RoofWindowView(
   windowState: RoofWindowState,
   modifier: Modifier = Modifier,
-  colors: RoofWindowColors = RoofWindowColors.standard(),
+  enabled: Boolean = false,
   onPositionChanging: ((Float) -> Unit)? = null,
   onPositionChanged: ((Float) -> Unit)? = null
 ) {
@@ -91,6 +91,7 @@ fun RoofWindowView(
     windowDimens?.let { Camera().asDynamic(windowDimens, windowState) }
   }
   val moveState = remember { mutableStateOf(MoveState()) }
+  val colors = RoofWindowColors.standard()
 
   Canvas(
     modifier = modifier
@@ -144,6 +145,10 @@ fun RoofWindowView(
     )
     drawPath(RoofWindowDrawer.sashGlassPath(windowDimens, dynamicCamera), color = colors.glassTop.copy(alpha = 0.4f))
     drawPath(RoofWindowDrawer.windowJambPath(windowDimens, staticCamera), color = colors.window)
+
+    if (enabled.not()) {
+      drawRect(colors.disabledOverlay)
+    }
   }
 }
 
@@ -313,6 +318,7 @@ private fun Preview_Normal() {
       ) {
         RoofWindowView(
           windowState = RoofWindowState(WindowGroupedValue.Similar(75f)),
+          enabled = true,
           modifier = Modifier
             .fillMaxSize()
             .padding(all = Distance.small)
@@ -339,6 +345,7 @@ private fun Preview_Normal() {
       ) {
         RoofWindowView(
           windowState = RoofWindowState(WindowGroupedValue.Similar(25f)),
+          enabled = true,
           modifier = Modifier
             .fillMaxSize()
             .padding(all = Distance.small)

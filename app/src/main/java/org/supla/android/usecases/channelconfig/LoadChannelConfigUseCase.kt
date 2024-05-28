@@ -1,4 +1,4 @@
-package org.supla.android.usecases.channel
+package org.supla.android.usecases.channelconfig
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -20,11 +20,8 @@ package org.supla.android.usecases.channel
 import io.reactivex.rxjava3.core.Single
 import org.supla.android.data.source.ChannelConfigRepository
 import org.supla.android.data.source.RoomChannelRepository
-import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.remote.ChannelConfigType
 import org.supla.android.data.source.remote.SuplaChannelConfig
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -36,14 +33,8 @@ class LoadChannelConfigUseCase @Inject constructor(
 
   operator fun invoke(profileId: Long, remoteId: Int): Single<SuplaChannelConfig> {
     return channelRepository.findByRemoteId(profileId, remoteId)
-      .map(this::toConfigType)
-      .flatMapSingle { channelConfigRepository.findGpmConfig(profileId, remoteId, it) }
+      .map(ChannelConfigType::from)
+      .flatMapSingle { channelConfigRepository.findChannelConfig(profileId, remoteId, it) }
       .toSingle()
-  }
-
-  private fun toConfigType(channel: ChannelEntity): ChannelConfigType = when (channel.function) {
-    SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT -> ChannelConfigType.GENERAL_PURPOSE_MEASUREMENT
-    SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER -> ChannelConfigType.GENERAL_PURPOSE_METER
-    else -> throw IllegalArgumentException("Channel not supported (function: `${channel.function}`)")
   }
 }

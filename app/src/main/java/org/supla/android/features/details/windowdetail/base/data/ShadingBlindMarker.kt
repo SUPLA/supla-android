@@ -1,4 +1,4 @@
-package org.supla.android.features.details.windowdetail.base.data.verticalblinds
+package org.supla.android.features.details.windowdetail.base.data
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,7 +17,7 @@ package org.supla.android.features.details.windowdetail.base.data.verticalblinds
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-data class VerticalBlindMarker(
+data class ShadingBlindMarker(
   val position: Float,
   val tilt: Float
 )

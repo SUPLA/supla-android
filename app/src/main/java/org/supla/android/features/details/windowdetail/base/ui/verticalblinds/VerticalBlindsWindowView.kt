@@ -53,8 +53,8 @@ import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.extensions.limit
 import org.supla.android.extensions.toPx
+import org.supla.android.features.details.windowdetail.base.data.ShadingBlindMarker
 import org.supla.android.features.details.windowdetail.base.data.WindowGroupedValue
-import org.supla.android.features.details.windowdetail.base.data.verticalblinds.VerticalBlindMarker
 import org.supla.android.features.details.windowdetail.base.data.verticalblinds.VerticalBlindWindowState
 import org.supla.android.features.details.windowdetail.base.ui.MoveState
 import org.supla.android.features.details.windowdetail.base.ui.facadeblinds.SlatTiltSliderDimens
@@ -71,12 +71,13 @@ private const val MOVE_HYSTERESIS = 20
 fun VerticalBlindsWindowView(
   windowState: VerticalBlindWindowState,
   modifier: Modifier = Modifier,
-  colors: VerticalBlindColors = VerticalBlindColors.standard(),
+  enabled: Boolean = false,
   onPositionChanging: ((tilt: Float, position: Float) -> Unit)? = null,
   onPositionChanged: ((tilt: Float, position: Float) -> Unit)? = null
 ) {
   val (windowDimens, updateDimens) = remember { mutableStateOf<RuntimeDimens?>(null) }
   val moveState = remember { mutableStateOf(MoveState()) }
+  val colors = VerticalBlindColors.standard()
 
   Canvas(
     modifier = modifier
@@ -125,6 +126,9 @@ fun VerticalBlindsWindowView(
     }
 
     WindowDrawer.drawWindow(runtimeDimens = windowDimens, colors = colors, windowState = windowState)
+    if (enabled.not()) {
+      drawRect(colors.disabledOverlay)
+    }
   }
 }
 
@@ -170,6 +174,7 @@ private object WindowDrawer : WindowDrawerBase<RuntimeDimens, VerticalBlindWindo
   ) {
     windowState.markers.forEach { marker ->
       val leftPosition = runtimeDimens.topLineRect.left
+        .plus(runtimeDimens.slatWidth)
         .plus(runtimeDimens.movementLimit.times(marker.position).div(100f))
 
       val tilt0 = windowState.tilt0Angle ?: VerticalBlindWindowState.DEFAULT_TILT_0_ANGLE
@@ -271,6 +276,7 @@ private data class RuntimeDimens(
   override val topLineRect: Rect,
   override val windowRect: Rect,
   override val scale: Float,
+  val slatWidth: Float,
   val leftSlats: List<Rect>,
   val rightSlats: List<Rect>,
   val slatDistance: Float,
@@ -302,6 +308,7 @@ private data class RuntimeDimens(
         canvasRect = canvasRect,
         topLineRect = topLineRect,
         windowRect = windowRect,
+        slatWidth = SLAT_WIDTH.times(scale),
         leftSlats = leftSlats,
         rightSlats = rightSlats,
         scale = scale,
@@ -356,6 +363,7 @@ private fun Preview_Normal() {
       ) {
         VerticalBlindsWindowView(
           windowState = VerticalBlindWindowState(WindowGroupedValue.Similar(100f)),
+          enabled = true,
           modifier = Modifier
             .fillMaxSize()
             .padding(all = Distance.small)
@@ -367,7 +375,7 @@ private fun Preview_Normal() {
           .height(350.dp)
           .background(color = colorResource(id = R.color.background))
       ) {
-        val markers = listOf(VerticalBlindMarker(0f, 50f), VerticalBlindMarker(35f, 25f))
+        val markers = listOf(ShadingBlindMarker(0f, 50f), ShadingBlindMarker(35f, 25f))
         VerticalBlindsWindowView(
           windowState = VerticalBlindWindowState(WindowGroupedValue.Similar(75f), markers = markers),
           modifier = Modifier
@@ -383,6 +391,7 @@ private fun Preview_Normal() {
       ) {
         VerticalBlindsWindowView(
           windowState = VerticalBlindWindowState(WindowGroupedValue.Similar(25f)),
+          enabled = true,
           modifier = Modifier
             .fillMaxSize()
             .padding(all = Distance.small)

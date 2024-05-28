@@ -26,7 +26,7 @@ import org.supla.android.Preferences
 import org.supla.android.core.notifications.NotificationsHelper
 import org.supla.android.core.notifications.ON_OFF_WIDGET_NOTIFICATION_ID
 import org.supla.android.lib.SuplaConst
-import org.supla.android.usecases.channel.LoadChannelConfigUseCase
+import org.supla.android.usecases.channelconfig.LoadChannelConfigUseCase
 import org.supla.android.widget.shared.WidgetCommandWorkerBase
 
 const val ARG_TURN_ON = "ARG_TURN_ON"

@@ -582,6 +582,7 @@
   <string name="channel_caption_curtain">Vorhang</string>
   <string name="channel_caption_vertical_blinds">Vertikaljalousien</string>
   <string name="channel_caption_roller_garage_door">Garagentor</string>
+  <string name="shading_system_extension">Entrollung:</string>
   <plurals name="details_timer_info_on">
     <item quantity="one">eingeschaltet</item>
     <item quantity="other">eingeschaltet</item>

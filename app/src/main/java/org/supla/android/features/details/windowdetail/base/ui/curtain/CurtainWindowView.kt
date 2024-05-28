@@ -59,12 +59,13 @@ import org.supla.android.features.details.windowdetail.base.ui.windowview.Window
 fun CurtainWindowView(
   windowState: CurtainWindowState,
   modifier: Modifier = Modifier,
-  colors: CurtainColors = CurtainColors.standard(),
+  enabled: Boolean = false,
   onPositionChanging: ((Float) -> Unit)? = null,
   onPositionChanged: ((Float) -> Unit)? = null
 ) {
   val (windowDimens, updateDimens) = remember { mutableStateOf<RuntimeDimens?>(null) }
   val moveState = remember { mutableStateOf(MoveState(horizontalAllowed = true)) }
+  val colors = CurtainColors.standard()
 
   Canvas(
     modifier = modifier
@@ -103,6 +104,9 @@ fun CurtainWindowView(
     }
 
     WindowDrawer.drawWindow(runtimeDimens = windowDimens, colors = colors, windowState = windowState)
+    if (enabled.not()) {
+      drawRect(colors.disabledOverlay)
+    }
   }
 }
 
@@ -240,6 +244,7 @@ private fun Preview_Normal() {
       ) {
         CurtainWindowView(
           windowState = CurtainWindowState(WindowGroupedValue.Similar(75f)),
+          enabled = true,
           modifier = Modifier
             .fillMaxSize()
             .padding(all = Distance.small)
@@ -266,6 +271,7 @@ private fun Preview_Normal() {
       ) {
         CurtainWindowView(
           windowState = CurtainWindowState(WindowGroupedValue.Similar(25f)),
+          enabled = true,
           modifier = Modifier
             .fillMaxSize()
             .padding(all = Distance.small)

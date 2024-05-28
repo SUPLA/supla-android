@@ -28,6 +28,7 @@ import org.supla.android.data.source.remote.ConfigResult
 import org.supla.android.data.source.remote.SuplaChannelConfig
 import org.supla.android.data.source.remote.gpm.SuplaChannelGeneralPurposeMeasurementConfig
 import org.supla.android.data.source.remote.gpm.SuplaChannelGeneralPurposeMeterConfig
+import org.supla.android.data.source.remote.rollershutter.SuplaChannelFacadeBlindConfig
 import org.supla.android.events.DownloadEventsManager
 import org.supla.android.extensions.TAG
 import org.supla.android.extensions.ifLet
@@ -54,10 +55,17 @@ class InsertChannelConfigUseCase @Inject constructor(
         channelConfigRepository.insertOrUpdate(it.id!!, config)
       }
     }
+    // Order is important as the SuplaChannelFacadeBlindConfig is child of SuplaChannelRollerShutterConfig
+    ifLet(config as? SuplaChannelFacadeBlindConfig) { (config) ->
+      return profileRepository.findActiveProfile().flatMapCompletable {
+        Trace.d(TAG, "Saving config (remoteId: `${config.remoteId}`, function: `${config.func}`)")
+        channelConfigRepository.insertOrUpdate(it.id!!, config)
+      }
+    }
     ifLet(config as? SuplaChannelGeneralPurposeMeterConfig) { (config) ->
       return profileRepository.findActiveProfile().flatMapCompletable { profile ->
         Trace.d(TAG, "Saving config (remoteId: `${config.remoteId}`, function: `${config.func}`)")
-        channelConfigRepository.findGpmConfig(profile.id!!, config.remoteId, ChannelConfigType.GENERAL_PURPOSE_METER)
+        channelConfigRepository.findChannelConfig(profile.id!!, config.remoteId, ChannelConfigType.GENERAL_PURPOSE_METER)
           .flatMapCompletable { oldConfig ->
             if (shouldCleanupHistory(oldConfig, config)) {
               Trace.d(TAG, "Cleaning history (remoteId: `${config.remoteId}`, function: `${config.func}`)")
@@ -100,7 +108,9 @@ class InsertChannelConfigUseCase @Inject constructor(
 
   private fun shouldHandle(config: SuplaChannelConfig): Boolean =
     config.func == SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER ||
-      config.func == SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT
+      config.func == SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT ||
+      config.func == SuplaConst.SUPLA_CHANNELFNC_VERTICAL_BLIND ||
+      config.func == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND
 
   private fun shouldCleanupHistory(oldConfig: SuplaChannelConfig, newConfig: SuplaChannelGeneralPurposeMeterConfig): Boolean {
     if (oldConfig is SuplaChannelGeneralPurposeMeterConfig) {

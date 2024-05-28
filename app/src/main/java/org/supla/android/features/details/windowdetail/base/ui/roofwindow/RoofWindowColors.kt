@@ -26,6 +26,7 @@ data class RoofWindowColors(
   val window: Color,
   val shadow: Color,
   val glassTop: Color,
+  val disabledOverlay: Color
 ) {
   companion object {
     @Composable
@@ -33,15 +34,8 @@ data class RoofWindowColors(
       RoofWindowColors(
         window = colorResource(id = R.color.roller_shutter_window_color),
         shadow = colorResource(id = R.color.shadow_start),
-        glassTop = colorResource(id = R.color.roller_shutter_glass_top_color)
-      )
-
-    @Composable
-    fun offline() =
-      RoofWindowColors(
-        window = colorResource(id = R.color.roller_shutter_window_color),
-        shadow = colorResource(id = R.color.shadow_start),
-        glassTop = colorResource(id = R.color.roller_shutter_disabled_glass_top_color)
+        glassTop = colorResource(id = R.color.roller_shutter_glass_top_color),
+        disabledOverlay = colorResource(id = R.color.roller_shutter_disabled_overlay)
       )
   }
 }

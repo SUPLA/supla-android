@@ -81,20 +81,10 @@ abstract class WindowDrawerBase<D : WindowDimensBase, S : WindowState, C : Windo
 
     val brush = Brush.verticalGradient(listOf(colors.glassTop, colors.glassBottom))
     val left = dimens.windowRect.left.plus(glassHorizontalMargin)
+    val top = dimens.canvasRect.top.plus(glassVerticalMargin)
     val height = dimens.canvasRect.height.minus(glassVerticalMargin.times(2))
 
-    drawRect(
-      brush = brush,
-      topLeft = Offset(left, glassVerticalMargin),
-      size = Size(singleGlassWidth, height)
-    )
-    drawRect(
-      brush = brush,
-      topLeft = Offset(
-        left.plus(singleGlassWidth).plus(glassMiddleMargin),
-        glassVerticalMargin
-      ),
-      size = Size(singleGlassWidth, height)
-    )
+    drawRect(brush, Offset(left, top), Size(singleGlassWidth, height))
+    drawRect(brush, Offset(left.plus(singleGlassWidth).plus(glassMiddleMargin), top), Size(singleGlassWidth, height))
   }
 }
