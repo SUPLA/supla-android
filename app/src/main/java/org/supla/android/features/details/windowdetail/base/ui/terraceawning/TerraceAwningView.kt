@@ -189,7 +189,7 @@ private object TerraceAwningDrawer {
     val maxWidthMarginByPosition = windowDimens.canvasRect.width.minus(maxWidthByPosition).div(2f)
 
     path.reset()
-    path.moveTo(awningLeftMargin, 0f)
+    path.moveTo(windowDimens.canvasRect.left.plus(awningLeftMargin), windowDimens.canvasRect.top)
     path.relativeLineTo(awningMinWidth, 0f)
     path.relativeLineTo(widthDeltaByPosition.div(2), deepByPosition)
     path.relativeLineTo(-maxWidthByPosition, 0f)
@@ -200,7 +200,7 @@ private object TerraceAwningDrawer {
     drawPath(path = path, color = colors.awningBorder, style = Stroke(width = 1.dp.toPx()))
 
     val frontHeight = frontMinHeight.plus(windowDimens.awningFrontHeight.minus(frontMinHeight).times(position).div(100f))
-    val frontOffset = Offset(maxWidthMarginByPosition, deepByPosition)
+    val frontOffset = Offset(windowDimens.canvasRect.left.plus(maxWidthMarginByPosition), windowDimens.canvasRect.top.plus(deepByPosition))
     val frontSize = Size(maxWidthByPosition, frontHeight)
     drawRect(color = colors.awningBackground, topLeft = frontOffset, size = frontSize)
     drawRect(color = colors.awningBorder, topLeft = frontOffset, size = frontSize, style = Stroke(width = 1.dp.toPx()))
@@ -217,7 +217,7 @@ private object TerraceAwningDrawer {
     val maxWidthByPosition = shadowMinWidth.plus(widthDeltaByPosition)
 
     path.reset()
-    path.moveTo(shadowTopMargin, windowDimens.windowRect.bottom)
+    path.moveTo(windowDimens.canvasRect.left.plus(shadowTopMargin), windowDimens.windowRect.bottom)
     path.relativeLineTo(shadowMinWidth, 0f)
     path.relativeLineTo(widthDeltaByPosition.div(2), deepByPosition)
     path.relativeLineTo(-maxWidthByPosition, 0f)
@@ -241,7 +241,7 @@ private object TerraceAwningDrawer {
     val maxWidthMarginByPosition = windowDimens.canvasRect.width.minus(maxWidthByPosition).div(2f)
 
     path.reset()
-    path.moveTo(awningTopMargin, 0f)
+    path.moveTo(awningTopMargin, windowDimens.canvasRect.top)
     path.relativeLineTo(awningMinWidth, 0f)
     path.relativeLineTo(widthDeltaByPosition.div(2), deepByPosition)
     path.relativeLineTo(-maxWidthByPosition, 0f)
@@ -255,12 +255,12 @@ private object TerraceAwningDrawer {
     if (withFront) {
       drawRect(
         color = colors.awningBackground,
-        topLeft = Offset(maxWidthMarginByPosition, deepByPosition),
+        topLeft = Offset(maxWidthMarginByPosition, windowDimens.canvasRect.top.plus(deepByPosition)),
         size = Size(maxWidthByPosition, frontHeight)
       )
       drawRect(
         color = colors.awningBorder,
-        topLeft = Offset(maxWidthMarginByPosition, deepByPosition),
+        topLeft = Offset(maxWidthMarginByPosition, windowDimens.canvasRect.top.plus(deepByPosition)),
         size = Size(maxWidthByPosition, frontHeight),
         style = Stroke(width = 1.dp.toPx())
       )
@@ -318,7 +318,7 @@ data class RuntimeDimens(
     private fun canvasRect(viewSize: IntSize): Rect {
       val size = getSize(viewSize = viewSize)
       return Rect(
-        Offset(viewSize.width.minus(size.width).div(2), 0f),
+        Offset(viewSize.width.minus(size.width).div(2), viewSize.height.minus(size.height).div(2)),
         size
       )
     }
@@ -328,8 +328,8 @@ data class RuntimeDimens(
       val windowHeight = TerraceAwningDimens.WINDOW_HEIGHT.times(scale)
       val windowSize = Size(windowWidth, windowHeight)
 
-      val windowTop = TerraceAwningDimens.WINDOW_TOP_DISTANCE.times(scale)
-      val windowLeft = canvasRect.width.minus(windowWidth).div(2)
+      val windowTop = canvasRect.top.plus(TerraceAwningDimens.WINDOW_TOP_DISTANCE.times(scale))
+      val windowLeft = canvasRect.left.plus(canvasRect.width.minus(windowWidth).div(2))
       val windowOffset = Offset(windowLeft, windowTop)
 
       return Rect(windowOffset, windowSize)

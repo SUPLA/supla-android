@@ -42,6 +42,8 @@ sealed class WindowGroupedValue private constructor(open val value: Float) {
   protected fun valueToAngle(value: Float, value0: Float, value100: Float) =
     value0.plus(value100.minus(value0).times(value).div(100f))
 
+  abstract fun reversed(): WindowGroupedValue
+
   data class Different(
     private val min: Float,
     private val max: Float
@@ -58,9 +60,15 @@ sealed class WindowGroupedValue private constructor(open val value: Float) {
         String.format("%.0f%% - %.0f%%", min, max)
       }
     }
+
+    override fun reversed(): WindowGroupedValue = Different(100f.minus(max), 100f.minus(min))
   }
 
-  object Invalid : WindowGroupedValue(0f)
+  object Invalid : WindowGroupedValue(0f) {
+    override fun reversed(): WindowGroupedValue = Invalid
+  }
 
-  data class Similar(override val value: Float) : WindowGroupedValue(value)
+  data class Similar(override val value: Float) : WindowGroupedValue(value) {
+    override fun reversed(): WindowGroupedValue = Similar(100f.minus(value))
+  }
 }

@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -83,11 +84,15 @@ fun WindowViewNormalContent(
     verticalArrangement = Arrangement.spacedBy(Distance.default),
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
+    val controlsHeight = when(viewState.orientation) {
+      ShadingSystemOrientation.HORIZONTAL -> 250.dp
+      ShadingSystemOrientation.VERTICAL -> TOTAL_HEIGHT
+    }
     val heightForWindow = availableHeight
       .minus(WindowViewTopMenu.getTopHeight(availableHeight))
       .minus(dimensionResource(id = R.dimen.custom_shadow_height))
       .minus(Distance.small)
-      .minus(TOTAL_HEIGHT) // UpDownControlButton
+      .minus(controlsHeight) // UpDownControlButton
       .minus(Distance.default) // Distance between window and buttons
       .minus(Distance.default)
       .let {
@@ -202,17 +207,21 @@ private fun HorizontalControlButtons(
   onAction: (ShadingSystemAction) -> Unit
 ) =
   Column(
-    modifier = modifier,
+    modifier = modifier.width(300.dp),
     horizontalAlignment = Alignment.CenterHorizontally,
-    verticalArrangement = Arrangement.Absolute.spacedBy(Distance.small)
+    verticalArrangement = Arrangement.Absolute.spacedBy(Distance.tiny)
   ) {
     PressTimeInfoHorizontal(touchTime = viewState.touchTime)
     HoldToMoveHorizontalButtons(viewState.enabled, onAction = onAction)
+    Spacer(modifier = Modifier.height(8.dp))
     PressToMoveHorizontalButtons(viewState.enabled, onAction = onAction)
+    Spacer(modifier = Modifier.height(8.dp))
     (windowState as? VerticalBlindWindowState)?.let {
       SlatTiltSlider(
         value = windowState.slatTilt?.value ?: 0f,
-        modifier = Modifier.width(240.dp),
+        modifier = Modifier
+          .width(300.dp)
+          .height(40.dp),
         enabled = viewState.enabled && windowState.slatTilt != null,
         slatsTiltDegrees = windowState.slatTiltDegrees ?: 0f,
         onValueChange = { onAction(ShadingSystemAction.TiltTo(it)) },
@@ -229,13 +238,13 @@ private fun HoldToMoveHorizontalButtons(enabled: Boolean, modifier: Modifier = M
     rightContent = { HoldToOpenCurtainControlIcon(textColor = it) },
     leftEventHandler = {
       handleEvents(
-        onTouchDown = { onAction(ShadingSystemAction.MoveUp) },
+        onTouchDown = { onAction(ShadingSystemAction.MoveDown) },
         onTouchUp = { onAction(ShadingSystemAction.Stop) }
       )
     },
     rightEventHandler = {
       handleEvents(
-        onTouchDown = { onAction(ShadingSystemAction.MoveDown) },
+        onTouchDown = { onAction(ShadingSystemAction.MoveUp) },
         onTouchUp = { onAction(ShadingSystemAction.Stop) }
       )
     },
@@ -265,23 +274,9 @@ private fun PressToMoveHorizontalButtons(enabled: Boolean, modifier: Modifier = 
     leftContent = { ClickToCloseCurtainControlIcon(textColor = it) },
     rightContent = { ClickToOpenCurtainControlIcon(textColor = it) },
     middleContent = { ControlButtonIcon(iconRes = R.drawable.ic_stop, textColor = it, modifier = Modifier.align(Alignment.Center)) },
-    leftEventHandler = {
-      handleEvents(
-        onTouchDown = { onAction(ShadingSystemAction.Open) },
-        onTouchUp = { onAction(ShadingSystemAction.Stop) }
-      )
-    },
-    rightEventHandler = {
-      handleEvents(
-        onTouchDown = { onAction(ShadingSystemAction.Close) },
-        onTouchUp = { onAction(ShadingSystemAction.Stop) }
-      )
-    },
-    middleEventHandler = {
-      handleEvents(
-        onClick = { onAction(ShadingSystemAction.Stop) }
-      )
-    },
+    leftEventHandler = { handleEvents(onClick = { onAction(ShadingSystemAction.Close) }) },
+    rightEventHandler = { handleEvents(onClick = { onAction(ShadingSystemAction.Open) }) },
+    middleEventHandler = { handleEvents(onClick = { onAction(ShadingSystemAction.Stop) }) },
     modifier = modifier
   )
 
@@ -362,7 +357,7 @@ private fun Preview_Horizontal() {
         availableWidth = 350.dp,
         availableHeight = 500.dp,
         viewState = WindowViewState(enabled = true, orientation = ShadingSystemOrientation.HORIZONTAL, touchTime = 12.3f),
-        windowState = FacadeBlindWindowState(position = WindowGroupedValue.Similar(10f)),
+        windowState = VerticalBlindWindowState(position = WindowGroupedValue.Similar(10f)),
         onAction = { },
       )
     }

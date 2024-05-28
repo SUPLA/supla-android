@@ -31,4 +31,7 @@ data class TerraceAwningState(
   val markers: List<Float> = emptyList(),
 
   override val positionTextFormat: WindowGroupedValueFormat = WindowGroupedValueFormat.PERCENTAGE,
-) : WindowState()
+) : WindowState() {
+  override fun positionText(): String =
+    position.reversed().asString(positionTextFormat)
+}

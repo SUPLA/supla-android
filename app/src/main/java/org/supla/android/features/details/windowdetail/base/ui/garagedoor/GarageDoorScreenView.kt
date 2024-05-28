@@ -244,7 +244,7 @@ data class RuntimeDimens(
     private fun canvasRect(viewSize: IntSize): Rect {
       val size = getSize(viewSize = viewSize)
       return Rect(
-        Offset(viewSize.width.minus(size.width).div(2), 0f),
+        Offset(viewSize.width.minus(size.width).div(2), viewSize.height.minus(size.height).div(2)),
         size
       )
     }

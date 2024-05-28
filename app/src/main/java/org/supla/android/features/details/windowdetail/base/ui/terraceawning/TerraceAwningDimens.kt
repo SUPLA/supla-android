@@ -19,12 +19,12 @@ package org.supla.android.features.details.windowdetail.base.ui.terraceawning
 
 object TerraceAwningDimens {
   const val WIDTH = 328f
-  const val HEIGHT = 352f
+  const val HEIGHT = 364f
   const val RATIO = WIDTH / HEIGHT
 
   const val WINDOW_WIDTH = 182f
   const val WINDOW_HEIGHT = 240f
-  const val WINDOW_TOP_DISTANCE = 24f
+  const val WINDOW_TOP_DISTANCE = 36f
 
   const val AWNING_CLOSED_WIDTH = 200f
   const val AWNING_OPENED_WIDTH = 328f

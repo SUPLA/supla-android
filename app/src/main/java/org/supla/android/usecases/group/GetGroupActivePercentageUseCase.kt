@@ -21,7 +21,7 @@ import org.supla.android.data.source.local.entity.ChannelGroupEntity
 import org.supla.android.db.ChannelGroup
 import org.supla.android.usecases.group.activepercentage.DimmerAndRgbGroupActivePercentage
 import org.supla.android.usecases.group.activepercentage.DimmerGroupActivePercentageProvider
-import org.supla.android.usecases.group.activepercentage.FacadeBlindGroupActivePercentageProvider
+import org.supla.android.usecases.group.activepercentage.BlindsGroupActivePercentageProvider
 import org.supla.android.usecases.group.activepercentage.HeatpolThermostatGroupActivePercentageProvider
 import org.supla.android.usecases.group.activepercentage.OpenedClosedGroupActivePercentageProvider
 import org.supla.android.usecases.group.activepercentage.ProjectorScreenGroupActivePercentageProvider
@@ -38,7 +38,7 @@ class GetGroupActivePercentageUseCase @Inject constructor() {
   private val providers: List<GroupActivePercentageProvider> = listOf(
     OpenedClosedGroupActivePercentageProvider,
     ShadingSystemGroupActivePercentageProvider,
-    FacadeBlindGroupActivePercentageProvider,
+    BlindsGroupActivePercentageProvider,
     ProjectorScreenGroupActivePercentageProvider,
     DimmerGroupActivePercentageProvider,
     RgbGroupActivePercentageProvider,

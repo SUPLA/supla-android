@@ -170,6 +170,7 @@ private object WindowDrawer : WindowDrawerBase<RuntimeDimens, VerticalBlindWindo
   ) {
     windowState.markers.forEach { marker ->
       val leftPosition = runtimeDimens.topLineRect.left
+        .plus(runtimeDimens.slatWidth)
         .plus(runtimeDimens.movementLimit.times(marker.position).div(100f))
 
       val tilt0 = windowState.tilt0Angle ?: VerticalBlindWindowState.DEFAULT_TILT_0_ANGLE
@@ -271,6 +272,7 @@ private data class RuntimeDimens(
   override val topLineRect: Rect,
   override val windowRect: Rect,
   override val scale: Float,
+  val slatWidth: Float,
   val leftSlats: List<Rect>,
   val rightSlats: List<Rect>,
   val slatDistance: Float,
@@ -302,6 +304,7 @@ private data class RuntimeDimens(
         canvasRect = canvasRect,
         topLineRect = topLineRect,
         windowRect = windowRect,
+        slatWidth = SLAT_WIDTH.times(scale),
         leftSlats = leftSlats,
         rightSlats = rightSlats,
         scale = scale,

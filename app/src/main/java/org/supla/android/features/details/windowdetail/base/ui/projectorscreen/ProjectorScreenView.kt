@@ -259,7 +259,7 @@ data class RuntimeDimens(
     private fun canvasRect(viewSize: IntSize): Rect {
       val size = getSize(viewSize = viewSize)
       return Rect(
-        Offset(viewSize.width.minus(size.width).div(2), 0f),
+        Offset(viewSize.width.minus(size.width).div(2), viewSize.height.minus(size.height).div(2)),
         size
       )
     }
@@ -279,7 +279,7 @@ data class RuntimeDimens(
     private fun logoRect(scale: Float, topRect: Rect): Rect {
       val logoWidth = DefaultDimens.LOGO_WIDTH.times(scale)
       val logoHeight = DefaultDimens.LOGO_HEIGHT.times(scale)
-      val left = topRect.width.minus(logoWidth).div(2)
+      val left = topRect.left.plus(topRect.width.minus(logoWidth).div(2))
       val topLeft = Offset(left, topRect.bottom.plus(DefaultDimens.LOGO_TOP_MARGIN.times(scale)))
       return Rect(topLeft, Size(logoWidth, logoHeight))
     }
@@ -338,7 +338,7 @@ private fun Preview_Normal() {
           .background(color = colorResource(id = R.color.background))
       ) {
         ProjectorScreenView(
-          windowState = ProjectorScreenState(WindowGroupedValue.Similar(25f)),
+          windowState = ProjectorScreenState(WindowGroupedValue.Similar(45f)),
           modifier = Modifier
             .fillMaxSize()
             .padding(all = Distance.small)
