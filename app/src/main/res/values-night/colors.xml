@@ -48,6 +48,9 @@
     <color name="roller_shutter_disabled_slat_background">#585a5b</color>
     <color name="roller_shutter_disabled_slat_border">#000000</color>
 
+    <!-- Garage door -->
+    <color name="garage_door_car">#191C19</color>
+
     <!-- Thermostat -->
     <color name="thermostat_control_circle_background">#313131</color>
     <color name="thermostat_control_button_background">#313131</color>

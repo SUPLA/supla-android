@@ -654,6 +654,7 @@
   <string name="channel_caption_projector_screen">Ekran projekcyjny</string>
   <string name="channel_caption_curtain">Zasłona</string>
   <string name="channel_caption_vertical_blinds">Żaluzja pionowa</string>
+  <string name="channel_caption_roller_garage_door">Brama garażowa</string>
 
   <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
     <item quantity="one">włączone</item>

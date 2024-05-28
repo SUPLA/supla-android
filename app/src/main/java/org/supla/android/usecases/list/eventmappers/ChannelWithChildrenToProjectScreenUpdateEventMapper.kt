@@ -17,45 +17,29 @@ package org.supla.android.usecases.list.eventmappers
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
-import org.supla.android.data.source.remote.channel.SuplaChannelFlag
+import org.supla.android.data.source.local.entity.isProjectorScreen
 import org.supla.android.extensions.guardLet
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_PROJECTOR_SCREEN
 import org.supla.android.ui.lists.data.SlideableListItemData
 import org.supla.android.usecases.channel.ChannelWithChildren
 import org.supla.android.usecases.channel.GetChannelCaptionUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
-import org.supla.android.usecases.list.CreateListItemUpdateEventDataUseCase
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class ChannelWithChildrenToProjectScreenUpdateEventMapper @Inject constructor(
-  private val getChannelCaptionUseCase: GetChannelCaptionUseCase,
-  private val getChannelIconUseCase: GetChannelIconUseCase
-) : CreateListItemUpdateEventDataUseCase.Mapper {
+  getChannelCaptionUseCase: GetChannelCaptionUseCase,
+  getChannelIconUseCase: GetChannelIconUseCase
+) : ShadingSystemBasedUpdateEventMapper(getChannelCaptionUseCase, getChannelIconUseCase) {
 
   override fun handle(item: Any): Boolean {
-    return (item as? ChannelWithChildren)?.channel?.function == SUPLA_CHANNELFNC_PROJECTOR_SCREEN
+    return (item as? ChannelWithChildren)?.channel?.isProjectorScreen() == true
   }
 
   override fun map(item: Any): SlideableListItemData {
     val (channel) = guardLet(item as? ChannelWithChildren) {
       throw IllegalArgumentException("Expected Channel but got $item")
     }
-    return toListItemData(channel.channel)
-  }
-
-  private fun toListItemData(channelData: ChannelDataEntity): SlideableListItemData.Default {
-    val value = channelData.channelValueEntity.asRollerShutterValue()
-    return SlideableListItemData.Default(
-      online = channelData.channelValueEntity.online,
-      titleProvider = getChannelCaptionUseCase(channelData),
-      icon = getChannelIconUseCase.invoke(channelData),
-      value = null,
-      issueIconType = value.getIssueIconType(),
-      estimatedTimerEndDate = null,
-      infoSupported = SuplaChannelFlag.CHANNEL_STATE.inside(channelData.flags)
-    )
+    return toListItemData(channel.channel, channel.channel.channelValueEntity.asRollerShutterValue())
   }
 }

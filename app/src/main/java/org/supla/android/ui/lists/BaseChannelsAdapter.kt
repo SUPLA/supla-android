@@ -80,11 +80,8 @@ abstract class BaseChannelsAdapter(
       ViewType.GENERAL_PURPOSE_MEASUREMENT_ITEM.identifier ->
         GpMeasurementListItemViewHolder(LiMainMeasurementItemBinding.inflate(inflater, parent, false))
 
-      ViewType.ROLLER_SHUTTER_ITEM.identifier ->
-        RollerShutterListItemViewHolder(LiMainStateIconWithButtonsBinding.inflate(inflater, parent, false))
-
-      ViewType.PROJECTOR_SCREEN_ITEM.identifier ->
-        ProjectorScreenListItemViewHolder(LiMainStateIconWithButtonsBinding.inflate(inflater, parent, false))
+      ViewType.ICON_WITH_BUTTONS_ITEM.identifier ->
+        IconWithButtonsListItemViewHolder(LiMainStateIconWithButtonsBinding.inflate(inflater, parent, false))
 
       else -> super.onCreateViewHolder(parent, viewType)
     }
@@ -97,8 +94,7 @@ abstract class BaseChannelsAdapter(
       is SingleMeasurementListItemViewHolder -> holder.bind(items[position] as ListItem.MeasurementItem)
       is GpMeterListItemViewHolder -> holder.bind(items[position] as ListItem.GeneralPurposeMeterItem)
       is GpMeasurementListItemViewHolder -> holder.bind(items[position] as ListItem.GeneralPurposeMeasurementItem)
-      is RollerShutterListItemViewHolder -> holder.bind(items[position] as ListItem.RollerShutterItem)
-      is ProjectorScreenListItemViewHolder -> holder.bind(items[position] as ListItem.ProjectorScreenItem)
+      is IconWithButtonsListItemViewHolder -> holder.bind(items[position] as ListItem.IconWithButtonsItem)
       else -> super.onBindViewHolder(holder, position)
     }
   }
@@ -212,30 +208,8 @@ abstract class BaseChannelsAdapter(
     }
   }
 
-  inner class RollerShutterListItemViewHolder(val binding: LiMainStateIconWithButtonsBinding) : ViewHolder(binding.root) {
-    fun bind(item: ListItem.RollerShutterItem) {
-      val data = item.toSlideableListItemData() as SlideableListItemData.Default
-      binding.listItemRoot.bind(
-        itemType = ItemType.CHANNEL,
-        remoteId = item.channel.remoteId,
-        locationCaption = item.locationCaption,
-        data = data,
-        onInfoClick = { infoButtonClickCallback(item.channel.remoteId) },
-        onIssueClick = { issueButtonClickCallback(item.issueMessage) },
-        onTitleLongClick = { onCaptionLongPress(item.channel.remoteId) },
-        onItemClick = { listItemClickCallback(item.channel.remoteId) }
-      )
-      binding.listItemContent.update(data)
-
-      binding.listItemContent.setOnClickListener { listItemClickCallback(item.channel.remoteId) }
-      binding.listItemContent.setOnLongClickListener { onLongPress(this) }
-      binding.listItemLeftItem.setOnClickListener { onLeftButtonClick(item.channel.remoteId) }
-      binding.listItemRightItem.setOnClickListener { onRightButtonClick(item.channel.remoteId) }
-    }
-  }
-
-  inner class ProjectorScreenListItemViewHolder(val binding: LiMainStateIconWithButtonsBinding) : ViewHolder(binding.root) {
-    fun bind(item: ListItem.ProjectorScreenItem) {
+  inner class IconWithButtonsListItemViewHolder(val binding: LiMainStateIconWithButtonsBinding) : ViewHolder(binding.root) {
+    fun bind(item: ListItem.IconWithButtonsItem) {
       val data = item.toSlideableListItemData() as SlideableListItemData.Default
       binding.listItemRoot.bind(
         itemType = ItemType.CHANNEL,

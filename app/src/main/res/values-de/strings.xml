@@ -581,6 +581,7 @@
   <string name="channel_caption_projector_screen">Leinwand</string>
   <string name="channel_caption_curtain">Vorhang</string>
   <string name="channel_caption_vertical_blinds">Vertikaljalousien</string>
+  <string name="channel_caption_roller_garage_door">Garagentor</string>
   <plurals name="details_timer_info_on">
     <item quantity="one">eingeschaltet</item>
     <item quantity="other">eingeschaltet</item>

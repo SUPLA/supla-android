@@ -45,6 +45,7 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_PROJECTOR_SCREEN
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_ROLLER_GARAGE_DOOR
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_TERRACE_AWNING
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
@@ -77,6 +78,8 @@ class ProvideDetailTypeUseCase @Inject constructor() {
       WindowDetailType(listOf(DetailPage.CURTAIN))
     SUPLA_CHANNELFNC_VERTICAL_BLIND ->
       WindowDetailType(listOf(DetailPage.VERTICAL_BLIND))
+    SUPLA_CHANNELFNC_ROLLER_GARAGE_DOOR ->
+      WindowDetailType(listOf(DetailPage.GARAGE_DOOR_ROLLER))
 
     SUPLA_CHANNELFNC_LIGHTSWITCH,
     SUPLA_CHANNELFNC_POWERSWITCH,

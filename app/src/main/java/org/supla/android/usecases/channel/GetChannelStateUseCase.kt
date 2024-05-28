@@ -56,6 +56,7 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROOFWINDOW
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_PROJECTOR_SCREEN
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_ROLLER_GARAGE_DOOR
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_TERRACE_AWNING
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS
@@ -108,13 +109,14 @@ class GetChannelStateUseCase @Inject constructor(
       SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER,
       SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW,
       SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND,
-      SUPLA_CHANNELFNC_TERRACE_AWNING,
       SUPLA_CHANNELFNC_CURTAIN,
-      SUPLA_CHANNELFNC_VERTICAL_BLIND ->
-        if (value.rollerShutterClosed) ChannelState(ChannelState.Value.CLOSED) else ChannelState(ChannelState.Value.OPEN)
+      SUPLA_CHANNELFNC_VERTICAL_BLIND,
+      SUPLA_CHANNELFNC_ROLLER_GARAGE_DOOR ->
+        if (value.shadingSystemClosed) ChannelState(ChannelState.Value.CLOSED) else ChannelState(ChannelState.Value.OPEN)
 
+      SUPLA_CHANNELFNC_TERRACE_AWNING,
       SUPLA_CHANNELFNC_PROJECTOR_SCREEN ->
-        if (value.projectorScreenClosed) ChannelState(ChannelState.Value.CLOSED) else ChannelState(ChannelState.Value.OPEN)
+        if (value.shadingSystemReversedClosed) ChannelState(ChannelState.Value.CLOSED) else ChannelState(ChannelState.Value.OPEN)
 
       SUPLA_CHANNELFNC_OPENSENSOR_GATEWAY,
       SUPLA_CHANNELFNC_OPENSENSOR_GATE,
@@ -182,10 +184,11 @@ class GetChannelStateUseCase @Inject constructor(
       SUPLA_CHANNELFNC_OPENSENSOR_ROOFWINDOW,
       SUPLA_CHANNELFNC_VALVE_OPENCLOSE,
       SUPLA_CHANNELFNC_VALVE_PERCENTAGE,
-      SUPLA_CHANNELFNC_TERRACE_AWNING,
       SUPLA_CHANNELFNC_CURTAIN,
-      SUPLA_CHANNELFNC_VERTICAL_BLIND -> ChannelState(ChannelState.Value.OPEN)
+      SUPLA_CHANNELFNC_VERTICAL_BLIND,
+      SUPLA_CHANNELFNC_ROLLER_GARAGE_DOOR -> ChannelState(ChannelState.Value.OPEN)
 
+      SUPLA_CHANNELFNC_TERRACE_AWNING,
       SUPLA_CHANNELFNC_PROJECTOR_SCREEN -> ChannelState(ChannelState.Value.CLOSED)
 
       SUPLA_CHANNELFNC_POWERSWITCH,
@@ -249,8 +252,8 @@ interface ValueStateWrapper {
   val colorBrightness: Int
   val transparent: Boolean
   val thermostatSubfunction: ThermostatSubfunction?
-  val rollerShutterClosed: Boolean
-  val projectorScreenClosed: Boolean
+  val shadingSystemClosed: Boolean
+  val shadingSystemReversedClosed: Boolean
 }
 
 private class ChannelValueEntityStateWrapper(private val channelValueEntity: ChannelValueEntity) : ValueStateWrapper {
@@ -268,13 +271,13 @@ private class ChannelValueEntityStateWrapper(private val channelValueEntity: Cha
     get() = channelValueEntity.asDigiglassValue().isAnySectionTransparent
   override val thermostatSubfunction: ThermostatSubfunction
     get() = channelValueEntity.asThermostatValue().subfunction
-  override val rollerShutterClosed: Boolean
+  override val shadingSystemClosed: Boolean
     get() {
       val percentage = channelValueEntity.asRollerShutterValue().position
       val subValueHi = channelValueEntity.getSubValueHi()
       return (subValueHi > 0 && percentage < 100) || percentage >= 100
     }
-  override val projectorScreenClosed: Boolean
+  override val shadingSystemReversedClosed: Boolean
     get() {
       val percentage = channelValueEntity.asRollerShutterValue().position
       return percentage <= 0
@@ -299,9 +302,9 @@ private class ChannelGroupEntityStateWrapper(
     get() = false
   override val thermostatSubfunction: ThermostatSubfunction?
     get() = null
-  override val rollerShutterClosed: Boolean
+  override val shadingSystemClosed: Boolean
     get() = getActivePercentage() >= 100
-  override val projectorScreenClosed: Boolean
+  override val shadingSystemReversedClosed: Boolean
     get() = getActivePercentage() <= 0
 
   private fun getActivePercentage(valueIndex: Int = 0) =
@@ -323,13 +326,13 @@ private class ChannelValueStateWrapper(private val value: ChannelValue?) : Value
     get() = value?.digiglassValue?.isAnySectionTransparent ?: false
   override val thermostatSubfunction: ThermostatSubfunction?
     get() = value?.asThermostatValue()?.subfunction
-  override val rollerShutterClosed: Boolean
+  override val shadingSystemClosed: Boolean
     get() {
       val percentage = value?.rollerShutterValue?.closingPercentage ?: 0
       val subValueHi = value?.subValueHi ?: 0
       return (subValueHi > 0 && percentage < 100) || percentage >= 100
     }
-  override val projectorScreenClosed: Boolean
+  override val shadingSystemReversedClosed: Boolean
     get() {
       val percentage = value?.rollerShutterValue?.closingPercentage ?: 0
       return percentage <= 100
@@ -354,9 +357,9 @@ private class ChannelGroupStateWrapper(
     get() = false
   override val thermostatSubfunction: ThermostatSubfunction?
     get() = null
-  override val rollerShutterClosed: Boolean
+  override val shadingSystemClosed: Boolean
     get() = getActivePercentage() >= 100
-  override val projectorScreenClosed: Boolean
+  override val shadingSystemReversedClosed: Boolean
     get() = getActivePercentage() <= 0
 
   private fun getActivePercentage(valueIndex: Int = 0) =

@@ -19,6 +19,7 @@ package org.supla.android.data.source.local.entity.complex
 
 import org.supla.android.data.source.local.entity.hasMeasurements
 import org.supla.android.data.source.local.entity.hasValue
+import org.supla.android.data.source.local.entity.isFacadeBlind
 import org.supla.android.data.source.local.entity.isGpMeasurement
 import org.supla.android.data.source.local.entity.isGpMeter
 import org.supla.android.data.source.local.entity.isGpm
@@ -26,6 +27,7 @@ import org.supla.android.data.source.local.entity.isHvacThermostat
 import org.supla.android.data.source.local.entity.isMeasurement
 import org.supla.android.data.source.local.entity.isShadingSystem
 import org.supla.android.data.source.local.entity.isThermometer
+import org.supla.android.data.source.local.entity.isVerticalBlind
 
 fun ChannelDataEntity.isMeasurement() = channelEntity.isMeasurement()
 
@@ -44,3 +46,7 @@ fun ChannelDataEntity.hasValue() = channelEntity.hasValue()
 fun ChannelDataEntity.isThermometer() = channelEntity.isThermometer()
 
 fun ChannelDataEntity.isShadingSystem() = channelEntity.isShadingSystem()
+
+fun ChannelDataEntity.isFacadeBlind() = channelEntity.isFacadeBlind()
+
+fun ChannelDataEntity.isVerticalBlind() = channelEntity.isVerticalBlind()

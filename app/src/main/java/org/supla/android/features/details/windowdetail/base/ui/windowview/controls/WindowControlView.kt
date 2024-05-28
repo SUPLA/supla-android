@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import org.supla.android.features.details.windowdetail.base.data.CurtainWindowState
+import org.supla.android.features.details.windowdetail.base.data.GarageDoorState
 import org.supla.android.features.details.windowdetail.base.data.ProjectorScreenState
 import org.supla.android.features.details.windowdetail.base.data.RollerShutterWindowState
 import org.supla.android.features.details.windowdetail.base.data.RoofWindowState
@@ -33,6 +34,8 @@ import org.supla.android.features.details.windowdetail.base.ui.curtain.CurtainCo
 import org.supla.android.features.details.windowdetail.base.ui.curtain.CurtainWindowView
 import org.supla.android.features.details.windowdetail.base.ui.facadeblinds.FacadeBlindColors
 import org.supla.android.features.details.windowdetail.base.ui.facadeblinds.FacadeBlindsWindowView
+import org.supla.android.features.details.windowdetail.base.ui.garagedoor.GarageDoorScreenColors
+import org.supla.android.features.details.windowdetail.base.ui.garagedoor.GarageDoorScreenView
 import org.supla.android.features.details.windowdetail.base.ui.projectorscreen.ProjectorScreenColors
 import org.supla.android.features.details.windowdetail.base.ui.projectorscreen.ProjectorScreenView
 import org.supla.android.features.details.windowdetail.base.ui.rollershutter.RollerShutterColors
@@ -113,6 +116,15 @@ fun WindowControlView(
         modifier = modifier,
         onPositionChanging = { tilt, position -> if (viewState.enabled) onAction(ShadingSystemAction.MoveAndTiltTo(position, tilt)) },
         onPositionChanged = { tilt, position -> if (viewState.enabled) onAction(ShadingSystemAction.MoveAndTiltSetTo(position, tilt)) }
+      )
+
+    is GarageDoorState ->
+      GarageDoorScreenView(
+        windowState = windowState,
+        colors = if (viewState.enabled) GarageDoorScreenColors.standard() else GarageDoorScreenColors.offline(),
+        modifier = modifier,
+        onPositionChanging = { position -> if (viewState.enabled) onAction(ShadingSystemAction.MoveTo(position)) },
+        onPositionChanged = { position -> if (viewState.enabled) onAction(ShadingSystemAction.OpenAt(position)) }
       )
   }
 }

@@ -1,4 +1,4 @@
-package org.supla.android.features.details.windowdetail.base.ui.rollershutter
+package org.supla.android.features.details.windowdetail.base.ui.garagedoor
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -21,26 +21,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import org.supla.android.R
-import org.supla.android.features.details.windowdetail.base.ui.windowview.WindowColorsBase
 
-data class RollerShutterColors(
-  override val window: Color,
-  override val shadow: Color,
-  override val glassTop: Color,
-  override val glassBottom: Color,
+data class GarageDoorScreenColors(
+  val building: Color,
+  val shadow: Color,
   val slatBackground: Color,
   val slatBorder: Color,
   val markerBorder: Color,
   val markerBackground: Color
-) : WindowColorsBase {
+) {
   companion object {
     @Composable
     fun standard() =
-      RollerShutterColors(
-        window = colorResource(id = R.color.roller_shutter_window_color),
+      GarageDoorScreenColors(
+        building = colorResource(id = R.color.roller_shutter_window_color),
         shadow = colorResource(id = R.color.shadow_start),
-        glassTop = colorResource(id = R.color.roller_shutter_glass_top_color),
-        glassBottom = colorResource(id = R.color.roller_shutter_glass_bottom_color),
         slatBackground = colorResource(id = R.color.roller_shutter_slat_background),
         slatBorder = colorResource(id = R.color.roller_shutter_slat_border),
         markerBorder = colorResource(id = R.color.on_background),
@@ -49,11 +44,9 @@ data class RollerShutterColors(
 
     @Composable
     fun offline() =
-      RollerShutterColors(
-        window = colorResource(id = R.color.roller_shutter_window_color),
+      GarageDoorScreenColors(
+        building = colorResource(id = R.color.roller_shutter_window_color),
         shadow = colorResource(id = R.color.shadow_start),
-        glassTop = colorResource(id = R.color.roller_shutter_disabled_glass_top_color),
-        glassBottom = colorResource(id = R.color.roller_shutter_disabled_glass_bottom_color),
         slatBackground = colorResource(id = R.color.roller_shutter_disabled_slat_background),
         slatBorder = colorResource(id = R.color.roller_shutter_disabled_slat_border),
         markerBorder = colorResource(id = R.color.disabled),

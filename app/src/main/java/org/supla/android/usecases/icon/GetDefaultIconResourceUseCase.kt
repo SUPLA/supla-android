@@ -41,6 +41,7 @@ import org.supla.android.usecases.icon.producers.DoorIconResourceProducer
 import org.supla.android.usecases.icon.producers.ElectricityMeterIconResourceProducer
 import org.supla.android.usecases.icon.producers.FacadeBlindIconResourceProducer
 import org.supla.android.usecases.icon.producers.GarageDoorIconResourceProducer
+import org.supla.android.usecases.icon.producers.GarageDoorRollerIconResourceProducer
 import org.supla.android.usecases.icon.producers.GateIconResourceProducer
 import org.supla.android.usecases.icon.producers.GatewayIconResourceProducer
 import org.supla.android.usecases.icon.producers.GeneralPurposeMeasurementIconResourceProducer
@@ -112,7 +113,8 @@ class GetDefaultIconResourceUseCase @Inject constructor() {
     TerraceAwningIconResourceProducer(),
     ProjectorScreenIconResourceProducer(),
     CurtainIconResourceProducer(),
-    VerticalBlindsIconResourceProducer
+    VerticalBlindsIconResourceProducer,
+    GarageDoorRollerIconResourceProducer
   )
 
   @DrawableRes
