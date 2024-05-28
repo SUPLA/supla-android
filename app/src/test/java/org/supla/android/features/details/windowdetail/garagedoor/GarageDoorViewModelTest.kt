@@ -17,7 +17,7 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package org.supla.android.features.details.windowdetail.projectorscreen
+package org.supla.android.features.details.windowdetail.garagedoor
 
 import io.mockk.every
 import io.mockk.mockk
@@ -48,7 +48,7 @@ import org.supla.android.data.source.remote.shadingsystem.SuplaShadingSystemFlag
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.LoadingTimeoutManager
 import org.supla.android.features.details.windowdetail.base.BaseWindowViewEvent
-import org.supla.android.features.details.windowdetail.base.data.ProjectorScreenState
+import org.supla.android.features.details.windowdetail.base.data.GarageDoorState
 import org.supla.android.features.details.windowdetail.base.data.WindowGroupedValue
 import org.supla.android.features.details.windowdetail.base.ui.WindowViewState
 import org.supla.android.lib.SuplaConst
@@ -66,7 +66,7 @@ import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
 import org.supla.android.usecases.group.totalvalue.GroupTotalValue
 
 @RunWith(MockitoJUnitRunner::class)
-class ProjectorScreenViewModelTest : BaseViewModelTest<ProjectorScreenViewModelState, BaseWindowViewEvent, ProjectorScreenViewModel>() {
+class GarageDoorViewModelTest : BaseViewModelTest<GarageDoorViewModelState, BaseWindowViewEvent, GarageDoorViewModel>() {
 
   @Mock
   lateinit var loadingTimeoutManager: LoadingTimeoutManager
@@ -114,7 +114,7 @@ class ProjectorScreenViewModelTest : BaseViewModelTest<ProjectorScreenViewModelS
   override lateinit var schedulers: SuplaSchedulers
 
   @InjectMocks
-  override lateinit var viewModel: ProjectorScreenViewModel
+  override lateinit var viewModel: GarageDoorViewModel
 
   @Before
   override fun setUp() {
@@ -139,9 +139,9 @@ class ProjectorScreenViewModelTest : BaseViewModelTest<ProjectorScreenViewModelS
 
     // then
     Assertions.assertThat(states).containsExactly(
-      ProjectorScreenViewModelState(
+      GarageDoorViewModelState(
         remoteId = remoteId,
-        windowState = ProjectorScreenState(WindowGroupedValue.Similar(position.toFloat())),
+        windowState = GarageDoorState(WindowGroupedValue.Similar(position.toFloat())),
         viewState = WindowViewState(
           issues = listOf(ChannelIssueItem(IssueIconType.ERROR, R.string.motor_problem)),
           enabled = true,
@@ -159,16 +159,16 @@ class ProjectorScreenViewModelTest : BaseViewModelTest<ProjectorScreenViewModelS
     // given
     val remoteId = 133
 
-    mockOnlineGroup(remoteId, "10|80|20")
+    mockOnlineGroup(remoteId, "10:1|80:1|20:0")
 
     // when
     viewModel.loadData(remoteId, ItemType.GROUP)
 
     // then
     Assertions.assertThat(states).containsExactly(
-      ProjectorScreenViewModelState(
+      GarageDoorViewModelState(
         remoteId = remoteId,
-        windowState = ProjectorScreenState(
+        windowState = GarageDoorState(
           position = WindowGroupedValue.Different(min = 10.0f, max = 80.0f),
           markers = listOf(10f, 80f, 20f)
         ),
@@ -192,7 +192,7 @@ class ProjectorScreenViewModelTest : BaseViewModelTest<ProjectorScreenViewModelS
     valueFlags: List<SuplaShadingSystemFlag> = emptyList(),
     channelFlags: List<SuplaChannelFlag> = emptyList(),
     hasValidPosition: Boolean = true,
-    function: Int = SuplaConst.SUPLA_CHANNELFNC_PROJECTOR_SCREEN
+    function: Int = SuplaConst.SUPLA_CHANNELFNC_ROLLER_GARAGE_DOOR
   ) {
     val rollerShutterValue: RollerShutterValue = mockk {
       every { this@mockk.position } returns position
@@ -222,12 +222,12 @@ class ProjectorScreenViewModelTest : BaseViewModelTest<ProjectorScreenViewModelS
     val group: ChannelGroupEntity = mockk {
       every {
         this@mockk.groupTotalValues
-      } returns GroupTotalValue.parse(SuplaConst.SUPLA_CHANNELFNC_PROJECTOR_SCREEN, totalValue)
+      } returns GroupTotalValue.parse(SuplaConst.SUPLA_CHANNELFNC_ROLLER_GARAGE_DOOR, totalValue)
     }
     val groupData: ChannelGroupDataEntity = mockk {
       every { id } returns groupId
       every { this@mockk.remoteId } returns remoteId
-      every { this@mockk.function } returns SuplaConst.SUPLA_CHANNELFNC_PROJECTOR_SCREEN
+      every { this@mockk.function } returns SuplaConst.SUPLA_CHANNELFNC_ROLLER_GARAGE_DOOR
       every { channelGroupEntity } returns group
       every { isOnline() } returns true
     }

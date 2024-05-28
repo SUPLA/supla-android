@@ -106,7 +106,7 @@ sealed interface ListItem {
     value: String? = null
   ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, value, null, null)
 
-  class RollerShutterItem(
+  class IconWithButtonsItem(
     channel: ChannelDataEntity,
     locationCaption: String,
     online: Boolean,
@@ -133,14 +133,4 @@ sealed interface ListItem {
     icon: ImageId,
     value: String
   ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, value, null, null)
-
-  class ProjectorScreenItem(
-    channel: ChannelDataEntity,
-    locationCaption: String,
-    online: Boolean,
-    captionProvider: StringProvider,
-    icon: ImageId,
-    issueIconType: IssueIconType?,
-    issueMessage: Int?
-  ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, null, issueIconType, issueMessage)
 }

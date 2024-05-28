@@ -41,6 +41,7 @@ import org.supla.android.ui.lists.data.SlideableListItemData
 import org.supla.android.usecases.channel.ChannelWithChildren
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
+import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToGarageDoorUpdateEventMapper
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToGpmUpdateEventMapper
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToMeasurementUpdateEventMapper
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToProjectScreenUpdateEventMapper
@@ -73,6 +74,9 @@ class CreateListItemUpdateEventDataUseCaseTest {
 
   @Mock
   private lateinit var channelWithChildrenToProjectScreenUpdateEventMapper: ChannelWithChildrenToProjectScreenUpdateEventMapper
+
+  @Mock
+  private lateinit var channelWithChildrenToGarageDoorUpdateEventMapper: ChannelWithChildrenToGarageDoorUpdateEventMapper
 
   @InjectMocks
   private lateinit var useCase: CreateListItemUpdateEventDataUseCase

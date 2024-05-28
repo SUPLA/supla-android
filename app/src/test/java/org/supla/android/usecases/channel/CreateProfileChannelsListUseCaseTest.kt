@@ -82,14 +82,14 @@ class CreateProfileChannelsListUseCaseTest {
     assertThat(list[3]).isInstanceOf(ListItem.LocationItem::class.java)
     assertThat(list[4]).isInstanceOf(ListItem.LocationItem::class.java)
     assertThat(list[5]).isInstanceOf(ListItem.MeasurementItem::class.java)
-    assertThat(list[6]).isInstanceOf(ListItem.RollerShutterItem::class.java)
-    assertThat(list[7]).isInstanceOf(ListItem.ProjectorScreenItem::class.java)
+    assertThat(list[6]).isInstanceOf(ListItem.IconWithButtonsItem::class.java)
+    assertThat(list[7]).isInstanceOf(ListItem.IconWithButtonsItem::class.java)
 
     assertThat((list[1] as ListItem.ChannelItem).channelBase.remoteId).isEqualTo(11)
     assertThat((list[2] as ListItem.HvacThermostatItem).captionProvider(context)).isEqualTo("caption 21")
     assertThat((list[5] as ListItem.MeasurementItem).captionProvider(context)).isEqualTo("caption 41")
-    assertThat((list[6] as ListItem.RollerShutterItem).captionProvider(context)).isEqualTo("caption 51")
-    assertThat((list[7] as ListItem.ProjectorScreenItem).captionProvider(context)).isEqualTo("caption 61")
+    assertThat((list[6] as ListItem.IconWithButtonsItem).captionProvider(context)).isEqualTo("caption 51")
+    assertThat((list[7] as ListItem.IconWithButtonsItem).captionProvider(context)).isEqualTo("caption 61")
 
     assertThat((list[0] as ListItem.LocationItem).location.caption).isEqualTo("12")
     assertThat((list[3] as ListItem.LocationItem).location.caption).isEqualTo("32")

@@ -31,6 +31,7 @@ import org.supla.android.features.details.thermostatdetail.schedule.ScheduleDeta
 import org.supla.android.features.details.thermostatdetail.timer.TimerDetailFragment
 import org.supla.android.features.details.windowdetail.curtain.CurtainFragment
 import org.supla.android.features.details.windowdetail.facadeblinds.FacadeBlindsFragment
+import org.supla.android.features.details.windowdetail.garagedoor.GarageDoorFragment
 import org.supla.android.features.details.windowdetail.projectorscreen.ProjectorScreenFragment
 import org.supla.android.features.details.windowdetail.rollershutter.RollerShutterFragment
 import org.supla.android.features.details.windowdetail.roofwindow.RoofWindowFragment
@@ -77,6 +78,7 @@ class StandardDetailPagerAdapter(
     DetailPage.PROJECTOR_SCREEN -> ProjectorScreenFragment().apply { arguments = ProjectorScreenFragment.bundle(itemBundle) }
     DetailPage.CURTAIN -> CurtainFragment().apply { arguments = CurtainFragment.bundle(itemBundle) }
     DetailPage.VERTICAL_BLIND -> VerticalBlindsFragment().apply { arguments = VerticalBlindsFragment.bundle(itemBundle) }
+    DetailPage.GARAGE_DOOR_ROLLER -> GarageDoorFragment().apply { arguments = GarageDoorFragment.bundle(itemBundle) }
   }
 }
 
@@ -106,5 +108,6 @@ enum class DetailPage(val menuId: Int) {
   TERRACE_AWNING(R.id.detail_general),
   PROJECTOR_SCREEN(R.id.detail_general),
   CURTAIN(R.id.detail_general),
-  VERTICAL_BLIND(R.id.detail_general)
+  VERTICAL_BLIND(R.id.detail_general),
+  GARAGE_DOOR_ROLLER(R.id.detail_general)
 }

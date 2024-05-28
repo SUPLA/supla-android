@@ -62,6 +62,7 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_PRESSURESENSOR
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_PROJECTOR_SCREEN
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_RAINSENSOR
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_ROLLER_GARAGE_DOOR
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_TERRACE_AWNING
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
@@ -131,6 +132,7 @@ class GetChannelDefaultCaptionUseCase @Inject constructor() {
       SUPLA_CHANNELFNC_PROJECTOR_SCREEN -> string(R.string.channel_caption_projector_screen)
       SUPLA_CHANNELFNC_CURTAIN -> string(R.string.channel_caption_curtain)
       SUPLA_CHANNELFNC_VERTICAL_BLIND -> string(R.string.channel_caption_vertical_blinds)
+      SUPLA_CHANNELFNC_ROLLER_GARAGE_DOOR -> string(R.string.channel_caption_roller_garage_door)
 
       else -> string(R.string.channel_not_supported)
     }

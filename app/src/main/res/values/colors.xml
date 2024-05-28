@@ -44,7 +44,6 @@
 
     <color name="item_unselected">#dadbdc</color>
 
-
     <!-- Roller shutter -->
     <color name="roller_shutter_window_color">#FFFFFF</color>
     <color name="roller_shutter_glass_top_color">#C9EEFF</color>
@@ -55,6 +54,10 @@
     <color name="roller_shutter_disabled_glass_bottom_color">#F3FBFF</color>
     <color name="roller_shutter_disabled_slat_background">#F5F5F6</color>
     <color name="roller_shutter_disabled_slat_border">#E9E9EA</color>
+
+    <!-- Garage door -->
+    <color name="garage_door_wall">@color/disabled</color>
+    <color name="garage_door_car">#7E8082</color>
 
     <!-- Thermostat -->
     <color name="thermostat_control_circle_background">#D2D2D2</color>

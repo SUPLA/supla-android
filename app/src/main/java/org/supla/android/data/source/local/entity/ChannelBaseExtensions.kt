@@ -63,6 +63,12 @@ fun ChannelBase.isThermometer() =
   function == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER ||
     function == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
 
+fun ChannelBase.isFacadeBlind() =
+  function == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND
+
+fun ChannelBase.isVerticalBlind() =
+  function == SuplaConst.SUPLA_CHANNELFNC_VERTICAL_BLIND
+
 fun ChannelBase.isShadingSystem() =
   function == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER ||
     function == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW ||
@@ -73,3 +79,6 @@ fun ChannelBase.isShadingSystem() =
 
 fun ChannelBase.isProjectorScreen() =
   function == SuplaConst.SUPLA_CHANNELFNC_PROJECTOR_SCREEN
+
+fun ChannelBase.isGarageDoorRoller() =
+  function == SuplaConst.SUPLA_CHANNELFNC_ROLLER_GARAGE_DOOR

@@ -147,7 +147,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get closed state for terrace awning`() {
     // given
-    val channelData = mockChannelDataEntity(SUPLA_CHANNELFNC_TERRACE_AWNING, rollerShutterPosition = 100)
+    val channelData = mockChannelDataEntity(SUPLA_CHANNELFNC_TERRACE_AWNING, rollerShutterPosition = 0)
 
     // when
     val state = useCase(channelData)
@@ -159,7 +159,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get open state for terrace awning`() {
     // given
-    val channelData = mockChannelDataEntity(SUPLA_CHANNELFNC_TERRACE_AWNING, rollerShutterPosition = 0)
+    val channelData = mockChannelDataEntity(SUPLA_CHANNELFNC_TERRACE_AWNING, rollerShutterPosition = 100)
 
     // when
     val state = useCase(channelData)
