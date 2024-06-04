@@ -492,7 +492,7 @@
   <string name="associeted_with_push_error" translatable="false">Nie można zmienić funkcji kanału powiązanego z powiadomieniami PUSH.</string>
   <string name="associeted_with_vbt_error" translatable="false">Nie można zmienić funkcji kanału powiązanego z reakcjami.</string>
   <string name="location_ordering" translatable="false">Kolejność lokalizacji</string>
-  <string name="rs_display_mode">Rolety, żaluzje, zasłony %</string>
+  <string name="rs_display_mode" translatable="false">Rolety, żaluzje, zasłony %</string>
   <string name="rs_display_mode_opening" translatable="false">Otwarcia</string>
   <string name="rs_display_mode_closing" translatable="false">Zamknięcia</string>
   <string name="status_accessid_inactive">Identyfikator dostępu nieaktywny</string>
