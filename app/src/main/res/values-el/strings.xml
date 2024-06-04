@@ -446,7 +446,6 @@
   <string name="add_device_needs_cloud_go">Μεταβείτε στο CLOUD</string>
   <string name="associeted_with_at_error">Δεν μπορείτε να αλλάξετε τη λειτουργία του καναλιού που σχετίζεται με το έναυσμα ενέργειας.</string>
   <string name="location_ordering">Σειρά τοποθεσιών</string>
-  <string name="rs_display_mode">Ρολά %</string>
   <string name="rs_display_mode_opening">Άνοιγμα</string>
   <string name="rs_display_mode_closing">Κλείσιμο</string>
   <string name="status_accessid_inactive">Ανενεργό αναγνωριστικό πρόσβασης</string>

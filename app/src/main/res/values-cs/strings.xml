@@ -429,7 +429,6 @@
   <string name="add_device_needs_cloud_go">Přejít do CLOUD</string>
   <string name="associeted_with_at_error">Není možné změnit funkci kanálu propojeného se spuštěním činnosti.</string>
   <string name="location_ordering">Pořadí dle umístění</string>
-  <string name="rs_display_mode">Rolety %</string>
   <string name="rs_display_mode_opening">Otevření</string>
   <string name="rs_display_mode_closing">Zavření</string>
   <string name="status_accessid_inactive">Identifikátor přístupu není aktivní</string>

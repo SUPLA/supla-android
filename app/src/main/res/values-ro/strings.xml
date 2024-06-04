@@ -449,7 +449,6 @@
   <string name="add_device_needs_cloud_go">Accesează CLOUD</string>
   <string name="associeted_with_at_error">Nu poate fi modificată funcția canalului asociat cu declanșatorul acțiunii.</string>
   <string name="location_ordering">Ordine alocației</string>
-  <string name="rs_display_mode">Rolete %</string>
   <string name="rs_display_mode_opening">Deschidere</string>
   <string name="rs_display_mode_closing">Închidere</string>
   <string name="status_accessid_inactive">Identificator de acces inactiv</string>
