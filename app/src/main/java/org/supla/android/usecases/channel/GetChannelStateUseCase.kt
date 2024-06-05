@@ -305,7 +305,7 @@ private class ChannelGroupEntityStateWrapper(
   override val shadingSystemClosed: Boolean
     get() = getActivePercentage() >= 100
   override val shadingSystemReversedClosed: Boolean
-    get() = getActivePercentage() <= 0
+    get() = getActivePercentage() < 100
 
   private fun getActivePercentage(valueIndex: Int = 0) =
     getGroupActivePercentageUseCase(group, valueIndex)
