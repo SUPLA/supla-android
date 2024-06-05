@@ -58,7 +58,7 @@ class RequestChannelConfigUseCaseTest {
   }
 
   @Test
-  fun `should ask for config when config stored and crc changed`() {
+  fun `should ask for config when crc differs`() {
     // given
     val remoteId = 123
     val config: ChannelConfigEntity = mockk {
@@ -85,7 +85,7 @@ class RequestChannelConfigUseCaseTest {
   }
 
   @Test
-  fun `should not ask for config when config stored and crc same`() {
+  fun `should not ask for config when crc same`() {
     // given
     val remoteId = 123
     val config: ChannelConfigEntity = mockk {
