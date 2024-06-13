@@ -21,11 +21,11 @@ import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 
-fun <R, T> Maybe<R>.flatMapMerged(otherProducer: (R) -> Maybe<T>): Maybe<Pair<R, T>> {
+fun <R : Any, T : Any> Maybe<R>.flatMapMerged(otherProducer: (R) -> Maybe<T>): Maybe<Pair<R, T>> {
   return flatMap { sourceItem -> otherProducer(sourceItem).map { otherItem -> Pair(sourceItem, otherItem) } }
 }
 
-fun <R, T> Maybe<R>.mapMerged(otherProducer: (R) -> T): Maybe<Pair<R, T>> {
+fun <R : Any, T : Any> Maybe<R>.mapMerged(otherProducer: (R) -> T): Maybe<Pair<R, T>> {
   return map { sourceItem -> Pair(sourceItem, otherProducer(sourceItem)) }
 }
 

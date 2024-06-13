@@ -2,7 +2,7 @@ package org.supla.android.usecases.channel.valueprovider
 
 import io.mockk.every
 import io.mockk.mockk
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.usecases.channel.ValueType
@@ -26,7 +26,11 @@ abstract class BaseDoubleValueProviderTest<T : DefaultDoubleValueProvider> {
     val value = valueProvider.value(channelData, ValueType.FIRST)
 
     // then
-    Assertions.assertThat(value).isEqualTo(unknownValue)
+    if (unknownValue.isNaN()) {
+      assertThat(value).isNaN()
+    } else {
+      assertThat(value).isEqualTo(unknownValue)
+    }
   }
 
   @Test
@@ -52,7 +56,7 @@ abstract class BaseDoubleValueProviderTest<T : DefaultDoubleValueProvider> {
     val value = valueProvider.value(channelData, ValueType.FIRST)
 
     // then
-    Assertions.assertThat(value).isEqualTo(0.21)
+    assertThat(value).isEqualTo(0.21)
   }
 
   @Test
@@ -77,6 +81,10 @@ abstract class BaseDoubleValueProviderTest<T : DefaultDoubleValueProvider> {
     val value = valueProvider.value(channelData, ValueType.FIRST)
 
     // then
-    Assertions.assertThat(value).isEqualTo(unknownValue)
+    if (unknownValue.isNaN()) {
+      assertThat(value).isNaN()
+    } else {
+      assertThat(value).isEqualTo(unknownValue)
+    }
   }
 }

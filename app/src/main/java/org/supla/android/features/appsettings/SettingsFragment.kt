@@ -30,6 +30,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
 import org.supla.android.core.ui.BaseFragment
 import org.supla.android.databinding.FragmentSettingsBinding
+import org.supla.android.features.lockscreen.LockScreenFragment
+import org.supla.android.features.pinsetup.PinSetupFragment
 import org.supla.android.navigator.MainNavigator
 import javax.inject.Inject
 
@@ -39,9 +41,11 @@ class SettingsFragment : BaseFragment<SettingsViewState, SettingsViewEvent>(R.la
   override val viewModel: SettingsViewModel by activityViewModels()
   private val binding by viewBinding(FragmentSettingsBinding::bind)
 
-  @Inject lateinit var navigator: MainNavigator
+  @Inject
+  lateinit var navigator: MainNavigator
 
-  @Inject lateinit var adapter: SettingsListAdapter
+  @Inject
+  lateinit var adapter: SettingsListAdapter
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
@@ -61,6 +65,13 @@ class SettingsFragment : BaseFragment<SettingsViewState, SettingsViewEvent>(R.la
     when (event) {
       SettingsViewEvent.NavigateToLocalizationsOrdering ->
         navigator.navigateTo(R.id.location_ordering_fragment)
+
+      is SettingsViewEvent.NavigateToPinSetup ->
+        navigator.navigateTo(R.id.pin_setup_fragment, PinSetupFragment.bundle(event.lockScreenScope))
+
+      is SettingsViewEvent.NavigateToPinVerification ->
+        navigator.navigateTo(R.id.lock_screen_fragment, LockScreenFragment.bundle(event.verificationAction))
+
       SettingsViewEvent.NavigateToSettings -> {
         Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
           data = Uri.fromParts("package", requireActivity().packageName, null)

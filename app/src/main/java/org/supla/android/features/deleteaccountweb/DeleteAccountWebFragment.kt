@@ -49,8 +49,7 @@ class DeleteAccountWebFragment : WebContentFragment<DeleteAccountWebViewState, D
       DeleteAccountWebViewEvent.CloseClicked -> {
         when (destination) {
           EndDestination.RESTART -> navigator.restartAppStack()
-          EndDestination.RECONNECT -> navigator.navigateToStatus()
-          else -> navigator.back()
+          else -> navigator.navigateToMain()
         }
       }
     }
@@ -64,7 +63,7 @@ class DeleteAccountWebFragment : WebContentFragment<DeleteAccountWebViewState, D
   }
 
   enum class EndDestination : Serializable {
-    RESTART, RECONNECT, CLOSE
+    RESTART, CLOSE
   }
 
   override fun onBackPressed() = when (destination) {
@@ -72,11 +71,6 @@ class DeleteAccountWebFragment : WebContentFragment<DeleteAccountWebViewState, D
       navigator.restartAppStack()
       true
     }
-    EndDestination.RECONNECT -> {
-      navigator.navigateToStatus()
-      true
-    }
-    EndDestination.CLOSE -> false
-    null -> false
+    else -> false
   }
 }

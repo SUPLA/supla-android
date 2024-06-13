@@ -17,10 +17,12 @@ package org.supla.android.usecases.client
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.content.Context
+import dagger.hilt.android.qualifiers.ApplicationContext
 import io.reactivex.rxjava3.core.Completable
+import org.supla.android.core.SuplaAppProvider
 import org.supla.android.core.infrastructure.ThreadHandler
 import org.supla.android.core.networking.suplaclient.SuplaClientMessageHandlerWrapper
-import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.extensions.guardLet
 import org.supla.android.lib.SuplaClientMessageHandler
 import org.supla.android.lib.SuplaClientMsg
@@ -29,14 +31,15 @@ import javax.inject.Singleton
 
 @Singleton
 class LoginUseCase @Inject constructor(
-  private val suplaClientProvider: SuplaClientProvider,
+  @ApplicationContext private val applicationContext: Context,
+  private val suplaAppProvider: SuplaAppProvider,
   private val suplaClientMessageHandlerWrapper: SuplaClientMessageHandlerWrapper,
   threadHandler: ThreadHandler
 ) : BaseCredentialsUseCase(threadHandler) {
 
   operator fun invoke(userName: String, password: String): Completable =
     Completable.fromRunnable {
-      val (client) = guardLet(suplaClientProvider.provide()) {
+      val (client) = guardLet(suplaAppProvider.provide().SuplaClientInitIfNeed(applicationContext, password)) {
         throw IllegalStateException("SuplaClient is null")
       }
 

@@ -66,11 +66,11 @@ abstract class BaseAuthorizationViewModel<S : AuthorizationModelState, E : ViewE
           updateDialogState {
             it?.copy(
               userName = profile.email ?: "",
-              isCloudAccount = profile.serverForEmail?.contains(".supla.org") == true,
+              isCloudAccount = profile.isCloudAccount,
               userNameEnabled = suplaClientProvider.provide()?.registered() == true
             ) ?: AuthorizationDialogState(
               userName = profile.email ?: "",
-              isCloudAccount = profile.serverForEmail?.contains(".supla.org") == true,
+              isCloudAccount = profile.isCloudAccount,
               userNameEnabled = suplaClientProvider.provide()?.registered() == true
             )
           }
@@ -99,9 +99,6 @@ abstract class BaseAuthorizationViewModel<S : AuthorizationModelState, E : ViewE
       .disposeBySelf()
   }
 
-  /**
-   * Prepared but not used and not tested!
-   */
   fun login(userName: String, password: String) {
     loginUseCase(userName, password)
       .attachSilent()

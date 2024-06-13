@@ -9,8 +9,8 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.argThat
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.verifyZeroInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.core.networking.suplaclient.SuplaClientApi
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
@@ -92,7 +92,7 @@ class ExecuteShadingSystemActionUseCaseTest {
     )
     verify(suplaClientProvider).provide()
     verifyNoMoreInteractions(suplaClient, suplaClientProvider)
-    verifyZeroInteractions(vibrationHelper)
+    verifyNoInteractions(vibrationHelper)
   }
 
   @Test
@@ -113,6 +113,6 @@ class ExecuteShadingSystemActionUseCaseTest {
 
     verify(suplaClientProvider).provide()
     verifyNoMoreInteractions(suplaClientProvider)
-    verifyZeroInteractions(vibrationHelper)
+    verifyNoInteractions(vibrationHelper)
   }
 }

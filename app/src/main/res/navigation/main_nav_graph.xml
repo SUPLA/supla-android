@@ -2,7 +2,11 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   android:id="@+id/main_nav_graph"
-  app:startDestination="@id/main_fragment">
+  app:startDestination="@id/status_fragment">
+
+  <fragment
+    android:id="@+id/status_fragment"
+    android:name="org.supla.android.features.status.StatusFragment" />
 
   <fragment
     android:id="@+id/main_fragment"
@@ -52,4 +56,19 @@
     android:id="@+id/device_catalog_fragment"
     android:name="org.supla.android.features.devicecatalog.DeviceCatalogFragment"
     android:label="@string/menu_device_catalog" />
+
+  <fragment
+    android:id="@+id/pin_setup_fragment"
+    android:name="org.supla.android.features.pinsetup.PinSetupFragment"
+    android:label="@string/pin_setup_title" />
+
+  <fragment
+    android:id="@+id/lock_screen_fragment"
+    android:name="org.supla.android.features.lockscreen.LockScreenFragment"
+    android:label="@string/pin_setup_title" />
+
+  <fragment
+    android:id="@+id/about_fragment"
+    android:name="org.supla.android.features.about.AboutFragment"
+    android:label="@string/menubar_title" />
 </navigation>

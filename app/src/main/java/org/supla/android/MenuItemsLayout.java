@@ -185,7 +185,7 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
     iv.setImageTintList(
         ColorStateList.valueOf(ResourcesCompat.getColor(getResources(), R.color.on_primary, null)));
 
-    Button btn = new Button(getContext(), null, R.attr.borderlessButtonStyle);
+    Button btn = new Button(getContext(), null);
     btn.setOnClickListener(this);
     btn.setTypeface(SuplaApp.getApp().getTypefaceOpenSansRegular());
     btn.setTextSize(
@@ -216,7 +216,7 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
     if ((availableButtons & BTN_HOMEPAGE) != 0) {
       addLongSeparator();
 
-      btn = new Button(getContext(), null, R.attr.borderlessButtonStyle);
+      btn = new Button(getContext(), null);
       btn.setTag(BTN_HOMEPAGE);
       btn.setText(getResources().getString(R.string.homepage).toUpperCase());
       btn.setTextSize(
@@ -237,7 +237,7 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
     }
 
     if ((availableButtons & BTN_FREE_SPACE) != 0) {
-      btn = new Button(getContext(), null, R.attr.borderlessButtonStyle);
+      btn = new Button(getContext(), null);
       btn.setTag(BTN_FREE_SPACE);
       btn.setOnClickListener(this);
       addView(btn);

@@ -22,8 +22,11 @@ import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
+import org.supla.android.data.model.general.LockScreenScope
 import org.supla.android.data.source.local.entity.ProfileEntity
+import org.supla.android.features.lockscreen.UnlockAction
 import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.usecases.lock.GetLockScreenSettingUseCase
 import org.supla.android.usecases.profile.ActivateProfileUseCase
 import org.supla.android.usecases.profile.ReadAllProfilesUseCase
 import javax.inject.Inject
@@ -32,6 +35,7 @@ import javax.inject.Inject
 class ProfilesViewModel @Inject constructor(
   private val readAllProfilesUseCase: ReadAllProfilesUseCase,
   private val activateProfileUseCase: ActivateProfileUseCase,
+  private val getLockScreenSettingUseCase: GetLockScreenSettingUseCase,
   schedulers: SuplaSchedulers
 ) : BaseViewModel<ProfilesViewState, ProfilesViewEvent>(ProfilesViewState(), schedulers) {
 
@@ -53,10 +57,29 @@ class ProfilesViewModel @Inject constructor(
       )
       .disposeBySelf()
   }
+
+  fun onEditProfileClick(profileId: Long) {
+    if (getLockScreenSettingUseCase() == LockScreenScope.ACCOUNTS) {
+      sendEvent(ProfilesViewEvent.NavigateToLockScreen(UnlockAction.AuthorizeAccountsEdit(profileId)))
+    } else {
+      sendEvent(ProfilesViewEvent.NavigateToProfileEdit(profileId))
+    }
+  }
+
+  fun onCreateProfileClick() {
+    if (getLockScreenSettingUseCase() == LockScreenScope.ACCOUNTS) {
+      sendEvent(ProfilesViewEvent.NavigateToLockScreen(UnlockAction.AuthorizeAccountsCreate))
+    } else {
+      sendEvent(ProfilesViewEvent.NavigateToProfileCreate)
+    }
+  }
 }
 
 sealed class ProfilesViewEvent : ViewEvent {
-  object Finish : ProfilesViewEvent()
+  data object Finish : ProfilesViewEvent()
+  data class NavigateToLockScreen(val unlockAction: UnlockAction) : ProfilesViewEvent()
+  data class NavigateToProfileEdit(val profileId: Long) : ProfilesViewEvent()
+  data object NavigateToProfileCreate : ProfilesViewEvent()
 }
 
 data class ProfilesViewState(

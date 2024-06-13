@@ -30,8 +30,8 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.verifyZeroInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.Preferences
 import org.supla.android.R
@@ -459,7 +459,7 @@ class RollerShutterViewModelTest :
     assertThat(states).containsExactly(
       RollerShutterViewModelState(showCalibrationDialog = true)
     )
-    verifyZeroInteractions(executeSimpleActionUseCase, executeShadingSystemActionUseCase)
+    verifyNoInteractions(executeSimpleActionUseCase, executeShadingSystemActionUseCase)
   }
 
   @Test
@@ -492,7 +492,7 @@ class RollerShutterViewModelTest :
         manualMoving = true
       )
     )
-    verifyZeroInteractions(executeShadingSystemActionUseCase, executeSimpleActionUseCase)
+    verifyNoInteractions(executeShadingSystemActionUseCase, executeSimpleActionUseCase)
   }
 
   @Test
@@ -517,7 +517,7 @@ class RollerShutterViewModelTest :
       )
     )
     assertThat(states).containsExactly(state)
-    verifyZeroInteractions(executeShadingSystemActionUseCase, executeSimpleActionUseCase)
+    verifyNoInteractions(executeShadingSystemActionUseCase, executeSimpleActionUseCase)
   }
 
   @Test
@@ -542,7 +542,7 @@ class RollerShutterViewModelTest :
       )
     )
     assertThat(states).containsExactly(state)
-    verifyZeroInteractions(executeShadingSystemActionUseCase, executeSimpleActionUseCase)
+    verifyNoInteractions(executeShadingSystemActionUseCase, executeSimpleActionUseCase)
   }
 
   @Test
@@ -559,7 +559,7 @@ class RollerShutterViewModelTest :
       RollerShutterViewModelState(showCalibrationDialog = true),
       RollerShutterViewModelState(showCalibrationDialog = false)
     )
-    verifyZeroInteractions(executeSimpleActionUseCase, executeShadingSystemActionUseCase)
+    verifyNoInteractions(executeSimpleActionUseCase, executeShadingSystemActionUseCase)
   }
 
   @Test
@@ -569,7 +569,7 @@ class RollerShutterViewModelTest :
 
     val profile: ProfileEntity = mockk {
       every { email } returns "some-email@supla.org"
-      every { serverForEmail } returns "cloud.supla.org"
+      every { isCloudAccount } returns true
     }
     whenever(profileRepository.findActiveProfile()).thenReturn(Single.just(profile))
 
@@ -590,7 +590,7 @@ class RollerShutterViewModelTest :
       )
     )
     verify(profileRepository).findActiveProfile()
-    verifyZeroInteractions(executeSimpleActionUseCase, executeShadingSystemActionUseCase)
+    verifyNoInteractions(executeSimpleActionUseCase, executeShadingSystemActionUseCase)
     verifyNoMoreInteractions(profileRepository)
   }
 
@@ -619,7 +619,7 @@ class RollerShutterViewModelTest :
     )
     assertThat(states).containsExactly(state)
     verify(callSuplaClientOperationUseCase).invoke(remoteId, ItemType.CHANNEL, SuplaClientOperation.Command.Recalibrate)
-    verifyZeroInteractions(executeShadingSystemActionUseCase, executeSimpleActionUseCase)
+    verifyNoInteractions(executeShadingSystemActionUseCase, executeSimpleActionUseCase)
   }
 
   private fun mockOnlineChannel(

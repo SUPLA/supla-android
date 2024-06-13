@@ -22,9 +22,9 @@ import androidx.work.ExistingWorkPolicy
 import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.qualifiers.ApplicationContext
 import org.supla.android.BuildConfig
+import org.supla.android.MainActivity
 import org.supla.android.Preferences
 import org.supla.android.R
-import org.supla.android.StartActivity
 import org.supla.android.Trace
 import org.supla.android.core.infrastructure.WorkManagerProxy
 import org.supla.android.core.storage.EncryptedPreferences
@@ -150,7 +150,7 @@ class NotificationsHelper @Inject constructor(
   }
 
   private fun buildNotification(title: String, text: String, channel: String = NOTIFICATION_CHANNEL_ID): Notification {
-    val intent = Intent(context, StartActivity::class.java).apply {
+    val intent = Intent(context, MainActivity::class.java).apply {
       flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
     }
     val flag = if (VERSION.SDK_INT >= VERSION_CODES.M) FLAG_IMMUTABLE else 0

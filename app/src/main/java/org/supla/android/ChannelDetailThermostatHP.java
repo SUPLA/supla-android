@@ -714,6 +714,7 @@ public class ChannelDetailThermostatHP extends DetailLayout
   private void cancelRefreshTimer() {
     if (refreshTimer1 != null) {
       refreshTimer1.cancel();
+      refreshTimer1.purge();
       refreshTimer1 = null;
     }
   }

@@ -26,6 +26,7 @@ import org.supla.android.R
 import org.supla.android.core.ui.BaseFragment
 import org.supla.android.databinding.FragmentProfilesBinding
 import org.supla.android.features.createaccount.CreateAccountFragment
+import org.supla.android.features.lockscreen.LockScreenFragment
 import org.supla.android.navigator.CfgActivityNavigator
 import org.supla.android.profile.ProfileManager
 import javax.inject.Inject
@@ -43,22 +44,25 @@ class ProfilesFragment : BaseFragment<ProfilesViewState, ProfilesViewEvent>(R.la
   internal lateinit var navigator: CfgActivityNavigator
 
   @Inject
-  protected lateinit var adapter: ProfilesAdapter
+  internal lateinit var adapter: ProfilesAdapter
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
 
     adapter.onActivateClickListener = { viewModel.activateProfile(it) }
-    adapter.onAddClickListener = { navigator.navigateTo(R.id.cfgNewProfile) }
-    adapter.onEditClickListener = { navigator.navigateTo(R.id.cfgEditProfile, CreateAccountFragment.bundle(it)) }
+    adapter.onAddClickListener = viewModel::onCreateProfileClick
+    adapter.onEditClickListener = viewModel::onEditProfileClick
 
     binding.profilesList.adapter = adapter
   }
 
   override fun handleEvents(event: ProfilesViewEvent) {
     when (event) {
-      is ProfilesViewEvent.Finish ->
-        requireActivity().finish()
+      is ProfilesViewEvent.Finish -> navigator.navigateToMain()
+      ProfilesViewEvent.NavigateToProfileCreate -> navigator.navigateTo(R.id.cfgNewProfile)
+      is ProfilesViewEvent.NavigateToProfileEdit -> navigator.navigateTo(R.id.cfgEditProfile, CreateAccountFragment.bundle(event.profileId))
+      is ProfilesViewEvent.NavigateToLockScreen ->
+        navigator.navigateTo(R.id.config_lock_screen_fragment, LockScreenFragment.bundle(event.unlockAction))
     }
   }
 

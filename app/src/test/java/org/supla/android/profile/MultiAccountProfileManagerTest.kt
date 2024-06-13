@@ -91,7 +91,7 @@ class MultiAccountProfileManagerTest {
     // then
     testObserver.assertFailure(IllegalArgumentException::class.java)
 
-    verifyZeroInteractions(profileRepository)
+    verifyNoInteractions(profileRepository)
 
     io.mockk.verify {
       profile.id
@@ -150,7 +150,7 @@ class MultiAccountProfileManagerTest {
     // then
     testObserver.assertFailure(IllegalArgumentException::class.java)
 
-    verifyZeroInteractions(profileRepository)
+    verifyNoInteractions(profileRepository)
 
     io.mockk.verify {
       profile.id

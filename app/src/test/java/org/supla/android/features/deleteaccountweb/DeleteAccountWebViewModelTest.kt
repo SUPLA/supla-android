@@ -12,7 +12,7 @@ import org.supla.android.tools.SuplaSchedulers
 
 @RunWith(MockitoJUnitRunner::class)
 class DeleteAccountWebViewModelTest : BaseViewModelTest<DeleteAccountWebViewState, DeleteAccountWebViewEvent, DeleteAccountWebViewModel>(
-  mockSchedulers = false
+  mockSchedulers = MockSchedulers.NONE
 ) {
 
   @Mock

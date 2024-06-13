@@ -29,8 +29,8 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.verifyZeroInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.data.source.ChannelConfigRepository
 import org.supla.android.data.source.GeneralPurposeMeterLogRepository
@@ -76,8 +76,8 @@ class InsertChannelConfigUseCaseTest {
 
     // then
     observer.assertComplete()
-    verifyZeroInteractions(channelConfigRepository, profileRepository)
-    verifyZeroInteractions(generalPurposeMeterLogRepository, downloadEventsManager)
+    verifyNoInteractions(channelConfigRepository, profileRepository)
+    verifyNoInteractions(generalPurposeMeterLogRepository, downloadEventsManager)
   }
 
   @Test
@@ -105,7 +105,7 @@ class InsertChannelConfigUseCaseTest {
     verify(channelConfigRepository).insertOrUpdate(profileId, config)
 
     verifyNoMoreInteractions(profileRepository, channelConfigRepository)
-    verifyZeroInteractions(generalPurposeMeterLogRepository, downloadEventsManager)
+    verifyNoInteractions(generalPurposeMeterLogRepository, downloadEventsManager)
   }
 
   @Test
@@ -137,7 +137,7 @@ class InsertChannelConfigUseCaseTest {
     verify(channelConfigRepository, times(2)).insertOrUpdate(profileId, config)
 
     verifyNoMoreInteractions(profileRepository, channelConfigRepository)
-    verifyZeroInteractions(generalPurposeMeterLogRepository, downloadEventsManager)
+    verifyNoInteractions(generalPurposeMeterLogRepository, downloadEventsManager)
   }
 
   @Test
@@ -171,7 +171,7 @@ class InsertChannelConfigUseCaseTest {
     verify(channelConfigRepository).insertOrUpdate(profileId, config)
 
     verifyNoMoreInteractions(profileRepository, channelConfigRepository)
-    verifyZeroInteractions(generalPurposeMeterLogRepository, downloadEventsManager)
+    verifyNoInteractions(generalPurposeMeterLogRepository, downloadEventsManager)
   }
 
   @Test
@@ -236,7 +236,7 @@ class InsertChannelConfigUseCaseTest {
     verify(channelConfigRepository).delete(profileId, channelRemoteId)
 
     verifyNoMoreInteractions(profileRepository, channelConfigRepository)
-    verifyZeroInteractions(generalPurposeMeterLogRepository, downloadEventsManager)
+    verifyNoInteractions(generalPurposeMeterLogRepository, downloadEventsManager)
   }
 
   @Test
@@ -253,7 +253,7 @@ class InsertChannelConfigUseCaseTest {
 
     // then
     observer.assertComplete()
-    verifyZeroInteractions(profileRepository, channelConfigRepository)
-    verifyZeroInteractions(generalPurposeMeterLogRepository, downloadEventsManager)
+    verifyNoInteractions(profileRepository, channelConfigRepository)
+    verifyNoInteractions(generalPurposeMeterLogRepository, downloadEventsManager)
   }
 }

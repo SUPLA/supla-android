@@ -656,6 +656,33 @@
   <string name="channel_caption_vertical_blinds">Żaluzja pionowa</string>
   <string name="channel_caption_roller_garage_door">Brama garażowa</string>
   <string name="shading_system_extension">Rozwinięcie:</string>
+  <string name="status_initializing">Uruchamianie…</string>
+  <string name="status_try_again">Spróbuj ponownie</string>
+  <string name="lock_screen_hello">Witaj ponownie!</string>
+  <string name="lock_screen_enter_pin">Wprowadź PIN</string>
+  <string name="pin_setup_header">Zdefiniuj swój kod PIN</string>
+  <string name="cfg_lock_screen">Ekran blokady</string>
+  <string name="cfg_lock_screen_app">Aplikacja</string>
+  <string name="cfg_lock_screen_accounts">Konta</string>
+  <string name="cfg_lock_screen_none">Brak</string>
+  <string name="pin_setup_title">Konfiguracja PIN</string>
+  <string name="pin_setup_repeat">Powtórz PIN</string>
+  <string name="pin_setup_entry_different">Wprowadzone kody różnią się!</string>
+  <string name="pin_setup_failed">Ustawienie kodu PIN nie powiodło się ze względu na wewnętrzny problem.</string>
+  <string name="lock_screen_wrong_pin">Wprowadzono nieprawidłowy kod PIN!</string>
+  <string name="lock_screen_remove_pin">Usuwanie kodu PIN</string>
+  <string name="lock_screen_forgotten_code">Nie pamiętam kodu dostępu</string>
+  <string name="lock_screen_forgotten_code_title">Kod dostępu</string>
+  <string name="lock_screen_forgotten_code_message">Jeśli nie pamiętasz kodu dostępu, odinstaluj aplikację z telefonu, a następnie zainstaluj ją ponownie. Po ponownej instalacji, dodaj konfigurację konta z Supla Cloud.\n\nNie zakładaj nowego konta. Dane historyczne i wszystkie urządzenia nie zostaną stracone.</string>
+  <string name="lock_screen_forgotten_code_button">Rozumiem</string>
+  <string name="lock_screen_confirm_authorize_app">Zmiana zakresu autoryzacji</string>
+  <string name="pin_setup_use_biometric">Uwierzytelnianie biometryczne: </string>
+  <string name="pin_setup_biometric_not_enrolled">Uwierzytalnienie biometryczne nie zostało skonfigurowane. Jeżeli chcesz skorzystać z biometrii skonfiguruj ją najpierw w ustawieniach systemowych.</string>
+  <string name="biometric_prompt_subtitle">Odblokuj odciskiem palca</string>
+  <string name="lock_screen_biometric_error">Biometria niemożliwa z powodu: %1$s</string>
+  <string name="lock_screen_pin_locked">Zbyt wiele błędnych prób. Pin został zablokowany na %1$s.</string>
+  <string name="status_disconnecting">Rozłączanie…</string>
+  <string name="status_awaiting_network">Oczekiwanie na sieć…</string>
 
   <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
     <item quantity="one">włączone</item>

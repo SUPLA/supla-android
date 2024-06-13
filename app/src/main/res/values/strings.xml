@@ -35,7 +35,7 @@
   <string name="help">Help</string>
   <string name="menu_notifications" translatable="false">Notifications log</string>
 
-  <string name="status_connecting">Connecting...</string>
+  <string name="status_connecting">Connecting…</string>
   <string name="status_unknown_err">Unknown error</string>
   <string name="status_temporarily_unavailable">Service temporarily unavailable</string>
   <string name="status_bad_credentials">Bad credentials</string>
@@ -680,6 +680,33 @@
   <string name="channel_caption_vertical_blinds" translatable="false">Vertical blinds</string>
   <string name="channel_caption_roller_garage_door" translatable="false">Garage door</string>
   <string name="shading_system_extension" translatable="false">Extension:</string>
+  <string name="status_initializing" translatable="false">Starting…</string>
+  <string name="status_try_again" translatable="false">Try again</string>
+  <string name="lock_screen_hello" translatable="false">Welcome back!</string>
+  <string name="lock_screen_enter_pin" translatable="false">Enter PIN</string>
+  <string name="pin_setup_header" translatable="false">Define your PIN code</string>
+  <string name="cfg_lock_screen" translatable="false">Lock screen</string>
+  <string name="cfg_lock_screen_app" translatable="false">App</string>
+  <string name="cfg_lock_screen_accounts" translatable="false">Accounts</string>
+  <string name="cfg_lock_screen_none" translatable="false">None</string>
+  <string name="pin_setup_title" translatable="false">Configure PIN</string>
+  <string name="pin_setup_repeat" translatable="false">Repeat the PIN</string>
+  <string name="pin_setup_entry_different" translatable="false">PIN\'s are not equal!</string>
+  <string name="pin_setup_failed" translatable="false">Pin setup not possible because of internal error.</string>
+  <string name="lock_screen_wrong_pin" translatable="false">Entered PIN is wrong!</string>
+  <string name="lock_screen_remove_pin" translatable="false">PIN removal</string>
+  <string name="lock_screen_forgotten_code" translatable="false">I don\'t remember my PIN code</string>
+  <string name="lock_screen_forgotten_code_title" translatable="false">Access code</string>
+  <string name="lock_screen_forgotten_code_message" translatable="false">If you don\'t remember the code, uninstall app and install it again. After that configure your Supla Cloud account again.\n\nDon\'t create new account. All your data and devices will stay registered in your Supla Cloud account.</string>
+  <string name="lock_screen_forgotten_code_button" translatable="false">OK</string>
+  <string name="lock_screen_confirm_authorize_app" translatable="false">Authorization scope change</string>
+  <string name="pin_setup_use_biometric" translatable="false">Biometric Authentication: </string>
+  <string name="pin_setup_biometric_not_enrolled" translatable="false">Biometric not available. If you want to use biometric go to settings and enrol your biometrics.</string>
+  <string name="biometric_prompt_subtitle" translatable="false">Unlock using your fingerprint</string>
+  <string name="lock_screen_biometric_error" translatable="false">Biometrics disabled because of: %1$s</string>
+  <string name="lock_screen_pin_locked" translatable="false">To many failures. PIN entry locked for %1$s.</string>
+  <string name="status_disconnecting" translatable="false">Disconnecting…</string>
+  <string name="status_awaiting_network" translatable="false">Awaiting network…</string>
 
   <plurals name="details_timer_info_on" translatable="false">
     <item quantity="other">on</item>

@@ -28,12 +28,15 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.verifyZeroInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.core.BaseViewModelTest
+import org.supla.android.data.model.general.LockScreenScope
 import org.supla.android.data.source.local.entity.ProfileEntity
+import org.supla.android.features.lockscreen.UnlockAction
 import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.usecases.lock.GetLockScreenSettingUseCase
 import org.supla.android.usecases.profile.ActivateProfileUseCase
 import org.supla.android.usecases.profile.ReadAllProfilesUseCase
 
@@ -44,6 +47,9 @@ class ProfilesViewModelTest : BaseViewModelTest<ProfilesViewState, ProfilesViewE
 
   @Mock
   private lateinit var activateProfileUseCase: ActivateProfileUseCase
+
+  @Mock
+  private lateinit var getLockScreenSettingUseCase: GetLockScreenSettingUseCase
 
   @Mock
   override lateinit var schedulers: SuplaSchedulers
@@ -71,7 +77,7 @@ class ProfilesViewModelTest : BaseViewModelTest<ProfilesViewState, ProfilesViewE
 
     verify(readAllProfilesUseCase).invoke()
     verifyNoMoreInteractions(readAllProfilesUseCase)
-    verifyZeroInteractions(activateProfileUseCase)
+    verifyNoInteractions(activateProfileUseCase)
   }
 
   @Test
@@ -89,6 +95,56 @@ class ProfilesViewModelTest : BaseViewModelTest<ProfilesViewState, ProfilesViewE
 
     verify(activateProfileUseCase).invoke(profileId, force = true)
     verifyNoMoreInteractions(activateProfileUseCase)
-    verifyZeroInteractions(readAllProfilesUseCase)
+    verifyNoInteractions(readAllProfilesUseCase)
+  }
+
+  @Test
+  fun `should open profile edit view`() {
+    // given
+    val profileId: Long = 123
+    whenever(getLockScreenSettingUseCase.invoke()).thenReturn(LockScreenScope.NONE)
+
+    // when
+    viewModel.onEditProfileClick(profileId)
+
+    // then
+    assertThat(events).containsExactly(ProfilesViewEvent.NavigateToProfileEdit(profileId))
+  }
+
+  @Test
+  fun `should open lock screen when user wants to edit profile but lock scope is set to accounts`() {
+    // given
+    val profileId: Long = 123
+    whenever(getLockScreenSettingUseCase.invoke()).thenReturn(LockScreenScope.ACCOUNTS)
+
+    // when
+    viewModel.onEditProfileClick(profileId)
+
+    // then
+    assertThat(events).containsExactly(ProfilesViewEvent.NavigateToLockScreen(UnlockAction.AuthorizeAccountsEdit(profileId)))
+  }
+
+  @Test
+  fun `should open new profile view`() {
+    // given
+    whenever(getLockScreenSettingUseCase.invoke()).thenReturn(LockScreenScope.NONE)
+
+    // when
+    viewModel.onCreateProfileClick()
+
+    // then
+    assertThat(events).containsExactly(ProfilesViewEvent.NavigateToProfileCreate)
+  }
+
+  @Test
+  fun `should open lock screen when user wants to add profile but lock scope is set to accounts`() {
+    // given
+    whenever(getLockScreenSettingUseCase.invoke()).thenReturn(LockScreenScope.ACCOUNTS)
+
+    // when
+    viewModel.onCreateProfileClick()
+
+    // then
+    assertThat(events).containsExactly(ProfilesViewEvent.NavigateToLockScreen(UnlockAction.AuthorizeAccountsCreate))
   }
 }

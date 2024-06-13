@@ -17,6 +17,7 @@ package org.supla.android.usecases.client
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.content.Context
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.Test
@@ -30,10 +31,11 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
+import org.supla.android.core.SuplaAppApi
+import org.supla.android.core.SuplaAppProvider
 import org.supla.android.core.infrastructure.ThreadHandler
 import org.supla.android.core.networking.suplaclient.SuplaClientApi
 import org.supla.android.core.networking.suplaclient.SuplaClientMessageHandlerWrapper
-import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.lib.SuplaClientMessageHandler
 import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.lib.SuplaConst.SUPLA_RESULTCODE_CLIENT_LIMITEXCEEDED
@@ -43,7 +45,10 @@ import org.supla.android.lib.SuplaRegisterError
 @RunWith(MockitoJUnitRunner::class)
 class LoginUseCaseTest {
   @Mock
-  private lateinit var suplaClientProvider: SuplaClientProvider
+  private lateinit var context: Context
+
+  @Mock
+  private lateinit var suplaAppProvider: SuplaAppProvider
 
   @Mock
   private lateinit var suplaClientMessageHandlerWrapper: SuplaClientMessageHandlerWrapper
@@ -63,7 +68,10 @@ class LoginUseCaseTest {
     val suplaClient: SuplaClientApi = mockk {
       every { superUserAuthorizationRequest(userName, password) } answers {}
     }
-    whenever(suplaClientProvider.provide()).thenReturn(suplaClient)
+    val suplaApp: SuplaAppApi = mockk {
+      every { SuplaClientInitIfNeed(context, password) } returns suplaClient
+    }
+    whenever(suplaAppProvider.provide()).thenReturn(suplaApp)
 
     val message: SuplaClientMsg = mockk {
       every { type } returns SuplaClientMsg.onRegistered
@@ -79,10 +87,10 @@ class LoginUseCaseTest {
 
     // then
     observer.assertComplete()
-    verify(suplaClientProvider).provide()
+    verify(suplaAppProvider).provide()
     verify(suplaClientMessageHandlerWrapper).registerMessageListener(listener!!)
     verify(suplaClientMessageHandlerWrapper, times(2)).unregisterMessageListener(listener!!)
-    verifyNoMoreInteractions(suplaClientProvider, suplaClientMessageHandlerWrapper)
+    verifyNoMoreInteractions(suplaAppProvider, suplaClientMessageHandlerWrapper)
   }
 
   @Test
@@ -94,7 +102,10 @@ class LoginUseCaseTest {
     val suplaClient: SuplaClientApi = mockk {
       every { superUserAuthorizationRequest(userName, password) } answers {}
     }
-    whenever(suplaClientProvider.provide()).thenReturn(suplaClient)
+    val suplaApp: SuplaAppApi = mockk {
+      every { SuplaClientInitIfNeed(context, password) } returns suplaClient
+    }
+    whenever(suplaAppProvider.provide()).thenReturn(suplaApp)
 
     val message: SuplaClientMsg = mockk {
       every { type } returns SuplaClientMsg.onRegisterError
@@ -115,9 +126,9 @@ class LoginUseCaseTest {
     // then
     observer.assertError(AuthorizationException(SUPLA_RESULTCODE_CLIENT_LIMITEXCEEDED))
 
-    verify(suplaClientProvider).provide()
+    verify(suplaAppProvider).provide()
     verify(suplaClientMessageHandlerWrapper).registerMessageListener(listener!!)
     verify(suplaClientMessageHandlerWrapper, times(2)).unregisterMessageListener(listener!!)
-    verifyNoMoreInteractions(suplaClientProvider, suplaClientMessageHandlerWrapper)
+    verifyNoMoreInteractions(suplaAppProvider, suplaClientMessageHandlerWrapper)
   }
 }

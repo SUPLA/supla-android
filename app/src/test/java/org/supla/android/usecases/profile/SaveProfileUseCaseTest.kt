@@ -63,7 +63,7 @@ class SaveProfileUseCaseTest {
     verify(profileManager).getAllProfiles()
     verify(profileManager).create(profile)
     verifyNoMoreInteractions(profileManager)
-    verifyZeroInteractions(profileIdHolder)
+    verifyNoInteractions(profileIdHolder)
   }
 
   @Test
@@ -109,7 +109,7 @@ class SaveProfileUseCaseTest {
     verify(profileManager).getAllProfiles()
     verify(profileManager).update(profile)
     verifyNoMoreInteractions(profileManager)
-    verifyZeroInteractions(profileIdHolder)
+    verifyNoInteractions(profileIdHolder)
   }
 
   @Test
@@ -130,7 +130,7 @@ class SaveProfileUseCaseTest {
     verify(profileManager).getAllProfiles()
     verify(profileManager).create(profile)
     verifyNoMoreInteractions(profileManager)
-    verifyZeroInteractions(profileIdHolder)
+    verifyNoInteractions(profileIdHolder)
   }
 
   @Test
@@ -156,7 +156,7 @@ class SaveProfileUseCaseTest {
     verify(profileManager).getAllProfiles()
     verify(profileManager).create(profile)
     verifyNoMoreInteractions(profileManager)
-    verifyZeroInteractions(profileIdHolder)
+    verifyNoInteractions(profileIdHolder)
   }
 
   @Test
@@ -176,7 +176,7 @@ class SaveProfileUseCaseTest {
     verify(profileManager).getAllProfiles()
     verify(profileManager).create(profile)
     verifyNoMoreInteractions(profileManager)
-    verifyZeroInteractions(profileIdHolder)
+    verifyNoInteractions(profileIdHolder)
   }
 
   private fun profileWithEmailMock(): AuthProfileItem {

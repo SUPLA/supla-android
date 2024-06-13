@@ -19,11 +19,16 @@ package org.supla.android.ui.views.buttons
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
+import org.supla.android.R
 
 @Composable
 fun OutlinedButton(
@@ -39,8 +44,8 @@ fun OutlinedButton(
   ) {
     Text(
       text = text,
-      style = MaterialTheme.typography.button,
-      color = MaterialTheme.colors.primary
+      style = MaterialTheme.typography.labelLarge,
+      color = MaterialTheme.colorScheme.primary
     )
   }
 }
@@ -52,11 +57,13 @@ fun OutlinedButton(
   enabled: Boolean = true,
   content: @Composable RowScope.() -> Unit
 ) {
-  androidx.compose.material.OutlinedButton(
+  androidx.compose.material3.OutlinedButton(
     onClick = onClick,
     modifier = modifier,
     enabled = enabled,
-    border = BorderStroke(1.dp, MaterialTheme.colors.primary),
-    content = content
+    border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
+    shape = RoundedCornerShape(dimensionResource(id = R.dimen.radius_default)),
+    content = content,
+    colors = ButtonDefaults.outlinedButtonColors().copy(containerColor = Color.Transparent)
   )
 }

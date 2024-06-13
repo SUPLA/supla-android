@@ -8,7 +8,7 @@ object Deps {
     const val GoogleServices = "com.google.gms:google-services:${Versions.GoogleServices}"
 
     const val KotlinGradlePlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.Kotlin}"
-    const val AndroidBuildTools = "com.android.tools.build:gradle:7.4.2"
+    const val AndroidGradlePlugin = "com.android.tools.build:gradle:8.4.1"
 
     const val Spotless = "com.diffplug.spotless:spotless-plugin-gradle:${Versions.Spotless}"
 
@@ -29,6 +29,7 @@ object Deps {
         const val Worker = "androidx.work:work-runtime-ktx:${Versions.Androidx.Worker}"
         const val RecyclerView = "androidx.recyclerview:recyclerview:${Versions.Androidx.RecyclerView}"
         const val AppCompat = "androidx.appcompat:appcompat:${Versions.Androidx.AppCompat}"
+        const val Biometric = "androidx.biometric:biometric:${Versions.Androidx.Biometric}"
 
         object Core {
             const val Core = "androidx.core:core:${Versions.Androidx.Core}"
@@ -45,9 +46,6 @@ object Deps {
         object Navigation {
             const val Fragment = "androidx.navigation:navigation-fragment-ktx:${Versions.Androidx.Navigation}"
             const val UI = "androidx.navigation:navigation-ui-ktx:${Versions.Androidx.Navigation}"
-            const val DynamicFeatures = "androidx.navigation:navigation-dynamic-features-fragment:${Versions.Androidx.Navigation}"
-
-            const val SafeArgsGradlePlugin = "androidx.navigation:navigation-safe-args-gradle-plugin:${Versions.Androidx.Navigation}"
         }
 
         object Security {
@@ -58,8 +56,12 @@ object Deps {
             const val UI = "androidx.compose.ui:ui:${Versions.Androidx.Compose.Core}"
             const val Material = "androidx.compose.material:material:${Versions.Androidx.Compose.Core}"
             const val Icons = "androidx.compose.material:material-icons-extended:${Versions.Androidx.Compose.Core}"
-            const val Material3 = "androidx.compose.material3:material3:${Versions.Androidx.Compose.Material3}"
+            object Material3 {
+                const val Core = "androidx.compose.material3:material3:${Versions.Androidx.Compose.Material3}"
+                const val Adaptive = "androidx.compose.material3.adaptive:adaptive:1.0.0-beta02"
+            }
             const val Tooling = "androidx.compose.ui:ui-tooling:${Versions.Androidx.Compose.Core}"
+            const val ToolingPreview = "androidx.compose.ui:ui-tooling-preview:${Versions.Androidx.Compose.Core}"
             const val ConstraintLayout = "androidx.constraintlayout:constraintlayout-compose:${Versions.Androidx.Compose.ConstaintLayout}"
         }
 

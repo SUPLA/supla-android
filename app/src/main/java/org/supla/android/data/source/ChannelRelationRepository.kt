@@ -28,20 +28,9 @@ class ChannelRelationRepository @Inject constructor(private val channelRelationD
 
   fun insertOrUpdate(channelRelation: ChannelRelationEntity) = channelRelationDao.insertOrUpdate(channelRelation)
 
-  fun findChildren(profileId: Long, parentId: Int) = channelRelationDao.findChildren(profileId, parentId)
-
   fun markAsRemovable(profileId: Long) = channelRelationDao.markAsRemovable(profileId)
 
   fun cleanUnused() = channelRelationDao.cleanUnused()
-
-  /**
-   * @return List with channel remote ids, which have parents
-   */
-  fun findListOfParents(): Single<List<Int>> =
-    channelRelationDao.getForActiveProfile()
-      .map { entities ->
-        return@map mutableListOf<Int>().apply { entities.map { it.parentId }.forEach { add(it) } }
-      }
 
   fun findChildrenForParent(parentId: Int) = channelRelationDao.findChildrenFor(parentId)
 

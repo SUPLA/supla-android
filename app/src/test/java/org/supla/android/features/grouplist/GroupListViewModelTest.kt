@@ -16,8 +16,8 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.verifyZeroInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.Preferences
 import org.supla.android.core.BaseViewModelTest
@@ -115,7 +115,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
       state.copy(groups = list)
     )
     Assertions.assertThat(events).isEmpty()
-    verifyZeroInteractionsExcept(createProfileGroupsListUseCase)
+    verifyNoInteractionsExcept(createProfileGroupsListUseCase)
   }
 
   @Test
@@ -135,7 +135,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
       state.copy(groups = list)
     )
     Assertions.assertThat(events).isEmpty()
-    verifyZeroInteractionsExcept(createProfileGroupsListUseCase, toggleLocationUseCase)
+    verifyNoInteractionsExcept(createProfileGroupsListUseCase, toggleLocationUseCase)
   }
 
   @Test
@@ -162,7 +162,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
 
     verify(channelRepository).reorderChannelGroups(firstItemId, firstItemLocationId, secondItemId)
     verifyNoMoreInteractions(channelRepository)
-    verifyZeroInteractionsExcept(channelRepository)
+    verifyNoInteractionsExcept(channelRepository)
   }
 
   @Test
@@ -180,7 +180,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     Assertions.assertThat(events).containsExactly(
       GroupListViewEvent.ShowValveDialog(groupId)
     )
-    verifyZeroInteractionsExcept(groupActionUseCase)
+    verifyNoInteractionsExcept(groupActionUseCase)
   }
 
   @Test
@@ -198,7 +198,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     Assertions.assertThat(events).containsExactly(
       GroupListViewEvent.ShowAmperageExceededDialog(groupId)
     )
-    verifyZeroInteractionsExcept(groupActionUseCase)
+    verifyNoInteractionsExcept(groupActionUseCase)
   }
 
   @Test
@@ -216,7 +216,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     // then
     Assertions.assertThat(states).isEmpty()
     Assertions.assertThat(events).isEmpty()
-    verifyZeroInteractionsExcept()
+    verifyNoInteractionsExcept()
   }
 
   @Test
@@ -240,7 +240,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     // then
     Assertions.assertThat(states).isEmpty()
     Assertions.assertThat(events).isEmpty()
-    verifyZeroInteractionsExcept(provideDetailTypeUseCase)
+    verifyNoInteractionsExcept(provideDetailTypeUseCase)
   }
 
   @Test
@@ -261,7 +261,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     // then
     Assertions.assertThat(states).isEmpty()
     Assertions.assertThat(events).isEmpty()
-    verifyZeroInteractionsExcept(provideDetailTypeUseCase)
+    verifyNoInteractionsExcept(provideDetailTypeUseCase)
   }
 
   @Test
@@ -287,7 +287,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     Assertions.assertThat(events).containsExactly(
       GroupListViewEvent.OpenRollerShutterDetail(ItemBundle(remoteId, 0, ItemType.GROUP, function), detailType.pages)
     )
-    verifyZeroInteractionsExcept(provideDetailTypeUseCase)
+    verifyNoInteractionsExcept(provideDetailTypeUseCase)
   }
 
   @Test
@@ -305,7 +305,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
       state.copy(groups = list)
     )
     Assertions.assertThat(events).isEmpty()
-    verifyZeroInteractionsExcept(createProfileGroupsListUseCase)
+    verifyNoInteractionsExcept(createProfileGroupsListUseCase)
   }
 
   @Test
@@ -332,7 +332,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     // then
     Assertions.assertThat(states).containsExactly(GroupListViewState(groups = list))
     Assertions.assertThat(events).isEmpty()
-    verifyZeroInteractionsExcept(findGroupByRemoteIdUseCase, createProfileGroupsListUseCase)
+    verifyNoInteractionsExcept(findGroupByRemoteIdUseCase, createProfileGroupsListUseCase)
     io.mockk.verify { list[0].channelBase = group }
   }
 
@@ -349,7 +349,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     // then
     Assertions.assertThat(states).isEmpty()
     Assertions.assertThat(events).isEmpty()
-    verifyZeroInteractionsExcept()
+    verifyNoInteractionsExcept()
   }
 
   @Test
@@ -365,7 +365,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     Assertions.assertThat(events).containsExactly(GroupListViewEvent.NavigateToSuplaCloud)
     verify(loadActiveProfileUrlUseCase).invoke()
     verifyNoMoreInteractions(loadActiveProfileUrlUseCase)
-    verifyZeroInteractionsExcept(loadActiveProfileUrlUseCase)
+    verifyNoInteractionsExcept(loadActiveProfileUrlUseCase)
   }
 
   @Test
@@ -382,10 +382,10 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     Assertions.assertThat(events).containsExactly(GroupListViewEvent.NavigateToPrivateCloud(url))
     verify(loadActiveProfileUrlUseCase).invoke()
     verifyNoMoreInteractions(loadActiveProfileUrlUseCase)
-    verifyZeroInteractionsExcept(loadActiveProfileUrlUseCase)
+    verifyNoInteractionsExcept(loadActiveProfileUrlUseCase)
   }
 
-  private fun verifyZeroInteractionsExcept(vararg except: Any) {
+  private fun verifyNoInteractionsExcept(vararg except: Any) {
     val allDependencies = listOf(
       channelRepository,
       createProfileGroupsListUseCase,
@@ -396,7 +396,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     )
     for (dependency in allDependencies) {
       if (!except.contains(dependency)) {
-        verifyZeroInteractions(dependency)
+        verifyNoInteractions(dependency)
       }
     }
   }

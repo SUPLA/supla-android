@@ -17,11 +17,12 @@ fun SuplaTheme(
 
   MaterialTheme(
     colors = colors,
-    typography = SuplaTypography(colors),
+    typography = SuplaTypographyMaterial2(colors),
     content = {
       androidx.compose.material3.MaterialTheme(
         colorScheme = colorScheme,
-        content = content
+        content = content,
+        typography = SuplaTypographyMaterial3(colors)
       )
     }
   )

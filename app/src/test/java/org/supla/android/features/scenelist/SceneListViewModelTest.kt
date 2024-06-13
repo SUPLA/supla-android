@@ -14,8 +14,8 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.verifyZeroInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.Preferences
 import org.supla.android.core.BaseViewModelTest
@@ -90,7 +90,7 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
       state.copy(scenes = items)
     )
     Assertions.assertThat(events).isEmpty()
-    verifyZeroInteractionsExcept(createProfileScenesListUseCase)
+    verifyNoInteractionsExcept(createProfileScenesListUseCase)
   }
 
   @Test
@@ -108,7 +108,7 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
 
     verify(updateSceneOrderUseCase).invoke(scenes)
     verifyNoMoreInteractions(updateSceneOrderUseCase)
-    verifyZeroInteractionsExcept(updateSceneOrderUseCase)
+    verifyNoInteractionsExcept(updateSceneOrderUseCase)
   }
 
   @Test
@@ -128,7 +128,7 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
       state.copy(scenes = list)
     )
     Assertions.assertThat(events).isEmpty()
-    verifyZeroInteractionsExcept(createProfileScenesListUseCase, toggleLocationUseCase)
+    verifyNoInteractionsExcept(createProfileScenesListUseCase, toggleLocationUseCase)
   }
 
   @Test
@@ -146,7 +146,7 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
       state.copy(scenes = list)
     )
     Assertions.assertThat(events).isEmpty()
-    verifyZeroInteractionsExcept(createProfileScenesListUseCase)
+    verifyNoInteractionsExcept(createProfileScenesListUseCase)
   }
 
   @Test
@@ -162,7 +162,7 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
     Assertions.assertThat(events).containsExactly(SceneListViewEvent.NavigateToSuplaCloud)
     verify(loadActiveProfileUrlUseCase).invoke()
     verifyNoMoreInteractions(loadActiveProfileUrlUseCase)
-    verifyZeroInteractionsExcept(loadActiveProfileUrlUseCase)
+    verifyNoInteractionsExcept(loadActiveProfileUrlUseCase)
   }
 
   @Test
@@ -179,10 +179,10 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
     Assertions.assertThat(events).containsExactly(SceneListViewEvent.NavigateToPrivateCloud(url))
     verify(loadActiveProfileUrlUseCase).invoke()
     verifyNoMoreInteractions(loadActiveProfileUrlUseCase)
-    verifyZeroInteractionsExcept(loadActiveProfileUrlUseCase)
+    verifyNoInteractionsExcept(loadActiveProfileUrlUseCase)
   }
 
-  private fun verifyZeroInteractionsExcept(vararg except: Any) {
+  private fun verifyNoInteractionsExcept(vararg except: Any) {
     val allDependencies = listOf(
       toggleLocationUseCase,
       createProfileScenesListUseCase,
@@ -190,7 +190,7 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
     )
     for (dependency in allDependencies) {
       if (!except.contains(dependency)) {
-        verifyZeroInteractions(dependency)
+        verifyNoInteractions(dependency)
       }
     }
   }

@@ -35,3 +35,5 @@ fun ByteArray.toTemperature(vararg byteIndices: Int): Float {
   byteIndices.sorted().forEachIndexed { index, byte -> bytes[index] = this[byte] }
   return toShort(byteIndices).fromSuplaTemperature()
 }
+
+fun ByteArray.toHex(): String = joinToString(separator = "") { "%02x".format(it) }

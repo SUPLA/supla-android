@@ -1,17 +1,35 @@
 package org.supla.android
+/*
+Copyright (C) AC SOFTWARE SP. Z O.O.
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+*/
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
-import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatImageView
@@ -25,52 +43,50 @@ import androidx.navigation.NavDestination
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
+import com.google.android.material.appbar.AppBarLayout
 import dagger.hilt.android.AndroidEntryPoint
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.subscribeBy
+import org.supla.android.core.networking.suplaclient.SuplaClientState
+import org.supla.android.core.networking.suplaclient.SuplaClientStateHolder
 import org.supla.android.core.notifications.NotificationsHelper
 import org.supla.android.core.ui.BackHandleOwner
+import org.supla.android.extensions.TAG
 import org.supla.android.extensions.getChannelIconUseCase
-import org.supla.android.features.notificationinfo.NotificationInfoDialog
+import org.supla.android.extensions.visibleIf
+import org.supla.android.features.lockscreen.LockScreenFragment
+import org.supla.android.features.lockscreen.UnlockAction
 import org.supla.android.images.ImageCache
 import org.supla.android.images.ImageId
 import org.supla.android.lib.SuplaConst
 import org.supla.android.lib.SuplaEvent
 import org.supla.android.navigator.MainNavigator
 import org.supla.android.restapi.DownloadUserIcons
+import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.LoadableContent
 import org.supla.android.ui.ToolbarItemsClickHandler
 import org.supla.android.ui.ToolbarItemsController
 import org.supla.android.ui.ToolbarTitleController
+import org.supla.android.ui.ToolbarVisibilityController
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
 import javax.inject.Inject
 
-/*
- Copyright (C) AC SOFTWARE SP. Z O.O.
-
- This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation; either version 2
- of the License, or (at your option) any later version.
-
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-syays GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with this program; if not, write to the Free Software
- Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- */
-
 @AndroidEntryPoint
-class MainActivity : NavigationActivity(), ToolbarTitleController, LoadableContent, ToolbarItemsController, BackHandleOwner {
+class MainActivity :
+  NavigationActivity(),
+  ToolbarTitleController,
+  LoadableContent,
+  ToolbarItemsController,
+  ToolbarVisibilityController,
+  BackHandleOwner {
 
   private var downloadUserIcons: DownloadUserIcons? = null
-  private var NotificationView: RelativeLayout? = null
-  private var notif_handler: Handler? = null
-  private var notif_nrunnable: Runnable? = null
-  private var notif_img: ImageView? = null
-  private var notif_text: TextView? = null
+  private var notificationView: RelativeLayout? = null
+  private var notificationHandler: Handler? = null
+  private var notificationnrunnable: Runnable? = null
+  private var notificationImage: ImageView? = null
+  private var notificationText: TextView? = null
   private var animatingMenu = false
   private val handler = Handler(Looper.getMainLooper())
 
@@ -79,8 +95,11 @@ class MainActivity : NavigationActivity(), ToolbarTitleController, LoadableConte
   private val toolbarItemsClickHandlers = mutableListOf<ToolbarItemsClickHandler>()
   private val newGestureInfo: ConstraintLayout by lazy { findViewById(R.id.new_gesture_info) }
   private val newGestureInfoClose: AppCompatImageView by lazy { findViewById(R.id.new_gesture_info_close) }
+  private val appBarLayout: AppBarLayout by lazy { findViewById(R.id.app_bar_layout) }
+  private val appBarLayoutSpacer: View by lazy { findViewById(R.id.main_content_top_spacer) }
 
   private var lastDestinationId: Int? = null
+  private val disposables: CompositeDisposable = CompositeDisposable()
 
   private val menuListener: Openable = object : Openable {
 
@@ -108,6 +127,12 @@ class MainActivity : NavigationActivity(), ToolbarTitleController, LoadableConte
   @Inject
   lateinit var notificationsHelper: NotificationsHelper
 
+  @Inject
+  lateinit var suplaClientStateHolder: SuplaClientStateHolder
+
+  @Inject
+  lateinit var suplaSchedulers: SuplaSchedulers
+
   @RequiresApi(Build.VERSION_CODES.O)
   val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
     if (isGranted) {
@@ -125,9 +150,7 @@ class MainActivity : NavigationActivity(), ToolbarTitleController, LoadableConte
     legacySetup()
     navigationSetup()
     toolbarSetup()
-    notificationsHelper.setup(this) {
-      NotificationInfoDialog.create().show(supportFragmentManager, null)
-    }
+    backCallbackSetup()
 
     if (preferences.shouldShowNewGestureInfo() && preferences.isNewGestureInfoPresented.not()) {
       newGestureInfo.bringToFront()
@@ -139,6 +162,41 @@ class MainActivity : NavigationActivity(), ToolbarTitleController, LoadableConte
     menuLayout.setOnClickListener(this::handleMenuClicks)
   }
 
+  override fun onStart() {
+    super.onStart()
+    disposables.add(
+      suplaClientStateHolder.state()
+        .observeOn(suplaSchedulers.ui)
+        .subscribeBy(
+          onNext = {
+            Trace.d(TAG, "Got state $it")
+            when (it) {
+              SuplaClientState.FirstProfileCreation -> navigator.navigateToNewProfile()
+              is SuplaClientState.Connecting,
+              SuplaClientState.Initialization,
+              SuplaClientState.Disconnecting,
+              SuplaClientState.Locking,
+              is SuplaClientState.Finished -> navigator.navigateToStatus()
+
+              SuplaClientState.Locked -> {
+                if (menuIsVisible()) {
+                  setMenuVisible(false)
+                }
+                navigator.navigateTo(R.id.lock_screen_fragment, LockScreenFragment.bundle(UnlockAction.AuthorizeApplication))
+              }
+
+              else -> {}
+            }
+          }
+        )
+    )
+  }
+
+  override fun onStop() {
+    super.onStop()
+    disposables.clear()
+  }
+
   fun registerMenuItemClickHandler(handler: ToolbarItemsClickHandler) {
     toolbarItemsClickHandlers.add(handler)
   }
@@ -148,21 +206,21 @@ class MainActivity : NavigationActivity(), ToolbarTitleController, LoadableConte
   }
 
   private fun legacySetup() {
-    notif_handler = null
-    notif_nrunnable = null
+    notificationHandler = null
+    notificationnrunnable = null
     setContentView(R.layout.activity_main)
-    NotificationView = Inflate(R.layout.notification, null) as RelativeLayout
-    NotificationView!!.visibility = View.GONE
-    val NotifBgLayout = NotificationView!!.findViewById<RelativeLayout>(R.id.notif_bg_layout)
-    NotifBgLayout.setOnClickListener(this)
-    NotifBgLayout.setBackgroundColor(ResourcesCompat.getColor(resources, R.color.notification_bg, null))
-    rootLayout.addView(NotificationView)
-    notif_img = NotificationView!!.findViewById(R.id.notif_img)
-    notif_text = NotificationView!!.findViewById<TextView?>(R.id.notif_txt).also {
+    notificationView = Inflate(R.layout.notification, null) as RelativeLayout
+    notificationView!!.visibility = View.GONE
+    val notificationBackgroundLayout = notificationView!!.findViewById<RelativeLayout>(R.id.notif_bg_layout)
+    notificationBackgroundLayout.setOnClickListener(this)
+    notificationBackgroundLayout.setBackgroundColor(ResourcesCompat.getColor(resources, R.color.notification_bg, null))
+    rootLayout.addView(notificationView)
+    notificationImage = notificationView!!.findViewById(R.id.notif_img)
+    notificationText = notificationView!!.findViewById<TextView?>(R.id.notif_txt).also {
       it.typeface = SuplaApp.getApp().typefaceOpenSansRegular
     }
 
-    RegisterMessageHandler()
+    registerMessageHandler()
   }
 
   private fun navigationSetup() {
@@ -171,13 +229,15 @@ class MainActivity : NavigationActivity(), ToolbarTitleController, LoadableConte
     navController.setGraph(R.navigation.main_nav_graph)
     navController.addOnDestinationChangedListener { _, destination, _ -> configureToolbarOnDestinationChange(destination) }
 
+    val appBarConfiguration = AppBarConfiguration
+      .Builder(setOf(R.id.status_fragment, R.id.main_fragment))
+      .setOpenableLayout(menuListener)
+      .build()
+
     NavigationUI.setupWithNavController(
       toolbar,
       navController,
-      AppBarConfiguration(
-        navGraph = navController.graph,
-        menuListener
-      )
+      appBarConfiguration
     )
   }
 
@@ -206,15 +266,29 @@ class MainActivity : NavigationActivity(), ToolbarTitleController, LoadableConte
     }
   }
 
+  private fun backCallbackSetup() {
+    onBackPressedDispatcher.addCallback(
+      this,
+      object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+          if (menuIsVisible()) {
+            setMenuVisible(false)
+          } else if (isBackHandledInChildFragment(supportFragmentManager)) {
+            return // Do nothing, is consumed by child fragment
+          } else if (!navigator.back()) {
+            finishAffinity()
+          }
+        }
+      }
+    )
+  }
+
   private fun configureToolbarOnDestinationChange(destination: NavDestination) {
     lastDestinationId = destination.id
+
     setAccountItemVisible(profileManager.getAllProfiles().blockingFirst().size > 1 && lastDestinationId == R.id.main_fragment)
     setDeleteVisible(lastDestinationId == R.id.notifications_log_fragment)
     setDeleteHistoryVisible(lastDestinationId == R.id.thermometer_detail_fragment || lastDestinationId == R.id.gpm_detail_fragment)
-
-    if (destination.id != R.id.main_fragment) {
-      findViewById<FrameLayout>(R.id.main_content).setPadding(0, 0, 0, 0)
-    }
   }
 
   override fun onResume() {
@@ -269,7 +343,7 @@ class MainActivity : NavigationActivity(), ToolbarTitleController, LoadableConte
   override fun onEventMsg(event: SuplaEvent) {
     super.onEventMsg(event)
     if (event.Owner && event.Event != SuplaConst.SUPLA_EVENT_SET_BRIDGE_VALUE_FAILED || event.ChannelID == 0) return
-    val channel = dbHelper.getChannel(event.ChannelID) ?: return
+    val channel = getDbHelper()?.getChannel(event.ChannelID) ?: return
     var imgResId = 0
     var imgId: ImageId? = null
     var msg: String
@@ -306,12 +380,12 @@ class MainActivity : NavigationActivity(), ToolbarTitleController, LoadableConte
   }
 
   private fun showHideNotificationView(show: Boolean) {
-    if (!show && NotificationView!!.visibility == View.GONE) return
+    if (!show && notificationView!!.visibility == View.GONE) return
     val height = resources.getDimension(R.dimen.channel_layout_height)
-    NotificationView!!.visibility = View.VISIBLE
-    NotificationView!!.bringToFront()
-    NotificationView!!.setTranslationY(if (show) height else 0f)
-    NotificationView!!.animate()
+    notificationView!!.visibility = View.VISIBLE
+    notificationView!!.bringToFront()
+    notificationView!!.translationY = if (show) height else 0f
+    notificationView!!.animate()
       .translationY(if (show) 0f else height)
       .setDuration(100)
       .setListener(
@@ -319,7 +393,7 @@ class MainActivity : NavigationActivity(), ToolbarTitleController, LoadableConte
           override fun onAnimationEnd(animation: Animator) {
             super.onAnimationEnd(animation)
             if (!show) {
-              NotificationView!!.visibility = View.GONE
+              notificationView!!.visibility = View.GONE
             }
           }
         }
@@ -327,25 +401,25 @@ class MainActivity : NavigationActivity(), ToolbarTitleController, LoadableConte
   }
 
   private fun showNotificationMessage(msg: String?, imgId: ImageId?, imgResId: Int) {
-    notif_img!!.setImageBitmap(null)
-    notif_img!!.background = null
+    notificationImage!!.setImageBitmap(null)
+    notificationImage!!.background = null
     if (imgId != null) {
-      notif_img!!.setImageBitmap(ImageCache.getBitmap(this, imgId))
+      notificationImage!!.setImageBitmap(ImageCache.getBitmap(this, imgId))
     } else if (imgResId > 0) {
-      notif_img!!.background = ResourcesCompat.getDrawable(resources, imgResId, null)
+      notificationImage!!.background = ResourcesCompat.getDrawable(resources, imgResId, null)
     }
-    notif_text!!.text = msg
+    notificationText!!.text = msg
     showHideNotificationView(true)
-    if (notif_handler != null && notif_nrunnable != null) {
-      notif_handler!!.removeCallbacks(notif_nrunnable!!)
+    if (notificationHandler != null && notificationnrunnable != null) {
+      notificationHandler!!.removeCallbacks(notificationnrunnable!!)
     }
-    notif_handler = Handler(Looper.getMainLooper())
-    notif_nrunnable = Runnable {
+    notificationHandler = Handler(Looper.getMainLooper())
+    notificationnrunnable = Runnable {
       hideNotificationMessage()
-      notif_handler = null
-      notif_nrunnable = null
+      notificationHandler = null
+      notificationnrunnable = null
     }
-    notif_handler!!.postDelayed(notif_nrunnable!!, 5000)
+    notificationHandler!!.postDelayed(notificationnrunnable!!, 5000)
   }
 
   private fun hideNotificationMessage() {
@@ -363,7 +437,11 @@ class MainActivity : NavigationActivity(), ToolbarTitleController, LoadableConte
     if (visible) {
       if (animatingMenu) return
       val btns =
-        if (dbHelper.isZWaveBridgeChannelAvailable) MenuItemsLayout.BTN_ALL else MenuItemsLayout.BTN_ALL xor MenuItemsLayout.BTN_Z_WAVE
+        if (getDbHelper()?.isZWaveBridgeChannelAvailable == true) {
+          MenuItemsLayout.BTN_ALL
+        } else {
+          MenuItemsLayout.BTN_ALL xor MenuItemsLayout.BTN_Z_WAVE
+        }
       menuLayout.setButtonsAvailable(btns)
       menuLayout.y = (-menuLayout.btnAreaHeight).toFloat()
       menuLayout.visibility = View.VISIBLE
@@ -400,18 +478,8 @@ class MainActivity : NavigationActivity(), ToolbarTitleController, LoadableConte
 
   override fun onClick(v: View) {
     super.onClick(v)
-    if (v.parent === NotificationView) {
+    if (v.parent === notificationView) {
       hideNotificationMessage()
-    }
-  }
-
-  override fun onBackPressed() {
-    if (menuIsVisible()) {
-      setMenuVisible(false)
-    } else if (isBackHandledInChildFragment(supportFragmentManager)) {
-      return // Do nothing, is consumed by child fragment
-    } else if (!navigator.back()) {
-      finishAffinity()
     }
   }
 
@@ -432,12 +500,12 @@ class MainActivity : NavigationActivity(), ToolbarTitleController, LoadableConte
 
     when (MenuItemsLayout.getButtonId(v)) {
       MenuItemsLayout.BTN_SETTINGS -> navigator.navigateTo(R.id.application_settings_fragment)
-      MenuItemsLayout.BTN_ABOUT -> showAbout()
+      MenuItemsLayout.BTN_ABOUT -> navigator.navigateTo(R.id.about_fragment)
       MenuItemsLayout.BTN_ADD_DEVICE -> navigator.navigateToAddWizard()
       MenuItemsLayout.BTN_Z_WAVE -> SuperUserAuthorize(MenuItemsLayout.BTN_Z_WAVE)
-      MenuItemsLayout.BTN_HELP -> openForumpage()
+      MenuItemsLayout.BTN_HELP -> navigator.navigateToWeb(Uri.parse(resources.getString(R.string.forumpage_url)))
       MenuItemsLayout.BTN_CLOUD -> navigator.navigateToCloudExternal()
-      MenuItemsLayout.BTN_HOMEPAGE -> openHomepage()
+      MenuItemsLayout.BTN_HOMEPAGE -> navigator.navigateToSuplaOrgExternal()
       MenuItemsLayout.BTN_PROFILE -> showProfile(this)
       MenuItemsLayout.BTN_NOTIFICATIONS -> navigator.navigateTo(R.id.notifications_log_fragment)
       MenuItemsLayout.BTN_DEVICE_CATALOG -> navigator.navigateTo(R.id.device_catalog_fragment)
@@ -446,5 +514,11 @@ class MainActivity : NavigationActivity(), ToolbarTitleController, LoadableConte
 
   override fun setToolbarItemVisible(itemId: Int, visible: Boolean) {
     toolbar.menu.findItem(itemId).isVisible = visible
+  }
+
+  override fun setToolbarVisible(visible: Boolean) {
+    appBarLayout.visibleIf(visible)
+    appBarLayoutSpacer.visibleIf(visible)
+    setStatusBarColor(if (visible) R.color.primary else R.color.background, visible.not())
   }
 }

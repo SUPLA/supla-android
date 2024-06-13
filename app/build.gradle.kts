@@ -3,14 +3,15 @@ plugins {
   id("com.diffplug.spotless")
   kotlin("android")
   kotlin("kapt")
-  id("androidx.navigation.safeargs.kotlin")
-  id("dagger.hilt.android.plugin")
   id("com.google.gms.google-services")
+  id("com.google.dagger.hilt.android") version Versions.Hilt
+  id("org.jetbrains.kotlin.plugin.compose") version Versions.Kotlin
 }
 
 android {
   compileSdk = Versions.Sdk
   buildToolsVersion = Versions.BuildTools
+  namespace = "org.supla.android"
 
   useLibrary("android.test.runner")
   useLibrary("android.test.base")
@@ -31,8 +32,8 @@ android {
   }
 
   compileOptions {
-    sourceCompatibility(JavaVersion.VERSION_1_8)
-    targetCompatibility(JavaVersion.VERSION_1_8)
+    sourceCompatibility(JavaVersion.VERSION_17)
+    targetCompatibility(JavaVersion.VERSION_17)
     isCoreLibraryDesugaringEnabled = true
   }
 
@@ -88,21 +89,15 @@ android {
     }
   }
 
-  buildToolsVersion = "30.0.3"
-
-
   buildFeatures {
     dataBinding = true
     viewBinding = true
     compose = true
-  }
-
-  composeOptions {
-    kotlinCompilerExtensionVersion = Versions.Androidx.Compose.Core
+    buildConfig = true
   }
 
   kotlinOptions {
-    jvmTarget = "1.8"
+    jvmTarget = "17"
     freeCompilerArgs = listOf("-Xcontext-receivers", "-Xjvm-default=all")
   }
 }
@@ -131,13 +126,13 @@ dependencies {
   implementation(Deps.Androidx.Room.Runtime)
   implementation(Deps.Androidx.Room.RxJava)
   implementation(Deps.Androidx.AppCompat)
+  implementation(Deps.Androidx.Biometric)
   implementation(Deps.Kotlin)
   implementation(Deps.Coroutines)
   implementation(Deps.Androidx.Fragment)
   implementation(Deps.Androidx.Lifecycle.Livedata)
   implementation(Deps.Androidx.Navigation.Fragment)
   implementation(Deps.Androidx.Navigation.UI)
-  implementation(Deps.Androidx.Navigation.DynamicFeatures)
   implementation(Deps.Androidx.Preferences)
   implementation(Deps.Androidx.Worker)
   implementation(Deps.Androidx.RecyclerView)
@@ -150,8 +145,10 @@ dependencies {
   implementation(Deps.Androidx.Compose.UI)
   implementation(Deps.Androidx.Compose.Material)
   implementation(Deps.Androidx.Compose.Icons)
-  implementation(Deps.Androidx.Compose.Material3)
+  implementation(Deps.Androidx.Compose.Material3.Core)
+  implementation(Deps.Androidx.Compose.Material3.Adaptive)
   implementation(Deps.Androidx.Compose.Tooling)
+  implementation(Deps.Androidx.Compose.ToolingPreview)
   implementation(Deps.Androidx.Compose.ConstraintLayout)
 
   coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
@@ -208,5 +205,9 @@ spotless {
       )
     )
   }
+}
+
+composeCompiler {
+  enableStrongSkippingMode.set(true)
 }
 

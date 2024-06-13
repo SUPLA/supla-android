@@ -18,9 +18,13 @@ import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.core.permissions.PermissionsHelper
+import org.supla.android.core.storage.EncryptedPreferences
+import org.supla.android.data.model.general.LockScreenScope
+import org.supla.android.data.model.general.LockScreenSettings
 import org.supla.android.data.model.general.NightModeSetting
 import org.supla.android.data.source.runtime.appsettings.ChannelHeight
 import org.supla.android.data.source.runtime.appsettings.TemperatureUnit
+import org.supla.android.features.lockscreen.UnlockAction
 import org.supla.android.tools.SuplaSchedulers
 
 @RunWith(MockitoJUnitRunner::class)
@@ -39,6 +43,9 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
   private lateinit var modeManager: UiModeManager
 
   @Mock
+  private lateinit var encryptedPreferences: EncryptedPreferences
+
+  @Mock
   override lateinit var schedulers: SuplaSchedulers
 
   override val viewModel: SettingsViewModel by lazy {
@@ -47,6 +54,7 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
       notificationManager,
       permissionsHelper,
       modeManager,
+      encryptedPreferences,
       schedulers
     )
   }
@@ -79,6 +87,7 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
       tuple(SettingItem.BottomLabels::class.java),
       tuple(SettingItem.RollerShutterOpenClose::class.java),
       tuple(SettingItem.NightMode::class.java),
+      tuple(SettingItem.LockScreen::class.java),
       tuple(SettingItem.LocalizationOrdering::class.java),
       tuple(SettingItem.HeaderItem::class.java),
       tuple(SettingItem.NotificationsItem::class.java),
@@ -93,9 +102,10 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
     assertThat((settingsList[5] as SettingItem.BottomLabels).visible).isEqualTo(false)
     assertThat((settingsList[6] as SettingItem.RollerShutterOpenClose).showOpeningPercentage).isEqualTo(true)
     assertThat((settingsList[7] as SettingItem.NightMode).nightModeSetting).isEqualTo(NightModeSetting.NEVER)
-    assertThat((settingsList[9] as SettingItem.HeaderItem).headerResource).isEqualTo(R.string.settings_permissions)
-    assertThat((settingsList[10] as SettingItem.NotificationsItem).allowed).isEqualTo(true)
-    assertThat((settingsList[11] as SettingItem.LocalizationItem).allowed).isEqualTo(true)
+    assertThat((settingsList[8] as SettingItem.LockScreen).lockScreenScope).isEqualTo(LockScreenScope.NONE)
+    assertThat((settingsList[10] as SettingItem.HeaderItem).headerResource).isEqualTo(R.string.settings_permissions)
+    assertThat((settingsList[11] as SettingItem.NotificationsItem).allowed).isEqualTo(true)
+    assertThat((settingsList[12] as SettingItem.LocalizationItem).allowed).isEqualTo(true)
   }
 
   @Test
@@ -231,13 +241,87 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
   }
 
   @Test
+  fun `should navigate to pin verification when user wants turn off pin`() {
+    // given
+    mockPreferences()
+
+    // when
+    viewModel.loadSettings()
+    val lockScreenItem = states[0].settingsItems[8] as SettingItem.LockScreen
+    lockScreenItem.callback(LockScreenScope.NONE)
+
+    // then
+    assertThat(states.size).isEqualTo(1)
+    assertThat(events).containsExactly(SettingsViewEvent.NavigateToPinVerification(UnlockAction.TurnOffPin))
+    verifyPreferencesMockedCalls()
+    verify(encryptedPreferences, times(2)).lockScreenSettings
+    verifyNoMoreInteractions(preferences, encryptedPreferences)
+  }
+
+  @Test
+  fun `should navigate to pin verification when user wants change scope to accounts`() {
+    // given
+    mockPreferences()
+    whenever(encryptedPreferences.lockScreenSettings).thenReturn(LockScreenSettings(LockScreenScope.NONE, "sum", false))
+
+    // when
+    viewModel.loadSettings()
+    val lockScreenItem = states[0].settingsItems[8] as SettingItem.LockScreen
+    lockScreenItem.callback(LockScreenScope.ACCOUNTS)
+
+    // then
+    assertThat(states.size).isEqualTo(1)
+    assertThat(events).containsExactly(SettingsViewEvent.NavigateToPinVerification(UnlockAction.ConfirmAuthorizeAccounts))
+    verifyPreferencesMockedCalls()
+    verify(encryptedPreferences, times(2)).lockScreenSettings
+    verifyNoMoreInteractions(preferences, encryptedPreferences)
+  }
+
+  @Test
+  fun `should navigate to pin verification when user wants change scope to application`() {
+    // given
+    mockPreferences()
+    whenever(encryptedPreferences.lockScreenSettings).thenReturn(LockScreenSettings(LockScreenScope.NONE, "sum", false))
+
+    // when
+    viewModel.loadSettings()
+    val lockScreenItem = states[0].settingsItems[8] as SettingItem.LockScreen
+    lockScreenItem.callback(LockScreenScope.APPLICATION)
+
+    // then
+    assertThat(states.size).isEqualTo(1)
+    assertThat(events).containsExactly(SettingsViewEvent.NavigateToPinVerification(UnlockAction.ConfirmAuthorizeApplication))
+    verifyPreferencesMockedCalls()
+    verify(encryptedPreferences, times(2)).lockScreenSettings
+    verifyNoMoreInteractions(preferences, encryptedPreferences)
+  }
+
+  @Test
+  fun `should navigate to pin setup`() {
+    // given
+    mockPreferences()
+
+    // when
+    viewModel.loadSettings()
+    val lockScreenItem = states[0].settingsItems[8] as SettingItem.LockScreen
+    lockScreenItem.callback(LockScreenScope.APPLICATION)
+
+    // then
+    assertThat(states.size).isEqualTo(1)
+    assertThat(events).containsExactly(SettingsViewEvent.NavigateToPinSetup(LockScreenScope.APPLICATION))
+    verifyPreferencesMockedCalls()
+    verify(encryptedPreferences, times(2)).lockScreenSettings
+    verifyNoMoreInteractions(preferences, encryptedPreferences)
+  }
+
+  @Test
   fun `should open localization ordering when clicked on localization ordering`() {
     mockPreferences()
     whenever(permissionsHelper.checkPermissionGranted(ACCESS_FINE_LOCATION)).thenReturn(true)
 
     // when
     viewModel.loadSettings()
-    val channelSettingItem = states[0].settingsItems[8] as SettingItem.LocalizationOrdering
+    val channelSettingItem = states[0].settingsItems[9] as SettingItem.LocalizationOrdering
     channelSettingItem.callback()
 
     // then
@@ -254,7 +338,7 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
 
     // when
     viewModel.loadSettings()
-    val channelSettingItem = states[0].settingsItems[10] as SettingItem.NotificationsItem
+    val channelSettingItem = states[0].settingsItems[11] as SettingItem.NotificationsItem
     channelSettingItem.callback()
 
     // then
@@ -271,7 +355,7 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
 
     // when
     viewModel.loadSettings()
-    val channelSettingItem = states[0].settingsItems[11] as SettingItem.LocalizationItem
+    val channelSettingItem = states[0].settingsItems[12] as SettingItem.LocalizationItem
     channelSettingItem.callback()
 
     // then
@@ -288,6 +372,8 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
     whenever(preferences.isShowChannelInfo).thenReturn(false)
     whenever(preferences.isShowOpeningPercent).thenReturn(true)
     whenever(preferences.nightMode).thenReturn(NightModeSetting.NEVER)
+
+    whenever(encryptedPreferences.lockScreenSettings).thenReturn(LockScreenSettings.DEFAULT)
   }
 
   private fun verifyPreferencesMockedCalls() {

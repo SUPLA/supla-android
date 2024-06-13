@@ -145,7 +145,7 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
     assertThat(result.subValue).isEqualTo(subValue)
     assertThat(result.indicatorIcon).isEqualTo(indicatorIcon)
     assertThat(result.issueIconType).isEqualTo(issueIconType)
-    assertThat(result.estimatedTimerEndDate).isEqualTo(null)
+    assertThat(result.estimatedTimerEndDate).isNull()
     assertThat(result.infoSupported).isEqualTo(true)
   }
 
