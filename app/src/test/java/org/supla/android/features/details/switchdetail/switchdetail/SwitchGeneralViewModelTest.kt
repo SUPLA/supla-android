@@ -29,8 +29,8 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.verifyZeroInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.core.infrastructure.DateProvider
@@ -101,7 +101,7 @@ class SwitchGeneralViewModelTest : BaseViewModelTest<SwitchGeneralViewState, Swi
 
     verify(readChannelByRemoteIdUseCase).invoke(remoteId)
     verifyNoMoreInteractions(readChannelByRemoteIdUseCase)
-    verifyZeroInteractions(readChannelGroupByRemoteIdUseCase)
+    verifyNoInteractions(readChannelGroupByRemoteIdUseCase)
   }
 
   @Test
@@ -123,7 +123,7 @@ class SwitchGeneralViewModelTest : BaseViewModelTest<SwitchGeneralViewState, Swi
 
     verify(readChannelGroupByRemoteIdUseCase).invoke(remoteId)
     verifyNoMoreInteractions(readChannelGroupByRemoteIdUseCase)
-    verifyZeroInteractions(readChannelByRemoteIdUseCase)
+    verifyNoInteractions(readChannelByRemoteIdUseCase)
   }
 
   @Test
@@ -139,7 +139,7 @@ class SwitchGeneralViewModelTest : BaseViewModelTest<SwitchGeneralViewState, Swi
     // then
     verify(executeSimpleActionUseCase).invoke(ActionId.TURN_ON, SubjectType.CHANNEL, remoteId)
     verifyNoMoreInteractions(executeSimpleActionUseCase)
-    verifyZeroInteractions(readChannelByRemoteIdUseCase, readChannelGroupByRemoteIdUseCase)
+    verifyNoInteractions(readChannelByRemoteIdUseCase, readChannelGroupByRemoteIdUseCase)
   }
 
   @Test
@@ -155,7 +155,7 @@ class SwitchGeneralViewModelTest : BaseViewModelTest<SwitchGeneralViewState, Swi
     // then
     verify(executeSimpleActionUseCase).invoke(ActionId.TURN_OFF, SubjectType.GROUP, remoteId)
     verifyNoMoreInteractions(executeSimpleActionUseCase)
-    verifyZeroInteractions(readChannelByRemoteIdUseCase, readChannelGroupByRemoteIdUseCase)
+    verifyNoInteractions(readChannelByRemoteIdUseCase, readChannelGroupByRemoteIdUseCase)
   }
 
   @Test
@@ -180,7 +180,7 @@ class SwitchGeneralViewModelTest : BaseViewModelTest<SwitchGeneralViewState, Swi
 
     verify(readChannelByRemoteIdUseCase).invoke(remoteId)
     verifyNoMoreInteractions(readChannelByRemoteIdUseCase)
-    verifyZeroInteractions(readChannelGroupByRemoteIdUseCase)
+    verifyNoInteractions(readChannelGroupByRemoteIdUseCase)
   }
 
   @Test
@@ -205,7 +205,7 @@ class SwitchGeneralViewModelTest : BaseViewModelTest<SwitchGeneralViewState, Swi
 
     verify(readChannelByRemoteIdUseCase).invoke(remoteId)
     verifyNoMoreInteractions(readChannelByRemoteIdUseCase)
-    verifyZeroInteractions(readChannelGroupByRemoteIdUseCase)
+    verifyNoInteractions(readChannelGroupByRemoteIdUseCase)
   }
 
   private fun mockTimerState(date: Date): ChannelExtendedValueEntity {

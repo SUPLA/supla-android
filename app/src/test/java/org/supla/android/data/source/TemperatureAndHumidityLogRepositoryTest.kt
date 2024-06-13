@@ -28,8 +28,8 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.verifyZeroInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.data.source.local.dao.measurements.TemperatureAndHumidityLogDao
 import org.supla.android.data.source.local.entity.measurements.TemperatureAndHumidityLogEntity
@@ -68,7 +68,7 @@ class TemperatureAndHumidityLogRepositoryTest {
 
     verify(temperatureAndHumidityLogDao).findMeasurements(remoteId, profileId, startDate.time, endDate.time)
     verifyNoMoreInteractions(temperatureAndHumidityLogDao)
-    verifyZeroInteractions(suplaCloudServiceProvider)
+    verifyNoInteractions(suplaCloudServiceProvider)
   }
 
   @Test
@@ -86,7 +86,7 @@ class TemperatureAndHumidityLogRepositoryTest {
 
     verify(temperatureAndHumidityLogDao).delete(remoteId, profileId)
     verifyNoMoreInteractions(temperatureAndHumidityLogDao)
-    verifyZeroInteractions(suplaCloudServiceProvider)
+    verifyNoInteractions(suplaCloudServiceProvider)
   }
 
   @Test
@@ -107,7 +107,7 @@ class TemperatureAndHumidityLogRepositoryTest {
 
     verify(temperatureAndHumidityLogDao).findCount(remoteId, profileId)
     verifyNoMoreInteractions(temperatureAndHumidityLogDao)
-    verifyZeroInteractions(suplaCloudServiceProvider)
+    verifyNoInteractions(suplaCloudServiceProvider)
   }
 
   @Test
@@ -128,7 +128,7 @@ class TemperatureAndHumidityLogRepositoryTest {
 
     verify(temperatureAndHumidityLogDao).findMinTimestamp(remoteId, profileId)
     verifyNoMoreInteractions(temperatureAndHumidityLogDao)
-    verifyZeroInteractions(suplaCloudServiceProvider)
+    verifyNoInteractions(suplaCloudServiceProvider)
   }
 
   @Test
@@ -149,7 +149,7 @@ class TemperatureAndHumidityLogRepositoryTest {
 
     verify(temperatureAndHumidityLogDao).findMaxTimestamp(remoteId, profileId)
     verifyNoMoreInteractions(temperatureAndHumidityLogDao)
-    verifyZeroInteractions(suplaCloudServiceProvider)
+    verifyNoInteractions(suplaCloudServiceProvider)
   }
 
   @Test
@@ -167,6 +167,6 @@ class TemperatureAndHumidityLogRepositoryTest {
 
     verify(temperatureAndHumidityLogDao).insert(listOf(entity))
     verifyNoMoreInteractions(temperatureAndHumidityLogDao)
-    verifyZeroInteractions(suplaCloudServiceProvider)
+    verifyNoInteractions(suplaCloudServiceProvider)
   }
 }

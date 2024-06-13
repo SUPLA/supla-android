@@ -17,8 +17,10 @@ package org.supla.android.core.infrastructure
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import androidx.compose.runtime.compositionLocalOf
 import org.supla.android.data.source.local.calendar.DayOfWeek
-import java.util.*
+import java.util.Calendar
+import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -44,3 +46,5 @@ class DateProvider @Inject constructor() {
     return calendar.get(Calendar.MINUTE)
   }
 }
+
+val LocalDateProvider = compositionLocalOf { DateProvider() }

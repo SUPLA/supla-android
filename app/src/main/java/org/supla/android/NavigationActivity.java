@@ -21,18 +21,15 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
-import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import androidx.core.content.res.ResourcesCompat;
 import dagger.hilt.android.AndroidEntryPoint;
 import javax.inject.Inject;
-import org.supla.android.cfg.CfgActivity;
-import org.supla.android.lib.SuplaClient;
 import org.supla.android.profile.ProfileChooser;
 import org.supla.android.profile.ProfileManager;
 import org.supla.android.usecases.profile.ActivateProfileUseCase;
@@ -45,8 +42,8 @@ public class NavigationActivity extends BaseActivity
         SuperuserAuthorizationDialog.OnAuthorizarionResultListener,
         ProfileChooser.Listener {
 
-  public static final String INTENTSENDER = "sender";
-  public static final String INTENTSENDER_MAIN = "main";
+  public static final String INTENT_SENDER = "sender";
+  public static final String INTENT_SENDER_MAIN = "main";
 
   @Inject ProfileManager profileManager;
   @Inject ActivateProfileUseCase activateProfileUseCase;
@@ -58,73 +55,35 @@ public class NavigationActivity extends BaseActivity
   private Button MenuButton;
   private Button ProfileButton;
   private SuperuserAuthorizationDialog mAuthDialog;
-  private TextView title;
-  private TextView detailTitle;
-  private ProfileChooser profileChooser;
 
-  private static void showActivity(Activity sender, Class<?> cls, int flags, String action) {
+  private static void showActivity(Activity sender, Class<?> cls) {
 
     Intent i = new Intent(sender.getBaseContext(), cls);
-    i.setFlags(flags == 0 ? Intent.FLAG_ACTIVITY_REORDER_TO_FRONT : flags);
-    i.putExtra(INTENTSENDER, sender instanceof MainActivity ? INTENTSENDER_MAIN : "");
-    if (action != null) {
-      i.setAction(action);
-    }
+    i.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+    i.putExtra(INTENT_SENDER, sender instanceof MainActivity ? INTENT_SENDER_MAIN : "");
 
     sender.startActivity(i);
 
     sender.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
   }
 
-  private static void showActivity(Activity sender, Class<?> cls, int flags) {
-    showActivity(sender, cls, flags, null);
-  }
-
   public static void showMain(Activity sender) {
-
-    SuplaClient client = SuplaApp.getApp().getSuplaClient();
-
-    if (client != null && client.registered()) {
-
-      showActivity(sender, MainActivity.class, 0);
-
-    } else {
-      showStatus(sender);
-    }
-  }
-
-  public static void showStatus(Activity sender) {
-    showActivity(sender, StatusActivity.class, 0);
-  }
-
-  public static void showAuth(Activity sender) {
-    showActivity(
-        sender,
-        org.supla.android.cfg.CfgActivity.class,
-        0,
-        org.supla.android.cfg.CfgActivity.ACTION_AUTH);
+    showActivity(sender, MainActivity.class);
   }
 
   public static void showProfile(Activity sender) {
-    showActivity(sender, org.supla.android.cfg.CfgActivity.class, 0, null);
+    showActivity(sender, org.supla.android.cfg.CfgActivity.class);
   }
 
   @Override
   protected void onResume() {
-
     super.onResume();
-    CurrentActivity = this;
-
     getMenuBarLayout();
   }
 
   @Override
   protected void onPause() {
     super.onPause();
-
-    if (CurrentActivity == this) {
-      CurrentActivity = null;
-    }
   }
 
   protected RelativeLayout getRootLayout() {
@@ -154,19 +113,13 @@ public class NavigationActivity extends BaseActivity
       MenuBarLayout = (RelativeLayout) Inflate(R.layout.menubar, null);
       MenuBarLayout.setVisibility(View.GONE);
 
-      title = MenuBarLayout.findViewById(R.id.menubar_title);
+      TextView title = MenuBarLayout.findViewById(R.id.menubar_title);
       title.setTypeface(SuplaApp.getApp().getTypefaceQuicksandRegular());
 
-      detailTitle = MenuBarLayout.findViewById(R.id.menubar_detail_title);
+      TextView detailTitle = MenuBarLayout.findViewById(R.id.menubar_detail_title);
       detailTitle.setTypeface(SuplaApp.getApp().getTypefaceQuicksandRegular());
 
       getRootLayout().addView(MenuBarLayout);
-
-      if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-        MenuBarLayout.setLayoutParams(
-            new RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.MATCH_PARENT, MenuBarLayout.getLayoutParams().height));
-      }
 
       MenuButton = findViewById(R.id.menubutton);
       MenuButton.setVisibility(View.GONE);
@@ -215,7 +168,7 @@ public class NavigationActivity extends BaseActivity
     getMenuBarLayout();
     setBtnBackground(MenuButton, R.drawable.back);
     MenuButton.setVisibility(View.VISIBLE);
-    MenuButton.setTag(Integer.valueOf(1));
+    MenuButton.setTag(1);
     ProfileButton.setVisibility(View.GONE);
   }
 
@@ -227,88 +180,36 @@ public class NavigationActivity extends BaseActivity
     lp.addRule(RelativeLayout.BELOW, getMenuBarLayout().getId());
     getContentLayout().setLayoutParams(lp);
 
-    if (MenuBarLayout != null) MenuBarLayout.setVisibility(View.VISIBLE);
-  }
-
-  public void openHomepage() {
-    Intent browserIntent =
-        new Intent(Intent.ACTION_VIEW, Uri.parse(getResources().getString(R.string.homepage_url)));
-    startActivity(browserIntent);
-  }
-
-  public void openForumpage() {
-    Intent browserIntent =
-        new Intent(Intent.ACTION_VIEW, Uri.parse(getResources().getString(R.string.forumpage_url)));
-    startActivity(browserIntent);
-  }
-
-  public void openCloud() {
-    Intent browserIntent =
-        new Intent(Intent.ACTION_VIEW, Uri.parse(getResources().getString(R.string.cloud_url)));
-    startActivity(browserIntent);
-  }
-
-  public void showAbout() {
-    showActivity(this, AboutActivity.class, 0);
-  }
-
-  public void showAddWizard() {
-    showActivity(this, AddDeviceWizardActivity.class, 0);
+    if (MenuBarLayout != null) {
+      MenuBarLayout.setVisibility(View.VISIBLE);
+    }
   }
 
   public void showZWaveConfigurationWizard() {
-    showActivity(this, ZWaveConfigurationWizardActivity.class, 0);
-  }
-
-  public void gotoMain() {
-    Intent intent = new Intent(Intent.ACTION_MAIN);
-    intent.addCategory(Intent.CATEGORY_HOME);
-    startActivity(intent);
+    showActivity(this, ZWaveConfigurationWizardActivity.class);
   }
 
   protected void showProfileSelector() {
-    profileChooser = new ProfileChooser(this, activateProfileUseCase, readAllProfilesUseCase);
+    ProfileChooser profileChooser =
+        new ProfileChooser(this, activateProfileUseCase, readAllProfilesUseCase);
     profileChooser.setListener(this);
     profileChooser.show();
   }
 
   private void setBtnBackground(Button btn, int imgResId) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-      btn.setBackground(getResources().getDrawable(imgResId));
-    } else {
-      btn.setBackgroundDrawable(getResources().getDrawable(imgResId));
-    }
+    btn.setBackground(ResourcesCompat.getDrawable(getResources(), imgResId, null));
   }
 
   @Override
   public void onClick(View v) {
-    if (v == MenuButton && MenuButton.getTag().equals(Integer.valueOf(1))) {
-      onBackPressed();
+    if (v == MenuButton && MenuButton.getTag().equals(1)) {
+      getOnBackPressedDispatcher().onBackPressed();
       return;
     }
 
     if (v == ProfileButton) {
       showProfileSelector();
     }
-  }
-
-  @Override
-  protected void beforeStatusMsg() {
-    super.beforeStatusMsg();
-
-    if (CurrentActivity != null
-        && !(CurrentActivity instanceof StatusActivity)
-        && !(CurrentActivity instanceof CfgActivity)
-        && !(CurrentActivity instanceof AddDeviceWizardActivity)) {
-      showStatus(this);
-    }
-  }
-
-  public static NavigationActivity getCurrentNavigationActivity() {
-    if (CurrentActivity != null && CurrentActivity instanceof NavigationActivity) {
-      return (NavigationActivity) CurrentActivity;
-    }
-    return null;
   }
 
   public void SuperUserAuthorize(int sourceBtnId) {
@@ -329,7 +230,7 @@ public class NavigationActivity extends BaseActivity
     if (Success
         && dialog != null
         && dialog == mAuthDialog
-        && dialog.getObject().equals(Integer.valueOf(MenuItemsLayout.BTN_Z_WAVE))) {
+        && dialog.getObject().equals(MenuItemsLayout.BTN_Z_WAVE)) {
       mAuthDialog.close();
       mAuthDialog = null;
       showZWaveConfigurationWizard();

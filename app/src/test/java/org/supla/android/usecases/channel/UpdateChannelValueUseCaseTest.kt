@@ -17,7 +17,7 @@ package org.supla.android.usecases.channel
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import io.mockk.called
+import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.mockk
 import io.reactivex.rxjava3.core.Completable
@@ -32,8 +32,8 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.verifyZeroInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.data.model.general.EntityUpdateResult
 import org.supla.android.data.source.ChannelValueRepository
@@ -122,7 +122,7 @@ class UpdateChannelValueUseCaseTest {
     }
 
     verifyNoMoreInteractions(channelValueRepository)
-    verifyZeroInteractions(profileRepository)
+    verifyNoInteractions(profileRepository)
   }
 
   @Test
@@ -147,12 +147,10 @@ class UpdateChannelValueUseCaseTest {
 
     verify(channelValueRepository).findByRemoteId(channelRemoteId)
 
-    io.mockk.verify {
-      channelValueEntity.differsFrom(suplaChannelValue, online)
-      channelValueEntity.updatedBy(suplaChannelValue, online) wasNot called
-    }
+    io.mockk.verify { channelValueEntity.differsFrom(suplaChannelValue, online) }
+    confirmVerified(channelValueEntity)
 
     verifyNoMoreInteractions(channelValueRepository)
-    verifyZeroInteractions(profileRepository)
+    verifyNoInteractions(profileRepository)
   }
 }

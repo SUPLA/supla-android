@@ -1,17 +1,17 @@
 object Versions {
 
-    const val Sdk = 33
+    const val Sdk = 34
     const val TargetSdk = 33
     const val MinSdk = 21
-    const val BuildTools = "30.0.3"
+    const val BuildTools = "34.0.0"
 
-    const val Kotlin = "1.8.10"
-    const val Hilt = "2.44"
-    const val HiltWorker = "1.0.0"
+    const val Kotlin = "2.0.0"
+    const val Hilt = "2.51.1"
+    const val HiltWorker = "1.2.0"
     const val Multidex = "2.0.1"
     const val AndroidChart = "v3.1.0"
-    const val Coroutines = "1.6.4"
-    const val GoogleMaterial = "1.0.0"
+    const val Coroutines = "1.8.1"
+    const val GoogleMaterial = "1.12.0"
     const val GoogleServices = "4.3.15"
 
     const val Spotless = "6.23.3"
@@ -19,60 +19,61 @@ object Versions {
 
     const val FragmentViewBinding = "1.0.2"
 
-    const val Firebase = "32.1.0"
+    const val Firebase = "33.1.0"
 
     object Androidx {
-        const val Fragment = "1.5.7"
-        const val Lifecycle = "2.4.1"
+        const val Fragment = "1.7.1"
+        const val Lifecycle = "2.8.1"
         const val LifecycleExtensions = "2.2.0"
-        const val Navigation = "2.4.1"
-        const val ConstraintLayout = "2.1.0"
-        const val Core = "1.3.2"
-        const val Preferences = "1.1.1"
-        const val Worker = "2.8.0"
-        const val RecyclerView = "1.2.1"
+        const val Navigation = "2.7.7"
+        const val ConstraintLayout = "2.1.4"
+        const val Core = "1.13.1"
+        const val Preferences = "1.2.1"
+        const val Worker = "2.9.0"
+        const val RecyclerView = "1.3.2"
         const val Security = "1.1.0-alpha06"
-        const val Room = "2.5.2"
-        const val AppCompat = "1.5.1"
+        const val Room = "2.6.1"
+        const val AppCompat = "1.7.0"
+        const val Biometric = "1.1.0"
 
         object Compose {
-            const val Core = "1.4.3"
+            const val Core = "1.6.7"
             const val ConstaintLayout = "1.0.1"
-            const val Material3 = "1.1.2"
+            const val Material3 = "1.2.1"
         }
     }
 
     object RxJava {
-        const val RxJava = "3.0.8"
-        const val RxAndroid = "3.0.0"
+        const val RxJava = "3.1.8"
+        const val RxAndroid = "3.0.2"
         const val RxKotlin = "3.0.1"
     }
 
     object Retrofit {
-        const val Retrofit = "2.9.0"
-        const val Logging = "4.11.0"
+        const val Retrofit = "2.11.0"
+        const val Logging = "4.12.0"
     }
 
     object Testing {
 
-        const val Robolectric = "4.6"
-        const val JUnit = "4.13.1"
+        const val Robolectric = "4.12.2"
+        const val JUnit = "4.13.2"
         const val Hamcrest = "1.3"
-        const val Coroutines = "1.3.2"
-        const val Mockk = "1.12.4"
-        const val AssertJ = "3.11.1"
+        const val Coroutines = "1.8.1"
+        const val Mockk = "1.13.11"
+        const val AssertJ = "3.26.0"
 
         object Mockito {
-            const val Core = "3.9.0"
-            const val Kotlin = "3.2.0"
+            const val Core = "5.12.0"
+            const val Kotlin = "5.3.1"
         }
 
         object Androidx {
-            const val Core = "1.4.0"
-            const val Runner = "1.4.0"
-            const val Rules = "1.4.0"
-            const val JUnitExtension = "1.1.3"
-            const val ArchCore = "2.1.0"
+            const val Core = "1.5.0"
+            const val Runner = "1.5.2"
+            const val Rules = "1.5.0"
+            const val JUnitExtension = "1.1.5"
+            const val ArchCore = "2.2.0"
         }
     }
 }

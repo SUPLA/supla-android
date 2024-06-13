@@ -12,7 +12,7 @@ import org.supla.android.tools.SuplaSchedulers
 
 @RunWith(MockitoJUnitRunner::class)
 class CreateAccountWebViewModelTest : BaseViewModelTest<CreateAccountWebViewState, CreateAccountWebViewEvent, CreateAccountWebViewModel>(
-  mockSchedulers = false
+  mockSchedulers = MockSchedulers.NONE
 ) {
 
   @Mock

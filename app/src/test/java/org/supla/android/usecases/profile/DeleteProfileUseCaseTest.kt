@@ -1,55 +1,63 @@
 package org.supla.android.usecases.profile
 
 import android.content.Context
+import io.mockk.MockKAnnotations
 import io.mockk.confirmVerified
 import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
+import io.mockk.verify
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.verifyZeroInteractions
-import org.mockito.kotlin.whenever
 import org.supla.android.Preferences
 import org.supla.android.core.SuplaAppApi
 import org.supla.android.core.SuplaAppProvider
-import org.supla.android.core.networking.suplaclient.SuplaClientApi
-import org.supla.android.core.networking.suplaclient.SuplaClientProvider
+import org.supla.android.core.networking.suplaclient.SuplaClientEvent
+import org.supla.android.core.networking.suplaclient.SuplaClientStateHolder
 import org.supla.android.db.AuthProfileItem
 import org.supla.android.profile.ProfileIdHolder
 import org.supla.android.profile.ProfileManager
+import org.supla.android.usecases.client.DisconnectUseCase
 
 @RunWith(MockitoJUnitRunner::class)
 class DeleteProfileUseCaseTest {
-  @Mock
+  @MockK
   private lateinit var context: Context
 
-  @Mock
+  @MockK
   private lateinit var profileManager: ProfileManager
 
-  @Mock
-  private lateinit var suplaClientProvider: SuplaClientProvider
-
-  @Mock
+  @MockK
   private lateinit var suplaAppProvider: SuplaAppProvider
 
-  @Mock
+  @MockK
   private lateinit var preferences: Preferences
 
-  @Mock
+  @MockK
   private lateinit var profileIdHolder: ProfileIdHolder
 
-  @Mock
+  @MockK
   private lateinit var activateProfileUseCase: ActivateProfileUseCase
 
-  @InjectMocks
+  @MockK
+  private lateinit var suplaClientStateHolder: SuplaClientStateHolder
+
+  @MockK
+  private lateinit var disconnectUseCase: DisconnectUseCase
+
+  @InjectMockKs
   private lateinit var useCase: DeleteProfileUseCase
+
+  @Before
+  fun setUp() {
+    MockKAnnotations.init(this)
+  }
 
   @Test
   fun `should delete inactive profile`() {
@@ -57,8 +65,8 @@ class DeleteProfileUseCaseTest {
     val profileId = 132L
     val profile = profileMock(profileId, false)
 
-    whenever(profileManager.read(profileId)).thenReturn(Maybe.just(profile))
-    whenever(profileManager.delete(profileId)).thenReturn(Completable.complete())
+    every { profileManager.read(profileId) } returns Maybe.just(profile)
+    every { profileManager.delete(profileId) } returns Completable.complete()
 
     // when
     val testObserver = useCase(profileId).test()
@@ -66,10 +74,11 @@ class DeleteProfileUseCaseTest {
     // then
     testObserver.assertComplete()
 
-    verify(profileManager).read(profileId)
-    verify(profileManager).delete(profileId)
-    verifyNoMoreInteractions(profileManager)
-    verifyZeroInteractions(suplaClientProvider, preferences, profileIdHolder, context)
+    verify {
+      profileManager.read(profileId)
+      profileManager.delete(profileId)
+    }
+    confirmVerified(profileManager, preferences, profileIdHolder, context)
   }
 
   @Test
@@ -78,14 +87,13 @@ class DeleteProfileUseCaseTest {
     val profileId = 132L
     val profile = profileMock(profileId, true)
 
-    whenever(profileManager.read(profileId)).thenReturn(Maybe.just(profile))
-    whenever(profileManager.delete(profileId)).thenReturn(Completable.complete())
-    whenever(profileManager.getAllProfiles()).thenReturn(Observable.just(emptyList()))
-
-    val suplaClient = mockk<SuplaClientApi>()
-    every { suplaClient.cancel() } answers { }
-    every { suplaClient.join() } answers { }
-    whenever(suplaClientProvider.provide()).thenReturn(suplaClient)
+    every { profileManager.read(profileId) } returns Maybe.just(profile)
+    every { profileManager.delete(profileId) } returns Completable.complete()
+    every { profileManager.getAllProfiles() } returns Observable.just(emptyList())
+    every { disconnectUseCase.invoke() } returns Completable.complete()
+    every { preferences.isAnyAccountRegistered = false } answers {}
+    every { profileIdHolder.profileId = null } answers {}
+    every { suplaClientStateHolder.handleEvent(SuplaClientEvent.NoAccount) } answers {}
 
     // when
     val testObserver = useCase(profileId).test()
@@ -93,26 +101,16 @@ class DeleteProfileUseCaseTest {
     // then
     testObserver.assertComplete()
 
-    verify(profileManager).read(profileId)
-    verify(profileManager).delete(profileId)
-    verify(profileManager).getAllProfiles()
-    verify(preferences).isAnyAccountRegistered = false
-    verify(profileIdHolder).profileId = null
-    verify(suplaClientProvider).provide()
-    verifyNoMoreInteractions(
-      profileManager,
-      suplaClientProvider,
-      suplaAppProvider,
-      preferences,
-      profileIdHolder
-    )
-    verifyZeroInteractions(context, suplaAppProvider)
-
-    io.mockk.verify {
-      suplaClient.cancel()
-      suplaClient.join()
+    verify {
+      profileManager.read(profileId)
+      profileManager.delete(profileId)
+      profileManager.getAllProfiles()
+      preferences.isAnyAccountRegistered = false
+      profileIdHolder.profileId = null
+      disconnectUseCase.invoke()
+      suplaClientStateHolder.handleEvent(SuplaClientEvent.NoAccount)
     }
-    confirmVerified(suplaClient)
+    confirmVerified(profileManager, preferences, profileIdHolder, context, disconnectUseCase, suplaClientStateHolder)
   }
 
   @Test
@@ -122,19 +120,15 @@ class DeleteProfileUseCaseTest {
     val profileIdToActivate = 234L
     val profile = profileMock(profileId, true)
 
-    whenever(activateProfileUseCase.invoke(profileIdToActivate, true)).thenReturn(Completable.complete())
-    whenever(profileManager.read(profileId)).thenReturn(Maybe.just(profile))
-    whenever(profileManager.delete(profileId)).thenReturn(Completable.complete())
-    whenever(profileManager.getAllProfiles()).thenReturn(Observable.just(listOf(profileMock(profileIdToActivate, false))))
-
-    val suplaClient = mockk<SuplaClientApi>()
-    every { suplaClient.cancel() } answers { }
-    every { suplaClient.join() } answers { }
-    whenever(suplaClientProvider.provide()).thenReturn(suplaClient)
+    every { activateProfileUseCase.invoke(profileIdToActivate, true) } returns Completable.complete()
+    every { profileManager.read(profileId) } returns Maybe.just(profile)
+    every { profileManager.delete(profileId) } returns Completable.complete()
+    every { profileManager.getAllProfiles() } returns Observable.just(listOf(profileMock(profileIdToActivate, false)))
+    every { disconnectUseCase.invoke() } returns Completable.complete()
 
     val suplaApp = mockk<SuplaAppApi>()
     every { suplaApp.SuplaClientInitIfNeed(any()) } returns null
-    whenever(suplaAppProvider.provide()).thenReturn(suplaApp)
+    every { suplaAppProvider.provide() } returns suplaApp
 
     // when
     val testObserver = useCase(profileId).test()
@@ -142,27 +136,16 @@ class DeleteProfileUseCaseTest {
     // then
     testObserver.assertComplete()
 
-    verify(profileManager).read(profileId)
-    verify(profileManager).delete(profileId)
-    verify(profileManager).getAllProfiles()
-    verify(activateProfileUseCase).invoke(profileIdToActivate, true)
-    verify(suplaClientProvider).provide()
-    verify(suplaAppProvider).provide()
-    verifyNoMoreInteractions(
-      profileManager,
-      suplaClientProvider,
-      suplaAppProvider,
-      preferences,
-      profileIdHolder
-    )
-    verifyZeroInteractions(context, profileIdHolder)
-
-    io.mockk.verify {
-      suplaClient.cancel()
-      suplaClient.join()
+    verify {
+      profileManager.read(profileId)
+      profileManager.delete(profileId)
+      profileManager.getAllProfiles()
+      activateProfileUseCase.invoke(profileIdToActivate, true)
+      suplaAppProvider.provide()
       suplaApp.SuplaClientInitIfNeed(context)
+      disconnectUseCase.invoke()
     }
-    confirmVerified(suplaClient, suplaApp)
+    confirmVerified(suplaApp, profileManager, suplaAppProvider, preferences, profileIdHolder, context, disconnectUseCase)
   }
 
   private fun profileMock(profileId: Long, isActive: Boolean): AuthProfileItem {

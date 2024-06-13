@@ -23,7 +23,6 @@ import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
-import kotlinx.coroutines.flow.MutableStateFlow
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -32,15 +31,14 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.verifyZeroInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.Preferences
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientApi
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
-import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.data.source.local.entity.ChannelGroupEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity
@@ -78,8 +76,6 @@ import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
 import org.supla.android.usecases.group.ReadGroupTiltingDetailsUseCase
 import org.supla.android.usecases.group.TiltingDetails
 import org.supla.android.usecases.group.totalvalue.ShadowingBlindGroupValue
-import kotlin.reflect.full.memberProperties
-import kotlin.reflect.jvm.isAccessible
 
 @RunWith(MockitoJUnitRunner::class)
 class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, BaseWindowViewEvent, FacadeBlindsViewModel>() {
@@ -753,7 +749,7 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
     }
 
     verifyNoMoreInteractions(suplaClientProvider)
-    verifyZeroInteractions(readGroupTiltingDetailsUseCase)
+    verifyNoInteractions(readGroupTiltingDetailsUseCase)
   }
 
   @Test
@@ -771,7 +767,7 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
 
     verify(readGroupTiltingDetailsUseCase).invoke(remoteId)
     verifyNoMoreInteractions(readGroupTiltingDetailsUseCase)
-    verifyZeroInteractions(suplaClientProvider)
+    verifyNoInteractions(suplaClientProvider)
   }
 
   @Test
@@ -799,7 +795,7 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
 
     verify(readGroupTiltingDetailsUseCase).invoke(remoteId)
     verifyNoMoreInteractions(readGroupTiltingDetailsUseCase)
-    verifyZeroInteractions(suplaClientProvider)
+    verifyNoInteractions(suplaClientProvider)
   }
 
   private fun mockChannel(
@@ -861,15 +857,4 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
       tilt100Angle = tilt100Angle,
       type = type
     )
-}
-
-@Suppress("UNCHECKED_CAST")
-fun FacadeBlindsViewModel.setState(state: FacadeBlindsViewModelState) {
-  BaseViewModel::class.memberProperties
-    .find { it.name == "viewState" }
-    ?.let {
-      it.isAccessible = true
-      val viewState = it.getter.call(this) as MutableStateFlow<FacadeBlindsViewModelState>
-      viewState.tryEmit(state)
-    }
 }

@@ -31,8 +31,8 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.verifyZeroInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.data.model.general.EntityUpdateResult
 import org.supla.android.data.source.LocationRepository
@@ -136,7 +136,7 @@ class UpdateChannelUseCaseTest {
     verify(locationRepository).findByRemoteId(locationRemoteId)
 
     verifyNoMoreInteractions(locationRepository)
-    verifyZeroInteractions(requestChannelConfigUseCase, channelRepository, profileRepository)
+    verifyNoInteractions(requestChannelConfigUseCase, channelRepository, profileRepository)
   }
 
   @Test
@@ -245,7 +245,7 @@ class UpdateChannelUseCaseTest {
       every { locationId } returns 333
       every { updatedBy(suplaChannel) } returns this
       every { position } returns 0
-      every { copy(id = 444, remoteId = channelRemoteId, locationId = 333, position = 6) } returns this
+      every { copy(id = 444, remoteId = channelRemoteId, caption = "", locationId = 333, position = 6) } returns this
       every { id } returns 444
       every { caption } returns ""
       every { function } returns 0
@@ -300,7 +300,7 @@ class UpdateChannelUseCaseTest {
       every { locationId } returns 333
       every { updatedBy(suplaChannel) } returns this
       every { position } returns 5
-      every { copy(id = 444, remoteId = channelRemoteId, locationId = 333, position = 0) } returns this
+      every { copy(id = 444, remoteId = channelRemoteId, caption = "", locationId = 333, position = 0) } returns this
       every { id } returns 444
       every { caption } returns ""
       every { function } returns 0
@@ -407,7 +407,7 @@ class UpdateChannelUseCaseTest {
     verify(channelRepository).findByRemoteId(channelRemoteId)
 
     verifyNoMoreInteractions(locationRepository, channelRepository)
-    verifyZeroInteractions(requestChannelConfigUseCase, profileRepository)
+    verifyNoInteractions(requestChannelConfigUseCase, profileRepository)
   }
 
   @Test

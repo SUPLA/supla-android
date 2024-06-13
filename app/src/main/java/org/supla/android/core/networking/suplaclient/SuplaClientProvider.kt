@@ -12,6 +12,7 @@ interface SuplaClientProvider {
 
 interface SuplaClientApi {
   fun cancel()
+  fun canceled(): Boolean
 
   @Throws(InterruptedException::class)
   fun join()

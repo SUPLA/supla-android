@@ -120,7 +120,7 @@ abstract class WidgetConfigurationViewModelBase(
   }
 
   @Suppress("UNUSED_PARAMETER")
-  fun onDisplayNameChanged(s: CharSequence, `_`: Int, `__`: Int, `___`: Int) {
+  fun onDisplayNameChanged(s: CharSequence, arg1: Int, arg2: Int, arg3: Int) {
     displayName = s.toString()
   }
 

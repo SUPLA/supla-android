@@ -32,8 +32,8 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.verifyZeroInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.Preferences
 import org.supla.android.core.BaseViewModelTest
@@ -134,7 +134,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
       state.copy(channels = list)
     )
     assertThat(events).isEmpty()
-    verifyZeroInteractionsExcept(createProfileChannelsListUseCase)
+    verifyNoInteractionsExcept(createProfileChannelsListUseCase)
   }
 
   @Test
@@ -154,7 +154,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
       state.copy(channels = list)
     )
     assertThat(events).isEmpty()
-    verifyZeroInteractionsExcept(createProfileChannelsListUseCase, toggleLocationUseCase)
+    verifyNoInteractionsExcept(createProfileChannelsListUseCase, toggleLocationUseCase)
   }
 
   @Test
@@ -181,7 +181,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
 
     verify(channelRepository).reorderChannels(firstItemId, firstItemLocationId, secondItemId)
     verifyNoMoreInteractions(channelRepository)
-    verifyZeroInteractionsExcept(channelRepository)
+    verifyNoInteractionsExcept(channelRepository)
   }
 
   @Test
@@ -199,7 +199,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     assertThat(events).containsExactly(
       ChannelListViewEvent.ShowValveDialog(channelId)
     )
-    verifyZeroInteractionsExcept(channelActionUseCase)
+    verifyNoInteractionsExcept(channelActionUseCase)
   }
 
   @Test
@@ -217,7 +217,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     assertThat(events).containsExactly(
       ChannelListViewEvent.ShowAmperageExceededDialog(channelId)
     )
-    verifyZeroInteractionsExcept(channelActionUseCase)
+    verifyNoInteractionsExcept(channelActionUseCase)
   }
 
   @Test
@@ -233,7 +233,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     // then
     assertThat(states).isEmpty()
     assertThat(events).isEmpty()
-    verifyZeroInteractionsExcept()
+    verifyNoInteractionsExcept()
   }
 
   @Test
@@ -255,7 +255,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     assertThat(events).containsExactly(
       ChannelListViewEvent.OpenLegacyDetails(channelId, detailType)
     )
-    verifyZeroInteractionsExcept(provideDetailTypeUseCase)
+    verifyNoInteractionsExcept(provideDetailTypeUseCase)
   }
 
   @Test
@@ -279,7 +279,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     assertThat(events).containsExactly(
       ChannelListViewEvent.OpenSwitchDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), detailType.pages)
     )
-    verifyZeroInteractionsExcept(provideDetailTypeUseCase)
+    verifyNoInteractionsExcept(provideDetailTypeUseCase)
   }
 
   @Test
@@ -303,7 +303,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     assertThat(events).containsExactly(
       ChannelListViewEvent.OpenThermometerDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), detailType.pages)
     )
-    verifyZeroInteractionsExcept(provideDetailTypeUseCase)
+    verifyNoInteractionsExcept(provideDetailTypeUseCase)
   }
 
   @Test
@@ -328,7 +328,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     assertThat(events).containsExactly(
       ChannelListViewEvent.OpenThermostatDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
     )
-    verifyZeroInteractionsExcept(provideDetailTypeUseCase)
+    verifyNoInteractionsExcept(provideDetailTypeUseCase)
   }
 
   @Test
@@ -353,7 +353,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     assertThat(events).containsExactly(
       ChannelListViewEvent.OpenThermostatDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
     )
-    verifyZeroInteractionsExcept(provideDetailTypeUseCase)
+    verifyNoInteractionsExcept(provideDetailTypeUseCase)
   }
 
   @Test
@@ -378,7 +378,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     assertThat(events).containsExactly(
       ChannelListViewEvent.OpenGpmDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
     )
-    verifyZeroInteractionsExcept(provideDetailTypeUseCase)
+    verifyNoInteractionsExcept(provideDetailTypeUseCase)
   }
 
   @Test
@@ -403,7 +403,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     assertThat(events).containsExactly(
       ChannelListViewEvent.OpenGpmDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
     )
-    verifyZeroInteractionsExcept(provideDetailTypeUseCase)
+    verifyNoInteractionsExcept(provideDetailTypeUseCase)
   }
 
   @Test
@@ -428,7 +428,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     assertThat(events).containsExactly(
       ChannelListViewEvent.OpenGpmDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
     )
-    verifyZeroInteractionsExcept(provideDetailTypeUseCase)
+    verifyNoInteractionsExcept(provideDetailTypeUseCase)
   }
 
   @Test
@@ -453,7 +453,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     assertThat(events).containsExactly(
       ChannelListViewEvent.OpenGpmDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
     )
-    verifyZeroInteractionsExcept(provideDetailTypeUseCase)
+    verifyNoInteractionsExcept(provideDetailTypeUseCase)
   }
 
   @Test
@@ -478,7 +478,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     assertThat(events).containsExactly(
       ChannelListViewEvent.OpenWindowDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
     )
-    verifyZeroInteractionsExcept(provideDetailTypeUseCase)
+    verifyNoInteractionsExcept(provideDetailTypeUseCase)
   }
 
   @Test
@@ -503,7 +503,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     assertThat(events).containsExactly(
       ChannelListViewEvent.OpenWindowDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
     )
-    verifyZeroInteractionsExcept(provideDetailTypeUseCase)
+    verifyNoInteractionsExcept(provideDetailTypeUseCase)
   }
 
   @Test
@@ -520,7 +520,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     // then
     assertThat(states).isEmpty()
     assertThat(events).isEmpty()
-    verifyZeroInteractionsExcept(provideDetailTypeUseCase)
+    verifyNoInteractionsExcept(provideDetailTypeUseCase)
   }
 
   @Test
@@ -538,7 +538,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
       state.copy(channels = list)
     )
     assertThat(events).isEmpty()
-    verifyZeroInteractionsExcept(createProfileChannelsListUseCase)
+    verifyNoInteractionsExcept(createProfileChannelsListUseCase)
   }
 
   @Test
@@ -566,7 +566,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     // then
     assertThat(states).containsExactly(ChannelListViewState(channels = list))
     assertThat(events).isEmpty()
-    verifyZeroInteractionsExcept(createProfileChannelsListUseCase, findChannelByRemoteIdUseCase)
+    verifyNoInteractionsExcept(createProfileChannelsListUseCase, findChannelByRemoteIdUseCase)
     io.mockk.verify { list[0].channelBase = channel }
   }
 
@@ -583,10 +583,10 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     // then
     assertThat(states).isEmpty()
     assertThat(events).isEmpty()
-    verifyZeroInteractionsExcept()
+    verifyNoInteractionsExcept()
   }
 
-  private fun verifyZeroInteractionsExcept(vararg except: Any) {
+  private fun verifyNoInteractionsExcept(vararg except: Any) {
     val allDependencies = listOf(
       channelRepository,
       createProfileChannelsListUseCase,
@@ -596,7 +596,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     )
     for (dependency in allDependencies) {
       if (!except.contains(dependency)) {
-        verifyZeroInteractions(dependency)
+        verifyNoInteractions(dependency)
       }
     }
   }

@@ -70,6 +70,7 @@ import androidx.annotation.RequiresPermission;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import dagger.hilt.android.AndroidEntryPoint;
 import java.util.ArrayList;
 import java.util.Date;
@@ -281,15 +282,11 @@ public class AddDeviceWizardActivity extends WizardActivity
     tvIODevLastState.setTypeface(type);
 
     showMenuBar();
-    RegisterMessageHandler();
+    registerMessageHandler();
   }
 
   private void setBackground(View view, int bgRes) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-      view.setBackground(getResources().getDrawable(bgRes));
-    } else {
-      view.setBackgroundDrawable(getResources().getDrawable(bgRes));
-    }
+    view.setBackground(ResourcesCompat.getDrawable(getResources(), bgRes, null));
   }
 
   @Override

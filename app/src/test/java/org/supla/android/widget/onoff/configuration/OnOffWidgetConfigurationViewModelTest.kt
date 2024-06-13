@@ -410,6 +410,9 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
   fun `shouldn't allow to save the selection when there is no widget id set`() = runTest {
     // given
     whenever(preferences.isAnyAccountRegistered).thenReturn(true)
+    whenever(profileManager.getCurrentProfile()).thenReturn(Maybe.empty())
+    whenever(channelRepository.getAllProfileChannels(null)).thenReturn(mock())
+
     val viewModel = OnOffWidgetConfigurationViewModel(
       preferences,
       widgetPreferences,
@@ -436,6 +439,9 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
   fun `shouldn't allow to save selection when there is no channel selected`() = runTest {
     // given
     whenever(preferences.isAnyAccountRegistered).thenReturn(true)
+    whenever(profileManager.getCurrentProfile()).thenReturn(Maybe.empty())
+    whenever(channelRepository.getAllProfileChannels(null)).thenReturn(mock())
+
     val viewModel = OnOffWidgetConfigurationViewModel(
       preferences,
       widgetPreferences,
@@ -465,6 +471,9 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
     runTest {
       // given
       whenever(preferences.isAnyAccountRegistered).thenReturn(true)
+      whenever(profileManager.getCurrentProfile()).thenReturn(Maybe.empty())
+      whenever(channelRepository.getAllProfileChannels(null)).thenReturn(mock())
+
       val viewModel = OnOffWidgetConfigurationViewModel(
         preferences,
         widgetPreferences,

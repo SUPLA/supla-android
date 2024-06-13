@@ -22,6 +22,7 @@ import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import dagger.hilt.android.qualifiers.ApplicationContext
+import org.supla.android.data.model.general.LockScreenSettings
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -30,6 +31,7 @@ private const val FCM_TOKEN_KEY = "FCM_TOKEN_KEY"
 private const val FCM_TOKEN_LAST_UPDATE_KEY = "FCM_TOKEN_LAST_UPDATE_KEY"
 private const val NOTIFICATIONS_LAST_ENABLED = "NOTIFICATIONS_LAST_ENABLED"
 private const val FCM_PROFILE_TOKEN_KEY = "FCM_TOKEN_KEY_"
+private const val LOCK_SCREEN_SETTING_KEY = "LOCK_SCREEN_SETTING_KEY"
 
 @Singleton
 class EncryptedPreferences @Inject constructor(
@@ -68,6 +70,13 @@ class EncryptedPreferences @Inject constructor(
     get() = preferences.getBoolean(NOTIFICATIONS_LAST_ENABLED, false)
     set(value) = with(preferences.edit()) {
       putBoolean(NOTIFICATIONS_LAST_ENABLED, value)
+      apply()
+    }
+
+  var lockScreenSettings: LockScreenSettings
+    get() = LockScreenSettings.from(preferences.getString(LOCK_SCREEN_SETTING_KEY, null))
+    set(value) = with(preferences.edit()) {
+      putString(LOCK_SCREEN_SETTING_KEY, value.asString())
       apply()
     }
 

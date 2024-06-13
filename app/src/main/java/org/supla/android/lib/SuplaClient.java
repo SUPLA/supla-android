@@ -43,6 +43,14 @@ import org.supla.android.SuplaApp;
 import org.supla.android.Trace;
 import org.supla.android.core.networking.suplaclient.SuplaClientApi;
 import org.supla.android.core.networking.suplaclient.SuplaClientDependencies;
+import org.supla.android.core.networking.suplaclient.SuplaClientEvent;
+import org.supla.android.core.networking.suplaclient.SuplaClientEvent.Cancel;
+import org.supla.android.core.networking.suplaclient.SuplaClientEvent.Connecting;
+import org.supla.android.core.networking.suplaclient.SuplaClientEvent.Finish;
+import org.supla.android.core.networking.suplaclient.SuplaClientState;
+import org.supla.android.core.networking.suplaclient.SuplaClientState.Reason.NoNetwork;
+import org.supla.android.core.networking.suplaclient.SuplaClientState.Reason.VersionError;
+import org.supla.android.core.networking.suplaclient.SuplaClientStateHolder;
 import org.supla.android.core.networking.suplacloud.SuplaCloudConfigHolder;
 import org.supla.android.core.notifications.NotificationsHelper;
 import org.supla.android.core.storage.EncryptedPreferences;
@@ -75,13 +83,12 @@ import org.supla.android.usecases.channelrelation.DeleteRemovableChannelRelation
 import org.supla.android.usecases.channelrelation.InsertChannelRelationForProfileUseCase;
 import org.supla.android.usecases.channelrelation.MarkChannelRelationsAsRemovableUseCase;
 import org.supla.android.usecases.group.UpdateChannelGroupTotalValueUseCase;
-import org.supla.android.usecases.icon.LoadUserIconsIntoCacheUseCase;
 
 @SuppressWarnings("unused")
 public class SuplaClient extends Thread implements SuplaClientApi {
 
   private static final long MINIMUM_WAITING_TIME_MSEC = 2000;
-  private static final int CONNECTION_NO_TIMEOUT = 0;
+  private static final int CONNECTION_TIMEOUT_MS = 5000; // 5 seconds
   public static final int SUPLA_APP_ID = 1;
   private static final String log_tag = "SuplaClientThread";
   private static final Object st_lck = new Object();
@@ -96,13 +103,13 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   private long _supla_client_ptr = 0;
   private long _supla_client_ptr_counter = 0;
   private boolean _canceled = false;
-  private Context _context;
   private DbHelper DbH = null;
   private int regTryCounter = 0; // supla-server v1.0 for Raspberry Compatibility fix
   private long lastTokenRequest = 0;
   private boolean superUserAuthorized = false;
   private String oneTimePassword;
-  private long _connectingStatusLastTime;
+  private final Context _context;
+  private final ConnectivityManager connectivityManager;
   private final ProfileManager profileManager;
   private final UpdateEventsManager updateEventsManager;
   private final ChannelConfigEventsManager channelConfigEventsManager;
@@ -118,13 +125,15 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   private final AppDatabase appDatabase;
   private final MeasurementsDatabase measurementsDatabase;
   private final ProfileIdHolder profileIdHolder;
-  private final LoadUserIconsIntoCacheUseCase loadUserIconsIntoCacheUseCase;
   private final UpdateChannelGroupTotalValueUseCase updateChannelGroupTotalValueUseCase;
+  private final SuplaClientStateHolder suplaClientStateHolder;
 
   public SuplaClient(
       Context context, String oneTimePassword, SuplaClientDependencies dependencies) {
     super();
-    _context = context;
+    this._context = context;
+    this.connectivityManager =
+        (ConnectivityManager) _context.getSystemService(Context.CONNECTIVITY_SERVICE);
     this.oneTimePassword = oneTimePassword;
     this.profileManager = dependencies.getProfileManager();
     this.updateEventsManager = dependencies.getUpdateEventsManager();
@@ -144,9 +153,9 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     this.appDatabase = dependencies.getAppDatabase();
     this.measurementsDatabase = dependencies.getMeasurementsDatabase();
     this.profileIdHolder = dependencies.getProfileIdHolder();
-    this.loadUserIconsIntoCacheUseCase = dependencies.getLoadUserIconsIntoCacheUseCase();
     this.updateChannelGroupTotalValueUseCase =
         dependencies.getUpdateChannelGroupTotalValueUseCase();
+    this.suplaClientStateHolder = dependencies.getSuplaClientStateHolder();
   }
 
   public static SuplaRegisterError getLastRegisterError() {
@@ -340,21 +349,25 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   }
 
   private boolean connect() {
-    ConnectivityManager connectivityManager =
-        (ConnectivityManager) _context.getSystemService(Context.CONNECTIVITY_SERVICE);
-    NetworkInfo activeNetworkInfo =
-        connectivityManager == null ? null : connectivityManager.getActiveNetworkInfo();
-
-    if (activeNetworkInfo != null && activeNetworkInfo.isConnected()) {
+    if (hasNetworkConnection()) {
       long _supla_client_ptr = lockClientPtr();
       try {
-        return _supla_client_ptr != 0 && scConnect(_supla_client_ptr, CONNECTION_NO_TIMEOUT);
+        return _supla_client_ptr != 0 && scConnect(_supla_client_ptr, CONNECTION_TIMEOUT_MS);
       } finally {
         unlockClientPtr();
       }
+    } else {
+      suplaClientStateHolder.handleEvent(new SuplaClientEvent.Error(NoNetwork.INSTANCE));
     }
 
     return false;
+  }
+
+  private boolean hasNetworkConnection() {
+    NetworkInfo activeNetworkInfo =
+        connectivityManager == null ? null : connectivityManager.getActiveNetworkInfo();
+
+    return activeNetworkInfo != null && activeNetworkInfo.isConnected();
   }
 
   public void reconnect() {
@@ -906,12 +919,14 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     sendMessage(msg);
 
     cancel();
+    suplaClientStateHolder.handleEvent(new SuplaClientEvent.Error(VersionError.INSTANCE));
   }
 
   private void onConnecting() {
     Trace.d(log_tag, "Connecting");
 
     sendMessage(new SuplaClientMsg(this, SuplaClientMsg.onConnecting));
+    suplaClientStateHolder.handleEvent(Connecting.INSTANCE);
   }
 
   private void onConnError(SuplaConnError connError) {
@@ -925,6 +940,8 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     if (connError.Code == SuplaConst.SUPLA_RESULT_HOST_NOT_FOUND) {
       cancel();
     }
+    suplaClientStateHolder.handleEvent(
+        new SuplaClientEvent.Error(new SuplaClientState.Reason.ConnectionError(connError)));
   }
 
   private void onConnected() {
@@ -935,7 +952,6 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   }
 
   private void onDisconnected() {
-
     sendMessage(new SuplaClientMsg(this, SuplaClientMsg.onDisconnected));
   }
 
@@ -993,6 +1009,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onRegistered);
     msg.setRegisterResult(registerResult);
     sendMessage(msg);
+    suplaClientStateHolder.handleEvent(SuplaClientEvent.Connected.INSTANCE);
 
     NotificationManager notificationManager =
         (NotificationManager) _context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -1006,7 +1023,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   }
 
   private void onRegisterError(SuplaRegisterError registerError) {
-    Trace.d(log_tag, registerError.codeToString(_context));
+    Trace.d(log_tag, "onRegisterError: " + registerError.codeToString(_context));
 
     regTryCounter = 0;
     synchronized (st_lck) {
@@ -1018,6 +1035,8 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     sendMessage(msg);
 
     cancel();
+    suplaClientStateHolder.handleEvent(
+        new SuplaClientEvent.Error(new SuplaClientState.Reason.RegisterError(registerError)));
   }
 
   private void onRegistrationEnabled(SuplaRegistrationEnabled registrationEnabled) {
@@ -1494,6 +1513,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
   public synchronized void cancel() {
     _canceled = true;
+    suplaClientStateHolder.handleEvent(Cancel.INSTANCE);
   }
 
   private String autodiscoverGetHost(String email) {
@@ -1594,7 +1614,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
         superUserAuthorized = false;
       }
 
-      _connectingStatusLastTime = System.currentTimeMillis();
+      long _connectingStatusLastTime = System.currentTimeMillis();
 
       onConnecting();
       setVisible(2, 1);
@@ -1630,7 +1650,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
               if (!cfg.Email.isEmpty() && cfg.Host.isEmpty() && shouldAutodiscoverHost()) {
                 cfg.Host = autodiscoverGetHost(cfg.Email);
 
-                if (cfg.Host.isEmpty()) {
+                if (hasNetworkConnection() && cfg.Host.isEmpty()) {
                   onConnError(new SuplaConnError(SuplaConst.SUPLA_RESULT_HOST_NOT_FOUND));
                 } else {
                   info.setServerForEmail(cfg.Host);
@@ -1668,6 +1688,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     }
 
     SuplaApp.getApp().OnSuplaClientFinished(this);
+    suplaClientStateHolder.handleEvent(new Finish());
     Trace.d(log_tag, "SuplaClient Finished");
   }
 

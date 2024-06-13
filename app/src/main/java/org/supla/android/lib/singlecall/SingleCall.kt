@@ -117,6 +117,6 @@ class SingleCall private constructor(
       System.loadLibrary("suplaclient")
     }
 
-    const val CONNECTION_NO_TIMEOUT: Int = 0;
+    const val CONNECTION_NO_TIMEOUT: Int = 0
   }
 }

@@ -30,8 +30,8 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.verifyZeroInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.Preferences
 import org.supla.android.R
@@ -502,7 +502,7 @@ class LoadChannelMeasurementsUseCaseTest : BaseLoadMeasurementsUseCaseTest() {
     verify(readChannelByRemoteIdUseCase).invoke(remoteId)
     verify(temperatureLogRepository).findMeasurements(remoteId, profileId, startDate, endDate)
     verifyNoMoreInteractions(readChannelByRemoteIdUseCase, temperatureLogRepository)
-    verifyZeroInteractions(temperatureAndHumidityLogRepository)
+    verifyNoInteractions(temperatureAndHumidityLogRepository)
   }
 
   @Test
@@ -660,7 +660,7 @@ class LoadChannelMeasurementsUseCaseTest : BaseLoadMeasurementsUseCaseTest() {
     verify(readChannelByRemoteIdUseCase).invoke(remoteId)
     verify(temperatureLogRepository).findMeasurements(remoteId, profileId, startDate, endDate)
     verifyNoMoreInteractions(readChannelByRemoteIdUseCase, temperatureLogRepository)
-    verifyZeroInteractions(temperatureAndHumidityLogRepository)
+    verifyNoInteractions(temperatureAndHumidityLogRepository)
   }
 
   private fun doTemperatureWithHumidityTest(
@@ -707,7 +707,7 @@ class LoadChannelMeasurementsUseCaseTest : BaseLoadMeasurementsUseCaseTest() {
     verify(readChannelByRemoteIdUseCase).invoke(remoteId)
     verify(temperatureAndHumidityLogRepository).findMeasurements(remoteId, profileId, startDate, endDate)
     verifyNoMoreInteractions(readChannelByRemoteIdUseCase, temperatureAndHumidityLogRepository)
-    verifyZeroInteractions(temperatureLogRepository)
+    verifyNoInteractions(temperatureLogRepository)
   }
 
   private fun doGeneralPurposeMeterTest(
@@ -750,7 +750,7 @@ class LoadChannelMeasurementsUseCaseTest : BaseLoadMeasurementsUseCaseTest() {
     verify(readChannelByRemoteIdUseCase).invoke(remoteId)
     verify(generalPurposeMeterLogRepository).findMeasurements(remoteId, profileId, startDate, endDate)
     verifyNoMoreInteractions(readChannelByRemoteIdUseCase, generalPurposeMeterLogRepository)
-    verifyZeroInteractions(temperatureAndHumidityLogRepository, temperatureLogRepository)
+    verifyNoInteractions(temperatureAndHumidityLogRepository, temperatureLogRepository)
   }
 
   private fun doGeneralPurposeMeasurementTest(
@@ -793,6 +793,6 @@ class LoadChannelMeasurementsUseCaseTest : BaseLoadMeasurementsUseCaseTest() {
     verify(readChannelByRemoteIdUseCase).invoke(remoteId)
     verify(generalPurposeMeasurementLogRepository).findMeasurements(remoteId, profileId, startDate, endDate)
     verifyNoMoreInteractions(readChannelByRemoteIdUseCase, generalPurposeMeasurementLogRepository)
-    verifyZeroInteractions(temperatureAndHumidityLogRepository, temperatureLogRepository, generalPurposeMeterLogRepository)
+    verifyNoInteractions(temperatureAndHumidityLogRepository, temperatureLogRepository, generalPurposeMeterLogRepository)
   }
 }

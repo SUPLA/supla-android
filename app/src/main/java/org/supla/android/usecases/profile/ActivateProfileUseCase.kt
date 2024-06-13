@@ -19,11 +19,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import androidx.room.rxjava3.EmptyResultSetException
 import io.reactivex.rxjava3.core.Completable
-import org.supla.android.core.SuplaAppProvider
 import org.supla.android.core.networking.suplacloud.SuplaCloudConfigHolder
 import org.supla.android.data.source.RoomProfileRepository
-import org.supla.android.events.UpdateEventsManager
 import org.supla.android.profile.ProfileIdHolder
+import org.supla.android.usecases.client.ReconnectUseCase
 import org.supla.android.usecases.icon.LoadUserIconsIntoCacheUseCase
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -33,9 +32,8 @@ class ActivateProfileUseCase @Inject constructor(
   private val profileRepository: RoomProfileRepository,
   private val profileIdHolder: ProfileIdHolder,
   private val suplaCloudConfigHolder: SuplaCloudConfigHolder,
-  private val suplaAppProvider: SuplaAppProvider,
-  private val updateEventsManager: UpdateEventsManager,
-  private val loadUserIconsIntoCacheUseCase: LoadUserIconsIntoCacheUseCase
+  private val loadUserIconsIntoCacheUseCase: LoadUserIconsIntoCacheUseCase,
+  private val reconnectUseCase: ReconnectUseCase
 ) {
 
   operator fun invoke(id: Long, force: Boolean = false): Completable =
@@ -62,18 +60,8 @@ class ActivateProfileUseCase @Inject constructor(
         Completable.fromRunnable {
           profileIdHolder.profileId = id
           suplaCloudConfigHolder.clean()
-
-          with(suplaAppProvider.provide()) {
-            CancelAllRestApiClientTasks(true)
-            cleanupToken()
-            getSuplaClient()?.reconnect()
-          }
-
-          updateEventsManager.cleanup()
-          updateEventsManager.emitChannelsUpdate()
-          updateEventsManager.emitGroupsUpdate()
-          updateEventsManager.emitScenesUpdate()
         }
       )
+      .andThen(reconnectUseCase())
       .andThen(loadUserIconsIntoCacheUseCase())
 }

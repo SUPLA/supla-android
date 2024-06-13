@@ -11,8 +11,8 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.verifyZeroInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.core.networking.suplaclient.SuplaClientApi
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
@@ -230,7 +230,7 @@ class ChannelActionUseCaseTest {
 
     // then
     testObserver.assertError(ActionException.ChannelExceedAmperage(channelId))
-    verifyZeroInteractions(suplaClientProvider)
+    verifyNoInteractions(suplaClientProvider)
   }
 
   private fun testValveException(channelFunc: Int, channelValueSetup: (ValveValue) -> Unit) {
@@ -255,7 +255,7 @@ class ChannelActionUseCaseTest {
 
     // then
     testObserver.assertError(ActionException.ChannelClosedManually(channelId))
-    verifyZeroInteractions(suplaClientProvider)
+    verifyNoInteractions(suplaClientProvider)
   }
 
   private fun testActionExecution(
