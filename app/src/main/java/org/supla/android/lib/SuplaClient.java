@@ -81,6 +81,7 @@ import org.supla.android.usecases.icon.LoadUserIconsIntoCacheUseCase;
 public class SuplaClient extends Thread implements SuplaClientApi {
 
   private static final long MINIMUM_WAITING_TIME_MSEC = 2000;
+  private static final int CONNECTION_NO_TIMEOUT = 0;
   public static final int SUPLA_APP_ID = 1;
   private static final String log_tag = "SuplaClientThread";
   private static final Object st_lck = new Object();
@@ -167,7 +168,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
   private native int scGetId(long _supla_client);
 
-  private native boolean scConnect(long _supla_client);
+  private native boolean scConnect(long _supla_client, int connectionTimeoutMs);
 
   private native boolean scConnected(long _supla_client);
 
@@ -347,7 +348,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     if (activeNetworkInfo != null && activeNetworkInfo.isConnected()) {
       long _supla_client_ptr = lockClientPtr();
       try {
-        return _supla_client_ptr != 0 && scConnect(_supla_client_ptr);
+        return _supla_client_ptr != 0 && scConnect(_supla_client_ptr, CONNECTION_NO_TIMEOUT);
       } finally {
         unlockClientPtr();
       }

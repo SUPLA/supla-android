@@ -47,13 +47,15 @@ class SingleCall private constructor(
   private external fun executeAction(
     context: Context,
     authInfo: AuthInfo,
-    parameters: ActionParameters
+    parameters: ActionParameters,
+    connectionTimeoutMs: Int
   )
 
   private external fun getChannelValue(
     context: Context,
     authInfo: AuthInfo,
-    channelId: Int
+    channelId: Int,
+    connectionTimeoutMs: Int
   ): ChannelValue
 
   private external fun registerPushNotificationClientToken(
@@ -61,7 +63,8 @@ class SingleCall private constructor(
     authInfo: AuthInfo,
     appId: Int,
     token: String,
-    profileName: String
+    profileName: String,
+    connectionTimeoutMs: Int
   )
 
   @Throws(NoSuchProfileException::class)
@@ -80,25 +83,25 @@ class SingleCall private constructor(
   @WorkerThread
   @Throws(NoSuchProfileException::class, ResultException::class)
   fun executeAction(parameters: ActionParameters) {
-    executeAction(context, getProfile().authInfo, parameters)
+    executeAction(context, getProfile().authInfo, parameters, CONNECTION_NO_TIMEOUT)
   }
 
   @WorkerThread
   @Throws(NoSuchProfileException::class, ResultException::class)
   fun getChannelValue(channelId: Int): ChannelValue {
-    return getChannelValue(context, getProfile().authInfo, channelId)
+    return getChannelValue(context, getProfile().authInfo, channelId, CONNECTION_NO_TIMEOUT)
   }
 
   @WorkerThread
   @Throws(NoSuchProfileException::class, ResultException::class)
   fun registerPushNotificationClientToken(appId: Int, token: String, profile: ProfileEntity) {
-    registerPushNotificationClientToken(context, profile.authInfo, appId, token, profile.name)
+    registerPushNotificationClientToken(context, profile.authInfo, appId, token, profile.name, CONNECTION_NO_TIMEOUT)
   }
 
   @WorkerThread
   @Throws(NoSuchProfileException::class, ResultException::class)
   fun registerPushNotificationClientToken(appId: Int, token: String, profile: AuthProfileItem) {
-    registerPushNotificationClientToken(context, profile.authInfo, appId, token, profile.name)
+    registerPushNotificationClientToken(context, profile.authInfo, appId, token, profile.name, CONNECTION_NO_TIMEOUT)
   }
 
   @Singleton
@@ -113,5 +116,7 @@ class SingleCall private constructor(
     init {
       System.loadLibrary("suplaclient")
     }
+
+    const val CONNECTION_NO_TIMEOUT: Int = 0;
   }
 }
