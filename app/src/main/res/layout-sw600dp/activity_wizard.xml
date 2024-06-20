@@ -1,85 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
 
+
+  <FrameLayout
+    android:id="@+id/wizard_top_line"
+    android:layout_width="match_parent"
+    android:layout_height="0.5dp"
+    android:background="@color/toolbar">
 
     <FrameLayout
-        android:id="@+id/wizard_top_line"
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@color/primary">
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:alpha="0.25"
+      android:background="@android:color/white">
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:alpha="0.25"
-            android:background="@android:color/white">
-
-        </FrameLayout>
     </FrameLayout>
+  </FrameLayout>
 
-    <RelativeLayout
-        android:id="@+id/wizard_navigation"
-        android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentBottom="true"
-        android:background="@color/primary">
+  <RelativeLayout
+    android:id="@+id/wizard_navigation"
+    android:layout_width="match_parent"
+    android:layout_height="120dp"
+    android:layout_alignParentStart="true"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentBottom="true"
+    android:background="@color/toolbar">
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/wizard_next_left_part"
-            android:layout_width="@dimen/wizard_btnnextl_width"
-            android:layout_height="70dp"
-            android:layout_alignParentTop="true"
-            android:layout_toStartOf="@+id/wizard_next_middle_part"
-            android:layout_toLeftOf="@+id/wizard_next_middle_part"
-            android:background="@drawable/btnnextl"
-            android:stateListAnimator="@null"
-            android:textAlignment="gravity"
-            android:textAllCaps="false"
-            android:textColor="@color/primary" />
+    <androidx.appcompat.widget.AppCompatButton
+      android:id="@+id/wizard_next_left_part"
+      android:layout_width="@dimen/wizard_btnnextl_width"
+      android:layout_height="70dp"
+      android:layout_alignParentTop="true"
+      android:layout_toStartOf="@+id/wizard_next_middle_part"
+      android:layout_toLeftOf="@+id/wizard_next_middle_part"
+      android:background="@drawable/btnnextl"
+      android:stateListAnimator="@null"
+      android:textAlignment="gravity"
+      android:textAllCaps="false"
+      android:textColor="@color/primary" />
 
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/wizard_next_middle_part"
-            android:layout_width="wrap_content"
-            android:layout_height="70dp"
-            android:layout_alignParentTop="true"
-            android:layout_toStartOf="@+id/wizard_next_right_part"
-            android:layout_toLeftOf="@+id/wizard_next_right_part"
-            android:background="@android:color/white"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:stateListAnimator="@null"
-            android:text="@string/next"
-            android:textAllCaps="false"
-            android:textColor="@color/primary"
-            android:textSize="25sp" />
+    <androidx.appcompat.widget.AppCompatButton
+      android:id="@+id/wizard_next_middle_part"
+      android:layout_width="wrap_content"
+      android:layout_height="70dp"
+      android:layout_alignParentTop="true"
+      android:layout_toStartOf="@+id/wizard_next_right_part"
+      android:layout_toLeftOf="@+id/wizard_next_right_part"
+      android:background="@android:color/white"
+      android:paddingLeft="10dp"
+      android:paddingRight="10dp"
+      android:stateListAnimator="@null"
+      android:text="@string/next"
+      android:textAllCaps="false"
+      android:textColor="@color/primary"
+      android:textSize="25sp" />
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/wizard_next_right_part"
-            android:layout_width="@dimen/wizard_btnnextr_width"
-            android:layout_height="70dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="30dp"
-            android:background="@drawable/btnnextr"
-            android:stateListAnimator="@null" />
+    <androidx.appcompat.widget.AppCompatButton
+      android:id="@+id/wizard_next_right_part"
+      android:layout_width="@dimen/wizard_btnnextr_width"
+      android:layout_height="70dp"
+      android:layout_alignParentTop="true"
+      android:layout_alignParentRight="true"
+      android:layout_marginRight="30dp"
+      android:background="@drawable/btnnextr"
+      android:stateListAnimator="@null" />
 
-    </RelativeLayout>
+  </RelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/wizard_content"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/wizard_navigation"
-        android:layout_below="@+id/wizard_top_line"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:background="@color/primary">
+  <RelativeLayout
+    android:id="@+id/wizard_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_above="@+id/wizard_navigation"
+    android:layout_below="@+id/wizard_top_line"
+    android:layout_alignParentStart="true"
+    android:layout_alignParentLeft="true"
+    android:background="@color/toolbar">
 
-    </RelativeLayout>
+  </RelativeLayout>
 
 </RelativeLayout>

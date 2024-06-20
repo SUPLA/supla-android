@@ -227,7 +227,7 @@ private fun CalendarHeader() {
     )
   ) {
     Spacer(modifier = Modifier.weight(1f))
-    DayOfWeek.values().forEach {
+    DayOfWeek.entries.forEach {
       CalendarDayBox(
         text = stringResource(id = it.shortText),
         header = true

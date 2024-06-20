@@ -18,14 +18,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import android.annotation.SuppressLint
-import android.os.Build
-import android.os.Build.VERSION_CODES
 import android.os.Bundle
-import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.res.ResourcesCompat
-import androidx.core.view.WindowInsetsControllerCompat
 import org.supla.android.db.DbHelper
+import org.supla.android.extensions.setStatusBarColor
 import org.supla.android.lib.SuplaChannelBasicCfg
 import org.supla.android.lib.SuplaChannelState
 import org.supla.android.lib.SuplaClientMessageHandler
@@ -47,7 +43,7 @@ open class BaseActivity : AppCompatActivity(), OnSuplaClientMessageListener {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     SuplaApp.getApp().initTypefaceCollection(this)
-    setStatusBarColor(R.color.primary, false)
+    setStatusBarColor(R.color.toolbar, false)
   }
 
   override fun onResume() {
@@ -178,20 +174,5 @@ open class BaseActivity : AppCompatActivity(), OnSuplaClientMessageListener {
 
   protected fun invalidateDbHelper() {
     dbHelper = null
-  }
-
-  protected fun setStatusBarColor(colorId: Int, isLight: Boolean) {
-    val window = window
-    window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-    val color = ResourcesCompat.getColor(resources, colorId, null)
-    window.statusBarColor = color
-    val navigationBarColor = ResourcesCompat.getColor(resources, R.color.channel_cell, null)
-    window.navigationBarColor = navigationBarColor
-    val view = window.decorView
-
-    if (Build.VERSION.SDK_INT >= VERSION_CODES.M) {
-      WindowInsetsControllerCompat(window, view).isAppearanceLightStatusBars = isLight
-    }
   }
 }

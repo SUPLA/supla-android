@@ -17,7 +17,15 @@ package org.supla.android.core.ui
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import org.supla.android.R
+import org.supla.android.extensions.setStatusBarColor
 import org.supla.android.ui.LoadableContent
 
-abstract class BaseActivity : AppCompatActivity(), LoadableContent, BackHandleOwner
+abstract class BaseActivity : AppCompatActivity(), LoadableContent, BackHandleOwner {
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setStatusBarColor(R.color.toolbar, false)
+  }
+}

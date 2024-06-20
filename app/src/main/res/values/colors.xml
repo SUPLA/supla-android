@@ -43,6 +43,7 @@
     <color name="shadow_end">#00000000</color>
 
     <color name="item_unselected">#dadbdc</color>
+    <color name="toolbar">@color/primary</color>
 
     <!-- Roller shutter -->
     <color name="roller_shutter_window_color">#FFFFFF</color>

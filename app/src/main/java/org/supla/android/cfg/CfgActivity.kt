@@ -18,9 +18,7 @@ package org.supla.android.cfg
  */
 
 import android.os.Bundle
-import android.view.WindowManager
 import androidx.activity.OnBackPressedCallback
-import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
@@ -86,14 +84,6 @@ class CfgActivity : BaseActivity() {
 
     binding = DataBindingUtil.setContentView(this, R.layout.activity_cfg)
     binding.lifecycleOwner = this
-
-    window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-    window.statusBarColor = ResourcesCompat.getColor(
-      resources,
-      R.color.primary,
-      null
-    )
 
     setSupportActionBar(navToolbar)
 
