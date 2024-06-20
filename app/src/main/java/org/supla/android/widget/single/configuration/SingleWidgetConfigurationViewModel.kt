@@ -24,13 +24,20 @@ import org.supla.android.Preferences
 import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.SceneRepository
+import org.supla.android.data.source.local.entity.Scene
 import org.supla.android.db.ChannelBase
 import org.supla.android.db.DbItem
 import org.supla.android.db.Location
-import org.supla.android.db.Scene
 import org.supla.android.di.CoroutineDispatchers
+import org.supla.android.extensions.isDoorLock
+import org.supla.android.extensions.isGateController
+import org.supla.android.extensions.isGpm
+import org.supla.android.extensions.isRollerShutter
+import org.supla.android.extensions.isSwitch
+import org.supla.android.extensions.isThermometer
 import org.supla.android.lib.singlecall.SingleCall
 import org.supla.android.profile.ProfileManager
+import org.supla.android.usecases.channelconfig.LoadChannelConfigUseCase
 import org.supla.android.widget.WidgetPreferences
 import org.supla.android.widget.shared.configuration.*
 import javax.inject.Inject
@@ -44,7 +51,8 @@ class SingleWidgetConfigurationViewModel @Inject constructor(
   sceneRepository: SceneRepository,
   dispatchers: CoroutineDispatchers,
   singleCallProvider: SingleCall.Provider,
-  valuesFormatter: ValuesFormatter
+  valuesFormatter: ValuesFormatter,
+  loadChannelConfigUseCase: LoadChannelConfigUseCase
 ) : WidgetConfigurationViewModelBase(
   preferences,
   widgetPreferences,
@@ -53,25 +61,27 @@ class SingleWidgetConfigurationViewModel @Inject constructor(
   sceneRepository,
   dispatchers,
   singleCallProvider,
-  valuesFormatter
+  valuesFormatter,
+  loadChannelConfigUseCase
 ) {
 
   private val _actionsList = MutableLiveData<List<WidgetAction>>()
   val actionsList: LiveData<List<WidgetAction>> = _actionsList
 
-  override fun filterItems(dbItem: DbItem): Boolean {
-    return when (dbItem) {
+  override fun filterItems(channelBase: DbItem): Boolean {
+    return when (channelBase) {
       is Location -> true
-      is ChannelBase -> dbItem.isGateController() ||
-        dbItem.isDoorLock() ||
-        dbItem.isSwitch() ||
-        dbItem.isRollerShutter() ||
-        dbItem.isThermometer()
+      is ChannelBase -> channelBase.isGateController() ||
+        channelBase.isDoorLock() ||
+        channelBase.isSwitch() ||
+        channelBase.isRollerShutter() ||
+        channelBase.isThermometer() ||
+        channelBase.isGpm()
       else -> false
     }
   }
 
-  override fun temperatureWithUnit(): Boolean = false
+  override fun valueWithUnit(): Boolean = false
 
   override fun changeItem(channel: DbItem?) {
     super.changeItem(channel)

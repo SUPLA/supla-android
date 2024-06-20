@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+  <item android:state_enabled="false">
+    <shape android:shape="rectangle">
+      <corners android:radius="@dimen/radius_default" />
+    </shape>
+  </item>
+  <item>
+    <ripple android:color="@color/ripple_light">
+      <item android:id="@android:id/mask">
+        <shape android:shape="rectangle">
+          <corners android:radius="@dimen/radius_default"/>
+          <!-- This color is needed to be set - doesn't affect anything -->
+          <solid android:color="@android:color/white"/>
+        </shape>
+      </item>
+      <item>
+        <shape android:shape="rectangle">
+          <corners android:radius="@dimen/radius_default" />
+          <solid android:color="@android:color/transparent" />
+        </shape>
+      </item>
+    </ripple>
+  </item>
+</selector>

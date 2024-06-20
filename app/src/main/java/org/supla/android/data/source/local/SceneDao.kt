@@ -21,38 +21,41 @@ import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import org.supla.android.Trace
-import org.supla.android.db.Scene
-import org.supla.android.db.SuplaContract
+import org.supla.android.data.source.local.entity.Scene
+import org.supla.android.data.source.local.entity.SceneEntity
+import org.supla.android.data.source.local.entity.SceneEntity.Companion.COLUMN_PROFILE_ID
+import org.supla.android.data.source.local.entity.SceneEntity.Companion.COLUMN_VISIBLE
+import org.supla.android.data.source.local.entity.UserIconEntity
+import org.supla.android.data.source.local.view.SceneView
 import org.supla.android.extensions.TAG
-import java.util.ArrayList
 
 class SceneDao(dap: DatabaseAccessProvider) : BaseDao(dap) {
 
   fun getSceneByRemoteId(remoteId: Int): Scene? {
     return getItem(
       { Scene() },
-      SuplaContract.SceneEntry.ALL_COLUMNS,
-      SuplaContract.SceneEntry.TABLE_NAME,
-      key(SuplaContract.SceneEntry.COLUMN_NAME_SCENEID, remoteId),
-      key(SuplaContract.SceneEntry.COLUMN_NAME_PROFILEID, cachedProfileId)
+      SceneEntity.ALL_COLUMNS_ARRAY,
+      SceneEntity.TABLE_NAME,
+      key(SceneEntity.COLUMN_REMOTE_ID, remoteId),
+      key(COLUMN_PROFILE_ID, cachedProfileId)
     )
   }
 
   fun getSceneUserIconIdsToDownload(): List<Int> {
     val sql = (
       "SELECT S." +
-        SuplaContract.SceneEntry.COLUMN_NAME_USERICON + " " +
-        SuplaContract.SceneEntry.COLUMN_NAME_USERICON + " FROM " +
-        SuplaContract.SceneEntry.TABLE_NAME + " AS S LEFT JOIN " +
-        SuplaContract.UserIconsEntry.TABLE_NAME + " AS U ON (S." +
-        SuplaContract.SceneEntry.COLUMN_NAME_USERICON + " = U." +
-        SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID + " AND S." +
-        SuplaContract.SceneEntry.COLUMN_NAME_PROFILEID + " = U." +
-        SuplaContract.UserIconsEntry.COLUMN_NAME_PROFILEID + ") WHERE " +
-        SuplaContract.SceneEntry.COLUMN_NAME_VISIBLE + " > 0 AND " +
-        SuplaContract.SceneEntry.COLUMN_NAME_USERICON + " > 0 AND U." +
-        SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID + " IS NULL AND (S." +
-        SuplaContract.SceneEntry.COLUMN_NAME_PROFILEID + " = " + cachedProfileId + ")"
+        SceneEntity.COLUMN_USER_ICON + " " +
+        SceneEntity.COLUMN_USER_ICON + " FROM " +
+        SceneEntity.TABLE_NAME + " AS S LEFT JOIN " +
+        UserIconEntity.TABLE_NAME + " AS U ON (S." +
+        SceneEntity.COLUMN_USER_ICON + " = U." +
+        UserIconEntity.COLUMN_REMOTE_ID + " AND S." +
+        COLUMN_PROFILE_ID + " = U." +
+        UserIconEntity.COLUMN_PROFILE_ID + ") WHERE " +
+        COLUMN_VISIBLE + " > 0 AND " +
+        SceneEntity.COLUMN_USER_ICON + " > 0 AND U." +
+        UserIconEntity.COLUMN_REMOTE_ID + " IS NULL AND (S." +
+        COLUMN_PROFILE_ID + " = " + cachedProfileId + ")"
       )
 
     val ids = ArrayList<Int>()
@@ -60,11 +63,7 @@ class SceneDao(dap: DatabaseAccessProvider) : BaseDao(dap) {
       .use { cursor ->
         if (cursor.moveToFirst()) {
           do {
-            val id = cursor.getInt(
-              cursor.getColumnIndexOrThrow(
-                SuplaContract.ChannelEntry.COLUMN_NAME_USERICON
-              )
-            )
+            val id = cursor.getInt(cursor.getColumnIndexOrThrow(SceneEntity.COLUMN_USER_ICON))
             if (!ids.contains(id)) {
               ids.add(id)
             }
@@ -74,21 +73,26 @@ class SceneDao(dap: DatabaseAccessProvider) : BaseDao(dap) {
     return ids
   }
 
-  fun sceneCursor(profileId: Long = cachedProfileId): Cursor {
+  fun sceneCursor(profileId: Long? = cachedProfileId): Cursor {
     return read {
-      val selection = "${SuplaContract.SceneEntry.COLUMN_NAME_PROFILEID} = ? AND " +
-        "${SuplaContract.SceneEntry.COLUMN_NAME_VISIBLE} > 0"
-      val selectionArgs = arrayOf(profileId.toString())
-      val order = SuplaContract.SceneViewEntry.COLUMN_NAME_LOCATION_SORT_ORDER + ", " +
-        SuplaContract.SceneViewEntry.COLUMN_NAME_LOCATION_NAME +
-        " COLLATE LOCALIZED, " +
-        SuplaContract.SceneEntry.COLUMN_NAME_SORT_ORDER + ", " +
-        SuplaContract.SceneEntry.COLUMN_NAME_CAPTION + " COLLATE LOCALIZED, " +
-        SuplaContract.SceneEntry.COLUMN_NAME_SCENEID
+      val selection: String?
+      val selectionArgs: Array<String>?
+      if (profileId == null) {
+        selection = null
+        selectionArgs = null
+      } else {
+        selection = "$COLUMN_PROFILE_ID = ? AND $COLUMN_VISIBLE > 0"
+        selectionArgs = arrayOf(profileId.toString())
+      }
+      val order = SceneView.COLUMN_LOCATION_SORT_ORDER + ", " +
+        SceneView.COLUMN_LOCATION_NAME + " COLLATE LOCALIZED, " +
+        SceneEntity.COLUMN_SORT_ORDER + ", " +
+        SceneEntity.COLUMN_CAPTION + " COLLATE LOCALIZED, " +
+        SceneEntity.COLUMN_REMOTE_ID
 
       it.query(
-        SuplaContract.SceneViewEntry.VIEW_NAME,
-        SuplaContract.SceneViewEntry.ALL_COLUMNS,
+        SceneView.NAME,
+        SceneView.ALL_COLUMNS,
         selection,
         selectionArgs,
         null /* groupBy */,
@@ -103,8 +107,8 @@ class SceneDao(dap: DatabaseAccessProvider) : BaseDao(dap) {
     return try {
       update(
         scene,
-        SuplaContract.SceneEntry.TABLE_NAME,
-        key(SuplaContract.SceneEntry._ID, scene.id)
+        SceneEntity.TABLE_NAME,
+        key(SceneEntity.COLUMN_ID, scene.id)
       )
       true
     } catch (e: Exception) {
@@ -117,7 +121,7 @@ class SceneDao(dap: DatabaseAccessProvider) : BaseDao(dap) {
     return try {
       insert(
         scene.copy(profileId = cachedProfileId),
-        SuplaContract.SceneEntry.TABLE_NAME
+        SceneEntity.TABLE_NAME
       )
       true
     } catch (e: Exception) {
@@ -126,20 +130,12 @@ class SceneDao(dap: DatabaseAccessProvider) : BaseDao(dap) {
     }
   }
 
-  fun setScenesVisible(visible: Int, whereVisible: Int) =
-    setVisible(
-      SuplaContract.SceneEntry.TABLE_NAME,
-      visible,
-      key(SuplaContract.SceneEntry.COLUMN_NAME_VISIBLE, whereVisible)
-    )
-
-  private fun setVisible(table: String, visible: Int, key: Key<Int>): Boolean {
-    val selection = key.asSelection() + " AND " +
-      SuplaContract.ChannelEntry.COLUMN_NAME_PROFILEID + " = ?"
-    val selectionArgs = arrayOf(key.value.toString(), cachedProfileId.toString())
+  fun setScenesVisible(visible: Int, whereVisible: Int): Boolean {
+    val selection = "$COLUMN_VISIBLE = ? AND $COLUMN_PROFILE_ID = ?"
+    val selectionArgs = arrayOf(whereVisible.toString(), cachedProfileId.toString())
     val values = ContentValues()
-    values.put(key.column, visible)
+    values.put(COLUMN_VISIBLE, visible)
 
-    return write<Int> { return@write it.update(table, values, selection, selectionArgs) } > 0
+    return write<Int> { return@write it.update(SceneEntity.TABLE_NAME, values, selection, selectionArgs) } > 0
   }
 }

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:id="@+id/chart_marker_content"
+  android:layout_width="wrap_content"
+  android:layout_height="wrap_content"
+  android:background="@drawable/background_chart_marker"
+  android:padding="@dimen/distance_tiny">
+
+  <TextView
+    android:id="@+id/chart_marker_title"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:fontFamily="@font/open_sans_regular"
+    android:textColor="@color/on_background"
+    android:textSize="12sp"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
+
+  <TextView
+    android:id="@+id/chart_marker_text"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:fontFamily="@font/open_sans_bold"
+    android:textColor="@color/on_background"
+    android:textSize="14sp"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/chart_marker_title" />
+
+  <TextView
+    android:id="@+id/chart_marker_range"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/distance_tiny"
+    android:fontFamily="@font/open_sans_regular"
+    android:textColor="@color/on_background"
+    android:textSize="12sp"
+    app:layout_constraintBottom_toBottomOf="@id/chart_marker_text"
+    app:layout_constraintStart_toEndOf="@id/chart_marker_text"
+    app:layout_constraintTop_toTopOf="@id/chart_marker_text" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

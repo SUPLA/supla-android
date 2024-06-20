@@ -1,4 +1,5 @@
 package org.supla.android;
+
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,59 +18,37 @@ package org.supla.android;
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import java.text.DecimalFormat;
 import junit.framework.TestCase;
 
-import java.text.DecimalFormat;
+public class SuplaFormatterTest extends TestCase {
+  private SuplaFormatter formatter;
 
-public class SuplaFormatterTest extends TestCase  {
-    private SuplaFormatter formatter;
+  @Override
+  protected void setUp() throws Exception {
+    super.setUp();
+    formatter = SuplaFormatter.sharedFormatter();
+  }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        formatter = SuplaFormatter.sharedFormatter();
-    }
+  public void testDoubleToStringConversionWithUnit() {
+    String p = new DecimalFormat().format(1.2).equals("1,2") ? "," : ".";
 
-    public void testDoubleToStringConversionWithUnit() {
-        String p = new DecimalFormat().format(1.2).equals("1,2") ? "," : ".";
-        
-        assertEquals("321"+p+"00", formatter.doubleToStringWithUnit(
-                321.000000001,
-                null,
-                5));
+    assertEquals("321" + p + "00", formatter.doubleToStringWithUnit(321.000000001, null, 5));
 
-        assertEquals("321"+p+"0", formatter.doubleToStringWithUnit(
-                321.000000001,
-                null,
-                1));
+    assertEquals("321" + p + "0", formatter.doubleToStringWithUnit(321.000000001, null, 1));
 
-        assertEquals("321", formatter.doubleToStringWithUnit(
-                321.000000001,
-                null,
-                0));
+    assertEquals("321", formatter.doubleToStringWithUnit(321.000000001, null, 0));
 
-        assertEquals("321"+p+"000000001", formatter.doubleToStringWithUnit(
-                321.000000001,
-                null,
-                15));
+    assertEquals(
+        "321" + p + "000000001", formatter.doubleToStringWithUnit(321.000000001, null, 15));
 
-        assertEquals("321"+p+"000000001", formatter.doubleToStringWithUnit(
-                321.000000001,
-                null,
-                9));
+    assertEquals("321" + p + "000000001", formatter.doubleToStringWithUnit(321.000000001, null, 9));
 
-        assertEquals("321"+p+"000000001", formatter.doubleToStringWithUnit(
-                321.00000000101,
-                null,
-                9));
+    assertEquals(
+        "321" + p + "000000001", formatter.doubleToStringWithUnit(321.00000000101, null, 9));
 
-        assertEquals("0"+p+"00", formatter.doubleToStringWithUnit(0,
-                null,
-                10));
+    assertEquals("0" + p + "00", formatter.doubleToStringWithUnit(0, null, 10));
 
-        assertEquals("321"+p+"00 kWh", formatter.doubleToStringWithUnit(
-                321,
-                "kWh",
-                10));
-    }
+    assertEquals("321" + p + "00 kWh", formatter.doubleToStringWithUnit(321, "kWh", 10));
+  }
 }

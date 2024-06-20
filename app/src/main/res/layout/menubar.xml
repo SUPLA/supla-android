@@ -4,10 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="45dp"
     android:layout_alignParentTop="true"
-    android:background="@color/menubar">
+    android:background="@color/primary">
 
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/menubutton"
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="45dp"
@@ -62,13 +62,13 @@
         android:layout_centerVertical="true"
         android:layout_marginRight="10dp">
 
-      <Button
+      <androidx.appcompat.widget.AppCompatButton
           android:id="@+id/profilebutton"
           style="?android:attr/borderlessButtonStyle"
           android:layout_marginLeft="10dp"
           android:layout_width="45dp"
           android:layout_height="45dp"
-          android:background="@drawable/account"
+          android:background="@drawable/ic_account"
           android:clickable="true" />
           
     </LinearLayout>

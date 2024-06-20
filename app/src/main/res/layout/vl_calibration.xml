@@ -4,9 +4,9 @@
     android:id="@+id/rlRgbVLCalibration"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/vl_settings_bg">
+    android:background="@color/background">
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/vlBtnInfo"
         android:layout_width="50dp"
         android:layout_height="50dp"
@@ -17,7 +17,7 @@
         android:background="@drawable/vlinfo"
         android:visibility="visible" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/vlBtnRestore"
         android:layout_width="50dp"
         android:layout_height="50dp"
@@ -28,7 +28,7 @@
         android:background="@drawable/vlrestore"
         android:visibility="visible" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/vlBtnOK"
         android:layout_width="50dp"
         android:layout_height="50dp"
@@ -56,7 +56,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/vl_cfg_mode"
-            android:textColor="@android:color/black" />
+            android:textColor="@color/on_background" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -66,7 +66,7 @@
             android:orientation="horizontal"
             android:padding="2dp">
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/vlCfgDmAuto"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -75,7 +75,7 @@
                 android:text="@string/vl_cfg_auto"
                 android:textColor="@android:color/white" />
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/vlCfgDm1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -85,7 +85,7 @@
                 android:background="@android:color/transparent"
                 android:text="@string/vl_cfg_mode1" />
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/vlCfgDm2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -94,7 +94,7 @@
                 android:background="@android:color/transparent"
                 android:text="@string/vl_cfg_mode2" />
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/vlCfgDm3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -121,7 +121,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/vl_cfg_boost"
-            android:textColor="@android:color/black" />
+            android:textColor="@color/on_background" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -131,7 +131,7 @@
             android:orientation="horizontal"
             android:padding="2dp">
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/vlCfgBoostAuto"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -140,7 +140,7 @@
                 android:text="@string/vl_cfg_auto"
                 android:textColor="@android:color/white" />
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/vlCfgBoostYes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -150,7 +150,7 @@
                 android:background="@android:color/transparent"
                 android:text="@string/vl_cfg_yes" />
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/vlCfgBoostNo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -179,7 +179,7 @@
             android:layout_marginBottom="-1dp"
             android:orientation="horizontal">
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/vlCfgOpRange"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
@@ -188,7 +188,7 @@
                 android:text="@string/cfg_op_range"
                 android:textColor="@android:color/black" />
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/vlCfgBoost"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
@@ -231,7 +231,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/status_led"
-            android:textColor="@android:color/black" />
+            android:textColor="@color/on_background" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -281,16 +281,4 @@
             android:gravity="right"
             android:textSize="10sp" />
     </LinearLayout>
-
-
-    <ImageView
-        android:id="@+id/imageView7"
-        android:layout_width="76dp"
-        android:layout_height="57dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/vprosmart" />
 </RelativeLayout>

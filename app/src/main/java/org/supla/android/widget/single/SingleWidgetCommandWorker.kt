@@ -18,10 +18,17 @@ package org.supla.android.widget.single
  */
 
 import android.content.Context
+import androidx.hilt.work.HiltWorker
 import androidx.work.WorkerParameters
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
+import org.supla.android.Preferences
+import org.supla.android.core.notifications.NotificationsHelper
+import org.supla.android.core.notifications.SINGLE_WIDGET_NOTIFICATION_ID
 import org.supla.android.lib.SuplaConst
 import org.supla.android.lib.SuplaConst.*
 import org.supla.android.lib.actions.ActionId
+import org.supla.android.usecases.channelconfig.LoadChannelConfigUseCase
 import org.supla.android.widget.WidgetConfiguration
 import org.supla.android.widget.shared.WidgetCommandWorkerBase
 import org.supla.android.widget.shared.configuration.ItemType
@@ -36,13 +43,19 @@ import org.supla.android.widget.shared.configuration.WidgetAction
  * power switch [SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH]
  * It supports also opening and closing of roller shutters
  */
-class SingleWidgetCommandWorker(
-  appContext: Context,
-  workerParams: WorkerParameters
-) : WidgetCommandWorkerBase(appContext, workerParams) {
+@HiltWorker
+class SingleWidgetCommandWorker @AssistedInject constructor(
+  notificationsHelper: NotificationsHelper,
+  loadChannelConfigUseCase: LoadChannelConfigUseCase,
+  appPreferences: Preferences,
+  @Assisted appContext: Context,
+  @Assisted workerParams: WorkerParameters
+) : WidgetCommandWorkerBase(notificationsHelper, loadChannelConfigUseCase, appPreferences, appContext, workerParams) {
+
+  override val notificationId = SINGLE_WIDGET_NOTIFICATION_ID
 
   override fun updateWidget(widgetId: Int) = updateSingleWidget(applicationContext, widgetId)
-  override fun temperatureWithUnit(): Boolean = false
+  override fun valueWithUnit(): Boolean = false
 
   override fun perform(widgetId: Int, configuration: WidgetConfiguration): Result {
     val action = WidgetAction.fromId(configuration.actionId)
@@ -60,7 +73,7 @@ class SingleWidgetCommandWorker(
         SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK -> callAction(configuration, ActionId.OPEN)
         SUPLA_CHANNELFNC_LIGHTSWITCH,
         SUPLA_CHANNELFNC_POWERSWITCH,
-        SUPLA_CHANNELFNC_STAIRCASETIMER-> {
+        SUPLA_CHANNELFNC_STAIRCASETIMER -> {
           if (action == null) {
             return callCommon(widgetId, configuration)
           }

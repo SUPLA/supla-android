@@ -21,311 +21,228 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import org.supla.android.data.source.local.entity.ChannelEntity;
+import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity;
+import org.supla.android.data.source.local.entity.ChannelGroupEntity;
+import org.supla.android.data.source.local.entity.ChannelGroupRelationEntity;
+import org.supla.android.data.source.local.entity.ChannelValueEntity;
+import org.supla.android.data.source.local.entity.LocationEntity;
+import org.supla.android.data.source.local.entity.UserIconEntity;
+import org.supla.android.data.source.local.view.ChannelView;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelExtendedValue;
 import org.supla.android.db.ChannelGroup;
 import org.supla.android.db.ChannelGroupRelation;
 import org.supla.android.db.ChannelValue;
 import org.supla.android.db.Location;
-import org.supla.android.db.SuplaContract;
 import org.supla.android.lib.SuplaConst;
 
 public class ChannelDao extends BaseDao {
+
   public ChannelDao(@NonNull DatabaseAccessProvider databaseAccessProvider) {
     super(databaseAccessProvider);
   }
 
   public Channel getChannel(int channelId) {
-    String[] projection = {
-      SuplaContract.ChannelViewEntry._ID,
-      SuplaContract.ChannelViewEntry.COLUMN_NAME_DEVICEID,
-      SuplaContract.ChannelViewEntry.COLUMN_NAME_CHANNELID,
-      SuplaContract.ChannelViewEntry.COLUMN_NAME_CAPTION,
-      SuplaContract.ChannelViewEntry.COLUMN_NAME_TYPE,
-      SuplaContract.ChannelViewEntry.COLUMN_NAME_FUNC,
-      SuplaContract.ChannelViewEntry.COLUMN_NAME_VALUEID,
-      SuplaContract.ChannelViewEntry.COLUMN_NAME_EXTENDEDVALUEID,
-      SuplaContract.ChannelViewEntry.COLUMN_NAME_ONLINE,
-      SuplaContract.ChannelViewEntry.COLUMN_NAME_SUBVALUE,
-      SuplaContract.ChannelViewEntry.COLUMN_NAME_SUBVALUE_TYPE,
-      SuplaContract.ChannelViewEntry.COLUMN_NAME_VALUE,
-      SuplaContract.ChannelViewEntry.COLUMN_NAME_EXTENDEDVALUE,
-      SuplaContract.ChannelViewEntry.COLUMN_NAME_VISIBLE,
-      SuplaContract.ChannelViewEntry.COLUMN_NAME_LOCATIONID,
-      SuplaContract.ChannelViewEntry.COLUMN_NAME_ALTICON,
-      SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON,
-      SuplaContract.ChannelViewEntry.COLUMN_NAME_MANUFACTURERID,
-      SuplaContract.ChannelViewEntry.COLUMN_NAME_PRODUCTID,
-      SuplaContract.ChannelViewEntry.COLUMN_NAME_FLAGS,
-      SuplaContract.ChannelViewEntry.COLUMN_NAME_PROTOCOLVERSION,
-      SuplaContract.ChannelViewEntry.COLUMN_NAME_POSITION,
-      SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON_IMAGE1,
-      SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON_IMAGE2,
-      SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON_IMAGE3,
-      SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON_IMAGE4,
-      SuplaContract.ChannelValueEntry.COLUMN_NAME_PROFILEID
-    };
-
     return getItem(
         Channel::new,
-        projection,
-        SuplaContract.ChannelViewEntry.VIEW_NAME,
-        key(SuplaContract.ChannelViewEntry.COLUMN_NAME_CHANNELID, channelId),
-        key(SuplaContract.ChannelValueEntry.COLUMN_NAME_PROFILEID, getCachedProfileId()));
-  }
-
-  public ChannelValue getChannelValue(int channelId) {
-    String[] projection = {
-      SuplaContract.ChannelValueEntry._ID,
-      SuplaContract.ChannelValueEntry.COLUMN_NAME_CHANNELID,
-      SuplaContract.ChannelValueEntry.COLUMN_NAME_ONLINE,
-      SuplaContract.ChannelValueEntry.COLUMN_NAME_SUBVALUE_TYPE,
-      SuplaContract.ChannelValueEntry.COLUMN_NAME_SUBVALUE,
-      SuplaContract.ChannelValueEntry.COLUMN_NAME_VALUE,
-      SuplaContract.ChannelValueEntry.COLUMN_NAME_PROFILEID
-    };
-
-    return getItem(
-        ChannelValue::new,
-        projection,
-        SuplaContract.ChannelValueEntry.TABLE_NAME,
-        key(SuplaContract.ChannelValueEntry.COLUMN_NAME_CHANNELID, channelId),
-        key(SuplaContract.ChannelValueEntry.COLUMN_NAME_PROFILEID, getCachedProfileId()));
+        ChannelView.INSTANCE.getALL_COLUMNS(),
+        ChannelView.NAME,
+        key(ChannelView.COLUMN_CHANNEL_REMOTE_ID, channelId),
+        key(ChannelValueEntity.COLUMN_PROFILE_ID, getCachedProfileId()));
   }
 
   public ChannelGroup getChannelGroup(int groupId) {
     String[] projection = {
-      SuplaContract.ChannelGroupEntry._ID,
-      SuplaContract.ChannelGroupEntry.COLUMN_NAME_GROUPID,
-      SuplaContract.ChannelGroupEntry.COLUMN_NAME_CAPTION,
-      SuplaContract.ChannelGroupEntry.COLUMN_NAME_ONLINE,
-      SuplaContract.ChannelGroupEntry.COLUMN_NAME_FUNC,
-      SuplaContract.ChannelGroupEntry.COLUMN_NAME_VISIBLE,
-      SuplaContract.ChannelGroupEntry.COLUMN_NAME_LOCATIONID,
-      SuplaContract.ChannelGroupEntry.COLUMN_NAME_ALTICON,
-      SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON,
-      SuplaContract.ChannelGroupEntry.COLUMN_NAME_FLAGS,
-      SuplaContract.ChannelGroupEntry.COLUMN_NAME_TOTALVALUE,
-      SuplaContract.ChannelGroupEntry.COLUMN_NAME_POSITION,
-      SuplaContract.ChannelGroupEntry.COLUMN_NAME_PROFILEID
+      ChannelGroupEntity.COLUMN_ID,
+      ChannelGroupEntity.COLUMN_REMOTE_ID,
+      ChannelGroupEntity.COLUMN_CAPTION,
+      ChannelGroupEntity.COLUMN_ONLINE,
+      ChannelGroupEntity.COLUMN_FUNCTION,
+      ChannelGroupEntity.COLUMN_VISIBLE,
+      ChannelGroupEntity.COLUMN_LOCATION_ID,
+      ChannelGroupEntity.COLUMN_ALT_ICON,
+      ChannelGroupEntity.COLUMN_USER_ICON,
+      ChannelGroupEntity.COLUMN_FLAGS,
+      ChannelGroupEntity.COLUMN_TOTAL_VALUE,
+      ChannelGroupEntity.COLUMN_POSITION,
+      ChannelGroupEntity.COLUMN_PROFILE_ID
     };
 
     return getItem(
         ChannelGroup::new,
         projection,
-        SuplaContract.ChannelGroupEntry.TABLE_NAME,
-        key(SuplaContract.ChannelGroupEntry.COLUMN_NAME_GROUPID, groupId),
-        key(SuplaContract.ChannelValueEntry.COLUMN_NAME_PROFILEID, getCachedProfileId()));
+        ChannelGroupEntity.TABLE_NAME,
+        key(ChannelGroupEntity.COLUMN_REMOTE_ID, groupId),
+        key(ChannelValueEntity.COLUMN_PROFILE_ID, getCachedProfileId()));
   }
 
   public ChannelGroupRelation getChannelGroupRelation(int channelId, int groupId) {
     String[] projection = {
-      SuplaContract.ChannelGroupRelationEntry._ID,
-      SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_GROUPID,
-      SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_CHANNELID,
-      SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_VISIBLE,
-      SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_PROFILEID
+      ChannelGroupRelationEntity.COLUMN_ID,
+      ChannelGroupRelationEntity.COLUMN_GROUP_ID,
+      ChannelGroupRelationEntity.COLUMN_CHANNEL_ID,
+      ChannelGroupRelationEntity.COLUMN_VISIBLE,
+      ChannelGroupRelationEntity.COLUMN_PROFILE_ID
     };
 
     return getItem(
         ChannelGroupRelation::new,
         projection,
-        SuplaContract.ChannelGroupRelationEntry.TABLE_NAME,
-        key(SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_GROUPID, groupId),
-        key(SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_CHANNELID, channelId),
-        key(SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_PROFILEID, getCachedProfileId()));
+        ChannelGroupRelationEntity.TABLE_NAME,
+        key(ChannelGroupRelationEntity.COLUMN_GROUP_ID, groupId),
+        key(ChannelGroupRelationEntity.COLUMN_CHANNEL_ID, channelId),
+        key(ChannelGroupRelationEntity.COLUMN_PROFILE_ID, getCachedProfileId()));
   }
 
   public ChannelExtendedValue getChannelExtendedValue(int channelId) {
     String[] projection = {
-      SuplaContract.ChannelExtendedValueEntry._ID,
-      SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_CHANNELID,
-      SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_VALUE,
-      SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_PROFILEID
+      ChannelExtendedValueEntity.COLUMN_ID,
+      ChannelExtendedValueEntity.COLUMN_CHANNEL_ID,
+      ChannelExtendedValueEntity.COLUMN_VALUE,
+      ChannelExtendedValueEntity.COLUMN_PROFILE_ID,
+      ChannelExtendedValueEntity.COLUMN_TIMER_START_TIME
     };
 
     return getItem(
         ChannelExtendedValue::new,
         projection,
-        SuplaContract.ChannelExtendedValueEntry.TABLE_NAME,
-        key(SuplaContract.ChannelExtendedValueEntry.COLUMN_NAME_CHANNELID, channelId),
-        key(SuplaContract.ChannelValueEntry.COLUMN_NAME_PROFILEID, getCachedProfileId()));
-  }
-
-  public Cursor getChannelGroupValueViewEntryCursor() {
-    return read(
-        sqLiteDatabase -> {
-          String[] projection = {
-            SuplaContract.ChannelGroupValueViewEntry._ID,
-            SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_FUNC,
-            SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_GROUPID,
-            SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_CHANNELID,
-            SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_ONLINE,
-            SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_SUBVALUE_TYPE,
-            SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_SUBVALUE,
-            SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_VALUE,
-            SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_PROFILEID
-          };
-
-          String selection =
-              SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_PROFILEID + " = ?";
-
-          String[] selectionArgs = {String.valueOf(getCachedProfileId())};
-
-          return sqLiteDatabase.query(
-              SuplaContract.ChannelGroupValueViewEntry.VIEW_NAME,
-              projection,
-              selection,
-              selectionArgs,
-              null,
-              null,
-              SuplaContract.ChannelGroupValueViewEntry.COLUMN_NAME_GROUPID);
-        });
+        ChannelExtendedValueEntity.TABLE_NAME,
+        key(ChannelExtendedValueEntity.COLUMN_CHANNEL_ID, channelId),
+        key(ChannelValueEntity.COLUMN_PROFILE_ID, getCachedProfileId()));
   }
 
   public void insert(Channel channel) {
     if (channel.getProfileId() == -1) {
       channel.setProfileId(getCachedProfileId());
     }
-    insert(channel, SuplaContract.ChannelEntry.TABLE_NAME);
+    insert(channel, ChannelEntity.TABLE_NAME);
   }
 
   public void update(Channel channel) {
     update(
         channel,
-        SuplaContract.ChannelEntry.TABLE_NAME,
-        key(SuplaContract.ChannelEntry._ID, channel.getId()),
-        key(SuplaContract.ChannelEntry.COLUMN_NAME_PROFILEID, channel.getProfileId()));
+        ChannelEntity.TABLE_NAME,
+        key(ChannelEntity.COLUMN_ID, channel.getId()),
+        key(ChannelEntity.COLUMN_PROFILE_ID, channel.getProfileId()));
   }
 
   public void insert(ChannelValue channelValue) {
     channelValue.setProfileId(getCachedProfileId());
-    insert(channelValue, SuplaContract.ChannelValueEntry.TABLE_NAME);
+    insert(channelValue, ChannelValueEntity.TABLE_NAME);
   }
 
   public void update(ChannelValue channelValue) {
     update(
         channelValue,
-        SuplaContract.ChannelValueEntry.TABLE_NAME,
-        key(SuplaContract.ChannelValueEntry._ID, channelValue.getId()),
-        key(SuplaContract.ChannelValueEntry.COLUMN_NAME_PROFILEID, channelValue.getProfileId()));
+        ChannelValueEntity.TABLE_NAME,
+        key(ChannelValueEntity.COLUMN_ID, channelValue.getId()),
+        key(ChannelValueEntity.COLUMN_PROFILE_ID, channelValue.getProfileId()));
   }
 
   public void insert(ChannelExtendedValue channelExtendedValue) {
     channelExtendedValue.setProfileId(getCachedProfileId());
-    insert(channelExtendedValue, SuplaContract.ChannelExtendedValueEntry.TABLE_NAME);
+    insert(channelExtendedValue, ChannelExtendedValueEntity.TABLE_NAME);
   }
 
   public void update(ChannelExtendedValue channelExtendedValue) {
     update(
         channelExtendedValue,
-        SuplaContract.ChannelExtendedValueEntry.TABLE_NAME,
-        key(SuplaContract.ChannelExtendedValueEntry._ID, channelExtendedValue.getId()),
-        key(
-            SuplaContract.ChannelValueEntry.COLUMN_NAME_PROFILEID,
-            channelExtendedValue.getProfileId()));
+        ChannelExtendedValueEntity.TABLE_NAME,
+        key(ChannelExtendedValueEntity.COLUMN_ID, channelExtendedValue.getId()),
+        key(ChannelValueEntity.COLUMN_PROFILE_ID, channelExtendedValue.getProfileId()));
   }
 
   public void insert(ChannelGroup channelGroup) {
     channelGroup.setProfileId(getCachedProfileId());
-    insert(channelGroup, SuplaContract.ChannelGroupEntry.TABLE_NAME);
+    insert(channelGroup, ChannelGroupEntity.TABLE_NAME);
   }
 
   public void update(ChannelGroup channelGroup) {
     update(
         channelGroup,
-        SuplaContract.ChannelGroupEntry.TABLE_NAME,
-        key(SuplaContract.ChannelGroupEntry._ID, channelGroup.getId()),
-        key(SuplaContract.ChannelGroupEntry.COLUMN_NAME_PROFILEID, channelGroup.getProfileId()));
+        ChannelGroupEntity.TABLE_NAME,
+        key(ChannelGroupEntity.COLUMN_ID, channelGroup.getId()),
+        key(ChannelGroupEntity.COLUMN_PROFILE_ID, channelGroup.getProfileId()));
   }
 
   public void insert(ChannelGroupRelation channelGroupRelation) {
     channelGroupRelation.setProfileId(getCachedProfileId());
-    insert(channelGroupRelation, SuplaContract.ChannelGroupRelationEntry.TABLE_NAME);
+    insert(channelGroupRelation, ChannelGroupRelationEntity.TABLE_NAME);
   }
 
   public void update(ChannelGroupRelation channelGroupRelation) {
     update(
         channelGroupRelation,
-        SuplaContract.ChannelGroupRelationEntry.TABLE_NAME,
-        key(SuplaContract.ChannelGroupRelationEntry._ID, channelGroupRelation.getId()),
-        key(
-            SuplaContract.ChannelValueEntry.COLUMN_NAME_PROFILEID,
-            channelGroupRelation.getProfileId()));
-  }
-
-  public int getChannelCountForLocation(int locationId) {
-    return getChannelCount(key(SuplaContract.ChannelEntry.COLUMN_NAME_LOCATIONID, locationId));
+        ChannelGroupRelationEntity.TABLE_NAME,
+        key(ChannelGroupRelationEntity.COLUMN_ID, channelGroupRelation.getId()),
+        key(ChannelValueEntity.COLUMN_PROFILE_ID, channelGroupRelation.getProfileId()));
   }
 
   public int getChannelCount() {
-    return getChannelCount(null);
+    return getCount(
+        ChannelEntity.TABLE_NAME, null, key(ChannelEntity.COLUMN_PROFILE_ID, getCachedProfileId()));
   }
 
   public boolean setChannelsVisible(int visible, int whereVisible) {
     return setVisible(
-        SuplaContract.ChannelEntry.TABLE_NAME,
-        visible,
-        key(SuplaContract.ChannelEntry.COLUMN_NAME_VISIBLE, whereVisible));
+        ChannelEntity.TABLE_NAME, visible, key(ChannelEntity.COLUMN_VISIBLE, whereVisible));
   }
 
   public boolean setChannelGroupsVisible(int visible, int whereVisible) {
     return setVisible(
-        SuplaContract.ChannelGroupEntry.TABLE_NAME,
+        ChannelGroupEntity.TABLE_NAME,
         visible,
-        key(SuplaContract.ChannelGroupEntry.COLUMN_NAME_VISIBLE, whereVisible));
+        key(ChannelGroupEntity.COLUMN_VISIBLE, whereVisible));
   }
 
   public boolean setChannelGroupRelationsVisible(int visible, int whereVisible) {
     return setVisible(
-        SuplaContract.ChannelGroupRelationEntry.TABLE_NAME,
+        ChannelGroupRelationEntity.TABLE_NAME,
         visible,
-        key(SuplaContract.ChannelGroupRelationEntry.COLUMN_NAME_VISIBLE, whereVisible));
+        key(ChannelGroupRelationEntity.COLUMN_VISIBLE, whereVisible));
   }
 
   public boolean setChannelsOffline() {
-    String selection = SuplaContract.ChannelValueEntry.COLUMN_NAME_ONLINE + " = ?";
+    String selection = ChannelValueEntity.COLUMN_ONLINE + " = ?";
     String[] selectionArgs = {String.valueOf(1)};
 
     ContentValues values = new ContentValues();
-    values.put(SuplaContract.ChannelValueEntry.COLUMN_NAME_ONLINE, 0);
+    values.put(ChannelValueEntity.COLUMN_ONLINE, 0);
 
     return write(
             sqLiteDatabase -> {
               return sqLiteDatabase.update(
-                  SuplaContract.ChannelValueEntry.TABLE_NAME, values, selection, selectionArgs);
+                  ChannelValueEntity.TABLE_NAME, values, selection, selectionArgs);
             })
         > 0;
   }
 
   public Cursor getChannelListCursorWithDefaultOrder(String where) {
     where +=
-        " AND (C."
-            + SuplaContract.ChannelViewEntry.COLUMN_NAME_PROFILEID
-            + " = "
-            + getCachedProfileId()
-            + ") ";
+        " AND (C." + ChannelView.COLUMN_CHANNEL_PROFILE_ID + " = " + getCachedProfileId() + ") ";
 
     String orderBY =
         "L."
-            + SuplaContract.LocationEntry.COLUMN_NAME_SORT_ORDER
+            + LocationEntity.COLUMN_SORT_ORDER
             + ", "
             + "L."
-            + SuplaContract.LocationEntry.COLUMN_NAME_CAPTION
+            + LocationEntity.COLUMN_CAPTION
             + " COLLATE LOCALIZED, "
             + "C."
-            + SuplaContract.ChannelEntry.COLUMN_NAME_POSITION
+            + ChannelEntity.COLUMN_POSITION
             + ", "
             + "C."
-            + SuplaContract.ChannelViewEntry.COLUMN_NAME_FUNC
+            + ChannelView.COLUMN_CHANNEL_FUNCTION
             + " DESC, "
             + "C."
-            + SuplaContract.ChannelViewEntry.COLUMN_NAME_CAPTION
+            + ChannelView.COLUMN_CHANNEL_CAPTION
             + " COLLATE LOCALIZED";
 
     return getChannelListCursor(orderBY, where);
@@ -334,19 +251,19 @@ public class ChannelDao extends BaseDao {
   public Cursor getAllChannels(String where) {
     String orderBY =
         "L."
-            + SuplaContract.LocationEntry.COLUMN_NAME_SORT_ORDER
+            + LocationEntity.COLUMN_SORT_ORDER
             + ", "
             + "L."
-            + SuplaContract.LocationEntry.COLUMN_NAME_CAPTION
+            + LocationEntity.COLUMN_CAPTION
             + " COLLATE LOCALIZED, "
             + "C."
-            + SuplaContract.ChannelEntry.COLUMN_NAME_POSITION
+            + ChannelEntity.COLUMN_POSITION
             + ", "
             + "C."
-            + SuplaContract.ChannelViewEntry.COLUMN_NAME_FUNC
+            + ChannelView.COLUMN_CHANNEL_FUNCTION
             + " DESC, "
             + "C."
-            + SuplaContract.ChannelViewEntry.COLUMN_NAME_CAPTION
+            + ChannelView.COLUMN_CHANNEL_CAPTION
             + " COLLATE LOCALIZED";
 
     return getChannelListCursor(orderBY, where);
@@ -354,29 +271,23 @@ public class ChannelDao extends BaseDao {
 
   public Cursor getAllChannelGroupsForProfileId(Long profileId) {
     return getChannelGroupListCursor(
-        "G." + SuplaContract.ChannelGroupEntry.COLUMN_NAME_PROFILEID + " = " + profileId);
-  }
-
-  public Cursor getChannelGroupListCursor() {
-    String profileId = SuplaContract.ChannelGroupEntry.COLUMN_NAME_PROFILEID;
-    String where = "G." + profileId + " = " + getCachedProfileId();
-    return getChannelGroupListCursor(where);
+        "G." + ChannelGroupEntity.COLUMN_PROFILE_ID + " = " + profileId);
   }
 
   public boolean isZWaveBridgeChannelAvailable() {
-    String[] projection = {SuplaContract.ChannelViewEntry._ID};
+    String[] projection = {ChannelView.COLUMN_CHANNEL_ID};
 
     String selection =
-        SuplaContract.ChannelViewEntry.COLUMN_NAME_PROFILEID
+        ChannelView.COLUMN_CHANNEL_PROFILE_ID
             + " = ? "
             + " AND "
-            + SuplaContract.ChannelViewEntry.COLUMN_NAME_TYPE
+            + ChannelView.COLUMN_CHANNEL_TYPE
             + " = ?"
             + " AND "
-            + SuplaContract.ChannelViewEntry.COLUMN_NAME_VISIBLE
+            + ChannelView.COLUMN_CHANNEL_VISIBLE
             + " > 0"
             + " AND ("
-            + SuplaContract.ChannelViewEntry.COLUMN_NAME_FLAGS
+            + ChannelView.COLUMN_CHANNEL_FLAGS
             + " & ?) > 0";
 
     String[] selectionArgs = {
@@ -389,14 +300,7 @@ public class ChannelDao extends BaseDao {
         sqLiteDatabase -> {
           try (Cursor cursor =
               sqLiteDatabase.query(
-                  SuplaContract.ChannelViewEntry.VIEW_NAME,
-                  projection,
-                  selection,
-                  selectionArgs,
-                  null,
-                  null,
-                  null,
-                  "1")) {
+                  ChannelView.NAME, projection, selection, selectionArgs, null, null, null, "1")) {
             return cursor.getCount() > 0;
           }
         });
@@ -404,26 +308,22 @@ public class ChannelDao extends BaseDao {
 
   public List<Channel> getZWaveBridgeChannels() {
     String conditions =
-        SuplaContract.ChannelViewEntry.COLUMN_NAME_TYPE
+        ChannelView.COLUMN_CHANNEL_TYPE
             + " = "
             + SuplaConst.SUPLA_CHANNELTYPE_BRIDGE
             + " AND ("
-            + SuplaContract.ChannelViewEntry.COLUMN_NAME_FLAGS
+            + ChannelView.COLUMN_CHANNEL_FLAGS
             + " & "
             + SuplaConst.SUPLA_CHANNEL_FLAG_ZWAVE_BRIDGE
             + " ) > 0 "
             + " AND (C."
-            + SuplaContract.ChannelViewEntry.COLUMN_NAME_PROFILEID
+            + ChannelView.COLUMN_CHANNEL_PROFILE_ID
             + " = "
             + getCachedProfileId()
             + ")";
 
     String orderBy =
-        "C."
-            + SuplaContract.ChannelViewEntry.COLUMN_NAME_DEVICEID
-            + ", "
-            + "C."
-            + SuplaContract.ChannelViewEntry.COLUMN_NAME_CHANNELID;
+        "C." + ChannelView.COLUMN_CHANNEL_DEVICE_ID + ", " + "C." + ChannelView.COLUMN_CHANNEL_ID;
 
     ArrayList<Channel> result = new ArrayList<>();
     try (Cursor cursor = getChannelListCursor(orderBy, conditions)) {
@@ -439,21 +339,24 @@ public class ChannelDao extends BaseDao {
     return result;
   }
 
-  public Cursor getSortedChannelIdsForLocationCursor(int locationId) {
+  public Cursor getSortedChannelIdsForLocationCursor(String locationCaption) {
     return getChannelListCursorWithDefaultOrder(
-        "C." + SuplaContract.ChannelEntry.COLUMN_NAME_LOCATIONID + " = " + locationId);
+        "L."
+            + LocationEntity.COLUMN_CAPTION
+            + " = "
+            + DatabaseUtils.sqlEscapeString(locationCaption));
   }
 
-  public Cursor getSortedChannelGroupIdsForLocationCursor(int locationId) {
+  public Cursor getSortedChannelGroupIdsForLocationCursor(String locationCaption) {
     String where =
         "G."
-            + SuplaContract.ChannelGroupEntry.COLUMN_NAME_PROFILEID
+            + ChannelGroupEntity.COLUMN_PROFILE_ID
             + " = "
             + getCachedProfileId()
-            + " AND G."
-            + SuplaContract.ChannelGroupEntry.COLUMN_NAME_LOCATIONID
+            + " AND L."
+            + LocationEntity.COLUMN_CAPTION
             + " = "
-            + locationId;
+            + DatabaseUtils.sqlEscapeString(locationCaption);
     return getChannelGroupListCursor(where);
   }
 
@@ -464,13 +367,13 @@ public class ChannelDao extends BaseDao {
           try {
             sqLiteDatabase.execSQL(
                 "UPDATE "
-                    + SuplaContract.LocationEntry.TABLE_NAME
+                    + LocationEntity.TABLE_NAME
                     + " SET "
-                    + SuplaContract.LocationEntry.COLUMN_NAME_SORTING
+                    + LocationEntity.COLUMN_SORTING
                     + " = '"
                     + Location.SortingType.USER_DEFINED.name()
                     + "' WHERE "
-                    + SuplaContract.LocationEntry.COLUMN_NAME_LOCATIONID
+                    + LocationEntity.COLUMN_REMOTE_ID
                     + " = "
                     + locationId);
 
@@ -478,13 +381,13 @@ public class ChannelDao extends BaseDao {
             for (Long id : reorderedIds) {
               sqLiteDatabase.execSQL(
                   "UPDATE "
-                      + SuplaContract.ChannelEntry.TABLE_NAME
+                      + ChannelEntity.TABLE_NAME
                       + " SET "
-                      + SuplaContract.ChannelEntry.COLUMN_NAME_POSITION
+                      + ChannelEntity.COLUMN_POSITION
                       + " = "
                       + position
                       + " WHERE "
-                      + SuplaContract.ChannelEntry._ID
+                      + ChannelEntity.COLUMN_ID
                       + " = "
                       + id);
               position++;
@@ -505,13 +408,13 @@ public class ChannelDao extends BaseDao {
             for (Long id : reorderedIds) {
               sqLiteDatabase.execSQL(
                   "UPDATE "
-                      + SuplaContract.ChannelGroupEntry.TABLE_NAME
+                      + ChannelGroupEntity.TABLE_NAME
                       + " SET "
-                      + SuplaContract.ChannelGroupEntry.COLUMN_NAME_POSITION
+                      + ChannelGroupEntity.COLUMN_POSITION
                       + " = "
                       + position
                       + " WHERE "
-                      + SuplaContract.ChannelGroupEntry._ID
+                      + ChannelGroupEntity.COLUMN_ID
                       + " = "
                       + id);
               position++;
@@ -527,35 +430,35 @@ public class ChannelDao extends BaseDao {
   public List<Integer> getChannelUserIconIdsToDownload() {
     String sql =
         "SELECT C."
-            + SuplaContract.ChannelEntry.COLUMN_NAME_USERICON
+            + ChannelEntity.COLUMN_USER_ICON
             + " "
-            + SuplaContract.ChannelEntry.COLUMN_NAME_USERICON
+            + ChannelEntity.COLUMN_USER_ICON
             + " FROM "
-            + SuplaContract.ChannelEntry.TABLE_NAME
+            + ChannelEntity.TABLE_NAME
             + " AS C"
             + " LEFT JOIN "
-            + SuplaContract.UserIconsEntry.TABLE_NAME
+            + UserIconEntity.TABLE_NAME
             + " AS U ON (C."
-            + SuplaContract.ChannelEntry.COLUMN_NAME_USERICON
+            + ChannelEntity.COLUMN_USER_ICON
             + " = "
             + "U."
-            + SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID
+            + UserIconEntity.COLUMN_REMOTE_ID
             + " AND "
             + "C."
-            + SuplaContract.ChannelEntry.COLUMN_NAME_PROFILEID
+            + ChannelEntity.COLUMN_PROFILE_ID
             + " = "
             + "U."
-            + SuplaContract.UserIconsEntry.COLUMN_NAME_PROFILEID
+            + UserIconEntity.COLUMN_PROFILE_ID
             + ")"
             + " WHERE "
-            + SuplaContract.ChannelEntry.COLUMN_NAME_VISIBLE
+            + ChannelEntity.COLUMN_VISIBLE
             + " > 0 AND "
-            + SuplaContract.ChannelEntry.COLUMN_NAME_USERICON
+            + ChannelEntity.COLUMN_USER_ICON
             + " > 0 AND U."
-            + SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID
+            + UserIconEntity.COLUMN_REMOTE_ID
             + " IS NULL"
             + " AND (C."
-            + SuplaContract.ChannelEntry.COLUMN_NAME_PROFILEID
+            + ChannelEntity.COLUMN_PROFILE_ID
             + " = "
             + getCachedProfileId()
             + ")";
@@ -564,8 +467,7 @@ public class ChannelDao extends BaseDao {
     try (Cursor cursor = read(sqLiteDatabase -> sqLiteDatabase.rawQuery(sql, null))) {
       if (cursor.moveToFirst()) {
         do {
-          Integer id =
-              cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_USERICON));
+          Integer id = cursor.getInt(cursor.getColumnIndex(ChannelEntity.COLUMN_USER_ICON));
           if (!ids.contains(id)) {
             ids.add(id);
           }
@@ -580,35 +482,35 @@ public class ChannelDao extends BaseDao {
   public List<Integer> getChannelGroupUserIconIdsToDownload() {
     String sql =
         "SELECT C."
-            + SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON
+            + ChannelGroupEntity.COLUMN_USER_ICON
             + " "
-            + SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON
+            + ChannelGroupEntity.COLUMN_USER_ICON
             + " FROM "
-            + SuplaContract.ChannelGroupEntry.TABLE_NAME
+            + ChannelGroupEntity.TABLE_NAME
             + " AS C"
             + " LEFT JOIN "
-            + SuplaContract.UserIconsEntry.TABLE_NAME
+            + UserIconEntity.TABLE_NAME
             + " AS U ON (C."
-            + SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON
+            + ChannelGroupEntity.COLUMN_USER_ICON
             + " = "
             + "U."
-            + SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID
+            + UserIconEntity.COLUMN_REMOTE_ID
             + " AND "
             + "C."
-            + SuplaContract.ChannelGroupEntry.COLUMN_NAME_PROFILEID
+            + ChannelGroupEntity.COLUMN_PROFILE_ID
             + " = "
             + "U."
-            + SuplaContract.UserIconsEntry.COLUMN_NAME_PROFILEID
+            + UserIconEntity.COLUMN_PROFILE_ID
             + ")"
             + " WHERE "
-            + SuplaContract.ChannelGroupEntry.COLUMN_NAME_VISIBLE
+            + ChannelGroupEntity.COLUMN_VISIBLE
             + " > 0 AND "
-            + SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON
+            + ChannelGroupEntity.COLUMN_USER_ICON
             + " > 0 AND U."
-            + SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID
+            + UserIconEntity.COLUMN_REMOTE_ID
             + " IS NULL"
             + " AND (C."
-            + SuplaContract.ChannelGroupEntry.COLUMN_NAME_PROFILEID
+            + ChannelGroupEntity.COLUMN_PROFILE_ID
             + " = "
             + getCachedProfileId()
             + ")";
@@ -617,8 +519,7 @@ public class ChannelDao extends BaseDao {
     try (Cursor cursor = read(sqLiteDatabase -> sqLiteDatabase.rawQuery(sql, null))) {
       if (cursor.moveToFirst()) {
         do {
-          Integer id =
-              cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_USERICON));
+          Integer id = cursor.getInt(cursor.getColumnIndex(ChannelEntity.COLUMN_USER_ICON));
           if (!ids.contains(id)) {
             ids.add(id);
           }
@@ -633,11 +534,11 @@ public class ChannelDao extends BaseDao {
   public int getChannelGroupLastPositionInLocation(int locationId) {
     String where =
         "G."
-            + SuplaContract.ChannelGroupEntry.COLUMN_NAME_PROFILEID
+            + ChannelGroupEntity.COLUMN_PROFILE_ID
             + " = "
             + getCachedProfileId()
             + " AND G."
-            + SuplaContract.ChannelGroupEntry.COLUMN_NAME_LOCATIONID
+            + ChannelGroupEntity.COLUMN_LOCATION_ID
             + " = "
             + locationId;
     Cursor cursor = getChannelGroupListCursor(where);
@@ -645,8 +546,7 @@ public class ChannelDao extends BaseDao {
       throw new NoSuchElementException();
     }
     if (cursor.moveToLast()) {
-      return cursor.getInt(
-          cursor.getColumnIndex(SuplaContract.ChannelGroupEntry.COLUMN_NAME_POSITION));
+      return cursor.getInt(cursor.getColumnIndex(ChannelGroupEntity.COLUMN_POSITION));
     }
     return 0;
   }
@@ -662,138 +562,142 @@ public class ChannelDao extends BaseDao {
           String sql =
               "SELECT "
                   + "C."
-                  + SuplaContract.ChannelViewEntry._ID
+                  + ChannelView.COLUMN_CHANNEL_ID
                   + " "
-                  + SuplaContract.ChannelViewEntry._ID
+                  + ChannelView.COLUMN_CHANNEL_ID
                   + ", L."
-                  + SuplaContract.LocationEntry.COLUMN_NAME_CAPTION
+                  + LocationEntity.COLUMN_CAPTION
                   + " AS section"
                   + ", L."
-                  + SuplaContract.LocationEntry.COLUMN_NAME_COLLAPSED
+                  + LocationEntity.COLUMN_COLLAPSED
                   + " "
-                  + SuplaContract.LocationEntry.COLUMN_NAME_COLLAPSED
+                  + LocationEntity.COLUMN_COLLAPSED
                   + ", C."
-                  + SuplaContract.ChannelViewEntry.COLUMN_NAME_DEVICEID
+                  + ChannelView.COLUMN_CHANNEL_DEVICE_ID
                   + " "
-                  + SuplaContract.ChannelViewEntry.COLUMN_NAME_DEVICEID
+                  + ChannelView.COLUMN_CHANNEL_DEVICE_ID
                   + ", C."
-                  + SuplaContract.ChannelViewEntry.COLUMN_NAME_CHANNELID
+                  + ChannelView.COLUMN_CHANNEL_REMOTE_ID
                   + " "
-                  + SuplaContract.ChannelViewEntry.COLUMN_NAME_CHANNELID
+                  + ChannelView.COLUMN_CHANNEL_REMOTE_ID
                   + ", C."
-                  + SuplaContract.ChannelViewEntry.COLUMN_NAME_CAPTION
+                  + ChannelView.COLUMN_CHANNEL_CAPTION
                   + " "
-                  + SuplaContract.ChannelViewEntry.COLUMN_NAME_CAPTION
+                  + ChannelView.COLUMN_CHANNEL_CAPTION
                   + ", C."
-                  + SuplaContract.ChannelViewEntry.COLUMN_NAME_TYPE
+                  + ChannelView.COLUMN_CHANNEL_TYPE
                   + " "
-                  + SuplaContract.ChannelViewEntry.COLUMN_NAME_TYPE
+                  + ChannelView.COLUMN_CHANNEL_TYPE
                   + ", C."
-                  + SuplaContract.ChannelViewEntry.COLUMN_NAME_FUNC
+                  + ChannelView.COLUMN_CHANNEL_FUNCTION
                   + " "
-                  + SuplaContract.ChannelViewEntry.COLUMN_NAME_FUNC
+                  + ChannelView.COLUMN_CHANNEL_FUNCTION
                   + ", C."
-                  + SuplaContract.ChannelViewEntry.COLUMN_NAME_VALUEID
+                  + ChannelView.COLUMN_VALUE_ID
                   + " "
-                  + SuplaContract.ChannelViewEntry.COLUMN_NAME_VALUEID
+                  + ChannelView.COLUMN_VALUE_ID
                   + ", C."
-                  + SuplaContract.ChannelViewEntry.COLUMN_NAME_EXTENDEDVALUEID
+                  + ChannelView.COLUMN_EXTENDED_VALUE_ID
                   + " "
-                  + SuplaContract.ChannelViewEntry.COLUMN_NAME_EXTENDEDVALUEID
+                  + ChannelView.COLUMN_EXTENDED_VALUE_ID
                   + ", C."
-                  + SuplaContract.ChannelViewEntry.COLUMN_NAME_ONLINE
+                  + ChannelView.COLUMN_VALUE_ONLINE
                   + " "
-                  + SuplaContract.ChannelViewEntry.COLUMN_NAME_ONLINE
+                  + ChannelView.COLUMN_VALUE_ONLINE
                   + ", C."
-                  + SuplaContract.ChannelViewEntry.COLUMN_NAME_SUBVALUE
+                  + ChannelView.COLUMN_VALUE_SUB_VALUE
                   + " "
-                  + SuplaContract.ChannelViewEntry.COLUMN_NAME_SUBVALUE
+                  + ChannelView.COLUMN_VALUE_SUB_VALUE
                   + ", C."
-                  + SuplaContract.ChannelViewEntry.COLUMN_NAME_SUBVALUE_TYPE
+                  + ChannelView.COLUMN_VALUE_SUB_VALUE_TYPE
                   + " "
-                  + SuplaContract.ChannelViewEntry.COLUMN_NAME_SUBVALUE_TYPE
+                  + ChannelView.COLUMN_VALUE_SUB_VALUE_TYPE
                   + ", C."
-                  + SuplaContract.ChannelViewEntry.COLUMN_NAME_VALUE
+                  + ChannelView.COLUMN_VALUE_VALUE
                   + " "
-                  + SuplaContract.ChannelViewEntry.COLUMN_NAME_VALUE
+                  + ChannelView.COLUMN_VALUE_VALUE
                   + ", C."
-                  + SuplaContract.ChannelViewEntry.COLUMN_NAME_EXTENDEDVALUE
+                  + ChannelView.COLUMN_EXTENDED_VALUE_VALUE
                   + " "
-                  + SuplaContract.ChannelViewEntry.COLUMN_NAME_EXTENDEDVALUE
+                  + ChannelView.COLUMN_EXTENDED_VALUE_VALUE
                   + ", C."
-                  + SuplaContract.ChannelViewEntry.COLUMN_NAME_VISIBLE
+                  + ChannelView.COLUMN_EXTENDED_VALUE_TIMER_START_TIME
                   + " "
-                  + SuplaContract.ChannelViewEntry.COLUMN_NAME_VISIBLE
+                  + ChannelView.COLUMN_EXTENDED_VALUE_TIMER_START_TIME
                   + ", C."
-                  + SuplaContract.ChannelViewEntry.COLUMN_NAME_LOCATIONID
+                  + ChannelView.COLUMN_CHANNEL_VISIBLE
                   + " "
-                  + SuplaContract.ChannelViewEntry.COLUMN_NAME_LOCATIONID
+                  + ChannelView.COLUMN_CHANNEL_VISIBLE
                   + ", C."
-                  + SuplaContract.ChannelViewEntry.COLUMN_NAME_ALTICON
+                  + ChannelView.COLUMN_CHANNEL_LOCATION_ID
                   + " "
-                  + SuplaContract.ChannelViewEntry.COLUMN_NAME_ALTICON
+                  + ChannelView.COLUMN_CHANNEL_LOCATION_ID
                   + ", C."
-                  + SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON
+                  + ChannelView.COLUMN_CHANNEL_ALT_ICON
                   + " "
-                  + SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON
+                  + ChannelView.COLUMN_CHANNEL_ALT_ICON
                   + ", C."
-                  + SuplaContract.ChannelViewEntry.COLUMN_NAME_MANUFACTURERID
+                  + ChannelView.COLUMN_CHANNEL_USER_ICON
                   + " "
-                  + SuplaContract.ChannelViewEntry.COLUMN_NAME_MANUFACTURERID
+                  + ChannelView.COLUMN_CHANNEL_USER_ICON
                   + ", C."
-                  + SuplaContract.ChannelViewEntry.COLUMN_NAME_PRODUCTID
+                  + ChannelView.COLUMN_CHANNEL_MANUFACTURER_ID
                   + " "
-                  + SuplaContract.ChannelViewEntry.COLUMN_NAME_PRODUCTID
+                  + ChannelView.COLUMN_CHANNEL_MANUFACTURER_ID
                   + ", C."
-                  + SuplaContract.ChannelViewEntry.COLUMN_NAME_FLAGS
+                  + ChannelView.COLUMN_CHANNEL_PRODUCT_ID
                   + " "
-                  + SuplaContract.ChannelViewEntry.COLUMN_NAME_FLAGS
+                  + ChannelView.COLUMN_CHANNEL_PRODUCT_ID
                   + ", C."
-                  + SuplaContract.ChannelViewEntry.COLUMN_NAME_PROTOCOLVERSION
+                  + ChannelView.COLUMN_CHANNEL_FLAGS
                   + " "
-                  + SuplaContract.ChannelViewEntry.COLUMN_NAME_PROTOCOLVERSION
+                  + ChannelView.COLUMN_CHANNEL_FLAGS
                   + ", C."
-                  + SuplaContract.ChannelViewEntry.COLUMN_NAME_POSITION
+                  + ChannelView.COLUMN_CHANNEL_PROTOCOL_VERSION
                   + " "
-                  + SuplaContract.ChannelViewEntry.COLUMN_NAME_POSITION
+                  + ChannelView.COLUMN_CHANNEL_PROTOCOL_VERSION
                   + ", C."
-                  + SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON_IMAGE1
+                  + ChannelView.COLUMN_CHANNEL_POSITION
                   + " "
-                  + SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON_IMAGE1
+                  + ChannelView.COLUMN_CHANNEL_POSITION
                   + ", C."
-                  + SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON_IMAGE2
+                  + ChannelView.COLUMN_USER_ICON_IMAGE_1
                   + " "
-                  + SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON_IMAGE2
+                  + ChannelView.COLUMN_USER_ICON_IMAGE_1
                   + ", C."
-                  + SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON_IMAGE3
+                  + ChannelView.COLUMN_USER_ICON_IMAGE_2
                   + " "
-                  + SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON_IMAGE3
+                  + ChannelView.COLUMN_USER_ICON_IMAGE_2
                   + ", C."
-                  + SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON_IMAGE4
+                  + ChannelView.COLUMN_USER_ICON_IMAGE_3
                   + " "
-                  + SuplaContract.ChannelViewEntry.COLUMN_NAME_USERICON_IMAGE4
+                  + ChannelView.COLUMN_USER_ICON_IMAGE_3
+                  + ", C."
+                  + ChannelView.COLUMN_USER_ICON_IMAGE_4
+                  + " "
+                  + ChannelView.COLUMN_USER_ICON_IMAGE_4
                   + " "
                   + ", C."
-                  + SuplaContract.ChannelViewEntry.COLUMN_NAME_PROFILEID
+                  + ChannelView.COLUMN_CHANNEL_PROFILE_ID
                   + " "
-                  + SuplaContract.ChannelViewEntry.COLUMN_NAME_PROFILEID
+                  + ChannelView.COLUMN_CHANNEL_PROFILE_ID
                   + " FROM "
-                  + SuplaContract.ChannelViewEntry.VIEW_NAME
+                  + ChannelView.NAME
                   + " C"
                   + " JOIN "
-                  + SuplaContract.LocationEntry.TABLE_NAME
+                  + LocationEntity.TABLE_NAME
                   + " L"
                   + " ON (C."
-                  + SuplaContract.ChannelViewEntry.COLUMN_NAME_LOCATIONID
+                  + ChannelView.COLUMN_CHANNEL_LOCATION_ID
                   + " = L."
-                  + SuplaContract.LocationEntry.COLUMN_NAME_LOCATIONID
+                  + LocationEntity.COLUMN_REMOTE_ID
                   + " AND C."
-                  + SuplaContract.ChannelViewEntry.COLUMN_NAME_PROFILEID
+                  + ChannelView.COLUMN_CHANNEL_PROFILE_ID
                   + " = L."
-                  + SuplaContract.LocationEntry.COLUMN_NAME_PROFILEID
+                  + LocationEntity.COLUMN_PROFILE_ID
                   + ")"
                   + " WHERE C."
-                  + SuplaContract.ChannelViewEntry.COLUMN_NAME_VISIBLE
+                  + ChannelView.COLUMN_CHANNEL_VISIBLE
                   + " > 0 "
                   + localWhere
                   + " ORDER BY "
@@ -815,142 +719,134 @@ public class ChannelDao extends BaseDao {
           String sql =
               "SELECT "
                   + "G."
-                  + SuplaContract.ChannelGroupEntry._ID
+                  + ChannelGroupEntity.COLUMN_ID
                   + " "
-                  + SuplaContract.ChannelGroupEntry._ID
+                  + ChannelGroupEntity.COLUMN_ID
                   + ", L."
-                  + SuplaContract.LocationEntry.COLUMN_NAME_CAPTION
+                  + LocationEntity.COLUMN_CAPTION
                   + " AS section"
                   + ", L."
-                  + SuplaContract.LocationEntry.COLUMN_NAME_COLLAPSED
+                  + LocationEntity.COLUMN_COLLAPSED
                   + " "
-                  + SuplaContract.LocationEntry.COLUMN_NAME_COLLAPSED
+                  + LocationEntity.COLUMN_COLLAPSED
                   + ", G."
-                  + SuplaContract.ChannelGroupEntry.COLUMN_NAME_GROUPID
+                  + ChannelGroupEntity.COLUMN_REMOTE_ID
                   + " "
-                  + SuplaContract.ChannelGroupEntry.COLUMN_NAME_GROUPID
+                  + ChannelGroupEntity.COLUMN_REMOTE_ID
                   + ", G."
-                  + SuplaContract.ChannelGroupEntry.COLUMN_NAME_CAPTION
+                  + ChannelGroupEntity.COLUMN_CAPTION
                   + " "
-                  + SuplaContract.ChannelGroupEntry.COLUMN_NAME_CAPTION
+                  + ChannelGroupEntity.COLUMN_CAPTION
                   + ", G."
-                  + SuplaContract.ChannelGroupEntry.COLUMN_NAME_FUNC
+                  + ChannelGroupEntity.COLUMN_FUNCTION
                   + " "
-                  + SuplaContract.ChannelGroupEntry.COLUMN_NAME_FUNC
+                  + ChannelGroupEntity.COLUMN_FUNCTION
                   + ", G."
-                  + SuplaContract.ChannelGroupEntry.COLUMN_NAME_ONLINE
+                  + ChannelGroupEntity.COLUMN_ONLINE
                   + " "
-                  + SuplaContract.ChannelGroupEntry.COLUMN_NAME_ONLINE
+                  + ChannelGroupEntity.COLUMN_ONLINE
                   + ", G."
-                  + SuplaContract.ChannelGroupEntry.COLUMN_NAME_TOTALVALUE
+                  + ChannelGroupEntity.COLUMN_TOTAL_VALUE
                   + " "
-                  + SuplaContract.ChannelGroupEntry.COLUMN_NAME_TOTALVALUE
+                  + ChannelGroupEntity.COLUMN_TOTAL_VALUE
                   + ", G."
-                  + SuplaContract.ChannelGroupEntry.COLUMN_NAME_LOCATIONID
+                  + ChannelGroupEntity.COLUMN_LOCATION_ID
                   + " "
-                  + SuplaContract.ChannelGroupEntry.COLUMN_NAME_LOCATIONID
+                  + ChannelGroupEntity.COLUMN_LOCATION_ID
                   + ", G."
-                  + SuplaContract.ChannelGroupEntry.COLUMN_NAME_ALTICON
+                  + ChannelGroupEntity.COLUMN_ALT_ICON
                   + " "
-                  + SuplaContract.ChannelGroupEntry.COLUMN_NAME_ALTICON
+                  + ChannelGroupEntity.COLUMN_ALT_ICON
                   + ", G."
-                  + SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON
+                  + ChannelGroupEntity.COLUMN_USER_ICON
                   + " "
-                  + SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON
+                  + ChannelGroupEntity.COLUMN_USER_ICON
                   + ", G."
-                  + SuplaContract.ChannelGroupEntry.COLUMN_NAME_FLAGS
+                  + ChannelGroupEntity.COLUMN_FLAGS
                   + " "
-                  + SuplaContract.ChannelGroupEntry.COLUMN_NAME_FLAGS
+                  + ChannelGroupEntity.COLUMN_FLAGS
                   + " "
                   + ", G."
-                  + SuplaContract.ChannelGroupEntry.COLUMN_NAME_VISIBLE
+                  + ChannelGroupEntity.COLUMN_VISIBLE
                   + " "
-                  + SuplaContract.ChannelGroupEntry.COLUMN_NAME_VISIBLE
+                  + ChannelGroupEntity.COLUMN_VISIBLE
                   + ", G."
-                  + SuplaContract.ChannelGroupEntry.COLUMN_NAME_POSITION
+                  + ChannelGroupEntity.COLUMN_POSITION
                   + " "
-                  + SuplaContract.ChannelGroupEntry.COLUMN_NAME_POSITION
+                  + ChannelGroupEntity.COLUMN_POSITION
                   + ", I."
-                  + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE1
+                  + UserIconEntity.COLUMN_IMAGE_1
                   + " "
-                  + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE1
+                  + UserIconEntity.COLUMN_IMAGE_1
                   + ", I."
-                  + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE2
+                  + UserIconEntity.COLUMN_IMAGE_2
                   + " "
-                  + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE2
+                  + UserIconEntity.COLUMN_IMAGE_2
                   + ", I."
-                  + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE3
+                  + UserIconEntity.COLUMN_IMAGE_3
                   + " "
-                  + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE3
+                  + UserIconEntity.COLUMN_IMAGE_3
                   + ", I."
-                  + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE4
+                  + UserIconEntity.COLUMN_IMAGE_4
                   + " "
-                  + SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE4
+                  + UserIconEntity.COLUMN_IMAGE_4
                   + ", G."
-                  + SuplaContract.ChannelGroupEntry.COLUMN_NAME_PROFILEID
+                  + ChannelGroupEntity.COLUMN_PROFILE_ID
                   + " "
-                  + SuplaContract.ChannelGroupEntry.COLUMN_NAME_PROFILEID
+                  + ChannelGroupEntity.COLUMN_PROFILE_ID
                   + " FROM "
-                  + SuplaContract.ChannelGroupEntry.TABLE_NAME
+                  + ChannelGroupEntity.TABLE_NAME
                   + " G"
                   + " JOIN "
-                  + SuplaContract.LocationEntry.TABLE_NAME
+                  + LocationEntity.TABLE_NAME
                   + " L"
                   + " ON (G."
-                  + SuplaContract.ChannelGroupEntry.COLUMN_NAME_LOCATIONID
+                  + ChannelGroupEntity.COLUMN_LOCATION_ID
                   + " = L."
-                  + SuplaContract.LocationEntry.COLUMN_NAME_LOCATIONID
+                  + LocationEntity.COLUMN_REMOTE_ID
                   + " AND G."
-                  + SuplaContract.ChannelGroupEntry.COLUMN_NAME_PROFILEID
+                  + ChannelGroupEntity.COLUMN_PROFILE_ID
                   + " = L."
-                  + SuplaContract.LocationEntry.COLUMN_NAME_PROFILEID
+                  + LocationEntity.COLUMN_PROFILE_ID
                   + ")"
                   + " LEFT JOIN "
-                  + SuplaContract.UserIconsEntry.TABLE_NAME
+                  + UserIconEntity.TABLE_NAME
                   + " I"
                   + " ON (G."
-                  + SuplaContract.ChannelGroupEntry.COLUMN_NAME_USERICON
+                  + ChannelGroupEntity.COLUMN_USER_ICON
                   + " = I."
-                  + SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID
+                  + UserIconEntity.COLUMN_REMOTE_ID
                   + " AND G."
-                  + SuplaContract.ChannelGroupEntry.COLUMN_NAME_PROFILEID
+                  + ChannelGroupEntity.COLUMN_PROFILE_ID
                   + " = I."
-                  + SuplaContract.UserIconsEntry.COLUMN_NAME_PROFILEID
+                  + UserIconEntity.COLUMN_PROFILE_ID
                   + ")"
                   + " WHERE G."
-                  + SuplaContract.ChannelGroupEntry.COLUMN_NAME_VISIBLE
+                  + ChannelGroupEntity.COLUMN_VISIBLE
                   + " > 0"
                   + localWhere
                   + " ORDER BY "
                   + "L."
-                  + SuplaContract.LocationEntry.COLUMN_NAME_SORT_ORDER
+                  + LocationEntity.COLUMN_SORT_ORDER
                   + ", "
                   + "L."
-                  + SuplaContract.LocationEntry.COLUMN_NAME_CAPTION
+                  + LocationEntity.COLUMN_CAPTION
                   + " COLLATE LOCALIZED, "
                   + "G."
-                  + SuplaContract.ChannelGroupEntry.COLUMN_NAME_POSITION
+                  + ChannelGroupEntity.COLUMN_POSITION
                   + ", "
                   + "G."
-                  + SuplaContract.ChannelGroupEntry.COLUMN_NAME_FUNC
+                  + ChannelGroupEntity.COLUMN_FUNCTION
                   + " DESC, "
                   + "G."
-                  + SuplaContract.ChannelGroupEntry.COLUMN_NAME_CAPTION;
+                  + ChannelGroupEntity.COLUMN_CAPTION;
 
           return sqLiteDatabase.rawQuery(sql, null);
         });
   }
 
-  private int getChannelCount(@Nullable Key<?> key) {
-    return getCount(
-        SuplaContract.ChannelEntry.TABLE_NAME,
-        key,
-        key(SuplaContract.ChannelEntry.COLUMN_NAME_PROFILEID, getCachedProfileId()));
-  }
-
   private boolean setVisible(String table, int visible, Key<Integer> key) {
-    String selection =
-        key.asSelection() + " AND " + SuplaContract.ChannelEntry.COLUMN_NAME_PROFILEID + " = ?";
+    String selection = key.asSelection() + " AND " + ChannelEntity.COLUMN_PROFILE_ID + " = ?";
     String[] selectionArgs = {String.valueOf(key.value), String.valueOf(getCachedProfileId())};
 
     ContentValues values = new ContentValues();

@@ -4,10 +4,10 @@ import android.appwidget.AppWidgetManager
 import androidx.work.Worker
 import dagger.hilt.android.EntryPointAccessors
 import org.supla.android.data.ValuesFormatter
-import org.supla.android.di.AppWidgetManagerEntryPoint
-import org.supla.android.di.SingleCallProviderEntryPoint
-import org.supla.android.di.ValuesFormatterEntryPoint
-import org.supla.android.di.WidgetPreferencesEntryPoint
+import org.supla.android.di.entrypoints.AppWidgetManagerEntryPoint
+import org.supla.android.di.entrypoints.SingleCallProviderEntryPoint
+import org.supla.android.di.entrypoints.ValuesFormatterEntryPoint
+import org.supla.android.di.entrypoints.WidgetPreferencesEntryPoint
 import org.supla.android.lib.singlecall.SingleCall
 import org.supla.android.widget.WidgetPreferences
 

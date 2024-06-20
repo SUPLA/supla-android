@@ -21,38 +21,30 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import android.database.Cursor;
 import io.reactivex.rxjava3.core.Completable;
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelGroup;
-import org.supla.android.db.ChannelValue;
 import org.supla.android.db.Location;
-import org.supla.android.lib.SuplaChannel;
 import org.supla.android.lib.SuplaChannelExtendedValue;
 import org.supla.android.lib.SuplaChannelGroup;
 import org.supla.android.lib.SuplaChannelGroupRelation;
-import org.supla.android.lib.SuplaChannelValue;
 import org.supla.android.lib.SuplaLocation;
 
 public interface ChannelRepository {
   Channel getChannel(int channelId);
 
-  ChannelValue getChannelValue(int channelId);
-
   ChannelGroup getChannelGroup(int groupId);
-
-  boolean updateChannel(SuplaChannel suplaChannel);
 
   void updateChannel(Channel channel);
 
+  void updateChannelGroup(ChannelGroup channelGroup);
+
   boolean updateChannelGroup(SuplaChannelGroup suplaChannelGroup);
 
-  boolean updateChannelValue(SuplaChannelValue channelValue, int channelId, boolean online);
-
-  boolean updateChannelExtendedValue(
+  ResultTuple updateChannelExtendedValue(
       SuplaChannelExtendedValue suplaChannelExtendedValue, int channelId);
 
   boolean updateChannelGroupRelation(SuplaChannelGroupRelation suplaChannelGroupRelation);
-
-  List<Integer> updateAllChannelGroups();
 
   int getChannelCount();
 
@@ -65,10 +57,6 @@ public interface ChannelRepository {
   boolean setChannelsOffline();
 
   Cursor getChannelListCursorForGroup(int groupId);
-
-  Cursor getChannelListCursorWithDefaultOrder();
-
-  Cursor getChannelGroupListCursor();
 
   boolean isZWaveBridgeChannelAvailable();
 
@@ -91,4 +79,7 @@ public interface ChannelRepository {
   Cursor getAllProfileChannels(Long profileId);
 
   Cursor getAllProfileChannelGroups(Long profileId);
+
+  @NotNull
+  List<Location> getAllLocations();
 }

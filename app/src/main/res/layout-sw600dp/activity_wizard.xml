@@ -8,7 +8,7 @@
         android:id="@+id/wizard_top_line"
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="@color/menubar">
+        android:background="@color/primary">
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -26,9 +26,9 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"
-        android:background="@color/menubar">
+        android:background="@color/primary">
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/wizard_next_left_part"
             android:layout_width="@dimen/wizard_btnnextl_width"
             android:layout_height="70dp"
@@ -39,10 +39,10 @@
             android:stateListAnimator="@null"
             android:textAlignment="gravity"
             android:textAllCaps="false"
-            android:textColor="@color/activity_status_bg_normal" />
+            android:textColor="@color/primary" />
 
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/wizard_next_middle_part"
             android:layout_width="wrap_content"
             android:layout_height="70dp"
@@ -55,10 +55,10 @@
             android:stateListAnimator="@null"
             android:text="@string/next"
             android:textAllCaps="false"
-            android:textColor="@color/activity_status_bg_normal"
+            android:textColor="@color/primary"
             android:textSize="25sp" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/wizard_next_right_part"
             android:layout_width="@dimen/wizard_btnnextr_width"
             android:layout_height="70dp"
@@ -78,7 +78,7 @@
         android:layout_below="@+id/wizard_top_line"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
-        android:background="@color/menubar">
+        android:background="@color/primary">
 
     </RelativeLayout>
 

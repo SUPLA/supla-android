@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto">
+
+  <merge>
+
+    <TextView
+      android:id="@+id/device_state_label"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginEnd="@dimen/distance_tiny"
+      android:text="@string/details_timer_state_label"
+      android:textAllCaps="true"
+      android:textAppearance="@style/AppTheme.TextAppearance.Body2"
+      android:textColor="@color/gray"
+      app:layout_constraintBottom_toBottomOf="@+id/device_state_icon"
+      app:layout_constraintEnd_toStartOf="@+id/device_state_icon"
+      app:layout_constraintHorizontal_chainStyle="packed"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="@+id/device_state_icon" />
+
+    <ImageView
+      android:id="@+id/device_state_icon"
+      android:layout_width="25dp"
+      android:layout_height="25dp"
+      android:layout_marginTop="@dimen/distance_default"
+      android:scaleType="fitCenter"
+      app:layout_constraintEnd_toStartOf="@+id/device_state_value"
+      app:layout_constraintStart_toEndOf="@+id/device_state_label"
+      app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+      android:id="@+id/device_state_value"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="@dimen/distance_tiny"
+      android:fontFamily="@font/open_sans_bold"
+      android:textAppearance="@style/AppTheme.TextAppearance.Body2"
+      android:textColor="@color/on_background"
+      app:layout_constraintBottom_toBottomOf="@+id/device_state_icon"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toEndOf="@+id/device_state_icon"
+      app:layout_constraintTop_toTopOf="@+id/device_state_icon" />
+  </merge>
+</layout>

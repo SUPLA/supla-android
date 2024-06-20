@@ -19,23 +19,72 @@ package org.supla.android.widget
  */
 
 import android.appwidget.AppWidgetManager
+import android.content.ComponentName
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
 import org.supla.android.extensions.getAllWidgetIds
+import org.supla.android.extensions.getOnOffWidgetIds
+import org.supla.android.extensions.getSingleWidgetIds
+import org.supla.android.widget.onoff.OnOffWidget
+import org.supla.android.widget.onoff.updateOnOffWidget
+import org.supla.android.widget.onoff.updateOnOffWidgets
+import org.supla.android.widget.shared.configuration.ItemType
+import org.supla.android.widget.single.updateSingleWidget
+import org.supla.android.widget.single.updateSingleWidgets
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class WidgetManager @Inject constructor(
-        @ApplicationContext private val context: Context,
-        private val appWidgetManager: AppWidgetManager,
-        private val widgetPreferences: WidgetPreferences
+  @ApplicationContext private val context: Context,
+  private val appWidgetManager: AppWidgetManager,
+  private val widgetPreferences: WidgetPreferences
 ) {
 
-    fun hasProfileWidgets(profileId: Long): Boolean {
-        return appWidgetManager.getAllWidgetIds(context).filter {
-            val widgetConfig = widgetPreferences.getWidgetConfiguration(it) ?: return@filter false
-            return@filter widgetConfig.profileId == profileId
-        }.isNotEmpty()
+  fun findWidgetConfig(profileId: Long, channelId: Int): Pair<Int, WidgetConfiguration>? {
+    appWidgetManager.getAllWidgetIds(context).forEach { widgetId ->
+      widgetPreferences.getWidgetConfiguration(widgetId)?.let { configuration ->
+        if (configuration.profileId == profileId && configuration.itemId == channelId && configuration.itemType == ItemType.CHANNEL) {
+          return Pair(widgetId, configuration)
+        }
+      }
     }
+
+    return null
+  }
+
+  fun updateWidget(widgetId: Int) {
+    appWidgetManager.getSingleWidgetIds(context)?.let {
+      if (it.contains(widgetId)) {
+        updateSingleWidget(context, widgetId)
+        return
+      }
+    }
+
+    appWidgetManager.getOnOffWidgetIds(context)?.let {
+      if (it.contains(widgetId)) {
+        updateOnOffWidget(context, widgetId)
+        return
+      }
+    }
+  }
+
+  fun updateAllWidgets() {
+    appWidgetManager.getAppWidgetIds(ComponentName(context, OnOffWidget::class.java))?.let {
+      updateOnOffWidgets(context, it)
+    }
+    appWidgetManager.getSingleWidgetIds(context)?.let {
+      updateSingleWidgets(context, it)
+    }
+  }
+
+  fun onProfileRemoved(profileId: Long) {
+    appWidgetManager.getAllWidgetIds(context).forEach {
+      val widgetConfig = widgetPreferences.getWidgetConfiguration(it) ?: return@forEach
+      if (widgetConfig.profileId == profileId) {
+        widgetPreferences.setWidgetConfiguration(it, widgetConfig.copy(profileId = INVALID_PROFILE_ID))
+        updateWidget(it)
+      }
+    }
+  }
 }

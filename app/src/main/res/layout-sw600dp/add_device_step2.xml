@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/menubar">
+    android:background="@color/primary">
 
     <CheckBox
         android:id="@+id/wizard_cb_save_pwd"
@@ -37,7 +37,8 @@
             android:background="@android:color/white"
             android:padding="5dp"
             android:layout_weight="1"
-            android:textSize="30sp" />
+            android:textSize="30sp"
+            android:textColor="#000000" />
 
         <EditText
             android:id="@+id/wizard_wifi_name"
@@ -49,9 +50,10 @@
             android:inputType="text"
             android:padding="5dp"
             android:textSize="30sp"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            android:textColor="#000000"/>
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/wizard_edit_button"
             android:layout_width="50dp"
             android:layout_height="50dp"
@@ -80,9 +82,10 @@
             android:background="@color/notification_bg"
             android:inputType="textPassword"
             android:padding="5dp"
-            android:textSize="30sp" />
+            android:textSize="30sp"
+            android:textColor="#000000" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/wizard_look_button"
             android:layout_width="50dp"
             android:layout_height="50dp"

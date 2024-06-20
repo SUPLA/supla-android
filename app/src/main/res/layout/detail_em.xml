@@ -5,7 +5,7 @@
     android:id="@+id/emrl_Main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/detail_rs_bg"
+    android:background="@color/background"
     android:visibility="visible">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -38,7 +38,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginBottom="5dp"
-            android:background="@android:color/black" />
+            android:background="@color/on_background" />
 
         <ImageView
             android:id="@+id/emimgIcon"
@@ -49,7 +49,7 @@
             android:layout_centerVertical="true"
             android:layout_marginStart="15dp"
             android:layout_marginLeft="15dp"
-            android:background="@drawable/electricitymeter"
+            android:background="@drawable/fnc_electricity_meter"
             android:visibility="visible" />
 
         <LinearLayout
@@ -156,7 +156,7 @@
             android:layout_marginBottom="-10dp"
             android:indeterminateOnly="true"
             android:scaleY="5"
-            android:secondaryProgressTint="@color/activity_bg" />
+            android:secondaryProgressTint="@color/background" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -180,7 +180,7 @@
             android:orientation="horizontal"
             tools:ignore="NotSibling">
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/embtn_Phase1"
                 android:layout_width="80dp"
                 android:layout_height="35dp"
@@ -191,7 +191,7 @@
                 android:text="@string/em_phase1"
                 android:textSize="12sp" />
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/embtn_Phase2"
                 android:layout_width="80dp"
                 android:layout_height="35dp"
@@ -202,7 +202,7 @@
                 android:text="@string/em_phase2"
                 android:textSize="12sp" />
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/embtn_Phase3"
                 android:layout_width="80dp"
                 android:layout_height="35dp"
@@ -213,7 +213,7 @@
                 android:text="@string/em_phase3"
                 android:textSize="12sp" />
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/embtn_Phase123"
                 android:layout_width="80dp"
                 android:layout_height="35dp"
@@ -267,6 +267,18 @@
         android:layout_marginBottom="10dp"
         android:visibility="visible">
 
+        <TextView
+          android:id="@+id/emOfflineText"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_alignParentTop="true"
+          android:layout_centerHorizontal="true"
+          android:layout_marginBottom="16dp"
+          android:orientation="vertical"
+          android:gravity="center_horizontal"
+          android:visibility="gone"
+          android:text="@string/channel_offline"/>
+
         <com.github.mikephil.charting.charts.CombinedChart
             android:id="@+id/emCombinedChart"
             android:layout_width="match_parent"
@@ -283,7 +295,7 @@
             android:id="@+id/emllDetails"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignParentTop="true"
+            android:layout_below="@+id/emOfflineText"
             android:layout_centerHorizontal="true"
             android:orientation="vertical"
             android:visibility="visible">

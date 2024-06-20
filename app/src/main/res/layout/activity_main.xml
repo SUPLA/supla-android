@@ -1,73 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:id="@+id/coordinator"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@color/channel_cell">
 
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+  <include layout="@layout/inc_toolbar" />
+
+  <FrameLayout
+    android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/channel_cell"
-    tools:context=".MainActivity">
- 
-  <androidx.coordinatorlayout.widget.CoordinatorLayout
-      android:id="@+id/coordinator"
+    android:layout_marginTop="@dimen/top_bar_height">
+
+    <androidx.fragment.app.FragmentContainerView
+      android:id="@+id/nav_host_fragment"
+      android:name="androidx.navigation.fragment.NavHostFragment"
       android:layout_width="match_parent"
-      android:layout_height="match_parent">
+      android:layout_height="match_parent"
+      app:defaultNavHost="true" />
+
+    <org.supla.android.MenuItemsLayout
+      android:id="@+id/main_menu"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent" />
 
     <RelativeLayout
-        android:id="@+id/inner_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+      android:id="@+id/loadingIndicator"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="@color/dialog_scrim"
+      android:visibility="gone">
 
-      <org.supla.android.listview.ChannelListView
-          android:id="@+id/channelsListView"
-          android:paddingBottom="@dimen/design_bottom_navigation_height"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent" />
-
-      <org.supla.android.listview.ChannelListView
-          android:id="@+id/channelGroupListView"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:paddingBottom="@dimen/design_bottom_navigation_height"
-          android:visibility="gone" />
-
-      <androidx.fragment.app.FragmentContainerView
-          android:id="@+id/scenesView"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:paddingBottom="@dimen/design_bottom_navigation_height"
-          android:visibility="invisible">
-        <fragment
-            android:name="org.supla.android.scenes.ScenesFragment"
-            android:id="@+id/scenesFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-      </androidx.fragment.app.FragmentContainerView>
-
+      <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:indeterminate="true" />
     </RelativeLayout>
 
-    <com.google.android.material.bottomappbar.BottomAppBar
-        android:id="@+id/bottombar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:contentInsetLeft="0dp"
-        app:contentInsetStart="0dp"
-        app:contentInsetRight="0dp"
-        app:contentInsetEnd="0dp"
-        android:layout_gravity="bottom">
-      <com.google.android.material.bottomnavigation.BottomNavigationView
-          android:id="@+id/bottomnavbar"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:background="@color/channel_cell"
-          android:layout_gravity="start"
-          app:menu="@menu/bottom_dashboard"
-          app:itemIconTint="@drawable/bottom_nav_bar_selector"
-          app:itemTextColor="@drawable/bottom_nav_bar_selector"
-          app:labelVisibilityMode="labeled"
-          />
-    </com.google.android.material.bottomappbar.BottomAppBar>
+    <include layout="@layout/inc_new_gesture_info" />
+  </FrameLayout>
 
-  </androidx.coordinatorlayout.widget.CoordinatorLayout>
-</RelativeLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

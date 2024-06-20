@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:id="@+id/main_nav_graph"
+  app:startDestination="@id/main_fragment">
+
+  <fragment
+    android:id="@+id/main_fragment"
+    android:name="org.supla.android.features.main.MainFragment"
+    android:label="@string/menubar_title" />
+
+  <fragment
+    android:id="@+id/legacy_detail_fragment"
+    android:name="org.supla.android.features.details.legacydetail.LegacyDetailFragment" />
+
+  <fragment
+    android:id="@+id/application_settings_fragment"
+    android:name="org.supla.android.features.appsettings.SettingsFragment"
+    android:label="@string/menubar_appsettings" />
+
+  <fragment
+    android:id="@+id/location_ordering_fragment"
+    android:name="org.supla.android.cfg.LocationOrderingFragment"
+    android:label="@string/location_ordering" />
+
+  <fragment
+    android:id="@+id/switch_detail_fragment"
+    android:name="org.supla.android.features.details.switchdetail.SwitchDetailFragment" />
+
+  <fragment
+    android:id="@+id/thermostat_detail_fragment"
+    android:name="org.supla.android.features.details.thermostatdetail.ThermostatDetailFragment" />
+
+  <fragment
+    android:id="@+id/thermometer_detail_fragment"
+    android:name="org.supla.android.features.details.thermometerdetail.ThermometerDetailFragment" />
+
+  <fragment
+    android:id="@+id/gpm_detail_fragment"
+    android:name="org.supla.android.features.details.gpmdetail.GpmDetailFragment" />
+
+  <fragment
+    android:id="@+id/window_detail_fragment"
+    android:name="org.supla.android.features.details.windowdetail.WindowDetailFragment" />
+
+  <fragment
+    android:id="@+id/notifications_log_fragment"
+    android:name="org.supla.android.features.notificationslog.NotificationsLogFragment"
+    android:label="@string/menu_notifications" />
+
+  <fragment
+    android:id="@+id/device_catalog_fragment"
+    android:name="org.supla.android.features.devicecatalog.DeviceCatalogFragment"
+    android:label="@string/menu_device_catalog" />
+</navigation>

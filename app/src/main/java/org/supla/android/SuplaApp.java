@@ -20,37 +20,54 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import static org.supla.android.widget.shared.WidgetReloadWorker.WORK_ID;
 
+import android.app.UiModeManager;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.media.AudioAttributes;
 import android.net.wifi.WifiManager;
 import android.os.Build;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.hilt.work.HiltWorkerFactory;
+import androidx.lifecycle.ProcessLifecycleOwner;
 import androidx.multidex.MultiDexApplication;
+import androidx.work.Configuration.Builder;
 import androidx.work.Constraints;
 import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.NetworkType;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
+import com.github.mikephil.charting.utils.Utils;
 import dagger.hilt.android.HiltAndroidApp;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
+import org.supla.android.core.SuplaAppApi;
+import org.supla.android.core.networking.suplaclient.SuplaClientBuilder;
+import org.supla.android.core.notifications.NotificationsHelper;
+import org.supla.android.core.observers.AppLifecycleObserver;
 import org.supla.android.data.ValuesFormatter;
+import org.supla.android.data.model.general.NightModeSetting;
+import org.supla.android.db.DbHelper;
+import org.supla.android.db.room.app.AppDatabase;
+import org.supla.android.features.icons.LoadUserIconsIntoCacheWorker;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaClientMessageHandler;
 import org.supla.android.lib.SuplaClientMsg;
 import org.supla.android.lib.SuplaOAuthToken;
-import org.supla.android.profile.ProfileIdHolder;
 import org.supla.android.profile.ProfileManager;
 import org.supla.android.restapi.SuplaRestApiClientTask;
 import org.supla.android.widget.shared.WidgetReloadWorker;
 
 @HiltAndroidApp
 public class SuplaApp extends MultiDexApplication
-    implements SuplaClientMessageHandler.OnSuplaClientMessageListener, ValuesFormatterProvider {
+    implements SuplaClientMessageHandler.OnSuplaClientMessageListener,
+        ValuesFormatterProvider,
+        SuplaAppApi {
 
   private static final Object _lck1 = new Object();
   private static final Object _lck3 = new Object();
@@ -61,13 +78,18 @@ public class SuplaApp extends MultiDexApplication
   private Typeface mTypefaceOpenSansRegular;
   private Typeface mTypefaceOpenSansBold;
   private SuplaOAuthToken _OAuthToken;
-  private ArrayList<SuplaRestApiClientTask> _RestApiClientTasks =
-      new ArrayList<SuplaRestApiClientTask>();
+  private final ArrayList<SuplaRestApiClientTask> _RestApiClientTasks = new ArrayList<>();
   private static long lastWifiScanTime;
 
   @Inject ProfileManager profileManager;
-  @Inject ProfileIdHolder profileIdHolder;
   @Inject ValuesFormatter valuesFormatter;
+  @Inject NotificationsHelper notificationsHelper;
+  @Inject AppLifecycleObserver appLifecycleObserver;
+  @Inject SuplaClientBuilder suplaClientBuilder;
+  @Inject HiltWorkerFactory workerFactory;
+  @Inject AppDatabase appDatabase;
+  @Inject Preferences preferences;
+  @Inject UiModeManager modeManager;
 
   public SuplaApp() {
     SuplaClientMessageHandler.getGlobalInstance().registerMessageListener(this);
@@ -80,12 +102,30 @@ public class SuplaApp extends MultiDexApplication
   @Override
   public void onCreate() {
     super.onCreate();
+    NightModeSetting nightModeSetting = preferences.getNightMode();
+    if (VERSION.SDK_INT < VERSION_CODES.S) {
+      AppCompatDelegate.setDefaultNightMode(nightModeSetting.appCompatDelegateValue());
+    }
+    if (nightModeSetting == NightModeSetting.UNSET) {
+      preferences.setNightMode(NightModeSetting.NEVER);
+      if (VERSION.SDK_INT >= VERSION_CODES.S) {
+        // If unset, expected is that the app will start without night mode.
+        modeManager.setApplicationNightMode(nightModeSetting.modeManagerValue());
+      }
+    }
     SuplaApp._SuplaApp = this;
-    profileIdHolder.setProfileId(profileManager.getCurrentProfile().getId());
+
+    notificationsHelper.registerForToken();
+    ProcessLifecycleOwner.get().getLifecycle().addObserver(appLifecycleObserver);
 
     SuplaFormatter.sharedFormatter();
 
     AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+    WorkManager.initialize(this, new Builder().setWorkerFactory(workerFactory).build());
+    Utils.init(this);
+
+    // Needed to trigger database migration through Room.
+    migrateDatabase();
 
     enqueueWidgetRefresh();
   }
@@ -114,7 +154,7 @@ public class SuplaApp extends MultiDexApplication
 
     synchronized (_lck1) {
       if (_SuplaClient == null || _SuplaClient.canceled()) {
-        _SuplaClient = new SuplaClient(context, oneTimePassword, profileManager);
+        _SuplaClient = suplaClientBuilder.build(context, oneTimePassword);
         _SuplaClient.start();
       }
 
@@ -124,7 +164,7 @@ public class SuplaApp extends MultiDexApplication
     return result;
   }
 
-  public SuplaClient SuplaClientInitIfNeed(Context context) {
+  public SuplaClient SuplaClientInitIfNeed(@NonNull Context context) {
     return SuplaClientInitIfNeed(context, null);
   }
 
@@ -154,10 +194,7 @@ public class SuplaApp extends MultiDexApplication
       if (_OAuthToken != null && _OAuthToken.isAlive()) {
         result = new SuplaOAuthToken(_OAuthToken);
       }
-
       _RestApiClientTasks.add(task);
-      // Trace.d("RegisterRestApiClientTask",
-      //        "taskCount: "+Integer.toString(_RestApiClientTasks.size()));
     }
 
     return result;
@@ -166,9 +203,6 @@ public class SuplaApp extends MultiDexApplication
   public void UnregisterRestApiClientTask(SuplaRestApiClientTask task) {
     synchronized (_lck3) {
       _RestApiClientTasks.remove(task);
-
-      // Trace.d("UnregisterRestApiClientTask",
-      //        "taskCount: "+Integer.toString(_RestApiClientTasks.size()));
     }
   }
 
@@ -249,6 +283,7 @@ public class SuplaApp extends MultiDexApplication
     }
   }
 
+  @NonNull
   public ValuesFormatter getValuesFormatter() {
     return valuesFormatter;
   }
@@ -261,10 +296,39 @@ public class SuplaApp extends MultiDexApplication
     Constraints constraints =
         new Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build();
     PeriodicWorkRequest request =
-        new PeriodicWorkRequest.Builder(WidgetReloadWorker.class, 30, TimeUnit.MINUTES)
+        new PeriodicWorkRequest.Builder(
+                WidgetReloadWorker.class,
+                PeriodicWorkRequest.MIN_PERIODIC_INTERVAL_MILLIS,
+                TimeUnit.MINUTES)
             .setConstraints(constraints)
+            .addTag(WORK_ID)
             .build();
-    WorkManager.getInstance()
-        .enqueueUniquePeriodicWork(WORK_ID, ExistingPeriodicWorkPolicy.KEEP, request);
+    WorkManager.getInstance(this)
+        .enqueueUniquePeriodicWork(
+            WORK_ID, ExistingPeriodicWorkPolicy.CANCEL_AND_REENQUEUE, request);
+    LoadUserIconsIntoCacheWorker.Companion.start(this);
+  }
+
+  private void migrateDatabase() {
+    try {
+      appDatabase.getOpenHelper().getReadableDatabase();
+    } catch (IllegalStateException exception) {
+      if (BuildConfig.DEBUG) {
+        throw exception;
+      }
+
+      Trace.e(
+          SuplaApp.class.getSimpleName(),
+          "Could not migrated database, trying to delete it",
+          exception);
+      boolean result = deleteDatabase(DbHelper.DATABASE_NAME);
+      Trace.e(
+          SuplaApp.class.getSimpleName(),
+          "Database deletion finished with " + (result ? "success" : "failure"));
+
+      if (result) {
+        preferences.setAnyAccountRegistered(false);
+      }
+    }
   }
 }

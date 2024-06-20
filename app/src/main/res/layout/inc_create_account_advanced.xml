@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools">
+
+  <data>
+
+    <import type="android.view.View" />
+
+    <variable
+      name="viewModel"
+      type="org.supla.android.features.createaccount.CreateAccountViewModel" />
+  </data>
+
+  <RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:clickable="true"
+    android:focusableInTouchMode="true"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="org.supla.android.CfgActivity">
+
+    <TextView
+      android:id="@+id/profile_name_label"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentTop="true"
+      android:layout_marginStart="2dp"
+      android:layout_marginTop="21dp"
+      android:fontFamily="@font/open_sans_regular"
+      android:text="@string/profile_name_label"
+      android:textAppearance="@style/AppTheme.TextAppearance.Body2"
+      android:textSize="9sp" />
+
+    <EditText
+      android:id="@+id/cfg_profile_name"
+      style="@style/AppTheme.EditText"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/profile_name_label"
+      android:layout_marginTop="@dimen/form_label_dist"
+      android:layout_marginBottom="@dimen/form_label_spacing"
+      android:text="@{viewModel.viewState.accountName}" />
+
+    <org.supla.android.ui.SegmentedButtonGroup
+      android:id="@+id/authType"
+      style="@style/SegmentedButtonGroupDayOnly"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/cfg_profile_name"
+      android:layout_centerHorizontal="true"
+      android:layout_marginLeft="0dp"
+      android:layout_marginTop="@dimen/advanced_top_offset"
+      android:layout_marginRight="0dp">
+
+      <org.supla.android.ui.SegmentedButton
+        style="@style/SegmentedButton"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/segmented_button_height"
+        android:layout_margin="4dp"
+        android:layout_weight="1"
+        android:text="@string/cfg_label_email_auth" />
+
+      <org.supla.android.ui.SegmentedButton
+        style="@style/SegmentedButton"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/segmented_button_height"
+        android:layout_margin="4dp"
+        android:layout_weight="1"
+        android:text="@string/cfg_label_access_id_auth" />
+
+    </org.supla.android.ui.SegmentedButtonGroup>
+
+    <FrameLayout
+      android:id="@+id/authFormWrapper"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/authType"
+      android:layout_centerHorizontal="true">
+
+      <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/emailAuthForm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:visibility="@{viewModel.viewState.authorizeByEmail ? View.VISIBLE : View.GONE}">
+
+        <TextView
+          android:id="@+id/cfg_label_email"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="2dp"
+          android:layout_marginTop="@dimen/form_label_spacing"
+          android:fontFamily="@font/open_sans_regular"
+          android:text="@string/email"
+          android:textAppearance="@style/AppTheme.TextAppearance.Body2"
+          android:textSize="9sp"
+          app:layout_constraintLeft_toLeftOf="parent"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+          android:id="@+id/cfg_email"
+          style="@style/AppTheme.EditText"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="@dimen/form_label_dist"
+          android:text="@{viewModel.viewState.emailAddress}"
+          app:layout_constraintLeft_toLeftOf="parent"
+          app:layout_constraintRight_toRightOf="parent"
+          app:layout_constraintTop_toBottomOf="@id/cfg_label_email" />
+
+        <TextView
+          android:id="@+id/cfg_label_svr_address_email"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="2dp"
+          android:layout_marginTop="@dimen/form_label_spacing"
+          android:text="@string/server_address"
+          android:textAppearance="@style/AppTheme.TextAppearance.Body2"
+          android:textSize="9sp"
+          app:layout_constraintLeft_toLeftOf="@id/edServerAddrEmail"
+          app:layout_constraintStart_toStartOf="@id/edServerAddrEmail"
+          app:layout_constraintTop_toBottomOf="@id/cfg_email" />
+
+        <EditText
+          android:id="@+id/edServerAddrEmail"
+          style="@style/AppTheme.EditText"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="@dimen/form_label_dist"
+          android:layout_marginEnd="25dp"
+          android:importantForAutofill="no"
+          android:inputType="textUri|textNoSuggestions"
+          android:text="@{viewModel.viewState.emailAddressServer}"
+          app:layout_constraintLeft_toLeftOf="@id/cfg_email"
+          app:layout_constraintRight_toLeftOf="@id/cb_auto_label"
+          app:layout_constraintTop_toBottomOf="@id/cfg_label_svr_address_email" />
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+          android:id="@+id/edServerAddrAutoEmail"
+          style="@style/CheckBox"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:onClick="@{() -> viewModel.toggleServerAutoDiscovery()}"
+          android:textAllCaps="false"
+          app:layout_constrainedWidth="true"
+          app:layout_constraintBaseline_toBaselineOf="@id/edServerAddrEmail"
+          app:layout_constraintRight_toRightOf="parent" />
+
+        <TextView
+          android:id="@+id/cb_auto_label"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:fontFamily="@font/open_sans_regular"
+          android:text="@string/cfg_checkbox_server_auto"
+          android:textSize="@dimen/default_text_size"
+          app:layout_constraintBaseline_toBaselineOf="@id/edServerAddrEmail"
+          app:layout_constraintRight_toLeftOf="@id/edServerAddrAutoEmail" />
+
+      </androidx.constraintlayout.widget.ConstraintLayout>
+
+      <RelativeLayout
+        android:id="@+id/cfg_accessIdAuthForm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="@{viewModel.viewState.authorizeByEmail ? View.GONE : View.VISIBLE}">
+
+        <TextView
+          android:id="@+id/cfg_label_access_id"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignStart="@id/edAccessID"
+          android:layout_alignParentTop="true"
+          android:layout_marginStart="2dp"
+          android:layout_marginTop="@dimen/form_label_spacing"
+          android:layout_marginBottom="@dimen/form_label_dist"
+          android:text="@string/access_id"
+          android:textAppearance="@style/AppTheme.TextAppearance.Body2"
+          android:textSize="9sp" />
+
+        <EditText
+          android:id="@+id/edAccessID"
+          style="@style/AppTheme.EditText"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_below="@+id/cfg_label_access_id"
+          android:layout_alignParentStart="true"
+          android:inputType="numberDecimal"
+          android:text="@{viewModel.viewState.accessIdentifier}" />
+
+        <TextView
+          android:id="@+id/cfg_label_access_pwd"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_below="@id/edAccessID"
+          android:layout_alignStart="@id/edAccessIDpwd"
+          android:layout_marginStart="2dp"
+          android:layout_marginTop="@dimen/form_label_spacing"
+          android:layout_marginBottom="@dimen/form_label_dist"
+          android:text="@string/password"
+          android:textAppearance="@style/AppTheme.TextAppearance.Body2"
+          android:textSize="9sp" />
+
+        <EditText
+          android:id="@+id/edAccessIDpwd"
+          style="@style/AppTheme.EditText"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_below="@id/cfg_label_access_pwd"
+          android:layout_centerVertical="true"
+          android:inputType="textPassword"
+          android:text="@{viewModel.viewState.accessIdentifierPassword}" />
+
+        <TextView
+          android:id="@+id/cfg_label_svr_address"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_below="@id/edAccessIDpwd"
+          android:layout_alignStart="@id/edServerAddr"
+          android:layout_marginStart="2dp"
+          android:layout_marginTop="@dimen/form_label_spacing"
+          android:layout_marginBottom="@dimen/form_label_dist"
+          android:fontFamily="@font/open_sans_regular"
+          android:text="@string/server_address"
+          android:textAppearance="@style/AppTheme.TextAppearance.Body2"
+          android:textSize="9sp" />
+
+        <EditText
+          android:id="@+id/edServerAddr"
+          style="@style/AppTheme.EditText"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_below="@id/cfg_label_svr_address"
+          android:layout_alignParentStart="true"
+          android:importantForAutofill="no"
+          android:inputType="textUri|textNoSuggestions"
+          android:text="@{viewModel.viewState.accessIdentifierServer}" />
+
+        <TextView
+          android:id="@+id/addDeviceWarning"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_below="@id/edServerAddr"
+          android:layout_centerHorizontal="true"
+          android:layout_marginTop="@dimen/form_label_spacing"
+          android:background="@drawable/rounded_border"
+          android:fontFamily="@font/open_sans_regular"
+          android:gravity="center"
+          android:padding="4dp"
+          android:text="@string/add_device_warning"
+          android:textColor="@color/red_alert"
+          android:textSize="14sp" />
+      </RelativeLayout>
+    </FrameLayout>
+
+  </RelativeLayout>
+
+
+</layout>

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto">
+
+  <TextView
+    android:id="@+id/details_timer_header_text"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/distance_default"
+    android:gravity="center"
+    android:textAppearance="@style/AppTheme.TextAppearance.Subtitle2"
+    app:layout_constraintTop_toTopOf="parent" />
+
+  <org.supla.android.ui.views.SegmentedComponent
+    android:id="@+id/details_timer_action_switch"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="24dp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/details_timer_header_text" />
+
+  <View
+    android:layout_width="0dp"
+    android:layout_height="40dp"
+    android:layout_marginStart="@dimen/distance_default"
+    android:layout_marginEnd="@dimen/distance_default"
+    android:background="@drawable/bg_detail_timer_picker"
+    app:layout_constraintBottom_toBottomOf="@+id/details_timer_minute"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="@+id/details_timer_minute" />
+
+  <NumberPicker
+    android:id="@+id/details_timer_hour"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="8dp"
+    android:descendantFocusability="blocksDescendants"
+    android:theme="@style/SuplaNumberPicker"
+    app:layout_constraintEnd_toStartOf="@+id/details_timer_minute"
+    app:layout_constraintHorizontal_chainStyle="spread"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="@+id/details_timer_minute" />
+
+  <NumberPicker
+    android:id="@+id/details_timer_minute"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="24dp"
+    android:descendantFocusability="blocksDescendants"
+    android:theme="@style/SuplaNumberPicker"
+    app:layout_constraintEnd_toStartOf="@+id/details_timer_second"
+    app:layout_constraintStart_toEndOf="@+id/details_timer_hour"
+    app:layout_constraintTop_toBottomOf="@id/details_timer_action_switch" />
+
+  <NumberPicker
+    android:id="@+id/details_timer_second"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="8dp"
+    android:descendantFocusability="blocksDescendants"
+    android:theme="@style/SuplaNumberPicker"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toEndOf="@+id/details_timer_minute"
+    app:layout_constraintTop_toTopOf="@+id/details_timer_minute" />
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/details_timer_minute">
+
+    <View
+      android:id="@+id/details_timer_divider"
+      android:layout_width="match_parent"
+      android:layout_height="1dp"
+      android:layout_marginTop="@dimen/distance_default"
+      android:background="@color/background" />
+
+    <TextView
+      android:id="@+id/details_timer_info_text"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="@dimen/distance_default"
+      android:layout_marginTop="@dimen/distance_default"
+      android:layout_marginEnd="@dimen/distance_default"
+      android:gravity="center"
+      android:textAppearance="@style/AppTheme.TextAppearance.Body2"
+      android:textColor="@color/gray" />
+
+    <androidx.appcompat.widget.AppCompatButton
+      android:id="@+id/details_timer_edit_cancel_button"
+      style="@style/AppTheme.Button.Outlined"
+      android:layout_width="match_parent"
+      android:layout_marginStart="@dimen/distance_default"
+      android:layout_marginTop="@dimen/distance_default"
+      android:layout_marginEnd="@dimen/distance_default"
+      android:text="@string/details_timer_edit_cancel" />
+
+    <androidx.appcompat.widget.AppCompatButton
+      android:id="@+id/details_timer_start_button"
+      style="@style/AppTheme.Button.Contained"
+      android:layout_width="match_parent"
+      android:layout_marginStart="@dimen/distance_default"
+      android:layout_marginTop="@dimen/distance_default"
+      android:layout_marginEnd="@dimen/distance_default"
+      android:layout_marginBottom="@dimen/distance_default" />
+  </LinearLayout>
+
+</merge>

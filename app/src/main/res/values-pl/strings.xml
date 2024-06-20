@@ -1,512 +1,683 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="confirm_button_text">OK</string>
-    <string name="profiles_title">Konta</string>
-    <string name="profile_name_label">NAZWA KONTA</string>
-    <string name="form_cannot_delete_active_profile">Nie można usunąć aktywnego konta</string>
-    <string name="delete_account">Usuń</string>
+<resources xmlns:tools="http://schemas.android.com/tools">
+  <string name="confirm_button_text">OK</string>
+  <string name="profiles_title">Konta</string>
+  <string name="profile_name_label">NAZWA KONTA</string>
+  <string name="delete_account">Usuń</string>
 
-    <string translatable="false" name="delete_account_confirm_title">Usuwanie konta</string>
-    <string translatable="false" name="delete_account_confirm_message">Czy na pewno chcesz usunąć konto?</string>
-    <string name="delete_account_confirm_message_with_widgets">Czy na pewno chcesz usunąć konto? Potwierdzenie będzie oznaczało usunięcie powiązanych widżetów.</string>
-    <string name="profile_default_name">Domyślne</string>
-    <string name="profile_select_active">Aktywne konto</string>
-    <string name="profile_act_info">Dotknij konta aby się zalogować</string>
-    <string name="form_error">Błąd</string>
-    <string name="form_profile_name_missing">Podaj nazwę konta</string>
-    <string name="form_profile_required_data_missing">Uzupełnij wymagane dane</string>
-    <string name="form_profile_duplicate" translate="false">Już istnieje konto o tej nazwie</string>
-    <string name="add_account">Dodaj konto</string>
-    <string name="edit_account">Edytuj konto</string>
-    <string name="dont_have_account_yet">Nie masz jeszcze konta w Supla Cloud?</string>
+  <string name="delete_account_confirm_message" translatable="false">Czy na pewno chcesz usunąć konto?</string>
+  <string name="delete_account_confirm_message_with_widgets">Czy na pewno chcesz usunąć konto? Potwierdzenie będzie oznaczało usunięcie powiązanych widżetów.</string>
+  <string name="profile_default_name">Domyślne</string>
+  <string name="profile_select_active">Aktywne konto</string>
+  <string name="profile_act_info">Dotknij konta aby się zalogować</string>
+  <string name="form_error">Błąd</string>
+  <string name="form_profile_name_missing">Podaj nazwę konta</string>
+  <string name="form_profile_required_data_missing">Uzupełnij wymagane dane</string>
+  <string name="form_profile_duplicate" translate="false">Już istnieje konto o tej nazwie</string>
+  <string name="add_account">Dodaj konto</string>
+  <string name="edit_account">Edytuj konto</string>
+  <string name="dont_have_account_yet">Nie masz jeszcze konta w Supla Cloud?</string>
 
 
-    <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=QYN932S5UQG8N</string>
-    <string name="create_url">https://cloud.supla.org/register?lang=pl</string>
-    <string name="forumpage_url">https://forum.supla.org</string>
+  <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=QYN932S5UQG8N</string>
+  <string name="create_url">https://cloud.supla.org/register?lang=pl</string>
+  <string name="delete_url">https://{SERVER_ADDRESS}/db99845855b2ecbfecca9a095062b96c3e27703f?lang=pl</string>
+  <string name="forumpage_url">https://forum.supla.org</string>
 
-    <string name="version">wersja</string>
+  <string name="version">wersja</string>
 
-    <string name="about">O programie</string>
-    <string name="settings">Ustawienia</string>
-    <string name="add_device">Dodaj urządzenie</string>
+  <string name="about">O programie</string>
+  <string name="settings">Ustawienia</string>
+  <string name="add_device">Dodaj urządzenie</string>
+  <string name="menu_notifications" translatable="false">Historia powiadomień</string>
 
-    <string name="status_connecting">Łączenie...</string>
-    <string name="status_unknown_err">Nieznany błąd</string>
-    <string name="status_temporarily_unavailable">Usługa tymczasowo niedostępna</string>
-    <string name="status_bad_credentials">Błędne poświadczenia</string>
-    <string name="status_climit_exceded">Przekroczony limit aplikacji klienckich</string>
-    <string name="status_version_error">Niekompatybilna wersja serwera</string>
-    <string name="status_reg_disabled">Rejestracja jest obecnie wyłączona. Zaloguj się do \"Supla Cloud\" i przełącz rejestrację klientów na AKTYWNĄ w zakładce \"Smartfony\".</string>
-    <string name="status_access_id_not_assigned">To urządzenie nie ma przypisanego identyfikatora dostępu. Przejdź na stronę \"Supla Cloud\" i w zakładce \"Smartfony\" przypisz odpowiedni identyfikator.</string>
-    <string name="status_device_disabled">Urządzenie jest wyłączone. Zaloguj się do \"Supla Cloud\" i włącz ten smrtfon w zakładce \"Smartfony\".</string>
-    <string name="status_accessid_disabled">Identyfikator dostępu jest wyłączony</string>
+  <string name="status_connecting">Łączenie...</string>
+  <string name="status_unknown_err">Nieznany błąd</string>
+  <string name="status_temporarily_unavailable">Usługa tymczasowo niedostępna</string>
+  <string name="status_bad_credentials">Błędne poświadczenia</string>
+  <string name="status_climit_exceded">Przekroczony limit aplikacji klienckich</string>
+  <string name="status_version_error">Niekompatybilna wersja serwera</string>
+  <string name="status_reg_disabled">Rejestracja jest obecnie wyłączona. Zaloguj się do \"Supla Cloud\" i przełącz rejestrację klientów na AKTYWNĄ w zakładce \"Smartfony\".</string>
+  <string name="status_access_id_not_assigned">To urządzenie nie ma przypisanego identyfikatora dostępu. Przejdź na stronę \"Supla Cloud\" i w zakładce \"Smartfony\" przypisz odpowiedni identyfikator.</string>
+  <string name="status_device_disabled">Urządzenie jest wyłączone. Zaloguj się do \"Supla Cloud\" i włącz ten smrtfon w zakładce \"Smartfony\".</string>
+  <string name="status_accessid_disabled">Identyfikator dostępu jest wyłączony</string>
 
-    <string name="err_hostnotfound">Adres serwera nie został znaleziony. Upewnij się, że posiadasz połączenie z internetem oraz, że konto o wprowadzonym adresie email zostało utworzone.</string>
-    <string name="err_cantconnecttohost">Nie można połączyć się z serwerem</string>
+  <string name="err_hostnotfound">Adres serwera nie został znaleziony. Upewnij się, że posiadasz połączenie z internetem oraz, że konto o wprowadzonym adresie email zostało utworzone.</string>
+  <string name="err_cantconnecttohost">Nie można połączyć się z serwerem</string>
 
-    <string name="channel_caption_gateway">Furtka</string>
-    <string name="channel_caption_gate">Brama</string>
-    <string name="channel_caption_garagedoor">Brama garażowa</string>
-    <string name="channel_caption_door">Drzwi</string>
-    <string name="channel_caption_rollershutter">Roleta</string>
-    <string name="channel_caption_powerswith">Włącznik zasilania</string>
-    <string name="channel_caption_lightswith">Włącznik światła</string>
-    <string name="channel_caption_thermometer">Termometr</string>
-    <string name="channel_caption_humidity">Wilgotność</string>
-    <string name="channel_caption_humidityandtemperature">Temperatura i wilgotność</string>
-    <string name="channel_caption_windsensor">Prędkość wiatru</string>
-    <string name="channel_caption_pressuresensor">Czujnik ciśnienia</string>
-    <string name="channel_caption_rainsensor">Pomiar opadów</string>
-    <string name="channel_caption_weightsensor">Waga</string>
-    <string name="channel_caption_dimmer">Ściemniacz</string>
-    <string name="channel_caption_rgblighting">Oświetlenie RGB</string>
-    <string name="channel_caption_dimmerandrgblighting">Ściemniacz i oświetlenie RGB</string>
-    <string name="channel_caption_noliquidsensor">Czujnik braku cieczy</string>
-    <string name="channel_caption_gatewayopeningsensor">Czujnik otwacia furtki</string>
-    <string name="channel_caption_gateopeningsensor">Czujnik otwarcia bramy</string>
-    <string name="channel_caption_garagedooropeningsensor">Czujnik otwacia bramy garażowej</string>
-    <string name="channel_caption_dooropeningsensor">Czujnik otwacia drzwi</string>
-    <string name="channel_caption_rsopeningsensor">Czujnik otwacia rolet</string>
-    <string name="channel_caption_depthsensor">Czujnik głębokości</string>
-    <string name="channel_caption_distancesensor">Czujnik odległości</string>
-    <string name="channel_caption_windowopeningsensor">Czujnik otwarcia okna</string>
-    <string name="channel_caption_mailsensor">Czujnik poczty</string>
+  <string name="channel_caption_gateway">Furtka</string>
+  <string name="channel_caption_gate">Brama</string>
+  <string name="channel_caption_garagedoor">Brama garażowa</string>
+  <string name="channel_caption_door">Drzwi</string>
+  <string name="channel_caption_rollershutter">Roleta</string>
+  <string name="channel_caption_powerswith">Włącznik zasilania</string>
+  <string name="channel_caption_lightswith">Włącznik światła</string>
+  <string name="channel_caption_thermometer">Termometr</string>
+  <string name="channel_caption_humidity">Wilgotność</string>
+  <string name="channel_caption_humidityandtemperature">Temperatura i wilgotność</string>
+  <string name="channel_caption_windsensor">Prędkość wiatru</string>
+  <string name="channel_caption_pressuresensor">Czujnik ciśnienia</string>
+  <string name="channel_caption_rainsensor">Pomiar opadów</string>
+  <string name="channel_caption_weightsensor">Waga</string>
+  <string name="channel_caption_dimmer">Ściemniacz</string>
+  <string name="channel_caption_rgblighting">Oświetlenie RGB</string>
+  <string name="channel_caption_dimmerandrgblighting">Ściemniacz i oświetlenie RGB</string>
+  <string name="channel_caption_noliquidsensor">Czujnik braku cieczy</string>
+  <string name="channel_caption_gatewayopeningsensor">Czujnik otwarcia furtki</string>
+  <string name="channel_caption_gateopeningsensor">Czujnik otwarcia bramy</string>
+  <string name="channel_caption_garagedooropeningsensor">Czujnik otwarcia bramy garażowej</string>
+  <string name="channel_caption_dooropeningsensor">Czujnik otwarcia drzwi</string>
+  <string name="channel_caption_rsopeningsensor">Czujnik otwarcia rolet</string>
+  <string name="channel_caption_depthsensor">Czujnik głębokości</string>
+  <string name="channel_caption_distancesensor">Czujnik odległości</string>
+  <string name="channel_caption_windowopeningsensor">Czujnik otwarcia okna</string>
+  <string name="channel_caption_mailsensor">Czujnik poczty</string>
 
-    <string name="channel_btn_open">Otwórz</string>
-    <string name="channel_btn_openclose">Otwórz Zamknij</string>
-    <string name="channel_btn_on">Włącz</string>
-    <string name="channel_btn_off">Wyłącz</string>
+  <string name="channel_btn_open">Otwórz</string>
+  <string name="channel_btn_openclose">Otwórz Zamknij</string>
+  <string name="channel_btn_on">Włącz</string>
+  <string name="channel_btn_off">Wyłącz</string>
 
-    <string name="event_openedthegateway">otworzył furtkę</string>
-    <string name="event_openedclosedthegate">otworzył / zamknął bramę</string>
-    <string name="event_openedclosedthegatedoors">otworzył / zamknął drzwi garażowe</string>
-    <string name="event_openedthedoor">otworzył drzwi</string>
-    <string name="event_openedcloserollershutter">otworzył / zamknął roletę</string>
-    <string name="event_poweronoff">włączył / wyłączył zasilanie</string>
-    <string name="event_turnedthelightonoff">włączył / wyłączył światło</string>
+  <string name="event_openedthegateway">otworzył furtkę</string>
+  <string name="event_openedclosedthegate">otworzył / zamknął bramę</string>
+  <string name="event_openedclosedthegatedoors">otworzył / zamknął drzwi garażowe</string>
+  <string name="event_openedthedoor">otworzył drzwi</string>
+  <string name="event_openedcloserollershutter">otworzył / zamknął roletę</string>
+  <string name="event_poweronoff">włączył / wyłączył zasilanie</string>
+  <string name="event_turnedthelightonoff">włączył / wyłączył światło</string>
 
-    <string name="server_address">ADRES SERWERA</string>
-    <string name="access_id">IDENTYFIKATOR DOSTĘPU</string>
-    <string name="password">HASŁO</string>
-    <string name="email">ADRES E-MAIL</string>
-    <string name="advanced_settings">Zaawansowane</string>
-    <string name="create_account"><u>Utwórz konto</u></string>
+  <string name="server_address">ADRES SERWERA</string>
+  <string name="access_id">IDENTYFIKATOR DOSTĘPU</string>
+  <string name="password">HASŁO</string>
+  <string name="email">ADRES E-MAIL</string>
+  <string name="advanced_settings">Zaawansowane</string>
+  <string name="create_account"><u>Utwórz konto</u></string>
 
-    <string translatable="false" name="cfg_profile_active_indicator">aktywny</string>
+  <string name="cfg_profile_active_indicator" translatable="false">aktywny</string>
 
-    <string name="cfg_label_email_auth">Email</string>
-    <string name="cfg_label_access_id_auth">Identyfikator</string>
-    <string translatable="false"  name="cfg_channel_height">Wysokość kanału</string>
-    <string translatable="false" name="cfg_temperature_unit">Jednostka temperatury</string>
-    <string translatable="false" name="cfg_button_autohide">Auto-ukrywanie przycisków</string>
+  <string name="cfg_label_email_auth">Email</string>
+  <string name="cfg_label_access_id_auth">Identyfikator</string>
+  <string name="cfg_channel_height" translatable="false">Wysokość kanału</string>
+  <string name="cfg_temperature_unit" translatable="false">Jednostka temperatury</string>
+  <string name="cfg_button_autohide" translatable="false">Auto-ukrywanie przycisków</string>
 
-    <string translatable="false" name="profile">Twoje konto</string>
-    <string translatable="false" name="profile_plural">Twoje konta</string>
-    <string translatable="false" name="menubar_appsettings">Ustawienia aplikacji</string>
+  <string name="profile" translatable="false">Twoje konto</string>
+  <string name="profile_plural" translatable="false">Twoje konta</string>
+  <string name="menubar_appsettings" translatable="false">Ustawienia aplikacji</string>
 
-    <string name="about_app">Ten program jest wolnym oprogramowaniem; możesz go rozprowadzać dalej i / lub\n
-   modyfikować zgodnie z warunkami licencji GNU General Public License\n
-   opublikowanej przez Free Software Foundation w wersji 2\n
-   Licencji lub (według Twojego wyboru) dowolnej późniejszej wersji.\n\n
-  
-   Ten program jest rozpowszechniany w nadziei, że będzie użyteczny,\n
-   ale BEZ JAKIEJKOLWIEK GWARANCJI; nawet bez gwarancji\n
-   Handlowej lub przydatności do KONKRETNEGO CELU. Przeczytaj\n
-   General Public Licence aby zapoznać się ze szczegółami.\n\n
-  
-   Powinieneś otrzymać kopię GNU General Public License\n
-   wraz z tym programem; jeśli nie, napisz do Free Software\n
-   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
+  <string name="about_app">Ten program jest wolnym oprogramowaniem; możesz go rozprowadzać dalej i / lub\n
+  modyfikować zgodnie z warunkami licencji GNU General Public License\n
+  opublikowanej przez Free Software Foundation w wersji 2\n
+  Licencji lub (według Twojego wyboru) dowolnej późniejszej wersji.\n\n
+
+  Ten program jest rozpowszechniany w nadziei, że będzie użyteczny,\n
+  ale BEZ JAKIEJKOLWIEK GWARANCJI; nawet bez gwarancji\n
+  Handlowej lub przydatności do KONKRETNEGO CELU. Przeczytaj\n
+  General Public Licence aby zapoznać się ze szczegółami.\n\n
+
+  Powinieneś otrzymać kopię GNU General Public License\n
+  wraz z tym programem; jeśli nie, napisz do Free Software\n
+  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
     </string>
 
-    <string name="rate_msg">Czy wiesz, że Supla to otwarty i bezpłatny projekt rozwijany przez społeczność? Jeśli podoba Ci się ta aplikacja to poświęć moment aby ją ocenić. Dziękujemy za Twoje wsparcie!</string>
-    <string name="rate_now">Oceń teraz</string>
-    <string name="rate_later">Później</string>
-    <string name="rate_no_thanks">Nie, dziękuję</string>
-    <string name="rs_percent_caption">Procent zamknięcia</string>
-    <string name="rs_percent_caption_open">Procent otwarcia</string>
-    <string name="calibration">[Kalibracja]</string>
+  <string name="rate_msg">Czy wiesz, że Supla to otwarty i bezpłatny projekt rozwijany przez społeczność? Jeśli podoba Ci się ta aplikacja to poświęć moment aby ją ocenić. Dziękujemy za Twoje wsparcie!</string>
+  <string name="rate_now">Oceń teraz</string>
+  <string name="rate_later">Później</string>
+  <string name="rate_no_thanks">Nie, dziękuję</string>
+  <string name="rs_percent_caption">Procent zamknięcia</string>
+  <string name="rs_percent_caption_open">Procent otwarcia</string>
+  <string name="roller_shutter_calibrating">Kalibracja…</string>
 
-    <string name="add_wizard_is_not_available">Kreator dodawania jest dostępny tylko gdy nawiązano połączenie z serwerem na podstawie wprowadzonego adresu email! (Wyłącz opcje zaawansowane w konfiguracji Twojego konta)</string>
+  <string name="add_wizard_is_not_available">Kreator dodawania jest dostępny tylko gdy nawiązano połączenie z serwerem na podstawie wprowadzonego adresu email! (Wyłącz opcje zaawansowane w konfiguracji Twojego konta)</string>
 
-    <string name="wizard_step1_txt1">Witaj w kreatorze dodawania urządzeń, który pomoże Ci w prosty i szybki sposób dodać nowe urządzenie do systemu.</string>
-    <string name="wizard_step1_txt3">Aby kontynuować naciśnij <b>Dalej</b>.</string>
-    <string name="next">Dalej</string>
-    <string name="start">START</string><![CDATA[>
+  <string name="wizard_step1_txt1">Witaj w kreatorze dodawania urządzeń, który pomoże Ci w prosty i szybki sposób dodać nowe urządzenie do systemu.</string>
+  <string name="wizard_step1_txt3">Aby kontynuować naciśnij <b>Dalej</b>.</string>
+  <string name="next">Dalej</string>
+  <string name="start">START</string>
+  <string name="stop">STOP</string>
+  <string name="turn_on">Włącz</string>
+  <string name="turn_off">Wyłącz</string>
+  <string name="wizard_remember_passwd">Zapamiętaj hasło</string>
+
+  <string name="wizard_step3_txt1">Podłącz Twoje urządzenie wykonawcze do zasilania. Urządzenie powinno domyślnie pracować w trybie konfiguracji, sygnalizując to miganiem diody statusu w następujący sposób</string>
+  <string name="wizard_step3_txt2">Jeżeli urządzenie po włączeniu zasilania nie pracuje w trybie konfiguracji, przytrzymaj wciśnięty przycisk <b>CONFIG</b> przez minimum 5 sekund.</string>
+  <string name="wizard_step3_txt3">Naciśnij przycisk <b>START</b> aby rozpocząć konfigurację.</string>
+
+  <string name="wizard_no_internetwifi">Zanim rozpoczniesz, połącz się z Internetem za pośrednictwem sieci WiFi, która będzie również wykorzystywana przez urządzenia wykonawcze do łączenia się z serwerem.</string>
+  <string name="wizard_wifi_error">Sieć WiFi jest wyłączona lub nie można odczytać jej identyfikatora lub nazwy!</string>
+  <string name="wizard_location_error">Aby kreator dodawania działał poprawnie, usługa Lokalizacji musi być włączona na tym urządzeniu. Przejdź do ustawień systemu, następnie wybierz opcję „Lokalizacja” i upewnij się, że jest włączona.</string>
+  <string name="wizard_addnetwork_error">Nie można dodać konfiguracji sieci WiFi!</string>
+  <string name="wizard_wifi_timeout">Przekroczono czas oczekiwania na dane o bieżącej sieci WiFi! Przejdź do ustawień WiFi systemu Android, wybierz Zaawansowane, a następnie zaznacz opcję "Włącz WiFi automatycznie"</string>
+  <string name="wizard_scan_timeout">Przekroczono czas oczekiwania na zakończenie przeszukiwania sieci WiFi!</string>
+  <string name="wizard_connect_timeout">Przekroczono czas oczekiwania na nawiązanie połączenia z urządzeniem wykonawczym!</string>
+  <string name="wizard_configure_timeout">Przekroczono czas oczekiwania na zakończenie konfiguracji urządzenia!</string>
+  <string name="wizard_reconnect_timeout">Przekroczono czas oczekiwania na powrót do podstawowej sieci WiFi!</string>
+  <string name="device_reg_request_timeout">Przekroczono czas oczekiwania na informację o dostępności rejestracji urządzeń!</string>
+
+  <string name="wizard_iodevice_notfound">Nie znaleziono żadnych urządzeń! Upewnij się, że urządzenie, które chcesz skonfigurować pracuje w trybie konfiguracji, a następnie spróbuj ponownie. WAŻNE - Niektóre wersje Androida wymagają włączonego GPS-a w celu umożliwienia aplikacjom przeszukanie sieci WiFi, w związku z tym upewnij się również, że GPS jest włączony.</string>
 
 
-    ]]>
-    <string name="wizard_remember_passwd">Zapamiętaj hasło</string>
+  <string name="wizard_done">Ustawienia zostały przesłane do urządzenia.</string>
+  <string name="wizard_iodev_data">Dane urządzenia</string>
+  <string name="wizard_iodev_name">Nazwa</string>
+  <string name="wizard_iodev_laststate">Poprzedni status</string>
 
-    <string name="wizard_step3_txt1">Podłącz Twoje urządzenie wykonawcze do zasilania. Urządzenie powinno domyślnie pracować w trybie konfiguracji, sygnalizując to miganiem diody statusu w następujący sposób</string>
-    <string name="wizard_step3_txt2">Jeżeli urządzenie po włączeniu zasilania nie pracuje w trybie konfiguracji, przytrzymaj wciśnięty przycisk <b>CONFIG</b> przez minimum 5 sekund.</string>
-    <string name="wizard_step3_txt3">Naciśnij przycisk <b>START</b> aby rozpocząć konfigurację.</string>
+  <string name="wizard_result_param_error">Błędne parametry wejściowe!</string>
+  <string name="wizard_result_compat_error">Urządzenie z którym nawiązano połączenie nie jest kompatybilne z tym kreatorem!</string>
+  <string name="wizard_result_conn_error">Nie można nawiązać połączenia z urządzeniem!</string>
+  <string name="wizard_result_failed">Konfiguracja zakończona niepowodzeniem!</string>
+  <string name="wizard_not_enought_permissions">Aplikacja nie posiada wystarczających uprawnień. Przejdź do zarządzania aplikacjami w ustawieniach systemowych. Następnie odszukaj aplikację %1$s i włącz wszystkie wymagane przez nią uprawnienia.</string>
+  <string name="help">Pomoc</string>
+  <string name="channel_caption_staircasetimer">Automat schodowy</string>
 
-    <string name="wizard_server_compat_error">Serwer z którym nawiązano połączenie nie obsługuje tej funkcji!</string>
-    <string name="wizard_no_internetwifi">Zanim rozpoczniesz, połącz się z Internetem za pośrednictwem sieci WiFi, która będzie również wykorzystywana przez urządzenia wykonawcze do łączenia się z serwerem.</string>
-    <string name="wizard_wifi_error">Sieć WiFi jest wyłączona lub nie można odczytać jej identyfikatora lub nazwy!</string>
-    <string name="wizard_location_error">Aby kreator dodawania działał poprawnie, usługa Lokalizacji musi być włączona na tym urządzeniu. Przejdź do ustawień systemu, następnie wybierz opcję „Lokalizacja” i upewnij się, że jest włączona.</string>
-    <string name="wizard_addnetwork_error">Nie można dodać konfiguracji sieci WiFi!</string>
-    <string name="wizard_wifi_timeout">Przekroczono czas oczekiwania na dane o bieżącej sieci WiFi! Przejdź do ustawień WiFi systemu Android, wybierz Zaawansowane, a następnie zaznacz opcję "Włącz WiFi automatycznie"</string>
-    <string name="wizard_scan_timeout">Przekroczono czas oczekiwania na zakończenie przeszukiwania sieci WiFi!</string>
-    <string name="wizard_connect_timeout">Przekroczono czas oczekiwania na nawiązanie połączenia z urządzeniem wykonawczym!</string>
-    <string name="wizard_configure_timeout">Przekroczono czas oczekiwania na zakończenie konfiguracji urządzenia!</string>
-    <string name="wizard_reconnect_timeout">Przekroczono czas oczekiwania na powrót do podstawowej sieci WiFi!</string>
-    <string name="device_reg_request_timeout">Przekroczono czas oczekiwania na informację o dostępności rejestracji urządzeń!</string>
+  <string name="channel_caption_electricitymeter">Licznik energii elektrycznej</string>
+  <string name="channel_caption_gasmeter">Licznik gazu</string>
+  <string name="channel_caption_watermeter">Licznik wody</string>
 
-    <string name="wizard_iodevice_notfound">Nie znaleziono żadnych urządzeń! Upewnij się, że urządzenie, które chcesz skonfigurować pracuje w trybie konfiguracji, a następnie spróbuj ponownie. WAŻNE - Niektóre wersje Androida wymagają włączonego GPS-a w celu umożliwienia aplikacjom przeszukanie sieci WiFi, w związku z tym upewnij się również, że GPS jest włączony.</string>
+  <string name="em_total_forward_avtive_energy">Energia czynna pobrana</string>
+  <string name="em_reverse_active_energy">Energia czynna zwrócona</string>
+  <string name="em_total_forward_reactive_energy">Energia bierna indukcyjna</string>
+  <string name="em_total_reverse_reactive_energy">Energia bierna pojemnościowa</string>
+  <string name="em_frequency">Częstotliwość</string>
+  <string name="em_voltage">Napięcie</string>
+  <string name="em_current">Natężenie</string>
+  <string name="em_power_active">Moc czynna</string>
+  <string name="em_power_reactive">Moc bierna</string>
+  <string name="em_power_factor">Współczynnik mocy</string>
+  <string name="em_phase_angle">Kąt fazowy</string>
+  <string name="em_power_apparent">Moc pozorna</string>
+  <string name="em_phase1">Faza 1</string>
+  <string name="em_phase2">Faza 2</string>
+  <string name="em_phase3">Faza 3</string>
+  <string name="channel_caption_thermostat">Termostat</string>
+  <string name="channel_caption_thermostat_hp_homeplus">Grzałka Home+</string>
+  <string name="hp_on">WŁĄCZONY</string>
+  <string name="hp_off">WYŁĄCZONY</string>
+  <string name="hp_normal">NORMAL</string>
+  <string name="hp_eco">ECO</string>
+  <string name="hp_turbo">TURBO</string>
+  <string name="hp_auto">AUTO</string>
+  <string name="hp_room_temperature">Temperatura w pomieszczeniu</string>
+  <string name="hp_cfg_turbo_time">Czas trwania trybu TURBO</string>
+  <string name="hp_cfg_water_max">Maksymalna temperatura wody</string>
+  <string name="hp_cfg_eco_reduction">Redukcja temperatury w trybie ECO</string>
+  <string name="hp_cfg_temp_comfort_auto">Temperatura komfort w trybie AUTO</string>
+  <string name="hp_calendar_comfort">Komfort</string>
+  <string name="hp_cfg_temp_eco">Temperatura ECO w trybie AUTO</string>
+  <string name="hp_hour">godz.</string>
+  <string name="total_cost">Łączny koszt</string>
+  <string name="current_cost">Koszt w bieżącym miesiącu</string>
+  <string name="current_consumption">Zużycie w bieżącym miesiącu</string>
+  <string name="meter_value">Stan licznika</string>
+  <string name="minutes">Minuty</string>
+  <string name="hours">Godziny</string>
+  <string name="days">Dni</string>
+  <string name="months">Miesiące</string>
+  <string name="years">Lata</string>
+  <string name="ranking_of_hours">Ranking godzin</string>
+  <string name="ranking_of_weekdays">Ranking dni tygodnia</string>
+  <string name="ranking_of_months">Ranking miesięcy</string>
+  <string name="consumption_acording_to_phases">Zużycie wg. faz</string>
+  <string name="temperature">Temperatura</string>
+  <string name="humidity">Wilgotność</string>
+  <string name="all_available_history">Cała dostępna historia</string>
+  <string name="retrieving_data_from_the_server">Pobieranie danych z serwera...</string>
+  <string name="no_chart_data_available">Brak danych w wybranym okresie czasu.</string>
+  <string name="em_chart_phase_n">Faza %d</string>
+  <string name="em_chart_all_phases">Fazy 1+2+3</string>
+  <string name="comparsion_minmin">Porównanie minuta do minuty</string>
+  <string name="comparsion_hourhour">Porównanie godzina do godziny</string>
+  <string name="comparsion_dayday">Porównanie dzień do dnia</string>
+  <string name="comparsion_monthmonth">Porównanie miesiąc do miesiąca</string>
+  <string name="comparsion_yearyear">Porównanie rok do roku</string>
+  <string name="hp_error_1">Brak wody</string>
+  <string name="hp_error_2">Spalona grzałka</string>
+  <string name="hp_error_3">Błąd czujnika temperatury wody</string>
+  <string name="hp_error_4">Błąd czujnika temperatury pokojowej</string>
+  <string name="hp_error_5">Brak przerwań sieciowych</string>
+  <string name="production_acording_to_phases">Produkcja wg. faz</string>
+  <string name="current_production">Produkcja w bieżącym miesiącu</string>
+  <string name="enter_superuser_credentials">Wprowadź poświadczenia głównego użytkownika</string>
 
+  <string name="channel_func_none">Brak funkcji</string>
+  <string name="channel_func_controllingthegatewaylock">Otwieranie furtki</string>
+  <string name="channel_func_controllingthegate">Otwieranie/zamykanie bramy wjazdowej</string>
+  <string name="channel_func_controllingthegaragedoor">Otwieranie/zamykanie bramy garażowej</string>
+  <string name="channel_func_thermometer">Termometr</string>
+  <string name="channel_func_humidity">Czujnik wilgotności</string>
+  <string name="channel_func_humidityandtemperature">Czujnik temperatury i wilgotności</string>
+  <string name="channel_func_opensensor_gateway">Czujnik otwarcia furtki</string>
+  <string name="channel_func_opensensor_gate">Czujnik otwarcia bramy wjazdowej</string>
+  <string name="channel_func_opensensor_garagedoor">Czujnik otwarcia bramy garażowej</string>
+  <string name="channel_func_noliquidsensor">Czujnik braku cieczy</string>
+  <string name="channel_func_controllingthedoorlock">Otwieranie drzwi</string>
+  <string name="channel_func_opensensor_door">Czujnik otwarcia drzwi</string>
+  <string name="channel_func_controllingtherollershutter">Otwieranie i zamykanie rolet</string>
+  <string name="channel_func_opensensor_rollershutter">Czujnik otwarcia rolet</string>
+  <string name="channel_func_powerswitch">Włącznik zasilania</string>
+  <string name="channel_func_lightswitch">Włącznik światła</string>
+  <string name="channel_func_dimmer">Ściemniacz</string>
+  <string name="channel_func_rgblighting">Oświetlenie RGB</string>
+  <string name="channel_func_dimmerandrgblighting">Ściemniacz i oświetlenie RGB</string>
+  <string name="channel_func_depthsensor">Czujnik głębokości</string>
+  <string name="channel_func_distancesensor">Czujnik odległości</string>
+  <string name="channel_func_openingsensor_window">Czujnik otwarcia okna</string>
+  <string name="channel_func_mailsensor">Czujnik poczty</string>
+  <string name="channel_func_windsensor">Czujnik wiatru</string>
+  <string name="channel_func_pressuresensor">Czujnik ciśnienia</string>
+  <string name="channel_func_rainsensor">Czujnik deszczu</string>
+  <string name="channel_func_weightsensor">Waga</string>
+  <string name="channel_func_weather_station">Stacja pogodowa</string>
+  <string name="channel_func_staircasetimer">Automat schodowy</string>
+  <string name="channel_func_electricity_meter">Licznik energii elektrycznej</string>
+  <string name="channel_func_gas_meter">Licznik gazu</string>
+  <string name="channel_func_water_meter">Licznik wody</string>
+  <string name="channel_func_heat_meter">Licznik ciepła</string>
+  <string name="channel_func_thermostat">Termostat</string>
+  <string name="channel_func_thermostat_heatpol_homeplus">Grzałka Home+</string>
+  <string name="channel_func_valve_openclose">Zawór</string>
+  <string name="channel_func_valve_percentage">Zawór</string>
+  <string name="channel_caption_heatmeter">Licznik ciepła</string>
 
-    <string name="wizard_done">Ustawienia zostały przesłane do urządzenia.</string>
-    <string name="wizard_iodev_data">Dane urządzenia</string>
-    <string name="wizard_iodev_name">Nazwa</string>
-    <string name="wizard_iodev_laststate">Poprzedni status</string>
+  <string name="z_wave">Most z-wave</string>
+  <string name="channel_caption_valve">Zawór</string>
+  <string name="channel_btn_close">Zamknij</string>
+  <string name="valve_open_warning">Zawór został zamknięty w trybie manualnym lub radiowo. Zanim go otworzysz upewnij się, że nie został zamknięty z powodu zalania. Aby wyłączyć ostrzeżenie otwórz zawór manualnie. Czy na pewno chcesz otworzyć zawór z aplikacji?!</string>
+  <string name="valve_warning">Zawór został zamknięty w trybie manualnym lub radiowo. Zanim go otworzysz upewnij się, że nie został zamknięty z powodu zalania. Aby wyłączyć ostrzeżenie otwórz zawór manualnie.</string>
+  <string name="yes">Tak</string>
+  <string name="no">Nie</string>
+  <string name="exit">Wyjście</string>
+  <string name="zwave_select_channel">Wybierz most z-wave, a następnie kanał który chcesz skonfigurować.</string>
+  <string name="device_name">Nazwa urządzenia</string>
+  <string name="channel_number">Numer kanału</string>
+  <string name="device_id">Id urządzenia</string>
+  <string name="channel_id">Id kanału</string>
+  <string name="soft_ver">Wersja opr.</string>
+  <string name="function">Funkcja</string>
+  <string name="caption">Podpis</string>
+  <string name="device">Urządzenie</string>
+  <string name="zwave_welcome_title">Kreator z-wave</string>
+  <string name="zwave_welcome_message">Witaj w kreatorze konfiguracji mostu z-wave. Umożliwi Ci on podłączenie posiadanych urządzeń z-wave do Supli. Naciśnij \"Dalej\" aby kontynuować.</string>
+  <string name="zwave_before_search_title">To chwilę zajmie</string>
+  <string name="zwave_before_search_message">Zanim kontynuujesz upewnij się, że wszystkie Twoje urządzenia z-wave są online. Naciśnięcie \"Dalej\" spowoduje przeszukanie Twojej sieci z-wave co może potrwać od kilku sekund do kilku minut.</string>
+  <string name="zwave_dialog_channel_detail_message">Poniżej znajdują się szczegółowe dane wybranego kanału. Określ jego przeznaczenie wybierając odpowiednią funkcję.</string>
+  <string name="zwave_error_unexpected_response">Odpowiedź urządzenia niezgodna z oczekiwaną. Metoda:%1$s Kod:%2$s</string>
+  <string name="zwave_error_function_change_error">Zmiana funkcji kanału zakończona niepowodzeniem. Kod %1$s</string>
+  <string name="zwave_error_caption_change_error">Zmiana podpisu kanału zakończona niepowodzeniem. Kod %1$s</string>
+  <string name="zwave_error_get_basic_cfg_timeout">Upłynął czas oczekiwania na dane podstawowej konfiguracji kanału</string>
+  <string name="zwave_error_set_function_timeout">Upłynął czas oczekiwania na zmianę funkcji kanału.</string>
+  <string name="zwave_error_set_caption_timeout">Upłynął czas oczekiwania na zmianę podpisu kanału.</string>
+  <string name="zwave_error_get_assigned_node_id_timeout">Upłynął czas oczekiwania na identyfikator przypisanego urządzenia z-wave.</string>
+  <string name="zwave_error_get_node_list_timeout">Upłynął czas oczekiwania na listę urządzeń z-wave.</string>
+  <string name="zwave_reset_and_clear">Resetuj sieć i ustawienia</string>
+  <string name="zwave_add_device">Dodaj urządzenie</string>
+  <string name="zwave_remove_device">Usuń urządzenie</string>
+  <string name="zwave_network">Sieć z-wave</string>
+  <string name="zwave_select_node">Wybierz urządzenie z-wave, które będzie powiązane z kanałem po stronie Supli.</string>
+  <string name="zwave_supla_channel">Kanał</string>
+  <string name="zwave_device">Urządzenie z-wave</string>
+  <string name="zwave_waiting_for_button_press">Oczekiwanie na naciśnięcie przycisku w urządzeniu z-wave.</string>
+  <string name="zwave_button_press_timeout">Upłynął czas oczekiwania na naciśnięcie przycisku.</string>
+  <string name="zwave_node_searching">Przeszukiwanie sieci z-wave w celu zbudowania listy urządzeń.</string>
+  <string name="zwave_remove_device_timeout">Upłynął czas oczekiwania na usunięcie urządzenia.</string>
+  <string name="zwave_waiting_for_reset">Oczekiwanie na potwierdzenie zresetowania sieci z-wave wraz z usunięciem ustawień.</string>
+  <string name="zwave_waiting_for_reset_timeout">Upłynął czas oczekiwania na reset sieci z-wave.</string>
+  <string name="zwave_error_assign_node_id_timeout">Upłynął czas oczekiwania na przypisanie urządzenia z-wave do kanału.</string>
+  <string name="zwave_bridge_offline">Most z-wave nie odpowiada. Sprawdź czy most jest połączony z serwerem.</string>
+  <string name="zwave_waiting_for_add">Oczekiwanie na dodanie urządzenia do sieci z-wave.</string>
+  <string name="zwave_waiting_for_add_timeout">Upłynął czas oczekiwania na dodanie urządzenia do sieci z-wave.</string>
+  <string name="zwave_reset_confirm_question">Czy na pewno chcesz zresetować ustawienia oraz sieć z-wave ?</string>
+  <string name="zwave_used">Przypisano do:</string>
+  <string name="zwave_node_assign_confirm_question">Wybrane urządzenie z-wave jest już powiązane z innym kanałem. Czy na pewno chcesz przenieść to urządzenie do tego kanału?</string>
+  <string name="zwave_error_common_message">Naciśnij wstecz aby wrócić do poprzedniego kroku lub \"Wyjście\" aby zakończyć.</string>
+  <string name="zwave_error_slave_mode">Ta funkcja nie jest dostępna gdy most pracuje w trybie podrzędnym.</string>
+  <string name="zwave_done">Gotowe! Teraz możesz zakończyć proces konfiguracji naciskając przycisk \"ok\" lub możesz nacisnąć wstecz aby skonfigurować kolejny kanał lub zmienić dotychczasowe ustawienia.</string>
+  <string name="restore_question">Czy na pewno chcesz przywrócić ustawienia domyślne ?</string>
+  <string name="belongs_to_group_error">Nie można zmienić funkcji kanału, który należy do grupy.</string>
+  <string name="has_schedule_error">Nie można zmienić funkcji kanału, który posiada harmonogram.</string>
+  <string name="associeted_with_scene_error">Nie można zmienić funkcji kanału, który jest powiązany ze sceną.</string>
+  <string name="event_openedclosedthevalve">Otwieranie/zamykanie zaworu</string>
+  <string name="bridge">Most</string>
+  <string name="em_phase_to_phase_balance">Bilans międzyfazowy wektorowy</string>
+  <string name="aritmetic_balance_minutes">Bilans arytmetyczny - Minuty</string>
+  <string name="aritmetic_balance_hours">Bilans arytmetyczny - Godziny</string>
+  <string name="aritmetic_balance_days">Bilans arytmetyczny - Dni</string>
+  <string name="aritmetic_balance_months">Bilans arytmetyczny - Miesiące</string>
+  <string name="aritmetic_balance_years">Bilans arytmetyczny - Lata</string>
+  <string name="vector_balance_minutes">Bilans wektorowy - Minuty</string>
+  <string name="vector_balance_hours">Bilans wektorowy - Godziny</string>
+  <string name="vector_balance_days">Bilans wektorowy - Dni</string>
+  <string name="vector_balance_months">Bilans wektorowy - Miesiące</string>
+  <string name="vector_balance_years">Bilans wektorowy - Lata</string>
+  <string name="wheel">Koło</string>
+  <string name="slider">Suwak</string>
+  <string name="vl_cfg_mode">Tryb ściemniania</string>
+  <string name="vl_cfg_auto">AUTO</string>
+  <string name="vl_cfg_mode1">TRYB 1</string>
+  <string name="vl_cfg_mode2">TRYB 2</string>
+  <string name="vl_cfg_mode3">TRYB 3</string>
+  <string name="vl_cfg_yes">TAK</string>
+  <string name="vl_cfg_no">NIE</string>
+  <string name="cfg_op_range">Zakres pracy</string>
+  <string name="vl_cfg_boost">Wzmocnienie</string>
+  <string name="information">Informacje</string>
+  <string name="vl_dimmer_info_txt1">Sterowanie ściemniaczem</string>
+  <string name="vl_dimmer_info_txt2">Aby zmienić poziom jasności przesuń palcem wskaźnik znajdujący się na suwaku lub kole jasności.</string>
+  <string name="vl_dimmer_info_txt3">Przyciskiem włącz/wyłącz możesz całkowicie wyłączyć lub włączyć oświetlenie.</string>
+  <string name="vl_dimmer_info_txt4">Ściemniacz zapamięta poziom jasności sprzed wyłączenia oświetlenia.</string>
+  <string name="vl_dimmer_info_txt5">Aby dostosować parametry ściemniacza, naciśnij przycisk ustawień.</string>
+  <string name="vl_dimmer_cfg_info_txt1">Tryb ściemniania / Zakres pracy</string>
+  <string name="vl_dimmer_cfg_info_txt2">Dostosuj wydajność ściemniania oświetlenia LED poprzez wybór odpowiedniego trybu. Dostosuj również zakres pracy ściemniacza poprzez ustawienie minimalnego oraz maksymalnego poziomu jasności. Wartość minimalną oraz maksymalną można ustawić przesuwając suwaki umieszczone po obu stronach koła.</string>
+  <string name="vl_dimmer_cfg_info_txt3">Tryb 1: Ściemnianie zboczem opadającym (V-Pro)</string>
+  <string name="vl_dimmer_cfg_info_txt4">Tryb 2: Ściemnianie zboczem narastającym</string>
+  <string name="vl_dimmer_cfg_info_txt5">Tryb 3: Ściemnianie zboczem opadającym (Alternatywne)</string>
+  <string name="vl_dimmer_cfg_info_txt6">Wzmocnienie</string>
+  <string name="vl_dimmer_cfg_info_txt7">Ta funkcja pomaga włączać oświetlenie LED przy zapamiętanym niskim poziomie jasności, zapewniając startowe zwiększenie (wzmocnienie) poziomu jasności. Przesuwając ciemnoszary suwak wokół koła, możesz zwiększyć lub zmniejszyć poziom wzmocnienia, który oznaczony jest zieloną linią. Podczas włączania oświetlenia poziom jasności zostanie zwiększony (wzmocniony) do zadanej wartości, a następnie powróci do poziomu zapamiętanego przed wyłączeniem oświetlenia.</string>
+  <string name="vl_dimmer_cfg_info_txt8">Więcej informacji na temat ściemniacza znajdziesz na</string>
+  <string name="time_exceeded">Przekroczono czas. Spróbuj ponownie.</string>
+  <string name="battery_level">Poziom baterii</string>
+  <string name="battery_powered">Zasilanie bateryjne</string>
+  <string name="wifi_rssi">WiFi RSSI</string>
+  <string name="wifi_signal_strength">Siła sygnału WiFi</string>
+  <string name="bridge_node_online">Węzeł mostu - online</string>
+  <string name="bridge_signal_strength">Węzeł mostu - siła sygnału</string>
+  <string name="uptime">Czas pracy</string>
+  <string name="connection_time">Czas połączenia</string>
+  <string name="battery_health">Żywotność baterii</string>
+  <string name="connection_reset_cause">Powód restartu połączenia</string>
+  <string name="light_source_lifespan">Żywotność źródła światła</string>
+  <string name="light_source_operatingtime">Czas pracy źródła światła</string>
+  <string name="chanel_lightsource_lifespan_settings">Zmień ustawienia żywotności źródła światła</string>
+  <string name="light_source_lifespan_hours">Żywotność źródła światła (godziny)</string>
+  <string name="reset_lightsource_usage_counter">Resetuj licznik zużycia źródła światła</string>
+  <string name="lightsource_warning">Żywotność źródła światła wynosi %1$s</string>
+  <string name="uv_warning1">Żywotność promiennika uv wynosi %1$s. Zaplanuj jego wymianę.</string>
+  <string name="uv_warning2">Żywotność promiennika uv wynosi %1$s. Wymień promiennik.</string>
+  <string name="wizard_step2_txt1">Wprowadź nazwę oraz hasło Twojej domowej lub firmowej sieci WiFi za pośrednictwem której urządzenie wykonawcze będzie mogło nawiązać połączenie z serwerem.</string>
+  <string name="enabling_registration_timeout">Upłynął czas oczekiwania na włączenie rejestracji!</string>
+  <string name="wifi_throttling">Z uwagi na limity skanowania sieci WiFi narzucone przez system Android, należy odczekać czas prezentowany powyżej.</string>
+  <string name="enter_suplaorg_credentails">Wprowadź Twoje dane logowania do Supla Cloud.</string>
+  <string name="save_without_saving">Czy na pewno chcesz wyjść bez zapisu?</string>
+  <string name="do_you_want_to_save">Czy chcesz zapisać ustawienia?</string>
+  <string name="restoring_default_settings">Trwa przywracanie ustawień domyślnych</string>
+  <string name="mode_change_in_progress">Trwa zmiana trybu</string>
+  <string name="wizard_step1_txt2">Zaleca się aby dane mobilne podczas dodawania urządzeń były wyłączone. W przeciwnym razie dodawanie może zakończyć się niepowodzeniem.</string>
+  <string name="wake_up_frequency">Częstotliwość wybudzania</string>
+  <string name="zwave_change_wake_up_settings">Możesz również zmienić ustawienia wybudzania naciskając poniższą ikonę.</string>
+  <string name="wakeup_info">*) Wprowadzone ustawienia zostaną zastosowane przy najbliższym wybudzeniu węzła.</string>
+  <string name="zwave_waiting_for_resposne_timeout">Upłynął czas oczekiwania na odpowiedź mostu z-wave.</string>
+  <string name="zwave_unexpected_answer">Nieoczekiwana odpowiedź mostu. Kod:  %1$s</string>
+  <string name="seconds">Sekundy</string>
+  <string name="zwave_offline">Offline ?</string>
+  <string name="zwave_device_communication_error">Wystąpił problem komunikacji z urządzeniem z-wave. Upewnij się, że urządzenie z-wave jest w zasięgu bramki.</string>
+  <string name="hp_calendar_eco">ECO</string>
+  <string name="channel_caption_roofwindowopeningsensor">Czujnik otwarcia okna dachowego</string>
+  <string name="channel_caption_roofwindow">Okno dachowe</string>
+  <string name="channel_func_controllingtheroofwindow">Otwieranie i zamykanie okna dachowego</string>
+  <string name="channel_func_opensensor_roofwindow">Czujnik otwarcia okna dachowego</string>
+  <string name="event_openedclosedtheroofwindow">otworzył / zamknął okno dachowe</string>
 
-    <string name="wizard_result_param_error">Błędne parametry wejściowe!</string>
-    <string name="wizard_result_compat_error">Urządzenie z którym nawiązano połączenie nie jest kompatybilne z tym kreatorem!</string>
-    <string name="wizard_result_conn_error">Nie można nawiązać połączenia z urządzeniem!</string>
-    <string name="wizard_result_failed">Konfiguracja zakończona niepowodzeniem!</string>
-    <string name="wizard_not_enought_permissions">Aplikacja nie posiada wystarczających uprawnień. Przejdź do zarządzania aplikacjami w ustawieniach systemowych. Następnie odszukaj aplikację %1$s i włącz wszystkie wymagane przez nią uprawnienia.</string>
-    <string name="help">Pomoc</string>
-    <string name="channel_caption_staircasetimer">Automat schodowy</string>
+  <string name="status_led">Dioda statusu</string>
+  <string name="info_led_on">Dioda LED świeci jeśli nawiązano połączenie z serwerem.</string>
+  <string name="info_led_off">Dioda LED nie świeci jeśli nawiązano połączenie z serwerem.</string>
+  <string name="info_led_alwaysoff">Dioda zawsze wyłączona, chyba, że urządzenie pracuje w trybie konfiguracji wifi (Tryb AP).</string>
+  <string name="input">Wejście</string>
+  <string name="monostable">Monostabilne</string>
+  <string name="bistable">Bistabilne</string>
+  <string name="wizard_iodev_connect_failed">Próba nawiązania połączenia WiFi z urządzeniem wykonawczym zakończyła się niepowodzeniem.</string>
+  <string name="diw_cfg_info_oprange">Dostosuj zakres pracy ściemniacza poprzez ustawienie minimalnego oraz maksymalnego poziomu jasności. Wartość minimalną oraz maksymalną można ustawić przesuwając suwaki umieszczone po obu stronach koła.</string>
+  <string name="diw_cfg_info_in_options">Opcje wejścia</string>
+  <string name="diw_cfg_info_mono_option">Opcja zmienia zachowanie wejścia do którego podłączony jest przycisk monostabilny. W przypadku gdy opcja jest wyłączona, ściemniacz zatrzymuje proces rozjaśniania w momencie osiągnięcia maksymalnego poziomu jasności, a w przypadku ściemniania gdy osiągnie poziom minimalny. Włączenie tej opcji spowoduje przejście do poziomu minimalnego zaraz po osiągnięciu maksimum jasności, a w przypadku ściemniania do wartości maksymalnej, zaraz po osiągnięciu minumum. Rozjaśnianie/ściemnianie będzie trwało tak długo jak długo będzie naciśnięty przycisk.</string>
+  <string name="diw_cfg_info_bi_option">Opcja zmienia zachowanie ściemniacza w przypadku włączenia oświetlenia za pomocą przycisku bistabilnego. W przypadku gdy opcja jest włączona, ściemniacz ustawi maksymalny poziom jasności zaraz po włączeniu oświetlenia. W przypadku gdy opcja jest wyłączona, ściemniacz ustawi poziom jasności zapamiętany przed wyłączeniem oświetlenia. </string>
+  <string name="dgf_too_long_operation_warning">Sekcje szyby są odsłonięte dłużej niż 20 godzin co może negatywnie wpłynąć na ich żywotność. Zalecane jest zasłonięcie wszystkich sekcji na minimum 4 godziny w celu ich regeneracji.</string>
+  <string name="dgf_planned_regeneration_in_progress">Trwa zaplanowana regeneracja.</string>
+  <string name="dgf_regeneration_after20h">Trwa regeneracja zainicjowana po 20h pracy.</string>
+  <string name="wizard_done_explentations">Jeśli urządzenie nie pojawi się w aplikacji, powtórz niniejszą procedurę dodawania jeszcze raz i odczytaj „Poprzedni status” widoczny powyżej. Zawiera on informację umożliwiającą ustalenie dlaczego urządzenie nie połączyło się z serwerem. Komunikat \"SSID not found\" oznacza, że wprowadzona nazwa sieci WiFi 2,4 GHz nie została odnaleziona lub sieć ta jest poza zasięgiem.</string>
+  <string name="incorrect_email_or_password">Błędny adres email lub hasło</string>
+  <string name="channel_name">Nazwa kanału</string>
+  <string name="location_name">Nazwa lokalizacji</string>
+  <string name="str_default">Domyślnie</string>
+  <string name="overcurrent_warning">Zasilanie zostało wyłączone po przekroczeniu ustawionego progu dopuszczalnego natężenia prądu.</string>
+  <string name="overcurrent_question">Zasilanie zostało wyłączone po przekroczeniu ustawionego progu dopuszczalnego natężenia prądu. Czy na pewno chcesz włączyć zasilanie ?</string>
+  <string name="roller_shutter_start_calibration_message">Czy na pewno chcesz rozpocząć kalibrację ?</string>
+  <string name="calibration_failed">Kalibracja nie powiodła się.</string>
+  <string name="calibration_lost">Kalibracja została utracona.</string>
+  <string name="motor_problem">Problem z silnikiem / Nieoczekiwane zatrzymanie.</string>
 
-    <string name="channel_caption_electricitymeter">Licznik energii elektrycznej</string>
-    <string name="channel_caption_gasmeter">Licznik gazu</string>
-    <string name="channel_caption_watermeter">Licznik wody</string>
+  <string name="widget_configure_title">Konfiguracja widżetu</string>
+  <string name="widget_configure_profile_label">Konto</string>
+  <string name="widget_configure_type_label">Widżet dla:</string>
+  <string name="widget_configure_type_channel_label">Kanału</string>
+  <string name="widget_configure_type_group_label">Grupy</string>
+  <string name="widget_configure_type_scene_label">Sceny</string>
+  <string name="widget_configure_channel_label">Kanał dla widżetu</string>
+  <string name="widget_configure_group_label">Grupa dla widżetu</string>
+  <string name="widget_configure_scene_label">Scena dla widżetu</string>
+  <string name="widget_configure_action_label">Akcja</string>
+  <string name="widget_configure_name_label">Nazwa</string>
+  <string name="widget_configure_error">Konfiguracja kanału nie powiodła się…</string>
+  <string name="widget_configure_no_selection">Nie wybrano kanału</string>
+  <string name="widget_configure_no_channel">Brak dostępnych kanałów</string>
+  <string name="widget_configure_no_group">Brak dostępnych grup</string>
+  <string name="widget_configure_no_scene">Brak dostępnch scen</string>
+  <string name="double_button_widget_description">Widżet dwuprzyciskowy</string>
+  <string name="single_button_widget_description">Widżet jednoprzyciskowy</string>
+  <string name="widget_app_not_initialized">Proszę się zalogować!</string>
+  <string name="widget_command_no_connection">Brak połączenia z internetem!</string>
+  <string name="widget_command_error">Wystąpił błąd! (kod: %1$d)</string>
+  <string name="widget_command_connection_failure">Błąd połączenia! (kod: %1$d)</string>
+  <string name="widget_command_subject_offline">%1$s jest offline!</string>
+  <string name="widget_command_subject_unavailable">%1$s nie istnieje!</string>
+  <string name="widget_command_no_access">Brak dostępu! (code: %1$d)</string>
+  <string name="widget_command_started">Wykonano</string>
+  <string name="widget_removed_label">Kanał usunięty</string>
+  <string name="widget_group">grupa</string>
+  <string name="widget_scene">scena</string>
+  <string name="widget_action_toggle">Przełącz</string>
 
-    <string name="em_total_forward_avtive_energy">Energia czynna pobrana</string>
-    <string name="em_reverse_active_energy">Energia czynna zwrócona</string>
-    <string name="em_total_forward_reactive_energy">Energia bierna indukcyjna</string>
-    <string name="em_total_reverse_reactive_energy">Energia bierna pojemnościowa</string>
-    <string name="em_frequency">Częstotliwość</string>
-    <string name="em_voltage">Napięcie</string>
-    <string name="em_current">Natężenie</string>
-    <string name="em_power_active">Moc czynna</string>
-    <string name="em_power_reactive">Moc bierna</string>
-    <string name="em_power_factor">Współczynnik mocy</string>
-    <string name="em_phase_angle">Kąt fazowy</string>
-    <string name="em_power_apparent">Moc pozorna</string>
-    <string name="em_phase1">Faza 1</string>
-    <string name="em_phase2">Faza 2</string>
-    <string name="em_phase3">Faza 3</string>
-    <string name="channel_caption_thermostat">Termostat</string>
-    <string name="channel_caption_thermostat_hp_homeplus">Grzałka Home+</string>
-    <string name="hp_on">WŁĄCZONY</string>
-    <string name="hp_off">WYŁĄCZONY</string>
-    <string name="hp_normal">NORMAL</string>
-    <string name="hp_eco">ECO</string>
-    <string name="hp_turbo">TURBO</string>
-    <string name="hp_auto">AUTO</string>
-    <string name="hp_room_temperature">Temperatura w pomieszczeniu</string>
-    <string name="hp_cfg_turbo_time">Czas trwania trybu TURBO</string>
-    <string name="hp_cfg_water_max">Maksymalna temperatura wody</string>
-    <string name="hp_cfg_eco_reduction">Redukcja temperatury w trybie ECO</string>
-    <string name="hp_cfg_temp_comfort_auto">Temperatura komfort w trybie AUTO</string>
-    <string name="hp_calendar_comfort">Komfort</string>
-    <string name="hp_cfg_temp_eco">Temperatura ECO w trybie AUTO</string>
-    <string name="hp_hour">godz.</string>
-    <string name="total_cost">Łączny koszt</string>
-    <string name="current_cost">Koszt w bieżącym miesiącu</string>
-    <string name="current_consumption">Zużycie w bieżącym miesiącu</string>
-    <string name="meter_value">Stan licznika</string>
-    <string name="minutes">Minuty</string>
-    <string name="hours">Godziny</string>
-    <string name="days">Dni</string>
-    <string name="months">Miesiące</string>
-    <string name="years">Lata</string>
-    <string name="ranking_of_hours">Ranking godzin</string>
-    <string name="ranking_of_weekdays">Ranking dni tygodnia</string>
-    <string name="ranking_of_months">Ranking miesięcy</string>
-    <string name="consumption_acording_to_phases">Zużycie wg. faz</string>
-    <string name="temperature">Temperatura</string>
-    <string name="humidity">Wilgotność</string>
-    <string name="last24hours">Ostatnie 24 godziny</string>
-    <string name="last7days">Ostatnie 7 dni</string>
-    <string name="last30days">Ostatnie 30 dni</string>
-    <string name="last90days">Ostatnie 90 dni</string>
-    <string name="all_available_history">Cała dostępna historia</string>
-    <string name="retrieving_data_from_the_server">Pobieranie danych z serwera...</string>
-    <string name="no_chart_data_available">Brak danych dla wykresu.</string>
-    <string name="em_chart_phase_n">Faza %d</string>
-    <string name="em_chart_all_phases">Fazy 1+2+3</string>
-    <string name="comparsion_minmin">Porównanie minuta do minuty</string>
-    <string name="comparsion_hourhour">Porównanie godzina do godziny</string>
-    <string name="comparsion_dayday">Porównanie dzień do dnia</string>
-    <string name="comparsion_monthmonth">Porównanie miesiąc do miesiąca</string>
-    <string name="comparsion_yearyear">Porównanie rok do roku</string>
-    <string name="hp_error_1">Brak wody</string>
-    <string name="hp_error_2">Spalona grzałka</string>
-    <string name="hp_error_3">Błąd czujnika temperatury wody</string>
-    <string name="hp_error_4">Błąd czujnika temperatury pokojowej</string>
-    <string name="hp_error_5">Brak przerwań sieciowych</string>
-    <string name="production_acording_to_phases">Produkcja wg. faz</string>
-    <string name="current_production">Produkcja w bieżącym miesiącu</string>
-    <string name="enter_superuser_credentials">Wprowadź poświadczenia głównego użytkownika</string>
-
-    <string name="channel_func_none">Brak funkcji</string>
-    <string name="channel_func_controllingthegatewaylock">Otwieranie furtki</string>
-    <string name="channel_func_controllingthegate">Otwieranie/zamykanie bramy wjazdowej</string>
-    <string name="channel_func_controllingthegaragedoor">Otwieranie/zamykanie bramy garażowej</string>
-    <string name="channel_func_thermometer">Termometr</string>
-    <string name="channel_func_humidity">Czujnik wilgotności</string>
-    <string name="channel_func_humidityandtemperature">Czujnik temperatury i wilgotności</string>
-    <string name="channel_func_opensensor_gateway">Czujnik otwarcia furtki</string>
-    <string name="channel_func_opensensor_gate">Czujnik otwarcia bramy wjazdowej</string>
-    <string name="channel_func_opensensor_garagedoor">Czujnik otwarcia bramy garażowej</string>
-    <string name="channel_func_noliquidsensor">Czujnik braku cieczy</string>
-    <string name="channel_func_controllingthedoorlock">Otwieranie drzwi</string>
-    <string name="channel_func_opensensor_door">Czujnik otwarcia drzwi</string>
-    <string name="channel_func_controllingtherollershutter">Otwieranie i zamykanie rolet</string>
-    <string name="channel_func_opensensor_rollershutter">Czujnik otwarcia rolet</string>
-    <string name="channel_func_powerswitch">Włącznik zasilania</string>
-    <string name="channel_func_lightswitch">Włącznik światła</string>
-    <string name="channel_func_dimmer">Ściemniacz</string>
-    <string name="channel_func_rgblighting">Oświetlenie RGB</string>
-    <string name="channel_func_dimmerandrgblighting">Ściemniacz i oświetlenie RGB</string>
-    <string name="channel_func_depthsensor">Czujnik głębokości</string>
-    <string name="channel_func_distancesensor">Czujnik odległości</string>
-    <string name="channel_func_openingsensor_window">Czujnik otwarcia okna</string>
-    <string name="channel_func_mailsensor">Czujnik poczty</string>
-    <string name="channel_func_windsensor">Czujnik wiatru</string>
-    <string name="channel_func_pressuresensor">Czujnik ciśnienia</string>
-    <string name="channel_func_rainsensor">Czujnik deszczu</string>
-    <string name="channel_func_weightsensor">Waga</string>
-    <string name="channel_func_weather_station">Stacja pogodowa</string>
-    <string name="channel_func_staircasetimer">Automat schodowy</string>
-    <string name="channel_func_electricity_meter">Licznik energii elektrycznej</string>
-    <string name="channel_func_gas_meter">Licznik gazu</string>
-    <string name="channel_func_water_meter">Licznik wody</string>
-    <string name="channel_func_heat_meter">Licznik ciepła</string>
-    <string name="channel_func_thermostat">Termostat</string>
-    <string name="channel_func_thermostat_heatpol_homeplus">Grzałka Home+</string>
-    <string name="channel_func_valve_openclose">Zawór</string>
-    <string name="channel_func_valve_percentage">Zawór</string>
-    <string name="channel_caption_heatmeter">Licznik ciepła</string>
-
-    <string name="z_wave">Most z-wave</string>
-    <string name="channel_caption_valve">Zawór</string>
-    <string name="channel_btn_close">Zamknij</string>
-    <string name="valve_open_warning">Zawór został zamknięty w trybie manualnym lub radiowo. Zanim go otworzysz upewnij się, że nie został zamknięty z powodu zalania. Aby wyłączyć ostrzeżenie otwórz zawór manualnie. Czy na pewno chcesz otworzyć zawór z aplikacji?!</string>
-    <string name="valve_warning">Zawór został zamknięty w trybie manualnym lub radiowo. Zanim go otworzysz upewnij się, że nie został zamknięty z powodu zalania. Aby wyłączyć ostrzeżenie otwórz zawór manualnie.</string>
-    <string name="yes">Tak</string>
-    <string name="no">Nie</string>
-    <string name="exit">Wyjście</string>
-    <string name="zwave_select_channel">Wybierz most z-wave, a następnie kanał który chcesz skonfigurować.</string>
-    <string name="device_name">Nazwa urządzenia</string>
-    <string name="channel_number">Numer kanału</string>
-    <string name="device_id">Id urządzenia</string>
-    <string name="channel_id">Id kanału</string>
-    <string name="soft_ver">Wersja opr.</string>
-    <string name="function">Funkcja</string>
-    <string name="caption">Podpis</string>
-    <string name="device">Urządzenie</string>
-    <string name="zwave_welcome_title">Kreator z-wave</string>
-    <string name="zwave_welcome_message">Witaj w kreatorze konfiguracji mostu z-wave. Umożliwi Ci on podłączenie posiadanych urządzeń z-wave do Supli. Naciśnij \"Dalej\" aby kontynuować.</string>
-    <string name="zwave_before_search_title">To chwilę zajmie</string>
-    <string name="zwave_before_search_message">Zanim kontynuujesz upewnij się, że wszystkie Twoje urządzenia z-wave są online. Naciśnięcie \"Dalej\" spowoduje przeszukanie Twojej sieci z-wave co może potrwać od kilku sekund do kilku minut.</string>
-    <string name="zwave_dialog_channel_detail_message">Poniżej znajdują się szczegółowe dane wybranego kanału. Określ jego przeznaczenie wybierając odpowiednią funkcję.</string>
-    <string name="zwave_error_unexpected_response">Odpowiedź urządzenia niezgodna z oczekiwaną. Metoda:%1$s Kod:%2$s</string>
-    <string name="zwave_error_function_change_error">Zmiana funkcji kanału zakończona niepowodzeniem. Kod %1$s</string>
-    <string name="zwave_error_caption_change_error">Zmiana podpisu kanału zakończona niepowodzeniem. Kod %1$s</string>
-    <string name="zwave_error_get_basic_cfg_timeout">Upłynął czas oczekiwania na dane podstawowej konfiguracji kanału</string>
-    <string name="zwave_error_set_function_timeout">Upłynął czas oczekiwania na zmianę funkcji kanału.</string>
-    <string name="zwave_error_set_caption_timeout">Upłynął czas oczekiwania na zmianę podpisu kanału.</string>
-    <string name="zwave_error_get_assigned_node_id_timeout">Upłynął czas oczekiwania na identyfikator przypisanego urządzenia z-wave.</string>
-    <string name="zwave_error_get_node_list_timeout">Upłynął czas oczekiwania na listę urządzeń z-wave.</string>
-    <string name="zwave_reset_and_clear">Resetuj sieć i ustawienia</string>
-    <string name="zwave_add_device">Dodaj urządzenie</string>
-    <string name="zwave_remove_device">Usuń urządzenie</string>
-    <string name="zwave_network">Sieć z-wave</string>
-    <string name="zwave_select_node">Wybierz urządzenie z-wave, które będzie powiązane z kanałem po stronie Supli.</string>
-    <string name="zwave_supla_channel">Kanał</string>
-    <string name="zwave_device">Urządzenie z-wave</string>
-    <string name="zwave_waiting_for_button_press">Oczekiwanie na naciśnięcie przycisku w urządzeniu z-wave.</string>
-    <string name="zwave_button_press_timeout">Upłynął czas oczekiwania na naciśnięcie przycisku.</string>
-    <string name="zwave_node_searching">Przeszukiwanie sieci z-wave w celu zbudowania listy urządzeń.</string>
-    <string name="zwave_remove_device_timeout">Upłynął czas oczekiwania na usunięcie urządzenia.</string>
-    <string name="zwave_waiting_for_reset">Oczekiwanie na potwierdzenie zresetowania sieci z-wave wraz z usunięciem ustawień.</string>
-    <string name="zwave_waiting_for_reset_timeout">Upłynął czas oczekiwania na reset sieci z-wave.</string>
-    <string name="zwave_error_assign_node_id_timeout">Upłynął czas oczekiwania na przypisanie urządzenia z-wave do kanału.</string>
-    <string name="zwave_bridge_offline">Most z-wave nie odpowiada. Sprawdź czy most jest połączony z serwerem.</string>
-    <string name="zwave_waiting_for_add">Oczekiwanie na dodanie urządzenia do sieci z-wave.</string>
-    <string name="zwave_waiting_for_add_timeout">Upłynął czas oczekiwania na dodanie urządzenia do sieci z-wave.</string>
-    <string name="zwave_reset_confirm_question">Czy na pewno chcesz zresetować ustawienia oraz sieć z-wave ?</string>
-    <string name="zwave_used">Przypisano do:</string>
-    <string name="zwave_node_assign_confirm_question">Wybrane urządzenie z-wave jest już powiązane z innym kanałem. Czy na pewno chcesz przenieść to urządzenie do tego kanału?</string>
-    <string name="zwave_error_common_message">Naciśnij wstecz aby wrócić do poprzedniego kroku lub \"Wyjście\" aby zakończyć.</string>
-    <string name="zwave_error_slave_mode">Ta funkcja nie jest dostępna gdy most pracuje w trybie podrzędnym.</string>
-    <string name="zwave_done">Gotowe! Teraz możesz zakończyć proces konfiguracji naciskając przycisk \"ok\" lub możesz nacisnąć wstecz aby skonfigurować kolejny kanał lub zmienić dotychczasowe ustawienia.</string>
-    <string name="restore_question">Czy na pewno chcesz przywrócić ustawienia domyślne ?</string>
-    <string name="belongs_to_group_error">Nie można zmienić funkcji kanału, który należy do grupy.</string>
-    <string name="has_schedule_error">Nie można zmienić funkcji kanału, który posiada harmonogram.</string>
-    <string name="associeted_with_scene_error">Nie można zmienić funkcji kanału, który jest powiązany ze sceną.</string>
-    <string name="event_openedclosedthevalve">Otwieranie/zamykanie zaworu</string>
-    <string name="bridge">Most</string>
-    <string name="em_phase_to_phase_balance">Bilans międzyfazowy wektorowy</string>
-    <string name="aritmetic_balance_minutes">Bilans arytmetyczny - Minuty</string>
-    <string name="aritmetic_balance_hours">Bilans arytmetyczny - Godziny</string>
-    <string name="aritmetic_balance_days">Bilans arytmetyczny - Dni</string>
-    <string name="aritmetic_balance_months">Bilans arytmetyczny - Miesiące</string>
-    <string name="aritmetic_balance_years">Bilans arytmetyczny - Lata</string>
-    <string name="vector_balance_minutes">Bilans wektorowy - Minuty</string>
-    <string name="vector_balance_hours">Bilans wektorowy - Godziny</string>
-    <string name="vector_balance_days">Bilans wektorowy - Dni</string>
-    <string name="vector_balance_months">Bilans wektorowy - Miesiące</string>
-    <string name="vector_balance_years">Bilans wektorowy - Lata</string>
-    <string name="wheel">Koło</string>
-    <string name="slider">Suwak</string>
-    <string name="vl_cfg_mode">Tryb ściemniania</string>
-    <string name="vl_cfg_auto">AUTO</string>
-    <string name="vl_cfg_mode1">TRYB 1</string>
-    <string name="vl_cfg_mode2">TRYB 2</string>
-    <string name="vl_cfg_mode3">TRYB 3</string>
-    <string name="vl_cfg_yes">TAK</string>
-    <string name="vl_cfg_no">NIE</string>
-    <string name="cfg_op_range">Zakres pracy</string>
-    <string name="vl_cfg_boost">Wzmocnienie</string>
-    <string name="information">Informacje</string>
-    <string name="vl_dimmer_info_txt1">Sterowanie ściemniaczem</string>
-    <string name="vl_dimmer_info_txt2">Aby zmienić poziom jasności przesuń palcem wskaźnik znajdujący się na suwaku lub kole jasności.</string>
-    <string name="vl_dimmer_info_txt3">Przyciskiem włącz/wyłącz możesz całkowicie wyłączyć lub włączyć oświetlenie.</string>
-    <string name="vl_dimmer_info_txt4">Ściemniacz zapamięta poziom jasności sprzed wyłączenia oświetlenia.</string>
-    <string name="vl_dimmer_info_txt5">Aby dostosować parametry ściemniacza, naciśnij przycisk ustawień.</string>
-    <string name="vl_dimmer_cfg_info_txt1">Tryb ściemniania / Zakres pracy</string>
-    <string name="vl_dimmer_cfg_info_txt2">Dostosuj wydajność ściemniania oświetlenia LED poprzez wybór odpowiedniego trybu. Dostosuj również zakres pracy ściemniacza poprzez ustawienie minimalnego oraz maksymalnego poziomu jasności. Wartość minimalną oraz maksymalną można ustawić przesuwając suwaki umieszczone po obu stronach koła.</string>
-    <string name="vl_dimmer_cfg_info_txt3">Tryb 1: Ściemnianie zboczem opadającym (V-Pro)</string>
-    <string name="vl_dimmer_cfg_info_txt4">Tryb 2: Ściemnianie zboczem narastającym</string>
-    <string name="vl_dimmer_cfg_info_txt5">Tryb 3: Ściemnianie zboczem opadającym (Alternatywne)</string>
-    <string name="vl_dimmer_cfg_info_txt6">Wzmocnienie</string>
-    <string name="vl_dimmer_cfg_info_txt7">Ta funkcja pomaga włączać oświetlenie LED przy zapamiętanym niskim poziomie jasności, zapewniając startowe zwiększenie (wzmocnienie) poziomu jasności. Przesuwając ciemnoszary suwak wokół koła, możesz zwiększyć lub zmniejszyć poziom wzmocnienia, który oznaczony jest zieloną linią. Podczas włączania oświetlenia poziom jasności zostanie zwiększony (wzmocniony) do zadanej wartości, a następnie powróci do poziomu zapamiętanego przed wyłączeniem oświetlenia.</string>
-    <string name="vl_dimmer_cfg_info_txt8">Więcej informacji na temat ściemniacza znajdziesz na</string>
-    <string name="time_exceeded">Przekroczono czas. Spróbuj ponownie.</string>
-    <string name="battery_level">Poziom baterii</string>
-    <string name="battery_powered">Zasilanie bateryjne</string>
-    <string name="wifi_rssi">WiFi RSSI</string>
-    <string name="wifi_signal_strength">Siła sygnału WiFi</string>
-    <string name="bridge_node_online">Węzeł mostu - online</string>
-    <string name="bridge_signal_strength">Węzeł mostu - siła sygnału</string>
-    <string name="uptime">Czas pracy</string>
-    <string name="connection_time">Czas połączenia</string>
-    <string name="battery_health">Żywotność baterii</string>
-    <string name="connection_reset_cause">Powód restartu połączenia</string>
-    <string name="light_source_lifespan">Żywotność źródła światła</string>
-    <string name="light_source_operatingtime">Czas pracy źródła światła</string>
-    <string name="chanel_lightsource_lifespan_settings">Zmień ustawienia żywotności źródła światła</string>
-    <string name="light_source_lifespan_hours">Żywotność źródła światła (godziny)</string>
-    <string name="reset_lightsource_usage_counter">Resetuj licznik zużycia źródła światła</string>
-    <string name="lightsource_warning">Żywotność źródła światła wynosi %1$s</string>
-    <string name="uv_warning1">Żywotność promiennika uv wynosi %1$s. Zaplanuj jego wymianę.</string>
-    <string name="uv_warning2">Żywotność promiennika uv wynosi %1$s. Wymień promiennik.</string>
-    <string name="wizard_step2_txt1">Wprowadź nazwę oraz hasło Twojej domowej lub firmowej sieci WiFi za pośrednictwem której urządzenie wykonawcze będzie mogło nawiązać połączenie z serwerem.</string>
-    <string name="enabling_registration_timeout">Upłynął czas oczekiwania na włączenie rejestracji!</string>
-    <string name="wifi_throttling">Z uwagi na limity skanowania sieci WiFi narzucone przez system Android, należy odczekać czas prezentowany powyżej.</string>
-    <string name="enter_suplaorg_credentails">Wprowadź Twoje dane logowania do Supla Cloud.</string>
-    <string name="save_without_saving">Czy na pewno chcesz wyjść bez zapisu?</string>
-    <string name="do_you_want_to_save">Czy chcesz zapisać ustawienia?</string>
-    <string name="restoring_default_settings">Trwa przywracanie ustawień domyślnych</string>
-    <string name="mode_change_in_progress">Trwa zmiana trybu</string>
-    <string name="wizard_step1_txt2">Zaleca się aby dane mobilne podczas dodawania urządzeń były wyłączone. W przeciwnym razie dodawanie może zakończyć się niepowodzeniem.</string>
-    <string name="wake_up_frequency">Częstotliwość wybudzania</string>
-    <string name="zwave_change_wake_up_settings">Możesz również zmienić ustawienia wybudzania naciskając poniższą ikonę.</string>
-    <string name="wakeup_info">*) Wprowadzone ustawienia zostaną zastosowane przy najbliższym wybudzeniu węzła.</string>
-    <string name="zwave_waiting_for_resposne_timeout">Upłynął czas oczekiwania na odpowiedź mostu z-wave.</string>
-    <string name="zwave_unexpected_answer">Nieoczekiwana odpowiedź mostu. Kod:  %1$s</string>
-    <string name="seconds">Sekundy</string>
-    <string name="zwave_offline">Offline ?</string>
-    <string name="zwave_device_communication_error" >Wystąpił problem komunikacji z urządzeniem z-wave. Upewnij się, że urządzenie z-wave jest w zasięgu bramki.</string>
-    <string name="hp_calendar_eco">ECO</string>
-    <string name="channel_caption_roofwindowopeningsensor">Czujnik otwarcia okna dachowego</string>
-    <string name="channel_caption_roofwindow">Okno dachowe</string>
-    <string name="channel_func_controllingtheroofwindow">Otwieranie i zamykanie okna dachowego</string>
-    <string name="channel_func_opensensor_roofwindow">Czujnik otwarcia okna dachowego</string>
-    <string name="event_openedclosedtheroofwindow">otworzył / zamknął okno dachowe</string>
-
-    <string name="status_led">Dioda statusu</string>
-    <string name="info_led_on">Dioda LED świeci jeśli nawiązano połączenie z serwerem.</string>
-    <string name="info_led_off">Dioda LED nie świeci jeśli nawiązano połączenie z serwerem.</string>
-    <string name="info_led_alwaysoff">Dioda zawsze wyłączona, chyba, że urządzenie pracuje w trybie konfiguracji wifi (Tryb AP).</string>
-    <string name="input">Wejście</string>
-    <string name="monostable">Monostabilne</string>
-    <string name="bistable">Bistabilne</string>
-    <string name="wizard_iodev_connect_failed">Próba nawiązania połączenia WiFi z urządzeniem wykonawczym zakończyła się niepowodzeniem.</string>
-    <string name="diw_cfg_info_oprange">Dostosuj zakres pracy ściemniacza poprzez ustawienie minimalnego oraz maksymalnego poziomu jasności. Wartość minimalną oraz maksymalną można ustawić przesuwając suwaki umieszczone po obu stronach koła.</string>
-    <string name="diw_cfg_info_in_options">Opcje wejścia</string>
-    <string name="diw_cfg_info_mono_option">Opcja zmienia zachowanie wejścia do którego podłączony jest przycisk monostabilny. W przypadku gdy opcja jest wyłączona, ściemniacz zatrzymuje proces rozjaśniania w momencie osiągnięcia maksymalnego poziomu jasności, a w przypadku ściemniania gdy osiągnie poziom minimalny. Włączenie tej opcji spowoduje przejście do poziomu minimalnego zaraz po osiągnięciu maksimum jasności, a w przypadku ściemniania do wartości maksymalnej, zaraz po osiągnięciu minumum. Rozjaśnianie/ściemnianie będzie trwało tak długo jak długo będzie naciśnięty przycisk.</string>
-    <string name="diw_cfg_info_bi_option">Opcja zmienia zachowanie ściemniacza w przypadku włączenia oświetlenia za pomocą przycisku bistabilnego. W przypadku gdy opcja jest włączona, ściemniacz ustawi maksymalny poziom jasności zaraz po włączeniu oświetlenia. W przypadku gdy opcja jest wyłączona, ściemniacz ustawi poziom jasności zapamiętany przed wyłączeniem oświetlenia. </string>
-    <string name="dgf_too_long_operation_warning">Sekcje szyby są odsłonięte dłużej niż 20 godzin co może negatywnie wpłynąć na ich żywotność. Zalecane jest zasłonięcie wszystkich sekcji na minimum 4 godziny w celu ich regeneracji.</string>
-    <string name="dgf_planned_regeneration_in_progress">Trwa zaplanowana regeneracja.</string>
-    <string name="dgf_regeneration_after20h">Trwa regeneracja zainicjowana po 20h pracy.</string>
-    <string name="wizard_done_explentations">Jeśli urządzenie nie pojawi się w aplikacji, powtórz niniejszą procedurę dodawania jeszcze raz i odczytaj „Poprzedni status” widoczny powyżej. Zawiera on informację umożliwiającą ustalenie dlaczego urządzenie nie połączyło się z serwerem. Komunikat \"SSID not found\" oznacza, że wprowadzona nazwa sieci WiFi 2,4 GHz nie została odnaleziona lub sieć ta jest poza zasięgiem.</string>
-    <string name="incorrect_email_or_password">Błędny adres email lub hasło</string>
-    <string name="channel_name">Nazwa kanału</string>
-    <string name="location_name">Nazwa lokalizacji</string>
-    <string name="str_default">Domyślnie</string>
-    <string name="overcurrent_warning">Zasilanie zostało wyłączone po przekroczeniu ustawionego progu dopuszczalnego natężenia prądu.</string>
-    <string name="overcurrent_question">Zasilanie zostało wyłączone po przekroczeniu ustawionego progu dopuszczalnego natężenia prądu. Czy na pewno chcesz włączyć zasilanie ?</string>
-    <string name="recalibration_question">Czy na pewno chcesz rozpocząć kalibrację ?</string>
-    <string name="calibration_failed">Kalibracja nie powiodła się.</string>
-    <string name="calibration_lost">Kalibracja została utracona.</string>
-    <string name="motor_problem">Problem z silnikiem / Nieoczekiwane zatrzymanie.</string>
-
-    <string name="widget_configure_title">Konfiguracja widżetu</string>
-    <string name="widget_configure_profile_label">Konto</string>
-    <string name="widget_configure_type_label">Widżet dla:</string>
-    <string name="widget_configure_type_channel_label">Kanału</string>
-    <string name="widget_configure_type_group_label">Grupy</string>
-    <string name="widget_configure_type_scene_label">Sceny</string>
-    <string name="widget_configure_channel_label">Kanał dla widżetu</string>
-    <string name="widget_configure_group_label">Grupa dla widżetu</string>
-    <string name="widget_configure_scene_label">Scena dla widżetu</string>
-    <string name="widget_configure_action_label">Akcja</string>
-    <string name="widget_configure_name_label">Nazwa</string>
-    <string name="widget_configure_error">Konfiguracja kanału nie powiodła się…</string>
-    <string name="widget_configure_no_selection">Nie wybrano kanału</string>
-    <string name="widget_configure_no_channel">Brak dostępnych kanałów</string>
-    <string name="widget_configure_no_group">Brak dostępnych grup</string>
-    <string name="widget_configure_no_scene">Brak dostępnch scen</string>
-    <string name="double_button_widget_description">Widżet dwuprzyciskowy</string>
-    <string name="single_button_widget_description">Widżet jednoprzyciskowy</string>
-    <string name="widget_app_not_initialized">Proszę się zalogować!</string>
-    <string name="widget_command_no_connection">Brak połączenia z internetem!</string>
-    <string name="widget_command_error">Wystąpił błąd! (kod: %1$i)</string>
-    <string name="widget_command_connection_failure">Błąd połączenia! (kod: %1$i)</string>
-    <string name="widget_command_subject_offline">%1$s jest offline!</string>
-    <string name="widget_command_subject_unavailable">%1$s nie istnieje!</string>
-    <string name="widget_command_no_access">Brak dostępu! (code: %1$i)</string>
-    <string name="widget_command_started">Wykonano</string>
-    <string name="widget_removed_label">Kanał usunięty</string>
-    <string name="widget_group">grupa</string>
-    <string name="widget_scene">scena</string>
-    <string name="widget_action_toggle">Przełącz</string>
-
-    <string translatable="false" name="lastconnectionresetcause_unknown">0: nieznany</string>
-    <string translatable="false"
-	    name="lastconnectionresetcause_activity_timeout">1: brak odpowiedzi serwera</string>
-    <string translatable="false"
-	    name="lastconnectionresetcause_wifi_connection_lost">2: utrata połączenia WiFi</string>
-    <string translatable="false"
-	    name="lastconnectionresetcause_server_connection_lost">3: reset połączenia z serwerem</string>
-    <string translatable="false" name="basic_profile_warning">Tryb niedostępny</string>
-    <string translatable="false" name="basic_config_unavailable">Przed wyłączeniem trybu zaawansowanego wybierz uwierzytelnianie email z automatycznym wykrywaniem serwera.</string>
-    <string translatable="false" name="add_device_warning">Kreator automatycznego dodawania urządzeń nie jest dostępny w trybie uwierzytelniania identyfikatorem dostępu. Urządzenia mogą być wówczas dodawane ręcznie.</string>
-    <string translatable="false" name="show_channel_info">Pokazywanie
+  <string name="lastconnectionresetcause_unknown" translatable="false">0: nieznany</string>
+  <string name="lastconnectionresetcause_activity_timeout" translatable="false">1: brak odpowiedzi serwera</string>
+  <string name="lastconnectionresetcause_wifi_connection_lost" translatable="false">2: utrata połączenia WiFi</string>
+  <string name="lastconnectionresetcause_server_connection_lost" translatable="false">3: reset połączenia z serwerem</string>
+  <string name="basic_profile_warning" translatable="false">Tryb niedostępny</string>
+  <string name="basic_config_unavailable" translatable="false">Przed wyłączeniem trybu zaawansowanego wybierz uwierzytelnianie email z automatycznym wykrywaniem serwera.</string>
+  <string name="add_device_warning" translatable="false">Kreator automatycznego dodawania urządzeń nie jest dostępny w trybie uwierzytelniania identyfikatorem dostępu. Urządzenia mogą być wówczas dodawane ręcznie.</string>
+  <string name="show_channel_info" translatable="false">Pokazywanie
     przycisku ⓘ</string>
-        <string translatable="false" name="add_device_needs_cloud_title">Konfiguracja urządzenia</string>
-    <string translatable="false" name="add_device_needs_cloud_message">To urządzenie nie ma żadnych kanałów widocznych w aplikacji. Aby dokończyć konfigurację przejdź do cloud.supla.org</string>
-    <string translatable="false" name="add_device_needs_cloud_dismiss">Rozumiem</string>
-    <string translatable="false" name="add_device_needs_cloud_go">Przejdź do CLOUD</string>
-    <string translatable="false" name="associeted_with_at_error">Nie można zmienić funkcji kanału powiązanego z wyzwalaczem akcji.</string>
-    <string translatable="false" name="location_ordering">Kolejność lokalizacji</string>
-    <string translatable="false" name="rs_display_mode">Rolety %</string>
-    <string translatable="false" name="rs_display_mode_opening">Otwarcia</string>
-    <string translatable="false" name="rs_display_mode_closing">Zamknięcia</string>
-    <string name="status_accessid_inactive">Identyfikator dostępu nieaktywny</string>
-    <string name="navbar_channels">Kanały</string>
-    <string name="navbar_groups">Grupy</string>
-    <string name="navbar_scenes">Sceny</string>
-    <string name="btn_execute">Wykonaj</string>
-    <string name="btn_abort">Przerwij</string>
-    <string name="btn_abort_and_execute">Przewij i wykonaj</string>
-    <string name="scene_name">Nazwa sceny</string>
+  <string name="add_device_needs_cloud_title" translatable="false">Konfiguracja urządzenia</string>
+  <string name="add_device_needs_cloud_message" translatable="false">To urządzenie nie ma żadnych kanałów widocznych w aplikacji. Aby dokończyć konfigurację przejdź do cloud.supla.org</string>
+  <string name="add_device_needs_cloud_dismiss" translatable="false">Rozumiem</string>
+  <string name="add_device_needs_cloud_go" translatable="false">Przejdź do CLOUD</string>
+  <string name="associeted_with_at_error" translatable="false">Nie można zmienić funkcji kanału powiązanego z wyzwalaczem akcji.</string>
+  <string name="associeted_with_push_error" translatable="false">Nie można zmienić funkcji kanału powiązanego z powiadomieniami PUSH.</string>
+  <string name="associeted_with_vbt_error" translatable="false">Nie można zmienić funkcji kanału powiązanego z reakcjami.</string>
+  <string name="location_ordering" translatable="false">Kolejność lokalizacji</string>
+  <string name="rs_display_mode" translatable="false">Rolety, żaluzje, zasłony %</string>
+  <string name="rs_display_mode_opening" translatable="false">Otwarcia</string>
+  <string name="rs_display_mode_closing" translatable="false">Zamknięcia</string>
+  <string name="status_accessid_inactive">Identyfikator dostępu nieaktywny</string>
+  <string name="navbar_channels">Kanały</string>
+  <string name="navbar_groups">Grupy</string>
+  <string name="navbar_scenes">Sceny</string>
+  <string name="btn_execute">Wykonaj</string>
+  <string name="btn_abort">Przerwij</string>
+  <string name="btn_abort_and_execute">Przewij i wykonaj</string>
+  <string name="scene_name">Nazwa sceny</string>
+
+  <string name="remove_account_title">Usunąć konto?</string>
+  <string name="remove_account_locally">Zapomnij na tym urządzeniu</string>
+  <string name="remove_account_remotely">Zapomnij i usuń na serwerze</string>
+  <string name="cancel">Anuluj</string>
+  <string name="form_profile_removal_failure">Usunięcie konta nie powiodło się, spróbuje ponownie</string>
+  <string name="general_failure">Wykonanie akcji nie powiodło się</string>
+  <string name="push_notification_limit_exceeded">Przekroczono limit powiadomień PUSH, który wynosi %1$s na godzinę.</string>
+
+  <string name="new_gesture_description">Usunęliśmy gest przesunięcia otwierający szczegóły, aby je zobaczyć dotknij wybrany kanał.</string>
+  <string name="channel_offline">Kanał jest offline</string>
+  <string name="notification_info_title">Powiadomienia!</string>
+  <string name="notification_info_message">Włącz powiadomienia, aby być na bieżąco z informacjami z Twojego domu! Potrzebujemy Twojej zgody, aby wyświetlać je na Twoim urządzeniu.\n\nPowiadomienia możesz skonfigurować w Supla Cloud.</string>
+  <string name="skip">Pomiń</string>
+  <string name="settings_notifications">Powiadomienia</string>
+  <string name="settings_localization">Lokalizacja (dokładna)</string>
+  <string name="settings_permissions">Uprawnienia</string>
+
+  <string name="details_general">Ogólne</string>
+  <string name="details_schedule">Tydzień</string>
+  <string name="details_metrics">Pomiary</string>
+  <string name="details_settings">Ustawienia</string>
+  <string name="details_history">Historia</string>
+  <string name="details_timer_wrong_time">Czas musi być większy od 0</string>
+  <string name="details_timer_text">Określ czas, w którym urządzenie powinno być:</string>
+  <string name="details_timer_turn_on_for">Włączone</string>
+  <string name="details_timer_turn_off_for">Wyłączone</string>
+  <string name="details_timer_info">Urządzenie będzie %1$s przez %2$s, a następnie się %3$s</string>
+  <string name="details_timer_leave_it">Pozostaw %1$s</string>
+  <string name="details_timer_cancel_and">Anuluj i %1$s</string>
+  <string name="details_timer_end_hour">do godz. %1$s</string>
+  <string name="hour_string_format">HH:mm:ss</string>
+  <string name="details_timer_state_label">Aktualny stan:</string>
+  <string name="details_timer_state_label_for_timer">Stan do godz. %s:</string>
+  <string name="details_timer_device_on">włączony</string>
+  <string name="details_timer_device_off">wyłączony</string>
+  <string name="details_timer_edit_time">Edytuj czas</string>
+  <string name="details_timer_edit_header">Edytuj czas, w którym urządzenie będzie %1$s</string>
+  <string name="details_timer_start">Start</string>
+  <string name="details_timer_edit_cancel">Anuluj edycję</string>
+  <string name="save">Zapisz</string>
+  <string name="details_timer_cancel_turn_off">wyłącz</string>
+  <string name="details_timer_cancel_turn_on">włącz</string>
+  <string name="thermostat_detail_mode_manual">Ręczny</string>
+  <string name="thermostat_detail_mode_weekly_schedule">Program</string>
+  <string name="monday">Poniedziałek</string>
+  <string name="tuesday">Wtorek</string>
+  <string name="wednesday">Środa</string>
+  <string name="thursday">Czwartek</string>
+  <string name="friday">Piątek</string>
+  <string name="saturday">Sobota</string>
+  <string name="sunday">Niedziela</string>
+  <string name="schedule_detail_quarters_dialog_header">Godzina %1$02d:00</string>
+  <string name="schedule_detail_program_dialog_header">Ustawienia program %1$d </string>
+  <string name="hvac_mode_heating">Grzanie</string>
+  <string name="hvac_mode_cooling">Chłodzenie</string>
+  <string name="hvac_mode_auto">Grzanie i chłodzenie</string>
+  <string name="hvac_mode_no_caption">Nieznany</string>
+  <string name="hvac_mode_temperature_heating">Temperatura grzania</string>
+  <string name="hvac_mode_temperature_cooling">Temperatura chłodzenia</string>
+  <string name="monday_short">PN</string>
+  <string name="tuesday_short">WT</string>
+  <string name="wednesday_short">ŚR</string>
+  <string name="thursday_short">CZ</string>
+  <string name="friday_short">PT</string>
+  <string name="saturday_short">SO</string>
+  <string name="sunday_short">ND</string>
+  <string name="thermostat_thermometer_error">Błąd odczytu temperatury</string>
+  <string name="thermostat_clock_error">Błąd zegara</string>
+  <string name="channel_not_supported">Niewspierana funkcja</string>
+  <string name="thermostat_detail_program_current">Aktualnie:</string>
+  <string name="thermostat_detail_program_next">Następnie:</string>
+  <string name="time_just_minutes">%1$d min.</string>
+  <string name="time_hours_and_minutes">%1$d godz. %2$d min.</string>
+  <string name="thermostat_detail_program_time">przez %1$s</string>
+
+  <string name="history_range_label">Zakres</string>
+  <string name="history_aggregation_label">Agregacja</string>
+  <string name="history_range_last_day">Ostatnie 24 godziny</string>
+  <string name="history_range_last_week">Ostatnie 7 dni</string>
+  <string name="history_range_last_30_days">Ostatnie 30 dni</string>
+  <string name="history_range_last_90_days">Ostatnie 90 dni</string>
+  <string name="history_range_current_day">Dzień</string>
+  <string name="history_range_current_week">Tydzień</string>
+  <string name="history_range_current_month">Miesiąc</string>
+  <string name="history_range_current_quarter">Kwartał</string>
+  <string name="history_range_current_year">Rok</string>
+  <string name="history_range_custom">Inny zakres</string>
+  <string name="history_refreshing">Odświeżanie…</string>
+  <string name="history_refreshing_failed">Odświeżanie nie powiodło się</string>
+  <string name="history_no_data_selected">Nie wybrano danych do wyświetlenia.</string>
+  <string name="history_no_data_available">Brak pomiarów</string>
+  <string name="channel_caption_hotelcard">Czujnik karty hotelowej</string>
+  <string name="thermostat_detail_off_by_window">Wyłączony przez otwarte okno</string>
+  <string name="thermostat_detail_off_by_card">Wyłączony z powodu braku karty hotelowej</string>
+  <string name="thermostat_detail_off_by_sensor">Wyłączony przez czujnik</string>
+  <string name="channel_caption_alarm_armament">Czujnik uzbrojenia alarmu</string>
+  <string name="calendar_picker_start_hour">Od godziny</string>
+  <string name="calendar_picker_end_hour">Do godziny</string>
+  <string name="history_wrong_range">Wybrany zakres dat jest nieprawidłowy.</string>
+  <string name="details_timer_select_mode">Wybierz tryb</string>
+  <string name="details_timer_manual_mode">Tryb ręczny</string>
+  <string name="details_timer_info_thermostat_off">Termostat będzie wyłączony przez\n%1$s</string>
+  <string name="details_timer_info_thermostat_heating">Termostat będzie w trybie grzania przez\n%1$s</string>
+  <string name="details_timer_info_thermostat_cooling">Termostat będzie w trybie chłodzenia przez\n%1$s</string>
+  <string name="details_timer_select_time">Określ czas</string>
+  <string name="details_timer_counter">Licznik</string>
+  <string name="details_timer_calendar">Kaledarz</string>
+  <string name="details_timer_min_temp">Temp. min.</string>
+  <string name="details_timer_max_temp">Temp. max.</string>
+  <string name="details_timer_state_label_for_timer_days">Stan do %1$s:</string>
+  <string name="details_timer_cancel_thermostat">Przerwij timer i włącz tryb:</string>
+  <string name="widget_processing_notification_text">Przetwarzanie…</string>
+  <string name="widget_processing_notification_title">Przetwarzanie w tle</string>
+  <string name="thermostat_detail_program_info">Dotknij, aby aktywować program. Przytrzymaj aby modyfikować program.</string>
+  <string name="thermostat_detail_box_info">Dotknij, aby ustawić wybrany program. Przytrzymaj, aby ustawić wybrane kwadranse.</string>
+  <string name="thermostat_detail_arrow_info">Czarny narożnik informuje o aktualnej godzinie i dniu.</string>
+  <string name="channel_caption_general_purpose_measurement">Kanał pomiarowy</string>
+  <string name="chart_marker_opening">Otwarcie</string>
+  <string name="chart_marker_closing">Zamknięcie</string>
+  <string name="channel_caption_general_purpose_meter">Kanał licznikowy</string>
+  <string name="history_disabled">Historia jest wyłączona dla tego kanału</string>
+  <string name="toolbar_delete_all">Usuń wszystko</string>
+  <string name="toolbar_delete_older_than_month">Usuń starsze niż 30 dni</string>
+  <string name="notification_delete_all_title">Usunąć?</string>
+  <string name="notification_delete_all_message">Usunięcie powiadomień jest nieodwracalne, kontynuować?</string>
+  <string name="notification_delete_all_proceed">Usuń</string>
+  <string name="notifications_log_profile">Profil:</string>
+  <string name="notifications_log_date">Data:</string>
+  <string name="widget_warning_battery_limitations">Aplikacja ma włączone ograniczenia w wykorzystaniu baterii. Widżet może nie działać prawidłowo. Przejdź do ustawień, aby zmienić na brak ograniczeń.</string>
+  <string name="notification_deleted">Usunięto</string>
+  <string name="settings_show_labels">Pokazuj etykiety w dolnym menu</string>
+  <string name="main_no_entries">Pusto</string>
+  <string name="groups_empty_list_button">Dodaj grupę na Supla Cloud</string>
+  <string name="scenes_empty_list_button">Dodaj scenę na Supla Cloud</string>
+  <string name="roller_shutter_closing_percentage">Zamknięcie:</string>
+  <string name="roller_shutter_opening_percentage">Otwarcie:</string>
+  <string name="roller_shutter_calibration">Kalibracja</string>
+  <string name="roller_shutter_calibration_needed">Wymagana kalibracja</string>
+  <string name="cfg_night_mode">Tryb nocny</string>
+  <string name="menu_device_catalog">Katalog urządzeń</string>
+  <string name="facade_blind_slat_tilt">Nachylenie:</string>
+  <string name="channel_caption_facade_blinds">Żaluzja fasadowa</string>
+  <string name="channel_loading_error">Błąd ładowania kanału</string>
+  <string name="facade_blinds_no_tilt">Brak konfiguracji</string>
+  <string name="toolbar_delete_chart_history">Usuń historię i pobierz ponownie</string>
+  <string name="history_wait_for_download_completed">Proszę czekać, pobieram…</string>
+  <string name="channel_caption_terrace_awning">Markiza tarasowa</string>
+  <string name="channel_caption_projector_screen">Ekran projekcyjny</string>
+  <string name="channel_caption_curtain">Zasłona</string>
+  <string name="channel_caption_vertical_blinds">Żaluzja pionowa</string>
+  <string name="channel_caption_roller_garage_door">Brama garażowa</string>
+  <string name="shading_system_extension">Rozwinięcie:</string>
+
+  <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
+    <item quantity="one">włączone</item>
+    <item quantity="other">włączy</item>
+  </plurals>
+  <plurals name="details_timer_info_off" tools:ignore="MissingQuantity">
+    <item quantity="one">wyłączone</item>
+    <item quantity="other">wyłączy</item>
+  </plurals>
+  <plurals name="day_pattern">
+    <item quantity="zero">%1$d dni</item>
+    <item quantity="one">%1$d dzień</item>
+    <item quantity="few">%1$d dni</item>
+    <item quantity="many">%1$d dni</item>
+  </plurals>
+  <plurals name="hour_pattern" tools:ignore="MissingQuantity">
+    <item quantity="other">%1$d godz.</item>
+  </plurals>
+  <plurals name="minute_pattern" tools:ignore="MissingQuantity">
+    <item quantity="other">%1$d min.</item>
+  </plurals>
+  <plurals name="second_pattern" tools:ignore="MissingQuantity">
+    <item quantity="other">%1$d sek.</item>
+  </plurals>
 </resources>

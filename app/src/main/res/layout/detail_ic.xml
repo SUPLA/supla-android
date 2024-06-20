@@ -5,7 +5,7 @@
     android:id="@+id/icrl_Main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/detail_rs_bg"
+    android:background="@color/background"
     android:visibility="visible">
 
     <RelativeLayout
@@ -104,7 +104,7 @@
             android:layout_marginBottom="-10dp"
             android:indeterminateOnly="true"
             android:scaleY="5"
-            android:secondaryProgressTint="@color/activity_bg" />
+            android:secondaryProgressTint="@color/background" />
 
         <View
             android:id="@+id/view"
@@ -114,7 +114,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginBottom="5dp"
-            android:background="@android:color/black" />
+            android:background="@color/on_background" />
 
         <ImageView
             android:id="@+id/icimgIcon"
@@ -125,7 +125,7 @@
             android:layout_centerVertical="true"
             android:layout_marginStart="15dp"
             android:layout_marginLeft="15dp"
-            android:background="@drawable/electricitymeter"
+            android:background="@drawable/fnc_electricity_meter"
             android:visibility="visible" />
 
         <LinearLayout

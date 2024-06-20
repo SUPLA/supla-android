@@ -1,0 +1,44 @@
+package org.supla.android.extensions
+/*
+ Copyright (C) AC SOFTWARE SP. Z O.O.
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
+
+import android.content.res.Resources
+import androidx.compose.ui.unit.Dp
+import kotlin.math.roundToInt
+
+/**
+ * Converts temperature to short which is used in supla protocols to present temperature.
+ * Temperature is presented as a float value multiplied by 100 without fractional part.
+ * In this method we're additional cutting of second position after decimal point, because
+ * in the application you're able to change only first position.
+ */
+fun Float.toSuplaTemperature() = this.times(10).roundToInt().times(10).toShort()
+
+fun Float.toDp(): Dp {
+  return Dp(this / Resources.getSystem().displayMetrics.density)
+}
+
+fun Float.limit(min: Float = 0f, max: Float = 1f): Float {
+  return if (this < min) {
+    min
+  } else if (this > max) {
+    max
+  } else {
+    this
+  }
+}

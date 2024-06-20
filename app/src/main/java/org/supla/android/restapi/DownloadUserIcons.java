@@ -1,114 +1,128 @@
 package org.supla.android.restapi;
 
 /*
- Copyright (C) AC SOFTWARE SP. Z O.O.
+Copyright (C) AC SOFTWARE SP. Z O.O.
 
- This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation; either version 2
- of the License, or (at your option) any later version.
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
- You should have received a copy of the GNU General Public License
- along with this program; if not, write to the Free Software
- Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- */
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+*/
 
 import android.content.Context;
 import android.util.Base64;
-
+import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.List;
+import org.supla.android.features.icons.LoadUserIconsIntoCacheWorker;
 
 public class DownloadUserIcons extends SuplaRestApiClientTask {
 
-    final private int PACKAGE_SIZE = 4;
-    final private int DELAY = 2500;
-    private int DownloadCount = 0;
+  private final int PACKAGE_SIZE = 4;
+  private final int DELAY = 2500;
+  private final Context context;
 
-    public DownloadUserIcons(Context context) {
-        super(context);
+  public DownloadUserIcons(Context context) {
+    super(context);
+    this.context = context;
+  }
+
+  @Override
+  protected Object doInBackground(Object[] objects) {
+    try {
+      Thread.sleep(DELAY);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
     }
 
-    @Override
-    protected Object doInBackground(Object[] objects) {
-        try {
-            Thread.sleep(DELAY);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    List<Integer> ids = getDbH().iconsToDownload();
 
-        List<Integer> ids = getDbH().iconsToDownload();
+    String package_ids = "";
+    for (int a = 0; a < ids.size(); a++) {
 
-        String package_ids = "";
-        for (int a = 0; a < ids.size(); a++) {
+      if (!package_ids.isEmpty()) {
+        package_ids += ",";
+      }
 
-            if (!package_ids.isEmpty()) {
-                package_ids += ",";
-            }
+      package_ids += ids.get(a).toString();
 
-            package_ids += ids.get(a).toString();
+      if (a % PACKAGE_SIZE == PACKAGE_SIZE - 1 || a == ids.size() - 1) {
+        ApiRequestResult result = apiRequest("user-icons?include=images&ids=" + package_ids);
 
-            if (a % PACKAGE_SIZE == PACKAGE_SIZE - 1 || a == ids.size() - 1) {
-                ApiRequestResult result = apiRequest(
-                        "user-icons?include=images&ids=" + package_ids);
+        if (result != null && result.getCode() == 200 && result.getJObj() instanceof JSONArray) {
 
-                if (result != null
-                        && result.getCode() == 200
-                        && result.getJObj() instanceof JSONArray) {
+          JSONArray arr = (JSONArray) result.getJObj();
+          for (int b = 0; b < arr.length(); b++) {
+            try {
+              JSONObject obj = arr.getJSONObject(b);
+              int imgId = obj.getInt("id");
+              if (imgId > 0) {
+                JSONArray images = obj.getJSONArray("images");
 
-                    JSONArray arr = (JSONArray) result.getJObj();
-                    for (int b = 0; b < arr.length(); b++) {
-                        try {
-                            JSONObject obj = arr.getJSONObject(b);
-                            int imgId = obj.getInt("id");
-                            if (imgId > 0) {
-                                JSONArray images = obj.getJSONArray("images");
+                byte[] img1 =
+                    images.length() > 0 ? Base64.decode(images.getString(0), Base64.DEFAULT) : null;
 
-                                byte[] img1 = images.length() > 0 ?
-                                        Base64.decode(images.getString(0), Base64.DEFAULT)
-                                        : null;
+                byte[] img2 =
+                    images.length() > 1 ? Base64.decode(images.getString(1), Base64.DEFAULT) : null;
 
+                byte[] img3 =
+                    images.length() > 2 ? Base64.decode(images.getString(2), Base64.DEFAULT) : null;
 
-                                byte[] img2 = images.length() > 1 ?
-                                        Base64.decode(images.getString(1), Base64.DEFAULT)
-                                        : null;
+                byte[] img4 =
+                    images.length() > 3 ? Base64.decode(images.getString(3), Base64.DEFAULT) : null;
 
-                                byte[] img3 = images.length() > 2 ?
-                                        Base64.decode(images.getString(2), Base64.DEFAULT)
-                                        : null;
+                try {
+                  JSONArray darkImages = obj.getJSONArray("imagesDark");
 
-                                byte[] img4 = images.length() > 3 ?
-                                        Base64.decode(images.getString(3), Base64.DEFAULT)
-                                        : null;
+                  byte[] img1Dark =
+                      darkImages.length() > 0
+                          ? Base64.decode(darkImages.getString(0), Base64.DEFAULT)
+                          : null;
 
-                                boolean added = getDbH().addUserIcons(
-                                        imgId, img1, img2, img3, img4);
-                                if (added) {
-                                    DownloadCount++;
-                                }
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
+                  byte[] img2Dark =
+                      darkImages.length() > 1
+                          ? Base64.decode(darkImages.getString(1), Base64.DEFAULT)
+                          : null;
+
+                  byte[] img3Dark =
+                      darkImages.length() > 2
+                          ? Base64.decode(darkImages.getString(2), Base64.DEFAULT)
+                          : null;
+
+                  byte[] img4Dark =
+                      darkImages.length() > 3
+                          ? Base64.decode(darkImages.getString(3), Base64.DEFAULT)
+                          : null;
+
+                  getDbH()
+                      .addUserIcons(
+                          imgId, img1, img2, img3, img4, img1Dark, img2Dark, img3Dark, img4Dark);
+                } catch (JSONException ex) {
+                  getDbH().addUserIcons(imgId, img1, img2, img3, img4, null, null, null, null);
                 }
-
-                package_ids = "";
+              }
+            } catch (JSONException e) {
+              e.printStackTrace();
             }
+          }
         }
 
-        return null;
+        package_ids = "";
+      }
     }
 
-    public int downloadCount() {
-        return DownloadCount;
-    }
+    LoadUserIconsIntoCacheWorker.Companion.start(context);
+
+    return null;
+  }
 }

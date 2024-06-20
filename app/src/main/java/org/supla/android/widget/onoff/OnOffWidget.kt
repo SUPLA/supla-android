@@ -21,7 +21,6 @@ import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
 import android.os.Build
 import android.view.View
 import android.widget.RemoteViews
@@ -31,13 +30,16 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import org.supla.android.R
 import org.supla.android.Trace
+import org.supla.android.data.model.general.ChannelState
+import org.supla.android.data.model.general.IconType
 import org.supla.android.db.Channel
-import org.supla.android.db.ChannelBase
+import org.supla.android.extensions.getChannelIconUseCase
+import org.supla.android.extensions.isGpm
+import org.supla.android.extensions.isThermometer
 import org.supla.android.images.ImageCache
 import org.supla.android.lib.SuplaConst
 import org.supla.android.widget.WidgetConfiguration
 import org.supla.android.widget.shared.WidgetProviderBase
-import org.supla.android.widget.shared.configuration.isThermometer
 import org.supla.android.widget.shared.getWorkId
 import org.supla.android.widget.shared.isWidgetValid
 
@@ -77,7 +79,7 @@ class OnOffWidget : WidgetProviderBase() {
     appWidgetManager.updateAppWidget(widgetId, views)
   }
 
-  override fun onReceive(context: Context?, intent: Intent?) {
+  override fun onReceive(context: Context, intent: Intent?) {
     super.onReceive(context, intent)
     Trace.i(TAG, "Got intent with action: " + intent?.action)
 
@@ -106,7 +108,7 @@ class OnOffWidget : WidgetProviderBase() {
       .build()
 
     // Work for widget ID is unique, so no other worker for the same ID will be started
-    WorkManager.getInstance()
+    WorkManager.getInstance(context)
       .enqueueUniqueWork(getWorkId(widgetIds), ExistingWorkPolicy.KEEP, removeWidgetsWork)
   }
 
@@ -121,52 +123,33 @@ class OnOffWidget : WidgetProviderBase() {
     channel.altIcon = configuration.altIcon
     channel.userIconId = configuration.userIcon
 
-    val activeValue = getActiveValue(configuration.itemFunction)
-
-    val viewId = if (channel.isThermometer()) {
+    val iconViewId = if (channel.isThermometer() || channel.isGpm()) {
       R.id.on_off_widget_value_icon
     } else {
       R.id.on_off_widget_turn_on_button
     }
+    val activeIcon = context.getChannelIconUseCase.invoke(channel, IconType.SINGLE, ChannelState.getActiveValue(channel.func))
+    ImageCache.loadBitmapForWidgetView(activeIcon, views, iconViewId, false)
 
-    views.setImageViewBitmap(
-      viewId,
-      ImageCache.getBitmap(
-        context,
-        channel.getImageIdx(false, ChannelBase.WhichOne.First, activeValue)
-      )
-    )
-
-    val viewIdNightMode = if (channel.isThermometer()) {
+    val viewIdNightMode = if (channel.isThermometer() || channel.isGpm()) {
       R.id.on_off_widget_value_icon_night_mode
     } else {
       R.id.on_off_widget_turn_on_button_night_mode
     }
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-      views.setImageViewBitmap(
-        viewIdNightMode,
-        ImageCache.getBitmap(
-          context,
-          channel.getImageIdx(true, ChannelBase.WhichOne.First, activeValue)
-        )
-      )
+      ImageCache.loadBitmapForWidgetView(activeIcon, views, viewIdNightMode, true)
     }
 
-    if (channel.isThermometer()) {
+    if (channel.isThermometer() || channel.isGpm()) {
       views.setTextViewText(R.id.on_off_widget_value_text, configuration.value)
       views.setViewVisibility(R.id.on_off_widget_buttons, View.GONE)
       views.setViewVisibility(R.id.on_off_widget_value, View.VISIBLE)
     } else {
-      views.setImageViewBitmap(
-        R.id.on_off_widget_turn_off_button,
-        ImageCache.getBitmap(context, channel.getImageIdx(false, ChannelBase.WhichOne.First, 0))
-      )
+      val inactiveIcon = context.getChannelIconUseCase.invoke(channel, IconType.SINGLE, ChannelState.getInactiveValue(channel.func))
+      ImageCache.loadBitmapForWidgetView(inactiveIcon, views, R.id.on_off_widget_turn_off_button, false)
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-        views.setImageViewBitmap(
-          R.id.on_off_widget_turn_off_button_night_mode,
-          ImageCache.getBitmap(context, channel.getImageIdx(true, ChannelBase.WhichOne.First, 0))
-        )
+        ImageCache.loadBitmapForWidgetView(inactiveIcon, views, R.id.on_off_widget_turn_off_button_night_mode, true)
       }
       views.setViewVisibility(R.id.on_off_widget_buttons, View.VISIBLE)
       views.setViewVisibility(R.id.on_off_widget_value, View.GONE)
@@ -174,16 +157,9 @@ class OnOffWidget : WidgetProviderBase() {
   }
 
   companion object {
-    private val TAG = OnOffWidget::javaClass.name
+    private val TAG = OnOffWidget::class.simpleName
   }
 }
-
-fun getActiveValue(channelFunction: Int) =
-  if (channelFunction == SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING) {
-    3
-  } else {
-    1
-  }
 
 internal fun buildWidget(context: Context, widgetId: Int): RemoteViews {
   val views = RemoteViews(context.packageName, R.layout.on_off_widget)
@@ -213,11 +189,17 @@ internal fun pendingIntent(context: Context, intentAction: String, widgetId: Int
 fun updateOnOffWidget(context: Context, widgetId: Int) =
   context.sendBroadcast(intent(context, AppWidgetManager.ACTION_APPWIDGET_UPDATE, widgetId))
 
-fun intent(context: Context, intentAction: String, widgetId: Int): Intent {
+fun updateOnOffWidgets(context: Context, widgetIds: IntArray) =
+  context.sendBroadcast(intent(context, AppWidgetManager.ACTION_APPWIDGET_UPDATE, widgetIds))
+
+fun intent(context: Context, intentAction: String, widgetId: Int): Intent =
+  intent(context, intentAction, intArrayOf(widgetId))
+
+fun intent(context: Context, intentAction: String, widgetIds: IntArray): Intent {
   Trace.d(OnOffWidget::javaClass.name, "Creating intent with action: $intentAction")
   return Intent(context, OnOffWidget::class.java).apply {
     action = intentAction
     flags = Intent.FLAG_RECEIVER_FOREGROUND
-    putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, intArrayOf(widgetId))
+    putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, widgetIds)
   }
 }

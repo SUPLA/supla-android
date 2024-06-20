@@ -1,108 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@color/surface"
+  android:orientation="vertical">
+
+  <LinearLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/tvInfoTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:text="@string/information"
-            android:textColor="@color/vl_infotitle"
-            android:textSize="30sp" />
-
-        <Button
-            android:id="@+id/btnClose"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="0"
-            android:background="@drawable/infoclose" />
-
-    </LinearLayout>
-
-    <View
-        android:id="@+id/view8"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/vl_infoline" />
+    android:layout_height="80dp"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp"
+    android:orientation="horizontal">
 
     <TextView
-        android:id="@+id/tvInfoTxt1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="20dp"
-        android:text="@string/vl_dimmer_info_txt1"
-        android:textColor="@color/vl_infotitle"
-        android:textStyle="bold" />
+      android:id="@+id/tvInfoTitle"
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent"
+      android:layout_weight="1"
+      android:gravity="center_vertical"
+      android:text="@string/information"
+      android:textColor="@color/on_background"
+      android:textSize="30sp" />
 
-    <TextView
-        android:id="@+id/tvInfoTxt2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:text="@string/vl_dimmer_info_txt2"
-        android:textColor="@color/vl_infotext" />
+    <androidx.appcompat.widget.AppCompatButton
+      android:id="@+id/btnClose"
+      android:layout_width="50dp"
+      android:layout_height="50dp"
+      android:layout_gravity="center_vertical"
+      android:layout_weight="0"
+      android:background="@drawable/infoclose" />
 
-    <ImageView
-        android:id="@+id/imageView6"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="10dp"
-        android:layout_weight="0"
-        android:background="@drawable/rgbwpoweroff" />
+  </LinearLayout>
 
-    <TextView
-        android:id="@+id/tvInfoTxt3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_weight="0"
-        android:text="@string/vl_dimmer_info_txt3"
-        android:textColor="@color/vl_infotext" />
+  <View
+    android:id="@+id/view8"
+    android:layout_width="match_parent"
+    android:layout_height="1dp"
+    android:background="@color/vl_infoline" />
 
-    <TextView
-        android:id="@+id/tvInfoTxt4"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_weight="0"
-        android:text="@string/vl_dimmer_info_txt4"
-        android:textColor="@color/vl_infotext" />
+  <TextView
+    android:id="@+id/tvInfoTxt1"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="20dp"
+    android:layout_marginTop="20dp"
+    android:layout_marginRight="20dp"
+    android:text="@string/vl_dimmer_info_txt1"
+    android:textColor="@color/on_background"
+    android:textStyle="bold" />
 
-    <ImageView
-        android:id="@+id/imageView9"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="10dp"
-        android:layout_weight="0"
-        android:background="@drawable/rgbwsettings" />
+  <TextView
+    android:id="@+id/tvInfoTxt2"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp"
+    android:text="@string/vl_dimmer_info_txt2"
+    android:textColor="@color/vl_infotext" />
 
-    <TextView
-        android:id="@+id/tvInfoTxt5"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginBottom="30dp"
-        android:layout_weight="0"
-        android:text="@string/vl_dimmer_info_txt5"
-        android:textColor="@color/vl_infotext" />
+  <ImageView
+    android:id="@+id/imageView6"
+    android:layout_width="30dp"
+    android:layout_height="30dp"
+    android:layout_marginLeft="15dp"
+    android:layout_marginTop="10dp"
+    android:layout_weight="0"
+    android:background="@drawable/rgbwpoweroff" />
+
+  <TextView
+    android:id="@+id/tvInfoTxt3"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp"
+    android:layout_weight="0"
+    android:text="@string/vl_dimmer_info_txt3"
+    android:textColor="@color/vl_infotext" />
+
+  <TextView
+    android:id="@+id/tvInfoTxt4"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp"
+    android:layout_weight="0"
+    android:text="@string/vl_dimmer_info_txt4"
+    android:textColor="@color/vl_infotext" />
+
+  <androidx.appcompat.widget.AppCompatImageView
+    android:id="@+id/imageView9"
+    android:layout_width="30dp"
+    android:layout_height="30dp"
+    android:layout_marginLeft="15dp"
+    android:layout_marginTop="10dp"
+    android:layout_weight="0"
+    android:background="@drawable/rgbw_button_background"
+    android:src="@drawable/rgbwsettings"
+    android:scaleType="fitCenter"
+    android:tint="@color/on_background"/>
+
+  <TextView
+    android:id="@+id/tvInfoTxt5"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp"
+    android:layout_marginBottom="30dp"
+    android:layout_weight="0"
+    android:text="@string/vl_dimmer_info_txt5"
+    android:textColor="@color/vl_infotext" />
 </LinearLayout>

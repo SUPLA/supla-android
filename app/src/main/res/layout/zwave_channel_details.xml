@@ -1,231 +1,221 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@color/primary">
+
+  <TextView
+    android:id="@+id/tv_channel_detail_title"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerHorizontal="false"
+    android:layout_marginLeft="20dp"
+    android:layout_marginTop="60dp"
+    android:layout_marginRight="20dp"
+    android:text="@string/function"
+    android:textColor="@android:color/white"
+    android:textSize="40sp" />
+
+  <TextView
+    android:id="@+id/tv_channel_detail_description"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/tv_channel_detail_title"
+    android:layout_marginLeft="20dp"
+    android:layout_marginTop="10dp"
+    android:layout_marginRight="20dp"
+    android:text="@string/zwave_dialog_channel_detail_message"
+    android:textColor="@android:color/white"
+    android:textSize="18sp" />
+
+  <LinearLayout
+    android:id="@+id/ll_channel_details"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/menubar">
-
-    <TextView
-        android:id="@+id/tv_channel_detail_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="false"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="60dp"
-        android:layout_marginRight="20dp"
-        android:text="@string/function"
-        android:textColor="@android:color/white"
-        android:textSize="40sp" />
-
-    <TextView
-        android:id="@+id/tv_channel_detail_description"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_channel_detail_title"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="20dp"
-        android:text="@string/zwave_dialog_channel_detail_message"
-        android:textColor="@android:color/white"
-        android:textSize="18sp" />
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/tv_channel_detail_description"
+    android:layout_marginTop="20dp"
+    android:background="@color/background"
+    android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/ll_channel_details"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="horizontal">
+
+      <TextView
+        android:id="@+id/tv_device_name_title"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="1dp"
+        android:layout_weight="1"
+        android:gravity="right"
+        android:paddingRight="10dp"
+        android:text="@string/device_name"
+        android:textColor="@color/on_background" />
+
+      <TextView
+        android:id="@+id/tv_device_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_channel_detail_description"
-        android:layout_marginTop="20dp"
-        android:background="@color/zwave_info_table_separator"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/tv_device_name_title"
-                android:layout_width="350dp"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="1dp"
-                android:layout_weight="1"
-                android:background="@color/zwave_info_table_bg"
-                android:gravity="right"
-                android:paddingRight="10dp"
-                android:text="@string/device_name"
-                android:textColor="@color/zwave_info_table_text" />
-
-            <TextView
-                android:id="@+id/tv_device_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@color/zwave_info_table_bg"
-                android:paddingLeft="5dp"
-                android:textColor="@color/zwave_info_table_text" />
-        </LinearLayout>
+        android:layout_weight="1"
+        android:paddingLeft="5dp"
+        android:textColor="@color/on_background" />
+    </LinearLayout>
 
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/tv_soft_ver_title"
-                android:layout_width="350dp"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="1dp"
-                android:layout_weight="1"
-                android:background="@color/zwave_info_table_bg"
-                android:gravity="right"
-                android:paddingRight="10dp"
-                android:text="@string/soft_ver"
-                android:textColor="@color/zwave_info_table_text" />
+      <TextView
+        android:id="@+id/tv_soft_ver_title"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="1dp"
+        android:layout_weight="1"
+        android:gravity="right"
+        android:paddingRight="10dp"
+        android:text="@string/soft_ver"
+        android:textColor="@color/on_background" />
 
-            <TextView
-                android:id="@+id/tv_soft_ver"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@color/zwave_info_table_bg"
-                android:paddingLeft="5dp"
-                android:textColor="@color/zwave_info_table_text" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/tv_device_id_title"
-                android:layout_width="350dp"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="1dp"
-                android:layout_weight="1"
-                android:background="@color/zwave_info_table_bg"
-                android:gravity="right"
-                android:paddingRight="10dp"
-                android:text="@string/device_id"
-                android:textColor="@color/zwave_info_table_text" />
-
-            <TextView
-                android:id="@+id/tv_device_id"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@color/zwave_info_table_bg"
-                android:paddingLeft="5dp"
-                android:textColor="@color/zwave_info_table_text" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/tv_channel_id_title"
-                android:layout_width="350dp"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="1dp"
-                android:layout_weight="1"
-                android:background="@color/zwave_info_table_bg"
-                android:gravity="right"
-                android:paddingRight="10dp"
-                android:text="@string/channel_id"
-                android:textColor="@color/zwave_info_table_text" />
-
-            <TextView
-                android:id="@+id/tv_channel_id"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@color/zwave_info_table_bg"
-                android:paddingLeft="5dp"
-                android:textColor="@color/zwave_info_table_text" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/tv_channel_number_title"
-                android:layout_width="350dp"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="1dp"
-                android:layout_weight="1"
-                android:background="@color/zwave_info_table_bg"
-                android:gravity="right"
-                android:paddingRight="10dp"
-                android:text="@string/channel_number"
-                android:textColor="@color/zwave_info_table_text" />
-
-            <TextView
-                android:id="@+id/tv_channel_number"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@color/zwave_info_table_bg"
-                android:paddingLeft="5dp"
-                android:textColor="@color/zwave_info_table_text" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal" />
+      <TextView
+        android:id="@+id/tv_soft_ver"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:paddingLeft="5dp"
+        android:textColor="@color/on_background" />
     </LinearLayout>
 
     <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="horizontal">
+
+      <TextView
+        android:id="@+id/tv_device_id_title"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="1dp"
+        android:layout_weight="1"
+        android:gravity="right"
+        android:paddingRight="10dp"
+        android:text="@string/device_id"
+        android:textColor="@color/on_background" />
+
+      <TextView
+        android:id="@+id/tv_device_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/ll_channel_details"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="20dp"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/tv_function"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/function"
-            android:textColor="@android:color/white"
-            android:textSize="18sp" />
-
-        <Spinner
-            android:id="@+id/zwave_func_list"
-            android:layout_width="match_parent"
-            android:layout_height="35dp"
-            android:layout_marginTop="5dp"
-            android:background="@drawable/rounded_spinner"
-            android:padding="5dp"
-            android:textSize="18sp" />
-
-        <TextView
-            android:id="@+id/tv_caption"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="@string/caption"
-            android:textColor="@android:color/white"
-            android:textSize="18sp" />
-
-        <EditText
-            android:id="@+id/et_caption"
-            android:layout_width="match_parent"
-            android:layout_height="35dp"
-            android:layout_below="@id/wizard_wifi_list"
-            android:layout_marginTop="5dp"
-            android:background="@drawable/rounded_edittext"
-            android:inputType="text"
-            android:maxLength="100"
-            android:padding="5dp"
-            android:textSize="18sp" />
+        android:layout_weight="1"
+        android:paddingLeft="5dp"
+        android:textColor="@color/on_background" />
     </LinearLayout>
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="horizontal">
+
+      <TextView
+        android:id="@+id/tv_channel_id_title"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="1dp"
+        android:layout_weight="1"
+        android:gravity="right"
+        android:paddingRight="10dp"
+        android:text="@string/channel_id"
+        android:textColor="@color/on_background" />
+
+      <TextView
+        android:id="@+id/tv_channel_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:paddingLeft="5dp"
+        android:textColor="@color/on_background" />
+    </LinearLayout>
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="horizontal">
+
+      <TextView
+        android:id="@+id/tv_channel_number_title"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="1dp"
+        android:layout_weight="1"
+        android:gravity="right"
+        android:paddingRight="10dp"
+        android:text="@string/channel_number"
+        android:textColor="@color/on_background" />
+
+      <TextView
+        android:id="@+id/tv_channel_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:paddingLeft="5dp"
+        android:textColor="@color/on_background" />
+    </LinearLayout>
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="horizontal" />
+  </LinearLayout>
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/ll_channel_details"
+    android:layout_marginLeft="20dp"
+    android:layout_marginTop="20dp"
+    android:layout_marginRight="20dp"
+    android:orientation="vertical">
+
+    <TextView
+      android:id="@+id/tv_function"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/function"
+      android:textColor="@android:color/white"
+      android:textSize="18sp" />
+
+    <Spinner
+      android:id="@+id/zwave_func_list"
+      android:layout_width="match_parent"
+      android:layout_height="35dp"
+      android:layout_marginTop="5dp"
+      android:background="@drawable/background_spinner"
+      android:padding="5dp"
+      android:textSize="18sp" />
+
+    <TextView
+      android:id="@+id/tv_caption"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="10dp"
+      android:text="@string/caption"
+      android:textColor="@android:color/white"
+      android:textSize="18sp" />
+
+    <EditText
+      android:id="@+id/et_caption"
+      style="@style/AppTheme.EditText"
+      android:layout_width="match_parent"
+      android:layout_height="35dp"
+      android:layout_below="@id/wizard_wifi_list"
+      android:layout_marginTop="5dp"
+      android:inputType="text"
+      android:maxLength="100"
+      android:padding="5dp"
+      android:textSize="18sp" />
+  </LinearLayout>
 
 
 </RelativeLayout>

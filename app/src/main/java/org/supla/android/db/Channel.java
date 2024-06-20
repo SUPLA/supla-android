@@ -24,9 +24,10 @@ import android.content.Context;
 import android.database.Cursor;
 import org.supla.android.R;
 import org.supla.android.ValuesFormatterProvider;
-import org.supla.android.images.ImageId;
+import org.supla.android.data.ValuesFormatter;
+import org.supla.android.data.source.local.entity.ChannelEntity;
+import org.supla.android.data.source.remote.channel.SuplaChannelFlag;
 import org.supla.android.lib.DigiglassValue;
-import org.supla.android.lib.SuplaChannel;
 import org.supla.android.lib.SuplaChannelState;
 import org.supla.android.lib.SuplaChannelValue;
 import org.supla.android.lib.SuplaConst;
@@ -108,7 +109,9 @@ public class Channel extends ChannelBase {
 
   public ChannelValue getValue() {
 
-    if (Value == null) Value = new ChannelValue();
+    if (Value == null) {
+      Value = new ChannelValue();
+    }
 
     return Value;
   }
@@ -127,36 +130,22 @@ public class Channel extends ChannelBase {
 
   @SuppressLint("Range")
   public void AssignCursorData(Cursor cursor) {
-    setId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ChannelEntry._ID)));
-    setDeviceID(
-        cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_DEVICEID)));
-    setRemoteId(
-        cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_CHANNELID)));
-    setType(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_TYPE)));
-    setFunc(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_FUNC)));
-    setCaption(
-        cursor.getString(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_CAPTION)));
-    setVisible(
-        cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_VISIBLE)));
-    setLocationId(
-        cursor.getLong(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_LOCATIONID)));
-    setAltIcon(
-        cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_ALTICON)));
-    setUserIconId(
-        cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_USERICON)));
-    setManufacturerID(
-        cursor.getShort(
-            cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_MANUFACTURERID)));
-    setProductID(
-        cursor.getShort(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_PRODUCTID)));
-    setFlags(cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_FLAGS)));
-    setProtocolVersion(
-        cursor.getInt(
-            cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_PROTOCOLVERSION)));
-    setPosition(
-        cursor.getInt(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_POSITION)));
-    setProfileId(
-        cursor.getLong(cursor.getColumnIndex(SuplaContract.ChannelEntry.COLUMN_NAME_PROFILEID)));
+    setId(cursor.getLong(cursor.getColumnIndex(ChannelEntity.COLUMN_ID)));
+    setDeviceID(cursor.getInt(cursor.getColumnIndex(ChannelEntity.COLUMN_DEVICE_ID)));
+    setRemoteId(cursor.getInt(cursor.getColumnIndex(ChannelEntity.COLUMN_CHANNEL_REMOTE_ID)));
+    setType(cursor.getInt(cursor.getColumnIndex(ChannelEntity.COLUMN_TYPE)));
+    setFunc(cursor.getInt(cursor.getColumnIndex(ChannelEntity.COLUMN_FUNCTION)));
+    setCaption(cursor.getString(cursor.getColumnIndex(ChannelEntity.COLUMN_CAPTION)));
+    setVisible(cursor.getInt(cursor.getColumnIndex(ChannelEntity.COLUMN_VISIBLE)));
+    setLocationId(cursor.getLong(cursor.getColumnIndex(ChannelEntity.COLUMN_LOCATION_ID)));
+    setAltIcon(cursor.getInt(cursor.getColumnIndex(ChannelEntity.COLUMN_ALT_ICON)));
+    setUserIconId(cursor.getInt(cursor.getColumnIndex(ChannelEntity.COLUMN_USER_ICON)));
+    setManufacturerID(cursor.getShort(cursor.getColumnIndex(ChannelEntity.COLUMN_MANUFACTURER_ID)));
+    setProductID(cursor.getShort(cursor.getColumnIndex(ChannelEntity.COLUMN_PRODUCT_ID)));
+    setFlags(cursor.getInt(cursor.getColumnIndex(ChannelEntity.COLUMN_FLAGS)));
+    setProtocolVersion(cursor.getInt(cursor.getColumnIndex(ChannelEntity.COLUMN_PROTOCOL_VERSION)));
+    setPosition(cursor.getInt(cursor.getColumnIndex(ChannelEntity.COLUMN_POSITION)));
+    setProfileId(cursor.getLong(cursor.getColumnIndex(ChannelEntity.COLUMN_PROFILE_ID)));
 
     ChannelValue cv = new ChannelValue();
     cv.AssignCursorData(cursor);
@@ -175,55 +164,23 @@ public class Channel extends ChannelBase {
 
     ContentValues values = new ContentValues();
 
-    values.put(SuplaContract.ChannelEntry.COLUMN_NAME_CHANNELID, getChannelId());
-    values.put(SuplaContract.ChannelEntry.COLUMN_NAME_DEVICEID, getDeviceID());
-    values.put(SuplaContract.ChannelEntry.COLUMN_NAME_CAPTION, getCaption());
-    values.put(SuplaContract.ChannelEntry.COLUMN_NAME_FUNC, getFunc());
-    values.put(SuplaContract.ChannelEntry.COLUMN_NAME_TYPE, getType());
-    values.put(SuplaContract.ChannelEntry.COLUMN_NAME_VISIBLE, getVisible());
-    values.put(SuplaContract.ChannelEntry.COLUMN_NAME_LOCATIONID, getLocationId());
-    values.put(SuplaContract.ChannelEntry.COLUMN_NAME_ALTICON, getAltIcon());
-    values.put(SuplaContract.ChannelEntry.COLUMN_NAME_USERICON, getUserIconId());
-    values.put(SuplaContract.ChannelEntry.COLUMN_NAME_MANUFACTURERID, getManufacturerID());
-    values.put(SuplaContract.ChannelEntry.COLUMN_NAME_PRODUCTID, getProductID());
-    values.put(SuplaContract.ChannelEntry.COLUMN_NAME_FLAGS, getFlags());
-    values.put(SuplaContract.ChannelEntry.COLUMN_NAME_PROTOCOLVERSION, getProtocolVersion());
-    values.put(SuplaContract.ChannelEntry.COLUMN_NAME_POSITION, getPosition());
-    values.put(SuplaContract.ChannelEntry.COLUMN_NAME_PROFILEID, getProfileId());
+    values.put(ChannelEntity.COLUMN_CHANNEL_REMOTE_ID, getChannelId());
+    values.put(ChannelEntity.COLUMN_DEVICE_ID, getDeviceID());
+    values.put(ChannelEntity.COLUMN_CAPTION, getCaption());
+    values.put(ChannelEntity.COLUMN_FUNCTION, getFunc());
+    values.put(ChannelEntity.COLUMN_TYPE, getType());
+    values.put(ChannelEntity.COLUMN_VISIBLE, getVisible());
+    values.put(ChannelEntity.COLUMN_LOCATION_ID, getLocationId());
+    values.put(ChannelEntity.COLUMN_ALT_ICON, getAltIcon());
+    values.put(ChannelEntity.COLUMN_USER_ICON, getUserIconId());
+    values.put(ChannelEntity.COLUMN_MANUFACTURER_ID, getManufacturerID());
+    values.put(ChannelEntity.COLUMN_PRODUCT_ID, getProductID());
+    values.put(ChannelEntity.COLUMN_FLAGS, getFlags());
+    values.put(ChannelEntity.COLUMN_PROTOCOL_VERSION, getProtocolVersion());
+    values.put(ChannelEntity.COLUMN_POSITION, getPosition());
+    values.put(ChannelEntity.COLUMN_PROFILE_ID, getProfileId());
 
     return values;
-  }
-
-  public void Assign(SuplaChannel channel, int profileId) {
-    super.Assign(channel, profileId);
-    setDeviceID(channel.DeviceID);
-    setType(channel.Type);
-    setProtocolVersion(channel.ProtocolVersion);
-    setManufacturerID(channel.ManufacturerID);
-    setProductID(channel.ProductID);
-
-    getValue().AssignSuplaChannelValue(channel.Value);
-  }
-
-  public boolean Diff(SuplaChannel channel) {
-    return super.Diff(channel)
-        || channel.Type != getType()
-        || channel.DeviceID != getDeviceID()
-        || channel.ProtocolVersion != getProtocolVersion()
-        || channel.ManufacturerID != getManufacturerID()
-        || channel.ProductID != getProductID()
-        || getValue().Diff(channel.Value);
-  }
-
-  public boolean Diff(Channel channel) {
-
-    return super.Diff(channel)
-        || channel.getType() != getType()
-        || channel.getDeviceID() != getDeviceID()
-        || channel.getProtocolVersion() != getProtocolVersion()
-        || channel.getManufacturerID() != getManufacturerID()
-        || channel.getProductID() != getProductID()
-        || getValue().Diff(channel.getValue());
   }
 
   public double getDouble(double unknown) {
@@ -238,15 +195,6 @@ public class Channel extends ChannelBase {
     return Value != null ? Value.getDistance() : -1;
   }
 
-  public byte getClosingPercentage() {
-
-    byte p = Value != null ? Value.getRollerShutterValue().getClosingPercentage() : 0;
-
-    if (p < 100 && getSubValueHi()) p = 100;
-
-    return p;
-  }
-
   public byte getColorBrightness() {
     return Value != null ? Value.getColorBrightness() : 0;
   }
@@ -257,28 +205,6 @@ public class Channel extends ChannelBase {
 
   public int getColor() {
     return Value != null ? Value.getColor() : 0;
-  }
-
-  public boolean getSubValueHi() {
-    return Value != null && Value.getSubValueHi() > 0;
-  }
-
-  @Override
-  protected int imgActive(ChannelValue value) {
-
-    if (getOnLine()
-        && (getFunc() == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
-            || getFunc() == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW)
-        && getClosingPercentage() >= 100) {
-      return 1;
-    }
-
-    return super.imgActive(value);
-  }
-
-  @Override
-  public ImageId getImageIdx(WhichOne whichImage) {
-    return super.getImageIdx(whichImage, Value);
   }
 
   public String getUnit() {
@@ -294,6 +220,7 @@ public class Channel extends ChannelBase {
     return "";
   }
 
+  @SuppressLint("DefaultLocale")
   protected CharSequence getHumanReadableValue(WhichOne whichOne, ChannelValue value) {
 
     switch (getFunc()) {
@@ -301,10 +228,16 @@ public class Channel extends ChannelBase {
       case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
       case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
         if (value.getSubValueType() == SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS) {
-          return String.format("%.1f " + getUnit(), value.getImpulseCounterCalculatedValue(true));
+          double doubleValue = value.getImpulseCounterCalculatedValue(true);
+          return doubleValue > 0
+              ? String.format("%.2f " + getUnit(), doubleValue)
+              : ValuesFormatter.NO_VALUE_TEXT;
         } else if (value.getSubValueType()
             == SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS) {
-          return String.format("%.2f kWh", value.getTotalForwardActiveEnergy(true));
+          double doubleValue = value.getTotalForwardActiveEnergy(true);
+          return doubleValue > 0
+              ? String.format("%.2f kWh", doubleValue)
+              : ValuesFormatter.NO_VALUE_TEXT;
         }
         break;
     }
@@ -312,9 +245,10 @@ public class Channel extends ChannelBase {
     // TODO: Remove channel type checking in future versions. Check function instead of type. #
     // 140-issue
     if (getType() == SuplaConst.SUPLA_CHANNELTYPE_IMPULSE_COUNTER) {
-      return getOnLine()
-          ? String.format("%.1f " + getUnit(), value.getImpulseCounterCalculatedValue())
-          : "--- " + getUnit();
+      double doubleValue = value.getImpulseCounterCalculatedValue();
+      return doubleValue > 0
+          ? String.format("%.2f " + getUnit(), doubleValue)
+          : ValuesFormatter.NO_VALUE_TEXT;
     }
 
     return super.getHumanReadableValue(whichOne, value);
@@ -439,7 +373,9 @@ public class Channel extends ChannelBase {
                 context.getResources().getString(R.string.dgf_too_long_operation_warning));
           }
           return 2;
-        } else return 0;
+        } else {
+          return 0;
+        }
     }
 
     return 0;
@@ -473,11 +409,11 @@ public class Channel extends ChannelBase {
   public int getChannelStateIcon() {
     if ((getOnLine()
         || (getType() == SuplaConst.SUPLA_CHANNELTYPE_BRIDGE
-            && (getFlags() & SuplaConst.SUPLA_CHANNEL_FLAG_CHANNELSTATE) > 0
-            && (getFlags() & SuplaConst.SUPLA_CHANNEL_FLAG_OFFLINE_DURING_REGISTRATION) > 0))) {
+            && SuplaChannelFlag.CHANNEL_STATE.inside(getFlags())
+            && SuplaChannelFlag.OFFLINE_DURING_REGISTRATION.inside(getFlags())))) {
       SuplaChannelState state = getChannelState();
 
-      if (state != null || (getFlags() & SuplaConst.SUPLA_CHANNEL_FLAG_CHANNELSTATE) != 0) {
+      if (state != null || SuplaChannelFlag.CHANNEL_STATE.inside(getFlags())) {
         if (state != null && (state.getFields() & state.getDefaultIconField()) != 0) {
           switch (state.getDefaultIconField()) {
             case SuplaChannelState.FIELD_BATTERYPOWERED:
@@ -488,7 +424,7 @@ public class Channel extends ChannelBase {
           }
         }
 
-        return R.drawable.channelstateinfo;
+        return R.drawable.ic_info;
       }
     }
 

@@ -1,109 +1,116 @@
 package org.supla.android.profile
 
 import android.content.Context
-import android.content.DialogInterface
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
-import androidx.databinding.Bindable
-import androidx.databinding.BaseObservable
+import io.reactivex.rxjava3.schedulers.Schedulers
 import org.supla.android.R
 import org.supla.android.SuplaApp
-import org.supla.android.MainActivity
-import org.supla.android.db.AuthProfileItem
 import org.supla.android.cfg.ProfileItemViewModel
-import org.supla.android.databinding.ProfileChooserListItemBinding
+import org.supla.android.data.source.local.entity.ProfileEntity
+import org.supla.android.databinding.LiProfileChooserBinding
 import org.supla.android.databinding.ProfileChooserBinding
+import org.supla.android.usecases.profile.ActivateProfileUseCase
+import org.supla.android.usecases.profile.ReadAllProfilesUseCase
 
+class ProfileChooser(
+  private val context: Context,
+  private val activateProfileUseCase: ActivateProfileUseCase,
+  readAllProfilesUseCase: ReadAllProfilesUseCase
+) {
 
-class ProfileChooser(private val context: Context,
-                     private val profileManager: ProfileManager) {
+  private val profiles: List<ProfileEntity> = readAllProfilesUseCase().blockingFirst()
+  private var dialog: AlertDialog? = null
 
-    private val profiles: Array<AuthProfileItem>
-    private var dialog: AlertDialog? = null
+  interface Listener {
+    fun onProfileChanged()
+  }
 
+  var listener: Listener? = null
 
-    interface Listener {
-        fun onProfileChanged()
+  fun show() {
+    val inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+    val viewBinding = ProfileChooserBinding.inflate(inflater, null, false)
+    val chooserView = viewBinding.root
+
+    viewBinding.profileChooser.adapter = Adapter(profiles, this)
+
+    val builder = AlertDialog.Builder(context)
+
+    with(builder) {
+      setTitle(R.string.profile_select_active)
+      setCancelable(true)
+      setView(chooserView)
+      dialog = show()
+    }
+  }
+
+  fun dismiss() {
+    dialog?.dismiss()
+    dialog = null
+  }
+
+  fun selectProfile(idx: Int) {
+    val activated = try {
+      activateProfileUseCase(profiles[idx].id!!, false)
+        .subscribeOn(Schedulers.io())
+        .blockingAwait()
+      true
+    } catch (throwable: Throwable) {
+      false
     }
 
-    var listener: Listener? = null
+    if (activated) {
+      listener?.onProfileChanged()
+    }
+    dialog?.dismiss()
+  }
 
-    init {
-        profiles = profileManager.getAllProfiles().toTypedArray()
+  class Adapter(
+    private val profiles: List<ProfileEntity>,
+    private val host: ProfileChooser
+  ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    inner class ItemViewHolder(val binding: LiProfileChooserBinding) : RecyclerView.ViewHolder(binding.root)
+
+    override fun onCreateViewHolder(
+      parent: ViewGroup,
+      viewType: Int
+    ): RecyclerView.ViewHolder {
+      val type = SuplaApp.getApp().typefaceOpenSansRegular
+      val inflater = LayoutInflater.from(parent.context)
+      val binding = LiProfileChooserBinding.inflate(
+        inflater,
+        parent,
+        false
+      )
+      binding.profileLabel.setTypeface(type)
+      return ItemViewHolder(binding)
     }
 
-    fun show() {
-        val inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val viewBinding = ProfileChooserBinding.inflate(inflater, null, false)
-        val chooserView = viewBinding.root
-
-        viewBinding.profileChooser.adapter = Adapter(profiles, this)
-        
-        val builder = AlertDialog.Builder(context)
-
-        with(builder) {
-
-            setTitle(R.string.profile_select_active)
-            setCancelable(true)
-            setView(chooserView)
-            dialog = show()
+    override fun onBindViewHolder(
+      vh: RecyclerView.ViewHolder,
+      pos: Int
+    ) {
+      val itm = profiles.get(pos)
+      if (vh is ItemViewHolder) {
+        vh.binding.viewModel = ItemViewModel(itm.name, itm.active == true)
+        vh.binding.root.setOnClickListener {
+          host.selectProfile(pos)
         }
+      }
     }
 
-    fun dismiss() {
-        dialog?.dismiss()
-        dialog = null
+    override fun getItemCount(): Int {
+      return profiles.size
     }
 
-    fun selectProfile(idx: Int) {
-        if(profileManager.activateProfile(profiles[idx].id, false)) {
-            listener?.onProfileChanged()
-        }
-        dialog?.dismiss()
+    override fun getItemId(pos: Int): Long {
+      return pos.toLong()
     }
+  }
 
-    class Adapter(private val profiles: Array<AuthProfileItem>,
-                  private val host: ProfileChooser): 
-        RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
-        inner class ItemViewHolder(val binding: ProfileChooserListItemBinding) 
-            : RecyclerView.ViewHolder(binding.root)
-
-        override fun onCreateViewHolder(parent: ViewGroup,
-                                        viewType: Int): RecyclerView.ViewHolder {
-            val type = SuplaApp.getApp().typefaceOpenSansRegular
-            val inflater = LayoutInflater.from(parent.context)
-            val binding = ProfileChooserListItemBinding.inflate(inflater, parent,
-                                                                false)
-            binding.profileLabel.setTypeface(type)
-            return ItemViewHolder(binding)
-        }
-
-        override fun onBindViewHolder(vh: RecyclerView.ViewHolder,
-                                      pos: Int) {
-            val itm = profiles.get(pos)
-            if(vh is ItemViewHolder) {
-                vh.binding.viewModel = ItemViewModel(itm.name, itm.isActive)
-                vh.binding.root.setOnClickListener {
-                    host.selectProfile(pos)
-                }
-            }
-        }
-
-        override fun getItemCount(): Int {
-            return profiles.size
-        }
-
-        override fun getItemId(pos: Int): Long {
-            return pos.toLong()
-        }
-    }
-
-
-    class ItemViewModel(name: String, isActive: Boolean): 
-        ProfileItemViewModel(name, isActive) {
-    }
+  class ItemViewModel(name: String, isActive: Boolean) : ProfileItemViewModel(name, isActive)
 }

@@ -6,8 +6,25 @@ steps:
   image: devel/supla-android-ci
   pull: never
   commands:
+    - mv app/drone.google-services.json app/google-services.json
+    - mv app/src/internaltest/drone.google-services.json app/src/internaltest/google-services.json
+    - mv app/src/internalTestRelease/drone.google-services.json app/src/internalTestRelease/google-services.json
     - ./gradlew build connectedCheck
-     
+
+# Use in case of problems with unit tests
+#- name: failureLog
+#  image: devel/supla-android-ci
+#  pull: never
+#  depends_on: [ connectedCheck ]
+#  commands:
+#    - find app/build/reports -type d
+#    - cat app/build/reports/tests/testDebugUnitTest/classes/org.supla.android.data.model.chart.DateRangeTest.html
+#  when:
+#    status: [ success, failure ]
+#    event:
+#      exclude:
+#        - pull_request
+
 
 - name: notify
   image: mike1pol/drone-rocket

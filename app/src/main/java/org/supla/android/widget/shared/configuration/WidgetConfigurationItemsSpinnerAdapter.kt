@@ -18,7 +18,6 @@ package org.supla.android.widget.shared.configuration
  */
 
 import android.content.Context
-import android.content.res.Configuration
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,26 +27,28 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.LayoutRes
 import org.supla.android.R
+import org.supla.android.data.model.general.IconType
+import org.supla.android.data.source.local.entity.Scene
 import org.supla.android.db.ChannelBase
 import org.supla.android.db.DbItem
 import org.supla.android.db.Location
-import org.supla.android.db.Scene
+import org.supla.android.extensions.getChannelIconUseCase
 import org.supla.android.images.ImageCache
 
 class WidgetConfigurationChannelsSpinnerAdapter(
   context: Context,
   objects: MutableList<SpinnerItem<DbItem>>
-) : ArrayAdapter<SpinnerItem<DbItem>>(context, R.layout.widget_channel_spinner_item, objects) {
+) : ArrayAdapter<SpinnerItem<DbItem>>(context, R.layout.li_widget_channel_spinner, objects) {
 
   override fun getItemId(position: Int): Long =
-    if ( position < count ) getItem(position)?.value?.id ?: 0 else 0
+    if (position < count) getItem(position)?.value?.id ?: 0 else 0
 
   override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-    return createDropDownItemView(position, convertView, R.layout.spinner_display_item)
+    return createDropDownItemView(position, convertView, R.layout.li_widget_spinner_display_item)
   }
 
   override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
-    return createItemView(position, convertView, R.layout.widget_channel_spinner_item)
+    return createItemView(position, convertView, R.layout.li_widget_channel_spinner)
   }
 
   fun postItems(channels: List<SpinnerItem<DbItem>>) {
@@ -59,11 +60,6 @@ class WidgetConfigurationChannelsSpinnerAdapter(
   private fun createItemView(position: Int, convertView: View?, @LayoutRes layout: Int): View {
     val view = convertView ?: LayoutInflater.from(context).inflate(layout, null)
     val item = getItem(position) ?: return view
-    val nightMode = context
-      .resources
-      .configuration
-      .uiMode
-      .and(Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
 
     when {
       item.isLocation() -> {
@@ -82,7 +78,7 @@ class WidgetConfigurationChannelsSpinnerAdapter(
 
         val icon = view.findViewById<ImageView>(R.id.spinner_item_icon)
         icon.visibility = View.VISIBLE
-        icon.setImageBitmap(ImageCache.getBitmap(context, scene.getImageId(nightMode)))
+        icon.setImageBitmap(ImageCache.getBitmap(context, scene.getImageId()))
       }
       else -> {
         view.findViewById<LinearLayout>(R.id.spinner_item_content).isClickable = false
@@ -90,14 +86,14 @@ class WidgetConfigurationChannelsSpinnerAdapter(
         view.findViewById<LinearLayout>(R.id.spinner_item_content)
           .setBackgroundResource(R.color.widget_spinner_item_background)
         view.findViewById<TextView>(R.id.spinner_item_text)?.text =
-          channel.getNotEmptyCaption(context)
+          channel.getCaption(context)
 
         val icon = view.findViewById<ImageView>(R.id.spinner_item_icon)
         icon.visibility = View.VISIBLE
         icon.setImageBitmap(
           ImageCache.getBitmap(
             context,
-            channel.getImageIdx(nightMode, ChannelBase.WhichOne.First, 0)
+            context.getChannelIconUseCase.invoke(channel, IconType.SINGLE)
           )
         )
       }
@@ -121,7 +117,7 @@ class WidgetConfigurationChannelsSpinnerAdapter(
         view.findViewById<TextView>(R.id.spinner_text)?.text = (item.value as Scene).caption
       else ->
         view.findViewById<TextView>(R.id.spinner_text)?.text =
-          (item.value as ChannelBase).getNotEmptyCaption(context)
+          (item.value as ChannelBase).getCaption(context)
     }
     return view
   }

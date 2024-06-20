@@ -19,6 +19,8 @@ package org.supla.android.widget.onoff.configuration
 
 import android.database.Cursor
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import io.reactivex.rxjava3.core.Maybe
+import io.reactivex.rxjava3.core.Observable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.*
@@ -45,6 +47,7 @@ import org.supla.android.lib.SuplaConst
 import org.supla.android.lib.singlecall.SingleCall
 import org.supla.android.profile.ProfileManager
 import org.supla.android.testhelpers.getOrAwaitValue
+import org.supla.android.usecases.channelconfig.LoadChannelConfigUseCase
 import org.supla.android.widget.WidgetPreferences
 import org.supla.android.widget.shared.WidgetConfigurationViewModelTestBase
 import org.supla.android.widget.shared.configuration.EmptyDisplayNameException
@@ -84,10 +87,15 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
   @Mock
   private lateinit var temperatureFormat: ValuesFormatter
 
+  @Mock
+  private lateinit var loadChannelConfigUseCase: LoadChannelConfigUseCase
+
   @Before
   fun setUp() {
     whenever(dispatchers.io()).thenReturn(testDispatcher)
     Dispatchers.setMain(testDispatcher)
+
+    whenever(profileManager.getAllProfiles()).thenReturn(Observable.just(emptyList()))
   }
 
   @After
@@ -102,11 +110,11 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
     val cursor: Cursor =
       mockCursorChannels(SuplaConst.SUPLA_CHANNELFNC_DIMMER, SuplaConst.SUPLA_CHANNELFNC_ALARM)
     whenever(channelRepository.getAllProfileChannels(any())).thenReturn(cursor)
-    whenever(preferences.configIsSet()).thenReturn(true)
+    whenever(preferences.isAnyAccountRegistered).thenReturn(true)
 
     val profile = mock<AuthProfileItem>()
     whenever(profile.id).thenReturn(profileId)
-    whenever(profileManager.getCurrentProfile()).thenReturn(profile)
+    whenever(profileManager.getCurrentProfile()).thenReturn(Maybe.just(profile))
 
     // when
     val viewModel = OnOffWidgetConfigurationViewModel(
@@ -117,7 +125,8 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
       sceneRepository,
       dispatchers,
       singleCallProvider,
-      temperatureFormat
+      temperatureFormat,
+      loadChannelConfigUseCase
     )
     advanceUntilIdle()
     val channels = viewModel.itemsList.getOrAwaitValue()
@@ -128,7 +137,7 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
     verify(profileManager).getCurrentProfile()
     verify(profileManager).getAllProfiles()
     verify(dispatchers).io()
-    verify(preferences).configIsSet()
+    verify(preferences).isAnyAccountRegistered
     verifyNoMoreInteractions(channelRepository, profileManager, dispatchers, preferences)
     verifyNoInteractions(widgetPreferences)
   }
@@ -142,11 +151,11 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
     whenever(channelRepository.getAllProfileChannelGroups(profileId)).thenReturn(cursor)
     val channelsCursor = mockCursorChannels()
     whenever(channelRepository.getAllProfileChannels(any())).thenReturn(channelsCursor)
-    whenever(preferences.configIsSet()).thenReturn(true)
+    whenever(preferences.isAnyAccountRegistered).thenReturn(true)
 
     val profile = mock<AuthProfileItem>()
     whenever(profile.id).thenReturn(profileId)
-    whenever(profileManager.getCurrentProfile()).thenReturn(profile)
+    whenever(profileManager.getCurrentProfile()).thenReturn(Maybe.just(profile))
 
     // when
     val viewModel = OnOffWidgetConfigurationViewModel(
@@ -157,7 +166,8 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
       sceneRepository,
       dispatchers,
       singleCallProvider,
-      temperatureFormat
+      temperatureFormat,
+      loadChannelConfigUseCase
     )
     advanceUntilIdle()
     viewModel.changeType(ItemType.GROUP)
@@ -171,7 +181,7 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
     verify(profileManager).getCurrentProfile()
     verify(profileManager).getAllProfiles()
     verify(dispatchers, times(2)).io()
-    verify(preferences).configIsSet()
+    verify(preferences).isAnyAccountRegistered
     verifyNoMoreInteractions(channelRepository, profileManager, dispatchers, preferences)
     verifyNoInteractions(widgetPreferences)
   }
@@ -188,11 +198,11 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
       SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH
     )
     whenever(channelRepository.getAllProfileChannels(any())).thenReturn(cursor)
-    whenever(preferences.configIsSet()).thenReturn(true)
+    whenever(preferences.isAnyAccountRegistered).thenReturn(true)
 
     val profile = mock<AuthProfileItem>()
     whenever(profile.id).thenReturn(profileId)
-    whenever(profileManager.getCurrentProfile()).thenReturn(profile)
+    whenever(profileManager.getCurrentProfile()).thenReturn(Maybe.just(profile))
 
     // when
     val viewModel = OnOffWidgetConfigurationViewModel(
@@ -203,7 +213,8 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
       sceneRepository,
       dispatchers,
       singleCallProvider,
-      temperatureFormat
+      temperatureFormat,
+      loadChannelConfigUseCase
     )
     advanceUntilIdle()
     val channels = viewModel.itemsList.getOrAwaitValue()
@@ -214,7 +225,7 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
     verify(profileManager).getCurrentProfile()
     verify(profileManager).getAllProfiles()
     verify(dispatchers).io()
-    verify(preferences).configIsSet()
+    verify(preferences).isAnyAccountRegistered
     verifyNoMoreInteractions(channelRepository, profileManager, dispatchers, preferences)
     verifyNoInteractions(widgetPreferences)
   }
@@ -234,11 +245,11 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
     whenever(channelRepository.getAllProfileChannels(any())).thenReturn(channelsCursor)
     val groupsCursor = mockCursorChannelGroups(*functions)
     whenever(channelRepository.getAllProfileChannelGroups(profileId)).thenReturn(groupsCursor)
-    whenever(preferences.configIsSet()).thenReturn(true)
+    whenever(preferences.isAnyAccountRegistered).thenReturn(true)
 
     val profile = mock<AuthProfileItem>()
     whenever(profile.id).thenReturn(profileId)
-    whenever(profileManager.getCurrentProfile()).thenReturn(profile)
+    whenever(profileManager.getCurrentProfile()).thenReturn(Maybe.just(profile))
 
     // when
     val viewModel = OnOffWidgetConfigurationViewModel(
@@ -249,7 +260,8 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
       sceneRepository,
       dispatchers,
       singleCallProvider,
-      temperatureFormat
+      temperatureFormat,
+      loadChannelConfigUseCase
     )
     advanceUntilIdle()
     viewModel.changeType(ItemType.GROUP)
@@ -263,7 +275,7 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
     verify(profileManager).getCurrentProfile()
     verify(profileManager).getAllProfiles()
     verify(dispatchers, times(2)).io()
-    verify(preferences).configIsSet()
+    verify(preferences).isAnyAccountRegistered
     verifyNoMoreInteractions(channelRepository, profileManager, dispatchers, preferences)
     verifyNoInteractions(widgetPreferences)
   }
@@ -277,11 +289,11 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
       SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW
     )
     whenever(channelRepository.getAllProfileChannels(any())).thenReturn(cursor)
-    whenever(preferences.configIsSet()).thenReturn(true)
+    whenever(preferences.isAnyAccountRegistered).thenReturn(true)
 
     val profile = mock<AuthProfileItem>()
     whenever(profile.id).thenReturn(profileId)
-    whenever(profileManager.getCurrentProfile()).thenReturn(profile)
+    whenever(profileManager.getCurrentProfile()).thenReturn(Maybe.just(profile))
 
     // when
     val viewModel = OnOffWidgetConfigurationViewModel(
@@ -292,7 +304,8 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
       sceneRepository,
       dispatchers,
       singleCallProvider,
-      temperatureFormat
+      temperatureFormat,
+      loadChannelConfigUseCase
     )
     advanceUntilIdle()
     val channels = viewModel.itemsList.getOrAwaitValue()
@@ -303,7 +316,7 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
     verify(profileManager).getCurrentProfile()
     verify(profileManager).getAllProfiles()
     verify(dispatchers).io()
-    verify(preferences).configIsSet()
+    verify(preferences).isAnyAccountRegistered
     verifyNoMoreInteractions(channelRepository, profileManager, dispatchers, preferences)
     verifyNoInteractions(widgetPreferences)
   }
@@ -320,11 +333,11 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
     whenever(channelRepository.getAllProfileChannels(any())).thenReturn(cursor)
     val groupsCursor = mockCursorChannelGroups(*functions)
     whenever(channelRepository.getAllProfileChannelGroups(profileId)).thenReturn(groupsCursor)
-    whenever(preferences.configIsSet()).thenReturn(true)
+    whenever(preferences.isAnyAccountRegistered).thenReturn(true)
 
     val profile = mock<AuthProfileItem>()
     whenever(profile.id).thenReturn(profileId)
-    whenever(profileManager.getCurrentProfile()).thenReturn(profile)
+    whenever(profileManager.getCurrentProfile()).thenReturn(Maybe.just(profile))
 
     // when
     val viewModel = OnOffWidgetConfigurationViewModel(
@@ -335,7 +348,8 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
       sceneRepository,
       dispatchers,
       singleCallProvider,
-      temperatureFormat
+      temperatureFormat,
+      loadChannelConfigUseCase
     )
     advanceUntilIdle()
     viewModel.changeType(ItemType.GROUP)
@@ -349,7 +363,7 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
     verify(profileManager).getCurrentProfile()
     verify(profileManager).getAllProfiles()
     verify(dispatchers, times(2)).io()
-    verify(preferences).configIsSet()
+    verify(preferences).isAnyAccountRegistered
     verifyNoMoreInteractions(channelRepository, profileManager, dispatchers, preferences)
     verifyNoInteractions(widgetPreferences)
   }
@@ -360,11 +374,11 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
     val profileId = 123L
     val cursor: Cursor = mockCursorChannels()
     whenever(channelRepository.getAllProfileChannels(profileId)).thenReturn(cursor)
-    whenever(preferences.configIsSet()).thenReturn(true)
+    whenever(preferences.isAnyAccountRegistered).thenReturn(true)
 
     val profile = mock<AuthProfileItem>()
     whenever(profile.id).thenReturn(profileId)
-    whenever(profileManager.getCurrentProfile()).thenReturn(profile)
+    whenever(profileManager.getCurrentProfile()).thenReturn(Maybe.just(profile))
 
     // when
     val viewModel = OnOffWidgetConfigurationViewModel(
@@ -375,7 +389,8 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
       sceneRepository,
       dispatchers,
       singleCallProvider,
-      temperatureFormat
+      temperatureFormat,
+      loadChannelConfigUseCase
     )
     advanceUntilIdle()
     val channels = viewModel.itemsList.getOrAwaitValue()
@@ -386,7 +401,7 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
     verify(profileManager).getCurrentProfile()
     verify(profileManager).getAllProfiles()
     verify(dispatchers).io()
-    verify(preferences).configIsSet()
+    verify(preferences).isAnyAccountRegistered
     verifyNoMoreInteractions(channelRepository, profileManager, dispatchers, preferences)
     verifyNoInteractions(widgetPreferences)
   }
@@ -394,7 +409,7 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
   @Test
   fun `shouldn't allow to save the selection when there is no widget id set`() = runTest {
     // given
-    whenever(preferences.configIsSet()).thenReturn(true)
+    whenever(preferences.isAnyAccountRegistered).thenReturn(true)
     val viewModel = OnOffWidgetConfigurationViewModel(
       preferences,
       widgetPreferences,
@@ -403,7 +418,8 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
       sceneRepository,
       dispatchers,
       singleCallProvider,
-      temperatureFormat
+      temperatureFormat,
+      loadChannelConfigUseCase
     )
 
     // when
@@ -419,7 +435,7 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
   @Test
   fun `shouldn't allow to save selection when there is no channel selected`() = runTest {
     // given
-    whenever(preferences.configIsSet()).thenReturn(true)
+    whenever(preferences.isAnyAccountRegistered).thenReturn(true)
     val viewModel = OnOffWidgetConfigurationViewModel(
       preferences,
       widgetPreferences,
@@ -428,7 +444,8 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
       sceneRepository,
       dispatchers,
       singleCallProvider,
-      temperatureFormat
+      temperatureFormat,
+      loadChannelConfigUseCase
     )
     advanceUntilIdle()
 
@@ -447,7 +464,7 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
   fun `shouldn't allow to save selection when there is no display name for channel provided`() =
     runTest {
       // given
-      whenever(preferences.configIsSet()).thenReturn(true)
+      whenever(preferences.isAnyAccountRegistered).thenReturn(true)
       val viewModel = OnOffWidgetConfigurationViewModel(
         preferences,
         widgetPreferences,
@@ -456,7 +473,8 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
         sceneRepository,
         dispatchers,
         singleCallProvider,
-        temperatureFormat
+        temperatureFormat,
+        loadChannelConfigUseCase
       )
       advanceUntilIdle()
 
@@ -478,12 +496,12 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
     val cursor: Cursor =
       mockCursorChannels(SuplaConst.SUPLA_CHANNELFNC_DIMMER, SuplaConst.SUPLA_CHANNELFNC_ALARM)
     whenever(channelRepository.getAllProfileChannels(any())).thenReturn(cursor)
-    whenever(preferences.configIsSet()).thenReturn(true)
+    whenever(preferences.isAnyAccountRegistered).thenReturn(true)
     val profileId: Long = 123
     val profile = mock<AuthProfileItem> {
       on { id } doReturn profileId
     }
-    whenever(profileManager.getCurrentProfile()).thenReturn(profile)
+    whenever(profileManager.getCurrentProfile()).thenReturn(Maybe.just(profile))
     val viewModel = OnOffWidgetConfigurationViewModel(
       preferences,
       widgetPreferences,
@@ -492,7 +510,8 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
       sceneRepository,
       dispatchers,
       singleCallProvider,
-      temperatureFormat
+      temperatureFormat,
+      loadChannelConfigUseCase
     )
     advanceUntilIdle()
 
@@ -543,11 +562,11 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
     whenever(channelRepository.getAllProfileChannels(secondProfileId)).thenReturn(
       secondProfileCursor
     )
-    whenever(preferences.configIsSet()).thenReturn(true)
+    whenever(preferences.isAnyAccountRegistered).thenReturn(true)
 
     val firstProfile = mock<AuthProfileItem>()
     whenever(firstProfile.id).thenReturn(firstProfileId)
-    whenever(profileManager.getCurrentProfile()).thenReturn(firstProfile)
+    whenever(profileManager.getCurrentProfile()).thenReturn(Maybe.just(firstProfile))
     val secondProfile = mock<AuthProfileItem>()
     whenever(secondProfile.id).thenReturn(secondProfileId)
 
@@ -560,7 +579,8 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
       sceneRepository,
       dispatchers,
       singleCallProvider,
-      temperatureFormat
+      temperatureFormat,
+      loadChannelConfigUseCase
     )
     advanceUntilIdle()
     viewModel.changeProfile(secondProfile)
@@ -574,7 +594,7 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
     verify(profileManager).getCurrentProfile()
     verify(profileManager).getAllProfiles()
     verify(dispatchers, times(2)).io()
-    verify(preferences).configIsSet()
+    verify(preferences).isAnyAccountRegistered
     verifyNoMoreInteractions(channelRepository, profileManager, dispatchers, preferences)
     verifyNoInteractions(widgetPreferences)
   }

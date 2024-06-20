@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:id="@+id/new_gesture_info"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@drawable/bg_new_gesture_info"
+  android:visibility="gone">
+
+  <androidx.appcompat.widget.AppCompatImageView
+    android:id="@+id/new_gesture_info_close"
+    android:layout_width="24dp"
+    android:layout_height="24dp"
+    android:layout_marginTop="16dp"
+    android:layout_marginEnd="16dp"
+    android:src="@drawable/ic_close"
+    app:layout_constraintEnd_toEndOf="@+id/new_gesture_info_text"
+    app:layout_constraintTop_toTopOf="@+id/new_gesture_info_icon"
+    app:tint="@color/on_primary" />
+
+  <androidx.appcompat.widget.AppCompatImageView
+    android:id="@+id/new_gesture_info_icon"
+    android:layout_width="120dp"
+    android:layout_height="120dp"
+    android:src="@drawable/tap_gesture"
+    app:layout_constraintBottom_toTopOf="@+id/new_gesture_info_text"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent" />
+
+  <TextView
+    android:id="@+id/new_gesture_info_text"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="16dp"
+    android:layout_marginTop="24dp"
+    android:layout_marginEnd="16dp"
+    android:gravity="center"
+    android:text="@string/new_gesture_description"
+    android:textAppearance="@style/AppTheme.TextAppearance.Headline5"
+    android:textColor="@color/on_primary"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

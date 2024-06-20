@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto">
+
+  <androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.recyclerview.widget.RecyclerView
+      android:id="@+id/channelsList"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+      app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/channels_vertical_center_guideline"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintGuide_percent="0.5"
+      app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+      android:id="@+id/channels_empty_list_icon"
+      android:layout_width="64dp"
+      android:layout_height="64dp"
+      android:src="@drawable/ic_empty"
+      android:tint="@color/gray"
+      app:layout_constraintBottom_toTopOf="@id/channels_empty_list_label"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+      android:id="@+id/channels_empty_list_label"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="@dimen/distance_default"
+      android:layout_marginEnd="@dimen/distance_default"
+      android:layout_marginBottom="@dimen/distance_small"
+      android:text="@string/main_no_entries"
+      android:textAlignment="center"
+      android:textAppearance="@style/AppTheme.TextAppearance.Headline4"
+      android:textColor="@color/gray"
+      app:layout_constraintBottom_toTopOf="@id/channels_vertical_center_guideline" />
+
+    <androidx.appcompat.widget.AppCompatButton
+      android:id="@+id/channels_empty_list_button"
+      style="@style/AppTheme.Button.Outlined"
+      android:layout_marginTop="@dimen/distance_small"
+      android:text="@string/add_device"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/channels_vertical_center_guideline" />
+
+  </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

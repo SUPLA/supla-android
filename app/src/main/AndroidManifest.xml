@@ -1,131 +1,153 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.supla.android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  package="org.supla.android">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+  <uses-permission android:name="android.permission.INTERNET" />
+  <uses-permission android:name="android.permission.VIBRATE" />
+  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+  <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+  <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+  <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+  <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+  <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+  <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+  <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
-    <uses-feature android:name="android.hardware.wifi" />
-    <supports-screens
-        android:anyDensity="true"
-        android:largeScreens="true"
-        android:normalScreens="true"
-        android:resizeable="true"
-        android:smallScreens="true"
-        android:xlargeScreens="true" />
+  <uses-feature android:name="android.hardware.wifi" />
+  <supports-screens
+    android:anyDensity="true"
+    android:largeScreens="true"
+    android:normalScreens="true"
+    android:resizeable="true"
+    android:smallScreens="true"
+    android:xlargeScreens="true" />
 
-    <application
-        android:name="org.supla.android.SuplaApp"
-        android:allowBackup="true"
-        android:extractNativeLibs="false"
-        android:fullBackupContent="@xml/backup_descriptor"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
-        android:theme="@style/AppTheme.Light"
-        android:usesCleartextTraffic="true">
-        <receiver
-            android:name=".widget.onoff.OnOffWidget"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
+  <application
+    android:name="org.supla.android.SuplaApp"
+    android:allowBackup="false"
+    android:extractNativeLibs="false"
+    android:fullBackupContent="@xml/backup_descriptor"
+    android:icon="@mipmap/ic_launcher"
+    android:label="@string/app_name"
+    android:roundIcon="@mipmap/ic_launcher_round"
+    android:supportsRtl="true"
+    android:theme="@style/AppTheme.Light"
+    android:usesCleartextTraffic="true">
 
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/on_off_widget_info" />
-        </receiver>
+    <meta-data
+      android:name="com.google.firebase.messaging.default_notification_icon"
+      android:resource="@drawable/logo" />
+    <meta-data
+      android:name="com.google.firebase.messaging.default_notification_color"
+      android:resource="@color/primary" />
+    <meta-data
+      android:name="com.google.firebase.messaging.default_notification_channel_id"
+      android:value="@string/default_notification_channel_id" />
 
-        <receiver
-            android:name=".widget.single.SingleWidget"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
+    <receiver
+      android:name=".widget.onoff.OnOffWidget"
+      android:exported="true">
+      <intent-filter>
+        <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+      </intent-filter>
 
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/single_widget_info" />
-        </receiver>
+      <meta-data
+        android:name="android.appwidget.provider"
+        android:resource="@xml/on_off_widget_info" />
+    </receiver>
 
-        <uses-library
-            android:name="android.test.runner"
-            android:required="false" />
+    <receiver
+      android:name=".widget.single.SingleWidget"
+      android:exported="true">
+      <intent-filter>
+        <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+      </intent-filter>
 
-        <activity
-            android:name=".StartActivity"
-            android:noHistory="true"
-            android:screenOrientation="sensorPortrait"
-            android:exported="true">
+      <meta-data
+        android:name="android.appwidget.provider"
+        android:resource="@xml/single_widget_info" />
+    </receiver>
 
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+    <uses-library
+      android:name="android.test.runner"
+      android:required="false" />
 
-        </activity>
+    <activity
+      android:name=".StartActivity"
+      android:exported="true"
+      android:noHistory="true"
+      android:screenOrientation="sensorPortrait">
 
-        <activity
-            android:name=".StatusActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="sensorPortrait"
-            android:exported="true"></activity>
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LAUNCHER" />
+      </intent-filter>
 
-        <activity
-            android:name=".MainActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="sensorPortrait"></activity>
+    </activity>
 
-        <activity
-            android:name=".cfg.CfgActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="sensorPortrait"></activity>
+    <activity
+      android:name=".StatusActivity"
+      android:exported="true"
+      android:launchMode="singleTop"
+      android:screenOrientation="sensorPortrait" />
 
-        <activity
-            android:name=".AboutActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="sensorPortrait"></activity>
+    <activity
+      android:name=".MainActivity"
+      android:launchMode="singleTop"
+      android:screenOrientation="sensorPortrait" />
 
-        <activity
-            android:name=".CreateAccountActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="sensorPortrait"></activity>
+    <activity
+      android:name=".cfg.CfgActivity"
+      android:launchMode="singleTop"
+      android:screenOrientation="sensorPortrait" />
 
-        <activity
-            android:name=".AddDeviceWizardActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="sensorPortrait"></activity>
+    <activity
+      android:name=".AboutActivity"
+      android:launchMode="singleTop"
+      android:screenOrientation="sensorPortrait" />
 
-        <activity
-            android:name=".ZWaveConfigurationWizardActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="sensorPortrait"
-            android:exported="true"></activity>
+    <activity
+      android:name=".AddDeviceWizardActivity"
+      android:launchMode="singleTop"
+      android:screenOrientation="sensorPortrait" />
 
-        <activity
-            android:name=".widget.onoff.configuration.OnOffWidgetConfigurationActivity"
-            android:theme="@style/AppTheme.Light.Widget"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".widget.single.configuration.SingleWidgetConfigurationActivity"
-            android:theme="@style/AppTheme.Light.Widget"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
-            </intent-filter>
-        </activity>
-    </application>
+    <activity
+      android:name=".ZWaveConfigurationWizardActivity"
+      android:exported="true"
+      android:launchMode="singleTop"
+      android:screenOrientation="sensorPortrait" />
+
+    <activity
+      android:name=".widget.onoff.configuration.OnOffWidgetConfigurationActivity"
+      android:exported="true"
+      android:theme="@style/AppTheme.Light.Widget">
+      <intent-filter>
+        <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+      </intent-filter>
+    </activity>
+    <activity
+      android:name=".widget.single.configuration.SingleWidgetConfigurationActivity"
+      android:exported="true"
+      android:theme="@style/AppTheme.Light.Widget">
+      <intent-filter>
+        <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+      </intent-filter>
+    </activity>
+
+    <service
+      android:name=".core.notifications.NotificationMessagingService"
+      android:exported="false">
+      <intent-filter>
+        <action android:name="com.google.firebase.MESSAGING_EVENT" />
+      </intent-filter>
+    </service>
+
+    <provider
+      android:name="androidx.startup.InitializationProvider"
+      android:authorities="org.supla.android.SuplaApp.androidx-startup"
+      tools:node="remove"
+      tools:replace="android:authorities"></provider>
+  </application>
 
 </manifest>

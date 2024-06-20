@@ -1,48 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+  xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <data>
+  <data>
 
-        <variable
-            name="viewmodel"
-            type="org.supla.android.widget.single.configuration.SingleWidgetConfigurationViewModel" />
-    </data>
+    <variable
+      name="viewmodel"
+      type="org.supla.android.widget.single.configuration.SingleWidgetConfigurationViewModel" />
+  </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/layout_background"
-        android:paddingBottom="16dp">
+  <androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/layout_background"
+    android:paddingBottom="16dp">
 
-        <TextView
-            android:id="@+id/widget_single_configure_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="16dp"
-            android:text="@string/widget_configure_title"
-            android:textColor="@color/widget_text"
-            android:textSize="34sp"
-            app:layout_constraintTop_toBottomOf="@+id/widget_single_configure_close" />
+    <TextView
+      android:id="@+id/widget_single_configure_title"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="16dp"
+      android:layout_marginTop="10dp"
+      android:layout_marginEnd="16dp"
+      android:text="@string/widget_configure_title"
+      android:textColor="@color/on_background"
+      android:textSize="34sp"
+      app:layout_constraintTop_toBottomOf="@+id/widget_single_configure_close" />
 
-        <include
-            android:id="@+id/widget_single_common"
-            layout="@layout/activity_single_widget_common"
-            app:viewmodel="@{viewmodel}" />
+    <include
+      android:id="@+id/widget_single_common"
+      layout="@layout/activity_single_widget_common"
+      app:viewmodel="@{viewmodel}" />
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:background="@drawable/background_widget_configuration_button"
-            android:enabled="@{viewmodel.itemsList.size() > 0}"
-            android:onClick="@{() -> viewmodel.confirmSelection()}"
-            android:text="@string/ok"
-            android:textColor="#FFFFFF"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:visibility="@{!viewmodel.dataLoading}" />
+    <Button
+      style="@style/AppTheme.Button.Contained"
+      android:layout_width="match_parent"
+      android:layout_margin="16dp"
+      android:enabled="@{viewmodel.itemsList.size() > 0}"
+      android:onClick="@{() -> viewmodel.confirmSelection()}"
+      android:text="@string/ok"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:visibility="@{!viewmodel.dataLoading}" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+  </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

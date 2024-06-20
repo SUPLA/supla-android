@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/menubar">
+    android:background="@color/primary">
 
     <ImageView
         android:id="@+id/tv_done_icon"
@@ -43,7 +43,7 @@
         android:textColor="@android:color/white"
         android:textSize="18sp" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnWakeUpSettings"
         android:layout_width="50dp"
         android:layout_height="50dp"

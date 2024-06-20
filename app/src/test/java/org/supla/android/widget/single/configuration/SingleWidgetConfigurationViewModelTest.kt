@@ -19,12 +19,14 @@ package org.supla.android.widget.single.configuration
 
 import android.database.Cursor
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import io.reactivex.rxjava3.core.Maybe
+import io.reactivex.rxjava3.core.Observable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.*
 import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.instanceOf
+import org.hamcrest.Matchers.`is`
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -48,6 +50,7 @@ import org.supla.android.lib.SuplaConst.*
 import org.supla.android.lib.singlecall.SingleCall
 import org.supla.android.profile.ProfileManager
 import org.supla.android.testhelpers.getOrAwaitValue
+import org.supla.android.usecases.channelconfig.LoadChannelConfigUseCase
 import org.supla.android.widget.WidgetPreferences
 import org.supla.android.widget.shared.WidgetConfigurationViewModelTestBase
 import org.supla.android.widget.shared.configuration.ItemType
@@ -85,10 +88,15 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
   @Mock
   private lateinit var valuesFormatter: ValuesFormatter
 
+  @Mock
+  private lateinit var loadChannelConfigUseCase: LoadChannelConfigUseCase
+
   @Before
   fun setUp() {
     whenever(dispatchers.io()).thenReturn(testDispatcher)
     Dispatchers.setMain(testDispatcher)
+
+    whenever(profileManager.getAllProfiles()).thenReturn(Observable.just(emptyList()))
   }
 
   @After
@@ -105,11 +113,11 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
       SUPLA_CHANNELFNC_ALARM
     )
     whenever(channelRepository.getAllProfileChannels(profileId)).thenReturn(cursor)
-    whenever(preferences.configIsSet()).thenReturn(true)
+    whenever(preferences.isAnyAccountRegistered).thenReturn(true)
 
     val profile = mock<AuthProfileItem>()
     whenever(profile.id).thenReturn(profileId)
-    whenever(profileManager.getCurrentProfile()).thenReturn(profile)
+    whenever(profileManager.getCurrentProfile()).thenReturn(Maybe.just(profile))
 
     // when
     val viewModel = SingleWidgetConfigurationViewModel(
@@ -120,7 +128,8 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
       sceneRepository,
       dispatchers,
       singleCallProvider,
-      valuesFormatter
+      valuesFormatter,
+      loadChannelConfigUseCase
     )
     advanceUntilIdle()
     val channels = viewModel.itemsList.getOrAwaitValue()
@@ -133,7 +142,7 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
     verify(profileManager).getCurrentProfile()
     verify(profileManager).getAllProfiles()
     verify(dispatchers).io()
-    verify(preferences).configIsSet()
+    verify(preferences).isAnyAccountRegistered
     verifyNoMoreInteractions(channelRepository, profileManager, dispatchers, preferences)
     verifyNoInteractions(widgetPreferences)
   }
@@ -152,11 +161,11 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
       SUPLA_CHANNELFNC_ALARM
     )
     whenever(channelRepository.getAllProfileChannels(profileId)).thenReturn(channelsCursor)
-    whenever(preferences.configIsSet()).thenReturn(true)
+    whenever(preferences.isAnyAccountRegistered).thenReturn(true)
 
     val profile = mock<AuthProfileItem>()
     whenever(profile.id).thenReturn(profileId)
-    whenever(profileManager.getCurrentProfile()).thenReturn(profile)
+    whenever(profileManager.getCurrentProfile()).thenReturn(Maybe.just(profile))
 
     // when
     val viewModel = SingleWidgetConfigurationViewModel(
@@ -167,7 +176,8 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
       sceneRepository,
       dispatchers,
       singleCallProvider,
-      valuesFormatter
+      valuesFormatter,
+      loadChannelConfigUseCase
     )
     advanceUntilIdle()
     viewModel.changeType(ItemType.GROUP)
@@ -183,7 +193,7 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
     verify(profileManager).getCurrentProfile()
     verify(profileManager).getAllProfiles()
     verify(dispatchers, times(2)).io()
-    verify(preferences).configIsSet()
+    verify(preferences).isAnyAccountRegistered
     verifyNoMoreInteractions(channelRepository, profileManager, dispatchers, preferences)
     verifyNoInteractions(widgetPreferences)
   }
@@ -199,11 +209,11 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
       SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK
     )
     whenever(channelRepository.getAllProfileChannels(profileId)).thenReturn(cursor)
-    whenever(preferences.configIsSet()).thenReturn(true)
+    whenever(preferences.isAnyAccountRegistered).thenReturn(true)
 
     val profile = mock<AuthProfileItem>()
     whenever(profile.id).thenReturn(profileId)
-    whenever(profileManager.getCurrentProfile()).thenReturn(profile)
+    whenever(profileManager.getCurrentProfile()).thenReturn(Maybe.just(profile))
 
     // when
     val viewModel = SingleWidgetConfigurationViewModel(
@@ -214,7 +224,8 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
       sceneRepository,
       dispatchers,
       singleCallProvider,
-      valuesFormatter
+      valuesFormatter,
+      loadChannelConfigUseCase
     )
     advanceUntilIdle()
     val channels = viewModel.itemsList.getOrAwaitValue()
@@ -222,13 +233,13 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
     // then
     assertThat(channels.size, `is`(5))
     channels.forEachIndexed { index, channel ->
-     assertThat(channel.value, instanceOf(if (index == 0) Location::class.java else Channel::class.java))
+      assertThat(channel.value, instanceOf(if (index == 0) Location::class.java else Channel::class.java))
     }
     verify(channelRepository).getAllProfileChannels(profileId)
     verify(profileManager).getCurrentProfile()
     verify(profileManager).getAllProfiles()
     verify(dispatchers).io()
-    verify(preferences).configIsSet()
+    verify(preferences).isAnyAccountRegistered
     verifyNoMoreInteractions(channelRepository, profileManager, dispatchers, preferences)
     verifyNoInteractions(widgetPreferences)
   }
@@ -239,11 +250,11 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
     val profileId = 123L
     val cursor: Cursor = mockCursorChannels()
     whenever(channelRepository.getAllProfileChannels(profileId)).thenReturn(cursor)
-    whenever(preferences.configIsSet()).thenReturn(true)
+    whenever(preferences.isAnyAccountRegistered).thenReturn(true)
 
     val profile = mock<AuthProfileItem>()
     whenever(profile.id).thenReturn(profileId)
-    whenever(profileManager.getCurrentProfile()).thenReturn(profile)
+    whenever(profileManager.getCurrentProfile()).thenReturn(Maybe.just(profile))
 
     // when
     val viewModel = SingleWidgetConfigurationViewModel(
@@ -254,7 +265,8 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
       sceneRepository,
       dispatchers,
       singleCallProvider,
-      valuesFormatter
+      valuesFormatter,
+      loadChannelConfigUseCase
     )
     advanceUntilIdle()
     val channels = viewModel.itemsList.getOrAwaitValue()
@@ -265,7 +277,7 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
     verify(profileManager).getCurrentProfile()
     verify(profileManager).getAllProfiles()
     verify(dispatchers).io()
-    verify(preferences).configIsSet()
+    verify(preferences).isAnyAccountRegistered
     verifyNoMoreInteractions(channelRepository, profileManager, dispatchers, preferences)
     verifyNoInteractions(widgetPreferences)
   }
@@ -285,7 +297,8 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
       sceneRepository,
       dispatchers,
       singleCallProvider,
-      valuesFormatter
+      valuesFormatter,
+      loadChannelConfigUseCase
     )
     viewModel.changeItem(channel)
 
@@ -312,7 +325,8 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
       sceneRepository,
       dispatchers,
       singleCallProvider,
-      valuesFormatter
+      valuesFormatter,
+      loadChannelConfigUseCase
     )
     viewModel.changeItem(channel)
 
@@ -336,7 +350,8 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
       sceneRepository,
       dispatchers,
       singleCallProvider,
-      valuesFormatter
+      valuesFormatter,
+      loadChannelConfigUseCase
     )
     viewModel.changeItem(channel)
 
@@ -362,7 +377,8 @@ class SingleWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestB
       sceneRepository,
       dispatchers,
       singleCallProvider,
-      valuesFormatter
+      valuesFormatter,
+      loadChannelConfigUseCase
     )
     viewModel.changeItem(channel)
 

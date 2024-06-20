@@ -1,68 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/menubar">
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@color/primary">
 
-    <TextView
-        android:id="@+id/wizard_step1_txt1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/imageView3"
-        android:layout_centerHorizontal="true"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="44dp"
-        android:layout_marginRight="20dp"
-        android:gravity="center_horizontal"
-        android:text="@string/wizard_step1_txt1"
-        android:textColor="@android:color/white"
-        android:textSize="18dp" />
+  <TextView
+    android:id="@+id/wizard_step1_txt1"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/imageView3"
+    android:layout_centerHorizontal="true"
+    android:layout_marginLeft="20dp"
+    android:layout_marginTop="@dimen/distance_default"
+    android:layout_marginRight="20dp"
+    android:gravity="center_horizontal"
+    android:text="@string/wizard_step1_txt1"
+    android:textColor="@android:color/white"
+    android:textSize="18dp" />
 
-    <TextView
-        android:id="@+id/wizard_step1_txt2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/wizard_step1_txt1"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="19dp"
-        android:layout_marginRight="20dp"
-        android:background="#FFEB3B"
-        android:gravity="center_horizontal"
-        android:text="@string/wizard_step1_txt2"
-        android:textColor="@android:color/black"
-        android:textSize="18dp" />
+  <TextView
+    android:id="@+id/wizard_step1_txt2"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/wizard_step1_txt1"
+    android:layout_alignParentStart="true"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentEnd="true"
+    android:layout_alignParentRight="true"
+    android:layout_marginLeft="20dp"
+    android:layout_marginTop="@dimen/distance_default"
+    android:layout_marginRight="20dp"
+    android:background="#FFEB3B"
+    android:gravity="center_horizontal"
+    android:text="@string/wizard_step1_txt2"
+    android:textColor="@android:color/black"
+    android:textSize="18dp" />
 
-    <TextView
-        android:id="@+id/wizard_step1_txt3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/wizard_step1_txt2"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="19dp"
-        android:layout_marginRight="20dp"
-        android:gravity="center_horizontal"
-        android:text="@string/wizard_step1_txt3"
-        android:textColor="@android:color/white"
-        android:textSize="18dp" />
+  <TextView
+    android:id="@+id/wizard_step1_txt3"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/wizard_step1_txt2"
+    android:layout_alignParentStart="true"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentEnd="true"
+    android:layout_alignParentRight="true"
+    android:layout_marginLeft="20dp"
+    android:layout_marginTop="@dimen/distance_default"
+    android:layout_marginRight="20dp"
+    android:gravity="center_horizontal"
+    android:text="@string/wizard_step1_txt3"
+    android:textColor="@android:color/white"
+    android:textSize="18dp" />
 
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="140dp"
-        android:layout_height="140dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="51dp"
-        android:background="@drawable/rocket"
-        tools:ignore="ContentDescription" />
+  <ImageView
+    android:id="@+id/imageView3"
+    android:layout_width="140dp"
+    android:layout_height="140dp"
+    android:layout_alignParentTop="true"
+    android:layout_centerHorizontal="true"
+    android:layout_marginTop="30dp"
+    android:background="@drawable/rocket"
+    tools:ignore="ContentDescription" />
 
 
 </RelativeLayout>

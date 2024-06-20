@@ -19,15 +19,18 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.widget.RemoteViews;
 import androidx.core.content.ContextCompat;
 import java.io.ByteArrayInputStream;
 import java.util.LinkedHashMap;
 
 public class ImageCache {
+
   private static final LinkedHashMap<ImageId, Bitmap> map = new LinkedHashMap<>();
 
   public static synchronized Bitmap getBitmap(Context context, ImageId imgId) {
@@ -35,8 +38,19 @@ public class ImageCache {
       return null;
     }
 
+    Configuration configuration = context.getResources().getConfiguration();
+    boolean nightMode =
+        (configuration.uiMode & Configuration.UI_MODE_NIGHT_MASK)
+            == Configuration.UI_MODE_NIGHT_YES;
+    imgId.setNightMode(nightMode);
+
+    if (imgId.getUserImage() && nightMode && !map.containsKey(imgId)) {
+      // If there is no user image for night mode, use the default
+      imgId.setNightMode(false);
+    }
+
     Bitmap result = map.get(imgId);
-    if (result == null && !imgId.isUserImage()) {
+    if (result == null && !imgId.getUserImage()) {
       result = BitmapFactory.decodeResource(context.getResources(), imgId.getId());
       if (result != null) {
         map.put(imgId, result);
@@ -57,6 +71,29 @@ public class ImageCache {
     }
 
     return result;
+  }
+
+  public static synchronized void loadBitmapForWidgetView(
+      ImageId imgId, RemoteViews view, int viewId, boolean nightMode) {
+    if (imgId == null) {
+      return;
+    }
+
+    imgId.setNightMode(nightMode);
+
+    if (imgId.getUserImage()) {
+      if (nightMode && !map.containsKey(imgId)) {
+        // If there is no user image for night mode, use the default
+        imgId.setNightMode(false);
+      }
+
+      Bitmap result = map.get(imgId);
+      if (result != null) {
+        view.setImageViewBitmap(viewId, result);
+      }
+    } else {
+      view.setImageViewResource(viewId, imgId.getId());
+    }
   }
 
   public static synchronized boolean bitmapExists(ImageId imgId) {

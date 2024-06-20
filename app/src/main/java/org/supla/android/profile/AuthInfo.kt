@@ -23,37 +23,49 @@ import org.supla.android.Preferences
 import org.supla.android.tools.UsedFromNativeCode
 
 @UsedFromNativeCode
-data class AuthInfo(var emailAuth: Boolean,
-                    var serverAutoDetect: Boolean,
-                    var serverForEmail: String = "",
-                    var serverForAccessID: String = "",
-                    var emailAddress: String = "",
-                    var accessID: Int = 0,
-                    var accessIDpwd: String = "",
-                    var preferredProtocolVersion: Int = 0,
-                    var guid: ByteArray = byteArrayOf(),
-                    var authKey: ByteArray = byteArrayOf()) {
+data class AuthInfo(
+  var emailAuth: Boolean,
+  var serverAutoDetect: Boolean,
+  var serverForEmail: String = "",
+  var serverForAccessID: String = "",
+  var emailAddress: String = "",
+  var accessID: Int = 0,
+  var accessIDpwd: String = "",
+  var preferredProtocolVersion: Int = 0,
+  var guid: ByteArray = byteArrayOf(),
+  var authKey: ByteArray = byteArrayOf()
+) {
 
-    /**
-     Returns server used for current authentication method
-     */
-    val serverForCurrentAuthMethod: String
-        get() = if(emailAuth) serverForEmail else serverForAccessID
+  /**
+   Returns server used for current authentication method
+   */
+  val serverForCurrentAuthMethod: String
+    get() = if (emailAuth) serverForEmail else serverForAccessID
 
-    /**
-     A flag indicating if current authentication settings
-     are complete (but not necessarily correct).
-     */
-    val isAuthDataComplete: Boolean
-        get() {
-            return if(emailAuth) {
-                emailAddress.isNotEmpty() &&
-                        (serverAutoDetect || serverForCurrentAuthMethod.isNotEmpty())
-            } else {
-                serverForCurrentAuthMethod.isNotEmpty() &&
-                        accessID > 0 && accessIDpwd.isNotEmpty()
-            }
-        }
+  val serverUrlString: String
+    get() = "https://$serverForCurrentAuthMethod"
+
+  /**
+   A flag indicating if current authentication settings
+   are complete (but not necessarily correct).
+   */
+  val isAuthDataComplete: Boolean
+    get() {
+      return if (emailAuth) {
+        emailAddress.isNotEmpty() &&
+          (serverAutoDetect || serverForCurrentAuthMethod.isNotEmpty())
+      } else {
+        serverForCurrentAuthMethod.isNotEmpty() &&
+          accessID > 0 && accessIDpwd.isNotEmpty()
+      }
+    }
+
+  val serverAddress: String
+    get() = if (emailAuth) {
+      serverForEmail
+    } else {
+      serverForAccessID
+    }
 
   private fun decrypt(payload: ByteArray, context: Context): ByteArray? {
     val key = Preferences.getDeviceID(context)
@@ -61,10 +73,10 @@ data class AuthInfo(var emailAuth: Boolean,
   }
 
   fun getDecryptedGuid(context: Context): ByteArray? {
-    return decrypt(guid, context);
+    return decrypt(guid, context)
   }
 
   fun getDecryptedAuthKey(context: Context): ByteArray? {
-    return decrypt(authKey, context);
+    return decrypt(authKey, context)
   }
 }

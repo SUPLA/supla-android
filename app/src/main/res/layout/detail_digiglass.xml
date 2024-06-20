@@ -3,7 +3,7 @@
     android:id="@+id/homeplus_Main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/detail_rs_bg"
+    android:background="@color/background"
     android:visibility="visible">
 
 
@@ -34,7 +34,7 @@
             android:visibility="visible"
             android:weightSum="0">
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnDgfTransparent"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
@@ -47,7 +47,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="2" />
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnDgfOpaque"
                 android:layout_width="80dp"
                 android:layout_height="80dp"

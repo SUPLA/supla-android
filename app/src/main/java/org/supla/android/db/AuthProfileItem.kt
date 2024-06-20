@@ -1,5 +1,5 @@
 package org.supla.android.db
- 
+
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -20,81 +20,83 @@ package org.supla.android.db
 
 import android.content.ContentValues
 import android.database.Cursor
+import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.profile.AuthInfo
 
-data class AuthProfileItem(var name: String = "",
-                           var authInfo: AuthInfo,
-                           var advancedAuthSetup: Boolean,
-                           var isActive: Boolean) : DbItem() {
+data class AuthProfileItem(
+  var name: String = "",
+  var authInfo: AuthInfo,
+  var advancedAuthSetup: Boolean,
+  var isActive: Boolean
+) : DbItem() {
 
-    override fun AssignCursorData(cur: Cursor) {
-        setId(cur.getLong(0))
-        fun stringOrNull(cur: Cursor, idx: Int): String? {
-            return if(cur.isNull(idx)) null else cur.getString(idx)
-        }
-
-        fun string(cur: Cursor, idx: Int, default: String = ""): String {
-            val str = stringOrNull(cur, idx)
-            return if(str == null) default else str
-        }
-
-        name = cur.getString(1)
-        authInfo = AuthInfo(emailAddress = string(cur, 2),
-                            serverForAccessID = string(cur, 3),
-                            serverForEmail = string(cur, 4),
-                            serverAutoDetect = cur.getInt(5) > 0,
-                            emailAuth = cur.getInt(6) > 0,
-                            accessID = cur.getInt(7),
-                            accessIDpwd = string(cur, 8),
-                            preferredProtocolVersion = cur.getInt(9),
-                            guid = cur.getBlob(12),
-                            authKey = cur.getBlob(13)
-        )
-        isActive = cur.getInt(10) > 0
-        advancedAuthSetup = cur.getInt(11) > 0
+  override fun AssignCursorData(cur: Cursor) {
+    setId(cur.getLong(0))
+    fun stringOrNull(cur: Cursor, idx: Int): String? {
+      return if (cur.isNull(idx)) null else cur.getString(idx)
     }
 
-    fun getContentValuesV22(): ContentValues {
-        val vals = ContentValues()
-        vals.put(SuplaContract.AuthProfileEntry.COLUMN_NAME_PROFILE_NAME, name)
-        vals.put(SuplaContract.AuthProfileEntry.COLUMN_NAME_EMAIL_ADDR, authInfo.emailAddress)
-        vals.put(SuplaContract.AuthProfileEntry.COLUMN_NAME_SERVER_ADDR_ACCESS_ID, authInfo.serverForAccessID)
-        vals.put(SuplaContract.AuthProfileEntry.COLUMN_NAME_SERVER_ADDR_EMAIL, authInfo.serverForEmail)
-        vals.put(SuplaContract.AuthProfileEntry.COLUMN_NAME_SERVER_AUTO_DETECT, if(authInfo.serverAutoDetect) 1 else 0)
-        vals.put(SuplaContract.AuthProfileEntry.COLUMN_NAME_EMAIL_AUTH, if(authInfo.emailAuth) 1 else 0)
-        vals.put(SuplaContract.AuthProfileEntry.COLUMN_NAME_ACCESS_ID, authInfo.accessID)
-        vals.put(SuplaContract.AuthProfileEntry.COLUMN_NAME_ACCESS_ID_PWD, authInfo.accessIDpwd)
-        vals.put(SuplaContract.AuthProfileEntry.COLUMN_NAME_PREFERRED_PROTOCOL_VERSION, authInfo.preferredProtocolVersion)
-        vals.put(SuplaContract.AuthProfileEntry.COLUMN_NAME_IS_ACTIVE, if(isActive) 1 else 0)
-        vals.put(SuplaContract.AuthProfileEntry.COLUMN_NAME_IS_ADVANCED_MODE, if(advancedAuthSetup) 1 else 0)
-
-        return vals
+    fun string(cur: Cursor, idx: Int, default: String = ""): String {
+      return stringOrNull(cur, idx) ?: default
     }
 
-    override fun getContentValues(): ContentValues {
-        val vals = getContentValuesV22()
-        vals.put(SuplaContract.AuthProfileEntry.COLUMN_NAME_GUID, authInfo.guid)
-        vals.put(SuplaContract.AuthProfileEntry.COLUMN_NAME_AUTHKEY, authInfo.authKey)
+    name = cur.getString(1)
+    authInfo = AuthInfo(
+      emailAddress = string(cur, 2),
+      serverForAccessID = string(cur, 3),
+      serverForEmail = string(cur, 4),
+      serverAutoDetect = cur.getInt(5) > 0,
+      emailAuth = cur.getInt(6) > 0,
+      accessID = cur.getInt(7),
+      accessIDpwd = string(cur, 8),
+      preferredProtocolVersion = cur.getInt(9),
+      guid = if (cur.isNull(12)) byteArrayOf() else cur.getBlob(12),
+      authKey = if (cur.isNull(13)) byteArrayOf() else cur.getBlob(13)
+    )
+    isActive = cur.getInt(10) > 0
+    advancedAuthSetup = cur.getInt(11) > 0
+  }
 
-        return vals
-    }
+  fun getContentValuesV22(): ContentValues {
+    val vals = ContentValues()
+    vals.put(ProfileEntity.COLUMN_NAME, name)
+    vals.put(ProfileEntity.COLUMN_EMAIL, authInfo.emailAddress)
+    vals.put(ProfileEntity.COLUMN_SERVER_FOR_ACCESS_ID, authInfo.serverForAccessID)
+    vals.put(ProfileEntity.COLUMN_SERVER_FOR_EMAIL, authInfo.serverForEmail)
+    vals.put(ProfileEntity.COLUMN_SERVER_AUTO_DETECT, if (authInfo.serverAutoDetect) 1 else 0)
+    vals.put(ProfileEntity.COLUMN_EMAIL_AUTH, if (authInfo.emailAuth) 1 else 0)
+    vals.put(ProfileEntity.COLUMN_ACCESS_ID, authInfo.accessID)
+    vals.put(ProfileEntity.COLUMN_ACCESS_ID_PASSWORD, authInfo.accessIDpwd)
+    vals.put(ProfileEntity.COLUMN_PREFERRED_PROTOCOL_VERSION, authInfo.preferredProtocolVersion)
+    vals.put(ProfileEntity.COLUMN_ACTIVE, if (isActive) 1 else 0)
+    vals.put(ProfileEntity.COLUMN_ADVANCED_MODE, if (advancedAuthSetup) 1 else 0)
 
-    fun isEmailAuthorizationEnabled(): Boolean {
-        return authInfo.emailAuth
-    }
+    return vals
+  }
 
-    fun authInfoChanged(other: AuthProfileItem): Boolean {
-        val a = authInfo
-        val b = other.authInfo
+  override fun getContentValues(): ContentValues {
+    val vals = getContentValuesV22()
+    vals.put(ProfileEntity.COLUMN_GUID, authInfo.guid)
+    vals.put(ProfileEntity.COLUMN_AUTH_KEY, authInfo.authKey)
 
-        return !(a.emailAuth == b.emailAuth && 
-                 a.emailAddress == b.emailAddress &&
-                 a.serverAutoDetect == b.serverAutoDetect &&
-                 a.serverForEmail == b.serverForEmail &&
-                 a.serverForAccessID == b.serverForAccessID &&
-                 a.accessID == b.accessID &&
-                 a.accessIDpwd == b.accessIDpwd)
+    return vals
+  }
 
-    }
+  fun isEmailAuthorizationEnabled(): Boolean {
+    return authInfo.emailAuth
+  }
 
+  fun authInfoChanged(other: AuthProfileItem): Boolean {
+    val a = authInfo
+    val b = other.authInfo
+
+    return !(
+      a.emailAuth == b.emailAuth && a.emailAddress == b.emailAddress &&
+        a.serverAutoDetect == b.serverAutoDetect &&
+        a.serverForEmail == b.serverForEmail &&
+        a.serverForAccessID == b.serverForAccessID &&
+        a.accessID == b.accessID &&
+        a.accessIDpwd == b.accessIDpwd
+      )
+  }
 }

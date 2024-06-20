@@ -24,11 +24,11 @@ import androidx.work.Data
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import org.supla.android.Trace
-import org.supla.android.db.DbHelper
 import org.supla.android.extensions.getAllWidgetIds
+import org.supla.android.features.icons.LoadUserIconsIntoCacheWorker
 import org.supla.android.images.ImageCache
-import org.supla.android.profile.INVALID_PROFILE_ID
 import org.supla.android.widget.INVALID_CHANNEL_ID
+import org.supla.android.widget.INVALID_PROFILE_ID
 import org.supla.android.widget.RemoveWidgetsWorker
 import org.supla.android.widget.WidgetConfiguration
 import org.supla.android.widget.WidgetPreferences
@@ -49,8 +49,7 @@ abstract class WidgetProviderBase : AppWidgetProvider() {
     if (ImageCache.size() == 0) {
       // It seems that after some time when the application is in the background, the cache is destroyed.
       // https://forum.supla.org/viewtopic.php?p=138424#p138424
-      var dbHelper = DbHelper.getInstance(context)
-      dbHelper.loadUserIconsIntoCache()
+      LoadUserIconsIntoCacheWorker.start(context)
     }
 
     val preferences = WidgetPreferences(context)
@@ -61,7 +60,7 @@ abstract class WidgetProviderBase : AppWidgetProvider() {
     }
   }
 
-  override fun onDeleted(context: Context?, appWidgetIds: IntArray?) {
+  override fun onDeleted(context: Context, appWidgetIds: IntArray?) {
     if (appWidgetIds == null) {
       return
     }
@@ -72,7 +71,7 @@ abstract class WidgetProviderBase : AppWidgetProvider() {
         Data.Builder().putIntArray(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds).build()
       )
       .build()
-    WorkManager.getInstance().enqueue(removeWidgetsWork)
+    WorkManager.getInstance(context).enqueue(removeWidgetsWork)
   }
 
   abstract fun updateAppWidget(
@@ -83,7 +82,7 @@ abstract class WidgetProviderBase : AppWidgetProvider() {
   )
 
   companion object {
-    private val TAG = WidgetProviderBase::javaClass.name
+    private val TAG = WidgetProviderBase::class.simpleName
   }
 }
 

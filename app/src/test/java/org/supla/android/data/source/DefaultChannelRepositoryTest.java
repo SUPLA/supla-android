@@ -14,9 +14,9 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import android.database.Cursor;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 import org.junit.Assert;
@@ -26,27 +26,27 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.supla.android.core.infrastructure.DateProvider;
 import org.supla.android.data.source.local.ChannelDao;
 import org.supla.android.data.source.local.LocationDao;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelExtendedValue;
 import org.supla.android.db.ChannelGroup;
 import org.supla.android.db.ChannelGroupRelation;
-import org.supla.android.db.ChannelValue;
 import org.supla.android.db.Location;
-import org.supla.android.db.SuplaContract;
-import org.supla.android.lib.SuplaChannel;
 import org.supla.android.lib.SuplaChannelExtendedValue;
 import org.supla.android.lib.SuplaChannelGroup;
 import org.supla.android.lib.SuplaChannelGroupRelation;
-import org.supla.android.lib.SuplaChannelValue;
 import org.supla.android.lib.SuplaLocation;
+import org.supla.android.lib.SuplaTimerState;
 
+@SuppressWarnings("unchecked")
 @RunWith(MockitoJUnitRunner.class)
 public class DefaultChannelRepositoryTest {
 
   @Mock private ChannelDao channelDao;
   @Mock private LocationDao locationDao;
+  @Mock private DateProvider dateProvider;
 
   @InjectMocks private DefaultChannelRepository defaultChannelRepository;
 
@@ -63,23 +63,6 @@ public class DefaultChannelRepositoryTest {
     // then
     Assert.assertSame(channel, result);
     verify(channelDao).getChannel(channelId);
-    verifyNoMoreInteractions(channelDao);
-    verifyNoInteractions(locationDao);
-  }
-
-  @Test
-  public void shouldProvideChannelValueFromDao() {
-    // given
-    int channelValueId = 123;
-    ChannelValue channelValue = mock(ChannelValue.class);
-    when(channelDao.getChannelValue(channelValueId)).thenReturn(channelValue);
-
-    // when
-    ChannelValue result = defaultChannelRepository.getChannelValue(channelValueId);
-
-    // then
-    Assert.assertSame(channelValue, result);
-    verify(channelDao).getChannelValue(channelValueId);
     verifyNoMoreInteractions(channelDao);
     verifyNoInteractions(locationDao);
   }
@@ -102,341 +85,20 @@ public class DefaultChannelRepositoryTest {
   }
 
   @Test
-  public void shouldNotUpdateChannelWhenLocationNotFound() {
-    // given
-    SuplaChannel suplaChannel = mock(SuplaChannel.class);
-
-    // when
-    boolean result = defaultChannelRepository.updateChannel(suplaChannel);
-
-    // then
-    assertFalse(result);
-    verify(locationDao).getLocation(anyInt());
-    verifyNoMoreInteractions(locationDao);
-    verifyNoInteractions(channelDao);
-  }
-
-  @Test
-  public void shouldInsertChannelWhenChannelNotFound() {
-    // given
-    int locationId = 123;
-    int channelId = 234;
-
-    SuplaChannelValue suplaChannelValue = suplaChannelValue(12L);
-    SuplaChannel suplaChannel =
-        suplaChannel(
-            channelId,
-            locationId,
-            "caption",
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            (short) 8,
-            (short) 9,
-            suplaChannelValue);
-
-    Location location = mock(Location.class);
-    when(location.getSorting()).thenReturn(Location.SortingType.DEFAULT);
-    when(locationDao.getLocation(locationId)).thenReturn(location);
-
-    // when
-    boolean result = defaultChannelRepository.updateChannel(suplaChannel);
-
-    // then
-    assertTrue(result);
-    ArgumentCaptor<Channel> channelArgumentCaptor = ArgumentCaptor.forClass(Channel.class);
-    verify(channelDao).getChannel(channelId);
-    verify(channelDao).insert(channelArgumentCaptor.capture());
-    verify(channelDao).getCachedProfileId();
-    verify(locationDao).getLocation(locationId);
-    verifyNoMoreInteractions(locationDao, channelDao);
-
-    assertChannel(
-        channelArgumentCaptor.getValue(),
-        channelId,
-        locationId,
-        "caption",
-        1,
-        2,
-        3,
-        4,
-        5,
-        6,
-        7,
-        (short) 8,
-        (short) 9,
-        1,
-        0,
-        12);
-  }
-
-  @Test
-  public void shouldInsertChannelOnLastPositionWhenUserSortingDefined() {
-    // given
-    int locationId = 123;
-    int channelId = 234;
-    int channelsCount = 12;
-
-    SuplaChannelValue suplaChannelValue = suplaChannelValue(12L);
-    SuplaChannel suplaChannel =
-        suplaChannel(
-            channelId,
-            locationId,
-            "caption",
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            (short) 8,
-            (short) 9,
-            suplaChannelValue);
-
-    Location location = mock(Location.class);
-    when(location.getSorting()).thenReturn(Location.SortingType.USER_DEFINED);
-    when(location.getLocationId()).thenReturn(locationId);
-    when(locationDao.getLocation(locationId)).thenReturn(location);
-
-    when(channelDao.getChannelCountForLocation(locationId)).thenReturn(channelsCount);
-
-    // when
-    boolean result = defaultChannelRepository.updateChannel(suplaChannel);
-
-    // then
-    assertTrue(result);
-    ArgumentCaptor<Channel> channelArgumentCaptor = ArgumentCaptor.forClass(Channel.class);
-    verify(channelDao).getChannel(channelId);
-    verify(channelDao).getChannelCountForLocation(locationId);
-    verify(channelDao).insert(channelArgumentCaptor.capture());
-    verify(channelDao).getCachedProfileId();
-    verify(locationDao).getLocation(locationId);
-    verifyNoMoreInteractions(locationDao, channelDao);
-
-    assertChannel(
-        channelArgumentCaptor.getValue(),
-        channelId,
-        locationId,
-        "caption",
-        1,
-        2,
-        3,
-        4,
-        5,
-        6,
-        7,
-        (short) 8,
-        (short) 9,
-        1,
-        channelsCount + 1,
-        12);
-  }
-
-  @Test
-  public void shouldUpdateChannelWhenFound() {
-    // given
-    int locationId = 123;
-    int channelId = 234;
-    int channelDbId = 345;
-
-    SuplaChannelValue suplaChannelValue = suplaChannelValue(12L);
-    SuplaChannel suplaChannel =
-        suplaChannel(
-            channelId,
-            locationId,
-            "caption",
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            (short) 8,
-            (short) 9,
-            suplaChannelValue);
-
-    Location location = mock(Location.class);
-    when(location.getSorting()).thenReturn(Location.SortingType.DEFAULT);
-    when(locationDao.getLocation(locationId)).thenReturn(location);
-
-    Channel channel = new Channel();
-    channel.setId(channelDbId);
-    when(channelDao.getChannel(channelId)).thenReturn(channel);
-
-    // when
-    boolean result = defaultChannelRepository.updateChannel(suplaChannel);
-
-    // then
-    assertTrue(result);
-    verify(channelDao).getChannel(channelId);
-    verify(channelDao).update(channel);
-    verify(channelDao).getCachedProfileId();
-    verify(locationDao).getLocation(locationId);
-    verifyNoMoreInteractions(locationDao, channelDao);
-
-    assertEquals(channelDbId, channel.getId());
-    assertChannel(
-        channel,
-        channelId,
-        locationId,
-        "caption",
-        1,
-        2,
-        3,
-        4,
-        5,
-        6,
-        7,
-        (short) 8,
-        (short) 9,
-        1,
-        0,
-        12);
-  }
-
-  @Test
-  public void shouldUpdateChannelAndChangePositionWhenMovedToAnotherLocation() {
-    // given
-    int locationId = 123;
-    int channelId = 234;
-    int channelDbId = 345;
-    int channelsCount = 12;
-
-    SuplaChannelValue suplaChannelValue = suplaChannelValue(14L);
-    SuplaChannel suplaChannel =
-        suplaChannel(
-            channelId,
-            locationId,
-            "caption1",
-            9,
-            8,
-            7,
-            6,
-            15,
-            4,
-            3,
-            (short) 2,
-            (short) 1,
-            suplaChannelValue);
-
-    Location location = mock(Location.class);
-    when(location.getSorting()).thenReturn(Location.SortingType.USER_DEFINED);
-    when(location.getLocationId()).thenReturn(locationId);
-    when(locationDao.getLocation(locationId)).thenReturn(location);
-
-    Channel channel = new Channel();
-    channel.setId(channelDbId);
-    channel.setLocationId(locationId + 1);
-    when(channelDao.getChannel(channelId)).thenReturn(channel);
-
-    when(channelDao.getChannelCountForLocation(locationId)).thenReturn(channelsCount);
-
-    // when
-    boolean result = defaultChannelRepository.updateChannel(suplaChannel);
-
-    // then
-    assertTrue(result);
-    verify(channelDao).getChannel(channelId);
-    verify(channelDao).getChannelCountForLocation(locationId);
-    verify(channelDao).update(channel);
-    verify(channelDao).getCachedProfileId();
-    verify(locationDao).getLocation(locationId);
-    verifyNoMoreInteractions(locationDao, channelDao);
-
-    assertEquals(channelDbId, channel.getId());
-    assertChannel(
-        channel,
-        channelId,
-        locationId,
-        "caption1",
-        9,
-        8,
-        7,
-        6,
-        15,
-        4,
-        3,
-        (short) 2,
-        (short) 1,
-        1,
-        channelsCount + 1,
-        14);
-  }
-
-  @Test
-  public void shouldNotChangeChannelWhenNothingChanged() {
-    // given
-    int locationId = 123;
-    int channelId = 234;
-    int channelDbId = 345;
-
-    SuplaChannelValue suplaChannelValue = suplaChannelValue(12L);
-    SuplaChannel suplaChannel =
-        suplaChannel(
-            channelId,
-            locationId,
-            "caption",
-            9,
-            8,
-            7,
-            6,
-            5,
-            4,
-            3,
-            (short) 2,
-            (short) 1,
-            suplaChannelValue);
-
-    Location location = mock(Location.class);
-    when(locationDao.getLocation(locationId)).thenReturn(location);
-
-    Channel channel =
-        channel(
-            channelId,
-            locationId,
-            "caption",
-            9,
-            8,
-            7,
-            6,
-            5,
-            4,
-            3,
-            (short) 2,
-            (short) 1,
-            channelValue(suplaChannelValue));
-    channel.setId(channelDbId);
-    channel.setVisible(1);
-    when(channelDao.getChannel(channelId)).thenReturn(channel);
-
-    // when
-    boolean result = defaultChannelRepository.updateChannel(suplaChannel);
-
-    // then
-    assertFalse(result);
-    verify(channelDao).getChannel(channelId);
-    verify(locationDao).getLocation(locationId);
-    verifyNoMoreInteractions(locationDao, channelDao);
-
-    assertEquals(channelDbId, channel.getId());
-  }
-
-  @Test
   public void shouldReorderChannels() {
     // given
     int locationId = 2;
+    String locationCaption = "Location";
 
     Cursor cursor = mock(Cursor.class);
     when(cursor.moveToFirst()).thenReturn(true);
     when(cursor.getLong(anyInt())).thenReturn(15L, 12L, 18L, 13L, 14L);
     when(cursor.moveToNext()).thenReturn(true, true, true, true, false);
-    when(channelDao.getSortedChannelIdsForLocationCursor(locationId)).thenReturn(cursor);
+    when(channelDao.getSortedChannelIdsForLocationCursor(locationCaption)).thenReturn(cursor);
+
+    Location location = mock(Location.class);
+    when(location.getCaption()).thenReturn(locationCaption);
+    when(locationDao.getLocation(locationId)).thenReturn(location);
 
     // when
     defaultChannelRepository.reorderChannels(15L, locationId, 13L).blockingAwait();
@@ -499,7 +161,7 @@ public class DefaultChannelRepositoryTest {
     verifyNoMoreInteractions(locationDao, channelDao);
 
     assertChannelGroup(
-        channelArgumentCaptor.getValue(), channelGroupId, locationId, "caption", 1, 2, 3, 4, 1, 0);
+        channelArgumentCaptor.getValue(), channelGroupId, locationId, "caption", 1, 2, 3, 4, 0);
   }
 
   @Test
@@ -542,7 +204,6 @@ public class DefaultChannelRepositoryTest {
         2,
         3,
         4,
-        1,
         channelGroupsCount + 1);
   }
 
@@ -551,7 +212,7 @@ public class DefaultChannelRepositoryTest {
     // given
     int locationId = 123;
     int channelGroupId = 234;
-    int channelGroupDbId = 345;
+    Long channelGroupDbId = 345L;
 
     SuplaChannelGroup suplaChannelGroup =
         suplaChannelGroup(channelGroupId, locationId, "caption", 1, 2, 3, 4);
@@ -580,7 +241,7 @@ public class DefaultChannelRepositoryTest {
     verifyNoMoreInteractions(locationDao, channelDao);
 
     assertEquals(channelGroupDbId, channelGroup.getId());
-    assertChannelGroup(channelGroup, channelGroupId, locationId, "caption", 1, 2, 3, 4, 1, 0);
+    assertChannelGroup(channelGroup, channelGroupId, locationId, "caption", 1, 2, 3, 4, 0);
   }
 
   @Test
@@ -588,7 +249,7 @@ public class DefaultChannelRepositoryTest {
     // given
     int locationId = 123;
     int channelGroupId = 234;
-    int channelGroupDbId = 345;
+    Long channelGroupDbId = 345L;
 
     SuplaChannelGroup suplaChannelGroup =
         suplaChannelGroup(channelGroupId, locationId, "caption1", 9, 8, 7, 6);
@@ -618,7 +279,7 @@ public class DefaultChannelRepositoryTest {
     verifyNoMoreInteractions(locationDao, channelDao);
 
     assertEquals(channelGroupDbId, channelGroup.getId());
-    assertChannelGroup(channelGroup, channelGroupId, locationId, "caption1", 9, 8, 7, 6, 1, 0);
+    assertChannelGroup(channelGroup, channelGroupId, locationId, "caption1", 9, 8, 7, 6, 0);
   }
 
   @Test
@@ -626,7 +287,7 @@ public class DefaultChannelRepositoryTest {
     // given
     int locationId = 123;
     int channelGroupId = 234;
-    int channelGroupDbId = 345;
+    Long channelGroupDbId = 345L;
 
     SuplaChannelGroup suplaChannelGroup =
         suplaChannelGroup(channelGroupId, locationId, "caption", 9, 8, 7, 6);
@@ -652,124 +313,53 @@ public class DefaultChannelRepositoryTest {
   }
 
   @Test
-  public void shouldInsertChannelValueWhenChannelValueNotFound() {
-    // given
-    int channelId = 234;
-    final boolean online = true;
-    SuplaChannelValue suplaChannelValue = suplaChannelValue(12L);
-
-    // when
-    boolean result =
-        defaultChannelRepository.updateChannelValue(suplaChannelValue, channelId, online);
-
-    // then
-    assertTrue(result);
-    ArgumentCaptor<ChannelValue> channelValueArgumentCaptor =
-        ArgumentCaptor.forClass(ChannelValue.class);
-    verify(channelDao).getChannelValue(channelId);
-    verify(channelDao).insert(channelValueArgumentCaptor.capture());
-    verifyNoMoreInteractions(channelDao);
-    verifyNoInteractions(locationDao);
-
-    assertChannelValue(channelValueArgumentCaptor.getValue(), 12, channelId, online);
-  }
-
-  @Test
-  public void shouldUpdateChannelValueWhenChannelValueFoundButDiffers() {
-    // given
-    int channelId = 234;
-    final boolean online = true;
-    SuplaChannelValue suplaChannelValue = suplaChannelValue(12L);
-
-    ChannelValue channelValue = channelValue(suplaChannelValue(13L));
-    channelValue.setChannelId(channelId);
-    channelValue.setOnLine(true);
-    when(channelDao.getChannelValue(channelId)).thenReturn(channelValue);
-
-    // when
-    boolean result =
-        defaultChannelRepository.updateChannelValue(suplaChannelValue, channelId, online);
-
-    // then
-    assertTrue(result);
-    ArgumentCaptor<ChannelValue> channelValueArgumentCaptor =
-        ArgumentCaptor.forClass(ChannelValue.class);
-    verify(channelDao).getChannelValue(channelId);
-    verify(channelDao).update(channelValueArgumentCaptor.capture());
-    verifyNoMoreInteractions(channelDao);
-    verifyNoInteractions(locationDao);
-
-    assertChannelValue(channelValueArgumentCaptor.getValue(), 12, channelId, online);
-  }
-
-  @Test
-  public void shouldUpdateChannelValueWhenChannelValueFoundButOnlineFieldChanged() {
-    // given
-    int channelId = 234;
-    final boolean online = true;
-    SuplaChannelValue suplaChannelValue = suplaChannelValue(12L);
-
-    ChannelValue channelValue = channelValue(suplaChannelValue);
-    channelValue.setChannelId(channelId);
-    channelValue.setOnLine(false);
-    when(channelDao.getChannelValue(channelId)).thenReturn(channelValue);
-
-    // when
-    boolean result =
-        defaultChannelRepository.updateChannelValue(suplaChannelValue, channelId, online);
-
-    // then
-    assertTrue(result);
-    ArgumentCaptor<ChannelValue> channelValueArgumentCaptor =
-        ArgumentCaptor.forClass(ChannelValue.class);
-    verify(channelDao).getChannelValue(channelId);
-    verify(channelDao).update(channelValueArgumentCaptor.capture());
-    verifyNoMoreInteractions(channelDao);
-    verifyNoInteractions(locationDao);
-
-    assertChannelValue(channelValueArgumentCaptor.getValue(), 12, channelId, online);
-  }
-
-  @Test
-  public void shouldNotUpdateChannelValueWhenNoChanges() {
-    // given
-    int channelId = 234;
-    final boolean online = true;
-    SuplaChannelValue suplaChannelValue = suplaChannelValue(12L);
-
-    ChannelValue channelValue = channelValue(suplaChannelValue);
-    channelValue.setChannelId(channelId);
-    channelValue.setOnLine(online);
-    when(channelDao.getChannelValue(channelId)).thenReturn(channelValue);
-
-    // when
-    boolean result =
-        defaultChannelRepository.updateChannelValue(suplaChannelValue, channelId, online);
-
-    // then
-    assertFalse(result);
-    verify(channelDao).getChannelValue(channelId);
-    verifyNoMoreInteractions(channelDao);
-    verifyNoInteractions(locationDao);
-  }
-
-  @Test
   public void shouldInsertChannelExtendedValueWhenChannelExtendedValueNotFound() {
     // given
     int channelId = 234;
     SuplaChannelExtendedValue suplaChannelExtendedValue = mock(SuplaChannelExtendedValue.class);
 
     // when
-    boolean result =
+    ResultTuple result =
         defaultChannelRepository.updateChannelExtendedValue(suplaChannelExtendedValue, channelId);
 
     // then
-    assertTrue(result);
+    assertEquals(Boolean.TRUE, result.asBoolean(0));
+    assertEquals(Boolean.FALSE, result.asBoolean(1));
     ArgumentCaptor<ChannelExtendedValue> argumentCaptor =
         ArgumentCaptor.forClass(ChannelExtendedValue.class);
     verify(channelDao).getChannelExtendedValue(channelId);
     verify(channelDao).insert(argumentCaptor.capture());
     verifyNoMoreInteractions(channelDao);
+    verifyNoInteractions(locationDao, dateProvider);
+
+    assertSame(suplaChannelExtendedValue, argumentCaptor.getValue().getExtendedValue());
+    assertEquals(channelId, argumentCaptor.getValue().getChannelId());
+  }
+
+  @Test
+  public void
+      shouldInsertChannelExtendedValueWhenChannelExtendedValueNotFoundAndCreateTimestampForTimer() {
+    // given
+    int channelId = 234;
+    SuplaTimerState suplaTimerState = mock(SuplaTimerState.class);
+    when(suplaTimerState.getCountdownEndsAt()).thenReturn(new Date());
+    SuplaChannelExtendedValue suplaChannelExtendedValue = mock(SuplaChannelExtendedValue.class);
+    suplaChannelExtendedValue.TimerStateValue = suplaTimerState;
+    when(dateProvider.currentTimestamp()).thenReturn(123L);
+
+    // when
+    ResultTuple result =
+        defaultChannelRepository.updateChannelExtendedValue(suplaChannelExtendedValue, channelId);
+
+    // then
+    assertEquals(Boolean.TRUE, result.asBoolean(0));
+    assertEquals(Boolean.TRUE, result.asBoolean(1));
+    ArgumentCaptor<ChannelExtendedValue> argumentCaptor =
+        ArgumentCaptor.forClass(ChannelExtendedValue.class);
+    verify(channelDao).getChannelExtendedValue(channelId);
+    verify(channelDao).insert(argumentCaptor.capture());
+    verify(dateProvider).currentTimestamp();
+    verifyNoMoreInteractions(channelDao, dateProvider);
     verifyNoInteractions(locationDao);
 
     assertSame(suplaChannelExtendedValue, argumentCaptor.getValue().getExtendedValue());
@@ -783,17 +373,80 @@ public class DefaultChannelRepositoryTest {
     SuplaChannelExtendedValue suplaChannelExtendedValue = mock(SuplaChannelExtendedValue.class);
 
     ChannelExtendedValue channelExtendedValue = mock(ChannelExtendedValue.class);
+    when(channelExtendedValue.getTimerStartTimestamp()).thenReturn(null);
     when(channelDao.getChannelExtendedValue(channelId)).thenReturn(channelExtendedValue);
 
     // when
-    boolean result =
+    ResultTuple result =
         defaultChannelRepository.updateChannelExtendedValue(suplaChannelExtendedValue, channelId);
 
     // then
-    assertTrue(result);
+    assertEquals(Boolean.TRUE, result.asBoolean(0));
+    assertEquals(Boolean.FALSE, result.asBoolean(1));
     verify(channelDao).getChannelExtendedValue(channelId);
     verify(channelDao).update(channelExtendedValue);
     verify(channelExtendedValue).setExtendedValue(suplaChannelExtendedValue);
+    verify(channelExtendedValue).getTimerStartTimestamp();
+    verify(channelExtendedValue, times(2)).getTimerEstimatedEndDate();
+    verifyNoMoreInteractions(channelDao, channelExtendedValue);
+    verifyNoInteractions(locationDao);
+  }
+
+  @Test
+  public void shouldUpdateChannelExtendedValueAndCleanupTimerStartTimestamp() {
+    // given
+    int channelId = 234;
+    Date date = new Date();
+    SuplaChannelExtendedValue suplaChannelExtendedValue = mock(SuplaChannelExtendedValue.class);
+
+    ChannelExtendedValue channelExtendedValue = mock(ChannelExtendedValue.class);
+    when(channelExtendedValue.getTimerStartTimestamp()).thenReturn(1L);
+    when(channelExtendedValue.getTimerEstimatedEndDate()).thenReturn(date, (Date) null);
+    when(channelDao.getChannelExtendedValue(channelId)).thenReturn(channelExtendedValue);
+
+    // when
+    ResultTuple result =
+        defaultChannelRepository.updateChannelExtendedValue(suplaChannelExtendedValue, channelId);
+
+    // then
+    assertEquals(Boolean.TRUE, result.asBoolean(0));
+    assertEquals(Boolean.TRUE, result.asBoolean(1));
+    verify(channelDao).getChannelExtendedValue(channelId);
+    verify(channelDao).update(channelExtendedValue);
+    verify(channelExtendedValue).setExtendedValue(suplaChannelExtendedValue);
+    verify(channelExtendedValue).getTimerStartTimestamp();
+    verify(channelExtendedValue, times(2)).getTimerEstimatedEndDate();
+    verify(channelExtendedValue).setTimerStartTimestamp(null);
+    verifyNoMoreInteractions(channelDao, channelExtendedValue);
+    verifyNoInteractions(locationDao);
+  }
+
+  @Test
+  public void shouldUpdateChannelExtendedValueAndSetTimerToCurrentDate() {
+    // given
+    long currentTimestamp = 123L;
+    Date date = new Date();
+    when(dateProvider.currentTimestamp()).thenReturn(currentTimestamp);
+
+    int channelId = 234;
+    SuplaChannelExtendedValue suplaChannelExtendedValue = mock(SuplaChannelExtendedValue.class);
+
+    ChannelExtendedValue channelExtendedValue = mock(ChannelExtendedValue.class);
+    when(channelExtendedValue.getTimerEstimatedEndDate()).thenReturn(null, date);
+    when(channelDao.getChannelExtendedValue(channelId)).thenReturn(channelExtendedValue);
+
+    // when
+    ResultTuple result =
+        defaultChannelRepository.updateChannelExtendedValue(suplaChannelExtendedValue, channelId);
+
+    // then
+    assertEquals(Boolean.TRUE, result.asBoolean(0));
+    assertEquals(Boolean.TRUE, result.asBoolean(1));
+    verify(channelDao).getChannelExtendedValue(channelId);
+    verify(channelDao).update(channelExtendedValue);
+    verify(channelExtendedValue).setExtendedValue(suplaChannelExtendedValue);
+    verify(channelExtendedValue, times(2)).getTimerEstimatedEndDate();
+    verify(channelExtendedValue).setTimerStartTimestamp(currentTimestamp);
     verifyNoMoreInteractions(channelDao, channelExtendedValue);
     verifyNoInteractions(locationDao);
   }
@@ -963,39 +616,6 @@ public class DefaultChannelRepositoryTest {
   }
 
   @Test
-  public void shouldGetChannelListCursorWithDefaultOrder() {
-    // given
-    String where = SuplaContract.ChannelViewEntry.COLUMN_NAME_FUNC + " <> 0 ";
-    Cursor expectedResult = mock(Cursor.class);
-    when(channelDao.getChannelListCursorWithDefaultOrder(where)).thenReturn(expectedResult);
-
-    // when
-    Cursor result = defaultChannelRepository.getChannelListCursorWithDefaultOrder();
-
-    // then
-    assertSame(expectedResult, result);
-    verify(channelDao).getChannelListCursorWithDefaultOrder(where);
-    verifyNoMoreInteractions(channelDao);
-    verifyNoInteractions(locationDao);
-  }
-
-  @Test
-  public void shouldGetChannelGroupListCursor() {
-    // given
-    Cursor expectedResult = mock(Cursor.class);
-    when(channelDao.getChannelGroupListCursor()).thenReturn(expectedResult);
-
-    // when
-    Cursor result = defaultChannelRepository.getChannelGroupListCursor();
-
-    // then
-    assertSame(expectedResult, result);
-    verify(channelDao).getChannelGroupListCursor();
-    verifyNoMoreInteractions(channelDao);
-    verifyNoInteractions(locationDao);
-  }
-
-  @Test
   public void shouldGetIfZWaveBridgeChannelIsAvailable() {
     // given
     final boolean expectedResult = true;
@@ -1153,11 +773,8 @@ public class DefaultChannelRepositoryTest {
 
   @Test
   public void shouldUpdateLocationWhenNull() {
-    // given
-    Location location = null;
-
     // when
-    defaultChannelRepository.updateLocation(location);
+    defaultChannelRepository.updateLocation((Location) null);
 
     // then
     verifyNoInteractions(locationDao, channelDao);
@@ -1167,12 +784,17 @@ public class DefaultChannelRepositoryTest {
   public void shouldReorderChannelGroups() {
     // given
     int locationId = 2;
+    String locationCaption = "Caption";
 
     Cursor cursor = mock(Cursor.class);
     when(cursor.moveToFirst()).thenReturn(true);
     when(cursor.getLong(anyInt())).thenReturn(15L, 12L, 18L, 13L, 14L);
     when(cursor.moveToNext()).thenReturn(true, true, true, true, false);
-    when(channelDao.getSortedChannelGroupIdsForLocationCursor(locationId)).thenReturn(cursor);
+    when(channelDao.getSortedChannelGroupIdsForLocationCursor(locationCaption)).thenReturn(cursor);
+
+    Location location = mock(Location.class);
+    when(location.getCaption()).thenReturn(locationCaption);
+    when(locationDao.getLocation(locationId)).thenReturn(location);
 
     // when
     defaultChannelRepository.reorderChannelGroups(15L, locationId, 13L).blockingAwait();
@@ -1218,49 +840,6 @@ public class DefaultChannelRepositoryTest {
     assertSame(cursor, returned);
   }
 
-  private void assertChannel(
-      Channel channel,
-      int id,
-      int locationId,
-      String caption,
-      int func,
-      int flags,
-      int altIcon,
-      int userIcon,
-      int deviceId,
-      int type,
-      int protocolVersion,
-      short manufacturerId,
-      short productId,
-      int visible,
-      int position,
-      int valueAsLong) {
-    assertEquals(id, channel.getChannelId());
-    assertEquals(locationId, channel.getLocationId());
-    assertEquals(caption, channel.getCaption());
-    assertEquals(func, channel.getFunc());
-    assertEquals(flags, channel.getFlags());
-    assertEquals(altIcon, channel.getAltIcon());
-    assertEquals(userIcon, channel.getUserIconId());
-    assertEquals(deviceId, channel.getDeviceID());
-    assertEquals(type, channel.getType());
-    assertEquals(protocolVersion, channel.getProtocolVersion());
-    assertEquals(manufacturerId, channel.getManufacturerID());
-    assertEquals(productId, channel.getProductID());
-    assertEquals(visible, channel.getVisible());
-    assertEquals(position, channel.getPosition());
-
-    ChannelValue channelValue = channel.getValue();
-    assertEquals(valueAsLong, channelValue.getLong());
-  }
-
-  private void assertChannelValue(
-      ChannelValue channelValue, long valueAsLong, int channelId, boolean online) {
-    assertEquals(valueAsLong, channelValue.getLong());
-    assertEquals(channelId, channelValue.getChannelId());
-    assertEquals(online, channelValue.getOnLine());
-  }
-
   private void assertChannelGroup(
       ChannelGroup channelGroup,
       int id,
@@ -1270,51 +849,17 @@ public class DefaultChannelRepositoryTest {
       int flags,
       int altIcon,
       int userIcon,
-      int visible,
       int position) {
     assertEquals(id, channelGroup.getGroupId());
     assertEquals(locationId, channelGroup.getLocationId());
-    assertEquals(caption, channelGroup.getCaption());
+    assertEquals(caption, channelGroup.getCaption(null));
     assertEquals(func, channelGroup.getFunc());
     assertEquals(flags, channelGroup.getFlags());
     assertEquals(altIcon, channelGroup.getAltIcon());
     assertEquals(userIcon, channelGroup.getUserIconId());
     assertEquals(0, channelGroup.getType());
-    assertEquals(visible, channelGroup.getVisible());
+    assertEquals(1, channelGroup.getVisible());
     assertEquals(position, channelGroup.getPosition());
-  }
-
-  private SuplaChannel suplaChannel(
-      int id,
-      int locationId,
-      String caption,
-      int func,
-      int flags,
-      int altIcon,
-      int userIcon,
-      int deviceId,
-      int type,
-      int protocolVersion,
-      short manufacturerId,
-      short productId,
-      SuplaChannelValue suplaChannelValue) {
-    SuplaChannel suplaChannel = new SuplaChannel();
-    suplaChannel.Id = id;
-    suplaChannel.LocationID = locationId;
-    suplaChannel.Caption = caption;
-    suplaChannel.Func = func;
-    suplaChannel.Flags = flags;
-    suplaChannel.AltIcon = altIcon;
-    suplaChannel.UserIcon = userIcon;
-
-    suplaChannel.DeviceID = deviceId;
-    suplaChannel.Type = type;
-    suplaChannel.ProtocolVersion = protocolVersion;
-    suplaChannel.ManufacturerID = manufacturerId;
-    suplaChannel.ProductID = productId;
-    suplaChannel.Value = suplaChannelValue;
-
-    return suplaChannel;
   }
 
   private SuplaChannelGroup suplaChannelGroup(
@@ -1331,16 +876,6 @@ public class DefaultChannelRepositoryTest {
     return suplaChannelGroup;
   }
 
-  private SuplaChannelValue suplaChannelValue(Long value) {
-    ByteBuffer byteBuffer = ByteBuffer.allocate(Long.BYTES);
-
-    SuplaChannelValue suplaChannelValue = new SuplaChannelValue();
-    byteBuffer.putLong(0, value);
-    suplaChannelValue.Value = invert(byteBuffer.array());
-
-    return suplaChannelValue;
-  }
-
   private SuplaLocation suplaLocation(int locationId, String caption) {
     SuplaLocation suplaLocation = new SuplaLocation();
     suplaLocation.Id = locationId;
@@ -1349,39 +884,7 @@ public class DefaultChannelRepositoryTest {
     return suplaLocation;
   }
 
-  private Channel channel(
-      int id,
-      int locationId,
-      String caption,
-      int func,
-      int flags,
-      int altIcon,
-      int userIcon,
-      int deviceId,
-      int type,
-      int protocolVersion,
-      short manufacturerId,
-      short productId,
-      ChannelValue channelValue) {
-    Channel channel = new Channel();
-    channel.setRemoteId(id);
-    channel.setLocationId(locationId);
-    channel.setCaption(caption);
-    channel.setFunc(func);
-    channel.setFlags(flags);
-    channel.setAltIcon(altIcon);
-    channel.setUserIconId(userIcon);
-
-    channel.setDeviceID(deviceId);
-    channel.setType(type);
-    channel.setProtocolVersion(protocolVersion);
-    channel.setManufacturerID(manufacturerId);
-    channel.setProductID(productId);
-    channel.setValue(channelValue);
-
-    return channel;
-  }
-
+  @SuppressWarnings("SameParameterValue")
   private ChannelGroup channelGroup(
       int id, int locationId, String caption, int func, int flags, int altIcon, int userIcon) {
     ChannelGroup channelGroup = new ChannelGroup();
@@ -1394,21 +897,5 @@ public class DefaultChannelRepositoryTest {
     channelGroup.setUserIconId(userIcon);
 
     return channelGroup;
-  }
-
-  private ChannelValue channelValue(SuplaChannelValue suplaChannelValue) {
-    ChannelValue channelValue = new ChannelValue();
-    channelValue.AssignSuplaChannelValue(suplaChannelValue);
-    return channelValue;
-  }
-
-  private byte[] invert(byte[] array) {
-    byte[] result = new byte[array.length];
-
-    for (int i = 0; i < array.length; i++) {
-      result[i] = array[array.length - i - 1];
-    }
-
-    return result;
   }
 }

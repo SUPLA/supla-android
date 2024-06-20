@@ -52,34 +52,36 @@ public class SuplaClientMsg {
   public static final int onZWaveSetWakeUpTimeResult = 29;
   public static final int onLocationCaptionSetResult = 30;
   public static final int onSceneCaptionSetResult = 31;
-  public final static int onSceneStateChanged = 32;
-    private Object Sender;
-    private int Type;
-    private SuplaVersionError VersionError;
-    private SuplaRegisterResult RegisterResult;
-    private SuplaRegisterError RegisterError;
-    private SuplaConnError ConnError;
-    private SuplaEvent Event;
-    private SuplaRegistrationEnabled RegistrationEnabled;
-    private SuplaOAuthToken OAuthToken;
-    private SuplaChannelState ChannelState;
-    private SuplaChannelBasicCfg ChannelBasicCfg;
-    private int ChannelId;
-    private int ChannelGroupId;
-    private int LocationId;
-    private int SceneId;
-    private boolean Success;
-    private int Code;
-    private int Command;
-    private int Result;
-    private byte[] data;
-    private int Func;
-    private short NodeId;
-    private ZWaveNode Node;
-    private String Text;
-    private short Progress;
-    private boolean ExtendedValue;
-    private ZWaveWakeUpSettings WakeUpSettings;
+  public static final int onSceneChanged = 32;
+  public static final int onChannelGroupCaptionSetResult = 33;
+  private Object Sender;
+  private int Type;
+  private SuplaVersionError VersionError;
+  private SuplaRegisterResult RegisterResult;
+  private SuplaRegisterError RegisterError;
+  private SuplaConnError ConnError;
+  private SuplaEvent Event;
+  private SuplaRegistrationEnabled RegistrationEnabled;
+  private SuplaOAuthToken OAuthToken;
+  private SuplaChannelState ChannelState;
+  private SuplaChannelBasicCfg ChannelBasicCfg;
+  private int ChannelId;
+  private int ChannelGroupId;
+  private int LocationId;
+  private int SceneId;
+  private boolean Success;
+  private int Code;
+  private int Command;
+  private int Result;
+  private byte[] data;
+  private int Func;
+  private short NodeId;
+  private ZWaveNode Node;
+  private String Text;
+  private short Progress;
+  private boolean ExtendedValue;
+  private boolean TimerValue;
+  private ZWaveWakeUpSettings WakeUpSettings;
 
   public SuplaClientMsg(Object sender, int type) {
     Type = type;
@@ -280,6 +282,14 @@ public class SuplaClientMsg {
 
   public void setExtendedValue(boolean extendedValue) {
     ExtendedValue = extendedValue;
+  }
+
+  public boolean isTimerValue() {
+    return TimerValue;
+  }
+
+  public void setTimerValue(boolean value) {
+    TimerValue = value;
   }
 
   public ZWaveWakeUpSettings getWakeUpSettings() {

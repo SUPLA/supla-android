@@ -1,113 +1,83 @@
 package org.supla.android.data.source;
 
 /*
- Copyright (C) AC SOFTWARE SP. Z O.O.
+Copyright (C) AC SOFTWARE SP. Z O.O.
 
- This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation; either version 2
- of the License, or (at your option) any later version.
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
- You should have received a copy of the GNU General Public License
- along with this program; if not, write to the Free Software
- Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- */
-
-import android.database.Cursor;
-import android.annotation.SuppressLint;
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+*/
 
 import org.supla.android.data.source.local.UserIconDao;
+import org.supla.android.data.source.local.entity.UserIconEntity;
 import org.supla.android.db.ProfileIdProvider;
-import org.supla.android.db.SuplaContract;
-import org.supla.android.db.SuplaContract.UserIconsEntry;
-import org.supla.android.images.ImageCache;
-import org.supla.android.images.ImageCacheProvider;
-import org.supla.android.images.ImageId;
+import org.supla.android.images.ImageCacheProxy;
 
 public class DefaultUserIconRepository implements UserIconRepository {
 
-    private final UserIconDao userIconDao;
-    private final ImageCacheProvider imageCacheProvider;
-    private final ProfileIdProvider profileIdProvider;
+  private final UserIconDao userIconDao;
+  private final ImageCacheProxy imageCacheProxy;
+  private final ProfileIdProvider profileIdProvider;
 
-    public DefaultUserIconRepository(UserIconDao userIconDao,
-                                     ImageCacheProvider imageCacheProvider,
-                                     ProfileIdProvider profileIdProvider) {
-        this.userIconDao = userIconDao;
-        this.imageCacheProvider = imageCacheProvider;
-        this.profileIdProvider = profileIdProvider;
+  public DefaultUserIconRepository(
+      UserIconDao userIconDao,
+      ImageCacheProxy imageCacheProxy,
+      ProfileIdProvider profileIdProvider) {
+    this.userIconDao = userIconDao;
+    this.imageCacheProxy = imageCacheProxy;
+    this.profileIdProvider = profileIdProvider;
+  }
+
+  @Override
+  public boolean addUserIcons(
+      int id,
+      byte[] img1,
+      byte[] img2,
+      byte[] img3,
+      byte[] img4,
+      byte[] img1dark,
+      byte[] img2dark,
+      byte[] img3dark,
+      byte[] img4dark) {
+    if (id <= 0 || (img1 == null && img2 == null && img3 == null && img4 == null)) {
+      return false;
     }
 
-    @Override
-    public boolean addUserIcons(int id, byte[] img1, byte[] img2, byte[] img3, byte[] img4) {
-        if (id <= 0 || (img1 == null && img2 == null && img3 == null && img4 == null)) {
-            return false;
-        }
+    UserIconDao.Image[] images = {
+      new UserIconDao.Image(
+          UserIconEntity.COLUMN_IMAGE_1, img1, 1, profileIdProvider.getCachedProfileId()),
+      new UserIconDao.Image(
+          UserIconEntity.COLUMN_IMAGE_2, img2, 2, profileIdProvider.getCachedProfileId()),
+      new UserIconDao.Image(
+          UserIconEntity.COLUMN_IMAGE_3, img3, 3, profileIdProvider.getCachedProfileId()),
+      new UserIconDao.Image(
+          UserIconEntity.COLUMN_IMAGE_4, img4, 4, profileIdProvider.getCachedProfileId()),
+      new UserIconDao.Image(
+          UserIconEntity.COLUMN_IMAGE_1_DARK, img1dark, 1, profileIdProvider.getCachedProfileId()),
+      new UserIconDao.Image(
+          UserIconEntity.COLUMN_IMAGE_2_DARK, img2dark, 2, profileIdProvider.getCachedProfileId()),
+      new UserIconDao.Image(
+          UserIconEntity.COLUMN_IMAGE_3_DARK, img3dark, 3, profileIdProvider.getCachedProfileId()),
+      new UserIconDao.Image(
+          UserIconEntity.COLUMN_IMAGE_4_DARK, img4dark, 4, profileIdProvider.getCachedProfileId()),
+    };
 
-        UserIconDao.Image[] images = {
-                new UserIconDao.Image(SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE1,
-                    img1, 1, profileIdProvider.getCachedProfileId()),
-                new UserIconDao.Image(SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE2,
-                    img2, 2, profileIdProvider.getCachedProfileId()),
-                new UserIconDao.Image(SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE3,
-                    img3, 3, profileIdProvider.getCachedProfileId()),
-                new UserIconDao.Image(SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE4,
-                    img4, 4, profileIdProvider.getCachedProfileId()),
-        };
-
-        userIconDao.insert(id, images);
-        for (UserIconDao.Image image : images) {
-            if (image.value != null) {
-                imageCacheProvider.addImage(id, image);
-            }
-        }
-        return true;
+    userIconDao.insert(id, images);
+    for (UserIconDao.Image image : images) {
+      if (image.value != null) {
+        imageCacheProxy.addUserImage(id, image);
+      }
     }
-
-    @Override
-    public void deleteUserIcons(long profileId) {
-        userIconDao.delete(profileId);
-    }
-
-    @Override
-    @SuppressLint("Range")
-    public void loadUserIconsIntoCache() {
-        Cursor cursor = userIconDao.getUserIcons();
-        if (cursor.moveToFirst()) {
-            do {
-                for (ImageType imageType : ImageType.values()) {
-                    byte[] image = cursor.getBlob(cursor.getColumnIndex(imageType.column));
-                    int remoteId = cursor.getInt(cursor.getColumnIndex(
-                            SuplaContract.UserIconsEntry.COLUMN_NAME_REMOTEID));
-                    long profileId = cursor.getLong(cursor.getColumnIndex(
-                        UserIconsEntry.COLUMN_NAME_PROFILEID));
-
-                    if (image != null && image.length > 0) {
-                        imageCacheProvider.addImage(new ImageId(remoteId, imageType.subId, profileId), image);
-                    }
-                }
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-    }
-
-    private enum ImageType {
-        IMAGE1(SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE1, 1),
-        IMAGE2(SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE2, 2),
-        IMAGE3(SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE3, 3),
-        IMAGE4(SuplaContract.UserIconsEntry.COLUMN_NAME_IMAGE4, 4);
-
-        private final String column;
-        private final int subId;
-
-        ImageType(String column, int subId) {
-            this.column = column;
-            this.subId = subId;
-        }
-    }
+    return true;
+  }
 }
