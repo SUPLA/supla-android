@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="primary">#003A03</color>
     <color name="primary_variant">@color/supla</color>
     <color name="primary_light">#2f3230</color>
     <color name="on_primary">#ffffff</color>
@@ -36,6 +35,7 @@
     <color name="channel_cell">@color/surface</color>
 
     <color name="dialog_scrim">#BB171717</color>
+    <color name="toolbar">#003A03</color>
 
     <!-- Roller shutter -->
     <color name="roller_shutter_window_color">#363738</color>

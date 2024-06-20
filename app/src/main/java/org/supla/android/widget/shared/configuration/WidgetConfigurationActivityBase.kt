@@ -37,6 +37,7 @@ import org.supla.android.data.source.local.entity.Scene
 import org.supla.android.db.AuthProfileItem
 import org.supla.android.db.ChannelBase
 import org.supla.android.db.DbItem
+import org.supla.android.extensions.setStatusBarColor
 
 abstract class WidgetConfigurationActivityBase<T : Any> : FragmentActivity() {
 
@@ -46,6 +47,7 @@ abstract class WidgetConfigurationActivityBase<T : Any> : FragmentActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+    setStatusBarColor(R.color.toolbar, false)
 
     binding = bind()
 

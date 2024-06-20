@@ -101,7 +101,7 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
           new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
       mMainButtonsAreaLayout.setLayoutParams(params);
       mMainButtonsAreaLayout.setOrientation(VERTICAL);
-      mMainButtonsAreaLayout.setBackgroundColor(getResources().getColor(R.color.primary));
+      mMainButtonsAreaLayout.setBackgroundColor(getResources().getColor(R.color.toolbar));
       addView(mMainButtonsAreaLayout);
     }
   }

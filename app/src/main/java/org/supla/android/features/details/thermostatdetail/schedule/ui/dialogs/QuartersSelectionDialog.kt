@@ -35,6 +35,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -129,7 +130,7 @@ private fun QuarterRow(
         .weight(1f)
         .height(36.dp)
         .clickable(
-          interactionSource = MutableInteractionSource(),
+          interactionSource = remember { MutableInteractionSource() },
           indication = null,
           onClick = { viewProxy.onQueartersDialogQuarterChange(quarterOfHour) }
         )

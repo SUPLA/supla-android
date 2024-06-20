@@ -1387,6 +1387,7 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity
 
   @Override
   public void onBackPressed() {
+    super.onBackPressed();
     switch (getVisiblePageId()) {
       case PAGE_ZWAVE_ERROR:
         if (mPreviousPage > 0) {

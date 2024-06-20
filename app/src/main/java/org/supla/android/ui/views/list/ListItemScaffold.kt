@@ -200,7 +200,7 @@ private fun ListItemInfoIcon(onClick: () -> Unit) {
     modifier = Modifier
       .padding(start = dimensionResource(id = R.dimen.list_horizontal_spacing))
       .size(dimensionResource(id = R.dimen.channel_state_image_size))
-      .clickable(interactionSource = MutableInteractionSource(), indication = null, onClick = onClick)
+      .clickable(interactionSource = remember { MutableInteractionSource() }, indication = null, onClick = onClick)
   )
 }
 
@@ -212,7 +212,7 @@ private fun ListItemIssueIcon(issueIconType: IssueIconType, onClick: () -> Unit)
     modifier = Modifier
       .padding(end = dimensionResource(id = R.dimen.list_horizontal_spacing))
       .size(dimensionResource(id = R.dimen.channel_warning_image_size))
-      .clickable(interactionSource = MutableInteractionSource(), indication = null, onClick = onClick)
+      .clickable(interactionSource = remember { MutableInteractionSource() }, indication = null, onClick = onClick)
   )
 }
 

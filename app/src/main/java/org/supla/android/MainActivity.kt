@@ -53,6 +53,7 @@ import org.supla.android.core.notifications.NotificationsHelper
 import org.supla.android.core.ui.BackHandleOwner
 import org.supla.android.extensions.TAG
 import org.supla.android.extensions.getChannelIconUseCase
+import org.supla.android.extensions.setStatusBarColor
 import org.supla.android.extensions.visibleIf
 import org.supla.android.features.lockscreen.LockScreenFragment
 import org.supla.android.features.lockscreen.UnlockAction
@@ -519,6 +520,6 @@ class MainActivity :
   override fun setToolbarVisible(visible: Boolean) {
     appBarLayout.visibleIf(visible)
     appBarLayoutSpacer.visibleIf(visible)
-    setStatusBarColor(if (visible) R.color.primary else R.color.background, visible.not())
+    setStatusBarColor(if (visible) R.color.toolbar else R.color.background, visible.not())
   }
 }

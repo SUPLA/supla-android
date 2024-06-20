@@ -1252,6 +1252,7 @@ public class AddDeviceWizardActivity extends WizardActivity
 
   @Override
   public void onBackPressed() {
+    super.onBackPressed();
     showMain(this);
     finish();
   }
