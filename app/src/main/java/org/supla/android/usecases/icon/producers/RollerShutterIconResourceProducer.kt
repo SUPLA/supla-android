@@ -35,7 +35,7 @@ class RollerShutterIconResourceProducer : IconResourceProducer {
 
   override fun produce(data: IconData): Int =
     when (data.state.value) {
-      ChannelState.Value.OPEN -> R.drawable.rollershutteropen
-      else -> R.drawable.rollershutterclosed
+      ChannelState.Value.OPEN -> R.drawable.fnc_roller_shutter_open
+      else -> R.drawable.fnc_roller_shutter_close
     }
 }
