@@ -36,7 +36,7 @@ class RollerShutterIconResourceProducerTest : BaseIconResourceProducerTest() {
     test(
       state = ChannelState.Value.OPEN,
       function = SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROLLERSHUTTER,
-      expectedIcon = R.drawable.rollershutteropen
+      expectedIcon = R.drawable.fnc_roller_shutter_open
     )
   }
 
@@ -45,7 +45,7 @@ class RollerShutterIconResourceProducerTest : BaseIconResourceProducerTest() {
     test(
       state = ChannelState.Value.CLOSED,
       function = SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROLLERSHUTTER,
-      expectedIcon = R.drawable.rollershutterclosed
+      expectedIcon = R.drawable.fnc_roller_shutter_close
     )
   }
 }

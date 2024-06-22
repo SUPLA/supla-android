@@ -65,7 +65,9 @@ class SuplaClientStateHolder @Inject constructor(
   fun state(): Observable<SuplaClientState> = stateSubject.hide()
 
   fun handleEvent(event: SuplaClientEvent) {
-    handleEventInternally(event)
+    synchronized(this) {
+      handleEventInternally(event)
+    }
   }
 
   private fun handleEventInternally(event: SuplaClientEvent) {
