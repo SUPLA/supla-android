@@ -61,6 +61,10 @@ class LockScreenViewModel @Inject constructor(
   }
 
   fun onPinChange(pin: String) {
+    if (currentState().viewState.pin == pin) {
+      return // nothing changed
+    }
+
     updateState { it.copy(viewState = it.viewState.copy(pin = pin, wrongPin = false)) }
 
     if (pin.length == PIN_LENGTH) {

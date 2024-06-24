@@ -190,4 +190,21 @@ class LockScreenViewModelTest : BaseViewModelTest<LockScreenViewModelState, Lock
     }
     confirmVerified(checkPinUseCase)
   }
+
+  @Test
+  fun `should not verify pin - when does not changed`() {
+    // given
+    val pin = "1234"
+    viewModel.setState(LockScreenViewModelState(LockScreenViewState(pin)))
+
+    // when
+    viewModel.onPinChange(pin)
+
+    // then
+    assertThat(events).isEmpty()
+    assertThat(states).containsExactly(
+      LockScreenViewModelState(LockScreenViewState(pin))
+    )
+    confirmVerified(checkPinUseCase)
+  }
 }
