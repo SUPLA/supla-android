@@ -66,12 +66,11 @@
   <string name="create_account">Konto erstellen</string>
 
 
-  <string name="about_app">Dieses Programm ist freie Software, es darf weitergegeben und / oder modifizieren werden unter den Bedingungen der GNU General Public License die von der Free Software Foundation veröffentlicht wurde, entweder gemäß Version 2 der Lizenz oder (nach Ihrer Option) jeder späteren Version.\n\n
-
- Dieses Programm wird vertrieben um nützlich zu sein, aber OHNE IRGENDEINE GARANTIE. Sogar ohne Gewähr Marktgängigkeit oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Lesen Sie bitte General Public License für weitere Details.\n\n
-
- Sie sollten eine Kopie der GNU General Public License zusammen mit diesem Programm erhalten haben. Falls nicht, schreiben Sie an die Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
-   </string>
+  <string name="about_app">
+   Dieses Programm ist freie Software, es darf weitergegeben und / oder modifizieren werden unter den Bedingungen der GNU General Public License die von der Free Software Foundation veröffentlicht wurde, entweder gemäß Version 2 der Lizenz oder (nach Ihrer Option) jeder späteren Version.\n\n
+   Dieses Programm wird vertrieben um nützlich zu sein, aber OHNE IRGENDEINE GARANTIE. Sogar ohne Gewähr Marktgängigkeit oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Lesen Sie bitte General Public License für weitere Details.\n\n
+   Sie sollten eine Kopie der GNU General Public License zusammen mit diesem Programm erhalten haben. Falls nicht, schreiben Sie an die Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
+  </string>
 
   <string name="rate_msg">Wusstest Du, dass Supla ein offenes und kostenloses Gemeinschaftsprojekt ist? Wenn Dir diese App gefällt, nimm Dir bitte einen Moment Zeit, um sie zu bewerten. Danke für Deine Unterstützung!</string>
   <string name="rate_now">Bewerten</string>
@@ -610,6 +609,7 @@
   <string name="lock_screen_pin_locked">Zu viele Fehlversuche. PIN-Eingabe für %1$s gesperrt.</string>
   <string name="status_disconnecting">Abschalten…</string>
   <string name="status_awaiting_network">Warten auf netzwerk…</string>
+  <string name="about_build_time">Version des Tages:</string>
   <plurals name="details_timer_info_on">
     <item quantity="one">eingeschaltet</item>
     <item quantity="other">eingeschaltet</item>

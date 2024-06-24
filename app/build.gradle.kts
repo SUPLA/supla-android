@@ -1,3 +1,5 @@
+import java.util.Date
+
 plugins {
   id("com.android.application")
   id("com.diffplug.spotless")
@@ -29,6 +31,9 @@ android {
       moduleName = "suplaclient"
       debugSymbolLevel = "FULL"
     }
+
+    val buildTime = Date()
+    buildConfigField("Long", "BUILD_TIME", "${buildTime.time}L")
   }
 
   compileOptions {

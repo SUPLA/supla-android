@@ -19,8 +19,6 @@ package org.supla.android.extensions
 
 import android.app.Activity
 import android.content.res.Configuration
-import android.os.Build
-import android.os.Build.VERSION_CODES
 import android.view.WindowManager
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -36,9 +34,8 @@ fun Activity.setStatusBarColor(colorId: Int, isLight: Boolean) {
   window.navigationBarColor = navigationBarColor
   val view = window.decorView
 
-  if (Build.VERSION.SDK_INT >= VERSION_CODES.M && !isInDarkMode()) {
-    WindowInsetsControllerCompat(window, view).isAppearanceLightStatusBars = isLight
-  }
+  WindowInsetsControllerCompat(window, view).isAppearanceLightStatusBars = isLight
+  WindowInsetsControllerCompat(window, view).isAppearanceLightNavigationBars = true
 }
 
 fun Activity.isInDarkMode(): Boolean =
