@@ -51,13 +51,13 @@ fun SuplaTypographyMaterial3(colors: Colors) = Typography(
     fontFamily = OpenSansFontFamily
   ),
   headlineMedium = TextStyle(
-    fontSize = 28.sp,
+    fontSize = 24.sp,
     fontWeight = FontWeight.Normal,
     color = colors.onBackground,
     fontFamily = OpenSansFontFamily
   ),
   headlineSmall = TextStyle(
-    fontSize = 24.sp,
+    fontSize = 17.sp,
     fontWeight = FontWeight.Normal,
     color = colors.onBackground,
     fontFamily = OpenSansFontFamily

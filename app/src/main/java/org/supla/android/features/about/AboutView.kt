@@ -27,9 +27,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,7 +48,8 @@ import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 
 data class AboutViewState(
-  val version: String = BuildConfig.VERSION_NAME
+  val version: String = BuildConfig.VERSION_NAME,
+  val buildTime: String = ""
 )
 
 @Composable
@@ -59,7 +60,7 @@ fun AboutView(
   Box(
     modifier = Modifier
       .fillMaxSize()
-      .background(MaterialTheme.colors.background)
+      .background(MaterialTheme.colorScheme.background)
   ) {
     Column(
       verticalArrangement = Arrangement.spacedBy(Distance.default),
@@ -71,25 +72,25 @@ fun AboutView(
       Image(
         painter = painterResource(id = R.drawable.logo_light),
         contentDescription = stringResource(id = R.string.app_name),
-        colorFilter = ColorFilter.tint(MaterialTheme.colors.onBackground),
+        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground),
         modifier = Modifier.size(100.dp),
         contentScale = ContentScale.Fit
       )
       Text(
         text = stringResource(id = R.string.menubar_title),
-        style = MaterialTheme.typography.h4,
-        color = MaterialTheme.colors.onBackground
+        style = MaterialTheme.typography.headlineLarge,
+        color = MaterialTheme.colorScheme.onBackground
       )
       Text(
         text = "${stringResource(id = R.string.version)} ${viewState.version}",
-        style = MaterialTheme.typography.body2,
-        color = MaterialTheme.colors.onBackground,
+        style = MaterialTheme.typography.bodyMedium,
+        color = MaterialTheme.colorScheme.onBackground,
         fontWeight = FontWeight.Bold
       )
       Text(
         text = stringResource(id = R.string.about_app),
-        style = MaterialTheme.typography.overline,
-        color = MaterialTheme.colors.onBackground,
+        style = MaterialTheme.typography.labelSmall,
+        color = MaterialTheme.colorScheme.onBackground,
         textAlign = TextAlign.Center,
         modifier = Modifier
           .verticalScroll(rememberScrollState())
@@ -98,6 +99,12 @@ fun AboutView(
       TextButton(onClick = onSuplaUrlClick) {
         Text(text = stringResource(id = R.string.homepage))
       }
+      Text(
+        text = "${stringResource(id = R.string.about_build_time)} ${viewState.buildTime}",
+        style = MaterialTheme.typography.bodySmall,
+        color = MaterialTheme.colorScheme.onBackground,
+        fontWeight = FontWeight.Light
+      )
     }
   }
 }
@@ -107,6 +114,6 @@ fun AboutView(
 @Composable
 private fun Preview() {
   SuplaTheme {
-    AboutView(AboutViewState())
+    AboutView(AboutViewState(buildTime = "24.06.2024 08:48 (224)"))
   }
 }

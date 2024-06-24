@@ -18,16 +18,28 @@ package org.supla.android.features.about
  */
 
 import dagger.hilt.android.lifecycle.HiltViewModel
+import org.supla.android.BuildConfig
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
+import org.supla.android.data.ValuesFormatter
 import org.supla.android.tools.SuplaSchedulers
+import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
 class AboutViewModel @Inject constructor(
+  private val valuesFormatter: ValuesFormatter,
   suplaSchedulers: SuplaSchedulers
-) : BaseViewModel<AboutViewModelState, AboutViewEvent>(AboutViewModelState(), suplaSchedulers)
+) : BaseViewModel<AboutViewModelState, AboutViewEvent>(AboutViewModelState(), suplaSchedulers) {
+  override fun onViewCreated() {
+    updateState {
+      val date = valuesFormatter.getFullDateString(Date(BuildConfig.BUILD_TIME)) ?: ""
+      val timeString = "$date (${BuildConfig.VERSION_CODE})"
+      it.copy(viewState = it.viewState.copy(buildTime = timeString))
+    }
+  }
+}
 
 sealed class AboutViewEvent : ViewEvent
 
