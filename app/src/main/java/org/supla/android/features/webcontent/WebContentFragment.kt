@@ -17,9 +17,11 @@ syays GNU General Public License for more details.
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import android.webkit.WebResourceRequest
+import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.annotation.CallSuper
@@ -45,15 +47,32 @@ abstract class WebContentFragment<S : WebContentViewState, E : ViewEvent> : Base
     override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
       return viewModel.allowRequest(request).not()
     }
+
+    override fun onReceivedHttpError(view: WebView?, request: WebResourceRequest?, errorResponse: WebResourceResponse?) {
+      if (request != null && errorResponse != null) {
+        viewModel.handleError(request.url.toString(), errorResponse.statusCode)
+      }
+    }
+
+    override fun onReceivedError(view: WebView?, errorCode: Int, description: String?, failingUrl: String?) {
+      if (failingUrl != null) {
+        viewModel.handleError(failingUrl, errorCode)
+      }
+    }
   }
 
+  @SuppressLint("SetJavaScriptEnabled")
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     binding.apply {
       webBrowser.settings.javaScriptEnabled = true
       webBrowser.settings.domStorageEnabled = true
+      webBrowser.clearCache(true)
 
       caProgressBar.progressDrawable = ResourcesCompat.getDrawable(resources, R.drawable.progressbar, null)
+
+      binding.webBrowser.webViewClient = client
+      binding.webBrowser.loadUrl(url)
     }
   }
 
@@ -66,12 +85,5 @@ abstract class WebContentFragment<S : WebContentViewState, E : ViewEvent> : Base
       binding.caProgressBar.visibility = View.GONE
       binding.webBrowser.visibility = View.VISIBLE
     }
-  }
-
-  override fun onStart() {
-    super.onStart()
-
-    binding.webBrowser.webViewClient = client
-    binding.webBrowser.loadUrl(url)
   }
 }

@@ -6,6 +6,7 @@
   <string name="create_url">https://cloud.supla.org/register?lang=de</string>
   <string name="delete_url">https://{SERVER_ADDRESS}/db99845855b2ecbfecca9a095062b96c3e27703f?lang=de</string>
   <string name="forumpage_url">https://de-forum.supla.org/</string>
+  <string name="devices_list_url">https://www.supla.org/de/devices</string>
 
   <string name="version">version</string>
 
@@ -610,6 +611,7 @@
   <string name="status_disconnecting">Abschalten…</string>
   <string name="status_awaiting_network">Warten auf netzwerk…</string>
   <string name="about_build_time">Version des Tages:</string>
+  <string name="device_catalog_error">Gerätekatalog konnte nicht geladen werden. Bitte versuchen Sie später.</string>
   <plurals name="details_timer_info_on">
     <item quantity="one">eingeschaltet</item>
     <item quantity="other">eingeschaltet</item>

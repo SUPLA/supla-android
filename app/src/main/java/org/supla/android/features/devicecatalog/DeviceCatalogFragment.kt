@@ -17,15 +17,24 @@ package org.supla.android.features.devicecatalog
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
+import org.supla.android.core.ui.theme.SuplaTheme
+import org.supla.android.extensions.visibleIf
 import org.supla.android.features.webcontent.WebContentFragment
 import org.supla.android.navigator.MainNavigator
 import javax.inject.Inject
+
+private const val JS_MOBILE_CLASS = "document.body.classList.add('mobile'); "
+private const val JS_NIGHT_CLASS = "document.body.classList.add('darkTheme'); "
 
 @AndroidEntryPoint
 class DeviceCatalogFragment : WebContentFragment<DeviceCatalogViewState, DeviceCatalogViewEvent>() {
@@ -36,13 +45,55 @@ class DeviceCatalogFragment : WebContentFragment<DeviceCatalogViewState, DeviceC
   @Inject
   internal lateinit var navigator: MainNavigator
 
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    viewModel.setUrl(url)
+  }
+
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
 
     (binding.root.layoutParams as FrameLayout.LayoutParams).topMargin = 0
+    binding.webCompose.apply {
+      setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+      setContent {
+        val modelState by viewModel.getViewState().collectAsState()
+        SuplaTheme {
+          if (modelState.showError) {
+            DeviceCatalogErrorView { viewModel.onTryAgainClick() }
+          }
+        }
+      }
+    }
   }
 
-  override fun handleEvents(event: DeviceCatalogViewEvent) = when (event) {
-    is DeviceCatalogViewEvent.OpenUrl -> navigator.navigateToWeb(event.url)
+  override fun handleViewState(state: DeviceCatalogViewState) {
+    binding.webCompose.visibleIf(state.showError)
+
+    if (state.showError) {
+      binding.caProgressBar.visibility = View.GONE
+      binding.webBrowser.visibility = View.GONE
+    } else {
+      super.handleViewState(state)
+    }
+  }
+
+  override fun handleEvents(event: DeviceCatalogViewEvent) {
+    when (event) {
+      DeviceCatalogViewEvent.Reload -> binding.webBrowser.loadUrl(url)
+      is DeviceCatalogViewEvent.OpenUrl -> navigator.navigateToWeb(event.url)
+      is DeviceCatalogViewEvent.ApplyStyling -> {
+        var jsClasses = JS_MOBILE_CLASS
+        if (nightModeActive()) {
+          jsClasses += JS_NIGHT_CLASS
+        }
+        binding.webBrowser.loadUrl("javascript:(function() { $jsClasses })()")
+      }
+    }
+  }
+
+  private fun nightModeActive(): Boolean {
+    val configuration = requireContext().resources.configuration
+    return (configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
   }
 }

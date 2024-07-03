@@ -36,7 +36,7 @@ sealed interface SuplaClientState {
         SuplaClientEvent.Initialized -> Connecting()
         SuplaClientEvent.NoAccount -> FirstProfileCreation
         else -> {
-          throw IllegalStateException("Unexpected event in Idle: $event")
+          throw IllegalStateException("Unexpected event in Initialization: $event")
         }
       }
     }
@@ -67,7 +67,7 @@ sealed interface SuplaClientState {
         SuplaClientEvent.NetworkConnected -> null
 
         else -> {
-          throw IllegalStateException("Unexpected event in ProfileCreation: $event")
+          throw IllegalStateException("Unexpected event in FirstProfileCreation: $event")
         }
       }
     }
