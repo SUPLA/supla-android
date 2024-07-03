@@ -335,7 +335,7 @@ private class ChannelValueStateWrapper(private val value: ChannelValue?) : Value
   override val shadingSystemReversedClosed: Boolean
     get() {
       val percentage = value?.rollerShutterValue?.closingPercentage ?: 0
-      return percentage <= 100
+      return percentage < 100
     }
 }
 

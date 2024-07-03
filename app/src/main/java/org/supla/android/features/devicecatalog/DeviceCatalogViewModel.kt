@@ -39,10 +39,38 @@ class DeviceCatalogViewModel @Inject constructor(
     }
     return false
   }
+
+  override fun urlLoaded(url: String?) {
+    super.urlLoaded(url)
+    if (url == currentState().urlRoot) {
+      sendEvent(DeviceCatalogViewEvent.ApplyStyling)
+    }
+  }
+
+  override fun handleError(requestUrl: String, statusCode: Int) {
+    if (requestUrl == currentState().urlRoot) {
+      updateState { it.copy(showError = true) }
+    }
+  }
+
+  fun setUrl(url: String) {
+    updateState { it.copy(urlRoot = url) }
+  }
+
+  fun onTryAgainClick() {
+    updateState { it.copy(showError = false, loading = true) }
+    sendEvent(DeviceCatalogViewEvent.Reload)
+  }
 }
 
 sealed class DeviceCatalogViewEvent : ViewEvent {
   data class OpenUrl(val url: Uri) : DeviceCatalogViewEvent()
+  data object ApplyStyling : DeviceCatalogViewEvent()
+  data object Reload : DeviceCatalogViewEvent()
 }
 
-data class DeviceCatalogViewState(override val loading: Boolean = true) : WebContentViewState(loading)
+data class DeviceCatalogViewState(
+  override val loading: Boolean = true,
+  val showError: Boolean = false,
+  val urlRoot: String = ""
+) : WebContentViewState(loading)

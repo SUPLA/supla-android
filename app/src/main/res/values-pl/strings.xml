@@ -23,6 +23,7 @@
   <string name="create_url">https://cloud.supla.org/register?lang=pl</string>
   <string name="delete_url">https://{SERVER_ADDRESS}/db99845855b2ecbfecca9a095062b96c3e27703f?lang=pl</string>
   <string name="forumpage_url">https://forum.supla.org</string>
+  <string name="devices_list_url">https://www.supla.org/pl/devices</string>
 
   <string name="version">wersja</string>
 
@@ -684,6 +685,7 @@
   <string name="status_disconnecting">Rozłączanie…</string>
   <string name="status_awaiting_network">Oczekiwanie na sieć…</string>
   <string name="about_build_time">Wersja z dnia:</string>
+  <string name="device_catalog_error">Nie udało się załadować katalogu urządzeń. Spróbuj ponownie później.</string>
 
   <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
     <item quantity="one">włączone</item>

@@ -122,6 +122,21 @@ class StatusViewModel @Inject constructor(
     }
   }
 
+  private fun handleErrorState(state: SuplaClientState.Finished) {
+    if (state.reason is SuplaClientState.Reason.RegisterError && state.reason.shouldAuthorize()) {
+      showAuthorizationDialog()
+    }
+
+    updateState {
+      it.copy(
+        viewType = StatusViewModelState.ViewType.ERROR,
+        viewState = it.viewState.copy(
+          errorDescription = state.reason?.let { error -> getErrorDescription(error) }
+        )
+      )
+    }
+  }
+
   private fun getErrorDescription(reason: SuplaClientState.Reason): StringProvider? {
     return when (reason) {
       is SuplaClientState.Reason.ConnectionError ->
@@ -135,21 +150,6 @@ class StatusViewModel @Inject constructor(
       SuplaClientState.Reason.NoNetwork,
       SuplaClientState.Reason.VersionError,
       SuplaClientState.Reason.AppInBackground -> null
-    }
-  }
-
-  private fun handleErrorState(state: SuplaClientState.Finished) {
-    if (state.reason is SuplaClientState.Reason.RegisterError && state.reason.shouldAuthorize()) {
-      showAuthorizationDialog()
-    }
-
-    updateState {
-      it.copy(
-        viewType = StatusViewModelState.ViewType.ERROR,
-        viewState = it.viewState.copy(
-          errorDescription = state.reason?.let { error -> getErrorDescription(error) }
-        )
-      )
     }
   }
 

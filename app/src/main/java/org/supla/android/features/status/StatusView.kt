@@ -30,7 +30,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -40,9 +39,9 @@ import org.supla.android.core.ui.StringProvider
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.ui.views.BodyMedium
+import org.supla.android.ui.views.buttons.BlueTextButton
 import org.supla.android.ui.views.buttons.Button
 import org.supla.android.ui.views.buttons.OutlinedButton
-import org.supla.android.ui.views.buttons.TextButton
 
 data class StatusViewState(
   val stateText: StatusViewStateText = StatusViewStateText.INITIALIZING,
@@ -130,18 +129,6 @@ fun ErrorStatusView(
     )
   }
 }
-
-@Composable
-private fun BlueTextButton(text: String, modifier: Modifier = Modifier, onClick: () -> Unit) =
-  TextButton(
-    modifier = modifier,
-    onClick = onClick
-  ) {
-    BodyMedium(
-      text = text,
-      color = colorResource(id = R.color.blue),
-    )
-  }
 
 @Preview
 @Composable
