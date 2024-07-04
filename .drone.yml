@@ -2,14 +2,14 @@ kind: pipeline
 name: default
 
 steps:
-- name: connectedCheck
+- name: test
   image: devel/supla-android-ci
   pull: never
   commands:
     - mv app/drone.google-services.json app/google-services.json
     - mv app/src/internaltest/drone.google-services.json app/src/internaltest/google-services.json
     - mv app/src/internalTestRelease/drone.google-services.json app/src/internalTestRelease/google-services.json
-    - ./gradlew build connectedCheck
+    - ./gradlew build testDebugUnitTest
 
 # Use in case of problems with unit tests
 #- name: failureLog
@@ -28,7 +28,7 @@ steps:
 
 - name: notify
   image: mike1pol/drone-rocket
-  depends_on: [ connectedCheck ]
+  depends_on: [ test ]
   settings:
     url: { from_secret: rocket_url }
     user_id: { from_secret: rocket_user }

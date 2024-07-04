@@ -1,5 +1,4 @@
 package org.supla.android.data.source.remote
-
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -18,11 +17,15 @@ package org.supla.android.data.source.remote
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import org.supla.android.data.source.local.entity.ChannelEntity
+import org.supla.android.lib.SuplaConst
+
 enum class ChannelConfigType(val value: Int) {
   DEFAULT(0),
   WEEKLY_SCHEDULE(2),
   GENERAL_PURPOSE_MEASUREMENT(3),
-  GENERAL_PURPOSE_METER(4);
+  GENERAL_PURPOSE_METER(4),
+  FACADE_BLIND(5);
 
   companion object {
     fun from(value: Int): ChannelConfigType {
@@ -34,6 +37,17 @@ enum class ChannelConfigType(val value: Int) {
 
       throw IllegalArgumentException("Illegal channel config type value: $value")
     }
+
+    fun from(channel: ChannelEntity) =
+      when (channel.function) {
+        SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT -> GENERAL_PURPOSE_MEASUREMENT
+        SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER -> GENERAL_PURPOSE_METER
+
+        SuplaConst.SUPLA_CHANNELFNC_VERTICAL_BLIND,
+        SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND -> FACADE_BLIND
+
+        else -> throw IllegalArgumentException("Channel not supported (function: `${channel.function}`)")
+      }
   }
 }
 

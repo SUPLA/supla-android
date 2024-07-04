@@ -27,8 +27,8 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.verifyZeroInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.data.model.Optional
 import org.supla.android.data.model.chart.DateRange
@@ -90,7 +90,7 @@ class LoadChannelMeasurementsDataRangeUseCaseTest {
     verify(temperatureLogRepository).findMinTimestamp(remoteId, profileId)
     verify(temperatureLogRepository).findMaxTimestamp(remoteId, profileId)
     verifyNoMoreInteractions(readChannelByRemoteIdUseCase, temperatureLogRepository)
-    verifyZeroInteractions(temperatureAndHumidityLogRepository)
+    verifyNoInteractions(temperatureAndHumidityLogRepository)
   }
 
   @Test
@@ -120,7 +120,7 @@ class LoadChannelMeasurementsDataRangeUseCaseTest {
     verify(temperatureAndHumidityLogRepository).findMinTimestamp(remoteId, profileId)
     verify(temperatureAndHumidityLogRepository).findMaxTimestamp(remoteId, profileId)
     verifyNoMoreInteractions(readChannelByRemoteIdUseCase, temperatureAndHumidityLogRepository)
-    verifyZeroInteractions(temperatureLogRepository)
+    verifyNoInteractions(temperatureLogRepository)
   }
 
   @Test
@@ -152,7 +152,7 @@ class LoadChannelMeasurementsDataRangeUseCaseTest {
     verify(generalPurposeMeasurementLogRepository).findMinTimestamp(remoteId, profileId)
     verify(generalPurposeMeasurementLogRepository).findMaxTimestamp(remoteId, profileId)
     verifyNoMoreInteractions(readChannelByRemoteIdUseCase, generalPurposeMeasurementLogRepository)
-    verifyZeroInteractions(temperatureAndHumidityLogRepository, temperatureLogRepository, generalPurposeMeterLogRepository)
+    verifyNoInteractions(temperatureAndHumidityLogRepository, temperatureLogRepository, generalPurposeMeterLogRepository)
   }
 
   @Test
@@ -184,7 +184,7 @@ class LoadChannelMeasurementsDataRangeUseCaseTest {
     verify(generalPurposeMeterLogRepository).findMinTimestamp(remoteId, profileId)
     verify(generalPurposeMeterLogRepository).findMaxTimestamp(remoteId, profileId)
     verifyNoMoreInteractions(readChannelByRemoteIdUseCase, generalPurposeMeterLogRepository)
-    verifyZeroInteractions(temperatureAndHumidityLogRepository, temperatureLogRepository, generalPurposeMeasurementLogRepository)
+    verifyNoInteractions(temperatureAndHumidityLogRepository, temperatureLogRepository, generalPurposeMeasurementLogRepository)
   }
 
   @Test
@@ -207,6 +207,6 @@ class LoadChannelMeasurementsDataRangeUseCaseTest {
 
     verify(readChannelByRemoteIdUseCase).invoke(remoteId)
     verifyNoMoreInteractions(readChannelByRemoteIdUseCase)
-    verifyZeroInteractions(temperatureLogRepository, temperatureAndHumidityLogRepository)
+    verifyNoInteractions(temperatureLogRepository, temperatureAndHumidityLogRepository)
   }
 }

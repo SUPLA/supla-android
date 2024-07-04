@@ -30,8 +30,8 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.verifyZeroInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.Preferences
 import org.supla.android.R
@@ -55,6 +55,7 @@ import org.supla.android.features.details.windowdetail.base.BaseWindowViewEvent
 import org.supla.android.features.details.windowdetail.base.data.RollerShutterWindowState
 import org.supla.android.features.details.windowdetail.base.data.WindowGroupedValue
 import org.supla.android.features.details.windowdetail.base.ui.ShadingSystemAction
+import org.supla.android.features.details.windowdetail.base.ui.ShadingSystemPositionPresentation
 import org.supla.android.features.details.windowdetail.base.ui.WindowViewState
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
 import org.supla.android.lib.actions.ActionId
@@ -157,7 +158,7 @@ class RollerShutterViewModelTest :
         viewState = WindowViewState(
           issues = listOf(ChannelIssueItem(IssueIconType.ERROR, R.string.motor_problem)),
           enabled = true,
-          showClosingPercentage = true,
+          positionPresentation = ShadingSystemPositionPresentation.AS_CLOSED,
           positionUnknown = false,
           calibrationPossible = true,
           calibrating = false,
@@ -186,7 +187,7 @@ class RollerShutterViewModelTest :
         ),
         viewState = WindowViewState(
           enabled = true,
-          showClosingPercentage = true,
+          positionPresentation = ShadingSystemPositionPresentation.AS_CLOSED,
           positionUnknown = false,
           calibrationPossible = false,
           calibrating = false,
@@ -214,7 +215,7 @@ class RollerShutterViewModelTest :
         windowState = RollerShutterWindowState(position = WindowGroupedValue.Similar(25f), markers = emptyList()),
         viewState = WindowViewState(
           enabled = true,
-          showClosingPercentage = true,
+          positionPresentation = ShadingSystemPositionPresentation.AS_CLOSED,
           positionUnknown = false,
           calibrationPossible = false,
           calibrating = false,
@@ -260,7 +261,7 @@ class RollerShutterViewModelTest :
         viewState = WindowViewState(
           issues = listOf(),
           enabled = false,
-          showClosingPercentage = true,
+          positionPresentation = ShadingSystemPositionPresentation.AS_CLOSED,
           positionUnknown = true,
           calibrating = true
         )
@@ -335,7 +336,7 @@ class RollerShutterViewModelTest :
       viewState = WindowViewState(
         issues = emptyList(),
         enabled = true,
-        showClosingPercentage = true,
+        positionPresentation = ShadingSystemPositionPresentation.AS_CLOSED,
         positionUnknown = true,
       )
     )
@@ -382,7 +383,7 @@ class RollerShutterViewModelTest :
       viewState = WindowViewState(
         issues = emptyList(),
         enabled = true,
-        showClosingPercentage = true,
+        positionPresentation = ShadingSystemPositionPresentation.AS_CLOSED,
         calibrationPossible = true,
         positionUnknown = true,
       )
@@ -435,7 +436,7 @@ class RollerShutterViewModelTest :
       viewState = WindowViewState(
         issues = emptyList(),
         enabled = true,
-        showClosingPercentage = true,
+        positionPresentation = ShadingSystemPositionPresentation.AS_CLOSED,
         positionUnknown = true,
       )
     )
@@ -458,7 +459,7 @@ class RollerShutterViewModelTest :
     assertThat(states).containsExactly(
       RollerShutterViewModelState(showCalibrationDialog = true)
     )
-    verifyZeroInteractions(executeSimpleActionUseCase, executeShadingSystemActionUseCase)
+    verifyNoInteractions(executeSimpleActionUseCase, executeShadingSystemActionUseCase)
   }
 
   @Test
@@ -491,7 +492,7 @@ class RollerShutterViewModelTest :
         manualMoving = true
       )
     )
-    verifyZeroInteractions(executeShadingSystemActionUseCase, executeSimpleActionUseCase)
+    verifyNoInteractions(executeShadingSystemActionUseCase, executeSimpleActionUseCase)
   }
 
   @Test
@@ -511,12 +512,12 @@ class RollerShutterViewModelTest :
       viewState = WindowViewState(
         issues = emptyList(),
         enabled = true,
-        showClosingPercentage = true,
+        positionPresentation = ShadingSystemPositionPresentation.AS_CLOSED,
         calibrating = true,
       )
     )
     assertThat(states).containsExactly(state)
-    verifyZeroInteractions(executeShadingSystemActionUseCase, executeSimpleActionUseCase)
+    verifyNoInteractions(executeShadingSystemActionUseCase, executeSimpleActionUseCase)
   }
 
   @Test
@@ -536,12 +537,12 @@ class RollerShutterViewModelTest :
       viewState = WindowViewState(
         issues = emptyList(),
         enabled = true,
-        showClosingPercentage = true,
+        positionPresentation = ShadingSystemPositionPresentation.AS_CLOSED,
         calibrating = true,
       )
     )
     assertThat(states).containsExactly(state)
-    verifyZeroInteractions(executeShadingSystemActionUseCase, executeSimpleActionUseCase)
+    verifyNoInteractions(executeShadingSystemActionUseCase, executeSimpleActionUseCase)
   }
 
   @Test
@@ -558,7 +559,7 @@ class RollerShutterViewModelTest :
       RollerShutterViewModelState(showCalibrationDialog = true),
       RollerShutterViewModelState(showCalibrationDialog = false)
     )
-    verifyZeroInteractions(executeSimpleActionUseCase, executeShadingSystemActionUseCase)
+    verifyNoInteractions(executeSimpleActionUseCase, executeShadingSystemActionUseCase)
   }
 
   @Test
@@ -568,7 +569,7 @@ class RollerShutterViewModelTest :
 
     val profile: ProfileEntity = mockk {
       every { email } returns "some-email@supla.org"
-      every { serverForEmail } returns "cloud.supla.org"
+      every { isCloudAccount } returns true
     }
     whenever(profileRepository.findActiveProfile()).thenReturn(Single.just(profile))
 
@@ -589,7 +590,7 @@ class RollerShutterViewModelTest :
       )
     )
     verify(profileRepository).findActiveProfile()
-    verifyZeroInteractions(executeSimpleActionUseCase, executeShadingSystemActionUseCase)
+    verifyNoInteractions(executeSimpleActionUseCase, executeShadingSystemActionUseCase)
     verifyNoMoreInteractions(profileRepository)
   }
 
@@ -612,13 +613,13 @@ class RollerShutterViewModelTest :
       viewState = WindowViewState(
         issues = emptyList(),
         enabled = true,
-        showClosingPercentage = true,
+        positionPresentation = ShadingSystemPositionPresentation.AS_CLOSED,
         positionUnknown = false,
       )
     )
     assertThat(states).containsExactly(state)
     verify(callSuplaClientOperationUseCase).invoke(remoteId, ItemType.CHANNEL, SuplaClientOperation.Command.Recalibrate)
-    verifyZeroInteractions(executeShadingSystemActionUseCase, executeSimpleActionUseCase)
+    verifyNoInteractions(executeShadingSystemActionUseCase, executeSimpleActionUseCase)
   }
 
   private fun mockOnlineChannel(

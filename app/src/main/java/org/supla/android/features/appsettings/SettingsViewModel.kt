@@ -29,12 +29,15 @@ import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.core.permissions.PermissionsHelper
+import org.supla.android.core.storage.EncryptedPreferences
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
+import org.supla.android.data.model.general.LockScreenScope
 import org.supla.android.data.model.general.NightModeSetting
 import org.supla.android.data.source.runtime.appsettings.ChannelHeight
 import org.supla.android.data.source.runtime.appsettings.TemperatureUnit
+import org.supla.android.features.lockscreen.UnlockAction
 import org.supla.android.tools.SuplaSchedulers
 import javax.inject.Inject
 
@@ -44,6 +47,7 @@ class SettingsViewModel @Inject constructor(
   private val notificationManager: NotificationManager,
   private val permissionsHelper: PermissionsHelper,
   private val modeManager: UiModeManager,
+  private val encryptedPreferences: EncryptedPreferences,
   schedulers: SuplaSchedulers
 ) : BaseViewModel<SettingsViewState, SettingsViewEvent>(SettingsViewState(), schedulers) {
 
@@ -66,6 +70,7 @@ class SettingsViewModel @Inject constructor(
       SettingItem.BottomLabels(visible = preferences.isShowBottomLabel, this::updateBottomLabel),
       SettingItem.RollerShutterOpenClose(showOpeningPercentage = preferences.isShowOpeningPercent, this::updateShowingOpeningPercentage),
       SettingItem.NightMode(nightModeSetting = preferences.nightMode, this::updateNightMode),
+      SettingItem.LockScreen(lockScreenScope = encryptedPreferences.lockScreenSettings.scope, this::updateLockScreen),
       SettingItem.LocalizationOrdering { sendEvent(SettingsViewEvent.NavigateToLocalizationsOrdering) },
 
       SettingItem.HeaderItem(headerResource = R.string.settings_permissions),
@@ -74,7 +79,7 @@ class SettingsViewModel @Inject constructor(
     )
   }
 
-  private fun getChannelHeight() = ChannelHeight.values()
+  private fun getChannelHeight() = ChannelHeight.entries
     .firstOrNull { it.percent == preferences.channelHeight } ?: ChannelHeight.HEIGHT_100
 
   private fun areNotificationsEnabled() = if (VERSION.SDK_INT > VERSION_CODES.N) {
@@ -116,6 +121,20 @@ class SettingsViewModel @Inject constructor(
     }
   }
 
+  private fun updateLockScreen(setting: LockScreenScope) {
+    val pinSum = encryptedPreferences.lockScreenSettings.pinSum
+
+    if (setting == LockScreenScope.NONE) {
+      sendEvent(SettingsViewEvent.NavigateToPinVerification(UnlockAction.TurnOffPin))
+    } else if (pinSum != null && setting == LockScreenScope.ACCOUNTS) {
+      sendEvent(SettingsViewEvent.NavigateToPinVerification(UnlockAction.ConfirmAuthorizeAccounts))
+    } else if (pinSum != null && setting == LockScreenScope.APPLICATION) {
+      sendEvent(SettingsViewEvent.NavigateToPinVerification(UnlockAction.ConfirmAuthorizeApplication))
+    } else {
+      sendEvent(SettingsViewEvent.NavigateToPinSetup(setting))
+    }
+  }
+
   private fun goToSettings() {
     sendEvent(SettingsViewEvent.NavigateToSettings)
   }
@@ -125,8 +144,10 @@ class SettingsViewModel @Inject constructor(
 }
 
 sealed class SettingsViewEvent : ViewEvent {
-  object NavigateToLocalizationsOrdering : SettingsViewEvent()
-  object NavigateToSettings : SettingsViewEvent()
+  data object NavigateToLocalizationsOrdering : SettingsViewEvent()
+  data object NavigateToSettings : SettingsViewEvent()
+  data class NavigateToPinVerification(val verificationAction: UnlockAction) : SettingsViewEvent()
+  data class NavigateToPinSetup(val lockScreenScope: LockScreenScope) : SettingsViewEvent()
 }
 
 data class SettingsViewState(

@@ -27,7 +27,7 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyZeroInteractions
+import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.lib.SuplaConst
@@ -73,7 +73,7 @@ class GetChannelCaptionUseCaseTest {
     // then
     val context: Context = mockk()
     assertThat(result(context)).isEqualTo("Test")
-    verifyZeroInteractions(getChannelDefaultCaptionUseCase)
+    verifyNoInteractions(getChannelDefaultCaptionUseCase)
   }
 
   @Test
@@ -109,6 +109,6 @@ class GetChannelCaptionUseCaseTest {
 
     // then
     assertThat(result).isEqualTo("Test")
-    verifyZeroInteractions(getChannelDefaultCaptionUseCase)
+    verifyNoInteractions(getChannelDefaultCaptionUseCase)
   }
 }

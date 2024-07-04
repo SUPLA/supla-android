@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="match_parent"
-  android:layout_height="@dimen/settings_cell_height"
+  android:layout_height="wrap_content"
+  android:minHeight="@dimen/settings_cell_height"
   android:background="@color/cell_bg_new"
   android:paddingLeft="@dimen/new_screen_margin"
-  android:paddingRight="@dimen/new_screen_margin">
+  android:paddingRight="@dimen/new_screen_margin"
+  android:paddingTop="@dimen/distance_tiny"
+  android:paddingBottom="@dimen/distance_tiny">
 
   <TextView
     android:id="@+id/settings_rs_text_label"
@@ -12,8 +15,12 @@
     android:layout_height="wrap_content"
     android:layout_alignParentStart="true"
     android:layout_centerVertical="true"
+    android:layout_marginEnd="@dimen/distance_default"
+    android:layout_toStartOf="@id/settings_rs_text"
+    android:lines="2"
     android:text="@string/rs_display_mode"
-    android:textAppearance="@style/AppTheme.TextAppearance.Body2" />
+    android:textAppearance="@style/AppTheme.TextAppearance.Body2"
+    android:gravity="center_vertical"/>
 
   <org.supla.android.ui.SegmentedButtonGroup
     android:id="@+id/settings_rs_text"

@@ -132,7 +132,7 @@ class SceneDao(dap: DatabaseAccessProvider) : BaseDao(dap) {
 
   fun setScenesVisible(visible: Int, whereVisible: Int): Boolean {
     val selection = "$COLUMN_VISIBLE = ? AND $COLUMN_PROFILE_ID = ?"
-    val selectionArgs = arrayOf(whereVisible.toString(), cachedProfileId.toString())
+    val selectionArgs = arrayOf(whereVisible.toString(), cachedProfileId?.toString() ?: "")
     val values = ContentValues()
     values.put(COLUMN_VISIBLE, visible)
 

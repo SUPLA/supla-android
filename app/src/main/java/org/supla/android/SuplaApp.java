@@ -24,6 +24,9 @@ import android.app.UiModeManager;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.media.AudioAttributes;
+import android.net.ConnectivityManager;
+import android.net.NetworkCapabilities;
+import android.net.NetworkRequest;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Build.VERSION;
@@ -38,6 +41,7 @@ import androidx.multidex.MultiDexApplication;
 import androidx.work.Configuration.Builder;
 import androidx.work.Constraints;
 import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.ExistingWorkPolicy;
 import androidx.work.NetworkType;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
@@ -48,6 +52,8 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import org.supla.android.core.SuplaAppApi;
 import org.supla.android.core.networking.suplaclient.SuplaClientBuilder;
+import org.supla.android.core.networking.suplaclient.SuplaClientNetworkCallback;
+import org.supla.android.core.networking.suplaclient.workers.InitializationWorker;
 import org.supla.android.core.notifications.NotificationsHelper;
 import org.supla.android.core.observers.AppLifecycleObserver;
 import org.supla.android.data.ValuesFormatter;
@@ -90,6 +96,7 @@ public class SuplaApp extends MultiDexApplication
   @Inject AppDatabase appDatabase;
   @Inject Preferences preferences;
   @Inject UiModeManager modeManager;
+  @Inject SuplaClientNetworkCallback suplaClientNetworkCallback;
 
   public SuplaApp() {
     SuplaClientMessageHandler.getGlobalInstance().registerMessageListener(this);
@@ -102,17 +109,8 @@ public class SuplaApp extends MultiDexApplication
   @Override
   public void onCreate() {
     super.onCreate();
-    NightModeSetting nightModeSetting = preferences.getNightMode();
-    if (VERSION.SDK_INT < VERSION_CODES.S) {
-      AppCompatDelegate.setDefaultNightMode(nightModeSetting.appCompatDelegateValue());
-    }
-    if (nightModeSetting == NightModeSetting.UNSET) {
-      preferences.setNightMode(NightModeSetting.NEVER);
-      if (VERSION.SDK_INT >= VERSION_CODES.S) {
-        // If unset, expected is that the app will start without night mode.
-        modeManager.setApplicationNightMode(nightModeSetting.modeManagerValue());
-      }
-    }
+    setupNightMode();
+    setupNetworkCallback();
     SuplaApp._SuplaApp = this;
 
     notificationsHelper.registerForToken();
@@ -128,6 +126,7 @@ public class SuplaApp extends MultiDexApplication
     migrateDatabase();
 
     enqueueWidgetRefresh();
+    enqueueInitialization();
   }
 
   public static void Vibrate(Context context) {
@@ -292,6 +291,34 @@ public class SuplaApp extends MultiDexApplication
     _OAuthToken = null;
   }
 
+  private void setupNightMode() {
+    NightModeSetting nightModeSetting = preferences.getNightMode();
+    if (VERSION.SDK_INT < VERSION_CODES.S) {
+      AppCompatDelegate.setDefaultNightMode(nightModeSetting.appCompatDelegateValue());
+    }
+    if (nightModeSetting == NightModeSetting.UNSET) {
+      preferences.setNightMode(NightModeSetting.NEVER);
+      if (VERSION.SDK_INT >= VERSION_CODES.S) {
+        // If unset, expected is that the app will start without night mode.
+        modeManager.setApplicationNightMode(nightModeSetting.modeManagerValue());
+      }
+    }
+  }
+
+  private void setupNetworkCallback() {
+    NetworkRequest requst =
+        new NetworkRequest.Builder()
+            .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
+            .addTransportType(NetworkCapabilities.TRANSPORT_ETHERNET)
+            .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+            .addTransportType(NetworkCapabilities.TRANSPORT_WIFI_AWARE)
+            .build();
+
+    ConnectivityManager manager =
+        (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+    manager.registerNetworkCallback(requst, suplaClientNetworkCallback);
+  }
+
   private void enqueueWidgetRefresh() {
     Constraints constraints =
         new Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build();
@@ -330,5 +357,13 @@ public class SuplaApp extends MultiDexApplication
         preferences.setAnyAccountRegistered(false);
       }
     }
+  }
+
+  private void enqueueInitialization() {
+    WorkManager.getInstance(this)
+        .enqueueUniqueWork(
+            InitializationWorker.NAME,
+            ExistingWorkPolicy.KEEP,
+            InitializationWorker.Companion.build());
   }
 }

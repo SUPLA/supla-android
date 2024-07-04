@@ -9,7 +9,9 @@ import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import dagger.hilt.android.qualifiers.ActivityContext
 import dagger.hilt.android.scopes.ActivityScoped
-import org.supla.android.*
+import org.supla.android.MainActivity
+import org.supla.android.NavigationActivity
+import org.supla.android.R
 import org.supla.android.cfg.CfgActivity
 import org.supla.android.features.deleteaccountweb.DeleteAccountWebFragment
 import javax.inject.Inject
@@ -38,13 +40,8 @@ class CfgActivityNavigator @Inject constructor(@ActivityContext private val acti
     navigateTo(R.id.webContentDeleteAccount, DeleteAccountWebFragment.bundle(serverAddress, destination))
   }
 
-  fun navigateToStatus() {
-    showActivity((activityContext as CfgActivity), StatusActivity::class.java)
-    activityContext.finish()
-  }
-
   fun restartAppStack() {
-    Intent(activityContext, StartActivity::class.java).also {
+    Intent(activityContext, MainActivity::class.java).also {
       it.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
       activityContext.startActivity(it)
     }
@@ -53,10 +50,16 @@ class CfgActivityNavigator @Inject constructor(@ActivityContext private val acti
 
   fun back(): Boolean = navController.navigateUp()
 
+  fun backOrClose() {
+    if (!navController.navigateUp()) {
+      navigateToMain()
+    }
+  }
+
   private fun showActivity(sender: Activity, cls: Class<*>) {
     val i = Intent(sender.baseContext, cls)
     i.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-    i.putExtra(NavigationActivity.INTENTSENDER, if (sender is MainActivity) NavigationActivity.INTENTSENDER_MAIN else "")
+    i.putExtra(NavigationActivity.INTENT_SENDER, if (sender is MainActivity) NavigationActivity.INTENT_SENDER_MAIN else "")
     sender.startActivity(i)
     sender.overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
   }

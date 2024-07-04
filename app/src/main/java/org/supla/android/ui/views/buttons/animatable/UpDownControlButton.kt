@@ -22,38 +22,40 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import org.supla.android.R
 import org.supla.android.core.ui.theme.SuplaTheme
+import org.supla.android.extensions.disabledOverlay
 import org.supla.android.extensions.innerShadow
-import org.supla.android.ui.views.buttons.animatable.upanddown.UpDownControlButtonScope
+import org.supla.android.ui.views.buttons.animatable.controlbutton.ControlButtonIcon
+import org.supla.android.ui.views.buttons.animatable.controlbutton.ControlButtonScope
 
 val TOTAL_HEIGHT = 188.dp
 private val BUTTON_WIDTH = 64.dp
 private val BUTTON_HEIGHT = TOTAL_HEIGHT.div(2)
 private val CORNER_RADIUS = BUTTON_WIDTH.div(2)
+private val MIDDLE_BUTTON_HEIGHT = 64.dp
 
 @Composable
 fun UpDownControlButton(
@@ -62,14 +64,17 @@ fun UpDownControlButton(
   animationMode: AnimationMode = AnimationMode.Pressed,
   upContent: @Composable BoxScope.(text: Color) -> Unit,
   downContent: @Composable BoxScope.(text: Color) -> Unit,
-  upEventHandler: (UpDownControlButtonScope.() -> UpDownControlButtonScope.OnEventHandler)? = null,
-  downEventHandler: (UpDownControlButtonScope.() -> UpDownControlButtonScope.OnEventHandler)? = null
+  middleContent: (@Composable BoxScope.(text: Color) -> Unit)? = null,
+  upEventHandler: (ControlButtonScope.() -> ControlButtonScope.OnEventHandler)? = null,
+  middleEventHandler: (ControlButtonScope.() -> ControlButtonScope.OnEventHandler)? = null,
+  downEventHandler: (ControlButtonScope.() -> ControlButtonScope.OnEventHandler)? = null
 ) {
   val type = AnimatableButtonType.POSITIVE
 
-  UpDownControlButtonScope {
+  ControlButtonScope {
     val upHandler = upEventHandler?.let { it() }
     val downHandler = downEventHandler?.let { it() }
+    val middleHandler = middleEventHandler?.let { it() }
 
     Column(
       modifier = modifier
@@ -83,6 +88,18 @@ fun UpDownControlButton(
         onTouchDown = upHandler?.onTouchDown(),
         onTouchUp = upHandler?.onTouchUp()
       )
+
+      middleContent?.let {
+        MiddleButton(
+          disabled = disabled,
+          animationMode = animationMode,
+          type = type,
+          content = middleContent,
+          onClick = middleHandler?.onClick(),
+          onTouchDown = middleHandler?.onTouchDown(),
+          onTouchUp = middleHandler?.onTouchUp()
+        )
+      }
 
       DownButton(
         disabled = disabled,
@@ -103,7 +120,17 @@ fun UpControlIcon(textColor: Color) =
   ControlButtonIcon(
     iconRes = R.drawable.ic_arrow_right,
     textColor = textColor,
-    rotate = 270f
+    rotate = 270f,
+    modifier = Modifier.align(Alignment.Center)
+  )
+
+context(BoxScope)
+@Composable
+fun StopControlIcon(textColor: Color) =
+  ControlButtonIcon(
+    iconRes = R.drawable.ic_stop,
+    textColor = textColor,
+    modifier = Modifier.align(Alignment.Center)
   )
 
 context (BoxScope)
@@ -112,23 +139,9 @@ fun DownControlIcon(textColor: Color) =
   ControlButtonIcon(
     iconRes = R.drawable.ic_arrow_right,
     textColor = textColor,
-    rotate = 90f
+    rotate = 90f,
+    modifier = Modifier.align(Alignment.Center)
   )
-
-context (BoxScope)
-@Composable
-fun ControlButtonIcon(
-  iconRes: Int,
-  textColor: Color = MaterialTheme.colors.onSurface,
-  rotate: Float = 0f
-) = Icon(
-  painter = painterResource(id = iconRes),
-  contentDescription = null,
-  tint = textColor,
-  modifier = Modifier
-    .align(Alignment.Center)
-    .rotate(rotate)
-)
 
 @Composable
 private fun UpButton(
@@ -150,6 +163,28 @@ private fun UpButton(
     onTouchUp = onTouchUp,
     topStartCornerRadius = CORNER_RADIUS,
     topEndCornerRadius = CORNER_RADIUS
+  )
+}
+
+@Composable
+private fun MiddleButton(
+  disabled: Boolean,
+  animationMode: AnimationMode,
+  type: AnimatableButtonType,
+  content: @Composable BoxScope.(text: Color) -> Unit,
+  onClick: (() -> Unit)?,
+  onTouchDown: (() -> Unit)?,
+  onTouchUp: (() -> Unit)?
+) {
+  ControlButton(
+    disabled = disabled,
+    animationMode = animationMode,
+    type = type,
+    content = content,
+    onClick = onClick,
+    onTouchDown = onTouchDown,
+    onTouchUp = onTouchUp,
+    height = MIDDLE_BUTTON_HEIGHT
   )
 }
 
@@ -185,6 +220,7 @@ private fun ControlButton(
   onClick: (() -> Unit)?,
   onTouchDown: (() -> Unit)?,
   onTouchUp: (() -> Unit)?,
+  height: Dp = BUTTON_HEIGHT,
   topStartCornerRadius: Dp = 0.dp,
   topEndCornerRadius: Dp = 0.dp,
   bottomStartCornerRadius: Dp = 0.dp,
@@ -225,7 +261,7 @@ private fun ControlButton(
     Box(
       modifier = Modifier
         .width(BUTTON_WIDTH)
-        .height(BUTTON_HEIGHT)
+        .height(height)
         .border(
           width = 1.dp,
           color = if (animationMode.isActiveState()) pressedColor else borderColor,
@@ -256,17 +292,10 @@ private fun ControlButton(
             }
           }
         )
+        .disabledOverlay(disabled)
 
     ) {
       content(textColor)
-
-      if (disabled) {
-        Box(
-          modifier = Modifier
-            .fillMaxSize()
-            .background(color = colorResource(id = R.color.disabledOverlay), shape = shape)
-        )
-      }
     }
   }
 }
@@ -275,15 +304,26 @@ private fun ControlButton(
 @Composable
 private fun Preview() {
   SuplaTheme {
-    Box(
+    Row(
+      horizontalArrangement = Arrangement.spacedBy(8.dp),
       modifier = Modifier
-        .width(200.dp)
-        .height(300.dp)
         .background(MaterialTheme.colors.background)
+        .padding(24.dp)
     ) {
       UpDownControlButton(
         upContent = { UpControlIcon(textColor = it) },
         downContent = { DownControlIcon(textColor = it) }
+      )
+      UpDownControlButton(
+        disabled = true,
+        upContent = { UpControlIcon(textColor = it) },
+        downContent = { DownControlIcon(textColor = it) }
+      )
+      UpDownControlButton(
+        disabled = true,
+        upContent = { UpControlIcon(textColor = it) },
+        downContent = { DownControlIcon(textColor = it) },
+        middleContent = { StopControlIcon(textColor = it) }
       )
     }
   }

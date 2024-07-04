@@ -38,6 +38,7 @@ import org.supla.android.data.source.remote.SuplaChannelConfig
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_ALARM
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER
+import org.supla.android.usecases.channelconfig.LoadChannelConfigUseCase
 
 @RunWith(MockitoJUnitRunner::class)
 class LoadChannelConfigUseCaseTest {
@@ -61,7 +62,7 @@ class LoadChannelConfigUseCaseTest {
     }
     val config: SuplaChannelConfig = mockk()
     whenever(channelRepository.findByRemoteId(profileId, remoteId)).thenReturn(Maybe.just(channelEntity))
-    whenever(channelConfigRepository.findGpmConfig(profileId, remoteId, ChannelConfigType.GENERAL_PURPOSE_MEASUREMENT))
+    whenever(channelConfigRepository.findChannelConfig(profileId, remoteId, ChannelConfigType.GENERAL_PURPOSE_MEASUREMENT))
       .thenReturn(Single.just(config))
 
     // when
@@ -82,7 +83,7 @@ class LoadChannelConfigUseCaseTest {
     }
     val config: SuplaChannelConfig = mockk()
     whenever(channelRepository.findByRemoteId(profileId, remoteId)).thenReturn(Maybe.just(channelEntity))
-    whenever(channelConfigRepository.findGpmConfig(profileId, remoteId, ChannelConfigType.GENERAL_PURPOSE_METER))
+    whenever(channelConfigRepository.findChannelConfig(profileId, remoteId, ChannelConfigType.GENERAL_PURPOSE_METER))
       .thenReturn(Single.just(config))
 
     // when

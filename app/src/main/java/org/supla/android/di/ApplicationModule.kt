@@ -21,6 +21,7 @@ import android.app.NotificationManager
 import android.app.UiModeManager
 import android.appwidget.AppWidgetManager
 import android.content.Context
+import androidx.biometric.BiometricManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -99,4 +100,8 @@ class ApplicationModule {
   @Provides
   fun provideModeManager(@ApplicationContext context: Context) =
     context.getSystemService(Context.UI_MODE_SERVICE) as UiModeManager
+
+  @Provides
+  fun provideBiometricManager(@ApplicationContext context: Context) =
+    BiometricManager.from(context)
 }

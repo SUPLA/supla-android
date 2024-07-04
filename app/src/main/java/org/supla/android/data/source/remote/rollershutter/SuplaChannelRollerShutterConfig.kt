@@ -23,14 +23,14 @@ import org.supla.android.tools.UsedFromNativeCode
 
 @UsedFromNativeCode
 open class SuplaChannelRollerShutterConfig(
-  override val remoteId: Int,
-  override val func: Int?,
-  override val crc32: Long,
-  open val closingTimeMs: Int,
-  open val openingTimeMs: Int,
-  open val motorUpsideDown: Boolean,
-  open val buttonsUpsideDown: Boolean,
-  open val timeMargin: Int,
+  @Transient override val remoteId: Int,
+  @Transient override val func: Int?,
+  @Transient override val crc32: Long,
+  @Transient open val closingTimeMs: Int,
+  @Transient open val openingTimeMs: Int,
+  @Transient open val motorUpsideDown: Boolean,
+  @Transient open val buttonsUpsideDown: Boolean,
+  @Transient open val timeMargin: Int,
 ) : SuplaChannelConfig(
   remoteId,
   func,

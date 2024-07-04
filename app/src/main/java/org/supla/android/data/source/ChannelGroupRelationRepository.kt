@@ -26,4 +26,6 @@ class ChannelGroupRelationRepository @Inject constructor(
   private val channelGroupRelationDao: ChannelGroupRelationDao
 ) {
   fun findAllVisibleRelations() = channelGroupRelationDao.allVisibleRelations()
+
+  fun findGroupRelations(remoteId: Int) = channelGroupRelationDao.findGroupRelations(remoteId)
 }

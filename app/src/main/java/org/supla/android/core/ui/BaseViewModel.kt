@@ -98,13 +98,13 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
     compositeDisposable.add(this)
   }
 
-  fun <T> Maybe<T>.attach(): Maybe<T> {
+  fun <T : Any> Maybe<T>.attach(): Maybe<T> {
     return attachSilent()
       .doOnSubscribe { loadingState.tryEmit(true) }
       .doOnTerminate { loadingState.tryEmit(false) }
   }
 
-  fun <T> Maybe<T>.attachSilent(): Maybe<T> {
+  fun <T : Any> Maybe<T>.attachSilent(): Maybe<T> {
     val calledAt = findStackEntryString(Thread.currentThread().stackTrace)
 
     return subscribeOn(schedulers.io)
@@ -163,7 +163,7 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
       .doOnError { Trace.e(TAG, errorMessage("Observable", calledAt, it.message), it) }
   }
 
-  fun <T> Maybe<T>.attachLoadable(): Maybe<T> {
+  fun <T : Any> Maybe<T>.attachLoadable(): Maybe<T> {
     return attachSilent()
       .doOnSubscribe { setLoading(true) }
       .doOnTerminate { setLoading(false) }
@@ -174,6 +174,12 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
       .doOnSubscribe { setLoading(true) }
       .doOnTerminate { setLoading(false) }
       .doOnNext { setLoading(false) }
+  }
+
+  fun <T : Any> Single<T>.attachLoadable(): Single<T> {
+    return attachSilent()
+      .doOnSubscribe { setLoading(true) }
+      .doOnTerminate { setLoading(false) }
   }
 
   protected fun defaultErrorHandler(method: String): (Throwable) -> Unit = { throwable ->

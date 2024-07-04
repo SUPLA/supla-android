@@ -361,7 +361,6 @@
   <string name="add_device_needs_cloud_go" translatable="false">Перейдіть до CLOUD</string>
   <string name="associeted_with_at_error" translatable="false">Неможливо змінити функцію каналу, пов’язаного з активатором дії.</string>
   <string name="location_ordering" translatable="false">Порядок розташування</string>
-  <string name="rs_display_mode" translatable="false">Ролети %</string>
   <string name="rs_display_mode_opening" translatable="false">Відкриття</string>
   <string name="rs_display_mode_closing" translatable="false">Закриття</string>
   <string name="status_accessid_inactive">Ідентифікатор доступу неактивний.</string>
@@ -374,7 +373,7 @@
   <string name="scene_name" translatable="false">Назва сцени</string>
   <string name="cfg_profile_active_indicator" translatable="false">активний</string>
   <string name="menubar_appsettings" translatable="false">Налаштування додатків</string>
-  <string name="about_app">"This program is free software; you can redistribute it and/or   modify it under the terms of the GNU General Public License   as published by the Free Software Foundation; either version 2   of the License, or (at your option) any later version.     This program is distributed in the hope that it will be useful,   but WITHOUT ANY WARRANTY; without even the implied warranty of   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the   GNU General Public License for more details.     You should have received a copy of the GNU General Public License   along with this program; if not, write to the Free Software   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA    "</string>
+  <string name="about_app">This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.\n\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place – Suite 330, Boston, MA  02111–1307, USA</string>
   <string name="wizard_step1_txt1">Вітаємо у майстрі додавання пристроїв, який допоможе Вам швидко та легко додати новий пристрій до системи.</string>
   <string name="start">СТАРТ</string>
   <string name="wizard_remember_passwd">Запам’ятати пароль</string>

@@ -46,4 +46,8 @@
     android:name="org.supla.android.features.deleteaccountweb.DeleteAccountWebFragment"
     android:label="" />
 
+  <fragment
+    android:id="@+id/config_lock_screen_fragment"
+    android:name="org.supla.android.features.lockscreen.LockScreenFragment" />
+
 </navigation>

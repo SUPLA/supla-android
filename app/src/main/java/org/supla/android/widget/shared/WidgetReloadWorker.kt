@@ -14,9 +14,9 @@ import org.supla.android.extensions.getAppWidgetManager
 import org.supla.android.lib.SuplaConst
 import org.supla.android.lib.singlecall.DoubleValue
 import org.supla.android.lib.singlecall.TemperatureAndHumidity
-import org.supla.android.usecases.channel.LoadChannelConfigUseCase
 import org.supla.android.usecases.channel.valueformatter.GpmValueFormatter
 import org.supla.android.usecases.channel.valueprovider.GpmValueProvider
+import org.supla.android.usecases.channelconfig.LoadChannelConfigUseCase
 import org.supla.android.widget.WidgetConfiguration
 import org.supla.android.widget.onoff.OnOffWidget
 import org.supla.android.widget.onoff.updateOnOffWidget

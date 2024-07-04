@@ -20,38 +20,36 @@ package org.supla.android.usecases.channel
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
-import org.supla.android.data.source.ChannelRepository
-import org.supla.android.db.Channel
+import org.supla.android.data.source.RoomChannelRepository
+import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.remote.relay.SuplaRelayFlag
+import org.supla.android.data.source.remote.valve.SuplaValveFlag
 import org.supla.android.lib.SuplaConst
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class ChannelActionUseCase @Inject constructor(
-  private val channelRepository: ChannelRepository,
+  private val channelRepository: RoomChannelRepository,
   suplaClientProvider: SuplaClientProvider
-) : BaseActionUseCase<Channel>(suplaClientProvider) {
+) : BaseActionUseCase<ChannelDataEntity>(suplaClientProvider) {
 
   operator fun invoke(channelId: Int, buttonType: ButtonType): Completable =
     getChannel(channelId).flatMapCompletable { performActionCompletable(it, buttonType, false) }
 
-  override fun performAction(channelBase: Channel, buttonType: ButtonType, forGroup: Boolean) {
-    if (isOnOff(channelBase.func) &&
-      buttonType == ButtonType.RIGHT &&
-      channelBase.value.hiValue().not() &&
-      channelBase.value.overcurrentRelayOff()
-    ) {
-      throw ActionException.ChannelExceedAmperage(channelBase.channelId)
+  override fun performAction(channelBase: ChannelDataEntity, buttonType: ButtonType, forGroup: Boolean) {
+    if (isOnOff(channelBase.function) && buttonType == ButtonType.RIGHT && isOvercurrentRelayOff(channelBase)) {
+      throw ActionException.ChannelExceedAmperage(channelBase.remoteId)
     }
 
-    if (buttonType == ButtonType.LEFT && isValveChannel(channelBase.func) && isChannelManuallyClosedOrIsFlooding(channelBase)) {
+    if (buttonType == ButtonType.LEFT && isValveChannel(channelBase.function) && isChannelManuallyClosedOrIsFlooding(channelBase)) {
       throw ActionException.ChannelClosedManually(channelBase.remoteId)
     }
 
     super.performAction(channelBase, buttonType, forGroup)
   }
 
-  private fun getChannel(channelId: Int): Maybe<Channel> = Maybe.fromCallable { channelRepository.getChannel(channelId) }
+  private fun getChannel(channelId: Int): Maybe<ChannelDataEntity> = channelRepository.findChannelDataEntity(channelId)
 
   private fun isOnOff(channelFunction: Int): Boolean =
     channelFunction == SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH ||
@@ -62,6 +60,13 @@ class ChannelActionUseCase @Inject constructor(
     function == SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE ||
       function == SuplaConst.SUPLA_CHANNELFNC_VALVE_PERCENTAGE
 
-  private fun isChannelManuallyClosedOrIsFlooding(channel: Channel): Boolean =
-    channel.value.isClosed && (channel.value.flooding() || channel.value.isManuallyClosed)
+  private fun isOvercurrentRelayOff(channelDataEntity: ChannelDataEntity) =
+    channelDataEntity.channelValueEntity.asRelayValue().let {
+      it.on.not() && it.flags.contains(SuplaRelayFlag.OVERCURRENT_RELAY_OFF)
+    }
+
+  private fun isChannelManuallyClosedOrIsFlooding(channel: ChannelDataEntity): Boolean =
+    channel.channelValueEntity.asValveValue().let {
+      it.isClosed() && (it.flags.contains(SuplaValveFlag.FLOODING) || it.flags.contains(SuplaValveFlag.MANUALLY_CLOSED))
+    }
 }

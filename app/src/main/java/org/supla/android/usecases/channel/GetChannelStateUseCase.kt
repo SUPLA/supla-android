@@ -17,9 +17,12 @@ package org.supla.android.usecases.channel
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.model.general.ChannelState
 import org.supla.android.data.source.local.entity.ChannelGroupEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity
+import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
 import org.supla.android.db.Channel
 import org.supla.android.db.ChannelBase
@@ -33,6 +36,7 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CURTAIN
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DIMMER
@@ -50,18 +54,48 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATEWAY
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROLLERSHUTTER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROOFWINDOW
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_PROJECTOR_SCREEN
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_ROLLER_GARAGE_DOOR
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_TERRACE_AWNING
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_VALVE_PERCENTAGE
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_VERTICAL_BLIND
+import org.supla.android.usecases.group.GetGroupActivePercentageUseCase
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class GetChannelStateUseCase @Inject constructor() {
+class GetChannelStateUseCase @Inject constructor(
+  private val getGroupActivePercentageUseCase: GetGroupActivePercentageUseCase
+) {
 
-  operator fun invoke(function: Int, value: ValueStateWrapper): ChannelState {
+  operator fun invoke(channelDataBase: ChannelDataBase): ChannelState {
+    if (channelDataBase is ChannelDataEntity) {
+      return getChannelState(channelDataBase.function, ChannelValueEntityStateWrapper(channelDataBase.channelValueEntity))
+    }
+    if (channelDataBase is ChannelGroupDataEntity) {
+      val wrapper = ChannelGroupEntityStateWrapper(channelDataBase.channelGroupEntity, getGroupActivePercentageUseCase)
+      return getChannelState(channelDataBase.function, wrapper)
+    }
+
+    throw IllegalArgumentException("Channel data base is extended by unknown class!")
+  }
+
+  operator fun invoke(channelBase: ChannelBase): ChannelState {
+    if (channelBase is Channel) {
+      return getChannelState(channelBase.func, ChannelValueStateWrapper(channelBase.value))
+    }
+    if (channelBase is ChannelGroup) {
+      return getChannelState(channelBase.func, ChannelGroupStateWrapper(channelBase, getGroupActivePercentageUseCase))
+    }
+
+    throw IllegalArgumentException("Channel base is extended by unknown class!")
+  }
+
+  private fun getChannelState(function: Int, value: ValueStateWrapper): ChannelState {
     if (value.online.not()) {
       return getOfflineState(function, value)
     }
@@ -74,8 +108,15 @@ class GetChannelStateUseCase @Inject constructor() {
 
       SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER,
       SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW,
-      SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND ->
-        if (value.rollerShutterClosed) ChannelState(ChannelState.Value.CLOSED) else ChannelState(ChannelState.Value.OPEN)
+      SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND,
+      SUPLA_CHANNELFNC_CURTAIN,
+      SUPLA_CHANNELFNC_VERTICAL_BLIND,
+      SUPLA_CHANNELFNC_ROLLER_GARAGE_DOOR ->
+        if (value.shadingSystemClosed) ChannelState(ChannelState.Value.CLOSED) else ChannelState(ChannelState.Value.OPEN)
+
+      SUPLA_CHANNELFNC_TERRACE_AWNING,
+      SUPLA_CHANNELFNC_PROJECTOR_SCREEN ->
+        if (value.shadingSystemReversedClosed) ChannelState(ChannelState.Value.CLOSED) else ChannelState(ChannelState.Value.OPEN)
 
       SUPLA_CHANNELFNC_OPENSENSOR_GATEWAY,
       SUPLA_CHANNELFNC_OPENSENSOR_GATE,
@@ -142,7 +183,13 @@ class GetChannelStateUseCase @Inject constructor() {
       SUPLA_CHANNELFNC_OPENINGSENSOR_WINDOW,
       SUPLA_CHANNELFNC_OPENSENSOR_ROOFWINDOW,
       SUPLA_CHANNELFNC_VALVE_OPENCLOSE,
-      SUPLA_CHANNELFNC_VALVE_PERCENTAGE -> ChannelState(ChannelState.Value.OPEN)
+      SUPLA_CHANNELFNC_VALVE_PERCENTAGE,
+      SUPLA_CHANNELFNC_CURTAIN,
+      SUPLA_CHANNELFNC_VERTICAL_BLIND,
+      SUPLA_CHANNELFNC_ROLLER_GARAGE_DOOR -> ChannelState(ChannelState.Value.OPEN)
+
+      SUPLA_CHANNELFNC_TERRACE_AWNING,
+      SUPLA_CHANNELFNC_PROJECTOR_SCREEN -> ChannelState(ChannelState.Value.CLOSED)
 
       SUPLA_CHANNELFNC_POWERSWITCH,
       SUPLA_CHANNELFNC_STAIRCASETIMER,
@@ -205,52 +252,66 @@ interface ValueStateWrapper {
   val colorBrightness: Int
   val transparent: Boolean
   val thermostatSubfunction: ThermostatSubfunction?
-  val rollerShutterClosed: Boolean
+  val shadingSystemClosed: Boolean
+  val shadingSystemReversedClosed: Boolean
 }
 
-class ChannelValueEntityStateWrapper(private val channelValueEntity: ChannelValueEntity) : ValueStateWrapper {
+private class ChannelValueEntityStateWrapper(private val channelValueEntity: ChannelValueEntity) : ValueStateWrapper {
   override val online: Boolean
     get() = channelValueEntity.online
   override val subValueHi: Int
-    get() = channelValueEntity.getSubValueHi().toInt()
+    get() = channelValueEntity.getSubValueHi()
   override val isClosed: Boolean
     get() = channelValueEntity.isClosed()
   override val brightness: Int
-    get() = channelValueEntity.asBrightness().toInt()
+    get() = channelValueEntity.asBrightness()
   override val colorBrightness: Int
-    get() = channelValueEntity.asBrightnessColor().toInt()
+    get() = channelValueEntity.asBrightnessColor()
   override val transparent: Boolean
     get() = channelValueEntity.asDigiglassValue().isAnySectionTransparent
   override val thermostatSubfunction: ThermostatSubfunction
     get() = channelValueEntity.asThermostatValue().subfunction
-  override val rollerShutterClosed: Boolean
+  override val shadingSystemClosed: Boolean
     get() {
       val percentage = channelValueEntity.asRollerShutterValue().position
       val subValueHi = channelValueEntity.getSubValueHi()
       return (subValueHi > 0 && percentage < 100) || percentage >= 100
     }
+  override val shadingSystemReversedClosed: Boolean
+    get() {
+      val percentage = channelValueEntity.asRollerShutterValue().position
+      return percentage < 100
+    }
 }
 
-class ChannelGroupEntityStateWrapper(private val group: ChannelGroupEntity) : ValueStateWrapper {
+private class ChannelGroupEntityStateWrapper(
+  private val group: ChannelGroupEntity,
+  private val getGroupActivePercentageUseCase: GetGroupActivePercentageUseCase
+) : ValueStateWrapper {
   override val online: Boolean
     get() = group.online > 0
   override val subValueHi: Int
-    get() = if (group.getActivePercentage() >= 100) 1 else 0
+    get() = if (getActivePercentage() >= 100) 1 else 0
   override val isClosed: Boolean
-    get() = group.getActivePercentage() >= 100
+    get() = getActivePercentage() >= 100
   override val brightness: Int
-    get() = if (group.getActivePercentage(2) >= 100) 1 else 0
+    get() = if (getActivePercentage(2) >= 100) 1 else 0
   override val colorBrightness: Int
-    get() = if (group.getActivePercentage(1) >= 100) 1 else 0
+    get() = if (getActivePercentage(1) >= 100) 1 else 0
   override val transparent: Boolean
     get() = false
   override val thermostatSubfunction: ThermostatSubfunction?
     get() = null
-  override val rollerShutterClosed: Boolean
-    get() = group.getActivePercentage() >= 100
+  override val shadingSystemClosed: Boolean
+    get() = getActivePercentage() >= 100
+  override val shadingSystemReversedClosed: Boolean
+    get() = getActivePercentage() < 100
+
+  private fun getActivePercentage(valueIndex: Int = 0) =
+    getGroupActivePercentageUseCase(group, valueIndex)
 }
 
-class ChannelValueStateWrapper(private val value: ChannelValue?) : ValueStateWrapper {
+private class ChannelValueStateWrapper(private val value: ChannelValue?) : ValueStateWrapper {
   override val online: Boolean
     get() = value?.onLine ?: false
   override val subValueHi: Int
@@ -265,41 +326,42 @@ class ChannelValueStateWrapper(private val value: ChannelValue?) : ValueStateWra
     get() = value?.digiglassValue?.isAnySectionTransparent ?: false
   override val thermostatSubfunction: ThermostatSubfunction?
     get() = value?.asThermostatValue()?.subfunction
-  override val rollerShutterClosed: Boolean
+  override val shadingSystemClosed: Boolean
     get() {
       val percentage = value?.rollerShutterValue?.closingPercentage ?: 0
       val subValueHi = value?.subValueHi ?: 0
       return (subValueHi > 0 && percentage < 100) || percentage >= 100
     }
+  override val shadingSystemReversedClosed: Boolean
+    get() {
+      val percentage = value?.rollerShutterValue?.closingPercentage ?: 0
+      return percentage < 100
+    }
 }
 
-class ChannelGroupStateWrapper(private val group: ChannelGroup) : ValueStateWrapper {
+private class ChannelGroupStateWrapper(
+  private val group: ChannelGroup,
+  private val getGroupActivePercentageUseCase: GetGroupActivePercentageUseCase
+) : ValueStateWrapper {
   override val online: Boolean
     get() = group.onLine
   override val subValueHi: Int
-    get() = if (group.activePercent >= 100) 1 else 0
+    get() = if (getActivePercentage() >= 100) 1 else 0
   override val isClosed: Boolean
-    get() = group.activePercent >= 100
+    get() = getActivePercentage() >= 100
   override val brightness: Int
-    get() = if (group.getActivePercent(2) >= 100) 1 else 0
+    get() = if (getActivePercentage(2) >= 100) 1 else 0
   override val colorBrightness: Int
-    get() = if (group.getActivePercent(1) >= 100) 1 else 0
+    get() = if (getActivePercentage(1) >= 100) 1 else 0
   override val transparent: Boolean
     get() = false
   override val thermostatSubfunction: ThermostatSubfunction?
     get() = null
-  override val rollerShutterClosed: Boolean
-    get() = group.activePercent >= 100
+  override val shadingSystemClosed: Boolean
+    get() = getActivePercentage() >= 100
+  override val shadingSystemReversedClosed: Boolean
+    get() = getActivePercentage() <= 0
+
+  private fun getActivePercentage(valueIndex: Int = 0) =
+    getGroupActivePercentageUseCase(group, valueIndex)
 }
-
-val ChannelBase.stateWrapper: ValueStateWrapper?
-  get() {
-    (this as? Channel)?.let {
-      return ChannelValueStateWrapper(it.value)
-    }
-    (this as? ChannelGroup)?.let {
-      return ChannelGroupStateWrapper(it)
-    }
-
-    return null
-  }

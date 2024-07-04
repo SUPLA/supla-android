@@ -6,6 +6,7 @@
   <string name="create_url">https://cloud.supla.org/register?lang=de</string>
   <string name="delete_url">https://{SERVER_ADDRESS}/db99845855b2ecbfecca9a095062b96c3e27703f?lang=de</string>
   <string name="forumpage_url">https://de-forum.supla.org/</string>
+  <string name="devices_list_url">https://www.supla.org/de/devices</string>
 
   <string name="version">version</string>
 
@@ -66,12 +67,11 @@
   <string name="create_account">Konto erstellen</string>
 
 
-  <string name="about_app">Dieses Programm ist freie Software, es darf weitergegeben und / oder modifizieren werden unter den Bedingungen der GNU General Public License die von der Free Software Foundation veröffentlicht wurde, entweder gemäß Version 2 der Lizenz oder (nach Ihrer Option) jeder späteren Version.\n\n
-
- Dieses Programm wird vertrieben um nützlich zu sein, aber OHNE IRGENDEINE GARANTIE. Sogar ohne Gewähr Marktgängigkeit oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Lesen Sie bitte General Public License für weitere Details.\n\n
-
- Sie sollten eine Kopie der GNU General Public License zusammen mit diesem Programm erhalten haben. Falls nicht, schreiben Sie an die Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
-   </string>
+  <string name="about_app">
+   Dieses Programm ist freie Software, es darf weitergegeben und / oder modifizieren werden unter den Bedingungen der GNU General Public License die von der Free Software Foundation veröffentlicht wurde, entweder gemäß Version 2 der Lizenz oder (nach Ihrer Option) jeder späteren Version.\n\n
+   Dieses Programm wird vertrieben um nützlich zu sein, aber OHNE IRGENDEINE GARANTIE. Sogar ohne Gewähr Marktgängigkeit oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Lesen Sie bitte General Public License für weitere Details.\n\n
+   Sie sollten eine Kopie der GNU General Public License zusammen mit diesem Programm erhalten haben. Falls nicht, schreiben Sie an die Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
+  </string>
 
   <string name="rate_msg">Wusstest Du, dass Supla ein offenes und kostenloses Gemeinschaftsprojekt ist? Wenn Dir diese App gefällt, nimm Dir bitte einen Moment Zeit, um sie zu bewerten. Danke für Deine Unterstützung!</string>
   <string name="rate_now">Bewerten</string>
@@ -452,7 +452,7 @@
   <string name="add_device_needs_cloud_go">Zur CLOUD gehen</string>
   <string name="associeted_with_at_error">Die Funktion des mit dem Aktionsauslöser verbundenen Kanals kann nicht geändert werden.</string>
   <string name="location_ordering">Lokalisierungsreihenfolge</string>
-  <string name="rs_display_mode">Rollläden %</string>
+  <string name="rs_display_mode">Rollläden, Jalousien, Vorhänge %</string>
   <string name="rs_display_mode_opening">Öffnungen</string>
   <string name="rs_display_mode_closing">Schließungen</string>
   <string name="status_accessid_inactive">Zugriffskennung nicht aktiv</string>
@@ -577,6 +577,41 @@
   <string name="facade_blinds_no_tilt">Fehlende Konfiguration</string>
   <string name="toolbar_delete_chart_history">Historie löschen und neuladen</string>
   <string name="history_wait_for_download_completed">Bitte warten, herunterladen…</string>
+  <string name="channel_caption_terrace_awning">Terrassenmarkise</string>
+  <string name="channel_caption_projector_screen">Leinwand</string>
+  <string name="channel_caption_curtain">Vorhang</string>
+  <string name="channel_caption_vertical_blinds">Vertikaljalousien</string>
+  <string name="channel_caption_roller_garage_door">Garagentor</string>
+  <string name="shading_system_extension">Entrollung:</string>
+  <string name="status_initializing">Starten…</string>
+  <string name="status_try_again">Erneut versuchen</string>
+  <string name="lock_screen_hello">Willkommen zurück!</string>
+  <string name="lock_screen_enter_pin">PIN Eingabe</string>
+  <string name="pin_setup_header">Definieren Sie Ihren PIN-Code</string>
+  <string name="cfg_lock_screen">PIN Eingabe</string>
+  <string name="cfg_lock_screen_app">Anwendung</string>
+  <string name="cfg_lock_screen_accounts">Konten</string>
+  <string name="cfg_lock_screen_none">Keine</string>
+  <string name="pin_setup_title">PIN konfigurieren</string>
+  <string name="pin_setup_repeat">PIN-Code wiederholen</string>
+  <string name="pin_setup_entry_different">PIN-Codes sind unterschiedlich!</string>
+  <string name="pin_setup_failed">Die PIN-Einrichtung ist aufgrund eines internen Problems fehlgeschlagen.</string>
+  <string name="lock_screen_wrong_pin">Eingegebenes PIN-Code ist falsch!</string>
+  <string name="lock_screen_remove_pin">PIN Löschen</string>
+  <string name="lock_screen_forgotten_code">PIN-Code vergessen</string>
+  <string name="lock_screen_forgotten_code_title">Zugangscode</string>
+  <string name="lock_screen_forgotten_code_message">Wenn Sie sich nicht an Ihren Zugangscode erinnern können, bitte die App löschen und neu installieren. Wenn die App neu installiert wird, bitte Ihres Kontodaten nochmal eingeben.\n\nSie sollten kein neues Konto anlegen. Die Daten und Geräte bleiben verfügbar in das Supla Cloud Konto</string>
+  <string name="lock_screen_forgotten_code_button">Einverstanden</string>
+  <string name="lock_screen_confirm_authorize_app">Änderung des Berechtigungsumfangs</string>
+  <string name="pin_setup_use_biometric">Biometrische Authentifizierung: </string>
+  <string name="pin_setup_biometric_not_enrolled">Biometrische Authentifizierung nicht verfügbar. Wenn Sie die biometrische Authentifizierung nuthen wollen, bitte zuerst in System Einstellungen konfigurieren.</string>
+  <string name="biometric_prompt_subtitle">Entsperren mit dem Fingerabdruck</string>
+  <string name="lock_screen_biometric_error">Biometrische Authentifizierung wurde geblockt: %1$s</string>
+  <string name="lock_screen_pin_locked">Zu viele Fehlversuche. PIN-Eingabe für %1$s gesperrt.</string>
+  <string name="status_disconnecting">Abschalten…</string>
+  <string name="status_awaiting_network">Warten auf netzwerk…</string>
+  <string name="about_build_time">Version des Tages:</string>
+  <string name="device_catalog_error">Gerätekatalog konnte nicht geladen werden. Bitte versuchen Sie später.</string>
   <plurals name="details_timer_info_on">
     <item quantity="one">eingeschaltet</item>
     <item quantity="other">eingeschaltet</item>

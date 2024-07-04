@@ -25,7 +25,6 @@ import android.content.ContextWrapper;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
@@ -112,13 +111,8 @@ public abstract class DimmerCalibrationTool
 
   protected void setSettingsChanged(boolean changed) {
     settingsChanged = changed;
-    Drawable d = getResources().getDrawable(changed ? R.drawable.btnok : R.drawable.btnokdisabled);
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-      btnOK.setBackground(d);
-    } else {
-      btnOK.setBackgroundDrawable(d);
-    }
+    int resource = changed ? R.drawable.btnok : R.drawable.btnokdisabled;
+    btnOK.setBackground(ResourcesCompat.getDrawable(getResources(), resource, null));
   }
 
   protected RelativeLayout getMainView() {
@@ -157,9 +151,9 @@ public abstract class DimmerCalibrationTool
 
   private void setConfigStarted(boolean started) {
     configStartedAtTime = started ? System.currentTimeMillis() : 0;
-    NavigationActivity activity = NavigationActivity.getCurrentNavigationActivity();
-    if (activity != null) {
-      activity.showBackButton();
+    Activity activity = getActivity();
+    if (activity instanceof NavigationActivity) {
+      ((NavigationActivity) activity).showBackButton();
     }
 
     authDialogClose();

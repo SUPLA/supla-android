@@ -18,10 +18,12 @@ package org.supla.android.core
  */
 
 import androidx.annotation.CallSuper
+import io.mockk.every
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.schedulers.TestScheduler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -32,11 +34,12 @@ import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.tools.SuplaSchedulers
+import kotlin.reflect.full.memberProperties
+import kotlin.reflect.jvm.isAccessible
 
-@Suppress("OPT_IN_IS_NOT_ENABLED")
 @OptIn(ExperimentalCoroutinesApi::class)
 abstract class BaseViewModelTest<S : ViewState, E : ViewEvent, VM : BaseViewModel<S, E>>(
-  private val mockSchedulers: Boolean = true
+  private val mockSchedulers: MockSchedulers = MockSchedulers.MOCK
 ) {
 
   protected abstract val schedulers: SuplaSchedulers
@@ -52,9 +55,18 @@ abstract class BaseViewModelTest<S : ViewState, E : ViewEvent, VM : BaseViewMode
     states.clear()
     events.clear()
 
-    if (mockSchedulers) {
-      whenever(schedulers.io).thenReturn(Schedulers.trampoline())
-      whenever(schedulers.ui).thenReturn(Schedulers.trampoline())
+    when (mockSchedulers) {
+      MockSchedulers.MOCK -> {
+        whenever(schedulers.io).thenReturn(Schedulers.trampoline())
+        whenever(schedulers.ui).thenReturn(Schedulers.trampoline())
+      }
+
+      MockSchedulers.MOCKK -> {
+        every { schedulers.io } returns Schedulers.trampoline()
+        every { schedulers.ui } returns Schedulers.trampoline()
+      }
+
+      MockSchedulers.NONE -> {} // No mocks
     }
 
     viewModel.getViewState()
@@ -65,5 +77,20 @@ abstract class BaseViewModelTest<S : ViewState, E : ViewEvent, VM : BaseViewMode
     viewModel.getViewEvents()
       .onEach(events::add)
       .launchIn(CoroutineScope(UnconfinedTestDispatcher(TestCoroutineScheduler())))
+  }
+
+  enum class MockSchedulers {
+    MOCK, MOCKK, NONE
+  }
+
+  @Suppress("UNCHECKED_CAST")
+  fun BaseViewModel<S, E>.setState(state: S) {
+    BaseViewModel::class.memberProperties
+      .find { it.name == "viewState" }
+      ?.let {
+        it.isAccessible = true
+        val viewState = it.getter.call(this) as MutableStateFlow<S>
+        viewState.tryEmit(state)
+      }
   }
 }

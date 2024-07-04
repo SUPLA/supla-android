@@ -17,6 +17,7 @@ package org.supla.android.features.createaccount
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.Preferences
@@ -27,6 +28,7 @@ import org.supla.android.extensions.TAG
 import org.supla.android.features.deleteaccountweb.DeleteAccountWebFragment
 import org.supla.android.profile.ProfileManager
 import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.usecases.client.ReconnectUseCase
 import org.supla.android.usecases.profile.DeleteProfileUseCase
 import org.supla.android.usecases.profile.SaveProfileUseCase
 import javax.inject.Inject
@@ -46,7 +48,8 @@ class CreateAccountViewModel @Inject constructor(
   private val preferences: Preferences,
   schedulers: SuplaSchedulers,
   private val saveProfileUseCase: SaveProfileUseCase,
-  private val deleteProfileUseCase: DeleteProfileUseCase
+  private val deleteProfileUseCase: DeleteProfileUseCase,
+  private val reconnectUseCase: ReconnectUseCase
 ) : BaseViewModel<CreateAccountViewState, CreateAccountViewEvent>(CreateAccountViewState(), schedulers) {
 
   fun loadProfile(profileId: Long?) {
@@ -151,40 +154,32 @@ class CreateAccountViewModel @Inject constructor(
     getSaveSingle(profileId, defaultName)
       .attach()
       .subscribeBy(
-        onSuccess = {
-          if (it.authSettingsChanged) {
-            sendEvent(CreateAccountViewEvent.Reconnect)
-          } else {
-            sendEvent(CreateAccountViewEvent.Close)
-          }
-        },
+        onComplete = { sendEvent(CreateAccountViewEvent.Close) },
         onError = this::handleSaveError
       )
       .disposeBySelf()
   }
 
-  private fun getSaveSingle(profileId: Long?, defaultName: String): Single<SaveBackInfo> = profileId.let { id ->
+  private fun getSaveSingle(profileId: Long?, defaultName: String): Completable = profileId.let { id ->
     return@let if (id == null) {
       Single.just(currentState().toProfileItem())
         .map { it.also { it.isActive = preferences.isAnyAccountRegistered.not() } }
-        .flatMap { profile ->
+        .flatMapCompletable { profile ->
           if (preferences.isAnyAccountRegistered.not()) {
             profile.name = defaultName
           }
 
-          saveProfileUseCase(profile)
-            .andThen(Single.just(SaveBackInfo(profile.isActive)))
+          saveProfileUseCase(profile).let { if (profile.isActive) it.andThen(reconnectUseCase()) else it }
         }
     } else {
       profileManager.read(id)
         .toSingle()
-        .flatMap { profile ->
+        .flatMapCompletable { profile ->
           val state = currentState()
           val authSettingsChanged = authSettingChanged(profile, state)
           state.updateProfile(profile)
 
-          saveProfileUseCase(profile)
-            .andThen(Single.just(SaveBackInfo(authSettingsChanged)))
+          saveProfileUseCase(profile).let { if (authSettingsChanged) it.andThen(reconnectUseCase()) else it }
         }
     }
   }
@@ -192,10 +187,13 @@ class CreateAccountViewModel @Inject constructor(
   private fun handleSaveError(error: Throwable) = when (error) {
     is SaveProfileUseCase.SaveAccountException.EmptyName ->
       sendEvent(CreateAccountViewEvent.ShowEmptyNameDialog)
+
     is SaveProfileUseCase.SaveAccountException.DuplicatedName ->
       sendEvent(CreateAccountViewEvent.ShowDuplicatedNameDialog)
+
     is SaveProfileUseCase.SaveAccountException.DataIncomplete ->
       sendEvent(CreateAccountViewEvent.ShowRequiredDataMissingDialog)
+
     else -> sendEvent(CreateAccountViewEvent.ShowUnknownErrorDialog)
   }
 
@@ -231,8 +229,6 @@ class CreateAccountViewModel @Inject constructor(
           onSuccess = {
             if (preferences.isAnyAccountRegistered.not()) {
               sendEvent(CreateAccountViewEvent.RestartFlow)
-            } else if (it.activeProfileRemoved) {
-              sendEvent(CreateAccountViewEvent.Reconnect)
             } else {
               sendEvent(CreateAccountViewEvent.Close)
             }
@@ -252,8 +248,6 @@ class CreateAccountViewModel @Inject constructor(
           onSuccess = {
             val destination = if (preferences.isAnyAccountRegistered.not()) {
               DeleteAccountWebFragment.EndDestination.RESTART
-            } else if (it.activeProfileRemoved) {
-              DeleteAccountWebFragment.EndDestination.RECONNECT
             } else {
               DeleteAccountWebFragment.EndDestination.CLOSE
             }
@@ -267,7 +261,7 @@ class CreateAccountViewModel @Inject constructor(
 
   private fun deleteAndGetReturnInfo(profile: AuthProfileItem): Single<RemovalBackInfo> =
     deleteProfileUseCase(profile.id)
-      .andThen(Single.just(RemovalBackInfo(profile.isActive, profile.authInfo.serverAddress)))
+      .andThen(Single.just(RemovalBackInfo(profile.authInfo.serverAddress)))
 
   private fun Int.toAccessIdentifierString(): String = if (this == 0) {
     ""
@@ -276,11 +270,6 @@ class CreateAccountViewModel @Inject constructor(
   }
 
   private data class RemovalBackInfo(
-    val activeProfileRemoved: Boolean,
     val serverAddress: String?
-  )
-
-  private data class SaveBackInfo(
-    val authSettingsChanged: Boolean
   )
 }

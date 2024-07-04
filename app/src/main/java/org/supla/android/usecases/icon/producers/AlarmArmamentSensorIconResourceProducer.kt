@@ -18,7 +18,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import org.supla.android.R
-import org.supla.android.data.model.general.ChannelState
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_ALARMARMAMENTSENSOR
 import org.supla.android.usecases.icon.IconData
 import org.supla.android.usecases.icon.IconResourceProducer
@@ -28,8 +27,10 @@ class AlarmArmamentSensorIconResourceProducer : IconResourceProducer {
     function == SUPLA_CHANNELFNC_ALARMARMAMENTSENSOR
 
   override fun produce(data: IconData): Int =
-    when (data.state.value) {
-      ChannelState.Value.ON -> R.drawable.fnc_alarm_armament_on
-      else -> R.drawable.fnc_alarm_armament_off
+    when (data.altIcon) {
+      1 -> if (data.state.isActive()) R.drawable.fnc_alarm_armament_1_on else R.drawable.fnc_alarm_armament_1_off
+      2 -> if (data.state.isActive()) R.drawable.fnc_alarm_armament_2_on else R.drawable.fnc_alarm_armament_2_off
+      3 -> if (data.state.isActive()) R.drawable.fnc_alarm_armament_3_on else R.drawable.fnc_alarm_armament_3_off
+      else -> if (data.state.isActive()) R.drawable.fnc_alarm_armament_on else R.drawable.fnc_alarm_armament_off
     }
 }

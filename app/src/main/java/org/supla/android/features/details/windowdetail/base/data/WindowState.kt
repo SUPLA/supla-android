@@ -21,6 +21,6 @@ abstract class WindowState {
   abstract val position: WindowGroupedValue
   abstract val positionTextFormat: WindowGroupedValueFormat
 
-  fun positionText(): String =
+  open fun positionText(): String =
     position.asString(positionTextFormat)
 }

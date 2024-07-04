@@ -272,6 +272,26 @@ class ProvideLegacyDetailTypeUseCaseTest {
     testDetailType(SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER, GpmDetailType(listOf(DetailPage.GPM_HISTORY)))
   }
 
+  @Test
+  fun `should provide detail for terrace awning`() {
+    testDetailType(SUPLA_CHANNELFNC_TERRACE_AWNING, WindowDetailType(listOf(DetailPage.TERRACE_AWNING)))
+  }
+
+  @Test
+  fun `should provide detail for projector screen`() {
+    testDetailType(SUPLA_CHANNELFNC_PROJECTOR_SCREEN, WindowDetailType(listOf(DetailPage.PROJECTOR_SCREEN)))
+  }
+
+  @Test
+  fun `should provide detail for curtain`() {
+    testDetailType(SUPLA_CHANNELFNC_CURTAIN, WindowDetailType(listOf(DetailPage.CURTAIN)))
+  }
+
+  @Test
+  fun `should provide detail for vertical blind`() {
+    testDetailType(SUPLA_CHANNELFNC_VERTICAL_BLIND, WindowDetailType(listOf(DetailPage.VERTICAL_BLIND)))
+  }
+
   private fun testDetailType(function: Int, result: DetailType?, extraMocks: ((ChannelDataEntity) -> Unit) = { }) {
     // given
     val channel: ChannelDataEntity = mockk()

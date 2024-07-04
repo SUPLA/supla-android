@@ -33,18 +33,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import org.supla.android.core.ui.theme.disabled
 import org.supla.android.core.ui.theme.primaryLight
-import java.util.Date
 
 @Composable
 fun DatePicker(
   state: DatePickerState,
   modifier: Modifier = Modifier,
-  dateValidator: (Date) -> Boolean = { true },
-  dateFormatter: DatePickerFormatter = remember { DatePickerFormatter() },
+  dateFormatter: DatePickerFormatter = remember { DatePickerDefaults.dateFormatter() },
   headline: (@Composable () -> Unit)? = {
     DatePickerDefaults.DatePickerHeadline(
-      state,
-      dateFormatter,
+      selectedDateMillis = state.selectedDateMillis,
+      displayMode = state.displayMode,
+      dateFormatter = dateFormatter,
       modifier = Modifier.padding(PaddingValues(start = 24.dp, end = 12.dp, bottom = 12.dp))
     )
   },
@@ -74,7 +73,6 @@ fun DatePicker(
     colors = colors,
     title = null,
     modifier = modifier,
-    dateValidator = { dateValidator(Date(it)) },
     dateFormatter = dateFormatter,
     headline = headline,
     showModeToggle = showModeToggle

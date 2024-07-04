@@ -20,6 +20,7 @@ package org.supla.android.data.source.local.entity
 import android.content.ContentValues
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import org.supla.android.data.source.local.entity.ProfileEntity.Companion.TABLE_NAME
 import org.supla.android.profile.AuthInfo
@@ -74,6 +75,10 @@ data class ProfileEntity(
       put(COLUMN_GUID, guid)
       put(COLUMN_AUTH_KEY, authKey)
     }
+
+  @Ignore
+  val isCloudAccount =
+    serverForEmail?.contains(".supla.org") == true
 
   companion object {
     const val TABLE_NAME = "auth_profile"

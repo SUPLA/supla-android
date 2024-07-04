@@ -15,8 +15,8 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.verifyZeroInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.R
 import org.supla.android.core.BaseViewModelTest
@@ -64,7 +64,7 @@ class BaseAuthorizationViewModelTest :
     // given
     val profile: ProfileEntity = mockk {
       every { email } returns "some-email@supla.org"
-      every { serverForEmail } returns "cloud.supla.org"
+      every { isCloudAccount } returns true
     }
     whenever(profileRepository.findActiveProfile()).thenReturn(Single.just(profile))
 
@@ -85,7 +85,7 @@ class BaseAuthorizationViewModelTest :
     verify(suplaClientProvider, times(2)).provide()
     verify(profileRepository).findActiveProfile()
     verifyNoMoreInteractions(suplaClientProvider, profileRepository)
-    verifyZeroInteractions(loginUseCase, authorizeUseCase)
+    verifyNoInteractions(loginUseCase, authorizeUseCase)
   }
 
   @Test
@@ -108,7 +108,7 @@ class BaseAuthorizationViewModelTest :
     )
     verify(suplaClientProvider).provide()
     verifyNoMoreInteractions(suplaClientProvider)
-    verifyZeroInteractions(loginUseCase, authorizeUseCase, profileRepository)
+    verifyNoInteractions(loginUseCase, authorizeUseCase, profileRepository)
   }
 
   @Test
@@ -129,8 +129,8 @@ class BaseAuthorizationViewModelTest :
     assertThat(states[0].errors[0]).isInstanceOfAny(IllegalStateException::class.java)
 
     verify(authorizeUseCase).invoke(username, password)
-    verifyNoMoreInteractions(loginUseCase)
-    verifyZeroInteractions(suplaClientProvider, authorizeUseCase, profileRepository)
+    verifyNoMoreInteractions(authorizeUseCase)
+    verifyNoInteractions(suplaClientProvider, loginUseCase, profileRepository)
   }
 
   @Test
@@ -151,7 +151,7 @@ class BaseAuthorizationViewModelTest :
     )
     verify(authorizeUseCase).invoke(userName, password)
     verifyNoMoreInteractions(authorizeUseCase)
-    verifyZeroInteractions(loginUseCase, suplaClientProvider, profileRepository)
+    verifyNoInteractions(loginUseCase, suplaClientProvider, profileRepository)
   }
 
   @Test
@@ -164,7 +164,7 @@ class BaseAuthorizationViewModelTest :
 
     val profile: ProfileEntity = mockk {
       every { email } returns userName
-      every { serverForEmail } returns "cloud.supla.org"
+      every { isCloudAccount } returns true
     }
     whenever(profileRepository.findActiveProfile()).thenReturn(Single.just(profile))
 
@@ -198,7 +198,7 @@ class BaseAuthorizationViewModelTest :
     verify(profileRepository).findActiveProfile()
     verify(authorizeUseCase).invoke(userName, password)
     verifyNoMoreInteractions(suplaClientProvider, authorizeUseCase, profileRepository)
-    verifyZeroInteractions(loginUseCase)
+    verifyNoInteractions(loginUseCase)
   }
 
   @Test
@@ -219,7 +219,7 @@ class BaseAuthorizationViewModelTest :
     )
     verify(loginUseCase).invoke(userName, password)
     verifyNoMoreInteractions(loginUseCase)
-    verifyZeroInteractions(authorizeUseCase, suplaClientProvider, profileRepository)
+    verifyNoInteractions(authorizeUseCase, suplaClientProvider, profileRepository)
   }
 
   @Test
@@ -232,7 +232,7 @@ class BaseAuthorizationViewModelTest :
 
     val profile: ProfileEntity = mockk {
       every { email } returns userName
-      every { serverForEmail } returns "cloud.supla.org"
+      every { isCloudAccount } returns true
     }
     whenever(profileRepository.findActiveProfile()).thenReturn(Single.just(profile))
 
@@ -268,7 +268,7 @@ class BaseAuthorizationViewModelTest :
     verify(profileRepository).findActiveProfile()
     verify(loginUseCase).invoke(userName, password)
     verifyNoMoreInteractions(suplaClientProvider, loginUseCase, profileRepository)
-    verifyZeroInteractions(authorizeUseCase)
+    verifyNoInteractions(authorizeUseCase)
   }
 }
 

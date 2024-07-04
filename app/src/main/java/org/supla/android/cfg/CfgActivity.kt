@@ -18,19 +18,20 @@ package org.supla.android.cfg
  */
 
 import android.os.Bundle
-import android.view.WindowManager
-import androidx.core.content.res.ResourcesCompat
+import androidx.activity.OnBackPressedCallback
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import dagger.hilt.android.AndroidEntryPoint
-import org.supla.android.NavigationActivity.INTENTSENDER
-import org.supla.android.NavigationActivity.INTENTSENDER_MAIN
+import org.supla.android.NavigationActivity.INTENT_SENDER
+import org.supla.android.NavigationActivity.INTENT_SENDER_MAIN
 import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.SuplaApp
+import org.supla.android.core.networking.suplaclient.SuplaClientEvent
+import org.supla.android.core.networking.suplaclient.SuplaClientStateHolder
 import org.supla.android.core.ui.BaseActivity
 import org.supla.android.data.ValuesFormatter
 import org.supla.android.databinding.ActivityCfgBinding
@@ -56,29 +57,33 @@ class CfgActivity : BaseActivity() {
   @Inject
   lateinit var navigator: CfgActivityNavigator
 
+  @Inject
+  lateinit var suplaClientStateHolder: SuplaClientStateHolder
+
+  @Inject
+  lateinit var preferences: Preferences
+
   private lateinit var binding: ActivityCfgBinding
   private var shouldShowBack = false
 
   private val navToolbar: AppBar
     get() = binding.incToolbar.suplaToolbar
 
+  private val onBackCallback = object : OnBackPressedCallback(true) {
+    override fun handleOnBackPressed() {
+      backLogic()
+    }
+  }
+
   override fun getLoadingIndicator() = binding.loadingIndicator
 
-  override fun onCreate(sis: Bundle?) {
-    super.onCreate(sis)
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
 
     SuplaApp.getApp().initTypefaceCollection(this)
 
     binding = DataBindingUtil.setContentView(this, R.layout.activity_cfg)
     binding.lifecycleOwner = this
-
-    window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-    window.statusBarColor = ResourcesCompat.getColor(
-      resources,
-      R.color.primary,
-      null
-    )
 
     setSupportActionBar(navToolbar)
 
@@ -111,6 +116,8 @@ class CfgActivity : BaseActivity() {
     )
 
     navController.addOnDestinationChangedListener { _, _, _ -> configureNavBar() }
+
+    onBackPressedDispatcher.addCallback(this, onBackCallback)
   }
 
   override fun onResume() {
@@ -127,13 +134,13 @@ class CfgActivity : BaseActivity() {
       }
     }
 
-    val sender = intent.getStringExtra(INTENTSENDER)
-    if (sender != null && sender == INTENTSENDER_MAIN) {
+    val sender = intent.getStringExtra(INTENT_SENDER)
+    if (sender != null && sender == INTENT_SENDER_MAIN) {
       // show back button
       shouldShowBack = true
       binding.incToolbar.suplaToolbar.setNavigationIcon(R.drawable.navbar_back)
       binding.incToolbar.suplaToolbar.setNavigationOnClickListener {
-        onBackPressed()
+        onBackPressedDispatcher.onBackPressed()
       }
     }
   }
@@ -144,7 +151,7 @@ class CfgActivity : BaseActivity() {
     }
   }
 
-  override fun onBackPressed() {
+  private fun backLogic() {
     if (isBackHandledInChildFragment(supportFragmentManager) || navigator.back()) {
       return
     }
@@ -152,11 +159,11 @@ class CfgActivity : BaseActivity() {
     if (Preferences(this).isAnyAccountRegistered) {
       val client = SuplaApp.getApp().getSuplaClient()
 
-      if (client != null && client.registered()) {
-        navigator.navigateToMain()
-      } else {
-        navigator.navigateToStatus()
+      if (client == null || !client.registered()) {
+        suplaClientStateHolder.handleEvent(SuplaClientEvent.Initialized)
       }
+
+      finish()
     } else {
       finishAffinity()
     }

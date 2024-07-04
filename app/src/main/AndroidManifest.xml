@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:tools="http://schemas.android.com/tools"
-  package="org.supla.android">
+  xmlns:tools="http://schemas.android.com/tools">
 
   <uses-permission android:name="android.permission.INTERNET" />
   <uses-permission android:name="android.permission.VIBRATE" />
@@ -74,9 +73,9 @@
       android:required="false" />
 
     <activity
-      android:name=".StartActivity"
+      android:name=".MainActivity"
       android:exported="true"
-      android:noHistory="true"
+      android:launchMode="singleTop"
       android:screenOrientation="sensorPortrait">
 
       <intent-filter>
@@ -87,23 +86,7 @@
     </activity>
 
     <activity
-      android:name=".StatusActivity"
-      android:exported="true"
-      android:launchMode="singleTop"
-      android:screenOrientation="sensorPortrait" />
-
-    <activity
-      android:name=".MainActivity"
-      android:launchMode="singleTop"
-      android:screenOrientation="sensorPortrait" />
-
-    <activity
       android:name=".cfg.CfgActivity"
-      android:launchMode="singleTop"
-      android:screenOrientation="sensorPortrait" />
-
-    <activity
-      android:name=".AboutActivity"
       android:launchMode="singleTop"
       android:screenOrientation="sensorPortrait" />
 
@@ -145,9 +128,15 @@
 
     <provider
       android:name="androidx.startup.InitializationProvider"
-      android:authorities="org.supla.android.SuplaApp.androidx-startup"
-      tools:node="remove"
-      tools:replace="android:authorities"></provider>
+      android:authorities="${applicationId}.androidx-startup"
+      android:exported="false"
+      tools:node="merge"
+      tools:replace="android:authorities">
+      <meta-data
+        android:name="androidx.work.WorkManagerInitializer"
+        android:value="androidx.startup"
+        tools:node="remove" />
+    </provider>
   </application>
 
 </manifest>

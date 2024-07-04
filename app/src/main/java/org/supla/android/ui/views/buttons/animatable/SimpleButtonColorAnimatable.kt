@@ -37,6 +37,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
+import org.supla.android.extensions.disabledOverlay
 import org.supla.android.extensions.innerShadow
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -92,6 +93,7 @@ fun SimpleButtonColorAnimatable(
           indication = null,
           interactionSource = interactionSource
         )
+        .disabledOverlay(disabled)
     ) {
       content(if (animationMode.isActiveState()) textColorRes else textColor)
     }

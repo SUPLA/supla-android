@@ -20,30 +20,6 @@ package org.supla.android.extensions
 import org.supla.android.db.ChannelBase
 import org.supla.android.lib.SuplaConst
 
-fun ChannelBase.isHvacThermostat(): Boolean =
-  func == SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT ||
-//    Temporarily commented out, because is not supported yet.
-//    func == SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_AUTO ||
-//    func == SuplaConst.SUPLA_CHANNELFNC_HVAC_DRYER ||
-//    func == SuplaConst.SUPLA_CHANNELFNC_HVAC_FAN ||
-//    func == SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_DIFFERENTIAL ||
-    func == SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER
-
-fun ChannelBase.isMeasurement(): Boolean =
-  func == SuplaConst.SUPLA_CHANNELFNC_ALARMARMAMENTSENSOR ||
-    func == SuplaConst.SUPLA_CHANNELFNC_HOTELCARDSENSOR ||
-    func == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER ||
-    func == SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR
-
-fun ChannelBase.hasValue(): Boolean =
-  when (func) {
-    SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT,
-    SuplaConst.SUPLA_CHANNELFNC_THERMOMETER,
-    SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR -> true
-
-    else -> false
-  }
-
 fun ChannelBase.isSwitch() =
   func == SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH ||
     func == SuplaConst.SUPLA_CHANNELFNC_DIMMER ||
@@ -69,13 +45,6 @@ fun ChannelBase.isThermometer() =
   func == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER ||
     func == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
 
-fun ChannelBase.isThermostat(): Boolean =
-  isHvacThermostat() || func == SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS
-
 fun ChannelBase.isGpm() =
   func == SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT ||
     func == SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER
-
-fun ChannelBase.isGpMeter() = func == SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER
-
-fun ChannelBase.isGpMeasurement() = func == SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT

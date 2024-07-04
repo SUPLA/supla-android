@@ -73,15 +73,15 @@ class SaveProfileUseCase @Inject constructor(
   }
 
   sealed class SaveAccountException : RuntimeException(null, null) {
-    object EmptyName : SaveAccountException() {
+    data object EmptyName : SaveAccountException() {
       private fun readResolve(): Any = EmptyName
     }
 
-    object DuplicatedName : SaveAccountException() {
+    data object DuplicatedName : SaveAccountException() {
       private fun readResolve(): Any = DuplicatedName
     }
 
-    object DataIncomplete : SaveAccountException() {
+    data object DataIncomplete : SaveAccountException() {
       private fun readResolve(): Any = DataIncomplete
     }
   }

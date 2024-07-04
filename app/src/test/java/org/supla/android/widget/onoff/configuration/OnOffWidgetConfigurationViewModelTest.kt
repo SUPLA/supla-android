@@ -47,7 +47,7 @@ import org.supla.android.lib.SuplaConst
 import org.supla.android.lib.singlecall.SingleCall
 import org.supla.android.profile.ProfileManager
 import org.supla.android.testhelpers.getOrAwaitValue
-import org.supla.android.usecases.channel.LoadChannelConfigUseCase
+import org.supla.android.usecases.channelconfig.LoadChannelConfigUseCase
 import org.supla.android.widget.WidgetPreferences
 import org.supla.android.widget.shared.WidgetConfigurationViewModelTestBase
 import org.supla.android.widget.shared.configuration.EmptyDisplayNameException
@@ -410,6 +410,9 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
   fun `shouldn't allow to save the selection when there is no widget id set`() = runTest {
     // given
     whenever(preferences.isAnyAccountRegistered).thenReturn(true)
+    whenever(profileManager.getCurrentProfile()).thenReturn(Maybe.empty())
+    whenever(channelRepository.getAllProfileChannels(null)).thenReturn(mock())
+
     val viewModel = OnOffWidgetConfigurationViewModel(
       preferences,
       widgetPreferences,
@@ -436,6 +439,9 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
   fun `shouldn't allow to save selection when there is no channel selected`() = runTest {
     // given
     whenever(preferences.isAnyAccountRegistered).thenReturn(true)
+    whenever(profileManager.getCurrentProfile()).thenReturn(Maybe.empty())
+    whenever(channelRepository.getAllProfileChannels(null)).thenReturn(mock())
+
     val viewModel = OnOffWidgetConfigurationViewModel(
       preferences,
       widgetPreferences,
@@ -465,6 +471,9 @@ class OnOffWidgetConfigurationViewModelTest : WidgetConfigurationViewModelTestBa
     runTest {
       // given
       whenever(preferences.isAnyAccountRegistered).thenReturn(true)
+      whenever(profileManager.getCurrentProfile()).thenReturn(Maybe.empty())
+      whenever(channelRepository.getAllProfileChannels(null)).thenReturn(mock())
+
       val viewModel = OnOffWidgetConfigurationViewModel(
         preferences,
         widgetPreferences,

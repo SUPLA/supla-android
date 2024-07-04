@@ -72,14 +72,6 @@ class ValuesFormatter @Inject constructor(
     }
   }
 
-  fun getHumidityString(rawValue: Double?, withPercentage: Boolean = false, precision: Int = 1): String {
-    return if (withPercentage) {
-      String.format("%.${precision}f%%", rawValue)
-    } else {
-      String.format("%.${precision}f", rawValue)
-    }
-  }
-
   fun getDistanceString(rawValue: Double?): String {
     val (distance) = guardLet(rawValue) { return "$NO_VALUE_TEXT m" }
     if (distance < 0 || distance.isNaN()) {

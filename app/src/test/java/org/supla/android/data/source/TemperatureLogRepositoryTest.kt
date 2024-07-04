@@ -28,8 +28,8 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.verifyZeroInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.data.source.local.dao.measurements.TemperatureLogDao
 import org.supla.android.data.source.local.entity.measurements.TemperatureLogEntity
@@ -68,7 +68,7 @@ class TemperatureLogRepositoryTest {
 
     verify(temperatureLogDao).findMeasurements(remoteId, profileId, startDate.time, endDate.time)
     verifyNoMoreInteractions(temperatureLogDao)
-    verifyZeroInteractions(suplaCloudServiceProvider)
+    verifyNoInteractions(suplaCloudServiceProvider)
   }
 
   @Test
@@ -86,7 +86,7 @@ class TemperatureLogRepositoryTest {
 
     verify(temperatureLogDao).delete(remoteId, profileId)
     verifyNoMoreInteractions(temperatureLogDao)
-    verifyZeroInteractions(suplaCloudServiceProvider)
+    verifyNoInteractions(suplaCloudServiceProvider)
   }
 
   @Test
@@ -107,7 +107,7 @@ class TemperatureLogRepositoryTest {
 
     verify(temperatureLogDao).findCount(remoteId, profileId)
     verifyNoMoreInteractions(temperatureLogDao)
-    verifyZeroInteractions(suplaCloudServiceProvider)
+    verifyNoInteractions(suplaCloudServiceProvider)
   }
 
   @Test
@@ -128,7 +128,7 @@ class TemperatureLogRepositoryTest {
 
     verify(temperatureLogDao).findMinTimestamp(remoteId, profileId)
     verifyNoMoreInteractions(temperatureLogDao)
-    verifyZeroInteractions(suplaCloudServiceProvider)
+    verifyNoInteractions(suplaCloudServiceProvider)
   }
 
   @Test
@@ -149,7 +149,7 @@ class TemperatureLogRepositoryTest {
 
     verify(temperatureLogDao).findMaxTimestamp(remoteId, profileId)
     verifyNoMoreInteractions(temperatureLogDao)
-    verifyZeroInteractions(suplaCloudServiceProvider)
+    verifyNoInteractions(suplaCloudServiceProvider)
   }
 
   @Test
@@ -167,6 +167,6 @@ class TemperatureLogRepositoryTest {
 
     verify(temperatureLogDao).insert(listOf(entity))
     verifyNoMoreInteractions(temperatureLogDao)
-    verifyZeroInteractions(suplaCloudServiceProvider)
+    verifyNoInteractions(suplaCloudServiceProvider)
   }
 }

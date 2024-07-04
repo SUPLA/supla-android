@@ -33,6 +33,7 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_RAINSENSOR
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_WEIGHTSENSOR
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_WINDSENSOR
 import org.supla.android.usecases.icon.producers.AlarmArmamentSensorIconResourceProducer
+import org.supla.android.usecases.icon.producers.CurtainIconResourceProducer
 import org.supla.android.usecases.icon.producers.DigiglassIconResourceProducer
 import org.supla.android.usecases.icon.producers.DimmerAndRgbIconResourceProducer
 import org.supla.android.usecases.icon.producers.DimmerIconResourceProducer
@@ -40,6 +41,7 @@ import org.supla.android.usecases.icon.producers.DoorIconResourceProducer
 import org.supla.android.usecases.icon.producers.ElectricityMeterIconResourceProducer
 import org.supla.android.usecases.icon.producers.FacadeBlindIconResourceProducer
 import org.supla.android.usecases.icon.producers.GarageDoorIconResourceProducer
+import org.supla.android.usecases.icon.producers.GarageDoorRollerIconResourceProducer
 import org.supla.android.usecases.icon.producers.GateIconResourceProducer
 import org.supla.android.usecases.icon.producers.GatewayIconResourceProducer
 import org.supla.android.usecases.icon.producers.GeneralPurposeMeasurementIconResourceProducer
@@ -50,15 +52,18 @@ import org.supla.android.usecases.icon.producers.LightSwitchIconResourceProducer
 import org.supla.android.usecases.icon.producers.LiquidSensorIconResourceProducer
 import org.supla.android.usecases.icon.producers.MailSensorIconResourceProducer
 import org.supla.android.usecases.icon.producers.PowerSwitchIconResourceProducer
+import org.supla.android.usecases.icon.producers.ProjectorScreenIconResourceProducer
 import org.supla.android.usecases.icon.producers.RgbLightingIconResourceProducer
 import org.supla.android.usecases.icon.producers.RollerShutterIconResourceProducer
 import org.supla.android.usecases.icon.producers.RoofWindowIconResourceProducer
 import org.supla.android.usecases.icon.producers.StaircaseTimerIconResourceProducer
 import org.supla.android.usecases.icon.producers.StaticIconResourceProducer
+import org.supla.android.usecases.icon.producers.TerraceAwningIconResourceProducer
 import org.supla.android.usecases.icon.producers.ThermometerIconResourceProducer
 import org.supla.android.usecases.icon.producers.ThermostatHomePlusIconResourceProducer
 import org.supla.android.usecases.icon.producers.ThermostatHvacIconResourceProducer
 import org.supla.android.usecases.icon.producers.ValveIconResourceProducer
+import org.supla.android.usecases.icon.producers.VerticalBlindsIconResourceProducer
 import org.supla.android.usecases.icon.producers.WindowIconResourceProducer
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -104,7 +109,12 @@ class GetDefaultIconResourceUseCase @Inject constructor() {
     ValveIconResourceProducer(),
     DigiglassIconResourceProducer(),
     GeneralPurposeMeasurementIconResourceProducer(),
-    GeneralPurposeMeterIconResourceProducer()
+    GeneralPurposeMeterIconResourceProducer(),
+    TerraceAwningIconResourceProducer(),
+    ProjectorScreenIconResourceProducer(),
+    CurtainIconResourceProducer(),
+    VerticalBlindsIconResourceProducer,
+    GarageDoorRollerIconResourceProducer
   )
 
   @DrawableRes

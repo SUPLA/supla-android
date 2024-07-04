@@ -106,7 +106,7 @@ sealed interface ListItem {
     value: String? = null
   ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, value, null, null)
 
-  class RollerShutterItem(
+  class IconWithButtonsItem(
     channel: ChannelDataEntity,
     locationCaption: String,
     online: Boolean,

@@ -4,10 +4,11 @@
   <merge>
 
     <com.google.android.material.appbar.AppBarLayout
+      android:id="@+id/app_bar_layout"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:animateLayoutChanges="true"
-      android:background="@color/primary">
+      android:background="@color/toolbar">
 
       <org.supla.android.ui.AppBar
         android:id="@+id/supla_toolbar"

@@ -49,6 +49,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
@@ -67,6 +68,7 @@ import org.supla.android.extensions.preferences
 import org.supla.android.extensions.valuesFormatter
 import org.supla.android.ui.lists.data.IssueIconType
 import org.supla.android.ui.views.Separator
+import org.supla.android.ui.views.list.components.ListItemMainRow
 import java.lang.Float.max
 import java.util.Date
 import kotlin.time.Duration.Companion.seconds
@@ -198,7 +200,7 @@ private fun ListItemInfoIcon(onClick: () -> Unit) {
     modifier = Modifier
       .padding(start = dimensionResource(id = R.dimen.list_horizontal_spacing))
       .size(dimensionResource(id = R.dimen.channel_state_image_size))
-      .clickable(interactionSource = MutableInteractionSource(), indication = null, onClick = onClick)
+      .clickable(interactionSource = remember { MutableInteractionSource() }, indication = null, onClick = onClick)
   )
 }
 
@@ -210,7 +212,7 @@ private fun ListItemIssueIcon(issueIconType: IssueIconType, onClick: () -> Unit)
     modifier = Modifier
       .padding(end = dimensionResource(id = R.dimen.list_horizontal_spacing))
       .size(dimensionResource(id = R.dimen.channel_warning_image_size))
-      .clickable(interactionSource = MutableInteractionSource(), indication = null, onClick = onClick)
+      .clickable(interactionSource = remember { MutableInteractionSource() }, indication = null, onClick = onClick)
   )
 }
 
@@ -307,6 +309,17 @@ private fun Preview() {
           scale = 1f,
           showInfoIcon = true
         ) {
+          ListItemMainRow(scale = 0.75f) {
+            Image(
+              painter = painterResource(id = R.drawable.fnc_curtain_close),
+              contentDescription = null,
+              alignment = Alignment.Center,
+              modifier = Modifier
+                .width(dimensionResource(id = R.dimen.channel_img_width))
+                .height(dimensionResource(id = R.dimen.channel_img_height)),
+              contentScale = ContentScale.Fit
+            )
+          }
         }
       }
       Box(

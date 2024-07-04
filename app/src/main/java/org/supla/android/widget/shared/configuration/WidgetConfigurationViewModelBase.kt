@@ -45,9 +45,9 @@ import org.supla.android.lib.singlecall.DoubleValue
 import org.supla.android.lib.singlecall.SingleCall
 import org.supla.android.lib.singlecall.TemperatureAndHumidity
 import org.supla.android.profile.ProfileManager
-import org.supla.android.usecases.channel.LoadChannelConfigUseCase
 import org.supla.android.usecases.channel.valueformatter.GpmValueFormatter
 import org.supla.android.usecases.channel.valueprovider.GpmValueProvider
+import org.supla.android.usecases.channelconfig.LoadChannelConfigUseCase
 import org.supla.android.widget.WidgetConfiguration
 import org.supla.android.widget.WidgetPreferences
 import org.supla.android.widget.shared.loadTemperatureAndHumidity
@@ -120,7 +120,7 @@ abstract class WidgetConfigurationViewModelBase(
   }
 
   @Suppress("UNUSED_PARAMETER")
-  fun onDisplayNameChanged(s: CharSequence, `_`: Int, `__`: Int, `___`: Int) {
+  fun onDisplayNameChanged(s: CharSequence, arg1: Int, arg2: Int, arg3: Int) {
     displayName = s.toString()
   }
 

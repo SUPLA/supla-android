@@ -29,8 +29,8 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.verifyZeroInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.core.infrastructure.DateProvider
@@ -82,6 +82,7 @@ class TimersDetailViewModelTest : BaseViewModelTest<TimersDetailViewState, Timer
     every { channel.extendedValue } returns null
     val channelData: ChannelDataEntity = mockk { every { getLegacyChannel() } returns channel }
     whenever(readChannelByRemoteIdUseCase(remoteId)).thenReturn(Maybe.just(channelData))
+    whenever(dateProvider.currentDate()).thenReturn(Date())
 
     // when
     viewModel.loadData(remoteId)
@@ -223,7 +224,7 @@ class TimersDetailViewModelTest : BaseViewModelTest<TimersDetailViewState, Timer
     assertThat(states).isEmpty()
     verify(startTimerUseCase).invoke(remoteId, turnOn, duration)
     verifyNoMoreInteractions(startTimerUseCase)
-    verifyZeroInteractions(readChannelByRemoteIdUseCase, dateProvider, executeSimpleActionUseCase)
+    verifyNoInteractions(readChannelByRemoteIdUseCase, dateProvider, executeSimpleActionUseCase)
   }
 
   @Test
@@ -243,7 +244,7 @@ class TimersDetailViewModelTest : BaseViewModelTest<TimersDetailViewState, Timer
     assertThat(states).isEmpty()
     verify(startTimerUseCase).invoke(remoteId, turnOn, duration)
     verifyNoMoreInteractions(startTimerUseCase)
-    verifyZeroInteractions(readChannelByRemoteIdUseCase, dateProvider, executeSimpleActionUseCase)
+    verifyNoInteractions(readChannelByRemoteIdUseCase, dateProvider, executeSimpleActionUseCase)
   }
 
   @Test
@@ -271,7 +272,7 @@ class TimersDetailViewModelTest : BaseViewModelTest<TimersDetailViewState, Timer
     verify(readChannelByRemoteIdUseCase).invoke(remoteId)
     verify(executeSimpleActionUseCase).invoke(ActionId.TURN_ON, SubjectType.CHANNEL, remoteId)
     verifyNoMoreInteractions(readChannelByRemoteIdUseCase, executeSimpleActionUseCase)
-    verifyZeroInteractions(dateProvider, startTimerUseCase)
+    verifyNoInteractions(dateProvider, startTimerUseCase)
   }
 
   @Test
@@ -299,7 +300,7 @@ class TimersDetailViewModelTest : BaseViewModelTest<TimersDetailViewState, Timer
     verify(readChannelByRemoteIdUseCase).invoke(remoteId)
     verify(executeSimpleActionUseCase).invoke(ActionId.TURN_ON, SubjectType.CHANNEL, remoteId)
     verifyNoMoreInteractions(readChannelByRemoteIdUseCase, executeSimpleActionUseCase)
-    verifyZeroInteractions(dateProvider, startTimerUseCase)
+    verifyNoInteractions(dateProvider, startTimerUseCase)
   }
 
   @Test

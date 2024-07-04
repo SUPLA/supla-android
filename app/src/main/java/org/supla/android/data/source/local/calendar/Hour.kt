@@ -1,6 +1,8 @@
 package org.supla.android.data.source.local.calendar
 
+import android.annotation.TargetApi
 import android.content.Context
+import android.os.Build
 import org.supla.android.extensions.valuesFormatter
 
 /*
@@ -29,6 +31,7 @@ data class Hour(
   fun toString(context: Context) = context.valuesFormatter.getHourString(this)
 
   companion object {
+    @TargetApi(Build.VERSION_CODES.O)
     fun from(string: String): Hour? {
       val regex = Regex("(?<hour>[0-9]{1,2}):(?<minute>[0-9]{1,2})")
       val matchResult = regex.find(string)

@@ -19,7 +19,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 object Configuration {
   object Menu {
-    const val DEVICES_OPTION_VISIBLE = false
+    const val DEVICES_OPTION_VISIBLE = true
     const val Z_WAVE_OPTION_VISIBLE = true
     const val ABOUT_OPTION_VISIBLE = true
     const val HELP_OPTION_VISIBLE = true

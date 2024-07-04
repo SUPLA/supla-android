@@ -29,8 +29,8 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.verifyZeroInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.data.model.Optional
 import org.supla.android.data.model.chart.DateRange
@@ -181,7 +181,7 @@ class LoadChannelWithChildrenMeasurementsDateRangeUseCaseTest {
 
     verify(readChannelWithChildrenUseCase).invoke(remoteId)
     verifyNoMoreInteractions(readChannelWithChildrenUseCase)
-    verifyZeroInteractions(temperatureLogRepository, temperatureAndHumidityLogRepository)
+    verifyNoInteractions(temperatureLogRepository, temperatureAndHumidityLogRepository)
   }
 
   private fun mockChannelWithChildren(): ChannelWithChildren {

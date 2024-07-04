@@ -22,7 +22,7 @@ import io.mockk.mockk
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
-import kotlinx.coroutines.flow.MutableStateFlow
+import io.reactivex.rxjava3.core.Single
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -31,19 +31,21 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.Preferences
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.core.infrastructure.DateProvider
+import org.supla.android.core.networking.suplaclient.SuplaClientApi
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
-import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.data.source.local.entity.ChannelGroupEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.data.source.local.entity.custom.GroupOnlineSummary
+import org.supla.android.data.source.remote.ChannelConfigType
 import org.supla.android.data.source.remote.ConfigResult
 import org.supla.android.data.source.remote.facadeblind.FacadeBlindValue
 import org.supla.android.data.source.remote.rollershutter.SuplaChannelFacadeBlindConfig
@@ -52,11 +54,12 @@ import org.supla.android.data.source.remote.shadingsystem.SuplaShadingSystemFlag
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.ChannelConfigEventsManager
 import org.supla.android.features.details.windowdetail.base.BaseWindowViewEvent
+import org.supla.android.features.details.windowdetail.base.data.ShadingBlindMarker
 import org.supla.android.features.details.windowdetail.base.data.WindowGroupedValue
 import org.supla.android.features.details.windowdetail.base.data.WindowGroupedValueFormat
-import org.supla.android.features.details.windowdetail.base.data.facadeblinds.FacadeBlindMarker
 import org.supla.android.features.details.windowdetail.base.data.facadeblinds.FacadeBlindWindowState
 import org.supla.android.features.details.windowdetail.base.ui.ShadingSystemAction
+import org.supla.android.features.details.windowdetail.base.ui.ShadingSystemPositionPresentation
 import org.supla.android.features.details.windowdetail.base.ui.WindowViewState
 import org.supla.android.lib.SuplaConst
 import org.supla.android.lib.actions.ActionId
@@ -70,9 +73,9 @@ import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
 import org.supla.android.usecases.client.LoginUseCase
 import org.supla.android.usecases.group.GetGroupOnlineSummaryUseCase
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
-import org.supla.android.usecases.group.totalvalue.FacadeBlindGroupValue
-import kotlin.reflect.full.memberProperties
-import kotlin.reflect.jvm.isAccessible
+import org.supla.android.usecases.group.ReadGroupTiltingDetailsUseCase
+import org.supla.android.usecases.group.TiltingDetails
+import org.supla.android.usecases.group.totalvalue.ShadowingBlindGroupValue
 
 @RunWith(MockitoJUnitRunner::class)
 class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, BaseWindowViewEvent, FacadeBlindsViewModel>() {
@@ -82,6 +85,9 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
 
   @Mock
   private lateinit var executeShadingSystemActionUseCase: ExecuteShadingSystemActionUseCase
+
+  @Mock
+  private lateinit var readGroupTiltingDetailsUseCase: ReadGroupTiltingDetailsUseCase
 
   @Mock
   private lateinit var suplaClientProvider: SuplaClientProvider
@@ -152,7 +158,7 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
         ),
         viewState = WindowViewState(
           enabled = true,
-          showClosingPercentage = true
+          positionPresentation = ShadingSystemPositionPresentation.AS_CLOSED
         ),
         lastPosition = position
       )
@@ -184,7 +190,7 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
         ),
         viewState = WindowViewState(
           enabled = false,
-          showClosingPercentage = true
+          positionPresentation = ShadingSystemPositionPresentation.AS_CLOSED
         ),
         lastPosition = position
       )
@@ -216,7 +222,7 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
         ),
         viewState = WindowViewState(
           enabled = true,
-          showClosingPercentage = true
+          positionPresentation = ShadingSystemPositionPresentation.AS_CLOSED
         ),
         lastPosition = position
       )
@@ -243,7 +249,7 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
           tilt0Angle = 0f,
           tilt100Angle = 180f,
         ),
-        facadeBlindType = SuplaTiltControlType.CHANGES_POSITION_WHILE_TILTING,
+        tiltControlType = SuplaTiltControlType.CHANGES_POSITION_WHILE_TILTING,
         tiltingTime = 2000,
         openingTime = 20000,
         closingTime = 20000
@@ -260,7 +266,7 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
         position = WindowGroupedValue.Similar(10f),
         slatTilt = WindowGroupedValue.Similar(33f)
       ),
-      facadeBlindType = SuplaTiltControlType.CHANGES_POSITION_WHILE_TILTING,
+      tiltControlType = SuplaTiltControlType.CHANGES_POSITION_WHILE_TILTING,
       tiltingTime = 2000,
       openingTime = 20000,
       closingTime = 20000,
@@ -290,7 +296,7 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
         position = WindowGroupedValue.Similar(10f),
         slatTilt = WindowGroupedValue.Similar(33f)
       ),
-      facadeBlindType = SuplaTiltControlType.TILTS_ONLY_WHEN_FULLY_CLOSED,
+      tiltControlType = SuplaTiltControlType.TILTS_ONLY_WHEN_FULLY_CLOSED,
       tiltingTime = 2000,
       openingTime = 20000,
       closingTime = 20000,
@@ -351,7 +357,7 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
         position = WindowGroupedValue.Similar(10f),
         slatTilt = WindowGroupedValue.Similar(33f)
       ),
-      facadeBlindType = SuplaTiltControlType.CHANGES_POSITION_WHILE_TILTING,
+      tiltControlType = SuplaTiltControlType.CHANGES_POSITION_WHILE_TILTING,
       tiltingTime = 2000,
       openingTime = 20000,
       closingTime = 20000,
@@ -382,7 +388,7 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
         position = WindowGroupedValue.Similar(10f),
         slatTilt = WindowGroupedValue.Similar(33f)
       ),
-      facadeBlindType = SuplaTiltControlType.CHANGES_POSITION_WHILE_TILTING,
+      tiltControlType = SuplaTiltControlType.CHANGES_POSITION_WHILE_TILTING,
       tiltingTime = 2000,
       openingTime = 20000,
       closingTime = 20000,
@@ -413,7 +419,7 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
         position = WindowGroupedValue.Similar(10f),
         slatTilt = WindowGroupedValue.Similar(33f)
       ),
-      facadeBlindType = SuplaTiltControlType.CHANGES_POSITION_WHILE_TILTING,
+      tiltControlType = SuplaTiltControlType.CHANGES_POSITION_WHILE_TILTING,
       tiltingTime = 2000,
       openingTime = 20000,
       closingTime = 20000,
@@ -444,7 +450,7 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
         position = WindowGroupedValue.Similar(10f),
         slatTilt = WindowGroupedValue.Similar(0f)
       ),
-      facadeBlindType = SuplaTiltControlType.TILTS_ONLY_WHEN_FULLY_CLOSED,
+      tiltControlType = SuplaTiltControlType.TILTS_ONLY_WHEN_FULLY_CLOSED,
       tiltingTime = 2000,
       openingTime = 20000,
       closingTime = 20000,
@@ -474,7 +480,7 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
         position = WindowGroupedValue.Similar(10f),
         slatTilt = WindowGroupedValue.Similar(0f)
       ),
-      facadeBlindType = SuplaTiltControlType.TILTS_ONLY_WHEN_FULLY_CLOSED,
+      tiltControlType = SuplaTiltControlType.TILTS_ONLY_WHEN_FULLY_CLOSED,
       tiltingTime = 2000,
       openingTime = 20000,
       closingTime = 20000,
@@ -505,7 +511,7 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
         position = WindowGroupedValue.Similar(10f),
         slatTilt = WindowGroupedValue.Similar(33f)
       ),
-      facadeBlindType = SuplaTiltControlType.CHANGES_POSITION_WHILE_TILTING,
+      tiltControlType = SuplaTiltControlType.CHANGES_POSITION_WHILE_TILTING,
       tiltingTime = 2000,
       openingTime = 20000,
       closingTime = 20000,
@@ -535,7 +541,7 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
         position = WindowGroupedValue.Similar(10f),
         slatTilt = WindowGroupedValue.Similar(33f)
       ),
-      facadeBlindType = SuplaTiltControlType.CHANGES_POSITION_WHILE_TILTING,
+      tiltControlType = SuplaTiltControlType.CHANGES_POSITION_WHILE_TILTING,
       tiltingTime = 2000,
       openingTime = 20000,
       closingTime = 20000,
@@ -567,7 +573,7 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
         position = WindowGroupedValue.Similar(10f),
         slatTilt = WindowGroupedValue.Similar(33f)
       ),
-      facadeBlindType = SuplaTiltControlType.CHANGES_POSITION_WHILE_TILTING,
+      tiltControlType = SuplaTiltControlType.CHANGES_POSITION_WHILE_TILTING,
       tiltingTime = 2000,
       openingTime = 20000,
       closingTime = 20000,
@@ -598,7 +604,7 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
         position = WindowGroupedValue.Similar(10f),
         slatTilt = WindowGroupedValue.Similar(0f)
       ),
-      facadeBlindType = SuplaTiltControlType.TILTS_ONLY_WHEN_FULLY_CLOSED,
+      tiltControlType = SuplaTiltControlType.TILTS_ONLY_WHEN_FULLY_CLOSED,
       tiltingTime = 2000,
       openingTime = 20000,
       closingTime = 20000,
@@ -630,7 +636,7 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
         position = WindowGroupedValue.Similar(10f),
         slatTilt = WindowGroupedValue.Similar(0f)
       ),
-      facadeBlindType = SuplaTiltControlType.TILTS_ONLY_WHEN_FULLY_CLOSED,
+      tiltControlType = SuplaTiltControlType.TILTS_ONLY_WHEN_FULLY_CLOSED,
       tiltingTime = 2000,
       openingTime = 20000,
       closingTime = 20000,
@@ -672,13 +678,13 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
         remoteId = remoteId,
         windowState = FacadeBlindWindowState(
           position = WindowGroupedValue.Different(30f, 50f),
-          slatTilt = WindowGroupedValue.Different(25f, 85f),
-          markers = listOf(FacadeBlindMarker(50f, 85f), FacadeBlindMarker(30f, 25f)),
+          slatTilt = WindowGroupedValue.Similar(85f),
+          markers = listOf(ShadingBlindMarker(50f, 85f), ShadingBlindMarker(30f, 25f)),
           positionTextFormat = WindowGroupedValueFormat.PERCENTAGE
         ),
         viewState = WindowViewState(
           enabled = true,
-          showClosingPercentage = true,
+          positionPresentation = ShadingSystemPositionPresentation.AS_CLOSED,
           isGroup = true,
           onlineStatusString = "2/5"
         ),
@@ -712,13 +718,84 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
           positionTextFormat = WindowGroupedValueFormat.PERCENTAGE
         ),
         viewState = WindowViewState(
-          showClosingPercentage = true,
+          positionPresentation = ShadingSystemPositionPresentation.AS_CLOSED,
           isGroup = true,
           onlineStatusString = "2/5"
         ),
         lastPosition = 0
       )
     )
+  }
+
+  @Test
+  fun `should load config for channel`() {
+    // given
+    val remoteId = 123
+
+    val suplaClient: SuplaClientApi = mockk()
+    every { suplaClient.getChannelConfig(remoteId, ChannelConfigType.DEFAULT) } returns true
+    whenever(suplaClientProvider.provide()).thenReturn(suplaClient)
+
+    // when
+    viewModel.loadConfig(remoteId, ItemType.CHANNEL)
+
+    // then
+    assertThat(states).isEmpty()
+    assertThat(events).isEmpty()
+
+    verify(suplaClientProvider).provide()
+    io.mockk.verify {
+      suplaClient.getChannelConfig(remoteId, ChannelConfigType.DEFAULT)
+    }
+
+    verifyNoMoreInteractions(suplaClientProvider)
+    verifyNoInteractions(readGroupTiltingDetailsUseCase)
+  }
+
+  @Test
+  fun `should load config for group and do nothing for unknown`() {
+    // given
+    val remoteId = 123
+    whenever(readGroupTiltingDetailsUseCase.invoke(remoteId)).thenReturn(Single.just(TiltingDetails.Unknown))
+
+    // when
+    viewModel.loadConfig(remoteId, ItemType.GROUP)
+
+    // then
+    assertThat(states).isEmpty()
+    assertThat(events).isEmpty()
+
+    verify(readGroupTiltingDetailsUseCase).invoke(remoteId)
+    verifyNoMoreInteractions(readGroupTiltingDetailsUseCase)
+    verifyNoInteractions(suplaClientProvider)
+  }
+
+  @Test
+  fun `should load config for group and update state for similar`() {
+    // given
+    val remoteId = 123
+    val details = TiltingDetails.Similar(0, 90, SuplaTiltControlType.TILTS_ONLY_WHEN_FULLY_CLOSED)
+    whenever(readGroupTiltingDetailsUseCase.invoke(remoteId)).thenReturn(Single.just(details))
+
+    // when
+    viewModel.loadConfig(remoteId, ItemType.GROUP)
+
+    // then
+    assertThat(states).containsExactly(
+      FacadeBlindsViewModelState(
+        tiltControlType = SuplaTiltControlType.TILTS_ONLY_WHEN_FULLY_CLOSED,
+        windowState = FacadeBlindWindowState(
+          position = WindowGroupedValue.Similar(0f),
+          tilt0Angle = 0f,
+          tilt100Angle = 90f
+        )
+      )
+    )
+    assertThat(events).isEmpty()
+
+    verify(readGroupTiltingDetailsUseCase).invoke(remoteId)
+    verifyNoMoreInteractions(readGroupTiltingDetailsUseCase)
+    verifyNoInteractions(suplaClientProvider)
   }
 
   private fun mockChannel(
@@ -748,7 +825,7 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
 
   private fun mockGroup(remoteId: Int, online: Boolean): ChannelGroupDataEntity {
     val group: ChannelGroupEntity = mockk {
-      every { groupTotalValues } returns listOf(FacadeBlindGroupValue(50, 85), FacadeBlindGroupValue(30, 25))
+      every { groupTotalValues } returns listOf(ShadowingBlindGroupValue(50, 85), ShadowingBlindGroupValue(30, 25))
     }
     return mockk {
       every { id } returns 321L
@@ -780,15 +857,4 @@ class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, 
       tilt100Angle = tilt100Angle,
       type = type
     )
-}
-
-@Suppress("UNCHECKED_CAST")
-fun FacadeBlindsViewModel.setState(state: FacadeBlindsViewModelState) {
-  BaseViewModel::class.memberProperties
-    .find { it.name == "viewState" }
-    ?.let {
-      it.isAccessible = true
-      val viewState = it.getter.call(this) as MutableStateFlow<FacadeBlindsViewModelState>
-      viewState.tryEmit(state)
-    }
 }

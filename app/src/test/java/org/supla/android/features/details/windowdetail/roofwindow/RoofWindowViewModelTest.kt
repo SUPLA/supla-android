@@ -1,3 +1,5 @@
+@file:Suppress("SameParameterValue")
+
 package org.supla.android.features.details.windowdetail.roofwindow
 
 import io.mockk.every
@@ -31,6 +33,7 @@ import org.supla.android.events.LoadingTimeoutManager
 import org.supla.android.features.details.windowdetail.base.BaseWindowViewEvent
 import org.supla.android.features.details.windowdetail.base.data.RoofWindowState
 import org.supla.android.features.details.windowdetail.base.data.WindowGroupedValue
+import org.supla.android.features.details.windowdetail.base.ui.ShadingSystemPositionPresentation
 import org.supla.android.features.details.windowdetail.base.ui.WindowViewState
 import org.supla.android.lib.SuplaConst
 import org.supla.android.tools.SuplaSchedulers
@@ -127,7 +130,7 @@ class RoofWindowViewModelTest :
         viewState = WindowViewState(
           issues = listOf(ChannelIssueItem(IssueIconType.ERROR, R.string.motor_problem)),
           enabled = true,
-          showClosingPercentage = true,
+          positionPresentation = ShadingSystemPositionPresentation.AS_CLOSED,
           positionUnknown = false,
           calibrationPossible = true,
           calibrating = false
@@ -156,7 +159,7 @@ class RoofWindowViewModelTest :
         ),
         viewState = WindowViewState(
           enabled = true,
-          showClosingPercentage = true,
+          positionPresentation = ShadingSystemPositionPresentation.AS_CLOSED,
           positionUnknown = false,
           calibrationPossible = false,
           calibrating = false,

@@ -29,9 +29,14 @@ import org.supla.android.features.details.thermostatdetail.general.ThermostatGen
 import org.supla.android.features.details.thermostatdetail.history.ThermostatHistoryDetailFragment
 import org.supla.android.features.details.thermostatdetail.schedule.ScheduleDetailFragment
 import org.supla.android.features.details.thermostatdetail.timer.TimerDetailFragment
+import org.supla.android.features.details.windowdetail.curtain.CurtainFragment
 import org.supla.android.features.details.windowdetail.facadeblinds.FacadeBlindsFragment
+import org.supla.android.features.details.windowdetail.garagedoor.GarageDoorFragment
+import org.supla.android.features.details.windowdetail.projectorscreen.ProjectorScreenFragment
 import org.supla.android.features.details.windowdetail.rollershutter.RollerShutterFragment
 import org.supla.android.features.details.windowdetail.roofwindow.RoofWindowFragment
+import org.supla.android.features.details.windowdetail.terraceawning.TerraceAwningFragment
+import org.supla.android.features.details.windowdetail.verticalblinds.VerticalBlindsFragment
 import org.supla.android.usecases.details.LegacyDetailType
 
 class StandardDetailPagerAdapter(
@@ -69,6 +74,11 @@ class StandardDetailPagerAdapter(
     DetailPage.ROLLER_SHUTTER -> RollerShutterFragment().apply { arguments = RollerShutterFragment.bundle(itemBundle) }
     DetailPage.ROOF_WINDOW -> RoofWindowFragment().apply { arguments = RoofWindowFragment.bundle(itemBundle) }
     DetailPage.FACADE_BLINDS -> FacadeBlindsFragment().apply { arguments = FacadeBlindsFragment.bundle(itemBundle) }
+    DetailPage.TERRACE_AWNING -> TerraceAwningFragment().apply { arguments = TerraceAwningFragment.bundle(itemBundle) }
+    DetailPage.PROJECTOR_SCREEN -> ProjectorScreenFragment().apply { arguments = ProjectorScreenFragment.bundle(itemBundle) }
+    DetailPage.CURTAIN -> CurtainFragment().apply { arguments = CurtainFragment.bundle(itemBundle) }
+    DetailPage.VERTICAL_BLIND -> VerticalBlindsFragment().apply { arguments = VerticalBlindsFragment.bundle(itemBundle) }
+    DetailPage.GARAGE_DOOR_ROLLER -> GarageDoorFragment().apply { arguments = GarageDoorFragment.bundle(itemBundle) }
   }
 }
 
@@ -94,5 +104,10 @@ enum class DetailPage(val menuId: Int) {
   // Window details
   ROLLER_SHUTTER(R.id.detail_general),
   ROOF_WINDOW(R.id.detail_general),
-  FACADE_BLINDS(R.id.detail_general)
+  FACADE_BLINDS(R.id.detail_general),
+  TERRACE_AWNING(R.id.detail_general),
+  PROJECTOR_SCREEN(R.id.detail_general),
+  CURTAIN(R.id.detail_general),
+  VERTICAL_BLIND(R.id.detail_general),
+  GARAGE_DOOR_ROLLER(R.id.detail_general)
 }

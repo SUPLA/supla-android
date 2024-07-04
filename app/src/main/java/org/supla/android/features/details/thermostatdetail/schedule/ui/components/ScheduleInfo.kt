@@ -73,7 +73,7 @@ fun ScheduleInfo(boxSize: Size, onClose: () -> Unit) {
       .fillMaxSize()
       .background(MaterialTheme.colors.onBackground.copy(alpha = 0.8f))
       .clickable(
-        interactionSource = MutableInteractionSource(),
+        interactionSource = remember { MutableInteractionSource() },
         indication = null,
         onClick = { }
       )

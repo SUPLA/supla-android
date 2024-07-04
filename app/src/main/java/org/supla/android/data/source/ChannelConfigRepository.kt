@@ -26,6 +26,7 @@ import org.supla.android.data.source.remote.ChannelConfigType
 import org.supla.android.data.source.remote.SuplaChannelConfig
 import org.supla.android.data.source.remote.gpm.SuplaChannelGeneralPurposeMeasurementConfig
 import org.supla.android.data.source.remote.gpm.SuplaChannelGeneralPurposeMeterConfig
+import org.supla.android.data.source.remote.rollershutter.SuplaChannelFacadeBlindConfig
 import org.supla.android.di.GSON_FOR_REPO
 import javax.inject.Inject
 import javax.inject.Named
@@ -47,11 +48,15 @@ class ChannelConfigRepository @Inject constructor(
     return channelConfigDao.insertOrUpdate(config.toEntity(profileId, gson))
   }
 
+  fun insertOrUpdate(profileId: Long, config: SuplaChannelFacadeBlindConfig): Completable {
+    return channelConfigDao.insertOrUpdate(config.toEntity(profileId, gson))
+  }
+
   fun delete(profileId: Long, channelId: Int): Completable {
     return channelConfigDao.delete(profileId, channelId)
   }
 
-  fun findGpmConfig(profileId: Long, channelId: Int, type: ChannelConfigType): Single<SuplaChannelConfig> {
+  fun findChannelConfig(profileId: Long, channelId: Int, type: ChannelConfigType): Single<SuplaChannelConfig> {
     return channelConfigDao.read(profileId, channelId, type)
       .map {
         when (type) {
@@ -60,6 +65,9 @@ class ChannelConfigRepository @Inject constructor(
 
           ChannelConfigType.GENERAL_PURPOSE_METER ->
             gson.fromJson(it.config, SuplaChannelGeneralPurposeMeterConfig::class.java)
+
+          ChannelConfigType.FACADE_BLIND ->
+            gson.fromJson(it.config, SuplaChannelFacadeBlindConfig::class.java)
 
           else ->
             gson.fromJson(it.config, SuplaChannelConfig::class.java)
@@ -84,6 +92,16 @@ private fun SuplaChannelGeneralPurposeMeterConfig.toEntity(profileId: Long, gson
     profileId = profileId,
     config = gson.toJson(this),
     configType = ChannelConfigType.GENERAL_PURPOSE_METER,
+    configCrc32 = crc32
+  )
+}
+
+private fun SuplaChannelFacadeBlindConfig.toEntity(profileId: Long, gson: Gson): ChannelConfigEntity {
+  return ChannelConfigEntity(
+    channelId = remoteId,
+    profileId = profileId,
+    config = gson.toJson(this),
+    configType = ChannelConfigType.FACADE_BLIND,
     configCrc32 = crc32
   )
 }

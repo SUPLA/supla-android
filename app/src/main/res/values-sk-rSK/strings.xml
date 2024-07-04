@@ -72,20 +72,7 @@
   <string name="advanced_settings">Pokročilé nastavenia</string>
   <string name="create_account"><u>Vytvoriť účet</u></string>
 
-  <string name="about_app">This program is free software; you can redistribute it and/or\n
- modify it under the terms of the GNU General Public License\n
- as published by the Free Software Foundation; either version 2\n
- of the License, or (at your option) any later version.\n\n
-
- This program is distributed in the hope that it will be useful,\n
- but WITHOUT ANY WARRANTY; without even the implied warranty of\n
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n
- GNU General Public License for more details.\n\n
-
- You should have received a copy of the GNU General Public License\n
- along with this program; if not, write to the Free Software\n
- Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
-   </string>
+  <string name="about_app">This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.\n\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place – Suite 330, Boston, MA  02111–1307, USA</string>
 
   <string name="rate_msg">Viete, že Supla je otvorený a bezplatný projekt, rozvíjaný komunitou? Ak sa Ti táto aplikácia páči, venuj chvíľu jej ohodnoteniu. Ďakujeme za Tvoju podporu!</string>
   <string name="rate_now">Ohodnotiť teraz</string>
@@ -462,7 +449,6 @@
   <string name="add_device_needs_cloud_go">Prejsť na CLOUD</string>
   <string name="associeted_with_at_error">Funkciu kanála spojeného so spúšťačom akcie nemožno zmeniť.</string>
   <string name="location_ordering">Poradie miest</string>
-  <string name="rs_display_mode">Rolety %</string>
   <string name="rs_display_mode_opening">Otvorenia</string>
   <string name="rs_display_mode_closing">Zatvorenia</string>
   <string name="status_accessid_inactive">Prístupový identifikátor nie je aktívny</string>

@@ -29,8 +29,8 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.verifyZeroInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.data.source.ChannelConfigRepository
 import org.supla.android.data.source.GeneralPurposeMeterLogRepository
@@ -76,8 +76,8 @@ class InsertChannelConfigUseCaseTest {
 
     // then
     observer.assertComplete()
-    verifyZeroInteractions(channelConfigRepository, profileRepository)
-    verifyZeroInteractions(generalPurposeMeterLogRepository, downloadEventsManager)
+    verifyNoInteractions(channelConfigRepository, profileRepository)
+    verifyNoInteractions(generalPurposeMeterLogRepository, downloadEventsManager)
   }
 
   @Test
@@ -105,7 +105,7 @@ class InsertChannelConfigUseCaseTest {
     verify(channelConfigRepository).insertOrUpdate(profileId, config)
 
     verifyNoMoreInteractions(profileRepository, channelConfigRepository)
-    verifyZeroInteractions(generalPurposeMeterLogRepository, downloadEventsManager)
+    verifyNoInteractions(generalPurposeMeterLogRepository, downloadEventsManager)
   }
 
   @Test
@@ -124,7 +124,7 @@ class InsertChannelConfigUseCaseTest {
 
     whenever(profileRepository.findActiveProfile()).thenReturn(Single.just(profileEntity))
     whenever(channelConfigRepository.insertOrUpdate(profileId, config)).thenReturn(Completable.complete())
-    whenever(channelConfigRepository.findGpmConfig(profileId, remoteId, ChannelConfigType.GENERAL_PURPOSE_METER))
+    whenever(channelConfigRepository.findChannelConfig(profileId, remoteId, ChannelConfigType.GENERAL_PURPOSE_METER))
       .thenReturn(Single.error(EmptyResultSetException("")))
 
     // when
@@ -133,11 +133,11 @@ class InsertChannelConfigUseCaseTest {
     // then
     observer.assertComplete()
     verify(profileRepository).findActiveProfile()
-    verify(channelConfigRepository).findGpmConfig(profileId, remoteId, ChannelConfigType.GENERAL_PURPOSE_METER)
+    verify(channelConfigRepository).findChannelConfig(profileId, remoteId, ChannelConfigType.GENERAL_PURPOSE_METER)
     verify(channelConfigRepository, times(2)).insertOrUpdate(profileId, config)
 
     verifyNoMoreInteractions(profileRepository, channelConfigRepository)
-    verifyZeroInteractions(generalPurposeMeterLogRepository, downloadEventsManager)
+    verifyNoInteractions(generalPurposeMeterLogRepository, downloadEventsManager)
   }
 
   @Test
@@ -158,7 +158,7 @@ class InsertChannelConfigUseCaseTest {
 
     whenever(profileRepository.findActiveProfile()).thenReturn(Single.just(profileEntity))
     whenever(channelConfigRepository.insertOrUpdate(profileId, config)).thenReturn(Completable.complete())
-    whenever(channelConfigRepository.findGpmConfig(profileId, remoteId, ChannelConfigType.GENERAL_PURPOSE_METER))
+    whenever(channelConfigRepository.findChannelConfig(profileId, remoteId, ChannelConfigType.GENERAL_PURPOSE_METER))
       .thenReturn(Single.just(config))
 
     // when
@@ -167,11 +167,11 @@ class InsertChannelConfigUseCaseTest {
     // then
     observer.assertComplete()
     verify(profileRepository).findActiveProfile()
-    verify(channelConfigRepository).findGpmConfig(profileId, remoteId, ChannelConfigType.GENERAL_PURPOSE_METER)
+    verify(channelConfigRepository).findChannelConfig(profileId, remoteId, ChannelConfigType.GENERAL_PURPOSE_METER)
     verify(channelConfigRepository).insertOrUpdate(profileId, config)
 
     verifyNoMoreInteractions(profileRepository, channelConfigRepository)
-    verifyZeroInteractions(generalPurposeMeterLogRepository, downloadEventsManager)
+    verifyNoInteractions(generalPurposeMeterLogRepository, downloadEventsManager)
   }
 
   @Test
@@ -192,7 +192,7 @@ class InsertChannelConfigUseCaseTest {
 
     whenever(profileRepository.findActiveProfile()).thenReturn(Single.just(profileEntity))
     whenever(channelConfigRepository.insertOrUpdate(profileId, config)).thenReturn(Completable.complete())
-    whenever(channelConfigRepository.findGpmConfig(profileId, remoteId, ChannelConfigType.GENERAL_PURPOSE_METER))
+    whenever(channelConfigRepository.findChannelConfig(profileId, remoteId, ChannelConfigType.GENERAL_PURPOSE_METER))
       .thenReturn(Single.just(config))
     whenever(generalPurposeMeterLogRepository.delete(remoteId, profileId)).thenReturn(Completable.complete())
 
@@ -202,7 +202,7 @@ class InsertChannelConfigUseCaseTest {
     // then
     observer.assertComplete()
     verify(profileRepository).findActiveProfile()
-    verify(channelConfigRepository).findGpmConfig(profileId, remoteId, ChannelConfigType.GENERAL_PURPOSE_METER)
+    verify(channelConfigRepository).findChannelConfig(profileId, remoteId, ChannelConfigType.GENERAL_PURPOSE_METER)
     verify(channelConfigRepository).insertOrUpdate(profileId, config)
     verify(generalPurposeMeterLogRepository).delete(remoteId, profileId)
     verify(downloadEventsManager).emitProgressState(remoteId, DownloadEventsManager.State.Refresh)
@@ -236,7 +236,7 @@ class InsertChannelConfigUseCaseTest {
     verify(channelConfigRepository).delete(profileId, channelRemoteId)
 
     verifyNoMoreInteractions(profileRepository, channelConfigRepository)
-    verifyZeroInteractions(generalPurposeMeterLogRepository, downloadEventsManager)
+    verifyNoInteractions(generalPurposeMeterLogRepository, downloadEventsManager)
   }
 
   @Test
@@ -253,7 +253,7 @@ class InsertChannelConfigUseCaseTest {
 
     // then
     observer.assertComplete()
-    verifyZeroInteractions(profileRepository, channelConfigRepository)
-    verifyZeroInteractions(generalPurposeMeterLogRepository, downloadEventsManager)
+    verifyNoInteractions(profileRepository, channelConfigRepository)
+    verifyNoInteractions(generalPurposeMeterLogRepository, downloadEventsManager)
   }
 }

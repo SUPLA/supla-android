@@ -28,6 +28,7 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CURTAIN
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL
@@ -58,12 +59,16 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROLLERSHUTTE
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROOFWINDOW
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_PRESSURESENSOR
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_PROJECTOR_SCREEN
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_RAINSENSOR
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_ROLLER_GARAGE_DOOR
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_TERRACE_AWNING
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_VERTICAL_BLIND
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_WEIGHTSENSOR
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_WINDSENSOR
 import javax.inject.Inject
@@ -122,6 +127,12 @@ class GetChannelDefaultCaptionUseCase @Inject constructor() {
 
       SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL,
       SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL -> string(R.string.channel_caption_digiglass)
+
+      SUPLA_CHANNELFNC_TERRACE_AWNING -> string(R.string.channel_caption_terrace_awning)
+      SUPLA_CHANNELFNC_PROJECTOR_SCREEN -> string(R.string.channel_caption_projector_screen)
+      SUPLA_CHANNELFNC_CURTAIN -> string(R.string.channel_caption_curtain)
+      SUPLA_CHANNELFNC_VERTICAL_BLIND -> string(R.string.channel_caption_vertical_blinds)
+      SUPLA_CHANNELFNC_ROLLER_GARAGE_DOOR -> string(R.string.channel_caption_roller_garage_door)
 
       else -> string(R.string.channel_not_supported)
     }

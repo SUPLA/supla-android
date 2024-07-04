@@ -29,8 +29,8 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.verifyZeroInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.Preferences
 import org.supla.android.core.BaseViewModelTest
@@ -97,7 +97,7 @@ class SwitchDetailViewModelTest : BaseViewModelTest<SwitchDetailViewState, Switc
 
     verify(readChannelByRemoteIdUseCase).invoke(remoteId)
     verifyNoMoreInteractions(readChannelByRemoteIdUseCase)
-    verifyZeroInteractions(readChannelGroupByRemoteIdUseCase, updateEventsManager)
+    verifyNoInteractions(readChannelGroupByRemoteIdUseCase, updateEventsManager)
   }
 
   @Test
@@ -119,7 +119,7 @@ class SwitchDetailViewModelTest : BaseViewModelTest<SwitchDetailViewState, Switc
 
     verify(readChannelByRemoteIdUseCase).invoke(remoteId)
     verifyNoMoreInteractions(readChannelByRemoteIdUseCase)
-    verifyZeroInteractions(readChannelGroupByRemoteIdUseCase, updateEventsManager)
+    verifyNoInteractions(readChannelGroupByRemoteIdUseCase, updateEventsManager)
   }
 
   @Test
@@ -141,7 +141,7 @@ class SwitchDetailViewModelTest : BaseViewModelTest<SwitchDetailViewState, Switc
 
     verify(readChannelByRemoteIdUseCase).invoke(remoteId)
     verifyNoMoreInteractions(readChannelByRemoteIdUseCase)
-    verifyZeroInteractions(readChannelGroupByRemoteIdUseCase, updateEventsManager)
+    verifyNoInteractions(readChannelGroupByRemoteIdUseCase, updateEventsManager)
   }
 
   @Test
@@ -166,7 +166,7 @@ class SwitchDetailViewModelTest : BaseViewModelTest<SwitchDetailViewState, Switc
 
     verify(readChannelGroupByRemoteIdUseCase).invoke(remoteId)
     verifyNoMoreInteractions(readChannelGroupByRemoteIdUseCase)
-    verifyZeroInteractions(readChannelByRemoteIdUseCase, updateEventsManager)
+    verifyNoInteractions(readChannelByRemoteIdUseCase, updateEventsManager)
   }
 
   @Test
@@ -193,7 +193,7 @@ class SwitchDetailViewModelTest : BaseViewModelTest<SwitchDetailViewState, Switc
     verify(readChannelByRemoteIdUseCase).invoke(remoteId)
     verify(updateEventsManager).observeChannelsUpdate()
     verifyNoMoreInteractions(readChannelByRemoteIdUseCase, updateEventsManager)
-    verifyZeroInteractions(readChannelGroupByRemoteIdUseCase)
+    verifyNoInteractions(readChannelGroupByRemoteIdUseCase)
   }
 
   @Test
@@ -220,6 +220,6 @@ class SwitchDetailViewModelTest : BaseViewModelTest<SwitchDetailViewState, Switc
     verify(readChannelGroupByRemoteIdUseCase).invoke(remoteId)
     verify(updateEventsManager).observeGroupsUpdate()
     verifyNoMoreInteractions(readChannelGroupByRemoteIdUseCase, updateEventsManager)
-    verifyZeroInteractions(readChannelByRemoteIdUseCase)
+    verifyNoInteractions(readChannelByRemoteIdUseCase)
   }
 }

@@ -40,6 +40,8 @@ import org.supla.android.data.source.remote.gpm.SuplaChannelConfigMeterChartType
 import org.supla.android.data.source.remote.gpm.SuplaChannelConfigMeterCounterType
 import org.supla.android.data.source.remote.gpm.SuplaChannelGeneralPurposeMeasurementConfig
 import org.supla.android.data.source.remote.gpm.SuplaChannelGeneralPurposeMeterConfig
+import org.supla.android.data.source.remote.rollershutter.SuplaChannelFacadeBlindConfig
+import org.supla.android.data.source.remote.rollershutter.SuplaTiltControlType
 import org.supla.android.lib.SuplaConst
 
 @RunWith(MockitoJUnitRunner::class)
@@ -190,6 +192,55 @@ class ChannelConfigRepositoryTest {
   }
 
   @Test
+  fun `should insert facade blind config to database`() {
+    // given
+    val profileId = 324L
+    val config = SuplaChannelFacadeBlindConfig(
+      remoteId = 123,
+      func = SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND,
+      crc32 = 1L,
+      closingTimeMs = 100,
+      openingTimeMs = 200,
+      tiltingTimeMs = 30,
+      motorUpsideDown = true,
+      buttonsUpsideDown = false,
+      timeMargin = 14,
+      tilt0Angle = 50,
+      tilt100Angle = 60,
+      type = SuplaTiltControlType.CHANGES_POSITION_WHILE_TILTING
+    )
+
+    // when
+    repository.insertOrUpdate(profileId, config)
+
+    // then
+    val captor = argumentCaptor<ChannelConfigEntity>()
+    verify(channelConfigDao).insertOrUpdate(captor.capture())
+
+    val entity = captor.firstValue
+    assertThat(entity.channelId).isEqualTo(123)
+    assertThat(entity.profileId).isEqualTo(profileId)
+    assertThat(entity.configType).isEqualTo(ChannelConfigType.FACADE_BLIND)
+    assertThat(entity.config).isEqualTo(
+      "{" +
+        "\"remoteId\":123," +
+        "\"func\":900," +
+        "\"crc32\":1," +
+        "\"closingTimeMs\":100," +
+        "\"openingTimeMs\":200," +
+        "\"tiltingTimeMs\":30," +
+        "\"motorUpsideDown\":true," +
+        "\"buttonsUpsideDown\":false," +
+        "\"timeMargin\":14," +
+        "\"tilt0Angle\":50," +
+        "\"tilt100Angle\":60," +
+        "\"type\":\"CHANGES_POSITION_WHILE_TILTING\"" +
+        "}"
+    )
+    assertThat(gson.fromJson(entity.config, SuplaChannelFacadeBlindConfig::class.java)).isEqualTo(config)
+  }
+
+  @Test
   fun `should load measurement config from database`() {
     // given
     val channelId = 222
@@ -225,7 +276,7 @@ class ChannelConfigRepositoryTest {
     whenever(channelConfigDao.read(profileId, channelId, type)).thenReturn(Single.just(entity))
 
     // when
-    val testObserver = repository.findGpmConfig(profileId, channelId, type).test()
+    val testObserver = repository.findChannelConfig(profileId, channelId, type).test()
 
     // then
     testObserver.assertComplete()
@@ -295,7 +346,7 @@ class ChannelConfigRepositoryTest {
     whenever(channelConfigDao.read(profileId, channelId, type)).thenReturn(Single.just(entity))
 
     // when
-    val testObserver = repository.findGpmConfig(profileId, channelId, type).test()
+    val testObserver = repository.findChannelConfig(profileId, channelId, type).test()
 
     // then
     testObserver.assertComplete()
@@ -325,6 +376,59 @@ class ChannelConfigRepositoryTest {
         chartType = SuplaChannelConfigMeterChartType.BAR,
         includeValueAddedInHistory = false,
         fillMissingData = true
+      )
+    )
+  }
+
+  @Test
+  fun `should load facade blind config from database`() {
+    // given
+    val channelId = 222
+    val profileId = 333L
+    val type = ChannelConfigType.FACADE_BLIND
+    val config = "{" +
+      "\"remoteId\":$channelId," +
+      "\"func\":900," +
+      "\"crc32\":1," +
+      "\"closingTimeMs\":100," +
+      "\"openingTimeMs\":200," +
+      "\"tiltingTimeMs\":30," +
+      "\"motorUpsideDown\":true," +
+      "\"buttonsUpsideDown\":false," +
+      "\"timeMargin\":14," +
+      "\"tilt0Angle\":50," +
+      "\"tilt100Angle\":60," +
+      "\"type\":\"TILTS_ONLY_WHEN_FULLY_CLOSED\"" +
+      "}"
+    val entity: ChannelConfigEntity = mockk<ChannelConfigEntity>().apply {
+      every { this@apply.channelId } returns channelId
+      every { this@apply.profileId } returns profileId
+      every { this@apply.configType } returns type
+      every { this@apply.config } returns config
+    }
+
+    whenever(channelConfigDao.read(profileId, channelId, type)).thenReturn(Single.just(entity))
+
+    // when
+    val testObserver = repository.findChannelConfig(profileId, channelId, type).test()
+
+    // then
+    testObserver.assertComplete()
+    val channelConfig = testObserver.values().first()
+    assertThat(channelConfig).isEqualTo(
+      SuplaChannelFacadeBlindConfig(
+        remoteId = channelId,
+        func = SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND,
+        crc32 = 1,
+        closingTimeMs = 100,
+        openingTimeMs = 200,
+        tiltingTimeMs = 30,
+        motorUpsideDown = true,
+        buttonsUpsideDown = false,
+        timeMargin = 14,
+        tilt0Angle = 50,
+        tilt100Angle = 60,
+        type = SuplaTiltControlType.TILTS_ONLY_WHEN_FULLY_CLOSED
       )
     )
   }

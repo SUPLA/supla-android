@@ -23,6 +23,7 @@
   <string name="create_url">https://cloud.supla.org/register?lang=pl</string>
   <string name="delete_url">https://{SERVER_ADDRESS}/db99845855b2ecbfecca9a095062b96c3e27703f?lang=pl</string>
   <string name="forumpage_url">https://forum.supla.org</string>
+  <string name="devices_list_url">https://www.supla.org/pl/devices</string>
 
   <string name="version">wersja</string>
 
@@ -105,20 +106,20 @@
   <string name="profile_plural" translatable="false">Twoje konta</string>
   <string name="menubar_appsettings" translatable="false">Ustawienia aplikacji</string>
 
-  <string name="about_app">Ten program jest wolnym oprogramowaniem; możesz go rozprowadzać dalej i / lub\n
-  modyfikować zgodnie z warunkami licencji GNU General Public License\n
-  opublikowanej przez Free Software Foundation w wersji 2\n
-  Licencji lub (według Twojego wyboru) dowolnej późniejszej wersji.\n\n
+  <string name="about_app">Ten program jest wolnym oprogramowaniem; możesz go rozprowadzać dalej i / lub
+    modyfikować zgodnie z warunkami licencji GNU General Public License
+    opublikowanej przez Free Software Foundation w wersji 2
+    Licencji lub (według Twojego wyboru) dowolnej późniejszej wersji.\n\n
 
-  Ten program jest rozpowszechniany w nadziei, że będzie użyteczny,\n
-  ale BEZ JAKIEJKOLWIEK GWARANCJI; nawet bez gwarancji\n
-  Handlowej lub przydatności do KONKRETNEGO CELU. Przeczytaj\n
-  General Public Licence aby zapoznać się ze szczegółami.\n\n
+    Ten program jest rozpowszechniany w nadziei, że będzie użyteczny,
+    ale BEZ JAKIEJKOLWIEK GWARANCJI; nawet bez gwarancji
+    Handlowej lub przydatności do KONKRETNEGO CELU. Przeczytaj
+    General Public Licence aby zapoznać się ze szczegółami.\n\n
 
-  Powinieneś otrzymać kopię GNU General Public License\n
-  wraz z tym programem; jeśli nie, napisz do Free Software\n
-  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
-    </string>
+    Powinieneś otrzymać kopię GNU General Public License
+    wraz z tym programem; jeśli nie, napisz do Free Software
+    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
+  </string>
 
   <string name="rate_msg">Czy wiesz, że Supla to otwarty i bezpłatny projekt rozwijany przez społeczność? Jeśli podoba Ci się ta aplikacja to poświęć moment aby ją ocenić. Dziękujemy za Twoje wsparcie!</string>
   <string name="rate_now">Oceń teraz</string>
@@ -492,7 +493,7 @@
   <string name="associeted_with_push_error" translatable="false">Nie można zmienić funkcji kanału powiązanego z powiadomieniami PUSH.</string>
   <string name="associeted_with_vbt_error" translatable="false">Nie można zmienić funkcji kanału powiązanego z reakcjami.</string>
   <string name="location_ordering" translatable="false">Kolejność lokalizacji</string>
-  <string name="rs_display_mode" translatable="false">Rolety %</string>
+  <string name="rs_display_mode" translatable="false">Rolety, żaluzje, zasłony %</string>
   <string name="rs_display_mode_opening" translatable="false">Otwarcia</string>
   <string name="rs_display_mode_closing" translatable="false">Zamknięcia</string>
   <string name="status_accessid_inactive">Identyfikator dostępu nieaktywny</string>
@@ -650,6 +651,41 @@
   <string name="facade_blinds_no_tilt">Brak konfiguracji</string>
   <string name="toolbar_delete_chart_history">Usuń historię i pobierz ponownie</string>
   <string name="history_wait_for_download_completed">Proszę czekać, pobieram…</string>
+  <string name="channel_caption_terrace_awning">Markiza tarasowa</string>
+  <string name="channel_caption_projector_screen">Ekran projekcyjny</string>
+  <string name="channel_caption_curtain">Zasłona</string>
+  <string name="channel_caption_vertical_blinds">Żaluzja pionowa</string>
+  <string name="channel_caption_roller_garage_door">Brama garażowa</string>
+  <string name="shading_system_extension">Rozwinięcie:</string>
+  <string name="status_initializing">Uruchamianie…</string>
+  <string name="status_try_again">Spróbuj ponownie</string>
+  <string name="lock_screen_hello">Witaj ponownie!</string>
+  <string name="lock_screen_enter_pin">Wprowadź PIN</string>
+  <string name="pin_setup_header">Zdefiniuj swój kod PIN</string>
+  <string name="cfg_lock_screen">Ekran blokady</string>
+  <string name="cfg_lock_screen_app">Aplikacja</string>
+  <string name="cfg_lock_screen_accounts">Konta</string>
+  <string name="cfg_lock_screen_none">Brak</string>
+  <string name="pin_setup_title">Konfiguracja PIN</string>
+  <string name="pin_setup_repeat">Powtórz PIN</string>
+  <string name="pin_setup_entry_different">Wprowadzone kody różnią się!</string>
+  <string name="pin_setup_failed">Ustawienie kodu PIN nie powiodło się ze względu na wewnętrzny problem.</string>
+  <string name="lock_screen_wrong_pin">Wprowadzono nieprawidłowy kod PIN!</string>
+  <string name="lock_screen_remove_pin">Usuwanie kodu PIN</string>
+  <string name="lock_screen_forgotten_code">Nie pamiętam kodu dostępu</string>
+  <string name="lock_screen_forgotten_code_title">Kod dostępu</string>
+  <string name="lock_screen_forgotten_code_message">Jeśli nie pamiętasz kodu dostępu, odinstaluj aplikację z telefonu, a następnie zainstaluj ją ponownie. Po ponownej instalacji, dodaj konfigurację konta z Supla Cloud.\n\nNie zakładaj nowego konta. Dane historyczne i wszystkie urządzenia nie zostaną stracone.</string>
+  <string name="lock_screen_forgotten_code_button">Rozumiem</string>
+  <string name="lock_screen_confirm_authorize_app">Zmiana zakresu autoryzacji</string>
+  <string name="pin_setup_use_biometric">Uwierzytelnianie biometryczne: </string>
+  <string name="pin_setup_biometric_not_enrolled">Uwierzytalnienie biometryczne nie zostało skonfigurowane. Jeżeli chcesz skorzystać z biometrii skonfiguruj ją najpierw w ustawieniach systemowych.</string>
+  <string name="biometric_prompt_subtitle">Odblokuj odciskiem palca</string>
+  <string name="lock_screen_biometric_error">Biometria niemożliwa z powodu: %1$s</string>
+  <string name="lock_screen_pin_locked">Zbyt wiele błędnych prób. Pin został zablokowany na %1$s.</string>
+  <string name="status_disconnecting">Rozłączanie…</string>
+  <string name="status_awaiting_network">Oczekiwanie na sieć…</string>
+  <string name="about_build_time">Wersja z dnia:</string>
+  <string name="device_catalog_error">Nie udało się załadować katalogu urządzeń. Spróbuj ponownie później.</string>
 
   <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
     <item quantity="one">włączone</item>

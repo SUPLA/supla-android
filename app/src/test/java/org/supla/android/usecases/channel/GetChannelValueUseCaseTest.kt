@@ -26,8 +26,8 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.verifyZeroInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.lib.SuplaConst
@@ -111,6 +111,6 @@ class GetChannelValueUseCaseTest {
     verify(humidityAndTemperatureValueProvider).handle(function)
     verify(humidityAndTemperatureValueProvider).value(channel, ValueType.FIRST)
     verifyNoMoreInteractions(depthSensorValueProvider, gpmValueProvider, humidityAndTemperatureValueProvider)
-    verifyZeroInteractions(thermometerValueProvider)
+    verifyNoInteractions(thermometerValueProvider)
   }
 }

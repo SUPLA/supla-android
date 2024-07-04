@@ -39,6 +39,8 @@ abstract class WebContentViewModel<S : WebContentViewState, E : ViewEvent>(
   open fun allowRequest(request: WebResourceRequest?): Boolean {
     return true
   }
+
+  open fun handleError(requestUrl: String, statusCode: Int) {}
 }
 
 open class WebContentViewState(open val loading: Boolean = true) : ViewState()

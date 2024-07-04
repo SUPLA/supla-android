@@ -1,5 +1,23 @@
 package org.supla.android.features.details.legacydetail
+/*
+Copyright (C) AC SOFTWARE SP. Z O.O.
 
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+*/
+
+import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
@@ -47,17 +65,25 @@ class LegacyDetailFragment : BaseFragment<LegacyDetailViewState, LegacyDetailVie
 
   private lateinit var detailView: DetailLayout
 
-  override fun onResume() {
-    super.onResume()
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
     viewModel.loadData(remoteId, itemType)
   }
 
-  override fun onDestroyView() {
+  override fun onResume() {
+    super.onResume()
+
+    if (this::detailView.isInitialized) {
+      detailView.onDetailShow()
+    }
+  }
+
+  override fun onPause() {
+    super.onPause()
+
     if (this::detailView.isInitialized) {
       detailView.onDetailHide()
     }
-
-    super.onDestroyView()
   }
 
   override fun handleEvents(event: LegacyDetailViewEvent) {

@@ -28,7 +28,6 @@ import org.supla.android.db.Channel
 import org.supla.android.db.ChannelExtendedValue
 import org.supla.android.db.ChannelValue
 import org.supla.android.lib.SuplaChannelExtendedValue
-import org.supla.android.usecases.channel.ValueStateWrapper
 
 data class ChannelDataEntity(
   @Embedded(prefix = "channel_") val channelEntity: ChannelEntity,
@@ -69,9 +68,6 @@ data class ChannelDataEntity(
     } else {
       0
     }
-
-  override fun toStateWrapper(): ValueStateWrapper =
-    channelValueEntity.toStateWrapper()
 
   @Deprecated("Please use channelDataEntity if possible")
   fun getLegacyChannel(): Channel = Channel().also { channel ->

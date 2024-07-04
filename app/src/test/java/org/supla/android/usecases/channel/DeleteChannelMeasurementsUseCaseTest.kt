@@ -27,8 +27,8 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.verifyZeroInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.data.source.GeneralPurposeMeasurementLogRepository
 import org.supla.android.data.source.GeneralPurposeMeterLogRepository
@@ -89,7 +89,7 @@ class DeleteChannelMeasurementsUseCaseTest {
     verify(channelRepository).findByRemoteId(remoteId)
     verify(temperatureLogRepository).delete(remoteId, profileId)
     verifyNoMoreInteractions(channelRepository, temperatureLogRepository)
-    verifyZeroInteractions(
+    verifyNoInteractions(
       readChannelWithChildrenUseCase,
       temperatureAndHumidityLogUseCase,
       generalPurposeMeterLogRepository,
@@ -120,7 +120,7 @@ class DeleteChannelMeasurementsUseCaseTest {
     verify(channelRepository).findByRemoteId(remoteId)
     verify(temperatureAndHumidityLogUseCase).delete(remoteId, profileId)
     verifyNoMoreInteractions(channelRepository, temperatureAndHumidityLogUseCase)
-    verifyZeroInteractions(
+    verifyNoInteractions(
       readChannelWithChildrenUseCase,
       temperatureLogRepository,
       generalPurposeMeterLogRepository,
@@ -151,7 +151,7 @@ class DeleteChannelMeasurementsUseCaseTest {
     verify(channelRepository).findByRemoteId(remoteId)
     verify(generalPurposeMeasurementLogRepository).delete(remoteId, profileId)
     verifyNoMoreInteractions(channelRepository, generalPurposeMeasurementLogRepository)
-    verifyZeroInteractions(
+    verifyNoInteractions(
       readChannelWithChildrenUseCase,
       temperatureLogRepository,
       generalPurposeMeterLogRepository,
@@ -182,7 +182,7 @@ class DeleteChannelMeasurementsUseCaseTest {
     verify(channelRepository).findByRemoteId(remoteId)
     verify(generalPurposeMeterLogRepository).delete(remoteId, profileId)
     verifyNoMoreInteractions(channelRepository, generalPurposeMeterLogRepository)
-    verifyZeroInteractions(
+    verifyNoInteractions(
       readChannelWithChildrenUseCase,
       temperatureLogRepository,
       generalPurposeMeasurementLogRepository,
@@ -232,7 +232,7 @@ class DeleteChannelMeasurementsUseCaseTest {
     verify(temperatureLogRepository).delete(111, profileId)
     verify(temperatureAndHumidityLogUseCase).delete(222, profileId)
     verifyNoMoreInteractions(channelRepository, readChannelWithChildrenUseCase, temperatureLogRepository, temperatureAndHumidityLogUseCase)
-    verifyZeroInteractions(
+    verifyNoInteractions(
       generalPurposeMeasurementLogRepository,
       generalPurposeMeterLogRepository
     )

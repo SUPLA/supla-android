@@ -36,8 +36,8 @@ import org.supla.android.ui.views.buttons.OutlinedButton
 fun AlertDialog(
   title: String,
   message: String,
-  negativeButtonTitle: String = stringResource(id = R.string.cancel),
-  positiveButtonTitle: String = stringResource(id = R.string.save),
+  negativeButtonTitle: String? = stringResource(id = R.string.cancel),
+  positiveButtonTitle: String? = stringResource(id = R.string.save),
   onDismiss: () -> Unit = {},
   onNegativeClick: () -> Unit = {},
   onPositiveClick: () -> Unit = {}
@@ -48,16 +48,20 @@ fun AlertDialog(
     DialogMessage(message = message)
     Separator(style = SeparatorStyle.LIGHT)
     DialogButtonsRow {
-      OutlinedButton(
-        onClick = onNegativeClick,
-        text = negativeButtonTitle,
-        modifier = Modifier.weight(1f)
-      )
-      Button(
-        onClick = onPositiveClick,
-        text = positiveButtonTitle,
-        modifier = Modifier.weight(1f)
-      )
+      negativeButtonTitle?.let {
+        OutlinedButton(
+          onClick = onNegativeClick,
+          text = it,
+          modifier = Modifier.weight(1f)
+        )
+      }
+      positiveButtonTitle?.let {
+        Button(
+          onClick = onPositiveClick,
+          text = it,
+          modifier = Modifier.weight(1f)
+        )
+      }
     }
   }
 }

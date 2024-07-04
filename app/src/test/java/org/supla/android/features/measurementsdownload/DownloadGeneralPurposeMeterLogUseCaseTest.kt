@@ -105,7 +105,7 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
       .thenReturn(Maybe.empty())
     whenever(generalPurposeMeterLogRepository.delete(remoteId, profileId)).thenReturn(Completable.complete())
     whenever(generalPurposeMeterLogRepository.findCount(remoteId, profileId)).thenReturn(Maybe.just(50))
-    whenever(channelConfigRepository.findGpmConfig(profileId, remoteId, ChannelConfigType.GENERAL_PURPOSE_METER))
+    whenever(channelConfigRepository.findChannelConfig(profileId, remoteId, ChannelConfigType.GENERAL_PURPOSE_METER))
       .thenReturn(Single.just(mockk<SuplaChannelGeneralPurposeMeterConfig>()))
 
     // when
@@ -650,7 +650,7 @@ class DownloadGeneralPurposeMeterLogUseCaseTest {
       every { this@mockk.counterType } returns counterType
       every { fillMissingData } returns fillData
     }
-    whenever(channelConfigRepository.findGpmConfig(profileId, remoteId, ChannelConfigType.GENERAL_PURPOSE_METER))
+    whenever(channelConfigRepository.findChannelConfig(profileId, remoteId, ChannelConfigType.GENERAL_PURPOSE_METER))
       .thenReturn(Single.just(config))
   }
 }

@@ -39,6 +39,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.rememberDatePickerState
@@ -73,6 +74,7 @@ import org.supla.android.ui.views.buttons.OutlinedButton
 import org.supla.android.ui.views.buttons.TextButton
 import org.supla.android.ui.views.slider.ThermostatThumb
 import org.supla.android.ui.views.thermostat.TemperatureControlButton
+import java.util.Date
 
 @Composable
 fun ThermostatTimerConfiguration(state: TimerDetailViewState, viewProxy: TimerDetailViewProxy) {
@@ -255,14 +257,18 @@ fun TimerSelectorCalendar(state: TimerDetailViewState, viewProxy: TimerDetailVie
   @Suppress("DEPRECATION")
   val pickerState = rememberDatePickerState(
     yearRange = state.yearsRange,
-    initialSelectedDateMillis = state.calendarValue?.time?.minus(state.calendarValue.timezoneOffset.times(60000))
+    initialSelectedDateMillis = state.calendarValue?.time?.minus(state.calendarValue.timezoneOffset.times(60000)),
+    selectableDates = object : SelectableDates {
+      override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+        return state.dateValidator(Date(utcTimeMillis))
+      }
+    }
   )
 
   DatePicker(
     state = pickerState,
     headline = null,
     showModeToggle = false,
-    dateValidator = state.dateValidator,
     // As we do not have any on click events, it's workaround to get it
     modifier = Modifier.pointerInput(Unit) {
       awaitEachGesture {

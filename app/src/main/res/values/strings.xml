@@ -24,7 +24,7 @@
   <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=L4N7RSWME6LG2</string>
   <string name="create_url">https://cloud.supla.org/register?lang=en</string>
   <string name="delete_url">https://{SERVER_ADDRESS}/db99845855b2ecbfecca9a095062b96c3e27703f?lang=en</string>
-  <string name="devices_list_url" translatable="false">https://www.supla.org/pl/</string>
+  <string name="devices_list_url" translatable="false">https://www.supla.org/en/devices</string>
 
   <string name="version">version</string>
 
@@ -35,7 +35,7 @@
   <string name="help">Help</string>
   <string name="menu_notifications" translatable="false">Notifications log</string>
 
-  <string name="status_connecting">Connecting...</string>
+  <string name="status_connecting">Connecting…</string>
   <string name="status_unknown_err">Unknown error</string>
   <string name="status_temporarily_unavailable">Service temporarily unavailable</string>
   <string name="status_bad_credentials">Bad credentials</string>
@@ -124,7 +124,7 @@
   <string name="profile_plural">Your accounts</string>
   <string name="menubar_appsettings">App Settings</string>
 
-  <string name="about_app">This program is free software; you can redistribute it and/or   modify it under the terms of the GNU General Public License   as published by the Free Software Foundation; either version 2   of the License, or (at your option) any later version.     This program is distributed in the hope that it will be useful,   but WITHOUT ANY WARRANTY; without even the implied warranty of   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the   GNU General Public License for more details.     You should have received a copy of the GNU General Public License   along with this program; if not, write to the Free Software   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA</string>
+  <string name="about_app">This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.\n\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place – Suite 330, Boston, MA  02111–1307, USA</string>
 
   <string name="rate_msg">Did you know that Supla is an open, free project developed by the community? If you like the app, spend a moment on rating it. Thank you for your support!</string>
   <string name="rate_now">Rate Now</string>
@@ -505,7 +505,7 @@
   <string name="associeted_with_push_error" translatable="false">The function of the channel associated with the push notification cannot be changed.</string>
   <string name="associeted_with_vbt_error" translatable="false">The channel function associated with reactions cannot be changed.</string>
   <string name="location_ordering">Location order</string>
-  <string name="rs_display_mode">Roller shutter %</string>
+  <string name="rs_display_mode" translatable="false">Roller shutter, facade blind, curtain %</string>
   <string name="rs_display_mode_opening">Opening</string>
   <string name="rs_display_mode_closing">Closing</string>
   <string name="status_accessid_inactive">Access Identifier inactive</string>
@@ -674,6 +674,41 @@
   <string name="facade_blinds_no_tilt" translatable="false">Missing configuration</string>
   <string name="toolbar_delete_chart_history" translatable="false">Delete history and download again</string>
   <string name="history_wait_for_download_completed" translatable="false">Please wait, downloading…</string>
+  <string name="channel_caption_terrace_awning" translatable="false">Terrace awning</string>
+  <string name="channel_caption_projector_screen" translatable="false">Projector screen</string>
+  <string name="channel_caption_curtain" translatable="false">Curtain</string>
+  <string name="channel_caption_vertical_blinds" translatable="false">Vertical blinds</string>
+  <string name="channel_caption_roller_garage_door" translatable="false">Garage door</string>
+  <string name="shading_system_extension" translatable="false">Extension:</string>
+  <string name="status_initializing" translatable="false">Starting…</string>
+  <string name="status_try_again" translatable="false">Try again</string>
+  <string name="lock_screen_hello" translatable="false">Welcome back!</string>
+  <string name="lock_screen_enter_pin" translatable="false">Enter PIN</string>
+  <string name="pin_setup_header" translatable="false">Define your PIN code</string>
+  <string name="cfg_lock_screen" translatable="false">Lock screen</string>
+  <string name="cfg_lock_screen_app" translatable="false">App</string>
+  <string name="cfg_lock_screen_accounts" translatable="false">Accounts</string>
+  <string name="cfg_lock_screen_none" translatable="false">None</string>
+  <string name="pin_setup_title" translatable="false">Configure PIN</string>
+  <string name="pin_setup_repeat" translatable="false">Repeat the PIN</string>
+  <string name="pin_setup_entry_different" translatable="false">PIN\'s are not equal!</string>
+  <string name="pin_setup_failed" translatable="false">Pin setup not possible because of internal error.</string>
+  <string name="lock_screen_wrong_pin" translatable="false">Entered PIN is wrong!</string>
+  <string name="lock_screen_remove_pin" translatable="false">PIN removal</string>
+  <string name="lock_screen_forgotten_code" translatable="false">I don\'t remember my PIN code</string>
+  <string name="lock_screen_forgotten_code_title" translatable="false">Access code</string>
+  <string name="lock_screen_forgotten_code_message" translatable="false">If you don\'t remember the code, uninstall app and install it again. After that configure your Supla Cloud account again.\n\nDon\'t create new account. All your data and devices will stay registered in your Supla Cloud account.</string>
+  <string name="lock_screen_forgotten_code_button" translatable="false">OK</string>
+  <string name="lock_screen_confirm_authorize_app" translatable="false">Authorization scope change</string>
+  <string name="pin_setup_use_biometric" translatable="false">Biometric Authentication: </string>
+  <string name="pin_setup_biometric_not_enrolled" translatable="false">Biometric not available. If you want to use biometric go to settings and enrol your biometrics.</string>
+  <string name="biometric_prompt_subtitle" translatable="false">Unlock using your fingerprint</string>
+  <string name="lock_screen_biometric_error" translatable="false">Biometrics disabled because of: %1$s</string>
+  <string name="lock_screen_pin_locked" translatable="false">To many failures. PIN entry locked for %1$s.</string>
+  <string name="status_disconnecting" translatable="false">Disconnecting…</string>
+  <string name="status_awaiting_network" translatable="false">Awaiting network…</string>
+  <string name="about_build_time" translatable="false">Version of the day: </string>
+  <string name="device_catalog_error" translatable="false">Could not load device catalog. Please try again later.</string>
 
   <plurals name="details_timer_info_on" translatable="false">
     <item quantity="other">on</item>

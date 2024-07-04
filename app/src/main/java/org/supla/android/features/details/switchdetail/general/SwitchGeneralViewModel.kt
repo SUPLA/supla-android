@@ -53,7 +53,7 @@ class SwitchGeneralViewModel @Inject constructor(
           updateState {
             it.copy(
               channelDataBase = channel,
-              isOn = getChannelStateUseCase(channel.function, channel.toStateWrapper()).isActive(),
+              isOn = getChannelStateUseCase(channel).isActive(),
               timerEndDate = getEstimatedCountDownEndTime(channel)
             )
           }

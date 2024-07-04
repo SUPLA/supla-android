@@ -10,8 +10,8 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.verifyZeroInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.core.infrastructure.UriProxy
 import org.supla.android.data.source.RoomProfileRepository
@@ -48,7 +48,7 @@ class LoadActiveProfileUrlUseCaseTest {
 
     verify(profileRepository).findActiveProfile()
     verifyNoMoreInteractions(profileRepository)
-    verifyZeroInteractions(uriProxy)
+    verifyNoInteractions(uriProxy)
   }
 
   @Test
@@ -94,7 +94,7 @@ class LoadActiveProfileUrlUseCaseTest {
 
     verify(profileRepository).findActiveProfile()
     verifyNoMoreInteractions(profileRepository)
-    verifyZeroInteractions(uriProxy)
+    verifyNoInteractions(uriProxy)
   }
 
   @Test

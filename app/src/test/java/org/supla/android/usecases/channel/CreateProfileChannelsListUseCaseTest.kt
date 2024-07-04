@@ -24,6 +24,7 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASURE
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HUMIDITY
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_PROJECTOR_SCREEN
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.ui.lists.data.IssueIconType
 import org.supla.android.usecases.icon.GetChannelIconUseCase
@@ -61,8 +62,9 @@ class CreateProfileChannelsListUseCaseTest {
     val third = mockListEntity(31, 32, locationCollapsed = true)
     val fourth = mockListEntity(41, 42, channelFunction = SUPLA_CHANNELFNC_DEPTHSENSOR)
     val fifth = mockListEntity(51, 42, channelFunction = SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER)
+    val sixth = mockListEntity(61, 42, channelFunction = SUPLA_CHANNELFNC_PROJECTOR_SCREEN)
 
-    whenever(channelRepository.findList()).thenReturn(Single.just(listOf(first, second, third, fourth, fifth)))
+    whenever(channelRepository.findList()).thenReturn(Single.just(listOf(first, second, third, fourth, fifth, sixth)))
     whenever(channelRelationRepository.findChildrenToParentsRelations()).thenReturn(Single.just(emptyMap()))
 
     // when
@@ -73,19 +75,21 @@ class CreateProfileChannelsListUseCaseTest {
     val context: Context = mockk()
     val list = testObserver.values()[0]
 
-    assertThat(list).hasSize(7)
+    assertThat(list).hasSize(8)
     assertThat(list[0]).isInstanceOf(ListItem.LocationItem::class.java)
     assertThat(list[1]).isInstanceOf(ListItem.ChannelItem::class.java)
     assertThat(list[2]).isInstanceOf(ListItem.HvacThermostatItem::class.java)
     assertThat(list[3]).isInstanceOf(ListItem.LocationItem::class.java)
     assertThat(list[4]).isInstanceOf(ListItem.LocationItem::class.java)
     assertThat(list[5]).isInstanceOf(ListItem.MeasurementItem::class.java)
-    assertThat(list[6]).isInstanceOf(ListItem.RollerShutterItem::class.java)
+    assertThat(list[6]).isInstanceOf(ListItem.IconWithButtonsItem::class.java)
+    assertThat(list[7]).isInstanceOf(ListItem.IconWithButtonsItem::class.java)
 
     assertThat((list[1] as ListItem.ChannelItem).channelBase.remoteId).isEqualTo(11)
     assertThat((list[2] as ListItem.HvacThermostatItem).captionProvider(context)).isEqualTo("caption 21")
     assertThat((list[5] as ListItem.MeasurementItem).captionProvider(context)).isEqualTo("caption 41")
-    assertThat((list[6] as ListItem.RollerShutterItem).captionProvider(context)).isEqualTo("caption 51")
+    assertThat((list[6] as ListItem.IconWithButtonsItem).captionProvider(context)).isEqualTo("caption 51")
+    assertThat((list[7] as ListItem.IconWithButtonsItem).captionProvider(context)).isEqualTo("caption 61")
 
     assertThat((list[0] as ListItem.LocationItem).location.caption).isEqualTo("12")
     assertThat((list[3] as ListItem.LocationItem).location.caption).isEqualTo("32")
@@ -167,6 +171,7 @@ class CreateProfileChannelsListUseCaseTest {
     channelFunction: Int = SUPLA_CHANNELFNC_HUMIDITY
   ): ChannelDataEntity = mockk {
     every { remoteId } returns channelRemoteId
+    every { function } returns channelFunction
     every { locationEntity } returns mockk {
       every { remoteId } returns locationRemoteId
       every { caption } returns locationName
@@ -189,7 +194,9 @@ class CreateProfileChannelsListUseCaseTest {
           every { getIssueMessage() } returns 456
         }
       }
-      if (channelFunction == SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER) {
+      val isRollerShutter = channelFunction == SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
+      val isProjectorScreen = channelFunction == SUPLA_CHANNELFNC_PROJECTOR_SCREEN
+      if (isRollerShutter || isProjectorScreen) {
         every { asRollerShutterValue() } returns mockk {
           every { getIssueIconType() } returns null
           every { getIssueMessage() } returns null

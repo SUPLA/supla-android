@@ -39,9 +39,9 @@ class Migration26to27 @Inject constructor(
   private val preferences: Preferences
 ) : Migration(26, 27), SqlExecutor {
 
-  override fun migrate(database: SupportSQLiteDatabase) {
-    migrateUserProfiles(database)
-    migrateScenesDates(database)
+  override fun migrate(db: SupportSQLiteDatabase) {
+    migrateUserProfiles(db)
+    migrateScenesDates(db)
   }
 
   private fun migrateUserProfiles(database: SupportSQLiteDatabase) {

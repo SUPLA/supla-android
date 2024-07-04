@@ -72,7 +72,7 @@
   <string name="advanced_settings">Avanserte innstillinger</string>
   <string name="create_account"><u>Opprett konto</u></string>
 
-  <string name="about_app">This program is free software; you can redistribute it and/or   modify it under the terms of the GNU General Public License   as published by the Free Software Foundation; either version 2   of the License, or (at your option) any later version.     This program is distributed in the hope that it will be useful,   but WITHOUT ANY WARRANTY; without even the implied warranty of   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the   GNU General Public License for more details.     You should have received a copy of the GNU General Public License   along with this program; if not, write to the Free Software   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA</string>
+  <string name="about_app">This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.\n\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place – Suite 330, Boston, MA  02111–1307, USA</string>
 
   <string name="rate_msg">Visste du at Supla er et åpent og gratis samfunnsprosjekt? Hvis du liker denne appen, vennligst ta tiden og vurder den. Takk for støtten din!</string>
   <string name="rate_now">Vurder nå</string>
@@ -449,7 +449,6 @@
   <string name="add_device_needs_cloud_go">Gå til CLOUD</string>
   <string name="associeted_with_at_error">Funksjonen til kanalen knyttet til handlingsutløseren kan ikke endres.</string>
   <string name="location_ordering">Rekkefølgen av plassering</string>
-  <string name="rs_display_mode">Rullegardiner %</string>
   <string name="rs_display_mode_opening">Åpning</string>
   <string name="rs_display_mode_closing">Nedleggelser</string>
   <string name="status_accessid_inactive">Tilgangs-ID inaktiv</string>

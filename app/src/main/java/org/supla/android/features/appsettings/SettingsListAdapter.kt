@@ -24,12 +24,14 @@ import androidx.core.content.res.ResourcesCompat.getColor
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import org.supla.android.R
+import org.supla.android.data.model.general.LockScreenScope
 import org.supla.android.data.model.general.NightModeSetting
 import org.supla.android.data.source.runtime.appsettings.ChannelHeight
 import org.supla.android.data.source.runtime.appsettings.TemperatureUnit
 import org.supla.android.databinding.LiSettingsArrowButtonBinding
 import org.supla.android.databinding.LiSettingsChannelHeightBinding
 import org.supla.android.databinding.LiSettingsHeaderBinding
+import org.supla.android.databinding.LiSettingsLockScreenBinding
 import org.supla.android.databinding.LiSettingsNightModeBinding
 import org.supla.android.databinding.LiSettingsPermissionBinding
 import org.supla.android.databinding.LiSettingsRollerShutterBinding
@@ -165,6 +167,18 @@ sealed class SettingItem(val viewResource: Int) {
     }
   }
 
+  data class LockScreen(
+    val lockScreenScope: LockScreenScope,
+    val callback: (LockScreenScope) -> Unit = {}
+  ) : SettingItem(R.layout.li_settings_lock_screen) {
+    override fun bind(holder: SettingItemViewHolder<*>) {
+      (holder.binding as LiSettingsLockScreenBinding).apply {
+        settingsLockScreen.position = lockScreenScope.value
+        settingsLockScreen.setOnPositionChangedListener { callback(LockScreenScope.from(it)) }
+      }
+    }
+  }
+
   data class LocalizationOrdering(
     val callback: () -> Unit = {}
   ) : SettingItem(R.layout.li_settings_arrow_button) {
@@ -219,27 +233,39 @@ data class SettingItemViewHolder<T : ViewBinding>(val binding: T) : RecyclerView
         R.layout.li_settings_channel_height -> {
           SettingItemViewHolder(LiSettingsChannelHeightBinding.inflate(inflater, parent, false))
         }
+
         R.layout.li_settings_temperature_unit -> {
           SettingItemViewHolder(LiSettingsTemperatureUnitBinding.inflate(inflater, parent, false))
         }
+
         R.layout.li_settings_roller_shutter -> {
           SettingItemViewHolder(LiSettingsRollerShutterBinding.inflate(inflater, parent, false))
         }
+
         R.layout.li_settings_switch -> {
           SettingItemViewHolder(LiSettingsSwitchBinding.inflate(inflater, parent, false))
         }
+
         R.layout.li_settings_arrow_button -> {
           SettingItemViewHolder(LiSettingsArrowButtonBinding.inflate(inflater, parent, false))
         }
+
         R.layout.li_settings_permission -> {
           SettingItemViewHolder(LiSettingsPermissionBinding.inflate(inflater, parent, false))
         }
+
         R.layout.li_settings_header -> {
           SettingItemViewHolder(LiSettingsHeaderBinding.inflate(inflater, parent, false))
         }
+
         R.layout.li_settings_night_mode -> {
           SettingItemViewHolder(LiSettingsNightModeBinding.inflate(inflater, parent, false))
         }
+
+        R.layout.li_settings_lock_screen -> {
+          SettingItemViewHolder(LiSettingsLockScreenBinding.inflate(inflater, parent, false))
+        }
+
         else -> throw IllegalArgumentException("Unsupported view type $viewId")
       }
     }

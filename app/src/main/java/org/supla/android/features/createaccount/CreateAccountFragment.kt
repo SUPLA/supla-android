@@ -105,9 +105,8 @@ class CreateAccountFragment : BaseFragment<CreateAccountViewState, CreateAccount
         showAlertDialog(R.string.form_error, R.string.form_profile_required_data_missing)
       CreateAccountViewEvent.ShowUnknownErrorDialog ->
         showAlertDialog(R.string.form_error, R.string.general_failure)
-      CreateAccountViewEvent.Close -> navigator.back()
+      CreateAccountViewEvent.Close -> navigator.backOrClose()
       CreateAccountViewEvent.RestartFlow -> navigator.restartAppStack()
-      CreateAccountViewEvent.Reconnect -> navigator.navigateToStatus()
       is CreateAccountViewEvent.NavigateToWebRemoval ->
         navigator.navigateToDeleteAccount(event.serverAddress, event.destination)
     }

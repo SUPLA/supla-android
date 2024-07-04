@@ -25,5 +25,6 @@ data class MoveState(
   val initialHorizontalPercentage: Float = 0f,
   val lastPoint: Offset = Offset(0f, 0f),
 
-  val horizontalAllowed: Boolean = false
+  val horizontalAllowed: Boolean = false,
+  val verticalAllowed: Boolean = true
 )

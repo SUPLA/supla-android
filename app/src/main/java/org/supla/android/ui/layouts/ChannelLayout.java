@@ -61,12 +61,14 @@ import org.supla.android.lib.SuplaConst;
 import org.supla.android.lib.SuplaTimerState;
 import org.supla.android.ui.lists.SlideableItem;
 import org.supla.android.ui.lists.SwapableListItem;
+import org.supla.android.usecases.group.GetGroupActivePercentageUseCase;
 
 @AndroidEntryPoint
 public class ChannelLayout extends LinearLayout implements SlideableItem, SwapableListItem {
 
   @Inject UpdateEventsManager eventsManager;
   @Inject DurationTimerHelper durationTimerHelper;
+  @Inject GetGroupActivePercentageUseCase getGroupActivePercentageUseCase;
 
   private ChannelBase channelBase;
   private int mFunc;
@@ -666,7 +668,8 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
 
     int activePercent;
 
-    if (mGroup && (activePercent = ((ChannelGroup) cbase).getActivePercent()) >= 0) {
+    if (mGroup
+        && (activePercent = getGroupActivePercentageUseCase.invoke((ChannelGroup) cbase, 0)) >= 0) {
       right_ActiveStatus.setVisibility(View.VISIBLE);
       right_ActiveStatus.setPercent(activePercent);
     } else {

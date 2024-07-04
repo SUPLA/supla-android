@@ -18,10 +18,13 @@ package org.supla.android.ui.views.buttons
  */
 
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
+import org.supla.android.R
 
 @Composable
 fun Button(
@@ -37,8 +40,8 @@ fun Button(
   ) {
     Text(
       text = text,
-      style = MaterialTheme.typography.button,
-      color = MaterialTheme.colors.onPrimary
+      style = MaterialTheme.typography.labelLarge,
+      color = MaterialTheme.colorScheme.onPrimary
     )
   }
 }
@@ -50,10 +53,11 @@ fun Button(
   enabled: Boolean = true,
   content: @Composable RowScope.() -> Unit
 ) {
-  androidx.compose.material.Button(
+  androidx.compose.material3.Button(
     onClick = onClick,
     modifier = modifier,
     enabled = enabled,
-    content = content
+    content = content,
+    shape = RoundedCornerShape(dimensionResource(id = R.dimen.radius_default)),
   )
 }
