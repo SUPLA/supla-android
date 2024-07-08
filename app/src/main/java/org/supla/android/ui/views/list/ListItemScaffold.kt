@@ -37,8 +37,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -242,7 +242,7 @@ private fun ListItemTitle(
         horizontal = Distance.default,
         vertical = Distance.small.times(scale)
       )
-      .pointerInput(Unit) {
+      .pointerInput(onLongClick, onItemClick) {
         detectTapGestures(onLongPress = { onLongClick() }, onTap = { onItemClick() })
       },
     maxLines = 1,
@@ -271,11 +271,11 @@ private fun ListItemTimerText(date: Date, scale: Float) {
   }
 
   text?.let {
-    val fontSize = MaterialTheme.typography.body2.fontSize
+    val fontSize = MaterialTheme.typography.bodyMedium.fontSize
     Text(
       text = it,
-      style = MaterialTheme.typography.body2.copy(fontSize = if (scale < 1) fontSize.times(0.8f) else fontSize),
-      color = MaterialTheme.colors.gray,
+      style = MaterialTheme.typography.bodyMedium.copy(fontSize = if (scale < 1) fontSize.times(0.8f) else fontSize),
+      color = MaterialTheme.colorScheme.gray,
       modifier = Modifier
         .align(Alignment.TopEnd)
         .padding(top = Distance.small.times(scale), end = Distance.small)
@@ -288,7 +288,7 @@ private fun ListItemTimerText(date: Date, scale: Float) {
 private fun Preview() {
   SuplaTheme {
     Column(
-      modifier = Modifier.background(MaterialTheme.colors.surface),
+      modifier = Modifier.background(MaterialTheme.colorScheme.surface),
       verticalArrangement = Arrangement.spacedBy(8.dp),
       horizontalAlignment = Alignment.CenterHorizontally
     ) {

@@ -86,20 +86,13 @@ fun PinSetupView(
       .background(MaterialTheme.colorScheme.background)
       .padding(all = Distance.default)
   ) {
-    Text(
-      text = stringResource(id = R.string.pin_setup_header),
-      style = MaterialTheme.typography.bodyMedium,
-      modifier = Modifier
-    )
+    BodyMedium(text = stringResource(id = R.string.pin_setup_header))
     PinTextField(
       pin = viewState.pin,
       onPinChange = { pin, _ -> onPinChange(pin) },
       modifier = Modifier.focusRequester(firstPinFocusRequester)
     )
-    Text(
-      text = stringResource(id = R.string.pin_setup_repeat),
-      style = MaterialTheme.typography.bodyMedium
-    )
+    BodyMedium(text = stringResource(id = R.string.pin_setup_repeat))
     PinTextField(
       pin = viewState.secondPin,
       onPinChange = { pin, _ -> onSecondPinChange(pin) },
