@@ -18,7 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
-import org.supla.android.lib.SuplaConst
+import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -28,8 +28,8 @@ class GpmValueProvider @Inject constructor() : DefaultDoubleValueProvider() {
   override val unknownValue = UNKNOWN_VALUE
 
   override fun handle(channelData: ChannelDataEntity): Boolean =
-    channelData.function == SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT ||
-      channelData.function == SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER
+    channelData.function == SuplaChannelFunction.GENERAL_PURPOSE_MEASUREMENT ||
+      channelData.function == SuplaChannelFunction.GENERAL_PURPOSE_METER
 
   companion object {
     const val UNKNOWN_VALUE = Double.NaN

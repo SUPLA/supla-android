@@ -27,8 +27,8 @@ import org.supla.android.SuplaApp
 import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.databinding.LiChannelItemBinding
-import org.supla.android.databinding.LiMainMeasurementItemBinding
-import org.supla.android.databinding.LiMainStateIconWithButtonsBinding
+import org.supla.android.databinding.LiMainIconValueItemBinding
+import org.supla.android.databinding.LiMainIconValueWithButtonsItemBinding
 import org.supla.android.databinding.LiMainThermostatItemBinding
 import org.supla.android.ui.layouts.ChannelLayout
 import org.supla.android.ui.lists.data.SlideableListItemData
@@ -72,20 +72,20 @@ abstract class BaseChannelsAdapter(
       ViewType.HVAC_ITEM.ordinal ->
         ThermostatListItemViewHolder(LiMainThermostatItemBinding.inflate(inflater, parent, false))
 
-      ViewType.MEASUREMENT_ITEM.ordinal ->
-        SingleMeasurementListItemViewHolder(LiMainMeasurementItemBinding.inflate(inflater, parent, false))
+      ViewType.ICON_VALUE_ITEM.ordinal ->
+        IconValueListItemViewHolder(LiMainIconValueItemBinding.inflate(inflater, parent, false))
 
       ViewType.GENERAL_PURPOSE_METER_ITEM.ordinal ->
-        GpMeterListItemViewHolder(LiMainMeasurementItemBinding.inflate(inflater, parent, false))
+        GpMeterListItemViewHolder(LiMainIconValueItemBinding.inflate(inflater, parent, false))
 
       ViewType.GENERAL_PURPOSE_MEASUREMENT_ITEM.ordinal ->
-        GpMeasurementListItemViewHolder(LiMainMeasurementItemBinding.inflate(inflater, parent, false))
+        GpMeasurementListItemViewHolder(LiMainIconValueItemBinding.inflate(inflater, parent, false))
 
       ViewType.SHADING_SYSTEM_ITEM.ordinal ->
-        ShadingSystemListItemViewHolder(LiMainStateIconWithButtonsBinding.inflate(inflater, parent, false))
+        ShadingSystemListItemViewHolder(LiMainIconValueWithButtonsItemBinding.inflate(inflater, parent, false))
 
       ViewType.SWITCH_ITEM.ordinal ->
-        SwitchListItemViewHolder(LiMainStateIconWithButtonsBinding.inflate(inflater, parent, false))
+        SwitchListItemViewHolder(LiMainIconValueWithButtonsItemBinding.inflate(inflater, parent, false))
 
       else -> super.onCreateViewHolder(parent, viewType)
     }
@@ -95,7 +95,7 @@ abstract class BaseChannelsAdapter(
     when (holder) {
       is ChannelListItemViewHolder -> holder.bind(items[position] as ListItem.ChannelItem)
       is ThermostatListItemViewHolder -> holder.bind(items[position] as ListItem.HvacThermostatItem)
-      is SingleMeasurementListItemViewHolder -> holder.bind(items[position] as ListItem.MeasurementItem)
+      is IconValueListItemViewHolder -> holder.bind(items[position] as ListItem.IconValueItem)
       is GpMeterListItemViewHolder -> holder.bind(items[position] as ListItem.GeneralPurposeMeterItem)
       is GpMeasurementListItemViewHolder -> holder.bind(items[position] as ListItem.GeneralPurposeMeasurementItem)
       is ShadingSystemListItemViewHolder -> holder.bind(items[position] as ListItem.ShadingSystemItem)
@@ -152,8 +152,8 @@ abstract class BaseChannelsAdapter(
     }
   }
 
-  inner class SingleMeasurementListItemViewHolder(val binding: LiMainMeasurementItemBinding) : ViewHolder(binding.root) {
-    fun bind(item: ListItem.MeasurementItem) {
+  inner class IconValueListItemViewHolder(val binding: LiMainIconValueItemBinding) : ViewHolder(binding.root) {
+    fun bind(item: ListItem.IconValueItem) {
       val data = item.toSlideableListItemData() as SlideableListItemData.Default
       binding.listItemRoot.bind(locationCaption = item.locationCaption)
       binding.listItemContent.bind(
@@ -171,7 +171,7 @@ abstract class BaseChannelsAdapter(
     }
   }
 
-  inner class GpMeterListItemViewHolder(val binding: LiMainMeasurementItemBinding) : ViewHolder(binding.root) {
+  inner class GpMeterListItemViewHolder(val binding: LiMainIconValueItemBinding) : ViewHolder(binding.root) {
     fun bind(item: ListItem.GeneralPurposeMeterItem) {
       val data = item.toSlideableListItemData() as SlideableListItemData.Default
       binding.listItemRoot.bind(locationCaption = item.locationCaption)
@@ -190,7 +190,7 @@ abstract class BaseChannelsAdapter(
     }
   }
 
-  inner class GpMeasurementListItemViewHolder(val binding: LiMainMeasurementItemBinding) : ViewHolder(binding.root) {
+  inner class GpMeasurementListItemViewHolder(val binding: LiMainIconValueItemBinding) : ViewHolder(binding.root) {
     fun bind(item: ListItem.GeneralPurposeMeasurementItem) {
       val data = item.toSlideableListItemData() as SlideableListItemData.Default
       binding.listItemRoot.bind(locationCaption = item.locationCaption)
@@ -209,7 +209,7 @@ abstract class BaseChannelsAdapter(
     }
   }
 
-  inner class ShadingSystemListItemViewHolder(val binding: LiMainStateIconWithButtonsBinding) : ViewHolder(binding.root) {
+  inner class ShadingSystemListItemViewHolder(val binding: LiMainIconValueWithButtonsItemBinding) : ViewHolder(binding.root) {
     fun bind(item: ListItem.ShadingSystemItem) {
       val data = item.toSlideableListItemData() as SlideableListItemData.Default
       binding.listItemRoot.bind(locationCaption = item.locationCaption)
@@ -232,7 +232,7 @@ abstract class BaseChannelsAdapter(
     }
   }
 
-  inner class SwitchListItemViewHolder(val binding: LiMainStateIconWithButtonsBinding) : ViewHolder(binding.root) {
+  inner class SwitchListItemViewHolder(val binding: LiMainIconValueWithButtonsItemBinding) : ViewHolder(binding.root) {
     fun bind(item: ListItem.SwitchItem) {
       val data = item.toSlideableListItemData() as SlideableListItemData.Default
       binding.listItemRoot.bind(locationCaption = item.locationCaption)

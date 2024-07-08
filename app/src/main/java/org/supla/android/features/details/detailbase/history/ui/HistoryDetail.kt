@@ -19,9 +19,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import android.graphics.BitmapFactory
 import androidx.annotation.DimenRes
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -58,8 +56,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
@@ -93,8 +89,10 @@ import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.extensions.weekEnd
 import org.supla.android.extensions.weekStart
 import org.supla.android.features.details.detailbase.history.HistoryDetailViewState
+import org.supla.android.images.ImageId
 import org.supla.android.ui.dialogs.DatePickerDialog
 import org.supla.android.ui.dialogs.TimePickerDialog
+import org.supla.android.ui.views.Image
 import org.supla.android.ui.views.SpinnerItem
 import org.supla.android.ui.views.TextField
 import org.supla.android.ui.views.TextSpinner
@@ -347,9 +345,7 @@ private fun DataSetItems(
 
 @Composable
 private fun DataSetItem(value: HistoryDataSet.LabelData, showColor: Boolean, active: Boolean) {
-  value.Icon(context = LocalContext.current) {
-    DataSetIcon(bitmap = it.asImageBitmap(), value.iconSize)
-  }
+  value.imageId?.let { DataSetIcon(imageId = it, value.iconSize) }
   Column(horizontalAlignment = Alignment.CenterHorizontally) {
     DataSetText(text = value.value)
     if (showColor) {
@@ -371,9 +367,9 @@ private fun DataSetItem(value: HistoryDataSet.LabelData, showColor: Boolean, act
 }
 
 @Composable
-private fun DataSetIcon(bitmap: ImageBitmap, @DimenRes iconSize: Int?) =
+private fun DataSetIcon(imageId: ImageId, @DimenRes iconSize: Int?) =
   Image(
-    bitmap = bitmap,
+    imageId = imageId,
     contentDescription = null,
     alignment = Alignment.Center,
     modifier = Modifier.size(dimensionResource(id = iconSize ?: R.dimen.button_small_height))
@@ -503,7 +499,7 @@ private class PreviewProxy : HistoryDetailProxy {
     val set = HistoryDataSet(
       type = ChartEntryType.HUMIDITY,
       label = singleLabel(
-        iconProvider = { BitmapFactory.decodeResource(it.resources, R.drawable.fnc_electricity_meter) },
+        imageId = ImageId(R.drawable.fnc_electricity_meter),
         value = "Label",
         color = R.color.light_red
       ),

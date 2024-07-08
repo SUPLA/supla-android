@@ -68,11 +68,7 @@ class ThermostatGeneralFragment : BaseFragment<ThermostatGeneralViewState, Therm
   override fun onSuplaMessage(message: SuplaClientMsg) {
     when (message.type) {
       SuplaClientMsg.onDataChanged -> {
-        if (message.channelId == item.remoteId) {
-          viewModel.triggerDataLoad(item.remoteId)
-        } else {
-          viewModel.loadTemperature(message.channelId)
-        }
+        viewModel.handleDataChangedEvent(message.channelId)
       }
     }
   }

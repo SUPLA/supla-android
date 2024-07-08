@@ -36,6 +36,15 @@ object Distance {
   val tiny: Dp
     @Composable
     get() = dimensionResource(id = R.dimen.distance_tiny)
+
+  @Composable
+  fun toStatic(): Static = Static(default, small, tiny)
+
+  data class Static(
+    val default: Dp,
+    val small: Dp,
+    val tiny: Dp
+  )
 }
 
 object Shadow {

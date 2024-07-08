@@ -27,7 +27,6 @@ import org.supla.android.data.model.chart.HumidityChartColors
 import org.supla.android.data.model.chart.TemperatureChartColors
 import org.supla.android.data.source.TemperatureAndHumidityLogRepository
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
-import org.supla.android.data.source.remote.channel.suplaFunction
 import org.supla.android.di.GSON_FOR_REPO
 import org.supla.android.lib.SuplaConst
 import org.supla.android.usecases.channel.GetChannelCaptionUseCase
@@ -76,7 +75,7 @@ class TemperatureAndHumidityMeasurementsProvider @Inject constructor(
       .map {
         ChannelChartSets(
           channel.remoteId,
-          channel.function.suplaFunction(),
+          channel.function,
           getChannelCaptionUseCase(channel.channelEntity),
           spec.aggregation,
           it

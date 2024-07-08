@@ -28,17 +28,18 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.whenever
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
+import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.db.Channel
 import org.supla.android.images.ImageId
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR
+import org.supla.android.ui.lists.ListOnlineState
 import org.supla.android.ui.lists.data.SlideableListItemData
-import org.supla.android.usecases.channel.ChannelWithChildren
 import org.supla.android.usecases.channel.GetChannelCaptionUseCase
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 
 @RunWith(MockitoJUnitRunner::class)
-class ChannelWithChildrenToMeasurementUpdateEventMapperTest {
+class ChannelWithChildrenToIconValueItemUpdateEventMapperTest {
 
   @Mock
   private lateinit var getChannelCaptionUseCase: GetChannelCaptionUseCase
@@ -50,13 +51,13 @@ class ChannelWithChildrenToMeasurementUpdateEventMapperTest {
   private lateinit var getChannelValueStringUseCase: GetChannelValueStringUseCase
 
   @InjectMocks
-  private lateinit var mapper: ChannelWithChildrenToMeasurementUpdateEventMapper
+  private lateinit var mapper: ChannelWithChildrenToIconValueItemUpdateEventMapper
 
   @Test
   fun `should handle channel with children`() {
     // given
     val channel = mockk<ChannelDataEntity>()
-    every { channel.channelEntity } returns mockk { every { function } returns SUPLA_CHANNELFNC_DEPTHSENSOR }
+    every { channel.channelEntity } returns mockk { every { function } returns SuplaChannelFunction.DEPTH_SENSOR }
 
     val channelWithChildren = ChannelWithChildren(channel, emptyList())
 
@@ -87,8 +88,8 @@ class ChannelWithChildrenToMeasurementUpdateEventMapperTest {
     val value = "value"
 
     val channel = mockk<ChannelDataEntity>()
-    every { channel.function } returns SUPLA_CHANNELFNC_DEPTHSENSOR
-    every { channel.channelEntity } returns mockk { every { function } returns SUPLA_CHANNELFNC_DEPTHSENSOR }
+    every { channel.function } returns SuplaChannelFunction.DEPTH_SENSOR
+    every { channel.channelEntity } returns mockk { every { function } returns SuplaChannelFunction.DEPTH_SENSOR }
     every { channel.channelValueEntity } returns mockk { every { this@mockk.online } returns online }
     every { channel.flags } returns 0
 
@@ -106,7 +107,7 @@ class ChannelWithChildrenToMeasurementUpdateEventMapperTest {
     // then
     val defaultItem = result as SlideableListItemData.Default
 
-    assertThat(defaultItem.online).isTrue
+    assertThat(defaultItem.onlineState).isEqualTo(ListOnlineState.ONLINE)
     assertThat(defaultItem.titleProvider(context)).isEqualTo(caption)
     assertThat(defaultItem.icon).isEqualTo(imageId)
     assertThat(defaultItem.value).isEqualTo(value)

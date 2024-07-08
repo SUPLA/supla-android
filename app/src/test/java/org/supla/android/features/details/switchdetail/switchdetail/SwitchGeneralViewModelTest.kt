@@ -33,20 +33,19 @@ import org.junit.Test
 import org.supla.android.R
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.core.infrastructure.DateProvider
-import org.supla.android.core.ui.BitmapProvider
 import org.supla.android.data.model.general.ChannelState
 import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
+import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.DownloadEventsManager
 import org.supla.android.features.details.detailbase.electricitymeter.ElectricityMeterGeneralStateHandler
 import org.supla.android.features.details.switchdetail.general.SwitchGeneralViewEvent
 import org.supla.android.features.details.switchdetail.general.SwitchGeneralViewModel
 import org.supla.android.features.details.switchdetail.general.SwitchGeneralViewState
+import org.supla.android.images.ImageId
 import org.supla.android.lib.SuplaChannelExtendedValue
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.testhelpers.extensions.extract
 import org.supla.android.testhelpers.extensions.extractResId
@@ -114,17 +113,17 @@ class SwitchGeneralViewModelTest :
   fun `should load channel`() {
     // given
     val remoteId = 123
-    val function = SUPLA_CHANNELFNC_POWERSWITCH
+    val function = SuplaChannelFunction.POWER_SWITCH
     val channelData: ChannelDataEntity = mockChannelData(remoteId, function)
-    val stateIcon: BitmapProvider = mockk()
-    val onIcon: BitmapProvider = mockk()
-    val offIcon: BitmapProvider = mockk()
+    val stateIcon: ImageId = mockk()
+    val onIcon: ImageId = mockk()
+    val offIcon: ImageId = mockk()
 
     every { readChannelByRemoteIdUseCase.invoke(remoteId) } returns Maybe.just(channelData)
     every { getChannelStateUseCase.invoke(channelData) } returns mockk { every { isActive() } returns true }
-    every { getChannelIconUseCase.getIconProvider(channelData) } returns stateIcon
-    every { getChannelIconUseCase.getIconProvider(channelData, channelStateValue = ChannelState.Value.ON) } returns onIcon
-    every { getChannelIconUseCase.getIconProvider(channelData, channelStateValue = ChannelState.Value.OFF) } returns offIcon
+    every { getChannelIconUseCase.invoke(channelData) } returns stateIcon
+    every { getChannelIconUseCase.invoke(channelData, channelStateValue = ChannelState.Value.ON) } returns onIcon
+    every { getChannelIconUseCase.invoke(channelData, channelStateValue = ChannelState.Value.OFF) } returns offIcon
     every { dateProvider.currentDate() } returns Date()
     every { electricityMeterGeneralStateHandler.updateState(any(), any(), any()) } answers { firstArg() }
 
@@ -141,18 +140,75 @@ class SwitchGeneralViewModelTest :
         { it.deviceStateValue },
         { it.onIcon },
         { it.offIcon },
-        { it.electricityMeterState }
+        { it.electricityMeterState },
+        { it.showButtons }
       )
       .containsExactly(
-        tuple(true, R.string.details_timer_state_label, stateIcon, R.string.details_timer_device_on, onIcon, offIcon, null)
+        tuple(true, R.string.details_timer_state_label, stateIcon, R.string.details_timer_device_on, onIcon, offIcon, null, true)
       )
 
     verify {
       readChannelByRemoteIdUseCase.invoke(remoteId)
       getChannelStateUseCase.invoke(channelData)
-      getChannelIconUseCase.getIconProvider(channelData)
-      getChannelIconUseCase.getIconProvider(channelData, channelStateValue = ChannelState.Value.ON)
-      getChannelIconUseCase.getIconProvider(channelData, channelStateValue = ChannelState.Value.OFF)
+      getChannelIconUseCase.invoke(channelData)
+      getChannelIconUseCase.invoke(channelData, channelStateValue = ChannelState.Value.ON)
+      getChannelIconUseCase.invoke(channelData, channelStateValue = ChannelState.Value.OFF)
+      dateProvider.currentDate()
+    }
+    confirmVerified(
+      readChannelByRemoteIdUseCase,
+      getChannelStateUseCase,
+      getChannelIconUseCase,
+      dateProvider,
+      loadElectricityMeterMeasurementsUseCase,
+      readChannelGroupByRemoteIdUseCase
+    )
+  }
+
+  @Test
+  fun `should load channel - without buttons`() {
+    // given
+    val remoteId = 123
+    val function = SuplaChannelFunction.PUMP_SWITCH
+    val channelData: ChannelDataEntity = mockChannelData(remoteId, function)
+    val stateIcon: ImageId = mockk()
+    val onIcon: ImageId = mockk()
+    val offIcon: ImageId = mockk()
+
+    every { readChannelByRemoteIdUseCase.invoke(remoteId) } returns Maybe.just(channelData)
+    every { getChannelStateUseCase.invoke(channelData) } returns mockk { every { isActive() } returns true }
+    every { getChannelIconUseCase.invoke(channelData) } returns stateIcon
+    every { getChannelIconUseCase.invoke(channelData, channelStateValue = ChannelState.Value.ON) } returns onIcon
+    every { getChannelIconUseCase.invoke(channelData, channelStateValue = ChannelState.Value.OFF) } returns offIcon
+    every { dateProvider.currentDate() } returns Date()
+    every { electricityMeterGeneralStateHandler.updateState(any(), any(), any()) } answers { firstArg() }
+
+    // when
+    viewModel.loadData(remoteId, ItemType.CHANNEL)
+
+    // then
+    assertThat(events).isEmpty()
+    assertThat(states)
+      .extracting(
+        { it.online },
+        { it.deviceStateLabel.extractResId() },
+        { it.deviceStateIcon },
+        { it.deviceStateValue },
+        { it.onIcon },
+        { it.offIcon },
+        { it.electricityMeterState },
+        { it.showButtons }
+      )
+      .containsExactly(
+        tuple(true, R.string.details_timer_state_label, stateIcon, R.string.details_timer_device_on, null, null, null, false)
+      )
+
+    verify {
+      readChannelByRemoteIdUseCase.invoke(remoteId)
+      getChannelStateUseCase.invoke(channelData)
+      getChannelIconUseCase.invoke(channelData)
+      getChannelIconUseCase.invoke(channelData, channelStateValue = ChannelState.Value.ON)
+      getChannelIconUseCase.invoke(channelData, channelStateValue = ChannelState.Value.OFF)
       dateProvider.currentDate()
     }
     confirmVerified(
@@ -169,21 +225,21 @@ class SwitchGeneralViewModelTest :
   fun `should load group`() {
     // given
     val remoteId = 123
-    val function = SUPLA_CHANNELFNC_POWERSWITCH
+    val function = SuplaChannelFunction.POWER_SWITCH
     val group: ChannelGroupDataEntity = mockk {
       every { this@mockk.function } returns function
       every { this@mockk.remoteId } returns remoteId
       every { isOnline() } returns true
     }
-    val stateIcon: BitmapProvider = mockk()
-    val onIcon: BitmapProvider = mockk()
-    val offIcon: BitmapProvider = mockk()
+    val stateIcon: ImageId = mockk()
+    val onIcon: ImageId = mockk()
+    val offIcon: ImageId = mockk()
 
     every { readChannelGroupByRemoteIdUseCase.invoke(remoteId) } returns Maybe.just(group)
     every { getChannelStateUseCase.invoke(group) } returns mockk { every { isActive() } returns true }
-    every { getChannelIconUseCase.getIconProvider(group) } returns stateIcon
-    every { getChannelIconUseCase.getIconProvider(group, channelStateValue = ChannelState.Value.ON) } returns onIcon
-    every { getChannelIconUseCase.getIconProvider(group, channelStateValue = ChannelState.Value.OFF) } returns offIcon
+    every { getChannelIconUseCase.invoke(group) } returns stateIcon
+    every { getChannelIconUseCase.invoke(group, channelStateValue = ChannelState.Value.ON) } returns onIcon
+    every { getChannelIconUseCase.invoke(group, channelStateValue = ChannelState.Value.OFF) } returns offIcon
 
     // when
     viewModel.loadData(remoteId, ItemType.GROUP)
@@ -207,9 +263,9 @@ class SwitchGeneralViewModelTest :
     verify {
       readChannelGroupByRemoteIdUseCase.invoke(remoteId)
       getChannelStateUseCase.invoke(group)
-      getChannelIconUseCase.getIconProvider(group)
-      getChannelIconUseCase.getIconProvider(group, channelStateValue = ChannelState.Value.ON)
-      getChannelIconUseCase.getIconProvider(group, channelStateValue = ChannelState.Value.OFF)
+      getChannelIconUseCase.invoke(group)
+      getChannelIconUseCase.invoke(group, channelStateValue = ChannelState.Value.ON)
+      getChannelIconUseCase.invoke(group, channelStateValue = ChannelState.Value.OFF)
     }
     confirmVerified(
       readChannelByRemoteIdUseCase,
@@ -275,10 +331,10 @@ class SwitchGeneralViewModelTest :
   fun `should load estimated count down end time`() {
     // given
     val remoteId = 123
-    val function = SUPLA_CHANNELFNC_LIGHTSWITCH
-    val stateIcon: BitmapProvider = mockk()
-    val onIcon: BitmapProvider = mockk()
-    val offIcon: BitmapProvider = mockk()
+    val function = SuplaChannelFunction.LIGHTSWITCH
+    val stateIcon: ImageId = mockk()
+    val onIcon: ImageId = mockk()
+    val offIcon: ImageId = mockk()
 
     val estimatedEndDate = Date(1000)
     every { dateProvider.currentDate() } returns Date(100)
@@ -287,9 +343,9 @@ class SwitchGeneralViewModelTest :
 
     every { readChannelByRemoteIdUseCase.invoke(remoteId) } returns Maybe.just(channelData)
     every { getChannelStateUseCase.invoke(channelData) } returns mockk { every { isActive() } returns true }
-    every { getChannelIconUseCase.getIconProvider(channelData) } returns stateIcon
-    every { getChannelIconUseCase.getIconProvider(channelData, channelStateValue = ChannelState.Value.ON) } returns onIcon
-    every { getChannelIconUseCase.getIconProvider(channelData, channelStateValue = ChannelState.Value.OFF) } returns offIcon
+    every { getChannelIconUseCase.invoke(channelData) } returns stateIcon
+    every { getChannelIconUseCase.invoke(channelData, channelStateValue = ChannelState.Value.ON) } returns onIcon
+    every { getChannelIconUseCase.invoke(channelData, channelStateValue = ChannelState.Value.OFF) } returns offIcon
     every { electricityMeterGeneralStateHandler.updateState(any(), any(), any()) } answers { firstArg() }
 
     // when
@@ -322,9 +378,9 @@ class SwitchGeneralViewModelTest :
     verify {
       readChannelByRemoteIdUseCase.invoke(remoteId)
       getChannelStateUseCase.invoke(channelData)
-      getChannelIconUseCase.getIconProvider(channelData)
-      getChannelIconUseCase.getIconProvider(channelData, channelStateValue = ChannelState.Value.ON)
-      getChannelIconUseCase.getIconProvider(channelData, channelStateValue = ChannelState.Value.OFF)
+      getChannelIconUseCase.invoke(channelData)
+      getChannelIconUseCase.invoke(channelData, channelStateValue = ChannelState.Value.ON)
+      getChannelIconUseCase.invoke(channelData, channelStateValue = ChannelState.Value.OFF)
       dateProvider.currentDate()
     }
     confirmVerified(
@@ -341,10 +397,10 @@ class SwitchGeneralViewModelTest :
   fun `shouldn't load estimated countdown end time when time elapsed`() {
     // given
     val remoteId = 123
-    val function = SUPLA_CHANNELFNC_LIGHTSWITCH
-    val stateIcon: BitmapProvider = mockk()
-    val onIcon: BitmapProvider = mockk()
-    val offIcon: BitmapProvider = mockk()
+    val function = SuplaChannelFunction.LIGHTSWITCH
+    val stateIcon: ImageId = mockk()
+    val onIcon: ImageId = mockk()
+    val offIcon: ImageId = mockk()
 
     val estimatedEndDate = Date(1000)
     every { dateProvider.currentDate() } returns Date(1003)
@@ -352,9 +408,9 @@ class SwitchGeneralViewModelTest :
     val channelData: ChannelDataEntity = mockChannelData(remoteId, function, estimatedEndDate)
     every { readChannelByRemoteIdUseCase.invoke(remoteId) } returns Maybe.just(channelData)
     every { getChannelStateUseCase.invoke(channelData) } returns mockk { every { isActive() } returns true }
-    every { getChannelIconUseCase.getIconProvider(channelData) } returns stateIcon
-    every { getChannelIconUseCase.getIconProvider(channelData, channelStateValue = ChannelState.Value.ON) } returns onIcon
-    every { getChannelIconUseCase.getIconProvider(channelData, channelStateValue = ChannelState.Value.OFF) } returns offIcon
+    every { getChannelIconUseCase.invoke(channelData) } returns stateIcon
+    every { getChannelIconUseCase.invoke(channelData, channelStateValue = ChannelState.Value.ON) } returns onIcon
+    every { getChannelIconUseCase.invoke(channelData, channelStateValue = ChannelState.Value.OFF) } returns offIcon
     every { electricityMeterGeneralStateHandler.updateState(any(), any(), any()) } answers { firstArg() }
 
     // when
@@ -379,9 +435,9 @@ class SwitchGeneralViewModelTest :
     verify {
       readChannelByRemoteIdUseCase.invoke(remoteId)
       getChannelStateUseCase.invoke(channelData)
-      getChannelIconUseCase.getIconProvider(channelData)
-      getChannelIconUseCase.getIconProvider(channelData, channelStateValue = ChannelState.Value.ON)
-      getChannelIconUseCase.getIconProvider(channelData, channelStateValue = ChannelState.Value.OFF)
+      getChannelIconUseCase.invoke(channelData)
+      getChannelIconUseCase.invoke(channelData, channelStateValue = ChannelState.Value.ON)
+      getChannelIconUseCase.invoke(channelData, channelStateValue = ChannelState.Value.OFF)
       dateProvider.currentDate()
     }
     confirmVerified(
@@ -404,7 +460,7 @@ class SwitchGeneralViewModelTest :
     return extendedValue
   }
 
-  private fun mockChannelData(remoteId: Int, function: Int, estimatedEndDate: Date? = null): ChannelDataEntity {
+  private fun mockChannelData(remoteId: Int, function: SuplaChannelFunction, estimatedEndDate: Date? = null): ChannelDataEntity {
     return mockk {
       every { this@mockk.function } returns function
       every { this@mockk.remoteId } returns remoteId

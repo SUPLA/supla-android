@@ -17,7 +17,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import androidx.annotation.DrawableRes
 import org.supla.android.R
 import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
@@ -40,13 +39,13 @@ data class ThermostatValue private constructor(
   val subfunction: ThermostatSubfunction
     get() = if (flags.contains(HEAT_OR_COOL)) ThermostatSubfunction.COOL else ThermostatSubfunction.HEAT
 
-  @DrawableRes
   fun getIndicatorIcon() = when {
-    online && flags.contains(SuplaThermostatFlag.FORCED_OFF_BY_SENSOR) -> R.drawable.ic_sensor_alert
-    online && flags.contains(SuplaThermostatFlag.COOLING) -> R.drawable.ic_cooling
-    online && flags.contains(SuplaThermostatFlag.HEATING) -> R.drawable.ic_heating
-    online && mode != SuplaHvacMode.OFF -> R.drawable.ic_standby
-    else -> null
+    online && flags.contains(SuplaThermostatFlag.FORCED_OFF_BY_SENSOR) -> ThermostatIndicatorIcon.FORCED_OFF_BY_SENSOR
+    online && flags.contains(SuplaThermostatFlag.COOLING) -> ThermostatIndicatorIcon.COOLING
+    online && flags.contains(SuplaThermostatFlag.HEATING) -> ThermostatIndicatorIcon.HEATING
+    online && mode != SuplaHvacMode.OFF -> ThermostatIndicatorIcon.STANDBY
+    online -> ThermostatIndicatorIcon.OFF
+    else -> ThermostatIndicatorIcon.OFFLINE
   }
 
   fun getIssueIconType() = when {

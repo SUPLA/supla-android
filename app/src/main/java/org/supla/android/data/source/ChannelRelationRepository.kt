@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.core.Observable
 import org.supla.android.data.source.local.dao.ChannelRelationDao
 import org.supla.android.data.source.local.entity.ChannelRelationEntity
 import javax.inject.Inject
@@ -34,7 +34,7 @@ class ChannelRelationRepository @Inject constructor(private val channelRelationD
 
   fun findChildrenForParent(parentId: Int) = channelRelationDao.findChildrenFor(parentId)
 
-  fun findChildrenToParentsRelations(): Single<Map<Int, List<ChannelRelationEntity>>> =
+  fun findChildrenToParentsRelations(): Observable<Map<Int, List<ChannelRelationEntity>>> =
     channelRelationDao.getForActiveProfile().map { entities ->
       mutableMapOf<Int, MutableList<ChannelRelationEntity>>().also { map ->
         entities.forEach { channelRelation ->

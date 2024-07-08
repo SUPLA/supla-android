@@ -33,6 +33,7 @@ import org.supla.android.features.details.thermometerdetail.history.ThermometerH
 import org.supla.android.features.details.thermostatdetail.general.ThermostatGeneralFragment
 import org.supla.android.features.details.thermostatdetail.history.ThermostatHistoryDetailFragment
 import org.supla.android.features.details.thermostatdetail.schedule.ScheduleDetailFragment
+import org.supla.android.features.details.thermostatdetail.slaves.ThermostatSlavesListFragment
 import org.supla.android.features.details.thermostatdetail.timer.TimerDetailFragment
 import org.supla.android.features.details.windowdetail.curtain.CurtainFragment
 import org.supla.android.features.details.windowdetail.facadeblinds.FacadeBlindsFragment
@@ -60,6 +61,7 @@ class StandardDetailPagerAdapter(
     }
 
     DetailPage.THERMOSTAT -> ThermostatGeneralFragment().apply { arguments = ThermostatGeneralFragment.bundle(itemBundle) }
+    DetailPage.THERMOSTAT_LIST -> ThermostatSlavesListFragment().apply { arguments = ThermostatSlavesListFragment.bundle(itemBundle) }
     DetailPage.SCHEDULE -> ScheduleDetailFragment().apply { arguments = ScheduleDetailFragment.bundle(itemBundle) }
     DetailPage.THERMOSTAT_TIMER -> TimerDetailFragment().apply { arguments = TimerDetailFragment.bundle(itemBundle) }
     DetailPage.THERMOSTAT_HISTORY -> ThermostatHistoryDetailFragment().apply {
@@ -97,6 +99,7 @@ enum class DetailPage(val item: DetailBottomItem) {
 
   // Thermostats
   THERMOSTAT(DetailBottomItem.GENERAL),
+  THERMOSTAT_LIST(DetailBottomItem.LIST),
   SCHEDULE(DetailBottomItem.SCHEDULE),
   THERMOSTAT_HISTORY(DetailBottomItem.HISTORY),
   THERMOSTAT_TIMER(DetailBottomItem.TIMER),
@@ -129,5 +132,6 @@ enum class DetailBottomItem(val menuId: Int, @DrawableRes val iconRes: Int, @Str
   TIMER(3, R.drawable.ic_timer, R.string.details_timer),
   HISTORY(4, R.drawable.ic_history, R.string.details_history),
   METRICS(5, R.drawable.ic_metrics, R.string.details_metrics),
-  SETTINGS(6, R.drawable.ic_settings, R.string.settings)
+  SETTINGS(6, R.drawable.ic_settings, R.string.settings),
+  LIST(7, R.drawable.list, R.string.details_list)
 }

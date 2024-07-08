@@ -30,7 +30,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.data.source.local.entity.ChannelEntity
-import org.supla.android.lib.SuplaConst
+import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 
 @RunWith(MockitoJUnitRunner::class)
 class GetChannelCaptionUseCaseTest {
@@ -44,7 +44,7 @@ class GetChannelCaptionUseCaseTest {
   @Test
   fun `should get default caption provider when caption empty`() {
     // given
-    val function = SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
+    val function = SuplaChannelFunction.THERMOMETER
     val channelEntity: ChannelEntity = mockk {
       every { this@mockk.function } returns function
       every { caption } returns ""
@@ -61,7 +61,7 @@ class GetChannelCaptionUseCaseTest {
   @Test
   fun `should get caption provider when caption not empty`() {
     // given
-    val function = SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
+    val function = SuplaChannelFunction.THERMOMETER
     val channelEntity: ChannelEntity = mockk {
       every { this@mockk.function } returns function
       every { caption } returns "Test"
@@ -79,7 +79,7 @@ class GetChannelCaptionUseCaseTest {
   @Test
   fun `should get default caption when caption empty`() {
     // given
-    val function = SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
+    val function = SuplaChannelFunction.THERMOMETER
     val channelEntity: ChannelEntity = mockk {
       every { this@mockk.function } returns function
       every { caption } returns ""
@@ -97,7 +97,7 @@ class GetChannelCaptionUseCaseTest {
   @Test
   fun `should get caption when caption not empty`() {
     // given
-    val function = SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
+    val function = SuplaChannelFunction.THERMOMETER
     val channelEntity: ChannelEntity = mockk {
       every { this@mockk.function } returns function
       every { caption } returns "Test"

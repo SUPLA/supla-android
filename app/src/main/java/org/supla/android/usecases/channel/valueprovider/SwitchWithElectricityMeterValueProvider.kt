@@ -19,11 +19,9 @@ package org.supla.android.usecases.channel.valueprovider
 
 import org.supla.android.core.storage.UserStateHolder
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType
 import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER
 import org.supla.android.usecases.channel.ChannelValueProvider
 import org.supla.android.usecases.channel.ValueType
 import org.supla.android.usecases.channel.valueprovider.parser.IntValueParser
@@ -38,9 +36,9 @@ class SwitchWithElectricityMeterValueProvider @Inject constructor(
 
   override fun handle(channelData: ChannelDataEntity): Boolean =
     when (channelData.function) {
-      SUPLA_CHANNELFNC_POWERSWITCH,
-      SUPLA_CHANNELFNC_LIGHTSWITCH,
-      SUPLA_CHANNELFNC_STAIRCASETIMER ->
+      SuplaChannelFunction.POWER_SWITCH,
+      SuplaChannelFunction.LIGHTSWITCH,
+      SuplaChannelFunction.STAIRCASE_TIMER ->
         channelData.channelValueEntity.subValueType == SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort()
 
       else -> false

@@ -25,12 +25,12 @@ import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
+import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.features.details.detailbase.standarddetail.DetailPage
 import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
 import org.supla.android.lib.SuplaClientMsg
-import org.supla.android.lib.SuplaConst
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.channel.*
@@ -223,7 +223,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
   fun `should open legacy detail fragment`() {
     // given
     val remoteId = 123
-    val groupFunction = SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
+    val groupFunction = SuplaChannelFunction.THERMOMETER
     val groupData: ChannelGroupDataEntity = mockk()
     every { groupData.remoteId } returns remoteId
     every { groupData.isOnline() } returns true
@@ -247,7 +247,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
   fun `should not open detail fragment when it is not supported`() {
     // given
     val remoteId = 123
-    val groupFunction = SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
+    val groupFunction = SuplaChannelFunction.THERMOMETER
     val groupData: ChannelGroupDataEntity = mockk()
     every { groupData.remoteId } returns remoteId
     every { groupData.isOnline() } returns true
@@ -268,7 +268,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
   fun `should open roller shutter detail when item is offline`() {
     // given
     val remoteId = 123
-    val function = SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
+    val function = SuplaChannelFunction.CONTROLLING_THE_ROLLER_SHUTTER
     val groupData: ChannelGroupDataEntity = mockk()
     every { groupData.remoteId } returns remoteId
     every { groupData.function } returns function

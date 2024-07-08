@@ -47,7 +47,7 @@ class GetGroupActivePercentageUseCase @Inject constructor() {
   )
 
   operator fun invoke(channelGroupEntity: ChannelGroupEntity, valueIndex: Int = 0): Int =
-    getActivePercentage(channelGroupEntity.function, channelGroupEntity.totalValue, valueIndex)
+    getActivePercentage(channelGroupEntity.function.value, channelGroupEntity.totalValue, valueIndex)
 
   operator fun invoke(channelGroup: ChannelGroup, valueIndex: Int = 0) =
     getActivePercentage(channelGroup.func, channelGroup.totalValue, valueIndex)

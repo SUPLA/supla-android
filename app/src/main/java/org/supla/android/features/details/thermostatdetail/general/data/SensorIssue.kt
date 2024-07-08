@@ -18,32 +18,31 @@ package org.supla.android.features.details.thermostatdetail.general.data
  */
 
 import org.supla.android.R
-import org.supla.android.core.ui.BitmapProvider
 import org.supla.android.core.ui.StringProvider
 import org.supla.android.data.source.local.entity.ChannelRelationType
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.remote.thermostat.SuplaThermostatFlag
 import org.supla.android.data.source.remote.thermostat.ThermostatValue
-import org.supla.android.extensions.getChannelIconUseCase
-import org.supla.android.images.ImageCache
+import org.supla.android.images.ImageId
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HOTELCARDSENSOR
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_OPENINGSENSOR_WINDOW
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROOFWINDOW
+import org.supla.android.usecases.icon.GetChannelIconUseCase
 
 data class SensorIssue(
-  val iconProvider: BitmapProvider?,
+  val imageId: ImageId?,
   val textProvider: StringProvider
 ) {
 
   companion object {
-    fun build(value: ThermostatValue, children: List<ChannelChildEntity>): SensorIssue? {
+    fun build(value: ThermostatValue, children: List<ChannelChildEntity>, getChannelIconUseCase: GetChannelIconUseCase): SensorIssue? {
       if (value.flags.contains(SuplaThermostatFlag.FORCED_OFF_BY_SENSOR).not()) {
         return null
       }
 
       return children.firstOrNull { it.relationType == ChannelRelationType.DEFAULT }?.let {
         SensorIssue(
-          iconProvider = { context -> ImageCache.getBitmap(context, context.getChannelIconUseCase(it.channelDataEntity)) },
+          imageId = getChannelIconUseCase(it.channelDataEntity),
           textProvider = { context ->
             when (it.function) {
               SUPLA_CHANNELFNC_OPENINGSENSOR_WINDOW,
@@ -56,7 +55,7 @@ data class SensorIssue(
           }
         )
       } ?: SensorIssue(
-        iconProvider = null,
+        imageId = null,
         textProvider = { it.getString(R.string.thermostat_detail_off_by_sensor) }
       )
     }

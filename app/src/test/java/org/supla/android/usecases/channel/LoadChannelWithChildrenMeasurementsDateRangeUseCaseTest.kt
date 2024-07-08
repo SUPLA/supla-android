@@ -40,8 +40,9 @@ import org.supla.android.data.source.local.entity.ChannelRelationEntity
 import org.supla.android.data.source.local.entity.ChannelRelationType
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
+import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.extensions.date
-import org.supla.android.lib.SuplaConst
 
 @RunWith(MockitoJUnitRunner::class)
 class LoadChannelWithChildrenMeasurementsDateRangeUseCaseTest {
@@ -166,9 +167,9 @@ class LoadChannelWithChildrenMeasurementsDateRangeUseCaseTest {
     val remoteId = 123
     val profileId = 321L
     val channel: ChannelDataEntity = mockk()
-    every { channel.channelEntity } returns mockk { every { function } returns SuplaConst.SUPLA_CHANNELFNC_HUMIDITY }
+    every { channel.channelEntity } returns mockk { every { function } returns SuplaChannelFunction.HUMIDITY }
     every { channel.remoteId } returns remoteId
-    every { channel.function } returns SuplaConst.SUPLA_CHANNELFNC_HUMIDITY
+    every { channel.function } returns SuplaChannelFunction.HUMIDITY
 
     whenever(readChannelWithChildrenUseCase.invoke(remoteId))
       .thenReturn(Maybe.just(ChannelWithChildren(channel, emptyList())))
@@ -186,21 +187,21 @@ class LoadChannelWithChildrenMeasurementsDateRangeUseCaseTest {
 
   private fun mockChannelWithChildren(): ChannelWithChildren {
     val channel: ChannelDataEntity = mockk()
-    every { channel.channelEntity } returns mockk { every { function } returns SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT }
-    every { channel.function } returns SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT
+    every { channel.channelEntity } returns mockk { every { function } returns SuplaChannelFunction.HVAC_THERMOSTAT }
+    every { channel.function } returns SuplaChannelFunction.HVAC_THERMOSTAT
     every { channel.remoteId } returns 1
     val child1: ChannelDataEntity = mockk()
     every { child1.channelEntity } returns mockk {
-      every { function } returns SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
+      every { function } returns SuplaChannelFunction.HUMIDITY_AND_TEMPERATURE
       every { remoteId } returns 2
     }
-    every { child1.function } returns SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
+    every { child1.function } returns SuplaChannelFunction.HUMIDITY_AND_TEMPERATURE
     val child2: ChannelDataEntity = mockk()
     every { child2.channelEntity } returns mockk {
-      every { function } returns SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
+      every { function } returns SuplaChannelFunction.THERMOMETER
       every { remoteId } returns 3
     }
-    every { child2.function } returns SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
+    every { child2.function } returns SuplaChannelFunction.THERMOMETER
 
     val mainRelation: ChannelRelationEntity = mockk {
       every { relationType } returns ChannelRelationType.MAIN_THERMOMETER

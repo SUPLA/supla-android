@@ -263,7 +263,7 @@ public class ChannelStatePopup
     if (state.getBridgeNodeSignalStrength() != null) {
       llBridgeNodeSignalStrength.setVisibility(View.VISIBLE);
       llProgress.setVisibility(View.GONE);
-      tvBridgeNodeSignalStrength.setText(state.getBridgeNodeSignalStrengthString(context));
+      tvBridgeNodeSignalStrength.setText(state.getBridgeNodeSignalStrengthString());
     }
 
     if (state.getUptime() != null) {

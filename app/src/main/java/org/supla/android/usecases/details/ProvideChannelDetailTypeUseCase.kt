@@ -19,16 +19,14 @@ package org.supla.android.usecases.details
 
 import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.source.local.entity.ChannelRelationType
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.local.entity.isElectricityMeter
 import org.supla.android.data.source.local.entity.isImpulseCounter
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
+import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.features.details.detailbase.standarddetail.DetailPage
 import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS
 import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER
-import org.supla.android.usecases.channel.ChannelWithChildren
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -36,9 +34,13 @@ import javax.inject.Singleton
 class ProvideChannelDetailTypeUseCase @Inject constructor() : BaseDetailTypeProviderUseCase() {
 
   operator fun invoke(channelWithChildren: ChannelWithChildren): DetailType? = when (val function = channelWithChildren.channel.function) {
-    SUPLA_CHANNELFNC_LIGHTSWITCH,
-    SUPLA_CHANNELFNC_POWERSWITCH,
-    SUPLA_CHANNELFNC_STAIRCASETIMER -> SwitchDetailType(getSwitchDetailPages(channelWithChildren))
+    SuplaChannelFunction.LIGHTSWITCH,
+    SuplaChannelFunction.POWER_SWITCH,
+    SuplaChannelFunction.STAIRCASE_TIMER,
+    SuplaChannelFunction.PUMP_SWITCH,
+    SuplaChannelFunction.HEAT_OR_COLD_SOURCE_SWITCH -> SwitchDetailType(getSwitchDetailPages(channelWithChildren))
+
+    SuplaChannelFunction.HVAC_THERMOSTAT -> ThermostatDetailType(getThermostatDetailPages(channelWithChildren))
 
     else -> provide(function)
   }
@@ -65,7 +67,22 @@ class ProvideChannelDetailTypeUseCase @Inject constructor() : BaseDetailTypeProv
     return list
   }
 
+  private fun getThermostatDetailPages(channelWithChildren: ChannelWithChildren): List<DetailPage> {
+    val list = mutableListOf(DetailPage.THERMOSTAT)
+
+    val slaveThermostat = channelWithChildren.children.firstOrNull { it.relationType == ChannelRelationType.MASTER_THERMOSTAT }
+    if (slaveThermostat != null) {
+      list.add(DetailPage.THERMOSTAT_LIST)
+    }
+
+    list.add(DetailPage.SCHEDULE)
+    list.add(DetailPage.THERMOSTAT_TIMER)
+    list.add(DetailPage.THERMOSTAT_HISTORY)
+
+    return list
+  }
+
   private fun supportsTimer(channelDataBase: ChannelDataBase) =
     SuplaChannelFlag.COUNTDOWN_TIMER_SUPPORTED inside channelDataBase.flags &&
-      channelDataBase.function != SUPLA_CHANNELFNC_STAIRCASETIMER
+      channelDataBase.function != SuplaChannelFunction.STAIRCASE_TIMER
 }

@@ -17,57 +17,67 @@ package org.supla.android.usecases.thermostat
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import io.mockk.MockKAnnotations
 import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.tuple
+import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.whenever
+import org.supla.android.R
 import org.supla.android.data.model.general.IconType
 import org.supla.android.data.source.local.entity.ChannelRelationEntity
 import org.supla.android.data.source.local.entity.ChannelRelationType
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
-import org.supla.android.usecases.channel.ChannelWithChildren
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
+import org.supla.android.data.source.remote.channel.SuplaChannelFunction
+import org.supla.android.features.details.thermostatdetail.general.MeasurementValue
+import org.supla.android.images.ImageId
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.channel.ValueType
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 
-@RunWith(MockitoJUnitRunner::class)
 class CreateTemperaturesListUseCaseTest {
 
-  @Mock
+  @MockK
   private lateinit var getChannelIconUseCase: GetChannelIconUseCase
 
-  @Mock
+  @MockK
   private lateinit var getChannelValueStringUseCase: GetChannelValueStringUseCase
 
-  @InjectMocks
+  @InjectMockKs
   lateinit var useCase: CreateTemperaturesListUseCase
+
+  @Before
+  fun setUp() {
+    MockKAnnotations.init(this)
+  }
 
   @Test
   fun `should create list of temperatures`() {
     // given
-    val child1 = createChild(ChannelRelationType.MAIN_THERMOMETER, 111, "11.0", SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE, "12.0")
-    val child2 = createChild(ChannelRelationType.AUX_THERMOMETER_FLOOR, 222, "22.0")
+    val child1ImageId: ImageId = mockk()
+    val child2ImageId: ImageId = mockk()
+    val child1 =
+      createChild(ChannelRelationType.MAIN_THERMOMETER, 111, "11.0", SuplaChannelFunction.HUMIDITY_AND_TEMPERATURE, "12.0", child1ImageId)
+    val child2 = createChild(ChannelRelationType.AUX_THERMOMETER_FLOOR, 222, "22.0", imageId = child2ImageId)
 
     val channelWithChildren: ChannelWithChildren = mockk()
     every { channelWithChildren.children } returns listOf(child1, child2)
 
     // when
-    val temperatures = useCase(channelWithChildren)
+    val temperatures = useCase.invoke(channelWithChildren)
 
     // then
     assertThat(temperatures).hasSize(3)
     assertThat(temperatures)
-      .extracting({ it.remoteId }, { it.value })
-      .containsExactly(tuple(111, "11.0"), tuple(111, "12.0"), tuple(222, "22.0"))
+      .containsExactly(
+        MeasurementValue(111, child1ImageId, "11.0"),
+        MeasurementValue(111, child1ImageId, "12.0"),
+        MeasurementValue(222, child2ImageId, "22.0")
+      )
   }
 
   @Test
@@ -77,39 +87,42 @@ class CreateTemperaturesListUseCaseTest {
     every { channelWithChildren.children } returns emptyList()
 
     // when
-    val temperatures = useCase(channelWithChildren)
+    val temperatures = useCase.invoke(channelWithChildren)
 
     // then
     assertThat(temperatures).hasSize(1)
     assertThat(temperatures)
-      .extracting({ it.remoteId }, { it.value })
-      .containsExactly(tuple(-1, "---"))
+      .containsExactly(MeasurementValue(-1, ImageId(R.drawable.ic_unknown_channel), "---"))
   }
 
   @Test
   fun `should add main thermometer even if there is no main thermometer`() {
     // given
-    val child2 = createChild(ChannelRelationType.AUX_THERMOMETER_FLOOR, 222, "22.0")
+    val imageId: ImageId = mockk()
+    val child2 = createChild(ChannelRelationType.AUX_THERMOMETER_FLOOR, 222, "22.0", imageId = imageId)
 
     val channelWithChildren: ChannelWithChildren = mockk()
     every { channelWithChildren.children } returns listOf(child2)
 
     // when
-    val temperatures = useCase(channelWithChildren)
+    val temperatures = useCase.invoke(channelWithChildren)
 
     // then
     assertThat(temperatures).hasSize(2)
     assertThat(temperatures)
-      .extracting({ it.remoteId }, { it.value })
-      .containsExactly(tuple(-1, "---"), tuple(222, "22.0"))
+      .containsExactly(
+        MeasurementValue(-1, ImageId(R.drawable.ic_unknown_channel), "---"),
+        MeasurementValue(222, imageId, "22.0")
+      )
   }
 
   private fun createChild(
     relationType: ChannelRelationType,
     remoteId: Int,
     text: String,
-    function: Int = SUPLA_CHANNELFNC_THERMOMETER,
-    secondValue: String? = null
+    function: SuplaChannelFunction = SuplaChannelFunction.THERMOMETER,
+    secondValue: String? = null,
+    imageId: ImageId = mockk()
   ): ChannelChildEntity {
     val relationEntity = mockk<ChannelRelationEntity> {
       every { this@mockk.relationType } returns relationType
@@ -118,10 +131,10 @@ class CreateTemperaturesListUseCaseTest {
     every { channel.remoteId } returns remoteId
     every { channel.function } returns function
 
-    whenever(getChannelValueStringUseCase(channel, withUnit = false)).thenReturn(text)
-    secondValue?.let { whenever(getChannelValueStringUseCase(channel, ValueType.SECOND, withUnit = false)).thenReturn(secondValue) }
-    whenever(getChannelIconUseCase.getIconProvider(channel)).thenReturn { null }
-    secondValue?.let { whenever(getChannelIconUseCase.getIconProvider(channel, IconType.SECOND)).thenReturn { null } }
+    every { getChannelValueStringUseCase.invoke(channel, withUnit = false) } returns text
+    secondValue?.let { every { getChannelValueStringUseCase.invoke(channel, ValueType.SECOND, withUnit = false) } returns secondValue }
+    every { getChannelIconUseCase.invoke(channel) } returns imageId
+    every { getChannelIconUseCase.invoke(channel, IconType.SECOND) } returns imageId
 
     return ChannelChildEntity(relationEntity, channel)
   }

@@ -41,6 +41,9 @@ public class SuplaChannelElectricityMeterValue implements Serializable {
   @UsedFromNativeCode
   SuplaChannelElectricityMeterValue(
       int MeasuredValues,
+      int VoltagePhaseAngle12,
+      int VoltagePhaseAngle13,
+      int PhaseSequence,
       int Period,
       int TotalCost,
       int PricePerUnit,

@@ -46,6 +46,7 @@ import org.supla.android.usecases.icon.producers.GateIconResourceProducer
 import org.supla.android.usecases.icon.producers.GatewayIconResourceProducer
 import org.supla.android.usecases.icon.producers.GeneralPurposeMeasurementIconResourceProducer
 import org.supla.android.usecases.icon.producers.GeneralPurposeMeterIconResourceProducer
+import org.supla.android.usecases.icon.producers.HeatOrColdSourceSwitchIconResourceProducer
 import org.supla.android.usecases.icon.producers.HotelCardIconResourceProducer
 import org.supla.android.usecases.icon.producers.HumidityAndTemperatureIconResourceProducer
 import org.supla.android.usecases.icon.producers.LightSwitchIconResourceProducer
@@ -53,6 +54,7 @@ import org.supla.android.usecases.icon.producers.LiquidSensorIconResourceProduce
 import org.supla.android.usecases.icon.producers.MailSensorIconResourceProducer
 import org.supla.android.usecases.icon.producers.PowerSwitchIconResourceProducer
 import org.supla.android.usecases.icon.producers.ProjectorScreenIconResourceProducer
+import org.supla.android.usecases.icon.producers.PumpSwitchIconResourceProducer
 import org.supla.android.usecases.icon.producers.RgbLightingIconResourceProducer
 import org.supla.android.usecases.icon.producers.RollerShutterIconResourceProducer
 import org.supla.android.usecases.icon.producers.RoofWindowIconResourceProducer
@@ -114,7 +116,9 @@ class GetDefaultIconResourceUseCase @Inject constructor() {
     ProjectorScreenIconResourceProducer(),
     CurtainIconResourceProducer(),
     VerticalBlindsIconResourceProducer,
-    GarageDoorRollerIconResourceProducer
+    GarageDoorRollerIconResourceProducer,
+    HeatOrColdSourceSwitchIconResourceProducer,
+    PumpSwitchIconResourceProducer
   )
 
   @DrawableRes

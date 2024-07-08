@@ -17,7 +17,7 @@ package org.supla.android.data.source.remote.channel
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-enum class SuplaChannelFunction(private val value: Int) {
+enum class SuplaChannelFunction(val value: Int) {
   UNKNOWN(-1),
   NONE(0),
   CONTROLLING_THE_GATEWAY_LOCK(10),
@@ -76,7 +76,9 @@ enum class SuplaChannelFunction(private val value: Int) {
   PROJECTOR_SCREEN(920),
   CURTAIN(930),
   VERTICAL_BLIND(940),
-  ROLLER_GARAGE_DOOR(950);
+  ROLLER_GARAGE_DOOR(950),
+  PUMP_SWITCH(960),
+  HEAT_OR_COLD_SOURCE_SWITCH(970);
 
   companion object {
     fun from(value: Int): SuplaChannelFunction {

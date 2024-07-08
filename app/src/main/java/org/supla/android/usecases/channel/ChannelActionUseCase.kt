@@ -38,11 +38,11 @@ class ChannelActionUseCase @Inject constructor(
     getChannel(channelId).flatMapCompletable { performActionCompletable(it, buttonType, false) }
 
   override fun performAction(channelBase: ChannelDataEntity, buttonType: ButtonType, forGroup: Boolean) {
-    if (isOnOff(channelBase.function) && buttonType == ButtonType.RIGHT && isOvercurrentRelayOff(channelBase)) {
+    if (isOnOff(channelBase.function.value) && buttonType == ButtonType.RIGHT && isOvercurrentRelayOff(channelBase)) {
       throw ActionException.ChannelExceedAmperage(channelBase.remoteId)
     }
 
-    if (buttonType == ButtonType.LEFT && isValveChannel(channelBase.function) && isChannelManuallyClosedOrIsFlooding(channelBase)) {
+    if (buttonType == ButtonType.LEFT && isValveChannel(channelBase.function.value) && isChannelManuallyClosedOrIsFlooding(channelBase)) {
       throw ActionException.ChannelClosedManually(channelBase.remoteId)
     }
 

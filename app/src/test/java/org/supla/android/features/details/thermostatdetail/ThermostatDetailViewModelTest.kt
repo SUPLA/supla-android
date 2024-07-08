@@ -34,12 +34,11 @@ import org.supla.android.core.ui.StringProvider
 import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
 import org.supla.android.data.source.remote.thermostat.ThermostatValue
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.UpdateEventsManager
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.GetChannelCaptionUseCase
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
@@ -88,8 +87,8 @@ class ThermostatDetailViewModelTest :
       .thenReturn(Maybe.just(channelData1), Maybe.just(channelData2))
 
     // when
-    viewModel.loadData(remoteId, ItemType.CHANNEL, SUPLA_CHANNELFNC_HVAC_THERMOSTAT)
-    viewModel.loadData(remoteId, ItemType.CHANNEL, SUPLA_CHANNELFNC_HVAC_THERMOSTAT)
+    viewModel.loadData(remoteId, ItemType.CHANNEL, SuplaChannelFunction.HVAC_THERMOSTAT)
+    viewModel.loadData(remoteId, ItemType.CHANNEL, SuplaChannelFunction.HVAC_THERMOSTAT)
 
     // then
     assertThat(states).containsExactly(
@@ -109,7 +108,7 @@ class ThermostatDetailViewModelTest :
       .thenReturn(Maybe.just(channelData1))
 
     // when
-    viewModel.loadData(remoteId, ItemType.CHANNEL, SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER)
+    viewModel.loadData(remoteId, ItemType.CHANNEL, SuplaChannelFunction.HVAC_DOMESTIC_HOT_WATER)
 
     // then
     assertThat(states).isEmpty()
@@ -127,7 +126,7 @@ class ThermostatDetailViewModelTest :
       .thenReturn(Maybe.just(channelData1))
 
     // when
-    viewModel.loadData(remoteId, ItemType.CHANNEL, SUPLA_CHANNELFNC_HVAC_THERMOSTAT)
+    viewModel.loadData(remoteId, ItemType.CHANNEL, SuplaChannelFunction.HVAC_THERMOSTAT)
 
     // then
     assertThat(states).isEmpty()
@@ -146,12 +145,12 @@ class ThermostatDetailViewModelTest :
     }
 
     val channel: ChannelEntity = mockk {
-      every { this@mockk.function } returns SUPLA_CHANNELFNC_HVAC_THERMOSTAT
+      every { this@mockk.function } returns SuplaChannelFunction.HVAC_THERMOSTAT
     }
 
     return mockk<ChannelDataEntity> {
       every { this@mockk.channelEntity } returns channel
-      every { this@mockk.function } returns SUPLA_CHANNELFNC_HVAC_THERMOSTAT
+      every { this@mockk.function } returns SuplaChannelFunction.HVAC_THERMOSTAT
       every { this@mockk.visible } returns visible
       every { this@mockk.channelValueEntity } returns value
     }

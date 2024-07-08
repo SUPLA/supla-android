@@ -19,7 +19,6 @@ package org.supla.android.features.details.thermostatdetail.ui
 
 import android.content.Context
 import android.util.AttributeSet
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -38,12 +37,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.AbstractComposeView
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.Density
@@ -53,6 +49,8 @@ import androidx.compose.ui.unit.min
 import org.supla.android.R
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.features.details.thermostatdetail.general.MeasurementValue
+import org.supla.android.images.ImageId
+import org.supla.android.ui.views.Image
 
 class ThermometersValues @JvmOverloads constructor(
   context: Context,
@@ -90,7 +88,7 @@ fun ThermometersValues(temperatures: List<MeasurementValue>) {
       Box(
         modifier = Modifier
           .background(MaterialTheme.colorScheme.surface)
-          .height(80.dp)
+          .height(dimensionResource(id = R.dimen.detail_top_component))
           .padding(top = dimensionResource(id = R.dimen.distance_small))
           .weight(weight)
       )
@@ -104,19 +102,17 @@ private fun TemperatureAndHumidityCell(temperature: MeasurementValue, weight: Fl
   Row(
     modifier = Modifier
       .background(MaterialTheme.colorScheme.surface)
-      .height(80.dp)
+      .height(dimensionResource(id = R.dimen.detail_top_component))
       .padding(vertical = dimensionResource(id = R.dimen.distance_small))
       .weight(weight),
     verticalAlignment = Alignment.CenterVertically,
     horizontalArrangement = Arrangement.spacedBy(8.dp)
   ) {
     Spacer(modifier = Modifier.weight(1f))
-    temperature.iconProvider(LocalContext.current)?.let {
-      ThermometerIcon(
-        icon = it.asImageBitmap(),
-        size = if (small) min(24.dp, availableWidthDp.div(4).dp) else min(36.dp, availableWidthDp.div(4).dp)
-      )
-    }
+    ThermometerIcon(
+      icon = temperature.imageId,
+      size = if (small) min(24.dp, availableWidthDp.div(4).dp) else min(36.dp, availableWidthDp.div(4).dp)
+    )
     CompositionLocalProvider(LocalDensity provides Density(LocalDensity.current.density, fontScale = 1f)) {
       Text(
         text = temperature.value,
@@ -127,8 +123,8 @@ private fun TemperatureAndHumidityCell(temperature: MeasurementValue, weight: Fl
   }
 
 @Composable
-private fun ThermometerIcon(icon: ImageBitmap, size: Dp = 48.dp) = Image(
-  bitmap = icon,
+private fun ThermometerIcon(icon: ImageId, size: Dp = 48.dp) = Image(
+  imageId = icon,
   contentDescription = "",
   modifier = Modifier.size(size),
   contentScale = ContentScale.Inside

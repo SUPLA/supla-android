@@ -60,7 +60,7 @@ abstract class BaseSlideableContent<T : SlideableListItemData> : BaseAbstractCom
   private var updateDisposable: Disposable? = null
 
   val isOnline: Boolean
-    get() = data?.online == true
+    get() = data?.onlineState?.online == true
 
   override fun onAttachedToWindow() {
     super.onAttachedToWindow()

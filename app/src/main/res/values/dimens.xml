@@ -68,4 +68,5 @@
     <dimen name="list_separator_thickness">1dp</dimen>
     <dimen name="advanced_top_offset">4dp</dimen>
     <dimen name="settings_cell_height">@dimen/button_default_size</dimen>
+    <dimen name="detail_top_component">60dp</dimen>
 </resources>

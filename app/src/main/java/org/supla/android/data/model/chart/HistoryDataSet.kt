@@ -17,12 +17,9 @@ package org.supla.android.data.model.chart
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.content.Context
 import android.content.res.Resources
-import android.graphics.Bitmap
 import androidx.annotation.ColorRes
 import androidx.annotation.DimenRes
-import androidx.compose.runtime.Composable
 import androidx.core.content.res.ResourcesCompat
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
@@ -33,8 +30,8 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.github.mikephil.charting.interfaces.datasets.ICandleDataSet
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
-import org.supla.android.core.ui.BitmapProvider
 import org.supla.android.data.model.chart.marker.ChartEntryDetails
+import org.supla.android.images.ImageId
 import org.supla.android.usecases.channel.valueformatter.ChannelValueFormatter
 
 data class HistoryDataSet(
@@ -171,7 +168,7 @@ data class HistoryDataSet(
   }
 
   data class LabelData(
-    val iconProvider: BitmapProvider?,
+    val imageId: ImageId?,
     val value: String,
     @ColorRes val color: Int,
     val presentColor: Boolean = true,
@@ -179,23 +176,17 @@ data class HistoryDataSet(
     val justColor: Boolean = false,
     @DimenRes val iconSize: Int? = null
   ) {
-    @Composable
-    fun Icon(context: Context, content: @Composable (Bitmap) -> Unit) {
-      iconProvider?.let {
-        it(context)?.let { bitmap -> content(bitmap) }
-      }
-    }
 
     companion object {
       operator fun invoke(@ColorRes color: Int): LabelData =
-        LabelData({ null }, "", color, presentColor = false, justColor = true)
+        LabelData(null, "", color, presentColor = false, justColor = true)
     }
   }
 }
 
 fun singleLabel(
-  iconProvider: BitmapProvider,
+  imageId: ImageId,
   value: String,
   @ColorRes color: Int
 ): HistoryDataSet.Label.Single =
-  HistoryDataSet.Label.Single(HistoryDataSet.LabelData(iconProvider, value, color))
+  HistoryDataSet.Label.Single(HistoryDataSet.LabelData(imageId, value, color))

@@ -129,9 +129,9 @@ fun SuplaButton(
 
   var pressed by remember { mutableStateOf(false) }
 
-  var borderColor by remember(active, disabled) { mutableStateOf(colors.border(active, disabled)) }
-  var shadowColor by remember(active) { mutableStateOf(if (active) colors.shadowPressed else colors.shadow) }
-  var foregroundColor by remember(active, disabled) { mutableStateOf(colors.content(active, disabled)) }
+  var borderColor by remember(colors, active, disabled) { mutableStateOf(colors.border(active, disabled)) }
+  var shadowColor by remember(colors, active) { mutableStateOf(if (active) colors.shadowPressed else colors.shadow) }
+  var foregroundColor by remember(colors, active, disabled) { mutableStateOf(colors.content(active, disabled)) }
 
   Box(
     modifier = modifier

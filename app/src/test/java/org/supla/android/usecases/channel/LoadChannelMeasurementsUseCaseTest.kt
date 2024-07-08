@@ -32,8 +32,7 @@ import org.junit.Test
 import org.supla.android.data.model.chart.ChannelChartSets
 import org.supla.android.data.model.chart.ChartDataSpec
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_ALARM
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
+import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.usecases.channel.measurementsprovider.ElectricityConsumptionMeasurementsProvider
 import org.supla.android.usecases.channel.measurementsprovider.GeneralPurposeMeasurementMeasurementsProvider
 import org.supla.android.usecases.channel.measurementsprovider.GeneralPurposeMeterMeasurementsProvider
@@ -72,7 +71,7 @@ class LoadChannelMeasurementsUseCaseTest : BaseLoadMeasurementsUseCaseTest() {
   fun `should provide sets when there is a provider which can handle given function`() {
     // given
     val remoteId = 1
-    val function = SUPLA_CHANNELFNC_THERMOMETER
+    val function = SuplaChannelFunction.THERMOMETER
     val channel: ChannelDataEntity = mockk {
       every { this@mockk.function } returns function
     }
@@ -80,7 +79,7 @@ class LoadChannelMeasurementsUseCaseTest : BaseLoadMeasurementsUseCaseTest() {
     val channelChartSets: ChannelChartSets = mockk()
 
     every { readChannelByRemoteIdUseCase.invoke(remoteId) } returns Maybe.just(channel)
-    every { temperatureMeasurementsProvider.handle(function) } returns true
+    every { temperatureMeasurementsProvider.handle(function.value) } returns true
     every { temperatureMeasurementsProvider.provide(channel, spec) } returns Single.just(channelChartSets)
 
     // when
@@ -92,7 +91,7 @@ class LoadChannelMeasurementsUseCaseTest : BaseLoadMeasurementsUseCaseTest() {
 
     verify {
       readChannelByRemoteIdUseCase.invoke(remoteId)
-      temperatureMeasurementsProvider.handle(function)
+      temperatureMeasurementsProvider.handle(function.value)
       temperatureMeasurementsProvider.provide(channel, spec)
     }
     confirmVerified(
@@ -110,18 +109,18 @@ class LoadChannelMeasurementsUseCaseTest : BaseLoadMeasurementsUseCaseTest() {
   fun `should throw exception when there is no provider for given function`() {
     // given
     val remoteId = 1
-    val function = SUPLA_CHANNELFNC_ALARM
+    val function = SuplaChannelFunction.ALARM
     val channel: ChannelDataEntity = mockk {
       every { this@mockk.function } returns function
     }
     val spec: ChartDataSpec = mockk()
 
     every { readChannelByRemoteIdUseCase.invoke(remoteId) } returns Maybe.just(channel)
-    every { temperatureMeasurementsProvider.handle(function) } returns false
-    every { temperatureAndHumidityMeasurementsProvider.handle(function) } returns false
-    every { generalPurposeMeasurementMeasurementsProvider.handle(function) } returns false
-    every { generalPurposeMeterMeasurementsProvider.handle(function) } returns false
-    every { electricityConsumptionMeasurementsProvider.handle(function) } returns false
+    every { temperatureMeasurementsProvider.handle(function.value) } returns false
+    every { temperatureAndHumidityMeasurementsProvider.handle(function.value) } returns false
+    every { generalPurposeMeasurementMeasurementsProvider.handle(function.value) } returns false
+    every { generalPurposeMeterMeasurementsProvider.handle(function.value) } returns false
+    every { electricityConsumptionMeasurementsProvider.handle(function.value) } returns false
 
     // when
     val observer = useCase.invoke(remoteId, spec).test()
@@ -129,11 +128,11 @@ class LoadChannelMeasurementsUseCaseTest : BaseLoadMeasurementsUseCaseTest() {
 
     verify {
       readChannelByRemoteIdUseCase.invoke(remoteId)
-      temperatureMeasurementsProvider.handle(function)
-      temperatureAndHumidityMeasurementsProvider.handle(function)
-      generalPurposeMeasurementMeasurementsProvider.handle(function)
-      generalPurposeMeterMeasurementsProvider.handle(function)
-      electricityConsumptionMeasurementsProvider.handle(function)
+      temperatureMeasurementsProvider.handle(function.value)
+      temperatureAndHumidityMeasurementsProvider.handle(function.value)
+      generalPurposeMeasurementMeasurementsProvider.handle(function.value)
+      generalPurposeMeterMeasurementsProvider.handle(function.value)
+      electricityConsumptionMeasurementsProvider.handle(function.value)
     }
     confirmVerified(
       readChannelByRemoteIdUseCase,

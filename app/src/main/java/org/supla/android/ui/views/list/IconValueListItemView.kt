@@ -37,6 +37,7 @@ import org.supla.android.extensions.preferences
 import org.supla.android.images.ImageId
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.layouts.BaseSlideableContent
+import org.supla.android.ui.lists.ListOnlineState
 import org.supla.android.ui.lists.data.SlideableListItemData
 import org.supla.android.ui.lists.data.default
 import org.supla.android.ui.views.list.components.ListItemIcon
@@ -92,7 +93,7 @@ fun IconValueListItemView(
   val title = data.titleProvider(LocalContext.current)
   ListItemScaffold(
     itemTitle = title,
-    itemOnline = data.online,
+    itemOnlineState = data.onlineState,
     itemEstimatedEndDate = data.estimatedTimerEndDate,
     onInfoClick = onInfoClick,
     onIssueClick = onIssueClick,
@@ -127,7 +128,7 @@ private fun Preview() {
     ) {
       IconValueListItemView(
         data = SlideableListItemData.Default(
-          online = true,
+          onlineState = ListOnlineState.ONLINE,
           titleProvider = { "Channel" },
           icon = ImageId(R.drawable.fnc_gpm_5),
           value = "100 hPa",

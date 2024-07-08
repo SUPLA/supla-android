@@ -25,8 +25,9 @@ import org.supla.android.data.model.chart.HumidityChartColors
 import org.supla.android.data.model.chart.TemperatureChartColors
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.isHvacThermostat
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.local.entity.hasMeasurements
-import org.supla.android.lib.SuplaConst
+import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.usecases.channel.measurementsprovider.TemperatureAndHumidityMeasurementsProvider
 import org.supla.android.usecases.channel.measurementsprovider.TemperatureMeasurementsProvider
 import javax.inject.Inject
@@ -73,10 +74,10 @@ class LoadChannelWithChildrenMeasurementsUseCase @Inject constructor(
     val humidityColors = HumidityChartColors()
     val observables = mutableListOf<Single<ChannelChartSets>>().also { list ->
       channelsWithMeasurements.forEach {
-        if (it.function == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER) {
+        if (it.function == SuplaChannelFunction.THERMOMETER) {
           val color = temperatureColors.nextColor()
           list.add(temperatureMeasurementsProvider.provide(it, spec) { color })
-        } else if (it.function == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE) {
+        } else if (it.function == SuplaChannelFunction.HUMIDITY_AND_TEMPERATURE) {
           val firstColor = temperatureColors.nextColor()
           val secondColor = humidityColors.nextColor()
           list.add(

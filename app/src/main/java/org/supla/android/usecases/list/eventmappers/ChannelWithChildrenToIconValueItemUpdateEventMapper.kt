@@ -18,11 +18,12 @@ package org.supla.android.usecases.list.eventmappers
  */
 
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
-import org.supla.android.data.source.local.entity.complex.isMeasurement
+import org.supla.android.data.source.local.entity.complex.isIconValueItem
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
+import org.supla.android.data.source.local.entity.extensions.onlineState
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.extensions.guardLet
 import org.supla.android.ui.lists.data.SlideableListItemData
-import org.supla.android.usecases.channel.ChannelWithChildren
 import org.supla.android.usecases.channel.GetChannelCaptionUseCase
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
@@ -31,14 +32,14 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ChannelWithChildrenToMeasurementUpdateEventMapper @Inject constructor(
+class ChannelWithChildrenToIconValueItemUpdateEventMapper @Inject constructor(
   private val getChannelCaptionUseCase: GetChannelCaptionUseCase,
   private val getChannelIconUseCase: GetChannelIconUseCase,
   private val getChannelValueStringUseCase: GetChannelValueStringUseCase,
 ) : CreateListItemUpdateEventDataUseCase.Mapper {
 
   override fun handle(item: Any): Boolean {
-    return (item as? ChannelWithChildren)?.channel?.isMeasurement() == true
+    return (item as? ChannelWithChildren)?.channel?.isIconValueItem() == true
   }
 
   override fun map(item: Any): SlideableListItemData {
@@ -50,7 +51,7 @@ class ChannelWithChildrenToMeasurementUpdateEventMapper @Inject constructor(
 
   private fun toListItemData(channelData: ChannelDataEntity): SlideableListItemData.Default =
     SlideableListItemData.Default(
-      online = channelData.channelValueEntity.online,
+      onlineState = channelData.channelValueEntity.onlineState,
       titleProvider = getChannelCaptionUseCase(channelData),
       icon = getChannelIconUseCase.invoke(channelData),
       value = getChannelValueStringUseCase.valueOrNull(channelData),

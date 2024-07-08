@@ -17,42 +17,24 @@ package org.supla.android.ui.views.list.components
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.graphics.Bitmap
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import org.supla.android.R
-import org.supla.android.images.ImageCache
 import org.supla.android.images.ImageId
+import org.supla.android.ui.views.Image
 
 @Composable
-fun ListItemIcon(imageId: ImageId, scale: Float) {
-  val context = LocalContext.current
-  val imageIdState = remember { mutableStateOf(imageId) }
-  val icon = remember { mutableStateOf<Bitmap?>(ImageCache.getBitmap(context, imageId)) }
-
-  if (imageIdState.value != imageId) {
-    imageIdState.value = imageId
-    icon.value = ImageCache.getBitmap(LocalContext.current, imageId)
-  }
-
-  icon.value?.let {
-    Image(
-      bitmap = it.asImageBitmap(),
-      contentDescription = null,
-      alignment = Alignment.Center,
-      modifier = androidx.compose.ui.Modifier
-        .width(dimensionResource(id = R.dimen.channel_img_width).times(scale))
-        .height(dimensionResource(id = R.dimen.channel_img_height).times(scale)),
-      contentScale = ContentScale.Fit
-    )
-  }
+fun ListItemIcon(imageId: ImageId, scale: Float, modifier: Modifier = Modifier) {
+  Image(
+    imageId = imageId,
+    contentDescription = null,
+    alignment = Alignment.Center,
+    modifier = modifier
+      .width(dimensionResource(id = R.dimen.channel_img_width).times(scale))
+      .height(dimensionResource(id = R.dimen.channel_img_height).times(scale)),
+  )
 }

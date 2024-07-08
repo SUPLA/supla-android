@@ -30,8 +30,7 @@ import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
-import org.supla.android.lib.SuplaConst
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HUMIDITY
+import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.usecases.channel.valueprovider.DepthSensorValueProvider
 import org.supla.android.usecases.channel.valueprovider.DistanceSensorValueProvider
 import org.supla.android.usecases.channel.valueprovider.ElectricityMeterValueProvider
@@ -75,14 +74,14 @@ class GetChannelValueUseCaseTest {
   fun `should check all handlers if can handle channel and throw exception that could not provide channel value`() {
     // given
     val channel: ChannelDataEntity = mockk {
-      every { function } returns SUPLA_CHANNELFNC_HUMIDITY
+      every { function } returns SuplaChannelFunction.HUMIDITY
     }
 
     // when
     Assertions.assertThatThrownBy {
       useCase.invoke(channel)
     }
-      .hasMessage("No value provider for channel function `$SUPLA_CHANNELFNC_HUMIDITY`")
+      .hasMessage("No value provider for channel function `${SuplaChannelFunction.HUMIDITY}`")
       .isInstanceOf(IllegalStateException::class.java)
 
     // then
@@ -101,7 +100,7 @@ class GetChannelValueUseCaseTest {
   @Test
   fun `should return value of first provider which can handle channel`() {
     // given
-    val function = SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
+    val function = SuplaChannelFunction.HUMIDITY_AND_TEMPERATURE
     val value = 12.4
     val channel: ChannelDataEntity = mockk {
       every { this@mockk.function } returns function
