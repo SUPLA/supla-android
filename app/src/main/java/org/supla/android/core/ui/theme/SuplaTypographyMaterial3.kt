@@ -17,16 +17,20 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import androidx.compose.material.Colors
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
+import org.supla.android.R
+import org.supla.android.extensions.fontDimensionResource
 
 @Composable
-fun SuplaTypographyMaterial3(colors: Colors) = Typography(
+fun suplaTypographyMaterial3(colors: ColorScheme) = Typography(
   displayLarge = TextStyle(
     fontSize = 60.sp,
     letterSpacing = 0.05.em,
@@ -128,3 +132,13 @@ fun SuplaTypographyMaterial3(colors: Colors) = Typography(
     fontFamily = OpenSansFontFamily
   )
 )
+
+@Composable
+fun Typography.listItemCaption(): TextStyle =
+  TextStyle(
+    color = androidx.compose.ui.res.colorResource(id = R.color.on_background),
+    fontSize = fontDimensionResource(id = R.dimen.channel_caption_text_size),
+    letterSpacing = 0.04.sp,
+    fontWeight = FontWeight.Bold,
+    fontFamily = FontFamily(Font(R.font.open_sans_bold))
+  )

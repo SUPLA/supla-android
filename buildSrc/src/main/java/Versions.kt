@@ -37,7 +37,7 @@ object Versions {
         const val Biometric = "1.1.0"
 
         object Compose {
-            const val Core = "1.6.7"
+            const val Core = "1.6.8"
             const val ConstaintLayout = "1.0.1"
             const val Material3 = "1.2.1"
         }
