@@ -306,17 +306,21 @@ public class SuplaApp extends MultiDexApplication
   }
 
   private void setupNetworkCallback() {
-    NetworkRequest requst =
+    NetworkRequest.Builder builder =
         new NetworkRequest.Builder()
             .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
             .addTransportType(NetworkCapabilities.TRANSPORT_ETHERNET)
-            .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
-            .addTransportType(NetworkCapabilities.TRANSPORT_WIFI_AWARE)
-            .build();
+            .addTransportType(NetworkCapabilities.TRANSPORT_WIFI);
+
+    if (VERSION.SDK_INT >= VERSION_CODES.O) {
+      builder = builder.addTransportType(NetworkCapabilities.TRANSPORT_WIFI_AWARE);
+    }
+
+    NetworkRequest request = builder.build();
 
     ConnectivityManager manager =
         (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-    manager.registerNetworkCallback(requst, suplaClientNetworkCallback);
+    manager.registerNetworkCallback(request, suplaClientNetworkCallback);
   }
 
   private void enqueueWidgetRefresh() {

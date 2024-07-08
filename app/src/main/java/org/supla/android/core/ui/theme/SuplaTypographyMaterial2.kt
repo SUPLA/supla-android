@@ -49,16 +49,6 @@ fun SuplaTypographyMaterial2(colors: Colors) = Typography(
 )
 
 @Composable
-fun Typography.listItemCaption(): TextStyle =
-  TextStyle(
-    color = colorResource(id = R.color.on_background),
-    fontSize = fontDimensionResource(id = R.dimen.channel_caption_text_size),
-    letterSpacing = 0.04.sp,
-    fontWeight = FontWeight.Bold,
-    fontFamily = FontFamily(Font(R.font.open_sans_bold))
-  )
-
-@Composable
 fun Typography.listItemValue(): TextStyle =
   TextStyle(
     color = colorResource(id = R.color.on_background),

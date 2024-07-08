@@ -24,7 +24,7 @@ enum class LockScreenScope(val value: Int) {
 
   companion object {
     fun from(value: Int): LockScreenScope {
-      for (mode in LockScreenScope.values()) {
+      for (mode in entries) {
         if (mode.value == value) {
           return mode
         }

@@ -600,7 +600,7 @@
   <string name="lock_screen_remove_pin">PIN Löschen</string>
   <string name="lock_screen_forgotten_code">PIN-Code vergessen</string>
   <string name="lock_screen_forgotten_code_title">Zugangscode</string>
-  <string name="lock_screen_forgotten_code_message">Wenn Sie sich nicht an Ihren Zugangscode erinnern können, bitte die App löschen und neu installieren. Wenn die App neu installiert wird, bitte Ihres Kontodaten nochmal eingeben.\n\nSie sollten kein neues Konto anlegen. Die Daten und Geräte bleiben verfügbar in das Supla Cloud Konto</string>
+  <string name="lock_screen_forgotten_code_message">Wenn Sie sich nicht an Ihren Zugangscode erinnern können, bitte die App löschen und neu installieren. Wenn die App neu installiert wird, bitte Ihres Kontodaten nochmal eingeben.\n\nSie sollten kein neues Konto anlegen. Die Daten und Geräte bleiben verfügbar in das Supla Cloud Konto.</string>
   <string name="lock_screen_forgotten_code_button">Einverstanden</string>
   <string name="lock_screen_confirm_authorize_app">Änderung des Berechtigungsumfangs</string>
   <string name="pin_setup_use_biometric">Biometrische Authentifizierung: </string>

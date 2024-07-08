@@ -31,3 +31,15 @@ sealed interface SuplaClientEvent {
   data class Finish(val reason: SuplaClientState.Reason? = null) : SuplaClientEvent
   data class Error(val reason: SuplaClientState.Reason) : SuplaClientEvent
 }
+
+sealed class IllegalEvent(message: String) : IllegalStateException(message) {
+  class IllegalInitializedEvent(message: String) : IllegalEvent(message)
+  class IllegalNoAccountEvent(message: String) : IllegalEvent(message)
+  class IllegalConnectingEvent(message: String) : IllegalEvent(message)
+  class IllegalConnectedEvent(message: String) : IllegalEvent(message)
+  class IllegalCancelEvent(message: String) : IllegalEvent(message)
+  class IllegalLockEvent(message: String) : IllegalEvent(message)
+  class IllegalUnlockEvent(message: String) : IllegalEvent(message)
+  class IllegalFinishEvent(message: String) : IllegalEvent(message)
+  class IllegalErrorEvent(message: String) : IllegalEvent(message)
+}
