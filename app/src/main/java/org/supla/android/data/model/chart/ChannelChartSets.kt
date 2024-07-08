@@ -20,7 +20,6 @@ package org.supla.android.data.model.chart
 import org.supla.android.core.ui.StringProvider
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.remote.channel.SuplaChannelFunction
-import org.supla.android.data.source.remote.channel.suplaFunction
 
 data class ChannelChartSets(
   val remoteId: Int,
@@ -68,7 +67,7 @@ data class ChannelChartSets(
       dataSets: List<HistoryDataSet>,
       customData: Any? = null,
       typeNameRes: StringProvider? = null
-    ) = ChannelChartSets(channel.remoteId, channel.function.suplaFunction(), name, aggregation, dataSets, customData, typeNameRes)
+    ) = ChannelChartSets(channel.remoteId, channel.function, name, aggregation, dataSets, customData, typeNameRes)
   }
 }
 
@@ -128,7 +127,9 @@ fun SuplaChannelFunction.hasCustomFilters(): Boolean =
     SuplaChannelFunction.HVAC_THERMOSTAT_HEAT_COOL,
     SuplaChannelFunction.HVAC_DOMESTIC_HOT_WATER,
     SuplaChannelFunction.ROLLER_GARAGE_DOOR,
-    SuplaChannelFunction.HUMIDITY_AND_TEMPERATURE -> false
+    SuplaChannelFunction.HUMIDITY_AND_TEMPERATURE,
+    SuplaChannelFunction.PUMP_SWITCH,
+    SuplaChannelFunction.HEAT_OR_COLD_SOURCE_SWITCH -> false
 
     SuplaChannelFunction.ELECTRICITY_METER,
     SuplaChannelFunction.POWER_SWITCH,

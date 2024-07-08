@@ -25,13 +25,11 @@ import org.supla.android.data.source.GeneralPurposeMeterLogRepository
 import org.supla.android.data.source.RoomChannelRepository
 import org.supla.android.data.source.TemperatureAndHumidityLogRepository
 import org.supla.android.data.source.TemperatureLogRepository
+import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -51,9 +49,9 @@ class DeleteChannelMeasurementsUseCase @Inject constructor(
     channelRepository.findByRemoteId(remoteId)
       .flatMap { channelEntity ->
         when (channelEntity.function) {
-          SUPLA_CHANNELFNC_HVAC_THERMOSTAT,
-          SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER,
-          SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL ->
+          SuplaChannelFunction.HVAC_THERMOSTAT,
+          SuplaChannelFunction.HVAC_DOMESTIC_HOT_WATER,
+          SuplaChannelFunction.HVAC_THERMOSTAT_HEAT_COOL ->
             readChannelWithChildrenUseCase(remoteId).map { channelWithChildren ->
               channelWithChildren.children
                 .filter { child -> child.relationType.isThermometer() }
@@ -64,7 +62,7 @@ class DeleteChannelMeasurementsUseCase @Inject constructor(
         }
       }
       .flatMapCompletable { entities ->
-        Completable.merge(entities.map { getDeleteCompletable(it.function, it.remoteId, it.profileId) })
+        Completable.merge(entities.map { getDeleteCompletable(it.function.value, it.remoteId, it.profileId) })
       }
 
   private fun getDeleteCompletable(function: Int, remoteId: Int, profileId: Long): Completable =

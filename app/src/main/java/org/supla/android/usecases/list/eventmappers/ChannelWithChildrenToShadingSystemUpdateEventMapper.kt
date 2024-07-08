@@ -20,9 +20,9 @@ package org.supla.android.usecases.list.eventmappers
 import org.supla.android.data.source.local.entity.complex.isFacadeBlind
 import org.supla.android.data.source.local.entity.complex.isShadingSystem
 import org.supla.android.data.source.local.entity.complex.isVerticalBlind
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.extensions.guardLet
 import org.supla.android.ui.lists.data.SlideableListItemData
-import org.supla.android.usecases.channel.ChannelWithChildren
 import org.supla.android.usecases.channel.GetChannelCaptionUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import javax.inject.Inject

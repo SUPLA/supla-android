@@ -25,7 +25,6 @@ import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.R
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.ui.BaseViewModel
-import org.supla.android.core.ui.BitmapProvider
 import org.supla.android.core.ui.StringProvider
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
@@ -34,11 +33,14 @@ import org.supla.android.data.model.general.ChannelState
 import org.supla.android.data.model.general.hasElectricityMeter
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
+import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.DownloadEventsManager
+import org.supla.android.extensions.ifTrue
 import org.supla.android.extensions.monthStart
 import org.supla.android.features.details.detailbase.electricitymeter.ElectricityMeterGeneralStateHandler
 import org.supla.android.features.details.detailbase.electricitymeter.ElectricityMeterState
+import org.supla.android.images.ImageId
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.DownloadChannelMeasurementsUseCase
@@ -112,10 +114,11 @@ class SwitchGeneralViewModel @Inject constructor(
   private fun handleData(data: ChannelDataBase, measurements: ElectricityMeasurements?, cleanupDownloading: Boolean) {
     updateState { state ->
       if (data.hasElectricityMeter && !state.initialDataLoadStarted) {
-        downloadChannelMeasurementsUseCase.invoke(data.remoteId, data.profileId, data.function)
+        downloadChannelMeasurementsUseCase.invoke(data.remoteId, data.profileId, data.function.value)
       }
 
       val downloading = if (cleanupDownloading) false else (state.electricityMeterState?.currentMonthDownloading ?: false)
+      val showButtons = data.function.switchWithButtons
 
       state.copy(
         remoteId = data.remoteId,
@@ -123,10 +126,11 @@ class SwitchGeneralViewModel @Inject constructor(
         online = data.isOnline(),
         initialDataLoadStarted = true,
         deviceStateLabel = getDeviceStateLabel(data),
-        deviceStateIcon = getChannelIconUseCase.getIconProvider(data),
+        deviceStateIcon = getChannelIconUseCase(data),
         deviceStateValue = getDeviceStateValue(data),
-        onIcon = getChannelIconUseCase.getIconProvider(data, channelStateValue = ChannelState.Value.ON),
-        offIcon = getChannelIconUseCase.getIconProvider(data, channelStateValue = ChannelState.Value.OFF),
+        showButtons = showButtons,
+        onIcon = showButtons.ifTrue(getChannelIconUseCase(data, channelStateValue = ChannelState.Value.ON)),
+        offIcon = showButtons.ifTrue(getChannelIconUseCase(data, channelStateValue = ChannelState.Value.OFF)),
         electricityMeterState = electricityMeterGeneralStateHandler
           .updateState(state.electricityMeterState, data, measurements)
           ?.copy(currentMonthDownloading = downloading)
@@ -209,11 +213,21 @@ data class SwitchGeneralViewState(
   val online: Boolean? = null,
 
   val deviceStateLabel: StringProvider = { "" },
-  val deviceStateIcon: BitmapProvider? = null,
+  val deviceStateIcon: ImageId? = null,
   @StringRes val deviceStateValue: Int = R.string.offline,
 
-  val onIcon: BitmapProvider? = null,
-  val offIcon: BitmapProvider? = null,
+  val showButtons: Boolean = true,
+  val onIcon: ImageId? = null,
+  val offIcon: ImageId? = null,
 
   val electricityMeterState: ElectricityMeterState? = null
 ) : ViewState()
+
+private val SuplaChannelFunction.switchWithButtons: Boolean
+  get() = when (this) {
+    SuplaChannelFunction.POWER_SWITCH,
+    SuplaChannelFunction.STAIRCASE_TIMER,
+    SuplaChannelFunction.LIGHTSWITCH -> true
+
+    else -> false
+  }

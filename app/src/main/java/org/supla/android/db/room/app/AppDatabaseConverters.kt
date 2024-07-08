@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import androidx.room.TypeConverter
 import org.supla.android.data.source.local.entity.ChannelRelationType
 import org.supla.android.data.source.remote.ChannelConfigType
+import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.util.Date
@@ -64,4 +65,12 @@ class AppDatabaseConverters {
   fun longToDateTime(value: Long): LocalDateTime {
     return LocalDateTime.ofEpochSecond(value, 0, ZoneOffset.UTC)
   }
+
+  @TypeConverter
+  fun suplaFunctionToInt(suplaChannelFunction: SuplaChannelFunction?): Int? =
+    suplaChannelFunction?.value
+
+  @TypeConverter
+  fun intToSuplaChannelFunction(value: Int?): SuplaChannelFunction? =
+    value?.let { SuplaChannelFunction.from(it) }
 }

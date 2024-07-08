@@ -48,7 +48,7 @@ abstract class BaseListAdapter<T, D>(
     return when (items[pos]) {
       is ListItem.ChannelItem -> ViewType.CHANNEL_ITEM
       is ListItem.HvacThermostatItem -> ViewType.HVAC_ITEM
-      is ListItem.MeasurementItem -> ViewType.MEASUREMENT_ITEM
+      is ListItem.IconValueItem -> ViewType.ICON_VALUE_ITEM
       is ListItem.SceneItem -> ViewType.SCENE_ITEM
       is ListItem.LocationItem -> ViewType.LOCATION_ITEM
       is ListItem.GeneralPurposeMeterItem -> ViewType.GENERAL_PURPOSE_METER_ITEM
@@ -152,7 +152,7 @@ abstract class BaseListAdapter<T, D>(
     CHANNEL_ITEM,
     LOCATION_ITEM,
 
-    MEASUREMENT_ITEM,
+    ICON_VALUE_ITEM,
     HVAC_ITEM,
     GENERAL_PURPOSE_METER_ITEM,
     GENERAL_PURPOSE_MEASUREMENT_ITEM,

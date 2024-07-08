@@ -32,7 +32,6 @@ import org.supla.android.data.model.chart.TemperatureChartColors
 import org.supla.android.data.source.GeneralPurposeMeasurementLogRepository
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.measurements.GeneralPurposeMeasurementEntity
-import org.supla.android.data.source.remote.channel.suplaFunction
 import org.supla.android.di.GSON_FOR_REPO
 import org.supla.android.extensions.toTimestamp
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT
@@ -67,7 +66,7 @@ class GeneralPurposeMeasurementMeasurementsProvider @Inject constructor(
       .map {
         ChannelChartSets(
           channel.remoteId,
-          channel.function.suplaFunction(),
+          channel.function,
           getChannelCaptionUseCase(channel.channelEntity),
           spec.aggregation,
           it

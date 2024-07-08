@@ -137,6 +137,8 @@ public class SuplaConst {
   public static final int SUPLA_CHANNELFNC_CURTAIN = 930;
   public static final int SUPLA_CHANNELFNC_VERTICAL_BLIND = 940;
   public static final int SUPLA_CHANNELFNC_ROLLER_GARAGE_DOOR = 950;
+  public static final int SUPLA_CHANNELFNC_PUMP_SWITCH = 960;
+  public static final int SUPLA_CHANNELFNC_HEAT_OR_COLD_SOURCE_SWITCH = 970;
 
   public static final int SUPLA_BIT_FUNC_CONTROLLINGTHEGATEWAYLOCK = 0x0000001;
   public static final int SUPLA_BIT_FUNC_CONTROLLINGTHEGATE = 0x0000002;
@@ -231,7 +233,14 @@ public class SuplaConst {
   public static final int EM_VAR_CURRENT_OVER_65A = 0x1000;
   public static final int EM_VAR_FORWARD_ACTIVE_ENERGY_BALANCED = 0x2000;
   public static final int EM_VAR_REVERSE_ACTIVE_ENERGY_BALANCED = 0x4000;
+  public static final int EM_VAR_VOLTAGE_PHASE_ANGLE_12 = 0x10000;
+  public static final int EM_VAR_VOLTAGE_PHASE_ANGLE_13 = 0x20000;
+  public static final int EM_VAR_VOLTAGE_PHASE_SEQUENCE = 0x40000;
+  public static final int EM_VAR_CURRENT_PHASE_SEQUENCE = 0x80000;
   public static final int EM_VAR_ALL = 0xFFFF;
+
+  public static final int EM_PHASE_SEQUENCE_VOLTAGE = 0x01;
+  public static final int EM_PHASE_SEQUENCE_CURRENT = 0x02;
 
   public static final int EM_VAR_POWER_ACTIVE_KW = 0x100000;
   public static final int EM_VAR_POWER_REACTIVE_KVAR = 0x200000;

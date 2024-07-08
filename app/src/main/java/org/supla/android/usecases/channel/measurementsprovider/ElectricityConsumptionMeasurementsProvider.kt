@@ -21,8 +21,6 @@ import com.google.gson.Gson
 import io.reactivex.rxjava3.core.Single
 import org.supla.android.Preferences
 import org.supla.android.R
-import org.supla.android.core.ui.BitmapProvider
-import org.supla.android.core.ui.fromResource
 import org.supla.android.data.model.chart.AggregatedEntity
 import org.supla.android.data.model.chart.AggregatedValue
 import org.supla.android.data.model.chart.ChannelChartSets
@@ -39,6 +37,7 @@ import org.supla.android.data.source.local.entity.measurements.balanceHourly
 import org.supla.android.di.GSON_FOR_REPO
 import org.supla.android.extensions.toTimestamp
 import org.supla.android.features.details.electricitymeterdetail.history.ElectricityMeterChartType
+import org.supla.android.images.ImageId
 import org.supla.android.lib.SuplaConst
 import org.supla.android.ui.views.charts.ElectricityMarkerCustomData
 import org.supla.android.usecases.channel.GetChannelCaptionUseCase
@@ -83,7 +82,7 @@ class ElectricityConsumptionMeasurementsProvider @Inject constructor(
   ): Single<ChannelChartSets> =
     electricityMeterLogRepository.findMeasurements(channel.remoteId, channel.profileId, spec.startDate, spec.endDate)
       .map { aggregating(it, spec) }
-      .map { listOf(historyDataSet(channel, labels(spec, getChannelIconUseCase.getIconProvider(channel), it), spec.aggregation, it.list)) }
+      .map { listOf(historyDataSet(channel, labels(spec, getChannelIconUseCase(channel), it), spec.aggregation, it.list)) }
       .map { historyDataSets ->
         ChannelChartSets(
           channel,
@@ -99,7 +98,7 @@ class ElectricityConsumptionMeasurementsProvider @Inject constructor(
       }
       .firstOrError()
 
-  private fun labels(spec: ChartDataSpec, icon: BitmapProvider, result: AggregationResult): HistoryDataSet.Label {
+  private fun labels(spec: ChartDataSpec, icon: ImageId, result: AggregationResult): HistoryDataSet.Label {
     val formatter = ListElectricityMeterValueFormatter(useNoValue = false)
 
     return when ((spec.customFilters as? ElectricityChartFilters)?.type) {
@@ -357,7 +356,7 @@ class ElectricityConsumptionMeasurementsProvider @Inject constructor(
 
 fun HistoryDataSet.LabelData.Companion.forwarded(value: String) =
   HistoryDataSet.LabelData(
-    fromResource(R.drawable.ic_forward_energy),
+    ImageId(R.drawable.ic_forward_energy),
     value,
     R.color.chart_color_value_positive,
     iconSize = R.dimen.icon_small_size
@@ -365,7 +364,7 @@ fun HistoryDataSet.LabelData.Companion.forwarded(value: String) =
 
 fun HistoryDataSet.LabelData.Companion.reversed(value: String) =
   HistoryDataSet.LabelData(
-    fromResource(R.drawable.ic_reversed_energy),
+    ImageId(R.drawable.ic_reversed_energy),
     value,
     R.color.chart_color_value_negative,
     iconSize = R.dimen.icon_small_size

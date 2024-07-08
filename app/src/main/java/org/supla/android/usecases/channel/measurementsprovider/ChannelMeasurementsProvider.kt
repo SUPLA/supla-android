@@ -63,9 +63,9 @@ abstract class ChannelMeasurementsProvider(
     HistoryDataSet(
       type = type,
       label = singleLabel(
-        iconProvider = when (type) {
-          ChartEntryType.HUMIDITY -> getChannelIconUseCase.getIconProvider(channel, IconType.SECOND)
-          else -> getChannelIconUseCase.getIconProvider(channel)
+        imageId = when (type) {
+          ChartEntryType.HUMIDITY -> getChannelIconUseCase(channel, IconType.SECOND)
+          else -> getChannelIconUseCase(channel)
         },
         value = when (type) {
           ChartEntryType.HUMIDITY -> getChannelValueStringUseCase(channel, ValueType.SECOND)

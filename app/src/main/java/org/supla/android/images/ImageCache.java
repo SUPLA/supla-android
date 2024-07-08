@@ -73,6 +73,25 @@ public class ImageCache {
     return result;
   }
 
+  public static Bitmap getUserImageBitmap(Context context, ImageId imgId) {
+    if (imgId == null || !imgId.getUserImage()) {
+      return null;
+    }
+
+    Configuration configuration = context.getResources().getConfiguration();
+    boolean nightMode =
+        (configuration.uiMode & Configuration.UI_MODE_NIGHT_MASK)
+            == Configuration.UI_MODE_NIGHT_YES;
+    imgId.setNightMode(nightMode);
+
+    if (imgId.getUserImage() && nightMode && !map.containsKey(imgId)) {
+      // If there is no user image for night mode, use the default
+      imgId.setNightMode(false);
+    }
+
+    return map.get(imgId);
+  }
+
   public static synchronized void loadBitmapForWidgetView(
       ImageId imgId, RemoteViews view, int viewId, boolean nightMode) {
     if (imgId == null) {

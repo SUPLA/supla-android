@@ -702,6 +702,11 @@
   <string name="details_em_total_suffix">(stan licznika)</string>
   <string name="details_em_current_month_suffix">(bieżący miesiąc)</string>
   <string name="details_em_last_month_balancing">Bilansowanie bieżącego miesiąca</string>
+  <string name="channel_caption_pump_switch">Przełącznik pompy</string>
+  <string name="channel_caption_heat_or_cold_sourc_switch">Przełącznik źródła ciepła lub chłodu</string>
+  <string name="details_list">Lista</string>
+  <string name="thermostat_detail_main_thermostat">Termostat główny</string>
+  <string name="thermostat_detail_other_thermostats">Termostaty zależne</string>
 
   <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
     <item quantity="one">włączone</item>

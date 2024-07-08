@@ -18,13 +18,17 @@ package org.supla.android.data.source.local.entity.complex
  */
 
 import androidx.room.Embedded
+import androidx.room.Ignore
 import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.ChannelRelationEntity
 import org.supla.android.data.source.local.entity.ChannelRelationType
+import org.supla.android.data.source.remote.thermostat.ThermostatIndicatorIcon
+import org.supla.android.ui.lists.ListOnlineState
 
-data class ChannelChildEntity(
+data class ChannelChildEntity @JvmOverloads constructor(
   @Embedded(prefix = "relation_") val channelRelationEntity: ChannelRelationEntity,
-  @Embedded val channelDataEntity: ChannelDataEntity
+  @Embedded val channelDataEntity: ChannelDataEntity,
+  @Ignore val children: List<ChannelChildEntity> = emptyList()
 ) {
 
   val relationType: ChannelRelationType
@@ -34,5 +38,33 @@ data class ChannelChildEntity(
     get() = channelDataEntity.channelEntity
 
   val function: Int
-    get() = channelDataEntity.function
+    get() = channelDataEntity.function.value
+
+  val pumpSwitchChild: ChannelChildEntity?
+    get() = children.firstOrNull { it.relationType == ChannelRelationType.PUMP_SWITCH }
+
+  val heatOrColdSourceSwitchChild: ChannelChildEntity?
+    get() = children.firstOrNull { it.relationType == ChannelRelationType.HEAT_OR_COLD_SOURCE_SWITCH }
 }
+
+val List<ChannelChildEntity>.indicatorIcon: ThermostatIndicatorIcon
+  get() = filter { it.relationType == ChannelRelationType.MASTER_THERMOSTAT }
+    .map { it.channelDataEntity.channelValueEntity.asThermostatValue().getIndicatorIcon() }
+    .fold(ThermostatIndicatorIcon.OFF) { result, value -> if (value moreImportantThan result) value else result }
+
+val List<ChannelChildEntity>.onlineState: ListOnlineState
+  get() = filter { it.relationType == ChannelRelationType.MASTER_THERMOSTAT }
+    .map { it.channelDataEntity.channelValueEntity.online }
+    .fold(ListOnlineState.UNKNOWN) { result, online ->
+      if (result == ListOnlineState.UNKNOWN && online) {
+        ListOnlineState.ONLINE
+      } else if (result == ListOnlineState.UNKNOWN) {
+        ListOnlineState.OFFLINE
+      } else if (result == ListOnlineState.ONLINE && !online) {
+        ListOnlineState.PARTIALLY_ONLINE
+      } else if (result == ListOnlineState.OFFLINE && online) {
+        ListOnlineState.PARTIALLY_ONLINE
+      } else {
+        result
+      }
+    }

@@ -25,6 +25,7 @@ import org.supla.android.core.ui.StringProvider
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.model.general.ChannelDataBase
+import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.tools.SuplaSchedulers
@@ -40,7 +41,7 @@ abstract class StandardDetailViewModel<S : StandardDetailViewState, E : Standard
   schedulers: SuplaSchedulers
 ) : BaseViewModel<S, E>(defaultState, schedulers) {
 
-  fun observeUpdates(remoteId: Int, itemType: ItemType, initialFunction: Int) {
+  fun observeUpdates(remoteId: Int, itemType: ItemType, initialFunction: SuplaChannelFunction) {
     getEventsSource(itemType)
       .flatMapMaybe { getDataSource(remoteId, itemType) }
       .attachSilent()
@@ -51,7 +52,7 @@ abstract class StandardDetailViewModel<S : StandardDetailViewState, E : Standard
       .disposeBySelf()
   }
 
-  fun loadData(remoteId: Int, itemType: ItemType, initialFunction: Int) {
+  fun loadData(remoteId: Int, itemType: ItemType, initialFunction: SuplaChannelFunction) {
     getDataSource(remoteId, itemType)
       .attach()
       .subscribeBy(
@@ -72,10 +73,10 @@ abstract class StandardDetailViewModel<S : StandardDetailViewState, E : Standard
 
   protected abstract fun updatedState(state: S, channelDataBase: ChannelDataBase): S
 
-  protected open fun shouldCloseDetail(channelDataBase: ChannelDataBase, initialFunction: Int) =
+  protected open fun shouldCloseDetail(channelDataBase: ChannelDataBase, initialFunction: SuplaChannelFunction) =
     channelDataBase.visible == 0 || channelDataBase.function != initialFunction
 
-  private fun handleChannelBase(channelDataBase: ChannelDataBase, initialFunction: Int) {
+  private fun handleChannelBase(channelDataBase: ChannelDataBase, initialFunction: SuplaChannelFunction) {
     if (shouldCloseDetail(channelDataBase, initialFunction)) {
       sendEvent(closeEvent())
     } else {

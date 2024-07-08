@@ -21,6 +21,7 @@ import androidx.room.Embedded
 import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.source.local.entity.ChannelGroupEntity
 import org.supla.android.data.source.local.entity.LocationEntity
+import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.db.ChannelGroup
 
 data class ChannelGroupDataEntity(
@@ -31,7 +32,7 @@ data class ChannelGroupDataEntity(
     get() = channelGroupEntity.id
   override val remoteId: Int
     get() = channelGroupEntity.remoteId
-  override val function: Int
+  override val function: SuplaChannelFunction
     get() = channelGroupEntity.function
   override val caption: String
     get() = channelGroupEntity.caption
@@ -65,7 +66,7 @@ data class ChannelGroupDataEntity(
   fun getLegacyGroup(): ChannelGroup = ChannelGroup().also {
     it.id = channelGroupEntity.id
     it.remoteId = channelGroupEntity.remoteId
-    it.func = channelGroupEntity.function
+    it.func = channelGroupEntity.function.value
     it.visible = channelGroupEntity.visible
     it.setOnline(channelGroupEntity.online)
     it.setCaption(channelGroupEntity.caption)

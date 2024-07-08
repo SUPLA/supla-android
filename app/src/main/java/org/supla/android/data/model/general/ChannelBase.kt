@@ -17,10 +17,12 @@ package org.supla.android.data.model.general
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import org.supla.android.data.source.remote.channel.SuplaChannelFunction
+
 interface ChannelBase {
   val id: Long?
   val remoteId: Int
-  val function: Int
+  val function: SuplaChannelFunction
   val caption: String
   val locationId: Int
   val flags: Long

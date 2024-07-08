@@ -24,6 +24,7 @@ import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.LocationEntity
+import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.db.Channel
 import org.supla.android.db.ChannelExtendedValue
 import org.supla.android.db.ChannelValue
@@ -41,7 +42,7 @@ data class ChannelDataEntity(
     get() = channelEntity.id
   override val remoteId: Int
     get() = channelEntity.remoteId
-  override val function: Int
+  override val function: SuplaChannelFunction
     get() = channelEntity.function
   override val caption: String
     get() = channelEntity.caption
@@ -75,7 +76,7 @@ data class ChannelDataEntity(
     channel.deviceID = channelEntity.deviceId ?: 0
     channel.remoteId = channelEntity.remoteId
     channel.type = channelEntity.type
-    channel.func = channelEntity.function
+    channel.func = channelEntity.function.value
     channel.setCaption(channelEntity.caption)
     channel.visible = channelEntity.visible
     channel.locationId = channelEntity.locationId.toLong()

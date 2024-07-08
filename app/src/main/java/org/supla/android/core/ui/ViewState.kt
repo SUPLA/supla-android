@@ -18,10 +18,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import android.content.Context
-import android.graphics.Bitmap
-import androidx.annotation.DrawableRes
-import androidx.core.content.res.ResourcesCompat
-import androidx.core.graphics.drawable.toBitmap
 import org.supla.android.events.LoadingTimeoutManager
 
 open class ViewState
@@ -30,8 +26,13 @@ open class LoadableViewState(
   open val loadingState: LoadingTimeoutManager.LoadingState = LoadingTimeoutManager.LoadingState()
 ) : ViewState()
 
-typealias BitmapProvider = (context: Context) -> Bitmap?
 typealias StringProvider = (context: Context) -> String
 
-fun fromResource(@DrawableRes drawableRes: Int): BitmapProvider =
-  { ResourcesCompat.getDrawable(it.resources, drawableRes, null)?.toBitmap() }
+fun stringProviderOf(string: String): StringProvider = { string }
+fun stringProviderOf(resourceId: Int): StringProvider = { it.getString(resourceId) }
+fun stringProvider(provider: (context: Context) -> String): StringProvider {
+  return { context -> provider(context) }
+}
+
+fun StringProvider?.valueOrEmpty(): StringProvider = this ?: { "" }
+fun StringProvider?.valueOrEmpty(context: Context) = this?.let { it(context) } ?: ""

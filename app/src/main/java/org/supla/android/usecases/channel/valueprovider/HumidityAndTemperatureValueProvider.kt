@@ -18,7 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
-import org.supla.android.lib.SuplaConst
+import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.usecases.channel.ChannelValueProvider
 import org.supla.android.usecases.channel.ValueType
 import org.supla.android.usecases.channel.valueprovider.parser.IntValueParser
@@ -29,7 +29,7 @@ import javax.inject.Singleton
 class HumidityAndTemperatureValueProvider @Inject constructor() : ChannelValueProvider, IntValueParser {
 
   override fun handle(channelData: ChannelDataEntity): Boolean =
-    channelData.function == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
+    channelData.function == SuplaChannelFunction.HUMIDITY_AND_TEMPERATURE
 
   override fun value(channelData: ChannelDataEntity, valueType: ValueType): Double {
     return when (valueType) {

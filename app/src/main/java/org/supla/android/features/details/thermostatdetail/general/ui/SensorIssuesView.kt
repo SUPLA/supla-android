@@ -17,7 +17,6 @@ package org.supla.android.features.details.thermostatdetail.general.ui
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -30,18 +29,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.toBitmap
 import org.supla.android.R
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.features.details.thermostatdetail.general.data.SensorIssue
+import org.supla.android.images.ImageId
+import org.supla.android.ui.views.Image
 
 @Composable
 fun SensorIssueView(sensorIssue: SensorIssue) {
@@ -56,28 +52,25 @@ fun SensorIssueView(sensorIssue: SensorIssue) {
     horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.distance_tiny)),
     verticalAlignment = Alignment.CenterVertically
   ) {
-    val iconProvider = sensorIssue.iconProvider
-    if (iconProvider != null) {
+    val imageId = sensorIssue.imageId
+    if (imageId != null) {
       Box(modifier = Modifier.size(36.dp)) {
-        iconProvider(LocalContext.current)?.let {
-          Image(
-            bitmap = it.asImageBitmap(),
-            contentDescription = null,
-            modifier = Modifier
-              .size(dimensionResource(id = R.dimen.icon_big_size))
-              .align(Alignment.TopCenter),
-            contentScale = ContentScale.Fit
-          )
-        }
         Image(
-          painter = painterResource(id = R.drawable.ic_sensor_alert_circle),
+          imageId = imageId,
+          contentDescription = null,
+          modifier = Modifier
+            .size(dimensionResource(id = R.dimen.icon_big_size))
+            .align(Alignment.TopCenter)
+        )
+        Image(
+          drawableId = R.drawable.ic_sensor_alert_circle,
           contentDescription = null,
           modifier = Modifier.align(Alignment.BottomStart)
         )
       }
     } else {
       Image(
-        painter = painterResource(id = R.drawable.ic_sensor_alert_circle),
+        drawableId = R.drawable.ic_sensor_alert_circle,
         contentDescription = null,
         modifier = Modifier.size(size = dimensionResource(id = R.dimen.icon_small_size))
       )
@@ -97,7 +90,7 @@ private fun Preview() {
     Box(modifier = Modifier.background(color = MaterialTheme.colorScheme.background)) {
       SensorIssueView(
         sensorIssue = SensorIssue(
-          iconProvider = { ContextCompat.getDrawable(it, R.drawable.fnc_hotel_card_on)?.toBitmap() },
+          imageId = ImageId(R.drawable.fnc_hotel_card_on),
           textProvider = { "Wyłączone przez czujnik" }
         )
       )

@@ -20,20 +20,10 @@ import org.supla.android.data.source.RoomChannelRepository
 import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
+import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.data.source.remote.relay.SuplaRelayFlag
 import org.supla.android.data.source.remote.valve.SuplaValveFlag
 import org.supla.android.data.source.remote.valve.ValveValue
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DIMMER
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_VALVE_PERCENTAGE
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.ActionParameters
 import org.supla.android.lib.actions.SubjectType
@@ -51,29 +41,29 @@ class ChannelActionUseCaseTest {
 
   @Test
   fun `should not perform action when power switch channel turned off because of high amperage`() {
-    testHighAmperageException(SUPLA_CHANNELFNC_POWERSWITCH)
+    testHighAmperageException(SuplaChannelFunction.POWER_SWITCH)
   }
 
   @Test
   fun `should not perform action when light switch channel turned off because of high amperage`() {
-    testHighAmperageException(SUPLA_CHANNELFNC_LIGHTSWITCH)
+    testHighAmperageException(SuplaChannelFunction.LIGHTSWITCH)
   }
 
   @Test
   fun `should not perform action when stair case timer channel turned off because of high amperage`() {
-    testHighAmperageException(SUPLA_CHANNELFNC_STAIRCASETIMER)
+    testHighAmperageException(SuplaChannelFunction.STAIRCASE_TIMER)
   }
 
   @Test
   fun `should not open valve channel when closed and flooding`() {
-    testValveException(SUPLA_CHANNELFNC_VALVE_OPENCLOSE) {
+    testValveException(SuplaChannelFunction.VALVE_OPEN_CLOSE) {
       every { it.flags } returns listOf(SuplaValveFlag.FLOODING)
     }
   }
 
   @Test
   fun `should not open valve channel when closed and closed manually`() {
-    testValveException(SUPLA_CHANNELFNC_VALVE_PERCENTAGE) {
+    testValveException(SuplaChannelFunction.VALVE_PERCENTAGE) {
       every { it.flags } returns listOf(SuplaValveFlag.FLOODING, SuplaValveFlag.MANUALLY_CLOSED)
     }
   }
@@ -82,7 +72,7 @@ class ChannelActionUseCaseTest {
   fun `should turn off RGB lighting`() {
     val channelId = 123
 
-    testActionExecution(channelId, SUPLA_CHANNELFNC_RGBLIGHTING, ButtonType.LEFT) {
+    testActionExecution(channelId, SuplaChannelFunction.RGB_LIGHTING, ButtonType.LEFT) {
       assertThat(it.action).isEqualTo(ActionId.TURN_OFF)
       assertThat(it.subjectType).isEqualTo(SubjectType.CHANNEL)
       assertThat(it.subjectId).isEqualTo(channelId)
@@ -93,7 +83,7 @@ class ChannelActionUseCaseTest {
   fun `should turn on dimmer lighting`() {
     val channelId = 234
 
-    testActionExecution(channelId, SUPLA_CHANNELFNC_DIMMER, ButtonType.RIGHT) {
+    testActionExecution(channelId, SuplaChannelFunction.DIMMER, ButtonType.RIGHT) {
       assertThat(it.action).isEqualTo(ActionId.TURN_ON)
       assertThat(it.subjectType).isEqualTo(SubjectType.CHANNEL)
       assertThat(it.subjectId).isEqualTo(channelId)
@@ -104,7 +94,7 @@ class ChannelActionUseCaseTest {
   fun `should turn off dimmer with RGB lighting`() {
     val channelId = 123
 
-    testActionExecution(channelId, SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING, ButtonType.LEFT) {
+    testActionExecution(channelId, SuplaChannelFunction.DIMMER_AND_RGB_LIGHTING, ButtonType.LEFT) {
       assertThat(it.action).isEqualTo(ActionId.TURN_OFF)
       assertThat(it.subjectType).isEqualTo(SubjectType.CHANNEL)
       assertThat(it.subjectId).isEqualTo(channelId)
@@ -115,7 +105,7 @@ class ChannelActionUseCaseTest {
   fun `should open roller shutter`() {
     val channelId = 123
 
-    testActionExecution(channelId, SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER, ButtonType.RIGHT) {
+    testActionExecution(channelId, SuplaChannelFunction.CONTROLLING_THE_ROLLER_SHUTTER, ButtonType.RIGHT) {
       assertThat(it.action).isEqualTo(ActionId.REVEAL)
       assertThat(it.subjectType).isEqualTo(SubjectType.CHANNEL)
       assertThat(it.subjectId).isEqualTo(channelId)
@@ -126,7 +116,7 @@ class ChannelActionUseCaseTest {
   fun `should close roller shutter`() {
     val channelId = 123
 
-    testActionExecution(channelId, SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW, ButtonType.LEFT) {
+    testActionExecution(channelId, SuplaChannelFunction.CONTROLLING_THE_ROOF_WINDOW, ButtonType.LEFT) {
       assertThat(it.action).isEqualTo(ActionId.SHUT)
       assertThat(it.subjectType).isEqualTo(SubjectType.CHANNEL)
       assertThat(it.subjectId).isEqualTo(channelId)
@@ -139,7 +129,7 @@ class ChannelActionUseCaseTest {
 
     testActionExecution(
       channelId,
-      SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER,
+      SuplaChannelFunction.CONTROLLING_THE_ROLLER_SHUTTER,
       ButtonType.RIGHT,
       SuplaChannelFlag.RS_SBS_AND_STOP_ACTIONS
     ) {
@@ -155,7 +145,7 @@ class ChannelActionUseCaseTest {
 
     testActionExecution(
       channelId,
-      SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW,
+      SuplaChannelFunction.CONTROLLING_THE_ROOF_WINDOW,
       ButtonType.LEFT,
       SuplaChannelFlag.RS_SBS_AND_STOP_ACTIONS
     ) {
@@ -169,14 +159,14 @@ class ChannelActionUseCaseTest {
   fun `should turn on power switch`() {
     val channelId = 123
 
-    testOpenClose(channelId, SUPLA_CHANNELFNC_POWERSWITCH, ButtonType.RIGHT, 1)
+    testOpenClose(channelId, SuplaChannelFunction.POWER_SWITCH, ButtonType.RIGHT, 1)
   }
 
   @Test
   fun `should turn off light switch`() {
     val channelId = 234
 
-    testOpenClose(channelId, SUPLA_CHANNELFNC_LIGHTSWITCH, ButtonType.LEFT, 0)
+    testOpenClose(channelId, SuplaChannelFunction.LIGHTSWITCH, ButtonType.LEFT, 0)
   }
 
   @Test
@@ -185,7 +175,7 @@ class ChannelActionUseCaseTest {
 
     testActionExecution(
       channelId,
-      SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS,
+      SuplaChannelFunction.THERMOSTAT_HEATPOL_HOMEPLUS,
       ButtonType.RIGHT
     ) {
       assertThat(it.action).isEqualTo(ActionId.TURN_ON)
@@ -200,7 +190,7 @@ class ChannelActionUseCaseTest {
 
     testActionExecution(
       channelId,
-      SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS,
+      SuplaChannelFunction.THERMOSTAT_HEATPOL_HOMEPLUS,
       ButtonType.LEFT
     ) {
       assertThat(it.action).isEqualTo(ActionId.TURN_OFF)
@@ -209,7 +199,7 @@ class ChannelActionUseCaseTest {
     }
   }
 
-  private fun testHighAmperageException(channelFunc: Int) {
+  private fun testHighAmperageException(channelFunc: SuplaChannelFunction) {
     // given
     val channelValue: ChannelValueEntity = mockk()
     every { channelValue.asRelayValue() } returns mockk {
@@ -233,7 +223,7 @@ class ChannelActionUseCaseTest {
     verifyNoInteractions(suplaClientProvider)
   }
 
-  private fun testValveException(channelFunc: Int, channelValueSetup: (ValveValue) -> Unit) {
+  private fun testValveException(channelFunc: SuplaChannelFunction, channelValueSetup: (ValveValue) -> Unit) {
     // given
     val channelId = 123
     val channel: ChannelDataEntity = mockk()
@@ -260,7 +250,7 @@ class ChannelActionUseCaseTest {
 
   private fun testActionExecution(
     channelId: Int,
-    channelFunc: Int,
+    channelFunc: SuplaChannelFunction,
     buttonType: ButtonType,
     flag: SuplaChannelFlag? = null,
     actionAssertion: (ActionParameters) -> Unit
@@ -292,7 +282,7 @@ class ChannelActionUseCaseTest {
     verifyNoMoreInteractions(channelRepository, suplaClientProvider)
   }
 
-  private fun testOpenClose(channelId: Int, channelFunc: Int, buttonType: ButtonType, openValue: Int) {
+  private fun testOpenClose(channelId: Int, channelFunc: SuplaChannelFunction, buttonType: ButtonType, openValue: Int) {
     // given
     val channelValue: ChannelValueEntity = mockk()
     every { channelValue.asRelayValue() } returns mockk {

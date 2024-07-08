@@ -31,11 +31,11 @@ import org.supla.android.data.model.chart.ChartState
 import org.supla.android.data.model.chart.DateRange
 import org.supla.android.data.model.chart.datatype.ChartData
 import org.supla.android.data.model.chart.datatype.LineChartData
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.events.DownloadEventsManager
 import org.supla.android.features.details.detailbase.history.BaseHistoryDetailViewModel
 import org.supla.android.profile.ProfileManager
 import org.supla.android.tools.SuplaSchedulers
-import org.supla.android.usecases.channel.ChannelWithChildren
 import org.supla.android.usecases.channel.DeleteChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.DownloadChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.LoadChannelWithChildrenMeasurementsDateRangeUseCase
@@ -84,7 +84,7 @@ class ThermostatHistoryDetailViewModel @Inject constructor(
     ) { first, second -> Pair(LineChartData(DateRange(spec.startDate, spec.endDate), chartRange, spec.aggregation, first), second) }
 
   private fun handleData(channel: ChannelWithChildren, chartState: ChartState) {
-    updateState { it.copy(profileId = channel.channel.channelEntity.profileId, channelFunction = channel.channel.function) }
+    updateState { it.copy(profileId = channel.channel.channelEntity.profileId, channelFunction = channel.channel.function.value) }
 
     if (channel.children.none { it.channelRelationEntity.relationType.isThermometer() }) {
       updateState { it.copy(loading = false) }
@@ -103,10 +103,10 @@ class ThermostatHistoryDetailViewModel @Inject constructor(
     updateState { it.copy(initialLoadStarted = true) }
 
     channel.children.firstOrNull { it.relationType.isMainThermometer() }?.channel?.let {
-      downloadChannelMeasurementsUseCase.invoke(it.remoteId, it.profileId, it.function)
+      downloadChannelMeasurementsUseCase.invoke(it.remoteId, it.profileId, it.function.value)
     }
     channel.children.firstOrNull { it.relationType.isAuxThermometer() }?.channel?.let {
-      downloadChannelMeasurementsUseCase.invoke(it.remoteId, it.profileId, it.function)
+      downloadChannelMeasurementsUseCase.invoke(it.remoteId, it.profileId, it.function.value)
     }
   }
 

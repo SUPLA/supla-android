@@ -21,9 +21,9 @@ import org.supla.android.core.storage.UserStateHolder
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.Electricity
 import org.supla.android.data.source.local.entity.custom.Phase
+import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType
 import org.supla.android.data.source.remote.channel.suplaElectricityMeterMeasuredTypes
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER
 import org.supla.android.usecases.channel.ChannelValueProvider
 import org.supla.android.usecases.channel.ValueType
 import org.supla.android.usecases.channel.valueprovider.parser.IntValueParser
@@ -37,7 +37,7 @@ class ElectricityMeterValueProvider @Inject constructor(
 
   override fun handle(channelData: ChannelDataEntity): Boolean =
     when (channelData.function) {
-      SUPLA_CHANNELFNC_ELECTRICITY_METER -> true
+      SuplaChannelFunction.ELECTRICITY_METER -> true
       else -> false
     }
 

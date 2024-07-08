@@ -27,22 +27,25 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.whenever
+import org.supla.android.R
 import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.local.entity.ChannelRelationType
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
+import org.supla.android.data.source.remote.channel.SuplaChannelFunction
+import org.supla.android.data.source.remote.thermostat.ThermostatIndicatorIcon
 import org.supla.android.data.source.remote.thermostat.ThermostatValue
 import org.supla.android.db.Channel
 import org.supla.android.extensions.date
 import org.supla.android.extensions.toTimestamp
 import org.supla.android.images.ImageId
 import org.supla.android.lib.SuplaChannelExtendedValue
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT
 import org.supla.android.lib.SuplaTimerState
+import org.supla.android.ui.lists.ListOnlineState
 import org.supla.android.ui.lists.data.IssueIconType
 import org.supla.android.ui.lists.data.SlideableListItemData
-import org.supla.android.usecases.channel.ChannelWithChildren
 import org.supla.android.usecases.channel.GetChannelCaptionUseCase
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
@@ -70,7 +73,7 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
     // given
     val channel = mockk<ChannelDataEntity> {
       every { channelEntity } returns mockk {
-        every { function } returns SUPLA_CHANNELFNC_HVAC_THERMOSTAT
+        every { function } returns SuplaChannelFunction.HVAC_THERMOSTAT
       }
     }
 
@@ -102,11 +105,10 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
     val icon: ImageId = mockk()
     val value = "some value"
     val subValue = "some sub value"
-    val indicatorIcon = 123
     val issueIconType = IssueIconType.WARNING
     val thermostatValue = mockk<ThermostatValue> {
       every { getSetpointText(valuesFormatter) } returns subValue
-      every { getIndicatorIcon() } returns indicatorIcon
+      every { getIndicatorIcon() } returns ThermostatIndicatorIcon.STANDBY
       every { getIssueIconType() } returns issueIconType
     }
     val thermometerChannel = mockk<ChannelDataEntity>()
@@ -116,7 +118,7 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
     }
     val channel = mockk<ChannelDataEntity> {
       every { channelEntity } returns mockk {
-        every { function } returns SUPLA_CHANNELFNC_HVAC_THERMOSTAT
+        every { function } returns SuplaChannelFunction.HVAC_THERMOSTAT
       }
       every { channelValueEntity } returns mockk {
         every { online } returns true
@@ -138,12 +140,12 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
     val result = mapper.map(channelWithChildren) as SlideableListItemData.Thermostat
 
     // then
-    assertThat(result.online).isTrue
+    assertThat(result.onlineState).isEqualTo(ListOnlineState.ONLINE)
     assertThat(result.titleProvider(context)).isEqualTo(caption)
     assertThat(result.icon).isEqualTo(icon)
     assertThat(result.value).isEqualTo(value)
     assertThat(result.subValue).isEqualTo(subValue)
-    assertThat(result.indicatorIcon).isEqualTo(indicatorIcon)
+    assertThat(result.indicatorIcon).isEqualTo(R.drawable.ic_standby)
     assertThat(result.issueIconType).isEqualTo(issueIconType)
     assertThat(result.estimatedTimerEndDate).isNull()
     assertThat(result.infoSupported).isEqualTo(true)
@@ -156,17 +158,16 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
     val icon: ImageId = mockk()
     val value = ValuesFormatter.NO_VALUE_TEXT
     val subValue = "some sub value"
-    val indicatorIcon = 123
     val issueIconType = IssueIconType.WARNING
     val estimatedEndDate = date(2023, 11, 21)
     val thermostatValue = mockk<ThermostatValue> {
       every { getSetpointText(valuesFormatter) } returns subValue
-      every { getIndicatorIcon() } returns indicatorIcon
+      every { getIndicatorIcon() } returns ThermostatIndicatorIcon.STANDBY
       every { getIssueIconType() } returns issueIconType
     }
     val channel = mockk<ChannelDataEntity> {
       every { channelEntity } returns mockk {
-        every { function } returns SUPLA_CHANNELFNC_HVAC_THERMOSTAT
+        every { function } returns SuplaChannelFunction.HVAC_THERMOSTAT
       }
       every { channelValueEntity } returns mockk {
         every { online } returns true
@@ -189,12 +190,12 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
     val result = mapper.map(channelWithChildren) as SlideableListItemData.Thermostat
 
     // then
-    assertThat(result.online).isTrue
+    assertThat(result.onlineState).isEqualTo(ListOnlineState.ONLINE)
     assertThat(result.titleProvider(context)).isEqualTo(caption)
     assertThat(result.icon).isEqualTo(icon)
     assertThat(result.value).isEqualTo(value)
     assertThat(result.subValue).isEqualTo(subValue)
-    assertThat(result.indicatorIcon).isEqualTo(indicatorIcon)
+    assertThat(result.indicatorIcon).isEqualTo(R.drawable.ic_standby)
     assertThat(result.issueIconType).isEqualTo(issueIconType)
     assertThat(result.estimatedTimerEndDate).isEqualTo(estimatedEndDate)
     assertThat(result.infoSupported).isEqualTo(false)

@@ -627,6 +627,11 @@
   <string name="details_em_settings_title">Einstellungen - %1$s</string>
   <string name="details_em_total_suffix">(Zählerstand)</string>
   <string name="details_em_current_month_suffix">(aktueller Monat)</string>
+  <string name="channel_caption_pump_switch">Pumpenschalter</string>
+  <string name="channel_caption_heat_or_cold_sourc_switch">Wärme- oder Kältequellenschalter</string>
+  <string name="details_list">Liste</string>
+  <string name="thermostat_detail_main_thermostat">Hauptthermostat</string>
+  <string name="thermostat_detail_other_thermostats">Andere Thermostate</string>
   <plurals name="details_timer_info_on">
     <item quantity="one">eingeschaltet</item>
     <item quantity="other">eingeschaltet</item>

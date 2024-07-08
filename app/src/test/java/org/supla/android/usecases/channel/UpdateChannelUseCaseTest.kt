@@ -41,6 +41,7 @@ import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.ProfileEntity
+import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.db.Location
 import org.supla.android.testhelpers.suplaChannel
 import org.supla.android.usecases.channelconfig.RequestChannelConfigUseCase
@@ -245,10 +246,12 @@ class UpdateChannelUseCaseTest {
       every { locationId } returns 333
       every { updatedBy(suplaChannel) } returns this
       every { position } returns 0
-      every { copy(id = 444, remoteId = channelRemoteId, caption = "", locationId = 333, position = 6) } returns this
+      every {
+        copy(id = 444, remoteId = channelRemoteId, caption = "", function = SuplaChannelFunction.NONE, locationId = 333, position = 6)
+      } returns this
       every { id } returns 444
       every { caption } returns ""
-      every { function } returns 0
+      every { function } returns SuplaChannelFunction.NONE
       every { visible } returns 0
       every { altIcon } returns 0
       every { userIcon } returns 0
@@ -300,10 +303,12 @@ class UpdateChannelUseCaseTest {
       every { locationId } returns 333
       every { updatedBy(suplaChannel) } returns this
       every { position } returns 5
-      every { copy(id = 444, remoteId = channelRemoteId, caption = "", locationId = 333, position = 0) } returns this
+      every {
+        copy(id = 444, remoteId = channelRemoteId, caption = "", function = SuplaChannelFunction.NONE, locationId = 333, position = 0)
+      } returns this
       every { id } returns 444
       every { caption } returns ""
-      every { function } returns 0
+      every { function } returns SuplaChannelFunction.NONE
       every { visible } returns 0
       every { altIcon } returns 0
       every { userIcon } returns 0

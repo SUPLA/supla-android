@@ -24,6 +24,7 @@ import androidx.room.Query
 import androidx.room.Update
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import org.supla.android.data.source.local.entity.ChannelConfigEntity
 import org.supla.android.data.source.local.entity.ChannelEntity
@@ -137,7 +138,7 @@ interface ChannelDao {
       channel.${ChannelEntity.COLUMN_CAPTION} COLLATE LOCALIZED
   """
   )
-  fun findList(): Single<List<ChannelDataEntity>>
+  fun findList(): Observable<List<ChannelDataEntity>>
 
   @Query(
     """

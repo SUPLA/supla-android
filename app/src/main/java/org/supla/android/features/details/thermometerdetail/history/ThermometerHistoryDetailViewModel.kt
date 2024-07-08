@@ -83,11 +83,11 @@ class ThermometerHistoryDetailViewModel @Inject constructor(
     ) { first, second -> Pair(LineChartData(DateRange(spec.startDate, spec.endDate), chartRange, spec.aggregation, listOf(first)), second) }
 
   private fun handleData(channel: ChannelDataEntity, chartState: ChartState) {
-    updateState { it.copy(profileId = channel.profileId, channelFunction = channel.function) }
+    updateState { it.copy(profileId = channel.profileId, channelFunction = channel.function.value) }
 
     restoreRange(chartState)
     configureDownloadObserver(channel.remoteId)
-    startInitialDataLoad(channel.remoteId, channel.profileId, channel.function)
+    startInitialDataLoad(channel.remoteId, channel.profileId, channel.function.value)
   }
 
   private fun startInitialDataLoad(remoteId: Int, profileId: Long, channelFunction: Int) {

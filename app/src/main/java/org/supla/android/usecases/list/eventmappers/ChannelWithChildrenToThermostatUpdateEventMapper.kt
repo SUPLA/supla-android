@@ -19,12 +19,16 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.local.entity.ChannelRelationType
+import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.complex.indicatorIcon
 import org.supla.android.data.source.local.entity.complex.isHvacThermostat
+import org.supla.android.data.source.local.entity.complex.onlineState
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.extensions.guardLet
 import org.supla.android.ui.lists.data.SlideableListItemData
-import org.supla.android.usecases.channel.ChannelWithChildren
+import org.supla.android.ui.lists.onlineState
 import org.supla.android.usecases.channel.GetChannelCaptionUseCase
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
@@ -49,24 +53,26 @@ class ChannelWithChildrenToThermostatUpdateEventMapper @Inject constructor(
       throw IllegalArgumentException("Expected Channel but got $item")
     }
 
-    val mainThermometerChild = channel.children.firstOrNull { it.relationType == ChannelRelationType.MAIN_THERMOMETER }
-    return toSlideableListItemData(channel.channel, mainThermometerChild?.channelDataEntity, valuesFormatter)
+    return toSlideableListItemData(channel.channel, channel.children, valuesFormatter)
   }
 
   private fun toSlideableListItemData(
     channelData: ChannelDataEntity,
-    mainThermometerChild: ChannelDataEntity?,
+    children: List<ChannelChildEntity>,
     valuesFormatter: ValuesFormatter
   ): SlideableListItemData.Thermostat {
     val thermostatValue = channelData.channelValueEntity.asThermostatValue()
+    val mainThermometerChild = children.firstOrNull { it.relationType == ChannelRelationType.MAIN_THERMOMETER }?.channelDataEntity
+    val indicatorIcon = thermostatValue.getIndicatorIcon() mergeWith children.indicatorIcon
+    val onlineState = channelData.channelValueEntity.online.onlineState mergeWith children.onlineState
 
     return SlideableListItemData.Thermostat(
-      online = channelData.channelValueEntity.online,
+      onlineState = onlineState,
       titleProvider = getChannelCaptionUseCase(channelData),
       icon = getChannelIconUseCase.invoke(channelData),
       value = mainThermometerChild?.let { getChannelValueStringUseCase(it) } ?: ValuesFormatter.NO_VALUE_TEXT,
       subValue = thermostatValue.getSetpointText(valuesFormatter),
-      indicatorIcon = thermostatValue.getIndicatorIcon(),
+      indicatorIcon = indicatorIcon.resource,
       issueIconType = thermostatValue.getIssueIconType(),
       estimatedTimerEndDate = channelData.channelExtendedValueEntity?.getSuplaValue()?.TimerStateValue?.countdownEndsAt,
       infoSupported = SuplaChannelFlag.CHANNEL_STATE.inside(channelData.flags)

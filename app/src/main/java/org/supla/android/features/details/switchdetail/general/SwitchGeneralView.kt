@@ -18,8 +18,6 @@ package org.supla.android.features.details.switchdetail.general
  */
 
 import android.content.res.Configuration
-import android.graphics.Bitmap
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,8 +30,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -41,14 +37,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.res.ResourcesCompat
-import androidx.core.graphics.drawable.toBitmap
 import org.supla.android.R
-import org.supla.android.core.ui.BitmapProvider
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.extensions.disabledOverlay
 import org.supla.android.features.details.detailbase.electricitymeter.ElectricityMeterMetricsView
+import org.supla.android.images.ImageId
+import org.supla.android.ui.views.Image
 import org.supla.android.ui.views.buttons.supla.SuplaButton
 import org.supla.android.ui.views.buttons.supla.SuplaButtonColors
 import org.supla.android.ui.views.buttons.supla.SuplaButtonDefaults
@@ -76,34 +71,36 @@ fun SwitchGeneralView(
       Spacer(modifier = Modifier.weight(1f))
     }
 
-    Row(
-      horizontalArrangement = Arrangement.spacedBy(Distance.default),
-      modifier = Modifier.padding(all = Distance.default)
-    ) {
-      Button(
-        icon = state.offIcon?.let { it(LocalContext.current) },
-        text = stringResource(id = R.string.channel_btn_off),
-        colors = SuplaButtonDefaults.errorColors(),
-        disabled = state.online == false,
-        pressed = state.deviceStateValue == R.string.details_timer_device_off,
-        onClick = onTurnOff,
-        modifier = Modifier.weight(1f)
-      )
-      Button(
-        icon = state.onIcon?.let { it(LocalContext.current) },
-        text = stringResource(id = R.string.channel_btn_on),
-        colors = SuplaButtonDefaults.primaryColors(),
-        disabled = state.online == false,
-        pressed = state.deviceStateValue == R.string.details_timer_device_on,
-        onClick = onTurnOn,
-        modifier = Modifier.weight(1f)
-      )
+    if (state.showButtons) {
+      Row(
+        horizontalArrangement = Arrangement.spacedBy(Distance.default),
+        modifier = Modifier.padding(all = Distance.default)
+      ) {
+        Button(
+          icon = state.offIcon,
+          text = stringResource(id = R.string.channel_btn_off),
+          colors = SuplaButtonDefaults.errorColors(),
+          disabled = state.online == false,
+          pressed = state.deviceStateValue == R.string.details_timer_device_off,
+          onClick = onTurnOff,
+          modifier = Modifier.weight(1f)
+        )
+        Button(
+          icon = state.onIcon,
+          text = stringResource(id = R.string.channel_btn_on),
+          colors = SuplaButtonDefaults.primaryColors(),
+          disabled = state.online == false,
+          pressed = state.deviceStateValue == R.string.details_timer_device_on,
+          onClick = onTurnOn,
+          modifier = Modifier.weight(1f)
+        )
+      }
     }
   }
 }
 
 @Composable
-private fun DeviceState(stateLabel: String, icon: BitmapProvider?, stateValue: String) =
+private fun DeviceState(stateLabel: String, icon: ImageId?, stateValue: String) =
   Row(
     verticalAlignment = Alignment.CenterVertically,
     horizontalArrangement = Arrangement.spacedBy(Distance.tiny),
@@ -115,15 +112,12 @@ private fun DeviceState(stateLabel: String, icon: BitmapProvider?, stateValue: S
       style = MaterialTheme.typography.bodyMedium,
       color = MaterialTheme.colorScheme.onSurfaceVariant
     )
-    icon?.let { provider ->
-      provider(LocalContext.current)?.let {
-        Image(
-          bitmap = it.asImageBitmap(),
-          contentDescription = null,
-          modifier = Modifier.size(25.dp),
-          contentScale = ContentScale.Fit
-        )
-      }
+    icon?.let {
+      Image(
+        imageId = it,
+        contentDescription = null,
+        modifier = Modifier.size(25.dp)
+      )
     }
     Text(
       text = stateValue,
@@ -135,7 +129,7 @@ private fun DeviceState(stateLabel: String, icon: BitmapProvider?, stateValue: S
 @Composable
 private fun Button(
   text: String,
-  icon: Bitmap?,
+  icon: ImageId?,
   modifier: Modifier = Modifier,
   disabled: Boolean = false,
   pressed: Boolean = false,
@@ -160,7 +154,7 @@ private fun Button(
     ) {
       icon?.let {
         Image(
-          bitmap = it.asImageBitmap(),
+          imageId = it,
           contentDescription = null,
           alignment = Alignment.Center,
           modifier = Modifier.size(dimensionResource(id = R.dimen.icon_default_size)),
@@ -186,9 +180,9 @@ private fun Preview() {
     SwitchGeneralView(
       state = SwitchGeneralViewState(
         deviceStateLabel = { it.getString(R.string.details_timer_state_label) },
-        deviceStateIcon = { ResourcesCompat.getDrawable(it.resources, R.drawable.fnc_switch_on, null)!!.toBitmap() },
-        onIcon = { ResourcesCompat.getDrawable(it.resources, R.drawable.fnc_switch_on, null)!!.toBitmap() },
-        offIcon = { ResourcesCompat.getDrawable(it.resources, R.drawable.fnc_switch_off, null)!!.toBitmap() }
+        deviceStateIcon = ImageId(R.drawable.fnc_switch_on),
+        onIcon = ImageId(R.drawable.fnc_switch_on),
+        offIcon = ImageId(R.drawable.fnc_switch_off)
       )
     )
   }
@@ -203,9 +197,9 @@ private fun Preview_Disabled() {
       state = SwitchGeneralViewState(
         online = false,
         deviceStateLabel = { it.getString(R.string.details_timer_state_label) },
-        deviceStateIcon = { ResourcesCompat.getDrawable(it.resources, R.drawable.fnc_switch_on, null)!!.toBitmap() },
-        onIcon = { ResourcesCompat.getDrawable(it.resources, R.drawable.fnc_switch_on, null)!!.toBitmap() },
-        offIcon = { ResourcesCompat.getDrawable(it.resources, R.drawable.fnc_switch_off, null)!!.toBitmap() }
+        deviceStateIcon = ImageId(R.drawable.fnc_switch_on),
+        onIcon = ImageId(R.drawable.fnc_switch_on),
+        offIcon = ImageId(R.drawable.fnc_switch_off)
       )
     )
   }

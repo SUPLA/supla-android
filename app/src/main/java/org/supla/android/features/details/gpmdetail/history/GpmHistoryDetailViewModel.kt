@@ -143,12 +143,12 @@ class GpmHistoryDetailViewModel @Inject constructor(
   }
 
   private fun handleData(channel: ChannelDataEntity, chartState: ChartState) {
-    updateState { it.copy(profileId = channel.channelEntity.profileId, channelFunction = channel.function) }
+    updateState { it.copy(profileId = channel.channelEntity.profileId, channelFunction = channel.function.value) }
 
     restoreRange(chartState)
     if ((channel.configEntity?.toSuplaConfig(gson) as? SuplaChannelGeneralPurposeBaseConfig)?.keepHistory == true) {
       configureDownloadObserver(channel.channelEntity.remoteId)
-      startInitialDataLoad(channel.channelEntity.remoteId, channel.channelEntity.profileId, channel.function)
+      startInitialDataLoad(channel.channelEntity.remoteId, channel.channelEntity.profileId, channel.function.value)
     } else {
       updateState { state ->
         triggerMeasurementsLoad(state)

@@ -20,14 +20,15 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import com.google.gson.Gson
 import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.data.source.remote.gpm.SuplaChannelGeneralPurposeBaseConfig
 import org.supla.android.di.GSON_FOR_REPO
 import org.supla.android.extensions.guardLet
-import org.supla.android.lib.SuplaConst
 import org.supla.android.usecases.channel.ChannelValueStringProvider
 import org.supla.android.usecases.channel.ValueType
 import org.supla.android.usecases.channel.valueformatter.GpmValueFormatter
 import org.supla.android.usecases.channel.valueprovider.GpmValueProvider
+import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -39,8 +40,8 @@ class GpmValueStringProvider @Inject constructor(
 ) : ChannelValueStringProvider {
 
   override fun handle(channelData: ChannelDataEntity): Boolean =
-    channelData.function == SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT ||
-      channelData.function == SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER
+    channelData.function == SuplaChannelFunction.GENERAL_PURPOSE_MEASUREMENT ||
+      channelData.function == SuplaChannelFunction.GENERAL_PURPOSE_METER
 
   override fun value(channelData: ChannelDataEntity, valueType: ValueType, withUnit: Boolean): String {
     val value = gpmValueProvider.value(channelData, valueType)
@@ -49,7 +50,7 @@ class GpmValueStringProvider @Inject constructor(
     }
 
     val (config) = guardLet(channelData.configEntity?.toSuplaConfig(gson) as? SuplaChannelGeneralPurposeBaseConfig) {
-      return String.format("%.0f", value)
+      return String.format(Locale.getDefault(), "%.0f", value)
     }
 
     val formatter = GpmValueFormatter(config)

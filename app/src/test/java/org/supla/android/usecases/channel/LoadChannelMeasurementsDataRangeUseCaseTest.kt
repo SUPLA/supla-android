@@ -33,8 +33,8 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.supla.android.data.model.Optional
 import org.supla.android.data.model.chart.DateRange
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.extensions.date
-import org.supla.android.lib.SuplaConst
 
 @RunWith(MockitoJUnitRunner::class)
 class LoadChannelMeasurementsDataRangeUseCaseTest {
@@ -70,7 +70,7 @@ class LoadChannelMeasurementsDataRangeUseCaseTest {
     // given
     val remoteId = 123
     val profileId = 234L
-    val channelFunction = SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
+    val channelFunction = SuplaChannelFunction.THERMOMETER
     val channel: ChannelDataEntity = mockk {
       every { function } returns channelFunction
     }
@@ -78,7 +78,7 @@ class LoadChannelMeasurementsDataRangeUseCaseTest {
     val maxDate = date(2024, 8, 14)
 
     every { readChannelByRemoteIdUseCase.invoke(remoteId) } returns Maybe.just(channel)
-    every { thermometerDataRangeProvide.handle(channelFunction) } returns true
+    every { thermometerDataRangeProvide.handle(channelFunction.value) } returns true
     every { thermometerDataRangeProvide.minTime(remoteId, profileId) } returns Single.just(minDate.time)
     every { thermometerDataRangeProvide.maxTime(remoteId, profileId) } returns Single.just(maxDate.time)
 
@@ -91,7 +91,7 @@ class LoadChannelMeasurementsDataRangeUseCaseTest {
 
     verify {
       readChannelByRemoteIdUseCase.invoke(remoteId)
-      thermometerDataRangeProvide.handle(channelFunction)
+      thermometerDataRangeProvide.handle(channelFunction.value)
       thermometerDataRangeProvide.minTime(remoteId, profileId)
       thermometerDataRangeProvide.maxTime(remoteId, profileId)
     }
@@ -110,17 +110,17 @@ class LoadChannelMeasurementsDataRangeUseCaseTest {
     // given
     val remoteId = 123
     val profileId = 234L
-    val channelFunction = SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
+    val channelFunction = SuplaChannelFunction.THERMOMETER
     val channel: ChannelDataEntity = mockk {
       every { function } returns channelFunction
     }
 
     every { readChannelByRemoteIdUseCase.invoke(remoteId) } returns Maybe.just(channel)
-    every { thermometerDataRangeProvide.handle(channelFunction) } returns false
-    every { humidityAndTemperatureDataRangeProvide.handle(channelFunction) } returns false
-    every { generalPurposeMeasurementDataRangeProvide.handle(channelFunction) } returns false
-    every { generalPurposeMeterDataRangeProvide.handle(channelFunction) } returns false
-    every { electricityMeterDataRangeProvide.handle(channelFunction) } returns false
+    every { thermometerDataRangeProvide.handle(channelFunction.value) } returns false
+    every { humidityAndTemperatureDataRangeProvide.handle(channelFunction.value) } returns false
+    every { generalPurposeMeasurementDataRangeProvide.handle(channelFunction.value) } returns false
+    every { generalPurposeMeterDataRangeProvide.handle(channelFunction.value) } returns false
+    every { electricityMeterDataRangeProvide.handle(channelFunction.value) } returns false
 
     // when
     val testObserver = useCase.invoke(remoteId, profileId).test()
@@ -131,11 +131,11 @@ class LoadChannelMeasurementsDataRangeUseCaseTest {
     }
     verify {
       readChannelByRemoteIdUseCase.invoke(remoteId)
-      thermometerDataRangeProvide.handle(channelFunction)
-      humidityAndTemperatureDataRangeProvide.handle(channelFunction)
-      generalPurposeMeasurementDataRangeProvide.handle(channelFunction)
-      generalPurposeMeterDataRangeProvide.handle(channelFunction)
-      electricityMeterDataRangeProvide.handle(channelFunction)
+      thermometerDataRangeProvide.handle(channelFunction.value)
+      humidityAndTemperatureDataRangeProvide.handle(channelFunction.value)
+      generalPurposeMeasurementDataRangeProvide.handle(channelFunction.value)
+      generalPurposeMeterDataRangeProvide.handle(channelFunction.value)
+      electricityMeterDataRangeProvide.handle(channelFunction.value)
     }
     confirmVerified(
       readChannelByRemoteIdUseCase,

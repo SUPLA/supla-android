@@ -193,12 +193,12 @@ class ElectricityMeterHistoryViewModel @Inject constructor(
   }
 
   private fun handleData(channel: ChannelDataEntity, chartState: ChartState) {
-    updateState { it.copy(profileId = channel.profileId, channelFunction = channel.function) }
+    updateState { it.copy(profileId = channel.profileId, channelFunction = channel.function.value) }
 
     restoreCustomFilters(channel.flags.suplaFlags, channel.Electricity.value, chartState)
     restoreRange(chartState)
     configureDownloadObserver(channel.remoteId)
-    startInitialDataLoad(channel.remoteId, channel.profileId, channel.function)
+    startInitialDataLoad(channel.remoteId, channel.profileId, channel.function.value)
   }
 
   private fun startInitialDataLoad(remoteId: Int, profileId: Long, channelFunction: Int) {

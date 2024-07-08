@@ -26,8 +26,8 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS
-import org.supla.android.lib.SuplaConst
 import org.supla.android.usecases.channel.GetChannelValueUseCase
 import org.supla.android.usecases.channel.electricitymeter.ElectricityMeasurements
 
@@ -48,7 +48,7 @@ class NoExtendedValueStateHandlerTest {
     // given
     val channel: ChannelDataEntity = mockk {
       every { channelEntity } returns mockk {
-        every { function } returns SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH
+        every { function } returns SuplaChannelFunction.POWER_SWITCH
       }
       every { channelValueEntity } returns mockk {
         every { subValueType } returns 0
@@ -68,7 +68,7 @@ class NoExtendedValueStateHandlerTest {
     // given
     val channel: ChannelDataEntity = mockk {
       every { channelEntity } returns mockk {
-        every { function } returns SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH
+        every { function } returns SuplaChannelFunction.POWER_SWITCH
       }
       every { channelValueEntity } returns mockk {
         every { subValueType } returns SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort()
@@ -106,7 +106,7 @@ class NoExtendedValueStateHandlerTest {
     // given
     val channel: ChannelDataEntity = mockk {
       every { channelEntity } returns mockk {
-        every { function } returns SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER
+        every { function } returns SuplaChannelFunction.ELECTRICITY_METER
       }
       every { channelValueEntity } returns mockk {
         every { subValueType } returns 0
@@ -135,7 +135,7 @@ class NoExtendedValueStateHandlerTest {
     // given
     val channel: ChannelDataEntity = mockk {
       every { channelEntity } returns mockk {
-        every { function } returns SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH
+        every { function } returns SuplaChannelFunction.POWER_SWITCH
       }
       every { channelValueEntity } returns mockk {
         every { subValueType } returns SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort()

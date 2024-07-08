@@ -18,6 +18,7 @@ package org.supla.android.usecases.channel
  */
 
 import org.supla.android.data.source.local.entity.ChannelRelationType
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import javax.inject.Inject
 import javax.inject.Singleton
 

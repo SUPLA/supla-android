@@ -69,7 +69,7 @@ class ElectricityMeterGeneralViewModel @Inject constructor(
   private fun handleChannel(channel: ChannelDataEntity, measurements: ElectricityMeasurements, cleanupDownloading: Boolean) {
     updateState { state ->
       if (!state.initialDataLoadStarted) {
-        downloadChannelMeasurementsUseCase.invoke(channel.remoteId, channel.profileId, channel.function)
+        downloadChannelMeasurementsUseCase.invoke(channel.remoteId, channel.profileId, channel.function.value)
       }
 
       electricityMeterGeneralStateHandler.updateState(state.viewState.electricityMeterState, channel, measurements)?.let {

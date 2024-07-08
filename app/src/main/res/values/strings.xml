@@ -724,6 +724,11 @@
   <string name="details_em_total_suffix" translatable="false">(meter reading)</string>
   <string name="details_em_current_month_suffix" translatable="false">(current month)</string>
   <string name="details_em_last_month_balancing" translatable="false">Type of balance for current month</string>
+  <string name="channel_caption_pump_switch" translatable="false">Pump switch</string>
+  <string name="channel_caption_heat_or_cold_sourc_switch" translatable="false">Heat or cold source switch</string>
+  <string name="details_list" translatable="false">List</string>
+  <string name="thermostat_detail_main_thermostat" translatable="false">Main thermostat</string>
+  <string name="thermostat_detail_other_thermostats" translatable="false">Dependent thermostats</string>
 
   <plurals name="details_timer_info_on" translatable="false">
     <item quantity="other">on</item>

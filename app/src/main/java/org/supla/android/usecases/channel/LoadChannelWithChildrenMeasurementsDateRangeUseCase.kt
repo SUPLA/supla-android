@@ -25,8 +25,9 @@ import org.supla.android.data.source.TemperatureLogRepository
 import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.complex.hasMeasurements
 import org.supla.android.data.source.local.entity.complex.isHvacThermostat
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.local.entity.hasMeasurements
-import org.supla.android.lib.SuplaConst
+import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -66,14 +67,14 @@ class LoadChannelWithChildrenMeasurementsDateRangeUseCase @Inject constructor(
 
     val observables = mutableListOf<Single<Optional<Long>>>().also { list ->
       channelsWithMeasurements.forEach {
-        if (it.function == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER) {
+        if (it.function == SuplaChannelFunction.THERMOMETER) {
           list.add(
             temperatureLogRepository
               .findMinTimestamp(it.remoteId, profileId)
               .map { value -> Optional.of(value) }
               .onErrorReturnItem(Optional.empty())
           )
-        } else if (it.function == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE) {
+        } else if (it.function == SuplaChannelFunction.HUMIDITY_AND_TEMPERATURE) {
           list.add(
             temperatureAndHumidityLogRepository
               .findMinTimestamp(it.remoteId, profileId)
@@ -102,14 +103,14 @@ class LoadChannelWithChildrenMeasurementsDateRangeUseCase @Inject constructor(
 
     val observables = mutableListOf<Single<Optional<Long>>>().also { list ->
       channelsWithMeasurements.forEach {
-        if (it.function == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER) {
+        if (it.function == SuplaChannelFunction.THERMOMETER) {
           list.add(
             temperatureLogRepository
               .findMaxTimestamp(it.remoteId, profileId)
               .map { value -> Optional.of(value) }
               .onErrorReturnItem(Optional.empty())
           )
-        } else if (it.function == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE) {
+        } else if (it.function == SuplaChannelFunction.HUMIDITY_AND_TEMPERATURE) {
           list.add(
             temperatureAndHumidityLogRepository
               .findMaxTimestamp(it.remoteId, profileId)

@@ -31,7 +31,6 @@ import org.supla.android.data.model.chart.ChartEntryType.GENERAL_PURPOSE_METER
 import org.supla.android.data.source.GeneralPurposeMeterLogRepository
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.measurements.GeneralPurposeMeterEntity
-import org.supla.android.data.source.remote.channel.suplaFunction
 import org.supla.android.di.GSON_FOR_REPO
 import org.supla.android.extensions.toTimestamp
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER
@@ -65,7 +64,7 @@ class GeneralPurposeMeterMeasurementsProvider @Inject constructor(
       .map {
         ChannelChartSets(
           channel.remoteId,
-          channel.function.suplaFunction(),
+          channel.function,
           getChannelCaptionUseCase(channel.channelEntity),
           spec.aggregation,
           it

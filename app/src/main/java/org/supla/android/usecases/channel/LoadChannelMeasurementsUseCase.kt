@@ -52,7 +52,7 @@ class LoadChannelMeasurementsUseCase @Inject constructor(
       .toSingle()
       .flatMap {
         providers.forEach { provider ->
-          if (provider.handle(it.function)) {
+          if (provider.handle(it.function.value)) {
             return@flatMap provider.provide(it, spec)
           }
         }
