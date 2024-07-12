@@ -3,7 +3,6 @@ package org.supla.android.ui.dialogs.authorize
 import android.content.Context
 import io.mockk.every
 import io.mockk.mockk
-import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.tuple
@@ -117,7 +116,7 @@ class BaseAuthorizationViewModelTest :
     val username = "username"
     val password = "password"
     whenever(authorizeUseCase.invoke(username, password))
-      .thenReturn(Completable.error(IllegalStateException("SuplaClient is null")))
+      .thenReturn(Single.error(IllegalStateException("SuplaClient is null")))
 
     // when
     viewModel.authorize(username, password)
@@ -138,7 +137,7 @@ class BaseAuthorizationViewModelTest :
     // given
     val userName = "test@supla.org"
     val password = "password"
-    whenever(authorizeUseCase.invoke(userName, password)).thenReturn(Completable.complete())
+    whenever(authorizeUseCase.invoke(userName, password)).thenReturn(Single.just(AuthorizeUseCase.Result.Authorized))
 
     // when
     viewModel.authorize(userName, password)
@@ -160,7 +159,7 @@ class BaseAuthorizationViewModelTest :
     val userName = "test@supla.org"
     val password = "password"
     whenever(authorizeUseCase.invoke(userName, password))
-      .thenReturn(Completable.error(AuthorizationException(R.string.incorrect_email_or_password)))
+      .thenReturn(Single.error(AuthorizationException(R.string.incorrect_email_or_password)))
 
     val profile: ProfileEntity = mockk {
       every { email } returns userName
@@ -202,11 +201,58 @@ class BaseAuthorizationViewModelTest :
   }
 
   @Test
+  fun `should not authorize without throwing an error`() {
+    // given
+    val userName = "test@supla.org"
+    val password = "password"
+    whenever(authorizeUseCase.invoke(userName, password))
+      .thenReturn(Single.just(AuthorizeUseCase.Result.Unauthorized))
+
+    val profile: ProfileEntity = mockk {
+      every { email } returns userName
+      every { isCloudAccount } returns true
+    }
+    whenever(profileRepository.findActiveProfile()).thenReturn(Single.just(profile))
+
+    val suplaClient: SuplaClientApi = mockk {
+      every { registered() } returns false
+    }
+    whenever(suplaClientProvider.provide()).thenReturn(suplaClient)
+
+    // when
+    viewModel.showAuthorizationDialog()
+    viewModel.authorize(userName, password)
+
+    // then
+    val context: Context = mockk {
+      every { getString(any()) } answers { "${it.invocation.args.first()}" }
+    }
+    assertThat(states)
+      .extracting(
+        { it.authorizationDialogState?.error?.let { it(context) }?.toInt() },
+        { it.authorizationDialogState?.processing },
+        { it.errors.count() },
+        { it.authorizationsCount }
+      )
+      .containsExactly(
+        tuple(null, false, 0, 0),
+        tuple(null, true, 0, 0),
+        tuple(null, false, 0, 0),
+        tuple(R.string.status_unknown_err, false, 0, 0)
+      )
+    verify(suplaClientProvider, times(2)).provide()
+    verify(profileRepository).findActiveProfile()
+    verify(authorizeUseCase).invoke(userName, password)
+    verifyNoMoreInteractions(suplaClientProvider, authorizeUseCase, profileRepository)
+    verifyNoInteractions(loginUseCase)
+  }
+
+  @Test
   fun `should login with success`() {
     // given
     val userName = "test@supla.org"
     val password = "password"
-    whenever(loginUseCase.invoke(userName, password)).thenReturn(Completable.complete())
+    whenever(loginUseCase.invoke(userName, password)).thenReturn(Single.just(LoginUseCase.Result.Authorized))
 
     // when
     viewModel.login(userName, password)
@@ -223,12 +269,62 @@ class BaseAuthorizationViewModelTest :
   }
 
   @Test
+  fun `should not login without throwing an error`() {
+    // given
+    val userName = "test@supla.org"
+    val password = "password"
+    whenever(loginUseCase.invoke(userName, password))
+      .thenReturn(Single.just(LoginUseCase.Result.Unauthorized))
+
+    val profile: ProfileEntity = mockk {
+      every { email } returns userName
+      every { isCloudAccount } returns true
+    }
+    whenever(profileRepository.findActiveProfile()).thenReturn(Single.just(profile))
+
+    val suplaClient: SuplaClientApi = mockk {
+      every { registered() } returns false
+    }
+    whenever(suplaClientProvider.provide()).thenReturn(suplaClient)
+
+    // when
+    viewModel.showAuthorizationDialog()
+    viewModel.login(userName, password)
+
+    // then
+    val context: Context = mockk {
+      every { resources } returns mockk {
+        every { getString(any()) } answers { "${it.invocation.args.first()}" }
+      }
+      every { getString(any()) } answers { "${it.invocation.args.first()}" }
+    }
+    assertThat(states)
+      .extracting(
+        { it.authorizationDialogState?.error?.let { it(context) }?.toInt() },
+        { it.authorizationDialogState?.processing },
+        { it.errors.count() },
+        { it.authorizationsCount }
+      )
+      .containsExactly(
+        tuple(null, false, 0, 0),
+        tuple(null, true, 0, 0),
+        tuple(null, false, 0, 0),
+        tuple(R.string.status_unknown_err, false, 0, 0)
+      )
+    verify(suplaClientProvider, times(2)).provide()
+    verify(profileRepository).findActiveProfile()
+    verify(loginUseCase).invoke(userName, password)
+    verifyNoMoreInteractions(suplaClientProvider, loginUseCase, profileRepository)
+    verifyNoInteractions(authorizeUseCase)
+  }
+
+  @Test
   fun `should login with error`() {
     // given
     val userName = "test@supla.org"
     val password = "password"
     whenever(loginUseCase.invoke(userName, password))
-      .thenReturn(Completable.error(AuthorizationException(SUPLA_RESULTCODE_CLIENT_LIMITEXCEEDED)))
+      .thenReturn(Single.error(AuthorizationException(SUPLA_RESULTCODE_CLIENT_LIMITEXCEEDED)))
 
     val profile: ProfileEntity = mockk {
       every { email } returns userName
