@@ -130,16 +130,16 @@ sealed interface SuplaClientState {
       return when (event) {
         SuplaClientEvent.OnStart,
         SuplaClientEvent.Cancel,
-        SuplaClientEvent.NetworkConnected -> null
+        SuplaClientEvent.Connecting,
+        SuplaClientEvent.Connected,
+        SuplaClientEvent.NetworkConnected,
+        SuplaClientEvent.Initialized -> null
 
         SuplaClientEvent.Lock -> Locking
         is SuplaClientEvent.Finish -> Finished(event.reason)
         is SuplaClientEvent.Error -> Finished(event.reason)
 
         // others which should not occur
-        SuplaClientEvent.Connected -> throw IllegalEvent.IllegalConnectedEvent("Unexpected event in Disconnecting")
-        SuplaClientEvent.Connecting -> throw IllegalEvent.IllegalConnectingEvent("Unexpected event in Disconnecting")
-        SuplaClientEvent.Initialized -> throw IllegalEvent.IllegalInitializedEvent("Unexpected event in Disconnecting")
         SuplaClientEvent.NoAccount -> throw IllegalEvent.IllegalNoAccountEvent("Unexpected event in Disconnecting")
         SuplaClientEvent.Unlock -> throw IllegalEvent.IllegalUnlockEvent("Unexpected event in Disconnecting")
       }

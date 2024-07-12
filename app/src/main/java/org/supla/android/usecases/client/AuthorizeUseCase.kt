@@ -17,7 +17,7 @@ package org.supla.android.usecases.client
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Single
 import org.supla.android.R
 import org.supla.android.core.infrastructure.ThreadHandler
 import org.supla.android.core.networking.suplaclient.SuplaClientMessageHandlerWrapper
@@ -36,8 +36,8 @@ class AuthorizeUseCase @Inject constructor(
   threadHandler: ThreadHandler
 ) : BaseCredentialsUseCase(threadHandler) {
 
-  operator fun invoke(userName: String, password: String): Completable =
-    Completable.fromRunnable {
+  operator fun invoke(userName: String, password: String): Single<Result> =
+    Single.fromCallable {
       val (client) = guardLet(suplaClientProvider.provide()) {
         throw IllegalStateException("SuplaClient is null")
       }
@@ -60,6 +60,12 @@ class AuthorizeUseCase @Inject constructor(
         )
       } finally {
         suplaClientMessageHandlerWrapper.unregisterMessageListener(listener)
+      }
+
+      return@fromCallable if (authorized == true) {
+        Result.Authorized
+      } else {
+        Result.Unauthorized
       }
     }
 
@@ -86,4 +92,15 @@ class AuthorizeUseCase @Inject constructor(
         }
       }
     }
+
+  sealed interface Result {
+    fun isAuthorized(): Boolean
+
+    data object Authorized : Result {
+      override fun isAuthorized() = true
+    }
+    data object Unauthorized : Result {
+      override fun isAuthorized() = false
+    }
+  }
 }

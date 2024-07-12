@@ -40,6 +40,11 @@ open class BaseCredentialsUseCase(private val threadHandler: ThreadHandler) {
         threadHandler.sleep(WAIT_TIME_MS)
       }
     } catch (exception: InterruptedException) {
+      // Because of some reasons the process should stop so escape from the method
+      return
+    } catch (exception: AuthorizationException) {
+      throw exception // just rethrow it
+    } catch (exception: Exception) {
       throw AuthorizationException(R.string.status_unknown_err)
     }
 
