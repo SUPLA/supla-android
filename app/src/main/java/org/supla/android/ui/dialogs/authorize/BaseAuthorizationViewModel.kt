@@ -85,7 +85,13 @@ abstract class BaseAuthorizationViewModel<S : AuthorizationModelState, E : ViewE
       .doOnSubscribe { updateDialogState { it?.copy(processing = true) } }
       .doOnTerminate { updateDialogState { it?.copy(processing = false) } }
       .subscribeBy(
-        onComplete = this::onAuthorized,
+        onSuccess = {
+          if (it.isAuthorized()) {
+            onAuthorized()
+          } else {
+            updateDialogState { state -> state?.copy(error = { context -> context.getString(R.string.status_unknown_err) }) }
+          }
+        },
         onError = { error ->
           if (error is AuthorizationException) {
             updateDialogState { state ->
@@ -105,7 +111,13 @@ abstract class BaseAuthorizationViewModel<S : AuthorizationModelState, E : ViewE
       .doOnSubscribe { updateDialogState { it?.copy(processing = true) } }
       .doOnTerminate { updateDialogState { it?.copy(processing = false) } }
       .subscribeBy(
-        onComplete = this::onAuthorized,
+        onSuccess = {
+          if (it.isAuthorized()) {
+            onAuthorized()
+          } else {
+            updateDialogState { state -> state?.copy(error = { context -> context.getString(R.string.status_unknown_err) }) }
+          }
+        },
         onError = { error ->
           if (error is AuthorizationException) {
             updateDialogState { state ->

@@ -19,7 +19,7 @@ package org.supla.android.usecases.client
 
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
-import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Single
 import org.supla.android.core.SuplaAppProvider
 import org.supla.android.core.infrastructure.ThreadHandler
 import org.supla.android.core.networking.suplaclient.SuplaClientMessageHandlerWrapper
@@ -37,8 +37,8 @@ class LoginUseCase @Inject constructor(
   threadHandler: ThreadHandler
 ) : BaseCredentialsUseCase(threadHandler) {
 
-  operator fun invoke(userName: String, password: String): Completable =
-    Completable.fromRunnable {
+  operator fun invoke(userName: String, password: String): Single<Result> =
+    Single.fromCallable {
       val (client) = guardLet(suplaAppProvider.provide().SuplaClientInitIfNeed(applicationContext, password)) {
         throw IllegalStateException("SuplaClient is null")
       }
@@ -62,6 +62,12 @@ class LoginUseCase @Inject constructor(
       } finally {
         suplaClientMessageHandlerWrapper.unregisterMessageListener(listener)
       }
+
+      return@fromCallable if (authorized == true) {
+        Result.Authorized
+      } else {
+        Result.Unauthorized
+      }
     }
 
   private fun getLoginMessageListener(onAuthorized: () -> Unit, onError: (Int) -> Unit) =
@@ -80,4 +86,15 @@ class LoginUseCase @Inject constructor(
         }
       }
     }
+
+  sealed interface Result {
+    fun isAuthorized(): Boolean
+
+    data object Authorized : Result {
+      override fun isAuthorized() = true
+    }
+    data object Unauthorized : Result {
+      override fun isAuthorized() = false
+    }
+  }
 }
