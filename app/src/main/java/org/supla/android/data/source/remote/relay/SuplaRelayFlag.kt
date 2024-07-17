@@ -23,7 +23,7 @@ enum class SuplaRelayFlag(val value: Int) {
   companion object {
     fun from(value: Int): List<SuplaRelayFlag> =
       mutableListOf<SuplaRelayFlag>().also {
-        for (flag in SuplaRelayFlag.values()) {
+        for (flag in entries) {
           if (flag.value and value > 0) {
             it.add(flag)
           }

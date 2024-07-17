@@ -88,7 +88,7 @@ enum class DeviceMode(val position: Int, @StringRes val stringRes: Int) {
 
   companion object {
     fun from(idx: Int): DeviceMode {
-      values().forEachIndexed { index, deviceMode ->
+      entries.forEachIndexed { index, deviceMode ->
         if (idx == index) {
           return deviceMode
         }

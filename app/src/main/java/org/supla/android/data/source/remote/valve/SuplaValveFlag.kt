@@ -24,7 +24,7 @@ enum class SuplaValveFlag(val value: Int) {
   companion object {
     fun from(value: Int): List<SuplaValveFlag> =
       mutableListOf<SuplaValveFlag>().also {
-        for (flag in SuplaValveFlag.values()) {
+        for (flag in entries) {
           if (flag.value and value > 0) {
             it.add(flag)
           }

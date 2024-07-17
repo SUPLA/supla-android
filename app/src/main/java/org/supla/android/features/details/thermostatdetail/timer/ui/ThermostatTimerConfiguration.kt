@@ -92,7 +92,7 @@ fun ThermostatTimerConfiguration(state: TimerDetailViewState, viewProxy: TimerDe
     ) {
       HeaderText(text = stringResource(id = R.string.details_timer_select_mode), modifier = Modifier.padding(top = Distance.default))
       SegmentedComponent(
-        items = DeviceMode.values().map { stringResource(id = it.stringRes) },
+        items = DeviceMode.entries.map { stringResource(id = it.stringRes) },
         activeItem = state.selectedMode.position,
         modifier = Modifier.padding(top = Distance.tiny),
         onClick = { viewProxy.toggleDeviceMode(DeviceMode.from(it)) }
