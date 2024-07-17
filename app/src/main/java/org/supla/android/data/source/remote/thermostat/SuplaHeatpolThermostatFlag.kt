@@ -30,7 +30,7 @@ enum class SuplaHeatpolThermostatFlag(val value: Int) {
   companion object {
     fun from(short: Short): List<SuplaHeatpolThermostatFlag> {
       val result = mutableListOf<SuplaHeatpolThermostatFlag>()
-      for (flag in SuplaHeatpolThermostatFlag.values()) {
+      for (flag in entries) {
         if (flag.value and short.toInt() > 0) {
           result.add(flag)
         }

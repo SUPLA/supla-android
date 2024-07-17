@@ -194,7 +194,7 @@ enum class TimerTargetAction(val id: Int) {
 
   companion object {
     fun from(id: Int): TimerTargetAction? {
-      for (action in TimerTargetAction.values()) {
+      for (action in entries) {
         if (action.id == id) {
           return action
         }

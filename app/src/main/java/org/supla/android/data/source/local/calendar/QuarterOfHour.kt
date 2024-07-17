@@ -28,7 +28,7 @@ enum class QuarterOfHour(val startingMinute: Int) {
 
   companion object {
     fun from(minuteOfHour: Int): QuarterOfHour {
-      for (quarter in QuarterOfHour.values()) {
+      for (quarter in entries) {
         if (minuteOfHour < quarter.startingMinute + 15) {
           return quarter
         }

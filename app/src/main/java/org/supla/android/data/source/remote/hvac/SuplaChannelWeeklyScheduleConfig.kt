@@ -24,6 +24,7 @@ import org.supla.android.data.source.remote.SuplaChannelConfig
  */
 
 enum class SuplaHvacMode(val value: Int) {
+  UNKNOWN(-1),
   NOT_SET(0),
   OFF(1),
   HEAT(2),
@@ -63,7 +64,7 @@ enum class SuplaHvacMode(val value: Int) {
         }
       }
 
-      throw IllegalArgumentException("Could not create ThermostatMode from $byte")
+      return UNKNOWN
     }
   }
 }

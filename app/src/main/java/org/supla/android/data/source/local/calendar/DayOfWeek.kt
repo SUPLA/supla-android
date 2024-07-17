@@ -32,7 +32,7 @@ enum class DayOfWeek(val day: Int, @StringRes val fullText: Int, @StringRes val 
 
   companion object {
     fun from(day: Int): DayOfWeek {
-      for (dayOfWeek in DayOfWeek.values()) {
+      for (dayOfWeek in entries) {
         if (dayOfWeek.day == day) {
           return dayOfWeek
         }

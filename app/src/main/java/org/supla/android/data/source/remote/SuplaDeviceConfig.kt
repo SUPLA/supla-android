@@ -92,11 +92,11 @@ enum class HomeScreenContent(val value: Int) {
 data class HomeScreenContentField(
   override val type: FieldType,
   val available: EnumSet<HomeScreenContent>,
-  val content: HomeScreenContent
+  val content: HomeScreenContent?
 ) : Field(type)
 
 data class SuplaDeviceConfig(val deviceId: Int, val availableFields: EnumSet<FieldType>, val fields: List<Field>)
 
 fun SuplaDeviceConfig?.isAutomaticTimeSyncDisabled(): Boolean {
-  return this?.fields?.filterIsInstance(AutomaticTimeSyncField::class.java)?.firstOrNull()?.enabled == false
+  return this?.fields?.filterIsInstance<AutomaticTimeSyncField>()?.firstOrNull()?.enabled == false
 }
