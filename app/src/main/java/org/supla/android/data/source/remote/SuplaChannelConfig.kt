@@ -21,6 +21,7 @@ import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.lib.SuplaConst
 
 enum class ChannelConfigType(val value: Int) {
+  UNKNOWN(-1),
   DEFAULT(0),
   WEEKLY_SCHEDULE(2),
   GENERAL_PURPOSE_MEASUREMENT(3),
@@ -29,13 +30,13 @@ enum class ChannelConfigType(val value: Int) {
 
   companion object {
     fun from(value: Int): ChannelConfigType {
-      for (type in ChannelConfigType.values()) {
+      for (type in entries) {
         if (type.value == value) {
           return type
         }
       }
 
-      throw IllegalArgumentException("Illegal channel config type value: $value")
+      return UNKNOWN
     }
 
     fun from(channel: ChannelEntity) =

@@ -44,6 +44,7 @@ data class ChannelRelationEntity(
 }
 
 enum class ChannelRelationType(val value: Short) {
+  UNKNOWN(-1),
   DEFAULT(0),
   OPENING_SENSOR(1),
   PARTIAL_OPENING_SENSOR(2),
@@ -77,13 +78,13 @@ enum class ChannelRelationType(val value: Short) {
 
   companion object {
     fun from(value: Short): ChannelRelationType {
-      for (type in ChannelRelationType.values()) {
+      for (type in entries) {
         if (type.value == value) {
           return type
         }
       }
 
-      throw IllegalArgumentException("Illegal channel relation type value: $value")
+      return UNKNOWN
     }
   }
 }

@@ -52,7 +52,7 @@ enum class SuplaShadingSystemFlag(val value: Int) {
   companion object {
     fun from(value: Int): List<SuplaShadingSystemFlag> {
       val result = mutableListOf<SuplaShadingSystemFlag>()
-      for (flag in SuplaShadingSystemFlag.values()) {
+      for (flag in entries) {
         if (flag.value and value > 0) {
           result.add(flag)
         }
