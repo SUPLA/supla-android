@@ -35,7 +35,7 @@ import org.supla.android.extensions.TAG
 import javax.inject.Inject
 import javax.inject.Singleton
 
-private const val INITIALIZATION_MIN_TIME_MS = 1000
+private const val INITIALIZATION_MIN_TIME_MS = 500
 
 @Singleton
 class InitializationUseCase @Inject constructor(

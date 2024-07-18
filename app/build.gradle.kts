@@ -112,6 +112,7 @@ repositories {
 }
 
 dependencies {
+  implementation(Deps.Androidx.Core.Splash)
   implementation(Deps.Multidex)
   implementation(Deps.Androidx.Lifecycle.Extensions)
   implementation(Deps.AndroidChart)
