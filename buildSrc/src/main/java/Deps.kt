@@ -34,6 +34,7 @@ object Deps {
         object Core {
             const val Core = "androidx.core:core:${Versions.Androidx.Core}"
             const val Ktx = "androidx.core:core-ktx:${Versions.Androidx.Core}"
+            const val Splash = "androidx.core:core-splashscreen:1.0.1"
         }
 
         object Lifecycle {
