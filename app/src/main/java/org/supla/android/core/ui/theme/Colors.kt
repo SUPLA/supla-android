@@ -38,6 +38,7 @@ class SuplaLightColors(context: Context) {
   val Surface = colorResource(context, R.color.surface)
   val OnSurface = colorResource(context, R.color.on_background)
   val Error = colorResource(context, R.color.red_alert)
+  val ErrorContainer = colorResource(context, R.color.error_container)
   val OnError = Color(0xFFFFFFFF)
   val Scrim = colorResource(context, R.color.dialog_scrim)
 
@@ -78,7 +79,7 @@ class SuplaLightColors(context: Context) {
     inverseOnSurface = OnSurface,
     error = Error,
     onError = OnError,
-    errorContainer = Error,
+    errorContainer = ErrorContainer,
     onErrorContainer = OnError,
     outline = Color(0xFF000000),
     outlineVariant = Color(0xFF000000),
@@ -95,6 +96,7 @@ class SuplaDarkColors(context: Context) {
   val Surface = colorResource(context, R.color.surface)
   val OnSurface = colorResource(context, R.color.on_background)
   val Error = colorResource(context, R.color.red_alert)
+  val ErrorContainer = colorResource(context, R.color.error_container)
   val OnError = Color(0xFFF5F6F7)
   val Scrim = colorResource(context, R.color.dialog_scrim)
 
@@ -135,7 +137,7 @@ class SuplaDarkColors(context: Context) {
     inverseOnSurface = OnSurface,
     error = Error,
     onError = OnError,
-    errorContainer = Error,
+    errorContainer = ErrorContainer,
     onErrorContainer = OnError,
     outline = Color(0xFF000000),
     outlineVariant = Color(0xFF000000),
@@ -146,7 +148,13 @@ class SuplaDarkColors(context: Context) {
 val Colors.progressPointShadow: Color
   get() = Color(0x99B2F4B8)
 
+val ColorScheme.progressPointShadow: Color
+  get() = Color(0x99B2F4B8)
+
 val Colors.blue: Color
+  get() = Color(0xFF007AFF)
+
+val ColorScheme.blue: Color
   get() = Color(0xFF007AFF)
 
 val Colors.gray: Color

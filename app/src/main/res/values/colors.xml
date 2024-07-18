@@ -13,6 +13,7 @@
     <color name="on_background">#000000</color>
     <color name="red_alert">#EB3A28</color>
     <color name="dialog_scrim">#80F5F6F7</color>
+    <color name="error_container">#FAEAE9</color>
 
     <color name="disabled">#B4B7BA</color>
     <color name="disabledOverlay">#DDFFFFFF</color>

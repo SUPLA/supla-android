@@ -25,7 +25,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -39,6 +39,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.DefaultShadowColor
 import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.RadialGradientShader
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.drawscope.Stroke
@@ -50,7 +51,6 @@ import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextMeasurer
@@ -91,6 +91,7 @@ private val setpointIconSize = 18.dp
 private val controlCircleWidth = 16.dp
 private val controlMinMaxStrokeWidth = 6.dp
 private val controlShadowWidth = 20.dp
+private val controlPowerStrokeWidth = 4.dp
 
 private val setpointTemperatureSizeBig = 48.nonScaledSp
 private val setpointTemperatureSizeSmall = 32.nonScaledSp
@@ -109,7 +110,7 @@ private val temperatureCirclePaint = Paint().asFrameworkPaint().apply {
 private val shaderColors = mutableListOf(Color(0xFFD2D2D2), Color.White, Color.White, Color(0xFFD2D2D2))
 private val shaderPositions = listOf(0.85f, 0.9f, 0.95f, 1f)
 
-@OptIn(ExperimentalTextApi::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun ThermostatControl(
   modifier: Modifier = Modifier,
@@ -123,31 +124,37 @@ fun ThermostatControl(
   isOffline: Boolean = false,
   isHeating: Boolean = false,
   isCooling: Boolean = false,
+  currentPower: Float? = null,
   onPositionChangeStarted: () -> Unit,
   onPositionChangeEnded: (Float?, Float?) -> Unit
 ) {
-  val surfaceColor = MaterialTheme.colors.surface
+  val surfaceColor = MaterialTheme.colorScheme.surface
   val shaderOuterColor = colorResource(id = R.color.thermostat_control_circle_background)
   val greenColor = colorResource(id = R.color.supla_green)
   val disabledColor = colorResource(id = R.color.disabled)
-  val textColor = MaterialTheme.colors.onBackground
-  val pointShadowColor = MaterialTheme.colors.progressPointShadow
+  val textColor = MaterialTheme.colorScheme.onBackground
+  val pointShadowColor = MaterialTheme.colorScheme.progressPointShadow
   val (minPointColor, minPointShadowColor) = if (isOff) {
     listOf(disabledColor, disabledColor.copy(alpha = 0.4f))
   } else {
-    listOf(MaterialTheme.colors.error, MaterialTheme.colors.error.copy(alpha = 0.4f))
+    listOf(MaterialTheme.colorScheme.error, MaterialTheme.colorScheme.error.copy(alpha = 0.4f))
   }
   val (maxPointColor, maxPointShadowColor) = if (isOff) {
     listOf(disabledColor, disabledColor.copy(alpha = 0.4f))
   } else {
-    listOf(MaterialTheme.colors.blue, MaterialTheme.colors.blue.copy(alpha = 0.4f))
+    listOf(MaterialTheme.colorScheme.blue, MaterialTheme.colorScheme.blue.copy(alpha = 0.4f))
   }
   val indicatorShadowColor = when {
     isOffline -> DefaultShadowColor
-    isHeating -> MaterialTheme.colors.error
-    isCooling -> MaterialTheme.colors.blue
+    isHeating -> MaterialTheme.colorScheme.error
+    isCooling -> MaterialTheme.colorScheme.blue
     isOff -> DefaultShadowColor
     else -> greenColor
+  }
+  val currentPowerBackgroundColor = when {
+    isHeating -> MaterialTheme.colorScheme.errorContainer
+    isCooling -> MaterialTheme.colorScheme.blue.copy(alpha = 0.1f)
+    else -> DefaultShadowColor
   }
 
   val paddings = dimensionResource(id = R.dimen.distance_default)
@@ -227,15 +234,26 @@ fun ThermostatControl(
     val mainTemperatureText = mainTemperatureTextProvider(lastMinSetpoint, lastMaxSetpoint)
     val temperatureControlLayoutResult = mainTemperature(text = mainTemperatureText, textMeasurer = textMeasurer)
     val temperatureControlTextSize = temperatureControlLayoutResult.size
+    val innerRadius = outerRadius - 35.dp.toPx()
     drawSetTemperatureCircle(
       text = temperatureControlLayoutResult,
       textColor = textColor,
       textSize = temperatureControlTextSize,
       shadowColor = indicatorShadowColor,
-      outerRadius = outerRadius,
+      radius = innerRadius,
       center = center,
       surfaceColor = surfaceColor
     )
+
+    if (isHeating || isCooling) {
+      drawCurrentPowerIndicator(
+        currentPower = currentPower,
+        foregroundColor = indicatorShadowColor,
+        backgroundColor = currentPowerBackgroundColor,
+        radius = innerRadius,
+        center = center
+      )
+    }
 
     drawControlPoints(
       outerRadius = outerRadius,
@@ -252,8 +270,7 @@ fun ThermostatControl(
 }
 
 context(DrawScope)
-@OptIn(ExperimentalTextApi::class)
-fun drawControlTemperatureCircle(
+private fun drawControlTemperatureCircle(
   outerRadius: Float,
   minTemperature: TextLayoutResult,
   minTemperatureSize: IntSize,
@@ -323,19 +340,17 @@ private fun calculateBoundaryTemperaturePosition(angle: Float, radius: Float, si
 }
 
 context(DrawScope)
-@OptIn(ExperimentalTextApi::class)
 fun drawSetTemperatureCircle(
   text: TextLayoutResult,
   textSize: IntSize,
   textColor: Color,
   shadowColor: Color,
-  outerRadius: Float,
+  radius: Float,
   center: Offset,
   surfaceColor: Color
 ) {
   val shadowWidth = controlShadowWidth.toPx()
   val shadowColorWithAlpha = shadowColor.copy(alpha = 0.2f).toArgb()
-  val radius = outerRadius - 35.dp.toPx()
 
   // shadow paint
   temperatureCirclePaint.setShadowLayer(shadowWidth, 0f, 0f, shadowColorWithAlpha)
@@ -429,6 +444,40 @@ private fun drawSetPoint(
   }
 }
 
+context(DrawScope)
+private fun drawCurrentPowerIndicator(
+  currentPower: Float?,
+  foregroundColor: Color,
+  backgroundColor: Color,
+  radius: Float,
+  center: Offset
+) {
+  currentPower?.let {
+    val startAngle = -90f
+    val sweepAngle = 360f.times(it).div(100f)
+    val width = controlPowerStrokeWidth.toPx()
+    val diameter = radius.times(2).minus(width)
+    val topLeftOffset = radius.minus(width.div(2))
+
+    drawCircle(
+      color = backgroundColor,
+      radius = topLeftOffset,
+      center = center,
+      style = Stroke(width = width)
+    )
+
+    drawArc(
+      color = foregroundColor,
+      startAngle = startAngle,
+      sweepAngle = sweepAngle,
+      useCenter = false,
+      topLeft = center.minus(Offset(topLeftOffset, topLeftOffset)),
+      size = Size(diameter, diameter),
+      style = Stroke(width = width, cap = StrokeCap.Round)
+    )
+  }
+}
+
 private fun getNearestCirclePoint(
   point: Offset,
   center: Offset,
@@ -487,7 +536,6 @@ private fun getAlphaPosition(correctedPoint: Offset, sinAlpha: Float) =
     }
   }
 
-@OptIn(ExperimentalTextApi::class)
 private fun mainTemperature(text: String, textMeasurer: TextMeasurer): TextLayoutResult {
   val fontSize = if (text.length > 5) {
     setpointTemperatureSizeSmall
@@ -508,7 +556,6 @@ private fun mainTemperature(text: String, textMeasurer: TextMeasurer): TextLayou
   return textMeasurer.measure(annotatedString)
 }
 
-@OptIn(ExperimentalTextApi::class)
 private fun boundaryTemperature(text: String, textMeasurer: TextMeasurer): TextLayoutResult {
   val annotatedString = buildAnnotatedString {
     withStyle(
@@ -591,6 +638,7 @@ private fun Preview() {
         maxSetpoint = 0.65f,
         isOff = false,
         isHeating = true,
+        currentPower = 55f,
         onPositionChangeStarted = {},
         onPositionChangeEnded = { _, _ -> }
       )

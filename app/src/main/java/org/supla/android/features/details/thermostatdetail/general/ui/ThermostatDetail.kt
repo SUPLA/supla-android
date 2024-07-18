@@ -38,8 +38,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -62,8 +62,10 @@ import kotlinx.coroutines.flow.StateFlow
 import org.supla.android.R
 import org.supla.android.core.ui.BaseViewProxy
 import org.supla.android.core.ui.StringProvider
+import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.core.ui.theme.blue
+import org.supla.android.data.formatting.LocalPercentageFormatter
 import org.supla.android.data.model.general.ChannelIssueItem
 import org.supla.android.data.model.temperature.TemperatureCorrection
 import org.supla.android.events.LoadingTimeoutManager
@@ -105,7 +107,7 @@ fun ThermostatDetail(viewProxy: ThermostatGeneralViewProxy) {
     modifier = Modifier
       .fillMaxWidth()
       .fillMaxHeight()
-      .background(color = MaterialTheme.colors.background)
+      .background(color = MaterialTheme.colorScheme.background)
   ) {
     Column(
       modifier = Modifier
@@ -193,7 +195,7 @@ private fun TemperatureControlRow(viewState: ThermostatGeneralViewState, viewPro
       .weight(1f)
       .fillMaxWidth()
   ) {
-    val (control, heating, cooling, row) = createRefs()
+    val (control, heating, heatingText, cooling, coolingText, row) = createRefs()
     val context = LocalContext.current
 
     ThermostatControl(
@@ -214,19 +216,25 @@ private fun TemperatureControlRow(viewState: ThermostatGeneralViewState, viewPro
       isHeating = viewState.showHeatingIndicator,
       isCooling = viewState.showCoolingIndicator,
       isOff = viewState.isOff,
+      currentPower = viewState.currentPower,
       isOffline = viewState.isOffline,
       onPositionChangeStarted = { viewProxy.markChanging() },
       onPositionChangeEnded = { minPercentage, maxPercentage -> viewProxy.setpointTemperatureChanged(minPercentage, maxPercentage) }
     )
 
-    ThermostatIndicators(viewState, listOf(control, heating, cooling))
+    ThermostatIndicators(viewState, listOf(control, heating, heatingText, cooling, coolingText))
 
     if ((!viewState.isOff || viewState.programmedModeActive) && !viewState.isOffline) {
       Row(
         modifier = Modifier.constrainAs(row) { bottom.linkTo(control.bottom, margin = 60.dp) },
         horizontalArrangement = Arrangement.spacedBy(40.dp)
       ) {
-        val color = if (viewState.viewModelState?.lastChangedHeat == false) MaterialTheme.colors.blue else MaterialTheme.colors.error
+        val color = if (viewState.viewModelState?.lastChangedHeat == false) {
+          MaterialTheme.colorScheme.blue
+        } else {
+          MaterialTheme.colorScheme.error
+        }
+
         Spacer(modifier = Modifier.weight(1f))
         TemperatureControlButton(icon = R.drawable.ic_minus, color = color, disabled = viewState.canDecreaseTemperature.not()) {
           viewProxy.changeSetpointTemperature(TemperatureCorrection.DOWN)
@@ -243,9 +251,10 @@ private fun TemperatureControlRow(viewState: ThermostatGeneralViewState, viewPro
 context (ConstraintLayoutScope)
 @Composable
 private fun ThermostatIndicators(viewState: ThermostatGeneralViewState, constraints: List<ConstrainedLayoutReference>) {
-  val (control, heating, cooling) = constraints
+  val (control, heating, heatingText, cooling, coolingText) = constraints
   val yCorrection = THERMOSTAT_VERTICAL_POSITION_CORRECTION.times(2)
-  val distanceFromCenterPoint = 94.dp
+  val distanceFromCenterPoint = if (viewState.currentPower == null) 94.dp else 129.dp
+  val powerTextMargin = Distance.tiny
 
   if (viewState.showHeatingIndicator) {
     val margin = yCorrection.minus(indicatorSize).minus(distanceFromCenterPoint)
@@ -258,6 +267,17 @@ private fun ThermostatIndicators(viewState: ThermostatGeneralViewState, constrai
         end.linkTo(control.end)
       }
     )
+    viewState.currentPower?.let {
+      Text(
+        text = LocalPercentageFormatter.current.format(it),
+        modifier = Modifier.constrainAs(heatingText) {
+          top.linkTo(heating.bottom, margin = powerTextMargin)
+          start.linkTo(heating.start)
+          end.linkTo(heating.end)
+        },
+        style = MaterialTheme.typography.labelLarge
+      )
+    }
   }
 
   if (viewState.showCoolingIndicator) {
@@ -271,6 +291,18 @@ private fun ThermostatIndicators(viewState: ThermostatGeneralViewState, constrai
         end.linkTo(control.end)
       }
     )
+
+    viewState.currentPower?.let {
+      Text(
+        text = LocalPercentageFormatter.current.format(it),
+        modifier = Modifier.constrainAs(coolingText) {
+          bottom.linkTo(cooling.top, margin = powerTextMargin)
+          start.linkTo(cooling.start)
+          end.linkTo(cooling.end)
+        },
+        style = MaterialTheme.typography.labelLarge
+      )
+    }
   }
 }
 
@@ -346,7 +378,7 @@ private fun WarningsRow(warnings: List<ChannelIssueItem>, modifier: Modifier = M
           contentDescription = null,
           modifier = Modifier.size(dimensionResource(id = R.dimen.channel_warning_image_size))
         )
-        Text(text = stringResource(id = it.descriptionRes), style = MaterialTheme.typography.body2)
+        Text(text = stringResource(id = it.descriptionRes), style = MaterialTheme.typography.bodyMedium)
       }
 
       if (smallScreen) {
@@ -361,9 +393,10 @@ private fun BottomButtonsRow(viewState: ThermostatGeneralViewState, viewProxy: T
   Row(
     modifier = Modifier
       .padding(
-        start = dimensionResource(id = R.dimen.distance_default),
-        end = dimensionResource(id = R.dimen.distance_default),
-        bottom = dimensionResource(id = R.dimen.distance_default)
+        start = Distance.default,
+        end = Distance.default,
+        bottom = Distance.default,
+        top = Distance.tiny
       ),
     horizontalArrangement = Arrangement.spacedBy(16.dp)
   ) {
@@ -400,7 +433,7 @@ private fun PowerButton(isOff: Boolean, disabled: Boolean, onClick: () -> Unit) 
     modifier = Modifier.width(dimensionResource(id = R.dimen.button_default_size)),
     onClick = onClick,
     icon = painterResource(id = R.drawable.ic_power_button),
-    iconColor = if (isOff) MaterialTheme.colors.error else colorResource(id = R.color.supla_green),
+    iconColor = if (isOff) MaterialTheme.colorScheme.error else colorResource(id = R.color.supla_green),
     disabled = disabled
   )
 }
@@ -409,7 +442,7 @@ private fun PowerButton(isOff: Boolean, disabled: Boolean, onClick: () -> Unit) 
 private fun EmptyThermometerValues() = Spacer(
   modifier = Modifier
     .fillMaxWidth()
-    .background(color = MaterialTheme.colors.surface)
+    .background(color = MaterialTheme.colorScheme.surface)
     .height(80.dp)
 )
 
@@ -417,7 +450,29 @@ private fun EmptyThermometerValues() = Spacer(
 @Composable
 private fun Preview() {
   SuplaTheme {
-    ThermostatDetail(PreviewProxy())
+    ThermostatDetail(
+      PreviewProxy(
+        ThermostatGeneralViewState(
+          showHeatingIndicator = true,
+          currentPower = 18f
+        )
+      )
+    )
+  }
+}
+
+@Preview
+@Composable
+private fun PreviewCooling() {
+  SuplaTheme {
+    ThermostatDetail(
+      PreviewProxy(
+        ThermostatGeneralViewState(
+          showCoolingIndicator = true,
+          currentPower = 18f
+        )
+      )
+    )
   }
 }
 
@@ -454,7 +509,15 @@ private fun PreviewTemporaryOverride() {
 private fun PreviewSmall() {
   SuplaTheme {
     Box(modifier = Modifier.height(500.dp)) {
-      ThermostatDetail(PreviewProxy())
+      ThermostatDetail(
+        PreviewProxy(
+          ThermostatGeneralViewState(
+            issues = listOf(
+              ChannelIssueItem(IssueIconType.WARNING, R.string.thermostat_detail_mode_manual)
+            )
+          )
+        )
+      )
     }
   }
 }
@@ -489,6 +552,11 @@ private class PreviewProxy(private var initialState: ThermostatGeneralViewState 
 
   override fun weeklyScheduledModeClicked() {}
 
-  override fun getTemperatureText(minPercentage: Float?, maxPercentage: Float?, state: ThermostatGeneralViewState): StringProvider = { "" }
+  override fun getTemperatureText(
+    minPercentage: Float?,
+    maxPercentage: Float?,
+    state: ThermostatGeneralViewState
+  ): StringProvider = { "25,0°" }
+
   override fun markChanging() {}
 }
