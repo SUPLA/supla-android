@@ -853,7 +853,8 @@ public class AddDeviceWizardActivity extends WizardActivity
             || SSID.startsWith("COMELIT-")
             || SSID.startsWith("POLIER-")
             || SSID.startsWith("ERGO-")
-            || SSID.startsWith("SOMEF-"))
+            || SSID.startsWith("SOMEF-")
+            || SSID.startsWith("AURATON-"))
         && (mFullPattern.matcher(SSID).find() || mShortPattern.matcher(SSID).find());
   }
 
