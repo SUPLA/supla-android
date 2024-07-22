@@ -17,10 +17,10 @@ package org.supla.android.ui.views.tools
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.content.res.Configuration
 import android.graphics.Path
 import android.view.MotionEvent
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
@@ -65,7 +65,6 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
 import org.supla.android.core.ui.theme.SuplaTheme
-import org.supla.android.core.ui.theme.blue
 import org.supla.android.core.ui.theme.progressPointShadow
 import org.supla.android.extensions.distanceTo
 import org.supla.android.extensions.nonScaledSp
@@ -142,18 +141,18 @@ fun ThermostatControl(
   val (maxPointColor, maxPointShadowColor) = if (isOff) {
     listOf(disabledColor, disabledColor.copy(alpha = 0.4f))
   } else {
-    listOf(MaterialTheme.colorScheme.blue, MaterialTheme.colorScheme.blue.copy(alpha = 0.4f))
+    listOf(MaterialTheme.colorScheme.secondary, MaterialTheme.colorScheme.secondary.copy(alpha = 0.4f))
   }
   val indicatorShadowColor = when {
     isOffline -> DefaultShadowColor
     isHeating -> MaterialTheme.colorScheme.error
-    isCooling -> MaterialTheme.colorScheme.blue
+    isCooling -> MaterialTheme.colorScheme.secondary
     isOff -> DefaultShadowColor
     else -> greenColor
   }
   val currentPowerBackgroundColor = when {
     isHeating -> MaterialTheme.colorScheme.errorContainer
-    isCooling -> MaterialTheme.colorScheme.blue.copy(alpha = 0.1f)
+    isCooling -> MaterialTheme.colorScheme.secondaryContainer
     else -> DefaultShadowColor
   }
 
@@ -609,16 +608,16 @@ private data class ControlPointConfig(
   }
 }
 
-@Preview
+@Preview(name = "Light mode", showBackground = true)
+@Preview(name = "Night mode", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 private fun Preview() {
   SuplaTheme {
     Column(verticalArrangement = Arrangement.spacedBy(1.dp)) {
       ThermostatControl(
         modifier = Modifier
-          .width(400.dp)
-          .height(400.dp)
-          .background(Color.White),
+          .width(300.dp)
+          .height(270.dp),
         mainTemperatureTextProvider = { _, _ -> "22.7°" },
         minTemperature = "10°",
         maxTemperature = "45°",
@@ -627,9 +626,8 @@ private fun Preview() {
       )
       ThermostatControl(
         modifier = Modifier
-          .width(400.dp)
-          .height(400.dp)
-          .background(Color.White),
+          .width(300.dp)
+          .height(270.dp),
         mainTemperatureTextProvider = { _, _ -> "22.7°" },
         minTemperature = "10°",
         maxTemperature = "45°",
@@ -638,6 +636,22 @@ private fun Preview() {
         maxSetpoint = 0.65f,
         isOff = false,
         isHeating = true,
+        currentPower = 55f,
+        onPositionChangeStarted = {},
+        onPositionChangeEnded = { _, _ -> }
+      )
+      ThermostatControl(
+        modifier = Modifier
+          .width(300.dp)
+          .height(270.dp),
+        mainTemperatureTextProvider = { _, _ -> "22.7°" },
+        minTemperature = "10°",
+        maxTemperature = "45°",
+        currentValue = 0.45f,
+        minSetpoint = 0.55f,
+        maxSetpoint = 0.65f,
+        isOff = false,
+        isCooling = true,
         currentPower = 55f,
         onPositionChangeStarted = {},
         onPositionChangeEnded = { _, _ -> }

@@ -77,7 +77,7 @@ class CurtainViewModel @Inject constructor(
 ) {
 
   override fun updatePosition(state: CurtainViewModelState, position: Float) =
-    state.copy(windowState = state.windowState.copy(position = WindowGroupedValue.Similar(position)))
+    state.copy(windowState = state.windowState.copy(position = WindowGroupedValue.Similar(position), markers = emptyList()))
 
   override fun stateCopy(
     state: CurtainViewModelState,

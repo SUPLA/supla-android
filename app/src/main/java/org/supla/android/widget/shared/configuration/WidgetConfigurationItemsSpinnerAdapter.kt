@@ -65,7 +65,7 @@ class WidgetConfigurationChannelsSpinnerAdapter(
       item.isLocation() -> {
         view.findViewById<LinearLayout>(R.id.spinner_item_content).isClickable = true
         view.findViewById<LinearLayout>(R.id.spinner_item_content)
-          .setBackgroundResource(R.color.widget_spinner_location_background)
+          .setBackgroundResource(R.color.surface_variant)
         view.findViewById<TextView>(R.id.spinner_item_text)?.text = (item.value as Location).caption
         view.findViewById<ImageView>(R.id.spinner_item_icon).visibility = View.GONE
       }

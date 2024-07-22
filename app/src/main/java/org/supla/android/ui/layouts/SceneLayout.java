@@ -108,7 +108,7 @@ public class SceneLayout extends LinearLayout implements SlideableItem, Swapable
     Preferences prefs = new Preferences(context);
     setOrientation(LinearLayout.HORIZONTAL);
 
-    setBackgroundColor(getResources().getColor(R.color.channel_cell));
+    setBackgroundColor(getResources().getColor(R.color.surface));
 
     right_btn = new FrameLayout(context);
     left_btn = new FrameLayout(context);
@@ -136,7 +136,7 @@ public class SceneLayout extends LinearLayout implements SlideableItem, Swapable
     content = new RelativeLayout(context);
     content.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, channelHeight));
 
-    content.setBackgroundColor(getResources().getColor(R.color.channel_cell));
+    content.setBackgroundColor(getResources().getColor(R.color.surface));
 
     addView(content);
     addView(left_btn);

@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <resources>
-  <attr name="brandPrimaryForegroundColor" format="color" />
-  <attr name="brandPrimaryBackgroundColor" format="color" />
-  <attr name="linkColor" format="color" />
-  <attr name="labelColor" format="color" />
-  <attr name="switcherBackgroundColor" format="reference" />
-
   <declare-styleable name="PowerButtonView">
     <attr name="text" format="string" />
     <attr name="type" format="enum">

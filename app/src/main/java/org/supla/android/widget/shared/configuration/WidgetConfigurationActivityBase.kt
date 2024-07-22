@@ -47,7 +47,7 @@ abstract class WidgetConfigurationActivityBase<T : Any> : FragmentActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setStatusBarColor(R.color.toolbar, false)
+    setStatusBarColor(R.color.primary_container, false)
 
     binding = bind()
 

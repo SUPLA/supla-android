@@ -38,6 +38,7 @@ import org.supla.android.R
 import org.supla.android.core.ui.StringProvider
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
+import org.supla.android.core.ui.theme.primaryVariant
 import org.supla.android.ui.views.BodyMedium
 import org.supla.android.ui.views.buttons.BlueTextButton
 import org.supla.android.ui.views.buttons.Button
@@ -73,7 +74,7 @@ fun ConnectionStatusView(
       Image(
         painter = painterResource(id = R.drawable.logo_light),
         contentDescription = stringResource(id = R.string.app_name),
-        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
+        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primaryVariant),
         modifier = Modifier.size(140.dp)
       )
       BodyMedium(stringRes = viewState.stateText.stringRes)

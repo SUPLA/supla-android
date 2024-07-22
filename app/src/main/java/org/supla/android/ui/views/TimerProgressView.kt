@@ -12,7 +12,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -73,10 +73,10 @@ private val progressRadius = 100.dp
 
 @Composable
 fun TimerProgressView(progress: Float, indeterminate: Boolean) {
-  val progressBackgroundColor = MaterialTheme.colors.surface
-  val progressColor = MaterialTheme.colors.primary
+  val progressBackgroundColor = MaterialTheme.colorScheme.surface
+  val progressColor = MaterialTheme.colorScheme.primary
   val progressPointColor = colorResource(id = R.color.supla_green)
-  val pointShadowColor = MaterialTheme.colors.progressPointShadow
+  val pointShadowColor = MaterialTheme.colorScheme.progressPointShadow
   val progressAlpha = convertProgressToAngle(progress)
   val position = remember {
     Animatable(0f)

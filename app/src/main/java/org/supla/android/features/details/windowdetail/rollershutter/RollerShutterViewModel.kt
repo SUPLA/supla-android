@@ -76,7 +76,7 @@ class RollerShutterViewModel @Inject constructor(
 ) {
 
   override fun updatePosition(state: RollerShutterViewModelState, position: Float) =
-    state.copy(windowState = state.windowState.copy(position = WindowGroupedValue.Similar(position)))
+    state.copy(windowState = state.windowState.copy(position = WindowGroupedValue.Similar(position), markers = emptyList()))
 
   override fun stateCopy(
     state: RollerShutterViewModelState,

@@ -1,17 +1,5 @@
 package org.supla.android;
 
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.Uri;
-import android.preference.PreferenceManager;
-import android.view.Window;
-import java.util.Calendar;
-import java.util.Date;
-import org.supla.android.db.DbHelper;
-
 /*
 Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -29,6 +17,17 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
+
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
+import android.preference.PreferenceManager;
+import android.view.Window;
+import java.util.Calendar;
+import java.util.Date;
+import org.supla.android.db.DbHelper;
 
 public class RateApp {
 
@@ -58,35 +57,25 @@ public class RateApp {
     builder.setMessage(R.string.rate_msg);
     builder.setPositiveButton(
         R.string.rate_now,
-        new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int id) {
-
-            context.startActivity(
-                new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=org.supla.android")));
-
-            moreTime(3650);
-            dialog.cancel();
-          }
+        (dialog, id) -> {
+          context.startActivity(
+              new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=org.supla.android")));
+          moreTime(3650);
+          dialog.cancel();
         });
 
     builder.setNeutralButton(
         R.string.rate_later,
-        new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int id) {
-
-            moreTime(6);
-            dialog.cancel();
-          }
+        (dialog, id) -> {
+          moreTime(6);
+          dialog.cancel();
         });
 
     builder.setNegativeButton(
         R.string.rate_no_thanks,
-        new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int id) {
-
-            moreTime(3650);
-            dialog.cancel();
-          }
+        (dialog, id) -> {
+          moreTime(3650);
+          dialog.cancel();
         });
 
     AlertDialog alert = builder.create();

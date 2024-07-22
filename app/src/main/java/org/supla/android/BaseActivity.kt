@@ -43,7 +43,7 @@ open class BaseActivity : AppCompatActivity(), OnSuplaClientMessageListener {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     SuplaApp.getApp().initTypefaceCollection(this)
-    setStatusBarColor(R.color.toolbar, false)
+    setStatusBarColor(R.color.primary_container, false)
   }
 
   override fun onResume() {

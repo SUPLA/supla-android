@@ -21,19 +21,17 @@ package org.supla.android.ui.dialogs
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.TimePickerDefaults
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import org.supla.android.R
-import org.supla.android.core.ui.theme.primaryLight
 import org.supla.android.data.source.local.calendar.Hour
 import org.supla.android.ui.views.Separator
 import org.supla.android.ui.views.buttons.Button
@@ -52,14 +50,14 @@ fun TimePickerDialog(
   )
 
   val colors = TimePickerDefaults.colors(
-    clockDialColor = MaterialTheme.colors.background,
-    clockDialSelectedContentColor = MaterialTheme.colors.onPrimary,
-    clockDialUnselectedContentColor = MaterialTheme.colors.onBackground,
-    selectorColor = MaterialTheme.colors.primary,
-    timeSelectorSelectedContainerColor = Color.primaryLight,
-    timeSelectorUnselectedContainerColor = MaterialTheme.colors.background,
-    timeSelectorSelectedContentColor = MaterialTheme.colors.onBackground,
-    timeSelectorUnselectedContentColor = MaterialTheme.colors.onBackground
+    clockDialColor = MaterialTheme.colorScheme.background,
+    clockDialSelectedContentColor = MaterialTheme.colorScheme.onPrimary,
+    clockDialUnselectedContentColor = MaterialTheme.colorScheme.onBackground,
+    selectorColor = MaterialTheme.colorScheme.primary,
+    timeSelectorSelectedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+    timeSelectorUnselectedContainerColor = MaterialTheme.colorScheme.background,
+    timeSelectorSelectedContentColor = MaterialTheme.colorScheme.onBackground,
+    timeSelectorUnselectedContentColor = MaterialTheme.colorScheme.onBackground
   )
 
   Dialog(

@@ -101,7 +101,7 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
           new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
       mMainButtonsAreaLayout.setLayoutParams(params);
       mMainButtonsAreaLayout.setOrientation(VERTICAL);
-      mMainButtonsAreaLayout.setBackgroundColor(getResources().getColor(R.color.toolbar));
+      mMainButtonsAreaLayout.setBackgroundColor(getResources().getColor(R.color.primary_container));
       addView(mMainButtonsAreaLayout);
     }
   }
@@ -183,7 +183,8 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
 
     iv.setImageResource(iconResId);
     iv.setImageTintList(
-        ColorStateList.valueOf(ResourcesCompat.getColor(getResources(), R.color.on_primary, null)));
+        ColorStateList.valueOf(
+            ResourcesCompat.getColor(getResources(), R.color.on_primary_container, null)));
 
     Button btn = new Button(getContext(), null);
     btn.setOnClickListener(this);

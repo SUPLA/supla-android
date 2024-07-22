@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
@@ -29,7 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.supla.android.R
 import org.supla.android.features.details.thermostatdetail.schedule.data.ScheduleDetailProgramBox
-import org.supla.android.features.details.thermostatdetail.schedule.extensions.color
+import org.supla.android.features.details.thermostatdetail.schedule.extensions.colorRes
 import org.supla.android.ui.views.buttons.animatable.AnimatableButtonType
 import org.supla.android.ui.views.buttons.animatable.AnimationMode
 import org.supla.android.ui.views.buttons.animatable.RoundedControlButton
@@ -46,7 +47,7 @@ fun ScheduleProgramButton(
   RoundedControlButton(
     modifier = modifier,
     height = 32.dp,
-    backgroundColor = programBox.scheduleProgram.program.color(),
+    backgroundColor = colorResource(id = programBox.scheduleProgram.program.colorRes()),
     animationMode = AnimationMode.Toggle(active = active),
     icon = iconPainter,
     text = programBox.textProvider(LocalContext.current),

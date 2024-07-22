@@ -14,9 +14,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -25,7 +25,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
@@ -38,9 +37,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
 import org.supla.android.core.ui.theme.SuplaTheme
-import org.supla.android.core.ui.theme.calendarCaption
 import org.supla.android.core.ui.theme.gray
-import org.supla.android.core.ui.theme.primaryLight
 import org.supla.android.data.model.chart.DateRange
 import org.supla.android.data.model.general.RangeValueType
 import org.supla.android.data.source.local.calendar.DayOfWeek
@@ -177,7 +174,7 @@ private fun DialogHeader(visibleDate: Date, state: CalendarPickerState, forward:
     )
     Text(
       text = LocalContext.current.valuesFormatter.getMonthAndYearString(visibleDate)?.capitalize(Locale.current) ?: "",
-      style = MaterialTheme.typography.h6,
+      style = MaterialTheme.typography.headlineSmall,
       textAlign = TextAlign.Center,
       modifier = Modifier.weight(1f)
     )
@@ -356,8 +353,8 @@ private fun CalendarHourTextField(
 ) {
   Text(
     text = label.uppercase(),
-    style = MaterialTheme.typography.caption,
-    color = MaterialTheme.colors.gray,
+    style = MaterialTheme.typography.bodySmall,
+    color = MaterialTheme.colorScheme.gray,
     modifier = Modifier.padding(
       start = horizontalPadding.plus(12.dp),
       top = dimensionResource(id = R.dimen.distance_default),
@@ -386,11 +383,11 @@ private fun CalendarDayBox(
   highlighted: Boolean = false,
   onClick: () -> Unit = {}
 ) {
-  val style = if (selected || currentDay || header) MaterialTheme.typography.calendarCaption() else MaterialTheme.typography.caption
+  val style = if (selected || currentDay || header) MaterialTheme.typography.labelMedium else MaterialTheme.typography.bodySmall
   val color = when {
-    selected -> MaterialTheme.colors.primary
-    highlighted -> MaterialTheme.colors.primary
-    enabled -> MaterialTheme.colors.onBackground
+    selected -> MaterialTheme.colorScheme.primary
+    highlighted -> MaterialTheme.colorScheme.primary
+    enabled -> MaterialTheme.colorScheme.onBackground
     else -> colorResource(id = R.color.disabled)
   }
 
@@ -398,7 +395,7 @@ private fun CalendarDayBox(
     .width(calendarDaySize)
     .height(calendarDaySize)
   if (currentDay) {
-    modifier = modifier.background(color = Color.primaryLight, shape = CircleShape)
+    modifier = modifier.background(color = MaterialTheme.colorScheme.surfaceVariant, shape = CircleShape)
   }
   if (selected) {
     modifier = modifier.border(width = 1.dp, color = color, shape = CircleShape)

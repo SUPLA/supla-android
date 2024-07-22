@@ -105,7 +105,7 @@ class CandleChartData(
       shadowColor = ResourcesCompat.getColor(resources, R.color.on_background, null)
       shadowWidth = 0.7f
 
-      decreasingColor = ResourcesCompat.getColor(resources, R.color.red_alert, null)
+      decreasingColor = ResourcesCompat.getColor(resources, R.color.error, null)
       decreasingPaintStyle = Paint.Style.FILL
       increasingColor = ResourcesCompat.getColor(resources, R.color.supla_green, null)
       increasingPaintStyle = Paint.Style.FILL

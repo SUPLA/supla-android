@@ -55,9 +55,13 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
+import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.core.ui.theme.gray
 import org.supla.android.data.model.temperature.TemperatureCorrection
 import org.supla.android.extensions.valuesFormatter
@@ -222,7 +226,7 @@ private fun EditModeButton(state: TimerDetailViewState, onClick: () -> Unit) =
       painter = if (state.showCalendar) painterResource(id = R.drawable.ic_timer) else painterResource(id = R.drawable.ic_schedule),
       contentDescription = null,
       modifier = Modifier.padding(end = Distance.tiny),
-      tint = colorResource(id = R.color.primary_variant)
+      tint = colorResource(id = R.color.primary)
     )
     Text(
       text = if (state.showCalendar) stringResource(R.string.details_timer_counter) else stringResource(R.string.details_timer_calendar),
@@ -397,3 +401,20 @@ private fun BottomSummaryEdit(
         .padding(start = Distance.default, top = Distance.small, end = Distance.default, bottom = Distance.small)
     )
   }
+
+@Preview
+@Composable
+private fun Preview() {
+  SuplaTheme {
+    ThermostatTimerConfiguration(
+      state = TimerDetailViewState(),
+      viewProxy = PreviewProxy2(TimerDetailViewState())
+    )
+  }
+}
+
+private class PreviewProxy2(val state: TimerDetailViewState) : TimerDetailViewProxy {
+  override val timerLeftTime: Int = 0
+  override fun getViewState(): StateFlow<TimerDetailViewState> =
+    MutableStateFlow(state)
+}

@@ -103,16 +103,14 @@
 
     <activity
       android:name=".widget.onoff.configuration.OnOffWidgetConfigurationActivity"
-      android:exported="true"
-      android:theme="@style/AppTheme.Light.Widget">
+      android:exported="true">
       <intent-filter>
         <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
       </intent-filter>
     </activity>
     <activity
       android:name=".widget.single.configuration.SingleWidgetConfigurationActivity"
-      android:exported="true"
-      android:theme="@style/AppTheme.Light.Widget">
+      android:exported="true">
       <intent-filter>
         <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
       </intent-filter>

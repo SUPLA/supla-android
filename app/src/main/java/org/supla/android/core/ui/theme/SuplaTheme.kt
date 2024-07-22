@@ -38,7 +38,7 @@ fun SuplaTheme(
       androidx.compose.material3.MaterialTheme(
         colorScheme = colorScheme,
         content = content,
-        typography = suplaTypographyMaterial3(colorScheme)
+        typography = suplaTypographyMaterial3()
       )
     }
   )

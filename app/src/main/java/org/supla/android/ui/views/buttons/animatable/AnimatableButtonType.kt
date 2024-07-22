@@ -26,8 +26,8 @@ enum class AnimatableButtonType(
   @ColorRes val pressedColor: Int,
   @ColorRes val inactiveColor: Int
 ) {
-  POSITIVE(0, R.color.supla_green, R.color.supla, R.color.on_background),
-  NEGATIVE(1, R.color.red_alert, R.color.red_alert, R.color.on_background),
+  POSITIVE(0, R.color.on_background, R.color.supla, R.color.on_background),
+  NEGATIVE(1, R.color.error, R.color.error, R.color.on_background),
   BLUE(3, R.color.blue, R.color.blue, R.color.on_background),
   NEUTRAL(4, R.color.black, R.color.black, R.color.black)
 }
