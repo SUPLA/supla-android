@@ -196,7 +196,7 @@ sealed class ChannelListViewEvent : ViewEvent {
   data class OpenWindowDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) :
     OpenStandardDetail(R.id.window_detail_fragment, WindowDetailFragment.bundle(itemBundle, pages.toTypedArray()))
 
-  object ReassignAdapter : ChannelListViewEvent()
+  data object ReassignAdapter : ChannelListViewEvent()
 
   abstract class OpenStandardDetail(
     @IdRes val fragmentId: Int,

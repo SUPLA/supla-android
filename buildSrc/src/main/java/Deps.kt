@@ -8,7 +8,7 @@ object Deps {
     const val GoogleServices = "com.google.gms:google-services:${Versions.GoogleServices}"
 
     const val KotlinGradlePlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.Kotlin}"
-    const val AndroidGradlePlugin = "com.android.tools.build:gradle:8.4.1"
+    const val AndroidGradlePlugin = "com.android.tools.build:gradle:8.5.1"
 
     const val Spotless = "com.diffplug.spotless:spotless-plugin-gradle:${Versions.Spotless}"
 

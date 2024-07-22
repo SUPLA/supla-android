@@ -525,7 +525,7 @@ class MainActivity :
   override fun setToolbarVisible(visible: Boolean) {
     appBarLayout.visibleIf(visible)
     appBarLayoutSpacer.visibleIf(visible)
-    setStatusBarColor(if (visible) R.color.toolbar else R.color.background, visible.not())
+    setStatusBarColor(if (visible) R.color.primary_container else R.color.background, visible.not())
   }
 
   private fun handleSplashScreen() {

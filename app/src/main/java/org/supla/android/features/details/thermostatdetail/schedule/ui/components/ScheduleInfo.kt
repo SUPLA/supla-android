@@ -33,8 +33,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -44,6 +44,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -57,7 +58,7 @@ import org.supla.android.data.source.remote.hvac.SuplaWeeklyScheduleProgram
 import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
 import org.supla.android.extensions.toDp
 import org.supla.android.features.details.thermostatdetail.schedule.data.ScheduleDetailProgramBox
-import org.supla.android.features.details.thermostatdetail.schedule.extensions.color
+import org.supla.android.features.details.thermostatdetail.schedule.extensions.colorRes
 import org.supla.android.ui.views.buttons.IconButton
 
 @Composable
@@ -71,7 +72,7 @@ fun ScheduleInfo(boxSize: Size, onClose: () -> Unit) {
   Box(
     modifier = Modifier
       .fillMaxSize()
-      .background(MaterialTheme.colors.onBackground.copy(alpha = 0.8f))
+      .background(colorResource(id = R.color.info_scrim))
       .clickable(
         interactionSource = remember { MutableInteractionSource() },
         indication = null,
@@ -113,7 +114,7 @@ private fun CloseIcon(onClick: () -> Unit) =
     modifier = Modifier
       .align(Alignment.TopEnd)
       .padding(top = Distance.tiny, end = Distance.small),
-    tint = MaterialTheme.colors.onPrimary
+    tint = MaterialTheme.colorScheme.onPrimaryContainer
   )
 
 @Composable
@@ -157,8 +158,8 @@ private fun ProgramButtonArrow() =
 private fun ProgramButtonText() =
   Text(
     text = stringResource(id = R.string.thermostat_detail_program_info),
-    style = MaterialTheme.typography.body1,
-    color = MaterialTheme.colors.onPrimary,
+    style = MaterialTheme.typography.bodyLarge,
+    color = MaterialTheme.colorScheme.onPrimaryContainer,
     modifier = Modifier
       .padding(top = 85.dp, start = 25.dp)
       .width(250.dp),
@@ -193,7 +194,7 @@ private fun SampleProgramBox(topMargin: Dp, boxWidth: Dp, boxHeight: Dp) =
       .padding(top = topMargin, end = 26.dp)
       .size(width = boxWidth, height = boxHeight)
       .background(
-        color = SuplaScheduleProgram.PROGRAM_1.color(),
+        color = colorResource(id = SuplaScheduleProgram.PROGRAM_1.colorRes()),
         shape = RoundedCornerShape(dimensionResource(id = R.dimen.radius_small))
       )
   )
@@ -217,8 +218,8 @@ private fun SampleBoxArrow(topMargin: Dp, boxWidth: Dp, boxHeight: Dp) =
 private fun SampleBoxText(topMargin: Dp, boxWidth: Dp, boxHeight: Dp) =
   Text(
     text = stringResource(id = R.string.thermostat_detail_box_info),
-    style = MaterialTheme.typography.body1,
-    color = MaterialTheme.colors.onPrimary,
+    style = MaterialTheme.typography.bodyLarge,
+    color = MaterialTheme.colorScheme.onPrimaryContainer,
     modifier = Modifier
       .padding(
         top = topMargin
@@ -266,7 +267,7 @@ private fun SampleDarkCornerBox(topMargin: Dp, boxWidth: Dp, boxHeight: Dp) {
       )
       .size(width = boxWidth, height = boxHeight)
       .background(
-        color = SuplaScheduleProgram.PROGRAM_2.color(),
+        color = colorResource(id = SuplaScheduleProgram.PROGRAM_2.colorRes()),
         shape = RoundedCornerShape(cornerRadius)
       )
   ) {
@@ -304,8 +305,8 @@ private fun SampleDarkCornerArrow(topMargin: Dp, boxWidth: Dp, boxHeight: Dp) =
 private fun SampleDarkCornerText(topMargin: Dp, boxWidth: Dp, boxHeight: Dp) =
   Text(
     text = stringResource(id = R.string.thermostat_detail_arrow_info),
-    style = MaterialTheme.typography.body1,
-    color = MaterialTheme.colors.onPrimary,
+    style = MaterialTheme.typography.bodyLarge,
+    color = MaterialTheme.colorScheme.onPrimaryContainer,
     modifier = Modifier
       .padding(
         top = topMargin
@@ -321,7 +322,7 @@ private fun SampleDarkCornerText(topMargin: Dp, boxWidth: Dp, boxHeight: Dp) =
 
 @Composable
 private fun Arrow(modifier: Modifier) {
-  val color = MaterialTheme.colors.onPrimary
+  val color = MaterialTheme.colorScheme.onPrimaryContainer
   Canvas(
     modifier = modifier
       .size(50.dp, 50.dp)

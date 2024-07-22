@@ -96,8 +96,6 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
         destinationId = event.fragmentId,
         bundle = event.fragmentArguments
       )
-
-      else -> {}
     }
   }
 

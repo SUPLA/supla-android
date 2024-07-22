@@ -8,7 +8,7 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:animateLayoutChanges="true"
-      android:background="@color/toolbar">
+      android:background="@color/primary_container">
 
       <org.supla.android.ui.AppBar
         android:id="@+id/supla_toolbar"
@@ -27,7 +27,7 @@
           android:gravity="center"
           android:maxLines="1"
           android:textAppearance="@style/AppTheme.TextAppearance.Headline6"
-          android:textColor="@color/on_primary" />
+          android:textColor="@color/on_primary_container" />
       </org.supla.android.ui.AppBar>
     </com.google.android.material.appbar.AppBarLayout>
   </merge>

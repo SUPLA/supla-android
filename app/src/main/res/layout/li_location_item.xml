@@ -6,7 +6,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="@dimen/channel_section_height"
-    android:background="@color/channel_section_cell"
+    android:background="@color/surface_variant"
     android:orientation="vertical">
 
     <TextView

@@ -199,7 +199,7 @@ sealed class SettingItem(val viewResource: Int) {
           settingsPermissionsStatus.setTextColor(getColor(settingsPermissionsStatus.resources, R.color.primary, null))
         } else {
           settingsPermissionsStatus.setText(R.string.notifications_inactive)
-          settingsPermissionsStatus.setTextColor(getColor(settingsPermissionsStatus.resources, R.color.red_alert, null))
+          settingsPermissionsStatus.setTextColor(getColor(settingsPermissionsStatus.resources, R.color.error, null))
         }
         root.setOnClickListener { callback() }
       }
@@ -218,7 +218,7 @@ sealed class SettingItem(val viewResource: Int) {
           settingsPermissionsStatus.setTextColor(getColor(settingsPermissionsStatus.resources, R.color.primary, null))
         } else {
           settingsPermissionsStatus.setText(R.string.notifications_inactive)
-          settingsPermissionsStatus.setTextColor(getColor(settingsPermissionsStatus.resources, R.color.red_alert, null))
+          settingsPermissionsStatus.setTextColor(getColor(settingsPermissionsStatus.resources, R.color.error, null))
         }
         root.setOnClickListener { callback() }
       }

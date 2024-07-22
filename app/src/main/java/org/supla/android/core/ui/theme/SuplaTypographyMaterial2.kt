@@ -18,17 +18,11 @@ package org.supla.android.core.ui.theme
  */
 
 import androidx.compose.material.Colors
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Typography
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import org.supla.android.R
-import org.supla.android.extensions.fontDimensionResource
 
 @Composable
 fun SuplaTypographyMaterial2(colors: Colors) = Typography(
@@ -47,21 +41,3 @@ fun SuplaTypographyMaterial2(colors: Colors) = Typography(
   caption = TextStyle(fontSize = 12.sp, fontWeight = FontWeight.Normal, color = colors.onBackground),
   overline = TextStyle(fontSize = 10.sp, letterSpacing = 0.15.sp, fontWeight = FontWeight.Normal, color = colors.onBackground)
 )
-
-@Composable
-fun Typography.listItemValue(): TextStyle =
-  TextStyle(
-    color = colorResource(id = R.color.on_background),
-    fontSize = fontDimensionResource(id = R.dimen.channel_imgtext_size),
-    fontWeight = FontWeight.Normal,
-    fontFamily = FontFamily(Font(R.font.open_sans_regular))
-  )
-
-@Composable
-fun Typography.calendarCaption(): TextStyle =
-  TextStyle(
-    color = MaterialTheme.colors.onBackground,
-    fontSize = 12.sp,
-    fontWeight = FontWeight.SemiBold,
-    fontFamily = FontFamily(Font(R.font.open_sans_semibold))
-  )

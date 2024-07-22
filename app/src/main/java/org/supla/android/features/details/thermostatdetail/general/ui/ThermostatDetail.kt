@@ -64,7 +64,6 @@ import org.supla.android.core.ui.BaseViewProxy
 import org.supla.android.core.ui.StringProvider
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
-import org.supla.android.core.ui.theme.blue
 import org.supla.android.data.formatting.LocalPercentageFormatter
 import org.supla.android.data.model.general.ChannelIssueItem
 import org.supla.android.data.model.temperature.TemperatureCorrection
@@ -76,6 +75,7 @@ import org.supla.android.features.details.thermostatdetail.ui.ThermometersValues
 import org.supla.android.features.details.thermostatdetail.ui.TimerHeader
 import org.supla.android.ui.lists.data.IssueIconType
 import org.supla.android.ui.views.LoadingScrim
+import org.supla.android.ui.views.buttons.SuplaButton
 import org.supla.android.ui.views.buttons.animatable.AnimatableButtonType
 import org.supla.android.ui.views.buttons.animatable.AnimationMode
 import org.supla.android.ui.views.buttons.animatable.RoundedControlButton
@@ -230,7 +230,7 @@ private fun TemperatureControlRow(viewState: ThermostatGeneralViewState, viewPro
         horizontalArrangement = Arrangement.spacedBy(40.dp)
       ) {
         val color = if (viewState.viewModelState?.lastChangedHeat == false) {
-          MaterialTheme.colorScheme.blue
+          MaterialTheme.colorScheme.secondary
         } else {
           MaterialTheme.colorScheme.error
         }
@@ -275,7 +275,8 @@ private fun ThermostatIndicators(viewState: ThermostatGeneralViewState, constrai
           start.linkTo(heating.start)
           end.linkTo(heating.end)
         },
-        style = MaterialTheme.typography.labelLarge
+        style = MaterialTheme.typography.labelLarge,
+        color = MaterialTheme.colorScheme.onBackground
       )
     }
   }
@@ -404,21 +405,21 @@ private fun BottomButtonsRow(viewState: ThermostatGeneralViewState, viewProxy: T
       isOff = viewState.isOff && viewState.programmedModeActive.not(),
       disabled = viewState.isOffline
     ) { viewProxy.turnOnOffClicked() }
-    RoundedControlButton(
+    SuplaButton(
       text = stringResource(id = R.string.thermostat_detail_mode_manual),
       modifier = Modifier.weight(0.5f),
       disabled = viewState.isOffline,
-      animationMode = AnimationMode.Stated(active = viewState.manualModeActive)
+      pressed = viewState.manualModeActive
     ) {
       if (viewState.isOffline.not() && viewState.manualModeActive.not()) {
         viewProxy.manualModeClicked()
       }
     }
-    RoundedControlButton(
+    SuplaButton(
       text = stringResource(id = R.string.thermostat_detail_mode_weekly_schedule),
       modifier = Modifier.weight(0.5f),
       disabled = viewState.isOffline,
-      animationMode = AnimationMode.Stated(active = viewState.programmedModeActive)
+      pressed = viewState.programmedModeActive
     ) {
       if (viewState.isOffline.not() && (viewState.programmedModeActive.not() || viewState.temporaryChangeActive)) {
         viewProxy.weeklyScheduledModeClicked()
@@ -429,12 +430,11 @@ private fun BottomButtonsRow(viewState: ThermostatGeneralViewState, viewProxy: T
 
 @Composable
 private fun PowerButton(isOff: Boolean, disabled: Boolean, onClick: () -> Unit) {
-  RoundedControlButton(
-    modifier = Modifier.width(dimensionResource(id = R.dimen.button_default_size)),
-    onClick = onClick,
-    icon = painterResource(id = R.drawable.ic_power_button),
-    iconColor = if (isOff) MaterialTheme.colorScheme.error else colorResource(id = R.color.supla_green),
-    disabled = disabled
+  SuplaButton(
+    iconRes = R.drawable.ic_power_button,
+    disabled = disabled,
+    color = if (isOff) MaterialTheme.colorScheme.error else colorResource(id = R.color.primary),
+    onClick = onClick
   )
 }
 
@@ -495,6 +495,7 @@ private fun PreviewTemporaryOverride() {
             ),
             ThermostatProgramInfo(ThermostatProgramInfo.Type.NEXT, null, R.drawable.ic_power_button, R.color.gray, { "Turn off" })
           ),
+          isAutoFunction = true,
           issues = listOf(
             ChannelIssueItem(IssueIconType.WARNING, R.string.thermostat_detail_mode_manual)
           )

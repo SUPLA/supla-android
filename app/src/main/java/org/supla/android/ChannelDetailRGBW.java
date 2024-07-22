@@ -362,7 +362,7 @@ public class ChannelDetailRGBW extends DetailLayout
   private void setPowerBtnOn(boolean on) {
     cbPicker.setPowerButtonOn(on);
     int color =
-        ResourcesCompat.getColor(getResources(), on ? R.color.primary : R.color.red_alert, null);
+        ResourcesCompat.getColor(getResources(), on ? R.color.primary : R.color.error, null);
     btnPowerOnOff.setImageTintList(ColorStateList.valueOf(color));
   }
 

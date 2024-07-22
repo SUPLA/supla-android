@@ -157,7 +157,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
     prefs = new Preferences(context);
     setOrientation(LinearLayout.HORIZONTAL);
 
-    setBackgroundColor(getResources().getColor(R.color.channel_cell));
+    setBackgroundColor(getResources().getColor(R.color.surface));
 
     right_btn = new FrameLayout(context);
     left_btn = new FrameLayout(context);
@@ -175,19 +175,19 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
             getResources().getDimensionPixelSize(R.dimen.channel_layout_button_width),
             channelHeight));
 
-    right_btn.setBackgroundColor(getResources().getColor(R.color.supla_green));
+    right_btn.setBackgroundColor(getResources().getColor(R.color.primary));
 
     left_btn.setLayoutParams(
         new LayoutParams(
             getResources().getDimensionPixelSize(R.dimen.channel_layout_button_width),
             channelHeight));
 
-    left_btn.setBackgroundColor(getResources().getColor(R.color.supla_green));
+    left_btn.setBackgroundColor(getResources().getColor(R.color.primary));
 
     content = new RelativeLayout(context);
     content.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, channelHeight));
 
-    content.setBackgroundColor(getResources().getColor(R.color.channel_cell));
+    content.setBackgroundColor(getResources().getColor(R.color.surface));
 
     addView(content);
     addView(left_btn);
@@ -316,7 +316,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
 
     tv.setTextSize(
         TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.channel_btn_text_size));
-    tv.setTextColor(getResources().getColor(R.color.channel_btn_text));
+    tv.setTextColor(getResources().getColor(R.color.on_primary));
     tv.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
 
     return tv;
