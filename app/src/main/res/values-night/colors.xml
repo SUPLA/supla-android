@@ -24,7 +24,6 @@
     <color name="error">#EF6153</color>
     <color name="error_container">#270603</color>
     <color name="control_button_background">#FF262626</color>
-    <color name="supla_button_background_inside">#262626</color>
     <color name="supla_button_background_outside">#131313</color>
     <color name="supla_button_inner_shadow">#00000000</color>
 

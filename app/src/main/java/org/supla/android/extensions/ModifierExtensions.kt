@@ -197,7 +197,7 @@ fun Modifier.buttonBackground(shape: Shape, radius: Dp) =
   this.then(
     Modifier
       .background(
-        color = colorResource(id = R.color.supla_button_background_inside),
+        color = colorResource(id = R.color.surface),
         shape = shape
       )
       .innerShadowForButtonBackground(

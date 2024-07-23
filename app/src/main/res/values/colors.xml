@@ -29,7 +29,6 @@
     <color name="separator">#AAAAAA</color>
     <color name="old_switch_track">#42221f1f</color>
     <color name="control_button_background">#FFF4F4F4</color>
-    <color name="supla_button_background_inside">#FFFFFF</color>
     <color name="supla_button_background_outside">#F4F4F4</color>
     <color name="supla_button_inner_shadow">#B3B4B7BA</color>
 

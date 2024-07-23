@@ -739,22 +739,13 @@ public class ChannelDetailEM extends DetailLayout
     setProductionDataSource(false, false);
     showChart(false);
 
-    SuplaApp.getApp().CancelAllRestApiClientTasks(true);
-
     if (timer1 == null) {
       timer1 = new Timer();
       timer1.schedule(
           new TimerTask() {
             @Override
             public void run() {
-              final Runnable r =
-                  new Runnable() {
-                    public void run() {
-                      runDownloadTask();
-                    }
-                  };
-
-              mHandler.post(r);
+              mHandler.post(() -> runDownloadTask());
             }
           },
           0,
@@ -774,7 +765,7 @@ public class ChannelDetailEM extends DetailLayout
     }
 
     if (demm != null) {
-      SuplaApp.getApp().CancelAllRestApiClientTasks(true);
+      demm.cancel(true);
       demm.setDelegate(null);
     }
 
