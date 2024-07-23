@@ -19,6 +19,7 @@ package org.supla.android.widget.shared
 
 import android.appwidget.AppWidgetManager
 import android.content.Context
+import android.content.pm.ServiceInfo
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
@@ -351,7 +352,15 @@ abstract class WidgetCommandWorkerBase(
 
   private fun createForegroundInfo(widgetCaption: String?): ForegroundInfo {
     notificationsHelper.setupBackgroundNotificationChannel(applicationContext)
-    return ForegroundInfo(notificationId, notificationsHelper.createBackgroundNotification(applicationContext, widgetCaption))
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+      ForegroundInfo(
+        notificationId,
+        notificationsHelper.createBackgroundNotification(applicationContext, widgetCaption),
+        ServiceInfo.FOREGROUND_SERVICE_TYPE_CONNECTED_DEVICE
+      )
+    } else {
+      ForegroundInfo(notificationId, notificationsHelper.createBackgroundNotification(applicationContext, widgetCaption))
+    }
   }
 }
 
