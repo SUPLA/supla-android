@@ -51,7 +51,7 @@ import org.supla.android.features.details.windowdetail.base.data.verticalblinds.
 import org.supla.android.features.details.windowdetail.base.ui.ShadingSystemAction
 import org.supla.android.features.details.windowdetail.base.ui.ShadingSystemPositionPresentation
 import org.supla.android.features.details.windowdetail.base.ui.WindowViewState
-import org.supla.android.ui.views.buttons.animatable.CircleControlButton
+import org.supla.android.ui.views.buttons.SuplaButton
 import org.supla.android.ui.views.tools.Shadow
 import org.supla.android.ui.views.tools.ShadowOrientation
 
@@ -106,12 +106,10 @@ fun WindowViewTopMenu(
       Spacer(modifier = Modifier.weight(1f))
 
       if (viewState.calibrationPossible) {
-        CircleControlButton(
-          iconPainter = painterResource(id = R.drawable.ic_recalibrate),
+        SuplaButton(
+          iconRes = R.drawable.ic_recalibrate,
           onClick = { onAction(ShadingSystemAction.Calibrate) },
-          width = 48.dp,
-          height = 48.dp,
-          padding = 0.dp
+          radius = 24.dp
         )
       } else if (viewState.onlineStatusString != null) {
         TopTextLabelView(text = "ONLINE:")

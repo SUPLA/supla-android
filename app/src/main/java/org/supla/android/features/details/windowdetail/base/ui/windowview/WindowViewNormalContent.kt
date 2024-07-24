@@ -58,7 +58,7 @@ import org.supla.android.features.details.windowdetail.base.ui.windowview.contro
 import org.supla.android.features.details.windowdetail.base.ui.windowview.controls.IssuesView
 import org.supla.android.features.details.windowdetail.base.ui.windowview.controls.PressTimeInfo
 import org.supla.android.features.details.windowdetail.base.ui.windowview.controls.WindowControlView
-import org.supla.android.ui.views.buttons.animatable.CircleControlButton
+import org.supla.android.ui.views.buttons.SuplaButton
 import org.supla.android.ui.views.buttons.animatable.LeftRightControlButton
 import org.supla.android.ui.views.buttons.animatable.TOTAL_HEIGHT
 import org.supla.android.ui.views.buttons.animatable.UpDownControlButton
@@ -298,14 +298,11 @@ private fun ClickToOpenCurtainControlIcon(textColor: Color) =
 
 @Composable
 private fun StopMoveButton(enabled: Boolean, modifier: Modifier = Modifier, onAction: (ShadingSystemAction) -> Unit) =
-  CircleControlButton(
-    iconPainter = painterResource(id = R.drawable.ic_stop),
+  SuplaButton(
+    iconRes = R.drawable.ic_stop,
     onClick = { onAction(ShadingSystemAction.Stop) },
     disabled = !enabled,
-    width = 64.dp,
-    height = 64.dp,
-    padding = 0.dp,
-    iconColor = MaterialTheme.colors.onBackground,
+    radius = 32.dp,
     modifier = modifier
   )
 

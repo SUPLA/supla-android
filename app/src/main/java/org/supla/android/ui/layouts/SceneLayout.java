@@ -252,7 +252,7 @@ public class SceneLayout extends LinearLayout implements SlideableItem, Swapable
 
     tv.setTextSize(
         TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.channel_btn_text_size));
-    tv.setTextColor(getResources().getColor(R.color.channel_btn_text));
+    tv.setTextColor(getResources().getColor(R.color.on_primary));
     tv.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
 
     return tv;
