@@ -46,7 +46,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -75,11 +74,8 @@ import org.supla.android.features.details.thermostatdetail.ui.ThermometersValues
 import org.supla.android.features.details.thermostatdetail.ui.TimerHeader
 import org.supla.android.ui.lists.data.IssueIconType
 import org.supla.android.ui.views.LoadingScrim
-import org.supla.android.ui.views.buttons.SuplaButton
-import org.supla.android.ui.views.buttons.SuplaButtonDefaults
-import org.supla.android.ui.views.buttons.animatable.AnimatableButtonType
-import org.supla.android.ui.views.buttons.animatable.AnimationMode
-import org.supla.android.ui.views.buttons.animatable.RoundedControlButton
+import org.supla.android.ui.views.buttons.supla.SuplaButton
+import org.supla.android.ui.views.buttons.supla.SuplaButtonDefaults
 import org.supla.android.ui.views.thermostat.TemperatureControlButton
 import org.supla.android.ui.views.tools.Shadow
 import org.supla.android.ui.views.tools.ShadowOrientation
@@ -328,7 +324,9 @@ private fun IndicatorIcon(iconRes: Int, modifier: Modifier = Modifier) {
 
 @Composable
 private fun HeatingIcon(active: Boolean, onClick: () -> Unit) {
-  RoundedControlButton(
+  SuplaButton(
+    iconRes = R.drawable.ic_heat,
+    onClick = onClick,
     modifier = Modifier
       .padding(
         top = dimensionResource(id = R.dimen.distance_default),
@@ -337,17 +335,16 @@ private fun HeatingIcon(active: Boolean, onClick: () -> Unit) {
         start = dimensionResource(id = R.dimen.distance_default)
       )
       .width(dimensionResource(id = R.dimen.button_default_size)),
-    onClick = onClick,
-    icon = painterResource(id = R.drawable.ic_heat),
-    type = AnimatableButtonType.NEGATIVE,
-    iconAndTextColorSynced = true,
-    animationMode = AnimationMode.Toggle(active = active)
+    pressed = active,
+    colors = SuplaButtonDefaults.errorColors()
   )
 }
 
 @Composable
 private fun CoolingIcon(active: Boolean, onClick: () -> Unit) {
-  RoundedControlButton(
+  SuplaButton(
+    iconRes = R.drawable.ic_cool,
+    onClick = onClick,
     modifier = Modifier
       .padding(
         top = dimensionResource(id = R.dimen.distance_default),
@@ -355,11 +352,8 @@ private fun CoolingIcon(active: Boolean, onClick: () -> Unit) {
         bottom = dimensionResource(id = R.dimen.distance_default)
       )
       .width(dimensionResource(id = R.dimen.button_default_size)),
-    onClick = onClick,
-    icon = painterResource(id = R.drawable.ic_cool),
-    type = AnimatableButtonType.BLUE,
-    iconAndTextColorSynced = true,
-    animationMode = AnimationMode.Toggle(active = active)
+    pressed = active,
+    colors = SuplaButtonDefaults.secondaryColors()
   )
 }
 
@@ -497,6 +491,7 @@ private fun PreviewTemporaryOverride() {
             ),
             ThermostatProgramInfo(ThermostatProgramInfo.Type.NEXT, null, R.drawable.ic_power_button, R.color.gray, { "Turn off" })
           ),
+          coolingModeActive = true,
           isAutoFunction = true,
           issues = listOf(
             ChannelIssueItem(IssueIconType.WARNING, R.string.thermostat_detail_mode_manual)

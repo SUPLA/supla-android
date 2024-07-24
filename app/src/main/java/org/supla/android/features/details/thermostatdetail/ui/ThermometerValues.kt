@@ -29,8 +29,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -79,7 +79,7 @@ fun ThermometersValues(temperatures: List<MeasurementValue>) {
   val endPadding = if (itemWidth < 100) dimensionResource(id = R.dimen.distance_small) else dimensionResource(id = R.dimen.distance_default)
   Row(
     modifier = Modifier
-      .background(color = MaterialTheme.colors.surface)
+      .background(color = MaterialTheme.colorScheme.surface)
       .padding(start = startPadding, end = endPadding),
     horizontalArrangement = Arrangement.spacedBy(arrangement)
   ) {
@@ -89,7 +89,7 @@ fun ThermometersValues(temperatures: List<MeasurementValue>) {
     if (temperatures.size == 1) {
       Box(
         modifier = Modifier
-          .background(MaterialTheme.colors.surface)
+          .background(MaterialTheme.colorScheme.surface)
           .height(80.dp)
           .padding(top = dimensionResource(id = R.dimen.distance_small))
           .weight(weight)
@@ -103,7 +103,7 @@ context(RowScope)
 private fun TemperatureAndHumidityCell(temperature: MeasurementValue, weight: Float, small: Boolean, availableWidthDp: Int) =
   Row(
     modifier = Modifier
-      .background(MaterialTheme.colors.surface)
+      .background(MaterialTheme.colorScheme.surface)
       .height(80.dp)
       .padding(vertical = dimensionResource(id = R.dimen.distance_small))
       .weight(weight),
@@ -120,7 +120,7 @@ private fun TemperatureAndHumidityCell(temperature: MeasurementValue, weight: Fl
     CompositionLocalProvider(LocalDensity provides Density(LocalDensity.current.density, fontScale = 1f)) {
       Text(
         text = temperature.value,
-        style = if (small) MaterialTheme.typography.body1 else MaterialTheme.typography.h5
+        style = if (small) MaterialTheme.typography.bodyLarge else MaterialTheme.typography.headlineMedium
       )
     }
     Spacer(modifier = Modifier.weight(1f))

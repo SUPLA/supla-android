@@ -25,37 +25,33 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.RoundRect
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.DefaultShadowColor
 import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
+import org.supla.android.ui.views.buttons.supla.SuplaButtonShape
 
 private val shadowPath = Path()
 
 fun Modifier.innerShadow(
   color: Color = Color.Black,
-  cornersRadius: Dp = 0.dp,
   spread: Dp = 0.dp,
   blur: Dp = 0.dp,
   offsetY: Dp = 0.dp,
   offsetX: Dp = 0.dp,
-  topLeftRadius: Dp? = null,
-  topRightRadius: Dp? = null,
-  bottomLeftRadius: Dp? = null,
-  bottomRightRadius: Dp? = null,
+  topLeftRadius: Dp = 0.dp,
+  topRightRadius: Dp = 0.dp,
+  bottomLeftRadius: Dp = 0.dp,
+  bottomRightRadius: Dp = 0.dp,
   active: () -> Boolean = { true }
 ) = drawWithContent {
   drawContent()
@@ -67,10 +63,10 @@ fun Modifier.innerShadow(
   val rect = Rect(Offset.Zero, size)
   val paint = Paint()
 
-  val topLeftCornerRadius = topLeftRadius?.toPx() ?: cornersRadius.toPx()
-  val topRightCornerRadius = topRightRadius?.toPx() ?: cornersRadius.toPx()
-  val bottomLeftCornerRadius = bottomLeftRadius?.toPx() ?: cornersRadius.toPx()
-  val bottomRightCornerRadius = bottomRightRadius?.toPx() ?: cornersRadius.toPx()
+  val topLeftCornerRadius = topLeftRadius.toPx()
+  val topRightCornerRadius = topRightRadius.toPx()
+  val bottomLeftCornerRadius = bottomLeftRadius.toPx()
+  val bottomRightCornerRadius = bottomRightRadius.toPx()
 
   drawIntoCanvas {
     paint.color = color
@@ -139,41 +135,6 @@ fun Modifier.innerShadow(
   }
 }
 
-fun Modifier.customOuterShadow(
-  color: Color = DefaultShadowColor,
-  alpha: Float = 0.25f,
-  borderRadius: Dp = 0.dp,
-  shadowRadius: Dp = 4.dp,
-  offsetY: Dp = 8.dp,
-  offsetX: Dp = 0.dp,
-  height: Float? = null
-) = composed {
-  val shadowColor = color.copy(alpha = alpha).toArgb()
-  val transparent = color.copy(alpha = 0f).toArgb()
-  this.drawBehind {
-    this.drawIntoCanvas {
-      val paint = Paint()
-      val frameworkPaint = paint.asFrameworkPaint()
-      frameworkPaint.color = transparent
-      frameworkPaint.setShadowLayer(
-        shadowRadius.toPx(),
-        offsetX.toPx(),
-        offsetY.toPx(),
-        shadowColor
-      )
-      it.drawRoundRect(
-        0f,
-        0f,
-        this.size.width,
-        height ?: this.size.height,
-        borderRadius.toPx(),
-        borderRadius.toPx(),
-        paint
-      )
-    }
-  }
-}
-
 @Composable
 fun Modifier.disabledOverlay(disabled: Boolean, color: Color = colorResource(id = R.color.disabledOverlay)) =
   composed {
@@ -193,43 +154,39 @@ fun Modifier.disabledOverlay(disabled: Boolean, color: Color = colorResource(id 
   }
 
 @Composable
-fun Modifier.buttonBackground(shape: Shape, radius: Dp) =
+fun Modifier.buttonBackground(shape: SuplaButtonShape) =
   this.then(
     Modifier
       .background(
         color = colorResource(id = R.color.surface),
-        shape = shape
+        shape = shape.shape
       )
       .innerShadowForButtonBackground(
         color = colorResource(id = R.color.supla_button_background_outside),
         blur = 10.dp,
         spread = 30.dp,
-        cornersRadius = radius,
+        shape = shape,
         offsetY = 0.dp
       )
   )
 
 private fun Modifier.innerShadowForButtonBackground(
   color: Color = Color.Black,
-  cornersRadius: Dp = 0.dp,
+  shape: SuplaButtonShape,
   spread: Dp = 0.dp,
   blur: Dp = 0.dp,
   offsetY: Dp = 0.dp,
   offsetX: Dp = 0.dp,
-  topLeftRadius: Dp? = null,
-  topRightRadius: Dp? = null,
-  bottomLeftRadius: Dp? = null,
-  bottomRightRadius: Dp? = null,
   active: () -> Boolean = { true }
 ) = drawWithContent {
   if (active()) {
     val rect = Rect(Offset.Zero, size)
     val paint = Paint()
 
-    val topLeftCornerRadius = topLeftRadius?.toPx() ?: cornersRadius.toPx()
-    val topRightCornerRadius = topRightRadius?.toPx() ?: cornersRadius.toPx()
-    val bottomLeftCornerRadius = bottomLeftRadius?.toPx() ?: cornersRadius.toPx()
-    val bottomRightCornerRadius = bottomRightRadius?.toPx() ?: cornersRadius.toPx()
+    val topLeftCornerRadius = shape.topStartRadius.toPx()
+    val topRightCornerRadius = shape.topEndRadius.toPx()
+    val bottomLeftCornerRadius = shape.bottomStartRadius.toPx()
+    val bottomRightCornerRadius = shape.bottomEndRadius.toPx()
 
     drawIntoCanvas {
       paint.color = color

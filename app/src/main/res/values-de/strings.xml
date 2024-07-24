@@ -2,7 +2,6 @@
 
   <string name="about">Über das Programm</string>
   <string name="settings">Einstellungen</string>
-  <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=L4N7RSWME6LG2</string>
   <string name="create_url">https://cloud.supla.org/register?lang=de</string>
   <string name="delete_url">https://{SERVER_ADDRESS}/db99845855b2ecbfecca9a095062b96c3e27703f?lang=de</string>
   <string name="forumpage_url">https://de-forum.supla.org/</string>
@@ -78,7 +77,6 @@
   <string name="rate_later">Später</string>
   <string name="rate_no_thanks">Nein danke</string>
 
-  <string name="rs_percent_caption">Prozentsatz des Abschlusses</string>
   <string name="roller_shutter_calibrating">Kalibrierung…</string>
   <string name="add_wizard_is_not_available">Der Hinzufügen-Assistent ist nur verfügbar, wenn die Verbindung zum Server basierend auf der eingegebenen E-Mail-Adresse hergestellt wurde! (Erweiterte Optionen in Ihrer Kontokonfiguration deaktivieren)</string>
   <string name="wizard_step1_txt3">Um fortzusetzen, drücken Sie <b>Weiter</b>.</string>
@@ -107,7 +105,6 @@
   <string name="wizard_wifi_error">Das WiFi-Netzwerk ist deaktiviert oder sein Code bzw. Name kann nicht abgelesen werden!</string>
   <string name="wizard_location_error">Damit der Assistent zum Hinzufügen ordnungsgemäß funktioniert, muss der Ortungsdienst auf diesem Gerät aktiviert sein. Gehen Sie zu Ihren Systemeinstellungen, wählen Sie dann „Standort“ und vergewissern Sie sich, dass die Standortfunktion aktiviert ist.</string>
   <string name="start">START</string>
-  <string name="stop">STOP</string>
   <string name="turn_on">Einschalten</string>
   <string name="turn_off">Ausschalten</string>
   <string name="wizard_result_compat_error">Das Gerät, mit dem die Verbindung hergestellt wurde, ist mit diesem Assistenten nicht kompatibel!</string>
@@ -394,8 +391,6 @@
   <string name="add_account">Konto hinzufügen</string>
   <string name="edit_account">Konto bearbeiten</string>
   <string name="delete_account">Löschen</string>
-  <string name="delete_account_confirm_message">Möchten Sie wirklich das Konto löschen?</string>
-  <string name="delete_account_confirm_message_with_widgets">Möchten Sie wirklich das Konto löschen? Bestätigung wird Löschung verbundener Widgets bedeuten.</string>
   <string name="cfg_label_access_id_auth">Kennung</string>
   <string name="cfg_channel_height">Höhe des Kanals</string>
   <string name="cfg_temperature_unit">Temperatureinheit</string>
@@ -403,7 +398,6 @@
   <string name="profile">Ihr Konto</string>
   <string name="profile_plural">Ihre Kontos</string>
   <string name="menubar_appsettings">Einstellungen</string>
-  <string name="rs_percent_caption_open">Prozentsatz der Öffnung</string>
   <string name="em_chart_phase_n">Phase %d</string>
   <string name="em_chart_all_phases">Phase 1+2+3</string>
   <string name="double_button_widget_description">Zweitasten-Widget</string>

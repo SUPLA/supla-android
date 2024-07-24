@@ -37,10 +37,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateListOf
@@ -125,7 +125,7 @@ private fun Thumb(
       .size(SlatTiltSliderDimens.thumbSize)
       .indication(
         interactionSource = interactionSource,
-        indication = rememberRipple(
+        indication = ripple(
           bounded = false,
           radius = SlatTiltSliderDimens.thumbSize.div(2)
         )
@@ -139,7 +139,7 @@ private fun Thumb(
         }
       }
       .background(
-        color = MaterialTheme.colors.surface,
+        color = MaterialTheme.colorScheme.surface,
         shape = CircleShape
       )
       .border(
@@ -206,7 +206,7 @@ private fun Track(steps: Int, enabled: Boolean) {
 @Preview
 private fun Preview() {
   SuplaTheme {
-    Column(modifier = Modifier.background(MaterialTheme.colors.background)) {
+    Column(modifier = Modifier.background(MaterialTheme.colorScheme.background)) {
       SlatTiltSlider(value = 0.2f)
       SlatTiltSlider(value = 2f, valueRange = 1f..10f, steps = 10)
       SlatTiltSlider(value = 55f)

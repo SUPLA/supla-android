@@ -9,7 +9,6 @@ import org.supla.android.db.IncrementalMeasurementItem;
 public abstract class DownloadIncrementalMeasurements extends DownloadMeasurementLogs {
 
   private IncrementalMeasurementItem older_item = null;
-  private IncrementalMeasurementItem younger_item = null;
 
   public DownloadIncrementalMeasurements(Context context, int profileId) {
     super(context, profileId);
@@ -30,7 +29,7 @@ public abstract class DownloadIncrementalMeasurements extends DownloadMeasuremen
   protected void SaveMeasurementItem(SQLiteDatabase db, long timestamp, JSONObject obj)
       throws JSONException {
     long profileId = getCurrentProfileId();
-    younger_item = newObject();
+    IncrementalMeasurementItem younger_item = newObject();
     younger_item.AssignJSONObject(obj);
     younger_item.setChannelId(getChannelId());
     younger_item.setProfileId(profileId);

@@ -3,14 +3,13 @@ package org.supla.android;
 import android.app.AlertDialog;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import androidx.appcompat.widget.AppCompatImageView;
+import androidx.core.content.res.ResourcesCompat;
 import org.supla.android.lib.SuplaConst;
 
 public class DiwCalibrationTool extends DimmerCalibrationTool
@@ -156,26 +155,14 @@ public class DiwCalibrationTool extends DimmerCalibrationTool
   }
 
   protected void setInputOptionBtnApparance(boolean selected, int resIdNormal, int resIdSelected) {
-
-    Drawable bg =
-        getResources()
-            .getDrawable(
-                selected
-                    ? R.drawable.rounded_option_sel_btn
-                    : R.drawable.rounded_option_normal_btn);
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-      imgInputOption.setBackground(bg);
-    } else {
-      imgInputOption.setBackgroundDrawable(bg);
-    }
-
+    int resId = selected ? R.drawable.rounded_option_sel_btn : R.drawable.rounded_option_normal_btn;
+    imgInputOption.setBackground(ResourcesCompat.getDrawable(getResources(), resId, null));
     imgInputOption.setImageResource(selected ? resIdSelected : resIdNormal);
   }
 
-  private class InputOptionTag {
-    private int inputMode;
-    private boolean selected;
+  private static class InputOptionTag {
+    private final int inputMode;
+    private final boolean selected;
 
     InputOptionTag(int inputMode, boolean selected) {
       this.inputMode = inputMode;

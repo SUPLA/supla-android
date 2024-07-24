@@ -29,8 +29,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateListOf
@@ -69,7 +69,7 @@ fun ThermostatThumb(
       .size(32.dp)
       .indication(
         interactionSource = interactionSource,
-        indication = rememberRipple(
+        indication = ripple(
           bounded = false,
           radius = 20.dp
         )
@@ -83,7 +83,7 @@ fun ThermostatThumb(
     Image(
       painter = painterResource(id = iconRes),
       contentDescription = null,
-      colorFilter = ColorFilter.tint(MaterialTheme.colors.onPrimary),
+      colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimary),
       contentScale = ContentScale.Inside,
       modifier = Modifier
         .size(24.dp)

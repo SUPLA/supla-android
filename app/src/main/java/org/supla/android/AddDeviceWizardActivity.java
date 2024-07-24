@@ -627,20 +627,18 @@ public class AddDeviceWizardActivity extends WizardActivity
   }
 
   private void unregisterCallbacks() {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      final ConnectivityManager connectivityManager =
-          (ConnectivityManager)
-              getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+    final ConnectivityManager connectivityManager =
+        (ConnectivityManager)
+            getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 
-      if (espNetworkCallback != null) {
-        connectivityManager.unregisterNetworkCallback(espNetworkCallback);
-        espNetworkCallback = null;
-      }
+    if (espNetworkCallback != null) {
+      connectivityManager.unregisterNetworkCallback(espNetworkCallback);
+      espNetworkCallback = null;
+    }
 
-      if (mainNetworkCallback != null) {
-        connectivityManager.unregisterNetworkCallback(mainNetworkCallback);
-        mainNetworkCallback = null;
-      }
+    if (mainNetworkCallback != null) {
+      connectivityManager.unregisterNetworkCallback(mainNetworkCallback);
+      mainNetworkCallback = null;
     }
   }
 
@@ -650,7 +648,7 @@ public class AddDeviceWizardActivity extends WizardActivity
       try {
         unregisterReceiver(stateChangedReceiver);
       } catch (IllegalArgumentException e) {
-        e.printStackTrace();
+        Trace.d(AddDeviceWizardActivity.class.getSimpleName(), e.getMessage(), e);
       }
       stateChangedReceiver = null;
     }
@@ -659,7 +657,7 @@ public class AddDeviceWizardActivity extends WizardActivity
       try {
         unregisterReceiver(scanResultReceiver);
       } catch (IllegalArgumentException e) {
-        e.printStackTrace();
+        Trace.d(AddDeviceWizardActivity.class.getSimpleName(), e.getMessage(), e);
       }
       scanResultReceiver = null;
     }
@@ -1016,7 +1014,7 @@ public class AddDeviceWizardActivity extends WizardActivity
       if (cm != null) {
         cm.bindProcessToNetwork(null);
       }
-    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+    } else {
       ConnectivityManager.setProcessDefaultNetwork(null);
     }
   }
@@ -1025,7 +1023,7 @@ public class AddDeviceWizardActivity extends WizardActivity
 
     final ConnectivityManager cm =
         (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-    if (cm != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+    if (cm != null) {
       Network[] ns = cm.getAllNetworks();
       for (Network n : ns) {
         NetworkCapabilities c = cm.getNetworkCapabilities(n);
@@ -1034,9 +1032,7 @@ public class AddDeviceWizardActivity extends WizardActivity
           if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             cm.bindProcessToNetwork(n);
           } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-              ConnectivityManager.setProcessDefaultNetwork(n);
-            }
+            ConnectivityManager.setProcessDefaultNetwork(n);
           }
         }
       }

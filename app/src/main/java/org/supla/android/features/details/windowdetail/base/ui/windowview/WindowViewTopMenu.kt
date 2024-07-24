@@ -28,10 +28,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -51,7 +51,8 @@ import org.supla.android.features.details.windowdetail.base.data.verticalblinds.
 import org.supla.android.features.details.windowdetail.base.ui.ShadingSystemAction
 import org.supla.android.features.details.windowdetail.base.ui.ShadingSystemPositionPresentation
 import org.supla.android.features.details.windowdetail.base.ui.WindowViewState
-import org.supla.android.ui.views.buttons.SuplaButton
+import org.supla.android.ui.views.buttons.supla.SuplaButton
+import org.supla.android.ui.views.buttons.supla.SuplaButtonDefaults
 import org.supla.android.ui.views.tools.Shadow
 import org.supla.android.ui.views.tools.ShadowOrientation
 
@@ -69,7 +70,7 @@ fun WindowViewTopMenu(
     modifier = Modifier
       .fillMaxWidth()
       .horizontalScroll(rememberScrollState())
-      .background(color = MaterialTheme.colors.surface)
+      .background(color = MaterialTheme.colorScheme.surface)
       .height(height)
       .padding(
         start = dimensionResource(id = R.dimen.distance_default),
@@ -80,7 +81,7 @@ fun WindowViewTopMenu(
   ) {
     if (viewState.enabled.not()) {
       Spacer(modifier = Modifier.weight(1f))
-      Icon(painter = painterResource(id = R.drawable.ic_offline), contentDescription = null, tint = MaterialTheme.colors.gray)
+      Icon(painter = painterResource(id = R.drawable.ic_offline), contentDescription = null, tint = MaterialTheme.colorScheme.gray)
       TopTextLabelView(text = stringResource(id = R.string.offline))
       Spacer(modifier = Modifier.weight(1f))
     } else {
@@ -109,7 +110,7 @@ fun WindowViewTopMenu(
         SuplaButton(
           iconRes = R.drawable.ic_recalibrate,
           onClick = { onAction(ShadingSystemAction.Calibrate) },
-          radius = 24.dp
+          shape = SuplaButtonDefaults.allRoundedShape(radius = 24.dp),
         )
       } else if (viewState.onlineStatusString != null) {
         TopTextLabelView(text = "ONLINE:")
@@ -151,8 +152,8 @@ private fun SlatsTiltLabel(value: String) {
 private fun PercentageValueView(value: String) =
   Text(
     text = value,
-    style = MaterialTheme.typography.body2,
-    color = MaterialTheme.colors.onSurface,
+    style = MaterialTheme.typography.bodyMedium,
+    color = MaterialTheme.colorScheme.onSurface,
     fontWeight = FontWeight.Bold
   )
 
@@ -160,6 +161,6 @@ private fun PercentageValueView(value: String) =
 private fun TopTextLabelView(text: String) =
   Text(
     text = text.uppercase(),
-    style = MaterialTheme.typography.body2,
-    color = MaterialTheme.colors.gray
+    style = MaterialTheme.typography.bodyMedium,
+    color = MaterialTheme.colorScheme.gray
   )

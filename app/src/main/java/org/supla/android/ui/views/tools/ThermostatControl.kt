@@ -129,7 +129,7 @@ fun ThermostatControl(
 ) {
   val surfaceColor = MaterialTheme.colorScheme.surface
   val shaderOuterColor = colorResource(id = R.color.thermostat_control_circle_background)
-  val greenColor = colorResource(id = R.color.supla_green)
+  val greenColor = colorResource(id = R.color.primary)
   val disabledColor = colorResource(id = R.color.disabled)
   val textColor = MaterialTheme.colorScheme.onBackground
   val pointShadowColor = MaterialTheme.colorScheme.progressPointShadow

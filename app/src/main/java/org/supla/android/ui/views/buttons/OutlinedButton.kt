@@ -17,18 +17,24 @@ package org.supla.android.ui.views.buttons
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
+import org.supla.android.core.ui.theme.Distance
+import org.supla.android.core.ui.theme.SuplaTheme
 
 @Composable
 fun OutlinedButton(
@@ -45,7 +51,6 @@ fun OutlinedButton(
     Text(
       text = text,
       style = MaterialTheme.typography.labelLarge,
-      color = MaterialTheme.colorScheme.primary
     )
   }
 }
@@ -61,9 +66,21 @@ fun OutlinedButton(
     onClick = onClick,
     modifier = modifier,
     enabled = enabled,
-    border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
+    border = BorderStroke(1.dp, if (enabled) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline),
     shape = RoundedCornerShape(dimensionResource(id = R.dimen.radius_default)),
     content = content,
-    colors = ButtonDefaults.outlinedButtonColors().copy(containerColor = Color.Transparent)
+    colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.onBackground)
   )
+}
+
+@Preview
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun Preview() {
+  SuplaTheme {
+    Column(modifier = Modifier.background(MaterialTheme.colorScheme.background).padding(Distance.default)) {
+      OutlinedButton(text = "Label") { }
+      OutlinedButton(text = "Label", enabled = false) { }
+    }
+  }
 }

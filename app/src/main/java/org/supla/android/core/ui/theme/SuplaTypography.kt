@@ -29,7 +29,7 @@ import org.supla.android.R
 import org.supla.android.extensions.fontDimensionResource
 
 @Composable
-fun suplaTypographyMaterial3() = Typography(
+fun suplaTypography() = Typography(
   displayLarge = TextStyle(
     fontSize = 60.sp,
     letterSpacing = 0.05.em,
@@ -109,9 +109,9 @@ fun suplaTypographyMaterial3() = Typography(
     fontFamily = OpenSansFontFamily
   ),
   labelMedium = TextStyle(
-    fontSize = 12.sp,
+    fontSize = 14.sp,
     letterSpacing = 0.15.sp,
-    fontWeight = FontWeight.SemiBold,
+    fontWeight = FontWeight.Bold,
     fontFamily = OpenSansFontFamily
   ),
   labelSmall = TextStyle(

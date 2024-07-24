@@ -1,6 +1,5 @@
 <resources>
 
-  <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=QYN932S5UQG8N</string>
   <string name="create_url">https://cloud.supla.org/register?lang=hu</string>
   <string name="delete_url">https://{SERVER_ADDRESS}/db99845855b2ecbfecca9a095062b96c3e27703f?lang=hu</string>
 
@@ -78,7 +77,6 @@
   <string name="rate_now">Értékelje most</string>
   <string name="rate_later">Később</string>
   <string name="rate_no_thanks">Nem, köszönöm</string>
-  <string name="rs_percent_caption">A bezárás százaléka</string>
   <string name="roller_shutter_calibrating">Kalibrálás…</string>
 
   <string name="add_wizard_is_not_available">A Hozzáadás varázsló csak akkor érhető el, ha a megadott e-mail cím alapján létrejött a kapcsolat a szerverrel! (A speciális beállítások letiltása a fiókkonfigurációban)</string>
@@ -379,8 +377,6 @@
   <string name="add_account">Fiók hozzáadása</string>
   <string name="edit_account">Fiók módosítása</string>
   <string name="delete_account">Törlés</string>
-  <string name="delete_account_confirm_message">Biztosan törölni akarja a fiókot?</string>
-  <string name="delete_account_confirm_message_with_widgets">Biztosan törölni akarja a fiókot? A megerősítés a kapcsolódó widgetek eltávolítását jelenti.</string>
   <string name="cfg_label_access_id_auth">Azonosító</string>
   <string name="cfg_channel_height">Csatorna magassága</string>
   <string name="cfg_temperature_unit">Hőmérsékleti egység</string>
@@ -388,7 +384,6 @@
   <string name="profile">A fiókja</string>
   <string name="profile_plural">A fiókjai</string>
   <string name="menubar_appsettings">Beállítások</string>
-  <string name="rs_percent_caption_open">Nyitás százaléka</string>
   <string name="em_chart_phase_n">Fázis %d</string>
   <string name="em_chart_all_phases">Fázis 1+2+3</string>
   <string name="widget_configure_title">Widget konfiguráció</string>

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=QYN932S5UQG8N</string>
   <string name="create_url">https://cloud.supla.org/register?lang=cs</string>
   <string name="delete_url">https://{SERVER_ADDRESS}/db99845855b2ecbfecca9a095062b96c3e27703f?lang=cs</string>
   <string name="forumpage_url">https://cz-forum.supla.org/</string>
@@ -67,7 +66,6 @@
   <string name="rate_now">Ohodnoťte teď</string>
   <string name="rate_later">Později</string>
   <string name="rate_no_thanks">Ne, děkuji</string>
-  <string name="rs_percent_caption">Procento uzavření</string>
   <string name="roller_shutter_calibrating">Kalibrace…</string>
   <string name="add_wizard_is_not_available">Průvodce přidáním je dostupný pouze v případě, že bylo navázáno připojení k serveru na základě zadané e-mailové adresy! (vypněte možnost pokročilé konfigurace účtu)</string>
   <string name="wizard_step1_txt1">Vítejte v Průvodci přidáním zařízení, který vám pomůže rychle a snadno přidat nové zařízení do vašeho systému.</string>
@@ -359,8 +357,6 @@
   <string name="add_account">Přidat účet</string>
   <string name="edit_account">Upravit účet</string>
   <string name="delete_account">Odstranit</string>
-  <string name="delete_account_confirm_message">Opravdu chcete svůj účet odstranit?</string>
-  <string name="delete_account_confirm_message_with_widgets">Opravdu chcete svůj účet odstranit? Potvrzení znamená, že propojené widgety budou odstraněny.</string>
   <string name="cfg_label_access_id_auth">Identifikátor:</string>
   <string name="cfg_channel_height">Výška kanálu</string>
   <string name="cfg_temperature_unit">Jednotka teploty</string>
@@ -368,7 +364,6 @@
   <string name="profile">Váš účet</string>
   <string name="profile_plural">Vaše účty</string>
   <string name="menubar_appsettings">Nastavení</string>
-  <string name="rs_percent_caption_open">Procento otevření</string>
   <string name="em_chart_phase_n">Fáze %d</string>
   <string name="em_chart_all_phases">Fáze 1+2+3</string>
   <string name="widget_configure_title">Nastavení widgetu</string>

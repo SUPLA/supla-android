@@ -15,13 +15,11 @@
   <string name="add_account">Add an account</string>
   <string name="edit_account">Edit account</string>
   <string name="supla_cloud" translatable="false">Supla Cloud</string>
-  <string name="slogan" translatable="false">YOUR HOME CONNECTED</string>
   <string name="menubar_title" translatable="false">supla</string>
   <string name="homepage" translatable="false">www.supla.org</string>
   <string name="homepage_url" translatable="false">https://www.supla.org</string>
   <string name="forumpage_url" translatable="false">https://en-forum.supla.org</string>
   <string name="cloud_url" translatable="false">https://cloud.supla.org</string>
-  <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=L4N7RSWME6LG2</string>
   <string name="create_url">https://cloud.supla.org/register?lang=en</string>
   <string name="delete_url">https://{SERVER_ADDRESS}/db99845855b2ecbfecca9a095062b96c3e27703f?lang=en</string>
   <string name="devices_list_url" translatable="false">https://www.supla.org/en/devices</string>
@@ -103,8 +101,6 @@
   <string name="advanced_settings">Advanced</string>
   <string name="create_account">Create</string>
   <string name="delete_account">Delete</string>
-  <string name="delete_account_confirm_message">Are you sure you want to delete the account?</string>
-  <string name="delete_account_confirm_message_with_widgets" translatable="false">Are you sure you want to delete the account? Confirmation will delete all account related widgets.</string>
 
   <!-- Configuration screen, profile name of current profile
  (editable) -->
@@ -131,8 +127,6 @@
   <string name="rate_later">Later</string>
   <string name="rate_no_thanks">No thanks</string>
 
-  <string name="rs_percent_caption">Percentage of closing</string>
-  <string name="rs_percent_caption_open">Percentage of opening</string>
   <string name="roller_shutter_calibrating">Calibration…</string>
 
   <string name="add_wizard_is_not_available">Add Wizard is only available when server connection has been set based on the email address. (Disable advanced options in your account settings)</string>
@@ -141,7 +135,6 @@
   <string name="wizard_step1_txt3">Press <b>Next</b> to continue.</string>
   <string name="next">Next</string>
   <string name="start">START</string>
-  <string name="stop" translatable="false">STOP</string>
   <string name="turn_on" translatable="false">Turn on</string>
   <string name="turn_off" translatable="false">Turn off</string>
   <string name="wizard_remember_passwd">Remember password</string>
@@ -663,7 +656,7 @@
   <string name="scenes_empty_list_button" translatable="false">Add scene in Supla Cloud</string>
   <string name="roller_shutter_closing_percentage" translatable="false">Close:</string>
   <string name="roller_shutter_opening_percentage" translatable="false">Open:</string>
-  <string name="roller_shutter_calibration" translatable="false">Calibration</string>
+  <string name="roller_shutter_calibration">Calibration</string>
   <string name="roller_shutter_calibration_needed" translatable="false">Calibration needed</string>
   <string name="cfg_night_mode" translatable="false">Night mode</string>
   <string name="auto" translatable="false">Auto</string>

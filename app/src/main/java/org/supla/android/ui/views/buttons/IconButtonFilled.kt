@@ -24,9 +24,9 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -45,7 +45,7 @@ fun IconButtonFilled(
   modifier: Modifier = Modifier,
   @DrawableRes icon: Int,
   disabled: Boolean = false,
-  enabledColor: Color = MaterialTheme.colors.primary,
+  enabledColor: Color = MaterialTheme.colorScheme.primary,
   iconTint: Color? = null,
   onClick: () -> Unit
 ) {
@@ -58,7 +58,7 @@ fun IconButtonFilled(
       .shadow(elevation = 4.dp, shape = CircleShape)
       .clickable(
         onClick = { onClick() },
-        indication = if (disabled) null else rememberRipple(),
+        indication = if (disabled) null else ripple(),
         interactionSource = remember { MutableInteractionSource() }
       )
   ) {

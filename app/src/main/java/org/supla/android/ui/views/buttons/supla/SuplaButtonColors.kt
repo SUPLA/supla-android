@@ -1,4 +1,4 @@
-package org.supla.android.ui.views.buttons.animatable
+package org.supla.android.ui.views.buttons.supla
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,27 +17,32 @@ package org.supla.android.ui.views.buttons.animatable
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-sealed interface AnimationMode {
+import androidx.compose.runtime.Immutable
+import androidx.compose.ui.graphics.Color
 
-  fun isActiveState(): Boolean
+@Immutable
+class SuplaButtonColors(
+  val border: Color,
+  val borderPressed: Color,
+  val borderDisabled: Color,
+  val content: Color,
+  val contentPressed: Color,
+  val contentDisabled: Color,
+  val shadow: Color,
+  val shadowPressed: Color
+) {
 
-  enum class State {
-    ACTIVE, CLEAR
-  }
+  fun border(active: Boolean, disabled: Boolean) =
+    when {
+      active -> borderPressed
+      disabled -> borderDisabled
+      else -> border
+    }
 
-  object Pressed : AnimationMode {
-    override fun isActiveState() = false
-  }
-
-  data class Toggle(val state: State) : AnimationMode {
-    constructor(active: Boolean) : this(if (active) State.ACTIVE else State.CLEAR)
-
-    override fun isActiveState() = state == State.ACTIVE
-  }
-
-  data class Stated(val state: State) : AnimationMode {
-    constructor(active: Boolean) : this(if (active) State.ACTIVE else State.CLEAR)
-
-    override fun isActiveState() = state == State.ACTIVE
-  }
+  fun content(active: Boolean, disabled: Boolean) =
+    when {
+      active -> contentPressed
+      disabled -> contentDisabled
+      else -> content
+    }
 }

@@ -55,7 +55,6 @@ object Deps {
 
         object Compose {
             const val UI = "androidx.compose.ui:ui:${Versions.Androidx.Compose.Core}"
-            const val Material = "androidx.compose.material:material:${Versions.Androidx.Compose.Core}"
             const val Icons = "androidx.compose.material:material-icons-extended:${Versions.Androidx.Compose.Core}"
             object Material3 {
                 const val Core = "androidx.compose.material3:material3:${Versions.Androidx.Compose.Material3}"

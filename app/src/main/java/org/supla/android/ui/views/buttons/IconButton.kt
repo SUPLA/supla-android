@@ -17,11 +17,10 @@ package org.supla.android.ui.views.buttons
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -29,7 +28,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import org.supla.android.R
+import org.supla.android.core.ui.theme.SuplaTheme
 
 @Composable
 fun IconButton(
@@ -38,11 +39,10 @@ fun IconButton(
   modifier: Modifier = Modifier,
   enabled: Boolean = true,
   rotate: Boolean = false,
-  tint: Color = MaterialTheme.colors.primary
+  tint: Color = MaterialTheme.colorScheme.primary
 ) =
   IconButton(onClick = onClick, enabled = enabled, modifier = modifier) {
     val iconModifier = Modifier
-      .padding(all = dimensionResource(id = R.dimen.distance_small))
       .size(dimensionResource(id = R.dimen.icon_default_size))
 
     Icon(
@@ -52,3 +52,11 @@ fun IconButton(
       tint = if (enabled) tint else colorResource(id = R.color.disabled)
     )
   }
+
+@Preview(showBackground = true)
+@Composable
+private fun Preview() {
+  SuplaTheme {
+    IconButton(icon = R.drawable.ic_arrow_right, onClick = { })
+  }
+}

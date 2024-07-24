@@ -29,9 +29,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -58,11 +58,12 @@ import org.supla.android.features.details.windowdetail.base.ui.windowview.contro
 import org.supla.android.features.details.windowdetail.base.ui.windowview.controls.IssuesView
 import org.supla.android.features.details.windowdetail.base.ui.windowview.controls.PressTimeInfo
 import org.supla.android.features.details.windowdetail.base.ui.windowview.controls.WindowControlView
-import org.supla.android.ui.views.buttons.SuplaButton
-import org.supla.android.ui.views.buttons.animatable.LeftRightControlButton
-import org.supla.android.ui.views.buttons.animatable.TOTAL_HEIGHT
-import org.supla.android.ui.views.buttons.animatable.UpDownControlButton
-import org.supla.android.ui.views.buttons.animatable.controlbutton.ControlButtonIcon
+import org.supla.android.ui.views.buttons.supla.LeftRightControlButton
+import org.supla.android.ui.views.buttons.supla.SuplaButton
+import org.supla.android.ui.views.buttons.supla.SuplaButtonDefaults
+import org.supla.android.ui.views.buttons.supla.TOTAL_HEIGHT
+import org.supla.android.ui.views.buttons.supla.UpDownControlButton
+import org.supla.android.ui.views.buttons.supla.controlbutton.ControlButtonIcon
 
 @Composable
 fun WindowViewNormalContent(
@@ -302,7 +303,7 @@ private fun StopMoveButton(enabled: Boolean, modifier: Modifier = Modifier, onAc
     iconRes = R.drawable.ic_stop,
     onClick = { onAction(ShadingSystemAction.Stop) },
     disabled = !enabled,
-    radius = 32.dp,
+    shape = SuplaButtonDefaults.allRoundedShape(radius = 32.dp),
     modifier = modifier
   )
 
@@ -312,7 +313,7 @@ fun PressTimeInfoHorizontal(touchTime: Float?) {
   if (touchTime != null) {
     Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.height(26.dp)) {
       Icon(painter = painterResource(id = R.drawable.ic_touch_hand), contentDescription = null)
-      Text(text = String.format("%.1fs", touchTime), style = MaterialTheme.typography.body2)
+      Text(text = String.format("%.1fs", touchTime), style = MaterialTheme.typography.bodyMedium)
     }
   } else {
     Box(modifier = Modifier.height(26.dp))
@@ -325,7 +326,7 @@ private fun Preview_Vertical() {
   SuplaTheme {
     Box(
       modifier = Modifier
-        .background(MaterialTheme.colors.background)
+        .background(MaterialTheme.colorScheme.background)
         .height(500.dp)
         .width(350.dp)
     ) {
@@ -346,7 +347,7 @@ private fun Preview_Horizontal() {
   SuplaTheme {
     Box(
       modifier = Modifier
-        .background(MaterialTheme.colors.background)
+        .background(MaterialTheme.colorScheme.background)
         .height(500.dp)
         .width(350.dp)
     ) {

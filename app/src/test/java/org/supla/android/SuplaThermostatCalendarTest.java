@@ -18,16 +18,23 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import android.content.Context;
+import android.content.res.Resources;
 import junit.framework.TestCase;
 import org.junit.Assert;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 public class SuplaThermostatCalendarTest extends TestCase {
   SuplaThermostatCalendar calendar;
 
   @Override
   protected void setUp() throws Exception {
-    calendar = new SuplaThermostatCalendar(null);
+    Resources resources = Mockito.mock();
+    Mockito.when(resources.getColor(R.color.on_background)).thenReturn(0);
+    Context context = Mockito.mock();
+    Mockito.when(context.getResources()).thenReturn(resources);
+    calendar = new SuplaThermostatCalendar(context);
   }
 
   @Test

@@ -22,14 +22,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -233,8 +233,8 @@ private fun PasswordTextField(
 private fun ErrorText(text: String) =
   Text(
     text = text,
-    style = MaterialTheme.typography.subtitle2,
-    color = MaterialTheme.colors.error,
+    style = MaterialTheme.typography.titleSmall,
+    color = MaterialTheme.colorScheme.error,
     modifier = Modifier.padding(
       start = Distance.default.plus(Distance.small),
       end = Distance.default.plus(Distance.small),

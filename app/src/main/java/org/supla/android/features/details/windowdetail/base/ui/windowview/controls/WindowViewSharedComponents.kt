@@ -27,9 +27,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -52,7 +52,7 @@ fun PressTimeInfo(
   touchTime?.let { time ->
     Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
       Icon(painter = painterResource(id = R.drawable.ic_touch_hand), contentDescription = null)
-      Text(text = String.format("%.1fs", time), style = MaterialTheme.typography.body2)
+      Text(text = String.format("%.1fs", time), style = MaterialTheme.typography.bodyMedium)
     }
   }
 }
@@ -77,7 +77,7 @@ fun IssuesView(issues: List<ChannelIssueItem>, modifier: Modifier = Modifier, sm
           contentDescription = null,
           modifier = Modifier.size(rowHeight)
         )
-        Text(text = stringResource(id = it.descriptionRes), style = MaterialTheme.typography.body2)
+        Text(text = stringResource(id = it.descriptionRes), style = MaterialTheme.typography.bodyMedium)
       }
 
       if (smallScreen) {
@@ -95,7 +95,7 @@ private fun Preview() {
       verticalArrangement = Arrangement.spacedBy(8.dp),
       horizontalAlignment = Alignment.CenterHorizontally,
       modifier = Modifier
-        .background(MaterialTheme.colors.background)
+        .background(MaterialTheme.colorScheme.background)
         .padding(dimensionResource(id = R.dimen.distance_default))
     ) {
       PressTimeInfo(12.3f)

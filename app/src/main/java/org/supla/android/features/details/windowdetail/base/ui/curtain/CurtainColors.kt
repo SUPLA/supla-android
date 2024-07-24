@@ -46,7 +46,7 @@ data class CurtainColors(
         curtainBackground = colorResource(id = R.color.roller_shutter_slat_background),
         curtainBorder = colorResource(id = R.color.roller_shutter_slat_border),
         markerBorder = colorResource(id = R.color.on_background),
-        markerBackground = colorResource(id = R.color.primary_variant)
+        markerBackground = colorResource(id = R.color.primary)
       )
   }
 }

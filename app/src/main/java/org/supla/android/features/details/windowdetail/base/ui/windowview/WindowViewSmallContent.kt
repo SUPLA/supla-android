@@ -28,7 +28,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,11 +48,11 @@ import org.supla.android.features.details.windowdetail.base.ui.windowview.contro
 import org.supla.android.features.details.windowdetail.base.ui.windowview.controls.IssuesView
 import org.supla.android.features.details.windowdetail.base.ui.windowview.controls.PressTimeInfo
 import org.supla.android.features.details.windowdetail.base.ui.windowview.controls.WindowControlView
-import org.supla.android.ui.views.buttons.animatable.DownControlIcon
-import org.supla.android.ui.views.buttons.animatable.StopControlIcon
-import org.supla.android.ui.views.buttons.animatable.UpControlIcon
-import org.supla.android.ui.views.buttons.animatable.UpDownControlButton
-import org.supla.android.ui.views.buttons.animatable.controlbutton.ControlButtonIcon
+import org.supla.android.ui.views.buttons.supla.DownControlIcon
+import org.supla.android.ui.views.buttons.supla.StopControlIcon
+import org.supla.android.ui.views.buttons.supla.UpControlIcon
+import org.supla.android.ui.views.buttons.supla.UpDownControlButton
+import org.supla.android.ui.views.buttons.supla.controlbutton.ControlButtonIcon
 
 @Composable
 fun WindowViewSmallContent(
@@ -217,7 +217,7 @@ private fun Preview_Vertical() {
   SuplaTheme {
     Box(
       modifier = Modifier
-        .background(MaterialTheme.colors.background)
+        .background(MaterialTheme.colorScheme.background)
         .height(350.dp)
         .width(350.dp)
     ) {
@@ -236,7 +236,7 @@ private fun Preview_Horizontal() {
   SuplaTheme {
     Box(
       modifier = Modifier
-        .background(MaterialTheme.colors.background)
+        .background(MaterialTheme.colorScheme.background)
         .height(350.dp)
         .width(350.dp)
     ) {
@@ -255,7 +255,7 @@ private fun Preview_FacadeBlind() {
   SuplaTheme {
     Box(
       modifier = Modifier
-        .background(MaterialTheme.colors.background)
+        .background(MaterialTheme.colorScheme.background)
         .height(300.dp)
         .width(400.dp)
     ) {
