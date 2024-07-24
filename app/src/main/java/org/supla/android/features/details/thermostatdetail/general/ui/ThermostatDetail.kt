@@ -76,6 +76,7 @@ import org.supla.android.features.details.thermostatdetail.ui.TimerHeader
 import org.supla.android.ui.lists.data.IssueIconType
 import org.supla.android.ui.views.LoadingScrim
 import org.supla.android.ui.views.buttons.SuplaButton
+import org.supla.android.ui.views.buttons.SuplaButtonDefaults
 import org.supla.android.ui.views.buttons.animatable.AnimatableButtonType
 import org.supla.android.ui.views.buttons.animatable.AnimationMode
 import org.supla.android.ui.views.buttons.animatable.RoundedControlButton
@@ -430,10 +431,11 @@ private fun BottomButtonsRow(viewState: ThermostatGeneralViewState, viewProxy: T
 
 @Composable
 private fun PowerButton(isOff: Boolean, disabled: Boolean, onClick: () -> Unit) {
+  val color = if (isOff) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary
   SuplaButton(
     iconRes = R.drawable.ic_power_button,
     disabled = disabled,
-    color = if (isOff) MaterialTheme.colorScheme.error else colorResource(id = R.color.primary),
+    colors = SuplaButtonDefaults.buttonColors(content = color, contentPressed = color),
     onClick = onClick
   )
 }
