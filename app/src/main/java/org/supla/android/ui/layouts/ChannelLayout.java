@@ -80,8 +80,6 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
   private FrameLayout right_btn;
   private FrameLayout left_btn;
 
-  private RelativeLayout channelIconContainer;
-
   private ChannelImageLayout imgl;
 
   private TextView left_btn_text;
@@ -94,14 +92,11 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
   private ImageView channelStateIcon;
   private SuplaWarningIcon channelWarningIcon;
 
-  private LineView bottom_line;
-
   private boolean Anim;
 
   private boolean RightButtonEnabled;
   private boolean LeftButtonEnabled;
 
-  private float heightScaleFactor = 1f;
   private boolean shouldUpdateChannelStateLayout;
 
   private Preferences prefs;
@@ -164,7 +159,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
 
     shouldUpdateChannelStateLayout = true;
 
-    heightScaleFactor = (prefs.getChannelHeight() + 0f) / 100f;
+    float heightScaleFactor = (prefs.getChannelHeight() + 0f) / 100f;
     int channelHeight =
         (int)
             (((float) getResources().getDimensionPixelSize(R.dimen.channel_layout_height))
@@ -211,7 +206,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
     durationTimer.setLayoutParams(
         durationTimerHelper.getTimerViewLayoutParams(context, heightScaleFactor));
 
-    channelIconContainer = new RelativeLayout(context);
+    RelativeLayout channelIconContainer = new RelativeLayout(context);
     content.addView(channelIconContainer);
     channelIconContainer.setLayoutParams(getChannelIconContainerLayoutParams());
 
@@ -227,7 +222,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
 
     right_ActiveStatus = new SuplaChannelStatus(context);
     right_ActiveStatus.setSingleColor(true);
-    right_ActiveStatus.setOnlineColor(getResources().getColor(R.color.primary_variant));
+    right_ActiveStatus.setOnlineColor(getResources().getColor(R.color.primary));
 
     {
       int dot_size = getResources().getDimensionPixelSize(R.dimen.channel_dot_size);
@@ -242,7 +237,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
     right_ActiveStatus.setVisibility(View.GONE);
     content.addView(right_ActiveStatus);
 
-    bottom_line = new LineView(context);
+    LineView bottom_line = new LineView(context);
     content.addView(bottom_line);
 
     imgl = new ChannelImageLayout(context, heightScaleFactor);
@@ -357,11 +352,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
     lp.leftMargin = margin;
 
     lp.addRule(RelativeLayout.RIGHT_OF, left_onlineStatus.getId());
-
-    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1) {
-      lp.addRule(RelativeLayout.END_OF, left_onlineStatus.getId());
-    }
-
+    lp.addRule(RelativeLayout.END_OF, left_onlineStatus.getId());
     lp.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
     return lp;
   }
@@ -375,11 +366,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
     lp.rightMargin = margin;
 
     lp.addRule(RelativeLayout.LEFT_OF, right_onlineStatus.getId());
-
-    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1) {
-      lp.addRule(RelativeLayout.START_OF, right_onlineStatus.getId());
-    }
-
+    lp.addRule(RelativeLayout.START_OF, right_onlineStatus.getId());
     lp.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
     return lp;
   }
@@ -390,7 +377,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
 
     result.setLayoutParams(getOnlineStatusLayoutParams(right));
     result.setOfflineColor(getResources().getColor(R.color.red));
-    result.setOnlineColor(getResources().getColor(R.color.primary_variant));
+    result.setOnlineColor(getResources().getColor(R.color.primary));
 
     return result;
   }

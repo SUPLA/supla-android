@@ -76,7 +76,7 @@ class LineChartData(
         ChartEntryType.HUMIDITY -> YAxis.AxisDependency.RIGHT
         else -> YAxis.AxisDependency.LEFT
       }
-      highLightColor = ResourcesCompat.getColor(resources, R.color.primary_variant, null)
+      highLightColor = ResourcesCompat.getColor(resources, R.color.primary, null)
 
       setDrawFilled(true)
       fillColor = color

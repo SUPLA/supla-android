@@ -37,7 +37,6 @@
         android:id="@+id/wizard_wifi_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/wizard_step2_txt1"
         android:layout_weight="1"
         android:background="@android:color/white"
         android:padding="5dp"
@@ -48,7 +47,6 @@
         android:id="@+id/wizard_wifi_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/wizard_wifi_list"
         android:layout_weight="1"
         android:background="@android:color/white"
         android:inputType="text"
@@ -61,9 +59,8 @@
         android:id="@+id/wizard_edit_button"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_centerHorizontal="false"
         android:layout_gravity="center"
-        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
         android:background="@drawable/editingoff" />
     </LinearLayout>
 
@@ -93,9 +90,8 @@
         android:id="@+id/wizard_look_button"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_centerHorizontal="false"
         android:layout_gravity="center"
-        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
         android:background="@drawable/look" />
 
     </LinearLayout>

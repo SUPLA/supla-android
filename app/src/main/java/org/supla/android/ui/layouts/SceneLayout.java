@@ -166,7 +166,7 @@ public class SceneLayout extends LinearLayout implements SlideableItem, Swapable
 
     SuplaChannelStatus right_ActiveStatus = new SuplaChannelStatus(context);
     right_ActiveStatus.setSingleColor(true);
-    right_ActiveStatus.setOnlineColor(getResources().getColor(R.color.primary_variant));
+    right_ActiveStatus.setOnlineColor(getResources().getColor(R.color.primary));
 
     int dot_size = getResources().getDimensionPixelSize(R.dimen.channel_dot_size);
     RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(dot_size / 2, dot_size * 2);
@@ -284,7 +284,7 @@ public class SceneLayout extends LinearLayout implements SlideableItem, Swapable
 
     result.setLayoutParams(getOnlineStatusLayoutParams(right));
     result.setOfflineColor(getResources().getColor(R.color.red));
-    result.setOnlineColor(getResources().getColor(R.color.primary_variant));
+    result.setOnlineColor(getResources().getColor(R.color.primary));
 
     return result;
   }

@@ -1,6 +1,5 @@
 <resources>
 
-  <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=QYN932S5UQG8N</string>
   <string name="create_url">https://cloud.supla.org/register?lang=sl</string>
   <string name="delete_url">https://{SERVER_ADDRESS}/db99845855b2ecbfecca9a095062b96c3e27703f?lang=sl</string>
 
@@ -78,7 +77,6 @@
   <string name="rate_now">Ocenite zdaj</string>
   <string name="rate_later">Pozneje</string>
   <string name="rate_no_thanks">Ne, hvala</string>
-  <string name="rs_percent_caption">Odstotek zapiranja</string>
   <string name="roller_shutter_calibrating">Kalibracija…</string>
 
   <string name="add_wizard_is_not_available">Čarovnik za dodajanje je na voljo le, če je na podlagi vnesenega e-poštnega naslova vzpostavljena povezava s strežnikom! (Onemogočite napredne možnosti v konfiguraciji računa)</string>
@@ -379,8 +377,6 @@
   <string name="add_account">Dodajte račun</string>
   <string name="edit_account">Uredite račun</string>
   <string name="delete_account">Izbišite</string>
-  <string name="delete_account_confirm_message">Ali ste prepričani, da želite izbrisati račun?</string>
-  <string name="delete_account_confirm_message_with_widgets">Ali ste prepričani, da želite izbrisati račun? S potrdilom boste odstranili povezane pripomočke.</string>
   <string name="cfg_label_access_id_auth">Identifikator</string>
   <string name="cfg_channel_height">Višina kanala</string>
   <string name="cfg_temperature_unit">Enota temperature</string>
@@ -388,7 +384,6 @@
   <string name="profile">Vaš račun</string>
   <string name="profile_plural">Vaši računi</string>
   <string name="menubar_appsettings">Nastavitve</string>
-  <string name="rs_percent_caption_open">Odstotek odpiranja</string>
   <string name="em_chart_phase_n">Faza %d</string>
   <string name="em_chart_all_phases">Faza 1+2+3</string>
   <string name="widget_configure_title">Konfiguracija pripomočka</string>

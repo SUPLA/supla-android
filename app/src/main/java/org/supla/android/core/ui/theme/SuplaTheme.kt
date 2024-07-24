@@ -18,7 +18,10 @@ package org.supla.android.core.ui.theme
  */
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.LocalContext
 
 @Composable
@@ -28,18 +31,13 @@ fun SuplaTheme(
 ) {
   val suplaDarkColors = SuplaDarkColors(LocalContext.current)
   val suplaLightColors = SuplaLightColors(LocalContext.current)
-  val colors = if (darkMode) suplaDarkColors.toMaterial() else suplaLightColors.toMaterial()
-  val colorScheme = if (darkMode) suplaDarkColors.toMaterial3() else suplaLightColors.toMaterial3()
+  val colorScheme = if (darkMode) suplaDarkColors.toMaterial() else suplaLightColors.toMaterial()
 
-  androidx.compose.material.MaterialTheme(
-    colors = colors,
-    typography = SuplaTypographyMaterial2(colors),
+  MaterialTheme(
+    colorScheme = colorScheme,
+    typography = suplaTypography(),
     content = {
-      androidx.compose.material3.MaterialTheme(
-        colorScheme = colorScheme,
-        content = content,
-        typography = suplaTypographyMaterial3()
-      )
+      CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onBackground, content = content)
     }
   )
 }

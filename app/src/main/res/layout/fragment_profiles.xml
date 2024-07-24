@@ -39,7 +39,7 @@
       android:id="@+id/sep1"
       android:layout_width="match_parent"
       android:layout_height="@dimen/list_separator_thickness"
-      android:background="@color/separator" />
+      android:background="@color/outline" />
 
     <androidx.recyclerview.widget.RecyclerView
       android:id="@+id/profilesList"

@@ -25,8 +25,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -84,8 +84,8 @@ fun SensorIssueView(sensorIssue: SensorIssue) {
     }
     Text(
       text = sensorIssue.textProvider(LocalContext.current),
-      style = MaterialTheme.typography.body2,
-      color = MaterialTheme.colors.onBackground
+      style = MaterialTheme.typography.bodyMedium,
+      color = MaterialTheme.colorScheme.onBackground
     )
   }
 }
@@ -94,7 +94,7 @@ fun SensorIssueView(sensorIssue: SensorIssue) {
 @Composable
 private fun Preview() {
   SuplaTheme {
-    Box(modifier = Modifier.background(color = MaterialTheme.colors.background)) {
+    Box(modifier = Modifier.background(color = MaterialTheme.colorScheme.background)) {
       SensorIssueView(
         sensorIssue = SensorIssue(
           iconProvider = { ContextCompat.getDrawable(it, R.drawable.fnc_hotel_card_on)?.toBitmap() },

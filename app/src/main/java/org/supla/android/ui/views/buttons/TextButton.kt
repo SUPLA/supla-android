@@ -18,8 +18,8 @@ package org.supla.android.ui.views.buttons
  */
 
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,7 +38,7 @@ fun TextButton(
     modifier = modifier,
     enabled = enabled
   ) {
-    Text(text = text, color = color, style = MaterialTheme.typography.button, textAlign = TextAlign.Center)
+    Text(text = text, color = color, style = MaterialTheme.typography.labelLarge, textAlign = TextAlign.Center)
   }
 }
 
@@ -49,7 +49,7 @@ fun TextButton(
   enabled: Boolean = true,
   content: @Composable RowScope.() -> Unit
 ) {
-  androidx.compose.material.TextButton(
+  androidx.compose.material3.TextButton(
     onClick = onClick,
     modifier = modifier,
     enabled = enabled,

@@ -5,8 +5,6 @@
   <string name="profile_name_label">NAZWA KONTA</string>
   <string name="delete_account">Usuń</string>
 
-  <string name="delete_account_confirm_message" translatable="false">Czy na pewno chcesz usunąć konto?</string>
-  <string name="delete_account_confirm_message_with_widgets">Czy na pewno chcesz usunąć konto? Potwierdzenie będzie oznaczało usunięcie powiązanych widżetów.</string>
   <string name="profile_default_name">Domyślne</string>
   <string name="profile_select_active">Aktywne konto</string>
   <string name="profile_act_info">Dotknij konta aby się zalogować</string>
@@ -19,7 +17,6 @@
   <string name="dont_have_account_yet">Nie masz jeszcze konta w Supla Cloud?</string>
 
 
-  <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=QYN932S5UQG8N</string>
   <string name="create_url">https://cloud.supla.org/register?lang=pl</string>
   <string name="delete_url">https://{SERVER_ADDRESS}/db99845855b2ecbfecca9a095062b96c3e27703f?lang=pl</string>
   <string name="forumpage_url">https://forum.supla.org</string>
@@ -125,8 +122,6 @@
   <string name="rate_now">Oceń teraz</string>
   <string name="rate_later">Później</string>
   <string name="rate_no_thanks">Nie, dziękuję</string>
-  <string name="rs_percent_caption">Procent zamknięcia</string>
-  <string name="rs_percent_caption_open">Procent otwarcia</string>
   <string name="roller_shutter_calibrating">Kalibracja…</string>
 
   <string name="add_wizard_is_not_available">Kreator dodawania jest dostępny tylko gdy nawiązano połączenie z serwerem na podstawie wprowadzonego adresu email! (Wyłącz opcje zaawansowane w konfiguracji Twojego konta)</string>
@@ -135,7 +130,6 @@
   <string name="wizard_step1_txt3">Aby kontynuować naciśnij <b>Dalej</b>.</string>
   <string name="next">Dalej</string>
   <string name="start">START</string>
-  <string name="stop">STOP</string>
   <string name="turn_on">Włącz</string>
   <string name="turn_off">Wyłącz</string>
   <string name="wizard_remember_passwd">Zapamiętaj hasło</string>

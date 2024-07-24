@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalMaterialApi::class)
+@file:OptIn(ExperimentalMaterial3Api::class)
 
 package org.supla.android.features.details.detailbase.history.ui
 /*
@@ -39,15 +39,15 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonColors
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.pullrefresh.PullRefreshIndicator
-import androidx.compose.material.pullrefresh.pullRefresh
-import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
+import androidx.compose.material3.pulltorefresh.pullToRefresh
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -79,8 +79,6 @@ import org.supla.android.data.model.chart.style.ChartStyle
 import org.supla.android.data.model.chart.style.ThermometerChartStyle
 import org.supla.android.data.model.general.RangeValueType
 import org.supla.android.data.source.local.calendar.Hour
-import org.supla.android.extensions.customOuterShadow
-import org.supla.android.extensions.toPx
 import org.supla.android.extensions.valuesFormatter
 import org.supla.android.features.details.detailbase.history.HistoryDetailViewState
 import org.supla.android.ui.dialogs.DatePickerDialog
@@ -170,7 +168,7 @@ fun HistoryDetail(viewModel: HistoryDetailProxy) {
       Text(
         text = stringResource(id = R.string.history_disabled),
         textAlign = TextAlign.Center,
-        style = MaterialTheme.typography.body1,
+        style = MaterialTheme.typography.bodyLarge,
         modifier = Modifier
           .fillMaxWidth()
           .padding(all = Distance.default)
@@ -181,15 +179,16 @@ fun HistoryDetail(viewModel: HistoryDetailProxy) {
 
 @Composable
 private fun DataSetsAndFilters(viewState: HistoryDetailViewState, viewModel: HistoryDetailProxy) {
-  val pullRefreshState = rememberPullRefreshState(
-    refreshing = viewState.loading,
-    onRefresh = { viewModel.refresh() },
-    refreshThreshold = 58.dp
-  )
+  val pullToRefreshState = rememberPullToRefreshState()
 
   Box(
     modifier = Modifier
-      .pullRefresh(pullRefreshState)
+      .pullToRefresh(
+        isRefreshing = viewState.loading,
+        onRefresh = { viewModel.refresh() },
+        state = pullToRefreshState,
+        threshold = 58.dp
+      )
       .fillMaxWidth()
   ) {
     // Vertical scroll is needed to make pull refresh working
@@ -205,11 +204,12 @@ private fun DataSetsAndFilters(viewState: HistoryDetailViewState, viewModel: His
       }
     }
 
-    PullRefreshIndicator(
-      refreshing = viewState.loading,
-      state = pullRefreshState,
+    PullToRefreshDefaults.Indicator(
+      state = pullToRefreshState,
+      isRefreshing = viewState.loading,
       modifier = Modifier.align(Alignment.TopCenter),
-      contentColor = MaterialTheme.colors.primary
+      color = MaterialTheme.colorScheme.primary,
+      threshold = 58.dp
     )
   }
 }
@@ -244,7 +244,7 @@ private fun DataSetsRow(content: @Composable RowScope.() -> Unit) =
     modifier = Modifier
       .fillMaxWidth()
       .horizontalScroll(rememberScrollState())
-      .background(color = MaterialTheme.colors.surface)
+      .background(color = MaterialTheme.colorScheme.surface)
       .height(80.dp)
       .padding(
         start = dimensionResource(id = R.dimen.distance_default),
@@ -275,12 +275,12 @@ private fun DataSetItem(
       onClick = onClick,
       colors = if (historyEnabled && dataSet.active) {
         ButtonDefaults.buttonColors(
-          backgroundColor = colorResource(id = dataSet.color),
+          containerColor = colorResource(id = dataSet.color),
           contentColor = colorResource(id = R.color.on_primary)
         )
       } else {
         ButtonDefaults.buttonColors(
-          backgroundColor = colorResource(id = R.color.background),
+          containerColor = colorResource(id = R.color.background),
           contentColor = colorResource(id = dataSet.color)
         )
       }
@@ -304,14 +304,7 @@ private fun DataSetButton(text: String, colors: ButtonColors, borderColor: Color
 
   Button(
     onClick = onClick,
-    modifier = Modifier
-      .height(height)
-      .customOuterShadow(
-        borderRadius = radius,
-        height = height
-          .plus(4.dp)
-          .toPx()
-      ),
+    modifier = Modifier.height(height),
     contentPadding = PaddingValues(horizontal = dimensionResource(id = R.dimen.distance_small)),
     colors = colors,
     shape = RoundedCornerShape(radius),
@@ -321,7 +314,6 @@ private fun DataSetButton(text: String, colors: ButtonColors, borderColor: Color
       text = text,
       fontSize = 14.sp,
       fontFamily = FontFamily(Font(R.font.open_sans_bold)),
-      color = colors.contentColor(enabled = true).value
     )
   }
 }
@@ -352,7 +344,7 @@ private fun BottomPagination(viewState: HistoryDetailViewState, viewModel: Histo
       }
       Text(
         text = it,
-        style = MaterialTheme.typography.caption,
+        style = MaterialTheme.typography.bodySmall,
         textAlign = TextAlign.Center,
         modifier = Modifier.weight(1f)
       )
@@ -407,7 +399,7 @@ fun DateTextField(date: Date?, onClick: () -> Unit) {
       .weight(0.3f)
       .height(36.dp),
     contentPadding = PaddingValues(8.dp),
-    textStyle = MaterialTheme.typography.body2.copy(textAlign = TextAlign.Center),
+    textStyle = MaterialTheme.typography.bodyMedium.copy(textAlign = TextAlign.Center),
     readOnly = true,
     onClicked = onClick
   )
@@ -422,7 +414,7 @@ fun HourTextField(date: Date?, onClick: () -> Unit) {
       .weight(0.18f)
       .height(36.dp),
     contentPadding = PaddingValues(8.dp),
-    textStyle = MaterialTheme.typography.body2.copy(textAlign = TextAlign.Center),
+    textStyle = MaterialTheme.typography.bodyMedium.copy(textAlign = TextAlign.Center),
     readOnly = true,
     onClicked = onClick
   )
@@ -432,8 +424,13 @@ fun HourTextField(date: Date?, onClick: () -> Unit) {
 @Composable
 private fun Preview() {
   SuplaTheme {
-    Box(modifier = Modifier.background(MaterialTheme.colors.background)) {
-      HistoryDetail(PreviewProxy())
+    Box(modifier = Modifier.background(MaterialTheme.colorScheme.background)) {
+      PaginationIcon(
+        onClick = { },
+        icon = R.drawable.ic_double_arrow_right,
+        enabled = true,
+        rotate = true
+      )
     }
   }
 }

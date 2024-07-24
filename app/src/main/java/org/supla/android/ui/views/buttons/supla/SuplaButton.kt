@@ -1,4 +1,4 @@
-package org.supla.android.ui.views.buttons
+package org.supla.android.ui.views.buttons.supla
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -24,15 +24,14 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,13 +41,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.DefaultShadowColor
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
@@ -63,7 +60,7 @@ fun SuplaButton(
   disabled: Boolean = false,
   pressed: Boolean = false,
   colors: SuplaButtonColors = SuplaButtonDefaults.buttonColors(),
-  radius: Dp = dimensionResource(id = R.dimen.button_default_size).div(2),
+  shape: SuplaButtonShape = SuplaButtonDefaults.allRoundedShape(),
   onClick: () -> Unit
 ) {
   SuplaButton(
@@ -71,7 +68,7 @@ fun SuplaButton(
     modifier = modifier,
     disabled = disabled,
     active = pressed,
-    radius = radius,
+    shape = shape,
     colors = colors
   ) {
     Image(
@@ -92,7 +89,7 @@ fun SuplaButton(
   modifier: Modifier = Modifier,
   disabled: Boolean = false,
   pressed: Boolean = false,
-  radius: Dp = dimensionResource(id = R.dimen.button_default_size).div(2),
+  shape: SuplaButtonShape = SuplaButtonDefaults.allRoundedShape(minWidth = 124.dp),
   onClick: () -> Unit
 ) {
   SuplaButton(
@@ -100,8 +97,7 @@ fun SuplaButton(
     modifier = modifier,
     disabled = disabled,
     active = pressed,
-    radius = radius,
-    minWidth = 124.dp
+    shape = shape,
   ) {
     Text(
       text = text,
@@ -116,17 +112,17 @@ fun SuplaButton(
 
 @Composable
 fun SuplaButton(
-  onClick: () -> Unit,
   modifier: Modifier = Modifier,
+  onClick: () -> Unit = {},
+  onTouchDown: () -> Unit = {},
+  onTouchUp: () -> Unit = {},
   disabled: Boolean = false,
   active: Boolean = false,
-  radius: Dp = dimensionResource(id = R.dimen.button_default_size).div(2),
-  minWidth: Dp = radius.times(2),
-  minHeight: Dp = radius.times(2),
+  shape: SuplaButtonShape = SuplaButtonDefaults.allRoundedShape(),
   colors: SuplaButtonColors = SuplaButtonDefaults.buttonColors(),
   content: @Composable BoxScope.(foregroundColor: Color) -> Unit = {}
 ) {
-  val shape = RoundedCornerShape(size = radius)
+  val roundedCornerShape = shape.shape
 
   var pressed by remember { mutableStateOf(false) }
 
@@ -136,28 +132,37 @@ fun SuplaButton(
 
   Box(
     modifier = modifier
-      .defaultMinSize(minWidth = minWidth, minHeight = minHeight)
-      .border(width = 1.dp, color = borderColor, shape = shape)
-      .shadow(elevation = 4.dp, shape = shape, ambientColor = shadowColor, spotColor = shadowColor)
-      .buttonBackground(shape = shape, radius = radius)
+      .defaultMinSize(minWidth = shape.minWidth, minHeight = shape.minHeight)
+      .border(width = 1.dp, color = borderColor, shape = roundedCornerShape)
+      .shadow(elevation = 4.dp, shape = roundedCornerShape, ambientColor = shadowColor, spotColor = shadowColor)
+      .buttonBackground(shape = shape)
       .innerShadow(
         color = colorResource(id = R.color.supla_button_inner_shadow),
         blur = 6.dp,
-        cornersRadius = radius,
         offsetY = 6.dp,
-        active = { active || pressed }
+        active = { active || pressed },
+        topLeftRadius = shape.topStartRadius,
+        topRightRadius = shape.topEndRadius,
+        bottomLeftRadius = shape.bottomStartRadius,
+        bottomRightRadius = shape.bottomEndRadius
       )
-      .pointerInput(onClick) {
+      .pointerInput(onClick, disabled, active) {
         detectTapGestures(
-          onTap = { onClick() },
+          onTap = {
+            if (!disabled) {
+              onClick()
+            }
+          },
           onPress = {
             if (!disabled && !active) {
+              onTouchDown()
               pressed = true
               borderColor = colors.borderPressed
               foregroundColor = colors.contentPressed
               shadowColor = colors.shadowPressed
 
               tryAwaitRelease()
+              onTouchUp()
               pressed = false
               borderColor = colors.border
               foregroundColor = colors.content
@@ -171,104 +176,17 @@ fun SuplaButton(
   }
 }
 
-@Immutable
-class SuplaButtonColors(
-  val border: Color,
-  val borderPressed: Color,
-  val borderDisabled: Color,
-  val content: Color,
-  val contentPressed: Color,
-  val contentDisabled: Color,
-  val shadow: Color,
-  val shadowPressed: Color
-) {
-
-  fun border(active: Boolean, disabled: Boolean) =
-    when {
-      active -> borderPressed
-      disabled -> borderDisabled
-      else -> border
-    }
-
-  fun content(active: Boolean, disabled: Boolean) =
-    when {
-      active -> contentPressed
-      disabled -> contentDisabled
-      else -> content
-    }
-}
-
-object SuplaButtonDefaults {
-  @Composable
-  fun buttonColors(
-    border: Color = MaterialTheme.colorScheme.outline,
-    borderPressed: Color = MaterialTheme.colorScheme.primary,
-    borderDisabled: Color = MaterialTheme.colorScheme.outlineVariant,
-    content: Color = MaterialTheme.colorScheme.onBackground,
-    contentPressed: Color = MaterialTheme.colorScheme.onBackground,
-    contentDisabled: Color = MaterialTheme.colorScheme.outline,
-    shadow: Color = DefaultShadowColor,
-    shadowPressed: Color = MaterialTheme.colorScheme.primary
-  ) = SuplaButtonColors(
-    border = border,
-    borderPressed = borderPressed,
-    borderDisabled = borderDisabled,
-    content = content,
-    contentPressed = contentPressed,
-    contentDisabled = contentDisabled,
-    shadow = shadow,
-    shadowPressed = shadowPressed
-  )
-
-  @Composable
-  fun turnOnColors(
-    border: Color = MaterialTheme.colorScheme.outline,
-    borderPressed: Color = MaterialTheme.colorScheme.primary,
-    borderDisabled: Color = MaterialTheme.colorScheme.outlineVariant,
-    content: Color = MaterialTheme.colorScheme.onBackground,
-    contentPressed: Color = MaterialTheme.colorScheme.primary,
-    contentDisabled: Color = MaterialTheme.colorScheme.outline,
-    shadow: Color = DefaultShadowColor,
-    shadowPressed: Color = MaterialTheme.colorScheme.primary
-  ) = SuplaButtonColors(
-    border = border,
-    borderPressed = borderPressed,
-    borderDisabled = borderDisabled,
-    content = content,
-    contentPressed = contentPressed,
-    contentDisabled = contentDisabled,
-    shadow = shadow,
-    shadowPressed = shadowPressed
-  )
-
-  @Composable
-  fun turnOffColors(
-    border: Color = MaterialTheme.colorScheme.outline,
-    borderPressed: Color = MaterialTheme.colorScheme.error,
-    borderDisabled: Color = MaterialTheme.colorScheme.outlineVariant,
-    content: Color = MaterialTheme.colorScheme.onBackground,
-    contentPressed: Color = MaterialTheme.colorScheme.error,
-    contentDisabled: Color = MaterialTheme.colorScheme.outline,
-    shadow: Color = DefaultShadowColor,
-    shadowPressed: Color = MaterialTheme.colorScheme.error
-  ) = SuplaButtonColors(
-    border = border,
-    borderPressed = borderPressed,
-    borderDisabled = borderDisabled,
-    content = content,
-    contentPressed = contentPressed,
-    contentDisabled = contentDisabled,
-    shadow = shadow,
-    shadowPressed = shadowPressed
-  )
-}
-
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
-@Preview(name = "Light mode", showBackground = true)
-@Preview(name = "Dark mode", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
+@Preview(name = "Light mode", showBackground = true, widthDp = 220)
+@Preview(name = "Dark mode", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true, widthDp = 220)
 private fun Preview() {
   SuplaTheme {
-    Column(verticalArrangement = Arrangement.spacedBy(Distance.default), modifier = Modifier.padding(Distance.default)) {
+    FlowRow(
+      verticalArrangement = Arrangement.spacedBy(Distance.small),
+      horizontalArrangement = Arrangement.spacedBy(Distance.tiny),
+      modifier = Modifier.padding(Distance.default)
+    ) {
       SuplaButton(onClick = {})
       SuplaButton(onClick = {}, disabled = true)
       SuplaButton(onClick = {}, active = true)
@@ -283,6 +201,22 @@ private fun Preview() {
         onClick = {},
         colors = SuplaButtonDefaults.buttonColors(content = MaterialTheme.colorScheme.primary),
         disabled = true
+      )
+      SuplaButton(
+        iconRes = R.drawable.ic_power_button,
+        onClick = {},
+        shape = SuplaButtonDefaults.allRoundedShape(minHeight = 100.dp)
+      )
+      SuplaButton(
+        iconRes = R.drawable.ic_power_button,
+        onClick = {},
+        shape = SuplaButtonDefaults.topRoundedShape(minHeight = 100.dp)
+      )
+      SuplaButton(
+        iconRes = R.drawable.ic_power_button,
+        onClick = {},
+        shape = SuplaButtonDefaults.topRoundedShape(minHeight = 100.dp),
+        pressed = true
       )
       SuplaButton(text = "Label", onClick = {})
       SuplaButton(text = "Label", onClick = {}, disabled = true)

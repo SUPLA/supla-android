@@ -1,6 +1,5 @@
 <resources>
 
-  <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=L4N7RSWME6LG2</string>
   <string name="create_url">https://cloud.supla.org/register?lang=pt</string>
   <string name="delete_url">https://{SERVER_ADDRESS}/db99845855b2ecbfecca9a095062b96c3e27703f?lang=pt</string>
 
@@ -71,7 +70,6 @@
   <string name="rate_now">Avalie agora</string>
   <string name="rate_later">Mais tarde</string>
   <string name="rate_no_thanks">Não, obrigado</string>
-  <string name="rs_percent_caption">Percentagem do fecho</string>
   <string name="roller_shutter_calibrating">Calibrar…</string>
   <string name="add_wizard_is_not_available">A Opção Adicionar Assistente só está disponível quando for estabelecida uma ligação ao servidor com base no endereço de e-mail inscrito! (Desative as opções avançadas na configuração da sua conta)</string>
   <string name="wizard_step1_txt3">Para continuar carregue em <b>Continuar</b>.</string>
@@ -366,8 +364,6 @@
   <string name="add_account">Adicionar conta</string>
   <string name="edit_account">Editar Conta</string>
   <string name="delete_account">Eliminar</string>
-  <string name="delete_account_confirm_message">Tem a certeza de que quer eliminar a sua conta?</string>
-  <string name="delete_account_confirm_message_with_widgets">Tem a certeza de que quer eliminar a sua conta? A confirmação significará que os widgets associados serão eliminados.</string>
   <string name="cfg_label_access_id_auth">Identificador</string>
   <string name="cfg_channel_height">Altura do canal</string>
   <string name="cfg_temperature_unit">Unidade de temperatura</string>
@@ -375,7 +371,6 @@
   <string name="profile">A sua conta</string>
   <string name="profile_plural">As suas contas</string>
   <string name="menubar_appsettings">Configurações</string>
-  <string name="rs_percent_caption_open">Percentagem de abertura</string>
   <string name="em_chart_all_phases">Fase 1+2+3</string>
   <string name="widget_configure_title">Configuração do Widget</string>
   <string name="widget_configure_profile_label">Conta</string>

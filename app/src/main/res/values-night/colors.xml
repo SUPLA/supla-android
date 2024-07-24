@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="primary">#54E08A</color>
-    <color name="on_primary">#131313</color>
+    <color name="primary">#12a71e</color>
+    <color name="on_primary">#FFFFFF</color>
     <color name="secondary">#54A6FF</color>
     <color name="primary_container">#003910</color>
     <color name="on_primary_container">#E4E4E4</color>
-    <color name="primary_variant">@color/supla</color>
     <color name="surface">#262626</color>
     <color name="on_surface">#E4E4E4</color>
     <color name="surface_variant">#191B1A</color>
@@ -23,7 +22,6 @@
     <color name="old_switch_track">#42d3d2d2</color>
     <color name="error">#EF6153</color>
     <color name="error_container">#270603</color>
-    <color name="control_button_background">#FF262626</color>
     <color name="supla_button_background_outside">#131313</color>
     <color name="supla_button_inner_shadow">#00000000</color>
 
@@ -59,9 +57,7 @@
 
     <!-- Thermostat -->
     <color name="thermostat_control_circle_background">#313131</color>
-    <color name="thermostat_control_button_background">#313131</color>
 
     <!-- Other -->
     <color name="vl_infotext">#808080</color>
-    <color name="rgbw_button_border">#F5F6F7</color>
 </resources>

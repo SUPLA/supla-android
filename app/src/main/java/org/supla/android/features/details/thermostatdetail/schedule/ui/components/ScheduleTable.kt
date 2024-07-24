@@ -25,7 +25,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -93,7 +93,7 @@ fun ScheduleTable(
 ) {
   val context = LocalContext.current
   // colors
-  val textColor = MaterialTheme.colors.onBackground
+  val textColor = MaterialTheme.colorScheme.onBackground
   val colorDisabled = colorResource(id = R.color.disabled)
   val colorHighlight = remember { Color(0x1F767880) }
   // texts with sizes
@@ -334,7 +334,7 @@ private data class DrawableText<T>(
 
 private fun mutableStateListOfDrawableDayOfWeek(context: Context, textMeasurer: TextMeasurer) =
   mutableStateListOf<DrawableText<DayOfWeek>>().also { list ->
-    DayOfWeek.values().forEach { list.add(DrawableText.get(it, context.resources, textMeasurer, false)) }
+    DayOfWeek.entries.forEach { list.add(DrawableText.get(it, context.resources, textMeasurer, false)) }
   }
 
 private fun mutableStateListOfDrawableHour(textMeasurer: TextMeasurer) =

@@ -21,7 +21,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -30,9 +30,9 @@ import androidx.compose.ui.unit.dp
 import org.supla.android.R
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.features.details.windowdetail.base.ui.ShadingSystemAction
-import org.supla.android.ui.views.buttons.animatable.DownControlIcon
-import org.supla.android.ui.views.buttons.animatable.UpControlIcon
-import org.supla.android.ui.views.buttons.animatable.UpDownControlButton
+import org.supla.android.ui.views.buttons.supla.DownControlIcon
+import org.supla.android.ui.views.buttons.supla.UpControlIcon
+import org.supla.android.ui.views.buttons.supla.UpDownControlButton
 
 @Composable
 fun HoldToMoveVerticalButtons(enabled: Boolean, modifier: Modifier = Modifier, onAction: (ShadingSystemAction) -> Unit) =
@@ -62,7 +62,7 @@ private fun Preview() {
     Row(
       horizontalArrangement = Arrangement.spacedBy(8.dp),
       modifier = Modifier
-        .background(MaterialTheme.colors.background)
+        .background(MaterialTheme.colorScheme.background)
         .padding(dimensionResource(id = R.dimen.distance_default))
     ) {
       HoldToMoveVerticalButtons(enabled = true) {}

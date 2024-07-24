@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- new color definitions start here -->
-    <color name="supla_green">#12a71e</color>
-    <color name="supla">#00d151</color>
-
-    <color name="primary">@color/supla_green</color>
+    <color name="primary">#12a71e</color>
     <color name="on_primary">#ffffff</color>
     <color name="secondary">#007AFF</color>
     <color name="primary_container">@color/primary</color>
     <color name="on_primary_container">@color/on_primary</color>
-    <color name="primary_variant">@color/supla</color>
     <color name="surface">#ffffff</color>
     <color name="on_surface">#282828</color>
     <color name="surface_variant">#EDFBEE</color>
@@ -28,7 +24,6 @@
     <color name="disabledOverlay">#DDFFFFFF</color>
     <color name="separator">#AAAAAA</color>
     <color name="old_switch_track">#42221f1f</color>
-    <color name="control_button_background">#FFF4F4F4</color>
     <color name="supla_button_background_outside">#F4F4F4</color>
     <color name="supla_button_inner_shadow">#B3B4B7BA</color>
 
@@ -38,7 +33,6 @@
     <color name="gray_light">#DCDEE0</color>
     <color name="gray_lighter">#EFEFF0</color>
     <color name="blue">#007AFF</color>
-    <color name="black">#000000</color>
     <color name="light_blue">#8C9DFF</color>
     <color name="light_green">#B0E0A8</color>
     <color name="light_red">#FFAA8C</color>
@@ -70,11 +64,8 @@
 
     <!-- Thermostat -->
     <color name="thermostat_control_circle_background">#D2D2D2</color>
-    <color name="thermostat_control_button_background">#F4F4F4</color>
 
     <!-- new color definitions end here -->
-
-    <color name="activity_status_bg_err">#fee700</color>
 
     <color name="menuseparator">#fafbfc</color>
     <color name="notification_bg">#fee700</color>
@@ -95,14 +86,9 @@
     <color name="vl_btn_disabled">#CECECE</color>
     <color name="vl_infotext">#606060</color>
     <color name="vl_infoline">@color/disabled</color>
-    <color name="rgbw_button_border">#FFFFFF</color>
-
-    <color name="diw_settings_bg">#ffededed</color>
 
     <color name="zwave_info_label_bg">#FFE804</color>
     <color name="zwave_info_label_text">#000000</color>
-    <color name="zwave_info_table_bg">@color/background</color>
-    <color name="zwave_info_table_text">#000000</color>
 
     <color name="channelstate_infoline">@color/disabled</color>
 

@@ -100,14 +100,14 @@ class CandleChartData(
         ChartEntryType.HUMIDITY -> YAxis.AxisDependency.RIGHT
         else -> YAxis.AxisDependency.LEFT
       }
-      highLightColor = ResourcesCompat.getColor(resources, R.color.primary_variant, null)
+      highLightColor = ResourcesCompat.getColor(resources, R.color.primary, null)
 
       shadowColor = ResourcesCompat.getColor(resources, R.color.on_background, null)
       shadowWidth = 0.7f
 
       decreasingColor = ResourcesCompat.getColor(resources, R.color.error, null)
       decreasingPaintStyle = Paint.Style.FILL
-      increasingColor = ResourcesCompat.getColor(resources, R.color.supla_green, null)
+      increasingColor = ResourcesCompat.getColor(resources, R.color.primary, null)
       increasingPaintStyle = Paint.Style.FILL
 
       neutralColor = ResourcesCompat.getColor(resources, R.color.blue, null)

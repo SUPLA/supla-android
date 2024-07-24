@@ -23,7 +23,7 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -122,7 +122,7 @@ private fun Preview() {
   SuplaTheme {
     Box(
       modifier = Modifier
-        .background(MaterialTheme.colors.background)
+        .background(MaterialTheme.colorScheme.background)
         .height(700.dp)
     ) {
       WindowView(
@@ -147,7 +147,7 @@ private fun Preview_Horizontal() {
   SuplaTheme {
     Box(
       modifier = Modifier
-        .background(MaterialTheme.colors.background)
+        .background(MaterialTheme.colorScheme.background)
         .height(700.dp)
     ) {
       WindowView(
@@ -173,7 +173,7 @@ private fun Preview_High() {
   SuplaTheme {
     Box(
       modifier = Modifier
-        .background(MaterialTheme.colors.background)
+        .background(MaterialTheme.colorScheme.background)
         .height(900.dp)
     ) {
       WindowView(
@@ -198,7 +198,7 @@ private fun Preview_Small() {
   SuplaTheme {
     Box(
       modifier = Modifier
-        .background(MaterialTheme.colors.background)
+        .background(MaterialTheme.colorScheme.background)
         .height(470.dp)
     ) {
       WindowView(
@@ -223,7 +223,7 @@ private fun Preview_Small_Horizontal() {
   SuplaTheme {
     Box(
       modifier = Modifier
-        .background(MaterialTheme.colors.background)
+        .background(MaterialTheme.colorScheme.background)
         .height(470.dp)
     ) {
       WindowView(

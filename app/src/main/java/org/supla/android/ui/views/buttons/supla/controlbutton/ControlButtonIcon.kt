@@ -1,4 +1,4 @@
-package org.supla.android.ui.views.buttons.animatable
+package org.supla.android.ui.views.buttons.supla.controlbutton
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,17 +17,23 @@ package org.supla.android.ui.views.buttons.animatable
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.annotation.ColorRes
-import org.supla.android.R
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 
-enum class AnimatableButtonType(
-  val value: Int,
-  @ColorRes val textColor: Int,
-  @ColorRes val pressedColor: Int,
-  @ColorRes val inactiveColor: Int
-) {
-  POSITIVE(0, R.color.on_background, R.color.supla, R.color.on_background),
-  NEGATIVE(1, R.color.error, R.color.error, R.color.on_background),
-  BLUE(3, R.color.blue, R.color.blue, R.color.on_background),
-  NEUTRAL(4, R.color.black, R.color.black, R.color.black)
-}
+@Composable
+fun ControlButtonIcon(
+  iconRes: Int,
+  modifier: Modifier = Modifier,
+  textColor: Color = MaterialTheme.colorScheme.onSurface,
+  rotate: Float = 0f
+) = Icon(
+  painter = painterResource(id = iconRes),
+  contentDescription = null,
+  tint = textColor,
+  modifier = modifier.rotate(rotate)
+)

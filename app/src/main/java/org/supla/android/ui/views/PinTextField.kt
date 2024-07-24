@@ -32,8 +32,8 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -102,8 +102,8 @@ private fun PinItemView(
     else -> "•"
   }
   val color = when {
-    isFieldFocused && isItemFocused -> MaterialTheme.colors.primary
-    isError -> MaterialTheme.colors.error
+    isFieldFocused && isItemFocused -> MaterialTheme.colorScheme.primary
+    isError -> MaterialTheme.colorScheme.error
     else -> colorResource(id = R.color.disabled)
   }
 
@@ -113,11 +113,11 @@ private fun PinItemView(
       .width(48.dp)
       .height(56.dp)
       .border(1.dp, color, shape)
-      .background(MaterialTheme.colors.surface, shape)
+      .background(MaterialTheme.colorScheme.surface, shape)
       .padding(2.dp)
       .wrapContentHeight(align = Alignment.CenterVertically),
     text = char,
-    style = MaterialTheme.typography.h4,
+    style = MaterialTheme.typography.headlineLarge,
     color = color,
     textAlign = TextAlign.Center,
   )
@@ -130,7 +130,7 @@ private fun Preview() {
     Column(
       verticalArrangement = Arrangement.spacedBy(8.dp),
       modifier = Modifier
-        .background(MaterialTheme.colors.background)
+        .background(MaterialTheme.colorScheme.background)
         .padding(16.dp)
     ) {
       PinTextField(pin = "")

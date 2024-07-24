@@ -22,8 +22,6 @@ import static java.lang.String.format;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.View;
@@ -36,6 +34,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import androidx.core.content.res.ResourcesCompat;
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.charts.PieChart;
 import dagger.hilt.android.AndroidEntryPoint;
@@ -260,13 +259,7 @@ public class ChannelDetailEM extends DetailLayout
   }
 
   private void setImgBackground(ImageView img, int bg) {
-    Drawable d = getResources().getDrawable(bg);
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-      img.setBackground(d);
-    } else {
-      img.setBackgroundDrawable(d);
-    }
+    img.setBackground(ResourcesCompat.getDrawable(getResources(), bg, null));
   }
 
   private void showChart(boolean show) {
@@ -653,14 +646,7 @@ public class ChannelDetailEM extends DetailLayout
   }
 
   private void setBtnBackground(Button btn, int i) {
-
-    Drawable d = getResources().getDrawable(i);
-
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-      btn.setBackgroundDrawable(d);
-    } else {
-      btn.setBackground(d);
-    }
+    btn.setBackground(ResourcesCompat.getDrawable(getResources(), i, null));
   }
 
   @Override

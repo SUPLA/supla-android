@@ -33,6 +33,10 @@ public class Trace {
     if (loggingLevel() >= ERRORS_WARNINGS_INFO_DEBUG) Log.d(tag, msg);
   }
 
+  public static void d(String tag, String msg, Throwable throwable) {
+    if (loggingLevel() >= ERRORS_WARNINGS_INFO_DEBUG) Log.d(tag, msg, throwable);
+  }
+
   private static int loggingLevel() {
     if (BuildConfig.DEBUG) {
       return ERRORS_WARNINGS_INFO_DEBUG;

@@ -26,8 +26,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
 import org.supla.android.extensions.buttonBackground
+import org.supla.android.ui.views.buttons.supla.SuplaButtonDefaults
 
 @Composable
 fun TemperatureControlButton(
@@ -57,11 +58,11 @@ fun TemperatureControlButton(
       .width(size)
       .height(size)
       .shadow(elevation = 4.dp, shape = CircleShape)
-      .buttonBackground(CircleShape, size.div(2))
+      .buttonBackground(SuplaButtonDefaults.allRoundedShape(radius = size.div(2)))
       .border(1.dp, if (disabled) MaterialTheme.colorScheme.outlineVariant else color, CircleShape)
       .clickable(
         onClick = { onClick() },
-        indication = if (disabled) null else rememberRipple(),
+        indication = if (disabled) null else ripple(),
         interactionSource = remember { MutableInteractionSource() }
       )
   ) {

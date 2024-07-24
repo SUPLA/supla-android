@@ -109,33 +109,11 @@ public class Encryption {
     return cipher.doFinal(cipherText);
   }
 
-  public static byte[] decryptData(byte[] cipherText, String password) throws Exception {
-    return decryptData(cipherText, password, false);
-  }
-
   public static byte[] decryptDataWithNullOnException(
       byte[] cipherText, String password, boolean deprecatedAlg) {
     byte[] result = null;
     try {
       result = decryptData(cipherText, password, deprecatedAlg);
-    } catch (NoSuchPaddingException e) {
-      e.printStackTrace();
-    } catch (NoSuchAlgorithmException e) {
-      e.printStackTrace();
-    } catch (InvalidParameterSpecException e) {
-      e.printStackTrace();
-    } catch (InvalidAlgorithmParameterException e) {
-      e.printStackTrace();
-    } catch (InvalidKeyException e) {
-      e.printStackTrace();
-    } catch (BadPaddingException e) {
-      e.printStackTrace();
-    } catch (IllegalBlockSizeException e) {
-      e.printStackTrace();
-    } catch (UnsupportedEncodingException e) {
-      e.printStackTrace();
-    } catch (InvalidKeySpecException e) {
-      e.printStackTrace();
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -151,23 +129,7 @@ public class Encryption {
     byte[] result = null;
     try {
       result = encryptData(data, password);
-    } catch (NoSuchAlgorithmException e) {
-      e.printStackTrace();
-    } catch (NoSuchPaddingException e) {
-      e.printStackTrace();
-    } catch (InvalidKeyException e) {
-      e.printStackTrace();
-    } catch (InvalidParameterSpecException e) {
-      e.printStackTrace();
-    } catch (IllegalBlockSizeException e) {
-      e.printStackTrace();
-    } catch (BadPaddingException e) {
-      e.printStackTrace();
-    } catch (UnsupportedEncodingException e) {
-      e.printStackTrace();
-    } catch (InvalidKeySpecException e) {
-      e.printStackTrace();
-    } catch (InvalidAlgorithmParameterException e) {
+    } catch (Exception e) {
       e.printStackTrace();
     }
 

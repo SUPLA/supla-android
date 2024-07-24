@@ -18,6 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import android.content.Context
+import android.content.res.Configuration
 import android.util.AttributeSet
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -26,8 +27,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -138,18 +139,20 @@ private fun SetpointTemperature(data: SlideableListItemData.Thermostat, scale: F
       )
     }
 
-    val subValueSize = MaterialTheme.typography.body2.fontSize.let { max(it, it.times(scale)) }
+    val subValueSize = MaterialTheme.typography.bodyMedium.fontSize.let { max(it, it.times(scale)) }
     Text(
       text = data.subValue,
-      style = MaterialTheme.typography.body2.copy(fontSize = subValueSize)
+      style = MaterialTheme.typography.bodyMedium.copy(fontSize = subValueSize),
+      color = MaterialTheme.colorScheme.onBackground
     )
   }
 
 @Preview
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun Preview() {
   SuplaTheme {
-    Column(modifier = Modifier.background(MaterialTheme.colors.background)) {
+    Column(modifier = Modifier.background(MaterialTheme.colorScheme.background)) {
       Column(
         modifier = Modifier
           .width(600.dp)
@@ -243,12 +246,13 @@ private fun Preview() {
 }
 
 @Preview(device = Devices.NEXUS_5)
+@Preview(device = Devices.NEXUS_5, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun Preview_Narrow() {
   SuplaTheme {
     Column(
       modifier = Modifier
-        .background(MaterialTheme.colors.background)
+        .background(MaterialTheme.colorScheme.background)
         .width(350.dp)
     ) {
       Column(

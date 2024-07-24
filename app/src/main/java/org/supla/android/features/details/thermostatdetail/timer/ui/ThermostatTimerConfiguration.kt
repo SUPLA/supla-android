@@ -35,13 +35,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
+import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -86,7 +86,7 @@ fun ThermostatTimerConfiguration(state: TimerDetailViewState, viewProxy: TimerDe
     modifier = Modifier
       .fillMaxWidth()
       .fillMaxHeight()
-      .background(MaterialTheme.colors.surface)
+      .background(MaterialTheme.colorScheme.surface)
   ) {
     val bottomPadding = if (state.editTime) 144.dp else 80.dp
     Column(
@@ -133,8 +133,8 @@ fun ThermostatTimerConfiguration(state: TimerDetailViewState, viewProxy: TimerDe
 private fun HeaderText(text: String, modifier: Modifier = Modifier) =
   Text(
     text = text.uppercase(),
-    color = MaterialTheme.colors.gray,
-    style = MaterialTheme.typography.body2,
+    color = MaterialTheme.colorScheme.gray,
+    style = MaterialTheme.typography.bodyMedium,
     modifier = modifier
   )
 
@@ -148,8 +148,8 @@ private fun TemperatureSelector(state: TimerDetailViewState, viewProxy: TimerDet
     Spacer(modifier = Modifier.weight(1f))
     Text(
       text = LocalContext.current.valuesFormatter.getTemperatureString(state.currentTemperature),
-      style = MaterialTheme.typography.button,
-      color = MaterialTheme.colors.onBackground
+      style = MaterialTheme.typography.labelLarge,
+      color = MaterialTheme.colorScheme.onBackground
     )
     Spacer(modifier = Modifier.weight(1f))
     CaptionText(text = stringResource(id = R.string.details_timer_max_temp))
@@ -230,8 +230,8 @@ private fun EditModeButton(state: TimerDetailViewState, onClick: () -> Unit) =
     )
     Text(
       text = if (state.showCalendar) stringResource(R.string.details_timer_counter) else stringResource(R.string.details_timer_calendar),
-      style = MaterialTheme.typography.body2,
-      color = MaterialTheme.colors.onBackground
+      style = MaterialTheme.typography.bodyMedium,
+      color = MaterialTheme.colorScheme.onBackground
     )
   }
 
@@ -248,8 +248,8 @@ private fun TimerSelector(state: TimerDetailViewState, viewProxy: TimerDetailVie
 private fun InfoText(state: TimerDetailViewState) =
   Text(
     text = state.timerInfoText(LocalContext.current),
-    style = MaterialTheme.typography.body2,
-    color = MaterialTheme.colors.gray,
+    style = MaterialTheme.typography.bodyMedium,
+    color = MaterialTheme.colorScheme.gray,
     textAlign = TextAlign.Center,
     modifier = Modifier
       .fillMaxWidth()
@@ -306,8 +306,8 @@ fun TimerSelectorCalendar(state: TimerDetailViewState, viewProxy: TimerDetailVie
 private fun CaptionText(text: String, modifier: Modifier = Modifier) =
   Text(
     text = text.uppercase(),
-    style = MaterialTheme.typography.caption,
-    color = MaterialTheme.colors.gray,
+    style = MaterialTheme.typography.bodySmall,
+    color = MaterialTheme.colorScheme.gray,
     modifier = modifier
   )
 

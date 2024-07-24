@@ -1,6 +1,5 @@
 <resources>
 
-  <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=QYN932S5UQG8N</string>
   <string name="create_url">https://cloud.supla.org/register?lang=nb</string>
   <string name="delete_url">https://{SERVER_ADDRESS}/db99845855b2ecbfecca9a095062b96c3e27703f?lang=nb</string>
 
@@ -78,7 +77,6 @@
   <string name="rate_now">Vurder nå</string>
   <string name="rate_later">Senere</string>
   <string name="rate_no_thanks">Nei takk</string>
-  <string name="rs_percent_caption">Prosent av stenging</string>
   <string name="roller_shutter_calibrating">Kalibrering…</string>
 
   <string name="add_wizard_is_not_available">Veiviseren legg er kun tilgjengelig når tilkobling til serveren er etablert basert på e-postadressen som er angitt! (Deaktiver avanserte innstillinger i kontokonfigurasjonen din).</string>
@@ -379,8 +377,6 @@
   <string name="add_account">Legg til konto</string>
   <string name="edit_account">Rediger konto</string>
   <string name="delete_account">Slett</string>
-  <string name="delete_account_confirm_message">Er du sikker på at du vil slette kontoen?</string>
-  <string name="delete_account_confirm_message_with_widgets">Er du sikker på at du vil slette kontoen? Bekreftelsen vil bety eliminasjon av relaterte widgets.</string>
   <string name="cfg_label_access_id_auth">ID</string>
   <string name="cfg_channel_height">Kanalhøyde</string>
   <string name="cfg_temperature_unit">Temperaturenhet</string>
@@ -388,7 +384,6 @@
   <string name="profile">Kontoen din</string>
   <string name="profile_plural">Dine kontoer</string>
   <string name="menubar_appsettings">Innstillinger</string>
-  <string name="rs_percent_caption_open">Åpningsprosent</string>
   <string name="em_chart_phase_n">Fase %d</string>
   <string name="em_chart_all_phases">Fase 1 + 2 + 3</string>
   <string name="widget_configure_title">Widget-konfigurasjon</string>

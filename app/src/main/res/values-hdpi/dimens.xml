@@ -1,6 +1,5 @@
 <resources>
     <!-- layout element dimensions, from new design -->
     <dimen name="top_bar_height">44dp</dimen>
-    <dimen name="form_element_spacing">12dp</dimen>
     <dimen name="new_screen_margin">24dp</dimen>
 </resources>

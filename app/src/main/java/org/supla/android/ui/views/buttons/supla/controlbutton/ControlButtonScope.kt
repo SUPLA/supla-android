@@ -1,4 +1,4 @@
-package org.supla.android.ui.views.buttons.animatable.controlbutton
+package org.supla.android.ui.views.buttons.supla.controlbutton
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 

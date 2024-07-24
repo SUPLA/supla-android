@@ -16,6 +16,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -48,7 +49,7 @@ class TimerProgressView @JvmOverloads constructor(
   defStyleAttr: Int = 0
 ) : AbstractComposeView(context, attrs, defStyleAttr) {
 
-  var progress by mutableStateOf(0f)
+  var progress by mutableFloatStateOf(0f)
   var indeterminate by mutableStateOf(false)
 
   @Composable
@@ -75,7 +76,7 @@ private val progressRadius = 100.dp
 fun TimerProgressView(progress: Float, indeterminate: Boolean) {
   val progressBackgroundColor = MaterialTheme.colorScheme.surface
   val progressColor = MaterialTheme.colorScheme.primary
-  val progressPointColor = colorResource(id = R.color.supla_green)
+  val progressPointColor = colorResource(id = R.color.primary)
   val pointShadowColor = MaterialTheme.colorScheme.progressPointShadow
   val progressAlpha = convertProgressToAngle(progress)
   val position = remember {

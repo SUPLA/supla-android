@@ -159,7 +159,7 @@ class NotificationsHelper @Inject constructor(
       .setSmallIcon(R.drawable.logo)
       .setContentTitle(title)
       .setContentText(text)
-      .setColor(ResourcesCompat.getColor(context.resources, R.color.supla, null))
+      .setColor(ResourcesCompat.getColor(context.resources, R.color.primary, null))
       .setContentIntent(PendingIntent.getActivity(context, 0, intent, flag))
       .setAutoCancel(true)
       .setStyle(NotificationCompat.BigTextStyle().bigText(text))

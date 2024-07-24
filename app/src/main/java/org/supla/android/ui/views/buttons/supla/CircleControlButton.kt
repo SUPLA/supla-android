@@ -1,4 +1,4 @@
-package org.supla.android.ui.views.buttons.animatable
+package org.supla.android.ui.views.buttons.supla
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -42,9 +42,6 @@ import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.extensions.disabledOverlay
-import org.supla.android.ui.views.buttons.SuplaButton
-import org.supla.android.ui.views.buttons.SuplaButtonColors
-import org.supla.android.ui.views.buttons.SuplaButtonDefaults
 
 class CircleControlButtonView @JvmOverloads constructor(
   context: Context,
@@ -54,7 +51,7 @@ class CircleControlButtonView @JvmOverloads constructor(
 
   var icon: Bitmap? by mutableStateOf(null)
   var text: String? by mutableStateOf(null)
-  var type: AnimatableButtonType by mutableStateOf(AnimatableButtonType.POSITIVE)
+  var type: Type by mutableStateOf(Type.POSITIVE)
   var disabled: Boolean by mutableStateOf(false)
   var clickListener: () -> Unit = { }
 
@@ -62,7 +59,7 @@ class CircleControlButtonView @JvmOverloads constructor(
     context.theme.obtainStyledAttributes(attrs, R.styleable.PowerButtonView, 0, 0).apply {
       try {
         text = getString(R.styleable.PowerButtonView_text)
-        type = getInteger(R.styleable.PowerButtonView_type, 0).toAnimatableButtonType()
+        type = Type.from(getInteger(R.styleable.PowerButtonView_type, 0))
       } finally {
         recycle()
       }
@@ -72,12 +69,34 @@ class CircleControlButtonView @JvmOverloads constructor(
   @Composable
   override fun Content() {
     SuplaTheme {
-      val colors = if (type == AnimatableButtonType.POSITIVE) {
-        SuplaButtonDefaults.turnOnColors(contentDisabled = MaterialTheme.colorScheme.onBackground)
-      } else {
-        SuplaButtonDefaults.turnOffColors(contentDisabled = MaterialTheme.colorScheme.onBackground)
+      CircleControlButton(
+        modifier = Modifier.padding(Distance.tiny),
+        icon = icon,
+        text = text,
+        colors = type.colors(),
+        onClick = clickListener,
+        disabled = disabled
+      )
+    }
+  }
+
+  enum class Type(val value: Int) {
+    POSITIVE(0), NEGATIVE(1);
+
+    @Composable
+    fun colors(): SuplaButtonColors = when (this) {
+      POSITIVE -> SuplaButtonDefaults.primaryColors(contentDisabled = MaterialTheme.colorScheme.onBackground)
+      NEGATIVE -> SuplaButtonDefaults.errorColors(contentDisabled = MaterialTheme.colorScheme.onBackground)
+    }
+
+    companion object {
+      fun from(value: Int): Type {
+        return if (value == NEGATIVE.value) {
+          NEGATIVE
+        } else {
+          POSITIVE
+        }
       }
-      CircleControlButton(modifier = Modifier.padding(Distance.tiny), icon = icon, text = text, colors = colors, onClick = clickListener, disabled = disabled)
     }
   }
 }
@@ -96,7 +115,7 @@ private fun CircleControlButton(
     modifier = modifier,
     disabled = disabled,
     colors = colors,
-    radius = 60.dp
+    shape = SuplaButtonDefaults.allRoundedShape(radius = 60.dp)
   ) { contentColor ->
     Column(
       modifier = Modifier
