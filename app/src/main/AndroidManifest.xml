@@ -12,6 +12,7 @@
   <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
   <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
   <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE" android:minSdkVersion="34" />
 
   <uses-feature android:name="android.hardware.wifi" />
   <supports-screens
@@ -103,16 +104,14 @@
 
     <activity
       android:name=".widget.onoff.configuration.OnOffWidgetConfigurationActivity"
-      android:exported="true"
-      android:theme="@style/AppTheme.Light.Widget">
+      android:exported="true">
       <intent-filter>
         <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
       </intent-filter>
     </activity>
     <activity
       android:name=".widget.single.configuration.SingleWidgetConfigurationActivity"
-      android:exported="true"
-      android:theme="@style/AppTheme.Light.Widget">
+      android:exported="true">
       <intent-filter>
         <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
       </intent-filter>
@@ -125,6 +124,10 @@
         <action android:name="com.google.firebase.MESSAGING_EVENT" />
       </intent-filter>
     </service>
+
+    <service
+      android:name="androidx.work.impl.foreground.SystemForegroundService"
+      android:foregroundServiceType="connectedDevice" />
 
     <provider
       android:name="androidx.startup.InitializationProvider"

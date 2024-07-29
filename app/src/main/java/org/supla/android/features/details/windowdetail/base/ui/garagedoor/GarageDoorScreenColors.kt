@@ -40,7 +40,7 @@ data class GarageDoorScreenColors(
         slatBackground = colorResource(id = R.color.roller_shutter_slat_background),
         slatBorder = colorResource(id = R.color.roller_shutter_slat_border),
         markerBorder = colorResource(id = R.color.on_background),
-        markerBackground = colorResource(id = R.color.primary_variant),
+        markerBackground = colorResource(id = R.color.primary),
         disabledOverlay = colorResource(id = R.color.roller_shutter_disabled_overlay)
       )
   }

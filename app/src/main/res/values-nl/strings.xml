@@ -1,6 +1,5 @@
 <resources>
 
-  <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=QYN932S5UQG8N</string>
   <string name="create_url">https://cloud.supla.org/register?lang=nl</string>
   <string name="delete_url">https://{SERVER_ADDRESS}/db99845855b2ecbfecca9a095062b96c3e27703f?lang=nl</string>
 
@@ -78,7 +77,6 @@
   <string name="rate_now">Beoordeel het nu</string>
   <string name="rate_later">Later</string>
   <string name="rate_no_thanks">Nee, dank je</string>
-  <string name="rs_percent_caption">Percentage van sluiting</string>
   <string name="roller_shutter_calibrating">Kalibratie…</string>
 
   <string name="add_wizard_is_not_available">De Toevoegen-Wizard is alleen beschikbaar als er op basis van het ingevoerde e-mailadres! een verbinding met de server tot stand is gebracht (Schakel geavanceerde opties in uw accountconfiguratie uit)</string>
@@ -379,8 +377,6 @@
   <string name="add_account">Rekening toevoegen</string>
   <string name="edit_account">Rekening bewerken</string>
   <string name="delete_account">Delete</string>
-  <string name="delete_account_confirm_message">Weet u zeker dat u uw rekening wilt verwijderen?</string>
-  <string name="delete_account_confirm_message_with_widgets">Weet u zeker dat u uw rekening wilt verwijderen? Bevestiging zal betekenen dat de bijbehorende widgets worden verwijderd.</string>
   <string name="cfg_label_access_id_auth">Identifier</string>
   <string name="cfg_channel_height">Kanaalhoogte</string>
   <string name="cfg_temperature_unit">Temperatuur eenheid</string>
@@ -388,7 +384,6 @@
   <string name="profile">Uw rekening</string>
   <string name="profile_plural">Uw rekeningen</string>
   <string name="menubar_appsettings">Voorkeuren</string>
-  <string name="rs_percent_caption_open">Openingspercentage</string>
   <string name="em_chart_phase_n">Fase %d</string>
   <string name="em_chart_all_phases">Fase 1+2+3</string>
   <string name="widget_configure_title">Widget configuratie</string>

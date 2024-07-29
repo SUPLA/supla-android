@@ -302,7 +302,7 @@ public abstract class SuplaRestApiClientTask extends AsyncTask {
       conn.connect();
       try {
         Trace.d(log_tag, "CODE: " + conn.getResponseCode());
-        Trace.d(log_tag, "URL: " + url.toString());
+        Trace.d(log_tag, "URL: " + url);
 
         int TotalCount;
         try {

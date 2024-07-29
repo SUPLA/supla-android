@@ -24,13 +24,11 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 
 public class DigiglassController extends View {
 
@@ -88,7 +86,6 @@ public class DigiglassController extends View {
     init();
   }
 
-  @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   public DigiglassController(
       Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);

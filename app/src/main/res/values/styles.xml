@@ -11,27 +11,16 @@
   </style>
 
   <style name="AppTheme.Light" parent="AppTheme">
-    <item name="colorPrimary">@color/supla_green</item>
-    <item name="colorPrimaryDark">@color/supla_green</item>
-    <item name="brandPrimaryForegroundColor">#ffffff</item>
-    <item name="brandPrimaryBackgroundColor">@color/supla_green</item>
-    <item name="linkColor">#007AFF</item>
-    <item name="labelColor">@color/gray</item>
-    <item name="switcherBackgroundColor">@color/gray_lighter</item>
+    <item name="colorPrimary">@color/primary</item>
     <item name="drawerArrowStyle">@style/AppTheme.ToolbarArrow</item>
   </style>
 
   <style name="AppTheme.ToolbarArrow" parent="Widget.AppCompat.DrawerArrowToggle">
-    <item name="color">@color/on_primary</item>
-  </style>
-
-  <style name="AppTheme.Light.Widget" parent="AppTheme.Light">
-    <item name="colorPrimary">@color/supla_green</item>
-    <item name="colorPrimaryDark">@color/layout_background</item>
+    <item name="color">@color/on_primary_container</item>
   </style>
 
   <style name="MenuBarTitle" parent="AppTheme.TextAppearance.Subtitle1">
-    <item name="android:textColor">?attr/brandPrimaryForegroundColor</item>
+    <item name="android:textColor">@color/on_primary_container</item>
     <item name="android:gravity">center</item>
     <item name="android:layout_gravity">center</item>
   </style>
@@ -42,7 +31,7 @@
   </style>
 
   <style name="SuplaToolbarStyle" parent="@style/AppTheme">
-    <item name="colorControlNormal">@color/on_primary</item>
+    <item name="colorControlNormal">@color/on_primary_container</item>
   </style>
 
   <style name="AppTheme.EditText">

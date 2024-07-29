@@ -1,6 +1,5 @@
 <resources>
 
-  <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=QYN932S5UQG8N</string>
   <string name="create_url">https://cloud.supla.org/register?lang=ro</string>
   <string name="delete_url">https://{SERVER_ADDRESS}/db99845855b2ecbfecca9a095062b96c3e27703f?lang=ro</string>
 
@@ -78,7 +77,6 @@
   <string name="rate_now">Evaluează acum</string>
   <string name="rate_later">Mai târziu</string>
   <string name="rate_no_thanks">Nu, mulțumesc</string>
-  <string name="rs_percent_caption">Procentul de închidere</string>
   <string name="roller_shutter_calibrating">Calibrare…</string>
 
   <string name="add_wizard_is_not_available">Add Wizard este disponibil numai atunci când conexiunea la server a fost stabilită pe baza adresei de e-mail introdusă! (Dezactivați opțiunile avansate în configurația contului dvs.)</string>
@@ -379,8 +377,6 @@
   <string name="add_account">Adaugă cont</string>
   <string name="edit_account">Editează contul</string>
   <string name="delete_account">Șterge</string>
-  <string name="delete_account_confirm_message">Sigur dorești să ștergi contul?</string>
-  <string name="delete_account_confirm_message_with_widgets">Sigur dorești să ștergi contul? Confirmarea va elimina widget-urile  asociate.</string>
   <string name="cfg_label_access_id_auth">Identificator</string>
   <string name="cfg_channel_height">Înălțimea canalului</string>
   <string name="cfg_temperature_unit">Unitate de temperatură</string>
@@ -388,7 +384,6 @@
   <string name="profile">Contul tău</string>
   <string name="profile_plural">Conturile Tale</string>
   <string name="menubar_appsettings">Setări</string>
-  <string name="rs_percent_caption_open">Procent de deschidere</string>
   <string name="em_chart_phase_n">Faza %d</string>
   <string name="em_chart_all_phases">Faza 1 + 2 + 3</string>
   <string name="widget_configure_title">Configurare widget</string>

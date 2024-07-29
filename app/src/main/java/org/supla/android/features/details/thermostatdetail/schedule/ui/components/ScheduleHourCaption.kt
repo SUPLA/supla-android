@@ -17,8 +17,8 @@ package org.supla.android.features.details.thermostatdetail.schedule.ui.componen
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
@@ -33,7 +33,7 @@ fun ScheduleHourCaption(hour: Short, withQuarter: QuarterOfHour? = null) {
 fun ScheduleHourCaption(hour: Int, withQuarter: QuarterOfHour? = null) {
   Text(
     text = hour.toHour(withQuarter),
-    style = MaterialTheme.typography.body2.copy(fontSize = if (withQuarter != null) 14.sp else 11.sp),
+    style = MaterialTheme.typography.bodyMedium.copy(fontSize = if (withQuarter != null) 14.sp else 11.sp),
     textAlign = TextAlign.Left
   )
 }

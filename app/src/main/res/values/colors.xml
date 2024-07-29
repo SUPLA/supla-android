@@ -1,24 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- new color definitions start here -->
-    <color name="supla_green">#12a71e</color>
-    <color name="supla">#00d151</color>
-
-    <color name="primary">@color/supla_green</color>
-    <color name="primary_variant">@color/supla</color>
-    <color name="primary_light">#EDFBEE</color>
+    <color name="primary">#12a71e</color>
     <color name="on_primary">#ffffff</color>
+    <color name="secondary">#007AFF</color>
+    <color name="primary_container">@color/primary</color>
+    <color name="on_primary_container">@color/on_primary</color>
     <color name="surface">#ffffff</color>
+    <color name="on_surface">#282828</color>
+    <color name="surface_variant">#EDFBEE</color>
+    <color name="on_surface_variant">#282828</color>
     <color name="background">#F5F6F7</color>
     <color name="on_background">#000000</color>
-    <color name="red_alert">#EB3A28</color>
+    <color name="error">#EB3A28</color>
     <color name="dialog_scrim">#80F5F6F7</color>
+    <color name="info_scrim">#CC000000</color>
+    <color name="secondary_container">#E7F2FF</color>
+    <color name="error_container">#FAEAE9</color>
+    <color name="outline">#B4B7BA</color>
+    <color name="outline_variant">#14282828</color>
 
     <color name="disabled">#B4B7BA</color>
     <color name="disabledOverlay">#DDFFFFFF</color>
     <color name="separator">#AAAAAA</color>
     <color name="old_switch_track">#42221f1f</color>
-    <color name="control_button_background">#FFF4F4F4</color>
+    <color name="supla_button_background_outside">#F4F4F4</color>
+    <color name="supla_button_inner_shadow">#B3B4B7BA</color>
 
     <color name="red">#FF0000</color>
     <color name="light_orange">#FFD19A</color>
@@ -26,13 +33,12 @@
     <color name="gray_light">#DCDEE0</color>
     <color name="gray_lighter">#EFEFF0</color>
     <color name="blue">#007AFF</color>
-    <color name="black">#000000</color>
     <color name="light_blue">#8C9DFF</color>
     <color name="light_green">#B0E0A8</color>
     <color name="light_red">#FFAA8C</color>
     <color name="dark_blue">#000080</color>
     <color name="dark_red">#800000</color>
-    <color name="chart_temperature_1">@color/red_alert</color>
+    <color name="chart_temperature_1">@color/error</color>
     <color name="chart_temperature_2">#FFFF8C53</color>
     <color name="chart_humidity_1">#FF57A0FF</color>
     <color name="chart_humidity_2">#FF33FFEC</color>
@@ -43,7 +49,6 @@
     <color name="shadow_end">#00000000</color>
 
     <color name="item_unselected">#dadbdc</color>
-    <color name="toolbar">@color/primary</color>
 
     <!-- Roller shutter -->
     <color name="roller_shutter_window_color">#FFFFFF</color>
@@ -59,15 +64,9 @@
 
     <!-- Thermostat -->
     <color name="thermostat_control_circle_background">#D2D2D2</color>
-    <color name="thermostat_control_button_background">#F4F4F4</color>
 
     <!-- new color definitions end here -->
 
-    <color name="channel_cell">#fafbfc</color>
-    <color name="channel_section_cell">#edfbee</color>
-    <color name="activity_status_bg_err">#fee700</color>
-
-    <color name="channel_btn_text">#FFFFFF</color>
     <color name="menuseparator">#fafbfc</color>
     <color name="notification_bg">#fee700</color>
 
@@ -87,14 +86,9 @@
     <color name="vl_btn_disabled">#CECECE</color>
     <color name="vl_infotext">#606060</color>
     <color name="vl_infoline">@color/disabled</color>
-    <color name="rgbw_button_border">#FFFFFF</color>
-
-    <color name="diw_settings_bg">#ffededed</color>
 
     <color name="zwave_info_label_bg">#FFE804</color>
     <color name="zwave_info_label_text">#000000</color>
-    <color name="zwave_info_table_bg">@color/background</color>
-    <color name="zwave_info_table_text">#000000</color>
 
     <color name="channelstate_infoline">@color/disabled</color>
 
@@ -114,6 +108,5 @@
     <color name="segmented_field_background">@color/gray_lighter</color>
 
     <color name="widget_fields_border">#3078801F</color>
-    <color name="widget_spinner_location_background">@color/channel_section_cell</color>
     <color name="widget_spinner_item_background">@color/background</color>
 </resources>

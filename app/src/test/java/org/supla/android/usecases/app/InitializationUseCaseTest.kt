@@ -98,7 +98,7 @@ class InitializationUseCaseTest() {
     // then
     verify {
       stateHolder.handleEvent(SuplaClientEvent.Lock)
-      threadHandler.sleep(995)
+      threadHandler.sleep(495)
     }
     confirmVerified(stateHolder, threadHandler, preferences, context)
   }
@@ -125,7 +125,7 @@ class InitializationUseCaseTest() {
     // then
     verify {
       stateHolder.handleEvent(SuplaClientEvent.Initialized)
-      threadHandler.sleep(995)
+      threadHandler.sleep(495)
       preferences.isAnyAccountRegistered = false
       context.deleteDatabase(DbHelper.DATABASE_NAME)
       context.deleteDatabase(MeasurementsDbHelper.DATABASE_NAME)

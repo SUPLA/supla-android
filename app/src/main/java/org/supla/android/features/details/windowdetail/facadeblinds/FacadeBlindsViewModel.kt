@@ -84,7 +84,7 @@ class FacadeBlindsViewModel @Inject constructor(
 ) {
 
   override fun updatePosition(state: FacadeBlindsViewModelState, position: Float) =
-    state.copy(windowState = state.windowState.copy(position = WindowGroupedValue.Similar(position)))
+    state.copy(windowState = state.windowState.copy(position = WindowGroupedValue.Similar(position), markers = emptyList()))
 
   override fun updateWindowState(
     state: FacadeBlindsViewModelState,

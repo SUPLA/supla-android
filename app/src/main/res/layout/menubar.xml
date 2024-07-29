@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="45dp"
     android:layout_alignParentTop="true"
-    android:background="@color/toolbar">
+    android:background="@color/primary_container">
 
 
     <androidx.appcompat.widget.AppCompatButton

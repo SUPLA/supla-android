@@ -11,11 +11,12 @@
       android:id="@+id/switch_detail_device_state"
       layout="@layout/inc_device_state" />
 
-    <org.supla.android.ui.views.buttons.animatable.CircleControlButtonView
+    <org.supla.android.ui.views.buttons.supla.CircleControlButtonView
       android:id="@+id/switch_detail_button_off"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginBottom="14dp"
+      android:layout_marginBottom="@dimen/distance_small"
+      android:layout_marginEnd="@dimen/distance_tiny"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toStartOf="@+id/switch_detail_button_on"
       app:layout_constraintHorizontal_chainStyle="packed"
@@ -23,11 +24,11 @@
       app:text="@string/channel_btn_off"
       app:type="negative" />
 
-    <org.supla.android.ui.views.buttons.animatable.CircleControlButtonView
+    <org.supla.android.ui.views.buttons.supla.CircleControlButtonView
       android:id="@+id/switch_detail_button_on"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginBottom="14dp"
+      android:layout_marginBottom="@dimen/distance_small"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toEndOf="@+id/switch_detail_button_off"

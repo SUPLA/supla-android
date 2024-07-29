@@ -252,7 +252,7 @@
           android:gravity="center"
           android:padding="4dp"
           android:text="@string/add_device_warning"
-          android:textColor="@color/red_alert"
+          android:textColor="@color/error"
           android:textSize="14sp" />
       </RelativeLayout>
     </FrameLayout>

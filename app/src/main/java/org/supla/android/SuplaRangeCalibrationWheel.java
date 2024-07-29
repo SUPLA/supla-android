@@ -21,14 +21,12 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.RectF;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.core.content.res.ResourcesCompat;
 
 public class SuplaRangeCalibrationWheel extends View {
@@ -88,7 +86,6 @@ public class SuplaRangeCalibrationWheel extends View {
     init();
   }
 
-  @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   public SuplaRangeCalibrationWheel(
       Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);

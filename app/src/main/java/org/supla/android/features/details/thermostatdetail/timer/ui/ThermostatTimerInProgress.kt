@@ -26,9 +26,9 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -50,8 +50,7 @@ import org.supla.android.features.details.thermostatdetail.timer.TimerDetailView
 import org.supla.android.features.details.thermostatdetail.ui.TimerHeader
 import org.supla.android.ui.views.TimerProgressView
 import org.supla.android.ui.views.buttons.TextButton
-import org.supla.android.ui.views.buttons.animatable.AnimationMode
-import org.supla.android.ui.views.buttons.animatable.RoundedControlButton
+import org.supla.android.ui.views.buttons.supla.SuplaButton
 import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
@@ -60,7 +59,7 @@ fun ThermostatTimerInProgress(state: TimerDetailViewState, viewProxy: TimerDetai
     modifier = Modifier
       .fillMaxWidth()
       .fillMaxHeight()
-      .background(MaterialTheme.colors.background)
+      .background(MaterialTheme.colorScheme.background)
   ) {
     TimerHeader(
       state = state,
@@ -94,7 +93,7 @@ private fun TimerProgress(state: TimerDetailViewState, viewProxy: TimerDetailVie
     TimerProgressView(progress = 0f, indeterminate = true)
     Text(
       text = viewProxy.formatLeftTime(leftTime)(LocalContext.current),
-      style = MaterialTheme.typography.h5.copy(fontWeight = FontWeight.Bold),
+      style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
       textAlign = TextAlign.Center,
       modifier = Modifier.align(Alignment.Center)
     )
@@ -106,8 +105,8 @@ private fun EditTimeButton(onClick: () -> Unit) =
   TextButton(onClick = onClick) {
     Text(
       text = stringResource(id = R.string.details_timer_edit_time),
-      color = MaterialTheme.colors.onBackground,
-      style = MaterialTheme.typography.body2
+      color = MaterialTheme.colorScheme.onBackground,
+      style = MaterialTheme.typography.bodyMedium
     )
     Icon(
       painter = painterResource(id = R.drawable.pencil),
@@ -127,21 +126,21 @@ private fun BottomButtons(viewProxy: TimerDetailViewProxy, modifier: Modifier = 
   ) {
     Text(
       text = stringResource(id = R.string.details_timer_cancel_thermostat),
-      style = MaterialTheme.typography.body2
+      style = MaterialTheme.typography.bodyMedium
     )
     Row(
       horizontalArrangement = Arrangement.spacedBy(Distance.tiny)
     ) {
-      RoundedControlButton(
+      SuplaButton(
         text = stringResource(id = R.string.thermostat_detail_mode_manual),
-        modifier = Modifier.weight(0.5f),
-        animationMode = AnimationMode.Stated(AnimationMode.State.CLEAR)
-      ) { viewProxy.cancelTimerStartManual() }
-      RoundedControlButton(
+        onClick = { viewProxy.cancelTimerStartManual() },
+        modifier = Modifier.weight(0.5f)
+      )
+      SuplaButton(
         text = stringResource(id = R.string.thermostat_detail_mode_weekly_schedule),
-        modifier = Modifier.weight(0.5f),
-        animationMode = AnimationMode.Stated(AnimationMode.State.CLEAR)
-      ) { viewProxy.cancelTimerStartProgram() }
+        onClick = { viewProxy.cancelTimerStartProgram() },
+        modifier = Modifier.weight(0.5f)
+      )
     }
   }
 }

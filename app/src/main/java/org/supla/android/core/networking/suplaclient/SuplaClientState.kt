@@ -68,13 +68,13 @@ sealed interface SuplaClientState {
       return when (event) {
         SuplaClientEvent.Connecting -> Connecting()
         SuplaClientEvent.OnStart,
-        SuplaClientEvent.NetworkConnected -> null
+        SuplaClientEvent.NetworkConnected,
+        is SuplaClientEvent.Finish -> null
 
         // others which should not occur
         SuplaClientEvent.Cancel -> throw IllegalEvent.IllegalCancelEvent("Unexpected event in FirstProfileCreation")
         SuplaClientEvent.Connected -> throw IllegalEvent.IllegalConnectedEvent("Unexpected event in FirstProfileCreation")
         is SuplaClientEvent.Error -> throw IllegalEvent.IllegalErrorEvent("Unexpected event in FirstProfileCreation")
-        is SuplaClientEvent.Finish -> throw IllegalEvent.IllegalFinishEvent("Unexpected event in FirstProfileCreation")
         SuplaClientEvent.Initialized -> throw IllegalEvent.IllegalInitializedEvent("Unexpected event in FirstProfileCreation")
         SuplaClientEvent.Lock -> throw IllegalEvent.IllegalLockEvent("Unexpected event in FirstProfileCreation")
         SuplaClientEvent.NoAccount -> throw IllegalEvent.IllegalNoAccountEvent("Unexpected event in FirstProfileCreation")

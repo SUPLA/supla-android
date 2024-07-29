@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <!-- Customize your theme here. -->
+    <item name="toolbarNavigationButtonStyle">@style/SuplaToolbarNavigationButtonStyle</item>
+    <item name="windowActionBar">false</item>
+    <item name="windowActionBarOverlay">false</item>
+    <item name="windowNoTitle">true</item>
+    <item name="android:textColorSecondary">@color/background</item>
+    <item name="android:windowSplashScreenAnimatedIcon">@drawable/splash_animation</item>
+    <item name="android:windowSplashScreenBackground">@color/background</item>
+  </style>
+
+</resources>

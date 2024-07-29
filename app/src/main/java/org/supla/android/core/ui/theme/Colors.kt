@@ -20,159 +20,97 @@ package org.supla.android.core.ui.theme
 import android.content.Context
 import android.os.Build
 import androidx.annotation.ColorRes
-import androidx.compose.material.Colors
-import androidx.compose.material.darkColors
-import androidx.compose.material.lightColors
 import androidx.compose.material3.ColorScheme
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import org.supla.android.R
 
-class SuplaLightColors(context: Context) {
-  val Primary = colorResource(context, R.color.primary)
-  val PrimaryVariant = colorResource(context, R.color.primary_variant)
-  val OnPrimary = colorResource(context, R.color.on_primary)
-  val Background = colorResource(context, R.color.background)
-  val OnBackground = colorResource(context, R.color.on_background)
-  val Surface = colorResource(context, R.color.surface)
-  val OnSurface = colorResource(context, R.color.on_background)
-  val Error = colorResource(context, R.color.red_alert)
-  val OnError = Color(0xFFFFFFFF)
-  val Scrim = colorResource(context, R.color.dialog_scrim)
-
-  fun toMaterial() = lightColors(
-    primary = Primary,
-    primaryVariant = PrimaryVariant,
-    onPrimary = OnPrimary,
-    background = Background,
-    onBackground = OnBackground,
-    surface = Surface,
-    onSurface = OnSurface,
-    error = Error,
-    onError = OnError
-  )
-
-  fun toMaterial3() = ColorScheme(
-    primary = Primary,
-    onPrimary = OnPrimary,
-    primaryContainer = Surface,
-    onPrimaryContainer = OnSurface,
-    inversePrimary = Primary,
-    secondary = PrimaryVariant,
-    onSecondary = OnPrimary,
-    secondaryContainer = Surface,
-    onSecondaryContainer = OnSurface,
-    tertiary = PrimaryVariant,
-    onTertiary = OnPrimary,
-    tertiaryContainer = Surface,
-    onTertiaryContainer = OnSurface,
-    background = Background,
-    onBackground = OnBackground,
-    surface = Surface,
-    onSurface = OnSurface,
-    surfaceVariant = Surface,
-    onSurfaceVariant = OnSurface,
-    surfaceTint = OnSurface,
-    inverseSurface = Surface,
-    inverseOnSurface = OnSurface,
-    error = Error,
-    onError = OnError,
-    errorContainer = Error,
-    onErrorContainer = OnError,
-    outline = Color(0xFF000000),
-    outlineVariant = Color(0xFF000000),
-    scrim = Scrim
+class SuplaLightColors(private val context: Context) {
+  fun toMaterial() = ColorScheme(
+    primary = colorResource(context, R.color.primary),
+    onPrimary = colorResource(context, R.color.on_primary),
+    primaryContainer = colorResource(context, R.color.primary_container),
+    onPrimaryContainer = colorResource(context, R.color.on_primary_container),
+    inversePrimary = colorResource(context, R.color.primary),
+    secondary = colorResource(context, R.color.secondary),
+    onSecondary = colorResource(context, R.color.on_primary),
+    secondaryContainer = colorResource(context, R.color.secondary_container),
+    onSecondaryContainer = colorResource(context, R.color.on_surface),
+    tertiary = colorResource(context, R.color.primary),
+    onTertiary = colorResource(context, R.color.on_primary),
+    tertiaryContainer = colorResource(context, R.color.surface),
+    onTertiaryContainer = colorResource(context, R.color.on_surface),
+    background = colorResource(context, R.color.background),
+    onBackground = colorResource(context, R.color.on_background),
+    surface = colorResource(context, R.color.surface),
+    onSurface = colorResource(context, R.color.on_surface),
+    surfaceVariant = colorResource(context, R.color.surface_variant),
+    onSurfaceVariant = colorResource(context, R.color.on_surface_variant),
+    surfaceTint = colorResource(context, R.color.on_surface),
+    inverseSurface = colorResource(context, R.color.surface),
+    inverseOnSurface = colorResource(context, R.color.on_surface),
+    error = colorResource(context, R.color.error),
+    onError = Color(0xFFFFFFFF),
+    errorContainer = colorResource(context, R.color.error_container),
+    onErrorContainer = Color(0xFFFFFFFF),
+    outline = colorResource(context, R.color.outline),
+    outlineVariant = colorResource(context, R.color.outline_variant),
+    scrim = colorResource(context, R.color.dialog_scrim),
+    surfaceBright = Color.Unspecified,
+    surfaceDim = Color.Unspecified,
+    surfaceContainer = colorResource(context, R.color.surface),
+    surfaceContainerHigh = colorResource(context, R.color.surface),
+    surfaceContainerHighest = colorResource(context, R.color.surface),
+    surfaceContainerLow = colorResource(context, R.color.surface),
+    surfaceContainerLowest = colorResource(context, R.color.surface)
   )
 }
 
-class SuplaDarkColors(context: Context) {
-  val Primary = colorResource(context, R.color.primary)
-  val PrimaryVariant = colorResource(context, R.color.primary_variant)
-  val OnPrimary = colorResource(context, R.color.on_primary)
-  val Background = colorResource(context, R.color.background)
-  val OnBackground = colorResource(context, R.color.on_background)
-  val Surface = colorResource(context, R.color.surface)
-  val OnSurface = colorResource(context, R.color.on_background)
-  val Error = colorResource(context, R.color.red_alert)
-  val OnError = Color(0xFFF5F6F7)
-  val Scrim = colorResource(context, R.color.dialog_scrim)
-
-  fun toMaterial() = darkColors(
-    primary = Primary,
-    primaryVariant = PrimaryVariant,
-    onPrimary = OnPrimary,
-    background = Background,
-    onBackground = OnBackground,
-    surface = Surface,
-    onSurface = OnSurface,
-    error = Error,
-    onError = OnError
-  )
-
-  fun toMaterial3() = ColorScheme(
-    primary = Primary,
-    onPrimary = OnPrimary,
-    primaryContainer = Surface,
-    onPrimaryContainer = OnSurface,
-    inversePrimary = Primary,
-    secondary = PrimaryVariant,
-    onSecondary = OnPrimary,
-    secondaryContainer = Surface,
-    onSecondaryContainer = OnSurface,
-    tertiary = PrimaryVariant,
-    onTertiary = OnPrimary,
-    tertiaryContainer = Surface,
-    onTertiaryContainer = OnSurface,
-    background = Background,
-    onBackground = OnBackground,
-    surface = Surface,
-    onSurface = OnSurface,
-    surfaceVariant = Surface,
-    onSurfaceVariant = OnSurface,
-    surfaceTint = OnSurface,
-    inverseSurface = Surface,
-    inverseOnSurface = OnSurface,
-    error = Error,
-    onError = OnError,
-    errorContainer = Error,
-    onErrorContainer = OnError,
-    outline = Color(0xFF000000),
-    outlineVariant = Color(0xFF000000),
-    scrim = Scrim
+class SuplaDarkColors(private val context: Context) {
+  fun toMaterial() = ColorScheme(
+    primary = colorResource(context, R.color.primary),
+    onPrimary = colorResource(context, R.color.on_primary),
+    primaryContainer = colorResource(context, R.color.primary_container),
+    onPrimaryContainer = colorResource(context, R.color.on_primary_container),
+    inversePrimary = colorResource(context, R.color.primary),
+    secondary = colorResource(context, R.color.secondary),
+    onSecondary = colorResource(context, R.color.on_primary),
+    secondaryContainer = colorResource(context, R.color.secondary_container),
+    onSecondaryContainer = colorResource(context, R.color.on_surface),
+    tertiary = colorResource(context, R.color.primary),
+    onTertiary = colorResource(context, R.color.on_primary),
+    tertiaryContainer = colorResource(context, R.color.surface),
+    onTertiaryContainer = colorResource(context, R.color.on_surface),
+    background = colorResource(context, R.color.background),
+    onBackground = colorResource(context, R.color.on_background),
+    surface = colorResource(context, R.color.surface),
+    onSurface = colorResource(context, R.color.on_surface),
+    surfaceVariant = colorResource(context, R.color.surface_variant),
+    onSurfaceVariant = colorResource(context, R.color.on_surface_variant),
+    surfaceTint = colorResource(context, R.color.on_surface),
+    inverseSurface = colorResource(context, R.color.surface),
+    inverseOnSurface = colorResource(context, R.color.on_surface),
+    error = colorResource(context, R.color.error),
+    onError = Color(0xFFF5F6F7),
+    errorContainer = colorResource(context, R.color.error_container),
+    onErrorContainer = Color(0xFFF5F6F7),
+    outline = colorResource(context, R.color.outline),
+    outlineVariant = colorResource(context, R.color.outline_variant),
+    scrim = colorResource(context, R.color.dialog_scrim),
+    surfaceBright = Color.Unspecified,
+    surfaceDim = Color.Unspecified,
+    surfaceContainer = colorResource(context, R.color.surface),
+    surfaceContainerHigh = colorResource(context, R.color.surface),
+    surfaceContainerHighest = colorResource(context, R.color.surface),
+    surfaceContainerLow = colorResource(context, R.color.surface),
+    surfaceContainerLowest = colorResource(context, R.color.surface),
   )
 }
 
-val Colors.progressPointShadow: Color
+val ColorScheme.progressPointShadow: Color
   get() = Color(0x99B2F4B8)
-
-val Colors.blue: Color
-  get() = Color(0xFF007AFF)
-
-val Colors.gray: Color
-  get() = Color(0xFF7E8082)
 
 val ColorScheme.gray: Color
   get() = Color(0xFF7E8082)
-
-val Color.Companion.lightBlue: Color
-  get() = Color(0xFF8C9DFF)
-
-val Color.Companion.lightGreen: Color
-  get() = Color(0xFFB0E0A8)
-
-val Color.Companion.lightOrange: Color
-  get() = Color(0xFFFFD19A)
-
-val Color.Companion.lightRed: Color
-  get() = Color(0xFFFFAA8C)
-
-val Color.Companion.disabled: Color
-  get() = Color(0xFFB4B7BA)
-
-val Color.Companion.primaryLight: Color
-  @Composable
-  get() = colorResource(LocalContext.current, R.color.primary_light)
 
 private fun colorResource(context: Context, @ColorRes id: Int): Color {
   return if (Build.VERSION.SDK_INT >= 23) {

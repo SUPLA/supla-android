@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:background="@color/toolbar">
+  android:background="@color/primary_container">
 
   <TextView
     android:id="@+id/tv_channel_detail_title"
@@ -46,10 +46,11 @@
         android:id="@+id/tv_device_name_title"
         android:layout_width="350dp"
         android:layout_height="wrap_content"
-        android:layout_marginRight="1dp"
+        android:layout_marginEnd="1dp"
         android:layout_weight="1"
-        android:gravity="right"
-        android:paddingRight="10dp"
+        android:gravity="end"
+        android:paddingEnd="10dp"
+        android:paddingStart="0dp"
         android:text="@string/device_name"
         android:textColor="@color/on_background" />
 
@@ -58,7 +59,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:paddingLeft="5dp"
+        android:paddingStart="5dp"
+        android:paddingEnd="0dp"
         android:textColor="@color/on_background" />
     </LinearLayout>
 
@@ -72,10 +74,11 @@
         android:id="@+id/tv_soft_ver_title"
         android:layout_width="350dp"
         android:layout_height="wrap_content"
-        android:layout_marginRight="1dp"
+        android:layout_marginEnd="1dp"
         android:layout_weight="1"
-        android:gravity="right"
-        android:paddingRight="10dp"
+        android:gravity="end"
+        android:paddingEnd="10dp"
+        android:paddingStart="0dp"
         android:text="@string/soft_ver"
         android:textColor="@color/on_background" />
 
@@ -84,7 +87,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:paddingLeft="5dp"
+        android:paddingStart="5dp"
+        android:paddingEnd="0dp"
         android:textColor="@color/on_background" />
     </LinearLayout>
 
@@ -97,10 +101,11 @@
         android:id="@+id/tv_device_id_title"
         android:layout_width="350dp"
         android:layout_height="wrap_content"
-        android:layout_marginRight="1dp"
+        android:layout_marginEnd="1dp"
         android:layout_weight="1"
-        android:gravity="right"
-        android:paddingRight="10dp"
+        android:gravity="end"
+        android:paddingEnd="10dp"
+        android:paddingStart="0dp"
         android:text="@string/device_id"
         android:textColor="@color/on_background" />
 
@@ -109,7 +114,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:paddingLeft="5dp"
+        android:paddingStart="5dp"
+        android:paddingEnd="0dp"
         android:textColor="@color/on_background" />
     </LinearLayout>
 
@@ -122,10 +128,11 @@
         android:id="@+id/tv_channel_id_title"
         android:layout_width="350dp"
         android:layout_height="wrap_content"
-        android:layout_marginRight="1dp"
+        android:layout_marginEnd="1dp"
         android:layout_weight="1"
-        android:gravity="right"
-        android:paddingRight="10dp"
+        android:gravity="end"
+        android:paddingEnd="10dp"
+        android:paddingStart="0dp"
         android:text="@string/channel_id"
         android:textColor="@color/on_background" />
 
@@ -134,7 +141,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:paddingLeft="5dp"
+        android:paddingStart="5dp"
+        android:paddingEnd="0dp"
         android:textColor="@color/on_background" />
     </LinearLayout>
 
@@ -147,10 +155,11 @@
         android:id="@+id/tv_channel_number_title"
         android:layout_width="350dp"
         android:layout_height="wrap_content"
-        android:layout_marginRight="1dp"
+        android:layout_marginEnd="1dp"
         android:layout_weight="1"
-        android:gravity="right"
-        android:paddingRight="10dp"
+        android:gravity="end"
+        android:paddingEnd="10dp"
+        android:paddingStart="0dp"
         android:text="@string/channel_number"
         android:textColor="@color/on_background" />
 
@@ -159,7 +168,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:paddingLeft="5dp"
+        android:paddingStart="5dp"
+        android:paddingEnd="0dp"
         android:textColor="@color/on_background" />
     </LinearLayout>
 
@@ -209,7 +219,6 @@
       style="@style/AppTheme.EditText"
       android:layout_width="match_parent"
       android:layout_height="35dp"
-      android:layout_below="@id/wizard_wifi_list"
       android:layout_marginTop="5dp"
       android:inputType="text"
       android:maxLength="100"

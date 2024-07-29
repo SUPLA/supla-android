@@ -30,7 +30,7 @@ fun Activity.setStatusBarColor(colorId: Int, isLight: Boolean) {
   window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
   val color = ResourcesCompat.getColor(resources, colorId, null)
   window.statusBarColor = color
-  val navigationBarColor = ResourcesCompat.getColor(resources, R.color.channel_cell, null)
+  val navigationBarColor = ResourcesCompat.getColor(resources, R.color.surface, null)
   window.navigationBarColor = navigationBarColor
   val view = window.decorView
 

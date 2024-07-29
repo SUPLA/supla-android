@@ -20,6 +20,7 @@ package org.supla.android.usecases.channel
 import io.reactivex.rxjava3.core.Completable
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.data.model.general.ChannelDataBase
+import org.supla.android.data.source.local.entity.isGarageDoorRoller
 import org.supla.android.data.source.local.entity.isProjectorScreen
 import org.supla.android.data.source.local.entity.isShadingSystem
 import org.supla.android.data.source.local.entity.isThermostat
@@ -40,7 +41,7 @@ open class BaseActionUseCase<T : ChannelDataBase>(
     val client = suplaClientProvider.provide() ?: return
     if (isRGBW(channelBase.function)) {
       client.executeAction(ActionParameters(getTurnOnOffActionId(buttonType), getSubjectType(forGroup), channelBase.remoteId))
-    } else if (channelBase.isShadingSystem() || channelBase.isProjectorScreen()) {
+    } else if (channelBase.isShadingSystem() || channelBase.isProjectorScreen() || channelBase.isGarageDoorRoller()) {
       if (SuplaChannelFlag.RS_SBS_AND_STOP_ACTIONS inside channelBase.flags) {
         client.executeAction(ActionParameters(getRevealShutStopActionId(buttonType), getSubjectType(forGroup), channelBase.remoteId))
       } else {

@@ -89,7 +89,6 @@ public class ChannelStatePopup
   private TextView tvLightSourceLifespan;
   private TextView tvLightSourceOperatingTime;
 
-  private Button btnClose;
   private Button btnReset;
 
   public ChannelStatePopup(Context context) {
@@ -136,7 +135,7 @@ public class ChannelStatePopup
 
     tvInfoTitle.setTypeface(SuplaApp.getApp().getTypefaceQuicksandRegular());
 
-    btnClose = view.findViewById(R.id.btnClose);
+    Button btnClose = view.findViewById(R.id.btnClose);
     btnReset = view.findViewById(R.id.btnReset);
 
     btnClose.setOnClickListener(this);

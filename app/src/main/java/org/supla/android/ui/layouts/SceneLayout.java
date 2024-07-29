@@ -108,7 +108,7 @@ public class SceneLayout extends LinearLayout implements SlideableItem, Swapable
     Preferences prefs = new Preferences(context);
     setOrientation(LinearLayout.HORIZONTAL);
 
-    setBackgroundColor(getResources().getColor(R.color.channel_cell));
+    setBackgroundColor(getResources().getColor(R.color.surface));
 
     right_btn = new FrameLayout(context);
     left_btn = new FrameLayout(context);
@@ -136,7 +136,7 @@ public class SceneLayout extends LinearLayout implements SlideableItem, Swapable
     content = new RelativeLayout(context);
     content.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, channelHeight));
 
-    content.setBackgroundColor(getResources().getColor(R.color.channel_cell));
+    content.setBackgroundColor(getResources().getColor(R.color.surface));
 
     addView(content);
     addView(left_btn);
@@ -166,7 +166,7 @@ public class SceneLayout extends LinearLayout implements SlideableItem, Swapable
 
     SuplaChannelStatus right_ActiveStatus = new SuplaChannelStatus(context);
     right_ActiveStatus.setSingleColor(true);
-    right_ActiveStatus.setOnlineColor(getResources().getColor(R.color.primary_variant));
+    right_ActiveStatus.setOnlineColor(getResources().getColor(R.color.primary));
 
     int dot_size = getResources().getDimensionPixelSize(R.dimen.channel_dot_size);
     RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(dot_size / 2, dot_size * 2);
@@ -252,7 +252,7 @@ public class SceneLayout extends LinearLayout implements SlideableItem, Swapable
 
     tv.setTextSize(
         TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.channel_btn_text_size));
-    tv.setTextColor(getResources().getColor(R.color.channel_btn_text));
+    tv.setTextColor(getResources().getColor(R.color.on_primary));
     tv.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
 
     return tv;
@@ -284,7 +284,7 @@ public class SceneLayout extends LinearLayout implements SlideableItem, Swapable
 
     result.setLayoutParams(getOnlineStatusLayoutParams(right));
     result.setOfflineColor(getResources().getColor(R.color.red));
-    result.setOnlineColor(getResources().getColor(R.color.primary_variant));
+    result.setOnlineColor(getResources().getColor(R.color.primary));
 
     return result;
   }

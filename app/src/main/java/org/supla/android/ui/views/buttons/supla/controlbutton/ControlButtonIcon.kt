@@ -1,4 +1,4 @@
-package org.supla.android.ui.views.buttons.animatable
+package org.supla.android.ui.views.buttons.supla.controlbutton
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,27 +17,23 @@ package org.supla.android.ui.views.buttons.animatable
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-sealed interface AnimationMode {
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 
-  fun isActiveState(): Boolean
-
-  enum class State {
-    ACTIVE, CLEAR
-  }
-
-  object Pressed : AnimationMode {
-    override fun isActiveState() = false
-  }
-
-  data class Toggle(val state: State) : AnimationMode {
-    constructor(active: Boolean) : this(if (active) State.ACTIVE else State.CLEAR)
-
-    override fun isActiveState() = state == State.ACTIVE
-  }
-
-  data class Stated(val state: State) : AnimationMode {
-    constructor(active: Boolean) : this(if (active) State.ACTIVE else State.CLEAR)
-
-    override fun isActiveState() = state == State.ACTIVE
-  }
-}
+@Composable
+fun ControlButtonIcon(
+  iconRes: Int,
+  modifier: Modifier = Modifier,
+  textColor: Color = MaterialTheme.colorScheme.onSurface,
+  rotate: Float = 0f
+) = Icon(
+  painter = painterResource(id = iconRes),
+  contentDescription = null,
+  tint = textColor,
+  modifier = modifier.rotate(rotate)
+)

@@ -19,8 +19,8 @@ syays GNU General Public License for more details.
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -70,7 +70,7 @@ fun AlertDialog(
 private fun DialogMessage(message: String) =
   Text(
     text = message,
-    style = MaterialTheme.typography.body2,
+    style = MaterialTheme.typography.bodyMedium,
     textAlign = TextAlign.Center,
     modifier = Modifier
       .padding(all = Distance.default)

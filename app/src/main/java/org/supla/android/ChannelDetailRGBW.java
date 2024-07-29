@@ -106,7 +106,7 @@ public class ChannelDetailRGBW extends DetailLayout
     pickerTypeTabs = findViewById(R.id.llPickerTypeTabs);
 
     status = findViewById(R.id.rgbwstatus);
-    status.setOnlineColor(getResources().getColor(R.color.primary_variant));
+    status.setOnlineColor(getResources().getColor(R.color.primary));
     status.setOfflineColor(getResources().getColor(R.color.red));
 
     clPicker = findViewById(R.id.clPicker);
@@ -362,7 +362,7 @@ public class ChannelDetailRGBW extends DetailLayout
   private void setPowerBtnOn(boolean on) {
     cbPicker.setPowerButtonOn(on);
     int color =
-        ResourcesCompat.getColor(getResources(), on ? R.color.primary : R.color.red_alert, null);
+        ResourcesCompat.getColor(getResources(), on ? R.color.primary : R.color.error, null);
     btnPowerOnOff.setImageTintList(ColorStateList.valueOf(color));
   }
 

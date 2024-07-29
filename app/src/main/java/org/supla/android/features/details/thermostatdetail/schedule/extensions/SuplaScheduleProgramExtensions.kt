@@ -18,13 +18,7 @@ package org.supla.android.features.details.thermostatdetail.schedule.extensions
  */
 
 import androidx.annotation.ColorRes
-import androidx.compose.ui.graphics.Color
 import org.supla.android.R
-import org.supla.android.core.ui.theme.disabled
-import org.supla.android.core.ui.theme.lightBlue
-import org.supla.android.core.ui.theme.lightGreen
-import org.supla.android.core.ui.theme.lightOrange
-import org.supla.android.core.ui.theme.lightRed
 import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
 
 @ColorRes
@@ -34,14 +28,6 @@ fun SuplaScheduleProgram.colorRes(): Int = when (this) {
   SuplaScheduleProgram.PROGRAM_2 -> R.color.light_green
   SuplaScheduleProgram.PROGRAM_3 -> R.color.light_orange
   SuplaScheduleProgram.PROGRAM_4 -> R.color.light_red
-}
-
-fun SuplaScheduleProgram.color(): Color = when (this) {
-  SuplaScheduleProgram.OFF -> Color.disabled
-  SuplaScheduleProgram.PROGRAM_1 -> Color.lightBlue
-  SuplaScheduleProgram.PROGRAM_2 -> Color.lightGreen
-  SuplaScheduleProgram.PROGRAM_3 -> Color.lightOrange
-  SuplaScheduleProgram.PROGRAM_4 -> Color.lightRed
 }
 
 fun SuplaScheduleProgram.number(): Int = when (this) {

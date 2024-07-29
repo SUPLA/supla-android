@@ -1,4 +1,4 @@
-package org.supla.android.ui.views.buttons.animatable
+package org.supla.android.ui.views.buttons.supla
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,17 +17,32 @@ package org.supla.android.ui.views.buttons.animatable
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.annotation.ColorRes
-import org.supla.android.R
+import androidx.compose.runtime.Immutable
+import androidx.compose.ui.graphics.Color
 
-enum class AnimatableButtonType(
-  val value: Int,
-  @ColorRes val textColor: Int,
-  @ColorRes val pressedColor: Int,
-  @ColorRes val inactiveColor: Int
+@Immutable
+class SuplaButtonColors(
+  val border: Color,
+  val borderPressed: Color,
+  val borderDisabled: Color,
+  val content: Color,
+  val contentPressed: Color,
+  val contentDisabled: Color,
+  val shadow: Color,
+  val shadowPressed: Color
 ) {
-  POSITIVE(0, R.color.supla_green, R.color.supla, R.color.on_background),
-  NEGATIVE(1, R.color.red_alert, R.color.red_alert, R.color.on_background),
-  BLUE(3, R.color.blue, R.color.blue, R.color.on_background),
-  NEUTRAL(4, R.color.black, R.color.black, R.color.black)
+
+  fun border(active: Boolean, disabled: Boolean) =
+    when {
+      active -> borderPressed
+      disabled -> borderDisabled
+      else -> border
+    }
+
+  fun content(active: Boolean, disabled: Boolean) =
+    when {
+      active -> contentPressed
+      disabled -> contentDisabled
+      else -> content
+    }
 }

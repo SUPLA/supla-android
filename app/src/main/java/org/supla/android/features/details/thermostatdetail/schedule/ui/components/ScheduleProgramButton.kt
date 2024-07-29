@@ -17,22 +17,39 @@ package org.supla.android.features.details.thermostatdetail.schedule.ui.componen
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.compose.foundation.layout.PaddingValues
+import android.content.res.Configuration
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import org.supla.android.R
+import org.supla.android.core.ui.theme.Distance
+import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.features.details.thermostatdetail.schedule.data.ScheduleDetailProgramBox
-import org.supla.android.features.details.thermostatdetail.schedule.extensions.color
-import org.supla.android.ui.views.buttons.animatable.AnimatableButtonType
-import org.supla.android.ui.views.buttons.animatable.AnimationMode
-import org.supla.android.ui.views.buttons.animatable.RoundedControlButton
+import org.supla.android.features.details.thermostatdetail.schedule.extensions.colorRes
 
 @Composable
 fun ScheduleProgramButton(
@@ -42,19 +59,127 @@ fun ScheduleProgramButton(
   onClick: () -> Unit = { },
   onLongClick: () -> Unit = { }
 ) {
-  val iconPainter = programBox.iconRes?.let { painterResource(id = programBox.iconRes) }
-  RoundedControlButton(
-    modifier = modifier,
-    height = 32.dp,
-    backgroundColor = programBox.scheduleProgram.program.color(),
-    animationMode = AnimationMode.Toggle(active = active),
-    icon = iconPainter,
+  Button(
+    contentColor = colorResource(id = programBox.scheduleProgram.program.colorRes()),
     text = programBox.textProvider(LocalContext.current),
-    type = AnimatableButtonType.NEUTRAL,
-    contentPadding = PaddingValues(horizontal = dimensionResource(id = R.dimen.distance_small)),
-    fontSize = 14.sp,
-    fontFamily = FontFamily(Font(R.font.open_sans_bold)),
+    iconRes = programBox.iconRes,
+    active = active,
     onClick = onClick,
-    onLongClick = onLongClick
+    onLongClick = onLongClick,
+    modifier = modifier
   )
+}
+
+@Composable
+private fun Button(
+  contentColor: Color,
+  text: String,
+  iconRes: Int?,
+  active: Boolean,
+  onClick: () -> Unit,
+  onLongClick: () -> Unit,
+  modifier: Modifier = Modifier
+) {
+  val radius = 16.dp
+  val shape = RoundedCornerShape(size = radius)
+  val onBackgroundColor = MaterialTheme.colorScheme.onBackground
+
+  var pressed by remember { mutableStateOf(false) }
+
+  var borderColor by remember(active) { mutableStateOf(if (active) onBackgroundColor else contentColor) }
+
+  Box(
+    modifier = modifier
+      .defaultMinSize(minHeight = radius.times(2))
+      .background(contentColor, shape = shape)
+      .border(width = 1.5.dp, color = borderColor, shape = shape)
+      .pointerInput(onClick) {
+        detectTapGestures(
+          onTap = { onClick() },
+          onLongPress = { onLongClick() },
+          onPress = {
+            if (!active) {
+              pressed = true
+              borderColor = onBackgroundColor
+
+              tryAwaitRelease()
+              pressed = false
+              borderColor = contentColor
+            }
+          }
+        )
+      }
+  ) {
+    Row(
+      modifier = Modifier
+        .padding(horizontal = Distance.small)
+        .align(Alignment.Center),
+      verticalAlignment = Alignment.CenterVertically,
+      horizontalArrangement = Arrangement.spacedBy(Distance.tiny)
+    ) {
+      iconRes?.let {
+        Image(
+          painter = painterResource(id = it),
+          contentDescription = null,
+          alignment = Alignment.Center,
+          modifier = Modifier.size(20.dp)
+        )
+      }
+      Text(
+        text = text,
+        style = MaterialTheme.typography.labelMedium,
+        color = Color.Black
+      )
+    }
+  }
+}
+
+@Preview(showBackground = true, widthDp = 500)
+@Preview(showBackground = true, widthDp = 500, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun Preview() {
+  SuplaTheme {
+    Row(modifier = Modifier.padding(Distance.default), horizontalArrangement = Arrangement.spacedBy(Distance.tiny)) {
+      Button(
+        contentColor = colorResource(id = R.color.light_blue),
+        text = "22.5°",
+        iconRes = null,
+        active = true,
+        onClick = { },
+        onLongClick = { }
+      )
+      Button(
+        contentColor = colorResource(id = R.color.light_red),
+        text = "22.5°",
+        iconRes = null,
+        active = false,
+        onClick = { },
+        onLongClick = { }
+      )
+      Button(
+        contentColor = colorResource(id = R.color.light_green),
+        text = "22.5°",
+        iconRes = null,
+        active = false,
+        onClick = { },
+        onLongClick = { }
+      )
+      Button(
+        contentColor = colorResource(id = R.color.light_orange),
+        text = "22.5°",
+        iconRes = null,
+        active = false,
+        onClick = { },
+        onLongClick = { }
+      )
+      Button(
+        contentColor = colorResource(id = R.color.disabled),
+        text = "Off",
+        iconRes = R.drawable.ic_power_button,
+        active = false,
+        onClick = { },
+        onLongClick = { }
+      )
+    }
+  }
 }

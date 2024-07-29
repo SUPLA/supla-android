@@ -55,7 +55,7 @@ class StaircaseTimerIconResourceProducerTest : BaseIconResourceProducerTest() {
       state = ChannelState.Value.ON,
       altIcon = 1,
       function = SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER,
-      expectedIcon = R.drawable.staircasetimeron_1
+      expectedIcon = R.drawable.fnc_staircasetimer_1_on
     )
   }
 
@@ -65,7 +65,7 @@ class StaircaseTimerIconResourceProducerTest : BaseIconResourceProducerTest() {
       state = ChannelState.Value.OFF,
       altIcon = 1,
       function = SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER,
-      expectedIcon = R.drawable.staircasetimeroff_1
+      expectedIcon = R.drawable.fnc_staircasetimer_1_off
     )
   }
 }

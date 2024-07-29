@@ -17,7 +17,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.TextStyle
@@ -30,20 +29,22 @@ import org.supla.android.R
 import org.supla.android.extensions.fontDimensionResource
 
 @Composable
-fun suplaTypographyMaterial3(colors: ColorScheme) = Typography(
+fun suplaTypography() = Typography(
   displayLarge = TextStyle(
     fontSize = 60.sp,
     letterSpacing = 0.05.em,
     fontWeight = FontWeight.Light,
-    color = colors.onBackground,
     fontFamily = OpenSansFontFamily
   ),
-  displayMedium = TextStyle(fontSize = 48.sp, fontWeight = FontWeight.Normal, color = colors.onBackground, fontFamily = OpenSansFontFamily),
+  displayMedium = TextStyle(
+    fontSize = 48.sp,
+    fontWeight = FontWeight.Normal,
+    fontFamily = OpenSansFontFamily
+  ),
   displaySmall = TextStyle(
     fontSize = 34.sp,
     letterSpacing = 0.025.sp,
     fontWeight = FontWeight.Normal,
-    color = colors.onBackground,
     fontFamily = OpenSansFontFamily
   ),
 
@@ -51,19 +52,16 @@ fun suplaTypographyMaterial3(colors: ColorScheme) = Typography(
     fontSize = 34.sp,
     letterSpacing = 0.025.sp,
     fontWeight = FontWeight.Normal,
-    color = colors.onBackground,
     fontFamily = OpenSansFontFamily
   ),
   headlineMedium = TextStyle(
     fontSize = 24.sp,
     fontWeight = FontWeight.Normal,
-    color = colors.onBackground,
     fontFamily = OpenSansFontFamily
   ),
   headlineSmall = TextStyle(
     fontSize = 17.sp,
     fontWeight = FontWeight.Normal,
-    color = colors.onBackground,
     fontFamily = OpenSansFontFamily
   ),
 
@@ -71,20 +69,17 @@ fun suplaTypographyMaterial3(colors: ColorScheme) = Typography(
     fontSize = 22.sp,
     letterSpacing = 0.025.sp,
     fontWeight = FontWeight.Normal,
-    color = colors.onBackground,
     fontFamily = OpenSansFontFamily
   ),
   titleMedium = TextStyle(
     fontSize = 16.sp,
     fontWeight = FontWeight.SemiBold,
-    color = colors.onBackground,
     fontFamily = OpenSansFontFamily
   ),
   titleSmall = TextStyle(
     fontSize = 14.sp,
     letterSpacing = 0.015.sp,
     fontWeight = FontWeight.SemiBold,
-    color = colors.onBackground,
     fontFamily = OpenSansFontFamily
   ),
 
@@ -92,21 +87,18 @@ fun suplaTypographyMaterial3(colors: ColorScheme) = Typography(
     fontSize = 16.sp,
     letterSpacing = 0.05.sp,
     fontWeight = FontWeight.Normal,
-    color = colors.onBackground,
     fontFamily = OpenSansFontFamily
   ),
   bodyMedium = TextStyle(
     fontSize = 14.sp,
     letterSpacing = 0.025.sp,
     fontWeight = FontWeight.Normal,
-    color = colors.onBackground,
     fontFamily = OpenSansFontFamily
   ),
   bodySmall = TextStyle(
     fontSize = 12.sp,
     letterSpacing = 0.025.sp,
     fontWeight = FontWeight.Normal,
-    color = colors.onBackground,
     fontFamily = OpenSansFontFamily
   ),
 
@@ -114,21 +106,18 @@ fun suplaTypographyMaterial3(colors: ColorScheme) = Typography(
     fontSize = 17.sp,
     letterSpacing = 0.15.sp,
     fontWeight = FontWeight.Medium,
-    color = colors.onBackground,
     fontFamily = OpenSansFontFamily
   ),
   labelMedium = TextStyle(
-    fontSize = 12.sp,
+    fontSize = 14.sp,
     letterSpacing = 0.15.sp,
-    fontWeight = FontWeight.SemiBold,
-    color = colors.onBackground,
+    fontWeight = FontWeight.Bold,
     fontFamily = OpenSansFontFamily
   ),
   labelSmall = TextStyle(
     fontSize = 10.sp,
     letterSpacing = 0.15.sp,
     fontWeight = FontWeight.SemiBold,
-    color = colors.onBackground,
     fontFamily = OpenSansFontFamily
   )
 )
@@ -141,4 +130,13 @@ fun Typography.listItemCaption(): TextStyle =
     letterSpacing = 0.04.sp,
     fontWeight = FontWeight.Bold,
     fontFamily = FontFamily(Font(R.font.open_sans_bold))
+  )
+
+@Composable
+fun Typography.listItemValue(): TextStyle =
+  TextStyle(
+    color = androidx.compose.ui.res.colorResource(id = R.color.on_background),
+    fontSize = fontDimensionResource(id = R.dimen.channel_imgtext_size),
+    fontWeight = FontWeight.Normal,
+    fontFamily = FontFamily(Font(R.font.open_sans_regular))
   )

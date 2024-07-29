@@ -25,7 +25,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -47,7 +47,6 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextMeasurer
@@ -70,12 +69,12 @@ import org.supla.android.features.details.thermostatdetail.schedule.ScheduleDeta
 import org.supla.android.features.details.thermostatdetail.schedule.data.MotionEventStateHolder
 import org.supla.android.features.details.thermostatdetail.schedule.data.ScheduleDetailEntryBoxKey
 import org.supla.android.features.details.thermostatdetail.schedule.data.ScheduleDetailEntryBoxValue
-import org.supla.android.features.details.thermostatdetail.schedule.extensions.color
+import org.supla.android.features.details.thermostatdetail.schedule.extensions.colorRes
 import org.supla.android.features.details.thermostatdetail.schedule.ui.PreviewProxy
 import org.supla.android.features.details.thermostatdetail.schedule.ui.ScheduleDetailViewProxy
 
 const val rowsCount = 25
-val columnsCount = DayOfWeek.values().size
+val columnsCount = DayOfWeek.entries.size
 val boxPadding = 2.dp
 val boxSpacing = boxPadding.times(2)
 val textPadding = 8.dp
@@ -84,7 +83,7 @@ private val textSize = 12.sp
 private val textFont = FontFamily(Font(R.font.open_sans_regular))
 private val textFontBold = FontFamily(Font(R.font.open_sans_bold))
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalTextApi::class)
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun ScheduleTable(
   modifier: Modifier = Modifier,
@@ -94,7 +93,7 @@ fun ScheduleTable(
 ) {
   val context = LocalContext.current
   // colors
-  val textColor = MaterialTheme.colors.onBackground
+  val textColor = MaterialTheme.colorScheme.onBackground
   val colorDisabled = colorResource(id = R.color.disabled)
   val colorHighlight = remember { Color(0x1F767880) }
   // texts with sizes
@@ -119,6 +118,7 @@ fun ScheduleTable(
 
   val coroutineScope = rememberCoroutineScope()
   val eventStateHolder by remember(viewSize) { mutableStateOf(MotionEventStateHolder(null, positions, boxSize)) }
+  val colorProvider = SuplaProgramColorProvider()
 
   Canvas(
     modifier = modifier
@@ -141,13 +141,13 @@ fun ScheduleTable(
       positions,
       boxSize,
       path,
-      cornerRadius
+      cornerRadius,
+      colorProvider
     )
   }
 }
 
 context(DrawScope)
-@OptIn(ExperimentalTextApi::class)
 private fun scheduleTableDays(
   days: List<DrawableText<DayOfWeek>>,
   textColor: Color,
@@ -179,7 +179,6 @@ private fun scheduleTableDays(
 }
 
 context(DrawScope)
-@OptIn(ExperimentalTextApi::class)
 private fun scheduleTableBoxes(
   gridHeight: Float,
   hours: List<DrawableText<Int>>,
@@ -191,7 +190,8 @@ private fun scheduleTableBoxes(
   positions: Map<ScheduleDetailEntryBoxKey, Offset>,
   boxSize: Size,
   path: Path,
-  cornerRadius: CornerRadius
+  cornerRadius: CornerRadius,
+  colorProvider: SuplaProgramColorProvider
 ) {
   var y = gridHeight.times(1.5f)
   for (hour in hours) {
@@ -220,10 +220,10 @@ private fun scheduleTableBoxes(
 
       val singleProgram = entryValue?.singleProgram()
       if (singleProgram != null || entryValue == null) {
-        val color = singleProgram?.color() ?: colorDisabled
+        val color = singleProgram?.let { colorProvider.get(it) } ?: colorDisabled
         drawScheduleBoxSingleColor(entryPosition!!, boxSize, cornerRadius, color)
       } else {
-        drawScheduleBoxMultiColor(path, entryPosition!!, boxSize, cornerRadius, entryValue)
+        drawScheduleBoxMultiColor(path, entryPosition!!, boxSize, cornerRadius, entryValue, colorProvider)
       }
 
       if (hour.value == (viewState.currentHour ?: false) && day.value == (viewState.currentDayOfWeek ?: false)) {
@@ -262,7 +262,8 @@ private fun drawScheduleBoxMultiColor(
   topLeft: Offset,
   size: Size,
   cornerRadius: CornerRadius,
-  value: ScheduleDetailEntryBoxValue
+  value: ScheduleDetailEntryBoxValue,
+  colorProvider: SuplaProgramColorProvider
 ) {
   val itemWidth = size.width.div(4)
   val itemHeight = size.height
@@ -284,17 +285,16 @@ private fun drawScheduleBoxMultiColor(
       else -> path.addRect(rect = Rect(offset = offset, size = quarterSize))
     }
     val color = when (i) {
-      0 -> value.firstQuarterProgram.color()
-      1 -> value.secondQuarterProgram.color()
-      2 -> value.thirdQuarterProgram.color()
-      3 -> value.fourthQuarterProgram.color()
+      0 -> colorProvider.get(value.firstQuarterProgram)
+      1 -> colorProvider.get(value.secondQuarterProgram)
+      2 -> colorProvider.get(value.thirdQuarterProgram)
+      3 -> colorProvider.get(value.fourthQuarterProgram)
       else -> throw IllegalStateException("Wanted to draw to many boxes")
     }
     drawPath(path, color = color)
   }
 }
 
-@OptIn(ExperimentalTextApi::class)
 private fun labelText(text: String, textMeasurer: TextMeasurer, useBold: Boolean = false): TextLayoutResult {
   val annotatedString = buildAnnotatedString {
     withStyle(
@@ -316,7 +316,6 @@ private data class DrawableText<T>(
 ) {
 
   companion object {
-    @OptIn(ExperimentalTextApi::class)
     fun get(dayOfWeek: DayOfWeek, resources: Resources, textMeasurer: TextMeasurer, isCurrentDay: Boolean): DrawableText<DayOfWeek> =
       DrawableText(
         value = dayOfWeek,
@@ -324,7 +323,6 @@ private data class DrawableText<T>(
         isCurrent = isCurrentDay
       )
 
-    @OptIn(ExperimentalTextApi::class)
     fun get(hour: Int, textMeasurer: TextMeasurer, isCurrentHour: Boolean): DrawableText<Int> =
       DrawableText(
         value = hour,
@@ -334,13 +332,11 @@ private data class DrawableText<T>(
   }
 }
 
-@OptIn(ExperimentalTextApi::class)
 private fun mutableStateListOfDrawableDayOfWeek(context: Context, textMeasurer: TextMeasurer) =
   mutableStateListOf<DrawableText<DayOfWeek>>().also { list ->
-    DayOfWeek.values().forEach { list.add(DrawableText.get(it, context.resources, textMeasurer, false)) }
+    DayOfWeek.entries.forEach { list.add(DrawableText.get(it, context.resources, textMeasurer, false)) }
   }
 
-@OptIn(ExperimentalTextApi::class)
 private fun mutableStateListOfDrawableHour(textMeasurer: TextMeasurer) =
   mutableStateListOf<DrawableText<Int>>().also { list ->
     for (i in 0..23) {
@@ -378,6 +374,36 @@ private fun createBoxesPositions(
       }
     }
   }
+
+private class SuplaProgramColorProvider private constructor(
+  private val off: Color,
+  private val program1: Color,
+  private val program2: Color,
+  private val program3: Color,
+  private val program4: Color
+) {
+
+  fun get(program: SuplaScheduleProgram): Color = when (program) {
+    SuplaScheduleProgram.OFF -> off
+    SuplaScheduleProgram.PROGRAM_1 -> program1
+    SuplaScheduleProgram.PROGRAM_2 -> program2
+    SuplaScheduleProgram.PROGRAM_3 -> program3
+    SuplaScheduleProgram.PROGRAM_4 -> program4
+  }
+
+  companion object {
+    @Composable
+    operator fun invoke(): SuplaProgramColorProvider {
+      return SuplaProgramColorProvider(
+        colorResource(id = SuplaScheduleProgram.OFF.colorRes()),
+        colorResource(id = SuplaScheduleProgram.PROGRAM_1.colorRes()),
+        colorResource(id = SuplaScheduleProgram.PROGRAM_2.colorRes()),
+        colorResource(id = SuplaScheduleProgram.PROGRAM_3.colorRes()),
+        colorResource(id = SuplaScheduleProgram.PROGRAM_4.colorRes())
+      )
+    }
+  }
+}
 
 @Preview
 @Composable

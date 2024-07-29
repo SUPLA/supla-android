@@ -4,7 +4,7 @@
   android:id="@+id/coordinator"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:background="@color/channel_cell">
+  android:background="@color/background">
 
   <include layout="@layout/inc_toolbar" />
 

@@ -29,8 +29,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -162,7 +162,7 @@ private fun DialogHeader(program: SuplaScheduleProgram) =
     ProgramIcon(program)
     Text(
       text = stringResource(id = R.string.schedule_detail_program_dialog_header, program.number()),
-      style = MaterialTheme.typography.h6,
+      style = MaterialTheme.typography.headlineSmall,
       textAlign = TextAlign.Center
     )
   }
@@ -195,7 +195,7 @@ private fun TemperatureControlRow(
       top = dimensionResource(id = R.dimen.distance_default),
       end = dimensionResource(id = R.dimen.distance_default)
     ),
-    style = MaterialTheme.typography.h6
+    style = MaterialTheme.typography.headlineSmall
   )
   Row(
     modifier = Modifier.padding(

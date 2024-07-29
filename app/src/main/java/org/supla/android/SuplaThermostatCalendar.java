@@ -25,14 +25,13 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
+import androidx.core.content.res.ResourcesCompat;
 import java.text.DateFormatSymbols;
 
 public class SuplaThermostatCalendar extends View {
@@ -66,27 +65,26 @@ public class SuplaThermostatCalendar extends View {
 
   public SuplaThermostatCalendar(Context context) {
     super(context);
-    init();
+    init(context);
   }
 
   public SuplaThermostatCalendar(Context context, @Nullable AttributeSet attrs) {
     super(context, attrs);
-    init();
+    init(context);
   }
 
   public SuplaThermostatCalendar(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
-    init();
+    init(context);
   }
 
-  @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   public SuplaThermostatCalendar(
       Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);
-    init();
+    init(context);
   }
 
-  private void init() {
+  private void init(Context context) {
 
     Resources res = getResources();
     if (res == null) {
@@ -104,7 +102,7 @@ public class SuplaThermostatCalendar extends View {
     mHourProgram1Color = Color.parseColor("#ffd19a");
     mProgram0Label = "P0";
     mProgram1Label = "P1";
-    mFontColor = Color.BLACK;
+    mFontColor = ResourcesCompat.getColor(context.getResources(), R.color.on_background, null);
 
     mPaint = new Paint();
     mPaint.setAntiAlias(true);
@@ -147,7 +145,7 @@ public class SuplaThermostatCalendar extends View {
       mPaint.setColor(color);
       canvas.drawRoundRect(frm, 6, 6, mPaint);
 
-      mPaint.setColor(mFontColor);
+      mPaint.setColor(Color.BLACK);
       drawText(canvas, label, frm, false);
       offset += 3;
     }

@@ -32,8 +32,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -144,7 +144,7 @@ private fun DialogHeader(hour: Short) =
     modifier = Modifier
       .padding(all = dimensionResource(id = R.dimen.distance_default))
       .fillMaxWidth(),
-    style = MaterialTheme.typography.h6,
+    style = MaterialTheme.typography.headlineSmall,
     textAlign = TextAlign.Center
   )
 
@@ -152,7 +152,7 @@ private fun DialogHeader(hour: Short) =
 private fun DayLabel(@StringRes textRes: Int) =
   Text(
     text = stringResource(id = textRes).uppercase(),
-    style = MaterialTheme.typography.body2,
+    style = MaterialTheme.typography.bodyMedium,
     textAlign = TextAlign.Center,
     modifier = Modifier
       .padding(

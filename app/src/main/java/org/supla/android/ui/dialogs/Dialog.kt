@@ -25,9 +25,10 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -49,7 +50,7 @@ fun Dialog(
   Dialog(onDismissRequest = onDismiss, properties = DialogProperties(usePlatformDefaultWidth = usePlatformDefaultWidth)) {
     Card(
       modifier = modifier,
-      elevation = dimensionResource(id = R.dimen.segmented_button_elevation),
+      colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
       shape = RoundedCornerShape(dimensionResource(id = R.dimen.radius_default))
     ) {
       Column(
@@ -64,7 +65,7 @@ fun Dialog(
 fun DialogHeader(title: String) =
   Text(
     text = title,
-    style = MaterialTheme.typography.h6,
+    style = MaterialTheme.typography.headlineSmall,
     textAlign = TextAlign.Center,
     modifier = Modifier
       .padding(all = dimensionResource(id = R.dimen.distance_default))

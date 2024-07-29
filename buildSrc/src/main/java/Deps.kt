@@ -8,7 +8,7 @@ object Deps {
     const val GoogleServices = "com.google.gms:google-services:${Versions.GoogleServices}"
 
     const val KotlinGradlePlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.Kotlin}"
-    const val AndroidGradlePlugin = "com.android.tools.build:gradle:8.4.1"
+    const val AndroidGradlePlugin = "com.android.tools.build:gradle:8.5.1"
 
     const val Spotless = "com.diffplug.spotless:spotless-plugin-gradle:${Versions.Spotless}"
 
@@ -34,6 +34,7 @@ object Deps {
         object Core {
             const val Core = "androidx.core:core:${Versions.Androidx.Core}"
             const val Ktx = "androidx.core:core-ktx:${Versions.Androidx.Core}"
+            const val Splash = "androidx.core:core-splashscreen:1.0.1"
         }
 
         object Lifecycle {
@@ -54,7 +55,6 @@ object Deps {
 
         object Compose {
             const val UI = "androidx.compose.ui:ui:${Versions.Androidx.Compose.Core}"
-            const val Material = "androidx.compose.material:material:${Versions.Androidx.Compose.Core}"
             const val Icons = "androidx.compose.material:material-icons-extended:${Versions.Androidx.Compose.Core}"
             object Material3 {
                 const val Core = "androidx.compose.material3:material3:${Versions.Androidx.Compose.Material3}"

@@ -21,18 +21,15 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerFormatter
 import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import org.supla.android.core.ui.theme.disabled
-import org.supla.android.core.ui.theme.primaryLight
 
 @Composable
 fun DatePicker(
@@ -50,22 +47,22 @@ fun DatePicker(
   showModeToggle: Boolean = true
 ) {
   val colors = DatePickerDefaults.colors(
-    containerColor = MaterialTheme.colors.surface,
-    titleContentColor = MaterialTheme.colors.onSurface,
-    headlineContentColor = MaterialTheme.colors.onSurface,
-    weekdayContentColor = MaterialTheme.colors.onSurface,
-    yearContentColor = MaterialTheme.colors.onSurface,
-    currentYearContentColor = MaterialTheme.colors.onSurface,
-    selectedYearContentColor = MaterialTheme.colors.onSurface,
-    selectedYearContainerColor = MaterialTheme.colors.surface,
-    dayContentColor = MaterialTheme.colors.onSurface,
-    disabledDayContentColor = Color.disabled,
-    selectedDayContentColor = MaterialTheme.colors.onPrimary,
-    disabledSelectedDayContentColor = MaterialTheme.colors.onSurface,
-    selectedDayContainerColor = MaterialTheme.colors.primary,
-    disabledSelectedDayContainerColor = Color.primaryLight,
-    todayContentColor = MaterialTheme.colors.onSurface,
-    todayDateBorderColor = MaterialTheme.colors.primary
+    containerColor = MaterialTheme.colorScheme.surface,
+    titleContentColor = MaterialTheme.colorScheme.onSurface,
+    headlineContentColor = MaterialTheme.colorScheme.onSurface,
+    weekdayContentColor = MaterialTheme.colorScheme.onSurface,
+    yearContentColor = MaterialTheme.colorScheme.onSurface,
+    currentYearContentColor = MaterialTheme.colorScheme.onSurface,
+    selectedYearContentColor = MaterialTheme.colorScheme.onSurface,
+    selectedYearContainerColor = MaterialTheme.colorScheme.surface,
+    dayContentColor = MaterialTheme.colorScheme.onSurface,
+    disabledDayContentColor = MaterialTheme.colorScheme.outline,
+    selectedDayContentColor = MaterialTheme.colorScheme.onPrimary,
+    disabledSelectedDayContentColor = MaterialTheme.colorScheme.onSurface,
+    selectedDayContainerColor = MaterialTheme.colorScheme.primary,
+    disabledSelectedDayContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+    todayContentColor = MaterialTheme.colorScheme.onSurface,
+    todayDateBorderColor = MaterialTheme.colorScheme.primary
   )
 
   androidx.compose.material3.DatePicker(

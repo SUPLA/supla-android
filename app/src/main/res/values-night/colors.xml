@@ -1,18 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="primary_variant">@color/supla</color>
-    <color name="primary_light">#2f3230</color>
-    <color name="on_primary">#ffffff</color>
-    <color name="surface">#1F211F</color>
-    <color name="background">#171717</color>
-    <color name="on_background">#B4B7BA</color>
+    <color name="primary">#12a71e</color>
+    <color name="on_primary">#FFFFFF</color>
+    <color name="secondary">#54A6FF</color>
+    <color name="primary_container">#003910</color>
+    <color name="on_primary_container">#E4E4E4</color>
+    <color name="surface">#262626</color>
+    <color name="on_surface">#E4E4E4</color>
+    <color name="surface_variant">#191B1A</color>
+    <color name="on_surface_variant">#B2B2B2</color>
+    <color name="background">#131313</color>
+    <color name="on_background">#FCFCFC</color>
+    <color name="outline">#565656</color>
+    <color name="outline_variant">#363636</color>
+    <color name="secondary_container">#03162C</color>
 
     <color name="disabled">#4E5255</color>
     <color name="disabledOverlay">#BB242725</color>
     <color name="separator">#000000</color>
     <color name="old_switch_track">#42d3d2d2</color>
-    <color name="control_button_background">#FF242725</color>
+    <color name="error">#EF6153</color>
+    <color name="error_container">#270603</color>
+    <color name="supla_button_background_outside">#131313</color>
+    <color name="supla_button_inner_shadow">#00000000</color>
 
     <color name="gray_light">#424343</color>
     <color name="gray_lighter">#3D3D3E</color>
@@ -28,14 +39,10 @@
     <color name="segmented_field_background">#101010</color>
 
     <color name="widget_fields_border">#4E5255</color>
-    <color name="widget_spinner_location_background">#2AA75A</color>
     <color name="widget_spinner_item_background">#262627</color>
 
-    <color name="channel_section_cell">#242725</color>
-    <color name="channel_cell">@color/surface</color>
-
     <color name="dialog_scrim">#BB171717</color>
-    <color name="toolbar">#003A03</color>
+    <color name="info_scrim">#BB171717</color>
 
     <!-- Roller shutter -->
     <color name="roller_shutter_window_color">#363738</color>
@@ -50,9 +57,7 @@
 
     <!-- Thermostat -->
     <color name="thermostat_control_circle_background">#313131</color>
-    <color name="thermostat_control_button_background">#313131</color>
 
     <!-- Other -->
     <color name="vl_infotext">#808080</color>
-    <color name="rgbw_button_border">#F5F6F7</color>
 </resources>

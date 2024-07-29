@@ -1,4 +1,4 @@
-package org.supla.android.ui.views.buttons.animatable.controlbutton
+package org.supla.android.ui.views.buttons.supla
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,23 +17,25 @@ package org.supla.android.ui.views.buttons.animatable.controlbutton
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.runtime.Immutable
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.unit.Dp
 
-@Composable
-fun ControlButtonIcon(
-  iconRes: Int,
-  modifier: Modifier = Modifier,
-  textColor: Color = MaterialTheme.colors.onSurface,
-  rotate: Float = 0f
-) = Icon(
-  painter = painterResource(id = iconRes),
-  contentDescription = null,
-  tint = textColor,
-  modifier = modifier.rotate(rotate)
-)
+@Immutable
+class SuplaButtonShape(
+  val topStartRadius: Dp,
+  val topEndRadius: Dp,
+  val bottomEndRadius: Dp,
+  val bottomStartRadius: Dp,
+  val minWidth: Dp,
+  val minHeight: Dp
+) {
+  val shape: Shape
+    get() = RoundedCornerShape(
+      topStart = topStartRadius,
+      topEnd = topEndRadius,
+      bottomEnd = bottomEndRadius,
+      bottomStart = bottomStartRadius
+    )
+}

@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalMaterialApi::class)
+@file:OptIn(ExperimentalMaterial3Api::class)
 
 package org.supla.android.features.notificationslog
 /*
@@ -29,15 +29,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.DismissDirection
-import androidx.compose.material.DismissValue
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.FixedThreshold
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.SwipeToDismiss
-import androidx.compose.material.Text
-import androidx.compose.material.rememberDismissState
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxValue
+import androidx.compose.material3.Text
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -88,7 +86,7 @@ fun NotificationsLogView(viewProxy: NotificationsLogViewProxy) {
   LazyColumn(
     modifier = Modifier
       .fillMaxWidth()
-      .background(MaterialTheme.colors.background)
+      .background(MaterialTheme.colorScheme.background)
       .padding(top = 1.dp)
   ) {
     items(
@@ -96,22 +94,23 @@ fun NotificationsLogView(viewProxy: NotificationsLogViewProxy) {
       key = { it.notificationEntity.id },
       itemContent = { item ->
         val currentItem by rememberUpdatedState(item)
-        val dismissState = rememberDismissState(
-          confirmStateChange = {
-            if (it == DismissValue.DismissedToEnd) {
+        val dismissState = rememberSwipeToDismissBoxState(
+          confirmValueChange = {
+            if (it == SwipeToDismissBoxValue.StartToEnd) {
               viewProxy.delete(currentItem.notificationEntity)
-              return@rememberDismissState true
+              return@rememberSwipeToDismissBoxState true
             }
             false
-          }
+          },
+          positionalThreshold = { it * 0.25f }
         )
         LaunchedEffect(Any()) { dismissState.reset() }
         if (item.deleted.not()) {
-          SwipeToDismiss(
+          SwipeToDismissBox(
             state = dismissState,
-            directions = setOf(DismissDirection.StartToEnd),
-            dismissThresholds = { FixedThreshold(112.dp) },
-            background = { NotificationRowBackground() }
+            enableDismissFromStartToEnd = true,
+            enableDismissFromEndToStart = false,
+            backgroundContent = { NotificationRowBackground() }
           ) {
             NotificationRow(item.notificationEntity)
           }
@@ -128,7 +127,7 @@ private fun NotificationRow(entity: NotificationEntity) {
     modifier = Modifier
       .fillMaxWidth()
       .padding(bottom = 1.dp)
-      .background(MaterialTheme.colors.surface)
+      .background(MaterialTheme.colorScheme.surface)
   ) {
     Row(
       modifier = Modifier
@@ -139,33 +138,33 @@ private fun NotificationRow(entity: NotificationEntity) {
       entity.profileName?.let {
         Text(
           text = stringResource(id = R.string.notifications_log_profile),
-          style = MaterialTheme.typography.caption,
+          style = MaterialTheme.typography.bodySmall,
           fontWeight = FontWeight.SemiBold
         )
         Text(
           text = entity.profileName,
-          style = MaterialTheme.typography.caption,
+          style = MaterialTheme.typography.bodySmall,
           modifier = Modifier.padding(end = Distance.tiny)
         )
       }
       Text(
         text = stringResource(id = R.string.notifications_log_date),
-        style = MaterialTheme.typography.caption,
+        style = MaterialTheme.typography.bodySmall,
         fontWeight = FontWeight.SemiBold
       )
       Text(
         text = formatter.format(entity.date),
-        style = MaterialTheme.typography.caption
+        style = MaterialTheme.typography.bodySmall
       )
     }
     Text(
       text = entity.title,
-      style = MaterialTheme.typography.h6,
+      style = MaterialTheme.typography.headlineSmall,
       modifier = Modifier.padding(start = Distance.default, end = Distance.default)
     )
     Text(
       text = entity.message,
-      style = MaterialTheme.typography.body2,
+      style = MaterialTheme.typography.bodyMedium,
       modifier = Modifier.padding(start = Distance.default, top = Distance.tiny, end = Distance.default, bottom = Distance.small)
     )
   }
@@ -178,12 +177,12 @@ private fun NotificationRowBackground() =
       .fillMaxWidth()
       .fillMaxHeight()
       .padding(bottom = 1.dp)
-      .background(MaterialTheme.colors.error)
+      .background(MaterialTheme.colorScheme.error)
   ) {
     Icon(
       painter = painterResource(id = R.drawable.ic_delete),
       contentDescription = null,
-      tint = MaterialTheme.colors.onPrimary,
+      tint = MaterialTheme.colorScheme.onPrimary,
       modifier = Modifier
         .align(Alignment.CenterStart)
         .padding(all = Distance.default)

@@ -82,8 +82,6 @@
   <string name="advanced_settings">Розширений</string>
   <string name="create_account">Створити обліковий запис</string>
   <string name="delete_account">Видалити</string>
-  <string name="delete_account_confirm_message" translatable="false">Ви впевнені, що хочете видалити свій обліковий запис?</string>
-  <string name="delete_account_confirm_message_with_widgets" translatable="false">Ви впевнені, що хочете видалити свій обліковий запис? Підтвердження видалить пов’язані віджети.</string>
   <string name="cfg_label_access_id_auth">ID</string>
   <string name="cfg_channel_height" translatable="false">Висота каналу</string>
   <string name="cfg_temperature_unit" translatable="false">Одиниця вимірювання температури</string>
@@ -94,8 +92,6 @@
   <string name="rate_now">Оцінити зараз</string>
   <string name="rate_later">Пізніше</string>
   <string name="rate_no_thanks">Ні, дякую</string>
-  <string name="rs_percent_caption">Відсоток закриття</string>
-  <string name="rs_percent_caption_open">Відсоток відкриття</string>
   <string name="roller_shutter_calibrating">Калібрування…</string>
   <string name="add_wizard_is_not_available">Майстер додавання доступний лише тоді, коли встановлено з’єднання з сервером на основі введеної електронної адреси! (Вимкніть додаткові параметри в налаштуваннях облікового запису)</string>
   <string name="next">Далі</string>
@@ -450,7 +446,6 @@
   <string name="motor_problem">Проблема з двигуном / Несподівана зупинка.</string>
   <string name="create_url">https://cloud.supla.org/register?lang=uk</string>
   <string name="delete_url">https://{SERVER_ADDRESS}/db99845855b2ecbfecca9a095062b96c3e27703f?lang=uk</string>
-  <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=QYN932S5UQG8N</string>
   <string name="hour_string_format">HH:mm:ss</string>
   <string name="roller_shutter_calibration">Калібрування</string>
 </resources>

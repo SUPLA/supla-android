@@ -1,6 +1,5 @@
 <resources>
 
-  <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=L4N7RSWME6LG2</string>
   <string name="create_url">https://cloud.supla.org/register?lang=es</string>
   <string name="delete_url">https://{SERVER_ADDRESS}/db99845855b2ecbfecca9a095062b96c3e27703f?lang=es</string>
   <string name="forumpage_url">https://es-forum.supla.org/</string>
@@ -72,7 +71,6 @@
   <string name="rate_now">Evalúa ahora</string>
   <string name="rate_later">Más tarde</string>
   <string name="rate_no_thanks">No, gracias</string>
-  <string name="rs_percent_caption">Porcentaje de cierre</string>
   <string name="roller_shutter_calibrating">Calibración…</string>
   <string name="add_wizard_is_not_available">¡El Asistente para agregar solo está disponible cuando se ha establecido una conexión con el servidor según la dirección de correo electrónico ingresada! (Desactiva las opciones avanzadas en la configuración de tu cuenta)</string>
   <string name="wizard_step1_txt3">Para continuar presiona <b>Siguiente</b>.</string>
@@ -259,7 +257,7 @@
   <string name="light_source_lifespan">Vida útil de la fuente de luz</string>
   <string name="light_source_lifespan_hours">Duración de la luz (horas)</string>
   <string name="light_source_operatingtime">Tiempo de trabajo de la fuente de luz</string>
-  <string name="lightsource_warning">Duración de la fuente de luz es% 1 $ s</string>
+  <string name="lightsource_warning">Duración de la fuente de luz es %1$s</string>
   <string name="mode_change_in_progress">Cambio de modo en curso</string>
   <string name="no">No</string>
   <string name="reset_lightsource_usage_counter">Resetear el contador de uso de la fuente de luz</string>
@@ -271,8 +269,8 @@
   <string name="soft_ver">Versión</string>
   <string name="time_exceeded">¡Se ha superado el tiempo! Inténtalo de nuevo.</string>
   <string name="uptime">Tiempo de trabajo</string>
-  <string name="uv_warning1">Duración de la lámpara ultravioleta es% 1 $ s. Planee su reemplazo.</string>
-  <string name="uv_warning2">Duración de la lámpara ultravioleta es% 1 $ s. Reemplácela.</string>
+  <string name="uv_warning1">Duración de la lámpara ultravioleta es %1$s. Planee su reemplazo.</string>
+  <string name="uv_warning2">Duración de la lámpara ultravioleta es %1$s. Reemplácela.</string>
   <string name="valve_open_warning">La válvula se ha cerrado manualmente o por radio. Antes de abrirla, asegúrese de que no se haya cerrado debido a una inundación. Para desactivar la advertencia, abra la válvula manualmente. ¿Está seguro de que quiere abrir la válvula desde la aplicación?</string>
   <string name="valve_warning">La válvula se ha cerrado manualmente o por radio. Antes de abrirla, asegúrese de que no se haya cerrado debido a una inundación. Para desactivar la advertencia, abra la válvula manualmente.</string>
   <string name="vector_balance_days">Balance vectorial – Días</string>
@@ -367,8 +365,6 @@
   <string name="add_account">Añadir cuenta</string>
   <string name="edit_account">Editar cuenta</string>
   <string name="delete_account">Borrar</string>
-  <string name="delete_account_confirm_message">¿Estás seguro de que deseas eliminar la cuenta?</string>
-  <string name="delete_account_confirm_message_with_widgets">¿Estás seguro de que deseas eliminar la cuenta? La confirmación eliminará los widgets relacionados.</string>
   <string name="cfg_label_access_id_auth">Identificación</string>
   <string name="cfg_channel_height">Altura del canal</string>
   <string name="cfg_temperature_unit">Unidad de temperatura</string>
@@ -376,7 +372,6 @@
   <string name="profile">Tu cuenta</string>
   <string name="profile_plural">Tus cuentas</string>
   <string name="menubar_appsettings">Configuración</string>
-  <string name="rs_percent_caption_open">Porcentaje de apertura</string>
   <string name="em_chart_phase_n">Fase %d</string>
   <string name="em_chart_all_phases">Fase 1 + 2 + 3</string>
   <string name="widget_configure_title">Configuración de widgets</string>

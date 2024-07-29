@@ -10,9 +10,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -36,7 +37,7 @@ class SegmentedComponent @JvmOverloads constructor(
   var selectedItemListener: (Int) -> Unit = { }
 
   var items by mutableStateOf(listOf<String>())
-  var activeItem by mutableStateOf(0)
+  var activeItem by mutableIntStateOf(0)
   var disabled by mutableStateOf(false)
 
   @Composable
@@ -76,8 +77,8 @@ fun SegmentedComponent(
 
       ClickableText(
         text = AnnotatedString(item),
-        style = MaterialTheme.typography.body2.copy(
-          color = if (disabled) colorResource(id = R.color.item_unselected) else MaterialTheme.colors.onBackground,
+        style = MaterialTheme.typography.bodyMedium.copy(
+          color = if (disabled) colorResource(id = R.color.item_unselected) else MaterialTheme.colorScheme.onBackground,
           textAlign = TextAlign.Center
         ),
         onClick = {

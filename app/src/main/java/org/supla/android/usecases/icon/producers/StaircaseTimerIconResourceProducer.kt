@@ -33,9 +33,9 @@ class StaircaseTimerIconResourceProducer : IconResourceProducer {
   override fun produce(data: IconData): Int =
     when (data.altIcon) {
       1 -> if (data.state.value == ChannelState.Value.ON) {
-        R.drawable.staircasetimeron_1
+        R.drawable.fnc_staircasetimer_1_on
       } else {
-        R.drawable.staircasetimeroff_1
+        R.drawable.fnc_staircasetimer_1_off
       }
 
       else -> if (data.state.value == ChannelState.Value.ON) {

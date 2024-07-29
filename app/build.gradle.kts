@@ -24,8 +24,8 @@ android {
     minSdk = Versions.MinSdk
     targetSdk = Versions.TargetSdk
     multiDexEnabled = true
-    versionCode = 232
-    versionName = "24.07.04"
+    versionCode = 235
+    versionName = "24.07.05"
 
     ndk {
       moduleName = "suplaclient"
@@ -112,6 +112,7 @@ repositories {
 }
 
 dependencies {
+  implementation(Deps.Androidx.Core.Splash)
   implementation(Deps.Multidex)
   implementation(Deps.Androidx.Lifecycle.Extensions)
   implementation(Deps.AndroidChart)
@@ -148,7 +149,6 @@ dependencies {
   implementation(Deps.Firebase.Messaging)
   implementation(Deps.Androidx.Security.Crypto)
   implementation(Deps.Androidx.Compose.UI)
-  implementation(Deps.Androidx.Compose.Material)
   implementation(Deps.Androidx.Compose.Icons)
   implementation(Deps.Androidx.Compose.Material3.Core)
   implementation(Deps.Androidx.Compose.Material3.Adaptive)

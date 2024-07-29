@@ -37,6 +37,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.children
 import androidx.customview.widget.Openable
 import androidx.navigation.NavDestination
@@ -46,6 +47,7 @@ import androidx.navigation.ui.NavigationUI
 import com.google.android.material.appbar.AppBarLayout
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.core.networking.suplaclient.SuplaClientState
 import org.supla.android.core.networking.suplaclient.SuplaClientStateHolder
@@ -101,6 +103,8 @@ class MainActivity :
 
   private var lastDestinationId: Int? = null
   private val disposables: CompositeDisposable = CompositeDisposable()
+  private var keepSplashScreen = true
+  private var splashScreenDisposable: Disposable? = null
 
   private val menuListener: Openable = object : Openable {
 
@@ -148,6 +152,7 @@ class MainActivity :
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
+    handleSplashScreen()
     legacySetup()
     navigationSetup()
     toolbarSetup()
@@ -520,6 +525,23 @@ class MainActivity :
   override fun setToolbarVisible(visible: Boolean) {
     appBarLayout.visibleIf(visible)
     appBarLayoutSpacer.visibleIf(visible)
-    setStatusBarColor(if (visible) R.color.toolbar else R.color.background, visible.not())
+    setStatusBarColor(if (visible) R.color.primary_container else R.color.background, visible.not())
+  }
+
+  private fun handleSplashScreen() {
+    val splashScreen = installSplashScreen()
+    splashScreen.setKeepOnScreenCondition { keepSplashScreen }
+
+    splashScreenDisposable = suplaClientStateHolder.state()
+      .subscribeOn(suplaSchedulers.io)
+      .observeOn(suplaSchedulers.ui)
+      .subscribeBy(
+        onNext = {
+          if (it != SuplaClientState.Initialization) {
+            keepSplashScreen = false
+            splashScreenDisposable?.dispose()
+          }
+        }
+      )
   }
 }

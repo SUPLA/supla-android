@@ -1,6 +1,5 @@
 <resources>
 
-  <string name="donate_url">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick\u0026hosted_button_id=QYN932S5UQG8N</string>
   <string name="create_url">https://cloud.supla.org/register?lang=el</string>
   <string name="delete_url">https://{SERVER_ADDRESS}/db99845855b2ecbfecca9a095062b96c3e27703f?lang=el</string>
 
@@ -78,7 +77,6 @@
   <string name="rate_now">Βαθμολογήστε τώρα</string>
   <string name="rate_later">Αργότερα</string>
   <string name="rate_no_thanks">Όχι, ευχαριστώ</string>
-  <string name="rs_percent_caption">Ποσοστό κλεισίματος</string>
   <string name="roller_shutter_calibrating">Βαθμονόμηση…</string>
 
   <string name="add_wizard_is_not_available">Ο Οδηγός εγκατάστασης είναι διαθέσιμος μόνο όταν έχει δημιουργηθεί σύνδεση με τον διακομιστή με βάση τη διεύθυνση e-mail που είχατε εισαγάγει! (Απενεργοποιήστε τις σύνθετες επιλογές στη διαμόρφωση του λογαριασμού σας)</string>
@@ -376,8 +374,6 @@
   <string name="add_account">Προσθήκη λογαριασμού</string>
   <string name="edit_account">Επεξεργασία λογαριασμού</string>
   <string name="delete_account">Αφαιρώ</string>
-  <string name="delete_account_confirm_message">Είστε βέβαιοι ότι θέλετε να διαγράψετε τον λογαριασμό σας;</string>
-  <string name="delete_account_confirm_message_with_widgets">Είστε βέβαιοι ότι θέλετε να διαγράψετε τον λογαριασμό σας; Η επιβεβαίωση θα σημαίνει την κατάργηση των σχετικών γραφικών στοιχείων.</string>
   <string name="cfg_label_access_id_auth">Αναγνωριστικό</string>
   <string name="cfg_channel_height">Ύψος καναλιού</string>
   <string name="cfg_temperature_unit">Μονάδα θερμοκρασίας</string>
@@ -385,7 +381,6 @@
   <string name="profile">Ο λογαριασμός σας</string>
   <string name="profile_plural">Οι λογαριασμοί σας</string>
   <string name="menubar_appsettings">Ρυθμίσεις</string>
-  <string name="rs_percent_caption_open">Ποσοστό ανοίγματος</string>
   <string name="em_chart_phase_n">Στάδιο %d</string>
   <string name="em_chart_all_phases">Στάδιο 1+2+3</string>
   <string name="widget_configure_title">Διαμόρφωση γραφικού στοιχείου</string>

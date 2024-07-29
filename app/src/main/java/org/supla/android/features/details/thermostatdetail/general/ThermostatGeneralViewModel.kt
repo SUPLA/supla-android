@@ -346,6 +346,7 @@ class ThermostatGeneralViewModel @Inject constructor(
     val (configMaxTemperature) = guardLet(data.config.temperatures.roomMax?.fromSuplaTemperature()) { return }
 
     val isOff = value.online.not() || thermostatValue.mode == SuplaHvacMode.OFF || thermostatValue.mode == SuplaHvacMode.NOT_SET
+    val currentPower = if (isOff) null else thermostatValue.state.power
 
     updateState {
       if (it.changing) {
@@ -377,6 +378,7 @@ class ThermostatGeneralViewModel @Inject constructor(
 
         isOffline = !value.online,
         isOff = isOff,
+        currentPower = currentPower,
         isAutoFunction = channelData.function == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL,
         heatingModeActive = isHeatingModeActive(channelData, thermostatValue),
         coolingModeActive = isCoolingModeActive(channelData, thermostatValue),
@@ -636,6 +638,7 @@ data class ThermostatGeneralViewState(
 
   val isOffline: Boolean = false,
   val isOff: Boolean = false,
+  val currentPower: Float? = null,
 
   val isAutoFunction: Boolean = false,
   val heatingModeActive: Boolean = false,

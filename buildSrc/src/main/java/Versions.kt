@@ -1,7 +1,7 @@
 object Versions {
 
     const val Sdk = 34
-    const val TargetSdk = 33
+    const val TargetSdk = 34
     const val MinSdk = 21
     const val BuildTools = "34.0.0"
 
@@ -39,7 +39,7 @@ object Versions {
         object Compose {
             const val Core = "1.6.8"
             const val ConstaintLayout = "1.0.1"
-            const val Material3 = "1.2.1"
+            const val Material3 = "1.3.0-beta04"
         }
     }
 

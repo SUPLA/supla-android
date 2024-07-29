@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:background="@color/toolbar">
+  android:background="@color/primary_container">
 
   <TextView
     android:id="@+id/tv_select_channel_title"
