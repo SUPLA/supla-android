@@ -142,65 +142,9 @@ class ValuesFormatter @Inject constructor(
   }
 
   @SuppressLint("SimpleDateFormat")
-  fun getHourString(date: Date?): String? =
-    date?.let {
-      val formatter = SimpleDateFormat("HH:mm")
-      formatter.format(it)
-    }
-
-  @SuppressLint("SimpleDateFormat")
-  fun getMonthString(date: Date?): String? =
-    date?.let {
-      val formatter = SimpleDateFormat("dd MMM")
-      formatter.format(it)
-    }
-
-  @SuppressLint("SimpleDateFormat")
-  fun getDateString(date: Date?): String? =
-    date?.let {
-      val formatter = SimpleDateFormat("dd.MM.yyyy")
-      formatter.format(it)
-    }
-
-  @SuppressLint("SimpleDateFormat")
-  fun getShortDateString(date: Date?): String? =
-    date?.let {
-      val formatter = SimpleDateFormat("dd.MM.yy")
-      formatter.format(it)
-    }
-
-  @SuppressLint("SimpleDateFormat")
   fun getFullDateString(date: Date?): String? =
     date?.let {
       val formatter = SimpleDateFormat("dd.MM.yyyy HH:mm")
-      formatter.format(it)
-    }
-
-  @SuppressLint("SimpleDateFormat")
-  fun getDayHourDateString(date: Date?): String? =
-    date?.let {
-      val formatter = SimpleDateFormat("EEEE HH:mm")
-      formatter.format(it)
-    }
-
-  @SuppressLint("SimpleDateFormat")
-  fun getDayAndHourDateString(date: Date?): String? =
-    date?.let {
-      val formatter = SimpleDateFormat("dd MMM HH:mm")
-      formatter.format(it)
-    }
-
-  @SuppressLint("SimpleDateFormat")
-  fun getMonthAndYearString(date: Date?): String? =
-    date?.let {
-      val formatter = SimpleDateFormat("LLLL yyyy")
-      formatter.format(it)
-    }
-
-  @SuppressLint("SimpleDateFormat")
-  fun getYearString(date: Date?): String? =
-    date?.let {
-      val formatter = SimpleDateFormat("yyyy")
       formatter.format(it)
     }
 

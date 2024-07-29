@@ -18,8 +18,9 @@ package org.supla.android.data.model.chart
  */
 
 import org.supla.android.R
+import org.supla.android.ui.views.SpinnerItem
 
-enum class ChartRange(val stringRes: Int, val roundedDaysCount: Int) {
+enum class ChartRange(val stringRes: Int, val roundedDaysCount: Int) : SpinnerItem {
   LAST_DAY(R.string.history_range_last_day, 1),
   LAST_WEEK(R.string.history_range_last_week, 7),
   LAST_MONTH(R.string.history_range_last_30_days, 30),
@@ -32,5 +33,8 @@ enum class ChartRange(val stringRes: Int, val roundedDaysCount: Int) {
   YEAR(R.string.history_range_current_year, 365),
 
   CUSTOM(R.string.history_range_custom, -1),
-  ALL_HISTORY(R.string.all_available_history, -1)
+  ALL_HISTORY(R.string.all_available_history, -1);
+
+  override val labelRes: Int
+    get() = stringRes
 }

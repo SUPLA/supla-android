@@ -17,8 +17,6 @@ package org.supla.android.features.details.detailbase.history
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.content.Context
-import android.content.res.Resources
 import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.intl.Locale
 import io.reactivex.rxjava3.core.Single
@@ -30,8 +28,10 @@ import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.StringProvider
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
+import org.supla.android.data.formatting.DateFormatter
 import org.supla.android.data.model.Optional
 import org.supla.android.data.model.chart.ChartDataAggregation
+import org.supla.android.data.model.chart.ChartFilters
 import org.supla.android.data.model.chart.ChartParameters
 import org.supla.android.data.model.chart.ChartRange
 import org.supla.android.data.model.chart.DateRange
@@ -63,6 +63,7 @@ import org.supla.android.extensions.yearNo
 import org.supla.android.extensions.yearStart
 import org.supla.android.features.details.detailbase.history.ui.HistoryDetailProxy
 import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.ui.views.SpinnerItem
 import org.supla.android.usecases.channel.DeleteChannelMeasurementsUseCase
 import java.util.Date
 
@@ -104,9 +105,31 @@ abstract class BaseHistoryDetailViewModel(
     updateUserState()
   }
 
-  override fun changeRange(range: ChartRange) {
+  override fun changeFilter(spinnerItem: SpinnerItem) {
+    if (spinnerItem is ChartRange) {
+      changeRange(spinnerItem)
+    }
+    if (spinnerItem is ChartDataAggregation) {
+      changeAggregation(spinnerItem)
+    }
+  }
+
+  private fun changeAggregation(aggregation: ChartDataAggregation) {
+    updateState { state ->
+      state.copy(
+        filters = state.filters.select(aggregation),
+        chartData = state.chartData.empty(),
+        loading = true
+      ).also {
+        triggerMeasurementsLoad(it)
+      }
+    }
+    updateUserState()
+  }
+
+  private fun changeRange(range: ChartRange) {
     if (range == ChartRange.CUSTOM) {
-      updateState { it.copy(ranges = it.ranges?.copy(selected = range)) }
+      updateState { it.copy(filters = it.filters.select(range)) }
     } else {
       updateState { state ->
         val (currentRange) = guardLet(state.range) { return@updateState state }
@@ -122,9 +145,10 @@ abstract class BaseHistoryDetailViewModel(
 
         val newDateRange = DateRange(rangeStart, rangeEnd)
         state.copy(
-          ranges = state.ranges?.copy(selected = range),
+          filters = state.filters
+            .select(range)
+            .putAggregations(aggregations(newDateRange, state.filters.selectedAggregation)),
           range = newDateRange,
-          aggregations = aggregations(newDateRange, state.aggregations?.selected),
           chartData = state.chartData.empty(),
           chartParameters = HideableValue(ChartParameters(1f, 1f, 0f, 0f)),
           loading = true
@@ -157,19 +181,6 @@ abstract class BaseHistoryDetailViewModel(
   override fun moveToDataEnd() {
     updateState { state ->
       moveToDate(state, state.maxDate)
-    }
-    updateUserState()
-  }
-
-  override fun changeAggregation(aggregation: ChartDataAggregation) {
-    updateState { state ->
-      state.copy(
-        aggregations = state.aggregations?.copy(selected = aggregation),
-        chartData = state.chartData.empty(),
-        loading = true
-      ).also {
-        triggerMeasurementsLoad(it)
-      }
     }
     updateUserState()
   }
@@ -221,7 +232,7 @@ abstract class BaseHistoryDetailViewModel(
       state.copy(
         range = range,
         editDate = null,
-        aggregations = aggregations(range, state.aggregations?.selected),
+        filters = state.filters.putAggregations(aggregations(range, state.filters.selectedAggregation)),
         chartData = state.chartData.empty(),
         chartParameters = HideableValue(ChartParameters(1f, 1f, 0f, 0f)),
         loading = true
@@ -246,7 +257,7 @@ abstract class BaseHistoryDetailViewModel(
       state.copy(
         range = range,
         editHour = null,
-        aggregations = aggregations(range, state.aggregations?.selected),
+        filters = state.filters.putAggregations(aggregations(range, state.filters.selectedAggregation)),
         chartData = state.chartData.empty(),
         chartParameters = HideableValue(ChartParameters(1f, 1f, 0f, 0f)),
         loading = true
@@ -297,8 +308,8 @@ abstract class BaseHistoryDetailViewModel(
     val (start, end) = guardLet(state.range?.start, state.range?.end) { return }
     val (remoteId) = guardLet(state.remoteId) { return }
     val (profileId) = guardLet(state.profileId) { return }
-    val (chartRange) = guardLet(state.ranges?.selected) { return }
-    val aggregation = state.aggregations?.selected ?: ChartDataAggregation.MINUTES
+    val (chartRange) = guardLet(state.filters.selectedRange) { return }
+    val aggregation = state.filters.selectedAggregation ?: ChartDataAggregation.MINUTES
 
     measurementsMaybe(remoteId, profileId, start, end, chartRange, aggregation)
       .attachSilent()
@@ -311,13 +322,13 @@ abstract class BaseHistoryDetailViewModel(
 
   private fun shiftByRange(forward: Boolean) {
     updateState { state ->
-      val (range) = guardLet(state.ranges?.selected) { return@updateState state }
+      val (range) = guardLet(state.filters.selectedRange) { return@updateState state }
       state.shiftRange(range, forward).also { triggerMeasurementsLoad(it) }
     }
   }
 
   private fun moveToDate(state: HistoryDetailViewState, date: Date?): HistoryDetailViewState {
-    val (range) = guardLet(state.ranges?.selected) { return state }
+    val (range) = guardLet(state.filters.selectedRange) { return state }
 
     val rangeStart = when (range) {
       ChartRange.DAY -> date?.dayStart()
@@ -364,8 +375,9 @@ abstract class BaseHistoryDetailViewModel(
 
     updateState { state ->
       state.copy(
-        ranges = SelectableList(selectedRange, ChartRange.values().toList()),
-        aggregations = aggregations(dateRange, chartState.aggregation),
+        filters = state.filters
+          .putRanges(SelectableList(selectedRange, ChartRange.entries, R.string.history_range_label))
+          .putAggregations(aggregations(dateRange, chartState.aggregation)),
         range = dateRange,
         chartParameters = chartParameters
       )
@@ -439,14 +451,15 @@ abstract class BaseHistoryDetailViewModel(
 
     return SelectableList(
       selected = aggregation,
-      items = ChartDataAggregation.values().filter { it.between(minAggregation, maxAggregation) }
+      items = ChartDataAggregation.entries.filter { it.between(minAggregation, maxAggregation) },
+      label = R.string.history_aggregation_label
     )
   }
 
   private fun updateUserState() {
     val state = currentState()
-    val (aggregation) = guardLet(state.aggregations?.selected) { return }
-    val (chartRange) = guardLet(state.ranges?.selected) { return }
+    val (aggregation) = guardLet(state.filters.selectedAggregation) { return }
+    val (chartRange) = guardLet(state.filters.selectedRange) { return }
     val (dateRange) = guardLet(state.range) { return }
     val visibleSets = state.chartData.sets.filter { it.active }.map { it.setId }
 
@@ -489,7 +502,7 @@ abstract class BaseHistoryDetailViewModel(
 }
 
 sealed class HistoryDetailViewEvent : ViewEvent {
-  object ShowDownloadInProgressToast : HistoryDetailViewEvent()
+  data object ShowDownloadInProgressToast : HistoryDetailViewEvent()
 }
 
 data class HistoryDetailViewState(
@@ -500,8 +513,7 @@ data class HistoryDetailViewState(
   val initialLoadStarted: Boolean = false,
   val chartData: ChartData = EmptyChartData,
   val range: DateRange? = null,
-  val ranges: SelectableList<ChartRange>? = null,
-  val aggregations: SelectableList<ChartDataAggregation>? = null,
+  val filters: ChartFilters = ChartFilters(),
   val loading: Boolean = false,
   val downloadState: DownloadEventsManager.State = DownloadEventsManager.State.Idle,
 
@@ -517,6 +529,8 @@ data class HistoryDetailViewState(
   val editDate: RangeValueType? = null,
   val editHour: RangeValueType? = null
 ) : ViewState() {
+
+  private val dateFormatter = DateFormatter()
 
   val shiftRightEnabled: Boolean
     get() {
@@ -565,7 +579,7 @@ data class HistoryDetailViewState(
     }
 
   val showBottomBar: Boolean
-    get() = when (ranges?.selected) {
+    get() = when (filters.selectedRange) {
       ChartRange.DAY,
       ChartRange.WEEK,
       ChartRange.MONTH,
@@ -577,7 +591,7 @@ data class HistoryDetailViewState(
     }
 
   val allowNavigation: Boolean
-    get() = when (ranges?.selected) {
+    get() = when (filters.selectedRange) {
       ChartRange.DAY,
       ChartRange.WEEK,
       ChartRange.MONTH,
@@ -607,42 +621,29 @@ data class HistoryDetailViewState(
       return IntRange(min.yearNo, max.yearNo)
     }
 
-  fun rangesMap(resources: Resources): Map<ChartRange, String> =
-    mutableMapOf<ChartRange, String>().also { map ->
-      ranges?.items?.forEach {
-        map[it] = resources.getString(it.stringRes)
+  val rangeText: String?
+    get() {
+      val (dateRange) = guardLet(range) { return null }
+      val (chartRange) = guardLet(filters.selectedRange) { return null }
+
+      return when (chartRange) {
+        ChartRange.DAY -> dateFormatter.getDateString(dateRange.start)
+        ChartRange.LAST_DAY -> weekdayAndHourString(dateRange)
+
+        ChartRange.LAST_WEEK,
+        ChartRange.LAST_MONTH -> dayAndHourString(dateRange)
+
+        ChartRange.WEEK,
+        ChartRange.LAST_QUARTER,
+        ChartRange.QUARTER -> dateString(dateRange)
+
+        ChartRange.MONTH -> dateFormatter.getMonthAndYearString(dateRange.start)?.capitalize(Locale.current)
+        ChartRange.YEAR -> dateFormatter.getYearString(dateRange.start)
+
+        ChartRange.CUSTOM,
+        ChartRange.ALL_HISTORY -> longDateString(dateRange)
       }
     }
-
-  fun aggregationsMap(resources: Resources): Map<ChartDataAggregation, String> =
-    mutableMapOf<ChartDataAggregation, String>().also { map ->
-      aggregations?.items?.forEach {
-        map[it] = resources.getString(it.stringRes)
-      }
-    }
-
-  fun rangeText(context: Context): String? {
-    val (dateRange) = guardLet(range) { return null }
-    val (chartRange) = guardLet(ranges?.selected) { return null }
-
-    return when (chartRange) {
-      ChartRange.DAY -> context.valuesFormatter.getDateString(dateRange.start)
-      ChartRange.LAST_DAY -> weekdayAndHourString(context, dateRange)
-
-      ChartRange.LAST_WEEK,
-      ChartRange.LAST_MONTH -> dayAndHourString(context, dateRange)
-
-      ChartRange.WEEK,
-      ChartRange.LAST_QUARTER,
-      ChartRange.QUARTER -> dateString(context, dateRange)
-
-      ChartRange.MONTH -> context.valuesFormatter.getMonthAndYearString(dateRange.start)?.capitalize(Locale.current)
-      ChartRange.YEAR -> context.valuesFormatter.getYearString(dateRange.start)
-
-      ChartRange.CUSTOM,
-      ChartRange.ALL_HISTORY -> longDateString(context, dateRange)
-    }
-  }
 
   internal fun shiftRange(chartRange: ChartRange, forward: Boolean): HistoryDetailViewState {
     val newChartRange = when (chartRange) {
@@ -656,7 +657,7 @@ data class HistoryDetailViewState(
       else -> ChartRange.CUSTOM
     }
     return copy(
-      ranges = ranges?.copy(selected = newChartRange),
+      filters = filters.select(newChartRange),
       range = range?.shift(chartRange, forward),
       chartData = chartData.empty()
     )
@@ -673,27 +674,27 @@ data class HistoryDetailViewState(
     }
   }
 
-  private fun weekdayAndHourString(context: Context, range: DateRange): String {
-    val rangeStart = context.valuesFormatter.getDayHourDateString(range.start)
-    val rangeEnd = context.valuesFormatter.getDayHourDateString(range.end)
+  private fun weekdayAndHourString(range: DateRange): String {
+    val rangeStart = dateFormatter.getDayHourDateString(range.start)
+    val rangeEnd = dateFormatter.getDayHourDateString(range.end)
     return "$rangeStart - $rangeEnd"
   }
 
-  private fun dayAndHourString(context: Context, range: DateRange): String {
-    val rangeStart = context.valuesFormatter.getDayAndHourDateString(range.start)
-    val rangeEnd = context.valuesFormatter.getDayAndHourDateString(range.end)
+  private fun dayAndHourString(range: DateRange): String {
+    val rangeStart = dateFormatter.getDayAndHourDateString(range.start)
+    val rangeEnd = dateFormatter.getDayAndHourDateString(range.end)
     return "$rangeStart - $rangeEnd"
   }
 
-  private fun dateString(context: Context, range: DateRange): String {
-    val startString = context.valuesFormatter.getShortDateString(range.start)
-    val endString = context.valuesFormatter.getShortDateString(range.end)
+  private fun dateString(range: DateRange): String {
+    val startString = dateFormatter.getShortDateString(range.start)
+    val endString = dateFormatter.getShortDateString(range.end)
     return "$startString - $endString"
   }
 
-  private fun longDateString(context: Context, range: DateRange): String {
-    val startString = context.valuesFormatter.getFullDateString(range.start)
-    val endString = context.valuesFormatter.getFullDateString(range.end)
+  private fun longDateString(range: DateRange): String {
+    val startString = dateFormatter.getFullDateString(range.start)
+    val endString = dateFormatter.getFullDateString(range.end)
     return "$startString - $endString"
   }
 }

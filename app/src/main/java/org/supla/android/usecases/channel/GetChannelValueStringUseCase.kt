@@ -23,6 +23,7 @@ import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.extensions.TAG
 import org.supla.android.usecases.channel.stringvalueprovider.DepthSensorValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.DistanceSensorValueStringProvider
+import org.supla.android.usecases.channel.stringvalueprovider.ElectricityMeterValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.GpmValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.HumidityAndTemperatureValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.ThermometerValueStringProvider
@@ -35,7 +36,8 @@ class GetChannelValueStringUseCase @Inject constructor(
   humidityAndTemperatureValueProvider: HumidityAndTemperatureValueStringProvider,
   depthSensorValueProvider: DepthSensorValueStringProvider,
   generalPurposeMeasurementValueProvider: GpmValueStringProvider,
-  distanceSensorValueStringProvider: DistanceSensorValueStringProvider
+  distanceSensorValueStringProvider: DistanceSensorValueStringProvider,
+  electricityMeterValueStringProvider: ElectricityMeterValueStringProvider
 ) {
 
   private val providers = listOf(
@@ -43,7 +45,8 @@ class GetChannelValueStringUseCase @Inject constructor(
     humidityAndTemperatureValueProvider,
     depthSensorValueProvider,
     generalPurposeMeasurementValueProvider,
-    distanceSensorValueStringProvider
+    distanceSensorValueStringProvider,
+    electricityMeterValueStringProvider
   )
 
   operator fun invoke(channel: ChannelDataEntity, valueType: ValueType = ValueType.FIRST, withUnit: Boolean = true): String {

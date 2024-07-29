@@ -24,36 +24,6 @@ public class SuplaContract {
 
   public SuplaContract() {}
 
-  public abstract static class ElectricityMeterLogEntry implements BaseColumns {
-
-    public static final String TABLE_NAME = "em_log";
-
-    public static final String _ID = "_id"; // Primary Key
-    public static final String COLUMN_NAME_CHANNELID = "channelid"; // SuplaChannel.Id
-    public static final String COLUMN_NAME_TIMESTAMP = "date";
-
-    public static final String COLUMN_NAME_PHASE1_FAE = "phase1_fae";
-    public static final String COLUMN_NAME_PHASE1_RAE = "phase1_rae";
-    public static final String COLUMN_NAME_PHASE1_FRE = "phase1_fre";
-    public static final String COLUMN_NAME_PHASE1_RRE = "phase1_rre";
-
-    public static final String COLUMN_NAME_PHASE2_FAE = "phase2_fae";
-    public static final String COLUMN_NAME_PHASE2_RAE = "phase2_rae";
-    public static final String COLUMN_NAME_PHASE2_FRE = "phase2_fre";
-    public static final String COLUMN_NAME_PHASE2_RRE = "phase2_rre";
-
-    public static final String COLUMN_NAME_PHASE3_FAE = "phase3_fae";
-    public static final String COLUMN_NAME_PHASE3_RAE = "phase3_rae";
-    public static final String COLUMN_NAME_PHASE3_FRE = "phase3_fre";
-    public static final String COLUMN_NAME_PHASE3_RRE = "phase3_rre";
-
-    public static final String COLUMN_NAME_FAE_BALANCED = "fae_balanced";
-    public static final String COLUMN_NAME_RAE_BALANCED = "rae_balanced";
-
-    public static final String COLUMN_NAME_COMPLEMENT = "complement";
-    public static final String COLUMN_NAME_PROFILEID = "profileid";
-  }
-
   public abstract static class ElectricityMeterLogViewEntry implements BaseColumns {
 
     public static final String VIEW_NAME = "em_log_v1";
@@ -77,19 +47,6 @@ public class SuplaContract {
     public static final String COLUMN_NAME_PROFILEID = "profileid";
   }
 
-  public abstract static class ImpulseCounterLogEntry implements BaseColumns {
-
-    public static final String TABLE_NAME = "ic_log";
-
-    public static final String _ID = "_ic_id"; // Primary Key
-    public static final String COLUMN_NAME_CHANNELID = "channelid"; // SuplaChannel.Id
-    public static final String COLUMN_NAME_TIMESTAMP = "date";
-    public static final String COLUMN_NAME_COUNTER = "counter";
-    public static final String COLUMN_NAME_CALCULATEDVALUE = "calculated_value";
-    public static final String COLUMN_NAME_COMPLEMENT = "complement";
-    public static final String COLUMN_NAME_PROFILEID = "profileid";
-  }
-
   public abstract static class ImpulseCounterLogViewEntry implements BaseColumns {
 
     public static final String VIEW_NAME = "ic_log_v1";
@@ -102,20 +59,6 @@ public class SuplaContract {
     public static final String COLUMN_NAME_COUNTER = "counter";
     public static final String COLUMN_NAME_CALCULATEDVALUE = "calculated_value";
     public static final String COLUMN_NAME_COMPLEMENT = "complement";
-    public static final String COLUMN_NAME_PROFILEID = "profileid";
-  }
-
-  public abstract static class ThermostatLogEntry implements BaseColumns {
-
-    public static final String TABLE_NAME = "th_log";
-
-    public static final String _ID = "_id"; // Primary Key
-    public static final String COLUMN_NAME_CHANNELID = "channelid"; // SuplaChannel.Id
-    public static final String COLUMN_NAME_TIMESTAMP = "date";
-
-    public static final String COLUMN_NAME_ON = "ison";
-    public static final String COLUMN_NAME_MEASUREDTEMPERATURE = "measured";
-    public static final String COLUMN_NAME_PRESETTEMPERATURE = "preset";
     public static final String COLUMN_NAME_PROFILEID = "profileid";
   }
 }

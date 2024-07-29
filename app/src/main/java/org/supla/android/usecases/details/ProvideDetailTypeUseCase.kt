@@ -88,7 +88,7 @@ class ProvideDetailTypeUseCase @Inject constructor() {
     }
 
     SUPLA_CHANNELFNC_ELECTRICITY_METER ->
-      LegacyDetailType.EM
+      EmDetailType(listOf(DetailPage.EM_GENERAL, DetailPage.EM_HISTORY, DetailPage.EM_SETTINGS))
 
     SUPLA_CHANNELFNC_IC_ELECTRICITY_METER,
     SUPLA_CHANNELFNC_IC_GAS_METER,
@@ -179,5 +179,9 @@ data class GpmDetailType(
 ) : DetailType
 
 data class WindowDetailType(
+  val pages: List<DetailPage>
+) : DetailType
+
+data class EmDetailType(
   val pages: List<DetailPage>
 ) : DetailType
