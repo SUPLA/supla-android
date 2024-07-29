@@ -29,8 +29,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import org.supla.android.R;
+import org.supla.android.data.source.local.entity.measurements.ImpulseCounterLogEntity;
 import org.supla.android.db.MeasurementsDbHelper;
-import org.supla.android.db.SuplaContract;
 
 public class ImpulseCounterChartHelper extends IncrementalMeterChartHelper {
 
@@ -49,9 +49,7 @@ public class ImpulseCounterChartHelper extends IncrementalMeterChartHelper {
     float[] phases = new float[1];
 
     phases[0] =
-        (float)
-            c.getDouble(
-                c.getColumnIndex(SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CALCULATEDVALUE));
+        (float) c.getDouble(c.getColumnIndex(ImpulseCounterLogEntity.COLUMN_CALCULATED_VALUE));
 
     entries.add(new BarEntry(n, phases));
   }
@@ -64,10 +62,7 @@ public class ImpulseCounterChartHelper extends IncrementalMeterChartHelper {
   protected void addPieEntries(SimpleDateFormat spf, Cursor c, ArrayList<PieEntry> entries) {
 
     float value;
-    value =
-        (float)
-            c.getDouble(
-                c.getColumnIndex(SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CALCULATEDVALUE));
+    value = (float) c.getDouble(c.getColumnIndex(ImpulseCounterLogEntity.COLUMN_CALCULATED_VALUE));
 
     entries.add(new PieEntry(value, spf.format(new java.util.Date(getTimestamp(c) * 1000))));
   }
@@ -75,7 +70,7 @@ public class ImpulseCounterChartHelper extends IncrementalMeterChartHelper {
   @Override
   @SuppressLint("Range")
   protected long getTimestamp(Cursor c) {
-    return c.getLong(c.getColumnIndex(SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_TIMESTAMP));
+    return c.getLong(c.getColumnIndex(ImpulseCounterLogEntity.COLUMN_TIMESTAMP));
   }
 
   @Override

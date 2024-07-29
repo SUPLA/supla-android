@@ -22,6 +22,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import androidx.annotation.NonNull;
 import java.util.Date;
+import org.supla.android.data.source.local.entity.measurements.ImpulseCounterLogEntity;
 import org.supla.android.db.ImpulseCounterMeasurementItem;
 import org.supla.android.db.SuplaContract;
 
@@ -41,14 +42,14 @@ public class ImpulseCounterLogDao extends MeasurementsBaseDao {
   }
 
   public void addImpulseCounterMeasurement(ImpulseCounterMeasurementItem item) {
-    insert(item, SuplaContract.ImpulseCounterLogEntry.TABLE_NAME, SQLiteDatabase.CONFLICT_IGNORE);
+    insert(item, ImpulseCounterLogEntity.TABLE_NAME, SQLiteDatabase.CONFLICT_IGNORE);
   }
 
   public int getImpulseCounterMeasurementTimestamp(int channelId, boolean min) {
     return getMeasurementTimestamp(
-        SuplaContract.ImpulseCounterLogEntry.TABLE_NAME,
-        SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_TIMESTAMP,
-        SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CHANNELID,
+        ImpulseCounterLogEntity.TABLE_NAME,
+        ImpulseCounterLogEntity.COLUMN_TIMESTAMP,
+        ImpulseCounterLogEntity.COLUMN_CHANNEL_ID,
         channelId,
         min);
   }
@@ -61,15 +62,15 @@ public class ImpulseCounterLogDao extends MeasurementsBaseDao {
   public int getImpulseCounterMeasurementTotalCount(int channelId, boolean withoutComplement) {
     if (withoutComplement) {
       return getCount(
-          SuplaContract.ImpulseCounterLogEntry.TABLE_NAME,
-          key(SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CHANNELID, channelId),
-          key(SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_COMPLEMENT, 0),
-          key(SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_PROFILEID, getCachedProfileId()));
+          ImpulseCounterLogEntity.TABLE_NAME,
+          key(ImpulseCounterLogEntity.COLUMN_CHANNEL_ID, channelId),
+          key(ImpulseCounterLogEntity.COLUMN_MANUALLY_COMPLEMENTED, 0),
+          key(ImpulseCounterLogEntity.COLUMN_PROFILE_ID, getCachedProfileId()));
     } else {
       return getCount(
-          SuplaContract.ImpulseCounterLogEntry.TABLE_NAME,
-          key(SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CHANNELID, channelId),
-          key(SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_PROFILEID, getCachedProfileId()));
+          ImpulseCounterLogEntity.TABLE_NAME,
+          key(ImpulseCounterLogEntity.COLUMN_CHANNEL_ID, channelId),
+          key(ImpulseCounterLogEntity.COLUMN_PROFILE_ID, getCachedProfileId()));
     }
   }
 
@@ -129,8 +130,8 @@ public class ImpulseCounterLogDao extends MeasurementsBaseDao {
 
   public void deleteImpulseCounterMeasurements(int channelId) {
     delete(
-        SuplaContract.ImpulseCounterLogEntry.TABLE_NAME,
-        key(SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CHANNELID, channelId),
-        key(SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_PROFILEID, getCachedProfileId()));
+        ImpulseCounterLogEntity.TABLE_NAME,
+        key(ImpulseCounterLogEntity.COLUMN_CHANNEL_ID, channelId),
+        key(ImpulseCounterLogEntity.COLUMN_PROFILE_ID, getCachedProfileId()));
   }
 }

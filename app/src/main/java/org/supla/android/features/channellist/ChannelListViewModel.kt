@@ -32,6 +32,7 @@ import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.features.details.detailbase.standarddetail.DetailPage
 import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
+import org.supla.android.features.details.electricitymeterdetail.ElectricityMeterDetailFragment
 import org.supla.android.features.details.gpmdetail.GpmDetailFragment
 import org.supla.android.features.details.switchdetail.SwitchDetailFragment
 import org.supla.android.features.details.thermometerdetail.ThermometerDetailFragment
@@ -46,6 +47,7 @@ import org.supla.android.usecases.channel.ButtonType
 import org.supla.android.usecases.channel.ChannelActionUseCase
 import org.supla.android.usecases.channel.CreateProfileChannelsListUseCase
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
+import org.supla.android.usecases.details.EmDetailType
 import org.supla.android.usecases.details.GpmDetailType
 import org.supla.android.usecases.details.LegacyDetailType
 import org.supla.android.usecases.details.ProvideDetailTypeUseCase
@@ -171,8 +173,9 @@ class ChannelListViewModel @Inject constructor(
       is ThermometerDetailType -> sendEvent(ChannelListViewEvent.OpenThermometerDetail(ItemBundle.from(data), detailType.pages))
       is GpmDetailType -> sendEvent(ChannelListViewEvent.OpenGpmDetail(ItemBundle.from(data), detailType.pages))
       is WindowDetailType -> sendEvent(ChannelListViewEvent.OpenWindowDetail(ItemBundle.from(data), detailType.pages))
+      is EmDetailType -> sendEvent(ChannelListViewEvent.OpenEmDetail(ItemBundle.from(data), detailType.pages))
       is LegacyDetailType -> sendEvent(ChannelListViewEvent.OpenLegacyDetails(data.remoteId, detailType))
-      else -> {} // no action
+      null -> {} // no action
     }
   }
 }
@@ -195,6 +198,9 @@ sealed class ChannelListViewEvent : ViewEvent {
 
   data class OpenWindowDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) :
     OpenStandardDetail(R.id.window_detail_fragment, WindowDetailFragment.bundle(itemBundle, pages.toTypedArray()))
+
+  data class OpenEmDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) :
+    OpenStandardDetail(R.id.electricity_meter_detail_fragment, ElectricityMeterDetailFragment.bundle(itemBundle, pages.toTypedArray()))
 
   data object ReassignAdapter : ChannelListViewEvent()
 

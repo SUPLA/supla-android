@@ -200,7 +200,10 @@ class ProvideLegacyDetailTypeUseCaseTest {
 
   @Test
   fun `should provide detail for electricity meter`() {
-    testDetailType(SUPLA_CHANNELFNC_ELECTRICITY_METER, LegacyDetailType.EM)
+    testDetailType(
+      SUPLA_CHANNELFNC_ELECTRICITY_METER,
+      EmDetailType(listOf(DetailPage.EM_GENERAL, DetailPage.EM_HISTORY, DetailPage.EM_SETTINGS))
+    )
   }
 
   @Test

@@ -22,7 +22,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import androidx.annotation.NonNull;
 import java.util.Date;
-import org.supla.android.db.SuplaContract;
+import org.supla.android.data.source.local.entity.measurements.HomePlusThermostatLogEntity;
 import org.supla.android.db.ThermostatMeasurementItem;
 
 public class ThermostatLogDao extends MeasurementsBaseDao {
@@ -33,29 +33,29 @@ public class ThermostatLogDao extends MeasurementsBaseDao {
 
   public int getThermostatMeasurementTimestamp(int channelId, boolean min) {
     return getMeasurementTimestamp(
-        SuplaContract.ThermostatLogEntry.TABLE_NAME,
-        SuplaContract.ThermostatLogEntry.COLUMN_NAME_TIMESTAMP,
-        SuplaContract.ThermostatLogEntry.COLUMN_NAME_CHANNELID,
+        HomePlusThermostatLogEntity.TABLE_NAME,
+        HomePlusThermostatLogEntity.COLUMN_TIMESTAMP,
+        HomePlusThermostatLogEntity.COLUMN_CHANNEL_ID,
         channelId,
         min);
   }
 
   public int getThermostatMeasurementTotalCount(int channelId) {
     return getCount(
-        SuplaContract.ThermostatLogEntry.TABLE_NAME,
-        key(SuplaContract.ThermostatLogEntry.COLUMN_NAME_CHANNELID, channelId),
-        key(SuplaContract.ThermostatLogEntry.COLUMN_NAME_PROFILEID, getCachedProfileId()));
+        HomePlusThermostatLogEntity.TABLE_NAME,
+        key(HomePlusThermostatLogEntity.COLUMN_CHANNEL_ID, channelId),
+        key(HomePlusThermostatLogEntity.COLUMN_PROFILE_ID, getCachedProfileId()));
   }
 
   public void deleteThermostatMeasurements(int channelId) {
     delete(
-        SuplaContract.ThermostatLogEntry.TABLE_NAME,
-        key(SuplaContract.ThermostatLogEntry.COLUMN_NAME_CHANNELID, channelId),
-        key(SuplaContract.ThermostatLogEntry.COLUMN_NAME_PROFILEID, getCachedProfileId()));
+        HomePlusThermostatLogEntity.TABLE_NAME,
+        key(HomePlusThermostatLogEntity.COLUMN_CHANNEL_ID, channelId),
+        key(HomePlusThermostatLogEntity.COLUMN_PROFILE_ID, getCachedProfileId()));
   }
 
   public void addThermostatMeasurement(ThermostatMeasurementItem emi) {
-    insert(emi, SuplaContract.ThermostatLogEntry.TABLE_NAME, SQLiteDatabase.CONFLICT_IGNORE);
+    insert(emi, HomePlusThermostatLogEntity.TABLE_NAME, SQLiteDatabase.CONFLICT_IGNORE);
   }
 
   public Cursor getThermostatMeasurements(int channelId, Date dateFrom, Date dateTo) {
@@ -63,30 +63,30 @@ public class ThermostatLogDao extends MeasurementsBaseDao {
     if (dateFrom != null && dateTo != null) {
       dates =
           " AND "
-              + SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_TIMESTAMP
+              + HomePlusThermostatLogEntity.COLUMN_TIMESTAMP
               + " >= "
               + toMilis(dateFrom)
               + " AND "
-              + SuplaContract.ImpulseCounterLogViewEntry.COLUMN_NAME_TIMESTAMP
+              + HomePlusThermostatLogEntity.COLUMN_TIMESTAMP
               + " <= "
               + toMilis(dateTo);
     }
     String sql =
         "SELECT "
-            + SuplaContract.ThermostatLogEntry.COLUMN_NAME_MEASUREDTEMPERATURE
+            + HomePlusThermostatLogEntity.COLUMN_MEASURED_TEMPERATURE
             + ", "
-            + SuplaContract.ThermostatLogEntry.COLUMN_NAME_PRESETTEMPERATURE
+            + HomePlusThermostatLogEntity.COLUMN_PRESET_TEMPERATURE
             + ", "
-            + SuplaContract.ThermostatLogEntry.COLUMN_NAME_TIMESTAMP
+            + HomePlusThermostatLogEntity.COLUMN_TIMESTAMP
             + " FROM "
-            + SuplaContract.ThermostatLogEntry.TABLE_NAME
+            + HomePlusThermostatLogEntity.TABLE_NAME
             + " WHERE "
-            + SuplaContract.ThermostatLogEntry.COLUMN_NAME_CHANNELID
+            + HomePlusThermostatLogEntity.COLUMN_CHANNEL_ID
             + " = "
             + channelId
             + dates
             + " ORDER BY "
-            + SuplaContract.ThermostatLogEntry.COLUMN_NAME_TIMESTAMP
+            + HomePlusThermostatLogEntity.COLUMN_TIMESTAMP
             + " ASC ";
 
     return read(sqLiteDatabase -> sqLiteDatabase.rawQuery(sql, null));

@@ -35,14 +35,17 @@ import com.github.mikephil.charting.components.MarkerView
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.utils.MPPointF
+import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
+import org.supla.android.data.formatting.DateFormatter
 import org.supla.android.data.model.chart.ChartDataAggregation
 import org.supla.android.data.model.chart.ChartEntryType
 import org.supla.android.data.model.chart.marker.ChartEntryDetails
 import org.supla.android.extensions.guardLet
 import org.supla.android.extensions.toPx
-import org.supla.android.extensions.valuesFormatter
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class ChartMarkerView(context: Context) : MarkerView(context, R.layout.view_chart_marker) {
 
   private val content: ConstraintLayout = findViewById(R.id.chart_marker_content)
@@ -53,6 +56,9 @@ class ChartMarkerView(context: Context) : MarkerView(context, R.layout.view_char
   private val tableId: Int = View.generateViewId()
   private lateinit var openingValueView: TextView
   private lateinit var closingValueView: TextView
+
+  @Inject
+  lateinit var dateFormatter: DateFormatter
 
   @Suppress("NAME_SHADOWING")
   @SuppressLint("SetTextI18n")
@@ -67,13 +73,11 @@ class ChartMarkerView(context: Context) : MarkerView(context, R.layout.view_char
     }
 
     title.text = when (details.aggregation) {
-      ChartDataAggregation.HOURS ->
-        "${context.valuesFormatter.getFullDateString(details.date())?.let { it.substring(0, it.length - 2) }}00"
-
-      ChartDataAggregation.DAYS -> context.valuesFormatter.getFullDateString(details.date())?.let { it.substring(0, it.length - 5) }
-      ChartDataAggregation.MONTHS -> context.valuesFormatter.getMonthAndYearString(details.date())?.capitalize(Locale.current)
-      ChartDataAggregation.YEARS -> context.valuesFormatter.getYearString(details.date())
-      else -> context.valuesFormatter.getFullDateString(details.date())
+      ChartDataAggregation.HOURS -> "${dateFormatter.getFullDateString(details.date())?.let { it.substring(0, it.length - 2) }}00"
+      ChartDataAggregation.DAYS -> dateFormatter.getFullDateString(details.date())?.let { it.substring(0, it.length - 5) }
+      ChartDataAggregation.MONTHS -> dateFormatter.getMonthAndYearString(details.date())?.capitalize(Locale.current)
+      ChartDataAggregation.YEARS -> dateFormatter.getYearString(details.date())
+      else -> dateFormatter.getFullDateString(details.date())
     }
     text.text = details.valueFormatter.format(entry.y.toDouble(), withUnit = showValueUnit(details.type), precision = 2)
 

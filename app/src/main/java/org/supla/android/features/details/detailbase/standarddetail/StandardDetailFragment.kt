@@ -18,16 +18,15 @@ package org.supla.android.features.details.detailbase.standarddetail
  */
 
 import android.os.Bundle
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.annotation.CallSuper
 import androidx.annotation.LayoutRes
 import androidx.core.os.bundleOf
-import androidx.core.view.children
 import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import org.supla.android.R
 import org.supla.android.core.storage.RuntimeStateHolder
 import org.supla.android.core.ui.BaseFragment
 import org.supla.android.extensions.visibleIf
@@ -63,11 +62,12 @@ abstract class StandardDetailFragment<S : StandardDetailViewState, E : StandardD
     super.onViewCreated(view, savedInstanceState)
 
     val openedPage = getOpenedPage()
-    detailBottomBar.inflateMenu(R.menu.detail_bottom)
-    for (item in detailBottomBar.menu.children) {
-      item.isVisible = pages.map { it.menuId }.contains(item.itemId)
+    var menuOrder = 0
+    pages.forEach {
+      detailBottomBar.menu.add(Menu.NONE, it.item.menuId, menuOrder++, getString(it.item.stringRes))
+        .setIcon(it.item.iconRes)
     }
-    detailBottomBar.selectedItemId = pages[openedPage].menuId
+    detailBottomBar.selectedItemId = pages[openedPage].item.menuId
     detailBottomBar.setOnItemSelectedListener(this::onBottomMenuItemSelected)
     detailBottomBar.labelVisibilityMode = viewModel.getLabelVisibility()
     detailBottomBar.layoutParams = bottomBarHeightHandler.getLayoutParams(resources, visible = pages.count() > 1)
@@ -99,13 +99,13 @@ abstract class StandardDetailFragment<S : StandardDetailViewState, E : StandardD
   protected open fun updateToolbarTitle(state: S) {}
 
   private fun onBottomMenuItemSelected(menuItem: MenuItem): Boolean {
-    detailViewPager.currentItem = pages.map { it.menuId }.indexOf(menuItem.itemId)
+    detailViewPager.currentItem = pages.map { it.item.menuId }.indexOf(menuItem.itemId)
     return true
   }
 
   private val pagerCallback = object : OnPageChangeCallback() {
     override fun onPageSelected(position: Int) {
-      detailBottomBar.selectedItemId = pages[position].menuId
+      detailBottomBar.selectedItemId = pages[position].item.menuId
       runtimeStateHolder.setDetailOpenedPage(item.remoteId, position)
     }
   }
