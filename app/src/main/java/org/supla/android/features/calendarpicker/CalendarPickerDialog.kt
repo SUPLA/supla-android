@@ -55,6 +55,7 @@ import androidx.compose.ui.unit.dp
 import org.supla.android.R
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.core.ui.theme.gray
+import org.supla.android.data.formatting.LocalDateFormatter
 import org.supla.android.data.model.chart.DateRange
 import org.supla.android.data.model.general.RangeValueType
 import org.supla.android.data.source.local.calendar.DayOfWeek
@@ -75,7 +76,6 @@ import org.supla.android.extensions.previousMonth
 import org.supla.android.extensions.sameDay
 import org.supla.android.extensions.setHour
 import org.supla.android.extensions.shift
-import org.supla.android.extensions.valuesFormatter
 import org.supla.android.extensions.weekEnd
 import org.supla.android.extensions.weekStart
 import org.supla.android.ui.dialogs.Dialog
@@ -190,7 +190,7 @@ private fun DialogHeader(visibleDate: Date, state: CalendarPickerState, forward:
       enabled = state.selectableRange?.start?.before(visibleDate.monthStart()) ?: true
     )
     Text(
-      text = LocalContext.current.valuesFormatter.getMonthAndYearString(visibleDate)?.capitalize(Locale.current) ?: "",
+      text = LocalDateFormatter.current.getMonthAndYearString(visibleDate)?.capitalize(Locale.current) ?: "",
       style = MaterialTheme.typography.headlineSmall,
       textAlign = TextAlign.Center,
       modifier = Modifier.weight(1f)

@@ -1,4 +1,4 @@
-package org.supla.android.data.model.general
+package org.supla.android.data.source.local.entity.custom
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,10 +17,18 @@ package org.supla.android.data.model.general
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.annotation.StringRes
+enum class Phase(val value: Int) {
+  PHASE_1(1), PHASE_2(2), PHASE_3(3);
 
-data class SelectableList<T>(
-  val selected: T,
-  val items: List<T>,
-  @StringRes val label: Int
-)
+  companion object {
+    fun from(value: Int?): Phase? {
+      entries.forEach {
+        if (it.value == value) {
+          return it
+        }
+      }
+
+      return null
+    }
+  }
+}

@@ -22,6 +22,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import androidx.annotation.NonNull;
 import java.util.Date;
+import org.supla.android.data.source.local.entity.measurements.ElectricityMeterLogEntity;
 import org.supla.android.db.ElectricityMeasurementItem;
 import org.supla.android.db.SuplaContract;
 
@@ -31,7 +32,7 @@ public class ElectricityMeterLogDao extends MeasurementsBaseDao {
   }
 
   public void addElectricityMeasurement(ElectricityMeasurementItem emi) {
-    insert(emi, SuplaContract.ElectricityMeterLogEntry.TABLE_NAME, SQLiteDatabase.CONFLICT_IGNORE);
+    insert(emi, ElectricityMeterLogEntity.TABLE_NAME, SQLiteDatabase.CONFLICT_IGNORE);
   }
 
   public double getLastElectricityMeterMeasurementValue(
@@ -61,9 +62,9 @@ public class ElectricityMeterLogDao extends MeasurementsBaseDao {
 
   public int getElectricityMeterMeasurementTimestamp(int channelId, boolean min) {
     return getMeasurementTimestamp(
-        SuplaContract.ElectricityMeterLogEntry.TABLE_NAME,
-        SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_TIMESTAMP,
-        SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_CHANNELID,
+        ElectricityMeterLogEntity.TABLE_NAME,
+        ElectricityMeterLogEntity.COLUMN_TIMESTAMP,
+        ElectricityMeterLogEntity.COLUMN_CHANNEL_ID,
         channelId,
         min);
   }
@@ -71,16 +72,16 @@ public class ElectricityMeterLogDao extends MeasurementsBaseDao {
   public int getElectricityMeterMeasurementTotalCount(int channelId, boolean withoutComplement) {
     if (withoutComplement) {
       return getCount(
-          SuplaContract.ElectricityMeterLogEntry.TABLE_NAME,
-          key(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_CHANNELID, channelId),
-          key(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_COMPLEMENT, 0),
-          key(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PROFILEID, getCachedProfileId()));
+          ElectricityMeterLogEntity.TABLE_NAME,
+          key(ElectricityMeterLogEntity.COLUMN_CHANNEL_ID, channelId),
+          key(ElectricityMeterLogEntity.COLUMN_MANUALLY_COMPLEMENTED, 0),
+          key(ElectricityMeterLogEntity.COLUMN_PROFILE_ID, getCachedProfileId()));
     } else {
 
       return getCount(
-          SuplaContract.ElectricityMeterLogEntry.TABLE_NAME,
-          key(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_CHANNELID, channelId),
-          key(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PROFILEID, getCachedProfileId()));
+          ElectricityMeterLogEntity.TABLE_NAME,
+          key(ElectricityMeterLogEntity.COLUMN_CHANNEL_ID, channelId),
+          key(ElectricityMeterLogEntity.COLUMN_PROFILE_ID, getCachedProfileId()));
     }
   }
 
@@ -178,8 +179,8 @@ public class ElectricityMeterLogDao extends MeasurementsBaseDao {
 
   public void deleteElectricityMeasurements(int channelId) {
     delete(
-        SuplaContract.ElectricityMeterLogEntry.TABLE_NAME,
-        key(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_CHANNELID, channelId),
-        key(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PROFILEID, getCachedProfileId()));
+        ElectricityMeterLogEntity.TABLE_NAME,
+        key(ElectricityMeterLogEntity.COLUMN_CHANNEL_ID, channelId),
+        key(ElectricityMeterLogEntity.COLUMN_PROFILE_ID, getCachedProfileId()));
   }
 }

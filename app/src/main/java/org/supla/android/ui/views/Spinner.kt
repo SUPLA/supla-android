@@ -45,11 +45,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
 import org.supla.android.core.ui.theme.SuplaTheme
+import org.supla.android.data.model.chart.ChartRange
+import org.supla.android.data.model.general.SelectableList
 
 @Composable
 fun <T> Spinner(label: String, options: Map<T, String>, modifier: Modifier = Modifier, onOptionSelected: (selectedId: T) -> Unit) {
@@ -87,20 +90,22 @@ fun <T> Spinner(label: String, options: Map<T, String>, modifier: Modifier = Mod
   }
 }
 
+interface SpinnerItem {
+  val labelRes: Int
+}
+
 @Composable
-fun <T> TextSpinner(
-  label: String,
-  options: Map<T, String>,
+fun <T : SpinnerItem> TextSpinner(
+  options: SelectableList<T>,
   modifier: Modifier = Modifier,
-  selectedOption: T? = null,
   onOptionSelected: (selectedId: T) -> Unit
 ) {
   var expanded by remember { mutableStateOf(false) }
-  val selectedOptionText = options[selectedOption ?: options.keys.firstOrNull()] ?: ""
+  val selectedOptionText = options.selected.labelRes
 
   Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(4.dp)) {
     Text(
-      text = label.uppercase(),
+      text = stringResource(id = options.label).uppercase(),
       style = MaterialTheme.typography.bodySmall,
       color = colorResource(id = R.color.gray)
     )
@@ -111,7 +116,7 @@ fun <T> TextSpinner(
     ) {
       Row(verticalAlignment = Alignment.CenterVertically) {
         Text(
-          text = selectedOptionText,
+          text = stringResource(id = selectedOptionText),
           style = MaterialTheme.typography.bodyMedium,
           color = MaterialTheme.colorScheme.onBackground,
           modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryEditable)
@@ -125,11 +130,11 @@ fun <T> TextSpinner(
         )
       }
       DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-        options.forEach { option ->
+        options.items.forEach { option ->
           DropdownMenuItem(
-            text = { Text(option.value, style = MaterialTheme.typography.bodyMedium) },
+            text = { Text(stringResource(id = option.labelRes), style = MaterialTheme.typography.bodyMedium) },
             onClick = {
-              onOptionSelected(option.key)
+              onOptionSelected(option)
               expanded = false
             }
           )
@@ -162,7 +167,7 @@ private fun Preview() {
   SuplaTheme {
     Column(Modifier.background(MaterialTheme.colorScheme.surface)) {
       Spinner(label = "Program", options = mapOf(1 to "Cooling", 2 to "Heating"), onOptionSelected = {})
-      TextSpinner(label = "Program", options = mapOf(1 to "Cooling", 2 to "Heating very long"), onOptionSelected = {})
+      TextSpinner(options = SelectableList(ChartRange.DAY, emptyList(), R.string.history_range_label), onOptionSelected = {})
     }
   }
 }

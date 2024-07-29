@@ -23,6 +23,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.supla.android.data.source.local.entity.measurements.ImpulseCounterLogEntity;
 
 public class ImpulseCounterMeasurementItem extends IncrementalMeasurementItem {
 
@@ -66,44 +67,32 @@ public class ImpulseCounterMeasurementItem extends IncrementalMeasurementItem {
   @SuppressLint("Range")
   public void AssignCursorData(Cursor cursor) {
 
-    setId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ImpulseCounterLogEntry._ID)));
-    setChannelId(
-        cursor.getInt(
-            cursor.getColumnIndex(SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CHANNELID)));
+    setId(cursor.getLong(cursor.getColumnIndex(ImpulseCounterLogEntity.COLUMN_ID)));
+    setChannelId(cursor.getInt(cursor.getColumnIndex(ImpulseCounterLogEntity.COLUMN_CHANNEL_ID)));
 
-    setTimestamp(
-        cursor.getLong(
-            cursor.getColumnIndex(SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_TIMESTAMP)));
+    setTimestamp(cursor.getLong(cursor.getColumnIndex(ImpulseCounterLogEntity.COLUMN_TIMESTAMP)));
 
-    setCounter(
-        cursor.getLong(
-            cursor.getColumnIndex(SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_COUNTER)));
+    setCounter(cursor.getLong(cursor.getColumnIndex(ImpulseCounterLogEntity.COLUMN_COUNTER)));
 
     setCalculatedValue(
-        cursor.getDouble(
-            cursor.getColumnIndex(
-                SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CALCULATEDVALUE)));
+        cursor.getDouble(cursor.getColumnIndex(ImpulseCounterLogEntity.COLUMN_CALCULATED_VALUE)));
 
     Complement =
-        cursor.getInt(
-                cursor.getColumnIndex(SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_COMPLEMENT))
+        cursor.getInt(cursor.getColumnIndex(ImpulseCounterLogEntity.COLUMN_MANUALLY_COMPLEMENTED))
             > 0;
-    setProfileId(
-        cursor.getLong(
-            cursor.getColumnIndex(SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_PROFILEID)));
+    setProfileId(cursor.getLong(cursor.getColumnIndex(ImpulseCounterLogEntity.COLUMN_PROFILE_ID)));
   }
 
   public ContentValues getContentValues() {
 
     ContentValues values = new ContentValues();
 
-    values.put(SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CHANNELID, getChannelId());
-    values.put(SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_TIMESTAMP, getTimestamp());
-    values.put(SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_COUNTER, getCounter());
-    values.put(
-        SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CALCULATEDVALUE, getCalculatedValue());
-    values.put(SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_COMPLEMENT, isComplement() ? 1 : 0);
-    values.put(SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_PROFILEID, getProfileId());
+    values.put(ImpulseCounterLogEntity.COLUMN_CHANNEL_ID, getChannelId());
+    values.put(ImpulseCounterLogEntity.COLUMN_TIMESTAMP, getTimestamp());
+    values.put(ImpulseCounterLogEntity.COLUMN_COUNTER, getCounter());
+    values.put(ImpulseCounterLogEntity.COLUMN_CALCULATED_VALUE, getCalculatedValue());
+    values.put(ImpulseCounterLogEntity.COLUMN_MANUALLY_COMPLEMENTED, isComplement() ? 1 : 0);
+    values.put(ImpulseCounterLogEntity.COLUMN_PROFILE_ID, getProfileId());
     return values;
   }
 

@@ -23,6 +23,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.supla.android.data.source.local.entity.measurements.HomePlusThermostatLogEntity;
 
 public class ThermostatMeasurementItem extends MeasurementItem {
 
@@ -69,49 +70,40 @@ public class ThermostatMeasurementItem extends MeasurementItem {
   @SuppressLint("Range")
   public void AssignCursorData(Cursor cursor) {
 
-    setId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ThermostatLogEntry._ID)));
+    setId(cursor.getLong(cursor.getColumnIndex(HomePlusThermostatLogEntity.COLUMN_ID)));
     setChannelId(
-        cursor.getInt(
-            cursor.getColumnIndex(SuplaContract.ThermostatLogEntry.COLUMN_NAME_CHANNELID)));
+        cursor.getInt(cursor.getColumnIndex(HomePlusThermostatLogEntity.COLUMN_CHANNEL_ID)));
 
     setTimestamp(
-        cursor.getLong(
-            cursor.getColumnIndex(SuplaContract.ThermostatLogEntry.COLUMN_NAME_TIMESTAMP)));
+        cursor.getLong(cursor.getColumnIndex(HomePlusThermostatLogEntity.COLUMN_TIMESTAMP)));
 
-    setOn(
-        cursor.getInt(cursor.getColumnIndex(SuplaContract.ThermostatLogEntry.COLUMN_NAME_ON)) > 0);
+    setOn(cursor.getInt(cursor.getColumnIndex(HomePlusThermostatLogEntity.COLUMN_IS_ON)) > 0);
 
     setMeasuredTemperature(
         cursor.getDouble(
-            cursor.getColumnIndex(
-                SuplaContract.ThermostatLogEntry.COLUMN_NAME_MEASUREDTEMPERATURE)));
+            cursor.getColumnIndex(HomePlusThermostatLogEntity.COLUMN_MEASURED_TEMPERATURE)));
 
     setPresetTemperature(
         cursor.getDouble(
-            cursor.getColumnIndex(SuplaContract.ThermostatLogEntry.COLUMN_NAME_PRESETTEMPERATURE)));
+            cursor.getColumnIndex(HomePlusThermostatLogEntity.COLUMN_PRESET_TEMPERATURE)));
     setProfileId(
-        cursor.getLong(
-            cursor.getColumnIndex(SuplaContract.ThermostatLogEntry.COLUMN_NAME_PROFILEID)));
+        cursor.getLong(cursor.getColumnIndex(HomePlusThermostatLogEntity.COLUMN_PROFILE_ID)));
   }
 
   public ContentValues getContentValues() {
 
     ContentValues values = new ContentValues();
 
-    values.put(SuplaContract.ThermostatLogEntry.COLUMN_NAME_CHANNELID, getChannelId());
-    values.put(SuplaContract.ThermostatLogEntry.COLUMN_NAME_TIMESTAMP, getTimestamp());
-    values.put(SuplaContract.ThermostatLogEntry.COLUMN_NAME_ON, isOn() ? 1 : 0);
+    values.put(HomePlusThermostatLogEntity.COLUMN_CHANNEL_ID, getChannelId());
+    values.put(HomePlusThermostatLogEntity.COLUMN_TIMESTAMP, getTimestamp());
+    values.put(HomePlusThermostatLogEntity.COLUMN_IS_ON, isOn() ? 1 : 0);
 
     putNullOrDouble(
-        values,
-        SuplaContract.ThermostatLogEntry.COLUMN_NAME_MEASUREDTEMPERATURE,
-        getMeasuredTemperature());
+        values, HomePlusThermostatLogEntity.COLUMN_MEASURED_TEMPERATURE, getMeasuredTemperature());
 
     putNullOrDouble(
-        values,
-        SuplaContract.ThermostatLogEntry.COLUMN_NAME_PRESETTEMPERATURE,
-        getPresetTemperature());
-    values.put(SuplaContract.ThermostatLogEntry.COLUMN_NAME_PROFILEID, getProfileId());
+        values, HomePlusThermostatLogEntity.COLUMN_PRESET_TEMPERATURE, getPresetTemperature());
+    values.put(HomePlusThermostatLogEntity.COLUMN_PROFILE_ID, getProfileId());
 
     return values;
   }

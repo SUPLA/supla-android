@@ -18,6 +18,7 @@ package org.supla.android.db.room.measurements
  */
 
 import androidx.room.TypeConverter
+import org.supla.android.data.source.local.entity.custom.Phase
 import java.util.Date
 
 class MeasurementsDatabaseConverters {
@@ -30,5 +31,15 @@ class MeasurementsDatabaseConverters {
   @TypeConverter
   fun dateToLong(date: Date?): Long? {
     return date?.time
+  }
+
+  @TypeConverter
+  fun phaseToInt(value: Phase?): Int? {
+    return value?.value
+  }
+
+  @TypeConverter
+  fun intToPhase(value: Int?): Phase? {
+    return Phase.from(value)
   }
 }

@@ -72,17 +72,17 @@ import org.supla.android.R
 import org.supla.android.core.ui.BaseViewProxy
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
-import org.supla.android.data.model.chart.ChartDataAggregation
+import org.supla.android.data.formatting.LocalDateFormatter
 import org.supla.android.data.model.chart.ChartRange
 import org.supla.android.data.model.chart.HistoryDataSet
 import org.supla.android.data.model.chart.style.ChartStyle
 import org.supla.android.data.model.chart.style.ThermometerChartStyle
 import org.supla.android.data.model.general.RangeValueType
 import org.supla.android.data.source.local.calendar.Hour
-import org.supla.android.extensions.valuesFormatter
 import org.supla.android.features.details.detailbase.history.HistoryDetailViewState
 import org.supla.android.ui.dialogs.DatePickerDialog
 import org.supla.android.ui.dialogs.TimePickerDialog
+import org.supla.android.ui.views.SpinnerItem
 import org.supla.android.ui.views.TextField
 import org.supla.android.ui.views.TextSpinner
 import org.supla.android.ui.views.buttons.IconButton
@@ -94,8 +94,7 @@ import java.util.Date
 interface HistoryDetailProxy : BaseViewProxy<HistoryDetailViewState> {
   fun refresh() {}
   fun changeSetActive(setId: HistoryDataSet.Id) {}
-  fun changeRange(range: ChartRange) {}
-  fun changeAggregation(aggregation: ChartDataAggregation) {}
+  fun changeFilter(spinnerItem: SpinnerItem) {}
   fun moveRangeLeft() {}
   fun moveRangeRight() {}
   fun moveToDataBegin() {}
@@ -153,7 +152,7 @@ fun HistoryDetail(viewModel: HistoryDetailProxy) {
           .padding(horizontal = Distance.tiny)
       )
 
-      if (viewState.ranges?.selected == ChartRange.CUSTOM) {
+      if (viewState.filters.selectedRange == ChartRange.CUSTOM) {
         RangeSelection(viewState, viewModel)
       } else if (viewState.showBottomBar) {
         BottomPagination(viewState = viewState, viewModel = viewModel)
@@ -217,25 +216,21 @@ private fun DataSetsAndFilters(viewState: HistoryDetailViewState, viewModel: His
 @Composable
 private fun FiltersRow(viewState: HistoryDetailViewState, viewModel: HistoryDetailProxy) =
   Row(modifier = Modifier.padding(top = Distance.tiny)) {
-    TextSpinner(
-      label = stringResource(id = R.string.history_range_label),
-      options = viewState.rangesMap(LocalContext.current.resources),
-      onOptionSelected = { viewModel.changeRange(it) },
-      selectedOption = viewState.ranges?.selected,
-      modifier = Modifier.padding(start = Distance.default)
-    )
-    Spacer(
-      modifier = Modifier
-        .weight(1f)
-        .defaultMinSize(minWidth = dimensionResource(id = R.dimen.distance_small))
-    )
-    TextSpinner(
-      label = stringResource(id = R.string.history_aggregation_label),
-      options = viewState.aggregationsMap(LocalContext.current.resources),
-      onOptionSelected = { viewModel.changeAggregation(it) },
-      selectedOption = viewState.aggregations?.selected,
-      modifier = Modifier.padding(end = Distance.default)
-    )
+    viewState.filters.values.forEachIndexed { index, selectableList ->
+      TextSpinner(
+        options = selectableList,
+        onOptionSelected = { viewModel.changeFilter(it) },
+        modifier = Modifier.padding(start = Distance.default)
+      )
+
+      if (viewState.filters.count() == 2 && index == 0) {
+        Spacer(
+          modifier = Modifier
+            .weight(1f)
+            .defaultMinSize(minWidth = dimensionResource(id = R.dimen.distance_small))
+        )
+      }
+    }
   }
 
 @Composable
@@ -320,7 +315,7 @@ private fun DataSetButton(text: String, colors: ButtonColors, borderColor: Color
 
 @Composable
 private fun BottomPagination(viewState: HistoryDetailViewState, viewModel: HistoryDetailProxy) =
-  viewState.rangeText(LocalContext.current)?.let {
+  viewState.rangeText?.let {
     Row(
       verticalAlignment = Alignment.CenterVertically,
       horizontalArrangement = Arrangement.spacedBy(0.dp),
@@ -394,7 +389,7 @@ context(RowScope)
 @Composable
 fun DateTextField(date: Date?, onClick: () -> Unit) {
   TextField(
-    value = LocalContext.current.valuesFormatter.getDateString(date) ?: "",
+    value = LocalDateFormatter.current.getDateString(date) ?: "",
     modifier = Modifier
       .weight(0.3f)
       .height(36.dp),
@@ -409,7 +404,7 @@ context(RowScope)
 @Composable
 fun HourTextField(date: Date?, onClick: () -> Unit) {
   TextField(
-    value = LocalContext.current.valuesFormatter.getHourString(date) ?: "",
+    value = LocalDateFormatter.current.getHourString(date) ?: "",
     modifier = Modifier
       .weight(0.18f)
       .height(36.dp),
@@ -425,12 +420,7 @@ fun HourTextField(date: Date?, onClick: () -> Unit) {
 private fun Preview() {
   SuplaTheme {
     Box(modifier = Modifier.background(MaterialTheme.colorScheme.background)) {
-      PaginationIcon(
-        onClick = { },
-        icon = R.drawable.ic_double_arrow_right,
-        enabled = true,
-        rotate = true
-      )
+      HistoryDetail(PreviewProxy())
     }
   }
 }

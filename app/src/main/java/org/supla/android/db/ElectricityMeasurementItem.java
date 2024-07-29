@@ -23,13 +23,14 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.supla.android.data.source.local.entity.measurements.ElectricityMeterLogEntity;
 
 public class ElectricityMeasurementItem extends IncrementalMeasurementItem {
 
-  private double[] fae;
-  private double[] rae;
-  private double[] fre;
-  private double[] rre;
+  private final double[] fae;
+  private final double[] rae;
+  private final double[] fre;
+  private final double[] rre;
   private double faeBalanced;
   private double raeBalanced;
 
@@ -132,10 +133,10 @@ public class ElectricityMeasurementItem extends IncrementalMeasurementItem {
     setTimestamp(obj.getLong("date_timestamp"));
 
     for (int phase = 1; phase <= 3; phase++) {
-      setFae(phase, getLong(obj, "phase" + Integer.toString(phase) + "_fae") / 100000.00);
-      setRae(phase, getLong(obj, "phase" + Integer.toString(phase) + "_rae") / 100000.00);
-      setFre(phase, getLong(obj, "phase" + Integer.toString(phase) + "_fre") / 100000.00);
-      setRre(phase, getLong(obj, "phase" + Integer.toString(phase) + "_rre") / 100000.00);
+      setFae(phase, getLong(obj, "phase" + phase + "_fae") / 100000.00);
+      setRae(phase, getLong(obj, "phase" + phase + "_rae") / 100000.00);
+      setFre(phase, getLong(obj, "phase" + phase + "_fre") / 100000.00);
+      setRre(phase, getLong(obj, "phase" + phase + "_rre") / 100000.00);
     }
 
     setFaeBalanced(getLong(obj, "fae_balanced") / 100000.00);
@@ -145,139 +146,77 @@ public class ElectricityMeasurementItem extends IncrementalMeasurementItem {
   @SuppressLint("Range")
   public void AssignCursorData(Cursor cursor) {
 
-    setId(cursor.getLong(cursor.getColumnIndex(SuplaContract.ElectricityMeterLogEntry._ID)));
-    setChannelId(
-        cursor.getInt(
-            cursor.getColumnIndex(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_CHANNELID)));
+    setId(cursor.getLong(cursor.getColumnIndex(ElectricityMeterLogEntity.COLUMN_ID)));
+    setChannelId(cursor.getInt(cursor.getColumnIndex(ElectricityMeterLogEntity.COLUMN_CHANNEL_ID)));
 
-    setTimestamp(
-        cursor.getLong(
-            cursor.getColumnIndex(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_TIMESTAMP)));
+    setTimestamp(cursor.getLong(cursor.getColumnIndex(ElectricityMeterLogEntity.COLUMN_TIMESTAMP)));
 
-    setFae(
-        1,
-        cursor.getDouble(
-            cursor.getColumnIndex(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE1_FAE)));
+    setFae(1, cursor.getDouble(cursor.getColumnIndex(ElectricityMeterLogEntity.COLUMN_PHASE1_FAE)));
 
-    setRae(
-        1,
-        cursor.getDouble(
-            cursor.getColumnIndex(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE1_RAE)));
+    setRae(1, cursor.getDouble(cursor.getColumnIndex(ElectricityMeterLogEntity.COLUMN_PHASE1_RAE)));
 
-    setFre(
-        1,
-        cursor.getDouble(
-            cursor.getColumnIndex(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE1_FRE)));
+    setFre(1, cursor.getDouble(cursor.getColumnIndex(ElectricityMeterLogEntity.COLUMN_PHASE1_FRE)));
 
-    setRre(
-        1,
-        cursor.getDouble(
-            cursor.getColumnIndex(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE1_RRE)));
+    setRre(1, cursor.getDouble(cursor.getColumnIndex(ElectricityMeterLogEntity.COLUMN_PHASE1_RRE)));
 
-    setFae(
-        2,
-        cursor.getDouble(
-            cursor.getColumnIndex(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE2_FAE)));
+    setFae(2, cursor.getDouble(cursor.getColumnIndex(ElectricityMeterLogEntity.COLUMN_PHASE2_FAE)));
 
-    setRae(
-        2,
-        cursor.getDouble(
-            cursor.getColumnIndex(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE2_RAE)));
+    setRae(2, cursor.getDouble(cursor.getColumnIndex(ElectricityMeterLogEntity.COLUMN_PHASE2_RAE)));
 
-    setFre(
-        2,
-        cursor.getDouble(
-            cursor.getColumnIndex(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE2_FRE)));
+    setFre(2, cursor.getDouble(cursor.getColumnIndex(ElectricityMeterLogEntity.COLUMN_PHASE2_FRE)));
 
-    setRre(
-        2,
-        cursor.getDouble(
-            cursor.getColumnIndex(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE2_RRE)));
+    setRre(2, cursor.getDouble(cursor.getColumnIndex(ElectricityMeterLogEntity.COLUMN_PHASE2_RRE)));
 
-    setFae(
-        3,
-        cursor.getDouble(
-            cursor.getColumnIndex(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_FAE)));
+    setFae(3, cursor.getDouble(cursor.getColumnIndex(ElectricityMeterLogEntity.COLUMN_PHASE3_FAE)));
 
-    setRae(
-        3,
-        cursor.getDouble(
-            cursor.getColumnIndex(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_RAE)));
+    setRae(3, cursor.getDouble(cursor.getColumnIndex(ElectricityMeterLogEntity.COLUMN_PHASE3_RAE)));
 
-    setFre(
-        3,
-        cursor.getDouble(
-            cursor.getColumnIndex(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_FRE)));
+    setFre(3, cursor.getDouble(cursor.getColumnIndex(ElectricityMeterLogEntity.COLUMN_PHASE3_FRE)));
 
-    setRre(
-        3,
-        cursor.getDouble(
-            cursor.getColumnIndex(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_RRE)));
+    setRre(3, cursor.getDouble(cursor.getColumnIndex(ElectricityMeterLogEntity.COLUMN_PHASE3_RRE)));
 
     setFaeBalanced(
-        cursor.getDouble(
-            cursor.getColumnIndex(
-                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_FAE_BALANCED)));
+        cursor.getDouble(cursor.getColumnIndex(ElectricityMeterLogEntity.COLUMN_FAE_BALANCED)));
 
     setRaeBalanced(
-        cursor.getDouble(
-            cursor.getColumnIndex(
-                SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_RAE_BALANCED)));
+        cursor.getDouble(cursor.getColumnIndex(ElectricityMeterLogEntity.COLUMN_RAE_BALANCED)));
 
     Complement =
-        cursor.getInt(
-                cursor.getColumnIndex(
-                    SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_COMPLEMENT))
+        cursor.getInt(cursor.getColumnIndex(ElectricityMeterLogEntity.COLUMN_MANUALLY_COMPLEMENTED))
             > 0;
 
     setProfileId(
-        cursor.getLong(
-            cursor.getColumnIndex(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PROFILEID)));
+        cursor.getLong(cursor.getColumnIndex(ElectricityMeterLogEntity.COLUMN_PROFILE_ID)));
   }
 
   public ContentValues getContentValues() {
 
     ContentValues values = new ContentValues();
 
-    values.put(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_CHANNELID, getChannelId());
-    values.put(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_TIMESTAMP, getTimestamp());
+    values.put(ElectricityMeterLogEntity.COLUMN_CHANNEL_ID, getChannelId());
+    values.put(ElectricityMeterLogEntity.COLUMN_TIMESTAMP, getTimestamp());
 
-    putNullOrDouble(
-        values, SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE1_FAE, getFae(1));
-    putNullOrDouble(
-        values, SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE1_RAE, getRae(1));
-    putNullOrDouble(
-        values, SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE1_FRE, getFre(1));
-    putNullOrDouble(
-        values, SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE1_RRE, getRre(1));
+    putNullOrDouble(values, ElectricityMeterLogEntity.COLUMN_PHASE1_FAE, getFae(1));
+    putNullOrDouble(values, ElectricityMeterLogEntity.COLUMN_PHASE1_RAE, getRae(1));
+    putNullOrDouble(values, ElectricityMeterLogEntity.COLUMN_PHASE1_FRE, getFre(1));
+    putNullOrDouble(values, ElectricityMeterLogEntity.COLUMN_PHASE1_RRE, getRre(1));
 
-    putNullOrDouble(
-        values, SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE2_FAE, getFae(2));
-    putNullOrDouble(
-        values, SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE2_RAE, getRae(2));
-    putNullOrDouble(
-        values, SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE2_FRE, getFre(2));
-    putNullOrDouble(
-        values, SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE2_RRE, getRre(2));
+    putNullOrDouble(values, ElectricityMeterLogEntity.COLUMN_PHASE2_FAE, getFae(2));
+    putNullOrDouble(values, ElectricityMeterLogEntity.COLUMN_PHASE2_RAE, getRae(2));
+    putNullOrDouble(values, ElectricityMeterLogEntity.COLUMN_PHASE2_FRE, getFre(2));
+    putNullOrDouble(values, ElectricityMeterLogEntity.COLUMN_PHASE2_RRE, getRre(2));
 
-    putNullOrDouble(
-        values, SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_FAE, getFae(3));
-    putNullOrDouble(
-        values, SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_RAE, getRae(3));
-    putNullOrDouble(
-        values, SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_FRE, getFre(3));
-    putNullOrDouble(
-        values, SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_RRE, getRre(3));
+    putNullOrDouble(values, ElectricityMeterLogEntity.COLUMN_PHASE3_FAE, getFae(3));
+    putNullOrDouble(values, ElectricityMeterLogEntity.COLUMN_PHASE3_RAE, getRae(3));
+    putNullOrDouble(values, ElectricityMeterLogEntity.COLUMN_PHASE3_FRE, getFre(3));
+    putNullOrDouble(values, ElectricityMeterLogEntity.COLUMN_PHASE3_RRE, getRre(3));
 
-    putNullOrDouble(
-        values, SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_FAE_BALANCED, getFaeBalanced());
+    putNullOrDouble(values, ElectricityMeterLogEntity.COLUMN_FAE_BALANCED, getFaeBalanced());
 
-    putNullOrDouble(
-        values, SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_RAE_BALANCED, getRaeBalanced());
+    putNullOrDouble(values, ElectricityMeterLogEntity.COLUMN_RAE_BALANCED, getRaeBalanced());
 
-    values.put(
-        SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_COMPLEMENT, isComplement() ? 1 : 0);
-    values.put(SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PROFILEID, getProfileId());
+    values.put(ElectricityMeterLogEntity.COLUMN_MANUALLY_COMPLEMENTED, isComplement() ? 1 : 0);
+    values.put(ElectricityMeterLogEntity.COLUMN_PROFILE_ID, getProfileId());
 
     return values;
   }

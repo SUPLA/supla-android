@@ -25,6 +25,7 @@ import org.supla.android.extensions.inHalfOfHour
 import org.supla.android.extensions.monthHalf
 import org.supla.android.extensions.toTimestamp
 import org.supla.android.extensions.yearHalf
+import org.supla.android.ui.views.SpinnerItem
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -33,7 +34,7 @@ enum class ChartDataAggregation(
   val timeInSec: Long,
   val aggregator: (Date, Formatter) -> Long,
   val groupTimeProvider: (Date) -> Long // In seconds
-) {
+) : SpinnerItem {
   MINUTES(
     R.string.minutes,
     600,
@@ -64,6 +65,9 @@ enum class ChartDataAggregation(
     { date, formatter -> date.getAggregationString(formatter).substring(0, 4).toLong() },
     { it.yearHalf().toTimestamp() }
   );
+
+  override val labelRes: Int
+    get() = stringRes
 
   fun between(min: ChartDataAggregation, max: ChartDataAggregation): Boolean =
     timeInSec >= min.timeInSec && timeInSec <= max.timeInSec

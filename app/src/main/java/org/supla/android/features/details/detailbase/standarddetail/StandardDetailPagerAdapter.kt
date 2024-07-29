@@ -17,9 +17,13 @@ package org.supla.android.features.details.detailbase.standarddetail
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import org.supla.android.R
+import org.supla.android.features.details.electricitymeterdetail.general.ElectricityMeterGeneralFragment
+import org.supla.android.features.details.electricitymeterdetail.settings.ElectricityMeterSettingsFragment
 import org.supla.android.features.details.gpmdetail.history.GpmHistoryDetailFragment
 import org.supla.android.features.details.legacydetail.LegacyDetailFragment
 import org.supla.android.features.details.switchdetail.general.SwitchGeneralFragment
@@ -79,35 +83,53 @@ class StandardDetailPagerAdapter(
     DetailPage.CURTAIN -> CurtainFragment().apply { arguments = CurtainFragment.bundle(itemBundle) }
     DetailPage.VERTICAL_BLIND -> VerticalBlindsFragment().apply { arguments = VerticalBlindsFragment.bundle(itemBundle) }
     DetailPage.GARAGE_DOOR_ROLLER -> GarageDoorFragment().apply { arguments = GarageDoorFragment.bundle(itemBundle) }
+
+    DetailPage.EM_GENERAL -> ElectricityMeterGeneralFragment().apply { arguments = ElectricityMeterGeneralFragment.bundle(itemBundle) }
+    DetailPage.EM_HISTORY -> ElectricityMeterSettingsFragment().apply { arguments = ElectricityMeterSettingsFragment.bundle(itemBundle) }
+    DetailPage.EM_SETTINGS -> ElectricityMeterSettingsFragment().apply { arguments = ElectricityMeterSettingsFragment.bundle(itemBundle) }
   }
 }
 
-enum class DetailPage(val menuId: Int) {
+enum class DetailPage(val item: DetailBottomItem) {
   // Switches
-  SWITCH(R.id.detail_general),
-  SWITCH_TIMER(R.id.detail_timer),
-  HISTORY_IC(R.id.detail_metrics),
-  HISTORY_EM(R.id.detail_metrics),
+  SWITCH(DetailBottomItem.GENERAL),
+  SWITCH_TIMER(DetailBottomItem.TIMER),
+  HISTORY_IC(DetailBottomItem.METRICS),
+  HISTORY_EM(DetailBottomItem.METRICS),
 
   // Thermostats
-  THERMOSTAT(R.id.detail_general),
-  SCHEDULE(R.id.detail_schedule),
-  THERMOSTAT_HISTORY(R.id.detail_history),
-  THERMOSTAT_TIMER(R.id.detail_timer),
+  THERMOSTAT(DetailBottomItem.GENERAL),
+  SCHEDULE(DetailBottomItem.SCHEDULE),
+  THERMOSTAT_HISTORY(DetailBottomItem.HISTORY),
+  THERMOSTAT_TIMER(DetailBottomItem.TIMER),
 
   // Thermometers
-  THERMOMETER_HISTORY(R.id.detail_history),
+  THERMOMETER_HISTORY(DetailBottomItem.HISTORY),
 
   // GPM
-  GPM_HISTORY(R.id.detail_history),
+  GPM_HISTORY(DetailBottomItem.HISTORY),
 
   // Window details
-  ROLLER_SHUTTER(R.id.detail_general),
-  ROOF_WINDOW(R.id.detail_general),
-  FACADE_BLINDS(R.id.detail_general),
-  TERRACE_AWNING(R.id.detail_general),
-  PROJECTOR_SCREEN(R.id.detail_general),
-  CURTAIN(R.id.detail_general),
-  VERTICAL_BLIND(R.id.detail_general),
-  GARAGE_DOOR_ROLLER(R.id.detail_general)
+  ROLLER_SHUTTER(DetailBottomItem.GENERAL),
+  ROOF_WINDOW(DetailBottomItem.GENERAL),
+  FACADE_BLINDS(DetailBottomItem.GENERAL),
+  TERRACE_AWNING(DetailBottomItem.GENERAL),
+  PROJECTOR_SCREEN(DetailBottomItem.GENERAL),
+  CURTAIN(DetailBottomItem.GENERAL),
+  VERTICAL_BLIND(DetailBottomItem.GENERAL),
+  GARAGE_DOOR_ROLLER(DetailBottomItem.GENERAL),
+
+  // EM
+  EM_GENERAL(DetailBottomItem.GENERAL),
+  EM_HISTORY(DetailBottomItem.HISTORY),
+  EM_SETTINGS(DetailBottomItem.SETTINGS)
+}
+
+enum class DetailBottomItem(val menuId: Int, @DrawableRes val iconRes: Int, @StringRes val stringRes: Int) {
+  GENERAL(1, R.drawable.ic_general, R.string.details_general),
+  SCHEDULE(2, R.drawable.ic_schedule, R.string.details_schedule),
+  TIMER(3, R.drawable.ic_timer, R.string.details_timer),
+  HISTORY(4, R.drawable.ic_history, R.string.details_history),
+  METRICS(5, R.drawable.ic_metrics, R.string.details_metrics),
+  SETTINGS(6, R.drawable.ic_settings, R.string.settings)
 }

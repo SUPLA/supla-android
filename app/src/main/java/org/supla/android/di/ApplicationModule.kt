@@ -32,6 +32,7 @@ import org.supla.android.SuplaApp
 import org.supla.android.core.SuplaAppApi
 import org.supla.android.core.SuplaAppProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
+import org.supla.android.data.formatting.DateFormatter
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.lib.SuplaClient
 import org.supla.android.lib.SuplaClientMessageHandler
@@ -104,4 +105,8 @@ class ApplicationModule {
   @Provides
   fun provideBiometricManager(@ApplicationContext context: Context) =
     BiometricManager.from(context)
+
+  @Provides
+  @Singleton
+  fun provideDateFormatter() = DateFormatter()
 }

@@ -37,7 +37,8 @@ fun ChannelBase.hasValue(): Boolean =
     SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT,
     SuplaConst.SUPLA_CHANNELFNC_THERMOMETER,
     SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR,
-    SuplaConst.SUPLA_CHANNELFNC_DISTANCESENSOR -> true
+    SuplaConst.SUPLA_CHANNELFNC_DISTANCESENSOR,
+    SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER -> true
 
     else -> false
   }
@@ -47,7 +48,8 @@ fun ChannelBase.isMeasurement(): Boolean =
     function == SuplaConst.SUPLA_CHANNELFNC_HOTELCARDSENSOR ||
     function == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER ||
     function == SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR ||
-    function == SuplaConst.SUPLA_CHANNELFNC_DISTANCESENSOR
+    function == SuplaConst.SUPLA_CHANNELFNC_DISTANCESENSOR ||
+    function == SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER
 
 fun ChannelBase.isGpm(): Boolean =
   function == SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER ||

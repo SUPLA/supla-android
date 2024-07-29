@@ -1,4 +1,21 @@
 package org.supla.android.ui.views.charts
+/*
+ Copyright (C) AC SOFTWARE SP. Z O.O.
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
 
 import android.graphics.drawable.ColorDrawable
 import android.view.MotionEvent
@@ -20,12 +37,12 @@ import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.listener.ChartTouchListener
 import com.github.mikephil.charting.listener.OnChartGestureListener
 import org.supla.android.R
-import org.supla.android.data.ValuesFormatter
+import org.supla.android.data.formatting.DateFormatter
+import org.supla.android.data.formatting.LocalDateFormatter
 import org.supla.android.data.model.chart.ChartParameters
 import org.supla.android.data.model.chart.datatype.ChartData
 import org.supla.android.data.model.chart.style.ChartStyle
 import org.supla.android.extensions.toPx
-import org.supla.android.extensions.valuesFormatter
 import org.supla.android.lib.SuplaConst
 import org.supla.android.usecases.channel.valueformatter.HumidityValueFormatter
 import java.util.Date
@@ -44,10 +61,10 @@ fun CombinedChart(
   channelFunction: Int,
   modifier: Modifier = Modifier
 ) {
-  val valuesFormatter = LocalContext.current.valuesFormatter
+  val dateFormatter = LocalDateFormatter.current
   val combinedData = data.combinedData(LocalContext.current.resources)
   val chartParameters = if (combinedData != null) chartParametersProvider() else null
-  val xAxisFormatter by remember { mutableStateOf(AxisXFormatter(valuesFormatter)) }
+  val xAxisFormatter by remember { mutableStateOf(AxisXFormatter(dateFormatter)) }
   xAxisFormatter.converter = data
 
   AndroidView(
@@ -150,7 +167,7 @@ fun CombinedChart(
 }
 
 private class AxisXFormatter(
-  private val valuesFormatter: ValuesFormatter
+  private val dateFormatter: DateFormatter
 ) : ValueFormatter() {
 
   lateinit var converter: ChartData
@@ -159,10 +176,10 @@ private class AxisXFormatter(
     val distanceInDays = converter.distanceInDays ?: 1
     return when {
       distanceInDays <= 1 ->
-        valuesFormatter.getHourString(Date(converter.fromCoordinate(value).times(1000).toLong())) ?: ""
+        dateFormatter.getHourString(Date(converter.fromCoordinate(value).times(1000).toLong())) ?: ""
 
       else -> {
-        valuesFormatter.getMonthString(Date(converter.fromCoordinate(value).times(1000).toLong())) ?: ""
+        dateFormatter.getMonthString(Date(converter.fromCoordinate(value).times(1000).toLong())) ?: ""
       }
     }
   }
