@@ -352,11 +352,11 @@ abstract class WidgetCommandWorkerBase(
 
   private fun createForegroundInfo(widgetCaption: String?): ForegroundInfo {
     notificationsHelper.setupBackgroundNotificationChannel(applicationContext)
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
       ForegroundInfo(
         notificationId,
         notificationsHelper.createBackgroundNotification(applicationContext, widgetCaption),
-        ServiceInfo.FOREGROUND_SERVICE_TYPE_CONNECTED_DEVICE
+        ServiceInfo.FOREGROUND_SERVICE_TYPE_SHORT_SERVICE
       )
     } else {
       ForegroundInfo(notificationId, notificationsHelper.createBackgroundNotification(applicationContext, widgetCaption))

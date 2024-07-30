@@ -12,20 +12,20 @@ object Versions {
     const val AndroidChart = "v3.1.0"
     const val Coroutines = "1.8.1"
     const val GoogleMaterial = "1.12.0"
-    const val GoogleServices = "4.3.15"
+    const val GoogleServices = "4.4.2"
 
     const val Spotless = "6.23.3"
     const val KtLint = "0.48.1"
 
     const val FragmentViewBinding = "1.0.2"
 
-    const val Firebase = "33.1.0"
+    const val Firebase = "33.1.2"
 
     object Androidx {
-        const val Fragment = "1.7.1"
-        const val Lifecycle = "2.8.1"
+        const val Fragment = "1.8.2"
+        const val Lifecycle = "2.8.4"
         const val LifecycleExtensions = "2.2.0"
-        const val Navigation = "2.7.7"
+        const val Navigation = "2.8.0-beta06"
         const val ConstraintLayout = "2.1.4"
         const val Core = "1.13.1"
         const val Preferences = "1.2.1"
