@@ -213,7 +213,7 @@
         android:layout_weight="1"
         android:background="@drawable/em_phase_btn_black"
         android:textSize="12sp"
-        tools:text="1+2+3 " />
+        android:text="1+2+3 " />
     </LinearLayout>
   </RelativeLayout>
 
