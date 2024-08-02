@@ -13,23 +13,34 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.extensions.preferences
 import org.supla.android.images.ImageId
+import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.layouts.BaseSlideableContent
 import org.supla.android.ui.lists.data.SlideableListItemData
 import org.supla.android.ui.lists.data.default
 import org.supla.android.ui.views.list.components.ListItemIcon
 import org.supla.android.ui.views.list.components.ListItemMainRow
 import org.supla.android.ui.views.list.components.ListItemValue
+import org.supla.android.usecases.list.CreateListItemUpdateEventDataUseCase
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class IconValueListItemView : BaseSlideableContent<SlideableListItemData.Default> {
   constructor(context: Context) : super(context, null, 0)
 
   constructor(context: Context, attrs: AttributeSet?) : super(context, attrs, 0)
 
   constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
+
+  @Inject
+  override lateinit var createListItemUpdateEventDataUseCase: CreateListItemUpdateEventDataUseCase
+
+  @Inject
+  override lateinit var schedulers: SuplaSchedulers
 
   @Composable
   override fun Content() {
