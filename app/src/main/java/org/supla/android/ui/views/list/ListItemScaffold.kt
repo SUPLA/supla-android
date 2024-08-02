@@ -21,9 +21,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -200,7 +198,11 @@ private fun ListItemInfoIcon(onClick: () -> Unit) {
     modifier = Modifier
       .padding(start = dimensionResource(id = R.dimen.list_horizontal_spacing))
       .size(dimensionResource(id = R.dimen.channel_state_image_size))
-      .clickable(interactionSource = remember { MutableInteractionSource() }, indication = null, onClick = onClick)
+      .pointerInput(onClick) {
+        detectTapGestures(
+          onTap = { onClick() }
+        )
+      }
   )
 }
 
@@ -212,7 +214,11 @@ private fun ListItemIssueIcon(issueIconType: IssueIconType, onClick: () -> Unit)
     modifier = Modifier
       .padding(end = dimensionResource(id = R.dimen.list_horizontal_spacing))
       .size(dimensionResource(id = R.dimen.channel_warning_image_size))
-      .clickable(interactionSource = remember { MutableInteractionSource() }, indication = null, onClick = onClick)
+      .pointerInput(onClick) {
+        detectTapGestures(
+          onTap = { onClick() }
+        )
+      }
   )
 }
 

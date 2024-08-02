@@ -129,17 +129,16 @@ abstract class BaseChannelsAdapter(
   inner class ThermostatListItemViewHolder(val binding: LiMainThermostatItemBinding) : ViewHolder(binding.root) {
     fun bind(item: ListItem.HvacThermostatItem) {
       val data = item.toSlideableListItemData() as SlideableListItemData.Thermostat
-      binding.listItemRoot.bind(
+      binding.listItemRoot.bind(locationCaption = item.locationCaption)
+      binding.listItemContent.bind(
         itemType = ItemType.CHANNEL,
         remoteId = item.channel.remoteId,
-        locationCaption = item.locationCaption,
         data = data,
         onInfoClick = { infoButtonClickCallback(item.channel.remoteId) },
         onIssueClick = { issueButtonClickCallback(item.issueMessage) },
         onTitleLongClick = { onCaptionLongPress(item.channel.remoteId) },
         onItemClick = { listItemClickCallback(item.channel.remoteId) }
       )
-      binding.listItemContent.update(data)
 
       binding.listItemContent.setOnClickListener { listItemClickCallback(item.channel.remoteId) }
       binding.listItemContent.setOnLongClickListener { onLongPress(this) }
@@ -151,17 +150,16 @@ abstract class BaseChannelsAdapter(
   inner class SingleMeasurementListItemViewHolder(val binding: LiMainMeasurementItemBinding) : ViewHolder(binding.root) {
     fun bind(item: ListItem.MeasurementItem) {
       val data = item.toSlideableListItemData() as SlideableListItemData.Default
-      binding.listItemRoot.bind(
+      binding.listItemRoot.bind(locationCaption = item.locationCaption)
+      binding.listItemContent.bind(
         itemType = ItemType.CHANNEL,
         remoteId = item.channel.remoteId,
-        locationCaption = item.locationCaption,
         data = data,
         onInfoClick = { infoButtonClickCallback(item.channel.remoteId) },
         onIssueClick = { },
         onTitleLongClick = { onCaptionLongPress(item.channel.remoteId) },
         onItemClick = { listItemClickCallback(item.channel.remoteId) }
       )
-      binding.listItemContent.update(data)
 
       binding.listItemContent.setOnClickListener { listItemClickCallback(item.channel.remoteId) }
       binding.listItemContent.setOnLongClickListener { onLongPress(this) }
@@ -171,17 +169,16 @@ abstract class BaseChannelsAdapter(
   inner class GpMeterListItemViewHolder(val binding: LiMainMeasurementItemBinding) : ViewHolder(binding.root) {
     fun bind(item: ListItem.GeneralPurposeMeterItem) {
       val data = item.toSlideableListItemData() as SlideableListItemData.Default
-      binding.listItemRoot.bind(
+      binding.listItemRoot.bind(locationCaption = item.locationCaption)
+      binding.listItemContent.bind(
         itemType = ItemType.CHANNEL,
         remoteId = item.channel.remoteId,
-        locationCaption = item.locationCaption,
         data = data,
         onInfoClick = { infoButtonClickCallback(item.channel.remoteId) },
         onIssueClick = { },
         onTitleLongClick = { onCaptionLongPress(item.channel.remoteId) },
         onItemClick = { listItemClickCallback(item.channel.remoteId) }
       )
-      binding.listItemContent.update(data)
 
       binding.listItemContent.setOnClickListener { listItemClickCallback(item.channel.remoteId) }
       binding.listItemContent.setOnLongClickListener { onLongPress(this) }
@@ -191,17 +188,16 @@ abstract class BaseChannelsAdapter(
   inner class GpMeasurementListItemViewHolder(val binding: LiMainMeasurementItemBinding) : ViewHolder(binding.root) {
     fun bind(item: ListItem.GeneralPurposeMeasurementItem) {
       val data = item.toSlideableListItemData() as SlideableListItemData.Default
-      binding.listItemRoot.bind(
+      binding.listItemRoot.bind(locationCaption = item.locationCaption)
+      binding.listItemContent.bind(
         itemType = ItemType.CHANNEL,
         remoteId = item.channel.remoteId,
-        locationCaption = item.locationCaption,
         data = data,
         onInfoClick = { infoButtonClickCallback(item.channel.remoteId) },
         onIssueClick = { },
         onTitleLongClick = { onCaptionLongPress(item.channel.remoteId) },
         onItemClick = { listItemClickCallback(item.channel.remoteId) }
       )
-      binding.listItemContent.update(data)
 
       binding.listItemContent.setOnClickListener { listItemClickCallback(item.channel.remoteId) }
       binding.listItemContent.setOnLongClickListener { onLongPress(this) }
@@ -211,17 +207,16 @@ abstract class BaseChannelsAdapter(
   inner class IconWithButtonsListItemViewHolder(val binding: LiMainStateIconWithButtonsBinding) : ViewHolder(binding.root) {
     fun bind(item: ListItem.IconWithButtonsItem) {
       val data = item.toSlideableListItemData() as SlideableListItemData.Default
-      binding.listItemRoot.bind(
+      binding.listItemRoot.bind(locationCaption = item.locationCaption)
+      binding.listItemContent.bind(
         itemType = ItemType.CHANNEL,
         remoteId = item.channel.remoteId,
-        locationCaption = item.locationCaption,
         data = data,
         onInfoClick = { infoButtonClickCallback(item.channel.remoteId) },
         onIssueClick = { issueButtonClickCallback(item.issueMessage) },
         onTitleLongClick = { onCaptionLongPress(item.channel.remoteId) },
         onItemClick = { listItemClickCallback(item.channel.remoteId) }
       )
-      binding.listItemContent.update(data)
 
       binding.listItemContent.setOnClickListener { listItemClickCallback(item.channel.remoteId) }
       binding.listItemContent.setOnLongClickListener { onLongPress(this) }

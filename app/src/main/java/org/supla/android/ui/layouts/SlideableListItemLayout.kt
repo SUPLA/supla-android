@@ -5,20 +5,12 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.LinearLayout
 import dagger.hilt.android.AndroidEntryPoint
-import io.reactivex.rxjava3.disposables.Disposable
-import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.Preferences
 import org.supla.android.R
-import org.supla.android.data.source.runtime.ItemType
-import org.supla.android.extensions.guardLet
-import org.supla.android.extensions.ifLet
-import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.lists.SlideableItem
 import org.supla.android.ui.lists.SwapableListItem
 import org.supla.android.ui.lists.data.SlideableListItemData
-import org.supla.android.usecases.list.CreateListItemUpdateEventDataUseCase
 import java.lang.Integer.min
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 /**
@@ -41,26 +33,10 @@ class SlideableListItemLayout @JvmOverloads constructor(
   private val leftItem: View? by lazy { findViewById(R.id.list_item_left_item) }
   private val rightItem: View? by lazy { findViewById(R.id.list_item_right_item) }
 
-  private var updateDisposable: Disposable? = null
-  private var data: SlideableListItemData? = null
-
-  private var remoteId: Int? = null
-  private var itemType: ItemType? = null
-  private var onInfoClick: () -> Unit = { }
-  private var onIssueClick: () -> Unit = { }
-  private var onTitleLongClick: () -> Unit = { }
-  private var onItemClick: () -> Unit = { }
-
   override var locationCaption: String? = null
 
   @Inject
   lateinit var preferences: Preferences
-
-  @Inject
-  lateinit var createListItemUpdateEventDataUseCase: CreateListItemUpdateEventDataUseCase
-
-  @Inject
-  lateinit var schedulers: SuplaSchedulers
 
   override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
     val desiredHeight = resources.getDimensionPixelSize(R.dimen.channel_layout_height) * getScaleFactor()
@@ -75,8 +51,6 @@ class SlideableListItemLayout @JvmOverloads constructor(
     }
 
     super.onMeasure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY))
-
-    updateContentView(data)
   }
 
   override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
@@ -95,7 +69,7 @@ class SlideableListItemLayout @JvmOverloads constructor(
       (leftItem == null && rightItem == null) ||
         (leftItem == null && position > 0) ||
         (rightItem == null && position < 0) ||
-        data?.online?.not() == true -> 0
+        content.isOnline.not() -> 0
 
       else -> position
     }
@@ -105,55 +79,8 @@ class SlideableListItemLayout @JvmOverloads constructor(
     rightItem?.run { updateRightItemPosition(this) }
   }
 
-  override fun onAttachedToWindow() {
-    super.onAttachedToWindow()
-
-    content.onInfoClick = onInfoClick
-    content.onIssueClick = onIssueClick
-    content.onTitleLongClick = onTitleLongClick
-    content.onItemClick = onItemClick
-
-    val (itemType) = guardLet(itemType) { return }
-    val (remoteId) = guardLet(remoteId) { return }
-
-    updateDisposable =
-      createListItemUpdateEventDataUseCase(itemType, remoteId)
-        .delay(1, TimeUnit.SECONDS)
-        .subscribeOn(schedulers.io)
-        .observeOn(schedulers.ui)
-        .subscribeBy(
-          onNext = { data ->
-            this.data = data
-            updateContentView(data)
-          }
-        )
-  }
-
-  override fun onDetachedFromWindow() {
-    super.onDetachedFromWindow()
-    if (updateDisposable?.isDisposed == false) {
-      updateDisposable?.dispose()
-    }
-  }
-
-  fun bind(
-    itemType: ItemType,
-    remoteId: Int,
-    locationCaption: String,
-    data: SlideableListItemData,
-    onInfoClick: () -> Unit,
-    onIssueClick: () -> Unit,
-    onTitleLongClick: () -> Unit,
-    onItemClick: () -> Unit
-  ) {
-    this.itemType = itemType
-    this.remoteId = remoteId
+  fun bind(locationCaption: String) {
     this.locationCaption = locationCaption
-    this.data = data
-    this.onInfoClick = onInfoClick
-    this.onIssueClick = onIssueClick
-    this.onTitleLongClick = onTitleLongClick
-    this.onItemClick = onItemClick
   }
 
   private fun updateLeftItemPosition(item: View) {
@@ -194,8 +121,4 @@ class SlideableListItemLayout @JvmOverloads constructor(
     } else {
       0f
     }
-
-  private fun updateContentView(data: SlideableListItemData?) {
-    ifLet(data) { (data) -> content.update(data = data) }
-  }
 }

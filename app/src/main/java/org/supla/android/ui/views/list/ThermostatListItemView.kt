@@ -45,6 +45,7 @@ import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.extensions.max
 import org.supla.android.extensions.preferences
 import org.supla.android.images.ImageId
+import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.layouts.BaseSlideableContent
 import org.supla.android.ui.lists.data.IssueIconType
 import org.supla.android.ui.lists.data.SlideableListItemData
@@ -52,6 +53,8 @@ import org.supla.android.ui.lists.data.default
 import org.supla.android.ui.views.list.components.ListItemIcon
 import org.supla.android.ui.views.list.components.ListItemMainRow
 import org.supla.android.ui.views.list.components.ListItemValue
+import org.supla.android.usecases.list.CreateListItemUpdateEventDataUseCase
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ThermostatListItemView : BaseSlideableContent<SlideableListItemData.Thermostat> {
@@ -61,6 +64,12 @@ class ThermostatListItemView : BaseSlideableContent<SlideableListItemData.Thermo
   constructor(context: Context, attrs: AttributeSet?) : super(context, attrs, 0)
 
   constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
+
+  @Inject
+  override lateinit var createListItemUpdateEventDataUseCase: CreateListItemUpdateEventDataUseCase
+
+  @Inject
+  override lateinit var schedulers: SuplaSchedulers
 
   @Composable
   override fun Content() {
