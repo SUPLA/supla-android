@@ -22,8 +22,15 @@ import android.util.AttributeSet
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import io.reactivex.rxjava3.disposables.Disposable
+import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.R
+import org.supla.android.data.source.runtime.ItemType
+import org.supla.android.extensions.guardLet
+import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.lists.data.SlideableListItemData
+import org.supla.android.usecases.list.CreateListItemUpdateEventDataUseCase
+import java.util.concurrent.TimeUnit
 
 abstract class BaseSlideableContent<T : SlideableListItemData> : BaseAbstractComposeView {
 
@@ -46,9 +53,53 @@ abstract class BaseSlideableContent<T : SlideableListItemData> : BaseAbstractCom
   protected var hasLeftButton: Boolean = false
   protected var hasRightButton: Boolean = false
 
-  fun update(data: T) {
+  abstract val createListItemUpdateEventDataUseCase: CreateListItemUpdateEventDataUseCase
+  abstract val schedulers: SuplaSchedulers
+
+  private var remoteId: Int? = null
+  private var itemType: ItemType? = null
+  private var updateDisposable: Disposable? = null
+
+  val isOnline: Boolean
+    get() = data?.online == true
+
+  override fun onAttachedToWindow() {
+    super.onAttachedToWindow()
+
+    val (itemType) = guardLet(itemType) { return }
+    val (remoteId) = guardLet(remoteId) { return }
+
+    updateDisposable =
+      createListItemUpdateEventDataUseCase(itemType, remoteId)
+        .delay(1, TimeUnit.SECONDS)
+        .subscribeOn(schedulers.io)
+        .observeOn(schedulers.ui)
+        .subscribeBy(onNext = this::updateData)
+  }
+
+  override fun onDetachedFromWindow() {
+    super.onDetachedFromWindow()
+    if (updateDisposable?.isDisposed == false) {
+      updateDisposable?.dispose()
+    }
+  }
+
+  fun bind(
+    itemType: ItemType,
+    remoteId: Int,
+    data: T,
+    onInfoClick: () -> Unit,
+    onIssueClick: () -> Unit,
+    onTitleLongClick: () -> Unit,
+    onItemClick: () -> Unit
+  ) {
+    this.itemType = itemType
+    this.remoteId = remoteId
     this.data = data
-    invalidate()
+    this.onInfoClick = onInfoClick
+    this.onIssueClick = onIssueClick
+    this.onTitleLongClick = onTitleLongClick
+    this.onItemClick = onItemClick
   }
 
   private fun loadAttributes(context: Context, attrs: AttributeSet?) {
@@ -60,5 +111,10 @@ abstract class BaseSlideableContent<T : SlideableListItemData> : BaseAbstractCom
         recycle()
       }
     }
+  }
+
+  @Suppress("UNCHECKED_CAST")
+  private fun updateData(data: SlideableListItemData) {
+    (data as? T)?.let { this.data = it }
   }
 }

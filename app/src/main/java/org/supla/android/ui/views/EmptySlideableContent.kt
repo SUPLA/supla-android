@@ -27,10 +27,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import dagger.hilt.android.AndroidEntryPoint
-import org.supla.android.Preferences
 import org.supla.android.core.ui.theme.SuplaTheme
+import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.layouts.BaseSlideableContent
 import org.supla.android.ui.lists.data.SlideableListItemData
+import org.supla.android.usecases.list.CreateListItemUpdateEventDataUseCase
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -43,7 +44,10 @@ class EmptySlideableContent : BaseSlideableContent<SlideableListItemData.Thermos
   constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
   @Inject
-  lateinit var preferences: Preferences
+  override lateinit var createListItemUpdateEventDataUseCase: CreateListItemUpdateEventDataUseCase
+
+  @Inject
+  override lateinit var schedulers: SuplaSchedulers
 
   @Composable
   override fun Content() {
