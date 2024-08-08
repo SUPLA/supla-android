@@ -20,13 +20,11 @@ package org.supla.android.usecases.channel
 import io.reactivex.rxjava3.core.Single
 import org.supla.android.data.model.Optional
 import org.supla.android.data.model.chart.DateRange
+import org.supla.android.data.source.ElectricityMeterLogRepository
 import org.supla.android.data.source.GeneralPurposeMeasurementLogRepository
 import org.supla.android.data.source.GeneralPurposeMeterLogRepository
 import org.supla.android.data.source.TemperatureAndHumidityLogRepository
 import org.supla.android.data.source.TemperatureLogRepository
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
-import org.supla.android.data.source.local.entity.complex.isGpm
-import org.supla.android.data.source.local.entity.complex.isThermometer
 import org.supla.android.lib.SuplaConst
 import java.util.Date
 import javax.inject.Inject
@@ -35,65 +33,118 @@ import javax.inject.Singleton
 @Singleton
 class LoadChannelMeasurementsDataRangeUseCase @Inject constructor(
   private val readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
-  private val temperatureLogRepository: TemperatureLogRepository,
-  private val temperatureAndHumidityLogRepository: TemperatureAndHumidityLogRepository,
-  private val generalPurposeMeasurementLogRepository: GeneralPurposeMeasurementLogRepository,
-  private val generalPurposeMeterLogRepository: GeneralPurposeMeterLogRepository
+  thermometerDataRangeProvide: ThermometerDataRangeProvide,
+  humidityAndTemperatureDataRangeProvide: HumidityAndTemperatureDataRangeProvide,
+  generalPurposeMeasurementDataRangeProvide: GeneralPurposeMeasurementDataRangeProvide,
+  generalPurposeMeterDataRangeProvide: GeneralPurposeMeterDataRangeProvide,
+  electricityMeterDataRangeProvide: ElectricityMeterDataRangeProvide
 ) {
+
+  private val providers: List<ChannelDataRangeProvider> =
+    listOf(
+      thermometerDataRangeProvide,
+      humidityAndTemperatureDataRangeProvide,
+      generalPurposeMeasurementDataRangeProvide,
+      generalPurposeMeterDataRangeProvide,
+      electricityMeterDataRangeProvide
+    )
+
   operator fun invoke(remoteId: Int, profileId: Long): Single<Optional<DateRange>> =
     readChannelByRemoteIdUseCase(remoteId)
       .toSingle()
-      .flatMap {
-        if (it.isThermometer() || it.isGpm()) {
-          Single.zip(
-            findMinTime(it, profileId).map { long -> Date(long) },
-            findMaxTime(it, profileId).map { long -> Date(long) }
-          ) { min, max -> Optional.of(DateRange(min, max)) }
-            .onErrorReturnItem(Optional.empty())
-        } else {
-          Single.error(IllegalArgumentException("Channel function not supported (${it.function}"))
+      .flatMap { channel ->
+        providers.forEach {
+          if (it.handle(channel.function)) {
+            return@flatMap Single.zip(
+              it.minTime(remoteId, profileId).map { long -> Date(long) },
+              it.maxTime(remoteId, profileId).map { long -> Date(long) }
+            ) { min, max -> Optional.of(DateRange(min, max)) }
+              .onErrorReturnItem(Optional.empty())
+          }
         }
+
+        Single.error(IllegalArgumentException("Channel function not supported (${channel.function}"))
       }
+}
 
-  private fun findMinTime(
-    channel: ChannelDataEntity,
-    profileId: Long
-  ): Single<Long> {
-    return when (channel.function) {
-      SuplaConst.SUPLA_CHANNELFNC_THERMOMETER ->
-        temperatureLogRepository.findMinTimestamp(channel.remoteId, profileId)
+interface ChannelDataRangeProvider {
+  fun handle(channelFunction: Int): Boolean
+  fun minTime(remoteId: Int, profileId: Long): Single<Long>
+  fun maxTime(remoteId: Int, profileId: Long): Single<Long>
+}
 
-      SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE ->
-        temperatureAndHumidityLogRepository.findMinTimestamp(channel.remoteId, profileId)
+@Singleton
+class ThermometerDataRangeProvide @Inject constructor(
+  private val temperatureLogRepository: TemperatureLogRepository
+) : ChannelDataRangeProvider {
+  override fun handle(channelFunction: Int): Boolean =
+    channelFunction == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
 
-      SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT ->
-        generalPurposeMeasurementLogRepository.findMinTimestamp(channel.remoteId, profileId)
+  override fun minTime(remoteId: Int, profileId: Long): Single<Long> =
+    temperatureLogRepository.findMinTimestamp(remoteId, profileId)
 
-      SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER ->
-        generalPurposeMeterLogRepository.findMinTimestamp(channel.remoteId, profileId)
+  override fun maxTime(remoteId: Int, profileId: Long): Single<Long> =
+    temperatureLogRepository.findMaxTimestamp(remoteId, profileId)
+}
 
-      else -> Single.error(IllegalArgumentException("Channel function not supported (${channel.function}"))
+@Singleton
+class HumidityAndTemperatureDataRangeProvide @Inject constructor(
+  private val temperatureAndHumidityLogRepository: TemperatureAndHumidityLogRepository
+) : ChannelDataRangeProvider {
+  override fun handle(channelFunction: Int): Boolean =
+    channelFunction == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
+
+  override fun minTime(remoteId: Int, profileId: Long): Single<Long> =
+    temperatureAndHumidityLogRepository.findMinTimestamp(remoteId, profileId)
+
+  override fun maxTime(remoteId: Int, profileId: Long): Single<Long> =
+    temperatureAndHumidityLogRepository.findMaxTimestamp(remoteId, profileId)
+}
+
+@Singleton
+class GeneralPurposeMeterDataRangeProvide @Inject constructor(
+  private val generalPurposeMeterLogRepository: GeneralPurposeMeterLogRepository
+) : ChannelDataRangeProvider {
+  override fun handle(channelFunction: Int): Boolean =
+    channelFunction == SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER
+
+  override fun minTime(remoteId: Int, profileId: Long): Single<Long> =
+    generalPurposeMeterLogRepository.findMinTimestamp(remoteId, profileId)
+
+  override fun maxTime(remoteId: Int, profileId: Long): Single<Long> =
+    generalPurposeMeterLogRepository.findMaxTimestamp(remoteId, profileId)
+}
+
+@Singleton
+class GeneralPurposeMeasurementDataRangeProvide @Inject constructor(
+  private val generalPurposeMeasurementLogRepository: GeneralPurposeMeasurementLogRepository
+) : ChannelDataRangeProvider {
+  override fun handle(channelFunction: Int): Boolean =
+    channelFunction == SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT
+
+  override fun minTime(remoteId: Int, profileId: Long): Single<Long> =
+    generalPurposeMeasurementLogRepository.findMinTimestamp(remoteId, profileId)
+
+  override fun maxTime(remoteId: Int, profileId: Long): Single<Long> =
+    generalPurposeMeasurementLogRepository.findMaxTimestamp(remoteId, profileId)
+}
+
+@Singleton
+class ElectricityMeterDataRangeProvide @Inject constructor(
+  private val electricityMeterLogRepository: ElectricityMeterLogRepository
+) : ChannelDataRangeProvider {
+  override fun handle(channelFunction: Int): Boolean =
+    when (channelFunction) {
+      SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER,
+      SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH,
+      SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH -> true
+
+      else -> false
     }
-  }
 
-  private fun findMaxTime(
-    channel: ChannelDataEntity,
-    profileId: Long
-  ): Single<Long> {
-    return when (channel.function) {
-      SuplaConst.SUPLA_CHANNELFNC_THERMOMETER ->
-        temperatureLogRepository.findMaxTimestamp(channel.remoteId, profileId)
+  override fun minTime(remoteId: Int, profileId: Long): Single<Long> =
+    electricityMeterLogRepository.findMinTimestamp(remoteId, profileId)
 
-      SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE ->
-        temperatureAndHumidityLogRepository.findMaxTimestamp(channel.remoteId, profileId)
-
-      SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT ->
-        generalPurposeMeasurementLogRepository.findMaxTimestamp(channel.remoteId, profileId)
-
-      SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER ->
-        generalPurposeMeterLogRepository.findMaxTimestamp(channel.remoteId, profileId)
-
-      else -> Single.error(IllegalArgumentException("Channel function not supported (${channel.function}"))
-    }
-  }
+  override fun maxTime(remoteId: Int, profileId: Long): Single<Long> =
+    electricityMeterLogRepository.findMaxTimestamp(remoteId, profileId)
 }

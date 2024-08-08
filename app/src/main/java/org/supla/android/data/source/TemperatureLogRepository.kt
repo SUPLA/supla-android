@@ -26,6 +26,7 @@ import org.supla.android.data.source.local.entity.measurements.TemperatureLogEnt
 import org.supla.android.data.source.remote.rest.SuplaCloudService
 import org.supla.android.data.source.remote.rest.channel.TemperatureMeasurement
 import org.supla.android.features.measurementsdownload.workers.BaseDownloadLogWorker
+import retrofit2.Response
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -33,8 +34,7 @@ import javax.inject.Singleton
 @Singleton
 class TemperatureLogRepository @Inject constructor(
   private val temperatureLogDao: TemperatureLogDao,
-  suplaCloudServiceProvider: SuplaCloudService.Provider
-) : BaseMeasurementRepository<TemperatureMeasurement, TemperatureLogEntity>(suplaCloudServiceProvider) {
+) : BaseMeasurementRepository<TemperatureMeasurement, TemperatureLogEntity>() {
 
   fun findMeasurements(remoteId: Int, profileId: Long, startDate: Date, endDate: Date): Observable<List<TemperatureLogEntity>> {
     return temperatureLogDao.findMeasurements(remoteId, profileId, startDate.time, endDate.time)
@@ -49,7 +49,7 @@ class TemperatureLogRepository @Inject constructor(
       profileId = profileId
     )
 
-  override fun getInitialMeasurements(cloudService: SuplaCloudService, remoteId: Int) =
+  override fun getInitialMeasurements(cloudService: SuplaCloudService, remoteId: Int): Response<List<TemperatureMeasurement>> =
     cloudService.getInitialThermometerMeasurements(remoteId).execute()
 
   override fun getMeasurements(

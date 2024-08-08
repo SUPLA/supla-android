@@ -42,8 +42,8 @@ class HumidityAndTemperatureValueStringProvider @Inject constructor(
   override fun value(channelData: ChannelDataEntity, valueType: ValueType, withUnit: Boolean): String {
     val value = humidityAndTemperatureValueProvider.value(channelData, valueType)
     return when (valueType) {
-      ValueType.FIRST -> temperatureFormatter.format(value, withUnit = withUnit, precision = 1)
-      ValueType.SECOND -> humidityFormatter.format(value, withUnit = withUnit, precision = 1)
+      ValueType.FIRST -> temperatureFormatter.format(value, withUnit = withUnit)
+      ValueType.SECOND -> humidityFormatter.format(value, withUnit = withUnit)
     }
   }
 }

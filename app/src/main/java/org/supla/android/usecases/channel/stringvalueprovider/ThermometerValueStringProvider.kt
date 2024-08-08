@@ -37,5 +37,5 @@ class ThermometerValueStringProvider @Inject constructor(
   override fun handle(function: Int): Boolean = thermometerValueProvider.handle(function)
 
   override fun value(channelData: ChannelDataEntity, valueType: ValueType, withUnit: Boolean): String =
-    formatter.format(thermometerValueProvider.value(channelData, valueType), withUnit = withUnit, precision = 1)
+    formatter.format(thermometerValueProvider.value(channelData, valueType), withUnit = withUnit)
 }

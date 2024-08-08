@@ -20,8 +20,10 @@ package org.supla.android.ui.views
 import androidx.annotation.ColorRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
@@ -29,15 +31,27 @@ import androidx.compose.ui.unit.dp
 import org.supla.android.R
 
 @Composable
-fun Separator(modifier: Modifier = Modifier, style: SeparatorStyle = SeparatorStyle.DEFAULT) {
+fun Separator(
+  modifier: Modifier = Modifier,
+  style: SeparatorStyle = SeparatorStyle.DEFAULT,
+  orientation: SeparatorOrientation = SeparatorOrientation.HORIZONTAL
+) {
   Spacer(
     modifier = modifier
-      .fillMaxWidth()
-      .height(1.dp)
+      .let {
+        when (orientation) {
+          SeparatorOrientation.HORIZONTAL -> it.fillMaxWidth().height(1.dp)
+          SeparatorOrientation.VERTICAL -> it.fillMaxHeight().width(1.dp)
+        }
+      }
       .background(colorResource(id = style.backgroundColor))
   )
 }
 
 enum class SeparatorStyle(@ColorRes val backgroundColor: Int) {
-  DEFAULT(R.color.separator), LIGHT(R.color.gray_light)
+  DEFAULT(R.color.separator), LIGHT(R.color.gray_light), OUTLINE(R.color.outline)
+}
+
+enum class SeparatorOrientation {
+  HORIZONTAL, VERTICAL
 }

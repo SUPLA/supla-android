@@ -53,6 +53,6 @@ class GpmValueStringProvider @Inject constructor(
     }
 
     val formatter = GpmValueFormatter(config)
-    return formatter.format(value, withUnit = withUnit, precision = 1)
+    return formatter.format(value, withUnit = withUnit)
   }
 }

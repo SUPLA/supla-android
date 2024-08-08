@@ -19,7 +19,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import android.content.res.Resources
 import android.graphics.Paint
-import androidx.annotation.ColorRes
 import androidx.core.content.res.ResourcesCompat
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.CandleData
@@ -28,6 +27,7 @@ import com.github.mikephil.charting.data.CandleEntry
 import com.github.mikephil.charting.data.CombinedData
 import com.github.mikephil.charting.interfaces.datasets.ICandleDataSet
 import org.supla.android.R
+import org.supla.android.data.model.chart.ChannelChartSets
 import org.supla.android.data.model.chart.ChartDataAggregation
 import org.supla.android.data.model.chart.ChartEntryType
 import org.supla.android.data.model.chart.ChartRange
@@ -40,7 +40,7 @@ class CandleChartData(
   dateRange: DateRange,
   chartRange: ChartRange,
   aggregation: ChartDataAggregation,
-  sets: List<HistoryDataSet>
+  sets: List<ChannelChartSets>
 ) : ChartData(dateRange, chartRange, aggregation, sets) {
 
   override val divider: Long
@@ -61,20 +61,14 @@ class CandleChartData(
 
   override fun combinedData(resources: Resources): CombinedData? {
     val candleData = mutableListOf<ICandleDataSet?>().also { list ->
-      sets.forEach { set ->
-        if (set.active && set.entities.isNotEmpty()) {
-          set.entities.forEach { entries ->
-            val candleEntries = entries.map { entry ->
-              val min = entry.min ?: entry.value
-              val max = entry.max ?: entry.value
-              val open = entry.open ?: entry.value
-              val close = entry.close ?: entry.value
-              return@map CandleEntry(toCoordinate(entry.date.toFloat() - minDate), max, min, open, close, set.toDetails(entry))
-            }
-            list.add(candleDataSet(candleEntries, set.color, set.setId.type, resources))
-          }
+      sets.flatMap { it.dataSets }
+        .forEach { dataSet ->
+          dataSet.asCandleChartData(
+            aggregation = aggregation!!,
+            timeToCoordinateConverter = { toCoordinate(it - minDate) },
+            toSetConverter = { set -> candleDataSet(set, dataSet.label, dataSet.type, resources) }
+          )?.let { data -> list.addAll(data) }
         }
-      }
     }
 
     return if (candleData.isEmpty()) {
@@ -86,16 +80,20 @@ class CandleChartData(
     }
   }
 
-  override fun newInstance(sets: List<HistoryDataSet>): ChartData = CandleChartData(dateRange!!, chartRange!!, aggregation!!, sets)
+  override fun newInstance(sets: List<ChannelChartSets>): ChartData = CandleChartData(dateRange!!, chartRange!!, aggregation!!, sets)
 
   override fun fromCoordinate(x: Float): Float {
     return super.fromCoordinate(x) + minDate
   }
 
-  private fun candleDataSet(set: List<CandleEntry>, @ColorRes colorRes: Int, type: ChartEntryType, resources: Resources) =
+  private fun candleDataSet(set: List<CandleEntry>, label: HistoryDataSet.Label, type: ChartEntryType, resources: Resources) =
     CandleDataSet(set, "").apply {
       setDrawValues(false)
-      color = ResourcesCompat.getColor(resources, colorRes, null)
+      when (label) {
+        is HistoryDataSet.Label.Single -> color = ResourcesCompat.getColor(resources, label.value.color, null)
+        is HistoryDataSet.Label.Multiple -> colors = label.colors(resources)
+      }
+
       axisDependency = when (type) {
         ChartEntryType.HUMIDITY -> YAxis.AxisDependency.RIGHT
         else -> YAxis.AxisDependency.LEFT

@@ -52,10 +52,17 @@ import androidx.compose.ui.unit.dp
 import org.supla.android.R
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.model.chart.ChartRange
-import org.supla.android.data.model.general.SelectableList
+import org.supla.android.data.model.general.SingleSelectionList
+import org.supla.android.extensions.ifTrue
 
 @Composable
-fun <T> Spinner(label: String, options: Map<T, String>, modifier: Modifier = Modifier, onOptionSelected: (selectedId: T) -> Unit) {
+fun <T> Spinner(
+  label: String,
+  options: Map<T, String>,
+  modifier: Modifier = Modifier,
+  enabled: Boolean = true,
+  onOptionSelected: (selectedId: T) -> Unit
+) {
   var expanded by remember { mutableStateOf(false) }
   val firstOptionText = options[options.keys.first()] ?: ""
   var selectedOptionText by remember { mutableStateOf(firstOptionText) }
@@ -67,11 +74,17 @@ fun <T> Spinner(label: String, options: Map<T, String>, modifier: Modifier = Mod
       modifier = Modifier.padding(horizontal = 12.dp),
       color = colorResource(id = R.color.gray)
     )
-    ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = { expanded = it }) {
+    ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = { ifTrue(enabled) { expanded = it } }) {
       TextField(
         value = selectedOptionText,
         readOnly = true,
-        trailingIcon = { SpinnerTrailingIcon(expanded = expanded, modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable)) },
+        trailingIcon = {
+          SpinnerTrailingIcon(
+            expanded = expanded,
+            enabled,
+            modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable)
+          )
+        },
         modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryEditable)
       )
       ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
@@ -96,8 +109,9 @@ interface SpinnerItem {
 
 @Composable
 fun <T : SpinnerItem> TextSpinner(
-  options: SelectableList<T>,
+  options: SingleSelectionList<T>,
   modifier: Modifier = Modifier,
+  enabled: Boolean = true,
   onOptionSelected: (selectedId: T) -> Unit
 ) {
   var expanded by remember { mutableStateOf(false) }
@@ -111,18 +125,19 @@ fun <T : SpinnerItem> TextSpinner(
     )
     ExposedDropdownMenuBox(
       expanded = expanded,
-      onExpandedChange = { expanded = it },
+      onExpandedChange = { ifTrue(enabled) { expanded = it } },
       modifier = Modifier.height(24.dp)
     ) {
       Row(verticalAlignment = Alignment.CenterVertically) {
         Text(
           text = stringResource(id = selectedOptionText),
           style = MaterialTheme.typography.bodyMedium,
-          color = MaterialTheme.colorScheme.onBackground,
+          color = if (enabled) MaterialTheme.colorScheme.onBackground else MaterialTheme.colorScheme.outline,
           modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryEditable)
         )
         SpinnerTrailingIcon(
           expanded = expanded,
+          enabled = enabled,
           modifier = Modifier
             .width(16.dp)
             .height(8.dp)
@@ -145,12 +160,12 @@ fun <T : SpinnerItem> TextSpinner(
 }
 
 @Composable
-private fun SpinnerTrailingIcon(expanded: Boolean, modifier: Modifier = Modifier) =
+private fun SpinnerTrailingIcon(expanded: Boolean, enabled: Boolean, modifier: Modifier = Modifier) =
   IconButton(modifier = Modifier.clearAndSetSemantics { }, onClick = { }) {
     Icon(
       painter = painterResource(id = R.drawable.ic_dropdown),
       contentDescription = null,
-      tint = MaterialTheme.colorScheme.onBackground,
+      tint = if (enabled) MaterialTheme.colorScheme.onBackground else MaterialTheme.colorScheme.outline,
       modifier = modifier.rotate(
         if (expanded) {
           180f
@@ -167,7 +182,7 @@ private fun Preview() {
   SuplaTheme {
     Column(Modifier.background(MaterialTheme.colorScheme.surface)) {
       Spinner(label = "Program", options = mapOf(1 to "Cooling", 2 to "Heating"), onOptionSelected = {})
-      TextSpinner(options = SelectableList(ChartRange.DAY, emptyList(), R.string.history_range_label), onOptionSelected = {})
+      TextSpinner(options = SingleSelectionList(ChartRange.DAY, emptyList(), R.string.history_range_label), onOptionSelected = {})
     }
   }
 }

@@ -55,7 +55,6 @@ import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.channel.*
 import org.supla.android.usecases.details.GpmDetailType
-import org.supla.android.usecases.details.LegacyDetailType
 import org.supla.android.usecases.details.ProvideDetailTypeUseCase
 import org.supla.android.usecases.details.SwitchDetailType
 import org.supla.android.usecases.details.ThermometerDetailType
@@ -234,28 +233,6 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     assertThat(states).isEmpty()
     assertThat(events).isEmpty()
     verifyNoInteractionsExcept()
-  }
-
-  @Test
-  fun `should open EM details when item is offline`() {
-    // given
-    val remoteId = 123
-    val channelId = 123
-    val channel = mockChannelData(remoteId, SUPLA_CHANNELFNC_ELECTRICITY_METER)
-    whenever(findChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
-
-    val detailType = LegacyDetailType.EM
-    whenever(provideDetailTypeUseCase(channel)).thenReturn(detailType)
-
-    // when
-    viewModel.onListItemClick(remoteId)
-
-    // then
-    assertThat(states).isEmpty()
-    assertThat(events).containsExactly(
-      ChannelListViewEvent.OpenLegacyDetails(channelId, detailType)
-    )
-    verifyNoInteractionsExcept(provideDetailTypeUseCase)
   }
 
   @Test

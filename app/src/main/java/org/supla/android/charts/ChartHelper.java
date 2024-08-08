@@ -685,7 +685,7 @@ public abstract class ChartHelper extends ValueFormatter {
         return ChartType.Bar_VectorBalance_Years;
     }
 
-    return ElectricityChartHelper.ChartType.Bar_Minutes;
+    return ChartType.Bar_Minutes;
   }
 
   public List<String> getSlaveSpinnerItems(Spinner master) {

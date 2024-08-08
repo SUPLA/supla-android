@@ -21,7 +21,7 @@ import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER
 import org.supla.android.usecases.channel.ChannelValueStringProvider
 import org.supla.android.usecases.channel.ValueType
-import org.supla.android.usecases.channel.valueformatter.ElectricityMeterValueFormatter
+import org.supla.android.usecases.channel.valueformatter.ListElectricityMeterValueFormatter
 import org.supla.android.usecases.channel.valueprovider.ElectricityMeterValueProvider
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -31,13 +31,13 @@ class ElectricityMeterValueStringProvider @Inject constructor(
   private val electricityMeterValueProvider: ElectricityMeterValueProvider,
 ) : ChannelValueStringProvider {
 
-  private val formatter = ElectricityMeterValueFormatter()
+  private val formatter = ListElectricityMeterValueFormatter()
 
   override fun handle(function: Int): Boolean =
     function == SUPLA_CHANNELFNC_ELECTRICITY_METER
 
   override fun value(channelData: ChannelDataEntity, valueType: ValueType, withUnit: Boolean): String {
     val value = electricityMeterValueProvider.value(channelData, valueType)
-    return formatter.format(value, withUnit = withUnit, precision = 2)
+    return formatter.format(value, withUnit = withUnit)
   }
 }

@@ -11,3 +11,9 @@ fun <T> Boolean.ifFalse(value: T): T? = if (this.not()) {
 } else {
   null
 }
+
+fun ifTrue(value: Boolean, callback: () -> Unit) {
+  if (value) {
+    callback()
+  }
+}

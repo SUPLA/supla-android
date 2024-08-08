@@ -206,6 +206,10 @@ public class SuplaChannelElectricityMeterValue implements Serializable {
       return Voltage;
     }
 
+    public double getCurrent() {
+      return Current;
+    }
+
     public double getCurrent(boolean over65A) {
       return Current * (over65A ? 10 : 1);
     }

@@ -17,10 +17,10 @@ package org.supla.android.data.model.chart
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.data.model.general.SelectableList
+import org.supla.android.data.model.general.SingleSelectionList
 import org.supla.android.ui.views.SpinnerItem
 
-class ChartFilters private constructor(private val filters: Map<FilterableKey, SelectableList<SpinnerItem>>) {
+class ChartFilters private constructor(private val filters: Map<FilterableKey, SingleSelectionList<SpinnerItem>>) {
 
   val selectedAggregation: ChartDataAggregation?
     get() = selected(FilterableKey.AGGREGATION)
@@ -33,12 +33,12 @@ class ChartFilters private constructor(private val filters: Map<FilterableKey, S
   fun count() = filters.keys.size
 
   @Suppress("UNCHECKED_CAST")
-  fun putRanges(values: SelectableList<ChartRange>): ChartFilters =
-    ChartFilters(filters.toMutableMap().apply { put(FilterableKey.RANGE_DATE, values as SelectableList<SpinnerItem>) })
+  fun putRanges(values: SingleSelectionList<ChartRange>): ChartFilters =
+    ChartFilters(filters.toMutableMap().apply { put(FilterableKey.RANGE_DATE, values as SingleSelectionList<SpinnerItem>) })
 
   @Suppress("UNCHECKED_CAST")
-  fun putAggregations(values: SelectableList<ChartDataAggregation>): ChartFilters =
-    ChartFilters(filters.toMutableMap().apply { put(FilterableKey.AGGREGATION, values as SelectableList<SpinnerItem>) })
+  fun putAggregations(values: SingleSelectionList<ChartDataAggregation>): ChartFilters =
+    ChartFilters(filters.toMutableMap().apply { put(FilterableKey.AGGREGATION, values as SingleSelectionList<SpinnerItem>) })
 
   fun select(option: ChartRange): ChartFilters =
     ChartFilters(

@@ -19,5 +19,13 @@ package org.supla.android.usecases.channel.valueformatter
 
 interface ChannelValueFormatter {
   fun handle(function: Int): Boolean
-  fun format(value: Any, withUnit: Boolean = true, precision: Int = 1): String
+  fun format(value: Any, withUnit: Boolean = true, precision: Precision = Default(1)): String
+  fun format(value: Any, withUnit: Boolean = true, precision: Int) =
+    format(value, withUnit, Default(precision))
+
+  sealed interface Precision {
+    val value: Int
+  }
+  data class Default(override val value: Int) : Precision
+  data class Custom(override val value: Int) : Precision
 }

@@ -20,6 +20,7 @@ package org.supla.android.db.room.measurements
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import org.supla.android.data.source.local.dao.measurements.ElectricityMeterLogDao
 import org.supla.android.data.source.local.dao.measurements.GeneralPurposeMeasurementLogDao
 import org.supla.android.data.source.local.dao.measurements.GeneralPurposeMeterLogDao
 import org.supla.android.data.source.local.dao.measurements.TemperatureAndHumidityLogDao
@@ -59,4 +60,6 @@ abstract class MeasurementsDatabase : RoomDatabase() {
   abstract fun generalPurposeMeterLogDao(): GeneralPurposeMeterLogDao
 
   abstract fun generalPurposeMeasurementLogDao(): GeneralPurposeMeasurementLogDao
+
+  abstract fun electricityMeterLogDao(): ElectricityMeterLogDao
 }

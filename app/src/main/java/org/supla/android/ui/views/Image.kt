@@ -18,8 +18,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 
 @Composable
-fun Image(drawableId: Int, contentDescription: String? = null) =
-  androidx.compose.foundation.Image(painter = painterResource(id = drawableId), contentDescription = contentDescription)
+fun Image(drawableId: Int, modifier: Modifier = Modifier, contentDescription: String? = null) =
+  androidx.compose.foundation.Image(
+    painter = painterResource(id = drawableId),
+    contentDescription = contentDescription,
+    modifier = modifier
+  )

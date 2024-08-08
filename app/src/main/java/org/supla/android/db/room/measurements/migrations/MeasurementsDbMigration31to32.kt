@@ -19,26 +19,27 @@ package org.supla.android.db.room.measurements.migrations/*
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import org.supla.android.Trace
+import org.supla.android.data.source.local.entity.measurements.ElectricityMeterLogEntity
+import org.supla.android.data.source.local.entity.measurements.ElectricityMeterLogEntity.Companion.COLUMN_FAE_BALANCED
+import org.supla.android.data.source.local.entity.measurements.ElectricityMeterLogEntity.Companion.COLUMN_PHASE1_FAE
+import org.supla.android.data.source.local.entity.measurements.ElectricityMeterLogEntity.Companion.COLUMN_PHASE1_FRE
+import org.supla.android.data.source.local.entity.measurements.ElectricityMeterLogEntity.Companion.COLUMN_PHASE1_RAE
+import org.supla.android.data.source.local.entity.measurements.ElectricityMeterLogEntity.Companion.COLUMN_PHASE1_RRE
+import org.supla.android.data.source.local.entity.measurements.ElectricityMeterLogEntity.Companion.COLUMN_PHASE2_FAE
+import org.supla.android.data.source.local.entity.measurements.ElectricityMeterLogEntity.Companion.COLUMN_PHASE2_FRE
+import org.supla.android.data.source.local.entity.measurements.ElectricityMeterLogEntity.Companion.COLUMN_PHASE2_RAE
+import org.supla.android.data.source.local.entity.measurements.ElectricityMeterLogEntity.Companion.COLUMN_PHASE2_RRE
+import org.supla.android.data.source.local.entity.measurements.ElectricityMeterLogEntity.Companion.COLUMN_PHASE3_FAE
+import org.supla.android.data.source.local.entity.measurements.ElectricityMeterLogEntity.Companion.COLUMN_PHASE3_FRE
+import org.supla.android.data.source.local.entity.measurements.ElectricityMeterLogEntity.Companion.COLUMN_PHASE3_RAE
+import org.supla.android.data.source.local.entity.measurements.ElectricityMeterLogEntity.Companion.COLUMN_PHASE3_RRE
+import org.supla.android.data.source.local.entity.measurements.ElectricityMeterLogEntity.Companion.COLUMN_RAE_BALANCED
 import org.supla.android.data.source.local.entity.measurements.GeneralPurposeMeasurementEntity
 import org.supla.android.data.source.local.entity.measurements.GeneralPurposeMeterEntity
+import org.supla.android.data.source.local.entity.measurements.ImpulseCounterLogEntity
+import org.supla.android.data.source.local.entity.measurements.ImpulseCounterLogEntity.Companion.COLUMN_CALCULATED_VALUE
+import org.supla.android.data.source.local.entity.measurements.ImpulseCounterLogEntity.Companion.COLUMN_COUNTER
 import org.supla.android.db.MeasurementsDbHelper
-import org.supla.android.db.SuplaContract
-import org.supla.android.db.SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_FAE_BALANCED
-import org.supla.android.db.SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE1_FAE
-import org.supla.android.db.SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE1_FRE
-import org.supla.android.db.SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE1_RAE
-import org.supla.android.db.SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE1_RRE
-import org.supla.android.db.SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE2_FAE
-import org.supla.android.db.SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE2_FRE
-import org.supla.android.db.SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE2_RAE
-import org.supla.android.db.SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE2_RRE
-import org.supla.android.db.SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_FAE
-import org.supla.android.db.SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_FRE
-import org.supla.android.db.SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_RAE
-import org.supla.android.db.SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_PHASE3_RRE
-import org.supla.android.db.SuplaContract.ElectricityMeterLogEntry.COLUMN_NAME_RAE_BALANCED
-import org.supla.android.db.SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_CALCULATEDVALUE
-import org.supla.android.db.SuplaContract.ImpulseCounterLogEntry.COLUMN_NAME_COUNTER
 import org.supla.android.db.room.SqlExecutor
 import org.supla.android.extensions.TAG
 
@@ -46,13 +47,13 @@ val MEASUREMENTS_DB_MIGRATION_31_32: Migration = object : Migration(31, 32), Sql
 
   override fun getDatabaseNameForLog(): String = MeasurementsDbHelper.DATABASE_NAME
 
-  override fun migrate(database: SupportSQLiteDatabase) {
-    execSQL(database, GeneralPurposeMeterEntity.SQL)
-    execSQL(database, GeneralPurposeMeasurementEntity.SQL)
+  override fun migrate(db: SupportSQLiteDatabase) {
+    execSQL(db, GeneralPurposeMeterEntity.SQL)
+    execSQL(db, GeneralPurposeMeasurementEntity.SQL)
 
     try {
-      findAndRemoveChannelsWithNegativeLogEntries(database, SuplaContract.ElectricityMeterLogEntry.TABLE_NAME, emColumns)
-      findAndRemoveChannelsWithNegativeLogEntries(database, SuplaContract.ImpulseCounterLogEntry.TABLE_NAME, icColumns)
+      findAndRemoveChannelsWithNegativeLogEntries(db, ElectricityMeterLogEntity.TABLE_NAME, emColumns)
+      findAndRemoveChannelsWithNegativeLogEntries(db, ImpulseCounterLogEntity.TABLE_NAME, icColumns)
     } catch (ex: Exception) {
       Trace.e(TAG, "Removing data with negative log entries failed!", ex)
     }
@@ -88,25 +89,25 @@ val MEASUREMENTS_DB_MIGRATION_31_32: Migration = object : Migration(31, 32), Sql
 }
 
 private val emColumns = arrayOf(
-  COLUMN_NAME_PHASE1_FAE,
-  COLUMN_NAME_PHASE1_RAE,
-  COLUMN_NAME_PHASE1_FRE,
-  COLUMN_NAME_PHASE1_RRE,
-  COLUMN_NAME_PHASE2_FAE,
-  COLUMN_NAME_PHASE2_RAE,
-  COLUMN_NAME_PHASE2_FRE,
-  COLUMN_NAME_PHASE2_RRE,
-  COLUMN_NAME_PHASE3_FAE,
-  COLUMN_NAME_PHASE3_RAE,
-  COLUMN_NAME_PHASE3_FRE,
-  COLUMN_NAME_PHASE3_RRE,
-  COLUMN_NAME_FAE_BALANCED,
-  COLUMN_NAME_RAE_BALANCED
+  COLUMN_PHASE1_FAE,
+  COLUMN_PHASE1_RAE,
+  COLUMN_PHASE1_FRE,
+  COLUMN_PHASE1_RRE,
+  COLUMN_PHASE2_FAE,
+  COLUMN_PHASE2_RAE,
+  COLUMN_PHASE2_FRE,
+  COLUMN_PHASE2_RRE,
+  COLUMN_PHASE3_FAE,
+  COLUMN_PHASE3_RAE,
+  COLUMN_PHASE3_FRE,
+  COLUMN_PHASE3_RRE,
+  COLUMN_FAE_BALANCED,
+  COLUMN_RAE_BALANCED
 )
 
 private val icColumns = arrayOf(
-  COLUMN_NAME_COUNTER,
-  COLUMN_NAME_CALCULATEDVALUE
+  COLUMN_COUNTER,
+  COLUMN_CALCULATED_VALUE
 )
 
 private fun channelsListSql(tableName: String, columnsForWhere: Array<String>) = """

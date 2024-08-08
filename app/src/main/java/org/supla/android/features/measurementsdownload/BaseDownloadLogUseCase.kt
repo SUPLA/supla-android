@@ -30,7 +30,7 @@ import org.supla.android.extensions.guardLet
 import org.supla.android.extensions.toTimestamp
 import retrofit2.Response
 
-private const val ALLOWED_TIME_DIFFERENCE = 1800
+private const val ALLOWED_TIME_DIFFERENCE = 1800_000
 
 abstract class BaseDownloadLogUseCase<T : Measurement, U : BaseLogEntity>(
   private val suplaCloudServiceProvider: SuplaCloudService.Provider,
