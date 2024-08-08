@@ -19,66 +19,31 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.util.TypedValue
 import android.view.View
-import android.view.ViewGroup
 import android.widget.TableLayout
-import android.widget.TableRow
 import android.widget.TextView
-import androidx.compose.ui.text.capitalize
-import androidx.compose.ui.text.intl.Locale
-import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
-import com.github.mikephil.charting.components.MarkerView
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.highlight.Highlight
-import com.github.mikephil.charting.utils.MPPointF
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
 import org.supla.android.data.formatting.DateFormatter
-import org.supla.android.data.model.chart.ChartDataAggregation
 import org.supla.android.data.model.chart.ChartEntryType
 import org.supla.android.data.model.chart.marker.ChartEntryDetails
-import org.supla.android.extensions.guardLet
-import org.supla.android.extensions.toPx
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ChartMarkerView(context: Context) : MarkerView(context, R.layout.view_chart_marker) {
-
-  private val content: ConstraintLayout = findViewById(R.id.chart_marker_content)
-  private val title: TextView = findViewById(R.id.chart_marker_title)
-  private val text: TextView = findViewById(R.id.chart_marker_text)
-  private val range: TextView = findViewById(R.id.chart_marker_range)
+class ChartMarkerView(context: Context) : BaseMarkerView(context) {
 
   private val tableId: Int = View.generateViewId()
   private lateinit var openingValueView: TextView
   private lateinit var closingValueView: TextView
 
   @Inject
-  lateinit var dateFormatter: DateFormatter
+  override lateinit var dateFormatter: DateFormatter
 
-  @Suppress("NAME_SHADOWING")
   @SuppressLint("SetTextI18n")
-  override fun refreshContent(entry: Entry?, highlight: Highlight?) {
-    val (entry) = guardLet(entry) {
-      super.refreshContent(entry, highlight)
-      return
-    }
-    val (details) = guardLet(entry.data as? ChartEntryDetails) {
-      super.refreshContent(entry, highlight)
-      return
-    }
-
-    title.text = when (details.aggregation) {
-      ChartDataAggregation.HOURS -> "${dateFormatter.getFullDateString(details.date())?.let { it.substring(0, it.length - 2) }}00"
-      ChartDataAggregation.DAYS -> dateFormatter.getFullDateString(details.date())?.let { it.substring(0, it.length - 5) }
-      ChartDataAggregation.MONTHS -> dateFormatter.getMonthAndYearString(details.date())?.capitalize(Locale.current)
-      ChartDataAggregation.YEARS -> dateFormatter.getYearString(details.date())
-      else -> dateFormatter.getFullDateString(details.date())
-    }
+  override fun refreshContent(entry: Entry, highlight: Highlight?, details: ChartEntryDetails) {
+    title.text = getFormattedDate(details)
     text.text = details.valueFormatter.format(entry.y.toDouble(), withUnit = showValueUnit(details.type), precision = 2)
 
     if (details.min != null && details.max != null) {
@@ -99,12 +64,6 @@ class ChartMarkerView(context: Context) : MarkerView(context, R.layout.view_char
     } else {
       findViewById<TableLayout>(tableId)?.visibility = GONE
     }
-
-    super.refreshContent(entry, highlight)
-  }
-
-  override fun getOffset(): MPPointF {
-    return MPPointF(-width.div(2).toFloat(), -height.toFloat().plus(20.dp.toPx()))
   }
 
   private fun createTableLayout(): TableLayout {
@@ -124,60 +83,6 @@ class ChartMarkerView(context: Context) : MarkerView(context, R.layout.view_char
       }
   }
 
-  private fun tableLayoutParams() =
-    ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.WRAP_CONTENT).also {
-      it.topToBottom = R.id.chart_marker_text
-      it.topMargin = resources.getDimension(R.dimen.distance_micro).toInt()
-    }
-
-  private fun textView(text: String? = null, alignment: Int = View.TEXT_ALIGNMENT_VIEW_START): TextView {
-    return TextView(context).apply {
-      this.text = text
-      textAlignment = alignment
-      setTextSize(TypedValue.COMPLEX_UNIT_SP, 11f)
-      typeface = ResourcesCompat.getFont(context, R.font.open_sans_regular)
-      setTextColor(ContextCompat.getColor(context, R.color.on_background))
-    }
-  }
-
   private fun showValueUnit(type: ChartEntryType) =
     type == ChartEntryType.HUMIDITY || type == ChartEntryType.GENERAL_PURPOSE_METER
-}
-
-class TableLayoutBuilder {
-
-  private val tableStructure = mutableListOf<MutableList<View>>()
-
-  fun addRow(): TableLayoutBuilder {
-    tableStructure.add(mutableListOf())
-    return this
-  }
-
-  fun addCell(view: View): TableLayoutBuilder {
-    if (tableStructure.isEmpty()) {
-      addRow()
-    }
-    tableStructure.last().add(view)
-    return this
-  }
-
-  fun build(context: Context, layoutParams: ViewGroup.LayoutParams): TableLayout {
-    val tableLayout = TableLayout(context)
-    tableLayout.layoutParams = layoutParams
-    tableLayout.isStretchAllColumns = true
-
-    tableStructure.forEach { row ->
-      val tableRow = TableRow(context)
-      tableRow.layoutParams = TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT)
-
-      row.forEach { cell ->
-        cell.layoutParams = TableRow.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT)
-        tableRow.addView(cell)
-      }
-
-      tableLayout.addView(tableRow)
-    }
-
-    return tableLayout
-  }
 }

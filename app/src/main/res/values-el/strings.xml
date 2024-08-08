@@ -122,21 +122,6 @@
   <string name="channel_caption_gasmeter">Μετρητής αερίου</string>
   <string name="channel_caption_watermeter">Μετρητής νερού</string>
 
-  <string name="em_total_forward_avtive_energy">Ληφθείσα ενεργή ενέργεια</string>
-  <string name="em_reverse_active_energy">Επιστραφείσα ενεργή ενέργεια</string>
-  <string name="em_total_forward_reactive_energy">Ληφθείσα παθητική ενέργεια</string>
-  <string name="em_total_reverse_reactive_energy">Επιστραφείσα παθητική ενέργεια</string>
-  <string name="em_frequency">Συχνότητα</string>
-  <string name="em_voltage">Τάση</string>
-  <string name="em_current">Ένταση</string>
-  <string name="em_power_active">Ενεργός ισχύς</string>
-  <string name="em_power_reactive">Παθητική ισχύς</string>
-  <string name="em_power_factor">Συντελεστής ισχύος</string>
-  <string name="em_phase_angle">Γωνία φάσης</string>
-  <string name="em_power_apparent">Φαινομενική ισχύς</string>
-  <string name="em_phase1">Φάση 1</string>
-  <string name="em_phase2">Φάση 2</string>
-  <string name="em_phase3">Φάση 3</string>
   <string name="channel_caption_thermostat">Θερμοστάτης</string>
   <string name="channel_caption_thermostat_hp_homeplus">Θερμαντήρας Home+</string>
   <string name="hp_on">ΕΝΕΡΓΟΠΟΙΗΜΕΝΟΣ</string>
@@ -446,4 +431,25 @@
   <string name="status_accessid_inactive">Ανενεργό αναγνωριστικό πρόσβασης</string>
   <string name="hour_string_format">HH:mm:ss</string>
   <string name="roller_shutter_calibration">Βαθμονόμηση</string>
+  <string name="details_em_total_forward_active_energy">Ληφθείσα ενεργή ενέργεια</string>
+  <string name="details_em_reverse_active_energy">Επιστραφείσα ενεργή ενέργεια</string>
+  <string name="details_em_total_forward_reactive_energy">Ληφθείσα παθητική ενέργεια</string>
+  <string name="details_em_total_reverse_reactive_energy">Επιστραφείσα παθητική ενέργεια</string>
+  <string name="details_em_frequency">Συχνότητα</string>
+  <string name="details_em_voltage">Τάση</string>
+  <string name="details_em_current">Ένταση</string>
+  <string name="details_em_power_active">Ενεργός ισχύς</string>
+  <string name="details_em_power_reactive">Παθητική ισχύς</string>
+  <string name="details_em_power_factor">Συντελεστής ισχύος</string>
+  <string name="details_em_phase_angle">Γωνία φάσης</string>
+  <string name="details_em_power_apparent">Φαινομενική ισχύς</string>
+  <string name="details_em_phase1">Φάση 1</string>
+  <string name="details_em_phase2">Φάση 2</string>
+  <string name="details_em_phase3">Φάση 3</string>
+  <string name="details_em_reversed_active_energy">Επιστραφείσα ενεργή ενέργεια</string>
+  <string name="details_em_forwarded_active_energy">Ληφθείσα ενεργή ενέργεια</string>
+  <string name="details_em_reversed_reactive_energy">Επιστραφείσα παθητική ενέργεια</string>
+  <string name="details_em_forwarded_reactive_energy">Ληφθείσα παθητική ενέργεια</string>
+  <string name="details_em_balance_arithmetic">Αριθμητικός ισολογισμός</string>
+  <string name="details_em_balance_vector">Διανυσματικός ισολογισμός</string>
 </resources>

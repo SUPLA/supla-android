@@ -37,4 +37,18 @@ enum class SuplaChannelFlag(val rawValue: Long) {
   infix fun inside(flags: Long): Boolean = (flags and rawValue) > 0L
 
   infix fun notInside(flags: Long): Boolean = (flags and rawValue) == 0L
+
+  companion object {
+    fun from(value: Long): List<SuplaChannelFlag> =
+      mutableListOf<SuplaChannelFlag>().apply {
+        SuplaChannelFlag.entries.forEach {
+          if (it.rawValue.and(value) > 0) {
+            add(it)
+          }
+        }
+      }
+  }
 }
+
+val Long.suplaFlags: List<SuplaChannelFlag>
+  get() = SuplaChannelFlag.from(this)

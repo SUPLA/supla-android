@@ -19,10 +19,14 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import androidx.compose.foundation.BorderStroke
+import android.graphics.BitmapFactory
+import androidx.annotation.DimenRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,29 +35,29 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.pullToRefresh
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
@@ -73,12 +77,21 @@ import org.supla.android.core.ui.BaseViewProxy
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.formatting.LocalDateFormatter
+import org.supla.android.data.model.chart.ChannelChartSets
+import org.supla.android.data.model.chart.ChartDataAggregation
+import org.supla.android.data.model.chart.ChartEntryType
 import org.supla.android.data.model.chart.ChartRange
+import org.supla.android.data.model.chart.DateRange
 import org.supla.android.data.model.chart.HistoryDataSet
+import org.supla.android.data.model.chart.datatype.LineChartData
+import org.supla.android.data.model.chart.singleLabel
 import org.supla.android.data.model.chart.style.ChartStyle
 import org.supla.android.data.model.chart.style.ThermometerChartStyle
 import org.supla.android.data.model.general.RangeValueType
 import org.supla.android.data.source.local.calendar.Hour
+import org.supla.android.data.source.remote.channel.SuplaChannelFunction
+import org.supla.android.extensions.weekEnd
+import org.supla.android.extensions.weekStart
 import org.supla.android.features.details.detailbase.history.HistoryDetailViewState
 import org.supla.android.ui.dialogs.DatePickerDialog
 import org.supla.android.ui.dialogs.TimePickerDialog
@@ -89,11 +102,14 @@ import org.supla.android.ui.views.buttons.IconButton
 import org.supla.android.ui.views.charts.CombinedChart
 import org.supla.android.ui.views.tools.Shadow
 import org.supla.android.ui.views.tools.ShadowOrientation
+import org.supla.android.usecases.channel.valueformatter.HumidityValueFormatter
 import java.util.Date
 
 interface HistoryDetailProxy : BaseViewProxy<HistoryDetailViewState> {
   fun refresh() {}
-  fun changeSetActive(setId: HistoryDataSet.Id) {}
+  fun showSelection(remoteId: Int, type: ChartEntryType) {}
+  fun confirmSelection(spinnerItem: SpinnerItem?, checkboxItems: Set<CheckboxItem>?) {}
+  fun hideSelection() {}
   fun changeFilter(spinnerItem: SpinnerItem) {}
   fun moveRangeLeft() {}
   fun moveRangeRight() {}
@@ -129,6 +145,13 @@ fun HistoryDetail(viewModel: HistoryDetailProxy) {
       onDismissTap = { viewModel.customRangeEditHourDismiss() }
     )
   }
+  viewState.chartDataSelectionDialogState?.let {
+    ChartDataSelectionDialog(
+      state = it,
+      onDismiss = { viewModel.hideSelection() },
+      onPositiveClick = viewModel::confirmSelection
+    )
+  }
 
   Column(
     modifier = Modifier.fillMaxSize()
@@ -154,14 +177,8 @@ fun HistoryDetail(viewModel: HistoryDetailProxy) {
 
       if (viewState.filters.selectedRange == ChartRange.CUSTOM) {
         RangeSelection(viewState, viewModel)
-      } else if (viewState.showBottomBar) {
-        BottomPagination(viewState = viewState, viewModel = viewModel)
       } else {
-        Spacer(
-          modifier = Modifier
-            .fillMaxWidth()
-            .height(96.dp)
-        )
+        BottomPagination(viewState = viewState, viewModel = viewModel)
       }
     } else {
       Text(
@@ -194,7 +211,42 @@ private fun DataSetsAndFilters(viewState: HistoryDetailViewState, viewModel: His
     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
       DataSetsRow {
         viewState.chartData.sets.forEach { data ->
-          DataSetItem(dataSet = data, historyEnabled = viewState.showHistory, onClick = { viewModel.changeSetActive(data.setId) })
+          Column(
+            modifier = Modifier
+              .padding(start = Distance.default, end = Distance.default)
+              .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                enabled = data.dataSets.size == 1,
+                indication = ripple(),
+                onClick = { viewModel.showSelection(data.remoteId, data.dataSets[0].type) }
+              ),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(4.dp)
+          ) {
+            data.typeName?.let {
+              Text(text = it(LocalContext.current), style = MaterialTheme.typography.labelSmall)
+            }
+            Row(
+              verticalAlignment = Alignment.CenterVertically,
+              horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+              data.dataSets.forEach { set ->
+                DataSetItems(
+                  label = set.label,
+                  active = set.active,
+                  historyEnabled = viewState.showHistory,
+                  clickEnabled = data.dataSets.size > 1,
+                  onClick = { viewModel.showSelection(data.remoteId, set.type) }
+                )
+              }
+            }
+          }
+          Box(
+            modifier = Modifier
+              .fillMaxHeight()
+              .width(1.dp)
+              .background(MaterialTheme.colorScheme.background)
+          )
         }
       }
       Shadow(orientation = ShadowOrientation.STARTING_TOP)
@@ -216,11 +268,16 @@ private fun DataSetsAndFilters(viewState: HistoryDetailViewState, viewModel: His
 @Composable
 private fun FiltersRow(viewState: HistoryDetailViewState, viewModel: HistoryDetailProxy) =
   Row(modifier = Modifier.padding(top = Distance.tiny)) {
+    val lastIdx = viewState.filters.values.size - 1
     viewState.filters.values.forEachIndexed { index, selectableList ->
       TextSpinner(
         options = selectableList,
         onOptionSelected = { viewModel.changeFilter(it) },
-        modifier = Modifier.padding(start = Distance.default)
+        modifier = Modifier
+          .padding(
+            start = if (index == 0) Distance.default else 0.dp,
+            end = if (index == lastIdx) Distance.default else 0.dp
+          )
       )
 
       if (viewState.filters.count() == 2 && index == 0) {
@@ -240,78 +297,97 @@ private fun DataSetsRow(content: @Composable RowScope.() -> Unit) =
       .fillMaxWidth()
       .horizontalScroll(rememberScrollState())
       .background(color = MaterialTheme.colorScheme.surface)
-      .height(80.dp)
-      .padding(
-        start = dimensionResource(id = R.dimen.distance_default),
-        top = dimensionResource(id = R.dimen.distance_default),
-        end = dimensionResource(id = R.dimen.distance_default)
-      ),
-    horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.distance_small)),
+      .height(80.dp),
+    verticalAlignment = Alignment.CenterVertically,
     content = content
   )
 
 @Composable
-private fun DataSetItem(
-  dataSet: HistoryDataSet,
+private fun DataSetItems(
+  label: HistoryDataSet.Label,
+  active: Boolean,
   historyEnabled: Boolean,
-  onClick: () -> Unit = { }
+  clickEnabled: Boolean,
+  onClick: () -> Unit
 ) {
   Row(
-    horizontalArrangement = Arrangement.spacedBy(4.dp),
-    verticalAlignment = Alignment.CenterVertically
-  ) {
-    dataSet.iconProvider(LocalContext.current)?.let {
-      DataSetIcon(bitmap = it.asImageBitmap())
-    }
-
-    DataSetButton(
-      text = dataSet.value,
-      borderColor = colorResource(id = dataSet.color),
-      onClick = onClick,
-      colors = if (historyEnabled && dataSet.active) {
-        ButtonDefaults.buttonColors(
-          containerColor = colorResource(id = dataSet.color),
-          contentColor = colorResource(id = R.color.on_primary)
-        )
-      } else {
-        ButtonDefaults.buttonColors(
-          containerColor = colorResource(id = R.color.background),
-          contentColor = colorResource(id = dataSet.color)
-        )
+    horizontalArrangement = Arrangement.spacedBy(8.dp),
+    verticalAlignment = Alignment.CenterVertically,
+    modifier = Modifier
+      .height(dimensionResource(id = R.dimen.button_small_height))
+      .let {
+        if (clickEnabled) {
+          it.clickable(
+            interactionSource = remember { MutableInteractionSource() },
+            indication = ripple(),
+            onClick = onClick
+          )
+        } else {
+          it
+        }
       }
-    )
+
+  ) {
+    when (label) {
+      is HistoryDataSet.Label.Single -> DataSetItem(
+        value = label.value,
+        showColor = label.value.presentColor,
+        active = historyEnabled && active
+      )
+
+      is HistoryDataSet.Label.Multiple ->
+        label.values.forEach {
+          if (!it.justColor) {
+            DataSetItem(value = it, showColor = it.presentColor, active = historyEnabled && active)
+          }
+        }
+    }
   }
 }
 
 @Composable
-private fun DataSetIcon(bitmap: ImageBitmap) =
+private fun DataSetItem(value: HistoryDataSet.LabelData, showColor: Boolean, active: Boolean) {
+  value.Icon(context = LocalContext.current) {
+    DataSetIcon(bitmap = it.asImageBitmap(), value.iconSize)
+  }
+  DataSetText(text = value.value)
+  if (showColor) {
+    DataSetPoint(color = value.color, active)
+  }
+}
+
+@Composable
+private fun DataSetIcon(bitmap: ImageBitmap, @DimenRes iconSize: Int?) =
   Image(
     bitmap = bitmap,
     contentDescription = null,
     alignment = Alignment.Center,
-    modifier = Modifier.size(dimensionResource(id = R.dimen.button_small_height))
+    modifier = Modifier.size(dimensionResource(id = iconSize ?: R.dimen.button_small_height))
   )
 
 @Composable
-private fun DataSetButton(text: String, colors: ButtonColors, borderColor: Color, onClick: () -> Unit) {
-  val height = dimensionResource(id = R.dimen.button_small_height)
-  val radius = height.div(2)
+private fun DataSetText(text: String) =
+  Text(
+    text = text,
+    fontSize = 16.sp,
+    fontFamily = FontFamily(Font(R.font.quicksand_regular)),
+  )
 
-  Button(
-    onClick = onClick,
-    modifier = Modifier.height(height),
-    contentPadding = PaddingValues(horizontal = dimensionResource(id = R.dimen.distance_small)),
-    colors = colors,
-    shape = RoundedCornerShape(radius),
-    border = BorderStroke(2.dp, borderColor)
-  ) {
-    Text(
-      text = text,
-      fontSize = 14.sp,
-      fontFamily = FontFamily(Font(R.font.open_sans_bold)),
+@Composable
+private fun DataSetPoint(color: Int, active: Boolean) =
+  Column(modifier = Modifier.fillMaxHeight()) {
+    Box(
+      modifier = Modifier
+        .size(8.dp)
+        .let {
+          if (active) {
+            it.background(color = colorResource(id = color), shape = RoundedCornerShape(4.dp))
+          } else {
+            it.border(1.dp, colorResource(id = color), RoundedCornerShape(4.dp))
+          }
+        }
     )
   }
-}
 
 @Composable
 private fun BottomPagination(viewState: HistoryDetailViewState, viewModel: HistoryDetailProxy) =
@@ -319,10 +395,9 @@ private fun BottomPagination(viewState: HistoryDetailViewState, viewModel: Histo
     Row(
       verticalAlignment = Alignment.CenterVertically,
       horizontalArrangement = Arrangement.spacedBy(0.dp),
-      modifier = Modifier.padding(
-        vertical = dimensionResource(id = R.dimen.distance_default),
-        horizontal = dimensionResource(id = R.dimen.distance_tiny)
-      )
+      modifier = Modifier
+        .padding(horizontal = dimensionResource(id = R.dimen.distance_tiny))
+        .height(80.dp)
     ) {
       if (viewState.allowNavigation) {
         PaginationIcon(
@@ -373,7 +448,7 @@ private fun RangeSelection(viewState: HistoryDetailViewState, viewModel: History
     verticalAlignment = Alignment.CenterVertically,
     modifier = Modifier
       .padding(horizontal = dimensionResource(id = R.dimen.distance_default))
-      .height(96.dp)
+      .height(80.dp)
   ) {
     Spacer(modifier = Modifier.weight(0.01f))
     DateTextField(date = viewState.range?.start) { viewModel.customRangeEditDate(RangeValueType.START) }
@@ -426,8 +501,36 @@ private fun Preview() {
 }
 
 private class PreviewProxy : HistoryDetailProxy {
-  override fun getViewState(): StateFlow<HistoryDetailViewState> =
-    MutableStateFlow(
-      value = HistoryDetailViewState()
+  override fun getViewState(): StateFlow<HistoryDetailViewState> {
+    val set = HistoryDataSet(
+      type = ChartEntryType.HUMIDITY,
+      label = singleLabel(
+        iconProvider = { BitmapFactory.decodeResource(it.resources, R.drawable.fnc_electricity_meter) },
+        value = "Label",
+        color = R.color.light_red
+      ),
+      valueFormatter = HumidityValueFormatter(),
     )
+    return MutableStateFlow(
+      value = HistoryDetailViewState(
+        chartData = LineChartData(
+          dateRange = DateRange(Date().weekStart(), Date().weekEnd()),
+          chartRange = ChartRange.WEEK,
+          aggregation = ChartDataAggregation.MINUTES,
+          sets = listOf(
+            ChannelChartSets(
+              1,
+              SuplaChannelFunction.UNKNOWN,
+              { "" },
+              ChartDataAggregation.MINUTES,
+              listOf(set, set.copy(active = false)),
+              null,
+              { it.getString(R.string.details_em_reversed_reactive_energy) }
+            )
+          )
+        ),
+        showHistory = true
+      )
+    )
+  }
 }

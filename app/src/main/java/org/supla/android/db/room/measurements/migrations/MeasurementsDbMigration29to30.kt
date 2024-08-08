@@ -19,6 +19,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+import org.supla.android.data.source.local.entity.measurements.ElectricityMeterLogEntity
+import org.supla.android.data.source.local.entity.measurements.HomePlusThermostatLogEntity
+import org.supla.android.data.source.local.entity.measurements.ImpulseCounterLogEntity
 import org.supla.android.data.source.local.entity.measurements.TemperatureAndHumidityLogEntity
 import org.supla.android.data.source.local.entity.measurements.TemperatureLogEntity
 import org.supla.android.db.MeasurementsDbHelper
@@ -35,19 +38,19 @@ class MeasurementsDbMigration29to30 @Inject constructor(
 
   override fun getDatabaseNameForLog(): String = MeasurementsDbHelper.DATABASE_NAME
 
-  override fun migrate(database: SupportSQLiteDatabase) {
-    execSQL(database, "DROP VIEW IF EXISTS " + SuplaContract.ImpulseCounterLogViewEntry.VIEW_NAME)
-    execSQL(database, "DROP VIEW IF EXISTS " + SuplaContract.ElectricityMeterLogViewEntry.VIEW_NAME)
+  override fun migrate(db: SupportSQLiteDatabase) {
+    execSQL(db, "DROP VIEW IF EXISTS " + SuplaContract.ImpulseCounterLogViewEntry.VIEW_NAME)
+    execSQL(db, "DROP VIEW IF EXISTS " + SuplaContract.ElectricityMeterLogViewEntry.VIEW_NAME)
 
-    execSQL(database, "DROP TABLE IF EXISTS " + SuplaContract.ImpulseCounterLogEntry.TABLE_NAME)
-    execSQL(database, "DROP TABLE IF EXISTS " + SuplaContract.ElectricityMeterLogEntry.TABLE_NAME)
-    execSQL(database, "DROP TABLE IF EXISTS " + TemperatureLogEntity.TABLE_NAME)
-    execSQL(database, "DROP TABLE IF EXISTS " + SuplaContract.ThermostatLogEntry.TABLE_NAME)
-    execSQL(database, "DROP TABLE IF EXISTS " + TemperatureAndHumidityLogEntity.TABLE_NAME)
+    execSQL(db, "DROP TABLE IF EXISTS " + ImpulseCounterLogEntity.TABLE_NAME)
+    execSQL(db, "DROP TABLE IF EXISTS " + ElectricityMeterLogEntity.TABLE_NAME)
+    execSQL(db, "DROP TABLE IF EXISTS " + TemperatureLogEntity.TABLE_NAME)
+    execSQL(db, "DROP TABLE IF EXISTS " + HomePlusThermostatLogEntity.TABLE_NAME)
+    execSQL(db, "DROP TABLE IF EXISTS " + TemperatureAndHumidityLogEntity.TABLE_NAME)
 
-    legacySchema.onCreate(database)
+    legacySchema.onCreate(db)
 
-    execSQL(database, TemperatureLogEntity.SQL)
-    execSQL(database, TemperatureAndHumidityLogEntity.SQL)
+    execSQL(db, TemperatureLogEntity.SQL)
+    execSQL(db, TemperatureAndHumidityLogEntity.SQL)
   }
 }

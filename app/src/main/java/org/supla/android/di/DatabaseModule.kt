@@ -209,6 +209,11 @@ class DatabaseModule {
 
   @Provides
   @Singleton
+  fun provideElectricityMeterLogDao(measurementsDatabase: MeasurementsDatabase) =
+    measurementsDatabase.electricityMeterLogDao()
+
+  @Provides
+  @Singleton
   fun provideDbHelper(@ApplicationContext context: Context) =
     DbHelper.getInstance(context)
 

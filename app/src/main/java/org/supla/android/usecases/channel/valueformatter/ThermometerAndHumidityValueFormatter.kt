@@ -16,7 +16,7 @@ class ThermometerAndHumidityValueFormatter(private val preferences: Preferences)
   override fun handle(function: Int) =
     function == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
 
-  override fun format(value: Any, withUnit: Boolean, precision: Int): String {
+  override fun format(value: Any, withUnit: Boolean, precision: ChannelValueFormatter.Precision): String {
     val (temperatureAndHumidity) = guardLet(value as? TemperatureAndHumidity) { return ValuesFormatter.NO_VALUE_TEXT }
 
     val temperatureString = thermometerValueFormatter.format(

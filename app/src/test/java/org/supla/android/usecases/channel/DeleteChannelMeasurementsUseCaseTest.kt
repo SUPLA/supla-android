@@ -30,6 +30,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
+import org.supla.android.data.source.ElectricityMeterLogRepository
 import org.supla.android.data.source.GeneralPurposeMeasurementLogRepository
 import org.supla.android.data.source.GeneralPurposeMeterLogRepository
 import org.supla.android.data.source.RoomChannelRepository
@@ -63,6 +64,9 @@ class DeleteChannelMeasurementsUseCaseTest {
   @Mock
   private lateinit var generalPurposeMeterLogRepository: GeneralPurposeMeterLogRepository
 
+  @Mock
+  private lateinit var electricityMeterLogRepository: ElectricityMeterLogRepository
+
   @InjectMocks
   private lateinit var useCase: DeleteChannelMeasurementsUseCase
 
@@ -93,7 +97,8 @@ class DeleteChannelMeasurementsUseCaseTest {
       readChannelWithChildrenUseCase,
       temperatureAndHumidityLogUseCase,
       generalPurposeMeterLogRepository,
-      generalPurposeMeasurementLogRepository
+      generalPurposeMeasurementLogRepository,
+      electricityMeterLogRepository
     )
   }
 
@@ -124,7 +129,8 @@ class DeleteChannelMeasurementsUseCaseTest {
       readChannelWithChildrenUseCase,
       temperatureLogRepository,
       generalPurposeMeterLogRepository,
-      generalPurposeMeasurementLogRepository
+      generalPurposeMeasurementLogRepository,
+      electricityMeterLogRepository
     )
   }
 
@@ -155,7 +161,8 @@ class DeleteChannelMeasurementsUseCaseTest {
       readChannelWithChildrenUseCase,
       temperatureLogRepository,
       generalPurposeMeterLogRepository,
-      temperatureAndHumidityLogUseCase
+      temperatureAndHumidityLogUseCase,
+      electricityMeterLogRepository
     )
   }
 
@@ -186,7 +193,40 @@ class DeleteChannelMeasurementsUseCaseTest {
       readChannelWithChildrenUseCase,
       temperatureLogRepository,
       generalPurposeMeasurementLogRepository,
-      temperatureAndHumidityLogUseCase
+      temperatureAndHumidityLogUseCase,
+      electricityMeterLogRepository
+    )
+  }
+
+  @Test
+  fun `should delete electricity meter history`() {
+    // given
+    val remoteId = 234
+    val profileId = 123L
+    val channel: ChannelEntity = mockk {
+      every { this@mockk.function } returns SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER
+      every { this@mockk.profileId } returns profileId
+      every { this@mockk.remoteId } returns remoteId
+    }
+
+    whenever(channelRepository.findByRemoteId(remoteId)).thenReturn(Maybe.just(channel))
+    whenever(electricityMeterLogRepository.delete(remoteId, profileId)).thenReturn(Completable.complete())
+
+    // when
+    val observer = useCase.invoke(remoteId).test()
+
+    // then
+    observer.assertComplete()
+
+    verify(channelRepository).findByRemoteId(remoteId)
+    verify(electricityMeterLogRepository).delete(remoteId, profileId)
+    verifyNoMoreInteractions(channelRepository, electricityMeterLogRepository)
+    verifyNoInteractions(
+      readChannelWithChildrenUseCase,
+      temperatureLogRepository,
+      generalPurposeMeasurementLogRepository,
+      temperatureAndHumidityLogUseCase,
+      generalPurposeMeterLogRepository
     )
   }
 
@@ -234,7 +274,8 @@ class DeleteChannelMeasurementsUseCaseTest {
     verifyNoMoreInteractions(channelRepository, readChannelWithChildrenUseCase, temperatureLogRepository, temperatureAndHumidityLogUseCase)
     verifyNoInteractions(
       generalPurposeMeasurementLogRepository,
-      generalPurposeMeterLogRepository
+      generalPurposeMeterLogRepository,
+      electricityMeterLogRepository
     )
   }
 

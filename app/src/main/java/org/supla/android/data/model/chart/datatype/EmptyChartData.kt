@@ -19,9 +19,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import android.content.res.Resources
 import com.github.mikephil.charting.data.CombinedData
-import org.supla.android.data.model.chart.HistoryDataSet
+import org.supla.android.data.model.chart.ChannelChartSets
 
 object EmptyChartData : ChartData(null, null, null, emptyList()) {
   override fun combinedData(resources: Resources): CombinedData? = null
-  override fun newInstance(sets: List<HistoryDataSet>): ChartData = EmptyChartData
+  override fun newInstance(sets: List<ChannelChartSets>): ChartData = EmptyChartData
 }

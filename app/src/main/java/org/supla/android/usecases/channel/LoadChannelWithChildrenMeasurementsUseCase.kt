@@ -17,49 +17,37 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import com.google.gson.Gson
-import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
-import org.supla.android.Preferences
-import org.supla.android.data.model.chart.ChartDataAggregation
+import org.supla.android.data.model.chart.ChannelChartSets
+import org.supla.android.data.model.chart.ChartDataSpec
 import org.supla.android.data.model.chart.ChartEntryType
-import org.supla.android.data.model.chart.HistoryDataSet
-import org.supla.android.data.source.TemperatureAndHumidityLogRepository
-import org.supla.android.data.source.TemperatureLogRepository
+import org.supla.android.data.model.chart.HumidityChartColors
+import org.supla.android.data.model.chart.TemperatureChartColors
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.isHvacThermostat
 import org.supla.android.data.source.local.entity.hasMeasurements
-import org.supla.android.di.GSON_FOR_REPO
 import org.supla.android.lib.SuplaConst
-import org.supla.android.usecases.icon.GetChannelIconUseCase
-import java.util.Date
+import org.supla.android.usecases.channel.measurementsprovider.TemperatureAndHumidityMeasurementsProvider
+import org.supla.android.usecases.channel.measurementsprovider.TemperatureMeasurementsProvider
 import javax.inject.Inject
-import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
 class LoadChannelWithChildrenMeasurementsUseCase @Inject constructor(
   private val readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
-  private val temperatureLogRepository: TemperatureLogRepository,
-  private val temperatureAndHumidityLogRepository: TemperatureAndHumidityLogRepository,
-  getChannelValueStringUseCase: GetChannelValueStringUseCase,
-  getChannelIconUseCase: GetChannelIconUseCase,
-  preferences: Preferences,
-  @Named(GSON_FOR_REPO) gson: Gson
-) : BaseLoadMeasurementsUseCase(getChannelValueStringUseCase, getChannelIconUseCase, preferences, gson) {
+  private val temperatureMeasurementsProvider: TemperatureMeasurementsProvider,
+  private val temperatureAndHumidityMeasurementsProvider: TemperatureAndHumidityMeasurementsProvider,
+) {
 
   operator fun invoke(
     remoteId: Int,
-    profileId: Long,
-    startDate: Date,
-    endDate: Date,
-    aggregation: ChartDataAggregation
-  ): Single<List<HistoryDataSet>> =
+    spec: ChartDataSpec
+  ): Single<List<ChannelChartSets>> =
     readChannelWithChildrenUseCase(remoteId)
       .toSingle()
       .flatMap {
         if (it.channel.isHvacThermostat()) {
-          buildDataSets(it, profileId, startDate, endDate, aggregation).firstOrError()
+          buildDataSets(it, spec)
         } else {
           Single.error(IllegalArgumentException("Channel function not supported (${it.channel.channelEntity.function}"))
         }
@@ -67,11 +55,8 @@ class LoadChannelWithChildrenMeasurementsUseCase @Inject constructor(
 
   private fun buildDataSets(
     channelWithChildren: ChannelWithChildren,
-    profileId: Long,
-    startDate: Date,
-    endDate: Date,
-    aggregation: ChartDataAggregation
-  ): Observable<List<HistoryDataSet>> {
+    spec: ChartDataSpec
+  ): Single<List<ChannelChartSets>> {
     val channelsWithMeasurements = mutableListOf<ChannelDataEntity>().also { list ->
       list.addAll(
         channelWithChildren.children
@@ -84,45 +69,29 @@ class LoadChannelWithChildrenMeasurementsUseCase @Inject constructor(
       }
     }
 
-    val temperatureColors = TemperatureColors()
-    val humidityColors = HumidityColors()
-    val observables = mutableListOf<Observable<List<HistoryDataSet>>>().also { list ->
+    val temperatureColors = TemperatureChartColors()
+    val humidityColors = HumidityChartColors()
+    val observables = mutableListOf<Single<ChannelChartSets>>().also { list ->
       channelsWithMeasurements.forEach {
         if (it.function == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER) {
           val color = temperatureColors.nextColor()
-          list.add(
-            temperatureLogRepository.findMeasurements(it.remoteId, profileId, startDate, endDate)
-              .map { list -> aggregatingTemperature(list, aggregation) }
-              .map { measurements -> listOf(historyDataSet(it, ChartEntryType.TEMPERATURE, color, aggregation, measurements)) }
-          )
+          list.add(temperatureMeasurementsProvider.provide(it, spec) { color })
         } else if (it.function == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE) {
           val firstColor = temperatureColors.nextColor()
           val secondColor = humidityColors.nextColor()
           list.add(
-            temperatureAndHumidityLogRepository.findMeasurements(it.remoteId, profileId, startDate, endDate)
-              .map { measurements ->
-                listOf(
-                  historyDataSet(
-                    it,
-                    ChartEntryType.TEMPERATURE,
-                    firstColor,
-                    aggregation,
-                    aggregatingTemperature(measurements, aggregation)
-                  ),
-                  historyDataSet(it, ChartEntryType.HUMIDITY, secondColor, aggregation, aggregatingHumidity(measurements, aggregation))
-                )
-              }
+            temperatureAndHumidityMeasurementsProvider.provide(it, spec) { type ->
+              if (type == ChartEntryType.HUMIDITY) secondColor else firstColor
+            }
           )
         }
       }
     }
 
-    return Observable.zip(observables) { items ->
-      mutableListOf<HistoryDataSet>().also { list ->
+    return Single.zip(observables) { items ->
+      mutableListOf<ChannelChartSets>().also { list ->
         items.forEach {
-          (it as? List<*>)?.let { dataSets ->
-            list.addAll(dataSets.filterIsInstance(HistoryDataSet::class.java))
-          }
+          (it as? ChannelChartSets)?.let { channelSets -> list.add(channelSets) }
         }
       }
     }

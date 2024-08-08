@@ -19,6 +19,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import android.content.Context
 import android.graphics.Bitmap
+import androidx.annotation.DrawableRes
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.graphics.drawable.toBitmap
 import org.supla.android.events.LoadingTimeoutManager
 
 open class ViewState
@@ -29,3 +32,6 @@ open class LoadableViewState(
 
 typealias BitmapProvider = (context: Context) -> Bitmap?
 typealias StringProvider = (context: Context) -> String
+
+fun fromResource(@DrawableRes drawableRes: Int): BitmapProvider =
+  { ResourcesCompat.getDrawable(it.resources, drawableRes, null)?.toBitmap() }

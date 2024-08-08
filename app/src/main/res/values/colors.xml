@@ -9,7 +9,7 @@
     <color name="surface">#ffffff</color>
     <color name="on_surface">#282828</color>
     <color name="surface_variant">#EDFBEE</color>
-    <color name="on_surface_variant">#282828</color>
+    <color name="on_surface_variant">#7E8082</color>
     <color name="background">#F5F6F7</color>
     <color name="on_background">#000000</color>
     <color name="error">#EB3A28</color>
@@ -17,7 +17,7 @@
     <color name="info_scrim">#CC000000</color>
     <color name="secondary_container">#E7F2FF</color>
     <color name="error_container">#FAEAE9</color>
-    <color name="outline">#B4B7BA</color>
+    <color name="outline">#E1E2E3</color>
     <color name="outline_variant">#14282828</color>
 
     <color name="disabled">#B4B7BA</color>

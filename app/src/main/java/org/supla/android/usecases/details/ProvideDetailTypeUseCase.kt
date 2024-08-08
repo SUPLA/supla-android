@@ -139,7 +139,8 @@ class ProvideDetailTypeUseCase @Inject constructor() {
       if (channelDataBase.channelValueEntity.subValueType == SUBV_TYPE_IC_MEASUREMENTS.toShort()) {
         list.add(DetailPage.HISTORY_IC)
       } else if (channelDataBase.channelValueEntity.subValueType == SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort()) {
-        list.add(DetailPage.HISTORY_EM)
+        list.add(DetailPage.EM_SWITCH_METRICS)
+        list.add(DetailPage.EM_HISTORY)
       }
       list
     } else {
@@ -157,7 +158,6 @@ sealed interface DetailType : Serializable
 enum class LegacyDetailType : DetailType {
   RGBW,
   IC,
-  EM,
   THERMOSTAT_HP,
   DIGIGLASS
 }

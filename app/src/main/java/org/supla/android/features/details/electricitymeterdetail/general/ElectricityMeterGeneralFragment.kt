@@ -17,14 +17,16 @@ package org.supla.android.features.details.electricitymeterdetail.general
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.core.ui.BaseComposeFragment
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
+import org.supla.android.lib.SuplaClientMsg
 
 private const val ARG_ITEM_BUNDLE = "ARG_ITEM_BUNDLE"
 
@@ -34,14 +36,32 @@ class ElectricityMeterGeneralFragment :
 
   override val viewModel: ElectricityMeterGeneralViewModel by viewModels()
 
+  private val item: ItemBundle by lazy { requireSerializable(ARG_ITEM_BUNDLE, ItemBundle::class.java) }
+
   @Composable
   override fun ComposableContent() {
+    val modelState by viewModel.getViewState().collectAsState()
     SuplaTheme {
-      Text(text = "Electricity meter general fragment")
+      ElectricityMeterGeneralView(modelState.viewState)
     }
   }
 
+  override fun onResume() {
+    super.onResume()
+    viewModel.loadData(item.remoteId)
+  }
+
   override fun handleEvents(event: ElectricityMeterGeneralViewEvent) {
+  }
+
+  override fun onSuplaMessage(message: SuplaClientMsg) {
+    when (message.type) {
+      SuplaClientMsg.onDataChanged -> {
+        if (message.channelId == item.remoteId) {
+          viewModel.loadData(item.remoteId)
+        }
+      }
+    }
   }
 
   companion object {

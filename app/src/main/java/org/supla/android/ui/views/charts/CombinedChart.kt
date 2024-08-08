@@ -101,7 +101,7 @@ fun CombinedChart(
         it.description.isEnabled = false
         it.onChartGestureListener = ChartObserver(positionEvents, it)
         it.setNoDataTextColor(onBackgroundColor)
-        it.marker = ChartMarkerView(context).apply { chartView = it }
+        it.marker = chartStyle.markerViewProvider(context).apply { chartView = it }
         it.setDrawMarkers(true)
         it.setDrawBarShadow(chartStyle.drawBarShadow)
 

@@ -17,23 +17,37 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import android.content.Context
 import androidx.annotation.ColorRes
 import org.supla.android.R
+import org.supla.android.ui.views.charts.BaseMarkerView
+import org.supla.android.ui.views.charts.ChartMarkerView
+import org.supla.android.ui.views.charts.ElectricityMarkerView
 
 sealed class ChartStyle(
   @ColorRes val leftAxisColor: Int,
   @ColorRes val rightAxisColor: Int,
-  val drawBarShadow: Boolean
+  val drawBarShadow: Boolean,
+  val markerViewProvider: (context: Context) -> BaseMarkerView
 )
 
-object ThermometerChartStyle : ChartStyle(
+data object ThermometerChartStyle : ChartStyle(
   leftAxisColor = R.color.dark_red,
   rightAxisColor = R.color.dark_blue,
-  drawBarShadow = false
+  drawBarShadow = false,
+  markerViewProvider = { ChartMarkerView(it) }
 )
 
-object GpmChartStyle : ChartStyle(
+data object GpmChartStyle : ChartStyle(
   leftAxisColor = R.color.chart_gpm_axis_left,
   rightAxisColor = R.color.chart_gpm_axis_left,
-  drawBarShadow = true
+  drawBarShadow = true,
+  markerViewProvider = { ChartMarkerView(it) }
+)
+
+data object ElectricityChartStyle : ChartStyle(
+  leftAxisColor = R.color.on_background,
+  rightAxisColor = R.color.on_background,
+  drawBarShadow = true,
+  markerViewProvider = { ElectricityMarkerView(it) }
 )

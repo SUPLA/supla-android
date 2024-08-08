@@ -23,6 +23,7 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import org.supla.android.R
 import org.supla.android.features.details.electricitymeterdetail.general.ElectricityMeterGeneralFragment
+import org.supla.android.features.details.electricitymeterdetail.history.ElectricityMeterHistoryFragment
 import org.supla.android.features.details.electricitymeterdetail.settings.ElectricityMeterSettingsFragment
 import org.supla.android.features.details.gpmdetail.history.GpmHistoryDetailFragment
 import org.supla.android.features.details.legacydetail.LegacyDetailFragment
@@ -58,10 +59,6 @@ class StandardDetailPagerAdapter(
       arguments = LegacyDetailFragment.bundle(itemBundle.remoteId, LegacyDetailType.IC, itemBundle.itemType)
     }
 
-    DetailPage.HISTORY_EM -> LegacyDetailFragment().apply {
-      arguments = LegacyDetailFragment.bundle(itemBundle.remoteId, LegacyDetailType.EM, itemBundle.itemType)
-    }
-
     DetailPage.THERMOSTAT -> ThermostatGeneralFragment().apply { arguments = ThermostatGeneralFragment.bundle(itemBundle) }
     DetailPage.SCHEDULE -> ScheduleDetailFragment().apply { arguments = ScheduleDetailFragment.bundle(itemBundle) }
     DetailPage.THERMOSTAT_TIMER -> TimerDetailFragment().apply { arguments = TimerDetailFragment.bundle(itemBundle) }
@@ -84,8 +81,13 @@ class StandardDetailPagerAdapter(
     DetailPage.VERTICAL_BLIND -> VerticalBlindsFragment().apply { arguments = VerticalBlindsFragment.bundle(itemBundle) }
     DetailPage.GARAGE_DOOR_ROLLER -> GarageDoorFragment().apply { arguments = GarageDoorFragment.bundle(itemBundle) }
 
-    DetailPage.EM_GENERAL -> ElectricityMeterGeneralFragment().apply { arguments = ElectricityMeterGeneralFragment.bundle(itemBundle) }
-    DetailPage.EM_HISTORY -> ElectricityMeterSettingsFragment().apply { arguments = ElectricityMeterSettingsFragment.bundle(itemBundle) }
+    DetailPage.EM_GENERAL, DetailPage.EM_SWITCH_METRICS ->
+      ElectricityMeterGeneralFragment().apply { arguments = ElectricityMeterGeneralFragment.bundle(itemBundle) }
+
+    DetailPage.EM_HISTORY -> ElectricityMeterHistoryFragment().apply {
+      arguments = ElectricityMeterHistoryFragment.bundle(itemBundle.remoteId)
+    }
+
     DetailPage.EM_SETTINGS -> ElectricityMeterSettingsFragment().apply { arguments = ElectricityMeterSettingsFragment.bundle(itemBundle) }
   }
 }
@@ -95,7 +97,6 @@ enum class DetailPage(val item: DetailBottomItem) {
   SWITCH(DetailBottomItem.GENERAL),
   SWITCH_TIMER(DetailBottomItem.TIMER),
   HISTORY_IC(DetailBottomItem.METRICS),
-  HISTORY_EM(DetailBottomItem.METRICS),
 
   // Thermostats
   THERMOSTAT(DetailBottomItem.GENERAL),
@@ -121,6 +122,7 @@ enum class DetailPage(val item: DetailBottomItem) {
 
   // EM
   EM_GENERAL(DetailBottomItem.GENERAL),
+  EM_SWITCH_METRICS(DetailBottomItem.METRICS),
   EM_HISTORY(DetailBottomItem.HISTORY),
   EM_SETTINGS(DetailBottomItem.SETTINGS)
 }

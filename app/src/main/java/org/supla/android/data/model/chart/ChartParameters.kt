@@ -1,4 +1,7 @@
 package org.supla.android.data.model.chart
+
+import kotlinx.serialization.Serializable
+
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,6 +20,7 @@ package org.supla.android.data.model.chart
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+@Serializable
 data class ChartParameters(
   val scaleX: Float,
   val scaleY: Float,

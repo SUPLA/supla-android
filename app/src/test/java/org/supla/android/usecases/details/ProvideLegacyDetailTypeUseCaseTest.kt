@@ -94,7 +94,7 @@ class ProvideLegacyDetailTypeUseCaseTest {
   fun `should provide detail for light switch with measurement`() {
     testDetailType(
       SUPLA_CHANNELFNC_LIGHTSWITCH,
-      SwitchDetailType(listOf(DetailPage.SWITCH, DetailPage.HISTORY_EM))
+      SwitchDetailType(listOf(DetailPage.SWITCH, DetailPage.EM_SWITCH_METRICS, DetailPage.EM_HISTORY))
     ) { channel ->
       val channelValue: ChannelValueEntity = mockk()
       every { channelValue.subValueType } returns SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort()
@@ -107,7 +107,7 @@ class ProvideLegacyDetailTypeUseCaseTest {
   fun `should provide detail for power switch with measurement`() {
     testDetailType(
       SUPLA_CHANNELFNC_POWERSWITCH,
-      SwitchDetailType(listOf(DetailPage.SWITCH, DetailPage.HISTORY_EM))
+      SwitchDetailType(listOf(DetailPage.SWITCH, DetailPage.EM_SWITCH_METRICS, DetailPage.EM_HISTORY))
     ) { channel ->
       val channelValue: ChannelValueEntity = mockk()
       every { channelValue.subValueType } returns SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort()
@@ -120,7 +120,7 @@ class ProvideLegacyDetailTypeUseCaseTest {
   fun `should provide detail for stair case timer with measurement and without timer even if supported`() {
     testDetailType(
       SUPLA_CHANNELFNC_STAIRCASETIMER,
-      SwitchDetailType(listOf(DetailPage.SWITCH, DetailPage.HISTORY_EM))
+      SwitchDetailType(listOf(DetailPage.SWITCH, DetailPage.EM_SWITCH_METRICS, DetailPage.EM_HISTORY))
     ) { channel ->
       val channelValue: ChannelValueEntity = mockk()
       every { channelValue.subValueType } returns SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort()
@@ -133,7 +133,7 @@ class ProvideLegacyDetailTypeUseCaseTest {
   fun `should provide detail for light switch with measurement and timer support`() {
     testDetailType(
       SUPLA_CHANNELFNC_LIGHTSWITCH,
-      SwitchDetailType(listOf(DetailPage.SWITCH, DetailPage.SWITCH_TIMER, DetailPage.HISTORY_EM))
+      SwitchDetailType(listOf(DetailPage.SWITCH, DetailPage.SWITCH_TIMER, DetailPage.EM_SWITCH_METRICS, DetailPage.EM_HISTORY))
     ) { channel ->
       val channelValue: ChannelValueEntity = mockk()
       every { channelValue.subValueType } returns SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort()
@@ -146,7 +146,7 @@ class ProvideLegacyDetailTypeUseCaseTest {
   fun `should provide detail for power switch with measurement and timer support`() {
     testDetailType(
       SUPLA_CHANNELFNC_POWERSWITCH,
-      SwitchDetailType(listOf(DetailPage.SWITCH, DetailPage.SWITCH_TIMER, DetailPage.HISTORY_EM))
+      SwitchDetailType(listOf(DetailPage.SWITCH, DetailPage.SWITCH_TIMER, DetailPage.EM_SWITCH_METRICS, DetailPage.EM_HISTORY))
     ) { channel ->
       val channelValue: ChannelValueEntity = mockk()
       every { channelValue.subValueType } returns SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort()
@@ -159,7 +159,7 @@ class ProvideLegacyDetailTypeUseCaseTest {
   fun `should provide detail for stair case timer with measurement`() {
     testDetailType(
       SUPLA_CHANNELFNC_STAIRCASETIMER,
-      SwitchDetailType(listOf(DetailPage.SWITCH, DetailPage.HISTORY_EM))
+      SwitchDetailType(listOf(DetailPage.SWITCH, DetailPage.EM_SWITCH_METRICS, DetailPage.EM_HISTORY))
     ) { channel ->
       val channelValue: ChannelValueEntity = mockk()
       every { channelValue.subValueType } returns SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort()

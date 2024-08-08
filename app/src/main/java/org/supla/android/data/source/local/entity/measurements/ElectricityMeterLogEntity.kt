@@ -21,12 +21,19 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import org.supla.android.data.model.chart.ChartDataSpec
+import org.supla.android.data.source.local.entity.custom.EnergyType
 import org.supla.android.data.source.local.entity.measurements.ElectricityMeterLogEntity.Companion.COLUMN_CHANNEL_ID
 import org.supla.android.data.source.local.entity.measurements.ElectricityMeterLogEntity.Companion.COLUMN_MANUALLY_COMPLEMENTED
 import org.supla.android.data.source.local.entity.measurements.ElectricityMeterLogEntity.Companion.COLUMN_PROFILE_ID
 import org.supla.android.data.source.local.entity.measurements.ElectricityMeterLogEntity.Companion.COLUMN_TIMESTAMP
 import org.supla.android.data.source.local.entity.measurements.ElectricityMeterLogEntity.Companion.TABLE_NAME
+import org.supla.android.data.source.remote.rest.channel.ElectricityMeasurement
+import org.supla.android.features.details.electricitymeterdetail.history.ElectricityMeterChartType
+import org.supla.android.usecases.channel.measurementsprovider.electricity.ElectricityChartFilters
 import java.util.Date
+import kotlin.math.abs
+import kotlin.math.max
 
 @Entity(
   tableName = TABLE_NAME,
@@ -55,7 +62,7 @@ data class ElectricityMeterLogEntity(
   @ColumnInfo(name = COLUMN_ID)
   val id: Long?,
   @ColumnInfo(name = COLUMN_CHANNEL_ID) val channelId: Int,
-  @ColumnInfo(name = COLUMN_TIMESTAMP) val date: Date,
+  @ColumnInfo(name = COLUMN_TIMESTAMP) override val date: Date,
   @ColumnInfo(name = COLUMN_PHASE1_FAE) val phase1Fae: Float?,
   @ColumnInfo(name = COLUMN_PHASE1_RAE) val phase1Rae: Float?,
   @ColumnInfo(name = COLUMN_PHASE1_FRE) val phase1Fre: Float?,
@@ -73,7 +80,16 @@ data class ElectricityMeterLogEntity(
   @ColumnInfo(name = COLUMN_MANUALLY_COMPLEMENTED) val manuallyComplemented: Boolean,
   @ColumnInfo(name = COLUMN_COUNTER_RESET) val counterReset: Boolean,
   @ColumnInfo(name = COLUMN_PROFILE_ID) val profileId: Long
-) {
+) : BaseLogEntity {
+
+  val phase1: PhaseValues
+    get() = PhaseValues(phase1Fae, phase1Rae, phase1Fre, phase1Rre)
+
+  val phase2: PhaseValues
+    get() = PhaseValues(phase2Fae, phase2Rae, phase2Fre, phase2Rre)
+
+  val phase3: PhaseValues
+    get() = PhaseValues(phase3Fae, phase3Rae, phase3Fre, phase3Rre)
 
   companion object {
     const val TABLE_NAME = "em_log"
@@ -98,35 +114,149 @@ data class ElectricityMeterLogEntity(
     const val COLUMN_COUNTER_RESET = "counter_reset"
     const val COLUMN_PROFILE_ID = "profileid"
 
-    val SQL = arrayOf(
-      """
-        CREATE TABLE $TABLE_NAME
-        (
-          $COLUMN_ID INTEGER PRIMARY KEY,
-          $COLUMN_CHANNEL_ID INTEGER NOT NULL,
-          $COLUMN_TIMESTAMP INTEGER NOT NULL,
-          $COLUMN_PHASE1_FAE REAL NULL,
-          $COLUMN_PHASE1_RAE REAL NULL,
-          $COLUMN_PHASE1_FRE REAL NULL,
-          $COLUMN_PHASE1_RRE REAL NULL,
-          $COLUMN_PHASE2_FAE REAL NULL,
-          $COLUMN_PHASE2_RAE REAL NULL,
-          $COLUMN_PHASE2_FRE REAL NULL,
-          $COLUMN_PHASE2_RRE REAL NULL,
-          $COLUMN_PHASE3_FAE REAL NULL,
-          $COLUMN_PHASE3_RAE REAL NULL,
-          $COLUMN_PHASE3_FRE REAL NULL,
-          $COLUMN_PHASE3_RRE REAL NULL,
-          $COLUMN_FAE_BALANCED REAL NULL,
-          $COLUMN_RAE_BALANCED REAL NULL,
-          $COLUMN_MANUALLY_COMPLEMENTED INTEGER NOT NULL,
-          $COLUMN_PROFILE_ID INTEGER NOT NULL
-        );
-      """.trimIndent(),
-      "CREATE INDEX ${TABLE_NAME}_${COLUMN_CHANNEL_ID}_index ON $TABLE_NAME ($COLUMN_CHANNEL_ID);",
-      "CREATE INDEX ${TABLE_NAME}_${COLUMN_TIMESTAMP}_index ON $TABLE_NAME ($COLUMN_TIMESTAMP);",
-      "CREATE INDEX ${TABLE_NAME}_${COLUMN_MANUALLY_COMPLEMENTED}_index ON $TABLE_NAME ($COLUMN_MANUALLY_COMPLEMENTED);",
-      "CREATE UNIQUE INDEX ${TABLE_NAME}_unique_index ON $TABLE_NAME ($COLUMN_CHANNEL_ID, $COLUMN_TIMESTAMP, $COLUMN_PROFILE_ID);"
+    const val ALL_COLUMNS = "$COLUMN_ID, $COLUMN_CHANNEL_ID, $COLUMN_TIMESTAMP, $COLUMN_PHASE1_FAE, $COLUMN_PHASE1_RAE, " +
+      "$COLUMN_PHASE1_FRE, $COLUMN_PHASE1_RRE, $COLUMN_PHASE2_FAE, $COLUMN_PHASE2_RAE, $COLUMN_PHASE2_FRE, $COLUMN_PHASE2_RRE, " +
+      "$COLUMN_PHASE3_FAE, $COLUMN_PHASE3_RAE, $COLUMN_PHASE3_FRE, $COLUMN_PHASE3_RRE, $COLUMN_FAE_BALANCED, " +
+      "$COLUMN_RAE_BALANCED, $COLUMN_MANUALLY_COMPLEMENTED, $COLUMN_COUNTER_RESET, $COLUMN_PROFILE_ID"
+
+    fun create(
+      entry: ElectricityMeasurement,
+      channelId: Int,
+      profileId: Long,
+      id: Long? = null,
+      date: Date? = null,
+      electricityMeterDiff: ElectricityMeterDiff? = null,
+      manuallyComplemented: Boolean = false,
+      counterReset: Boolean = false
+    ) = ElectricityMeterLogEntity(
+      id = id,
+      channelId = channelId,
+      date = date ?: entry.date,
+      phase1Fae = electricityMeterDiff?.phase1?.fae ?: entry.phase1Fae?.toKWh(),
+      phase1Rae = electricityMeterDiff?.phase1?.rae ?: entry.phase1Rae?.toKWh(),
+      phase1Fre = electricityMeterDiff?.phase1?.fre ?: entry.phase1Fre?.toKWh(),
+      phase1Rre = electricityMeterDiff?.phase1?.rre ?: entry.phase1Rre?.toKWh(),
+      phase2Fae = electricityMeterDiff?.phase2?.fae ?: entry.phase2Fae?.toKWh(),
+      phase2Rae = electricityMeterDiff?.phase2?.rae ?: entry.phase2Rae?.toKWh(),
+      phase2Fre = electricityMeterDiff?.phase2?.fre ?: entry.phase2Fre?.toKWh(),
+      phase2Rre = electricityMeterDiff?.phase2?.rre ?: entry.phase2Rre?.toKWh(),
+      phase3Fae = electricityMeterDiff?.phase3?.fae ?: entry.phase3Fae?.toKWh(),
+      phase3Rae = electricityMeterDiff?.phase3?.rae ?: entry.phase3Rae?.toKWh(),
+      phase3Fre = electricityMeterDiff?.phase3?.fre ?: entry.phase3Fre?.toKWh(),
+      phase3Rre = electricityMeterDiff?.phase3?.rre ?: entry.phase3Rre?.toKWh(),
+      faeBalanced = electricityMeterDiff?.faeBalanced ?: entry.faeBalanced?.toKWh(),
+      raeBalanced = electricityMeterDiff?.raeBalanced ?: entry.raeBalanced?.toKWh(),
+      manuallyComplemented = manuallyComplemented,
+      counterReset = electricityMeterDiff?.resetRecognized() ?: counterReset,
+      profileId = profileId
     )
   }
 }
+
+data class ElectricityMeterDiff(
+  val phase1: PhaseValues,
+  val phase2: PhaseValues,
+  val phase3: PhaseValues,
+  var faeBalanced: Float? = null,
+  var raeBalanced: Float? = null,
+  override var reset: Boolean = false
+) : SetWithResetDetection {
+  override fun set(type: EnergyType, value: Float?) {
+    when (type) {
+      EnergyType.FAE_BALANCED -> faeBalanced = value
+      EnergyType.RAE_BALANCED -> raeBalanced = value
+      else -> throw IllegalStateException("Type `$type` is not applicable here!")
+    }
+  }
+
+  fun resetRecognized() =
+    phase1.reset || phase2.reset || phase3.reset || reset
+
+  fun div(divider: Int): ElectricityMeterDiff =
+    ElectricityMeterDiff(
+      phase1 = phase1.div(divider),
+      phase2 = phase2.div(divider),
+      phase3 = phase3.div(divider),
+      faeBalanced = faeBalanced?.div(divider),
+      raeBalanced = raeBalanced?.div(divider),
+      reset = reset
+    )
+}
+
+data class PhaseValues(
+  var fae: Float? = null,
+  var rae: Float? = null,
+  var fre: Float? = null,
+  var rre: Float? = null,
+  override var reset: Boolean = false
+) : SetWithResetDetection {
+
+  override fun set(type: EnergyType, value: Float?) {
+    when (type) {
+      EnergyType.FAE -> fae = value
+      EnergyType.RAE -> rae = value
+      EnergyType.FRE -> fre = value
+      EnergyType.RRE -> rre = value
+      else -> throw IllegalStateException("Type `$type` is not applicable here!")
+    }
+  }
+
+  fun div(divider: Int): PhaseValues =
+    PhaseValues(
+      fae = fae?.div(divider),
+      rae = rae?.div(divider),
+      fre = fre?.div(divider),
+      rre = rre?.div(divider),
+      reset = reset
+    )
+
+  fun valueFor(chartType: ElectricityMeterChartType): Float? =
+    when (chartType) {
+      ElectricityMeterChartType.REVERSED_ACTIVE_ENERGY -> rae
+      ElectricityMeterChartType.FORWARDED_ACTIVE_ENERGY -> fae
+      ElectricityMeterChartType.REVERSED_REACTIVE_ENERGY -> rre
+      ElectricityMeterChartType.FORWARDED_REACTIVE_ENERGY -> fre
+      else -> null
+    }
+
+  fun valueFor(spec: ChartDataSpec): Float? {
+    return (spec.customFilters as? ElectricityChartFilters)?.let { valueFor(it.type) }
+      ?: valueFor(ElectricityMeterChartType.FORWARDED_ACTIVE_ENERGY)
+  }
+
+  operator fun plus(other: PhaseValues): PhaseValues =
+    PhaseValues(
+      fae?.let { it + (other.fae ?: 0f) } ?: other.fae,
+      rae?.let { it + (other.rae ?: 0f) } ?: other.rae,
+      fre?.let { it + (other.fre ?: 0f) } ?: other.fre,
+      rre?.let { it + (other.rre ?: 0f) } ?: other.rre,
+      reset || other.reset
+    )
+}
+
+private interface SetWithResetDetection {
+
+  var reset: Boolean
+
+  fun set(type: EnergyType, value: Float?)
+
+  fun set(type: EnergyType, current: Float?, previous: Float?) {
+    if (current == null) {
+      return
+    }
+    if (previous == null) {
+      set(type, current)
+      return
+    }
+
+    val diff = current - previous
+    if (diff < 0 && abs(diff) > previous.times(0.1)) {
+      set(type, 0f)
+      reset = true
+    } else {
+      set(type, max(0f, diff))
+    }
+  }
+}
+
+fun Long.toKWh(): Float = this.div(100000.00f)
