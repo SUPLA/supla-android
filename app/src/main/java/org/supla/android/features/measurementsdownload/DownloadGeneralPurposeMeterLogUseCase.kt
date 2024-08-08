@@ -157,7 +157,6 @@ class DownloadGeneralPurposeMeterLogUseCase @Inject constructor(
     }
   }
 
-  @OptIn(ExperimentalStdlibApi::class)
   private fun generateMissingEntities(
     list: MutableList<GeneralPurposeMeterEntity>,
     missingItemsCount: Int,

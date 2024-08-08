@@ -25,10 +25,10 @@ import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.storage.UserStateHolder
 import org.supla.android.data.model.Optional
-import org.supla.android.data.model.chart.ChartDataAggregation
+import org.supla.android.data.model.chart.ChartDataSpec
 import org.supla.android.data.model.chart.ChartRange
+import org.supla.android.data.model.chart.ChartState
 import org.supla.android.data.model.chart.DateRange
-import org.supla.android.data.model.chart.TemperatureChartState
 import org.supla.android.data.model.chart.datatype.ChartData
 import org.supla.android.data.model.chart.datatype.LineChartData
 import org.supla.android.events.DownloadEventsManager
@@ -41,7 +41,6 @@ import org.supla.android.usecases.channel.DownloadChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.LoadChannelWithChildrenMeasurementsDateRangeUseCase
 import org.supla.android.usecases.channel.LoadChannelWithChildrenMeasurementsUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
-import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
@@ -61,7 +60,7 @@ class ThermostatHistoryDetailViewModel @Inject constructor(
   override fun triggerDataLoad(remoteId: Int) {
     Maybe.zip(
       readChannelWithChildrenUseCase(remoteId),
-      profileManager.getCurrentProfile().map { userStateHolder.getChartState(it.id, remoteId) }
+      profileManager.getCurrentProfile().map { loadChartState(it.id, remoteId) }
     ) { first, second ->
       Pair(first, second)
     }
@@ -76,17 +75,15 @@ class ThermostatHistoryDetailViewModel @Inject constructor(
   override fun measurementsMaybe(
     remoteId: Int,
     profileId: Long,
-    start: Date,
-    end: Date,
+    spec: ChartDataSpec,
     chartRange: ChartRange,
-    aggregation: ChartDataAggregation
   ): Single<Pair<ChartData, Optional<DateRange>>> =
     Single.zip(
-      loadChannelWithChildrenMeasurementsUseCase(remoteId, profileId, start, end, aggregation),
+      loadChannelWithChildrenMeasurementsUseCase(remoteId, spec),
       loadChannelWithChildrenMeasurementsDateRangeUseCase(remoteId, profileId)
-    ) { first, second -> Pair(LineChartData(DateRange(start, end), chartRange, aggregation, first), second) }
+    ) { first, second -> Pair(LineChartData(DateRange(spec.startDate, spec.endDate), chartRange, spec.aggregation, first), second) }
 
-  private fun handleData(channel: ChannelWithChildren, chartState: TemperatureChartState) {
+  private fun handleData(channel: ChannelWithChildren, chartState: ChartState) {
     updateState { it.copy(profileId = channel.channel.channelEntity.profileId, channelFunction = channel.channel.function) }
 
     if (channel.children.none { it.channelRelationEntity.relationType.isThermometer() }) {

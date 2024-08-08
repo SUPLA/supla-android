@@ -23,6 +23,7 @@ import io.reactivex.rxjava3.core.Observable
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.networking.suplacloud.OkHttpClientProvider
 import org.supla.android.core.networking.suplacloud.SuplaCloudConfigHolder
+import org.supla.android.data.source.remote.rest.channel.ElectricityMeasurement
 import org.supla.android.data.source.remote.rest.channel.GeneralPurposeMeasurement
 import org.supla.android.data.source.remote.rest.channel.GeneralPurposeMeter
 import org.supla.android.data.source.remote.rest.channel.TemperatureAndHumidityMeasurement
@@ -109,6 +110,24 @@ interface SuplaCloudService {
     @Query("limit") limit: Int = 2,
     @Query("offset") offset: Int = 0
   ): Call<List<GeneralPurposeMeter>>
+
+  @GET("/api/$API_VERSION/channels/{remoteId}/measurement-logs")
+  fun getElectricityMeasurements(
+    @Path("remoteId") remoteId: Int,
+    @Query("order") order: String = "ASC",
+    @Query("limit") limit: Int? = null,
+    @Query("offset") offset: Int? = null,
+    @Query("afterTimestamp") afterTimestamp: Long? = null,
+    @Query("beforeTimestamp") beforeTimestamp: Long? = null
+  ): Observable<List<ElectricityMeasurement>>
+
+  @GET("/api/$API_VERSION/channels/{remoteId}/measurement-logs")
+  fun getInitialElectricityMeasurements(
+    @Path("remoteId") remoteId: Int,
+    @Query("order") order: String = "ASC",
+    @Query("limit") limit: Int = 2,
+    @Query("offset") offset: Int = 0
+  ): Call<List<ElectricityMeasurement>>
 
   @Singleton
   class Provider @Inject constructor(

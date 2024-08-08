@@ -52,7 +52,7 @@ import androidx.compose.ui.unit.dp
 import org.supla.android.R
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.model.chart.ChartRange
-import org.supla.android.data.model.general.SelectableList
+import org.supla.android.data.model.general.SingleSelectionList
 
 @Composable
 fun <T> Spinner(label: String, options: Map<T, String>, modifier: Modifier = Modifier, onOptionSelected: (selectedId: T) -> Unit) {
@@ -96,7 +96,7 @@ interface SpinnerItem {
 
 @Composable
 fun <T : SpinnerItem> TextSpinner(
-  options: SelectableList<T>,
+  options: SingleSelectionList<T>,
   modifier: Modifier = Modifier,
   onOptionSelected: (selectedId: T) -> Unit
 ) {
@@ -167,7 +167,7 @@ private fun Preview() {
   SuplaTheme {
     Column(Modifier.background(MaterialTheme.colorScheme.surface)) {
       Spinner(label = "Program", options = mapOf(1 to "Cooling", 2 to "Heating"), onOptionSelected = {})
-      TextSpinner(options = SelectableList(ChartRange.DAY, emptyList(), R.string.history_range_label), onOptionSelected = {})
+      TextSpinner(options = SingleSelectionList(ChartRange.DAY, emptyList(), R.string.history_range_label), onOptionSelected = {})
     }
   }
 }

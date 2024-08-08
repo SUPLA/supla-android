@@ -32,6 +32,7 @@ import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.data.model.Optional
 import org.supla.android.data.model.chart.DateRange
+import org.supla.android.data.source.ElectricityMeterLogRepository
 import org.supla.android.data.source.GeneralPurposeMeasurementLogRepository
 import org.supla.android.data.source.GeneralPurposeMeterLogRepository
 import org.supla.android.data.source.TemperatureAndHumidityLogRepository
@@ -57,6 +58,9 @@ class LoadChannelMeasurementsDataRangeUseCaseTest {
 
   @Mock
   private lateinit var generalPurposeMeterLogRepository: GeneralPurposeMeterLogRepository
+
+  @Mock
+  private lateinit var electricityMeterLogRepository: ElectricityMeterLogRepository
 
   @InjectMocks
   private lateinit var useCase: LoadChannelMeasurementsDataRangeUseCase

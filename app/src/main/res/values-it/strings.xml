@@ -449,6 +449,12 @@
   <string name="btn_abort">Stop</string>
   <string name="btn_abort_and_execute">Stop &amp; start</string>
   <string name="hour_string_format">HH:mm:ss</string>
- <string name="roller_shutter_calibration">Calibrazione</string>
+  <string name="roller_shutter_calibration">Calibrazione</string>
+  <string name="details_em_reversed_active_energy">Energia attiva restituita</string>
+  <string name="details_em_forwarded_active_energy">Energia attiva prelevata</string>
+  <string name="details_em_reversed_reactive_energy">Energia reattiva restituita</string>
+  <string name="details_em_forwarded_reactive_energy">Energia reattiva prelevata</string>
+  <string name="details_em_balance_arithmetic">Equilibrio aritmetico</string>
+  <string name="details_em_balance_vector">Equilibrio vettoriale</string>
 
 </resources>

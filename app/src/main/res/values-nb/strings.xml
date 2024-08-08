@@ -449,4 +449,10 @@
   <string name="status_accessid_inactive">Tilgangs-ID inaktiv</string>
   <string name="hour_string_format">HH:mm:ss</string>
   <string name="roller_shutter_calibration">Kalibrering</string>
+  <string name="details_em_reversed_active_energy">Aktiv strøm returnert</string>
+  <string name="details_em_forwarded_active_energy">Aktiv strøm mottatt</string>
+  <string name="details_em_reversed_reactive_energy">Passiv strøm returnert</string>
+  <string name="details_em_forwarded_reactive_energy">Passiv strøm mottatt</string>
+  <string name="details_em_balance_arithmetic">Aritmetisk balanse</string>
+  <string name="details_em_balance_vector">Vektorbalanse</string>
 </resources>

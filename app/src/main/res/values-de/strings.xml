@@ -606,6 +606,14 @@
   <string name="status_awaiting_network">Warten auf netzwerk…</string>
   <string name="about_build_time">Version des Tages:</string>
   <string name="device_catalog_error">Gerätekatalog konnte nicht geladen werden. Bitte versuchen Sie später.</string>
+  <string name="details_em_reversed_active_energy">Wirkenergie zurückgegeben</string>
+  <string name="details_em_forwarded_active_energy">Wirkenergie aufgenommen</string>
+  <string name="details_em_reversed_reactive_energy">Blindenergie zurückgegeben</string>
+  <string name="details_em_forwarded_reactive_energy">Blindenergie aufgenommen</string>
+  <string name="details_em_balance_arithmetic">Arithmetisches Gleichgewicht</string>
+  <string name="details_em_balance_vector">Vektorgleichgewicht</string>
+  <string name="details_em_chart_data_type">Daten</string>
+  <string name="details_em_phases">Phasen</string>
   <plurals name="details_timer_info_on">
     <item quantity="one">eingeschaltet</item>
     <item quantity="other">eingeschaltet</item>

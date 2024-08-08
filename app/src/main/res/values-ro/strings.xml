@@ -449,4 +449,10 @@
   <string name="status_accessid_inactive">Identificator de acces inactiv</string>
   <string name="hour_string_format">HH:mm:ss</string>
   <string name="roller_shutter_calibration">Calibrare</string>
+  <string name="details_em_reversed_active_energy">Energia activă returnată</string>
+  <string name="details_em_forwarded_active_energy">Energie activă consumată</string>
+  <string name="details_em_reversed_reactive_energy">Energia reactivă returnată</string>
+  <string name="details_em_forwarded_reactive_energy">Energie reactivă consumată</string>
+  <string name="details_em_balance_arithmetic">Bilanţ aritmetic</string>
+  <string name="details_em_balance_vector">Bilanţ vectorial</string>
 </resources>

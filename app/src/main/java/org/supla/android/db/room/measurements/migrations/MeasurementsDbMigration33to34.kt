@@ -39,11 +39,18 @@ val MEASUREMENTS_DB_MIGRATION_33_34: Migration = object : Migration(33, 34), Sql
     ADD COLUMN ${ElectricityMeterLogEntity.COLUMN_COUNTER_RESET} INTEGER NOT NULL DEFAULT (0)  
     """.trimIndent()
 
+  private val ALTER_EM_CORRECT_DATE =
+    """
+      UPDATE ${ElectricityMeterLogEntity.TABLE_NAME} 
+      SET ${ElectricityMeterLogEntity.COLUMN_TIMESTAMP} = ${ElectricityMeterLogEntity.COLUMN_TIMESTAMP} * 1000
+    """.trimIndent()
+
   override fun getDatabaseNameForLog(): String = MeasurementsDbHelper.DATABASE_NAME
 
   override fun migrate(db: SupportSQLiteDatabase) {
     execSQL(db, ALTER_IC)
     execSQL(db, ALTER_EM)
+    execSQL(db, ALTER_EM_CORRECT_DATE)
 
     execSQL(db, CurrentHistoryLogEntity.SQL)
     execSQL(db, VoltageHistoryLogEntity.SQL)

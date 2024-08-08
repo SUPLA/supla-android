@@ -680,6 +680,14 @@
   <string name="status_awaiting_network">Oczekiwanie na sieć…</string>
   <string name="about_build_time">Wersja z dnia:</string>
   <string name="device_catalog_error">Nie udało się załadować katalogu urządzeń. Spróbuj ponownie później.</string>
+  <string name="details_em_reversed_active_energy">Energia czynna zwrócona</string>
+  <string name="details_em_forwarded_active_energy">Energia czynna pobrana</string>
+  <string name="details_em_reversed_reactive_energy">Energia bierna pojemnościowa</string>
+  <string name="details_em_forwarded_reactive_energy">Energia bierna indukcyjna</string>
+  <string name="details_em_balance_arithmetic">Bilans arytmetyczny</string>
+  <string name="details_em_balance_vector">Bilans wektorowy</string>
+  <string name="details_em_chart_data_type">Dane</string>
+  <string name="details_em_phases">Faza</string>
 
   <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
     <item quantity="one">włączone</item>

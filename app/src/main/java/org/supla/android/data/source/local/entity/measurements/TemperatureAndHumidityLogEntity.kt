@@ -52,9 +52,9 @@ data class TemperatureAndHumidityLogEntity(
   @ColumnInfo(name = COLUMN_CHANNEL_ID) val channelId: Int,
   @ColumnInfo(name = COLUMN_TIMESTAMP) override val date: Date,
   @ColumnInfo(name = COLUMN_TEMPERATURE) override val temperature: Float?,
-  @ColumnInfo(name = COLUMN_HUMIDITY) val humidity: Float?,
+  @ColumnInfo(name = COLUMN_HUMIDITY) override val humidity: Float?,
   @ColumnInfo(name = COLUMN_PROFILE_ID) val profileId: Long
-) : BaseTemperatureEntity {
+) : BaseTemperatureEntity, BaseHumidityEntity {
 
   companion object {
     const val TABLE_NAME = "temphumidity_log"

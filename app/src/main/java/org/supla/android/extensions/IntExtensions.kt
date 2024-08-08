@@ -18,6 +18,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import android.content.res.Resources
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.sp
 
@@ -46,3 +49,6 @@ val Int.minutesInHour
 
 val Int.secondsInMinute
   get() = this.mod(MINUTE_IN_SEC)
+
+@Composable
+fun Int.asColor(): Color = colorResource(id = this)

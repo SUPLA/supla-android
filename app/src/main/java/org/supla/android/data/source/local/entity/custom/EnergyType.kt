@@ -1,4 +1,4 @@
-package org.supla.android.data.model.general
+package org.supla.android.data.source.local.entity.custom
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,10 +17,6 @@ package org.supla.android.data.model.general
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.annotation.StringRes
-
-data class SelectableList<T>(
-  val selected: T,
-  val items: List<T>,
-  @StringRes val label: Int
-)
+enum class EnergyType {
+  FAE, RAE, FRE, RRE, FAE_BALANCED, RAE_BALANCED
+}

@@ -449,4 +449,10 @@
   <string name="status_accessid_inactive">A hozzáférési azonosító inaktív </string>
   <string name="hour_string_format">HH:mm:ss</string>
   <string name="roller_shutter_calibration">Kalibrálás</string>
+  <string name="details_em_reversed_active_energy">A visszatérített aktív energia</string>
+  <string name="details_em_forwarded_active_energy">Fogyasztott aktív energia</string>
+  <string name="details_em_reversed_reactive_energy">A visszatérített passzív energia</string>
+  <string name="details_em_forwarded_reactive_energy">Letöltött passzív energia</string>
+  <string name="details_em_balance_arithmetic">Számtani egyensúly</string>
+  <string name="details_em_balance_vector">Vektoregyensúly</string>
 </resources>

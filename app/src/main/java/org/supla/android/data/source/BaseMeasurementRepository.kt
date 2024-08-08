@@ -26,9 +26,7 @@ import org.supla.android.data.source.remote.rest.SuplaCloudService
 import org.supla.android.data.source.remote.rest.channel.Measurement
 import retrofit2.Response
 
-abstract class BaseMeasurementRepository<T : Measurement, U : BaseLogEntity>(
-  private val suplaCloudServiceProvider: SuplaCloudService.Provider
-) {
+abstract class BaseMeasurementRepository<T : Measurement, U : BaseLogEntity> {
 
   abstract fun getInitialMeasurements(cloudService: SuplaCloudService, remoteId: Int): Response<List<T>>
 

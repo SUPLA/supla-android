@@ -23,6 +23,7 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import org.supla.android.R
 import org.supla.android.features.details.electricitymeterdetail.general.ElectricityMeterGeneralFragment
+import org.supla.android.features.details.electricitymeterdetail.history.ElectricityMeterHistoryFragment
 import org.supla.android.features.details.electricitymeterdetail.settings.ElectricityMeterSettingsFragment
 import org.supla.android.features.details.gpmdetail.history.GpmHistoryDetailFragment
 import org.supla.android.features.details.legacydetail.LegacyDetailFragment
@@ -85,7 +86,9 @@ class StandardDetailPagerAdapter(
     DetailPage.GARAGE_DOOR_ROLLER -> GarageDoorFragment().apply { arguments = GarageDoorFragment.bundle(itemBundle) }
 
     DetailPage.EM_GENERAL -> ElectricityMeterGeneralFragment().apply { arguments = ElectricityMeterGeneralFragment.bundle(itemBundle) }
-    DetailPage.EM_HISTORY -> ElectricityMeterSettingsFragment().apply { arguments = ElectricityMeterSettingsFragment.bundle(itemBundle) }
+    DetailPage.EM_HISTORY -> ElectricityMeterHistoryFragment().apply {
+      arguments = ElectricityMeterHistoryFragment.bundle(itemBundle.remoteId)
+    }
     DetailPage.EM_SETTINGS -> ElectricityMeterSettingsFragment().apply { arguments = ElectricityMeterSettingsFragment.bundle(itemBundle) }
   }
 }

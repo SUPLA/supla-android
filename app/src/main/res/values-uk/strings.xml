@@ -448,4 +448,10 @@
   <string name="delete_url">https://{SERVER_ADDRESS}/db99845855b2ecbfecca9a095062b96c3e27703f?lang=uk</string>
   <string name="hour_string_format">HH:mm:ss</string>
   <string name="roller_shutter_calibration">Калібрування</string>
+  <string name="details_em_reversed_active_energy">Повернуто активну енергію</string>
+  <string name="details_em_forwarded_active_energy">Спожита активна енергія</string>
+  <string name="details_em_reversed_reactive_energy">Повернута реактивна енергія</string>
+  <string name="details_em_forwarded_reactive_energy">Спожита реактивна енергія</string>
+  <string name="details_em_balance_arithmetic">Арифметичний баланс</string>
+  <string name="details_em_balance_vector">Векторний баланс</string>
 </resources>

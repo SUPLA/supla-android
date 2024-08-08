@@ -449,4 +449,10 @@
   <string name="status_accessid_inactive">Identifikator dostopa ni aktiven</string>
   <string name="hour_string_format">HH:mm:ss</string>
   <string name="roller_shutter_calibration">Kalibracija</string>
+  <string name="details_em_reversed_active_energy">Aktivna vrnjena energija</string>
+  <string name="details_em_forwarded_active_energy">Aktivna porabljena energija</string>
+  <string name="details_em_reversed_reactive_energy">Reaktivna vrnjena energija</string>
+  <string name="details_em_forwarded_reactive_energy">Reaktivna porabljena energija</string>
+  <string name="details_em_balance_arithmetic">Aritmetično ravnotežje</string>
+  <string name="details_em_balance_vector">Vektorsko ravnotežje</string>
 </resources>

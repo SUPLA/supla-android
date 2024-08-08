@@ -20,6 +20,7 @@ package org.supla.android.usecases.channel
 import io.reactivex.rxjava3.core.Single
 import org.supla.android.data.model.Optional
 import org.supla.android.data.model.chart.DateRange
+import org.supla.android.data.source.ElectricityMeterLogRepository
 import org.supla.android.data.source.GeneralPurposeMeasurementLogRepository
 import org.supla.android.data.source.GeneralPurposeMeterLogRepository
 import org.supla.android.data.source.TemperatureAndHumidityLogRepository
@@ -38,13 +39,14 @@ class LoadChannelMeasurementsDataRangeUseCase @Inject constructor(
   private val temperatureLogRepository: TemperatureLogRepository,
   private val temperatureAndHumidityLogRepository: TemperatureAndHumidityLogRepository,
   private val generalPurposeMeasurementLogRepository: GeneralPurposeMeasurementLogRepository,
-  private val generalPurposeMeterLogRepository: GeneralPurposeMeterLogRepository
+  private val generalPurposeMeterLogRepository: GeneralPurposeMeterLogRepository,
+  private val electricityMeterLogRepository: ElectricityMeterLogRepository
 ) {
   operator fun invoke(remoteId: Int, profileId: Long): Single<Optional<DateRange>> =
     readChannelByRemoteIdUseCase(remoteId)
       .toSingle()
       .flatMap {
-        if (it.isThermometer() || it.isGpm()) {
+        if (it.isThermometer() || it.isGpm() || it.function == SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER) {
           Single.zip(
             findMinTime(it, profileId).map { long -> Date(long) },
             findMaxTime(it, profileId).map { long -> Date(long) }
@@ -72,6 +74,9 @@ class LoadChannelMeasurementsDataRangeUseCase @Inject constructor(
       SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER ->
         generalPurposeMeterLogRepository.findMinTimestamp(channel.remoteId, profileId)
 
+      SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER ->
+        electricityMeterLogRepository.findMinTimestamp(channel.remoteId, profileId)
+
       else -> Single.error(IllegalArgumentException("Channel function not supported (${channel.function}"))
     }
   }
@@ -92,6 +97,9 @@ class LoadChannelMeasurementsDataRangeUseCase @Inject constructor(
 
       SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER ->
         generalPurposeMeterLogRepository.findMaxTimestamp(channel.remoteId, profileId)
+
+      SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER ->
+        electricityMeterLogRepository.findMaxTimestamp(channel.remoteId, profileId)
 
       else -> Single.error(IllegalArgumentException("Channel function not supported (${channel.function}"))
     }

@@ -17,36 +17,19 @@ package org.supla.android.features.details.electricitymeterdetail.history
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
-import org.supla.android.core.ui.BaseComposeFragment
-import org.supla.android.core.ui.theme.SuplaTheme
-import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
+import org.supla.android.features.details.detailbase.history.BaseHistoryDetailFragment
 
-private const val ARG_ITEM_BUNDLE = "ARG_ITEM_BUNDLE"
+private const val ARG_REMOTE_ID = "ARG_REMOTE_ID"
 
 @AndroidEntryPoint
-class ElectricityMeterHistoryFragment :
-  BaseComposeFragment<ElectricityMeterHistoryViewModelState, ElectricityMeterHistoryViewEvent>() {
+class ElectricityMeterHistoryFragment : BaseHistoryDetailFragment() {
 
   override val viewModel: ElectricityMeterHistoryViewModel by viewModels()
 
-  @Composable
-  override fun ComposableContent() {
-    SuplaTheme {
-      Text(text = "Electricity meter history fragment")
-    }
-  }
-
-  override fun handleEvents(event: ElectricityMeterHistoryViewEvent) {
-  }
-
   companion object {
-    fun bundle(itemBundle: ItemBundle) = bundleOf(
-      ARG_ITEM_BUNDLE to itemBundle
-    )
+    fun bundle(remoteId: Int) = bundleOf(ARG_REMOTE_ID to remoteId)
   }
 }

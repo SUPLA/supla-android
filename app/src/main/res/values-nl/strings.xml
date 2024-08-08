@@ -449,4 +449,10 @@
   <string name="status_accessid_inactive">Toegangs ID inactief</string>
   <string name="hour_string_format">HH:mm:ss</string>
   <string name="roller_shutter_calibration">Kalibratie</string>
+  <string name="details_em_reversed_active_energy">Actieve energie geretourneerd</string>
+  <string name="details_em_forwarded_active_energy">Opgenomen actieve energie</string>
+  <string name="details_em_reversed_reactive_energy">Reactieve energie geretourneerd</string>
+  <string name="details_em_forwarded_reactive_energy">Reactieve energie verzameld</string>
+  <string name="details_em_balance_arithmetic">Rekenkundig saldo</string>
+  <string name="details_em_balance_vector">Vector saldo</string>
 </resources>

@@ -18,9 +18,10 @@ package org.supla.android.core.storage
  */
 
 import android.content.Context
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.hilt.android.qualifiers.ApplicationContext
-import org.supla.android.data.model.chart.TemperatureChartState
+import org.supla.android.data.model.chart.ChartState
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -33,12 +34,12 @@ class UserStateHolder @Inject constructor(@ApplicationContext context: Context) 
   private val preferences = context.getSharedPreferences(USER_STATE_PREFERENCES, Context.MODE_PRIVATE)
   private val gson = GsonBuilder().create()
 
-  fun getChartState(profileId: Long, remoteId: Int) =
+  fun <T : ChartState> getChartState(profileId: Long, remoteId: Int, converter: (Gson, String) -> T?): T? =
     preferences.getString(getKey(TEMPERATURE_CHART_STATE, profileId, remoteId), null)?.let {
-      gson.fromJson(it, TemperatureChartState::class.java)
-    } ?: TemperatureChartState.default()
+      converter(gson, it)
+    }
 
-  fun setChartState(state: TemperatureChartState, profileId: Long, remoteId: Int) {
+  fun <T : ChartState> setChartState(state: T, profileId: Long, remoteId: Int) {
     with(preferences.edit()) {
       putString(getKey(TEMPERATURE_CHART_STATE, profileId, remoteId), gson.toJson(state))
       apply()

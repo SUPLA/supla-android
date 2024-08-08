@@ -26,20 +26,20 @@ import org.supla.android.data.source.local.entity.measurements.GeneralPurposeMet
 import org.supla.android.data.source.remote.rest.SuplaCloudService
 import org.supla.android.data.source.remote.rest.channel.GeneralPurposeMeter
 import org.supla.android.features.measurementsdownload.workers.BaseDownloadLogWorker
+import retrofit2.Response
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class GeneralPurposeMeterLogRepository @Inject constructor(
-  private val generalPurposeMeterLogDao: GeneralPurposeMeterLogDao,
-  suplaCloudServiceProvider: SuplaCloudService.Provider
-) : BaseMeasurementRepository<GeneralPurposeMeter, GeneralPurposeMeterEntity>(suplaCloudServiceProvider) {
+  private val generalPurposeMeterLogDao: GeneralPurposeMeterLogDao
+) : BaseMeasurementRepository<GeneralPurposeMeter, GeneralPurposeMeterEntity>() {
 
   fun findMeasurements(remoteId: Int, profileId: Long, startDate: Date, endDate: Date): Observable<List<GeneralPurposeMeterEntity>> =
     generalPurposeMeterLogDao.findMeasurements(remoteId, profileId, startDate.time, endDate.time)
 
-  override fun getInitialMeasurements(cloudService: SuplaCloudService, remoteId: Int) =
+  override fun getInitialMeasurements(cloudService: SuplaCloudService, remoteId: Int): Response<List<GeneralPurposeMeter>> =
     cloudService.getInitialGpmCounterMeasurements(remoteId).execute()
 
   override fun getMeasurements(

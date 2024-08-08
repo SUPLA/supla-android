@@ -429,4 +429,10 @@
   <string name="status_accessid_inactive">Identifikátor přístupu není aktivní</string>
   <string name="hour_string_format">HH:mm:ss</string>
   <string name="roller_shutter_calibration">Kalibrace</string>
+  <string name="details_em_reversed_active_energy">Zpětná činná energie</string>
+  <string name="details_em_forwarded_active_energy">Pobíraná činná energie</string>
+  <string name="details_em_reversed_reactive_energy">Zpětná jalová energie</string>
+  <string name="details_em_forwarded_reactive_energy">Pobíraná jalová energie</string>
+  <string name="details_em_balance_arithmetic">Aritmetická rovnováha</string>
+  <string name="details_em_balance_vector">Vektorová rovnováha</string>
 </resources>
