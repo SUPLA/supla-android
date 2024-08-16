@@ -606,6 +606,7 @@
   <string name="status_awaiting_network">Warten auf netzwerk…</string>
   <string name="about_build_time">Version des Tages:</string>
   <string name="device_catalog_error">Gerätekatalog konnte nicht geladen werden. Bitte versuchen Sie später.</string>
+  <string name="settings_show_bottom_menu">Unteres Menü anzeigen</string>
   <plurals name="details_timer_info_on">
     <item quantity="one">eingeschaltet</item>
     <item quantity="other">eingeschaltet</item>

@@ -84,6 +84,7 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
       tuple(SettingItem.TemperatureUnitItem::class.java),
       tuple(SettingItem.ButtonAutoHide::class.java),
       tuple(SettingItem.InfoButton::class.java),
+      tuple(SettingItem.BottomMenu::class.java),
       tuple(SettingItem.BottomLabels::class.java),
       tuple(SettingItem.RollerShutterOpenClose::class.java),
       tuple(SettingItem.NightMode::class.java),
@@ -99,13 +100,14 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
     assertThat((settingsList[2] as SettingItem.TemperatureUnitItem).unit).isEqualTo(TemperatureUnit.FAHRENHEIT)
     assertThat((settingsList[3] as SettingItem.ButtonAutoHide).active).isEqualTo(true)
     assertThat((settingsList[4] as SettingItem.InfoButton).visible).isEqualTo(false)
-    assertThat((settingsList[5] as SettingItem.BottomLabels).visible).isEqualTo(false)
-    assertThat((settingsList[6] as SettingItem.RollerShutterOpenClose).showOpeningPercentage).isEqualTo(true)
-    assertThat((settingsList[7] as SettingItem.NightMode).nightModeSetting).isEqualTo(NightModeSetting.NEVER)
-    assertThat((settingsList[8] as SettingItem.LockScreen).lockScreenScope).isEqualTo(LockScreenScope.NONE)
-    assertThat((settingsList[10] as SettingItem.HeaderItem).headerResource).isEqualTo(R.string.settings_permissions)
-    assertThat((settingsList[11] as SettingItem.NotificationsItem).allowed).isEqualTo(true)
-    assertThat((settingsList[12] as SettingItem.LocalizationItem).allowed).isEqualTo(true)
+    assertThat((settingsList[5] as SettingItem.BottomMenu).visible).isEqualTo(false)
+    assertThat((settingsList[6] as SettingItem.BottomLabels).visible).isEqualTo(false)
+    assertThat((settingsList[7] as SettingItem.RollerShutterOpenClose).showOpeningPercentage).isEqualTo(true)
+    assertThat((settingsList[8] as SettingItem.NightMode).nightModeSetting).isEqualTo(NightModeSetting.NEVER)
+    assertThat((settingsList[9] as SettingItem.LockScreen).lockScreenScope).isEqualTo(LockScreenScope.NONE)
+    assertThat((settingsList[11] as SettingItem.HeaderItem).headerResource).isEqualTo(R.string.settings_permissions)
+    assertThat((settingsList[12] as SettingItem.NotificationsItem).allowed).isEqualTo(true)
+    assertThat((settingsList[13] as SettingItem.LocalizationItem).allowed).isEqualTo(true)
   }
 
   @Test
@@ -185,6 +187,24 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
   }
 
   @Test
+  fun `check if show bottom menu is saved`() {
+    // given
+    mockPreferences()
+
+    // when
+    viewModel.loadSettings()
+    val channelSettingItem = states[0].settingsItems[5] as SettingItem.BottomMenu
+    channelSettingItem.callback(true)
+
+    // then
+    assertThat(states.size).isEqualTo(2)
+    assertThat(events).isEmpty()
+    verifyPreferencesMockedCalls(2)
+    verify(preferences).isShowBottomMenu = true
+    verifyNoMoreInteractions(preferences)
+  }
+
+  @Test
   fun `check if show bottom labels is saved`() {
     // given
     mockPreferences()
@@ -192,7 +212,7 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
 
     // when
     viewModel.loadSettings()
-    val channelSettingItem = states[0].settingsItems[5] as SettingItem.BottomLabels
+    val channelSettingItem = states[0].settingsItems[6] as SettingItem.BottomLabels
     channelSettingItem.callback(true)
 
     // then
@@ -211,7 +231,7 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
 
     // when
     viewModel.loadSettings()
-    val channelSettingItem = states[0].settingsItems[6] as SettingItem.RollerShutterOpenClose
+    val channelSettingItem = states[0].settingsItems[7] as SettingItem.RollerShutterOpenClose
     channelSettingItem.callback(false)
 
     // then
@@ -229,7 +249,7 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
 
     // when
     viewModel.loadSettings()
-    val channelSettingItem = states[0].settingsItems[7] as SettingItem.NightMode
+    val channelSettingItem = states[0].settingsItems[8] as SettingItem.NightMode
     channelSettingItem.callback(NightModeSetting.ALWAYS)
 
     // then
@@ -247,7 +267,7 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
 
     // when
     viewModel.loadSettings()
-    val lockScreenItem = states[0].settingsItems[8] as SettingItem.LockScreen
+    val lockScreenItem = states[0].settingsItems[9] as SettingItem.LockScreen
     lockScreenItem.callback(LockScreenScope.NONE)
 
     // then
@@ -266,7 +286,7 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
 
     // when
     viewModel.loadSettings()
-    val lockScreenItem = states[0].settingsItems[8] as SettingItem.LockScreen
+    val lockScreenItem = states[0].settingsItems[9] as SettingItem.LockScreen
     lockScreenItem.callback(LockScreenScope.ACCOUNTS)
 
     // then
@@ -285,7 +305,7 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
 
     // when
     viewModel.loadSettings()
-    val lockScreenItem = states[0].settingsItems[8] as SettingItem.LockScreen
+    val lockScreenItem = states[0].settingsItems[9] as SettingItem.LockScreen
     lockScreenItem.callback(LockScreenScope.APPLICATION)
 
     // then
@@ -303,7 +323,7 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
 
     // when
     viewModel.loadSettings()
-    val lockScreenItem = states[0].settingsItems[8] as SettingItem.LockScreen
+    val lockScreenItem = states[0].settingsItems[9] as SettingItem.LockScreen
     lockScreenItem.callback(LockScreenScope.APPLICATION)
 
     // then
@@ -321,7 +341,7 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
 
     // when
     viewModel.loadSettings()
-    val channelSettingItem = states[0].settingsItems[9] as SettingItem.LocalizationOrdering
+    val channelSettingItem = states[0].settingsItems[10] as SettingItem.LocalizationOrdering
     channelSettingItem.callback()
 
     // then
@@ -338,7 +358,7 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
 
     // when
     viewModel.loadSettings()
-    val channelSettingItem = states[0].settingsItems[11] as SettingItem.NotificationsItem
+    val channelSettingItem = states[0].settingsItems[12] as SettingItem.NotificationsItem
     channelSettingItem.callback()
 
     // then
@@ -355,7 +375,7 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
 
     // when
     viewModel.loadSettings()
-    val channelSettingItem = states[0].settingsItems[12] as SettingItem.LocalizationItem
+    val channelSettingItem = states[0].settingsItems[13] as SettingItem.LocalizationItem
     channelSettingItem.callback()
 
     // then
@@ -376,13 +396,14 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
     whenever(encryptedPreferences.lockScreenSettings).thenReturn(LockScreenSettings.DEFAULT)
   }
 
-  private fun verifyPreferencesMockedCalls() {
-    verify(preferences, times(2)).channelHeight
-    verify(preferences).temperatureUnit
-    verify(preferences).isButtonAutohide
-    verify(preferences).isShowChannelInfo
-    verify(preferences).isShowBottomLabel
-    verify(preferences).isShowOpeningPercent
-    verify(preferences).nightMode
+  private fun verifyPreferencesMockedCalls(multiply: Int = 1) {
+    verify(preferences, times(2 * multiply)).channelHeight
+    verify(preferences, times(1 * multiply)).temperatureUnit
+    verify(preferences, times(1 * multiply)).isButtonAutohide
+    verify(preferences, times(1 * multiply)).isShowChannelInfo
+    verify(preferences, times(2 * multiply)).isShowBottomMenu
+    verify(preferences, times(1 * multiply)).isShowBottomLabel
+    verify(preferences, times(1 * multiply)).isShowOpeningPercent
+    verify(preferences, times(1 * multiply)).nightMode
   }
 }

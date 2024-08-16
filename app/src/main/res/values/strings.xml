@@ -702,6 +702,7 @@
   <string name="status_awaiting_network" translatable="false">Awaiting network…</string>
   <string name="about_build_time" translatable="false">Version of the day: </string>
   <string name="device_catalog_error" translatable="false">Could not load device catalog. Please try again later.</string>
+  <string name="settings_show_bottom_menu" translatable="false">Show bottom menu</string>
 
   <plurals name="details_timer_info_on" translatable="false">
     <item quantity="other">on</item>

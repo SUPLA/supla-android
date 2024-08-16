@@ -41,6 +41,7 @@ public class Preferences {
   public static final String pref_channel_height = "pref_channel_height_percent";
   private static final String pref_show_channel_info = "pref_show_channel_info";
   private static final String pref_show_bottom_label = "pref_show_bottom_label";
+  private static final String pref_show_bottom_menu = "pref_show_bottom_menu";
   private static final String pref_show_opening_percent = "pref_show_opening_percent";
   private static final String pref_night_mode = "pref_night_mode";
 
@@ -180,6 +181,16 @@ public class Preferences {
   public void setShowBottomLabel(boolean val) {
     SharedPreferences.Editor ed = _prefs.edit();
     ed.putBoolean(pref_show_bottom_label, val);
+    ed.apply();
+  }
+
+  public boolean isShowBottomMenu() {
+    return _prefs.getBoolean(pref_show_bottom_menu, true);
+  }
+
+  public void setShowBottomMenu(boolean val) {
+    SharedPreferences.Editor ed = _prefs.edit();
+    ed.putBoolean(pref_show_bottom_menu, val);
     ed.apply();
   }
 

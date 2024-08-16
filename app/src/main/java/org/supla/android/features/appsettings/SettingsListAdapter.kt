@@ -131,11 +131,29 @@ sealed class SettingItem(val viewResource: Int) {
 
   data class BottomLabels(
     val visible: Boolean,
+    val enabled: Boolean,
     val callback: (Boolean) -> Unit = {}
   ) : SettingItem(R.layout.li_settings_switch) {
     override fun bind(holder: SettingItemViewHolder<*>) {
       (holder.binding as LiSettingsSwitchBinding).apply {
         settingsSwitchLabel.setText(R.string.settings_show_labels)
+        val colorRes = if (enabled) R.color.on_background else R.color.outline
+        val color = getColor(settingsSwitchLabel.resources, colorRes, null)
+        settingsSwitchLabel.setTextColor(color)
+        settingsSwitch.isEnabled = enabled
+        settingsSwitch.isChecked = visible
+        settingsSwitch.setOnCheckedChangeListener { _, allowed -> callback(allowed) }
+      }
+    }
+  }
+
+  data class BottomMenu(
+    val visible: Boolean,
+    val callback: (Boolean) -> Unit = {}
+  ) : SettingItem(R.layout.li_settings_switch) {
+    override fun bind(holder: SettingItemViewHolder<*>) {
+      (holder.binding as LiSettingsSwitchBinding).apply {
+        settingsSwitchLabel.setText(R.string.settings_show_bottom_menu)
         settingsSwitch.isChecked = visible
         settingsSwitch.setOnCheckedChangeListener { _, allowed -> callback(allowed) }
       }
