@@ -56,6 +56,7 @@
     <!-- layout element dimensions, from new design -->
     <dimen name="top_bar_height">44dp</dimen>
     <dimen name="bottom_bar_height">56dp</dimen>
+    <dimen name="bottom_bar_without_label_height">44dp</dimen>
     <dimen name="form_label_spacing">27dp</dimen>
     <dimen name="form_field_spacing">47dp</dimen>
     <dimen name="shrink_field_spacing">-27dp</dimen>

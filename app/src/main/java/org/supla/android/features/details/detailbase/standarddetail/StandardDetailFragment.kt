@@ -31,6 +31,7 @@ import org.supla.android.R
 import org.supla.android.core.storage.RuntimeStateHolder
 import org.supla.android.core.ui.BaseFragment
 import org.supla.android.extensions.visibleIf
+import org.supla.android.ui.layouts.BottomBarHeightHandler
 import javax.inject.Inject
 
 private const val ARG_SUBJECT_BUNDLE = "ARG_SUBJECT_BUNDLE"
@@ -41,6 +42,9 @@ abstract class StandardDetailFragment<S : StandardDetailViewState, E : StandardD
 
   @Inject
   lateinit var runtimeStateHolder: RuntimeStateHolder
+
+  @Inject
+  lateinit var bottomBarHeightHandler: BottomBarHeightHandler
 
   @Suppress("DEPRECATION") // Not deprecated method can't be accessed from API 21
   protected val item: ItemBundle by lazy { requireArguments().getSerializable(ARG_SUBJECT_BUNDLE) as ItemBundle }
@@ -65,8 +69,9 @@ abstract class StandardDetailFragment<S : StandardDetailViewState, E : StandardD
     }
     detailBottomBar.selectedItemId = pages[openedPage].menuId
     detailBottomBar.setOnItemSelectedListener(this::onBottomMenuItemSelected)
-    detailBottomBar.visibleIf(pages.count() > 1)
     detailBottomBar.labelVisibilityMode = viewModel.getLabelVisibility()
+    detailBottomBar.layoutParams = bottomBarHeightHandler.getLayoutParams(resources, visible = pages.count() > 1)
+    detailBottomBar.visibleIf(pages.count() > 1)
     detailShadow.visibleIf(pages.count() > 1)
 
     detailViewPager.adapter = StandardDetailPagerAdapter(pages, item, this)
