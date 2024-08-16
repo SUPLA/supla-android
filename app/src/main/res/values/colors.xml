@@ -92,9 +92,6 @@
 
     <color name="channelstate_infoline">@color/disabled</color>
 
-    <color name="lifespan_infotitle">#000000</color>
-    <color name="lifespan_infotext">#000000</color>
-
     <color name="wake_up_settings_infotitle">#000000</color>
 
     <color name="cell_bg_new">@color/surface</color>

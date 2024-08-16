@@ -21,7 +21,7 @@
             android:gravity="center_vertical"
             android:singleLine="true"
             android:text="@string/channel_func_lightswitch"
-            android:textColor="@color/lifespan_infotitle"
+            android:textColor="@color/on_background"
             android:textSize="25sp" />
 
         <androidx.appcompat.widget.AppCompatButton
@@ -75,7 +75,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/light_source_lifespan_hours"
-            android:textColor="@color/lifespan_infotext"
+            android:textColor="@color/on_background"
             android:textSize="10sp" />
 
         <LinearLayout
