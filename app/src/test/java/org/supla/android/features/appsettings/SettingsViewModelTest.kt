@@ -197,9 +197,9 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
     channelSettingItem.callback(true)
 
     // then
-    assertThat(states.size).isEqualTo(2)
+    assertThat(states.size).isEqualTo(1)
     assertThat(events).isEmpty()
-    verifyPreferencesMockedCalls(2)
+    verifyPreferencesMockedCalls()
     verify(preferences).isShowBottomMenu = true
     verifyNoMoreInteractions(preferences)
   }
@@ -396,14 +396,14 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
     whenever(encryptedPreferences.lockScreenSettings).thenReturn(LockScreenSettings.DEFAULT)
   }
 
-  private fun verifyPreferencesMockedCalls(multiply: Int = 1) {
-    verify(preferences, times(2 * multiply)).channelHeight
-    verify(preferences, times(1 * multiply)).temperatureUnit
-    verify(preferences, times(1 * multiply)).isButtonAutohide
-    verify(preferences, times(1 * multiply)).isShowChannelInfo
-    verify(preferences, times(2 * multiply)).isShowBottomMenu
-    verify(preferences, times(1 * multiply)).isShowBottomLabel
-    verify(preferences, times(1 * multiply)).isShowOpeningPercent
-    verify(preferences, times(1 * multiply)).nightMode
+  private fun verifyPreferencesMockedCalls() {
+    verify(preferences, times(2)).channelHeight
+    verify(preferences, times(1)).temperatureUnit
+    verify(preferences, times(1)).isButtonAutohide
+    verify(preferences, times(1)).isShowChannelInfo
+    verify(preferences, times(1)).isShowBottomMenu
+    verify(preferences, times(1)).isShowBottomLabel
+    verify(preferences, times(1)).isShowOpeningPercent
+    verify(preferences, times(1)).nightMode
   }
 }
