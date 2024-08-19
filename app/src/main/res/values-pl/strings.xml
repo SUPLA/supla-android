@@ -680,6 +680,7 @@
   <string name="status_awaiting_network">Oczekiwanie na sieć…</string>
   <string name="about_build_time">Wersja z dnia:</string>
   <string name="device_catalog_error">Nie udało się załadować katalogu urządzeń. Spróbuj ponownie później.</string>
+  <string name="settings_show_bottom_menu">Pokazuj dolne menu</string>
 
   <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
     <item quantity="one">włączone</item>

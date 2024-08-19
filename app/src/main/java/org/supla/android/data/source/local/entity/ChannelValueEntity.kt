@@ -130,9 +130,9 @@ data class ChannelValueEntity(
       id = id,
       channelRemoteId = channelRemoteId,
       online = online,
-      subValue = Companion.toString(suplaChannelValue.SubValue),
-      subValueType = suplaChannelValue.SubValueType,
-      value = Companion.toString(suplaChannelValue.Value),
+      subValue = if (online) Companion.toString(suplaChannelValue.SubValue) else subValue,
+      subValueType = if (online) suplaChannelValue.SubValueType else subValueType,
+      value = if (online) Companion.toString(suplaChannelValue.Value) else value,
       profileId = profileId
     )
 

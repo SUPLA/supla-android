@@ -29,7 +29,9 @@ import org.supla.android.core.notifications.NotificationsHelper
 import org.supla.android.core.ui.BackHandler
 import org.supla.android.core.ui.BaseFragment
 import org.supla.android.databinding.FragmentMainBinding
+import org.supla.android.extensions.visibleIf
 import org.supla.android.features.notificationinfo.NotificationInfoDialog
+import org.supla.android.ui.layouts.BottomBarHeightHandler
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -38,10 +40,13 @@ class MainFragment :
 
   override val viewModel: MainViewModel by viewModels()
   private val binding by viewBinding(FragmentMainBinding::bind)
-  private val pages = ListPage.values()
+  private val pages = ListPage.entries.toTypedArray()
 
   @Inject
   lateinit var notificationsHelper: NotificationsHelper
+
+  @Inject
+  lateinit var bottomBarHeightHandler: BottomBarHeightHandler
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
@@ -61,6 +66,9 @@ class MainFragment :
   override fun onResume() {
     super.onResume()
     binding.mainBottomBar.labelVisibilityMode = viewModel.getLabelVisibility()
+    binding.mainBottomBar.visibleIf(viewModel.getBottomMenuVisible())
+    binding.detailShadow.visibleIf(viewModel.getBottomMenuVisible())
+    binding.mainBottomBar.layoutParams = bottomBarHeightHandler.getLayoutParams(resources)
   }
 
   override fun handleEvents(event: MainViewEvent) {

@@ -21,6 +21,10 @@ class MainViewModel @Inject constructor(
     } else {
       NavigationBarView.LABEL_VISIBILITY_UNLABELED
     }
+
+  fun getBottomMenuVisible() = preferences.isShowBottomMenu
+
+  fun getBottomLabelVisible() = preferences.isShowBottomLabel
 }
 
 sealed class MainViewEvent : ViewEvent

@@ -67,7 +67,8 @@ class SettingsViewModel @Inject constructor(
       SettingItem.TemperatureUnitItem(unit = preferences.temperatureUnit, this::updateTemperatureUnit),
       SettingItem.ButtonAutoHide(active = preferences.isButtonAutohide, this::updateButtonAutoHide),
       SettingItem.InfoButton(visible = preferences.isShowChannelInfo, this::updateInfoButton),
-      SettingItem.BottomLabels(visible = preferences.isShowBottomLabel, this::updateBottomLabel),
+      SettingItem.BottomMenu(visible = preferences.isShowBottomMenu, this::updateBottomMenu),
+      SettingItem.BottomLabels(visible = preferences.isShowBottomLabel, enabled = true, this::updateBottomLabel),
       SettingItem.RollerShutterOpenClose(showOpeningPercentage = preferences.isShowOpeningPercent, this::updateShowingOpeningPercentage),
       SettingItem.NightMode(nightModeSetting = preferences.nightMode, this::updateNightMode),
       SettingItem.LockScreen(lockScreenScope = encryptedPreferences.lockScreenSettings.scope, this::updateLockScreen),
@@ -106,6 +107,10 @@ class SettingsViewModel @Inject constructor(
 
   private fun updateBottomLabel(value: Boolean) {
     preferences.isShowBottomLabel = value
+  }
+
+  private fun updateBottomMenu(value: Boolean) {
+    preferences.isShowBottomMenu = value
   }
 
   private fun updateShowingOpeningPercentage(value: Boolean) {
