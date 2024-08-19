@@ -43,6 +43,7 @@ class UpdateEventsManager @Inject constructor(
   private val groupUpdatesSubject: BehaviorSubject<Any> = BehaviorSubject.create()
   private val sceneUpdatesSubject: BehaviorSubject<Any> = BehaviorSubject.create()
 
+  @Synchronized
   fun cleanup() {
     subjects.clear()
   }
@@ -124,9 +125,9 @@ class UpdateEventsManager @Inject constructor(
   }
 
   sealed class State {
-    object Scene : State()
-    object Channel : State()
-    object Group : State()
+    data object Scene : State()
+    data object Channel : State()
+    data object Group : State()
   }
 
   private enum class IdType { SCENE, CHANNEL, GROUP }
