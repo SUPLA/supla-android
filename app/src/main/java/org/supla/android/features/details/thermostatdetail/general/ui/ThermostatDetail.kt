@@ -489,7 +489,13 @@ private fun PreviewTemporaryOverride() {
               { "22.7" },
               true
             ),
-            ThermostatProgramInfo(ThermostatProgramInfo.Type.NEXT, null, R.drawable.ic_power_button, R.color.gray, { "Turn off" })
+            ThermostatProgramInfo(
+              ThermostatProgramInfo.Type.NEXT,
+              null,
+              R.drawable.ic_power_button,
+              R.color.on_surface_variant,
+              { "Turn off" }
+            )
           ),
           coolingModeActive = true,
           isAutoFunction = true,

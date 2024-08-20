@@ -88,7 +88,7 @@
       android:layout_marginEnd="@dimen/distance_default"
       android:gravity="center"
       android:textAppearance="@style/AppTheme.TextAppearance.Body2"
-      android:textColor="@color/gray" />
+      android:textColor="@color/on_surface_variant" />
 
     <androidx.appcompat.widget.AppCompatButton
       android:id="@+id/details_timer_edit_cancel_button"

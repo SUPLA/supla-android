@@ -18,7 +18,6 @@ package org.supla.android.data.model.chart.marker
  */
 
 import org.supla.android.data.model.chart.ChartDataAggregation
-import org.supla.android.data.model.chart.ChartDataSpec
 import org.supla.android.data.model.chart.ChartEntryType
 import org.supla.android.usecases.channel.valueformatter.ChannelValueFormatter
 import java.util.Date
@@ -32,7 +31,7 @@ data class ChartEntryDetails(
   val open: Float? = null,
   val close: Float? = null,
   val valueFormatter: ChannelValueFormatter,
-  val customFilters: ChartDataSpec.Filters? = null
+  val customData: Any? = null
 ) {
   fun date(): Date = Date(date.times(1000))
 }

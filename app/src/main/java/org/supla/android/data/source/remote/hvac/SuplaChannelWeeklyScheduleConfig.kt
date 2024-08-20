@@ -49,7 +49,7 @@ enum class SuplaHvacMode(val value: Int) {
   val iconColor: Int?
     get() {
       return when (this) {
-        OFF -> R.color.gray
+        OFF -> R.color.on_surface_variant
         HEAT -> R.color.red
         COOL -> R.color.blue
         else -> null

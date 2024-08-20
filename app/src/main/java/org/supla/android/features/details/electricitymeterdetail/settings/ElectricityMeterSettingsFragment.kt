@@ -17,8 +17,9 @@ package org.supla.android.features.details.electricitymeterdetail.settings
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
@@ -34,11 +35,23 @@ class ElectricityMeterSettingsFragment :
 
   override val viewModel: ElectricityMeterSettingsViewModel by viewModels()
 
+  private val item: ItemBundle by lazy { requireSerializable(ARG_ITEM_BUNDLE, ItemBundle::class.java) }
+
   @Composable
   override fun ComposableContent() {
+    val state by viewModel.getViewState().collectAsState()
     SuplaTheme {
-      Text(text = "Electricity meter settings fragment")
+      ElectricityMeterSettingsView(
+        state = state.viewState,
+        onListValueChanged = viewModel::onListValueChange,
+        onBalancingChanged = viewModel::onBalanceValueChange
+      )
     }
+  }
+
+  override fun onResume() {
+    super.onResume()
+    viewModel.loadData(item.remoteId)
   }
 
   override fun handleEvents(event: ElectricityMeterSettingsViewEvent) {

@@ -83,7 +83,7 @@ data class HistoryDataSet(
 
   fun asBarChartData(
     aggregation: ChartDataAggregation,
-    customFilters: ChartDataSpec.Filters? = null,
+    customData: Any? = null,
     timeToCoordinateConverter: ((Float) -> Float)? = null,
     toSetConverter: (set: List<BarEntry>) -> BarDataSet
   ): List<IBarDataSet>? {
@@ -95,7 +95,7 @@ data class HistoryDataSet(
       entities.forEach { aggregatedEntities ->
         val entries = aggregatedEntities.map { entity ->
           val x = timeToCoordinateConverter?.let { it(entity.date.toFloat()) } ?: entity.date.toFloat()
-          toBarEntry(x, aggregation, entity, customFilters)
+          toBarEntry(x, aggregation, entity, customData)
         }
 
         add(toSetConverter(entries))
@@ -131,11 +131,11 @@ data class HistoryDataSet(
     x: Float,
     aggregation: ChartDataAggregation,
     entity: AggregatedEntity,
-    customFilters: ChartDataSpec.Filters? = null
+    customData: Any? = null
   ): BarEntry =
     when (val value = entity.value) {
-      is AggregatedValue.Single -> BarEntry(x, value.value, chartEntryDetails(aggregation, entity, customFilters))
-      is AggregatedValue.Multiple -> BarEntry(x, value.values, chartEntryDetails(aggregation, entity, customFilters))
+      is AggregatedValue.Single -> BarEntry(x, value.value, chartEntryDetails(aggregation, entity, customData))
+      is AggregatedValue.Multiple -> BarEntry(x, value.values, chartEntryDetails(aggregation, entity, customData))
     }
 
   private fun toCandleEntry(x: Float, aggregation: ChartDataAggregation, entity: AggregatedEntity): CandleEntry {
@@ -147,13 +147,13 @@ data class HistoryDataSet(
     return CandleEntry(x, max, min, open, close, chartEntryDetails(aggregation, entity))
   }
 
-  private fun chartEntryDetails(aggregation: ChartDataAggregation, entity: AggregatedEntity, customFilters: ChartDataSpec.Filters? = null) =
+  private fun chartEntryDetails(aggregation: ChartDataAggregation, entity: AggregatedEntity, customData: Any? = null) =
     when (val value = entity.value) {
       is AggregatedValue.Single ->
-        ChartEntryDetails(aggregation, type, entity.date, value.min, value.max, value.open, value.close, valueFormatter, customFilters)
+        ChartEntryDetails(aggregation, type, entity.date, value.min, value.max, value.open, value.close, valueFormatter, customData)
 
       is AggregatedValue.Multiple ->
-        ChartEntryDetails(aggregation, type, entity.date, null, null, null, null, valueFormatter, customFilters)
+        ChartEntryDetails(aggregation, type, entity.date, null, null, null, null, valueFormatter, customData)
     }
 
   sealed interface Label {

@@ -53,7 +53,7 @@ data class DefaultChartState(
   override fun toJson(): String = Json.encodeToString(this)
 
   companion object {
-    fun default(): ChartState =
+    fun default(): DefaultChartState =
       DefaultChartState(
         aggregation = ChartDataAggregation.MINUTES,
         chartRange = ChartRange.LAST_WEEK,

@@ -30,6 +30,7 @@ import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToGpmUpda
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToMeasurementUpdateEventMapper
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToProjectScreenUpdateEventMapper
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToShadingSystemUpdateEventMapper
+import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToSwitchUpdateEventMapper
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToThermostatUpdateEventMapper
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -44,7 +45,8 @@ class CreateListItemUpdateEventDataUseCase @Inject constructor(
   channelWithChildrenToGpmUpdateEventMapper: ChannelWithChildrenToGpmUpdateEventMapper,
   channelWithChildrenToShadingSystemUpdateEventMapper: ChannelWithChildrenToShadingSystemUpdateEventMapper,
   channelWithChildrenToProjectScreenUpdateEventMapper: ChannelWithChildrenToProjectScreenUpdateEventMapper,
-  channelWithChildrenToGarageDoorUpdateEventMapper: ChannelWithChildrenToGarageDoorUpdateEventMapper
+  channelWithChildrenToGarageDoorUpdateEventMapper: ChannelWithChildrenToGarageDoorUpdateEventMapper,
+  channelWithChildrenToSwitchUpdateEventMapper: ChannelWithChildrenToSwitchUpdateEventMapper
 ) {
 
   private val mappers: List<Mapper> = listOf(
@@ -53,7 +55,8 @@ class CreateListItemUpdateEventDataUseCase @Inject constructor(
     channelWithChildrenToGpmUpdateEventMapper,
     channelWithChildrenToShadingSystemUpdateEventMapper,
     channelWithChildrenToProjectScreenUpdateEventMapper,
-    channelWithChildrenToGarageDoorUpdateEventMapper
+    channelWithChildrenToGarageDoorUpdateEventMapper,
+    channelWithChildrenToSwitchUpdateEventMapper
   )
 
   operator fun invoke(itemType: ItemType, remoteId: Int): Observable<SlideableListItemData> {

@@ -697,6 +697,11 @@
   <string name="details_em_forwarded_energy">Pobrana</string>
   <string name="details_em_reversed_energy">Oddana</string>
   <string name="details_em_cost">Koszt</string>
+  <string name="details_em_settings_list_item">Wartość pokazywana na liście kanałów</string>
+  <string name="details_em_settings_title">Ustawienia - %1$s</string>
+  <string name="details_em_total_suffix">(całkowita)</string>
+  <string name="details_em_current_month_suffix">(bieżący miesiąc)</string>
+  <string name="details_em_last_month_balancing">Bilansowanie bieżącego miesiąca</string>
 
   <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
     <item quantity="one">włączone</item>

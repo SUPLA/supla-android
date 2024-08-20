@@ -34,6 +34,7 @@ import org.supla.android.data.source.local.entity.complex.isMeasurement
 import org.supla.android.data.source.local.entity.complex.isShadingSystem
 import org.supla.android.data.source.local.entity.isGarageDoorRoller
 import org.supla.android.data.source.local.entity.isProjectorScreen
+import org.supla.android.data.source.local.entity.isSwitch
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.location.CollapsedFlag
@@ -110,10 +111,11 @@ class CreateProfileChannelsListUseCase @Inject constructor(
       channelData.isGpMeasurement() -> toGpMeasurement(channelData)
       channelData.isGpMeter() -> toGpMeterItem(channelData)
       channelData.isMeasurement() -> toMeasurementItem(channelData)
+      channelData.isSwitch() -> toSwitchItem(channelData)
       channelData.isHvacThermostat() -> toThermostatItem(channelData, childrenMap)
-      channelData.isShadingSystem() -> toIconWithButtonsItem(channelData)
-      channelData.isProjectorScreen() -> toIconWithButtonsItem(channelData)
-      channelData.isGarageDoorRoller() -> toIconWithButtonsItem(channelData)
+      channelData.isShadingSystem() -> toShadingSystemItem(channelData)
+      channelData.isProjectorScreen() -> toShadingSystemItem(channelData)
+      channelData.isGarageDoorRoller() -> toShadingSystemItem(channelData)
       else -> toChannelItem(channelData, childrenMap)
     }
 
@@ -176,9 +178,9 @@ class CreateProfileChannelsListUseCase @Inject constructor(
     )
   }
 
-  private fun toIconWithButtonsItem(channelData: ChannelDataEntity): ListItem.IconWithButtonsItem {
+  private fun toShadingSystemItem(channelData: ChannelDataEntity): ListItem.ShadingSystemItem {
     val rollerShutterValue = channelData.channelValueEntity.asRollerShutterValue()
-    return ListItem.IconWithButtonsItem(
+    return ListItem.ShadingSystemItem(
       channelData,
       channelData.locationEntity.caption,
       channelData.channelValueEntity.online,
@@ -186,6 +188,22 @@ class CreateProfileChannelsListUseCase @Inject constructor(
       getChannelIconUseCase(channelData),
       rollerShutterValue.getIssueIconType(),
       rollerShutterValue.getIssueMessage()
+    )
+  }
+
+  private fun toSwitchItem(channelData: ChannelDataEntity): ListItem.SwitchItem {
+    val value: String? = when {
+      channelData.hasValue() -> getChannelValueStringUseCase(channelData)
+      else -> null
+    }
+
+    return ListItem.SwitchItem(
+      channelData,
+      channelData.locationEntity.caption,
+      channelData.channelValueEntity.online,
+      getChannelCaptionUseCase(channelData),
+      getChannelIconUseCase(channelData),
+      value = value
     )
   }
 

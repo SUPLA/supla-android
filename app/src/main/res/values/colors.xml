@@ -29,7 +29,6 @@
 
     <color name="red">#FF0000</color>
     <color name="light_orange">#FFD19A</color>
-    <color name="gray">#7E8082</color>
     <color name="gray_light">#DCDEE0</color>
     <color name="gray_lighter">#EFEFF0</color>
     <color name="blue">#007AFF</color>
@@ -60,7 +59,7 @@
 
     <!-- Garage door -->
     <color name="garage_door_wall">@color/disabled</color>
-    <color name="garage_door_car">#7E8082</color>
+    <color name="garage_door_car">@color/on_surface_variant</color>
 
     <!-- Thermostat -->
     <color name="thermostat_control_circle_background">#D2D2D2</color>

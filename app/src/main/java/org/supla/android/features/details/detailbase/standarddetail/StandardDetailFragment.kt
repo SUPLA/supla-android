@@ -99,7 +99,7 @@ abstract class StandardDetailFragment<S : StandardDetailViewState, E : StandardD
   protected open fun updateToolbarTitle(state: S) {}
 
   private fun onBottomMenuItemSelected(menuItem: MenuItem): Boolean {
-    detailViewPager.currentItem = pages.map { it.item.menuId }.indexOf(menuItem.itemId)
+    detailViewPager.setCurrentItem(pages.map { it.item.menuId }.indexOf(menuItem.itemId), false)
     return true
   }
 

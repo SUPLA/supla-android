@@ -32,17 +32,6 @@ fun ChannelBase.hasMeasurements(): Boolean =
     function == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE ||
     function == SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR
 
-fun ChannelBase.hasValue(): Boolean =
-  when (function) {
-    SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT,
-    SuplaConst.SUPLA_CHANNELFNC_THERMOMETER,
-    SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR,
-    SuplaConst.SUPLA_CHANNELFNC_DISTANCESENSOR,
-    SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER -> true
-
-    else -> false
-  }
-
 fun ChannelBase.isMeasurement(): Boolean =
   function == SuplaConst.SUPLA_CHANNELFNC_ALARMARMAMENTSENSOR ||
     function == SuplaConst.SUPLA_CHANNELFNC_HOTELCARDSENSOR ||
@@ -50,6 +39,11 @@ fun ChannelBase.isMeasurement(): Boolean =
     function == SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR ||
     function == SuplaConst.SUPLA_CHANNELFNC_DISTANCESENSOR ||
     function == SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER
+
+fun ChannelBase.isSwitch(): Boolean =
+  function == SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH ||
+    function == SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH ||
+    function == SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER
 
 fun ChannelBase.isGpm(): Boolean =
   function == SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER ||

@@ -12,7 +12,7 @@
       android:text="@string/details_timer_state_label"
       android:textAllCaps="true"
       android:textAppearance="@style/AppTheme.TextAppearance.Body2"
-      android:textColor="@color/gray"
+      android:textColor="@color/on_surface_variant"
       app:layout_constraintBottom_toBottomOf="@+id/device_state_icon"
       app:layout_constraintEnd_toStartOf="@+id/device_state_icon"
       app:layout_constraintHorizontal_chainStyle="packed"

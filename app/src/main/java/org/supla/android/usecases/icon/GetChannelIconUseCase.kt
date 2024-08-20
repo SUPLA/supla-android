@@ -44,9 +44,10 @@ class GetChannelIconUseCase @Inject constructor(
 
   fun getIconProvider(
     channelData: ChannelDataBase,
-    iconType: IconType = IconType.SINGLE
+    iconType: IconType = IconType.SINGLE,
+    channelStateValue: ChannelState.Value? = null
   ): BitmapProvider =
-    { imageCacheProxy.getBitmap(it, invoke(channelData, iconType)) }
+    { imageCacheProxy.getBitmap(it, invoke(channelData, iconType, channelStateValue)) }
 
   // We intentionally specify icons with the _nighthtmode
   // suffix for night mode instead of using the default icons

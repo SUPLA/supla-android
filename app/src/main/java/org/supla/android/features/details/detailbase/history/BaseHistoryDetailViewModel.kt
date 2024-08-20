@@ -175,7 +175,7 @@ abstract class BaseHistoryDetailViewModel(
         state.copy(
           filters = state.filters
             .select(range)
-            .putAggregations(aggregations(newDateRange, state.filters.selectedAggregation, state.chartCustomFilters)),
+            .putAggregations(aggregations(newDateRange, range, state.filters.selectedAggregation, state.chartCustomFilters)),
           range = newDateRange,
           chartData = state.chartData.empty(),
           chartParameters = HideableValue(ChartParameters(1f, 1f, 0f, 0f)),
@@ -249,18 +249,22 @@ abstract class BaseHistoryDetailViewModel(
 
   override fun customRangeEditDateSave(date: Date) {
     updateState { state ->
-      val range = guardLet(state.range) { return@updateState state }.let { (range) ->
-        when (state.editDate) {
-          RangeValueType.START -> range.copy(start = range.start.setDay(date))
-          RangeValueType.END -> range.copy(end = range.end.setDay(date))
-          else -> range
+      val dateRange = guardLet(state.range) { return@updateState state }
+        .let { (range) ->
+          when (state.editDate) {
+            RangeValueType.START -> range.copy(start = range.start.setDay(date))
+            RangeValueType.END -> range.copy(end = range.end.setDay(date))
+            else -> range
+          }
         }
-      }
+      val (chartRange) = guardLet(state.filters.selectedRange) { return@updateState state }
 
       state.copy(
-        range = range,
+        range = dateRange,
         editDate = null,
-        filters = state.filters.putAggregations(aggregations(range, state.filters.selectedAggregation, state.chartCustomFilters)),
+        filters = state.filters.putAggregations(
+          aggregations(dateRange, chartRange, state.filters.selectedAggregation, state.chartCustomFilters)
+        ),
         chartData = state.chartData.empty(),
         chartParameters = HideableValue(ChartParameters(1f, 1f, 0f, 0f)),
         loading = true
@@ -281,11 +285,13 @@ abstract class BaseHistoryDetailViewModel(
           else -> range
         }
       }
+      val (chartRange) = guardLet(state.filters.selectedRange) { return@updateState state }
+      val aggregations = aggregations(range, chartRange, state.filters.selectedAggregation, state.chartCustomFilters)
 
       state.copy(
         range = range,
         editHour = null,
-        filters = state.filters.putAggregations(aggregations(range, state.filters.selectedAggregation, state.chartCustomFilters)),
+        filters = state.filters.putAggregations(aggregations),
         chartData = state.chartData.empty(),
         chartParameters = HideableValue(ChartParameters(1f, 1f, 0f, 0f)),
         loading = true
@@ -331,7 +337,7 @@ abstract class BaseHistoryDetailViewModel(
   ): Single<Pair<ChartData, Optional<DateRange>>>
 
   protected open fun loadChartState(profileId: Long, remoteId: Int): ChartState =
-    userStateHolder.getChartState(profileId, remoteId) { DefaultChartState.from(it) } ?: DefaultChartState.default()
+    userStateHolder.getDefaultChartState(profileId, remoteId)
 
   protected open fun exportChartState(state: HistoryDetailViewState): ChartState? {
     val (aggregation) = guardLet(state.filters.selectedAggregation) { return null }
@@ -430,7 +436,7 @@ abstract class BaseHistoryDetailViewModel(
   ) =
     filters
       .putRanges(SingleSelectionList(selectedRange, ChartRange.entries, R.string.history_range_label))
-      .putAggregations(aggregations(dateRange, chartState.aggregation, customFilters))
+      .putAggregations(aggregations(dateRange, selectedRange, chartState.aggregation, customFilters))
 
   private fun handleMeasurements(chartData: ChartData, dateRange: Optional<DateRange>, chartState: ChartState) {
     updateState { state ->
@@ -490,12 +496,13 @@ abstract class BaseHistoryDetailViewModel(
   }
 
   protected open fun aggregations(
-    currentRange: DateRange,
+    dateRange: DateRange,
+    chartRange: ChartRange,
     selectedAggregation: ChartDataAggregation? = ChartDataAggregation.MINUTES,
     customFilters: ChartDataSpec.Filters?
   ): SingleSelectionList<ChartDataAggregation> {
-    val minAggregation = currentRange.minAggregation
-    val maxAggregation = currentRange.maxAggregation
+    val minAggregation = dateRange.minAggregation
+    val maxAggregation = dateRange.maxAggregation(chartRange)
     val aggregation = if (selectedAggregation?.between(minAggregation, maxAggregation) == true) selectedAggregation else minAggregation
 
     return SingleSelectionList(

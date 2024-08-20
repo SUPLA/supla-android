@@ -24,7 +24,7 @@ class DurationTimerHelper @Inject constructor() {
       }
     }
     timerView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize)
-    timerView.setTextColor(ResourcesCompat.getColor(context.resources, R.color.gray, null))
+    timerView.setTextColor(ResourcesCompat.getColor(context.resources, R.color.on_surface_variant, null))
     timerView.gravity = Gravity.BOTTOM or Gravity.END
 
     return timerView

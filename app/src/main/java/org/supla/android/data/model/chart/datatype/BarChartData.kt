@@ -65,7 +65,7 @@ class BarChartData(
           channelSet.dataSets.forEach { dataSet ->
             dataSet.asBarChartData(
               aggregation = aggregation!!,
-              customFilters = channelSet.customFilters,
+              customData = channelSet.customData,
               timeToCoordinateConverter = { toCoordinate(it - minDate) },
               toSetConverter = { set -> barDataSet(set, dataSet.label, resources) }
             )
