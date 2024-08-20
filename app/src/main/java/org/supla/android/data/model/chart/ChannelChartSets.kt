@@ -28,7 +28,7 @@ data class ChannelChartSets(
   val name: StringProvider,
   val aggregation: ChartDataAggregation,
   val dataSets: List<HistoryDataSet>,
-  val customFilters: ChartDataSpec.Filters? = null,
+  val customData: Any? = null,
   val typeName: StringProvider? = null
 ) {
   val active: Boolean
@@ -66,9 +66,9 @@ data class ChannelChartSets(
       name: StringProvider,
       aggregation: ChartDataAggregation,
       dataSets: List<HistoryDataSet>,
-      customFilters: ChartDataSpec.Filters? = null,
+      customData: Any? = null,
       typeNameRes: StringProvider? = null
-    ) = ChannelChartSets(channel.remoteId, channel.function.suplaFunction(), name, aggregation, dataSets, customFilters, typeNameRes)
+    ) = ChannelChartSets(channel.remoteId, channel.function.suplaFunction(), name, aggregation, dataSets, customData, typeNameRes)
   }
 }
 

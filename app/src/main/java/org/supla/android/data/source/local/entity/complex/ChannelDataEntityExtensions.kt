@@ -17,8 +17,8 @@ package org.supla.android.data.source.local.entity.complex
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import org.supla.android.data.source.local.entity.custom.Phase
 import org.supla.android.data.source.local.entity.hasMeasurements
-import org.supla.android.data.source.local.entity.hasValue
 import org.supla.android.data.source.local.entity.isFacadeBlind
 import org.supla.android.data.source.local.entity.isGpMeasurement
 import org.supla.android.data.source.local.entity.isGpMeter
@@ -28,6 +28,11 @@ import org.supla.android.data.source.local.entity.isMeasurement
 import org.supla.android.data.source.local.entity.isShadingSystem
 import org.supla.android.data.source.local.entity.isThermometer
 import org.supla.android.data.source.local.entity.isVerticalBlind
+import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType
+import org.supla.android.data.source.remote.channel.suplaElectricityMeterMeasuredTypes
+import org.supla.android.lib.SuplaChannelElectricityMeterValue
+import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS
+import org.supla.android.lib.SuplaConst
 
 fun ChannelDataEntity.isMeasurement() = channelEntity.isMeasurement()
 
@@ -41,7 +46,21 @@ fun ChannelDataEntity.isHvacThermostat() = channelEntity.isHvacThermostat()
 
 fun ChannelDataEntity.hasMeasurements() = channelEntity.hasMeasurements()
 
-fun ChannelDataEntity.hasValue() = channelEntity.hasValue()
+fun ChannelDataEntity.hasValue(): Boolean =
+  when (function) {
+    SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT,
+    SuplaConst.SUPLA_CHANNELFNC_THERMOMETER,
+    SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR,
+    SuplaConst.SUPLA_CHANNELFNC_DISTANCESENSOR,
+    SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER -> true
+
+    SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH,
+    SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH,
+    SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER ->
+      channelValueEntity.subValueType == SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort()
+
+    else -> false
+  }
 
 fun ChannelDataEntity.isThermometer() = channelEntity.isThermometer()
 
@@ -50,3 +69,23 @@ fun ChannelDataEntity.isShadingSystem() = channelEntity.isShadingSystem()
 fun ChannelDataEntity.isFacadeBlind() = channelEntity.isFacadeBlind()
 
 fun ChannelDataEntity.isVerticalBlind() = channelEntity.isVerticalBlind()
+
+val ChannelDataEntity.Electricity: ChannelDataElectricityExtension
+  get() = ChannelDataElectricityExtension(this)
+
+@JvmInline
+value class ChannelDataElectricityExtension(private val channelData: ChannelDataEntity) {
+  val phases: List<Phase>
+    get() = Phase.entries
+      .filter { channelData.flags and it.disabledFlag.rawValue == 0L }
+
+  val value: SuplaChannelElectricityMeterValue?
+    get() = channelData.channelExtendedValueEntity?.getSuplaValue()?.ElectricityMeterValue
+
+  val measuredTypes: List<SuplaElectricityMeasurementType>
+    get() = value?.measuredValues?.suplaElectricityMeterMeasuredTypes ?: emptyList()
+
+  val hasBalance: Boolean
+    get() = measuredTypes.contains(SuplaElectricityMeasurementType.FORWARD_ACTIVE_ENERGY_BALANCED) &&
+      measuredTypes.contains(SuplaElectricityMeasurementType.REVERSE_ACTIVE_ENERGY_BALANCED)
+}

@@ -17,22 +17,36 @@ package org.supla.android.features.details.switchdetail.general
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.text.format.DateFormat
+import androidx.annotation.StringRes
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.kotlin.subscribeBy
+import org.supla.android.R
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.ui.BaseViewModel
+import org.supla.android.core.ui.BitmapProvider
+import org.supla.android.core.ui.StringProvider
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.model.general.ChannelDataBase
+import org.supla.android.data.model.general.ChannelState
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.runtime.ItemType
+import org.supla.android.extensions.monthStart
+import org.supla.android.features.details.detailbase.electricitymeter.ElectricityMeterChannelViewModel
+import org.supla.android.features.details.detailbase.electricitymeter.ElectricityMeterState
+import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.GetChannelStateUseCase
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
+import org.supla.android.usecases.channel.electricitymeter.ElectricityMeasurements
+import org.supla.android.usecases.channel.electricitymeter.LoadElectricityMeterMeasurementsUseCase
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
-import java.util.*
+import org.supla.android.usecases.icon.GetChannelIconUseCase
+import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
@@ -42,22 +56,24 @@ class SwitchGeneralViewModel @Inject constructor(
   private val getChannelStateUseCase: GetChannelStateUseCase,
   private val executeSimpleActionUseCase: ExecuteSimpleActionUseCase,
   private val dateProvider: DateProvider,
+  private val getChannelIconUseCase: GetChannelIconUseCase,
+  private val loadElectricityMeterMeasurementsUseCase: LoadElectricityMeterMeasurementsUseCase,
   schedulers: SuplaSchedulers
-) : BaseViewModel<SwitchGeneralViewState, SwitchGeneralViewEvent>(SwitchGeneralViewState(), schedulers) {
+) : BaseViewModel<SwitchGeneralViewState, SwitchGeneralViewEvent>(SwitchGeneralViewState(), schedulers), ElectricityMeterChannelViewModel {
 
   fun loadData(remoteId: Int, itemType: ItemType) {
     getDataSource(remoteId, itemType)
+      .flatMap { channelBase ->
+        if ((channelBase as? ChannelDataEntity)?.channelValueEntity?.subValueType == SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort()) {
+          loadElectricityMeterMeasurementsUseCase(remoteId, dateProvider.currentDate().monthStart())
+            .map { Pair(channelBase, it) }
+        } else {
+          Maybe.just(Pair<ChannelDataBase, ElectricityMeasurements?>(channelBase, null))
+        }
+      }
       .attach()
       .subscribeBy(
-        onSuccess = { channel ->
-          updateState {
-            it.copy(
-              channelDataBase = channel,
-              isOn = getChannelStateUseCase(channel).isActive(),
-              timerEndDate = getEstimatedCountDownEndTime(channel)
-            )
-          }
-        },
+        onSuccess = { (channelBase, measurements) -> handleData(channelBase, measurements) },
         onError = defaultErrorHandler("loadData($remoteId, $itemType)")
       )
       .disposeBySelf()
@@ -83,6 +99,30 @@ class SwitchGeneralViewModel @Inject constructor(
       .disposeBySelf()
   }
 
+  private fun handleData(data: ChannelDataBase, measurements: ElectricityMeasurements?) {
+    updateState { state ->
+      state.copy(
+        online = data.isOnline(),
+        deviceStateLabel = getDeviceStateLabel(data),
+        deviceStateIcon = getChannelIconUseCase.getIconProvider(data),
+        deviceStateValue = getDeviceStateValue(data),
+        onIcon = getChannelIconUseCase.getIconProvider(data, channelStateValue = ChannelState.Value.ON),
+        offIcon = getChannelIconUseCase.getIconProvider(data, channelStateValue = ChannelState.Value.OFF),
+        electricityMeterState = (data as? ChannelDataEntity)?.let { getElectricityMeterState(it, measurements) }
+      )
+    }
+  }
+
+  private fun getDeviceStateLabel(data: ChannelDataBase): StringProvider {
+    return getEstimatedCountDownEndTime(data)
+      ?.let { estimatedCountDownEndTime ->
+        { context ->
+          val format = context.getString(R.string.hour_string_format)
+          context.getString(R.string.details_timer_state_label_for_timer, DateFormat.format(format, estimatedCountDownEndTime))
+        }
+      } ?: { context -> context.getString(R.string.details_timer_state_label) }
+  }
+
   private fun getEstimatedCountDownEndTime(channelDataBase: ChannelDataBase): Date? {
     return (channelDataBase as? ChannelDataEntity)?.let {
       val currentDate = dateProvider.currentDate()
@@ -95,12 +135,24 @@ class SwitchGeneralViewModel @Inject constructor(
       }
     }
   }
+
+  private fun getDeviceStateValue(data: ChannelDataBase) = when {
+    data.isOnline().not() -> R.string.offline
+    getChannelStateUseCase(data).isActive() -> R.string.details_timer_device_on
+    else -> R.string.details_timer_device_off
+  }
 }
 
 sealed class SwitchGeneralViewEvent : ViewEvent
 
 data class SwitchGeneralViewState(
-  val channelDataBase: ChannelDataBase? = null,
-  val isOn: Boolean = false,
-  val timerEndDate: Date? = null
+  val online: Boolean = false,
+  val deviceStateLabel: StringProvider = { "" },
+  val deviceStateIcon: BitmapProvider? = null,
+  @StringRes val deviceStateValue: Int = R.string.offline,
+
+  val onIcon: BitmapProvider? = null,
+  val offIcon: BitmapProvider? = null,
+
+  val electricityMeterState: ElectricityMeterState? = null
 ) : ViewState()

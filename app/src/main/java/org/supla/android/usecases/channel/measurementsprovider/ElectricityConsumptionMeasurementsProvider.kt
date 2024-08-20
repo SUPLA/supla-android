@@ -32,11 +32,15 @@ import org.supla.android.data.model.chart.ChartEntryType
 import org.supla.android.data.model.chart.HistoryDataSet
 import org.supla.android.data.source.ElectricityMeterLogRepository
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.complex.Electricity
+import org.supla.android.data.source.local.entity.measurements.BalancedValue
 import org.supla.android.data.source.local.entity.measurements.ElectricityMeterLogEntity
+import org.supla.android.data.source.local.entity.measurements.balanceHourly
 import org.supla.android.di.GSON_FOR_REPO
 import org.supla.android.extensions.toTimestamp
 import org.supla.android.features.details.electricitymeterdetail.history.ElectricityMeterChartType
 import org.supla.android.lib.SuplaConst
+import org.supla.android.ui.views.charts.ElectricityMarkerCustomData
 import org.supla.android.usecases.channel.GetChannelCaptionUseCase
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.channel.measurementsprovider.electricity.ElectricityChartFilters
@@ -46,9 +50,8 @@ import org.supla.android.usecases.channel.measurementsprovider.electricity.getVa
 import org.supla.android.usecases.channel.measurementsprovider.electricity.ifPhase1
 import org.supla.android.usecases.channel.measurementsprovider.electricity.ifPhase2
 import org.supla.android.usecases.channel.measurementsprovider.electricity.ifPhase3
-import org.supla.android.usecases.channel.valueformatter.ChartElectricityMeterValueFormatter
+import org.supla.android.usecases.channel.valueformatter.ChartMarkerElectricityMeterValueFormatter
 import org.supla.android.usecases.icon.GetChannelIconUseCase
-import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -86,20 +89,24 @@ class ElectricityConsumptionMeasurementsProvider @Inject constructor(
           getChannelCaptionUseCase(channel.channelEntity),
           spec.aggregation,
           historyDataSets,
-          spec.customFilters
+          ElectricityMarkerCustomData(
+            spec.customFilters as? ElectricityChartFilters,
+            channel.Electricity.value?.pricePerUnit?.toFloat(),
+            channel.Electricity.value?.currency
+          )
         ) { context -> (spec.customFilters as? ElectricityChartFilters)?.type?.labelRes?.let { "${context.getString(it)} [kWh]" } ?: "" }
       }
       .firstOrError()
 
   private fun labels(spec: ChartDataSpec, icon: BitmapProvider, result: AggregationResult): HistoryDataSet.Label {
-    val formatter = ChartElectricityMeterValueFormatter()
+    val formatter = ChartMarkerElectricityMeterValueFormatter()
 
     return when ((spec.customFilters as? ElectricityChartFilters)?.type) {
       ElectricityMeterChartType.BALANCE_VECTOR,
       ElectricityMeterChartType.BALANCE_ARITHMETIC,
       ElectricityMeterChartType.BALANCE_HOURLY -> HistoryDataSet.Label.Multiple(
         mutableListOf<HistoryDataSet.LabelData>().apply {
-          add(HistoryDataSet.LabelData(icon, "", R.color.gray, presentColor = false, useColor = false))
+          add(HistoryDataSet.LabelData(icon, "", R.color.on_surface_variant, presentColor = false, useColor = false))
           add(HistoryDataSet.LabelData.forwarded(formatter.format(result.nextSum(), withUnit = false)))
           add(HistoryDataSet.LabelData.reversed(formatter.format(result.nextSum(), withUnit = false)))
         }
@@ -107,10 +114,10 @@ class ElectricityConsumptionMeasurementsProvider @Inject constructor(
 
       ElectricityMeterChartType.BALANCE_CHART_AGGREGATED -> HistoryDataSet.Label.Multiple(
         mutableListOf<HistoryDataSet.LabelData>().apply {
-          add(HistoryDataSet.LabelData(icon, "", R.color.gray, presentColor = false))
+          add(HistoryDataSet.LabelData(icon, "", R.color.on_surface_variant, presentColor = false))
           add(HistoryDataSet.LabelData.forwarded(formatter.format(result.nextSum(), withUnit = false)))
           add(HistoryDataSet.LabelData.reversed(formatter.format(result.nextSum(), withUnit = false)))
-          add(HistoryDataSet.LabelData(R.color.gray))
+          add(HistoryDataSet.LabelData(R.color.on_surface_variant))
         }
       )
 
@@ -201,7 +208,7 @@ class ElectricityConsumptionMeasurementsProvider @Inject constructor(
       }
 
       ElectricityMeterChartType.BALANCE_HOURLY ->
-        balanceHourly(measurements, ChartDataAggregation.Formatter()).let { values ->
+        measurements.balanceHourly(ChartDataAggregation.Formatter()).let { values ->
           listOf(values.map { it.forwarded }.sum(), values.map { it.reversed }.sum())
         }
 
@@ -345,12 +352,6 @@ class ElectricityConsumptionMeasurementsProvider @Inject constructor(
         0f
       }
   }
-
-  private data class BalancedValue(
-    val date: Date,
-    val forwarded: Float,
-    val reversed: Float
-  )
 }
 
 fun HistoryDataSet.LabelData.Companion.forwarded(value: String) =

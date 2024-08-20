@@ -350,9 +350,23 @@ private fun DataSetItem(value: HistoryDataSet.LabelData, showColor: Boolean, act
   value.Icon(context = LocalContext.current) {
     DataSetIcon(bitmap = it.asImageBitmap(), value.iconSize)
   }
-  DataSetText(text = value.value)
-  if (showColor) {
-    DataSetPoint(color = value.color, active)
+  Column(horizontalAlignment = Alignment.CenterHorizontally) {
+    DataSetText(text = value.value)
+    if (showColor) {
+      Box(
+        modifier = Modifier
+          .width(50.dp)
+          .height(4.dp)
+          .let {
+            if (active) {
+              it.background(colorResource(id = value.color), shape = RoundedCornerShape(2.dp))
+            } else {
+              it
+            }
+          }
+          .border(1.dp, colorResource(id = value.color), RoundedCornerShape(2.dp))
+      )
+    }
   }
 }
 
@@ -372,22 +386,6 @@ private fun DataSetText(text: String) =
     fontSize = 16.sp,
     fontFamily = FontFamily(Font(R.font.quicksand_regular)),
   )
-
-@Composable
-private fun DataSetPoint(color: Int, active: Boolean) =
-  Column(modifier = Modifier.fillMaxHeight()) {
-    Box(
-      modifier = Modifier
-        .size(8.dp)
-        .let {
-          if (active) {
-            it.background(color = colorResource(id = color), shape = RoundedCornerShape(4.dp))
-          } else {
-            it.border(1.dp, colorResource(id = color), RoundedCornerShape(4.dp))
-          }
-        }
-    )
-  }
 
 @Composable
 private fun BottomPagination(viewState: HistoryDetailViewState, viewModel: HistoryDetailProxy) =

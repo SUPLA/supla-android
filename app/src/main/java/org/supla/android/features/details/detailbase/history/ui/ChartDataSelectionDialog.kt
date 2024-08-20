@@ -120,7 +120,7 @@ private fun ContentCheckBoxes(list: MultipleSelectionList<CheckboxItem>, localSt
       Text(
         text = stringResource(id = it).uppercase(),
         style = MaterialTheme.typography.bodySmall,
-        color = colorResource(id = R.color.gray),
+        color = colorResource(id = R.color.on_surface_variant),
         modifier = Modifier.padding(start = Distance.default, top = Distance.default, end = Distance.default)
       )
     }

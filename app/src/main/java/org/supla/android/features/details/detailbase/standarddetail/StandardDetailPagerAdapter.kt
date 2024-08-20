@@ -80,10 +80,7 @@ class StandardDetailPagerAdapter(
     DetailPage.CURTAIN -> CurtainFragment().apply { arguments = CurtainFragment.bundle(itemBundle) }
     DetailPage.VERTICAL_BLIND -> VerticalBlindsFragment().apply { arguments = VerticalBlindsFragment.bundle(itemBundle) }
     DetailPage.GARAGE_DOOR_ROLLER -> GarageDoorFragment().apply { arguments = GarageDoorFragment.bundle(itemBundle) }
-
-    DetailPage.EM_GENERAL, DetailPage.EM_SWITCH_METRICS ->
-      ElectricityMeterGeneralFragment().apply { arguments = ElectricityMeterGeneralFragment.bundle(itemBundle) }
-
+    DetailPage.EM_GENERAL -> ElectricityMeterGeneralFragment().apply { arguments = ElectricityMeterGeneralFragment.bundle(itemBundle) }
     DetailPage.EM_HISTORY -> ElectricityMeterHistoryFragment().apply {
       arguments = ElectricityMeterHistoryFragment.bundle(itemBundle.remoteId)
     }
@@ -122,7 +119,6 @@ enum class DetailPage(val item: DetailBottomItem) {
 
   // EM
   EM_GENERAL(DetailBottomItem.GENERAL),
-  EM_SWITCH_METRICS(DetailBottomItem.METRICS),
   EM_HISTORY(DetailBottomItem.HISTORY),
   EM_SETTINGS(DetailBottomItem.SETTINGS)
 }

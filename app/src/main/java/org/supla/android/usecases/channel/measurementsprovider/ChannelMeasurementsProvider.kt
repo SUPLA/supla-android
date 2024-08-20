@@ -33,7 +33,7 @@ import org.supla.android.data.source.remote.gpm.SuplaChannelGeneralPurposeBaseCo
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.channel.ValueType
 import org.supla.android.usecases.channel.valueformatter.ChannelValueFormatter
-import org.supla.android.usecases.channel.valueformatter.ChartElectricityMeterValueFormatter
+import org.supla.android.usecases.channel.valueformatter.ChartAxisElectricityMeterValueFormatter
 import org.supla.android.usecases.channel.valueformatter.GpmValueFormatter
 import org.supla.android.usecases.channel.valueformatter.HumidityValueFormatter
 import org.supla.android.usecases.channel.valueformatter.ThermometerValueFormatter
@@ -88,7 +88,7 @@ abstract class ChannelMeasurementsProvider(
       ChartEntryType.GENERAL_PURPOSE_METER ->
         GpmValueFormatter(channel.configEntity?.toSuplaConfig(gson) as? SuplaChannelGeneralPurposeBaseConfig)
 
-      ChartEntryType.ELECTRICITY -> ChartElectricityMeterValueFormatter()
+      ChartEntryType.ELECTRICITY -> ChartAxisElectricityMeterValueFormatter()
     }
   }
 

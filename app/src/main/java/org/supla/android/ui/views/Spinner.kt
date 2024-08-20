@@ -43,10 +43,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
@@ -72,7 +74,7 @@ fun <T> Spinner(
       text = label.uppercase(),
       style = MaterialTheme.typography.bodySmall,
       modifier = Modifier.padding(horizontal = 12.dp),
-      color = colorResource(id = R.color.gray)
+      color = colorResource(id = R.color.on_surface_variant)
     )
     ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = { ifTrue(enabled) { expanded = it } }) {
       TextField(
@@ -112,17 +114,20 @@ fun <T : SpinnerItem> TextSpinner(
   options: SingleSelectionList<T>,
   modifier: Modifier = Modifier,
   enabled: Boolean = true,
+  labelTextColor: Color = colorResource(id = R.color.on_surface_variant),
   onOptionSelected: (selectedId: T) -> Unit
 ) {
   var expanded by remember { mutableStateOf(false) }
   val selectedOptionText = options.selected.labelRes
 
   Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(4.dp)) {
-    Text(
-      text = stringResource(id = options.label).uppercase(),
-      style = MaterialTheme.typography.bodySmall,
-      color = colorResource(id = R.color.gray)
-    )
+    options.label?.let {
+      Text(
+        text = stringResource(id = it).uppercase(),
+        style = MaterialTheme.typography.bodySmall,
+        color = labelTextColor
+      )
+    }
     ExposedDropdownMenuBox(
       expanded = expanded,
       onExpandedChange = { ifTrue(enabled) { expanded = it } },
@@ -133,7 +138,9 @@ fun <T : SpinnerItem> TextSpinner(
           text = stringResource(id = selectedOptionText),
           style = MaterialTheme.typography.bodyMedium,
           color = if (enabled) MaterialTheme.colorScheme.onBackground else MaterialTheme.colorScheme.outline,
-          modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryEditable)
+          modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryEditable).weight(1f, false),
+          maxLines = 1,
+          overflow = TextOverflow.Ellipsis
         )
         SpinnerTrailingIcon(
           expanded = expanded,

@@ -106,7 +106,7 @@ sealed interface ListItem {
     value: String? = null
   ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, value, null, null)
 
-  class IconWithButtonsItem(
+  class ShadingSystemItem(
     channel: ChannelDataEntity,
     locationCaption: String,
     online: Boolean,
@@ -115,6 +115,15 @@ sealed interface ListItem {
     issueIconType: IssueIconType?,
     issueMessage: Int?
   ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, null, issueIconType, issueMessage)
+
+  class SwitchItem(
+    channel: ChannelDataEntity,
+    locationCaption: String,
+    online: Boolean,
+    captionProvider: StringProvider,
+    icon: ImageId,
+    value: String?
+  ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, value, null, null)
 
   class GeneralPurposeMeterItem(
     channel: ChannelDataEntity,

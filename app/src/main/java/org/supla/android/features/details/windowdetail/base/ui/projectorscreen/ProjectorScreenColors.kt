@@ -36,7 +36,7 @@ data class ProjectorScreenColors(
         screen = colorResource(id = R.color.roller_shutter_window_color),
         shadow = colorResource(id = R.color.shadow_start),
         bottomRect = colorResource(id = R.color.roller_shutter_slat_background),
-        topRect = colorResource(id = R.color.gray),
+        topRect = colorResource(id = R.color.on_surface_variant),
         disabledOverlay = colorResource(id = R.color.roller_shutter_disabled_overlay)
       )
   }

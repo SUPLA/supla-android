@@ -18,8 +18,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import static org.supla.android.data.source.local.BaseDao.timestampStartsWithTheCurrentMonth;
-
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -28,7 +26,6 @@ import dagger.hilt.android.EntryPointAccessors;
 import java.util.Date;
 import org.supla.android.data.source.DefaultMeasurableItemsRepository;
 import org.supla.android.data.source.MeasurableItemsRepository;
-import org.supla.android.data.source.local.ElectricityMeterLogDao;
 import org.supla.android.data.source.local.ImpulseCounterLogDao;
 import org.supla.android.data.source.local.ThermostatLogDao;
 import org.supla.android.di.entrypoints.ProfileIdHolderEntryPoint;
@@ -48,9 +45,7 @@ public class MeasurementsDbHelper extends BaseDbHelper {
     super(context, DATABASE_NAME, null, DATABASE_VERSION, profileIdProvider);
     this.measurableItemsRepository =
         new DefaultMeasurableItemsRepository(
-            new ImpulseCounterLogDao(this),
-            new ElectricityMeterLogDao(this),
-            new ThermostatLogDao(this));
+            new ImpulseCounterLogDao(this), new ThermostatLogDao(this));
   }
 
   /**
@@ -94,21 +89,6 @@ public class MeasurementsDbHelper extends BaseDbHelper {
     // Moved to Room (see DatabaseModule)
   }
 
-  public boolean electricityMeterMeasurementsStartsWithTheCurrentMonth(int channelId) {
-    long minTS = getElectricityMeterMeasurementTimestamp(channelId, true);
-    return timestampStartsWithTheCurrentMonth(minTS);
-  }
-
-  public int getElectricityMeterMeasurementTimestamp(int channelId, boolean min) {
-    return measurableItemsRepository.getElectricityMeterMeasurementTimestamp(channelId, min);
-  }
-
-  public double getLastElectricityMeterMeasurementValue(
-      int monthOffset, int channelId, boolean production) {
-    return measurableItemsRepository.getLastElectricityMeterMeasurementValue(
-        monthOffset, channelId, production);
-  }
-
   public boolean impulseCounterMeasurementsStartsWithTheCurrentMonth(int channelId) {
     return measurableItemsRepository.impulseCounterMeasurementsStartsWithTheCurrentMonth(channelId);
   }
@@ -119,25 +99,6 @@ public class MeasurementsDbHelper extends BaseDbHelper {
 
   public double getLastImpulseCounterMeasurementValue(int monthOffset, int channelId) {
     return measurableItemsRepository.getLastImpulseCounterMeasurementValue(monthOffset, channelId);
-  }
-
-  public Cursor getElectricityMeasurements(
-      int channelId, String groupByDateFormat, Date dateFrom, Date dateTo) {
-    return measurableItemsRepository.getElectricityMeasurementsCursor(
-        channelId, groupByDateFormat, dateFrom, dateTo);
-  }
-
-  public int getElectricityMeterMeasurementTotalCount(int channelId, boolean withoutComplement) {
-    return measurableItemsRepository.getElectricityMeterMeasurementTotalCount(
-        channelId, withoutComplement);
-  }
-
-  public void addElectricityMeasurement(ElectricityMeasurementItem emi) {
-    measurableItemsRepository.addElectricityMeasurement(emi);
-  }
-
-  public void deleteElectricityMeasurements(int channelId) {
-    measurableItemsRepository.deleteElectricityMeasurements(channelId);
   }
 
   public Cursor getThermostatMeasurements(int channelId, Date dateFrom, Date dateTo) {

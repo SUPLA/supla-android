@@ -20,27 +20,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import android.database.Cursor;
 import java.util.Date;
-import org.supla.android.db.ElectricityMeasurementItem;
 import org.supla.android.db.ImpulseCounterMeasurementItem;
 import org.supla.android.db.ThermostatMeasurementItem;
 
 public interface MeasurableItemsRepository {
 
   double getLastImpulseCounterMeasurementValue(int monthOffset, int channelId);
-
-  double getLastElectricityMeterMeasurementValue(
-      int monthOffset, int channelId, boolean production);
-
-  int getElectricityMeterMeasurementTimestamp(int channelId, boolean min);
-
-  int getElectricityMeterMeasurementTotalCount(int channelId, boolean withoutComplement);
-
-  void addElectricityMeasurement(ElectricityMeasurementItem emi);
-
-  Cursor getElectricityMeasurementsCursor(
-      int channelId, String groupByDateFormat, Date dateFrom, Date dateTo);
-
-  void deleteElectricityMeasurements(int channelId);
 
   int getThermostatMeasurementTimestamp(int channelId, boolean min);
 

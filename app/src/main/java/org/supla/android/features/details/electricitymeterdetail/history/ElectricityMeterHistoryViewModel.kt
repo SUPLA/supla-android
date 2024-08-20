@@ -105,7 +105,8 @@ class ElectricityMeterHistoryViewModel @Inject constructor(
     val phases = checkboxItems?.filterIsInstance<PhaseItem>()?.toSet() ?: emptySet()
 
     updateState { state ->
-      val (range) = guardLet(state.range) { return@updateState state }
+      val (dateRange) = guardLet(state.range) { return@updateState state }
+      val (chartRange) = guardLet(state.filters.selectedRange) { return@updateState state }
 
       (state.chartCustomFilters as? ElectricityChartFilters)?.let {
         val customFilters = state.chartCustomFilters.copy(type = type, selectedPhases = phases)
@@ -114,7 +115,7 @@ class ElectricityMeterHistoryViewModel @Inject constructor(
           chartDataSelectionDialogState = null,
           loading = true,
           initialLoadStarted = false,
-          filters = state.filters.putAggregations(aggregations(range, state.filters.selectedAggregation, customFilters)),
+          filters = state.filters.putAggregations(aggregations(dateRange, chartRange, state.filters.selectedAggregation, customFilters)),
           chartData = state.chartData.empty()
         )
       } ?: state
@@ -125,7 +126,7 @@ class ElectricityMeterHistoryViewModel @Inject constructor(
   }
 
   override fun loadChartState(profileId: Long, remoteId: Int): ChartState =
-    userStateHolder.getChartState(profileId, remoteId) { ElectricityChartState.from(it) } ?: ElectricityChartState.default()
+    userStateHolder.getElectricityChartState(profileId, remoteId)
 
   override fun exportChartState(state: HistoryDetailViewState): ChartState? {
     val (aggregation) = guardLet(state.filters.selectedAggregation) { return null }
@@ -168,15 +169,16 @@ class ElectricityMeterHistoryViewModel @Inject constructor(
   override fun chartStyle(): ChartStyle = ElectricityChartStyle
 
   override fun aggregations(
-    currentRange: DateRange,
+    dateRange: DateRange,
+    chartRange: ChartRange,
     selectedAggregation: ChartDataAggregation?,
     customFilters: ChartDataSpec.Filters?
   ): SingleSelectionList<ChartDataAggregation> {
     val (filters) = guardLet(customFilters as? ElectricityChartFilters) {
-      return super.aggregations(currentRange, selectedAggregation, customFilters)
+      return super.aggregations(dateRange, chartRange, selectedAggregation, customFilters)
     }
 
-    val aggregations = super.aggregations(currentRange, selectedAggregation, customFilters)
+    val aggregations = super.aggregations(dateRange, chartRange, selectedAggregation, customFilters)
     return if (filters.type == ElectricityMeterChartType.BALANCE_HOURLY && aggregations.items.contains(ChartDataAggregation.MINUTES)) {
       aggregations.copy(
         selected = if (aggregations.selected == ChartDataAggregation.MINUTES) ChartDataAggregation.HOURS else aggregations.selected,

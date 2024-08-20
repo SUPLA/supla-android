@@ -41,7 +41,7 @@ class DateRangeTest {
     // then
     assertThat(daysCount).isEqualTo(22)
     assertThat(range.minAggregation).isEqualTo(ChartDataAggregation.MINUTES)
-    assertThat(range.maxAggregation).isEqualTo(ChartDataAggregation.DAYS)
+    assertThat(range.maxAggregation(ChartRange.MONTH)).isEqualTo(ChartDataAggregation.DAYS)
   }
 
   @Test
@@ -58,7 +58,7 @@ class DateRangeTest {
     // then
     assertThat(daysCount).isEqualTo(1)
     assertThat(range.minAggregation).isEqualTo(ChartDataAggregation.MINUTES)
-    assertThat(range.maxAggregation).isEqualTo(ChartDataAggregation.HOURS)
+    assertThat(range.maxAggregation(ChartRange.MONTH)).isEqualTo(ChartDataAggregation.HOURS)
   }
 
   @Test
@@ -75,7 +75,7 @@ class DateRangeTest {
     // then
     assertThat(daysCount).isEqualTo(0)
     assertThat(range.minAggregation).isEqualTo(ChartDataAggregation.MINUTES)
-    assertThat(range.maxAggregation).isEqualTo(ChartDataAggregation.HOURS)
+    assertThat(range.maxAggregation(ChartRange.DAY)).isEqualTo(ChartDataAggregation.HOURS)
   }
 
   @Test
@@ -92,7 +92,7 @@ class DateRangeTest {
     // then
     assertThat(daysCount).isEqualTo(40)
     assertThat(range.minAggregation).isEqualTo(ChartDataAggregation.HOURS)
-    assertThat(range.maxAggregation).isEqualTo(ChartDataAggregation.MONTHS)
+    assertThat(range.maxAggregation(ChartRange.QUARTER)).isEqualTo(ChartDataAggregation.MONTHS)
   }
 
   @Test
@@ -109,7 +109,7 @@ class DateRangeTest {
     // then
     assertThat(daysCount).isEqualTo(101)
     assertThat(range.minAggregation).isEqualTo(ChartDataAggregation.DAYS)
-    assertThat(range.maxAggregation).isEqualTo(ChartDataAggregation.MONTHS)
+    assertThat(range.maxAggregation(ChartRange.QUARTER)).isEqualTo(ChartDataAggregation.MONTHS)
   }
 
   @Test
@@ -126,7 +126,7 @@ class DateRangeTest {
     // then
     assertThat(daysCount).isEqualTo(590)
     assertThat(range.minAggregation).isEqualTo(ChartDataAggregation.DAYS)
-    assertThat(range.maxAggregation).isEqualTo(ChartDataAggregation.YEARS)
+    assertThat(range.maxAggregation(ChartRange.YEAR)).isEqualTo(ChartDataAggregation.YEARS)
   }
 
   @Test

@@ -1,4 +1,21 @@
 package org.supla.android.ui.views
+/*
+ Copyright (C) AC SOFTWARE SP. Z O.O.
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
 
 import android.content.Context
 import android.util.AttributeSet
@@ -6,7 +23,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
@@ -65,6 +85,7 @@ fun SegmentedComponent(
     verticalAlignment = Alignment.CenterVertically,
     modifier = modifier
       .background(color = colorResource(id = R.color.segmented_field_background), shape = RoundedCornerShape(6.dp))
+      .height(IntrinsicSize.Max)
       .padding(2.dp),
     horizontalArrangement = Arrangement.spacedBy(10.dp)
   ) {
@@ -88,6 +109,7 @@ fun SegmentedComponent(
         },
         modifier = textModifier
           .padding(horizontal = 8.dp, vertical = 8.dp)
+          .fillMaxHeight()
           .weight(1f)
       )
     }

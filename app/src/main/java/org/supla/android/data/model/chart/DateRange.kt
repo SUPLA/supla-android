@@ -57,12 +57,15 @@ data class DateRange(
       else -> ChartDataAggregation.DAYS
     }
 
-  val maxAggregation: ChartDataAggregation
-    get() = when {
-      daysCount <= 1 -> ChartDataAggregation.HOURS
-      daysCount <= 31 -> ChartDataAggregation.DAYS
-      daysCount <= 420 -> ChartDataAggregation.MONTHS
-      else -> ChartDataAggregation.YEARS
+  fun maxAggregation(selectedRange: ChartRange): ChartDataAggregation =
+    when (selectedRange) {
+      ChartRange.CUSTOM, ChartRange.ALL_HISTORY -> ChartDataAggregation.YEARS
+      else -> when {
+        daysCount <= 1 -> ChartDataAggregation.HOURS
+        daysCount <= 31 -> ChartDataAggregation.DAYS
+        daysCount <= 420 -> ChartDataAggregation.MONTHS
+        else -> ChartDataAggregation.YEARS
+      }
     }
 
   fun shift(range: ChartRange, forward: Boolean): DateRange =

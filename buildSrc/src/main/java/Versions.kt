@@ -60,7 +60,7 @@ object Versions {
         const val JUnit = "4.13.2"
         const val Hamcrest = "1.3"
         const val Coroutines = "1.8.1"
-        const val Mockk = "1.13.11"
+        const val Mockk = "1.13.12"
         const val AssertJ = "3.26.0"
 
         object Mockito {

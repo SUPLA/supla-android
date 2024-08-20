@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <resources>
-  <declare-styleable name="PowerButtonView">
-    <attr name="text" format="string" />
-    <attr name="type" format="enum">
-      <enum name="positive" value="0" />
-      <enum name="negative" value="1" />
-    </attr>
-  </declare-styleable>
-
   <declare-styleable name="ThermostatListItemView">
     <attr name="hasLeftButton" format="boolean" />
     <attr name="hasRightButton" format="boolean" />

@@ -20,66 +20,25 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import android.database.Cursor;
 import java.util.Date;
-import org.supla.android.data.source.local.ElectricityMeterLogDao;
 import org.supla.android.data.source.local.ImpulseCounterLogDao;
 import org.supla.android.data.source.local.ThermostatLogDao;
-import org.supla.android.db.ElectricityMeasurementItem;
 import org.supla.android.db.ImpulseCounterMeasurementItem;
 import org.supla.android.db.ThermostatMeasurementItem;
 
 public class DefaultMeasurableItemsRepository implements MeasurableItemsRepository {
 
   private final ImpulseCounterLogDao impulseCounterLogDao;
-  private final ElectricityMeterLogDao electricityMeterLogDao;
   private final ThermostatLogDao thermostatLogDao;
 
   public DefaultMeasurableItemsRepository(
-      ImpulseCounterLogDao impulseCounterLogDao,
-      ElectricityMeterLogDao electricityMeterLogDao,
-      ThermostatLogDao thermostatLogDao) {
+      ImpulseCounterLogDao impulseCounterLogDao, ThermostatLogDao thermostatLogDao) {
     this.impulseCounterLogDao = impulseCounterLogDao;
-    this.electricityMeterLogDao = electricityMeterLogDao;
     this.thermostatLogDao = thermostatLogDao;
   }
 
   @Override
   public double getLastImpulseCounterMeasurementValue(int monthOffset, int channelId) {
     return impulseCounterLogDao.getLastImpulseCounterMeasurementValue(monthOffset, channelId);
-  }
-
-  @Override
-  public double getLastElectricityMeterMeasurementValue(
-      int monthOffset, int channelId, boolean production) {
-    return electricityMeterLogDao.getLastElectricityMeterMeasurementValue(
-        monthOffset, channelId, production);
-  }
-
-  @Override
-  public int getElectricityMeterMeasurementTimestamp(int channelId, boolean min) {
-    return electricityMeterLogDao.getElectricityMeterMeasurementTimestamp(channelId, min);
-  }
-
-  @Override
-  public int getElectricityMeterMeasurementTotalCount(int channelId, boolean withoutComplement) {
-    return electricityMeterLogDao.getElectricityMeterMeasurementTotalCount(
-        channelId, withoutComplement);
-  }
-
-  @Override
-  public void addElectricityMeasurement(ElectricityMeasurementItem emi) {
-    electricityMeterLogDao.addElectricityMeasurement(emi);
-  }
-
-  @Override
-  public Cursor getElectricityMeasurementsCursor(
-      int channelId, String groupByDateFormat, Date dateFrom, Date dateTo) {
-    return electricityMeterLogDao.getElectricityMeasurementsCursor(
-        channelId, groupByDateFormat, dateFrom, dateTo);
-  }
-
-  @Override
-  public void deleteElectricityMeasurements(int channelId) {
-    electricityMeterLogDao.deleteElectricityMeasurements(channelId);
   }
 
   @Override

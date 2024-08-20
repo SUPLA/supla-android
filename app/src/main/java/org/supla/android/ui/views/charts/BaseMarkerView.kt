@@ -106,13 +106,15 @@ abstract class BaseMarkerView(context: Context) : MarkerView(context, R.layout.v
   data class Row(
     val icon: ImageView,
     val label: TextView,
-    val value: TextView
+    val value: TextView,
+    val cost: TextView
   ) {
     fun hide() {
       icon.visibility = GONE
       (icon.layoutParams as? LinearLayout.LayoutParams)?.marginEnd = 0
       label.visibility = GONE
       value.visibility = GONE
+      cost.visibility = GONE
     }
 
     fun show(withIcon: Boolean = true, withLabel: Boolean = true) {
@@ -124,6 +126,9 @@ abstract class BaseMarkerView(context: Context) : MarkerView(context, R.layout.v
         label.visibility = VISIBLE
       }
       value.visibility = VISIBLE
+      if (cost.text.isNotEmpty()) {
+        cost.visibility = VISIBLE
+      }
     }
   }
 
@@ -131,12 +136,14 @@ abstract class BaseMarkerView(context: Context) : MarkerView(context, R.layout.v
     val typeface = ResourcesCompat.getFont(context, R.font.open_sans_bold)
     label.typeface = typeface
     value.typeface = typeface
+    cost.typeface = typeface
   }
 
   protected fun Row.regular() {
     val typeface = ResourcesCompat.getFont(context, R.font.open_sans_regular)
     label.typeface = typeface
     value.typeface = typeface
+    cost.typeface = typeface
   }
 }
 
@@ -171,6 +178,7 @@ class TableLayoutBuilder {
 
       add(layout)
       add(row.value)
+      add(row.cost)
     }
     return this
   }

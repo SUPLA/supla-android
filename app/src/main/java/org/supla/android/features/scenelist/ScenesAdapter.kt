@@ -64,7 +64,7 @@ class ScenesAdapter @Inject constructor(
   ): ViewHolder {
     val inflater = LayoutInflater.from(parent.context)
     return when (viewType) {
-      ViewType.SCENE_ITEM.identifier -> {
+      ViewType.SCENE_ITEM.ordinal -> {
         val binding = LiSceneItemBinding.inflate(inflater, parent, false)
         val holder = SceneListItemViewHolder(binding)
         holder

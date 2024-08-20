@@ -87,6 +87,7 @@ class ChannelWithChildrenToMeasurementUpdateEventMapperTest {
     val value = "value"
 
     val channel = mockk<ChannelDataEntity>()
+    every { channel.function } returns SUPLA_CHANNELFNC_DEPTHSENSOR
     every { channel.channelEntity } returns mockk { every { function } returns SUPLA_CHANNELFNC_DEPTHSENSOR }
     every { channel.channelValueEntity } returns mockk { every { this@mockk.online } returns online }
     every { channel.flags } returns 0
