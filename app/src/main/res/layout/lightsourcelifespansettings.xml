@@ -1,106 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:minHeight="150dp"
+  android:orientation="vertical">
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp"
+    android:orientation="horizontal">
+
+    <TextView
+      android:id="@+id/tvInfoTitle"
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent"
+      android:layout_weight="1"
+      android:ellipsize="middle"
+      android:gravity="center_vertical"
+      android:singleLine="true"
+      android:text="@string/channel_func_lightswitch"
+      android:textColor="@color/on_background"
+      android:textSize="25sp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+      android:id="@+id/btnClose"
+      android:layout_width="50dp"
+      android:layout_height="50dp"
+      android:layout_gravity="center_vertical"
+      android:layout_weight="0"
+      android:background="@drawable/infoclose" />
+
+  </LinearLayout>
+
+  <View
+    android:id="@+id/view8"
+    android:layout_width="match_parent"
+    android:layout_height="1dp"
+    android:background="@color/disabled" />
+
+  <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:minHeight="150dp"
+    android:layout_marginLeft="20dp"
+    android:layout_marginTop="20dp"
+    android:layout_marginRight="20dp"
+    android:layout_marginBottom="20dp"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:orientation="horizontal">
+    <CheckBox
+      android:id="@+id/cbReset"
+      style="@style/CheckBox"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="20dp"
+      android:layout_weight="0"
+      android:text="@string/reset_lightsource_usage_counter"
+      android:textColor="@color/red"
+      android:translationX="-5dp" />
 
-        <TextView
-            android:id="@+id/tvInfoTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:ellipsize="middle"
-            android:gravity="center_vertical"
-            android:singleLine="true"
-            android:text="@string/channel_func_lightswitch"
-            android:textColor="@color/on_background"
-            android:textSize="25sp" />
+    <EditText
+      android:id="@+id/edLifespan"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="@drawable/rounded_edittext"
+      android:ems="10"
+      android:inputType="numberSigned"
+      android:text="0"
+      android:textColor="@color/on_surface"
+      android:textSize="14sp" />
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btnClose"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="0"
-            android:background="@drawable/infoclose" />
-
-    </LinearLayout>
-
-    <View
-        android:id="@+id/view8"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/disabled" />
+    <TextView
+      android:id="@+id/tvLifespanTitle"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/light_source_lifespan_hours"
+      android:textColor="@color/on_background"
+      android:textSize="10sp" />
 
     <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="horizontal">
+
+      <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnCancel"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="20dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginBottom="20dp"
-        android:orientation="vertical">
+        android:layout_weight="1"
+        android:text="@android:string/cancel" />
 
-        <CheckBox
-            style="@style/CheckBox"
-            android:id="@+id/cbReset"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:layout_weight="0"
-            android:text="@string/reset_lightsource_usage_counter"
-            android:textColor="@color/red"
-            android:translationX="-5dp" />
-
-        <EditText
-            android:id="@+id/edLifespan"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/rounded_edittext"
-            android:ems="10"
-            android:inputType="numberSigned"
-            android:text="0"
-            android:textSize="14sp" />
-
-        <TextView
-            android:id="@+id/tvLifespanTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/light_source_lifespan_hours"
-            android:textColor="@color/on_background"
-            android:textSize="10sp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btnCancel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_weight="1"
-                android:text="@android:string/cancel" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btnOK"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_weight="1"
-                android:text="@string/ok" />
-
-        </LinearLayout>
+      <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnOK"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_weight="1"
+        android:text="@string/ok" />
 
     </LinearLayout>
+
+  </LinearLayout>
 
 </LinearLayout>
