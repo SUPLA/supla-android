@@ -70,7 +70,8 @@ class ElectricityConsumptionMeasurementsProvider @Inject constructor(
     when (function) {
       SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER,
       SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH,
-      SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH -> true
+      SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH,
+      SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER -> true
 
       else -> false
     }

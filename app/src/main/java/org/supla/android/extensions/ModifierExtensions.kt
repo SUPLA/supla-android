@@ -136,7 +136,7 @@ fun Modifier.innerShadow(
 }
 
 @Composable
-fun Modifier.disabledOverlay(disabled: Boolean, color: Color = colorResource(id = R.color.disabledOverlay)) =
+fun Modifier.disabledOverlay(disabled: Boolean, radius: Dp? = null, color: Color = colorResource(id = R.color.disabledOverlay)) =
   composed {
     val paint = remember {
       Paint().also { it.color = color }
@@ -147,7 +147,11 @@ fun Modifier.disabledOverlay(disabled: Boolean, color: Color = colorResource(id 
 
       if (disabled) {
         drawIntoCanvas {
-          it.drawRect(0f, 0f, size.width, size.height, paint)
+          if (radius != null) {
+            it.drawRoundRect(0f, 0f, size.width, size.height, radius.toPx(), radius.toPx(), paint)
+          } else {
+            it.drawRect(0f, 0f, size.width, size.height, paint)
+          }
         }
       }
     }
