@@ -91,8 +91,6 @@ fun SuplaChannelFunction.hasCustomFilters(): Boolean =
     SuplaChannelFunction.CONTROLLING_THE_ROOF_WINDOW,
     SuplaChannelFunction.OPEN_SENSOR_ROLLER_SHUTTER,
     SuplaChannelFunction.OPEN_SENSOR_ROOF_WINDOW,
-    SuplaChannelFunction.POWER_SWITCH,
-    SuplaChannelFunction.LIGHTSWITCH,
     SuplaChannelFunction.RING,
     SuplaChannelFunction.ALARM,
     SuplaChannelFunction.NOTIFICATION,
@@ -110,7 +108,6 @@ fun SuplaChannelFunction.hasCustomFilters(): Boolean =
     SuplaChannelFunction.RAIN_SENSOR,
     SuplaChannelFunction.WEIGHT_SENSOR,
     SuplaChannelFunction.WEATHER_STATION,
-    SuplaChannelFunction.STAIRCASE_TIMER,
     SuplaChannelFunction.IC_ELECTRICITY_METER,
     SuplaChannelFunction.IC_GAS_METER,
     SuplaChannelFunction.IC_WATER_METER,
@@ -133,5 +130,8 @@ fun SuplaChannelFunction.hasCustomFilters(): Boolean =
     SuplaChannelFunction.ROLLER_GARAGE_DOOR,
     SuplaChannelFunction.HUMIDITY_AND_TEMPERATURE -> false
 
-    SuplaChannelFunction.ELECTRICITY_METER -> true
+    SuplaChannelFunction.ELECTRICITY_METER,
+    SuplaChannelFunction.POWER_SWITCH,
+    SuplaChannelFunction.LIGHTSWITCH,
+    SuplaChannelFunction.STAIRCASE_TIMER -> true
   }

@@ -141,18 +141,19 @@ private fun Button(
   pressed: Boolean = false,
   colors: SuplaButtonColors = SuplaButtonDefaults.buttonColors(),
   onClick: () -> Unit
-) =
+) {
+  val shape = SuplaButtonDefaults.allRoundedShape()
   SuplaButton(
     onClick = onClick,
-    modifier = modifier,
+    modifier = modifier.disabledOverlay(disabled, radius = shape.topEndRadius),
     disabled = disabled,
     active = pressed,
-    colors = colors
+    colors = colors,
+    shape = shape
   ) {
     Row(
       modifier = Modifier
         .align(Alignment.Center)
-        .disabledOverlay(disabled)
         .padding(horizontal = Distance.small),
       verticalAlignment = Alignment.CenterVertically,
       horizontalArrangement = Arrangement.spacedBy(Distance.tiny)
@@ -175,6 +176,7 @@ private fun Button(
       )
     }
   }
+}
 
 @Preview(showBackground = true)
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
@@ -183,6 +185,23 @@ private fun Preview() {
   SuplaTheme {
     SwitchGeneralView(
       state = SwitchGeneralViewState(
+        deviceStateLabel = { it.getString(R.string.details_timer_state_label) },
+        deviceStateIcon = { ResourcesCompat.getDrawable(it.resources, R.drawable.fnc_switch_on, null)!!.toBitmap() },
+        onIcon = { ResourcesCompat.getDrawable(it.resources, R.drawable.fnc_switch_on, null)!!.toBitmap() },
+        offIcon = { ResourcesCompat.getDrawable(it.resources, R.drawable.fnc_switch_off, null)!!.toBitmap() }
+      )
+    )
+  }
+}
+
+@Preview(name = "Disabled", showBackground = true)
+@Preview(name = "Disabled", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun Preview_Disabled() {
+  SuplaTheme {
+    SwitchGeneralView(
+      state = SwitchGeneralViewState(
+        online = false,
         deviceStateLabel = { it.getString(R.string.details_timer_state_label) },
         deviceStateIcon = { ResourcesCompat.getDrawable(it.resources, R.drawable.fnc_switch_on, null)!!.toBitmap() },
         onIcon = { ResourcesCompat.getDrawable(it.resources, R.drawable.fnc_switch_on, null)!!.toBitmap() },

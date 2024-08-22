@@ -67,7 +67,8 @@ class DownloadChannelMeasurementsUseCase @Inject constructor(
 
       SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER,
       SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH,
-      SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH ->
+      SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH,
+      SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER ->
         workManagerProxy.enqueueUniqueWork(
           "${DownloadElectricityMeasurementsWorker.WORK_ID}.$remoteId",
           ExistingWorkPolicy.KEEP,
