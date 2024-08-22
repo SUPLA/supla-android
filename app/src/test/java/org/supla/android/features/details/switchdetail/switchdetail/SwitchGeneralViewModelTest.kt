@@ -39,6 +39,7 @@ import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.data.source.runtime.ItemType
+import org.supla.android.events.DownloadEventsManager
 import org.supla.android.features.details.switchdetail.general.SwitchGeneralViewEvent
 import org.supla.android.features.details.switchdetail.general.SwitchGeneralViewModel
 import org.supla.android.features.details.switchdetail.general.SwitchGeneralViewState
@@ -49,6 +50,7 @@ import org.supla.android.lib.actions.ActionId
 import org.supla.android.testhelpers.extensions.extract
 import org.supla.android.testhelpers.extensions.extractResId
 import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.usecases.channel.DownloadChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.GetChannelStateUseCase
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.channel.electricitymeter.LoadElectricityMeterMeasurementsUseCase
@@ -85,6 +87,12 @@ class SwitchGeneralViewModelTest :
   @MockK
   private lateinit var loadElectricityMeterMeasurementsUseCase: LoadElectricityMeterMeasurementsUseCase
 
+  @MockK
+  private lateinit var downloadEventsManager: DownloadEventsManager
+
+  @MockK
+  private lateinit var downloadChannelMeasurementsUseCase: DownloadChannelMeasurementsUseCase
+
   @InjectMockKs
   override lateinit var viewModel: SwitchGeneralViewModel
 
@@ -99,7 +107,7 @@ class SwitchGeneralViewModelTest :
     // given
     val remoteId = 123
     val function = SUPLA_CHANNELFNC_POWERSWITCH
-    val channelData: ChannelDataEntity = mockChannelData(function)
+    val channelData: ChannelDataEntity = mockChannelData(remoteId, function)
     val stateIcon: BitmapProvider = mockk()
     val onIcon: BitmapProvider = mockk()
     val offIcon: BitmapProvider = mockk()
@@ -155,6 +163,7 @@ class SwitchGeneralViewModelTest :
     val function = SUPLA_CHANNELFNC_POWERSWITCH
     val group: ChannelGroupDataEntity = mockk {
       every { this@mockk.function } returns function
+      every { this@mockk.remoteId } returns remoteId
       every { isOnline() } returns true
     }
     val stateIcon: BitmapProvider = mockk()
@@ -265,7 +274,7 @@ class SwitchGeneralViewModelTest :
     val estimatedEndDate = Date(1000)
     every { dateProvider.currentDate() } returns Date(100)
 
-    val channelData: ChannelDataEntity = mockChannelData(function, estimatedEndDate)
+    val channelData: ChannelDataEntity = mockChannelData(remoteId, function, estimatedEndDate)
 
     every { readChannelByRemoteIdUseCase.invoke(remoteId) } returns Maybe.just(channelData)
     every { getChannelStateUseCase.invoke(channelData) } returns mockk { every { isActive() } returns true }
@@ -330,7 +339,7 @@ class SwitchGeneralViewModelTest :
     val estimatedEndDate = Date(1000)
     every { dateProvider.currentDate() } returns Date(1003)
 
-    val channelData: ChannelDataEntity = mockChannelData(function, estimatedEndDate)
+    val channelData: ChannelDataEntity = mockChannelData(remoteId, function, estimatedEndDate)
     every { readChannelByRemoteIdUseCase.invoke(remoteId) } returns Maybe.just(channelData)
     every { getChannelStateUseCase.invoke(channelData) } returns mockk { every { isActive() } returns true }
     every { getChannelIconUseCase.getIconProvider(channelData) } returns stateIcon
@@ -384,9 +393,10 @@ class SwitchGeneralViewModelTest :
     return extendedValue
   }
 
-  private fun mockChannelData(function: Int, estimatedEndDate: Date? = null): ChannelDataEntity {
+  private fun mockChannelData(remoteId: Int, function: Int, estimatedEndDate: Date? = null): ChannelDataEntity {
     return mockk {
       every { this@mockk.function } returns function
+      every { this@mockk.remoteId } returns remoteId
       every { isOnline() } returns true
       every { channelExtendedValueEntity } returns estimatedEndDate?.let { mockTimerState(estimatedEndDate) }
       every { channelValueEntity } returns mockk {

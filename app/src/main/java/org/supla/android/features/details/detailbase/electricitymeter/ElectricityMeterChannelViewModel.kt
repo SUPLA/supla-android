@@ -35,7 +35,11 @@ import org.supla.android.usecases.channel.valueformatter.ChartMarkerElectricityM
 
 interface ElectricityMeterChannelViewModel {
 
-  fun getElectricityMeterState(channel: ChannelDataEntity, measurements: ElectricityMeasurements? = null): ElectricityMeterState? {
+  fun updateElectricityMeterState(
+    state: ElectricityMeterState?,
+    channel: ChannelDataEntity,
+    measurements: ElectricityMeasurements? = null
+  ): ElectricityMeterState? {
     val (extendedValue) = guardLet(channel.Electricity.value) { return null }
     val totalForwardActiveEnergy = extendedValue.summary.totalForwardActiveEnergy
     val totalReverseActiveEnergy = extendedValue.summary.totalReverseActiveEnergy
@@ -59,7 +63,7 @@ interface ElectricityMeterChannelViewModel {
       null
     }
 
-    return ElectricityMeterState(
+    return state.copyOrCreate(
       online = channel.isOnline(),
       totalForwardActiveEnergy = getForwardEnergy(extendedValue, totalForwardActiveEnergy.toFloat(), formatter),
       totalReversedActiveEnergy = getReverseEnergy(extendedValue, totalReverseActiveEnergy.toFloat(), formatter),

@@ -31,14 +31,17 @@ import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.model.general.ChannelState
+import org.supla.android.data.model.general.hasElectricityMeter
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.data.source.runtime.ItemType
+import org.supla.android.events.DownloadEventsManager
 import org.supla.android.extensions.monthStart
 import org.supla.android.features.details.detailbase.electricitymeter.ElectricityMeterChannelViewModel
 import org.supla.android.features.details.detailbase.electricitymeter.ElectricityMeterState
-import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.usecases.channel.DownloadChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.GetChannelStateUseCase
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.channel.electricitymeter.ElectricityMeasurements
@@ -51,20 +54,26 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SwitchGeneralViewModel @Inject constructor(
-  private val readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
-  private val readChannelGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase,
-  private val getChannelStateUseCase: GetChannelStateUseCase,
-  private val executeSimpleActionUseCase: ExecuteSimpleActionUseCase,
-  private val dateProvider: DateProvider,
-  private val getChannelIconUseCase: GetChannelIconUseCase,
   private val loadElectricityMeterMeasurementsUseCase: LoadElectricityMeterMeasurementsUseCase,
+  private val downloadChannelMeasurementsUseCase: DownloadChannelMeasurementsUseCase,
+  private val readChannelGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase,
+  private val readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
+  private val executeSimpleActionUseCase: ExecuteSimpleActionUseCase,
+  private val getChannelStateUseCase: GetChannelStateUseCase,
+  private val getChannelIconUseCase: GetChannelIconUseCase,
+  private val downloadEventsManager: DownloadEventsManager,
+  private val dateProvider: DateProvider,
   schedulers: SuplaSchedulers
 ) : BaseViewModel<SwitchGeneralViewState, SwitchGeneralViewEvent>(SwitchGeneralViewState(), schedulers), ElectricityMeterChannelViewModel {
 
-  fun loadData(remoteId: Int, itemType: ItemType) {
+  fun onViewCreated(remoteId: Int) {
+    observeDownload(remoteId)
+  }
+
+  fun loadData(remoteId: Int, itemType: ItemType, cleanupDownloading: Boolean = false) {
     getDataSource(remoteId, itemType)
       .flatMap { channelBase ->
-        if ((channelBase as? ChannelDataEntity)?.channelValueEntity?.subValueType == SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort()) {
+        if (channelBase.hasElectricityMeter) {
           loadElectricityMeterMeasurementsUseCase(remoteId, dateProvider.currentDate().monthStart())
             .map { Pair(channelBase, it) }
         } else {
@@ -73,7 +82,7 @@ class SwitchGeneralViewModel @Inject constructor(
       }
       .attach()
       .subscribeBy(
-        onSuccess = { (channelBase, measurements) -> handleData(channelBase, measurements) },
+        onSuccess = { (channelBase, measurements) -> handleData(channelBase, measurements, cleanupDownloading) },
         onError = defaultErrorHandler("loadData($remoteId, $itemType)")
       )
       .disposeBySelf()
@@ -99,16 +108,28 @@ class SwitchGeneralViewModel @Inject constructor(
       .disposeBySelf()
   }
 
-  private fun handleData(data: ChannelDataBase, measurements: ElectricityMeasurements?) {
+  private fun handleData(data: ChannelDataBase, measurements: ElectricityMeasurements?, cleanupDownloading: Boolean) {
     updateState { state ->
+      if (data.hasElectricityMeter && !state.initialDataLoadStarted) {
+        downloadChannelMeasurementsUseCase.invoke(data.remoteId, data.profileId, data.function)
+      }
+
+      val downloading = if (cleanupDownloading) false else (state.electricityMeterState?.currentMonthDownloading ?: false)
+
       state.copy(
+        remoteId = data.remoteId,
+        itemType = if (data is ChannelGroupDataEntity) ItemType.GROUP else ItemType.CHANNEL,
         online = data.isOnline(),
+        initialDataLoadStarted = true,
         deviceStateLabel = getDeviceStateLabel(data),
         deviceStateIcon = getChannelIconUseCase.getIconProvider(data),
         deviceStateValue = getDeviceStateValue(data),
         onIcon = getChannelIconUseCase.getIconProvider(data, channelStateValue = ChannelState.Value.ON),
         offIcon = getChannelIconUseCase.getIconProvider(data, channelStateValue = ChannelState.Value.OFF),
-        electricityMeterState = (data as? ChannelDataEntity)?.let { getElectricityMeterState(it, measurements) }
+        electricityMeterState = (data as? ChannelDataEntity)?.let {
+          updateElectricityMeterState(state.electricityMeterState, it, measurements)
+            ?.copy(currentMonthDownloading = downloading)
+        }
       )
     }
   }
@@ -141,12 +162,45 @@ class SwitchGeneralViewModel @Inject constructor(
     getChannelStateUseCase(data).isActive() -> R.string.details_timer_device_on
     else -> R.string.details_timer_device_off
   }
+
+  private fun observeDownload(remoteId: Int) {
+    downloadEventsManager.observeProgress(remoteId).attachSilent()
+      .distinctUntilChanged()
+      .subscribeBy(
+        onNext = { handleDownloadEvents(it) },
+        onError = defaultErrorHandler("configureDownloadObserver")
+      )
+      .disposeBySelf()
+  }
+
+  private fun handleDownloadEvents(downloadState: DownloadEventsManager.State) {
+    when (downloadState) {
+      is DownloadEventsManager.State.InProgress,
+      is DownloadEventsManager.State.Started -> {
+        updateState {
+          it.copy(
+            electricityMeterState = it.electricityMeterState?.copy(currentMonthDownloading = true)
+          )
+        }
+      }
+
+      else -> {
+        with(currentState()) {
+          loadData(remoteId, itemType, cleanupDownloading = true)
+        }
+      }
+    }
+  }
 }
 
 sealed class SwitchGeneralViewEvent : ViewEvent
 
 data class SwitchGeneralViewState(
-  val online: Boolean = false,
+  val remoteId: Int = 0,
+  val itemType: ItemType = ItemType.CHANNEL,
+  val initialDataLoadStarted: Boolean = false,
+  val online: Boolean? = null,
+
   val deviceStateLabel: StringProvider = { "" },
   val deviceStateIcon: BitmapProvider? = null,
   @StringRes val deviceStateValue: Int = R.string.offline,
