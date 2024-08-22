@@ -333,7 +333,8 @@ private fun Preview() {
           .width(500.dp)
           .height(100.dp)
       ) {
-        ListItemScaffold(itemTitle = "Power Switch", itemOnline = false, null, { }, { }, { }, { }, null, scale = 1f, showInfoIcon = false) {
+        ListItemScaffold(itemTitle = "Power Switch", itemOnline = false, Date(), {
+        }, { }, { }, { }, null, scale = 1f, showInfoIcon = false) {
         }
       }
     }

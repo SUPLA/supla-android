@@ -17,7 +17,6 @@ package org.supla.android.ui.views.list
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-
 import android.content.Context
 import android.util.AttributeSet
 import androidx.compose.foundation.background

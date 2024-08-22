@@ -17,7 +17,6 @@ package org.supla.android.core.debugtools
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-
 import android.util.Log
 import org.supla.android.extensions.TAG
 import org.supla.android.extensions.guardLet
@@ -39,6 +38,6 @@ object DelayAnalyzer {
     }
 
     val date = Date()
-    Log.d(TAG, "Control point `${description}` with time ${date.time.minus(startTime)} ms")
+    Log.d(TAG, "Control point `$description` with time ${date.time.minus(startTime)} ms")
   }
 }

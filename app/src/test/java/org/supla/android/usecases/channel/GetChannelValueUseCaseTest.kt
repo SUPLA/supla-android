@@ -34,6 +34,7 @@ import org.supla.android.lib.SuplaConst
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HUMIDITY
 import org.supla.android.usecases.channel.valueprovider.DepthSensorValueProvider
 import org.supla.android.usecases.channel.valueprovider.DistanceSensorValueProvider
+import org.supla.android.usecases.channel.valueprovider.ElectricityMeterValueProvider
 import org.supla.android.usecases.channel.valueprovider.GpmValueProvider
 import org.supla.android.usecases.channel.valueprovider.HumidityAndTemperatureValueProvider
 import org.supla.android.usecases.channel.valueprovider.ThermometerValueProvider
@@ -55,6 +56,9 @@ class GetChannelValueUseCaseTest {
 
   @Mock
   private lateinit var distanceSensorValueProvider: DistanceSensorValueProvider
+
+  @Mock
+  private lateinit var electricityMeterValueProvider: ElectricityMeterValueProvider
 
   @InjectMocks
   private lateinit var useCase: GetChannelValueUseCase

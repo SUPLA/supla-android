@@ -61,7 +61,7 @@ class ChannelWithChildrenToSwitchUpdateEventMapper @Inject constructor(
       icon = getChannelIconUseCase.invoke(channelData),
       value = value,
       issueIconType = null,
-      estimatedTimerEndDate = null,
+      estimatedTimerEndDate = channelData.channelExtendedValueEntity?.getSuplaValue()?.TimerStateValue?.countdownEndsAt,
       infoSupported = SuplaChannelFlag.CHANNEL_STATE.inside(channelData.flags)
     )
   }

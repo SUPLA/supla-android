@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.usecases.channel.valueprovider.DepthSensorValueProvider
 import org.supla.android.usecases.channel.valueprovider.DistanceSensorValueProvider
+import org.supla.android.usecases.channel.valueprovider.ElectricityMeterValueProvider
 import org.supla.android.usecases.channel.valueprovider.GpmValueProvider
 import org.supla.android.usecases.channel.valueprovider.HumidityAndTemperatureValueProvider
 import org.supla.android.usecases.channel.valueprovider.ThermometerValueProvider
@@ -32,7 +33,8 @@ class GetChannelValueUseCase @Inject constructor(
   gpmValueProvider: GpmValueProvider,
   humidityAndTemperatureValueProvider: HumidityAndTemperatureValueProvider,
   thermometerValueProvider: ThermometerValueProvider,
-  distanceSensorValueProvider: DistanceSensorValueProvider
+  distanceSensorValueProvider: DistanceSensorValueProvider,
+  electricityMeterValueProvider: ElectricityMeterValueProvider
 ) {
 
   private val providers = listOf(
@@ -40,7 +42,8 @@ class GetChannelValueUseCase @Inject constructor(
     gpmValueProvider,
     humidityAndTemperatureValueProvider,
     thermometerValueProvider,
-    distanceSensorValueProvider
+    distanceSensorValueProvider,
+    electricityMeterValueProvider
   )
 
   @Suppress("UNCHECKED_CAST")

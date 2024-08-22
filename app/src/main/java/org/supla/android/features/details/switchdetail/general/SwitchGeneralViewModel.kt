@@ -43,6 +43,7 @@ import org.supla.android.lib.actions.ActionId
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.DownloadChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.GetChannelStateUseCase
+import org.supla.android.usecases.channel.GetChannelValueUseCase
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.channel.electricitymeter.ElectricityMeasurements
 import org.supla.android.usecases.channel.electricitymeter.LoadElectricityMeterMeasurementsUseCase
@@ -59,6 +60,7 @@ class SwitchGeneralViewModel @Inject constructor(
   private val readChannelGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase,
   private val readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
   private val executeSimpleActionUseCase: ExecuteSimpleActionUseCase,
+  private val getChannelValueUseCase: GetChannelValueUseCase,
   private val getChannelStateUseCase: GetChannelStateUseCase,
   private val getChannelIconUseCase: GetChannelIconUseCase,
   private val downloadEventsManager: DownloadEventsManager,
@@ -127,7 +129,7 @@ class SwitchGeneralViewModel @Inject constructor(
         onIcon = getChannelIconUseCase.getIconProvider(data, channelStateValue = ChannelState.Value.ON),
         offIcon = getChannelIconUseCase.getIconProvider(data, channelStateValue = ChannelState.Value.OFF),
         electricityMeterState = (data as? ChannelDataEntity)?.let {
-          updateElectricityMeterState(state.electricityMeterState, it, measurements)
+          updateElectricityMeterState(state.electricityMeterState, it, measurements, getChannelValueUseCase)
             ?.copy(currentMonthDownloading = downloading)
         }
       )

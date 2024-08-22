@@ -52,6 +52,7 @@ import org.supla.android.testhelpers.extensions.extractResId
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.DownloadChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.GetChannelStateUseCase
+import org.supla.android.usecases.channel.GetChannelValueUseCase
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.channel.electricitymeter.LoadElectricityMeterMeasurementsUseCase
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
@@ -92,6 +93,9 @@ class SwitchGeneralViewModelTest :
 
   @MockK
   private lateinit var downloadChannelMeasurementsUseCase: DownloadChannelMeasurementsUseCase
+
+  @MockK
+  private lateinit var getChannelValueUseCase: GetChannelValueUseCase
 
   @InjectMockKs
   override lateinit var viewModel: SwitchGeneralViewModel
@@ -401,6 +405,9 @@ class SwitchGeneralViewModelTest :
       every { channelExtendedValueEntity } returns estimatedEndDate?.let { mockTimerState(estimatedEndDate) }
       every { channelValueEntity } returns mockk {
         every { subValueType } returns 0
+      }
+      every { channelEntity } returns mockk {
+        every { this@mockk.function } returns function
       }
     }
   }

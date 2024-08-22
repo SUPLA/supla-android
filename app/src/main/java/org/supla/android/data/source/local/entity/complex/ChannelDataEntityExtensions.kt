@@ -17,9 +17,11 @@ package org.supla.android.data.source.local.entity.complex
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import org.supla.android.Trace
 import org.supla.android.data.model.general.hasElectricityMeter
 import org.supla.android.data.source.local.entity.custom.Phase
 import org.supla.android.data.source.local.entity.hasMeasurements
+import org.supla.android.data.source.local.entity.isElectricityMeter
 import org.supla.android.data.source.local.entity.isFacadeBlind
 import org.supla.android.data.source.local.entity.isGpMeasurement
 import org.supla.android.data.source.local.entity.isGpMeter
@@ -31,6 +33,7 @@ import org.supla.android.data.source.local.entity.isThermometer
 import org.supla.android.data.source.local.entity.isVerticalBlind
 import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType
 import org.supla.android.data.source.remote.channel.suplaElectricityMeterMeasuredTypes
+import org.supla.android.extensions.TAG
 import org.supla.android.lib.SuplaChannelElectricityMeterValue
 import org.supla.android.lib.SuplaConst
 
@@ -41,6 +44,8 @@ fun ChannelDataEntity.isGpm() = channelEntity.isGpm()
 fun ChannelDataEntity.isGpMeasurement() = channelEntity.isGpMeasurement()
 
 fun ChannelDataEntity.isGpMeter() = channelEntity.isGpMeter()
+
+fun ChannelDataEntity.isElectricityMeter() = channelEntity.isElectricityMeter()
 
 fun ChannelDataEntity.isHvacThermostat() = channelEntity.isHvacThermostat()
 
@@ -79,7 +84,12 @@ value class ChannelDataElectricityExtension(private val channelData: ChannelData
       .filter { channelData.flags and it.disabledFlag.rawValue == 0L }
 
   val value: SuplaChannelElectricityMeterValue?
-    get() = channelData.channelExtendedValueEntity?.getSuplaValue()?.ElectricityMeterValue
+    get() = try {
+      channelData.channelExtendedValueEntity?.getSuplaValue()?.ElectricityMeterValue
+    } catch (ex: Exception) {
+      Trace.w(TAG, "Could not get electricity meter value", ex)
+      null
+    }
 
   val measuredTypes: List<SuplaElectricityMeasurementType>
     get() = value?.measuredValues?.suplaElectricityMeterMeasuredTypes ?: emptyList()
