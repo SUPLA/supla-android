@@ -38,7 +38,7 @@ class GpmValueFormatter(
     function == SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT ||
       function == SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER
 
-  override fun format(value: Any, withUnit: Boolean, precision: ChannelValueFormatter.Precision): String {
+  override fun format(value: Any, withUnit: Boolean, precision: ChannelValueFormatter.Precision, custom: Any?): String {
     val (doubleValue) = guardLet(value as? Double) { return ValuesFormatter.NO_VALUE_TEXT }
     if (doubleValue.isNaN()) {
       return ValuesFormatter.NO_VALUE_TEXT

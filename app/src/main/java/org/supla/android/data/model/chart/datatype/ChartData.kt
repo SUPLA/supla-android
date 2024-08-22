@@ -219,7 +219,7 @@ abstract class ChartData(
 private class DefaultValueFormatter : ChannelValueFormatter {
   override fun handle(function: Int): Boolean = true
 
-  override fun format(value: Any, withUnit: Boolean, precision: ChannelValueFormatter.Precision): String {
+  override fun format(value: Any, withUnit: Boolean, precision: ChannelValueFormatter.Precision, custom: Any?): String {
     (value as? Double)?.let {
       return String.format("%.2f", it)
     }

@@ -19,8 +19,10 @@ package org.supla.android.features.details.detailbase.electricitymeter
 
 import android.annotation.SuppressLint
 import org.supla.android.R
+import org.supla.android.data.model.general.hasElectricityMeter
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.Electricity
+import org.supla.android.data.source.local.entity.complex.isElectricityMeter
 import org.supla.android.data.source.local.entity.custom.Phase
 import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType
 import org.supla.android.data.source.remote.channel.suplaElectricityMeterMeasuredTypes
@@ -29,6 +31,7 @@ import org.supla.android.extensions.ifTrue
 import org.supla.android.lib.SuplaChannelElectricityMeterValue
 import org.supla.android.lib.SuplaChannelElectricityMeterValue.Measurement
 import org.supla.android.lib.SuplaChannelElectricityMeterValue.Summary
+import org.supla.android.usecases.channel.GetChannelValueUseCase
 import org.supla.android.usecases.channel.electricitymeter.ElectricityMeasurements
 import org.supla.android.usecases.channel.valueformatter.ChannelValueFormatter
 import org.supla.android.usecases.channel.valueformatter.ChartMarkerElectricityMeterValueFormatter
@@ -38,9 +41,13 @@ interface ElectricityMeterChannelViewModel {
   fun updateElectricityMeterState(
     state: ElectricityMeterState?,
     channel: ChannelDataEntity,
-    measurements: ElectricityMeasurements? = null
+    measurements: ElectricityMeasurements? = null,
+    getChannelValueUseCase: GetChannelValueUseCase
   ): ElectricityMeterState? {
-    val (extendedValue) = guardLet(channel.Electricity.value) { return null }
+    val (extendedValue) = guardLet(channel.Electricity.value) {
+      return tryLoadOfflineData(state, channel, measurements, getChannelValueUseCase)
+    }
+
     val totalForwardActiveEnergy = extendedValue.summary.totalForwardActiveEnergy
     val totalReverseActiveEnergy = extendedValue.summary.totalReverseActiveEnergy
     val formatter = ChartMarkerElectricityMeterValueFormatter()
@@ -72,6 +79,31 @@ interface ElectricityMeterChannelViewModel {
       phaseMeasurementTypes = phaseTypes,
       phaseMeasurementValues = getPhaseData(phaseTypes, channel.flags, extendedValue, formatter),
       vectorBalancedValues = vectorBalancedValues
+    )
+  }
+
+  private fun tryLoadOfflineData(
+    state: ElectricityMeterState?,
+    channel: ChannelDataEntity,
+    measurements: ElectricityMeasurements? = null,
+    getChannelValueUseCase: GetChannelValueUseCase
+  ): ElectricityMeterState? {
+    if (!channel.isElectricityMeter() && !channel.hasElectricityMeter) {
+      return state
+    }
+
+    val value: Double = getChannelValueUseCase(channel)
+    val formatter = ChartMarkerElectricityMeterValueFormatter()
+
+    return state.copyOrCreate(
+      online = channel.isOnline(),
+      totalForwardActiveEnergy = EnergyData(energy = formatter.format(value), price = null),
+      totalReversedActiveEnergy = null,
+      currentMonthForwardActiveEnergy = measurements?.let { EnergyData(energy = formatter.format(it.forwardActiveEnergy), price = null) },
+      currentMonthReversedActiveEnergy = measurements?.let { EnergyData(energy = formatter.format(it.reversedActiveEnergy), price = null) },
+      phaseMeasurementTypes = emptyList(),
+      phaseMeasurementValues = emptyList(),
+      vectorBalancedValues = emptyMap()
     )
   }
 

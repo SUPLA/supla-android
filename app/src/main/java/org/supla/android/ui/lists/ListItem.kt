@@ -122,8 +122,21 @@ sealed interface ListItem {
     online: Boolean,
     captionProvider: StringProvider,
     icon: ImageId,
-    value: String?
-  ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, value, null, null)
+    value: String?,
+    private val estimatedTimerEndDate: Date?,
+  ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, value, null, null) {
+    override fun toSlideableListItemData(): SlideableListItemData {
+      return SlideableListItemData.Default(
+        online = online,
+        titleProvider = captionProvider,
+        icon = icon,
+        value = value,
+        issueIconType = issueIconType,
+        estimatedTimerEndDate = estimatedTimerEndDate,
+        infoSupported = SuplaChannelFlag.CHANNEL_STATE.inside(channel.flags)
+      )
+    }
+  }
 
   class GeneralPurposeMeterItem(
     channel: ChannelDataEntity,

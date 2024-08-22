@@ -28,7 +28,7 @@ class ThermometerValueFormatter(private val preferences: Preferences) : ChannelV
   override fun handle(function: Int): Boolean =
     function == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
 
-  override fun format(value: Any, withUnit: Boolean, precision: ChannelValueFormatter.Precision): String {
+  override fun format(value: Any, withUnit: Boolean, precision: ChannelValueFormatter.Precision, custom: Any?): String {
     val (doubleValue) = guardLet(value as? Double) { return NO_VALUE_TEXT }
     if (doubleValue <= ThermometerValueProvider.UNKNOWN_VALUE) {
       return NO_VALUE_TEXT

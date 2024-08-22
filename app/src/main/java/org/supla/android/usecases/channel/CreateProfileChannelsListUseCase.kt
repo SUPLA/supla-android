@@ -203,7 +203,8 @@ class CreateProfileChannelsListUseCase @Inject constructor(
       channelData.channelValueEntity.online,
       getChannelCaptionUseCase(channelData),
       getChannelIconUseCase(channelData),
-      value = value
+      value = value,
+      channelData.channelExtendedValueEntity?.getSuplaValue()?.TimerStateValue?.countdownEndsAt
     )
   }
 

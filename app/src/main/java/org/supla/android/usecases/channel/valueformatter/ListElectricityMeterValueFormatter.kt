@@ -18,6 +18,7 @@ package org.supla.android.usecases.channel.valueformatter
  */
 
 import org.supla.android.data.ValuesFormatter.Companion.NO_VALUE_TEXT
+import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType
 import org.supla.android.extensions.ifLet
 import org.supla.android.lib.SuplaConst
 import org.supla.android.usecases.channel.valueprovider.ElectricityMeterValueProvider
@@ -26,22 +27,26 @@ import kotlin.math.abs
 
 class ListElectricityMeterValueFormatter : BaseElectricityMeterValueFormatter() {
 
-  override var unit: String = "kWh"
-
-  override fun format(value: Any, withUnit: Boolean, precision: ChannelValueFormatter.Precision): String {
-    ifLet(value as? Double) { (value) -> return formatDouble(value, withUnit, precisionProvider = { getPrecision(it, precision) }) }
-    ifLet(value as? Float) { (value) -> return formatFloat(value, withUnit, precisionProvider = { getPrecision(it, precision) }) }
+  override fun format(value: Any, withUnit: Boolean, precision: ChannelValueFormatter.Precision, custom: Any?): String {
+    val unit = (custom as? SuplaElectricityMeasurementType)?.unit ?: "kWh"
+    val checkNoValue = custom == SuplaElectricityMeasurementType.FORWARD_ACTIVE_ENERGY
+    ifLet(value as? Double) { (value) ->
+      return formatDouble(value, if (withUnit) unit else "", { getPrecision(it, precision) }, checkNoValue)
+    }
+    ifLet(value as? Float) { (value) ->
+      return formatFloat(value, if (withUnit) unit else "", { getPrecision(it, precision) }, checkNoValue)
+    }
 
     return NO_VALUE_TEXT
   }
 }
 
 class ChartMarkerElectricityMeterValueFormatter : BaseElectricityMeterValueFormatter() {
-  override fun format(value: Any, withUnit: Boolean, precision: ChannelValueFormatter.Precision): String {
+  override fun format(value: Any, withUnit: Boolean, precision: ChannelValueFormatter.Precision, custom: Any?): String {
     ifLet(value as? Double) { (value) ->
       return formatDouble(
         value,
-        withUnit,
+        if (withUnit) "kWh" else "",
         precisionProvider = { getPrecision(it, precision) },
         checkNoValue = false
       )
@@ -49,22 +54,22 @@ class ChartMarkerElectricityMeterValueFormatter : BaseElectricityMeterValueForma
     ifLet(value as? Float) { (value) ->
       return formatFloat(
         value,
-        withUnit,
+        if (withUnit) "kWh" else "",
         precisionProvider = { getPrecision(it, precision) },
         checkNoValue = false
       )
     }
 
-    return formatFloat(0f, withUnit, precisionProvider = { getPrecision(it, precision) }, checkNoValue = false)
+    return formatFloat(0f, if (withUnit) "kWh" else "", precisionProvider = { getPrecision(it, precision) }, checkNoValue = false)
   }
 }
 
 class ChartAxisElectricityMeterValueFormatter : BaseElectricityMeterValueFormatter() {
-  override fun format(value: Any, withUnit: Boolean, precision: ChannelValueFormatter.Precision): String {
+  override fun format(value: Any, withUnit: Boolean, precision: ChannelValueFormatter.Precision, custom: Any?): String {
     ifLet(value as? Double) { (value) ->
       return formatDouble(
         value,
-        withUnit,
+        if (withUnit) "kWh" else "",
         precisionProvider = { getAxisPrecision(it) },
         checkNoValue = false
       )
@@ -72,13 +77,13 @@ class ChartAxisElectricityMeterValueFormatter : BaseElectricityMeterValueFormatt
     ifLet(value as? Float) { (value) ->
       return formatFloat(
         value,
-        withUnit,
+        if (withUnit) "kWh" else "",
         precisionProvider = { getAxisPrecision(it) },
         checkNoValue = false
       )
     }
 
-    return formatFloat(0f, withUnit, precisionProvider = { 0 }, checkNoValue = false)
+    return formatFloat(0f, if (withUnit) "kWh" else "", precisionProvider = { 0 }, checkNoValue = false)
   }
 
   private fun getAxisPrecision(value: Float): Int =
@@ -92,15 +97,13 @@ class ChartAxisElectricityMeterValueFormatter : BaseElectricityMeterValueFormatt
 abstract class BaseElectricityMeterValueFormatter : ChannelValueFormatter {
 
   val formatter: DecimalFormat = DecimalFormat()
-  open val unit: String
-    get() = "kWh"
 
   override fun handle(function: Int): Boolean =
     function == SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER
 
   protected fun formatDouble(
     value: Double,
-    withUnit: Boolean,
+    unit: String,
     precisionProvider: (Float) -> Int,
     checkNoValue: Boolean = true
   ): String {
@@ -111,16 +114,12 @@ abstract class BaseElectricityMeterValueFormatter : ChannelValueFormatter {
     val precisionValue = precisionProvider(value.toFloat())
     formatter.minimumFractionDigits = precisionValue
     formatter.maximumFractionDigits = precisionValue
-    return if (withUnit) {
-      "${formatter.format(value)} $unit"
-    } else {
-      formatter.format(value)
-    }
+    return "${formatter.format(value)} $unit"
   }
 
   protected fun formatFloat(
     value: Float,
-    withUnit: Boolean,
+    unit: String,
     precisionProvider: (Float) -> Int,
     checkNoValue: Boolean = true
   ): String {
@@ -131,11 +130,7 @@ abstract class BaseElectricityMeterValueFormatter : ChannelValueFormatter {
     val precisionValue = precisionProvider(value)
     formatter.minimumFractionDigits = precisionValue
     formatter.maximumFractionDigits = precisionValue
-    return if (withUnit) {
-      "${formatter.format(value)} $unit"
-    } else {
-      formatter.format(value)
-    }
+    return "${formatter.format(value)} $unit"
   }
 
   protected fun getPrecision(value: Float, precision: ChannelValueFormatter.Precision): Int =

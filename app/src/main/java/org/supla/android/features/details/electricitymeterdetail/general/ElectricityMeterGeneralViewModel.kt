@@ -31,6 +31,7 @@ import org.supla.android.extensions.monthStart
 import org.supla.android.features.details.detailbase.electricitymeter.ElectricityMeterChannelViewModel
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.DownloadChannelMeasurementsUseCase
+import org.supla.android.usecases.channel.GetChannelValueUseCase
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.channel.electricitymeter.ElectricityMeasurements
 import org.supla.android.usecases.channel.electricitymeter.LoadElectricityMeterMeasurementsUseCase
@@ -41,6 +42,7 @@ class ElectricityMeterGeneralViewModel @Inject constructor(
   private val loadElectricityMeterMeasurementsUseCase: LoadElectricityMeterMeasurementsUseCase,
   private val downloadChannelMeasurementsUseCase: DownloadChannelMeasurementsUseCase,
   private val readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
+  private val getChannelValueUseCase: GetChannelValueUseCase,
   private val downloadEventsManager: DownloadEventsManager,
   private val dateProvider: DateProvider,
   schedulers: SuplaSchedulers
@@ -72,7 +74,14 @@ class ElectricityMeterGeneralViewModel @Inject constructor(
       if (!it.initialDataLoadStarted) {
         downloadChannelMeasurementsUseCase.invoke(channel.remoteId, channel.profileId, channel.function)
       }
-      val (electricityMeterState) = guardLet(updateElectricityMeterState(it.viewState.electricityMeterState, channel, measurements)) {
+      val (electricityMeterState) = guardLet(
+        updateElectricityMeterState(
+          it.viewState.electricityMeterState,
+          channel,
+          measurements,
+          getChannelValueUseCase
+        )
+      ) {
         return@updateState it
       }
       val downloading = if (cleanupDownloading) false else it.viewState.electricityMeterState.currentMonthDownloading

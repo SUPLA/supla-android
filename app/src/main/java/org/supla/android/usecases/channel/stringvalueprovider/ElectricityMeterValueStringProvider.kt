@@ -50,7 +50,7 @@ class ElectricityMeterValueStringProvider @Inject constructor(
 
   override fun value(channelData: ChannelDataEntity, valueType: ValueType, withUnit: Boolean): String {
     val value = electricityMeterValueProvider.value(channelData, valueType)
-    formatter.unit = userStateHolder.getElectricityMeterSettings(channelData.profileId, channelData.remoteId).showOnListSafe.unit
-    return formatter.format(value, withUnit = withUnit)
+    val type = userStateHolder.getElectricityMeterSettings(channelData.profileId, channelData.remoteId).showOnListSafe
+    return formatter.format(value, withUnit = withUnit, custom = type)
   }
 }
