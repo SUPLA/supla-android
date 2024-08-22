@@ -18,6 +18,7 @@ package org.supla.android.features.details.switchdetail.general
  */
 
 import android.content.res.Configuration
+import android.graphics.Bitmap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -34,8 +35,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.res.ResourcesCompat
@@ -44,8 +47,10 @@ import org.supla.android.R
 import org.supla.android.core.ui.BitmapProvider
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
+import org.supla.android.extensions.disabledOverlay
 import org.supla.android.features.details.detailbase.electricitymeter.ElectricityMeterMetricsView
-import org.supla.android.ui.views.buttons.supla.CircleControlButton
+import org.supla.android.ui.views.buttons.supla.SuplaButton
+import org.supla.android.ui.views.buttons.supla.SuplaButtonColors
 import org.supla.android.ui.views.buttons.supla.SuplaButtonDefaults
 import org.supla.android.ui.views.tools.Shadow
 import org.supla.android.ui.views.tools.ShadowOrientation
@@ -57,40 +62,42 @@ fun SwitchGeneralView(
   onTurnOff: () -> Unit = {}
 ) {
   Column {
-    DeviceState(
-      stateLabel = state.deviceStateLabel(LocalContext.current),
-      icon = state.deviceStateIcon,
-      stateValue = stringResource(id = state.deviceStateValue)
-    )
-    state.electricityMeterState?.let {
+    if (state.electricityMeterState != null) {
       Box(modifier = Modifier.weight(1f)) {
-        ElectricityMeterMetricsView(
-          state = it,
-          topPadding = 0.dp
-        )
+        ElectricityMeterMetricsView(state = state.electricityMeterState)
         Shadow(orientation = ShadowOrientation.STARTING_BOTTOM, modifier = Modifier.align(Alignment.BottomCenter))
       }
-    } ?: Spacer(modifier = Modifier.weight(1f))
+    } else {
+      DeviceState(
+        stateLabel = state.deviceStateLabel(LocalContext.current),
+        icon = state.deviceStateIcon,
+        stateValue = stringResource(id = state.deviceStateValue)
+      )
+      Spacer(modifier = Modifier.weight(1f))
+    }
+
     Row(
       horizontalArrangement = Arrangement.spacedBy(Distance.default),
-      modifier = Modifier.padding(bottom = Distance.default, top = Distance.default)
+      modifier = Modifier.padding(all = Distance.default)
     ) {
-      Spacer(modifier = Modifier.weight(1f))
-      CircleControlButton(
+      Button(
         icon = state.offIcon?.let { it(LocalContext.current) },
         text = stringResource(id = R.string.channel_btn_off),
         colors = SuplaButtonDefaults.errorColors(),
-        disabled = !state.online,
-        onClick = onTurnOff
+        disabled = state.online == false,
+        pressed = state.deviceStateValue == R.string.details_timer_device_off,
+        onClick = onTurnOff,
+        modifier = Modifier.weight(1f)
       )
-      CircleControlButton(
+      Button(
         icon = state.onIcon?.let { it(LocalContext.current) },
         text = stringResource(id = R.string.channel_btn_on),
         colors = SuplaButtonDefaults.primaryColors(),
-        disabled = !state.online,
-        onClick = onTurnOn
+        disabled = state.online == false,
+        pressed = state.deviceStateValue == R.string.details_timer_device_on,
+        onClick = onTurnOn,
+        modifier = Modifier.weight(1f)
       )
-      Spacer(modifier = Modifier.weight(1f))
     }
   }
 }
@@ -123,6 +130,50 @@ private fun DeviceState(stateLabel: String, icon: BitmapProvider?, stateValue: S
       style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
     )
     Spacer(modifier = Modifier.weight(1f))
+  }
+
+@Composable
+private fun Button(
+  text: String,
+  icon: Bitmap?,
+  modifier: Modifier = Modifier,
+  disabled: Boolean = false,
+  pressed: Boolean = false,
+  colors: SuplaButtonColors = SuplaButtonDefaults.buttonColors(),
+  onClick: () -> Unit
+) =
+  SuplaButton(
+    onClick = onClick,
+    modifier = modifier,
+    disabled = disabled,
+    active = pressed,
+    colors = colors
+  ) {
+    Row(
+      modifier = Modifier
+        .align(Alignment.Center)
+        .disabledOverlay(disabled)
+        .padding(horizontal = Distance.small),
+      verticalAlignment = Alignment.CenterVertically,
+      horizontalArrangement = Arrangement.spacedBy(Distance.tiny)
+    ) {
+      icon?.let {
+        Image(
+          bitmap = it.asImageBitmap(),
+          contentDescription = null,
+          alignment = Alignment.Center,
+          modifier = Modifier.size(dimensionResource(id = R.dimen.icon_default_size)),
+        )
+      }
+      Text(
+        text = text,
+        style = MaterialTheme.typography.labelLarge,
+        color = it,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
+        modifier = Modifier
+      )
+    }
   }
 
 @Preview(showBackground = true)

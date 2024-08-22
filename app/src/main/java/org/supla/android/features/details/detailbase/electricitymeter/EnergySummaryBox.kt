@@ -20,6 +20,7 @@ package org.supla.android.features.details.detailbase.electricitymeter
 import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -31,6 +32,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -42,6 +44,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -60,7 +63,8 @@ fun EnergySummaryBox(
   forwardEnergy: EnergyData?,
   reversedEnergy: EnergyData?,
   modifier: Modifier = Modifier,
-  labelSuffix: String? = null
+  labelSuffix: String? = null,
+  loading: Boolean = false
 ) {
   Column(
     modifier = modifier
@@ -81,57 +85,73 @@ fun EnergySummaryBox(
     val density = LocalDensity.current
     var spacerHeight by remember { mutableStateOf<Dp?>(null) }
 
-    Row(
+    Box(
       modifier = Modifier
         .onGloballyPositioned {
-          if (spacerHeight == null) {
+          if (spacerHeight == null || spacerHeight == 0.dp) {
             spacerHeight = with(density) { it.size.height.toDp() }
           }
-        },
-      horizontalArrangement = Arrangement.spacedBy(1.dp)
+        }
     ) {
-      if (forwardEnergy != null && reversedEnergy != null) {
-        EnergyItemBox(
-          iconRes = R.drawable.ic_forward_energy,
-          label = stringResource(id = R.string.details_em_forwarded_energy),
-          value = forwardEnergy.energy,
-          price = forwardEnergy.price,
+      Row {
+        if (forwardEnergy != null && reversedEnergy != null) {
+          EnergyItemBox(
+            iconRes = R.drawable.ic_forward_energy,
+            label = stringResource(id = R.string.details_em_forwarded_energy),
+            value = forwardEnergy.energy,
+            price = forwardEnergy.price,
+            modifier = Modifier
+              .weight(0.5f)
+              .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(bottomStart = radius))
+          )
+          Spacer(height = spacerHeight)
+          EnergyItemBox(
+            iconRes = R.drawable.ic_reversed_energy,
+            label = stringResource(id = R.string.details_em_reversed_energy),
+            value = reversedEnergy.energy,
+            price = reversedEnergy.price,
+            modifier = Modifier
+              .weight(0.5f)
+              .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(bottomEnd = radius))
+          )
+        } else if (forwardEnergy != null) {
+          val labelPrefix = stringResource(id = R.string.details_em_total_forward_active_energy)
+          val separator = if (forwardEnergy.price == null) " " else "\n"
+          EnergyItemSingleBox(
+            iconRes = R.drawable.ic_forward_energy,
+            label = labelSuffix?.let { "${labelPrefix}${separator}$it" } ?: labelPrefix,
+            value = forwardEnergy.energy,
+            price = forwardEnergy.price,
+            modifier = Modifier
+              .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(radius))
+          )
+        } else if (reversedEnergy != null) {
+          val labelPrefix = stringResource(id = R.string.details_em_total_reverse_reactive_energy)
+          val separator = if (reversedEnergy.price == null) " " else "\n"
+          EnergyItemSingleBox(
+            iconRes = R.drawable.ic_reversed_energy,
+            label = labelSuffix?.let { "${labelPrefix}${separator}$it" } ?: labelPrefix,
+            value = reversedEnergy.energy,
+            price = reversedEnergy.price,
+            modifier = Modifier
+              .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(radius))
+          )
+        }
+      }
+      if (loading) {
+        Box(
           modifier = Modifier
-            .weight(0.5f)
-            .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(bottomStart = radius))
-        )
-        Spacer(height = spacerHeight)
-        EnergyItemBox(
-          iconRes = R.drawable.ic_reversed_energy,
-          label = stringResource(id = R.string.details_em_reversed_energy),
-          value = reversedEnergy.energy,
-          price = reversedEnergy.price,
-          modifier = Modifier
-            .weight(0.5f)
-            .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(bottomEnd = radius))
-        )
-      } else if (forwardEnergy != null) {
-        val labelPrefix = stringResource(id = R.string.details_em_total_forward_active_energy)
-        val separator = if (forwardEnergy.price == null) " " else "\n"
-        EnergyItemSingleBox(
-          iconRes = R.drawable.ic_forward_energy,
-          label = labelSuffix?.let { "${labelPrefix}${separator}$it" } ?: labelPrefix,
-          value = forwardEnergy.energy,
-          price = forwardEnergy.price,
-          modifier = Modifier
-            .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(radius))
-        )
-      } else if (reversedEnergy != null) {
-        val labelPrefix = stringResource(id = R.string.details_em_total_reverse_reactive_energy)
-        val separator = if (reversedEnergy.price == null) " " else "\n"
-        EnergyItemSingleBox(
-          iconRes = R.drawable.ic_reversed_energy,
-          label = labelSuffix?.let { "${labelPrefix}${separator}$it" } ?: labelPrefix,
-          value = reversedEnergy.energy,
-          price = reversedEnergy.price,
-          modifier = Modifier
-            .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(radius))
-        )
+            .height(spacerHeight ?: 0.dp)
+            .fillMaxWidth()
+            .background(colorResource(id = R.color.dialog_scrim))
+        ) {
+          CircularProgressIndicator(
+            modifier = Modifier
+              .align(Alignment.Center)
+              .padding(Distance.small)
+              .size(dimensionResource(id = R.dimen.button_small_height))
+          )
+        }
       }
     }
   }
@@ -236,8 +256,8 @@ private fun EnergyValue(text: String) =
     style = MaterialTheme.typography.labelLarge
   )
 
-@Preview(showBackground = true, heightDp = 1000)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true, heightDp = 1000)
+@Preview(showBackground = true, heightDp = 1100)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true, heightDp = 1100)
 @PreviewFontScale
 @Composable
 private fun Preview() {
@@ -250,6 +270,7 @@ private fun Preview() {
       EnergySummaryBox(forwardEnergy = EnergyData("12,34 kWh", null), reversedEnergy = null)
       EnergySummaryBox(forwardEnergy = null, reversedEnergy = EnergyData("23,45 kWh", "25,00 PLN"), labelSuffix = "(test)")
       EnergySummaryBox(forwardEnergy = null, reversedEnergy = EnergyData("23,45 kWh", null), labelSuffix = "(test)")
+      EnergySummaryBox(forwardEnergy = null, reversedEnergy = EnergyData("23,45 kWh", null), labelSuffix = "(test)", loading = true)
     }
   }
 }

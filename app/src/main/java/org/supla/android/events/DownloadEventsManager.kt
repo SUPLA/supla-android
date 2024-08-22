@@ -57,14 +57,14 @@ class DownloadEventsManager @Inject constructor() {
   }
 
   sealed class State(val order: Int) {
-    object Idle : State(0)
-    object Started : State(1)
+    data object Idle : State(0)
+    data object Started : State(1)
     data class InProgress(
       val progress: Float
     ) : State(2)
-    object Failed : State(3)
-    object Finished : State(4)
-    object Refresh : State(5)
+    data object Failed : State(3)
+    data object Finished : State(4)
+    data object Refresh : State(5)
   }
 
   private enum class IdType { CHANNEL }

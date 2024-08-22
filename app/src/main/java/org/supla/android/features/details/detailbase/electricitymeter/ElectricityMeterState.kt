@@ -23,6 +23,7 @@ data class ElectricityMeterState(
   val online: Boolean? = null,
   val totalForwardActiveEnergy: EnergyData? = null,
   val totalReversedActiveEnergy: EnergyData? = null,
+  val currentMonthDownloading: Boolean = false,
   val currentMonthForwardActiveEnergy: EnergyData? = null,
   val currentMonthReversedActiveEnergy: EnergyData? = null,
   val phaseMeasurementTypes: List<SuplaElectricityMeasurementType> = emptyList(),
@@ -44,4 +45,38 @@ data class PhaseWithMeasurements(
   val values: Map<SuplaElectricityMeasurementType, String>
 ) {
   companion object
+}
+
+fun ElectricityMeterState?.copyOrCreate(
+  online: Boolean? = null,
+  totalForwardActiveEnergy: EnergyData? = null,
+  totalReversedActiveEnergy: EnergyData? = null,
+  currentMonthDownloading: Boolean = false,
+  currentMonthForwardActiveEnergy: EnergyData? = null,
+  currentMonthReversedActiveEnergy: EnergyData? = null,
+  phaseMeasurementTypes: List<SuplaElectricityMeasurementType> = emptyList(),
+  phaseMeasurementValues: List<PhaseWithMeasurements> = emptyList(),
+  vectorBalancedValues: Map<SuplaElectricityMeasurementType, String>? = null
+): ElectricityMeterState {
+  return this?.copy(
+    online = online,
+    totalForwardActiveEnergy = totalForwardActiveEnergy,
+    totalReversedActiveEnergy = totalReversedActiveEnergy,
+    currentMonthDownloading = currentMonthDownloading,
+    currentMonthForwardActiveEnergy = currentMonthForwardActiveEnergy,
+    currentMonthReversedActiveEnergy = currentMonthReversedActiveEnergy,
+    phaseMeasurementTypes = phaseMeasurementTypes,
+    phaseMeasurementValues = phaseMeasurementValues,
+    vectorBalancedValues = vectorBalancedValues
+  ) ?: ElectricityMeterState(
+    online = online,
+    totalForwardActiveEnergy = totalForwardActiveEnergy,
+    totalReversedActiveEnergy = totalReversedActiveEnergy,
+    currentMonthDownloading = currentMonthDownloading,
+    currentMonthForwardActiveEnergy = currentMonthForwardActiveEnergy,
+    currentMonthReversedActiveEnergy = currentMonthReversedActiveEnergy,
+    phaseMeasurementTypes = phaseMeasurementTypes,
+    phaseMeasurementValues = phaseMeasurementValues,
+    vectorBalancedValues = vectorBalancedValues
+  )
 }

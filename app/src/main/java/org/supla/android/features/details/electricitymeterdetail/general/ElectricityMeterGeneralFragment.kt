@@ -17,6 +17,8 @@ package org.supla.android.features.details.electricitymeterdetail.general
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.os.Bundle
+import android.view.View
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -44,6 +46,11 @@ class ElectricityMeterGeneralFragment :
     SuplaTheme {
       ElectricityMeterGeneralView(modelState.viewState)
     }
+  }
+
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    viewModel.onViewCreated(item.remoteId)
   }
 
   override fun onResume() {

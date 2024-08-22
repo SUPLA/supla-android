@@ -17,6 +17,7 @@ package org.supla.android.data.source.local.entity.complex
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import org.supla.android.data.model.general.hasElectricityMeter
 import org.supla.android.data.source.local.entity.custom.Phase
 import org.supla.android.data.source.local.entity.hasMeasurements
 import org.supla.android.data.source.local.entity.isFacadeBlind
@@ -31,7 +32,6 @@ import org.supla.android.data.source.local.entity.isVerticalBlind
 import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType
 import org.supla.android.data.source.remote.channel.suplaElectricityMeterMeasuredTypes
 import org.supla.android.lib.SuplaChannelElectricityMeterValue
-import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS
 import org.supla.android.lib.SuplaConst
 
 fun ChannelDataEntity.isMeasurement() = channelEntity.isMeasurement()
@@ -56,8 +56,7 @@ fun ChannelDataEntity.hasValue(): Boolean =
 
     SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH,
     SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH,
-    SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER ->
-      channelValueEntity.subValueType == SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort()
+    SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER -> hasElectricityMeter
 
     else -> false
   }

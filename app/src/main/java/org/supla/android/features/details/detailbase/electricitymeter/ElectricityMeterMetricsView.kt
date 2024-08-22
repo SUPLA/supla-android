@@ -67,8 +67,7 @@ import org.supla.android.ui.views.ChannelOfflineView
 @Composable
 fun ElectricityMeterMetricsView(
   state: ElectricityMeterState,
-  modifier: Modifier = Modifier,
-  topPadding: Dp = Distance.default
+  modifier: Modifier = Modifier
 ) {
   Column(
     modifier = modifier
@@ -78,7 +77,7 @@ fun ElectricityMeterMetricsView(
     EnergySummaryBox(
       state.totalForwardActiveEnergy,
       state.totalReversedActiveEnergy,
-      modifier = Modifier.padding(start = Distance.default, top = topPadding, end = Distance.default),
+      modifier = Modifier.padding(start = Distance.default, top = Distance.default, end = Distance.default),
       labelSuffix = stringResource(id = R.string.details_em_total_suffix)
     )
 //    RangeSelectionBox(modifier = Modifier.padding(start = Distance.default, top = Distance.small, end = Distance.default)) {}
@@ -86,7 +85,8 @@ fun ElectricityMeterMetricsView(
       state.currentMonthForwardActiveEnergy,
       state.currentMonthReversedActiveEnergy,
       modifier = Modifier.padding(start = Distance.default, top = Distance.small, end = Distance.default),
-      labelSuffix = stringResource(id = R.string.details_em_current_month_suffix)
+      labelSuffix = stringResource(id = R.string.details_em_current_month_suffix),
+      loading = state.currentMonthDownloading
     )
     when (state.online) {
       true -> {
