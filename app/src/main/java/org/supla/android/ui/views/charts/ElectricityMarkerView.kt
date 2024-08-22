@@ -123,7 +123,7 @@ class ElectricityMarkerView(context: Context) : BaseMarkerView(context) {
         rows[yIdx].icon.setImageResource(R.drawable.ic_phase_point_color)
         rows[yIdx].icon.imageTintList = ColorStateList.valueOf(ResourcesCompat.getColor(resources, phase.color, null))
         rows[yIdx].label.text = context.getText(phase.label)
-        if (highlight?.stackIndex == yIdx) rows[yIdx].bold() else rows[yIdx].regular()
+        if (highlight?.stackIndex == yIdx || selectedPhases.size == 1) rows[yIdx].bold() else rows[yIdx].regular()
         sum += barEntry.yVals[yIdx]
         rows[yIdx].value.text = formatter.format(barEntry.yVals[yIdx])
         rows[yIdx].cost.text = customData.priceString(barEntry.yVals[yIdx])
@@ -133,10 +133,12 @@ class ElectricityMarkerView(context: Context) : BaseMarkerView(context) {
       }
     }
 
-    rows[yIdx].label.text = context.getText(R.string.details_em_sum)
-    rows[yIdx].value.text = formatter.format(sum)
-    rows[yIdx].cost.text = customData.priceString(sum)
-    rows[yIdx].show(withIcon = false)
+    if (selectedPhases.size > 1) {
+      rows[yIdx].label.text = context.getText(R.string.details_em_sum)
+      rows[yIdx].value.text = formatter.format(sum)
+      rows[yIdx].cost.text = customData.priceString(sum)
+      rows[yIdx].show(withIcon = false)
+    }
   }
 
   private fun showBalanceTwoValues(highlight: Highlight?, barEntry: BarEntry, customData: ElectricityMarkerCustomData) {
