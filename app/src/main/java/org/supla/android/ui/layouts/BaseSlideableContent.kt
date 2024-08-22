@@ -30,7 +30,6 @@ import org.supla.android.extensions.guardLet
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.lists.data.SlideableListItemData
 import org.supla.android.usecases.list.CreateListItemUpdateEventDataUseCase
-import java.util.concurrent.TimeUnit
 
 abstract class BaseSlideableContent<T : SlideableListItemData> : BaseAbstractComposeView {
 
@@ -71,7 +70,6 @@ abstract class BaseSlideableContent<T : SlideableListItemData> : BaseAbstractCom
 
     updateDisposable =
       createListItemUpdateEventDataUseCase(itemType, remoteId)
-        .delay(1, TimeUnit.SECONDS)
         .subscribeOn(schedulers.io)
         .observeOn(schedulers.ui)
         .subscribeBy(onNext = this::updateData)

@@ -1,18 +1,4 @@
 package org.supla.android.events
-
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.schedulers.Schedulers
-import io.reactivex.rxjava3.subjects.BehaviorSubject
-import io.reactivex.rxjava3.subjects.Subject
-import org.supla.android.data.source.ChannelRepository
-import org.supla.android.data.source.RoomSceneRepository
-import org.supla.android.data.source.local.entity.SceneEntity
-import org.supla.android.db.Channel
-import org.supla.android.db.ChannelGroup
-import java.util.concurrent.TimeUnit
-import javax.inject.Inject
-import javax.inject.Singleton
-
 /*
   Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -30,6 +16,19 @@ import javax.inject.Singleton
   along with this program; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
+
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.schedulers.Schedulers
+import io.reactivex.rxjava3.subjects.BehaviorSubject
+import io.reactivex.rxjava3.subjects.Subject
+import org.supla.android.data.source.ChannelRepository
+import org.supla.android.data.source.RoomSceneRepository
+import org.supla.android.data.source.local.entity.SceneEntity
+import org.supla.android.db.Channel
+import org.supla.android.db.ChannelGroup
+import java.util.concurrent.TimeUnit
+import javax.inject.Inject
+import javax.inject.Singleton
 
 @Singleton
 class UpdateEventsManager @Inject constructor(
