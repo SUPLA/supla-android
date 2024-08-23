@@ -127,6 +127,8 @@ class ElectricityMeterHistoryViewModel @Inject constructor(
 
   override fun loadChartState(profileId: Long, remoteId: Int): ChartState =
     userStateHolder.getElectricityChartState(profileId, remoteId)
+      // currently there is only one set and has to be always visible, should be removed when char comparisons added
+      .copy(visibleSets = null)
 
   override fun exportChartState(state: HistoryDetailViewState): ChartState? {
     val (aggregation) = guardLet(state.filters.selectedAggregation) { return null }
