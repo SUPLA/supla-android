@@ -625,7 +625,7 @@
   <string name="details_em_cost">Kosten</string>
   <string name="details_em_settings_list_item">In der Kanalliste angezeigte Metrik</string>
   <string name="details_em_settings_title">Einstellungen - %1$s</string>
-  <string name="details_em_total_suffix">(gesamt)</string>
+  <string name="details_em_total_suffix">(Zählerstand)</string>
   <string name="details_em_current_month_suffix">(aktueller Monat)</string>
   <plurals name="details_timer_info_on">
     <item quantity="one">eingeschaltet</item>

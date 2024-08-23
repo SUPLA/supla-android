@@ -124,37 +124,6 @@ public abstract class ChartHelper extends ValueFormatter {
     return false;
   }
 
-  public boolean isBalanceChartType(ChartType chartType) {
-    switch (chartType) {
-      case Bar_AritmeticBalance_Minutes:
-      case Bar_AritmeticBalance_Hours:
-      case Bar_AritmeticBalance_Days:
-      case Bar_AritmeticBalance_Months:
-      case Bar_AritmeticBalance_Years:
-      case Bar_VectorBalance_Minutes:
-      case Bar_VectorBalance_Hours:
-      case Bar_VectorBalance_Days:
-      case Bar_VectorBalance_Months:
-      case Bar_VectorBalance_Years:
-        return true;
-    }
-
-    return false;
-  }
-
-  public boolean isVectorBalanceChartType(ChartType chartType) {
-    switch (chartType) {
-      case Bar_VectorBalance_Minutes:
-      case Bar_VectorBalance_Hours:
-      case Bar_VectorBalance_Days:
-      case Bar_VectorBalance_Months:
-      case Bar_VectorBalance_Years:
-        return true;
-    }
-
-    return false;
-  }
-
   public void setVisibility(int visibility) {
     if (combinedChart != null) {
       combinedChart.setVisibility(View.GONE);
@@ -534,18 +503,6 @@ public abstract class ChartHelper extends ValueFormatter {
     }
   }
 
-  public void clearData() {
-    if (combinedChart != null) {
-      combinedChart.setData(null);
-      combinedChart.invalidate();
-    }
-
-    if (pieChart != null) {
-      pieChart.setData(null);
-      pieChart.invalidate();
-    }
-  }
-
   public String[] getMasterSpinnerItems(int limit) {
 
     if (limit <= 0 || limit > 24) {
@@ -789,14 +746,6 @@ public abstract class ChartHelper extends ValueFormatter {
   public void setDateRange(Date from, Date to) {
     dateFrom = from;
     dateTo = to;
-  }
-
-  public Date getDateFrom() {
-    return dateFrom;
-  }
-
-  public Date getDateTo() {
-    return dateTo;
   }
 
   public void persistSpinners(int func, Spinner master, Spinner slave) {

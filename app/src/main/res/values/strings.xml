@@ -721,7 +721,7 @@
   <string name="details_em_cost" translatable="false">Cost</string>
   <string name="details_em_settings_list_item" translatable="false">Metric shown on the channel list</string>
   <string name="details_em_settings_title" translatable="false">Settings - %1$s</string>
-  <string name="details_em_total_suffix" translatable="false">(total)</string>
+  <string name="details_em_total_suffix" translatable="false">(meter reading)</string>
   <string name="details_em_current_month_suffix" translatable="false">(current month)</string>
   <string name="details_em_last_month_balancing" translatable="false">Type of balance for current month</string>
 
