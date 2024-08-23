@@ -72,7 +72,7 @@ class SwitchGeneralFragment : BaseComposeFragment<SwitchGeneralViewState, Switch
   override fun onSuplaMessage(message: SuplaClientMsg) {
     when (message.type) {
       SuplaClientMsg.onDataChanged -> {
-        if (message.channelId == item.remoteId && (message.isTimerValue || !message.isExtendedValue)) {
+        if (message.channelId == item.remoteId) {
           viewModel.loadData(item.remoteId, item.itemType)
         }
       }

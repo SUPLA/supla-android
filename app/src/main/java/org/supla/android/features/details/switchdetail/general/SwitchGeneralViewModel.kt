@@ -82,7 +82,7 @@ class SwitchGeneralViewModel @Inject constructor(
           Maybe.just(Pair<ChannelDataBase, ElectricityMeasurements?>(channelBase, null))
         }
       }
-      .attach()
+      .attachSilent()
       .subscribeBy(
         onSuccess = { (channelBase, measurements) -> handleData(channelBase, measurements, cleanupDownloading) },
         onError = defaultErrorHandler("loadData($remoteId, $itemType)")
