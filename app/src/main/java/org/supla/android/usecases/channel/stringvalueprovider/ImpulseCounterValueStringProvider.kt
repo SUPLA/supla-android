@@ -19,6 +19,7 @@ package org.supla.android.usecases.channel.stringvalueprovider
 
 import org.supla.android.data.ValuesFormatter.Companion.NO_VALUE_TEXT
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.complex.ImpulseCounter
 import org.supla.android.usecases.channel.ChannelValueStringProvider
 import org.supla.android.usecases.channel.ValueType
 import org.supla.android.usecases.channel.valueprovider.ImpulseCounterValueProvider
@@ -39,7 +40,7 @@ class ImpulseCounterValueStringProvider @Inject constructor(
       return NO_VALUE_TEXT
     }
 
-    val unit = channelData.channelExtendedValueEntity?.getSuplaValue()?.ImpulseCounterValue?.unit
+    val unit = channelData.ImpulseCounter.value?.unit
     return if (withUnit && unit != null) {
       String.format(Locale.getDefault(), "%.2f $unit", value)
     } else {

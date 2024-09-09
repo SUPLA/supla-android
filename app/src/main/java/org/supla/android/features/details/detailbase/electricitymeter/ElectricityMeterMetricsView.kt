@@ -193,7 +193,7 @@ private fun PhaseDataSinglePhase(
         horizontalAlignment = Alignment.CenterHorizontally
       ) {
         types.forEach {
-          PhaseValue(phase.values[it] ?: "")
+          PhaseValue(phase.values[it] ?: ValuesFormatter.NO_VALUE_TEXT)
         }
       }
       Column(
@@ -201,7 +201,7 @@ private fun PhaseDataSinglePhase(
         horizontalAlignment = Alignment.CenterHorizontally
       ) {
         types.forEach {
-          PhaseValueUnit(if (phase.values.contains(it) && phase.values[it] != null) it.unit else ValuesFormatter.NO_VALUE_TEXT)
+          PhaseValueUnit(if (phase.values.contains(it) && phase.values[it] != null) it.unit else "")
         }
       }
     }

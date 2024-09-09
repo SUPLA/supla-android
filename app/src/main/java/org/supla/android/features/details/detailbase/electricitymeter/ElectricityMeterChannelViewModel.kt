@@ -34,7 +34,7 @@ import org.supla.android.lib.SuplaChannelElectricityMeterValue.Summary
 import org.supla.android.usecases.channel.GetChannelValueUseCase
 import org.supla.android.usecases.channel.electricitymeter.ElectricityMeasurements
 import org.supla.android.usecases.channel.valueformatter.ChannelValueFormatter
-import org.supla.android.usecases.channel.valueformatter.ChartMarkerElectricityMeterValueFormatter
+import org.supla.android.usecases.channel.valueformatter.ListElectricityMeterValueFormatter
 
 interface ElectricityMeterChannelViewModel {
 
@@ -50,7 +50,7 @@ interface ElectricityMeterChannelViewModel {
 
     val totalForwardActiveEnergy = extendedValue.summary.totalForwardActiveEnergy
     val totalReverseActiveEnergy = extendedValue.summary.totalReverseActiveEnergy
-    val formatter = ChartMarkerElectricityMeterValueFormatter()
+    val formatter = ListElectricityMeterValueFormatter(useNoValue = false)
 
     val allTypes = extendedValue.measuredValues.suplaElectricityMeterMeasuredTypes.sortedBy { it.ordering }
     val phaseTypes = allTypes.filter { it.phaseType }
@@ -93,7 +93,7 @@ interface ElectricityMeterChannelViewModel {
     }
 
     val value: Double = getChannelValueUseCase(channel)
-    val formatter = ChartMarkerElectricityMeterValueFormatter()
+    val formatter = ListElectricityMeterValueFormatter(useNoValue = false)
 
     return state.copyOrCreate(
       online = channel.isOnline(),
@@ -110,7 +110,7 @@ interface ElectricityMeterChannelViewModel {
   private fun getForwardEnergy(
     extendedValue: SuplaChannelElectricityMeterValue,
     totalForwardActiveEnergy: Float,
-    formatter: ChartMarkerElectricityMeterValueFormatter
+    formatter: ListElectricityMeterValueFormatter
   ): EnergyData? {
     val hasForwardEnergy = extendedValue.measuredValues and SuplaElectricityMeasurementType.FORWARD_ACTIVE_ENERGY.rawValue > 0
 
@@ -125,7 +125,7 @@ interface ElectricityMeterChannelViewModel {
   private fun getReverseEnergy(
     extendedValue: SuplaChannelElectricityMeterValue,
     totalReverseActiveEnergy: Float,
-    formatter: ChartMarkerElectricityMeterValueFormatter
+    formatter: ListElectricityMeterValueFormatter
   ): EnergyData? {
     val hasReverseEnergy = extendedValue.measuredValues and SuplaElectricityMeasurementType.REVERSE_ACTIVE_ENERGY.rawValue > 0
 
@@ -136,7 +136,7 @@ interface ElectricityMeterChannelViewModel {
     types: List<SuplaElectricityMeasurementType>,
     channelFlags: Long,
     extendedValue: SuplaChannelElectricityMeterValue,
-    formatter: ChartMarkerElectricityMeterValueFormatter
+    formatter: ListElectricityMeterValueFormatter
   ): MutableList<PhaseWithMeasurements> {
     val phasesWithData =
       Phase.entries
@@ -164,7 +164,7 @@ interface ElectricityMeterChannelViewModel {
 private fun PhaseWithMeasurements.Companion.forPhase(
   phaseWithData: PhaseWithData,
   types: List<SuplaElectricityMeasurementType>,
-  formatter: ChartMarkerElectricityMeterValueFormatter
+  formatter: ListElectricityMeterValueFormatter
 ): PhaseWithMeasurements {
   val values = mutableMapOf<SuplaElectricityMeasurementType, String>().apply {
     types.mapNotNull { type ->
@@ -182,7 +182,7 @@ private fun PhaseWithMeasurements.Companion.forPhase(
 private fun PhaseWithMeasurements.Companion.allPhases(
   types: List<SuplaElectricityMeasurementType>,
   phasesWithData: List<PhaseWithData>,
-  formatter: ChartMarkerElectricityMeterValueFormatter
+  formatter: ListElectricityMeterValueFormatter
 ): PhaseWithMeasurements {
   val values = mutableMapOf<SuplaElectricityMeasurementType, String>().apply {
     types.forEach { type ->
@@ -197,7 +197,7 @@ private fun PhaseWithMeasurements.Companion.allPhases(
   return PhaseWithMeasurements(R.string.em_chart_all_phases, values)
 }
 
-private fun ChartMarkerElectricityMeterValueFormatter.custom(value: Float, precision: Int) =
+private fun ListElectricityMeterValueFormatter.custom(value: Float, precision: Int) =
   format(value, withUnit = false, precision = ChannelValueFormatter.Custom(precision))
 
 private data class PhaseWithData(

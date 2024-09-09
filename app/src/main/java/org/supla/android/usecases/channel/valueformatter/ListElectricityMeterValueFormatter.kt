@@ -24,41 +24,26 @@ import org.supla.android.lib.SuplaConst
 import org.supla.android.usecases.channel.valueprovider.ElectricityMeterValueProvider
 import java.text.DecimalFormat
 
-class ListElectricityMeterValueFormatter : BaseElectricityMeterValueFormatter() {
+class ListElectricityMeterValueFormatter(private val useNoValue: Boolean? = null) : BaseElectricityMeterValueFormatter() {
 
   override fun format(value: Any, withUnit: Boolean, precision: ChannelValueFormatter.Precision, custom: Any?): String {
     val unit = (custom as? SuplaElectricityMeasurementType)?.unit ?: "kWh"
-    val checkNoValue = custom == SuplaElectricityMeasurementType.FORWARD_ACTIVE_ENERGY
+    val checkNoValue = useNoValue ?: (custom == SuplaElectricityMeasurementType.FORWARD_ACTIVE_ENERGY)
     ifLet(value as? Double) { (value) ->
-      return formatDouble(value, if (withUnit) unit else "", getPrecision(value.toFloat(), precision), checkNoValue)
+      return format(value, if (withUnit) unit else "", getPrecision(value, precision), checkNoValue)
     }
     ifLet(value as? Float) { (value) ->
-      return formatFloat(value, if (withUnit) unit else "", getPrecision(value, precision), checkNoValue)
+      return format(value.toDouble(), if (withUnit) unit else "", getPrecision(value.toDouble(), precision), checkNoValue)
     }
 
-    return NO_VALUE_TEXT
-  }
-}
-
-class ChartMarkerElectricityMeterValueFormatter : BaseElectricityMeterValueFormatter() {
-  private val checkNoValue = false
-
-  override fun format(value: Any, withUnit: Boolean, precision: ChannelValueFormatter.Precision, custom: Any?): String {
-    ifLet(value as? Double) { (value) ->
-      return formatDouble(value, if (withUnit) "kWh" else "", getPrecision(value.toFloat(), precision), checkNoValue)
-    }
-    ifLet(value as? Float) { (value) ->
-      return formatFloat(value, if (withUnit) "kWh" else "", getPrecision(value, precision), checkNoValue)
-    }
-
-    return formatFloat(0f, if (withUnit) "kWh" else "", 0, checkNoValue)
+    return format(0.0, if (withUnit) unit else "", 0, checkNoValue)
   }
 }
 
 class ChartAxisElectricityMeterValueFormatter : BaseElectricityMeterValueFormatter() {
   override fun format(value: Any, withUnit: Boolean, precision: ChannelValueFormatter.Precision, custom: Any?): String {
     ifLet(value as? Double) { (value) ->
-      return formatDouble(
+      return format(
         value,
         if (withUnit) "kWh" else "",
         precision = if (value == 0.0) 0 else precision.value,
@@ -66,15 +51,15 @@ class ChartAxisElectricityMeterValueFormatter : BaseElectricityMeterValueFormatt
       )
     }
     ifLet(value as? Float) { (value) ->
-      return formatFloat(
-        value,
+      return format(
+        value.toDouble(),
         if (withUnit) "kWh" else "",
         precision = if (value == 0f) 0 else precision.value,
         checkNoValue = false
       )
     }
 
-    return formatFloat(0f, if (withUnit) "kWh" else "", precision = 0, checkNoValue = false)
+    return format(0.0, if (withUnit) "kWh" else "", precision = 0, checkNoValue = false)
   }
 }
 
@@ -85,12 +70,16 @@ abstract class BaseElectricityMeterValueFormatter : ChannelValueFormatter {
   override fun handle(function: Int): Boolean =
     function == SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER
 
-  protected fun formatDouble(
+  protected fun format(
     value: Double,
     unit: String,
     precision: Int,
     checkNoValue: Boolean = true
   ): String {
+    if (value.isNaN()) {
+      // NaN is possible when user selected other type than default (ex voltage) and currently there is no data
+      return NO_VALUE_TEXT
+    }
     if (checkNoValue && value == ElectricityMeterValueProvider.UNKNOWN_VALUE) {
       return NO_VALUE_TEXT
     }
@@ -100,22 +89,7 @@ abstract class BaseElectricityMeterValueFormatter : ChannelValueFormatter {
     return "${formatter.format(value)} $unit"
   }
 
-  protected fun formatFloat(
-    value: Float,
-    unit: String,
-    precision: Int,
-    checkNoValue: Boolean = true
-  ): String {
-    if (checkNoValue && value == ElectricityMeterValueProvider.UNKNOWN_VALUE.toFloat()) {
-      return NO_VALUE_TEXT
-    }
-
-    formatter.minimumFractionDigits = precision
-    formatter.maximumFractionDigits = precision
-    return "${formatter.format(value)} $unit"
-  }
-
-  protected fun getPrecision(value: Float, precision: ChannelValueFormatter.Precision): Int =
+  protected fun getPrecision(value: Double, precision: ChannelValueFormatter.Precision): Int =
     when (precision) {
       is ChannelValueFormatter.Default ->
         if (value < 100) {

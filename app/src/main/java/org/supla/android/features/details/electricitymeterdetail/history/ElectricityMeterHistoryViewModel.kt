@@ -39,6 +39,7 @@ import org.supla.android.data.model.chart.style.ElectricityChartStyle
 import org.supla.android.data.model.general.MultipleSelectionList
 import org.supla.android.data.model.general.SingleSelectionList
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.complex.Electricity
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.data.source.remote.channel.suplaFlags
 import org.supla.android.events.DownloadEventsManager
@@ -194,7 +195,7 @@ class ElectricityMeterHistoryViewModel @Inject constructor(
   private fun handleData(channel: ChannelDataEntity, chartState: ChartState) {
     updateState { it.copy(profileId = channel.profileId, channelFunction = channel.function) }
 
-    restoreCustomFilters(channel.flags.suplaFlags, channel.channelExtendedValueEntity?.getSuplaValue()?.ElectricityMeterValue, chartState)
+    restoreCustomFilters(channel.flags.suplaFlags, channel.Electricity.value, chartState)
     restoreRange(chartState)
     configureDownloadObserver(channel.remoteId)
     startInitialDataLoad(channel.remoteId, channel.profileId, channel.function)

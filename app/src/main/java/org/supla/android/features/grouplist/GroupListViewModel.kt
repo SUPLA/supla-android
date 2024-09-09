@@ -40,7 +40,7 @@ import org.supla.android.ui.lists.BaseListViewModel
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.channel.*
 import org.supla.android.usecases.details.LegacyDetailType
-import org.supla.android.usecases.details.ProvideDetailTypeUseCase
+import org.supla.android.usecases.details.ProvideGroupDetailTypeUseCase
 import org.supla.android.usecases.details.WindowDetailType
 import org.supla.android.usecases.group.CreateProfileGroupsListUseCase
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
@@ -56,7 +56,7 @@ class GroupListViewModel @Inject constructor(
   private val createProfileGroupsListUseCase: CreateProfileGroupsListUseCase,
   private val groupActionUseCase: GroupActionUseCase,
   private val toggleLocationUseCase: ToggleLocationUseCase,
-  private val provideDetailTypeUseCase: ProvideDetailTypeUseCase,
+  private val provideGroupDetailTypeUseCase: ProvideGroupDetailTypeUseCase,
   private val findGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase,
   loadActiveProfileUrlUseCase: LoadActiveProfileUrlUseCase,
   updateEventsManager: UpdateEventsManager,
@@ -153,7 +153,7 @@ class GroupListViewModel @Inject constructor(
         .subscribeBy(
           onSuccess = { channel ->
             currentState().groups
-              ?.filterIsInstance(ListItem.ChannelItem::class.java)
+              ?.filterIsInstance<ListItem.ChannelItem>()
               ?.first { it.channelBase.remoteId == channel.remoteId }
               ?.channelBase = channel
           },
@@ -164,11 +164,11 @@ class GroupListViewModel @Inject constructor(
   }
 
   private fun openDetailsByChannelFunction(group: ChannelGroupDataEntity) {
-    if (isAvailableInOffline(group.function, null).not() && group.isOnline().not()) {
+    if (isAvailableInOffline(group, null).not() && group.isOnline().not()) {
       return // do not open details for offline channels
     }
 
-    when (val detailType = provideDetailTypeUseCase(group)) {
+    when (val detailType = provideGroupDetailTypeUseCase(group)) {
       is LegacyDetailType -> sendEvent(GroupListViewEvent.OpenLegacyDetails(group.remoteId, detailType))
       is WindowDetailType -> sendEvent(GroupListViewEvent.OpenRollerShutterDetail(ItemBundle.from(group), detailType.pages))
       else -> {} // no action

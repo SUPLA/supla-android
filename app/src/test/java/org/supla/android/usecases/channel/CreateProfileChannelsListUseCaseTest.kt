@@ -49,6 +49,9 @@ class CreateProfileChannelsListUseCaseTest {
   private lateinit var getChannelValueStringUseCase: GetChannelValueStringUseCase
 
   @Mock
+  private lateinit var getSwitchValueStringUseCase: GetSwitchValueStringUseCase
+
+  @Mock
   private lateinit var valuesFormatter: ValuesFormatter
 
   @InjectMocks

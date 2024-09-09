@@ -23,7 +23,7 @@ import org.supla.android.extensions.guardLet
 import org.supla.android.ui.lists.data.SlideableListItemData
 import org.supla.android.usecases.channel.ChannelWithChildren
 import org.supla.android.usecases.channel.GetChannelCaptionUseCase
-import org.supla.android.usecases.channel.GetChannelValueStringUseCase
+import org.supla.android.usecases.channel.GetSwitchValueStringUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.list.CreateListItemUpdateEventDataUseCase
 import javax.inject.Inject
@@ -33,7 +33,7 @@ import javax.inject.Singleton
 class ChannelWithChildrenToSwitchUpdateEventMapper @Inject constructor(
   private val getChannelCaptionUseCase: GetChannelCaptionUseCase,
   private val getChannelIconUseCase: GetChannelIconUseCase,
-  private val getChannelValueStringUseCase: GetChannelValueStringUseCase,
+  private val getSwitchValueStringUseCase: GetSwitchValueStringUseCase,
 ) : CreateListItemUpdateEventDataUseCase.Mapper {
 
   override fun handle(item: Any): Boolean {
@@ -49,9 +49,7 @@ class ChannelWithChildrenToSwitchUpdateEventMapper @Inject constructor(
 
   private fun toListItemData(channelWithChildren: ChannelWithChildren): SlideableListItemData.Default {
     val channelData = channelWithChildren.channel
-    val value: String? = channelWithChildren.children.firstOrNull()?.let {
-      getChannelValueStringUseCase.valueOrNull(it.channelDataEntity)
-    }
+    val value: String? = getSwitchValueStringUseCase(channelWithChildren)
 
     return SlideableListItemData.Default(
       online = channelData.channelValueEntity.online,
