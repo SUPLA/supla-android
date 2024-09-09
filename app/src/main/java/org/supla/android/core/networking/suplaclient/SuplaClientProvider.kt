@@ -11,7 +11,7 @@ interface SuplaClientProvider {
 }
 
 interface SuplaClientApi {
-  fun cancel()
+  fun cancel(reason: SuplaClientState.Reason? = null)
   fun canceled(): Boolean
 
   @Throws(InterruptedException::class)

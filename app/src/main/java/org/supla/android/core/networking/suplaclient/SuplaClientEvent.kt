@@ -22,12 +22,13 @@ sealed interface SuplaClientEvent {
   data object NoAccount : SuplaClientEvent
   data object Connecting : SuplaClientEvent
   data object Connected : SuplaClientEvent
-  data object Cancel : SuplaClientEvent
   data object Lock : SuplaClientEvent
   data object Unlock : SuplaClientEvent
   data object OnStart : SuplaClientEvent
   data object NetworkConnected : SuplaClientEvent
+  data object AddWizardFinished : SuplaClientEvent
 
+  data class Cancel(val reason: SuplaClientState.Reason? = null) : SuplaClientEvent
   data class Finish(val reason: SuplaClientState.Reason? = null) : SuplaClientEvent
   data class Error(val reason: SuplaClientState.Reason) : SuplaClientEvent
 }
@@ -42,4 +43,5 @@ sealed class IllegalEvent(message: String) : IllegalStateException(message) {
   class IllegalUnlockEvent(message: String) : IllegalEvent(message)
   class IllegalFinishEvent(message: String) : IllegalEvent(message)
   class IllegalErrorEvent(message: String) : IllegalEvent(message)
+  class IllegalAddWizardFinishedEvent(message: String) : IllegalEvent(message)
 }

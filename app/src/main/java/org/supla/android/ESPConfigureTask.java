@@ -145,7 +145,7 @@ public class ESPConfigureTask extends AsyncTask<String, Integer, EspConfigResult
                 .execute();
 
           } catch (IOException e) {
-            e.printStackTrace();
+            Trace.d(ESPConfigureTask.class.getSimpleName(), "Could not connect to esp (no. 1)", e);
           }
 
           result.setResultCode(RESULT_SUCCESS);
@@ -153,10 +153,10 @@ public class ESPConfigureTask extends AsyncTask<String, Integer, EspConfigResult
         }
 
       } catch (IOException e) {
-        e.printStackTrace();
+        Trace.d(ESPConfigureTask.class.getSimpleName(), "Could not connect to esp (no. 2)", e);
         retryCount--;
       } catch (InterruptedException e) {
-        e.printStackTrace();
+        Trace.d(ESPConfigureTask.class.getSimpleName(), "Esp connection broken", e);
       }
 
     result.setResultCode(RESULT_FAILED);

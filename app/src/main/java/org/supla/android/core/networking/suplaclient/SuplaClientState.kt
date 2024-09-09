@@ -54,11 +54,12 @@ sealed interface SuplaClientState {
         SuplaClientEvent.NoAccount -> FirstProfileCreation
 
         // others which should not occur
-        SuplaClientEvent.Cancel -> throw IllegalEvent.IllegalCancelEvent("Unexpected event in Locked")
         SuplaClientEvent.Connected -> throw IllegalEvent.IllegalConnectedEvent("Unexpected event in Locked")
         SuplaClientEvent.Connecting -> throw IllegalEvent.IllegalConnectingEvent("Unexpected event in Locked")
+        is SuplaClientEvent.Cancel -> throw IllegalEvent.IllegalCancelEvent("Unexpected event in Locked")
         is SuplaClientEvent.Error -> throw IllegalEvent.IllegalErrorEvent("Unexpected event in Locked")
         SuplaClientEvent.Initialized -> throw IllegalEvent.IllegalInitializedEvent("Unexpected event in Locked")
+        SuplaClientEvent.AddWizardFinished -> throw IllegalEvent.IllegalAddWizardFinishedEvent("Unexpected event in Locked")
       }
     }
   }
@@ -72,13 +73,14 @@ sealed interface SuplaClientState {
         is SuplaClientEvent.Finish -> null
 
         // others which should not occur
-        SuplaClientEvent.Cancel -> throw IllegalEvent.IllegalCancelEvent("Unexpected event in FirstProfileCreation")
         SuplaClientEvent.Connected -> throw IllegalEvent.IllegalConnectedEvent("Unexpected event in FirstProfileCreation")
+        is SuplaClientEvent.Cancel -> throw IllegalEvent.IllegalCancelEvent("Unexpected event in FirstProfileCreation")
         is SuplaClientEvent.Error -> throw IllegalEvent.IllegalErrorEvent("Unexpected event in FirstProfileCreation")
         SuplaClientEvent.Initialized -> throw IllegalEvent.IllegalInitializedEvent("Unexpected event in FirstProfileCreation")
         SuplaClientEvent.Lock -> throw IllegalEvent.IllegalLockEvent("Unexpected event in FirstProfileCreation")
         SuplaClientEvent.NoAccount -> throw IllegalEvent.IllegalNoAccountEvent("Unexpected event in FirstProfileCreation")
         SuplaClientEvent.Unlock -> throw IllegalEvent.IllegalUnlockEvent("Unexpected event in FirstProfileCreation")
+        SuplaClientEvent.AddWizardFinished -> throw IllegalEvent.IllegalAddWizardFinishedEvent("Unexpected event in FirstProfileCreation")
       }
     }
   }
@@ -92,14 +94,15 @@ sealed interface SuplaClientState {
         SuplaClientEvent.OnStart -> null
 
         SuplaClientEvent.Lock -> Locked
-        SuplaClientEvent.Cancel -> Disconnecting
         SuplaClientEvent.NetworkConnected -> Connecting()
+        is SuplaClientEvent.Cancel -> Disconnecting(event.reason)
         is SuplaClientEvent.Error -> Connecting(event.reason)
         is SuplaClientEvent.Finish -> Finished(event.reason ?: reason)
 
         // others which should not occur
         SuplaClientEvent.NoAccount -> throw IllegalEvent.IllegalNoAccountEvent("Unexpected event in Connecting")
         SuplaClientEvent.Unlock -> throw IllegalEvent.IllegalUnlockEvent("Unexpected event in Connecting")
+        SuplaClientEvent.AddWizardFinished -> throw IllegalEvent.IllegalAddWizardFinishedEvent("Unexpected event in Connecting")
       }
     }
   }
@@ -108,11 +111,12 @@ sealed interface SuplaClientState {
     override fun nextState(event: SuplaClientEvent): SuplaClientState? {
       return when (event) {
         SuplaClientEvent.OnStart,
-        SuplaClientEvent.NetworkConnected -> null
+        SuplaClientEvent.NetworkConnected,
+        SuplaClientEvent.AddWizardFinished -> null
 
         SuplaClientEvent.Connecting -> Connecting()
         SuplaClientEvent.Lock -> Locked
-        SuplaClientEvent.Cancel -> Disconnecting
+        is SuplaClientEvent.Cancel -> Disconnecting(event.reason)
         is SuplaClientEvent.Finish -> Finished(event.reason)
         is SuplaClientEvent.Error -> Finished(event.reason)
 
@@ -125,23 +129,24 @@ sealed interface SuplaClientState {
     }
   }
 
-  data object Disconnecting : SuplaClientState {
+  data class Disconnecting(val reason: Reason? = null) : SuplaClientState {
     override fun nextState(event: SuplaClientEvent): SuplaClientState? {
       return when (event) {
         SuplaClientEvent.OnStart,
-        SuplaClientEvent.Cancel,
+        is SuplaClientEvent.Cancel,
         SuplaClientEvent.Connecting,
         SuplaClientEvent.Connected,
         SuplaClientEvent.NetworkConnected,
         SuplaClientEvent.Initialized -> null
 
         SuplaClientEvent.Lock -> Locking
-        is SuplaClientEvent.Finish -> Finished(event.reason)
+        is SuplaClientEvent.Finish -> Finished(reason ?: event.reason)
         is SuplaClientEvent.Error -> Finished(event.reason)
 
         // others which should not occur
         SuplaClientEvent.NoAccount -> throw IllegalEvent.IllegalNoAccountEvent("Unexpected event in Disconnecting")
         SuplaClientEvent.Unlock -> throw IllegalEvent.IllegalUnlockEvent("Unexpected event in Disconnecting")
+        SuplaClientEvent.AddWizardFinished -> throw IllegalEvent.IllegalAddWizardFinishedEvent("Unexpected event in Disconnecting")
       }
     }
   }
@@ -151,7 +156,7 @@ sealed interface SuplaClientState {
       return when (event) {
         SuplaClientEvent.OnStart,
         SuplaClientEvent.Lock,
-        SuplaClientEvent.Cancel,
+        is SuplaClientEvent.Cancel,
         SuplaClientEvent.NetworkConnected -> null
 
         is SuplaClientEvent.Finish -> Locked
@@ -163,6 +168,7 @@ sealed interface SuplaClientState {
         SuplaClientEvent.Initialized -> throw IllegalEvent.IllegalInitializedEvent("Unexpected event in Locking")
         SuplaClientEvent.NoAccount -> throw IllegalEvent.IllegalNoAccountEvent("Unexpected event in Locking")
         SuplaClientEvent.Unlock -> throw IllegalEvent.IllegalUnlockEvent("Unexpected event in Locking")
+        SuplaClientEvent.AddWizardFinished -> throw IllegalEvent.IllegalAddWizardFinishedEvent("Unexpected event in Locking")
       }
     }
   }
@@ -170,16 +176,27 @@ sealed interface SuplaClientState {
   data class Finished(val reason: Reason? = null) : SuplaClientState {
     override fun nextState(event: SuplaClientEvent): SuplaClientState? {
       return when (event) {
-        SuplaClientEvent.Cancel,
+        is SuplaClientEvent.Cancel,
         SuplaClientEvent.NetworkConnected -> null
 
-        SuplaClientEvent.Initialized -> Connecting()
-        SuplaClientEvent.Connecting -> Connecting()
+        SuplaClientEvent.Initialized,
+        SuplaClientEvent.AddWizardFinished -> Connecting()
+
+        SuplaClientEvent.Connecting ->
+          if (reason == Reason.AddWizardStarted) null else Connecting()
+
         SuplaClientEvent.Lock -> Locked
-        SuplaClientEvent.OnStart -> if (reason is Reason.NoNetwork) Connecting(reason) else Connecting()
+        SuplaClientEvent.OnStart ->
+          when (reason) {
+            Reason.AddWizardStarted -> null
+            is Reason.NoNetwork -> Connecting(reason)
+            else -> Connecting()
+          }
+
         SuplaClientEvent.NoAccount -> FirstProfileCreation
         is SuplaClientEvent.Error -> if (event.reason != reason) Finished(event.reason) else null
-        is SuplaClientEvent.Finish -> if (event.reason != reason) Finished(event.reason ?: reason) else null
+        is SuplaClientEvent.Finish ->
+          if (event.reason != reason && reason != Reason.AddWizardStarted) Finished(event.reason ?: reason) else null
 
         // others which should not occur
         SuplaClientEvent.Connected -> throw IllegalEvent.IllegalConnectedEvent("Unexpected event in Finished")
@@ -202,5 +219,7 @@ sealed interface SuplaClientState {
     data object NoNetwork : Reason
 
     data object AppInBackground : Reason
+
+    data object AddWizardStarted : Reason
   }
 }
