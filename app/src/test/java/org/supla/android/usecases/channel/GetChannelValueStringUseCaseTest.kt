@@ -38,6 +38,7 @@ import org.supla.android.usecases.channel.stringvalueprovider.ElectricityMeterVa
 import org.supla.android.usecases.channel.stringvalueprovider.GpmValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.HumidityAndTemperatureValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.ImpulseCounterValueStringProvider
+import org.supla.android.usecases.channel.stringvalueprovider.SwitchWithElectricityMeterValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.ThermometerValueStringProvider
 
 @RunWith(MockitoJUnitRunner::class)
@@ -62,6 +63,9 @@ class GetChannelValueStringUseCaseTest {
   private lateinit var electricityMeterValueStringProvider: ElectricityMeterValueStringProvider
 
   @Mock
+  private lateinit var switchWithElectricityMeterValueStringProvider: SwitchWithElectricityMeterValueStringProvider
+
+  @Mock
   private lateinit var impulseCounterValueStringProvider: ImpulseCounterValueStringProvider
 
   @InjectMocks
@@ -72,6 +76,7 @@ class GetChannelValueStringUseCaseTest {
     // given
     val channel: ChannelDataEntity = mockk {
       every { channelValueEntity } returns mockk {
+        every { function } returns SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
         every { online } returns false
       }
     }

@@ -17,12 +17,7 @@ package org.supla.android.usecases.details
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.data.model.general.ChannelDataBase
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
-import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.features.details.detailbase.standarddetail.DetailPage
-import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS
-import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW
@@ -51,14 +46,10 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_TERRACE_AWNING
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_VERTICAL_BLIND
-import java.io.Serializable
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class ProvideDetailTypeUseCase @Inject constructor() {
+abstract class BaseDetailTypeProviderUseCase {
 
-  operator fun invoke(channelDataBase: ChannelDataBase): DetailType? = when (channelDataBase.function) {
+  fun provide(function: Int): DetailType? = when (function) {
     SUPLA_CHANNELFNC_DIMMER,
     SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING,
     SUPLA_CHANNELFNC_RGBLIGHTING ->
@@ -66,26 +57,32 @@ class ProvideDetailTypeUseCase @Inject constructor() {
 
     SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER ->
       WindowDetailType(listOf(DetailPage.ROLLER_SHUTTER))
+
     SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW ->
       WindowDetailType(listOf(DetailPage.ROOF_WINDOW))
+
     SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND ->
       WindowDetailType(listOf(DetailPage.FACADE_BLINDS))
+
     SUPLA_CHANNELFNC_TERRACE_AWNING ->
       WindowDetailType(listOf(DetailPage.TERRACE_AWNING))
+
     SUPLA_CHANNELFNC_PROJECTOR_SCREEN ->
       WindowDetailType(listOf(DetailPage.PROJECTOR_SCREEN))
+
     SUPLA_CHANNELFNC_CURTAIN ->
       WindowDetailType(listOf(DetailPage.CURTAIN))
+
     SUPLA_CHANNELFNC_VERTICAL_BLIND ->
       WindowDetailType(listOf(DetailPage.VERTICAL_BLIND))
+
     SUPLA_CHANNELFNC_ROLLER_GARAGE_DOOR ->
       WindowDetailType(listOf(DetailPage.GARAGE_DOOR_ROLLER))
 
     SUPLA_CHANNELFNC_LIGHTSWITCH,
     SUPLA_CHANNELFNC_POWERSWITCH,
-    SUPLA_CHANNELFNC_STAIRCASETIMER -> {
-      SwitchDetailType(getSwitchDetailPages(channelDataBase))
-    }
+    SUPLA_CHANNELFNC_STAIRCASETIMER ->
+      SwitchDetailType(listOf(DetailPage.SWITCH))
 
     SUPLA_CHANNELFNC_ELECTRICITY_METER ->
       EmDetailType(listOf(DetailPage.EM_GENERAL, DetailPage.EM_HISTORY, DetailPage.EM_SETTINGS))
@@ -129,59 +126,4 @@ class ProvideDetailTypeUseCase @Inject constructor() {
 
     else -> null
   }
-
-  private fun getSwitchDetailPages(channelDataBase: ChannelDataBase): List<DetailPage> {
-    return if (channelDataBase is ChannelDataEntity) {
-      val list = mutableListOf(DetailPage.SWITCH)
-      if (supportsTimer(channelDataBase)) {
-        list.add(DetailPage.SWITCH_TIMER)
-      }
-      if (channelDataBase.channelValueEntity.subValueType == SUBV_TYPE_IC_MEASUREMENTS.toShort()) {
-        list.add(DetailPage.HISTORY_IC)
-      } else if (channelDataBase.channelValueEntity.subValueType == SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort()) {
-        list.add(DetailPage.EM_HISTORY)
-        list.add(DetailPage.EM_SETTINGS)
-      }
-      list
-    } else {
-      listOf(DetailPage.SWITCH)
-    }
-  }
-
-  private fun supportsTimer(channelDataBase: ChannelDataBase) =
-    SuplaChannelFlag.COUNTDOWN_TIMER_SUPPORTED inside channelDataBase.flags &&
-      channelDataBase.function != SUPLA_CHANNELFNC_STAIRCASETIMER
 }
-
-sealed interface DetailType : Serializable
-
-enum class LegacyDetailType : DetailType {
-  RGBW,
-  IC,
-  THERMOSTAT_HP,
-  DIGIGLASS
-}
-
-data class SwitchDetailType(
-  val pages: List<DetailPage>
-) : DetailType
-
-data class ThermostatDetailType(
-  val pages: List<DetailPage>
-) : DetailType
-
-data class ThermometerDetailType(
-  val pages: List<DetailPage>
-) : DetailType
-
-data class GpmDetailType(
-  val pages: List<DetailPage>
-) : DetailType
-
-data class WindowDetailType(
-  val pages: List<DetailPage>
-) : DetailType
-
-data class EmDetailType(
-  val pages: List<DetailPage>
-) : DetailType

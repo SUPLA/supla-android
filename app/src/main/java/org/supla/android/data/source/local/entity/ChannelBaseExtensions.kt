@@ -58,6 +58,12 @@ fun ChannelBase.isGpMeter(): Boolean =
 fun ChannelBase.isElectricityMeter(): Boolean =
   function == SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER
 
+fun ChannelBase.isImpulseCounter(): Boolean =
+  function == SuplaConst.SUPLA_CHANNELFNC_IC_GAS_METER ||
+    function == SuplaConst.SUPLA_CHANNELFNC_IC_HEAT_METER ||
+    function == SuplaConst.SUPLA_CHANNELFNC_IC_WATER_METER ||
+    function == SuplaConst.SUPLA_CHANNELFNC_IC_ELECTRICITY_METER
+
 fun ChannelBase.isThermometer() =
   function == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER ||
     function == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE

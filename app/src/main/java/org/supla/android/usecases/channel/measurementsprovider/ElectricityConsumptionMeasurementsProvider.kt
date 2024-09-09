@@ -50,7 +50,7 @@ import org.supla.android.usecases.channel.measurementsprovider.electricity.getVa
 import org.supla.android.usecases.channel.measurementsprovider.electricity.ifPhase1
 import org.supla.android.usecases.channel.measurementsprovider.electricity.ifPhase2
 import org.supla.android.usecases.channel.measurementsprovider.electricity.ifPhase3
-import org.supla.android.usecases.channel.valueformatter.ChartMarkerElectricityMeterValueFormatter
+import org.supla.android.usecases.channel.valueformatter.ListElectricityMeterValueFormatter
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import javax.inject.Inject
 import javax.inject.Named
@@ -100,7 +100,7 @@ class ElectricityConsumptionMeasurementsProvider @Inject constructor(
       .firstOrError()
 
   private fun labels(spec: ChartDataSpec, icon: BitmapProvider, result: AggregationResult): HistoryDataSet.Label {
-    val formatter = ChartMarkerElectricityMeterValueFormatter()
+    val formatter = ListElectricityMeterValueFormatter(useNoValue = false)
 
     return when ((spec.customFilters as? ElectricityChartFilters)?.type) {
       ElectricityMeterChartType.BALANCE_VECTOR,

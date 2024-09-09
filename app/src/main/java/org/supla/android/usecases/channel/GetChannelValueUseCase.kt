@@ -24,6 +24,7 @@ import org.supla.android.usecases.channel.valueprovider.ElectricityMeterValuePro
 import org.supla.android.usecases.channel.valueprovider.GpmValueProvider
 import org.supla.android.usecases.channel.valueprovider.HumidityAndTemperatureValueProvider
 import org.supla.android.usecases.channel.valueprovider.ImpulseCounterValueProvider
+import org.supla.android.usecases.channel.valueprovider.SwitchWithElectricityMeterValueProvider
 import org.supla.android.usecases.channel.valueprovider.ThermometerValueProvider
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -36,7 +37,8 @@ class GetChannelValueUseCase @Inject constructor(
   thermometerValueProvider: ThermometerValueProvider,
   distanceSensorValueProvider: DistanceSensorValueProvider,
   electricityMeterValueProvider: ElectricityMeterValueProvider,
-  impulseCounterValueProvider: ImpulseCounterValueProvider
+  impulseCounterValueProvider: ImpulseCounterValueProvider,
+  switchWithElectricityMeterValueProvider: SwitchWithElectricityMeterValueProvider
 ) {
 
   private val providers = listOf(
@@ -46,7 +48,8 @@ class GetChannelValueUseCase @Inject constructor(
     thermometerValueProvider,
     distanceSensorValueProvider,
     electricityMeterValueProvider,
-    impulseCounterValueProvider
+    impulseCounterValueProvider,
+    switchWithElectricityMeterValueProvider
   )
 
   @Suppress("UNCHECKED_CAST")

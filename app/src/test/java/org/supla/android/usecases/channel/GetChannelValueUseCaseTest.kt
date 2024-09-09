@@ -38,6 +38,7 @@ import org.supla.android.usecases.channel.valueprovider.ElectricityMeterValuePro
 import org.supla.android.usecases.channel.valueprovider.GpmValueProvider
 import org.supla.android.usecases.channel.valueprovider.HumidityAndTemperatureValueProvider
 import org.supla.android.usecases.channel.valueprovider.ImpulseCounterValueProvider
+import org.supla.android.usecases.channel.valueprovider.SwitchWithElectricityMeterValueProvider
 import org.supla.android.usecases.channel.valueprovider.ThermometerValueProvider
 
 @RunWith(MockitoJUnitRunner::class)
@@ -63,6 +64,9 @@ class GetChannelValueUseCaseTest {
 
   @Mock
   private lateinit var impulseCounterValueProvider: ImpulseCounterValueProvider
+
+  @Mock
+  private lateinit var switchWithElectricityMeterValueProvider: SwitchWithElectricityMeterValueProvider
 
   @InjectMocks
   private lateinit var useCase: GetChannelValueUseCase

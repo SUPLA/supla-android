@@ -9,6 +9,10 @@ import org.supla.android.Preferences
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
+import org.supla.android.data.model.general.ChannelDataBase
+import org.supla.android.data.source.local.entity.ChannelRelationType
+import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
+import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.lib.SuplaChannelValue
 import org.supla.android.lib.SuplaClientMessageHandler.OnSuplaClientMessageListener
 import org.supla.android.lib.SuplaClientMsg
@@ -58,40 +62,45 @@ abstract class BaseListViewModel<S : ViewState, E : ViewEvent>(
       .disposeBySelf()
   }
 
-  protected fun isAvailableInOffline(function: Int, subValueType: Short?) = when (function) {
-    SuplaConst.SUPLA_CHANNELFNC_THERMOMETER,
-    SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE,
-    SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER,
-    SuplaConst.SUPLA_CHANNELFNC_IC_ELECTRICITY_METER,
-    SuplaConst.SUPLA_CHANNELFNC_IC_GAS_METER,
-    SuplaConst.SUPLA_CHANNELFNC_IC_WATER_METER,
-    SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT,
-    SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER,
-    SuplaConst.SUPLA_CHANNELFNC_IC_HEAT_METER,
-    SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT,
-    SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER,
-    SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER,
-    SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND,
-    SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW,
-    SuplaConst.SUPLA_CHANNELFNC_TERRACE_AWNING,
-    SuplaConst.SUPLA_CHANNELFNC_CURTAIN,
-    SuplaConst.SUPLA_CHANNELFNC_PROJECTOR_SCREEN,
-    SuplaConst.SUPLA_CHANNELFNC_VERTICAL_BLIND,
-    SuplaConst.SUPLA_CHANNELFNC_ROLLER_GARAGE_DOOR -> true
+  protected fun isAvailableInOffline(channel: ChannelDataBase, children: List<ChannelChildEntity>?) =
+    when (channel.function) {
+      SuplaConst.SUPLA_CHANNELFNC_THERMOMETER,
+      SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE,
+      SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER,
+      SuplaConst.SUPLA_CHANNELFNC_IC_ELECTRICITY_METER,
+      SuplaConst.SUPLA_CHANNELFNC_IC_GAS_METER,
+      SuplaConst.SUPLA_CHANNELFNC_IC_WATER_METER,
+      SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT,
+      SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER,
+      SuplaConst.SUPLA_CHANNELFNC_IC_HEAT_METER,
+      SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT,
+      SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER,
+      SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER,
+      SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND,
+      SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW,
+      SuplaConst.SUPLA_CHANNELFNC_TERRACE_AWNING,
+      SuplaConst.SUPLA_CHANNELFNC_CURTAIN,
+      SuplaConst.SUPLA_CHANNELFNC_PROJECTOR_SCREEN,
+      SuplaConst.SUPLA_CHANNELFNC_VERTICAL_BLIND,
+      SuplaConst.SUPLA_CHANNELFNC_ROLLER_GARAGE_DOOR -> true
 
-    SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH,
-    SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH,
-    SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER -> {
-      when (subValueType) {
-        SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS.toShort(),
-        SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort() -> true
+      SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH,
+      SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH,
+      SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER -> {
+        if (children?.firstOrNull { it.relationType == ChannelRelationType.METER } != null) {
+          true
+        } else {
+          when ((channel as? ChannelDataEntity)?.channelValueEntity?.subValueType) {
+            SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS.toShort(),
+            SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort() -> true
 
-        else -> false
+            else -> false
+          }
+        }
       }
-    }
 
-    else -> false
-  }
+      else -> false
+    }
 
   protected fun loadServerUrl(handler: (CloudUrl) -> Unit) {
     loadActiveProfileUrlUseCase?.invoke()

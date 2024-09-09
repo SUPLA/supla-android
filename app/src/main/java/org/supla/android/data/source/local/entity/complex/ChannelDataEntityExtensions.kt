@@ -34,6 +34,7 @@ import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementT
 import org.supla.android.data.source.remote.channel.suplaElectricityMeterMeasuredTypes
 import org.supla.android.extensions.TAG
 import org.supla.android.lib.SuplaChannelElectricityMeterValue
+import org.supla.android.lib.SuplaChannelImpulseCounterValue
 
 fun ChannelDataEntity.isMeasurement() = channelEntity.isMeasurement()
 
@@ -60,6 +61,9 @@ fun ChannelDataEntity.isVerticalBlind() = channelEntity.isVerticalBlind()
 val ChannelDataEntity.Electricity: ChannelDataElectricityExtension
   get() = ChannelDataElectricityExtension(this)
 
+val ChannelDataEntity.ImpulseCounter: ChannelDataImpulseCounterExtension
+  get() = ChannelDataImpulseCounterExtension(this)
+
 @JvmInline
 value class ChannelDataElectricityExtension(private val channelData: ChannelDataEntity) {
   val phases: List<Phase>
@@ -80,4 +84,15 @@ value class ChannelDataElectricityExtension(private val channelData: ChannelData
   val hasBalance: Boolean
     get() = measuredTypes.contains(SuplaElectricityMeasurementType.FORWARD_ACTIVE_ENERGY_BALANCED) &&
       measuredTypes.contains(SuplaElectricityMeasurementType.REVERSE_ACTIVE_ENERGY_BALANCED)
+}
+
+@JvmInline
+value class ChannelDataImpulseCounterExtension(private val channelData: ChannelDataEntity) {
+  val value: SuplaChannelImpulseCounterValue?
+    get() = try {
+      channelData.channelExtendedValueEntity?.getSuplaValue()?.ImpulseCounterValue
+    } catch (ex: Exception) {
+      Trace.w(TAG, "Could not get impulse counter value", ex)
+      null
+    }
 }

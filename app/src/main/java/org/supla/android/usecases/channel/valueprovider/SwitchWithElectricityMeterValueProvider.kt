@@ -19,11 +19,11 @@ package org.supla.android.usecases.channel.valueprovider
 
 import org.supla.android.core.storage.UserStateHolder
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
-import org.supla.android.data.source.local.entity.complex.Electricity
-import org.supla.android.data.source.local.entity.custom.Phase
 import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType
-import org.supla.android.data.source.remote.channel.suplaElectricityMeterMeasuredTypes
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER
+import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER
 import org.supla.android.usecases.channel.ChannelValueProvider
 import org.supla.android.usecases.channel.ValueType
 import org.supla.android.usecases.channel.valueprovider.parser.IntValueParser
@@ -31,44 +31,33 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ElectricityMeterValueProvider @Inject constructor(
-  private val userStateHolder: UserStateHolder
+class SwitchWithElectricityMeterValueProvider @Inject constructor(
+  private val userStateHolder: UserStateHolder,
+  private val electricityMeterValueProvider: ElectricityMeterValueProvider
 ) : ChannelValueProvider, IntValueParser {
 
   override fun handle(channelData: ChannelDataEntity): Boolean =
     when (channelData.function) {
-      SUPLA_CHANNELFNC_ELECTRICITY_METER -> true
+      SUPLA_CHANNELFNC_POWERSWITCH,
+      SUPLA_CHANNELFNC_LIGHTSWITCH,
+      SUPLA_CHANNELFNC_STAIRCASETIMER ->
+        channelData.channelValueEntity.subValueType == SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort()
+
       else -> false
     }
 
   override fun value(channelData: ChannelDataEntity, valueType: ValueType): Any =
     when (userStateHolder.getElectricityMeterSettings(channelData.profileId, channelData.remoteId).showOnListSafe) {
-      SuplaElectricityMeasurementType.REVERSE_ACTIVE_ENERGY ->
-        channelData.Electricity.value?.summary?.totalReverseActiveEnergy ?: UNKNOWN_VALUE
-
-      SuplaElectricityMeasurementType.POWER_ACTIVE ->
-        channelData.Electricity.value?.let { value ->
-          val powerActive = Phase.entries
-            .filter { it.disabledFlag.rawValue and channelData.flags == 0L }
-            .mapNotNull { value.getMeasurement(it.value, 0)?.powerActive }
-            .let { if (it.isEmpty()) Double.NaN else it.sum() }
-
-          if (value.measuredValues.suplaElectricityMeterMeasuredTypes.contains(SuplaElectricityMeasurementType.POWER_ACTIVE_KW)) {
-            powerActive.times(1000)
-          } else {
-            powerActive
-          }
-        } ?: UNKNOWN_VALUE
-
+      SuplaElectricityMeasurementType.REVERSE_ACTIVE_ENERGY,
+      SuplaElectricityMeasurementType.POWER_ACTIVE,
       SuplaElectricityMeasurementType.VOLTAGE ->
-        channelData.Electricity.value?.let { value ->
-          Phase.entries
-            .filter { it.disabledFlag.rawValue and channelData.flags == 0L }
-            .mapNotNull { value.getMeasurement(it.value, 0)?.voltage }
-            .average()
-        } ?: UNKNOWN_VALUE
+        electricityMeterValueProvider.value(channelData, valueType)
 
-      else -> asIntValue(channelData.channelValueEntity, startPos = 1, endPos = 4)?.div(100.0) ?: UNKNOWN_VALUE
+      else -> asIntValue(
+        channelData.channelValueEntity.getSubValueAsByteArray(),
+        startPos = 1,
+        endPos = 4
+      )?.div(100.0) ?: UNKNOWN_VALUE
     }
 
   companion object {

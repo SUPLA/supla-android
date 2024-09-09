@@ -33,7 +33,7 @@ import org.supla.android.extensions.guardLet
 import org.supla.android.features.details.electricitymeterdetail.history.ElectricityMeterChartType
 import org.supla.android.usecases.channel.measurementsprovider.electricity.ElectricityChartFilters
 import org.supla.android.usecases.channel.measurementsprovider.electricity.PhaseItem
-import org.supla.android.usecases.channel.valueformatter.ChartMarkerElectricityMeterValueFormatter
+import org.supla.android.usecases.channel.valueformatter.ListElectricityMeterValueFormatter
 import javax.inject.Inject
 
 data class ElectricityMarkerCustomData(
@@ -67,7 +67,7 @@ data class ElectricityMarkerCustomData(
 @AndroidEntryPoint
 class ElectricityMarkerView(context: Context) : BaseMarkerView(context) {
 
-  private val formatter = ChartMarkerElectricityMeterValueFormatter()
+  private val formatter = ListElectricityMeterValueFormatter(useNoValue = false)
   private val tableId: Int = View.generateViewId()
   private lateinit var firstRow: Row
   private lateinit var secondRow: Row

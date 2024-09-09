@@ -48,6 +48,7 @@ class CreateProfileChannelsListUseCase @Inject constructor(
   private val getChannelCaptionUseCase: GetChannelCaptionUseCase,
   private val getChannelIconUseCase: GetChannelIconUseCase,
   private val getChannelValueStringUseCase: GetChannelValueStringUseCase,
+  private val getSwitchValueStringUseCase: GetSwitchValueStringUseCase,
   private val valuesFormatter: ValuesFormatter
 ) {
 
@@ -186,9 +187,8 @@ class CreateProfileChannelsListUseCase @Inject constructor(
   }
 
   private fun toSwitchItem(channelData: ChannelDataEntity, childrenMap: MutableMap<Int, List<ChannelChildEntity?>>): ListItem.SwitchItem {
-    val value: String? = childrenMap[channelData.remoteId]?.firstOrNull()?.let {
-      getChannelValueStringUseCase.valueOrNull(it.channelDataEntity)
-    }
+    val children = childrenMap[channelData.remoteId]?.filterNotNull() ?: emptyList()
+    val value: String? = getSwitchValueStringUseCase(ChannelWithChildren(channelData, children))
 
     return ListItem.SwitchItem(
       channelData,

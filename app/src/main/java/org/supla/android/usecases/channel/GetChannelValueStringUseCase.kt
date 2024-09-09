@@ -27,6 +27,7 @@ import org.supla.android.usecases.channel.stringvalueprovider.ElectricityMeterVa
 import org.supla.android.usecases.channel.stringvalueprovider.GpmValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.HumidityAndTemperatureValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.ImpulseCounterValueStringProvider
+import org.supla.android.usecases.channel.stringvalueprovider.SwitchWithElectricityMeterValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.ThermometerValueStringProvider
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -39,6 +40,7 @@ class GetChannelValueStringUseCase @Inject constructor(
   generalPurposeMeasurementValueProvider: GpmValueStringProvider,
   distanceSensorValueStringProvider: DistanceSensorValueStringProvider,
   electricityMeterValueStringProvider: ElectricityMeterValueStringProvider,
+  switchWithElectricityMeterValueStringProvider: SwitchWithElectricityMeterValueStringProvider,
   impulseCounterValueStringProvider: ImpulseCounterValueStringProvider
 ) {
 
@@ -49,6 +51,7 @@ class GetChannelValueStringUseCase @Inject constructor(
     generalPurposeMeasurementValueProvider,
     distanceSensorValueStringProvider,
     electricityMeterValueStringProvider,
+    switchWithElectricityMeterValueStringProvider,
     impulseCounterValueStringProvider
   )
 
@@ -57,14 +60,12 @@ class GetChannelValueStringUseCase @Inject constructor(
   }
 
   fun valueOrNull(channel: ChannelDataEntity, valueType: ValueType = ValueType.FIRST, withUnit: Boolean = true): String? {
-    if (channel.channelValueEntity.online.not()) {
-      return ValuesFormatter.NO_VALUE_TEXT
-    }
-
-    providers.forEach {
-      if (it.handle(channel)) {
-        return it.value(channel, valueType, withUnit)
+    providers.firstOrNull { it.handle(channel) }?.let {
+      if (channel.channelValueEntity.online.not()) {
+        return ValuesFormatter.NO_VALUE_TEXT
       }
+
+      return it.value(channel, valueType, withUnit)
     }
 
     Trace.e(TAG, "No value formatter for channel function `${channel.function}`")
