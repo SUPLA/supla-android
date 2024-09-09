@@ -25,6 +25,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
+import androidx.annotation.Nullable;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -48,6 +49,7 @@ import org.supla.android.core.networking.suplaclient.SuplaClientEvent.Cancel;
 import org.supla.android.core.networking.suplaclient.SuplaClientEvent.Connecting;
 import org.supla.android.core.networking.suplaclient.SuplaClientEvent.Finish;
 import org.supla.android.core.networking.suplaclient.SuplaClientState;
+import org.supla.android.core.networking.suplaclient.SuplaClientState.Reason;
 import org.supla.android.core.networking.suplaclient.SuplaClientState.Reason.NoNetwork;
 import org.supla.android.core.networking.suplaclient.SuplaClientState.Reason.VersionError;
 import org.supla.android.core.networking.suplaclient.SuplaClientStateHolder;
@@ -1511,9 +1513,13 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     return _canceled;
   }
 
-  public synchronized void cancel() {
+  public void cancel() {
+    cancel(null);
+  }
+
+  public synchronized void cancel(@Nullable Reason reason) {
     _canceled = true;
-    suplaClientStateHolder.handleEvent(Cancel.INSTANCE);
+    suplaClientStateHolder.handleEvent(new Cancel(reason));
   }
 
   private String autodiscoverGetHost(String email) {

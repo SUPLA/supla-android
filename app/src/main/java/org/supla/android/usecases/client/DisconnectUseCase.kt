@@ -21,6 +21,7 @@ import io.reactivex.rxjava3.core.Completable
 import org.supla.android.Trace
 import org.supla.android.core.SuplaAppProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
+import org.supla.android.core.networking.suplaclient.SuplaClientState
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.extensions.TAG
 import javax.inject.Inject
@@ -33,14 +34,14 @@ class DisconnectUseCase @Inject constructor(
   private val updateEventsManager: UpdateEventsManager,
 ) {
 
-  operator fun invoke(): Completable = Completable.fromRunnable {
-    invokeSynchronous()
+  operator fun invoke(reason: SuplaClientState.Reason? = null): Completable = Completable.fromRunnable {
+    invokeSynchronous(reason)
   }
 
-  fun invokeSynchronous() {
+  fun invokeSynchronous(reason: SuplaClientState.Reason? = null) {
     val suplaClient = suplaClientProvider.provide()
     if (suplaClient != null && suplaClient.canceled().not()) {
-      suplaClient.cancel()
+      suplaClient.cancel(reason)
       try {
         suplaClient.join()
       } catch (ex: InterruptedException) {

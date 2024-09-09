@@ -88,7 +88,7 @@ class StatusViewModel @Inject constructor(
                 )
               }
 
-            SuplaClientState.Disconnecting,
+            is SuplaClientState.Disconnecting,
             SuplaClientState.Locking ->
               updateState {
                 it.copy(
@@ -149,7 +149,8 @@ class StatusViewModel @Inject constructor(
       is SuplaClientState.Reason.RegisterError -> { context -> reason.error.codeToString(context, true) }
       SuplaClientState.Reason.NoNetwork,
       SuplaClientState.Reason.VersionError,
-      SuplaClientState.Reason.AppInBackground -> null
+      SuplaClientState.Reason.AppInBackground,
+      SuplaClientState.Reason.AddWizardStarted -> null
     }
   }
 
