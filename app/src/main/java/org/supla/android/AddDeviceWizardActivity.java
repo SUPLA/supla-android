@@ -29,7 +29,6 @@ import android.Manifest.permission;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
@@ -64,6 +63,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.annotation.RequiresPermission;
@@ -72,6 +72,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import dagger.hilt.android.AndroidEntryPoint;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -83,10 +84,15 @@ import java.util.regex.Pattern;
 import javax.inject.Inject;
 import org.supla.android.core.networking.esp.EspConfigResult;
 import org.supla.android.core.networking.esp.EspHtmlParser;
+import org.supla.android.core.networking.suplaclient.SuplaClientEvent.AddWizardFinished;
+import org.supla.android.core.networking.suplaclient.SuplaClientState.Reason.AddWizardStarted;
+import org.supla.android.core.networking.suplaclient.SuplaClientStateHolder;
 import org.supla.android.lib.SuplaConst;
 import org.supla.android.lib.SuplaRegistrationEnabled;
 import org.supla.android.profile.AuthInfo;
 import org.supla.android.profile.ProfileManager;
+import org.supla.android.tools.SuplaSchedulers;
+import org.supla.android.usecases.client.DisconnectUseCase;
 
 @AndroidEntryPoint
 public class AddDeviceWizardActivity extends WizardActivity
@@ -160,6 +166,11 @@ public class AddDeviceWizardActivity extends WizardActivity
 
   @Inject ProfileManager profileManager;
   @Inject EspHtmlParser espHtmlParser;
+  @Inject SuplaClientStateHolder suplaClientStateHolder;
+  @Inject DisconnectUseCase disconnectUseCase;
+  @Inject SuplaSchedulers suplaSchedulers;
+
+  private final CompositeDisposable disposables = new CompositeDisposable();
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -213,15 +224,12 @@ public class AddDeviceWizardActivity extends WizardActivity
     btnEditWifiName.setOnClickListener(this);
 
     View.OnFocusChangeListener fcl =
-        new View.OnFocusChangeListener() {
-          @Override
-          public void onFocusChange(View v, boolean hasFocus) {
-            if (!hasFocus) {
-              InputMethodManager inputMethodManager =
-                  (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
-              if (inputMethodManager != null) {
-                inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
-              }
+        (v, hasFocus) -> {
+          if (!hasFocus) {
+            InputMethodManager inputMethodManager =
+                (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+            if (inputMethodManager != null) {
+              inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
             }
           }
         };
@@ -283,6 +291,16 @@ public class AddDeviceWizardActivity extends WizardActivity
 
     showMenuBar();
     registerMessageHandler();
+
+    getOnBackPressedDispatcher()
+        .addCallback(
+            this,
+            new OnBackPressedCallback(true) {
+              @Override
+              public void handleOnBackPressed() {
+                resumeClientAndClose();
+              }
+            });
   }
 
   private void setBackground(View view, int bgRes) {
@@ -363,15 +381,11 @@ public class AddDeviceWizardActivity extends WizardActivity
         .setMessage(R.string.add_device_needs_cloud_message)
         .setPositiveButton(
             R.string.add_device_needs_cloud_go,
-            new DialogInterface.OnClickListener() {
-              @Override
-              public void onClick(DialogInterface dialog, int which) {
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse("https://cloud.supla.org"));
-                showMain(AddDeviceWizardActivity.this);
-                startActivity(i);
-                finish();
-              }
+            (dialog, which) -> {
+              Intent i = new Intent(Intent.ACTION_VIEW);
+              i.setData(Uri.parse("https://cloud.supla.org"));
+              resumeClientAndClose();
+              startActivity(i);
             })
         .setNegativeButton(R.string.add_device_needs_cloud_dismiss, null)
         .create()
@@ -434,46 +448,31 @@ public class AddDeviceWizardActivity extends WizardActivity
     SuplaApp.getApp().getSuplaClient();
 
     watchDog = new Timer();
-    watchDog.scheduleAtFixedRate(
+    watchDog.schedule(
         new TimerTask() {
           @Override
           public void run() {
 
             runOnUiThread(
-                new Runnable() {
-                  public void run() {
+                () -> {
+                  int timeout =
+                      switch (step) {
+                        case STEP_CHECK_WIFI -> 20;
+                        case STEP_CHECK_REGISTRATION_ENABLED_TRY1,
+                                STEP_CHECK_REGISTRATION_ENABLED_TRY2,
+                                STEP_ENABLING_REGISTRATION ->
+                            10;
+                        case STEP_SCAN -> 50;
+                        case STEP_CONNECT, STEP_CONFIGURE -> 60;
+                        case STEP_RECONNECT -> 25;
+                        default -> 0;
+                      };
 
-                    int timeout = 0;
+                  if (timeout > 0
+                      && step_time != null
+                      && (System.currentTimeMillis() - step_time.getTime()) / 1000 >= timeout) {
 
-                    switch (step) {
-                      case STEP_CHECK_WIFI:
-                        timeout = 20;
-                        break;
-                      case STEP_CHECK_REGISTRATION_ENABLED_TRY1:
-                      case STEP_CHECK_REGISTRATION_ENABLED_TRY2:
-                        timeout = 10;
-                        break;
-                      case STEP_ENABLING_REGISTRATION:
-                        timeout = 10;
-                        break;
-                      case STEP_SCAN:
-                        timeout = 50;
-                        break;
-                      case STEP_CONNECT:
-                      case STEP_CONFIGURE:
-                        timeout = 60;
-                        break;
-                      case STEP_RECONNECT:
-                        timeout = 25;
-                        break;
-                    }
-
-                    if (timeout > 0
-                        && step_time != null
-                        && (System.currentTimeMillis() - step_time.getTime()) / 1000 >= timeout) {
-
-                      onWatchDogTimeout();
-                    }
+                    onWatchDogTimeout();
                   }
                 });
           }
@@ -482,19 +481,15 @@ public class AddDeviceWizardActivity extends WizardActivity
         1000);
 
     blinkTimer = new Timer();
-    blinkTimer.scheduleAtFixedRate(
+    blinkTimer.schedule(
         new TimerTask() {
           @Override
           public void run() {
-
             runOnUiThread(
-                new Runnable() {
-                  public void run() {
-
-                    if (getVisiblePageId() == PAGE_STEP_3) {
-                      ivDot.setVisibility(
-                          ivDot.getVisibility() == View.VISIBLE ? View.INVISIBLE : View.VISIBLE);
-                    }
+                () -> {
+                  if (getVisiblePageId() == PAGE_STEP_3) {
+                    ivDot.setVisibility(
+                        ivDot.getVisibility() == View.VISIBLE ? View.INVISIBLE : View.VISIBLE);
                   }
                 });
           }
@@ -578,6 +573,12 @@ public class AddDeviceWizardActivity extends WizardActivity
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
       connectToInternet_Q();
     }
+  }
+
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    disposables.clear();
   }
 
   private void setStep(int step) {
@@ -704,7 +705,7 @@ public class AddDeviceWizardActivity extends WizardActivity
           Settings.Secure.getInt(getContentResolver(), Settings.Secure.LOCATION_MODE);
       return locationMode != Settings.Secure.LOCATION_MODE_OFF;
     } catch (SettingNotFoundException e) {
-      e.printStackTrace();
+      Trace.d(AddDeviceWizardActivity.class.getSimpleName(), "Could not check location enabled", e);
     }
 
     return false;
@@ -749,13 +750,9 @@ public class AddDeviceWizardActivity extends WizardActivity
           // Autostart after 20 sec.
           new Handler()
               .postDelayed(
-                  new Runnable() {
-                    @Override
-                    public void run() {
-
-                      if (getVisiblePageId() == PAGE_STEP_3 && !isBtnNextPreloaderVisible()) {
-                        onBtnNextClick();
-                      }
+                  () -> {
+                    if (getVisiblePageId() == PAGE_STEP_3 && !isBtnNextPreloaderVisible()) {
+                      onBtnNextClick();
                     }
                   },
                   20000);
@@ -770,8 +767,7 @@ public class AddDeviceWizardActivity extends WizardActivity
         break;
       case PAGE_ERROR:
       case PAGE_DONE:
-        showMain(this);
-        finish();
+        resumeClientAndClose();
         break;
     }
   }
@@ -784,11 +780,10 @@ public class AddDeviceWizardActivity extends WizardActivity
       Preferences prefs = new Preferences(this);
       prefs.wizardSetSavePasswordEnabled(getSelectedSSID(), cbSavePassword.isChecked());
     } else if (v == btnEditWifiName) {
-
       setWifiNameEditingEnabled(
-          spWifiList.getAdapter() == null || spWifiList.getAdapter().getCount() == 0
-              ? true
-              : !isWifiNameEditingEnabled());
+          spWifiList.getAdapter() == null
+              || spWifiList.getAdapter().getCount() == 0
+              || !isWifiNameEditingEnabled());
     }
   }
 
@@ -841,8 +836,8 @@ public class AddDeviceWizardActivity extends WizardActivity
       SSID = SSID.substring(1, SSID.length() - 1);
     }
 
-    Pattern mFullPattern = Pattern.compile("\\-[A-Fa-f0-9]{12}$");
-    Pattern mShortPattern = Pattern.compile("\\-[A-Fa-f0-9]{4}$");
+    Pattern mFullPattern = Pattern.compile("-[A-Fa-f0-9]{12}$");
+    Pattern mShortPattern = Pattern.compile("-[A-Fa-f0-9]{4}$");
 
     return (SSID.startsWith("SUPLA-")
             || SSID.startsWith("ZAMEL-")
@@ -857,9 +852,7 @@ public class AddDeviceWizardActivity extends WizardActivity
   }
 
   private void startScan(boolean first) {
-
     unregisterReceivers();
-    final AddDeviceWizardActivity wizard = this;
 
     scanResultReceiver =
         new BroadcastReceiver() {
@@ -885,17 +878,7 @@ public class AddDeviceWizardActivity extends WizardActivity
 
               if (espNetworkName(iodev_SSID)) {
                 match = true;
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                  connect_Q();
-                } else {
-                  if (ContextCompat.checkSelfPermission(
-                          wizard, Manifest.permission.ACCESS_FINE_LOCATION)
-                      == PackageManager.PERMISSION_GRANTED) {
-                    connect();
-                  }
-                }
-
+                connectToEsp();
                 break;
               }
             }
@@ -916,13 +899,13 @@ public class AddDeviceWizardActivity extends WizardActivity
 
     registerReceiver(scanResultReceiver, i);
 
-    if (!SuplaApp.getApp().wifiStartScan(manager) && first) {
+    if (!SuplaApp.wifiStartScan(manager) && first) {
       showThrottlingDialog(STEP_SCAN_THROTTLING);
     }
   }
 
   private void showThrottlingDialog(int step) {
-    if (SuplaApp.getApp().getSecondsSinceLastWiFiScan() <= 120) {
+    if (SuplaApp.getSecondsSinceLastWiFiScan() <= 120) {
       setStep(step);
       WifiThrottlingNotificationDialog dialog = new WifiThrottlingNotificationDialog(this);
       dialog.setOnDialogResultListener(this);
@@ -1028,7 +1011,7 @@ public class AddDeviceWizardActivity extends WizardActivity
       for (Network n : ns) {
         NetworkCapabilities c = cm.getNetworkCapabilities(n);
 
-        if (c.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+        if (c != null && c.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
           if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             cm.bindProcessToNetwork(n);
           } else {
@@ -1082,11 +1065,30 @@ public class AddDeviceWizardActivity extends WizardActivity
     connectivityManager.requestNetwork(request, mainNetworkCallback);
   }
 
+  private void connectToEsp() {
+    disposables.add(
+        disconnectUseCase
+            .invoke(AddWizardStarted.INSTANCE)
+            .subscribeOn(suplaSchedulers.getIo())
+            .subscribe(
+                () -> {
+                  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    connect_Q();
+                  } else {
+                    int locationPermission =
+                        ContextCompat.checkSelfPermission(
+                            this, Manifest.permission.ACCESS_FINE_LOCATION);
+                    if (locationPermission == PackageManager.PERMISSION_GRANTED) {
+                      connect();
+                    }
+                  }
+                }));
+  }
+
   @RequiresApi(api = Build.VERSION_CODES.Q)
   private void connect_Q() {
     setStep(STEP_CONNECT);
 
-    final Preferences prefs = new Preferences(this);
     final AddDeviceWizardActivity wizard = this;
 
     final NetworkSpecifier specifier =
@@ -1205,7 +1207,10 @@ public class AddDeviceWizardActivity extends WizardActivity
                 try {
                   unregisterReceiver(stateChangedReceiver);
                 } catch (IllegalArgumentException e) {
-                  e.printStackTrace();
+                  Trace.d(
+                      AddDeviceWizardActivity.class.getSimpleName(),
+                      "Could not unregister receiver",
+                      e);
                 }
 
                 stateChangedReceiver = null;
@@ -1248,13 +1253,6 @@ public class AddDeviceWizardActivity extends WizardActivity
   }
 
   @Override
-  public void onBackPressed() {
-    super.onBackPressed();
-    showMain(this);
-    finish();
-  }
-
-  @Override
   public void espConfigFinished(final EspConfigResult result) {
 
     unregisterReceivers();
@@ -1285,7 +1283,10 @@ public class AddDeviceWizardActivity extends WizardActivity
                   try {
                     unregisterReceiver(stateChangedReceiver);
                   } catch (IllegalArgumentException e) {
-                    e.printStackTrace();
+                    Trace.d(
+                        AddDeviceWizardActivity.class.getSimpleName(),
+                        "Could not unregister receiver",
+                        e);
                   }
 
                   stateChangedReceiver = null;
@@ -1390,16 +1391,13 @@ public class AddDeviceWizardActivity extends WizardActivity
   public boolean onTouch(View v, MotionEvent event) {
 
     if (v == btnViewPassword) {
-      switch (event.getAction()) {
-        case MotionEvent.ACTION_DOWN:
-          if ((edPassword.getInputType() & InputType.TYPE_TEXT_VARIATION_PASSWORD) > 0) {
-            edPassword.setInputType(InputType.TYPE_CLASS_TEXT);
-          } else {
-            edPassword.setInputType(
-                InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-          }
-
-          break;
+      if (event.getAction() == MotionEvent.ACTION_DOWN) {
+        if ((edPassword.getInputType() & InputType.TYPE_TEXT_VARIATION_PASSWORD) > 0) {
+          edPassword.setInputType(InputType.TYPE_CLASS_TEXT);
+        } else {
+          edPassword.setInputType(
+              InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        }
       }
     }
 
@@ -1408,8 +1406,7 @@ public class AddDeviceWizardActivity extends WizardActivity
 
   @Override
   public void onWifiThrottlingDialogCancel(WifiThrottlingNotificationDialog dialog) {
-    showMain(this);
-    finish();
+    resumeClientAndClose();
   }
 
   @Override
@@ -1426,5 +1423,11 @@ public class AddDeviceWizardActivity extends WizardActivity
         SuplaApp.wifiStartScan(manager);
         break;
     }
+  }
+
+  private void resumeClientAndClose() {
+    suplaClientStateHolder.handleEvent(AddWizardFinished.INSTANCE);
+    showMain(this);
+    finish();
   }
 }

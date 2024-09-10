@@ -180,7 +180,7 @@ class MainActivity :
               SuplaClientState.FirstProfileCreation -> navigator.navigateToNewProfile()
               is SuplaClientState.Connecting,
               SuplaClientState.Initialization,
-              SuplaClientState.Disconnecting,
+              is SuplaClientState.Disconnecting,
               SuplaClientState.Locking,
               is SuplaClientState.Finished -> navigator.navigateToStatus()
 

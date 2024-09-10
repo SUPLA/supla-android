@@ -196,7 +196,7 @@ class StatusViewModelTest : BaseViewModelTest<StatusViewModelState, StatusViewEv
   @Test
   fun `should show disconnecting`() {
     // given
-    every { suplaClientStateHolder.state() } returns Observable.just(SuplaClientState.Disconnecting)
+    every { suplaClientStateHolder.state() } returns Observable.just(SuplaClientState.Disconnecting())
 
     // when
     viewModel.onStart()
