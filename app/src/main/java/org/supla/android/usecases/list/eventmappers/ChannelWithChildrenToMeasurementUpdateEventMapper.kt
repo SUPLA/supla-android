@@ -18,7 +18,6 @@ package org.supla.android.usecases.list.eventmappers
  */
 
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
-import org.supla.android.data.source.local.entity.complex.hasValue
 import org.supla.android.data.source.local.entity.complex.isMeasurement
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.extensions.guardLet
@@ -49,20 +48,14 @@ class ChannelWithChildrenToMeasurementUpdateEventMapper @Inject constructor(
     return toListItemData(channel.channel)
   }
 
-  private fun toListItemData(channelData: ChannelDataEntity): SlideableListItemData.Default {
-    val value: String? = when {
-      channelData.hasValue() -> getChannelValueStringUseCase(channelData)
-      else -> null
-    }
-
-    return SlideableListItemData.Default(
+  private fun toListItemData(channelData: ChannelDataEntity): SlideableListItemData.Default =
+    SlideableListItemData.Default(
       online = channelData.channelValueEntity.online,
       titleProvider = getChannelCaptionUseCase(channelData),
       icon = getChannelIconUseCase.invoke(channelData),
-      value = value,
+      value = getChannelValueStringUseCase.valueOrNull(channelData),
       issueIconType = null,
       estimatedTimerEndDate = null,
       infoSupported = SuplaChannelFlag.CHANNEL_STATE.inside(channelData.flags)
     )
-  }
 }

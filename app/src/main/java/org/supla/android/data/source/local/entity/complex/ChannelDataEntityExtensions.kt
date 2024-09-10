@@ -18,7 +18,6 @@ package org.supla.android.data.source.local.entity.complex
  */
 
 import org.supla.android.Trace
-import org.supla.android.data.model.general.hasElectricityMeter
 import org.supla.android.data.source.local.entity.custom.Phase
 import org.supla.android.data.source.local.entity.hasMeasurements
 import org.supla.android.data.source.local.entity.isElectricityMeter
@@ -35,7 +34,6 @@ import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementT
 import org.supla.android.data.source.remote.channel.suplaElectricityMeterMeasuredTypes
 import org.supla.android.extensions.TAG
 import org.supla.android.lib.SuplaChannelElectricityMeterValue
-import org.supla.android.lib.SuplaConst
 
 fun ChannelDataEntity.isMeasurement() = channelEntity.isMeasurement()
 
@@ -50,21 +48,6 @@ fun ChannelDataEntity.isElectricityMeter() = channelEntity.isElectricityMeter()
 fun ChannelDataEntity.isHvacThermostat() = channelEntity.isHvacThermostat()
 
 fun ChannelDataEntity.hasMeasurements() = channelEntity.hasMeasurements()
-
-fun ChannelDataEntity.hasValue(): Boolean =
-  when (function) {
-    SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT,
-    SuplaConst.SUPLA_CHANNELFNC_THERMOMETER,
-    SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR,
-    SuplaConst.SUPLA_CHANNELFNC_DISTANCESENSOR,
-    SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER -> true
-
-    SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH,
-    SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH,
-    SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER -> hasElectricityMeter
-
-    else -> false
-  }
 
 fun ChannelDataEntity.isThermometer() = channelEntity.isThermometer()
 

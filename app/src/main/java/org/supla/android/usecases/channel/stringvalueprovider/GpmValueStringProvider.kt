@@ -38,9 +38,9 @@ class GpmValueStringProvider @Inject constructor(
   @Named(GSON_FOR_REPO) private val gson: Gson
 ) : ChannelValueStringProvider {
 
-  override fun handle(function: Int): Boolean =
-    function == SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT ||
-      function == SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER
+  override fun handle(channelData: ChannelDataEntity): Boolean =
+    channelData.function == SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT ||
+      channelData.function == SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER
 
   override fun value(channelData: ChannelDataEntity, valueType: ValueType, withUnit: Boolean): String {
     val value = gpmValueProvider.value(channelData, valueType)

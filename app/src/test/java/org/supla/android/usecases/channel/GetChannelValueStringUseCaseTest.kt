@@ -37,6 +37,7 @@ import org.supla.android.usecases.channel.stringvalueprovider.DistanceSensorValu
 import org.supla.android.usecases.channel.stringvalueprovider.ElectricityMeterValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.GpmValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.HumidityAndTemperatureValueStringProvider
+import org.supla.android.usecases.channel.stringvalueprovider.ImpulseCounterValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.ThermometerValueStringProvider
 
 @RunWith(MockitoJUnitRunner::class)
@@ -59,6 +60,9 @@ class GetChannelValueStringUseCaseTest {
 
   @Mock
   private lateinit var electricityMeterValueStringProvider: ElectricityMeterValueStringProvider
+
+  @Mock
+  private lateinit var impulseCounterValueStringProvider: ImpulseCounterValueStringProvider
 
   @InjectMocks
   private lateinit var useCase: GetChannelValueStringUseCase
@@ -95,10 +99,10 @@ class GetChannelValueStringUseCaseTest {
 
     // then
     assertThat(valueText).isEqualTo(ValuesFormatter.NO_VALUE_TEXT)
-    verify(thermometerValueProvider).handle(function)
-    verify(humidityAndTemperatureValueProvider).handle(function)
-    verify(depthSensorValueProvider).handle(function)
-    verify(generalPurposeMeasurementValueProvider).handle(function)
+    verify(thermometerValueProvider).handle(channel)
+    verify(humidityAndTemperatureValueProvider).handle(channel)
+    verify(depthSensorValueProvider).handle(channel)
+    verify(generalPurposeMeasurementValueProvider).handle(channel)
     verifyNoMoreInteractions(
       thermometerValueProvider,
       humidityAndTemperatureValueProvider,
@@ -119,7 +123,7 @@ class GetChannelValueStringUseCaseTest {
       }
     }
 
-    whenever(humidityAndTemperatureValueProvider.handle(function)).thenReturn(true)
+    whenever(humidityAndTemperatureValueProvider.handle(channel)).thenReturn(true)
     whenever(humidityAndTemperatureValueProvider.value(channel, ValueType.FIRST)).thenReturn(value)
 
     // when
@@ -127,8 +131,8 @@ class GetChannelValueStringUseCaseTest {
 
     // then
     assertThat(valueText).isEqualTo(value)
-    verify(thermometerValueProvider).handle(function)
-    verify(humidityAndTemperatureValueProvider).handle(function)
+    verify(thermometerValueProvider).handle(channel)
+    verify(humidityAndTemperatureValueProvider).handle(channel)
     verify(humidityAndTemperatureValueProvider).value(channel, ValueType.FIRST)
     verifyNoMoreInteractions(thermometerValueProvider, humidityAndTemperatureValueProvider)
     verifyNoInteractions(depthSensorValueProvider, generalPurposeMeasurementValueProvider)

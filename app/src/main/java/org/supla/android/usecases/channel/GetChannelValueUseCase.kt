@@ -23,6 +23,7 @@ import org.supla.android.usecases.channel.valueprovider.DistanceSensorValueProvi
 import org.supla.android.usecases.channel.valueprovider.ElectricityMeterValueProvider
 import org.supla.android.usecases.channel.valueprovider.GpmValueProvider
 import org.supla.android.usecases.channel.valueprovider.HumidityAndTemperatureValueProvider
+import org.supla.android.usecases.channel.valueprovider.ImpulseCounterValueProvider
 import org.supla.android.usecases.channel.valueprovider.ThermometerValueProvider
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -34,7 +35,8 @@ class GetChannelValueUseCase @Inject constructor(
   humidityAndTemperatureValueProvider: HumidityAndTemperatureValueProvider,
   thermometerValueProvider: ThermometerValueProvider,
   distanceSensorValueProvider: DistanceSensorValueProvider,
-  electricityMeterValueProvider: ElectricityMeterValueProvider
+  electricityMeterValueProvider: ElectricityMeterValueProvider,
+  impulseCounterValueProvider: ImpulseCounterValueProvider
 ) {
 
   private val providers = listOf(
@@ -43,13 +45,14 @@ class GetChannelValueUseCase @Inject constructor(
     humidityAndTemperatureValueProvider,
     thermometerValueProvider,
     distanceSensorValueProvider,
-    electricityMeterValueProvider
+    electricityMeterValueProvider,
+    impulseCounterValueProvider
   )
 
   @Suppress("UNCHECKED_CAST")
   operator fun <T> invoke(channel: ChannelDataEntity, valueType: ValueType = ValueType.FIRST): T {
     providers.forEach {
-      if (it.handle(channel.function)) {
+      if (it.handle(channel)) {
         return it.value(channel, valueType) as T
       }
     }
@@ -59,7 +62,7 @@ class GetChannelValueUseCase @Inject constructor(
 }
 
 interface ChannelValueProvider {
-  fun handle(function: Int): Boolean
+  fun handle(channelData: ChannelDataEntity): Boolean
 
   fun value(channelData: ChannelDataEntity, valueType: ValueType): Any
 }

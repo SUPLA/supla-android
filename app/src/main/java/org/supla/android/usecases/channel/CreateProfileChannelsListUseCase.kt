@@ -26,7 +26,6 @@ import org.supla.android.data.source.local.entity.ChannelRelationType
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
-import org.supla.android.data.source.local.entity.complex.hasValue
 import org.supla.android.data.source.local.entity.complex.isGpMeasurement
 import org.supla.android.data.source.local.entity.complex.isGpMeter
 import org.supla.android.data.source.local.entity.complex.isHvacThermostat
@@ -111,7 +110,7 @@ class CreateProfileChannelsListUseCase @Inject constructor(
       channelData.isGpMeasurement() -> toGpMeasurement(channelData)
       channelData.isGpMeter() -> toGpMeterItem(channelData)
       channelData.isMeasurement() -> toMeasurementItem(channelData)
-      channelData.isSwitch() -> toSwitchItem(channelData)
+      channelData.isSwitch() -> toSwitchItem(channelData, childrenMap)
       channelData.isHvacThermostat() -> toThermostatItem(channelData, childrenMap)
       channelData.isShadingSystem() -> toShadingSystemItem(channelData)
       channelData.isProjectorScreen() -> toShadingSystemItem(channelData)
@@ -140,18 +139,13 @@ class CreateProfileChannelsListUseCase @Inject constructor(
     )
 
   private fun toMeasurementItem(channelData: ChannelDataEntity): ListItem.MeasurementItem {
-    val value: String? = when {
-      channelData.hasValue() -> getChannelValueStringUseCase(channelData)
-      else -> null
-    }
-
     return ListItem.MeasurementItem(
       channelData,
       channelData.locationEntity.caption,
       channelData.channelValueEntity.online,
       getChannelCaptionUseCase(channelData),
       getChannelIconUseCase(channelData),
-      value
+      getChannelValueStringUseCase.valueOrNull(channelData)
     )
   }
 
@@ -191,10 +185,9 @@ class CreateProfileChannelsListUseCase @Inject constructor(
     )
   }
 
-  private fun toSwitchItem(channelData: ChannelDataEntity): ListItem.SwitchItem {
-    val value: String? = when {
-      channelData.hasValue() -> getChannelValueStringUseCase(channelData)
-      else -> null
+  private fun toSwitchItem(channelData: ChannelDataEntity, childrenMap: MutableMap<Int, List<ChannelChildEntity?>>): ListItem.SwitchItem {
+    val value: String? = childrenMap[channelData.remoteId]?.firstOrNull()?.let {
+      getChannelValueStringUseCase.valueOrNull(it.channelDataEntity)
     }
 
     return ListItem.SwitchItem(

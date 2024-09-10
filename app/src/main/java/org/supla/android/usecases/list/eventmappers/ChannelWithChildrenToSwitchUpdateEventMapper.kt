@@ -17,8 +17,6 @@ package org.supla.android.usecases.list.eventmappers
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
-import org.supla.android.data.source.local.entity.complex.hasValue
 import org.supla.android.data.source.local.entity.isSwitch
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.extensions.guardLet
@@ -46,13 +44,13 @@ class ChannelWithChildrenToSwitchUpdateEventMapper @Inject constructor(
     val (channel) = guardLet(item as? ChannelWithChildren) {
       throw IllegalArgumentException("Expected Channel but got $item")
     }
-    return toListItemData(channel.channel)
+    return toListItemData(channel)
   }
 
-  private fun toListItemData(channelData: ChannelDataEntity): SlideableListItemData.Default {
-    val value: String? = when {
-      channelData.hasValue() -> getChannelValueStringUseCase(channelData)
-      else -> null
+  private fun toListItemData(channelWithChildren: ChannelWithChildren): SlideableListItemData.Default {
+    val channelData = channelWithChildren.channel
+    val value: String? = channelWithChildren.children.firstOrNull()?.let {
+      getChannelValueStringUseCase.valueOrNull(it.channelDataEntity)
     }
 
     return SlideableListItemData.Default(

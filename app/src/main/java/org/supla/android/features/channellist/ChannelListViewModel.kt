@@ -152,7 +152,7 @@ class ChannelListViewModel @Inject constructor(
         .subscribeBy(
           onSuccess = { channel ->
             currentState().channels
-              ?.filterIsInstance(ListItem.ChannelItem::class.java)
+              ?.filterIsInstance<ListItem.ChannelItem>()
               ?.first { it.channelBase.remoteId == channel.remoteId }
               ?.channelBase = channel
           },

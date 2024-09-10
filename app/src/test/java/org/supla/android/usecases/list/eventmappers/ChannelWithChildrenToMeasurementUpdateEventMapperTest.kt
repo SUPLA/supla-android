@@ -94,7 +94,7 @@ class ChannelWithChildrenToMeasurementUpdateEventMapperTest {
 
     val imageId = ImageId(123)
     val channelWithChildren = ChannelWithChildren(channel, emptyList())
-    whenever(getChannelValueStringUseCase.invoke(channel)).thenReturn(value)
+    whenever(getChannelValueStringUseCase.valueOrNull(channel)).thenReturn(value)
     whenever(getChannelCaptionUseCase.invoke(channel)).thenReturn { caption }
     whenever(getChannelIconUseCase.invoke(channel)).thenReturn(imageId)
 

@@ -28,8 +28,8 @@ import javax.inject.Singleton
 @Singleton
 class HumidityAndTemperatureValueProvider @Inject constructor() : ChannelValueProvider, IntValueParser {
 
-  override fun handle(function: Int): Boolean =
-    function == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
+  override fun handle(channelData: ChannelDataEntity): Boolean =
+    channelData.function == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
 
   override fun value(channelData: ChannelDataEntity, valueType: ValueType): Double {
     return when (valueType) {

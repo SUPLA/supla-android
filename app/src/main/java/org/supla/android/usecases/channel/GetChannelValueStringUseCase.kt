@@ -26,6 +26,7 @@ import org.supla.android.usecases.channel.stringvalueprovider.DistanceSensorValu
 import org.supla.android.usecases.channel.stringvalueprovider.ElectricityMeterValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.GpmValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.HumidityAndTemperatureValueStringProvider
+import org.supla.android.usecases.channel.stringvalueprovider.ImpulseCounterValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.ThermometerValueStringProvider
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -37,7 +38,8 @@ class GetChannelValueStringUseCase @Inject constructor(
   depthSensorValueProvider: DepthSensorValueStringProvider,
   generalPurposeMeasurementValueProvider: GpmValueStringProvider,
   distanceSensorValueStringProvider: DistanceSensorValueStringProvider,
-  electricityMeterValueStringProvider: ElectricityMeterValueStringProvider
+  electricityMeterValueStringProvider: ElectricityMeterValueStringProvider,
+  impulseCounterValueStringProvider: ImpulseCounterValueStringProvider
 ) {
 
   private val providers = listOf(
@@ -46,22 +48,27 @@ class GetChannelValueStringUseCase @Inject constructor(
     depthSensorValueProvider,
     generalPurposeMeasurementValueProvider,
     distanceSensorValueStringProvider,
-    electricityMeterValueStringProvider
+    electricityMeterValueStringProvider,
+    impulseCounterValueStringProvider
   )
 
   operator fun invoke(channel: ChannelDataEntity, valueType: ValueType = ValueType.FIRST, withUnit: Boolean = true): String {
+    return valueOrNull(channel, valueType, withUnit) ?: ValuesFormatter.NO_VALUE_TEXT
+  }
+
+  fun valueOrNull(channel: ChannelDataEntity, valueType: ValueType = ValueType.FIRST, withUnit: Boolean = true): String? {
     if (channel.channelValueEntity.online.not()) {
       return ValuesFormatter.NO_VALUE_TEXT
     }
 
     providers.forEach {
-      if (it.handle(channel.function)) {
+      if (it.handle(channel)) {
         return it.value(channel, valueType, withUnit)
       }
     }
 
     Trace.e(TAG, "No value formatter for channel function `${channel.function}`")
-    return ValuesFormatter.NO_VALUE_TEXT
+    return null
   }
 }
 
@@ -70,7 +77,6 @@ enum class ValueType {
 }
 
 interface ChannelValueStringProvider {
-  fun handle(function: Int): Boolean
-
+  fun handle(channelData: ChannelDataEntity): Boolean
   fun value(channelData: ChannelDataEntity, valueType: ValueType, withUnit: Boolean = true): String
 }
