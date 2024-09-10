@@ -19,10 +19,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import org.supla.android.core.storage.UserStateHolder
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER
 import org.supla.android.usecases.channel.ChannelValueStringProvider
 import org.supla.android.usecases.channel.ValueType
 import org.supla.android.usecases.channel.valueformatter.ListElectricityMeterValueFormatter
@@ -38,15 +34,8 @@ class ElectricityMeterValueStringProvider @Inject constructor(
 
   private val formatter = ListElectricityMeterValueFormatter()
 
-  override fun handle(function: Int): Boolean =
-    when (function) {
-      SUPLA_CHANNELFNC_ELECTRICITY_METER,
-      SUPLA_CHANNELFNC_POWERSWITCH,
-      SUPLA_CHANNELFNC_LIGHTSWITCH,
-      SUPLA_CHANNELFNC_STAIRCASETIMER -> true
-
-      else -> false
-    }
+  override fun handle(channelData: ChannelDataEntity): Boolean =
+    electricityMeterValueProvider.handle(channelData)
 
   override fun value(channelData: ChannelDataEntity, valueType: ValueType, withUnit: Boolean): String {
     val value = electricityMeterValueProvider.value(channelData, valueType)

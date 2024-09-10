@@ -24,10 +24,12 @@ class HumidityAndTemperatureValueProviderTest {
   @Test
   fun `should handle value`() {
     // given
-    val function = SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
+    val channel: ChannelDataEntity = mockk {
+      every { function } returns SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
+    }
 
     // when
-    val result = valueProvider.handle(function)
+    val result = valueProvider.handle(channel)
 
     // then
     assertThat(result).isTrue()

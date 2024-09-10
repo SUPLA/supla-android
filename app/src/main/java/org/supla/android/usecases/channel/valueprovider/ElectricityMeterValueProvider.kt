@@ -24,9 +24,6 @@ import org.supla.android.data.source.local.entity.custom.Phase
 import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType
 import org.supla.android.data.source.remote.channel.suplaElectricityMeterMeasuredTypes
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER
 import org.supla.android.usecases.channel.ChannelValueProvider
 import org.supla.android.usecases.channel.ValueType
 import org.supla.android.usecases.channel.valueprovider.parser.IntValueParser
@@ -38,13 +35,9 @@ class ElectricityMeterValueProvider @Inject constructor(
   private val userStateHolder: UserStateHolder
 ) : ChannelValueProvider, IntValueParser {
 
-  override fun handle(function: Int): Boolean =
-    when (function) {
-      SUPLA_CHANNELFNC_ELECTRICITY_METER,
-      SUPLA_CHANNELFNC_POWERSWITCH,
-      SUPLA_CHANNELFNC_LIGHTSWITCH,
-      SUPLA_CHANNELFNC_STAIRCASETIMER -> true
-
+  override fun handle(channelData: ChannelDataEntity): Boolean =
+    when (channelData.function) {
+      SUPLA_CHANNELFNC_ELECTRICITY_METER -> true
       else -> false
     }
 
@@ -57,7 +50,7 @@ class ElectricityMeterValueProvider @Inject constructor(
         channelData.Electricity.value?.let { value ->
           val powerActive = Phase.entries
             .filter { it.disabledFlag.rawValue and channelData.flags == 0L }
-            .sumOf { value.getMeasurement(it.value, 0).powerActive }
+            .sumOf { value.getMeasurement(it.value, 0)?.powerActive ?: 0.0 }
 
           if (value.measuredValues.suplaElectricityMeterMeasuredTypes.contains(SuplaElectricityMeasurementType.POWER_ACTIVE_KW)) {
             powerActive.times(1000)
@@ -70,16 +63,11 @@ class ElectricityMeterValueProvider @Inject constructor(
         channelData.Electricity.value?.let { value ->
           Phase.entries
             .filter { it.disabledFlag.rawValue and channelData.flags == 0L }
-            .map { value.getMeasurement(it.value, 0).voltage }
+            .map { value.getMeasurement(it.value, 0)?.voltage ?: 0.0 }
             .average()
         } ?: UNKNOWN_VALUE
 
-      else ->
-        if (channelData.function == SUPLA_CHANNELFNC_ELECTRICITY_METER) {
-          asIntValue(channelData.channelValueEntity, startPos = 1, endPos = 4)?.div(100.0) ?: UNKNOWN_VALUE
-        } else {
-          asIntValue(channelData.channelValueEntity.getSubValueAsByteArray(), startPos = 1, endPos = 4)?.div(100.0) ?: UNKNOWN_VALUE
-        }
+      else -> asIntValue(channelData.channelValueEntity, startPos = 1, endPos = 4)?.div(100.0) ?: UNKNOWN_VALUE
     }
 
   companion object {

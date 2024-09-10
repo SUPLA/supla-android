@@ -61,6 +61,7 @@ import androidx.compose.ui.unit.dp
 import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
+import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType
 import org.supla.android.ui.views.ChannelOfflineView
 
@@ -200,7 +201,7 @@ private fun PhaseDataSinglePhase(
         horizontalAlignment = Alignment.CenterHorizontally
       ) {
         types.forEach {
-          PhaseValueUnit(if (phase.values.contains(it)) it.unit else "")
+          PhaseValueUnit(if (phase.values.contains(it) && phase.values[it] != null) it.unit else ValuesFormatter.NO_VALUE_TEXT)
         }
       }
     }

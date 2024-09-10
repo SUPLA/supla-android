@@ -37,6 +37,7 @@ import org.supla.android.usecases.channel.valueprovider.DistanceSensorValueProvi
 import org.supla.android.usecases.channel.valueprovider.ElectricityMeterValueProvider
 import org.supla.android.usecases.channel.valueprovider.GpmValueProvider
 import org.supla.android.usecases.channel.valueprovider.HumidityAndTemperatureValueProvider
+import org.supla.android.usecases.channel.valueprovider.ImpulseCounterValueProvider
 import org.supla.android.usecases.channel.valueprovider.ThermometerValueProvider
 
 @RunWith(MockitoJUnitRunner::class)
@@ -60,6 +61,9 @@ class GetChannelValueUseCaseTest {
   @Mock
   private lateinit var electricityMeterValueProvider: ElectricityMeterValueProvider
 
+  @Mock
+  private lateinit var impulseCounterValueProvider: ImpulseCounterValueProvider
+
   @InjectMocks
   private lateinit var useCase: GetChannelValueUseCase
 
@@ -78,10 +82,10 @@ class GetChannelValueUseCaseTest {
       .isInstanceOf(IllegalStateException::class.java)
 
     // then
-    verify(thermometerValueProvider).handle(SUPLA_CHANNELFNC_HUMIDITY)
-    verify(humidityAndTemperatureValueProvider).handle(SUPLA_CHANNELFNC_HUMIDITY)
-    verify(depthSensorValueProvider).handle(SUPLA_CHANNELFNC_HUMIDITY)
-    verify(gpmValueProvider).handle(SUPLA_CHANNELFNC_HUMIDITY)
+    verify(thermometerValueProvider).handle(channel)
+    verify(humidityAndTemperatureValueProvider).handle(channel)
+    verify(depthSensorValueProvider).handle(channel)
+    verify(gpmValueProvider).handle(channel)
     verifyNoMoreInteractions(
       thermometerValueProvider,
       humidityAndTemperatureValueProvider,
@@ -102,7 +106,7 @@ class GetChannelValueUseCaseTest {
       }
     }
 
-    whenever(humidityAndTemperatureValueProvider.handle(function)).thenReturn(true)
+    whenever(humidityAndTemperatureValueProvider.handle(channel)).thenReturn(true)
     whenever(humidityAndTemperatureValueProvider.value(channel, ValueType.FIRST)).thenReturn(value)
 
     // when
@@ -110,9 +114,9 @@ class GetChannelValueUseCaseTest {
 
     // then
     Assertions.assertThat(valueText).isEqualTo(value)
-    verify(depthSensorValueProvider).handle(function)
-    verify(gpmValueProvider).handle(function)
-    verify(humidityAndTemperatureValueProvider).handle(function)
+    verify(depthSensorValueProvider).handle(channel)
+    verify(gpmValueProvider).handle(channel)
+    verify(humidityAndTemperatureValueProvider).handle(channel)
     verify(humidityAndTemperatureValueProvider).value(channel, ValueType.FIRST)
     verifyNoMoreInteractions(depthSensorValueProvider, gpmValueProvider, humidityAndTemperatureValueProvider)
     verifyNoInteractions(thermometerValueProvider)

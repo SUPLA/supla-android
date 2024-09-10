@@ -64,20 +64,20 @@ enum class SuplaElectricityMeasurementType(val rawValue: Int, val ordering: Int,
       else -> false
     }
 
-  val provider: ((SuplaChannelElectricityMeterValue.Measurement, SuplaChannelElectricityMeterValue.Summary) -> Float)?
+  val provider: ((SuplaChannelElectricityMeterValue.Measurement?, SuplaChannelElectricityMeterValue.Summary) -> Float?)?
     get() = when (this) {
-      FREQUENCY -> { measurement, _ -> measurement.freq.toFloat() }
-      VOLTAGE -> { measurement, _ -> measurement.voltage.toFloat() }
-      CURRENT -> { measurement, _ -> measurement.current.toFloat() }
-      CURRENT_OVER_65A -> { measurement, _ -> measurement.current.toFloat().times(10) }
-      POWER_ACTIVE -> { measurement, _ -> measurement.powerActive.toFloat() }
-      POWER_ACTIVE_KW -> { measurement, _ -> measurement.powerActive.toFloat().times(1000) }
-      POWER_REACTIVE -> { measurement, _ -> measurement.powerReactive.toFloat() }
-      POWER_REACTIVE_KVAR -> { measurement, _ -> measurement.powerReactive.toFloat().times(1000) }
-      POWER_APPARENT -> { measurement, _ -> measurement.powerApparent.toFloat() }
-      POWER_APPARENT_KVA -> { measurement, _ -> measurement.powerApparent.toFloat().times(1000) }
-      POWER_FACTOR -> { measurement, _ -> measurement.powerFactor.toFloat() }
-      PHASE_ANGLE -> { measurement, _ -> measurement.phaseAngle.toFloat() }
+      FREQUENCY -> { measurement, _ -> measurement?.freq?.toFloat() }
+      VOLTAGE -> { measurement, _ -> measurement?.voltage?.toFloat() }
+      CURRENT -> { measurement, _ -> measurement?.current?.toFloat() }
+      CURRENT_OVER_65A -> { measurement, _ -> measurement?.current?.toFloat()?.times(10) }
+      POWER_ACTIVE -> { measurement, _ -> measurement?.powerActive?.toFloat() }
+      POWER_ACTIVE_KW -> { measurement, _ -> measurement?.powerActive?.toFloat()?.times(1000) }
+      POWER_REACTIVE -> { measurement, _ -> measurement?.powerReactive?.toFloat() }
+      POWER_REACTIVE_KVAR -> { measurement, _ -> measurement?.powerReactive?.toFloat()?.times(1000) }
+      POWER_APPARENT -> { measurement, _ -> measurement?.powerApparent?.toFloat() }
+      POWER_APPARENT_KVA -> { measurement, _ -> measurement?.powerApparent?.toFloat()?.times(1000) }
+      POWER_FACTOR -> { measurement, _ -> measurement?.powerFactor?.toFloat() }
+      PHASE_ANGLE -> { measurement, _ -> measurement?.phaseAngle?.toFloat() }
       FORWARD_ACTIVE_ENERGY -> { _, sum -> sum.totalForwardActiveEnergy.toFloat() }
       REVERSE_ACTIVE_ENERGY -> { _, sum -> sum.totalReverseActiveEnergy.toFloat() }
       FORWARD_REACTIVE_ENERGY -> { _, sum -> sum.totalForwardReactiveEnergy.toFloat() }

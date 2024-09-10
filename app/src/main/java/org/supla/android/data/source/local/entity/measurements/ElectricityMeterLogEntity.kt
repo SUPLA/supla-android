@@ -219,10 +219,12 @@ data class PhaseValues(
       else -> null
     }
 
-  fun valueFor(spec: ChartDataSpec): Float? {
-    return (spec.customFilters as? ElectricityChartFilters)?.let { valueFor(it.type) }
-      ?: valueFor(ElectricityMeterChartType.FORWARDED_ACTIVE_ENERGY)
-  }
+  fun valueFor(spec: ChartDataSpec): Float? =
+    if (spec.customFilters is ElectricityChartFilters) {
+      valueFor(spec.customFilters.type)
+    } else {
+      valueFor(ElectricityMeterChartType.FORWARDED_ACTIVE_ENERGY)
+    }
 
   operator fun plus(other: PhaseValues): PhaseValues =
     PhaseValues(

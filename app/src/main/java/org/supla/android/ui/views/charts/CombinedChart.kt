@@ -126,7 +126,7 @@ fun CombinedChart(
       // Left axis
       chart.axisLeft.valueFormatter = object : ValueFormatter() {
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
-          return data.leftAxisFormatter.format(value.toDouble(), withUnit = false, 1)
+          return data.leftAxisFormatter.format(value.toDouble(), withUnit = false, chart.axisLeft.mDecimals)
         }
       }
       chart.axisLeft.isEnabled = withLeftAxis
@@ -143,7 +143,7 @@ fun CombinedChart(
       chart.axisRight.valueFormatter = object : ValueFormatter() {
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
           val withUnit = data.rightAxisFormatter is HumidityValueFormatter
-          return data.rightAxisFormatter.format(value.toDouble(), withUnit = withUnit, 1)
+          return data.rightAxisFormatter.format(value.toDouble(), withUnit = withUnit, chart.axisRight.mDecimals)
         }
       }
       chart.axisRight.isEnabled = withRightAxis

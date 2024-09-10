@@ -169,8 +169,9 @@ private fun PhaseWithMeasurements.Companion.forPhase(
   val values = mutableMapOf<SuplaElectricityMeasurementType, String>().apply {
     types.mapNotNull { type ->
       type.provider?.let { provider ->
-        val value = provider(phaseWithData.measurement, phaseWithData.summary)
-        put(type, formatter.custom(value, type.precision))
+        provider(phaseWithData.measurement, phaseWithData.summary)?.let {
+          put(type, formatter.custom(it, type.precision))
+        }
       }
     }
   }
@@ -188,7 +189,9 @@ private fun PhaseWithMeasurements.Companion.allPhases(
       // export values for given type as a list
       val values = phasesWithData.mapNotNull { type.provider?.invoke(it.measurement, it.summary) }
       // perform merge operation on the values for all phases to get single value
-      type.merge(values)?.let { put(type, formatter.custom(it, type.precision)) }
+      if (values.isNotEmpty()) {
+        type.merge(values)?.let { put(type, formatter.custom(it, type.precision)) }
+      }
     }
   }
   return PhaseWithMeasurements(R.string.em_chart_all_phases, values)
@@ -199,6 +202,6 @@ private fun ChartMarkerElectricityMeterValueFormatter.custom(value: Float, preci
 
 private data class PhaseWithData(
   val phase: Phase,
-  val measurement: Measurement,
+  val measurement: Measurement?,
   val summary: Summary
 )

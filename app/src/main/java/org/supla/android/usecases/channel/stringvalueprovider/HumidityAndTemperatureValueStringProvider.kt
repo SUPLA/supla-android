@@ -36,8 +36,8 @@ class HumidityAndTemperatureValueStringProvider @Inject constructor(
 
   private val temperatureFormatter = ThermometerValueFormatter(preferences)
   private val humidityFormatter = HumidityValueFormatter()
-  override fun handle(function: Int): Boolean =
-    function == SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
+  override fun handle(channelData: ChannelDataEntity): Boolean =
+    channelData.function == SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
 
   override fun value(channelData: ChannelDataEntity, valueType: ValueType, withUnit: Boolean): String {
     val value = humidityAndTemperatureValueProvider.value(channelData, valueType)
