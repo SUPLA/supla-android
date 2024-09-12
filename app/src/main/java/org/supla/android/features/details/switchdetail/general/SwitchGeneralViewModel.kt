@@ -37,13 +37,12 @@ import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.DownloadEventsManager
 import org.supla.android.extensions.monthStart
-import org.supla.android.features.details.detailbase.electricitymeter.ElectricityMeterChannelViewModel
+import org.supla.android.features.details.detailbase.electricitymeter.ElectricityMeterGeneralStateHandler
 import org.supla.android.features.details.detailbase.electricitymeter.ElectricityMeterState
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.DownloadChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.GetChannelStateUseCase
-import org.supla.android.usecases.channel.GetChannelValueUseCase
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.channel.electricitymeter.ElectricityMeasurements
 import org.supla.android.usecases.channel.electricitymeter.LoadElectricityMeterMeasurementsUseCase
@@ -56,17 +55,17 @@ import javax.inject.Inject
 @HiltViewModel
 class SwitchGeneralViewModel @Inject constructor(
   private val loadElectricityMeterMeasurementsUseCase: LoadElectricityMeterMeasurementsUseCase,
+  private val electricityMeterGeneralStateHandler: ElectricityMeterGeneralStateHandler,
   private val downloadChannelMeasurementsUseCase: DownloadChannelMeasurementsUseCase,
   private val readChannelGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase,
   private val readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
   private val executeSimpleActionUseCase: ExecuteSimpleActionUseCase,
-  private val getChannelValueUseCase: GetChannelValueUseCase,
   private val getChannelStateUseCase: GetChannelStateUseCase,
   private val getChannelIconUseCase: GetChannelIconUseCase,
   private val downloadEventsManager: DownloadEventsManager,
   private val dateProvider: DateProvider,
   schedulers: SuplaSchedulers
-) : BaseViewModel<SwitchGeneralViewState, SwitchGeneralViewEvent>(SwitchGeneralViewState(), schedulers), ElectricityMeterChannelViewModel {
+) : BaseViewModel<SwitchGeneralViewState, SwitchGeneralViewEvent>(SwitchGeneralViewState(), schedulers) {
 
   fun onViewCreated(remoteId: Int) {
     observeDownload(remoteId)
@@ -128,10 +127,9 @@ class SwitchGeneralViewModel @Inject constructor(
         deviceStateValue = getDeviceStateValue(data),
         onIcon = getChannelIconUseCase.getIconProvider(data, channelStateValue = ChannelState.Value.ON),
         offIcon = getChannelIconUseCase.getIconProvider(data, channelStateValue = ChannelState.Value.OFF),
-        electricityMeterState = (data as? ChannelDataEntity)?.let {
-          updateElectricityMeterState(state.electricityMeterState, it, measurements, getChannelValueUseCase)
-            ?.copy(currentMonthDownloading = downloading)
-        }
+        electricityMeterState = electricityMeterGeneralStateHandler
+          .updateState(state.electricityMeterState, data, measurements)
+          ?.copy(currentMonthDownloading = downloading)
       )
     }
   }
@@ -193,6 +191,13 @@ class SwitchGeneralViewModel @Inject constructor(
       }
     }
   }
+
+  fun ElectricityMeterGeneralStateHandler.updateState(
+    state: ElectricityMeterState?,
+    data: ChannelDataBase,
+    measurements: ElectricityMeasurements?
+  ): ElectricityMeterState? =
+    (data as? ChannelDataEntity)?.let { updateState(state, it, measurements) }
 }
 
 sealed class SwitchGeneralViewEvent : ViewEvent

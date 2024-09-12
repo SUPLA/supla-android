@@ -26,12 +26,10 @@ import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.events.DownloadEventsManager
-import org.supla.android.extensions.guardLet
 import org.supla.android.extensions.monthStart
-import org.supla.android.features.details.detailbase.electricitymeter.ElectricityMeterChannelViewModel
+import org.supla.android.features.details.detailbase.electricitymeter.ElectricityMeterGeneralStateHandler
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.DownloadChannelMeasurementsUseCase
-import org.supla.android.usecases.channel.GetChannelValueUseCase
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.channel.electricitymeter.ElectricityMeasurements
 import org.supla.android.usecases.channel.electricitymeter.LoadElectricityMeterMeasurementsUseCase
@@ -40,17 +38,16 @@ import javax.inject.Inject
 @HiltViewModel
 class ElectricityMeterGeneralViewModel @Inject constructor(
   private val loadElectricityMeterMeasurementsUseCase: LoadElectricityMeterMeasurementsUseCase,
+  private val electricityMeterGeneralStateHandler: ElectricityMeterGeneralStateHandler,
   private val downloadChannelMeasurementsUseCase: DownloadChannelMeasurementsUseCase,
   private val readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
-  private val getChannelValueUseCase: GetChannelValueUseCase,
   private val downloadEventsManager: DownloadEventsManager,
   private val dateProvider: DateProvider,
   schedulers: SuplaSchedulers
 ) : BaseViewModel<ElectricityMeterGeneralViewModelState, ElectricityMeterGeneralViewEvent>(
   ElectricityMeterGeneralViewModelState(),
   schedulers
-),
-  ElectricityMeterChannelViewModel {
+) {
 
   fun onViewCreated(remoteId: Int) {
     observeDownload(remoteId)
@@ -70,27 +67,19 @@ class ElectricityMeterGeneralViewModel @Inject constructor(
   }
 
   private fun handleChannel(channel: ChannelDataEntity, measurements: ElectricityMeasurements, cleanupDownloading: Boolean) {
-    updateState {
-      if (!it.initialDataLoadStarted) {
+    updateState { state ->
+      if (!state.initialDataLoadStarted) {
         downloadChannelMeasurementsUseCase.invoke(channel.remoteId, channel.profileId, channel.function)
       }
-      val (electricityMeterState) = guardLet(
-        updateElectricityMeterState(
-          it.viewState.electricityMeterState,
-          channel,
-          measurements,
-          getChannelValueUseCase
-        )
-      ) {
-        return@updateState it
-      }
-      val downloading = if (cleanupDownloading) false else it.viewState.electricityMeterState.currentMonthDownloading
 
-      it.copy(
-        remoteId = channel.remoteId,
-        initialDataLoadStarted = true,
-        viewState = it.viewState.copy(electricityMeterState = electricityMeterState.copy(currentMonthDownloading = downloading))
-      )
+      electricityMeterGeneralStateHandler.updateState(state.viewState.electricityMeterState, channel, measurements)?.let {
+        val downloading = if (cleanupDownloading) false else state.viewState.electricityMeterState.currentMonthDownloading
+        state.copy(
+          remoteId = channel.remoteId,
+          initialDataLoadStarted = true,
+          viewState = state.viewState.copy(electricityMeterState = it.copy(currentMonthDownloading = downloading))
+        )
+      } ?: state
     }
   }
 

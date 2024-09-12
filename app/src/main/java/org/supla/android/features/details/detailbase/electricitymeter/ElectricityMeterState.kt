@@ -31,22 +31,6 @@ data class ElectricityMeterState(
   val vectorBalancedValues: Map<SuplaElectricityMeasurementType, String>? = null
 )
 
-data class EnergyData(
-  val energy: String,
-  val price: String?
-) {
-  companion object {
-    fun empty(): EnergyData = EnergyData("", "")
-  }
-}
-
-data class PhaseWithMeasurements(
-  val phase: Int,
-  val values: Map<SuplaElectricityMeasurementType, String>
-) {
-  companion object
-}
-
 fun ElectricityMeterState?.copyOrCreate(
   online: Boolean? = null,
   totalForwardActiveEnergy: EnergyData? = null,
@@ -57,8 +41,8 @@ fun ElectricityMeterState?.copyOrCreate(
   phaseMeasurementTypes: List<SuplaElectricityMeasurementType> = emptyList(),
   phaseMeasurementValues: List<PhaseWithMeasurements> = emptyList(),
   vectorBalancedValues: Map<SuplaElectricityMeasurementType, String>? = null
-): ElectricityMeterState {
-  return this?.copy(
+): ElectricityMeterState =
+  this?.copy(
     online = online,
     totalForwardActiveEnergy = totalForwardActiveEnergy,
     totalReversedActiveEnergy = totalReversedActiveEnergy,
@@ -79,4 +63,3 @@ fun ElectricityMeterState?.copyOrCreate(
     phaseMeasurementValues = phaseMeasurementValues,
     vectorBalancedValues = vectorBalancedValues
   )
-}
