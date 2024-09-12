@@ -28,7 +28,13 @@ import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.Electricity
 import org.supla.android.data.source.local.entity.measurements.ElectricityMeterLogEntity
 import org.supla.android.data.source.local.entity.measurements.balanceHourly
+import org.supla.android.data.source.remote.electricitymeter.hasForwardEnergy
+import org.supla.android.data.source.remote.electricitymeter.hasReverseEnergy
+import org.supla.android.extensions.ifTrue
+import org.supla.android.features.details.detailbase.electricitymeter.EnergyData
+import org.supla.android.lib.SuplaChannelElectricityMeterValue
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
+import org.supla.android.usecases.channel.valueformatter.ListElectricityMeterValueFormatter
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -90,4 +96,26 @@ class LoadElectricityMeterMeasurementsUseCase @Inject constructor(
 data class ElectricityMeasurements(
   val forwardActiveEnergy: Float,
   val reversedActiveEnergy: Float
-)
+) {
+  fun toForwardEnergy(
+    formatter: ListElectricityMeterValueFormatter,
+    electricityMeterValue: SuplaChannelElectricityMeterValue? = null
+  ): EnergyData? =
+    if (electricityMeterValue != null) {
+      with(electricityMeterValue) {
+        hasForwardEnergy.ifTrue { EnergyData(formatter, forwardActiveEnergy.toDouble(), pricePerUnit, currency) }
+      }
+    } else {
+      EnergyData(energy = formatter.format(forwardActiveEnergy))
+    }
+
+  fun toReverseEnergy(
+    formatter: ListElectricityMeterValueFormatter,
+    electricityMeterValue: SuplaChannelElectricityMeterValue? = null
+  ): EnergyData? =
+    if (electricityMeterValue != null) {
+      electricityMeterValue.hasReverseEnergy.ifTrue { EnergyData(energy = formatter.format(reversedActiveEnergy)) }
+    } else {
+      EnergyData(energy = formatter.format(reversedActiveEnergy))
+    }
+}

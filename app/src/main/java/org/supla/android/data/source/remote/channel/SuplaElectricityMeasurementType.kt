@@ -167,3 +167,8 @@ enum class SuplaElectricityMeasurementType(val rawValue: Int, val ordering: Int,
 
 val Int.suplaElectricityMeterMeasuredTypes: List<SuplaElectricityMeasurementType>
   get() = SuplaElectricityMeasurementType.from(this)
+
+val List<SuplaElectricityMeasurementType>.hasForwardAndReverseEnergy: Boolean
+  get() =
+    contains(SuplaElectricityMeasurementType.FORWARD_ACTIVE_ENERGY_BALANCED) &&
+      contains(SuplaElectricityMeasurementType.REVERSE_ACTIVE_ENERGY_BALANCED)

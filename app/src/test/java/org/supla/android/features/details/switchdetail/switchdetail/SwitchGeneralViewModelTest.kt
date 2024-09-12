@@ -40,6 +40,7 @@ import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.DownloadEventsManager
+import org.supla.android.features.details.detailbase.electricitymeter.ElectricityMeterGeneralStateHandler
 import org.supla.android.features.details.switchdetail.general.SwitchGeneralViewEvent
 import org.supla.android.features.details.switchdetail.general.SwitchGeneralViewModel
 import org.supla.android.features.details.switchdetail.general.SwitchGeneralViewState
@@ -97,6 +98,9 @@ class SwitchGeneralViewModelTest :
   @MockK
   private lateinit var getChannelValueUseCase: GetChannelValueUseCase
 
+  @MockK
+  private lateinit var electricityMeterGeneralStateHandler: ElectricityMeterGeneralStateHandler
+
   @InjectMockKs
   override lateinit var viewModel: SwitchGeneralViewModel
 
@@ -122,6 +126,7 @@ class SwitchGeneralViewModelTest :
     every { getChannelIconUseCase.getIconProvider(channelData, channelStateValue = ChannelState.Value.ON) } returns onIcon
     every { getChannelIconUseCase.getIconProvider(channelData, channelStateValue = ChannelState.Value.OFF) } returns offIcon
     every { dateProvider.currentDate() } returns Date()
+    every { electricityMeterGeneralStateHandler.updateState(any(), any(), any()) } answers { firstArg() }
 
     // when
     viewModel.loadData(remoteId, ItemType.CHANNEL)
@@ -285,6 +290,7 @@ class SwitchGeneralViewModelTest :
     every { getChannelIconUseCase.getIconProvider(channelData) } returns stateIcon
     every { getChannelIconUseCase.getIconProvider(channelData, channelStateValue = ChannelState.Value.ON) } returns onIcon
     every { getChannelIconUseCase.getIconProvider(channelData, channelStateValue = ChannelState.Value.OFF) } returns offIcon
+    every { electricityMeterGeneralStateHandler.updateState(any(), any(), any()) } answers { firstArg() }
 
     // when
     viewModel.loadData(remoteId, ItemType.CHANNEL)
@@ -349,6 +355,7 @@ class SwitchGeneralViewModelTest :
     every { getChannelIconUseCase.getIconProvider(channelData) } returns stateIcon
     every { getChannelIconUseCase.getIconProvider(channelData, channelStateValue = ChannelState.Value.ON) } returns onIcon
     every { getChannelIconUseCase.getIconProvider(channelData, channelStateValue = ChannelState.Value.OFF) } returns offIcon
+    every { electricityMeterGeneralStateHandler.updateState(any(), any(), any()) } answers { firstArg() }
 
     // when
     viewModel.loadData(remoteId, ItemType.CHANNEL)
