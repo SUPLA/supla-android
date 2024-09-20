@@ -128,17 +128,15 @@ enum class SuplaElectricityMeasurementType(val rawValue: Int, val ordering: Int,
     when (this) {
       FREQUENCY -> values.first()
       VOLTAGE -> values.average().toFloat()
-      CURRENT, CURRENT_OVER_65A -> null
       POWER_ACTIVE,
       POWER_REACTIVE,
       POWER_APPARENT,
-      POWER_FACTOR,
       FORWARD_ACTIVE_ENERGY,
       REVERSE_ACTIVE_ENERGY,
       FORWARD_REACTIVE_ENERGY,
       REVERSE_REACTIVE_ENERGY -> values.sum()
 
-      else -> 0f
+      else -> null
     }
 
   companion object {
