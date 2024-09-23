@@ -729,6 +729,7 @@
   <string name="details_list" translatable="false">List</string>
   <string name="thermostat_detail_main_thermostat" translatable="false">Main thermostat</string>
   <string name="thermostat_detail_other_thermostats" translatable="false">Dependent thermostats</string>
+  <string name="thermostat_battery_cover_open" translatable="false">Battery cover open</string>
 
   <plurals name="details_timer_info_on" translatable="false">
     <item quantity="other">on</item>

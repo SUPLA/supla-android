@@ -632,6 +632,7 @@
   <string name="details_list">Liste</string>
   <string name="thermostat_detail_main_thermostat">Hauptthermostat</string>
   <string name="thermostat_detail_other_thermostats">Andere Thermostate</string>
+  <string name="thermostat_battery_cover_open">Batteriefachdeckel offen</string>
   <plurals name="details_timer_info_on">
     <item quantity="one">eingeschaltet</item>
     <item quantity="other">eingeschaltet</item>

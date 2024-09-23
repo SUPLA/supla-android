@@ -144,6 +144,8 @@ object Constraints {
     distanceFromCenter: Dp,
     controlWheel: ConstrainedLayoutReference
   ) {
+    val horizontalCenterGuideline = createGuidelineFromStart(0.5f)
+
     if (viewState.pumpSwitchIcon != null) {
       val pumpIcon = createRefFor(PUMP_ICON)
 
@@ -155,11 +157,9 @@ object Constraints {
           end.linkTo(controlWheel.end, margin = 90.dp)
         }
       } else {
-        val decreaseButton = createRefFor(DECREASE_BUTTON)
         constrain(pumpIcon) {
-          top.linkTo(decreaseButton.top)
-          bottom.linkTo(decreaseButton.bottom)
-          end.linkTo(decreaseButton.start, margin = 24.dp)
+          bottom.linkTo(controlWheel.bottom, margin = 43.dp)
+          end.linkTo(horizontalCenterGuideline, margin = 96.dp)
         }
       }
     }
@@ -174,11 +174,9 @@ object Constraints {
           end.linkTo(controlWheel.end)
         }
       } else {
-        val increaseButton = createRefFor(INCREASE_BUTTON)
         constrain(sourceIcon) {
-          top.linkTo(increaseButton.top)
-          bottom.linkTo(increaseButton.bottom)
-          start.linkTo(increaseButton.end, margin = 24.dp)
+          bottom.linkTo(controlWheel.bottom, margin = 43.dp)
+          start.linkTo(horizontalCenterGuideline, margin = 96.dp)
         }
       }
     }

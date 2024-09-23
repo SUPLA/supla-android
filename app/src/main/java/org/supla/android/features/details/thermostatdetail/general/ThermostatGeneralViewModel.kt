@@ -645,6 +645,9 @@ class ThermostatGeneralViewModel @Inject constructor(
       if (flags.contains(SuplaThermostatFlag.THERMOMETER_ERROR)) {
         add(ChannelIssueItem(IssueIconType.ERROR, R.string.thermostat_thermometer_error))
       }
+      if (flags.contains(SuplaThermostatFlag.BATTERY_COVER_OPEN)) {
+        add(ChannelIssueItem(IssueIconType.ERROR, R.string.thermostat_battery_cover_open))
+      }
       if (flags.contains(SuplaThermostatFlag.CLOCK_ERROR)) {
         add(ChannelIssueItem(IssueIconType.WARNING, R.string.thermostat_clock_error))
       }
