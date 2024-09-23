@@ -25,16 +25,16 @@ import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
+import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.features.details.detailbase.standarddetail.DetailPage
 import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
 import org.supla.android.lib.SuplaClientMsg
-import org.supla.android.lib.SuplaConst
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.channel.*
-import org.supla.android.usecases.details.ProvideDetailTypeUseCase
+import org.supla.android.usecases.details.ProvideGroupDetailTypeUseCase
 import org.supla.android.usecases.details.ThermometerDetailType
 import org.supla.android.usecases.details.WindowDetailType
 import org.supla.android.usecases.group.CreateProfileGroupsListUseCase
@@ -60,7 +60,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
   private lateinit var toggleLocationUseCase: ToggleLocationUseCase
 
   @Mock
-  private lateinit var provideDetailTypeUseCase: ProvideDetailTypeUseCase
+  private lateinit var provideGroupDetailTypeUseCase: ProvideGroupDetailTypeUseCase
 
   @Mock
   private lateinit var findGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase
@@ -83,7 +83,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
       createProfileGroupsListUseCase,
       groupActionUseCase,
       toggleLocationUseCase,
-      provideDetailTypeUseCase,
+      provideGroupDetailTypeUseCase,
       findGroupByRemoteIdUseCase,
       loadActiveProfileUrlUseCase,
       updateEventsManager,
@@ -223,14 +223,14 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
   fun `should open legacy detail fragment`() {
     // given
     val remoteId = 123
-    val groupFunction = SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
+    val groupFunction = SuplaChannelFunction.THERMOMETER
     val groupData: ChannelGroupDataEntity = mockk()
     every { groupData.remoteId } returns remoteId
     every { groupData.isOnline() } returns true
     every { groupData.function } returns groupFunction
 
     val detailType = ThermometerDetailType(listOf(DetailPage.THERMOMETER_HISTORY))
-    whenever(provideDetailTypeUseCase(groupData)).thenReturn(detailType)
+    whenever(provideGroupDetailTypeUseCase(groupData)).thenReturn(detailType)
 
     whenever(findGroupByRemoteIdUseCase(remoteId)).thenReturn(Maybe.just(groupData))
 
@@ -240,14 +240,14 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     // then
     Assertions.assertThat(states).isEmpty()
     Assertions.assertThat(events).isEmpty()
-    verifyNoInteractionsExcept(provideDetailTypeUseCase)
+    verifyNoInteractionsExcept(provideGroupDetailTypeUseCase)
   }
 
   @Test
   fun `should not open detail fragment when it is not supported`() {
     // given
     val remoteId = 123
-    val groupFunction = SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
+    val groupFunction = SuplaChannelFunction.THERMOMETER
     val groupData: ChannelGroupDataEntity = mockk()
     every { groupData.remoteId } returns remoteId
     every { groupData.isOnline() } returns true
@@ -261,21 +261,21 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     // then
     Assertions.assertThat(states).isEmpty()
     Assertions.assertThat(events).isEmpty()
-    verifyNoInteractionsExcept(provideDetailTypeUseCase)
+    verifyNoInteractionsExcept(provideGroupDetailTypeUseCase)
   }
 
   @Test
   fun `should open roller shutter detail when item is offline`() {
     // given
     val remoteId = 123
-    val function = SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
+    val function = SuplaChannelFunction.CONTROLLING_THE_ROLLER_SHUTTER
     val groupData: ChannelGroupDataEntity = mockk()
     every { groupData.remoteId } returns remoteId
     every { groupData.function } returns function
     every { groupData.isOnline() } returns false
 
     val detailType = WindowDetailType(listOf(DetailPage.ROLLER_SHUTTER))
-    whenever(provideDetailTypeUseCase(groupData)).thenReturn(detailType)
+    whenever(provideGroupDetailTypeUseCase(groupData)).thenReturn(detailType)
 
     whenever(findGroupByRemoteIdUseCase(remoteId)).thenReturn(Maybe.just(groupData))
 
@@ -287,7 +287,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     Assertions.assertThat(events).containsExactly(
       GroupListViewEvent.OpenRollerShutterDetail(ItemBundle(remoteId, 0, ItemType.GROUP, function), detailType.pages)
     )
-    verifyNoInteractionsExcept(provideDetailTypeUseCase)
+    verifyNoInteractionsExcept(provideGroupDetailTypeUseCase)
   }
 
   @Test
@@ -391,7 +391,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
       createProfileGroupsListUseCase,
       groupActionUseCase,
       toggleLocationUseCase,
-      provideDetailTypeUseCase,
+      provideGroupDetailTypeUseCase,
       loadActiveProfileUrlUseCase
     )
     for (dependency in allDependencies) {

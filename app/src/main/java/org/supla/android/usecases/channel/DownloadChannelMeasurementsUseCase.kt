@@ -21,6 +21,7 @@ import androidx.work.ExistingWorkPolicy
 import org.supla.android.Trace
 import org.supla.android.core.infrastructure.WorkManagerProxy
 import org.supla.android.extensions.TAG
+import org.supla.android.features.measurementsdownload.workers.DownloadElectricityMeasurementsWorker
 import org.supla.android.features.measurementsdownload.workers.DownloadGeneralPurposeMeasurementsWorker
 import org.supla.android.features.measurementsdownload.workers.DownloadGeneralPurposeMeterWorker
 import org.supla.android.features.measurementsdownload.workers.DownloadTemperaturesAndHumidityWorker
@@ -62,6 +63,16 @@ class DownloadChannelMeasurementsUseCase @Inject constructor(
           "${DownloadGeneralPurposeMeterWorker.WORK_ID}.$remoteId",
           ExistingWorkPolicy.KEEP,
           DownloadGeneralPurposeMeterWorker.build(remoteId, profileId)
+        )
+
+      SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER,
+      SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH,
+      SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH,
+      SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER ->
+        workManagerProxy.enqueueUniqueWork(
+          "${DownloadElectricityMeasurementsWorker.WORK_ID}.$remoteId",
+          ExistingWorkPolicy.KEEP,
+          DownloadElectricityMeasurementsWorker.build(remoteId, profileId)
         )
 
       else -> Trace.w(TAG, "Tries to download something what is not supported (function: `$function`)")

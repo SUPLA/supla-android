@@ -8,7 +8,7 @@ import org.junit.runner.RunWith
 import org.mockito.InjectMocks
 import org.mockito.junit.MockitoJUnitRunner
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
+import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.usecases.channel.ValueType
 
 @RunWith(MockitoJUnitRunner::class)
@@ -24,10 +24,12 @@ class HumidityAndTemperatureValueProviderTest {
   @Test
   fun `should handle value`() {
     // given
-    val function = SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
+    val channel: ChannelDataEntity = mockk {
+      every { function } returns SuplaChannelFunction.HUMIDITY_AND_TEMPERATURE
+    }
 
     // when
-    val result = valueProvider.handle(function)
+    val result = valueProvider.handle(channel)
 
     // then
     assertThat(result).isTrue()

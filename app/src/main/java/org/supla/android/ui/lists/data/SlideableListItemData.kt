@@ -20,10 +20,11 @@ package org.supla.android.ui.lists.data
 import androidx.annotation.DrawableRes
 import org.supla.android.core.ui.StringProvider
 import org.supla.android.images.ImageId
+import org.supla.android.ui.lists.ListOnlineState
 import java.util.Date
 
 sealed class SlideableListItemData {
-  abstract val online: Boolean
+  abstract val onlineState: ListOnlineState
   abstract val titleProvider: StringProvider
   abstract val icon: ImageId?
   abstract val issueIconType: IssueIconType?
@@ -31,7 +32,7 @@ sealed class SlideableListItemData {
   abstract val infoSupported: Boolean
 
   data class Thermostat(
-    override val online: Boolean,
+    override val onlineState: ListOnlineState,
     override val titleProvider: StringProvider,
     override val icon: ImageId?,
     override val issueIconType: IssueIconType?,
@@ -45,7 +46,7 @@ sealed class SlideableListItemData {
   }
 
   data class Default(
-    override val online: Boolean,
+    override val onlineState: ListOnlineState,
     override val titleProvider: StringProvider,
     override val icon: ImageId?,
     override val issueIconType: IssueIconType?,
@@ -59,7 +60,7 @@ sealed class SlideableListItemData {
 
 fun SlideableListItemData.Thermostat.Companion.default(): SlideableListItemData.Thermostat =
   SlideableListItemData.Thermostat(
-    online = false,
+    onlineState = ListOnlineState.OFFLINE,
     titleProvider = { "" },
     icon = null,
     value = "",
@@ -72,7 +73,7 @@ fun SlideableListItemData.Thermostat.Companion.default(): SlideableListItemData.
 
 fun SlideableListItemData.Default.Companion.default(): SlideableListItemData.Default =
   SlideableListItemData.Default(
-    online = false,
+    onlineState = ListOnlineState.OFFLINE,
     titleProvider = { "" },
     icon = null,
     value = "",

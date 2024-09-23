@@ -215,7 +215,7 @@ public class SuplaChannelState implements Serializable {
     return bridgeNodeSignalStrength;
   }
 
-  public String getBridgeNodeSignalStrengthString(Context context) {
+  public String getBridgeNodeSignalStrengthString() {
     return String.format("%d%%", getBridgeNodeSignalStrength());
   }
 

@@ -17,97 +17,70 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import io.mockk.MockKAnnotations
+import io.mockk.confirmVerified
 import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
+import io.mockk.verify
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoInteractions
-import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.whenever
 import org.supla.android.data.model.Optional
 import org.supla.android.data.model.chart.DateRange
-import org.supla.android.data.source.GeneralPurposeMeasurementLogRepository
-import org.supla.android.data.source.GeneralPurposeMeterLogRepository
-import org.supla.android.data.source.TemperatureAndHumidityLogRepository
-import org.supla.android.data.source.TemperatureLogRepository
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.extensions.date
-import org.supla.android.lib.SuplaConst
 
 @RunWith(MockitoJUnitRunner::class)
 class LoadChannelMeasurementsDataRangeUseCaseTest {
 
-  @Mock
+  @MockK
   private lateinit var readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase
 
-  @Mock
-  private lateinit var temperatureLogRepository: TemperatureLogRepository
+  @MockK
+  private lateinit var thermometerDataRangeProvide: ThermometerDataRangeProvide
 
-  @Mock
-  private lateinit var temperatureAndHumidityLogRepository: TemperatureAndHumidityLogRepository
+  @MockK
+  private lateinit var humidityAndTemperatureDataRangeProvide: HumidityAndTemperatureDataRangeProvide
 
-  @Mock
-  private lateinit var generalPurposeMeasurementLogRepository: GeneralPurposeMeasurementLogRepository
+  @MockK
+  private lateinit var generalPurposeMeasurementDataRangeProvide: GeneralPurposeMeasurementDataRangeProvide
 
-  @Mock
-  private lateinit var generalPurposeMeterLogRepository: GeneralPurposeMeterLogRepository
+  @MockK
+  private lateinit var generalPurposeMeterDataRangeProvide: GeneralPurposeMeterDataRangeProvide
 
-  @InjectMocks
+  @MockK
+  private lateinit var electricityMeterDataRangeProvide: ElectricityMeterDataRangeProvide
+
+  @InjectMockKs
   private lateinit var useCase: LoadChannelMeasurementsDataRangeUseCase
 
+  @Before
+  fun setUp() {
+    MockKAnnotations.init(this)
+  }
+
   @Test
-  fun `should load thermometer date range`() {
+  fun `should use provider when it can handle given channel`() {
     // given
     val remoteId = 123
-    val profileId = 321L
-    val minDate = date(2022, 8, 1)
-    val maxDate = date(2023, 8, 1)
-
+    val profileId = 234L
+    val channelFunction = SuplaChannelFunction.THERMOMETER
     val channel: ChannelDataEntity = mockk {
-      every { channelEntity } returns mockk { every { function } returns SuplaConst.SUPLA_CHANNELFNC_THERMOMETER }
+      every { function } returns channelFunction
     }
-    every { channel.remoteId } returns remoteId
-    every { channel.function } returns SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
+    val minDate = date(2024, 5, 1)
+    val maxDate = date(2024, 8, 14)
 
-    whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
-    whenever(temperatureLogRepository.findMinTimestamp(remoteId, profileId)).thenReturn(Single.just(minDate.time))
-    whenever(temperatureLogRepository.findMaxTimestamp(remoteId, profileId)).thenReturn(Single.just(maxDate.time))
-
-    // when
-    val testObserver = useCase.invoke(remoteId, profileId).test()
-
-    // then
-    testObserver.assertComplete()
-    testObserver.assertResult(Optional.of(DateRange(minDate, maxDate)))
-
-    verify(readChannelByRemoteIdUseCase).invoke(remoteId)
-    verify(temperatureLogRepository).findMinTimestamp(remoteId, profileId)
-    verify(temperatureLogRepository).findMaxTimestamp(remoteId, profileId)
-    verifyNoMoreInteractions(readChannelByRemoteIdUseCase, temperatureLogRepository)
-    verifyNoInteractions(temperatureAndHumidityLogRepository)
-  }
-
-  @Test
-  fun `should load thermometer with humidity date range`() {
-    // given
-    val remoteId = 123
-    val profileId = 321L
-    val minDate = date(2022, 8, 1)
-    val maxDate = date(2023, 8, 1)
-    val channel: ChannelDataEntity = mockk()
-    every { channel.channelEntity } returns mockk { every { function } returns SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE }
-    every { channel.remoteId } returns remoteId
-    every { channel.function } returns SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
-
-    whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
-    whenever(temperatureAndHumidityLogRepository.findMinTimestamp(remoteId, profileId)).thenReturn(Single.just(minDate.time))
-    whenever(temperatureAndHumidityLogRepository.findMaxTimestamp(remoteId, profileId)).thenReturn(Single.just(maxDate.time))
+    every { readChannelByRemoteIdUseCase.invoke(remoteId) } returns Maybe.just(channel)
+    every { thermometerDataRangeProvide.handle(channelFunction.value) } returns true
+    every { thermometerDataRangeProvide.minTime(remoteId, profileId) } returns Single.just(minDate.time)
+    every { thermometerDataRangeProvide.maxTime(remoteId, profileId) } returns Single.just(maxDate.time)
 
     // when
     val testObserver = useCase.invoke(remoteId, profileId).test()
@@ -116,97 +89,61 @@ class LoadChannelMeasurementsDataRangeUseCaseTest {
     testObserver.assertComplete()
     testObserver.assertResult(Optional.of(DateRange(minDate, maxDate)))
 
-    verify(readChannelByRemoteIdUseCase).invoke(remoteId)
-    verify(temperatureAndHumidityLogRepository).findMinTimestamp(remoteId, profileId)
-    verify(temperatureAndHumidityLogRepository).findMaxTimestamp(remoteId, profileId)
-    verifyNoMoreInteractions(readChannelByRemoteIdUseCase, temperatureAndHumidityLogRepository)
-    verifyNoInteractions(temperatureLogRepository)
+    verify {
+      readChannelByRemoteIdUseCase.invoke(remoteId)
+      thermometerDataRangeProvide.handle(channelFunction.value)
+      thermometerDataRangeProvide.minTime(remoteId, profileId)
+      thermometerDataRangeProvide.maxTime(remoteId, profileId)
+    }
+    confirmVerified(
+      readChannelByRemoteIdUseCase,
+      thermometerDataRangeProvide,
+      humidityAndTemperatureDataRangeProvide,
+      generalPurposeMeasurementDataRangeProvide,
+      generalPurposeMeterDataRangeProvide,
+      electricityMeterDataRangeProvide
+    )
   }
 
   @Test
-  fun `should load general purpose measurement date range`() {
+  fun `should throw exception when there is no provider for function`() {
     // given
     val remoteId = 123
-    val profileId = 321L
-    val minDate = date(2022, 8, 1)
-    val maxDate = date(2023, 8, 1)
-
+    val profileId = 234L
+    val channelFunction = SuplaChannelFunction.THERMOMETER
     val channel: ChannelDataEntity = mockk {
-      every { channelEntity } returns mockk { every { function } returns SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT }
+      every { function } returns channelFunction
     }
-    every { channel.remoteId } returns remoteId
-    every { channel.function } returns SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT
 
-    whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
-    whenever(generalPurposeMeasurementLogRepository.findMinTimestamp(remoteId, profileId)).thenReturn(Single.just(minDate.time))
-    whenever(generalPurposeMeasurementLogRepository.findMaxTimestamp(remoteId, profileId)).thenReturn(Single.just(maxDate.time))
+    every { readChannelByRemoteIdUseCase.invoke(remoteId) } returns Maybe.just(channel)
+    every { thermometerDataRangeProvide.handle(channelFunction.value) } returns false
+    every { humidityAndTemperatureDataRangeProvide.handle(channelFunction.value) } returns false
+    every { generalPurposeMeasurementDataRangeProvide.handle(channelFunction.value) } returns false
+    every { generalPurposeMeterDataRangeProvide.handle(channelFunction.value) } returns false
+    every { electricityMeterDataRangeProvide.handle(channelFunction.value) } returns false
 
     // when
     val testObserver = useCase.invoke(remoteId, profileId).test()
 
     // then
-    testObserver.assertComplete()
-    testObserver.assertResult(Optional.of(DateRange(minDate, maxDate)))
-
-    verify(readChannelByRemoteIdUseCase).invoke(remoteId)
-    verify(generalPurposeMeasurementLogRepository).findMinTimestamp(remoteId, profileId)
-    verify(generalPurposeMeasurementLogRepository).findMaxTimestamp(remoteId, profileId)
-    verifyNoMoreInteractions(readChannelByRemoteIdUseCase, generalPurposeMeasurementLogRepository)
-    verifyNoInteractions(temperatureAndHumidityLogRepository, temperatureLogRepository, generalPurposeMeterLogRepository)
-  }
-
-  @Test
-  fun `should load general purpose meter date range`() {
-    // given
-    val remoteId = 123
-    val profileId = 321L
-    val minDate = date(2022, 8, 1)
-    val maxDate = date(2023, 8, 1)
-
-    val channel: ChannelDataEntity = mockk {
-      every { channelEntity } returns mockk { every { function } returns SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER }
+    testObserver.assertError {
+      it is IllegalArgumentException && it.message == "Channel function not supported ($channelFunction"
     }
-    every { channel.remoteId } returns remoteId
-    every { channel.function } returns SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER
-
-    whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
-    whenever(generalPurposeMeterLogRepository.findMinTimestamp(remoteId, profileId)).thenReturn(Single.just(minDate.time))
-    whenever(generalPurposeMeterLogRepository.findMaxTimestamp(remoteId, profileId)).thenReturn(Single.just(maxDate.time))
-
-    // when
-    val testObserver = useCase.invoke(remoteId, profileId).test()
-
-    // then
-    testObserver.assertComplete()
-    testObserver.assertResult(Optional.of(DateRange(minDate, maxDate)))
-
-    verify(readChannelByRemoteIdUseCase).invoke(remoteId)
-    verify(generalPurposeMeterLogRepository).findMinTimestamp(remoteId, profileId)
-    verify(generalPurposeMeterLogRepository).findMaxTimestamp(remoteId, profileId)
-    verifyNoMoreInteractions(readChannelByRemoteIdUseCase, generalPurposeMeterLogRepository)
-    verifyNoInteractions(temperatureAndHumidityLogRepository, temperatureLogRepository, generalPurposeMeasurementLogRepository)
-  }
-
-  @Test
-  fun `should throw error when channel not supported`() {
-    // given
-    val remoteId = 123
-    val profileId = 321L
-    val channel: ChannelDataEntity = mockk()
-    every { channel.channelEntity } returns mockk { every { function } returns SuplaConst.SUPLA_CHANNELFNC_HUMIDITY }
-    every { channel.remoteId } returns remoteId
-    every { channel.function } returns SuplaConst.SUPLA_CHANNELFNC_HUMIDITY
-
-    whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
-
-    // when
-    val testObserver = useCase.invoke(remoteId, profileId).test()
-
-    // then
-    testObserver.assertError(IllegalArgumentException::class.java)
-
-    verify(readChannelByRemoteIdUseCase).invoke(remoteId)
-    verifyNoMoreInteractions(readChannelByRemoteIdUseCase)
-    verifyNoInteractions(temperatureLogRepository, temperatureAndHumidityLogRepository)
+    verify {
+      readChannelByRemoteIdUseCase.invoke(remoteId)
+      thermometerDataRangeProvide.handle(channelFunction.value)
+      humidityAndTemperatureDataRangeProvide.handle(channelFunction.value)
+      generalPurposeMeasurementDataRangeProvide.handle(channelFunction.value)
+      generalPurposeMeterDataRangeProvide.handle(channelFunction.value)
+      electricityMeterDataRangeProvide.handle(channelFunction.value)
+    }
+    confirmVerified(
+      readChannelByRemoteIdUseCase,
+      thermometerDataRangeProvide,
+      humidityAndTemperatureDataRangeProvide,
+      generalPurposeMeasurementDataRangeProvide,
+      generalPurposeMeterDataRangeProvide,
+      electricityMeterDataRangeProvide
+    )
   }
 }

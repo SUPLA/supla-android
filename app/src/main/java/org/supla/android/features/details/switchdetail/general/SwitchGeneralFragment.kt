@@ -18,19 +18,16 @@ package org.supla.android.features.details.switchdetail.general
  */
 
 import android.os.Bundle
-import android.text.format.DateFormat
 import android.view.View
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
-import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
-import org.supla.android.R
-import org.supla.android.core.ui.BaseFragment
-import org.supla.android.data.model.general.ChannelState
-import org.supla.android.data.model.general.IconType
-import org.supla.android.databinding.FragmentSwitchDetailBinding
+import org.supla.android.core.ui.BaseComposeFragment
+import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
-import org.supla.android.images.ImageCache.getBitmap
 import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import javax.inject.Inject
@@ -38,20 +35,30 @@ import javax.inject.Inject
 private const val ARG_ITEM_BUNDLE = "ARG_ITEM_BUNDLE"
 
 @AndroidEntryPoint
-class SwitchGeneralFragment : BaseFragment<SwitchGeneralViewState, SwitchGeneralViewEvent>(R.layout.fragment_switch_detail) {
+class SwitchGeneralFragment : BaseComposeFragment<SwitchGeneralViewState, SwitchGeneralViewEvent>() {
 
   override val viewModel: SwitchGeneralViewModel by viewModels()
-  private val binding by viewBinding(FragmentSwitchDetailBinding::bind)
 
   private val item: ItemBundle by lazy { requireSerializable(ARG_ITEM_BUNDLE, ItemBundle::class.java) }
 
   @Inject
   lateinit var getChannelIconUseCase: GetChannelIconUseCase
 
+  @Composable
+  override fun ComposableContent() {
+    val modelState by viewModel.getViewState().collectAsState()
+    SuplaTheme {
+      SwitchGeneralView(
+        state = modelState,
+        onTurnOn = { viewModel.turnOn(item.remoteId, item.itemType) },
+        onTurnOff = { viewModel.turnOff(item.remoteId, item.itemType) }
+      )
+    }
+  }
+
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    binding.switchDetailButtonOn.clickListener = { viewModel.turnOn(item.remoteId, item.itemType) }
-    binding.switchDetailButtonOff.clickListener = { viewModel.turnOff(item.remoteId, item.itemType) }
+    viewModel.onViewCreated(item.remoteId)
   }
 
   override fun onResume() {
@@ -62,37 +69,10 @@ class SwitchGeneralFragment : BaseFragment<SwitchGeneralViewState, SwitchGeneral
   override fun handleEvents(event: SwitchGeneralViewEvent) {
   }
 
-  override fun handleViewState(state: SwitchGeneralViewState) {
-    state.channelDataBase?.let {
-      binding.switchDetailDeviceState.deviceStateIcon.setImageBitmap(getBitmap(context, getChannelIconUseCase(it)))
-      binding.switchDetailButtonOn.disabled = it.isOnline().not()
-      binding.switchDetailButtonOn.icon = getBitmap(
-        context,
-        getChannelIconUseCase(it, IconType.SINGLE, channelStateValue = ChannelState.Value.ON)
-      )
-      binding.switchDetailButtonOff.disabled = it.isOnline().not()
-      binding.switchDetailButtonOff.icon = getBitmap(
-        context,
-        getChannelIconUseCase(it, IconType.SINGLE, channelStateValue = ChannelState.Value.OFF)
-      )
-    }
-    binding.switchDetailDeviceState.deviceStateLabel.text = if (state.timerEndDate != null) {
-      val formatString = getString(R.string.hour_string_format)
-      getString(R.string.details_timer_state_label_for_timer, DateFormat.format(formatString, state.timerEndDate))
-    } else {
-      getString(R.string.details_timer_state_label)
-    }
-    binding.switchDetailDeviceState.deviceStateValue.text = when {
-      state.channelDataBase?.isOnline()?.not() == true -> getString(R.string.offline)
-      state.isOn -> getString(R.string.details_timer_device_on)
-      else -> getString(R.string.details_timer_device_off)
-    }
-  }
-
   override fun onSuplaMessage(message: SuplaClientMsg) {
     when (message.type) {
       SuplaClientMsg.onDataChanged -> {
-        if (message.channelId == item.remoteId && (message.isTimerValue || !message.isExtendedValue)) {
+        if (message.channelId == item.remoteId) {
           viewModel.loadData(item.remoteId, item.itemType)
         }
       }

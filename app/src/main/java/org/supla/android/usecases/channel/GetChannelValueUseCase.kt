@@ -20,8 +20,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.usecases.channel.valueprovider.DepthSensorValueProvider
 import org.supla.android.usecases.channel.valueprovider.DistanceSensorValueProvider
+import org.supla.android.usecases.channel.valueprovider.ElectricityMeterValueProvider
 import org.supla.android.usecases.channel.valueprovider.GpmValueProvider
 import org.supla.android.usecases.channel.valueprovider.HumidityAndTemperatureValueProvider
+import org.supla.android.usecases.channel.valueprovider.ImpulseCounterValueProvider
+import org.supla.android.usecases.channel.valueprovider.SwitchWithElectricityMeterValueProvider
 import org.supla.android.usecases.channel.valueprovider.ThermometerValueProvider
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -32,7 +35,10 @@ class GetChannelValueUseCase @Inject constructor(
   gpmValueProvider: GpmValueProvider,
   humidityAndTemperatureValueProvider: HumidityAndTemperatureValueProvider,
   thermometerValueProvider: ThermometerValueProvider,
-  distanceSensorValueProvider: DistanceSensorValueProvider
+  distanceSensorValueProvider: DistanceSensorValueProvider,
+  electricityMeterValueProvider: ElectricityMeterValueProvider,
+  impulseCounterValueProvider: ImpulseCounterValueProvider,
+  switchWithElectricityMeterValueProvider: SwitchWithElectricityMeterValueProvider
 ) {
 
   private val providers = listOf(
@@ -40,13 +46,16 @@ class GetChannelValueUseCase @Inject constructor(
     gpmValueProvider,
     humidityAndTemperatureValueProvider,
     thermometerValueProvider,
-    distanceSensorValueProvider
+    distanceSensorValueProvider,
+    electricityMeterValueProvider,
+    impulseCounterValueProvider,
+    switchWithElectricityMeterValueProvider
   )
 
   @Suppress("UNCHECKED_CAST")
   operator fun <T> invoke(channel: ChannelDataEntity, valueType: ValueType = ValueType.FIRST): T {
     providers.forEach {
-      if (it.handle(channel.function)) {
+      if (it.handle(channel)) {
         return it.value(channel, valueType) as T
       }
     }
@@ -56,7 +65,7 @@ class GetChannelValueUseCase @Inject constructor(
 }
 
 interface ChannelValueProvider {
-  fun handle(function: Int): Boolean
+  fun handle(channelData: ChannelDataEntity): Boolean
 
   fun value(channelData: ChannelDataEntity, valueType: ValueType): Any
 }

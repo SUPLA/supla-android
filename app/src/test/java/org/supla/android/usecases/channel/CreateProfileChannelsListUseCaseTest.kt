@@ -3,6 +3,7 @@ package org.supla.android.usecases.channel
 import android.content.Context
 import io.mockk.every
 import io.mockk.mockk
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
@@ -17,14 +18,9 @@ import org.supla.android.data.source.RoomChannelRepository
 import org.supla.android.data.source.local.entity.ChannelRelationEntity
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.remote.channel.SuplaChannelFunction
+import org.supla.android.data.source.remote.thermostat.ThermostatIndicatorIcon
 import org.supla.android.images.ImageId
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HUMIDITY
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_PROJECTOR_SCREEN
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.ui.lists.data.IssueIconType
 import org.supla.android.usecases.icon.GetChannelIconUseCase
@@ -49,6 +45,9 @@ class CreateProfileChannelsListUseCaseTest {
   private lateinit var getChannelValueStringUseCase: GetChannelValueStringUseCase
 
   @Mock
+  private lateinit var getSwitchValueStringUseCase: GetSwitchValueStringUseCase
+
+  @Mock
   private lateinit var valuesFormatter: ValuesFormatter
 
   @InjectMocks
@@ -58,14 +57,14 @@ class CreateProfileChannelsListUseCaseTest {
   fun `should create list of channels and locations`() {
     // given
     val first = mockListEntity(11, 12)
-    val second = mockListEntity(21, 12, channelFunction = SUPLA_CHANNELFNC_HVAC_THERMOSTAT)
+    val second = mockListEntity(21, 12, channelFunction = SuplaChannelFunction.HVAC_THERMOSTAT)
     val third = mockListEntity(31, 32, locationCollapsed = true)
-    val fourth = mockListEntity(41, 42, channelFunction = SUPLA_CHANNELFNC_DEPTHSENSOR)
-    val fifth = mockListEntity(51, 42, channelFunction = SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER)
-    val sixth = mockListEntity(61, 42, channelFunction = SUPLA_CHANNELFNC_PROJECTOR_SCREEN)
+    val fourth = mockListEntity(41, 42, channelFunction = SuplaChannelFunction.DEPTH_SENSOR)
+    val fifth = mockListEntity(51, 42, channelFunction = SuplaChannelFunction.CONTROLLING_THE_ROLLER_SHUTTER)
+    val sixth = mockListEntity(61, 42, channelFunction = SuplaChannelFunction.PROJECTOR_SCREEN)
 
     whenever(channelRepository.findList()).thenReturn(Single.just(listOf(first, second, third, fourth, fifth, sixth)))
-    whenever(channelRelationRepository.findChildrenToParentsRelations()).thenReturn(Single.just(emptyMap()))
+    whenever(channelRelationRepository.findChildrenToParentsRelations()).thenReturn(Observable.just(emptyMap()))
 
     // when
     val testObserver = usecase().test()
@@ -81,15 +80,15 @@ class CreateProfileChannelsListUseCaseTest {
     assertThat(list[2]).isInstanceOf(ListItem.HvacThermostatItem::class.java)
     assertThat(list[3]).isInstanceOf(ListItem.LocationItem::class.java)
     assertThat(list[4]).isInstanceOf(ListItem.LocationItem::class.java)
-    assertThat(list[5]).isInstanceOf(ListItem.MeasurementItem::class.java)
-    assertThat(list[6]).isInstanceOf(ListItem.IconWithButtonsItem::class.java)
-    assertThat(list[7]).isInstanceOf(ListItem.IconWithButtonsItem::class.java)
+    assertThat(list[5]).isInstanceOf(ListItem.IconValueItem::class.java)
+    assertThat(list[6]).isInstanceOf(ListItem.ShadingSystemItem::class.java)
+    assertThat(list[7]).isInstanceOf(ListItem.ShadingSystemItem::class.java)
 
     assertThat((list[1] as ListItem.ChannelItem).channelBase.remoteId).isEqualTo(11)
     assertThat((list[2] as ListItem.HvacThermostatItem).captionProvider(context)).isEqualTo("caption 21")
-    assertThat((list[5] as ListItem.MeasurementItem).captionProvider(context)).isEqualTo("caption 41")
-    assertThat((list[6] as ListItem.IconWithButtonsItem).captionProvider(context)).isEqualTo("caption 51")
-    assertThat((list[7] as ListItem.IconWithButtonsItem).captionProvider(context)).isEqualTo("caption 61")
+    assertThat((list[5] as ListItem.IconValueItem).captionProvider(context)).isEqualTo("caption 41")
+    assertThat((list[6] as ListItem.ShadingSystemItem).captionProvider(context)).isEqualTo("caption 51")
+    assertThat((list[7] as ListItem.ShadingSystemItem).captionProvider(context)).isEqualTo("caption 61")
 
     assertThat((list[0] as ListItem.LocationItem).location.caption).isEqualTo("12")
     assertThat((list[3] as ListItem.LocationItem).location.caption).isEqualTo("32")
@@ -99,13 +98,13 @@ class CreateProfileChannelsListUseCaseTest {
   @Test
   fun `should merge location with same name into one`() {
     // given
-    val first = mockListEntity(11, 12, channelFunction = SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER)
-    val second = mockListEntity(21, 12, channelFunction = SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT)
+    val first = mockListEntity(11, 12, channelFunction = SuplaChannelFunction.GENERAL_PURPOSE_METER)
+    val second = mockListEntity(21, 12, channelFunction = SuplaChannelFunction.GENERAL_PURPOSE_MEASUREMENT)
     val third = mockListEntity(31, 32, locationName = "12")
     val fourth = mockListEntity(41, 42)
 
     whenever(channelRepository.findList()).thenReturn(Single.just(listOf(first, second, third, fourth)))
-    whenever(channelRelationRepository.findChildrenToParentsRelations()).thenReturn(Single.just(emptyMap()))
+    whenever(channelRelationRepository.findChildrenToParentsRelations()).thenReturn(Observable.just(emptyMap()))
 
     // when
     val testObserver = usecase().test()
@@ -141,7 +140,7 @@ class CreateProfileChannelsListUseCaseTest {
     whenever(channelRepository.findList()).thenReturn(Single.just(listOf(first, second, third)))
     val childrenRelation = mockk<ChannelRelationEntity> { every { channelId } returns 21 }
     whenever(channelRelationRepository.findChildrenToParentsRelations()).thenReturn(
-      Single.just(mapOf(11 to listOf(childrenRelation)))
+      Observable.just(mapOf(11 to listOf(childrenRelation)))
     )
 
     // when
@@ -168,7 +167,7 @@ class CreateProfileChannelsListUseCaseTest {
     locationRemoteId: Int,
     locationName: String = "$locationRemoteId",
     locationCollapsed: Boolean = false,
-    channelFunction: Int = SUPLA_CHANNELFNC_HUMIDITY
+    channelFunction: SuplaChannelFunction = SuplaChannelFunction.HUMIDITY
   ): ChannelDataEntity = mockk {
     every { remoteId } returns channelRemoteId
     every { function } returns channelFunction
@@ -186,16 +185,16 @@ class CreateProfileChannelsListUseCaseTest {
     }
     every { channelValueEntity } returns mockk {
       every { online } returns true
-      if (channelFunction == SUPLA_CHANNELFNC_HVAC_THERMOSTAT) {
+      if (channelFunction == SuplaChannelFunction.HVAC_THERMOSTAT) {
         every { asThermostatValue() } returns mockk {
           every { getSetpointText(valuesFormatter) } returns "setpoint text"
-          every { getIndicatorIcon() } returns 123
+          every { getIndicatorIcon() } returns ThermostatIndicatorIcon.STANDBY
           every { getIssueIconType() } returns IssueIconType.WARNING
           every { getIssueMessage() } returns 456
         }
       }
-      val isRollerShutter = channelFunction == SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
-      val isProjectorScreen = channelFunction == SUPLA_CHANNELFNC_PROJECTOR_SCREEN
+      val isRollerShutter = channelFunction == SuplaChannelFunction.CONTROLLING_THE_ROLLER_SHUTTER
+      val isProjectorScreen = channelFunction == SuplaChannelFunction.PROJECTOR_SCREEN
       if (isRollerShutter || isProjectorScreen) {
         every { asRollerShutterValue() } returns mockk {
           every { getIssueIconType() } returns null
@@ -204,7 +203,7 @@ class CreateProfileChannelsListUseCaseTest {
       }
     }
 
-    if (channelFunction == SUPLA_CHANNELFNC_HVAC_THERMOSTAT) {
+    if (channelFunction == SuplaChannelFunction.HVAC_THERMOSTAT) {
       every { channelExtendedValueEntity } returns mockk {
         every { getSuplaValue() } returns null
       }

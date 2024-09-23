@@ -17,9 +17,15 @@ package org.supla.android.data.model.general
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS
+
 interface ChannelDataBase : ChannelBase {
   val locationCaption: String
 
   fun isOnline(): Boolean
   fun onlinePercentage(): Int
 }
+
+val ChannelDataBase.hasElectricityMeter: Boolean
+  get() = (this as? ChannelDataEntity)?.channelValueEntity?.subValueType == SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort()

@@ -40,6 +40,8 @@ interface SuplaClientApi {
 
   fun getChannelConfig(remoteId: Int, type: ChannelConfigType): Boolean
 
+  fun getChannelState(remoteId: Int): Boolean
+
   fun setChannelConfig(config: SuplaChannelConfig): Boolean
 
   fun getDeviceConfig(deviceId: Int, type: EnumSet<FieldType>): Boolean

@@ -36,9 +36,9 @@ import org.supla.android.Preferences
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.core.ui.StringProvider
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.UpdateEventsManager
-import org.supla.android.lib.SuplaConst
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.GetChannelCaptionUseCase
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
@@ -77,7 +77,7 @@ class GpmDetailViewModelTest : BaseViewModelTest<GpmDetailViewState, GpmDetailVi
   fun `should load channel`() {
     // given
     val remoteId = 123
-    val function = SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER
+    val function = SuplaChannelFunction.GENERAL_PURPOSE_METER
     val channelData: ChannelDataEntity = mockk()
     every { channelData.visible } returns 1
     every { channelData.function } returns function
@@ -102,7 +102,7 @@ class GpmDetailViewModelTest : BaseViewModelTest<GpmDetailViewState, GpmDetailVi
   fun `should close activity when loaded channel is not visible`() {
     // given
     val remoteId = 123
-    val function = SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER
+    val function = SuplaChannelFunction.GENERAL_PURPOSE_METER
     val channelData: ChannelDataEntity = mockk()
     every { channelData.visible } returns 0
     every { channelData.function } returns function
@@ -124,14 +124,14 @@ class GpmDetailViewModelTest : BaseViewModelTest<GpmDetailViewState, GpmDetailVi
   fun `should close activity when loaded channel has different function`() {
     // given
     val remoteId = 123
-    val function = SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER
+    val function = SuplaChannelFunction.GENERAL_PURPOSE_METER
     val channelData: ChannelDataEntity = mockk()
     every { channelData.visible } returns 1
     every { channelData.function } returns function
     whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channelData))
 
     // when
-    viewModel.loadData(remoteId, ItemType.CHANNEL, SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH)
+    viewModel.loadData(remoteId, ItemType.CHANNEL, SuplaChannelFunction.LIGHTSWITCH)
 
     // then
     Assertions.assertThat(events).containsExactly(GpmDetailViewEvent.Close)
@@ -146,7 +146,7 @@ class GpmDetailViewModelTest : BaseViewModelTest<GpmDetailViewState, GpmDetailVi
   fun `should reload channel when channels updated`() {
     // given
     val remoteId = 123
-    val function = SuplaConst.SUPLA_CHANNELFNC_DIMMER
+    val function = SuplaChannelFunction.DIMMER
     val channelData: ChannelDataEntity = mockk()
     every { channelData.visible } returns 1
     every { channelData.function } returns function

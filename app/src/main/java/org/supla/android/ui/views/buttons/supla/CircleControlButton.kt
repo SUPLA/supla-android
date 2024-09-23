@@ -17,92 +17,26 @@ package org.supla.android.ui.views.buttons.supla
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.content.Context
 import android.graphics.Bitmap
-import android.util.AttributeSet
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.platform.AbstractComposeView
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
-import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.extensions.disabledOverlay
 
-class CircleControlButtonView @JvmOverloads constructor(
-  context: Context,
-  attrs: AttributeSet? = null,
-  defStyleAttr: Int = 0
-) : AbstractComposeView(context, attrs, defStyleAttr) {
-
-  var icon: Bitmap? by mutableStateOf(null)
-  var text: String? by mutableStateOf(null)
-  var type: Type by mutableStateOf(Type.POSITIVE)
-  var disabled: Boolean by mutableStateOf(false)
-  var clickListener: () -> Unit = { }
-
-  init {
-    context.theme.obtainStyledAttributes(attrs, R.styleable.PowerButtonView, 0, 0).apply {
-      try {
-        text = getString(R.styleable.PowerButtonView_text)
-        type = Type.from(getInteger(R.styleable.PowerButtonView_type, 0))
-      } finally {
-        recycle()
-      }
-    }
-  }
-
-  @Composable
-  override fun Content() {
-    SuplaTheme {
-      CircleControlButton(
-        modifier = Modifier.padding(Distance.tiny),
-        icon = icon,
-        text = text,
-        colors = type.colors(),
-        onClick = clickListener,
-        disabled = disabled
-      )
-    }
-  }
-
-  enum class Type(val value: Int) {
-    POSITIVE(0), NEGATIVE(1);
-
-    @Composable
-    fun colors(): SuplaButtonColors = when (this) {
-      POSITIVE -> SuplaButtonDefaults.primaryColors(contentDisabled = MaterialTheme.colorScheme.onBackground)
-      NEGATIVE -> SuplaButtonDefaults.errorColors(contentDisabled = MaterialTheme.colorScheme.onBackground)
-    }
-
-    companion object {
-      fun from(value: Int): Type {
-        return if (value == NEGATIVE.value) {
-          NEGATIVE
-        } else {
-          POSITIVE
-        }
-      }
-    }
-  }
-}
-
 @Composable
-private fun CircleControlButton(
+fun CircleControlButton(
   modifier: Modifier = Modifier,
   icon: Bitmap? = null,
   text: String? = null,

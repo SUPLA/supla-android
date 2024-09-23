@@ -31,7 +31,9 @@ class RoomChannelRepository @Inject constructor(
 
   fun findByRemoteId(profileId: Long, remoteId: Int) = channelDao.findByRemoteId(profileId, remoteId)
 
-  fun findList() = channelDao.findList()
+  fun findList() = channelDao.findList().firstOrError()
+
+  fun findObservableList() = channelDao.findList()
 
   fun findChannelDataEntity(remoteId: Int) = channelDao.findChannelDataEntity(remoteId)
 

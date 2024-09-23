@@ -27,7 +27,6 @@ import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.networking.suplaclient.DelayableState
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.ui.BaseViewModel
-import org.supla.android.core.ui.BitmapProvider
 import org.supla.android.core.ui.StringProvider
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
@@ -36,9 +35,11 @@ import org.supla.android.data.model.general.ChannelIssueItem
 import org.supla.android.data.model.temperature.TemperatureCorrection
 import org.supla.android.data.source.local.entity.ChannelRelationType
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.remote.ChannelConfigType
 import org.supla.android.data.source.remote.ConfigResult
 import org.supla.android.data.source.remote.SuplaDeviceConfig
+import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.data.source.remote.hvac.SuplaChannelHvacConfig
 import org.supla.android.data.source.remote.hvac.SuplaChannelWeeklyScheduleConfig
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
@@ -53,20 +54,19 @@ import org.supla.android.extensions.TAG
 import org.supla.android.extensions.fromSuplaTemperature
 import org.supla.android.extensions.guardLet
 import org.supla.android.extensions.ifLet
+import org.supla.android.extensions.ifTrue
 import org.supla.android.extensions.mapMerged
 import org.supla.android.features.details.thermostatdetail.general.data.SensorIssue
 import org.supla.android.features.details.thermostatdetail.general.data.ThermostatProgramInfo
 import org.supla.android.features.details.thermostatdetail.general.data.build
 import org.supla.android.features.details.thermostatdetail.general.ui.ThermostatGeneralViewProxy
 import org.supla.android.features.details.thermostatdetail.ui.TimerHeaderState
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL
+import org.supla.android.images.ImageId
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.lists.data.IssueIconType
-import org.supla.android.usecases.channel.ChannelWithChildren
 import org.supla.android.usecases.channel.GetChannelValueUseCase
-import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
+import org.supla.android.usecases.channel.ReadChannelWithChildrenTreeUseCase
+import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.thermostat.CreateTemperaturesListUseCase
 import java.util.Date
 import java.util.concurrent.TimeUnit
@@ -77,9 +77,10 @@ private const val REFRESH_DELAY_MS = 3000
 
 @HiltViewModel
 class ThermostatGeneralViewModel @Inject constructor(
-  private val readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
+  private val readChannelWithChildrenTreeUseCase: ReadChannelWithChildrenTreeUseCase,
   private val createTemperaturesListUseCase: CreateTemperaturesListUseCase,
   private val getChannelValueUseCase: GetChannelValueUseCase,
+  private val getChannelIconUseCase: GetChannelIconUseCase,
   private val valuesFormatter: ValuesFormatter,
   private val delayedThermostatActionSubject: DelayedThermostatActionSubject,
   private val channelConfigEventsManager: ChannelConfigEventsManager,
@@ -158,7 +159,7 @@ class ThermostatGeneralViewModel @Inject constructor(
   }
 
   fun triggerDataLoad(remoteId: Int) {
-    readChannelWithChildrenUseCase(remoteId)
+    readChannelWithChildrenTreeUseCase(remoteId).firstOrError()
       .attachSilent()
       .subscribeBy(
         onSuccess = { channelSubject.onNext(it) },
@@ -167,11 +168,13 @@ class ThermostatGeneralViewModel @Inject constructor(
       .disposeBySelf()
   }
 
-  fun loadTemperature(remoteId: Int) {
+  fun handleDataChangedEvent(remoteId: Int) {
     val state = currentState()
 
-    if (state.temperatures.firstOrNull { it.remoteId == remoteId } != null) {
-      state.viewModelState?.remoteId?.let { triggerDataLoad(it) }
+    state.viewModelState?.let { viewModelState ->
+      if (viewModelState.relatedRemoteIds.contains(remoteId) || remoteId == viewModelState.remoteId) {
+        triggerDataLoad(viewModelState.remoteId)
+      }
     }
   }
 
@@ -363,7 +366,7 @@ class ThermostatGeneralViewModel @Inject constructor(
       it.copy(
         viewModelState = ThermostatGeneralViewModelState(
           remoteId = channelData.remoteId,
-          function = channelData.function,
+          function = channelData.function.value,
           lastChangedHeat = lastChangedHeat(it.viewModelState, thermostatValue, setpointHeatTemperature),
           setpointHeatTemperature = setpointHeatTemperature,
           setpointCoolTemperature = setpointCoolTemperature,
@@ -371,6 +374,7 @@ class ThermostatGeneralViewModel @Inject constructor(
           configMaxTemperature = configMaxTemperature,
           mode = thermostatValue.mode,
           subfunction = thermostatValue.subfunction,
+          relatedRemoteIds = getRelatedIds(data.channelWithChildren),
           timerEndDate = timerState?.countdownEndsAt
         ),
 
@@ -379,12 +383,14 @@ class ThermostatGeneralViewModel @Inject constructor(
         isOffline = !value.online,
         isOff = isOff,
         currentPower = currentPower,
-        isAutoFunction = channelData.function == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL,
+        isAutoFunction = channelData.function == SuplaChannelFunction.HVAC_THERMOSTAT_HEAT_COOL,
         heatingModeActive = isHeatingModeActive(channelData, thermostatValue),
         coolingModeActive = isCoolingModeActive(channelData, thermostatValue),
 
-        showHeatingIndicator = value.online && thermostatValue.state.isOn() && thermostatValue.flags.contains(SuplaThermostatFlag.HEATING),
-        showCoolingIndicator = value.online && thermostatValue.state.isOn() && thermostatValue.flags.contains(SuplaThermostatFlag.COOLING),
+        showHeatingIndicator = isFlagActive(data.channelWithChildren, SuplaThermostatFlag.HEATING),
+        showCoolingIndicator = isFlagActive(data.channelWithChildren, SuplaThermostatFlag.COOLING),
+        pumpSwitchIcon = value.online.ifTrue { pumpSwitchIcon(data.channelWithChildren) },
+        heatOrColdSourceSwitchIcon = value.online.ifTrue { heatOrColdSourceSwitchIcon(data.channelWithChildren) },
 
         configMinTemperatureString = valuesFormatter.getTemperatureString(configMinTemperature),
         configMaxTemperatureString = valuesFormatter.getTemperatureString(configMaxTemperature),
@@ -397,7 +403,7 @@ class ThermostatGeneralViewModel @Inject constructor(
         temporaryChangeActive = value.online && thermostatValue.flags.contains(SuplaThermostatFlag.WEEKLY_SCHEDULE_TEMPORAL_OVERRIDE),
         temporaryProgramInfo = buildProgramInfo(data.weeklySchedule, data.deviceConfig, thermostatValue, value.online),
 
-        sensorIssue = SensorIssue.build(thermostatValue, data.channelWithChildren.children),
+        sensorIssue = SensorIssue.build(thermostatValue, data.channelWithChildren.children, getChannelIconUseCase),
 
         issues = createThermostatIssues(thermostatValue.flags),
 
@@ -405,6 +411,51 @@ class ThermostatGeneralViewModel @Inject constructor(
       )
     }
   }
+
+  private fun isFlagActive(channelWithChildren: ChannelWithChildren, flag: SuplaThermostatFlag): Boolean {
+    val children = channelWithChildren.allDescendantFlat.filter { it.relationType == ChannelRelationType.MASTER_THERMOSTAT }
+    val channelHasFlag = channelWithChildren.channel.isActive(flag)
+
+    return if (children.isEmpty()) {
+      channelHasFlag
+    } else {
+      channelHasFlag || children.fold(false) { result, child ->
+        result || child.channelDataEntity.isActive(flag)
+      }
+    }
+  }
+
+  private fun pumpSwitchIcon(channelWithChildren: ChannelWithChildren): ImageId? {
+    channelWithChildren.pumpSwitchChild?.let { getChannelIconUseCase(it.channelDataEntity) }
+      .let { if (it != null) return it }
+
+    channelWithChildren.allDescendantFlat
+      .filter { it.relationType == ChannelRelationType.PUMP_SWITCH }
+      .let { if (it.size == 1) return getChannelIconUseCase(it.first().channelDataEntity) }
+
+    return null
+  }
+
+  private fun heatOrColdSourceSwitchIcon(channelWithChildren: ChannelWithChildren): ImageId? {
+    channelWithChildren.heatOrColdSourceSwitchChild?.let { getChannelIconUseCase(it.channelDataEntity) }
+      .let { if (it != null) return it }
+
+    channelWithChildren.allDescendantFlat
+      .filter { it.relationType == ChannelRelationType.HEAT_OR_COLD_SOURCE_SWITCH }
+      .let { if (it.size == 1) return getChannelIconUseCase(it.first().channelDataEntity) }
+
+    return null
+  }
+
+  private fun getRelatedIds(channelWithChildren: ChannelWithChildren): List<Int> =
+    channelWithChildren.allDescendantFlat
+      .filter {
+        it.relationType == ChannelRelationType.PUMP_SWITCH ||
+          it.relationType == ChannelRelationType.HEAT_OR_COLD_SOURCE_SWITCH ||
+          it.relationType == ChannelRelationType.MASTER_THERMOSTAT ||
+          it.relationType.isThermometer()
+      }
+      .map { it.channelDataEntity.remoteId }
 
   private fun buildProgramInfo(
     weeklyConfig: SuplaChannelWeeklyScheduleConfig,
@@ -428,11 +479,11 @@ class ThermostatGeneralViewModel @Inject constructor(
       .build()
 
   private fun isHeatingModeActive(channel: ChannelDataEntity, value: ThermostatValue) =
-    channel.function == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL &&
+    channel.function == SuplaChannelFunction.HVAC_THERMOSTAT_HEAT_COOL &&
       (value.mode == SuplaHvacMode.HEAT_COOL || value.mode == SuplaHvacMode.HEAT)
 
   private fun isCoolingModeActive(channel: ChannelDataEntity, value: ThermostatValue) =
-    channel.function == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL &&
+    channel.function == SuplaChannelFunction.HVAC_THERMOSTAT_HEAT_COOL &&
       (value.mode == SuplaHvacMode.HEAT_COOL || value.mode == SuplaHvacMode.COOL)
 
   private fun calculateTemperatureControlText(
@@ -484,14 +535,14 @@ class ThermostatGeneralViewModel @Inject constructor(
 
   private fun getSetpointHeatTemperature(channel: ChannelDataEntity, thermostatValue: ThermostatValue): Float? {
     val setpointSet = thermostatValue.flags.contains(SuplaThermostatFlag.SETPOINT_TEMP_MIN_SET)
-    if (channel.function == SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER && setpointSet) {
+    if (channel.function == SuplaChannelFunction.HVAC_DOMESTIC_HOT_WATER && setpointSet) {
       return thermostatValue.setpointTemperatureHeat
     }
-    if (channel.function == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL && setpointSet) {
+    if (channel.function == SuplaChannelFunction.HVAC_THERMOSTAT_HEAT_COOL && setpointSet) {
       return thermostatValue.setpointTemperatureHeat
     }
     val isHeatSubfunction = thermostatValue.subfunction == ThermostatSubfunction.HEAT
-    if (channel.function == SUPLA_CHANNELFNC_HVAC_THERMOSTAT && isHeatSubfunction && setpointSet) {
+    if (channel.function == SuplaChannelFunction.HVAC_THERMOSTAT && isHeatSubfunction && setpointSet) {
       return thermostatValue.setpointTemperatureHeat
     }
 
@@ -500,11 +551,11 @@ class ThermostatGeneralViewModel @Inject constructor(
 
   private fun getSetpointCoolTemperature(channel: ChannelDataEntity, thermostatValue: ThermostatValue): Float? {
     val setpointSet = thermostatValue.flags.contains(SuplaThermostatFlag.SETPOINT_TEMP_MAX_SET)
-    if (channel.function == SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL && setpointSet) {
+    if (channel.function == SuplaChannelFunction.HVAC_THERMOSTAT_HEAT_COOL && setpointSet) {
       return thermostatValue.setpointTemperatureCool
     }
     val isCoolSubfunction = thermostatValue.subfunction == ThermostatSubfunction.COOL
-    if (channel.function == SUPLA_CHANNELFNC_HVAC_THERMOSTAT && isCoolSubfunction && setpointSet) {
+    if (channel.function == SuplaChannelFunction.HVAC_THERMOSTAT && isCoolSubfunction && setpointSet) {
       return thermostatValue.setpointTemperatureCool
     }
 
@@ -594,6 +645,9 @@ class ThermostatGeneralViewModel @Inject constructor(
       if (flags.contains(SuplaThermostatFlag.THERMOMETER_ERROR)) {
         add(ChannelIssueItem(IssueIconType.ERROR, R.string.thermostat_thermometer_error))
       }
+      if (flags.contains(SuplaThermostatFlag.BATTERY_COVER_OPEN)) {
+        add(ChannelIssueItem(IssueIconType.ERROR, R.string.thermostat_battery_cover_open))
+      }
       if (flags.contains(SuplaThermostatFlag.CLOCK_ERROR)) {
         add(ChannelIssueItem(IssueIconType.WARNING, R.string.thermostat_clock_error))
       }
@@ -645,6 +699,8 @@ data class ThermostatGeneralViewState(
   val coolingModeActive: Boolean = false,
   val showHeatingIndicator: Boolean = false,
   val showCoolingIndicator: Boolean = false,
+  val pumpSwitchIcon: ImageId? = null,
+  val heatOrColdSourceSwitchIcon: ImageId? = null,
 
   val configMinTemperatureString: String = "",
   val configMaxTemperatureString: String = "",
@@ -751,7 +807,7 @@ data class ThermostatGeneralViewState(
 
 data class MeasurementValue(
   val remoteId: Int,
-  val iconProvider: BitmapProvider,
+  val imageId: ImageId,
   val value: String
 )
 
@@ -766,9 +822,15 @@ data class ThermostatGeneralViewModelState(
   val setpointCoolTemperature: Float? = null,
   val subfunction: ThermostatSubfunction? = null,
   val timerEndDate: Date? = null,
+  val relatedRemoteIds: List<Int> = emptyList(),
   override val sent: Boolean = false
 ) : DelayableState {
 
   override fun sentState(): DelayableState = copy(sent = true)
   override fun delayableCopy(): DelayableState = copy()
+}
+
+private fun ChannelDataEntity.isActive(flag: SuplaThermostatFlag): Boolean {
+  val value = channelValueEntity.asThermostatValue()
+  return channelValueEntity.online && value.state.isOn() && value.flags.contains(flag)
 }

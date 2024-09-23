@@ -48,6 +48,10 @@
     android:name="org.supla.android.features.details.windowdetail.WindowDetailFragment" />
 
   <fragment
+    android:id="@+id/electricity_meter_detail_fragment"
+    android:name="org.supla.android.features.details.electricitymeterdetail.ElectricityMeterDetailFragment" />
+
+  <fragment
     android:id="@+id/notifications_log_fragment"
     android:name="org.supla.android.features.notificationslog.NotificationsLogFragment"
     android:label="@string/menu_notifications" />

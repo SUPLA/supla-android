@@ -8,6 +8,7 @@ plugins {
   id("com.google.gms.google-services")
   id("com.google.dagger.hilt.android") version Versions.Hilt
   id("org.jetbrains.kotlin.plugin.compose") version Versions.Kotlin
+  kotlin("plugin.serialization") version "2.0.0"
 }
 
 android {
@@ -24,8 +25,8 @@ android {
     minSdk = Versions.MinSdk
     targetSdk = Versions.TargetSdk
     multiDexEnabled = true
-    versionCode = 241
-    versionName = "24.09"
+    versionCode = 245
+    versionName = "24.09.01"
 
     ndk {
       moduleName = "suplaclient"
@@ -155,6 +156,7 @@ dependencies {
   implementation(Deps.Androidx.Compose.Tooling)
   implementation(Deps.Androidx.Compose.ToolingPreview)
   implementation(Deps.Androidx.Compose.ConstraintLayout)
+  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1")
 
   coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
 

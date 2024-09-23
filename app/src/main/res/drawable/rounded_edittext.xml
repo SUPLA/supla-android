@@ -3,7 +3,7 @@
 
     <item android:state_focused="true" android:state_pressed="true" android:state_enabled="true">
         <shape>
-            <solid android:color="#FFFFFF" />
+            <solid android:color="@color/surface" />
             <stroke android:width="0.3dp" android:color="#BDBDBD" />
             <corners android:radius="5dp" />
         </shape>
@@ -11,7 +11,7 @@
 
     <item android:state_focused="false" android:state_pressed="true" android:state_enabled="true">
         <shape>
-            <solid android:color="#FFFFFF" />
+            <solid android:color="@color/surface" />
             <stroke android:width="0.3dp" android:color="#BDBDBD" />
             <corners android:radius="5dp" />
         </shape>
@@ -19,7 +19,7 @@
 
     <item android:state_focused="true" android:state_pressed="false" android:state_enabled="true">
         <shape>
-            <solid android:color="#FFFFFF" />
+            <solid android:color="@color/surface" />
             <stroke android:width="0.3dp" android:color="#BDBDBD" />
             <corners android:radius="5dp" />
         </shape>
@@ -28,7 +28,7 @@
     <item android:state_focused="false"
           android:state_pressed="false" android:state_enabled="true">
         <shape>
-            <solid android:color="#FFFFFF" />
+            <solid android:color="@color/surface" />
             <stroke android:width="0.3dp" android:color="#BDBDBD" />
             <corners android:radius="5dp" />
         </shape>

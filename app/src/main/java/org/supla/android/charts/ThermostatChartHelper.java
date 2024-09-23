@@ -32,12 +32,12 @@ import org.supla.android.R;
 import org.supla.android.SuplaApp;
 import org.supla.android.ValuesFormatterProvider;
 import org.supla.android.data.ValuesFormatter;
+import org.supla.android.data.source.local.entity.measurements.HomePlusThermostatLogEntity;
 import org.supla.android.db.MeasurementsDbHelper;
-import org.supla.android.db.SuplaContract;
 
 public class ThermostatChartHelper extends ChartHelper {
 
-  private ValuesFormatterProvider valuesFormatterProvider;
+  private final ValuesFormatterProvider valuesFormatterProvider;
 
   public ThermostatChartHelper(Context context) {
     super(context);
@@ -58,8 +58,7 @@ public class ThermostatChartHelper extends ChartHelper {
         (float)
             tp.getTemperatureInConfiguredUnit(
                 c.getDouble(
-                    c.getColumnIndex(
-                        SuplaContract.ThermostatLogEntry.COLUMN_NAME_MEASUREDTEMPERATURE)));
+                    c.getColumnIndex(HomePlusThermostatLogEntity.COLUMN_MEASURED_TEMPERATURE)));
 
     entries.add(new BarEntry(time, phases));
   }
@@ -73,7 +72,7 @@ public class ThermostatChartHelper extends ChartHelper {
   @Override
   @SuppressLint("Range")
   protected long getTimestamp(Cursor c) {
-    return c.getLong(c.getColumnIndex(SuplaContract.ThermostatLogEntry.COLUMN_NAME_TIMESTAMP));
+    return c.getLong(c.getColumnIndex(HomePlusThermostatLogEntity.COLUMN_TIMESTAMP));
   }
 
   @Override

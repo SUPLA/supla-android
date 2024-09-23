@@ -28,7 +28,6 @@ import androidx.fragment.app.viewModels
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.ChannelDetailDigiglass
-import org.supla.android.ChannelDetailEM
 import org.supla.android.ChannelDetailIC
 import org.supla.android.ChannelDetailRGBW
 import org.supla.android.ChannelDetailThermostatHP
@@ -127,7 +126,6 @@ class LegacyDetailFragment : BaseFragment<LegacyDetailViewState, LegacyDetailVie
   private fun getDetailView(): DetailLayout = when (legacyDetailType) {
     LegacyDetailType.RGBW -> ChannelDetailRGBW(context)
     LegacyDetailType.IC -> ChannelDetailIC(context)
-    LegacyDetailType.EM -> ChannelDetailEM(context)
     LegacyDetailType.THERMOSTAT_HP -> ChannelDetailThermostatHP(context)
     LegacyDetailType.DIGIGLASS -> ChannelDetailDigiglass(context)
   }

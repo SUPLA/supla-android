@@ -115,6 +115,8 @@ data class ChannelValueEntity(
 
   fun getValueAsByteArray(): ByteArray = toByteArray(value)
 
+  fun getSubValueAsByteArray(): ByteArray = toByteArray(subValue)
+
   fun differsFrom(suplaChannelValue: SuplaChannelValue, online: Boolean): Boolean {
     val suplaValue = Companion.toString(suplaChannelValue.Value)
     val suplaSubValue = Companion.toString(suplaChannelValue.SubValue)
@@ -135,8 +137,6 @@ data class ChannelValueEntity(
       value = if (online) Companion.toString(suplaChannelValue.Value) else value,
       profileId = profileId
     )
-
-  private fun getSubValueAsByteArray(): ByteArray = toByteArray(subValue)
 
   private fun asShortValue(bytePosition: Int): Short? {
     getValueAsByteArray().let {

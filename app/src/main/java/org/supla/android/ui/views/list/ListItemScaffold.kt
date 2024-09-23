@@ -20,8 +20,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -34,7 +32,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -45,14 +42,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
@@ -60,21 +53,23 @@ import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.core.ui.theme.gray
-import org.supla.android.core.ui.theme.listItemCaption
 import org.supla.android.extensions.differenceInSeconds
 import org.supla.android.extensions.preferences
 import org.supla.android.extensions.valuesFormatter
+import org.supla.android.ui.lists.ListOnlineState
 import org.supla.android.ui.lists.data.IssueIconType
 import org.supla.android.ui.views.Separator
+import org.supla.android.ui.views.list.components.ListItemInfoIcon
+import org.supla.android.ui.views.list.components.ListItemIssueIcon
 import org.supla.android.ui.views.list.components.ListItemMainRow
-import java.lang.Float.max
+import org.supla.android.ui.views.list.components.ListItemTitle
 import java.util.Date
 import kotlin.time.Duration.Companion.seconds
 
 @Composable
 fun ListItemScaffold(
   itemTitle: String,
-  itemOnline: Boolean,
+  itemOnlineState: ListOnlineState,
   itemEstimatedEndDate: Date?,
   onInfoClick: () -> Unit,
   onIssueClick: () -> Unit,
@@ -88,15 +83,15 @@ fun ListItemScaffold(
   content: @Composable BoxScope.() -> Unit
 ) {
   var title by remember { mutableStateOf(itemTitle) }
-  var online by remember { mutableStateOf(itemOnline) }
+  var onlineState by remember { mutableStateOf(itemOnlineState) }
   var estimatedEndDate by remember { mutableStateOf(itemEstimatedEndDate) }
   var issueIconType by remember { mutableStateOf(itemIssueIconType) }
 
   if (title != itemTitle) {
     title = itemTitle
   }
-  if (online != itemOnline) {
-    online = itemOnline
+  if (onlineState != itemOnlineState) {
+    onlineState = itemOnlineState
   }
   if (estimatedEndDate != itemEstimatedEndDate) {
     estimatedEndDate = itemEstimatedEndDate
@@ -120,10 +115,10 @@ fun ListItemScaffold(
         .fillMaxWidth()
         .fillMaxHeight()
     ) {
-      ListItemDotLeading(online, hasLeftButton)
+      ListItemDotLeading(onlineState, hasLeftButton)
 
-      if (online && showInfoIcon) {
-        ListItemInfoIcon(onInfoClick)
+      if (onlineState.online && showInfoIcon) {
+        ListItemInfoIcon(onInfoClick, modifier = Modifier.padding(start = dimensionResource(id = R.dimen.list_horizontal_spacing)))
       } else if (issueIconType != null) {
         ListItemIssueIconSpacing()
       }
@@ -137,13 +132,13 @@ fun ListItemScaffold(
 
       issueIconType.let {
         if (it != null) {
-          ListItemIssueIcon(it, onIssueClick)
-        } else if (online && showInfoIcon) {
+          ListItemIssueIcon(it, onIssueClick, modifier = Modifier.padding(end = dimensionResource(id = R.dimen.list_horizontal_spacing)))
+        } else if (onlineState.online && showInfoIcon) {
           ListItemIssueIconSpacing()
         }
       }
 
-      ListItemDotTrading(online, hasRightButton)
+      ListItemDotTrading(onlineState, hasRightButton)
     }
 
     ListItemTitle(
@@ -151,7 +146,7 @@ fun ListItemScaffold(
       onLongClick = onTitleLongClick,
       onItemClick = onItemClick,
       scale = scale,
-      modifier = Modifier.align(Alignment.BottomCenter)
+      modifier = Modifier.padding(horizontal = Distance.default, vertical = Distance.small.times(scale)).align(Alignment.BottomCenter)
     )
 
     Separator(modifier = Modifier.align(Alignment.BottomCenter))
@@ -159,68 +154,22 @@ fun ListItemScaffold(
 }
 
 @Composable
-private fun ListItemDotLeading(online: Boolean, withButton: Boolean, modifier: Modifier = Modifier) =
+private fun ListItemDotLeading(onlineState: ListOnlineState, withButton: Boolean, modifier: Modifier = Modifier) =
   ListItemDot(
-    online = online,
+    onlineState = onlineState,
     withButton = withButton,
     paddingValues = PaddingValues(start = dimensionResource(id = R.dimen.list_horizontal_spacing)),
     modifier = modifier
   )
 
 @Composable
-private fun ListItemDotTrading(online: Boolean, withButton: Boolean, modifier: Modifier = Modifier) =
+private fun ListItemDotTrading(onlineState: ListOnlineState, withButton: Boolean, modifier: Modifier = Modifier) =
   ListItemDot(
-    online = online,
+    onlineState = onlineState,
     withButton = withButton,
     paddingValues = PaddingValues(end = dimensionResource(id = R.dimen.list_horizontal_spacing)),
     modifier = modifier
   )
-
-@Composable
-private fun ListItemDot(online: Boolean, withButton: Boolean, paddingValues: PaddingValues, modifier: Modifier = Modifier) {
-  val color = if (online) colorResource(id = R.color.primary) else colorResource(id = R.color.red)
-  val background = if (withButton) color else Color.Transparent
-  Box(
-    modifier = modifier
-      .padding(paddingValues = paddingValues)
-      .width(dimensionResource(id = R.dimen.channel_dot_size))
-      .height(dimensionResource(id = R.dimen.channel_dot_size))
-      .border(width = 1.dp, color = color, shape = CircleShape)
-      .background(color = background, shape = CircleShape)
-  )
-}
-
-@Composable
-private fun ListItemInfoIcon(onClick: () -> Unit) {
-  Image(
-    painter = painterResource(id = R.drawable.ic_info),
-    contentDescription = null,
-    modifier = Modifier
-      .padding(start = dimensionResource(id = R.dimen.list_horizontal_spacing))
-      .size(dimensionResource(id = R.dimen.channel_state_image_size))
-      .pointerInput(onClick) {
-        detectTapGestures(
-          onTap = { onClick() }
-        )
-      }
-  )
-}
-
-@Composable
-private fun ListItemIssueIcon(issueIconType: IssueIconType, onClick: () -> Unit) {
-  Image(
-    painter = painterResource(id = issueIconType.icon),
-    contentDescription = null,
-    modifier = Modifier
-      .padding(end = dimensionResource(id = R.dimen.list_horizontal_spacing))
-      .size(dimensionResource(id = R.dimen.channel_warning_image_size))
-      .pointerInput(onClick) {
-        detectTapGestures(
-          onTap = { onClick() }
-        )
-      }
-  )
-}
 
 @Composable
 private fun ListItemIssueIconSpacing() {
@@ -228,32 +177,6 @@ private fun ListItemIssueIconSpacing() {
     modifier = Modifier
       .padding(end = dimensionResource(id = R.dimen.list_horizontal_spacing))
       .size(dimensionResource(id = R.dimen.channel_warning_image_size))
-  )
-}
-
-@Composable
-private fun ListItemTitle(
-  text: String,
-  onLongClick: () -> Unit,
-  onItemClick: () -> Unit,
-  modifier: Modifier = Modifier,
-  scale: Float = 1f
-) {
-  val textSize = MaterialTheme.typography.listItemCaption().fontSize.times(max(scale, 1f))
-  Text(
-    text = text,
-    style = MaterialTheme.typography.listItemCaption(),
-    modifier = modifier
-      .padding(
-        horizontal = Distance.default,
-        vertical = Distance.small.times(scale)
-      )
-      .pointerInput(onLongClick, onItemClick) {
-        detectTapGestures(onLongPress = { onLongClick() }, onTap = { onItemClick() })
-      },
-    maxLines = 1,
-    overflow = TextOverflow.Ellipsis,
-    fontSize = textSize
   )
 }
 
@@ -305,7 +228,7 @@ private fun Preview() {
       ) {
         ListItemScaffold(
           itemTitle = "Power Switch",
-          itemOnline = true,
+          itemOnlineState = ListOnlineState.ONLINE,
           null,
           { },
           { },
@@ -333,7 +256,17 @@ private fun Preview() {
           .width(500.dp)
           .height(100.dp)
       ) {
-        ListItemScaffold(itemTitle = "Power Switch", itemOnline = false, null, { }, { }, { }, { }, null, scale = 1f, showInfoIcon = false) {
+        ListItemScaffold(itemTitle = "Power Switch", itemOnlineState = ListOnlineState.OFFLINE, Date(), {
+        }, { }, { }, { }, null, scale = 1f, showInfoIcon = false) {
+        }
+      }
+      Box(
+        modifier = Modifier
+          .width(500.dp)
+          .height(100.dp)
+      ) {
+        ListItemScaffold(itemTitle = "Power Switch", itemOnlineState = ListOnlineState.PARTIALLY_ONLINE, Date(), {
+        }, { }, { }, { }, null, scale = 1f, showInfoIcon = false, hasLeftButton = true, hasRightButton = true) {
         }
       }
     }

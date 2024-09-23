@@ -17,10 +17,10 @@ package org.supla.android.usecases.icon
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.core.ui.BitmapProvider
 import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.model.general.ChannelState
 import org.supla.android.data.model.general.IconType
+import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.db.ChannelBase
 import org.supla.android.extensions.guardLet
 import org.supla.android.extensions.ifLet
@@ -42,12 +42,6 @@ class GetChannelIconUseCase @Inject constructor(
   private val imageCacheProxy: ImageCacheProxy
 ) {
 
-  fun getIconProvider(
-    channelData: ChannelDataBase,
-    iconType: IconType = IconType.SINGLE
-  ): BitmapProvider =
-    { imageCacheProxy.getBitmap(it, invoke(channelData, iconType)) }
-
   // We intentionally specify icons with the _nighthtmode
   // suffix for night mode instead of using the default icons
   // from the drawable-night directory because not every
@@ -57,7 +51,7 @@ class GetChannelIconUseCase @Inject constructor(
     type: IconType = IconType.SINGLE,
     channelStateValue: ChannelState.Value? = null
   ): ImageId {
-    if (type != IconType.SINGLE && channelDataBase.function != SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE) {
+    if (type != IconType.SINGLE && channelDataBase.function != SuplaChannelFunction.HUMIDITY_AND_TEMPERATURE) {
       throw IllegalArgumentException("Wrong icon type (iconType: '$type', function: '${channelDataBase.function}')!")
     }
 
@@ -68,7 +62,7 @@ class GetChannelIconUseCase @Inject constructor(
     }
 
     val iconData = IconData(
-      function = channelDataBase.function,
+      function = channelDataBase.function.value,
       altIcon = channelDataBase.altIcon,
       state = state,
       type = type
@@ -128,7 +122,7 @@ class GetChannelIconUseCase @Inject constructor(
       return null
     }
 
-    return userImageId(channelEntity.function, userIconId, iconType, state, channelEntity.profileId).let {
+    return userImageId(channelEntity.function.value, userIconId, iconType, state, channelEntity.profileId).let {
       if (imageCacheProxy.bitmapExists(it)) {
         it
       } else {

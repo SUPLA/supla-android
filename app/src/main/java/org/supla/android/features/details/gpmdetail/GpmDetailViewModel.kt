@@ -55,7 +55,7 @@ class GpmDetailViewModel @Inject constructor(
 }
 
 sealed interface GpmDetailViewEvent : StandardDetailViewEvent {
-  object Close : GpmDetailViewEvent
+  data object Close : GpmDetailViewEvent
 }
 
 data class GpmDetailViewState(

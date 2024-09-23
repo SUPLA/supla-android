@@ -30,12 +30,14 @@ import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
-import org.supla.android.lib.SuplaConst
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HUMIDITY
+import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.usecases.channel.valueprovider.DepthSensorValueProvider
 import org.supla.android.usecases.channel.valueprovider.DistanceSensorValueProvider
+import org.supla.android.usecases.channel.valueprovider.ElectricityMeterValueProvider
 import org.supla.android.usecases.channel.valueprovider.GpmValueProvider
 import org.supla.android.usecases.channel.valueprovider.HumidityAndTemperatureValueProvider
+import org.supla.android.usecases.channel.valueprovider.ImpulseCounterValueProvider
+import org.supla.android.usecases.channel.valueprovider.SwitchWithElectricityMeterValueProvider
 import org.supla.android.usecases.channel.valueprovider.ThermometerValueProvider
 
 @RunWith(MockitoJUnitRunner::class)
@@ -56,6 +58,15 @@ class GetChannelValueUseCaseTest {
   @Mock
   private lateinit var distanceSensorValueProvider: DistanceSensorValueProvider
 
+  @Mock
+  private lateinit var electricityMeterValueProvider: ElectricityMeterValueProvider
+
+  @Mock
+  private lateinit var impulseCounterValueProvider: ImpulseCounterValueProvider
+
+  @Mock
+  private lateinit var switchWithElectricityMeterValueProvider: SwitchWithElectricityMeterValueProvider
+
   @InjectMocks
   private lateinit var useCase: GetChannelValueUseCase
 
@@ -63,21 +74,21 @@ class GetChannelValueUseCaseTest {
   fun `should check all handlers if can handle channel and throw exception that could not provide channel value`() {
     // given
     val channel: ChannelDataEntity = mockk {
-      every { function } returns SUPLA_CHANNELFNC_HUMIDITY
+      every { function } returns SuplaChannelFunction.HUMIDITY
     }
 
     // when
     Assertions.assertThatThrownBy {
       useCase.invoke(channel)
     }
-      .hasMessage("No value provider for channel function `$SUPLA_CHANNELFNC_HUMIDITY`")
+      .hasMessage("No value provider for channel function `${SuplaChannelFunction.HUMIDITY}`")
       .isInstanceOf(IllegalStateException::class.java)
 
     // then
-    verify(thermometerValueProvider).handle(SUPLA_CHANNELFNC_HUMIDITY)
-    verify(humidityAndTemperatureValueProvider).handle(SUPLA_CHANNELFNC_HUMIDITY)
-    verify(depthSensorValueProvider).handle(SUPLA_CHANNELFNC_HUMIDITY)
-    verify(gpmValueProvider).handle(SUPLA_CHANNELFNC_HUMIDITY)
+    verify(thermometerValueProvider).handle(channel)
+    verify(humidityAndTemperatureValueProvider).handle(channel)
+    verify(depthSensorValueProvider).handle(channel)
+    verify(gpmValueProvider).handle(channel)
     verifyNoMoreInteractions(
       thermometerValueProvider,
       humidityAndTemperatureValueProvider,
@@ -89,7 +100,7 @@ class GetChannelValueUseCaseTest {
   @Test
   fun `should return value of first provider which can handle channel`() {
     // given
-    val function = SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
+    val function = SuplaChannelFunction.HUMIDITY_AND_TEMPERATURE
     val value = 12.4
     val channel: ChannelDataEntity = mockk {
       every { this@mockk.function } returns function
@@ -98,7 +109,7 @@ class GetChannelValueUseCaseTest {
       }
     }
 
-    whenever(humidityAndTemperatureValueProvider.handle(function)).thenReturn(true)
+    whenever(humidityAndTemperatureValueProvider.handle(channel)).thenReturn(true)
     whenever(humidityAndTemperatureValueProvider.value(channel, ValueType.FIRST)).thenReturn(value)
 
     // when
@@ -106,9 +117,9 @@ class GetChannelValueUseCaseTest {
 
     // then
     Assertions.assertThat(valueText).isEqualTo(value)
-    verify(depthSensorValueProvider).handle(function)
-    verify(gpmValueProvider).handle(function)
-    verify(humidityAndTemperatureValueProvider).handle(function)
+    verify(depthSensorValueProvider).handle(channel)
+    verify(gpmValueProvider).handle(channel)
+    verify(humidityAndTemperatureValueProvider).handle(channel)
     verify(humidityAndTemperatureValueProvider).value(channel, ValueType.FIRST)
     verifyNoMoreInteractions(depthSensorValueProvider, gpmValueProvider, humidityAndTemperatureValueProvider)
     verifyNoInteractions(thermometerValueProvider)

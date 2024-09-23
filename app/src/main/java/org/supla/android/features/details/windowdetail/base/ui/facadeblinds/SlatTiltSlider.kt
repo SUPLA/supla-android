@@ -155,21 +155,21 @@ private fun Thumb(
             .rotate(slatDegrees)
             .width(12.dp)
             .height(1.dp)
-            .background(colorResource(id = R.color.gray), RoundedCornerShape(0.5.dp))
+            .background(colorResource(id = R.color.on_surface_variant), RoundedCornerShape(0.5.dp))
         )
         Box(
           modifier = Modifier
             .rotate(slatDegrees)
             .width(12.dp)
             .height(1.dp)
-            .background(colorResource(id = R.color.gray), RoundedCornerShape(0.5.dp))
+            .background(colorResource(id = R.color.on_surface_variant), RoundedCornerShape(0.5.dp))
         )
         Box(
           modifier = Modifier
             .rotate(slatDegrees)
             .width(12.dp)
             .height(1.dp)
-            .background(colorResource(id = R.color.gray), RoundedCornerShape(0.5.dp))
+            .background(colorResource(id = R.color.on_surface_variant), RoundedCornerShape(0.5.dp))
         )
       }
     }

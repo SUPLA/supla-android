@@ -26,6 +26,7 @@ import org.supla.android.data.source.local.entity.ChannelEntity.Companion.COLUMN
 import org.supla.android.data.source.local.entity.ChannelEntity.Companion.COLUMN_LOCATION_ID
 import org.supla.android.data.source.local.entity.ChannelEntity.Companion.COLUMN_PROFILE_ID
 import org.supla.android.data.source.local.entity.ChannelEntity.Companion.TABLE_NAME
+import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.lib.SuplaChannel
 
 @Entity(
@@ -51,7 +52,7 @@ data class ChannelEntity(
   @ColumnInfo(name = COLUMN_DEVICE_ID) val deviceId: Int?,
   @ColumnInfo(name = COLUMN_CAPTION) override val caption: String,
   @ColumnInfo(name = COLUMN_TYPE) val type: Int,
-  @ColumnInfo(name = COLUMN_FUNCTION) override val function: Int,
+  @ColumnInfo(name = COLUMN_FUNCTION) override val function: SuplaChannelFunction,
   @ColumnInfo(name = COLUMN_VISIBLE) override val visible: Int,
   @ColumnInfo(name = COLUMN_LOCATION_ID) override val locationId: Int,
   @ColumnInfo(name = COLUMN_ALT_ICON) override val altIcon: Int,
@@ -71,7 +72,7 @@ data class ChannelEntity(
       deviceId = suplaChannel.DeviceID,
       caption = suplaChannel.Caption,
       type = suplaChannel.Type,
-      function = suplaChannel.Func,
+      function = SuplaChannelFunction.from(suplaChannel.Func),
       visible = 1,
       locationId = suplaChannel.LocationID,
       altIcon = suplaChannel.AltIcon,
@@ -158,7 +159,7 @@ data class ChannelEntity(
         deviceId = suplaChannel.DeviceID,
         caption = suplaChannel.Caption,
         type = suplaChannel.Type,
-        function = suplaChannel.Func,
+        function = SuplaChannelFunction.from(suplaChannel.Func),
         visible = 1,
         locationId = suplaChannel.LocationID,
         altIcon = suplaChannel.AltIcon,

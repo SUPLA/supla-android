@@ -27,7 +27,7 @@
       android:layout_width="64dp"
       android:layout_height="64dp"
       android:src="@drawable/ic_empty"
-      android:tint="@color/gray"
+      android:tint="@color/on_surface_variant"
       app:layout_constraintBottom_toTopOf="@id/groups_empty_list_label"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent" />
@@ -42,7 +42,7 @@
       android:text="@string/main_no_entries"
       android:textAlignment="center"
       android:textAppearance="@style/AppTheme.TextAppearance.Headline4"
-      android:textColor="@color/gray"
+      android:textColor="@color/on_surface_variant"
       app:layout_constraintBottom_toTopOf="@id/groups_vertical_center_guideline" />
 
     <androidx.appcompat.widget.AppCompatButton

@@ -23,6 +23,7 @@ import org.supla.android.core.ui.StringProvider
 import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.isHvacThermostat
+import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.features.details.detailbase.standarddetail.StandardDetailViewEvent
@@ -59,7 +60,7 @@ class ThermostatDetailViewModel @Inject constructor(
       subfunction = (channelDataBase as? ChannelDataEntity)?.channelValueEntity?.asThermostatValue()?.subfunction
     )
 
-  override fun shouldCloseDetail(channelDataBase: ChannelDataBase, initialFunction: Int) =
+  override fun shouldCloseDetail(channelDataBase: ChannelDataBase, initialFunction: SuplaChannelFunction) =
     when (channelDataBase) {
       is ChannelDataEntity -> {
         if (channelDataBase.isHvacThermostat()) {

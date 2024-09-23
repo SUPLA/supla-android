@@ -125,21 +125,6 @@
   <string name="channel_caption_gasmeter">Gassmåler</string>
   <string name="channel_caption_watermeter">Vannmåler</string>
 
-  <string name="em_total_forward_avtive_energy">Aktiv strøm mottatt</string>
-  <string name="em_reverse_active_energy">Aktiv strøm returnert</string>
-  <string name="em_total_forward_reactive_energy">Passiv strøm mottatt</string>
-  <string name="em_total_reverse_reactive_energy">Passiv strøm returnert</string>
-  <string name="em_frequency">Frekvens</string>
-  <string name="em_voltage">Spenning</string>
-  <string name="em_current">Intensitet</string>
-  <string name="em_power_active">Aktiv strøm</string>
-  <string name="em_power_reactive">Passiv strøm</string>
-  <string name="em_power_factor">Effektfaktor</string>
-  <string name="em_phase_angle">Fasevinkel</string>
-  <string name="em_power_apparent">Tilsynelatende effekt</string>
-  <string name="em_phase1">Fase 1</string>
-  <string name="em_phase2">Fase 2</string>
-  <string name="em_phase3">Fase 3</string>
   <string name="channel_caption_thermostat">Termostat</string>
   <string name="channel_caption_thermostat_hp_homeplus">Varmeapparat Home+</string>
   <string name="hp_on">PÅ</string>
@@ -449,4 +434,25 @@
   <string name="status_accessid_inactive">Tilgangs-ID inaktiv</string>
   <string name="hour_string_format">HH:mm:ss</string>
   <string name="roller_shutter_calibration">Kalibrering</string>
+  <string name="details_em_total_forward_active_energy">Aktiv strøm mottatt</string>
+  <string name="details_em_reverse_active_energy">Aktiv strøm returnert</string>
+  <string name="details_em_total_forward_reactive_energy">Passiv strøm mottatt</string>
+  <string name="details_em_total_reverse_reactive_energy">Passiv strøm returnert</string>
+  <string name="details_em_frequency">Frekvens</string>
+  <string name="details_em_voltage">Spenning</string>
+  <string name="details_em_current">Intensitet</string>
+  <string name="details_em_power_active">Aktiv strøm</string>
+  <string name="details_em_power_reactive">Passiv strøm</string>
+  <string name="details_em_power_factor">Effektfaktor</string>
+  <string name="details_em_phase_angle">Fasevinkel</string>
+  <string name="details_em_power_apparent">Tilsynelatende effekt</string>
+  <string name="details_em_phase1">Fase 1</string>
+  <string name="details_em_phase2">Fase 2</string>
+  <string name="details_em_phase3">Fase 3</string>
+  <string name="details_em_reversed_active_energy">Aktiv strøm returnert</string>
+  <string name="details_em_forwarded_active_energy">Aktiv strøm mottatt</string>
+  <string name="details_em_reversed_reactive_energy">Passiv strøm returnert</string>
+  <string name="details_em_forwarded_reactive_energy">Passiv strøm mottatt</string>
+  <string name="details_em_balance_arithmetic">Aritmetisk balanse</string>
+  <string name="details_em_balance_vector">Vektorbalanse</string>
 </resources>

@@ -19,17 +19,17 @@ package org.supla.android.usecases.channel
 
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
+import org.supla.android.data.source.ElectricityMeterLogRepository
 import org.supla.android.data.source.GeneralPurposeMeasurementLogRepository
 import org.supla.android.data.source.GeneralPurposeMeterLogRepository
 import org.supla.android.data.source.RoomChannelRepository
 import org.supla.android.data.source.TemperatureAndHumidityLogRepository
 import org.supla.android.data.source.TemperatureLogRepository
+import org.supla.android.data.source.remote.channel.SuplaChannelFunction
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -41,16 +41,17 @@ class DeleteChannelMeasurementsUseCase @Inject constructor(
   private val temperatureLogRepository: TemperatureLogRepository,
   private val temperatureAndHumidityLogUseCase: TemperatureAndHumidityLogRepository,
   private val generalPurposeMeasurementLogRepository: GeneralPurposeMeasurementLogRepository,
-  private val generalPurposeMeterLogRepository: GeneralPurposeMeterLogRepository
+  private val generalPurposeMeterLogRepository: GeneralPurposeMeterLogRepository,
+  private val electricityMeterLogRepository: ElectricityMeterLogRepository
 ) {
 
   operator fun invoke(remoteId: Int): Completable =
     channelRepository.findByRemoteId(remoteId)
       .flatMap { channelEntity ->
         when (channelEntity.function) {
-          SUPLA_CHANNELFNC_HVAC_THERMOSTAT,
-          SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER,
-          SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL ->
+          SuplaChannelFunction.HVAC_THERMOSTAT,
+          SuplaChannelFunction.HVAC_DOMESTIC_HOT_WATER,
+          SuplaChannelFunction.HVAC_THERMOSTAT_HEAT_COOL ->
             readChannelWithChildrenUseCase(remoteId).map { channelWithChildren ->
               channelWithChildren.children
                 .filter { child -> child.relationType.isThermometer() }
@@ -61,7 +62,7 @@ class DeleteChannelMeasurementsUseCase @Inject constructor(
         }
       }
       .flatMapCompletable { entities ->
-        Completable.merge(entities.map { getDeleteCompletable(it.function, it.remoteId, it.profileId) })
+        Completable.merge(entities.map { getDeleteCompletable(it.function.value, it.remoteId, it.profileId) })
       }
 
   private fun getDeleteCompletable(function: Int, remoteId: Int, profileId: Long): Completable =
@@ -77,6 +78,9 @@ class DeleteChannelMeasurementsUseCase @Inject constructor(
 
       SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER ->
         generalPurposeMeterLogRepository.delete(remoteId, profileId)
+
+      SUPLA_CHANNELFNC_ELECTRICITY_METER ->
+        electricityMeterLogRepository.delete(remoteId, profileId)
 
       else ->
         Completable.error(IllegalStateException("Deleting measurements for channel with function `$function` is not supported yet!"))

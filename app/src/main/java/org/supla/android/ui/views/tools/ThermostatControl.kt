@@ -49,7 +49,6 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLayoutResult
@@ -78,7 +77,7 @@ import kotlin.math.pow
 import kotlin.math.sin
 import kotlin.math.sqrt
 
-val THERMOSTAT_VERTICAL_POSITION_CORRECTION = (-24).dp
+val THERMOSTAT_VERTICAL_POSITION_CORRECTION = 0.dp // (-24).dp
 
 private const val START_ANGLE = 150f
 private const val SWEEP_ANGLE = 240f
@@ -156,7 +155,7 @@ fun ThermostatControl(
     else -> DefaultShadowColor
   }
 
-  val paddings = dimensionResource(id = R.dimen.distance_default)
+  val paddings = 0.dp // dimensionResource(id = R.dimen.distance_default)
   val desiredRadius = 135.dp
 
   val textMeasurer = rememberTextMeasurer()

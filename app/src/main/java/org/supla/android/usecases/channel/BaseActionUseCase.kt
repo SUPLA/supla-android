@@ -39,7 +39,7 @@ open class BaseActionUseCase<T : ChannelDataBase>(
 
   protected open fun performAction(channelBase: T, buttonType: ButtonType, forGroup: Boolean) {
     val client = suplaClientProvider.provide() ?: return
-    if (isRGBW(channelBase.function)) {
+    if (isRGBW(channelBase.function.value)) {
       client.executeAction(ActionParameters(getTurnOnOffActionId(buttonType), getSubjectType(forGroup), channelBase.remoteId))
     } else if (channelBase.isShadingSystem() || channelBase.isProjectorScreen() || channelBase.isGarageDoorRoller()) {
       if (SuplaChannelFlag.RS_SBS_AND_STOP_ACTIONS inside channelBase.flags) {

@@ -25,11 +25,12 @@ import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.storage.UserStateHolder
 import org.supla.android.data.model.Optional
+import org.supla.android.data.model.chart.ChannelChartSets
 import org.supla.android.data.model.chart.ChartDataAggregation
+import org.supla.android.data.model.chart.ChartDataSpec
 import org.supla.android.data.model.chart.ChartRange
+import org.supla.android.data.model.chart.ChartState
 import org.supla.android.data.model.chart.DateRange
-import org.supla.android.data.model.chart.HistoryDataSet
-import org.supla.android.data.model.chart.TemperatureChartState
 import org.supla.android.data.model.chart.datatype.BarChartData
 import org.supla.android.data.model.chart.datatype.CandleChartData
 import org.supla.android.data.model.chart.datatype.ChartData
@@ -56,7 +57,6 @@ import org.supla.android.usecases.channel.LoadChannelMeasurementsDataRangeUseCas
 import org.supla.android.usecases.channel.LoadChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.channelconfig.LoadChannelConfigUseCase
-import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -92,7 +92,7 @@ class GpmHistoryDetailViewModel @Inject constructor(
   override fun triggerDataLoad(remoteId: Int) {
     Maybe.zip(
       readChannelByRemoteIdUseCase(remoteId),
-      profileManager.getCurrentProfile().map { userStateHolder.getChartState(it.id, remoteId) }
+      profileManager.getCurrentProfile().map { loadChartState(it.id, remoteId) }
     ) { first, second ->
       Pair(first, second)
     }
@@ -107,17 +107,15 @@ class GpmHistoryDetailViewModel @Inject constructor(
   override fun measurementsMaybe(
     remoteId: Int,
     profileId: Long,
-    start: Date,
-    end: Date,
-    chartRange: ChartRange,
-    aggregation: ChartDataAggregation
+    spec: ChartDataSpec,
+    chartRange: ChartRange
   ): Single<Pair<ChartData, Optional<DateRange>>> =
     Single.zip(
-      loadChannelMeasurementsUseCase(remoteId, profileId, start, end, aggregation),
+      loadChannelMeasurementsUseCase(remoteId, spec),
       loadChannelMeasurementsDataRangeUseCase(remoteId, profileId),
       loadChannelConfigUseCase(profileId, remoteId)
     ) { sets, range, config ->
-      Pair(createChartData(sets, DateRange(start, end), chartRange, aggregation, config), range)
+      Pair(createChartData(listOf(sets), DateRange(spec.startDate, spec.endDate), chartRange, spec.aggregation, config), range)
     }
 
   override fun chartStyle(): ChartStyle = GpmChartStyle
@@ -144,13 +142,13 @@ class GpmHistoryDetailViewModel @Inject constructor(
       .disposeBySelf()
   }
 
-  private fun handleData(channel: ChannelDataEntity, chartState: TemperatureChartState) {
-    updateState { it.copy(profileId = channel.channelEntity.profileId, channelFunction = channel.function) }
+  private fun handleData(channel: ChannelDataEntity, chartState: ChartState) {
+    updateState { it.copy(profileId = channel.channelEntity.profileId, channelFunction = channel.function.value) }
 
     restoreRange(chartState)
     if ((channel.configEntity?.toSuplaConfig(gson) as? SuplaChannelGeneralPurposeBaseConfig)?.keepHistory == true) {
       configureDownloadObserver(channel.channelEntity.remoteId)
-      startInitialDataLoad(channel.channelEntity.remoteId, channel.channelEntity.profileId, channel.function)
+      startInitialDataLoad(channel.channelEntity.remoteId, channel.channelEntity.profileId, channel.function.value)
     } else {
       updateState { state ->
         triggerMeasurementsLoad(state)
@@ -188,7 +186,7 @@ class GpmHistoryDetailViewModel @Inject constructor(
   }
 
   private fun createChartData(
-    sets: List<HistoryDataSet>,
+    sets: List<ChannelChartSets>,
     dateRange: DateRange,
     chartRange: ChartRange,
     aggregation: ChartDataAggregation,
@@ -201,7 +199,7 @@ class GpmHistoryDetailViewModel @Inject constructor(
     }
 
   private fun createChartData(
-    sets: List<HistoryDataSet>,
+    sets: List<ChannelChartSets>,
     dateRange: DateRange,
     chartRange: ChartRange,
     aggregation: ChartDataAggregation,
@@ -213,7 +211,7 @@ class GpmHistoryDetailViewModel @Inject constructor(
     }
 
   private fun createChartData(
-    sets: List<HistoryDataSet>,
+    sets: List<ChannelChartSets>,
     dateRange: DateRange,
     chartRange: ChartRange,
     aggregation: ChartDataAggregation,

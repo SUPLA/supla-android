@@ -6,16 +6,19 @@ import java.nio.ByteOrder
 
 interface IntValueParser {
 
-  fun asIntValue(channelValueEntity: ChannelValueEntity): Int? {
-    return asIntValue(channelValueEntity, 0, 3)
-  }
+  /**
+   * @param startPos - starting position in the byte array (starts from 0)
+   * @param endPos - ending position in the byte array (starts from 0)
+   */
+  fun asIntValue(channelValueEntity: ChannelValueEntity, startPos: Int = 0, endPos: Int = 3): Int? =
+    asIntValue(channelValueEntity.getValueAsByteArray(), startPos, endPos)
 
   /**
    * @param startPos - starting position in the byte array (starts from 0)
    * @param endPos - ending position in the byte array (starts from 0)
    */
-  fun asIntValue(channelValueEntity: ChannelValueEntity, startPos: Int, endPos: Int): Int? {
-    channelValueEntity.getValueAsByteArray().let {
+  fun asIntValue(byteArray: ByteArray, startPos: Int = 0, endPos: Int = 3): Int? {
+    byteArray.let {
       if (it.size <= endPos) {
         return null
       }

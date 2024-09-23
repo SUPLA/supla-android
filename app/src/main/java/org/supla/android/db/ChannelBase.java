@@ -25,6 +25,7 @@ import android.text.style.RelativeSizeSpan;
 import org.supla.android.SuplaApp;
 import org.supla.android.ValuesFormatterProvider;
 import org.supla.android.data.ValuesFormatter;
+import org.supla.android.data.source.remote.channel.SuplaChannelFunction;
 import org.supla.android.extensions.ContextExtensionsKt;
 import org.supla.android.lib.SuplaChannelBase;
 import org.supla.android.lib.SuplaConst;
@@ -133,7 +134,7 @@ public abstract class ChannelBase extends DbItem {
   public String getCaption(Context context) {
     if (Caption == null || Caption.trim().isEmpty()) {
       return ContextExtensionsKt.getGetChannelDefaultCaptionUseCase(context)
-          .invoke(Func)
+          .invoke(SuplaChannelFunction.Companion.from(Func))
           .invoke(context);
     }
     return Caption;

@@ -19,11 +19,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import android.content.res.Resources
 import com.github.mikephil.charting.data.CombinedData
+import org.supla.android.data.model.chart.ChannelChartSets
 import org.supla.android.data.model.chart.ChartDataAggregation
 import org.supla.android.data.model.chart.ChartEntryType
 import org.supla.android.data.model.chart.ChartRange
+import org.supla.android.data.model.chart.ChartState
 import org.supla.android.data.model.chart.DateRange
-import org.supla.android.data.model.chart.HistoryDataSet
 import org.supla.android.extensions.guardLet
 import org.supla.android.extensions.ifLet
 import org.supla.android.extensions.toTimestamp
@@ -62,7 +63,7 @@ abstract class ChartData(
   val dateRange: DateRange?,
   val chartRange: ChartRange?,
   val aggregation: ChartDataAggregation?,
-  val sets: List<HistoryDataSet>
+  val sets: List<ChannelChartSets>
 ) : CoordinatesConverter {
 
   override val divider: Long = 1
@@ -86,53 +87,65 @@ abstract class ChartData(
     }
 
   val leftAxisFormatter: ChannelValueFormatter
-    get() = sets.firstOrNull { it.setId.type.leftAxis() }?.valueFormatter ?: DefaultValueFormatter()
+    get() = sets.map { it.dataSets.firstOrNull { set -> set.type.leftAxis() }?.valueFormatter }.firstOrNull() ?: DefaultValueFormatter()
 
   val rightAxisFormatter: ChannelValueFormatter
-    get() = sets.firstOrNull { it.setId.type.rightAxis() }?.valueFormatter ?: DefaultValueFormatter()
+    get() = sets.map { it.dataSets.firstOrNull { set -> set.type.rightAxis() }?.valueFormatter }.firstOrNull() ?: DefaultValueFormatter()
 
   val distanceInDays: Int? = dateRange?.daysCount
 
   val isEmpty: Boolean
     get() {
       var result = true
-      sets.forEach {
-        if (it.entities.isNotEmpty()) {
-          result = false
+      sets
+        .flatMap { it.dataSets }
+        .forEach {
+          if (it.isEmpty.not()) {
+            result = false
+          }
         }
-      }
       return result
     }
 
+  val noActiveSet: Boolean
+    get() = sets.flatMap { it.dataSets }.firstOrNull { it.active } == null
+
+  val onlyOneSetAndActive: Boolean
+    get() = sets.size == 1 && sets.first().dataSets.size == 1 && sets.first().active
+
+  val visibleSets: List<ChartState.VisibleSet>
+    get() =
+      sets.mapNotNull { channelSets ->
+        if (channelSets.active) {
+          channelSets.dataSets.filter { it.active }.map { ChartState.VisibleSet(channelSets.remoteId, it.type) }
+        } else {
+          null
+        }
+      }.flatten()
+
   protected val minDate: Long
-    get() = sets.minOfOrNull { set ->
-      set.entities.minOfOrNull { entities ->
-        entities.minOfOrNull { it.date } ?: 0L
-      } ?: 0L
-    } ?: 0L
+    get() = sets.minOfOrNull { it.dataSets.minOf { set -> set.minDate } } ?: 0L
 
   protected val maxDate: Long
-    get() = sets.maxOfOrNull { set ->
-      set.entities.maxOfOrNull { entities ->
-        entities.maxOfOrNull { it.date } ?: 0L
-      } ?: 0L
-    } ?: 0L
+    get() = sets.maxOfOrNull { it.dataSets.maxOf { set -> set.maxDate } } ?: 0L
 
   fun empty(): ChartData = newInstance(emptySets())
 
-  fun activateSet(setId: HistoryDataSet.Id): ChartData =
+  fun toggleActive(remoteId: Int, type: ChartEntryType): ChartData =
+    newInstance(sets.map { if (it.remoteId == remoteId) it.toggleActive(type) else it })
+
+  fun activateSets(visibleSets: List<ChartState.VisibleSet>?): ChartData =
     newInstance(
-      sets.map {
-        if (it.setId == setId) {
-          it.copy(active = it.active.not())
-        } else {
-          it
-        }
+      sets.map { set ->
+        visibleSets?.let { list ->
+          if (list.map { it.remoteId }.contains(set.remoteId)) {
+            set.setActive(visibleSets.map { it.type })
+          } else {
+            set.deactivate()
+          }
+        } ?: set
       }
     )
-
-  fun activateSets(setIds: List<HistoryDataSet.Id>?): ChartData =
-    newInstance(sets.map { it.copy(active = setIds?.contains(it.setId) ?: true) })
 
   open fun getAxisMaxValue(filter: (ChartEntryType) -> Boolean): Float? {
     val maxValue = getAxisMaxValueRaw(filter)
@@ -160,23 +173,25 @@ abstract class ChartData(
 
   override fun toCoordinate(x: Float): Float = toCoordinate(x as Float?)!!
 
-  protected abstract fun newInstance(sets: List<HistoryDataSet>): ChartData
+  protected abstract fun newInstance(sets: List<ChannelChartSets>): ChartData
 
   protected fun getAxisMinValueRaw(filter: (ChartEntryType) -> Boolean): Float? =
     sets
-      .filter { filter(it.setId.type) }
-      .mapNotNull { set -> set.entities.minOfOrNull { entries -> entries.minOf { it.value } } }
+      .flatMap { it.dataSets }
+      .filter { filter(it.type) }
+      .mapNotNull { it.min }
       .minOfOrNull { it }
 
   private fun getAxisMaxValueRaw(filter: (ChartEntryType) -> Boolean): Float? =
     sets
-      .filter { filter(it.setId.type) }
-      .mapNotNull { set -> set.entities.maxOfOrNull { entries -> entries.maxOf { it.value } } }
+      .flatMap { it.dataSets }
+      .filter { filter(it.type) }
+      .mapNotNull { it.max }
       .maxOfOrNull { it }
 
   private fun toCoordinate(x: Float?): Float? = x?.div(divider)?.roundToInt()?.toFloat()
 
-  private fun emptySets(): List<HistoryDataSet> = sets.map { set -> set.copy(entities = emptyList()) }
+  private fun emptySets(): List<ChannelChartSets> = sets.map { it.empty() }
 
   private fun chartMarginNotNeeded() = when (chartRange) {
     ChartRange.LAST_DAY,
@@ -204,7 +219,7 @@ abstract class ChartData(
 private class DefaultValueFormatter : ChannelValueFormatter {
   override fun handle(function: Int): Boolean = true
 
-  override fun format(value: Any, withUnit: Boolean, precision: Int): String {
+  override fun format(value: Any, withUnit: Boolean, precision: ChannelValueFormatter.Precision, custom: Any?): String {
     (value as? Double)?.let {
       return String.format("%.2f", it)
     }

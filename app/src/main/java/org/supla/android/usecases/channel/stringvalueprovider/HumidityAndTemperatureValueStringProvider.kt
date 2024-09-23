@@ -19,7 +19,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import org.supla.android.Preferences
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
+import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.usecases.channel.ChannelValueStringProvider
 import org.supla.android.usecases.channel.ValueType
 import org.supla.android.usecases.channel.valueformatter.HumidityValueFormatter
@@ -36,14 +36,14 @@ class HumidityAndTemperatureValueStringProvider @Inject constructor(
 
   private val temperatureFormatter = ThermometerValueFormatter(preferences)
   private val humidityFormatter = HumidityValueFormatter()
-  override fun handle(function: Int): Boolean =
-    function == SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
+  override fun handle(channelData: ChannelDataEntity): Boolean =
+    channelData.function == SuplaChannelFunction.HUMIDITY_AND_TEMPERATURE
 
   override fun value(channelData: ChannelDataEntity, valueType: ValueType, withUnit: Boolean): String {
     val value = humidityAndTemperatureValueProvider.value(channelData, valueType)
     return when (valueType) {
-      ValueType.FIRST -> temperatureFormatter.format(value, withUnit = withUnit, precision = 1)
-      ValueType.SECOND -> humidityFormatter.format(value, withUnit = withUnit, precision = 1)
+      ValueType.FIRST -> temperatureFormatter.format(value, withUnit = withUnit)
+      ValueType.SECOND -> humidityFormatter.format(value, withUnit = withUnit)
     }
   }
 }

@@ -20,39 +20,33 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import android.content.Context
 import android.content.res.Configuration
 import android.util.AttributeSet
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
 import org.supla.android.core.ui.theme.SuplaTheme
-import org.supla.android.extensions.max
 import org.supla.android.extensions.preferences
 import org.supla.android.images.ImageId
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.layouts.BaseSlideableContent
+import org.supla.android.ui.lists.ListOnlineState
 import org.supla.android.ui.lists.data.IssueIconType
 import org.supla.android.ui.lists.data.SlideableListItemData
 import org.supla.android.ui.lists.data.default
 import org.supla.android.ui.views.list.components.ListItemIcon
 import org.supla.android.ui.views.list.components.ListItemMainRow
 import org.supla.android.ui.views.list.components.ListItemValue
+import org.supla.android.ui.views.list.components.SetpointTemperature
 import org.supla.android.usecases.list.CreateListItemUpdateEventDataUseCase
 import javax.inject.Inject
 
@@ -103,7 +97,7 @@ fun ThermostatListItemView(
 ) {
   ListItemScaffold(
     itemTitle = data.titleProvider(LocalContext.current),
-    itemOnline = data.online,
+    itemOnlineState = data.onlineState,
     itemEstimatedEndDate = data.estimatedTimerEndDate,
     hasLeftButton = hasLeftButton,
     hasRightButton = hasRightButton,
@@ -122,39 +116,16 @@ fun ThermostatListItemView(
 
       if (scale <= 1f) {
         ListItemValue(value = data.value, scale = scale)
-        SetpointTemperature(data = data, scale = scale)
+        SetpointTemperature(indicatorIcon = data.indicatorIcon, subValue = data.subValue, scale = scale)
       } else {
         Column {
           ListItemValue(value = data.value, scale = scale)
-          SetpointTemperature(data = data, scale = scale)
+          SetpointTemperature(indicatorIcon = data.indicatorIcon, subValue = data.subValue, scale = scale)
         }
       }
     }
   }
 }
-
-@Composable
-private fun SetpointTemperature(data: SlideableListItemData.Thermostat, scale: Float) =
-  Row(horizontalArrangement = Arrangement.spacedBy(4.dp), verticalAlignment = Alignment.CenterVertically) {
-    data.indicatorIcon?.let {
-      val indicatorSize = androidx.compose.ui.unit.max(12.dp, 12.dp.times(scale))
-      Image(
-        painter = painterResource(id = it),
-        contentDescription = null,
-        modifier = Modifier
-          .width(indicatorSize)
-          .height(indicatorSize),
-        contentScale = ContentScale.Fit
-      )
-    }
-
-    val subValueSize = MaterialTheme.typography.bodyMedium.fontSize.let { max(it, it.times(scale)) }
-    Text(
-      text = data.subValue,
-      style = MaterialTheme.typography.bodyMedium.copy(fontSize = subValueSize),
-      color = MaterialTheme.colorScheme.onBackground
-    )
-  }
 
 @Preview
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
@@ -169,7 +140,7 @@ private fun Preview() {
       ) {
         ThermostatListItemView(
           data = SlideableListItemData.Thermostat(
-            online = true,
+            onlineState = ListOnlineState.ONLINE,
             titleProvider = { "Thermostat" },
             icon = ImageId(R.drawable.fnc_thermostat_cool),
             value = "20,7°C",
@@ -191,7 +162,7 @@ private fun Preview() {
       ) {
         ThermostatListItemView(
           data = SlideableListItemData.Thermostat(
-            online = true,
+            onlineState = ListOnlineState.PARTIALLY_ONLINE,
             titleProvider = { "Thermostat" },
             icon = ImageId(R.drawable.fnc_thermostat_cool),
             value = "20,7°C",
@@ -213,7 +184,7 @@ private fun Preview() {
       ) {
         ThermostatListItemView(
           data = SlideableListItemData.Thermostat(
-            online = true,
+            onlineState = ListOnlineState.ONLINE,
             titleProvider = { "Thermostat" },
             icon = ImageId(R.drawable.fnc_thermostat_cool),
             value = "20,7°C",
@@ -235,7 +206,7 @@ private fun Preview() {
       ) {
         ThermostatListItemView(
           data = SlideableListItemData.Thermostat(
-            online = true,
+            onlineState = ListOnlineState.ONLINE,
             titleProvider = { "Thermostat with very long name which goes out of the screen and must be cut" },
             icon = ImageId(R.drawable.fnc_thermostat_cool),
             value = "20,7°C",
@@ -270,7 +241,7 @@ private fun Preview_Narrow() {
       ) {
         ThermostatListItemView(
           data = SlideableListItemData.Thermostat(
-            online = true,
+            onlineState = ListOnlineState.ONLINE,
             titleProvider = { "Thermostat" },
             icon = ImageId(R.drawable.fnc_thermostat_cool),
             value = "20,7°C",
@@ -292,7 +263,7 @@ private fun Preview_Narrow() {
       ) {
         ThermostatListItemView(
           data = SlideableListItemData.Thermostat(
-            online = true,
+            onlineState = ListOnlineState.ONLINE,
             titleProvider = { "Thermostat" },
             icon = ImageId(R.drawable.fnc_thermostat_cool),
             value = "20,7°C",

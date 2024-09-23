@@ -18,7 +18,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import android.content.res.Resources
-import androidx.annotation.ColorRes
 import androidx.core.content.res.ResourcesCompat
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.CombinedData
@@ -27,6 +26,7 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import org.supla.android.R
+import org.supla.android.data.model.chart.ChannelChartSets
 import org.supla.android.data.model.chart.ChartDataAggregation
 import org.supla.android.data.model.chart.ChartEntryType
 import org.supla.android.data.model.chart.ChartRange
@@ -37,17 +37,13 @@ class LineChartData(
   dateRange: DateRange,
   chartRange: ChartRange,
   aggregation: ChartDataAggregation,
-  sets: List<HistoryDataSet>
+  sets: List<ChannelChartSets>
 ) : ChartData(dateRange, chartRange, aggregation, sets) {
   override fun combinedData(resources: Resources): CombinedData? {
     val lineDataSets = mutableListOf<ILineDataSet?>().also { list ->
-      sets.forEach { set ->
-        if (set.active && set.entities.isNotEmpty()) {
-          set.entities.forEach { entities ->
-            val entries = entities.map { Entry(it.date.toFloat(), it.value, set.toDetails(it)) }
-            list.add(lineDataSet(entries, set.color, set.setId.type, resources))
-          }
-        }
+      sets.flatMap { it.dataSets }.forEach {
+        it.asLineChartData(aggregation!!) { set -> lineDataSet(set, it.label, it.type, resources) }
+          ?.let { data -> list.addAll(data) }
       }
     }
 
@@ -60,15 +56,23 @@ class LineChartData(
     }
   }
 
-  override fun newInstance(sets: List<HistoryDataSet>): ChartData = LineChartData(dateRange!!, chartRange!!, aggregation!!, sets)
+  override fun newInstance(sets: List<ChannelChartSets>): ChartData = LineChartData(dateRange!!, chartRange!!, aggregation!!, sets)
 
-  private fun lineDataSet(set: List<Entry>, @ColorRes colorRes: Int, type: ChartEntryType, resources: Resources) =
+  private fun lineDataSet(set: List<Entry>, label: HistoryDataSet.Label, type: ChartEntryType, resources: Resources) =
     LineDataSet(set, "").apply {
       setDrawValues(false)
       mode = LineDataSet.Mode.HORIZONTAL_BEZIER
       cubicIntensity = 0.05f
-      color = ResourcesCompat.getColor(resources, colorRes, null)
-      circleColors = listOf(ResourcesCompat.getColor(resources, colorRes, null))
+      when (label) {
+        is HistoryDataSet.Label.Single -> {
+          color = ResourcesCompat.getColor(resources, label.value.color, null)
+          circleColors = listOf(color)
+        }
+        is HistoryDataSet.Label.Multiple -> {
+          colors = label.colors(resources)
+          circleColors = colors
+        }
+      }
       setDrawCircleHole(false)
       setDrawCircles(false)
       lineWidth = 2f

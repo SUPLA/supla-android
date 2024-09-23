@@ -1,11 +1,14 @@
 package org.supla.android.usecases.channel.valueprovider
 
+import io.mockk.every
+import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.InjectMocks
 import org.mockito.junit.MockitoJUnitRunner
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR
+import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 
 @RunWith(MockitoJUnitRunner::class)
 class DepthSensorValueProviderTest : BaseDoubleValueProviderTest<DepthSensorValueProvider>() {
@@ -18,10 +21,12 @@ class DepthSensorValueProviderTest : BaseDoubleValueProviderTest<DepthSensorValu
   @Test
   fun `check if handles`() {
     // given
-    val function = SUPLA_CHANNELFNC_DEPTHSENSOR
+    val channel: ChannelDataEntity = mockk {
+      every { function } returns SuplaChannelFunction.DEPTH_SENSOR
+    }
 
     // when
-    val result = valueProvider.handle(function)
+    val result = valueProvider.handle(channel)
 
     // then
     assertThat(result).isTrue()

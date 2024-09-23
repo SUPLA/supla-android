@@ -25,7 +25,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 sealed class CloudUrl {
-  object SuplaCloud : CloudUrl()
+  data object SuplaCloud : CloudUrl()
   data class PrivateCloud(val url: Uri) : CloudUrl()
 }
 

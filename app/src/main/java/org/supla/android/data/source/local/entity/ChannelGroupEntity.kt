@@ -26,6 +26,7 @@ import org.supla.android.data.source.local.entity.ChannelGroupEntity.Companion.C
 import org.supla.android.data.source.local.entity.ChannelGroupEntity.Companion.COLUMN_PROFILE_ID
 import org.supla.android.data.source.local.entity.ChannelGroupEntity.Companion.COLUMN_REMOTE_ID
 import org.supla.android.data.source.local.entity.ChannelGroupEntity.Companion.TABLE_NAME
+import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.usecases.group.totalvalue.GroupTotalValue
 import org.supla.android.usecases.group.totalvalue.GroupValue
 
@@ -51,7 +52,7 @@ data class ChannelGroupEntity(
   @ColumnInfo(name = COLUMN_REMOTE_ID) override val remoteId: Int,
   @ColumnInfo(name = COLUMN_CAPTION) override val caption: String,
   @ColumnInfo(name = COLUMN_ONLINE) val online: Int,
-  @ColumnInfo(name = COLUMN_FUNCTION) override val function: Int,
+  @ColumnInfo(name = COLUMN_FUNCTION) override val function: SuplaChannelFunction,
   @ColumnInfo(name = COLUMN_VISIBLE) override val visible: Int,
   @ColumnInfo(name = COLUMN_LOCATION_ID) override val locationId: Int,
   @ColumnInfo(name = COLUMN_ALT_ICON) override val altIcon: Int,
@@ -63,7 +64,7 @@ data class ChannelGroupEntity(
 ) : ChannelBase {
 
   val groupTotalValues: List<GroupValue>
-    get() = GroupTotalValue.parse(function, totalValue)
+    get() = GroupTotalValue.parse(function.value, totalValue)
 
   companion object {
     const val TABLE_NAME = "channelgroup"

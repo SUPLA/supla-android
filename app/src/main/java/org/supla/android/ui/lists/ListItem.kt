@@ -40,7 +40,7 @@ sealed interface ListItem {
   abstract class DefaultItem(
     val channel: ChannelDataEntity,
     val locationCaption: String,
-    val online: Boolean,
+    val online: ListOnlineState,
     val captionProvider: StringProvider,
     val icon: ImageId,
     val value: String?,
@@ -49,7 +49,7 @@ sealed interface ListItem {
   ) : ChannelBasedItem(channel) {
     open fun toSlideableListItemData(): SlideableListItemData {
       return SlideableListItemData.Default(
-        online = online,
+        onlineState = online,
         titleProvider = captionProvider,
         icon = icon,
         value = value,
@@ -72,7 +72,7 @@ sealed interface ListItem {
   class HvacThermostatItem(
     channel: ChannelDataEntity,
     locationCaption: String,
-    online: Boolean,
+    online: ListOnlineState,
     captionProvider: StringProvider,
     icon: ImageId,
     value: String?,
@@ -84,7 +84,7 @@ sealed interface ListItem {
   ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, value, issueIconType, issueMessage) {
     override fun toSlideableListItemData(): SlideableListItemData {
       return SlideableListItemData.Thermostat(
-        online = online,
+        onlineState = online,
         titleProvider = captionProvider,
         icon = icon,
         issueIconType = issueIconType,
@@ -97,29 +97,51 @@ sealed interface ListItem {
     }
   }
 
-  class MeasurementItem(
+  class IconValueItem(
     channel: ChannelDataEntity,
     locationCaption: String,
-    online: Boolean,
+    online: ListOnlineState,
     captionProvider: StringProvider,
     icon: ImageId,
     value: String? = null
   ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, value, null, null)
 
-  class IconWithButtonsItem(
+  class ShadingSystemItem(
     channel: ChannelDataEntity,
     locationCaption: String,
-    online: Boolean,
+    online: ListOnlineState,
     captionProvider: StringProvider,
     icon: ImageId,
     issueIconType: IssueIconType?,
     issueMessage: Int?
   ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, null, issueIconType, issueMessage)
 
+  class SwitchItem(
+    channel: ChannelDataEntity,
+    locationCaption: String,
+    online: ListOnlineState,
+    captionProvider: StringProvider,
+    icon: ImageId,
+    value: String?,
+    private val estimatedTimerEndDate: Date?,
+  ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, value, null, null) {
+    override fun toSlideableListItemData(): SlideableListItemData {
+      return SlideableListItemData.Default(
+        onlineState = online,
+        titleProvider = captionProvider,
+        icon = icon,
+        value = value,
+        issueIconType = issueIconType,
+        estimatedTimerEndDate = estimatedTimerEndDate,
+        infoSupported = SuplaChannelFlag.CHANNEL_STATE.inside(channel.flags)
+      )
+    }
+  }
+
   class GeneralPurposeMeterItem(
     channel: ChannelDataEntity,
     locationCaption: String,
-    online: Boolean,
+    online: ListOnlineState,
     captionProvider: StringProvider,
     icon: ImageId,
     value: String
@@ -128,7 +150,7 @@ sealed interface ListItem {
   class GeneralPurposeMeasurementItem(
     channel: ChannelDataEntity,
     locationCaption: String,
-    online: Boolean,
+    online: ListOnlineState,
     captionProvider: StringProvider,
     icon: ImageId,
     value: String

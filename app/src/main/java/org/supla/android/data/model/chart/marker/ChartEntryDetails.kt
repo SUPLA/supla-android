@@ -30,7 +30,8 @@ data class ChartEntryDetails(
   val max: Float? = null,
   val open: Float? = null,
   val close: Float? = null,
-  val valueFormatter: ChannelValueFormatter
+  val valueFormatter: ChannelValueFormatter,
+  val customData: Any? = null
 ) {
   fun date(): Date = Date(date.times(1000))
 }

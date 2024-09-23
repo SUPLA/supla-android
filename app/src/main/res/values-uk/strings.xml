@@ -116,11 +116,6 @@
   <string name="wizard_result_conn_error">Неможливо підключитися до пристрою!</string>
   <string name="wizard_result_failed">Помилка налаштування!</string>
   <string name="wizard_not_enought_permissions">Додоаток не має достатніх дозволів. Перейдіть до керування додатками в налаштуваннях системи. Потім знайдіть додаток %1$s і ввімкніть усі необхідні дозволи.</string>
-  <string name="em_total_forward_avtive_energy">Спожита активна енергія</string>
-  <string name="em_reverse_active_energy">Повернуто активну енергію</string>
-  <string name="em_phase1">Фаза 1</string>
-  <string name="em_phase2">Фаза 2</string>
-  <string name="em_phase3">Фаза 3</string>
   <string name="hp_on">УВІМКНЕНИЙ</string>
   <string name="hp_off">ВИМКНЕНИЙ</string>
   <string name="hp_eco">ЕКО</string>
@@ -376,16 +371,6 @@
   <string name="wizard_iodevice_notfound">Пристроїв не знайдено! Переконайтеся, що пристрій, який Ви хочете налаштувати, знаходиться в режимі налаштування, а потім повторіть спробу. ВАЖЛИВО - Деякі версії Android вимагають увімкнення GPS для того, щоб програми могли шукати мережі Wi-Fi, тому переконайтеся, що GPS також увімкнено.</string>
   <string name="wizard_done">Налаштування перенесено на пристрій.</string>
   <string name="wizard_iodev_data">Дані пристрою</string>
-  <string name="em_total_forward_reactive_energy">Спожита реактивна енергія</string>
-  <string name="em_total_reverse_reactive_energy">Повернута реактивна енергія</string>
-  <string name="em_frequency">Частота</string>
-  <string name="em_voltage">Напруга</string>
-  <string name="em_current">Інтенсивність</string>
-  <string name="em_power_active">Активна потужність</string>
-  <string name="em_power_reactive">Реактивна потужність</string>
-  <string name="em_power_factor">Коефіцієнт потужності</string>
-  <string name="em_phase_angle">Кут зсуву фаз</string>
-  <string name="em_power_apparent">Видима потужність</string>
   <string name="hp_normal">NORMAL</string>
   <string name="hp_turbo">TURBO</string>
   <string name="hp_auto">AUTO</string>
@@ -448,4 +433,25 @@
   <string name="delete_url">https://{SERVER_ADDRESS}/db99845855b2ecbfecca9a095062b96c3e27703f?lang=uk</string>
   <string name="hour_string_format">HH:mm:ss</string>
   <string name="roller_shutter_calibration">Калібрування</string>
+  <string name="details_em_total_forward_active_energy">Спожита активна енергія</string>
+  <string name="details_em_reverse_active_energy">Повернуто активну енергію</string>
+  <string name="details_em_total_forward_reactive_energy">Спожита реактивна енергія</string>
+  <string name="details_em_total_reverse_reactive_energy">Повернута реактивна енергія</string>
+  <string name="details_em_frequency">Частота</string>
+  <string name="details_em_voltage">Напруга</string>
+  <string name="details_em_current">Інтенсивність</string>
+  <string name="details_em_power_active">Активна потужність</string>
+  <string name="details_em_power_reactive">Реактивна потужність</string>
+  <string name="details_em_power_factor">Коефіцієнт потужності</string>
+  <string name="details_em_phase_angle">Кут зсуву фаз</string>
+  <string name="details_em_power_apparent">Видима потужність</string>
+  <string name="details_em_phase1">Фаза 1</string>
+  <string name="details_em_phase2">Фаза 2</string>
+  <string name="details_em_phase3">Фаза 3</string>
+  <string name="details_em_reversed_active_energy">Повернуто активну енергію</string>
+  <string name="details_em_forwarded_active_energy">Спожита активна енергія</string>
+  <string name="details_em_reversed_reactive_energy">Повернута реактивна енергія</string>
+  <string name="details_em_forwarded_reactive_energy">Спожита реактивна енергія</string>
+  <string name="details_em_balance_arithmetic">Арифметичний баланс</string>
+  <string name="details_em_balance_vector">Векторний баланс</string>
 </resources>

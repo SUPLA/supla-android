@@ -18,67 +18,74 @@ package org.supla.android.data.source.local.entity
  */
 
 import org.supla.android.data.model.general.ChannelBase
-import org.supla.android.lib.SuplaConst
+import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 
 fun ChannelBase.isHvacThermostat() =
-  function == SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT ||
-    function == SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER
+  function == SuplaChannelFunction.HVAC_THERMOSTAT ||
+    function == SuplaChannelFunction.HVAC_DOMESTIC_HOT_WATER
 
 fun ChannelBase.isThermostat(): Boolean =
-  isHvacThermostat() || function == SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS
+  isHvacThermostat() || function == SuplaChannelFunction.THERMOSTAT_HEATPOL_HOMEPLUS
 
 fun ChannelBase.hasMeasurements(): Boolean =
-  function == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER ||
-    function == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE ||
-    function == SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR
+  function == SuplaChannelFunction.THERMOMETER ||
+    function == SuplaChannelFunction.HUMIDITY_AND_TEMPERATURE ||
+    function == SuplaChannelFunction.DEPTH_SENSOR
 
-fun ChannelBase.hasValue(): Boolean =
-  when (function) {
-    SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT,
-    SuplaConst.SUPLA_CHANNELFNC_THERMOMETER,
-    SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR,
-    SuplaConst.SUPLA_CHANNELFNC_DISTANCESENSOR -> true
+fun ChannelBase.isIconValueItem(): Boolean =
+  function == SuplaChannelFunction.ALARM_ARMAMENT_SENSOR ||
+    function == SuplaChannelFunction.HOTEL_CARD_SENSOR ||
+    function == SuplaChannelFunction.THERMOMETER ||
+    function == SuplaChannelFunction.DEPTH_SENSOR ||
+    function == SuplaChannelFunction.DISTANCE_SENSOR ||
+    function == SuplaChannelFunction.ELECTRICITY_METER ||
+    function == SuplaChannelFunction.HEAT_OR_COLD_SOURCE_SWITCH ||
+    function == SuplaChannelFunction.PUMP_SWITCH
 
-    else -> false
-  }
-
-fun ChannelBase.isMeasurement(): Boolean =
-  function == SuplaConst.SUPLA_CHANNELFNC_ALARMARMAMENTSENSOR ||
-    function == SuplaConst.SUPLA_CHANNELFNC_HOTELCARDSENSOR ||
-    function == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER ||
-    function == SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR ||
-    function == SuplaConst.SUPLA_CHANNELFNC_DISTANCESENSOR
+fun ChannelBase.isSwitch(): Boolean =
+  function == SuplaChannelFunction.LIGHTSWITCH ||
+    function == SuplaChannelFunction.POWER_SWITCH ||
+    function == SuplaChannelFunction.STAIRCASE_TIMER
 
 fun ChannelBase.isGpm(): Boolean =
-  function == SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER ||
-    function == SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT
+  function == SuplaChannelFunction.GENERAL_PURPOSE_METER ||
+    function == SuplaChannelFunction.GENERAL_PURPOSE_MEASUREMENT
 
 fun ChannelBase.isGpMeasurement(): Boolean =
-  function == SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT
+  function == SuplaChannelFunction.GENERAL_PURPOSE_MEASUREMENT
 
 fun ChannelBase.isGpMeter(): Boolean =
-  function == SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER
+  function == SuplaChannelFunction.GENERAL_PURPOSE_METER
+
+fun ChannelBase.isElectricityMeter(): Boolean =
+  function == SuplaChannelFunction.ELECTRICITY_METER
+
+fun ChannelBase.isImpulseCounter(): Boolean =
+  function == SuplaChannelFunction.IC_GAS_METER ||
+    function == SuplaChannelFunction.IC_HEAT_METER ||
+    function == SuplaChannelFunction.IC_WATER_METER ||
+    function == SuplaChannelFunction.IC_ELECTRICITY_METER
 
 fun ChannelBase.isThermometer() =
-  function == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER ||
-    function == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
+  function == SuplaChannelFunction.THERMOMETER ||
+    function == SuplaChannelFunction.HUMIDITY_AND_TEMPERATURE
 
 fun ChannelBase.isFacadeBlind() =
-  function == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND
+  function == SuplaChannelFunction.CONTROLLING_THE_FACADE_BLIND
 
 fun ChannelBase.isVerticalBlind() =
-  function == SuplaConst.SUPLA_CHANNELFNC_VERTICAL_BLIND
+  function == SuplaChannelFunction.VERTICAL_BLIND
 
 fun ChannelBase.isShadingSystem() =
-  function == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER ||
-    function == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW ||
-    function == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND ||
-    function == SuplaConst.SUPLA_CHANNELFNC_TERRACE_AWNING ||
-    function == SuplaConst.SUPLA_CHANNELFNC_CURTAIN ||
-    function == SuplaConst.SUPLA_CHANNELFNC_VERTICAL_BLIND
+  function == SuplaChannelFunction.CONTROLLING_THE_ROLLER_SHUTTER ||
+    function == SuplaChannelFunction.CONTROLLING_THE_ROOF_WINDOW ||
+    function == SuplaChannelFunction.CONTROLLING_THE_FACADE_BLIND ||
+    function == SuplaChannelFunction.TERRACE_AWNING ||
+    function == SuplaChannelFunction.CURTAIN ||
+    function == SuplaChannelFunction.VERTICAL_BLIND
 
 fun ChannelBase.isProjectorScreen() =
-  function == SuplaConst.SUPLA_CHANNELFNC_PROJECTOR_SCREEN
+  function == SuplaChannelFunction.PROJECTOR_SCREEN
 
 fun ChannelBase.isGarageDoorRoller() =
-  function == SuplaConst.SUPLA_CHANNELFNC_ROLLER_GARAGE_DOOR
+  function == SuplaChannelFunction.ROLLER_GARAGE_DOOR

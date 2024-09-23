@@ -26,21 +26,21 @@ import org.supla.android.data.source.local.entity.measurements.TemperatureAndHum
 import org.supla.android.data.source.remote.rest.SuplaCloudService
 import org.supla.android.data.source.remote.rest.channel.TemperatureAndHumidityMeasurement
 import org.supla.android.features.measurementsdownload.workers.BaseDownloadLogWorker
+import retrofit2.Response
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class TemperatureAndHumidityLogRepository @Inject constructor(
-  private val temperatureAndHumidityLogDao: TemperatureAndHumidityLogDao,
-  suplaCloudServiceProvider: SuplaCloudService.Provider
-) : BaseMeasurementRepository<TemperatureAndHumidityMeasurement, TemperatureAndHumidityLogEntity>(suplaCloudServiceProvider) {
+  private val temperatureAndHumidityLogDao: TemperatureAndHumidityLogDao
+) : BaseMeasurementRepository<TemperatureAndHumidityMeasurement, TemperatureAndHumidityLogEntity>() {
 
   fun findMeasurements(remoteId: Int, profileId: Long, startDate: Date, endDate: Date): Observable<List<TemperatureAndHumidityLogEntity>> {
     return temperatureAndHumidityLogDao.findMeasurements(remoteId, profileId, startDate.time, endDate.time)
   }
 
-  override fun getInitialMeasurements(cloudService: SuplaCloudService, remoteId: Int) =
+  override fun getInitialMeasurements(cloudService: SuplaCloudService, remoteId: Int): Response<List<TemperatureAndHumidityMeasurement>> =
     cloudService.getInitialThermometerWithHumidityMeasurements(remoteId).execute()
 
   override fun getMeasurements(

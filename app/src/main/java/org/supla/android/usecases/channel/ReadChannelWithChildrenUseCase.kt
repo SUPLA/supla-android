@@ -20,15 +20,9 @@ package org.supla.android.usecases.channel
 import io.reactivex.rxjava3.core.Maybe
 import org.supla.android.data.source.ChannelRelationRepository
 import org.supla.android.data.source.RoomChannelRepository
-import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import javax.inject.Inject
 import javax.inject.Singleton
-
-data class ChannelWithChildren(
-  val channel: ChannelDataEntity,
-  val children: List<ChannelChildEntity>
-)
 
 @Singleton
 class ReadChannelWithChildrenUseCase @Inject constructor(

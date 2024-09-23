@@ -26,16 +26,16 @@ class HumidityValueFormatter : ChannelValueFormatter {
   override fun handle(function: Int): Boolean =
     function == SuplaConst.SUPLA_CHANNELFNC_HUMIDITY
 
-  override fun format(value: Any, withUnit: Boolean, precision: Int): String {
+  override fun format(value: Any, withUnit: Boolean, precision: ChannelValueFormatter.Precision, custom: Any?): String {
     val (doubleValue) = guardLet(value as? Double) { return ValuesFormatter.NO_VALUE_TEXT }
     if (doubleValue <= HumidityAndTemperatureValueProvider.UNKNOWN_HUMIDITY_VALUE) {
       return ValuesFormatter.NO_VALUE_TEXT
     }
 
     return if (withUnit) {
-      String.format("%.${precision}f%%", doubleValue)
+      String.format("%.${precision.value}f%%", doubleValue)
     } else {
-      String.format("%.${precision}f", doubleValue)
+      String.format("%.${precision.value}f", doubleValue)
     }
   }
 }

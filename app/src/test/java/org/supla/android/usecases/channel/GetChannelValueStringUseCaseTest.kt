@@ -31,11 +31,14 @@ import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
+import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.usecases.channel.stringvalueprovider.DepthSensorValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.DistanceSensorValueStringProvider
+import org.supla.android.usecases.channel.stringvalueprovider.ElectricityMeterValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.GpmValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.HumidityAndTemperatureValueStringProvider
+import org.supla.android.usecases.channel.stringvalueprovider.ImpulseCounterValueStringProvider
+import org.supla.android.usecases.channel.stringvalueprovider.SwitchWithElectricityMeterValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.ThermometerValueStringProvider
 
 @RunWith(MockitoJUnitRunner::class)
@@ -56,6 +59,15 @@ class GetChannelValueStringUseCaseTest {
   @Mock
   private lateinit var distanceSensorValueStringProvider: DistanceSensorValueStringProvider
 
+  @Mock
+  private lateinit var electricityMeterValueStringProvider: ElectricityMeterValueStringProvider
+
+  @Mock
+  private lateinit var switchWithElectricityMeterValueStringProvider: SwitchWithElectricityMeterValueStringProvider
+
+  @Mock
+  private lateinit var impulseCounterValueStringProvider: ImpulseCounterValueStringProvider
+
   @InjectMocks
   private lateinit var useCase: GetChannelValueStringUseCase
 
@@ -64,6 +76,7 @@ class GetChannelValueStringUseCaseTest {
     // given
     val channel: ChannelDataEntity = mockk {
       every { channelValueEntity } returns mockk {
+        every { function } returns SuplaChannelFunction.HUMIDITY_AND_TEMPERATURE
         every { online } returns false
       }
     }
@@ -78,7 +91,7 @@ class GetChannelValueStringUseCaseTest {
   @Test
   fun `should check all handlers if can handle channel and return no value when no one can handle`() {
     // given
-    val function = SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
+    val function = SuplaChannelFunction.HUMIDITY_AND_TEMPERATURE
     val channel: ChannelDataEntity = mockk {
       every { this@mockk.function } returns function
       every { channelValueEntity } returns mockk {
@@ -91,10 +104,10 @@ class GetChannelValueStringUseCaseTest {
 
     // then
     assertThat(valueText).isEqualTo(ValuesFormatter.NO_VALUE_TEXT)
-    verify(thermometerValueProvider).handle(function)
-    verify(humidityAndTemperatureValueProvider).handle(function)
-    verify(depthSensorValueProvider).handle(function)
-    verify(generalPurposeMeasurementValueProvider).handle(function)
+    verify(thermometerValueProvider).handle(channel)
+    verify(humidityAndTemperatureValueProvider).handle(channel)
+    verify(depthSensorValueProvider).handle(channel)
+    verify(generalPurposeMeasurementValueProvider).handle(channel)
     verifyNoMoreInteractions(
       thermometerValueProvider,
       humidityAndTemperatureValueProvider,
@@ -106,7 +119,7 @@ class GetChannelValueStringUseCaseTest {
   @Test
   fun `should return value of first provider which can handle channel`() {
     // given
-    val function = SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
+    val function = SuplaChannelFunction.HUMIDITY_AND_TEMPERATURE
     val value = "some value"
     val channel: ChannelDataEntity = mockk {
       every { this@mockk.function } returns function
@@ -115,7 +128,7 @@ class GetChannelValueStringUseCaseTest {
       }
     }
 
-    whenever(humidityAndTemperatureValueProvider.handle(function)).thenReturn(true)
+    whenever(humidityAndTemperatureValueProvider.handle(channel)).thenReturn(true)
     whenever(humidityAndTemperatureValueProvider.value(channel, ValueType.FIRST)).thenReturn(value)
 
     // when
@@ -123,8 +136,8 @@ class GetChannelValueStringUseCaseTest {
 
     // then
     assertThat(valueText).isEqualTo(value)
-    verify(thermometerValueProvider).handle(function)
-    verify(humidityAndTemperatureValueProvider).handle(function)
+    verify(thermometerValueProvider).handle(channel)
+    verify(humidityAndTemperatureValueProvider).handle(channel)
     verify(humidityAndTemperatureValueProvider).value(channel, ValueType.FIRST)
     verifyNoMoreInteractions(thermometerValueProvider, humidityAndTemperatureValueProvider)
     verifyNoInteractions(depthSensorValueProvider, generalPurposeMeasurementValueProvider)

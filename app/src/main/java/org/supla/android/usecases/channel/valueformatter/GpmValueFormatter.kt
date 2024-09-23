@@ -27,24 +27,18 @@ class GpmValueFormatter(
   config: SuplaChannelGeneralPurposeBaseConfig?
 ) : ChannelValueFormatter {
 
-  private val beforeValue: String
-  private val afterValue: String
-  private val valueFormatter: DecimalFormat
-
-  init {
-    beforeValue = config?.unitBeforeValue?.let { if (config.noSpaceBeforeValue) it else "$it " } ?: ""
-    afterValue = config?.unitAfterValue?.let { if (config.noSpaceAfterValue) it else " $it" } ?: ""
-    valueFormatter = DecimalFormat().apply {
-      minimumFractionDigits = config?.valuePrecision ?: 2
-      maximumFractionDigits = config?.valuePrecision ?: 2
-    }
+  private val beforeValue: String = config?.unitBeforeValue?.let { if (config.noSpaceBeforeValue) it else "$it " } ?: ""
+  private val afterValue: String = config?.unitAfterValue?.let { if (config.noSpaceAfterValue) it else " $it" } ?: ""
+  private val valueFormatter: DecimalFormat = DecimalFormat().apply {
+    minimumFractionDigits = config?.valuePrecision ?: 2
+    maximumFractionDigits = config?.valuePrecision ?: 2
   }
 
   override fun handle(function: Int): Boolean =
     function == SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT ||
       function == SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER
 
-  override fun format(value: Any, withUnit: Boolean, precision: Int): String {
+  override fun format(value: Any, withUnit: Boolean, precision: ChannelValueFormatter.Precision, custom: Any?): String {
     val (doubleValue) = guardLet(value as? Double) { return ValuesFormatter.NO_VALUE_TEXT }
     if (doubleValue.isNaN()) {
       return ValuesFormatter.NO_VALUE_TEXT

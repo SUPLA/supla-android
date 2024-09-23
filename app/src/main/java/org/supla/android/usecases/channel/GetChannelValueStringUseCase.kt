@@ -23,8 +23,11 @@ import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.extensions.TAG
 import org.supla.android.usecases.channel.stringvalueprovider.DepthSensorValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.DistanceSensorValueStringProvider
+import org.supla.android.usecases.channel.stringvalueprovider.ElectricityMeterValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.GpmValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.HumidityAndTemperatureValueStringProvider
+import org.supla.android.usecases.channel.stringvalueprovider.ImpulseCounterValueStringProvider
+import org.supla.android.usecases.channel.stringvalueprovider.SwitchWithElectricityMeterValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.ThermometerValueStringProvider
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -35,7 +38,10 @@ class GetChannelValueStringUseCase @Inject constructor(
   humidityAndTemperatureValueProvider: HumidityAndTemperatureValueStringProvider,
   depthSensorValueProvider: DepthSensorValueStringProvider,
   generalPurposeMeasurementValueProvider: GpmValueStringProvider,
-  distanceSensorValueStringProvider: DistanceSensorValueStringProvider
+  distanceSensorValueStringProvider: DistanceSensorValueStringProvider,
+  electricityMeterValueStringProvider: ElectricityMeterValueStringProvider,
+  switchWithElectricityMeterValueStringProvider: SwitchWithElectricityMeterValueStringProvider,
+  impulseCounterValueStringProvider: ImpulseCounterValueStringProvider
 ) {
 
   private val providers = listOf(
@@ -43,22 +49,27 @@ class GetChannelValueStringUseCase @Inject constructor(
     humidityAndTemperatureValueProvider,
     depthSensorValueProvider,
     generalPurposeMeasurementValueProvider,
-    distanceSensorValueStringProvider
+    distanceSensorValueStringProvider,
+    electricityMeterValueStringProvider,
+    switchWithElectricityMeterValueStringProvider,
+    impulseCounterValueStringProvider
   )
 
   operator fun invoke(channel: ChannelDataEntity, valueType: ValueType = ValueType.FIRST, withUnit: Boolean = true): String {
-    if (channel.channelValueEntity.online.not()) {
-      return ValuesFormatter.NO_VALUE_TEXT
-    }
+    return valueOrNull(channel, valueType, withUnit) ?: ValuesFormatter.NO_VALUE_TEXT
+  }
 
-    providers.forEach {
-      if (it.handle(channel.function)) {
-        return it.value(channel, valueType, withUnit)
+  fun valueOrNull(channel: ChannelDataEntity, valueType: ValueType = ValueType.FIRST, withUnit: Boolean = true): String? {
+    providers.firstOrNull { it.handle(channel) }?.let {
+      if (channel.channelValueEntity.online.not()) {
+        return ValuesFormatter.NO_VALUE_TEXT
       }
+
+      return it.value(channel, valueType, withUnit)
     }
 
     Trace.e(TAG, "No value formatter for channel function `${channel.function}`")
-    return ValuesFormatter.NO_VALUE_TEXT
+    return null
   }
 }
 
@@ -67,7 +78,6 @@ enum class ValueType {
 }
 
 interface ChannelValueStringProvider {
-  fun handle(function: Int): Boolean
-
+  fun handle(channelData: ChannelDataEntity): Boolean
   fun value(channelData: ChannelDataEntity, valueType: ValueType, withUnit: Boolean = true): String
 }

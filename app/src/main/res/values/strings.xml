@@ -168,21 +168,6 @@
   <string name="wizard_result_conn_error">Connection with the device cannot be set!</string>
   <string name="wizard_result_failed">Configuration Failed!</string>
   <string name="wizard_not_enought_permissions">This application is not fully authorized. Go to the Application Manager in the System Settings. Find %1$s app and activate all the required authorizations.</string>
-  <string name="em_total_forward_avtive_energy">Forward active energy</string>
-  <string name="em_reverse_active_energy">Reverse active energy</string>
-  <string name="em_total_forward_reactive_energy">Forward reactive energy</string>
-  <string name="em_total_reverse_reactive_energy">Reverse reactive energy</string>
-  <string name="em_frequency">Frequency</string>
-  <string name="em_voltage">Voltage</string>
-  <string name="em_current">Current</string>
-  <string name="em_power_active">Active Power</string>
-  <string name="em_power_reactive">Reactive Power</string>
-  <string name="em_power_factor">Power factor</string>
-  <string name="em_phase_angle">Phase angle</string>
-  <string name="em_power_apparent">Apparent Power</string>
-  <string name="em_phase1">Phase 1</string>
-  <string name="em_phase2">Phase 2</string>
-  <string name="em_phase3">Phase 3</string>
   <string name="hp_on">ON</string>
   <string name="hp_off">OFF</string>
   <string name="hp_normal">MANUAL</string>
@@ -703,6 +688,48 @@
   <string name="about_build_time" translatable="false">Version of the day: </string>
   <string name="device_catalog_error" translatable="false">Could not load device catalog. Please try again later.</string>
   <string name="settings_show_bottom_menu" translatable="false">Show bottom menu</string>
+  <string name="details_em_total_forward_active_energy">Forward active energy</string>
+  <string name="details_em_reverse_active_energy">Reverse active energy</string>
+  <string name="details_em_total_forward_reactive_energy">Forward reactive energy</string>
+  <string name="details_em_total_reverse_reactive_energy">Reverse reactive energy</string>
+  <string name="details_em_frequency">Frequency</string>
+  <string name="details_em_voltage">Voltage</string>
+  <string name="details_em_current">Current</string>
+  <string name="details_em_power_active">Active Power</string>
+  <string name="details_em_power_reactive">Reactive Power</string>
+  <string name="details_em_power_factor">Power factor</string>
+  <string name="details_em_phase_angle">Phase angle</string>
+  <string name="details_em_power_apparent">Apparent Power</string>
+  <string name="details_em_phase1">Phase 1</string>
+  <string name="details_em_phase2">Phase 2</string>
+  <string name="details_em_phase3">Phase 3</string>
+  <string name="details_em_reversed_active_energy">Reverse active energy</string>
+  <string name="details_em_forwarded_active_energy">Forward active energy</string>
+  <string name="details_em_reversed_reactive_energy">Reverse reactive energy</string>
+  <string name="details_em_forwarded_reactive_energy">Forward reactive energy</string>
+  <string name="details_em_balance_arithmetic">Arythmetic balance</string>
+  <string name="details_em_balance_vector">Vector balance</string>
+  <string name="details_em_chart_data_type" translatable="false">Data</string>
+  <string name="details_em_phases" translatable="false">Phases</string>
+  <string name="details_em_balance_hourly" translatable="false">Hourly balance</string>
+  <string name="details_em_balance_chart_aggregated" translatable="false">Chart aggregated balance</string>
+  <string name="details_em_sum" translatable="false">Sum</string>
+  <string name="details_em_select_range" translatable="false">Select range</string>
+  <string name="details_em_active_energy" translatable="false">Active energy</string>
+  <string name="details_em_forwarded_energy" translatable="false">Forward</string>
+  <string name="details_em_reversed_energy" translatable="false">Reverse</string>
+  <string name="details_em_cost" translatable="false">Cost</string>
+  <string name="details_em_settings_list_item" translatable="false">Metric shown on the channel list</string>
+  <string name="details_em_settings_title" translatable="false">Settings - %1$s</string>
+  <string name="details_em_total_suffix" translatable="false">(meter reading)</string>
+  <string name="details_em_current_month_suffix" translatable="false">(current month)</string>
+  <string name="details_em_last_month_balancing" translatable="false">Type of balance for current month</string>
+  <string name="channel_caption_pump_switch" translatable="false">Pump switch</string>
+  <string name="channel_caption_heat_or_cold_sourc_switch" translatable="false">Heat or cold source switch</string>
+  <string name="details_list" translatable="false">List</string>
+  <string name="thermostat_detail_main_thermostat" translatable="false">Main thermostat</string>
+  <string name="thermostat_detail_other_thermostats" translatable="false">Dependent thermostats</string>
+  <string name="thermostat_battery_cover_open" translatable="false">Battery cover open</string>
 
   <plurals name="details_timer_info_on" translatable="false">
     <item quantity="other">on</item>

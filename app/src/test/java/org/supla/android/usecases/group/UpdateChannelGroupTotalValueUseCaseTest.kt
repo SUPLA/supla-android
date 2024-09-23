@@ -38,7 +38,7 @@ import org.supla.android.data.source.ChannelGroupRepository
 import org.supla.android.data.source.local.entity.ChannelGroupEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupRelationDataEntity
-import org.supla.android.lib.SuplaConst
+import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 
 @Suppress("SameParameterValue")
 @RunWith(MockitoJUnitRunner::class)
@@ -61,7 +61,7 @@ class UpdateChannelGroupTotalValueUseCaseTest {
     val roofWindowRelationDataOffline = mockRoofWindow(123)
     val facadeBlindRelationData = mockFacadeBlind(234, true, 40, 50)
     val facadeBlindRelationDataOffline = mockFacadeBlind(234)
-    val heatpolData = mockRelationData(345, SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS) {
+    val heatpolData = mockRelationData(345, SuplaChannelFunction.THERMOSTAT_HEATPOL_HOMEPLUS) {
       every { it.getValueHi() } returns true
       every { it.asHeatpolThermostatValue() } returns mockk {
         every { measuredTemperature } returns 18.4f
@@ -378,7 +378,7 @@ class UpdateChannelGroupTotalValueUseCaseTest {
   @Test
   fun `should not crash when function is not supported`() {
     // given
-    val relation = mockRelationData(1, SuplaConst.SUPLA_CHANNELFNC_ALARM) {}
+    val relation = mockRelationData(1, SuplaChannelFunction.ALARM) {}
     whenever(channelGroupRelationRepository.findAllVisibleRelations()).thenReturn(Single.just(listOf(relation)))
     whenever(channelGroupRepository.update(any())).thenReturn(Completable.complete())
 
@@ -401,17 +401,17 @@ class UpdateChannelGroupTotalValueUseCaseTest {
   }
 
   private fun mockDoorLock(groupId: Int, open: Boolean = false) =
-    mockRelationData(groupId, SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK, true) {
+    mockRelationData(groupId, SuplaChannelFunction.CONTROLLING_THE_DOOR_LOCK, true) {
       every { it.getSubValueHi() } returns (if (open) 1 else 0)
     }
 
   private fun mockPowerSwitch(groupId: Int, on: Boolean = false) =
-    mockRelationData(groupId, SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH, true) {
+    mockRelationData(groupId, SuplaChannelFunction.POWER_SWITCH, true) {
       every { it.getValueHi() } returns on
     }
 
   private fun mockRollerShutter(groupId: Int, online: Boolean = false, position: Int = 0, sensor: Int = 0) =
-    mockRelationData(groupId, SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER, online) {
+    mockRelationData(groupId, SuplaChannelFunction.CONTROLLING_THE_ROLLER_SHUTTER, online) {
       every { it.asRollerShutterValue() } returns mockk {
         every { this@mockk.alwaysValidPosition } returns position
       }
@@ -419,7 +419,7 @@ class UpdateChannelGroupTotalValueUseCaseTest {
     }
 
   private fun mockRoofWindow(groupId: Int, online: Boolean = false, position: Int = 0, sensor: Int = 0) =
-    mockRelationData(groupId, SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW, online) {
+    mockRelationData(groupId, SuplaChannelFunction.CONTROLLING_THE_ROOF_WINDOW, online) {
       every { it.asRollerShutterValue() } returns mockk {
         every { this@mockk.alwaysValidPosition } returns position
       }
@@ -427,7 +427,7 @@ class UpdateChannelGroupTotalValueUseCaseTest {
     }
 
   private fun mockFacadeBlind(groupId: Int, online: Boolean = false, position: Int = 0, tilt: Int = 0) =
-    mockRelationData(groupId, SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND, online) {
+    mockRelationData(groupId, SuplaChannelFunction.CONTROLLING_THE_FACADE_BLIND, online) {
       every { it.asFacadeBlindValue() } returns mockk {
         every { this@mockk.alwaysValidPosition } returns position
         every { this@mockk.alwaysValidTilt } returns tilt
@@ -435,25 +435,25 @@ class UpdateChannelGroupTotalValueUseCaseTest {
     }
 
   private fun mockDimmer(groupId: Int, brightness: Int = 0) =
-    mockRelationData(groupId, SuplaConst.SUPLA_CHANNELFNC_DIMMER, true) {
+    mockRelationData(groupId, SuplaChannelFunction.DIMMER, true) {
       every { it.asBrightness() } returns brightness
     }
 
   private fun mockRgb(groupId: Int, color: Int = 0, brightness: Int = 0) =
-    mockRelationData(groupId, SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING, true) {
+    mockRelationData(groupId, SuplaChannelFunction.RGB_LIGHTING, true) {
       every { it.asColor() } returns color
       every { it.asBrightnessColor() } returns brightness
     }
 
   private fun mockDimmerAndRgb(groupId: Int, color: Int = 0, brightnessColor: Int = 0, brightness: Int = 0) =
-    mockRelationData(groupId, SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING, true) {
+    mockRelationData(groupId, SuplaChannelFunction.DIMMER_AND_RGB_LIGHTING, true) {
       every { it.asColor() } returns color
       every { it.asBrightnessColor() } returns brightnessColor
       every { it.asBrightness() } returns brightness
     }
 
   private fun mockTerraceAwning(groupId: Int, online: Boolean = false, position: Int = 0, sensor: Int = 0) =
-    mockRelationData(groupId, SuplaConst.SUPLA_CHANNELFNC_TERRACE_AWNING, online) {
+    mockRelationData(groupId, SuplaChannelFunction.TERRACE_AWNING, online) {
       every { it.asRollerShutterValue() } returns mockk {
         every { this@mockk.alwaysValidPosition } returns position
       }
@@ -461,7 +461,7 @@ class UpdateChannelGroupTotalValueUseCaseTest {
     }
 
   private fun mockCurtain(groupId: Int, online: Boolean = false, position: Int = 0, sensor: Int = 0) =
-    mockRelationData(groupId, SuplaConst.SUPLA_CHANNELFNC_CURTAIN, online) {
+    mockRelationData(groupId, SuplaChannelFunction.CURTAIN, online) {
       every { it.asRollerShutterValue() } returns mockk {
         every { this@mockk.alwaysValidPosition } returns position
       }
@@ -469,14 +469,14 @@ class UpdateChannelGroupTotalValueUseCaseTest {
     }
 
   private fun mockProjectorScreen(groupId: Int, online: Boolean = false, position: Int = 0) =
-    mockRelationData(groupId, SuplaConst.SUPLA_CHANNELFNC_PROJECTOR_SCREEN, online) {
+    mockRelationData(groupId, SuplaChannelFunction.PROJECTOR_SCREEN, online) {
       every { it.asRollerShutterValue() } returns mockk {
         every { this@mockk.alwaysValidPosition } returns position
       }
     }
 
   private fun mockVerticalBlind(groupId: Int, online: Boolean = false, position: Int = 0, sensor: Int = 0) =
-    mockRelationData(groupId, SuplaConst.SUPLA_CHANNELFNC_VERTICAL_BLIND, online) {
+    mockRelationData(groupId, SuplaChannelFunction.VERTICAL_BLIND, online) {
       every { it.asRollerShutterValue() } returns mockk {
         every { this@mockk.alwaysValidPosition } returns position
       }
@@ -485,7 +485,7 @@ class UpdateChannelGroupTotalValueUseCaseTest {
 
   private fun mockRelationData(
     groupId: Int,
-    function: Int,
+    function: SuplaChannelFunction,
     online: Boolean = true,
     extraValueMock: (ChannelValueEntity) -> Unit
   ): ChannelGroupRelationDataEntity {

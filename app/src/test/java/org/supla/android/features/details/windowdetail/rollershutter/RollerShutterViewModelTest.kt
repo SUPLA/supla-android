@@ -47,6 +47,7 @@ import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.data.source.local.entity.custom.GroupOnlineSummary
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
+import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.data.source.remote.rollershutter.RollerShutterValue
 import org.supla.android.data.source.remote.shadingsystem.SuplaShadingSystemFlag
 import org.supla.android.data.source.runtime.ItemType
@@ -244,7 +245,7 @@ class RollerShutterViewModelTest :
     }
     val channelData: ChannelDataEntity = mockk {
       every { this@mockk.remoteId } returns remoteId
-      every { function } returns SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
+      every { function } returns SuplaChannelFunction.CONTROLLING_THE_ROLLER_SHUTTER
       every { channelValueEntity } returns value
       every { flags } returns 0
     }
@@ -629,7 +630,7 @@ class RollerShutterViewModelTest :
     valueFlags: List<SuplaShadingSystemFlag> = emptyList(),
     channelFlags: List<SuplaChannelFlag> = emptyList(),
     hasValidPosition: Boolean = true,
-    function: Int = SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
+    function: SuplaChannelFunction = SuplaChannelFunction.CONTROLLING_THE_ROLLER_SHUTTER
   ) {
     val rollerShutterValue: RollerShutterValue = mockk {
       every { this@mockk.position } returns position
@@ -662,7 +663,7 @@ class RollerShutterViewModelTest :
     val groupData: ChannelGroupDataEntity = mockk {
       every { id } returns groupId
       every { this@mockk.remoteId } returns remoteId
-      every { this@mockk.function } returns SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
+      every { this@mockk.function } returns SuplaChannelFunction.CONTROLLING_THE_ROLLER_SHUTTER
       every { channelGroupEntity } returns group
       every { isOnline() } returns true
     }

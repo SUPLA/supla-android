@@ -18,6 +18,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import androidx.annotation.Nullable;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +41,9 @@ public class SuplaChannelElectricityMeterValue implements Serializable {
   @UsedFromNativeCode
   SuplaChannelElectricityMeterValue(
       int MeasuredValues,
+      int VoltagePhaseAngle12,
+      int VoltagePhaseAngle13,
+      int PhaseSequence,
       int Period,
       int TotalCost,
       int PricePerUnit,
@@ -93,11 +97,6 @@ public class SuplaChannelElectricityMeterValue implements Serializable {
     return MeasuredValues;
   }
 
-  public boolean currentIsOver65A() {
-    return (getMeasuredValues() & SuplaConst.EM_VAR_CURRENT_OVER_65A) > 0
-        && (getMeasuredValues() & SuplaConst.EM_VAR_CURRENT) == 0;
-  }
-
   public double getPricePerUnit() {
     return PricePerUnit;
   }
@@ -114,6 +113,7 @@ public class SuplaChannelElectricityMeterValue implements Serializable {
     return TotalReverseActiveEnergyBalanced;
   }
 
+  @Nullable
   public Measurement getMeasurement(int Phase, int index) {
     switch (Phase) {
       case 1:
@@ -156,18 +156,6 @@ public class SuplaChannelElectricityMeterValue implements Serializable {
     return null;
   }
 
-  public double[] getTotalActiveEnergyForAllPhases(boolean reverse) {
-    double result[] = new double[3];
-    for (int a = 0; a < 3; a++) {
-      if (reverse) {
-        result[a] = getSummary(a + 1).getTotalReverseActiveEnergy();
-      } else {
-        result[a] = getSummary(a + 1).getTotalForwardActiveEnergy();
-      }
-    }
-    return result;
-  }
-
   public class Measurement implements Serializable {
     private double Freq; // Hz
     private double Voltage; // V
@@ -206,8 +194,8 @@ public class SuplaChannelElectricityMeterValue implements Serializable {
       return Voltage;
     }
 
-    public double getCurrent(boolean over65A) {
-      return Current * (over65A ? 10 : 1);
+    public double getCurrent() {
+      return Current;
     }
 
     public double getPowerActive() {

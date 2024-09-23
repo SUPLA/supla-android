@@ -18,7 +18,7 @@ import org.supla.android.core.networking.suplaclient.SuplaClientApi
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.data.source.ChannelGroupRepository
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
-import org.supla.android.lib.SuplaConst
+import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.ActionParameters
 import org.supla.android.lib.actions.SubjectType
@@ -38,7 +38,7 @@ class GroupActionUseCaseTest {
   fun `should turn off RGB lighting`() {
     val channelId = 123
 
-    testActionExecution(channelId, SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING, ButtonType.LEFT) {
+    testActionExecution(channelId, SuplaChannelFunction.RGB_LIGHTING, ButtonType.LEFT) {
       Assertions.assertThat(it.action).isEqualTo(ActionId.TURN_OFF)
       Assertions.assertThat(it.subjectType).isEqualTo(SubjectType.GROUP)
       Assertions.assertThat(it.subjectId).isEqualTo(channelId)
@@ -49,7 +49,7 @@ class GroupActionUseCaseTest {
   fun `should turn on dimmer lighting`() {
     val channelId = 234
 
-    testActionExecution(channelId, SuplaConst.SUPLA_CHANNELFNC_DIMMER, ButtonType.RIGHT) {
+    testActionExecution(channelId, SuplaChannelFunction.DIMMER, ButtonType.RIGHT) {
       Assertions.assertThat(it.action).isEqualTo(ActionId.TURN_ON)
       Assertions.assertThat(it.subjectType).isEqualTo(SubjectType.GROUP)
       Assertions.assertThat(it.subjectId).isEqualTo(channelId)
@@ -60,7 +60,7 @@ class GroupActionUseCaseTest {
   fun `should turn off dimmer with RGB lighting`() {
     val channelId = 123
 
-    testActionExecution(channelId, SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING, ButtonType.LEFT) {
+    testActionExecution(channelId, SuplaChannelFunction.DIMMER_AND_RGB_LIGHTING, ButtonType.LEFT) {
       Assertions.assertThat(it.action).isEqualTo(ActionId.TURN_OFF)
       Assertions.assertThat(it.subjectType).isEqualTo(SubjectType.GROUP)
       Assertions.assertThat(it.subjectId).isEqualTo(channelId)
@@ -71,7 +71,7 @@ class GroupActionUseCaseTest {
   fun `should open roller shutter`() {
     val channelId = 123
 
-    testActionExecution(channelId, SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER, ButtonType.RIGHT) {
+    testActionExecution(channelId, SuplaChannelFunction.CONTROLLING_THE_ROLLER_SHUTTER, ButtonType.RIGHT) {
       Assertions.assertThat(it.action).isEqualTo(ActionId.REVEAL)
       Assertions.assertThat(it.subjectType).isEqualTo(SubjectType.GROUP)
       Assertions.assertThat(it.subjectId).isEqualTo(channelId)
@@ -82,7 +82,7 @@ class GroupActionUseCaseTest {
   fun `should close roller shutter`() {
     val channelId = 123
 
-    testActionExecution(channelId, SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW, ButtonType.LEFT) {
+    testActionExecution(channelId, SuplaChannelFunction.CONTROLLING_THE_ROOF_WINDOW, ButtonType.LEFT) {
       Assertions.assertThat(it.action).isEqualTo(ActionId.SHUT)
       Assertions.assertThat(it.subjectType).isEqualTo(SubjectType.GROUP)
       Assertions.assertThat(it.subjectId).isEqualTo(channelId)
@@ -93,17 +93,22 @@ class GroupActionUseCaseTest {
   fun `should turn on power switch`() {
     val channelId = 123
 
-    testOpenClose(channelId, SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH, ButtonType.RIGHT, 1)
+    testOpenClose(channelId, SuplaChannelFunction.POWER_SWITCH, ButtonType.RIGHT, 1)
   }
 
   @Test
   fun `should turn off light switch`() {
     val channelId = 234
 
-    testOpenClose(channelId, SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH, ButtonType.LEFT, 0)
+    testOpenClose(channelId, SuplaChannelFunction.LIGHTSWITCH, ButtonType.LEFT, 0)
   }
 
-  private fun testActionExecution(groupId: Int, channelFunc: Int, buttonType: ButtonType, actionAssertion: (ActionParameters) -> Unit) {
+  private fun testActionExecution(
+    groupId: Int,
+    channelFunc: SuplaChannelFunction,
+    buttonType: ButtonType,
+    actionAssertion: (ActionParameters) -> Unit
+  ) {
     // given
     val group: ChannelGroupDataEntity = mockk()
     every { group.remoteId } returns groupId
@@ -131,7 +136,7 @@ class GroupActionUseCaseTest {
     verifyNoMoreInteractions(channelGroupRepository, suplaClientProvider)
   }
 
-  private fun testOpenClose(groupId: Int, channelFunc: Int, buttonType: ButtonType, openValue: Int) {
+  private fun testOpenClose(groupId: Int, channelFunc: SuplaChannelFunction, buttonType: ButtonType, openValue: Int) {
     // given
     val group: ChannelGroupDataEntity = mockk()
     every { group.remoteId } returns groupId

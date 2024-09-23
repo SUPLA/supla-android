@@ -22,7 +22,7 @@ import org.supla.android.data.source.ChannelGroupRelationRepository
 import org.supla.android.data.source.ChannelGroupRepository
 import org.supla.android.data.source.local.entity.ChannelGroupEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity
-import org.supla.android.lib.SuplaConst
+import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.usecases.group.totalvalue.DimmerAndRgbGroupValue
 import org.supla.android.usecases.group.totalvalue.DimmerGroupValue
 import org.supla.android.usecases.group.totalvalue.GroupTotalValue
@@ -87,47 +87,87 @@ private fun ChannelGroupEntity.updateBy(totalValue: GroupTotalValue, onChangedCa
 
 private fun ChannelGroupEntity.getGroupValue(value: ChannelValueEntity): GroupValue? {
   return when (function) {
-    SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK,
-    SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK,
-    SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE,
-    SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR ->
+    SuplaChannelFunction.CONTROLLING_THE_DOOR_LOCK,
+    SuplaChannelFunction.CONTROLLING_THE_GATEWAY_LOCK,
+    SuplaChannelFunction.CONTROLLING_THE_GATE,
+    SuplaChannelFunction.CONTROLLING_THE_GARAGE_DOOR ->
       OpenedClosedGroupValue(value.getSensorHighValue())
 
-    SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH,
-    SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH,
-    SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER,
-    SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE ->
+    SuplaChannelFunction.POWER_SWITCH,
+    SuplaChannelFunction.LIGHTSWITCH,
+    SuplaChannelFunction.STAIRCASE_TIMER,
+    SuplaChannelFunction.VALVE_OPEN_CLOSE ->
       OpenedClosedGroupValue(value.getValueHi())
 
-    SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER,
-    SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW,
-    SuplaConst.SUPLA_CHANNELFNC_TERRACE_AWNING,
-    SuplaConst.SUPLA_CHANNELFNC_CURTAIN,
-    SuplaConst.SUPLA_CHANNELFNC_VERTICAL_BLIND,
-    SuplaConst.SUPLA_CHANNELFNC_ROLLER_GARAGE_DOOR ->
+    SuplaChannelFunction.CONTROLLING_THE_ROLLER_SHUTTER,
+    SuplaChannelFunction.CONTROLLING_THE_ROOF_WINDOW,
+    SuplaChannelFunction.TERRACE_AWNING,
+    SuplaChannelFunction.CURTAIN,
+    SuplaChannelFunction.VERTICAL_BLIND,
+    SuplaChannelFunction.ROLLER_GARAGE_DOOR ->
       ShadingSystemGroupValue(value.asRollerShutterValue().alwaysValidPosition, (value.getSubValueHi() and 0x1) == 0x1)
 
-    SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND ->
+    SuplaChannelFunction.CONTROLLING_THE_FACADE_BLIND ->
       value.asFacadeBlindValue().let { ShadowingBlindGroupValue(it.alwaysValidPosition, it.alwaysValidTilt) }
 
-    SuplaConst.SUPLA_CHANNELFNC_PROJECTOR_SCREEN ->
+    SuplaChannelFunction.PROJECTOR_SCREEN ->
       ProjectorScreenGroupValue(value.asRollerShutterValue().alwaysValidPosition)
 
-    SuplaConst.SUPLA_CHANNELFNC_DIMMER ->
+    SuplaChannelFunction.DIMMER ->
       DimmerGroupValue(value.asBrightness())
 
-    SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING ->
+    SuplaChannelFunction.RGB_LIGHTING ->
       RgbGroupValue(value.asColor(), value.asBrightnessColor())
 
-    SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING ->
+    SuplaChannelFunction.DIMMER_AND_RGB_LIGHTING ->
       DimmerAndRgbGroupValue(value.asColor(), value.asBrightnessColor(), value.asBrightness())
 
-    SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS ->
+    SuplaChannelFunction.THERMOSTAT_HEATPOL_HOMEPLUS ->
       value.asHeatpolThermostatValue().let {
         HeatpolThermostatGroupValue(value.getValueHi(), it.measuredTemperature, it.presetTemperature)
       }
 
-    else -> null
+    SuplaChannelFunction.UNKNOWN,
+    SuplaChannelFunction.NONE,
+    SuplaChannelFunction.THERMOMETER,
+    SuplaChannelFunction.HUMIDITY,
+    SuplaChannelFunction.HUMIDITY_AND_TEMPERATURE,
+    SuplaChannelFunction.OPEN_SENSOR_GATEWAY,
+    SuplaChannelFunction.OPEN_SENSOR_GATE,
+    SuplaChannelFunction.OPEN_SENSOR_GARAGE_DOOR,
+    SuplaChannelFunction.NO_LIQUID_SENSOR,
+    SuplaChannelFunction.OPEN_SENSOR_DOOR,
+    SuplaChannelFunction.OPEN_SENSOR_ROLLER_SHUTTER,
+    SuplaChannelFunction.OPEN_SENSOR_ROOF_WINDOW,
+    SuplaChannelFunction.RING,
+    SuplaChannelFunction.ALARM,
+    SuplaChannelFunction.NOTIFICATION,
+    SuplaChannelFunction.DEPTH_SENSOR,
+    SuplaChannelFunction.DISTANCE_SENSOR,
+    SuplaChannelFunction.OPENING_SENSOR_WINDOW,
+    SuplaChannelFunction.HOTEL_CARD_SENSOR,
+    SuplaChannelFunction.ALARM_ARMAMENT_SENSOR,
+    SuplaChannelFunction.MAIL_SENSOR,
+    SuplaChannelFunction.WIND_SENSOR,
+    SuplaChannelFunction.PRESSURE_SENSOR,
+    SuplaChannelFunction.RAIN_SENSOR,
+    SuplaChannelFunction.WEIGHT_SENSOR,
+    SuplaChannelFunction.WEATHER_STATION,
+    SuplaChannelFunction.ELECTRICITY_METER,
+    SuplaChannelFunction.IC_ELECTRICITY_METER,
+    SuplaChannelFunction.IC_GAS_METER,
+    SuplaChannelFunction.IC_WATER_METER,
+    SuplaChannelFunction.IC_HEAT_METER,
+    SuplaChannelFunction.HVAC_THERMOSTAT,
+    SuplaChannelFunction.HVAC_THERMOSTAT_HEAT_COOL,
+    SuplaChannelFunction.HVAC_DOMESTIC_HOT_WATER,
+    SuplaChannelFunction.VALVE_PERCENTAGE,
+    SuplaChannelFunction.GENERAL_PURPOSE_MEASUREMENT,
+    SuplaChannelFunction.GENERAL_PURPOSE_METER,
+    SuplaChannelFunction.DIGIGLASS_HORIZONTAL,
+    SuplaChannelFunction.DIGIGLASS_VERTICAL,
+    SuplaChannelFunction.PUMP_SWITCH,
+    SuplaChannelFunction.HEAT_OR_COLD_SOURCE_SWITCH -> null
   }
 }
 

@@ -23,7 +23,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.em
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.sp
 import org.supla.android.R
 import org.supla.android.extensions.fontDimensionResource
@@ -32,7 +33,7 @@ import org.supla.android.extensions.fontDimensionResource
 fun suplaTypography() = Typography(
   displayLarge = TextStyle(
     fontSize = 60.sp,
-    letterSpacing = 0.05.em,
+    letterSpacing = TextUnit(0.05f, TextUnitType.Em),
     fontWeight = FontWeight.Light,
     fontFamily = OpenSansFontFamily
   ),
@@ -43,14 +44,14 @@ fun suplaTypography() = Typography(
   ),
   displaySmall = TextStyle(
     fontSize = 34.sp,
-    letterSpacing = 0.025.sp,
+    letterSpacing = TextUnit(0.025f, TextUnitType.Em),
     fontWeight = FontWeight.Normal,
     fontFamily = OpenSansFontFamily
   ),
 
   headlineLarge = TextStyle(
     fontSize = 34.sp,
-    letterSpacing = 0.025.sp,
+    letterSpacing = TextUnit(0.025f, TextUnitType.Em),
     fontWeight = FontWeight.Normal,
     fontFamily = OpenSansFontFamily
   ),
@@ -67,7 +68,7 @@ fun suplaTypography() = Typography(
 
   titleLarge = TextStyle(
     fontSize = 22.sp,
-    letterSpacing = 0.025.sp,
+    letterSpacing = TextUnit(0.025f, TextUnitType.Em),
     fontWeight = FontWeight.Normal,
     fontFamily = OpenSansFontFamily
   ),
@@ -78,45 +79,45 @@ fun suplaTypography() = Typography(
   ),
   titleSmall = TextStyle(
     fontSize = 14.sp,
-    letterSpacing = 0.015.sp,
+    letterSpacing = TextUnit(0.015f, TextUnitType.Em),
     fontWeight = FontWeight.SemiBold,
     fontFamily = OpenSansFontFamily
   ),
 
   bodyLarge = TextStyle(
     fontSize = 16.sp,
-    letterSpacing = 0.05.sp,
+    letterSpacing = TextUnit(0.005f, TextUnitType.Em),
     fontWeight = FontWeight.Normal,
     fontFamily = OpenSansFontFamily
   ),
   bodyMedium = TextStyle(
     fontSize = 14.sp,
-    letterSpacing = 0.025.sp,
+    letterSpacing = TextUnit(0.025f, TextUnitType.Em),
     fontWeight = FontWeight.Normal,
     fontFamily = OpenSansFontFamily
   ),
   bodySmall = TextStyle(
     fontSize = 12.sp,
-    letterSpacing = 0.025.sp,
+    letterSpacing = TextUnit(0.025f, TextUnitType.Em),
     fontWeight = FontWeight.Normal,
     fontFamily = OpenSansFontFamily
   ),
 
   labelLarge = TextStyle(
     fontSize = 17.sp,
-    letterSpacing = 0.15.sp,
+    letterSpacing = TextUnit(0.015f, TextUnitType.Em),
     fontWeight = FontWeight.Medium,
     fontFamily = OpenSansFontFamily
   ),
   labelMedium = TextStyle(
     fontSize = 14.sp,
-    letterSpacing = 0.15.sp,
+    letterSpacing = TextUnit(0.015f, TextUnitType.Em),
     fontWeight = FontWeight.Bold,
     fontFamily = OpenSansFontFamily
   ),
   labelSmall = TextStyle(
     fontSize = 10.sp,
-    letterSpacing = 0.15.sp,
+    letterSpacing = TextUnit(0.015f, TextUnitType.Em),
     fontWeight = FontWeight.SemiBold,
     fontFamily = OpenSansFontFamily
   )

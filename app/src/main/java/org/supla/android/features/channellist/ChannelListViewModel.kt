@@ -28,10 +28,11 @@ import org.supla.android.core.ui.ViewState
 import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.local.entity.LocationEntity
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.features.details.detailbase.standarddetail.DetailPage
 import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
+import org.supla.android.features.details.electricitymeterdetail.ElectricityMeterDetailFragment
 import org.supla.android.features.details.gpmdetail.GpmDetailFragment
 import org.supla.android.features.details.switchdetail.SwitchDetailFragment
 import org.supla.android.features.details.thermometerdetail.ThermometerDetailFragment
@@ -46,9 +47,11 @@ import org.supla.android.usecases.channel.ButtonType
 import org.supla.android.usecases.channel.ChannelActionUseCase
 import org.supla.android.usecases.channel.CreateProfileChannelsListUseCase
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
+import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
+import org.supla.android.usecases.details.EmDetailType
 import org.supla.android.usecases.details.GpmDetailType
 import org.supla.android.usecases.details.LegacyDetailType
-import org.supla.android.usecases.details.ProvideDetailTypeUseCase
+import org.supla.android.usecases.details.ProvideChannelDetailTypeUseCase
 import org.supla.android.usecases.details.SwitchDetailType
 import org.supla.android.usecases.details.ThermometerDetailType
 import org.supla.android.usecases.details.ThermostatDetailType
@@ -63,8 +66,9 @@ class ChannelListViewModel @Inject constructor(
   private val createProfileChannelsListUseCase: CreateProfileChannelsListUseCase,
   private val channelActionUseCase: ChannelActionUseCase,
   private val toggleLocationUseCase: ToggleLocationUseCase,
-  private val provideDetailTypeUseCase: ProvideDetailTypeUseCase,
+  private val provideChannelDetailTypeUseCase: ProvideChannelDetailTypeUseCase,
   private val findChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
+  private val readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
   updateEventsManager: UpdateEventsManager,
   preferences: Preferences,
   schedulers: SuplaSchedulers
@@ -128,7 +132,7 @@ class ChannelListViewModel @Inject constructor(
   }
 
   fun onListItemClick(remoteId: Int) {
-    findChannelByRemoteIdUseCase(remoteId)
+    readChannelWithChildrenUseCase(remoteId)
       .attach()
       .subscribeBy(
         onSuccess = { openDetailsByChannelFunction(it) },
@@ -150,7 +154,7 @@ class ChannelListViewModel @Inject constructor(
         .subscribeBy(
           onSuccess = { channel ->
             currentState().channels
-              ?.filterIsInstance(ListItem.ChannelItem::class.java)
+              ?.filterIsInstance<ListItem.ChannelItem>()
               ?.first { it.channelBase.remoteId == channel.remoteId }
               ?.channelBase = channel
           },
@@ -160,19 +164,21 @@ class ChannelListViewModel @Inject constructor(
     }
   }
 
-  private fun openDetailsByChannelFunction(data: ChannelDataEntity) {
-    if (isAvailableInOffline(data.function, data.channelValueEntity.subValueType).not() && data.isOnline().not()) {
+  private fun openDetailsByChannelFunction(data: ChannelWithChildren) {
+    val channel = data.channel
+    if (isAvailableInOffline(channel, data.children).not() && channel.isOnline().not()) {
       return // do not open details for offline channels
     }
 
-    when (val detailType = provideDetailTypeUseCase(data)) {
-      is SwitchDetailType -> sendEvent(ChannelListViewEvent.OpenSwitchDetail(ItemBundle.from(data), detailType.pages))
-      is ThermostatDetailType -> sendEvent(ChannelListViewEvent.OpenThermostatDetail(ItemBundle.from(data), detailType.pages))
-      is ThermometerDetailType -> sendEvent(ChannelListViewEvent.OpenThermometerDetail(ItemBundle.from(data), detailType.pages))
-      is GpmDetailType -> sendEvent(ChannelListViewEvent.OpenGpmDetail(ItemBundle.from(data), detailType.pages))
-      is WindowDetailType -> sendEvent(ChannelListViewEvent.OpenWindowDetail(ItemBundle.from(data), detailType.pages))
-      is LegacyDetailType -> sendEvent(ChannelListViewEvent.OpenLegacyDetails(data.remoteId, detailType))
-      else -> {} // no action
+    when (val detailType = provideChannelDetailTypeUseCase(data)) {
+      is SwitchDetailType -> sendEvent(ChannelListViewEvent.OpenSwitchDetail(ItemBundle.from(channel), detailType.pages))
+      is ThermostatDetailType -> sendEvent(ChannelListViewEvent.OpenThermostatDetail(ItemBundle.from(channel), detailType.pages))
+      is ThermometerDetailType -> sendEvent(ChannelListViewEvent.OpenThermometerDetail(ItemBundle.from(channel), detailType.pages))
+      is GpmDetailType -> sendEvent(ChannelListViewEvent.OpenGpmDetail(ItemBundle.from(channel), detailType.pages))
+      is WindowDetailType -> sendEvent(ChannelListViewEvent.OpenWindowDetail(ItemBundle.from(channel), detailType.pages))
+      is EmDetailType -> sendEvent(ChannelListViewEvent.OpenEmDetail(ItemBundle.from(channel), detailType.pages))
+      is LegacyDetailType -> sendEvent(ChannelListViewEvent.OpenLegacyDetails(channel.remoteId, detailType))
+      null -> {} // no action
     }
   }
 }
@@ -195,6 +201,9 @@ sealed class ChannelListViewEvent : ViewEvent {
 
   data class OpenWindowDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) :
     OpenStandardDetail(R.id.window_detail_fragment, WindowDetailFragment.bundle(itemBundle, pages.toTypedArray()))
+
+  data class OpenEmDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) :
+    OpenStandardDetail(R.id.electricity_meter_detail_fragment, ElectricityMeterDetailFragment.bundle(itemBundle, pages.toTypedArray()))
 
   data object ReassignAdapter : ChannelListViewEvent()
 

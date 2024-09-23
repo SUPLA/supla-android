@@ -15,10 +15,8 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.supla.android.data.source.local.ElectricityMeterLogDao;
 import org.supla.android.data.source.local.ImpulseCounterLogDao;
 import org.supla.android.data.source.local.ThermostatLogDao;
-import org.supla.android.db.ElectricityMeasurementItem;
 import org.supla.android.db.ImpulseCounterMeasurementItem;
 import org.supla.android.db.ThermostatMeasurementItem;
 
@@ -28,7 +26,6 @@ public class DefaultMeasurableItemsRepositoryTest {
   private static final double DELTA = 1e-15;
 
   @Mock private ImpulseCounterLogDao impulseCounterLogDao;
-  @Mock private ElectricityMeterLogDao electricityMeterLogDao;
   @Mock private ThermostatLogDao thermostatLogDao;
   @InjectMocks private DefaultMeasurableItemsRepository measurableItemsRepository;
 
@@ -50,130 +47,7 @@ public class DefaultMeasurableItemsRepositoryTest {
 
     verify(impulseCounterLogDao).getLastImpulseCounterMeasurementValue(monthOffset, channelId);
     verifyNoMoreInteractions(impulseCounterLogDao);
-    verifyNoInteractions(electricityMeterLogDao, thermostatLogDao);
-  }
-
-  @Test
-  public void shouldGetLastElectricityMeterMeasurementValue() {
-    // given
-    int monthOffset = 1;
-    int channelId = 2;
-    boolean production = true;
-    double expected = 4.5;
-    when(electricityMeterLogDao.getLastElectricityMeterMeasurementValue(
-            monthOffset, channelId, production))
-        .thenReturn(expected);
-
-    // when
-    double result =
-        measurableItemsRepository.getLastElectricityMeterMeasurementValue(
-            monthOffset, channelId, production);
-
-    // then
-    assertEquals(expected, result, DELTA);
-
-    verify(electricityMeterLogDao)
-        .getLastElectricityMeterMeasurementValue(monthOffset, channelId, production);
-    verifyNoMoreInteractions(electricityMeterLogDao);
-    verifyNoInteractions(impulseCounterLogDao, thermostatLogDao);
-  }
-
-  @Test
-  public void shouldGetElectricityMeterMeasurementTimestamp() {
-    // given
-    int channelId = 2;
-    boolean min = true;
-    int expected = 4;
-    when(electricityMeterLogDao.getElectricityMeterMeasurementTimestamp(channelId, min))
-        .thenReturn(expected);
-
-    // when
-    int result = measurableItemsRepository.getElectricityMeterMeasurementTimestamp(channelId, min);
-
-    // then
-    assertEquals(expected, result);
-
-    verify(electricityMeterLogDao).getElectricityMeterMeasurementTimestamp(channelId, min);
-    verifyNoMoreInteractions(electricityMeterLogDao);
-    verifyNoInteractions(impulseCounterLogDao, thermostatLogDao);
-  }
-
-  @Test
-  public void shouldGetElectricityMeterMeasurementTotalCount() {
-    // given
-    int channelId = 2;
-    boolean withoutComplement = true;
-    int expected = 4;
-    when(electricityMeterLogDao.getElectricityMeterMeasurementTotalCount(
-            channelId, withoutComplement))
-        .thenReturn(expected);
-
-    // when
-    int result =
-        measurableItemsRepository.getElectricityMeterMeasurementTotalCount(
-            channelId, withoutComplement);
-
-    // then
-    assertEquals(expected, result);
-
-    verify(electricityMeterLogDao)
-        .getElectricityMeterMeasurementTotalCount(channelId, withoutComplement);
-    verifyNoMoreInteractions(electricityMeterLogDao);
-    verifyNoInteractions(impulseCounterLogDao, thermostatLogDao);
-  }
-
-  @Test
-  public void shouldAddElectricityMeasurement() {
-    // given
-    ElectricityMeasurementItem item = mock(ElectricityMeasurementItem.class);
-
-    // when
-    measurableItemsRepository.addElectricityMeasurement(item);
-
-    // then
-    verify(electricityMeterLogDao).addElectricityMeasurement(item);
-    verifyNoMoreInteractions(electricityMeterLogDao);
-    verifyNoInteractions(impulseCounterLogDao, thermostatLogDao);
-  }
-
-  @Test
-  public void shouldGetElectricityMeasurementsCursor() {
-    // given
-    int channelId = 2;
-    String groupByDateFormat = "format";
-    Date dateFrom = mock(Date.class);
-    Date dateTo = mock(Date.class);
-    Cursor expected = mock(Cursor.class);
-    when(electricityMeterLogDao.getElectricityMeasurementsCursor(
-            channelId, groupByDateFormat, dateFrom, dateTo))
-        .thenReturn(expected);
-
-    // when
-    Cursor result =
-        measurableItemsRepository.getElectricityMeasurementsCursor(
-            channelId, groupByDateFormat, dateFrom, dateTo);
-
-    // then
-    assertSame(expected, result);
-
-    verify(electricityMeterLogDao)
-        .getElectricityMeasurementsCursor(channelId, groupByDateFormat, dateFrom, dateTo);
-    verifyNoMoreInteractions(electricityMeterLogDao);
-    verifyNoInteractions(impulseCounterLogDao, thermostatLogDao);
-  }
-
-  @Test
-  public void shouldDeleteElectricityMeasurements() {
-    // given
-    int channelId = 1;
-
-    // when
-    measurableItemsRepository.deleteElectricityMeasurements(channelId);
-
-    // then
-    verify(electricityMeterLogDao).deleteElectricityMeasurements(channelId);
-    verifyNoMoreInteractions(electricityMeterLogDao);
-    verifyNoInteractions(impulseCounterLogDao, thermostatLogDao);
+    verifyNoInteractions(thermostatLogDao);
   }
 
   @Test
@@ -192,7 +66,7 @@ public class DefaultMeasurableItemsRepositoryTest {
 
     verify(thermostatLogDao).getThermostatMeasurementTimestamp(channelId, min);
     verifyNoMoreInteractions(thermostatLogDao);
-    verifyNoInteractions(impulseCounterLogDao, electricityMeterLogDao);
+    verifyNoInteractions(impulseCounterLogDao);
   }
 
   @Test
@@ -210,7 +84,7 @@ public class DefaultMeasurableItemsRepositoryTest {
 
     verify(thermostatLogDao).getThermostatMeasurementTotalCount(channelId);
     verifyNoMoreInteractions(thermostatLogDao);
-    verifyNoInteractions(impulseCounterLogDao, electricityMeterLogDao);
+    verifyNoInteractions(impulseCounterLogDao);
   }
 
   @Test
@@ -224,7 +98,7 @@ public class DefaultMeasurableItemsRepositoryTest {
     // then
     verify(thermostatLogDao).deleteThermostatMeasurements(channelId);
     verifyNoMoreInteractions(thermostatLogDao);
-    verifyNoInteractions(impulseCounterLogDao, electricityMeterLogDao);
+    verifyNoInteractions(impulseCounterLogDao);
   }
 
   @Test
@@ -238,7 +112,7 @@ public class DefaultMeasurableItemsRepositoryTest {
     // then
     verify(thermostatLogDao).addThermostatMeasurement(item);
     verifyNoMoreInteractions(thermostatLogDao);
-    verifyNoInteractions(impulseCounterLogDao, electricityMeterLogDao);
+    verifyNoInteractions(impulseCounterLogDao);
   }
 
   @Test
@@ -260,7 +134,7 @@ public class DefaultMeasurableItemsRepositoryTest {
 
     verify(thermostatLogDao).getThermostatMeasurements(channelId, startDate, endDate);
     verifyNoMoreInteractions(thermostatLogDao);
-    verifyNoInteractions(impulseCounterLogDao, electricityMeterLogDao);
+    verifyNoInteractions(impulseCounterLogDao);
   }
 
   @Test
@@ -274,7 +148,7 @@ public class DefaultMeasurableItemsRepositoryTest {
     // then
     verify(impulseCounterLogDao).addImpulseCounterMeasurement(item);
     verifyNoMoreInteractions(impulseCounterLogDao);
-    verifyNoInteractions(electricityMeterLogDao, thermostatLogDao);
+    verifyNoInteractions(thermostatLogDao);
   }
 
   @Test
@@ -294,7 +168,7 @@ public class DefaultMeasurableItemsRepositoryTest {
 
     verify(impulseCounterLogDao).getImpulseCounterMeasurementTimestamp(channelId, min);
     verifyNoMoreInteractions(impulseCounterLogDao);
-    verifyNoInteractions(electricityMeterLogDao, thermostatLogDao);
+    verifyNoInteractions(thermostatLogDao);
   }
 
   @Test
@@ -314,7 +188,7 @@ public class DefaultMeasurableItemsRepositoryTest {
 
     verify(impulseCounterLogDao).impulseCounterMeasurementsStartsWithTheCurrentMonth(channelId);
     verifyNoMoreInteractions(impulseCounterLogDao);
-    verifyNoInteractions(electricityMeterLogDao, thermostatLogDao);
+    verifyNoInteractions(thermostatLogDao);
   }
 
   @Test
@@ -337,7 +211,7 @@ public class DefaultMeasurableItemsRepositoryTest {
     verify(impulseCounterLogDao)
         .getImpulseCounterMeasurementTotalCount(channelId, withoutComplement);
     verifyNoMoreInteractions(impulseCounterLogDao);
-    verifyNoInteractions(electricityMeterLogDao, thermostatLogDao);
+    verifyNoInteractions(thermostatLogDao);
   }
 
   @Test
@@ -363,7 +237,7 @@ public class DefaultMeasurableItemsRepositoryTest {
     verify(impulseCounterLogDao)
         .getImpulseCounterMeasurements(channelId, groupByDateFormat, dateFrom, dateTo);
     verifyNoMoreInteractions(impulseCounterLogDao);
-    verifyNoInteractions(electricityMeterLogDao, thermostatLogDao);
+    verifyNoInteractions(thermostatLogDao);
   }
 
   @Test
@@ -377,6 +251,6 @@ public class DefaultMeasurableItemsRepositoryTest {
     // then
     verify(impulseCounterLogDao).deleteImpulseCounterMeasurements(channelId);
     verifyNoMoreInteractions(impulseCounterLogDao);
-    verifyNoInteractions(electricityMeterLogDao, thermostatLogDao);
+    verifyNoInteractions(thermostatLogDao);
   }
 }

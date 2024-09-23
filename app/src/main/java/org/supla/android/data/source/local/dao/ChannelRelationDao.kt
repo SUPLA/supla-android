@@ -24,7 +24,6 @@ import androidx.room.Query
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.Single
 import org.supla.android.data.source.local.entity.ChannelConfigEntity
 import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity
@@ -42,7 +41,7 @@ interface ChannelRelationDao {
   fun insertOrUpdate(channelRelation: ChannelRelationEntity): Completable
 
   @Query("SELECT $ALL_COLUMNS FROM $TABLE_NAME WHERE ${ChannelRelationEntity.COLUMN_PROFILE_ID} = ${ProfileEntity.SUBQUERY_ACTIVE}")
-  fun getForActiveProfile(): Single<List<ChannelRelationEntity>>
+  fun getForActiveProfile(): Observable<List<ChannelRelationEntity>>
 
   @Query(
     """

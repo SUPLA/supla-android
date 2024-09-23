@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
   android:id="@+id/chart_marker_content"
   android:layout_width="wrap_content"
   android:layout_height="wrap_content"
@@ -15,7 +16,8 @@
     android:textColor="@color/on_background"
     android:textSize="12sp"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent" />
+    app:layout_constraintTop_toTopOf="parent"
+    tools:text="09.08.2024 16:00"/>
 
   <TextView
     android:id="@+id/chart_marker_text"
@@ -25,7 +27,8 @@
     android:textColor="@color/on_background"
     android:textSize="14sp"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/chart_marker_title" />
+    app:layout_constraintTop_toBottomOf="@id/chart_marker_title"
+    tools:text="24,63°"/>
 
   <TextView
     android:id="@+id/chart_marker_range"
@@ -37,6 +40,7 @@
     android:textSize="12sp"
     app:layout_constraintBottom_toBottomOf="@id/chart_marker_text"
     app:layout_constraintStart_toEndOf="@id/chart_marker_text"
-    app:layout_constraintTop_toTopOf="@id/chart_marker_text" />
+    app:layout_constraintTop_toTopOf="@id/chart_marker_text"
+    tools:text="(24,5° - 24,9°)"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

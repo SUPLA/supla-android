@@ -17,6 +17,8 @@ package org.supla.android.data.model.chart
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import kotlinx.serialization.Serializable
+import org.supla.android.core.infrastructure.serialization.DateSerializer
 import org.supla.android.extensions.dayEnd
 import org.supla.android.extensions.dayStart
 import org.supla.android.extensions.monthEnd
@@ -33,15 +35,20 @@ import org.supla.android.extensions.yearEnd
 import org.supla.android.extensions.yearStart
 import java.util.Date
 import kotlin.math.abs
+import kotlin.math.roundToInt
 
 private const val DAY_IN_MILLIS = 24 * 60 * 60 * 1000
+
+@Serializable
 data class DateRange(
+  @Serializable(with = DateSerializer::class)
   val start: Date,
+  @Serializable(with = DateSerializer::class)
   val end: Date
 ) {
 
   val daysCount: Int
-    get() = abs(end.time - start.time).div(DAY_IN_MILLIS).toInt()
+    get() = abs(end.time.minus(start.time).toFloat()).div(DAY_IN_MILLIS).roundToInt()
 
   val minAggregation: ChartDataAggregation
     get() = when {
@@ -50,12 +57,15 @@ data class DateRange(
       else -> ChartDataAggregation.DAYS
     }
 
-  val maxAggregation: ChartDataAggregation
-    get() = when {
-      daysCount <= 1 -> ChartDataAggregation.HOURS
-      daysCount <= 31 -> ChartDataAggregation.DAYS
-      daysCount <= 420 -> ChartDataAggregation.MONTHS
-      else -> ChartDataAggregation.YEARS
+  fun maxAggregation(selectedRange: ChartRange): ChartDataAggregation =
+    when (selectedRange) {
+      ChartRange.CUSTOM, ChartRange.ALL_HISTORY -> ChartDataAggregation.YEARS
+      else -> when {
+        daysCount <= 1 -> ChartDataAggregation.HOURS
+        daysCount <= 31 -> ChartDataAggregation.DAYS
+        daysCount <= 420 -> ChartDataAggregation.MONTHS
+        else -> ChartDataAggregation.YEARS
+      }
     }
 
   fun shift(range: ChartRange, forward: Boolean): DateRange =

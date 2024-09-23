@@ -48,15 +48,16 @@ abstract class BaseListAdapter<T, D>(
     return when (items[pos]) {
       is ListItem.ChannelItem -> ViewType.CHANNEL_ITEM
       is ListItem.HvacThermostatItem -> ViewType.HVAC_ITEM
-      is ListItem.MeasurementItem -> ViewType.MEASUREMENT_ITEM
+      is ListItem.IconValueItem -> ViewType.ICON_VALUE_ITEM
       is ListItem.SceneItem -> ViewType.SCENE_ITEM
       is ListItem.LocationItem -> ViewType.LOCATION_ITEM
       is ListItem.GeneralPurposeMeterItem -> ViewType.GENERAL_PURPOSE_METER_ITEM
       is ListItem.GeneralPurposeMeasurementItem -> ViewType.GENERAL_PURPOSE_MEASUREMENT_ITEM
-      is ListItem.IconWithButtonsItem -> ViewType.ICON_WITH_BUTTONS_ITEM
+      is ListItem.ShadingSystemItem -> ViewType.SHADING_SYSTEM_ITEM
+      is ListItem.SwitchItem -> ViewType.SWITCH_ITEM
 
       else -> throw IllegalStateException("Could find evaluate view item type")
-    }.identifier
+    }.ordinal
   }
 
   override fun onCreateViewHolder(
@@ -65,7 +66,7 @@ abstract class BaseListAdapter<T, D>(
   ): RecyclerView.ViewHolder {
     val inflater = LayoutInflater.from(parent.context)
     return when (viewType) {
-      ViewType.LOCATION_ITEM.identifier -> LocationListItemViewHolder(LiLocationItemBinding.inflate(inflater, parent, false))
+      ViewType.LOCATION_ITEM.ordinal -> LocationListItemViewHolder(LiLocationItemBinding.inflate(inflater, parent, false))
       else -> throw IllegalArgumentException("unsupported view type $viewType")
     }
   }
@@ -146,16 +147,17 @@ abstract class BaseListAdapter<T, D>(
   class LocationListItemViewHolder(val binding: LiLocationItemBinding) :
     RecyclerView.ViewHolder(binding.root)
 
-  enum class ViewType(val identifier: Int) {
-    SCENE_ITEM(1),
-    CHANNEL_ITEM(2),
-    LOCATION_ITEM(3),
+  enum class ViewType {
+    SCENE_ITEM,
+    CHANNEL_ITEM,
+    LOCATION_ITEM,
 
-    MEASUREMENT_ITEM(4),
-    HVAC_ITEM(5),
-    GENERAL_PURPOSE_METER_ITEM(6),
-    GENERAL_PURPOSE_MEASUREMENT_ITEM(7),
-    ICON_WITH_BUTTONS_ITEM(8)
+    ICON_VALUE_ITEM,
+    HVAC_ITEM,
+    GENERAL_PURPOSE_METER_ITEM,
+    GENERAL_PURPOSE_MEASUREMENT_ITEM,
+    SHADING_SYSTEM_ITEM,
+    SWITCH_ITEM
   }
 
   private fun View.isLocationOnBottom(): Boolean {

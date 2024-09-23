@@ -24,7 +24,8 @@ enum class ChartEntryType(private val axisDependency: AxisDependency) {
   TEMPERATURE(AxisDependency.LEFT),
   HUMIDITY(AxisDependency.RIGHT),
   GENERAL_PURPOSE_MEASUREMENT(AxisDependency.LEFT),
-  GENERAL_PURPOSE_METER(AxisDependency.LEFT);
+  GENERAL_PURPOSE_METER(AxisDependency.LEFT),
+  ELECTRICITY(AxisDependency.LEFT);
 
   fun leftAxis() = axisDependency == AxisDependency.LEFT
   fun rightAxis() = axisDependency == AxisDependency.RIGHT
