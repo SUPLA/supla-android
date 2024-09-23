@@ -707,6 +707,7 @@
   <string name="details_list">Lista</string>
   <string name="thermostat_detail_main_thermostat">Termostat główny</string>
   <string name="thermostat_detail_other_thermostats">Termostaty zależne</string>
+  <string name="thermostat_battery_cover_open">Otwarta pokrywa baterii</string>
 
   <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
     <item quantity="one">włączone</item>

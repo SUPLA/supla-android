@@ -50,6 +50,7 @@ data class ThermostatValue private constructor(
 
   fun getIssueIconType() = when {
     online && flags.contains(SuplaThermostatFlag.THERMOMETER_ERROR) -> IssueIconType.ERROR
+    online && flags.contains(SuplaThermostatFlag.BATTERY_COVER_OPEN) -> IssueIconType.ERROR
     online && flags.contains(SuplaThermostatFlag.CLOCK_ERROR) -> IssueIconType.WARNING
     else -> null
   }
@@ -70,6 +71,8 @@ data class ThermostatValue private constructor(
   fun getIssueMessage(): Int? {
     return if (flags.contains(SuplaThermostatFlag.THERMOMETER_ERROR)) {
       R.string.thermostat_thermometer_error
+    } else if (flags.contains(SuplaThermostatFlag.BATTERY_COVER_OPEN)) {
+      R.string.thermostat_battery_cover_open
     } else if (flags.contains(SuplaThermostatFlag.CLOCK_ERROR)) {
       R.string.thermostat_clock_error
     } else {
