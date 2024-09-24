@@ -17,8 +17,6 @@ package org.supla.android.images
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.content.Context
-import android.graphics.Bitmap
 import org.supla.android.data.source.local.UserIconDao
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -36,6 +34,7 @@ class ImageCacheProxy @Inject constructor() {
   fun bitmapExists(imageId: ImageId): Boolean =
     ImageCache.bitmapExists(imageId)
 
-  fun getBitmap(context: Context, imageId: ImageId): Bitmap? =
-    ImageCache.getBitmap(context, imageId)
+  fun size(): Int = ImageCache.size()
+
+  fun sum(): Int = ImageCache.sum()
 }
