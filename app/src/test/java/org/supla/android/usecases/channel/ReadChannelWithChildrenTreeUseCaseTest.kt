@@ -127,6 +127,30 @@ class ReadChannelWithChildrenTreeUseCaseTest {
     )
   }
 
+  @Test
+  fun `should not crash when requested channel not exists`() {
+    // given
+    val remoteId = 4
+    val relations = mapOf(
+      1 to listOf(channelRelationEntity(2, 1)),
+      2 to listOf(channelRelationEntity(3, 2)),
+    )
+    val channels = listOf(
+      mockChannelDataEntity(1),
+      mockChannelDataEntity(2),
+      mockChannelDataEntity(3),
+    )
+    every { channelRelationRepository.findChildrenToParentsRelations() } returns Observable.just(relations)
+    every { channelRepository.findObservableList() } returns Observable.just(channels)
+
+    // when
+    val result = useCase.invoke(remoteId).test()
+
+    // then
+    result.assertNoValues()
+    result.assertComplete()
+  }
+
   private fun channelRelationEntity(
     channelId: Int,
     parentId: Int,

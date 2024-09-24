@@ -159,7 +159,7 @@ class ThermostatGeneralViewModel @Inject constructor(
   }
 
   fun triggerDataLoad(remoteId: Int) {
-    readChannelWithChildrenTreeUseCase(remoteId).firstOrError()
+    readChannelWithChildrenTreeUseCase(remoteId).firstElement()
       .attachSilent()
       .subscribeBy(
         onSuccess = { channelSubject.onNext(it) },
