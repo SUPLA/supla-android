@@ -17,7 +17,7 @@ syays GNU General Public License for more details.
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Single
 import org.supla.android.Trace
 import org.supla.android.data.source.RoomUserIconRepository
 import org.supla.android.data.source.local.entity.UserIconEntity
@@ -27,23 +27,33 @@ import org.supla.android.images.ImageId
 import javax.inject.Inject
 import javax.inject.Singleton
 
+data class IconsCacheStatistics(
+  val iconsCount: Int,
+  val changed: Boolean
+)
+
 @Singleton
 class LoadUserIconsIntoCacheUseCase @Inject constructor(
   private val userIconRepository: RoomUserIconRepository,
   private val imageCacheProxy: ImageCacheProxy
 ) {
 
-  operator fun invoke(): Completable =
+  operator fun invoke(): Single<IconsCacheStatistics> =
     userIconRepository.loadAllIcons()
-      .firstElement()
+      .firstOrError()
       .map { icons ->
         Trace.d(TAG, "Icons loading started")
+        val initialSum = imageCacheProxy.sum()
         icons.forEach { icon ->
-          ImageType.values().forEach { addImage(icon, it) }
+          ImageType.entries.forEach { addImage(icon, it) }
         }
         Trace.d(TAG, "Icons loading finished")
+
+        IconsCacheStatistics(
+          iconsCount = imageCacheProxy.size(),
+          changed = initialSum != imageCacheProxy.sum()
+        )
       }
-      .ignoreElement()
 
   private fun addImage(icon: UserIconEntity, type: ImageType) {
     val image = type.provider(icon)

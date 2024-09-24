@@ -93,7 +93,7 @@ class ActivateProfileUseCaseTest {
     whenever(profileRepository.findActiveProfile()).thenReturn(Single.just(activeProfile))
     whenever(profileRepository.activateProfile(newActiveProfileId)).thenReturn(Completable.complete())
 
-    whenever(loadUserIconsIntoCacheUseCase.invoke()).thenReturn(Completable.complete())
+    whenever(loadUserIconsIntoCacheUseCase.invoke()).thenReturn(Single.just(mockk()))
     whenever(reconnectUseCase.invoke()).thenReturn(Completable.complete())
 
     // when
@@ -121,7 +121,7 @@ class ActivateProfileUseCaseTest {
     whenever(profileRepository.findActiveProfile()).thenReturn(Single.just(activeProfile))
     whenever(profileRepository.activateProfile(activeProfileId)).thenReturn(Completable.complete())
 
-    whenever(loadUserIconsIntoCacheUseCase.invoke()).thenReturn(Completable.complete())
+    whenever(loadUserIconsIntoCacheUseCase.invoke()).thenReturn(Single.just(mockk()))
     whenever(reconnectUseCase.invoke()).thenReturn(Completable.complete())
 
     // when
@@ -145,7 +145,7 @@ class ActivateProfileUseCaseTest {
     whenever(profileRepository.findActiveProfile()).thenReturn(Single.error(EmptyResultSetException("")))
     whenever(profileRepository.activateProfile(activeProfileId)).thenReturn(Completable.complete())
 
-    whenever(loadUserIconsIntoCacheUseCase.invoke()).thenReturn(Completable.complete())
+    whenever(loadUserIconsIntoCacheUseCase.invoke()).thenReturn(Single.just(mockk()))
     whenever(reconnectUseCase.invoke()).thenReturn(Completable.complete())
 
     // when
