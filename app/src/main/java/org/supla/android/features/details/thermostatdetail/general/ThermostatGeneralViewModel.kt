@@ -349,7 +349,7 @@ class ThermostatGeneralViewModel @Inject constructor(
     val (configMaxTemperature) = guardLet(data.config.temperatures.roomMax?.fromSuplaTemperature()) { return }
 
     val isOff = value.online.not() || thermostatValue.mode == SuplaHvacMode.OFF || thermostatValue.mode == SuplaHvacMode.NOT_SET
-    val currentPower = if (isOff) null else thermostatValue.state.power
+    val currentPower = if (value.online) thermostatValue.state.power else null
 
     updateState {
       if (it.changing) {
