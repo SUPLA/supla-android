@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
   android:id="@+id/rlRgbRootLayout"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
@@ -61,6 +61,23 @@
       </LinearLayout>
 
     </LinearLayout>
+
+    <EditText
+      android:id="@+id/percentageValue"
+      android:layout_width="70dp"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/llHeader"
+      android:layout_marginTop="@dimen/distance_default"
+      android:layout_alignParentEnd="true"
+      android:layout_marginEnd="@dimen/distance_default"
+      android:background="@drawable/background_widget_configuration_field"
+      android:enabled="false"
+      android:textAppearance="@style/AppTheme.TextAppearance.Body1"
+      android:textColor="@color/on_background"
+      android:textAlignment="center"
+      android:paddingHorizontal="@dimen/distance_tiny"
+      android:paddingVertical="@dimen/distance_tiny"
+      tools:text="48%"/>
 
     <org.supla.android.SuplaColorBrightnessPicker
       android:id="@+id/cbPicker"

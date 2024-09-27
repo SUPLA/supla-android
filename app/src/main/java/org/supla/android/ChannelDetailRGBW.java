@@ -32,11 +32,13 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.core.content.res.ResourcesCompat;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 import org.supla.android.db.Channel;
@@ -63,6 +65,7 @@ public class ChannelDetailRGBW extends DetailLayout
   private ViewGroup tabs;
   private ViewGroup pickerTypeTabs;
   private ViewGroup llExtraButtons;
+  private EditText percentageValue;
   private AppCompatImageButton btnSettings;
   private AppCompatImageButton btnInfo;
   private RelativeLayout rlMain;
@@ -151,6 +154,8 @@ public class ChannelDetailRGBW extends DetailLayout
     tabWheel.setTypeface(type);
     tabSlider.setTypeface(type);
 
+    percentageValue = findViewById(R.id.percentageValue);
+
     remoteUpdateTime = 0;
     changeFinishedTime = 0;
     delayTimer1 = null;
@@ -178,8 +183,7 @@ public class ChannelDetailRGBW extends DetailLayout
     zamel = false;
     comelit = false;
 
-    if (getChannelBase() instanceof Channel) {
-      Channel c = (Channel) getChannelBase();
+    if (getChannelBase() instanceof Channel c) {
       if (c.getManufacturerID() == SuplaConst.SUPLA_MFR_DOYLETRATT && c.getProductID() == 1) {
         varilight = true;
         if (dimmerCalibrationTool == null
@@ -246,6 +250,7 @@ public class ChannelDetailRGBW extends DetailLayout
     super.setData(channel);
     llExtraButtons.setVisibility(GONE);
     pickerTypeTabs.setVisibility(GONE);
+    percentageValue.setVisibility(GONE);
 
     varilight = false;
     zamel = false;
@@ -321,6 +326,7 @@ public class ChannelDetailRGBW extends DetailLayout
       Channel channel = (Channel) getChannelFromDatabase();
 
       status.setVisibility(View.GONE);
+      percentageValue.setVisibility(VISIBLE);
 
       if (cbPicker.isColorWheelVisible()
           && (int) cbPicker.getBrightnessValue() != (int) channel.getColorBrightness()) {
@@ -331,7 +337,16 @@ public class ChannelDetailRGBW extends DetailLayout
         cbPicker.setBrightnessValue(channel.getBrightness());
       }
 
-      if (cbPicker.isColorWheelVisible()) cbPicker.setColor(channel.getColor());
+      if (cbPicker.isColorWheelVisible()) {
+        cbPicker.setColor(channel.getColor());
+        percentageValue.setText(
+            String.format(
+                Locale.getDefault(), "%d%%", Byte.toUnsignedInt(channel.getColorBrightness())));
+      } else {
+        percentageValue.setText(
+            String.format(
+                Locale.getDefault(), "%d%%", Byte.toUnsignedInt(channel.getBrightness())));
+      }
     }
 
     for (int a = 1; a < 6; a++) {
@@ -387,8 +402,11 @@ public class ChannelDetailRGBW extends DetailLayout
 
     setPowerBtnOn(brightness > 0 || isAnyOn());
 
-    if (cbPicker.isColorWheelVisible()) lastColorBrightness = brightness;
-    else lastBrightness = brightness;
+    if (cbPicker.isColorWheelVisible()) {
+      lastColorBrightness = brightness;
+    } else {
+      lastBrightness = brightness;
+    }
   }
 
   @Override
@@ -418,7 +436,9 @@ public class ChannelDetailRGBW extends DetailLayout
 
     SuplaClient client = SuplaApp.getApp().getSuplaClient();
 
-    if (client == null || (!isDetailVisible() && !force)) return;
+    if (client == null || (!isDetailVisible() && !force)) {
+      return;
+    }
 
     if ((turnOnOff || System.currentTimeMillis() - remoteUpdateTime >= MIN_REMOTE_UPDATE_PERIOD)
         && client.setRGBW(
@@ -429,8 +449,9 @@ public class ChannelDetailRGBW extends DetailLayout
 
       long delayTime = 1;
 
-      if (System.currentTimeMillis() - remoteUpdateTime < MIN_REMOTE_UPDATE_PERIOD)
+      if (System.currentTimeMillis() - remoteUpdateTime < MIN_REMOTE_UPDATE_PERIOD) {
         delayTime = MIN_REMOTE_UPDATE_PERIOD - (System.currentTimeMillis() - remoteUpdateTime) + 1;
+      }
 
       delayTimer1 = new Timer();
 
@@ -542,6 +563,7 @@ public class ChannelDetailRGBW extends DetailLayout
   public void onBrightnessChanged(SuplaColorBrightnessPicker scbPicker, double brightness) {
     pickerToUI();
     sendNewValues();
+    percentageValue.setText(String.format(Locale.getDefault(), "%d%%", Math.round(brightness)));
   }
 
   @Override
@@ -558,7 +580,9 @@ public class ChannelDetailRGBW extends DetailLayout
       delayTimer2 = null;
     }
 
-    if (!isDetailVisible() || cbPicker.isMoving()) return;
+    if (!isDetailVisible() || cbPicker.isMoving()) {
+      return;
+    }
 
     if (delayTime == 0 && System.currentTimeMillis() - changeFinishedTime >= MIN_UPDATE_DELAY) {
 
@@ -569,8 +593,9 @@ public class ChannelDetailRGBW extends DetailLayout
       if (delayTime == 0) {
         delayTime = 1;
 
-        if (System.currentTimeMillis() - changeFinishedTime < MIN_UPDATE_DELAY)
+        if (System.currentTimeMillis() - changeFinishedTime < MIN_UPDATE_DELAY) {
           delayTime = MIN_UPDATE_DELAY - (System.currentTimeMillis() - changeFinishedTime) + 1;
+        }
       }
 
       delayTimer2 = new Timer();

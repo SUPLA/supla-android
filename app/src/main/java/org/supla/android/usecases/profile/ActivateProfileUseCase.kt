@@ -63,5 +63,5 @@ class ActivateProfileUseCase @Inject constructor(
         }
       )
       .andThen(reconnectUseCase())
-      .andThen(loadUserIconsIntoCacheUseCase())
+      .andThen(loadUserIconsIntoCacheUseCase().ignoreElement())
 }

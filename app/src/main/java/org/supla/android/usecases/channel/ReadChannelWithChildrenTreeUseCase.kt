@@ -41,14 +41,20 @@ class ReadChannelWithChildrenTreeUseCase @Inject constructor(
       channelRelationRepository.findChildrenToParentsRelations(),
       channelRepository.findObservableList()
     ) { relationMap, entities -> Pair(relationMap, entities) }
-      .map { (relationMap, entities) ->
-        val channel = entities.first { it.remoteId == remoteId }
+      .flatMap { (relationMap, entities) ->
+        val channel = entities.firstOrNull { it.remoteId == remoteId }
+        if (channel == null) {
+          Trace.w(TAG, "Could not find channel where channels tree was requested!")
+          return@flatMap Observable.empty()
+        }
         val channelsMap = mutableMapOf<Int, ChannelDataEntity>().also { map -> entities.forEach { map[it.remoteId] = it } }
         val childrenList = LinkedList<Int>()
 
-        ChannelWithChildren(
-          channel = channel,
-          children = findChildren(channel.remoteId, relationMap, channelsMap, childrenList)
+        Observable.just(
+          ChannelWithChildren(
+            channel = channel,
+            children = findChildren(channel.remoteId, relationMap, channelsMap, childrenList)
+          )
         )
       }
       .distinctUntilChanged()

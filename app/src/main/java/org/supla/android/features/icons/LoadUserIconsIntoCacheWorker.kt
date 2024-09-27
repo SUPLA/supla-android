@@ -10,7 +10,7 @@ package org.supla.android.features.icons
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-syays GNU General Public License for more details.
+ GNU General Public License for more details.
 
  You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -41,8 +41,10 @@ class LoadUserIconsIntoCacheWorker @AssistedInject constructor(
 ) : Worker(appContext, workerParameters) {
   override fun doWork(): Result {
     return try {
-      loadUserIconsIntoCacheUseCase().blockingSubscribe()
-      widgetManager.updateAllWidgets()
+      val statistics = loadUserIconsIntoCacheUseCase().blockingGet()
+      if (statistics.iconsCount > 0 && statistics.changed) {
+        widgetManager.updateAllWidgets()
+      }
       Result.success()
     } catch (ex: Exception) {
       Trace.e(TAG, "Load user icons into cache worker failed!")

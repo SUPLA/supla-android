@@ -123,6 +123,10 @@ public class ImageCache {
     return map.size();
   }
 
+  public static synchronized int sum() {
+    return map.keySet().hashCode();
+  }
+
   public static synchronized boolean addBitmap(ImageId imgId, Bitmap bmp) {
     if (!bitmapExists(imgId)) {
       return map.put(imgId, bmp) != null;
