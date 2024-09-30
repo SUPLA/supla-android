@@ -434,10 +434,10 @@
   <string name="status_accessid_inactive">A hozzáférési azonosító inaktív </string>
   <string name="hour_string_format">HH:mm:ss</string>
   <string name="roller_shutter_calibration">Kalibrálás</string>
-  <string name="details_em_total_forward_active_energy">Fogyasztott aktív energia</string>
+  <string name="details_em_forward_active_energy">Fogyasztott aktív energia</string>
   <string name="details_em_reverse_active_energy">A visszatérített aktív energia</string>
-  <string name="details_em_total_forward_reactive_energy">Letöltött passzív energia</string>
-  <string name="details_em_total_reverse_reactive_energy">A visszatérített passzív energia</string>
+  <string name="details_em_forward_reactive_energy">Letöltött passzív energia</string>
+  <string name="details_em_reverse_reactive_energy">A visszatérített passzív energia</string>
   <string name="details_em_frequency">Frekvencia</string>
   <string name="details_em_voltage">Feszültség</string>
   <string name="details_em_current">Áramerősség</string>
@@ -449,10 +449,6 @@
   <string name="details_em_phase1">1. sz. Fázis</string>
   <string name="details_em_phase2">2. sz. Fázis</string>
   <string name="details_em_phase3">3. sz. Fázis</string>
-  <string name="details_em_reversed_active_energy">A visszatérített aktív energia</string>
-  <string name="details_em_forwarded_active_energy">Fogyasztott aktív energia</string>
-  <string name="details_em_reversed_reactive_energy">A visszatérített passzív energia</string>
-  <string name="details_em_forwarded_reactive_energy">Letöltött passzív energia</string>
   <string name="details_em_balance_arithmetic">Számtani egyensúly</string>
   <string name="details_em_balance_vector">Vektoregyensúly</string>
 </resources>

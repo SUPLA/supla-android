@@ -688,10 +688,10 @@
   <string name="about_build_time" translatable="false">Version of the day: </string>
   <string name="device_catalog_error" translatable="false">Could not load device catalog. Please try again later.</string>
   <string name="settings_show_bottom_menu" translatable="false">Show bottom menu</string>
-  <string name="details_em_total_forward_active_energy">Forward active energy</string>
+  <string name="details_em_forward_active_energy">Forward active energy</string>
   <string name="details_em_reverse_active_energy">Reverse active energy</string>
-  <string name="details_em_total_forward_reactive_energy">Forward reactive energy</string>
-  <string name="details_em_total_reverse_reactive_energy">Reverse reactive energy</string>
+  <string name="details_em_forward_reactive_energy">Forward reactive energy</string>
+  <string name="details_em_reverse_reactive_energy">Reverse reactive energy</string>
   <string name="details_em_frequency">Frequency</string>
   <string name="details_em_voltage">Voltage</string>
   <string name="details_em_current">Current</string>
@@ -703,10 +703,6 @@
   <string name="details_em_phase1">Phase 1</string>
   <string name="details_em_phase2">Phase 2</string>
   <string name="details_em_phase3">Phase 3</string>
-  <string name="details_em_reversed_active_energy">Reverse active energy</string>
-  <string name="details_em_forwarded_active_energy">Forward active energy</string>
-  <string name="details_em_reversed_reactive_energy">Reverse reactive energy</string>
-  <string name="details_em_forwarded_reactive_energy">Forward reactive energy</string>
   <string name="details_em_balance_arithmetic">Arythmetic balance</string>
   <string name="details_em_balance_vector">Vector balance</string>
   <string name="details_em_chart_data_type" translatable="false">Data</string>

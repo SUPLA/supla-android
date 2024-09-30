@@ -434,10 +434,10 @@
   <string name="status_accessid_inactive">Prístupový identifikátor nie je aktívny</string>
   <string name="hour_string_format">HH:mm:ss</string>
   <string name="roller_shutter_calibration">Kalibrácia</string>
-  <string name="details_em_total_forward_active_energy">Činná energia prijatá</string>
+  <string name="details_em_forward_active_energy">Činná energia prijatá</string>
   <string name="details_em_reverse_active_energy">Činná energia odovzdaná</string>
-  <string name="details_em_total_forward_reactive_energy">Jalová energia prijatá</string>
-  <string name="details_em_total_reverse_reactive_energy">Jalová energia odovzdaná</string>
+  <string name="details_em_forward_reactive_energy">Jalová energia prijatá</string>
+  <string name="details_em_reverse_reactive_energy">Jalová energia odovzdaná</string>
   <string name="details_em_frequency">Frekvencia</string>
   <string name="details_em_voltage">Napätie</string>
   <string name="details_em_current">Intenzita</string>
@@ -449,10 +449,6 @@
   <string name="details_em_phase1">Fáza 1</string>
   <string name="details_em_phase2">Fáza 2</string>
   <string name="details_em_phase3">Fáza 3</string>
-  <string name="details_em_reversed_active_energy">Činná energia odovzdaná</string>
-  <string name="details_em_forwarded_active_energy">Činná energia prijatá</string>
-  <string name="details_em_reversed_reactive_energy">Jalová energia odovzdaná</string>
-  <string name="details_em_forwarded_reactive_energy">Jalová energia prijatá</string>
   <string name="details_em_balance_arithmetic">Aritmetická bilancia</string>
   <string name="details_em_balance_vector">Vektorová bilancia</string>
 </resources>

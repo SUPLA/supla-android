@@ -431,10 +431,10 @@
   <string name="status_accessid_inactive">Ανενεργό αναγνωριστικό πρόσβασης</string>
   <string name="hour_string_format">HH:mm:ss</string>
   <string name="roller_shutter_calibration">Βαθμονόμηση</string>
-  <string name="details_em_total_forward_active_energy">Ληφθείσα ενεργή ενέργεια</string>
+  <string name="details_em_forward_active_energy">Ληφθείσα ενεργή ενέργεια</string>
   <string name="details_em_reverse_active_energy">Επιστραφείσα ενεργή ενέργεια</string>
-  <string name="details_em_total_forward_reactive_energy">Ληφθείσα παθητική ενέργεια</string>
-  <string name="details_em_total_reverse_reactive_energy">Επιστραφείσα παθητική ενέργεια</string>
+  <string name="details_em_forward_reactive_energy">Ληφθείσα παθητική ενέργεια</string>
+  <string name="details_em_reverse_reactive_energy">Επιστραφείσα παθητική ενέργεια</string>
   <string name="details_em_frequency">Συχνότητα</string>
   <string name="details_em_voltage">Τάση</string>
   <string name="details_em_current">Ένταση</string>
@@ -446,10 +446,6 @@
   <string name="details_em_phase1">Φάση 1</string>
   <string name="details_em_phase2">Φάση 2</string>
   <string name="details_em_phase3">Φάση 3</string>
-  <string name="details_em_reversed_active_energy">Επιστραφείσα ενεργή ενέργεια</string>
-  <string name="details_em_forwarded_active_energy">Ληφθείσα ενεργή ενέργεια</string>
-  <string name="details_em_reversed_reactive_energy">Επιστραφείσα παθητική ενέργεια</string>
-  <string name="details_em_forwarded_reactive_energy">Ληφθείσα παθητική ενέργεια</string>
   <string name="details_em_balance_arithmetic">Αριθμητικός ισολογισμός</string>
   <string name="details_em_balance_vector">Διανυσματικός ισολογισμός</string>
 </resources>

@@ -434,10 +434,10 @@
   <string name="status_accessid_inactive">Toegangs ID inactief</string>
   <string name="hour_string_format">HH:mm:ss</string>
   <string name="roller_shutter_calibration">Kalibratie</string>
-  <string name="details_em_total_forward_active_energy">Opgenomen actieve energie</string>
+  <string name="details_em_forward_active_energy">Opgenomen actieve energie</string>
   <string name="details_em_reverse_active_energy">Actieve energie geretourneerd</string>
-  <string name="details_em_total_forward_reactive_energy">Reactieve energie verzameld</string>
-  <string name="details_em_total_reverse_reactive_energy">Reactieve energie geretourneerd</string>
+  <string name="details_em_forward_reactive_energy">Reactieve energie verzameld</string>
+  <string name="details_em_reverse_reactive_energy">Reactieve energie geretourneerd</string>
   <string name="details_em_frequency">Frequentie</string>
   <string name="details_em_voltage">Spanning</string>
   <string name="details_em_current">Intensiteit</string>
@@ -449,10 +449,6 @@
   <string name="details_em_phase1">Fase 1</string>
   <string name="details_em_phase2">Fase 2</string>
   <string name="details_em_phase3">Fase 3</string>
-  <string name="details_em_reversed_active_energy">Actieve energie geretourneerd</string>
-  <string name="details_em_forwarded_active_energy">Opgenomen actieve energie</string>
-  <string name="details_em_reversed_reactive_energy">Reactieve energie geretourneerd</string>
-  <string name="details_em_forwarded_reactive_energy">Reactieve energie verzameld</string>
   <string name="details_em_balance_arithmetic">Rekenkundig saldo</string>
   <string name="details_em_balance_vector">Vector saldo</string>
 </resources>
