@@ -92,6 +92,7 @@ public class ImpulseCounterMeasurementItem extends IncrementalMeasurementItem {
     values.put(ImpulseCounterLogEntity.COLUMN_COUNTER, getCounter());
     values.put(ImpulseCounterLogEntity.COLUMN_CALCULATED_VALUE, getCalculatedValue());
     values.put(ImpulseCounterLogEntity.COLUMN_MANUALLY_COMPLEMENTED, isComplement() ? 1 : 0);
+    values.put(ImpulseCounterLogEntity.COLUMN_COUNTER_RESET, 0);
     values.put(ImpulseCounterLogEntity.COLUMN_PROFILE_ID, getProfileId());
     return values;
   }

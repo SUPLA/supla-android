@@ -433,10 +433,10 @@
   <string name="delete_url">https://{SERVER_ADDRESS}/db99845855b2ecbfecca9a095062b96c3e27703f?lang=uk</string>
   <string name="hour_string_format">HH:mm:ss</string>
   <string name="roller_shutter_calibration">Калібрування</string>
-  <string name="details_em_total_forward_active_energy">Спожита активна енергія</string>
+  <string name="details_em_forward_active_energy">Спожита активна енергія</string>
   <string name="details_em_reverse_active_energy">Повернуто активну енергію</string>
-  <string name="details_em_total_forward_reactive_energy">Спожита реактивна енергія</string>
-  <string name="details_em_total_reverse_reactive_energy">Повернута реактивна енергія</string>
+  <string name="details_em_forward_reactive_energy">Спожита реактивна енергія</string>
+  <string name="details_em_reverse_reactive_energy">Повернута реактивна енергія</string>
   <string name="details_em_frequency">Частота</string>
   <string name="details_em_voltage">Напруга</string>
   <string name="details_em_current">Інтенсивність</string>
@@ -448,10 +448,6 @@
   <string name="details_em_phase1">Фаза 1</string>
   <string name="details_em_phase2">Фаза 2</string>
   <string name="details_em_phase3">Фаза 3</string>
-  <string name="details_em_reversed_active_energy">Повернуто активну енергію</string>
-  <string name="details_em_forwarded_active_energy">Спожита активна енергія</string>
-  <string name="details_em_reversed_reactive_energy">Повернута реактивна енергія</string>
-  <string name="details_em_forwarded_reactive_energy">Спожита реактивна енергія</string>
   <string name="details_em_balance_arithmetic">Арифметичний баланс</string>
   <string name="details_em_balance_vector">Векторний баланс</string>
 </resources>

@@ -115,7 +115,7 @@ fun EnergySummaryBox(
               .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(bottomEnd = radius))
           )
         } else if (forwardEnergy != null) {
-          val labelPrefix = stringResource(id = R.string.details_em_total_forward_active_energy)
+          val labelPrefix = stringResource(id = R.string.details_em_forward_active_energy)
           val separator = if (forwardEnergy.price == null) " " else "\n"
           EnergyItemSingleBox(
             iconRes = R.drawable.ic_forward_energy,
@@ -126,7 +126,7 @@ fun EnergySummaryBox(
               .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(radius))
           )
         } else if (reversedEnergy != null) {
-          val labelPrefix = stringResource(id = R.string.details_em_total_reverse_reactive_energy)
+          val labelPrefix = stringResource(id = R.string.details_em_reverse_reactive_energy)
           val separator = if (reversedEnergy.price == null) " " else "\n"
           EnergyItemSingleBox(
             iconRes = R.drawable.ic_reversed_energy,

@@ -414,10 +414,10 @@
   <string name="status_accessid_inactive">Identifikátor přístupu není aktivní</string>
   <string name="hour_string_format">HH:mm:ss</string>
   <string name="roller_shutter_calibration">Kalibrace</string>
-  <string name="details_em_total_forward_active_energy">Pobíraná činná energie</string>
+  <string name="details_em_forward_active_energy">Pobíraná činná energie</string>
   <string name="details_em_reverse_active_energy">Zpětná činná energie</string>
-  <string name="details_em_total_forward_reactive_energy">Pobíraná jalová energie</string>
-  <string name="details_em_total_reverse_reactive_energy">Zpětná jalová energie</string>
+  <string name="details_em_forward_reactive_energy">Pobíraná jalová energie</string>
+  <string name="details_em_reverse_reactive_energy">Zpětná jalová energie</string>
   <string name="details_em_frequency">Frekvence</string>
   <string name="details_em_voltage">Napětí</string>
   <string name="details_em_current">Intenzita</string>
@@ -429,10 +429,6 @@
   <string name="details_em_phase1">Fáze 1</string>
   <string name="details_em_phase2">Fáze 2</string>
   <string name="details_em_phase3">Fáze 3</string>
-  <string name="details_em_reversed_active_energy">Zpětná činná energie</string>
-  <string name="details_em_forwarded_active_energy">Pobíraná činná energie</string>
-  <string name="details_em_reversed_reactive_energy">Zpětná jalová energie</string>
-  <string name="details_em_forwarded_reactive_energy">Pobíraná jalová energie</string>
   <string name="details_em_balance_arithmetic">Aritmetická rovnováha</string>
   <string name="details_em_balance_vector">Vektorová rovnováha</string>
 </resources>

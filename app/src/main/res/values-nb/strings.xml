@@ -434,10 +434,10 @@
   <string name="status_accessid_inactive">Tilgangs-ID inaktiv</string>
   <string name="hour_string_format">HH:mm:ss</string>
   <string name="roller_shutter_calibration">Kalibrering</string>
-  <string name="details_em_total_forward_active_energy">Aktiv strøm mottatt</string>
+  <string name="details_em_forward_active_energy">Aktiv strøm mottatt</string>
   <string name="details_em_reverse_active_energy">Aktiv strøm returnert</string>
-  <string name="details_em_total_forward_reactive_energy">Passiv strøm mottatt</string>
-  <string name="details_em_total_reverse_reactive_energy">Passiv strøm returnert</string>
+  <string name="details_em_forward_reactive_energy">Passiv strøm mottatt</string>
+  <string name="details_em_reverse_reactive_energy">Passiv strøm returnert</string>
   <string name="details_em_frequency">Frekvens</string>
   <string name="details_em_voltage">Spenning</string>
   <string name="details_em_current">Intensitet</string>
@@ -449,10 +449,6 @@
   <string name="details_em_phase1">Fase 1</string>
   <string name="details_em_phase2">Fase 2</string>
   <string name="details_em_phase3">Fase 3</string>
-  <string name="details_em_reversed_active_energy">Aktiv strøm returnert</string>
-  <string name="details_em_forwarded_active_energy">Aktiv strøm mottatt</string>
-  <string name="details_em_reversed_reactive_energy">Passiv strøm returnert</string>
-  <string name="details_em_forwarded_reactive_energy">Passiv strøm mottatt</string>
   <string name="details_em_balance_arithmetic">Aritmetisk balanse</string>
   <string name="details_em_balance_vector">Vektorbalanse</string>
 </resources>
