@@ -22,10 +22,10 @@ import org.supla.android.R
 import org.supla.android.ui.views.SpinnerItem
 
 enum class ElectricityMeterChartType(@StringRes override val labelRes: Int) : SpinnerItem {
-  FORWARDED_ACTIVE_ENERGY(R.string.details_em_forwarded_active_energy),
-  REVERSED_ACTIVE_ENERGY(R.string.details_em_reversed_active_energy),
-  FORWARDED_REACTIVE_ENERGY(R.string.details_em_forwarded_reactive_energy),
-  REVERSED_REACTIVE_ENERGY(R.string.details_em_reversed_reactive_energy),
+  FORWARDED_ACTIVE_ENERGY(R.string.details_em_forward_active_energy),
+  REVERSED_ACTIVE_ENERGY(R.string.details_em_reverse_active_energy),
+  FORWARDED_REACTIVE_ENERGY(R.string.details_em_forward_reactive_energy),
+  REVERSED_REACTIVE_ENERGY(R.string.details_em_reverse_reactive_energy),
   BALANCE_ARITHMETIC(R.string.details_em_balance_arithmetic),
   BALANCE_VECTOR(R.string.details_em_balance_vector),
   BALANCE_HOURLY(R.string.details_em_balance_hourly),

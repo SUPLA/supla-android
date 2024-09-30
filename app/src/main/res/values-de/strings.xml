@@ -592,10 +592,10 @@
   <string name="about_build_time">Version des Tages:</string>
   <string name="device_catalog_error">Gerätekatalog konnte nicht geladen werden. Bitte versuchen Sie später.</string>
   <string name="settings_show_bottom_menu">Unteres Menü anzeigen</string>
-  <string name="details_em_total_forward_active_energy">Wirkenergie aufgenommen</string>
+  <string name="details_em_forward_active_energy">Wirkenergie aufgenommen</string>
   <string name="details_em_reverse_active_energy">Wirkenergie zurückgegeben</string>
-  <string name="details_em_total_forward_reactive_energy">Blindenergie aufgenommen</string>
-  <string name="details_em_total_reverse_reactive_energy">Blindenergie zurückgegeben</string>
+  <string name="details_em_forward_reactive_energy">Blindenergie aufgenommen</string>
+  <string name="details_em_reverse_reactive_energy">Blindenergie zurückgegeben</string>
   <string name="details_em_frequency">Frequenz</string>
   <string name="details_em_voltage">Spannung</string>
   <string name="details_em_current">Stärke</string>
@@ -607,10 +607,6 @@
   <string name="details_em_phase1">Phase 1</string>
   <string name="details_em_phase2">Phase 2</string>
   <string name="details_em_phase3">Phase 3</string>
-  <string name="details_em_reversed_active_energy">Wirkenergie zurückgegeben</string>
-  <string name="details_em_forwarded_active_energy">Wirkenergie aufgenommen</string>
-  <string name="details_em_reversed_reactive_energy">Blindenergie zurückgegeben</string>
-  <string name="details_em_forwarded_reactive_energy">Blindenergie aufgenommen</string>
   <string name="details_em_balance_arithmetic">Arithmetisches Gleichgewicht</string>
   <string name="details_em_balance_vector">Vektorgleichgewicht</string>
   <string name="details_em_chart_data_type">Daten</string>

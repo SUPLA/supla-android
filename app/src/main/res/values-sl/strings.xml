@@ -434,10 +434,10 @@
   <string name="status_accessid_inactive">Identifikator dostopa ni aktiven</string>
   <string name="hour_string_format">HH:mm:ss</string>
   <string name="roller_shutter_calibration">Kalibracija</string>
-  <string name="details_em_total_forward_active_energy">Aktivna porabljena energija</string>
+  <string name="details_em_forward_active_energy">Aktivna porabljena energija</string>
   <string name="details_em_reverse_active_energy">Aktivna vrnjena energija</string>
-  <string name="details_em_total_forward_reactive_energy">Reaktivna porabljena energija</string>
-  <string name="details_em_total_reverse_reactive_energy">Reaktivna vrnjena energija</string>
+  <string name="details_em_forward_reactive_energy">Reaktivna porabljena energija</string>
+  <string name="details_em_reverse_reactive_energy">Reaktivna vrnjena energija</string>
   <string name="details_em_frequency">Pogostost</string>
   <string name="details_em_voltage">Napetost</string>
   <string name="details_em_current">Intenzivnost</string>
@@ -449,10 +449,6 @@
   <string name="details_em_phase1">1. faza</string>
   <string name="details_em_phase2">2. faza</string>
   <string name="details_em_phase3">3. faza</string>
-  <string name="details_em_reversed_active_energy">Aktivna vrnjena energija</string>
-  <string name="details_em_forwarded_active_energy">Aktivna porabljena energija</string>
-  <string name="details_em_reversed_reactive_energy">Reaktivna vrnjena energija</string>
-  <string name="details_em_forwarded_reactive_energy">Reaktivna porabljena energija</string>
   <string name="details_em_balance_arithmetic">Aritmetično ravnotežje</string>
   <string name="details_em_balance_vector">Vektorsko ravnotežje</string>
 </resources>

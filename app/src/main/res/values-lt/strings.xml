@@ -412,10 +412,10 @@
   <string name="status_accessid_inactive">Prieigos identifikatorius neaktyvus</string>
   <string name="hour_string_format">HH:mm:ss</string>
   <string name="roller_shutter_calibration">Kalibravimas</string>
-  <string name="details_em_total_forward_active_energy">Aktyvioji energija parsisiųsta</string>
+  <string name="details_em_forward_active_energy">Aktyvioji energija parsisiųsta</string>
   <string name="details_em_reverse_active_energy">Aktyvioji energija grąžinta</string>
-  <string name="details_em_total_forward_reactive_energy">Reaktyvioji energija parsisiųsta</string>
-  <string name="details_em_total_reverse_reactive_energy">Reaktyvioji energija grąžinta</string>
+  <string name="details_em_forward_reactive_energy">Reaktyvioji energija parsisiųsta</string>
+  <string name="details_em_reverse_reactive_energy">Reaktyvioji energija grąžinta</string>
   <string name="details_em_frequency">Dažnumas</string>
   <string name="details_em_voltage">Įtampa</string>
   <string name="details_em_current">Intensyvumas</string>
@@ -427,10 +427,6 @@
   <string name="details_em_phase1">1 fazė</string>
   <string name="details_em_phase2">2 fazė</string>
   <string name="details_em_phase3">3 fazė</string>
-  <string name="details_em_reversed_active_energy">Aktyvioji energija grąžinta</string>
-  <string name="details_em_forwarded_active_energy">Aktyvioji energija parsisiųsta</string>
-  <string name="details_em_reversed_reactive_energy">Reaktyvioji energija grąžinta</string>
-  <string name="details_em_forwarded_reactive_energy">Reaktyvioji energija parsisiųsta</string>
   <string name="details_em_balance_arithmetic">Asimetrinis balansas</string>
   <string name="details_em_balance_vector">Vektorinis balansas</string>
 </resources>

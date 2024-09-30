@@ -519,7 +519,7 @@ private class PreviewProxy : HistoryDetailProxy {
               ChartDataAggregation.MINUTES,
               listOf(set, set.copy(active = false)),
               null,
-              { it.getString(R.string.details_em_reversed_reactive_energy) }
+              { it.getString(R.string.details_em_reverse_reactive_energy) }
             )
           )
         ),

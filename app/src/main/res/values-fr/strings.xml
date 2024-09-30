@@ -421,10 +421,10 @@
   <string name="status_accessid_inactive">ID d\'accès inactif</string>
   <string name="hour_string_format">HH:mm:ss</string>
   <string name="roller_shutter_calibration">Calibration</string>
-  <string name="details_em_total_forward_active_energy">Energie active importée</string>
+  <string name="details_em_forward_active_energy">Energie active importée</string>
   <string name="details_em_reverse_active_energy">Energie active rendue</string>
-  <string name="details_em_total_forward_reactive_energy">Energie passive importée</string>
-  <string name="details_em_total_reverse_reactive_energy">Energie passive rendue</string>
+  <string name="details_em_forward_reactive_energy">Energie passive importée</string>
+  <string name="details_em_reverse_reactive_energy">Energie passive rendue</string>
   <string name="details_em_frequency">Fréquence</string>
   <string name="details_em_voltage">Voltage</string>
   <string name="details_em_current">Intensité</string>
@@ -436,10 +436,6 @@
   <string name="details_em_phase1">Phase 1</string>
   <string name="details_em_phase2">Phase 2</string>
   <string name="details_em_phase3">Phase 3</string>
-  <string name="details_em_reversed_active_energy">Energie active rendue</string>
-  <string name="details_em_forwarded_active_energy">Energie active importée</string>
-  <string name="details_em_reversed_reactive_energy">Energie passive rendue</string>
-  <string name="details_em_forwarded_reactive_energy">Energie passive importée</string>
   <string name="details_em_balance_arithmetic">Bilan arithmétique</string>
   <string name="details_em_balance_vector">Bilan vectorielle</string>
 </resources>
