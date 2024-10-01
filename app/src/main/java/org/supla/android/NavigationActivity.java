@@ -91,7 +91,6 @@ public class NavigationActivity extends BaseActivity
     if (RootLayout == null) {
 
       RootLayout = new RelativeLayout(this);
-      RootLayout.setId(ViewHelper.generateViewId());
       RootLayout.setLayoutParams(
           new RelativeLayout.LayoutParams(
               ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
@@ -136,9 +135,7 @@ public class NavigationActivity extends BaseActivity
   protected RelativeLayout getContentLayout() {
 
     if (ContentLayout == null) {
-
       ContentLayout = new RelativeLayout(this);
-      ContentLayout.setId(ViewHelper.generateViewId());
       ContentLayout.setBackgroundColor(getResources().getColor(R.color.background));
 
       RelativeLayout.LayoutParams lp =
