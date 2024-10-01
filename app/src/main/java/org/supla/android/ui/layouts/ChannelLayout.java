@@ -45,7 +45,6 @@ import org.supla.android.R;
 import org.supla.android.SuplaApp;
 import org.supla.android.SuplaChannelStatus;
 import org.supla.android.SuplaWarningIcon;
-import org.supla.android.ViewHelper;
 import org.supla.android.data.model.general.IconType;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
@@ -195,10 +194,10 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
     right_btn.addView(right_btn_text);
 
     right_onlineStatus = newOnlineStatus(context, true);
-    right_onlineStatus.setId(ViewHelper.generateViewId());
+    right_onlineStatus.setId(View.generateViewId());
     content.addView(right_onlineStatus);
     left_onlineStatus = newOnlineStatus(context, false);
-    left_onlineStatus.setId(ViewHelper.generateViewId());
+    left_onlineStatus.setId(View.generateViewId());
     content.addView(left_onlineStatus);
 
     durationTimer = durationTimerHelper.createTimerView(context, heightScaleFactor);
@@ -211,12 +210,12 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
     channelIconContainer.setLayoutParams(getChannelIconContainerLayoutParams());
 
     channelStateIcon = new ImageView(context);
-    channelStateIcon.setId(ViewHelper.generateViewId());
+    channelStateIcon.setId(View.generateViewId());
     content.addView(channelStateIcon);
     channelStateIcon.setLayoutParams(getChannelStateImageLayoutParams());
 
     channelWarningIcon = new SuplaWarningIcon(context);
-    channelWarningIcon.setId(ViewHelper.generateViewId());
+    channelWarningIcon.setId(View.generateViewId());
     content.addView(channelWarningIcon);
     channelWarningIcon.setLayoutParams(getChannelWarningImageLayoutParams());
 
@@ -912,7 +911,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
 
       this.heightScaleFactor = heightScaleFactor;
 
-      setId(ViewHelper.generateViewId());
+      setId(View.generateViewId());
       mFunc = 0;
       mOldFunc = 0;
       Img1 = newImageView(context);
@@ -945,7 +944,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
     private ImageView newImageView(Context context) {
 
       ImageView Img = new ImageView(context);
-      Img.setId(ViewHelper.generateViewId());
+      Img.setId(View.generateViewId());
       Img.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
 
       return Img;
@@ -958,7 +957,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
     private TextView newTextView(Context context) {
 
       AppCompatTextView Text = new AppCompatTextView(context);
-      Text.setId(ViewHelper.generateViewId());
+      Text.setId(View.generateViewId());
 
       Text.setTypeface(SuplaApp.getApp().getTypefaceOpenSansRegular());
 

@@ -3,4 +3,12 @@
   <item name="list_item_content" type="id" />
   <item name="list_item_left_item" type="id" />
   <item name="list_item_right_item" type="id" />
+  <item name="chart_marker_table_id" type="id" />
+  <item name="bottom_item_general" type="id" />
+  <item name="bottom_item_schedule" type="id" />
+  <item name="bottom_item_timer" type="id" />
+  <item name="bottom_item_history" type="id" />
+  <item name="bottom_item_metrics" type="id" />
+  <item name="bottom_item_settings" type="id" />
+  <item name="bottom_item_list" type="id" />
 </resources>

@@ -42,7 +42,6 @@ import org.supla.android.R;
 import org.supla.android.SuplaApp;
 import org.supla.android.SuplaChannelStatus;
 import org.supla.android.SuplaChannelStatus.ShapeType;
-import org.supla.android.ViewHelper;
 import org.supla.android.data.source.local.entity.SceneEntity;
 import org.supla.android.events.UpdateEventsManager;
 import org.supla.android.images.ImageCache;
@@ -149,10 +148,10 @@ public class SceneLayout extends LinearLayout implements SlideableItem, Swapable
     right_btn.addView(right_btn_text);
 
     right_onlineStatus = newOnlineStatus(context, true);
-    right_onlineStatus.setId(ViewHelper.generateViewId());
+    right_onlineStatus.setId(View.generateViewId());
     content.addView(right_onlineStatus);
     left_onlineStatus = newOnlineStatus(context, false);
-    left_onlineStatus.setId(ViewHelper.generateViewId());
+    left_onlineStatus.setId(View.generateViewId());
     content.addView(left_onlineStatus);
 
     sceneDurationTimer = durationTimerHelper.createTimerView(context, heightScaleFactor);
@@ -495,7 +494,7 @@ public class SceneLayout extends LinearLayout implements SlideableItem, Swapable
       super(context);
       this.heightScaleFactor = heightScaleFactor;
 
-      setId(ViewHelper.generateViewId());
+      setId(View.generateViewId());
       imageView = newImageView(context);
 
       configureSubviews();
@@ -510,7 +509,7 @@ public class SceneLayout extends LinearLayout implements SlideableItem, Swapable
 
     private ImageView newImageView(Context context) {
       ImageView imageView = new ImageView(context);
-      imageView.setId(ViewHelper.generateViewId());
+      imageView.setId(View.generateViewId());
       imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
 
       return imageView;
