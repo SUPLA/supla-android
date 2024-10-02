@@ -107,10 +107,6 @@ public class WifiThrottlingNotificationDialog implements DialogInterface.OnCance
     }
   }
 
-  public OnDialogResultListener getOnDialogResultListener() {
-    return onDialogResultListener;
-  }
-
   public void setOnDialogResultListener(OnDialogResultListener onDialogResultListener) {
     this.onDialogResultListener = onDialogResultListener;
   }
