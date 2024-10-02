@@ -34,7 +34,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class ChartMarkerView(context: Context) : BaseMarkerView(context) {
 
-  private val tableId: Int = View.generateViewId()
+  private val tableId: Int = R.id.chart_marker_table_id
   private lateinit var openingValueView: TextView
   private lateinit var closingValueView: TextView
 

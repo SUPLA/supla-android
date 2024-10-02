@@ -127,11 +127,11 @@ enum class DetailPage(val item: DetailBottomItem) {
 }
 
 enum class DetailBottomItem(val menuId: Int, @DrawableRes val iconRes: Int, @StringRes val stringRes: Int) {
-  GENERAL(1, R.drawable.ic_general, R.string.details_general),
-  SCHEDULE(2, R.drawable.ic_schedule, R.string.details_schedule),
-  TIMER(3, R.drawable.ic_timer, R.string.details_timer),
-  HISTORY(4, R.drawable.ic_history, R.string.details_history),
-  METRICS(5, R.drawable.ic_metrics, R.string.details_metrics),
-  SETTINGS(6, R.drawable.ic_settings, R.string.settings),
-  LIST(7, R.drawable.list, R.string.details_list)
+  GENERAL(R.id.bottom_item_general, R.drawable.ic_general, R.string.details_general),
+  SCHEDULE(R.id.bottom_item_schedule, R.drawable.ic_schedule, R.string.details_schedule),
+  TIMER(R.id.bottom_item_timer, R.drawable.ic_timer, R.string.details_timer),
+  HISTORY(R.id.bottom_item_history, R.drawable.ic_history, R.string.details_history),
+  METRICS(R.id.bottom_item_metrics, R.drawable.ic_metrics, R.string.details_metrics),
+  SETTINGS(R.id.bottom_item_settings, R.drawable.ic_settings, R.string.settings),
+  LIST(R.id.bottom_item_list, R.drawable.list, R.string.details_list)
 }

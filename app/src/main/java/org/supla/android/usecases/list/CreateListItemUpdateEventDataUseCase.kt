@@ -19,12 +19,17 @@ package org.supla.android.usecases.list
 
 import io.reactivex.rxjava3.core.Observable
 import org.supla.android.data.source.local.entity.ChannelRelationType
+import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.ui.lists.data.SlideableListItemData
+import org.supla.android.ui.lists.onlineState
+import org.supla.android.usecases.channel.GetChannelCaptionUseCase
+import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
+import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToGarageDoorUpdateEventMapper
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToGpmUpdateEventMapper
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToIconValueItemUpdateEventMapper
@@ -40,6 +45,9 @@ class CreateListItemUpdateEventDataUseCase @Inject constructor(
   private val eventsManager: UpdateEventsManager,
   private val readChannelGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase,
   private val readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
+  private val getChannelCaptionUseCase: GetChannelCaptionUseCase,
+  private val getChannelIconUseCase: GetChannelIconUseCase,
+  private val getChannelValueStringUseCase: GetChannelValueStringUseCase,
   channelWithChildrenToThermostatUpdateEventMapper: ChannelWithChildrenToThermostatUpdateEventMapper,
   channelWithChildrenToIconValueItemUpdateEventMapper: ChannelWithChildrenToIconValueItemUpdateEventMapper,
   channelWithChildrenToGpmUpdateEventMapper: ChannelWithChildrenToGpmUpdateEventMapper,
@@ -73,7 +81,28 @@ class CreateListItemUpdateEventDataUseCase @Inject constructor(
       }
     }
 
-    throw IllegalStateException("No mapper found for item '$item'")
+    (item as? ChannelWithChildren)?.let {
+      return SlideableListItemData.Default(
+        onlineState = it.channel.isOnline().onlineState,
+        titleProvider = getChannelCaptionUseCase(it.channel),
+        icon = getChannelIconUseCase(it.channel),
+        issueIconType = null,
+        infoSupported = false,
+        value = getChannelValueStringUseCase(it.channel)
+      )
+    }
+    (item as? ChannelGroupDataEntity)?.let {
+      return SlideableListItemData.Default(
+        onlineState = it.isOnline().onlineState,
+        titleProvider = getChannelCaptionUseCase(it),
+        icon = getChannelIconUseCase(it),
+        issueIconType = null,
+        infoSupported = false,
+        value = null
+      )
+    }
+
+    throw IllegalStateException("No mapper found and unexpected item class for '$item'")
   }
 
   private fun observeChannel(remoteId: Int): Observable<ChannelWithChildren> {

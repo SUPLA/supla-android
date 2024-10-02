@@ -19,7 +19,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import android.content.Context
 import android.content.res.ColorStateList
-import android.view.View
 import android.widget.TableLayout
 import androidx.core.content.res.ResourcesCompat
 import com.github.mikephil.charting.data.BarEntry
@@ -68,7 +67,7 @@ data class ElectricityMarkerCustomData(
 class ElectricityMarkerView(context: Context) : BaseMarkerView(context) {
 
   private val formatter = ListElectricityMeterValueFormatter(useNoValue = false)
-  private val tableId: Int = View.generateViewId()
+  private val tableId: Int = R.id.chart_marker_table_id
   private lateinit var firstRow: Row
   private lateinit var secondRow: Row
   private lateinit var thirdRow: Row
