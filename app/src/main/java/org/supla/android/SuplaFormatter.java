@@ -29,8 +29,6 @@ public class SuplaFormatter {
     if (_sharedInstance == null) {
       _sharedInstance = new SuplaFormatter();
     }
-    // TODO: Invalidate and reinit in case system number format
-    // has changed
 
     return _sharedInstance;
   }

@@ -209,8 +209,8 @@ class ElectricityMeterGeneralStateHandlerTest {
           phaseWithMeasurements(R.string.details_em_phase2, forwardActiveEnergy = "200.00000 ", reverseActiveEnergy = "201.00000 "),
         ),
         vectorBalancedValues = mapOf(
-          SuplaElectricityMeasurementType.FORWARD_ACTIVE_ENERGY_BALANCED to "111.1 kWh",
-          SuplaElectricityMeasurementType.REVERSE_ACTIVE_ENERGY_BALANCED to "222.2 kWh"
+          SuplaElectricityMeasurementType.FORWARD_ACTIVE_ENERGY_BALANCED to "111.1 ",
+          SuplaElectricityMeasurementType.REVERSE_ACTIVE_ENERGY_BALANCED to "222.2 "
         )
       )
     )

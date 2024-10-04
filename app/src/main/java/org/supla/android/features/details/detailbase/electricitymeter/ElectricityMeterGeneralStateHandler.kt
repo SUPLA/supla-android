@@ -22,6 +22,8 @@ import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.Electricity
 import org.supla.android.data.source.local.entity.custom.Phase
 import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType
+import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType.FORWARD_ACTIVE_ENERGY_BALANCED
+import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType.REVERSE_ACTIVE_ENERGY_BALANCED
 import org.supla.android.data.source.remote.channel.hasForwardAndReverseEnergy
 import org.supla.android.data.source.remote.channel.suplaElectricityMeterMeasuredTypes
 import org.supla.android.data.source.remote.electricitymeter.getForwardEnergy
@@ -59,8 +61,8 @@ class ElectricityMeterGeneralStateHandler @Inject constructor(
     val formatter = ListElectricityMeterValueFormatter(useNoValue = false)
     val vectorBalancedValues = (moreThanOnePhase && allTypes.hasForwardAndReverseEnergy).ifTrue {
       mapOf(
-        SuplaElectricityMeasurementType.FORWARD_ACTIVE_ENERGY_BALANCED to formatter.format(extendedValue.totalForwardActiveEnergyBalanced),
-        SuplaElectricityMeasurementType.REVERSE_ACTIVE_ENERGY_BALANCED to formatter.format(extendedValue.totalReverseActiveEnergyBalanced)
+        FORWARD_ACTIVE_ENERGY_BALANCED to formatter.format(extendedValue.totalForwardActiveEnergyBalanced, withUnit = false),
+        REVERSE_ACTIVE_ENERGY_BALANCED to formatter.format(extendedValue.totalReverseActiveEnergyBalanced, withUnit = false)
       )
     }
 

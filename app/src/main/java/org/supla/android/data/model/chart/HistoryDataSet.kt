@@ -27,12 +27,23 @@ import com.github.mikephil.charting.data.CandleDataSet
 import com.github.mikephil.charting.data.CandleEntry
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.data.PieDataSet
+import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.github.mikephil.charting.interfaces.datasets.ICandleDataSet
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
+import com.github.mikephil.charting.interfaces.datasets.IPieDataSet
+import org.supla.android.data.model.chart.ChartDataAggregation.RANK_HOURS
+import org.supla.android.data.model.chart.ChartDataAggregation.RANK_MONTHS
+import org.supla.android.data.model.chart.ChartDataAggregation.RANK_WEEKDAYS
 import org.supla.android.data.model.chart.marker.ChartEntryDetails
+import org.supla.android.extensions.ucFirst
 import org.supla.android.images.ImageId
 import org.supla.android.usecases.channel.valueformatter.ChannelValueFormatter
+import java.time.DayOfWeek
+import java.time.Month
+import java.time.format.TextStyle
+import java.util.Locale
 
 data class HistoryDataSet(
   val type: ChartEntryType,
@@ -121,6 +132,29 @@ data class HistoryDataSet(
     }
   }
 
+  fun asPieChartData(
+    aggregation: ChartDataAggregation,
+    customData: Any?,
+    toSetConverter: (set: List<PieEntry>) -> PieDataSet
+  ): List<IPieDataSet>? {
+    if (!active || entities.isEmpty()) {
+      return null
+    }
+
+    return mutableListOf<IPieDataSet>().apply {
+      entities.forEach { aggregatedEntity ->
+        val entries = aggregatedEntity
+          .mapNotNull {
+            (it.value as? AggregatedValue.Single)?.let { value ->
+              PieEntry(value.value, aggregation.label(it.date), chartEntryDetails(aggregation, it, customData))
+            }
+          }
+
+        add(toSetConverter(entries))
+      }
+    }
+  }
+
   private fun toLineEntry(x: Float, aggregation: ChartDataAggregation, entity: AggregatedEntity): Entry =
     Entry(x, (entity.value as AggregatedValue.Single).value, chartEntryDetails(aggregation, entity))
 
@@ -190,3 +224,11 @@ fun singleLabel(
   @ColorRes color: Int
 ): HistoryDataSet.Label.Single =
   HistoryDataSet.Label.Single(HistoryDataSet.LabelData(imageId, value, color))
+
+private fun ChartDataAggregation.label(value: Long): String =
+  when (this) {
+    RANK_HOURS -> "$value"
+    RANK_WEEKDAYS -> DayOfWeek.of(value.toInt()).getDisplayName(TextStyle.SHORT, Locale.getDefault()).ucFirst()
+    RANK_MONTHS -> Month.of(value.toInt()).getDisplayName(TextStyle.SHORT, Locale.getDefault()).ucFirst()
+    else -> ""
+  }

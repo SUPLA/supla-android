@@ -726,6 +726,8 @@
   <string name="thermostat_detail_main_thermostat" translatable="false">Main thermostat</string>
   <string name="thermostat_detail_other_thermostats" translatable="false">Dependent thermostats</string>
   <string name="thermostat_battery_cover_open" translatable="false">Battery cover open</string>
+  <string name="details_em_hour_marker_title" translatable="false">%1$d o\'clock</string>
+  <string name="history_data_type" translatable="false">Data type</string>
 
   <plurals name="details_timer_info_on" translatable="false">
     <item quantity="other">on</item>

@@ -704,6 +704,8 @@
   <string name="thermostat_detail_main_thermostat">Termostat główny</string>
   <string name="thermostat_detail_other_thermostats">Termostaty zależne</string>
   <string name="thermostat_battery_cover_open">Otwarta pokrywa baterii</string>
+  <string name="details_em_hour_marker_title">Godzina %1$d</string>
+  <string name="history_data_type">Typ danych</string>
 
   <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
     <item quantity="one">włączone</item>

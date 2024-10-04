@@ -629,6 +629,8 @@
   <string name="thermostat_detail_main_thermostat">Hauptthermostat</string>
   <string name="thermostat_detail_other_thermostats">Andere Thermostate</string>
   <string name="thermostat_battery_cover_open">Batteriefachdeckel offen</string>
+  <string name="details_em_hour_marker_title">%1$d Uhr</string>
+  <string name="history_data_type">Datentyp</string>
   <plurals name="details_timer_info_on">
     <item quantity="one">eingeschaltet</item>
     <item quantity="other">eingeschaltet</item>

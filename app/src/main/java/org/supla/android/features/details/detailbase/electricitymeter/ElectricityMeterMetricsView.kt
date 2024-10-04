@@ -269,7 +269,7 @@ private fun PhaseValue(text: String) =
       .defaultMinSize(minWidth = 70.dp)
       .fillMaxWidth()
       .background(MaterialTheme.colorScheme.surface)
-      .padding(end = 4.dp)
+      .padding(end = 4.dp, start = Distance.small)
       .wrapContentHeight(align = Alignment.CenterVertically)
   )
 
@@ -284,7 +284,6 @@ private fun PhaseValueUnit(text: String = "") =
       .height(35.dp)
       .fillMaxWidth()
       .background(MaterialTheme.colorScheme.surface)
-      .padding(end = Distance.small)
       .wrapContentHeight(align = Alignment.CenterVertically)
   )
 
@@ -295,22 +294,37 @@ private fun VectorBalancedData(data: Map<SuplaElectricityMeasurementType, String
     style = MaterialTheme.typography.labelMedium,
     modifier = Modifier.padding(start = Distance.small, top = Distance.default, end = Distance.small)
   )
-  Row(
+
+  BoxWithConstraints(
     modifier = Modifier
       .padding(top = Distance.small)
       .background(color = MaterialTheme.colorScheme.surface)
       .fillMaxWidth()
-      .horizontalScroll(rememberScrollState())
   ) {
-    Row(modifier = Modifier.padding(start = Distance.small, end = Distance.small)) {
+    var freeSpace by remember { mutableStateOf<Dp?>(null) }
+    val density = LocalDensity.current
+    val width = maxWidth
+
+    Row(
+      modifier = Modifier
+        .onGloballyPositioned {
+          if (freeSpace == null) {
+            freeSpace = with(density) { width - it.size.width.toDp() }
+          }
+        }
+        .horizontalScroll(rememberScrollState())
+    ) {
       PhaseDataLabels(measurementTypes = data.keys.toList(), withHeader = false)
-      VectorBalancedDataValues(values = data.values.toList())
+      OptionalSpace(freeSpace = freeSpace, showPhaseName = false, measurementsCount = data.size)
+      VectorBalancedDataValues(types = data.keys.toList(), values = data.values.toList())
+      Spacer(modifier = Modifier.width(Distance.small))
     }
   }
 }
 
 @Composable
 private fun VectorBalancedDataValues(
+  types: List<SuplaElectricityMeasurementType>,
   values: List<String>
 ) =
   Column(
@@ -325,6 +339,12 @@ private fun VectorBalancedDataValues(
         horizontalAlignment = Alignment.CenterHorizontally
       ) {
         values.forEach { PhaseValue(it) }
+      }
+      Column(
+        modifier = Modifier.width(IntrinsicSize.Max),
+        horizontalAlignment = Alignment.CenterHorizontally
+      ) {
+        types.forEach { PhaseValueUnit(it.unit) }
       }
     }
   }
@@ -368,6 +388,10 @@ private fun Preview() {
               SuplaElectricityMeasurementType.VOLTAGE to "248"
             )
           )
+        ),
+        vectorBalancedValues = mapOf(
+          SuplaElectricityMeasurementType.FORWARD_ACTIVE_ENERGY_BALANCED to "1234,56",
+          SuplaElectricityMeasurementType.REVERSE_ACTIVE_ENERGY_BALANCED to "2345,67"
         )
       )
     )

@@ -41,7 +41,7 @@ class CandleChartData(
   chartRange: ChartRange,
   aggregation: ChartDataAggregation,
   sets: List<ChannelChartSets>
-) : ChartData(dateRange, chartRange, aggregation, sets) {
+) : CombinedChartData(dateRange, chartRange, aggregation, sets) {
 
   override val divider: Long
     get() = aggregation?.timeInSec ?: 1

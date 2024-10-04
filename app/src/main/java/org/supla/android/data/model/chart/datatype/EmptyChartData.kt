@@ -21,7 +21,7 @@ import android.content.res.Resources
 import com.github.mikephil.charting.data.CombinedData
 import org.supla.android.data.model.chart.ChannelChartSets
 
-object EmptyChartData : ChartData(null, null, null, emptyList()) {
+object EmptyChartData : CombinedChartData(null, null, null, emptyList()) {
   override fun combinedData(resources: Resources): CombinedData? = null
   override fun newInstance(sets: List<ChannelChartSets>): ChartData = EmptyChartData
 }
