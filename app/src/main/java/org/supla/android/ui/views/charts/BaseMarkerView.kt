@@ -27,8 +27,6 @@ import android.widget.LinearLayout
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
-import androidx.compose.ui.text.capitalize
-import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -40,9 +38,17 @@ import com.github.mikephil.charting.utils.MPPointF
 import org.supla.android.R
 import org.supla.android.data.formatting.DateFormatter
 import org.supla.android.data.model.chart.ChartDataAggregation
+import org.supla.android.data.model.chart.ChartDataAggregation.RANK_HOURS
+import org.supla.android.data.model.chart.ChartDataAggregation.RANK_MONTHS
+import org.supla.android.data.model.chart.ChartDataAggregation.RANK_WEEKDAYS
 import org.supla.android.data.model.chart.marker.ChartEntryDetails
 import org.supla.android.extensions.guardLet
 import org.supla.android.extensions.toPx
+import org.supla.android.extensions.ucFirst
+import java.time.DayOfWeek
+import java.time.Month
+import java.time.format.TextStyle
+import java.util.Locale
 
 abstract class BaseMarkerView(context: Context) : MarkerView(context, R.layout.view_chart_marker) {
 
@@ -79,8 +85,9 @@ abstract class BaseMarkerView(context: Context) : MarkerView(context, R.layout.v
     when (details.aggregation) {
       ChartDataAggregation.HOURS -> "${dateFormatter.getFullDateString(details.date())?.let { it.substring(0, it.length - 2) }}00"
       ChartDataAggregation.DAYS -> dateFormatter.getFullDateString(details.date())?.let { it.substring(0, it.length - 5) }
-      ChartDataAggregation.MONTHS -> dateFormatter.getMonthAndYearString(details.date())?.capitalize(Locale.current)
+      ChartDataAggregation.MONTHS -> dateFormatter.getMonthAndYearString(details.date())?.ucFirst()
       ChartDataAggregation.YEARS -> dateFormatter.getYearString(details.date())
+      RANK_HOURS, RANK_WEEKDAYS, RANK_MONTHS -> details.aggregation.label(details.date)
       else -> dateFormatter.getFullDateString(details.date())
     }
 
@@ -145,6 +152,14 @@ abstract class BaseMarkerView(context: Context) : MarkerView(context, R.layout.v
     value.typeface = typeface
     cost.typeface = typeface
   }
+
+  private fun ChartDataAggregation.label(value: Long): String =
+    when (this) {
+      RANK_HOURS -> resources.getString(R.string.details_em_hour_marker_title, value.toInt())
+      RANK_WEEKDAYS -> DayOfWeek.of(value.toInt()).getDisplayName(TextStyle.FULL, Locale.getDefault()).ucFirst()
+      RANK_MONTHS -> Month.of(value.toInt()).getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault()).ucFirst()
+      else -> ""
+    }
 }
 
 class TableLayoutBuilder {

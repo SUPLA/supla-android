@@ -79,7 +79,9 @@ import org.supla.android.data.model.chart.ChartEntryType
 import org.supla.android.data.model.chart.ChartRange
 import org.supla.android.data.model.chart.DateRange
 import org.supla.android.data.model.chart.HistoryDataSet
+import org.supla.android.data.model.chart.datatype.CombinedChartData
 import org.supla.android.data.model.chart.datatype.LineChartData
+import org.supla.android.data.model.chart.datatype.PieChartData
 import org.supla.android.data.model.chart.singleLabel
 import org.supla.android.data.model.chart.style.ChartStyle
 import org.supla.android.data.model.chart.style.ThermometerChartStyle
@@ -98,6 +100,7 @@ import org.supla.android.ui.views.TextField
 import org.supla.android.ui.views.TextSpinner
 import org.supla.android.ui.views.buttons.IconButton
 import org.supla.android.ui.views.charts.CombinedChart
+import org.supla.android.ui.views.charts.PieChart
 import org.supla.android.ui.views.tools.Shadow
 import org.supla.android.ui.views.tools.ShadowOrientation
 import org.supla.android.usecases.channel.valueformatter.HumidityValueFormatter
@@ -157,21 +160,34 @@ fun HistoryDetail(viewModel: HistoryDetailProxy) {
     DataSetsAndFilters(viewState = viewState, viewModel = viewModel)
 
     if (viewState.showHistory) {
-      CombinedChart(
-        data = viewState.chartData,
-        channelFunction = viewState.channelFunction,
-        emptyChartMessage = viewState.emptyChartMessage(LocalContext.current),
-        withRightAxis = viewState.withRightAxis,
-        withLeftAxis = viewState.withLeftAxis,
-        maxLeftAxis = viewState.maxLeftAxis,
-        maxRightAxis = viewState.maxRightAxis,
-        chartParametersProvider = { viewState.chartParameters?.getOptional() },
-        positionEvents = viewModel::updateChartPosition,
-        chartStyle = viewModel.chartStyle(),
-        modifier = Modifier
-          .weight(1f)
-          .padding(horizontal = Distance.tiny)
-      )
+      when (val data = viewState.chartData) {
+        is CombinedChartData ->
+          CombinedChart(
+            data = data,
+            channelFunction = viewState.channelFunction,
+            emptyChartMessage = viewState.emptyChartMessage(LocalContext.current),
+            withRightAxis = viewState.withRightAxis,
+            withLeftAxis = viewState.withLeftAxis,
+            maxLeftAxis = viewState.maxLeftAxis,
+            maxRightAxis = viewState.maxRightAxis,
+            chartParametersProvider = { viewState.chartParameters?.getOptional() },
+            positionEvents = viewModel::updateChartPosition,
+            chartStyle = viewModel.chartStyle(),
+            modifier = Modifier
+              .weight(1f)
+              .padding(horizontal = Distance.tiny)
+          )
+
+        is PieChartData ->
+          PieChart(
+            data = data,
+            emptyChartMessage = viewState.emptyChartMessage(LocalContext.current),
+            chartStyle = viewModel.chartStyle(),
+            modifier = Modifier
+              .weight(1f)
+              .padding(horizontal = Distance.tiny)
+          )
+      }
 
       if (viewState.filters.selectedRange == ChartRange.CUSTOM) {
         RangeSelection(viewState, viewModel)
@@ -273,8 +289,8 @@ private fun FiltersRow(viewState: HistoryDetailViewState, viewModel: HistoryDeta
         onOptionSelected = { viewModel.changeFilter(it) },
         modifier = Modifier
           .padding(
-            start = if (index == 0) Distance.default else 0.dp,
-            end = if (index == lastIdx) Distance.default else 0.dp
+            start = if (index == 0) Distance.small else 0.dp,
+            end = if (index == lastIdx) 4.dp else 0.dp
           )
       )
 

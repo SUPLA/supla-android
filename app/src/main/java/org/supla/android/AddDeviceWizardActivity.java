@@ -85,6 +85,7 @@ import javax.inject.Inject;
 import org.supla.android.core.networking.esp.EspConfigResult;
 import org.supla.android.core.networking.esp.EspHtmlParser;
 import org.supla.android.core.networking.suplaclient.SuplaClientEvent.AddWizardFinished;
+import org.supla.android.core.networking.suplaclient.SuplaClientEvent.AddWizardStopped;
 import org.supla.android.core.networking.suplaclient.SuplaClientState.Reason.AddWizardStarted;
 import org.supla.android.core.networking.suplaclient.SuplaClientStateHolder;
 import org.supla.android.lib.SuplaConst;
@@ -573,6 +574,8 @@ public class AddDeviceWizardActivity extends WizardActivity
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
       connectToInternet_Q();
     }
+
+    suplaClientStateHolder.handleEvent(AddWizardStopped.INSTANCE);
   }
 
   @Override

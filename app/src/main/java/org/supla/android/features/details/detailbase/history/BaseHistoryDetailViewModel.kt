@@ -507,10 +507,12 @@ abstract class BaseHistoryDetailViewModel(
 
     return SingleSelectionList(
       selected = aggregation,
-      items = ChartDataAggregation.entries.filter { it.between(minAggregation, maxAggregation) },
-      label = R.string.history_aggregation_label
+      items = allAggregations().filter { it.between(minAggregation, maxAggregation) },
+      label = R.string.history_data_type
     )
   }
+
+  protected open fun allAggregations() = ChartDataAggregation.defaultEntries
 
   protected fun updateUserState() {
     val state = currentState()

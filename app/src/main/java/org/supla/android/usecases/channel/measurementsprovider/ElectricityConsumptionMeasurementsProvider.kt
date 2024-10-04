@@ -248,6 +248,13 @@ class ElectricityConsumptionMeasurementsProvider @Inject constructor(
             }
           }
     }
+      .let { list ->
+        if (spec.aggregation.isRank) {
+          list.sortedByDescending { it.value.valueMax }
+        } else {
+          list
+        }
+      }
   }
 
   private fun aggregatedHourly(
@@ -284,16 +291,29 @@ class ElectricityConsumptionMeasurementsProvider @Inject constructor(
         BalancedValue(group.value.firstOrNull()!!.date, if (result > 0) result else 0f, if (result < 0) -result else 0f)
       }
 
-  private fun aggregatedPhases(spec: ChartDataSpec, group: Map.Entry<Long, List<ElectricityMeterLogEntity>>): AggregatedEntity {
-    val values = mutableListOf<Float>().apply {
-      spec.customFilters?.ifPhase1 { add(group.value.map { it.phase1.valueFor(spec) ?: 0f }.sum()) }
-      spec.customFilters?.ifPhase2 { add(group.value.map { it.phase2.valueFor(spec) ?: 0f }.sum()) }
-      spec.customFilters?.ifPhase3 { add(group.value.map { it.phase3.valueFor(spec) ?: 0f }.sum()) }
+  private fun aggregatedPhases(
+    spec: ChartDataSpec,
+    group: Map.Entry<Long, List<ElectricityMeterLogEntity>>
+  ): AggregatedEntity {
+    val values = if (spec.aggregation.isRank) {
+      var sum = 0f
+      spec.customFilters?.ifPhase1 { sum += group.value.map { it.phase1.valueFor(spec) ?: 0f }.sum() }
+      spec.customFilters?.ifPhase2 { sum += (group.value.map { it.phase2.valueFor(spec) ?: 0f }.sum()) }
+      spec.customFilters?.ifPhase3 { sum += (group.value.map { it.phase3.valueFor(spec) ?: 0f }.sum()) }
+      AggregatedValue.Single(sum)
+    } else {
+      AggregatedValue.Multiple(
+        mutableListOf<Float>().apply {
+          spec.customFilters?.ifPhase1 { add(group.value.map { it.phase1.valueFor(spec) ?: 0f }.sum()) }
+          spec.customFilters?.ifPhase2 { add(group.value.map { it.phase2.valueFor(spec) ?: 0f }.sum()) }
+          spec.customFilters?.ifPhase3 { add(group.value.map { it.phase3.valueFor(spec) ?: 0f }.sum()) }
+        }.toFloatArray()
+      )
     }
 
     return AggregatedEntity(
-      spec.aggregation.groupTimeProvider(group.value.firstOrNull()!!.date),
-      AggregatedValue.Multiple(values.toFloatArray())
+      if (spec.aggregation.isRank) group.key else spec.aggregation.groupTimeProvider(group.value.firstOrNull()!!.date),
+      values
     )
   }
 

@@ -41,6 +41,7 @@ import org.supla.android.data.formatting.DateFormatter
 import org.supla.android.data.formatting.LocalDateFormatter
 import org.supla.android.data.model.chart.ChartParameters
 import org.supla.android.data.model.chart.datatype.ChartData
+import org.supla.android.data.model.chart.datatype.CombinedChartData
 import org.supla.android.data.model.chart.style.ChartStyle
 import org.supla.android.extensions.toPx
 import org.supla.android.lib.SuplaConst
@@ -49,7 +50,7 @@ import java.util.Date
 
 @Composable
 fun CombinedChart(
-  data: ChartData,
+  data: CombinedChartData,
   emptyChartMessage: String,
   withRightAxis: Boolean,
   withLeftAxis: Boolean,
@@ -64,7 +65,7 @@ fun CombinedChart(
   val dateFormatter = LocalDateFormatter.current
   val combinedData = data.combinedData(LocalContext.current.resources)
   val chartParameters = if (combinedData != null) chartParametersProvider() else null
-  val xAxisFormatter by remember { mutableStateOf(AxisXFormatter(dateFormatter)) }
+  val xAxisFormatter by remember { mutableStateOf(CombinedChartAxisXFormatter(dateFormatter)) }
   xAxisFormatter.converter = data
 
   AndroidView(
@@ -166,25 +167,6 @@ fun CombinedChart(
   )
 }
 
-private class AxisXFormatter(
-  private val dateFormatter: DateFormatter
-) : ValueFormatter() {
-
-  lateinit var converter: ChartData
-
-  override fun getAxisLabel(value: Float, axis: AxisBase?): String {
-    val distanceInDays = converter.distanceInDays ?: 1
-    return when {
-      distanceInDays <= 1 ->
-        dateFormatter.getHourString(Date(converter.fromCoordinate(value).times(1000).toLong())) ?: ""
-
-      else -> {
-        dateFormatter.getMonthString(Date(converter.fromCoordinate(value).times(1000).toLong())) ?: ""
-      }
-    }
-  }
-}
-
 private class ChartObserver(
   private val positionEvents: (scaleX: Float, scaleY: Float, x: Float, y: Float) -> Unit,
   private val chart: CombinedChart
@@ -211,6 +193,25 @@ private class ChartObserver(
     val centerPoint = chart.viewPortHandler.contentCenter
     val centerPosition = chart.getValuesByTouchPoint(centerPoint.x, centerPoint.y, YAxis.AxisDependency.LEFT)
     positionEvents(chart.viewPortHandler.scaleX, chart.viewPortHandler.scaleY, centerPosition.x.toFloat(), centerPosition.y.toFloat())
+  }
+}
+
+private class CombinedChartAxisXFormatter(
+  private val dateFormatter: DateFormatter
+) : ValueFormatter() {
+
+  lateinit var converter: ChartData
+
+  override fun getAxisLabel(value: Float, axis: AxisBase?): String {
+    val distanceInDays = converter.distanceInDays ?: 1
+    return when {
+      distanceInDays <= 1 ->
+        dateFormatter.getHourString(Date(converter.fromCoordinate(value).times(1000).toLong())) ?: ""
+
+      else -> {
+        dateFormatter.getMonthString(Date(converter.fromCoordinate(value).times(1000).toLong())) ?: ""
+      }
+    }
   }
 }
 

@@ -1,4 +1,7 @@
 package org.supla.android.extensions
+
+import java.util.Locale
+
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -18,3 +21,7 @@ package org.supla.android.extensions
  */
 
 fun String?.convertToTemperature() = this?.replace(",", ".")?.toFloatOrNull()
+
+fun String.ucFirst(locale: Locale = Locale.getDefault()) = replaceFirstChar {
+  if (it.isLowerCase()) it.titlecase(locale) else it.toString()
+}
