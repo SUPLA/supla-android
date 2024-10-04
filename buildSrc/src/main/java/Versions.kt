@@ -2,7 +2,7 @@ object Versions {
 
     const val Sdk = 34
     const val TargetSdk = 34
-    const val MinSdk = 21
+    const val MinSdk = 24
     const val BuildTools = "34.0.0"
 
     const val Kotlin = "2.0.0"

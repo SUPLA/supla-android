@@ -23,7 +23,6 @@ import org.supla.android.R;
 
 public class SuplaConnError {
 
-  // TODO: Make it private. Remember about JNI (NativeLib)
   public int Code;
 
   public SuplaConnError() {

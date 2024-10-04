@@ -34,6 +34,7 @@ import org.supla.android.data.model.chart.DateRange
 import org.supla.android.data.model.chart.ElectricityChartState
 import org.supla.android.data.model.chart.datatype.BarChartData
 import org.supla.android.data.model.chart.datatype.ChartData
+import org.supla.android.data.model.chart.datatype.PieChartData
 import org.supla.android.data.model.chart.style.ChartStyle
 import org.supla.android.data.model.chart.style.ElectricityChartStyle
 import org.supla.android.data.model.general.MultipleSelectionList
@@ -44,6 +45,7 @@ import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.data.source.remote.channel.suplaFlags
 import org.supla.android.events.DownloadEventsManager
 import org.supla.android.extensions.guardLet
+import org.supla.android.extensions.ifTrue
 import org.supla.android.features.details.detailbase.history.BaseHistoryDetailViewModel
 import org.supla.android.features.details.detailbase.history.HistoryDetailViewState
 import org.supla.android.features.details.detailbase.history.ui.ChartDataSelectionDialogState
@@ -167,7 +169,7 @@ class ElectricityMeterHistoryViewModel @Inject constructor(
     Single.zip(
       loadChannelMeasurementsUseCase(remoteId, spec),
       loadChannelMeasurementsDataRangeUseCase(remoteId, profileId)
-    ) { first, second -> Pair(BarChartData(DateRange(spec.startDate, spec.endDate), chartRange, spec.aggregation, listOf(first)), second) }
+    ) { first, second -> Pair(getChartData(spec, chartRange, first), second) }
 
   override fun chartStyle(): ChartStyle = ElectricityChartStyle
 
@@ -182,6 +184,16 @@ class ElectricityMeterHistoryViewModel @Inject constructor(
     }
 
     val aggregations = super.aggregations(dateRange, chartRange, selectedAggregation, customFilters)
+      .let {
+        filters.type.isBalance.ifTrue {
+          // In balance charts no ranking is available
+          val aggregations = it.items.filter { aggregation -> !aggregation.isRank }
+          it.copy(
+            selected = if (it.selected.isRank) aggregations.first() else it.selected,
+            items = aggregations
+          )
+        } ?: it
+      }
     return if (filters.type == ElectricityMeterChartType.BALANCE_HOURLY && aggregations.items.contains(ChartDataAggregation.MINUTES)) {
       aggregations.copy(
         selected = if (aggregations.selected == ChartDataAggregation.MINUTES) ChartDataAggregation.HOURS else aggregations.selected,
@@ -191,6 +203,8 @@ class ElectricityMeterHistoryViewModel @Inject constructor(
       aggregations
     }
   }
+
+  override fun allAggregations() = ChartDataAggregation.entries
 
   private fun handleData(channel: ChannelDataEntity, chartState: ChartState) {
     updateState { it.copy(profileId = channel.profileId, channelFunction = channel.function.value) }
@@ -250,4 +264,12 @@ class ElectricityMeterHistoryViewModel @Inject constructor(
 
   private fun restoreCustomFilters(flags: List<SuplaChannelFlag>, value: SuplaChannelElectricityMeterValue?, state: ChartState) =
     updateState { it.copy(chartCustomFilters = ElectricityChartFilters.restore(flags, value, state)) }
+
+  private fun getChartData(spec: ChartDataSpec, chartRange: ChartRange, sets: ChannelChartSets): ChartData {
+    return if (spec.aggregation.isRank) {
+      PieChartData(DateRange(spec.startDate, spec.endDate), chartRange, spec.aggregation, listOf(sets))
+    } else {
+      BarChartData(DateRange(spec.startDate, spec.endDate), chartRange, spec.aggregation, listOf(sets))
+    }
+  }
 }

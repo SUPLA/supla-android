@@ -59,6 +59,15 @@ interface CoordinatesConverter {
   fun toCoordinate(x: Float): Float
 }
 
+abstract class CombinedChartData(
+  dateRange: DateRange?,
+  chartRange: ChartRange?,
+  aggregation: ChartDataAggregation?,
+  sets: List<ChannelChartSets>
+) : ChartData(dateRange, chartRange, aggregation, sets) {
+  abstract fun combinedData(resources: Resources): CombinedData?
+}
+
 abstract class ChartData(
   val dateRange: DateRange?,
   val chartRange: ChartRange?,
@@ -165,8 +174,6 @@ abstract class ChartData(
 
     return null
   }
-
-  abstract fun combinedData(resources: Resources): CombinedData?
 
   override fun fromCoordinate(x: Float): Float =
     x.times(divider)

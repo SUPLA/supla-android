@@ -97,7 +97,9 @@ enum class SuplaElectricityMeasurementType(val rawValue: Int, val ordering: Int,
       POWER_FACTOR -> ""
       PHASE_ANGLE -> "°"
       FORWARD_ACTIVE_ENERGY,
-      REVERSE_ACTIVE_ENERGY -> "kWh"
+      REVERSE_ACTIVE_ENERGY,
+      FORWARD_ACTIVE_ENERGY_BALANCED,
+      REVERSE_ACTIVE_ENERGY_BALANCED -> "kWh"
 
       FORWARD_REACTIVE_ENERGY,
       REVERSE_REACTIVE_ENERGY -> "kvarh"

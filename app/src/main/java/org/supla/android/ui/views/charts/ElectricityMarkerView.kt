@@ -23,10 +23,12 @@ import android.widget.TableLayout
 import androidx.core.content.res.ResourcesCompat
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.highlight.Highlight
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
 import org.supla.android.data.formatting.DateFormatter
+import org.supla.android.data.model.chart.ChartDataAggregation
 import org.supla.android.data.model.chart.marker.ChartEntryDetails
 import org.supla.android.extensions.guardLet
 import org.supla.android.features.details.electricitymeterdetail.history.ElectricityMeterChartType
@@ -75,6 +77,7 @@ class ElectricityMarkerView(context: Context) : BaseMarkerView(context) {
 
   @Inject
   override lateinit var dateFormatter: DateFormatter
+
   override fun refreshContent(entry: Entry, highlight: Highlight?, details: ChartEntryDetails) {
     title.text = getFormattedDate(details)
     text.visibility = GONE
@@ -90,20 +93,26 @@ class ElectricityMarkerView(context: Context) : BaseMarkerView(context) {
 
     val (customData) = guardLet(details.customData as? ElectricityMarkerCustomData) { return }
     val (filters) = guardLet(customData.filters) { return }
-    val (barEntry) = guardLet(entry as? BarEntry) { return }
 
-    when (filters.type) {
-      ElectricityMeterChartType.REVERSED_ACTIVE_ENERGY,
-      ElectricityMeterChartType.FORWARDED_ACTIVE_ENERGY,
-      ElectricityMeterChartType.REVERSED_REACTIVE_ENERGY,
-      ElectricityMeterChartType.FORWARDED_REACTIVE_ENERGY ->
-        showPhases(filters.selectedPhases, highlight, barEntry, customData)
+    if (details.aggregation.isRank) {
+      val (pieEntry) = guardLet(entry as? PieEntry) { return }
+      showRank(pieEntry, details.aggregation, customData, highlight?.x)
+    } else {
+      val (barEntry) = guardLet(entry as? BarEntry) { return }
 
-      ElectricityMeterChartType.BALANCE_HOURLY,
-      ElectricityMeterChartType.BALANCE_VECTOR,
-      ElectricityMeterChartType.BALANCE_ARITHMETIC -> showBalanceTwoValues(highlight, barEntry, customData)
+      when (filters.type) {
+        ElectricityMeterChartType.REVERSED_ACTIVE_ENERGY,
+        ElectricityMeterChartType.FORWARDED_ACTIVE_ENERGY,
+        ElectricityMeterChartType.REVERSED_REACTIVE_ENERGY,
+        ElectricityMeterChartType.FORWARDED_REACTIVE_ENERGY ->
+          showPhases(filters.selectedPhases, highlight, barEntry, customData)
 
-      ElectricityMeterChartType.BALANCE_CHART_AGGREGATED -> showBalanceThreeValues(highlight, barEntry)
+        ElectricityMeterChartType.BALANCE_HOURLY,
+        ElectricityMeterChartType.BALANCE_VECTOR,
+        ElectricityMeterChartType.BALANCE_ARITHMETIC -> showBalanceTwoValues(highlight, barEntry, customData)
+
+        ElectricityMeterChartType.BALANCE_CHART_AGGREGATED -> showBalanceThreeValues(highlight, barEntry)
+      }
     }
   }
 
@@ -184,6 +193,19 @@ class ElectricityMarkerView(context: Context) : BaseMarkerView(context) {
     fourthRow.cost.text = ElectricityMarkerCustomData.EMPTY
     if (highlight?.stackIndex == 0) fourthRow.bold() else fourthRow.regular()
     fourthRow.show(withLabel = false)
+  }
+
+  private fun showRank(pieEntry: PieEntry, aggregation: ChartDataAggregation, customData: ElectricityMarkerCustomData, idx: Float?) {
+    idx?.let {
+      aggregation.colors(context)?.get(idx.toInt())?.let { color ->
+        firstRow.icon.setImageResource(R.drawable.ic_phase_point_color)
+        firstRow.icon.imageTintList = ColorStateList.valueOf(color)
+      }
+    }
+    firstRow.value.text = formatter.format(pieEntry.value)
+    firstRow.cost.text = customData.priceString(pieEntry.value)
+    firstRow.regular()
+    firstRow.show(withLabel = false)
   }
 
   private fun createTableLayout(): TableLayout {

@@ -43,4 +43,17 @@ enum class ElectricityMeterChartType(@StringRes override val labelRes: Int) : Sp
       BALANCE_HOURLY,
       BALANCE_CHART_AGGREGATED -> false
     }
+
+  val isBalance: Boolean
+    get() = when (this) {
+      BALANCE_VECTOR,
+      BALANCE_ARITHMETIC,
+      BALANCE_HOURLY,
+      BALANCE_CHART_AGGREGATED -> true
+
+      FORWARDED_ACTIVE_ENERGY,
+      REVERSED_ACTIVE_ENERGY,
+      FORWARDED_REACTIVE_ENERGY,
+      REVERSED_REACTIVE_ENERGY -> false
+    }
 }
