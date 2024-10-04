@@ -39,8 +39,8 @@ data object ThermometerChartStyle : ChartStyle(
 )
 
 data object GpmChartStyle : ChartStyle(
-  leftAxisColor = R.color.chart_gpm_axis_left,
-  rightAxisColor = R.color.chart_gpm_axis_left,
+  leftAxisColor = R.color.on_background,
+  rightAxisColor = R.color.on_background,
   drawBarShadow = true,
   markerViewProvider = { ChartMarkerView(it) }
 )

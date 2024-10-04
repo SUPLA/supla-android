@@ -42,7 +42,6 @@
     <color name="chart_humidity_1">#FF57A0FF</color>
     <color name="chart_humidity_2">#FF33FFEC</color>
     <color name="chart_gpm">#FF01C2FB</color>
-    <color name="chart_gpm_axis_left">#003037</color>
     <color name="chart_pie_1">#F4A261</color>
     <color name="chart_pie_2">#C2DF4E</color>
     <color name="chart_pie_3">#2A9D8F</color>
