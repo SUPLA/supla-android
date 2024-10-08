@@ -33,9 +33,11 @@ import com.github.mikephil.charting.charts.CombinedChart
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
+import com.github.mikephil.charting.components.YAxis.AxisDependency
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.listener.ChartTouchListener
 import com.github.mikephil.charting.listener.OnChartGestureListener
+import com.github.mikephil.charting.utils.ViewPortHandler
 import org.supla.android.R
 import org.supla.android.data.formatting.DateFormatter
 import org.supla.android.data.formatting.LocalDateFormatter
@@ -92,8 +94,10 @@ fun CombinedChart(
         it.xAxis.setDrawGridLines(false)
         it.xAxis.setDrawAxisLine(false)
         it.xAxis.position = XAxis.XAxisPosition.BOTTOM
+        xAxisFormatter.chart = it
+        xAxisFormatter.handler = it.viewPortHandler
         it.xAxis.valueFormatter = xAxisFormatter
-        it.xAxis.labelCount = 6
+        it.xAxis.labelCount = 5
         it.xAxis.textColor = onBackgroundColor
         // Others
         it.data = combinedData
@@ -201,11 +205,20 @@ private class CombinedChartAxisXFormatter(
 ) : ValueFormatter() {
 
   lateinit var converter: ChartData
+  lateinit var chart: CombinedChart
+  lateinit var handler: ViewPortHandler
 
   override fun getAxisLabel(value: Float, axis: AxisBase?): String {
+    val left = chart.getValuesByTouchPoint(handler.contentLeft(), handler.contentTop(), AxisDependency.LEFT)
+    val right = chart.getValuesByTouchPoint(handler.contentRight(), handler.contentTop(), AxisDependency.LEFT)
+
+    val distanceInDaysFromChart = (converter.fromCoordinate(right.x.toFloat()) - converter.fromCoordinate(left.x.toFloat())) / 3600 / 24
     val distanceInDays = converter.distanceInDays ?: 1
     return when {
-      distanceInDays <= 1 ->
+      distanceInDays > 1 && distanceInDaysFromChart <= 2 ->
+        dateFormatter.getDayAndHourShortDateString(Date(converter.fromCoordinate(value).times(1000).toLong())) ?: ""
+
+      distanceInDaysFromChart <= 1 ->
         dateFormatter.getHourString(Date(converter.fromCoordinate(value).times(1000).toLong())) ?: ""
 
       else -> {

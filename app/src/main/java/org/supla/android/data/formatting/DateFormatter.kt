@@ -22,69 +22,48 @@ import androidx.compose.runtime.compositionLocalOf
 import java.text.SimpleDateFormat
 import java.util.Date
 
+@SuppressLint("SimpleDateFormat")
 class DateFormatter {
-  @SuppressLint("SimpleDateFormat")
+  private val hourFormatter = SimpleDateFormat("HH:mm")
+  private val monthFormatter = SimpleDateFormat("dd MMM")
+  private val dateFormatter = SimpleDateFormat("dd.MM.yyyy")
+  private val shortDateFormatter = SimpleDateFormat("dd.MM.yy")
+  private val fullDateFormatter = SimpleDateFormat("dd.MM.yyyy HH:mm")
+  private val dayHourFormatter = SimpleDateFormat("EEEE HH:mm")
+  private val dayAndHourFormatter = SimpleDateFormat("dd MMM HH:mm")
+  private val dayAndHourShortFormatter = SimpleDateFormat("dd.MM HH:mm")
+  private val monthAndYearFormatter = SimpleDateFormat("LLLL yyyy")
+  private val yearFormatter = SimpleDateFormat("yyyy")
+
   fun getHourString(date: Date?): String? =
-    date?.let {
-      val formatter = SimpleDateFormat("HH:mm")
-      formatter.format(it)
-    }
+    date?.let { hourFormatter.format(it) }
 
-  @SuppressLint("SimpleDateFormat")
   fun getMonthString(date: Date?): String? =
-    date?.let {
-      val formatter = SimpleDateFormat("dd MMM")
-      formatter.format(it)
-    }
+    date?.let { monthFormatter.format(it) }
 
-  @SuppressLint("SimpleDateFormat")
   fun getDateString(date: Date?): String? =
-    date?.let {
-      val formatter = SimpleDateFormat("dd.MM.yyyy")
-      formatter.format(it)
-    }
+    date?.let { dateFormatter.format(it) }
 
-  @SuppressLint("SimpleDateFormat")
   fun getShortDateString(date: Date?): String? =
-    date?.let {
-      val formatter = SimpleDateFormat("dd.MM.yy")
-      formatter.format(it)
-    }
+    date?.let { shortDateFormatter.format(it) }
 
-  @SuppressLint("SimpleDateFormat")
   fun getFullDateString(date: Date?): String? =
-    date?.let {
-      val formatter = SimpleDateFormat("dd.MM.yyyy HH:mm")
-      formatter.format(it)
-    }
+    date?.let { fullDateFormatter.format(it) }
 
-  @SuppressLint("SimpleDateFormat")
   fun getDayHourDateString(date: Date?): String? =
-    date?.let {
-      val formatter = SimpleDateFormat("EEEE HH:mm")
-      formatter.format(it)
-    }
+    date?.let { dayHourFormatter.format(it) }
 
-  @SuppressLint("SimpleDateFormat")
   fun getDayAndHourDateString(date: Date?): String? =
-    date?.let {
-      val formatter = SimpleDateFormat("dd MMM HH:mm")
-      formatter.format(it)
-    }
+    date?.let { dayAndHourFormatter.format(it) }
 
-  @SuppressLint("SimpleDateFormat")
+  fun getDayAndHourShortDateString(date: Date?): String? =
+    date?.let { dayAndHourShortFormatter.format(it) }
+
   fun getMonthAndYearString(date: Date?): String? =
-    date?.let {
-      val formatter = SimpleDateFormat("LLLL yyyy")
-      formatter.format(it)
-    }
+    date?.let { monthAndYearFormatter.format(it) }
 
-  @SuppressLint("SimpleDateFormat")
   fun getYearString(date: Date?): String? =
-    date?.let {
-      val formatter = SimpleDateFormat("yyyy")
-      formatter.format(it)
-    }
+    date?.let { yearFormatter.format(it) }
 }
 
 val LocalDateFormatter = compositionLocalOf { DateFormatter() }
