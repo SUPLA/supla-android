@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <full-backup-content>
-    <exclude
-        domain="database"
-        path="supla.db" />
-    <exclude
-        domain="database"
-        path="supla_measurements.db" />
-    <!-- Exclude specific shared preferences that contain GCM registration Id -->
+  <exclude
+    domain="database"
+    path="supla.db" />
+  <exclude
+    domain="database"
+    path="supla_measurements.db" />
+  <!-- Exclude specific shared preferences that contain GCM registration Id -->
+  <exclude
+    domain="sharedpref"
+    path="secured_preferences.xml" />
 </full-backup-content>
