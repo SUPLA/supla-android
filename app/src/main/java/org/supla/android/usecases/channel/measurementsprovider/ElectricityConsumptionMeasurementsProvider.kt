@@ -262,7 +262,7 @@ class ElectricityConsumptionMeasurementsProvider @Inject constructor(
     spec: ChartDataSpec,
     formatter: ChartDataAggregation.Formatter
   ): List<AggregatedEntity> =
-    balanceHourly(measurements, formatter)
+    measurements.balanceHourly(formatter)
       .groupBy { item -> spec.aggregation.aggregator(item.date, formatter) }
       .filter { group -> group.value.isNotEmpty() }
       .map { group ->
@@ -272,24 +272,6 @@ class ElectricityConsumptionMeasurementsProvider @Inject constructor(
         )
       }
       .toList()
-
-  private fun balanceHourly(measurements: List<ElectricityMeterLogEntity>, formatter: ChartDataAggregation.Formatter) =
-    measurements
-      .groupBy { item -> ChartDataAggregation.HOURS.aggregator(item.date, formatter) }
-      .asSequence()
-      .filter { group -> group.value.isNotEmpty() }
-      .map { group ->
-        val consumption =
-          group.value.map { it.phase1Fae ?: 0f }.sum() +
-            group.value.map { it.phase2Fae ?: 0f }.sum() +
-            group.value.map { it.phase3Fae ?: 0f }.sum()
-        val production =
-          group.value.map { it.phase1Rae ?: 0f }.sum() +
-            group.value.map { it.phase2Rae ?: 0f }.sum() +
-            group.value.map { it.phase3Rae ?: 0f }.sum()
-        val result = consumption - production
-        BalancedValue(group.value.firstOrNull()!!.date, if (result > 0) result else 0f, if (result < 0) -result else 0f)
-      }
 
   private fun aggregatedPhases(
     spec: ChartDataSpec,
