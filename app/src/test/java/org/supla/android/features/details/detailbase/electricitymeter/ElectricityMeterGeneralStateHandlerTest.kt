@@ -72,7 +72,7 @@ class ElectricityMeterGeneralStateHandlerTest {
       every { summary } returns mockk {
         every { totalForwardActiveEnergy } returns 100.0
       }
-      every { pricePerUnit } returns 10.0
+      every { pricePerUnit } returns 2.0
       every { currency } returns "PLN"
       every { getMeasurement(1, 0) } returns mockMeasurement(1)
       every { getMeasurement(2, 0) } returns mockMeasurement(2)
@@ -97,7 +97,7 @@ class ElectricityMeterGeneralStateHandlerTest {
     assertThat(result).isEqualTo(
       state.copy(
         online = true,
-        totalForwardActiveEnergy = EnergyData("100.0 kWh", "1000.00 PLN"),
+        totalForwardActiveEnergy = EnergyData("100.0 kWh", "200.00 PLN"),
         phaseMeasurementTypes = listOf(
           SuplaElectricityMeasurementType.FREQUENCY,
           SuplaElectricityMeasurementType.VOLTAGE,
@@ -105,7 +105,7 @@ class ElectricityMeterGeneralStateHandlerTest {
           SuplaElectricityMeasurementType.FORWARD_ACTIVE_ENERGY
         ),
         phaseMeasurementValues = listOf(
-          phaseWithMeasurements(R.string.em_chart_all_phases, "10.00 ", "21.00 ", forwardActiveEnergy = "600.00000 "),
+          phaseWithMeasurements(R.string.em_chart_all_phases, "10.00 ", "11 - 31 ", forwardActiveEnergy = "600.00000 "),
           phaseWithMeasurements(R.string.details_em_phase1, "10.00 ", "11.00 ", "12.00 ", "100.00000 "),
           phaseWithMeasurements(R.string.details_em_phase2, "20.00 ", "21.00 ", "22.00 ", "200.00000 "),
           phaseWithMeasurements(R.string.details_em_phase3, "30.00 ", "31.00 ", "32.00 ", "300.00000 ")

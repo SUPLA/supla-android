@@ -109,7 +109,14 @@ private fun PhaseWithMeasurements.Companion.allPhases(
     .filterValues { it.isNotEmpty() }
     .mapValues { it.key.merge(it.value) }
     .filterValues { it != null }
-    .mapValues { formatter.custom(it.value!!, it.key.precision) }
+    .mapValues {
+      when (val value = it.value!!) {
+        is SuplaElectricityMeasurementType.Value.Single ->
+          formatter.custom(value.value, it.key.precision)
+        is SuplaElectricityMeasurementType.Value.Double ->
+          "${formatter.custom(value.first, 0)}- ${formatter.custom(value.second, 0)}"
+      }
+    }
 
   return PhaseWithMeasurements(R.string.em_chart_all_phases, values)
 }

@@ -19,7 +19,7 @@ package org.supla.android.features.details.detailbase.electricitymeter
 
 import org.supla.android.extensions.ifNotZero
 import org.supla.android.usecases.channel.valueformatter.ChannelValueFormatter
-import java.util.Locale
+import java.text.DecimalFormat
 
 data class EnergyData(
   val energy: String,
@@ -29,7 +29,13 @@ data class EnergyData(
     operator fun invoke(formatter: ChannelValueFormatter, energy: Double, pricePerUnit: Double, currency: String): EnergyData =
       EnergyData(
         energy = formatter.format(energy),
-        price = pricePerUnit.ifNotZero { String.format(Locale.getDefault(), "%.2f %s", it.times(energy), currency) }
+        price = pricePerUnit.ifNotZero {
+          val decimalFormatter = DecimalFormat()
+          decimalFormatter.minimumFractionDigits = 2
+          decimalFormatter.maximumFractionDigits = 2
+
+          "${decimalFormatter.format(it.times(energy))} $currency"
+        }
       )
   }
 }

@@ -86,7 +86,8 @@ enum class HomeScreenContent(val value: Int) {
   TIME(1 shl 3),
   TIME_DATE(1 shl 4),
   TEMPERATURE_TIME(1 shl 5),
-  MAIN_AND_AUX_TEMPERATURE(1 shl 6)
+  MAIN_AND_AUX_TEMPERATURE(1 shl 6),
+  MODE_OR_TEMPERATURE(1 shl 7)
 }
 
 data class HomeScreenContentField(

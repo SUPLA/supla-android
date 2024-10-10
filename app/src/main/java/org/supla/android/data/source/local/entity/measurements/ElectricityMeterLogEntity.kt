@@ -261,4 +261,4 @@ private interface SetWithResetDetection {
   }
 }
 
-fun Long.toKWh(): Float = this.div(100000.00f)
+fun Long.toKWh(): Float = this.div(100_000.00f)

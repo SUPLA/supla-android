@@ -728,6 +728,11 @@
   <string name="thermostat_battery_cover_open" translatable="false">Battery cover open</string>
   <string name="details_em_hour_marker_title" translatable="false">%1$d o\'clock</string>
   <string name="history_data_type" translatable="false">Data type</string>
+  <string name="details_em_forward_active_energy_short" translatable="false">Forward active</string>
+  <string name="details_em_reverse_active_energy_short" translatable="false">Reverse active</string>
+  <string name="details_em_forward_reactive_energy_short" translatable="false">Forward reactive</string>
+  <string name="details_em_reverse_reactive_energy_short" translatable="false">Reverse reactive</string>
+  <string name="details_em_energy_label" translatable="false">Energy</string>
 
   <plurals name="details_timer_info_on" translatable="false">
     <item quantity="other">on</item>

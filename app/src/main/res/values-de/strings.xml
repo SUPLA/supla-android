@@ -631,6 +631,11 @@
   <string name="thermostat_battery_cover_open">Batteriefachdeckel offen</string>
   <string name="details_em_hour_marker_title">%1$d Uhr</string>
   <string name="history_data_type">Datentyp</string>
+  <string name="details_em_forward_active_energy_short">Wirk- aufgenommen</string>
+  <string name="details_em_reverse_active_energy_short">Wirk- zurückgegeben</string>
+  <string name="details_em_forward_reactive_energy_short">Blind- aufgenommen</string>
+  <string name="details_em_reverse_reactive_energy_short">Blind- zurückgegeben</string>
+  <string name="details_em_energy_label">Energie</string>
   <plurals name="details_timer_info_on">
     <item quantity="one">eingeschaltet</item>
     <item quantity="other">eingeschaltet</item>
