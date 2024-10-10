@@ -706,6 +706,11 @@
   <string name="thermostat_battery_cover_open">Otwarta pokrywa baterii</string>
   <string name="details_em_hour_marker_title">Godzina %1$d</string>
   <string name="history_data_type">Typ danych</string>
+  <string name="details_em_forward_active_energy_short">Czynna pobrana</string>
+  <string name="details_em_reverse_active_energy_short">Czynna zwrócona</string>
+  <string name="details_em_forward_reactive_energy_short">Indukcyjna</string>
+  <string name="details_em_reverse_reactive_energy_short">Pojemnościowa</string>
+  <string name="details_em_energy_label">Energia</string>
 
   <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
     <item quantity="one">włączone</item>
