@@ -635,18 +635,6 @@ data class HistoryDetailViewState(
       }
     }
 
-  val showBottomBar: Boolean
-    get() = when (filters.selectedRange) {
-      ChartRange.DAY,
-      ChartRange.WEEK,
-      ChartRange.MONTH,
-      ChartRange.QUARTER,
-      ChartRange.YEAR,
-      ChartRange.ALL_HISTORY -> true
-
-      else -> false
-    }
-
   val allowNavigation: Boolean
     get() = when (filters.selectedRange) {
       ChartRange.DAY,
