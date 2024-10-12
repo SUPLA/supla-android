@@ -157,7 +157,11 @@ private fun PhasesData(measurementTypes: List<SuplaElectricityMeasurementType>, 
 }
 
 @Composable
-private fun PhaseDataLabels(measurementTypes: List<SuplaElectricityMeasurementType>, withHeader: Boolean = true) =
+private fun PhaseDataLabels(
+  measurementTypes: List<SuplaElectricityMeasurementType>,
+  withHeader: Boolean = true,
+  withLabel: Boolean = true
+) =
   Column(
     modifier = Modifier
       .width(IntrinsicSize.Max)
@@ -167,8 +171,13 @@ private fun PhaseDataLabels(measurementTypes: List<SuplaElectricityMeasurementTy
     if (withHeader) {
       PhaseHeader()
     }
+    var energyShown = false
     measurementTypes.forEach {
-      TypeLabel(stringResource(id = it.labelRes))
+      if (!energyShown && it.showEnergyLabel && withLabel) {
+        EnergyLabel(text = stringResource(id = R.string.details_em_energy_label))
+        energyShown = true
+      }
+      TypeLabel(stringResource(id = it.shortLabel))
     }
   }
 
@@ -176,7 +185,8 @@ private fun PhaseDataLabels(measurementTypes: List<SuplaElectricityMeasurementTy
 private fun PhaseDataSinglePhase(
   phase: PhaseWithMeasurements,
   types: List<SuplaElectricityMeasurementType>,
-  showPhaseName: Boolean
+  showPhaseName: Boolean,
+  withLabel: Boolean = true
 ) =
   Column(
     modifier = Modifier
@@ -192,7 +202,12 @@ private fun PhaseDataSinglePhase(
         modifier = Modifier.width(IntrinsicSize.Max),
         horizontalAlignment = Alignment.CenterHorizontally
       ) {
+        var energyShown = false
         types.forEach {
+          if (!energyShown && it.showEnergyLabel && withLabel) {
+            EnergyLabel()
+            energyShown = true
+          }
           PhaseValue(phase.values[it] ?: ValuesFormatter.NO_VALUE_TEXT)
         }
       }
@@ -200,7 +215,12 @@ private fun PhaseDataSinglePhase(
         modifier = Modifier.width(IntrinsicSize.Max),
         horizontalAlignment = Alignment.CenterHorizontally
       ) {
+        var energyShown = false
         types.forEach {
+          if (!energyShown && it.showEnergyLabel && withLabel) {
+            EnergyLabel()
+            energyShown = true
+          }
           PhaseValueUnit(if (phase.values.contains(it) && phase.values[it] != null) it.unit else "")
         }
       }
@@ -242,6 +262,19 @@ private fun PhaseHeader(text: String = "", alignment: TextAlign = TextAlign.Star
   )
 
 @Composable
+private fun EnergyLabel(text: String = "") =
+  Text(
+    text = text,
+    style = MaterialTheme.typography.labelMedium,
+    color = MaterialTheme.colorScheme.onBackground,
+    modifier = Modifier
+      .fillMaxWidth()
+      .background(MaterialTheme.colorScheme.surface)
+      .padding(top = Distance.small, bottom = Distance.tiny)
+      .wrapContentHeight(align = Alignment.CenterVertically)
+  )
+
+@Composable
 private fun TypeLabel(text: String = "") =
   Text(
     text = text,
@@ -252,7 +285,6 @@ private fun TypeLabel(text: String = "") =
       .height(35.dp)
       .fillMaxWidth()
       .background(MaterialTheme.colorScheme.surface)
-      .padding(end = Distance.small)
       .wrapContentHeight(align = Alignment.CenterVertically)
   )
 
@@ -361,7 +393,8 @@ private fun Preview() {
         phaseMeasurementTypes = listOf(
           SuplaElectricityMeasurementType.FREQUENCY,
           SuplaElectricityMeasurementType.CURRENT,
-          SuplaElectricityMeasurementType.VOLTAGE
+          SuplaElectricityMeasurementType.VOLTAGE,
+          SuplaElectricityMeasurementType.FORWARD_ACTIVE_ENERGY
         ),
         phaseMeasurementValues = listOf(
           PhaseWithMeasurements(
@@ -369,7 +402,8 @@ private fun Preview() {
             mapOf(
               SuplaElectricityMeasurementType.FREQUENCY to "50",
               SuplaElectricityMeasurementType.CURRENT to "5",
-              SuplaElectricityMeasurementType.VOLTAGE to "245"
+              SuplaElectricityMeasurementType.VOLTAGE to "245",
+              SuplaElectricityMeasurementType.FORWARD_ACTIVE_ENERGY to "245"
             )
           ),
           PhaseWithMeasurements(
@@ -377,7 +411,8 @@ private fun Preview() {
             mapOf(
               SuplaElectricityMeasurementType.FREQUENCY to "50",
               SuplaElectricityMeasurementType.CURRENT to "3",
-              SuplaElectricityMeasurementType.VOLTAGE to "243"
+              SuplaElectricityMeasurementType.VOLTAGE to "243",
+              SuplaElectricityMeasurementType.FORWARD_ACTIVE_ENERGY to "245"
             )
           ),
           PhaseWithMeasurements(
@@ -385,7 +420,8 @@ private fun Preview() {
             mapOf(
               SuplaElectricityMeasurementType.FREQUENCY to "50",
               SuplaElectricityMeasurementType.CURRENT to "4",
-              SuplaElectricityMeasurementType.VOLTAGE to "248"
+              SuplaElectricityMeasurementType.VOLTAGE to "248",
+              SuplaElectricityMeasurementType.FORWARD_ACTIVE_ENERGY to "245"
             )
           )
         ),

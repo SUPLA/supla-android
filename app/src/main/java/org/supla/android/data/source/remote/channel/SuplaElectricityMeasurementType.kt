@@ -103,8 +103,6 @@ enum class SuplaElectricityMeasurementType(val rawValue: Int, val ordering: Int,
 
       FORWARD_REACTIVE_ENERGY,
       REVERSE_REACTIVE_ENERGY -> "kvarh"
-
-      else -> ""
     }
 
   val precision: Int
@@ -126,17 +124,45 @@ enum class SuplaElectricityMeasurementType(val rawValue: Int, val ordering: Int,
       else -> 0
     }
 
-  fun merge(values: List<Float>): Float? =
+  val showEnergyLabel: Boolean
+    get() = when (this) {
+      FORWARD_ACTIVE_ENERGY,
+      REVERSE_ACTIVE_ENERGY,
+      FORWARD_REACTIVE_ENERGY,
+      REVERSE_REACTIVE_ENERGY -> true
+
+      else -> false
+    }
+
+  val shortLabel: Int
+    get() = when (this) {
+      FREQUENCY -> R.string.details_em_frequency
+      VOLTAGE -> R.string.details_em_voltage
+      CURRENT, CURRENT_OVER_65A -> R.string.details_em_current
+      POWER_ACTIVE, POWER_ACTIVE_KW -> R.string.details_em_power_active
+      POWER_REACTIVE, POWER_REACTIVE_KVAR -> R.string.details_em_power_reactive
+      POWER_APPARENT, POWER_APPARENT_KVA -> R.string.details_em_power_apparent
+      POWER_FACTOR -> R.string.details_em_power_factor
+      PHASE_ANGLE -> R.string.details_em_phase_angle
+      FORWARD_ACTIVE_ENERGY -> R.string.details_em_forward_active_energy_short
+      REVERSE_ACTIVE_ENERGY -> R.string.details_em_reverse_active_energy_short
+      FORWARD_ACTIVE_ENERGY_BALANCED -> R.string.details_em_forward_active_energy_short
+      REVERSE_ACTIVE_ENERGY_BALANCED -> R.string.details_em_reverse_active_energy_short
+      FORWARD_REACTIVE_ENERGY -> R.string.details_em_forward_reactive_energy_short
+      REVERSE_REACTIVE_ENERGY -> R.string.details_em_reverse_reactive_energy_short
+    }
+
+  fun merge(values: List<Float>): Value? =
     when (this) {
-      FREQUENCY -> values.first()
-      VOLTAGE -> values.average().toFloat()
+      FREQUENCY -> Value.Single(values.first())
+      VOLTAGE -> Value.Double(values.min(), values.max())
       POWER_ACTIVE,
       POWER_REACTIVE,
       POWER_APPARENT,
       FORWARD_ACTIVE_ENERGY,
       REVERSE_ACTIVE_ENERGY,
       FORWARD_REACTIVE_ENERGY,
-      REVERSE_REACTIVE_ENERGY -> values.sum()
+      REVERSE_REACTIVE_ENERGY -> Value.Single(values.sum())
 
       else -> null
     }
@@ -162,6 +188,11 @@ enum class SuplaElectricityMeasurementType(val rawValue: Int, val ordering: Int,
           remove(POWER_APPARENT)
         }
       }
+  }
+
+  sealed interface Value {
+    data class Single(val value: Float) : Value
+    data class Double(val first: Float, val second: Float) : Value
   }
 }
 

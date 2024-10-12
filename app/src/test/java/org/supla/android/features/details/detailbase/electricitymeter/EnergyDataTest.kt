@@ -43,7 +43,7 @@ class EnergyDataTest {
     // then
     Assertions.assertThat(result)
       .extracting({ it.energy }, { it.price })
-      .containsExactly(energyString, "1234.50 PLN")
+      .containsExactly(energyString, "1,234.50 PLN")
   }
 
   @Test
