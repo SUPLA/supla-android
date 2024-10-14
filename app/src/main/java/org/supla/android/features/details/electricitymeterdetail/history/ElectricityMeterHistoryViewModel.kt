@@ -114,7 +114,7 @@ class ElectricityMeterHistoryViewModel @Inject constructor(
       (state.chartCustomFilters as? ElectricityChartFilters)?.let {
         val customFilters = state.chartCustomFilters.copy(type = type, selectedPhases = phases)
         state.copy(
-          chartCustomFilters = state.chartCustomFilters.copy(type = type, selectedPhases = phases),
+          chartCustomFilters = customFilters,
           chartDataSelectionDialogState = null,
           loading = true,
           initialLoadStarted = false,
@@ -130,7 +130,8 @@ class ElectricityMeterHistoryViewModel @Inject constructor(
 
   override fun loadChartState(profileId: Long, remoteId: Int): ChartState =
     userStateHolder.getElectricityChartState(profileId, remoteId)
-      // currently there is only one set and has to be always visible, should be removed when char comparisons added
+      // currently there is only one set and has to be always visible, should be removed when chart comparisons added
+      // If not set to null, set will be displayed as not active
       .copy(visibleSets = null)
 
   override fun exportChartState(state: HistoryDetailViewState): ChartState? {

@@ -52,6 +52,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewFontScale
@@ -135,6 +136,7 @@ private fun PhasesData(measurementTypes: List<SuplaElectricityMeasurementType>, 
       .fillMaxWidth()
   ) {
     var freeSpace by remember { mutableStateOf<Dp?>(null) }
+    var selectedType by remember { mutableStateOf<SuplaElectricityMeasurementType?>(null) }
     val density = LocalDensity.current
     val width = maxWidth
 
@@ -148,10 +150,29 @@ private fun PhasesData(measurementTypes: List<SuplaElectricityMeasurementType>, 
         .horizontalScroll(rememberScrollState())
     ) {
       val showPhaseName = phaseValues.size > 1
-      PhaseDataLabels(measurementTypes = measurementTypes, withHeader = showPhaseName)
-      OptionalSpace(freeSpace = freeSpace, showPhaseName = showPhaseName, measurementsCount = measurementTypes.size)
-      phaseValues.forEach { PhaseDataSinglePhase(phase = it, types = measurementTypes, showPhaseName = showPhaseName) }
-      Spacer(modifier = Modifier.width(Distance.small))
+      PhaseDataLabels(
+        measurementTypes = measurementTypes,
+        withHeader = showPhaseName,
+        selectedLabel = selectedType,
+        onSelectedLabelChanged = { selectedType = if (selectedType == it) null else it }
+      )
+      OptionalSpace(
+        freeSpace = freeSpace,
+        showPhaseName = showPhaseName,
+        measurements = measurementTypes,
+        selectedLabel = selectedType,
+        onSelectedLabelChanged = { selectedType = if (selectedType == it) null else it }
+      )
+      phaseValues.forEachIndexed { index, phase ->
+        PhaseDataSinglePhase(
+          phase = phase,
+          types = measurementTypes,
+          showPhaseName = showPhaseName,
+          selectedLabel = selectedType,
+          onSelectedLabelChanged = { selectedType = if (selectedType == it) null else it },
+          withMargin = index + 1 == phaseValues.size
+        )
+      }
     }
   }
 }
@@ -160,12 +181,13 @@ private fun PhasesData(measurementTypes: List<SuplaElectricityMeasurementType>, 
 private fun PhaseDataLabels(
   measurementTypes: List<SuplaElectricityMeasurementType>,
   withHeader: Boolean = true,
-  withLabel: Boolean = true
+  withLabel: Boolean = true,
+  selectedLabel: SuplaElectricityMeasurementType? = null,
+  onSelectedLabelChanged: ((SuplaElectricityMeasurementType) -> Unit)? = null
 ) =
   Column(
     modifier = Modifier
       .width(IntrinsicSize.Max)
-      .padding(start = Distance.small)
       .background(MaterialTheme.colorScheme.background)
   ) {
     if (withHeader) {
@@ -177,7 +199,7 @@ private fun PhaseDataLabels(
         EnergyLabel(text = stringResource(id = R.string.details_em_energy_label))
         energyShown = true
       }
-      TypeLabel(stringResource(id = it.shortLabel))
+      TypeLabel(stringResource(id = it.shortLabel), selected = it == selectedLabel, onClick = onSelectedLabelChanged?.click(it))
     }
   }
 
@@ -186,7 +208,10 @@ private fun PhaseDataSinglePhase(
   phase: PhaseWithMeasurements,
   types: List<SuplaElectricityMeasurementType>,
   showPhaseName: Boolean,
-  withLabel: Boolean = true
+  withLabel: Boolean = true,
+  selectedLabel: SuplaElectricityMeasurementType? = null,
+  onSelectedLabelChanged: ((SuplaElectricityMeasurementType) -> Unit)? = null,
+  withMargin: Boolean = false
 ) =
   Column(
     modifier = Modifier
@@ -208,7 +233,11 @@ private fun PhaseDataSinglePhase(
             EnergyLabel()
             energyShown = true
           }
-          PhaseValue(phase.values[it] ?: ValuesFormatter.NO_VALUE_TEXT)
+          PhaseValue(
+            text = phase.values[it] ?: ValuesFormatter.NO_VALUE_TEXT,
+            selected = it == selectedLabel,
+            onClick = onSelectedLabelChanged?.click(it)
+          )
         }
       }
       Column(
@@ -221,27 +250,43 @@ private fun PhaseDataSinglePhase(
             EnergyLabel()
             energyShown = true
           }
-          PhaseValueUnit(if (phase.values.contains(it) && phase.values[it] != null) it.unit else "")
+          PhaseValueUnit(
+            text = if (phase.values.contains(it) && phase.values[it] != null) it.unit else "",
+            withMargin = withMargin,
+            selected = it == selectedLabel,
+            onClick = onSelectedLabelChanged?.click(it)
+          )
         }
       }
     }
   }
 
 @Composable
-private fun OptionalSpace(freeSpace: Dp?, showPhaseName: Boolean, measurementsCount: Int) =
-  freeSpace?.let {
+private fun OptionalSpace(
+  freeSpace: Dp?,
+  showPhaseName: Boolean,
+  measurements: List<SuplaElectricityMeasurementType>,
+  selectedLabel: SuplaElectricityMeasurementType? = null,
+  onSelectedLabelChanged: ((SuplaElectricityMeasurementType) -> Unit)? = null
+) =
+  freeSpace?.let { space ->
     // For the single phase, when there is more space, we want that values are aligned to the right side of screen
-    if (it > 0.dp) {
+    if (space > 0.dp) {
       Column(
         modifier = Modifier
-          .width(it)
+          .width(space)
           .background(MaterialTheme.colorScheme.background)
       ) {
         if (showPhaseName) {
           PhaseHeader()
         }
-        repeat(measurementsCount) {
-          TypeLabel()
+        var energyLabelShown = false
+        measurements.forEach {
+          if (it.showEnergyLabel && !energyLabelShown) {
+            EnergyLabel()
+            energyLabelShown = true
+          }
+          TypeLabel(selected = it == selectedLabel, onClick = onSelectedLabelChanged?.click(it))
         }
       }
     }
@@ -270,29 +315,37 @@ private fun EnergyLabel(text: String = "") =
     modifier = Modifier
       .fillMaxWidth()
       .background(MaterialTheme.colorScheme.surface)
-      .padding(top = Distance.small, bottom = Distance.tiny)
+      .padding(top = Distance.small, bottom = Distance.tiny, start = Distance.small)
       .wrapContentHeight(align = Alignment.CenterVertically)
   )
 
 @Composable
-private fun TypeLabel(text: String = "") =
+private fun TypeLabel(text: String = "", selected: Boolean = false, onClick: (() -> Unit)? = null) {
   Text(
     text = text,
-    style = MaterialTheme.typography.bodyMedium,
+    style = MaterialTheme.typography.bodyMedium.copy(fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal),
     color = MaterialTheme.colorScheme.onBackground,
     modifier = Modifier
       .padding(bottom = 1.dp)
       .height(35.dp)
       .fillMaxWidth()
-      .background(MaterialTheme.colorScheme.surface)
+      .background(if (selected) MaterialTheme.colorScheme.outline else MaterialTheme.colorScheme.surface)
+      .padding(start = Distance.small)
       .wrapContentHeight(align = Alignment.CenterVertically)
+      .clickable(
+        interactionSource = remember { MutableInteractionSource() },
+        indication = null,
+        enabled = onClick != null,
+        onClick = onClick ?: {}
+      )
   )
+}
 
 @Composable
-private fun PhaseValue(text: String) =
+private fun PhaseValue(text: String, selected: Boolean = false, onClick: (() -> Unit)? = null) =
   Text(
     text = text,
-    style = MaterialTheme.typography.bodyMedium,
+    style = MaterialTheme.typography.bodyMedium.copy(fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal),
     color = MaterialTheme.colorScheme.onBackground,
     textAlign = TextAlign.End,
     modifier = Modifier
@@ -300,23 +353,36 @@ private fun PhaseValue(text: String) =
       .height(35.dp)
       .defaultMinSize(minWidth = 70.dp)
       .fillMaxWidth()
-      .background(MaterialTheme.colorScheme.surface)
+      .background(if (selected) MaterialTheme.colorScheme.outline else MaterialTheme.colorScheme.surface)
       .padding(end = 4.dp, start = Distance.small)
       .wrapContentHeight(align = Alignment.CenterVertically)
+      .clickable(
+        interactionSource = remember { MutableInteractionSource() },
+        indication = null,
+        enabled = onClick != null,
+        onClick = onClick ?: {}
+      )
   )
 
 @Composable
-private fun PhaseValueUnit(text: String = "") =
+private fun PhaseValueUnit(text: String = "", withMargin: Boolean = false, selected: Boolean = false, onClick: (() -> Unit)? = null) =
   Text(
     text = text,
-    style = MaterialTheme.typography.bodyMedium,
+    style = MaterialTheme.typography.bodyMedium.copy(fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal),
     color = MaterialTheme.colorScheme.onSurfaceVariant,
     modifier = Modifier
       .padding(bottom = 1.dp)
       .height(35.dp)
       .fillMaxWidth()
-      .background(MaterialTheme.colorScheme.surface)
+      .background(if (selected) MaterialTheme.colorScheme.outline else MaterialTheme.colorScheme.surface)
+      .padding(end = if (withMargin) Distance.small else 0.dp)
       .wrapContentHeight(align = Alignment.CenterVertically)
+      .clickable(
+        interactionSource = remember { MutableInteractionSource() },
+        indication = null,
+        enabled = onClick != null,
+        onClick = onClick ?: {}
+      )
   )
 
 @Composable
@@ -347,9 +413,8 @@ private fun VectorBalancedData(data: Map<SuplaElectricityMeasurementType, String
         .horizontalScroll(rememberScrollState())
     ) {
       PhaseDataLabels(measurementTypes = data.keys.toList(), withHeader = false)
-      OptionalSpace(freeSpace = freeSpace, showPhaseName = false, measurementsCount = data.size)
+      OptionalSpace(freeSpace = freeSpace, showPhaseName = false, measurements = data.keys.toList())
       VectorBalancedDataValues(types = data.keys.toList(), values = data.values.toList())
-      Spacer(modifier = Modifier.width(Distance.small))
     }
   }
 }
@@ -376,10 +441,12 @@ private fun VectorBalancedDataValues(
         modifier = Modifier.width(IntrinsicSize.Max),
         horizontalAlignment = Alignment.CenterHorizontally
       ) {
-        types.forEach { PhaseValueUnit(it.unit) }
+        types.forEach { PhaseValueUnit(it.unit, withMargin = true) }
       }
     }
   }
+
+private fun ((SuplaElectricityMeasurementType) -> Unit).click(type: SuplaElectricityMeasurementType): () -> Unit = { this(type) }
 
 @Preview(showBackground = true)
 @PreviewScreenSizes
