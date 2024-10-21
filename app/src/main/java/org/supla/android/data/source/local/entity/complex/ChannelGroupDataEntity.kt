@@ -21,8 +21,8 @@ import androidx.room.Embedded
 import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.source.local.entity.ChannelGroupEntity
 import org.supla.android.data.source.local.entity.LocationEntity
-import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.db.ChannelGroup
+import org.supla.core.shared.data.SuplaChannelFunction
 
 data class ChannelGroupDataEntity(
   @Embedded(prefix = "group_") val channelGroupEntity: ChannelGroupEntity,

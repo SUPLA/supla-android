@@ -23,14 +23,14 @@ import org.supla.android.data.source.local.entity.ChannelGroupEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
-import org.supla.android.data.source.remote.channel.SuplaChannelFunction
-import org.supla.android.data.source.remote.channel.suplaFunction
 import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
 import org.supla.android.db.Channel
 import org.supla.android.db.ChannelBase
 import org.supla.android.db.ChannelGroup
 import org.supla.android.db.ChannelValue
 import org.supla.android.usecases.group.GetGroupActivePercentageUseCase
+import org.supla.core.shared.data.SuplaChannelFunction
+import org.supla.core.shared.data.suplaFunction
 import javax.inject.Inject
 import javax.inject.Singleton
 

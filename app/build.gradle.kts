@@ -113,6 +113,8 @@ repositories {
 }
 
 dependencies {
+  implementation(project(":shared-core"))
+
   implementation(Deps.Androidx.Core.Splash)
   implementation(Deps.Multidex)
   implementation(Deps.Androidx.Lifecycle.Extensions)
