@@ -17,7 +17,7 @@ package org.supla.android.data.model.general
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.data.source.remote.channel.SuplaChannelFunction
+import org.supla.core.shared.data.SuplaChannelFunction
 
 interface ChannelBase {
   val id: Long?

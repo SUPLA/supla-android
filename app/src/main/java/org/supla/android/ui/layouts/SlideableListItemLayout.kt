@@ -21,12 +21,16 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.widget.LinearLayout
+import androidx.appcompat.widget.AppCompatButton
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.Preferences
 import org.supla.android.R
+import org.supla.android.extensions.resourceId
 import org.supla.android.ui.lists.SlideableItem
 import org.supla.android.ui.lists.SwapableListItem
 import org.supla.android.ui.lists.data.SlideableListItemData
+import org.supla.core.shared.data.SuplaChannelFunction
+import org.supla.core.shared.usecase.GetChannelActionStringUseCase
 import java.lang.Integer.min
 import javax.inject.Inject
 
@@ -54,6 +58,9 @@ class SlideableListItemLayout @JvmOverloads constructor(
 
   @Inject
   lateinit var preferences: Preferences
+
+  @Inject
+  lateinit var getChannelActionStringUseCase: GetChannelActionStringUseCase
 
   override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
     val desiredHeight = resources.getDimensionPixelSize(R.dimen.channel_layout_height) * getScaleFactor()
@@ -96,8 +103,11 @@ class SlideableListItemLayout @JvmOverloads constructor(
     rightItem?.run { updateRightItemPosition(this) }
   }
 
-  fun bind(locationCaption: String) {
+  fun bind(locationCaption: String, function: SuplaChannelFunction) {
     this.locationCaption = locationCaption
+
+    getChannelActionStringUseCase.leftButton(function)?.resourceId?.let { (leftItem as? AppCompatButton)?.setText(it) }
+    getChannelActionStringUseCase.rightButton(function)?.resourceId?.let { (rightItem as? AppCompatButton)?.setText(it) }
   }
 
   private fun updateLeftItemPosition(item: View) {

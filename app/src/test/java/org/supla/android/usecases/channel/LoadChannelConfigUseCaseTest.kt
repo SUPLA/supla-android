@@ -35,8 +35,8 @@ import org.supla.android.data.source.RoomChannelRepository
 import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.remote.ChannelConfigType
 import org.supla.android.data.source.remote.SuplaChannelConfig
-import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.usecases.channelconfig.LoadChannelConfigUseCase
+import org.supla.core.shared.data.SuplaChannelFunction
 
 @RunWith(MockitoJUnitRunner::class)
 class LoadChannelConfigUseCaseTest {

@@ -21,12 +21,12 @@ import org.supla.android.core.storage.UserStateHolder
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.Electricity
 import org.supla.android.data.source.local.entity.custom.Phase
-import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType
 import org.supla.android.data.source.remote.channel.suplaElectricityMeterMeasuredTypes
 import org.supla.android.usecases.channel.ChannelValueProvider
 import org.supla.android.usecases.channel.ValueType
 import org.supla.android.usecases.channel.valueprovider.parser.IntValueParser
+import org.supla.core.shared.data.SuplaChannelFunction
 import javax.inject.Inject
 import javax.inject.Singleton
 

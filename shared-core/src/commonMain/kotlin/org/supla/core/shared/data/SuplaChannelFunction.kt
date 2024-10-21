@@ -1,4 +1,4 @@
-package org.supla.android.data.source.remote.channel
+package org.supla.core.shared.data
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 

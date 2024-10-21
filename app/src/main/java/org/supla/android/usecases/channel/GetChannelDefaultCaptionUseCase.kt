@@ -20,7 +20,7 @@ package org.supla.android.usecases.channel
 import androidx.annotation.StringRes
 import org.supla.android.R
 import org.supla.android.core.ui.StringProvider
-import org.supla.android.data.source.remote.channel.SuplaChannelFunction
+import org.supla.core.shared.data.SuplaChannelFunction
 import javax.inject.Inject
 import javax.inject.Singleton
 

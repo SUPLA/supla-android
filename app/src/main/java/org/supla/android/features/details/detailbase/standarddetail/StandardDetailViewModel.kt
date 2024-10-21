@@ -25,12 +25,12 @@ import org.supla.android.core.ui.StringProvider
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.model.general.ChannelDataBase
-import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
+import org.supla.core.shared.data.SuplaChannelFunction
 
 abstract class StandardDetailViewModel<S : StandardDetailViewState, E : StandardDetailViewEvent>(
   private val readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,

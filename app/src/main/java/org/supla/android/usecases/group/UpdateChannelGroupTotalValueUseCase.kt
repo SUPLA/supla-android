@@ -22,7 +22,6 @@ import org.supla.android.data.source.ChannelGroupRelationRepository
 import org.supla.android.data.source.ChannelGroupRepository
 import org.supla.android.data.source.local.entity.ChannelGroupEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity
-import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.usecases.group.totalvalue.DimmerAndRgbGroupValue
 import org.supla.android.usecases.group.totalvalue.DimmerGroupValue
 import org.supla.android.usecases.group.totalvalue.GroupTotalValue
@@ -33,6 +32,7 @@ import org.supla.android.usecases.group.totalvalue.ProjectorScreenGroupValue
 import org.supla.android.usecases.group.totalvalue.RgbGroupValue
 import org.supla.android.usecases.group.totalvalue.ShadingSystemGroupValue
 import org.supla.android.usecases.group.totalvalue.ShadowingBlindGroupValue
+import org.supla.core.shared.data.SuplaChannelFunction
 import javax.inject.Inject
 import javax.inject.Singleton
 

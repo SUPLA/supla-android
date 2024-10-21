@@ -711,6 +711,10 @@
   <string name="details_em_forward_reactive_energy_short">Indukcyjna</string>
   <string name="details_em_reverse_reactive_energy_short">Pojemnościowa</string>
   <string name="details_em_energy_label">Energia</string>
+  <string name="channel_btn_shut">Zasłoń</string>
+  <string name="channel_btn_reveal">Odsłoń</string>
+  <string name="channel_btn_collapse">Zwiń</string>
+  <string name="channel_btn_expand">Rozwiń</string>
 
   <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
     <item quantity="one">włączone</item>

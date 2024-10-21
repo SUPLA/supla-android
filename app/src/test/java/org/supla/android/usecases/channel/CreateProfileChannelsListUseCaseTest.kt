@@ -18,13 +18,13 @@ import org.supla.android.data.source.RoomChannelRepository
 import org.supla.android.data.source.local.entity.ChannelRelationEntity
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
-import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.data.source.remote.thermostat.ThermostatIndicatorIcon
 import org.supla.android.images.ImageId
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.ui.lists.data.IssueIconType
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.location.CollapsedFlag
+import org.supla.core.shared.data.SuplaChannelFunction
 
 @RunWith(MockitoJUnitRunner::class)
 class CreateProfileChannelsListUseCaseTest {
