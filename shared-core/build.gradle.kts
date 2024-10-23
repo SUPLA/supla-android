@@ -54,6 +54,8 @@ kotlin {
     val iosArm64Main by getting
     val iosSimulatorArm64Main by getting
   }
+
+  jvmToolchain(17)
 }
 
 dependencies {
