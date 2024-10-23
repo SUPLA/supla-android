@@ -27,8 +27,8 @@ android {
     }
   }
   compileOptions {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
   }
 }
 
@@ -54,8 +54,6 @@ kotlin {
     val iosArm64Main by getting
     val iosSimulatorArm64Main by getting
   }
-
-  jvmToolchain(17)
 }
 
 dependencies {
