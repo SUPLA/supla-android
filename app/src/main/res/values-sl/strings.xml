@@ -160,6 +160,7 @@
   <string name="history_range_last_week">Zadnjih 7 dni</string>
   <string name="history_range_last_30_days">Zadnjih 30 dni</string>
   <string name="history_range_last_90_days">Zadnjih 90 dni</string>
+  <string name="history_range_last_365_days">Zadnjih 365 dni</string>
   <string name="all_available_history">Vsa zgodovina je na voljo</string>
   <string name="retrieving_data_from_the_server">Prenos podatkov s strežnika...</string>
   <string name="no_chart_data_available">Za tabelo ni podatkov.</string>

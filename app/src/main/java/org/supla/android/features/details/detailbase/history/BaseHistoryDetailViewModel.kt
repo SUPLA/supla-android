@@ -530,7 +530,8 @@ abstract class BaseHistoryDetailViewModel(
     ChartRange.LAST_DAY,
     ChartRange.LAST_WEEK,
     ChartRange.LAST_MONTH,
-    ChartRange.LAST_QUARTER -> currentDate.shift(-range.roundedDaysCount)
+    ChartRange.LAST_QUARTER,
+    ChartRange.LAST_YEAR -> currentDate.shift(-range.roundedDaysCount)
 
     ChartRange.WEEK -> date.weekStart()
     ChartRange.MONTH -> date.monthStart()
@@ -545,7 +546,8 @@ abstract class BaseHistoryDetailViewModel(
     ChartRange.LAST_DAY,
     ChartRange.LAST_WEEK,
     ChartRange.LAST_MONTH,
-    ChartRange.LAST_QUARTER -> currentDate
+    ChartRange.LAST_QUARTER,
+    ChartRange.LAST_YEAR -> currentDate
 
     ChartRange.WEEK -> end.weekEnd()
     ChartRange.MONTH -> end.monthEnd()
@@ -680,7 +682,8 @@ data class HistoryDetailViewState(
 
         ChartRange.WEEK,
         ChartRange.LAST_QUARTER,
-        ChartRange.QUARTER -> dateString(dateRange)
+        ChartRange.QUARTER,
+        ChartRange.LAST_YEAR -> dateString(dateRange)
 
         ChartRange.MONTH -> dateFormatter.getMonthAndYearString(dateRange.start)?.capitalize(Locale.current)
         ChartRange.YEAR -> dateFormatter.getYearString(dateRange.start)
