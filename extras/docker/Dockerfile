@@ -15,5 +15,5 @@ RUN wget https://download.oracle.com/java/21/latest/jdk-21_linux-x64_bin.deb
 RUN dpkg -i jdk-21_linux-x64_bin.deb
 
 RUN yes | sdkmanager "platforms;android-33" --sdk_root=/usr/lib/android-sdk
-RUN yes | sdkmanager "build-tools;30.0.3" --sdk_root=/usr/lib/android-sdk
+RUN yes | sdkmanager "build-tools;34.0.0" --sdk_root=/usr/lib/android-sdk
 
