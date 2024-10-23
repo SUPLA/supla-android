@@ -143,6 +143,7 @@
   <string name="history_range_last_week">Últimos 7 dias</string>
   <string name="history_range_last_30_days">Últimos 30 dias</string>
   <string name="history_range_last_90_days">Últimos 90 dias</string>
+  <string name="history_range_last_365_days">Últimos 365 dias</string>
   <string name="all_available_history">Todo o histórico disponível</string>
   <string name="retrieving_data_from_the_server">Baixando dados do servidor ...</string>
   <string name="no_chart_data_available">Nenhum dado para o gráfico.</string>

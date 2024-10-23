@@ -565,6 +565,7 @@
   <string name="history_range_last_week">Ostatnie 7 dni</string>
   <string name="history_range_last_30_days">Ostatnie 30 dni</string>
   <string name="history_range_last_90_days">Ostatnie 90 dni</string>
+  <string name="history_range_last_365_days">Ostatnie 365 dni</string>
   <string name="history_range_current_day">Dzień</string>
   <string name="history_range_current_week">Tydzień</string>
   <string name="history_range_current_month">Miesiąc</string>
