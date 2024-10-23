@@ -87,7 +87,6 @@ import org.supla.android.core.networking.esp.EspHtmlParser;
 import org.supla.android.core.networking.suplaclient.SuplaClientEvent.AddWizardFinished;
 import org.supla.android.core.networking.suplaclient.SuplaClientEvent.AddWizardStopped;
 import org.supla.android.core.networking.suplaclient.SuplaClientState.Reason.AddWizardStarted;
-import org.supla.android.core.networking.suplaclient.SuplaClientStateHolder;
 import org.supla.android.lib.SuplaConst;
 import org.supla.android.lib.SuplaRegistrationEnabled;
 import org.supla.android.profile.AuthInfo;
@@ -167,7 +166,6 @@ public class AddDeviceWizardActivity extends WizardActivity
 
   @Inject ProfileManager profileManager;
   @Inject EspHtmlParser espHtmlParser;
-  @Inject SuplaClientStateHolder suplaClientStateHolder;
   @Inject DisconnectUseCase disconnectUseCase;
   @Inject SuplaSchedulers suplaSchedulers;
 
@@ -445,8 +443,6 @@ public class AddDeviceWizardActivity extends WizardActivity
       showError(R.string.wizard_no_internetwifi);
       return;
     }
-
-    SuplaApp.getApp().getSuplaClient();
 
     watchDog = new Timer();
     watchDog.schedule(
@@ -1117,23 +1113,20 @@ public class AddDeviceWizardActivity extends WizardActivity
             connectivityManager.bindProcessToNetwork(network);
 
             wizard.runOnUiThread(
-                new Runnable() {
-                  @Override
-                  public void run() {
-                    unregisterReceivers();
-                    removeConfigTask();
+                () -> {
+                  unregisterReceivers();
+                  removeConfigTask();
 
-                    espConfigTask = new ESPConfigureTask(espHtmlParser);
-                    espConfigTask.setDelegate(wizard);
+                  espConfigTask = new ESPConfigureTask(espHtmlParser);
+                  espConfigTask.setDelegate(wizard);
 
-                    setStep(STEP_CONFIGURE);
-                    AuthInfo info = profileManager.getCurrentProfile().blockingGet().getAuthInfo();
-                    espConfigTask.execute(
-                        getSelectedSSID(),
-                        edPassword.getText().toString(),
-                        info.getServerForEmail(),
-                        info.getEmailAddress());
-                  }
+                  setStep(STEP_CONFIGURE);
+                  AuthInfo info = profileManager.getCurrentProfile().blockingGet().getAuthInfo();
+                  espConfigTask.execute(
+                      getSelectedSSID(),
+                      edPassword.getText().toString(),
+                      info.getServerForEmail(),
+                      info.getEmailAddress());
                 });
           }
 
@@ -1142,12 +1135,10 @@ public class AddDeviceWizardActivity extends WizardActivity
             super.onUnavailable();
 
             wizard.runOnUiThread(
-                new Runnable() {
-                  @Override
-                  public void run() {
-                    unregisterCallbacks();
-                    showError(R.string.wizard_iodev_connect_failed);
-                  }
+                () -> {
+                  unregisterCallbacks();
+                  suplaClientStateHolder.handleEvent(AddWizardFinished.INSTANCE);
+                  showError(R.string.wizard_iodev_connect_failed);
                 });
           }
         };
@@ -1181,6 +1172,7 @@ public class AddDeviceWizardActivity extends WizardActivity
     }
 
     if (iodev_NetworkID == -1) {
+      suplaClientStateHolder.handleEvent(AddWizardFinished.INSTANCE);
       showError(R.string.wizard_addnetwork_error);
       return;
     }
@@ -1294,10 +1286,6 @@ public class AddDeviceWizardActivity extends WizardActivity
 
                   stateChangedReceiver = null;
 
-                  if (SuplaApp.getApp().getSuplaClient() != null) {
-                    SuplaApp.getApp().getSuplaClient().reconnect();
-                  }
-
                   setStep(STEP_DONE);
                   showDone(result);
                 }
@@ -1332,6 +1320,8 @@ public class AddDeviceWizardActivity extends WizardActivity
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
       connectToInternet_Q();
     }
+
+    suplaClientStateHolder.handleEvent(AddWizardFinished.INSTANCE);
   }
 
   private String getSelectedSSID() {
@@ -1429,7 +1419,6 @@ public class AddDeviceWizardActivity extends WizardActivity
   }
 
   private void resumeClientAndClose() {
-    suplaClientStateHolder.handleEvent(AddWizardFinished.INSTANCE);
     showMain(this);
     finish();
   }
