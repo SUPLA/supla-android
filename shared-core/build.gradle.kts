@@ -22,6 +22,9 @@ android {
     create("internaltest") {
       initWith(buildTypes.getByName("debug"))
     }
+    create("internalTestRelease") {
+      initWith(buildTypes.getByName("release"))
+    }
   }
   compileOptions {
     sourceCompatibility = JavaVersion.VERSION_17
@@ -32,7 +35,7 @@ android {
 kotlin {
   androidTarget()
 
-  val xcf = XCFramework()
+  val xcf = XCFramework("SharedCore")
 
   listOf(
     iosX64(),
@@ -40,7 +43,7 @@ kotlin {
     iosSimulatorArm64()
   ).forEach {
     it.binaries.framework {
-      baseName = "shared-core"
+      baseName = "SharedCore"
       xcf.add(this)
     }
   }
@@ -58,6 +61,6 @@ dependencies {
 }
 
 tasks.register<Exec>("applyXCFramework") {
-  commandLine("cp", "-R", "build/XCFrameworks/release/shared_core.xcframework", "../../supla-ios")
-  dependsOn("assembleXCFramework")
+  commandLine("cp", "-R", "build/XCFrameworks/release/SharedCore.xcframework", "../../supla-ios")
+  dependsOn("assembleSharedCoreReleaseXCFramework")
 }
