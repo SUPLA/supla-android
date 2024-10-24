@@ -476,7 +476,7 @@
   <string name="new_gesture_description" >Odstranili jsme posuvné gesto, které otevírá podrobnosti, pro zobrazení klepněte na vybraný kanál.</string>
   <string name="channel_offline" >Kanál je v režimu offline</string>
   <string name="notification_info_title" >Oznámení!</string>
-  <string name="notification_info_message" >Zapněte si upozornění, abyste měli přehled o novinkách ze svého domova! K jejich zobrazení na vašem zařízení potřebujeme váš souhlas.nnOznámení můžete nastavit v aplikaci Supla Cloud.</string>
+  <string name="notification_info_message" >Zapněte si upozornění, abyste měli přehled o novinkách ze svého domova! K jejich zobrazení na vašem zařízení potřebujeme váš souhlas.\n\nOznámení můžete nastavit v aplikaci Supla Cloud.</string>
   <string name="skip" >Přeskočit</string>
 
   <string name="settings_notifications" >Oznámení</string>
