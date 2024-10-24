@@ -581,7 +581,6 @@
   <string name="thermostat_detail_program_time" translatable="false">for %1$s</string>
 
   <string name="history_range_label" translatable="false">Range</string>
-  <string name="history_aggregation_label" translatable="false">Aggregation</string>
   <string name="history_range_last_day">Last 24 hours</string>
   <string name="history_range_last_week">Last 7 days</string>
   <string name="history_range_last_30_days">Last 30 days</string>

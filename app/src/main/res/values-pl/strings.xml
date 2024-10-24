@@ -560,7 +560,6 @@
   <string name="thermostat_detail_program_time">przez %1$s</string>
 
   <string name="history_range_label">Zakres</string>
-  <string name="history_aggregation_label">Agregacja</string>
   <string name="history_range_last_day">Ostatnie 24 godziny</string>
   <string name="history_range_last_week">Ostatnie 7 dni</string>
   <string name="history_range_last_30_days">Ostatnie 30 dni</string>
