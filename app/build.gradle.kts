@@ -1,19 +1,21 @@
+import org.jetbrains.kotlin.compose.compiler.gradle.ComposeFeatureFlag
 import java.util.Date
 
 plugins {
-  id("com.android.application")
-  id("com.diffplug.spotless")
-  kotlin("android")
-  kotlin("kapt")
-  id("com.google.gms.google-services")
-  id("com.google.dagger.hilt.android") version Versions.Hilt
-  id("org.jetbrains.kotlin.plugin.compose") version Versions.Kotlin
-  kotlin("plugin.serialization") version "2.0.0"
+  alias(libs.plugins.android.application)
+  alias(libs.plugins.spotless)
+  alias(libs.plugins.kotlin.android)
+  alias(libs.plugins.kapt)
+  alias(libs.plugins.google.services)
+  alias(libs.plugins.hilt)
+  alias(libs.plugins.kotlin.compose)
+  alias(libs.plugins.kotlin.serialization)
+  alias(libs.plugins.ksp)
 }
 
 android {
-  compileSdk = Versions.Sdk
-  buildToolsVersion = Versions.BuildTools
+  compileSdk = libs.versions.compileSdk.get().toInt()
+  buildToolsVersion = libs.versions.buildTools.get()
   namespace = "org.supla.android"
 
   useLibrary("android.test.runner")
@@ -22,8 +24,8 @@ android {
 
   defaultConfig {
     applicationId = "org.supla.android"
-    minSdk = Versions.MinSdk
-    targetSdk = Versions.TargetSdk
+    minSdk = libs.versions.minSdk.get().toInt()
+    targetSdk = libs.versions.targetSdk.get().toInt()
     multiDexEnabled = true
     versionCode = 254
     versionName = "24.10.04"
@@ -106,85 +108,89 @@ android {
     jvmTarget = "21"
     freeCompilerArgs = listOf("-Xcontext-receivers", "-Xjvm-default=all")
   }
-}
-
-repositories {
-  maven(url = "https://jitpack.io")
+  packaging {
+    jniLibs {
+      useLegacyPackaging = false
+    }
+  }
 }
 
 dependencies {
   implementation(project(":shared-core"))
 
-  implementation(Deps.Androidx.Core.Splash)
-  implementation(Deps.Multidex)
-  implementation(Deps.Androidx.Lifecycle.Extensions)
-  implementation(Deps.AndroidChart)
-  implementation(Deps.RxJava.RxJava)
-  implementation(Deps.RxJava.RxAndroid)
-  implementation(Deps.RxJava.RxKotlin)
-  implementation(Deps.Retrofit.Retrofit)
-  implementation(Deps.Retrofit.Gson)
-  implementation(Deps.Retrofit.RxJavaAdapter)
-  implementation(Deps.Retrofit.Logging)
-  implementation(Deps.GoogleMaterial)
-  implementation(Deps.Androidx.ConstraintLayout)
-  implementation(Deps.Androidx.Core.Core)
-  implementation(Deps.Androidx.Core.Ktx)
-  implementation(Deps.Androidx.Lifecycle.Runtime)
-  implementation(Deps.Androidx.Lifecycle.Viewmodel)
-  implementation(Deps.Androidx.Room.Runtime)
-  implementation(Deps.Androidx.Room.RxJava)
-  implementation(Deps.Androidx.AppCompat)
-  implementation(Deps.Androidx.Biometric)
-  implementation(Deps.Kotlin)
-  implementation(Deps.Coroutines)
-  implementation(Deps.Androidx.Fragment)
-  implementation(Deps.Androidx.Lifecycle.Livedata)
-  implementation(Deps.Androidx.Navigation.Fragment)
-  implementation(Deps.Androidx.Navigation.UI)
-  implementation(Deps.Androidx.Preferences)
-  implementation(Deps.Androidx.Worker)
-  implementation(Deps.Androidx.RecyclerView)
-  implementation(Deps.Hilt.Hilt)
-  implementation(Deps.Hilt.Worker)
-  implementation(Deps.FragmentViewBinding)
-  implementation(platform(Deps.Firebase.Bom))
-  implementation(Deps.Firebase.Messaging)
-  implementation(Deps.Androidx.Security.Crypto)
-  implementation(Deps.Androidx.Compose.UI)
-  implementation(Deps.Androidx.Compose.Icons)
-  implementation(Deps.Androidx.Compose.Material3.Core)
-  implementation(Deps.Androidx.Compose.Material3.Adaptive)
-  implementation(Deps.Androidx.Compose.Tooling)
-  implementation(Deps.Androidx.Compose.ToolingPreview)
-  implementation(Deps.Androidx.Compose.ConstraintLayout)
-  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1")
+  implementation(libs.multidex)
+  implementation(libs.androidChart)
+  implementation(libs.googleMaterial)
+  implementation(libs.coroutines)
+  implementation(libs.fragmentViewBinding)
 
-  coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
+  implementation(libs.hilt)
+  implementation(libs.hilt.worker)
 
-  annotationProcessor(Deps.Androidx.Room.Compiler)
+  implementation(libs.androidx.constraintLayout)
+  implementation(libs.androidx.fragment)
+  implementation(libs.androidx.preferences)
+  implementation(libs.androidx.recyclerView)
+  implementation(libs.androidx.appCompat)
+  implementation(libs.androidx.biometric)
+  implementation(libs.androidx.worker)
+  implementation(libs.androidx.core)
+  implementation(libs.androidx.core.ktx)
+  implementation(libs.androidx.core.splash)
+  implementation(libs.androidx.lifecycle.runtime)
+  implementation(libs.androidx.lifecycle.viewmodel)
+  implementation(libs.androidx.lifecycle.livedata)
+  implementation(libs.androidx.lifecycle.extensions)
+  implementation(libs.androidx.room.runtime)
+  implementation(libs.androidx.room.rxjava)
+  implementation(libs.androidx.security.crypto)
+  implementation(libs.androidx.navigation.fragment)
+  implementation(libs.androidx.navigation.ui)
+  implementation(libs.androidx.compose.ui)
+  implementation(libs.androidx.compose.ui.tooling)
+  implementation(libs.androidx.compose.ui.toolingPreview)
+  implementation(libs.androidx.compose.material.icons)
+  implementation(libs.androidx.compose.material3)
+  implementation(libs.androidx.compose.material3.adaptive)
+  implementation(libs.androidx.compose.constraintLayout)
 
-  kapt(Deps.Hilt.Kapt)
-  kapt(Deps.Hilt.WorkerKapt)
-  kapt(Deps.Androidx.Room.Compiler)
+  implementation(libs.rxjava)
+  implementation(libs.rxandroid)
+  implementation(libs.rxkotlin)
+  implementation(libs.retrofit)
+  implementation(libs.retrofit.gson)
+  implementation(libs.retrofit.rxJavaAdapter)
+  implementation(libs.retrofit.logging)
 
-  testImplementation(Deps.Testing.Androidx.Core)
-  testImplementation(Deps.Testing.Androidx.Runner)
-  testImplementation(Deps.Testing.Androidx.Rules)
-  testImplementation(Deps.Testing.Androidx.JUnitExtension)
-  testImplementation(Deps.Testing.Androidx.ArchCore)
-  testImplementation(Deps.Testing.Mockito.Core)
-  testImplementation(Deps.Testing.Mockito.Kotlin)
-  testImplementation(Deps.Testing.Robolectric)
-  testImplementation(Deps.Testing.JUnit)
-  testImplementation(Deps.Testing.Hamcrest)
-  testImplementation(Deps.Testing.Coroutines)
-  testImplementation(Deps.Testing.Mockk)
-  testImplementation(Deps.Testing.AssertJ)
-  testImplementation(Deps.Testing.Kotlin.Reflect)
-  androidTestImplementation(Deps.Testing.Androidx.Navigation)
+  implementation(platform(libs.firebase))
+  implementation(libs.firebase.messaging)
 
-  implementation(files("src/main/libs/jsoup-1.13.1.jar"))
+  implementation(libs.kotlin.stdlib)
+  implementation(libs.kotlinx.serialization)
+  implementation(libs.jsoup)
+
+  coreLibraryDesugaring(libs.android.tools.desugar)
+
+  annotationProcessor(libs.androidx.room.compiler)
+
+  kapt(libs.hilt.kapt)
+  kapt(libs.hilt.worker.kapt)
+  ksp(libs.androidx.room.compiler)
+
+  testImplementation(libs.testing.junit)
+  testImplementation(libs.testing.hamcrest)
+  testImplementation(libs.testing.coroutines)
+  testImplementation(libs.testing.mockk)
+  testImplementation(libs.testing.assertj)
+  testImplementation(libs.testing.mockito)
+  testImplementation(libs.testing.mockito.kotlin)
+  testImplementation(libs.testing.androidx)
+  testImplementation(libs.testing.androidx.navigation)
+  testImplementation(libs.testing.androidx.runner)
+  testImplementation(libs.testing.androidx.rules)
+  testImplementation(libs.testing.androidx.junit)
+  testImplementation(libs.testing.androidx.arch.core)
+  testImplementation(libs.testing.kotlin.relfect)
 }
 
 kapt {
@@ -195,14 +201,14 @@ spotless {
   java {
     target(fileTree("dir" to "src", "include" to "**/*.java"))
 
-    googleJavaFormat("1.19.2")
+    googleJavaFormat(libs.versions.googleJavaFormat.get())
     removeUnusedImports()
     trimTrailingWhitespace()
     endWithNewline()
   }
   kotlin {
     target(fileTree("dir" to "src", "include" to "**/*.kt"))
-    ktlint(Versions.KtLint).editorConfigOverride(
+    ktlint(libs.versions.ktlint.get()).editorConfigOverride(
       mapOf(
         "ktlint_standard_no-wildcard-imports" to "disabled",
         "ktlint_standard_filename" to "disabled",
@@ -217,6 +223,6 @@ spotless {
 }
 
 composeCompiler {
-  enableStrongSkippingMode.set(true)
+  featureFlags.add(ComposeFeatureFlag.StrongSkipping)
 }
 
