@@ -25,12 +25,12 @@ import org.supla.android.data.source.GeneralPurposeMeterLogRepository
 import org.supla.android.data.source.RoomChannelRepository
 import org.supla.android.data.source.TemperatureAndHumidityLogRepository
 import org.supla.android.data.source.TemperatureLogRepository
-import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
+import org.supla.core.shared.data.SuplaChannelFunction
 import javax.inject.Inject
 import javax.inject.Singleton
 

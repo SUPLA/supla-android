@@ -19,10 +19,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
-import org.supla.android.data.source.remote.channel.SuplaChannelFunction
-import org.supla.android.data.source.remote.channel.suplaFunction
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.db.Channel
+import org.supla.core.shared.data.SuplaChannelFunction
+import org.supla.core.shared.data.suplaFunction
 import java.io.Serializable
 
 data class ItemBundle(

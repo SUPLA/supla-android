@@ -39,10 +39,10 @@ import org.supla.android.data.source.local.entity.ChannelRelationType
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
-import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.extensions.date
 import org.supla.android.usecases.channel.measurementsprovider.TemperatureAndHumidityMeasurementsProvider
 import org.supla.android.usecases.channel.measurementsprovider.TemperatureMeasurementsProvider
+import org.supla.core.shared.data.SuplaChannelFunction
 
 @RunWith(MockitoJUnitRunner::class)
 class LoadChannelWithChildrenMeasurementsUseCaseTest : BaseLoadMeasurementsUseCaseTest() {

@@ -31,7 +31,6 @@ import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
-import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.usecases.channel.stringvalueprovider.DepthSensorValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.DistanceSensorValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.ElectricityMeterValueStringProvider
@@ -40,6 +39,7 @@ import org.supla.android.usecases.channel.stringvalueprovider.HumidityAndTempera
 import org.supla.android.usecases.channel.stringvalueprovider.ImpulseCounterValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.SwitchWithElectricityMeterValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.ThermometerValueStringProvider
+import org.supla.core.shared.data.SuplaChannelFunction
 
 @RunWith(MockitoJUnitRunner::class)
 class GetChannelValueStringUseCaseTest {

@@ -33,8 +33,8 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.supla.android.data.model.Optional
 import org.supla.android.data.model.chart.DateRange
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
-import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.extensions.date
+import org.supla.core.shared.data.SuplaChannelFunction
 
 @RunWith(MockitoJUnitRunner::class)
 class LoadChannelMeasurementsDataRangeUseCaseTest {

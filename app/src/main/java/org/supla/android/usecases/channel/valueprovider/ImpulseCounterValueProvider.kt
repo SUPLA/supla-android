@@ -18,10 +18,10 @@ package org.supla.android.usecases.channel.valueprovider
  */
 
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
-import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.usecases.channel.ChannelValueProvider
 import org.supla.android.usecases.channel.ValueType
 import org.supla.android.usecases.channel.valueprovider.parser.LongValueProvider
+import org.supla.core.shared.data.SuplaChannelFunction
 import javax.inject.Inject
 import javax.inject.Singleton
 

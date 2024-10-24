@@ -18,7 +18,7 @@ package org.supla.android.data.source.remote
  */
 
 import org.supla.android.data.source.local.entity.ChannelEntity
-import org.supla.android.data.source.remote.channel.SuplaChannelFunction
+import org.supla.core.shared.data.SuplaChannelFunction
 
 enum class ChannelConfigType(val value: Int) {
   UNKNOWN(-1),

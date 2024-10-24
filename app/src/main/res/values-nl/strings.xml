@@ -160,6 +160,7 @@
   <string name="history_range_last_week">De laatste 7 dni</string>
   <string name="history_range_last_30_days">De laatste 30 dni</string>
   <string name="history_range_last_90_days">De laatste 90 dni</string>
+  <string name="history_range_last_365_days">De laatste 365 dni</string>
   <string name="all_available_history">Volledige geschiedenis beschikbaar</string>
   <string name="retrieving_data_from_the_server">Gegevens downloaden van de server ...</string>
   <string name="no_chart_data_available">Er zijn geen gegevens voor de grafiek.</string>

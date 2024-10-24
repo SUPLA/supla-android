@@ -8,7 +8,7 @@ import org.junit.runner.RunWith
 import org.mockito.InjectMocks
 import org.mockito.junit.MockitoJUnitRunner
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
-import org.supla.android.data.source.remote.channel.SuplaChannelFunction
+import org.supla.core.shared.data.SuplaChannelFunction
 
 @RunWith(MockitoJUnitRunner::class)
 class DepthSensorValueProviderTest : BaseDoubleValueProviderTest<DepthSensorValueProvider>() {

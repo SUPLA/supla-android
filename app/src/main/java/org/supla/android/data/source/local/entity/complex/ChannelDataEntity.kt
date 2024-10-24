@@ -24,11 +24,11 @@ import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.LocationEntity
-import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.db.Channel
 import org.supla.android.db.ChannelExtendedValue
 import org.supla.android.db.ChannelValue
 import org.supla.android.lib.SuplaChannelExtendedValue
+import org.supla.core.shared.data.SuplaChannelFunction
 
 data class ChannelDataEntity(
   @Embedded(prefix = "channel_") val channelEntity: ChannelEntity,

@@ -45,7 +45,6 @@ import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
-import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.features.details.detailbase.standarddetail.DetailPage
@@ -63,6 +62,7 @@ import org.supla.android.usecases.details.ThermostatDetailType
 import org.supla.android.usecases.details.WindowDetailType
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
+import org.supla.core.shared.data.SuplaChannelFunction
 
 @RunWith(MockitoJUnitRunner::class)
 class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, ChannelListViewEvent, ChannelListViewModel>() {

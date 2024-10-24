@@ -27,7 +27,7 @@ import org.supla.android.data.source.local.entity.complex.hasMeasurements
 import org.supla.android.data.source.local.entity.complex.isHvacThermostat
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.local.entity.hasMeasurements
-import org.supla.android.data.source.remote.channel.SuplaChannelFunction
+import org.supla.core.shared.data.SuplaChannelFunction
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton

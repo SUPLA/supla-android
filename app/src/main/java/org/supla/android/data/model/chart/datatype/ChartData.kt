@@ -205,6 +205,7 @@ abstract class ChartData(
     ChartRange.LAST_WEEK,
     ChartRange.LAST_MONTH,
     ChartRange.LAST_QUARTER,
+    ChartRange.LAST_YEAR,
     ChartRange.CUSTOM,
     ChartRange.ALL_HISTORY -> false
 

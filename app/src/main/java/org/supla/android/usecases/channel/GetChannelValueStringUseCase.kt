@@ -27,8 +27,10 @@ import org.supla.android.usecases.channel.stringvalueprovider.ElectricityMeterVa
 import org.supla.android.usecases.channel.stringvalueprovider.GpmValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.HumidityAndTemperatureValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.ImpulseCounterValueStringProvider
+import org.supla.android.usecases.channel.stringvalueprovider.NoValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.SwitchWithElectricityMeterValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.ThermometerValueStringProvider
+import org.supla.core.shared.data.SuplaChannelFunction
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -52,7 +54,10 @@ class GetChannelValueStringUseCase @Inject constructor(
     distanceSensorValueStringProvider,
     electricityMeterValueStringProvider,
     switchWithElectricityMeterValueStringProvider,
-    impulseCounterValueStringProvider
+    impulseCounterValueStringProvider,
+    NoValueStringProvider(SuplaChannelFunction.STAIRCASE_TIMER),
+    NoValueStringProvider(SuplaChannelFunction.POWER_SWITCH),
+    NoValueStringProvider(SuplaChannelFunction.LIGHTSWITCH)
   )
 
   operator fun invoke(channel: ChannelDataEntity, valueType: ValueType = ValueType.FIRST, withUnit: Boolean = true): String {
@@ -79,5 +84,5 @@ enum class ValueType {
 
 interface ChannelValueStringProvider {
   fun handle(channelData: ChannelDataEntity): Boolean
-  fun value(channelData: ChannelDataEntity, valueType: ValueType, withUnit: Boolean = true): String
+  fun value(channelData: ChannelDataEntity, valueType: ValueType, withUnit: Boolean = true): String?
 }

@@ -18,7 +18,7 @@ package org.supla.android.data.source.local.entity
  */
 
 import org.supla.android.data.model.general.ChannelBase
-import org.supla.android.data.source.remote.channel.SuplaChannelFunction
+import org.supla.core.shared.data.SuplaChannelFunction
 
 fun ChannelBase.isHvacThermostat() =
   function == SuplaChannelFunction.HVAC_THERMOSTAT ||

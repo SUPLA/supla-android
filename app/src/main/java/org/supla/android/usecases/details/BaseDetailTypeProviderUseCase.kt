@@ -17,8 +17,8 @@ package org.supla.android.usecases.details
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.features.details.detailbase.standarddetail.DetailPage
+import org.supla.core.shared.data.SuplaChannelFunction
 
 abstract class BaseDetailTypeProviderUseCase {
 

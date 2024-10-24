@@ -32,12 +32,12 @@ import org.junit.Test
 import org.supla.android.data.model.chart.ChannelChartSets
 import org.supla.android.data.model.chart.ChartDataSpec
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
-import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.usecases.channel.measurementsprovider.ElectricityConsumptionMeasurementsProvider
 import org.supla.android.usecases.channel.measurementsprovider.GeneralPurposeMeasurementMeasurementsProvider
 import org.supla.android.usecases.channel.measurementsprovider.GeneralPurposeMeterMeasurementsProvider
 import org.supla.android.usecases.channel.measurementsprovider.TemperatureAndHumidityMeasurementsProvider
 import org.supla.android.usecases.channel.measurementsprovider.TemperatureMeasurementsProvider
+import org.supla.core.shared.data.SuplaChannelFunction
 
 class LoadChannelMeasurementsUseCaseTest : BaseLoadMeasurementsUseCaseTest() {
 

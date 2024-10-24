@@ -129,7 +129,7 @@ context (ColumnScope)
 @Composable
 private fun ThermostatView(viewState: ThermostatGeneralViewState, viewProxy: ThermostatGeneralViewProxy, modifier: Modifier = Modifier) {
   BoxWithConstraints(modifier = modifier) {
-    if (maxHeight < 250.dp) {
+    if (maxHeight < 298.dp) {
       if (viewState.isOff.not() && viewState.isAutoFunction && !viewState.programmedModeActive) {
         HeatingCoolingRowSmallScreen(viewState = viewState, viewProxy = viewProxy)
       }
@@ -584,7 +584,7 @@ private fun PreviewSmall() {
 @Composable
 private fun PreviewVerySmall() {
   SuplaTheme {
-    Box(modifier = Modifier.height(330.dp)) {
+    Box(modifier = Modifier.height(381.dp)) {
       ThermostatDetail(
         PreviewProxy(
           ThermostatGeneralViewState(

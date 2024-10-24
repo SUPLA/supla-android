@@ -160,6 +160,7 @@
   <string name="history_range_last_week">Siste 7 dager</string>
   <string name="history_range_last_30_days">Siste 30 dager</string>
   <string name="history_range_last_90_days">Siste 90 dager</string>
+  <string name="history_range_last_365_days">Siste 365 dager</string>
   <string name="all_available_history">Tilgjengelig historie</string>
   <string name="retrieving_data_from_the_server">Nedlasting av data fra serveren...</string>
   <string name="no_chart_data_available">Manglende data for diagrammet.</string>

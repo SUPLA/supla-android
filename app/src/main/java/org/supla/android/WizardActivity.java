@@ -1,5 +1,23 @@
 package org.supla.android;
 
+/*
+Copyright (C) AC SOFTWARE SP. Z O.O.
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+*/
+
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
@@ -10,6 +28,9 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
+import javax.inject.Inject;
+import org.supla.android.core.networking.suplaclient.SuplaClientState.Locked;
+import org.supla.android.core.networking.suplaclient.SuplaClientStateHolder;
 
 @SuppressLint("Registered")
 public abstract class WizardActivity extends NavigationActivity {
@@ -22,6 +43,8 @@ public abstract class WizardActivity extends NavigationActivity {
 
   private RelativeLayout mContent;
   private ArrayList<View> mPages = new ArrayList<>();
+
+  @Inject SuplaClientStateHolder suplaClientStateHolder;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +64,15 @@ public abstract class WizardActivity extends NavigationActivity {
 
     mContent = findViewById(R.id.wizard_content);
     setBtnNextEnabled(false);
+  }
+
+  @Override
+  protected void onStart() {
+    super.onStart();
+
+    if (suplaClientStateHolder.stateOrNull() == Locked.INSTANCE) {
+      finish();
+    }
   }
 
   protected View addStepPage(int layoutResId, int pageId) {
@@ -78,18 +110,6 @@ public abstract class WizardActivity extends NavigationActivity {
     return 0;
   }
 
-  protected void setBtnNextVisible(boolean visible) {
-    if (visible) {
-      mBtnNextLeftPart.setVisibility(View.VISIBLE);
-      mBtnNextMiddlePart.setVisibility(View.VISIBLE);
-      mBtnNextRightPart.setVisibility(View.VISIBLE);
-    } else {
-      mBtnNextLeftPart.setVisibility(View.GONE);
-      mBtnNextMiddlePart.setVisibility(View.GONE);
-      mBtnNextRightPart.setVisibility(View.GONE);
-    }
-  }
-
   protected void setBtnNextEnabled(boolean enabled) {
     mBtnNextLeftPart.setEnabled(enabled);
     mBtnNextMiddlePart.setEnabled(enabled);
@@ -102,10 +122,6 @@ public abstract class WizardActivity extends NavigationActivity {
 
   protected void setBtnNextText(int resId) {
     mBtnNextMiddlePart.setText(resId, TextView.BufferType.NORMAL);
-  }
-
-  protected void setBtnNextText(String text) {
-    mBtnNextMiddlePart.setText(text, TextView.BufferType.NORMAL);
   }
 
   protected boolean isBtnNextPreloaderVisible() {

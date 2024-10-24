@@ -581,11 +581,11 @@
   <string name="thermostat_detail_program_time" translatable="false">for %1$s</string>
 
   <string name="history_range_label" translatable="false">Range</string>
-  <string name="history_aggregation_label" translatable="false">Aggregation</string>
   <string name="history_range_last_day">Last 24 hours</string>
   <string name="history_range_last_week">Last 7 days</string>
   <string name="history_range_last_30_days">Last 30 days</string>
   <string name="history_range_last_90_days">Last 90 days</string>
+  <string name="history_range_last_365_days">Last 365 days</string>
   <string name="history_range_current_day" translatable="false">Current day</string>
   <string name="history_range_current_week" translatable="false">Current week</string>
   <string name="history_range_current_month" translatable="false">Current month</string>
@@ -733,6 +733,10 @@
   <string name="details_em_forward_reactive_energy_short" translatable="false">Forward reactive</string>
   <string name="details_em_reverse_reactive_energy_short" translatable="false">Reverse reactive</string>
   <string name="details_em_energy_label" translatable="false">Energy</string>
+  <string name="channel_btn_shut" translatable="false">Shut</string>
+  <string name="channel_btn_reveal" translatable="false">Reveal</string>
+  <string name="channel_btn_collapse" translatable="false">Collapse</string>
+  <string name="channel_btn_expand" translatable="false">Expand</string>
 
   <plurals name="details_timer_info_on" translatable="false">
     <item quantity="other">on</item>

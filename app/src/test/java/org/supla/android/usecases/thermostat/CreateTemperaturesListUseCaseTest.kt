@@ -32,12 +32,12 @@ import org.supla.android.data.source.local.entity.ChannelRelationType
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
-import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.features.details.thermostatdetail.general.MeasurementValue
 import org.supla.android.images.ImageId
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.channel.ValueType
 import org.supla.android.usecases.icon.GetChannelIconUseCase
+import org.supla.core.shared.data.SuplaChannelFunction
 
 class CreateTemperaturesListUseCaseTest {
 

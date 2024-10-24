@@ -48,6 +48,7 @@ sealed interface SuplaClientState {
         SuplaClientEvent.Lock,
         SuplaClientEvent.OnStart,
         SuplaClientEvent.NetworkConnected,
+        SuplaClientEvent.AddWizardStopped,
         is SuplaClientEvent.Finish -> null
 
         SuplaClientEvent.Unlock -> Connecting()
@@ -60,7 +61,6 @@ sealed interface SuplaClientState {
         is SuplaClientEvent.Error -> throw IllegalEvent.IllegalErrorEvent("Unexpected event in Locked")
         SuplaClientEvent.Initialized -> throw IllegalEvent.IllegalInitializedEvent("Unexpected event in Locked")
         SuplaClientEvent.AddWizardFinished -> throw IllegalEvent.IllegalAddWizardFinishedEvent("Unexpected event in Locked")
-        SuplaClientEvent.AddWizardStopped -> throw IllegalEvent.IllegalAddWizardStoppedEvent("Unexpected event in Locked")
       }
     }
   }
@@ -146,7 +146,7 @@ sealed interface SuplaClientState {
 
         SuplaClientEvent.Lock -> Locking
         is SuplaClientEvent.Finish -> Finished(reason ?: event.reason)
-        is SuplaClientEvent.Error -> Finished(event.reason)
+        is SuplaClientEvent.Error -> Finished(if (reason == Reason.AddWizardStarted) reason else event.reason)
 
         // others which should not occur
         SuplaClientEvent.NoAccount -> throw IllegalEvent.IllegalNoAccountEvent("Unexpected event in Disconnecting")
@@ -203,7 +203,7 @@ sealed interface SuplaClientState {
         is SuplaClientEvent.Error -> if (event.reason != reason) Finished(event.reason) else null
         is SuplaClientEvent.Finish ->
           if (event.reason != reason && reason != Reason.AddWizardStarted) Finished(event.reason ?: reason) else null
-        SuplaClientEvent.AddWizardStopped -> Finished(Reason.AppInBackground)
+        SuplaClientEvent.AddWizardStopped -> if (reason == Reason.AddWizardStarted) Finished() else Connecting()
 
         // others which should not occur
         SuplaClientEvent.Connected -> throw IllegalEvent.IllegalConnectedEvent("Unexpected event in Finished")

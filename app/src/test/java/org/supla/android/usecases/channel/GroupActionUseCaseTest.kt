@@ -18,10 +18,10 @@ import org.supla.android.core.networking.suplaclient.SuplaClientApi
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.data.source.ChannelGroupRepository
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
-import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.ActionParameters
 import org.supla.android.lib.actions.SubjectType
+import org.supla.core.shared.data.SuplaChannelFunction
 
 @RunWith(MockitoJUnitRunner::class)
 class GroupActionUseCaseTest {

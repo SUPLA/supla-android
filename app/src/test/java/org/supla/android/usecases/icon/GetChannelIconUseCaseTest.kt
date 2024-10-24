@@ -30,7 +30,6 @@ import org.mockito.kotlin.whenever
 import org.supla.android.data.model.general.ChannelState
 import org.supla.android.data.model.general.IconType
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
-import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.db.Channel
 import org.supla.android.db.ChannelBase
 import org.supla.android.images.ImageCacheProxy
@@ -41,6 +40,7 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
 import org.supla.android.usecases.channel.GetChannelStateUseCase
 import org.supla.android.usecases.channel.ValueStateWrapper
+import org.supla.core.shared.data.SuplaChannelFunction
 
 @Suppress("SameParameterValue")
 @RunWith(MockitoJUnitRunner::class)

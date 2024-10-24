@@ -40,7 +40,7 @@ import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.ChannelRelationType
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
-import org.supla.android.data.source.remote.channel.SuplaChannelFunction
+import org.supla.core.shared.data.SuplaChannelFunction
 
 @RunWith(MockitoJUnitRunner::class)
 class DeleteChannelMeasurementsUseCaseTest {

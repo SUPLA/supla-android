@@ -38,7 +38,7 @@ import org.supla.android.data.source.ChannelGroupRepository
 import org.supla.android.data.source.local.entity.ChannelGroupEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupRelationDataEntity
-import org.supla.android.data.source.remote.channel.SuplaChannelFunction
+import org.supla.core.shared.data.SuplaChannelFunction
 
 @Suppress("SameParameterValue")
 @RunWith(MockitoJUnitRunner::class)

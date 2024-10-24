@@ -140,6 +140,7 @@
   <string name="history_range_last_week">Останні 7 днів</string>
   <string name="history_range_last_30_days">Останні 30 днів</string>
   <string name="history_range_last_90_days">Останні 90 днів</string>
+  <string name="history_range_last_365_days">Останні 365 днів</string>
   <string name="all_available_history">Вся історія доступна</string>
   <string name="retrieving_data_from_the_server">Завантаження даних із сервера...</string>
   <string name="no_chart_data_available">Немає даних для діаграми.</string>

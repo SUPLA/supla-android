@@ -73,7 +73,8 @@ data class DateRange(
       ChartRange.LAST_DAY,
       ChartRange.LAST_WEEK,
       ChartRange.LAST_MONTH,
-      ChartRange.LAST_QUARTER -> shift(if (forward) range.roundedDaysCount else -range.roundedDaysCount)
+      ChartRange.LAST_QUARTER,
+      ChartRange.LAST_YEAR -> shift(if (forward) range.roundedDaysCount else -range.roundedDaysCount)
 
       ChartRange.DAY -> if (forward) nextDay() else previousDay()
       ChartRange.WEEK -> if (forward) nextWeek() else previousWeek()

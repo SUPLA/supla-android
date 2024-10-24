@@ -20,7 +20,6 @@ package org.supla.android.usecases.icon
 import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.model.general.ChannelState
 import org.supla.android.data.model.general.IconType
-import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.db.ChannelBase
 import org.supla.android.extensions.guardLet
 import org.supla.android.extensions.ifLet
@@ -32,6 +31,7 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
 import org.supla.android.usecases.channel.GetChannelStateUseCase
+import org.supla.core.shared.data.SuplaChannelFunction
 import javax.inject.Inject
 import javax.inject.Singleton
 

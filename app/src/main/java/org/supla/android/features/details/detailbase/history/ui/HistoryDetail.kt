@@ -87,7 +87,6 @@ import org.supla.android.data.model.chart.style.ChartStyle
 import org.supla.android.data.model.chart.style.ThermometerChartStyle
 import org.supla.android.data.model.general.RangeValueType
 import org.supla.android.data.source.local.calendar.Hour
-import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.extensions.weekEnd
 import org.supla.android.extensions.weekStart
 import org.supla.android.features.details.detailbase.history.HistoryDetailViewState
@@ -104,6 +103,7 @@ import org.supla.android.ui.views.charts.PieChart
 import org.supla.android.ui.views.tools.Shadow
 import org.supla.android.ui.views.tools.ShadowOrientation
 import org.supla.android.usecases.channel.valueformatter.HumidityValueFormatter
+import org.supla.core.shared.data.SuplaChannelFunction
 import java.util.Date
 
 interface HistoryDetailProxy : BaseViewProxy<HistoryDetailViewState> {

@@ -34,7 +34,6 @@ import org.supla.android.core.ui.StringProvider
 import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
-import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
 import org.supla.android.data.source.remote.thermostat.ThermostatValue
 import org.supla.android.data.source.runtime.ItemType
@@ -43,6 +42,7 @@ import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.GetChannelCaptionUseCase
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
+import org.supla.core.shared.data.SuplaChannelFunction
 
 @RunWith(MockitoJUnitRunner::class)
 class ThermostatDetailViewModelTest :

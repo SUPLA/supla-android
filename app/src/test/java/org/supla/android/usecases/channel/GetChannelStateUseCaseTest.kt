@@ -28,9 +28,9 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.supla.android.data.model.general.ChannelState
 import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
-import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
 import org.supla.android.usecases.group.GetGroupActivePercentageUseCase
+import org.supla.core.shared.data.SuplaChannelFunction
 
 @RunWith(MockitoJUnitRunner::class)
 class GetChannelStateUseCaseTest {

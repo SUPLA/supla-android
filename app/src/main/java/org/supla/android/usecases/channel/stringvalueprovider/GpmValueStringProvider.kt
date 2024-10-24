@@ -20,7 +20,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import com.google.gson.Gson
 import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
-import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.data.source.remote.gpm.SuplaChannelGeneralPurposeBaseConfig
 import org.supla.android.di.GSON_FOR_REPO
 import org.supla.android.extensions.guardLet
@@ -28,6 +27,7 @@ import org.supla.android.usecases.channel.ChannelValueStringProvider
 import org.supla.android.usecases.channel.ValueType
 import org.supla.android.usecases.channel.valueformatter.GpmValueFormatter
 import org.supla.android.usecases.channel.valueprovider.GpmValueProvider
+import org.supla.core.shared.data.SuplaChannelFunction
 import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Named

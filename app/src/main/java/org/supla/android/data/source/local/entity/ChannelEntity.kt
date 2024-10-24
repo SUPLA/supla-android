@@ -26,8 +26,8 @@ import org.supla.android.data.source.local.entity.ChannelEntity.Companion.COLUMN
 import org.supla.android.data.source.local.entity.ChannelEntity.Companion.COLUMN_LOCATION_ID
 import org.supla.android.data.source.local.entity.ChannelEntity.Companion.COLUMN_PROFILE_ID
 import org.supla.android.data.source.local.entity.ChannelEntity.Companion.TABLE_NAME
-import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.lib.SuplaChannel
+import org.supla.core.shared.data.SuplaChannelFunction
 
 @Entity(
   tableName = TABLE_NAME,

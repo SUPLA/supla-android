@@ -22,7 +22,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import org.supla.android.Preferences
-import org.supla.android.R
 import org.supla.android.SuplaApp
 import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.source.runtime.ItemType
@@ -134,7 +133,7 @@ abstract class BaseChannelsAdapter(
   inner class ThermostatListItemViewHolder(val binding: LiMainThermostatItemBinding) : ViewHolder(binding.root) {
     fun bind(item: ListItem.HvacThermostatItem) {
       val data = item.toSlideableListItemData() as SlideableListItemData.Thermostat
-      binding.listItemRoot.bind(locationCaption = item.locationCaption)
+      binding.listItemRoot.bind(locationCaption = item.locationCaption, function = item.channelBase.function)
       binding.listItemContent.bind(
         itemType = ItemType.CHANNEL,
         remoteId = item.channel.remoteId,
@@ -155,7 +154,7 @@ abstract class BaseChannelsAdapter(
   inner class IconValueListItemViewHolder(val binding: LiMainIconValueItemBinding) : ViewHolder(binding.root) {
     fun bind(item: ListItem.IconValueItem) {
       val data = item.toSlideableListItemData() as SlideableListItemData.Default
-      binding.listItemRoot.bind(locationCaption = item.locationCaption)
+      binding.listItemRoot.bind(locationCaption = item.locationCaption, function = item.channelBase.function)
       binding.listItemContent.bind(
         itemType = ItemType.CHANNEL,
         remoteId = item.channel.remoteId,
@@ -174,7 +173,7 @@ abstract class BaseChannelsAdapter(
   inner class GpMeterListItemViewHolder(val binding: LiMainIconValueItemBinding) : ViewHolder(binding.root) {
     fun bind(item: ListItem.GeneralPurposeMeterItem) {
       val data = item.toSlideableListItemData() as SlideableListItemData.Default
-      binding.listItemRoot.bind(locationCaption = item.locationCaption)
+      binding.listItemRoot.bind(locationCaption = item.locationCaption, function = item.channelBase.function)
       binding.listItemContent.bind(
         itemType = ItemType.CHANNEL,
         remoteId = item.channel.remoteId,
@@ -193,7 +192,7 @@ abstract class BaseChannelsAdapter(
   inner class GpMeasurementListItemViewHolder(val binding: LiMainIconValueItemBinding) : ViewHolder(binding.root) {
     fun bind(item: ListItem.GeneralPurposeMeasurementItem) {
       val data = item.toSlideableListItemData() as SlideableListItemData.Default
-      binding.listItemRoot.bind(locationCaption = item.locationCaption)
+      binding.listItemRoot.bind(locationCaption = item.locationCaption, function = item.channelBase.function)
       binding.listItemContent.bind(
         itemType = ItemType.CHANNEL,
         remoteId = item.channel.remoteId,
@@ -212,7 +211,7 @@ abstract class BaseChannelsAdapter(
   inner class ShadingSystemListItemViewHolder(val binding: LiMainIconValueWithButtonsItemBinding) : ViewHolder(binding.root) {
     fun bind(item: ListItem.ShadingSystemItem) {
       val data = item.toSlideableListItemData() as SlideableListItemData.Default
-      binding.listItemRoot.bind(locationCaption = item.locationCaption)
+      binding.listItemRoot.bind(locationCaption = item.locationCaption, function = item.channelBase.function)
       binding.listItemContent.bind(
         itemType = ItemType.CHANNEL,
         remoteId = item.channel.remoteId,
@@ -226,16 +225,14 @@ abstract class BaseChannelsAdapter(
       binding.listItemContent.setOnClickListener { listItemClickCallback(item.channel.remoteId) }
       binding.listItemContent.setOnLongClickListener { onLongPress(this) }
       binding.listItemLeftItem.setOnClickListener { onLeftButtonClick(item.channel.remoteId) }
-      binding.listItemLeftItem.setText(R.string.channel_btn_close)
       binding.listItemRightItem.setOnClickListener { onRightButtonClick(item.channel.remoteId) }
-      binding.listItemRightItem.setText(R.string.channel_btn_open)
     }
   }
 
   inner class SwitchListItemViewHolder(val binding: LiMainIconValueWithButtonsItemBinding) : ViewHolder(binding.root) {
     fun bind(item: ListItem.SwitchItem) {
       val data = item.toSlideableListItemData() as SlideableListItemData.Default
-      binding.listItemRoot.bind(locationCaption = item.locationCaption)
+      binding.listItemRoot.bind(locationCaption = item.locationCaption, function = item.channelBase.function)
       binding.listItemContent.bind(
         itemType = ItemType.CHANNEL,
         remoteId = item.channel.remoteId,
@@ -249,9 +246,7 @@ abstract class BaseChannelsAdapter(
       binding.listItemContent.setOnClickListener { listItemClickCallback(item.channel.remoteId) }
       binding.listItemContent.setOnLongClickListener { onLongPress(this) }
       binding.listItemLeftItem.setOnClickListener { onLeftButtonClick(item.channel.remoteId) }
-      binding.listItemLeftItem.setText(R.string.channel_btn_off)
       binding.listItemRightItem.setOnClickListener { onRightButtonClick(item.channel.remoteId) }
-      binding.listItemRightItem.setText(R.string.channel_btn_on)
     }
   }
 }

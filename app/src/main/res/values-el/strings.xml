@@ -157,6 +157,7 @@
   <string name="history_range_last_week">Οι τελευταίες 7 ημέρες</string>
   <string name="history_range_last_30_days">Οι τελευταίες 30 ημέρες</string>
   <string name="history_range_last_90_days">Οι τελευταίες 90 ημέρες</string>
+  <string name="history_range_last_365_days">Οι τελευταίες 365 ημέρες</string>
   <string name="all_available_history">Όλο το διαθέσιμο ιστορικό</string>
   <string name="retrieving_data_from_the_server">Λήψη δεδομένων από διακομιστή...</string>
   <string name="no_chart_data_available">Δεν υπάρχουν δεδομένα για το γράφημα.</string>
