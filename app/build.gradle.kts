@@ -25,8 +25,8 @@ android {
     minSdk = Versions.MinSdk
     targetSdk = Versions.TargetSdk
     multiDexEnabled = true
-    versionCode = 253
-    versionName = "24.10.03"
+    versionCode = 254
+    versionName = "24.10.04"
 
     ndk {
       moduleName = "suplaclient"
@@ -38,8 +38,8 @@ android {
   }
 
   compileOptions {
-    sourceCompatibility(JavaVersion.VERSION_17)
-    targetCompatibility(JavaVersion.VERSION_17)
+    sourceCompatibility(JavaVersion.VERSION_21)
+    targetCompatibility(JavaVersion.VERSION_21)
     isCoreLibraryDesugaringEnabled = true
   }
 
@@ -103,7 +103,7 @@ android {
   }
 
   kotlinOptions {
-    jvmTarget = "17"
+    jvmTarget = "21"
     freeCompilerArgs = listOf("-Xcontext-receivers", "-Xjvm-default=all")
   }
 }
@@ -113,6 +113,8 @@ repositories {
 }
 
 dependencies {
+  implementation(project(":shared-core"))
+
   implementation(Deps.Androidx.Core.Splash)
   implementation(Deps.Multidex)
   implementation(Deps.Androidx.Lifecycle.Extensions)

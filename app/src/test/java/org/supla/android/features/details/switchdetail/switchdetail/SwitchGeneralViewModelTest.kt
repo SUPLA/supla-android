@@ -37,7 +37,6 @@ import org.supla.android.data.model.general.ChannelState
 import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
-import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.DownloadEventsManager
 import org.supla.android.features.details.detailbase.electricitymeter.ElectricityMeterGeneralStateHandler
@@ -58,6 +57,7 @@ import org.supla.android.usecases.channel.electricitymeter.LoadElectricityMeterM
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
+import org.supla.core.shared.data.SuplaChannelFunction
 import java.util.Date
 
 @Suppress("UnusedLambdaExpressionBody")

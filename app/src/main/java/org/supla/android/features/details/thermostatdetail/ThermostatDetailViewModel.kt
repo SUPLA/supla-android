@@ -23,7 +23,6 @@ import org.supla.android.core.ui.StringProvider
 import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.isHvacThermostat
-import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.features.details.detailbase.standarddetail.StandardDetailViewEvent
@@ -33,6 +32,7 @@ import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.GetChannelCaptionUseCase
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
+import org.supla.core.shared.data.SuplaChannelFunction
 import javax.inject.Inject
 
 @HiltViewModel

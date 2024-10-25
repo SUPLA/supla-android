@@ -444,7 +444,7 @@
   <string name="general_failure" translatable="false">Die Aktion wurde nicht erfolgreich durchgeführt</string>
 
   <string name="new_gesture_description">Wischgeste zum Öffnen der Kanaldetails wurde gelöscht, tippe auf dem Kanal, um sie zu sehen.</string>
-  <string name="channel_offline">Das Kanal is offline</string>
+  <string name="channel_offline">Das Kanal ist offline</string>
   <string name="notification_info_title">Benachrichtigungen!</string>
   <string name="notification_info_message">Schalte die Notifikationen ein, um auf dem Laufenden zu halten! Um sie Ihnen zu zeigen, brauchen wir Ihre Zustimmung.\n\nDie Notifikation können Sie in Supla Cloud konfigurieren.</string>
   <string name="skip">Überspringen</string>
@@ -636,6 +636,10 @@
   <string name="details_em_forward_reactive_energy_short">Blind- aufgenommen</string>
   <string name="details_em_reverse_reactive_energy_short">Blind- zurückgegeben</string>
   <string name="details_em_energy_label">Energie</string>
+  <string name="channel_btn_shut">Verhüllen</string>
+  <string name="channel_btn_reveal">Enthüllen</string>
+  <string name="channel_btn_collapse">Einklappen</string>
+  <string name="channel_btn_expand">Ausklappen</string>
   <plurals name="details_timer_info_on">
     <item quantity="one">eingeschaltet</item>
     <item quantity="other">eingeschaltet</item>

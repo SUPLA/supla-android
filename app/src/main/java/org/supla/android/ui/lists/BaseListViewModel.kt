@@ -13,13 +13,13 @@ import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.source.local.entity.ChannelRelationType
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
-import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.lib.SuplaChannelValue
 import org.supla.android.lib.SuplaClientMessageHandler.OnSuplaClientMessageListener
 import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.profile.CloudUrl
 import org.supla.android.usecases.profile.LoadActiveProfileUrlUseCase
+import org.supla.core.shared.data.SuplaChannelFunction
 
 abstract class BaseListViewModel<S : ViewState, E : ViewEvent>(
   private val preferences: Preferences,

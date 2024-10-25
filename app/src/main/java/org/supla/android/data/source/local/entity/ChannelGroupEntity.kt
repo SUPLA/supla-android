@@ -26,9 +26,9 @@ import org.supla.android.data.source.local.entity.ChannelGroupEntity.Companion.C
 import org.supla.android.data.source.local.entity.ChannelGroupEntity.Companion.COLUMN_PROFILE_ID
 import org.supla.android.data.source.local.entity.ChannelGroupEntity.Companion.COLUMN_REMOTE_ID
 import org.supla.android.data.source.local.entity.ChannelGroupEntity.Companion.TABLE_NAME
-import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.usecases.group.totalvalue.GroupTotalValue
 import org.supla.android.usecases.group.totalvalue.GroupValue
+import org.supla.core.shared.data.SuplaChannelFunction
 
 @Entity(
   tableName = TABLE_NAME,

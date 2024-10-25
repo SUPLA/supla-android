@@ -733,6 +733,10 @@
   <string name="details_em_forward_reactive_energy_short" translatable="false">Forward reactive</string>
   <string name="details_em_reverse_reactive_energy_short" translatable="false">Reverse reactive</string>
   <string name="details_em_energy_label" translatable="false">Energy</string>
+  <string name="channel_btn_shut" translatable="false">Shut</string>
+  <string name="channel_btn_reveal" translatable="false">Reveal</string>
+  <string name="channel_btn_collapse" translatable="false">Collapse</string>
+  <string name="channel_btn_expand" translatable="false">Expand</string>
 
   <plurals name="details_timer_info_on" translatable="false">
     <item quantity="other">on</item>

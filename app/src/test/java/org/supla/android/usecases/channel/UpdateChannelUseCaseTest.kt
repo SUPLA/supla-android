@@ -41,13 +41,13 @@ import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.ProfileEntity
-import org.supla.android.data.source.remote.channel.SuplaChannelFunction
 import org.supla.android.db.Location
 import org.supla.android.testhelpers.suplaChannel
 import org.supla.android.usecases.channelconfig.RequestChannelConfigUseCase
 import org.supla.android.widget.WidgetConfiguration
 import org.supla.android.widget.WidgetManager
 import org.supla.android.widget.WidgetPreferences
+import org.supla.core.shared.data.SuplaChannelFunction
 
 @Suppress("UnusedDataClassCopyResult")
 @RunWith(MockitoJUnitRunner::class)
