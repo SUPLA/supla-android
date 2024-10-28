@@ -38,7 +38,6 @@ import org.supla.android.R
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
-import org.supla.android.data.model.general.ChannelIssueItem
 import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.data.source.local.entity.ChannelGroupEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity
@@ -63,7 +62,7 @@ import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.tools.VibrationHelper
 import org.supla.android.ui.dialogs.AuthorizationDialogState
-import org.supla.android.ui.lists.data.IssueIconType
+import org.supla.android.ui.lists.data.ChannelIssueItem
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.client.AuthorizeUseCase
 import org.supla.android.usecases.client.CallSuplaClientOperationUseCase
@@ -157,7 +156,7 @@ class RollerShutterViewModelTest :
         remoteId = remoteId,
         windowState = RollerShutterWindowState(WindowGroupedValue.Similar(position.toFloat()), bottomPosition.toFloat()),
         viewState = WindowViewState(
-          issues = listOf(ChannelIssueItem(IssueIconType.ERROR, R.string.motor_problem)),
+          issues = listOf(ChannelIssueItem.Error(R.string.motor_problem)),
           enabled = true,
           positionPresentation = ShadingSystemPositionPresentation.AS_CLOSED,
           positionUnknown = false,

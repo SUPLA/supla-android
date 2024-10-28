@@ -65,7 +65,7 @@ class GeneralPurposeMeterMeasurementsProvider @Inject constructor(
         ChannelChartSets(
           channel.remoteId,
           channel.function,
-          getChannelCaptionUseCase(channel.channelEntity),
+          getChannelCaptionUseCase(channel.channelEntity).provider(),
           spec.aggregation,
           it
         )

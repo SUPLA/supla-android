@@ -672,4 +672,5 @@
   <string name="thermostat_detail_other_thermostats">Termostatos dependentes</string>
   <string name="thermostat_battery_cover_open">Tampa da bateria aberta</string>
 
+  <string name="channel_battery_level">Nível de bateria (%1$d - %2$s): %3$d%%</string>
 </resources>

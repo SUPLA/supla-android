@@ -1,4 +1,4 @@
-package org.supla.android.data.model.general
+package org.supla.core.shared.data.model.general
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 

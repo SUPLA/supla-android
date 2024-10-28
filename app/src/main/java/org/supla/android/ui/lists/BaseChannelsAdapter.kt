@@ -38,7 +38,7 @@ abstract class BaseChannelsAdapter(
 ) : BaseListAdapter<ListItem, ChannelDataBase>(context, preferences), ChannelLayout.Listener {
 
   var infoButtonClickCallback: (id: Int) -> Unit = { _ -> }
-  var issueButtonClickCallback: (messageId: Int?) -> Unit = { _ -> }
+  var issueButtonClickCallback: (issues: ListItemIssues) -> Unit = { _ -> }
   var listItemClickCallback: (remoteId: Int) -> Unit = { _ -> }
 
   override val callback = ListCallback(context, this).also {
@@ -139,7 +139,7 @@ abstract class BaseChannelsAdapter(
         remoteId = item.channel.remoteId,
         data = data,
         onInfoClick = { infoButtonClickCallback(item.channel.remoteId) },
-        onIssueClick = { issueButtonClickCallback(item.issueMessage) },
+        onIssueClick = { issueButtonClickCallback(it) },
         onTitleLongClick = { onCaptionLongPress(item.channel.remoteId) },
         onItemClick = { listItemClickCallback(item.channel.remoteId) }
       )
@@ -160,7 +160,7 @@ abstract class BaseChannelsAdapter(
         remoteId = item.channel.remoteId,
         data = data,
         onInfoClick = { infoButtonClickCallback(item.channel.remoteId) },
-        onIssueClick = { },
+        onIssueClick = { issueButtonClickCallback(it) },
         onTitleLongClick = { onCaptionLongPress(item.channel.remoteId) },
         onItemClick = { listItemClickCallback(item.channel.remoteId) }
       )
@@ -217,7 +217,7 @@ abstract class BaseChannelsAdapter(
         remoteId = item.channel.remoteId,
         data = data,
         onInfoClick = { infoButtonClickCallback(item.channel.remoteId) },
-        onIssueClick = { issueButtonClickCallback(item.issueMessage) },
+        onIssueClick = { issueButtonClickCallback(it) },
         onTitleLongClick = { onCaptionLongPress(item.channel.remoteId) },
         onItemClick = { listItemClickCallback(item.channel.remoteId) }
       )
@@ -238,7 +238,7 @@ abstract class BaseChannelsAdapter(
         remoteId = item.channel.remoteId,
         data = data,
         onInfoClick = { infoButtonClickCallback(item.channel.remoteId) },
-        onIssueClick = { issueButtonClickCallback(item.issueMessage) },
+        onIssueClick = { issueButtonClickCallback(it) },
         onTitleLongClick = { onCaptionLongPress(item.channel.remoteId) },
         onItemClick = { listItemClickCallback(item.channel.remoteId) }
       )

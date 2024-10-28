@@ -17,28 +17,29 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.local.entity.extensions.onlineState
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
-import org.supla.android.data.source.remote.shadingsystem.ShadingSystemValue
 import org.supla.android.ui.lists.data.SlideableListItemData
 import org.supla.android.usecases.channel.GetChannelCaptionUseCase
+import org.supla.android.usecases.channel.GetChannelIssuesForListUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.list.CreateListItemUpdateEventDataUseCase
 
 abstract class ShadingSystemBasedUpdateEventMapper(
   private val getChannelCaptionUseCase: GetChannelCaptionUseCase,
-  private val getChannelIconUseCase: GetChannelIconUseCase
+  private val getChannelIconUseCase: GetChannelIconUseCase,
+  private val getChannelIssuesForListUseCase: GetChannelIssuesForListUseCase
 ) : CreateListItemUpdateEventDataUseCase.Mapper {
-  protected fun toListItemData(channelData: ChannelDataEntity, value: ShadingSystemValue): SlideableListItemData.Default {
+  protected fun toListItemData(channelWithChildren: ChannelWithChildren): SlideableListItemData.Default {
     return SlideableListItemData.Default(
-      onlineState = channelData.channelValueEntity.onlineState,
-      titleProvider = getChannelCaptionUseCase(channelData),
-      icon = getChannelIconUseCase.invoke(channelData),
+      onlineState = channelWithChildren.channel.channelValueEntity.onlineState,
+      title = getChannelCaptionUseCase(channelWithChildren.channel),
+      icon = getChannelIconUseCase.invoke(channelWithChildren.channel),
       value = null,
-      issueIconType = value.getIssueIconType(),
+      issues = getChannelIssuesForListUseCase(channelWithChildren),
       estimatedTimerEndDate = null,
-      infoSupported = SuplaChannelFlag.CHANNEL_STATE.inside(channelData.flags)
+      infoSupported = SuplaChannelFlag.CHANNEL_STATE.inside(channelWithChildren.channel.flags)
     )
   }
 }

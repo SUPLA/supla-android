@@ -21,10 +21,10 @@ import io.mockk.every
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
-import org.supla.android.data.source.local.entity.ChannelRelationType
 import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.remote.thermostat.ThermostatIndicatorIcon
 import org.supla.android.ui.lists.ListOnlineState
+import org.supla.core.shared.data.source.local.entity.ChannelRelationType
 
 class ChannelChildEntityTest {
 

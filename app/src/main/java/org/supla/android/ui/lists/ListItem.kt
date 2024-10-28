@@ -18,7 +18,7 @@ package org.supla.android.ui.lists
  */
 
 import androidx.annotation.DrawableRes
-import org.supla.android.core.ui.StringProvider
+import org.supla.android.core.ui.LocalizedString
 import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.source.local.entity.LocationEntity
@@ -27,7 +27,6 @@ import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.SceneDataEntity
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.images.ImageId
-import org.supla.android.ui.lists.data.IssueIconType
 import org.supla.android.ui.lists.data.SlideableListItemData
 import java.util.Date
 
@@ -41,19 +40,18 @@ sealed interface ListItem {
     val channel: ChannelDataEntity,
     val locationCaption: String,
     val online: ListOnlineState,
-    val captionProvider: StringProvider,
+    val captionProvider: LocalizedString,
     val icon: ImageId,
     val value: String?,
-    val issueIconType: IssueIconType?,
-    val issueMessage: Int?
+    val issues: ListItemIssues
   ) : ChannelBasedItem(channel) {
     open fun toSlideableListItemData(): SlideableListItemData {
       return SlideableListItemData.Default(
         onlineState = online,
-        titleProvider = captionProvider,
+        title = captionProvider,
         icon = icon,
         value = value,
-        issueIconType = issueIconType,
+        issues = issues,
         estimatedTimerEndDate = null,
         infoSupported = SuplaChannelFlag.CHANNEL_STATE.inside(channel.flags)
       )
@@ -73,21 +71,20 @@ sealed interface ListItem {
     channel: ChannelDataEntity,
     locationCaption: String,
     online: ListOnlineState,
-    captionProvider: StringProvider,
+    captionProvider: LocalizedString,
     icon: ImageId,
     value: String?,
-    issueIconType: IssueIconType?,
-    issueMessage: Int?,
+    issues: ListItemIssues,
     private val estimatedTimerEndDate: Date?,
     private val subValue: String,
     @DrawableRes private val indicatorIcon: Int?
-  ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, value, issueIconType, issueMessage) {
+  ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, value, issues) {
     override fun toSlideableListItemData(): SlideableListItemData {
       return SlideableListItemData.Thermostat(
         onlineState = online,
-        titleProvider = captionProvider,
+        title = captionProvider,
         icon = icon,
-        issueIconType = issueIconType,
+        issues = issues,
         estimatedTimerEndDate = estimatedTimerEndDate,
         value = value ?: ValuesFormatter.NO_VALUE_TEXT,
         subValue = subValue,
@@ -101,37 +98,38 @@ sealed interface ListItem {
     channel: ChannelDataEntity,
     locationCaption: String,
     online: ListOnlineState,
-    captionProvider: StringProvider,
+    captionProvider: LocalizedString,
     icon: ImageId,
-    value: String? = null
-  ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, value, null, null)
+    value: String? = null,
+    issues: ListItemIssues
+  ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, value, issues)
 
   class ShadingSystemItem(
     channel: ChannelDataEntity,
     locationCaption: String,
     online: ListOnlineState,
-    captionProvider: StringProvider,
+    captionProvider: LocalizedString,
     icon: ImageId,
-    issueIconType: IssueIconType?,
-    issueMessage: Int?
-  ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, null, issueIconType, issueMessage)
+    issues: ListItemIssues
+  ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, null, issues)
 
   class SwitchItem(
     channel: ChannelDataEntity,
     locationCaption: String,
     online: ListOnlineState,
-    captionProvider: StringProvider,
+    captionProvider: LocalizedString,
     icon: ImageId,
     value: String?,
     private val estimatedTimerEndDate: Date?,
-  ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, value, null, null) {
+    issues: ListItemIssues
+  ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, value, issues) {
     override fun toSlideableListItemData(): SlideableListItemData {
       return SlideableListItemData.Default(
         onlineState = online,
-        titleProvider = captionProvider,
+        title = captionProvider,
         icon = icon,
         value = value,
-        issueIconType = issueIconType,
+        issues = issues,
         estimatedTimerEndDate = estimatedTimerEndDate,
         infoSupported = SuplaChannelFlag.CHANNEL_STATE.inside(channel.flags)
       )
@@ -142,17 +140,19 @@ sealed interface ListItem {
     channel: ChannelDataEntity,
     locationCaption: String,
     online: ListOnlineState,
-    captionProvider: StringProvider,
+    captionProvider: LocalizedString,
     icon: ImageId,
-    value: String
-  ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, value, null, null)
+    value: String,
+    issues: ListItemIssues
+  ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, value, issues)
 
   class GeneralPurposeMeasurementItem(
     channel: ChannelDataEntity,
     locationCaption: String,
     online: ListOnlineState,
-    captionProvider: StringProvider,
+    captionProvider: LocalizedString,
     icon: ImageId,
-    value: String
-  ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, value, null, null)
+    value: String,
+    issues: ListItemIssues
+  ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, value, issues)
 }

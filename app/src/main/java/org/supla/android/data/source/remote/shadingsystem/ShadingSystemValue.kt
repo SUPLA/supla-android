@@ -1,5 +1,6 @@
 package org.supla.android.data.source.remote.shadingsystem
 
+import org.supla.android.ui.lists.data.ChannelIssueItem
 import kotlin.math.max
 
 /*
@@ -30,19 +31,12 @@ abstract class ShadingSystemValue {
 
   fun hasValidPosition() = position != INVALID_VALUE
 
-  fun getIssueIconType() = when {
+  fun getChannelIssue(): ChannelIssueItem? = when {
     online && flags.contains(SuplaShadingSystemFlag.MOTOR_PROBLEM) -> SuplaShadingSystemFlag.MOTOR_PROBLEM
     online && flags.contains(SuplaShadingSystemFlag.CALIBRATION_LOST) -> SuplaShadingSystemFlag.CALIBRATION_LOST
     online && flags.contains(SuplaShadingSystemFlag.CALIBRATION_FAILED) -> SuplaShadingSystemFlag.CALIBRATION_FAILED
     else -> null
-  }?.getIssueIconType()
-
-  fun getIssueMessage() = when {
-    online && flags.contains(SuplaShadingSystemFlag.MOTOR_PROBLEM) -> SuplaShadingSystemFlag.MOTOR_PROBLEM
-    online && flags.contains(SuplaShadingSystemFlag.CALIBRATION_LOST) -> SuplaShadingSystemFlag.CALIBRATION_LOST
-    online && flags.contains(SuplaShadingSystemFlag.CALIBRATION_FAILED) -> SuplaShadingSystemFlag.CALIBRATION_FAILED
-    else -> null
-  }?.getIssueMessage()
+  }?.asChannelIssues()
 
   companion object {
     const val INVALID_VALUE = -1

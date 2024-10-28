@@ -18,7 +18,7 @@ package org.supla.android.data.source.remote.shadingsystem
  */
 
 import org.supla.android.R
-import org.supla.android.ui.lists.data.IssueIconType
+import org.supla.android.ui.lists.data.ChannelIssueItem
 
 enum class SuplaShadingSystemFlag(val value: Int) {
   TILT_IS_SET(1),
@@ -27,19 +27,11 @@ enum class SuplaShadingSystemFlag(val value: Int) {
   MOTOR_PROBLEM(1 shl 3),
   CALIBRATION_IN_PROGRESS(1 shl 4);
 
-  fun getIssueIconType() =
+  fun asChannelIssues(): ChannelIssueItem? =
     when (this) {
-      MOTOR_PROBLEM -> IssueIconType.ERROR
-      CALIBRATION_LOST -> IssueIconType.WARNING
-      CALIBRATION_FAILED -> IssueIconType.WARNING
-      else -> null
-    }
-
-  fun getIssueMessage(): Int? =
-    when (this) {
-      MOTOR_PROBLEM -> R.string.motor_problem
-      CALIBRATION_LOST -> R.string.calibration_lost
-      CALIBRATION_FAILED -> R.string.calibration_failed
+      MOTOR_PROBLEM -> ChannelIssueItem.Error(R.string.motor_problem)
+      CALIBRATION_LOST -> ChannelIssueItem.Warning(R.string.calibration_lost)
+      CALIBRATION_FAILED -> ChannelIssueItem.Warning(R.string.calibration_failed)
       else -> null
     }
 

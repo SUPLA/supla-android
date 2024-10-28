@@ -18,6 +18,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,7 +32,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -48,7 +52,8 @@ import org.supla.android.data.formatting.LocalPercentageFormatter
 import org.supla.android.data.source.remote.thermostat.ThermostatIndicatorIcon
 import org.supla.android.images.ImageId
 import org.supla.android.ui.lists.ListOnlineState
-import org.supla.android.ui.lists.data.IssueIconType
+import org.supla.android.ui.lists.data.ChannelIssueItem
+import org.supla.android.ui.lists.data.message
 import org.supla.android.ui.lists.onlineState
 import org.supla.android.ui.views.Image
 import org.supla.android.ui.views.list.ListItemDot
@@ -74,8 +79,7 @@ data class ThermostatData(
   val currentPower: Float?,
   val value: String,
   val indicatorIcon: ThermostatIndicatorIcon,
-  val issueIconType: IssueIconType?,
-  val issueMessage: Int?,
+  val channelIssueItem: List<ChannelIssueItem>,
   val showChannelStateIcon: Boolean,
   val subValue: String? = null,
   val pumpSwitchIcon: ImageId? = null,
@@ -85,7 +89,7 @@ data class ThermostatData(
 @Composable
 fun ThermostatSlavesListView(
   state: ThermostatSlavesListViewState,
-  onShowMessage: (Int?) -> Unit,
+  onShowMessage: (String) -> Unit,
   onShowInfo: (ThermostatData) -> Unit
 ) {
   Column {
@@ -112,7 +116,7 @@ fun ThermostatSlavesListView(
 }
 
 @Composable
-private fun SlaveRow(slave: ThermostatData, scale: Float, onShowMessage: (Int?) -> Unit, onShowInfo: (ThermostatData) -> Unit) {
+private fun SlaveRow(slave: ThermostatData, scale: Float, onShowMessage: (String) -> Unit, onShowInfo: (ThermostatData) -> Unit) {
   Box(
     modifier = Modifier
       .fillMaxWidth()
@@ -162,8 +166,16 @@ private fun SlaveRow(slave: ThermostatData, scale: Float, onShowMessage: (Int?) 
       horizontalArrangement = Arrangement.spacedBy(Distance.small),
       modifier = Modifier.align(Alignment.CenterEnd)
     ) {
-      slave.issueIconType?.let {
-        ListItemIssueIcon(issueIconType = it, onClick = { onShowMessage(slave.issueMessage) })
+      slave.channelIssueItem.firstOrNull()?.let {
+        val message = slave.channelIssueItem.message(LocalContext.current)
+        ListItemIssueIcon(
+          icon = it.icon,
+          modifier = Modifier.clickable(
+            interactionSource = remember { MutableInteractionSource() },
+            indication = ripple(),
+            onClick = { onShowMessage(message) }
+          )
+        )
       }
       if (slave.showChannelStateIcon && slave.onlineState.online) {
         ListItemInfoIcon(onClick = { onShowInfo(slave) })
@@ -198,8 +210,7 @@ private fun sampleSlave(channelId: Int) = ThermostatData(
   25f,
   "22,7°C",
   ThermostatIndicatorIcon.HEATING,
-  IssueIconType.WARNING,
-  null,
+  listOf(ChannelIssueItem.Warning()),
   true,
   pumpSwitchIcon = ImageId(R.drawable.fnc_pump_switch_on),
   sourceSwitchIcon = ImageId(R.drawable.fnc_heat_or_cold_source_switch_off)

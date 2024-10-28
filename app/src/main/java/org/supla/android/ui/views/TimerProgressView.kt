@@ -124,8 +124,7 @@ fun TimerProgressView(progress: Float, indeterminate: Boolean) {
   }
 }
 
-context(DrawScope)
-private fun timerProgressLine(
+private fun DrawScope.timerProgressLine(
   progressAlpha: Float,
   backgroundColor: Color,
   progressColor: Color
@@ -160,8 +159,7 @@ private fun timerProgressLine(
   )
 }
 
-context(DrawScope)
-private fun timerProgressPoint(
+private fun DrawScope.timerProgressPoint(
   progressAlpha: Float,
   progressColor: Color,
   pointShadowColor: Color
@@ -185,8 +183,7 @@ private fun timerProgressPoint(
   )
 }
 
-context(DrawScope)
-private fun indeterminateWave(
+private fun DrawScope.indeterminateWave(
   position: Float,
   progressColor: Color
 ) {

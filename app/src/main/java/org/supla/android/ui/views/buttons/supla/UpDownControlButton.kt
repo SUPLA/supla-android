@@ -89,9 +89,8 @@ fun UpDownControlButton(
   }
 }
 
-context(BoxScope)
 @Composable
-fun UpControlIcon(textColor: Color) =
+fun BoxScope.UpControlIcon(textColor: Color) =
   ControlButtonIcon(
     iconRes = R.drawable.ic_arrow_right,
     textColor = textColor,
@@ -99,18 +98,16 @@ fun UpControlIcon(textColor: Color) =
     modifier = Modifier.align(Alignment.Center)
   )
 
-context(BoxScope)
 @Composable
-fun StopControlIcon(textColor: Color) =
+fun BoxScope.StopControlIcon(textColor: Color) =
   ControlButtonIcon(
     iconRes = R.drawable.ic_stop,
     textColor = textColor,
     modifier = Modifier.align(Alignment.Center)
   )
 
-context (BoxScope)
 @Composable
-fun DownControlIcon(textColor: Color) =
+fun BoxScope.DownControlIcon(textColor: Color) =
   ControlButtonIcon(
     iconRes = R.drawable.ic_arrow_right,
     textColor = textColor,

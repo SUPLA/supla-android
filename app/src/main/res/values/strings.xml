@@ -737,6 +737,8 @@
   <string name="channel_btn_reveal" translatable="false">Reveal</string>
   <string name="channel_btn_collapse" translatable="false">Collapse</string>
   <string name="channel_btn_expand" translatable="false">Expand</string>
+  <string name="cfg_battery_level_warning" translatable="false">Battery level warning</string>
+  <string name="channel_battery_level">Battery level (%1$d - %2$s): %3$d%%</string>
 
   <plurals name="details_timer_info_on" translatable="false">
     <item quantity="other">on</item>

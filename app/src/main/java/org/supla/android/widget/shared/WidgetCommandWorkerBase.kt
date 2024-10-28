@@ -282,36 +282,30 @@ abstract class WidgetCommandWorkerBase(
     }
   }
 
+  @Suppress("DEPRECATION")
   private fun isNetworkAvailable(): Boolean {
     val connectivityManager =
       applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      connectivityManager.allNetworks.forEach {
-        val actNw = connectivityManager.getNetworkCapabilities(it)
-          ?: return@forEach
+    connectivityManager.allNetworks.forEach {
+      val actNw = connectivityManager.getNetworkCapabilities(it)
+        ?: return@forEach
 
-        val result = when {
-          actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
-          actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
-          // for other device which are able to connect with Ethernet
-          actNw.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
-          // for check internet over Bluetooths
-          actNw.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH) -> true
-          else -> false
-        }
-
-        if (result) {
-          return true
-        }
+      val result = when {
+        actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+        actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+        // for other device which are able to connect with Ethernet
+        actNw.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+        // for check internet over Bluetooths
+        actNw.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH) -> true
+        else -> false
       }
 
-      return false
-    } else {
-      @Suppress("DEPRECATION")
-      val nwInfo = connectivityManager.activeNetworkInfo ?: return false
-      @Suppress("DEPRECATION")
-      return nwInfo.isConnected
+      if (result) {
+        return true
+      }
     }
+
+    return false
   }
 
   private fun getBrightness(turnOnOrClose: Boolean): Short =

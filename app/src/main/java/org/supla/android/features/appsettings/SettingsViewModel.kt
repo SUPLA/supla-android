@@ -29,6 +29,7 @@ import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.core.permissions.PermissionsHelper
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.core.storage.EncryptedPreferences
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
@@ -48,6 +49,7 @@ class SettingsViewModel @Inject constructor(
   private val permissionsHelper: PermissionsHelper,
   private val modeManager: UiModeManager,
   private val encryptedPreferences: EncryptedPreferences,
+  private val applicationPreferences: ApplicationPreferences,
   schedulers: SuplaSchedulers
 ) : BaseViewModel<SettingsViewState, SettingsViewEvent>(SettingsViewState(), schedulers) {
 
@@ -70,8 +72,9 @@ class SettingsViewModel @Inject constructor(
       SettingItem.BottomMenu(visible = preferences.isShowBottomMenu, this::updateBottomMenu),
       SettingItem.BottomLabels(visible = preferences.isShowBottomLabel, enabled = true, this::updateBottomLabel),
       SettingItem.RollerShutterOpenClose(showOpeningPercentage = preferences.isShowOpeningPercent, this::updateShowingOpeningPercentage),
-      SettingItem.NightMode(nightModeSetting = preferences.nightMode, this::updateNightMode),
+      SettingItem.NightMode(nightModeSetting = applicationPreferences.nightMode, this::updateNightMode),
       SettingItem.LockScreen(lockScreenScope = encryptedPreferences.lockScreenSettings.scope, this::updateLockScreen),
+      SettingItem.BatteryWarningLevel(level = applicationPreferences.batteryWarningLevel, this::updateBatteryWarningLevel),
       SettingItem.LocalizationOrdering { sendEvent(SettingsViewEvent.NavigateToLocalizationsOrdering) },
 
       SettingItem.HeaderItem(headerResource = R.string.settings_permissions),
@@ -118,7 +121,7 @@ class SettingsViewModel @Inject constructor(
   }
 
   private fun updateNightMode(setting: NightModeSetting) {
-    preferences.nightMode = setting
+    applicationPreferences.nightMode = setting
     if (VERSION.SDK_INT >= VERSION_CODES.S) {
       modeManager.setApplicationNightMode(setting.modeManagerValue())
     } else {
@@ -138,6 +141,10 @@ class SettingsViewModel @Inject constructor(
     } else {
       sendEvent(SettingsViewEvent.NavigateToPinSetup(setting))
     }
+  }
+
+  private fun updateBatteryWarningLevel(level: Int) {
+    applicationPreferences.batteryWarningLevel = level
   }
 
   private fun goToSettings() {

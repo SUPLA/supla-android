@@ -24,6 +24,7 @@ import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.extensions.guardLet
 import org.supla.android.ui.lists.data.SlideableListItemData
 import org.supla.android.usecases.channel.GetChannelCaptionUseCase
+import org.supla.android.usecases.channel.GetChannelIssuesForListUseCase
 import org.supla.android.usecases.channel.GetSwitchValueStringUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.list.CreateListItemUpdateEventDataUseCase
@@ -35,6 +36,7 @@ class ChannelWithChildrenToSwitchUpdateEventMapper @Inject constructor(
   private val getChannelCaptionUseCase: GetChannelCaptionUseCase,
   private val getChannelIconUseCase: GetChannelIconUseCase,
   private val getSwitchValueStringUseCase: GetSwitchValueStringUseCase,
+  private val getChannelIssuesForListUseCase: GetChannelIssuesForListUseCase
 ) : CreateListItemUpdateEventDataUseCase.Mapper {
 
   override fun handle(item: Any): Boolean {
@@ -54,10 +56,10 @@ class ChannelWithChildrenToSwitchUpdateEventMapper @Inject constructor(
 
     return SlideableListItemData.Default(
       onlineState = channelData.channelValueEntity.onlineState,
-      titleProvider = getChannelCaptionUseCase(channelData),
+      title = getChannelCaptionUseCase(channelData),
       icon = getChannelIconUseCase.invoke(channelData),
       value = value,
-      issueIconType = null,
+      issues = getChannelIssuesForListUseCase(channelWithChildren),
       estimatedTimerEndDate = channelData.channelExtendedValueEntity?.getSuplaValue()?.TimerStateValue?.countdownEndsAt,
       infoSupported = SuplaChannelFlag.CHANNEL_STATE.inside(channelData.flags)
     )

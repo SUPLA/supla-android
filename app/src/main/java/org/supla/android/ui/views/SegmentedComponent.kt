@@ -20,6 +20,7 @@ package org.supla.android.ui.views
 import android.content.Context
 import android.util.AttributeSet
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,8 +30,8 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -41,7 +42,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.AbstractComposeView
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -96,21 +96,21 @@ fun SegmentedComponent(
         Modifier
       }
 
-      ClickableText(
-        text = AnnotatedString(item),
+      Text(
+        text = item,
         style = MaterialTheme.typography.bodyMedium.copy(
           color = if (disabled) colorResource(id = R.color.item_unselected) else MaterialTheme.colorScheme.onBackground,
           textAlign = TextAlign.Center
         ),
-        onClick = {
-          if (activeItem != i) {
-            onClick(i)
-          }
-        },
         modifier = textModifier
           .padding(horizontal = 8.dp, vertical = 8.dp)
           .fillMaxHeight()
           .weight(1f)
+          .clickable {
+            if (activeItem != i) {
+              onClick(i)
+            }
+          }
       )
     }
   }

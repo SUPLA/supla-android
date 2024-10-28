@@ -18,8 +18,9 @@ package org.supla.android.usecases.channel
  */
 
 import android.content.Context
-import org.supla.android.core.ui.StringProvider
-import org.supla.android.data.model.general.ChannelBase
+import org.supla.android.core.ui.LocalizedString
+import org.supla.android.core.ui.localized
+import org.supla.core.shared.data.model.general.ChannelBase
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -28,11 +29,11 @@ class GetChannelCaptionUseCase @Inject constructor(
   private val getChannelDefaultCaptionUseCase: GetChannelDefaultCaptionUseCase
 ) {
 
-  operator fun invoke(channelEntity: ChannelBase): StringProvider {
+  operator fun invoke(channelEntity: ChannelBase): LocalizedString {
     if (channelEntity.caption.trim().isEmpty()) {
       return getChannelDefaultCaptionUseCase(channelEntity.function)
     } else {
-      return { channelEntity.caption }
+      return channelEntity.caption.localized()
     }
   }
 

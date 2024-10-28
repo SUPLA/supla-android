@@ -19,7 +19,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.supla.android.Preferences
-import org.supla.android.core.ui.StringProvider
+import org.supla.android.core.ui.LocalizedString
 import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.isHvacThermostat
@@ -86,6 +86,6 @@ sealed interface ThermostatDetailViewEvent : StandardDetailViewEvent {
 }
 
 data class ThermostatDetailViewState(
-  override val caption: StringProvider? = null,
+  override val caption: LocalizedString? = null,
   val subfunction: ThermostatSubfunction? = null
 ) : StandardDetailViewState(caption)

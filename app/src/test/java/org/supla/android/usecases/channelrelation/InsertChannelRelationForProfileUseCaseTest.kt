@@ -33,12 +33,12 @@ import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.data.source.ChannelRelationRepository
 import org.supla.android.data.source.local.entity.ChannelRelationEntity
-import org.supla.android.data.source.local.entity.ChannelRelationType
 import org.supla.android.db.AuthProfileItem
 import org.supla.android.lib.SuplaChannelRelation
 import org.supla.android.profile.ProfileManager
 import org.supla.android.testhelpers.profileMock
 import org.supla.android.testhelpers.relationMock
+import org.supla.core.shared.data.source.local.entity.ChannelRelationType
 
 @Suppress("SameParameterValue")
 @RunWith(MockitoJUnitRunner::class)

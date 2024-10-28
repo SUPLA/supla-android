@@ -17,7 +17,6 @@ package org.supla.android.usecases.list.eventmappers
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.content.Context
 import io.mockk.every
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
@@ -28,8 +27,8 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.whenever
 import org.supla.android.R
+import org.supla.android.core.ui.LocalizedString
 import org.supla.android.data.ValuesFormatter
-import org.supla.android.data.source.local.entity.ChannelRelationType
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
@@ -42,13 +41,16 @@ import org.supla.android.extensions.toTimestamp
 import org.supla.android.images.ImageId
 import org.supla.android.lib.SuplaChannelExtendedValue
 import org.supla.android.lib.SuplaTimerState
+import org.supla.android.ui.lists.ListItemIssues
 import org.supla.android.ui.lists.ListOnlineState
-import org.supla.android.ui.lists.data.IssueIconType
+import org.supla.android.ui.lists.data.IssueIcon
 import org.supla.android.ui.lists.data.SlideableListItemData
 import org.supla.android.usecases.channel.GetChannelCaptionUseCase
+import org.supla.android.usecases.channel.GetChannelIssuesForListUseCase
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.core.shared.data.SuplaChannelFunction
+import org.supla.core.shared.data.source.local.entity.ChannelRelationType
 
 @RunWith(MockitoJUnitRunner::class)
 class ChannelWithChildrenToThermostatUpdateEventMapperTest {
@@ -61,6 +63,9 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
 
   @Mock
   private lateinit var getChannelValueStringUseCase: GetChannelValueStringUseCase
+
+  @Mock
+  private lateinit var getChannelIssuesForListUseCase: GetChannelIssuesForListUseCase
 
   @Mock
   lateinit var valuesFormatter: ValuesFormatter
@@ -101,15 +106,14 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
   @Test
   fun `should map channel with thermometer to thermostat slideable item`() {
     // given
-    val caption = "some title"
+    val caption = LocalizedString.Constant("some title")
     val icon: ImageId = mockk()
     val value = "some value"
     val subValue = "some sub value"
-    val issueIconType = IssueIconType.WARNING
+    val channelIssues = ListItemIssues(IssueIcon.Warning)
     val thermostatValue = mockk<ThermostatValue> {
       every { getSetpointText(valuesFormatter) } returns subValue
       every { getIndicatorIcon() } returns ThermostatIndicatorIcon.STANDBY
-      every { getIssueIconType() } returns issueIconType
     }
     val thermometerChannel = mockk<ChannelDataEntity>()
     val thermometerChild = mockk<ChannelChildEntity> {
@@ -130,23 +134,23 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
       every { flags } returns SuplaChannelFlag.CHANNEL_STATE.rawValue
     }
     val channelWithChildren = ChannelWithChildren(channel, listOf(thermometerChild))
-    val context: Context = mockk()
 
-    whenever(getChannelCaptionUseCase.invoke(channel)).thenReturn { caption }
+    whenever(getChannelCaptionUseCase.invoke(channel)).thenReturn(caption)
     whenever(getChannelIconUseCase.invoke(channel)).thenReturn(icon)
     whenever(getChannelValueStringUseCase(thermometerChannel)).thenReturn(value)
+    whenever(getChannelIssuesForListUseCase(channelWithChildren)).thenReturn(channelIssues)
 
     // when
     val result = mapper.map(channelWithChildren) as SlideableListItemData.Thermostat
 
     // then
     assertThat(result.onlineState).isEqualTo(ListOnlineState.ONLINE)
-    assertThat(result.titleProvider(context)).isEqualTo(caption)
+    assertThat(result.title).isEqualTo(caption)
     assertThat(result.icon).isEqualTo(icon)
     assertThat(result.value).isEqualTo(value)
     assertThat(result.subValue).isEqualTo(subValue)
     assertThat(result.indicatorIcon).isEqualTo(R.drawable.ic_standby)
-    assertThat(result.issueIconType).isEqualTo(issueIconType)
+    assertThat(result.issues).isEqualTo(channelIssues)
     assertThat(result.estimatedTimerEndDate).isNull()
     assertThat(result.infoSupported).isEqualTo(true)
   }
@@ -154,16 +158,15 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
   @Test
   fun `should map channel with thermometer to thermostat slideable item without main thermometer`() {
     // given
-    val caption = "some title"
+    val caption = LocalizedString.Constant("some title")
     val icon: ImageId = mockk()
     val value = ValuesFormatter.NO_VALUE_TEXT
     val subValue = "some sub value"
-    val issueIconType = IssueIconType.WARNING
+    val channelIssues = ListItemIssues(IssueIcon.Warning)
     val estimatedEndDate = date(2023, 11, 21)
     val thermostatValue = mockk<ThermostatValue> {
       every { getSetpointText(valuesFormatter) } returns subValue
       every { getIndicatorIcon() } returns ThermostatIndicatorIcon.STANDBY
-      every { getIssueIconType() } returns issueIconType
     }
     val channel = mockk<ChannelDataEntity> {
       every { channelEntity } returns mockk {
@@ -181,22 +184,22 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
       every { flags } returns 0
     }
     val channelWithChildren = ChannelWithChildren(channel, listOf())
-    val context: Context = mockk()
 
-    whenever(getChannelCaptionUseCase.invoke(channel)).thenReturn { caption }
+    whenever(getChannelCaptionUseCase.invoke(channel)).thenReturn(caption)
     whenever(getChannelIconUseCase.invoke(channel)).thenReturn(icon)
+    whenever(getChannelIssuesForListUseCase.invoke(channelWithChildren)).thenReturn(channelIssues)
 
     // when
     val result = mapper.map(channelWithChildren) as SlideableListItemData.Thermostat
 
     // then
     assertThat(result.onlineState).isEqualTo(ListOnlineState.ONLINE)
-    assertThat(result.titleProvider(context)).isEqualTo(caption)
+    assertThat(result.title).isEqualTo(caption)
     assertThat(result.icon).isEqualTo(icon)
     assertThat(result.value).isEqualTo(value)
     assertThat(result.subValue).isEqualTo(subValue)
     assertThat(result.indicatorIcon).isEqualTo(R.drawable.ic_standby)
-    assertThat(result.issueIconType).isEqualTo(issueIconType)
+    assertThat(result.issues).isEqualTo(channelIssues)
     assertThat(result.estimatedTimerEndDate).isEqualTo(estimatedEndDate)
     assertThat(result.infoSupported).isEqualTo(false)
   }

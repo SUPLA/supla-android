@@ -56,6 +56,7 @@ import org.supla.android.core.networking.suplaclient.SuplaClientNetworkCallback;
 import org.supla.android.core.networking.suplaclient.workers.InitializationWorker;
 import org.supla.android.core.notifications.NotificationsHelper;
 import org.supla.android.core.observers.AppLifecycleObserver;
+import org.supla.android.core.storage.ApplicationPreferences;
 import org.supla.android.data.ValuesFormatter;
 import org.supla.android.data.model.general.NightModeSetting;
 import org.supla.android.db.DbHelper;
@@ -97,6 +98,7 @@ public class SuplaApp extends MultiDexApplication
   @Inject Preferences preferences;
   @Inject UiModeManager modeManager;
   @Inject SuplaClientNetworkCallback suplaClientNetworkCallback;
+  @Inject ApplicationPreferences applicationPreferences;
 
   public SuplaApp() {
     SuplaClientMessageHandler.getGlobalInstance().registerMessageListener(this);
@@ -292,12 +294,12 @@ public class SuplaApp extends MultiDexApplication
   }
 
   private void setupNightMode() {
-    NightModeSetting nightModeSetting = preferences.getNightMode();
+    NightModeSetting nightModeSetting = applicationPreferences.getNightMode();
     if (VERSION.SDK_INT < VERSION_CODES.S) {
       AppCompatDelegate.setDefaultNightMode(nightModeSetting.appCompatDelegateValue());
     }
     if (nightModeSetting == NightModeSetting.UNSET) {
-      preferences.setNightMode(NightModeSetting.NEVER);
+      applicationPreferences.setNightMode(NightModeSetting.NEVER);
       if (VERSION.SDK_INT >= VERSION_CODES.S) {
         // If unset, expected is that the app will start without night mode.
         modeManager.setApplicationNightMode(nightModeSetting.modeManagerValue());

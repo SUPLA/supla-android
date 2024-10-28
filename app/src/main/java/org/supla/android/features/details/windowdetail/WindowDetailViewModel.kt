@@ -19,7 +19,7 @@ package org.supla.android.features.details.windowdetail
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.supla.android.Preferences
-import org.supla.android.core.ui.StringProvider
+import org.supla.android.core.ui.LocalizedString
 import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.features.details.detailbase.standarddetail.StandardDetailViewEvent
@@ -58,5 +58,5 @@ sealed interface WindowDetailViewEvent : StandardDetailViewEvent {
 }
 
 data class WindowDetailViewState(
-  override val caption: StringProvider? = null
+  override val caption: LocalizedString? = null
 ) : StandardDetailViewState(caption)

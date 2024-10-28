@@ -34,7 +34,7 @@ import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.Preferences
 import org.supla.android.core.BaseViewModelTest
-import org.supla.android.core.ui.StringProvider
+import org.supla.android.core.ui.LocalizedString
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.UpdateEventsManager
@@ -81,9 +81,9 @@ class GpmDetailViewModelTest : BaseViewModelTest<GpmDetailViewState, GpmDetailVi
     val channelData: ChannelDataEntity = mockk()
     every { channelData.visible } returns 1
     every { channelData.function } returns function
-    val captionProvider: StringProvider = mockk()
+    val caption: LocalizedString = mockk()
 
-    whenever(getChannelCaptionUseCase.invoke(channelData)).thenReturn(captionProvider)
+    whenever(getChannelCaptionUseCase.invoke(channelData)).thenReturn(caption)
     whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channelData))
 
     // when
@@ -91,7 +91,7 @@ class GpmDetailViewModelTest : BaseViewModelTest<GpmDetailViewState, GpmDetailVi
 
     // then
     Assertions.assertThat(events).isEmpty()
-    Assertions.assertThat(states).containsExactly(GpmDetailViewState(captionProvider))
+    Assertions.assertThat(states).containsExactly(GpmDetailViewState(caption))
 
     verify(readChannelByRemoteIdUseCase).invoke(remoteId)
     verifyNoMoreInteractions(readChannelByRemoteIdUseCase)
@@ -153,15 +153,15 @@ class GpmDetailViewModelTest : BaseViewModelTest<GpmDetailViewState, GpmDetailVi
     whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channelData))
     whenever(updateEventsManager.observeChannelsUpdate()).thenReturn(Observable.just(Any()))
 
-    val captionProvider: StringProvider = mockk()
-    whenever(getChannelCaptionUseCase.invoke(channelData)).thenReturn(captionProvider)
+    val caption: LocalizedString = mockk()
+    whenever(getChannelCaptionUseCase.invoke(channelData)).thenReturn(caption)
 
     // when
     viewModel.observeUpdates(remoteId, ItemType.CHANNEL, function)
 
     // then
     Assertions.assertThat(events).isEmpty()
-    Assertions.assertThat(states).containsExactly(GpmDetailViewState(captionProvider))
+    Assertions.assertThat(states).containsExactly(GpmDetailViewState(caption))
 
     verify(readChannelByRemoteIdUseCase).invoke(remoteId)
     verify(updateEventsManager).observeChannelsUpdate()

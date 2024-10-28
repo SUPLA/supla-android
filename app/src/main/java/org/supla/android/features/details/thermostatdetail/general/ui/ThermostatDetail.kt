@@ -48,6 +48,7 @@ import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -59,7 +60,6 @@ import org.supla.android.core.ui.StringProvider
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.formatting.LocalPercentageFormatter
-import org.supla.android.data.model.general.ChannelIssueItem
 import org.supla.android.data.model.temperature.TemperatureCorrection
 import org.supla.android.events.LoadingTimeoutManager
 import org.supla.android.features.details.thermostatdetail.general.MeasurementValue
@@ -68,7 +68,7 @@ import org.supla.android.features.details.thermostatdetail.general.data.Thermost
 import org.supla.android.features.details.thermostatdetail.ui.ThermometersValues
 import org.supla.android.features.details.thermostatdetail.ui.TimerHeader
 import org.supla.android.images.ImageId
-import org.supla.android.ui.lists.data.IssueIconType
+import org.supla.android.ui.lists.data.ChannelIssueItem
 import org.supla.android.ui.views.Image
 import org.supla.android.ui.views.LoadingScrim
 import org.supla.android.ui.views.buttons.supla.SuplaButton
@@ -379,11 +379,16 @@ private fun WarningsRow(warnings: List<ChannelIssueItem>, modifier: Modifier = M
         horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.distance_small))
       ) {
         Image(
-          drawableId = it.issueIconType.icon,
+          drawableId = it.icon.resource,
           contentDescription = null,
           modifier = Modifier.size(dimensionResource(id = R.dimen.channel_warning_image_size))
         )
-        Text(text = stringResource(id = it.descriptionRes), style = MaterialTheme.typography.bodyMedium)
+        Text(
+          text = it.message(LocalContext.current),
+          style = MaterialTheme.typography.bodyMedium,
+          maxLines = 1,
+          overflow = TextOverflow.Ellipsis
+        )
       }
 
       if (smallScreen) {
@@ -554,7 +559,7 @@ private fun PreviewTemporaryOverride() {
           coolingModeActive = true,
           isAutoFunction = true,
           issues = listOf(
-            ChannelIssueItem(IssueIconType.WARNING, R.string.thermostat_detail_mode_manual)
+            ChannelIssueItem.Warning(R.string.thermostat_detail_mode_manual)
           )
         )
       )
@@ -571,7 +576,7 @@ private fun PreviewSmall() {
         PreviewProxy(
           ThermostatGeneralViewState(
             issues = listOf(
-              ChannelIssueItem(IssueIconType.WARNING, R.string.thermostat_detail_mode_manual)
+              ChannelIssueItem.Warning(R.string.thermostat_detail_mode_manual)
             )
           )
         )

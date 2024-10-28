@@ -1,4 +1,4 @@
-package org.supla.android.ui.lists.data
+package org.supla.android.usecases.channel.issues
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,10 +17,9 @@ package org.supla.android.ui.lists.data
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.annotation.DrawableRes
-import org.supla.android.R
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
+import org.supla.android.ui.lists.data.ChannelIssueItem
 
-enum class IssueIconType(@DrawableRes val icon: Int) {
-  WARNING(R.drawable.channel_warning_level1),
-  ERROR(R.drawable.channel_warning_level2)
+interface ChannelIssuesProvider {
+  fun provide(channelWithChildren: ChannelWithChildren): List<ChannelIssueItem>
 }

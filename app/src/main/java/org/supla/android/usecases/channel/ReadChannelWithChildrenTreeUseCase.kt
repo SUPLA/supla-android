@@ -21,8 +21,6 @@ import io.reactivex.rxjava3.core.Observable
 import org.supla.android.Trace
 import org.supla.android.data.source.ChannelRelationRepository
 import org.supla.android.data.source.RoomChannelRepository
-import org.supla.android.data.source.local.entity.ChannelRelationEntity
-import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.extensions.TAG
@@ -33,7 +31,8 @@ import javax.inject.Singleton
 @Singleton
 class ReadChannelWithChildrenTreeUseCase @Inject constructor(
   private val channelRelationRepository: ChannelRelationRepository,
-  private val channelRepository: RoomChannelRepository
+  private val channelRepository: RoomChannelRepository,
+  private val getChannelChildrenTreeUseCase: GetChannelChildrenTreeUseCase
 ) {
 
   operator fun invoke(remoteId: Int): Observable<ChannelWithChildren> =
@@ -53,37 +52,9 @@ class ReadChannelWithChildrenTreeUseCase @Inject constructor(
         Observable.just(
           ChannelWithChildren(
             channel = channel,
-            children = findChildren(channel.remoteId, relationMap, channelsMap, childrenList)
+            children = getChannelChildrenTreeUseCase(channel.remoteId, relationMap, channelsMap, childrenList)
           )
         )
       }
       .distinctUntilChanged()
-
-  private fun findChildren(
-    forChannelId: Int,
-    relationMap: Map<Int, List<ChannelRelationEntity>>,
-    channelsMap: MutableMap<Int, ChannelDataEntity>,
-    childrenList: LinkedList<Int>
-  ): List<ChannelChildEntity> {
-    childrenList.add(forChannelId)
-
-    val result = relationMap[forChannelId]?.mapNotNull {
-      channelsMap[it.channelId]?.let { child ->
-        if (childrenList.contains(child.remoteId)) {
-          Trace.w(TAG, "Cycle dependency found! Skipping child ${child.remoteId}")
-          null
-        } else {
-          ChannelChildEntity(
-            it,
-            child,
-            findChildren(it.channelId, relationMap, channelsMap, childrenList)
-          )
-        }
-      }
-    } ?: emptyList()
-
-    childrenList.removeLast()
-
-    return result
-  }
 }

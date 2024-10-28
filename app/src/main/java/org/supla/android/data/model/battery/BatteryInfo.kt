@@ -1,4 +1,4 @@
-package org.supla.android.data.model.general
+package org.supla.android.data.model.battery
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,10 +17,21 @@ package org.supla.android.data.model.general
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.annotation.StringRes
-import org.supla.android.ui.lists.data.IssueIconType
+import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.extensions.ifTrue
 
-data class ChannelIssueItem(
-  val issueIconType: IssueIconType,
-  @StringRes val descriptionRes: Int
+data class BatteryInfo(
+  val batteryPowered: Boolean,
+  val level: Int?,
+  val health: Int?
 )
+
+val ChannelDataEntity.batterInfo: BatteryInfo?
+  get() = channelExtendedValueEntity?.getSuplaValue()?.ChannelStateValue?.let {
+    val batteryPowered = it.isBatteryPowered ?: false
+    val level = it.batteryLevel
+
+    (batteryPowered || level != null).ifTrue {
+      BatteryInfo(batteryPowered, level?.toInt(), it.batteryHealth?.toInt())
+    }
+  }

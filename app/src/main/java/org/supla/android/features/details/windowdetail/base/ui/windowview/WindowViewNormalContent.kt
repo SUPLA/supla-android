@@ -190,14 +190,12 @@ private fun PressToMoveVerticalButtons(enabled: Boolean, onAction: (ShadingSyste
     downEventHandler = { handleEvents(onClick = { onAction(ShadingSystemAction.Close) }) }
   )
 
-context (BoxScope)
 @Composable
-private fun OpenControlIcon(textColor: Color) =
+private fun BoxScope.OpenControlIcon(textColor: Color) =
   ControlButtonIcon(iconRes = R.drawable.ic_arrow_open, textColor = textColor, modifier = Modifier.align(Alignment.Center))
 
-context (BoxScope)
 @Composable
-private fun CloseControlIcon(textColor: Color) =
+private fun BoxScope.CloseControlIcon(textColor: Color) =
   ControlButtonIcon(iconRes = R.drawable.ic_arrow_open, textColor = textColor, rotate = 180f, modifier = Modifier.align(Alignment.Center))
 
 @Composable
@@ -252,17 +250,15 @@ private fun HoldToMoveHorizontalButtons(enabled: Boolean, modifier: Modifier = M
     modifier = modifier
   )
 
-context(BoxScope)
 @Composable
-private fun HoldToCloseCurtainControlIcon(textColor: Color) =
+private fun BoxScope.HoldToCloseCurtainControlIcon(textColor: Color) =
   Row(modifier = Modifier.align(Alignment.Center)) {
     ControlButtonIcon(iconRes = R.drawable.ic_arrow_right, textColor = textColor)
     ControlButtonIcon(iconRes = R.drawable.ic_arrow_right, textColor = textColor, rotate = 180f)
   }
 
-context(BoxScope)
 @Composable
-private fun HoldToOpenCurtainControlIcon(textColor: Color) =
+private fun BoxScope.HoldToOpenCurtainControlIcon(textColor: Color) =
   Row(modifier = Modifier.align(Alignment.Center)) {
     ControlButtonIcon(iconRes = R.drawable.ic_arrow_right, textColor = textColor, rotate = 180f)
     ControlButtonIcon(iconRes = R.drawable.ic_arrow_right, textColor = textColor)
@@ -281,17 +277,15 @@ private fun PressToMoveHorizontalButtons(enabled: Boolean, modifier: Modifier = 
     modifier = modifier
   )
 
-context(BoxScope)
 @Composable
-private fun ClickToCloseCurtainControlIcon(textColor: Color) =
+private fun BoxScope.ClickToCloseCurtainControlIcon(textColor: Color) =
   Row(modifier = Modifier.align(Alignment.Center)) {
     ControlButtonIcon(iconRes = R.drawable.ic_arrow_close, textColor = textColor, rotate = 270f)
     ControlButtonIcon(iconRes = R.drawable.ic_arrow_close, textColor = textColor, rotate = 90f)
   }
 
-context(BoxScope)
 @Composable
-private fun ClickToOpenCurtainControlIcon(textColor: Color) =
+private fun BoxScope.ClickToOpenCurtainControlIcon(textColor: Color) =
   Row(modifier = Modifier.align(Alignment.Center)) {
     ControlButtonIcon(iconRes = R.drawable.ic_arrow_close, textColor = textColor, rotate = 90f)
     ControlButtonIcon(iconRes = R.drawable.ic_arrow_close, textColor = textColor, rotate = 270f)

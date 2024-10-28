@@ -29,6 +29,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
+import org.supla.android.core.ui.LocalizedString
 import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.core.shared.data.SuplaChannelFunction
 
@@ -49,7 +50,7 @@ class GetChannelCaptionUseCaseTest {
       every { this@mockk.function } returns function
       every { caption } returns ""
     }
-    whenever(getChannelDefaultCaptionUseCase.invoke(function)).thenReturn { _ -> "" }
+    whenever(getChannelDefaultCaptionUseCase.invoke(function)).thenReturn(LocalizedString.Empty)
 
     // when
     useCase.invoke(channelEntity)
@@ -85,7 +86,7 @@ class GetChannelCaptionUseCaseTest {
       every { caption } returns ""
     }
     val context: Context = mockk()
-    whenever(getChannelDefaultCaptionUseCase.invoke(function)).thenReturn { _ -> "" }
+    whenever(getChannelDefaultCaptionUseCase.invoke(function)).thenReturn(LocalizedString.Empty)
 
     // when
     useCase.invoke(channelEntity, context)

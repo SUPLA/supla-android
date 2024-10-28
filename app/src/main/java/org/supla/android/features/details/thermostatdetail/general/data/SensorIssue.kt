@@ -19,7 +19,6 @@ package org.supla.android.features.details.thermostatdetail.general.data
 
 import org.supla.android.R
 import org.supla.android.core.ui.StringProvider
-import org.supla.android.data.source.local.entity.ChannelRelationType
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.remote.thermostat.SuplaThermostatFlag
 import org.supla.android.data.source.remote.thermostat.ThermostatValue
@@ -28,6 +27,7 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HOTELCARDSENSOR
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_OPENINGSENSOR_WINDOW
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROOFWINDOW
 import org.supla.android.usecases.icon.GetChannelIconUseCase
+import org.supla.core.shared.data.source.local.entity.ChannelRelationType
 
 data class SensorIssue(
   val imageId: ImageId?,

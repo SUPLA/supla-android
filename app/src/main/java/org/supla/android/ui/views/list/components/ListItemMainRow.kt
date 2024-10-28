@@ -28,9 +28,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import org.supla.android.R
 
-context(BoxScope)
 @Composable
-fun ListItemMainRow(scale: Float, content: @Composable RowScope.() -> Unit) =
+fun BoxScope.ListItemMainRow(scale: Float, content: @Composable RowScope.() -> Unit) =
   Row(
     modifier = Modifier
       .align(Alignment.TopCenter)

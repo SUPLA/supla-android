@@ -87,7 +87,7 @@ class ElectricityMeterSettingsViewModel @Inject constructor(
         remoteId = channelData.remoteId,
         profileId = channelData.profileId,
         viewState = ElectricityMeterSettingsViewState(
-          channelName = getChannelCaptionUseCase(channelData.channelEntity),
+          channelName = getChannelCaptionUseCase(channelData.channelEntity).provider(),
           onListOptions = SingleSelectionList(
             selected = settings.showOnListSafe,
             items = ElectricityMeterSettings.showOnListAllItems.filter { measuredValues.contains(it) },
