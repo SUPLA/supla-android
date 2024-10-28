@@ -17,8 +17,8 @@ package org.supla.android.data.source.local.entity
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.data.model.general.ChannelBase
 import org.supla.core.shared.data.SuplaChannelFunction
+import org.supla.core.shared.data.model.general.ChannelBase
 
 fun ChannelBase.isHvacThermostat() =
   function == SuplaChannelFunction.HVAC_THERMOSTAT ||
@@ -40,7 +40,10 @@ fun ChannelBase.isIconValueItem(): Boolean =
     function == SuplaChannelFunction.DISTANCE_SENSOR ||
     function == SuplaChannelFunction.ELECTRICITY_METER ||
     function == SuplaChannelFunction.HEAT_OR_COLD_SOURCE_SWITCH ||
-    function == SuplaChannelFunction.PUMP_SWITCH
+    function == SuplaChannelFunction.PUMP_SWITCH ||
+    function == SuplaChannelFunction.NO_LIQUID_SENSOR ||
+    function == SuplaChannelFunction.RAIN_SENSOR ||
+    function == SuplaChannelFunction.MAIL_SENSOR
 
 fun ChannelBase.isSwitch(): Boolean =
   function == SuplaChannelFunction.LIGHTSWITCH ||

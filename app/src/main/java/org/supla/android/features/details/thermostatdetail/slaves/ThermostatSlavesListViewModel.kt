@@ -27,7 +27,6 @@ import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.ValuesFormatter.Companion.NO_VALUE_TEXT
-import org.supla.android.data.source.local.entity.ChannelRelationType
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.local.entity.extensions.onlineState
@@ -41,6 +40,7 @@ import org.supla.android.usecases.channel.GetChannelCaptionUseCase
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenTreeUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
+import org.supla.core.shared.data.source.local.entity.ChannelRelationType
 import javax.inject.Inject
 
 @HiltViewModel
@@ -78,8 +78,8 @@ class ThermostatSlavesListViewModel @Inject constructor(
     stateDialogViewModelState.startRefreshing(dateProvider, suplaClientProvider)
   }
 
-  fun showMessage(messageId: Int?) {
-    updateState { it.copy(showMessage = messageId) }
+  fun showMessage(message: String) {
+    updateState { it.copy(showMessage = message) }
   }
 
   fun closeMessage() {
@@ -112,13 +112,12 @@ class ThermostatSlavesListViewModel @Inject constructor(
     return ThermostatData(
       channelId = channel.remoteId,
       onlineState = channel.channelValueEntity.onlineState,
-      caption = getChannelCaptionUseCase(channel),
+      caption = getChannelCaptionUseCase(channel).provider(),
       imageId = getChannelIconUseCase(channel),
       currentPower = thermostatValue.state.power,
       value = mainThermometer?.let { getChannelValueStringUseCase(it.channelDataEntity) } ?: NO_VALUE_TEXT,
       indicatorIcon = thermostatValue.getIndicatorIcon(),
-      issueIconType = thermostatValue.getIssueIconType(),
-      issueMessage = thermostatValue.getIssueMessage(),
+      channelIssueItem = thermostatValue.getChannelIssues(),
       showChannelStateIcon = SuplaChannelFlag.CHANNEL_STATE inside channel.flags,
       subValue = withSetpointValue.ifTrue { thermostatValue.getSetpointText(valuesFormatter) },
       pumpSwitchIcon = pumpSwitchChild?.let { getChannelIconUseCase(it.channelDataEntity) },
@@ -132,13 +131,12 @@ class ThermostatSlavesListViewModel @Inject constructor(
     return ThermostatData(
       channelId = channel.remoteId,
       onlineState = channelDataEntity.channelValueEntity.onlineState,
-      caption = getChannelCaptionUseCase(channel),
+      caption = getChannelCaptionUseCase(channel).provider(),
       imageId = getChannelIconUseCase(channelDataEntity),
       currentPower = thermostatValue.state.power,
       value = mainThermometer?.let { getChannelValueStringUseCase(it.channelDataEntity) } ?: NO_VALUE_TEXT,
       indicatorIcon = thermostatValue.getIndicatorIcon(),
-      issueIconType = thermostatValue.getIssueIconType(),
-      issueMessage = thermostatValue.getIssueMessage(),
+      channelIssueItem = thermostatValue.getChannelIssues(),
       showChannelStateIcon = SuplaChannelFlag.CHANNEL_STATE inside channel.flags,
       subValue = withSetpointValue.ifTrue { thermostatValue.getSetpointText(valuesFormatter) },
       pumpSwitchIcon = pumpSwitchChild?.let { getChannelIconUseCase(it.channelDataEntity) },
@@ -152,5 +150,5 @@ sealed class ThermostatSlavesListViewEvent : ViewEvent
 data class ThermostatSlavesListViewModelState(
   val viewState: ThermostatSlavesListViewState = ThermostatSlavesListViewState(),
   val stateDialogViewState: StateDialogViewState? = null,
-  val showMessage: Int? = null
+  val showMessage: String? = null
 ) : ViewState()

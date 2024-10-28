@@ -19,6 +19,7 @@ package org.supla.android.data.model.general
 
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS
+import org.supla.core.shared.data.model.general.ChannelBase
 
 interface ChannelDataBase : ChannelBase {
   val locationCaption: String

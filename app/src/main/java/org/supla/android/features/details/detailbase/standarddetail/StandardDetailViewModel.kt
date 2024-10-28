@@ -21,7 +21,7 @@ import com.google.android.material.navigation.NavigationBarView
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.Preferences
 import org.supla.android.core.ui.BaseViewModel
-import org.supla.android.core.ui.StringProvider
+import org.supla.android.core.ui.LocalizedString
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.model.general.ChannelDataBase
@@ -98,5 +98,5 @@ abstract class StandardDetailViewModel<S : StandardDetailViewState, E : Standard
 interface StandardDetailViewEvent : ViewEvent
 
 open class StandardDetailViewState(
-  open val caption: StringProvider?
+  open val caption: LocalizedString?
 ) : ViewState()

@@ -24,7 +24,6 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
-import org.supla.android.data.model.general.NightModeSetting;
 import org.supla.android.data.source.runtime.appsettings.TemperatureUnit;
 
 public class Preferences {
@@ -43,7 +42,6 @@ public class Preferences {
   private static final String pref_show_bottom_label = "pref_show_bottom_label";
   private static final String pref_show_bottom_menu = "pref_show_bottom_menu";
   private static final String pref_show_opening_percent = "pref_show_opening_percent";
-  private static final String pref_night_mode = "pref_night_mode";
 
   private static final String pref_chart_type = "pref_ct%d_prof%d_%d";
 
@@ -256,15 +254,6 @@ public class Preferences {
 
   public void setShouldShowNewGestureInfo() {
     _prefs.edit().putBoolean(pref_should_show_new_gesture_info, true).apply();
-  }
-
-  public NightModeSetting getNightMode() {
-    return NightModeSetting.Companion.from(
-        _prefs.getInt(pref_night_mode, NightModeSetting.UNSET.getValue()));
-  }
-
-  public void setNightMode(NightModeSetting setting) {
-    _prefs.edit().putInt(pref_night_mode, setting.getValue()).apply();
   }
 
   public void registerChangeListener(OnSharedPreferenceChangeListener listener) {

@@ -69,8 +69,7 @@ abstract class WindowDrawerBase<D : WindowDimensBase, S : WindowState, C : Windo
     drawMarkers(windowState, runtimeDimens, colors)
   }
 
-  context(DrawScope)
-  private fun drawGlasses(dimens: D, colors: C) {
+  private fun DrawScope.drawGlasses(dimens: D, colors: C) {
     val glassHorizontalMargin = WindowDimens.GLASS_HORIZONTAL_MARGIN.times(dimens.scale)
     val glassVerticalMargin = WindowDimens.GLASS_VERTICAL_MARGIN.times(dimens.scale)
     val glassMiddleMargin = WindowDimens.GLASS_MIDDLE_MARGIN.times(dimens.scale)

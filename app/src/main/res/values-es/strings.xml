@@ -671,4 +671,5 @@
   <string name="thermostat_battery_cover_open">Tapa de la batería abierta</string>
 
 
+  <string name="channel_battery_level">Nivel de batería (%1$d - %2$s): %3$d%%</string>
 </resources>

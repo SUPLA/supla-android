@@ -49,7 +49,7 @@ class ThermostatSlavesListFragment : BaseComposeFragment<ThermostatSlavesListVie
       modelState.showMessage?.let {
         AlertDialog(
           title = stringResource(id = R.string.dialog_alert_title),
-          message = stringResource(id = it),
+          message = it,
           positiveButtonTitle = stringResource(id = R.string.ok),
           negativeButtonTitle = null,
           onPositiveClick = viewModel::closeMessage

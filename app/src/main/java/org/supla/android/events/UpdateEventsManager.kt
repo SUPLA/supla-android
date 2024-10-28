@@ -82,10 +82,14 @@ class UpdateEventsManager @Inject constructor(
       .map { channelRepository.getChannel(channelId) }
   }
 
+  fun observeChannelEvents(channelId: Int): Observable<State> = getSubjectForChannel(channelId).hide()
+
   fun observeGroup(groupId: Int): Observable<ChannelGroup> {
     return getSubjectForChannelGroup(groupId).hide()
       .map { channelRepository.getChannelGroup(groupId) }
   }
+
+  fun observeGroupEvents(groupId: Int): Observable<State> = getSubjectForChannelGroup(groupId).hide()
 
   fun observeChannelsUpdate(): Observable<Any> = channelUpdatesSubject.hide().debounce(200, TimeUnit.MILLISECONDS)
   fun observeGroupsUpdate(): Observable<Any> = groupUpdatesSubject.hide().debounce(200, TimeUnit.MILLISECONDS)

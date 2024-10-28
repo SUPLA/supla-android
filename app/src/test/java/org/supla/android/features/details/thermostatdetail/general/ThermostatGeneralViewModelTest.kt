@@ -37,7 +37,6 @@ import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.model.temperature.TemperatureCorrection
 import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity
-import org.supla.android.data.source.local.entity.ChannelRelationType
 import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
@@ -68,6 +67,7 @@ import org.supla.android.usecases.channel.ReadChannelWithChildrenTreeUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.thermostat.CreateTemperaturesListUseCase
 import org.supla.core.shared.data.SuplaChannelFunction
+import org.supla.core.shared.data.source.local.entity.ChannelRelationType
 import java.util.Date
 import java.util.concurrent.TimeUnit
 

@@ -23,7 +23,6 @@ import org.supla.android.Preferences
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.ui.ViewEvent
-import org.supla.android.data.model.general.ChannelIssueItem
 import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
@@ -307,8 +306,7 @@ abstract class BaseWindowViewModel<S : BaseWindowViewModelState>(
     )
 
   private fun createIssues(flags: List<SuplaShadingSystemFlag>) =
-    flags.filter { it.isIssueFlag() }
-      .map { ChannelIssueItem(it.getIssueIconType()!!, it.getIssueMessage()!!) }
+    flags.filter { it.isIssueFlag() }.mapNotNull { it.asChannelIssues() }
 
   private fun getPositionPresentation() =
     if (preferences.isShowOpeningPercent) ShadingSystemPositionPresentation.AS_OPENED else ShadingSystemPositionPresentation.AS_CLOSED
@@ -320,7 +318,7 @@ abstract class BaseWindowViewModel<S : BaseWindowViewModelState>(
 }
 
 sealed class BaseWindowViewEvent : ViewEvent {
-  object LoadingError : BaseWindowViewEvent()
+  data object LoadingError : BaseWindowViewEvent()
 }
 
 abstract class BaseWindowViewModelState : AuthorizationModelState() {

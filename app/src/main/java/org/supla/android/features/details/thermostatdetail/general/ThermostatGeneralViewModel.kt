@@ -31,9 +31,7 @@ import org.supla.android.core.ui.StringProvider
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.ValuesFormatter
-import org.supla.android.data.model.general.ChannelIssueItem
 import org.supla.android.data.model.temperature.TemperatureCorrection
-import org.supla.android.data.source.local.entity.ChannelRelationType
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.remote.ChannelConfigType
@@ -62,12 +60,13 @@ import org.supla.android.features.details.thermostatdetail.general.ui.Thermostat
 import org.supla.android.features.details.thermostatdetail.ui.TimerHeaderState
 import org.supla.android.images.ImageId
 import org.supla.android.tools.SuplaSchedulers
-import org.supla.android.ui.lists.data.IssueIconType
+import org.supla.android.ui.lists.data.ChannelIssueItem
 import org.supla.android.usecases.channel.GetChannelValueUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenTreeUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.thermostat.CreateTemperaturesListUseCase
 import org.supla.core.shared.data.SuplaChannelFunction
+import org.supla.core.shared.data.source.local.entity.ChannelRelationType
 import java.util.Date
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -643,13 +642,13 @@ class ThermostatGeneralViewModel @Inject constructor(
   private fun createThermostatIssues(flags: List<SuplaThermostatFlag>): List<ChannelIssueItem> =
     mutableListOf<ChannelIssueItem>().apply {
       if (flags.contains(SuplaThermostatFlag.THERMOMETER_ERROR)) {
-        add(ChannelIssueItem(IssueIconType.ERROR, R.string.thermostat_thermometer_error))
+        add(ChannelIssueItem.Error(R.string.thermostat_thermometer_error))
       }
       if (flags.contains(SuplaThermostatFlag.BATTERY_COVER_OPEN)) {
-        add(ChannelIssueItem(IssueIconType.ERROR, R.string.thermostat_battery_cover_open))
+        add(ChannelIssueItem.Error(R.string.thermostat_battery_cover_open))
       }
       if (flags.contains(SuplaThermostatFlag.CLOCK_ERROR)) {
-        add(ChannelIssueItem(IssueIconType.WARNING, R.string.thermostat_clock_error))
+        add(ChannelIssueItem.Warning(R.string.thermostat_clock_error))
       }
     }
 

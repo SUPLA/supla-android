@@ -17,13 +17,13 @@ package org.supla.android.usecases.list.eventmappers
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.local.entity.extensions.onlineState
 import org.supla.android.data.source.local.entity.isGpm
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.ui.lists.data.SlideableListItemData
 import org.supla.android.usecases.channel.GetChannelCaptionUseCase
+import org.supla.android.usecases.channel.GetChannelIssuesForListUseCase
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.list.CreateListItemUpdateEventDataUseCase
@@ -32,6 +32,7 @@ import javax.inject.Singleton
 
 @Singleton
 class ChannelWithChildrenToGpmUpdateEventMapper @Inject constructor(
+  private val getChannelIssuesForListUseCase: GetChannelIssuesForListUseCase,
   private val getChannelValueStringUseCase: GetChannelValueStringUseCase,
   private val getChannelCaptionUseCase: GetChannelCaptionUseCase,
   private val getChannelIconUseCase: GetChannelIconUseCase
@@ -42,17 +43,17 @@ class ChannelWithChildrenToGpmUpdateEventMapper @Inject constructor(
 
   override fun map(item: Any): SlideableListItemData {
     val channelWithChildren = item as ChannelWithChildren
-    return toSlideableListItemData(channelWithChildren.channel)
+    return toSlideableListItemData(channelWithChildren)
   }
 
-  private fun toSlideableListItemData(channelData: ChannelDataEntity): SlideableListItemData.Default =
+  private fun toSlideableListItemData(channelWithChildren: ChannelWithChildren): SlideableListItemData.Default =
     SlideableListItemData.Default(
-      onlineState = channelData.channelValueEntity.onlineState,
-      titleProvider = getChannelCaptionUseCase(channelData.channelEntity),
-      icon = getChannelIconUseCase.invoke(channelData),
-      value = getChannelValueStringUseCase(channelData),
-      issueIconType = null,
+      onlineState = channelWithChildren.channel.channelValueEntity.onlineState,
+      title = getChannelCaptionUseCase(channelWithChildren.channel.channelEntity),
+      icon = getChannelIconUseCase.invoke(channelWithChildren.channel),
+      value = getChannelValueStringUseCase(channelWithChildren.channel),
+      issues = getChannelIssuesForListUseCase(channelWithChildren),
       estimatedTimerEndDate = null,
-      infoSupported = SuplaChannelFlag.CHANNEL_STATE.inside(channelData.flags)
+      infoSupported = SuplaChannelFlag.CHANNEL_STATE.inside(channelWithChildren.channel.flags)
     )
 }

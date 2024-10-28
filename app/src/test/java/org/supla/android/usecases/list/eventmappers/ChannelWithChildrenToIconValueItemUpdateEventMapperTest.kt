@@ -17,7 +17,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import android.content.Context
 import io.mockk.every
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
@@ -27,13 +26,16 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.whenever
+import org.supla.android.core.ui.LocalizedString
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.db.Channel
 import org.supla.android.images.ImageId
+import org.supla.android.ui.lists.ListItemIssues
 import org.supla.android.ui.lists.ListOnlineState
 import org.supla.android.ui.lists.data.SlideableListItemData
 import org.supla.android.usecases.channel.GetChannelCaptionUseCase
+import org.supla.android.usecases.channel.GetChannelIssuesForListUseCase
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.core.shared.data.SuplaChannelFunction
@@ -49,6 +51,9 @@ class ChannelWithChildrenToIconValueItemUpdateEventMapperTest {
 
   @Mock
   private lateinit var getChannelValueStringUseCase: GetChannelValueStringUseCase
+
+  @Mock
+  private lateinit var getChannelIssuesForListUseCase: GetChannelIssuesForListUseCase
 
   @InjectMocks
   private lateinit var mapper: ChannelWithChildrenToIconValueItemUpdateEventMapper
@@ -84,7 +89,7 @@ class ChannelWithChildrenToIconValueItemUpdateEventMapperTest {
   fun `should map channel data to item`() {
     // given
     val online = true
-    val caption = "caption"
+    val caption = LocalizedString.Constant("caption")
     val value = "value"
 
     val channel = mockk<ChannelDataEntity>()
@@ -96,10 +101,9 @@ class ChannelWithChildrenToIconValueItemUpdateEventMapperTest {
     val imageId = ImageId(123)
     val channelWithChildren = ChannelWithChildren(channel, emptyList())
     whenever(getChannelValueStringUseCase.valueOrNull(channel)).thenReturn(value)
-    whenever(getChannelCaptionUseCase.invoke(channel)).thenReturn { caption }
+    whenever(getChannelCaptionUseCase.invoke(channel)).thenReturn(caption)
     whenever(getChannelIconUseCase.invoke(channel)).thenReturn(imageId)
-
-    val context: Context = mockk()
+    whenever(getChannelIssuesForListUseCase.invoke(channelWithChildren)).thenReturn(ListItemIssues.empty)
 
     // when
     val result = mapper.map(channelWithChildren)
@@ -108,9 +112,10 @@ class ChannelWithChildrenToIconValueItemUpdateEventMapperTest {
     val defaultItem = result as SlideableListItemData.Default
 
     assertThat(defaultItem.onlineState).isEqualTo(ListOnlineState.ONLINE)
-    assertThat(defaultItem.titleProvider(context)).isEqualTo(caption)
+    assertThat(defaultItem.title).isEqualTo(caption)
     assertThat(defaultItem.icon).isEqualTo(imageId)
     assertThat(defaultItem.value).isEqualTo(value)
     assertThat(defaultItem.infoSupported).isEqualTo(false)
+    assertThat(defaultItem.issues).isEqualTo(ListItemIssues.empty)
   }
 }

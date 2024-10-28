@@ -29,9 +29,8 @@ import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
 import org.junit.Before
 import org.junit.Test
-import org.supla.android.core.ui.StringProvider
+import org.supla.android.core.ui.LocalizedString
 import org.supla.android.data.source.local.entity.ChannelRelationEntity
-import org.supla.android.data.source.local.entity.ChannelRelationType
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
@@ -39,11 +38,13 @@ import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.images.ImageId
+import org.supla.android.ui.lists.ListItemIssues
 import org.supla.android.ui.lists.ListOnlineState
 import org.supla.android.ui.lists.data.SlideableListItemData
 import org.supla.android.usecases.channel.GetChannelCaptionUseCase
+import org.supla.android.usecases.channel.GetChannelIssuesForListUseCase
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
-import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
+import org.supla.android.usecases.channel.ReadChannelWithChildrenTreeUseCase
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToGarageDoorUpdateEventMapper
@@ -53,6 +54,7 @@ import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToProject
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToShadingSystemUpdateEventMapper
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToSwitchUpdateEventMapper
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToThermostatUpdateEventMapper
+import org.supla.core.shared.data.source.local.entity.ChannelRelationType
 
 class CreateListItemUpdateEventDataUseCaseTest {
 
@@ -63,7 +65,7 @@ class CreateListItemUpdateEventDataUseCaseTest {
   private lateinit var readChannelGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase
 
   @MockK
-  private lateinit var readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase
+  private lateinit var readChannelWithChildrenTreeUseCase: ReadChannelWithChildrenTreeUseCase
 
   @MockK
   private lateinit var channelWithChildrenToThermostatUpdateEventMapper: ChannelWithChildrenToThermostatUpdateEventMapper
@@ -95,6 +97,9 @@ class CreateListItemUpdateEventDataUseCaseTest {
   @MockK
   private lateinit var getChannelValueStringUseCase: GetChannelValueStringUseCase
 
+  @MockK
+  private lateinit var getChannelIssuesForListUseCase: GetChannelIssuesForListUseCase
+
   @InjectMockKs
   private lateinit var useCase: CreateListItemUpdateEventDataUseCase
 
@@ -117,8 +122,8 @@ class CreateListItemUpdateEventDataUseCaseTest {
 
     val data: SlideableListItemData = mockk()
 
-    every { eventsManager.observeChannel(remoteId) } returns Observable.just(mockk())
-    every { readChannelWithChildrenUseCase(remoteId) } returns Maybe.just(channelWithChildren)
+    every { eventsManager.observeChannelEvents(remoteId) } returns Observable.just(mockk())
+    every { readChannelWithChildrenTreeUseCase(remoteId) } returns Observable.just(channelWithChildren)
     every { channelWithChildrenToThermostatUpdateEventMapper.handle(channelWithChildren) } returns true
     every { channelWithChildrenToThermostatUpdateEventMapper.map(channelWithChildren) } returns data
 
@@ -130,15 +135,15 @@ class CreateListItemUpdateEventDataUseCaseTest {
     observer.assertResult(data)
 
     verify {
-      eventsManager.observeChannel(remoteId)
+      eventsManager.observeChannelEvents(remoteId)
       channelWithChildrenToThermostatUpdateEventMapper.handle(channelWithChildren)
       channelWithChildrenToThermostatUpdateEventMapper.map(channelWithChildren)
     }
-    verify(exactly = 2) { readChannelWithChildrenUseCase.invoke(remoteId) }
+    verify(exactly = 2) { readChannelWithChildrenTreeUseCase.invoke(remoteId) }
     confirmVerified(
       eventsManager,
       readChannelGroupByRemoteIdUseCase,
-      readChannelWithChildrenUseCase,
+      readChannelWithChildrenTreeUseCase,
       channelWithChildrenToThermostatUpdateEventMapper
     )
   }
@@ -161,9 +166,9 @@ class CreateListItemUpdateEventDataUseCaseTest {
 
     val data: SlideableListItemData = mockk()
 
-    every { eventsManager.observeChannel(remoteId) } returns Observable.empty()
-    every { eventsManager.observeChannel(childId) } returns Observable.just(mockk())
-    every { readChannelWithChildrenUseCase(remoteId) } returns Maybe.just(channelWithChildren)
+    every { eventsManager.observeChannelEvents(remoteId) } returns Observable.empty()
+    every { eventsManager.observeChannelEvents(childId) } returns Observable.just(mockk())
+    every { readChannelWithChildrenTreeUseCase(remoteId) } returns Observable.just(channelWithChildren)
     every { channelWithChildrenToThermostatUpdateEventMapper.handle(channelWithChildren) } returns true
     every { channelWithChildrenToThermostatUpdateEventMapper.map(channelWithChildren) } returns data
 
@@ -175,16 +180,16 @@ class CreateListItemUpdateEventDataUseCaseTest {
     observer.assertResult(data)
 
     verify {
-      eventsManager.observeChannel(remoteId)
-      eventsManager.observeChannel(childId)
+      eventsManager.observeChannelEvents(remoteId)
+      eventsManager.observeChannelEvents(childId)
       channelWithChildrenToThermostatUpdateEventMapper.handle(channelWithChildren)
       channelWithChildrenToThermostatUpdateEventMapper.map(channelWithChildren)
     }
-    verify(exactly = 2) { readChannelWithChildrenUseCase.invoke(remoteId) }
+    verify(exactly = 2) { readChannelWithChildrenTreeUseCase.invoke(remoteId) }
     confirmVerified(
       eventsManager,
       readChannelGroupByRemoteIdUseCase,
-      readChannelWithChildrenUseCase,
+      readChannelWithChildrenTreeUseCase,
       channelWithChildrenToThermostatUpdateEventMapper
     )
   }
@@ -198,7 +203,7 @@ class CreateListItemUpdateEventDataUseCaseTest {
     val channelGroup: ChannelGroupDataEntity = mockk()
     val data: SlideableListItemData = mockk()
 
-    every { eventsManager.observeGroup(remoteId) } returns Observable.just(mockk())
+    every { eventsManager.observeGroupEvents(remoteId) } returns Observable.just(mockk())
     every { readChannelGroupByRemoteIdUseCase(remoteId) } returns Maybe.just(channelGroup)
     every { channelWithChildrenToThermostatUpdateEventMapper.handle(channelGroup) } returns true
     every { channelWithChildrenToThermostatUpdateEventMapper.map(channelGroup) } returns data
@@ -211,7 +216,7 @@ class CreateListItemUpdateEventDataUseCaseTest {
     observer.assertResult(data)
 
     verify {
-      eventsManager.observeGroup(remoteId)
+      eventsManager.observeGroupEvents(remoteId)
       readChannelGroupByRemoteIdUseCase.invoke(remoteId)
       channelWithChildrenToThermostatUpdateEventMapper.handle(channelGroup)
       channelWithChildrenToThermostatUpdateEventMapper.map(channelGroup)
@@ -219,7 +224,7 @@ class CreateListItemUpdateEventDataUseCaseTest {
     confirmVerified(
       eventsManager,
       readChannelGroupByRemoteIdUseCase,
-      readChannelWithChildrenUseCase,
+      readChannelWithChildrenTreeUseCase,
       channelWithChildrenToThermostatUpdateEventMapper
     )
   }
@@ -229,7 +234,7 @@ class CreateListItemUpdateEventDataUseCaseTest {
     // given
     val remoteId = 123
     val itemType = ItemType.CHANNEL
-    val captionProvider: StringProvider = { _ -> "caption" }
+    val caption: LocalizedString = LocalizedString.Constant("caption")
     val imageId: ImageId = mockk()
     val value = "---"
 
@@ -241,11 +246,12 @@ class CreateListItemUpdateEventDataUseCaseTest {
     every { channelWithChildren.children } returns emptyList()
 
     every { channelWithChildrenToThermostatUpdateEventMapper.handle(channelWithChildren) } returns false
-    every { eventsManager.observeChannel(remoteId) } returns Observable.just(mockk())
-    every { readChannelWithChildrenUseCase(remoteId) } returns Maybe.just(channelWithChildren)
-    every { getChannelCaptionUseCase(channel) } returns captionProvider
+    every { eventsManager.observeChannelEvents(remoteId) } returns Observable.just(mockk())
+    every { readChannelWithChildrenTreeUseCase(remoteId) } returns Observable.just(channelWithChildren)
+    every { getChannelCaptionUseCase(channel) } returns caption
     every { getChannelIconUseCase(channel) } returns imageId
     every { getChannelValueStringUseCase(channel) } returns value
+    every { getChannelIssuesForListUseCase.invoke(channelWithChildren) } returns ListItemIssues.empty
 
     // when
     val observer = useCase(itemType, remoteId).test()
@@ -255,26 +261,26 @@ class CreateListItemUpdateEventDataUseCaseTest {
     observer.assertResult(
       SlideableListItemData.Default(
         onlineState = ListOnlineState.ONLINE,
-        titleProvider = captionProvider,
+        title = caption,
         icon = imageId,
-        issueIconType = null,
+        issues = ListItemIssues.empty,
         infoSupported = false,
         value = value
       )
     )
 
     verify {
-      eventsManager.observeChannel(remoteId)
+      eventsManager.observeChannelEvents(remoteId)
       channelWithChildrenToThermostatUpdateEventMapper.handle(channelWithChildren)
       getChannelCaptionUseCase.invoke(channel)
       getChannelIconUseCase.invoke(channel)
       getChannelValueStringUseCase.invoke(channel)
     }
-    verify(exactly = 2) { readChannelWithChildrenUseCase.invoke(remoteId) }
+    verify(exactly = 2) { readChannelWithChildrenTreeUseCase.invoke(remoteId) }
     confirmVerified(
       eventsManager,
       readChannelGroupByRemoteIdUseCase,
-      readChannelWithChildrenUseCase,
+      readChannelWithChildrenTreeUseCase,
       channelWithChildrenToThermostatUpdateEventMapper,
       getChannelCaptionUseCase,
       getChannelIconUseCase,
@@ -287,17 +293,17 @@ class CreateListItemUpdateEventDataUseCaseTest {
     // given
     val remoteId = 123
     val itemType = ItemType.GROUP
-    val captionProvider: StringProvider = { _ -> "caption" }
+    val caption: LocalizedString = LocalizedString.Constant("caption")
     val imageId: ImageId = mockk()
 
     val channelGroup: ChannelGroupDataEntity = mockk {
       every { isOnline() } returns true
     }
 
-    every { eventsManager.observeGroup(remoteId) } returns Observable.just(mockk())
+    every { eventsManager.observeGroupEvents(remoteId) } returns Observable.just(mockk())
     every { readChannelGroupByRemoteIdUseCase(remoteId) } returns Maybe.just(channelGroup)
     every { channelWithChildrenToThermostatUpdateEventMapper.handle(channelGroup) } returns false
-    every { getChannelCaptionUseCase(channelGroup) } returns captionProvider
+    every { getChannelCaptionUseCase(channelGroup) } returns caption
     every { getChannelIconUseCase(channelGroup) } returns imageId
 
     // when
@@ -308,16 +314,16 @@ class CreateListItemUpdateEventDataUseCaseTest {
     observer.assertResult(
       SlideableListItemData.Default(
         onlineState = ListOnlineState.ONLINE,
-        titleProvider = captionProvider,
+        title = caption,
         icon = imageId,
-        issueIconType = null,
+        issues = ListItemIssues.empty,
         infoSupported = false,
         value = null
       )
     )
 
     verify {
-      eventsManager.observeGroup(remoteId)
+      eventsManager.observeGroupEvents(remoteId)
       readChannelGroupByRemoteIdUseCase.invoke(remoteId)
       channelWithChildrenToThermostatUpdateEventMapper.handle(channelGroup)
       getChannelCaptionUseCase.invoke(channelGroup)
@@ -326,7 +332,7 @@ class CreateListItemUpdateEventDataUseCaseTest {
     confirmVerified(
       eventsManager,
       readChannelGroupByRemoteIdUseCase,
-      readChannelWithChildrenUseCase,
+      readChannelWithChildrenTreeUseCase,
       channelWithChildrenToThermostatUpdateEventMapper,
       getChannelCaptionUseCase,
       getChannelIconUseCase

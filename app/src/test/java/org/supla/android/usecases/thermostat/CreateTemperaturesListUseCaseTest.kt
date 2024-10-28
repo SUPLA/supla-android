@@ -28,7 +28,6 @@ import org.junit.Test
 import org.supla.android.R
 import org.supla.android.data.model.general.IconType
 import org.supla.android.data.source.local.entity.ChannelRelationEntity
-import org.supla.android.data.source.local.entity.ChannelRelationType
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
@@ -38,6 +37,7 @@ import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.channel.ValueType
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.core.shared.data.SuplaChannelFunction
+import org.supla.core.shared.data.source.local.entity.ChannelRelationType
 
 class CreateTemperaturesListUseCaseTest {
 

@@ -86,7 +86,7 @@ class ElectricityConsumptionMeasurementsProvider @Inject constructor(
       .map { historyDataSets ->
         ChannelChartSets(
           channel,
-          getChannelCaptionUseCase(channel.channelEntity),
+          getChannelCaptionUseCase(channel.channelEntity).provider(),
           spec.aggregation,
           historyDataSets,
           ElectricityMarkerCustomData(

@@ -24,7 +24,7 @@ import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
 import org.supla.android.data.source.remote.thermostat.SuplaThermostatFlag.HEAT_OR_COOL
 import org.supla.android.extensions.toShortVararg
 import org.supla.android.extensions.toTemperature
-import org.supla.android.ui.lists.data.IssueIconType
+import org.supla.android.ui.lists.data.ChannelIssueItem
 
 @Suppress("DataClassPrivateConstructor")
 data class ThermostatValue private constructor(
@@ -48,11 +48,13 @@ data class ThermostatValue private constructor(
     else -> ThermostatIndicatorIcon.OFFLINE
   }
 
-  fun getIssueIconType() = when {
-    online && flags.contains(SuplaThermostatFlag.THERMOMETER_ERROR) -> IssueIconType.ERROR
-    online && flags.contains(SuplaThermostatFlag.BATTERY_COVER_OPEN) -> IssueIconType.ERROR
-    online && flags.contains(SuplaThermostatFlag.CLOCK_ERROR) -> IssueIconType.WARNING
-    else -> null
+  fun getChannelIssues(): List<ChannelIssueItem> = when {
+    online && flags.contains(SuplaThermostatFlag.THERMOMETER_ERROR) -> listOf(ChannelIssueItem.Error(R.string.thermostat_thermometer_error))
+    online && flags.contains(SuplaThermostatFlag.BATTERY_COVER_OPEN) -> listOf(
+      ChannelIssueItem.Error(R.string.thermostat_battery_cover_open)
+    )
+    online && flags.contains(SuplaThermostatFlag.CLOCK_ERROR) -> listOf(ChannelIssueItem.Warning(R.string.thermostat_clock_error))
+    else -> emptyList()
   }
 
   fun getSetpointText(valuesFormatter: ValuesFormatter): String {
@@ -65,18 +67,6 @@ data class ThermostatValue private constructor(
       mode == SuplaHvacMode.HEAT -> temperatureMin
       mode == SuplaHvacMode.OFF -> "Off"
       else -> ""
-    }
-  }
-
-  fun getIssueMessage(): Int? {
-    return if (flags.contains(SuplaThermostatFlag.THERMOMETER_ERROR)) {
-      R.string.thermostat_thermometer_error
-    } else if (flags.contains(SuplaThermostatFlag.BATTERY_COVER_OPEN)) {
-      R.string.thermostat_battery_cover_open
-    } else if (flags.contains(SuplaThermostatFlag.CLOCK_ERROR)) {
-      R.string.thermostat_clock_error
-    } else {
-      null
     }
   }
 

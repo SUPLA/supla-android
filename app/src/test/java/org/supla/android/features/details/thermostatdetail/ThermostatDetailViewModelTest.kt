@@ -30,7 +30,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.whenever
 import org.supla.android.Preferences
 import org.supla.android.core.BaseViewModelTest
-import org.supla.android.core.ui.StringProvider
+import org.supla.android.core.ui.LocalizedString
 import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
@@ -80,9 +80,9 @@ class ThermostatDetailViewModelTest :
     val remoteId = 123
     val channelData1: ChannelDataEntity = mockChannel(ThermostatSubfunction.HEAT)
     val channelData2: ChannelDataEntity = mockChannel(ThermostatSubfunction.COOL)
-    val captionProvider: StringProvider = mockk()
+    val caption: LocalizedString = mockk()
 
-    whenever(getChannelCaptionUseCase.invoke(channelData1)).thenReturn(captionProvider)
+    whenever(getChannelCaptionUseCase.invoke(channelData1)).thenReturn(caption)
     whenever(readChannelByRemoteIdUseCase.invoke(remoteId))
       .thenReturn(Maybe.just(channelData1), Maybe.just(channelData2))
 
@@ -92,7 +92,7 @@ class ThermostatDetailViewModelTest :
 
     // then
     assertThat(states).containsExactly(
-      ThermostatDetailViewState(captionProvider, ThermostatSubfunction.HEAT)
+      ThermostatDetailViewState(caption, ThermostatSubfunction.HEAT)
     )
     assertThat(events).containsExactly(
       ThermostatDetailViewEvent.Close

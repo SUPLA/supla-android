@@ -128,7 +128,7 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
       scrollDownOnReload = scrollDown
     }
     adapter.infoButtonClickCallback = { statePopup.show(it) }
-    adapter.issueButtonClickCallback = { showAlertPopup(it) }
+    adapter.issueButtonClickCallback = { showAlertPopup(it.message(requireContext())) }
     adapter.listItemClickCallback = { viewModel.onListItemClick(it) }
   }
 
@@ -151,10 +151,7 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
     }
   }
 
-  private fun showAlertPopup(messageId: Int?) {
-    if (messageId == null) {
-      return
-    }
+  private fun showAlertPopup(messageId: String) {
     val builder = AlertDialog.Builder(context)
     builder.setTitle(android.R.string.dialog_alert_title)
     builder.setMessage(messageId)

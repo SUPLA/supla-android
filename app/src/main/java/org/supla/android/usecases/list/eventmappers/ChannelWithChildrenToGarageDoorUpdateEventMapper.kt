@@ -22,6 +22,7 @@ import org.supla.android.data.source.local.entity.isGarageDoorRoller
 import org.supla.android.extensions.guardLet
 import org.supla.android.ui.lists.data.SlideableListItemData
 import org.supla.android.usecases.channel.GetChannelCaptionUseCase
+import org.supla.android.usecases.channel.GetChannelIssuesForListUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -29,8 +30,9 @@ import javax.inject.Singleton
 @Singleton
 class ChannelWithChildrenToGarageDoorUpdateEventMapper @Inject constructor(
   getChannelCaptionUseCase: GetChannelCaptionUseCase,
-  getChannelIconUseCase: GetChannelIconUseCase
-) : ShadingSystemBasedUpdateEventMapper(getChannelCaptionUseCase, getChannelIconUseCase) {
+  getChannelIconUseCase: GetChannelIconUseCase,
+  getChannelIssuesForListUseCase: GetChannelIssuesForListUseCase
+) : ShadingSystemBasedUpdateEventMapper(getChannelCaptionUseCase, getChannelIconUseCase, getChannelIssuesForListUseCase) {
 
   override fun handle(item: Any): Boolean {
     return (item as? ChannelWithChildren)?.channel?.isGarageDoorRoller() == true
@@ -40,6 +42,6 @@ class ChannelWithChildrenToGarageDoorUpdateEventMapper @Inject constructor(
     val (channel) = guardLet(item as? ChannelWithChildren) {
       throw IllegalArgumentException("Expected Channel but got $item")
     }
-    return toListItemData(channel.channel, channel.channel.channelValueEntity.asRollerShutterValue())
+    return toListItemData(channel)
   }
 }

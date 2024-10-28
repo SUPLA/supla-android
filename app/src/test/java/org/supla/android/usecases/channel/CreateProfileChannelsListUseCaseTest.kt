@@ -11,7 +11,10 @@ import org.junit.runner.RunWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.whenever
+import org.supla.android.core.ui.LocalizedString
 import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.ChannelRelationRepository
 import org.supla.android.data.source.RoomChannelRepository
@@ -21,7 +24,8 @@ import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.remote.thermostat.ThermostatIndicatorIcon
 import org.supla.android.images.ImageId
 import org.supla.android.ui.lists.ListItem
-import org.supla.android.ui.lists.data.IssueIconType
+import org.supla.android.ui.lists.ListItemIssues
+import org.supla.android.ui.lists.data.ChannelIssueItem
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.core.shared.data.SuplaChannelFunction
@@ -50,6 +54,12 @@ class CreateProfileChannelsListUseCaseTest {
   @Mock
   private lateinit var valuesFormatter: ValuesFormatter
 
+  @Mock
+  private lateinit var getChannelIssuesForListUseCase: GetChannelIssuesForListUseCase
+
+  @Mock
+  private lateinit var getChannelChildrenTreeUseCase: GetChannelChildrenTreeUseCase
+
   @InjectMocks
   private lateinit var usecase: CreateProfileChannelsListUseCase
 
@@ -65,6 +75,7 @@ class CreateProfileChannelsListUseCaseTest {
 
     whenever(channelRepository.findList()).thenReturn(Single.just(listOf(first, second, third, fourth, fifth, sixth)))
     whenever(channelRelationRepository.findChildrenToParentsRelations()).thenReturn(Observable.just(emptyMap()))
+    whenever(getChannelIssuesForListUseCase.invoke(any())).thenReturn(ListItemIssues.empty)
 
     // when
     val testObserver = usecase().test()
@@ -105,6 +116,7 @@ class CreateProfileChannelsListUseCaseTest {
 
     whenever(channelRepository.findList()).thenReturn(Single.just(listOf(first, second, third, fourth)))
     whenever(channelRelationRepository.findChildrenToParentsRelations()).thenReturn(Observable.just(emptyMap()))
+    whenever(getChannelIssuesForListUseCase.invoke(any())).thenReturn(ListItemIssues.empty)
 
     // when
     val testObserver = usecase().test()
@@ -139,9 +151,12 @@ class CreateProfileChannelsListUseCaseTest {
 
     whenever(channelRepository.findList()).thenReturn(Single.just(listOf(first, second, third)))
     val childrenRelation = mockk<ChannelRelationEntity> { every { channelId } returns 21 }
+    val relationMap = mapOf(11 to listOf(childrenRelation))
     whenever(channelRelationRepository.findChildrenToParentsRelations()).thenReturn(
-      Observable.just(mapOf(11 to listOf(childrenRelation)))
+      Observable.just(relationMap)
     )
+    whenever(getChannelChildrenTreeUseCase.invoke(eq(11), eq(relationMap), any(), any()))
+      .thenReturn(listOf(ChannelChildEntity(childrenRelation, second)))
 
     // when
     val testObserver = usecase().test()
@@ -189,16 +204,14 @@ class CreateProfileChannelsListUseCaseTest {
         every { asThermostatValue() } returns mockk {
           every { getSetpointText(valuesFormatter) } returns "setpoint text"
           every { getIndicatorIcon() } returns ThermostatIndicatorIcon.STANDBY
-          every { getIssueIconType() } returns IssueIconType.WARNING
-          every { getIssueMessage() } returns 456
+          every { getChannelIssues() } returns listOf(ChannelIssueItem.Warning())
         }
       }
       val isRollerShutter = channelFunction == SuplaChannelFunction.CONTROLLING_THE_ROLLER_SHUTTER
       val isProjectorScreen = channelFunction == SuplaChannelFunction.PROJECTOR_SCREEN
       if (isRollerShutter || isProjectorScreen) {
         every { asRollerShutterValue() } returns mockk {
-          every { getIssueIconType() } returns null
-          every { getIssueMessage() } returns null
+          every { getChannelIssue() } returns null
         }
       }
     }
@@ -209,7 +222,7 @@ class CreateProfileChannelsListUseCaseTest {
       }
     }
 
-    whenever(getChannelCaptionUseCase.invoke(this)).thenReturn { "caption $channelRemoteId" }
+    whenever(getChannelCaptionUseCase.invoke(this)).thenReturn(LocalizedString.Constant("caption $channelRemoteId"))
     whenever(getChannelValueStringUseCase.invoke(this)).thenReturn("value $channelRemoteId")
     whenever(getChannelIconUseCase.invoke(this)).thenReturn(ImageId(channelRemoteId))
   }

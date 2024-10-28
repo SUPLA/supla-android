@@ -18,16 +18,17 @@ package org.supla.android.usecases.list
  */
 
 import io.reactivex.rxjava3.core.Observable
-import org.supla.android.data.source.local.entity.ChannelRelationType
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.UpdateEventsManager
+import org.supla.android.ui.lists.ListItemIssues
 import org.supla.android.ui.lists.data.SlideableListItemData
 import org.supla.android.ui.lists.onlineState
 import org.supla.android.usecases.channel.GetChannelCaptionUseCase
+import org.supla.android.usecases.channel.GetChannelIssuesForListUseCase
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
-import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
+import org.supla.android.usecases.channel.ReadChannelWithChildrenTreeUseCase
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToGarageDoorUpdateEventMapper
@@ -37,6 +38,7 @@ import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToProject
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToShadingSystemUpdateEventMapper
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToSwitchUpdateEventMapper
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToThermostatUpdateEventMapper
+import org.supla.core.shared.data.source.local.entity.ChannelRelationType
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -44,10 +46,11 @@ import javax.inject.Singleton
 class CreateListItemUpdateEventDataUseCase @Inject constructor(
   private val eventsManager: UpdateEventsManager,
   private val readChannelGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase,
-  private val readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
+  private val readChannelWithChildrenTreeUseCase: ReadChannelWithChildrenTreeUseCase,
   private val getChannelCaptionUseCase: GetChannelCaptionUseCase,
   private val getChannelIconUseCase: GetChannelIconUseCase,
   private val getChannelValueStringUseCase: GetChannelValueStringUseCase,
+  private val getChannelIssuesForListUseCase: GetChannelIssuesForListUseCase,
   channelWithChildrenToThermostatUpdateEventMapper: ChannelWithChildrenToThermostatUpdateEventMapper,
   channelWithChildrenToIconValueItemUpdateEventMapper: ChannelWithChildrenToIconValueItemUpdateEventMapper,
   channelWithChildrenToGpmUpdateEventMapper: ChannelWithChildrenToGpmUpdateEventMapper,
@@ -70,7 +73,7 @@ class CreateListItemUpdateEventDataUseCase @Inject constructor(
   operator fun invoke(itemType: ItemType, remoteId: Int): Observable<SlideableListItemData> {
     return when (itemType) {
       ItemType.CHANNEL -> observeChannel(remoteId)
-      ItemType.GROUP -> eventsManager.observeGroup(remoteId).flatMapMaybe { readChannelGroupByRemoteIdUseCase(remoteId) }
+      ItemType.GROUP -> eventsManager.observeGroupEvents(remoteId).flatMapMaybe { readChannelGroupByRemoteIdUseCase(remoteId) }
     }.map { map(it) }
   }
 
@@ -84,9 +87,9 @@ class CreateListItemUpdateEventDataUseCase @Inject constructor(
     (item as? ChannelWithChildren)?.let {
       return SlideableListItemData.Default(
         onlineState = it.channel.isOnline().onlineState,
-        titleProvider = getChannelCaptionUseCase(it.channel),
+        title = getChannelCaptionUseCase(it.channel),
         icon = getChannelIconUseCase(it.channel),
-        issueIconType = null,
+        issues = getChannelIssuesForListUseCase(item),
         infoSupported = false,
         value = getChannelValueStringUseCase(it.channel)
       )
@@ -94,9 +97,9 @@ class CreateListItemUpdateEventDataUseCase @Inject constructor(
     (item as? ChannelGroupDataEntity)?.let {
       return SlideableListItemData.Default(
         onlineState = it.isOnline().onlineState,
-        titleProvider = getChannelCaptionUseCase(it),
+        title = getChannelCaptionUseCase(it),
         icon = getChannelIconUseCase(it),
-        issueIconType = null,
+        issues = ListItemIssues.empty,
         infoSupported = false,
         value = null
       )
@@ -106,8 +109,8 @@ class CreateListItemUpdateEventDataUseCase @Inject constructor(
   }
 
   private fun observeChannel(remoteId: Int): Observable<ChannelWithChildren> {
-    return readChannelWithChildrenUseCase.invoke(remoteId)
-      .flatMapObservable { channelWithChildren ->
+    return readChannelWithChildrenTreeUseCase.invoke(remoteId).firstElement().toObservable()
+      .flatMap { channelWithChildren ->
         // For channel we observe the channel itself but also all children
         val ids = mutableListOf<Int>().also { list ->
           list.add(channelWithChildren.channel.remoteId)
@@ -116,9 +119,11 @@ class CreateListItemUpdateEventDataUseCase @Inject constructor(
           }
         }
 
-        return@flatMapObservable Observable.merge(
+        return@flatMap Observable.merge(
           ids.map { id ->
-            eventsManager.observeChannel(id).flatMapMaybe { readChannelWithChildrenUseCase.invoke(remoteId) }
+            eventsManager.observeChannelEvents(id).flatMap {
+              readChannelWithChildrenTreeUseCase.invoke(remoteId).firstElement().toObservable()
+            }
           }
         )
       }

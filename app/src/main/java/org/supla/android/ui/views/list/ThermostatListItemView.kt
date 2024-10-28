@@ -34,13 +34,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
+import org.supla.android.core.ui.LocalizedString
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.extensions.preferences
 import org.supla.android.images.ImageId
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.layouts.BaseSlideableContent
+import org.supla.android.ui.lists.ListItemIssues
 import org.supla.android.ui.lists.ListOnlineState
-import org.supla.android.ui.lists.data.IssueIconType
+import org.supla.android.ui.lists.data.IssueIcon
 import org.supla.android.ui.lists.data.SlideableListItemData
 import org.supla.android.ui.lists.data.default
 import org.supla.android.ui.views.list.components.ListItemIcon
@@ -91,12 +93,12 @@ fun ThermostatListItemView(
   showInfoIcon: Boolean = LocalContext.current.preferences.isShowChannelInfo,
   scale: Float = LocalContext.current.preferences.scale,
   onInfoClick: () -> Unit = { },
-  onIssueClick: () -> Unit = { },
+  onIssueClick: (ListItemIssues) -> Unit = { },
   onItemClick: () -> Unit = { },
   onTitleLongClick: () -> Unit = { }
 ) {
   ListItemScaffold(
-    itemTitle = data.titleProvider(LocalContext.current),
+    itemTitle = data.title(LocalContext.current),
     itemOnlineState = data.onlineState,
     itemEstimatedEndDate = data.estimatedTimerEndDate,
     hasLeftButton = hasLeftButton,
@@ -104,7 +106,7 @@ fun ThermostatListItemView(
     onInfoClick = onInfoClick,
     onTitleLongClick = onTitleLongClick,
     showInfoIcon = showInfoIcon && data.infoSupported,
-    itemIssueIconType = data.issueIconType,
+    issues = data.issues,
     onIssueClick = onIssueClick,
     onItemClick = onItemClick,
     scale = scale
@@ -141,12 +143,12 @@ private fun Preview() {
         ThermostatListItemView(
           data = SlideableListItemData.Thermostat(
             onlineState = ListOnlineState.ONLINE,
-            titleProvider = { "Thermostat" },
+            title = LocalizedString.Constant("Thermostat"),
             icon = ImageId(R.drawable.fnc_thermostat_cool),
             value = "20,7°C",
             subValue = "21,0°",
             indicatorIcon = R.drawable.ic_cooling,
-            issueIconType = IssueIconType.WARNING,
+            issues = ListItemIssues(IssueIcon.Warning),
             estimatedTimerEndDate = null,
             infoSupported = true
           ),
@@ -163,12 +165,12 @@ private fun Preview() {
         ThermostatListItemView(
           data = SlideableListItemData.Thermostat(
             onlineState = ListOnlineState.PARTIALLY_ONLINE,
-            titleProvider = { "Thermostat" },
+            title = LocalizedString.Constant("Thermostat"),
             icon = ImageId(R.drawable.fnc_thermostat_cool),
             value = "20,7°C",
             subValue = "21,0°",
             indicatorIcon = R.drawable.ic_cooling,
-            issueIconType = IssueIconType.ERROR,
+            issues = ListItemIssues(IssueIcon.Error),
             estimatedTimerEndDate = null,
             infoSupported = true
           ),
@@ -185,12 +187,12 @@ private fun Preview() {
         ThermostatListItemView(
           data = SlideableListItemData.Thermostat(
             onlineState = ListOnlineState.ONLINE,
-            titleProvider = { "Thermostat" },
+            title = LocalizedString.Constant("Thermostat"),
             icon = ImageId(R.drawable.fnc_thermostat_cool),
             value = "20,7°C",
             subValue = "21,0°",
             indicatorIcon = R.drawable.ic_cooling,
-            issueIconType = null,
+            issues = ListItemIssues.empty,
             estimatedTimerEndDate = null,
             infoSupported = true
           ),
@@ -207,12 +209,12 @@ private fun Preview() {
         ThermostatListItemView(
           data = SlideableListItemData.Thermostat(
             onlineState = ListOnlineState.ONLINE,
-            titleProvider = { "Thermostat with very long name which goes out of the screen and must be cut" },
+            title = LocalizedString.Constant("Thermostat with very long name which goes out of the screen and must be cut"),
             icon = ImageId(R.drawable.fnc_thermostat_cool),
             value = "20,7°C",
             subValue = "21,0°",
             indicatorIcon = R.drawable.ic_cooling,
-            issueIconType = IssueIconType.WARNING,
+            issues = ListItemIssues(IssueIcon.Warning),
             estimatedTimerEndDate = null,
             infoSupported = true
           ),
@@ -242,12 +244,12 @@ private fun Preview_Narrow() {
         ThermostatListItemView(
           data = SlideableListItemData.Thermostat(
             onlineState = ListOnlineState.ONLINE,
-            titleProvider = { "Thermostat" },
+            title = LocalizedString.Constant("Thermostat"),
             icon = ImageId(R.drawable.fnc_thermostat_cool),
             value = "20,7°C",
             subValue = "21,0°",
             indicatorIcon = R.drawable.ic_cooling,
-            issueIconType = IssueIconType.WARNING,
+            issues = ListItemIssues(IssueIcon.Warning),
             estimatedTimerEndDate = null,
             infoSupported = true
           ),
@@ -264,12 +266,12 @@ private fun Preview_Narrow() {
         ThermostatListItemView(
           data = SlideableListItemData.Thermostat(
             onlineState = ListOnlineState.ONLINE,
-            titleProvider = { "Thermostat" },
+            title = LocalizedString.Constant("Thermostat"),
             icon = ImageId(R.drawable.fnc_thermostat_cool),
             value = "20,7°C",
             subValue = "21,0°",
             indicatorIcon = R.drawable.ic_cooling,
-            issueIconType = IssueIconType.ERROR,
+            issues = ListItemIssues(IssueIcon.Error),
             estimatedTimerEndDate = null,
             infoSupported = true
           ),

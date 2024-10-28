@@ -37,12 +37,12 @@ import org.supla.android.data.model.chart.DateRange
 import org.supla.android.data.source.TemperatureAndHumidityLogRepository
 import org.supla.android.data.source.TemperatureLogRepository
 import org.supla.android.data.source.local.entity.ChannelRelationEntity
-import org.supla.android.data.source.local.entity.ChannelRelationType
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.extensions.date
 import org.supla.core.shared.data.SuplaChannelFunction
+import org.supla.core.shared.data.source.local.entity.ChannelRelationType
 
 @RunWith(MockitoJUnitRunner::class)
 class LoadChannelWithChildrenMeasurementsDateRangeUseCaseTest {
