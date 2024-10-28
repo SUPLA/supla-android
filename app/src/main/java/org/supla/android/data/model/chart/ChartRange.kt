@@ -25,6 +25,7 @@ enum class ChartRange(val stringRes: Int, val roundedDaysCount: Int) : SpinnerIt
   LAST_WEEK(R.string.history_range_last_week, 7),
   LAST_MONTH(R.string.history_range_last_30_days, 30),
   LAST_QUARTER(R.string.history_range_last_90_days, 90),
+  LAST_YEAR(R.string.history_range_last_365_days, 365),
 
   DAY(R.string.history_range_current_day, 1),
   WEEK(R.string.history_range_current_week, 7),

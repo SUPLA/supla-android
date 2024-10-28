@@ -35,6 +35,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.core.content.res.ResourcesCompat;
+import dagger.hilt.android.AndroidEntryPoint;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -46,6 +47,7 @@ import org.supla.android.lib.SuplaConst;
 import org.supla.android.lib.ZWaveNode;
 import org.supla.android.lib.ZWaveWakeUpSettings;
 
+@AndroidEntryPoint
 public class ZWaveConfigurationWizardActivity extends WizardActivity
     implements AdapterView.OnItemSelectedListener {
 

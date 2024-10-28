@@ -160,6 +160,7 @@
   <string name="history_range_last_week">Posledných 7 dní</string>
   <string name="history_range_last_30_days">Posledných 30 dní</string>
   <string name="history_range_last_90_days">Posledných 90 dní</string>
+  <string name="history_range_last_365_days">Posledných 365 dní</string>
   <string name="all_available_history">Celá dostupná história</string>
   <string name="retrieving_data_from_the_server">Údaje sa načítavajú zo servera...</string>
   <string name="no_chart_data_available">Žiadne údaje pre graf.</string>

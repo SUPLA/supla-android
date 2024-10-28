@@ -1,16 +1,16 @@
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 
 plugins {
-  kotlin("multiplatform")
-  id("com.android.library")
+  alias(libs.plugins.kotlin.multiplatform)
+  alias(libs.plugins.android.library)
 }
 
 android {
   namespace = "org.supla.core.shared"
-  compileSdk = 34
+  compileSdk = libs.versions.compileSdk.get().toInt()
 
   defaultConfig {
-    minSdk = 24
+    minSdk = libs.versions.minSdk.get().toInt()
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
@@ -57,7 +57,7 @@ kotlin {
 }
 
 dependencies {
-  testImplementation("junit:junit:4.13.2")
+  testImplementation(libs.testing.junit)
 }
 
 tasks.register<Exec>("applyXCFramework") {
