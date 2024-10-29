@@ -581,9 +581,9 @@
   <string name="history_wrong_range">A kiválasztott dátumtartomány érvénytelen.</string>
   <string name="details_timer_select_mode">Válassza ki az üzemmódot</string>
   <string name="details_timer_manual_mode">Kézi üzemmód</string>
-  <string name="details_timer_info_thermostat_off">A termosztátot kikapcsol a %1$s időpontok között</string>
-  <string name="details_timer_info_thermostat_heating">A termosztát fűtési üzemmódban lesz %1$s időpontok között</string>
-  <string name="details_timer_info_thermostat_cooling">A termosztát hűtési üzemmódban lesz %1$s időpontok között</string>
+  <string name="details_timer_info_thermostat_off">A termosztátot kikapcsol a\n%1$s időpontok között</string>
+  <string name="details_timer_info_thermostat_heating">A termosztát fűtési üzemmódban lesz\n%1$s időpontok között</string>
+  <string name="details_timer_info_thermostat_cooling">A termosztát hűtési üzemmódban lesz\n%1$s időpontok között</string>
   <string name="details_timer_select_time">Adja meg az időtartamot</string>
   <string name="details_timer_counter">Mérőóra</string>
   <string name="details_timer_calendar">Naptár</string>
