@@ -452,9 +452,9 @@
   <string name="details_em_balance_arithmetic">Bilanţ aritmetic</string>
   <string name="details_em_balance_vector">Bilanţ vectorial</string>
 
-  <string name="menu_notifications" translatable="false">Istoricul notificărilor</string>
+  <string name="menu_notifications">Istoricul notificărilor</string>
 
-  <string name="cfg_profile_active_indicator" translatable="false">activ</string>
+  <string name="cfg_profile_active_indicator">activ</string>
 
   <string name="turn_on">Pornește</string>
   <string name="turn_off">Închide</string>
@@ -476,9 +476,9 @@
   <string name="widget_group">grupa</string>
   <string name="widget_scene">scena</string>
   <string name="widget_action_toggle">Comutare</string>
-  <string name="associeted_with_push_error" translatable="false">Funcția canalului asociat cu notificările PUSH nu poate fi modificată.</string>
-  <string name="associeted_with_vbt_error" translatable="false">Funcția canalului asociat cu reacțiile nu poate fi modificată.</string>
-  <string name="rs_display_mode" translatable="false">Obloane rulante, jaluzele, perdele %</string>
+  <string name="associeted_with_push_error">Funcția canalului asociat cu notificările PUSH nu poate fi modificată.</string>
+  <string name="associeted_with_vbt_error">Funcția canalului asociat cu reacțiile nu poate fi modificată.</string>
+  <string name="rs_display_mode">Obloane rulante, jaluzele, perdele %</string>
   <string name="navbar_channels">Canale</string>
   <string name="navbar_groups">Grupuri</string>
   <string name="navbar_scenes">Scene</string>

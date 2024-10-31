@@ -440,7 +440,7 @@
   <string name="details_em_balance_arithmetic">Balanço aritmético</string>
   <string name="details_em_balance_vector">Balanço vetorial</string>
 
-  <string name="cfg_profile_active_indicator" translatable="false">Ativo</string>
+  <string name="cfg_profile_active_indicator">Ativo</string>
 
   <string name="turn_on">Ativar</string>
   <string name="turn_off">Desativar</string>
@@ -463,9 +463,9 @@
   <string name="widget_scene">cena</string>
   <string name="widget_action_toggle">Alternar</string>
 
-  <string name="associeted_with_push_error" translatable="false">Não é possível alterar a função do canal associado às notificações PUSH.</string>
-  <string name="associeted_with_vbt_error" translatable="false">Não é possível alterar a função do canal associado às reações.</string>
-  <string name="rs_display_mode" translatable="false">Cortinas, persianas, cortinas %</string>
+  <string name="associeted_with_push_error">Não é possível alterar a função do canal associado às notificações PUSH.</string>
+  <string name="associeted_with_vbt_error">Não é possível alterar a função do canal associado às reações.</string>
+  <string name="rs_display_mode">Cortinas, persianas, cortinas %</string>
   <string name="navbar_channels">Canais</string>
   <string name="navbar_groups">Grupos</string>
   <string name="navbar_scenes">Cenas</string>

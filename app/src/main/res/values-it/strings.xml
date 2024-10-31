@@ -449,7 +449,7 @@
   <string name="details_em_balance_arithmetic">Equilibrio aritmetico</string>
   <string name="details_em_balance_vector">Equilibrio vettoriale</string>
 
-  <string name="cfg_profile_active_indicator" translatable="false">attivo</string>
+  <string name="cfg_profile_active_indicator">attivo</string>
 
   <string name="turn_on">Abilita</string>
   <string name="turn_off">Disabilita</string>
@@ -470,9 +470,9 @@
   <string name="widget_group">gruppo</string>
   <string name="widget_scene">scena</string>
   <string name="widget_action_toggle">Cambia</string>
-  <string name="associeted_with_push_error" translatable="false">La funzione del canale associato alle notifiche PUSH non può essere modificata.</string>
-  <string name="associeted_with_vbt_error" translatable="false">La funzione del canale associato alle reazioni non può essere modificata.</string>
-  <string name="rs_display_mode" translatable="false">Tapparelle, persiane, tende %</string>
+  <string name="associeted_with_push_error">La funzione del canale associato alle notifiche PUSH non può essere modificata.</string>
+  <string name="associeted_with_vbt_error">La funzione del canale associato alle reazioni non può essere modificata.</string>
+  <string name="rs_display_mode">Tapparelle, persiane, tende %</string>
   <string name="navbar_scenes">Scene</string>
   <string name="btn_execute">Esegui</string>
   <string name="btn_abort">Interrompi</string>

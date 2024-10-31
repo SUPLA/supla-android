@@ -440,7 +440,7 @@
   <string name="details_em_balance_arithmetic">Bilan arithmétique</string>
   <string name="details_em_balance_vector">Bilan vectorielle</string>
 
-  <string name="cfg_profile_active_indicator" translatable="false">actif</string>
+  <string name="cfg_profile_active_indicator">actif</string>
 
   <string name="turn_on">Activez</string>
   <string name="turn_off">Désactivez</string>
@@ -461,9 +461,9 @@
   <string name="widget_group">groupe</string>
   <string name="widget_scene">scène</string>
   <string name="widget_action_toggle">Changez</string>
-  <string name="associeted_with_push_error" translatable="false">La fonction de la chaîne associée aux notifications PUSH ne peut pas être modifiée.</string>
-  <string name="associeted_with_vbt_error" translatable="false">La fonction de la chaîne associée aux réactions ne peut pas être modifiée.</string>
-  <string name="rs_display_mode" translatable="false">Volets roulants, stores, rideaux %</string>
+  <string name="associeted_with_push_error">La fonction de la chaîne associée aux notifications PUSH ne peut pas être modifiée.</string>
+  <string name="associeted_with_vbt_error">La fonction de la chaîne associée aux réactions ne peut pas être modifiée.</string>
+  <string name="rs_display_mode">Volets roulants, stores, rideaux %</string>
   <string name="navbar_channels">Chaînes</string>
   <string name="navbar_groups">Groupes</string>
   <string name="navbar_scenes">Scènes</string>

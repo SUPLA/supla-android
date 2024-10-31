@@ -453,7 +453,7 @@
   <string name="details_em_balance_arithmetic">Aritmetično ravnotežje</string>
   <string name="details_em_balance_vector">Vektorsko ravnotežje</string>
 
-  <string name="cfg_profile_active_indicator" translatable="false">dejaven</string>
+  <string name="cfg_profile_active_indicator">dejaven</string>
 
   <string name="turn_on">Vklopi</string>
   <string name="turn_off">Izklopi</string>
@@ -475,9 +475,9 @@
   <string name="widget_scene">scena</string>
   <string name="widget_action_toggle">Preklopi</string>
 
-  <string name="associeted_with_push_error" translatable="false">Funkcije kanala, povezanega s potisnimi obvestili, ni mogoče spremeniti.</string>
-  <string name="associeted_with_vbt_error" translatable="false">Funkcije kanala, povezanega z reakcijami, ni mogoče spremeniti.</string>
-  <string name="rs_display_mode" translatable="false">Rolete, žaluzije, zavese %</string>
+  <string name="associeted_with_push_error">Funkcije kanala, povezanega s potisnimi obvestili, ni mogoče spremeniti.</string>
+  <string name="associeted_with_vbt_error">Funkcije kanala, povezanega z reakcijami, ni mogoče spremeniti.</string>
+  <string name="rs_display_mode">Rolete, žaluzije, zavese %</string>
   <string name="navbar_channels">Kanali</string>
   <string name="navbar_groups">Skupine</string>
   <string name="navbar_scenes">Prizori</string>

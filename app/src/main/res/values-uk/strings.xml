@@ -84,11 +84,11 @@
   <string name="create_account">Створити обліковий запис</string>
   <string name="delete_account">Видалити</string>
   <string name="cfg_label_access_id_auth">ID</string>
-  <string name="cfg_channel_height" translatable="false">Висота каналу</string>
-  <string name="cfg_temperature_unit" translatable="false">Одиниця вимірювання температури</string>
-  <string name="cfg_button_autohide" translatable="false">Автоматичне приховування кнопки</string>
-  <string name="profile" translatable="false">Ваш обліковий запис</string>
-  <string name="profile_plural" translatable="false">Ваші облікові записи</string>
+  <string name="cfg_channel_height">Висота каналу</string>
+  <string name="cfg_temperature_unit">Одиниця вимірювання температури</string>
+  <string name="cfg_button_autohide">Автоматичне приховування кнопки</string>
+  <string name="profile">Ваш обліковий запис</string>
+  <string name="profile_plural">Ваші облікові записи</string>
   <string name="rate_msg">Чи знаєте ви, що Supla є відкритим і безкоштовним проєктом, розробленим спільнотою? Якщо вам подобається ця програма, будь ласка, знайдіть час, щоб оцінити її. Дякуємо вам за підтримку!</string>
   <string name="rate_now">Оцінити зараз</string>
   <string name="rate_later">Пізніше</string>
@@ -292,31 +292,31 @@
   <string name="zwave_device_communication_error">Виникла проблема зв’язку з пристроєм z-wave. Переконайтеся, що ваш пристрій z-wave знаходиться в зоні дії шлюзу.</string>
   <string name="widget_configure_title">Конфігурація віджета</string>
   <string name="widget_configure_profile_label">Обліковий запис</string>
-  <string name="widget_configure_type_label" translatable="false">Віджет для:</string>
-  <string name="widget_configure_type_group_label" translatable="false">Групи</string>
-  <string name="widget_configure_type_scene_label" translatable="false">Сцени</string>
+  <string name="widget_configure_type_label">Віджет для:</string>
+  <string name="widget_configure_type_group_label">Групи</string>
+  <string name="widget_configure_type_scene_label">Сцени</string>
   <string name="widget_configure_channel_label">Канал для віджета</string>
-  <string name="widget_configure_group_label" translatable="false">Група для віджета</string>
+  <string name="widget_configure_group_label">Група для віджета</string>
   <string name="widget_configure_action_label">Подія</string>
   <string name="widget_configure_name_label">Назва</string>
   <string name="widget_configure_error">Помилка налаштування каналу…</string>
   <string name="widget_configure_no_selection">Канал не вибрано</string>
   <string name="widget_configure_no_channel">Немає доступних каналів</string>
-  <string name="widget_configure_no_group" translatable="false">Немає доступних груп</string>
+  <string name="widget_configure_no_group">Немає доступних груп</string>
   <string name="double_button_widget_description">Двокнопковий віджет</string>
   <string name="single_button_widget_description">"Одно кнопковий віджет "</string>
   <string name="widget_app_not_initialized">Будь ласка, увійдіть!</string>
   <string name="widget_command_no_connection">Немає підключення до Інтернету!</string>
-  <string name="widget_command_error" translatable="false">Сталася помилка! (код: %1$d)</string>
-  <string name="widget_command_connection_failure" translatable="false">Помилка з\'єднання! (код: %1$d)</string>
-  <string name="widget_command_subject_offline" translatable="false">%1$s поза мережею!</string>
-  <string name="widget_command_subject_unavailable" translatable="false">%1$s не існує!</string>
-  <string name="widget_command_no_access" translatable="false">Відсутність доступу! (код: %1$d)</string>
+  <string name="widget_command_error">Сталася помилка! (код: %1$d)</string>
+  <string name="widget_command_connection_failure">Помилка з\'єднання! (код: %1$d)</string>
+  <string name="widget_command_subject_offline">%1$s поза мережею!</string>
+  <string name="widget_command_subject_unavailable">%1$s не існує!</string>
+  <string name="widget_command_no_access">Відсутність доступу! (код: %1$d)</string>
   <string name="widget_command_started">Готово</string>
   <string name="widget_removed_label">Канал видалено</string>
-  <string name="widget_group" translatable="false">група</string>
-  <string name="widget_scene" translatable="false">етап</string>
-  <string name="widget_action_toggle" translatable="false">Переключити</string>
+  <string name="widget_group">група</string>
+  <string name="widget_scene">етап</string>
+  <string name="widget_action_toggle">Переключити</string>
   <string name="channel_caption_roofwindowopeningsensor">Датчик відчинення мансардного вікна</string>
   <string name="channel_caption_roofwindow">Мансардне вікно</string>
   <string name="channel_func_controllingtheroofwindow">Відчинення та зачинення мансардного вікна</string>
@@ -339,32 +339,32 @@
   <string name="incorrect_email_or_password">Неправильна адреса електронної пошти або пароль</string>
   <string name="channel_name">Назва каналу</string>
   <string name="location_name">Назва місця</string>
-  <string name="lastconnectionresetcause_unknown" translatable="false">0: невідомо</string>
-  <string name="lastconnectionresetcause_activity_timeout" translatable="false">1: немає відповіді сервера</string>
-  <string name="lastconnectionresetcause_wifi_connection_lost" translatable="false">2: Wi-Fi з’єднання втрачено</string>
-  <string name="lastconnectionresetcause_server_connection_lost" translatable="false">3: скидання підключення до сервера</string>
-  <string name="basic_profile_warning" translatable="false">Режим недоступний</string>
-  <string name="basic_config_unavailable" translatable="false">Перш ніж вимкнути розширений режим, виберіть автентифікацію електронної пошти з автоматичним визначенням сервера.</string>
-  <string name="add_device_warning" translatable="false">Майстер автоматичного додавання пристроїв недоступний у режимі автентифікації за ідентифікатором доступу. Пристрої можуть бути додані вручну.</string>
-  <string name="show_channel_info" translatable="false">Показати кнопку ⓘ</string>
-  <string name="add_device_needs_cloud_title" translatable="false">Конфігурація пристрою</string>
-  <string name="add_device_needs_cloud_message" translatable="false">Цей пристрій не має видимих каналів у програмі. Щоб завершити налаштування, перейдіть на cloud.supla.org</string>
-  <string name="add_device_needs_cloud_dismiss" translatable="false">Розумію</string>
-  <string name="add_device_needs_cloud_go" translatable="false">Перейдіть до CLOUD</string>
-  <string name="associeted_with_at_error" translatable="false">Неможливо змінити функцію каналу, пов’язаного з активатором дії.</string>
-  <string name="location_ordering" translatable="false">Порядок розташування</string>
-  <string name="rs_display_mode_opening" translatable="false">Відкриття</string>
-  <string name="rs_display_mode_closing" translatable="false">Закриття</string>
+  <string name="lastconnectionresetcause_unknown">0: невідомо</string>
+  <string name="lastconnectionresetcause_activity_timeout">1: немає відповіді сервера</string>
+  <string name="lastconnectionresetcause_wifi_connection_lost">2: Wi-Fi з’єднання втрачено</string>
+  <string name="lastconnectionresetcause_server_connection_lost">3: скидання підключення до сервера</string>
+  <string name="basic_profile_warning">Режим недоступний</string>
+  <string name="basic_config_unavailable">Перш ніж вимкнути розширений режим, виберіть автентифікацію електронної пошти з автоматичним визначенням сервера.</string>
+  <string name="add_device_warning">Майстер автоматичного додавання пристроїв недоступний у режимі автентифікації за ідентифікатором доступу. Пристрої можуть бути додані вручну.</string>
+  <string name="show_channel_info">Показати кнопку ⓘ</string>
+  <string name="add_device_needs_cloud_title">Конфігурація пристрою</string>
+  <string name="add_device_needs_cloud_message">Цей пристрій не має видимих каналів у програмі. Щоб завершити налаштування, перейдіть на cloud.supla.org</string>
+  <string name="add_device_needs_cloud_dismiss">Розумію</string>
+  <string name="add_device_needs_cloud_go">Перейдіть до CLOUD</string>
+  <string name="associeted_with_at_error">Неможливо змінити функцію каналу, пов’язаного з активатором дії.</string>
+  <string name="location_ordering">Порядок розташування</string>
+  <string name="rs_display_mode_opening">Відкриття</string>
+  <string name="rs_display_mode_closing">Закриття</string>
   <string name="status_accessid_inactive">Ідентифікатор доступу неактивний.</string>
-  <string name="navbar_channels" translatable="false">Канали</string>
-  <string name="navbar_groups" translatable="false">Групи</string>
-  <string name="navbar_scenes" translatable="false">Сцени</string>
-  <string name="btn_execute" translatable="false">Виконати</string>
-  <string name="btn_abort" translatable="false">Перервати</string>
-  <string name="btn_abort_and_execute" translatable="false">Перервати і виконати</string>
-  <string name="scene_name" translatable="false">Назва сцени</string>
-  <string name="cfg_profile_active_indicator" translatable="false">активний</string>
-  <string name="menubar_appsettings" translatable="false">Налаштування додатків</string>
+  <string name="navbar_channels">Канали</string>
+  <string name="navbar_groups">Групи</string>
+  <string name="navbar_scenes">Сцени</string>
+  <string name="btn_execute">Виконати</string>
+  <string name="btn_abort">Перервати</string>
+  <string name="btn_abort_and_execute">Перервати і виконати</string>
+  <string name="scene_name">Назва сцени</string>
+  <string name="cfg_profile_active_indicator">активний</string>
+  <string name="menubar_appsettings">Налаштування додатків</string>
   <string name="about_app">This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.\n\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place – Suite 330, Boston, MA  02111–1307, USA</string>
   <string name="wizard_step1_txt1">Вітаємо у майстрі додавання пристроїв, який допоможе Вам швидко та легко додати новий пристрій до системи.</string>
   <string name="start">СТАРТ</string>
@@ -420,10 +420,10 @@
   <string name="zwave_change_wake_up_settings">Ви також можете змінити налаштування пробудження, натиснувши іконку нижче.</string>
   <string name="wakeup_info">"*) Встановлені налаштування будуть застосовані при наступному пробудженні вузла. "</string>
   <string name="seconds">Секунди</string>
-  <string name="widget_configure_type_channel_label" translatable="false">Каналу</string>
+  <string name="widget_configure_type_channel_label">Каналу</string>
   <string name="status_led">Світлодіодний індикатор стану</string>
   <string name="input">Вхід</string>
-  <string name="str_default" translatable="false">За замовчуванням</string>
+  <string name="str_default">За замовчуванням</string>
   <string name="overcurrent_warning">Відключення живлення відбулося після перевищення встановленого порогу допустимої сили струму.</string>
   <string name="overcurrent_question">Живлення відключено після перевищення встановленого порогу допустимої сили струму. Ви впевнені, що хочете увімкнути живлення ?</string>
   <string name="roller_shutter_start_calibration_message">Ви впевнені, що хочете почати калібрування?</string>
@@ -456,9 +456,9 @@
   <string name="turn_off">Вимкнути</string>
   <string name="widget_configure_scene_label">Сцена для віджету</string>
   <string name="widget_configure_no_scene">Немає доступних сцен</string>
-  <string name="associeted_with_push_error" translatable="false">Функцію каналу, пов\'язаного з PUSH-сповіщеннями, не можна змінити.</string>
-  <string name="associeted_with_vbt_error" translatable="false">Функцію каналу, пов\'язаного з реакціями, не можна змінити.</string>
-  <string name="rs_display_mode" translatable="false">Ролети, жалюзі, штори %</string>
+  <string name="associeted_with_push_error">Функцію каналу, пов\'язаного з PUSH-сповіщеннями, не можна змінити.</string>
+  <string name="associeted_with_vbt_error">Функцію каналу, пов\'язаного з реакціями, не можна змінити.</string>
+  <string name="rs_display_mode">Ролети, жалюзі, штори %</string>
 
   <string name="remove_account_title">Видалити обліковий запис?</string>
   <string name="remove_account_locally">Забути на цьому пристрої</string>

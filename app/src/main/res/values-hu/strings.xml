@@ -453,7 +453,7 @@
   <string name="details_em_balance_arithmetic">Számtani egyensúly</string>
   <string name="details_em_balance_vector">Vektoregyensúly</string>
 
-  <string name="cfg_profile_active_indicator" translatable="false">aktív</string>
+  <string name="cfg_profile_active_indicator">aktív</string>
 
   <string name="turn_on">Bekapcsolás</string>
   <string name="turn_off">Kikapcsolás</string>
@@ -474,9 +474,9 @@
   <string name="widget_group">csoport</string>
   <string name="widget_scene">jelenet</string>
   <string name="widget_action_toggle">Átkapcsolás</string>
-  <string name="associeted_with_push_error" translatable="false">A PUSH értesítésekhez tartozó csatorna funkciója nem módosítható.</string>
-  <string name="associeted_with_vbt_error" translatable="false">A reakciókhoz társított csatorna funkciója nem módosítható.</string>
-  <string name="rs_display_mode" translatable="false">Redőnyök, zsalu, függönyök %</string>
+  <string name="associeted_with_push_error">A PUSH értesítésekhez tartozó csatorna funkciója nem módosítható.</string>
+  <string name="associeted_with_vbt_error">A reakciókhoz társított csatorna funkciója nem módosítható.</string>
+  <string name="rs_display_mode">Redőnyök, zsalu, függönyök %</string>
   <string name="navbar_channels">Csatornák</string>
   <string name="navbar_groups">Csoportok</string>
   <string name="navbar_scenes">Jelenetek</string>
