@@ -25,11 +25,11 @@ import androidx.appcompat.widget.AppCompatButton
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.Preferences
 import org.supla.android.R
-import org.supla.android.extensions.resourceId
+import org.supla.android.core.shared.resourceId
 import org.supla.android.ui.lists.SlideableItem
 import org.supla.android.ui.lists.SwapableListItem
 import org.supla.android.ui.lists.data.SlideableListItemData
-import org.supla.core.shared.data.SuplaChannelFunction
+import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.usecase.GetChannelActionStringUseCase
 import java.lang.Integer.min
 import javax.inject.Inject
@@ -103,7 +103,7 @@ class SlideableListItemLayout @JvmOverloads constructor(
     rightItem?.run { updateRightItemPosition(this) }
   }
 
-  fun bind(locationCaption: String, function: SuplaChannelFunction) {
+  fun bind(locationCaption: String, function: SuplaFunction) {
     this.locationCaption = locationCaption
 
     getChannelActionStringUseCase.leftButton(function)?.resourceId?.let { (leftItem as? AppCompatButton)?.setText(it) }

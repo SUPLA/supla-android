@@ -47,10 +47,8 @@ import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.data.source.local.entity.custom.GroupOnlineSummary
 import org.supla.android.data.source.remote.ChannelConfigType
 import org.supla.android.data.source.remote.ConfigResult
-import org.supla.android.data.source.remote.facadeblind.FacadeBlindValue
 import org.supla.android.data.source.remote.rollershutter.SuplaChannelFacadeBlindConfig
 import org.supla.android.data.source.remote.rollershutter.SuplaTiltControlType
-import org.supla.android.data.source.remote.shadingsystem.SuplaShadingSystemFlag
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.ChannelConfigEventsManager
 import org.supla.android.features.details.windowdetail.base.BaseWindowViewEvent
@@ -76,6 +74,8 @@ import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
 import org.supla.android.usecases.group.ReadGroupTiltingDetailsUseCase
 import org.supla.android.usecases.group.TiltingDetails
 import org.supla.android.usecases.group.totalvalue.ShadowingBlindGroupValue
+import org.supla.core.shared.data.model.facadeblind.FacadeBlindValue
+import org.supla.core.shared.data.model.shadingsystem.SuplaShadingSystemFlag
 
 @RunWith(MockitoJUnitRunner::class)
 class FacadeBlindsViewModelTest : BaseViewModelTest<FacadeBlindsViewModelState, BaseWindowViewEvent, FacadeBlindsViewModel>() {

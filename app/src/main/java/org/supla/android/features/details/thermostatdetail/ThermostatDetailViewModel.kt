@@ -19,7 +19,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.supla.android.Preferences
-import org.supla.android.core.ui.LocalizedString
+import org.supla.android.core.shared.shareable
 import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.isHvacThermostat
@@ -29,15 +29,16 @@ import org.supla.android.features.details.detailbase.standarddetail.StandardDeta
 import org.supla.android.features.details.detailbase.standarddetail.StandardDetailViewModel
 import org.supla.android.features.details.detailbase.standarddetail.StandardDetailViewState
 import org.supla.android.tools.SuplaSchedulers
-import org.supla.android.usecases.channel.GetChannelCaptionUseCase
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
-import org.supla.core.shared.data.SuplaChannelFunction
+import org.supla.core.shared.data.model.general.SuplaFunction
+import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.usecase.GetCaptionUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class ThermostatDetailViewModel @Inject constructor(
-  private val getChannelCaptionUseCase: GetChannelCaptionUseCase,
+  private val getChannelCaptionUseCase: GetCaptionUseCase,
   readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
   readChannelGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase,
   updateEventsManager: UpdateEventsManager,
@@ -56,11 +57,11 @@ class ThermostatDetailViewModel @Inject constructor(
 
   override fun updatedState(state: ThermostatDetailViewState, channelDataBase: ChannelDataBase) =
     state.copy(
-      caption = getChannelCaptionUseCase(channelDataBase),
+      caption = getChannelCaptionUseCase(channelDataBase.shareable),
       subfunction = (channelDataBase as? ChannelDataEntity)?.channelValueEntity?.asThermostatValue()?.subfunction
     )
 
-  override fun shouldCloseDetail(channelDataBase: ChannelDataBase, initialFunction: SuplaChannelFunction) =
+  override fun shouldCloseDetail(channelDataBase: ChannelDataBase, initialFunction: SuplaFunction) =
     when (channelDataBase) {
       is ChannelDataEntity -> {
         if (channelDataBase.isHvacThermostat()) {

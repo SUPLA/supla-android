@@ -40,7 +40,7 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
 import org.supla.android.usecases.channel.GetChannelStateUseCase
 import org.supla.android.usecases.channel.ValueStateWrapper
-import org.supla.core.shared.data.SuplaChannelFunction
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 @Suppress("SameParameterValue")
 @RunWith(MockitoJUnitRunner::class)
@@ -77,7 +77,7 @@ class GetChannelIconUseCaseTest {
   fun `should return null when wrong icon type asked (entity)`() {
     // given
     val channelBase: ChannelDataEntity = mockk {
-      every { function } returns SuplaChannelFunction.LIGHTSWITCH
+      every { function } returns SuplaFunction.LIGHTSWITCH
     }
     val type: IconType = IconType.SECOND
 
@@ -85,7 +85,7 @@ class GetChannelIconUseCaseTest {
     assertThatThrownBy {
       useCase.invoke(channelBase, type)
     }
-      .hasMessage("Wrong icon type (iconType: '$type', function: '${SuplaChannelFunction.LIGHTSWITCH}')!")
+      .hasMessage("Wrong icon type (iconType: '$type', function: '${SuplaFunction.LIGHTSWITCH}')!")
       .isInstanceOf(IllegalArgumentException::class.java)
   }
 
@@ -117,7 +117,7 @@ class GetChannelIconUseCaseTest {
   @Test
   fun `should get default icon when user icon not defined (entity)`() {
     // given
-    val function = SuplaChannelFunction.LIGHTSWITCH
+    val function = SuplaFunction.LIGHTSWITCH
     val userIconId = 0
     val altIcon = 1
     val channelState = ChannelState(ChannelState.Value.ON)
@@ -167,7 +167,7 @@ class GetChannelIconUseCaseTest {
   @Test
   fun `should get user icon (entity)`() {
     // given
-    val function = SuplaChannelFunction.LIGHTSWITCH
+    val function = SuplaFunction.LIGHTSWITCH
     val userIconId = 5
     val altIcon = 1
     val channelState = ChannelState(ChannelState.Value.ON)
@@ -217,7 +217,7 @@ class GetChannelIconUseCaseTest {
   @Test
   fun `should get user icon (inactive) (entity)`() {
     // given
-    val function = SuplaChannelFunction.LIGHTSWITCH
+    val function = SuplaFunction.LIGHTSWITCH
     val userIconId = 5
     val altIcon = 1
     val channelState = ChannelState(ChannelState.Value.OFF)
@@ -268,7 +268,7 @@ class GetChannelIconUseCaseTest {
   @Test
   fun `should get user icon (humidity and temperature) (entity)`() {
     // given
-    val function = SuplaChannelFunction.HUMIDITY_AND_TEMPERATURE
+    val function = SuplaFunction.HUMIDITY_AND_TEMPERATURE
     val userIconId = 5
     val altIcon = 1
     val channelState = ChannelState(ChannelState.Value.OFF)
@@ -318,7 +318,7 @@ class GetChannelIconUseCaseTest {
   @Test
   fun `should get user icon (humidity and temperature, second) (entity)`() {
     // given
-    val function = SuplaChannelFunction.HUMIDITY_AND_TEMPERATURE
+    val function = SuplaFunction.HUMIDITY_AND_TEMPERATURE
     val userIconId = 5
     val altIcon = 1
     val channelState = ChannelState(ChannelState.Value.OFF)
@@ -368,7 +368,7 @@ class GetChannelIconUseCaseTest {
   @Test
   fun `should get user icon (thermometer) (entity)`() {
     // given
-    val function = SuplaChannelFunction.THERMOMETER
+    val function = SuplaFunction.THERMOMETER
     val userIconId = 5
     val altIcon = 1
     val channelState = ChannelState(ChannelState.Value.OFF)
@@ -418,7 +418,7 @@ class GetChannelIconUseCaseTest {
   @Test
   fun `should get user icon (garage door closed) (entity)`() {
     // given
-    val function = SuplaChannelFunction.CONTROLLING_THE_GARAGE_DOOR
+    val function = SuplaFunction.CONTROLLING_THE_GARAGE_DOOR
     val userIconId = 5
     val altIcon = 1
     val channelState = ChannelState(ChannelState.Value.CLOSED)
@@ -468,7 +468,7 @@ class GetChannelIconUseCaseTest {
   @Test
   fun `should get user icon (garage door open) (entity)`() {
     // given
-    val function = SuplaChannelFunction.CONTROLLING_THE_GARAGE_DOOR
+    val function = SuplaFunction.CONTROLLING_THE_GARAGE_DOOR
     val userIconId = 5
     val altIcon = 1
     val channelState = ChannelState(ChannelState.Value.OPEN)
@@ -518,7 +518,7 @@ class GetChannelIconUseCaseTest {
   @Test
   fun `should get user icon (garage door partially open) (entity)`() {
     // given
-    val function = SuplaChannelFunction.CONTROLLING_THE_GARAGE_DOOR
+    val function = SuplaFunction.CONTROLLING_THE_GARAGE_DOOR
     val userIconId = 5
     val altIcon = 1
     val channelState = ChannelState(ChannelState.Value.PARTIALLY_OPENED)
@@ -543,7 +543,7 @@ class GetChannelIconUseCaseTest {
   @Test
   fun `should get user icon (dimmer and rgb - off off)`() {
     // given
-    val function = SuplaChannelFunction.DIMMER_AND_RGB_LIGHTING
+    val function = SuplaFunction.DIMMER_AND_RGB_LIGHTING
     val userIconId = 5
     val channelState = ChannelState(ChannelState.Value.COMPLEX, listOf(ChannelState.Value.OFF, ChannelState.Value.OFF))
     val profileId = 212L
@@ -567,7 +567,7 @@ class GetChannelIconUseCaseTest {
   @Test
   fun `should get user icon (dimmer and rgb - on off)`() {
     // given
-    val function = SuplaChannelFunction.DIMMER_AND_RGB_LIGHTING
+    val function = SuplaFunction.DIMMER_AND_RGB_LIGHTING
     val userIconId = 5
     val channelState = ChannelState(ChannelState.Value.COMPLEX, listOf(ChannelState.Value.ON, ChannelState.Value.OFF))
     val profileId = 212L
@@ -591,7 +591,7 @@ class GetChannelIconUseCaseTest {
   @Test
   fun `should get user icon (dimmer and rgb - off on)`() {
     // given
-    val function = SuplaChannelFunction.DIMMER_AND_RGB_LIGHTING
+    val function = SuplaFunction.DIMMER_AND_RGB_LIGHTING
     val userIconId = 5
     val channelState = ChannelState(ChannelState.Value.COMPLEX, listOf(ChannelState.Value.OFF, ChannelState.Value.ON))
     val profileId = 212L
@@ -615,7 +615,7 @@ class GetChannelIconUseCaseTest {
   @Test
   fun `should get user icon (dimmer and rgb - on on)`() {
     // given
-    val function = SuplaChannelFunction.DIMMER_AND_RGB_LIGHTING
+    val function = SuplaFunction.DIMMER_AND_RGB_LIGHTING
     val userIconId = 5
     val channelState = ChannelState(ChannelState.Value.COMPLEX, listOf(ChannelState.Value.ON, ChannelState.Value.ON))
     val profileId = 212L
@@ -639,7 +639,7 @@ class GetChannelIconUseCaseTest {
   @Test
   fun `should get user icon (dimmer and rgb - unclear)`() {
     // given
-    val function = SuplaChannelFunction.DIMMER_AND_RGB_LIGHTING
+    val function = SuplaFunction.DIMMER_AND_RGB_LIGHTING
     val userIconId = 5
     val channelState = ChannelState(ChannelState.Value.ON)
     val profileId = 212L
@@ -671,7 +671,7 @@ class GetChannelIconUseCaseTest {
   }
 
   private fun mockChannelDataEntity(
-    function: SuplaChannelFunction,
+    function: SuplaFunction,
     userIconId: Int,
     altIcon: Int,
     profileId: Long

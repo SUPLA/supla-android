@@ -35,8 +35,8 @@ import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.profile.CloudUrl
 import org.supla.android.usecases.profile.LoadActiveProfileUrlUseCase
-import org.supla.core.shared.data.SuplaChannelFunction
-import org.supla.core.shared.data.source.local.entity.ChannelRelationType
+import org.supla.core.shared.data.model.channel.ChannelRelationType
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 abstract class BaseListViewModel<S : ViewState, E : ViewEvent>(
   private val preferences: Preferences,
@@ -81,29 +81,29 @@ abstract class BaseListViewModel<S : ViewState, E : ViewEvent>(
 
   protected fun isAvailableInOffline(channel: ChannelDataBase, children: List<ChannelChildEntity>?) =
     when (channel.function) {
-      SuplaChannelFunction.THERMOMETER,
-      SuplaChannelFunction.HUMIDITY_AND_TEMPERATURE,
-      SuplaChannelFunction.ELECTRICITY_METER,
-      SuplaChannelFunction.IC_ELECTRICITY_METER,
-      SuplaChannelFunction.IC_GAS_METER,
-      SuplaChannelFunction.IC_WATER_METER,
-      SuplaChannelFunction.HVAC_THERMOSTAT,
-      SuplaChannelFunction.HVAC_DOMESTIC_HOT_WATER,
-      SuplaChannelFunction.IC_HEAT_METER,
-      SuplaChannelFunction.GENERAL_PURPOSE_MEASUREMENT,
-      SuplaChannelFunction.GENERAL_PURPOSE_METER,
-      SuplaChannelFunction.CONTROLLING_THE_ROLLER_SHUTTER,
-      SuplaChannelFunction.CONTROLLING_THE_FACADE_BLIND,
-      SuplaChannelFunction.CONTROLLING_THE_ROOF_WINDOW,
-      SuplaChannelFunction.TERRACE_AWNING,
-      SuplaChannelFunction.CURTAIN,
-      SuplaChannelFunction.PROJECTOR_SCREEN,
-      SuplaChannelFunction.VERTICAL_BLIND,
-      SuplaChannelFunction.ROLLER_GARAGE_DOOR -> true
+      SuplaFunction.THERMOMETER,
+      SuplaFunction.HUMIDITY_AND_TEMPERATURE,
+      SuplaFunction.ELECTRICITY_METER,
+      SuplaFunction.IC_ELECTRICITY_METER,
+      SuplaFunction.IC_GAS_METER,
+      SuplaFunction.IC_WATER_METER,
+      SuplaFunction.HVAC_THERMOSTAT,
+      SuplaFunction.HVAC_DOMESTIC_HOT_WATER,
+      SuplaFunction.IC_HEAT_METER,
+      SuplaFunction.GENERAL_PURPOSE_MEASUREMENT,
+      SuplaFunction.GENERAL_PURPOSE_METER,
+      SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER,
+      SuplaFunction.CONTROLLING_THE_FACADE_BLIND,
+      SuplaFunction.CONTROLLING_THE_ROOF_WINDOW,
+      SuplaFunction.TERRACE_AWNING,
+      SuplaFunction.CURTAIN,
+      SuplaFunction.PROJECTOR_SCREEN,
+      SuplaFunction.VERTICAL_BLIND,
+      SuplaFunction.ROLLER_GARAGE_DOOR -> true
 
-      SuplaChannelFunction.LIGHTSWITCH,
-      SuplaChannelFunction.POWER_SWITCH,
-      SuplaChannelFunction.STAIRCASE_TIMER -> {
+      SuplaFunction.LIGHTSWITCH,
+      SuplaFunction.POWER_SWITCH,
+      SuplaFunction.STAIRCASE_TIMER -> {
         if (children?.firstOrNull { it.relationType == ChannelRelationType.METER } != null) {
           true
         } else {
@@ -116,45 +116,45 @@ abstract class BaseListViewModel<S : ViewState, E : ViewEvent>(
         }
       }
 
-      SuplaChannelFunction.UNKNOWN,
-      SuplaChannelFunction.NONE,
-      SuplaChannelFunction.CONTROLLING_THE_GATEWAY_LOCK,
-      SuplaChannelFunction.CONTROLLING_THE_GATE,
-      SuplaChannelFunction.CONTROLLING_THE_GARAGE_DOOR,
-      SuplaChannelFunction.HUMIDITY,
-      SuplaChannelFunction.OPEN_SENSOR_GATEWAY,
-      SuplaChannelFunction.OPEN_SENSOR_GATE,
-      SuplaChannelFunction.OPEN_SENSOR_GARAGE_DOOR,
-      SuplaChannelFunction.NO_LIQUID_SENSOR,
-      SuplaChannelFunction.CONTROLLING_THE_DOOR_LOCK,
-      SuplaChannelFunction.OPEN_SENSOR_DOOR,
-      SuplaChannelFunction.OPEN_SENSOR_ROLLER_SHUTTER,
-      SuplaChannelFunction.OPEN_SENSOR_ROOF_WINDOW,
-      SuplaChannelFunction.RING,
-      SuplaChannelFunction.ALARM,
-      SuplaChannelFunction.NOTIFICATION,
-      SuplaChannelFunction.DIMMER,
-      SuplaChannelFunction.RGB_LIGHTING,
-      SuplaChannelFunction.DIMMER_AND_RGB_LIGHTING,
-      SuplaChannelFunction.DEPTH_SENSOR,
-      SuplaChannelFunction.DISTANCE_SENSOR,
-      SuplaChannelFunction.OPENING_SENSOR_WINDOW,
-      SuplaChannelFunction.HOTEL_CARD_SENSOR,
-      SuplaChannelFunction.ALARM_ARMAMENT_SENSOR,
-      SuplaChannelFunction.MAIL_SENSOR,
-      SuplaChannelFunction.WIND_SENSOR,
-      SuplaChannelFunction.PRESSURE_SENSOR,
-      SuplaChannelFunction.RAIN_SENSOR,
-      SuplaChannelFunction.WEIGHT_SENSOR,
-      SuplaChannelFunction.WEATHER_STATION,
-      SuplaChannelFunction.THERMOSTAT_HEATPOL_HOMEPLUS,
-      SuplaChannelFunction.HVAC_THERMOSTAT_HEAT_COOL,
-      SuplaChannelFunction.VALVE_OPEN_CLOSE,
-      SuplaChannelFunction.VALVE_PERCENTAGE,
-      SuplaChannelFunction.DIGIGLASS_HORIZONTAL,
-      SuplaChannelFunction.DIGIGLASS_VERTICAL,
-      SuplaChannelFunction.PUMP_SWITCH,
-      SuplaChannelFunction.HEAT_OR_COLD_SOURCE_SWITCH -> false
+      SuplaFunction.UNKNOWN,
+      SuplaFunction.NONE,
+      SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK,
+      SuplaFunction.CONTROLLING_THE_GATE,
+      SuplaFunction.CONTROLLING_THE_GARAGE_DOOR,
+      SuplaFunction.HUMIDITY,
+      SuplaFunction.OPEN_SENSOR_GATEWAY,
+      SuplaFunction.OPEN_SENSOR_GATE,
+      SuplaFunction.OPEN_SENSOR_GARAGE_DOOR,
+      SuplaFunction.NO_LIQUID_SENSOR,
+      SuplaFunction.CONTROLLING_THE_DOOR_LOCK,
+      SuplaFunction.OPEN_SENSOR_DOOR,
+      SuplaFunction.OPEN_SENSOR_ROLLER_SHUTTER,
+      SuplaFunction.OPEN_SENSOR_ROOF_WINDOW,
+      SuplaFunction.RING,
+      SuplaFunction.ALARM,
+      SuplaFunction.NOTIFICATION,
+      SuplaFunction.DIMMER,
+      SuplaFunction.RGB_LIGHTING,
+      SuplaFunction.DIMMER_AND_RGB_LIGHTING,
+      SuplaFunction.DEPTH_SENSOR,
+      SuplaFunction.DISTANCE_SENSOR,
+      SuplaFunction.OPENING_SENSOR_WINDOW,
+      SuplaFunction.HOTEL_CARD_SENSOR,
+      SuplaFunction.ALARM_ARMAMENT_SENSOR,
+      SuplaFunction.MAIL_SENSOR,
+      SuplaFunction.WIND_SENSOR,
+      SuplaFunction.PRESSURE_SENSOR,
+      SuplaFunction.RAIN_SENSOR,
+      SuplaFunction.WEIGHT_SENSOR,
+      SuplaFunction.WEATHER_STATION,
+      SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS,
+      SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL,
+      SuplaFunction.VALVE_OPEN_CLOSE,
+      SuplaFunction.VALVE_PERCENTAGE,
+      SuplaFunction.DIGIGLASS_HORIZONTAL,
+      SuplaFunction.DIGIGLASS_VERTICAL,
+      SuplaFunction.PUMP_SWITCH,
+      SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH -> false
     }
 
   protected fun loadServerUrl(handler: (CloudUrl) -> Unit) {

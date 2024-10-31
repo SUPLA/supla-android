@@ -25,7 +25,7 @@ import org.junit.runner.RunWith
 import org.mockito.InjectMocks
 import org.mockito.junit.MockitoJUnitRunner
 import org.supla.android.data.source.local.entity.ChannelGroupEntity
-import org.supla.core.shared.data.SuplaChannelFunction
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 @RunWith(MockitoJUnitRunner::class)
 class GetGroupActivePercentageUseCaseTest {
@@ -37,7 +37,7 @@ class GetGroupActivePercentageUseCaseTest {
   fun `should get active percentage for power switch group`() {
     // given
     val group: ChannelGroupEntity = mockk {
-      every { function } returns SuplaChannelFunction.POWER_SWITCH
+      every { function } returns SuplaFunction.POWER_SWITCH
       every { totalValue } returns "1|0|1|1"
     }
 
@@ -52,7 +52,7 @@ class GetGroupActivePercentageUseCaseTest {
   fun `should get active percentage for roller shutter`() {
     // given
     val group: ChannelGroupEntity = mockk {
-      every { function } returns SuplaChannelFunction.CONTROLLING_THE_ROLLER_SHUTTER
+      every { function } returns SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER
       every { totalValue } returns "80:1|50:0|100:0|100:0"
     }
 
@@ -67,7 +67,7 @@ class GetGroupActivePercentageUseCaseTest {
   fun `should get active percentage for facade blind`() {
     // given
     val group: ChannelGroupEntity = mockk {
-      every { function } returns SuplaChannelFunction.CONTROLLING_THE_FACADE_BLIND
+      every { function } returns SuplaFunction.CONTROLLING_THE_FACADE_BLIND
       every { totalValue } returns "80:50|50:10|100:0|100:0"
     }
 
@@ -82,7 +82,7 @@ class GetGroupActivePercentageUseCaseTest {
   fun `should get active percentage for projector screen`() {
     // given
     val group: ChannelGroupEntity = mockk {
-      every { function } returns SuplaChannelFunction.PROJECTOR_SCREEN
+      every { function } returns SuplaFunction.PROJECTOR_SCREEN
       every { totalValue } returns "100|50|100|100"
     }
 
@@ -97,7 +97,7 @@ class GetGroupActivePercentageUseCaseTest {
   fun `should get active percentage for dimmer`() {
     // given
     val group: ChannelGroupEntity = mockk {
-      every { function } returns SuplaChannelFunction.DIMMER
+      every { function } returns SuplaFunction.DIMMER
       every { totalValue } returns "100|0|100|100"
     }
 
@@ -112,7 +112,7 @@ class GetGroupActivePercentageUseCaseTest {
   fun `should get active percentage for rgb`() {
     // given
     val group: ChannelGroupEntity = mockk {
-      every { function } returns SuplaChannelFunction.RGB_LIGHTING
+      every { function } returns SuplaFunction.RGB_LIGHTING
       every { totalValue } returns "20:100|20:0|40:100|10:100"
     }
 
@@ -127,7 +127,7 @@ class GetGroupActivePercentageUseCaseTest {
   fun `should get active percentage for dimmer and rgb`() {
     // given
     val group: ChannelGroupEntity = mockk {
-      every { function } returns SuplaChannelFunction.DIMMER_AND_RGB_LIGHTING
+      every { function } returns SuplaFunction.DIMMER_AND_RGB_LIGHTING
       every { totalValue } returns "20:100:40|20:0:0|40:100:20|10:100:10"
     }
 
@@ -142,7 +142,7 @@ class GetGroupActivePercentageUseCaseTest {
   fun `should get active percentage for heatpol thermostat`() {
     // given
     val group: ChannelGroupEntity = mockk {
-      every { function } returns SuplaChannelFunction.THERMOSTAT_HEATPOL_HOMEPLUS
+      every { function } returns SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS
       every { totalValue } returns "1:10:40|0:0:0|1:10:20|0:10:10"
     }
 

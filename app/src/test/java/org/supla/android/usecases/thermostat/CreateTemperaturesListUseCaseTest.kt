@@ -36,8 +36,8 @@ import org.supla.android.images.ImageId
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.channel.ValueType
 import org.supla.android.usecases.icon.GetChannelIconUseCase
-import org.supla.core.shared.data.SuplaChannelFunction
-import org.supla.core.shared.data.source.local.entity.ChannelRelationType
+import org.supla.core.shared.data.model.channel.ChannelRelationType
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 class CreateTemperaturesListUseCaseTest {
 
@@ -61,7 +61,7 @@ class CreateTemperaturesListUseCaseTest {
     val child1ImageId: ImageId = mockk()
     val child2ImageId: ImageId = mockk()
     val child1 =
-      createChild(ChannelRelationType.MAIN_THERMOMETER, 111, "11.0", SuplaChannelFunction.HUMIDITY_AND_TEMPERATURE, "12.0", child1ImageId)
+      createChild(ChannelRelationType.MAIN_THERMOMETER, 111, "11.0", SuplaFunction.HUMIDITY_AND_TEMPERATURE, "12.0", child1ImageId)
     val child2 = createChild(ChannelRelationType.AUX_THERMOMETER_FLOOR, 222, "22.0", imageId = child2ImageId)
 
     val channelWithChildren: ChannelWithChildren = mockk()
@@ -120,7 +120,7 @@ class CreateTemperaturesListUseCaseTest {
     relationType: ChannelRelationType,
     remoteId: Int,
     text: String,
-    function: SuplaChannelFunction = SuplaChannelFunction.THERMOMETER,
+    function: SuplaFunction = SuplaFunction.THERMOMETER,
     secondValue: String? = null,
     imageId: ImageId = mockk()
   ): ChannelChildEntity {

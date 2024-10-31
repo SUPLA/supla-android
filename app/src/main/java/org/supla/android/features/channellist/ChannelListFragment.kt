@@ -37,6 +37,7 @@ import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.navigator.MainNavigator
 import org.supla.android.ui.dialogs.exceededAmperageDialog
 import org.supla.android.ui.dialogs.valveAlertDialog
+import org.supla.android.ui.lists.message
 import org.supla.android.usecases.channel.ButtonType
 import javax.inject.Inject
 

@@ -17,78 +17,78 @@ package org.supla.android.data.source.local.entity
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.core.shared.data.SuplaChannelFunction
-import org.supla.core.shared.data.model.general.ChannelBase
+import org.supla.android.data.model.general.ChannelBase
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 fun ChannelBase.isHvacThermostat() =
-  function == SuplaChannelFunction.HVAC_THERMOSTAT ||
-    function == SuplaChannelFunction.HVAC_DOMESTIC_HOT_WATER
+  function == SuplaFunction.HVAC_THERMOSTAT ||
+    function == SuplaFunction.HVAC_DOMESTIC_HOT_WATER
 
 fun ChannelBase.isThermostat(): Boolean =
-  isHvacThermostat() || function == SuplaChannelFunction.THERMOSTAT_HEATPOL_HOMEPLUS
+  isHvacThermostat() || function == SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS
 
 fun ChannelBase.hasMeasurements(): Boolean =
-  function == SuplaChannelFunction.THERMOMETER ||
-    function == SuplaChannelFunction.HUMIDITY_AND_TEMPERATURE ||
-    function == SuplaChannelFunction.DEPTH_SENSOR
+  function == SuplaFunction.THERMOMETER ||
+    function == SuplaFunction.HUMIDITY_AND_TEMPERATURE ||
+    function == SuplaFunction.DEPTH_SENSOR
 
 fun ChannelBase.isIconValueItem(): Boolean =
-  function == SuplaChannelFunction.ALARM_ARMAMENT_SENSOR ||
-    function == SuplaChannelFunction.HOTEL_CARD_SENSOR ||
-    function == SuplaChannelFunction.THERMOMETER ||
-    function == SuplaChannelFunction.DEPTH_SENSOR ||
-    function == SuplaChannelFunction.DISTANCE_SENSOR ||
-    function == SuplaChannelFunction.ELECTRICITY_METER ||
-    function == SuplaChannelFunction.HEAT_OR_COLD_SOURCE_SWITCH ||
-    function == SuplaChannelFunction.PUMP_SWITCH ||
-    function == SuplaChannelFunction.NO_LIQUID_SENSOR ||
-    function == SuplaChannelFunction.RAIN_SENSOR ||
-    function == SuplaChannelFunction.MAIL_SENSOR
+  function == SuplaFunction.ALARM_ARMAMENT_SENSOR ||
+    function == SuplaFunction.HOTEL_CARD_SENSOR ||
+    function == SuplaFunction.THERMOMETER ||
+    function == SuplaFunction.DEPTH_SENSOR ||
+    function == SuplaFunction.DISTANCE_SENSOR ||
+    function == SuplaFunction.ELECTRICITY_METER ||
+    function == SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH ||
+    function == SuplaFunction.PUMP_SWITCH ||
+    function == SuplaFunction.NO_LIQUID_SENSOR ||
+    function == SuplaFunction.RAIN_SENSOR ||
+    function == SuplaFunction.MAIL_SENSOR
 
 fun ChannelBase.isSwitch(): Boolean =
-  function == SuplaChannelFunction.LIGHTSWITCH ||
-    function == SuplaChannelFunction.POWER_SWITCH ||
-    function == SuplaChannelFunction.STAIRCASE_TIMER
+  function == SuplaFunction.LIGHTSWITCH ||
+    function == SuplaFunction.POWER_SWITCH ||
+    function == SuplaFunction.STAIRCASE_TIMER
 
 fun ChannelBase.isGpm(): Boolean =
-  function == SuplaChannelFunction.GENERAL_PURPOSE_METER ||
-    function == SuplaChannelFunction.GENERAL_PURPOSE_MEASUREMENT
+  function == SuplaFunction.GENERAL_PURPOSE_METER ||
+    function == SuplaFunction.GENERAL_PURPOSE_MEASUREMENT
 
 fun ChannelBase.isGpMeasurement(): Boolean =
-  function == SuplaChannelFunction.GENERAL_PURPOSE_MEASUREMENT
+  function == SuplaFunction.GENERAL_PURPOSE_MEASUREMENT
 
 fun ChannelBase.isGpMeter(): Boolean =
-  function == SuplaChannelFunction.GENERAL_PURPOSE_METER
+  function == SuplaFunction.GENERAL_PURPOSE_METER
 
 fun ChannelBase.isElectricityMeter(): Boolean =
-  function == SuplaChannelFunction.ELECTRICITY_METER
+  function == SuplaFunction.ELECTRICITY_METER
 
 fun ChannelBase.isImpulseCounter(): Boolean =
-  function == SuplaChannelFunction.IC_GAS_METER ||
-    function == SuplaChannelFunction.IC_HEAT_METER ||
-    function == SuplaChannelFunction.IC_WATER_METER ||
-    function == SuplaChannelFunction.IC_ELECTRICITY_METER
+  function == SuplaFunction.IC_GAS_METER ||
+    function == SuplaFunction.IC_HEAT_METER ||
+    function == SuplaFunction.IC_WATER_METER ||
+    function == SuplaFunction.IC_ELECTRICITY_METER
 
 fun ChannelBase.isThermometer() =
-  function == SuplaChannelFunction.THERMOMETER ||
-    function == SuplaChannelFunction.HUMIDITY_AND_TEMPERATURE
+  function == SuplaFunction.THERMOMETER ||
+    function == SuplaFunction.HUMIDITY_AND_TEMPERATURE
 
 fun ChannelBase.isFacadeBlind() =
-  function == SuplaChannelFunction.CONTROLLING_THE_FACADE_BLIND
+  function == SuplaFunction.CONTROLLING_THE_FACADE_BLIND
 
 fun ChannelBase.isVerticalBlind() =
-  function == SuplaChannelFunction.VERTICAL_BLIND
+  function == SuplaFunction.VERTICAL_BLIND
 
 fun ChannelBase.isShadingSystem() =
-  function == SuplaChannelFunction.CONTROLLING_THE_ROLLER_SHUTTER ||
-    function == SuplaChannelFunction.CONTROLLING_THE_ROOF_WINDOW ||
-    function == SuplaChannelFunction.CONTROLLING_THE_FACADE_BLIND ||
-    function == SuplaChannelFunction.TERRACE_AWNING ||
-    function == SuplaChannelFunction.CURTAIN ||
-    function == SuplaChannelFunction.VERTICAL_BLIND
+  function == SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER ||
+    function == SuplaFunction.CONTROLLING_THE_ROOF_WINDOW ||
+    function == SuplaFunction.CONTROLLING_THE_FACADE_BLIND ||
+    function == SuplaFunction.TERRACE_AWNING ||
+    function == SuplaFunction.CURTAIN ||
+    function == SuplaFunction.VERTICAL_BLIND
 
 fun ChannelBase.isProjectorScreen() =
-  function == SuplaChannelFunction.PROJECTOR_SCREEN
+  function == SuplaFunction.PROJECTOR_SCREEN
 
 fun ChannelBase.isGarageDoorRoller() =
-  function == SuplaChannelFunction.ROLLER_GARAGE_DOOR
+  function == SuplaFunction.ROLLER_GARAGE_DOOR

@@ -52,7 +52,6 @@ import org.supla.android.data.formatting.LocalPercentageFormatter
 import org.supla.android.data.source.remote.thermostat.ThermostatIndicatorIcon
 import org.supla.android.images.ImageId
 import org.supla.android.ui.lists.ListOnlineState
-import org.supla.android.ui.lists.data.ChannelIssueItem
 import org.supla.android.ui.lists.data.message
 import org.supla.android.ui.lists.onlineState
 import org.supla.android.ui.views.Image
@@ -64,6 +63,7 @@ import org.supla.android.ui.views.list.components.ListItemTitle
 import org.supla.android.ui.views.list.components.ListItemValue
 import org.supla.android.ui.views.list.components.SetpointIndicator
 import org.supla.android.ui.views.list.components.SetpointText
+import org.supla.core.shared.data.model.lists.ChannelIssueItem
 
 data class ThermostatSlavesListViewState(
   val master: ThermostatData? = null,

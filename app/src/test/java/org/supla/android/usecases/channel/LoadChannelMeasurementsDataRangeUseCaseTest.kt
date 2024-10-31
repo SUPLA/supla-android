@@ -34,7 +34,7 @@ import org.supla.android.data.model.Optional
 import org.supla.android.data.model.chart.DateRange
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.extensions.date
-import org.supla.core.shared.data.SuplaChannelFunction
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 @RunWith(MockitoJUnitRunner::class)
 class LoadChannelMeasurementsDataRangeUseCaseTest {
@@ -70,7 +70,7 @@ class LoadChannelMeasurementsDataRangeUseCaseTest {
     // given
     val remoteId = 123
     val profileId = 234L
-    val channelFunction = SuplaChannelFunction.THERMOMETER
+    val channelFunction = SuplaFunction.THERMOMETER
     val channel: ChannelDataEntity = mockk {
       every { function } returns channelFunction
     }
@@ -110,7 +110,7 @@ class LoadChannelMeasurementsDataRangeUseCaseTest {
     // given
     val remoteId = 123
     val profileId = 234L
-    val channelFunction = SuplaChannelFunction.THERMOMETER
+    val channelFunction = SuplaFunction.THERMOMETER
     val channel: ChannelDataEntity = mockk {
       every { function } returns channelFunction
     }

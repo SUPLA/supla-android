@@ -31,7 +31,6 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.whenever
 import org.supla.android.Preferences
-import org.supla.android.R
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
@@ -42,8 +41,6 @@ import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.data.source.local.entity.custom.GroupOnlineSummary
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
-import org.supla.android.data.source.remote.rollershutter.RollerShutterValue
-import org.supla.android.data.source.remote.shadingsystem.SuplaShadingSystemFlag
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.LoadingTimeoutManager
 import org.supla.android.features.details.windowdetail.base.BaseWindowViewEvent
@@ -55,7 +52,6 @@ import org.supla.android.features.details.windowdetail.base.ui.windowview.Shadin
 import org.supla.android.lib.SuplaConst
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.tools.VibrationHelper
-import org.supla.android.ui.lists.data.ChannelIssueItem
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.client.AuthorizeUseCase
 import org.supla.android.usecases.client.CallSuplaClientOperationUseCase
@@ -65,7 +61,11 @@ import org.supla.android.usecases.client.LoginUseCase
 import org.supla.android.usecases.group.GetGroupOnlineSummaryUseCase
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
 import org.supla.android.usecases.group.totalvalue.GroupTotalValue
-import org.supla.core.shared.data.SuplaChannelFunction
+import org.supla.core.shared.data.model.general.SuplaFunction
+import org.supla.core.shared.data.model.lists.ChannelIssueItem
+import org.supla.core.shared.data.model.rollershutter.RollerShutterValue
+import org.supla.core.shared.data.model.shadingsystem.SuplaShadingSystemFlag
+import org.supla.core.shared.infrastructure.LocalizedStringId
 
 @RunWith(MockitoJUnitRunner::class)
 class CurtainViewModelTest : BaseViewModelTest<CurtainViewModelState, BaseWindowViewEvent, CurtainViewModel>() {
@@ -145,7 +145,7 @@ class CurtainViewModelTest : BaseViewModelTest<CurtainViewModelState, BaseWindow
         remoteId = remoteId,
         windowState = CurtainWindowState(WindowGroupedValue.Similar(position.toFloat())),
         viewState = WindowViewState(
-          issues = listOf(ChannelIssueItem.Error(R.string.motor_problem)),
+          issues = listOf(ChannelIssueItem.Error(LocalizedStringId.MOTOR_PROBLEM)),
           enabled = true,
           positionPresentation = ShadingSystemPositionPresentation.AS_CLOSED,
           positionUnknown = false,
@@ -196,7 +196,7 @@ class CurtainViewModelTest : BaseViewModelTest<CurtainViewModelState, BaseWindow
     valueFlags: List<SuplaShadingSystemFlag> = emptyList(),
     channelFlags: List<SuplaChannelFlag> = emptyList(),
     hasValidPosition: Boolean = true,
-    function: SuplaChannelFunction = SuplaChannelFunction.CURTAIN
+    function: SuplaFunction = SuplaFunction.CURTAIN
   ) {
     val rollerShutterValue: RollerShutterValue = mockk {
       every { this@mockk.position } returns position
@@ -231,7 +231,7 @@ class CurtainViewModelTest : BaseViewModelTest<CurtainViewModelState, BaseWindow
     val groupData: ChannelGroupDataEntity = mockk {
       every { id } returns groupId
       every { this@mockk.remoteId } returns remoteId
-      every { this@mockk.function } returns SuplaChannelFunction.CURTAIN
+      every { this@mockk.function } returns SuplaFunction.CURTAIN
       every { channelGroupEntity } returns group
       every { isOnline() } returns true
     }

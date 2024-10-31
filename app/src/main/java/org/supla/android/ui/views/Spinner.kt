@@ -55,7 +55,7 @@ import org.supla.android.R
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.model.chart.ChartRange
 import org.supla.android.data.model.general.SingleSelectionList
-import org.supla.android.extensions.ifTrue
+import org.supla.core.shared.extensions.ifTrue
 
 @Composable
 fun <T> Spinner(

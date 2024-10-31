@@ -21,7 +21,13 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import org.supla.android.core.storage.ApplicationPreferences
+import org.supla.core.shared.usecase.GetCaptionUseCase
 import org.supla.core.shared.usecase.GetChannelActionStringUseCase
+import org.supla.core.shared.usecase.channel.GetChannelBatteryIconUseCase
+import org.supla.core.shared.usecase.channel.GetChannelDefaultCaptionUseCase
+import org.supla.core.shared.usecase.channel.GetChannelIssuesForListUseCase
+import org.supla.core.shared.usecase.channel.GetChannelLowBatteryIssueUseCase
 import javax.inject.Singleton
 
 @Module
@@ -31,4 +37,32 @@ class CoreSharedModule {
   @Provides
   @Singleton
   fun provideGetChannelActionStringUseCase() = GetChannelActionStringUseCase()
+
+  @Provides
+  @Singleton
+  fun provideGetChannelDefaultCaptionUseCase() = GetChannelDefaultCaptionUseCase()
+
+  @Provides
+  @Singleton
+  fun provideGetChannelBatteryIconUseCase() = GetChannelBatteryIconUseCase()
+
+  @Provides
+  @Singleton
+  fun provideGetCaptionUseCase(
+    getChannelDefaultCaptionUseCase: GetChannelDefaultCaptionUseCase
+  ) = GetCaptionUseCase(getChannelDefaultCaptionUseCase)
+
+  @Singleton
+  @Provides
+  fun provideGetChannelLowBatteryIssueUseCase(
+    getCaptionUseCase: GetCaptionUseCase,
+    applicationPreferences: ApplicationPreferences
+  ) = GetChannelLowBatteryIssueUseCase(getCaptionUseCase, applicationPreferences)
+
+  @Singleton
+  @Provides
+  fun provide(
+    getChannelLowBatteryIssueUseCase: GetChannelLowBatteryIssueUseCase,
+    getChannelBatteryIconUseCase: GetChannelBatteryIconUseCase
+  ) = GetChannelIssuesForListUseCase(getChannelLowBatteryIssueUseCase, getChannelBatteryIconUseCase)
 }

@@ -20,9 +20,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.usecases.channel.ChannelValueStringProvider
 import org.supla.android.usecases.channel.ValueType
-import org.supla.core.shared.data.SuplaChannelFunction
+import org.supla.core.shared.data.model.general.SuplaFunction
 
-class NoValueStringProvider(private val function: SuplaChannelFunction) : ChannelValueStringProvider {
+class NoValueStringProvider(private val function: SuplaFunction) : ChannelValueStringProvider {
   override fun handle(channelData: ChannelDataEntity): Boolean = channelData.function == function
 
   override fun value(channelData: ChannelDataEntity, valueType: ValueType, withUnit: Boolean): String? = null

@@ -24,6 +24,7 @@ import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
 import org.supla.android.data.source.remote.hvac.SuplaWeeklyScheduleProgram
 import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
+import org.supla.android.data.source.remote.hvac.icon
 import org.supla.android.features.details.thermostatdetail.schedule.data.ScheduleDetailEntryBoxKey
 import org.supla.android.features.details.thermostatdetail.schedule.data.ScheduleDetailEntryBoxValue
 import org.supla.android.features.details.thermostatdetail.schedule.data.ScheduleDetailProgramBox

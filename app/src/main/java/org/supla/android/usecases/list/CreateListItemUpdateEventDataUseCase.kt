@@ -18,15 +18,13 @@ package org.supla.android.usecases.list
  */
 
 import io.reactivex.rxjava3.core.Observable
+import org.supla.android.core.shared.shareable
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.UpdateEventsManager
-import org.supla.android.ui.lists.ListItemIssues
 import org.supla.android.ui.lists.data.SlideableListItemData
 import org.supla.android.ui.lists.onlineState
-import org.supla.android.usecases.channel.GetChannelCaptionUseCase
-import org.supla.android.usecases.channel.GetChannelIssuesForListUseCase
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenTreeUseCase
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
@@ -38,7 +36,10 @@ import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToProject
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToShadingSystemUpdateEventMapper
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToSwitchUpdateEventMapper
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToThermostatUpdateEventMapper
-import org.supla.core.shared.data.source.local.entity.ChannelRelationType
+import org.supla.core.shared.data.model.channel.ChannelRelationType
+import org.supla.core.shared.data.model.lists.ListItemIssues
+import org.supla.core.shared.usecase.GetCaptionUseCase
+import org.supla.core.shared.usecase.channel.GetChannelIssuesForListUseCase
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -47,7 +48,7 @@ class CreateListItemUpdateEventDataUseCase @Inject constructor(
   private val eventsManager: UpdateEventsManager,
   private val readChannelGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase,
   private val readChannelWithChildrenTreeUseCase: ReadChannelWithChildrenTreeUseCase,
-  private val getChannelCaptionUseCase: GetChannelCaptionUseCase,
+  private val getCaptionUseCase: GetCaptionUseCase,
   private val getChannelIconUseCase: GetChannelIconUseCase,
   private val getChannelValueStringUseCase: GetChannelValueStringUseCase,
   private val getChannelIssuesForListUseCase: GetChannelIssuesForListUseCase,
@@ -87,9 +88,9 @@ class CreateListItemUpdateEventDataUseCase @Inject constructor(
     (item as? ChannelWithChildren)?.let {
       return SlideableListItemData.Default(
         onlineState = it.channel.isOnline().onlineState,
-        title = getChannelCaptionUseCase(it.channel),
+        title = getCaptionUseCase(it.channel.shareable),
         icon = getChannelIconUseCase(it.channel),
-        issues = getChannelIssuesForListUseCase(item),
+        issues = getChannelIssuesForListUseCase(item.shareable),
         infoSupported = false,
         value = getChannelValueStringUseCase(it.channel)
       )
@@ -97,7 +98,7 @@ class CreateListItemUpdateEventDataUseCase @Inject constructor(
     (item as? ChannelGroupDataEntity)?.let {
       return SlideableListItemData.Default(
         onlineState = it.isOnline().onlineState,
-        title = getChannelCaptionUseCase(it),
+        title = getCaptionUseCase(it.shareable),
         icon = getChannelIconUseCase(it),
         issues = ListItemIssues.empty,
         infoSupported = false,

@@ -41,17 +41,13 @@ import org.supla.android.data.source.remote.hvac.SuplaChannelHvacConfig
 import org.supla.android.data.source.remote.hvac.SuplaChannelWeeklyScheduleConfig
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
-import org.supla.android.data.source.remote.thermostat.SuplaThermostatFlag
-import org.supla.android.data.source.remote.thermostat.ThermostatValue
 import org.supla.android.events.ChannelConfigEventsManager
 import org.supla.android.events.DeviceConfigEventsManager
 import org.supla.android.events.LoadingTimeoutManager
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.extensions.TAG
-import org.supla.android.extensions.fromSuplaTemperature
 import org.supla.android.extensions.guardLet
 import org.supla.android.extensions.ifLet
-import org.supla.android.extensions.ifTrue
 import org.supla.android.extensions.mapMerged
 import org.supla.android.features.details.thermostatdetail.general.data.SensorIssue
 import org.supla.android.features.details.thermostatdetail.general.data.ThermostatProgramInfo
@@ -60,13 +56,19 @@ import org.supla.android.features.details.thermostatdetail.general.ui.Thermostat
 import org.supla.android.features.details.thermostatdetail.ui.TimerHeaderState
 import org.supla.android.images.ImageId
 import org.supla.android.tools.SuplaSchedulers
-import org.supla.android.ui.lists.data.ChannelIssueItem
+import org.supla.android.ui.lists.data.error
+import org.supla.android.ui.lists.data.warning
 import org.supla.android.usecases.channel.GetChannelValueUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenTreeUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.thermostat.CreateTemperaturesListUseCase
-import org.supla.core.shared.data.SuplaChannelFunction
-import org.supla.core.shared.data.source.local.entity.ChannelRelationType
+import org.supla.core.shared.data.model.channel.ChannelRelationType
+import org.supla.core.shared.data.model.general.SuplaFunction
+import org.supla.core.shared.data.model.lists.ChannelIssueItem
+import org.supla.core.shared.data.model.thermostat.SuplaThermostatFlag
+import org.supla.core.shared.data.model.thermostat.ThermostatValue
+import org.supla.core.shared.extensions.fromSuplaTemperature
+import org.supla.core.shared.extensions.ifTrue
 import java.util.Date
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -382,7 +384,7 @@ class ThermostatGeneralViewModel @Inject constructor(
         isOffline = !value.online,
         isOff = isOff,
         currentPower = currentPower,
-        isAutoFunction = channelData.function == SuplaChannelFunction.HVAC_THERMOSTAT_HEAT_COOL,
+        isAutoFunction = channelData.function == SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL,
         heatingModeActive = isHeatingModeActive(channelData, thermostatValue),
         coolingModeActive = isCoolingModeActive(channelData, thermostatValue),
 
@@ -478,11 +480,11 @@ class ThermostatGeneralViewModel @Inject constructor(
       .build()
 
   private fun isHeatingModeActive(channel: ChannelDataEntity, value: ThermostatValue) =
-    channel.function == SuplaChannelFunction.HVAC_THERMOSTAT_HEAT_COOL &&
+    channel.function == SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL &&
       (value.mode == SuplaHvacMode.HEAT_COOL || value.mode == SuplaHvacMode.HEAT)
 
   private fun isCoolingModeActive(channel: ChannelDataEntity, value: ThermostatValue) =
-    channel.function == SuplaChannelFunction.HVAC_THERMOSTAT_HEAT_COOL &&
+    channel.function == SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL &&
       (value.mode == SuplaHvacMode.HEAT_COOL || value.mode == SuplaHvacMode.COOL)
 
   private fun calculateTemperatureControlText(
@@ -534,14 +536,14 @@ class ThermostatGeneralViewModel @Inject constructor(
 
   private fun getSetpointHeatTemperature(channel: ChannelDataEntity, thermostatValue: ThermostatValue): Float? {
     val setpointSet = thermostatValue.flags.contains(SuplaThermostatFlag.SETPOINT_TEMP_MIN_SET)
-    if (channel.function == SuplaChannelFunction.HVAC_DOMESTIC_HOT_WATER && setpointSet) {
+    if (channel.function == SuplaFunction.HVAC_DOMESTIC_HOT_WATER && setpointSet) {
       return thermostatValue.setpointTemperatureHeat
     }
-    if (channel.function == SuplaChannelFunction.HVAC_THERMOSTAT_HEAT_COOL && setpointSet) {
+    if (channel.function == SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL && setpointSet) {
       return thermostatValue.setpointTemperatureHeat
     }
     val isHeatSubfunction = thermostatValue.subfunction == ThermostatSubfunction.HEAT
-    if (channel.function == SuplaChannelFunction.HVAC_THERMOSTAT && isHeatSubfunction && setpointSet) {
+    if (channel.function == SuplaFunction.HVAC_THERMOSTAT && isHeatSubfunction && setpointSet) {
       return thermostatValue.setpointTemperatureHeat
     }
 
@@ -550,11 +552,11 @@ class ThermostatGeneralViewModel @Inject constructor(
 
   private fun getSetpointCoolTemperature(channel: ChannelDataEntity, thermostatValue: ThermostatValue): Float? {
     val setpointSet = thermostatValue.flags.contains(SuplaThermostatFlag.SETPOINT_TEMP_MAX_SET)
-    if (channel.function == SuplaChannelFunction.HVAC_THERMOSTAT_HEAT_COOL && setpointSet) {
+    if (channel.function == SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL && setpointSet) {
       return thermostatValue.setpointTemperatureCool
     }
     val isCoolSubfunction = thermostatValue.subfunction == ThermostatSubfunction.COOL
-    if (channel.function == SuplaChannelFunction.HVAC_THERMOSTAT && isCoolSubfunction && setpointSet) {
+    if (channel.function == SuplaFunction.HVAC_THERMOSTAT && isCoolSubfunction && setpointSet) {
       return thermostatValue.setpointTemperatureCool
     }
 
@@ -642,13 +644,13 @@ class ThermostatGeneralViewModel @Inject constructor(
   private fun createThermostatIssues(flags: List<SuplaThermostatFlag>): List<ChannelIssueItem> =
     mutableListOf<ChannelIssueItem>().apply {
       if (flags.contains(SuplaThermostatFlag.THERMOMETER_ERROR)) {
-        add(ChannelIssueItem.Error(R.string.thermostat_thermometer_error))
+        add(ChannelIssueItem.error(R.string.thermostat_thermometer_error))
       }
       if (flags.contains(SuplaThermostatFlag.BATTERY_COVER_OPEN)) {
-        add(ChannelIssueItem.Error(R.string.thermostat_battery_cover_open))
+        add(ChannelIssueItem.error(R.string.thermostat_battery_cover_open))
       }
       if (flags.contains(SuplaThermostatFlag.CLOCK_ERROR)) {
-        add(ChannelIssueItem.Warning(R.string.thermostat_clock_error))
+        add(ChannelIssueItem.warning(R.string.thermostat_clock_error))
       }
     }
 

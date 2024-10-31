@@ -17,23 +17,24 @@ package org.supla.android.usecases.list.eventmappers
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import org.supla.android.core.shared.shareable
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.local.entity.extensions.onlineState
 import org.supla.android.data.source.local.entity.isSwitch
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.extensions.guardLet
 import org.supla.android.ui.lists.data.SlideableListItemData
-import org.supla.android.usecases.channel.GetChannelCaptionUseCase
-import org.supla.android.usecases.channel.GetChannelIssuesForListUseCase
 import org.supla.android.usecases.channel.GetSwitchValueStringUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.list.CreateListItemUpdateEventDataUseCase
+import org.supla.core.shared.usecase.GetCaptionUseCase
+import org.supla.core.shared.usecase.channel.GetChannelIssuesForListUseCase
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class ChannelWithChildrenToSwitchUpdateEventMapper @Inject constructor(
-  private val getChannelCaptionUseCase: GetChannelCaptionUseCase,
+  private val getCaptionUseCase: GetCaptionUseCase,
   private val getChannelIconUseCase: GetChannelIconUseCase,
   private val getSwitchValueStringUseCase: GetSwitchValueStringUseCase,
   private val getChannelIssuesForListUseCase: GetChannelIssuesForListUseCase
@@ -56,10 +57,10 @@ class ChannelWithChildrenToSwitchUpdateEventMapper @Inject constructor(
 
     return SlideableListItemData.Default(
       onlineState = channelData.channelValueEntity.onlineState,
-      title = getChannelCaptionUseCase(channelData),
+      title = getCaptionUseCase(channelData.shareable),
       icon = getChannelIconUseCase.invoke(channelData),
       value = value,
-      issues = getChannelIssuesForListUseCase(channelWithChildren),
+      issues = getChannelIssuesForListUseCase(channelWithChildren.shareable),
       estimatedTimerEndDate = channelData.channelExtendedValueEntity?.getSuplaValue()?.TimerStateValue?.countdownEndsAt,
       infoSupported = SuplaChannelFlag.CHANNEL_STATE.inside(channelData.flags)
     )

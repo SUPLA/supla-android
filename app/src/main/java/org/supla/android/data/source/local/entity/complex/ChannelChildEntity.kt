@@ -22,8 +22,9 @@ import androidx.room.Ignore
 import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.ChannelRelationEntity
 import org.supla.android.data.source.remote.thermostat.ThermostatIndicatorIcon
+import org.supla.android.data.source.remote.thermostat.getIndicatorIcon
 import org.supla.android.ui.lists.ListOnlineState
-import org.supla.core.shared.data.source.local.entity.ChannelRelationType
+import org.supla.core.shared.data.model.channel.ChannelRelationType
 
 data class ChannelChildEntity @JvmOverloads constructor(
   @Embedded(prefix = "relation_") val channelRelationEntity: ChannelRelationEntity,

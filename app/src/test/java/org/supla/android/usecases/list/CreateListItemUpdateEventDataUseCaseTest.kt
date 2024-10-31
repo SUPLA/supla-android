@@ -29,20 +29,19 @@ import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
 import org.junit.Before
 import org.junit.Test
-import org.supla.android.core.ui.LocalizedString
+import org.supla.android.core.shared.shareable
 import org.supla.android.data.source.local.entity.ChannelRelationEntity
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
+import org.supla.android.data.source.local.entity.complex.shareable
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.images.ImageId
-import org.supla.android.ui.lists.ListItemIssues
+import org.supla.android.testhelpers.extensions.mockShareable
 import org.supla.android.ui.lists.ListOnlineState
 import org.supla.android.ui.lists.data.SlideableListItemData
-import org.supla.android.usecases.channel.GetChannelCaptionUseCase
-import org.supla.android.usecases.channel.GetChannelIssuesForListUseCase
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenTreeUseCase
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
@@ -54,7 +53,12 @@ import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToProject
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToShadingSystemUpdateEventMapper
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToSwitchUpdateEventMapper
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToThermostatUpdateEventMapper
-import org.supla.core.shared.data.source.local.entity.ChannelRelationType
+import org.supla.core.shared.data.model.channel.ChannelRelationType
+import org.supla.core.shared.data.model.general.SuplaFunction
+import org.supla.core.shared.data.model.lists.ListItemIssues
+import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.usecase.GetCaptionUseCase
+import org.supla.core.shared.usecase.channel.GetChannelIssuesForListUseCase
 
 class CreateListItemUpdateEventDataUseCaseTest {
 
@@ -89,7 +93,7 @@ class CreateListItemUpdateEventDataUseCaseTest {
   private lateinit var channelWithChildrenToSwitchUpdateEventMapper: ChannelWithChildrenToSwitchUpdateEventMapper
 
   @MockK
-  private lateinit var getChannelCaptionUseCase: GetChannelCaptionUseCase
+  private lateinit var getCaptionUseCase: GetCaptionUseCase
 
   @MockK
   private lateinit var getChannelIconUseCase: GetChannelIconUseCase
@@ -238,20 +242,23 @@ class CreateListItemUpdateEventDataUseCaseTest {
     val imageId: ImageId = mockk()
     val value = "---"
 
-    val channel: ChannelDataEntity = mockk()
-    every { channel.remoteId } returns remoteId
-    every { channel.isOnline() } returns true
+    val channel: ChannelDataEntity = mockk {
+      every { function } returns SuplaFunction.POWER_SWITCH
+    }
+    channel.mockShareable(remoteId)
     val channelWithChildren: ChannelWithChildren = mockk()
     every { channelWithChildren.channel } returns channel
     every { channelWithChildren.children } returns emptyList()
+    val channelShareable = channel.shareable
+    val channelWithChildrenShareable = channelWithChildren.shareable
 
     every { channelWithChildrenToThermostatUpdateEventMapper.handle(channelWithChildren) } returns false
     every { eventsManager.observeChannelEvents(remoteId) } returns Observable.just(mockk())
     every { readChannelWithChildrenTreeUseCase(remoteId) } returns Observable.just(channelWithChildren)
-    every { getChannelCaptionUseCase(channel) } returns caption
+    every { getCaptionUseCase(channelShareable) } returns caption
     every { getChannelIconUseCase(channel) } returns imageId
     every { getChannelValueStringUseCase(channel) } returns value
-    every { getChannelIssuesForListUseCase.invoke(channelWithChildren) } returns ListItemIssues.empty
+    every { getChannelIssuesForListUseCase.invoke(channelWithChildrenShareable) } returns ListItemIssues.empty
 
     // when
     val observer = useCase(itemType, remoteId).test()
@@ -272,7 +279,7 @@ class CreateListItemUpdateEventDataUseCaseTest {
     verify {
       eventsManager.observeChannelEvents(remoteId)
       channelWithChildrenToThermostatUpdateEventMapper.handle(channelWithChildren)
-      getChannelCaptionUseCase.invoke(channel)
+      getCaptionUseCase.invoke(channelShareable)
       getChannelIconUseCase.invoke(channel)
       getChannelValueStringUseCase.invoke(channel)
     }
@@ -282,7 +289,7 @@ class CreateListItemUpdateEventDataUseCaseTest {
       readChannelGroupByRemoteIdUseCase,
       readChannelWithChildrenTreeUseCase,
       channelWithChildrenToThermostatUpdateEventMapper,
-      getChannelCaptionUseCase,
+      getCaptionUseCase,
       getChannelIconUseCase,
       getChannelValueStringUseCase
     )
@@ -298,12 +305,16 @@ class CreateListItemUpdateEventDataUseCaseTest {
 
     val channelGroup: ChannelGroupDataEntity = mockk {
       every { isOnline() } returns true
+      every { this@mockk.remoteId } returns remoteId
+      every { this@mockk.function } returns SuplaFunction.POWER_SWITCH
+      every { this@mockk.caption } returns ""
     }
+    val shareable = channelGroup.shareable
 
     every { eventsManager.observeGroupEvents(remoteId) } returns Observable.just(mockk())
     every { readChannelGroupByRemoteIdUseCase(remoteId) } returns Maybe.just(channelGroup)
     every { channelWithChildrenToThermostatUpdateEventMapper.handle(channelGroup) } returns false
-    every { getChannelCaptionUseCase(channelGroup) } returns caption
+    every { getCaptionUseCase.invoke(shareable) } returns caption
     every { getChannelIconUseCase(channelGroup) } returns imageId
 
     // when
@@ -326,7 +337,7 @@ class CreateListItemUpdateEventDataUseCaseTest {
       eventsManager.observeGroupEvents(remoteId)
       readChannelGroupByRemoteIdUseCase.invoke(remoteId)
       channelWithChildrenToThermostatUpdateEventMapper.handle(channelGroup)
-      getChannelCaptionUseCase.invoke(channelGroup)
+      getCaptionUseCase.invoke(shareable)
       getChannelIconUseCase.invoke(channelGroup)
     }
     confirmVerified(
@@ -334,7 +345,7 @@ class CreateListItemUpdateEventDataUseCaseTest {
       readChannelGroupByRemoteIdUseCase,
       readChannelWithChildrenTreeUseCase,
       channelWithChildrenToThermostatUpdateEventMapper,
-      getChannelCaptionUseCase,
+      getCaptionUseCase,
       getChannelIconUseCase
     )
   }

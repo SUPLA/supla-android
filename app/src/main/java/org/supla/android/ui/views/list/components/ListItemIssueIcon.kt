@@ -24,7 +24,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
-import org.supla.android.ui.lists.data.IssueIcon
+import org.supla.android.core.shared.data.model.lists.height
+import org.supla.android.core.shared.data.model.lists.resource
+import org.supla.android.core.shared.data.model.lists.rotation
+import org.supla.android.core.shared.data.model.lists.width
+import org.supla.core.shared.data.model.lists.IssueIcon
 
 @Composable
 fun ListItemIssueIcon(icon: IssueIcon, modifier: Modifier = Modifier) {

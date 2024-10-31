@@ -25,15 +25,15 @@ import androidx.room.PrimaryKey
 import org.supla.android.data.source.local.entity.ChannelValueEntity.Companion.COLUMN_CHANNEL_REMOTE_ID
 import org.supla.android.data.source.local.entity.ChannelValueEntity.Companion.COLUMN_PROFILE_ID
 import org.supla.android.data.source.local.entity.ChannelValueEntity.Companion.TABLE_NAME
-import org.supla.android.data.source.remote.facadeblind.FacadeBlindValue
 import org.supla.android.data.source.remote.relay.RelayValue
-import org.supla.android.data.source.remote.rollershutter.RollerShutterValue
 import org.supla.android.data.source.remote.thermostat.HeatpolThermostatValue
-import org.supla.android.data.source.remote.thermostat.ThermostatValue
 import org.supla.android.data.source.remote.valve.ValveValue
 import org.supla.android.lib.DigiglassValue
 import org.supla.android.lib.SuplaChannelValue
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELVALUE_SIZE
+import org.supla.core.shared.data.model.facadeblind.FacadeBlindValue
+import org.supla.core.shared.data.model.rollershutter.RollerShutterValue
+import org.supla.core.shared.data.model.thermostat.ThermostatValue
 
 @Entity(
   tableName = TABLE_NAME,

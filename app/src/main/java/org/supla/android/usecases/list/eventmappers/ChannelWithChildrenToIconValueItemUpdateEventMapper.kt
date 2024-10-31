@@ -17,23 +17,24 @@ package org.supla.android.usecases.list.eventmappers
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import org.supla.android.core.shared.shareable
 import org.supla.android.data.source.local.entity.complex.isIconValueItem
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.local.entity.extensions.onlineState
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.extensions.guardLet
 import org.supla.android.ui.lists.data.SlideableListItemData
-import org.supla.android.usecases.channel.GetChannelCaptionUseCase
-import org.supla.android.usecases.channel.GetChannelIssuesForListUseCase
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.list.CreateListItemUpdateEventDataUseCase
+import org.supla.core.shared.usecase.GetCaptionUseCase
+import org.supla.core.shared.usecase.channel.GetChannelIssuesForListUseCase
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class ChannelWithChildrenToIconValueItemUpdateEventMapper @Inject constructor(
-  private val getChannelCaptionUseCase: GetChannelCaptionUseCase,
+  private val getCaptionUseCase: GetCaptionUseCase,
   private val getChannelIconUseCase: GetChannelIconUseCase,
   private val getChannelValueStringUseCase: GetChannelValueStringUseCase,
   private val getChannelIssuesForListUseCase: GetChannelIssuesForListUseCase,
@@ -53,10 +54,10 @@ class ChannelWithChildrenToIconValueItemUpdateEventMapper @Inject constructor(
   private fun toListItemData(channelWithChildren: ChannelWithChildren): SlideableListItemData.Default =
     SlideableListItemData.Default(
       onlineState = channelWithChildren.channel.channelValueEntity.onlineState,
-      title = getChannelCaptionUseCase(channelWithChildren.channel),
+      title = getCaptionUseCase(channelWithChildren.channel.shareable),
       icon = getChannelIconUseCase.invoke(channelWithChildren.channel),
       value = getChannelValueStringUseCase.valueOrNull(channelWithChildren.channel),
-      issues = getChannelIssuesForListUseCase(channelWithChildren),
+      issues = getChannelIssuesForListUseCase(channelWithChildren.shareable),
       estimatedTimerEndDate = null,
       infoSupported = SuplaChannelFlag.CHANNEL_STATE.inside(channelWithChildren.channel.flags)
     )

@@ -47,7 +47,7 @@ import org.supla.android.usecases.channelconfig.RequestChannelConfigUseCase
 import org.supla.android.widget.WidgetConfiguration
 import org.supla.android.widget.WidgetManager
 import org.supla.android.widget.WidgetPreferences
-import org.supla.core.shared.data.SuplaChannelFunction
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 @Suppress("UnusedDataClassCopyResult")
 @RunWith(MockitoJUnitRunner::class)
@@ -247,11 +247,11 @@ class UpdateChannelUseCaseTest {
       every { updatedBy(suplaChannel) } returns this
       every { position } returns 0
       every {
-        copy(id = 444, remoteId = channelRemoteId, caption = "", function = SuplaChannelFunction.NONE, locationId = 333, position = 6)
+        copy(id = 444, remoteId = channelRemoteId, caption = "", function = SuplaFunction.NONE, locationId = 333, position = 6)
       } returns this
       every { id } returns 444
       every { caption } returns ""
-      every { function } returns SuplaChannelFunction.NONE
+      every { function } returns SuplaFunction.NONE
       every { visible } returns 0
       every { altIcon } returns 0
       every { userIcon } returns 0
@@ -304,11 +304,11 @@ class UpdateChannelUseCaseTest {
       every { updatedBy(suplaChannel) } returns this
       every { position } returns 5
       every {
-        copy(id = 444, remoteId = channelRemoteId, caption = "", function = SuplaChannelFunction.NONE, locationId = 333, position = 0)
+        copy(id = 444, remoteId = channelRemoteId, caption = "", function = SuplaFunction.NONE, locationId = 333, position = 0)
       } returns this
       every { id } returns 444
       every { caption } returns ""
-      every { function } returns SuplaChannelFunction.NONE
+      every { function } returns SuplaFunction.NONE
       every { visible } returns 0
       every { altIcon } returns 0
       every { userIcon } returns 0

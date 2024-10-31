@@ -24,7 +24,7 @@ import org.supla.android.usecases.channel.ValueType
 import org.supla.android.usecases.channel.valueformatter.HumidityValueFormatter
 import org.supla.android.usecases.channel.valueformatter.ThermometerValueFormatter
 import org.supla.android.usecases.channel.valueprovider.HumidityAndTemperatureValueProvider
-import org.supla.core.shared.data.SuplaChannelFunction
+import org.supla.core.shared.data.model.general.SuplaFunction
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -37,7 +37,7 @@ class HumidityAndTemperatureValueStringProvider @Inject constructor(
   private val temperatureFormatter = ThermometerValueFormatter(preferences)
   private val humidityFormatter = HumidityValueFormatter()
   override fun handle(channelData: ChannelDataEntity): Boolean =
-    channelData.function == SuplaChannelFunction.HUMIDITY_AND_TEMPERATURE
+    channelData.function == SuplaFunction.HUMIDITY_AND_TEMPERATURE
 
   override fun value(channelData: ChannelDataEntity, valueType: ValueType, withUnit: Boolean): String {
     val value = humidityAndTemperatureValueProvider.value(channelData, valueType)

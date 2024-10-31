@@ -55,6 +55,8 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import org.supla.android.R
+import org.supla.android.core.shared.data.model.lists.resource
+import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.BaseViewProxy
 import org.supla.android.core.ui.StringProvider
 import org.supla.android.core.ui.theme.Distance
@@ -68,7 +70,7 @@ import org.supla.android.features.details.thermostatdetail.general.data.Thermost
 import org.supla.android.features.details.thermostatdetail.ui.ThermometersValues
 import org.supla.android.features.details.thermostatdetail.ui.TimerHeader
 import org.supla.android.images.ImageId
-import org.supla.android.ui.lists.data.ChannelIssueItem
+import org.supla.android.ui.lists.data.warning
 import org.supla.android.ui.views.Image
 import org.supla.android.ui.views.LoadingScrim
 import org.supla.android.ui.views.buttons.supla.SuplaButton
@@ -77,6 +79,7 @@ import org.supla.android.ui.views.thermostat.TemperatureControlButton
 import org.supla.android.ui.views.tools.Shadow
 import org.supla.android.ui.views.tools.ShadowOrientation
 import org.supla.android.ui.views.tools.ThermostatControl
+import org.supla.core.shared.data.model.lists.ChannelIssueItem
 
 interface ThermostatGeneralViewProxy : BaseViewProxy<ThermostatGeneralViewState> {
   fun heatingModeChanged()
@@ -559,7 +562,7 @@ private fun PreviewTemporaryOverride() {
           coolingModeActive = true,
           isAutoFunction = true,
           issues = listOf(
-            ChannelIssueItem.Warning(R.string.thermostat_detail_mode_manual)
+            ChannelIssueItem.warning(R.string.thermostat_detail_mode_manual)
           )
         )
       )
@@ -576,7 +579,7 @@ private fun PreviewSmall() {
         PreviewProxy(
           ThermostatGeneralViewState(
             issues = listOf(
-              ChannelIssueItem.Warning(R.string.thermostat_detail_mode_manual)
+              ChannelIssueItem.warning(R.string.thermostat_detail_mode_manual)
             )
           )
         )

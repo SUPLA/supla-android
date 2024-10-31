@@ -21,14 +21,14 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import org.supla.android.data.model.general.ChannelBase
 import org.supla.android.data.source.local.entity.ChannelGroupEntity.Companion.COLUMN_LOCATION_ID
 import org.supla.android.data.source.local.entity.ChannelGroupEntity.Companion.COLUMN_PROFILE_ID
 import org.supla.android.data.source.local.entity.ChannelGroupEntity.Companion.COLUMN_REMOTE_ID
 import org.supla.android.data.source.local.entity.ChannelGroupEntity.Companion.TABLE_NAME
 import org.supla.android.usecases.group.totalvalue.GroupTotalValue
 import org.supla.android.usecases.group.totalvalue.GroupValue
-import org.supla.core.shared.data.SuplaChannelFunction
-import org.supla.core.shared.data.model.general.ChannelBase
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 @Entity(
   tableName = TABLE_NAME,
@@ -52,7 +52,7 @@ data class ChannelGroupEntity(
   @ColumnInfo(name = COLUMN_REMOTE_ID) override val remoteId: Int,
   @ColumnInfo(name = COLUMN_CAPTION) override val caption: String,
   @ColumnInfo(name = COLUMN_ONLINE) val online: Int,
-  @ColumnInfo(name = COLUMN_FUNCTION) override val function: SuplaChannelFunction,
+  @ColumnInfo(name = COLUMN_FUNCTION) override val function: SuplaFunction,
   @ColumnInfo(name = COLUMN_VISIBLE) override val visible: Int,
   @ColumnInfo(name = COLUMN_LOCATION_ID) override val locationId: Int,
   @ColumnInfo(name = COLUMN_ALT_ICON) override val altIcon: Int,

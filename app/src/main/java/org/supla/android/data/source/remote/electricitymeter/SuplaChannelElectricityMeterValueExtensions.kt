@@ -18,10 +18,10 @@ package org.supla.android.data.source.remote.electricitymeter
  */
 
 import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType
-import org.supla.android.extensions.ifTrue
 import org.supla.android.features.details.detailbase.electricitymeter.EnergyData
 import org.supla.android.lib.SuplaChannelElectricityMeterValue
 import org.supla.android.usecases.channel.valueformatter.ListElectricityMeterValueFormatter
+import org.supla.core.shared.extensions.ifTrue
 
 val SuplaChannelElectricityMeterValue.hasForwardEnergy: Boolean
   get() = measuredValues and SuplaElectricityMeasurementType.FORWARD_ACTIVE_ENERGY.rawValue > 0

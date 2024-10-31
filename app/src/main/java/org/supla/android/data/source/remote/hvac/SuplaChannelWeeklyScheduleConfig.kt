@@ -1,6 +1,5 @@
 package org.supla.android.data.source.remote.hvac
 
-import org.supla.android.R
 import org.supla.android.data.source.local.calendar.DayOfWeek
 import org.supla.android.data.source.local.calendar.QuarterOfHour
 import org.supla.android.data.source.remote.SuplaChannelConfig
@@ -22,52 +21,6 @@ import org.supla.android.data.source.remote.SuplaChannelConfig
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-
-enum class SuplaHvacMode(val value: Int) {
-  UNKNOWN(-1),
-  NOT_SET(0),
-  OFF(1),
-  HEAT(2),
-  COOL(3),
-  HEAT_COOL(4),
-  FAN_ONLY(6),
-  DRY(7),
-  CMD_TURN_ON(8),
-  CMD_WEEKLY_SCHEDULE(9),
-  CMD_SWITCH_TO_MANUAL(10);
-
-  val icon: Int?
-    get() {
-      return when (this) {
-        OFF -> R.drawable.ic_power_button
-        HEAT -> R.drawable.ic_heat
-        COOL -> R.drawable.ic_cool
-        else -> null
-      }
-    }
-
-  val iconColor: Int?
-    get() {
-      return when (this) {
-        OFF -> R.color.on_surface_variant
-        HEAT -> R.color.red
-        COOL -> R.color.blue
-        else -> null
-      }
-    }
-
-  companion object {
-    fun from(byte: Byte): SuplaHvacMode {
-      for (state in SuplaHvacMode.values()) {
-        if (state.value == byte.toInt()) {
-          return state
-        }
-      }
-
-      return UNKNOWN
-    }
-  }
-}
 
 enum class SuplaScheduleProgram(val value: Int) {
   OFF(0),

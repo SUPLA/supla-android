@@ -20,6 +20,8 @@ package org.supla.android.usecases.channel.measurementsprovider
 import com.google.gson.Gson
 import io.reactivex.rxjava3.core.Single
 import org.supla.android.Preferences
+import org.supla.android.core.shared.provider
+import org.supla.android.core.shared.shareable
 import org.supla.android.data.model.chart.ChannelChartSets
 import org.supla.android.data.model.chart.ChartDataSpec
 import org.supla.android.data.model.chart.ChartEntryType
@@ -28,9 +30,9 @@ import org.supla.android.data.source.TemperatureLogRepository
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.di.GSON_FOR_REPO
 import org.supla.android.lib.SuplaConst
-import org.supla.android.usecases.channel.GetChannelCaptionUseCase
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
+import org.supla.core.shared.usecase.GetCaptionUseCase
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -38,7 +40,7 @@ import javax.inject.Singleton
 @Singleton
 class TemperatureMeasurementsProvider @Inject constructor(
   private val temperatureLogRepository: TemperatureLogRepository,
-  private val getChannelCaptionUseCase: GetChannelCaptionUseCase,
+  private val getCaptionUseCase: GetCaptionUseCase,
   getChannelValueStringUseCase: GetChannelValueStringUseCase,
   getChannelIconUseCase: GetChannelIconUseCase,
   preferences: Preferences,
@@ -61,7 +63,7 @@ class TemperatureMeasurementsProvider @Inject constructor(
         ChannelChartSets(
           channel.remoteId,
           channel.function,
-          getChannelCaptionUseCase(channel.channelEntity).provider(),
+          getCaptionUseCase(channel.shareable).provider(),
           spec.aggregation,
           it
         )

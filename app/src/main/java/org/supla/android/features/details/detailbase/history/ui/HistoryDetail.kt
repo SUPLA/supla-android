@@ -103,7 +103,7 @@ import org.supla.android.ui.views.charts.PieChart
 import org.supla.android.ui.views.tools.Shadow
 import org.supla.android.ui.views.tools.ShadowOrientation
 import org.supla.android.usecases.channel.valueformatter.HumidityValueFormatter
-import org.supla.core.shared.data.SuplaChannelFunction
+import org.supla.core.shared.data.model.general.SuplaFunction
 import java.util.Date
 
 interface HistoryDetailProxy : BaseViewProxy<HistoryDetailViewState> {
@@ -530,7 +530,7 @@ private class PreviewProxy : HistoryDetailProxy {
           sets = listOf(
             ChannelChartSets(
               1,
-              SuplaChannelFunction.UNKNOWN,
+              SuplaFunction.UNKNOWN,
               { "" },
               ChartDataAggregation.MINUTES,
               listOf(set, set.copy(active = false)),

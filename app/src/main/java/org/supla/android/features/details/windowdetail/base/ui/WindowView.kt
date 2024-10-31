@@ -38,7 +38,8 @@ import org.supla.android.features.details.windowdetail.base.ui.windowview.Shadin
 import org.supla.android.features.details.windowdetail.base.ui.windowview.WindowViewNormalContent
 import org.supla.android.features.details.windowdetail.base.ui.windowview.WindowViewSmallContent
 import org.supla.android.features.details.windowdetail.base.ui.windowview.WindowViewTopMenu
-import org.supla.android.ui.lists.data.ChannelIssueItem
+import org.supla.android.ui.lists.data.warning
+import org.supla.core.shared.data.model.lists.ChannelIssueItem
 
 data class WindowViewState(
   val issues: List<ChannelIssueItem> = emptyList(),
@@ -128,7 +129,7 @@ private fun Preview() {
         windowState = RollerShutterWindowState(WindowGroupedValue.Similar(75f), 90f),
         viewState = WindowViewState(
           enabled = true,
-          issues = listOf(ChannelIssueItem.Warning(R.string.motor_problem)),
+          issues = listOf(ChannelIssueItem.warning(R.string.motor_problem)),
           positionPresentation = ShadingSystemPositionPresentation.AS_CLOSED,
           calibrating = false,
           positionUnknown = false,
@@ -153,7 +154,7 @@ private fun Preview_Horizontal() {
         windowState = RollerShutterWindowState(WindowGroupedValue.Similar(75f), 90f),
         viewState = WindowViewState(
           enabled = true,
-          issues = listOf(ChannelIssueItem.Warning(R.string.motor_problem)),
+          issues = listOf(ChannelIssueItem.warning(R.string.motor_problem)),
           positionPresentation = ShadingSystemPositionPresentation.AS_OPENED,
           calibrating = false,
           positionUnknown = false,
@@ -179,7 +180,7 @@ private fun Preview_High() {
         windowState = RollerShutterWindowState(WindowGroupedValue.Similar(75f), 90f),
         viewState = WindowViewState(
           enabled = true,
-          issues = listOf(ChannelIssueItem.Warning(R.string.motor_problem)),
+          issues = listOf(ChannelIssueItem.warning(R.string.motor_problem)),
           positionPresentation = ShadingSystemPositionPresentation.AS_CLOSED,
           calibrating = false,
           positionUnknown = false,
@@ -204,7 +205,7 @@ private fun Preview_Small() {
         windowState = RollerShutterWindowState(WindowGroupedValue.Similar(75f), 90f),
         viewState = WindowViewState(
           enabled = true,
-          issues = listOf(ChannelIssueItem.Warning(R.string.motor_problem)),
+          issues = listOf(ChannelIssueItem.warning(R.string.motor_problem)),
           positionPresentation = ShadingSystemPositionPresentation.AS_CLOSED,
           calibrating = true,
           positionUnknown = true,
@@ -229,7 +230,7 @@ private fun Preview_Small_Horizontal() {
         windowState = RollerShutterWindowState(WindowGroupedValue.Similar(75f), 90f),
         viewState = WindowViewState(
           enabled = true,
-          issues = listOf(ChannelIssueItem.Warning(R.string.motor_problem)),
+          issues = listOf(ChannelIssueItem.warning(R.string.motor_problem)),
           positionPresentation = ShadingSystemPositionPresentation.AS_CLOSED,
           calibrating = true,
           positionUnknown = true,

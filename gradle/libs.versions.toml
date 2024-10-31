@@ -12,6 +12,7 @@ hilt = "2.51.1"
 googleServices = "4.4.2"
 spotless = "6.23.3"
 ksp = "2.0.21-1.0.26"
+skie = "0.9.3"
 
 hiltWorker = "1.2.0"
 multidex = "2.0.1"
@@ -63,6 +64,8 @@ testing-androidx-runner = "1.6.2"
 testing-androidx-rules = "1.6.1"
 testing-androidx-junit-extension = "1.2.1"
 testing-androidx-arch-core = "2.2.0"
+
+kotlin-endians = "0.3.1"
 
 googleJavaFormat = "1.19.2"
 
@@ -123,6 +126,8 @@ kotlinx-serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-seria
 android-tools-desugar = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "android-tools-desugar" }
 jsoup = { group = "org.jsoup", name = "jsoup", version.ref = "jsoup" }
 
+kotlin-endians = { group = "org.kotlincrypto.endians", name = "endians", version.ref = "kotlin-endians" }
+
 testing-junit = { group = "junit", name = "junit", version.ref = "testing-junit" }
 testing-hamcrest = { group = "org.hamcrest", name = "hamcrest-all", version.ref = "testing-hamcrest" }
 testing-coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
@@ -150,3 +155,4 @@ hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+skie = { id = "co.touchlab.skie", version.ref = "skie" }

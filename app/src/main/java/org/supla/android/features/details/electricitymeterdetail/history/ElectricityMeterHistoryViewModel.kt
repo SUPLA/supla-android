@@ -45,7 +45,6 @@ import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.data.source.remote.channel.suplaFlags
 import org.supla.android.events.DownloadEventsManager
 import org.supla.android.extensions.guardLet
-import org.supla.android.extensions.ifTrue
 import org.supla.android.features.details.detailbase.history.BaseHistoryDetailViewModel
 import org.supla.android.features.details.detailbase.history.HistoryDetailViewState
 import org.supla.android.features.details.detailbase.history.ui.ChartDataSelectionDialogState
@@ -61,6 +60,7 @@ import org.supla.android.usecases.channel.LoadChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.channel.measurementsprovider.electricity.ElectricityChartFilters
 import org.supla.android.usecases.channel.measurementsprovider.electricity.PhaseItem
+import org.supla.core.shared.extensions.ifTrue
 import javax.inject.Inject
 
 private val DEFAULT_PHASES = PhaseItem.entries.toSet()

@@ -22,6 +22,8 @@ import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.Preferences
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
+import org.supla.android.core.shared.provider
+import org.supla.android.core.shared.shareable
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
@@ -31,23 +33,26 @@ import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.local.entity.extensions.onlineState
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
-import org.supla.android.extensions.ifTrue
+import org.supla.android.data.source.remote.thermostat.getChannelIssues
+import org.supla.android.data.source.remote.thermostat.getIndicatorIcon
+import org.supla.android.data.source.remote.thermostat.getSetpointText
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.dialogs.state.StateDialogHandler
 import org.supla.android.ui.dialogs.state.StateDialogViewModelState
 import org.supla.android.ui.dialogs.state.StateDialogViewState
-import org.supla.android.usecases.channel.GetChannelCaptionUseCase
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenTreeUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
-import org.supla.core.shared.data.source.local.entity.ChannelRelationType
+import org.supla.core.shared.data.model.channel.ChannelRelationType
+import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.usecase.GetCaptionUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class ThermostatSlavesListViewModel @Inject constructor(
   private val readChannelWithChildrenTreeUseCase: ReadChannelWithChildrenTreeUseCase,
   private val getChannelValueStringUseCase: GetChannelValueStringUseCase,
-  private val getChannelCaptionUseCase: GetChannelCaptionUseCase,
+  private val getCaptionUseCase: GetCaptionUseCase,
   private val getChannelIconUseCase: GetChannelIconUseCase,
   override val suplaClientProvider: SuplaClientProvider,
   private val valuesFormatter: ValuesFormatter,
@@ -112,7 +117,7 @@ class ThermostatSlavesListViewModel @Inject constructor(
     return ThermostatData(
       channelId = channel.remoteId,
       onlineState = channel.channelValueEntity.onlineState,
-      caption = getChannelCaptionUseCase(channel).provider(),
+      caption = getCaptionUseCase(channel.shareable).provider(),
       imageId = getChannelIconUseCase(channel),
       currentPower = thermostatValue.state.power,
       value = mainThermometer?.let { getChannelValueStringUseCase(it.channelDataEntity) } ?: NO_VALUE_TEXT,
@@ -131,7 +136,7 @@ class ThermostatSlavesListViewModel @Inject constructor(
     return ThermostatData(
       channelId = channel.remoteId,
       onlineState = channelDataEntity.channelValueEntity.onlineState,
-      caption = getChannelCaptionUseCase(channel).provider(),
+      caption = getCaptionUseCase(channelDataEntity.shareable).provider(),
       imageId = getChannelIconUseCase(channelDataEntity),
       currentPower = thermostatValue.state.power,
       value = mainThermometer?.let { getChannelValueStringUseCase(it.channelDataEntity) } ?: NO_VALUE_TEXT,

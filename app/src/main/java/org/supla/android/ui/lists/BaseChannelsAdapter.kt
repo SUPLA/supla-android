@@ -31,6 +31,7 @@ import org.supla.android.databinding.LiMainIconValueWithButtonsItemBinding
 import org.supla.android.databinding.LiMainThermostatItemBinding
 import org.supla.android.ui.layouts.ChannelLayout
 import org.supla.android.ui.lists.data.SlideableListItemData
+import org.supla.core.shared.data.model.lists.ListItemIssues
 
 abstract class BaseChannelsAdapter(
   private val context: Context,

@@ -18,7 +18,6 @@ package org.supla.android.ui.lists
  */
 
 import androidx.annotation.DrawableRes
-import org.supla.android.core.ui.LocalizedString
 import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.source.local.entity.LocationEntity
@@ -28,6 +27,8 @@ import org.supla.android.data.source.local.entity.complex.SceneDataEntity
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.images.ImageId
 import org.supla.android.ui.lists.data.SlideableListItemData
+import org.supla.core.shared.data.model.lists.ListItemIssues
+import org.supla.core.shared.infrastructure.LocalizedString
 import java.util.Date
 
 sealed interface ListItem {

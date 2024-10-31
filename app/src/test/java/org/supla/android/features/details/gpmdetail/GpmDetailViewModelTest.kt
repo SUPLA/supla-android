@@ -34,21 +34,24 @@ import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.Preferences
 import org.supla.android.core.BaseViewModelTest
-import org.supla.android.core.ui.LocalizedString
+import org.supla.android.core.shared.shareable
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.complex.shareable
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.UpdateEventsManager
+import org.supla.android.testhelpers.extensions.mockShareable
 import org.supla.android.tools.SuplaSchedulers
-import org.supla.android.usecases.channel.GetChannelCaptionUseCase
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
-import org.supla.core.shared.data.SuplaChannelFunction
+import org.supla.core.shared.data.model.general.SuplaFunction
+import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.usecase.GetCaptionUseCase
 
 @RunWith(MockitoJUnitRunner::class)
 class GpmDetailViewModelTest : BaseViewModelTest<GpmDetailViewState, GpmDetailViewEvent, GpmDetailViewModel>() {
 
   @Mock
-  private lateinit var getChannelCaptionUseCase: GetChannelCaptionUseCase
+  private lateinit var getCaptionUseCase: GetCaptionUseCase
 
   @Mock
   private lateinit var readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase
@@ -77,13 +80,14 @@ class GpmDetailViewModelTest : BaseViewModelTest<GpmDetailViewState, GpmDetailVi
   fun `should load channel`() {
     // given
     val remoteId = 123
-    val function = SuplaChannelFunction.GENERAL_PURPOSE_METER
+    val function = SuplaFunction.GENERAL_PURPOSE_METER
     val channelData: ChannelDataEntity = mockk()
     every { channelData.visible } returns 1
     every { channelData.function } returns function
+    channelData.mockShareable()
     val caption: LocalizedString = mockk()
 
-    whenever(getChannelCaptionUseCase.invoke(channelData)).thenReturn(caption)
+    whenever(getCaptionUseCase.invoke(channelData.shareable)).thenReturn(caption)
     whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channelData))
 
     // when
@@ -102,7 +106,7 @@ class GpmDetailViewModelTest : BaseViewModelTest<GpmDetailViewState, GpmDetailVi
   fun `should close activity when loaded channel is not visible`() {
     // given
     val remoteId = 123
-    val function = SuplaChannelFunction.GENERAL_PURPOSE_METER
+    val function = SuplaFunction.GENERAL_PURPOSE_METER
     val channelData: ChannelDataEntity = mockk()
     every { channelData.visible } returns 0
     every { channelData.function } returns function
@@ -124,14 +128,14 @@ class GpmDetailViewModelTest : BaseViewModelTest<GpmDetailViewState, GpmDetailVi
   fun `should close activity when loaded channel has different function`() {
     // given
     val remoteId = 123
-    val function = SuplaChannelFunction.GENERAL_PURPOSE_METER
+    val function = SuplaFunction.GENERAL_PURPOSE_METER
     val channelData: ChannelDataEntity = mockk()
     every { channelData.visible } returns 1
     every { channelData.function } returns function
     whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channelData))
 
     // when
-    viewModel.loadData(remoteId, ItemType.CHANNEL, SuplaChannelFunction.LIGHTSWITCH)
+    viewModel.loadData(remoteId, ItemType.CHANNEL, SuplaFunction.LIGHTSWITCH)
 
     // then
     Assertions.assertThat(events).containsExactly(GpmDetailViewEvent.Close)
@@ -146,15 +150,16 @@ class GpmDetailViewModelTest : BaseViewModelTest<GpmDetailViewState, GpmDetailVi
   fun `should reload channel when channels updated`() {
     // given
     val remoteId = 123
-    val function = SuplaChannelFunction.DIMMER
+    val function = SuplaFunction.DIMMER
     val channelData: ChannelDataEntity = mockk()
     every { channelData.visible } returns 1
     every { channelData.function } returns function
+    channelData.mockShareable()
     whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channelData))
     whenever(updateEventsManager.observeChannelsUpdate()).thenReturn(Observable.just(Any()))
 
     val caption: LocalizedString = mockk()
-    whenever(getChannelCaptionUseCase.invoke(channelData)).thenReturn(caption)
+    whenever(getCaptionUseCase.invoke(channelData.shareable)).thenReturn(caption)
 
     // when
     viewModel.observeUpdates(remoteId, ItemType.CHANNEL, function)
