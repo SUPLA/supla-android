@@ -35,7 +35,6 @@ import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.DownloadEventsManager
-import org.supla.android.extensions.ifTrue
 import org.supla.android.extensions.monthStart
 import org.supla.android.features.details.detailbase.electricitymeter.ElectricityMeterGeneralStateHandler
 import org.supla.android.features.details.detailbase.electricitymeter.ElectricityMeterState
@@ -50,7 +49,8 @@ import org.supla.android.usecases.channel.electricitymeter.LoadElectricityMeterM
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
-import org.supla.core.shared.data.SuplaChannelFunction
+import org.supla.core.shared.data.model.general.SuplaFunction
+import org.supla.core.shared.extensions.ifTrue
 import java.util.Date
 import javax.inject.Inject
 
@@ -223,11 +223,11 @@ data class SwitchGeneralViewState(
   val electricityMeterState: ElectricityMeterState? = null
 ) : ViewState()
 
-private val SuplaChannelFunction.switchWithButtons: Boolean
+private val SuplaFunction.switchWithButtons: Boolean
   get() = when (this) {
-    SuplaChannelFunction.POWER_SWITCH,
-    SuplaChannelFunction.STAIRCASE_TIMER,
-    SuplaChannelFunction.LIGHTSWITCH -> true
+    SuplaFunction.POWER_SWITCH,
+    SuplaFunction.STAIRCASE_TIMER,
+    SuplaFunction.LIGHTSWITCH -> true
 
     else -> false
   }

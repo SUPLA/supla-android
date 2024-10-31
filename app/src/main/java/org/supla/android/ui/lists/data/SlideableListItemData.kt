@@ -18,10 +18,10 @@ package org.supla.android.ui.lists.data
  */
 
 import androidx.annotation.DrawableRes
-import org.supla.android.core.ui.LocalizedString
 import org.supla.android.images.ImageId
-import org.supla.android.ui.lists.ListItemIssues
 import org.supla.android.ui.lists.ListOnlineState
+import org.supla.core.shared.data.model.lists.ListItemIssues
+import org.supla.core.shared.infrastructure.LocalizedString
 import java.util.Date
 
 sealed class SlideableListItemData {

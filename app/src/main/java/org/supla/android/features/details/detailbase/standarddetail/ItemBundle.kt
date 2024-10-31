@@ -21,15 +21,15 @@ import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.db.Channel
-import org.supla.core.shared.data.SuplaChannelFunction
-import org.supla.core.shared.data.suplaFunction
+import org.supla.core.shared.data.model.general.SuplaFunction
+import org.supla.core.shared.data.model.general.suplaFunction
 import java.io.Serializable
 
 data class ItemBundle(
   val remoteId: Int,
   val deviceId: Int,
   val itemType: ItemType,
-  val function: SuplaChannelFunction
+  val function: SuplaFunction
 ) : Serializable {
   companion object {
     fun from(channel: Channel): ItemBundle =

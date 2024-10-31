@@ -21,7 +21,7 @@ import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.usecases.channel.ChannelValueProvider
 import org.supla.android.usecases.channel.ValueType
 import org.supla.android.usecases.channel.valueprovider.parser.IntValueParser
-import org.supla.core.shared.data.SuplaChannelFunction
+import org.supla.core.shared.data.model.general.SuplaFunction
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -29,7 +29,7 @@ import javax.inject.Singleton
 class HumidityAndTemperatureValueProvider @Inject constructor() : ChannelValueProvider, IntValueParser {
 
   override fun handle(channelData: ChannelDataEntity): Boolean =
-    channelData.function == SuplaChannelFunction.HUMIDITY_AND_TEMPERATURE
+    channelData.function == SuplaFunction.HUMIDITY_AND_TEMPERATURE
 
   override fun value(channelData: ChannelDataEntity, valueType: ValueType): Double {
     return when (valueType) {

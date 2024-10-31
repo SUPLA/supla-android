@@ -39,8 +39,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
+import org.supla.android.core.shared.data.model.lists.resource
+import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.theme.SuplaTheme
-import org.supla.android.ui.lists.data.ChannelIssueItem
+import org.supla.android.ui.lists.data.warning
+import org.supla.core.shared.data.model.lists.ChannelIssueItem
 
 @Composable
 @SuppressLint("DefaultLocale")
@@ -100,8 +103,8 @@ private fun Preview() {
       PressTimeInfo(12.3f)
       IssuesView(
         issues = listOf(
-          ChannelIssueItem.Warning(R.string.roller_shutter_calibration_needed),
-          ChannelIssueItem.Warning(R.string.motor_problem)
+          ChannelIssueItem.warning(R.string.roller_shutter_calibration_needed),
+          ChannelIssueItem.warning(R.string.motor_problem)
         )
       )
     }

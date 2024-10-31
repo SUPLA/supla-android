@@ -25,10 +25,10 @@ import android.util.Base64;
 import androidx.annotation.NonNull;
 import java.nio.ByteBuffer;
 import org.supla.android.data.source.local.entity.ChannelValueEntity;
-import org.supla.android.data.source.remote.thermostat.ThermostatValue;
 import org.supla.android.lib.DigiglassValue;
 import org.supla.android.lib.RollerShutterValue;
 import org.supla.android.lib.SuplaConst;
+import org.supla.core.shared.data.model.thermostat.ThermostatValue;
 
 public class ChannelValue extends DbItem {
 

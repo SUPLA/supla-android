@@ -20,6 +20,8 @@ package org.supla.android.features.details.electricitymeterdetail.settings
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.R
+import org.supla.android.core.shared.provider
+import org.supla.android.core.shared.shareable
 import org.supla.android.core.storage.UserStateHolder
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
@@ -32,14 +34,14 @@ import org.supla.android.data.source.local.entity.complex.Electricity
 import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType
 import org.supla.android.extensions.guardLet
 import org.supla.android.tools.SuplaSchedulers
-import org.supla.android.usecases.channel.GetChannelCaptionUseCase
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
+import org.supla.core.shared.usecase.GetCaptionUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class ElectricityMeterSettingsViewModel @Inject constructor(
   private val readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
-  private val getChannelCaptionUseCase: GetChannelCaptionUseCase,
+  private val getCaptionUseCase: GetCaptionUseCase,
   private val userStateHolder: UserStateHolder,
   schedulers: SuplaSchedulers
 ) : BaseViewModel<ElectricityMeterSettingsViewModelState, ElectricityMeterSettingsViewEvent>(
@@ -87,7 +89,7 @@ class ElectricityMeterSettingsViewModel @Inject constructor(
         remoteId = channelData.remoteId,
         profileId = channelData.profileId,
         viewState = ElectricityMeterSettingsViewState(
-          channelName = getChannelCaptionUseCase(channelData.channelEntity).provider(),
+          channelName = getCaptionUseCase(channelData.shareable).provider(),
           onListOptions = SingleSelectionList(
             selected = settings.showOnListSafe,
             items = ElectricityMeterSettings.showOnListAllItems.filter { measuredValues.contains(it) },

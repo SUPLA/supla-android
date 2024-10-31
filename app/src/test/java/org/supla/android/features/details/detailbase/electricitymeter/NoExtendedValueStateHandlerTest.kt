@@ -29,7 +29,7 @@ import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS
 import org.supla.android.usecases.channel.GetChannelValueUseCase
 import org.supla.android.usecases.channel.electricitymeter.ElectricityMeasurements
-import org.supla.core.shared.data.SuplaChannelFunction
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 class NoExtendedValueStateHandlerTest {
   @MockK
@@ -48,7 +48,7 @@ class NoExtendedValueStateHandlerTest {
     // given
     val channel: ChannelDataEntity = mockk {
       every { channelEntity } returns mockk {
-        every { function } returns SuplaChannelFunction.POWER_SWITCH
+        every { function } returns SuplaFunction.POWER_SWITCH
       }
       every { channelValueEntity } returns mockk {
         every { subValueType } returns 0
@@ -68,7 +68,7 @@ class NoExtendedValueStateHandlerTest {
     // given
     val channel: ChannelDataEntity = mockk {
       every { channelEntity } returns mockk {
-        every { function } returns SuplaChannelFunction.POWER_SWITCH
+        every { function } returns SuplaFunction.POWER_SWITCH
       }
       every { channelValueEntity } returns mockk {
         every { subValueType } returns SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort()
@@ -106,7 +106,7 @@ class NoExtendedValueStateHandlerTest {
     // given
     val channel: ChannelDataEntity = mockk {
       every { channelEntity } returns mockk {
-        every { function } returns SuplaChannelFunction.ELECTRICITY_METER
+        every { function } returns SuplaFunction.ELECTRICITY_METER
       }
       every { channelValueEntity } returns mockk {
         every { subValueType } returns 0
@@ -135,7 +135,7 @@ class NoExtendedValueStateHandlerTest {
     // given
     val channel: ChannelDataEntity = mockk {
       every { channelEntity } returns mockk {
-        every { function } returns SuplaChannelFunction.POWER_SWITCH
+        every { function } returns SuplaFunction.POWER_SWITCH
       }
       every { channelValueEntity } returns mockk {
         every { subValueType } returns SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort()

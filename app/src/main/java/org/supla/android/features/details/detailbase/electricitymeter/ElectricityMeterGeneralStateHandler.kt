@@ -29,13 +29,13 @@ import org.supla.android.data.source.remote.channel.suplaElectricityMeterMeasure
 import org.supla.android.data.source.remote.electricitymeter.getForwardEnergy
 import org.supla.android.data.source.remote.electricitymeter.getReverseEnergy
 import org.supla.android.extensions.guardLet
-import org.supla.android.extensions.ifTrue
 import org.supla.android.lib.SuplaChannelElectricityMeterValue
 import org.supla.android.lib.SuplaChannelElectricityMeterValue.Measurement
 import org.supla.android.lib.SuplaChannelElectricityMeterValue.Summary
 import org.supla.android.usecases.channel.electricitymeter.ElectricityMeasurements
 import org.supla.android.usecases.channel.valueformatter.ChannelValueFormatter
 import org.supla.android.usecases.channel.valueformatter.ListElectricityMeterValueFormatter
+import org.supla.core.shared.extensions.ifTrue
 import javax.inject.Inject
 import javax.inject.Singleton
 

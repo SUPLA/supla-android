@@ -41,8 +41,8 @@ import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.extensions.date
 import org.supla.android.usecases.channel.measurementsprovider.TemperatureAndHumidityMeasurementsProvider
 import org.supla.android.usecases.channel.measurementsprovider.TemperatureMeasurementsProvider
-import org.supla.core.shared.data.SuplaChannelFunction
-import org.supla.core.shared.data.source.local.entity.ChannelRelationType
+import org.supla.core.shared.data.model.channel.ChannelRelationType
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 @RunWith(MockitoJUnitRunner::class)
 class LoadChannelWithChildrenMeasurementsUseCaseTest : BaseLoadMeasurementsUseCaseTest() {
@@ -95,16 +95,16 @@ class LoadChannelWithChildrenMeasurementsUseCaseTest : BaseLoadMeasurementsUseCa
   private fun mockChannelWithChildren(): ChannelWithChildren =
     mockk<ChannelWithChildren>().also { channelWithChildren ->
       every { channelWithChildren.channel } returns mockk<ChannelDataEntity>().also {
-        every { it.channelEntity } returns mockk { every { function } returns SuplaChannelFunction.HVAC_THERMOSTAT }
+        every { it.channelEntity } returns mockk { every { function } returns SuplaFunction.HVAC_THERMOSTAT }
         every { it.remoteId } returns 1
-        every { it.function } returns SuplaChannelFunction.HVAC_THERMOSTAT
+        every { it.function } returns SuplaFunction.HVAC_THERMOSTAT
       }
-      val child1 = mockChannelChild(ChannelRelationType.MAIN_THERMOMETER, 2, SuplaChannelFunction.HUMIDITY_AND_TEMPERATURE)
-      val child2 = mockChannelChild(ChannelRelationType.AUX_THERMOMETER_FLOOR, 3, SuplaChannelFunction.THERMOMETER)
+      val child1 = mockChannelChild(ChannelRelationType.MAIN_THERMOMETER, 2, SuplaFunction.HUMIDITY_AND_TEMPERATURE)
+      val child2 = mockChannelChild(ChannelRelationType.AUX_THERMOMETER_FLOOR, 3, SuplaFunction.THERMOMETER)
       every { channelWithChildren.children } returns listOf(child1, child2)
     }
 
-  private fun mockChannelChild(relation: ChannelRelationType, remoteId: Int, function: SuplaChannelFunction): ChannelChildEntity =
+  private fun mockChannelChild(relation: ChannelRelationType, remoteId: Int, function: SuplaFunction): ChannelChildEntity =
     mockk<ChannelChildEntity>().also { channelChild ->
       every { channelChild.relationType } returns relation
       every { channelChild.channel } returns mockk { every { this@mockk.function } returns function }

@@ -1,7 +1,4 @@
 package org.supla.android.extensions
-
-import java.util.Locale
-
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -19,6 +16,8 @@ import java.util.Locale
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+
+import java.util.Locale
 
 fun String?.convertToTemperature() = this?.replace(",", ".")?.toFloatOrNull()
 

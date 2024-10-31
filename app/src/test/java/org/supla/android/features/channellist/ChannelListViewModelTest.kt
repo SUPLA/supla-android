@@ -62,7 +62,7 @@ import org.supla.android.usecases.details.ThermostatDetailType
 import org.supla.android.usecases.details.WindowDetailType
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
-import org.supla.core.shared.data.SuplaChannelFunction
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 @RunWith(MockitoJUnitRunner::class)
 class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, ChannelListViewEvent, ChannelListViewModel>() {
@@ -228,7 +228,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
   fun `should not open RGB details when item is offline`() {
     // given
     val remoteId = 123
-    val channel = mockChannelData(remoteId, SuplaChannelFunction.RGB_LIGHTING)
+    val channel = mockChannelData(remoteId, SuplaFunction.RGB_LIGHTING)
     whenever(readChannelWithChildrenUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
 
     // when
@@ -246,7 +246,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     val remoteId = 123
     val channelId = 123
     val deviceId = 222
-    val function = SuplaChannelFunction.LIGHTSWITCH
+    val function = SuplaFunction.LIGHTSWITCH
     val channel = mockChannelData(remoteId, function, deviceId, subValueType = SUBV_TYPE_IC_MEASUREMENTS.toShort())
     whenever(readChannelWithChildrenUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
 
@@ -270,7 +270,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     val remoteId = 123
     val channelId = 123
     val deviceId = 222
-    val function = SuplaChannelFunction.THERMOMETER
+    val function = SuplaFunction.THERMOMETER
     val channel = mockChannelData(remoteId, function, deviceId)
     whenever(readChannelWithChildrenUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
 
@@ -294,7 +294,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     val remoteId = 123
     val channelId = 123
     val deviceId = 222
-    val function = SuplaChannelFunction.HVAC_THERMOSTAT
+    val function = SuplaFunction.HVAC_THERMOSTAT
     val pages = emptyList<DetailPage>()
     val channel = mockChannelData(remoteId, function, deviceId, true)
     whenever(readChannelWithChildrenUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
@@ -319,7 +319,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     val remoteId = 123
     val channelId = 123
     val deviceId = 222
-    val function = SuplaChannelFunction.HVAC_THERMOSTAT
+    val function = SuplaFunction.HVAC_THERMOSTAT
     val pages = emptyList<DetailPage>()
     val channel = mockChannelData(remoteId, function, deviceId)
     whenever(readChannelWithChildrenUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
@@ -344,7 +344,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     val remoteId = 123
     val channelId = 123
     val deviceId = 222
-    val function = SuplaChannelFunction.GENERAL_PURPOSE_MEASUREMENT
+    val function = SuplaFunction.GENERAL_PURPOSE_MEASUREMENT
     val pages = emptyList<DetailPage>()
     val channel = mockChannelData(remoteId, function, deviceId, true)
     whenever(readChannelWithChildrenUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
@@ -369,7 +369,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     val remoteId = 123
     val channelId = 123
     val deviceId = 222
-    val function = SuplaChannelFunction.GENERAL_PURPOSE_MEASUREMENT
+    val function = SuplaFunction.GENERAL_PURPOSE_MEASUREMENT
     val pages = emptyList<DetailPage>()
     val channel = mockChannelData(remoteId, function, deviceId)
     whenever(readChannelWithChildrenUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
@@ -394,7 +394,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     val remoteId = 123
     val channelId = 123
     val deviceId = 222
-    val function = SuplaChannelFunction.GENERAL_PURPOSE_METER
+    val function = SuplaFunction.GENERAL_PURPOSE_METER
     val pages = emptyList<DetailPage>()
     val channel = mockChannelData(remoteId, function, deviceId, true)
     whenever(readChannelWithChildrenUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
@@ -419,7 +419,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     val remoteId = 123
     val channelId = 123
     val deviceId = 222
-    val function = SuplaChannelFunction.GENERAL_PURPOSE_METER
+    val function = SuplaFunction.GENERAL_PURPOSE_METER
     val pages = emptyList<DetailPage>()
     val channel = mockChannelData(remoteId, function, deviceId)
     whenever(readChannelWithChildrenUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
@@ -444,7 +444,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     val remoteId = 123
     val channelId = 123
     val deviceId = 222
-    val function = SuplaChannelFunction.CONTROLLING_THE_ROLLER_SHUTTER
+    val function = SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER
     val pages = emptyList<DetailPage>()
     val channel = mockChannelData(remoteId, function, deviceId, true)
     whenever(readChannelWithChildrenUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
@@ -469,7 +469,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     val remoteId = 123
     val channelId = 123
     val deviceId = 222
-    val function = SuplaChannelFunction.CONTROLLING_THE_ROLLER_SHUTTER
+    val function = SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER
     val pages = emptyList<DetailPage>()
     val channel = mockChannelData(remoteId, function, deviceId, false)
     whenever(readChannelWithChildrenUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
@@ -492,7 +492,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
   fun `should not open detail fragment when it is not supported`() {
     // given
     val remoteId = 123
-    val channelFunction = SuplaChannelFunction.NONE
+    val channelFunction = SuplaFunction.NONE
     val channel = mockChannelData(remoteId, channelFunction)
     whenever(readChannelWithChildrenUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
 
@@ -585,7 +585,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
 
   private fun mockChannelData(
     remoteId: Int,
-    function: SuplaChannelFunction,
+    function: SuplaFunction,
     deviceId: Int? = null,
     online: Boolean = false,
     configEntity: ChannelConfigEntity? = null,

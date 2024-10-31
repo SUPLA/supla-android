@@ -42,7 +42,7 @@ import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
 import org.supla.android.usecases.profile.CloudUrl
 import org.supla.android.usecases.profile.LoadActiveProfileUrlUseCase
-import org.supla.core.shared.data.SuplaChannelFunction
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 @RunWith(MockitoJUnitRunner::class)
 class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListViewEvent, GroupListViewModel>() {
@@ -223,7 +223,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
   fun `should open legacy detail fragment`() {
     // given
     val remoteId = 123
-    val groupFunction = SuplaChannelFunction.THERMOMETER
+    val groupFunction = SuplaFunction.THERMOMETER
     val groupData: ChannelGroupDataEntity = mockk()
     every { groupData.remoteId } returns remoteId
     every { groupData.isOnline() } returns true
@@ -247,7 +247,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
   fun `should not open detail fragment when it is not supported`() {
     // given
     val remoteId = 123
-    val groupFunction = SuplaChannelFunction.THERMOMETER
+    val groupFunction = SuplaFunction.THERMOMETER
     val groupData: ChannelGroupDataEntity = mockk()
     every { groupData.remoteId } returns remoteId
     every { groupData.isOnline() } returns true
@@ -268,7 +268,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
   fun `should open roller shutter detail when item is offline`() {
     // given
     val remoteId = 123
-    val function = SuplaChannelFunction.CONTROLLING_THE_ROLLER_SHUTTER
+    val function = SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER
     val groupData: ChannelGroupDataEntity = mockk()
     every { groupData.remoteId } returns remoteId
     every { groupData.function } returns function

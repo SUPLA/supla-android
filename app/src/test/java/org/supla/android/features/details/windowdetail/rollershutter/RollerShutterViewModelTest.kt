@@ -34,7 +34,6 @@ import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.Preferences
-import org.supla.android.R
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
@@ -46,8 +45,6 @@ import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.data.source.local.entity.custom.GroupOnlineSummary
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
-import org.supla.android.data.source.remote.rollershutter.RollerShutterValue
-import org.supla.android.data.source.remote.shadingsystem.SuplaShadingSystemFlag
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.LoadingTimeoutManager
 import org.supla.android.features.details.windowdetail.base.BaseWindowViewEvent
@@ -62,7 +59,6 @@ import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.tools.VibrationHelper
 import org.supla.android.ui.dialogs.AuthorizationDialogState
-import org.supla.android.ui.lists.data.ChannelIssueItem
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.client.AuthorizeUseCase
 import org.supla.android.usecases.client.CallSuplaClientOperationUseCase
@@ -73,7 +69,11 @@ import org.supla.android.usecases.client.SuplaClientOperation
 import org.supla.android.usecases.group.GetGroupOnlineSummaryUseCase
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
 import org.supla.android.usecases.group.totalvalue.GroupTotalValue
-import org.supla.core.shared.data.SuplaChannelFunction
+import org.supla.core.shared.data.model.general.SuplaFunction
+import org.supla.core.shared.data.model.lists.ChannelIssueItem
+import org.supla.core.shared.data.model.rollershutter.RollerShutterValue
+import org.supla.core.shared.data.model.shadingsystem.SuplaShadingSystemFlag
+import org.supla.core.shared.infrastructure.LocalizedStringId
 
 @RunWith(MockitoJUnitRunner::class)
 class RollerShutterViewModelTest :
@@ -156,7 +156,7 @@ class RollerShutterViewModelTest :
         remoteId = remoteId,
         windowState = RollerShutterWindowState(WindowGroupedValue.Similar(position.toFloat()), bottomPosition.toFloat()),
         viewState = WindowViewState(
-          issues = listOf(ChannelIssueItem.Error(R.string.motor_problem)),
+          issues = listOf(ChannelIssueItem.Error(LocalizedStringId.MOTOR_PROBLEM)),
           enabled = true,
           positionPresentation = ShadingSystemPositionPresentation.AS_CLOSED,
           positionUnknown = false,
@@ -244,7 +244,7 @@ class RollerShutterViewModelTest :
     }
     val channelData: ChannelDataEntity = mockk {
       every { this@mockk.remoteId } returns remoteId
-      every { function } returns SuplaChannelFunction.CONTROLLING_THE_ROLLER_SHUTTER
+      every { function } returns SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER
       every { channelValueEntity } returns value
       every { flags } returns 0
     }
@@ -629,7 +629,7 @@ class RollerShutterViewModelTest :
     valueFlags: List<SuplaShadingSystemFlag> = emptyList(),
     channelFlags: List<SuplaChannelFlag> = emptyList(),
     hasValidPosition: Boolean = true,
-    function: SuplaChannelFunction = SuplaChannelFunction.CONTROLLING_THE_ROLLER_SHUTTER
+    function: SuplaFunction = SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER
   ) {
     val rollerShutterValue: RollerShutterValue = mockk {
       every { this@mockk.position } returns position
@@ -662,7 +662,7 @@ class RollerShutterViewModelTest :
     val groupData: ChannelGroupDataEntity = mockk {
       every { id } returns groupId
       every { this@mockk.remoteId } returns remoteId
-      every { this@mockk.function } returns SuplaChannelFunction.CONTROLLING_THE_ROLLER_SHUTTER
+      every { this@mockk.function } returns SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER
       every { channelGroupEntity } returns group
       every { isOnline() } returns true
     }

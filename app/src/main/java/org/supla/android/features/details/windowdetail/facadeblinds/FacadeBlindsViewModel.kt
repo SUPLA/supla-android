@@ -25,7 +25,6 @@ import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.data.source.local.entity.ChannelGroupEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.remote.rollershutter.SuplaTiltControlType
-import org.supla.android.data.source.remote.shadingsystem.SuplaShadingSystemFlag
 import org.supla.android.events.ChannelConfigEventsManager
 import org.supla.android.features.details.windowdetail.base.data.ShadingBlindMarker
 import org.supla.android.features.details.windowdetail.base.data.WindowGroupedValue
@@ -45,6 +44,7 @@ import org.supla.android.usecases.group.GetGroupOnlineSummaryUseCase
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
 import org.supla.android.usecases.group.ReadGroupTiltingDetailsUseCase
 import org.supla.android.usecases.group.totalvalue.ShadowingBlindGroupValue
+import org.supla.core.shared.data.model.shadingsystem.SuplaShadingSystemFlag
 import javax.inject.Inject
 
 @HiltViewModel

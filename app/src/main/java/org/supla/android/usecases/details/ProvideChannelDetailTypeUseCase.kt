@@ -25,8 +25,8 @@ import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.features.details.detailbase.standarddetail.DetailPage
 import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS
 import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS
-import org.supla.core.shared.data.SuplaChannelFunction
-import org.supla.core.shared.data.source.local.entity.ChannelRelationType
+import org.supla.core.shared.data.model.channel.ChannelRelationType
+import org.supla.core.shared.data.model.general.SuplaFunction
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -34,13 +34,13 @@ import javax.inject.Singleton
 class ProvideChannelDetailTypeUseCase @Inject constructor() : BaseDetailTypeProviderUseCase() {
 
   operator fun invoke(channelWithChildren: ChannelWithChildren): DetailType? = when (val function = channelWithChildren.channel.function) {
-    SuplaChannelFunction.LIGHTSWITCH,
-    SuplaChannelFunction.POWER_SWITCH,
-    SuplaChannelFunction.STAIRCASE_TIMER,
-    SuplaChannelFunction.PUMP_SWITCH,
-    SuplaChannelFunction.HEAT_OR_COLD_SOURCE_SWITCH -> SwitchDetailType(getSwitchDetailPages(channelWithChildren))
+    SuplaFunction.LIGHTSWITCH,
+    SuplaFunction.POWER_SWITCH,
+    SuplaFunction.STAIRCASE_TIMER,
+    SuplaFunction.PUMP_SWITCH,
+    SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH -> SwitchDetailType(getSwitchDetailPages(channelWithChildren))
 
-    SuplaChannelFunction.HVAC_THERMOSTAT -> ThermostatDetailType(getThermostatDetailPages(channelWithChildren))
+    SuplaFunction.HVAC_THERMOSTAT -> ThermostatDetailType(getThermostatDetailPages(channelWithChildren))
 
     else -> provide(function)
   }
@@ -84,5 +84,5 @@ class ProvideChannelDetailTypeUseCase @Inject constructor() : BaseDetailTypeProv
 
   private fun supportsTimer(channelDataBase: ChannelDataBase) =
     SuplaChannelFlag.COUNTDOWN_TIMER_SUPPORTED inside channelDataBase.flags &&
-      channelDataBase.function != SuplaChannelFunction.STAIRCASE_TIMER
+      channelDataBase.function != SuplaFunction.STAIRCASE_TIMER
 }

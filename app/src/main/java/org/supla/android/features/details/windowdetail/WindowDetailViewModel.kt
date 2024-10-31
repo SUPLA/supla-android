@@ -19,21 +19,22 @@ package org.supla.android.features.details.windowdetail
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.supla.android.Preferences
-import org.supla.android.core.ui.LocalizedString
+import org.supla.android.core.shared.shareable
 import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.features.details.detailbase.standarddetail.StandardDetailViewEvent
 import org.supla.android.features.details.detailbase.standarddetail.StandardDetailViewModel
 import org.supla.android.features.details.detailbase.standarddetail.StandardDetailViewState
 import org.supla.android.tools.SuplaSchedulers
-import org.supla.android.usecases.channel.GetChannelCaptionUseCase
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
+import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.usecase.GetCaptionUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class WindowDetailViewModel @Inject constructor(
-  private val getChannelCaptionUseCase: GetChannelCaptionUseCase,
+  private val getCaptionUseCase: GetCaptionUseCase,
   readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
   readChannelGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase,
   updateEventsManager: UpdateEventsManager,
@@ -50,7 +51,7 @@ class WindowDetailViewModel @Inject constructor(
   override fun closeEvent(): WindowDetailViewEvent = WindowDetailViewEvent.Close
 
   override fun updatedState(state: WindowDetailViewState, channelDataBase: ChannelDataBase) =
-    state.copy(caption = getChannelCaptionUseCase(channelDataBase))
+    state.copy(caption = getCaptionUseCase(channelDataBase.shareable))
 }
 
 sealed interface WindowDetailViewEvent : StandardDetailViewEvent {

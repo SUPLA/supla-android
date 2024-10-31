@@ -31,7 +31,7 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
 import org.supla.android.usecases.channel.GetChannelStateUseCase
-import org.supla.core.shared.data.SuplaChannelFunction
+import org.supla.core.shared.data.model.general.SuplaFunction
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -51,7 +51,7 @@ class GetChannelIconUseCase @Inject constructor(
     type: IconType = IconType.SINGLE,
     channelStateValue: ChannelState.Value? = null
   ): ImageId {
-    if (type != IconType.SINGLE && channelDataBase.function != SuplaChannelFunction.HUMIDITY_AND_TEMPERATURE) {
+    if (type != IconType.SINGLE && channelDataBase.function != SuplaFunction.HUMIDITY_AND_TEMPERATURE) {
       throw IllegalArgumentException("Wrong icon type (iconType: '$type', function: '${channelDataBase.function}')!")
     }
 

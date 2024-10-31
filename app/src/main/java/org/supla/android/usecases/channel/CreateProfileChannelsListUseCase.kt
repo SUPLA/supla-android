@@ -19,6 +19,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
+import org.supla.android.core.shared.shareable
 import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.ChannelRelationRepository
 import org.supla.android.data.source.RoomChannelRepository
@@ -36,11 +37,15 @@ import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.local.entity.isGarageDoorRoller
 import org.supla.android.data.source.local.entity.isProjectorScreen
 import org.supla.android.data.source.local.entity.isSwitch
+import org.supla.android.data.source.remote.thermostat.getIndicatorIcon
+import org.supla.android.data.source.remote.thermostat.getSetpointText
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.ui.lists.onlineState
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.location.CollapsedFlag
-import org.supla.core.shared.data.source.local.entity.ChannelRelationType
+import org.supla.core.shared.data.model.channel.ChannelRelationType
+import org.supla.core.shared.usecase.GetCaptionUseCase
+import org.supla.core.shared.usecase.channel.GetChannelIssuesForListUseCase
 import java.util.Collections
 import java.util.LinkedList
 import javax.inject.Inject
@@ -50,7 +55,7 @@ import javax.inject.Singleton
 class CreateProfileChannelsListUseCase @Inject constructor(
   private val channelRelationRepository: ChannelRelationRepository,
   private val channelRepository: RoomChannelRepository,
-  private val getChannelCaptionUseCase: GetChannelCaptionUseCase,
+  private val getCaptionUseCase: GetCaptionUseCase,
   private val getChannelIconUseCase: GetChannelIconUseCase,
   private val getChannelValueStringUseCase: GetChannelValueStringUseCase,
   private val getSwitchValueStringUseCase: GetSwitchValueStringUseCase,
@@ -127,10 +132,10 @@ class CreateProfileChannelsListUseCase @Inject constructor(
       channelData,
       channelData.locationEntity.caption,
       channelData.channelValueEntity.online.onlineState,
-      getChannelCaptionUseCase(channelData),
+      getCaptionUseCase(channelData.shareable),
       getChannelIconUseCase(channelData),
       getChannelValueStringUseCase(channelData),
-      getChannelIssuesForListUseCase(channelWithChildren(channelData, childrenMap))
+      getChannelIssuesForListUseCase(channelWithChildren(channelData, childrenMap).shareable)
     )
 
   private fun toGpMeterItem(
@@ -141,10 +146,10 @@ class CreateProfileChannelsListUseCase @Inject constructor(
       channelData,
       channelData.locationEntity.caption,
       channelData.channelValueEntity.online.onlineState,
-      getChannelCaptionUseCase(channelData),
+      getCaptionUseCase(channelData.shareable),
       getChannelIconUseCase(channelData),
       getChannelValueStringUseCase(channelData),
-      getChannelIssuesForListUseCase(channelWithChildren(channelData, childrenMap))
+      getChannelIssuesForListUseCase(channelWithChildren(channelData, childrenMap).shareable)
     )
 
   private fun toIconValueItem(
@@ -155,10 +160,10 @@ class CreateProfileChannelsListUseCase @Inject constructor(
       channelData,
       channelData.locationEntity.caption,
       channelData.channelValueEntity.online.onlineState,
-      getChannelCaptionUseCase(channelData),
+      getCaptionUseCase(channelData.shareable),
       getChannelIconUseCase(channelData),
       getChannelValueStringUseCase.valueOrNull(channelData),
-      getChannelIssuesForListUseCase(channelWithChildren(channelData, childrenMap))
+      getChannelIssuesForListUseCase(channelWithChildren(channelData, childrenMap).shareable)
     )
   }
 
@@ -176,10 +181,10 @@ class CreateProfileChannelsListUseCase @Inject constructor(
       channelData,
       channelData.locationEntity.caption,
       onlineState,
-      getChannelCaptionUseCase(channelData),
+      getCaptionUseCase(channelData.shareable),
       getChannelIconUseCase(channelData),
       mainThermometerChild?.channelDataEntity?.let { getChannelValueStringUseCase(it) } ?: ValuesFormatter.NO_VALUE_TEXT,
-      getChannelIssuesForListUseCase(channelWithChildren(channelData, childrenMap)),
+      getChannelIssuesForListUseCase(channelWithChildren(channelData, childrenMap).shareable),
       channelData.channelExtendedValueEntity?.getSuplaValue()?.TimerStateValue?.countdownEndsAt,
       thermostatValue.getSetpointText(valuesFormatter),
       indicatorIcon.resource,
@@ -194,9 +199,9 @@ class CreateProfileChannelsListUseCase @Inject constructor(
       channelData,
       channelData.locationEntity.caption,
       channelData.channelValueEntity.online.onlineState,
-      getChannelCaptionUseCase(channelData),
+      getCaptionUseCase(channelData.shareable),
       getChannelIconUseCase(channelData),
-      getChannelIssuesForListUseCase(channelWithChildren(channelData, childrenMap)),
+      getChannelIssuesForListUseCase(channelWithChildren(channelData, childrenMap).shareable),
     )
 
   private fun toSwitchItem(channelData: ChannelDataEntity, childrenMap: MutableMap<Int, List<ChannelChildEntity?>>): ListItem.SwitchItem {
@@ -207,11 +212,11 @@ class CreateProfileChannelsListUseCase @Inject constructor(
       channelData,
       channelData.locationEntity.caption,
       channelData.channelValueEntity.online.onlineState,
-      getChannelCaptionUseCase(channelData),
+      getCaptionUseCase(channelData.shareable),
       getChannelIconUseCase(channelData),
       value = value,
       channelData.channelExtendedValueEntity?.getSuplaValue()?.TimerStateValue?.countdownEndsAt,
-      getChannelIssuesForListUseCase(channelWithChildren(channelData, childrenMap))
+      getChannelIssuesForListUseCase(channelWithChildren(channelData, childrenMap).shareable)
     )
   }
 

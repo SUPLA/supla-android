@@ -59,14 +59,14 @@ import org.supla.android.core.ui.theme.gray
 import org.supla.android.extensions.differenceInSeconds
 import org.supla.android.extensions.preferences
 import org.supla.android.extensions.valuesFormatter
-import org.supla.android.ui.lists.ListItemIssues
 import org.supla.android.ui.lists.ListOnlineState
-import org.supla.android.ui.lists.data.IssueIcon
 import org.supla.android.ui.views.Separator
 import org.supla.android.ui.views.list.components.ListItemInfoIcon
 import org.supla.android.ui.views.list.components.ListItemIssueIcon
 import org.supla.android.ui.views.list.components.ListItemMainRow
 import org.supla.android.ui.views.list.components.ListItemTitle
+import org.supla.core.shared.data.model.lists.IssueIcon
+import org.supla.core.shared.data.model.lists.ListItemIssues
 import java.util.Date
 import kotlin.time.Duration.Companion.seconds
 

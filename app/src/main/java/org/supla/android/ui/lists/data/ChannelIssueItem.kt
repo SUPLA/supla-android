@@ -19,42 +19,15 @@ package org.supla.android.ui.lists.data
 
 import android.content.Context
 import androidx.annotation.StringRes
-import org.supla.android.core.ui.LocalizedString
-import org.supla.android.core.ui.localizedString
+import org.supla.android.core.shared.invoke
+import org.supla.core.shared.data.model.lists.ChannelIssueItem
+import org.supla.core.shared.infrastructure.LocalizedString
 
-sealed interface ChannelIssueItem {
-  val icon: IssueIcon
-  val messages: List<LocalizedString>
-  val priority: Int
+fun ChannelIssueItem.Companion.error(@StringRes stringRes: Int): ChannelIssueItem =
+  ChannelIssueItem.Error(LocalizedString.WithResource(stringRes))
 
-  val message: LocalizedString
-    get() = messages.firstOrNull() ?: LocalizedString.Empty
-
-  data class Warning(@StringRes private val stringRes: Int? = null) : ChannelIssueItem {
-    override val icon: IssueIcon
-      get() = IssueIcon.Warning
-    override val messages: List<LocalizedString>
-      get() = listOf(localizedString(stringRes))
-    override val priority: Int
-      get() = 1
-  }
-
-  data class Error(@StringRes private val stringRes: Int? = null) : ChannelIssueItem {
-    override val icon: IssueIcon
-      get() = IssueIcon.Error
-    override val messages: List<LocalizedString>
-      get() = listOf(localizedString(stringRes))
-    override val priority: Int
-      get() = 2
-  }
-
-  data class LowBattery(override val messages: List<LocalizedString>) : ChannelIssueItem {
-    override val icon: IssueIcon
-      get() = IssueIcon.Battery0
-    override val priority: Int
-      get() = 3
-  }
-}
+fun ChannelIssueItem.Companion.warning(@StringRes stringRes: Int): ChannelIssueItem =
+  ChannelIssueItem.Warning(LocalizedString.WithResource(stringRes))
 
 fun List<ChannelIssueItem>.message(context: Context): String =
   flatMap { it.messages }.fold("") { acc, item -> if (acc.isEmpty()) item(context) else "$acc\n${item(context)}" }

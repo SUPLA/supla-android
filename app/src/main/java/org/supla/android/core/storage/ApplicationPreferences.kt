@@ -21,6 +21,7 @@ import android.content.Context
 import androidx.preference.PreferenceManager
 import dagger.hilt.android.qualifiers.ApplicationContext
 import org.supla.android.data.model.general.NightModeSetting
+import org.supla.core.shared.infrastructure.storage.ApplicationPreferences
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -30,7 +31,7 @@ private const val KEY_NIGHT_MODE = "pref_night_mode"
 private const val KEY_BATTERY_WARNING_LEVEL = "pref_battery_warning_level"
 
 @Singleton
-class ApplicationPreferences @Inject constructor(@ApplicationContext context: Context) {
+class ApplicationPreferences @Inject constructor(@ApplicationContext context: Context) : ApplicationPreferences {
 
   private val preferences = PreferenceManager.getDefaultSharedPreferences(context)
 
@@ -38,7 +39,7 @@ class ApplicationPreferences @Inject constructor(@ApplicationContext context: Co
     get() = NightModeSetting.from(preferences.getInt(KEY_NIGHT_MODE, NightModeSetting.UNSET.value))
     set(setting) = preferences.edit().putInt(KEY_NIGHT_MODE, setting.value).apply()
 
-  var batteryWarningLevel: Int
+  override var batteryWarningLevel: Int
     get() = preferences.getInt(KEY_BATTERY_WARNING_LEVEL, DEFAULT_BATTERY_WARNING_LEVEL)
     set(level) = preferences.edit().putInt(KEY_BATTERY_WARNING_LEVEL, level).apply()
 }

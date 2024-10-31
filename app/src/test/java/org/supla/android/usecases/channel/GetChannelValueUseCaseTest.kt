@@ -38,7 +38,7 @@ import org.supla.android.usecases.channel.valueprovider.HumidityAndTemperatureVa
 import org.supla.android.usecases.channel.valueprovider.ImpulseCounterValueProvider
 import org.supla.android.usecases.channel.valueprovider.SwitchWithElectricityMeterValueProvider
 import org.supla.android.usecases.channel.valueprovider.ThermometerValueProvider
-import org.supla.core.shared.data.SuplaChannelFunction
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 @RunWith(MockitoJUnitRunner::class)
 class GetChannelValueUseCaseTest {
@@ -74,14 +74,14 @@ class GetChannelValueUseCaseTest {
   fun `should check all handlers if can handle channel and throw exception that could not provide channel value`() {
     // given
     val channel: ChannelDataEntity = mockk {
-      every { function } returns SuplaChannelFunction.HUMIDITY
+      every { function } returns SuplaFunction.HUMIDITY
     }
 
     // when
     Assertions.assertThatThrownBy {
       useCase.invoke(channel)
     }
-      .hasMessage("No value provider for channel function `${SuplaChannelFunction.HUMIDITY}`")
+      .hasMessage("No value provider for channel function `${SuplaFunction.HUMIDITY}`")
       .isInstanceOf(IllegalStateException::class.java)
 
     // then
@@ -100,7 +100,7 @@ class GetChannelValueUseCaseTest {
   @Test
   fun `should return value of first provider which can handle channel`() {
     // given
-    val function = SuplaChannelFunction.HUMIDITY_AND_TEMPERATURE
+    val function = SuplaFunction.HUMIDITY_AND_TEMPERATURE
     val value = 12.4
     val channel: ChannelDataEntity = mockk {
       every { this@mockk.function } returns function

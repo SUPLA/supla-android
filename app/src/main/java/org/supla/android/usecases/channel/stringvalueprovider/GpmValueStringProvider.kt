@@ -27,7 +27,7 @@ import org.supla.android.usecases.channel.ChannelValueStringProvider
 import org.supla.android.usecases.channel.ValueType
 import org.supla.android.usecases.channel.valueformatter.GpmValueFormatter
 import org.supla.android.usecases.channel.valueprovider.GpmValueProvider
-import org.supla.core.shared.data.SuplaChannelFunction
+import org.supla.core.shared.data.model.general.SuplaFunction
 import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Named
@@ -40,8 +40,8 @@ class GpmValueStringProvider @Inject constructor(
 ) : ChannelValueStringProvider {
 
   override fun handle(channelData: ChannelDataEntity): Boolean =
-    channelData.function == SuplaChannelFunction.GENERAL_PURPOSE_MEASUREMENT ||
-      channelData.function == SuplaChannelFunction.GENERAL_PURPOSE_METER
+    channelData.function == SuplaFunction.GENERAL_PURPOSE_MEASUREMENT ||
+      channelData.function == SuplaFunction.GENERAL_PURPOSE_METER
 
   override fun value(channelData: ChannelDataEntity, valueType: ValueType, withUnit: Boolean): String {
     val value = gpmValueProvider.value(channelData, valueType)

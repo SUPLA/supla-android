@@ -22,7 +22,7 @@ import org.supla.android.data.source.ChannelRelationRepository
 import org.supla.android.data.source.local.entity.ChannelRelationEntity
 import org.supla.android.lib.SuplaChannelRelation
 import org.supla.android.profile.ProfileManager
-import org.supla.core.shared.data.source.local.entity.ChannelRelationType
+import org.supla.core.shared.data.model.channel.ChannelRelationType
 import javax.inject.Inject
 import javax.inject.Singleton
 

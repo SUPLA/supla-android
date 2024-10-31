@@ -18,29 +18,13 @@ package org.supla.android.ui.lists
  */
 
 import android.content.Context
-import org.supla.android.core.ui.LocalizedString
-import org.supla.android.ui.lists.data.IssueIcon
+import org.supla.android.core.shared.invoke
+import org.supla.core.shared.data.model.lists.ListItemIssues
 
-data class ListItemIssues(
-  val icons: List<IssueIcon> = emptyList(),
-  private val issuesStrings: List<LocalizedString> = emptyList()
-) {
-  fun message(context: Context): String {
-    if (issuesStrings.isEmpty()) {
-      return ""
-    }
-
-    return issuesStrings.fold("") { acc, item -> if (acc.isEmpty()) item(context) else "$acc\n${item(context)}" }
+fun ListItemIssues.message(context: Context): String {
+  if (issuesStrings.isEmpty()) {
+    return ""
   }
 
-  fun isEmpty(): Boolean = icons.isEmpty()
-
-  fun hasMessage(): Boolean = issuesStrings.isNotEmpty()
-
-  companion object {
-    val empty = ListItemIssues()
-
-    operator fun invoke(issueIcon: IssueIcon): ListItemIssues = ListItemIssues(listOf(issueIcon))
-    operator fun invoke(first: IssueIcon, second: IssueIcon): ListItemIssues = ListItemIssues(listOf(first, second))
-  }
+  return issuesStrings.fold("") { acc, item -> if (acc.isEmpty()) item(context) else "$acc\n${item(context)}" }
 }

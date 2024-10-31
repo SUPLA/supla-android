@@ -30,9 +30,9 @@ import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.extensions.TAG
 import org.supla.android.extensions.guardLet
 import org.supla.android.tools.SuplaSchedulers
-import org.supla.android.ui.lists.ListItemIssues
 import org.supla.android.ui.lists.data.SlideableListItemData
 import org.supla.android.usecases.list.CreateListItemUpdateEventDataUseCase
+import org.supla.core.shared.data.model.lists.ListItemIssues
 
 abstract class BaseSlideableContent<T : SlideableListItemData> : BaseAbstractComposeView {
 

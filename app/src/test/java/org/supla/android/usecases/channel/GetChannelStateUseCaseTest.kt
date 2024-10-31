@@ -30,7 +30,7 @@ import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
 import org.supla.android.usecases.group.GetGroupActivePercentageUseCase
-import org.supla.core.shared.data.SuplaChannelFunction
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 @RunWith(MockitoJUnitRunner::class)
 class GetChannelStateUseCaseTest {
@@ -44,7 +44,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get closed state from sub value`() {
     // given
-    val channelData = mockChannelDataEntity(SuplaChannelFunction.CONTROLLING_THE_GATE, subValueHi = 1)
+    val channelData = mockChannelDataEntity(SuplaFunction.CONTROLLING_THE_GATE, subValueHi = 1)
 
     // when
     val state = useCase(channelData)
@@ -56,7 +56,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get open state from sub value`() {
     // given
-    val channelData = mockChannelDataEntity(SuplaChannelFunction.CONTROLLING_THE_GATE, subValueHi = 0)
+    val channelData = mockChannelDataEntity(SuplaFunction.CONTROLLING_THE_GATE, subValueHi = 0)
 
     // when
     val state = useCase(channelData)
@@ -68,7 +68,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get partially open state from sub value`() {
     // given
-    val channelData = mockChannelDataEntity(SuplaChannelFunction.CONTROLLING_THE_GARAGE_DOOR, subValueHi = 2)
+    val channelData = mockChannelDataEntity(SuplaFunction.CONTROLLING_THE_GARAGE_DOOR, subValueHi = 2)
 
     // when
     val state = useCase(channelData)
@@ -80,7 +80,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get closed state for roller shutter`() {
     // given
-    val channelData = mockChannelDataEntity(SuplaChannelFunction.CONTROLLING_THE_ROLLER_SHUTTER, rollerShutterPosition = 100)
+    val channelData = mockChannelDataEntity(SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER, rollerShutterPosition = 100)
 
     // when
     val state = useCase(channelData)
@@ -92,7 +92,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get open state for roller shutter`() {
     // given
-    val channelData = mockChannelDataEntity(SuplaChannelFunction.CONTROLLING_THE_ROOF_WINDOW, rollerShutterPosition = 0)
+    val channelData = mockChannelDataEntity(SuplaFunction.CONTROLLING_THE_ROOF_WINDOW, rollerShutterPosition = 0)
 
     // when
     val state = useCase(channelData)
@@ -104,7 +104,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get closed state for facade blind`() {
     // given
-    val channelData = mockChannelDataEntity(SuplaChannelFunction.CONTROLLING_THE_FACADE_BLIND, rollerShutterPosition = 100)
+    val channelData = mockChannelDataEntity(SuplaFunction.CONTROLLING_THE_FACADE_BLIND, rollerShutterPosition = 100)
 
     // when
     val state = useCase(channelData)
@@ -116,7 +116,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get open state for facade blind`() {
     // given
-    val channelData = mockChannelDataEntity(SuplaChannelFunction.CONTROLLING_THE_FACADE_BLIND, rollerShutterPosition = 0)
+    val channelData = mockChannelDataEntity(SuplaFunction.CONTROLLING_THE_FACADE_BLIND, rollerShutterPosition = 0)
 
     // when
     val state = useCase(channelData)
@@ -128,7 +128,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get closed state for terrace awning`() {
     // given
-    val channelData = mockChannelDataEntity(SuplaChannelFunction.TERRACE_AWNING, rollerShutterPosition = 0)
+    val channelData = mockChannelDataEntity(SuplaFunction.TERRACE_AWNING, rollerShutterPosition = 0)
 
     // when
     val state = useCase(channelData)
@@ -140,7 +140,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get open state for terrace awning`() {
     // given
-    val channelData = mockChannelDataEntity(SuplaChannelFunction.TERRACE_AWNING, rollerShutterPosition = 100)
+    val channelData = mockChannelDataEntity(SuplaFunction.TERRACE_AWNING, rollerShutterPosition = 100)
 
     // when
     val state = useCase(channelData)
@@ -152,7 +152,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get closed state for projector screen`() {
     // given
-    val channelData = mockChannelDataEntity(SuplaChannelFunction.PROJECTOR_SCREEN, rollerShutterPosition = 100)
+    val channelData = mockChannelDataEntity(SuplaFunction.PROJECTOR_SCREEN, rollerShutterPosition = 100)
 
     // when
     val state = useCase(channelData)
@@ -164,7 +164,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get open state for projector screen`() {
     // given
-    val channelData = mockChannelDataEntity(SuplaChannelFunction.PROJECTOR_SCREEN, rollerShutterPosition = 0)
+    val channelData = mockChannelDataEntity(SuplaFunction.PROJECTOR_SCREEN, rollerShutterPosition = 0)
 
     // when
     val state = useCase(channelData)
@@ -176,7 +176,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get closed state for curtain`() {
     // given
-    val channelData = mockChannelDataEntity(SuplaChannelFunction.CURTAIN, rollerShutterPosition = 100)
+    val channelData = mockChannelDataEntity(SuplaFunction.CURTAIN, rollerShutterPosition = 100)
 
     // when
     val state = useCase(channelData)
@@ -188,7 +188,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get open state for curtain`() {
     // given
-    val channelData = mockChannelDataEntity(SuplaChannelFunction.CURTAIN, rollerShutterPosition = 0)
+    val channelData = mockChannelDataEntity(SuplaFunction.CURTAIN, rollerShutterPosition = 0)
 
     // when
     val state = useCase(channelData)
@@ -200,7 +200,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get closed state for vertical blind`() {
     // given
-    val channelData = mockChannelDataEntity(SuplaChannelFunction.VERTICAL_BLIND, rollerShutterPosition = 100)
+    val channelData = mockChannelDataEntity(SuplaFunction.VERTICAL_BLIND, rollerShutterPosition = 100)
 
     // when
     val state = useCase(channelData)
@@ -212,7 +212,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get open state for vertical blind`() {
     // given
-    val channelData = mockChannelDataEntity(SuplaChannelFunction.VERTICAL_BLIND, rollerShutterPosition = 0)
+    val channelData = mockChannelDataEntity(SuplaFunction.VERTICAL_BLIND, rollerShutterPosition = 0)
 
     // when
     val state = useCase(channelData)
@@ -224,7 +224,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get closed state from is closed property`() {
     // given
-    val channelData = mockChannelDataEntity(SuplaChannelFunction.OPEN_SENSOR_GATEWAY, isClosed = true)
+    val channelData = mockChannelDataEntity(SuplaFunction.OPEN_SENSOR_GATEWAY, isClosed = true)
 
     // when
     val state = useCase(channelData)
@@ -236,7 +236,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get open state from is closed property`() {
     // given
-    val channelData = mockChannelDataEntity(SuplaChannelFunction.OPEN_SENSOR_GATEWAY, isClosed = false)
+    val channelData = mockChannelDataEntity(SuplaFunction.OPEN_SENSOR_GATEWAY, isClosed = false)
 
     // when
     val state = useCase(channelData)
@@ -248,7 +248,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get off state from is closed property`() {
     // given
-    val channelData = mockChannelDataEntity(SuplaChannelFunction.POWER_SWITCH, isClosed = false)
+    val channelData = mockChannelDataEntity(SuplaFunction.POWER_SWITCH, isClosed = false)
 
     // when
     val state = useCase(channelData)
@@ -260,7 +260,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get on state from is closed property`() {
     // given
-    val channelData = mockChannelDataEntity(SuplaChannelFunction.STAIRCASE_TIMER, isClosed = true)
+    val channelData = mockChannelDataEntity(SuplaFunction.STAIRCASE_TIMER, isClosed = true)
 
     // when
     val state = useCase(channelData)
@@ -272,7 +272,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get off state for dimmer`() {
     // given
-    val channelData = mockChannelDataEntity(SuplaChannelFunction.DIMMER, brightness = 0)
+    val channelData = mockChannelDataEntity(SuplaFunction.DIMMER, brightness = 0)
 
     // when
     val state = useCase(channelData)
@@ -284,7 +284,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get on state for dimmer`() {
     // given
-    val channelData = mockChannelDataEntity(SuplaChannelFunction.DIMMER, brightness = 5)
+    val channelData = mockChannelDataEntity(SuplaFunction.DIMMER, brightness = 5)
 
     // when
     val state = useCase(channelData)
@@ -296,7 +296,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get off state for rgb`() {
     // given
-    val channelData = mockChannelDataEntity(SuplaChannelFunction.RGB_LIGHTING, colorBrightness = 0)
+    val channelData = mockChannelDataEntity(SuplaFunction.RGB_LIGHTING, colorBrightness = 0)
 
     // when
     val state = useCase(channelData)
@@ -308,7 +308,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get on state for rgb`() {
     // given
-    val channelData = mockChannelDataEntity(SuplaChannelFunction.RGB_LIGHTING, colorBrightness = 5)
+    val channelData = mockChannelDataEntity(SuplaFunction.RGB_LIGHTING, colorBrightness = 5)
 
     // when
     val state = useCase(channelData)
@@ -320,7 +320,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get off off state for dimmer and rgb`() {
     // given
-    val channelData = mockChannelDataEntity(SuplaChannelFunction.DIMMER_AND_RGB_LIGHTING, colorBrightness = 0, brightness = 0)
+    val channelData = mockChannelDataEntity(SuplaFunction.DIMMER_AND_RGB_LIGHTING, colorBrightness = 0, brightness = 0)
 
     // when
     val state = useCase(channelData)
@@ -333,7 +333,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get off on state for dimmer and rgb`() {
     // given
-    val channelData = mockChannelDataEntity(SuplaChannelFunction.DIMMER_AND_RGB_LIGHTING, colorBrightness = 3, brightness = 0)
+    val channelData = mockChannelDataEntity(SuplaFunction.DIMMER_AND_RGB_LIGHTING, colorBrightness = 3, brightness = 0)
 
     // when
     val state = useCase(channelData)
@@ -346,7 +346,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get on off state for dimmer and rgb`() {
     // given
-    val channelData = mockChannelDataEntity(SuplaChannelFunction.DIMMER_AND_RGB_LIGHTING, colorBrightness = 0, brightness = 3)
+    val channelData = mockChannelDataEntity(SuplaFunction.DIMMER_AND_RGB_LIGHTING, colorBrightness = 0, brightness = 3)
 
     // when
     val state = useCase(channelData)
@@ -359,7 +359,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get on on state for dimmer and rgb`() {
     // given
-    val channelData = mockChannelDataEntity(SuplaChannelFunction.DIMMER_AND_RGB_LIGHTING, colorBrightness = 4, brightness = 3)
+    val channelData = mockChannelDataEntity(SuplaFunction.DIMMER_AND_RGB_LIGHTING, colorBrightness = 4, brightness = 3)
 
     // when
     val state = useCase(channelData)
@@ -372,7 +372,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get transparent state for digiglass`() {
     // given
-    val channelData = mockChannelDataEntity(SuplaChannelFunction.DIGIGLASS_HORIZONTAL, transparent = true)
+    val channelData = mockChannelDataEntity(SuplaFunction.DIGIGLASS_HORIZONTAL, transparent = true)
 
     // when
     val state = useCase(channelData)
@@ -384,7 +384,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get opaque state for digiglass`() {
     // given
-    val channelData = mockChannelDataEntity(SuplaChannelFunction.DIGIGLASS_VERTICAL, transparent = false)
+    val channelData = mockChannelDataEntity(SuplaFunction.DIGIGLASS_VERTICAL, transparent = false)
 
     // when
     val state = useCase(channelData)
@@ -396,7 +396,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get thermostat heat`() {
     // given
-    val channelData = mockChannelDataEntity(SuplaChannelFunction.HVAC_THERMOSTAT, thermostatSubfunction = ThermostatSubfunction.HEAT)
+    val channelData = mockChannelDataEntity(SuplaFunction.HVAC_THERMOSTAT, thermostatSubfunction = ThermostatSubfunction.HEAT)
 
     // when
     val state = useCase(channelData)
@@ -408,7 +408,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get thermostat cool`() {
     // given
-    val channelData = mockChannelDataEntity(SuplaChannelFunction.HVAC_THERMOSTAT, thermostatSubfunction = ThermostatSubfunction.COOL)
+    val channelData = mockChannelDataEntity(SuplaFunction.HVAC_THERMOSTAT, thermostatSubfunction = ThermostatSubfunction.COOL)
 
     // when
     val state = useCase(channelData)
@@ -420,7 +420,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get offline state for open-close function`() {
     // given
-    val channelData = mockChannelDataEntity(SuplaChannelFunction.OPEN_SENSOR_GATEWAY, online = false)
+    val channelData = mockChannelDataEntity(SuplaFunction.OPEN_SENSOR_GATEWAY, online = false)
 
     // when
     val state = useCase(channelData)
@@ -432,7 +432,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get offline state for on-off function`() {
     // given
-    val channelData = mockChannelDataEntity(SuplaChannelFunction.MAIL_SENSOR, online = false)
+    val channelData = mockChannelDataEntity(SuplaFunction.MAIL_SENSOR, online = false)
 
     // when
     val state = useCase(channelData)
@@ -444,7 +444,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get offline state for complex state`() {
     // given
-    val channelData = mockChannelDataEntity(SuplaChannelFunction.DIMMER_AND_RGB_LIGHTING, online = false)
+    val channelData = mockChannelDataEntity(SuplaFunction.DIMMER_AND_RGB_LIGHTING, online = false)
 
     // when
     val state = useCase(channelData)
@@ -457,7 +457,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get offline state for transparent-opaque function`() {
     // given
-    val channelData = mockChannelDataEntity(SuplaChannelFunction.DIGIGLASS_HORIZONTAL, online = false)
+    val channelData = mockChannelDataEntity(SuplaFunction.DIGIGLASS_HORIZONTAL, online = false)
 
     // when
     val state = useCase(channelData)
@@ -470,7 +470,7 @@ class GetChannelStateUseCaseTest {
   fun `should get offline state for heat thermostat`() {
     // given
     val channelData =
-      mockChannelDataEntity(SuplaChannelFunction.HVAC_THERMOSTAT, online = false, thermostatSubfunction = ThermostatSubfunction.HEAT)
+      mockChannelDataEntity(SuplaFunction.HVAC_THERMOSTAT, online = false, thermostatSubfunction = ThermostatSubfunction.HEAT)
 
     // when
     val state = useCase(channelData)
@@ -483,7 +483,7 @@ class GetChannelStateUseCaseTest {
   fun `should get offline state for cool thermostat`() {
     // given
     val channelData =
-      mockChannelDataEntity(SuplaChannelFunction.HVAC_THERMOSTAT, online = false, thermostatSubfunction = ThermostatSubfunction.COOL)
+      mockChannelDataEntity(SuplaFunction.HVAC_THERMOSTAT, online = false, thermostatSubfunction = ThermostatSubfunction.COOL)
 
     // when
     val state = useCase(channelData)
@@ -495,7 +495,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get not used state`() {
     // given
-    val channelData = mockChannelDataEntity(SuplaChannelFunction.RING)
+    val channelData = mockChannelDataEntity(SuplaFunction.RING)
 
     // when
     val state = useCase(channelData)
@@ -507,7 +507,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get not used state for offline`() {
     // given
-    val channelData = mockChannelDataEntity(SuplaChannelFunction.RING, online = false)
+    val channelData = mockChannelDataEntity(SuplaFunction.RING, online = false)
 
     // when
     val state = useCase(channelData)
@@ -519,7 +519,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get off state for pump switch`() {
     // given
-    val channelData = mockChannelDataEntity(SuplaChannelFunction.PUMP_SWITCH, isClosed = false)
+    val channelData = mockChannelDataEntity(SuplaFunction.PUMP_SWITCH, isClosed = false)
 
     // when
     val state = useCase(channelData)
@@ -531,7 +531,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get on state for pump switch`() {
     // given
-    val channelData = mockChannelDataEntity(SuplaChannelFunction.PUMP_SWITCH, isClosed = true)
+    val channelData = mockChannelDataEntity(SuplaFunction.PUMP_SWITCH, isClosed = true)
 
     // when
     val state = useCase(channelData)
@@ -543,7 +543,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get off state for hear or cold source switch - offline`() {
     // given
-    val channelData = mockChannelDataEntity(SuplaChannelFunction.HEAT_OR_COLD_SOURCE_SWITCH, online = false)
+    val channelData = mockChannelDataEntity(SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH, online = false)
 
     // when
     val state = useCase(channelData)
@@ -555,7 +555,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get off state for hear or cold source switch`() {
     // given
-    val channelData = mockChannelDataEntity(SuplaChannelFunction.HEAT_OR_COLD_SOURCE_SWITCH, isClosed = false)
+    val channelData = mockChannelDataEntity(SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH, isClosed = false)
 
     // when
     val state = useCase(channelData)
@@ -567,7 +567,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get on state for hear or cold source switch`() {
     // given
-    val channelData = mockChannelDataEntity(SuplaChannelFunction.HEAT_OR_COLD_SOURCE_SWITCH, isClosed = true)
+    val channelData = mockChannelDataEntity(SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH, isClosed = true)
 
     // when
     val state = useCase(channelData)
@@ -579,7 +579,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get off state for pump switch - offline`() {
     // given
-    val channelData = mockChannelDataEntity(SuplaChannelFunction.PUMP_SWITCH, online = false)
+    val channelData = mockChannelDataEntity(SuplaFunction.PUMP_SWITCH, online = false)
 
     // when
     val state = useCase(channelData)
@@ -589,7 +589,7 @@ class GetChannelStateUseCaseTest {
   }
 
   private fun mockChannelDataEntity(
-    function: SuplaChannelFunction,
+    function: SuplaFunction,
     online: Boolean = true,
     subValueHi: Int = 0,
     rollerShutterPosition: Int = 0,

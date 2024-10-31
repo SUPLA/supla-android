@@ -36,7 +36,7 @@ import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.remote.ChannelConfigType
 import org.supla.android.data.source.remote.SuplaChannelConfig
 import org.supla.android.usecases.channelconfig.LoadChannelConfigUseCase
-import org.supla.core.shared.data.SuplaChannelFunction
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 @RunWith(MockitoJUnitRunner::class)
 class LoadChannelConfigUseCaseTest {
@@ -56,7 +56,7 @@ class LoadChannelConfigUseCaseTest {
     val profileId = 213L
     val remoteId = 123
     val channelEntity: ChannelEntity = mockk {
-      every { function } returns SuplaChannelFunction.GENERAL_PURPOSE_MEASUREMENT
+      every { function } returns SuplaFunction.GENERAL_PURPOSE_MEASUREMENT
     }
     val config: SuplaChannelConfig = mockk()
     whenever(channelRepository.findByRemoteId(profileId, remoteId)).thenReturn(Maybe.just(channelEntity))
@@ -77,7 +77,7 @@ class LoadChannelConfigUseCaseTest {
     val profileId = 213L
     val remoteId = 123
     val channelEntity: ChannelEntity = mockk {
-      every { function } returns SuplaChannelFunction.GENERAL_PURPOSE_METER
+      every { function } returns SuplaFunction.GENERAL_PURPOSE_METER
     }
     val config: SuplaChannelConfig = mockk()
     whenever(channelRepository.findByRemoteId(profileId, remoteId)).thenReturn(Maybe.just(channelEntity))
@@ -99,7 +99,7 @@ class LoadChannelConfigUseCaseTest {
     val profileId = 213L
     val remoteId = 123
     val channelEntity: ChannelEntity = mockk {
-      every { function } returns SuplaChannelFunction.ALARM
+      every { function } returns SuplaFunction.ALARM
     }
     whenever(channelRepository.findByRemoteId(profileId, remoteId)).thenReturn(Maybe.just(channelEntity))
 
@@ -111,6 +111,6 @@ class LoadChannelConfigUseCaseTest {
     // then
     assertThat(throwable)
       .isInstanceOf(IllegalArgumentException::class.java)
-      .hasMessage("Channel not supported (function: `${SuplaChannelFunction.ALARM}`)")
+      .hasMessage("Channel not supported (function: `${SuplaFunction.ALARM}`)")
   }
 }

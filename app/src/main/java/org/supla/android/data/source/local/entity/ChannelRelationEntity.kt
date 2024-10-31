@@ -19,19 +19,19 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import org.supla.core.shared.data.source.local.entity.ChannelRelationType
+import org.supla.core.shared.data.model.channel.ChannelRelationType
 
 @Entity(
   tableName = ChannelRelationEntity.TABLE_NAME,
   primaryKeys = [ChannelRelationEntity.COLUMN_CHANNEL_ID, ChannelRelationEntity.COLUMN_PARENT_ID, ChannelRelationEntity.COLUMN_PROFILE_ID]
 )
 data class ChannelRelationEntity(
-  @ColumnInfo(name = COLUMN_CHANNEL_ID) override val channelId: Int,
-  @ColumnInfo(name = COLUMN_PARENT_ID) override val parentId: Int,
-  @ColumnInfo(name = COLUMN_CHANNEL_RELATION_TYPE) override val relationType: ChannelRelationType,
-  @ColumnInfo(name = COLUMN_PROFILE_ID) override val profileId: Long,
-  @ColumnInfo(name = COLUMN_DELETE_FLAG) override val deleteFlag: Boolean
-) : org.supla.core.shared.data.source.local.entity.ChannelRelationEntity {
+  @ColumnInfo(name = COLUMN_CHANNEL_ID) val channelId: Int,
+  @ColumnInfo(name = COLUMN_PARENT_ID) val parentId: Int,
+  @ColumnInfo(name = COLUMN_CHANNEL_RELATION_TYPE) val relationType: ChannelRelationType,
+  @ColumnInfo(name = COLUMN_PROFILE_ID) val profileId: Long,
+  @ColumnInfo(name = COLUMN_DELETE_FLAG) val deleteFlag: Boolean
+) {
   companion object {
     const val TABLE_NAME = "channel_relation"
     const val COLUMN_CHANNEL_ID = "channel_id"

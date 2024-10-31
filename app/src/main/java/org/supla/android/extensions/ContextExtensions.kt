@@ -25,8 +25,8 @@ import org.supla.android.di.entrypoints.GetChannelDefaultCaptionUseCaseEntryPoin
 import org.supla.android.di.entrypoints.GetChannelIconUseCaseEntryPoint
 import org.supla.android.di.entrypoints.PreferencesEntryPoint
 import org.supla.android.di.entrypoints.ValuesFormatterEntryPoint
-import org.supla.android.usecases.channel.GetChannelDefaultCaptionUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
+import org.supla.core.shared.usecase.channel.GetChannelDefaultCaptionUseCase
 
 val Context.valuesFormatter: ValuesFormatter
   get() = EntryPointAccessors.fromApplication(

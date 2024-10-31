@@ -23,7 +23,7 @@ import org.supla.android.db.AuthProfileItem
 import org.supla.android.lib.SuplaChannel
 import org.supla.android.lib.SuplaChannelRelation
 import org.supla.android.lib.SuplaChannelValue
-import org.supla.core.shared.data.source.local.entity.ChannelRelationType
+import org.supla.core.shared.data.model.channel.ChannelRelationType
 
 fun profileMock(profileId: Long) = mockk<AuthProfileItem>().also {
   every { it.id } returns profileId

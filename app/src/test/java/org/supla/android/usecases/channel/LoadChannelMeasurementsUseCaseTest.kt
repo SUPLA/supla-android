@@ -37,7 +37,7 @@ import org.supla.android.usecases.channel.measurementsprovider.GeneralPurposeMea
 import org.supla.android.usecases.channel.measurementsprovider.GeneralPurposeMeterMeasurementsProvider
 import org.supla.android.usecases.channel.measurementsprovider.TemperatureAndHumidityMeasurementsProvider
 import org.supla.android.usecases.channel.measurementsprovider.TemperatureMeasurementsProvider
-import org.supla.core.shared.data.SuplaChannelFunction
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 class LoadChannelMeasurementsUseCaseTest : BaseLoadMeasurementsUseCaseTest() {
 
@@ -71,7 +71,7 @@ class LoadChannelMeasurementsUseCaseTest : BaseLoadMeasurementsUseCaseTest() {
   fun `should provide sets when there is a provider which can handle given function`() {
     // given
     val remoteId = 1
-    val function = SuplaChannelFunction.THERMOMETER
+    val function = SuplaFunction.THERMOMETER
     val channel: ChannelDataEntity = mockk {
       every { this@mockk.function } returns function
     }
@@ -109,7 +109,7 @@ class LoadChannelMeasurementsUseCaseTest : BaseLoadMeasurementsUseCaseTest() {
   fun `should throw exception when there is no provider for given function`() {
     // given
     val remoteId = 1
-    val function = SuplaChannelFunction.ALARM
+    val function = SuplaFunction.ALARM
     val channel: ChannelDataEntity = mockk {
       every { this@mockk.function } returns function
     }
