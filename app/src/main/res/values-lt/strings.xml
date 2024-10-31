@@ -432,7 +432,7 @@
   <string name="details_em_balance_arithmetic">Asimetrinis balansas</string>
   <string name="details_em_balance_vector">Vektorinis balansas</string>
 
-  <string name="cfg_profile_active_indicator" translatable="false">aktyvus</string>
+  <string name="cfg_profile_active_indicator">aktyvus</string>
 
   <string name="turn_on">Įjungti</string>
   <string name="turn_off">Išjungti</string>
@@ -453,9 +453,9 @@
   <string name="widget_group">grupė</string>
   <string name="widget_scene">scena</string>
   <string name="widget_action_toggle">Perjungti</string>
-  <string name="associeted_with_push_error" translatable="false">Negalima pakeisti kanalo, susieto su PUSH pranešimais, funkcijos.</string>
-  <string name="associeted_with_vbt_error" translatable="false">Negalima pakeisti kanalo, susieto su reakcijomis, funkcijos.</string>
-  <string name="rs_display_mode" translatable="false">Roletai, žaliuzės, užuolaidos %</string>
+  <string name="associeted_with_push_error">Negalima pakeisti kanalo, susieto su PUSH pranešimais, funkcijos.</string>
+  <string name="associeted_with_vbt_error">Negalima pakeisti kanalo, susieto su reakcijomis, funkcijos.</string>
+  <string name="rs_display_mode">Roletai, žaliuzės, užuolaidos %</string>
   <string name="navbar_channels">Kanalai</string>
   <string name="navbar_groups">Grupės</string>
   <string name="navbar_scenes">Scenos</string>

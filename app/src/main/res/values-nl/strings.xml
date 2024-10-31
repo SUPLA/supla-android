@@ -454,7 +454,7 @@
   <string name="details_em_balance_arithmetic">Rekenkundig saldo</string>
   <string name="details_em_balance_vector">Vector saldo</string>
 
-  <string name="cfg_profile_active_indicator" translatable="false">Actief</string>
+  <string name="cfg_profile_active_indicator">Actief</string>
 
   <string name="turn_on">Zet in</string>
   <string name="turn_off">Schakel uit</string>
@@ -476,9 +476,9 @@
   <string name="widget_scene">podium</string>
   <string name="widget_action_toggle">Schakel</string>
 
-  <string name="associeted_with_push_error" translatable="false">De functie van het kanaal dat is gekoppeld aan PUSH-meldingen kan niet worden gewijzigd.</string>
-  <string name="associeted_with_vbt_error" translatable="false">De functie van het kanaal dat gekoppeld is aan de reacties kan niet worden gewijzigd.</string>
-  <string name="rs_display_mode" translatable="false">Rolluiken, jaloezieën, gordijnen %.</string>
+  <string name="associeted_with_push_error">De functie van het kanaal dat is gekoppeld aan PUSH-meldingen kan niet worden gewijzigd.</string>
+  <string name="associeted_with_vbt_error">De functie van het kanaal dat gekoppeld is aan de reacties kan niet worden gewijzigd.</string>
+  <string name="rs_display_mode">Rolluiken, jaloezieën, gordijnen %.</string>
   <string name="navbar_channels">Kanalen</string>
   <string name="navbar_groups">Groepen</string>
   <string name="navbar_scenes">Scènes</string>

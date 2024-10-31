@@ -442,7 +442,7 @@
   <string name="details_em_balance_arithmetic">Balance aritmético</string>
   <string name="details_em_balance_vector">Balance vectorial</string>
 
-  <string name="cfg_profile_active_indicator" translatable="false">activo</string>
+  <string name="cfg_profile_active_indicator">activo</string>
   <string name="turn_on">Activar</string>
   <string name="turn_off">Desactivar</string>
   <string name="str_default">Por defecto</string>
@@ -463,9 +463,9 @@
   <string name="widget_scene">escena</string>
   <string name="widget_action_toggle">Cambiar</string>
 
-  <string name="associeted_with_push_error" translatable="false">La función del canal asociado a las notificaciones PUSH no puede modificarse.</string>
-  <string name="associeted_with_vbt_error" translatable="false">La función del canal asociado a las reacciones no puede modificarse.</string>
-  <string name="rs_display_mode" translatable="false">Persianas, estores, cortinas % </string>
+  <string name="associeted_with_push_error">La función del canal asociado a las notificaciones PUSH no puede modificarse.</string>
+  <string name="associeted_with_vbt_error">La función del canal asociado a las reacciones no puede modificarse.</string>
+  <string name="rs_display_mode">Persianas, estores, cortinas % </string>
   <string name="navbar_channels">Canales</string>
   <string name="navbar_groups">Grupos</string>
   <string name="navbar_scenes">Escenas</string>
@@ -670,9 +670,6 @@
   <string name="thermostat_detail_main_thermostat">Termostato principal</string>
   <string name="thermostat_detail_other_thermostats">Termostatos dependientes</string>
   <string name="thermostat_battery_cover_open">Tapa de la batería abierta</string>
-
-
-
 
 
 </resources>
