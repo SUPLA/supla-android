@@ -451,7 +451,7 @@
   <string name="details_em_balance_arithmetic">Αριθμητικός ισολογισμός</string>
   <string name="details_em_balance_vector">Διανυσματικός ισολογισμός</string>
 
-  <string name="cfg_profile_active_indicator" translatable="false">ενεργό</string>
+  <string name="cfg_profile_active_indicator">ενεργό</string>
   <string name="turn_on">Ενεργοποίηση</string>
   <string name="turn_off">Απενεργοποίηση</string>
   <string name="str_default">Προεπιλογή</string>
@@ -471,9 +471,9 @@
   <string name="widget_group">ομάδα</string>
   <string name="widget_scene">σκηνή</string>
   <string name="widget_action_toggle">Εναλλαγή</string>
-  <string name="associeted_with_push_error" translatable="false">Η λειτουργία του καναλιού που σχετίζεται με τις ειδοποιήσεις PUSH δεν μπορεί να αλλάξει.</string>
-  <string name="associeted_with_vbt_error" translatable="false">Η λειτουργία του καναλιού που σχετίζεται με τις αντιδράσεις δεν μπορεί να αλλάξει.</string>
-  <string name="rs_display_mode" translatable="false">Ρολά, περσίδες, κουρτίνες %.</string>
+  <string name="associeted_with_push_error">Η λειτουργία του καναλιού που σχετίζεται με τις ειδοποιήσεις PUSH δεν μπορεί να αλλάξει.</string>
+  <string name="associeted_with_vbt_error">Η λειτουργία του καναλιού που σχετίζεται με τις αντιδράσεις δεν μπορεί να αλλάξει.</string>
+  <string name="rs_display_mode">Ρολά, περσίδες, κουρτίνες %.</string>
   <string name="navbar_channels">Κανάλια</string>
   <string name="navbar_groups">Ομάδες</string>
   <string name="navbar_scenes">Σκηνές</string>

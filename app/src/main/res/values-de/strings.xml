@@ -442,7 +442,7 @@
   <string name="remove_account_remotely">Vergiss und lösch im Cloud</string>
   <string name="cancel">Abbrechen</string>
   <string name="form_profile_removal_failure">Das Löschen deines Konto ist fehlgeschlagen, bitte noch mal versuchen</string>
-  <string name="general_failure" translatable="false">Die Aktion wurde nicht erfolgreich durchgeführt</string>
+  <string name="general_failure">Die Aktion wurde nicht erfolgreich durchgeführt</string>
 
   <string name="new_gesture_description">Wischgeste zum Öffnen der Kanaldetails wurde gelöscht, tippe auf dem Kanal, um sie zu sehen.</string>
   <string name="channel_offline">Das Kanal ist offline</string>
@@ -453,10 +453,10 @@
   <string name="settings_localization">Standort (genau)</string>
   <string name="settings_permissions">Berechtigungen</string>
 
-  <string name="details_general" translatable="false">Allgemein</string>
-  <string name="details_metrics" translatable="false">Messungen</string>
-  <string name="details_settings" translatable="false">Einstellungen</string>
-  <string name="details_history" translatable="false">Historie</string>
+  <string name="details_general">Allgemein</string>
+  <string name="details_metrics">Messungen</string>
+  <string name="details_settings">Einstellungen</string>
+  <string name="details_history">Historie</string>
   <string name="details_timer_wrong_time">Zeit muss größer als 0 sein</string>
   <string name="details_timer_text">Bestimmen Sie bitte die Zeit, zu der das Gerät ein- oder ausgeschaltet werden sollte</string>
   <string name="details_timer_turn_on_for">Einschalten für</string>

@@ -454,7 +454,7 @@
   <string name="details_em_balance_arithmetic">Aritmetisk balanse</string>
   <string name="details_em_balance_vector">Vektorbalanse</string>
 
-  <string name="cfg_profile_active_indicator" translatable="false">Aktiv</string>
+  <string name="cfg_profile_active_indicator">Aktiv</string>
 
   <string name="turn_on">Slå på</string>
   <string name="turn_off">Slå av</string>
@@ -476,9 +476,9 @@
   <string name="widget_scene">scene</string>
   <string name="widget_action_toggle">Bytt om</string>
 
-  <string name="associeted_with_push_error" translatable="false">Funksjonen til kanalen som er knyttet til PUSH-varsler, kan ikke endres.</string>
-  <string name="associeted_with_vbt_error" translatable="false">Funksjonen til kanalen som er knyttet til reaksjonene, kan ikke endres.</string>
-  <string name="rs_display_mode" translatable="false">Rulleskodder, persienner, gardiner %.</string>
+  <string name="associeted_with_push_error">Funksjonen til kanalen som er knyttet til PUSH-varsler, kan ikke endres.</string>
+  <string name="associeted_with_vbt_error">Funksjonen til kanalen som er knyttet til reaksjonene, kan ikke endres.</string>
+  <string name="rs_display_mode">Rulleskodder, persienner, gardiner %.</string>
   <string name="navbar_channels">Kanaler</string>
   <string name="navbar_groups">Grupper</string>
   <string name="navbar_scenes">Scener</string>
