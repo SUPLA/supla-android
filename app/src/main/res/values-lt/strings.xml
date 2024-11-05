@@ -539,7 +539,6 @@
   <string name="thermostat_detail_program_time">per %1$s</string>
 
   <string name="history_range_label">Diapazonas</string>
-  <string name="history_aggregation_label">Apibendrinimas</string>
   <string name="history_range_current_day">Diena</string>
   <string name="history_range_current_week">Savaitė</string>
   <string name="history_range_current_month">Mėnuo</string>

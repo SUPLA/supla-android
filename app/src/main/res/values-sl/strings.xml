@@ -562,7 +562,6 @@
   <string name="thermostat_detail_program_time">prek %1$s</string>
 
   <string name="history_range_label">Območje</string>
-  <string name="history_aggregation_label">Združevanje</string>
   <string name="history_range_current_day">Dan</string>
   <string name="history_range_current_week">Teden</string>
   <string name="history_range_current_month">Mesec</string>

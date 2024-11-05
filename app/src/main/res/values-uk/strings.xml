@@ -536,7 +536,6 @@
   <string name="thermostat_detail_program_time">протягом %1$s</string>
 
   <string name="history_range_label">Діапазон</string>
-  <string name="history_aggregation_label">Агрегація</string>
   <string name="history_range_current_day">День</string>
   <string name="history_range_current_week">Тиждень</string>
   <string name="history_range_current_month">Місяць</string>

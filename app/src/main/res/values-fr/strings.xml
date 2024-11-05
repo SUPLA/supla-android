@@ -548,7 +548,6 @@
   <string name="thermostat_detail_program_time">pendant %1$s</string>
 
   <string name="history_range_label">Plage</string>
-  <string name="history_aggregation_label">Agrégation</string>
   <string name="history_range_current_day">Jour</string>
   <string name="history_range_current_week">Semaine</string>
   <string name="history_range_current_month">Mois</string>

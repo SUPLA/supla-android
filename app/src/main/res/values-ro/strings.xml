@@ -563,7 +563,6 @@
   <string name="thermostat_detail_program_time">prin %1$s</string>
 
   <string name="history_range_label">Domeniu:</string>
-  <string name="history_aggregation_label">Agregare</string>
   <string name="history_range_current_day">Ziua</string>
   <string name="history_range_current_week">Săptămână</string>
   <string name="history_range_current_month">Luna</string>

@@ -554,7 +554,6 @@
   <string name="thermostat_detail_program_time">per %1$s</string>
 
   <string name="history_range_label">Intervallo</string>
-  <string name="history_aggregation_label">Aggregazione</string>
   <string name="history_range_current_day">Giorno</string>
   <string name="history_range_current_week">Settimana</string>
   <string name="history_range_current_month">Mese</string>
