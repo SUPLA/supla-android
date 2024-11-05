@@ -562,7 +562,6 @@
   <string name="thermostat_detail_program_time">na %1$s</string>
 
   <string name="history_range_label">Rozsah</string>
-  <string name="history_aggregation_label">Agregácia</string>
   <string name="history_range_current_day">Deň</string>
   <string name="history_range_current_week">Týždeň</string>
   <string name="history_range_current_month">Mesiac</string>

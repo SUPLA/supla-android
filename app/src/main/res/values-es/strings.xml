@@ -549,7 +549,6 @@
   <string name="thermostat_detail_program_time">durante %1$s</string>
 
   <string name="history_range_label">Rango</string>
-  <string name="history_aggregation_label">Agregación</string>
   <string name="history_range_current_day">Día</string>
   <string name="history_range_current_week">Semana</string>
   <string name="history_range_current_month">Mes</string>

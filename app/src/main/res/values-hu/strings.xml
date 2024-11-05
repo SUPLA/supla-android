@@ -561,7 +561,6 @@
   <string name="thermostat_detail_program_time">%1$s keresztül</string>
 
   <string name="history_range_label">Időtartam</string>
-  <string name="history_aggregation_label">Összesítés</string>
   <string name="history_range_current_day">Nap</string>
   <string name="history_range_current_week">Hét</string>
   <string name="history_range_current_month">Hónap</string>

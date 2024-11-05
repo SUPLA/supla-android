@@ -561,7 +561,6 @@
   <string name="thermostat_detail_program_time">via %1$s</string>
 
   <string name="history_range_label">Omfang</string>
-  <string name="history_aggregation_label">Aggregering</string>
   <string name="history_range_current_day">Dag</string>
   <string name="history_range_current_week">Uke</string>
   <string name="history_range_current_month">Måned</string>
