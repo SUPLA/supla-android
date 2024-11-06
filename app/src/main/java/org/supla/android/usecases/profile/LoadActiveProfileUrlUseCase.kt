@@ -25,7 +25,15 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 sealed class CloudUrl {
+  val urlString: String
+    get() = when (this) {
+      SuplaCloud -> "https://cloud.supla.org/"
+      BetaCloud -> "https://beta-cloud.supla.org"
+      is PrivateCloud -> url.toString()
+    }
+
   data object SuplaCloud : CloudUrl()
+  data object BetaCloud : CloudUrl()
   data class PrivateCloud(val url: Uri) : CloudUrl()
 }
 
@@ -41,12 +49,16 @@ class LoadActiveProfileUrlUseCase @Inject constructor(
         if (profile.emailAuth) {
           if (profile.serverForEmail?.endsWith("supla.org") == false) {
             CloudUrl.PrivateCloud(uriProxy.toUri("https://${profile.serverForEmail}"))
+          } else if (profile.serverForEmail == "beta-cloud.supla.org") {
+            CloudUrl.BetaCloud
           } else {
             CloudUrl.SuplaCloud
           }
         } else {
           if (profile.serverForAccessId?.endsWith("supla.org") == false) {
             CloudUrl.PrivateCloud(uriProxy.toUri("https://${profile.serverForAccessId}"))
+          } else if (profile.serverForAccessId == "beta-cloud.supla.org") {
+            CloudUrl.BetaCloud
           } else {
             CloudUrl.SuplaCloud
           }

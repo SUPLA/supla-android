@@ -226,22 +226,22 @@ class ProvideChannelDetailTypeUseCaseTest {
 
   @Test
   fun `should provide detail for electricity IC`() {
-    testDetailType(SuplaFunction.IC_ELECTRICITY_METER, LegacyDetailType.IC)
+    testDetailType(SuplaFunction.IC_ELECTRICITY_METER, IcDetailType(listOf(DetailPage.HISTORY_IC)))
   }
 
   @Test
   fun `should provide detail for gas IC`() {
-    testDetailType(SuplaFunction.IC_GAS_METER, LegacyDetailType.IC)
+    testDetailType(SuplaFunction.IC_GAS_METER, IcDetailType(listOf(DetailPage.HISTORY_IC)))
   }
 
   @Test
   fun `should provide detail for water IC`() {
-    testDetailType(SuplaFunction.IC_WATER_METER, LegacyDetailType.IC)
+    testDetailType(SuplaFunction.IC_WATER_METER, IcDetailType(listOf(DetailPage.HISTORY_IC)))
   }
 
   @Test
   fun `should provide detail for heat IC`() {
-    testDetailType(SuplaFunction.IC_HEAT_METER, LegacyDetailType.IC)
+    testDetailType(SuplaFunction.IC_HEAT_METER, IcDetailType(listOf(DetailPage.HISTORY_IC)))
   }
 
   @Test

@@ -70,6 +70,10 @@ class MainNavigator @Inject constructor(@ActivityContext private val activityCon
     activityContext.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(activityContext.resources.getString(R.string.cloud_url))))
   }
 
+  fun navigateToBetaCloudExternal() {
+    activityContext.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(activityContext.resources.getString(R.string.beta_cloud_url))))
+  }
+
   fun navigateToWeb(url: Uri) {
     activityContext.startActivity(Intent(Intent.ACTION_VIEW, url))
   }

@@ -1,11 +1,11 @@
 [versions]
 
-compileSdk = "34"
+compileSdk = "35"
 targetSdk = "34"
 minSdk = "24"
 buildTools = "34.0.0"
 
-androidGradlePlugin = "8.7.1"
+androidGradlePlugin = "8.7.2"
 
 kotlin = "2.0.21"
 hilt = "2.51.1"
@@ -17,29 +17,29 @@ skie = "0.9.3"
 hiltWorker = "1.2.0"
 multidex = "2.0.1"
 androidChart = "v3.1.0"
-coroutines = "1.8.1"
+coroutines = "1.9.0"
 googleMaterial = "1.12.0"
 ktlint = "0.48.1"
 fragmentViewBinding = "1.0.2"
 firebase = "33.5.1"
 
-androidx-fragment = "1.8.4"
-androidx-lifecycle = "2.8.6"
+androidx-fragment = "1.8.5"
+androidx-lifecycle = "2.8.7"
 androidx-lifecycle-extensions = "2.2.0"
 androidx-navigation = "2.8.3"
-androidx-constraintLayout = "2.1.4"
-androidx-core = "1.13.1"
+androidx-constraintLayout = "2.2.0"
+androidx-core = "1.15.0"
 androidx-core-splashscreen = "1.0.1"
 androidx-preferences = "1.2.1"
-androidx-worker = "2.9.1"
+androidx-worker = "2.10.0"
 androidx-recyclerView = "1.3.2"
 androidx-security = "1.1.0-alpha06"
 androidx-room = "2.6.1"
 androidx-appCompat = "1.7.0"
 androidx-biometric = "1.1.0"
-androidx-compose-core = "1.7.4"
-androidx-compose-constraintLayout = "1.0.1"
-androidx-compose-material3 = "1.3.0"
+androidx-compose-core = "1.7.5"
+androidx-compose-constraintLayout = "1.1.0"
+androidx-compose-material3 = "1.3.1"
 androidx-compose-material3-adaptive = "1.0.0"
 
 rxjava = "3.1.8"
@@ -52,6 +52,7 @@ retrofit-logging = "4.12.0"
 kotlinx-serialization = "1.7.1"
 android-tools-desugar = "2.1.2"
 jsoup = "1.18.1"
+coil = "3.0.0"
 
 testing-junit = "4.13.2"
 testing-hamcrest = "1.3"
@@ -125,6 +126,7 @@ firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging
 kotlinx-serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 android-tools-desugar = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "android-tools-desugar" }
 jsoup = { group = "org.jsoup", name = "jsoup", version.ref = "jsoup" }
+coil = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
 
 kotlin-endians = { group = "org.kotlincrypto.endians", name = "endians", version.ref = "kotlin-endians" }
 

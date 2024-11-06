@@ -45,6 +45,9 @@ abstract class BaseFragment<S : ViewState, E : ViewEvent>(@LayoutRes contentLayo
 
   protected abstract val viewModel: BaseViewModel<S, E>
 
+  protected val viewState: S
+    get() = viewModel.getViewState().value
+
   @OptIn(FlowPreview::class)
   @CallSuper
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

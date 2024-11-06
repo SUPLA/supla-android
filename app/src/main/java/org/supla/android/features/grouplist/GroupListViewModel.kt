@@ -135,6 +135,7 @@ class GroupListViewModel @Inject constructor(
     loadServerUrl {
       when (it) {
         is CloudUrl.SuplaCloud -> sendEvent(GroupListViewEvent.NavigateToSuplaCloud)
+        is CloudUrl.BetaCloud -> sendEvent(GroupListViewEvent.NavigateToSuplaBetaCloud)
         is CloudUrl.PrivateCloud -> sendEvent(GroupListViewEvent.NavigateToPrivateCloud(it.url))
       }
     }
@@ -180,8 +181,9 @@ sealed class GroupListViewEvent : ViewEvent {
   data class ShowValveDialog(val remoteId: Int) : GroupListViewEvent()
   data class ShowAmperageExceededDialog(val remoteId: Int) : GroupListViewEvent()
   data class OpenLegacyDetails(val remoteId: Int, val type: LegacyDetailType) : GroupListViewEvent()
-  object ReassignAdapter : GroupListViewEvent()
-  object NavigateToSuplaCloud : GroupListViewEvent()
+  data object ReassignAdapter : GroupListViewEvent()
+  data object NavigateToSuplaCloud : GroupListViewEvent()
+  data object NavigateToSuplaBetaCloud : GroupListViewEvent()
   data class NavigateToPrivateCloud(val url: Uri) : GroupListViewEvent()
 
   data class OpenRollerShutterDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) :

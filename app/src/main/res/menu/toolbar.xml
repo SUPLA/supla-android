@@ -25,4 +25,10 @@
     android:title="@string/toolbar_delete_chart_history"
     android:visible="false"
     app:showAsAction="never" />
+  <item
+    android:id="@+id/toolbar_ocr"
+    android:icon="@drawable/ic_ocr_photo"
+    android:title="@string/toolbar_ocr"
+    android:visible="false"
+    app:showAsAction="always" />
 </menu>

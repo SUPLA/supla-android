@@ -66,7 +66,7 @@ abstract class BaseDetailTypeProviderUseCase {
     SuplaFunction.IC_GAS_METER,
     SuplaFunction.IC_WATER_METER,
     SuplaFunction.IC_HEAT_METER ->
-      LegacyDetailType.IC
+      IcDetailType(listOf(DetailPage.HISTORY_IC))
 
     SuplaFunction.THERMOMETER,
     SuplaFunction.HUMIDITY_AND_TEMPERATURE ->
