@@ -52,3 +52,7 @@ data class WindowDetailType(
 data class EmDetailType(
   val pages: List<DetailPage>
 ) : DetailType
+
+data class IcDetailType(
+  val pages: List<DetailPage>
+) : DetailType

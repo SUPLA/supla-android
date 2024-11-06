@@ -168,10 +168,9 @@ dependencies {
   implementation(libs.kotlin.stdlib)
   implementation(libs.kotlinx.serialization)
   implementation(libs.jsoup)
+  implementation(libs.coil)
 
   coreLibraryDesugaring(libs.android.tools.desugar)
-
-  annotationProcessor(libs.androidx.room.compiler)
 
   kapt(libs.hilt.kapt)
   kapt(libs.hilt.worker.kapt)

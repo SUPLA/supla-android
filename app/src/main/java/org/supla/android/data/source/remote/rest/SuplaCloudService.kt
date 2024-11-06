@@ -29,6 +29,7 @@ import org.supla.android.data.source.remote.rest.channel.GeneralPurposeMeter
 import org.supla.android.data.source.remote.rest.channel.TemperatureAndHumidityMeasurement
 import org.supla.android.data.source.remote.rest.channel.TemperatureMeasurement
 import org.supla.android.di.GSON_FOR_API
+import org.supla.core.shared.data.model.rest.ImpulseCounterPhoto
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
@@ -128,6 +129,11 @@ interface SuplaCloudService {
     @Query("limit") limit: Int = 2,
     @Query("offset") offset: Int = 0
   ): Call<List<ElectricityMeasurement>>
+
+  @GET("/api/v3/integrations/ocr/{remoteId}/latest")
+  fun getImpulseCounterPhoto(
+    @Path("remoteId") remoteId: Int
+  ): Observable<ImpulseCounterPhoto>
 
   @Singleton
   class Provider @Inject constructor(

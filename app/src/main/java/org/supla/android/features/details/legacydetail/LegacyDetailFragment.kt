@@ -65,6 +65,17 @@ class LegacyDetailFragment : BaseFragment<LegacyDetailViewState, LegacyDetailVie
     viewModel.loadData(remoteId, itemType)
   }
 
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+
+    if (binding.legacyDetailContent.childCount == 0 && this::detailView.isInitialized) {
+      binding.legacyDetailContent.addView(
+        detailView,
+        ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+      )
+    }
+  }
+
   override fun onResume() {
     super.onResume()
 
@@ -79,6 +90,13 @@ class LegacyDetailFragment : BaseFragment<LegacyDetailViewState, LegacyDetailVie
     if (this::detailView.isInitialized) {
       detailView.onDetailHide()
     }
+  }
+
+  override fun onDestroyView() {
+    if (this::detailView.isInitialized) {
+      binding.legacyDetailContent.removeView(detailView)
+    }
+    super.onDestroyView()
   }
 
   override fun handleEvents(event: LegacyDetailViewEvent) {

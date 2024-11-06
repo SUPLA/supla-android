@@ -88,6 +88,7 @@ class SceneListViewModel @Inject constructor(
     loadServerUrl {
       when (it) {
         is CloudUrl.SuplaCloud -> sendEvent(SceneListViewEvent.NavigateToSuplaCloud)
+        is CloudUrl.BetaCloud -> sendEvent(SceneListViewEvent.NavigateToSuplaBetaCloud)
         is CloudUrl.PrivateCloud -> sendEvent(SceneListViewEvent.NavigateToPrivateCloud(it.url))
       }
     }
@@ -95,8 +96,9 @@ class SceneListViewModel @Inject constructor(
 }
 
 sealed class SceneListViewEvent : ViewEvent {
-  object ReassignAdapter : SceneListViewEvent()
-  object NavigateToSuplaCloud : SceneListViewEvent()
+  data object ReassignAdapter : SceneListViewEvent()
+  data object NavigateToSuplaCloud : SceneListViewEvent()
+  data object NavigateToSuplaBetaCloud : SceneListViewEvent()
   data class NavigateToPrivateCloud(val url: Uri) : SceneListViewEvent()
 }
 

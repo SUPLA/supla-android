@@ -224,12 +224,9 @@ public class ChannelDetailIC extends DetailLayout
         getChannelBase().getFunc(),
         icSpinnerMaster,
         icSpinnerSlave,
-        new Runnable() {
-          @Override
-          public void run() {
-            masterLastSelectedIdx = icSpinnerMaster.getSelectedItemPosition();
-            updateSlaveSpinnerItems();
-          }
+        () -> {
+          masterLastSelectedIdx = icSpinnerMaster.getSelectedItemPosition();
+          updateSlaveSpinnerItems();
         });
 
     icSpinnerMaster.setOnItemSelectedListener(this);
@@ -244,13 +241,7 @@ public class ChannelDetailIC extends DetailLayout
           new TimerTask() {
             @Override
             public void run() {
-              final Runnable r =
-                  new Runnable() {
-                    public void run() {
-                      runDownloadTask();
-                    }
-                  };
-
+              final Runnable r = () -> runDownloadTask();
               mHandler.post(r);
             }
           },

@@ -52,6 +52,14 @@
     android:name="org.supla.android.features.details.electricitymeterdetail.ElectricityMeterDetailFragment" />
 
   <fragment
+    android:id="@+id/impulse_counter_detail_fragment"
+    android:name="org.supla.android.features.details.impulsecounter.ImpulseCounterDetailFragment" />
+
+  <fragment
+    android:id="@+id/counter_photo_fragment"
+    android:name="org.supla.android.features.details.impulsecounter.counterphoto.CounterPhotoFragment" />
+
+  <fragment
     android:id="@+id/notifications_log_fragment"
     android:name="org.supla.android.features.notificationslog.NotificationsLogFragment"
     android:label="@string/menu_notifications" />

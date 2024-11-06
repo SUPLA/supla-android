@@ -65,6 +65,7 @@ class SceneListFragment : BaseFragment<SceneListViewState, SceneListViewEvent>(R
       }
       is SceneListViewEvent.NavigateToPrivateCloud -> navigator.navigateToWeb(event.url)
       is SceneListViewEvent.NavigateToSuplaCloud -> navigator.navigateToCloudExternal()
+      is SceneListViewEvent.NavigateToSuplaBetaCloud -> navigator.navigateToBetaCloudExternal()
     }
   }
 

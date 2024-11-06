@@ -20,6 +20,7 @@
   <string name="homepage_url" translatable="false">https://www.supla.org</string>
   <string name="forumpage_url" translatable="false">https://en-forum.supla.org</string>
   <string name="cloud_url" translatable="false">https://cloud.supla.org</string>
+  <string name="beta_cloud_url" translatable="false">https://beta-cloud.supla.org</string>
   <string name="create_url">https://cloud.supla.org/register?lang=en</string>
   <string name="delete_url">https://{SERVER_ADDRESS}/db99845855b2ecbfecca9a095062b96c3e27703f?lang=en</string>
   <string name="devices_list_url" translatable="false">https://www.supla.org/en/devices</string>
@@ -651,6 +652,7 @@
   <string name="facade_blind_slat_tilt" translatable="false">Tilt: </string>
   <string name="facade_blinds_no_tilt" translatable="false">Missing configuration</string>
   <string name="toolbar_delete_chart_history" translatable="false">Delete history and download again</string>
+  <string name="toolbar_ocr" translatable="false">OCR</string>
   <string name="history_wait_for_download_completed" translatable="false">Please wait, downloading…</string>
   <string name="channel_caption_terrace_awning" translatable="false">Terrace awning</string>
   <string name="channel_caption_projector_screen" translatable="false">Projector screen</string>
@@ -739,6 +741,10 @@
   <string name="channel_btn_expand" translatable="false">Expand</string>
   <string name="cfg_battery_level_warning" translatable="false">Battery level warning</string>
   <string name="channel_battery_level">Battery level (%1$d - %2$s): %3$d%%</string>
+  <string name="counter_photo_toolbar" translatable="false">Counter photos</string>
+  <string name="counter_photo_counter_area" translatable="false">Counter area</string>
+  <string name="counter_photo_original_photo" translatable="false">Original photo</string>
+  <string name="counter_photo_settings" translatable="false">Cloud configuration</string>
 
   <plurals name="details_timer_info_on" translatable="false">
     <item quantity="other">on</item>

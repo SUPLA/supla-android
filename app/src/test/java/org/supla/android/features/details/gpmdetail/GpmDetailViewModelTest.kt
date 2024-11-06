@@ -156,7 +156,7 @@ class GpmDetailViewModelTest : BaseViewModelTest<GpmDetailViewState, GpmDetailVi
     every { channelData.function } returns function
     channelData.mockShareable()
     whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channelData))
-    whenever(updateEventsManager.observeChannelsUpdate()).thenReturn(Observable.just(Any()))
+    whenever(updateEventsManager.observeChannelEvents(remoteId)).thenReturn(Observable.just(UpdateEventsManager.State.Channel))
 
     val caption: LocalizedString = mockk()
     whenever(getCaptionUseCase.invoke(channelData.shareable)).thenReturn(caption)
@@ -169,7 +169,7 @@ class GpmDetailViewModelTest : BaseViewModelTest<GpmDetailViewState, GpmDetailVi
     Assertions.assertThat(states).containsExactly(GpmDetailViewState(caption))
 
     verify(readChannelByRemoteIdUseCase).invoke(remoteId)
-    verify(updateEventsManager).observeChannelsUpdate()
+    verify(updateEventsManager).observeChannelEvents(remoteId)
     verifyNoMoreInteractions(readChannelByRemoteIdUseCase, updateEventsManager)
     verifyNoInteractions(readChannelGroupByRemoteIdUseCase)
   }

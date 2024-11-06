@@ -187,7 +187,7 @@ class SwitchDetailViewModelTest : BaseViewModelTest<SwitchDetailViewState, Switc
 
     whenever(getCaptionUseCase.invoke(channelData.shareable)).thenReturn(caption)
     whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channelData))
-    whenever(updateEventsManager.observeChannelsUpdate()).thenReturn(Observable.just(Any()))
+    whenever(updateEventsManager.observeChannelEvents(remoteId)).thenReturn(Observable.just(UpdateEventsManager.State.Channel))
 
     // when
     viewModel.observeUpdates(remoteId, ItemType.CHANNEL, function)
@@ -197,7 +197,7 @@ class SwitchDetailViewModelTest : BaseViewModelTest<SwitchDetailViewState, Switc
     assertThat(states).containsExactly(SwitchDetailViewState(caption))
 
     verify(readChannelByRemoteIdUseCase).invoke(remoteId)
-    verify(updateEventsManager).observeChannelsUpdate()
+    verify(updateEventsManager).observeChannelEvents(remoteId)
     verifyNoMoreInteractions(readChannelByRemoteIdUseCase, updateEventsManager)
     verifyNoInteractions(readChannelGroupByRemoteIdUseCase)
   }
@@ -216,7 +216,7 @@ class SwitchDetailViewModelTest : BaseViewModelTest<SwitchDetailViewState, Switc
 
     whenever(getCaptionUseCase.invoke(group.shareable)).thenReturn(caption)
     whenever(readChannelGroupByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(group))
-    whenever(updateEventsManager.observeGroupsUpdate()).thenReturn(Observable.just(Any()))
+    whenever(updateEventsManager.observeGroupEvents(remoteId)).thenReturn(Observable.just(UpdateEventsManager.State.Group))
 
     // when
     viewModel.observeUpdates(remoteId, ItemType.GROUP, function)
@@ -226,7 +226,7 @@ class SwitchDetailViewModelTest : BaseViewModelTest<SwitchDetailViewState, Switc
     assertThat(states).containsExactly(SwitchDetailViewState(caption))
 
     verify(readChannelGroupByRemoteIdUseCase).invoke(remoteId)
-    verify(updateEventsManager).observeGroupsUpdate()
+    verify(updateEventsManager).observeGroupEvents(remoteId)
     verifyNoMoreInteractions(readChannelGroupByRemoteIdUseCase, updateEventsManager)
     verifyNoInteractions(readChannelByRemoteIdUseCase)
   }
