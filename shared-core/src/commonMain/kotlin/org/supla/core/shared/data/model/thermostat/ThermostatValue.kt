@@ -23,7 +23,7 @@ import org.supla.core.shared.data.model.thermostat.SuplaThermostatFlag.HEAT_OR_C
 import org.supla.core.shared.extensions.toShort
 import org.supla.core.shared.extensions.toTemperature
 
-@Suppress("DataClassPrivateConstructor")
+@ExposedCopyVisibility
 data class ThermostatValue private constructor(
   val online: Boolean,
   val state: ThermostatState,
