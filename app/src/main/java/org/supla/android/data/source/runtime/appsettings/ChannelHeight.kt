@@ -23,7 +23,7 @@ enum class ChannelHeight(val percent: Int) {
   HEIGHT_150(150);
 
   fun position(): Int {
-    for ((position, height) in ChannelHeight.values().withIndex()) {
+    for ((position, height) in entries.withIndex()) {
       if (height == this) {
         return position
       }
@@ -34,7 +34,7 @@ enum class ChannelHeight(val percent: Int) {
 
   companion object {
     fun forPosition(position: Int): ChannelHeight {
-      for ((i, height) in ChannelHeight.values().withIndex()) {
+      for ((i, height) in entries.withIndex()) {
         if (i == position) {
           return height
         }
