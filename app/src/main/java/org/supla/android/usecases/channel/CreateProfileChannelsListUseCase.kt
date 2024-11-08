@@ -21,6 +21,7 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import org.supla.android.core.shared.shareable
 import org.supla.android.data.ValuesFormatter
+import org.supla.android.data.model.general.IconType
 import org.supla.android.data.source.ChannelRelationRepository
 import org.supla.android.data.source.RoomChannelRepository
 import org.supla.android.data.source.local.entity.LocationEntity
@@ -44,6 +45,7 @@ import org.supla.android.ui.lists.onlineState
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.core.shared.data.model.channel.ChannelRelationType
+import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.usecase.GetCaptionUseCase
 import org.supla.core.shared.usecase.channel.GetChannelIssuesForListUseCase
 import java.util.Collections
@@ -121,6 +123,7 @@ class CreateProfileChannelsListUseCase @Inject constructor(
       channelData.isShadingSystem() -> toShadingSystemItem(channelData, childrenMap)
       channelData.isProjectorScreen() -> toShadingSystemItem(channelData, childrenMap)
       channelData.isGarageDoorRoller() -> toShadingSystemItem(channelData, childrenMap)
+      channelData.function == SuplaFunction.HUMIDITY_AND_TEMPERATURE -> toDoubleValueItem(channelData, childrenMap)
       else -> toChannelItem(channelData, childrenMap)
     }
 
@@ -219,6 +222,22 @@ class CreateProfileChannelsListUseCase @Inject constructor(
       getChannelIssuesForListUseCase(channelWithChildren(channelData, childrenMap).shareable)
     )
   }
+
+  private fun toDoubleValueItem(
+    channelData: ChannelDataEntity,
+    childrenMap: MutableMap<Int, List<ChannelChildEntity?>>
+  ): ListItem.DoubleValueItem =
+    ListItem.DoubleValueItem(
+      channelData,
+      channelData.locationEntity.caption,
+      channelData.channelValueEntity.online.onlineState,
+      getCaptionUseCase(channelData.shareable),
+      getChannelIconUseCase(channelData),
+      value = getChannelValueStringUseCase.valueOrNull(channelData),
+      getChannelIssuesForListUseCase(channelWithChildren(channelData, childrenMap).shareable),
+      secondIcon = getChannelIconUseCase(channelData, IconType.SECOND),
+      secondValue = getChannelValueStringUseCase.valueOrNull(channelData, ValueType.SECOND, withUnit = false)
+    )
 
   private fun toChannelItem(channelData: ChannelDataEntity, childrenMap: MutableMap<Int, List<ChannelChildEntity?>>): ListItem.ChannelItem =
     ListItem.ChannelItem(

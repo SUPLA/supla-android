@@ -52,6 +52,7 @@ import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToIconVal
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToProjectScreenUpdateEventMapper
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToShadingSystemUpdateEventMapper
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToSwitchUpdateEventMapper
+import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToTemperatureHumidityUpdateEventMapper
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToThermostatUpdateEventMapper
 import org.supla.core.shared.data.model.channel.ChannelRelationType
 import org.supla.core.shared.data.model.general.SuplaFunction
@@ -91,6 +92,9 @@ class CreateListItemUpdateEventDataUseCaseTest {
 
   @RelaxedMockK
   private lateinit var channelWithChildrenToSwitchUpdateEventMapper: ChannelWithChildrenToSwitchUpdateEventMapper
+
+  @RelaxedMockK
+  private lateinit var channelWithChildrenToTemperatureHumidityUpdateEventMapper: ChannelWithChildrenToTemperatureHumidityUpdateEventMapper
 
   @MockK
   private lateinit var getCaptionUseCase: GetCaptionUseCase

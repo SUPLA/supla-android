@@ -95,6 +95,31 @@ sealed interface ListItem {
     }
   }
 
+  class DoubleValueItem(
+    channel: ChannelDataEntity,
+    locationCaption: String,
+    online: ListOnlineState,
+    captionProvider: LocalizedString,
+    icon: ImageId,
+    value: String?,
+    issues: ListItemIssues,
+    private val secondIcon: ImageId?,
+    private val secondValue: String?
+  ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, value, issues) {
+    override fun toSlideableListItemData(): SlideableListItemData {
+      return SlideableListItemData.DoubleValue(
+        onlineState = online,
+        title = captionProvider,
+        icon = icon,
+        issues = issues,
+        value = value ?: ValuesFormatter.NO_VALUE_TEXT,
+        infoSupported = SuplaChannelFlag.CHANNEL_STATE.inside(channel.flags),
+        secondIcon = secondIcon,
+        secondValue = secondValue
+      )
+    }
+  }
+
   class IconValueItem(
     channel: ChannelDataEntity,
     locationCaption: String,

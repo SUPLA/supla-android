@@ -46,6 +46,20 @@ sealed class SlideableListItemData {
     companion object
   }
 
+  data class DoubleValue(
+    override val onlineState: ListOnlineState,
+    override val title: LocalizedString,
+    override val icon: ImageId?,
+    override val issues: ListItemIssues,
+    override val estimatedTimerEndDate: Date? = null,
+    override val infoSupported: Boolean,
+    val value: String?,
+    val secondIcon: ImageId?,
+    val secondValue: String?
+  ) : SlideableListItemData() {
+    companion object
+  }
+
   data class Default(
     override val onlineState: ListOnlineState,
     override val title: LocalizedString,
@@ -70,6 +84,19 @@ fun SlideableListItemData.Thermostat.Companion.default(): SlideableListItemData.
     issues = ListItemIssues(),
     estimatedTimerEndDate = null,
     infoSupported = false
+  )
+
+fun SlideableListItemData.DoubleValue.Companion.default(): SlideableListItemData.DoubleValue =
+  SlideableListItemData.DoubleValue(
+    onlineState = ListOnlineState.OFFLINE,
+    title = LocalizedString.Empty,
+    icon = null,
+    value = "",
+    issues = ListItemIssues(),
+    estimatedTimerEndDate = null,
+    infoSupported = false,
+    secondIcon = null,
+    secondValue = null
   )
 
 fun SlideableListItemData.Default.Companion.default(): SlideableListItemData.Default =

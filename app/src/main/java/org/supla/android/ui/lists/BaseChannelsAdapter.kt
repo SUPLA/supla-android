@@ -26,6 +26,7 @@ import org.supla.android.SuplaApp
 import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.databinding.LiChannelItemBinding
+import org.supla.android.databinding.LiMainDoubleValueItemBinding
 import org.supla.android.databinding.LiMainIconValueItemBinding
 import org.supla.android.databinding.LiMainIconValueWithButtonsItemBinding
 import org.supla.android.databinding.LiMainThermostatItemBinding
@@ -87,6 +88,9 @@ abstract class BaseChannelsAdapter(
       ViewType.SWITCH_ITEM.ordinal ->
         SwitchListItemViewHolder(LiMainIconValueWithButtonsItemBinding.inflate(inflater, parent, false))
 
+      ViewType.DOUBLE_VALUE_ITEM.ordinal ->
+        DoubleValueListItemViewHolder(LiMainDoubleValueItemBinding.inflate(inflater, parent, false))
+
       else -> super.onCreateViewHolder(parent, viewType)
     }
   }
@@ -100,6 +104,7 @@ abstract class BaseChannelsAdapter(
       is GpMeasurementListItemViewHolder -> holder.bind(items[position] as ListItem.GeneralPurposeMeasurementItem)
       is ShadingSystemListItemViewHolder -> holder.bind(items[position] as ListItem.ShadingSystemItem)
       is SwitchListItemViewHolder -> holder.bind(items[position] as ListItem.SwitchItem)
+      is DoubleValueListItemViewHolder -> holder.bind(items[position] as ListItem.DoubleValueItem)
       else -> super.onBindViewHolder(holder, position)
     }
   }
@@ -248,6 +253,25 @@ abstract class BaseChannelsAdapter(
       binding.listItemContent.setOnLongClickListener { onLongPress(this) }
       binding.listItemLeftItem.setOnClickListener { onLeftButtonClick(item.channel.remoteId) }
       binding.listItemRightItem.setOnClickListener { onRightButtonClick(item.channel.remoteId) }
+    }
+  }
+
+  inner class DoubleValueListItemViewHolder(val binding: LiMainDoubleValueItemBinding) : ViewHolder(binding.root) {
+    fun bind(item: ListItem.DoubleValueItem) {
+      val data = item.toSlideableListItemData() as SlideableListItemData.DoubleValue
+      binding.listItemRoot.bind(locationCaption = item.locationCaption, function = item.channelBase.function)
+      binding.listItemContent.bind(
+        itemType = ItemType.CHANNEL,
+        remoteId = item.channel.remoteId,
+        data = data,
+        onInfoClick = { infoButtonClickCallback(item.channel.remoteId) },
+        onIssueClick = { issueButtonClickCallback(it) },
+        onTitleLongClick = { onCaptionLongPress(item.channel.remoteId) },
+        onItemClick = { listItemClickCallback(item.channel.remoteId) }
+      )
+
+      binding.listItemContent.setOnClickListener { listItemClickCallback(item.channel.remoteId) }
+      binding.listItemContent.setOnLongClickListener { onLongPress(this) }
     }
   }
 }
