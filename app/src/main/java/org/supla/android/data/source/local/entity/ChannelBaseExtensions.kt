@@ -43,7 +43,15 @@ fun ChannelBase.isIconValueItem(): Boolean =
     function == SuplaFunction.PUMP_SWITCH ||
     function == SuplaFunction.NO_LIQUID_SENSOR ||
     function == SuplaFunction.RAIN_SENSOR ||
-    function == SuplaFunction.MAIL_SENSOR
+    function == SuplaFunction.MAIL_SENSOR ||
+    function == SuplaFunction.OPENING_SENSOR_WINDOW ||
+    function == SuplaFunction.OPEN_SENSOR_DOOR ||
+    function == SuplaFunction.OPEN_SENSOR_GATE ||
+    function == SuplaFunction.OPEN_SENSOR_GATEWAY ||
+    function == SuplaFunction.OPEN_SENSOR_GARAGE_DOOR ||
+    function == SuplaFunction.OPEN_SENSOR_ROOF_WINDOW ||
+    function == SuplaFunction.OPEN_SENSOR_ROLLER_SHUTTER ||
+    function == SuplaFunction.PRESSURE_SENSOR
 
 fun ChannelBase.isSwitch(): Boolean =
   function == SuplaFunction.LIGHTSWITCH ||

@@ -47,6 +47,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -159,7 +160,7 @@ fun ListItemScaffold(
       onItemClick = onItemClick,
       scale = scale,
       modifier = Modifier
-        .padding(horizontal = Distance.default, vertical = Distance.small.times(scale))
+        .padding(horizontal = Distance.default, vertical = Distance.small.times(scale).div(LocalDensity.current.fontScale))
         .align(Alignment.BottomCenter)
     )
 

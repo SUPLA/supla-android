@@ -28,6 +28,8 @@ import org.supla.android.usecases.channel.stringvalueprovider.GpmValueStringProv
 import org.supla.android.usecases.channel.stringvalueprovider.HumidityAndTemperatureValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.ImpulseCounterValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.NoValueStringProvider
+import org.supla.android.usecases.channel.stringvalueprovider.PressureSensorValueStringProvider
+import org.supla.android.usecases.channel.stringvalueprovider.RainSensorValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.SwitchWithElectricityMeterValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.ThermometerValueStringProvider
 import org.supla.core.shared.data.model.general.SuplaFunction
@@ -43,7 +45,9 @@ class GetChannelValueStringUseCase @Inject constructor(
   distanceSensorValueStringProvider: DistanceSensorValueStringProvider,
   electricityMeterValueStringProvider: ElectricityMeterValueStringProvider,
   switchWithElectricityMeterValueStringProvider: SwitchWithElectricityMeterValueStringProvider,
-  impulseCounterValueStringProvider: ImpulseCounterValueStringProvider
+  impulseCounterValueStringProvider: ImpulseCounterValueStringProvider,
+  pressureSensorValueStringProvider: PressureSensorValueStringProvider,
+  rainSensorValueStringProvider: RainSensorValueStringProvider
 ) {
 
   private val providers = listOf(
@@ -55,9 +59,19 @@ class GetChannelValueStringUseCase @Inject constructor(
     electricityMeterValueStringProvider,
     switchWithElectricityMeterValueStringProvider,
     impulseCounterValueStringProvider,
+    pressureSensorValueStringProvider,
+    rainSensorValueStringProvider,
     NoValueStringProvider(SuplaFunction.STAIRCASE_TIMER),
     NoValueStringProvider(SuplaFunction.POWER_SWITCH),
-    NoValueStringProvider(SuplaFunction.LIGHTSWITCH)
+    NoValueStringProvider(SuplaFunction.LIGHTSWITCH),
+    NoValueStringProvider(SuplaFunction.MAIL_SENSOR),
+    NoValueStringProvider(SuplaFunction.OPENING_SENSOR_WINDOW),
+    NoValueStringProvider(SuplaFunction.OPEN_SENSOR_DOOR),
+    NoValueStringProvider(SuplaFunction.OPEN_SENSOR_GATE),
+    NoValueStringProvider(SuplaFunction.OPEN_SENSOR_GATEWAY),
+    NoValueStringProvider(SuplaFunction.OPEN_SENSOR_GARAGE_DOOR),
+    NoValueStringProvider(SuplaFunction.OPEN_SENSOR_ROOF_WINDOW),
+    NoValueStringProvider(SuplaFunction.OPEN_SENSOR_ROLLER_SHUTTER)
   )
 
   operator fun invoke(channel: ChannelDataEntity, valueType: ValueType = ValueType.FIRST, withUnit: Boolean = true): String {
