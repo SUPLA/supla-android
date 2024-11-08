@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -118,35 +119,42 @@ fun DoubleIconValueListItemView(
     onItemClick = onItemClick,
     scale = scale
   ) {
-    val topDistance = when {
-      scale < 1 -> Distance.default.times(scale).div(LocalDensity.current.fontScale)
-      scale == 1f -> Distance.small.div(LocalDensity.current.fontScale)
-      else -> Distance.tiny
-    }
-    ListItemMainRow(scale = scale, spacing = 0.dp, topPadding = topDistance) {
-      if (scale < 1) {
+    ListItemMainRow(scale = scale, spacing = Distance.tiny) {
+      if (scale <= 1) {
+        Spacer(modifier = Modifier.width(4.dp))
         data.icon?.let {
-          ListItemIcon(imageId = it, scale = scale)
+          ListItemIcon(
+            imageId = it,
+            scale = scale,
+            modifier = Modifier
+              .weight(1f)
+              .widthIn(max = dimensionResource(id = R.dimen.channel_img_width))
+          )
         }
         data.value?.let {
           ListItemValue(value = it, scale = scale)
         }
-        Spacer(modifier = Modifier.width(Distance.tiny.div(LocalDensity.current.fontScale)))
         data.secondIcon?.let {
-          ListItemIcon(imageId = it, scale = scale)
+          ListItemIcon(
+            imageId = it,
+            scale = scale,
+            modifier = Modifier
+              .weight(1f)
+              .widthIn(max = dimensionResource(id = R.dimen.channel_img_width))
+          )
         }
         data.secondValue?.let {
           ListItemValue(value = it, scale = scale)
         }
+        Spacer(modifier = Modifier.width(4.dp))
       } else {
         Column(
           verticalArrangement = Arrangement.spacedBy(Distance.tiny.div(LocalDensity.current.fontScale)),
           horizontalAlignment = Alignment.CenterHorizontally
         ) {
-          val iconScale = if (scale == 1f) 0.6f else 1f
           Row(verticalAlignment = Alignment.CenterVertically) {
             data.icon?.let {
-              ListItemIcon(imageId = it, scale = iconScale)
+              ListItemIcon(imageId = it, scale = 0.6f)
             }
             data.value?.let {
               ListItemValue(value = it, scale = scale)
@@ -154,7 +162,7 @@ fun DoubleIconValueListItemView(
           }
           Row(verticalAlignment = Alignment.CenterVertically) {
             data.secondIcon?.let {
-              ListItemIcon(imageId = it, scale = iconScale)
+              ListItemIcon(imageId = it, scale = 0.6f)
             }
             data.secondValue?.let {
               ListItemValue(value = it, scale = scale)
@@ -184,7 +192,7 @@ private fun Preview() {
             title = LocalizedString.Constant("Humidity and temperature"),
             icon = ImageId(R.drawable.thermometer),
             value = "20,7°C",
-            issues = ListItemIssues(IssueIcon.Warning),
+            issues = ListItemIssues(icons = listOf(IssueIcon.Warning, IssueIcon.Battery50)),
             estimatedTimerEndDate = null,
             infoSupported = true,
             secondIcon = ImageId(R.drawable.humidity),
@@ -206,7 +214,7 @@ private fun Preview() {
             title = LocalizedString.Constant("Humidity and temperature"),
             icon = ImageId(R.drawable.thermometer),
             value = "20,7°C",
-            issues = ListItemIssues(IssueIcon.Error),
+            issues = ListItemIssues(icons = listOf(IssueIcon.Warning, IssueIcon.Battery25)),
             estimatedTimerEndDate = null,
             infoSupported = true,
             secondIcon = ImageId(R.drawable.humidity),
