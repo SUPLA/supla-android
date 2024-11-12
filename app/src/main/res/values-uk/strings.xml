@@ -19,6 +19,7 @@
   <string name="add_device">Додайте пристрій</string>
   <string name="z_wave">Міст z-wave</string>
   <string name="help">Довідка</string>
+  <string name="menu_notifications">Історія сповіщень</string>
   <string name="status_connecting">Підключення...</string>
   <string name="status_unknown_err">Невідома помилка</string>
   <string name="status_temporarily_unavailable">Послуга тимчасово недоступна</string>
@@ -83,11 +84,11 @@
   <string name="create_account">Створити обліковий запис</string>
   <string name="delete_account">Видалити</string>
   <string name="cfg_label_access_id_auth">ID</string>
-  <string name="cfg_channel_height" translatable="false">Висота каналу</string>
-  <string name="cfg_temperature_unit" translatable="false">Одиниця вимірювання температури</string>
-  <string name="cfg_button_autohide" translatable="false">Автоматичне приховування кнопки</string>
-  <string name="profile" translatable="false">Ваш обліковий запис</string>
-  <string name="profile_plural" translatable="false">Ваші облікові записи</string>
+  <string name="cfg_channel_height">Висота каналу</string>
+  <string name="cfg_temperature_unit">Одиниця вимірювання температури</string>
+  <string name="cfg_button_autohide">Автоматичне приховування кнопки</string>
+  <string name="profile">Ваш обліковий запис</string>
+  <string name="profile_plural">Ваші облікові записи</string>
   <string name="rate_msg">Чи знаєте ви, що Supla є відкритим і безкоштовним проєктом, розробленим спільнотою? Якщо вам подобається ця програма, будь ласка, знайдіть час, щоб оцінити її. Дякуємо вам за підтримку!</string>
   <string name="rate_now">Оцінити зараз</string>
   <string name="rate_later">Пізніше</string>
@@ -292,31 +293,31 @@
   <string name="zwave_device_communication_error">Виникла проблема зв’язку з пристроєм z-wave. Переконайтеся, що ваш пристрій z-wave знаходиться в зоні дії шлюзу.</string>
   <string name="widget_configure_title">Конфігурація віджета</string>
   <string name="widget_configure_profile_label">Обліковий запис</string>
-  <string name="widget_configure_type_label" translatable="false">Віджет для:</string>
-  <string name="widget_configure_type_group_label" translatable="false">Групи</string>
-  <string name="widget_configure_type_scene_label" translatable="false">Сцени</string>
+  <string name="widget_configure_type_label">Віджет для:</string>
+  <string name="widget_configure_type_group_label">Групи</string>
+  <string name="widget_configure_type_scene_label">Сцени</string>
   <string name="widget_configure_channel_label">Канал для віджета</string>
-  <string name="widget_configure_group_label" translatable="false">Група для віджета</string>
+  <string name="widget_configure_group_label">Група для віджета</string>
   <string name="widget_configure_action_label">Подія</string>
   <string name="widget_configure_name_label">Назва</string>
   <string name="widget_configure_error">Помилка налаштування каналу…</string>
   <string name="widget_configure_no_selection">Канал не вибрано</string>
   <string name="widget_configure_no_channel">Немає доступних каналів</string>
-  <string name="widget_configure_no_group" translatable="false">Немає доступних груп</string>
+  <string name="widget_configure_no_group">Немає доступних груп</string>
   <string name="double_button_widget_description">Двокнопковий віджет</string>
   <string name="single_button_widget_description">"Одно кнопковий віджет "</string>
   <string name="widget_app_not_initialized">Будь ласка, увійдіть!</string>
   <string name="widget_command_no_connection">Немає підключення до Інтернету!</string>
-  <string name="widget_command_error" translatable="false">Сталася помилка! (код: %1$d)</string>
-  <string name="widget_command_connection_failure" translatable="false">Помилка з\'єднання! (код: %1$d)</string>
-  <string name="widget_command_subject_offline" translatable="false">%1$s поза мережею!</string>
-  <string name="widget_command_subject_unavailable" translatable="false">%1$s не існує!</string>
-  <string name="widget_command_no_access" translatable="false">Відсутність доступу! (код: %1$d)</string>
+  <string name="widget_command_error">Сталася помилка! (код: %1$d)</string>
+  <string name="widget_command_connection_failure">Помилка з\'єднання! (код: %1$d)</string>
+  <string name="widget_command_subject_offline">%1$s поза мережею!</string>
+  <string name="widget_command_subject_unavailable">%1$s не існує!</string>
+  <string name="widget_command_no_access">Відсутність доступу! (код: %1$d)</string>
   <string name="widget_command_started">Готово</string>
   <string name="widget_removed_label">Канал видалено</string>
-  <string name="widget_group" translatable="false">група</string>
-  <string name="widget_scene" translatable="false">етап</string>
-  <string name="widget_action_toggle" translatable="false">Переключити</string>
+  <string name="widget_group">група</string>
+  <string name="widget_scene">етап</string>
+  <string name="widget_action_toggle">Переключити</string>
   <string name="channel_caption_roofwindowopeningsensor">Датчик відчинення мансардного вікна</string>
   <string name="channel_caption_roofwindow">Мансардне вікно</string>
   <string name="channel_func_controllingtheroofwindow">Відчинення та зачинення мансардного вікна</string>
@@ -339,32 +340,32 @@
   <string name="incorrect_email_or_password">Неправильна адреса електронної пошти або пароль</string>
   <string name="channel_name">Назва каналу</string>
   <string name="location_name">Назва місця</string>
-  <string name="lastconnectionresetcause_unknown" translatable="false">0: невідомо</string>
-  <string name="lastconnectionresetcause_activity_timeout" translatable="false">1: немає відповіді сервера</string>
-  <string name="lastconnectionresetcause_wifi_connection_lost" translatable="false">2: Wi-Fi з’єднання втрачено</string>
-  <string name="lastconnectionresetcause_server_connection_lost" translatable="false">3: скидання підключення до сервера</string>
-  <string name="basic_profile_warning" translatable="false">Режим недоступний</string>
-  <string name="basic_config_unavailable" translatable="false">Перш ніж вимкнути розширений режим, виберіть автентифікацію електронної пошти з автоматичним визначенням сервера.</string>
-  <string name="add_device_warning" translatable="false">Майстер автоматичного додавання пристроїв недоступний у режимі автентифікації за ідентифікатором доступу. Пристрої можуть бути додані вручну.</string>
-  <string name="show_channel_info" translatable="false">Показати кнопку ⓘ</string>
-  <string name="add_device_needs_cloud_title" translatable="false">Конфігурація пристрою</string>
-  <string name="add_device_needs_cloud_message" translatable="false">Цей пристрій не має видимих каналів у програмі. Щоб завершити налаштування, перейдіть на cloud.supla.org</string>
-  <string name="add_device_needs_cloud_dismiss" translatable="false">Розумію</string>
-  <string name="add_device_needs_cloud_go" translatable="false">Перейдіть до CLOUD</string>
-  <string name="associeted_with_at_error" translatable="false">Неможливо змінити функцію каналу, пов’язаного з активатором дії.</string>
-  <string name="location_ordering" translatable="false">Порядок розташування</string>
-  <string name="rs_display_mode_opening" translatable="false">Відкриття</string>
-  <string name="rs_display_mode_closing" translatable="false">Закриття</string>
+  <string name="lastconnectionresetcause_unknown">0: невідомо</string>
+  <string name="lastconnectionresetcause_activity_timeout">1: немає відповіді сервера</string>
+  <string name="lastconnectionresetcause_wifi_connection_lost">2: Wi-Fi з’єднання втрачено</string>
+  <string name="lastconnectionresetcause_server_connection_lost">3: скидання підключення до сервера</string>
+  <string name="basic_profile_warning">Режим недоступний</string>
+  <string name="basic_config_unavailable">Перш ніж вимкнути розширений режим, виберіть автентифікацію електронної пошти з автоматичним визначенням сервера.</string>
+  <string name="add_device_warning">Майстер автоматичного додавання пристроїв недоступний у режимі автентифікації за ідентифікатором доступу. Пристрої можуть бути додані вручну.</string>
+  <string name="show_channel_info">Показати кнопку ⓘ</string>
+  <string name="add_device_needs_cloud_title">Конфігурація пристрою</string>
+  <string name="add_device_needs_cloud_message">Цей пристрій не має видимих каналів у програмі. Щоб завершити налаштування, перейдіть на cloud.supla.org</string>
+  <string name="add_device_needs_cloud_dismiss">Розумію</string>
+  <string name="add_device_needs_cloud_go">Перейдіть до CLOUD</string>
+  <string name="associeted_with_at_error">Неможливо змінити функцію каналу, пов’язаного з активатором дії.</string>
+  <string name="location_ordering">Порядок розташування</string>
+  <string name="rs_display_mode_opening">Відкриття</string>
+  <string name="rs_display_mode_closing">Закриття</string>
   <string name="status_accessid_inactive">Ідентифікатор доступу неактивний.</string>
-  <string name="navbar_channels" translatable="false">Канали</string>
-  <string name="navbar_groups" translatable="false">Групи</string>
-  <string name="navbar_scenes" translatable="false">Сцени</string>
-  <string name="btn_execute" translatable="false">Виконати</string>
-  <string name="btn_abort" translatable="false">Перервати</string>
-  <string name="btn_abort_and_execute" translatable="false">Перервати і виконати</string>
-  <string name="scene_name" translatable="false">Назва сцени</string>
-  <string name="cfg_profile_active_indicator" translatable="false">активний</string>
-  <string name="menubar_appsettings" translatable="false">Налаштування додатків</string>
+  <string name="navbar_channels">Канали</string>
+  <string name="navbar_groups">Групи</string>
+  <string name="navbar_scenes">Сцени</string>
+  <string name="btn_execute">Виконати</string>
+  <string name="btn_abort">Перервати</string>
+  <string name="btn_abort_and_execute">Перервати і виконати</string>
+  <string name="scene_name">Назва сцени</string>
+  <string name="cfg_profile_active_indicator">активний</string>
+  <string name="menubar_appsettings">Налаштування додатків</string>
   <string name="about_app">This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.\n\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place – Suite 330, Boston, MA  02111–1307, USA</string>
   <string name="wizard_step1_txt1">Вітаємо у майстрі додавання пристроїв, який допоможе Вам швидко та легко додати новий пристрій до системи.</string>
   <string name="start">СТАРТ</string>
@@ -420,10 +421,10 @@
   <string name="zwave_change_wake_up_settings">Ви також можете змінити налаштування пробудження, натиснувши іконку нижче.</string>
   <string name="wakeup_info">"*) Встановлені налаштування будуть застосовані при наступному пробудженні вузла. "</string>
   <string name="seconds">Секунди</string>
-  <string name="widget_configure_type_channel_label" translatable="false">Каналу</string>
+  <string name="widget_configure_type_channel_label">Каналу</string>
   <string name="status_led">Світлодіодний індикатор стану</string>
   <string name="input">Вхід</string>
-  <string name="str_default" translatable="false">За замовчуванням</string>
+  <string name="str_default">За замовчуванням</string>
   <string name="overcurrent_warning">Відключення живлення відбулося після перевищення встановленого порогу допустимої сили струму.</string>
   <string name="overcurrent_question">Живлення відключено після перевищення встановленого порогу допустимої сили струму. Ви впевнені, що хочете увімкнути живлення ?</string>
   <string name="roller_shutter_start_calibration_message">Ви впевнені, що хочете почати калібрування?</string>
@@ -451,4 +452,211 @@
   <string name="details_em_phase3">Фаза 3</string>
   <string name="details_em_balance_arithmetic">Арифметичний баланс</string>
   <string name="details_em_balance_vector">Векторний баланс</string>
+
+  <string name="turn_on">Ввімкнути</string>
+  <string name="turn_off">Вимкнути</string>
+  <string name="widget_configure_scene_label">Сцена для віджету</string>
+  <string name="widget_configure_no_scene">Немає доступних сцен</string>
+  <string name="associeted_with_push_error">Функцію каналу, пов\'язаного з PUSH-сповіщеннями, не можна змінити.</string>
+  <string name="associeted_with_vbt_error">Функцію каналу, пов\'язаного з реакціями, не можна змінити.</string>
+  <string name="rs_display_mode">Ролети, жалюзі, штори %</string>
+
+  <string name="remove_account_title">Видалити обліковий запис?</string>
+  <string name="remove_account_locally">Забути на цьому пристрої</string>
+  <string name="remove_account_remotely">Забути і видалити на сервері</string>
+  <string name="cancel">Скасувати</string>
+  <string name="form_profile_removal_failure">Видалення облікового запису не вдалося, спробуйте ще раз</string>
+  <string name="general_failure">Не вдалося виконати дію</string>
+  <string name="push_notification_limit_exceeded">Перевищено ліміт PUSH-сповіщень, який становить %1$s на годину.</string>
+
+  <string name="new_gesture_description">Ми прибрали жест прогортування, який відкриває деталі, торкніться вибраного каналу, щоб побачити їх.</string>
+  <string name="channel_offline">Канал не в мережі</string>
+  <string name="notification_info_title">Сповіщення!</string>
+  <string name="notification_info_message">Увімкніть сповіщення, щоб отримувати актуальну інформацію з Вашого дому! Нам потрібна Ваша згода, щоб відображати їх на Вашому пристрої.\n\nВи можете налаштувати сповіщення в Supla Cloud.</string>
+  <string name="skip">Пропустити</string>
+  <string name="settings_notifications">Сповіщення</string>
+  <string name="settings_localization">Місцезнаходження (точне)</string>
+  <string name="settings_permissions">Права</string>
+
+  <string name="details_general">Загальні</string>
+  <string name="details_schedule">Тиждень</string>
+  <string name="details_metrics">Виміри</string>
+  <string name="details_settings">Налаштування</string>
+  <string name="details_history">Історія</string>
+  <string name="details_timer_wrong_time">Час має бути більшим за 0</string>
+  <string name="details_timer_text">Вкажіть час, коли пристрій повинен бути:</string>
+  <string name="details_timer_turn_on_for">Ввімкнений</string>
+  <string name="details_timer_turn_off_for">Вимкнений</string>
+  <string name="details_timer_info">Пристрій буде %1$s протягом %2$s, а потім %3$s</string>
+  <string name="details_timer_leave_it">Залишити %1$s</string>
+  <string name="details_timer_cancel_and">Скасувати та %1$s</string>
+  <string name="details_timer_end_hour">до год %1$s</string>
+  <string name="details_timer_state_label">Поточний стан:</string>
+  <string name="details_timer_state_label_for_timer">Стан до год %s:</string>
+  <string name="details_timer_device_on">увімкнений</string>
+  <string name="details_timer_device_off">вимкнений</string>
+  <string name="details_timer_edit_time">Редагувати час</string>
+  <string name="details_timer_edit_header">Редагувати час, коли пристрій буде %1$s</string>
+  <string name="details_timer_start">Старт</string>
+  <string name="details_timer_edit_cancel">Скасувати редагування</string>
+  <string name="save">Зберегти</string>
+  <string name="details_timer_cancel_turn_off">вимкнути</string>
+  <string name="details_timer_cancel_turn_on">увімкнути</string>
+  <string name="thermostat_detail_mode_manual">Ручний</string>
+  <string name="thermostat_detail_mode_weekly_schedule">Програма</string>
+  <string name="monday">Понеділок</string>
+  <string name="tuesday">Вівторок</string>
+  <string name="wednesday">Середа</string>
+  <string name="thursday">Четвер</string>
+  <string name="friday">П\'ятниця</string>
+  <string name="saturday">Субота</string>
+  <string name="sunday">Неділя</string>
+  <string name="schedule_detail_quarters_dialog_header">Година %1$02d:00</string>
+  <string name="schedule_detail_program_dialog_header">Налаштування програми %1$d </string>
+  <string name="hvac_mode_heating">Нагрівання</string>
+  <string name="hvac_mode_cooling">Охолодження</string>
+  <string name="hvac_mode_auto">Нагрівання та охолодження</string>
+  <string name="hvac_mode_no_caption">Невідомий</string>
+  <string name="hvac_mode_temperature_heating">Температура нагрівання</string>
+  <string name="hvac_mode_temperature_cooling">Температура охолодження</string>
+  <string name="monday_short">ПН</string>
+  <string name="tuesday_short">ВТ</string>
+  <string name="wednesday_short">СР</string>
+  <string name="thursday_short">ЧТ</string>
+  <string name="friday_short">ПТ</string>
+  <string name="saturday_short">СБ</string>
+  <string name="sunday_short">НД</string>
+  <string name="thermostat_thermometer_error">Помилка зчитування температури</string>
+  <string name="thermostat_clock_error">Помилка годинника</string>
+  <string name="channel_not_supported">Непідтримувана функція</string>
+  <string name="thermostat_detail_program_current">На даний момент:</string>
+  <string name="thermostat_detail_program_next">Далі:</string>
+  <string name="time_just_minutes">%1$d хв.</string>
+  <string name="time_hours_and_minutes">%1$d год %2$d хв.</string>
+  <string name="thermostat_detail_program_time">протягом %1$s</string>
+
+  <string name="history_range_label">Діапазон</string>
+  <string name="history_range_current_day">День</string>
+  <string name="history_range_current_week">Тиждень</string>
+  <string name="history_range_current_month">Місяць</string>
+  <string name="history_range_current_quarter">Квартал</string>
+  <string name="history_range_current_year">Рік</string>
+  <string name="history_range_custom">Інший діапазон</string>
+  <string name="history_refreshing">Оновлення…</string>
+  <string name="history_refreshing_failed">Не вдалося оновити</string>
+  <string name="history_no_data_selected">Не вибрано даних для відображення.</string>
+  <string name="history_no_data_available">Немає вимірів</string>
+  <string name="channel_caption_hotelcard">Датчик готельної картки</string>
+  <string name="thermostat_detail_off_by_window">Вимикнений через відкрите вікно</string>
+  <string name="thermostat_detail_off_by_card">Вимкнений через відсутність готельної картки</string>
+  <string name="thermostat_detail_off_by_sensor">Вимкнений через датчик</string>
+  <string name="channel_caption_alarm_armament">Датчик встановлення будильника</string>
+  <string name="calendar_picker_start_hour">Від години</string>
+  <string name="calendar_picker_end_hour">До години</string>
+  <string name="history_wrong_range">Вибраний діапазон дат є невірним.</string>
+  <string name="details_timer_select_mode">Вибрати режим</string>
+  <string name="details_timer_manual_mode">Ручний режим</string>
+  <string name="details_timer_info_thermostat_off">Терморегулятор вимкнеться за допомогою\n%1$s</string>
+  <string name="details_timer_info_thermostat_heating">Термостат працюватиме в режимі нагрівання протягом\n%1$s</string>
+  <string name="details_timer_info_thermostat_cooling">Термостат працюватиме в режимі охолодження протягом\n%1$s</string>
+  <string name="details_timer_select_time">Вкажіть час</string>
+  <string name="details_timer_counter">Лічильник</string>
+  <string name="details_timer_calendar">Календар</string>
+  <string name="details_timer_min_temp">Мін. темп.</string>
+  <string name="details_timer_max_temp">Макс. темп.</string>
+  <string name="details_timer_state_label_for_timer_days">Стан до %1$s:</string>
+  <string name="details_timer_cancel_thermostat">Перервати таймер і увімкнути режим:</string>
+  <string name="widget_processing_notification_text">Обробка…</string>
+  <string name="widget_processing_notification_title">Обробка на фоні</string>
+  <string name="thermostat_detail_program_info">Торкніться, щоб активувати програму. Утримуйте, щоб змінити програму.</string>
+  <string name="thermostat_detail_box_info">Торкніться, щоб встановити обрану програму. Утримуйте, щоб встановити вибрані квартали.</string>
+  <string name="thermostat_detail_arrow_info">У чорному кутку вказано поточний час і день.</string>
+  <string name="channel_caption_general_purpose_measurement">Канал вимірювання</string>
+  <string name="chart_marker_opening">Відкриття</string>
+  <string name="chart_marker_closing">Закриття</string>
+  <string name="channel_caption_general_purpose_meter">Канал лічильника</string>
+  <string name="history_disabled">Історія для цього каналу вимкнена</string>
+  <string name="toolbar_delete_all">Видалити все</string>
+  <string name="toolbar_delete_older_than_month">Видалити старіші за 30 днів</string>
+  <string name="notification_delete_all_title">Видалити?</string>
+  <string name="notification_delete_all_message">Видалення сповіщень є незворотнім, продовжити?</string>
+  <string name="notification_delete_all_proceed">Видалити</string>
+  <string name="notifications_log_profile">Профіль:</string>
+  <string name="notifications_log_date">Дата:</string>
+  <string name="widget_warning_battery_limitations">У додатку ввімкнено обмеження використання батареї. Віджет може не працювати належним чином. Перейдіть до налаштувань, щоб змінити значення на "без обмежень".</string>
+  <string name="notification_deleted">Видалено</string>
+  <string name="settings_show_labels">Показати мітки в нижньому меню</string>
+  <string name="main_no_entries">Пусто</string>
+  <string name="groups_empty_list_button">Додати групу в Supla Cloud</string>
+  <string name="scenes_empty_list_button">Додати сцену в Supla Cloud</string>
+  <string name="roller_shutter_closing_percentage">Закриття:</string>
+  <string name="roller_shutter_opening_percentage">Відкриття:</string>
+  <string name="roller_shutter_calibration_needed">Потрібне калібрування</string>
+  <string name="cfg_night_mode">Нічний режим</string>
+  <string name="menu_device_catalog">Каталог приладів</string>
+  <string name="facade_blind_slat_tilt">Нахил:</string>
+  <string name="channel_caption_facade_blinds">Фасадніі жалюзі</string>
+  <string name="channel_loading_error">Помилка завантаження каналу</string>
+  <string name="facade_blinds_no_tilt">Немає конфігурації</string>
+  <string name="toolbar_delete_chart_history">Видалити історію та повторно завантажити</string>
+  <string name="history_wait_for_download_completed">Будь ласка, зачекайте, завантажується…</string>
+  <string name="channel_caption_terrace_awning">Тент для тераси</string>
+  <string name="channel_caption_projector_screen">Проекційний екран</string>
+  <string name="channel_caption_curtain">Штора</string>
+  <string name="channel_caption_vertical_blinds">Вертикальні жалюзі</string>
+  <string name="channel_caption_roller_garage_door">Гаражні двері</string>
+  <string name="shading_system_extension">Розширення:</string>
+  <string name="status_initializing">Запуск…</string>
+  <string name="status_try_again">Спробуйте ще раз</string>
+  <string name="lock_screen_hello">З поверненням!</string>
+  <string name="lock_screen_enter_pin">Введіть PIN-код</string>
+  <string name="pin_setup_header">Встановіть свій PIN-код</string>
+  <string name="cfg_lock_screen">Екран блокування</string>
+  <string name="cfg_lock_screen_app">Додаток</string>
+  <string name="cfg_lock_screen_accounts">Облікові записи</string>
+  <string name="cfg_lock_screen_none">Немає</string>
+  <string name="pin_setup_title">Конфігурація PIN-коду</string>
+  <string name="pin_setup_repeat">Повторіть PIN-код</string>
+  <string name="pin_setup_entry_different">Введені коди відрізняються!</string>
+  <string name="pin_setup_failed">Встановлення PIN-коду не вдалося через внутрішню проблему.</string>
+  <string name="lock_screen_wrong_pin">Введено неправильний PIN-код!</string>
+  <string name="lock_screen_remove_pin">Видалення PIN-коду</string>
+  <string name="lock_screen_forgotten_code">Я не пам\'ятаю код доступу</string>
+  <string name="lock_screen_forgotten_code_title">Код доступу</string>
+  <string name="lock_screen_forgotten_code_message">Якщо Ви не пам\'ятаєте код доступу, видаліть додаток з телефону, а потім встановіть його знову. Після перевстановлення додайте конфігурацію облікового запису з Supla Cloud.\n\nНе створюйте новий обліковий запис. Історичні дані та всі пристрої не будуть втрачені.</string>
+  <string name="lock_screen_forgotten_code_button">Розумію</string>
+  <string name="lock_screen_confirm_authorize_app">Зміна обсягу авторизації</string>
+  <string name="pin_setup_use_biometric">Біометрична автентифікація: </string>
+  <string name="pin_setup_biometric_not_enrolled">Біометричну автентифікацію не налаштовано. Якщо Ви хочете використовувати біометричні дані, спочатку налаштуйте їх у налаштуваннях системи.</string>
+  <string name="biometric_prompt_subtitle">Розблокування за допомогою відбитка пальця</string>
+  <string name="lock_screen_biometric_error">Біометрія неможлива через: %1$s</string>
+  <string name="lock_screen_pin_locked">Занадто багато помилкових спроб. PIN-код заблоковано на %1$s.</string>
+  <string name="status_disconnecting">Відключення…</string>
+  <string name="status_awaiting_network">Очікування мережі…</string>
+  <string name="about_build_time">Версія від:</string>
+  <string name="device_catalog_error">Не вдалося завантажити каталог приладів. Будь ласка спробуйте пізніше.</string>
+  <string name="settings_show_bottom_menu">Показати нижнє меню</string>
+  <string name="details_em_chart_data_type">Дані</string>
+  <string name="details_em_phases">Фаза</string>
+  <string name="details_em_balance_hourly">Погодинний баланс</string>
+  <string name="details_em_balance_chart_aggregated">Агрегований баланс у вигляді діаграми</string>
+  <string name="details_em_sum">Сума</string>
+  <string name="details_em_select_range">Виберіть період</string>
+  <string name="details_em_active_energy">Активна енергія</string>
+  <string name="details_em_forwarded_energy">Використана</string>
+  <string name="details_em_reversed_energy">Повернена</string>
+  <string name="details_em_cost">Вартість</string>
+  <string name="details_em_settings_list_item">Значення, показане у списку каналів</string>
+  <string name="details_em_settings_title">Налаштування - %1$s</string>
+  <string name="details_em_total_suffix">(стан лічильника)</string>
+  <string name="details_em_current_month_suffix">(поточний місяць)</string>
+  <string name="details_em_last_month_balancing">Балансування поточного місяця</string>
+  <string name="channel_caption_pump_switch">Перемикач насоса</string>
+  <string name="channel_caption_heat_or_cold_sourc_switch">Перемикач джерела тепла або холоду</string>
+  <string name="details_list">Список</string>
+  <string name="thermostat_detail_main_thermostat">Головний термостат</string>
+  <string name="thermostat_detail_other_thermostats">Залежні термостати</string>
+  <string name="thermostat_battery_cover_open">Кришка акумулятора відкрита</string>
+
+  <string name="channel_battery_level">Рівень заряду батареї (%1$d - %2$s): %3$d%%</string>
 </resources>

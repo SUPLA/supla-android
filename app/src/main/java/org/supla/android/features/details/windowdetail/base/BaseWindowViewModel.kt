@@ -23,14 +23,11 @@ import org.supla.android.Preferences
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.ui.ViewEvent
-import org.supla.android.data.model.general.ChannelIssueItem
 import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.data.source.local.entity.custom.GroupOnlineSummary
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
-import org.supla.android.data.source.remote.shadingsystem.ShadingSystemValue
-import org.supla.android.data.source.remote.shadingsystem.SuplaShadingSystemFlag
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.extensions.guardLet
 import org.supla.android.extensions.ifLet
@@ -54,6 +51,8 @@ import org.supla.android.usecases.client.LoginUseCase
 import org.supla.android.usecases.client.SuplaClientOperation
 import org.supla.android.usecases.group.GetGroupOnlineSummaryUseCase
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
+import org.supla.core.shared.data.model.shadingsystem.ShadingSystemValue
+import org.supla.core.shared.data.model.shadingsystem.SuplaShadingSystemFlag
 import kotlin.math.abs
 
 abstract class BaseWindowViewModel<S : BaseWindowViewModelState>(
@@ -307,8 +306,7 @@ abstract class BaseWindowViewModel<S : BaseWindowViewModelState>(
     )
 
   private fun createIssues(flags: List<SuplaShadingSystemFlag>) =
-    flags.filter { it.isIssueFlag() }
-      .map { ChannelIssueItem(it.getIssueIconType()!!, it.getIssueMessage()!!) }
+    flags.filter { it.isIssueFlag() }.mapNotNull { it.asChannelIssues() }
 
   private fun getPositionPresentation() =
     if (preferences.isShowOpeningPercent) ShadingSystemPositionPresentation.AS_OPENED else ShadingSystemPositionPresentation.AS_CLOSED
@@ -320,7 +318,7 @@ abstract class BaseWindowViewModel<S : BaseWindowViewModelState>(
 }
 
 sealed class BaseWindowViewEvent : ViewEvent {
-  object LoadingError : BaseWindowViewEvent()
+  data object LoadingError : BaseWindowViewEvent()
 }
 
 abstract class BaseWindowViewModelState : AuthorizationModelState() {

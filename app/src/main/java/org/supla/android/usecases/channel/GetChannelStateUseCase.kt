@@ -29,8 +29,8 @@ import org.supla.android.db.ChannelBase
 import org.supla.android.db.ChannelGroup
 import org.supla.android.db.ChannelValue
 import org.supla.android.usecases.group.GetGroupActivePercentageUseCase
-import org.supla.core.shared.data.SuplaChannelFunction
-import org.supla.core.shared.data.suplaFunction
+import org.supla.core.shared.data.model.general.SuplaFunction
+import org.supla.core.shared.data.model.general.suplaFunction
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -62,177 +62,177 @@ class GetChannelStateUseCase @Inject constructor(
     throw IllegalArgumentException("Channel base is extended by unknown class!")
   }
 
-  private fun getChannelState(function: SuplaChannelFunction, value: ValueStateWrapper): ChannelState {
+  private fun getChannelState(function: SuplaFunction, value: ValueStateWrapper): ChannelState {
     if (value.online.not()) {
       return getOfflineState(function, value)
     }
 
     return when (function) {
-      SuplaChannelFunction.CONTROLLING_THE_GATEWAY_LOCK,
-      SuplaChannelFunction.CONTROLLING_THE_GATE,
-      SuplaChannelFunction.CONTROLLING_THE_GARAGE_DOOR,
-      SuplaChannelFunction.CONTROLLING_THE_DOOR_LOCK -> getOpenClose(value.subValueHi)
+      SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK,
+      SuplaFunction.CONTROLLING_THE_GATE,
+      SuplaFunction.CONTROLLING_THE_GARAGE_DOOR,
+      SuplaFunction.CONTROLLING_THE_DOOR_LOCK -> getOpenClose(value.subValueHi)
 
-      SuplaChannelFunction.CONTROLLING_THE_ROLLER_SHUTTER,
-      SuplaChannelFunction.CONTROLLING_THE_ROOF_WINDOW,
-      SuplaChannelFunction.CONTROLLING_THE_FACADE_BLIND,
-      SuplaChannelFunction.CURTAIN,
-      SuplaChannelFunction.VERTICAL_BLIND,
-      SuplaChannelFunction.ROLLER_GARAGE_DOOR ->
+      SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER,
+      SuplaFunction.CONTROLLING_THE_ROOF_WINDOW,
+      SuplaFunction.CONTROLLING_THE_FACADE_BLIND,
+      SuplaFunction.CURTAIN,
+      SuplaFunction.VERTICAL_BLIND,
+      SuplaFunction.ROLLER_GARAGE_DOOR ->
         if (value.shadingSystemClosed) ChannelState(ChannelState.Value.CLOSED) else ChannelState(ChannelState.Value.OPEN)
 
-      SuplaChannelFunction.TERRACE_AWNING,
-      SuplaChannelFunction.PROJECTOR_SCREEN ->
+      SuplaFunction.TERRACE_AWNING,
+      SuplaFunction.PROJECTOR_SCREEN ->
         if (value.shadingSystemReversedClosed) ChannelState(ChannelState.Value.CLOSED) else ChannelState(ChannelState.Value.OPEN)
 
-      SuplaChannelFunction.OPEN_SENSOR_GATEWAY,
-      SuplaChannelFunction.OPEN_SENSOR_GATE,
-      SuplaChannelFunction.OPEN_SENSOR_GARAGE_DOOR,
-      SuplaChannelFunction.OPEN_SENSOR_DOOR,
-      SuplaChannelFunction.OPEN_SENSOR_ROLLER_SHUTTER,
-      SuplaChannelFunction.OPENING_SENSOR_WINDOW,
-      SuplaChannelFunction.OPEN_SENSOR_ROOF_WINDOW,
-      SuplaChannelFunction.VALVE_OPEN_CLOSE,
-      SuplaChannelFunction.VALVE_PERCENTAGE -> getOpenClose(value.isClosed)
+      SuplaFunction.OPEN_SENSOR_GATEWAY,
+      SuplaFunction.OPEN_SENSOR_GATE,
+      SuplaFunction.OPEN_SENSOR_GARAGE_DOOR,
+      SuplaFunction.OPEN_SENSOR_DOOR,
+      SuplaFunction.OPEN_SENSOR_ROLLER_SHUTTER,
+      SuplaFunction.OPENING_SENSOR_WINDOW,
+      SuplaFunction.OPEN_SENSOR_ROOF_WINDOW,
+      SuplaFunction.VALVE_OPEN_CLOSE,
+      SuplaFunction.VALVE_PERCENTAGE -> getOpenClose(value.isClosed)
 
-      SuplaChannelFunction.POWER_SWITCH,
-      SuplaChannelFunction.STAIRCASE_TIMER,
-      SuplaChannelFunction.NO_LIQUID_SENSOR,
-      SuplaChannelFunction.MAIL_SENSOR,
-      SuplaChannelFunction.THERMOSTAT_HEATPOL_HOMEPLUS,
-      SuplaChannelFunction.HOTEL_CARD_SENSOR,
-      SuplaChannelFunction.ALARM_ARMAMENT_SENSOR,
-      SuplaChannelFunction.LIGHTSWITCH,
-      SuplaChannelFunction.PUMP_SWITCH,
-      SuplaChannelFunction.HEAT_OR_COLD_SOURCE_SWITCH -> getOnOff(value.isClosed)
+      SuplaFunction.POWER_SWITCH,
+      SuplaFunction.STAIRCASE_TIMER,
+      SuplaFunction.NO_LIQUID_SENSOR,
+      SuplaFunction.MAIL_SENSOR,
+      SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS,
+      SuplaFunction.HOTEL_CARD_SENSOR,
+      SuplaFunction.ALARM_ARMAMENT_SENSOR,
+      SuplaFunction.LIGHTSWITCH,
+      SuplaFunction.PUMP_SWITCH,
+      SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH -> getOnOff(value.isClosed)
 
-      SuplaChannelFunction.DIMMER -> getOnOff(value.brightness > 0)
-      SuplaChannelFunction.RGB_LIGHTING -> getOnOff(value.colorBrightness > 0)
+      SuplaFunction.DIMMER -> getOnOff(value.brightness > 0)
+      SuplaFunction.RGB_LIGHTING -> getOnOff(value.colorBrightness > 0)
 
-      SuplaChannelFunction.DIMMER_AND_RGB_LIGHTING -> {
+      SuplaFunction.DIMMER_AND_RGB_LIGHTING -> {
         val first = if (value.brightness > 0) ChannelState.Value.ON else ChannelState.Value.OFF
         val second = if (value.colorBrightness > 0) ChannelState.Value.ON else ChannelState.Value.OFF
 
         ChannelState(ChannelState.Value.COMPLEX, listOf(first, second))
       }
 
-      SuplaChannelFunction.DIGIGLASS_HORIZONTAL,
-      SuplaChannelFunction.DIGIGLASS_VERTICAL ->
+      SuplaFunction.DIGIGLASS_HORIZONTAL,
+      SuplaFunction.DIGIGLASS_VERTICAL ->
         if (value.transparent) {
           ChannelState(ChannelState.Value.TRANSPARENT)
         } else {
           ChannelState(ChannelState.Value.OPAQUE)
         }
 
-      SuplaChannelFunction.HVAC_THERMOSTAT -> {
+      SuplaFunction.HVAC_THERMOSTAT -> {
         when (value.thermostatSubfunction) {
           ThermostatSubfunction.HEAT -> ChannelState(ChannelState.Value.HEAT)
           else -> ChannelState(ChannelState.Value.COOL)
         }
       }
 
-      SuplaChannelFunction.UNKNOWN,
-      SuplaChannelFunction.NONE,
-      SuplaChannelFunction.THERMOMETER,
-      SuplaChannelFunction.HUMIDITY,
-      SuplaChannelFunction.HUMIDITY_AND_TEMPERATURE,
-      SuplaChannelFunction.RING,
-      SuplaChannelFunction.ALARM,
-      SuplaChannelFunction.NOTIFICATION,
-      SuplaChannelFunction.DEPTH_SENSOR,
-      SuplaChannelFunction.DISTANCE_SENSOR,
-      SuplaChannelFunction.WIND_SENSOR,
-      SuplaChannelFunction.PRESSURE_SENSOR,
-      SuplaChannelFunction.RAIN_SENSOR,
-      SuplaChannelFunction.WEIGHT_SENSOR,
-      SuplaChannelFunction.WEATHER_STATION,
-      SuplaChannelFunction.ELECTRICITY_METER,
-      SuplaChannelFunction.IC_ELECTRICITY_METER,
-      SuplaChannelFunction.IC_GAS_METER,
-      SuplaChannelFunction.IC_WATER_METER,
-      SuplaChannelFunction.IC_HEAT_METER,
-      SuplaChannelFunction.HVAC_THERMOSTAT_HEAT_COOL,
-      SuplaChannelFunction.HVAC_DOMESTIC_HOT_WATER,
-      SuplaChannelFunction.GENERAL_PURPOSE_MEASUREMENT,
-      SuplaChannelFunction.GENERAL_PURPOSE_METER -> ChannelState(ChannelState.Value.NOT_USED)
+      SuplaFunction.UNKNOWN,
+      SuplaFunction.NONE,
+      SuplaFunction.THERMOMETER,
+      SuplaFunction.HUMIDITY,
+      SuplaFunction.HUMIDITY_AND_TEMPERATURE,
+      SuplaFunction.RING,
+      SuplaFunction.ALARM,
+      SuplaFunction.NOTIFICATION,
+      SuplaFunction.DEPTH_SENSOR,
+      SuplaFunction.DISTANCE_SENSOR,
+      SuplaFunction.WIND_SENSOR,
+      SuplaFunction.PRESSURE_SENSOR,
+      SuplaFunction.RAIN_SENSOR,
+      SuplaFunction.WEIGHT_SENSOR,
+      SuplaFunction.WEATHER_STATION,
+      SuplaFunction.ELECTRICITY_METER,
+      SuplaFunction.IC_ELECTRICITY_METER,
+      SuplaFunction.IC_GAS_METER,
+      SuplaFunction.IC_WATER_METER,
+      SuplaFunction.IC_HEAT_METER,
+      SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL,
+      SuplaFunction.HVAC_DOMESTIC_HOT_WATER,
+      SuplaFunction.GENERAL_PURPOSE_MEASUREMENT,
+      SuplaFunction.GENERAL_PURPOSE_METER -> ChannelState(ChannelState.Value.NOT_USED)
     }
   }
 
-  private fun getOfflineState(function: SuplaChannelFunction, value: ValueStateWrapper): ChannelState {
+  private fun getOfflineState(function: SuplaFunction, value: ValueStateWrapper): ChannelState {
     return when (function) {
-      SuplaChannelFunction.CONTROLLING_THE_GATEWAY_LOCK,
-      SuplaChannelFunction.CONTROLLING_THE_GATE,
-      SuplaChannelFunction.CONTROLLING_THE_GARAGE_DOOR,
-      SuplaChannelFunction.CONTROLLING_THE_DOOR_LOCK,
-      SuplaChannelFunction.CONTROLLING_THE_ROLLER_SHUTTER,
-      SuplaChannelFunction.CONTROLLING_THE_ROOF_WINDOW,
-      SuplaChannelFunction.CONTROLLING_THE_FACADE_BLIND,
-      SuplaChannelFunction.OPEN_SENSOR_GATEWAY,
-      SuplaChannelFunction.OPEN_SENSOR_GATE,
-      SuplaChannelFunction.OPEN_SENSOR_GARAGE_DOOR,
-      SuplaChannelFunction.OPEN_SENSOR_DOOR,
-      SuplaChannelFunction.OPEN_SENSOR_ROLLER_SHUTTER,
-      SuplaChannelFunction.OPENING_SENSOR_WINDOW,
-      SuplaChannelFunction.OPEN_SENSOR_ROOF_WINDOW,
-      SuplaChannelFunction.VALVE_OPEN_CLOSE,
-      SuplaChannelFunction.VALVE_PERCENTAGE,
-      SuplaChannelFunction.CURTAIN,
-      SuplaChannelFunction.VERTICAL_BLIND,
-      SuplaChannelFunction.ROLLER_GARAGE_DOOR -> ChannelState(ChannelState.Value.OPEN)
+      SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK,
+      SuplaFunction.CONTROLLING_THE_GATE,
+      SuplaFunction.CONTROLLING_THE_GARAGE_DOOR,
+      SuplaFunction.CONTROLLING_THE_DOOR_LOCK,
+      SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER,
+      SuplaFunction.CONTROLLING_THE_ROOF_WINDOW,
+      SuplaFunction.CONTROLLING_THE_FACADE_BLIND,
+      SuplaFunction.OPEN_SENSOR_GATEWAY,
+      SuplaFunction.OPEN_SENSOR_GATE,
+      SuplaFunction.OPEN_SENSOR_GARAGE_DOOR,
+      SuplaFunction.OPEN_SENSOR_DOOR,
+      SuplaFunction.OPEN_SENSOR_ROLLER_SHUTTER,
+      SuplaFunction.OPENING_SENSOR_WINDOW,
+      SuplaFunction.OPEN_SENSOR_ROOF_WINDOW,
+      SuplaFunction.VALVE_OPEN_CLOSE,
+      SuplaFunction.VALVE_PERCENTAGE,
+      SuplaFunction.CURTAIN,
+      SuplaFunction.VERTICAL_BLIND,
+      SuplaFunction.ROLLER_GARAGE_DOOR -> ChannelState(ChannelState.Value.OPEN)
 
-      SuplaChannelFunction.TERRACE_AWNING,
-      SuplaChannelFunction.PROJECTOR_SCREEN -> ChannelState(ChannelState.Value.CLOSED)
+      SuplaFunction.TERRACE_AWNING,
+      SuplaFunction.PROJECTOR_SCREEN -> ChannelState(ChannelState.Value.CLOSED)
 
-      SuplaChannelFunction.POWER_SWITCH,
-      SuplaChannelFunction.STAIRCASE_TIMER,
-      SuplaChannelFunction.NO_LIQUID_SENSOR,
-      SuplaChannelFunction.MAIL_SENSOR,
-      SuplaChannelFunction.THERMOSTAT_HEATPOL_HOMEPLUS,
-      SuplaChannelFunction.HOTEL_CARD_SENSOR,
-      SuplaChannelFunction.ALARM_ARMAMENT_SENSOR,
-      SuplaChannelFunction.LIGHTSWITCH,
-      SuplaChannelFunction.DIMMER,
-      SuplaChannelFunction.RGB_LIGHTING,
-      SuplaChannelFunction.PUMP_SWITCH,
-      SuplaChannelFunction.HEAT_OR_COLD_SOURCE_SWITCH -> ChannelState(ChannelState.Value.OFF)
+      SuplaFunction.POWER_SWITCH,
+      SuplaFunction.STAIRCASE_TIMER,
+      SuplaFunction.NO_LIQUID_SENSOR,
+      SuplaFunction.MAIL_SENSOR,
+      SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS,
+      SuplaFunction.HOTEL_CARD_SENSOR,
+      SuplaFunction.ALARM_ARMAMENT_SENSOR,
+      SuplaFunction.LIGHTSWITCH,
+      SuplaFunction.DIMMER,
+      SuplaFunction.RGB_LIGHTING,
+      SuplaFunction.PUMP_SWITCH,
+      SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH -> ChannelState(ChannelState.Value.OFF)
 
-      SuplaChannelFunction.DIMMER_AND_RGB_LIGHTING ->
+      SuplaFunction.DIMMER_AND_RGB_LIGHTING ->
         ChannelState(ChannelState.Value.COMPLEX, listOf(ChannelState.Value.OFF, ChannelState.Value.OFF))
 
-      SuplaChannelFunction.DIGIGLASS_HORIZONTAL,
-      SuplaChannelFunction.DIGIGLASS_VERTICAL ->
+      SuplaFunction.DIGIGLASS_HORIZONTAL,
+      SuplaFunction.DIGIGLASS_VERTICAL ->
         ChannelState(ChannelState.Value.OPAQUE)
 
-      SuplaChannelFunction.HVAC_THERMOSTAT ->
+      SuplaFunction.HVAC_THERMOSTAT ->
         when (value.thermostatSubfunction) {
           ThermostatSubfunction.HEAT -> ChannelState(ChannelState.Value.HEAT)
           else -> ChannelState(ChannelState.Value.COOL)
         }
 
-      SuplaChannelFunction.UNKNOWN,
-      SuplaChannelFunction.NONE,
-      SuplaChannelFunction.THERMOMETER,
-      SuplaChannelFunction.HUMIDITY,
-      SuplaChannelFunction.HUMIDITY_AND_TEMPERATURE,
-      SuplaChannelFunction.RING,
-      SuplaChannelFunction.ALARM,
-      SuplaChannelFunction.NOTIFICATION,
-      SuplaChannelFunction.DEPTH_SENSOR,
-      SuplaChannelFunction.DISTANCE_SENSOR,
-      SuplaChannelFunction.WIND_SENSOR,
-      SuplaChannelFunction.PRESSURE_SENSOR,
-      SuplaChannelFunction.RAIN_SENSOR,
-      SuplaChannelFunction.WEIGHT_SENSOR,
-      SuplaChannelFunction.WEATHER_STATION,
-      SuplaChannelFunction.ELECTRICITY_METER,
-      SuplaChannelFunction.IC_ELECTRICITY_METER,
-      SuplaChannelFunction.IC_GAS_METER,
-      SuplaChannelFunction.IC_WATER_METER,
-      SuplaChannelFunction.IC_HEAT_METER,
-      SuplaChannelFunction.HVAC_THERMOSTAT_HEAT_COOL,
-      SuplaChannelFunction.HVAC_DOMESTIC_HOT_WATER,
-      SuplaChannelFunction.GENERAL_PURPOSE_MEASUREMENT,
-      SuplaChannelFunction.GENERAL_PURPOSE_METER -> ChannelState(ChannelState.Value.NOT_USED)
+      SuplaFunction.UNKNOWN,
+      SuplaFunction.NONE,
+      SuplaFunction.THERMOMETER,
+      SuplaFunction.HUMIDITY,
+      SuplaFunction.HUMIDITY_AND_TEMPERATURE,
+      SuplaFunction.RING,
+      SuplaFunction.ALARM,
+      SuplaFunction.NOTIFICATION,
+      SuplaFunction.DEPTH_SENSOR,
+      SuplaFunction.DISTANCE_SENSOR,
+      SuplaFunction.WIND_SENSOR,
+      SuplaFunction.PRESSURE_SENSOR,
+      SuplaFunction.RAIN_SENSOR,
+      SuplaFunction.WEIGHT_SENSOR,
+      SuplaFunction.WEATHER_STATION,
+      SuplaFunction.ELECTRICITY_METER,
+      SuplaFunction.IC_ELECTRICITY_METER,
+      SuplaFunction.IC_GAS_METER,
+      SuplaFunction.IC_WATER_METER,
+      SuplaFunction.IC_HEAT_METER,
+      SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL,
+      SuplaFunction.HVAC_DOMESTIC_HOT_WATER,
+      SuplaFunction.GENERAL_PURPOSE_MEASUREMENT,
+      SuplaFunction.GENERAL_PURPOSE_METER -> ChannelState(ChannelState.Value.NOT_USED)
     }
   }
 

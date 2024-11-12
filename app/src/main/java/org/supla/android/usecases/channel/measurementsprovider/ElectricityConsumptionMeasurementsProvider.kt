@@ -21,6 +21,8 @@ import com.google.gson.Gson
 import io.reactivex.rxjava3.core.Single
 import org.supla.android.Preferences
 import org.supla.android.R
+import org.supla.android.core.shared.provider
+import org.supla.android.core.shared.shareable
 import org.supla.android.data.model.chart.AggregatedEntity
 import org.supla.android.data.model.chart.AggregatedValue
 import org.supla.android.data.model.chart.ChannelChartSets
@@ -40,7 +42,6 @@ import org.supla.android.features.details.electricitymeterdetail.history.Electri
 import org.supla.android.images.ImageId
 import org.supla.android.lib.SuplaConst
 import org.supla.android.ui.views.charts.ElectricityMarkerCustomData
-import org.supla.android.usecases.channel.GetChannelCaptionUseCase
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.channel.measurementsprovider.electricity.ElectricityChartFilters
 import org.supla.android.usecases.channel.measurementsprovider.electricity.balanceValues
@@ -51,6 +52,7 @@ import org.supla.android.usecases.channel.measurementsprovider.electricity.ifPha
 import org.supla.android.usecases.channel.measurementsprovider.electricity.ifPhase3
 import org.supla.android.usecases.channel.valueformatter.ListElectricityMeterValueFormatter
 import org.supla.android.usecases.icon.GetChannelIconUseCase
+import org.supla.core.shared.usecase.GetCaptionUseCase
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -59,7 +61,7 @@ import javax.inject.Singleton
 class ElectricityConsumptionMeasurementsProvider @Inject constructor(
   private val electricityMeterLogRepository: ElectricityMeterLogRepository,
   private val getChannelIconUseCase: GetChannelIconUseCase,
-  private val getChannelCaptionUseCase: GetChannelCaptionUseCase,
+  private val getCaptionUseCase: GetCaptionUseCase,
   getChannelValueStringUseCase: GetChannelValueStringUseCase,
   preferences: Preferences,
   @Named(GSON_FOR_REPO) gson: Gson
@@ -86,7 +88,7 @@ class ElectricityConsumptionMeasurementsProvider @Inject constructor(
       .map { historyDataSets ->
         ChannelChartSets(
           channel,
-          getChannelCaptionUseCase(channel.channelEntity),
+          getCaptionUseCase(channel.shareable).provider(),
           spec.aggregation,
           historyDataSets,
           ElectricityMarkerCustomData(

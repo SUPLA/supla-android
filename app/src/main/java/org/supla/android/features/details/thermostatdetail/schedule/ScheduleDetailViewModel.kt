@@ -49,9 +49,7 @@ import org.supla.android.events.ChannelConfigEventsManager
 import org.supla.android.events.DeviceConfigEventsManager
 import org.supla.android.events.LoadingTimeoutManager
 import org.supla.android.extensions.TAG
-import org.supla.android.extensions.fromSuplaTemperature
 import org.supla.android.extensions.guardLet
-import org.supla.android.extensions.ifFalse
 import org.supla.android.extensions.toSuplaTemperature
 import org.supla.android.features.details.thermostatdetail.schedule.data.ProgramSettingsData
 import org.supla.android.features.details.thermostatdetail.schedule.data.QuartersSelectionData
@@ -65,6 +63,8 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL
 import org.supla.android.tools.SuplaSchedulers
+import org.supla.core.shared.extensions.fromSuplaTemperature
+import org.supla.core.shared.extensions.ifFalse
 import java.util.Calendar
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject

@@ -20,18 +20,19 @@ package org.supla.android.ui.views.list
 import android.content.Context
 import android.util.AttributeSet
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
+import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.extensions.preferences
 import org.supla.android.images.ImageId
@@ -44,6 +45,9 @@ import org.supla.android.ui.views.list.components.ListItemIcon
 import org.supla.android.ui.views.list.components.ListItemMainRow
 import org.supla.android.ui.views.list.components.ListItemValue
 import org.supla.android.usecases.list.CreateListItemUpdateEventDataUseCase
+import org.supla.core.shared.data.model.lists.IssueIcon
+import org.supla.core.shared.data.model.lists.ListItemIssues
+import org.supla.core.shared.infrastructure.LocalizedString
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -86,11 +90,11 @@ fun IconValueListItemView(
   hasRightButton: Boolean = false,
   scale: Float = LocalContext.current.preferences.scale,
   onInfoClick: () -> Unit = { },
-  onIssueClick: () -> Unit = { },
+  onIssueClick: (ListItemIssues) -> Unit = { },
   onItemClick: () -> Unit = { },
   onTitleLongClick: () -> Unit = { }
 ) {
-  val title = data.titleProvider(LocalContext.current)
+  val title = data.title(LocalContext.current)
   ListItemScaffold(
     itemTitle = title,
     itemOnlineState = data.onlineState,
@@ -99,7 +103,7 @@ fun IconValueListItemView(
     onIssueClick = onIssueClick,
     onTitleLongClick = onTitleLongClick,
     onItemClick = onItemClick,
-    itemIssueIconType = data.issueIconType,
+    issues = data.issues,
     hasLeftButton = hasLeftButton,
     hasRightButton = hasRightButton,
     scale = scale,
@@ -123,21 +127,61 @@ private fun Preview() {
     Column(
       modifier = Modifier
         .background(MaterialTheme.colorScheme.background)
-        .width(600.dp)
-        .height(dimensionResource(id = R.dimen.channel_layout_height).times(1.5f))
     ) {
-      IconValueListItemView(
-        data = SlideableListItemData.Default(
-          onlineState = ListOnlineState.ONLINE,
-          titleProvider = { "Channel" },
-          icon = ImageId(R.drawable.fnc_gpm_5),
-          value = "100 hPa",
-          issueIconType = null,
-          infoSupported = true
-        ),
-        scale = 1f,
-        showInfoIcon = true
-      )
+      Box(
+        modifier = Modifier
+          .fillMaxWidth()
+          .height(dimensionResource(id = R.dimen.channel_layout_height).times(0.75f))
+      ) {
+        IconValueListItemView(
+          data = SlideableListItemData.Default(
+            onlineState = ListOnlineState.ONLINE,
+            title = LocalizedString.Constant("Channel"),
+            icon = ImageId(R.drawable.fnc_gpm_5),
+            value = "100 hPa",
+            issues = ListItemIssues(IssueIcon.Warning),
+            infoSupported = true
+          ),
+          scale = 0.75f,
+          showInfoIcon = true
+        )
+      }
+      Box(
+        modifier = Modifier
+          .fillMaxWidth()
+          .height(dimensionResource(id = R.dimen.channel_layout_height))
+      ) {
+        IconValueListItemView(
+          data = SlideableListItemData.Default(
+            onlineState = ListOnlineState.ONLINE,
+            title = LocalizedString.Constant("Channel"),
+            icon = ImageId(R.drawable.fnc_gpm_5),
+            value = "100 hPa",
+            issues = ListItemIssues(IssueIcon.Error),
+            infoSupported = true
+          ),
+          scale = 1f,
+          showInfoIcon = true
+        )
+      }
+      Box(
+        modifier = Modifier
+          .fillMaxWidth()
+          .height(dimensionResource(id = R.dimen.channel_layout_height).times(1.5f))
+      ) {
+        IconValueListItemView(
+          data = SlideableListItemData.Default(
+            onlineState = ListOnlineState.ONLINE,
+            title = LocalizedString.Constant("Channel"),
+            icon = ImageId(R.drawable.fnc_gpm_5),
+            value = "100 hPa",
+            issues = ListItemIssues(IssueIcon.Error),
+            infoSupported = true
+          ),
+          scale = 1.5f,
+          showInfoIcon = true
+        )
+      }
     }
   }
 }

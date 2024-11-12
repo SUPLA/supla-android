@@ -33,15 +33,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
+import org.supla.android.core.shared.data.model.lists.resource
+import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.theme.SuplaTheme
-import org.supla.android.data.model.general.ChannelIssueItem
-import org.supla.android.ui.lists.data.IssueIconType
+import org.supla.android.ui.lists.data.warning
+import org.supla.core.shared.data.model.lists.ChannelIssueItem
 
 @Composable
 @SuppressLint("DefaultLocale")
@@ -73,11 +75,11 @@ fun IssuesView(issues: List<ChannelIssueItem>, modifier: Modifier = Modifier, sm
           .height(rowHeight)
       ) {
         Image(
-          painter = painterResource(id = it.issueIconType.icon),
+          painter = painterResource(id = it.icon.resource),
           contentDescription = null,
           modifier = Modifier.size(rowHeight)
         )
-        Text(text = stringResource(id = it.descriptionRes), style = MaterialTheme.typography.bodyMedium)
+        Text(text = it.message(LocalContext.current), style = MaterialTheme.typography.bodyMedium)
       }
 
       if (smallScreen) {
@@ -101,8 +103,8 @@ private fun Preview() {
       PressTimeInfo(12.3f)
       IssuesView(
         issues = listOf(
-          ChannelIssueItem(IssueIconType.WARNING, R.string.roller_shutter_calibration_needed),
-          ChannelIssueItem(IssueIconType.ERROR, R.string.motor_problem)
+          ChannelIssueItem.warning(R.string.roller_shutter_calibration_needed),
+          ChannelIssueItem.warning(R.string.motor_problem)
         )
       )
     }

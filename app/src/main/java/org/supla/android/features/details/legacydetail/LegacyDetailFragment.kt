@@ -39,9 +39,7 @@ import org.supla.android.db.ChannelBase
 import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.listview.DetailLayout
 import org.supla.android.ui.animations.DEFAULT_ANIMATION_DURATION
-import org.supla.android.usecases.channel.GetChannelDefaultCaptionUseCase
 import org.supla.android.usecases.details.LegacyDetailType
-import javax.inject.Inject
 
 private const val ARG_REMOTE_ID = "ARG_REMOTE_ID"
 private const val ARG_DETAIL_TYPE = "ARG_DETAIL_TYPE"
@@ -60,13 +58,22 @@ class LegacyDetailFragment : BaseFragment<LegacyDetailViewState, LegacyDetailVie
   private val itemType: ItemType by lazy { requireArguments().getSerializable(ARG_ITEM_TYPE) as ItemType }
   private val remoteId: Int by lazy { requireArguments().getInt(ARG_REMOTE_ID) }
 
-  @Inject lateinit var getChannelDefaultCaptionUseCase: GetChannelDefaultCaptionUseCase
-
   private lateinit var detailView: DetailLayout
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     viewModel.loadData(remoteId, itemType)
+  }
+
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+
+    if (binding.legacyDetailContent.childCount == 0 && this::detailView.isInitialized) {
+      binding.legacyDetailContent.addView(
+        detailView,
+        ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+      )
+    }
   }
 
   override fun onResume() {
@@ -83,6 +90,13 @@ class LegacyDetailFragment : BaseFragment<LegacyDetailViewState, LegacyDetailVie
     if (this::detailView.isInitialized) {
       detailView.onDetailHide()
     }
+  }
+
+  override fun onDestroyView() {
+    if (this::detailView.isInitialized) {
+      binding.legacyDetailContent.removeView(detailView)
+    }
+    super.onDestroyView()
   }
 
   override fun handleEvents(event: LegacyDetailViewEvent) {

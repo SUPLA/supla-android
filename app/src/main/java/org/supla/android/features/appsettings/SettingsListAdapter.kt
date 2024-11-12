@@ -30,6 +30,7 @@ import org.supla.android.data.source.runtime.appsettings.ChannelHeight
 import org.supla.android.data.source.runtime.appsettings.TemperatureUnit
 import org.supla.android.databinding.LiSettingsArrowButtonBinding
 import org.supla.android.databinding.LiSettingsChannelHeightBinding
+import org.supla.android.databinding.LiSettingsEditTextBinding
 import org.supla.android.databinding.LiSettingsHeaderBinding
 import org.supla.android.databinding.LiSettingsLockScreenBinding
 import org.supla.android.databinding.LiSettingsNightModeBinding
@@ -197,6 +198,21 @@ sealed class SettingItem(val viewResource: Int) {
     }
   }
 
+  data class BatteryWarningLevel(
+    val level: Int,
+    val callback: (Int) -> Unit = {}
+  ) : SettingItem(R.layout.li_settings_edit_text) {
+    override fun bind(holder: SettingItemViewHolder<*>) {
+      (holder.binding as LiSettingsEditTextBinding).apply {
+        root.label = root.context.getString(R.string.cfg_battery_level_warning)
+        root.value = "$level"
+        root.suffix = "%"
+        root.prefix = "<"
+        root.onValueChanged = callback
+      }
+    }
+  }
+
   data class LocalizationOrdering(
     val callback: () -> Unit = {}
   ) : SettingItem(R.layout.li_settings_arrow_button) {
@@ -282,6 +298,10 @@ data class SettingItemViewHolder<T : ViewBinding>(val binding: T) : RecyclerView
 
         R.layout.li_settings_lock_screen -> {
           SettingItemViewHolder(LiSettingsLockScreenBinding.inflate(inflater, parent, false))
+        }
+
+        R.layout.li_settings_edit_text -> {
+          SettingItemViewHolder(LiSettingsEditTextBinding.inflate(inflater, parent, false))
         }
 
         else -> throw IllegalArgumentException("Unsupported view type $viewId")

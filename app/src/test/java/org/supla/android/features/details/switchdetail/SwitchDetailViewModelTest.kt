@@ -34,22 +34,25 @@ import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.Preferences
 import org.supla.android.core.BaseViewModelTest
-import org.supla.android.core.ui.StringProvider
+import org.supla.android.core.shared.shareable
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
+import org.supla.android.data.source.local.entity.complex.shareable
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.UpdateEventsManager
+import org.supla.android.testhelpers.extensions.mockShareable
 import org.supla.android.tools.SuplaSchedulers
-import org.supla.android.usecases.channel.GetChannelCaptionUseCase
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
-import org.supla.core.shared.data.SuplaChannelFunction
+import org.supla.core.shared.data.model.general.SuplaFunction
+import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.usecase.GetCaptionUseCase
 
 @RunWith(MockitoJUnitRunner::class)
 class SwitchDetailViewModelTest : BaseViewModelTest<SwitchDetailViewState, SwitchDetailViewEvent, SwitchDetailViewModel>() {
 
   @Mock
-  private lateinit var getChannelCaptionUseCase: GetChannelCaptionUseCase
+  private lateinit var getCaptionUseCase: GetCaptionUseCase
 
   @Mock
   private lateinit var readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase
@@ -78,13 +81,14 @@ class SwitchDetailViewModelTest : BaseViewModelTest<SwitchDetailViewState, Switc
   fun `should load channel`() {
     // given
     val remoteId = 123
-    val function = SuplaChannelFunction.DIMMER
+    val function = SuplaFunction.DIMMER
     val channelData: ChannelDataEntity = mockk()
     every { channelData.visible } returns 1
     every { channelData.function } returns function
-    val captionProvider: StringProvider = mockk()
+    channelData.mockShareable()
+    val caption: LocalizedString = mockk()
 
-    whenever(getChannelCaptionUseCase.invoke(channelData)).thenReturn(captionProvider)
+    whenever(getCaptionUseCase.invoke(channelData.shareable)).thenReturn(caption)
     whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channelData))
 
     // when
@@ -92,7 +96,7 @@ class SwitchDetailViewModelTest : BaseViewModelTest<SwitchDetailViewState, Switc
 
     // then
     assertThat(events).isEmpty()
-    assertThat(states).containsExactly(SwitchDetailViewState(captionProvider))
+    assertThat(states).containsExactly(SwitchDetailViewState(caption))
 
     verify(readChannelByRemoteIdUseCase).invoke(remoteId)
     verifyNoMoreInteractions(readChannelByRemoteIdUseCase)
@@ -103,7 +107,7 @@ class SwitchDetailViewModelTest : BaseViewModelTest<SwitchDetailViewState, Switc
   fun `should close activity when loaded channel is not visible`() {
     // given
     val remoteId = 123
-    val function = SuplaChannelFunction.DIMMER
+    val function = SuplaFunction.DIMMER
     val channelData: ChannelDataEntity = mockk()
     every { channelData.visible } returns 0
     every { channelData.function } returns function
@@ -125,14 +129,14 @@ class SwitchDetailViewModelTest : BaseViewModelTest<SwitchDetailViewState, Switc
   fun `should close activity when loaded channel has different function`() {
     // given
     val remoteId = 123
-    val function = SuplaChannelFunction.DIMMER
+    val function = SuplaFunction.DIMMER
     val channelData: ChannelDataEntity = mockk()
     every { channelData.visible } returns 1
     every { channelData.function } returns function
     whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channelData))
 
     // when
-    viewModel.loadData(remoteId, ItemType.CHANNEL, SuplaChannelFunction.LIGHTSWITCH)
+    viewModel.loadData(remoteId, ItemType.CHANNEL, SuplaFunction.LIGHTSWITCH)
 
     // then
     assertThat(events).containsExactly(SwitchDetailViewEvent.Close)
@@ -147,13 +151,15 @@ class SwitchDetailViewModelTest : BaseViewModelTest<SwitchDetailViewState, Switc
   fun `should load group`() {
     // given
     val remoteId = 123
-    val function = SuplaChannelFunction.DIMMER
+    val function = SuplaFunction.DIMMER
     val group: ChannelGroupDataEntity = mockk()
+    every { group.remoteId } returns remoteId
     every { group.visible } returns 1
     every { group.function } returns function
-    val captionProvider: StringProvider = mockk()
+    every { group.caption } returns ""
+    val caption: LocalizedString = mockk()
 
-    whenever(getChannelCaptionUseCase.invoke(group)).thenReturn(captionProvider)
+    whenever(getCaptionUseCase.invoke(group.shareable)).thenReturn(caption)
     whenever(readChannelGroupByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(group))
 
     // when
@@ -161,7 +167,7 @@ class SwitchDetailViewModelTest : BaseViewModelTest<SwitchDetailViewState, Switc
 
     // then
     assertThat(events).isEmpty()
-    assertThat(states).containsExactly(SwitchDetailViewState(captionProvider))
+    assertThat(states).containsExactly(SwitchDetailViewState(caption))
 
     verify(readChannelGroupByRemoteIdUseCase).invoke(remoteId)
     verifyNoMoreInteractions(readChannelGroupByRemoteIdUseCase)
@@ -172,25 +178,26 @@ class SwitchDetailViewModelTest : BaseViewModelTest<SwitchDetailViewState, Switc
   fun `should reload channel when channels updated`() {
     // given
     val remoteId = 123
-    val function = SuplaChannelFunction.DIMMER
+    val function = SuplaFunction.DIMMER
     val channelData: ChannelDataEntity = mockk()
     every { channelData.visible } returns 1
     every { channelData.function } returns function
-    val captionProvider: StringProvider = mockk()
+    channelData.mockShareable()
+    val caption: LocalizedString = mockk()
 
-    whenever(getChannelCaptionUseCase.invoke(channelData)).thenReturn(captionProvider)
+    whenever(getCaptionUseCase.invoke(channelData.shareable)).thenReturn(caption)
     whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channelData))
-    whenever(updateEventsManager.observeChannelsUpdate()).thenReturn(Observable.just(Any()))
+    whenever(updateEventsManager.observeChannelEvents(remoteId)).thenReturn(Observable.just(UpdateEventsManager.State.Channel))
 
     // when
     viewModel.observeUpdates(remoteId, ItemType.CHANNEL, function)
 
     // then
     assertThat(events).isEmpty()
-    assertThat(states).containsExactly(SwitchDetailViewState(captionProvider))
+    assertThat(states).containsExactly(SwitchDetailViewState(caption))
 
     verify(readChannelByRemoteIdUseCase).invoke(remoteId)
-    verify(updateEventsManager).observeChannelsUpdate()
+    verify(updateEventsManager).observeChannelEvents(remoteId)
     verifyNoMoreInteractions(readChannelByRemoteIdUseCase, updateEventsManager)
     verifyNoInteractions(readChannelGroupByRemoteIdUseCase)
   }
@@ -199,25 +206,27 @@ class SwitchDetailViewModelTest : BaseViewModelTest<SwitchDetailViewState, Switc
   fun `should reload group when channels updated`() {
     // given
     val remoteId = 123
-    val function = SuplaChannelFunction.DIMMER
+    val function = SuplaFunction.DIMMER
     val group: ChannelGroupDataEntity = mockk()
+    every { group.remoteId } returns remoteId
     every { group.visible } returns 1
     every { group.function } returns function
-    val captionProvider: StringProvider = mockk()
+    every { group.caption } returns ""
+    val caption: LocalizedString = mockk()
 
-    whenever(getChannelCaptionUseCase.invoke(group)).thenReturn(captionProvider)
+    whenever(getCaptionUseCase.invoke(group.shareable)).thenReturn(caption)
     whenever(readChannelGroupByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(group))
-    whenever(updateEventsManager.observeGroupsUpdate()).thenReturn(Observable.just(Any()))
+    whenever(updateEventsManager.observeGroupEvents(remoteId)).thenReturn(Observable.just(UpdateEventsManager.State.Group))
 
     // when
     viewModel.observeUpdates(remoteId, ItemType.GROUP, function)
 
     // then
     assertThat(events).isEmpty()
-    assertThat(states).containsExactly(SwitchDetailViewState(captionProvider))
+    assertThat(states).containsExactly(SwitchDetailViewState(caption))
 
     verify(readChannelGroupByRemoteIdUseCase).invoke(remoteId)
-    verify(updateEventsManager).observeGroupsUpdate()
+    verify(updateEventsManager).observeGroupEvents(remoteId)
     verifyNoMoreInteractions(readChannelGroupByRemoteIdUseCase, updateEventsManager)
     verifyNoInteractions(readChannelByRemoteIdUseCase)
   }

@@ -1,4 +1,6 @@
 @file:Suppress("SameParameterValue")
+
+package org.supla.android.features.details.windowdetail.projectorscreen
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,8 +19,6 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package org.supla.android.features.details.windowdetail.projectorscreen
-
 import io.mockk.every
 import io.mockk.mockk
 import io.reactivex.rxjava3.core.Maybe
@@ -31,11 +31,9 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.whenever
 import org.supla.android.Preferences
-import org.supla.android.R
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
-import org.supla.android.data.model.general.ChannelIssueItem
 import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.data.source.local.entity.ChannelGroupEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity
@@ -43,8 +41,6 @@ import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.data.source.local.entity.custom.GroupOnlineSummary
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
-import org.supla.android.data.source.remote.rollershutter.RollerShutterValue
-import org.supla.android.data.source.remote.shadingsystem.SuplaShadingSystemFlag
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.LoadingTimeoutManager
 import org.supla.android.features.details.windowdetail.base.BaseWindowViewEvent
@@ -55,7 +51,6 @@ import org.supla.android.features.details.windowdetail.base.ui.WindowViewState
 import org.supla.android.lib.SuplaConst
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.tools.VibrationHelper
-import org.supla.android.ui.lists.data.IssueIconType
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.client.AuthorizeUseCase
 import org.supla.android.usecases.client.CallSuplaClientOperationUseCase
@@ -65,7 +60,11 @@ import org.supla.android.usecases.client.LoginUseCase
 import org.supla.android.usecases.group.GetGroupOnlineSummaryUseCase
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
 import org.supla.android.usecases.group.totalvalue.GroupTotalValue
-import org.supla.core.shared.data.SuplaChannelFunction
+import org.supla.core.shared.data.model.general.SuplaFunction
+import org.supla.core.shared.data.model.lists.ChannelIssueItem
+import org.supla.core.shared.data.model.rollershutter.RollerShutterValue
+import org.supla.core.shared.data.model.shadingsystem.SuplaShadingSystemFlag
+import org.supla.core.shared.infrastructure.LocalizedStringId
 
 @RunWith(MockitoJUnitRunner::class)
 class ProjectorScreenViewModelTest : BaseViewModelTest<ProjectorScreenViewModelState, BaseWindowViewEvent, ProjectorScreenViewModel>() {
@@ -145,7 +144,7 @@ class ProjectorScreenViewModelTest : BaseViewModelTest<ProjectorScreenViewModelS
         remoteId = remoteId,
         windowState = ProjectorScreenState(WindowGroupedValue.Similar(position.toFloat())),
         viewState = WindowViewState(
-          issues = listOf(ChannelIssueItem(IssueIconType.ERROR, R.string.motor_problem)),
+          issues = listOf(ChannelIssueItem.Error(LocalizedStringId.MOTOR_PROBLEM)),
           enabled = true,
           positionPresentation = ShadingSystemPositionPresentation.AS_EXTENSION,
           positionUnknown = false,
@@ -194,7 +193,7 @@ class ProjectorScreenViewModelTest : BaseViewModelTest<ProjectorScreenViewModelS
     valueFlags: List<SuplaShadingSystemFlag> = emptyList(),
     channelFlags: List<SuplaChannelFlag> = emptyList(),
     hasValidPosition: Boolean = true,
-    function: SuplaChannelFunction = SuplaChannelFunction.PROJECTOR_SCREEN
+    function: SuplaFunction = SuplaFunction.PROJECTOR_SCREEN
   ) {
     val rollerShutterValue: RollerShutterValue = mockk {
       every { this@mockk.position } returns position
@@ -229,7 +228,7 @@ class ProjectorScreenViewModelTest : BaseViewModelTest<ProjectorScreenViewModelS
     val groupData: ChannelGroupDataEntity = mockk {
       every { id } returns groupId
       every { this@mockk.remoteId } returns remoteId
-      every { this@mockk.function } returns SuplaChannelFunction.PROJECTOR_SCREEN
+      every { this@mockk.function } returns SuplaFunction.PROJECTOR_SCREEN
       every { channelGroupEntity } returns group
       every { isOnline() } returns true
     }

@@ -36,7 +36,6 @@ import org.supla.android.data.source.remote.ConfigResult
 import org.supla.android.data.source.remote.hvac.SuplaChannelHvacConfig
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
-import org.supla.android.data.source.remote.thermostat.ThermostatValue
 import org.supla.android.db.Channel
 import org.supla.android.events.ChannelConfigEventsManager
 import org.supla.android.events.LoadingTimeoutManager
@@ -46,12 +45,10 @@ import org.supla.android.extensions.dayEnd
 import org.supla.android.extensions.dayStart
 import org.supla.android.extensions.days
 import org.supla.android.extensions.differenceInSeconds
-import org.supla.android.extensions.fromSuplaTemperature
 import org.supla.android.extensions.getTimerStateValue
 import org.supla.android.extensions.guardLet
 import org.supla.android.extensions.hour
 import org.supla.android.extensions.hoursInDay
-import org.supla.android.extensions.ifTrue
 import org.supla.android.extensions.minutesInHour
 import org.supla.android.extensions.secondsInMinute
 import org.supla.android.extensions.setHour
@@ -65,6 +62,9 @@ import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.client.ExecuteThermostatActionUseCase
+import org.supla.core.shared.data.model.thermostat.ThermostatValue
+import org.supla.core.shared.extensions.fromSuplaTemperature
+import org.supla.core.shared.extensions.ifTrue
 import java.util.Date
 import javax.inject.Inject
 

@@ -37,9 +37,11 @@ import org.supla.android.usecases.channel.stringvalueprovider.ElectricityMeterVa
 import org.supla.android.usecases.channel.stringvalueprovider.GpmValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.HumidityAndTemperatureValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.ImpulseCounterValueStringProvider
+import org.supla.android.usecases.channel.stringvalueprovider.PressureSensorValueStringProvider
+import org.supla.android.usecases.channel.stringvalueprovider.RainSensorValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.SwitchWithElectricityMeterValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.ThermometerValueStringProvider
-import org.supla.core.shared.data.SuplaChannelFunction
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 @RunWith(MockitoJUnitRunner::class)
 class GetChannelValueStringUseCaseTest {
@@ -68,6 +70,12 @@ class GetChannelValueStringUseCaseTest {
   @Mock
   private lateinit var impulseCounterValueStringProvider: ImpulseCounterValueStringProvider
 
+  @Mock
+  private lateinit var pressureSensorValueStringProvider: PressureSensorValueStringProvider
+
+  @Mock
+  private lateinit var rainSensorValueStringProvider: RainSensorValueStringProvider
+
   @InjectMocks
   private lateinit var useCase: GetChannelValueStringUseCase
 
@@ -76,7 +84,7 @@ class GetChannelValueStringUseCaseTest {
     // given
     val channel: ChannelDataEntity = mockk {
       every { channelValueEntity } returns mockk {
-        every { function } returns SuplaChannelFunction.HUMIDITY_AND_TEMPERATURE
+        every { function } returns SuplaFunction.HUMIDITY_AND_TEMPERATURE
         every { online } returns false
       }
     }
@@ -91,7 +99,7 @@ class GetChannelValueStringUseCaseTest {
   @Test
   fun `should check all handlers if can handle channel and return no value when no one can handle`() {
     // given
-    val function = SuplaChannelFunction.HUMIDITY_AND_TEMPERATURE
+    val function = SuplaFunction.HUMIDITY_AND_TEMPERATURE
     val channel: ChannelDataEntity = mockk {
       every { this@mockk.function } returns function
       every { channelValueEntity } returns mockk {
@@ -119,7 +127,7 @@ class GetChannelValueStringUseCaseTest {
   @Test
   fun `should return value of first provider which can handle channel`() {
     // given
-    val function = SuplaChannelFunction.HUMIDITY_AND_TEMPERATURE
+    val function = SuplaFunction.HUMIDITY_AND_TEMPERATURE
     val value = "some value"
     val channel: ChannelDataEntity = mockk {
       every { this@mockk.function } returns function

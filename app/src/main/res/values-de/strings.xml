@@ -148,13 +148,19 @@
   <string name="consumption_acording_to_phases">Verbrauch nach Phase</string>
   <string name="temperature">Temperatur</string>
   <string name="humidity">Feuchtigkeit</string>
+  <string name="history_range_label">Umfang</string>
   <string name="history_range_last_day">Letzte 24 Stunden</string>
   <string name="history_range_last_week">Die letzten 7 Tage</string>
   <string name="history_range_last_30_days">Die letzten 30 Tage</string>
   <string name="history_range_last_90_days">Die letzten 90 Tage</string>
   <string name="history_range_last_365_days">Die letzten 365 Tage</string>
+  <string name="history_range_current_day">Tag</string>
+  <string name="history_range_current_week">Woche</string>
+  <string name="history_range_current_month">Monat</string>
+  <string name="history_range_current_quarter">Quartal</string>
+  <string name="history_range_current_year">Jahr</string>
   <string name="all_available_history">Gesamte verfügbare Geschichte</string>
-  <string name="retrieving_data_from_the_server">Daten werden vom Server heruntergeladen...</string>
+  <string name="retrieving_data_from_the_server">Daten werden vom Server heruntergeladen…</string>
   <string name="no_chart_data_available">Keine Daten für das Diagramm in ausgewälte Zeitraum.</string>
   <string name="comparsion_minmin">Vergleich Minute zu Minute</string>
   <string name="comparsion_hourhour">Vergleich Stunde zu Stunde</string>
@@ -442,7 +448,7 @@
   <string name="remove_account_remotely">Vergiss und lösch im Cloud</string>
   <string name="cancel">Abbrechen</string>
   <string name="form_profile_removal_failure">Das Löschen deines Konto ist fehlgeschlagen, bitte noch mal versuchen</string>
-  <string name="general_failure" translatable="false">Die Aktion wurde nicht erfolgreich durchgeführt</string>
+  <string name="general_failure">Die Aktion wurde nicht erfolgreich durchgeführt</string>
 
   <string name="new_gesture_description">Wischgeste zum Öffnen der Kanaldetails wurde gelöscht, tippe auf dem Kanal, um sie zu sehen.</string>
   <string name="channel_offline">Das Kanal ist offline</string>
@@ -453,10 +459,10 @@
   <string name="settings_localization">Standort (genau)</string>
   <string name="settings_permissions">Berechtigungen</string>
 
-  <string name="details_general" translatable="false">Allgemein</string>
-  <string name="details_metrics" translatable="false">Messungen</string>
-  <string name="details_settings" translatable="false">Einstellungen</string>
-  <string name="details_history" translatable="false">Historie</string>
+  <string name="details_general">Allgemein</string>
+  <string name="details_metrics">Messungen</string>
+  <string name="details_settings">Einstellungen</string>
+  <string name="details_history">Historie</string>
   <string name="details_timer_wrong_time">Zeit muss größer als 0 sein</string>
   <string name="details_timer_text">Bestimmen Sie bitte die Zeit, zu der das Gerät ein- oder ausgeschaltet werden sollte</string>
   <string name="details_timer_turn_on_for">Einschalten für</string>
@@ -641,6 +647,12 @@
   <string name="channel_btn_reveal">Enthüllen</string>
   <string name="channel_btn_collapse">Einklappen</string>
   <string name="channel_btn_expand">Ausklappen</string>
+  <string name="cfg_battery_level_warning">Batteriestandswarnung</string>
+  <string name="channel_battery_level">Batteriefüllstand (%1$d - %2$s): %3$d%%</string>
+  <string name="counter_photo_toolbar">Bilder von Zähler</string>
+  <string name="counter_photo_counter_area">Zählerbereich</string>
+  <string name="counter_photo_original_photo">Originalbild</string>
+  <string name="counter_photo_settings">Cloudkonfiguration</string>
   <plurals name="details_timer_info_on">
     <item quantity="one">eingeschaltet</item>
     <item quantity="other">eingeschaltet</item>

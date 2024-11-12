@@ -18,24 +18,25 @@ package org.supla.android.ui.lists.data
  */
 
 import androidx.annotation.DrawableRes
-import org.supla.android.core.ui.StringProvider
 import org.supla.android.images.ImageId
 import org.supla.android.ui.lists.ListOnlineState
+import org.supla.core.shared.data.model.lists.ListItemIssues
+import org.supla.core.shared.infrastructure.LocalizedString
 import java.util.Date
 
 sealed class SlideableListItemData {
   abstract val onlineState: ListOnlineState
-  abstract val titleProvider: StringProvider
+  abstract val title: LocalizedString
   abstract val icon: ImageId?
-  abstract val issueIconType: IssueIconType?
+  abstract val issues: ListItemIssues
   abstract val estimatedTimerEndDate: Date?
   abstract val infoSupported: Boolean
 
   data class Thermostat(
     override val onlineState: ListOnlineState,
-    override val titleProvider: StringProvider,
+    override val title: LocalizedString,
     override val icon: ImageId?,
-    override val issueIconType: IssueIconType?,
+    override val issues: ListItemIssues,
     override val estimatedTimerEndDate: Date?,
     override val infoSupported: Boolean,
     val value: String,
@@ -45,11 +46,25 @@ sealed class SlideableListItemData {
     companion object
   }
 
+  data class DoubleValue(
+    override val onlineState: ListOnlineState,
+    override val title: LocalizedString,
+    override val icon: ImageId?,
+    override val issues: ListItemIssues,
+    override val estimatedTimerEndDate: Date? = null,
+    override val infoSupported: Boolean,
+    val value: String?,
+    val secondIcon: ImageId?,
+    val secondValue: String?
+  ) : SlideableListItemData() {
+    companion object
+  }
+
   data class Default(
     override val onlineState: ListOnlineState,
-    override val titleProvider: StringProvider,
+    override val title: LocalizedString,
     override val icon: ImageId?,
-    override val issueIconType: IssueIconType?,
+    override val issues: ListItemIssues,
     override val estimatedTimerEndDate: Date? = null,
     override val infoSupported: Boolean,
     val value: String?
@@ -61,23 +76,36 @@ sealed class SlideableListItemData {
 fun SlideableListItemData.Thermostat.Companion.default(): SlideableListItemData.Thermostat =
   SlideableListItemData.Thermostat(
     onlineState = ListOnlineState.OFFLINE,
-    titleProvider = { "" },
+    title = LocalizedString.Empty,
     icon = null,
     value = "",
     subValue = "",
     indicatorIcon = null,
-    issueIconType = null,
+    issues = ListItemIssues(),
     estimatedTimerEndDate = null,
     infoSupported = false
+  )
+
+fun SlideableListItemData.DoubleValue.Companion.default(): SlideableListItemData.DoubleValue =
+  SlideableListItemData.DoubleValue(
+    onlineState = ListOnlineState.OFFLINE,
+    title = LocalizedString.Empty,
+    icon = null,
+    value = "",
+    issues = ListItemIssues(),
+    estimatedTimerEndDate = null,
+    infoSupported = false,
+    secondIcon = null,
+    secondValue = null
   )
 
 fun SlideableListItemData.Default.Companion.default(): SlideableListItemData.Default =
   SlideableListItemData.Default(
     onlineState = ListOnlineState.OFFLINE,
-    titleProvider = { "" },
+    title = LocalizedString.Empty,
     icon = null,
     value = "",
-    issueIconType = null,
+    issues = ListItemIssues(),
     estimatedTimerEndDate = null,
     infoSupported = false
   )

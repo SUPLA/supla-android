@@ -21,16 +21,18 @@ import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.local.entity.isProjectorScreen
 import org.supla.android.extensions.guardLet
 import org.supla.android.ui.lists.data.SlideableListItemData
-import org.supla.android.usecases.channel.GetChannelCaptionUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
+import org.supla.core.shared.usecase.GetCaptionUseCase
+import org.supla.core.shared.usecase.channel.GetChannelIssuesForListUseCase
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class ChannelWithChildrenToProjectScreenUpdateEventMapper @Inject constructor(
-  getChannelCaptionUseCase: GetChannelCaptionUseCase,
-  getChannelIconUseCase: GetChannelIconUseCase
-) : ShadingSystemBasedUpdateEventMapper(getChannelCaptionUseCase, getChannelIconUseCase) {
+  getCaptionUseCase: GetCaptionUseCase,
+  getChannelIconUseCase: GetChannelIconUseCase,
+  getChannelIssuesForListUseCase: GetChannelIssuesForListUseCase
+) : ShadingSystemBasedUpdateEventMapper(getCaptionUseCase, getChannelIconUseCase, getChannelIssuesForListUseCase) {
 
   override fun handle(item: Any): Boolean {
     return (item as? ChannelWithChildren)?.channel?.isProjectorScreen() == true
@@ -40,6 +42,6 @@ class ChannelWithChildrenToProjectScreenUpdateEventMapper @Inject constructor(
     val (channel) = guardLet(item as? ChannelWithChildren) {
       throw IllegalArgumentException("Expected Channel but got $item")
     }
-    return toListItemData(channel.channel, channel.channel.channelValueEntity.asRollerShutterValue())
+    return toListItemData(channel)
   }
 }

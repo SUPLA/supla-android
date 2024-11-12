@@ -18,7 +18,7 @@ import org.supla.android.data.source.local.entity.complex.ChannelGroupRelationDa
 import org.supla.android.data.source.remote.ChannelConfigType
 import org.supla.android.data.source.remote.rollershutter.SuplaChannelFacadeBlindConfig
 import org.supla.android.data.source.remote.rollershutter.SuplaTiltControlType
-import org.supla.core.shared.data.SuplaChannelFunction
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 class ReadGroupTiltingDetailsUseCaseTest {
 
@@ -60,7 +60,7 @@ class ReadGroupTiltingDetailsUseCaseTest {
     // given
     val remoteId = 123
     val profileId = 321L
-    val function = SuplaChannelFunction.VERTICAL_BLIND
+    val function = SuplaFunction.VERTICAL_BLIND
     val relation = mockRelation(profileId, remoteId, function)
     every { groupRelationRepository.findGroupRelations(remoteId) } returns Single.just(listOf(relation))
     every { channelConfigRepository.findChannelConfig(profileId, remoteId, ChannelConfigType.FACADE_BLIND) } returns Single.just(mockk())
@@ -84,7 +84,7 @@ class ReadGroupTiltingDetailsUseCaseTest {
     // given
     val profileId = 11L
     val groupId = 321
-    val function = SuplaChannelFunction.CONTROLLING_THE_FACADE_BLIND
+    val function = SuplaFunction.CONTROLLING_THE_FACADE_BLIND
     val relation1 = mockRelation(profileId, 123, function)
     val relation2 = mockRelation(profileId, 234, function)
     val config = mockConfig(0, 90, SuplaTiltControlType.CHANGES_POSITION_WHILE_TILTING)
@@ -117,7 +117,7 @@ class ReadGroupTiltingDetailsUseCaseTest {
     // given
     val profileId = 11L
     val groupId = 321
-    val function = SuplaChannelFunction.CONTROLLING_THE_FACADE_BLIND
+    val function = SuplaFunction.CONTROLLING_THE_FACADE_BLIND
     val relation1 = mockRelation(profileId, 123, function)
     val relation2 = mockRelation(profileId, 234, function)
     val config1 = mockConfig(0, 90, SuplaTiltControlType.CHANGES_POSITION_WHILE_TILTING)
@@ -151,7 +151,7 @@ class ReadGroupTiltingDetailsUseCaseTest {
     // given
     val profileId = 11L
     val groupId = 321
-    val function = SuplaChannelFunction.CONTROLLING_THE_FACADE_BLIND
+    val function = SuplaFunction.CONTROLLING_THE_FACADE_BLIND
     val relation1 = mockRelation(profileId, 123, function)
     val relation2 = mockRelation(profileId, 234, function)
     val relation3 = mockRelation(profileId, 345, function)
@@ -185,7 +185,7 @@ class ReadGroupTiltingDetailsUseCaseTest {
     confirmVerified(groupRelationRepository, channelConfigRepository)
   }
 
-  private fun mockRelation(profileId: Long, remoteId: Int, function: SuplaChannelFunction): ChannelGroupRelationDataEntity {
+  private fun mockRelation(profileId: Long, remoteId: Int, function: SuplaFunction): ChannelGroupRelationDataEntity {
     val channel: ChannelEntity = mockk {
       every { this@mockk.remoteId } returns remoteId
       every { this@mockk.profileId } returns profileId

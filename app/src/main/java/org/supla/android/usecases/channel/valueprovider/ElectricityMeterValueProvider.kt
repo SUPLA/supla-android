@@ -26,7 +26,7 @@ import org.supla.android.data.source.remote.channel.suplaElectricityMeterMeasure
 import org.supla.android.usecases.channel.ChannelValueProvider
 import org.supla.android.usecases.channel.ValueType
 import org.supla.android.usecases.channel.valueprovider.parser.IntValueParser
-import org.supla.core.shared.data.SuplaChannelFunction
+import org.supla.core.shared.data.model.general.SuplaFunction
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -37,7 +37,7 @@ class ElectricityMeterValueProvider @Inject constructor(
 
   override fun handle(channelData: ChannelDataEntity): Boolean =
     when (channelData.function) {
-      SuplaChannelFunction.ELECTRICITY_METER -> true
+      SuplaFunction.ELECTRICITY_METER -> true
       else -> false
     }
 

@@ -24,7 +24,7 @@ import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENT
 import org.supla.android.usecases.channel.ChannelValueProvider
 import org.supla.android.usecases.channel.ValueType
 import org.supla.android.usecases.channel.valueprovider.parser.IntValueParser
-import org.supla.core.shared.data.SuplaChannelFunction
+import org.supla.core.shared.data.model.general.SuplaFunction
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -36,9 +36,9 @@ class SwitchWithElectricityMeterValueProvider @Inject constructor(
 
   override fun handle(channelData: ChannelDataEntity): Boolean =
     when (channelData.function) {
-      SuplaChannelFunction.POWER_SWITCH,
-      SuplaChannelFunction.LIGHTSWITCH,
-      SuplaChannelFunction.STAIRCASE_TIMER ->
+      SuplaFunction.POWER_SWITCH,
+      SuplaFunction.LIGHTSWITCH,
+      SuplaFunction.STAIRCASE_TIMER ->
         channelData.channelValueEntity.subValueType == SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort()
 
       else -> false

@@ -22,7 +22,8 @@ import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.source.local.entity.ChannelGroupEntity
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.db.ChannelGroup
-import org.supla.core.shared.data.SuplaChannelFunction
+import org.supla.core.shared.data.model.general.Group
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 data class ChannelGroupDataEntity(
   @Embedded(prefix = "group_") val channelGroupEntity: ChannelGroupEntity,
@@ -32,7 +33,7 @@ data class ChannelGroupDataEntity(
     get() = channelGroupEntity.id
   override val remoteId: Int
     get() = channelGroupEntity.remoteId
-  override val function: SuplaChannelFunction
+  override val function: SuplaFunction
     get() = channelGroupEntity.function
   override val caption: String
     get() = channelGroupEntity.caption
@@ -79,3 +80,10 @@ data class ChannelGroupDataEntity(
     it.profileId = channelGroupEntity.profileId
   }
 }
+
+val ChannelGroupDataEntity.shareable: Group
+  get() = Group(
+    remoteId = remoteId,
+    caption = caption,
+    function = function
+  )

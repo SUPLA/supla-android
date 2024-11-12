@@ -17,11 +17,26 @@ package org.supla.android.di
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.content.Context
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import org.supla.android.core.infrastructure.CacheFileAccessProxy
+import org.supla.android.core.storage.ApplicationPreferences
+import org.supla.core.shared.infrastructure.Base64Helper
+import org.supla.core.shared.infrastructure.storage.CacheFileAccess
+import org.supla.core.shared.usecase.GetCaptionUseCase
 import org.supla.core.shared.usecase.GetChannelActionStringUseCase
+import org.supla.core.shared.usecase.channel.CheckOcrPhotoExistsUseCase
+import org.supla.core.shared.usecase.channel.GetChannelBatteryIconUseCase
+import org.supla.core.shared.usecase.channel.GetChannelDefaultCaptionUseCase
+import org.supla.core.shared.usecase.channel.GetChannelIssuesForListUseCase
+import org.supla.core.shared.usecase.channel.GetChannelLowBatteryIssueUseCase
+import org.supla.core.shared.usecase.channel.StoreChannelOcrPhotoUseCase
+import org.supla.core.shared.usecase.channel.ocr.OcrImageNamingProvider
+import org.supla.core.shared.usecase.file.StoreFileInDirectoryUseCase
 import javax.inject.Singleton
 
 @Module
@@ -31,4 +46,66 @@ class CoreSharedModule {
   @Provides
   @Singleton
   fun provideGetChannelActionStringUseCase() = GetChannelActionStringUseCase()
+
+  @Provides
+  @Singleton
+  fun provideGetChannelDefaultCaptionUseCase() = GetChannelDefaultCaptionUseCase()
+
+  @Provides
+  @Singleton
+  fun provideGetChannelBatteryIconUseCase() = GetChannelBatteryIconUseCase()
+
+  @Provides
+  @Singleton
+  fun provideGetCaptionUseCase(
+    getChannelDefaultCaptionUseCase: GetChannelDefaultCaptionUseCase
+  ) = GetCaptionUseCase(getChannelDefaultCaptionUseCase)
+
+  @Singleton
+  @Provides
+  fun provideGetChannelLowBatteryIssueUseCase(
+    getCaptionUseCase: GetCaptionUseCase,
+    applicationPreferences: ApplicationPreferences
+  ) = GetChannelLowBatteryIssueUseCase(getCaptionUseCase, applicationPreferences)
+
+  @Singleton
+  @Provides
+  fun provideGetChannelIssuesForListUseCase(
+    getChannelLowBatteryIssueUseCase: GetChannelLowBatteryIssueUseCase,
+    getChannelBatteryIconUseCase: GetChannelBatteryIconUseCase
+  ) = GetChannelIssuesForListUseCase(getChannelLowBatteryIssueUseCase, getChannelBatteryIconUseCase)
+
+  @Singleton
+  @Provides
+  fun provideBase64Helper() = Base64Helper()
+
+  @Singleton
+  @Provides
+  fun provideOcrImageNamingProvider() = OcrImageNamingProvider()
+
+  @Singleton
+  @Provides
+  fun provideCacheFileAccessProxy(@ApplicationContext context: Context): CacheFileAccess =
+    CacheFileAccessProxy(context)
+
+  @Singleton
+  @Provides
+  fun provideStoreFileInDirectoryUseCase(
+    cacheFileAccess: CacheFileAccess
+  ) = StoreFileInDirectoryUseCase(cacheFileAccess)
+
+  @Singleton
+  @Provides
+  fun provideStoreChannelOcrPhotoUseCase(
+    storeFileInDirectoryUseCase: StoreFileInDirectoryUseCase,
+    ocrImageNamingProvider: OcrImageNamingProvider,
+    base64Helper: Base64Helper
+  ) = StoreChannelOcrPhotoUseCase(storeFileInDirectoryUseCase, ocrImageNamingProvider, base64Helper)
+
+  @Singleton
+  @Provides
+  fun provideCheckOcrPhotoExistsUseCase(
+    ocrImageNamingProvider: OcrImageNamingProvider,
+    cacheFileAccess: CacheFileAccess
+  ) = CheckOcrPhotoExistsUseCase(ocrImageNamingProvider, cacheFileAccess)
 }

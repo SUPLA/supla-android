@@ -267,8 +267,7 @@ fun ThermostatControl(
   }
 }
 
-context(DrawScope)
-private fun drawControlTemperatureCircle(
+private fun DrawScope.drawControlTemperatureCircle(
   outerRadius: Float,
   minTemperature: TextLayoutResult,
   minTemperatureSize: IntSize,
@@ -331,14 +330,12 @@ private fun drawControlTemperatureCircle(
   }
 }
 
-context(DrawScope)
 private fun calculateBoundaryTemperaturePosition(angle: Float, radius: Float, size: IntSize, center: Offset): Offset {
   val position = getPositionOnCircle(angle, radius, center)
   return Offset(position.x - size.width.div(2f), position.y - size.height.div(2f))
 }
 
-context(DrawScope)
-fun drawSetTemperatureCircle(
+private fun DrawScope.drawSetTemperatureCircle(
   text: TextLayoutResult,
   textSize: IntSize,
   textColor: Color,
@@ -363,8 +360,7 @@ fun drawSetTemperatureCircle(
   drawText(text, textColor, topLeft = Offset(center.x - textSize.width.div(2f), center.y - textSize.height.div(2f)))
 }
 
-context(DrawScope)
-private fun drawControlPoints(
+private fun DrawScope.drawControlPoints(
   outerRadius: Float,
   maxSetpointConfig: ControlPointConfig?,
   minSetpointConfig: ControlPointConfig?,
@@ -406,15 +402,13 @@ private fun drawControlPoints(
   }
 }
 
-context(DrawScope)
-private fun drawCurrentPoint(config: ControlPointConfig, radius: Float, center: Offset) {
+private fun DrawScope.drawCurrentPoint(config: ControlPointConfig, radius: Float, center: Offset) {
   val angle = START_ANGLE + SWEEP_ANGLE.times(config.value)
   val centerPoint = getPositionOnCircle(angle, radius, center)
   drawControlPoint(centerPoint, config.pointColor, config.shadowColor)
 }
 
-context(DrawScope)
-private fun drawSetPoint(
+private fun DrawScope.drawSetPoint(
   config: ControlPointConfig,
   radius: Float,
   center: Offset,
@@ -442,8 +436,7 @@ private fun drawSetPoint(
   }
 }
 
-context(DrawScope)
-private fun drawCurrentPowerIndicator(
+private fun DrawScope.drawCurrentPowerIndicator(
   currentPower: Float?,
   foregroundColor: Color,
   backgroundColor: Color,

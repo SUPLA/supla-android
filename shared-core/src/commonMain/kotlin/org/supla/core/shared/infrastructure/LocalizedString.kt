@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalObjCRefinement::class)
+
 package org.supla.core.shared.infrastructure
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
@@ -17,13 +19,31 @@ package org.supla.core.shared.infrastructure
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-enum class LocalizedString {
-  GENERAL_TURN_ON,
-  GENERAL_TURN_OFF,
-  GENERAL_OPEN,
-  GENERAL_CLOSE,
-  GENERAL_SHUT,
-  GENERAL_REVEAL,
-  GENERAL_COLLAPSE,
-  GENERAL_EXPAND
+import kotlin.experimental.ExperimentalObjCRefinement
+import kotlin.native.HiddenFromObjC
+
+sealed interface LocalizedString {
+
+  data object Empty : LocalizedString
+  data class Constant(val text: String) : LocalizedString
+  data class WithId(val id: LocalizedStringId) : LocalizedString
+  data class WithIdIntStringInt(val id: LocalizedStringId, val arg1: Int, val arg2: LocalizedString, val arg3: Int) : LocalizedString
+
+  @HiddenFromObjC
+  data class WithResource(val id: Int) : LocalizedString
+
+  @HiddenFromObjC
+  data class WithResourceIntStringInt(val id: Int, val arg1: Int, val arg2: LocalizedString, val arg3: Int) : LocalizedString
 }
+
+fun localizedString(id: LocalizedStringId?): LocalizedString = id?.let { LocalizedString.WithId(it) } ?: LocalizedString.Empty
+
+fun localizedString(id: LocalizedStringId, arg1: Int, arg2: LocalizedString, arg3: Int): LocalizedString =
+  LocalizedString.WithIdIntStringInt(id, arg1, arg2, arg3)
+
+@HiddenFromObjC
+fun localizedString(id: Int?): LocalizedString = id?.let { LocalizedString.WithResource(it) } ?: LocalizedString.Empty
+
+@HiddenFromObjC
+fun localizedString(id: Int, arg1: Int, arg2: LocalizedString, arg3: Int): LocalizedString =
+  LocalizedString.WithResourceIntStringInt(id, arg1, arg2, arg3)

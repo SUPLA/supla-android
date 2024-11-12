@@ -91,9 +91,8 @@ fun LeftRightControlButton(
   }
 }
 
-context(BoxScope)
 @Composable
-fun LeftControlIcon(textColor: Color) =
+fun BoxScope.LeftControlIcon(textColor: Color) =
   ControlButtonIcon(
     iconRes = R.drawable.ic_arrow_right,
     textColor = textColor,
@@ -101,9 +100,8 @@ fun LeftControlIcon(textColor: Color) =
     modifier = Modifier.align(Alignment.Center)
   )
 
-context(BoxScope)
 @Composable
-fun RightControlIcon(textColor: Color) =
+fun BoxScope.RightControlIcon(textColor: Color) =
   ControlButtonIcon(
     iconRes = R.drawable.ic_arrow_right,
     textColor = textColor,

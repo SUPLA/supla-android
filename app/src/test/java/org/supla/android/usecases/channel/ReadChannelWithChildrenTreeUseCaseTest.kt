@@ -19,7 +19,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import io.mockk.MockKAnnotations
 import io.mockk.every
-import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import io.reactivex.rxjava3.core.Observable
@@ -29,10 +28,10 @@ import org.junit.Test
 import org.supla.android.data.source.ChannelRelationRepository
 import org.supla.android.data.source.RoomChannelRepository
 import org.supla.android.data.source.local.entity.ChannelRelationEntity
-import org.supla.android.data.source.local.entity.ChannelRelationType
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
+import org.supla.core.shared.data.model.channel.ChannelRelationType
 
 class ReadChannelWithChildrenTreeUseCaseTest {
   @MockK
@@ -41,12 +40,12 @@ class ReadChannelWithChildrenTreeUseCaseTest {
   @MockK
   private lateinit var channelRepository: RoomChannelRepository
 
-  @InjectMockKs
   private lateinit var useCase: ReadChannelWithChildrenTreeUseCase
 
   @Before
   fun setUp() {
     MockKAnnotations.init(this)
+    useCase = ReadChannelWithChildrenTreeUseCase(channelRelationRepository, channelRepository, GetChannelChildrenTreeUseCase())
   }
 
   @Test

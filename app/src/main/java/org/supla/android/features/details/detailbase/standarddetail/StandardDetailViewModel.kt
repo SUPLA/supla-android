@@ -17,11 +17,11 @@ package org.supla.android.features.details.detailbase.standarddetail
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import androidx.annotation.CallSuper
 import com.google.android.material.navigation.NavigationBarView
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.Preferences
 import org.supla.android.core.ui.BaseViewModel
-import org.supla.android.core.ui.StringProvider
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.model.general.ChannelDataBase
@@ -30,7 +30,8 @@ import org.supla.android.events.UpdateEventsManager
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
-import org.supla.core.shared.data.SuplaChannelFunction
+import org.supla.core.shared.data.model.general.SuplaFunction
+import org.supla.core.shared.infrastructure.LocalizedString
 
 abstract class StandardDetailViewModel<S : StandardDetailViewState, E : StandardDetailViewEvent>(
   private val readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
@@ -41,8 +42,8 @@ abstract class StandardDetailViewModel<S : StandardDetailViewState, E : Standard
   schedulers: SuplaSchedulers
 ) : BaseViewModel<S, E>(defaultState, schedulers) {
 
-  fun observeUpdates(remoteId: Int, itemType: ItemType, initialFunction: SuplaChannelFunction) {
-    getEventsSource(itemType)
+  fun observeUpdates(remoteId: Int, itemType: ItemType, initialFunction: SuplaFunction) {
+    getEventsSource(remoteId, itemType)
       .flatMapMaybe { getDataSource(remoteId, itemType) }
       .attachSilent()
       .subscribeBy(
@@ -52,7 +53,7 @@ abstract class StandardDetailViewModel<S : StandardDetailViewState, E : Standard
       .disposeBySelf()
   }
 
-  fun loadData(remoteId: Int, itemType: ItemType, initialFunction: SuplaChannelFunction) {
+  fun loadData(remoteId: Int, itemType: ItemType, initialFunction: SuplaFunction) {
     getDataSource(remoteId, itemType)
       .attach()
       .subscribeBy(
@@ -73,10 +74,11 @@ abstract class StandardDetailViewModel<S : StandardDetailViewState, E : Standard
 
   protected abstract fun updatedState(state: S, channelDataBase: ChannelDataBase): S
 
-  protected open fun shouldCloseDetail(channelDataBase: ChannelDataBase, initialFunction: SuplaChannelFunction) =
+  protected open fun shouldCloseDetail(channelDataBase: ChannelDataBase, initialFunction: SuplaFunction) =
     channelDataBase.visible == 0 || channelDataBase.function != initialFunction
 
-  private fun handleChannelBase(channelDataBase: ChannelDataBase, initialFunction: SuplaChannelFunction) {
+  @CallSuper
+  protected open fun handleChannelBase(channelDataBase: ChannelDataBase, initialFunction: SuplaFunction) {
     if (shouldCloseDetail(channelDataBase, initialFunction)) {
       sendEvent(closeEvent())
     } else {
@@ -89,14 +91,14 @@ abstract class StandardDetailViewModel<S : StandardDetailViewState, E : Standard
     ItemType.GROUP -> readChannelGroupByRemoteIdUseCase(remoteId)
   }
 
-  private fun getEventsSource(itemType: ItemType) = when (itemType) {
-    ItemType.CHANNEL -> updateEventsManager.observeChannelsUpdate()
-    ItemType.GROUP -> updateEventsManager.observeGroupsUpdate()
+  private fun getEventsSource(remoteId: Int, itemType: ItemType) = when (itemType) {
+    ItemType.CHANNEL -> updateEventsManager.observeChannelEvents(remoteId)
+    ItemType.GROUP -> updateEventsManager.observeGroupEvents(remoteId)
   }
 }
 
 interface StandardDetailViewEvent : ViewEvent
 
 open class StandardDetailViewState(
-  open val caption: StringProvider?
+  open val caption: LocalizedString?
 ) : ViewState()

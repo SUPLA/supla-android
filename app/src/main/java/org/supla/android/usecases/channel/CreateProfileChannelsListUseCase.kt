@@ -19,10 +19,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
+import org.supla.android.core.shared.shareable
 import org.supla.android.data.ValuesFormatter
+import org.supla.android.data.model.general.IconType
 import org.supla.android.data.source.ChannelRelationRepository
 import org.supla.android.data.source.RoomChannelRepository
-import org.supla.android.data.source.local.entity.ChannelRelationType
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
@@ -37,11 +38,18 @@ import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.local.entity.isGarageDoorRoller
 import org.supla.android.data.source.local.entity.isProjectorScreen
 import org.supla.android.data.source.local.entity.isSwitch
+import org.supla.android.data.source.remote.thermostat.getIndicatorIcon
+import org.supla.android.data.source.remote.thermostat.getSetpointText
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.ui.lists.onlineState
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.location.CollapsedFlag
+import org.supla.core.shared.data.model.channel.ChannelRelationType
+import org.supla.core.shared.data.model.general.SuplaFunction
+import org.supla.core.shared.usecase.GetCaptionUseCase
+import org.supla.core.shared.usecase.channel.GetChannelIssuesForListUseCase
 import java.util.Collections
+import java.util.LinkedList
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -49,11 +57,13 @@ import javax.inject.Singleton
 class CreateProfileChannelsListUseCase @Inject constructor(
   private val channelRelationRepository: ChannelRelationRepository,
   private val channelRepository: RoomChannelRepository,
-  private val getChannelCaptionUseCase: GetChannelCaptionUseCase,
+  private val getCaptionUseCase: GetCaptionUseCase,
   private val getChannelIconUseCase: GetChannelIconUseCase,
   private val getChannelValueStringUseCase: GetChannelValueStringUseCase,
   private val getSwitchValueStringUseCase: GetSwitchValueStringUseCase,
-  private val valuesFormatter: ValuesFormatter
+  private val valuesFormatter: ValuesFormatter,
+  private val getChannelIssuesForListUseCase: GetChannelIssuesForListUseCase,
+  private val getChannelChildrenTreeUseCase: GetChannelChildrenTreeUseCase
 ) {
 
   operator fun invoke(): Observable<List<ListItem>> =
@@ -65,18 +75,11 @@ class CreateProfileChannelsListUseCase @Inject constructor(
         val channels = mutableListOf<ListItem>()
 
         val channelsMap = mutableMapOf<Int, ChannelDataEntity>().also { map -> entities.forEach { map[it.remoteId] = it } }
-        val allChildrenIds = mutableListOf<Int>()
+        val allChildrenIds = relationMap.flatMap { it.value }.map { it.channelId }
         val childrenMap = mutableMapOf<Int, List<ChannelChildEntity?>>().also { map ->
           relationMap.forEach { relation ->
-            map[relation.key] = relation.value.map { entry ->
-              allChildrenIds.add(entry.channelId)
-              channelsMap[entry.channelId]?.let {
-                ChannelChildEntity(
-                  entry,
-                  it
-                )
-              }
-            }
+            val childrenList = LinkedList<Int>()
+            map[relation.key] = getChannelChildrenTreeUseCase.invoke(relation.key, relationMap, channelsMap, childrenList)
           }
         }
 
@@ -112,45 +115,58 @@ class CreateProfileChannelsListUseCase @Inject constructor(
     childrenMap: MutableMap<Int, List<ChannelChildEntity?>>
   ) =
     when {
-      channelData.isGpMeasurement() -> toGpMeasurement(channelData)
-      channelData.isGpMeter() -> toGpMeterItem(channelData)
-      channelData.isIconValueItem() -> toIconValueItem(channelData)
+      channelData.isGpMeasurement() -> toGpMeasurement(channelData, childrenMap)
+      channelData.isGpMeter() -> toGpMeterItem(channelData, childrenMap)
+      channelData.isIconValueItem() -> toIconValueItem(channelData, childrenMap)
       channelData.isSwitch() -> toSwitchItem(channelData, childrenMap)
       channelData.isHvacThermostat() -> toThermostatItem(channelData, childrenMap)
-      channelData.isShadingSystem() -> toShadingSystemItem(channelData)
-      channelData.isProjectorScreen() -> toShadingSystemItem(channelData)
-      channelData.isGarageDoorRoller() -> toShadingSystemItem(channelData)
+      channelData.isShadingSystem() -> toShadingSystemItem(channelData, childrenMap)
+      channelData.isProjectorScreen() -> toShadingSystemItem(channelData, childrenMap)
+      channelData.isGarageDoorRoller() -> toShadingSystemItem(channelData, childrenMap)
+      channelData.function == SuplaFunction.HUMIDITY_AND_TEMPERATURE -> toDoubleValueItem(channelData, childrenMap)
       else -> toChannelItem(channelData, childrenMap)
     }
 
-  private fun toGpMeasurement(channelData: ChannelDataEntity): ListItem.GeneralPurposeMeasurementItem =
+  private fun toGpMeasurement(
+    channelData: ChannelDataEntity,
+    childrenMap: MutableMap<Int, List<ChannelChildEntity?>>
+  ): ListItem.GeneralPurposeMeasurementItem =
     ListItem.GeneralPurposeMeasurementItem(
       channelData,
       channelData.locationEntity.caption,
       channelData.channelValueEntity.online.onlineState,
-      getChannelCaptionUseCase(channelData),
+      getCaptionUseCase(channelData.shareable),
       getChannelIconUseCase(channelData),
-      getChannelValueStringUseCase(channelData)
+      getChannelValueStringUseCase(channelData),
+      getChannelIssuesForListUseCase(channelWithChildren(channelData, childrenMap).shareable)
     )
 
-  private fun toGpMeterItem(channelData: ChannelDataEntity): ListItem.GeneralPurposeMeterItem =
+  private fun toGpMeterItem(
+    channelData: ChannelDataEntity,
+    childrenMap: MutableMap<Int, List<ChannelChildEntity?>>
+  ): ListItem.GeneralPurposeMeterItem =
     ListItem.GeneralPurposeMeterItem(
       channelData,
       channelData.locationEntity.caption,
       channelData.channelValueEntity.online.onlineState,
-      getChannelCaptionUseCase(channelData),
+      getCaptionUseCase(channelData.shareable),
       getChannelIconUseCase(channelData),
-      getChannelValueStringUseCase(channelData)
+      getChannelValueStringUseCase(channelData),
+      getChannelIssuesForListUseCase(channelWithChildren(channelData, childrenMap).shareable)
     )
 
-  private fun toIconValueItem(channelData: ChannelDataEntity): ListItem.IconValueItem {
+  private fun toIconValueItem(
+    channelData: ChannelDataEntity,
+    childrenMap: MutableMap<Int, List<ChannelChildEntity?>>
+  ): ListItem.IconValueItem {
     return ListItem.IconValueItem(
       channelData,
       channelData.locationEntity.caption,
       channelData.channelValueEntity.online.onlineState,
-      getChannelCaptionUseCase(channelData),
+      getCaptionUseCase(channelData.shareable),
       getChannelIconUseCase(channelData),
-      getChannelValueStringUseCase.valueOrNull(channelData)
+      getChannelValueStringUseCase.valueOrNull(channelData),
+      getChannelIssuesForListUseCase(channelWithChildren(channelData, childrenMap).shareable)
     )
   }
 
@@ -168,29 +184,28 @@ class CreateProfileChannelsListUseCase @Inject constructor(
       channelData,
       channelData.locationEntity.caption,
       onlineState,
-      getChannelCaptionUseCase(channelData),
+      getCaptionUseCase(channelData.shareable),
       getChannelIconUseCase(channelData),
       mainThermometerChild?.channelDataEntity?.let { getChannelValueStringUseCase(it) } ?: ValuesFormatter.NO_VALUE_TEXT,
-      thermostatValue.getIssueIconType(),
-      thermostatValue.getIssueMessage(),
+      getChannelIssuesForListUseCase(channelWithChildren(channelData, childrenMap).shareable),
       channelData.channelExtendedValueEntity?.getSuplaValue()?.TimerStateValue?.countdownEndsAt,
       thermostatValue.getSetpointText(valuesFormatter),
       indicatorIcon.resource,
     )
   }
 
-  private fun toShadingSystemItem(channelData: ChannelDataEntity): ListItem.ShadingSystemItem {
-    val rollerShutterValue = channelData.channelValueEntity.asRollerShutterValue()
-    return ListItem.ShadingSystemItem(
+  private fun toShadingSystemItem(
+    channelData: ChannelDataEntity,
+    childrenMap: MutableMap<Int, List<ChannelChildEntity?>>
+  ): ListItem.ShadingSystemItem =
+    ListItem.ShadingSystemItem(
       channelData,
       channelData.locationEntity.caption,
       channelData.channelValueEntity.online.onlineState,
-      getChannelCaptionUseCase(channelData),
+      getCaptionUseCase(channelData.shareable),
       getChannelIconUseCase(channelData),
-      rollerShutterValue.getIssueIconType(),
-      rollerShutterValue.getIssueMessage()
+      getChannelIssuesForListUseCase(channelWithChildren(channelData, childrenMap).shareable),
     )
-  }
 
   private fun toSwitchItem(channelData: ChannelDataEntity, childrenMap: MutableMap<Int, List<ChannelChildEntity?>>): ListItem.SwitchItem {
     val children = childrenMap[channelData.remoteId]?.filterNotNull() ?: emptyList()
@@ -200,12 +215,29 @@ class CreateProfileChannelsListUseCase @Inject constructor(
       channelData,
       channelData.locationEntity.caption,
       channelData.channelValueEntity.online.onlineState,
-      getChannelCaptionUseCase(channelData),
+      getCaptionUseCase(channelData.shareable),
       getChannelIconUseCase(channelData),
       value = value,
-      channelData.channelExtendedValueEntity?.getSuplaValue()?.TimerStateValue?.countdownEndsAt
+      channelData.channelExtendedValueEntity?.getSuplaValue()?.TimerStateValue?.countdownEndsAt,
+      getChannelIssuesForListUseCase(channelWithChildren(channelData, childrenMap).shareable)
     )
   }
+
+  private fun toDoubleValueItem(
+    channelData: ChannelDataEntity,
+    childrenMap: MutableMap<Int, List<ChannelChildEntity?>>
+  ): ListItem.DoubleValueItem =
+    ListItem.DoubleValueItem(
+      channelData,
+      channelData.locationEntity.caption,
+      channelData.channelValueEntity.online.onlineState,
+      getCaptionUseCase(channelData.shareable),
+      getChannelIconUseCase(channelData),
+      value = getChannelValueStringUseCase.valueOrNull(channelData),
+      getChannelIssuesForListUseCase(channelWithChildren(channelData, childrenMap).shareable),
+      secondIcon = getChannelIconUseCase(channelData, IconType.SECOND),
+      secondValue = getChannelValueStringUseCase.valueOrNull(channelData, ValueType.SECOND, withUnit = false)
+    )
 
   private fun toChannelItem(channelData: ChannelDataEntity, childrenMap: MutableMap<Int, List<ChannelChildEntity?>>): ListItem.ChannelItem =
     ListItem.ChannelItem(
@@ -213,4 +245,14 @@ class CreateProfileChannelsListUseCase @Inject constructor(
       childrenMap[channelData.remoteId]?.filterNotNull(),
       channelData.getLegacyChannel()
     )
+
+  private fun channelWithChildren(
+    channelData: ChannelDataEntity,
+    childrenMap: MutableMap<Int, List<ChannelChildEntity?>>
+  ): ChannelWithChildren {
+    val children = mutableListOf<ChannelChildEntity>().apply {
+      childrenMap[channelData.remoteId]?.forEach { it?.let { add(it) } }
+    }
+    return ChannelWithChildren(channelData, children)
+  }
 }

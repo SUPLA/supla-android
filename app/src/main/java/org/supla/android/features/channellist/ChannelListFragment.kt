@@ -37,6 +37,7 @@ import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.navigator.MainNavigator
 import org.supla.android.ui.dialogs.exceededAmperageDialog
 import org.supla.android.ui.dialogs.valveAlertDialog
+import org.supla.android.ui.lists.message
 import org.supla.android.usecases.channel.ButtonType
 import javax.inject.Inject
 
@@ -128,7 +129,7 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
       scrollDownOnReload = scrollDown
     }
     adapter.infoButtonClickCallback = { statePopup.show(it) }
-    adapter.issueButtonClickCallback = { showAlertPopup(it) }
+    adapter.issueButtonClickCallback = { showAlertPopup(it.message(requireContext())) }
     adapter.listItemClickCallback = { viewModel.onListItemClick(it) }
   }
 
@@ -151,10 +152,7 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
     }
   }
 
-  private fun showAlertPopup(messageId: Int?) {
-    if (messageId == null) {
-      return
-    }
+  private fun showAlertPopup(messageId: String) {
     val builder = AlertDialog.Builder(context)
     builder.setTitle(android.R.string.dialog_alert_title)
     builder.setMessage(messageId)

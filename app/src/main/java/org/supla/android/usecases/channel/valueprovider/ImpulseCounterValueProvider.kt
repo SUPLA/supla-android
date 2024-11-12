@@ -21,7 +21,7 @@ import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.usecases.channel.ChannelValueProvider
 import org.supla.android.usecases.channel.ValueType
 import org.supla.android.usecases.channel.valueprovider.parser.LongValueProvider
-import org.supla.core.shared.data.SuplaChannelFunction
+import org.supla.core.shared.data.model.general.SuplaFunction
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -29,10 +29,10 @@ import javax.inject.Singleton
 class ImpulseCounterValueProvider @Inject constructor() : ChannelValueProvider, LongValueProvider {
   override fun handle(channelData: ChannelDataEntity): Boolean =
     when (channelData.function) {
-      SuplaChannelFunction.IC_ELECTRICITY_METER,
-      SuplaChannelFunction.IC_WATER_METER,
-      SuplaChannelFunction.IC_HEAT_METER,
-      SuplaChannelFunction.IC_GAS_METER -> true
+      SuplaFunction.IC_ELECTRICITY_METER,
+      SuplaFunction.IC_WATER_METER,
+      SuplaFunction.IC_HEAT_METER,
+      SuplaFunction.IC_GAS_METER -> true
 
       else -> false
     }

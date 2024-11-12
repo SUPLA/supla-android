@@ -23,17 +23,18 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
+import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -53,6 +54,7 @@ fun TextField(
   onValueChange: (String) -> Unit = { },
   onClicked: (() -> Unit)? = null,
   keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+  keyboardActions: KeyboardActions = KeyboardActions.Default,
   visualTransformation: VisualTransformation = VisualTransformation.None,
   enabled: Boolean = true,
   readOnly: Boolean = false,
@@ -63,6 +65,9 @@ fun TextField(
   placeholder: @Composable (() -> Unit)? = null,
   leadingIcon: @Composable (() -> Unit)? = null,
   trailingIcon: @Composable (() -> Unit)? = null,
+  prefix: @Composable (() -> Unit)? = null,
+  suffix: @Composable (() -> Unit)? = null,
+  focusedColor: Color? = null,
   contentPadding: PaddingValues =
     if (label == null) {
       TextFieldDefaults.contentPaddingWithoutLabel()
@@ -70,7 +75,7 @@ fun TextField(
       TextFieldDefaults.contentPaddingWithLabel()
     }
 ) {
-  val colors = ExposedDropdownMenuDefaults.textFieldColors(
+  val colors = TextFieldDefaults.colors(
     focusedContainerColor = MaterialTheme.colorScheme.surface,
     unfocusedContainerColor = MaterialTheme.colorScheme.surface,
     disabledContainerColor = MaterialTheme.colorScheme.surface,
@@ -89,6 +94,7 @@ fun TextField(
 
   val shape = RoundedCornerShape(dimensionResource(id = R.dimen.radius_default))
   val interactionSource = remember { MutableInteractionSource() }
+  val isFocused by interactionSource.collectIsFocusedAsState()
 
   if (onClicked != null) {
     LaunchedEffect(interactionSource) {
@@ -100,13 +106,19 @@ fun TextField(
     }
   }
 
+  val borderColor = when {
+    isError -> MaterialTheme.colorScheme.error
+    isFocused && focusedColor != null -> focusedColor
+    else -> colorResource(id = R.color.gray_lighter)
+  }
+
   BasicTextField(
     value = value,
     modifier = modifier
       .background(MaterialTheme.colorScheme.surface, shape)
       .border(
         width = 1.dp,
-        color = if (isError) MaterialTheme.colorScheme.error else colorResource(id = R.color.gray_lighter),
+        color = borderColor,
         shape = RoundedCornerShape(dimensionResource(id = R.dimen.radius_default))
       ),
     onValueChange = onValueChange,
@@ -116,7 +128,7 @@ fun TextField(
     cursorBrush = SolidColor(cursorColor),
     visualTransformation = visualTransformation,
     keyboardOptions = keyboardOptions,
-    keyboardActions = KeyboardActions(),
+    keyboardActions = keyboardActions,
     interactionSource = interactionSource,
     singleLine = singleLine,
     maxLines = if (singleLine) 1 else Int.MAX_VALUE,
@@ -132,6 +144,8 @@ fun TextField(
         leadingIcon = leadingIcon,
         trailingIcon = trailingIcon,
         singleLine = singleLine,
+        prefix = prefix,
+        suffix = suffix,
         enabled = enabled,
         isError = isError,
         interactionSource = interactionSource,

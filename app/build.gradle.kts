@@ -27,8 +27,8 @@ android {
     minSdk = libs.versions.minSdk.get().toInt()
     targetSdk = libs.versions.targetSdk.get().toInt()
     multiDexEnabled = true
-    versionCode = 255
-    versionName = "24.10.05"
+    versionCode = 259
+    versionName = "24.11"
 
     ndk {
       moduleName = "suplaclient"
@@ -168,10 +168,9 @@ dependencies {
   implementation(libs.kotlin.stdlib)
   implementation(libs.kotlinx.serialization)
   implementation(libs.jsoup)
+  implementation(libs.coil)
 
   coreLibraryDesugaring(libs.android.tools.desugar)
-
-  annotationProcessor(libs.androidx.room.compiler)
 
   kapt(libs.hilt.kapt)
   kapt(libs.hilt.worker.kapt)

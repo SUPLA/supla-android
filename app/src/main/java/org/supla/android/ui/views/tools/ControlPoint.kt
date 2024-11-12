@@ -26,8 +26,7 @@ import androidx.compose.ui.unit.dp
 private val defaultPointRadius = 8.dp
 private val defaultShadowRadius = 4.dp
 
-context(DrawScope)
-fun drawControlPoint(
+fun DrawScope.drawControlPoint(
   position: Offset,
   pointColor: Color,
   pointShadowColor: Color,

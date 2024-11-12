@@ -19,6 +19,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import org.supla.core.shared.data.model.channel.ChannelRelationType
 
 @Entity(
   tableName = ChannelRelationEntity.TABLE_NAME,
@@ -40,54 +41,5 @@ data class ChannelRelationEntity(
     const val COLUMN_DELETE_FLAG = "delete_flag"
 
     const val ALL_COLUMNS = "$COLUMN_CHANNEL_ID, $COLUMN_PARENT_ID, $COLUMN_CHANNEL_RELATION_TYPE, $COLUMN_PROFILE_ID, $COLUMN_DELETE_FLAG"
-  }
-}
-
-enum class ChannelRelationType(val value: Short) {
-  UNKNOWN(-1),
-  DEFAULT(0),
-  OPENING_SENSOR(1),
-  PARTIAL_OPENING_SENSOR(2),
-  METER(3),
-  MAIN_THERMOMETER(4),
-  AUX_THERMOMETER_FLOOR(5),
-  AUX_THERMOMETER_WATER(6),
-  AUX_THERMOMETER_GENERIC_HEATER(7),
-  AUX_THERMOMETER_GENERIC_COOLER(8),
-  MASTER_THERMOSTAT(20),
-  HEAT_OR_COLD_SOURCE_SWITCH(21),
-  PUMP_SWITCH(22);
-
-  fun isThermometer(): Boolean {
-    return isMainThermometer() || isAuxThermometer()
-  }
-
-  fun isAuxThermometer(): Boolean {
-    return when (this) {
-      AUX_THERMOMETER_FLOOR,
-      AUX_THERMOMETER_WATER,
-      AUX_THERMOMETER_GENERIC_HEATER,
-      AUX_THERMOMETER_GENERIC_COOLER -> true
-      else -> false
-    }
-  }
-
-  fun isMainThermometer(): Boolean {
-    return when (this) {
-      MAIN_THERMOMETER -> true
-      else -> false
-    }
-  }
-
-  companion object {
-    fun from(value: Short): ChannelRelationType {
-      for (type in entries) {
-        if (type.value == value) {
-          return type
-        }
-      }
-
-      return UNKNOWN
-    }
   }
 }

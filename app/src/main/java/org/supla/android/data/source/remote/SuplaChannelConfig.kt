@@ -18,7 +18,7 @@ package org.supla.android.data.source.remote
  */
 
 import org.supla.android.data.source.local.entity.ChannelEntity
-import org.supla.core.shared.data.SuplaChannelFunction
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 enum class ChannelConfigType(val value: Int) {
   UNKNOWN(-1),
@@ -41,11 +41,11 @@ enum class ChannelConfigType(val value: Int) {
 
     fun from(channel: ChannelEntity) =
       when (channel.function) {
-        SuplaChannelFunction.GENERAL_PURPOSE_MEASUREMENT -> GENERAL_PURPOSE_MEASUREMENT
-        SuplaChannelFunction.GENERAL_PURPOSE_METER -> GENERAL_PURPOSE_METER
+        SuplaFunction.GENERAL_PURPOSE_MEASUREMENT -> GENERAL_PURPOSE_MEASUREMENT
+        SuplaFunction.GENERAL_PURPOSE_METER -> GENERAL_PURPOSE_METER
 
-        SuplaChannelFunction.VERTICAL_BLIND,
-        SuplaChannelFunction.CONTROLLING_THE_FACADE_BLIND -> FACADE_BLIND
+        SuplaFunction.VERTICAL_BLIND,
+        SuplaFunction.CONTROLLING_THE_FACADE_BLIND -> FACADE_BLIND
 
         else -> throw IllegalArgumentException("Channel not supported (function: `${channel.function}`)")
       }

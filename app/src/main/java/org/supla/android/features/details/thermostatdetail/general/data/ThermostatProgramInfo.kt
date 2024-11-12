@@ -30,12 +30,14 @@ import org.supla.android.data.source.remote.hvac.SuplaChannelWeeklyScheduleConfi
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
 import org.supla.android.data.source.remote.hvac.SuplaWeeklyScheduleProgram
+import org.supla.android.data.source.remote.hvac.icon
+import org.supla.android.data.source.remote.hvac.iconColor
 import org.supla.android.data.source.remote.isAutomaticTimeSyncDisabled
-import org.supla.android.data.source.remote.thermostat.SuplaThermostatFlag
 import org.supla.android.extensions.guardLet
 import org.supla.android.extensions.valuesFormatter
 import org.supla.android.features.details.thermostatdetail.ui.OFF
 import org.supla.android.features.details.thermostatdetail.ui.description
+import org.supla.core.shared.data.model.thermostat.SuplaThermostatFlag
 
 data class ThermostatProgramInfo(
   val type: Type,

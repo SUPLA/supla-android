@@ -30,26 +30,28 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.whenever
 import org.supla.android.Preferences
 import org.supla.android.core.BaseViewModelTest
-import org.supla.android.core.ui.StringProvider
+import org.supla.android.core.shared.shareable
 import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.complex.shareable
 import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
-import org.supla.android.data.source.remote.thermostat.ThermostatValue
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.tools.SuplaSchedulers
-import org.supla.android.usecases.channel.GetChannelCaptionUseCase
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
-import org.supla.core.shared.data.SuplaChannelFunction
+import org.supla.core.shared.data.model.general.SuplaFunction
+import org.supla.core.shared.data.model.thermostat.ThermostatValue
+import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.usecase.GetCaptionUseCase
 
 @RunWith(MockitoJUnitRunner::class)
 class ThermostatDetailViewModelTest :
   BaseViewModelTest<ThermostatDetailViewState, ThermostatDetailViewEvent, ThermostatDetailViewModel>() {
 
   @Mock
-  private lateinit var getChannelCaptionUseCase: GetChannelCaptionUseCase
+  private lateinit var getCaptionUseCase: GetCaptionUseCase
 
   @Mock
   private lateinit var readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase
@@ -78,21 +80,21 @@ class ThermostatDetailViewModelTest :
   fun `should close detail when thermostat changed subfunction`() {
     // given
     val remoteId = 123
-    val channelData1: ChannelDataEntity = mockChannel(ThermostatSubfunction.HEAT)
-    val channelData2: ChannelDataEntity = mockChannel(ThermostatSubfunction.COOL)
-    val captionProvider: StringProvider = mockk()
+    val channelData1: ChannelDataEntity = mockChannel(remoteId, ThermostatSubfunction.HEAT)
+    val channelData2: ChannelDataEntity = mockChannel(remoteId, ThermostatSubfunction.COOL)
+    val caption: LocalizedString = mockk()
 
-    whenever(getChannelCaptionUseCase.invoke(channelData1)).thenReturn(captionProvider)
+    whenever(getCaptionUseCase.invoke(channelData1.shareable)).thenReturn(caption)
     whenever(readChannelByRemoteIdUseCase.invoke(remoteId))
       .thenReturn(Maybe.just(channelData1), Maybe.just(channelData2))
 
     // when
-    viewModel.loadData(remoteId, ItemType.CHANNEL, SuplaChannelFunction.HVAC_THERMOSTAT)
-    viewModel.loadData(remoteId, ItemType.CHANNEL, SuplaChannelFunction.HVAC_THERMOSTAT)
+    viewModel.loadData(remoteId, ItemType.CHANNEL, SuplaFunction.HVAC_THERMOSTAT)
+    viewModel.loadData(remoteId, ItemType.CHANNEL, SuplaFunction.HVAC_THERMOSTAT)
 
     // then
     assertThat(states).containsExactly(
-      ThermostatDetailViewState(captionProvider, ThermostatSubfunction.HEAT)
+      ThermostatDetailViewState(caption, ThermostatSubfunction.HEAT)
     )
     assertThat(events).containsExactly(
       ThermostatDetailViewEvent.Close
@@ -103,12 +105,12 @@ class ThermostatDetailViewModelTest :
   fun `should close detail when thermostat changed function`() {
     // given
     val remoteId = 123
-    val channelData1: ChannelDataEntity = mockChannel(ThermostatSubfunction.HEAT)
+    val channelData1: ChannelDataEntity = mockChannel(remoteId, ThermostatSubfunction.HEAT)
     whenever(readChannelByRemoteIdUseCase.invoke(remoteId))
       .thenReturn(Maybe.just(channelData1))
 
     // when
-    viewModel.loadData(remoteId, ItemType.CHANNEL, SuplaChannelFunction.HVAC_DOMESTIC_HOT_WATER)
+    viewModel.loadData(remoteId, ItemType.CHANNEL, SuplaFunction.HVAC_DOMESTIC_HOT_WATER)
 
     // then
     assertThat(states).isEmpty()
@@ -121,12 +123,12 @@ class ThermostatDetailViewModelTest :
   fun `should close detail when thermostat was deleted`() {
     // given
     val remoteId = 123
-    val channelData1: ChannelDataEntity = mockChannel(ThermostatSubfunction.HEAT, visible = 0)
+    val channelData1: ChannelDataEntity = mockChannel(remoteId, ThermostatSubfunction.HEAT, visible = 0)
     whenever(readChannelByRemoteIdUseCase.invoke(remoteId))
       .thenReturn(Maybe.just(channelData1))
 
     // when
-    viewModel.loadData(remoteId, ItemType.CHANNEL, SuplaChannelFunction.HVAC_THERMOSTAT)
+    viewModel.loadData(remoteId, ItemType.CHANNEL, SuplaFunction.HVAC_THERMOSTAT)
 
     // then
     assertThat(states).isEmpty()
@@ -135,24 +137,29 @@ class ThermostatDetailViewModelTest :
     )
   }
 
-  private fun mockChannel(subfunction: ThermostatSubfunction, visible: Int = 1): ChannelDataEntity {
+  private fun mockChannel(remoteId: Int, subfunction: ThermostatSubfunction, visible: Int = 1): ChannelDataEntity {
     val thermostatValue: ThermostatValue = mockk {
       every { this@mockk.subfunction } returns subfunction
     }
 
     val value: ChannelValueEntity = mockk {
       every { asThermostatValue() } returns thermostatValue
+      every { getValueAsByteArray() } returns byteArrayOf()
     }
 
     val channel: ChannelEntity = mockk {
-      every { this@mockk.function } returns SuplaChannelFunction.HVAC_THERMOSTAT
+      every { this@mockk.function } returns SuplaFunction.HVAC_THERMOSTAT
     }
 
     return mockk<ChannelDataEntity> {
+      every { this@mockk.remoteId } returns remoteId
       every { this@mockk.channelEntity } returns channel
-      every { this@mockk.function } returns SuplaChannelFunction.HVAC_THERMOSTAT
+      every { this@mockk.function } returns SuplaFunction.HVAC_THERMOSTAT
       every { this@mockk.visible } returns visible
       every { this@mockk.channelValueEntity } returns value
+      every { caption } returns ""
+      every { channelExtendedValueEntity } returns null
+      every { isOnline() } returns true
     }
   }
 }

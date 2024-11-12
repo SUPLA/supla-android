@@ -20,6 +20,8 @@ package org.supla.android.usecases.channel.measurementsprovider
 import com.google.gson.Gson
 import io.reactivex.rxjava3.core.Single
 import org.supla.android.Preferences
+import org.supla.android.core.shared.provider
+import org.supla.android.core.shared.shareable
 import org.supla.android.data.model.chart.AggregatedEntity
 import org.supla.android.data.model.chart.AggregatedValue
 import org.supla.android.data.model.chart.ChannelChartSets
@@ -35,9 +37,9 @@ import org.supla.android.data.source.local.entity.measurements.GeneralPurposeMea
 import org.supla.android.di.GSON_FOR_REPO
 import org.supla.android.extensions.toTimestamp
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT
-import org.supla.android.usecases.channel.GetChannelCaptionUseCase
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
+import org.supla.core.shared.usecase.GetCaptionUseCase
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -45,7 +47,7 @@ import javax.inject.Singleton
 @Singleton
 class GeneralPurposeMeasurementMeasurementsProvider @Inject constructor(
   private val generalPurposeMeasurementLogRepository: GeneralPurposeMeasurementLogRepository,
-  private val getChannelCaptionUseCase: GetChannelCaptionUseCase,
+  private val getCaptionUseCase: GetCaptionUseCase,
   getChannelValueStringUseCase: GetChannelValueStringUseCase,
   getChannelIconUseCase: GetChannelIconUseCase,
   preferences: Preferences,
@@ -67,7 +69,7 @@ class GeneralPurposeMeasurementMeasurementsProvider @Inject constructor(
         ChannelChartSets(
           channel.remoteId,
           channel.function,
-          getChannelCaptionUseCase(channel.channelEntity),
+          getCaptionUseCase(channel.shareable).provider(),
           spec.aggregation,
           it
         )

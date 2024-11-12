@@ -8,7 +8,7 @@ import org.junit.runner.RunWith
 import org.mockito.InjectMocks
 import org.mockito.junit.MockitoJUnitRunner
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
-import org.supla.core.shared.data.SuplaChannelFunction
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 @RunWith(MockitoJUnitRunner::class)
 class GpmValueProviderTest : BaseDoubleValueProviderTest<GpmValueProvider>() {
@@ -22,7 +22,7 @@ class GpmValueProviderTest : BaseDoubleValueProviderTest<GpmValueProvider>() {
   fun `check if handles meter`() {
     // given
     val channel: ChannelDataEntity = mockk {
-      every { function } returns SuplaChannelFunction.GENERAL_PURPOSE_METER
+      every { function } returns SuplaFunction.GENERAL_PURPOSE_METER
     }
 
     // when
@@ -36,7 +36,7 @@ class GpmValueProviderTest : BaseDoubleValueProviderTest<GpmValueProvider>() {
   fun `check if handles measurement`() {
     // given
     val channel: ChannelDataEntity = mockk {
-      every { function } returns SuplaChannelFunction.GENERAL_PURPOSE_MEASUREMENT
+      every { function } returns SuplaFunction.GENERAL_PURPOSE_MEASUREMENT
     }
 
     // when

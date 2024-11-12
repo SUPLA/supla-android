@@ -30,11 +30,11 @@ import org.supla.android.data.source.local.entity.measurements.ElectricityMeterL
 import org.supla.android.data.source.local.entity.measurements.balanceHourly
 import org.supla.android.data.source.remote.electricitymeter.hasForwardEnergy
 import org.supla.android.data.source.remote.electricitymeter.hasReverseEnergy
-import org.supla.android.extensions.ifTrue
 import org.supla.android.features.details.detailbase.electricitymeter.EnergyData
 import org.supla.android.lib.SuplaChannelElectricityMeterValue
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.channel.valueformatter.ListElectricityMeterValueFormatter
+import org.supla.core.shared.extensions.ifTrue
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton

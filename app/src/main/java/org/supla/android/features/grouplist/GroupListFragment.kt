@@ -70,6 +70,7 @@ class GroupListFragment : BaseFragment<GroupListViewState, GroupListViewEvent>(R
     when (event) {
       is GroupListViewEvent.NavigateToPrivateCloud -> navigator.navigateToWeb(event.url)
       is GroupListViewEvent.NavigateToSuplaCloud -> navigator.navigateToCloudExternal()
+      is GroupListViewEvent.NavigateToSuplaBetaCloud -> navigator.navigateToBetaCloudExternal()
       is GroupListViewEvent.ShowValveDialog -> valveAlertDialog(event.remoteId, suplaClient).show()
       is GroupListViewEvent.ShowAmperageExceededDialog -> exceededAmperageDialog(event.remoteId, suplaClient).show()
       is GroupListViewEvent.OpenLegacyDetails -> {

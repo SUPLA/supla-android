@@ -129,7 +129,7 @@ class NotificationsHelper @Inject constructor(
   }
 
   fun showNotification(context: Context, title: String, text: String, profileName: String?) {
-    if (VERSION.SDK_INT >= VERSION_CODES.N && !notificationManager.areNotificationsEnabled()) {
+    if (!notificationManager.areNotificationsEnabled()) {
       return
     }
     // Channel is removed when user revoke notification permission and we don't know
@@ -153,14 +153,13 @@ class NotificationsHelper @Inject constructor(
     val intent = Intent(context, MainActivity::class.java).apply {
       flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
     }
-    val flag = if (VERSION.SDK_INT >= VERSION_CODES.M) FLAG_IMMUTABLE else 0
 
     return NotificationCompat.Builder(context, channel)
       .setSmallIcon(R.drawable.logo)
       .setContentTitle(title)
       .setContentText(text)
       .setColor(ResourcesCompat.getColor(context.resources, R.color.primary, null))
-      .setContentIntent(PendingIntent.getActivity(context, 0, intent, flag))
+      .setContentIntent(PendingIntent.getActivity(context, 0, intent, FLAG_IMMUTABLE))
       .setAutoCancel(true)
       .setStyle(NotificationCompat.BigTextStyle().bigText(text))
       .build()
@@ -168,13 +167,7 @@ class NotificationsHelper @Inject constructor(
 
   companion object {
     fun areNotificationsEnabled(notificationManager: NotificationManager): Boolean {
-      return if (VERSION.SDK_INT >= VERSION_CODES.N) {
-        notificationManager.areNotificationsEnabled()
-      } else {
-        true
-      }
+      return notificationManager.areNotificationsEnabled()
     }
   }
 }
-
-private const val ONE_DAY_MILLIS = 24 * 60 * 60 * 1000

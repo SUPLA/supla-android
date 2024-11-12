@@ -18,6 +18,7 @@ import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.core.permissions.PermissionsHelper
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.core.storage.EncryptedPreferences
 import org.supla.android.data.model.general.LockScreenScope
 import org.supla.android.data.model.general.LockScreenSettings
@@ -46,6 +47,9 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
   private lateinit var encryptedPreferences: EncryptedPreferences
 
   @Mock
+  private lateinit var applicationPreferences: ApplicationPreferences
+
+  @Mock
   override lateinit var schedulers: SuplaSchedulers
 
   override val viewModel: SettingsViewModel by lazy {
@@ -55,6 +59,7 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
       permissionsHelper,
       modeManager,
       encryptedPreferences,
+      applicationPreferences,
       schedulers
     )
   }
@@ -89,6 +94,7 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
       tuple(SettingItem.RollerShutterOpenClose::class.java),
       tuple(SettingItem.NightMode::class.java),
       tuple(SettingItem.LockScreen::class.java),
+      tuple(SettingItem.BatteryWarningLevel::class.java),
       tuple(SettingItem.LocalizationOrdering::class.java),
       tuple(SettingItem.HeaderItem::class.java),
       tuple(SettingItem.NotificationsItem::class.java),
@@ -105,9 +111,9 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
     assertThat((settingsList[7] as SettingItem.RollerShutterOpenClose).showOpeningPercentage).isEqualTo(true)
     assertThat((settingsList[8] as SettingItem.NightMode).nightModeSetting).isEqualTo(NightModeSetting.NEVER)
     assertThat((settingsList[9] as SettingItem.LockScreen).lockScreenScope).isEqualTo(LockScreenScope.NONE)
-    assertThat((settingsList[11] as SettingItem.HeaderItem).headerResource).isEqualTo(R.string.settings_permissions)
-    assertThat((settingsList[12] as SettingItem.NotificationsItem).allowed).isEqualTo(true)
-    assertThat((settingsList[13] as SettingItem.LocalizationItem).allowed).isEqualTo(true)
+    assertThat((settingsList[12] as SettingItem.HeaderItem).headerResource).isEqualTo(R.string.settings_permissions)
+    assertThat((settingsList[13] as SettingItem.NotificationsItem).allowed).isEqualTo(true)
+    assertThat((settingsList[14] as SettingItem.LocalizationItem).allowed).isEqualTo(true)
   }
 
   @Test
@@ -256,7 +262,7 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
     assertThat(states.size).isEqualTo(1)
     assertThat(events).isEmpty()
     verifyPreferencesMockedCalls()
-    verify(preferences).nightMode = NightModeSetting.ALWAYS
+    verify(applicationPreferences).nightMode = NightModeSetting.ALWAYS
     verifyNoMoreInteractions(preferences)
   }
 
@@ -341,7 +347,7 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
 
     // when
     viewModel.loadSettings()
-    val channelSettingItem = states[0].settingsItems[10] as SettingItem.LocalizationOrdering
+    val channelSettingItem = states[0].settingsItems[11] as SettingItem.LocalizationOrdering
     channelSettingItem.callback()
 
     // then
@@ -358,7 +364,7 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
 
     // when
     viewModel.loadSettings()
-    val channelSettingItem = states[0].settingsItems[12] as SettingItem.NotificationsItem
+    val channelSettingItem = states[0].settingsItems[13] as SettingItem.NotificationsItem
     channelSettingItem.callback()
 
     // then
@@ -375,7 +381,7 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
 
     // when
     viewModel.loadSettings()
-    val channelSettingItem = states[0].settingsItems[13] as SettingItem.LocalizationItem
+    val channelSettingItem = states[0].settingsItems[14] as SettingItem.LocalizationItem
     channelSettingItem.callback()
 
     // then
@@ -391,7 +397,7 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
     whenever(preferences.isButtonAutohide).thenReturn(true)
     whenever(preferences.isShowChannelInfo).thenReturn(false)
     whenever(preferences.isShowOpeningPercent).thenReturn(true)
-    whenever(preferences.nightMode).thenReturn(NightModeSetting.NEVER)
+    whenever(applicationPreferences.nightMode).thenReturn(NightModeSetting.NEVER)
 
     whenever(encryptedPreferences.lockScreenSettings).thenReturn(LockScreenSettings.DEFAULT)
   }
@@ -404,6 +410,6 @@ class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewE
     verify(preferences, times(1)).isShowBottomMenu
     verify(preferences, times(1)).isShowBottomLabel
     verify(preferences, times(1)).isShowOpeningPercent
-    verify(preferences, times(1)).nightMode
+    verify(applicationPreferences, times(1)).nightMode
   }
 }

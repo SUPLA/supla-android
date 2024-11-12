@@ -18,25 +18,25 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
-import org.supla.android.R
-import org.supla.android.ui.lists.data.IssueIconType
+import org.supla.android.core.shared.data.model.lists.height
+import org.supla.android.core.shared.data.model.lists.resource
+import org.supla.android.core.shared.data.model.lists.rotation
+import org.supla.android.core.shared.data.model.lists.width
+import org.supla.core.shared.data.model.lists.IssueIcon
 
 @Composable
-fun ListItemIssueIcon(issueIconType: IssueIconType, onClick: () -> Unit, modifier: Modifier = Modifier) {
+fun ListItemIssueIcon(icon: IssueIcon, modifier: Modifier = Modifier) {
   Image(
-    painter = painterResource(id = issueIconType.icon),
+    painter = painterResource(id = icon.resource),
     contentDescription = null,
     modifier = modifier
-      .size(dimensionResource(id = R.dimen.channel_warning_image_size))
-      .clickable(interactionSource = remember { MutableInteractionSource() }, indication = ripple(), onClick = onClick)
+      .size(width = dimensionResource(icon.width), height = dimensionResource(icon.height))
+      .rotate(icon.rotation)
   )
 }

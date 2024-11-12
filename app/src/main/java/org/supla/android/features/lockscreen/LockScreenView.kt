@@ -170,9 +170,8 @@ private fun PinEntry(viewState: LockScreenViewState, onPinChange: (String) -> Un
   }
 }
 
-context(BoxScope)
 @Composable
-private fun AuthenticationView(viewState: LockScreenViewState, onClick: () -> Unit) {
+private fun BoxScope.AuthenticationView(viewState: LockScreenViewState, onClick: () -> Unit) {
   Column(
     horizontalAlignment = Alignment.CenterHorizontally,
     verticalArrangement = Arrangement.spacedBy(Distance.tiny),

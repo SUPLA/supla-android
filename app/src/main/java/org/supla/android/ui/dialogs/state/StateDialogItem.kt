@@ -21,8 +21,8 @@ import org.supla.android.R
 import org.supla.android.core.ui.StringProvider
 import org.supla.android.core.ui.stringProvider
 import org.supla.android.core.ui.stringProviderOf
-import org.supla.android.extensions.ifTrue
 import org.supla.android.lib.SuplaChannelState
+import org.supla.core.shared.extensions.ifTrue
 
 enum class StateDialogItem(val captionResource: Int) {
   CHANNEL_ID(R.string.channel_id),

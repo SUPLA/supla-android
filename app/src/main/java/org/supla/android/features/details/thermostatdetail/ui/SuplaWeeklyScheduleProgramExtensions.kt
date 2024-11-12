@@ -23,8 +23,8 @@ import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
 import org.supla.android.data.source.remote.hvac.SuplaWeeklyScheduleProgram
-import org.supla.android.extensions.fromSuplaTemperature
 import org.supla.android.extensions.valuesFormatter
+import org.supla.core.shared.extensions.fromSuplaTemperature
 
 val SuplaWeeklyScheduleProgram.description: StringProvider
   get() = { context ->

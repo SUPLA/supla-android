@@ -25,17 +25,21 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.dimensionResource
-import org.supla.android.R
+import androidx.compose.ui.unit.Dp
+import org.supla.android.core.ui.theme.Distance
 
-context(BoxScope)
 @Composable
-fun ListItemMainRow(scale: Float, content: @Composable RowScope.() -> Unit) =
+fun BoxScope.ListItemMainRow(
+  scale: Float,
+  spacing: Dp = Distance.tiny,
+  topPadding: Dp = Distance.default.times(scale),
+  content: @Composable RowScope.() -> Unit
+) =
   Row(
     modifier = Modifier
       .align(Alignment.TopCenter)
-      .padding(top = dimensionResource(id = R.dimen.distance_default).times(scale)),
-    horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.distance_tiny)),
+      .padding(top = topPadding),
+    horizontalArrangement = Arrangement.spacedBy(spacing),
     verticalAlignment = Alignment.CenterVertically,
     content = content
   )

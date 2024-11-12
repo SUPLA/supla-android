@@ -57,7 +57,7 @@ import org.supla.android.usecases.channel.electricitymeter.LoadElectricityMeterM
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
-import org.supla.core.shared.data.SuplaChannelFunction
+import org.supla.core.shared.data.model.general.SuplaFunction
 import java.util.Date
 
 @Suppress("UnusedLambdaExpressionBody")
@@ -113,7 +113,7 @@ class SwitchGeneralViewModelTest :
   fun `should load channel`() {
     // given
     val remoteId = 123
-    val function = SuplaChannelFunction.POWER_SWITCH
+    val function = SuplaFunction.POWER_SWITCH
     val channelData: ChannelDataEntity = mockChannelData(remoteId, function)
     val stateIcon: ImageId = mockk()
     val onIcon: ImageId = mockk()
@@ -169,7 +169,7 @@ class SwitchGeneralViewModelTest :
   fun `should load channel - without buttons`() {
     // given
     val remoteId = 123
-    val function = SuplaChannelFunction.PUMP_SWITCH
+    val function = SuplaFunction.PUMP_SWITCH
     val channelData: ChannelDataEntity = mockChannelData(remoteId, function)
     val stateIcon: ImageId = mockk()
     val onIcon: ImageId = mockk()
@@ -225,7 +225,7 @@ class SwitchGeneralViewModelTest :
   fun `should load group`() {
     // given
     val remoteId = 123
-    val function = SuplaChannelFunction.POWER_SWITCH
+    val function = SuplaFunction.POWER_SWITCH
     val group: ChannelGroupDataEntity = mockk {
       every { this@mockk.function } returns function
       every { this@mockk.remoteId } returns remoteId
@@ -331,7 +331,7 @@ class SwitchGeneralViewModelTest :
   fun `should load estimated count down end time`() {
     // given
     val remoteId = 123
-    val function = SuplaChannelFunction.LIGHTSWITCH
+    val function = SuplaFunction.LIGHTSWITCH
     val stateIcon: ImageId = mockk()
     val onIcon: ImageId = mockk()
     val offIcon: ImageId = mockk()
@@ -397,7 +397,7 @@ class SwitchGeneralViewModelTest :
   fun `shouldn't load estimated countdown end time when time elapsed`() {
     // given
     val remoteId = 123
-    val function = SuplaChannelFunction.LIGHTSWITCH
+    val function = SuplaFunction.LIGHTSWITCH
     val stateIcon: ImageId = mockk()
     val onIcon: ImageId = mockk()
     val offIcon: ImageId = mockk()
@@ -460,7 +460,7 @@ class SwitchGeneralViewModelTest :
     return extendedValue
   }
 
-  private fun mockChannelData(remoteId: Int, function: SuplaChannelFunction, estimatedEndDate: Date? = null): ChannelDataEntity {
+  private fun mockChannelData(remoteId: Int, function: SuplaFunction, estimatedEndDate: Date? = null): ChannelDataEntity {
     return mockk {
       every { this@mockk.function } returns function
       every { this@mockk.remoteId } returns remoteId

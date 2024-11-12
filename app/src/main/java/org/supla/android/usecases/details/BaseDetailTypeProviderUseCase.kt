@@ -18,70 +18,70 @@ package org.supla.android.usecases.details
  */
 
 import org.supla.android.features.details.detailbase.standarddetail.DetailPage
-import org.supla.core.shared.data.SuplaChannelFunction
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 abstract class BaseDetailTypeProviderUseCase {
 
-  fun provide(function: SuplaChannelFunction): DetailType? = when (function) {
-    SuplaChannelFunction.DIMMER,
-    SuplaChannelFunction.DIMMER_AND_RGB_LIGHTING,
-    SuplaChannelFunction.RGB_LIGHTING ->
+  fun provide(function: SuplaFunction): DetailType? = when (function) {
+    SuplaFunction.DIMMER,
+    SuplaFunction.DIMMER_AND_RGB_LIGHTING,
+    SuplaFunction.RGB_LIGHTING ->
       LegacyDetailType.RGBW
 
-    SuplaChannelFunction.CONTROLLING_THE_ROLLER_SHUTTER ->
+    SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER ->
       WindowDetailType(listOf(DetailPage.ROLLER_SHUTTER))
 
-    SuplaChannelFunction.CONTROLLING_THE_ROOF_WINDOW ->
+    SuplaFunction.CONTROLLING_THE_ROOF_WINDOW ->
       WindowDetailType(listOf(DetailPage.ROOF_WINDOW))
 
-    SuplaChannelFunction.CONTROLLING_THE_FACADE_BLIND ->
+    SuplaFunction.CONTROLLING_THE_FACADE_BLIND ->
       WindowDetailType(listOf(DetailPage.FACADE_BLINDS))
 
-    SuplaChannelFunction.TERRACE_AWNING ->
+    SuplaFunction.TERRACE_AWNING ->
       WindowDetailType(listOf(DetailPage.TERRACE_AWNING))
 
-    SuplaChannelFunction.PROJECTOR_SCREEN ->
+    SuplaFunction.PROJECTOR_SCREEN ->
       WindowDetailType(listOf(DetailPage.PROJECTOR_SCREEN))
 
-    SuplaChannelFunction.CURTAIN ->
+    SuplaFunction.CURTAIN ->
       WindowDetailType(listOf(DetailPage.CURTAIN))
 
-    SuplaChannelFunction.VERTICAL_BLIND ->
+    SuplaFunction.VERTICAL_BLIND ->
       WindowDetailType(listOf(DetailPage.VERTICAL_BLIND))
 
-    SuplaChannelFunction.ROLLER_GARAGE_DOOR ->
+    SuplaFunction.ROLLER_GARAGE_DOOR ->
       WindowDetailType(listOf(DetailPage.GARAGE_DOOR_ROLLER))
 
-    SuplaChannelFunction.LIGHTSWITCH,
-    SuplaChannelFunction.POWER_SWITCH,
-    SuplaChannelFunction.STAIRCASE_TIMER,
-    SuplaChannelFunction.PUMP_SWITCH,
-    SuplaChannelFunction.HEAT_OR_COLD_SOURCE_SWITCH ->
+    SuplaFunction.LIGHTSWITCH,
+    SuplaFunction.POWER_SWITCH,
+    SuplaFunction.STAIRCASE_TIMER,
+    SuplaFunction.PUMP_SWITCH,
+    SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH ->
       SwitchDetailType(listOf(DetailPage.SWITCH))
 
-    SuplaChannelFunction.ELECTRICITY_METER ->
+    SuplaFunction.ELECTRICITY_METER ->
       EmDetailType(listOf(DetailPage.EM_GENERAL, DetailPage.EM_HISTORY, DetailPage.EM_SETTINGS))
 
-    SuplaChannelFunction.IC_ELECTRICITY_METER,
-    SuplaChannelFunction.IC_GAS_METER,
-    SuplaChannelFunction.IC_WATER_METER,
-    SuplaChannelFunction.IC_HEAT_METER ->
-      LegacyDetailType.IC
+    SuplaFunction.IC_ELECTRICITY_METER,
+    SuplaFunction.IC_GAS_METER,
+    SuplaFunction.IC_WATER_METER,
+    SuplaFunction.IC_HEAT_METER ->
+      IcDetailType(listOf(DetailPage.HISTORY_IC))
 
-    SuplaChannelFunction.THERMOMETER,
-    SuplaChannelFunction.HUMIDITY_AND_TEMPERATURE ->
+    SuplaFunction.THERMOMETER,
+    SuplaFunction.HUMIDITY_AND_TEMPERATURE ->
       ThermometerDetailType(listOf(DetailPage.THERMOMETER_HISTORY))
 
-    SuplaChannelFunction.THERMOSTAT_HEATPOL_HOMEPLUS ->
+    SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS ->
       LegacyDetailType.THERMOSTAT_HP
 
-    SuplaChannelFunction.HVAC_THERMOSTAT,
+    SuplaFunction.HVAC_THERMOSTAT,
 //    Temporarily commented out, because is not supported yet.
 //    SuplaConst.SuplaChannelFunction.HVAC_THERMOSTAT_AUTO,
 //    SuplaConst.SuplaChannelFunction.HVAC_DRYER,
 //    SuplaConst.SuplaChannelFunction.HVAC_FAN,
 //    SuplaConst.SuplaChannelFunction.HVAC_THERMOSTAT_DIFFERENTIAL,
-    SuplaChannelFunction.HVAC_DOMESTIC_HOT_WATER ->
+    SuplaFunction.HVAC_DOMESTIC_HOT_WATER ->
       ThermostatDetailType(
         listOf(
           DetailPage.THERMOSTAT,
@@ -91,44 +91,44 @@ abstract class BaseDetailTypeProviderUseCase {
         )
       )
 
-    SuplaChannelFunction.DIGIGLASS_VERTICAL,
-    SuplaChannelFunction.DIGIGLASS_HORIZONTAL ->
+    SuplaFunction.DIGIGLASS_VERTICAL,
+    SuplaFunction.DIGIGLASS_HORIZONTAL ->
       LegacyDetailType.DIGIGLASS
 
-    SuplaChannelFunction.GENERAL_PURPOSE_MEASUREMENT,
-    SuplaChannelFunction.GENERAL_PURPOSE_METER ->
+    SuplaFunction.GENERAL_PURPOSE_MEASUREMENT,
+    SuplaFunction.GENERAL_PURPOSE_METER ->
       GpmDetailType(listOf(DetailPage.GPM_HISTORY))
 
-    SuplaChannelFunction.UNKNOWN,
-    SuplaChannelFunction.NONE,
-    SuplaChannelFunction.CONTROLLING_THE_GATEWAY_LOCK,
-    SuplaChannelFunction.CONTROLLING_THE_GATE,
-    SuplaChannelFunction.CONTROLLING_THE_GARAGE_DOOR,
-    SuplaChannelFunction.HUMIDITY,
-    SuplaChannelFunction.OPEN_SENSOR_GATEWAY,
-    SuplaChannelFunction.OPEN_SENSOR_GATE,
-    SuplaChannelFunction.OPEN_SENSOR_GARAGE_DOOR,
-    SuplaChannelFunction.NO_LIQUID_SENSOR,
-    SuplaChannelFunction.CONTROLLING_THE_DOOR_LOCK,
-    SuplaChannelFunction.OPEN_SENSOR_DOOR,
-    SuplaChannelFunction.OPEN_SENSOR_ROLLER_SHUTTER,
-    SuplaChannelFunction.OPEN_SENSOR_ROOF_WINDOW,
-    SuplaChannelFunction.RING,
-    SuplaChannelFunction.ALARM,
-    SuplaChannelFunction.NOTIFICATION,
-    SuplaChannelFunction.DEPTH_SENSOR,
-    SuplaChannelFunction.DISTANCE_SENSOR,
-    SuplaChannelFunction.OPENING_SENSOR_WINDOW,
-    SuplaChannelFunction.HOTEL_CARD_SENSOR,
-    SuplaChannelFunction.ALARM_ARMAMENT_SENSOR,
-    SuplaChannelFunction.MAIL_SENSOR,
-    SuplaChannelFunction.WIND_SENSOR,
-    SuplaChannelFunction.PRESSURE_SENSOR,
-    SuplaChannelFunction.RAIN_SENSOR,
-    SuplaChannelFunction.WEIGHT_SENSOR,
-    SuplaChannelFunction.WEATHER_STATION,
-    SuplaChannelFunction.HVAC_THERMOSTAT_HEAT_COOL,
-    SuplaChannelFunction.VALVE_OPEN_CLOSE,
-    SuplaChannelFunction.VALVE_PERCENTAGE -> null
+    SuplaFunction.UNKNOWN,
+    SuplaFunction.NONE,
+    SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK,
+    SuplaFunction.CONTROLLING_THE_GATE,
+    SuplaFunction.CONTROLLING_THE_GARAGE_DOOR,
+    SuplaFunction.HUMIDITY,
+    SuplaFunction.OPEN_SENSOR_GATEWAY,
+    SuplaFunction.OPEN_SENSOR_GATE,
+    SuplaFunction.OPEN_SENSOR_GARAGE_DOOR,
+    SuplaFunction.NO_LIQUID_SENSOR,
+    SuplaFunction.CONTROLLING_THE_DOOR_LOCK,
+    SuplaFunction.OPEN_SENSOR_DOOR,
+    SuplaFunction.OPEN_SENSOR_ROLLER_SHUTTER,
+    SuplaFunction.OPEN_SENSOR_ROOF_WINDOW,
+    SuplaFunction.RING,
+    SuplaFunction.ALARM,
+    SuplaFunction.NOTIFICATION,
+    SuplaFunction.DEPTH_SENSOR,
+    SuplaFunction.DISTANCE_SENSOR,
+    SuplaFunction.OPENING_SENSOR_WINDOW,
+    SuplaFunction.HOTEL_CARD_SENSOR,
+    SuplaFunction.ALARM_ARMAMENT_SENSOR,
+    SuplaFunction.MAIL_SENSOR,
+    SuplaFunction.WIND_SENSOR,
+    SuplaFunction.PRESSURE_SENSOR,
+    SuplaFunction.RAIN_SENSOR,
+    SuplaFunction.WEIGHT_SENSOR,
+    SuplaFunction.WEATHER_STATION,
+    SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL,
+    SuplaFunction.VALVE_OPEN_CLOSE,
+    SuplaFunction.VALVE_PERCENTAGE -> null
   }
 }

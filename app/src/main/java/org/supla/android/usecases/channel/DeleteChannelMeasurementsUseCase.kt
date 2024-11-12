@@ -30,7 +30,7 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASURE
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
-import org.supla.core.shared.data.SuplaChannelFunction
+import org.supla.core.shared.data.model.general.SuplaFunction
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -49,9 +49,9 @@ class DeleteChannelMeasurementsUseCase @Inject constructor(
     channelRepository.findByRemoteId(remoteId)
       .flatMap { channelEntity ->
         when (channelEntity.function) {
-          SuplaChannelFunction.HVAC_THERMOSTAT,
-          SuplaChannelFunction.HVAC_DOMESTIC_HOT_WATER,
-          SuplaChannelFunction.HVAC_THERMOSTAT_HEAT_COOL ->
+          SuplaFunction.HVAC_THERMOSTAT,
+          SuplaFunction.HVAC_DOMESTIC_HOT_WATER,
+          SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL ->
             readChannelWithChildrenUseCase(remoteId).map { channelWithChildren ->
               channelWithChildren.children
                 .filter { child -> child.relationType.isThermometer() }

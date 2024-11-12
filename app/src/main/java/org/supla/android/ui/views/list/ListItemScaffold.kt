@@ -20,6 +20,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -34,6 +36,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -44,6 +47,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -57,12 +61,13 @@ import org.supla.android.extensions.differenceInSeconds
 import org.supla.android.extensions.preferences
 import org.supla.android.extensions.valuesFormatter
 import org.supla.android.ui.lists.ListOnlineState
-import org.supla.android.ui.lists.data.IssueIconType
 import org.supla.android.ui.views.Separator
 import org.supla.android.ui.views.list.components.ListItemInfoIcon
 import org.supla.android.ui.views.list.components.ListItemIssueIcon
 import org.supla.android.ui.views.list.components.ListItemMainRow
 import org.supla.android.ui.views.list.components.ListItemTitle
+import org.supla.core.shared.data.model.lists.IssueIcon
+import org.supla.core.shared.data.model.lists.ListItemIssues
 import java.util.Date
 import kotlin.time.Duration.Companion.seconds
 
@@ -72,10 +77,10 @@ fun ListItemScaffold(
   itemOnlineState: ListOnlineState,
   itemEstimatedEndDate: Date?,
   onInfoClick: () -> Unit,
-  onIssueClick: () -> Unit,
+  onIssueClick: (ListItemIssues) -> Unit,
   onTitleLongClick: () -> Unit,
   onItemClick: () -> Unit,
-  itemIssueIconType: IssueIconType?,
+  issues: ListItemIssues,
   hasLeftButton: Boolean = false,
   hasRightButton: Boolean = false,
   scale: Float = LocalContext.current.preferences.scale,
@@ -85,7 +90,6 @@ fun ListItemScaffold(
   var title by remember { mutableStateOf(itemTitle) }
   var onlineState by remember { mutableStateOf(itemOnlineState) }
   var estimatedEndDate by remember { mutableStateOf(itemEstimatedEndDate) }
-  var issueIconType by remember { mutableStateOf(itemIssueIconType) }
 
   if (title != itemTitle) {
     title = itemTitle
@@ -95,9 +99,6 @@ fun ListItemScaffold(
   }
   if (estimatedEndDate != itemEstimatedEndDate) {
     estimatedEndDate = itemEstimatedEndDate
-  }
-  if (issueIconType != itemIssueIconType) {
-    issueIconType = itemIssueIconType
   }
 
   Box(
@@ -119,7 +120,7 @@ fun ListItemScaffold(
 
       if (onlineState.online && showInfoIcon) {
         ListItemInfoIcon(onInfoClick, modifier = Modifier.padding(start = dimensionResource(id = R.dimen.list_horizontal_spacing)))
-      } else if (issueIconType != null) {
+      } else if (issues.isEmpty()) {
         ListItemIssueIconSpacing()
       }
 
@@ -130,11 +131,23 @@ fun ListItemScaffold(
         content = content
       )
 
-      issueIconType.let {
-        if (it != null) {
-          ListItemIssueIcon(it, onIssueClick, modifier = Modifier.padding(end = dimensionResource(id = R.dimen.list_horizontal_spacing)))
-        } else if (onlineState.online && showInfoIcon) {
-          ListItemIssueIconSpacing()
+      if (issues.isEmpty()) {
+        ListItemIssueIconSpacing()
+      } else {
+        Column(
+          horizontalAlignment = Alignment.CenterHorizontally,
+          modifier = Modifier
+            .padding(end = dimensionResource(id = R.dimen.list_horizontal_spacing))
+            .clickable(
+              interactionSource = remember { MutableInteractionSource() },
+              indication = ripple(),
+              onClick = { onIssueClick(issues) },
+              enabled = issues.hasMessage()
+            )
+        ) {
+          issues.icons.forEach {
+            ListItemIssueIcon(it)
+          }
         }
       }
 
@@ -146,7 +159,9 @@ fun ListItemScaffold(
       onLongClick = onTitleLongClick,
       onItemClick = onItemClick,
       scale = scale,
-      modifier = Modifier.padding(horizontal = Distance.default, vertical = Distance.small.times(scale)).align(Alignment.BottomCenter)
+      modifier = Modifier
+        .padding(horizontal = Distance.default, vertical = Distance.small.times(scale).div(LocalDensity.current.fontScale))
+        .align(Alignment.BottomCenter)
     )
 
     Separator(modifier = Modifier.align(Alignment.BottomCenter))
@@ -180,9 +195,8 @@ private fun ListItemIssueIconSpacing() {
   )
 }
 
-context (BoxScope)
 @Composable
-private fun ListItemTimerText(date: Date, scale: Float) {
+private fun BoxScope.ListItemTimerText(date: Date, scale: Float) {
   var text by remember { mutableStateOf<String?>(null) }
   val context = LocalContext.current
 
@@ -234,7 +248,7 @@ private fun Preview() {
           { },
           { },
           { },
-          IssueIconType.WARNING,
+          ListItemIssues(IssueIcon.Warning),
           scale = 1f,
           showInfoIcon = true
         ) {
@@ -257,7 +271,7 @@ private fun Preview() {
           .height(100.dp)
       ) {
         ListItemScaffold(itemTitle = "Power Switch", itemOnlineState = ListOnlineState.OFFLINE, Date(), {
-        }, { }, { }, { }, null, scale = 1f, showInfoIcon = false) {
+        }, { }, { }, { }, ListItemIssues(), scale = 1f, showInfoIcon = false) {
         }
       }
       Box(
@@ -266,7 +280,7 @@ private fun Preview() {
           .height(100.dp)
       ) {
         ListItemScaffold(itemTitle = "Power Switch", itemOnlineState = ListOnlineState.PARTIALLY_ONLINE, Date(), {
-        }, { }, { }, { }, null, scale = 1f, showInfoIcon = false, hasLeftButton = true, hasRightButton = true) {
+        }, { }, { }, { }, ListItemIssues(), scale = 1f, showInfoIcon = false, hasLeftButton = true, hasRightButton = true) {
         }
       }
     }

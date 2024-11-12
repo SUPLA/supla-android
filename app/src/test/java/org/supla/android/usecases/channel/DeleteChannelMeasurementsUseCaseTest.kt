@@ -37,10 +37,10 @@ import org.supla.android.data.source.RoomChannelRepository
 import org.supla.android.data.source.TemperatureAndHumidityLogRepository
 import org.supla.android.data.source.TemperatureLogRepository
 import org.supla.android.data.source.local.entity.ChannelEntity
-import org.supla.android.data.source.local.entity.ChannelRelationType
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
-import org.supla.core.shared.data.SuplaChannelFunction
+import org.supla.core.shared.data.model.channel.ChannelRelationType
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 @RunWith(MockitoJUnitRunner::class)
 class DeleteChannelMeasurementsUseCaseTest {
@@ -75,7 +75,7 @@ class DeleteChannelMeasurementsUseCaseTest {
     val remoteId = 234
     val profileId = 123L
     val channel: ChannelEntity = mockk {
-      every { this@mockk.function } returns SuplaChannelFunction.THERMOMETER
+      every { this@mockk.function } returns SuplaFunction.THERMOMETER
       every { this@mockk.profileId } returns profileId
       every { this@mockk.remoteId } returns remoteId
     }
@@ -107,7 +107,7 @@ class DeleteChannelMeasurementsUseCaseTest {
     val remoteId = 234
     val profileId = 123L
     val channel: ChannelEntity = mockk {
-      every { this@mockk.function } returns SuplaChannelFunction.HUMIDITY_AND_TEMPERATURE
+      every { this@mockk.function } returns SuplaFunction.HUMIDITY_AND_TEMPERATURE
       every { this@mockk.profileId } returns profileId
       every { this@mockk.remoteId } returns remoteId
     }
@@ -139,7 +139,7 @@ class DeleteChannelMeasurementsUseCaseTest {
     val remoteId = 234
     val profileId = 123L
     val channel: ChannelEntity = mockk {
-      every { this@mockk.function } returns SuplaChannelFunction.GENERAL_PURPOSE_MEASUREMENT
+      every { this@mockk.function } returns SuplaFunction.GENERAL_PURPOSE_MEASUREMENT
       every { this@mockk.profileId } returns profileId
       every { this@mockk.remoteId } returns remoteId
     }
@@ -171,7 +171,7 @@ class DeleteChannelMeasurementsUseCaseTest {
     val remoteId = 234
     val profileId = 123L
     val channel: ChannelEntity = mockk {
-      every { this@mockk.function } returns SuplaChannelFunction.GENERAL_PURPOSE_METER
+      every { this@mockk.function } returns SuplaFunction.GENERAL_PURPOSE_METER
       every { this@mockk.profileId } returns profileId
       every { this@mockk.remoteId } returns remoteId
     }
@@ -203,7 +203,7 @@ class DeleteChannelMeasurementsUseCaseTest {
     val remoteId = 234
     val profileId = 123L
     val channel: ChannelEntity = mockk {
-      every { this@mockk.function } returns SuplaChannelFunction.ELECTRICITY_METER
+      every { this@mockk.function } returns SuplaFunction.ELECTRICITY_METER
       every { this@mockk.profileId } returns profileId
       every { this@mockk.remoteId } returns remoteId
     }
@@ -235,18 +235,18 @@ class DeleteChannelMeasurementsUseCaseTest {
     val remoteId = 234
     val profileId = 123L
     val channel: ChannelEntity = mockk {
-      every { this@mockk.function } returns SuplaChannelFunction.HVAC_THERMOSTAT
+      every { this@mockk.function } returns SuplaFunction.HVAC_THERMOSTAT
       every { this@mockk.profileId } returns profileId
       every { this@mockk.remoteId } returns remoteId
     }
     val thermometerChild = mockChannelChild(
-      function = SuplaChannelFunction.THERMOMETER,
+      function = SuplaFunction.THERMOMETER,
       profileId = profileId,
       remoteId = 111,
       relationType = ChannelRelationType.MAIN_THERMOMETER
     )
     val thermometerAndHumidityChild = mockChannelChild(
-      function = SuplaChannelFunction.HUMIDITY_AND_TEMPERATURE,
+      function = SuplaFunction.HUMIDITY_AND_TEMPERATURE,
       profileId = profileId,
       remoteId = 222,
       relationType = ChannelRelationType.AUX_THERMOMETER_FLOOR
@@ -279,7 +279,7 @@ class DeleteChannelMeasurementsUseCaseTest {
   }
 
   private fun mockChannelChild(
-    function: SuplaChannelFunction,
+    function: SuplaFunction,
     profileId: Long,
     remoteId: Int,
     relationType: ChannelRelationType

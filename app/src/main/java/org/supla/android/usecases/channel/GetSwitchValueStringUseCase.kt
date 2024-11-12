@@ -17,8 +17,8 @@ package org.supla.android.usecases.channel
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.data.source.local.entity.ChannelRelationType
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
+import org.supla.core.shared.data.model.channel.ChannelRelationType
 import javax.inject.Inject
 import javax.inject.Singleton
 

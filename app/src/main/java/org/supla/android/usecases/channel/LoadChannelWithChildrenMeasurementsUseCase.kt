@@ -29,7 +29,7 @@ import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.local.entity.hasMeasurements
 import org.supla.android.usecases.channel.measurementsprovider.TemperatureAndHumidityMeasurementsProvider
 import org.supla.android.usecases.channel.measurementsprovider.TemperatureMeasurementsProvider
-import org.supla.core.shared.data.SuplaChannelFunction
+import org.supla.core.shared.data.model.general.SuplaFunction
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -74,10 +74,10 @@ class LoadChannelWithChildrenMeasurementsUseCase @Inject constructor(
     val humidityColors = HumidityChartColors()
     val observables = mutableListOf<Single<ChannelChartSets>>().also { list ->
       channelsWithMeasurements.forEach {
-        if (it.function == SuplaChannelFunction.THERMOMETER) {
+        if (it.function == SuplaFunction.THERMOMETER) {
           val color = temperatureColors.nextColor()
           list.add(temperatureMeasurementsProvider.provide(it, spec) { color })
-        } else if (it.function == SuplaChannelFunction.HUMIDITY_AND_TEMPERATURE) {
+        } else if (it.function == SuplaFunction.HUMIDITY_AND_TEMPERATURE) {
           val firstColor = temperatureColors.nextColor()
           val secondColor = humidityColors.nextColor()
           list.add(

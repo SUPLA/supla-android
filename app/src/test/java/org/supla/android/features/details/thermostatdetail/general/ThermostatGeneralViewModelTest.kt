@@ -37,7 +37,6 @@ import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.model.temperature.TemperatureCorrection
 import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity
-import org.supla.android.data.source.local.entity.ChannelRelationType
 import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
@@ -50,9 +49,6 @@ import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.data.source.remote.hvac.SuplaHvacTemperatures
 import org.supla.android.data.source.remote.hvac.SuplaHvacThermometerType
 import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
-import org.supla.android.data.source.remote.thermostat.SuplaThermostatFlag
-import org.supla.android.data.source.remote.thermostat.ThermostatState
-import org.supla.android.data.source.remote.thermostat.ThermostatValue
 import org.supla.android.events.ChannelConfigEventsManager
 import org.supla.android.events.DeviceConfigEventsManager
 import org.supla.android.events.LoadingTimeoutManager
@@ -67,7 +63,11 @@ import org.supla.android.usecases.channel.GetChannelValueUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenTreeUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.thermostat.CreateTemperaturesListUseCase
-import org.supla.core.shared.data.SuplaChannelFunction
+import org.supla.core.shared.data.model.channel.ChannelRelationType
+import org.supla.core.shared.data.model.general.SuplaFunction
+import org.supla.core.shared.data.model.thermostat.SuplaThermostatFlag
+import org.supla.core.shared.data.model.thermostat.ThermostatState
+import org.supla.core.shared.data.model.thermostat.ThermostatValue
 import java.util.Date
 import java.util.concurrent.TimeUnit
 
@@ -721,7 +721,7 @@ class ThermostatGeneralViewModelTest :
 
   private fun mockChannelWithChildren(
     remoteId: Int,
-    func: SuplaChannelFunction = SuplaChannelFunction.HVAC_THERMOSTAT,
+    func: SuplaFunction = SuplaFunction.HVAC_THERMOSTAT,
     mode: SuplaHvacMode = SuplaHvacMode.HEAT,
     setpointTemperatureHeat: Float? = null,
     setpointTemperatureCool: Float? = null,

@@ -25,11 +25,14 @@ import androidx.compose.runtime.setValue
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.R
+import org.supla.android.Trace
 import org.supla.android.data.source.runtime.ItemType
+import org.supla.android.extensions.TAG
 import org.supla.android.extensions.guardLet
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.lists.data.SlideableListItemData
 import org.supla.android.usecases.list.CreateListItemUpdateEventDataUseCase
+import org.supla.core.shared.data.model.lists.ListItemIssues
 
 abstract class BaseSlideableContent<T : SlideableListItemData> : BaseAbstractComposeView {
 
@@ -44,7 +47,7 @@ abstract class BaseSlideableContent<T : SlideableListItemData> : BaseAbstractCom
   }
 
   var onInfoClick: () -> Unit = { }
-  var onIssueClick: () -> Unit = { }
+  var onIssueClick: (ListItemIssues) -> Unit = { }
   var onTitleLongClick: () -> Unit = { }
   var onItemClick: () -> Unit = { }
 
@@ -72,7 +75,10 @@ abstract class BaseSlideableContent<T : SlideableListItemData> : BaseAbstractCom
       createListItemUpdateEventDataUseCase(itemType, remoteId)
         .subscribeOn(schedulers.io)
         .observeOn(schedulers.ui)
-        .subscribeBy(onNext = this::updateData)
+        .subscribeBy(
+          onNext = this::updateData,
+          onError = { Trace.e(TAG, "Could not subscribe for list item update event", it) }
+        )
   }
 
   override fun onDetachedFromWindow() {
@@ -87,7 +93,7 @@ abstract class BaseSlideableContent<T : SlideableListItemData> : BaseAbstractCom
     remoteId: Int,
     data: T,
     onInfoClick: () -> Unit,
-    onIssueClick: () -> Unit,
+    onIssueClick: (ListItemIssues) -> Unit,
     onTitleLongClick: () -> Unit,
     onItemClick: () -> Unit
   ) {
