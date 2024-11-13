@@ -24,4 +24,7 @@ object Configuration {
     const val ABOUT_OPTION_VISIBLE = true
     const val HELP_OPTION_VISIBLE = true
   }
+
+  const val ASK_FOR_RATE = true
+  const val SHOW_LICENCE = true
 }

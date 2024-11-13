@@ -49,6 +49,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.kotlin.subscribeBy
+import org.supla.android.core.branding.Configuration
 import org.supla.android.core.networking.suplaclient.SuplaClientState
 import org.supla.android.core.networking.suplaclient.SuplaClientStateHolder
 import org.supla.android.core.notifications.NotificationsHelper
@@ -307,8 +308,10 @@ class MainActivity :
     }
     runDownloadTask()
 
-    RateApp(this).showDialog {
-      handler.postDelayed({ it.run() }, 1000)
+    if (Configuration.ASK_FOR_RATE) {
+      RateApp(this).showDialog {
+        handler.postDelayed({ it.run() }, 1000)
+      }
     }
   }
 
