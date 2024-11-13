@@ -204,7 +204,7 @@ sealed class SettingItem(val viewResource: Int) {
   ) : SettingItem(R.layout.li_settings_edit_text) {
     override fun bind(holder: SettingItemViewHolder<*>) {
       (holder.binding as LiSettingsEditTextBinding).apply {
-        root.label = root.context.getString(R.string.cfg_battery_level_warning)
+        root.label = root.context.getString(R.string.settings_battery_level_warning)
         root.value = "$level"
         root.suffix = "%"
         root.prefix = "<"

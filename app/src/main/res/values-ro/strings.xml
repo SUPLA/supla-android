@@ -652,7 +652,7 @@
   <string name="lock_screen_forgotten_code_title">Cod de acces</string>
   <string name="lock_screen_forgotten_code_message">Dacă nu vă amintiți codul de acces, dezinstalați aplicația de pe telefon și apoi reinstalați-o. După reinstalare, adăugați configurația contului din Supla Cloud.\n\nNu creați un cont nou. Datele istorice și toate dispozitivele nu vor fi pierdute.</string>
   <string name="lock_screen_forgotten_code_button">Înțeleg</string>
-  <string name="lock_screen_confirm_authorize_app">Modificarea domeniului de aplicare a autorizației</string>
+  <string name="lock_screen_confirm_authorize_range_change">Modificarea domeniului de aplicare a autorizației</string>
   <string name="pin_setup_use_biometric">Autentificare biometrică: </string>
   <string name="pin_setup_biometric_not_enrolled">Autentificarea biometrică nu a fost configurată. Dacă doriți să utilizați date biometrice, configurați-le mai întâi în setările sistemului.</string>
   <string name="biometric_prompt_subtitle">Deblocați cu amprenta dvs. digitală</string>

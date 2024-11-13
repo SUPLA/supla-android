@@ -358,8 +358,10 @@
   <string name="widget_configure_type_label">Widget für:</string>
   <string name="widget_configure_type_channel_label">Kanal</string>
   <string name="widget_configure_type_group_label">Gruppe</string>
+  <string name="widget_configure_type_scene_label">Szene</string>
   <string name="widget_configure_channel_label">Kanal des Widget</string>
   <string name="widget_configure_group_label">Gruppe des Widget</string>
+  <string name="widget_configure_scene_label">Szene des Widget</string>
   <string name="widget_configure_action_label">Aktion</string>
   <string name="widget_configure_name_label">Anzeigename</string>
   <string name="widget_configure_error">Die Konfiguration konnte nicht gesetzt werden…</string>
@@ -368,6 +370,7 @@
   <string name="widget_configure_no_group">Keine Gruppe verfügbar</string>
   <string name="widget_app_not_initialized">Bitte sich zuerst anmelden!</string>
   <string name="widget_command_no_connection">Keine Internetverbindung!</string>
+  <string name="widget_command_no_access">Zugang fehlt! (Code: %1$d)</string>
   <string name="widget_command_started">Gemacht</string>
   <string name="widget_removed_label">Kanal gelöscht</string>
   <string name="dont_have_account_yet">Haben Sie noch kein Konto bei Supla Cloud?</string>
@@ -392,8 +395,10 @@
   <string name="menubar_appsettings">Einstellungen</string>
   <string name="em_chart_phase_n">Phase %d</string>
   <string name="em_chart_all_phases">Phase 1+2+3</string>
+  <string name="widget_configure_no_scene">Keine Szene verfügbar</string>
   <string name="double_button_widget_description">Zweitasten-Widget</string>
   <string name="single_button_widget_description">Eintasten-Widget</string>
+  <string name="widget_action_toggle">Umschalten</string>
   <string name="channel_caption_roofwindowopeningsensor">Dachfenster-Öffnungssensor</string>
   <string name="channel_caption_roofwindow">Dachfenster</string>
   <string name="channel_func_controllingtheroofwindow">Öffnen und Schließen des Dachfensters</string>
@@ -418,6 +423,7 @@
   <string name="incorrect_email_or_password">Falsche E-Mail-Adresse oder Kennwort</string>
   <string name="channel_name">Name des Kanals</string>
   <string name="location_name">Name der Lokalisierung</string>
+  <string name="str_default">Standard</string>
   <string name="overcurrent_warning">Die Versorgung wurde nach dem Überschreiten der eingestellten zulässigen Stromstärke abgeschaltet.</string>
   <string name="overcurrent_question">Die Versorgung wurde nach dem Überschreiten der eingestellten zulässigen Stromstärke abgeschaltet. Möchten Sie wirklich die Versorgung einschalten?</string>
   <string name="roller_shutter_start_calibration_message">Wollen Sie wirklich die Kalibrierung beginnen?</string>
@@ -437,12 +443,14 @@
   <string name="add_device_needs_cloud_dismiss">Verstehe</string>
   <string name="add_device_needs_cloud_go">Zur CLOUD gehen</string>
   <string name="associeted_with_at_error">Die Funktion des mit dem Aktionsauslöser verbundenen Kanals kann nicht geändert werden.</string>
+  <string name="associeted_with_vbt_error">Die den Reaktionen zugeordnete Kanalfunktion kann nicht geändert werden.</string>
   <string name="location_ordering">Lokalisierungsreihenfolge</string>
   <string name="rs_display_mode">Rollläden, Jalousien, Vorhänge %</string>
   <string name="rs_display_mode_opening">Öffnungen</string>
   <string name="rs_display_mode_closing">Schließungen</string>
   <string name="status_accessid_inactive">Zugriffskennung nicht aktiv</string>
 
+  <string name="scene_name">Szenenname</string>
   <string name="remove_account_title">Das Konto löschen?</string>
   <string name="remove_account_locally">Vergiss auf diesem Gerät</string>
   <string name="remove_account_remotely">Vergiss und lösch im Cloud</string>
@@ -450,6 +458,7 @@
   <string name="form_profile_removal_failure">Das Löschen deines Konto ist fehlgeschlagen, bitte noch mal versuchen</string>
   <string name="general_failure">Die Aktion wurde nicht erfolgreich durchgeführt</string>
 
+  <string name="push_notification_limit_exceeded">Das Limit für Push-Benachrichtigungen von %1$s pro Stunde wurde überschritten.</string>
   <string name="new_gesture_description">Wischgeste zum Öffnen der Kanaldetails wurde gelöscht, tippe auf dem Kanal, um sie zu sehen.</string>
   <string name="channel_offline">Das Kanal ist offline</string>
   <string name="notification_info_title">Benachrichtigungen!</string>
@@ -507,11 +516,13 @@
   <string name="friday_short">FR</string>
   <string name="saturday_short">SA</string>
   <string name="sunday_short">SO</string>
+  <string name="channel_not_supported">Nicht unterstützte Funktion</string>
   <string name="thermostat_detail_program_current">Aktuell:</string>
   <string name="thermostat_detail_program_next">Danach:</string>
   <string name="time_just_minutes">%1$d Min.</string>
   <string name="time_hours_and_minutes">%1$d Std. %2$d Min.</string>
   <string name="thermostat_detail_program_time">für %1$s</string>
+  <string name="history_no_data_available">Es sind noch keine Messungen verfügbar</string>
   <string name="channel_caption_hotelcard">Hotelkartensensor</string>
   <string name="thermostat_detail_off_by_window">Wegen offenem Fenster ausgeschaltet</string>
   <string name="thermostat_detail_off_by_card">Wegen fehlender Hotelkarte ausgeschaltet</string>
@@ -538,6 +549,7 @@
   <string name="thermostat_detail_box_info">Tippen, um das aktivierten Program zu setzen. Long halten, um die Viertelstunde anzupassen.</string>
   <string name="thermostat_detail_arrow_info">Die dunkle Ecke zeigt aktuelles Tag und Zeit.</string>
   <string name="channel_caption_general_purpose_measurement">Messungskanal</string>
+  <string name="channel_caption_general_purpose_meter">Messkanal</string>
   <string name="history_disabled">Der Verlauf ist für diesen Kanal deaktiviert.</string>
   <string name="toolbar_delete_all">Alles löschen</string>
   <string name="toolbar_delete_older_than_month">Älter als 30 Tage löschen</string>
@@ -548,6 +560,7 @@
   <string name="notifications_log_date">Datum:</string>
   <string name="widget_warning_battery_limitations">Die Anwendung hat limitierte Akkunutzung deshalb kann das Widget falsch funktionieren. Die Akkunutzung der App können Sie in Einstellungen ändern.</string>
   <string name="notification_deleted">Gelöscht</string>
+  <string name="settings_show_labels">Etiketten für unteres Menü anzeigen</string>
   <string name="main_no_entries">Lehr</string>
   <string name="groups_empty_list_button">Gruppe in Supla Cloud hinzufügen</string>
   <string name="scenes_empty_list_button">Szene in Supla Cloud hinzufügen</string>
@@ -588,7 +601,7 @@
   <string name="lock_screen_forgotten_code_title">Zugangscode</string>
   <string name="lock_screen_forgotten_code_message">Wenn Sie sich nicht an Ihren Zugangscode erinnern können, bitte die App löschen und neu installieren. Wenn die App neu installiert wird, bitte Ihres Kontodaten nochmal eingeben.\n\nSie sollten kein neues Konto anlegen. Die Daten und Geräte bleiben verfügbar in das Supla Cloud Konto.</string>
   <string name="lock_screen_forgotten_code_button">Einverstanden</string>
-  <string name="lock_screen_confirm_authorize_app">Änderung des Berechtigungsumfangs</string>
+  <string name="lock_screen_confirm_authorize_range_change">Änderung des Berechtigungsumfangs</string>
   <string name="pin_setup_use_biometric">Biometrische Authentifizierung: </string>
   <string name="pin_setup_biometric_not_enrolled">Biometrische Authentifizierung nicht verfügbar. Wenn Sie die biometrische Authentifizierung nuthen wollen, bitte zuerst in System Einstellungen konfigurieren.</string>
   <string name="biometric_prompt_subtitle">Entsperren mit dem Fingerabdruck</string>
@@ -630,6 +643,7 @@
   <string name="details_em_settings_title">Einstellungen - %1$s</string>
   <string name="details_em_total_suffix">(Zählerstand)</string>
   <string name="details_em_current_month_suffix">(aktueller Monat)</string>
+  <string name="details_em_last_month_balancing">Art des Saldos für den aktuellen Monat</string>
   <string name="channel_caption_pump_switch">Pumpenschalter</string>
   <string name="channel_caption_heat_or_cold_sourc_switch">Wärme- oder Kältequellenschalter</string>
   <string name="details_list">Liste</string>
@@ -647,7 +661,7 @@
   <string name="channel_btn_reveal">Enthüllen</string>
   <string name="channel_btn_collapse">Einklappen</string>
   <string name="channel_btn_expand">Ausklappen</string>
-  <string name="cfg_battery_level_warning">Batteriestandswarnung</string>
+  <string name="settings_battery_level_warning">Batteriestandswarnung</string>
   <string name="channel_battery_level">Batteriefüllstand (%1$d - %2$s): %3$d%%</string>
   <string name="counter_photo_toolbar">Bilder von Zähler</string>
   <string name="counter_photo_counter_area">Zählerbereich</string>
@@ -674,4 +688,27 @@
   <plurals name="second_pattern" tools:ignore="MissingQuantity">
     <item quantity="other">%1$d Sek.</item>
   </plurals>
+  <string name="navbar_channels">Kanäle</string>
+  <string name="navbar_groups">Gruppen</string>
+  <string name="cfg_profile_active_indicator">aktiv</string>
+  <string name="widget_command_error">Problem aufgetretten! (Code: %1$d)</string>
+  <string name="widget_command_connection_failure">Verbindung fehler! (Code: %1$d)</string>
+  <string name="widget_command_subject_offline">%1$s ist offline!</string>
+  <string name="widget_command_subject_unavailable">%1$s existiert nicht!</string>
+  <string name="widget_group">Gruppe</string>
+  <string name="widget_scene">Szene</string>
+  <string name="navbar_scenes">Szenen</string>
+  <string name="btn_execute">Ausführen</string>
+  <string name="btn_abort">Abbrechen</string>
+  <string name="btn_abort_and_execute">Abbrechen und ausführen</string>
+  <string name="details_schedule">Woche</string>
+  <string name="thermostat_thermometer_error">Temperaturmessfehler</string>
+  <string name="thermostat_clock_error">Uhrfehler</string>
+  <string name="history_range_custom">Benutzertdefiniert</string>
+  <string name="history_refreshing">Neuladen…</string>
+  <string name="history_refreshing_failed">Neuladen ist fehlgeschlagen</string>
+  <string name="history_no_data_selected">Kein Datensatz ausgewählt</string>
+  <string name="chart_marker_opening">Offen</string>
+  <string name="chart_marker_closing">Geschlossen</string>
+  <string name="associeted_with_push_error">Die Funktion des mit der Push-Benachrichtigung verknüpften Kanals kann nicht geändert werden.</string>
 </resources>

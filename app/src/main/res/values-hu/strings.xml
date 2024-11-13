@@ -650,7 +650,7 @@
   <string name="lock_screen_forgotten_code_title">Hozzáférési kód</string>
   <string name="lock_screen_forgotten_code_message">Ha nem emlékszik a hozzáférési kódra, távolítsa el az alkalmazást a telefonjáról, majd telepítse újra. Az újratelepítést követően adja hozzá a fiókkonfigurációt a Supla Cloudból.\n\nNe hozzon létre új fiókot. Az előzményadatok és az eszközök nem  vesznek el.</string>
   <string name="lock_screen_forgotten_code_button">Elfogadom</string>
-  <string name="lock_screen_confirm_authorize_app">Az engedély hatályának módosítása</string>
+  <string name="lock_screen_confirm_authorize_range_change">Az engedély hatályának módosítása</string>
   <string name="pin_setup_use_biometric">Biometrikus hitelesítés:</string>
   <string name="pin_setup_biometric_not_enrolled">A biometrikus hitelesítés nincs konfigurálva. Ha biometrikus adatokat szeretne használni, először konfigurálja azt a rendszerbeállításokban.</string>
   <string name="biometric_prompt_subtitle">Feloldás ujjlenyomattal</string>

@@ -628,7 +628,7 @@
   <string name="lock_screen_forgotten_code_title">Prieigos kodas</string>
   <string name="lock_screen_forgotten_code_message">Jei pamiršote prieigos kodą, pašalinkite programėlę iš telefono, o tada įdiekite ją iš naujo. Vėl įdiegę pridėkite paskyros konfigūravimą su Supla Cloud.\n\nNekurkite naujos paskyros. Istorijos duomenys ir visi įrenginiai nebus prarasti.</string>
   <string name="lock_screen_forgotten_code_button">Supratau</string>
-  <string name="lock_screen_confirm_authorize_app">Autorizacijos apimties keitimas</string>
+  <string name="lock_screen_confirm_authorize_range_change">Autorizacijos apimties keitimas</string>
   <string name="pin_setup_use_biometric">Biometrinis autentifikavimas:</string>
   <string name="pin_setup_biometric_not_enrolled">Biometrinis autentifikavimas nebuvo sukonfigūruotas. Jei norite pasinaudoti biometrija, pirmiau sukonfigūruokite ją sistemos nustatymuose.</string>
   <string name="biometric_prompt_subtitle">Atrakinti piršto atspaudu</string>
