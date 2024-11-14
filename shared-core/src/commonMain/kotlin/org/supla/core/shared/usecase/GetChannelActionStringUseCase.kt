@@ -24,7 +24,14 @@ class GetChannelActionStringUseCase {
   fun rightButton(function: SuplaFunction): LocalizedStringId? =
     when (function) {
       SuplaFunction.CONTROLLING_THE_ROOF_WINDOW,
-      SuplaFunction.ROLLER_GARAGE_DOOR -> LocalizedStringId.GENERAL_OPEN
+      SuplaFunction.ROLLER_GARAGE_DOOR,
+      SuplaFunction.CONTROLLING_THE_DOOR_LOCK,
+      SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK,
+      SuplaFunction.VALVE_OPEN_CLOSE,
+      SuplaFunction.VALVE_PERCENTAGE -> LocalizedStringId.GENERAL_OPEN
+
+      SuplaFunction.CONTROLLING_THE_GATE,
+      SuplaFunction.CONTROLLING_THE_GARAGE_DOOR -> LocalizedStringId.GENERAL_OPEN_CLOSE
 
       SuplaFunction.CONTROLLING_THE_FACADE_BLIND,
       SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER,
@@ -36,7 +43,11 @@ class GetChannelActionStringUseCase {
 
       SuplaFunction.POWER_SWITCH,
       SuplaFunction.LIGHTSWITCH,
-      SuplaFunction.STAIRCASE_TIMER -> LocalizedStringId.GENERAL_TURN_ON
+      SuplaFunction.STAIRCASE_TIMER,
+      SuplaFunction.RGB_LIGHTING,
+      SuplaFunction.DIMMER,
+      SuplaFunction.DIMMER_AND_RGB_LIGHTING,
+      SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS -> LocalizedStringId.GENERAL_TURN_ON
 
       else -> null
     }
@@ -44,7 +55,11 @@ class GetChannelActionStringUseCase {
   fun leftButton(function: SuplaFunction): LocalizedStringId? =
     when (function) {
       SuplaFunction.CONTROLLING_THE_ROOF_WINDOW,
-      SuplaFunction.ROLLER_GARAGE_DOOR -> LocalizedStringId.GENERAL_CLOSE
+      SuplaFunction.ROLLER_GARAGE_DOOR,
+      SuplaFunction.CONTROLLING_THE_DOOR_LOCK,
+      SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK,
+      SuplaFunction.VALVE_OPEN_CLOSE,
+      SuplaFunction.VALVE_PERCENTAGE -> LocalizedStringId.GENERAL_CLOSE
 
       SuplaFunction.CONTROLLING_THE_FACADE_BLIND,
       SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER,
@@ -56,7 +71,11 @@ class GetChannelActionStringUseCase {
 
       SuplaFunction.POWER_SWITCH,
       SuplaFunction.LIGHTSWITCH,
-      SuplaFunction.STAIRCASE_TIMER -> LocalizedStringId.GENERAL_TURN_OFF
+      SuplaFunction.STAIRCASE_TIMER,
+      SuplaFunction.RGB_LIGHTING,
+      SuplaFunction.DIMMER,
+      SuplaFunction.DIMMER_AND_RGB_LIGHTING,
+      SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS -> LocalizedStringId.GENERAL_TURN_OFF
 
       else -> null
     }

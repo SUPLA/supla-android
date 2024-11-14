@@ -26,6 +26,7 @@ val LocalizedStringId.resourceId: Int
     LocalizedStringId.GENERAL_TURN_OFF -> R.string.channel_btn_off
     LocalizedStringId.GENERAL_OPEN -> R.string.channel_btn_open
     LocalizedStringId.GENERAL_CLOSE -> R.string.channel_btn_close
+    LocalizedStringId.GENERAL_OPEN_CLOSE -> R.string.channel_btn_openclose
     LocalizedStringId.GENERAL_SHUT -> R.string.channel_btn_shut
     LocalizedStringId.GENERAL_REVEAL -> R.string.channel_btn_reveal
     LocalizedStringId.GENERAL_COLLAPSE -> R.string.channel_btn_collapse
