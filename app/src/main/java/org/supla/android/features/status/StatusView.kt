@@ -75,7 +75,7 @@ fun ConnectionStatusView(
       Image(
         painter = painterResource(id = Configuration.Status.LOGO_RESOURCE),
         contentDescription = stringResource(id = R.string.app_name),
-        colorFilter = Configuration.Status.COLOR?.let { ColorFilter.tint(colorResource(it)) },
+        colorFilter = Configuration.Status.COLOR_FILLER?.let { ColorFilter.tint(colorResource(it)) },
         modifier = Modifier.size(140.dp)
       )
       BodyMedium(stringRes = viewState.stateText.stringRes)

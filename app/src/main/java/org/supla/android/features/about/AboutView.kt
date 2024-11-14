@@ -36,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -77,7 +78,7 @@ fun AboutView(
       Image(
         painter = painterResource(id = Configuration.About.LOGO_RESOURCE),
         contentDescription = stringResource(id = R.string.app_name),
-        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground),
+        colorFilter = Configuration.About.COLOR_FILLER?.let { ColorFilter.tint(colorResource(it)) },
         modifier = Modifier.size(100.dp),
         contentScale = ContentScale.Fit
       )

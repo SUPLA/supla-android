@@ -74,7 +74,7 @@ fun ProjectorScreenView(
   val (windowDimens, updateDimens) = remember { mutableStateOf<RuntimeDimens?>(null) }
   val moveState = remember { mutableStateOf(MoveState()) }
   val logoPainter = painterResource(id = Configuration.ProjectorScreen.LOGO_RESOURCE)
-  val logoColor = Configuration.ProjectorScreen.COLOR?.let { colorResource(id = it) }
+  val logoColor = Configuration.ProjectorScreen.COLOR_FILLER?.let { colorResource(id = it) }
   val colors = ProjectorScreenColors.standard()
 
   Canvas(
