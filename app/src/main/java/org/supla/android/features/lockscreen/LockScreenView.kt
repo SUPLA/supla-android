@@ -56,6 +56,7 @@ import androidx.window.core.layout.WindowHeightSizeClass
 import androidx.window.core.layout.WindowSizeClass
 import kotlinx.coroutines.delay
 import org.supla.android.R
+import org.supla.android.core.branding.Configuration
 import org.supla.android.core.infrastructure.LocalDateProvider
 import org.supla.android.core.ui.StringProvider
 import org.supla.android.core.ui.theme.Distance
@@ -127,7 +128,7 @@ fun LockScreenView(
         .align(Alignment.TopCenter)
     ) {
       if (viewState.unlockAction.showLogo) {
-        Image(R.drawable.logo_with_name)
+        Image(Configuration.LockScreen.LOGO_RESOURCE)
         Spacer(modifier = Modifier.height(logoBottomSpace))
       }
       viewState.unlockAction.messageId?.let {

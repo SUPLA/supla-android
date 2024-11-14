@@ -39,4 +39,18 @@ object Configuration {
   object About {
     val LOGO_RESOURCE = R.drawable.logo_light
   }
+
+  object Status {
+    val LOGO_RESOURCE = R.drawable.logo_light
+  }
+
+  object LockScreen {
+    val LOGO_RESOURCE = R.drawable.logo_with_name
+  }
+
+  object ProjectorScreen {
+    val LOGO_RESOURCE = R.drawable.logo
+    const val LOGO_WIDTH = 120f
+    const val LOGO_HEIGHT = 137f
+  }
 }

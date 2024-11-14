@@ -53,6 +53,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
+import org.supla.android.core.branding.Configuration
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.extensions.guardLet
@@ -72,7 +73,7 @@ fun ProjectorScreenView(
 ) {
   val (windowDimens, updateDimens) = remember { mutableStateOf<RuntimeDimens?>(null) }
   val moveState = remember { mutableStateOf(MoveState()) }
-  val logoPainter = painterResource(id = R.drawable.logo)
+  val logoPainter = painterResource(id = Configuration.ProjectorScreen.LOGO_RESOURCE)
   val logoColor = colorResource(id = R.color.primary)
   val colors = ProjectorScreenColors.standard()
 
@@ -205,8 +206,8 @@ object DefaultDimens {
   const val BOTTOM_RECT_WIDTH = 304f
   const val SCREEN_WIDTH = 288f
 
-  const val LOGO_WIDTH = 120f
-  const val LOGO_HEIGHT = 137f
+  const val LOGO_WIDTH = Configuration.ProjectorScreen.LOGO_WIDTH
+  const val LOGO_HEIGHT = Configuration.ProjectorScreen.LOGO_HEIGHT
   const val LOGO_TOP_MARGIN = 50f
 }
 
