@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -128,7 +129,7 @@ fun LockScreenView(
         .align(Alignment.TopCenter)
     ) {
       if (viewState.unlockAction.showLogo) {
-        Image(Configuration.LockScreen.LOGO_RESOURCE)
+        Image(Configuration.LockScreen.LOGO_RESOURCE, modifier = Modifier.widthIn(max = 144.dp))
         Spacer(modifier = Modifier.height(logoBottomSpace))
       }
       viewState.unlockAction.messageId?.let {
