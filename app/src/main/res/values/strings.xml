@@ -684,7 +684,7 @@
   <string name="pin_setup_biometric_not_enrolled">Biometric not available. If you want to use biometric go to settings and enrol your biometrics.</string>
   <string name="biometric_prompt_subtitle">Unlock using your fingerprint</string>
   <string name="lock_screen_biometric_error">Biometrics disabled because of: %1$s</string>
-  <string name="lock_screen_pin_locked" translatable="false">To many failures. PIN entry locked for %1$s.</string>
+  <string name="lock_screen_pin_locked">To many failures. PIN entry locked for %1$s.</string>
   <string name="status_disconnecting">Disconnecting…</string>
   <string name="status_awaiting_network">Awaiting network…</string>
   <string name="about_build_time">Version of the day: </string>
