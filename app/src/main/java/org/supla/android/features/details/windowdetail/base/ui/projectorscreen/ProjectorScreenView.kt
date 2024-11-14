@@ -74,7 +74,7 @@ fun ProjectorScreenView(
   val (windowDimens, updateDimens) = remember { mutableStateOf<RuntimeDimens?>(null) }
   val moveState = remember { mutableStateOf(MoveState()) }
   val logoPainter = painterResource(id = Configuration.ProjectorScreen.LOGO_RESOURCE)
-  val logoColor = colorResource(id = R.color.primary)
+  val logoColor = Configuration.ProjectorScreen.COLOR?.let { colorResource(id = it) }
   val colors = ProjectorScreenColors.standard()
 
   Canvas(
@@ -164,7 +164,7 @@ private fun drawHandle(color: Color, bottomRect: Rect) {
 }
 
 context(DrawScope)
-private fun drawLogo(logoPainter: Painter, logoColor: Color, windowDimens: RuntimeDimens, screenHeight: Float, bottomRect: Rect) {
+private fun drawLogo(logoPainter: Painter, logoColor: Color?, windowDimens: RuntimeDimens, screenHeight: Float, bottomRect: Rect) {
   with(logoPainter) {
     val verticalCorrection = windowDimens.maxScreenHeight.minus(screenHeight)
     clipRect(
@@ -174,7 +174,7 @@ private fun drawLogo(logoPainter: Painter, logoColor: Color, windowDimens: Runti
       bottom = bottomRect.top
     ) {
       translate(left = windowDimens.logoRect.left, top = windowDimens.logoRect.top - verticalCorrection) {
-        draw(size = windowDimens.logoRect.size, colorFilter = ColorFilter.tint(logoColor), alpha = 0.2f)
+        draw(size = windowDimens.logoRect.size, colorFilter = logoColor?.let { ColorFilter.tint(it) }, alpha = 0.2f)
       }
     }
   }

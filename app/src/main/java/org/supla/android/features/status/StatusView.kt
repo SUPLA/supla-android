@@ -30,6 +30,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -74,7 +75,7 @@ fun ConnectionStatusView(
       Image(
         painter = painterResource(id = Configuration.Status.LOGO_RESOURCE),
         contentDescription = stringResource(id = R.string.app_name),
-        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
+        colorFilter = Configuration.Status.COLOR?.let { ColorFilter.tint(colorResource(it)) },
         modifier = Modifier.size(140.dp)
       )
       BodyMedium(stringRes = viewState.stateText.stringRes)

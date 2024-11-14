@@ -42,6 +42,7 @@ object Configuration {
 
   object Status {
     val LOGO_RESOURCE = R.drawable.logo_light
+    val COLOR: Int? = R.color.primary
   }
 
   object LockScreen {
@@ -50,6 +51,7 @@ object Configuration {
 
   object ProjectorScreen {
     val LOGO_RESOURCE = R.drawable.logo
+    val COLOR: Int? = R.color.primary
     const val LOGO_WIDTH = 120f
     const val LOGO_HEIGHT = 137f
   }
