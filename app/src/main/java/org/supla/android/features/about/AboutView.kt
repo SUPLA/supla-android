@@ -75,7 +75,7 @@ fun AboutView(
         Spacer(modifier = Modifier.weight(1f))
       }
       Image(
-        painter = painterResource(id = R.drawable.logo_light),
+        painter = painterResource(id = Configuration.About.LOGO_RESOURCE),
         contentDescription = stringResource(id = R.string.app_name),
         colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground),
         modifier = Modifier.size(100.dp),

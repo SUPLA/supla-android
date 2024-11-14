@@ -1,4 +1,8 @@
 package org.supla.android.core.branding
+
+import org.supla.android.R
+import org.supla.android.ui.AppBar
+
 /*
 Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -27,4 +31,12 @@ object Configuration {
 
   const val ASK_FOR_RATE = true
   const val SHOW_LICENCE = true
+
+  object Toolbar {
+    val LOGO_INSTEAD_OFF_APP_NAME: AppBar.Title? = null
+  }
+
+  object About {
+    val LOGO_RESOURCE = R.drawable.logo_light
+  }
 }

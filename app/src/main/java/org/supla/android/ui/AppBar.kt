@@ -20,8 +20,13 @@ package org.supla.android.ui
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.TextView
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.Toolbar
+import androidx.compose.ui.unit.Dp
 import org.supla.android.R
+import org.supla.android.core.branding.Configuration
+import org.supla.android.extensions.toPx
+import org.supla.android.extensions.visibleIf
 
 class AppBar @JvmOverloads constructor(
   ctx: Context,
@@ -30,12 +35,44 @@ class AppBar @JvmOverloads constructor(
 ) : Toolbar(ctx, attrs, defStyleAttr) {
 
   private val toolbarTitle: TextView by lazy { findViewById(R.id.supla_toolbar_title) }
+  private val toolbarIcon: AppCompatImageView by lazy { findViewById(R.id.supla_toolbar_icon) }
 
   override fun setTitle(title: CharSequence) {
-    toolbarTitle.text = title
+    val iconLogo = Configuration.Toolbar.LOGO_INSTEAD_OFF_APP_NAME
+    if (iconLogo != null && title == context.getString(R.string.app_name)) {
+      setTitle(iconLogo)
+    } else {
+      setTitle(Title.Text(title.toString()))
+    }
   }
 
   override fun setSubtitle(subtitle: CharSequence?) {
-    toolbarTitle.text = subtitle
+    subtitle?.let { setTitle(it) }
+  }
+
+  fun setTitle(title: Title) {
+    toolbarTitle.visibleIf(title is Title.Text)
+    toolbarIcon.visibleIf(title is Title.Icon)
+
+    when (title) {
+      is Title.Text ->
+        toolbarTitle.text = title.text
+      is Title.Icon -> {
+        toolbarIcon.setImageResource(title.iconRes)
+        with(toolbarIcon.layoutParams) {
+          width = title.width.toPx().toInt()
+          height = title.height.toPx().toInt()
+        }
+      }
+    }
+  }
+
+  sealed interface Title {
+    data class Text(val text: String) : Title
+    data class Icon(
+      val iconRes: Int,
+      val width: Dp,
+      val height: Dp
+    ) : Title
   }
 }
