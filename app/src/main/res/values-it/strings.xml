@@ -681,9 +681,9 @@
   <string name="details_em_reverse_reactive_energy_short">Reattiva restituita</string>
   <string name="details_em_energy_label">Energia</string>
   <string name="channel_btn_shut">Chiudi</string>
-  <string name="channel_btn_reveal">Mostra</string>
-  <string name="channel_btn_collapse">Comprimi</string>
-  <string name="channel_btn_expand">Espandi</string>
+  <string name="channel_btn_reveal">Apri</string>
+  <string name="channel_btn_collapse">Chiudi</string>
+  <string name="channel_btn_expand">Apri</string>
   <string name="details_em_hour_marker_title">%1$d</string>
   <string name="history_data_type">Tipo dati</string>
   <string name="details_em_forward_active_energy_short">Attiva prelevata</string>
