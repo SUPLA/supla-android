@@ -18,6 +18,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus;
+
 public class SuplaChannelBase {
 
   public boolean EOL;
@@ -28,7 +30,7 @@ public class SuplaChannelBase {
   public int AltIcon;
   public int UserIcon;
   public long Flags;
-  public boolean OnLine;
+  public SuplaChannelAvailabilityStatus AvailabilityStatus;
   public String Caption;
 
   public SuplaChannelBase() {
