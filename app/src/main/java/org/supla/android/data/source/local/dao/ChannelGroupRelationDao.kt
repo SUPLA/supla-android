@@ -72,10 +72,13 @@ interface ChannelGroupRelationDao {
       FROM ${ChannelGroupRelationEntity.TABLE_NAME} relation
       JOIN ${ChannelGroupEntity.TABLE_NAME} channel_group
         ON channel_group.${ChannelGroupEntity.COLUMN_REMOTE_ID} = relation.${ChannelGroupRelationEntity.COLUMN_GROUP_ID}
+          AND channel_group.${ChannelGroupEntity.COLUMN_PROFILE_ID} = relation.${ChannelGroupRelationEntity.COLUMN_PROFILE_ID}
       JOIN ${ChannelEntity.TABLE_NAME} channel
         ON channel.${ChannelEntity.COLUMN_CHANNEL_REMOTE_ID} = relation.${ChannelGroupRelationEntity.COLUMN_CHANNEL_ID}
+          AND channel.${ChannelEntity.COLUMN_PROFILE_ID} = relation.${ChannelGroupRelationEntity.COLUMN_PROFILE_ID}
       JOIN ${ChannelValueEntity.TABLE_NAME} value
         ON value.${ChannelValueEntity.COLUMN_CHANNEL_REMOTE_ID} = relation.${ChannelGroupRelationEntity.COLUMN_CHANNEL_ID}
+          AND value.${ChannelValueEntity.COLUMN_PROFILE_ID} = relation.${ChannelGroupRelationEntity.COLUMN_PROFILE_ID}
       WHERE relation.${ChannelGroupRelationEntity.COLUMN_VISIBLE} > 0
           AND channel_group.${ChannelGroupEntity.COLUMN_VISIBLE} > 0  
           AND relation.${ChannelGroupRelationEntity.COLUMN_PROFILE_ID} = ${ProfileEntity.SUBQUERY_ACTIVE}
@@ -126,10 +129,13 @@ interface ChannelGroupRelationDao {
       FROM ${ChannelGroupRelationEntity.TABLE_NAME} relation
       JOIN ${ChannelGroupEntity.TABLE_NAME} channel_group
         ON channel_group.${ChannelGroupEntity.COLUMN_REMOTE_ID} = relation.${ChannelGroupRelationEntity.COLUMN_GROUP_ID}
+          AND channel_group.${ChannelGroupEntity.COLUMN_PROFILE_ID} = relation.${ChannelGroupRelationEntity.COLUMN_PROFILE_ID}
       JOIN ${ChannelEntity.TABLE_NAME} channel
         ON channel.${ChannelEntity.COLUMN_CHANNEL_REMOTE_ID} = relation.${ChannelGroupRelationEntity.COLUMN_CHANNEL_ID}
+          AND channel.${ChannelEntity.COLUMN_PROFILE_ID} = relation.${ChannelGroupRelationEntity.COLUMN_PROFILE_ID}
       JOIN ${ChannelValueEntity.TABLE_NAME} value
         ON value.${ChannelValueEntity.COLUMN_CHANNEL_REMOTE_ID} = relation.${ChannelGroupRelationEntity.COLUMN_CHANNEL_ID}
+          AND value.${ChannelValueEntity.COLUMN_PROFILE_ID} = relation.${ChannelGroupRelationEntity.COLUMN_PROFILE_ID}
       WHERE relation.${ChannelGroupRelationEntity.COLUMN_VISIBLE} > 0
           AND channel_group.${ChannelGroupEntity.COLUMN_VISIBLE} > 0  
           AND relation.${ChannelGroupRelationEntity.COLUMN_PROFILE_ID} = ${ProfileEntity.SUBQUERY_ACTIVE}
