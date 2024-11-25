@@ -21,16 +21,23 @@ import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import org.supla.android.Trace
 import org.supla.android.data.model.chart.ChartState
 import org.supla.android.data.model.chart.DefaultChartState
 import org.supla.android.data.model.chart.ElectricityChartState
 import org.supla.android.data.model.electricitymeter.ElectricityMeterSettings
+import org.supla.android.extensions.TAG
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
 
 private const val USER_STATE_PREFERENCES = "user_state_preferences"
 private const val TEMPERATURE_CHART_STATE = "temperature_chart_state_%PROFILE_ID%_%CHANNEL_ID%"
 private const val ELECTRICITY_METER_SETTINGS = "electricity_meter_settings_%PROFILE_ID%_%CHANNEL_ID%"
+private const val OCR_PHOTO_CREATION_TIME = "ocr_photo_creation_time_%PROFILE_ID%_%CHANNEL_ID%"
 
 @Singleton
 class UserStateHolder @Inject constructor(@ApplicationContext context: Context) {
@@ -59,6 +66,24 @@ class UserStateHolder @Inject constructor(@ApplicationContext context: Context) 
   fun setElectricityMeterSettings(settings: ElectricityMeterSettings, profileId: Long, remoteId: Int) {
     with(preferences.edit()) {
       putString(getKey(ELECTRICITY_METER_SETTINGS, profileId, remoteId), Json.encodeToString(settings))
+      apply()
+    }
+  }
+
+  fun getOcrPhotoCreationTime(profileId: Long, remoteId: Int): Date? =
+    preferences.getString(getKey(OCR_PHOTO_CREATION_TIME, profileId, remoteId), null)
+      ?.let {
+        try {
+          Date.from(LocalDateTime.parse(it, DateTimeFormatter.ISO_OFFSET_DATE_TIME).atZone(ZoneId.systemDefault()).toInstant())
+        } catch (ex: Exception) {
+          Trace.e(TAG, "Could not parse ocr photo creation date", ex)
+          null
+        }
+      }
+
+  fun setOcrPhotoCreationTime(creationTime: String, profileId: Long, remoteId: Int) {
+    with(preferences.edit()) {
+      putString(getKey(OCR_PHOTO_CREATION_TIME, profileId, remoteId), creationTime)
       apply()
     }
   }

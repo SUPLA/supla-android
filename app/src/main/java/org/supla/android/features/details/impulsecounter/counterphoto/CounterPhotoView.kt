@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -27,8 +28,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
+import androidx.compose.material3.pulltorefresh.pullToRefresh
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,36 +52,66 @@ import org.supla.android.ui.views.buttons.OutlinedButton
 
 data class CounterPhotoViewState(
   val imageFile: Any? = null,
-  val croppedImageFile: Any? = null
+  val croppedImageFile: Any? = null,
+  val date: String? = null,
+  val refreshing: Boolean = false
 )
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CounterPhotoView(
   state: CounterPhotoViewState,
-  onCloudClick: () -> Unit = {}
+  onCloudClick: () -> Unit = {},
+  onRefresh: () -> Unit = {}
 ) {
-  Column(
-    modifier = Modifier
-      .verticalScroll(rememberScrollState())
-      .padding(horizontal = Distance.default),
-    horizontalAlignment = Alignment.Start,
-    verticalArrangement = Arrangement.spacedBy(Distance.default)
+  val pullToRefreshState = rememberPullToRefreshState()
+
+  Box(
+    modifier = Modifier.pullToRefresh(
+      isRefreshing = state.refreshing,
+      onRefresh = { onRefresh() },
+      state = pullToRefreshState,
+      threshold = 58.dp
+    )
   ) {
-    state.croppedImageFile?.let {
-      ImageWithCaption(R.string.counter_photo_counter_area, it, topPadding = Distance.default)
-    }
-    state.imageFile?.let {
-      ImageWithCaption(R.string.counter_photo_original_photo, it)
+    Column(
+      modifier = Modifier
+        .verticalScroll(rememberScrollState())
+        .padding(horizontal = Distance.default),
+      horizontalAlignment = Alignment.Start,
+      verticalArrangement = Arrangement.spacedBy(Distance.default)
+    ) {
+      state.croppedImageFile?.let {
+        ImageWithCaption(R.string.counter_photo_counter_area, it, topPadding = Distance.default)
+      }
+      state.imageFile?.let {
+        ImageWithCaption(R.string.counter_photo_original_photo, it)
+      }
+      state.date?.let {
+        Row {
+          Spacer(modifier = Modifier.weight(1f))
+          Text(text = it, style = MaterialTheme.typography.bodyMedium)
+          Spacer(modifier = Modifier.weight(1f))
+        }
+      }
+
+      Row {
+        Spacer(modifier = Modifier.weight(1f))
+        OutlinedButton(
+          text = stringResource(R.string.counter_photo_settings),
+          onClick = onCloudClick
+        )
+        Spacer(modifier = Modifier.weight(1f))
+      }
     }
 
-    Row {
-      Spacer(modifier = Modifier.weight(1f))
-      OutlinedButton(
-        text = stringResource(R.string.counter_photo_settings),
-        onClick = onCloudClick
-      )
-      Spacer(modifier = Modifier.weight(1f))
-    }
+    PullToRefreshDefaults.Indicator(
+      state = pullToRefreshState,
+      isRefreshing = state.refreshing,
+      modifier = Modifier.align(Alignment.TopCenter),
+      color = MaterialTheme.colorScheme.primary,
+      threshold = 58.dp
+    )
   }
 }
 
@@ -106,7 +141,8 @@ fun Preview() {
     CounterPhotoView(
       CounterPhotoViewState(
         R.drawable.on_off_widget_preview_image,
-        R.drawable.on_off_widget_preview_image
+        R.drawable.on_off_widget_preview_image,
+        "12.12.2024 12:12"
       )
     )
   }
