@@ -26,6 +26,7 @@ interface CacheFileAccess {
 
   @Throws(Exception::class)
   fun writeBytes(file: File, bytes: ByteArray)
+
   @Throws(Exception::class)
   fun readBytes(file: File): ByteArray
 
