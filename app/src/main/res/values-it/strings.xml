@@ -701,6 +701,7 @@
   <plurals name="day_pattern">
     <item quantity="one">%1$d giorno</item>
     <item quantity="many">%1$d giorni</item>
+    <item quantity="other">%1$d giorni</item>
   </plurals>
   <plurals name="hour_pattern" tools:ignore="MissingQuantity">
     <item quantity="other">%1$d ore</item>
