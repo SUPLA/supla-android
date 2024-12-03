@@ -33,7 +33,6 @@ import org.supla.android.data.source.DefaultChannelRepository;
 import org.supla.android.data.source.DefaultColorListRepository;
 import org.supla.android.data.source.DefaultSceneRepository;
 import org.supla.android.data.source.DefaultUserIconRepository;
-import org.supla.android.data.source.ResultTuple;
 import org.supla.android.data.source.SceneRepository;
 import org.supla.android.data.source.UserIconRepository;
 import org.supla.android.data.source.local.ChannelDao;
@@ -43,7 +42,6 @@ import org.supla.android.data.source.local.SceneDao;
 import org.supla.android.data.source.local.UserIconDao;
 import org.supla.android.di.entrypoints.ProfileIdHolderEntryPoint;
 import org.supla.android.images.ImageCacheProxy;
-import org.supla.android.lib.SuplaChannelExtendedValue;
 import org.supla.android.lib.SuplaChannelGroup;
 import org.supla.android.lib.SuplaChannelGroupRelation;
 import org.supla.android.lib.SuplaLocation;
@@ -51,7 +49,7 @@ import org.supla.android.profile.ProfileIdHolder;
 
 public class DbHelper extends BaseDbHelper {
 
-  public static final int DATABASE_VERSION = 36;
+  public static final int DATABASE_VERSION = 37;
   public static final String DATABASE_NAME = "supla.db";
   private static final Object mutex = new Object();
 
@@ -139,11 +137,6 @@ public class DbHelper extends BaseDbHelper {
 
   public void updateChannel(Channel channel) {
     channelRepository.updateChannel(channel);
-  }
-
-  public ResultTuple updateChannelExtendedValue(
-      SuplaChannelExtendedValue suplaChannelExtendedValue, int channelId) {
-    return channelRepository.updateChannelExtendedValue(suplaChannelExtendedValue, channelId);
   }
 
   public boolean updateChannelGroup(SuplaChannelGroup suplaChannelGroup) {

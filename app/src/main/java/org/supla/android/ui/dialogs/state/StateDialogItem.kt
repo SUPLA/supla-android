@@ -18,11 +18,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import org.supla.android.R
-import org.supla.android.core.ui.StringProvider
-import org.supla.android.core.ui.stringProvider
-import org.supla.android.core.ui.stringProviderOf
 import org.supla.android.lib.SuplaChannelState
-import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.extensions.localizedString
+import org.supla.core.shared.infrastructure.LocalizedString
 
 enum class StateDialogItem(val captionResource: Int) {
   CHANNEL_ID(R.string.channel_id),
@@ -41,48 +39,22 @@ enum class StateDialogItem(val captionResource: Int) {
   LIGHT_SOURCE_LIFESPAN(R.string.light_source_lifespan),
   LIGHT_SOURCE_OPERATING_TIME(R.string.light_source_operatingtime);
 
-  val extractor: (SuplaChannelState) -> StringProvider?
+  val extractor: (SuplaChannelState) -> LocalizedString?
     get() = when (this) {
-      CHANNEL_ID -> { state -> stringProviderOf("${state.channelID}") }
-      IP_ADDRESS -> { state -> (state.ipv4 != null).ifTrue { stringProviderOf(state.ipv4String) } }
-      MAC_ADDRESS -> { state -> (state.macAddress != null).ifTrue { stringProviderOf(state.macAddressString) } }
-      BATTERY_LEVEL -> { state -> (state.batteryLevel != null).ifTrue { stringProviderOf(state.batteryLevelString) } }
-      BATTERY_POWERED -> { state -> state.isBatteryPowered?.stringProvider }
+      CHANNEL_ID -> { state -> LocalizedString.Constant("${state.channelId}") }
+      IP_ADDRESS -> { state -> state.ipV4?.let { LocalizedString.Constant(it) } }
+      MAC_ADDRESS -> { state -> state.macAddress?.let { LocalizedString.Constant(it) } }
+      BATTERY_LEVEL -> { state -> state.batteryLevelString?.let { LocalizedString.Constant(it) } }
+      BATTERY_POWERED -> { state -> state.batteryPowered?.localizedString }
 
-      WIFI_RSSI -> { state -> (state.wiFiRSSI != null).ifTrue { stringProviderOf(state.wiFiRSSIString) } }
-      WIFI_SIGNAL -> { state -> (state.wiFiSignalStrength != null).ifTrue { stringProviderOf(state.wiFiSignalStrengthString) } }
-      BRIDGE_NODE -> { state -> state.isBridgeNodeOnline?.stringProvider }
-      BRIDGE_SIGNAL -> { state -> state.bridgeNodeSignalStrengthStringProvider }
-      UPTIME -> { state -> state.uptimeStringProvider }
-      CONNECTION_TIME -> { state -> state.connectionUptimeStringProvider }
-      BATTERY_HEALTH -> { state -> (state.batteryHealth != null).ifTrue { stringProviderOf(state.batteryHealthString) } }
-      CONNECTION_RESET -> { state -> state.lastConnectionResetCauseStringProvider }
+      WIFI_RSSI -> { state -> state.wifiRssiString?.let { LocalizedString.Constant(it) } }
+      WIFI_SIGNAL -> { state -> state.wifiSignalStrengthString?.let { LocalizedString.Constant(it) } }
+      BRIDGE_NODE -> { state -> state.bridgeNodeOnline?.localizedString }
+      BRIDGE_SIGNAL -> { state -> state.bridgeNodeSignalStrengthString?.let { LocalizedString.Constant(it) } }
+      UPTIME -> { state -> state.uptimeString }
+      CONNECTION_TIME -> { state -> state.connectionUptimeString }
+      BATTERY_HEALTH -> { state -> state.batteryHealthString?.let { LocalizedString.Constant(it) } }
+      CONNECTION_RESET -> { state -> state.lastConnectionResetCauseString }
       else -> { _ -> null }
-    }
-
-  private val Boolean.stringProvider: StringProvider
-    get() = if (this) stringProviderOf(R.string.yes) else stringProviderOf(R.string.no)
-
-  private val SuplaChannelState.bridgeNodeSignalStrengthStringProvider: StringProvider?
-    get() = (bridgeNodeSignalStrength != null).ifTrue { stringProviderOf(bridgeNodeSignalStrengthString) }
-
-  private val SuplaChannelState.uptimeStringProvider: StringProvider?
-    get() = (uptime != null).ifTrue { stringProvider { getUptimeString(it) } }
-
-  private val SuplaChannelState.connectionUptimeStringProvider: StringProvider?
-    get() = (connectionUptime != null).ifTrue { stringProvider { getConnectionUptimeString(it) } }
-
-  private val SuplaChannelState.lastConnectionResetCauseStringProvider: StringProvider?
-    get() = lastConnectionResetCause?.let { cause ->
-      val causeResources = listOf(
-        R.string.lastconnectionresetcause_unknown,
-        R.string.lastconnectionresetcause_activity_timeout,
-        R.string.lastconnectionresetcause_wifi_connection_lost,
-        R.string.lastconnectionresetcause_server_connection_lost
-      )
-
-      causeResources.getOrNull(cause.toInt())?.let {
-        stringProviderOf(it)
-      } ?: stringProviderOf("$cause")
     }
 }

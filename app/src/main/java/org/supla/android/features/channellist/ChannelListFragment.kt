@@ -141,7 +141,7 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
   }
 
   private fun handleChannelState(state: SuplaChannelState?) {
-    if (state != null && statePopup.isVisible && statePopup.remoteId == state.channelID) {
+    if (state != null && statePopup.isVisible && statePopup.remoteId == state.channelId) {
       statePopup.update(state)
     }
   }

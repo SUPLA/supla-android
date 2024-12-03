@@ -9,6 +9,7 @@
 
   <string name="version">version</string>
 
+  <string name="channel_state_uptime">$1%d Tage $2%02d:$3%02d:$4%02d</string>
   <string name="status_connecting">Verbindung...</string>
   <string name="status_unknown_err">Unbekannter Fehler</string>
   <string name="status_temporarily_unavailable">Service momentan nicht verfügbar</string>

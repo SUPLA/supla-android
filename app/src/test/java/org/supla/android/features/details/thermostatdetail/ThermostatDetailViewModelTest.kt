@@ -159,6 +159,7 @@ class ThermostatDetailViewModelTest :
       every { this@mockk.channelValueEntity } returns value
       every { caption } returns ""
       every { channelExtendedValueEntity } returns null
+      every { stateEntity } returns null
       every { isOnline() } returns true
     }
   }

@@ -25,7 +25,6 @@ import org.jetbrains.annotations.NotNull;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelGroup;
 import org.supla.android.db.Location;
-import org.supla.android.lib.SuplaChannelExtendedValue;
 import org.supla.android.lib.SuplaChannelGroup;
 import org.supla.android.lib.SuplaChannelGroupRelation;
 import org.supla.android.lib.SuplaLocation;
@@ -40,9 +39,6 @@ public interface ChannelRepository {
   void updateChannelGroup(ChannelGroup channelGroup);
 
   boolean updateChannelGroup(SuplaChannelGroup suplaChannelGroup);
-
-  ResultTuple updateChannelExtendedValue(
-      SuplaChannelExtendedValue suplaChannelExtendedValue, int channelId);
 
   boolean updateChannelGroupRelation(SuplaChannelGroupRelation suplaChannelGroupRelation);
 

@@ -140,6 +140,7 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
       every { this@mockk.caption } returns captionString
       every { function } returns SuplaFunction.HVAC_THERMOSTAT
       every { isOnline() } returns true
+      every { stateEntity } returns null
       every { channelEntity } returns mockk {
         every { function } returns SuplaFunction.HVAC_THERMOSTAT
       }
@@ -200,6 +201,7 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
       every { this@mockk.caption } returns captionString
       every { function } returns SuplaFunction.HVAC_THERMOSTAT
       every { isOnline() } returns true
+      every { stateEntity } returns null
       every { channelEntity } returns mockk {
         every { function } returns SuplaFunction.HVAC_THERMOSTAT
       }

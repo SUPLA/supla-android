@@ -32,6 +32,9 @@ val LocalizedStringId.resourceId: Int
     LocalizedStringId.GENERAL_COLLAPSE -> R.string.channel_btn_collapse
     LocalizedStringId.GENERAL_EXPAND -> R.string.channel_btn_expand
 
+    LocalizedStringId.GENERAL_YES -> R.string.yes
+    LocalizedStringId.GENERAL_NO -> R.string.no
+
     LocalizedStringId.CHANNEL_CAPTION_OPEN_SENSOR_GATEWAY -> R.string.channel_caption_gatewayopeningsensor
     LocalizedStringId.CHANNEL_CAPTION_CONTROLLING_THE_GATEWAY_LOCK -> R.string.channel_caption_gateway
     LocalizedStringId.CHANNEL_CAPTION_OPEN_SENSOR_GATE -> R.string.channel_caption_gateopeningsensor

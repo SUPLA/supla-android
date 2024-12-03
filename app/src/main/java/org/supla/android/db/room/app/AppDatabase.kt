@@ -26,6 +26,7 @@ import org.supla.android.data.source.local.dao.ChannelExtendedValueDao
 import org.supla.android.data.source.local.dao.ChannelGroupDao
 import org.supla.android.data.source.local.dao.ChannelGroupRelationDao
 import org.supla.android.data.source.local.dao.ChannelRelationDao
+import org.supla.android.data.source.local.dao.ChannelStateDao
 import org.supla.android.data.source.local.dao.ChannelValueDao
 import org.supla.android.data.source.local.dao.ColorDao
 import org.supla.android.data.source.local.dao.LocationDao
@@ -39,6 +40,7 @@ import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity
 import org.supla.android.data.source.local.entity.ChannelGroupEntity
 import org.supla.android.data.source.local.entity.ChannelGroupRelationEntity
 import org.supla.android.data.source.local.entity.ChannelRelationEntity
+import org.supla.android.data.source.local.entity.ChannelStateEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.ColorEntity
 import org.supla.android.data.source.local.entity.LocationEntity
@@ -62,7 +64,8 @@ import org.supla.android.db.DbHelper
     UserIconEntity::class,
     ChannelGroupRelationEntity::class,
     ChannelExtendedValueEntity::class,
-    NotificationEntity::class
+    NotificationEntity::class,
+    ChannelStateEntity::class
   ],
   version = DbHelper.DATABASE_VERSION,
   exportSchema = false
@@ -82,4 +85,5 @@ abstract class AppDatabase : RoomDatabase() {
   abstract fun channelGroupRelationDao(): ChannelGroupRelationDao
   abstract fun channelExtendedValueDao(): ChannelExtendedValueDao
   abstract fun notificationDao(): NotificationDao
+  abstract fun channelStateDao(): ChannelStateDao
 }

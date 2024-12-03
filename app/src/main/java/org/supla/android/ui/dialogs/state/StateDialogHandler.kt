@@ -102,7 +102,7 @@ interface StateDialogHandler {
     val (channelState) = guardLet(state) { return }
 
     updateDialogState { viewState ->
-      if (viewState?.remoteId == channelState.channelID) {
+      if (viewState?.remoteId == channelState.channelId) {
         val values = StateDialogItem.entries.associateWith { it.extractor(channelState) }
           .filter { it.value != null }
           .mapValues { it.value!! }

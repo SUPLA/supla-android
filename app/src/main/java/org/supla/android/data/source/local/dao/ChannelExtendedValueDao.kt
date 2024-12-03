@@ -18,6 +18,34 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.Update
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Single
+import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity
+import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity.Companion.ALL_COLUMNS
+import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity.Companion.COLUMN_CHANNEL_ID
+import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity.Companion.COLUMN_PROFILE_ID
+import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity.Companion.TABLE_NAME
+import org.supla.android.data.source.local.entity.ProfileEntity.Companion.SUBQUERY_ACTIVE
 
 @Dao
-interface ChannelExtendedValueDao
+interface ChannelExtendedValueDao {
+  @Query(
+    """
+      SELECT $ALL_COLUMNS 
+      FROM $TABLE_NAME
+      WHERE $COLUMN_CHANNEL_ID = :remoteId
+        AND $COLUMN_PROFILE_ID = $SUBQUERY_ACTIVE
+    """
+  )
+  fun findByRemoteId(remoteId: Int): Single<ChannelExtendedValueEntity>
+
+  @Update
+  fun update(entity: ChannelExtendedValueEntity): Completable
+
+  @Insert(onConflict = OnConflictStrategy.REPLACE)
+  fun insert(entity: ChannelExtendedValueEntity): Completable
+}

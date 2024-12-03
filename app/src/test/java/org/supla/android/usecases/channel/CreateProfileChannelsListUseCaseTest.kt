@@ -192,6 +192,7 @@ class CreateProfileChannelsListUseCaseTest {
     every { function } returns channelFunction
     every { caption } returns ""
     every { isOnline() } returns true
+    every { stateEntity } returns null
     every { locationEntity } returns mockk {
       every { remoteId } returns locationRemoteId
       every { caption } returns locationName
