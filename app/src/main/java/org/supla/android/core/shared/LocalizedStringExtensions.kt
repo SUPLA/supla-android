@@ -29,6 +29,7 @@ operator fun LocalizedString.invoke(context: Context): String {
     is LocalizedString.WithResourceIntStringInt -> context.getString(id, arg1, arg2(context), arg3)
     is LocalizedString.WithResource -> context.getString(id)
     is LocalizedString.WithIdIntStringInt -> context.getString(id.resourceId, arg1, arg2(context), arg3)
+    is LocalizedString.WithResourceIntIntIntInt -> context.getString(id, arg1, arg2, arg3, arg4)
   }
 }
 

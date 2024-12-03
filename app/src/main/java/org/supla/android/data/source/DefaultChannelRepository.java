@@ -24,7 +24,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import io.reactivex.rxjava3.core.Completable;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -36,11 +35,9 @@ import org.supla.android.data.source.local.entity.ChannelGroupEntity;
 import org.supla.android.data.source.local.entity.ChannelGroupRelationEntity;
 import org.supla.android.data.source.local.view.ChannelView;
 import org.supla.android.db.Channel;
-import org.supla.android.db.ChannelExtendedValue;
 import org.supla.android.db.ChannelGroup;
 import org.supla.android.db.ChannelGroupRelation;
 import org.supla.android.db.Location;
-import org.supla.android.lib.SuplaChannelExtendedValue;
 import org.supla.android.lib.SuplaChannelGroup;
 import org.supla.android.lib.SuplaChannelGroupRelation;
 import org.supla.android.lib.SuplaLocation;
@@ -111,43 +108,6 @@ public class DefaultChannelRepository implements ChannelRepository {
       return true;
     }
     return false;
-  }
-
-  @Override
-  public ResultTuple updateChannelExtendedValue(
-      SuplaChannelExtendedValue suplaChannelExtendedValue, int channelId) {
-    ChannelExtendedValue value = channelDao.getChannelExtendedValue(channelId);
-
-    boolean timerUpdated = false;
-    if (value == null) {
-      value = new ChannelExtendedValue();
-      value.setExtendedValue(suplaChannelExtendedValue);
-      value.setChannelId(channelId);
-      if (value.getTimerEstimatedEndDate() != null) {
-        value.setTimerStartTimestamp(dateProvider.currentTimestamp());
-        timerUpdated = true;
-      } else {
-        value.setTimerStartTimestamp(null);
-      }
-
-      channelDao.insert(value);
-    } else {
-      Date oldDate = value.getTimerEstimatedEndDate();
-      value.setExtendedValue(suplaChannelExtendedValue);
-      Date newValue = value.getTimerEstimatedEndDate();
-      if (newValue != null
-          && (oldDate == null || Math.abs(oldDate.getTime() - newValue.getTime()) > 1000)) {
-        // Time difference must be bigger then 1s, because sometimes even without change there is 1s
-        // difference
-        value.setTimerStartTimestamp(dateProvider.currentTimestamp());
-        timerUpdated = true;
-      } else if (value.getTimerStartTimestamp() != null && newValue == null) {
-        value.setTimerStartTimestamp(null);
-        timerUpdated = true;
-      }
-      channelDao.update(value);
-    }
-    return new ResultTuple(true, timerUpdated);
   }
 
   @Override

@@ -56,8 +56,6 @@ class GetChannelActionStringUseCase {
     when (function) {
       SuplaFunction.CONTROLLING_THE_ROOF_WINDOW,
       SuplaFunction.ROLLER_GARAGE_DOOR,
-      SuplaFunction.CONTROLLING_THE_DOOR_LOCK,
-      SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK,
       SuplaFunction.VALVE_OPEN_CLOSE,
       SuplaFunction.VALVE_PERCENTAGE -> LocalizedStringId.GENERAL_CLOSE
 

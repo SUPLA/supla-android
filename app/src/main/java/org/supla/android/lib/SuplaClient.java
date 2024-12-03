@@ -57,7 +57,6 @@ import org.supla.android.core.networking.suplacloud.SuplaCloudConfigHolder;
 import org.supla.android.core.notifications.NotificationsHelper;
 import org.supla.android.core.storage.EncryptedPreferences;
 import org.supla.android.data.model.general.EntityUpdateResult;
-import org.supla.android.data.source.ResultTuple;
 import org.supla.android.data.source.SceneRepository;
 import org.supla.android.data.source.remote.ChannelConfigType;
 import org.supla.android.data.source.remote.ConfigResult;
@@ -78,8 +77,10 @@ import org.supla.android.lib.actions.SubjectType;
 import org.supla.android.profile.AuthInfo;
 import org.supla.android.profile.ProfileIdHolder;
 import org.supla.android.profile.ProfileManager;
+import org.supla.android.usecases.channel.UpdateChannelExtendedValueUseCase;
 import org.supla.android.usecases.channel.UpdateChannelUseCase;
 import org.supla.android.usecases.channel.UpdateChannelValueUseCase;
+import org.supla.android.usecases.channel.UpdateExtendedValueResult;
 import org.supla.android.usecases.channelconfig.InsertChannelConfigUseCase;
 import org.supla.android.usecases.channelrelation.DeleteRemovableChannelRelationsUseCase;
 import org.supla.android.usecases.channelrelation.InsertChannelRelationForProfileUseCase;
@@ -124,6 +125,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   private final InsertChannelConfigUseCase insertChannelConfigUseCase;
   private final UpdateChannelUseCase updateChannelUseCase;
   private final UpdateChannelValueUseCase updateChannelValueUseCase;
+  private final UpdateChannelExtendedValueUseCase updateChannelExtendedValueUseCase;
   private final AppDatabase appDatabase;
   private final MeasurementsDatabase measurementsDatabase;
   private final ProfileIdHolder profileIdHolder;
@@ -152,6 +154,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     this.insertChannelConfigUseCase = dependencies.getInsertChannelConfigUseCase();
     this.updateChannelUseCase = dependencies.getUpdateChannelUseCase();
     this.updateChannelValueUseCase = dependencies.getUpdateChannelValueUseCase();
+    this.updateChannelExtendedValueUseCase = dependencies.getUpdateChannelExtendedValueUseCase();
     this.appDatabase = dependencies.getAppDatabase();
     this.measurementsDatabase = dependencies.getMeasurementsDatabase();
     this.profileIdHolder = dependencies.getProfileIdHolder();
@@ -1283,12 +1286,13 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
   private void channelExtendedValueUpdate(
       SuplaChannelExtendedValueUpdate channelExtendedValueUpdate) {
-    ResultTuple result =
-        DbH.updateChannelExtendedValue(
-            channelExtendedValueUpdate.Value, channelExtendedValueUpdate.Id);
-    if (Boolean.TRUE.equals(result.asBoolean(0))) {
-      onDataChanged(
-          channelExtendedValueUpdate.Id, 0, true, Boolean.TRUE.equals(result.asBoolean(1)));
+    UpdateExtendedValueResult result =
+        updateChannelExtendedValueUseCase
+            .invoke(channelExtendedValueUpdate.Id, channelExtendedValueUpdate.Value)
+            .blockingGet();
+
+    if (result.getResult() == EntityUpdateResult.UPDATED) {
+      onDataChanged(channelExtendedValueUpdate.Id, 0, true, result.getTimerChanged());
     }
   }
 

@@ -28,6 +28,6 @@ fun ByteArray.toTemperature(first: Int = 0, second: Int = 1): Float {
 }
 
 @OptIn(ExperimentalStdlibApi::class)
-fun ByteArray.toHex(): String = joinToString(separator = "") {
+fun ByteArray.toHex(separator: String = ""): String = joinToString(separator = separator) {
   it.toHexString(HexFormat { })
 }

@@ -22,6 +22,7 @@ import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.source.local.entity.ChannelConfigEntity
 import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity
+import org.supla.android.data.source.local.entity.ChannelStateEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.db.Channel
@@ -37,7 +38,8 @@ data class ChannelDataEntity(
   @Embedded(prefix = "value_") val channelValueEntity: ChannelValueEntity,
   @Embedded(prefix = "location_") val locationEntity: LocationEntity,
   @Embedded(prefix = "extended_value_") val channelExtendedValueEntity: ChannelExtendedValueEntity?,
-  @Embedded(prefix = "config_") val configEntity: ChannelConfigEntity?
+  @Embedded(prefix = "config_") val configEntity: ChannelConfigEntity?,
+  @Embedded(prefix = "state_") val stateEntity: ChannelStateEntity?
 ) : ChannelDataBase {
 
   override val id: Long?
@@ -124,11 +126,11 @@ val ChannelDataEntity.shareable: org.supla.core.shared.data.model.general.Channe
   )
 
 val ChannelDataEntity.batteryInfo: BatteryInfo?
-  get() = channelExtendedValueEntity?.getSuplaValue()?.ChannelStateValue?.let {
-    val batteryPowered = it.isBatteryPowered ?: false
+  get() = stateEntity?.let {
+    val batteryPowered = it.batteryPowered ?: false
     val level = it.batteryLevel
 
     (batteryPowered || level != null).ifTrue {
-      BatteryInfo(batteryPowered, level?.toInt(), it.batteryHealth?.toInt())
+      BatteryInfo(batteryPowered, level, it.batteryHealth)
     }
   }

@@ -1,4 +1,4 @@
-package org.supla.core.shared.extensions
+package org.supla.android.data.source
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,36 +17,17 @@ package org.supla.core.shared.extensions
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.core.shared.infrastructure.LocalizedString
-import org.supla.core.shared.infrastructure.LocalizedStringId
+import org.supla.android.data.source.local.dao.ChannelStateDao
+import org.supla.android.data.source.local.entity.ChannelStateEntity
+import javax.inject.Inject
+import javax.inject.Singleton
 
-val Boolean.localizedString: LocalizedString
-  get() = if (this) {
-    LocalizedString.WithId(LocalizedStringId.GENERAL_YES)
-  } else {
-    LocalizedString.WithId(LocalizedStringId.GENERAL_NO)
-  }
+@Singleton
+class ChannelStateRepository @Inject constructor(
+  private val channelStateDao: ChannelStateDao
+) {
 
-fun <T> Boolean.ifTrue(value: T): T? = if (this) {
-  value
-} else {
-  null
-}
+  fun getState(channelId: Int) = channelStateDao.getState(channelId)
 
-fun <T> Boolean.ifTrue(valueProvider: () -> T): T? = if (this) {
-  valueProvider()
-} else {
-  null
-}
-
-fun <T> Boolean.ifFalse(value: T): T? = if (this.not()) {
-  value
-} else {
-  null
-}
-
-fun ifTrue(value: Boolean, callback: () -> Unit) {
-  if (value) {
-    callback()
-  }
+  fun insertOrUpdate(state: ChannelStateEntity) = channelStateDao.insertOrUpdate(state)
 }

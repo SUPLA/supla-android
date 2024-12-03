@@ -29,14 +29,17 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
+import org.supla.android.core.shared.LocalizedStringExtensionsKt;
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag;
 import org.supla.android.db.Channel;
 import org.supla.android.db.DbHelper;
 import org.supla.android.lib.SuplaChannelState;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaConst;
+import org.supla.core.shared.extensions.BooleanExtensionsKt;
 
 public class ChannelStatePopup
     implements DialogInterface.OnCancelListener,
@@ -212,93 +215,89 @@ public class ChannelStatePopup
 
     lastRefreshTime = System.currentTimeMillis();
 
-    if (state.getChannelID() != 0) {
+    if (state.getChannelId() != 0) {
       llChannelID.setVisibility(View.VISIBLE);
       llProgress.setVisibility(View.GONE);
-      tvChannelID.setText(Integer.toString(state.getChannelID()));
+      tvChannelID.setText(String.format(Locale.getDefault(), "%d", state.getChannelId()));
     }
 
-    if (state.getIpv4() != null) {
+    if (state.getIpV4() != null) {
       llIP.setVisibility(View.VISIBLE);
       llProgress.setVisibility(View.GONE);
-      tvIP.setText(state.getIpv4String());
+      tvIP.setText(state.getIpV4());
     }
 
     if (state.getMacAddress() != null) {
       llMAC.setVisibility(View.VISIBLE);
       llProgress.setVisibility(View.GONE);
-      tvMAC.setText(state.getMacAddressString());
+      tvMAC.setText(state.getMacAddress());
     }
 
-    if (state.getBatteryLevel() != null) {
+    if (state.getBatteryLevelString() != null) {
       llBatteryLevel.setVisibility(View.VISIBLE);
       llProgress.setVisibility(View.GONE);
       tvBatteryLevel.setText(state.getBatteryLevelString());
     }
 
-    if (state.isBatteryPowered() != null) {
+    if (state.getBatterPoweredString() != null) {
       llBatteryPowered.setVisibility(View.VISIBLE);
       llProgress.setVisibility(View.GONE);
-      tvBatteryPowered.setText(state.getBatteryPoweredString(context));
+      tvBatteryPowered.setText(
+          LocalizedStringExtensionsKt.invoke(state.getBatterPoweredString(), context));
     }
 
-    if (state.getWiFiRSSI() != null) {
+    if (state.getWifiRssiString() != null) {
       llWiFiRSSI.setVisibility(View.VISIBLE);
       llProgress.setVisibility(View.GONE);
-      tvWiFiRSSI.setText(state.getWiFiRSSIString());
+      tvWiFiRSSI.setText(state.getWifiRssiString());
     }
 
-    if (state.getWiFiSignalStrength() != null) {
+    if (state.getWifiSignalStrengthString() != null) {
       llWiFiSignalStrength.setVisibility(View.VISIBLE);
       llProgress.setVisibility(View.GONE);
-      tvWiFiSignalStrength.setText(state.getWiFiSignalStrengthString());
+      tvWiFiSignalStrength.setText(state.getWifiSignalStrengthString());
     }
 
-    if (state.isBridgeNodeOnline() != null) {
+    if (state.getBridgeNodeOnline() != null) {
       llBridgeNodeOnline.setVisibility(View.VISIBLE);
       llProgress.setVisibility(View.GONE);
-      tvBridgeNodeOnline.setText(state.getBridgeNodeOnlineString(context));
+      tvBridgeNodeOnline.setText(
+          LocalizedStringExtensionsKt.invoke(
+              BooleanExtensionsKt.getLocalizedString(state.getBridgeNodeOnline()), context));
     }
 
-    if (state.getBridgeNodeSignalStrength() != null) {
+    if (state.getBridgeNodeSignalStrengthString() != null) {
       llBridgeNodeSignalStrength.setVisibility(View.VISIBLE);
       llProgress.setVisibility(View.GONE);
       tvBridgeNodeSignalStrength.setText(state.getBridgeNodeSignalStrengthString());
     }
 
-    if (state.getUptime() != null) {
+    if (state.getUptimeString() != null) {
       llUptime.setVisibility(View.VISIBLE);
       llProgress.setVisibility(View.GONE);
 
-      tvUptime.setText(state.getUptimeString(context));
+      tvUptime.setText(LocalizedStringExtensionsKt.invoke(state.getUptimeString(), context));
     }
 
-    if (state.getConnectionUptime() != null) {
+    if (state.getConnectionUptimeString() != null) {
       llConnectionUptime.setVisibility(View.VISIBLE);
       llProgress.setVisibility(View.GONE);
 
-      tvConnectionUptime.setText(state.getConnectionUptimeString(context));
+      tvConnectionUptime.setText(
+          LocalizedStringExtensionsKt.invoke(state.getConnectionUptimeString(), context));
     }
 
-    if (state.getBatteryHealth() != null) {
+    if (state.getBatteryHealthString() != null) {
       llBatteryHealth.setVisibility(View.VISIBLE);
       llProgress.setVisibility(View.GONE);
       tvBatteryHealth.setText(state.getBatteryHealthString());
     }
 
-    if (state.getLastConnectionResetCause() != null) {
+    if (state.getLastConnectionResetCauseString() != null) {
       llLastConnectionResetCause.setVisibility(View.VISIBLE);
       llProgress.setVisibility(View.GONE);
-      int res[] = {
-        R.string.lastconnectionresetcause_unknown,
-        R.string.lastconnectionresetcause_activity_timeout,
-        R.string.lastconnectionresetcause_wifi_connection_lost,
-        R.string.lastconnectionresetcause_server_connection_lost
-      };
-      int reset_cause = state.getLastConnectionResetCause();
-      if (reset_cause >= 0 && reset_cause < res.length)
-        tvLastConnectionResetCause.setText(res[reset_cause]);
-      else tvLastConnectionResetCause.setText(state.getLastConnectionResetCauseString());
+      tvLastConnectionResetCause.setText(
+          LocalizedStringExtensionsKt.invoke(state.getLastConnectionResetCauseString(), context));
     }
 
     if (channelFunc == SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH) {
@@ -377,12 +376,13 @@ public class ChannelStatePopup
   public void onSuperuserOnAuthorizarionResult(
       SuperuserAuthorizationDialog dialog, boolean Success, int Code) {
     if (Success) {
+      int lifespan = 0;
+      if (lastState.getLightSourceLifespan() != null) {
+        lifespan = lastState.getLightSourceLifespan();
+      }
       LightsourceLifespanSettingsDialog lsdialog =
           new LightsourceLifespanSettingsDialog(
-              context,
-              remoteId,
-              lastState.getLightSourceLifespan(),
-              tvInfoTitle.getText().toString());
+              context, remoteId, lifespan, tvInfoTitle.getText().toString());
       dialog.close();
       lsdialog.show();
     }

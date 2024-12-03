@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.sp
+import java.util.Locale
 
 const val DAY_IN_SEC = 24 * 60 * 60
 const val HOUR_IN_SEC = 60 * 60
@@ -52,3 +53,14 @@ val Int.secondsInMinute
 
 @Composable
 fun Int.asColor(): Color = colorResource(id = this)
+
+val Int.ipV4String: String
+  get() =
+    String.format(
+      Locale.getDefault(),
+      "%d.%d.%d.%d",
+      (this and 0xff),
+      (this shr 8 and 0xff),
+      (this shr 16 and 0xff),
+      (this shr 24 and 0xff)
+    )

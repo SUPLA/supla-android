@@ -16,7 +16,6 @@ import static org.mockito.Mockito.when;
 import android.database.Cursor;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 import org.junit.Assert;
@@ -30,15 +29,12 @@ import org.supla.android.core.infrastructure.DateProvider;
 import org.supla.android.data.source.local.ChannelDao;
 import org.supla.android.data.source.local.LocationDao;
 import org.supla.android.db.Channel;
-import org.supla.android.db.ChannelExtendedValue;
 import org.supla.android.db.ChannelGroup;
 import org.supla.android.db.ChannelGroupRelation;
 import org.supla.android.db.Location;
-import org.supla.android.lib.SuplaChannelExtendedValue;
 import org.supla.android.lib.SuplaChannelGroup;
 import org.supla.android.lib.SuplaChannelGroupRelation;
 import org.supla.android.lib.SuplaLocation;
-import org.supla.android.lib.SuplaTimerState;
 
 @SuppressWarnings("unchecked")
 @RunWith(MockitoJUnitRunner.class)
@@ -310,145 +306,6 @@ public class DefaultChannelRepositoryTest {
     verifyNoMoreInteractions(locationDao, channelDao);
 
     assertEquals(channelGroupDbId, channelGroup.getId());
-  }
-
-  @Test
-  public void shouldInsertChannelExtendedValueWhenChannelExtendedValueNotFound() {
-    // given
-    int channelId = 234;
-    SuplaChannelExtendedValue suplaChannelExtendedValue = mock(SuplaChannelExtendedValue.class);
-
-    // when
-    ResultTuple result =
-        defaultChannelRepository.updateChannelExtendedValue(suplaChannelExtendedValue, channelId);
-
-    // then
-    assertEquals(Boolean.TRUE, result.asBoolean(0));
-    assertEquals(Boolean.FALSE, result.asBoolean(1));
-    ArgumentCaptor<ChannelExtendedValue> argumentCaptor =
-        ArgumentCaptor.forClass(ChannelExtendedValue.class);
-    verify(channelDao).getChannelExtendedValue(channelId);
-    verify(channelDao).insert(argumentCaptor.capture());
-    verifyNoMoreInteractions(channelDao);
-    verifyNoInteractions(locationDao, dateProvider);
-
-    assertSame(suplaChannelExtendedValue, argumentCaptor.getValue().getExtendedValue());
-    assertEquals(channelId, argumentCaptor.getValue().getChannelId());
-  }
-
-  @Test
-  public void
-      shouldInsertChannelExtendedValueWhenChannelExtendedValueNotFoundAndCreateTimestampForTimer() {
-    // given
-    int channelId = 234;
-    SuplaTimerState suplaTimerState = mock(SuplaTimerState.class);
-    when(suplaTimerState.getCountdownEndsAt()).thenReturn(new Date());
-    SuplaChannelExtendedValue suplaChannelExtendedValue = mock(SuplaChannelExtendedValue.class);
-    suplaChannelExtendedValue.TimerStateValue = suplaTimerState;
-    when(dateProvider.currentTimestamp()).thenReturn(123L);
-
-    // when
-    ResultTuple result =
-        defaultChannelRepository.updateChannelExtendedValue(suplaChannelExtendedValue, channelId);
-
-    // then
-    assertEquals(Boolean.TRUE, result.asBoolean(0));
-    assertEquals(Boolean.TRUE, result.asBoolean(1));
-    ArgumentCaptor<ChannelExtendedValue> argumentCaptor =
-        ArgumentCaptor.forClass(ChannelExtendedValue.class);
-    verify(channelDao).getChannelExtendedValue(channelId);
-    verify(channelDao).insert(argumentCaptor.capture());
-    verify(dateProvider).currentTimestamp();
-    verifyNoMoreInteractions(channelDao, dateProvider);
-    verifyNoInteractions(locationDao);
-
-    assertSame(suplaChannelExtendedValue, argumentCaptor.getValue().getExtendedValue());
-    assertEquals(channelId, argumentCaptor.getValue().getChannelId());
-  }
-
-  @Test
-  public void shouldUpdateChannelExtendedValueWhenChannelExtendedValueFound() {
-    // given
-    int channelId = 234;
-    SuplaChannelExtendedValue suplaChannelExtendedValue = mock(SuplaChannelExtendedValue.class);
-
-    ChannelExtendedValue channelExtendedValue = mock(ChannelExtendedValue.class);
-    when(channelExtendedValue.getTimerStartTimestamp()).thenReturn(null);
-    when(channelDao.getChannelExtendedValue(channelId)).thenReturn(channelExtendedValue);
-
-    // when
-    ResultTuple result =
-        defaultChannelRepository.updateChannelExtendedValue(suplaChannelExtendedValue, channelId);
-
-    // then
-    assertEquals(Boolean.TRUE, result.asBoolean(0));
-    assertEquals(Boolean.FALSE, result.asBoolean(1));
-    verify(channelDao).getChannelExtendedValue(channelId);
-    verify(channelDao).update(channelExtendedValue);
-    verify(channelExtendedValue).setExtendedValue(suplaChannelExtendedValue);
-    verify(channelExtendedValue).getTimerStartTimestamp();
-    verify(channelExtendedValue, times(2)).getTimerEstimatedEndDate();
-    verifyNoMoreInteractions(channelDao, channelExtendedValue);
-    verifyNoInteractions(locationDao);
-  }
-
-  @Test
-  public void shouldUpdateChannelExtendedValueAndCleanupTimerStartTimestamp() {
-    // given
-    int channelId = 234;
-    Date date = new Date();
-    SuplaChannelExtendedValue suplaChannelExtendedValue = mock(SuplaChannelExtendedValue.class);
-
-    ChannelExtendedValue channelExtendedValue = mock(ChannelExtendedValue.class);
-    when(channelExtendedValue.getTimerStartTimestamp()).thenReturn(1L);
-    when(channelExtendedValue.getTimerEstimatedEndDate()).thenReturn(date, (Date) null);
-    when(channelDao.getChannelExtendedValue(channelId)).thenReturn(channelExtendedValue);
-
-    // when
-    ResultTuple result =
-        defaultChannelRepository.updateChannelExtendedValue(suplaChannelExtendedValue, channelId);
-
-    // then
-    assertEquals(Boolean.TRUE, result.asBoolean(0));
-    assertEquals(Boolean.TRUE, result.asBoolean(1));
-    verify(channelDao).getChannelExtendedValue(channelId);
-    verify(channelDao).update(channelExtendedValue);
-    verify(channelExtendedValue).setExtendedValue(suplaChannelExtendedValue);
-    verify(channelExtendedValue).getTimerStartTimestamp();
-    verify(channelExtendedValue, times(2)).getTimerEstimatedEndDate();
-    verify(channelExtendedValue).setTimerStartTimestamp(null);
-    verifyNoMoreInteractions(channelDao, channelExtendedValue);
-    verifyNoInteractions(locationDao);
-  }
-
-  @Test
-  public void shouldUpdateChannelExtendedValueAndSetTimerToCurrentDate() {
-    // given
-    long currentTimestamp = 123L;
-    Date date = new Date();
-    when(dateProvider.currentTimestamp()).thenReturn(currentTimestamp);
-
-    int channelId = 234;
-    SuplaChannelExtendedValue suplaChannelExtendedValue = mock(SuplaChannelExtendedValue.class);
-
-    ChannelExtendedValue channelExtendedValue = mock(ChannelExtendedValue.class);
-    when(channelExtendedValue.getTimerEstimatedEndDate()).thenReturn(null, date);
-    when(channelDao.getChannelExtendedValue(channelId)).thenReturn(channelExtendedValue);
-
-    // when
-    ResultTuple result =
-        defaultChannelRepository.updateChannelExtendedValue(suplaChannelExtendedValue, channelId);
-
-    // then
-    assertEquals(Boolean.TRUE, result.asBoolean(0));
-    assertEquals(Boolean.TRUE, result.asBoolean(1));
-    verify(channelDao).getChannelExtendedValue(channelId);
-    verify(channelDao).update(channelExtendedValue);
-    verify(channelExtendedValue).setExtendedValue(suplaChannelExtendedValue);
-    verify(channelExtendedValue, times(2)).getTimerEstimatedEndDate();
-    verify(channelExtendedValue).setTimerStartTimestamp(currentTimestamp);
-    verifyNoMoreInteractions(channelDao, channelExtendedValue);
-    verifyNoInteractions(locationDao);
   }
 
   @Test

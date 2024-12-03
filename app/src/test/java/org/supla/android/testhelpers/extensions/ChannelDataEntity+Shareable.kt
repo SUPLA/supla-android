@@ -37,4 +37,5 @@ fun ChannelDataEntity.mockShareable(
   every { this@mockShareable.channelExtendedValueEntity } returns extendedValue
   every { this@mockShareable.isOnline() } returns isOnline
   every { this@mockShareable.channelValueEntity } returns value
+  every { this@mockShareable.stateEntity } returns null
 }

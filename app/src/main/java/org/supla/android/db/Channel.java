@@ -414,16 +414,6 @@ public class Channel extends ChannelBase {
       SuplaChannelState state = getChannelState();
 
       if (state != null || SuplaChannelFlag.CHANNEL_STATE.inside(getFlags())) {
-        if (state != null && (state.getFields() & state.getDefaultIconField()) != 0) {
-          switch (state.getDefaultIconField()) {
-            case SuplaChannelState.FIELD_BATTERYPOWERED:
-              if (state.isBatteryPowered()) {
-                return R.drawable.battery;
-              }
-              break;
-          }
-        }
-
         return R.drawable.ic_info;
       }
     }
