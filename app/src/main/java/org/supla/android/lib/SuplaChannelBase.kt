@@ -27,17 +27,23 @@ open class SuplaChannelBase @UsedFromNativeCode constructor() {
 
   @JvmField
   var Id: Int = 0
+
   @JvmField
   var LocationID: Int = 0
+
   @JvmField
   var Func: Int = 0
+
   @JvmField
   var AltIcon: Int = 0
+
   @JvmField
   var UserIcon: Int = 0
+
   @JvmField
   var Flags: Long = 0
   var AvailabilityStatus: SuplaChannelAvailabilityStatus? = null
+
   @JvmField
   var Caption: String = ""
 
