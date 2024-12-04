@@ -51,8 +51,8 @@ data class ThermostatValue private constructor(
 }
 
 data class ThermostatState(val value: Short) {
-  val power: Float? = if (value > 1) value.minus(1).toFloat() else null
+  val power: Float? = if (value > 1) value.minus(2).toFloat() else null
 
-  fun isOn() = value > 0
-  fun isOff() = value.toInt() == 0
+  fun isOn() = value.toInt() == 1 || value > 2
+  fun isOff() = value.toInt() == 0 || value.toInt() == 2
 }
