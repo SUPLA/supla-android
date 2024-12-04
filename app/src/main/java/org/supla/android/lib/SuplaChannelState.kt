@@ -85,7 +85,7 @@ class SuplaChannelState(
     get() = hasField(FIELD_BRIDGENODESIGNALSTRENGTH).ifTrue { rawBridgeNodeSignalStrength.toInt() }
 
   val bridgeNodeSignalStrengthString: String?
-    get() = bridgeNodeSignalStrengthString?.let { "$it%" }
+    get() = bridgeNodeSignalStrength?.let { "$it%" }
 
   val uptime: Int?
     get() = hasField(FIELD_UPTIME).ifTrue { rawUptime }

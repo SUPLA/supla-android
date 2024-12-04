@@ -18,16 +18,23 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus;
+
 public class SuplaChannelValueUpdate {
 
   public boolean EOL;
 
   public int Id;
-  public boolean OnLine;
+
+  public SuplaChannelAvailabilityStatus AvailabilityStatus;
 
   public SuplaChannelValue Value;
 
   public SuplaChannelValueUpdate() {
     // This constructor is used by native code
+  }
+
+  public boolean isOnLine() {
+    return AvailabilityStatus == SuplaChannelAvailabilityStatus.ONLINE;
   }
 }

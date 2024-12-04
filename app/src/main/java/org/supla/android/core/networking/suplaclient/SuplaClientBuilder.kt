@@ -35,6 +35,7 @@ import org.supla.android.usecases.channelconfig.InsertChannelConfigUseCase
 import org.supla.android.usecases.channelrelation.DeleteRemovableChannelRelationsUseCase
 import org.supla.android.usecases.channelrelation.InsertChannelRelationForProfileUseCase
 import org.supla.android.usecases.channelrelation.MarkChannelRelationsAsRemovableUseCase
+import org.supla.android.usecases.channelstate.UpdateChannelStateUseCase
 import org.supla.android.usecases.group.UpdateChannelGroupTotalValueUseCase
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -64,6 +65,7 @@ data class SuplaClientDependencies @Inject constructor(
   val updateChannelUseCase: UpdateChannelUseCase,
   val updateChannelValueUseCase: UpdateChannelValueUseCase,
   val updateChannelExtendedValueUseCase: UpdateChannelExtendedValueUseCase,
+  val updateChannelStateUseCase: UpdateChannelStateUseCase,
 
   val appDatabase: AppDatabase,
   val measurementsDatabase: MeasurementsDatabase,

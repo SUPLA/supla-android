@@ -32,8 +32,8 @@
   <string name="add_device">Add I/O device</string>
   <string name="z_wave">Z-Wave bridge</string>
   <string name="help">Help</string>
-  <string name="menu_notifications" translatable="false">Notifications log</string>
-  <string name="channel_state_uptime">$1%d days $2%02d:$3%02d:$4%02d</string>
+  <string name="menu_notifications">Notifications log</string>
+  <string name="channel_state_uptime">%1$d days %2$02d:%3$02d:%4$02d</string>
 
   <string name="status_connecting">Connecting…</string>
   <string name="status_unknown_err">Unknown error</string>

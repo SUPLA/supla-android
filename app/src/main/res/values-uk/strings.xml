@@ -20,7 +20,7 @@
   <string name="z_wave">Міст z-wave</string>
   <string name="help">Довідка</string>
   <string name="menu_notifications">Історія сповіщень</string>
-  <string name="channel_state_uptime">$1%d дні $2%02d:$3%02d:$4%02d</string>
+  <string name="channel_state_uptime">%1$d дні %2$02d:%3$02d:%4$02d</string>
   <string name="status_connecting">Підключення...</string>
   <string name="status_unknown_err">Невідома помилка</string>
   <string name="status_temporarily_unavailable">Послуга тимчасово недоступна</string>

@@ -9,7 +9,7 @@
   <string name="settings">Configurações</string>
 
   <string name="menu_notifications">Histórico de Notificações</string>
-  <string name="channel_state_uptime">$1%d dias $2%02d:$3%02d:$4%02d</string>
+  <string name="channel_state_uptime">%1$d dias %2$02d:%3$02d:%4$02d</string>
   <string name="status_connecting">Está a ligar...</string>
   <string name="status_unknown_err">Erro indefinido</string>
   <string name="status_temporarily_unavailable">Serviço temporariamente indisponível</string>
