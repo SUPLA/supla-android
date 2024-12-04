@@ -96,7 +96,7 @@ class NoExtendedValueStateHandlerTest {
         totalForwardActiveEnergy = EnergyData("123.5 kWh"),
         currentMonthForwardActiveEnergy = monthForwardEnergy,
         currentMonthReversedActiveEnergy = monthReverseEnergy,
-        vectorBalancedValues = emptyMap()
+        vectorBalancedValues = null
       )
     )
   }
@@ -125,7 +125,7 @@ class NoExtendedValueStateHandlerTest {
       state.copy(
         online = true,
         totalForwardActiveEnergy = EnergyData("---"),
-        vectorBalancedValues = emptyMap()
+        vectorBalancedValues = null
       )
     )
   }
@@ -152,7 +152,7 @@ class NoExtendedValueStateHandlerTest {
       ElectricityMeterState(
         online = false,
         totalForwardActiveEnergy = EnergyData("---"),
-        vectorBalancedValues = emptyMap()
+        vectorBalancedValues = null
       )
     )
   }

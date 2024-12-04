@@ -19,6 +19,7 @@ package org.supla.android.testhelpers
 
 import io.mockk.every
 import io.mockk.mockk
+import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.android.db.AuthProfileItem
 import org.supla.android.lib.SuplaChannel
 import org.supla.android.lib.SuplaChannelRelation
@@ -52,7 +53,7 @@ fun suplaChannel(
   Func = function
   DefaultConfigCRC32 = crc32
   value?.let { Value = value }
-  OnLine = online
+  AvailabilityStatus = if (online) SuplaChannelAvailabilityStatus.ONLINE else SuplaChannelAvailabilityStatus.OFFLINE
   UserIcon = userIcon
   AltIcon = altIcon
 }
