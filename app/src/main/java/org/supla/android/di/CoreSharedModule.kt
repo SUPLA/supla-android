@@ -33,6 +33,7 @@ import org.supla.core.shared.usecase.channel.CheckOcrPhotoExistsUseCase
 import org.supla.core.shared.usecase.channel.GetChannelBatteryIconUseCase
 import org.supla.core.shared.usecase.channel.GetChannelDefaultCaptionUseCase
 import org.supla.core.shared.usecase.channel.GetChannelIssuesForListUseCase
+import org.supla.core.shared.usecase.channel.GetChannelIssuesForSlavesUseCase
 import org.supla.core.shared.usecase.channel.GetChannelLowBatteryIssueUseCase
 import org.supla.core.shared.usecase.channel.StoreChannelOcrPhotoUseCase
 import org.supla.core.shared.usecase.channel.ocr.OcrImageNamingProvider
@@ -74,6 +75,13 @@ class CoreSharedModule {
     getChannelLowBatteryIssueUseCase: GetChannelLowBatteryIssueUseCase,
     getChannelBatteryIconUseCase: GetChannelBatteryIconUseCase
   ) = GetChannelIssuesForListUseCase(getChannelLowBatteryIssueUseCase, getChannelBatteryIconUseCase)
+
+  @Singleton
+  @Provides
+  fun provideGetChannelIssuesForSlavesUseCase(
+    getChannelLowBatteryIssueUseCase: GetChannelLowBatteryIssueUseCase,
+    getChannelBatteryIconUseCase: GetChannelBatteryIconUseCase
+  ) = GetChannelIssuesForSlavesUseCase(getChannelLowBatteryIssueUseCase, getChannelBatteryIconUseCase)
 
   @Singleton
   @Provides
