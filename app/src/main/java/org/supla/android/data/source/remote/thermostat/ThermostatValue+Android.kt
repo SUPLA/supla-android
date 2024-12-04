@@ -17,12 +17,8 @@ package org.supla.android.data.source.remote.thermostat
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.R
 import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
-import org.supla.android.ui.lists.data.error
-import org.supla.android.ui.lists.data.warning
-import org.supla.core.shared.data.model.lists.ChannelIssueItem
 import org.supla.core.shared.data.model.thermostat.SuplaThermostatFlag
 import org.supla.core.shared.data.model.thermostat.ThermostatValue
 
@@ -33,15 +29,6 @@ fun ThermostatValue.getIndicatorIcon() = when {
   online && mode != SuplaHvacMode.OFF -> ThermostatIndicatorIcon.STANDBY
   online -> ThermostatIndicatorIcon.OFF
   else -> ThermostatIndicatorIcon.OFFLINE
-}
-
-fun ThermostatValue.getChannelIssues(): List<ChannelIssueItem> = when {
-  online && flags.contains(SuplaThermostatFlag.THERMOMETER_ERROR) -> listOf(ChannelIssueItem.error(R.string.thermostat_thermometer_error))
-  online && flags.contains(SuplaThermostatFlag.BATTERY_COVER_OPEN) -> listOf(
-    ChannelIssueItem.error(R.string.thermostat_battery_cover_open)
-  )
-  online && flags.contains(SuplaThermostatFlag.CLOCK_ERROR) -> listOf(ChannelIssueItem.warning(R.string.thermostat_clock_error))
-  else -> emptyList()
 }
 
 fun ThermostatValue.getSetpointText(valuesFormatter: ValuesFormatter): String {
