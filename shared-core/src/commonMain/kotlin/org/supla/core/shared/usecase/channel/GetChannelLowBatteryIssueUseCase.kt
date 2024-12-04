@@ -69,8 +69,12 @@ class GetChannelLowBatteryIssueUseCase(
       }
 
       val batteryInfo = child.channel.batteryInfo
-      batteryInfo?.level?.let {
-        if (it < applicationPreferences.batteryWarningLevel) {
+      batteryInfo?.level?.let { level ->
+        // May happen that same channel is linked twice via relation.
+        // In such a situation would be listed twice, `duplicate` is to avoid that.
+        val duplicate = list.map { it.id }.firstOrNull { it == child.channel.remoteId } != null
+
+        if (level < applicationPreferences.batteryWarningLevel && !duplicate) {
           list.add(
             BatteryIssue(
               name = getCaptionUseCase(child.channel),

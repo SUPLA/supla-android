@@ -17,6 +17,7 @@ package org.supla.android.usecases.channel
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import androidx.room.rxjava3.EmptyResultSetException
 import io.reactivex.rxjava3.core.Single
 import org.supla.android.Trace
 import org.supla.android.core.infrastructure.DateProvider
@@ -67,9 +68,10 @@ class UpdateChannelExtendedValueUseCase @Inject constructor(
         }
       }
       .onErrorResumeNext { throwable ->
-        if (throwable is NoSuchElementException) {
+        if (throwable is NoSuchElementException || throwable is EmptyResultSetException) {
           insert(channelId, suplaChannelExtendedValue)
         } else {
+          Trace.e(TAG, "Could not create/update channel extended value", throwable)
           Single.just(UpdateExtendedValueResult(EntityUpdateResult.ERROR, false))
         }
       }

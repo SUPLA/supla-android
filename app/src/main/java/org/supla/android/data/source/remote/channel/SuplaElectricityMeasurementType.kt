@@ -157,8 +157,11 @@ enum class SuplaElectricityMeasurementType(val rawValue: Int, val ordering: Int,
       FREQUENCY -> Value.Single(values.first())
       VOLTAGE -> Value.Double(values.min(), values.max())
       POWER_ACTIVE,
+      POWER_ACTIVE_KW,
       POWER_REACTIVE,
+      POWER_REACTIVE_KVAR,
       POWER_APPARENT,
+      POWER_APPARENT_KVA,
       FORWARD_ACTIVE_ENERGY,
       REVERSE_ACTIVE_ENERGY,
       FORWARD_REACTIVE_ENERGY,
