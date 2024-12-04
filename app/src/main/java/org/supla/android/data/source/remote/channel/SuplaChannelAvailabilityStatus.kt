@@ -17,7 +17,7 @@ package org.supla.android.data.source.remote.channel
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-enum class SuplaChannelAvailabilityStatus(val rawValue: Long) {
+enum class SuplaChannelAvailabilityStatus(val rawValue: Int) {
   ONLINE(1),
   OFFLINE(0),
   ONLINE_BUT_NOT_AVAILABLE(2)

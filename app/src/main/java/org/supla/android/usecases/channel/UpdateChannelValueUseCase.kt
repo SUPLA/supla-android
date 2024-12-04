@@ -37,7 +37,7 @@ class UpdateChannelValueUseCase @Inject constructor(
 ) {
 
   operator fun invoke(suplaChannelValueUpdate: SuplaChannelValueUpdate): Single<EntityUpdateResult> =
-    update(suplaChannelValueUpdate.Value, suplaChannelValueUpdate.Id, suplaChannelValueUpdate.OnLine)
+    update(suplaChannelValueUpdate.Value, suplaChannelValueUpdate.Id, suplaChannelValueUpdate.isOnLine)
 
   operator fun invoke(suplaChannel: SuplaChannel): Single<EntityUpdateResult> =
     update(suplaChannel.Value, suplaChannel.Id, suplaChannel.OnLine)

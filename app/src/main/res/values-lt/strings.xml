@@ -9,7 +9,7 @@
   <string name="add_device">Pridėti įrenginį</string>
   <string name="help">Pagalba</string>
   <string name="menu_notifications">Pranešimų istorija</string>
-  <string name="channel_state_uptime">$1%d dienos $2%02d:$3%02d:$4%02d</string>
+  <string name="channel_state_uptime">%1$d dienos %2$02d:%3$02d:%4$02d</string>
   <string name="status_connecting">Jungimasis...</string>
   <string name="status_unknown_err">Nenustatyta klaida</string>
   <string name="status_temporarily_unavailable">Paslauga laikinai nepasiekiama</string>

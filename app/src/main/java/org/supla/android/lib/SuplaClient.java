@@ -85,6 +85,7 @@ import org.supla.android.usecases.channelconfig.InsertChannelConfigUseCase;
 import org.supla.android.usecases.channelrelation.DeleteRemovableChannelRelationsUseCase;
 import org.supla.android.usecases.channelrelation.InsertChannelRelationForProfileUseCase;
 import org.supla.android.usecases.channelrelation.MarkChannelRelationsAsRemovableUseCase;
+import org.supla.android.usecases.channelstate.UpdateChannelStateUseCase;
 import org.supla.android.usecases.group.UpdateChannelGroupTotalValueUseCase;
 
 @SuppressWarnings("unused")
@@ -126,6 +127,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   private final UpdateChannelUseCase updateChannelUseCase;
   private final UpdateChannelValueUseCase updateChannelValueUseCase;
   private final UpdateChannelExtendedValueUseCase updateChannelExtendedValueUseCase;
+  private final UpdateChannelStateUseCase updateChannelStateUseCase;
   private final AppDatabase appDatabase;
   private final MeasurementsDatabase measurementsDatabase;
   private final ProfileIdHolder profileIdHolder;
@@ -155,6 +157,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     this.updateChannelUseCase = dependencies.getUpdateChannelUseCase();
     this.updateChannelValueUseCase = dependencies.getUpdateChannelValueUseCase();
     this.updateChannelExtendedValueUseCase = dependencies.getUpdateChannelExtendedValueUseCase();
+    this.updateChannelStateUseCase = dependencies.getUpdateChannelStateUseCase();
     this.appDatabase = dependencies.getAppDatabase();
     this.measurementsDatabase = dependencies.getMeasurementsDatabase();
     this.profileIdHolder = dependencies.getProfileIdHolder();
@@ -1090,7 +1093,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
             + " channel Location ID: "
             + channel.LocationID
             + " OnLine: "
-            + channel.OnLine
+            + channel.getOnLine()
             + " AltIcon: "
             + channel.AltIcon
             + " UserIcon: "
@@ -1271,7 +1274,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
             + " value: "
             + channelValueUpdate.Value
             + " online:"
-            + channelValueUpdate.OnLine
+            + channelValueUpdate.isOnLine()
             + " EOL:"
             + channelValueUpdate.EOL);
     if (updateChannelValueUseCase.invoke(channelValueUpdate).blockingGet()
@@ -1345,9 +1348,12 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   }
 
   private void onChannelState(SuplaChannelState state) {
+    Trace.d(log_tag, "onChannelState channelId: " + state.getChannelId());
+    updateChannelStateUseCase.invoke(state).blockingSubscribe();
     SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onChannelState);
     msg.setChannelState(state);
     sendMessage(msg);
+    updateEventsManager.emitChannelUpdate(state.getChannelId());
   }
 
   private void onChannelBasicCfg(SuplaChannelBasicCfg cfg) {
