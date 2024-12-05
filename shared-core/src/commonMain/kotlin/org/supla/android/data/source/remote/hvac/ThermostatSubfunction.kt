@@ -17,8 +17,20 @@ package org.supla.android.data.source.remote.hvac
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-enum class ThermostatSubfunction(value: Int) {
+enum class ThermostatSubfunction(private val value: Int) {
   NOT_SET(0),
   HEAT(1),
-  COOL(2)
+  COOL(2);
+
+  companion object {
+    fun from(value: Int): ThermostatSubfunction {
+      for (subfunction in entries) {
+        if (subfunction.value == value) {
+          return subfunction
+        }
+      }
+
+      return NOT_SET
+    }
+  }
 }
