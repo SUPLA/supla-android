@@ -21,17 +21,17 @@ import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.LocalizedStringId
 import org.supla.core.shared.infrastructure.localizedString
 
-sealed interface ChannelIssueItem {
+sealed class ChannelIssueItem(
   val icon: IssueIcon
-  val messages: List<LocalizedString>
-  val priority: Int
+) {
+
+  abstract val messages: List<LocalizedString>
+  abstract val priority: Int
 
   val message: LocalizedString
     get() = messages.firstOrNull() ?: LocalizedString.Empty
 
-  data class Warning(private val string: LocalizedString? = null) : ChannelIssueItem {
-    override val icon: IssueIcon
-      get() = IssueIcon.Warning
+  data class Warning(private val string: LocalizedString? = null) : ChannelIssueItem(IssueIcon.Warning) {
     override val messages: List<LocalizedString>
       get() = string?.let { listOf(it) } ?: emptyList()
     override val priority: Int
@@ -43,9 +43,7 @@ sealed interface ChannelIssueItem {
     }
   }
 
-  data class Error(private val string: LocalizedString? = null) : ChannelIssueItem {
-    override val icon: IssueIcon
-      get() = IssueIcon.Error
+  data class Error(private val string: LocalizedString? = null) : ChannelIssueItem(IssueIcon.Error) {
     override val messages: List<LocalizedString>
       get() = string?.let { listOf(it) } ?: emptyList()
     override val priority: Int
@@ -57,9 +55,7 @@ sealed interface ChannelIssueItem {
     }
   }
 
-  data class LowBattery(override val messages: List<LocalizedString>) : ChannelIssueItem {
-    override val icon: IssueIcon
-      get() = IssueIcon.Battery0
+  data class LowBattery(override val messages: List<LocalizedString>) : ChannelIssueItem(IssueIcon.Battery0) {
     override val priority: Int
       get() = 3
   }
