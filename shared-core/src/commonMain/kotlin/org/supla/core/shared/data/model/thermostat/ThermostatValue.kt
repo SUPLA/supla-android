@@ -23,6 +23,8 @@ import org.supla.core.shared.data.model.thermostat.SuplaThermostatFlag.HEAT_OR_C
 import org.supla.core.shared.extensions.toShort
 import org.supla.core.shared.extensions.toTemperature
 
+private const val THERMOSTAT_VALUE_LENGTH = 8
+
 @ExposedCopyVisibility
 data class ThermostatValue private constructor(
   val online: Boolean,
@@ -38,10 +40,14 @@ data class ThermostatValue private constructor(
 
   companion object {
     fun from(online: Boolean, bytes: ByteArray): ThermostatValue {
+      if (bytes.size < THERMOSTAT_VALUE_LENGTH) {
+        return ThermostatValue(online, ThermostatState(0), SuplaHvacMode.UNKNOWN, 0f, 0f, emptyList())
+      }
+
       return ThermostatValue(
         online = online,
         state = ThermostatState(bytes[0].toShort()),
-        mode = SuplaHvacMode.from(bytes[1]),
+        mode = SuplaHvacMode.from(bytes[1].toInt()),
         setpointTemperatureHeat = bytes.toTemperature(2, 3),
         setpointTemperatureCool = bytes.toTemperature(4, 5),
         flags = SuplaThermostatFlag.from(bytes.toShort(6, 7))

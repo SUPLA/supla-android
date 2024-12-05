@@ -31,9 +31,9 @@ enum class SuplaHvacMode(val value: Int) {
   CMD_SWITCH_TO_MANUAL(10);
 
   companion object {
-    fun from(byte: Byte): SuplaHvacMode {
+    fun from(byte: Int): SuplaHvacMode {
       for (state in entries) {
-        if (state.value == byte.toInt()) {
+        if (state.value == byte) {
           return state
         }
       }
