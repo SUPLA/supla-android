@@ -168,4 +168,23 @@ class GetChannelBatteryIconUseCaseTest {
     // then
     assertThat(icon).isEqualTo(IssueIcon.Battery)
   }
+
+  @Test
+  fun `should get battery icon when battery powered not set`() {
+    // given
+    val channelWithChildren: ChannelWithChildren = mockk {
+      every { channel } returns mockk {
+        every { batteryInfo } returns mockk {
+          every { batteryPowered } returns null
+          every { level } returns 50
+        }
+      }
+    }
+
+    // when
+    val icon = useCase.invoke(channelWithChildren)
+
+    // then
+    assertThat(icon).isEqualTo(IssueIcon.Battery50)
+  }
 }

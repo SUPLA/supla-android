@@ -20,6 +20,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.DefaultAlpha
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
@@ -29,12 +31,19 @@ import org.supla.android.images.ImageCache
 import org.supla.android.images.ImageId
 
 @Composable
-fun Image(drawableId: Int, modifier: Modifier = Modifier, contentDescription: String? = null, alpha: Float = DefaultAlpha) =
+fun Image(
+  drawableId: Int,
+  modifier: Modifier = Modifier,
+  contentDescription: String? = null,
+  alpha: Float = DefaultAlpha,
+  tint: Color? = null
+) =
   androidx.compose.foundation.Image(
     painter = painterResource(id = drawableId),
     contentDescription = contentDescription,
     modifier = modifier,
-    alpha = alpha
+    alpha = alpha,
+    colorFilter = tint?.let { ColorFilter.tint(it) }
   )
 
 @Composable

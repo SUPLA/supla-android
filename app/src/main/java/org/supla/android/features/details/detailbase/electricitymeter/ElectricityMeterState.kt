@@ -28,7 +28,8 @@ data class ElectricityMeterState(
   val currentMonthReversedActiveEnergy: EnergyData? = null,
   val phaseMeasurementTypes: List<SuplaElectricityMeasurementType> = emptyList(),
   val phaseMeasurementValues: List<PhaseWithMeasurements> = emptyList(),
-  val vectorBalancedValues: Map<SuplaElectricityMeasurementType, String>? = null
+  val vectorBalancedValues: Map<SuplaElectricityMeasurementType, String>? = null,
+  val showIntroduction: Boolean = false
 )
 
 fun ElectricityMeterState?.copyOrCreate(
@@ -40,7 +41,8 @@ fun ElectricityMeterState?.copyOrCreate(
   currentMonthReversedActiveEnergy: EnergyData? = null,
   phaseMeasurementTypes: List<SuplaElectricityMeasurementType> = emptyList(),
   phaseMeasurementValues: List<PhaseWithMeasurements> = emptyList(),
-  vectorBalancedValues: Map<SuplaElectricityMeasurementType, String>? = null
+  vectorBalancedValues: Map<SuplaElectricityMeasurementType, String>? = null,
+  showIntroduction: Boolean = false
 ): ElectricityMeterState =
   this?.copy(
     online = online,
@@ -51,7 +53,8 @@ fun ElectricityMeterState?.copyOrCreate(
     currentMonthReversedActiveEnergy = currentMonthReversedActiveEnergy,
     phaseMeasurementTypes = phaseMeasurementTypes,
     phaseMeasurementValues = phaseMeasurementValues,
-    vectorBalancedValues = vectorBalancedValues
+    vectorBalancedValues = vectorBalancedValues,
+    showIntroduction = showIntroduction
   ) ?: ElectricityMeterState(
     online = online,
     totalForwardActiveEnergy = totalForwardActiveEnergy,
@@ -61,5 +64,6 @@ fun ElectricityMeterState?.copyOrCreate(
     currentMonthReversedActiveEnergy = currentMonthReversedActiveEnergy,
     phaseMeasurementTypes = phaseMeasurementTypes,
     phaseMeasurementValues = phaseMeasurementValues,
-    vectorBalancedValues = vectorBalancedValues
+    vectorBalancedValues = vectorBalancedValues,
+    showIntroduction = showIntroduction
   )

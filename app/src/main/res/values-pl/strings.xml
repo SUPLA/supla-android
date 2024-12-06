@@ -722,6 +722,11 @@
   <string name="counter_photo_counter_area">Obszar licznika</string>
   <string name="counter_photo_original_photo">Zdjęcie oryginalne</string>
   <string name="counter_photo_settings">Konfiguracja w Cloud</string>
+  <string name="details_em_info_data_type">Dotknij tutaj, aby wybrać jak mają być grupowane dane (godziny, dni) lub wyświetlić rankingi.</string>
+  <string name="details_em_info_range">Tu ustawisz jaki zakres ma obejmować wyres, np. bieżący miesiąc lub ostatni rok.</string>
+  <string name="details_em_info_data_set_single_phase">Dotknij tutaj, aby wybrać co chcesz wyświetlić, np. energię zbilansowaną godzinowo lub wybrać fazy.</string>
+  <string name="details_em_info_swipe">Przesuń w lewo po więcej</string>
+  <string name="details_em_info_data_set_multiple_phase">Dotknij tutaj, aby zmienić rodzaj wyświetlanych danych, np. energię pobraną lub oddaną (o ile jest dostępna).</string>
 
   <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
     <item quantity="one">włączone</item>
@@ -732,7 +737,6 @@
     <item quantity="other">wyłączy</item>
   </plurals>
   <plurals name="day_pattern">
-    <item quantity="zero">%1$d dni</item>
     <item quantity="one">%1$d dzień</item>
     <item quantity="few">%1$d dni</item>
     <item quantity="many">%1$d dni</item>

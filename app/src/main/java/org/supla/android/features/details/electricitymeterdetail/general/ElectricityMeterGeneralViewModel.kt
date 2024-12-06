@@ -20,6 +20,7 @@ package org.supla.android.features.details.electricitymeterdetail.general
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.kotlin.subscribeBy
+import org.supla.android.Preferences
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
@@ -28,6 +29,7 @@ import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.events.DownloadEventsManager
 import org.supla.android.extensions.monthStart
 import org.supla.android.features.details.detailbase.electricitymeter.ElectricityMeterGeneralStateHandler
+import org.supla.android.features.details.detailbase.electricitymeter.ElectricityMeterState
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.DownloadChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
@@ -43,6 +45,7 @@ class ElectricityMeterGeneralViewModel @Inject constructor(
   private val readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
   private val downloadEventsManager: DownloadEventsManager,
   private val dateProvider: DateProvider,
+  private val preferences: Preferences,
   schedulers: SuplaSchedulers
 ) : BaseViewModel<ElectricityMeterGeneralViewModelState, ElectricityMeterGeneralViewEvent>(
   ElectricityMeterGeneralViewModelState(),
@@ -66,18 +69,23 @@ class ElectricityMeterGeneralViewModel @Inject constructor(
       .disposeBySelf()
   }
 
+  fun onIntroductionClose() {
+    preferences.setEmGeneralIntroductionShown()
+    updateState { it.copy(viewState = it.viewState.copy(showIntroduction = false)) }
+  }
+
   private fun handleChannel(channel: ChannelDataEntity, measurements: ElectricityMeasurements, cleanupDownloading: Boolean) {
     updateState { state ->
       if (!state.initialDataLoadStarted) {
         downloadChannelMeasurementsUseCase.invoke(channel.remoteId, channel.profileId, channel.function.value)
       }
 
-      electricityMeterGeneralStateHandler.updateState(state.viewState.electricityMeterState, channel, measurements)?.let {
-        val downloading = if (cleanupDownloading) false else state.viewState.electricityMeterState.currentMonthDownloading
+      electricityMeterGeneralStateHandler.updateState(state.viewState, channel, measurements)?.let {
+        val downloading = if (cleanupDownloading) false else state.viewState.currentMonthDownloading
         state.copy(
           remoteId = channel.remoteId,
           initialDataLoadStarted = true,
-          viewState = state.viewState.copy(electricityMeterState = it.copy(currentMonthDownloading = downloading))
+          viewState = it.copy(currentMonthDownloading = downloading)
         )
       } ?: state
     }
@@ -97,13 +105,7 @@ class ElectricityMeterGeneralViewModel @Inject constructor(
     when (downloadState) {
       is DownloadEventsManager.State.InProgress,
       is DownloadEventsManager.State.Started -> {
-        updateState {
-          it.copy(
-            viewState = it.viewState.copy(
-              electricityMeterState = it.viewState.electricityMeterState.copy(currentMonthDownloading = true)
-            )
-          )
-        }
+        updateState { it.copy(viewState = it.viewState.copy(currentMonthDownloading = true)) }
       }
 
       else -> {
@@ -118,5 +120,5 @@ sealed class ElectricityMeterGeneralViewEvent : ViewEvent
 data class ElectricityMeterGeneralViewModelState(
   val remoteId: Int = 0,
   val initialDataLoadStarted: Boolean = false,
-  val viewState: ElectricityMeterGeneralViewState = ElectricityMeterGeneralViewState()
+  val viewState: ElectricityMeterState = ElectricityMeterState()
 ) : ViewState()
