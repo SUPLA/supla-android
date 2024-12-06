@@ -51,7 +51,8 @@ class SwitchGeneralFragment : BaseComposeFragment<SwitchGeneralViewState, Switch
       SwitchGeneralView(
         state = modelState,
         onTurnOn = { viewModel.turnOn(item.remoteId, item.itemType) },
-        onTurnOff = { viewModel.turnOff(item.remoteId, item.itemType) }
+        onTurnOff = { viewModel.turnOff(item.remoteId, item.itemType) },
+        onIntroductionClose = viewModel::onIntroductionClose
       )
     }
   }

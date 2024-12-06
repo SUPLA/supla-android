@@ -19,12 +19,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import androidx.annotation.DimenRes
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,10 +34,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -49,23 +43,17 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.pullToRefresh
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
-import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import org.supla.android.R
@@ -93,7 +81,6 @@ import org.supla.android.features.details.detailbase.history.HistoryDetailViewSt
 import org.supla.android.images.ImageId
 import org.supla.android.ui.dialogs.DatePickerDialog
 import org.supla.android.ui.dialogs.TimePickerDialog
-import org.supla.android.ui.views.Image
 import org.supla.android.ui.views.SpinnerItem
 import org.supla.android.ui.views.TextField
 import org.supla.android.ui.views.TextSpinner
@@ -127,9 +114,7 @@ interface HistoryDetailProxy : BaseViewProxy<HistoryDetailViewState> {
 }
 
 @Composable
-fun HistoryDetail(viewModel: HistoryDetailProxy) {
-  val viewState by viewModel.getViewState().collectAsState()
-
+fun HistoryDetail(viewModel: HistoryDetailProxy, viewState: HistoryDetailViewState) {
   if (viewState.editDate != null) {
     DatePickerDialog(
       selectedDate = viewState.editDateValue,
@@ -225,36 +210,7 @@ private fun DataSetsAndFilters(viewState: HistoryDetailViewState, viewModel: His
     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
       DataSetsRow {
         viewState.chartData.sets.forEach { data ->
-          Column(
-            modifier = Modifier
-              .padding(start = Distance.default, end = Distance.default)
-              .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                enabled = data.dataSets.size == 1,
-                indication = ripple(),
-                onClick = { viewModel.showSelection(data.remoteId, data.dataSets[0].type) }
-              ),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(4.dp)
-          ) {
-            data.typeName?.let {
-              Text(text = it(LocalContext.current), style = MaterialTheme.typography.labelSmall)
-            }
-            Row(
-              verticalAlignment = Alignment.CenterVertically,
-              horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-              data.dataSets.forEach { set ->
-                DataSetItems(
-                  label = set.label,
-                  active = set.active,
-                  historyEnabled = viewState.showHistory,
-                  clickEnabled = data.dataSets.size > 1,
-                  onClick = { viewModel.showSelection(data.remoteId, set.type) }
-                )
-              }
-            }
-          }
+          DataSetContainer(data, viewState.showHistory) { remoteId, type -> viewModel.showSelection(remoteId, type) }
           Box(
             modifier = Modifier
               .fillMaxHeight()
@@ -314,89 +270,6 @@ private fun DataSetsRow(content: @Composable RowScope.() -> Unit) =
       .height(80.dp),
     verticalAlignment = Alignment.CenterVertically,
     content = content
-  )
-
-@Composable
-private fun DataSetItems(
-  label: HistoryDataSet.Label,
-  active: Boolean,
-  historyEnabled: Boolean,
-  clickEnabled: Boolean,
-  onClick: () -> Unit
-) {
-  Row(
-    horizontalArrangement = Arrangement.spacedBy(8.dp),
-    verticalAlignment = Alignment.CenterVertically,
-    modifier = Modifier
-      .height(dimensionResource(id = R.dimen.button_small_height))
-      .let {
-        if (clickEnabled) {
-          it.clickable(
-            interactionSource = remember { MutableInteractionSource() },
-            indication = ripple(),
-            onClick = onClick
-          )
-        } else {
-          it
-        }
-      }
-
-  ) {
-    when (label) {
-      is HistoryDataSet.Label.Single -> DataSetItem(
-        value = label.value,
-        showColor = label.value.presentColor,
-        active = historyEnabled && active
-      )
-
-      is HistoryDataSet.Label.Multiple ->
-        label.values.forEach {
-          if (!it.justColor) {
-            DataSetItem(value = it, showColor = it.presentColor, active = historyEnabled && active)
-          }
-        }
-    }
-  }
-}
-
-@Composable
-private fun DataSetItem(value: HistoryDataSet.LabelData, showColor: Boolean, active: Boolean) {
-  value.imageId?.let { DataSetIcon(imageId = it, value.iconSize) }
-  Column(horizontalAlignment = Alignment.CenterHorizontally) {
-    DataSetText(text = value.value)
-    if (showColor) {
-      Box(
-        modifier = Modifier
-          .width(50.dp)
-          .height(4.dp)
-          .let {
-            if (active) {
-              it.background(colorResource(id = value.color), shape = RoundedCornerShape(2.dp))
-            } else {
-              it
-            }
-          }
-          .border(1.dp, colorResource(id = value.color), RoundedCornerShape(2.dp))
-      )
-    }
-  }
-}
-
-@Composable
-private fun DataSetIcon(imageId: ImageId, @DimenRes iconSize: Int?) =
-  Image(
-    imageId = imageId,
-    contentDescription = null,
-    alignment = Alignment.Center,
-    modifier = Modifier.size(dimensionResource(id = iconSize ?: R.dimen.button_small_height))
-  )
-
-@Composable
-private fun DataSetText(text: String) =
-  Text(
-    text = text,
-    fontSize = 16.sp,
-    fontFamily = FontFamily(Font(R.font.quicksand_regular)),
   )
 
 @Composable
@@ -503,9 +376,12 @@ fun HourTextField(date: Date?, onClick: () -> Unit) {
 @Preview
 @Composable
 private fun Preview() {
+  val vm = PreviewProxy()
+  val viewState by vm.getViewState().collectAsState()
+
   SuplaTheme {
     Box(modifier = Modifier.background(MaterialTheme.colorScheme.background)) {
-      HistoryDetail(PreviewProxy())
+      HistoryDetail(vm, viewState)
     }
   }
 }

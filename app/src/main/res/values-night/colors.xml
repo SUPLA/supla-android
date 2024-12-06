@@ -66,7 +66,7 @@
     <color name="widget_spinner_item_background">#262627</color>
 
     <color name="dialog_scrim">#BB171717</color>
-    <color name="info_scrim">#BB171717</color>
+    <color name="info_scrim">#DD000000</color>
 
     <!-- Roller shutter -->
     <color name="roller_shutter_window_color">#363738</color>

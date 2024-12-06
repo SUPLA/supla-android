@@ -17,6 +17,7 @@ package org.supla.android.features.details.detailbase.electricitymeter
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.Electricity
@@ -41,7 +42,8 @@ import javax.inject.Singleton
 
 @Singleton
 class ElectricityMeterGeneralStateHandler @Inject constructor(
-  private val noExtendedValueStateHandler: NoExtendedValueStateHandler
+  private val noExtendedValueStateHandler: NoExtendedValueStateHandler,
+  private val preferences: Preferences
 ) {
   fun updateState(
     state: ElectricityMeterState?,
@@ -74,7 +76,8 @@ class ElectricityMeterGeneralStateHandler @Inject constructor(
       currentMonthReversedActiveEnergy = measurements?.toReverseEnergy(formatter, extendedValue),
       phaseMeasurementTypes = phaseTypes,
       phaseMeasurementValues = getPhaseData(phaseTypes, channel.flags, extendedValue, formatter),
-      vectorBalancedValues = vectorBalancedValues
+      vectorBalancedValues = vectorBalancedValues,
+      showIntroduction = preferences.shouldShowEmGeneralIntroduction() && moreThanOnePhase
     )
   }
 

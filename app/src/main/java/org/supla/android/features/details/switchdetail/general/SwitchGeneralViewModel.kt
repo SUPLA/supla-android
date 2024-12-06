@@ -22,6 +22,7 @@ import androidx.annotation.StringRes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.kotlin.subscribeBy
+import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.ui.BaseViewModel
@@ -66,6 +67,7 @@ class SwitchGeneralViewModel @Inject constructor(
   private val getChannelIconUseCase: GetChannelIconUseCase,
   private val downloadEventsManager: DownloadEventsManager,
   private val dateProvider: DateProvider,
+  private val preferences: Preferences,
   schedulers: SuplaSchedulers
 ) : BaseViewModel<SwitchGeneralViewState, SwitchGeneralViewEvent>(SwitchGeneralViewState(), schedulers) {
 
@@ -102,6 +104,11 @@ class SwitchGeneralViewModel @Inject constructor(
 
   fun turnOff(remoteId: Int, itemType: ItemType) {
     performAction(ActionId.TURN_OFF, itemType, remoteId)
+  }
+
+  fun onIntroductionClose() {
+    preferences.setEmGeneralIntroductionShown()
+    updateState { it.copy(electricityMeterState = it.electricityMeterState?.copy(showIntroduction = false)) }
   }
 
   private fun performAction(actionId: ActionId, itemType: ItemType, remoteId: Int) {

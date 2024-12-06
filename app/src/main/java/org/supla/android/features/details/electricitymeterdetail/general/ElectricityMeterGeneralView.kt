@@ -21,13 +21,10 @@ import androidx.compose.runtime.Composable
 import org.supla.android.features.details.detailbase.electricitymeter.ElectricityMeterMetricsView
 import org.supla.android.features.details.detailbase.electricitymeter.ElectricityMeterState
 
-data class ElectricityMeterGeneralViewState(
-  val electricityMeterState: ElectricityMeterState = ElectricityMeterState()
-)
-
 @Composable
 fun ElectricityMeterGeneralView(
-  state: ElectricityMeterGeneralViewState
+  state: ElectricityMeterState,
+  onIntroductionClose: () -> Unit
 ) {
-  ElectricityMeterMetricsView(state = state.electricityMeterState)
+  ElectricityMeterMetricsView(state = state, onIntroductionClose = onIntroductionClose)
 }

@@ -25,6 +25,7 @@ import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
+import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
@@ -38,6 +39,9 @@ import org.supla.android.usecases.channel.electricitymeter.ElectricityMeasuremen
 class ElectricityMeterGeneralStateHandlerTest {
   @MockK
   private lateinit var noExtendedValueStateHandler: NoExtendedValueStateHandler
+
+  @MockK
+  private lateinit var preferences: Preferences
 
   @InjectMockKs
   private lateinit var handler: ElectricityMeterGeneralStateHandler
@@ -90,6 +94,8 @@ class ElectricityMeterGeneralStateHandlerTest {
     }
     val state = ElectricityMeterState()
 
+    every { preferences.shouldShowEmGeneralIntroduction() } returns false
+
     // when
     val result = handler.updateState(state, channel)
 
@@ -137,6 +143,8 @@ class ElectricityMeterGeneralStateHandlerTest {
     }
     val measurements = ElectricityMeasurements(21f, 22f)
     val state = ElectricityMeterState()
+
+    every { preferences.shouldShowEmGeneralIntroduction() } returns false
 
     // when
     val result = handler.updateState(state, channel, measurements)
@@ -187,6 +195,8 @@ class ElectricityMeterGeneralStateHandlerTest {
     }
     val measurements = ElectricityMeasurements(21f, 22f)
     val state = ElectricityMeterState()
+
+    every { preferences.shouldShowEmGeneralIntroduction() } returns false
 
     // when
     val result = handler.updateState(state, channel, measurements)
