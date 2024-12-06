@@ -127,10 +127,10 @@ val ChannelDataEntity.shareable: org.supla.core.shared.data.model.general.Channe
 
 val ChannelDataEntity.batteryInfo: BatteryInfo?
   get() = stateEntity?.let {
-    val batteryPowered = it.batteryPowered ?: false
+    val batteryPowered = it.batteryPowered
     val level = it.batteryLevel
 
-    (batteryPowered || level != null).ifTrue {
+    (batteryPowered != null || level != null).ifTrue {
       BatteryInfo(batteryPowered, level, it.batteryHealth)
     }
   }
