@@ -36,6 +36,7 @@ import org.supla.android.usecases.channel.stringvalueprovider.DistanceSensorValu
 import org.supla.android.usecases.channel.stringvalueprovider.ElectricityMeterValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.GpmValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.HumidityAndTemperatureValueStringProvider
+import org.supla.android.usecases.channel.stringvalueprovider.HumidityValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.ImpulseCounterValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.PressureSensorValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.RainSensorValueStringProvider
@@ -75,6 +76,9 @@ class GetChannelValueStringUseCaseTest {
 
   @Mock
   private lateinit var rainSensorValueStringProvider: RainSensorValueStringProvider
+
+  @Mock
+  private lateinit var humidityValueStringProvider: HumidityValueStringProvider
 
   @InjectMocks
   private lateinit var useCase: GetChannelValueStringUseCase

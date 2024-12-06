@@ -51,7 +51,8 @@ fun ChannelBase.isIconValueItem(): Boolean =
     function == SuplaFunction.OPEN_SENSOR_GARAGE_DOOR ||
     function == SuplaFunction.OPEN_SENSOR_ROOF_WINDOW ||
     function == SuplaFunction.OPEN_SENSOR_ROLLER_SHUTTER ||
-    function == SuplaFunction.PRESSURE_SENSOR
+    function == SuplaFunction.PRESSURE_SENSOR ||
+    function == SuplaFunction.HUMIDITY
 
 fun ChannelBase.isSwitch(): Boolean =
   function == SuplaFunction.LIGHTSWITCH ||

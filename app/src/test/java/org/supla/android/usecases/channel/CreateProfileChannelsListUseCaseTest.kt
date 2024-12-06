@@ -186,7 +186,7 @@ class CreateProfileChannelsListUseCaseTest {
     locationRemoteId: Int,
     locationName: String = "$locationRemoteId",
     locationCollapsed: Boolean = false,
-    channelFunction: SuplaFunction = SuplaFunction.HUMIDITY
+    channelFunction: SuplaFunction = SuplaFunction.NONE
   ): ChannelDataEntity = mockk {
     every { remoteId } returns channelRemoteId
     every { function } returns channelFunction
