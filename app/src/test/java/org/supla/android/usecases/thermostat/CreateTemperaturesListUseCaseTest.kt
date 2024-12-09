@@ -37,7 +37,9 @@ import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.channel.ValueType
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.core.shared.data.model.channel.ChannelRelationType
+import org.supla.core.shared.data.model.general.Channel
 import org.supla.core.shared.data.model.general.SuplaFunction
+import org.supla.core.shared.usecase.channel.GetChannelBatteryIconUseCase
 
 class CreateTemperaturesListUseCaseTest {
 
@@ -46,6 +48,9 @@ class CreateTemperaturesListUseCaseTest {
 
   @MockK
   private lateinit var getChannelValueStringUseCase: GetChannelValueStringUseCase
+
+  @MockK
+  private lateinit var getChannelBatteryIconUseCase: GetChannelBatteryIconUseCase
 
   @InjectMockKs
   lateinit var useCase: CreateTemperaturesListUseCase
@@ -66,6 +71,8 @@ class CreateTemperaturesListUseCaseTest {
 
     val channelWithChildren: ChannelWithChildren = mockk()
     every { channelWithChildren.children } returns listOf(child1, child2)
+
+    every { getChannelBatteryIconUseCase.invoke(any<Channel>()) } returns null
 
     // when
     val temperatures = useCase.invoke(channelWithChildren)
@@ -104,6 +111,8 @@ class CreateTemperaturesListUseCaseTest {
     val channelWithChildren: ChannelWithChildren = mockk()
     every { channelWithChildren.children } returns listOf(child2)
 
+    every { getChannelBatteryIconUseCase.invoke(any<Channel>()) } returns null
+
     // when
     val temperatures = useCase.invoke(channelWithChildren)
 
@@ -130,6 +139,12 @@ class CreateTemperaturesListUseCaseTest {
     val channel = mockk<ChannelDataEntity>()
     every { channel.remoteId } returns remoteId
     every { channel.function } returns function
+    every { channel.caption } returns ""
+    every { channel.stateEntity } returns null
+    every { channel.isOnline() } returns true
+    every { channel.channelValueEntity } returns mockk {
+      every { getValueAsByteArray() } returns byteArrayOf()
+    }
 
     every { getChannelValueStringUseCase.invoke(channel, withUnit = false) } returns text
     secondValue?.let { every { getChannelValueStringUseCase.invoke(channel, ValueType.SECOND, withUnit = false) } returns secondValue }
