@@ -18,12 +18,15 @@ package org.supla.core.shared.usecase.channel
  */
 
 import org.supla.core.shared.data.model.channel.ChannelWithChildren
+import org.supla.core.shared.data.model.general.Channel
 import org.supla.core.shared.data.model.lists.IssueIcon
 
 class GetChannelBatteryIconUseCase {
 
-  operator fun invoke(channelWithChildren: ChannelWithChildren): IssueIcon? {
-    val batteryInfo = channelWithChildren.channel.batteryInfo
+  operator fun invoke(channelWithChildren: ChannelWithChildren): IssueIcon? = invoke(channelWithChildren.channel)
+
+  operator fun invoke(channel: Channel): IssueIcon? {
+    val batteryInfo = channel.batteryInfo
 
     return when {
       batteryInfo?.batteryPowered == false -> IssueIcon.BatteryNotUsed

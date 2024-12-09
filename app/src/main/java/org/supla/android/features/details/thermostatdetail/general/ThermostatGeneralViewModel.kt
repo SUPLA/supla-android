@@ -65,6 +65,7 @@ import org.supla.android.usecases.thermostat.CreateTemperaturesListUseCase
 import org.supla.core.shared.data.model.channel.ChannelRelationType
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.data.model.lists.ChannelIssueItem
+import org.supla.core.shared.data.model.lists.IssueIcon
 import org.supla.core.shared.data.model.thermostat.SuplaThermostatFlag
 import org.supla.core.shared.data.model.thermostat.ThermostatValue
 import org.supla.core.shared.extensions.fromSuplaTemperature
@@ -809,7 +810,8 @@ data class ThermostatGeneralViewState(
 data class MeasurementValue(
   val remoteId: Int,
   val imageId: ImageId,
-  val value: String
+  val value: String,
+  val batteryIcon: IssueIcon? = null
 )
 
 data class ThermostatGeneralViewModelState(

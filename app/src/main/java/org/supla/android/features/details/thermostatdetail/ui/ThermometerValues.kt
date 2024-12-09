@@ -17,8 +17,6 @@ package org.supla.android.features.details.thermostatdetail.ui
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.content.Context
-import android.util.AttributeSet
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -28,45 +26,29 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.AbstractComposeView
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.min
 import org.supla.android.R
+import org.supla.android.core.shared.data.model.lists.resource
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.features.details.thermostatdetail.general.MeasurementValue
 import org.supla.android.images.ImageId
 import org.supla.android.ui.views.Image
-
-class ThermometersValues @JvmOverloads constructor(
-  context: Context,
-  attrs: AttributeSet? = null,
-  defStyleAttr: Int = 0
-) : AbstractComposeView(context, attrs, defStyleAttr) {
-
-  private var temperatures: List<MeasurementValue> by mutableStateOf(emptyList())
-
-  @Composable
-  override fun Content() {
-    SuplaTheme {
-      ThermometersValues(temperatures = temperatures)
-    }
-  }
-}
+import org.supla.core.shared.data.model.lists.IssueIcon
 
 @Composable
 fun ThermometersValues(temperatures: List<MeasurementValue>) {
@@ -103,29 +85,51 @@ private fun TemperatureAndHumidityCell(temperature: MeasurementValue, weight: Fl
     modifier = Modifier
       .background(MaterialTheme.colorScheme.surface)
       .height(dimensionResource(id = R.dimen.detail_top_component))
-      .padding(vertical = dimensionResource(id = R.dimen.distance_small))
       .weight(weight),
     verticalAlignment = Alignment.CenterVertically,
-    horizontalArrangement = Arrangement.spacedBy(8.dp)
   ) {
     Spacer(modifier = Modifier.weight(1f))
+
+    val size = if (small) min(24.dp, availableWidthDp.div(4).dp) else min(36.dp, availableWidthDp.div(4).dp)
     ThermometerIcon(
       icon = temperature.imageId,
-      size = if (small) min(24.dp, availableWidthDp.div(4).dp) else min(36.dp, availableWidthDp.div(4).dp)
+      modifier = Modifier.size(size)
     )
+
+    Spacer(modifier = Modifier.width(8.dp))
+
     CompositionLocalProvider(LocalDensity provides Density(LocalDensity.current.density, fontScale = 1f)) {
       Text(
         text = temperature.value,
         style = if (small) MaterialTheme.typography.bodyLarge else MaterialTheme.typography.headlineMedium
       )
     }
+
+    temperature.batteryIcon?.let {
+      Image(
+        drawableId = it.resource,
+        modifier = Modifier
+          .rotate(90f)
+          .size(24.dp)
+      )
+    }
     Spacer(modifier = Modifier.weight(1f))
   }
 
 @Composable
-private fun ThermometerIcon(icon: ImageId, size: Dp = 48.dp) = Image(
+private fun ThermometerIcon(icon: ImageId, modifier: Modifier = Modifier.size(48.dp)) = Image(
   imageId = icon,
   contentDescription = "",
-  modifier = Modifier.size(size),
+  modifier = modifier,
   contentScale = ContentScale.Inside
 )
+
+@Preview(showBackground = true)
+@Composable
+private fun Preview() {
+  SuplaTheme {
+    ThermometersValues(
+      listOf(MeasurementValue(0, ImageId(R.drawable.thermometer), "21,5", IssueIcon.Battery50))
+    )
+  }
+}
