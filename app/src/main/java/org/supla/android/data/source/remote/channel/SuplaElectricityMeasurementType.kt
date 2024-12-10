@@ -38,13 +38,16 @@ enum class SuplaElectricityMeasurementType(val rawValue: Int, val ordering: Int,
   CURRENT_OVER_65A(0x1000, 4, R.string.details_em_current),
   FORWARD_ACTIVE_ENERGY_BALANCED(0x2000, 14, R.string.details_em_forward_active_energy),
   REVERSE_ACTIVE_ENERGY_BALANCED(0x4000, 15, R.string.details_em_reverse_active_energy),
+  VOLTAGE_PHASE_ANGLE_12(0x10000, 0, R.string.details_em_voltage_phase_angle_12),
+  VOLTAGE_PHASE_ANGLE_13(0x20000, 1, R.string.details_em_voltage_phase_angle_13),
+  VOLTAGE_PHASE_SEQUENCE(0x40000, 2, R.string.details_em_voltage_phase_sequence),
+  CURRENT_PHASE_SEQUENCE(0x80000, 3, R.string.details_em_current_phase_sequence),
   POWER_ACTIVE_KW(0x100000, 5, R.string.details_em_power_active),
   POWER_REACTIVE_KVAR(0x200000, 6, R.string.details_em_power_reactive),
   POWER_APPARENT_KVA(0x400000, 7, R.string.details_em_power_apparent);
 
   val phaseType: Boolean
     get() = when (this) {
-      FREQUENCY,
       VOLTAGE,
       CURRENT,
       POWER_ACTIVE,
@@ -66,7 +69,7 @@ enum class SuplaElectricityMeasurementType(val rawValue: Int, val ordering: Int,
 
   val provider: ((SuplaChannelElectricityMeterValue.Measurement?, SuplaChannelElectricityMeterValue.Summary) -> Float?)?
     get() = when (this) {
-      FREQUENCY -> { measurement, _ -> measurement?.freq?.toFloat() }
+      FREQUENCY -> { measurement, _ -> measurement?.frequency?.toFloat() }
       VOLTAGE -> { measurement, _ -> measurement?.voltage?.toFloat() }
       CURRENT -> { measurement, _ -> measurement?.current?.toFloat() }
       CURRENT_OVER_65A -> { measurement, _ -> measurement?.current?.toFloat()?.times(10) }
@@ -95,14 +98,14 @@ enum class SuplaElectricityMeasurementType(val rawValue: Int, val ordering: Int,
       POWER_REACTIVE, POWER_REACTIVE_KVAR -> "var"
       POWER_APPARENT, POWER_APPARENT_KVA -> "VA"
       POWER_FACTOR -> ""
-      PHASE_ANGLE -> "°"
+      VOLTAGE_PHASE_ANGLE_12, VOLTAGE_PHASE_ANGLE_13, PHASE_ANGLE -> "°"
       FORWARD_ACTIVE_ENERGY,
       REVERSE_ACTIVE_ENERGY,
       FORWARD_ACTIVE_ENERGY_BALANCED,
       REVERSE_ACTIVE_ENERGY_BALANCED -> "kWh"
 
-      FORWARD_REACTIVE_ENERGY,
-      REVERSE_REACTIVE_ENERGY -> "kvarh"
+      FORWARD_REACTIVE_ENERGY, REVERSE_REACTIVE_ENERGY -> "kvarh"
+      VOLTAGE_PHASE_SEQUENCE, CURRENT_PHASE_SEQUENCE -> ""
     }
 
   val precision: Int
@@ -120,6 +123,9 @@ enum class SuplaElectricityMeasurementType(val rawValue: Int, val ordering: Int,
 
       FORWARD_REACTIVE_ENERGY,
       REVERSE_REACTIVE_ENERGY -> 5
+
+      VOLTAGE_PHASE_ANGLE_12,
+      VOLTAGE_PHASE_ANGLE_13 -> 1
 
       else -> 0
     }
@@ -150,6 +156,10 @@ enum class SuplaElectricityMeasurementType(val rawValue: Int, val ordering: Int,
       REVERSE_ACTIVE_ENERGY_BALANCED -> R.string.details_em_reverse_active_energy_short
       FORWARD_REACTIVE_ENERGY -> R.string.details_em_forward_reactive_energy_short
       REVERSE_REACTIVE_ENERGY -> R.string.details_em_reverse_reactive_energy_short
+      VOLTAGE_PHASE_ANGLE_12 -> R.string.details_em_voltage_phase_angle_12
+      VOLTAGE_PHASE_ANGLE_13 -> R.string.details_em_voltage_phase_angle_13
+      VOLTAGE_PHASE_SEQUENCE -> R.string.details_em_voltage_phase_sequence
+      CURRENT_PHASE_SEQUENCE -> R.string.details_em_current_phase_sequence
     }
 
   fun merge(values: List<Float>): Value? =

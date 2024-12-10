@@ -29,6 +29,7 @@ data class ElectricityMeterState(
   val phaseMeasurementTypes: List<SuplaElectricityMeasurementType> = emptyList(),
   val phaseMeasurementValues: List<PhaseWithMeasurements> = emptyList(),
   val vectorBalancedValues: Map<SuplaElectricityMeasurementType, String>? = null,
+  val electricGridParameters: Map<SuplaElectricityMeasurementType, String>? = null,
   val showIntroduction: Boolean = false
 )
 
@@ -42,6 +43,7 @@ fun ElectricityMeterState?.copyOrCreate(
   phaseMeasurementTypes: List<SuplaElectricityMeasurementType> = emptyList(),
   phaseMeasurementValues: List<PhaseWithMeasurements> = emptyList(),
   vectorBalancedValues: Map<SuplaElectricityMeasurementType, String>? = null,
+  electricGridParameters: Map<SuplaElectricityMeasurementType, String>? = null,
   showIntroduction: Boolean = false
 ): ElectricityMeterState =
   this?.copy(
@@ -54,6 +56,7 @@ fun ElectricityMeterState?.copyOrCreate(
     phaseMeasurementTypes = phaseMeasurementTypes,
     phaseMeasurementValues = phaseMeasurementValues,
     vectorBalancedValues = vectorBalancedValues,
+    electricGridParameters = electricGridParameters,
     showIntroduction = showIntroduction
   ) ?: ElectricityMeterState(
     online = online,
@@ -65,5 +68,6 @@ fun ElectricityMeterState?.copyOrCreate(
     phaseMeasurementTypes = phaseMeasurementTypes,
     phaseMeasurementValues = phaseMeasurementValues,
     vectorBalancedValues = vectorBalancedValues,
+    electricGridParameters = electricGridParameters,
     showIntroduction = showIntroduction
   )

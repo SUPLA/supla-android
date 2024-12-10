@@ -22,21 +22,27 @@ import androidx.annotation.Nullable;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import org.supla.android.data.source.remote.electricitymeter.ElectricityMeterPhaseSequence;
 import org.supla.android.tools.UsedFromNativeCode;
 
 public class SuplaChannelElectricityMeterValue implements Serializable {
-  private double TotalCost;
-  private List<Summary> sumList;
-  private List<Measurement> mp1List;
-  private List<Measurement> mp2List;
-  private List<Measurement> mp3List;
-  private int MeasuredValues;
-  private int Period;
-  private double PricePerUnit;
-  private String Currency;
+
+  private final double totalCost;
+  private final List<Summary> sumList;
+  private final List<Measurement> mp1List;
+  private final List<Measurement> mp2List;
+  private final List<Measurement> mp3List;
+  private final int measuredValues;
+  private final int voltagePhaseAngle12;
+  private final int voltagePhaseAngle13;
+  private final ElectricityMeterPhaseSequence voltagePhaseSequence;
+  private final ElectricityMeterPhaseSequence currentPhaseSequence;
+  private final int period;
+  private final double pricePerUnit;
+  private final String currency;
   // Unit - kWh
-  private double TotalForwardActiveEnergyBalanced;
-  private double TotalReverseActiveEnergyBalanced;
+  private final double totalForwardActiveEnergyBalanced;
+  private final double totalReverseActiveEnergyBalanced;
 
   @UsedFromNativeCode
   SuplaChannelElectricityMeterValue(
@@ -55,17 +61,23 @@ public class SuplaChannelElectricityMeterValue implements Serializable {
     mp2List = new ArrayList<>();
     mp3List = new ArrayList<>();
 
-    this.MeasuredValues = MeasuredValues;
-    this.Period = Period;
-    this.TotalCost = TotalCost / 100.00;
-    this.PricePerUnit = PricePerUnit / 10000.00;
-    this.Currency = Currency;
-    this.TotalForwardActiveEnergyBalanced = TotalForwardActiveEnergyBalanced / 100000.00;
-    this.TotalReverseActiveEnergyBalanced = TotalReverseActiveEnergyBalanced / 100000.00;
+    this.measuredValues = MeasuredValues;
+    this.period = Period;
+    this.totalCost = TotalCost / 100.00;
+    this.pricePerUnit = PricePerUnit / 10000.00;
+    this.currency = Currency;
+    this.totalForwardActiveEnergyBalanced = TotalForwardActiveEnergyBalanced / 100000.00;
+    this.totalReverseActiveEnergyBalanced = TotalReverseActiveEnergyBalanced / 100000.00;
+    this.voltagePhaseAngle12 = VoltagePhaseAngle12;
+    this.voltagePhaseAngle13 = VoltagePhaseAngle13;
+    this.voltagePhaseSequence =
+        ElectricityMeterPhaseSequence.Companion.from((PhaseSequence & 0x1) == 0);
+    this.currentPhaseSequence =
+        ElectricityMeterPhaseSequence.Companion.from((PhaseSequence & 0x2) == 0);
   }
 
   public double getTotalCost() {
-    return TotalCost;
+    return totalCost;
   }
 
   @UsedFromNativeCode
@@ -94,36 +106,49 @@ public class SuplaChannelElectricityMeterValue implements Serializable {
   }
 
   public int getMeasuredValues() {
-    return MeasuredValues;
+    return measuredValues;
   }
 
   public double getPricePerUnit() {
-    return PricePerUnit;
+    return pricePerUnit;
   }
 
   public String getCurrency() {
-    return Currency;
+    return currency;
+  }
+
+  public int getVoltagePhaseAngle12() {
+    return voltagePhaseAngle12;
+  }
+
+  public int getVoltagePhaseAngle13() {
+    return voltagePhaseAngle13;
+  }
+
+  public ElectricityMeterPhaseSequence getVoltagePhaseSequence() {
+    return voltagePhaseSequence;
+  }
+
+  public ElectricityMeterPhaseSequence getCurrentPhaseSequence() {
+    return currentPhaseSequence;
   }
 
   public double getTotalForwardActiveEnergyBalanced() {
-    return TotalForwardActiveEnergyBalanced;
+    return totalForwardActiveEnergyBalanced;
   }
 
   public double getTotalReverseActiveEnergyBalanced() {
-    return TotalReverseActiveEnergyBalanced;
+    return totalReverseActiveEnergyBalanced;
   }
 
   @Nullable
   public Measurement getMeasurement(int Phase, int index) {
-    switch (Phase) {
-      case 1:
-        return (mp1List.size() > index) ? mp1List.get(index) : null;
-      case 2:
-        return (mp2List.size() > index) ? mp2List.get(index) : null;
-      case 3:
-        return (mp3List.size() > index) ? mp3List.get(index) : null;
-    }
-    return null;
+    return switch (Phase) {
+      case 1 -> (mp1List.size() > index) ? mp1List.get(index) : null;
+      case 2 -> (mp2List.size() > index) ? mp2List.get(index) : null;
+      case 3 -> (mp3List.size() > index) ? mp3List.get(index) : null;
+      default -> null;
+    };
   }
 
   public Summary getSummary() {
@@ -157,18 +182,19 @@ public class SuplaChannelElectricityMeterValue implements Serializable {
   }
 
   public class Measurement implements Serializable {
-    private double Freq; // Hz
-    private double Voltage; // V
-    private double Current; // A
-    private double PowerActive; // W
-    private double PowerReactive; // var
-    private double PowerApparent; // VA
-    private double PowerFactor;
-    private double PhaseAngle;
+
+    private final double frequency; // Hz
+    private final double voltage; // V
+    private final double current; // A
+    private final double powerActive; // W
+    private final double powerReactive; // var
+    private final double powerApparent; // VA
+    private final double powerFactor;
+    private final double phaseAngle;
 
     @UsedFromNativeCode
     Measurement(
-        int Freq,
+        int frequency,
         int Voltage,
         int Current,
         int PowerActive,
@@ -176,55 +202,56 @@ public class SuplaChannelElectricityMeterValue implements Serializable {
         int PowerApparent,
         int PowerFactor,
         int PhaseAngle) {
-      this.Freq = Freq / 100.00;
-      this.Voltage = Voltage / 100.00;
-      this.Current = Current / 1000.00;
-      this.PowerActive = PowerActive / 100000.00;
-      this.PowerReactive = PowerReactive / 100000.00;
-      this.PowerApparent = PowerApparent / 100000.00;
-      this.PowerFactor = PowerFactor / 1000.00;
-      this.PhaseAngle = PhaseAngle / 10.00;
+      this.frequency = frequency / 100.00;
+      this.voltage = Voltage / 100.00;
+      this.current = Current / 1000.00;
+      this.powerActive = PowerActive / 100000.00;
+      this.powerReactive = PowerReactive / 100000.00;
+      this.powerApparent = PowerApparent / 100000.00;
+      this.powerFactor = PowerFactor / 1000.00;
+      this.phaseAngle = PhaseAngle / 10.00;
     }
 
-    public double getFreq() {
-      return Freq;
+    public double getFrequency() {
+      return frequency;
     }
 
     public double getVoltage() {
-      return Voltage;
+      return voltage;
     }
 
     public double getCurrent() {
-      return Current;
+      return current;
     }
 
     public double getPowerActive() {
-      return PowerActive;
+      return powerActive;
     }
 
     public double getPowerReactive() {
-      return PowerReactive;
+      return powerReactive;
     }
 
     public double getPowerApparent() {
-      return PowerApparent;
+      return powerApparent;
     }
 
     public double getPowerFactor() {
-      return PowerFactor;
+      return powerFactor;
     }
 
     public double getPhaseAngle() {
-      return PhaseAngle;
+      return phaseAngle;
     }
   }
 
   public class Summary implements Serializable {
+
     // Unit - kWh
-    private double TotalForwardActiveEnergy;
-    private double TotalReverseActiveEnergy;
-    private double TotalForwardReactiveEnergy;
-    private double TotalReverseReactiveEnergy;
+    private final double totalForwardActiveEnergy;
+    private final double totalReverseActiveEnergy;
+    private final double totalForwardReactiveEnergy;
+    private final double totalReverseReactiveEnergy;
 
     @UsedFromNativeCode
     Summary(
@@ -232,10 +259,10 @@ public class SuplaChannelElectricityMeterValue implements Serializable {
         long TotalReverseActiveEnergy,
         long TotalForwardReactiveEnergy,
         long TotalReverseReactiveEnergy) {
-      this.TotalForwardActiveEnergy = TotalForwardActiveEnergy / 100000.00;
-      this.TotalReverseActiveEnergy = TotalReverseActiveEnergy / 100000.00;
-      this.TotalForwardReactiveEnergy = TotalForwardReactiveEnergy / 100000.00;
-      this.TotalReverseReactiveEnergy = TotalReverseReactiveEnergy / 100000.00;
+      this.totalForwardActiveEnergy = TotalForwardActiveEnergy / 100000.00;
+      this.totalReverseActiveEnergy = TotalReverseActiveEnergy / 100000.00;
+      this.totalForwardReactiveEnergy = TotalForwardReactiveEnergy / 100000.00;
+      this.totalReverseReactiveEnergy = TotalReverseReactiveEnergy / 100000.00;
     }
 
     Summary(
@@ -243,26 +270,26 @@ public class SuplaChannelElectricityMeterValue implements Serializable {
         double TotalReverseActiveEnergy,
         double TotalForwardReactiveEnergy,
         double TotalReverseReactiveEnergy) {
-      this.TotalForwardActiveEnergy = TotalForwardActiveEnergy;
-      this.TotalReverseActiveEnergy = TotalReverseActiveEnergy;
-      this.TotalForwardReactiveEnergy = TotalForwardReactiveEnergy;
-      this.TotalReverseReactiveEnergy = TotalReverseReactiveEnergy;
+      this.totalForwardActiveEnergy = TotalForwardActiveEnergy;
+      this.totalReverseActiveEnergy = TotalReverseActiveEnergy;
+      this.totalForwardReactiveEnergy = TotalForwardReactiveEnergy;
+      this.totalReverseReactiveEnergy = TotalReverseReactiveEnergy;
     }
 
     public double getTotalForwardActiveEnergy() {
-      return TotalForwardActiveEnergy;
+      return totalForwardActiveEnergy;
     }
 
     public double getTotalReverseActiveEnergy() {
-      return TotalReverseActiveEnergy;
+      return totalReverseActiveEnergy;
     }
 
     public double getTotalForwardReactiveEnergy() {
-      return TotalForwardReactiveEnergy;
+      return totalForwardReactiveEnergy;
     }
 
     public double getTotalReverseReactiveEnergy() {
-      return TotalReverseReactiveEnergy;
+      return totalReverseReactiveEnergy;
     }
   }
 }
