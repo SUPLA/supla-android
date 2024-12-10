@@ -17,6 +17,7 @@ package org.supla.android.features.details.detailbase.electricitymeter
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import androidx.annotation.StringRes
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.tween
@@ -32,7 +33,6 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -46,10 +46,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.TouchApp
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -67,7 +65,6 @@ import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -116,7 +113,6 @@ fun ElectricityMeterMetricsView(
         modifier = Modifier.padding(start = Distance.default, top = Distance.default, end = Distance.default),
         labelSuffix = stringResource(id = R.string.details_em_total_suffix)
       )
-//    RangeSelectionBox(modifier = Modifier.padding(start = Distance.default, top = Distance.small, end = Distance.default)) {}
       EnergySummaryBox(
         state.currentMonthForwardActiveEnergy,
         state.currentMonthReversedActiveEnergy,
@@ -129,7 +125,8 @@ fun ElectricityMeterMetricsView(
       when (state.online) {
         true -> {
           PhasesData(state.phaseMeasurementTypes, state.phaseMeasurementValues, horizontalScrollState)
-          state.vectorBalancedValues?.let { VectorBalancedData(data = it) }
+          state.vectorBalancedValues?.let { SingleValueTable(headerRes = R.string.em_phase_to_phase_balance, data = it) }
+          state.electricGridParameters?.let { SingleValueTable(headerRes = R.string.em_electric_grid_parameters, data = it) }
         }
 
         false -> ChannelOfflineView()
@@ -156,31 +153,6 @@ fun ElectricityMeterMetricsView(
           .onGloballyPositioned { infoHeight = it.size.height }
       )
     }
-  }
-}
-
-@Composable
-private fun RangeSelectionBox(
-  modifier: Modifier = Modifier,
-  onClick: () -> Unit
-) {
-  Row(
-    modifier = modifier
-      .suplaCard()
-      .clickable(interactionSource = remember { MutableInteractionSource() }, indication = ripple(), onClick = onClick)
-      .padding(horizontal = Distance.small, vertical = Distance.tiny),
-    verticalAlignment = Alignment.CenterVertically
-  ) {
-    Text(
-      text = stringResource(id = R.string.details_em_select_range),
-      style = MaterialTheme.typography.bodyMedium
-    )
-    Spacer(modifier = Modifier.weight(1f))
-    Icon(
-      painter = painterResource(id = R.drawable.ic_dropdown),
-      contentDescription = null,
-      tint = MaterialTheme.colorScheme.onBackground
-    )
   }
 }
 
@@ -447,9 +419,9 @@ private fun PhaseValueUnit(text: String = "", withMargin: Boolean = false, selec
   )
 
 @Composable
-private fun VectorBalancedData(data: Map<SuplaElectricityMeasurementType, String>) {
+private fun SingleValueTable(@StringRes headerRes: Int, data: Map<SuplaElectricityMeasurementType, String>) {
   Text(
-    text = stringResource(id = R.string.em_phase_to_phase_balance),
+    text = stringResource(id = headerRes),
     style = MaterialTheme.typography.labelMedium,
     modifier = Modifier.padding(start = Distance.small, top = Distance.default, end = Distance.small)
   )
@@ -649,6 +621,12 @@ private fun Preview() {
         vectorBalancedValues = mapOf(
           SuplaElectricityMeasurementType.FORWARD_ACTIVE_ENERGY_BALANCED to "1234,56",
           SuplaElectricityMeasurementType.REVERSE_ACTIVE_ENERGY_BALANCED to "2345,67"
+        ),
+        electricGridParameters = mapOf(
+          SuplaElectricityMeasurementType.VOLTAGE_PHASE_ANGLE_12 to "33",
+          SuplaElectricityMeasurementType.VOLTAGE_PHASE_ANGLE_13 to "34",
+          SuplaElectricityMeasurementType.CURRENT_PHASE_SEQUENCE to "1-2-3",
+          SuplaElectricityMeasurementType.VOLTAGE_PHASE_SEQUENCE to "1-3-2"
         )
       )
     )
