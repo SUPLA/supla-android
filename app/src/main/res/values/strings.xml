@@ -748,9 +748,9 @@
   <string name="counter_photo_settings" translatable="false">Cloud configuration</string>
   <string name="details_em_info_data_type" translatable="false">Here you can select how the data are grouped (hours, days) or display ranks.</string>
   <string name="details_em_info_range" translatable="false">Here you can select range for the data displayed on chart (like current month or last year).</string>
-  <string name="details_em_info_data_set_single_phase" translatable="false">Tap here to select what you want to see, like hourly energy balance or which phases.</string>
+  <string name="details_em_info_data_set_single_phase" translatable="false">Tap here to change the type of displayed data, like forward or reverse energy (if available).</string>
   <string name="details_em_info_swipe" translatable="false">Use swipe gesture to see more values</string>
-  <string name="details_em_info_data_set_multiple_phase" translatable="false">Tap here to change the type of displayed data, like forward or reverse energy (if available)</string>
+  <string name="details_em_info_data_set_multiple_phase" translatable="false">Tap here to select what you want to see, like hourly energy balance or which phases.</string>
   <string name="details_em_voltage_phase_angle_12" translatable="false">Voltage phase angle 1-2</string>
   <string name="details_em_voltage_phase_angle_13" translatable="false">Voltage phase angle 1-3</string>
   <string name="details_em_voltage_phase_sequence" translatable="false">Voltage phase sequence</string>

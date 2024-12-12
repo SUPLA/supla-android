@@ -724,11 +724,11 @@
   <string name="counter_photo_settings">Konfiguracja w Cloud</string>
   <string name="details_em_info_data_type">Dotknij tutaj, aby wybrać jak mają być grupowane dane (godziny, dni) lub wyświetlić rankingi.</string>
   <string name="details_em_info_range">Tu ustawisz jaki zakres ma obejmować wyres, np. bieżący miesiąc lub ostatni rok.</string>
-  <string name="details_em_info_data_set_single_phase">Dotknij tutaj, aby wybrać co chcesz wyświetlić, np. energię zbilansowaną godzinowo lub wybrać fazy.</string>
+  <string name="details_em_info_data_set_single_phase">Dotknij tutaj, aby zmienić rodzaj wyświetlanych danych, np. energię pobraną lub oddaną (o ile jest dostępna).</string>
   <string name="details_em_info_swipe">Przesuń w lewo po więcej</string>
-  <string name="details_em_info_data_set_multiple_phase">Dotknij tutaj, aby zmienić rodzaj wyświetlanych danych, np. energię pobraną lub oddaną (o ile jest dostępna).</string>
+  <string name="details_em_info_data_set_multiple_phase">Dotknij tutaj, aby wybrać co chcesz wyświetlić, np. energię zbilansowaną godzinowo lub wybrać fazy.</string>
   <string name="details_em_voltage_phase_angle_12">Kąt między napięciami faz 1–2</string>
-  <string name="details_em_voltage_phase_angle_13">Kąt mięszy napięciami faz 1–3</string>
+  <string name="details_em_voltage_phase_angle_13">Kąt między napięciami faz 1–3</string>
   <string name="details_em_voltage_phase_sequence">Kolejność faz napięcia</string>
   <string name="details_em_current_phase_sequence">Kolejność faz prądu</string>
   <string name="em_electric_grid_parameters">Parametry sieci elektrycznej</string>

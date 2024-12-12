@@ -83,7 +83,7 @@ class ElectricityMeterGeneralStateHandler @Inject constructor(
       phaseMeasurementValues = getPhaseData(phaseTypes, channel.flags, extendedValue, formatter),
       vectorBalancedValues = vectorBalancedValues,
       electricGridParameters = getGridParameters(channel.flags, extendedValue, formatter),
-      showIntroduction = preferences.shouldShowEmGeneralIntroduction() && moreThanOnePhase
+      showIntroduction = preferences.shouldShowEmGeneralIntroduction() && channel.isOnline() && moreThanOnePhase
     )
   }
 
