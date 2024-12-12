@@ -121,7 +121,7 @@ private fun FirstPageMultiplePhase(onClick: () -> Unit) {
       .padding(vertical = Distance.tiny)
   )
   InfoText(
-    textId = R.string.details_em_info_data_set_single_phase,
+    textId = R.string.details_em_info_data_set_multiple_phase,
     modifier = Modifier
       .fillMaxWidth()
       .padding(top = 100.dp, start = Distance.default, end = Distance.default)
@@ -149,7 +149,7 @@ private fun FirstPageSinglePhase(onClick: () -> Unit) {
       .padding(vertical = Distance.tiny)
   )
   InfoText(
-    textId = R.string.details_em_info_data_set_multiple_phase,
+    textId = R.string.details_em_info_data_set_single_phase,
     modifier = Modifier
       .fillMaxWidth()
       .padding(top = 100.dp, start = Distance.default, end = Distance.default)

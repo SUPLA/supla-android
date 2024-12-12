@@ -715,9 +715,9 @@
   <string name="associeted_with_push_error">Die Funktion des mit der Push-Benachrichtigung verknüpften Kanals kann nicht geändert werden.</string>
   <string name="details_em_info_data_type">Hier können Sie auswählen, wie die Daten gruppiert werden (Stunden, Tagen) oder Rangfolgen anzeigen.</string>
   <string name="details_em_info_range">Hier können Sie den Bereich für die im Diagramm angezeigten Daten auswählen (z. B. aktueller Monat oder letztes Jahr).</string>
-  <string name="details_em_info_data_set_single_phase">Tippen Sie hier, um auszuwählen, was Sie sehen möchten, beispielsweise die stündliche Energiebilanz oder die Phasen wählen.</string>
+  <string name="details_em_info_data_set_single_phase">Tippen Sie hier, um den Typ der angezeigten Daten zu ändern, z. B. Vorwärts- oder Rückwärtsenergie (falls verfügbar).</string>
   <string name="details_em_info_swipe">Wischen Sie nach links um mehr zu sehen</string>
-  <string name="details_em_info_data_set_multiple_phase">Tippen Sie hier, um den Typ der angezeigten Daten zu ändern, z. B. Vorwärts- oder Rückwärtsenergie (falls verfügbar).</string>
+  <string name="details_em_info_data_set_multiple_phase">Tippen Sie hier, um auszuwählen, was Sie sehen möchten, beispielsweise die stündliche Energiebilanz oder die Phasen wählen.</string>
   <string name="details_em_voltage_phase_angle_12">Spannungs-Phasewinkel U12</string>
   <string name="details_em_voltage_phase_angle_13">Spannungs-Phasewinkel U13</string>
   <string name="details_em_voltage_phase_sequence">Spannungs-Phasenfolge</string>
