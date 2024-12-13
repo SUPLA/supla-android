@@ -21,6 +21,7 @@ import org.supla.android.R
 import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.model.general.IconType
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.complex.shareable
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.features.details.thermostatdetail.general.MeasurementValue
 import org.supla.android.images.ImageId
@@ -28,13 +29,15 @@ import org.supla.android.lib.SuplaConst
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.channel.ValueType
 import org.supla.android.usecases.icon.GetChannelIconUseCase
+import org.supla.core.shared.usecase.channel.GetChannelBatteryIconUseCase
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class CreateTemperaturesListUseCase @Inject constructor(
   private val getChannelValueStringUseCase: GetChannelValueStringUseCase,
-  private val getChannelIconUseCase: GetChannelIconUseCase
+  private val getChannelIconUseCase: GetChannelIconUseCase,
+  private val getChannelBatteryIconUseCase: GetChannelBatteryIconUseCase
 ) {
 
   operator fun invoke(channelWithChildren: ChannelWithChildren): List<MeasurementValue> =
@@ -65,13 +68,15 @@ class CreateTemperaturesListUseCase @Inject constructor(
     MeasurementValue(
       remoteId = channelData.remoteId,
       imageId = getChannelIconUseCase(channelData),
-      value = getChannelValueStringUseCase(channelData, withUnit = false)
+      value = getChannelValueStringUseCase(channelData, withUnit = false),
+      batteryIcon = getChannelBatteryIconUseCase(channelData.shareable)
     )
 
   private fun getHumidityValue(channelData: ChannelDataEntity): MeasurementValue =
     MeasurementValue(
       remoteId = channelData.remoteId,
       imageId = getChannelIconUseCase(channelData, IconType.SECOND),
-      value = getChannelValueStringUseCase(channelData, ValueType.SECOND, withUnit = false)
+      value = getChannelValueStringUseCase(channelData, ValueType.SECOND, withUnit = false),
+      batteryIcon = getChannelBatteryIconUseCase(channelData.shareable)
     )
 }

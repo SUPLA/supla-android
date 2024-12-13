@@ -52,7 +52,7 @@ import org.supla.android.data.formatting.LocalPercentageFormatter
 import org.supla.android.data.source.remote.thermostat.ThermostatIndicatorIcon
 import org.supla.android.images.ImageId
 import org.supla.android.ui.lists.ListOnlineState
-import org.supla.android.ui.lists.data.message
+import org.supla.android.ui.lists.message
 import org.supla.android.ui.lists.onlineState
 import org.supla.android.ui.views.Image
 import org.supla.android.ui.views.list.ListItemDot
@@ -63,7 +63,8 @@ import org.supla.android.ui.views.list.components.ListItemTitle
 import org.supla.android.ui.views.list.components.ListItemValue
 import org.supla.android.ui.views.list.components.SetpointIndicator
 import org.supla.android.ui.views.list.components.SetpointText
-import org.supla.core.shared.data.model.lists.ChannelIssueItem
+import org.supla.core.shared.data.model.lists.IssueIcon
+import org.supla.core.shared.data.model.lists.ListItemIssues
 
 data class ThermostatSlavesListViewState(
   val master: ThermostatData? = null,
@@ -79,7 +80,7 @@ data class ThermostatData(
   val currentPower: Float?,
   val value: String,
   val indicatorIcon: ThermostatIndicatorIcon,
-  val channelIssueItem: List<ChannelIssueItem>,
+  val channelIssueItem: ListItemIssues,
   val showChannelStateIcon: Boolean,
   val subValue: String? = null,
   val pumpSwitchIcon: ImageId? = null,
@@ -166,13 +167,14 @@ private fun SlaveRow(slave: ThermostatData, scale: Float, onShowMessage: (String
       horizontalArrangement = Arrangement.spacedBy(Distance.small),
       modifier = Modifier.align(Alignment.CenterEnd)
     ) {
-      slave.channelIssueItem.firstOrNull()?.let {
+      slave.channelIssueItem.icons.firstOrNull()?.let {
         val message = slave.channelIssueItem.message(LocalContext.current)
         ListItemIssueIcon(
-          icon = it.icon,
+          icon = it,
           modifier = Modifier.clickable(
             interactionSource = remember { MutableInteractionSource() },
             indication = ripple(),
+            enabled = slave.channelIssueItem.hasMessage(),
             onClick = { onShowMessage(message) }
           )
         )
@@ -210,7 +212,7 @@ private fun sampleSlave(channelId: Int) = ThermostatData(
   25f,
   "22,7°C",
   ThermostatIndicatorIcon.HEATING,
-  listOf(ChannelIssueItem.Warning()),
+  ListItemIssues(listOf(IssueIcon.Warning)),
   true,
   pumpSwitchIcon = ImageId(R.drawable.fnc_pump_switch_on),
   sourceSwitchIcon = ImageId(R.drawable.fnc_heat_or_cold_source_switch_off)

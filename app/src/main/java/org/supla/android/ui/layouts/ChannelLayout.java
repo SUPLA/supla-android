@@ -45,6 +45,7 @@ import org.supla.android.R;
 import org.supla.android.SuplaApp;
 import org.supla.android.SuplaChannelStatus;
 import org.supla.android.SuplaWarningIcon;
+import org.supla.android.core.shared.LocalizedStringIdExtensionsKt;
 import org.supla.android.data.model.general.IconType;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
@@ -61,6 +62,9 @@ import org.supla.android.lib.SuplaTimerState;
 import org.supla.android.ui.lists.SlideableItem;
 import org.supla.android.ui.lists.SwapableListItem;
 import org.supla.android.usecases.group.GetGroupActivePercentageUseCase;
+import org.supla.core.shared.data.model.general.SuplaFunction;
+import org.supla.core.shared.infrastructure.LocalizedStringId;
+import org.supla.core.shared.usecase.GetChannelActionStringUseCase;
 
 @AndroidEntryPoint
 public class ChannelLayout extends LinearLayout implements SlideableItem, SwapableListItem {
@@ -68,6 +72,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
   @Inject UpdateEventsManager eventsManager;
   @Inject DurationTimerHelper durationTimerHelper;
   @Inject GetGroupActivePercentageUseCase getGroupActivePercentageUseCase;
+  @Inject GetChannelActionStringUseCase getChannelActionStringUseCase;
 
   private ChannelBase channelBase;
   private int mFunc;
@@ -677,38 +682,12 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
     }
 
     {
-      int lidx = -1;
-      int ridx = -1;
-
-      switch (mFunc) {
-        case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK:
-        case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK:
-          ridx = R.string.channel_btn_open;
-          break;
-
-        case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE:
-        case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR:
-          ridx = R.string.channel_btn_openclose;
-          break;
-
-        case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
-        case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
-        case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
-        case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING:
-        case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
-        case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
-        case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
-          ridx = R.string.channel_btn_on;
-          lidx = R.string.channel_btn_off;
-          break;
-
-        case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
-        case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
-        case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW:
-          ridx = R.string.channel_btn_open;
-          lidx = R.string.channel_btn_close;
-          break;
-      }
+      LocalizedStringId left =
+          getChannelActionStringUseCase.leftButton(SuplaFunction.Companion.from(mFunc));
+      int lidx = left != null ? LocalizedStringIdExtensionsKt.getResourceId(left) : -1;
+      LocalizedStringId right =
+          getChannelActionStringUseCase.rightButton(SuplaFunction.Companion.from(mFunc));
+      int ridx = right != null ? LocalizedStringIdExtensionsKt.getResourceId(right) : -1;
 
       setRightBtnText(ridx == -1 ? "" : getResources().getString(ridx));
       setLeftBtnText(lidx == -1 ? "" : getResources().getString(lidx));

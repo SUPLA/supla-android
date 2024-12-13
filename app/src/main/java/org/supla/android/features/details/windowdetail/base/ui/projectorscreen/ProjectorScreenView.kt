@@ -53,6 +53,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
+import org.supla.android.core.branding.Configuration
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.extensions.guardLet
@@ -72,8 +73,8 @@ fun ProjectorScreenView(
 ) {
   val (windowDimens, updateDimens) = remember { mutableStateOf<RuntimeDimens?>(null) }
   val moveState = remember { mutableStateOf(MoveState()) }
-  val logoPainter = painterResource(id = R.drawable.logo)
-  val logoColor = colorResource(id = R.color.primary)
+  val logoPainter = painterResource(id = Configuration.ProjectorScreen.LOGO_RESOURCE)
+  val logoColor = Configuration.ProjectorScreen.COLOR_FILLER?.let { colorResource(id = it) }
   val colors = ProjectorScreenColors.standard()
 
   Canvas(
@@ -163,7 +164,7 @@ private fun drawHandle(color: Color, bottomRect: Rect) {
 }
 
 context(DrawScope)
-private fun drawLogo(logoPainter: Painter, logoColor: Color, windowDimens: RuntimeDimens, screenHeight: Float, bottomRect: Rect) {
+private fun drawLogo(logoPainter: Painter, logoColor: Color?, windowDimens: RuntimeDimens, screenHeight: Float, bottomRect: Rect) {
   with(logoPainter) {
     val verticalCorrection = windowDimens.maxScreenHeight.minus(screenHeight)
     clipRect(
@@ -173,7 +174,7 @@ private fun drawLogo(logoPainter: Painter, logoColor: Color, windowDimens: Runti
       bottom = bottomRect.top
     ) {
       translate(left = windowDimens.logoRect.left, top = windowDimens.logoRect.top - verticalCorrection) {
-        draw(size = windowDimens.logoRect.size, colorFilter = ColorFilter.tint(logoColor), alpha = 0.2f)
+        draw(size = windowDimens.logoRect.size, colorFilter = logoColor?.let { ColorFilter.tint(it) }, alpha = 0.2f)
       }
     }
   }
@@ -205,8 +206,8 @@ object DefaultDimens {
   const val BOTTOM_RECT_WIDTH = 304f
   const val SCREEN_WIDTH = 288f
 
-  const val LOGO_WIDTH = 120f
-  const val LOGO_HEIGHT = 137f
+  const val LOGO_WIDTH = Configuration.ProjectorScreen.LOGO_WIDTH
+  const val LOGO_HEIGHT = Configuration.ProjectorScreen.LOGO_HEIGHT
   const val LOGO_TOP_MARGIN = 50f
 }
 

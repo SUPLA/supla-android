@@ -1,4 +1,7 @@
-package org.supla.android.lib;
+package org.supla.android.lib
+
+import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
+import org.supla.android.tools.UsedFromNativeCode
 
 /*
 Copyright (C) AC SOFTWARE SP. Z O.O.
@@ -18,20 +21,32 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-public class SuplaChannelBase {
+open class SuplaChannelBase @UsedFromNativeCode constructor() {
+  @JvmField
+  var EOL: Boolean = false
 
-  public boolean EOL;
+  @JvmField
+  var Id: Int = 0
 
-  public int Id;
-  public int LocationID;
-  public int Func;
-  public int AltIcon;
-  public int UserIcon;
-  public long Flags;
-  public boolean OnLine;
-  public String Caption;
+  @JvmField
+  var LocationID: Int = 0
 
-  public SuplaChannelBase() {
-    // This constructor is used by native code
-  }
+  @JvmField
+  var Func: Int = 0
+
+  @JvmField
+  var AltIcon: Int = 0
+
+  @JvmField
+  var UserIcon: Int = 0
+
+  @JvmField
+  var Flags: Long = 0
+  var AvailabilityStatus: SuplaChannelAvailabilityStatus? = null
+
+  @JvmField
+  var Caption: String = ""
+
+  val OnLine: Boolean
+    get() = AvailabilityStatus == SuplaChannelAvailabilityStatus.ONLINE
 }

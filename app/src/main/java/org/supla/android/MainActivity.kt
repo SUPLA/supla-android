@@ -34,7 +34,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
-import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -49,6 +48,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.kotlin.subscribeBy
+import org.supla.android.core.branding.Configuration
 import org.supla.android.core.networking.suplaclient.SuplaClientState
 import org.supla.android.core.networking.suplaclient.SuplaClientStateHolder
 import org.supla.android.core.notifications.NotificationsHelper
@@ -66,6 +66,7 @@ import org.supla.android.lib.SuplaEvent
 import org.supla.android.navigator.MainNavigator
 import org.supla.android.restapi.DownloadUserIcons
 import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.ui.AppBar
 import org.supla.android.ui.LoadableContent
 import org.supla.android.ui.ToolbarItemsClickHandler
 import org.supla.android.ui.ToolbarItemsController
@@ -93,7 +94,7 @@ class MainActivity :
   private var animatingMenu = false
   private val handler = Handler(Looper.getMainLooper())
 
-  private val toolbar: Toolbar by lazy { findViewById(R.id.supla_toolbar) }
+  private val toolbar: AppBar by lazy { findViewById(R.id.supla_toolbar) }
   private val menuLayout: MenuItemsLayout by lazy { findViewById(R.id.main_menu) }
   private val toolbarItemsClickHandlers = mutableListOf<ToolbarItemsClickHandler>()
   private val newGestureInfo: ConstraintLayout by lazy { findViewById(R.id.new_gesture_info) }
@@ -307,8 +308,10 @@ class MainActivity :
     }
     runDownloadTask()
 
-    RateApp(this).showDialog {
-      handler.postDelayed({ it.run() }, 1000)
+    if (Configuration.ASK_FOR_RATE) {
+      RateApp(this).showDialog {
+        handler.postDelayed({ it.run() }, 1000)
+      }
     }
   }
 
@@ -495,8 +498,8 @@ class MainActivity :
     setMenuVisible(false)
   }
 
-  override fun setToolbarTitle(title: String) {
-    toolbar.title = title
+  override fun setToolbarTitle(title: AppBar.Title) {
+    toolbar.setTitle(title)
   }
 
   override fun getLoadingIndicator(): View = findViewById(R.id.loadingIndicator)

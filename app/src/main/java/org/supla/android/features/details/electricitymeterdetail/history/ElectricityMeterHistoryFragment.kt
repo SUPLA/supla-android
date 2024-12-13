@@ -17,10 +17,15 @@ package org.supla.android.features.details.electricitymeterdetail.history
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.features.details.detailbase.history.BaseHistoryDetailFragment
+import org.supla.android.features.details.detailbase.history.HistoryDetailViewState
 
 private const val ARG_REMOTE_ID = "ARG_REMOTE_ID"
 
@@ -28,6 +33,19 @@ private const val ARG_REMOTE_ID = "ARG_REMOTE_ID"
 class ElectricityMeterHistoryFragment : BaseHistoryDetailFragment() {
 
   override val viewModel: ElectricityMeterHistoryViewModel by viewModels()
+
+  @Composable
+  override fun Content(viewState: HistoryDetailViewState) {
+    Box(modifier = Modifier.fillMaxSize()) {
+      super.Content(viewState)
+
+      viewState.introductionPages?.let {
+        ElectricityMeterHistoryIntroduction(it) {
+          viewModel.closeIntroduction()
+        }
+      }
+    }
+  }
 
   companion object {
     fun bundle(remoteId: Int) = bundleOf(ARG_REMOTE_ID to remoteId)

@@ -21,6 +21,9 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import org.supla.android.R
 import org.supla.android.core.ui.BaseFragment
@@ -45,10 +48,16 @@ abstract class BaseHistoryDetailFragment :
     viewModel.loadData(remoteId)
 
     binding.composeContent.setContent {
+      val viewState by viewModel.getViewState().collectAsState()
       SuplaTheme {
-        HistoryDetail(viewModel)
+        Content(viewState)
       }
     }
+  }
+
+  @Composable
+  open fun Content(viewState: HistoryDetailViewState) {
+    HistoryDetail(viewModel, viewState)
   }
 
   override fun onResume() {

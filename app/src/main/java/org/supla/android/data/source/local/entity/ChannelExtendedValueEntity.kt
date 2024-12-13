@@ -78,6 +78,8 @@ data class ChannelExtendedValueEntity(
     const val COLUMN_TIMER_START_TIME = "timer_start_time"
     const val COLUMN_PROFILE_ID = "profileid"
 
+    const val ALL_COLUMNS = "$COLUMN_ID, $COLUMN_CHANNEL_ID, $COLUMN_VALUE, $COLUMN_TIMER_START_TIME, $COLUMN_PROFILE_ID"
+
     val SQL = arrayOf(
       """
         CREATE TABLE $TABLE_NAME

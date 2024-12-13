@@ -10,6 +10,7 @@
   <string name="add_device">Pridať zariadenie</string>
 
   <string name="menu_notifications">História upozornení</string>
+  <string name="channel_state_uptime">%1$d dni %2$02d:%3$02d:%4$02d</string>
   <string name="status_connecting">Pripája sa...</string>
   <string name="status_unknown_err">Neznáma chyba</string>
   <string name="status_temporarily_unavailable">Služba je dočasne nedostupná</string>
@@ -651,7 +652,7 @@
   <string name="lock_screen_forgotten_code_title">Prístupový kód</string>
   <string name="lock_screen_forgotten_code_message">Ak si nepamätáte prístupový kód, odinštalujte aplikáciu z telefónu a potom ju znova nainštalujte. Po opätovnej inštalácii pridajte konfiguráciu účtu zo služby Supla Cloud.\n\nNevytvárajte nový účet. Údaje z histórie ani zariadenia nezmiznú.</string>
   <string name="lock_screen_forgotten_code_button">Rozumiem</string>
-  <string name="lock_screen_confirm_authorize_app">Zmena rozsahu povolenia</string>
+  <string name="lock_screen_confirm_authorize_range_change">Zmena rozsahu povolenia</string>
   <string name="pin_setup_use_biometric">Biometrické overovanie: </string>
   <string name="pin_setup_biometric_not_enrolled">Biometrické overovanie nebolo nakonfigurované. Ak chcete používať biometriu, najprv ju nakonfigurujte v nastaveniach systému.</string>
   <string name="biometric_prompt_subtitle">Odomknutie pomocou odtlačku prsta</string>

@@ -25,10 +25,12 @@ import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
+import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType
+import org.supla.android.data.source.remote.electricitymeter.ElectricityMeterPhaseSequence
 import org.supla.android.lib.SuplaChannelElectricityMeterValue
 import org.supla.android.lib.SuplaChannelElectricityMeterValue.Measurement
 import org.supla.android.lib.SuplaChannelElectricityMeterValue.Summary
@@ -38,6 +40,9 @@ import org.supla.android.usecases.channel.electricitymeter.ElectricityMeasuremen
 class ElectricityMeterGeneralStateHandlerTest {
   @MockK
   private lateinit var noExtendedValueStateHandler: NoExtendedValueStateHandler
+
+  @MockK
+  private lateinit var preferences: Preferences
 
   @InjectMockKs
   private lateinit var handler: ElectricityMeterGeneralStateHandler
@@ -90,6 +95,8 @@ class ElectricityMeterGeneralStateHandlerTest {
     }
     val state = ElectricityMeterState()
 
+    every { preferences.shouldShowEmGeneralIntroduction() } returns true
+
     // when
     val result = handler.updateState(state, channel)
 
@@ -99,17 +106,20 @@ class ElectricityMeterGeneralStateHandlerTest {
         online = true,
         totalForwardActiveEnergy = EnergyData("100.0 kWh", "200.00 PLN"),
         phaseMeasurementTypes = listOf(
-          SuplaElectricityMeasurementType.FREQUENCY,
           SuplaElectricityMeasurementType.VOLTAGE,
           SuplaElectricityMeasurementType.CURRENT,
           SuplaElectricityMeasurementType.FORWARD_ACTIVE_ENERGY
         ),
         phaseMeasurementValues = listOf(
-          phaseWithMeasurements(R.string.em_chart_all_phases, "10.00 ", "11 - 31 ", forwardActiveEnergy = "600.00000 "),
-          phaseWithMeasurements(R.string.details_em_phase1, "10.00 ", "11.00 ", "12.00 ", "100.00000 "),
-          phaseWithMeasurements(R.string.details_em_phase2, "20.00 ", "21.00 ", "22.00 ", "200.00000 "),
-          phaseWithMeasurements(R.string.details_em_phase3, "30.00 ", "31.00 ", "32.00 ", "300.00000 ")
-        )
+          phaseWithMeasurements(R.string.em_chart_all_phases, "11 - 31 ", forwardActiveEnergy = "600.00000 "),
+          phaseWithMeasurements(R.string.details_em_phase1, "11.00 ", "12.00 ", "100.00000 "),
+          phaseWithMeasurements(R.string.details_em_phase2, "21.00 ", "22.00 ", "200.00000 "),
+          phaseWithMeasurements(R.string.details_em_phase3, "31.00 ", "32.00 ", "300.00000 ")
+        ),
+        electricGridParameters = mapOf(
+          SuplaElectricityMeasurementType.FREQUENCY to "10.00 "
+        ),
+        showIntroduction = true
       )
     )
   }
@@ -118,7 +128,7 @@ class ElectricityMeterGeneralStateHandlerTest {
   fun `should update state - total reverse energy`() {
     // given
     val electricityMeterValue: SuplaChannelElectricityMeterValue = mockk {
-      every { measuredValues } returns (0x200 or 0x100)
+      every { measuredValues } returns (0x200 or 0x100 or 0x10000 or 0x20000)
       every { summary } returns mockk {
         every { totalForwardActiveEnergy } returns 98.0
         every { totalReverseActiveEnergy } returns 100.0
@@ -127,6 +137,8 @@ class ElectricityMeterGeneralStateHandlerTest {
       every { currency } returns "PLN"
       every { getMeasurement(1, 0) } returns mockMeasurement(1)
       every { getSummary(1) } returns mockSummary(1)
+      every { voltagePhaseAngle12 } returns 123
+      every { voltagePhaseAngle13 } returns 234
     }
     val channel: ChannelDataEntity = mockk {
       every { channelExtendedValueEntity } returns mockk {
@@ -137,6 +149,8 @@ class ElectricityMeterGeneralStateHandlerTest {
     }
     val measurements = ElectricityMeasurements(21f, 22f)
     val state = ElectricityMeterState()
+
+    every { preferences.shouldShowEmGeneralIntroduction() } returns false
 
     // when
     val result = handler.updateState(state, channel, measurements)
@@ -155,6 +169,10 @@ class ElectricityMeterGeneralStateHandlerTest {
         ),
         phaseMeasurementValues = listOf(
           phaseWithMeasurements(R.string.details_em_phase1, forwardActiveEnergy = "100.00000 ", reverseActiveEnergy = "101.00000 "),
+        ),
+        electricGridParameters = mapOf(
+          SuplaElectricityMeasurementType.VOLTAGE_PHASE_ANGLE_12 to "12.3 ",
+          SuplaElectricityMeasurementType.VOLTAGE_PHASE_ANGLE_13 to "23.4 "
         )
       )
     )
@@ -164,7 +182,7 @@ class ElectricityMeterGeneralStateHandlerTest {
   fun `should update state - total reverse energy without price`() {
     // given
     val electricityMeterValue: SuplaChannelElectricityMeterValue = mockk {
-      every { measuredValues } returns (0x4000 or 0x2000 or 0x200 or 0x100)
+      every { measuredValues } returns (0x4000 or 0x2000 or 0x200 or 0x100 or 0x40000 or 0x80000)
       every { summary } returns mockk {
         every { totalForwardActiveEnergy } returns 98.0
         every { totalReverseActiveEnergy } returns 100.0
@@ -177,6 +195,8 @@ class ElectricityMeterGeneralStateHandlerTest {
       every { getSummary(2) } returns mockSummary(2)
       every { totalForwardActiveEnergyBalanced } returns 111.1
       every { totalReverseActiveEnergyBalanced } returns 222.2
+      every { voltagePhaseSequence } returns ElectricityMeterPhaseSequence.CLOCKWISE
+      every { currentPhaseSequence } returns ElectricityMeterPhaseSequence.COUNTER_CLOCKWISE
     }
     val channel: ChannelDataEntity = mockk {
       every { channelExtendedValueEntity } returns mockk {
@@ -187,6 +207,8 @@ class ElectricityMeterGeneralStateHandlerTest {
     }
     val measurements = ElectricityMeasurements(21f, 22f)
     val state = ElectricityMeterState()
+
+    every { preferences.shouldShowEmGeneralIntroduction() } returns false
 
     // when
     val result = handler.updateState(state, channel, measurements)
@@ -211,6 +233,10 @@ class ElectricityMeterGeneralStateHandlerTest {
         vectorBalancedValues = mapOf(
           SuplaElectricityMeasurementType.FORWARD_ACTIVE_ENERGY_BALANCED to "111.1 ",
           SuplaElectricityMeasurementType.REVERSE_ACTIVE_ENERGY_BALANCED to "222.2 "
+        ),
+        electricGridParameters = mapOf(
+          SuplaElectricityMeasurementType.VOLTAGE_PHASE_SEQUENCE to "1-2-3",
+          SuplaElectricityMeasurementType.CURRENT_PHASE_SEQUENCE to "1-3-2"
         )
       )
     )
@@ -218,7 +244,7 @@ class ElectricityMeterGeneralStateHandlerTest {
 
   private fun mockMeasurement(phase: Int): Measurement =
     mockk {
-      every { freq } returns phase * 10.0
+      every { frequency } returns phase * 10.0
       every { voltage } returns phase * 10.0 + 1
       every { current } returns phase * 10.0 + 2
     }
@@ -240,7 +266,6 @@ class ElectricityMeterGeneralStateHandlerTest {
 
   private fun phaseWithMeasurements(
     phaseLabel: Int,
-    frequency: String? = null,
     voltage: String? = null,
     current: String? = null,
     forwardActiveEnergy: String? = null,
@@ -249,7 +274,6 @@ class ElectricityMeterGeneralStateHandlerTest {
     PhaseWithMeasurements(
       phase = phaseLabel,
       values = mutableMapOf<SuplaElectricityMeasurementType, String>().apply {
-        frequency?.let { put(SuplaElectricityMeasurementType.FREQUENCY, it) }
         voltage?.let { put(SuplaElectricityMeasurementType.VOLTAGE, it) }
         current?.let { put(SuplaElectricityMeasurementType.CURRENT, it) }
         forwardActiveEnergy?.let { put(SuplaElectricityMeasurementType.FORWARD_ACTIVE_ENERGY, it) }

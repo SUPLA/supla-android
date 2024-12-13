@@ -30,11 +30,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
+import org.supla.android.core.branding.Configuration
 import org.supla.android.core.ui.StringProvider
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
@@ -71,9 +73,9 @@ fun ConnectionStatusView(
       horizontalAlignment = Alignment.CenterHorizontally
     ) {
       Image(
-        painter = painterResource(id = R.drawable.logo_light),
+        painter = painterResource(id = Configuration.Status.LOGO_RESOURCE),
         contentDescription = stringResource(id = R.string.app_name),
-        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
+        colorFilter = Configuration.Status.COLOR_FILLER?.let { ColorFilter.tint(colorResource(it)) },
         modifier = Modifier.size(140.dp)
       )
       BodyMedium(stringRes = viewState.stateText.stringRes)

@@ -37,6 +37,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
+import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.StringProvider
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
@@ -46,12 +47,13 @@ import org.supla.android.ui.dialogs.DialogHeader
 import org.supla.android.ui.views.Separator
 import org.supla.android.ui.views.SeparatorStyle
 import org.supla.android.ui.views.buttons.OutlinedButton
+import org.supla.core.shared.infrastructure.LocalizedString
 
 data class StateDialogViewState(
   val remoteId: Int,
   val title: StringProvider,
   val loading: Boolean = true,
-  val values: Map<StateDialogItem, StringProvider> = emptyMap()
+  val values: Map<StateDialogItem, LocalizedString> = emptyMap()
 )
 
 @Composable
@@ -124,8 +126,8 @@ private fun Preview() {
         title = { "Dimmer" },
         loading = false,
         values = mapOf(
-          StateDialogItem.CHANNEL_ID to { "123456" },
-          StateDialogItem.BRIDGE_SIGNAL to { "100%" }
+          StateDialogItem.CHANNEL_ID to LocalizedString.Constant("123456"),
+          StateDialogItem.BRIDGE_SIGNAL to LocalizedString.Constant("100%")
         )
       ),
       onDismiss = {}

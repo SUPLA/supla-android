@@ -54,12 +54,16 @@ import org.supla.android.ui.views.tools.ShadowOrientation
 fun SwitchGeneralView(
   state: SwitchGeneralViewState,
   onTurnOn: () -> Unit = {},
-  onTurnOff: () -> Unit = {}
+  onTurnOff: () -> Unit = {},
+  onIntroductionClose: () -> Unit = {}
 ) {
   Column {
     if (state.electricityMeterState != null) {
       Box(modifier = Modifier.weight(1f)) {
-        ElectricityMeterMetricsView(state = state.electricityMeterState)
+        ElectricityMeterMetricsView(
+          state = state.electricityMeterState,
+          onIntroductionClose = onIntroductionClose
+        )
         Shadow(orientation = ShadowOrientation.STARTING_BOTTOM, modifier = Modifier.align(Alignment.BottomCenter))
       }
     } else {

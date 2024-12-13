@@ -18,7 +18,7 @@ package org.supla.core.shared.data.model.battery
  */
 
 data class BatteryInfo(
-  val batteryPowered: Boolean,
+  val batteryPowered: Boolean?,
   val level: Int?,
   val health: Int?
 )

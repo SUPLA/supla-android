@@ -34,11 +34,11 @@ sealed class UnlockAction(val messageId: Int? = null, val showToolbar: Boolean =
     private fun readResolve(): Any = TurnOffPin
   }
 
-  data object ConfirmAuthorizeApplication : UnlockAction(R.string.lock_screen_confirm_authorize_app) {
+  data object ConfirmAuthorizeApplication : UnlockAction(R.string.lock_screen_confirm_authorize_range_change) {
     private fun readResolve(): Any = ConfirmAuthorizeApplication
   }
 
-  data object ConfirmAuthorizeAccounts : UnlockAction(R.string.lock_screen_confirm_authorize_app) {
+  data object ConfirmAuthorizeAccounts : UnlockAction(R.string.lock_screen_confirm_authorize_range_change) {
     private fun readResolve(): Any = ConfirmAuthorizeAccounts
   }
 }

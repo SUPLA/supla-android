@@ -41,18 +41,13 @@ public class SuplaConnError {
 
   public String codeToString(Context context) {
 
-    int resid = 0;
+    int resId =
+        switch (Code) {
+          case SuplaConst.SUPLA_RESULT_HOST_NOT_FOUND -> R.string.err_hostnotfound;
+          case SuplaConst.SUPLA_RESULT_CANT_CONNECT_TO_HOST -> R.string.err_cantconnecttohost;
+          default -> 0;
+        };
 
-    switch (Code) {
-      case SuplaConst.SUPLA_RESULT_HOST_NOT_FOUND:
-        resid = R.string.err_hostnotfound;
-        break;
-
-      case SuplaConst.SUPLA_RESULT_CANT_CONNECT_TO_HOST:
-        resid = R.string.err_cantconnecttohost;
-        break;
-    }
-
-    return resid != 0 ? context.getResources().getString(resid) : Integer.valueOf(Code).toString();
+    return resId != 0 ? context.getResources().getString(resId) : Integer.valueOf(Code).toString();
   }
 }

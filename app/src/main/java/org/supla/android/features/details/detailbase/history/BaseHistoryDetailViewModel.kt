@@ -67,6 +67,7 @@ import org.supla.android.extensions.yearNo
 import org.supla.android.extensions.yearStart
 import org.supla.android.features.details.detailbase.history.ui.ChartDataSelectionDialogState
 import org.supla.android.features.details.detailbase.history.ui.HistoryDetailProxy
+import org.supla.android.features.details.electricitymeterdetail.history.IntroductionPage
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.views.SpinnerItem
 import org.supla.android.usecases.channel.DeleteChannelMeasurementsUseCase
@@ -586,7 +587,9 @@ data class HistoryDetailViewState(
   val showHistory: Boolean = true,
 
   val editDate: RangeValueType? = null,
-  val editHour: RangeValueType? = null
+  val editHour: RangeValueType? = null,
+
+  val introductionPages: List<IntroductionPage>? = null
 ) : ViewState() {
 
   private val dateFormatter = DateFormatter()

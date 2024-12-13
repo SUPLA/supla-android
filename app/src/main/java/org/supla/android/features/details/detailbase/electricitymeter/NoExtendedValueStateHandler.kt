@@ -51,7 +51,7 @@ class NoExtendedValueStateHandler @Inject constructor(
       currentMonthReversedActiveEnergy = measurements?.toReverseEnergy(formatter),
       phaseMeasurementTypes = emptyList(),
       phaseMeasurementValues = emptyList(),
-      vectorBalancedValues = emptyMap()
+      vectorBalancedValues = null
     )
   }
 }

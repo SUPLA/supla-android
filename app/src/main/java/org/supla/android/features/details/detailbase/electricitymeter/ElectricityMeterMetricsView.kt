@@ -17,40 +17,54 @@ package org.supla.android.features.details.detailbase.electricitymeter
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import androidx.annotation.StringRes
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.CubicBezierEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Icon
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.TouchApp
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -58,77 +72,96 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewFontScale
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType
+import org.supla.android.extensions.toPx
 import org.supla.android.ui.views.ChannelOfflineView
+import org.supla.android.ui.views.buttons.IconButton
 
 @Composable
 fun ElectricityMeterMetricsView(
   state: ElectricityMeterState,
+  onIntroductionClose: () -> Unit = {},
   modifier: Modifier = Modifier
 ) {
-  Column(
-    modifier = modifier
-      .background(MaterialTheme.colorScheme.background)
-      .verticalScroll(rememberScrollState())
-  ) {
-    EnergySummaryBox(
-      state.totalForwardActiveEnergy,
-      state.totalReversedActiveEnergy,
-      modifier = Modifier.padding(start = Distance.default, top = Distance.default, end = Distance.default),
-      labelSuffix = stringResource(id = R.string.details_em_total_suffix)
-    )
-//    RangeSelectionBox(modifier = Modifier.padding(start = Distance.default, top = Distance.small, end = Distance.default)) {}
-    EnergySummaryBox(
-      state.currentMonthForwardActiveEnergy,
-      state.currentMonthReversedActiveEnergy,
-      modifier = Modifier.padding(start = Distance.default, top = Distance.small, end = Distance.default),
-      labelSuffix = stringResource(id = R.string.details_em_current_month_suffix),
-      loading = state.currentMonthDownloading
-    )
-    when (state.online) {
-      true -> {
-        PhasesData(state.phaseMeasurementTypes, state.phaseMeasurementValues)
-        state.vectorBalancedValues?.let { VectorBalancedData(data = it) }
-      }
+  val horizontalScrollState = rememberScrollState()
+  val verticalScrollState = rememberScrollState()
 
-      false -> ChannelOfflineView()
-      null -> {}
+  val defaultDistanceInPx = Distance.small.toPx().toInt()
+  var tableStartY by remember { mutableIntStateOf(0) }
+  var infoHeight by remember { mutableIntStateOf(0) }
+  var scrollableHeight by remember { mutableIntStateOf(0) }
+
+  Box(
+    modifier = Modifier.onGloballyPositioned { scrollableHeight = it.size.height }
+  ) {
+    Column(
+      modifier = modifier
+        .background(MaterialTheme.colorScheme.background)
+        .verticalScroll(verticalScrollState)
+    ) {
+      EnergySummaryBox(
+        state.totalForwardActiveEnergy,
+        state.totalReversedActiveEnergy,
+        modifier = Modifier.padding(start = Distance.default, top = Distance.default, end = Distance.default),
+        labelSuffix = stringResource(id = R.string.details_em_total_suffix)
+      )
+      EnergySummaryBox(
+        state.currentMonthForwardActiveEnergy,
+        state.currentMonthReversedActiveEnergy,
+        modifier = Modifier
+          .padding(start = Distance.default, top = Distance.small, end = Distance.default)
+          .onGloballyPositioned { tableStartY = it.positionInParent().y.toInt() + it.size.height + defaultDistanceInPx },
+        labelSuffix = stringResource(id = R.string.details_em_current_month_suffix),
+        loading = state.currentMonthDownloading
+      )
+      when (state.online) {
+        true -> {
+          PhasesData(state.phaseMeasurementTypes, state.phaseMeasurementValues, horizontalScrollState)
+          state.vectorBalancedValues?.let { SingleValueTable(headerRes = R.string.em_phase_to_phase_balance, data = it) }
+          state.electricGridParameters?.let { SingleValueTable(headerRes = R.string.em_electric_grid_parameters, data = it) }
+        }
+
+        false -> ChannelOfflineView()
+        null -> {}
+      }
+    }
+
+    if (state.showIntroduction) {
+      Info(
+        scrollState = horizontalScrollState,
+        onClose = onIntroductionClose,
+        modifier = Modifier
+          .offset {
+            val area = scrollableHeight + verticalScrollState.value - tableStartY
+            if (area > infoHeight) {
+              IntOffset(0, 0)
+            } else if (area > 0) {
+              IntOffset(0, infoHeight - area)
+            } else {
+              IntOffset(0, infoHeight)
+            }
+          }
+          .align(Alignment.BottomCenter)
+          .onGloballyPositioned { infoHeight = it.size.height }
+      )
     }
   }
 }
 
 @Composable
-private fun RangeSelectionBox(
-  modifier: Modifier = Modifier,
-  onClick: () -> Unit
+private fun PhasesData(
+  measurementTypes: List<SuplaElectricityMeasurementType>,
+  phaseValues: List<PhaseWithMeasurements>,
+  scrollState: ScrollState
 ) {
-  Row(
-    modifier = modifier
-      .suplaCard()
-      .clickable(interactionSource = remember { MutableInteractionSource() }, indication = ripple(), onClick = onClick)
-      .padding(horizontal = Distance.small, vertical = Distance.tiny),
-    verticalAlignment = Alignment.CenterVertically
-  ) {
-    Text(
-      text = stringResource(id = R.string.details_em_select_range),
-      style = MaterialTheme.typography.bodyMedium
-    )
-    Spacer(modifier = Modifier.weight(1f))
-    Icon(
-      painter = painterResource(id = R.drawable.ic_dropdown),
-      contentDescription = null,
-      tint = MaterialTheme.colorScheme.onBackground
-    )
-  }
-}
-
-@Composable
-private fun PhasesData(measurementTypes: List<SuplaElectricityMeasurementType>, phaseValues: List<PhaseWithMeasurements>) {
   BoxWithConstraints(
     modifier = Modifier
       .padding(top = Distance.small)
@@ -147,7 +180,7 @@ private fun PhasesData(measurementTypes: List<SuplaElectricityMeasurementType>, 
             freeSpace = with(density) { width - it.size.width.toDp() }
           }
         }
-        .horizontalScroll(rememberScrollState())
+        .horizontalScroll(scrollState)
     ) {
       val showPhaseName = phaseValues.size > 1
       PhaseDataLabels(
@@ -386,9 +419,9 @@ private fun PhaseValueUnit(text: String = "", withMargin: Boolean = false, selec
   )
 
 @Composable
-private fun VectorBalancedData(data: Map<SuplaElectricityMeasurementType, String>) {
+private fun SingleValueTable(@StringRes headerRes: Int, data: Map<SuplaElectricityMeasurementType, String>) {
   Text(
-    text = stringResource(id = R.string.em_phase_to_phase_balance),
+    text = stringResource(id = headerRes),
     style = MaterialTheme.typography.labelMedium,
     modifier = Modifier.padding(start = Distance.small, top = Distance.default, end = Distance.small)
   )
@@ -448,6 +481,99 @@ private fun VectorBalancedDataValues(
 
 private fun ((SuplaElectricityMeasurementType) -> Unit).click(type: SuplaElectricityMeasurementType): () -> Unit = { this(type) }
 
+@Composable
+private fun Info(scrollState: ScrollState, onClose: () -> Unit, modifier: Modifier = Modifier) {
+  val offset = remember { Animatable(100.dp.toPx()) }
+  LaunchedEffect("Swipe animation") {
+    delay(2000)
+    while (true) {
+      launch {
+        scrollState.animateScrollBy(
+          100.dp.toPx(),
+          animationSpec = tween(durationMillis = 750, easing = CubicBezierEasing(0.5f, 0.0f, 0.3f, 1.0f))
+        )
+      }
+      launch {
+        offset.animateTo((-100).dp.toPx(), animationSpec = tween(durationMillis = 750, easing = CubicBezierEasing(0.5f, 0.0f, 0.3f, 1.0f)))
+      }
+      delay(750)
+      launch {
+        scrollState.animateScrollBy(
+          (-100).dp.toPx(),
+          animationSpec = tween(durationMillis = 750, easing = CubicBezierEasing(0.5f, 0.0f, 0.3f, 1.0f))
+        )
+      }
+      launch {
+        offset.animateTo(100.dp.toPx(), animationSpec = tween(durationMillis = 750, easing = CubicBezierEasing(0.5f, 0.0f, 0.3f, 1.0f)))
+      }
+      delay(2000)
+    }
+  }
+
+  Column(
+    modifier = modifier
+      .fillMaxWidth()
+  ) {
+    Box(
+      modifier = Modifier
+        .fillMaxWidth()
+        .height(30.dp)
+        .background(Brush.verticalGradient(listOf(Color.Transparent, colorResource(R.color.info_scrim))))
+    )
+    Box(
+      modifier = Modifier
+        .fillMaxWidth()
+        .background(colorResource(R.color.info_scrim))
+    ) {
+      IconButton(
+        R.drawable.ic_close,
+        modifier = Modifier
+          .padding(Distance.small)
+          .size(dimensionResource(R.dimen.icon_default_size))
+          .align(Alignment.TopEnd),
+        tint = MaterialTheme.colorScheme.onPrimary,
+        onClick = onClose
+      )
+      Box(
+        modifier = Modifier
+          .padding(bottom = 42.dp)
+          .width(200.dp)
+          .height(10.dp)
+          .background(
+            Brush.horizontalGradient(listOf(Color.Transparent, MaterialTheme.colorScheme.onPrimary)),
+            RoundedCornerShape(size = 5.dp)
+          )
+          .align(Alignment.BottomCenter)
+      )
+      androidx.compose.foundation.Image(
+        imageVector = Icons.Filled.TouchApp,
+        contentDescription = "",
+        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimary),
+        modifier = Modifier
+          .offset { IntOffset(offset.value.toInt(), 0) }
+          .padding(bottom = Distance.default, top = Distance.default)
+          .size(dimensionResource(R.dimen.icon_big_size))
+          .align(Alignment.BottomCenter)
+      )
+    }
+    Box(
+      modifier = Modifier
+        .fillMaxWidth()
+        .background(colorResource(R.color.info_scrim))
+    ) {
+      Text(
+        stringResource(R.string.details_em_info_swipe),
+        style = MaterialTheme.typography.bodyMedium,
+        color = MaterialTheme.colorScheme.onPrimary,
+        textAlign = TextAlign.Center,
+        modifier = Modifier
+          .fillMaxWidth()
+          .padding(start = Distance.default, end = Distance.default, bottom = Distance.small)
+      )
+    }
+  }
+}
+
 @Preview(showBackground = true)
 @PreviewScreenSizes
 @PreviewFontScale
@@ -495,6 +621,12 @@ private fun Preview() {
         vectorBalancedValues = mapOf(
           SuplaElectricityMeasurementType.FORWARD_ACTIVE_ENERGY_BALANCED to "1234,56",
           SuplaElectricityMeasurementType.REVERSE_ACTIVE_ENERGY_BALANCED to "2345,67"
+        ),
+        electricGridParameters = mapOf(
+          SuplaElectricityMeasurementType.VOLTAGE_PHASE_ANGLE_12 to "33",
+          SuplaElectricityMeasurementType.VOLTAGE_PHASE_ANGLE_13 to "34",
+          SuplaElectricityMeasurementType.CURRENT_PHASE_SEQUENCE to "1-2-3",
+          SuplaElectricityMeasurementType.VOLTAGE_PHASE_SEQUENCE to "1-3-2"
         )
       )
     )

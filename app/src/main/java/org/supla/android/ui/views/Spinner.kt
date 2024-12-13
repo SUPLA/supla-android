@@ -114,6 +114,7 @@ fun <T : SpinnerItem> TextSpinner(
   options: SingleSelectionList<T>,
   modifier: Modifier = Modifier,
   enabled: Boolean = true,
+  active: Boolean = true,
   labelTextColor: Color = colorResource(id = R.color.on_surface_variant),
   onOptionSelected: (selectedId: T) -> Unit
 ) {
@@ -130,7 +131,7 @@ fun <T : SpinnerItem> TextSpinner(
     }
     ExposedDropdownMenuBox(
       expanded = expanded,
-      onExpandedChange = { ifTrue(enabled) { expanded = it } },
+      onExpandedChange = { ifTrue(enabled && active) { expanded = it } },
       modifier = Modifier.height(24.dp)
     ) {
       Row(verticalAlignment = Alignment.CenterVertically) {
@@ -144,7 +145,7 @@ fun <T : SpinnerItem> TextSpinner(
         )
         SpinnerTrailingIcon(
           expanded = expanded,
-          enabled = enabled,
+          enabled = enabled && active,
           modifier = Modifier
             .width(16.dp)
             .height(8.dp)

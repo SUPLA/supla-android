@@ -9,6 +9,7 @@
   <string name="settings">Configurações</string>
 
   <string name="menu_notifications">Histórico de Notificações</string>
+  <string name="channel_state_uptime">%1$d dias %2$02d:%3$02d:%4$02d</string>
   <string name="status_connecting">Está a ligar...</string>
   <string name="status_unknown_err">Erro indefinido</string>
   <string name="status_temporarily_unavailable">Serviço temporariamente indisponível</string>
@@ -638,8 +639,9 @@
   <string name="lock_screen_forgotten_code">Não me lembro do código de acesso</string>
   <string name="lock_screen_forgotten_code_title">Código de acesso</string>
 
+  <string name="lock_screen_forgotten_code_message">Se não se lembrar do código de acesso, desinstale a aplicação do telefone e, em seguida, instale-a novamente. Os dados históricos e todos os dispositivos não serão perdidos.</string>
   <string name="lock_screen_forgotten_code_button">Entendo</string>
-  <string name="lock_screen_confirm_authorize_app">Alteração do intervalo de autorização</string>
+  <string name="lock_screen_confirm_authorize_range_change">Alteração do intervalo de autorização</string>
   <string name="pin_setup_use_biometric">Autenticação biométrica:</string>
   <string name="pin_setup_biometric_not_enrolled">A autenticação biométrica não foi configurada. Se deseja utilizar a biometria, configure-a primeiro nas definições do sistema.</string>
   <string name="biometric_prompt_subtitle">Desbloquear com a impressão digital</string>

@@ -10,6 +10,7 @@
   <string name="add_device">Προσθήκη συσκευής</string>
 
   <string name="menu_notifications">Ιστορικό ειδοποιήσεων</string>
+  <string name="channel_state_uptime">%1$d ημέρες %2$02d:%3$02d:%4$02d</string>
   <string name="status_connecting">Σύνδεση...</string>
   <string name="status_unknown_err">Άγνωστο σφάλμα</string>
   <string name="status_temporarily_unavailable">Υπηρεσία προσωρινά μη διαθέσιμη</string>
@@ -646,7 +647,7 @@
   <string name="lock_screen_forgotten_code_title">Κωδικός πρόσβασης</string>
   <string name="lock_screen_forgotten_code_message">Αν δεν θυμάστε τον κωδικό πρόσβασης, απεγκαταστήστε την εφαρμογή από το τηλέφωνό σας και, στη συνέχεια, εγκαταστήστε την ξανά. Μετά την επανεγκατάσταση, προσθέστε τη διαμόρφωση λογαριασμού από το Supla Cloud.\n\nΜην δημιουργείτε νέο λογαριασμό. Τα ιστορικά δεδομένα και όλες οι συσκευές δεν θα χαθούν.</string>
   <string name="lock_screen_forgotten_code_button">Καταλαβαίνω</string>
-  <string name="lock_screen_confirm_authorize_app">Αλλαγή του πεδίου εφαρμογής της άδειας</string>
+  <string name="lock_screen_confirm_authorize_range_change">Αλλαγή του πεδίου εφαρμογής της άδειας</string>
   <string name="pin_setup_use_biometric">Βιομετρικός έλεγχος ταυτότητας:</string>
   <string name="pin_setup_biometric_not_enrolled">Ο βιομετρικός έλεγχος ταυτότητας δεν έχει ρυθμιστεί. Αν θέλετε να χρησιμοποιήσετε βιομετρικά στοιχεία, ρυθμίστε τα πρώτα στις ρυθμίσεις συστήματος.</string>
   <string name="biometric_prompt_subtitle">Ξεκλείδωμα με το δακτυλικό σας αποτύπωμα</string>

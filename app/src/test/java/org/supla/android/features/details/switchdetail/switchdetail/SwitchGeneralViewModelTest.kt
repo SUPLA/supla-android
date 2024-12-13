@@ -30,6 +30,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.tuple
 import org.junit.Before
 import org.junit.Test
+import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.core.infrastructure.DateProvider
@@ -99,6 +100,9 @@ class SwitchGeneralViewModelTest :
 
   @MockK
   private lateinit var electricityMeterGeneralStateHandler: ElectricityMeterGeneralStateHandler
+
+  @MockK
+  private lateinit var preferences: Preferences
 
   @InjectMockKs
   override lateinit var viewModel: SwitchGeneralViewModel

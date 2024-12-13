@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
   <string name="create_url">https://cloud.supla.org/register?lang=it</string>
   <string name="delete_url">https://{SERVER_ADDRESS}/db99845855b2ecbfecca9a095062b96c3e27703f?lang=it</string>
@@ -10,6 +10,7 @@
   <string name="settings">Impostazioni</string>
 
   <string name="menu_notifications">Cronologia delle notifiche</string>
+  <string name="channel_state_uptime">%1$d giorni %2$02d:%3$02d:%4$02d</string>
   <string name="status_connecting">Connessione in corso...</string>
   <string name="status_unknown_err">Errore sconosciuto</string>
   <string name="status_temporarily_unavailable">Servizio temporaneamente non disponibile</string>
@@ -474,7 +475,7 @@
   <string name="associeted_with_push_error">La funzione del canale associato alle notifiche PUSH non può essere modificata.</string>
   <string name="associeted_with_vbt_error">La funzione del canale associato alle reazioni non può essere modificata.</string>
   <string name="rs_display_mode">Tapparelle, persiane, tende %</string>
-  <string name="navbar_scenes">Scene</string>
+  <string name="navbar_scenes">Scenari</string>
   <string name="btn_execute">Esegui</string>
   <string name="btn_abort">Interrompi</string>
   <string name="btn_abort_and_execute">Scorri ed esegui</string>
@@ -564,9 +565,9 @@
   <string name="history_refreshing_failed">Aggiornamento non riuscito</string>
   <string name="history_no_data_selected">Nessun dato selezionato per la visualizzazione.</string>
   <string name="history_no_data_available">Nessuna misurazione</string>
-  <string name="channel_caption_hotelcard">Sensore chiave elettronica dell\'albergo</string>
+  <string name="channel_caption_hotelcard">Sensore tessera albergo</string>
   <string name="thermostat_detail_off_by_window">Disabilitato dalla finestra aperta</string>
-  <string name="thermostat_detail_off_by_card">Disabilitato per mancanza della chiave elettronica dell\'albergo</string>
+  <string name="thermostat_detail_off_by_card">Disabilitato per mancanza tessera albergo</string>
   <string name="thermostat_detail_off_by_sensor">Disabilitato dal sensore</string>
   <string name="channel_caption_alarm_armament">Sensore di impostazione dell\'allarme</string>
   <string name="calendar_picker_start_hour">Dall\'ora</string>
@@ -606,7 +607,7 @@
   <string name="settings_show_labels">Mostra le etichette in menu inferiore</string>
   <string name="main_no_entries">Vuoto</string>
   <string name="groups_empty_list_button">Aggiungi un gruppo su Supla Cloud</string>
-  <string name="scenes_empty_list_button">Aggiungi una scena su Supla Cloud</string>
+  <string name="scenes_empty_list_button">Aggiungi una scenario su Supla Cloud</string>
   <string name="roller_shutter_closing_percentage">Chiusura:</string>
   <string name="roller_shutter_opening_percentage">Apertura:</string>
   <string name="roller_shutter_calibration_needed">Calibrazione richiesta</string>
@@ -642,8 +643,8 @@
   <string name="lock_screen_forgotten_code">Non ricordo il codice di accesso</string>
   <string name="lock_screen_forgotten_code_title">Codice di accesso</string>
   <string name="lock_screen_forgotten_code_message">Se hai dimenticato il codice di accesso, disinstalla l\'applicazione dal telefono e poi procedi alla reinstallazione. Dopo la reinstallazione, aggiungi la configurazione dell\'account da Supla Cloud.\n\nNon creare un nuovo account. I dati storici e tutti i dispositivi non andranno persi.</string>
-  <string name="lock_screen_forgotten_code_button">Capisco</string>
-  <string name="lock_screen_confirm_authorize_app">Modifica dell\'ambito dell\'autorizzazione</string>
+  <string name="lock_screen_forgotten_code_button">Ho capito</string>
+  <string name="lock_screen_confirm_authorize_range_change">Modifica dell\'ambito dell\'autorizzazione</string>
   <string name="pin_setup_use_biometric">Autenticazione biometrica:</string>
   <string name="pin_setup_biometric_not_enrolled">Autenticazione biometrica non è stata configurata. Se si desidera utilizzare la biometria, configurarla prima nelle impostazioni di sistema.</string>
   <string name="biometric_prompt_subtitle">Sblocca con l\'impronta digitale</string>
@@ -676,5 +677,40 @@
   <string name="thermostat_detail_other_thermostats">Termostati dipendenti</string>
   <string name="thermostat_battery_cover_open">Coperchio della batteria aperto</string>
 
+  <string name="settings_battery_level_warning">Allarme batteria scarica</string>
   <string name="channel_battery_level">Livello batteria (%1$d - %2$s): %3$d%%</string>
+  <string name="details_em_reverse_reactive_energy_short">Reattiva restituita</string>
+  <string name="details_em_energy_label">Energia</string>
+  <string name="channel_btn_shut">Chiudi</string>
+  <string name="channel_btn_reveal">Apri</string>
+  <string name="channel_btn_collapse">Chiudi</string>
+  <string name="channel_btn_expand">Apri</string>
+  <string name="details_em_hour_marker_title">%1$d</string>
+  <string name="history_data_type">Tipo dati</string>
+  <string name="details_em_forward_active_energy_short">Attiva prelevata</string>
+  <string name="details_em_reverse_active_energy_short">Attiva restituita</string>
+  <string name="details_em_forward_reactive_energy_short">Reattiva prelevata</string>
+
+  <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
+    <item quantity="one">acceso</item>
+    <item quantity="other">accenderà</item>
+  </plurals>
+  <plurals name="details_timer_info_off" tools:ignore="MissingQuantity">
+    <item quantity="one">spento</item>
+    <item quantity="other">spegnerà</item>
+  </plurals>
+  <plurals name="day_pattern">
+    <item quantity="one">%1$d giorno</item>
+    <item quantity="many">%1$d giorni</item>
+    <item quantity="other">%1$d giorni</item>
+  </plurals>
+  <plurals name="hour_pattern" tools:ignore="MissingQuantity">
+    <item quantity="other">%1$d ore</item>
+  </plurals>
+  <plurals name="minute_pattern" tools:ignore="MissingQuantity">
+    <item quantity="other">%1$d min</item>
+  </plurals>
+  <plurals name="second_pattern" tools:ignore="MissingQuantity">
+  <item quantity="other">%1$d sec</item>
+  </plurals>
 </resources>

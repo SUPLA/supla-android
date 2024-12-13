@@ -17,6 +17,16 @@ package org.supla.core.shared.extensions
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.infrastructure.LocalizedStringId
+
+val Boolean.localizedString: LocalizedString
+  get() = if (this) {
+    LocalizedString.WithId(LocalizedStringId.GENERAL_YES)
+  } else {
+    LocalizedString.WithId(LocalizedStringId.GENERAL_NO)
+  }
+
 fun <T> Boolean.ifTrue(value: T): T? = if (this) {
   value
 } else {

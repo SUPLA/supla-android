@@ -22,6 +22,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -35,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -44,6 +46,7 @@ import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import org.supla.android.BuildConfig
 import org.supla.android.R
+import org.supla.android.core.branding.Configuration
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 
@@ -69,10 +72,13 @@ fun AboutView(
         .align(Alignment.TopCenter)
         .padding(all = Distance.default)
     ) {
+      if (!Configuration.SHOW_LICENCE) {
+        Spacer(modifier = Modifier.weight(1f))
+      }
       Image(
-        painter = painterResource(id = R.drawable.logo_light),
+        painter = painterResource(id = Configuration.About.LOGO_RESOURCE),
         contentDescription = stringResource(id = R.string.app_name),
-        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground),
+        colorFilter = Configuration.About.COLOR_FILLER?.let { ColorFilter.tint(colorResource(it)) },
         modifier = Modifier.size(100.dp),
         contentScale = ContentScale.Fit
       )
@@ -87,15 +93,20 @@ fun AboutView(
         color = MaterialTheme.colorScheme.onBackground,
         fontWeight = FontWeight.Bold
       )
-      Text(
-        text = stringResource(id = R.string.about_app),
-        style = MaterialTheme.typography.labelSmall,
-        color = MaterialTheme.colorScheme.onBackground,
-        textAlign = TextAlign.Center,
-        modifier = Modifier
-          .verticalScroll(rememberScrollState())
-          .weight(1f)
-      )
+      if (Configuration.SHOW_LICENCE) {
+        Text(
+          text = stringResource(id = R.string.about_app),
+          style = MaterialTheme.typography.labelSmall,
+          color = MaterialTheme.colorScheme.onBackground,
+          textAlign = TextAlign.Center,
+          modifier = Modifier
+            .verticalScroll(rememberScrollState())
+            .weight(1f)
+        )
+      }
+      if (!Configuration.SHOW_LICENCE) {
+        Spacer(modifier = Modifier.weight(1f))
+      }
       TextButton(onClick = onSuplaUrlClick) {
         Text(text = stringResource(id = R.string.homepage))
       }

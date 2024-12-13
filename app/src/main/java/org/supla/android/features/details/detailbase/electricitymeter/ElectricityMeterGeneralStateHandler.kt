@@ -17,13 +17,19 @@ package org.supla.android.features.details.detailbase.electricitymeter
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.Electricity
 import org.supla.android.data.source.local.entity.custom.Phase
 import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType
+import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType.CURRENT_PHASE_SEQUENCE
 import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType.FORWARD_ACTIVE_ENERGY_BALANCED
+import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType.FREQUENCY
 import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType.REVERSE_ACTIVE_ENERGY_BALANCED
+import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType.VOLTAGE_PHASE_ANGLE_12
+import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType.VOLTAGE_PHASE_ANGLE_13
+import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType.VOLTAGE_PHASE_SEQUENCE
 import org.supla.android.data.source.remote.channel.hasForwardAndReverseEnergy
 import org.supla.android.data.source.remote.channel.suplaElectricityMeterMeasuredTypes
 import org.supla.android.data.source.remote.electricitymeter.getForwardEnergy
@@ -41,7 +47,8 @@ import javax.inject.Singleton
 
 @Singleton
 class ElectricityMeterGeneralStateHandler @Inject constructor(
-  private val noExtendedValueStateHandler: NoExtendedValueStateHandler
+  private val noExtendedValueStateHandler: NoExtendedValueStateHandler,
+  private val preferences: Preferences
 ) {
   fun updateState(
     state: ElectricityMeterState?,
@@ -74,7 +81,9 @@ class ElectricityMeterGeneralStateHandler @Inject constructor(
       currentMonthReversedActiveEnergy = measurements?.toReverseEnergy(formatter, extendedValue),
       phaseMeasurementTypes = phaseTypes,
       phaseMeasurementValues = getPhaseData(phaseTypes, channel.flags, extendedValue, formatter),
-      vectorBalancedValues = vectorBalancedValues
+      vectorBalancedValues = vectorBalancedValues,
+      electricGridParameters = getGridParameters(channel.flags, extendedValue, formatter),
+      showIntroduction = preferences.shouldShowEmGeneralIntroduction() && channel.isOnline() && moreThanOnePhase
     )
   }
 
@@ -97,6 +106,43 @@ class ElectricityMeterGeneralStateHandler @Inject constructor(
       phasesWithData.forEach { add(it.toPhase(types, formatter)) }
     }
   }
+
+  private fun getGridParameters(
+    channelFlags: Long,
+    extendedValue: SuplaChannelElectricityMeterValue,
+    formatter: ListElectricityMeterValueFormatter
+  ): Map<SuplaElectricityMeasurementType, String>? {
+    val measuredValues = extendedValue.measuredValues.suplaElectricityMeterMeasuredTypes
+    val result = mutableMapOf<SuplaElectricityMeasurementType, String>()
+
+    if (measuredValues.contains(FREQUENCY)) {
+      Phase.entries
+        .firstOrNull { channelFlags and it.disabledFlag.rawValue == 0L }
+        ?.let {
+          extendedValue.getMeasurement(it.value, 0)?.frequency?.let { value ->
+            result[FREQUENCY] = formatter.custom(value.toFloat(), FREQUENCY.precision)
+          }
+        }
+    }
+    VOLTAGE_PHASE_ANGLE_12.let {
+      if (measuredValues.contains(it)) {
+        result[it] = formatter.custom(extendedValue.voltagePhaseAngle12.toFloat().div(10), it.precision)
+      }
+    }
+    VOLTAGE_PHASE_ANGLE_13.let {
+      if (measuredValues.contains(it)) {
+        result[it] = formatter.custom(extendedValue.voltagePhaseAngle13.toFloat().div(10), it.precision)
+      }
+    }
+    if (measuredValues.contains(VOLTAGE_PHASE_SEQUENCE)) {
+      result[VOLTAGE_PHASE_SEQUENCE] = extendedValue.voltagePhaseSequence.text
+    }
+    if (measuredValues.contains(CURRENT_PHASE_SEQUENCE)) {
+      result[CURRENT_PHASE_SEQUENCE] = extendedValue.currentPhaseSequence.text
+    }
+
+    return if (result.isEmpty()) null else result
+  }
 }
 
 private fun PhaseWithMeasurements.Companion.allPhases(
@@ -113,6 +159,7 @@ private fun PhaseWithMeasurements.Companion.allPhases(
       when (val value = it.value!!) {
         is SuplaElectricityMeasurementType.Value.Single ->
           formatter.custom(value.value, it.key.precision)
+
         is SuplaElectricityMeasurementType.Value.Double ->
           "${formatter.custom(value.first, 0)}- ${formatter.custom(value.second, 0)}"
       }

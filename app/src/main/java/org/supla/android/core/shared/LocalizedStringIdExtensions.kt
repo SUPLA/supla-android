@@ -26,10 +26,14 @@ val LocalizedStringId.resourceId: Int
     LocalizedStringId.GENERAL_TURN_OFF -> R.string.channel_btn_off
     LocalizedStringId.GENERAL_OPEN -> R.string.channel_btn_open
     LocalizedStringId.GENERAL_CLOSE -> R.string.channel_btn_close
+    LocalizedStringId.GENERAL_OPEN_CLOSE -> R.string.channel_btn_openclose
     LocalizedStringId.GENERAL_SHUT -> R.string.channel_btn_shut
     LocalizedStringId.GENERAL_REVEAL -> R.string.channel_btn_reveal
     LocalizedStringId.GENERAL_COLLAPSE -> R.string.channel_btn_collapse
     LocalizedStringId.GENERAL_EXPAND -> R.string.channel_btn_expand
+
+    LocalizedStringId.GENERAL_YES -> R.string.yes
+    LocalizedStringId.GENERAL_NO -> R.string.no
 
     LocalizedStringId.CHANNEL_CAPTION_OPEN_SENSOR_GATEWAY -> R.string.channel_caption_gatewayopeningsensor
     LocalizedStringId.CHANNEL_CAPTION_CONTROLLING_THE_GATEWAY_LOCK -> R.string.channel_caption_gateway
