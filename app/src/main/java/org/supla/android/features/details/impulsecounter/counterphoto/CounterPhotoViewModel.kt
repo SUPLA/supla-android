@@ -106,7 +106,7 @@ class CounterPhotoViewModel @Inject constructor(
       val ocrImage = File(ocrDirectory, ocrImageNamingProvider.imageName(channel.profileId, channel.remoteId))
       val ocrImageCropped = File(ocrDirectory, ocrImageNamingProvider.imageCroppedName(channel.profileId, channel.remoteId))
       val configurationAddress =
-        data.second?.let { "${it.urlString}channels/${channel.remoteId}/ocr-settings" } ?: state.configurationAddress
+        data.second?.let { "${it.urlString}/channels/${channel.remoteId}/ocr-settings" } ?: state.configurationAddress
 
       state.copy(
         viewState = state.viewState.copy(

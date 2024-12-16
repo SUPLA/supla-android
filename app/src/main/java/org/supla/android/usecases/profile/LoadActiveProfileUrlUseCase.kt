@@ -27,14 +27,12 @@ import javax.inject.Singleton
 sealed class CloudUrl {
   val urlString: String
     get() = when (this) {
-      SuplaCloud -> "https://cloud.supla.org/"
-      BetaCloud -> "https://beta-cloud.supla.org"
-      is PrivateCloud -> url.toString()
+      DefaultCloud -> "https://cloud.supla.org"
+      is ServerUri -> url.toString()
     }
 
-  data object SuplaCloud : CloudUrl()
-  data object BetaCloud : CloudUrl()
-  data class PrivateCloud(val url: Uri) : CloudUrl()
+  data object DefaultCloud : CloudUrl()
+  data class ServerUri(val url: Uri) : CloudUrl()
 }
 
 @Singleton
@@ -46,22 +44,15 @@ class LoadActiveProfileUrlUseCase @Inject constructor(
   operator fun invoke(): Single<CloudUrl> =
     profileRepository.findActiveProfile()
       .map { profile ->
-        if (profile.emailAuth) {
-          if (profile.serverForEmail?.endsWith("supla.org") == false) {
-            CloudUrl.PrivateCloud(uriProxy.toUri("https://${profile.serverForEmail}"))
-          } else if (profile.serverForEmail == "beta-cloud.supla.org") {
-            CloudUrl.BetaCloud
-          } else {
-            CloudUrl.SuplaCloud
-          }
+        if (profile.emailAuth && profile.serverAutoDetect) {
+          return@map CloudUrl.DefaultCloud
+        }
+
+        val serverUrl = if (profile.emailAuth) profile.serverForEmail else profile.serverForAccessId
+        if (serverUrl?.isEmpty() == false) {
+          CloudUrl.ServerUri(uriProxy.toUri("https://$serverUrl"))
         } else {
-          if (profile.serverForAccessId?.endsWith("supla.org") == false) {
-            CloudUrl.PrivateCloud(uriProxy.toUri("https://${profile.serverForAccessId}"))
-          } else if (profile.serverForAccessId == "beta-cloud.supla.org") {
-            CloudUrl.BetaCloud
-          } else {
-            CloudUrl.SuplaCloud
-          }
+          CloudUrl.DefaultCloud
         }
       }
 }

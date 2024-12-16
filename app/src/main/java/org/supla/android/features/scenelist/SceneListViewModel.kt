@@ -87,9 +87,8 @@ class SceneListViewModel @Inject constructor(
   fun onAddGroupClick() {
     loadServerUrl {
       when (it) {
-        is CloudUrl.SuplaCloud -> sendEvent(SceneListViewEvent.NavigateToSuplaCloud)
-        is CloudUrl.BetaCloud -> sendEvent(SceneListViewEvent.NavigateToSuplaBetaCloud)
-        is CloudUrl.PrivateCloud -> sendEvent(SceneListViewEvent.NavigateToPrivateCloud(it.url))
+        is CloudUrl.DefaultCloud -> sendEvent(SceneListViewEvent.NavigateToSuplaCloud)
+        is CloudUrl.ServerUri -> sendEvent(SceneListViewEvent.NavigateToPrivateCloud(it.url))
       }
     }
   }
