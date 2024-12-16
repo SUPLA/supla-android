@@ -74,7 +74,7 @@ class UserStateHolder @Inject constructor(@ApplicationContext context: Context) 
     preferences.getString(getKey(OCR_PHOTO_CREATION_TIME, profileId, remoteId), null)
       ?.let {
         try {
-          Date.from(LocalDateTime.parse(it, DateTimeFormatter.ISO_OFFSET_DATE_TIME).atZone(ZoneId.systemDefault()).toInstant())
+          Date.from(LocalDateTime.parse(it, DateTimeFormatter.ISO_OFFSET_DATE_TIME).atZone(ZoneId.of("UTC")).toInstant())
         } catch (ex: Exception) {
           Trace.e(TAG, "Could not parse ocr photo creation date", ex)
           null
