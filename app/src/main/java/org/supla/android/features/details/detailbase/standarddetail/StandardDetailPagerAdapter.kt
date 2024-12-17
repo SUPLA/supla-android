@@ -27,6 +27,7 @@ import org.supla.android.features.details.electricitymeterdetail.general.Electri
 import org.supla.android.features.details.electricitymeterdetail.history.ElectricityMeterHistoryFragment
 import org.supla.android.features.details.electricitymeterdetail.settings.ElectricityMeterSettingsFragment
 import org.supla.android.features.details.gpmdetail.history.GpmHistoryDetailFragment
+import org.supla.android.features.details.humiditydetail.history.HumidityHistoryDetailFragment
 import org.supla.android.features.details.legacydetail.LegacyDetailFragment
 import org.supla.android.features.details.switchdetail.general.SwitchGeneralFragment
 import org.supla.android.features.details.switchdetail.timer.TimersDetailFragment
@@ -73,6 +74,10 @@ class StandardDetailPagerAdapter(
       arguments = ThermometerHistoryDetailFragment.bundle(itemBundle.remoteId)
     }
 
+    DetailPage.HUMIDITY_HISTORY -> HumidityHistoryDetailFragment().apply {
+      arguments = HumidityHistoryDetailFragment.bundle(itemBundle.remoteId)
+    }
+
     DetailPage.GPM_HISTORY -> GpmHistoryDetailFragment().apply { arguments = GpmHistoryDetailFragment.bundle(itemBundle.remoteId) }
 
     DetailPage.ROLLER_SHUTTER -> RollerShutterFragment().apply { arguments = RollerShutterFragment.bundle(itemBundle) }
@@ -111,6 +116,9 @@ enum class DetailPage(val item: DetailBottomItem) {
 
   // Thermometers
   THERMOMETER_HISTORY(DetailBottomItem.HISTORY),
+
+  // Humidity
+  HUMIDITY_HISTORY(DetailBottomItem.HISTORY),
 
   // GPM
   GPM_HISTORY(DetailBottomItem.HISTORY),

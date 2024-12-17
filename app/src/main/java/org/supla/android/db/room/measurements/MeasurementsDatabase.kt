@@ -23,6 +23,7 @@ import androidx.room.TypeConverters
 import org.supla.android.data.source.local.dao.measurements.ElectricityMeterLogDao
 import org.supla.android.data.source.local.dao.measurements.GeneralPurposeMeasurementLogDao
 import org.supla.android.data.source.local.dao.measurements.GeneralPurposeMeterLogDao
+import org.supla.android.data.source.local.dao.measurements.HumidityLogDao
 import org.supla.android.data.source.local.dao.measurements.TemperatureAndHumidityLogDao
 import org.supla.android.data.source.local.dao.measurements.TemperatureLogDao
 import org.supla.android.data.source.local.entity.measurements.CurrentHistoryLogEntity
@@ -30,6 +31,7 @@ import org.supla.android.data.source.local.entity.measurements.ElectricityMeterL
 import org.supla.android.data.source.local.entity.measurements.GeneralPurposeMeasurementEntity
 import org.supla.android.data.source.local.entity.measurements.GeneralPurposeMeterEntity
 import org.supla.android.data.source.local.entity.measurements.HomePlusThermostatLogEntity
+import org.supla.android.data.source.local.entity.measurements.HumidityLogEntity
 import org.supla.android.data.source.local.entity.measurements.ImpulseCounterLogEntity
 import org.supla.android.data.source.local.entity.measurements.TemperatureAndHumidityLogEntity
 import org.supla.android.data.source.local.entity.measurements.TemperatureLogEntity
@@ -46,7 +48,8 @@ import org.supla.android.db.MeasurementsDbHelper
     ImpulseCounterLogEntity::class,
     HomePlusThermostatLogEntity::class,
     VoltageHistoryLogEntity::class,
-    CurrentHistoryLogEntity::class
+    CurrentHistoryLogEntity::class,
+    HumidityLogEntity::class
   ],
   version = MeasurementsDbHelper.DATABASE_VERSION,
   exportSchema = false,
@@ -62,4 +65,6 @@ abstract class MeasurementsDatabase : RoomDatabase() {
   abstract fun generalPurposeMeasurementLogDao(): GeneralPurposeMeasurementLogDao
 
   abstract fun electricityMeterLogDao(): ElectricityMeterLogDao
+
+  abstract fun humidityLogDao(): HumidityLogDao
 }

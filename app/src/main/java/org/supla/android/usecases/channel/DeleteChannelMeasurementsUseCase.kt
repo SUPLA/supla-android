@@ -22,14 +22,10 @@ import io.reactivex.rxjava3.core.Maybe
 import org.supla.android.data.source.ElectricityMeterLogRepository
 import org.supla.android.data.source.GeneralPurposeMeasurementLogRepository
 import org.supla.android.data.source.GeneralPurposeMeterLogRepository
+import org.supla.android.data.source.HumidityLogRepository
 import org.supla.android.data.source.RoomChannelRepository
 import org.supla.android.data.source.TemperatureAndHumidityLogRepository
 import org.supla.android.data.source.TemperatureLogRepository
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
 import org.supla.core.shared.data.model.general.SuplaFunction
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -42,7 +38,8 @@ class DeleteChannelMeasurementsUseCase @Inject constructor(
   private val temperatureAndHumidityLogUseCase: TemperatureAndHumidityLogRepository,
   private val generalPurposeMeasurementLogRepository: GeneralPurposeMeasurementLogRepository,
   private val generalPurposeMeterLogRepository: GeneralPurposeMeterLogRepository,
-  private val electricityMeterLogRepository: ElectricityMeterLogRepository
+  private val electricityMeterLogRepository: ElectricityMeterLogRepository,
+  private val humidityLogRepository: HumidityLogRepository
 ) {
 
   operator fun invoke(remoteId: Int): Completable =
@@ -62,25 +59,28 @@ class DeleteChannelMeasurementsUseCase @Inject constructor(
         }
       }
       .flatMapCompletable { entities ->
-        Completable.merge(entities.map { getDeleteCompletable(it.function.value, it.remoteId, it.profileId) })
+        Completable.merge(entities.map { getDeleteCompletable(it.function, it.remoteId, it.profileId) })
       }
 
-  private fun getDeleteCompletable(function: Int, remoteId: Int, profileId: Long): Completable =
+  private fun getDeleteCompletable(function: SuplaFunction, remoteId: Int, profileId: Long): Completable =
     when (function) {
-      SUPLA_CHANNELFNC_THERMOMETER ->
+      SuplaFunction.THERMOMETER ->
         temperatureLogRepository.delete(remoteId, profileId)
 
-      SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE ->
+      SuplaFunction.HUMIDITY_AND_TEMPERATURE ->
         temperatureAndHumidityLogUseCase.delete(remoteId, profileId)
 
-      SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT ->
+      SuplaFunction.GENERAL_PURPOSE_MEASUREMENT ->
         generalPurposeMeasurementLogRepository.delete(remoteId, profileId)
 
-      SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER ->
+      SuplaFunction.GENERAL_PURPOSE_METER ->
         generalPurposeMeterLogRepository.delete(remoteId, profileId)
 
-      SUPLA_CHANNELFNC_ELECTRICITY_METER ->
+      SuplaFunction.ELECTRICITY_METER ->
         electricityMeterLogRepository.delete(remoteId, profileId)
+
+      SuplaFunction.HUMIDITY ->
+        humidityLogRepository.delete(remoteId, profileId)
 
       else ->
         Completable.error(IllegalStateException("Deleting measurements for channel with function `$function` is not supported yet!"))

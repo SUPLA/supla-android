@@ -72,6 +72,8 @@ abstract class BaseDetailTypeProviderUseCase {
     SuplaFunction.HUMIDITY_AND_TEMPERATURE ->
       ThermometerDetailType(listOf(DetailPage.THERMOMETER_HISTORY))
 
+    SuplaFunction.HUMIDITY -> HumidityDetailType(listOf(DetailPage.HUMIDITY_HISTORY))
+
     SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS ->
       LegacyDetailType.THERMOSTAT_HP
 
@@ -107,7 +109,6 @@ abstract class BaseDetailTypeProviderUseCase {
     SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK,
     SuplaFunction.CONTROLLING_THE_GATE,
     SuplaFunction.CONTROLLING_THE_GARAGE_DOOR,
-    SuplaFunction.HUMIDITY,
     SuplaFunction.OPEN_SENSOR_GATEWAY,
     SuplaFunction.OPEN_SENSOR_GATE,
     SuplaFunction.OPEN_SENSOR_GARAGE_DOOR,
