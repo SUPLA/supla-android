@@ -36,6 +36,7 @@ class LoadActiveProfileUrlUseCaseTest {
     val profile: ProfileEntity = mockk {
       every { emailAuth } returns true
       every { serverForEmail } returns url
+      every { serverAutoDetect } returns true
     }
     whenever(profileRepository.findActiveProfile()).thenReturn(Single.just(profile))
 
@@ -44,7 +45,7 @@ class LoadActiveProfileUrlUseCaseTest {
 
     // then
     observer.assertComplete()
-    observer.assertResult(CloudUrl.SuplaCloud)
+    observer.assertResult(CloudUrl.DefaultCloud)
 
     verify(profileRepository).findActiveProfile()
     verifyNoMoreInteractions(profileRepository)
@@ -58,6 +59,7 @@ class LoadActiveProfileUrlUseCaseTest {
     val profile: ProfileEntity = mockk {
       every { emailAuth } returns true
       every { serverForEmail } returns url
+      every { serverAutoDetect } returns false
     }
     val uri: Uri = mockk()
     whenever(uriProxy.toUri("https://$url")).thenReturn(uri)
@@ -68,7 +70,7 @@ class LoadActiveProfileUrlUseCaseTest {
 
     // then
     observer.assertComplete()
-    observer.assertResult(CloudUrl.PrivateCloud(uri))
+    observer.assertResult(CloudUrl.ServerUri(uri))
 
     verify(profileRepository).findActiveProfile()
     verify(uriProxy).toUri("https://$url")
@@ -76,12 +78,13 @@ class LoadActiveProfileUrlUseCaseTest {
   }
 
   @Test
-  fun `should get supla cloud when access id auth`() {
+  fun `should get supla cloud when no url defined`() {
     // given
     val url = "srv1.supla.org"
     val profile: ProfileEntity = mockk {
       every { emailAuth } returns false
-      every { serverForAccessId } returns url
+      every { serverForAccessId } returns null
+      every { serverAutoDetect } returns false
     }
     whenever(profileRepository.findActiveProfile()).thenReturn(Single.just(profile))
 
@@ -90,7 +93,7 @@ class LoadActiveProfileUrlUseCaseTest {
 
     // then
     observer.assertComplete()
-    observer.assertResult(CloudUrl.SuplaCloud)
+    observer.assertResult(CloudUrl.DefaultCloud)
 
     verify(profileRepository).findActiveProfile()
     verifyNoMoreInteractions(profileRepository)
@@ -104,6 +107,7 @@ class LoadActiveProfileUrlUseCaseTest {
     val profile: ProfileEntity = mockk {
       every { emailAuth } returns false
       every { serverForAccessId } returns url
+      every { serverAutoDetect } returns false
     }
     val uri: Uri = mockk()
     whenever(uriProxy.toUri("https://$url")).thenReturn(uri)
@@ -114,7 +118,7 @@ class LoadActiveProfileUrlUseCaseTest {
 
     // then
     observer.assertComplete()
-    observer.assertResult(CloudUrl.PrivateCloud(uri))
+    observer.assertResult(CloudUrl.ServerUri(uri))
 
     verify(profileRepository).findActiveProfile()
     verify(uriProxy).toUri("https://$url")

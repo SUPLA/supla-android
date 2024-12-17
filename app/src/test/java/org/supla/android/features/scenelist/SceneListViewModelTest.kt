@@ -152,7 +152,7 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
   @Test
   fun `on add group click should open supla cloud`() {
     // given
-    whenever(loadActiveProfileUrlUseCase.invoke()).thenReturn(Single.just(CloudUrl.SuplaCloud))
+    whenever(loadActiveProfileUrlUseCase.invoke()).thenReturn(Single.just(CloudUrl.DefaultCloud))
 
     // when
     viewModel.onAddGroupClick()
@@ -169,7 +169,7 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
   fun `on add group click should open private cloud`() {
     // given
     val url: Uri = mockk()
-    whenever(loadActiveProfileUrlUseCase.invoke()).thenReturn(Single.just(CloudUrl.PrivateCloud(url)))
+    whenever(loadActiveProfileUrlUseCase.invoke()).thenReturn(Single.just(CloudUrl.ServerUri(url)))
 
     // when
     viewModel.onAddGroupClick()

@@ -134,9 +134,8 @@ class GroupListViewModel @Inject constructor(
   fun onAddGroupClick() {
     loadServerUrl {
       when (it) {
-        is CloudUrl.SuplaCloud -> sendEvent(GroupListViewEvent.NavigateToSuplaCloud)
-        is CloudUrl.BetaCloud -> sendEvent(GroupListViewEvent.NavigateToSuplaBetaCloud)
-        is CloudUrl.PrivateCloud -> sendEvent(GroupListViewEvent.NavigateToPrivateCloud(it.url))
+        is CloudUrl.DefaultCloud -> sendEvent(GroupListViewEvent.NavigateToSuplaCloud)
+        is CloudUrl.ServerUri -> sendEvent(GroupListViewEvent.NavigateToPrivateCloud(it.url))
       }
     }
   }
