@@ -23,6 +23,7 @@ import org.supla.core.shared.data.model.lists.IssueIcon
 import org.supla.core.shared.data.model.lists.ListItemIssues
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.usecase.channel.issues.ChannelIssuesProvider
+import org.supla.core.shared.usecase.channel.issues.ContainerIssuesProvider
 import org.supla.core.shared.usecase.channel.issues.ShadingSystemIssuesProvider
 import org.supla.core.shared.usecase.channel.issues.ThermostatIssuesProvider
 
@@ -33,7 +34,8 @@ class GetChannelIssuesForListUseCase(
 
   private val otherIssuesProviders: List<ChannelIssuesProvider> = listOf(
     ThermostatIssuesProvider(),
-    ShadingSystemIssuesProvider()
+    ShadingSystemIssuesProvider(),
+    ContainerIssuesProvider()
   )
 
   operator fun invoke(channelWithChildren: ChannelWithChildren): ListItemIssues {

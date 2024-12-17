@@ -85,6 +85,7 @@ val LocalizedStringId.resourceId: Int
     LocalizedStringId.CHANNEL_CAPTION_ROLLER_GARAGE_DOOR -> R.string.channel_caption_roller_garage_door
     LocalizedStringId.CHANNEL_CAPTION_PUMP_SWITCH -> R.string.channel_caption_pump_switch
     LocalizedStringId.CHANNEL_CAPTION_HEAT_OR_COLD_SOURCE_SWITCH -> R.string.channel_caption_heat_or_cold_sourc_switch
+    LocalizedStringId.CHANNEL_CAPTION_CONTAINER -> R.string.channel_caption_container
     LocalizedStringId.CHANNEL_CAPTION_UNKNOWN -> R.string.channel_not_supported
 
     LocalizedStringId.CHANNEL_BATTERY_LEVEL -> R.string.channel_battery_level

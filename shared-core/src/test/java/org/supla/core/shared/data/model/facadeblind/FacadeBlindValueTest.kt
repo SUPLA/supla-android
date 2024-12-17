@@ -19,6 +19,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
+import org.supla.core.shared.data.model.function.facadeblind.FacadeBlindValue
 import org.supla.core.shared.data.model.shadingsystem.SuplaShadingSystemFlag
 
 class FacadeBlindValueTest {

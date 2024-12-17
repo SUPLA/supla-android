@@ -1,4 +1,4 @@
-package org.supla.core.shared.data.model.rollershutter
+package org.supla.core.shared.data.model.function.facadeblind
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -20,28 +20,32 @@ package org.supla.core.shared.data.model.rollershutter
 import org.supla.core.shared.data.model.shadingsystem.ShadingSystemValue
 import org.supla.core.shared.data.model.shadingsystem.SuplaShadingSystemFlag
 import org.supla.core.shared.extensions.toShort
+import kotlin.math.max
 
-private const val ROLLER_SHUTTER_VALUE_LENGTH = 5
+private const val FACADE_BLIND_VALUE_LENGTH = 5
 
-data class RollerShutterValue(
+data class FacadeBlindValue(
   override val online: Boolean,
   override val position: Int,
-  val bottomPosition: Int,
+  val tilt: Int,
   override val flags: List<SuplaShadingSystemFlag>
 ) : ShadingSystemValue() {
 
-  companion object {
-    private const val INVALID_BOTTOM_POSITION = 0 // more precisely <= 0
+  val alwaysValidTilt: Int
+    get() = max(0, tilt)
 
-    fun from(online: Boolean, bytes: ByteArray): RollerShutterValue {
-      if (bytes.size < ROLLER_SHUTTER_VALUE_LENGTH) {
-        return RollerShutterValue(online, INVALID_VALUE, 0, emptyList())
+  fun hasValidTilt() = tilt != INVALID_VALUE
+
+  companion object {
+    fun from(online: Boolean, bytes: ByteArray): FacadeBlindValue {
+      if (bytes.size < FACADE_BLIND_VALUE_LENGTH) {
+        return FacadeBlindValue(online, INVALID_VALUE, INVALID_VALUE, listOf())
       }
 
-      return RollerShutterValue(
+      return FacadeBlindValue(
         online = online,
         position = bytes[0].toInt().let { if (it < INVALID_VALUE || it > MAX_VALUE) INVALID_VALUE else it },
-        bottomPosition = bytes[2].toInt().let { if (it <= INVALID_BOTTOM_POSITION || it > MAX_VALUE) MAX_VALUE else it },
+        tilt = bytes[1].toInt().let { if (it < INVALID_VALUE || it > MAX_VALUE) INVALID_VALUE else it },
         flags = SuplaShadingSystemFlag.from(bytes.toShort(3, 4).toInt())
       )
     }

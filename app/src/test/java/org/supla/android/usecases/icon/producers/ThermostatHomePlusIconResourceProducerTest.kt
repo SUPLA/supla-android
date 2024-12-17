@@ -23,7 +23,7 @@ import org.mockito.InjectMocks
 import org.mockito.junit.MockitoJUnitRunner
 import org.supla.android.R
 import org.supla.android.data.model.general.ChannelState
-import org.supla.android.lib.SuplaConst
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 @RunWith(MockitoJUnitRunner::class)
 class ThermostatHomePlusIconResourceProducerTest : BaseIconResourceProducerTest() {
@@ -35,7 +35,7 @@ class ThermostatHomePlusIconResourceProducerTest : BaseIconResourceProducerTest(
   fun `should produce on icon`() {
     test(
       state = ChannelState.Value.ON,
-      function = SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS,
+      function = SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS,
       expectedIcon = R.drawable.thermostat_hp_homepluson
     )
   }
@@ -44,7 +44,7 @@ class ThermostatHomePlusIconResourceProducerTest : BaseIconResourceProducerTest(
   fun `should produce off icon`() {
     test(
       state = ChannelState.Value.OFF,
-      function = SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS,
+      function = SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS,
       expectedIcon = R.drawable.thermostat_hp_homeplusoff
     )
   }
@@ -54,7 +54,7 @@ class ThermostatHomePlusIconResourceProducerTest : BaseIconResourceProducerTest(
     test(
       state = ChannelState.Value.ON,
       altIcon = 1,
-      function = SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS,
+      function = SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS,
       expectedIcon = R.drawable.thermostat_hp_homepluson_1
     )
   }
@@ -64,7 +64,7 @@ class ThermostatHomePlusIconResourceProducerTest : BaseIconResourceProducerTest(
     test(
       state = ChannelState.Value.OFF,
       altIcon = 1,
-      function = SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS,
+      function = SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS,
       expectedIcon = R.drawable.thermostat_hp_homeplusoff_1
     )
   }
@@ -74,7 +74,7 @@ class ThermostatHomePlusIconResourceProducerTest : BaseIconResourceProducerTest(
     test(
       state = ChannelState.Value.ON,
       altIcon = 2,
-      function = SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS,
+      function = SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS,
       expectedIcon = R.drawable.thermostat_hp_homepluson_2
     )
   }
@@ -84,7 +84,7 @@ class ThermostatHomePlusIconResourceProducerTest : BaseIconResourceProducerTest(
     test(
       state = ChannelState.Value.OFF,
       altIcon = 2,
-      function = SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS,
+      function = SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS,
       expectedIcon = R.drawable.thermostat_hp_homeplusoff_2
     )
   }
@@ -94,7 +94,7 @@ class ThermostatHomePlusIconResourceProducerTest : BaseIconResourceProducerTest(
     test(
       state = ChannelState.Value.ON,
       altIcon = 3,
-      function = SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS,
+      function = SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS,
       expectedIcon = R.drawable.thermostat_hp_homepluson_3
     )
   }
@@ -104,7 +104,7 @@ class ThermostatHomePlusIconResourceProducerTest : BaseIconResourceProducerTest(
     test(
       state = ChannelState.Value.OFF,
       altIcon = 3,
-      function = SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS,
+      function = SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS,
       expectedIcon = R.drawable.thermostat_hp_homeplusoff_3
     )
   }

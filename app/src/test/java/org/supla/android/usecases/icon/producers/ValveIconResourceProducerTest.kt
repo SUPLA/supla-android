@@ -23,7 +23,7 @@ import org.mockito.InjectMocks
 import org.mockito.junit.MockitoJUnitRunner
 import org.supla.android.R
 import org.supla.android.data.model.general.ChannelState
-import org.supla.android.lib.SuplaConst
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 @RunWith(MockitoJUnitRunner::class)
 class ValveIconResourceProducerTest : BaseIconResourceProducerTest() {
@@ -35,7 +35,7 @@ class ValveIconResourceProducerTest : BaseIconResourceProducerTest() {
   fun `should produce open icon`() {
     test(
       state = ChannelState.Value.OPEN,
-      function = SuplaConst.SUPLA_CHANNELFNC_VALVE_PERCENTAGE,
+      function = SuplaFunction.VALVE_PERCENTAGE,
       expectedIcon = R.drawable.valveopen
     )
   }
@@ -44,7 +44,7 @@ class ValveIconResourceProducerTest : BaseIconResourceProducerTest() {
   fun `should produce close icon`() {
     test(
       state = ChannelState.Value.CLOSED,
-      function = SuplaConst.SUPLA_CHANNELFNC_VALVE_PERCENTAGE,
+      function = SuplaFunction.VALVE_PERCENTAGE,
       expectedIcon = R.drawable.valveclosed
     )
   }

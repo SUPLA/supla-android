@@ -99,6 +99,9 @@ abstract class BaseDetailTypeProviderUseCase {
     SuplaFunction.GENERAL_PURPOSE_METER ->
       GpmDetailType(listOf(DetailPage.GPM_HISTORY))
 
+    SuplaFunction.CONTAINER ->
+      ContainerDetailType(listOf(DetailPage.CONTAINER_GENERAL))
+
     SuplaFunction.UNKNOWN,
     SuplaFunction.NONE,
     SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK,
