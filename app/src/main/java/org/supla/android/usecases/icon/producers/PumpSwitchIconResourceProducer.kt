@@ -19,13 +19,13 @@ package org.supla.android.usecases.icon.producers
 
 import org.supla.android.R
 import org.supla.android.data.model.general.ChannelState
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_PUMP_SWITCH
 import org.supla.android.usecases.icon.IconData
 import org.supla.android.usecases.icon.IconResourceProducer
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 object PumpSwitchIconResourceProducer : IconResourceProducer {
-  override fun accepts(function: Int): Boolean =
-    function == SUPLA_CHANNELFNC_PUMP_SWITCH
+  override fun accepts(function: SuplaFunction): Boolean =
+    function == SuplaFunction.PUMP_SWITCH
 
   override fun produce(data: IconData): Int =
     when (data.state.value) {

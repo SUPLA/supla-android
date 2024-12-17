@@ -49,6 +49,7 @@ import org.supla.android.usecases.channel.ChannelActionUseCase
 import org.supla.android.usecases.channel.CreateProfileChannelsListUseCase
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
+import org.supla.android.usecases.details.ContainerDetailType
 import org.supla.android.usecases.details.EmDetailType
 import org.supla.android.usecases.details.GpmDetailType
 import org.supla.android.usecases.details.IcDetailType
@@ -180,6 +181,7 @@ class ChannelListViewModel @Inject constructor(
       is WindowDetailType -> sendEvent(ChannelListViewEvent.OpenWindowDetail(ItemBundle.from(channel), detailType.pages))
       is EmDetailType -> sendEvent(ChannelListViewEvent.OpenEmDetail(ItemBundle.from(channel), detailType.pages))
       is IcDetailType -> sendEvent(ChannelListViewEvent.OpenIcDetail(ItemBundle.from(channel), detailType.pages))
+      is ContainerDetailType -> sendEvent(ChannelListViewEvent.OpenContainerDetail(ItemBundle.from(channel), detailType.pages))
       is LegacyDetailType -> sendEvent(ChannelListViewEvent.OpenLegacyDetails(channel.remoteId, detailType))
       null -> {} // no action
     }
@@ -210,6 +212,9 @@ sealed class ChannelListViewEvent : ViewEvent {
 
   data class OpenIcDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) :
     OpenStandardDetail(R.id.impulse_counter_detail_fragment, ImpulseCounterDetailFragment.bundle(itemBundle, pages.toTypedArray()))
+
+  data class OpenContainerDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) :
+    OpenStandardDetail(R.id.container_detail_fragment, ImpulseCounterDetailFragment.bundle(itemBundle, pages.toTypedArray()))
 
   data object ReassignAdapter : ChannelListViewEvent()
 

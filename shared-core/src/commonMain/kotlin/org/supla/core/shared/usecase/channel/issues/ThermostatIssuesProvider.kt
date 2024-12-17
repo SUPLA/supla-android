@@ -18,15 +18,15 @@ package org.supla.core.shared.usecase.channel.issues
  */
 
 import org.supla.core.shared.data.model.channel.ChannelWithChildren
-import org.supla.core.shared.data.model.channel.isThermostat
+import org.supla.core.shared.data.model.channel.isHvacThermostat
 import org.supla.core.shared.data.model.channel.thermostatValue
+import org.supla.core.shared.data.model.function.thermostat.SuplaThermostatFlag
 import org.supla.core.shared.data.model.lists.ChannelIssueItem
-import org.supla.core.shared.data.model.thermostat.SuplaThermostatFlag
 import org.supla.core.shared.infrastructure.LocalizedStringId
 
 class ThermostatIssuesProvider : ChannelIssuesProvider {
   override fun provide(channelWithChildren: ChannelWithChildren): List<ChannelIssueItem> {
-    if (!channelWithChildren.channel.isThermostat) {
+    if (!channelWithChildren.channel.isHvacThermostat) {
       return emptyList()
     }
 

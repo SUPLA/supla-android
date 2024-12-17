@@ -56,3 +56,7 @@ data class EmDetailType(
 data class IcDetailType(
   val pages: List<DetailPage>
 ) : DetailType
+
+data class ContainerDetailType(
+  val pages: List<DetailPage>
+) : DetailType

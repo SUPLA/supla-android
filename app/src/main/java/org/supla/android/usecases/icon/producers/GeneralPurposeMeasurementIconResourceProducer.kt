@@ -18,13 +18,13 @@ package org.supla.android.usecases.icon.producers
  */
 
 import org.supla.android.R
-import org.supla.android.lib.SuplaConst
 import org.supla.android.usecases.icon.IconData
 import org.supla.android.usecases.icon.IconResourceProducer
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 class GeneralPurposeMeasurementIconResourceProducer : IconResourceProducer {
-  override fun accepts(function: Int): Boolean =
-    function == SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT
+  override fun accepts(function: SuplaFunction): Boolean =
+    function == SuplaFunction.GENERAL_PURPOSE_MEASUREMENT
 
   override fun produce(data: IconData): Int =
     when (data.altIcon) {

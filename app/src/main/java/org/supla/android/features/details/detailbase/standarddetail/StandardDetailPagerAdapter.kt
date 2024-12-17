@@ -22,6 +22,7 @@ import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import org.supla.android.R
+import org.supla.android.features.details.containerdetail.general.ContainerGeneralDetailFragment
 import org.supla.android.features.details.electricitymeterdetail.general.ElectricityMeterGeneralFragment
 import org.supla.android.features.details.electricitymeterdetail.history.ElectricityMeterHistoryFragment
 import org.supla.android.features.details.electricitymeterdetail.settings.ElectricityMeterSettingsFragment
@@ -88,6 +89,10 @@ class StandardDetailPagerAdapter(
     }
 
     DetailPage.EM_SETTINGS -> ElectricityMeterSettingsFragment().apply { arguments = ElectricityMeterSettingsFragment.bundle(itemBundle) }
+
+    DetailPage.CONTAINER_GENERAL -> ContainerGeneralDetailFragment().apply {
+      arguments = ContainerGeneralDetailFragment.bundle(itemBundle)
+    }
   }
 }
 
@@ -123,7 +128,10 @@ enum class DetailPage(val item: DetailBottomItem) {
   // EM
   EM_GENERAL(DetailBottomItem.GENERAL),
   EM_HISTORY(DetailBottomItem.HISTORY),
-  EM_SETTINGS(DetailBottomItem.SETTINGS)
+  EM_SETTINGS(DetailBottomItem.SETTINGS),
+
+  // Container
+  CONTAINER_GENERAL(DetailBottomItem.GENERAL)
 }
 
 enum class DetailBottomItem(val menuId: Int, @DrawableRes val iconRes: Int, @StringRes val stringRes: Int) {

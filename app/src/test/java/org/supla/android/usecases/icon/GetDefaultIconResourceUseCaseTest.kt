@@ -25,7 +25,7 @@ import org.junit.runner.RunWith
 import org.mockito.InjectMocks
 import org.mockito.junit.MockitoJUnitRunner
 import org.supla.android.R
-import org.supla.android.lib.SuplaConst
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 @RunWith(MockitoJUnitRunner::class)
 class GetDefaultIconResourceUseCaseTest {
@@ -37,7 +37,7 @@ class GetDefaultIconResourceUseCaseTest {
   fun `should get unknown icon when no handler available`() {
     // given
     val iconData: IconData = mockk {
-      every { function } returns SuplaConst.SUPLA_CHANNELFNC_NONE
+      every { function } returns SuplaFunction.NONE
     }
 
     // when
@@ -51,7 +51,7 @@ class GetDefaultIconResourceUseCaseTest {
   fun `should get unknown icon when handler available`() {
     // given
     val iconData: IconData = mockk {
-      every { function } returns SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR
+      every { function } returns SuplaFunction.DEPTH_SENSOR
     }
 
     // when

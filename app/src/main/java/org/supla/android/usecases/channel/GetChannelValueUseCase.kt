@@ -18,6 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.usecases.channel.valueprovider.ContainerValueProvider
 import org.supla.android.usecases.channel.valueprovider.DepthSensorValueProvider
 import org.supla.android.usecases.channel.valueprovider.DistanceSensorValueProvider
 import org.supla.android.usecases.channel.valueprovider.ElectricityMeterValueProvider
@@ -42,7 +43,8 @@ class GetChannelValueUseCase @Inject constructor(
   impulseCounterValueProvider: ImpulseCounterValueProvider,
   switchWithElectricityMeterValueProvider: SwitchWithElectricityMeterValueProvider,
   pressureSensorValueProvider: PressureSensorValueProvider,
-  rainSensorValueProvider: RainSensorValueProvider
+  rainSensorValueProvider: RainSensorValueProvider,
+  containerValueProvider: ContainerValueProvider
 ) {
 
   private val providers = listOf(
@@ -55,7 +57,8 @@ class GetChannelValueUseCase @Inject constructor(
     impulseCounterValueProvider,
     switchWithElectricityMeterValueProvider,
     pressureSensorValueProvider,
-    rainSensorValueProvider
+    rainSensorValueProvider,
+    containerValueProvider
   )
 
   @Suppress("UNCHECKED_CAST")

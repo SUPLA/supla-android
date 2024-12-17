@@ -1,4 +1,4 @@
-package org.supla.core.shared.data.model.thermostat
+package org.supla.core.shared.data.model.function.thermostat
 /*
 Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -19,7 +19,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
-import org.supla.core.shared.data.model.thermostat.SuplaThermostatFlag.HEAT_OR_COOL
+import org.supla.core.shared.data.model.function.thermostat.SuplaThermostatFlag.HEAT_OR_COOL
 import org.supla.core.shared.extensions.toShort
 import org.supla.core.shared.extensions.toTemperature
 

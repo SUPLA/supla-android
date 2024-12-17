@@ -67,6 +67,11 @@ data class ChannelState(
     HEAT,
     COOL,
 
+    // fulfillment
+    FULL,
+    HALF,
+    EMPTY,
+
     // others
     NOT_USED,
     COMPLEX
