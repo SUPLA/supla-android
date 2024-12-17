@@ -45,6 +45,7 @@ import org.supla.android.data.model.chart.ChartParameters
 import org.supla.android.data.model.chart.datatype.ChartData
 import org.supla.android.data.model.chart.datatype.CombinedChartData
 import org.supla.android.data.model.chart.style.ChartStyle
+import org.supla.android.data.model.chart.style.HumidityChartStyle
 import org.supla.android.extensions.toPx
 import org.supla.android.lib.SuplaConst
 import org.supla.android.usecases.channel.valueformatter.HumidityValueFormatter
@@ -131,7 +132,8 @@ fun CombinedChart(
       // Left axis
       chart.axisLeft.valueFormatter = object : ValueFormatter() {
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
-          return data.leftAxisFormatter.format(value.toDouble(), withUnit = false, chart.axisLeft.mDecimals)
+          val withUnit = chartStyle is HumidityChartStyle
+          return data.leftAxisFormatter.format(value.toDouble(), withUnit = withUnit, chart.axisLeft.mDecimals)
         }
       }
       chart.axisLeft.isEnabled = withLeftAxis

@@ -43,19 +43,22 @@ class LoadChannelMeasurementsDataRangeUseCaseTest {
   private lateinit var readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase
 
   @MockK
-  private lateinit var thermometerDataRangeProvide: ThermometerDataRangeProvide
+  private lateinit var thermometerDataRangeProvide: ThermometerDataRangeProvider
 
   @MockK
-  private lateinit var humidityAndTemperatureDataRangeProvide: HumidityAndTemperatureDataRangeProvide
+  private lateinit var humidityAndTemperatureDataRangeProvide: HumidityAndTemperatureDataRangeProvider
 
   @MockK
-  private lateinit var generalPurposeMeasurementDataRangeProvide: GeneralPurposeMeasurementDataRangeProvide
+  private lateinit var generalPurposeMeasurementDataRangeProvide: GeneralPurposeMeasurementDataRangeProvider
 
   @MockK
-  private lateinit var generalPurposeMeterDataRangeProvide: GeneralPurposeMeterDataRangeProvide
+  private lateinit var generalPurposeMeterDataRangeProvide: GeneralPurposeMeterDataRangeProvider
 
   @MockK
-  private lateinit var electricityMeterDataRangeProvide: ElectricityMeterDataRangeProvide
+  private lateinit var electricityMeterDataRangeProvide: ElectricityMeterDataRangeProvider
+
+  @MockK
+  private lateinit var humidityDataRangeProvider: HumidityDataRangeProvider
 
   @InjectMockKs
   private lateinit var useCase: LoadChannelMeasurementsDataRangeUseCase
@@ -78,7 +81,7 @@ class LoadChannelMeasurementsDataRangeUseCaseTest {
     val maxDate = date(2024, 8, 14)
 
     every { readChannelByRemoteIdUseCase.invoke(remoteId) } returns Maybe.just(channel)
-    every { thermometerDataRangeProvide.handle(channelFunction.value) } returns true
+    every { thermometerDataRangeProvide.handle(channelFunction) } returns true
     every { thermometerDataRangeProvide.minTime(remoteId, profileId) } returns Single.just(minDate.time)
     every { thermometerDataRangeProvide.maxTime(remoteId, profileId) } returns Single.just(maxDate.time)
 
@@ -91,7 +94,7 @@ class LoadChannelMeasurementsDataRangeUseCaseTest {
 
     verify {
       readChannelByRemoteIdUseCase.invoke(remoteId)
-      thermometerDataRangeProvide.handle(channelFunction.value)
+      thermometerDataRangeProvide.handle(channelFunction)
       thermometerDataRangeProvide.minTime(remoteId, profileId)
       thermometerDataRangeProvide.maxTime(remoteId, profileId)
     }
@@ -116,11 +119,12 @@ class LoadChannelMeasurementsDataRangeUseCaseTest {
     }
 
     every { readChannelByRemoteIdUseCase.invoke(remoteId) } returns Maybe.just(channel)
-    every { thermometerDataRangeProvide.handle(channelFunction.value) } returns false
-    every { humidityAndTemperatureDataRangeProvide.handle(channelFunction.value) } returns false
-    every { generalPurposeMeasurementDataRangeProvide.handle(channelFunction.value) } returns false
-    every { generalPurposeMeterDataRangeProvide.handle(channelFunction.value) } returns false
-    every { electricityMeterDataRangeProvide.handle(channelFunction.value) } returns false
+    every { thermometerDataRangeProvide.handle(channelFunction) } returns false
+    every { humidityAndTemperatureDataRangeProvide.handle(channelFunction) } returns false
+    every { generalPurposeMeasurementDataRangeProvide.handle(channelFunction) } returns false
+    every { generalPurposeMeterDataRangeProvide.handle(channelFunction) } returns false
+    every { electricityMeterDataRangeProvide.handle(channelFunction) } returns false
+    every { humidityDataRangeProvider.handle(channelFunction) } returns false
 
     // when
     val testObserver = useCase.invoke(remoteId, profileId).test()
@@ -131,11 +135,12 @@ class LoadChannelMeasurementsDataRangeUseCaseTest {
     }
     verify {
       readChannelByRemoteIdUseCase.invoke(remoteId)
-      thermometerDataRangeProvide.handle(channelFunction.value)
-      humidityAndTemperatureDataRangeProvide.handle(channelFunction.value)
-      generalPurposeMeasurementDataRangeProvide.handle(channelFunction.value)
-      generalPurposeMeterDataRangeProvide.handle(channelFunction.value)
-      electricityMeterDataRangeProvide.handle(channelFunction.value)
+      thermometerDataRangeProvide.handle(channelFunction)
+      humidityAndTemperatureDataRangeProvide.handle(channelFunction)
+      generalPurposeMeasurementDataRangeProvide.handle(channelFunction)
+      generalPurposeMeterDataRangeProvide.handle(channelFunction)
+      electricityMeterDataRangeProvide.handle(channelFunction)
+      humidityDataRangeProvider.handle(channelFunction)
     }
     confirmVerified(
       readChannelByRemoteIdUseCase,
@@ -143,7 +148,8 @@ class LoadChannelMeasurementsDataRangeUseCaseTest {
       humidityAndTemperatureDataRangeProvide,
       generalPurposeMeasurementDataRangeProvide,
       generalPurposeMeterDataRangeProvide,
-      electricityMeterDataRangeProvide
+      electricityMeterDataRangeProvide,
+      humidityDataRangeProvider
     )
   }
 }

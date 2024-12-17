@@ -26,8 +26,7 @@ import org.supla.android.data.model.chart.ChannelChartSets
 import org.supla.android.data.model.chart.ChartDataSpec
 import org.supla.android.data.model.chart.ChartEntryType
 import org.supla.android.data.model.chart.HumidityChartColors
-import org.supla.android.data.model.chart.TemperatureChartColors
-import org.supla.android.data.source.TemperatureAndHumidityLogRepository
+import org.supla.android.data.source.HumidityLogRepository
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.di.GSON_FOR_REPO
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
@@ -39,41 +38,27 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
-class TemperatureAndHumidityMeasurementsProvider @Inject constructor(
-  private val temperatureAndHumidityLogRepository: TemperatureAndHumidityLogRepository,
+class HumidityMeasurementsProvider @Inject constructor(
+  private val humidityLogRepository: HumidityLogRepository,
   private val getCaptionUseCase: GetCaptionUseCase,
   getChannelValueStringUseCase: GetChannelValueStringUseCase,
   getChannelIconUseCase: GetChannelIconUseCase,
   preferences: Preferences,
   @Named(GSON_FOR_REPO) gson: Gson
 ) : ChannelMeasurementsProvider(getChannelValueStringUseCase, getChannelIconUseCase, preferences, gson) {
-
-  override fun handle(function: SuplaFunction) = function == SuplaFunction.HUMIDITY_AND_TEMPERATURE
+  override fun handle(function: SuplaFunction) = function == SuplaFunction.HUMIDITY
 
   override fun provide(
     channel: ChannelDataEntity,
     spec: ChartDataSpec,
     colorProvider: ((ChartEntryType) -> Int)?
-  ): Single<ChannelChartSets> =
-    temperatureAndHumidityLogRepository.findMeasurements(channel.remoteId, channel.profileId, spec.startDate, spec.endDate)
-      .map { measurements ->
-        listOf(
-          historyDataSet(
-            channel = channel,
-            type = ChartEntryType.TEMPERATURE,
-            color = colorProvider?.let { it(ChartEntryType.TEMPERATURE) } ?: TemperatureChartColors.DEFAULT,
-            aggregation = spec.aggregation,
-            measurements = aggregatingTemperature(measurements, spec.aggregation)
-          ),
-          historyDataSet(
-            channel = channel,
-            type = ChartEntryType.HUMIDITY,
-            color = colorProvider?.let { it(ChartEntryType.HUMIDITY) } ?: HumidityChartColors.DEFAULT,
-            aggregation = spec.aggregation,
-            measurements = aggregatingHumidity(measurements, spec.aggregation)
-          )
-        )
-      }
+  ): Single<ChannelChartSets> {
+    val entryType = ChartEntryType.HUMIDITY_ONLY
+    val color = colorProvider?.let { it(entryType) } ?: HumidityChartColors.DEFAULT
+
+    return humidityLogRepository.findMeasurements(channel.remoteId, channel.profileId, spec.startDate, spec.endDate)
+      .map { entities -> aggregatingHumidity(entities, spec.aggregation) }
+      .map { measurements -> listOf(historyDataSet(channel, entryType, color, spec.aggregation, measurements)) }
       .map {
         ChannelChartSets(
           channel.remoteId,
@@ -84,4 +69,5 @@ class TemperatureAndHumidityMeasurementsProvider @Inject constructor(
         )
       }
       .firstOrError()
+  }
 }

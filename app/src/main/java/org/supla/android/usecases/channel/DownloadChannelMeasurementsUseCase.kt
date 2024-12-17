@@ -24,9 +24,10 @@ import org.supla.android.extensions.TAG
 import org.supla.android.features.measurementsdownload.workers.DownloadElectricityMeasurementsWorker
 import org.supla.android.features.measurementsdownload.workers.DownloadGeneralPurposeMeasurementsWorker
 import org.supla.android.features.measurementsdownload.workers.DownloadGeneralPurposeMeterWorker
+import org.supla.android.features.measurementsdownload.workers.DownloadHumidityWorker
 import org.supla.android.features.measurementsdownload.workers.DownloadTemperaturesAndHumidityWorker
 import org.supla.android.features.measurementsdownload.workers.DownloadTemperaturesWorker
-import org.supla.android.lib.SuplaConst
+import org.supla.core.shared.data.model.general.SuplaFunction
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -35,44 +36,51 @@ class DownloadChannelMeasurementsUseCase @Inject constructor(
   private val workManagerProxy: WorkManagerProxy
 ) {
 
-  operator fun invoke(remoteId: Int, profileId: Long, function: Int) {
+  operator fun invoke(remoteId: Int, profileId: Long, function: SuplaFunction) {
     when (function) {
-      SuplaConst.SUPLA_CHANNELFNC_THERMOMETER ->
+      SuplaFunction.THERMOMETER ->
         workManagerProxy.enqueueUniqueWork(
           "${DownloadTemperaturesWorker.WORK_ID}.$remoteId",
           ExistingWorkPolicy.KEEP,
           DownloadTemperaturesWorker.build(remoteId, profileId)
         )
 
-      SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE ->
+      SuplaFunction.HUMIDITY_AND_TEMPERATURE ->
         workManagerProxy.enqueueUniqueWork(
           "${DownloadTemperaturesAndHumidityWorker.WORK_ID}.$remoteId",
           ExistingWorkPolicy.KEEP,
           DownloadTemperaturesAndHumidityWorker.build(remoteId, profileId)
         )
 
-      SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT ->
+      SuplaFunction.GENERAL_PURPOSE_MEASUREMENT ->
         workManagerProxy.enqueueUniqueWork(
           "${DownloadGeneralPurposeMeasurementsWorker.WORK_ID}.$remoteId",
           ExistingWorkPolicy.KEEP,
           DownloadGeneralPurposeMeasurementsWorker.build(remoteId, profileId)
         )
 
-      SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER ->
+      SuplaFunction.GENERAL_PURPOSE_METER ->
         workManagerProxy.enqueueUniqueWork(
           "${DownloadGeneralPurposeMeterWorker.WORK_ID}.$remoteId",
           ExistingWorkPolicy.KEEP,
           DownloadGeneralPurposeMeterWorker.build(remoteId, profileId)
         )
 
-      SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER,
-      SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH,
-      SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH,
-      SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER ->
+      SuplaFunction.ELECTRICITY_METER,
+      SuplaFunction.LIGHTSWITCH,
+      SuplaFunction.POWER_SWITCH,
+      SuplaFunction.STAIRCASE_TIMER ->
         workManagerProxy.enqueueUniqueWork(
           "${DownloadElectricityMeasurementsWorker.WORK_ID}.$remoteId",
           ExistingWorkPolicy.KEEP,
           DownloadElectricityMeasurementsWorker.build(remoteId, profileId)
+        )
+
+      SuplaFunction.HUMIDITY ->
+        workManagerProxy.enqueueUniqueWork(
+          "${DownloadHumidityWorker.WORK_ID}.$remoteId",
+          ExistingWorkPolicy.KEEP,
+          DownloadHumidityWorker.build(remoteId, profileId)
         )
 
       else -> Trace.w(TAG, "Tries to download something what is not supported (function: `$function`)")

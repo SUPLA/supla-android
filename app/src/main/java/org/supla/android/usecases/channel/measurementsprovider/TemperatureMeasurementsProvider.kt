@@ -29,9 +29,9 @@ import org.supla.android.data.model.chart.TemperatureChartColors
 import org.supla.android.data.source.TemperatureLogRepository
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.di.GSON_FOR_REPO
-import org.supla.android.lib.SuplaConst
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
+import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.usecase.GetCaptionUseCase
 import javax.inject.Inject
 import javax.inject.Named
@@ -46,7 +46,7 @@ class TemperatureMeasurementsProvider @Inject constructor(
   preferences: Preferences,
   @Named(GSON_FOR_REPO) gson: Gson
 ) : ChannelMeasurementsProvider(getChannelValueStringUseCase, getChannelIconUseCase, preferences, gson) {
-  override fun handle(function: Int) = function == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
+  override fun handle(function: SuplaFunction) = function == SuplaFunction.THERMOMETER
 
   override fun provide(
     channel: ChannelDataEntity,

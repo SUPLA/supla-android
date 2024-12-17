@@ -44,6 +44,10 @@
     android:name="org.supla.android.features.details.gpmdetail.GpmDetailFragment" />
 
   <fragment
+    android:id="@+id/humidity_detail_fragment"
+    android:name="org.supla.android.features.details.humiditydetail.HumidityDetailFragment" />
+
+  <fragment
     android:id="@+id/window_detail_fragment"
     android:name="org.supla.android.features.details.windowdetail.WindowDetailFragment" />
 

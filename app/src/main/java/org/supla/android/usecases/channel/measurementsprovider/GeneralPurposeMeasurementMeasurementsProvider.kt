@@ -36,9 +36,9 @@ import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.measurements.GeneralPurposeMeasurementEntity
 import org.supla.android.di.GSON_FOR_REPO
 import org.supla.android.extensions.toTimestamp
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
+import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.usecase.GetCaptionUseCase
 import javax.inject.Inject
 import javax.inject.Named
@@ -53,7 +53,7 @@ class GeneralPurposeMeasurementMeasurementsProvider @Inject constructor(
   preferences: Preferences,
   @Named(GSON_FOR_REPO) gson: Gson
 ) : ChannelMeasurementsProvider(getChannelValueStringUseCase, getChannelIconUseCase, preferences, gson) {
-  override fun handle(function: Int) = function == SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT
+  override fun handle(function: SuplaFunction) = function == SuplaFunction.GENERAL_PURPOSE_MEASUREMENT
 
   override fun provide(
     channel: ChannelDataEntity,

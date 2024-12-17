@@ -41,6 +41,10 @@ data class ThermometerDetailType(
   val pages: List<DetailPage>
 ) : DetailType
 
+data class HumidityDetailType(
+  val pages: List<DetailPage>
+) : DetailType
+
 data class GpmDetailType(
   val pages: List<DetailPage>
 ) : DetailType

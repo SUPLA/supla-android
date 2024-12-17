@@ -33,6 +33,7 @@ import org.mockito.kotlin.whenever
 import org.supla.android.data.source.ElectricityMeterLogRepository
 import org.supla.android.data.source.GeneralPurposeMeasurementLogRepository
 import org.supla.android.data.source.GeneralPurposeMeterLogRepository
+import org.supla.android.data.source.HumidityLogRepository
 import org.supla.android.data.source.RoomChannelRepository
 import org.supla.android.data.source.TemperatureAndHumidityLogRepository
 import org.supla.android.data.source.TemperatureLogRepository
@@ -65,6 +66,9 @@ class DeleteChannelMeasurementsUseCaseTest {
 
   @Mock
   private lateinit var electricityMeterLogRepository: ElectricityMeterLogRepository
+
+  @Mock
+  private lateinit var humidityLogRepository: HumidityLogRepository
 
   @InjectMocks
   private lateinit var useCase: DeleteChannelMeasurementsUseCase

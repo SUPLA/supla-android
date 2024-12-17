@@ -30,6 +30,7 @@ import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity
 import org.supla.android.data.source.local.entity.ChannelGroupEntity
 import org.supla.android.data.source.local.entity.ChannelGroupRelationEntity
 import org.supla.android.data.source.local.entity.ChannelRelationEntity
+import org.supla.android.data.source.local.entity.ChannelStateEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.ColorEntity
 import org.supla.android.data.source.local.entity.LocationEntity
@@ -169,7 +170,8 @@ class LocalProfileRepository(provider: DatabaseAccessProvider) : ProfileReposito
       SceneEntity.TABLE_NAME to SceneEntity.COLUMN_PROFILE_ID,
       UserIconEntity.TABLE_NAME to UserIconEntity.COLUMN_PROFILE_ID,
       ChannelRelationEntity.TABLE_NAME to ChannelRelationEntity.COLUMN_PROFILE_ID,
-      ChannelConfigEntity.TABLE_NAME to ChannelConfigEntity.COLUMN_PROFILE_ID
+      ChannelConfigEntity.TABLE_NAME to ChannelConfigEntity.COLUMN_PROFILE_ID,
+      ChannelStateEntity.TABLE_NAME to ChannelStateEntity.COLUMN_PROFILE_ID
     )
     for ((table, column) in tables) {
       delete(table, key(column, id))

@@ -40,7 +40,6 @@ import org.supla.android.di.GSON_FOR_REPO
 import org.supla.android.extensions.toTimestamp
 import org.supla.android.features.details.electricitymeterdetail.history.ElectricityMeterChartType
 import org.supla.android.images.ImageId
-import org.supla.android.lib.SuplaConst
 import org.supla.android.ui.views.charts.ElectricityMarkerCustomData
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.channel.measurementsprovider.electricity.ElectricityChartFilters
@@ -52,6 +51,7 @@ import org.supla.android.usecases.channel.measurementsprovider.electricity.ifPha
 import org.supla.android.usecases.channel.measurementsprovider.electricity.ifPhase3
 import org.supla.android.usecases.channel.valueformatter.ListElectricityMeterValueFormatter
 import org.supla.android.usecases.icon.GetChannelIconUseCase
+import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.usecase.GetCaptionUseCase
 import javax.inject.Inject
 import javax.inject.Named
@@ -67,12 +67,12 @@ class ElectricityConsumptionMeasurementsProvider @Inject constructor(
   @Named(GSON_FOR_REPO) gson: Gson
 ) : ChannelMeasurementsProvider(getChannelValueStringUseCase, getChannelIconUseCase, preferences, gson) {
 
-  override fun handle(function: Int) =
+  override fun handle(function: SuplaFunction) =
     when (function) {
-      SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER,
-      SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH,
-      SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH,
-      SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER -> true
+      SuplaFunction.ELECTRICITY_METER,
+      SuplaFunction.LIGHTSWITCH,
+      SuplaFunction.POWER_SWITCH,
+      SuplaFunction.STAIRCASE_TIMER -> true
 
       else -> false
     }

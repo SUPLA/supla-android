@@ -24,6 +24,7 @@ import org.supla.android.usecases.channel.measurementsprovider.ChannelMeasuremen
 import org.supla.android.usecases.channel.measurementsprovider.ElectricityConsumptionMeasurementsProvider
 import org.supla.android.usecases.channel.measurementsprovider.GeneralPurposeMeasurementMeasurementsProvider
 import org.supla.android.usecases.channel.measurementsprovider.GeneralPurposeMeterMeasurementsProvider
+import org.supla.android.usecases.channel.measurementsprovider.HumidityMeasurementsProvider
 import org.supla.android.usecases.channel.measurementsprovider.TemperatureAndHumidityMeasurementsProvider
 import org.supla.android.usecases.channel.measurementsprovider.TemperatureMeasurementsProvider
 import javax.inject.Inject
@@ -36,7 +37,8 @@ class LoadChannelMeasurementsUseCase @Inject constructor(
   temperatureAndHumidityMeasurementsProvider: TemperatureAndHumidityMeasurementsProvider,
   generalPurposeMeasurementMeasurementsProvider: GeneralPurposeMeasurementMeasurementsProvider,
   generalPurposeMeterMeasurementsProvider: GeneralPurposeMeterMeasurementsProvider,
-  electricityConsumptionMeasurementsProvider: ElectricityConsumptionMeasurementsProvider
+  electricityConsumptionMeasurementsProvider: ElectricityConsumptionMeasurementsProvider,
+  humidityMeasurementsProvider: HumidityMeasurementsProvider
 ) {
 
   private val providers: List<ChannelMeasurementsProvider> = listOf(
@@ -44,7 +46,8 @@ class LoadChannelMeasurementsUseCase @Inject constructor(
     temperatureAndHumidityMeasurementsProvider,
     generalPurposeMeasurementMeasurementsProvider,
     generalPurposeMeterMeasurementsProvider,
-    electricityConsumptionMeasurementsProvider
+    electricityConsumptionMeasurementsProvider,
+    humidityMeasurementsProvider
   )
 
   operator fun invoke(remoteId: Int, spec: ChartDataSpec): Single<ChannelChartSets> =
@@ -52,7 +55,7 @@ class LoadChannelMeasurementsUseCase @Inject constructor(
       .toSingle()
       .flatMap {
         providers.forEach { provider ->
-          if (provider.handle(it.function.value)) {
+          if (provider.handle(it.function)) {
             return@flatMap provider.provide(it, spec)
           }
         }

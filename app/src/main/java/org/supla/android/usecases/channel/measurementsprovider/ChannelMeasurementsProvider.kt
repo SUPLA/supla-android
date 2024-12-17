@@ -38,6 +38,7 @@ import org.supla.android.usecases.channel.valueformatter.GpmValueFormatter
 import org.supla.android.usecases.channel.valueformatter.HumidityValueFormatter
 import org.supla.android.usecases.channel.valueformatter.ThermometerValueFormatter
 import org.supla.android.usecases.icon.GetChannelIconUseCase
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 abstract class ChannelMeasurementsProvider(
   private val getChannelValueStringUseCase: GetChannelValueStringUseCase,
@@ -46,7 +47,7 @@ abstract class ChannelMeasurementsProvider(
   private val gson: Gson // GSON_FOR_REPO
 ) {
 
-  abstract fun handle(function: Int): Boolean
+  abstract fun handle(function: SuplaFunction): Boolean
   abstract fun provide(
     channel: ChannelDataEntity,
     spec: ChartDataSpec,
@@ -82,7 +83,7 @@ abstract class ChannelMeasurementsProvider(
 
   protected fun getValueFormatter(type: ChartEntryType, channel: ChannelDataEntity): ChannelValueFormatter {
     return when (type) {
-      ChartEntryType.HUMIDITY -> HumidityValueFormatter()
+      ChartEntryType.HUMIDITY, ChartEntryType.HUMIDITY_ONLY -> HumidityValueFormatter()
       ChartEntryType.TEMPERATURE -> ThermometerValueFormatter(preferences)
       ChartEntryType.GENERAL_PURPOSE_MEASUREMENT,
       ChartEntryType.GENERAL_PURPOSE_METER ->

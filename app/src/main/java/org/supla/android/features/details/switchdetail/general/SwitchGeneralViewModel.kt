@@ -121,7 +121,7 @@ class SwitchGeneralViewModel @Inject constructor(
   private fun handleData(data: ChannelDataBase, measurements: ElectricityMeasurements?, cleanupDownloading: Boolean) {
     updateState { state ->
       if (data.hasElectricityMeter && !state.initialDataLoadStarted) {
-        downloadChannelMeasurementsUseCase.invoke(data.remoteId, data.profileId, data.function.value)
+        downloadChannelMeasurementsUseCase.invoke(data.remoteId, data.profileId, data.function)
       }
 
       val downloading = if (cleanupDownloading) false else (state.electricityMeterState?.currentMonthDownloading ?: false)

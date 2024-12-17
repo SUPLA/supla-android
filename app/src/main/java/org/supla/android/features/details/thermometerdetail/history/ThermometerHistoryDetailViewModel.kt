@@ -40,6 +40,7 @@ import org.supla.android.usecases.channel.DownloadChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.LoadChannelMeasurementsDataRangeUseCase
 import org.supla.android.usecases.channel.LoadChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
+import org.supla.core.shared.data.model.general.SuplaFunction
 import javax.inject.Inject
 
 @HiltViewModel
@@ -87,10 +88,10 @@ class ThermometerHistoryDetailViewModel @Inject constructor(
 
     restoreRange(chartState)
     configureDownloadObserver(channel.remoteId)
-    startInitialDataLoad(channel.remoteId, channel.profileId, channel.function.value)
+    startInitialDataLoad(channel.remoteId, channel.profileId, channel.function)
   }
 
-  private fun startInitialDataLoad(remoteId: Int, profileId: Long, channelFunction: Int) {
+  private fun startInitialDataLoad(remoteId: Int, profileId: Long, channelFunction: SuplaFunction) {
     if (currentState().initialLoadStarted) {
       // Needs to be performed only once
       return
