@@ -21,18 +21,8 @@ import androidx.annotation.DrawableRes
 import org.supla.android.R
 import org.supla.android.data.model.general.ChannelState
 import org.supla.android.data.model.general.IconType
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DISTANCESENSOR
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HUMIDITY
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_IC_GAS_METER
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_IC_HEAT_METER
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_IC_WATER_METER
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_PRESSURESENSOR
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_RAINSENSOR
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_WEIGHTSENSOR
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_WINDSENSOR
 import org.supla.android.usecases.icon.producers.AlarmArmamentSensorIconResourceProducer
+import org.supla.android.usecases.icon.producers.ContainerIconResourceProducer
 import org.supla.android.usecases.icon.producers.CurtainIconResourceProducer
 import org.supla.android.usecases.icon.producers.DigiglassIconResourceProducer
 import org.supla.android.usecases.icon.producers.DimmerAndRgbIconResourceProducer
@@ -67,6 +57,7 @@ import org.supla.android.usecases.icon.producers.ThermostatHvacIconResourceProdu
 import org.supla.android.usecases.icon.producers.ValveIconResourceProducer
 import org.supla.android.usecases.icon.producers.VerticalBlindsIconResourceProducer
 import org.supla.android.usecases.icon.producers.WindowIconResourceProducer
+import org.supla.core.shared.data.model.general.SuplaFunction
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -84,29 +75,29 @@ class GetDefaultIconResourceUseCase @Inject constructor() {
     PowerSwitchIconResourceProducer(),
     LightSwitchIconResourceProducer(),
     StaircaseTimerIconResourceProducer(),
-    static(SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER, R.drawable.fnc_thermostat_dhw),
+    static(SuplaFunction.HVAC_DOMESTIC_HOT_WATER, R.drawable.fnc_thermostat_dhw),
     ThermostatHvacIconResourceProducer(),
     ThermometerIconResourceProducer(),
-    static(SUPLA_CHANNELFNC_HUMIDITY, R.drawable.humidity),
+    static(SuplaFunction.HUMIDITY, R.drawable.humidity),
     HumidityAndTemperatureIconResourceProducer(),
-    static(SUPLA_CHANNELFNC_WINDSENSOR, R.drawable.wind),
-    static(SUPLA_CHANNELFNC_PRESSURESENSOR, R.drawable.pressure),
-    static(SUPLA_CHANNELFNC_RAINSENSOR, R.drawable.rain),
-    static(SUPLA_CHANNELFNC_WEIGHTSENSOR, R.drawable.weight),
+    static(SuplaFunction.WIND_SENSOR, R.drawable.wind),
+    static(SuplaFunction.PRESSURE_SENSOR, R.drawable.pressure),
+    static(SuplaFunction.RAIN_SENSOR, R.drawable.rain),
+    static(SuplaFunction.WEIGHT_SENSOR, R.drawable.weight),
     LiquidSensorIconResourceProducer(),
     DimmerIconResourceProducer(),
     RgbLightingIconResourceProducer(),
     DimmerAndRgbIconResourceProducer(),
-    static(SUPLA_CHANNELFNC_DEPTHSENSOR, R.drawable.fnc_depth),
-    static(SUPLA_CHANNELFNC_DISTANCESENSOR, R.drawable.fnc_distance),
+    static(SuplaFunction.DEPTH_SENSOR, R.drawable.fnc_depth),
+    static(SuplaFunction.DISTANCE_SENSOR, R.drawable.fnc_distance),
     WindowIconResourceProducer(),
     HotelCardIconResourceProducer(),
     AlarmArmamentSensorIconResourceProducer(),
     MailSensorIconResourceProducer(),
     ElectricityMeterIconResourceProducer(),
-    static(SUPLA_CHANNELFNC_IC_GAS_METER, R.drawable.fnc_gasmeter),
-    static(SUPLA_CHANNELFNC_IC_WATER_METER, R.drawable.fnc_watermeter),
-    static(SUPLA_CHANNELFNC_IC_HEAT_METER, R.drawable.fnc_heatmeter),
+    static(SuplaFunction.IC_GAS_METER, R.drawable.fnc_gasmeter),
+    static(SuplaFunction.IC_WATER_METER, R.drawable.fnc_watermeter),
+    static(SuplaFunction.IC_HEAT_METER, R.drawable.fnc_heatmeter),
     ThermostatHomePlusIconResourceProducer(),
     ValveIconResourceProducer(),
     DigiglassIconResourceProducer(),
@@ -118,7 +109,8 @@ class GetDefaultIconResourceUseCase @Inject constructor() {
     VerticalBlindsIconResourceProducer,
     GarageDoorRollerIconResourceProducer,
     HeatOrColdSourceSwitchIconResourceProducer,
-    PumpSwitchIconResourceProducer
+    PumpSwitchIconResourceProducer,
+    ContainerIconResourceProducer
   )
 
   @DrawableRes
@@ -136,18 +128,18 @@ class GetDefaultIconResourceUseCase @Inject constructor() {
 }
 
 interface IconResourceProducer {
-  fun accepts(function: Int): Boolean
+  fun accepts(function: SuplaFunction): Boolean
 
   @DrawableRes
   fun produce(data: IconData): Int?
 }
 
 data class IconData(
-  val function: Int,
+  val function: SuplaFunction,
   val altIcon: Int,
   val state: ChannelState = ChannelState(ChannelState.Value.NOT_USED),
   val type: IconType = IconType.SINGLE
 )
 
-private fun static(function: Int, @DrawableRes day: Int) =
+private fun static(function: SuplaFunction, @DrawableRes day: Int) =
   StaticIconResourceProducer(function, day)

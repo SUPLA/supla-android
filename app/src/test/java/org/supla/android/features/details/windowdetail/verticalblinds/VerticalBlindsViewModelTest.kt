@@ -70,7 +70,7 @@ import org.supla.android.usecases.group.GetGroupOnlineSummaryUseCase
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
 import org.supla.android.usecases.group.ReadGroupTiltingDetailsUseCase
 import org.supla.android.usecases.group.totalvalue.ShadowingBlindGroupValue
-import org.supla.core.shared.data.model.facadeblind.FacadeBlindValue
+import org.supla.core.shared.data.model.function.facadeblind.FacadeBlindValue
 import org.supla.core.shared.data.model.shadingsystem.SuplaShadingSystemFlag
 
 @RunWith(MockitoJUnitRunner::class)

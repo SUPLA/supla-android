@@ -23,7 +23,7 @@ import org.mockito.InjectMocks
 import org.mockito.junit.MockitoJUnitRunner
 import org.supla.android.R
 import org.supla.android.data.model.general.ChannelState
-import org.supla.android.lib.SuplaConst
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 @RunWith(MockitoJUnitRunner::class)
 class DimmerAndRgbIconResourceProducerTest : BaseIconResourceProducerTest() {
@@ -35,7 +35,7 @@ class DimmerAndRgbIconResourceProducerTest : BaseIconResourceProducerTest() {
   fun `should produce off off icon`() {
     test(
       data = mockIconData(state = ChannelState(ChannelState.Value.COMPLEX, listOf(ChannelState.Value.OFF, ChannelState.Value.OFF))),
-      function = SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING,
+      function = SuplaFunction.DIMMER_AND_RGB_LIGHTING,
       expectedIcon = R.drawable.dimmerrgboffoff
     )
   }
@@ -44,7 +44,7 @@ class DimmerAndRgbIconResourceProducerTest : BaseIconResourceProducerTest() {
   fun `should produce on off icon`() {
     test(
       data = mockIconData(state = ChannelState(ChannelState.Value.COMPLEX, listOf(ChannelState.Value.ON, ChannelState.Value.OFF))),
-      function = SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING,
+      function = SuplaFunction.DIMMER_AND_RGB_LIGHTING,
       expectedIcon = R.drawable.dimmerrgbonoff
     )
   }
@@ -53,7 +53,7 @@ class DimmerAndRgbIconResourceProducerTest : BaseIconResourceProducerTest() {
   fun `should produce off on icon`() {
     test(
       data = mockIconData(state = ChannelState(ChannelState.Value.COMPLEX, listOf(ChannelState.Value.OFF, ChannelState.Value.ON))),
-      function = SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING,
+      function = SuplaFunction.DIMMER_AND_RGB_LIGHTING,
       expectedIcon = R.drawable.dimmerrgboffon
     )
   }
@@ -62,7 +62,7 @@ class DimmerAndRgbIconResourceProducerTest : BaseIconResourceProducerTest() {
   fun `should produce on on icon`() {
     test(
       data = mockIconData(state = ChannelState(ChannelState.Value.COMPLEX, listOf(ChannelState.Value.ON, ChannelState.Value.ON))),
-      function = SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING,
+      function = SuplaFunction.DIMMER_AND_RGB_LIGHTING,
       expectedIcon = R.drawable.dimmerrgbonon
     )
   }
@@ -71,7 +71,7 @@ class DimmerAndRgbIconResourceProducerTest : BaseIconResourceProducerTest() {
   fun `should produce null icon`() {
     test(
       data = mockIconData(state = ChannelState(ChannelState.Value.NOT_USED)),
-      function = SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING,
+      function = SuplaFunction.DIMMER_AND_RGB_LIGHTING,
       expectedIcon = null
     )
   }

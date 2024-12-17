@@ -23,8 +23,7 @@ import org.mockito.InjectMocks
 import org.mockito.junit.MockitoJUnitRunner
 import org.supla.android.R
 import org.supla.android.data.model.general.ChannelState
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATEWAY
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 @RunWith(MockitoJUnitRunner::class)
 class GatewayIconResourceProducerTest : BaseIconResourceProducerTest() {
@@ -36,7 +35,7 @@ class GatewayIconResourceProducerTest : BaseIconResourceProducerTest() {
   fun `should produce open icon`() {
     test(
       state = ChannelState.Value.OPEN,
-      function = SUPLA_CHANNELFNC_OPENSENSOR_GATEWAY,
+      function = SuplaFunction.OPEN_SENSOR_GATEWAY,
       expectedIcon = R.drawable.gatewayopen
     )
   }
@@ -45,7 +44,7 @@ class GatewayIconResourceProducerTest : BaseIconResourceProducerTest() {
   fun `should produce closed icon`() {
     test(
       state = ChannelState.Value.CLOSED,
-      function = SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK,
+      function = SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK,
       expectedIcon = R.drawable.gatewayclosed
     )
   }

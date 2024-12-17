@@ -19,6 +19,7 @@ package org.supla.core.shared.data.model.rollershutter
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
+import org.supla.core.shared.data.model.function.rollershutter.RollerShutterValue
 import org.supla.core.shared.data.model.shadingsystem.SuplaShadingSystemFlag
 
 class RollerShutterValueTest {

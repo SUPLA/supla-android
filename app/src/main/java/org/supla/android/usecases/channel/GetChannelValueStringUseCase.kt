@@ -21,6 +21,7 @@ import org.supla.android.Trace
 import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.extensions.TAG
+import org.supla.android.usecases.channel.stringvalueprovider.ContainerValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.DepthSensorValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.DistanceSensorValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.ElectricityMeterValueStringProvider
@@ -49,7 +50,8 @@ class GetChannelValueStringUseCase @Inject constructor(
   impulseCounterValueStringProvider: ImpulseCounterValueStringProvider,
   pressureSensorValueStringProvider: PressureSensorValueStringProvider,
   rainSensorValueStringProvider: RainSensorValueStringProvider,
-  humidityValueStringProvider: HumidityValueStringProvider
+  humidityValueStringProvider: HumidityValueStringProvider,
+  containerValueStringProvider: ContainerValueStringProvider
 ) {
 
   private val providers = listOf(
@@ -64,6 +66,7 @@ class GetChannelValueStringUseCase @Inject constructor(
     pressureSensorValueStringProvider,
     rainSensorValueStringProvider,
     humidityValueStringProvider,
+    containerValueStringProvider,
     NoValueStringProvider(SuplaFunction.STAIRCASE_TIMER),
     NoValueStringProvider(SuplaFunction.POWER_SWITCH),
     NoValueStringProvider(SuplaFunction.LIGHTSWITCH),

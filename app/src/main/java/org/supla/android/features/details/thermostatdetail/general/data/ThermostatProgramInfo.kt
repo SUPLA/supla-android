@@ -37,7 +37,7 @@ import org.supla.android.extensions.guardLet
 import org.supla.android.extensions.valuesFormatter
 import org.supla.android.features.details.thermostatdetail.ui.OFF
 import org.supla.android.features.details.thermostatdetail.ui.description
-import org.supla.core.shared.data.model.thermostat.SuplaThermostatFlag
+import org.supla.core.shared.data.model.function.thermostat.SuplaThermostatFlag
 
 data class ThermostatProgramInfo(
   val type: Type,

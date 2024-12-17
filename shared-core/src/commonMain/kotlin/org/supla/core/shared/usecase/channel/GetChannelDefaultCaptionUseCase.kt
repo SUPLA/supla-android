@@ -19,6 +19,7 @@ package org.supla.core.shared.usecase.channel
 
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_ALARM_ARMAMENT_SENSOR
+import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_CONTAINER
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_CONTROLLING_THE_DOOR_LOCK
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_CONTROLLING_THE_FACADE_BLIND
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_CONTROLLING_THE_GARAGE_DOOR
@@ -132,6 +133,7 @@ class GetChannelDefaultCaptionUseCase {
       SuplaFunction.ROLLER_GARAGE_DOOR -> localizedString(CHANNEL_CAPTION_ROLLER_GARAGE_DOOR)
       SuplaFunction.PUMP_SWITCH -> localizedString(CHANNEL_CAPTION_PUMP_SWITCH)
       SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH -> localizedString(CHANNEL_CAPTION_HEAT_OR_COLD_SOURCE_SWITCH)
+      SuplaFunction.CONTAINER -> localizedString(CHANNEL_CAPTION_CONTAINER)
 
       SuplaFunction.UNKNOWN,
       SuplaFunction.NONE,

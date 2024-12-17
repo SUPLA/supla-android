@@ -31,6 +31,7 @@ import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.usecases.channel.stringvalueprovider.ContainerValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.DepthSensorValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.DistanceSensorValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.ElectricityMeterValueStringProvider
@@ -79,6 +80,9 @@ class GetChannelValueStringUseCaseTest {
 
   @Mock
   private lateinit var humidityValueStringProvider: HumidityValueStringProvider
+
+  @Mock
+  private lateinit var containerValueStringProvider: ContainerValueStringProvider
 
   @InjectMocks
   private lateinit var useCase: GetChannelValueStringUseCase

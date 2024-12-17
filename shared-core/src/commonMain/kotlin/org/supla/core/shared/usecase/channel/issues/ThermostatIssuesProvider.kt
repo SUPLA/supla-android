@@ -20,8 +20,8 @@ package org.supla.core.shared.usecase.channel.issues
 import org.supla.core.shared.data.model.channel.ChannelWithChildren
 import org.supla.core.shared.data.model.channel.isThermostat
 import org.supla.core.shared.data.model.channel.thermostatValue
+import org.supla.core.shared.data.model.function.thermostat.SuplaThermostatFlag
 import org.supla.core.shared.data.model.lists.ChannelIssueItem
-import org.supla.core.shared.data.model.thermostat.SuplaThermostatFlag
 import org.supla.core.shared.infrastructure.LocalizedStringId
 
 class ThermostatIssuesProvider : ChannelIssuesProvider {

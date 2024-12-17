@@ -24,7 +24,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.supla.android.R
 import org.supla.android.data.model.general.ChannelState
 import org.supla.android.data.model.general.IconType
-import org.supla.android.lib.SuplaConst
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 @RunWith(MockitoJUnitRunner::class)
 class HumidityAndTemperatureIconResourceProducerTest : BaseIconResourceProducerTest() {
@@ -36,7 +36,7 @@ class HumidityAndTemperatureIconResourceProducerTest : BaseIconResourceProducerT
   fun `should produce humidity icon`() {
     test(
       data = mockIconData(stateValue = ChannelState.Value.NOT_USED, type = IconType.SECOND),
-      function = SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE,
+      function = SuplaFunction.HUMIDITY_AND_TEMPERATURE,
       expectedIcon = R.drawable.humidity
     )
   }
@@ -45,7 +45,7 @@ class HumidityAndTemperatureIconResourceProducerTest : BaseIconResourceProducerT
   fun `should produce thermometer icon`() {
     test(
       data = mockIconData(stateValue = ChannelState.Value.NOT_USED, type = IconType.FIRST),
-      function = SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE,
+      function = SuplaFunction.HUMIDITY_AND_TEMPERATURE,
       expectedIcon = R.drawable.thermometer
     )
   }
@@ -54,7 +54,7 @@ class HumidityAndTemperatureIconResourceProducerTest : BaseIconResourceProducerT
   fun `should produce thermometer icon also for single type`() {
     test(
       data = mockIconData(stateValue = ChannelState.Value.NOT_USED, type = IconType.SINGLE),
-      function = SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE,
+      function = SuplaFunction.HUMIDITY_AND_TEMPERATURE,
       expectedIcon = R.drawable.thermometer
     )
   }

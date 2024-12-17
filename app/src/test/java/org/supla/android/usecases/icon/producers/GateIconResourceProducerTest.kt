@@ -23,7 +23,7 @@ import org.mockito.InjectMocks
 import org.mockito.junit.MockitoJUnitRunner
 import org.supla.android.R
 import org.supla.android.data.model.general.ChannelState
-import org.supla.android.lib.SuplaConst
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 @RunWith(MockitoJUnitRunner::class)
 class GateIconResourceProducerTest : BaseIconResourceProducerTest() {
@@ -35,7 +35,7 @@ class GateIconResourceProducerTest : BaseIconResourceProducerTest() {
   fun `should produce open icon`() {
     test(
       state = ChannelState.Value.OPEN,
-      function = SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATE,
+      function = SuplaFunction.OPEN_SENSOR_GATE,
       expectedIcon = R.drawable.gateopen
     )
   }
@@ -44,7 +44,7 @@ class GateIconResourceProducerTest : BaseIconResourceProducerTest() {
   fun `should produce closed icon`() {
     test(
       state = ChannelState.Value.CLOSED,
-      function = SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE,
+      function = SuplaFunction.CONTROLLING_THE_GATE,
       expectedIcon = R.drawable.gateclosed
     )
   }
@@ -53,7 +53,7 @@ class GateIconResourceProducerTest : BaseIconResourceProducerTest() {
   fun `should produce partially opened icon`() {
     test(
       state = ChannelState.Value.PARTIALLY_OPENED,
-      function = SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE,
+      function = SuplaFunction.CONTROLLING_THE_GATE,
       expectedIcon = R.drawable.gateclosed50percent
     )
   }
@@ -63,7 +63,7 @@ class GateIconResourceProducerTest : BaseIconResourceProducerTest() {
     test(
       state = ChannelState.Value.OPEN,
       altIcon = 1,
-      function = SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATE,
+      function = SuplaFunction.CONTROLLING_THE_GATE,
       expectedIcon = R.drawable.gatealt1open
     )
   }
@@ -73,7 +73,7 @@ class GateIconResourceProducerTest : BaseIconResourceProducerTest() {
     test(
       state = ChannelState.Value.CLOSED,
       altIcon = 1,
-      function = SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE,
+      function = SuplaFunction.CONTROLLING_THE_GATE,
       expectedIcon = R.drawable.gatealt1closed
     )
   }
@@ -83,7 +83,7 @@ class GateIconResourceProducerTest : BaseIconResourceProducerTest() {
     test(
       state = ChannelState.Value.PARTIALLY_OPENED,
       altIcon = 1,
-      function = SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE,
+      function = SuplaFunction.CONTROLLING_THE_GATE,
       expectedIcon = R.drawable.gatealt1closed50percent
     )
   }
@@ -93,7 +93,7 @@ class GateIconResourceProducerTest : BaseIconResourceProducerTest() {
     test(
       state = ChannelState.Value.OPEN,
       altIcon = 2,
-      function = SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATE,
+      function = SuplaFunction.OPEN_SENSOR_GATE,
       expectedIcon = R.drawable.barieropen
     )
   }
@@ -103,7 +103,7 @@ class GateIconResourceProducerTest : BaseIconResourceProducerTest() {
     test(
       state = ChannelState.Value.CLOSED,
       altIcon = 2,
-      function = SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE,
+      function = SuplaFunction.CONTROLLING_THE_GATE,
       expectedIcon = R.drawable.barierclosed
     )
   }

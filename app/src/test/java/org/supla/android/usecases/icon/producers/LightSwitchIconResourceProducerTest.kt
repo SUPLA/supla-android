@@ -17,14 +17,13 @@ package org.supla.android.usecases.icon.producers
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.InjectMocks
 import org.mockito.junit.MockitoJUnitRunner
 import org.supla.android.R
 import org.supla.android.data.model.general.ChannelState
-import org.supla.android.lib.SuplaConst
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 @RunWith(MockitoJUnitRunner::class)
 class LightSwitchIconResourceProducerTest : BaseIconResourceProducerTest() {
@@ -36,7 +35,7 @@ class LightSwitchIconResourceProducerTest : BaseIconResourceProducerTest() {
   fun `should produce on icon`() {
     test(
       state = ChannelState.Value.ON,
-      function = SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH,
+      function = SuplaFunction.LIGHTSWITCH,
       expectedIcon = R.drawable.lighton
     )
   }
@@ -45,7 +44,7 @@ class LightSwitchIconResourceProducerTest : BaseIconResourceProducerTest() {
   fun `should produce off icon`() {
     test(
       state = ChannelState.Value.OFF,
-      function = SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH,
+      function = SuplaFunction.LIGHTSWITCH,
       expectedIcon = R.drawable.lightoff
     )
   }
@@ -55,7 +54,7 @@ class LightSwitchIconResourceProducerTest : BaseIconResourceProducerTest() {
     test(
       state = ChannelState.Value.ON,
       altIcon = 1,
-      function = SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH,
+      function = SuplaFunction.LIGHTSWITCH,
       expectedIcon = R.drawable.xmastreeon
     )
   }
@@ -65,7 +64,7 @@ class LightSwitchIconResourceProducerTest : BaseIconResourceProducerTest() {
     test(
       state = ChannelState.Value.OFF,
       altIcon = 1,
-      function = SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH,
+      function = SuplaFunction.LIGHTSWITCH,
       expectedIcon = R.drawable.xmastreeoff
     )
   }
@@ -75,7 +74,7 @@ class LightSwitchIconResourceProducerTest : BaseIconResourceProducerTest() {
     test(
       state = ChannelState.Value.ON,
       altIcon = 2,
-      function = SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH,
+      function = SuplaFunction.LIGHTSWITCH,
       expectedIcon = R.drawable.uvon
     )
   }
@@ -85,7 +84,7 @@ class LightSwitchIconResourceProducerTest : BaseIconResourceProducerTest() {
     test(
       state = ChannelState.Value.OFF,
       altIcon = 2,
-      function = SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH,
+      function = SuplaFunction.LIGHTSWITCH,
       expectedIcon = R.drawable.uvoff
     )
   }

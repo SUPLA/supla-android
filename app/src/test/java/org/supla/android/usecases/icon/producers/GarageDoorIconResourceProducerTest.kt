@@ -23,7 +23,7 @@ import org.mockito.InjectMocks
 import org.mockito.junit.MockitoJUnitRunner
 import org.supla.android.R
 import org.supla.android.data.model.general.ChannelState
-import org.supla.android.lib.SuplaConst
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 @RunWith(MockitoJUnitRunner::class)
 class GarageDoorIconResourceProducerTest : BaseIconResourceProducerTest() {
@@ -35,7 +35,7 @@ class GarageDoorIconResourceProducerTest : BaseIconResourceProducerTest() {
   fun `should produce open icon`() {
     test(
       state = ChannelState.Value.OPEN,
-      function = SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GARAGEDOOR,
+      function = SuplaFunction.OPEN_SENSOR_GARAGE_DOOR,
       expectedIcon = R.drawable.garagedooropen
     )
   }
@@ -44,7 +44,7 @@ class GarageDoorIconResourceProducerTest : BaseIconResourceProducerTest() {
   fun `should produce closed icon`() {
     test(
       state = ChannelState.Value.CLOSED,
-      function = SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GARAGEDOOR,
+      function = SuplaFunction.OPEN_SENSOR_GARAGE_DOOR,
       expectedIcon = R.drawable.garagedoorclosed
     )
   }
@@ -53,7 +53,7 @@ class GarageDoorIconResourceProducerTest : BaseIconResourceProducerTest() {
   fun `should produce partially opened icon`() {
     test(
       state = ChannelState.Value.PARTIALLY_OPENED,
-      function = SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR,
+      function = SuplaFunction.CONTROLLING_THE_GARAGE_DOOR,
       expectedIcon = R.drawable.garagedoorclosed50percent
     )
   }

@@ -129,7 +129,8 @@ fun SuplaFunction.hasCustomFilters(): Boolean =
     SuplaFunction.ROLLER_GARAGE_DOOR,
     SuplaFunction.HUMIDITY_AND_TEMPERATURE,
     SuplaFunction.PUMP_SWITCH,
-    SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH -> false
+    SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH,
+    SuplaFunction.CONTAINER -> false
 
     SuplaFunction.ELECTRICITY_METER,
     SuplaFunction.POWER_SWITCH,

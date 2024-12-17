@@ -26,9 +26,9 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.usecases.icon.GetChannelIconUseCase
-import org.supla.core.shared.data.model.thermostat.SuplaThermostatFlag
-import org.supla.core.shared.data.model.thermostat.ThermostatState
-import org.supla.core.shared.data.model.thermostat.ThermostatValue
+import org.supla.core.shared.data.model.function.thermostat.SuplaThermostatFlag
+import org.supla.core.shared.data.model.function.thermostat.ThermostatState
+import org.supla.core.shared.data.model.function.thermostat.ThermostatValue
 
 @RunWith(MockitoJUnitRunner::class)
 class SensorIssueTest {

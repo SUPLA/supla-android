@@ -99,7 +99,8 @@ abstract class BaseListViewModel<S : ViewState, E : ViewEvent>(
       SuplaFunction.CURTAIN,
       SuplaFunction.PROJECTOR_SCREEN,
       SuplaFunction.VERTICAL_BLIND,
-      SuplaFunction.ROLLER_GARAGE_DOOR -> true
+      SuplaFunction.ROLLER_GARAGE_DOOR,
+      SuplaFunction.CONTAINER -> true
 
       SuplaFunction.LIGHTSWITCH,
       SuplaFunction.POWER_SWITCH,

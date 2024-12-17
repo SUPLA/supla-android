@@ -1,4 +1,4 @@
-package org.supla.core.shared.data.model.thermostat
+package org.supla.core.shared.data.model.function.thermostat
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 

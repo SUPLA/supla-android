@@ -167,7 +167,8 @@ private fun ChannelGroupEntity.getGroupValue(value: ChannelValueEntity): GroupVa
     SuplaFunction.DIGIGLASS_HORIZONTAL,
     SuplaFunction.DIGIGLASS_VERTICAL,
     SuplaFunction.PUMP_SWITCH,
-    SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH -> null
+    SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH,
+    SuplaFunction.CONTAINER -> null
   }
 }
 

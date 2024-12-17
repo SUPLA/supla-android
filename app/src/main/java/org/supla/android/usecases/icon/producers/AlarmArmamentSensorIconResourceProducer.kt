@@ -18,13 +18,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import org.supla.android.R
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_ALARMARMAMENTSENSOR
 import org.supla.android.usecases.icon.IconData
 import org.supla.android.usecases.icon.IconResourceProducer
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 class AlarmArmamentSensorIconResourceProducer : IconResourceProducer {
-  override fun accepts(function: Int): Boolean =
-    function == SUPLA_CHANNELFNC_ALARMARMAMENTSENSOR
+  override fun accepts(function: SuplaFunction): Boolean =
+    function == SuplaFunction.ALARM_ARMAMENT_SENSOR
 
   override fun produce(data: IconData): Int =
     when (data.altIcon) {

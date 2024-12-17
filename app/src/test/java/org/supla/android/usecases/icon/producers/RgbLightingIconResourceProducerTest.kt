@@ -23,7 +23,7 @@ import org.mockito.InjectMocks
 import org.mockito.junit.MockitoJUnitRunner
 import org.supla.android.R
 import org.supla.android.data.model.general.ChannelState
-import org.supla.android.lib.SuplaConst
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 @RunWith(MockitoJUnitRunner::class)
 class RgbLightingIconResourceProducerTest : BaseIconResourceProducerTest() {
@@ -35,7 +35,7 @@ class RgbLightingIconResourceProducerTest : BaseIconResourceProducerTest() {
   fun `should produce on icon`() {
     test(
       state = ChannelState.Value.ON,
-      function = SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING,
+      function = SuplaFunction.RGB_LIGHTING,
       expectedIcon = R.drawable.rgbon
     )
   }
@@ -44,7 +44,7 @@ class RgbLightingIconResourceProducerTest : BaseIconResourceProducerTest() {
   fun `should produce off icon`() {
     test(
       state = ChannelState.Value.OFF,
-      function = SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING,
+      function = SuplaFunction.RGB_LIGHTING,
       expectedIcon = R.drawable.rgboff
     )
   }

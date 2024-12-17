@@ -23,7 +23,7 @@ import org.mockito.InjectMocks
 import org.mockito.junit.MockitoJUnitRunner
 import org.supla.android.R
 import org.supla.android.data.model.general.ChannelState
-import org.supla.android.lib.SuplaConst
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 @RunWith(MockitoJUnitRunner::class)
 class StaircaseTimerIconResourceProducerTest : BaseIconResourceProducerTest() {
@@ -35,7 +35,7 @@ class StaircaseTimerIconResourceProducerTest : BaseIconResourceProducerTest() {
   fun `should produce on icon`() {
     test(
       state = ChannelState.Value.ON,
-      function = SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER,
+      function = SuplaFunction.STAIRCASE_TIMER,
       expectedIcon = R.drawable.staircasetimeron
     )
   }
@@ -44,7 +44,7 @@ class StaircaseTimerIconResourceProducerTest : BaseIconResourceProducerTest() {
   fun `should produce off icon`() {
     test(
       state = ChannelState.Value.OFF,
-      function = SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER,
+      function = SuplaFunction.STAIRCASE_TIMER,
       expectedIcon = R.drawable.staircasetimeroff
     )
   }
@@ -54,7 +54,7 @@ class StaircaseTimerIconResourceProducerTest : BaseIconResourceProducerTest() {
     test(
       state = ChannelState.Value.ON,
       altIcon = 1,
-      function = SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER,
+      function = SuplaFunction.STAIRCASE_TIMER,
       expectedIcon = R.drawable.fnc_staircasetimer_1_on
     )
   }
@@ -64,7 +64,7 @@ class StaircaseTimerIconResourceProducerTest : BaseIconResourceProducerTest() {
     test(
       state = ChannelState.Value.OFF,
       altIcon = 1,
-      function = SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER,
+      function = SuplaFunction.STAIRCASE_TIMER,
       expectedIcon = R.drawable.fnc_staircasetimer_1_off
     )
   }

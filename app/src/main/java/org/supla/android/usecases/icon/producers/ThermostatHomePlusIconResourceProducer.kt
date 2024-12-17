@@ -19,13 +19,13 @@ package org.supla.android.usecases.icon.producers
 
 import org.supla.android.R
 import org.supla.android.data.model.general.ChannelState
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS
 import org.supla.android.usecases.icon.IconData
 import org.supla.android.usecases.icon.IconResourceProducer
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 class ThermostatHomePlusIconResourceProducer : IconResourceProducer {
-  override fun accepts(function: Int): Boolean =
-    function == SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS
+  override fun accepts(function: SuplaFunction): Boolean =
+    function == SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS
 
   override fun produce(data: IconData): Int =
     when (data.altIcon) {

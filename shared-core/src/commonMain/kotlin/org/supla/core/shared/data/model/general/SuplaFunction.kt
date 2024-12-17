@@ -78,7 +78,8 @@ enum class SuplaFunction(val value: Int) {
   VERTICAL_BLIND(940),
   ROLLER_GARAGE_DOOR(950),
   PUMP_SWITCH(960),
-  HEAT_OR_COLD_SOURCE_SWITCH(970);
+  HEAT_OR_COLD_SOURCE_SWITCH(970),
+  CONTAINER(980);
 
   companion object {
     fun from(value: Int): SuplaFunction {

@@ -26,8 +26,8 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_OPENINGSENSOR_WINDOW
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROOFWINDOW
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.core.shared.data.model.channel.ChannelRelationType
-import org.supla.core.shared.data.model.thermostat.SuplaThermostatFlag
-import org.supla.core.shared.data.model.thermostat.ThermostatValue
+import org.supla.core.shared.data.model.function.thermostat.SuplaThermostatFlag
+import org.supla.core.shared.data.model.function.thermostat.ThermostatValue
 
 data class SensorIssue(
   val imageId: ImageId?,

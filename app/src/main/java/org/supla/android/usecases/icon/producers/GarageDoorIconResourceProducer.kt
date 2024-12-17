@@ -19,16 +19,15 @@ package org.supla.android.usecases.icon.producers
 
 import org.supla.android.R
 import org.supla.android.data.model.general.ChannelState
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GARAGEDOOR
 import org.supla.android.usecases.icon.IconData
 import org.supla.android.usecases.icon.IconResourceProducer
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 class GarageDoorIconResourceProducer : IconResourceProducer {
-  override fun accepts(function: Int): Boolean =
+  override fun accepts(function: SuplaFunction): Boolean =
     when (function) {
-      SUPLA_CHANNELFNC_OPENSENSOR_GARAGEDOOR,
-      SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR -> true
+      SuplaFunction.OPEN_SENSOR_GARAGE_DOOR,
+      SuplaFunction.CONTROLLING_THE_GARAGE_DOOR -> true
 
       else -> false
     }

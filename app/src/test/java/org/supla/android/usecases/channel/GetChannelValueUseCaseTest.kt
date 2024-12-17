@@ -30,6 +30,7 @@ import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.usecases.channel.valueprovider.ContainerValueProvider
 import org.supla.android.usecases.channel.valueprovider.DepthSensorValueProvider
 import org.supla.android.usecases.channel.valueprovider.DistanceSensorValueProvider
 import org.supla.android.usecases.channel.valueprovider.ElectricityMeterValueProvider
@@ -74,6 +75,9 @@ class GetChannelValueUseCaseTest {
 
   @Mock
   private lateinit var rainSensorValueProvider: RainSensorValueProvider
+
+  @Mock
+  private lateinit var containerValueProvider: ContainerValueProvider
 
   @InjectMocks
   private lateinit var useCase: GetChannelValueUseCase

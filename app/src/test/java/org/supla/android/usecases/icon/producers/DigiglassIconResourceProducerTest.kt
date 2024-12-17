@@ -23,7 +23,7 @@ import org.mockito.InjectMocks
 import org.mockito.junit.MockitoJUnitRunner
 import org.supla.android.R
 import org.supla.android.data.model.general.ChannelState
-import org.supla.android.lib.SuplaConst
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 @RunWith(MockitoJUnitRunner::class)
 class DigiglassIconResourceProducerTest : BaseIconResourceProducerTest() {
@@ -35,7 +35,7 @@ class DigiglassIconResourceProducerTest : BaseIconResourceProducerTest() {
   fun `should produce opaque icon`() {
     test(
       state = ChannelState.Value.OPAQUE,
-      function = SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL,
+      function = SuplaFunction.DIGIGLASS_HORIZONTAL,
       expectedIcon = R.drawable.digiglass
     )
   }
@@ -44,7 +44,7 @@ class DigiglassIconResourceProducerTest : BaseIconResourceProducerTest() {
   fun `should produce transparent icon`() {
     test(
       state = ChannelState.Value.TRANSPARENT,
-      function = SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL,
+      function = SuplaFunction.DIGIGLASS_HORIZONTAL,
       expectedIcon = R.drawable.digiglasstransparent
     )
   }
@@ -54,7 +54,7 @@ class DigiglassIconResourceProducerTest : BaseIconResourceProducerTest() {
     test(
       state = ChannelState.Value.OPAQUE,
       altIcon = 1,
-      function = SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL,
+      function = SuplaFunction.DIGIGLASS_VERTICAL,
       expectedIcon = R.drawable.digiglass1
     )
   }
@@ -64,7 +64,7 @@ class DigiglassIconResourceProducerTest : BaseIconResourceProducerTest() {
     test(
       state = ChannelState.Value.TRANSPARENT,
       altIcon = 1,
-      function = SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL,
+      function = SuplaFunction.DIGIGLASS_VERTICAL,
       expectedIcon = R.drawable.digiglasstransparent1
     )
   }

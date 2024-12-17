@@ -26,7 +26,7 @@ import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.data.source.remote.thermostat.ThermostatIndicatorIcon
 import org.supla.android.ui.lists.ListOnlineState
 import org.supla.core.shared.data.model.channel.ChannelRelationType
-import org.supla.core.shared.data.model.thermostat.SuplaThermostatFlag
+import org.supla.core.shared.data.model.function.thermostat.SuplaThermostatFlag
 
 class ChannelChildTest {
 

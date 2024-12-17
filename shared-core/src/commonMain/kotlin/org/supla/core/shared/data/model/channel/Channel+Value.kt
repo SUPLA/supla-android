@@ -17,10 +17,10 @@ package org.supla.core.shared.data.model.channel
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.core.shared.data.model.facadeblind.FacadeBlindValue
+import org.supla.core.shared.data.model.function.facadeblind.FacadeBlindValue
+import org.supla.core.shared.data.model.function.rollershutter.RollerShutterValue
+import org.supla.core.shared.data.model.function.thermostat.ThermostatValue
 import org.supla.core.shared.data.model.general.Channel
-import org.supla.core.shared.data.model.rollershutter.RollerShutterValue
-import org.supla.core.shared.data.model.thermostat.ThermostatValue
 
 val Channel.facadeBlindValue: FacadeBlindValue?
   get() = value?.let { FacadeBlindValue.from(online, it) }

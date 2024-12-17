@@ -28,7 +28,8 @@ import org.supla.android.data.source.local.entity.ChannelValueEntity;
 import org.supla.android.lib.DigiglassValue;
 import org.supla.android.lib.RollerShutterValue;
 import org.supla.android.lib.SuplaConst;
-import org.supla.core.shared.data.model.thermostat.ThermostatValue;
+import org.supla.core.shared.data.model.function.container.ContainerValue;
+import org.supla.core.shared.data.model.function.thermostat.ThermostatValue;
 
 public class ChannelValue extends DbItem {
 
@@ -402,6 +403,10 @@ public class ChannelValue extends DbItem {
 
   public ThermostatValue asThermostatValue() {
     return ThermostatValue.Companion.from(getOnLine(), Value);
+  }
+
+  public ContainerValue asContainerValue() {
+    return ContainerValue.Companion.from(getOnLine(), Value);
   }
 
   @NonNull

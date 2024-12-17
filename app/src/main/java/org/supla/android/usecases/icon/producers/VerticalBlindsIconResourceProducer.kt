@@ -19,13 +19,13 @@ package org.supla.android.usecases.icon.producers
 
 import org.supla.android.R
 import org.supla.android.data.model.general.ChannelState
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_VERTICAL_BLIND
 import org.supla.android.usecases.icon.IconData
 import org.supla.android.usecases.icon.IconResourceProducer
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 object VerticalBlindsIconResourceProducer : IconResourceProducer {
-  override fun accepts(function: Int): Boolean =
-    function == SUPLA_CHANNELFNC_VERTICAL_BLIND
+  override fun accepts(function: SuplaFunction): Boolean =
+    function == SuplaFunction.VERTICAL_BLIND
 
   override fun produce(data: IconData): Int =
     when (data.state.value) {

@@ -23,7 +23,7 @@ import org.mockito.InjectMocks
 import org.mockito.junit.MockitoJUnitRunner
 import org.supla.android.R
 import org.supla.android.data.model.general.ChannelState
-import org.supla.android.lib.SuplaConst
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 @RunWith(MockitoJUnitRunner::class)
 class RollerShutterIconResourceProducerTest : BaseIconResourceProducerTest() {
@@ -35,7 +35,7 @@ class RollerShutterIconResourceProducerTest : BaseIconResourceProducerTest() {
   fun `should produce open icon`() {
     test(
       state = ChannelState.Value.OPEN,
-      function = SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROLLERSHUTTER,
+      function = SuplaFunction.OPEN_SENSOR_ROLLER_SHUTTER,
       expectedIcon = R.drawable.fnc_roller_shutter_open
     )
   }
@@ -44,7 +44,7 @@ class RollerShutterIconResourceProducerTest : BaseIconResourceProducerTest() {
   fun `should produce closed icon`() {
     test(
       state = ChannelState.Value.CLOSED,
-      function = SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROLLERSHUTTER,
+      function = SuplaFunction.OPEN_SENSOR_ROLLER_SHUTTER,
       expectedIcon = R.drawable.fnc_roller_shutter_close
     )
   }

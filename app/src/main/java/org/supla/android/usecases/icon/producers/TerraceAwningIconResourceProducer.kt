@@ -19,13 +19,13 @@ package org.supla.android.usecases.icon.producers
 
 import org.supla.android.R
 import org.supla.android.data.model.general.ChannelState
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_TERRACE_AWNING
 import org.supla.android.usecases.icon.IconData
 import org.supla.android.usecases.icon.IconResourceProducer
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 class TerraceAwningIconResourceProducer : IconResourceProducer {
-  override fun accepts(function: Int): Boolean =
-    function == SUPLA_CHANNELFNC_TERRACE_AWNING
+  override fun accepts(function: SuplaFunction): Boolean =
+    function == SuplaFunction.TERRACE_AWNING
 
   override fun produce(data: IconData): Int =
     when (data.state.value) {

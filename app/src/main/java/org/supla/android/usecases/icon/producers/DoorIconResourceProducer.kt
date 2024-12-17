@@ -19,16 +19,15 @@ package org.supla.android.usecases.icon.producers
 
 import org.supla.android.R
 import org.supla.android.data.model.general.ChannelState
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_DOOR
 import org.supla.android.usecases.icon.IconData
 import org.supla.android.usecases.icon.IconResourceProducer
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 class DoorIconResourceProducer : IconResourceProducer {
-  override fun accepts(function: Int): Boolean =
+  override fun accepts(function: SuplaFunction): Boolean =
     when (function) {
-      SUPLA_CHANNELFNC_OPENSENSOR_DOOR,
-      SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK -> true
+      SuplaFunction.OPEN_SENSOR_DOOR,
+      SuplaFunction.CONTROLLING_THE_DOOR_LOCK -> true
 
       else -> false
     }

@@ -41,6 +41,7 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
 import org.supla.android.usecases.channel.GetChannelStateUseCase
 import org.supla.android.usecases.channel.ValueStateWrapper
 import org.supla.core.shared.data.model.general.SuplaFunction
+import org.supla.core.shared.data.model.general.suplaFunction
 
 @Suppress("SameParameterValue")
 @RunWith(MockitoJUnitRunner::class)
@@ -100,7 +101,7 @@ class GetChannelIconUseCaseTest {
 
     val channelBase = mockChannelBase(function, userIconId, altIcon, 0)
 
-    val iconData = IconData(function, altIcon, channelState)
+    val iconData = IconData(function.suplaFunction(), altIcon, channelState)
     whenever(getDefaultIconResourceUseCase(iconData)).thenReturn(resourceId)
     whenever(getChannelStateUseCase(channelBase)).thenReturn(channelState)
 
@@ -125,7 +126,7 @@ class GetChannelIconUseCaseTest {
 
     val channelDataEntity = mockChannelDataEntity(function, userIconId, altIcon, 0)
 
-    val iconData = IconData(function.value, altIcon, channelState)
+    val iconData = IconData(function, altIcon, channelState)
     whenever(getDefaultIconResourceUseCase(iconData)).thenReturn(resourceId)
     whenever(getChannelStateUseCase(channelDataEntity)).thenReturn(channelState)
 
