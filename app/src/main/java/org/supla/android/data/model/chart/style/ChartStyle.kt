@@ -38,6 +38,13 @@ data object ThermometerChartStyle : ChartStyle(
   markerViewProvider = { ChartMarkerView(it) }
 )
 
+data object HumidityChartStyle : ChartStyle(
+  leftAxisColor = R.color.dark_blue,
+  rightAxisColor = R.color.dark_blue,
+  drawBarShadow = false,
+  markerViewProvider = { ChartMarkerView(it) }
+)
+
 data object GpmChartStyle : ChartStyle(
   leftAxisColor = R.color.on_background,
   rightAxisColor = R.color.on_background,

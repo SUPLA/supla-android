@@ -57,6 +57,7 @@ import org.supla.android.usecases.channel.LoadChannelMeasurementsDataRangeUseCas
 import org.supla.android.usecases.channel.LoadChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.channelconfig.LoadChannelConfigUseCase
+import org.supla.core.shared.data.model.general.SuplaFunction
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -148,7 +149,7 @@ class GpmHistoryDetailViewModel @Inject constructor(
     restoreRange(chartState)
     if ((channel.configEntity?.toSuplaConfig(gson) as? SuplaChannelGeneralPurposeBaseConfig)?.keepHistory == true) {
       configureDownloadObserver(channel.channelEntity.remoteId)
-      startInitialDataLoad(channel.channelEntity.remoteId, channel.channelEntity.profileId, channel.function.value)
+      startInitialDataLoad(channel.channelEntity.remoteId, channel.channelEntity.profileId, channel.function)
     } else {
       updateState { state ->
         triggerMeasurementsLoad(state)
@@ -160,7 +161,7 @@ class GpmHistoryDetailViewModel @Inject constructor(
     }
   }
 
-  private fun startInitialDataLoad(remoteId: Int, profileId: Long, channelFunction: Int) {
+  private fun startInitialDataLoad(remoteId: Int, profileId: Long, channelFunction: SuplaFunction) {
     if (currentState().initialLoadStarted) {
       // Needs to be performed only once
       return

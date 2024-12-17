@@ -28,7 +28,7 @@ import org.mockito.kotlin.eq
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.supla.android.core.infrastructure.WorkManagerProxy
-import org.supla.android.lib.SuplaConst
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 @RunWith(MockitoJUnitRunner::class)
 class DownloadChannelMeasurementsUseCaseTest {
@@ -44,7 +44,7 @@ class DownloadChannelMeasurementsUseCaseTest {
     // given
     val remoteId = 123
     val profileId = 321L
-    val function = SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
+    val function = SuplaFunction.THERMOMETER
 
     // when
     useCase.invoke(remoteId, profileId, function)
@@ -63,7 +63,7 @@ class DownloadChannelMeasurementsUseCaseTest {
     // given
     val remoteId = 123
     val profileId = 321L
-    val function = SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
+    val function = SuplaFunction.HUMIDITY_AND_TEMPERATURE
 
     // when
     useCase.invoke(remoteId, profileId, function)
@@ -82,7 +82,7 @@ class DownloadChannelMeasurementsUseCaseTest {
     // given
     val remoteId = 123
     val profileId = 321L
-    val function = SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT
+    val function = SuplaFunction.GENERAL_PURPOSE_MEASUREMENT
 
     // when
     useCase.invoke(remoteId, profileId, function)
@@ -101,7 +101,7 @@ class DownloadChannelMeasurementsUseCaseTest {
     // given
     val remoteId = 123
     val profileId = 321L
-    val function = SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER
+    val function = SuplaFunction.GENERAL_PURPOSE_METER
 
     // when
     useCase.invoke(remoteId, profileId, function)

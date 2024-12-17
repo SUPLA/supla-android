@@ -26,6 +26,7 @@ import org.supla.android.core.networking.suplacloud.SuplaCloudConfigHolder
 import org.supla.android.data.source.remote.rest.channel.ElectricityMeasurement
 import org.supla.android.data.source.remote.rest.channel.GeneralPurposeMeasurement
 import org.supla.android.data.source.remote.rest.channel.GeneralPurposeMeter
+import org.supla.android.data.source.remote.rest.channel.HumidityMeasurement
 import org.supla.android.data.source.remote.rest.channel.TemperatureAndHumidityMeasurement
 import org.supla.android.data.source.remote.rest.channel.TemperatureMeasurement
 import org.supla.android.di.GSON_FOR_API
@@ -60,6 +61,23 @@ interface SuplaCloudService {
     @Query("limit") limit: Int = 2,
     @Query("offset") offset: Int = 0
   ): Call<List<TemperatureMeasurement>>
+
+  @GET("/api/$API_VERSION/channels/{remoteId}/measurement-logs")
+  fun getHumidityMeasurements(
+    @Path("remoteId") remoteId: Int,
+    @Query("order") order: String = "ASC",
+    @Query("limit") limit: Int? = null,
+    @Query("offset") offset: Int? = null,
+    @Query("afterTimestamp") afterTimestamp: Long? = null
+  ): Observable<List<HumidityMeasurement>>
+
+  @GET("/api/$API_VERSION/channels/{remoteId}/measurement-logs")
+  fun getInitialHumidityMeasurements(
+    @Path("remoteId") remoteId: Int,
+    @Query("order") order: String = "ASC",
+    @Query("limit") limit: Int = 2,
+    @Query("offset") offset: Int = 0
+  ): Call<List<HumidityMeasurement>>
 
   @GET("/api/$API_VERSION/channels/{remoteId}/measurement-logs")
   fun getThermometerWithHumidityMeasurements(

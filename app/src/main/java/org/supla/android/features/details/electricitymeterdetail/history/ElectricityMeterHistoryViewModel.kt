@@ -61,6 +61,7 @@ import org.supla.android.usecases.channel.LoadChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.channel.measurementsprovider.electricity.ElectricityChartFilters
 import org.supla.android.usecases.channel.measurementsprovider.electricity.PhaseItem
+import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.extensions.ifTrue
 import javax.inject.Inject
 
@@ -220,7 +221,7 @@ class ElectricityMeterHistoryViewModel @Inject constructor(
     restoreCustomFilters(channel.flags.suplaFlags, channel.Electricity.value, chartState)
     restoreRange(chartState)
     configureDownloadObserver(channel.remoteId)
-    startInitialDataLoad(channel.remoteId, channel.profileId, channel.function.value)
+    startInitialDataLoad(channel.remoteId, channel.profileId, channel.function)
 
     if (preferences.shouldShowEmHistoryIntroduction()) {
       val pages = if (channel.Electricity.phases.size > 1) {
@@ -232,7 +233,7 @@ class ElectricityMeterHistoryViewModel @Inject constructor(
     }
   }
 
-  private fun startInitialDataLoad(remoteId: Int, profileId: Long, channelFunction: Int) {
+  private fun startInitialDataLoad(remoteId: Int, profileId: Long, channelFunction: SuplaFunction) {
     if (currentState().initialLoadStarted) {
       // Needs to be performed only once
       return
