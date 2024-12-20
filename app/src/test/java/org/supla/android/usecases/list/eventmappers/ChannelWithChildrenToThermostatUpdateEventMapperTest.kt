@@ -125,6 +125,7 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
     val thermometerChannel = mockk<ChannelDataEntity>()
     every { thermometerChannel.function } returns SuplaFunction.THERMOMETER
     thermometerChannel.mockShareable()
+    val thermometerChannelWithChildren = ChannelWithChildren(thermometerChannel)
     val thermometerChild = mockk<ChannelChildEntity> {
       every { relationType } returns ChannelRelationType.MAIN_THERMOMETER
       every { channelRelationEntity } returns mockk {
@@ -133,6 +134,7 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
         every { relationType } returns ChannelRelationType.MAIN_THERMOMETER
       }
       every { channelDataEntity } returns thermometerChannel
+      every { withChildren } returns thermometerChannelWithChildren
       every { children } returns emptyList()
     }
     val channel = mockk<ChannelDataEntity> {
@@ -159,7 +161,7 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
     val channelShareable = channel.shareable
     whenever(getCaptionUseCase.invoke(channelShareable)).thenReturn(caption)
     whenever(getChannelIconUseCase.invoke(channel)).thenReturn(icon)
-    whenever(getChannelValueStringUseCase(thermometerChannel)).thenReturn(value)
+    whenever(getChannelValueStringUseCase(thermometerChannelWithChildren)).thenReturn(value)
     val channelWithChildrenShareable = channelWithChildren.shareable
     whenever(getChannelIssuesForListUseCase(channelWithChildrenShareable)).thenReturn(channelIssues)
     whenever(valuesFormatter.getTemperatureString(12.5f)).thenReturn(subValue)

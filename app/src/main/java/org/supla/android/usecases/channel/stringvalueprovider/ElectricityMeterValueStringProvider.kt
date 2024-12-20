@@ -18,7 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import org.supla.android.core.storage.UserStateHolder
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.usecases.channel.ChannelValueStringProvider
 import org.supla.android.usecases.channel.ValueType
 import org.supla.android.usecases.channel.valueformatter.ListElectricityMeterValueFormatter
@@ -34,10 +34,11 @@ class ElectricityMeterValueStringProvider @Inject constructor(
 
   private val formatter = ListElectricityMeterValueFormatter()
 
-  override fun handle(channelData: ChannelDataEntity): Boolean =
-    electricityMeterValueProvider.handle(channelData)
+  override fun handle(channelWithChildren: ChannelWithChildren): Boolean =
+    electricityMeterValueProvider.handle(channelWithChildren.channel)
 
-  override fun value(channelData: ChannelDataEntity, valueType: ValueType, withUnit: Boolean): String {
+  override fun value(channelWithChildren: ChannelWithChildren, valueType: ValueType, withUnit: Boolean): String {
+    val channelData = channelWithChildren.channel
     val value = electricityMeterValueProvider.value(channelData, valueType)
     val type = userStateHolder.getElectricityMeterSettings(channelData.profileId, channelData.remoteId).showOnListSafe
     return formatter.format(value, withUnit = withUnit, custom = type)

@@ -52,7 +52,7 @@ class ChannelWithChildrenToGpmUpdateEventMapper @Inject constructor(
       onlineState = channelWithChildren.channel.channelValueEntity.onlineState,
       title = getCaptionUseCase(channelWithChildren.channel.shareable),
       icon = getChannelIconUseCase.invoke(channelWithChildren.channel),
-      value = getChannelValueStringUseCase(channelWithChildren.channel),
+      value = getChannelValueStringUseCase(channelWithChildren),
       issues = getChannelIssuesForListUseCase(channelWithChildren.shareable),
       estimatedTimerEndDate = null,
       infoSupported = SuplaChannelFlag.CHANNEL_STATE.inside(channelWithChildren.channel.flags)

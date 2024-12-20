@@ -145,8 +145,8 @@
   <string name="hp_hour">t</string>
   <string name="total_cost">Total kostnad</string>
   <string name="current_cost">Kostnad for gjeldende måned</string>
-  <string name="current_consumption">Forbruk i gjeldende måned</string>
-  <string name="meter_value">Meterlesing</string>
+  <string name="details_ic_current_consumption">Forbruk i gjeldende måned</string>
+  <string name="details_ic_meter_value">Meterlesing</string>
   <string name="minutes">Minutter</string>
   <string name="hours">Time</string>
   <string name="days">Dager</string>

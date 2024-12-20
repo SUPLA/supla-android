@@ -18,14 +18,15 @@ package org.supla.android.features.details.detailbase.electricitymeter
  */
 
 import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType
+import org.supla.android.ui.views.card.SummaryCardData
 
 data class ElectricityMeterState(
   val online: Boolean? = null,
-  val totalForwardActiveEnergy: EnergyData? = null,
-  val totalReversedActiveEnergy: EnergyData? = null,
+  val totalForwardActiveEnergy: SummaryCardData? = null,
+  val totalReversedActiveEnergy: SummaryCardData? = null,
   val currentMonthDownloading: Boolean = false,
-  val currentMonthForwardActiveEnergy: EnergyData? = null,
-  val currentMonthReversedActiveEnergy: EnergyData? = null,
+  val currentMonthForwardActiveEnergy: SummaryCardData? = null,
+  val currentMonthReversedActiveEnergy: SummaryCardData? = null,
   val phaseMeasurementTypes: List<SuplaElectricityMeasurementType> = emptyList(),
   val phaseMeasurementValues: List<PhaseWithMeasurements> = emptyList(),
   val vectorBalancedValues: Map<SuplaElectricityMeasurementType, String>? = null,
@@ -35,11 +36,11 @@ data class ElectricityMeterState(
 
 fun ElectricityMeterState?.copyOrCreate(
   online: Boolean? = null,
-  totalForwardActiveEnergy: EnergyData? = null,
-  totalReversedActiveEnergy: EnergyData? = null,
+  totalForwardActiveEnergy: SummaryCardData? = null,
+  totalReversedActiveEnergy: SummaryCardData? = null,
   currentMonthDownloading: Boolean = false,
-  currentMonthForwardActiveEnergy: EnergyData? = null,
-  currentMonthReversedActiveEnergy: EnergyData? = null,
+  currentMonthForwardActiveEnergy: SummaryCardData? = null,
+  currentMonthReversedActiveEnergy: SummaryCardData? = null,
   phaseMeasurementTypes: List<SuplaElectricityMeasurementType> = emptyList(),
   phaseMeasurementValues: List<PhaseWithMeasurements> = emptyList(),
   vectorBalancedValues: Map<SuplaElectricityMeasurementType, String>? = null,

@@ -31,11 +31,12 @@ import org.junit.Before
 import org.junit.Test
 import org.supla.android.data.model.chart.ChannelChartSets
 import org.supla.android.data.model.chart.ChartDataSpec
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.usecases.channel.measurementsprovider.ElectricityConsumptionMeasurementsProvider
 import org.supla.android.usecases.channel.measurementsprovider.GeneralPurposeMeasurementMeasurementsProvider
 import org.supla.android.usecases.channel.measurementsprovider.GeneralPurposeMeterMeasurementsProvider
 import org.supla.android.usecases.channel.measurementsprovider.HumidityMeasurementsProvider
+import org.supla.android.usecases.channel.measurementsprovider.ImpulseCounterMeasurementsProvider
 import org.supla.android.usecases.channel.measurementsprovider.TemperatureAndHumidityMeasurementsProvider
 import org.supla.android.usecases.channel.measurementsprovider.TemperatureMeasurementsProvider
 import org.supla.core.shared.data.model.general.SuplaFunction
@@ -43,7 +44,7 @@ import org.supla.core.shared.data.model.general.SuplaFunction
 class LoadChannelMeasurementsUseCaseTest : BaseLoadMeasurementsUseCaseTest() {
 
   @MockK
-  private lateinit var readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase
+  private lateinit var readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase
 
   @MockK
   private lateinit var temperatureMeasurementsProvider: TemperatureMeasurementsProvider
@@ -63,6 +64,9 @@ class LoadChannelMeasurementsUseCaseTest : BaseLoadMeasurementsUseCaseTest() {
   @MockK
   private lateinit var humidityMeasurementsProvider: HumidityMeasurementsProvider
 
+  @MockK
+  private lateinit var impulseCounterMeasurementsProvider: ImpulseCounterMeasurementsProvider
+
   @InjectMockKs
   private lateinit var useCase: LoadChannelMeasurementsUseCase
 
@@ -75,16 +79,14 @@ class LoadChannelMeasurementsUseCaseTest : BaseLoadMeasurementsUseCaseTest() {
   fun `should provide sets when there is a provider which can handle given function`() {
     // given
     val remoteId = 1
-    val function = SuplaFunction.THERMOMETER
-    val channel: ChannelDataEntity = mockk {
-      every { this@mockk.function } returns function
+    val channelWithChildren: ChannelWithChildren = mockk {
     }
     val spec: ChartDataSpec = mockk()
     val channelChartSets: ChannelChartSets = mockk()
 
-    every { readChannelByRemoteIdUseCase.invoke(remoteId) } returns Maybe.just(channel)
-    every { temperatureMeasurementsProvider.handle(function) } returns true
-    every { temperatureMeasurementsProvider.provide(channel, spec) } returns Single.just(channelChartSets)
+    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Maybe.just(channelWithChildren)
+    every { temperatureMeasurementsProvider.handle(channelWithChildren) } returns true
+    every { temperatureMeasurementsProvider.provide(channelWithChildren, spec) } returns Single.just(channelChartSets)
 
     // when
     val observer = useCase.invoke(remoteId, spec).test()
@@ -94,12 +96,12 @@ class LoadChannelMeasurementsUseCaseTest : BaseLoadMeasurementsUseCaseTest() {
     observer.assertResult(channelChartSets)
 
     verify {
-      readChannelByRemoteIdUseCase.invoke(remoteId)
-      temperatureMeasurementsProvider.handle(function)
-      temperatureMeasurementsProvider.provide(channel, spec)
+      readChannelWithChildrenUseCase.invoke(remoteId)
+      temperatureMeasurementsProvider.handle(channelWithChildren)
+      temperatureMeasurementsProvider.provide(channelWithChildren, spec)
     }
     confirmVerified(
-      readChannelByRemoteIdUseCase,
+      readChannelWithChildrenUseCase,
       temperatureMeasurementsProvider,
       temperatureAndHumidityMeasurementsProvider,
       generalPurposeMeasurementMeasurementsProvider,
@@ -114,40 +116,43 @@ class LoadChannelMeasurementsUseCaseTest : BaseLoadMeasurementsUseCaseTest() {
     // given
     val remoteId = 1
     val function = SuplaFunction.ALARM
-    val channel: ChannelDataEntity = mockk {
+    val channelWithChildren: ChannelWithChildren = mockk {
       every { this@mockk.function } returns function
     }
     val spec: ChartDataSpec = mockk()
 
-    every { readChannelByRemoteIdUseCase.invoke(remoteId) } returns Maybe.just(channel)
-    every { temperatureMeasurementsProvider.handle(function) } returns false
-    every { temperatureAndHumidityMeasurementsProvider.handle(function) } returns false
-    every { generalPurposeMeasurementMeasurementsProvider.handle(function) } returns false
-    every { generalPurposeMeterMeasurementsProvider.handle(function) } returns false
-    every { electricityConsumptionMeasurementsProvider.handle(function) } returns false
-    every { humidityMeasurementsProvider.handle(function) } returns false
+    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Maybe.just(channelWithChildren)
+    every { temperatureMeasurementsProvider.handle(channelWithChildren) } returns false
+    every { temperatureAndHumidityMeasurementsProvider.handle(channelWithChildren) } returns false
+    every { generalPurposeMeasurementMeasurementsProvider.handle(channelWithChildren) } returns false
+    every { generalPurposeMeterMeasurementsProvider.handle(channelWithChildren) } returns false
+    every { electricityConsumptionMeasurementsProvider.handle(channelWithChildren) } returns false
+    every { humidityMeasurementsProvider.handle(channelWithChildren) } returns false
+    every { impulseCounterMeasurementsProvider.handle(channelWithChildren) } returns false
 
     // when
     val observer = useCase.invoke(remoteId, spec).test()
     observer.assertError(IllegalArgumentException::class.java)
 
     verify {
-      readChannelByRemoteIdUseCase.invoke(remoteId)
-      temperatureMeasurementsProvider.handle(function)
-      temperatureAndHumidityMeasurementsProvider.handle(function)
-      generalPurposeMeasurementMeasurementsProvider.handle(function)
-      generalPurposeMeterMeasurementsProvider.handle(function)
-      electricityConsumptionMeasurementsProvider.handle(function)
-      humidityMeasurementsProvider.handle(function)
+      readChannelWithChildrenUseCase.invoke(remoteId)
+      temperatureMeasurementsProvider.handle(channelWithChildren)
+      temperatureAndHumidityMeasurementsProvider.handle(channelWithChildren)
+      generalPurposeMeasurementMeasurementsProvider.handle(channelWithChildren)
+      generalPurposeMeterMeasurementsProvider.handle(channelWithChildren)
+      electricityConsumptionMeasurementsProvider.handle(channelWithChildren)
+      humidityMeasurementsProvider.handle(channelWithChildren)
+      impulseCounterMeasurementsProvider.handle(channelWithChildren)
     }
     confirmVerified(
-      readChannelByRemoteIdUseCase,
+      readChannelWithChildrenUseCase,
       temperatureMeasurementsProvider,
       temperatureAndHumidityMeasurementsProvider,
       generalPurposeMeasurementMeasurementsProvider,
       generalPurposeMeterMeasurementsProvider,
       electricityConsumptionMeasurementsProvider,
-      humidityMeasurementsProvider
+      humidityMeasurementsProvider,
+      impulseCounterMeasurementsProvider
     )
   }
 }

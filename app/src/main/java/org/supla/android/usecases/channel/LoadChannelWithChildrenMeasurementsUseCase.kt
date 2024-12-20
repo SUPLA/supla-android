@@ -23,7 +23,6 @@ import org.supla.android.data.model.chart.ChartDataSpec
 import org.supla.android.data.model.chart.ChartEntryType
 import org.supla.android.data.model.chart.HumidityChartColors
 import org.supla.android.data.model.chart.TemperatureChartColors
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.isHvacThermostat
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.local.entity.hasMeasurements
@@ -58,15 +57,15 @@ class LoadChannelWithChildrenMeasurementsUseCase @Inject constructor(
     channelWithChildren: ChannelWithChildren,
     spec: ChartDataSpec
   ): Single<List<ChannelChartSets>> {
-    val channelsWithMeasurements = mutableListOf<ChannelDataEntity>().also { list ->
+    val channelsWithMeasurements = mutableListOf<ChannelWithChildren>().also { list ->
       list.addAll(
         channelWithChildren.children
           .sortedBy { it.relationType.value }
           .filter { it.channel.hasMeasurements() }
-          .map { it.channelDataEntity }
+          .map { it.withChildren }
       )
       if (channelWithChildren.channel.channelEntity.hasMeasurements()) {
-        list.add(channelWithChildren.channel)
+        list.add(channelWithChildren)
       }
     }
 

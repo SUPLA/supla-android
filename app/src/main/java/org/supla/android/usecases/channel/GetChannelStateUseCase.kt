@@ -23,6 +23,7 @@ import org.supla.android.data.source.local.entity.ChannelGroupEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
 import org.supla.android.db.Channel
 import org.supla.android.db.ChannelBase
@@ -43,6 +44,9 @@ class GetChannelStateUseCase @Inject constructor(
   operator fun invoke(channelDataBase: ChannelDataBase): ChannelState {
     if (channelDataBase is ChannelDataEntity) {
       return getChannelState(channelDataBase.function, ChannelValueEntityStateWrapper(channelDataBase.channelValueEntity))
+    }
+    if (channelDataBase is ChannelWithChildren) {
+      return getChannelState(channelDataBase.function, ChannelValueEntityStateWrapper(channelDataBase.channel.channelValueEntity))
     }
     if (channelDataBase is ChannelGroupDataEntity) {
       val wrapper = ChannelGroupEntityStateWrapper(channelDataBase.channelGroupEntity, getGroupActivePercentageUseCase)

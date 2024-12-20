@@ -26,10 +26,10 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
-import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
+import org.supla.android.ui.views.card.SummaryCardData
 import org.supla.android.usecases.channel.GetChannelValueUseCase
-import org.supla.android.usecases.channel.electricitymeter.ElectricityMeasurements
-import org.supla.core.shared.data.model.general.SuplaFunction
+import org.supla.android.usecases.channel.measurements.ElectricityMeasurements
 
 class NoExtendedValueStateHandlerTest {
   @MockK
@@ -46,18 +46,13 @@ class NoExtendedValueStateHandlerTest {
   @Test
   fun `should not manipulate state when there is no electricity meter assigned`() {
     // given
-    val channel: ChannelDataEntity = mockk {
-      every { channelEntity } returns mockk {
-        every { function } returns SuplaFunction.POWER_SWITCH
-      }
-      every { channelValueEntity } returns mockk {
-        every { subValueType } returns 0
-      }
+    val channelWithChildren: ChannelWithChildren = mockk {
+      every { isOrHasElectricityMeter } returns false
     }
     val state: ElectricityMeterState = mockk()
 
     // when
-    val result = handler.updateState(state, channel)
+    val result = handler.updateState(state, channelWithChildren)
 
     // then
     assertThat(result).isSameAs(state)
@@ -66,19 +61,16 @@ class NoExtendedValueStateHandlerTest {
   @Test
   fun `should update state when there is electricity meter assigned`() {
     // given
-    val channel: ChannelDataEntity = mockk {
-      every { channelEntity } returns mockk {
-        every { function } returns SuplaFunction.POWER_SWITCH
-      }
-      every { channelValueEntity } returns mockk {
-        every { subValueType } returns SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort()
-      }
+    val channel: ChannelDataEntity = mockk()
+    val channelWithChildren: ChannelWithChildren = mockk {
+      every { this@mockk.channel } returns channel
+      every { isOrHasElectricityMeter } returns true
       every { isOnline() } returns true
     }
     val value = 123.45
     val state = ElectricityMeterState()
-    val monthForwardEnergy: EnergyData = mockk()
-    val monthReverseEnergy: EnergyData = mockk()
+    val monthForwardEnergy: SummaryCardData = mockk()
+    val monthReverseEnergy: SummaryCardData = mockk()
     val measurements: ElectricityMeasurements = mockk {
       every { toForwardEnergy(any()) } returns monthForwardEnergy
       every { toReverseEnergy(any()) } returns monthReverseEnergy
@@ -87,13 +79,13 @@ class NoExtendedValueStateHandlerTest {
     every { getChannelValueUseCase<Double>(channel) } returns value
 
     // when
-    val result = handler.updateState(state, channel, measurements)
+    val result = handler.updateState(state, channelWithChildren, measurements)
 
     // then
     assertThat(result).isEqualTo(
       state.copy(
         online = true,
-        totalForwardActiveEnergy = EnergyData("123.5 kWh"),
+        totalForwardActiveEnergy = SummaryCardData("123.5 kWh"),
         currentMonthForwardActiveEnergy = monthForwardEnergy,
         currentMonthReversedActiveEnergy = monthReverseEnergy,
         vectorBalancedValues = null
@@ -104,13 +96,10 @@ class NoExtendedValueStateHandlerTest {
   @Test
   fun `should update state for electricity meter`() {
     // given
-    val channel: ChannelDataEntity = mockk {
-      every { channelEntity } returns mockk {
-        every { function } returns SuplaFunction.ELECTRICITY_METER
-      }
-      every { channelValueEntity } returns mockk {
-        every { subValueType } returns 0
-      }
+    val channel: ChannelDataEntity = mockk()
+    val channelWithChildren: ChannelWithChildren = mockk {
+      every { this@mockk.channel } returns channel
+      every { isOrHasElectricityMeter } returns true
       every { isOnline() } returns true
     }
     every { getChannelValueUseCase<Double>(channel) } returns Double.NaN
@@ -118,13 +107,13 @@ class NoExtendedValueStateHandlerTest {
     val state = ElectricityMeterState()
 
     // when
-    val result = handler.updateState(state, channel)
+    val result = handler.updateState(state, channelWithChildren)
 
     // then
     assertThat(result).isEqualTo(
       state.copy(
         online = true,
-        totalForwardActiveEnergy = EnergyData("---"),
+        totalForwardActiveEnergy = SummaryCardData("---"),
         vectorBalancedValues = null
       )
     )
@@ -133,25 +122,22 @@ class NoExtendedValueStateHandlerTest {
   @Test
   fun `should create state for electricity meter`() {
     // given
-    val channel: ChannelDataEntity = mockk {
-      every { channelEntity } returns mockk {
-        every { function } returns SuplaFunction.POWER_SWITCH
-      }
-      every { channelValueEntity } returns mockk {
-        every { subValueType } returns SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort()
-      }
+    val channel: ChannelDataEntity = mockk()
+    val channelWithChildren: ChannelWithChildren = mockk {
+      every { this@mockk.channel } returns channel
+      every { isOrHasElectricityMeter } returns true
       every { isOnline() } returns false
     }
     every { getChannelValueUseCase<Double>(channel) } returns Double.NaN
 
     // when
-    val result = handler.updateState(null, channel)
+    val result = handler.updateState(null, channelWithChildren)
 
     // then
     assertThat(result).isEqualTo(
       ElectricityMeterState(
         online = false,
-        totalForwardActiveEnergy = EnergyData("---"),
+        totalForwardActiveEnergy = SummaryCardData("---"),
         vectorBalancedValues = null
       )
     )

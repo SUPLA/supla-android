@@ -1,4 +1,4 @@
-package org.supla.android.features.details.detailbase.electricitymeter
+package org.supla.android.ui.views.card
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -21,14 +21,20 @@ import org.supla.android.extensions.ifNotZero
 import org.supla.android.usecases.channel.valueformatter.ChannelValueFormatter
 import java.text.DecimalFormat
 
-data class EnergyData(
-  val energy: String,
+data class SummaryCardData(
+  val value: String,
   val price: String? = null
 ) {
   companion object {
-    operator fun invoke(formatter: ChannelValueFormatter, energy: Double, pricePerUnit: Double, currency: String): EnergyData =
-      EnergyData(
-        energy = formatter.format(energy),
+    operator fun invoke(
+      formatter: ChannelValueFormatter,
+      energy: Double,
+      pricePerUnit: Double,
+      currency: String,
+      custom: Any? = null
+    ): SummaryCardData =
+      SummaryCardData(
+        value = formatter.format(energy, custom = custom),
         price = pricePerUnit.ifNotZero {
           val decimalFormatter = DecimalFormat()
           decimalFormatter.minimumFractionDigits = 2

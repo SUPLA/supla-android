@@ -127,10 +127,10 @@
   <string name="hp_calendar_comfort">Comfort</string>
   <string name="hp_cfg_temp_eco">Temperatura ECO in modalità AUTO</string>
   <string name="hp_hour">h</string>
-  <string name="meter_value">Lettura del contatore</string>
+  <string name="details_ic_meter_value">Lettura del contatore</string>
   <string name="total_cost">Costo totale</string>
   <string name="current_cost">Costo del mese corrente</string>
-  <string name="current_consumption">Consumo del mese corrente</string>
+  <string name="details_ic_current_consumption">Consumo del mese corrente</string>
   <string name="minutes">Minuti</string>
   <string name="hours">Ore</string>
   <string name="days">Giorni</string>

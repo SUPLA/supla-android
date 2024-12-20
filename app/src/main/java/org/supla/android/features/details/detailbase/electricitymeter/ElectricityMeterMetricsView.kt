@@ -84,6 +84,7 @@ import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementT
 import org.supla.android.extensions.toPx
 import org.supla.android.ui.views.ChannelOfflineView
 import org.supla.android.ui.views.buttons.IconButton
+import org.supla.android.ui.views.card.SummaryCardData
 
 @Composable
 fun ElectricityMeterMetricsView(
@@ -583,6 +584,7 @@ private fun Preview() {
     ElectricityMeterMetricsView(
       ElectricityMeterState(
         online = true,
+        totalForwardActiveEnergy = SummaryCardData("1234 kWh", "2345 PLN"),
         phaseMeasurementTypes = listOf(
           SuplaElectricityMeasurementType.FREQUENCY,
           SuplaElectricityMeasurementType.CURRENT,

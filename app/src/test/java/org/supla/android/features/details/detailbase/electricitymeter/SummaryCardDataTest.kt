@@ -21,9 +21,10 @@ import io.mockk.every
 import io.mockk.mockk
 import org.assertj.core.api.Assertions
 import org.junit.Test
+import org.supla.android.ui.views.card.SummaryCardData
 import org.supla.android.usecases.channel.valueformatter.ChannelValueFormatter
 
-class EnergyDataTest {
+class SummaryCardDataTest {
 
   @Test
   fun `should create data with price`() {
@@ -38,11 +39,11 @@ class EnergyDataTest {
     }
 
     // when
-    val result = EnergyData(formatter, energy, price, currency)
+    val result = SummaryCardData(formatter, energy, price, currency)
 
     // then
     Assertions.assertThat(result)
-      .extracting({ it.energy }, { it.price })
+      .extracting({ it.value }, { it.price })
       .containsExactly(energyString, "1,234.50 PLN")
   }
 
@@ -59,11 +60,11 @@ class EnergyDataTest {
     }
 
     // when
-    val result = EnergyData(formatter, energy, price, currency)
+    val result = SummaryCardData(formatter, energy, price, currency)
 
     // then
     Assertions.assertThat(result)
-      .extracting({ it.energy }, { it.price })
+      .extracting({ it.value }, { it.price })
       .containsExactly(energyString, null)
   }
 }

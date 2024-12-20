@@ -32,7 +32,7 @@ import org.supla.android.data.model.chart.datatype.ChartData
 import org.supla.android.data.model.chart.datatype.LineChartData
 import org.supla.android.data.model.chart.style.ChartStyle
 import org.supla.android.data.model.chart.style.HumidityChartStyle
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.events.DownloadEventsManager
 import org.supla.android.features.details.detailbase.history.BaseHistoryDetailViewModel
 import org.supla.android.profile.ProfileManager
@@ -41,8 +41,7 @@ import org.supla.android.usecases.channel.DeleteChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.DownloadChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.LoadChannelMeasurementsDataRangeUseCase
 import org.supla.android.usecases.channel.LoadChannelMeasurementsUseCase
-import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
-import org.supla.core.shared.data.model.general.SuplaFunction
+import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
 import javax.inject.Inject
 
 @HiltViewModel
@@ -52,7 +51,7 @@ class HumidityHistoryDetailViewModel @Inject constructor(
   private val loadChannelMeasurementsDataRangeUseCase: LoadChannelMeasurementsDataRangeUseCase,
   private val downloadEventsManager: DownloadEventsManager,
   private val profileManager: ProfileManager,
-  private val readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
+  private val readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
   userStateHolder: UserStateHolder,
   deleteChannelMeasurementsUseCase: DeleteChannelMeasurementsUseCase,
   dateProvider: DateProvider,
@@ -63,7 +62,7 @@ class HumidityHistoryDetailViewModel @Inject constructor(
 
   override fun triggerDataLoad(remoteId: Int) {
     Maybe.zip(
-      readChannelByRemoteIdUseCase(remoteId),
+      readChannelWithChildrenUseCase(remoteId),
       profileManager.getCurrentProfile().map { loadChartState(it.id, remoteId) }
     ) { first, second ->
       Pair(first, second)
@@ -87,21 +86,22 @@ class HumidityHistoryDetailViewModel @Inject constructor(
       loadChannelMeasurementsDataRangeUseCase(remoteId, profileId)
     ) { first, second -> Pair(LineChartData(DateRange(spec.startDate, spec.endDate), chartRange, spec.aggregation, listOf(first)), second) }
 
-  private fun handleData(channel: ChannelDataEntity, chartState: ChartState) {
+  private fun handleData(channelWithChildren: ChannelWithChildren, chartState: ChartState) {
+    val channel = channelWithChildren.channel
     updateState { it.copy(profileId = channel.profileId, channelFunction = channel.function.value) }
 
     restoreRange(chartState)
     configureDownloadObserver(channel.remoteId)
-    startInitialDataLoad(channel.remoteId, channel.profileId, channel.function)
+    startInitialDataLoad(channelWithChildren)
   }
 
-  private fun startInitialDataLoad(remoteId: Int, profileId: Long, channelFunction: SuplaFunction) {
+  private fun startInitialDataLoad(channelWithChildren: ChannelWithChildren) {
     if (currentState().initialLoadStarted) {
       // Needs to be performed only once
       return
     }
     updateState { it.copy(initialLoadStarted = true) }
-    downloadChannelMeasurementsUseCase.invoke(remoteId, profileId, channelFunction)
+    downloadChannelMeasurementsUseCase.invoke(channelWithChildren)
   }
 
   private fun configureDownloadObserver(remoteId: Int) {

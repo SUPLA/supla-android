@@ -146,8 +146,10 @@ class CreateTemperaturesListUseCaseTest {
       every { getValueAsByteArray() } returns byteArrayOf()
     }
 
-    every { getChannelValueStringUseCase.invoke(channel, withUnit = false) } returns text
-    secondValue?.let { every { getChannelValueStringUseCase.invoke(channel, ValueType.SECOND, withUnit = false) } returns secondValue }
+    every { getChannelValueStringUseCase.invoke(ChannelWithChildren(channel), withUnit = false) } returns text
+    secondValue?.let {
+      every { getChannelValueStringUseCase.invoke(ChannelWithChildren(channel), ValueType.SECOND, withUnit = false) } returns secondValue
+    }
     every { getChannelIconUseCase.invoke(channel) } returns imageId
     every { getChannelIconUseCase.invoke(channel, IconType.SECOND) } returns imageId
 

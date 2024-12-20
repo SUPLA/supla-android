@@ -28,6 +28,7 @@ import org.mockito.kotlin.eq
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.supla.android.core.infrastructure.WorkManagerProxy
+import org.supla.android.testhelpers.extensions.mock
 import org.supla.core.shared.data.model.general.SuplaFunction
 
 @RunWith(MockitoJUnitRunner::class)
@@ -45,9 +46,10 @@ class DownloadChannelMeasurementsUseCaseTest {
     val remoteId = 123
     val profileId = 321L
     val function = SuplaFunction.THERMOMETER
+    val channelWithChildren = mock(remoteId, profileId, function)
 
     // when
-    useCase.invoke(remoteId, profileId, function)
+    useCase.invoke(channelWithChildren)
 
     // then
     verify(workManagerProxy).enqueueUniqueWork(
@@ -64,9 +66,10 @@ class DownloadChannelMeasurementsUseCaseTest {
     val remoteId = 123
     val profileId = 321L
     val function = SuplaFunction.HUMIDITY_AND_TEMPERATURE
+    val channelWithChildren = mock(remoteId, profileId, function)
 
     // when
-    useCase.invoke(remoteId, profileId, function)
+    useCase.invoke(channelWithChildren)
 
     // then
     verify(workManagerProxy).enqueueUniqueWork(
@@ -83,9 +86,10 @@ class DownloadChannelMeasurementsUseCaseTest {
     val remoteId = 123
     val profileId = 321L
     val function = SuplaFunction.GENERAL_PURPOSE_MEASUREMENT
+    val channelWithChildren = mock(remoteId, profileId, function)
 
     // when
-    useCase.invoke(remoteId, profileId, function)
+    useCase.invoke(channelWithChildren)
 
     // then
     verify(workManagerProxy).enqueueUniqueWork(
@@ -102,9 +106,10 @@ class DownloadChannelMeasurementsUseCaseTest {
     val remoteId = 123
     val profileId = 321L
     val function = SuplaFunction.GENERAL_PURPOSE_METER
+    val channelWithChildren = mock(remoteId, profileId, function)
 
     // when
-    useCase.invoke(remoteId, profileId, function)
+    useCase.invoke(channelWithChildren)
 
     // then
     verify(workManagerProxy).enqueueUniqueWork(

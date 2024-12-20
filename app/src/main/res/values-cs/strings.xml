@@ -118,10 +118,10 @@
   <string name="hp_calendar_comfort">Ideální teplota</string>
   <string name="hp_cfg_temp_eco">Teplota ECO v reżimu AUTO</string>
   <string name="hp_hour">h</string>
-  <string name="meter_value">Stav měřiče</string>
+  <string name="details_ic_meter_value">Stav měřiče</string>
   <string name="total_cost">Celková cena</string>
   <string name="current_cost">Cena za celý měsíc</string>
-  <string name="current_consumption">Spotřeba v tomto měsíci</string>
+  <string name="details_ic_current_consumption">Spotřeba v tomto měsíci</string>
   <string name="minutes">Minuty</string>
   <string name="hours">Hodiny</string>
   <string name="days">Dny</string>

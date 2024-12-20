@@ -56,9 +56,9 @@ class ProvideChannelDetailTypeUseCase @Inject constructor() : BaseDetailTypeProv
       list.add(DetailPage.EM_HISTORY)
       list.add(DetailPage.EM_SETTINGS)
     } else if (meterChild?.channel?.isImpulseCounter() == true) {
-      list.add(DetailPage.HISTORY_IC)
+      list.add(DetailPage.IC_HISTORY)
     } else if (channelWithChildren.channel.channelValueEntity.subValueType == SUBV_TYPE_IC_MEASUREMENTS.toShort()) {
-      list.add(DetailPage.HISTORY_IC)
+      list.add(DetailPage.IC_HISTORY)
     } else if (channelWithChildren.channel.channelValueEntity.subValueType == SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort()) {
       list.add(DetailPage.EM_HISTORY)
       list.add(DetailPage.EM_SETTINGS)

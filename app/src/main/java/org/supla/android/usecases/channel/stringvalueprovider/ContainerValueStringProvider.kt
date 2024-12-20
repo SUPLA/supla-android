@@ -18,7 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import org.supla.android.data.ValuesFormatter
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.usecases.channel.ChannelValueStringProvider
 import org.supla.android.usecases.channel.ValueType
 import org.supla.android.usecases.channel.valueprovider.ContainerValueProvider
@@ -30,10 +30,11 @@ class ContainerValueStringProvider @Inject constructor(
   private val containerValueProvider: ContainerValueProvider,
 ) : ChannelValueStringProvider {
 
-  override fun handle(channelData: ChannelDataEntity): Boolean = containerValueProvider.handle(channelData)
+  override fun handle(channelWithChildren: ChannelWithChildren): Boolean =
+    containerValueProvider.handle(channelWithChildren.channel)
 
-  override fun value(channelData: ChannelDataEntity, valueType: ValueType, withUnit: Boolean): String {
-    val value = containerValueProvider.value(channelData, valueType)
+  override fun value(channelWithChildren: ChannelWithChildren, valueType: ValueType, withUnit: Boolean): String {
+    val value = containerValueProvider.value(channelWithChildren.channel, valueType)
     return if (value.levelKnown) {
       "${value.level}%"
     } else {

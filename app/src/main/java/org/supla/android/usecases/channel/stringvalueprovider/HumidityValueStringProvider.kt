@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.usecases.channel.ChannelValueStringProvider
 import org.supla.android.usecases.channel.ValueType
 import org.supla.android.usecases.channel.valueformatter.HumidityValueFormatter
@@ -31,10 +31,11 @@ class HumidityValueStringProvider @Inject constructor(
 ) : ChannelValueStringProvider {
 
   private val humidityFormatter = HumidityValueFormatter()
-  override fun handle(channelData: ChannelDataEntity): Boolean = humidityValueProvider.handle(channelData)
+  override fun handle(channelWithChildren: ChannelWithChildren): Boolean =
+    humidityValueProvider.handle(channelWithChildren.channel)
 
-  override fun value(channelData: ChannelDataEntity, valueType: ValueType, withUnit: Boolean): String {
-    val value = humidityValueProvider.value(channelData, valueType)
+  override fun value(channelWithChildren: ChannelWithChildren, valueType: ValueType, withUnit: Boolean): String {
+    val value = humidityValueProvider.value(channelWithChildren.channel, valueType)
     return humidityFormatter.format(value, withUnit = withUnit)
   }
 }

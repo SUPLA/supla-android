@@ -95,7 +95,7 @@ class CreateListItemUpdateEventDataUseCase @Inject constructor(
         icon = getChannelIconUseCase(it.channel),
         issues = getChannelIssuesForListUseCase(item.shareable),
         infoSupported = false,
-        value = getChannelValueStringUseCase(it.channel)
+        value = getChannelValueStringUseCase(it)
       )
     }
     (item as? ChannelGroupDataEntity)?.let {

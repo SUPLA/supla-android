@@ -24,7 +24,7 @@ import org.supla.android.data.source.local.entity.isSwitch
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.extensions.guardLet
 import org.supla.android.ui.lists.data.SlideableListItemData
-import org.supla.android.usecases.channel.GetSwitchValueStringUseCase
+import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.list.CreateListItemUpdateEventDataUseCase
 import org.supla.core.shared.usecase.GetCaptionUseCase
@@ -36,7 +36,7 @@ import javax.inject.Singleton
 class ChannelWithChildrenToSwitchUpdateEventMapper @Inject constructor(
   private val getCaptionUseCase: GetCaptionUseCase,
   private val getChannelIconUseCase: GetChannelIconUseCase,
-  private val getSwitchValueStringUseCase: GetSwitchValueStringUseCase,
+  private val getChannelValueStringUseCase: GetChannelValueStringUseCase,
   private val getChannelIssuesForListUseCase: GetChannelIssuesForListUseCase
 ) : CreateListItemUpdateEventDataUseCase.Mapper {
 
@@ -53,13 +53,11 @@ class ChannelWithChildrenToSwitchUpdateEventMapper @Inject constructor(
 
   private fun toListItemData(channelWithChildren: ChannelWithChildren): SlideableListItemData.Default {
     val channelData = channelWithChildren.channel
-    val value: String? = getSwitchValueStringUseCase(channelWithChildren)
-
     return SlideableListItemData.Default(
       onlineState = channelData.channelValueEntity.onlineState,
       title = getCaptionUseCase(channelData.shareable),
       icon = getChannelIconUseCase.invoke(channelData),
-      value = value,
+      value = getChannelValueStringUseCase.valueOrNull(channelWithChildren),
       issues = getChannelIssuesForListUseCase(channelWithChildren.shareable),
       estimatedTimerEndDate = channelData.channelExtendedValueEntity?.getSuplaValue()?.TimerStateValue?.countdownEndsAt,
       infoSupported = SuplaChannelFlag.CHANNEL_STATE.inside(channelData.flags)

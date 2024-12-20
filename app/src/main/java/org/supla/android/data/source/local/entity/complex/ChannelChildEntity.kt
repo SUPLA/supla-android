@@ -21,6 +21,7 @@ import androidx.room.Embedded
 import androidx.room.Ignore
 import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.ChannelRelationEntity
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.remote.thermostat.ThermostatIndicatorIcon
 import org.supla.android.data.source.remote.thermostat.getIndicatorIcon
 import org.supla.android.ui.lists.ListOnlineState
@@ -46,6 +47,9 @@ data class ChannelChildEntity @JvmOverloads constructor(
 
   val heatOrColdSourceSwitchChild: ChannelChildEntity?
     get() = children.firstOrNull { it.relationType == ChannelRelationType.HEAT_OR_COLD_SOURCE_SWITCH }
+
+  val withChildren: ChannelWithChildren
+    get() = ChannelWithChildren(channelDataEntity, children)
 }
 
 val List<ChannelChildEntity>.indicatorIcon: ThermostatIndicatorIcon

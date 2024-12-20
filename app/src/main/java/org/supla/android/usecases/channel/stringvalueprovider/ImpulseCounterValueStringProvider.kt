@@ -18,12 +18,12 @@ package org.supla.android.usecases.channel.stringvalueprovider
  */
 
 import org.supla.android.data.ValuesFormatter.Companion.NO_VALUE_TEXT
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.ImpulseCounter
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.usecases.channel.ChannelValueStringProvider
 import org.supla.android.usecases.channel.ValueType
+import org.supla.android.usecases.channel.valueformatter.ImpulseCounterValueFormatter
 import org.supla.android.usecases.channel.valueprovider.ImpulseCounterValueProvider
-import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -31,20 +31,21 @@ import javax.inject.Singleton
 class ImpulseCounterValueStringProvider @Inject constructor(
   private val impulseCounterValueProvider: ImpulseCounterValueProvider
 ) : ChannelValueStringProvider {
-  override fun handle(channelData: ChannelDataEntity): Boolean = impulseCounterValueProvider.handle(channelData)
 
-  override fun value(channelData: ChannelDataEntity, valueType: ValueType, withUnit: Boolean): String {
+  val formatter = ImpulseCounterValueFormatter()
+
+  override fun handle(channelWithChildren: ChannelWithChildren): Boolean =
+    impulseCounterValueProvider.handle(channelWithChildren.channel)
+
+  override fun value(channelWithChildren: ChannelWithChildren, valueType: ValueType, withUnit: Boolean): String {
+    val channelData = channelWithChildren.channel
     val value = impulseCounterValueProvider.value(channelData, valueType)
 
     if (value == ImpulseCounterValueProvider.UNKNOWN_VALUE) {
       return NO_VALUE_TEXT
     }
 
-    val unit = channelData.ImpulseCounter.value?.unit
-    return if (withUnit && unit != null) {
-      String.format(Locale.getDefault(), "%.2f $unit", value)
-    } else {
-      String.format(Locale.getDefault(), "%.2f", value)
-    }
+    val unit = channelData.ImpulseCounter.value?.unit?.let { ImpulseCounterValueFormatter.Data(it) }
+    return formatter.format(value, withUnit, custom = unit)
   }
 }

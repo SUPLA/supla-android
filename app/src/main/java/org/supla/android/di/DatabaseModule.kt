@@ -228,6 +228,11 @@ class DatabaseModule {
 
   @Provides
   @Singleton
+  fun impulseCounterLogDao(measurementsDatabase: MeasurementsDatabase) =
+    measurementsDatabase.impulseCounterLogDao()
+
+  @Provides
+  @Singleton
   fun provideDbHelper(@ApplicationContext context: Context) =
     DbHelper.getInstance(context)
 

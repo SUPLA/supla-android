@@ -44,7 +44,11 @@ class ChartMarkerView(context: Context) : BaseMarkerView(context) {
   @SuppressLint("SetTextI18n")
   override fun refreshContent(entry: Entry, highlight: Highlight?, details: ChartEntryDetails) {
     title.text = getFormattedDate(details)
-    text.text = details.valueFormatter.format(entry.y.toDouble(), withUnit = showValueUnit(details.type), precision = 2)
+    text.text = details.valueFormatter.format(
+      value = entry.y.toDouble(),
+      withUnit = showValueUnit(details.type),
+      precision = precision(details.type)
+    )
 
     if (details.min != null && details.max != null) {
       val minText = details.valueFormatter.format(details.min.toDouble(), withUnit = details.type == ChartEntryType.HUMIDITY)
@@ -84,5 +88,17 @@ class ChartMarkerView(context: Context) : BaseMarkerView(context) {
   }
 
   private fun showValueUnit(type: ChartEntryType) =
-    type == ChartEntryType.HUMIDITY || type == ChartEntryType.GENERAL_PURPOSE_METER
+    when (type) {
+      ChartEntryType.HUMIDITY,
+      ChartEntryType.GENERAL_PURPOSE_METER,
+      ChartEntryType.IMPULSE_COUNTER -> true
+
+      else -> false
+    }
+
+  private fun precision(type: ChartEntryType) =
+    when (type) {
+      ChartEntryType.IMPULSE_COUNTER -> 3
+      else -> 2
+    }
 }

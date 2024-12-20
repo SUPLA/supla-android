@@ -31,22 +31,26 @@ import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.model.general.ChannelState
-import org.supla.android.data.model.general.hasElectricityMeter
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.DownloadEventsManager
 import org.supla.android.extensions.monthStart
 import org.supla.android.features.details.detailbase.electricitymeter.ElectricityMeterGeneralStateHandler
 import org.supla.android.features.details.detailbase.electricitymeter.ElectricityMeterState
+import org.supla.android.features.details.detailbase.impulsecounter.ImpulseCounterGeneralStateHandler
+import org.supla.android.features.details.detailbase.impulsecounter.ImpulseCounterState
 import org.supla.android.images.ImageId
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.DownloadChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.GetChannelStateUseCase
-import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
-import org.supla.android.usecases.channel.electricitymeter.ElectricityMeasurements
-import org.supla.android.usecases.channel.electricitymeter.LoadElectricityMeterMeasurementsUseCase
+import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
+import org.supla.android.usecases.channel.measurements.ElectricityMeasurements
+import org.supla.android.usecases.channel.measurements.ImpulseCounterMeasurements
+import org.supla.android.usecases.channel.measurements.SummarizedMeasurements
+import org.supla.android.usecases.channel.measurements.electricitymeter.LoadElectricityMeterMeasurementsUseCase
+import org.supla.android.usecases.channel.measurements.impulsecounter.LoadImpulseCounterMeasurementsUseCase
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
@@ -58,10 +62,12 @@ import javax.inject.Inject
 @HiltViewModel
 class SwitchGeneralViewModel @Inject constructor(
   private val loadElectricityMeterMeasurementsUseCase: LoadElectricityMeterMeasurementsUseCase,
+  private val loadImpulseCounterMeasurementsUseCase: LoadImpulseCounterMeasurementsUseCase,
   private val electricityMeterGeneralStateHandler: ElectricityMeterGeneralStateHandler,
   private val downloadChannelMeasurementsUseCase: DownloadChannelMeasurementsUseCase,
+  private val impulseCounterGeneralStateHandler: ImpulseCounterGeneralStateHandler,
   private val readChannelGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase,
-  private val readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
+  private val readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
   private val executeSimpleActionUseCase: ExecuteSimpleActionUseCase,
   private val getChannelStateUseCase: GetChannelStateUseCase,
   private val getChannelIconUseCase: GetChannelIconUseCase,
@@ -78,12 +84,15 @@ class SwitchGeneralViewModel @Inject constructor(
   fun loadData(remoteId: Int, itemType: ItemType, cleanupDownloading: Boolean = false) {
     getDataSource(remoteId, itemType)
       .flatMap { channelBase ->
-        if (channelBase.hasElectricityMeter) {
+        (channelBase as? ChannelWithChildren)?.isOrHasElectricityMeter?.ifTrue {
           loadElectricityMeterMeasurementsUseCase(remoteId, dateProvider.currentDate().monthStart())
             .map { Pair(channelBase, it) }
-        } else {
-          Maybe.just(Pair<ChannelDataBase, ElectricityMeasurements?>(channelBase, null))
         }
+          ?: (channelBase as? ChannelWithChildren)?.isOrHasImpulseCounter?.ifTrue {
+            loadImpulseCounterMeasurementsUseCase(remoteId, dateProvider.currentDate().monthStart())
+              .map { Pair(channelBase, it) }
+          }
+          ?: Maybe.just(Pair<ChannelDataBase, SummarizedMeasurements?>(channelBase, null))
       }
       .attachSilent()
       .subscribeBy(
@@ -94,7 +103,7 @@ class SwitchGeneralViewModel @Inject constructor(
   }
 
   private fun getDataSource(remoteId: Int, itemType: ItemType) = when (itemType) {
-    ItemType.CHANNEL -> readChannelByRemoteIdUseCase(remoteId)
+    ItemType.CHANNEL -> readChannelWithChildrenUseCase(remoteId)
     ItemType.GROUP -> readChannelGroupByRemoteIdUseCase(remoteId)
   }
 
@@ -118,13 +127,20 @@ class SwitchGeneralViewModel @Inject constructor(
       .disposeBySelf()
   }
 
-  private fun handleData(data: ChannelDataBase, measurements: ElectricityMeasurements?, cleanupDownloading: Boolean) {
+  private fun handleData(data: ChannelDataBase, measurements: SummarizedMeasurements?, cleanupDownloading: Boolean) {
     updateState { state ->
-      if (data.hasElectricityMeter && !state.initialDataLoadStarted) {
-        downloadChannelMeasurementsUseCase.invoke(data.remoteId, data.profileId, data.function)
+      (data as? ChannelWithChildren)?.let {
+        if ((data.isOrHasElectricityMeter || data.isOrHasImpulseCounter) && !state.initialDataLoadStarted) {
+          downloadChannelMeasurementsUseCase.invoke(data)
+        }
       }
 
-      val downloading = if (cleanupDownloading) false else (state.electricityMeterState?.currentMonthDownloading ?: false)
+      val downloading = when {
+        cleanupDownloading -> false
+        (data as? ChannelWithChildren)?.isOrHasElectricityMeter == true -> state.electricityMeterState?.currentMonthDownloading ?: false
+        (data as? ChannelWithChildren)?.isOrHasImpulseCounter == true -> state.impulseCounterState?.currentMonthDownloading ?: false
+        else -> false
+      }
       val showButtons = data.function.switchWithButtons
 
       state.copy(
@@ -140,6 +156,9 @@ class SwitchGeneralViewModel @Inject constructor(
         offIcon = showButtons.ifTrue(getChannelIconUseCase(data, channelStateValue = ChannelState.Value.OFF)),
         electricityMeterState = electricityMeterGeneralStateHandler
           .updateState(state.electricityMeterState, data, measurements)
+          ?.copy(currentMonthDownloading = downloading),
+        impulseCounterState = impulseCounterGeneralStateHandler
+          .updateState(state.impulseCounterState, data, measurements)
           ?.copy(currentMonthDownloading = downloading)
       )
     }
@@ -156,9 +175,9 @@ class SwitchGeneralViewModel @Inject constructor(
   }
 
   private fun getEstimatedCountDownEndTime(channelDataBase: ChannelDataBase): Date? {
-    return (channelDataBase as? ChannelDataEntity)?.let {
+    return (channelDataBase as? ChannelWithChildren)?.let {
       val currentDate = dateProvider.currentDate()
-      val estimatedEndDate = it.channelExtendedValueEntity?.getSuplaValue()?.timerEstimatedEndDate
+      val estimatedEndDate = it.channel.channelExtendedValueEntity?.getSuplaValue()?.timerEstimatedEndDate
 
       if (estimatedEndDate?.after(currentDate) == true) {
         estimatedEndDate
@@ -190,7 +209,8 @@ class SwitchGeneralViewModel @Inject constructor(
       is DownloadEventsManager.State.Started -> {
         updateState {
           it.copy(
-            electricityMeterState = it.electricityMeterState?.copy(currentMonthDownloading = true)
+            electricityMeterState = it.electricityMeterState?.copy(currentMonthDownloading = true),
+            impulseCounterState = it.impulseCounterState?.copy(currentMonthDownloading = true)
           )
         }
       }
@@ -206,9 +226,16 @@ class SwitchGeneralViewModel @Inject constructor(
   fun ElectricityMeterGeneralStateHandler.updateState(
     state: ElectricityMeterState?,
     data: ChannelDataBase,
-    measurements: ElectricityMeasurements?
+    measurements: SummarizedMeasurements?
   ): ElectricityMeterState? =
-    (data as? ChannelDataEntity)?.let { updateState(state, it, measurements) }
+    (data as? ChannelWithChildren)?.let { updateState(state, it, measurements as? ElectricityMeasurements) }
+
+  fun ImpulseCounterGeneralStateHandler.updateState(
+    state: ImpulseCounterState?,
+    data: ChannelDataBase,
+    measurements: SummarizedMeasurements?
+  ): ImpulseCounterState? =
+    (data as? ChannelWithChildren)?.let { updateState(state, it, measurements as? ImpulseCounterMeasurements) }
 }
 
 sealed class SwitchGeneralViewEvent : ViewEvent
@@ -227,7 +254,8 @@ data class SwitchGeneralViewState(
   val onIcon: ImageId? = null,
   val offIcon: ImageId? = null,
 
-  val electricityMeterState: ElectricityMeterState? = null
+  val electricityMeterState: ElectricityMeterState? = null,
+  val impulseCounterState: ImpulseCounterState? = null
 ) : ViewState()
 
 private val SuplaFunction.switchWithButtons: Boolean

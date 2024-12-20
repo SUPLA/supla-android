@@ -31,7 +31,7 @@ import org.supla.android.data.model.chart.ChartDataSpec
 import org.supla.android.data.model.chart.ChartEntryType
 import org.supla.android.data.model.chart.ChartEntryType.GENERAL_PURPOSE_METER
 import org.supla.android.data.source.GeneralPurposeMeterLogRepository
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.local.entity.measurements.GeneralPurposeMeterEntity
 import org.supla.android.di.GSON_FOR_REPO
 import org.supla.android.extensions.toTimestamp
@@ -53,16 +53,21 @@ class GeneralPurposeMeterMeasurementsProvider @Inject constructor(
   @Named(GSON_FOR_REPO) gson: Gson
 ) : ChannelMeasurementsProvider(getChannelValueStringUseCase, getChannelIconUseCase, preferences, gson) {
 
-  override fun handle(function: SuplaFunction) = function == SuplaFunction.GENERAL_PURPOSE_METER
+  override fun handle(channelWithChildren: ChannelWithChildren) =
+    channelWithChildren.channel.function == SuplaFunction.GENERAL_PURPOSE_METER
 
   override fun provide(
-    channel: ChannelDataEntity,
+    channelWithChildren: ChannelWithChildren,
     spec: ChartDataSpec,
     colorProvider: ((ChartEntryType) -> Int)?
-  ): Single<ChannelChartSets> =
-    generalPurposeMeterLogRepository.findMeasurements(channel.remoteId, channel.profileId, spec.startDate, spec.endDate)
+  ): Single<ChannelChartSets> {
+    val channel = channelWithChildren.channel
+
+    return generalPurposeMeterLogRepository.findMeasurements(channel.remoteId, channel.profileId, spec.startDate, spec.endDate)
       .map { entities -> aggregatingGeneralCounter(entities, spec.aggregation) }
-      .map { measurements -> listOf(historyDataSet(channel, GENERAL_PURPOSE_METER, R.color.chart_gpm, spec.aggregation, measurements)) }
+      .map { measurements ->
+        listOf(historyDataSet(channelWithChildren, GENERAL_PURPOSE_METER, R.color.chart_gpm, spec.aggregation, measurements))
+      }
       .map {
         ChannelChartSets(
           channel.remoteId,
@@ -73,6 +78,7 @@ class GeneralPurposeMeterMeasurementsProvider @Inject constructor(
         )
       }
       .firstOrError()
+  }
 
   private fun aggregatingGeneralCounter(
     measurements: List<GeneralPurposeMeterEntity>,

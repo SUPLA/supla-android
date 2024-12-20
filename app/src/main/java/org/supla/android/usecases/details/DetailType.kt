@@ -24,7 +24,6 @@ sealed interface DetailType : Serializable
 
 enum class LegacyDetailType : DetailType {
   RGBW,
-  IC,
   THERMOSTAT_HP,
   DIGIGLASS
 }

@@ -25,16 +25,16 @@ import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.events.DownloadEventsManager
 import org.supla.android.extensions.monthStart
 import org.supla.android.features.details.detailbase.electricitymeter.ElectricityMeterGeneralStateHandler
 import org.supla.android.features.details.detailbase.electricitymeter.ElectricityMeterState
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.DownloadChannelMeasurementsUseCase
-import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
-import org.supla.android.usecases.channel.electricitymeter.ElectricityMeasurements
-import org.supla.android.usecases.channel.electricitymeter.LoadElectricityMeterMeasurementsUseCase
+import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
+import org.supla.android.usecases.channel.measurements.ElectricityMeasurements
+import org.supla.android.usecases.channel.measurements.electricitymeter.LoadElectricityMeterMeasurementsUseCase
 import javax.inject.Inject
 
 @HiltViewModel
@@ -42,7 +42,7 @@ class ElectricityMeterGeneralViewModel @Inject constructor(
   private val loadElectricityMeterMeasurementsUseCase: LoadElectricityMeterMeasurementsUseCase,
   private val electricityMeterGeneralStateHandler: ElectricityMeterGeneralStateHandler,
   private val downloadChannelMeasurementsUseCase: DownloadChannelMeasurementsUseCase,
-  private val readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
+  private val readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
   private val downloadEventsManager: DownloadEventsManager,
   private val dateProvider: DateProvider,
   private val preferences: Preferences,
@@ -58,7 +58,7 @@ class ElectricityMeterGeneralViewModel @Inject constructor(
 
   fun loadData(remoteId: Int, cleanupDownloading: Boolean = false) {
     Maybe.zip(
-      readChannelByRemoteIdUseCase(remoteId),
+      readChannelWithChildrenUseCase(remoteId),
       loadElectricityMeterMeasurementsUseCase(remoteId, dateProvider.currentDate().monthStart())
     ) { channel, measurements -> Pair(channel, measurements) }
       .attach()
@@ -74,16 +74,16 @@ class ElectricityMeterGeneralViewModel @Inject constructor(
     updateState { it.copy(viewState = it.viewState.copy(showIntroduction = false)) }
   }
 
-  private fun handleChannel(channel: ChannelDataEntity, measurements: ElectricityMeasurements, cleanupDownloading: Boolean) {
+  private fun handleChannel(channelWithChildren: ChannelWithChildren, measurements: ElectricityMeasurements, cleanupDownloading: Boolean) {
     updateState { state ->
       if (!state.initialDataLoadStarted) {
-        downloadChannelMeasurementsUseCase.invoke(channel.remoteId, channel.profileId, channel.function)
+        downloadChannelMeasurementsUseCase.invoke(channelWithChildren)
       }
 
-      electricityMeterGeneralStateHandler.updateState(state.viewState, channel, measurements)?.let {
+      electricityMeterGeneralStateHandler.updateState(state.viewState, channelWithChildren, measurements)?.let {
         val downloading = if (cleanupDownloading) false else state.viewState.currentMonthDownloading
         state.copy(
-          remoteId = channel.remoteId,
+          remoteId = channelWithChildren.remoteId,
           initialDataLoadStarted = true,
           viewState = it.copy(currentMonthDownloading = downloading)
         )

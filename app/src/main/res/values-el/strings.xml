@@ -142,8 +142,8 @@
   <string name="hp_hour">ώρα</string>
   <string name="total_cost">Συνολικό κόστος</string>
   <string name="current_cost">Το κόστος του τρέχοντος μήνα</string>
-  <string name="current_consumption">Κατανάλωση τον τρέχοντα μήνα</string>
-  <string name="meter_value">Κατάσταση του μετρητή</string>
+  <string name="details_ic_current_consumption">Κατανάλωση τον τρέχοντα μήνα</string>
+  <string name="details_ic_meter_value">Κατάσταση του μετρητή</string>
   <string name="minutes">Λεπτά</string>
   <string name="hours">Ώρες</string>
   <string name="days">Ημέρες</string>

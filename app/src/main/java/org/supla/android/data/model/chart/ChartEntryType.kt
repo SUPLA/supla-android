@@ -26,6 +26,7 @@ enum class ChartEntryType(private val axisDependency: AxisDependency) {
   HUMIDITY_ONLY(AxisDependency.LEFT),
   GENERAL_PURPOSE_MEASUREMENT(AxisDependency.LEFT),
   GENERAL_PURPOSE_METER(AxisDependency.LEFT),
+  IMPULSE_COUNTER(AxisDependency.LEFT),
   ELECTRICITY(AxisDependency.LEFT);
 
   fun leftAxis() = axisDependency == AxisDependency.LEFT

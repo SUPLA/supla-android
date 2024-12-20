@@ -24,8 +24,10 @@ import org.supla.android.data.source.ElectricityMeterLogRepository
 import org.supla.android.data.source.GeneralPurposeMeasurementLogRepository
 import org.supla.android.data.source.GeneralPurposeMeterLogRepository
 import org.supla.android.data.source.HumidityLogRepository
+import org.supla.android.data.source.ImpulseCounterLogRepository
 import org.supla.android.data.source.TemperatureAndHumidityLogRepository
 import org.supla.android.data.source.TemperatureLogRepository
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.core.shared.data.model.general.SuplaFunction
 import java.util.Date
 import javax.inject.Inject
@@ -33,13 +35,14 @@ import javax.inject.Singleton
 
 @Singleton
 class LoadChannelMeasurementsDataRangeUseCase @Inject constructor(
-  private val readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
+  private val readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
   thermometerDataRangeProvider: ThermometerDataRangeProvider,
   humidityAndTemperatureDataRangeProvider: HumidityAndTemperatureDataRangeProvider,
   generalPurposeMeasurementDataRangeProvider: GeneralPurposeMeasurementDataRangeProvider,
   generalPurposeMeterDataRangeProvider: GeneralPurposeMeterDataRangeProvider,
   electricityMeterDataRangeProvider: ElectricityMeterDataRangeProvider,
-  humidityDataRangeProvider: HumidityDataRangeProvider
+  humidityDataRangeProvider: HumidityDataRangeProvider,
+  impulseCounterDataRangeProvider: ImpulseCounterDataRangeProvider
 ) {
 
   private val providers: List<ChannelDataRangeProvider> =
@@ -49,15 +52,16 @@ class LoadChannelMeasurementsDataRangeUseCase @Inject constructor(
       generalPurposeMeasurementDataRangeProvider,
       generalPurposeMeterDataRangeProvider,
       electricityMeterDataRangeProvider,
-      humidityDataRangeProvider
+      humidityDataRangeProvider,
+      impulseCounterDataRangeProvider
     )
 
   operator fun invoke(remoteId: Int, profileId: Long): Single<Optional<DateRange>> =
-    readChannelByRemoteIdUseCase(remoteId)
+    readChannelWithChildrenUseCase(remoteId)
       .toSingle()
       .flatMap { channel ->
         providers.forEach {
-          if (it.handle(channel.function)) {
+          if (it.handle(channel)) {
             return@flatMap Single.zip(
               it.minTime(remoteId, profileId).map { long -> Date(long) },
               it.maxTime(remoteId, profileId).map { long -> Date(long) }
@@ -71,7 +75,7 @@ class LoadChannelMeasurementsDataRangeUseCase @Inject constructor(
 }
 
 interface ChannelDataRangeProvider {
-  fun handle(channelFunction: SuplaFunction): Boolean
+  fun handle(channelWithChildren: ChannelWithChildren): Boolean
   fun minTime(remoteId: Int, profileId: Long): Single<Long>
   fun maxTime(remoteId: Int, profileId: Long): Single<Long>
 }
@@ -80,8 +84,8 @@ interface ChannelDataRangeProvider {
 class ThermometerDataRangeProvider @Inject constructor(
   private val temperatureLogRepository: TemperatureLogRepository
 ) : ChannelDataRangeProvider {
-  override fun handle(channelFunction: SuplaFunction): Boolean =
-    channelFunction == SuplaFunction.THERMOMETER
+  override fun handle(channelWithChildren: ChannelWithChildren): Boolean =
+    channelWithChildren.function == SuplaFunction.THERMOMETER
 
   override fun minTime(remoteId: Int, profileId: Long): Single<Long> =
     temperatureLogRepository.findMinTimestamp(remoteId, profileId)
@@ -94,8 +98,8 @@ class ThermometerDataRangeProvider @Inject constructor(
 class HumidityAndTemperatureDataRangeProvider @Inject constructor(
   private val temperatureAndHumidityLogRepository: TemperatureAndHumidityLogRepository
 ) : ChannelDataRangeProvider {
-  override fun handle(channelFunction: SuplaFunction): Boolean =
-    channelFunction == SuplaFunction.HUMIDITY_AND_TEMPERATURE
+  override fun handle(channelWithChildren: ChannelWithChildren): Boolean =
+    channelWithChildren.function == SuplaFunction.HUMIDITY_AND_TEMPERATURE
 
   override fun minTime(remoteId: Int, profileId: Long): Single<Long> =
     temperatureAndHumidityLogRepository.findMinTimestamp(remoteId, profileId)
@@ -108,8 +112,8 @@ class HumidityAndTemperatureDataRangeProvider @Inject constructor(
 class GeneralPurposeMeterDataRangeProvider @Inject constructor(
   private val generalPurposeMeterLogRepository: GeneralPurposeMeterLogRepository
 ) : ChannelDataRangeProvider {
-  override fun handle(channelFunction: SuplaFunction): Boolean =
-    channelFunction == SuplaFunction.GENERAL_PURPOSE_METER
+  override fun handle(channelWithChildren: ChannelWithChildren): Boolean =
+    channelWithChildren.function == SuplaFunction.GENERAL_PURPOSE_METER
 
   override fun minTime(remoteId: Int, profileId: Long): Single<Long> =
     generalPurposeMeterLogRepository.findMinTimestamp(remoteId, profileId)
@@ -122,8 +126,8 @@ class GeneralPurposeMeterDataRangeProvider @Inject constructor(
 class GeneralPurposeMeasurementDataRangeProvider @Inject constructor(
   private val generalPurposeMeasurementLogRepository: GeneralPurposeMeasurementLogRepository
 ) : ChannelDataRangeProvider {
-  override fun handle(channelFunction: SuplaFunction): Boolean =
-    channelFunction == SuplaFunction.GENERAL_PURPOSE_MEASUREMENT
+  override fun handle(channelWithChildren: ChannelWithChildren): Boolean =
+    channelWithChildren.function == SuplaFunction.GENERAL_PURPOSE_MEASUREMENT
 
   override fun minTime(remoteId: Int, profileId: Long): Single<Long> =
     generalPurposeMeasurementLogRepository.findMinTimestamp(remoteId, profileId)
@@ -136,15 +140,8 @@ class GeneralPurposeMeasurementDataRangeProvider @Inject constructor(
 class ElectricityMeterDataRangeProvider @Inject constructor(
   private val electricityMeterLogRepository: ElectricityMeterLogRepository
 ) : ChannelDataRangeProvider {
-  override fun handle(channelFunction: SuplaFunction): Boolean =
-    when (channelFunction) {
-      SuplaFunction.ELECTRICITY_METER,
-      SuplaFunction.LIGHTSWITCH,
-      SuplaFunction.POWER_SWITCH,
-      SuplaFunction.STAIRCASE_TIMER -> true
-
-      else -> false
-    }
+  override fun handle(channelWithChildren: ChannelWithChildren): Boolean =
+    channelWithChildren.isOrHasElectricityMeter
 
   override fun minTime(remoteId: Int, profileId: Long): Single<Long> =
     electricityMeterLogRepository.findMinTimestamp(remoteId, profileId)
@@ -157,12 +154,26 @@ class ElectricityMeterDataRangeProvider @Inject constructor(
 class HumidityDataRangeProvider @Inject constructor(
   private val humidityLogRepository: HumidityLogRepository
 ) : ChannelDataRangeProvider {
-  override fun handle(channelFunction: SuplaFunction): Boolean =
-    channelFunction == SuplaFunction.HUMIDITY
+  override fun handle(channelWithChildren: ChannelWithChildren): Boolean =
+    channelWithChildren.function == SuplaFunction.HUMIDITY
 
   override fun minTime(remoteId: Int, profileId: Long): Single<Long> =
     humidityLogRepository.findMinTimestamp(remoteId, profileId)
 
   override fun maxTime(remoteId: Int, profileId: Long): Single<Long> =
     humidityLogRepository.findMaxTimestamp(remoteId, profileId)
+}
+
+@Singleton
+class ImpulseCounterDataRangeProvider @Inject constructor(
+  private val impulseCounterLogRepository: ImpulseCounterLogRepository
+) : ChannelDataRangeProvider {
+  override fun handle(channelWithChildren: ChannelWithChildren): Boolean =
+    channelWithChildren.isOrHasImpulseCounter
+
+  override fun minTime(remoteId: Int, profileId: Long): Single<Long> =
+    impulseCounterLogRepository.findMinTimestamp(remoteId, profileId)
+
+  override fun maxTime(remoteId: Int, profileId: Long): Single<Long> =
+    impulseCounterLogRepository.findMaxTimestamp(remoteId, profileId)
 }

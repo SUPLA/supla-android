@@ -26,7 +26,6 @@ import dagger.hilt.android.EntryPointAccessors;
 import java.util.Date;
 import org.supla.android.data.source.DefaultMeasurableItemsRepository;
 import org.supla.android.data.source.MeasurableItemsRepository;
-import org.supla.android.data.source.local.ImpulseCounterLogDao;
 import org.supla.android.data.source.local.ThermostatLogDao;
 import org.supla.android.di.entrypoints.ProfileIdHolderEntryPoint;
 import org.supla.android.profile.ProfileIdHolder;
@@ -44,8 +43,7 @@ public class MeasurementsDbHelper extends BaseDbHelper {
   private MeasurementsDbHelper(Context context, ProfileIdProvider profileIdProvider) {
     super(context, DATABASE_NAME, null, DATABASE_VERSION, profileIdProvider);
     this.measurableItemsRepository =
-        new DefaultMeasurableItemsRepository(
-            new ImpulseCounterLogDao(this), new ThermostatLogDao(this));
+        new DefaultMeasurableItemsRepository(new ThermostatLogDao(this));
   }
 
   /**
@@ -89,18 +87,6 @@ public class MeasurementsDbHelper extends BaseDbHelper {
     // Moved to Room (see DatabaseModule)
   }
 
-  public boolean impulseCounterMeasurementsStartsWithTheCurrentMonth(int channelId) {
-    return measurableItemsRepository.impulseCounterMeasurementsStartsWithTheCurrentMonth(channelId);
-  }
-
-  public int getImpulseCounterMeasurementTimestamp(int channelId, boolean min) {
-    return measurableItemsRepository.getImpulseCounterMeasurementTimestamp(channelId, min);
-  }
-
-  public double getLastImpulseCounterMeasurementValue(int monthOffset, int channelId) {
-    return measurableItemsRepository.getLastImpulseCounterMeasurementValue(monthOffset, channelId);
-  }
-
   public Cursor getThermostatMeasurements(int channelId, Date dateFrom, Date dateTo) {
     return measurableItemsRepository.getThermostatMeasurements(channelId, dateFrom, dateTo);
   }
@@ -119,24 +105,5 @@ public class MeasurementsDbHelper extends BaseDbHelper {
 
   public void addThermostatMeasurement(ThermostatMeasurementItem emi) {
     measurableItemsRepository.addThermostatMeasurement(emi);
-  }
-
-  public Cursor getImpulseCounterMeasurements(
-      int channelId, String groupByDateFormat, Date dateFrom, Date dateTo) {
-    return measurableItemsRepository.getImpulseCounterMeasurements(
-        channelId, groupByDateFormat, dateFrom, dateTo);
-  }
-
-  public void addImpulseCounterMeasurement(ImpulseCounterMeasurementItem item) {
-    measurableItemsRepository.addImpulseCounterMeasurement(item);
-  }
-
-  public int getImpulseCounterMeasurementTotalCount(int channelId, boolean withoutComplement) {
-    return measurableItemsRepository.getImpulseCounterMeasurementTotalCount(
-        channelId, withoutComplement);
-  }
-
-  public void deleteImpulseCounterMeasurements(int channelId) {
-    measurableItemsRepository.deleteImpulseCounterMeasurements(channelId);
   }
 }

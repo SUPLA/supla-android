@@ -27,6 +27,7 @@ import org.supla.android.data.source.local.entity.isGpMeter
 import org.supla.android.data.source.local.entity.isGpm
 import org.supla.android.data.source.local.entity.isHvacThermostat
 import org.supla.android.data.source.local.entity.isIconValueItem
+import org.supla.android.data.source.local.entity.isImpulseCounter
 import org.supla.android.data.source.local.entity.isShadingSystem
 import org.supla.android.data.source.local.entity.isThermometer
 import org.supla.android.data.source.local.entity.isVerticalBlind
@@ -45,6 +46,8 @@ fun ChannelDataEntity.isGpMeasurement() = channelEntity.isGpMeasurement()
 fun ChannelDataEntity.isGpMeter() = channelEntity.isGpMeter()
 
 fun ChannelDataEntity.isElectricityMeter() = channelEntity.isElectricityMeter()
+
+fun ChannelDataEntity.isImpulseCounter() = channelEntity.isImpulseCounter()
 
 fun ChannelDataEntity.isHvacThermostat() = channelEntity.isHvacThermostat()
 
