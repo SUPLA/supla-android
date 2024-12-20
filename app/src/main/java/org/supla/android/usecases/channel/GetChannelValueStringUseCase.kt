@@ -19,7 +19,7 @@ package org.supla.android.usecases.channel
 
 import org.supla.android.Trace
 import org.supla.android.data.ValuesFormatter
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.extensions.TAG
 import org.supla.android.usecases.channel.stringvalueprovider.ContainerValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.DepthSensorValueStringProvider
@@ -32,7 +32,7 @@ import org.supla.android.usecases.channel.stringvalueprovider.ImpulseCounterValu
 import org.supla.android.usecases.channel.stringvalueprovider.NoValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.PressureSensorValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.RainSensorValueStringProvider
-import org.supla.android.usecases.channel.stringvalueprovider.SwitchWithElectricityMeterValueStringProvider
+import org.supla.android.usecases.channel.stringvalueprovider.SwitchWithMeterValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.ThermometerValueStringProvider
 import org.supla.core.shared.data.model.general.SuplaFunction
 import javax.inject.Inject
@@ -46,7 +46,7 @@ class GetChannelValueStringUseCase @Inject constructor(
   generalPurposeMeasurementValueProvider: GpmValueStringProvider,
   distanceSensorValueStringProvider: DistanceSensorValueStringProvider,
   electricityMeterValueStringProvider: ElectricityMeterValueStringProvider,
-  switchWithElectricityMeterValueStringProvider: SwitchWithElectricityMeterValueStringProvider,
+  switchWithMeterValueStringProvider: SwitchWithMeterValueStringProvider,
   impulseCounterValueStringProvider: ImpulseCounterValueStringProvider,
   pressureSensorValueStringProvider: PressureSensorValueStringProvider,
   rainSensorValueStringProvider: RainSensorValueStringProvider,
@@ -61,7 +61,7 @@ class GetChannelValueStringUseCase @Inject constructor(
     generalPurposeMeasurementValueProvider,
     distanceSensorValueStringProvider,
     electricityMeterValueStringProvider,
-    switchWithElectricityMeterValueStringProvider,
+    switchWithMeterValueStringProvider,
     impulseCounterValueStringProvider,
     pressureSensorValueStringProvider,
     rainSensorValueStringProvider,
@@ -80,20 +80,20 @@ class GetChannelValueStringUseCase @Inject constructor(
     NoValueStringProvider(SuplaFunction.OPEN_SENSOR_ROLLER_SHUTTER)
   )
 
-  operator fun invoke(channel: ChannelDataEntity, valueType: ValueType = ValueType.FIRST, withUnit: Boolean = true): String {
+  operator fun invoke(channel: ChannelWithChildren, valueType: ValueType = ValueType.FIRST, withUnit: Boolean = true): String {
     return valueOrNull(channel, valueType, withUnit) ?: ValuesFormatter.NO_VALUE_TEXT
   }
 
-  fun valueOrNull(channel: ChannelDataEntity, valueType: ValueType = ValueType.FIRST, withUnit: Boolean = true): String? {
+  fun valueOrNull(channel: ChannelWithChildren, valueType: ValueType = ValueType.FIRST, withUnit: Boolean = true): String? {
     providers.firstOrNull { it.handle(channel) }?.let {
-      if (channel.channelValueEntity.online.not()) {
+      if (channel.channel.channelValueEntity.online.not()) {
         return ValuesFormatter.NO_VALUE_TEXT
       }
 
       return it.value(channel, valueType, withUnit)
     }
 
-    Trace.e(TAG, "No value formatter for channel function `${channel.function}`")
+    Trace.e(TAG, "No value formatter for channel function `${channel.channel.function}`")
     return null
   }
 }
@@ -103,6 +103,6 @@ enum class ValueType {
 }
 
 interface ChannelValueStringProvider {
-  fun handle(channelData: ChannelDataEntity): Boolean
-  fun value(channelData: ChannelDataEntity, valueType: ValueType, withUnit: Boolean = true): String?
+  fun handle(channelWithChildren: ChannelWithChildren): Boolean
+  fun value(channelWithChildren: ChannelWithChildren, valueType: ValueType, withUnit: Boolean = true): String?
 }

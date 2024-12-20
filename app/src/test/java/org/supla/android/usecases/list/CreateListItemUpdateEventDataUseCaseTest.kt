@@ -261,7 +261,7 @@ class CreateListItemUpdateEventDataUseCaseTest {
     every { readChannelWithChildrenTreeUseCase(remoteId) } returns Observable.just(channelWithChildren)
     every { getCaptionUseCase(channelShareable) } returns caption
     every { getChannelIconUseCase(channel) } returns imageId
-    every { getChannelValueStringUseCase(channel) } returns value
+    every { getChannelValueStringUseCase(channelWithChildren) } returns value
     every { getChannelIssuesForListUseCase.invoke(channelWithChildrenShareable) } returns ListItemIssues.empty
 
     // when
@@ -285,7 +285,7 @@ class CreateListItemUpdateEventDataUseCaseTest {
       channelWithChildrenToThermostatUpdateEventMapper.handle(channelWithChildren)
       getCaptionUseCase.invoke(channelShareable)
       getChannelIconUseCase.invoke(channel)
-      getChannelValueStringUseCase.invoke(channel)
+      getChannelValueStringUseCase.invoke(channelWithChildren)
     }
     verify(exactly = 2) { readChannelWithChildrenTreeUseCase.invoke(remoteId) }
     confirmVerified(

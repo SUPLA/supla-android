@@ -28,7 +28,8 @@ import org.supla.android.features.details.electricitymeterdetail.history.Electri
 import org.supla.android.features.details.electricitymeterdetail.settings.ElectricityMeterSettingsFragment
 import org.supla.android.features.details.gpmdetail.history.GpmHistoryDetailFragment
 import org.supla.android.features.details.humiditydetail.history.HumidityHistoryDetailFragment
-import org.supla.android.features.details.legacydetail.LegacyDetailFragment
+import org.supla.android.features.details.impulsecounter.general.ImpulseCounterGeneralFragment
+import org.supla.android.features.details.impulsecounter.history.ImpulseCounterHistoryDetailFragment
 import org.supla.android.features.details.switchdetail.general.SwitchGeneralFragment
 import org.supla.android.features.details.switchdetail.timer.TimersDetailFragment
 import org.supla.android.features.details.thermometerdetail.history.ThermometerHistoryDetailFragment
@@ -45,7 +46,6 @@ import org.supla.android.features.details.windowdetail.rollershutter.RollerShutt
 import org.supla.android.features.details.windowdetail.roofwindow.RoofWindowFragment
 import org.supla.android.features.details.windowdetail.terraceawning.TerraceAwningFragment
 import org.supla.android.features.details.windowdetail.verticalblinds.VerticalBlindsFragment
-import org.supla.android.usecases.details.LegacyDetailType
 
 class StandardDetailPagerAdapter(
   private val pages: List<DetailPage>,
@@ -58,9 +58,6 @@ class StandardDetailPagerAdapter(
   override fun createFragment(position: Int): Fragment = when (pages[position]) {
     DetailPage.SWITCH -> SwitchGeneralFragment().apply { arguments = SwitchGeneralFragment.bundle(itemBundle) }
     DetailPage.SWITCH_TIMER -> TimersDetailFragment().apply { arguments = TimersDetailFragment.bundle(itemBundle.remoteId) }
-    DetailPage.HISTORY_IC -> LegacyDetailFragment().apply {
-      arguments = LegacyDetailFragment.bundle(itemBundle.remoteId, LegacyDetailType.IC, itemBundle.itemType)
-    }
 
     DetailPage.THERMOSTAT -> ThermostatGeneralFragment().apply { arguments = ThermostatGeneralFragment.bundle(itemBundle) }
     DetailPage.THERMOSTAT_LIST -> ThermostatSlavesListFragment().apply { arguments = ThermostatSlavesListFragment.bundle(itemBundle) }
@@ -88,15 +85,20 @@ class StandardDetailPagerAdapter(
     DetailPage.CURTAIN -> CurtainFragment().apply { arguments = CurtainFragment.bundle(itemBundle) }
     DetailPage.VERTICAL_BLIND -> VerticalBlindsFragment().apply { arguments = VerticalBlindsFragment.bundle(itemBundle) }
     DetailPage.GARAGE_DOOR_ROLLER -> GarageDoorFragment().apply { arguments = GarageDoorFragment.bundle(itemBundle) }
+
     DetailPage.EM_GENERAL -> ElectricityMeterGeneralFragment().apply { arguments = ElectricityMeterGeneralFragment.bundle(itemBundle) }
     DetailPage.EM_HISTORY -> ElectricityMeterHistoryFragment().apply {
       arguments = ElectricityMeterHistoryFragment.bundle(itemBundle.remoteId)
     }
-
     DetailPage.EM_SETTINGS -> ElectricityMeterSettingsFragment().apply { arguments = ElectricityMeterSettingsFragment.bundle(itemBundle) }
 
     DetailPage.CONTAINER_GENERAL -> ContainerGeneralDetailFragment().apply {
       arguments = ContainerGeneralDetailFragment.bundle(itemBundle)
+    }
+
+    DetailPage.IC_GENERAL -> ImpulseCounterGeneralFragment().apply { arguments = ImpulseCounterGeneralFragment.bundle(itemBundle) }
+    DetailPage.IC_HISTORY -> ImpulseCounterHistoryDetailFragment().apply {
+      arguments = ImpulseCounterHistoryDetailFragment.bundle(itemBundle.remoteId)
     }
   }
 }
@@ -105,7 +107,6 @@ enum class DetailPage(val item: DetailBottomItem) {
   // Switches
   SWITCH(DetailBottomItem.GENERAL),
   SWITCH_TIMER(DetailBottomItem.TIMER),
-  HISTORY_IC(DetailBottomItem.METRICS),
 
   // Thermostats
   THERMOSTAT(DetailBottomItem.GENERAL),
@@ -139,7 +140,11 @@ enum class DetailPage(val item: DetailBottomItem) {
   EM_SETTINGS(DetailBottomItem.SETTINGS),
 
   // Container
-  CONTAINER_GENERAL(DetailBottomItem.GENERAL)
+  CONTAINER_GENERAL(DetailBottomItem.GENERAL),
+
+  // IC
+  IC_GENERAL(DetailBottomItem.GENERAL),
+  IC_HISTORY(DetailBottomItem.METRICS)
 }
 
 enum class DetailBottomItem(val menuId: Int, @DrawableRes val iconRes: Int, @StringRes val stringRes: Int) {

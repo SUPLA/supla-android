@@ -56,7 +56,7 @@ class ContainerGeneralDetailViewModel @Inject constructor(
       it.copy(
         viewState = it.viewState.copy(
           icon = getChannelIconUseCase(channelWithChildren.channel),
-          level = getChannelValueStringUseCase(channelWithChildren.channel),
+          level = getChannelValueStringUseCase(channelWithChildren),
           value = channelWithChildren.channel.channelValueEntity.getValueAsByteArray().toHex("-")
         )
       )

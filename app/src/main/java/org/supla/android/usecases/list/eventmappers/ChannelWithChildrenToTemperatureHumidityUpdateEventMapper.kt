@@ -64,12 +64,12 @@ class ChannelWithChildrenToTemperatureHumidityUpdateEventMapper @Inject construc
       onlineState = onlineState,
       title = getCaptionUseCase(channelData.shareable),
       icon = getChannelIconUseCase.invoke(channelData),
-      value = getChannelValueStringUseCase(channelData),
+      value = getChannelValueStringUseCase(channelWithChildren),
       issues = getChannelIssuesForListUseCase(channelWithChildren.shareable),
       estimatedTimerEndDate = channelData.channelExtendedValueEntity?.getSuplaValue()?.TimerStateValue?.countdownEndsAt,
       infoSupported = SuplaChannelFlag.CHANNEL_STATE.inside(channelData.flags),
       secondIcon = getChannelIconUseCase.invoke(channelData, IconType.SECOND),
-      secondValue = getChannelValueStringUseCase(channelData, ValueType.SECOND, withUnit = false)
+      secondValue = getChannelValueStringUseCase(channelWithChildren, ValueType.SECOND, withUnit = false)
     )
   }
 }

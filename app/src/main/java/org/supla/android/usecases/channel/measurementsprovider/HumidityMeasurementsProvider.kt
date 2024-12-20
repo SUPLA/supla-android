@@ -27,7 +27,7 @@ import org.supla.android.data.model.chart.ChartDataSpec
 import org.supla.android.data.model.chart.ChartEntryType
 import org.supla.android.data.model.chart.HumidityChartColors
 import org.supla.android.data.source.HumidityLogRepository
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.di.GSON_FOR_REPO
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
@@ -46,19 +46,21 @@ class HumidityMeasurementsProvider @Inject constructor(
   preferences: Preferences,
   @Named(GSON_FOR_REPO) gson: Gson
 ) : ChannelMeasurementsProvider(getChannelValueStringUseCase, getChannelIconUseCase, preferences, gson) {
-  override fun handle(function: SuplaFunction) = function == SuplaFunction.HUMIDITY
+  override fun handle(channelWithChildren: ChannelWithChildren) =
+    channelWithChildren.channel.function == SuplaFunction.HUMIDITY
 
   override fun provide(
-    channel: ChannelDataEntity,
+    channelWithChildren: ChannelWithChildren,
     spec: ChartDataSpec,
     colorProvider: ((ChartEntryType) -> Int)?
   ): Single<ChannelChartSets> {
     val entryType = ChartEntryType.HUMIDITY_ONLY
     val color = colorProvider?.let { it(entryType) } ?: HumidityChartColors.DEFAULT
+    val channel = channelWithChildren.channel
 
     return humidityLogRepository.findMeasurements(channel.remoteId, channel.profileId, spec.startDate, spec.endDate)
       .map { entities -> aggregatingHumidity(entities, spec.aggregation) }
-      .map { measurements -> listOf(historyDataSet(channel, entryType, color, spec.aggregation, measurements)) }
+      .map { measurements -> listOf(historyDataSet(channelWithChildren, entryType, color, spec.aggregation, measurements)) }
       .map {
         ChannelChartSets(
           channel.remoteId,

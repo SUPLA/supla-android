@@ -188,8 +188,8 @@
   <string name="hp_hour">godz.</string>
   <string name="total_cost">Łączny koszt</string>
   <string name="current_cost">Koszt w bieżącym miesiącu</string>
-  <string name="current_consumption">Zużycie w bieżącym miesiącu</string>
-  <string name="meter_value">Stan licznika</string>
+  <string name="details_ic_current_consumption">Zużycie w bieżącym miesiącu</string>
+  <string name="details_ic_meter_value">Stan licznika</string>
   <string name="minutes">Minuty</string>
   <string name="hours">Godziny</string>
   <string name="days">Dni</string>

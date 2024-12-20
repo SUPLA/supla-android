@@ -20,25 +20,15 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import android.database.Cursor;
 import java.util.Date;
-import org.supla.android.data.source.local.ImpulseCounterLogDao;
 import org.supla.android.data.source.local.ThermostatLogDao;
-import org.supla.android.db.ImpulseCounterMeasurementItem;
 import org.supla.android.db.ThermostatMeasurementItem;
 
 public class DefaultMeasurableItemsRepository implements MeasurableItemsRepository {
 
-  private final ImpulseCounterLogDao impulseCounterLogDao;
   private final ThermostatLogDao thermostatLogDao;
 
-  public DefaultMeasurableItemsRepository(
-      ImpulseCounterLogDao impulseCounterLogDao, ThermostatLogDao thermostatLogDao) {
-    this.impulseCounterLogDao = impulseCounterLogDao;
+  public DefaultMeasurableItemsRepository(ThermostatLogDao thermostatLogDao) {
     this.thermostatLogDao = thermostatLogDao;
-  }
-
-  @Override
-  public double getLastImpulseCounterMeasurementValue(int monthOffset, int channelId) {
-    return impulseCounterLogDao.getLastImpulseCounterMeasurementValue(monthOffset, channelId);
   }
 
   @Override
@@ -64,38 +54,5 @@ public class DefaultMeasurableItemsRepository implements MeasurableItemsReposito
   @Override
   public Cursor getThermostatMeasurements(int channelId, Date dateFrom, Date dateTo) {
     return thermostatLogDao.getThermostatMeasurements(channelId, dateFrom, dateTo);
-  }
-
-  @Override
-  public void addImpulseCounterMeasurement(ImpulseCounterMeasurementItem item) {
-    impulseCounterLogDao.addImpulseCounterMeasurement(item);
-  }
-
-  @Override
-  public int getImpulseCounterMeasurementTimestamp(int channelId, boolean min) {
-    return impulseCounterLogDao.getImpulseCounterMeasurementTimestamp(channelId, min);
-  }
-
-  @Override
-  public boolean impulseCounterMeasurementsStartsWithTheCurrentMonth(int channelId) {
-    return impulseCounterLogDao.impulseCounterMeasurementsStartsWithTheCurrentMonth(channelId);
-  }
-
-  @Override
-  public int getImpulseCounterMeasurementTotalCount(int channelId, boolean withoutComplement) {
-    return impulseCounterLogDao.getImpulseCounterMeasurementTotalCount(
-        channelId, withoutComplement);
-  }
-
-  @Override
-  public Cursor getImpulseCounterMeasurements(
-      int channelId, String groupByDateFormat, Date dateFrom, Date dateTo) {
-    return impulseCounterLogDao.getImpulseCounterMeasurements(
-        channelId, groupByDateFormat, dateFrom, dateTo);
-  }
-
-  @Override
-  public void deleteImpulseCounterMeasurements(int channelId) {
-    impulseCounterLogDao.deleteImpulseCounterMeasurements(channelId);
   }
 }

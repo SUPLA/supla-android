@@ -102,11 +102,11 @@ class ThermostatHistoryDetailViewModel @Inject constructor(
     }
     updateState { it.copy(initialLoadStarted = true) }
 
-    channel.children.firstOrNull { it.relationType.isMainThermometer() }?.channel?.let {
-      downloadChannelMeasurementsUseCase.invoke(it.remoteId, it.profileId, it.function)
+    channel.children.firstOrNull { it.relationType.isMainThermometer() }?.let {
+      downloadChannelMeasurementsUseCase.invoke(it.withChildren)
     }
-    channel.children.firstOrNull { it.relationType.isAuxThermometer() }?.channel?.let {
-      downloadChannelMeasurementsUseCase.invoke(it.remoteId, it.profileId, it.function)
+    channel.children.firstOrNull { it.relationType.isAuxThermometer() }?.let {
+      downloadChannelMeasurementsUseCase.invoke(it.withChildren)
     }
   }
 

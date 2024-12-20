@@ -145,8 +145,8 @@
   <string name="hp_hour">u</string>
   <string name="total_cost">Totale kosten</string>
   <string name="current_cost">De kosten van de huidige maand</string>
-  <string name="current_consumption">Verbruik in de lopende maand</string>
-  <string name="meter_value">Meterstand</string>
+  <string name="details_ic_current_consumption">Verbruik in de lopende maand</string>
+  <string name="details_ic_meter_value">Meterstand</string>
   <string name="minutes">Minuten</string>
   <string name="hours">Uren</string>
   <string name="days">Dagen</string>

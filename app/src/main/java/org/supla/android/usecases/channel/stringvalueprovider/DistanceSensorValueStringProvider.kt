@@ -18,7 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import org.supla.android.data.ValuesFormatter
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.usecases.channel.ChannelValueStringProvider
 import org.supla.android.usecases.channel.ValueType
 import org.supla.android.usecases.channel.valueprovider.DistanceSensorValueProvider
@@ -31,8 +31,9 @@ class DistanceSensorValueStringProvider @Inject constructor(
   private val valuesFormatter: ValuesFormatter
 ) : ChannelValueStringProvider {
 
-  override fun handle(channelData: ChannelDataEntity): Boolean = distanceSensorValueProvider.handle(channelData)
+  override fun handle(channelWithChildren: ChannelWithChildren): Boolean =
+    distanceSensorValueProvider.handle(channelWithChildren.channel)
 
-  override fun value(channelData: ChannelDataEntity, valueType: ValueType, withUnit: Boolean): String =
-    valuesFormatter.getDistanceString(distanceSensorValueProvider.value(channelData, valueType))
+  override fun value(channelWithChildren: ChannelWithChildren, valueType: ValueType, withUnit: Boolean): String =
+    valuesFormatter.getDistanceString(distanceSensorValueProvider.value(channelWithChildren.channel, valueType))
 }

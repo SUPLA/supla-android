@@ -128,8 +128,8 @@
   <string name="hp_hour">h</string>
   <string name="total_cost">Custo total</string>
   <string name="current_cost">Custo no mês atual</string>
-  <string name="current_consumption">Consumo no mês atual</string>
-  <string name="meter_value">Status do contador</string>
+  <string name="details_ic_current_consumption">Consumo no mês atual</string>
+  <string name="details_ic_meter_value">Status do contador</string>
   <string name="minutes">Minutos</string>
   <string name="hours">Horas</string>
   <string name="days">Dias</string>

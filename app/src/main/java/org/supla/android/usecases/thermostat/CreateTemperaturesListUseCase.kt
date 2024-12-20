@@ -68,7 +68,7 @@ class CreateTemperaturesListUseCase @Inject constructor(
     MeasurementValue(
       remoteId = channelData.remoteId,
       imageId = getChannelIconUseCase(channelData),
-      value = getChannelValueStringUseCase(channelData, withUnit = false),
+      value = getChannelValueStringUseCase(ChannelWithChildren(channelData), withUnit = false),
       batteryIcon = getChannelBatteryIconUseCase(channelData.shareable)
     )
 
@@ -76,7 +76,7 @@ class CreateTemperaturesListUseCase @Inject constructor(
     MeasurementValue(
       remoteId = channelData.remoteId,
       imageId = getChannelIconUseCase(channelData, IconType.SECOND),
-      value = getChannelValueStringUseCase(channelData, ValueType.SECOND, withUnit = false),
+      value = getChannelValueStringUseCase(ChannelWithChildren(channelData), ValueType.SECOND, withUnit = false),
       batteryIcon = getChannelBatteryIconUseCase(channelData.shareable)
     )
 }

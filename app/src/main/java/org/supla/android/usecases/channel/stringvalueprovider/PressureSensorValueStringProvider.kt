@@ -18,7 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import org.supla.android.data.ValuesFormatter
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.extensions.guardLet
 import org.supla.android.usecases.channel.ChannelValueStringProvider
 import org.supla.android.usecases.channel.ValueType
@@ -36,10 +36,11 @@ class PressureSensorValueStringProvider @Inject constructor(
     maximumFractionDigits = 0
   }
 
-  override fun handle(channelData: ChannelDataEntity): Boolean = pressureSensorValueProvider.handle(channelData)
+  override fun handle(channelWithChildren: ChannelWithChildren): Boolean =
+    pressureSensorValueProvider.handle(channelWithChildren.channel)
 
-  override fun value(channelData: ChannelDataEntity, valueType: ValueType, withUnit: Boolean): String {
-    val (doubleValue) = guardLet(pressureSensorValueProvider.value(channelData, valueType) as? Double) {
+  override fun value(channelWithChildren: ChannelWithChildren, valueType: ValueType, withUnit: Boolean): String {
+    val (doubleValue) = guardLet(pressureSensorValueProvider.value(channelWithChildren.channel, valueType) as? Double) {
       return ValuesFormatter.NO_VALUE_TEXT
     }
     if (doubleValue <= PressureSensorValueProvider.UNKNOWN_VALUE) {

@@ -32,7 +32,7 @@ import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import org.supla.android.data.model.Optional
 import org.supla.android.data.model.chart.DateRange
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.extensions.date
 import org.supla.core.shared.data.model.general.SuplaFunction
 
@@ -40,7 +40,7 @@ import org.supla.core.shared.data.model.general.SuplaFunction
 class LoadChannelMeasurementsDataRangeUseCaseTest {
 
   @MockK
-  private lateinit var readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase
+  private lateinit var readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase
 
   @MockK
   private lateinit var thermometerDataRangeProvide: ThermometerDataRangeProvider
@@ -60,6 +60,9 @@ class LoadChannelMeasurementsDataRangeUseCaseTest {
   @MockK
   private lateinit var humidityDataRangeProvider: HumidityDataRangeProvider
 
+  @MockK
+  private lateinit var impulseCounterDataRangeProvider: ImpulseCounterDataRangeProvider
+
   @InjectMockKs
   private lateinit var useCase: LoadChannelMeasurementsDataRangeUseCase
 
@@ -73,15 +76,12 @@ class LoadChannelMeasurementsDataRangeUseCaseTest {
     // given
     val remoteId = 123
     val profileId = 234L
-    val channelFunction = SuplaFunction.THERMOMETER
-    val channel: ChannelDataEntity = mockk {
-      every { function } returns channelFunction
-    }
+    val channelWithChildren: ChannelWithChildren = mockk()
     val minDate = date(2024, 5, 1)
     val maxDate = date(2024, 8, 14)
 
-    every { readChannelByRemoteIdUseCase.invoke(remoteId) } returns Maybe.just(channel)
-    every { thermometerDataRangeProvide.handle(channelFunction) } returns true
+    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Maybe.just(channelWithChildren)
+    every { thermometerDataRangeProvide.handle(channelWithChildren) } returns true
     every { thermometerDataRangeProvide.minTime(remoteId, profileId) } returns Single.just(minDate.time)
     every { thermometerDataRangeProvide.maxTime(remoteId, profileId) } returns Single.just(maxDate.time)
 
@@ -93,13 +93,13 @@ class LoadChannelMeasurementsDataRangeUseCaseTest {
     testObserver.assertResult(Optional.of(DateRange(minDate, maxDate)))
 
     verify {
-      readChannelByRemoteIdUseCase.invoke(remoteId)
-      thermometerDataRangeProvide.handle(channelFunction)
+      readChannelWithChildrenUseCase.invoke(remoteId)
+      thermometerDataRangeProvide.handle(channelWithChildren)
       thermometerDataRangeProvide.minTime(remoteId, profileId)
       thermometerDataRangeProvide.maxTime(remoteId, profileId)
     }
     confirmVerified(
-      readChannelByRemoteIdUseCase,
+      readChannelWithChildrenUseCase,
       thermometerDataRangeProvide,
       humidityAndTemperatureDataRangeProvide,
       generalPurposeMeasurementDataRangeProvide,
@@ -114,17 +114,18 @@ class LoadChannelMeasurementsDataRangeUseCaseTest {
     val remoteId = 123
     val profileId = 234L
     val channelFunction = SuplaFunction.THERMOMETER
-    val channel: ChannelDataEntity = mockk {
+    val channelWithChildren: ChannelWithChildren = mockk {
       every { function } returns channelFunction
     }
 
-    every { readChannelByRemoteIdUseCase.invoke(remoteId) } returns Maybe.just(channel)
-    every { thermometerDataRangeProvide.handle(channelFunction) } returns false
-    every { humidityAndTemperatureDataRangeProvide.handle(channelFunction) } returns false
-    every { generalPurposeMeasurementDataRangeProvide.handle(channelFunction) } returns false
-    every { generalPurposeMeterDataRangeProvide.handle(channelFunction) } returns false
-    every { electricityMeterDataRangeProvide.handle(channelFunction) } returns false
-    every { humidityDataRangeProvider.handle(channelFunction) } returns false
+    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Maybe.just(channelWithChildren)
+    every { thermometerDataRangeProvide.handle(channelWithChildren) } returns false
+    every { humidityAndTemperatureDataRangeProvide.handle(channelWithChildren) } returns false
+    every { generalPurposeMeasurementDataRangeProvide.handle(channelWithChildren) } returns false
+    every { generalPurposeMeterDataRangeProvide.handle(channelWithChildren) } returns false
+    every { electricityMeterDataRangeProvide.handle(channelWithChildren) } returns false
+    every { humidityDataRangeProvider.handle(channelWithChildren) } returns false
+    every { impulseCounterDataRangeProvider.handle(channelWithChildren) } returns false
 
     // when
     val testObserver = useCase.invoke(remoteId, profileId).test()
@@ -134,22 +135,24 @@ class LoadChannelMeasurementsDataRangeUseCaseTest {
       it is IllegalArgumentException && it.message == "Channel function not supported ($channelFunction"
     }
     verify {
-      readChannelByRemoteIdUseCase.invoke(remoteId)
-      thermometerDataRangeProvide.handle(channelFunction)
-      humidityAndTemperatureDataRangeProvide.handle(channelFunction)
-      generalPurposeMeasurementDataRangeProvide.handle(channelFunction)
-      generalPurposeMeterDataRangeProvide.handle(channelFunction)
-      electricityMeterDataRangeProvide.handle(channelFunction)
-      humidityDataRangeProvider.handle(channelFunction)
+      readChannelWithChildrenUseCase.invoke(remoteId)
+      thermometerDataRangeProvide.handle(channelWithChildren)
+      humidityAndTemperatureDataRangeProvide.handle(channelWithChildren)
+      generalPurposeMeasurementDataRangeProvide.handle(channelWithChildren)
+      generalPurposeMeterDataRangeProvide.handle(channelWithChildren)
+      electricityMeterDataRangeProvide.handle(channelWithChildren)
+      humidityDataRangeProvider.handle(channelWithChildren)
+      impulseCounterDataRangeProvider.handle(channelWithChildren)
     }
     confirmVerified(
-      readChannelByRemoteIdUseCase,
+      readChannelWithChildrenUseCase,
       thermometerDataRangeProvide,
       humidityAndTemperatureDataRangeProvide,
       generalPurposeMeasurementDataRangeProvide,
       generalPurposeMeterDataRangeProvide,
       electricityMeterDataRangeProvide,
-      humidityDataRangeProvider
+      humidityDataRangeProvider,
+      impulseCounterDataRangeProvider
     )
   }
 }

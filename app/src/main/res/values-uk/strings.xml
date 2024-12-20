@@ -127,7 +127,7 @@
   <string name="hp_calendar_eco">ЕКО</string>
   <string name="hp_cfg_temp_eco">ECO температура в режимі AUTO</string>
   <string name="hp_hour">год.</string>
-  <string name="current_consumption">Споживання за поточний місяць</string>
+  <string name="details_ic_current_consumption">Споживання за поточний місяць</string>
   <string name="minutes">Хвилини</string>
   <string name="hours">Години</string>
   <string name="days">Дні</string>
@@ -380,7 +380,7 @@
   <string name="hp_cfg_turbo_time">Тривалість режиму TURBO</string>
   <string name="hp_cfg_water_max">Максимальна температура води</string>
   <string name="hp_cfg_eco_reduction">Зниження температури в режимі ЕCО</string>
-  <string name="meter_value">Стан лічильника</string>
+  <string name="details_ic_meter_value">Стан лічильника</string>
   <string name="total_cost">Загальна вартість</string>
   <string name="current_cost">Вартість поточного місяця</string>
   <string name="temperature">Температура</string>

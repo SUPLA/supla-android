@@ -29,6 +29,7 @@ import org.supla.android.data.model.chart.HistoryDataSet
 import org.supla.android.data.model.chart.singleLabel
 import org.supla.android.data.model.general.IconType
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.remote.gpm.SuplaChannelGeneralPurposeBaseConfig
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.channel.ValueType
@@ -36,9 +37,9 @@ import org.supla.android.usecases.channel.valueformatter.ChannelValueFormatter
 import org.supla.android.usecases.channel.valueformatter.ChartAxisElectricityMeterValueFormatter
 import org.supla.android.usecases.channel.valueformatter.GpmValueFormatter
 import org.supla.android.usecases.channel.valueformatter.HumidityValueFormatter
+import org.supla.android.usecases.channel.valueformatter.ImpulseCounterChartValueFormatter
 import org.supla.android.usecases.channel.valueformatter.ThermometerValueFormatter
 import org.supla.android.usecases.icon.GetChannelIconUseCase
-import org.supla.core.shared.data.model.general.SuplaFunction
 
 abstract class ChannelMeasurementsProvider(
   private val getChannelValueStringUseCase: GetChannelValueStringUseCase,
@@ -47,15 +48,15 @@ abstract class ChannelMeasurementsProvider(
   private val gson: Gson // GSON_FOR_REPO
 ) {
 
-  abstract fun handle(function: SuplaFunction): Boolean
+  abstract fun handle(channelWithChildren: ChannelWithChildren): Boolean
   abstract fun provide(
-    channel: ChannelDataEntity,
+    channelWithChildren: ChannelWithChildren,
     spec: ChartDataSpec,
     colorProvider: ((ChartEntryType) -> Int)? = null
   ): Single<ChannelChartSets>
 
   protected fun historyDataSet(
-    channel: ChannelDataEntity,
+    channelWithChildren: ChannelWithChildren,
     type: ChartEntryType,
     color: Int,
     aggregation: ChartDataAggregation,
@@ -65,16 +66,16 @@ abstract class ChannelMeasurementsProvider(
       type = type,
       label = singleLabel(
         imageId = when (type) {
-          ChartEntryType.HUMIDITY -> getChannelIconUseCase(channel, IconType.SECOND)
-          else -> getChannelIconUseCase(channel)
+          ChartEntryType.HUMIDITY -> getChannelIconUseCase(channelWithChildren.channel, IconType.SECOND)
+          else -> getChannelIconUseCase(channelWithChildren.channel)
         },
         value = when (type) {
-          ChartEntryType.HUMIDITY -> getChannelValueStringUseCase(channel, ValueType.SECOND)
-          else -> getChannelValueStringUseCase(channel)
+          ChartEntryType.HUMIDITY -> getChannelValueStringUseCase(channelWithChildren, ValueType.SECOND)
+          else -> getChannelValueStringUseCase(channelWithChildren)
         },
         color = color,
       ),
-      valueFormatter = getValueFormatter(type, channel),
+      valueFormatter = getValueFormatter(type, channelWithChildren.channel),
       entities = divideSetToSubsets(
         entities = measurements,
         aggregation = aggregation
@@ -83,13 +84,19 @@ abstract class ChannelMeasurementsProvider(
 
   protected fun getValueFormatter(type: ChartEntryType, channel: ChannelDataEntity): ChannelValueFormatter {
     return when (type) {
-      ChartEntryType.HUMIDITY, ChartEntryType.HUMIDITY_ONLY -> HumidityValueFormatter()
+      ChartEntryType.HUMIDITY,
+      ChartEntryType.HUMIDITY_ONLY -> HumidityValueFormatter()
+
       ChartEntryType.TEMPERATURE -> ThermometerValueFormatter(preferences)
       ChartEntryType.GENERAL_PURPOSE_MEASUREMENT,
       ChartEntryType.GENERAL_PURPOSE_METER ->
         GpmValueFormatter(channel.configEntity?.toSuplaConfig(gson) as? SuplaChannelGeneralPurposeBaseConfig)
 
       ChartEntryType.ELECTRICITY -> ChartAxisElectricityMeterValueFormatter()
+      ChartEntryType.IMPULSE_COUNTER ->
+        ImpulseCounterChartValueFormatter(
+          unit = channel.channelExtendedValueEntity?.getSuplaValue()?.ImpulseCounterValue?.unit
+        )
     }
   }
 

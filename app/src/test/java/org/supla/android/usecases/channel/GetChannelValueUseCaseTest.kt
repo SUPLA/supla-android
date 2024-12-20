@@ -40,6 +40,7 @@ import org.supla.android.usecases.channel.valueprovider.ImpulseCounterValueProvi
 import org.supla.android.usecases.channel.valueprovider.PressureSensorValueProvider
 import org.supla.android.usecases.channel.valueprovider.RainSensorValueProvider
 import org.supla.android.usecases.channel.valueprovider.SwitchWithElectricityMeterValueProvider
+import org.supla.android.usecases.channel.valueprovider.SwitchWithImpulseCounterValueProvider
 import org.supla.android.usecases.channel.valueprovider.ThermometerValueProvider
 import org.supla.core.shared.data.model.general.SuplaFunction
 
@@ -69,6 +70,9 @@ class GetChannelValueUseCaseTest {
 
   @Mock
   private lateinit var switchWithElectricityMeterValueProvider: SwitchWithElectricityMeterValueProvider
+
+  @Mock
+  private lateinit var switchWithImpulseCounterValueProvider: SwitchWithImpulseCounterValueProvider
 
   @Mock
   private lateinit var pressureSensorValueProvider: PressureSensorValueProvider

@@ -28,6 +28,7 @@ import org.supla.android.usecases.channel.valueprovider.ImpulseCounterValueProvi
 import org.supla.android.usecases.channel.valueprovider.PressureSensorValueProvider
 import org.supla.android.usecases.channel.valueprovider.RainSensorValueProvider
 import org.supla.android.usecases.channel.valueprovider.SwitchWithElectricityMeterValueProvider
+import org.supla.android.usecases.channel.valueprovider.SwitchWithImpulseCounterValueProvider
 import org.supla.android.usecases.channel.valueprovider.ThermometerValueProvider
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -42,6 +43,7 @@ class GetChannelValueUseCase @Inject constructor(
   electricityMeterValueProvider: ElectricityMeterValueProvider,
   impulseCounterValueProvider: ImpulseCounterValueProvider,
   switchWithElectricityMeterValueProvider: SwitchWithElectricityMeterValueProvider,
+  switchWithImpulseCounterValueProvider: SwitchWithImpulseCounterValueProvider,
   pressureSensorValueProvider: PressureSensorValueProvider,
   rainSensorValueProvider: RainSensorValueProvider,
   containerValueProvider: ContainerValueProvider
@@ -56,6 +58,7 @@ class GetChannelValueUseCase @Inject constructor(
     electricityMeterValueProvider,
     impulseCounterValueProvider,
     switchWithElectricityMeterValueProvider,
+    switchWithImpulseCounterValueProvider,
     pressureSensorValueProvider,
     rainSensorValueProvider,
     containerValueProvider

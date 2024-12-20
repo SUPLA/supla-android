@@ -32,7 +32,7 @@ import org.supla.android.data.model.chart.ChartEntryType.GENERAL_PURPOSE_MEASURE
 import org.supla.android.data.model.chart.ChartEntryType.GENERAL_PURPOSE_METER
 import org.supla.android.data.model.chart.TemperatureChartColors
 import org.supla.android.data.source.GeneralPurposeMeasurementLogRepository
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.local.entity.measurements.GeneralPurposeMeasurementEntity
 import org.supla.android.di.GSON_FOR_REPO
 import org.supla.android.extensions.toTimestamp
@@ -53,18 +53,22 @@ class GeneralPurposeMeasurementMeasurementsProvider @Inject constructor(
   preferences: Preferences,
   @Named(GSON_FOR_REPO) gson: Gson
 ) : ChannelMeasurementsProvider(getChannelValueStringUseCase, getChannelIconUseCase, preferences, gson) {
-  override fun handle(function: SuplaFunction) = function == SuplaFunction.GENERAL_PURPOSE_MEASUREMENT
+  override fun handle(channelWithChildren: ChannelWithChildren) =
+    channelWithChildren.channel.function == SuplaFunction.GENERAL_PURPOSE_MEASUREMENT
 
   override fun provide(
-    channel: ChannelDataEntity,
+    channelWithChildren: ChannelWithChildren,
     spec: ChartDataSpec,
     colorProvider: ((ChartEntryType) -> Int)?
   ): Single<ChannelChartSets> {
+    val channel = channelWithChildren.channel
     val color = colorProvider?.let { it(GENERAL_PURPOSE_METER) } ?: TemperatureChartColors.DEFAULT
 
     return generalPurposeMeasurementLogRepository.findMeasurements(channel.remoteId, channel.profileId, spec.startDate, spec.endDate)
       .map { entities -> aggregatingGeneralMeasurement(entities, spec.aggregation) }
-      .map { measurements -> listOf(historyDataSet(channel, GENERAL_PURPOSE_MEASUREMENT, color, spec.aggregation, measurements)) }
+      .map { measurements ->
+        listOf(historyDataSet(channelWithChildren, GENERAL_PURPOSE_MEASUREMENT, color, spec.aggregation, measurements))
+      }
       .map {
         ChannelChartSets(
           channel.remoteId,

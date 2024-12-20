@@ -42,6 +42,7 @@ import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.extensions.disabledOverlay
 import org.supla.android.features.details.detailbase.electricitymeter.ElectricityMeterMetricsView
+import org.supla.android.features.details.detailbase.impulsecounter.ImpulseCounterMetricsView
 import org.supla.android.images.ImageId
 import org.supla.android.ui.views.Image
 import org.supla.android.ui.views.buttons.supla.SuplaButton
@@ -64,6 +65,11 @@ fun SwitchGeneralView(
           state = state.electricityMeterState,
           onIntroductionClose = onIntroductionClose
         )
+        Shadow(orientation = ShadowOrientation.STARTING_BOTTOM, modifier = Modifier.align(Alignment.BottomCenter))
+      }
+    } else if (state.impulseCounterState != null) {
+      Box(modifier = Modifier.weight(1f)) {
+        ImpulseCounterMetricsView(state = state.impulseCounterState)
         Shadow(orientation = ShadowOrientation.STARTING_BOTTOM, modifier = Modifier.align(Alignment.BottomCenter))
       }
     } else {

@@ -145,8 +145,8 @@
   <string name="hp_hour">ura</string>
   <string name="total_cost">Skupni stroški</string>
   <string name="current_cost">Stroški v tekočem mesecu</string>
-  <string name="current_consumption">Poraba v tekočem mesecu</string>
-  <string name="meter_value">Stanje števca</string>
+  <string name="details_ic_current_consumption">Poraba v tekočem mesecu</string>
+  <string name="details_ic_meter_value">Stanje števca</string>
   <string name="minutes">Minute</string>
   <string name="hours">Ure</string>
   <string name="days">Dni</string>

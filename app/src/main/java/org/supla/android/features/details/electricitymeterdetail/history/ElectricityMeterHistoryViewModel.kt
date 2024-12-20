@@ -40,8 +40,8 @@ import org.supla.android.data.model.chart.style.ChartStyle
 import org.supla.android.data.model.chart.style.ElectricityChartStyle
 import org.supla.android.data.model.general.MultipleSelectionList
 import org.supla.android.data.model.general.SingleSelectionList
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.Electricity
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.data.source.remote.channel.suplaFlags
 import org.supla.android.events.DownloadEventsManager
@@ -58,10 +58,9 @@ import org.supla.android.usecases.channel.DeleteChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.DownloadChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.LoadChannelMeasurementsDataRangeUseCase
 import org.supla.android.usecases.channel.LoadChannelMeasurementsUseCase
-import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
+import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
 import org.supla.android.usecases.channel.measurementsprovider.electricity.ElectricityChartFilters
 import org.supla.android.usecases.channel.measurementsprovider.electricity.PhaseItem
-import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.extensions.ifTrue
 import javax.inject.Inject
 
@@ -72,7 +71,7 @@ class ElectricityMeterHistoryViewModel @Inject constructor(
   private val loadChannelMeasurementsDataRangeUseCase: LoadChannelMeasurementsDataRangeUseCase,
   private val downloadChannelMeasurementsUseCase: DownloadChannelMeasurementsUseCase,
   private val loadChannelMeasurementsUseCase: LoadChannelMeasurementsUseCase,
-  private val readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
+  private val readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
   private val downloadEventsManager: DownloadEventsManager,
   private val userStateHolder: UserStateHolder,
   private val profileManager: ProfileManager,
@@ -154,7 +153,7 @@ class ElectricityMeterHistoryViewModel @Inject constructor(
 
   override fun triggerDataLoad(remoteId: Int) {
     Maybe.zip(
-      readChannelByRemoteIdUseCase(remoteId),
+      readChannelWithChildrenUseCase(remoteId),
       profileManager.getCurrentProfile().map { loadChartState(it.id, remoteId) }
     ) { first, second -> Pair(first, second) }
       .attachSilent()
@@ -215,13 +214,14 @@ class ElectricityMeterHistoryViewModel @Inject constructor(
     updateState { it.copy(introductionPages = null) }
   }
 
-  private fun handleData(channel: ChannelDataEntity, chartState: ChartState) {
+  private fun handleData(channelWithChildren: ChannelWithChildren, chartState: ChartState) {
+    val channel = channelWithChildren.channel
     updateState { it.copy(profileId = channel.profileId, channelFunction = channel.function.value) }
 
     restoreCustomFilters(channel.flags.suplaFlags, channel.Electricity.value, chartState)
     restoreRange(chartState)
     configureDownloadObserver(channel.remoteId)
-    startInitialDataLoad(channel.remoteId, channel.profileId, channel.function)
+    startInitialDataLoad(channelWithChildren)
 
     if (preferences.shouldShowEmHistoryIntroduction()) {
       val pages = if (channel.Electricity.phases.size > 1) {
@@ -233,13 +233,13 @@ class ElectricityMeterHistoryViewModel @Inject constructor(
     }
   }
 
-  private fun startInitialDataLoad(remoteId: Int, profileId: Long, channelFunction: SuplaFunction) {
+  private fun startInitialDataLoad(channelWithChildren: ChannelWithChildren) {
     if (currentState().initialLoadStarted) {
       // Needs to be performed only once
       return
     }
     updateState { it.copy(initialLoadStarted = true) }
-    downloadChannelMeasurementsUseCase.invoke(remoteId, profileId, channelFunction)
+    downloadChannelMeasurementsUseCase.invoke(channelWithChildren)
   }
 
   private fun configureDownloadObserver(remoteId: Int) {

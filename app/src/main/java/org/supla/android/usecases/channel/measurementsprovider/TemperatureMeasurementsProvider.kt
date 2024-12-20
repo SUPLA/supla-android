@@ -27,7 +27,7 @@ import org.supla.android.data.model.chart.ChartDataSpec
 import org.supla.android.data.model.chart.ChartEntryType
 import org.supla.android.data.model.chart.TemperatureChartColors
 import org.supla.android.data.source.TemperatureLogRepository
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.di.GSON_FOR_REPO
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
@@ -46,19 +46,21 @@ class TemperatureMeasurementsProvider @Inject constructor(
   preferences: Preferences,
   @Named(GSON_FOR_REPO) gson: Gson
 ) : ChannelMeasurementsProvider(getChannelValueStringUseCase, getChannelIconUseCase, preferences, gson) {
-  override fun handle(function: SuplaFunction) = function == SuplaFunction.THERMOMETER
+  override fun handle(channelWithChildren: ChannelWithChildren) =
+    channelWithChildren.channel.function == SuplaFunction.THERMOMETER
 
   override fun provide(
-    channel: ChannelDataEntity,
+    channelWithChildren: ChannelWithChildren,
     spec: ChartDataSpec,
     colorProvider: ((ChartEntryType) -> Int)?
   ): Single<ChannelChartSets> {
     val entryType = ChartEntryType.TEMPERATURE
     val color = colorProvider?.let { it(entryType) } ?: TemperatureChartColors.DEFAULT
+    val channel = channelWithChildren.channel
 
     return temperatureLogRepository.findMeasurements(channel.remoteId, channel.profileId, spec.startDate, spec.endDate)
       .map { entities -> aggregatingTemperature(entities, spec.aggregation) }
-      .map { measurements -> listOf(historyDataSet(channel, entryType, color, spec.aggregation, measurements)) }
+      .map { measurements -> listOf(historyDataSet(channelWithChildren, entryType, color, spec.aggregation, measurements)) }
       .map {
         ChannelChartSets(
           channel.remoteId,

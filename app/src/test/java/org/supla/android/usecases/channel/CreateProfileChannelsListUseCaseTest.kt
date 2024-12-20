@@ -22,6 +22,7 @@ import org.supla.android.data.source.local.entity.ChannelRelationEntity
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.shareable
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.images.ImageId
 import org.supla.android.ui.lists.ListItem
@@ -51,9 +52,6 @@ class CreateProfileChannelsListUseCaseTest {
 
   @Mock
   private lateinit var getChannelValueStringUseCase: GetChannelValueStringUseCase
-
-  @Mock
-  private lateinit var getSwitchValueStringUseCase: GetSwitchValueStringUseCase
 
   @Mock
   private lateinit var valuesFormatter: ValuesFormatter
@@ -229,7 +227,8 @@ class CreateProfileChannelsListUseCaseTest {
     }
 
     whenever(getCaptionUseCase.invoke(shareable)).thenReturn(LocalizedString.Constant("caption $channelRemoteId"))
-    whenever(getChannelValueStringUseCase.invoke(this)).thenReturn("value $channelRemoteId")
+    whenever(getChannelValueStringUseCase.invoke(eq(ChannelWithChildren(this)), eq(ValueType.FIRST), eq(true)))
+      .thenReturn("value $channelRemoteId")
     whenever(getChannelIconUseCase.invoke(this)).thenReturn(ImageId(channelRemoteId))
   }
 

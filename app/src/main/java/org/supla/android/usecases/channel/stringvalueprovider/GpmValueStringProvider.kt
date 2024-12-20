@@ -19,7 +19,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import com.google.gson.Gson
 import org.supla.android.data.ValuesFormatter
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.remote.gpm.SuplaChannelGeneralPurposeBaseConfig
 import org.supla.android.di.GSON_FOR_REPO
 import org.supla.android.extensions.guardLet
@@ -39,17 +39,17 @@ class GpmValueStringProvider @Inject constructor(
   @Named(GSON_FOR_REPO) private val gson: Gson
 ) : ChannelValueStringProvider {
 
-  override fun handle(channelData: ChannelDataEntity): Boolean =
-    channelData.function == SuplaFunction.GENERAL_PURPOSE_MEASUREMENT ||
-      channelData.function == SuplaFunction.GENERAL_PURPOSE_METER
+  override fun handle(channelWithChildren: ChannelWithChildren): Boolean =
+    channelWithChildren.channel.function == SuplaFunction.GENERAL_PURPOSE_MEASUREMENT ||
+      channelWithChildren.channel.function == SuplaFunction.GENERAL_PURPOSE_METER
 
-  override fun value(channelData: ChannelDataEntity, valueType: ValueType, withUnit: Boolean): String {
-    val value = gpmValueProvider.value(channelData, valueType)
+  override fun value(channelWithChildren: ChannelWithChildren, valueType: ValueType, withUnit: Boolean): String {
+    val value = gpmValueProvider.value(channelWithChildren.channel, valueType)
     if (value.isNaN()) {
       return ValuesFormatter.NO_VALUE_TEXT
     }
 
-    val (config) = guardLet(channelData.configEntity?.toSuplaConfig(gson) as? SuplaChannelGeneralPurposeBaseConfig) {
+    val (config) = guardLet(channelWithChildren.channel.configEntity?.toSuplaConfig(gson) as? SuplaChannelGeneralPurposeBaseConfig) {
       return String.format(Locale.getDefault(), "%.0f", value)
     }
 

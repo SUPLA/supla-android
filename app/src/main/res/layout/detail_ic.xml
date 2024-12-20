@@ -142,7 +142,7 @@
                 android:id="@+id/textView18"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/meter_value"
+                android:text="@string/details_ic_meter_value"
                 android:textSize="10sp" />
 
             <TextView
@@ -156,7 +156,7 @@
                 android:id="@+id/emtv_lTotalActiveEnergy"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/current_consumption"
+                android:text="@string/details_ic_current_consumption"
                 android:textSize="10sp" />
 
             <TextView

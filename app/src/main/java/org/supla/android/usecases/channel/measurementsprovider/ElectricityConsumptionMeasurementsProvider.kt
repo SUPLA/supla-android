@@ -33,6 +33,7 @@ import org.supla.android.data.model.chart.HistoryDataSet
 import org.supla.android.data.source.ElectricityMeterLogRepository
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.Electricity
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.local.entity.measurements.BalancedValue
 import org.supla.android.data.source.local.entity.measurements.ElectricityMeterLogEntity
 import org.supla.android.data.source.local.entity.measurements.balanceHourly
@@ -51,7 +52,6 @@ import org.supla.android.usecases.channel.measurementsprovider.electricity.ifPha
 import org.supla.android.usecases.channel.measurementsprovider.electricity.ifPhase3
 import org.supla.android.usecases.channel.valueformatter.ListElectricityMeterValueFormatter
 import org.supla.android.usecases.icon.GetChannelIconUseCase
-import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.usecase.GetCaptionUseCase
 import javax.inject.Inject
 import javax.inject.Named
@@ -67,22 +67,16 @@ class ElectricityConsumptionMeasurementsProvider @Inject constructor(
   @Named(GSON_FOR_REPO) gson: Gson
 ) : ChannelMeasurementsProvider(getChannelValueStringUseCase, getChannelIconUseCase, preferences, gson) {
 
-  override fun handle(function: SuplaFunction) =
-    when (function) {
-      SuplaFunction.ELECTRICITY_METER,
-      SuplaFunction.LIGHTSWITCH,
-      SuplaFunction.POWER_SWITCH,
-      SuplaFunction.STAIRCASE_TIMER -> true
-
-      else -> false
-    }
+  override fun handle(channelWithChildren: ChannelWithChildren) = channelWithChildren.isOrHasElectricityMeter
 
   override fun provide(
-    channel: ChannelDataEntity,
+    channelWithChildren: ChannelWithChildren,
     spec: ChartDataSpec,
     colorProvider: ((ChartEntryType) -> Int)?
-  ): Single<ChannelChartSets> =
-    electricityMeterLogRepository.findMeasurements(channel.remoteId, channel.profileId, spec.startDate, spec.endDate)
+  ): Single<ChannelChartSets> {
+    val channel = channelWithChildren.channel
+
+    return electricityMeterLogRepository.findMeasurements(channel.remoteId, channel.profileId, spec.startDate, spec.endDate)
       .map { aggregating(it, spec) }
       .map { listOf(historyDataSet(channel, labels(spec, getChannelIconUseCase(channel), it), spec.aggregation, it.list)) }
       .map { historyDataSets ->
@@ -99,6 +93,7 @@ class ElectricityConsumptionMeasurementsProvider @Inject constructor(
         ) { context -> (spec.customFilters as? ElectricityChartFilters)?.type?.labelRes?.let { "${context.getString(it)} [kWh]" } ?: "" }
       }
       .firstOrError()
+  }
 
   private fun labels(spec: ChartDataSpec, icon: ImageId, result: AggregationResult): HistoryDataSet.Label {
     val formatter = ListElectricityMeterValueFormatter(useNoValue = false)

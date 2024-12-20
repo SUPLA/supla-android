@@ -73,7 +73,7 @@ class ProvideChannelDetailTypeUseCaseTest {
   fun `should provide detail for light switch with impulse counter`() {
     testDetailType(
       SuplaFunction.LIGHTSWITCH,
-      SwitchDetailType(listOf(DetailPage.SWITCH, DetailPage.HISTORY_IC))
+      SwitchDetailType(listOf(DetailPage.SWITCH, DetailPage.IC_HISTORY))
     ) { channel ->
       val channelValue: ChannelValueEntity = mockk()
       every { channelValue.subValueType } returns SUBV_TYPE_IC_MEASUREMENTS.toShort()
@@ -86,7 +86,7 @@ class ProvideChannelDetailTypeUseCaseTest {
   fun `should provide detail for power switch with impulse counter`() {
     testDetailType(
       SuplaFunction.POWER_SWITCH,
-      SwitchDetailType(listOf(DetailPage.SWITCH, DetailPage.HISTORY_IC))
+      SwitchDetailType(listOf(DetailPage.SWITCH, DetailPage.IC_HISTORY))
     ) { channel ->
       val channelValue: ChannelValueEntity = mockk()
       every { channelValue.subValueType } returns SUBV_TYPE_IC_MEASUREMENTS.toShort()
@@ -99,7 +99,7 @@ class ProvideChannelDetailTypeUseCaseTest {
   fun `should provide detail for stair case timer with impulse counter`() {
     testDetailType(
       SuplaFunction.STAIRCASE_TIMER,
-      SwitchDetailType(listOf(DetailPage.SWITCH, DetailPage.HISTORY_IC))
+      SwitchDetailType(listOf(DetailPage.SWITCH, DetailPage.IC_HISTORY))
     ) { channel ->
       val channelValue: ChannelValueEntity = mockk()
       every { channelValue.subValueType } returns SUBV_TYPE_IC_MEASUREMENTS.toShort()
@@ -226,22 +226,22 @@ class ProvideChannelDetailTypeUseCaseTest {
 
   @Test
   fun `should provide detail for electricity IC`() {
-    testDetailType(SuplaFunction.IC_ELECTRICITY_METER, IcDetailType(listOf(DetailPage.HISTORY_IC)))
+    testDetailType(SuplaFunction.IC_ELECTRICITY_METER, IcDetailType(listOf(DetailPage.IC_GENERAL, DetailPage.IC_HISTORY)))
   }
 
   @Test
   fun `should provide detail for gas IC`() {
-    testDetailType(SuplaFunction.IC_GAS_METER, IcDetailType(listOf(DetailPage.HISTORY_IC)))
+    testDetailType(SuplaFunction.IC_GAS_METER, IcDetailType(listOf(DetailPage.IC_GENERAL, DetailPage.IC_HISTORY)))
   }
 
   @Test
   fun `should provide detail for water IC`() {
-    testDetailType(SuplaFunction.IC_WATER_METER, IcDetailType(listOf(DetailPage.HISTORY_IC)))
+    testDetailType(SuplaFunction.IC_WATER_METER, IcDetailType(listOf(DetailPage.IC_GENERAL, DetailPage.IC_HISTORY)))
   }
 
   @Test
   fun `should provide detail for heat IC`() {
-    testDetailType(SuplaFunction.IC_HEAT_METER, IcDetailType(listOf(DetailPage.HISTORY_IC)))
+    testDetailType(SuplaFunction.IC_HEAT_METER, IcDetailType(listOf(DetailPage.IC_GENERAL, DetailPage.IC_HISTORY)))
   }
 
   @Test

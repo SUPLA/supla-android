@@ -24,6 +24,7 @@ import org.supla.android.data.source.local.dao.measurements.ElectricityMeterLogD
 import org.supla.android.data.source.local.dao.measurements.GeneralPurposeMeasurementLogDao
 import org.supla.android.data.source.local.dao.measurements.GeneralPurposeMeterLogDao
 import org.supla.android.data.source.local.dao.measurements.HumidityLogDao
+import org.supla.android.data.source.local.dao.measurements.ImpulseCounterLogDao
 import org.supla.android.data.source.local.dao.measurements.TemperatureAndHumidityLogDao
 import org.supla.android.data.source.local.dao.measurements.TemperatureLogDao
 import org.supla.android.data.source.local.entity.measurements.CurrentHistoryLogEntity
@@ -67,4 +68,6 @@ abstract class MeasurementsDatabase : RoomDatabase() {
   abstract fun electricityMeterLogDao(): ElectricityMeterLogDao
 
   abstract fun humidityLogDao(): HumidityLogDao
+
+  abstract fun impulseCounterLogDao(): ImpulseCounterLogDao
 }

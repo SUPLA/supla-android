@@ -18,7 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import org.supla.android.Preferences
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.usecases.channel.ChannelValueStringProvider
 import org.supla.android.usecases.channel.ValueType
 import org.supla.android.usecases.channel.valueformatter.ThermometerValueFormatter
@@ -34,8 +34,9 @@ class ThermometerValueStringProvider @Inject constructor(
 
   private val formatter = ThermometerValueFormatter(preferences)
 
-  override fun handle(channelData: ChannelDataEntity): Boolean = thermometerValueProvider.handle(channelData)
+  override fun handle(channelWithChildren: ChannelWithChildren): Boolean =
+    thermometerValueProvider.handle(channelWithChildren.channel)
 
-  override fun value(channelData: ChannelDataEntity, valueType: ValueType, withUnit: Boolean): String =
-    formatter.format(thermometerValueProvider.value(channelData, valueType), withUnit = withUnit)
+  override fun value(channelWithChildren: ChannelWithChildren, valueType: ValueType, withUnit: Boolean): String =
+    formatter.format(thermometerValueProvider.value(channelWithChildren.channel, valueType), withUnit = withUnit)
 }
