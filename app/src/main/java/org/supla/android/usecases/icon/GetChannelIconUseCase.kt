@@ -74,7 +74,7 @@ class GetChannelIconUseCase @Inject constructor(
   operator fun invoke(
     channelBase: ChannelBase,
     type: IconType = IconType.SINGLE,
-    channelStateValue: ChannelState.Value? = null
+    channelState: ChannelState? = null
   ): ImageId? {
     if (type != IconType.SINGLE && channelBase.func != SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE) {
       // TODO: Should be restored when ChannelLayout removed
@@ -82,7 +82,7 @@ class GetChannelIconUseCase @Inject constructor(
       return null
     }
 
-    val state = channelStateValue?.let { ChannelState(it) } ?: getChannelStateUseCase(channelBase)
+    val state = channelState ?: getChannelStateUseCase(channelBase)
 
     ifLet(findUserIcon(channelBase, type, state)) { (id) ->
       return id
