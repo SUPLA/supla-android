@@ -128,7 +128,7 @@ class OnOffWidget : WidgetProviderBase() {
     } else {
       R.id.on_off_widget_turn_on_button
     }
-    val activeIcon = context.getChannelIconUseCase.invoke(channel, IconType.SINGLE, ChannelState.getActiveValue(channel.func))
+    val activeIcon = context.getChannelIconUseCase.invoke(channel, IconType.SINGLE, ChannelState.active(channel.func))
     ImageCache.loadBitmapForWidgetView(activeIcon, views, iconViewId, false)
 
     val viewIdNightMode = if (channel.isThermometer() || channel.isGpm()) {
@@ -146,7 +146,7 @@ class OnOffWidget : WidgetProviderBase() {
       views.setViewVisibility(R.id.on_off_widget_buttons, View.GONE)
       views.setViewVisibility(R.id.on_off_widget_value, View.VISIBLE)
     } else {
-      val inactiveIcon = context.getChannelIconUseCase.invoke(channel, IconType.SINGLE, ChannelState.getInactiveValue(channel.func))
+      val inactiveIcon = context.getChannelIconUseCase.invoke(channel, IconType.SINGLE, ChannelState.inactive(channel.func))
       ImageCache.loadBitmapForWidgetView(inactiveIcon, views, R.id.on_off_widget_turn_off_button, false)
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
         ImageCache.loadBitmapForWidgetView(inactiveIcon, views, R.id.on_off_widget_turn_off_button_night_mode, true)

@@ -69,16 +69,22 @@ class SingleWidgetCommandWorker @AssistedInject constructor(
         SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR -> if (action != null) {
           callAction(configuration, action.suplaAction)
         }
+
         SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK,
         SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK -> callAction(configuration, ActionId.OPEN)
+
         SUPLA_CHANNELFNC_LIGHTSWITCH,
         SUPLA_CHANNELFNC_POWERSWITCH,
-        SUPLA_CHANNELFNC_STAIRCASETIMER -> {
+        SUPLA_CHANNELFNC_STAIRCASETIMER,
+        SUPLA_CHANNELFNC_DIMMER,
+        SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING,
+        SUPLA_CHANNELFNC_RGBLIGHTING -> {
           if (action == null) {
             return callCommon(widgetId, configuration)
           }
           callAction(configuration, action.suplaAction)
         }
+
         else -> return callCommon(widgetId, configuration)
       }
     }
