@@ -1,5 +1,4 @@
-package org.supla.android.lib;
-
+package org.supla.android.usecases.channel.valueprovider
 /*
 Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -18,22 +17,20 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import java.io.Serializable;
+import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.core.shared.data.model.general.SuplaFunction
+import javax.inject.Inject
+import javax.inject.Singleton
 
-public class SuplaChannelAndTimerState implements Serializable {
-  private SuplaChannelState channel;
-  private SuplaTimerState timer;
+@Singleton
+class WeightSensorValueProvider @Inject constructor() : DefaultDoubleValueProvider() {
 
-  public SuplaChannelAndTimerState(SuplaChannelState channel, SuplaTimerState timer) {
-    this.channel = channel;
-    this.timer = timer;
-  }
+  override val unknownValue = UNKNOWN_VALUE
 
-  public SuplaChannelState getChannelState() {
-    return channel;
-  }
+  override fun handle(channelData: ChannelDataEntity): Boolean =
+    channelData.function == SuplaFunction.WEIGHT_SENSOR
 
-  public SuplaTimerState getTimerState() {
-    return timer;
+  companion object {
+    const val UNKNOWN_VALUE = -1.0
   }
 }

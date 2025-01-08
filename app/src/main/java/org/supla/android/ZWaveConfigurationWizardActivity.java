@@ -289,7 +289,7 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity
         position = spinnerList.size();
       }
       SuplaChannelBasicCfg cfg = getChannelBasicCfgWithDeviceId(deviceId);
-      spinnerList.add("#" + deviceId.toString() + (cfg == null ? "" : (" " + cfg.getDeviceName())));
+      spinnerList.add("#" + deviceId + (cfg == null ? "" : (" " + cfg.getDeviceName())));
     }
 
     ArrayAdapter<String> adapter =

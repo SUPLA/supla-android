@@ -32,7 +32,7 @@ import org.supla.android.db.DbHelper;
 public class RateApp {
 
   private final String PN_RATE_TIME = "rate_time";
-  private Context context;
+  private final Context context;
 
   RateApp(Context context) {
     this.context = context;

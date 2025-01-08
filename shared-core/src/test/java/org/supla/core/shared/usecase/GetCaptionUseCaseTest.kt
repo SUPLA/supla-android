@@ -1,4 +1,4 @@
-package org.supla.android.usecases.channel
+package org.supla.core.shared.usecase
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -30,7 +30,6 @@ import org.junit.Test
 import org.supla.core.shared.data.model.general.Channel
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.infrastructure.LocalizedString
-import org.supla.core.shared.usecase.GetCaptionUseCase
 import org.supla.core.shared.usecase.channel.GetChannelDefaultCaptionUseCase
 
 class GetCaptionUseCaseTest {

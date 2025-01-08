@@ -1329,7 +1329,6 @@ public class AddDeviceWizardActivity extends WizardActivity
     if (isWifiNameEditingEnabled()) {
       return edWifiName.getText().toString();
     }
-    ;
 
     if (spWifiList.getSelectedItem() != null) {
       return spWifiList.getSelectedItem().toString();

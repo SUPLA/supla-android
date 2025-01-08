@@ -35,16 +35,16 @@ import org.supla.android.lib.SuplaClient;
 public class LightsourceLifespanSettingsDialog
     implements DialogInterface.OnCancelListener, View.OnClickListener {
 
-  private Context context;
-  private AlertDialog alertDialog;
+  private final Context context;
+  private final AlertDialog alertDialog;
   private int remoteId;
-  private int lifespan;
+  private final int lifespan;
 
-  private Button btnClose;
-  private Button btnCancel;
-  private Button btnOK;
-  private EditText edLifespan;
-  private CheckBox cbReset;
+  private final Button btnClose;
+  private final Button btnCancel;
+  private final Button btnOK;
+  private final EditText edLifespan;
+  private final CheckBox cbReset;
 
   public LightsourceLifespanSettingsDialog(
       Context context, int remoteId, int lifespan, String title) {
@@ -124,4 +124,3 @@ public class LightsourceLifespanSettingsDialog
     }
   }
 }
-;

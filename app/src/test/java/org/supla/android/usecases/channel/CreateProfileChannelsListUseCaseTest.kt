@@ -94,14 +94,14 @@ class CreateProfileChannelsListUseCaseTest {
     assertThat(list[3]).isInstanceOf(ListItem.LocationItem::class.java)
     assertThat(list[4]).isInstanceOf(ListItem.LocationItem::class.java)
     assertThat(list[5]).isInstanceOf(ListItem.IconValueItem::class.java)
-    assertThat(list[6]).isInstanceOf(ListItem.ShadingSystemItem::class.java)
-    assertThat(list[7]).isInstanceOf(ListItem.ShadingSystemItem::class.java)
+    assertThat(list[6]).isInstanceOf(ListItem.IconWithButtonsItem::class.java)
+    assertThat(list[7]).isInstanceOf(ListItem.IconWithButtonsItem::class.java)
 
     assertThat((list[1] as ListItem.ChannelItem).channelBase.remoteId).isEqualTo(11)
     assertThat((list[2] as ListItem.HvacThermostatItem).captionProvider).isEqualTo(LocalizedString.Constant("caption 21"))
     assertThat((list[5] as ListItem.IconValueItem).captionProvider).isEqualTo(LocalizedString.Constant("caption 41"))
-    assertThat((list[6] as ListItem.ShadingSystemItem).captionProvider).isEqualTo(LocalizedString.Constant("caption 51"))
-    assertThat((list[7] as ListItem.ShadingSystemItem).captionProvider).isEqualTo(LocalizedString.Constant("caption 61"))
+    assertThat((list[6] as ListItem.IconWithButtonsItem).captionProvider).isEqualTo(LocalizedString.Constant("caption 51"))
+    assertThat((list[7] as ListItem.IconWithButtonsItem).captionProvider).isEqualTo(LocalizedString.Constant("caption 61"))
 
     assertThat((list[0] as ListItem.LocationItem).location.caption).isEqualTo("12")
     assertThat((list[3] as ListItem.LocationItem).location.caption).isEqualTo("32")
@@ -129,14 +129,14 @@ class CreateProfileChannelsListUseCaseTest {
 
     assertThat(list).hasSize(6)
     assertThat(list[0]).isInstanceOf(ListItem.LocationItem::class.java)
-    assertThat(list[1]).isInstanceOf(ListItem.GeneralPurposeMeterItem::class.java)
-    assertThat(list[2]).isInstanceOf(ListItem.GeneralPurposeMeasurementItem::class.java)
+    assertThat(list[1]).isInstanceOf(ListItem.IconValueItem::class.java)
+    assertThat(list[2]).isInstanceOf(ListItem.IconValueItem::class.java)
     assertThat(list[3]).isInstanceOf(ListItem.ChannelItem::class.java)
     assertThat(list[4]).isInstanceOf(ListItem.LocationItem::class.java)
     assertThat(list[5]).isInstanceOf(ListItem.ChannelItem::class.java)
 
-    assertThat((list[1] as ListItem.GeneralPurposeMeterItem).value).isEqualTo("value 11")
-    assertThat((list[2] as ListItem.GeneralPurposeMeasurementItem).value).isEqualTo("value 21")
+    assertThat((list[1] as ListItem.IconValueItem).value).isEqualTo("value 11")
+    assertThat((list[2] as ListItem.IconValueItem).value).isEqualTo("value 21")
     assertThat((list[3] as ListItem.ChannelItem).channelBase.remoteId).isEqualTo(31)
     assertThat((list[5] as ListItem.ChannelItem).channelBase.remoteId).isEqualTo(41)
 
@@ -227,7 +227,7 @@ class CreateProfileChannelsListUseCaseTest {
     }
 
     whenever(getCaptionUseCase.invoke(shareable)).thenReturn(LocalizedString.Constant("caption $channelRemoteId"))
-    whenever(getChannelValueStringUseCase.invoke(eq(ChannelWithChildren(this)), eq(ValueType.FIRST), eq(true)))
+    whenever(getChannelValueStringUseCase.valueOrNull(eq(ChannelWithChildren(this)), eq(ValueType.FIRST), eq(true)))
       .thenReturn("value $channelRemoteId")
     whenever(getChannelIconUseCase.invoke(this)).thenReturn(ImageId(channelRemoteId))
   }

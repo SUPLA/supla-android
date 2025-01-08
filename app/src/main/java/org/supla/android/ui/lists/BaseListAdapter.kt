@@ -28,13 +28,14 @@ import org.supla.android.SuplaApp
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.databinding.LiLocationItemBinding
 import org.supla.android.ui.dialogs.LocationCaptionEditor
+import kotlin.math.max
 
-abstract class BaseListAdapter<T, D>(
+abstract class BaseListAdapter<D>(
   private val context: Context,
   private val preferences: Preferences
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-  protected val items: MutableList<T> = mutableListOf()
+  protected val items: MutableList<ListItem> = mutableListOf()
   protected abstract val callback: ListCallback
   protected val itemTouchHelper by lazy { ItemTouchHelper(callback) }
 
@@ -47,8 +48,8 @@ abstract class BaseListAdapter<T, D>(
   var rightButtonClickCallback: (id: Int) -> Unit = { _ -> }
 
   private var movedStartPosition: Int? = null
-  protected var movedItem: T? = null
-  protected var replacedItem: T? = null
+  protected var movedItem: ListItem? = null
+  protected var replacedItem: ListItem? = null
 
   override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
     super.onAttachedToRecyclerView(recyclerView)
@@ -68,11 +69,9 @@ abstract class BaseListAdapter<T, D>(
       is ListItem.IconValueItem -> ViewType.ICON_VALUE_ITEM
       is ListItem.SceneItem -> ViewType.SCENE_ITEM
       is ListItem.LocationItem -> ViewType.LOCATION_ITEM
-      is ListItem.GeneralPurposeMeterItem -> ViewType.GENERAL_PURPOSE_METER_ITEM
-      is ListItem.GeneralPurposeMeasurementItem -> ViewType.GENERAL_PURPOSE_MEASUREMENT_ITEM
-      is ListItem.ShadingSystemItem -> ViewType.SHADING_SYSTEM_ITEM
-      is ListItem.SwitchItem -> ViewType.SWITCH_ITEM
+      is ListItem.IconWithButtonsItem -> ViewType.ICON_WITH_BUTTONS_ITEM
       is ListItem.DoubleValueItem -> ViewType.DOUBLE_VALUE_ITEM
+      is ListItem.IconWithRightButtonItem -> ViewType.ICON_WITH_RIGHT_BUTTON_ITEM
 
       else -> throw IllegalStateException("Could find evaluate view item type")
     }.ordinal
@@ -110,10 +109,28 @@ abstract class BaseListAdapter<T, D>(
 
   protected abstract fun isLocationCollapsed(location: LocationEntity): Boolean
 
-  fun setItems(items: List<T>) {
-    this.items.clear()
-    this.items.addAll(items)
-    notifyDataSetChanged()
+  fun setItems(items: List<ListItem>) {
+    val iterations = max(this.items.count(), items.count())
+    var removedItems = 0
+
+    for (index in 0..<iterations) {
+      val oldItem = this.items.getOrNull(index - removedItems)
+      val newItem = items.getOrNull(index)
+
+      if (oldItem != null && newItem != null) {
+        if (oldItem.isDifferentFrom(newItem)) {
+          this.items[index] = newItem
+          notifyItemChanged(index)
+        }
+      } else if (oldItem == null) {
+        this.items.add(newItem!!)
+        notifyItemInserted(index)
+      } else {
+        this.items.removeAt(index - removedItems)
+        notifyItemRemoved(index - removedItems)
+        removedItems++
+      }
+    }
   }
 
   fun onLeftButtonClick(remoteId: Int) {
@@ -172,11 +189,9 @@ abstract class BaseListAdapter<T, D>(
 
     ICON_VALUE_ITEM,
     HVAC_ITEM,
-    GENERAL_PURPOSE_METER_ITEM,
-    GENERAL_PURPOSE_MEASUREMENT_ITEM,
-    SHADING_SYSTEM_ITEM,
-    SWITCH_ITEM,
-    DOUBLE_VALUE_ITEM
+    ICON_WITH_BUTTONS_ITEM,
+    DOUBLE_VALUE_ITEM,
+    ICON_WITH_RIGHT_BUTTON_ITEM
   }
 
   private fun View.isLocationOnBottom(): Boolean {

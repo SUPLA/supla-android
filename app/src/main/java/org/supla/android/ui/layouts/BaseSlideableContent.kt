@@ -61,28 +61,22 @@ abstract class BaseSlideableContent<T : SlideableListItemData> : BaseAbstractCom
   private var remoteId: Int? = null
   private var itemType: ItemType? = null
   private var updateDisposable: Disposable? = null
+  private var isAttached: Boolean = false
 
   val isOnline: Boolean
     get() = data?.onlineState?.online == true
 
   override fun onAttachedToWindow() {
     super.onAttachedToWindow()
+    isAttached = true
 
-    val (itemType) = guardLet(itemType) { return }
-    val (remoteId) = guardLet(remoteId) { return }
-
-    updateDisposable =
-      createListItemUpdateEventDataUseCase(itemType, remoteId)
-        .subscribeOn(schedulers.io)
-        .observeOn(schedulers.ui)
-        .subscribeBy(
-          onNext = this::updateData,
-          onError = { Trace.e(TAG, "Could not subscribe for list item update event", it) }
-        )
+    observeUpdates()
   }
 
   override fun onDetachedFromWindow() {
     super.onDetachedFromWindow()
+    isAttached = false
+
     if (updateDisposable?.isDisposed == false) {
       updateDisposable?.dispose()
     }
@@ -97,6 +91,8 @@ abstract class BaseSlideableContent<T : SlideableListItemData> : BaseAbstractCom
     onTitleLongClick: () -> Unit,
     onItemClick: () -> Unit
   ) {
+    val oldRemoteId = this.remoteId
+
     this.itemType = itemType
     this.remoteId = remoteId
     this.data = data
@@ -104,6 +100,12 @@ abstract class BaseSlideableContent<T : SlideableListItemData> : BaseAbstractCom
     this.onIssueClick = onIssueClick
     this.onTitleLongClick = onTitleLongClick
     this.onItemClick = onItemClick
+
+    if (oldRemoteId != remoteId && isAttached) {
+      // After notifyItemChanged called on adapter rebind is made. Observed remote id must be changed
+      updateDisposable?.dispose()
+      observeUpdates()
+    }
   }
 
   private fun loadAttributes(context: Context, attrs: AttributeSet?) {
@@ -115,6 +117,20 @@ abstract class BaseSlideableContent<T : SlideableListItemData> : BaseAbstractCom
         recycle()
       }
     }
+  }
+
+  private fun observeUpdates() {
+    val (itemType) = guardLet(itemType) { return }
+    val (remoteId) = guardLet(remoteId) { return }
+
+    updateDisposable =
+      createListItemUpdateEventDataUseCase(itemType, remoteId)
+        .subscribeOn(schedulers.io)
+        .observeOn(schedulers.ui)
+        .subscribeBy(
+          onNext = this::updateData,
+          onError = { Trace.e(TAG, "Could not subscribe for list item update event", it) }
+        )
   }
 
   @Suppress("UNCHECKED_CAST")

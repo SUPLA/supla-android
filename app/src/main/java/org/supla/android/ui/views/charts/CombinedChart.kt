@@ -32,7 +32,6 @@ import androidx.core.content.res.ResourcesCompat
 import com.github.mikephil.charting.charts.CombinedChart
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.components.YAxis.AxisDependency
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.listener.ChartTouchListener
@@ -115,7 +114,7 @@ fun CombinedChart(
           if (scaleX == 1f && scaleY == 1f && x == 0f && y == 0f) {
             it.fitScreen() // reset scale
           } else {
-            it.zoom(scaleX, scaleY, x, y, YAxis.AxisDependency.LEFT)
+            it.zoom(scaleX, scaleY, x, y, AxisDependency.LEFT)
           }
         }
       }
@@ -166,7 +165,7 @@ fun CombinedChart(
         if (scaleX == 1f && scaleY == 1f && x == 0f && y == 0f) {
           chart.fitScreen() // reset scale
         } else if (chart.scaleX != scaleX || chart.scaleY != scaleY) {
-          chart.zoom(scaleX, scaleY, x, y, YAxis.AxisDependency.LEFT)
+          chart.zoom(scaleX, scaleY, x, y, AxisDependency.LEFT)
         }
       }
     }
@@ -191,13 +190,13 @@ private class ChartObserver(
 
   override fun onChartScale(me: MotionEvent?, scaleX: Float, scaleY: Float) {
     val centerPoint = chart.viewPortHandler.contentCenter
-    val centerPosition = chart.getValuesByTouchPoint(centerPoint.x, centerPoint.y, YAxis.AxisDependency.LEFT)
+    val centerPosition = chart.getValuesByTouchPoint(centerPoint.x, centerPoint.y, AxisDependency.LEFT)
     positionEvents(chart.viewPortHandler.scaleX, chart.viewPortHandler.scaleY, centerPosition.x.toFloat(), centerPosition.y.toFloat())
   }
 
   override fun onChartTranslate(me: MotionEvent?, dX: Float, dY: Float) {
     val centerPoint = chart.viewPortHandler.contentCenter
-    val centerPosition = chart.getValuesByTouchPoint(centerPoint.x, centerPoint.y, YAxis.AxisDependency.LEFT)
+    val centerPosition = chart.getValuesByTouchPoint(centerPoint.x, centerPoint.y, AxisDependency.LEFT)
     positionEvents(chart.viewPortHandler.scaleX, chart.viewPortHandler.scaleY, centerPosition.x.toFloat(), centerPosition.y.toFloat())
   }
 }

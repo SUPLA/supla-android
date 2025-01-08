@@ -1,10 +1,10 @@
 package org.supla.android.lib;
 
 public class ZWaveWakeUpSettings {
-  private int minimum;
-  private int maximum;
+  private final int minimum;
+  private final int maximum;
   private int value;
-  private int step;
+  private final int step;
 
   ZWaveWakeUpSettings(int minimum, int maximum, int value, int step) {
     this.minimum = minimum;

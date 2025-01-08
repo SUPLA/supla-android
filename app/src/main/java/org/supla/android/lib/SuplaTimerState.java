@@ -25,9 +25,9 @@ import java.util.Date;
 public class SuplaTimerState implements Serializable {
 
   private Date countdownEndsAt;
-  private byte[] targetValue;
-  private int senderId;
-  private String senderName;
+  private final byte[] targetValue;
+  private final int senderId;
+  private final String senderName;
 
   public SuplaTimerState(
       long countdownEndsAt, byte[] targetValue, int senderId, String senderName) {

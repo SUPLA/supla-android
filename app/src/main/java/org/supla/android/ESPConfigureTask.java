@@ -40,7 +40,7 @@ public class ESPConfigureTask extends AsyncTask<String, Integer, EspConfigResult
 
   private AsyncResponse delegate;
 
-  private EspHtmlParser parser;
+  private final EspHtmlParser parser;
 
   public ESPConfigureTask(EspHtmlParser parser) {
     Validate.notNull(parser);

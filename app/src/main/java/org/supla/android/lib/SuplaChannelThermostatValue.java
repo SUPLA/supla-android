@@ -19,6 +19,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import java.io.Serializable;
+import java.util.Arrays;
+import org.supla.android.tools.UsedFromNativeCode;
 
 public class SuplaChannelThermostatValue implements Serializable {
 
@@ -46,14 +48,13 @@ public class SuplaChannelThermostatValue implements Serializable {
         : null;
   }
 
+  @UsedFromNativeCode
   boolean setMeasuredTemperature(int idx, double temperature) {
     if (idx >= 0 && idx < 10) {
       if (MeasuredTemperature == null) {
         MeasuredTemperature = new Double[10];
 
-        for (int a = 0; a < MeasuredTemperature.length; a++) {
-          MeasuredTemperature[a] = -273.0;
-        }
+        Arrays.fill(MeasuredTemperature, -273.0);
       }
       MeasuredTemperature[idx] = temperature;
       return true;
@@ -67,15 +68,14 @@ public class SuplaChannelThermostatValue implements Serializable {
         : null;
   }
 
+  @UsedFromNativeCode
   boolean setPresetTemperature(int idx, double temperature) {
     if (idx >= 0 && idx < 10) {
 
       if (PresetTemperature == null) {
         PresetTemperature = new Double[10];
 
-        for (int a = 0; a < PresetTemperature.length; a++) {
-          PresetTemperature[a] = -273.0;
-        }
+        Arrays.fill(PresetTemperature, -273.0);
       }
 
       PresetTemperature[idx] = temperature;
@@ -88,6 +88,7 @@ public class SuplaChannelThermostatValue implements Serializable {
     return Flags != null && idx >= 0 && idx < Flags.length ? Flags[idx] : null;
   }
 
+  @UsedFromNativeCode
   boolean setFlags(int idx, int flags) {
     if (idx >= 0 && idx < 8) {
       if (Flags == null) {
@@ -99,10 +100,11 @@ public class SuplaChannelThermostatValue implements Serializable {
     return false;
   }
 
-  public int getValues(int idx) {
+  public Integer getValues(int idx) {
     return Values != null && idx >= 0 && idx < Values.length ? Values[idx] : null;
   }
 
+  @UsedFromNativeCode
   public boolean setValues(int idx, int values) {
     if (idx >= 0 && idx < 8) {
       if (Values == null) {
@@ -114,6 +116,7 @@ public class SuplaChannelThermostatValue implements Serializable {
     return false;
   }
 
+  @UsedFromNativeCode
   public void setScheduleValue(byte day, byte hour, byte value) {
     if (mSchedule == null) {
       mSchedule = new Schedule();
@@ -122,6 +125,7 @@ public class SuplaChannelThermostatValue implements Serializable {
     mSchedule.setValue(day, hour, value);
   }
 
+  @UsedFromNativeCode
   public void setScheduleValueType(byte type) {
     if (mSchedule == null) {
       mSchedule = new Schedule();
@@ -138,6 +142,7 @@ public class SuplaChannelThermostatValue implements Serializable {
     mSchedule = schedule;
   }
 
+  @UsedFromNativeCode
   public void setTime(byte second, byte minute, byte hour, byte dayOfWeek) {
     mTime = new Time(second, minute, hour, dayOfWeek);
   }
@@ -150,20 +155,15 @@ public class SuplaChannelThermostatValue implements Serializable {
     mTime = time;
   }
 
-  public class Schedule implements Serializable {
+  public static class Schedule implements Serializable {
 
     public static final byte TYPE_TEMPERATURE = 0;
     public static final byte TYPE_PROGRAM = 1;
 
     private byte Type;
-    private byte HourValue[][];
+    private final byte[][] HourValue;
 
     Schedule() {
-      HourValue = new byte[7][24];
-    }
-
-    Schedule(byte type) {
-      Type = type;
       HourValue = new byte[7][24];
     }
 
@@ -190,7 +190,7 @@ public class SuplaChannelThermostatValue implements Serializable {
     }
   }
 
-  public class Time implements Serializable {
+  public static class Time implements Serializable {
     private byte Second;
     private byte Minute;
     private byte Hour;

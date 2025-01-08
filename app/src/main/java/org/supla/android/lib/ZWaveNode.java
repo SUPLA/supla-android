@@ -21,7 +21,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 public class ZWaveNode {
   private short NodeId;
   private short SceneType;
-  private int Flags;
+  private final int Flags;
   private Integer ChannelId;
   private String Name;
 

@@ -27,7 +27,7 @@ public class SuplaClientMessageHandler {
 
   private static SuplaClientMessageHandler globalInstance;
   private Handler _sc_msg_handler = null;
-  private ArrayList<OnSuplaClientMessageListener> listeners;
+  private final ArrayList<OnSuplaClientMessageListener> listeners;
 
   private static class ScMsgHandler extends Handler {
     @Override
@@ -64,7 +64,7 @@ public class SuplaClientMessageHandler {
 
   public void registerMessageListener(OnSuplaClientMessageListener listener) {
     synchronized (this) {
-      if (listeners.indexOf(listener) == -1) {
+      if (!listeners.contains(listener)) {
         listeners.add(listener);
       }
     }

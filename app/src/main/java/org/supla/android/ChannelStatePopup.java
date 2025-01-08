@@ -50,49 +50,49 @@ public class ChannelStatePopup
 
   private long lastRefreshTime;
   private Timer refreshTimer;
-  private Handler uiHandler;
-  private AlertDialog alertDialog;
+  private final Handler uiHandler;
+  private final AlertDialog alertDialog;
   private int remoteId;
-  private Context context;
+  private final Context context;
   private int channelFunc;
   private long channelFlags;
   private SuplaChannelState lastState;
 
-  private LinearLayout llChannelID;
-  private LinearLayout llIP;
-  private LinearLayout llMAC;
-  private LinearLayout llBatteryLevel;
-  private LinearLayout llBatteryPowered;
-  private LinearLayout llWiFiRSSI;
-  private LinearLayout llWiFiSignalStrength;
-  private LinearLayout llBridgeNodeOnline;
-  private LinearLayout llBridgeNodeSignalStrength;
-  private LinearLayout llUptime;
-  private LinearLayout llConnectionUptime;
-  private LinearLayout llBatteryHealth;
-  private LinearLayout llLastConnectionResetCause;
-  private LinearLayout llLightSourceLifespan;
-  private LinearLayout llLightSourceOperatingTime;
-  private LinearLayout llProgress;
+  private final LinearLayout llChannelID;
+  private final LinearLayout llIP;
+  private final LinearLayout llMAC;
+  private final LinearLayout llBatteryLevel;
+  private final LinearLayout llBatteryPowered;
+  private final LinearLayout llWiFiRSSI;
+  private final LinearLayout llWiFiSignalStrength;
+  private final LinearLayout llBridgeNodeOnline;
+  private final LinearLayout llBridgeNodeSignalStrength;
+  private final LinearLayout llUptime;
+  private final LinearLayout llConnectionUptime;
+  private final LinearLayout llBatteryHealth;
+  private final LinearLayout llLastConnectionResetCause;
+  private final LinearLayout llLightSourceLifespan;
+  private final LinearLayout llLightSourceOperatingTime;
+  private final LinearLayout llProgress;
 
-  private TextView tvInfoTitle;
-  private TextView tvChannelID;
-  private TextView tvIP;
-  private TextView tvMAC;
-  private TextView tvBatteryLevel;
-  private TextView tvBatteryPowered;
-  private TextView tvWiFiRSSI;
-  private TextView tvWiFiSignalStrength;
-  private TextView tvBridgeNodeOnline;
-  private TextView tvBridgeNodeSignalStrength;
-  private TextView tvUptime;
-  private TextView tvConnectionUptime;
-  private TextView tvBatteryHealth;
-  private TextView tvLastConnectionResetCause;
-  private TextView tvLightSourceLifespan;
-  private TextView tvLightSourceOperatingTime;
+  private final TextView tvInfoTitle;
+  private final TextView tvChannelID;
+  private final TextView tvIP;
+  private final TextView tvMAC;
+  private final TextView tvBatteryLevel;
+  private final TextView tvBatteryPowered;
+  private final TextView tvWiFiRSSI;
+  private final TextView tvWiFiSignalStrength;
+  private final TextView tvBridgeNodeOnline;
+  private final TextView tvBridgeNodeSignalStrength;
+  private final TextView tvUptime;
+  private final TextView tvConnectionUptime;
+  private final TextView tvBatteryHealth;
+  private final TextView tvLastConnectionResetCause;
+  private final TextView tvLightSourceLifespan;
+  private final TextView tvLightSourceOperatingTime;
 
-  private Button btnReset;
+  private final Button btnReset;
 
   public ChannelStatePopup(Context context) {
     this.context = context;
@@ -391,4 +391,3 @@ public class ChannelStatePopup
   @Override
   public void authorizationCanceled() {}
 }
-;

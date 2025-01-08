@@ -62,6 +62,7 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
     super.onViewCreated(view, savedInstanceState)
 
     binding.channelsList.adapter = adapter
+    binding.channelsList.itemAnimator = null
     statePopup = ChannelStatePopup(requireActivity())
     setupAdapter()
     binding.channelsEmptyListButton.setOnClickListener {

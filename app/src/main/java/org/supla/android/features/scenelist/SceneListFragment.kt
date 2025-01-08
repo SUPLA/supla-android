@@ -48,6 +48,7 @@ class SceneListFragment : BaseFragment<SceneListViewState, SceneListViewEvent>(R
     super.onViewCreated(view, savedInstanceState)
 
     binding.scenesList.adapter = adapter
+    binding.scenesList.itemAnimator = null
     setupAdapter()
     binding.scenesEmptyListButton.setOnClickListener { viewModel.onAddGroupClick() }
   }

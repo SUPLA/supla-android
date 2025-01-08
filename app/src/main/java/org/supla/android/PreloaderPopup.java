@@ -14,9 +14,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class PreloaderPopup {
-  private Activity activity;
-  private AlertDialog dialog;
-  private TextView textView;
+  private final Activity activity;
+  private final AlertDialog dialog;
+  private final TextView textView;
   private String text;
   private Timer timer;
   private int pos;

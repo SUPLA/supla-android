@@ -45,11 +45,11 @@ public class SuplaColorBrightnessPicker extends View {
   private static final double m90_01d = Math.toRadians(-90.01);
   private static final double m20d = Math.toRadians(-20);
   private static final double p40d = Math.toRadians(40);
-  private int[] BW = new int[] {Color.BLACK, Color.WHITE, Color.WHITE};
+  private final int[] BW = new int[] {Color.BLACK, Color.WHITE, Color.WHITE};
 
   private PointF colorPointerCenter;
   private PointF brightnessPointerCenter;
-  private RectF rectF = new RectF();
+  private final RectF rectF = new RectF();
   private float centerX;
   private float centerY;
   private float colorWheelWidth;

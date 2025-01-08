@@ -29,6 +29,7 @@ import org.supla.android.databinding.LiChannelItemBinding
 import org.supla.android.databinding.LiMainDoubleValueItemBinding
 import org.supla.android.databinding.LiMainIconValueItemBinding
 import org.supla.android.databinding.LiMainIconValueWithButtonsItemBinding
+import org.supla.android.databinding.LiMainIconValueWithRightButtonItemBinding
 import org.supla.android.databinding.LiMainThermostatItemBinding
 import org.supla.android.ui.layouts.ChannelLayout
 import org.supla.android.ui.lists.data.SlideableListItemData
@@ -37,7 +38,7 @@ import org.supla.core.shared.data.model.lists.ListItemIssues
 abstract class BaseChannelsAdapter(
   private val context: Context,
   preferences: Preferences
-) : BaseListAdapter<ListItem, ChannelDataBase>(context, preferences), ChannelLayout.Listener {
+) : BaseListAdapter<ChannelDataBase>(context, preferences), ChannelLayout.Listener {
 
   var infoButtonClickCallback: (id: Int) -> Unit = { _ -> }
   var issueButtonClickCallback: (issues: ListItemIssues) -> Unit = { _ -> }
@@ -48,7 +49,7 @@ abstract class BaseChannelsAdapter(
     it.onMoveFinishedListener = {
       val channelsOrdered = items
         .filterIsInstance<ListItem.ChannelItem>()
-        .map { sceneItem -> sceneItem.channelBase }
+        .map { item -> item.channelBase }
 
       if (movedItem != replacedItem) {
         swappedElementsCallback(
@@ -76,35 +77,28 @@ abstract class BaseChannelsAdapter(
       ViewType.ICON_VALUE_ITEM.ordinal ->
         IconValueListItemViewHolder(LiMainIconValueItemBinding.inflate(inflater, parent, false))
 
-      ViewType.GENERAL_PURPOSE_METER_ITEM.ordinal ->
-        GpMeterListItemViewHolder(LiMainIconValueItemBinding.inflate(inflater, parent, false))
-
-      ViewType.GENERAL_PURPOSE_MEASUREMENT_ITEM.ordinal ->
-        GpMeasurementListItemViewHolder(LiMainIconValueItemBinding.inflate(inflater, parent, false))
-
-      ViewType.SHADING_SYSTEM_ITEM.ordinal ->
-        ShadingSystemListItemViewHolder(LiMainIconValueWithButtonsItemBinding.inflate(inflater, parent, false))
-
-      ViewType.SWITCH_ITEM.ordinal ->
-        SwitchListItemViewHolder(LiMainIconValueWithButtonsItemBinding.inflate(inflater, parent, false))
+      ViewType.ICON_WITH_BUTTONS_ITEM.ordinal ->
+        IconWithButtonsItemViewHolder(LiMainIconValueWithButtonsItemBinding.inflate(inflater, parent, false))
 
       ViewType.DOUBLE_VALUE_ITEM.ordinal ->
         DoubleValueListItemViewHolder(LiMainDoubleValueItemBinding.inflate(inflater, parent, false))
+
+      ViewType.ICON_WITH_RIGHT_BUTTON_ITEM.ordinal ->
+        IconWithRightButtonItemViewHolder(LiMainIconValueWithRightButtonItemBinding.inflate(inflater, parent, false))
 
       else -> super.onCreateViewHolder(parent, viewType)
     }
   }
 
   override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    val item = items[position]
     when (holder) {
-      is ChannelListItemViewHolder -> holder.bind(items[position] as ListItem.ChannelItem)
-      is ThermostatListItemViewHolder -> holder.bind(items[position] as ListItem.HvacThermostatItem)
-      is IconValueListItemViewHolder -> holder.bind(items[position] as ListItem.IconValueItem)
-      is GpMeterListItemViewHolder -> holder.bind(items[position] as ListItem.GeneralPurposeMeterItem)
-      is GpMeasurementListItemViewHolder -> holder.bind(items[position] as ListItem.GeneralPurposeMeasurementItem)
-      is ShadingSystemListItemViewHolder -> holder.bind(items[position] as ListItem.ShadingSystemItem)
-      is SwitchListItemViewHolder -> holder.bind(items[position] as ListItem.SwitchItem)
-      is DoubleValueListItemViewHolder -> holder.bind(items[position] as ListItem.DoubleValueItem)
+      is ChannelListItemViewHolder -> holder.bind(item as ListItem.ChannelItem)
+      is ThermostatListItemViewHolder -> holder.bind(item as ListItem.HvacThermostatItem)
+      is IconValueListItemViewHolder -> holder.bind(item as ListItem.IconValueItem)
+      is IconWithButtonsItemViewHolder -> holder.bind(item as ListItem.IconWithButtonsItem)
+      is DoubleValueListItemViewHolder -> holder.bind(item as ListItem.DoubleValueItem)
+      is IconWithRightButtonItemViewHolder -> holder.bind(item as ListItem.IconWithRightButtonItem)
       else -> super.onBindViewHolder(holder, position)
     }
   }
@@ -176,46 +170,8 @@ abstract class BaseChannelsAdapter(
     }
   }
 
-  inner class GpMeterListItemViewHolder(val binding: LiMainIconValueItemBinding) : ViewHolder(binding.root) {
-    fun bind(item: ListItem.GeneralPurposeMeterItem) {
-      val data = item.toSlideableListItemData() as SlideableListItemData.Default
-      binding.listItemRoot.bind(locationCaption = item.locationCaption, function = item.channelBase.function)
-      binding.listItemContent.bind(
-        itemType = ItemType.CHANNEL,
-        remoteId = item.channel.remoteId,
-        data = data,
-        onInfoClick = { infoButtonClickCallback(item.channel.remoteId) },
-        onIssueClick = { },
-        onTitleLongClick = { onCaptionLongPress(item.channel.remoteId) },
-        onItemClick = { listItemClickCallback(item.channel.remoteId) }
-      )
-
-      binding.listItemContent.setOnClickListener { listItemClickCallback(item.channel.remoteId) }
-      binding.listItemContent.setOnLongClickListener { onLongPress(this) }
-    }
-  }
-
-  inner class GpMeasurementListItemViewHolder(val binding: LiMainIconValueItemBinding) : ViewHolder(binding.root) {
-    fun bind(item: ListItem.GeneralPurposeMeasurementItem) {
-      val data = item.toSlideableListItemData() as SlideableListItemData.Default
-      binding.listItemRoot.bind(locationCaption = item.locationCaption, function = item.channelBase.function)
-      binding.listItemContent.bind(
-        itemType = ItemType.CHANNEL,
-        remoteId = item.channel.remoteId,
-        data = data,
-        onInfoClick = { infoButtonClickCallback(item.channel.remoteId) },
-        onIssueClick = { },
-        onTitleLongClick = { onCaptionLongPress(item.channel.remoteId) },
-        onItemClick = { listItemClickCallback(item.channel.remoteId) }
-      )
-
-      binding.listItemContent.setOnClickListener { listItemClickCallback(item.channel.remoteId) }
-      binding.listItemContent.setOnLongClickListener { onLongPress(this) }
-    }
-  }
-
-  inner class ShadingSystemListItemViewHolder(val binding: LiMainIconValueWithButtonsItemBinding) : ViewHolder(binding.root) {
-    fun bind(item: ListItem.ShadingSystemItem) {
+  inner class IconWithButtonsItemViewHolder(val binding: LiMainIconValueWithButtonsItemBinding) : ViewHolder(binding.root) {
+    fun bind(item: ListItem.IconWithButtonsItem) {
       val data = item.toSlideableListItemData() as SlideableListItemData.Default
       binding.listItemRoot.bind(locationCaption = item.locationCaption, function = item.channelBase.function)
       binding.listItemContent.bind(
@@ -235,8 +191,8 @@ abstract class BaseChannelsAdapter(
     }
   }
 
-  inner class SwitchListItemViewHolder(val binding: LiMainIconValueWithButtonsItemBinding) : ViewHolder(binding.root) {
-    fun bind(item: ListItem.SwitchItem) {
+  inner class IconWithRightButtonItemViewHolder(val binding: LiMainIconValueWithRightButtonItemBinding) : ViewHolder(binding.root) {
+    fun bind(item: ListItem.IconWithRightButtonItem) {
       val data = item.toSlideableListItemData() as SlideableListItemData.Default
       binding.listItemRoot.bind(locationCaption = item.locationCaption, function = item.channelBase.function)
       binding.listItemContent.bind(
@@ -251,7 +207,6 @@ abstract class BaseChannelsAdapter(
 
       binding.listItemContent.setOnClickListener { listItemClickCallback(item.channel.remoteId) }
       binding.listItemContent.setOnLongClickListener { onLongPress(this) }
-      binding.listItemLeftItem.setOnClickListener { onLeftButtonClick(item.channel.remoteId) }
       binding.listItemRightItem.setOnClickListener { onRightButtonClick(item.channel.remoteId) }
     }
   }
