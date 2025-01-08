@@ -876,12 +876,12 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
 
   private class ChannelImageLayout extends LinearLayout {
 
-    private ImageView Img1;
-    private ImageView Img2;
+    private final ImageView Img1;
+    private final ImageView Img2;
     private ImageId Img1Id;
     private ImageId Img2Id;
-    private TextView Text1;
-    private TextView Text2;
+    private final TextView Text1;
+    private final TextView Text2;
     private float heightScaleFactor = 1f;
     private int mOldFunc;
 

@@ -86,7 +86,7 @@ class ProfileChooser(
         parent,
         false
       )
-      binding.profileLabel.setTypeface(type)
+      binding.profileLabel.typeface = type
       return ItemViewHolder(binding)
     }
 

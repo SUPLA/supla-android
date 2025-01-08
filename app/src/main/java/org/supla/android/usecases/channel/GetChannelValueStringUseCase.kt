@@ -34,6 +34,7 @@ import org.supla.android.usecases.channel.stringvalueprovider.PressureSensorValu
 import org.supla.android.usecases.channel.stringvalueprovider.RainSensorValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.SwitchWithMeterValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.ThermometerValueStringProvider
+import org.supla.android.usecases.channel.stringvalueprovider.WeightSensorValueStringProvider
 import org.supla.core.shared.data.model.general.SuplaFunction
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -51,7 +52,8 @@ class GetChannelValueStringUseCase @Inject constructor(
   pressureSensorValueStringProvider: PressureSensorValueStringProvider,
   rainSensorValueStringProvider: RainSensorValueStringProvider,
   humidityValueStringProvider: HumidityValueStringProvider,
-  containerValueStringProvider: ContainerValueStringProvider
+  containerValueStringProvider: ContainerValueStringProvider,
+  weightSensorValueStringProvider: WeightSensorValueStringProvider
 ) {
 
   private val providers = listOf(
@@ -67,6 +69,7 @@ class GetChannelValueStringUseCase @Inject constructor(
     rainSensorValueStringProvider,
     humidityValueStringProvider,
     containerValueStringProvider,
+    weightSensorValueStringProvider,
     NoValueStringProvider(SuplaFunction.STAIRCASE_TIMER),
     NoValueStringProvider(SuplaFunction.POWER_SWITCH),
     NoValueStringProvider(SuplaFunction.LIGHTSWITCH),
@@ -77,7 +80,14 @@ class GetChannelValueStringUseCase @Inject constructor(
     NoValueStringProvider(SuplaFunction.OPEN_SENSOR_GATEWAY),
     NoValueStringProvider(SuplaFunction.OPEN_SENSOR_GARAGE_DOOR),
     NoValueStringProvider(SuplaFunction.OPEN_SENSOR_ROOF_WINDOW),
-    NoValueStringProvider(SuplaFunction.OPEN_SENSOR_ROLLER_SHUTTER)
+    NoValueStringProvider(SuplaFunction.OPEN_SENSOR_ROLLER_SHUTTER),
+    NoValueStringProvider(SuplaFunction.DIMMER),
+    NoValueStringProvider(SuplaFunction.RGB_LIGHTING),
+    NoValueStringProvider(SuplaFunction.DIMMER_AND_RGB_LIGHTING),
+    NoValueStringProvider(SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK),
+    NoValueStringProvider(SuplaFunction.CONTROLLING_THE_DOOR_LOCK),
+    NoValueStringProvider(SuplaFunction.CONTROLLING_THE_GATE),
+    NoValueStringProvider(SuplaFunction.CONTROLLING_THE_GARAGE_DOOR)
   )
 
   operator fun invoke(channel: ChannelWithChildren, valueType: ValueType = ValueType.FIRST, withUnit: Boolean = true): String {
@@ -86,7 +96,7 @@ class GetChannelValueStringUseCase @Inject constructor(
 
   fun valueOrNull(channel: ChannelWithChildren, valueType: ValueType = ValueType.FIRST, withUnit: Boolean = true): String? {
     providers.firstOrNull { it.handle(channel) }?.let {
-      if (channel.channel.channelValueEntity.online.not()) {
+      if (channel.channel.channelValueEntity.online.not() && it !is NoValueStringProvider) {
         return ValuesFormatter.NO_VALUE_TEXT
       }
 

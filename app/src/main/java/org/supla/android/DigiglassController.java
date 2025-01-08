@@ -271,7 +271,7 @@ public class DigiglassController extends View {
     paint.setColor(dotColor);
     paint.setStrokeWidth(1);
     paint.setStyle(Paint.Style.FILL);
-    float fieldRadius = pxPerDP * 1.0f;
+    float fieldRadius = pxPerDP;
     float pointRadius = pxPerDP * 0.5f;
 
     float diameter = fieldRadius * 2;

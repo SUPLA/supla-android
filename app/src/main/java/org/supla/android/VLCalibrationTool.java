@@ -31,10 +31,10 @@ public class VLCalibrationTool extends DimmerCalibrationTool
   private static final int VL_CALCFG_MSG_SET_LED_CONFIG = 0x01FF;
   private static final int UI_REFRESH_LOCK_TIME = 2000;
 
-  private Button btnDmAuto;
-  private Button btnDm1;
-  private Button btnDm2;
-  private Button btnDm3;
+  private final Button btnDmAuto;
+  private final Button btnDm1;
+  private final Button btnDm2;
+  private final Button btnDm3;
   private final Button btnBoostAuto;
   private final Button btnBoostYes;
   private final Button btnBoostNo;
@@ -42,7 +42,7 @@ public class VLCalibrationTool extends DimmerCalibrationTool
   private final Button btnBoost;
   private final SuplaRangeCalibrationWheel calibrationWheel;
   private final VLCfgParameters cfgParameters;
-  private int mColorDisabled;
+  private final int mColorDisabled;
   private boolean restoringDefaults;
   private Timer startConfigurationRetryTimer;
   private final TextView tvPicFirmwareVersion;

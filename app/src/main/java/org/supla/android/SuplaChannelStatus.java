@@ -37,10 +37,10 @@ public class SuplaChannelStatus extends View {
   private int OfflineColor = Color.RED;
   private boolean mSingleColor = false;
   private int BorderlineColor = Color.BLACK;
-  private RectF rectf = new RectF();
-  private Paint paint = new Paint();
-  private DisplayMetrics metrics = getResources().getDisplayMetrics();
-  private float FrameLineWidth =
+  private final RectF rectf = new RectF();
+  private final Paint paint = new Paint();
+  private final DisplayMetrics metrics = getResources().getDisplayMetrics();
+  private final float FrameLineWidth =
       TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (float) 1, metrics);
 
   public SuplaChannelStatus(Context context) {

@@ -22,13 +22,13 @@ import java.io.Serializable;
 
 public class SuplaChannelImpulseCounterValue implements Serializable {
 
-  private int ImpulsesPerUnit;
-  private long Counter;
-  private double CalculatedValue;
-  private double TotalCost;
-  private double PricePerUnit;
-  private String Currency;
-  private String Unit;
+  private final int ImpulsesPerUnit;
+  private final long Counter;
+  private final double CalculatedValue;
+  private final double TotalCost;
+  private final double PricePerUnit;
+  private final String Currency;
+  private final String Unit;
 
   SuplaChannelImpulseCounterValue(
       int ImpulsesPerUnit,

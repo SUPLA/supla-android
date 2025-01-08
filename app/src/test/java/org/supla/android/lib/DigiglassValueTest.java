@@ -36,12 +36,12 @@ public class DigiglassValueTest extends TestCase {
     Assert.assertEquals(31, val.getMask());
     Assert.assertEquals(7, val.getSectionCount());
 
-    Assert.assertEquals(true, val.isAnySectionTransparent());
-    Assert.assertEquals(false, val.isPlannedRegenerationInProgress());
-    Assert.assertEquals(true, val.isTooLongOperationWarningPresent());
-    Assert.assertEquals(true, val.isSectionTransparent(0));
-    Assert.assertEquals(true, val.isSectionTransparent(4));
-    Assert.assertEquals(false, val.isSectionTransparent(5));
+    Assert.assertTrue(val.isAnySectionTransparent());
+    Assert.assertFalse(val.isPlannedRegenerationInProgress());
+    Assert.assertTrue(val.isTooLongOperationWarningPresent());
+    Assert.assertTrue(val.isSectionTransparent(0));
+    Assert.assertTrue(val.isSectionTransparent(4));
+    Assert.assertFalse(val.isSectionTransparent(5));
 
     v[0] = DigiglassValue.PLANNED_REGENERATION_IN_PROGRESS;
     v[1] = 5;
@@ -50,21 +50,21 @@ public class DigiglassValueTest extends TestCase {
 
     val = new DigiglassValue(v);
 
-    Assert.assertEquals(false, val.isAnySectionTransparent());
-    Assert.assertEquals(true, val.isPlannedRegenerationInProgress());
-    Assert.assertEquals(false, val.isTooLongOperationWarningPresent());
-    Assert.assertEquals(false, val.isSectionTransparent(0));
+    Assert.assertFalse(val.isAnySectionTransparent());
+    Assert.assertTrue(val.isPlannedRegenerationInProgress());
+    Assert.assertFalse(val.isTooLongOperationWarningPresent());
+    Assert.assertFalse(val.isSectionTransparent(0));
 
     v[0] =
         DigiglassValue.TOO_LONG_OPERATION_WARNING | DigiglassValue.PLANNED_REGENERATION_IN_PROGRESS;
 
     val = new DigiglassValue(v);
 
-    Assert.assertEquals(false, val.isAnySectionTransparent());
-    Assert.assertEquals(true, val.isPlannedRegenerationInProgress());
-    Assert.assertEquals(true, val.isTooLongOperationWarningPresent());
-    Assert.assertEquals(false, val.regenerationAfter20hInProgress());
-    Assert.assertEquals(false, val.isSectionTransparent(0));
+    Assert.assertFalse(val.isAnySectionTransparent());
+    Assert.assertTrue(val.isPlannedRegenerationInProgress());
+    Assert.assertTrue(val.isTooLongOperationWarningPresent());
+    Assert.assertFalse(val.regenerationAfter20hInProgress());
+    Assert.assertFalse(val.isSectionTransparent(0));
 
     v[0] =
         DigiglassValue.TOO_LONG_OPERATION_WARNING
@@ -73,10 +73,10 @@ public class DigiglassValueTest extends TestCase {
 
     val = new DigiglassValue(v);
 
-    Assert.assertEquals(false, val.isAnySectionTransparent());
-    Assert.assertEquals(true, val.isPlannedRegenerationInProgress());
-    Assert.assertEquals(true, val.isTooLongOperationWarningPresent());
-    Assert.assertEquals(true, val.regenerationAfter20hInProgress());
-    Assert.assertEquals(false, val.isSectionTransparent(0));
+    Assert.assertFalse(val.isAnySectionTransparent());
+    Assert.assertTrue(val.isPlannedRegenerationInProgress());
+    Assert.assertTrue(val.isTooLongOperationWarningPresent());
+    Assert.assertTrue(val.regenerationAfter20hInProgress());
+    Assert.assertFalse(val.isSectionTransparent(0));
   }
 }

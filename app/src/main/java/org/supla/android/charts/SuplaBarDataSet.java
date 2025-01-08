@@ -40,7 +40,6 @@ public class SuplaBarDataSet extends BarDataSet {
     } catch (IndexOutOfBoundsException exception) {
       result = null;
     }
-    ;
 
     return result;
   }

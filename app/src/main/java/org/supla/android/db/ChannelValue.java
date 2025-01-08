@@ -412,15 +412,6 @@ public class ChannelValue extends DbItem {
   @NonNull
   @Override
   public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("{channelId=");
-    sb.append(ChannelId);
-    sb.append(", online=");
-    sb.append(OnLine);
-    sb.append(", profileId=");
-    sb.append(profileId);
-    sb.append("}");
-
-    return sb.toString();
+    return "{channelId=" + ChannelId + ", online=" + OnLine + ", profileId=" + profileId + "}";
   }
 }

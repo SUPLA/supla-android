@@ -31,7 +31,7 @@ data class AuthProfileItem(
 ) : DbItem() {
 
   override fun AssignCursorData(cur: Cursor) {
-    setId(cur.getLong(0))
+    id = cur.getLong(0)
     fun stringOrNull(cur: Cursor, idx: Int): String? {
       return if (cur.isNull(idx)) null else cur.getString(idx)
     }

@@ -38,7 +38,7 @@ import javax.inject.Inject
 class ScenesAdapter @Inject constructor(
   @ActivityContext private val context: Context,
   preferences: Preferences
-) : BaseListAdapter<ListItem, SceneDataEntity>(context, preferences), SceneLayout.Listener {
+) : BaseListAdapter<SceneDataEntity>(context, preferences), SceneLayout.Listener {
 
   override val callback = ListCallback(context, this).also {
     it.onMovedListener = { fromPos, toPos -> swapInternally(fromPos, toPos) }

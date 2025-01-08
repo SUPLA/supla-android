@@ -50,20 +50,20 @@ public class SuperuserAuthorizationDialog
         View.OnTouchListener,
         SuplaClientMessageHandler.OnSuplaClientMessageListener,
         TextWatcher {
-  private Context context;
+  private final Context context;
   private AlertDialog dialog;
-  private Button btnCancel;
-  private Button btnOK;
-  private Button btnViewPassword;
-  private ProgressBar progressBar;
-  private EditText edEmail;
-  private EditText edPassword;
-  private TextView tvErrorMessage;
+  private final Button btnCancel;
+  private final Button btnOK;
+  private final Button btnViewPassword;
+  private final ProgressBar progressBar;
+  private final EditText edEmail;
+  private final EditText edPassword;
+  private final TextView tvErrorMessage;
   private OnAuthorizarionResultListener onAuthorizarionResultListener;
   private Object object;
   private Timer timeoutTimer;
   private static SuperuserAuthorizationDialog lastVisibleInstance;
-  private AlertDialog.Builder builder;
+  private final AlertDialog.Builder builder;
 
   SuperuserAuthorizationDialog(Context context) {
     this.context = context;

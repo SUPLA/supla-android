@@ -29,7 +29,7 @@ class SuplaSceneState(
     get() {
       if (estimatedEndDate != null) {
         val now = Date()
-        val diff = estimatedEndDate!!.getTime() - now.time
+        val diff = estimatedEndDate!!.time - now.time
         if (diff > 0) {
           return diff
         }

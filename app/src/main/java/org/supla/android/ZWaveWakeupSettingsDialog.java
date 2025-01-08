@@ -21,19 +21,19 @@ public class ZWaveWakeupSettingsDialog
     implements DialogInterface.OnDismissListener,
         View.OnClickListener,
         NumberPicker.OnValueChangeListener {
-  private Activity activity;
+  private final Activity activity;
   private int ChannelID;
-  private AlertDialog dialog;
-  private LinearLayout llMain;
-  private NumberPicker npHours;
-  private NumberPicker npMinutes;
-  private NumberPicker npSeconds;
-  private TextView tvError;
-  private ProgressBar progressBar1;
-  private ProgressBar progressBar2;
+  private final AlertDialog dialog;
+  private final LinearLayout llMain;
+  private final NumberPicker npHours;
+  private final NumberPicker npMinutes;
+  private final NumberPicker npSeconds;
+  private final TextView tvError;
+  private final ProgressBar progressBar1;
+  private final ProgressBar progressBar2;
   private Timer timeoutTimer;
   private Timer delayTimer;
-  private Button btnOK;
+  private final Button btnOK;
   private ZWaveWakeUpSettings settings;
 
   ZWaveWakeupSettingsDialog(Activity activity) {
@@ -185,7 +185,6 @@ public class ZWaveWakeupSettingsDialog
                   R.string.zwave_unexpected_answer,
                   settings == null ? "NULL" : Integer.toString(result)));
     }
-    ;
   }
 
   public void onZwaveSetWakeUpTimeResult(int result) {

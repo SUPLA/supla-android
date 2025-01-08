@@ -79,7 +79,7 @@ public abstract class ChartHelper extends ValueFormatter {
   private long minTimestamp;
   private LineDataSet lineDataSet;
   private Double downloadProgress;
-  private Preferences prefs;
+  private final Preferences prefs;
   private final ProfileManager profileManager;
 
   public ChartHelper(Context context) {
@@ -449,7 +449,7 @@ public abstract class ChartHelper extends ValueFormatter {
     if (downloadProgress != null) {
       description = r.getString(R.string.retrieving_data_from_the_server);
       if (downloadProgress > 0) {
-        description += Integer.toString(downloadProgress.intValue()) + "%";
+        description += downloadProgress.intValue() + "%";
       }
 
       noData = description;
