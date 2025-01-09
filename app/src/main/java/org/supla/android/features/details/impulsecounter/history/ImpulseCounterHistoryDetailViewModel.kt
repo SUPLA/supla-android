@@ -33,7 +33,7 @@ import org.supla.android.data.model.chart.datatype.BarChartData
 import org.supla.android.data.model.chart.datatype.ChartData
 import org.supla.android.data.model.chart.datatype.PieChartData
 import org.supla.android.data.model.chart.style.ChartStyle
-import org.supla.android.data.model.chart.style.GpmChartStyle
+import org.supla.android.data.model.chart.style.ImpulseCounterChartStyle
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.events.DownloadEventsManager
 import org.supla.android.features.details.detailbase.history.BaseHistoryDetailViewModel
@@ -67,7 +67,7 @@ class ImpulseCounterHistoryDetailViewModel @Inject constructor(
   schedulers
 ) {
 
-  override fun chartStyle(): ChartStyle = GpmChartStyle
+  override fun chartStyle(): ChartStyle = ImpulseCounterChartStyle
 
   override fun allAggregations() = ChartDataAggregation.entries
 

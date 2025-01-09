@@ -118,8 +118,8 @@ abstract class BaseListAdapter<D>(
       val newItem = items.getOrNull(index)
 
       if (oldItem != null && newItem != null) {
+        this.items[index] = newItem
         if (oldItem.isDifferentFrom(newItem)) {
-          this.items[index] = newItem
           notifyItemChanged(index)
         }
       } else if (oldItem == null) {
