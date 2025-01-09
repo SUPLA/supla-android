@@ -1,4 +1,4 @@
-package org.supla.android.data.source
+package org.supla.android.data.source.remote.rest.channel
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,14 +17,12 @@ package org.supla.android.data.source
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.data.source.local.dao.measurements.HomePlusThermostatLogDao
-import org.supla.android.usecases.channel.RemoveHiddenChannelsUseCase
-import javax.inject.Inject
-import javax.inject.Singleton
+import com.google.gson.annotations.SerializedName
+import java.util.Date
 
-@Singleton
-class HomePlusThermostatLogRepository @Inject constructor(
-  private val homePlusThermostatLogDao: HomePlusThermostatLogDao
-) : RemoveHiddenChannelsUseCase.ChannelsDeletable {
-  override suspend fun deleteChannelRelated(remoteId: Int, profileId: Long) = homePlusThermostatLogDao.deleteKtx(remoteId, profileId)
-}
+data class ThermostatMeasurement(
+  @SerializedName("date_timestamp") override val date: Date,
+  val on: Boolean,
+  @SerializedName("measured_temperature") val measuredTemperature: Float,
+  @SerializedName("preset_temperature") val presetTemperature: Float
+) : Measurement

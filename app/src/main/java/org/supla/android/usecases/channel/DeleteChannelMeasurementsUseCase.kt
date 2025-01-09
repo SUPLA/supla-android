@@ -29,6 +29,7 @@ import org.supla.android.data.source.PowerActiveLogRepository
 import org.supla.android.data.source.TemperatureAndHumidityLogRepository
 import org.supla.android.data.source.TemperatureLogRepository
 import org.supla.android.data.source.VoltageLogRepository
+import org.supla.android.data.source.ThermostatHeatpolLogRepository
 import org.supla.android.data.source.local.entity.isHvacThermostat
 import org.supla.core.shared.data.model.general.SuplaFunction
 import javax.inject.Inject
@@ -46,7 +47,8 @@ class DeleteChannelMeasurementsUseCase @Inject constructor(
   private val impulseCounterLogRepository: ImpulseCounterLogRepository,
   private val voltageLogRepository: VoltageLogRepository,
   private val currentLogRepository: CurrentLogRepository,
-  private val powerActiveLogRepository: PowerActiveLogRepository
+  private val powerActiveLogRepository: PowerActiveLogRepository,
+  private val thermostatHeatpolLogRepository: ThermostatHeatpolLogRepository
 ) {
 
   operator fun invoke(remoteId: Int): Completable =
@@ -69,6 +71,9 @@ class DeleteChannelMeasurementsUseCase @Inject constructor(
 
           channelWithChildren.function == SuplaFunction.HUMIDITY ->
             humidityLogRepository.delete(remoteId, profileId)
+
+          channelWithChildren.function == SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS ->
+            thermostatHeatpolLogRepository.delete(remoteId, profileId)
 
           channelWithChildren.isOrHasElectricityMeter ->
             Completable.merge(

@@ -1,4 +1,4 @@
-package org.supla.android.usecases.details
+package org.supla.android.usecases.channel.valueprovider
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,19 +17,23 @@ package org.supla.android.usecases.details
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.data.model.general.ChannelDataBase
-import org.supla.android.features.details.detailbase.standarddetail.DetailPage
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
+import org.supla.android.data.source.remote.thermostat.HeatpolThermostatValue
+import org.supla.android.usecases.channel.ChannelValueProvider
+import org.supla.android.usecases.channel.ValueType
 import org.supla.core.shared.data.model.general.SuplaFunction
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ProvideGroupDetailTypeUseCase @Inject constructor() : BaseDetailTypeProviderUseCase() {
+class HeatpolThermostatValueProvider @Inject constructor() : ChannelValueProvider {
+  override fun handle(channelWithChildren: ChannelWithChildren): Boolean =
+    channelWithChildren.function == SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS
 
-  operator fun invoke(channelDataBase: ChannelDataBase): DetailType? =
-    when (channelDataBase.function) {
-      SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS ->
-        ThermostatDetailType(listOf(DetailPage.THERMOSTAT_HEATPOL_GENERAL))
-      else -> provide(channelDataBase.function)
-    }
+  override fun value(channelWithChildren: ChannelWithChildren, valueType: ValueType): Any {
+    return HeatpolThermostatValue.from(
+      channelWithChildren.status,
+      channelWithChildren.channel.channelValueEntity.getValueAsByteArray()
+    )
+  }
 }

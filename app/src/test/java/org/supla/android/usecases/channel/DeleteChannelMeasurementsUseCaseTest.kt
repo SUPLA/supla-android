@@ -40,6 +40,7 @@ import org.supla.android.data.source.PowerActiveLogRepository
 import org.supla.android.data.source.TemperatureAndHumidityLogRepository
 import org.supla.android.data.source.TemperatureLogRepository
 import org.supla.android.data.source.VoltageLogRepository
+import org.supla.android.data.source.ThermostatHeatpolLogRepository
 import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
@@ -81,6 +82,9 @@ class DeleteChannelMeasurementsUseCaseTest {
 
   @Mock
   private lateinit var powerActiveLogRepository: PowerActiveLogRepository
+
+  @Mock
+  private lateinit var thermostatHeatpolLogRepository: ThermostatHeatpolLogRepository
 
   @InjectMocks
   private lateinit var useCase: DeleteChannelMeasurementsUseCase

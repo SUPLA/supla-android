@@ -1,4 +1,4 @@
-package org.supla.android.data.source.local.dao.measurements
+package org.supla.android.features.details.thermostatdetail.heatpolhistory
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,15 +17,19 @@ package org.supla.android.data.source.local.dao.measurements
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.room.Dao
-import androidx.room.Query
-import org.supla.android.data.source.local.entity.measurements.HomePlusThermostatLogEntity.Companion.COLUMN_CHANNEL_ID
-import org.supla.android.data.source.local.entity.measurements.HomePlusThermostatLogEntity.Companion.COLUMN_PROFILE_ID
-import org.supla.android.data.source.local.entity.measurements.HomePlusThermostatLogEntity.Companion.TABLE_NAME
+import androidx.core.os.bundleOf
+import androidx.fragment.app.viewModels
+import dagger.hilt.android.AndroidEntryPoint
+import org.supla.android.features.details.detailbase.history.BaseHistoryDetailFragment
 
-@Dao
-interface HomePlusThermostatLogDao {
+private const val ARG_REMOTE_ID = "ARG_REMOTE_ID"
 
-  @Query("DELETE FROM $TABLE_NAME WHERE $COLUMN_CHANNEL_ID = :remoteId AND $COLUMN_PROFILE_ID = :profileId")
-  suspend fun deleteKtx(remoteId: Int, profileId: Long)
+@AndroidEntryPoint
+class HeatpolHistoryDetailFragment : BaseHistoryDetailFragment() {
+
+  override val viewModel: HeatpolHistoryDetailViewModel by viewModels()
+
+  companion object {
+    fun bundle(remoteId: Int) = bundleOf(ARG_REMOTE_ID to remoteId)
+  }
 }

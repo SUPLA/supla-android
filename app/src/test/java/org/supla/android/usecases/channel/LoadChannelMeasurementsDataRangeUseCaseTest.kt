@@ -73,6 +73,9 @@ class LoadChannelMeasurementsDataRangeUseCaseTest {
   @MockK
   private lateinit var powerActiveDataRangeProvider: PowerActiveDataRangeProvider
 
+  @MockK
+  private lateinit var thermostatHeatpolDataRangeProvider: ThermostatHeatpolDataRangeProvider
+
   @InjectMockKs
   private lateinit var useCase: LoadChannelMeasurementsDataRangeUseCase
 
@@ -139,6 +142,7 @@ class LoadChannelMeasurementsDataRangeUseCaseTest {
     every { voltageDataRangeProvider.handle(channelWithChildren, DEFAULT_TYPE) } returns false
     every { currentDataRangeProvider.handle(channelWithChildren, DEFAULT_TYPE) } returns false
     every { powerActiveDataRangeProvider.handle(channelWithChildren, DEFAULT_TYPE) } returns false
+    every { thermostatHeatpolDataRangeProvider.handle(channelWithChildren) } returns false
 
     // when
     val testObserver = useCase.invoke(remoteId, profileId).test()
@@ -159,6 +163,7 @@ class LoadChannelMeasurementsDataRangeUseCaseTest {
       voltageDataRangeProvider.handle(channelWithChildren, DEFAULT_TYPE)
       currentDataRangeProvider.handle(channelWithChildren, DEFAULT_TYPE)
       powerActiveDataRangeProvider.handle(channelWithChildren, DEFAULT_TYPE)
+      thermostatHeatpolDataRangeProvider.handle(channelWithChildren)
     }
     confirmVerified(
       readChannelWithChildrenUseCase,
@@ -170,7 +175,8 @@ class LoadChannelMeasurementsDataRangeUseCaseTest {
       humidityDataRangeProvider,
       impulseCounterDataRangeProvider,
       voltageDataRangeProvider,
-      powerActiveDataRangeProvider
+      powerActiveDataRangeProvider,
+      thermostatHeatpolDataRangeProvider
     )
   }
 }

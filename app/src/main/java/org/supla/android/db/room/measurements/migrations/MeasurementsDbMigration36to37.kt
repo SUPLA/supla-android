@@ -23,28 +23,28 @@ import org.supla.android.data.source.local.entity.measurements.CurrentHistoryLog
 import org.supla.android.data.source.local.entity.measurements.ElectricityMeterLogEntity
 import org.supla.android.data.source.local.entity.measurements.GeneralPurposeMeasurementEntity
 import org.supla.android.data.source.local.entity.measurements.GeneralPurposeMeterEntity
-import org.supla.android.data.source.local.entity.measurements.HomePlusThermostatLogEntity
+import org.supla.android.data.source.local.entity.measurements.ThermostatHeatpolLogEntity
 import org.supla.android.data.source.local.entity.measurements.HumidityLogEntity
 import org.supla.android.data.source.local.entity.measurements.ImpulseCounterLogEntity
 import org.supla.android.data.source.local.entity.measurements.PowerActiveHistoryLogEntity
 import org.supla.android.data.source.local.entity.measurements.TemperatureAndHumidityLogEntity
 import org.supla.android.data.source.local.entity.measurements.TemperatureLogEntity
 import org.supla.android.data.source.local.entity.measurements.VoltageHistoryLogEntity
-import org.supla.android.db.MeasurementsDbHelper
 import org.supla.android.db.room.SqlExecutor
+import org.supla.android.db.room.measurements.MeasurementsDatabase
 import javax.inject.Singleton
 
 @Singleton
 object MeasurementsDbMigration36to37 : Migration(36, 37), SqlExecutor {
 
-  override fun getDatabaseNameForLog(): String = MeasurementsDbHelper.DATABASE_NAME
+  override fun getDatabaseNameForLog(): String = MeasurementsDatabase.NAME
 
   private val tables: List<Pair<String, String>> = listOf(
     Pair(CurrentHistoryLogEntity.TABLE_NAME, CurrentHistoryLogEntity.COLUMN_GROUPING_STRING),
     Pair(ElectricityMeterLogEntity.TABLE_NAME, ElectricityMeterLogEntity.COLUMN_GROUPING_STRING),
     Pair(GeneralPurposeMeasurementEntity.TABLE_NAME, GeneralPurposeMeasurementEntity.COLUMN_GROUPING_STRING),
     Pair(GeneralPurposeMeterEntity.TABLE_NAME, GeneralPurposeMeterEntity.COLUMN_GROUPING_STRING),
-    Pair(HomePlusThermostatLogEntity.TABLE_NAME, HomePlusThermostatLogEntity.COLUMN_GROUPING_STRING),
+    Pair(ThermostatHeatpolLogEntity.TABLE_NAME, ThermostatHeatpolLogEntity.COLUMN_GROUPING_STRING),
     Pair(ImpulseCounterLogEntity.TABLE_NAME, ImpulseCounterLogEntity.COLUMN_GROUPING_STRING),
     Pair(TemperatureAndHumidityLogEntity.TABLE_NAME, TemperatureAndHumidityLogEntity.COLUMN_GROUPING_STRING),
     Pair(TemperatureLogEntity.TABLE_NAME, TemperatureLogEntity.COLUMN_GROUPING_STRING),

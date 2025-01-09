@@ -32,7 +32,6 @@ import org.supla.android.data.source.CurrentLogRepository
 import org.supla.android.data.source.ElectricityMeterLogRepository
 import org.supla.android.data.source.GeneralPurposeMeasurementLogRepository
 import org.supla.android.data.source.GeneralPurposeMeterLogRepository
-import org.supla.android.data.source.HomePlusThermostatLogRepository
 import org.supla.android.data.source.HumidityLogRepository
 import org.supla.android.data.source.ImpulseCounterLogRepository
 import org.supla.android.data.source.PowerActiveLogRepository
@@ -40,6 +39,7 @@ import org.supla.android.data.source.RoomChannelRepository
 import org.supla.android.data.source.RoomColorListRepository
 import org.supla.android.data.source.TemperatureAndHumidityLogRepository
 import org.supla.android.data.source.TemperatureLogRepository
+import org.supla.android.data.source.ThermostatHeatpolLogRepository
 import org.supla.android.data.source.VoltageLogRepository
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -63,7 +63,7 @@ class RemoveHiddenChannelsUseCase @Inject constructor(
   powerActiveLogRepository: PowerActiveLogRepository,
   temperatureLogRepository: TemperatureLogRepository,
   temperatureAndHumidityLogRepository: TemperatureAndHumidityLogRepository,
-  homePlusThermostatLogRepository: HomePlusThermostatLogRepository,
+  thermostatHeatpolLogRepository: ThermostatHeatpolLogRepository,
   voltageLogRepository: VoltageLogRepository
 ) {
 
@@ -85,7 +85,7 @@ class RemoveHiddenChannelsUseCase @Inject constructor(
     powerActiveLogRepository,
     temperatureLogRepository,
     temperatureAndHumidityLogRepository,
-    homePlusThermostatLogRepository,
+    thermostatHeatpolLogRepository,
     voltageLogRepository
   )
 

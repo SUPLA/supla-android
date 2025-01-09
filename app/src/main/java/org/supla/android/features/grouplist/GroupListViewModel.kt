@@ -48,6 +48,7 @@ import org.supla.android.usecases.channel.GroupActionUseCase
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
 import org.supla.android.usecases.details.LegacyDetailType
 import org.supla.android.usecases.details.ProvideGroupDetailTypeUseCase
+import org.supla.android.usecases.details.ThermostatDetailType
 import org.supla.android.usecases.details.WindowDetailType
 import org.supla.android.usecases.group.CreateProfileGroupsListUseCase
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
@@ -202,6 +203,7 @@ class GroupListViewModel @Inject constructor(
     when (val detailType = provideGroupDetailTypeUseCase(group)) {
       is LegacyDetailType -> sendEvent(GroupListViewEvent.OpenLegacyDetails(group.remoteId, detailType))
       is WindowDetailType -> sendEvent(GroupListViewEvent.OpenRollerShutterDetail(ItemBundle.from(group), detailType.pages))
+      is ThermostatDetailType -> sendEvent(GroupListViewEvent.OpenHeatpolThermostatDetail(ItemBundle.from(group), detailType.pages))
       else -> {} // no action
     }
   }
@@ -215,6 +217,9 @@ sealed class GroupListViewEvent : ViewEvent {
   data class NavigateToPrivateCloud(val url: Uri) : GroupListViewEvent()
 
   data class OpenRollerShutterDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) :
+    OpenStandardDetail(R.id.window_detail_fragment, WindowDetailFragment.bundle(itemBundle, pages.toTypedArray()))
+
+  data class OpenHeatpolThermostatDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) :
     OpenStandardDetail(R.id.window_detail_fragment, WindowDetailFragment.bundle(itemBundle, pages.toTypedArray()))
 
   abstract class OpenStandardDetail(

@@ -33,6 +33,7 @@ import org.supla.android.features.measurementsdownload.workers.DownloadPowerActi
 import org.supla.android.features.measurementsdownload.workers.DownloadTemperaturesAndHumidityWorker
 import org.supla.android.features.measurementsdownload.workers.DownloadTemperaturesWorker
 import org.supla.android.features.measurementsdownload.workers.DownloadVoltageMeasurementsWorker
+import org.supla.android.features.measurementsdownload.workers.DownloadThermostatHeatpolWorker
 import org.supla.core.shared.data.model.general.SuplaFunction
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -101,6 +102,13 @@ class DownloadChannelMeasurementsUseCase @Inject constructor(
           "${DownloadPowerActiveMeasurementsWorker.WORK_ID}.$remoteId",
           ExistingWorkPolicy.KEEP,
           DownloadPowerActiveMeasurementsWorker.build(remoteId, profileId)
+        )
+
+      function == SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS ->
+        workManagerProxy.enqueueUniqueWork(
+          "${DownloadThermostatHeatpolWorker.WORK_ID}.$remoteId",
+          ExistingWorkPolicy.KEEP,
+          DownloadThermostatHeatpolWorker.build(remoteId, profileId)
         )
 
       channelWithChildren.isOrHasElectricityMeter ->

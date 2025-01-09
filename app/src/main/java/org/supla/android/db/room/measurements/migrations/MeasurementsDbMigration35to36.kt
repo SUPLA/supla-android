@@ -19,12 +19,12 @@ package org.supla.android.db.room.measurements.migrations
 
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import org.supla.android.db.MeasurementsDbHelper
 import org.supla.android.db.room.SqlExecutor
+import org.supla.android.db.room.measurements.MeasurementsDatabase
 
 val MEASUREMENTS_DB_MIGRATION_35_36: Migration = object : Migration(35, 36), SqlExecutor {
 
-  override fun getDatabaseNameForLog(): String = MeasurementsDbHelper.DATABASE_NAME
+  override fun getDatabaseNameForLog(): String = MeasurementsDatabase.NAME
 
   override fun migrate(db: SupportSQLiteDatabase) {
     execSQL(db, "DROP VIEW IF EXISTS ic_log_v1")

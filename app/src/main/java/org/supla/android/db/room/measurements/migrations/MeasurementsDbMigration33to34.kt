@@ -22,8 +22,8 @@ import org.supla.android.data.source.local.entity.measurements.CurrentHistoryLog
 import org.supla.android.data.source.local.entity.measurements.ElectricityMeterLogEntity
 import org.supla.android.data.source.local.entity.measurements.ImpulseCounterLogEntity
 import org.supla.android.data.source.local.entity.measurements.VoltageHistoryLogEntity
-import org.supla.android.db.MeasurementsDbHelper
 import org.supla.android.db.room.SqlExecutor
+import org.supla.android.db.room.measurements.MeasurementsDatabase
 
 val MEASUREMENTS_DB_MIGRATION_33_34: Migration = object : Migration(33, 34), SqlExecutor {
 
@@ -45,7 +45,7 @@ val MEASUREMENTS_DB_MIGRATION_33_34: Migration = object : Migration(33, 34), Sql
       SET ${ElectricityMeterLogEntity.COLUMN_TIMESTAMP} = ${ElectricityMeterLogEntity.COLUMN_TIMESTAMP} * 1000
     """.trimIndent()
 
-  override fun getDatabaseNameForLog(): String = MeasurementsDbHelper.DATABASE_NAME
+  override fun getDatabaseNameForLog(): String = MeasurementsDatabase.NAME
 
   override fun migrate(db: SupportSQLiteDatabase) {
     execSQL(db, ALTER_IC)

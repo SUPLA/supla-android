@@ -36,6 +36,7 @@ import org.supla.android.usecases.channel.valueprovider.DepthSensorValueProvider
 import org.supla.android.usecases.channel.valueprovider.DistanceSensorValueProvider
 import org.supla.android.usecases.channel.valueprovider.ElectricityMeterValueProvider
 import org.supla.android.usecases.channel.valueprovider.GpmValueProvider
+import org.supla.android.usecases.channel.valueprovider.HeatpolThermostatValueProvider
 import org.supla.android.usecases.channel.valueprovider.HumidityAndTemperatureValueProvider
 import org.supla.android.usecases.channel.valueprovider.ImpulseCounterValueProvider
 import org.supla.android.usecases.channel.valueprovider.PressureSensorValueProvider
@@ -91,6 +92,9 @@ class GetChannelValueUseCaseTest {
 
   @Mock
   private lateinit var windSensorValueProvider: WindSensorValueProvider
+
+  @Mock
+  private lateinit var heatpolThermostatValueProvider: HeatpolThermostatValueProvider
 
   @InjectMocks
   private lateinit var useCase: GetChannelValueUseCase
