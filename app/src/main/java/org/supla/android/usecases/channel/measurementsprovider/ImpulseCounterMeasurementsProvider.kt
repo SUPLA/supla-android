@@ -31,10 +31,12 @@ import org.supla.android.data.model.chart.ChartDataSpec
 import org.supla.android.data.model.chart.ChartEntryType
 import org.supla.android.data.model.chart.ChartEntryType.IMPULSE_COUNTER
 import org.supla.android.data.source.ImpulseCounterLogRepository
+import org.supla.android.data.source.local.entity.complex.ImpulseCounter
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.local.entity.measurements.ImpulseCounterLogEntity
 import org.supla.android.di.GSON_FOR_REPO
 import org.supla.android.extensions.toTimestamp
+import org.supla.android.ui.views.charts.marker.ImpulseCounterCustomData
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.core.shared.usecase.GetCaptionUseCase
@@ -68,11 +70,15 @@ class ImpulseCounterMeasurementsProvider @Inject constructor(
       }
       .map {
         ChannelChartSets(
-          channel.remoteId,
-          channel.function,
+          channel,
           getCaptionUseCase(channel.shareable).provider(),
           spec.aggregation,
-          it
+          it,
+          ImpulseCounterCustomData(
+            channel.ImpulseCounter.value?.unit,
+            channel.ImpulseCounter.value?.pricePerUnit?.toFloat(),
+            channel.ImpulseCounter.value?.currency
+          )
         )
       }
       .firstOrError()
