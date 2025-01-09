@@ -1,4 +1,4 @@
-package org.supla.android.ui.views.charts
+package org.supla.android.ui.views.charts.marker
 /*
 Copyright (C) AC SOFTWARE SP. Z O.O.
 

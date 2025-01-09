@@ -41,7 +41,7 @@ import org.supla.android.di.GSON_FOR_REPO
 import org.supla.android.extensions.toTimestamp
 import org.supla.android.features.details.electricitymeterdetail.history.ElectricityMeterChartType
 import org.supla.android.images.ImageId
-import org.supla.android.ui.views.charts.ElectricityMarkerCustomData
+import org.supla.android.ui.views.charts.marker.ElectricityMarkerCustomData
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.channel.measurementsprovider.electricity.ElectricityChartFilters
 import org.supla.android.usecases.channel.measurementsprovider.electricity.balanceValues
