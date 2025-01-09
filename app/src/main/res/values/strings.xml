@@ -836,6 +836,8 @@
   <string name="channel_state_battery_powered">battery</string>
   <string name="channel_state_main_powered">mains</string>
   <string name="cfg_temperature_precision">Temperature precision</string>
+  <string name="temperature_measured">Measured</string>
+  <string name="temperature_preset">Preset</string>
 
   <plurals name="details_timer_info_on" translatable="false">
     <item quantity="other">on</item>

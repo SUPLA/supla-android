@@ -713,4 +713,6 @@
   <string name="channel_state_battery_powered">cu baterii</string>
   <string name="channel_state_main_powered">de la rețea</string>
   <string name="cfg_temperature_precision">Precizie de temperatură</string>
+  <string name="temperature_measured">Măsurat</string>
+  <string name="temperature_preset">Predefinit</string>
 </resources>

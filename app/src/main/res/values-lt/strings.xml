@@ -689,4 +689,6 @@
   <string name="channel_state_battery_powered">iš baterijų</string>
   <string name="channel_state_main_powered">iš tinklo</string>
   <string name="cfg_temperature_precision">Temperatūros tikslumas</string>
+  <string name="temperature_measured">Išmatuotas</string>
+  <string name="temperature_preset">Iš anksto nustatytas</string>
 </resources>

@@ -711,4 +711,6 @@
   <string name="channel_state_battery_powered">elemes</string>
   <string name="channel_state_main_powered">hálózati</string>
   <string name="cfg_temperature_precision">Hőmérséklet-pontosság</string>
+  <string name="temperature_measured">Mért</string>
+  <string name="temperature_preset">Előre beállított</string>
 </resources>

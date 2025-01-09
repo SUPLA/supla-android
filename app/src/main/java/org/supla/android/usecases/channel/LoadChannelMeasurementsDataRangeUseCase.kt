@@ -24,6 +24,7 @@ import org.supla.android.data.source.CurrentLogRepository
 import org.supla.android.data.source.ElectricityMeterLogRepository
 import org.supla.android.data.source.GeneralPurposeMeasurementLogRepository
 import org.supla.android.data.source.GeneralPurposeMeterLogRepository
+import org.supla.android.data.source.HomePlusThermostatLogRepository
 import org.supla.android.data.source.HumidityLogRepository
 import org.supla.android.data.source.ImpulseCounterLogRepository
 import org.supla.android.data.source.PowerActiveLogRepository
@@ -49,7 +50,8 @@ class LoadChannelMeasurementsDataRangeUseCase @Inject constructor(
   humidityDataRangeProvider: HumidityDataRangeProvider,
   voltageDataRangeProvider: VoltageDataRangeProvider,
   currentDataRangeProvider: CurrentDataRangeProvider,
-  powerActiveDataRangeProvider: PowerActiveDataRangeProvider
+  powerActiveDataRangeProvider: PowerActiveDataRangeProvider,
+  thermostatHeatpolDataRangeProvider: ThermostatHeatpolDataRangeProvider
 ) {
 
   private val providers: List<ChannelDataRangeProvider> =
@@ -63,7 +65,8 @@ class LoadChannelMeasurementsDataRangeUseCase @Inject constructor(
       humidityDataRangeProvider,
       voltageDataRangeProvider,
       currentDataRangeProvider,
-      powerActiveDataRangeProvider
+      powerActiveDataRangeProvider,
+      thermostatHeatpolDataRangeProvider
     )
 
   operator fun invoke(
@@ -230,4 +233,18 @@ class ImpulseCounterDataRangeProvider @Inject constructor(
 
   override fun maxTime(remoteId: Int, profileId: Long): Single<Long> =
     impulseCounterLogRepository.findMaxTimestamp(remoteId, profileId)
+}
+
+@Singleton
+class ThermostatHeatpolDataRangeProvider @Inject constructor(
+  private val homePlusThermostatLogRepository: HomePlusThermostatLogRepository
+) : ChannelDataRangeProvider {
+  override fun handle(channelWithChildren: ChannelWithChildren, type: DownloadEventsManager.DataType): Boolean =
+    channelWithChildren.function == SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS
+
+  override fun minTime(remoteId: Int, profileId: Long): Single<Long> =
+    homePlusThermostatLogRepository.findMinTimestamp(remoteId, profileId)
+
+  override fun maxTime(remoteId: Int, profileId: Long): Single<Long> =
+    homePlusThermostatLogRepository.findMaxTimestamp(remoteId, profileId)
 }

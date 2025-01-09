@@ -22,7 +22,7 @@ import org.supla.core.shared.extensions.toTemperature
 
 private const val HEATPOL_THERMOSTAT_VALUE_LENGTH = 6
 
-data class HeatpolThermostatValue(
+data class HomePlusThermostatValue(
   val status: SuplaChannelAvailabilityStatus,
   val on: Boolean,
   val flags: List<SuplaHeatpolThermostatFlag>,
@@ -30,13 +30,13 @@ data class HeatpolThermostatValue(
   val presetTemperature: Float
 ) {
 
-  companion object {
-    fun from(status: SuplaChannelAvailabilityStatus, bytes: ByteArray): HeatpolThermostatValue {
+  companion object Companion {
+    fun from(status: SuplaChannelAvailabilityStatus, bytes: ByteArray): HomePlusThermostatValue {
       if (bytes.size < HEATPOL_THERMOSTAT_VALUE_LENGTH) {
-        return HeatpolThermostatValue(status, false, emptyList(), 0f, 0f)
+        return HomePlusThermostatValue(status, false, emptyList(), 0f, 0f)
       }
 
-      return HeatpolThermostatValue(
+      return HomePlusThermostatValue(
         status = status,
         on = bytes[0].toInt() == 1,
         flags = SuplaHeatpolThermostatFlag.from(bytes[1].toShort()),

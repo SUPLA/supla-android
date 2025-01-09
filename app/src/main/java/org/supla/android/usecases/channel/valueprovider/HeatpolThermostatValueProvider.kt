@@ -20,7 +20,7 @@ package org.supla.android.usecases.channel.valueprovider
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.usecases.channel.ChannelValueProvider
 import org.supla.android.usecases.channel.ValueType
-import org.supla.core.shared.data.model.function.thermostat.HeatpolThermostatValue
+import org.supla.core.shared.data.model.function.thermostat.HomePlusThermostatValue
 import org.supla.core.shared.data.model.general.SuplaFunction
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -34,5 +34,5 @@ class HeatpolThermostatValueProvider @Inject constructor() : ChannelValueProvide
     channelWithChildren: ChannelWithChildren,
     valueType: ValueType
   ): Any =
-    HeatpolThermostatValue.from(channelWithChildren.status, channelWithChildren.channel.channelValueEntity.getValueAsByteArray())
+    HomePlusThermostatValue.from(channelWithChildren.status, channelWithChildren.channel.channelValueEntity.getValueAsByteArray())
 }

@@ -39,6 +39,7 @@ import org.supla.android.usecases.channel.measurementsprovider.HumidityMeasureme
 import org.supla.android.usecases.channel.measurementsprovider.ImpulseCounterMeasurementsProvider
 import org.supla.android.usecases.channel.measurementsprovider.TemperatureAndHumidityMeasurementsProvider
 import org.supla.android.usecases.channel.measurementsprovider.TemperatureMeasurementsProvider
+import org.supla.android.usecases.channel.measurementsprovider.ThermostatHeatpolMeasurementsProvider
 import org.supla.core.shared.data.model.general.SuplaFunction
 
 class LoadChannelMeasurementsUseCaseTest : BaseLoadMeasurementsUseCaseTest() {
@@ -66,6 +67,9 @@ class LoadChannelMeasurementsUseCaseTest : BaseLoadMeasurementsUseCaseTest() {
 
   @MockK
   private lateinit var impulseCounterMeasurementsProvider: ImpulseCounterMeasurementsProvider
+
+  @MockK
+  private lateinit var thermostatHeatpolMeasurementsProvider: ThermostatHeatpolMeasurementsProvider
 
   @InjectMockKs
   private lateinit var useCase: LoadChannelMeasurementsUseCase
@@ -129,6 +133,7 @@ class LoadChannelMeasurementsUseCaseTest : BaseLoadMeasurementsUseCaseTest() {
     every { electricityMeterMeasurementsProvider.handle(channelWithChildren) } returns false
     every { humidityMeasurementsProvider.handle(channelWithChildren) } returns false
     every { impulseCounterMeasurementsProvider.handle(channelWithChildren) } returns false
+    every { thermostatHeatpolMeasurementsProvider.handle(channelWithChildren) } returns false
 
     // when
     val observer = useCase.invoke(remoteId, spec).test()
@@ -143,6 +148,7 @@ class LoadChannelMeasurementsUseCaseTest : BaseLoadMeasurementsUseCaseTest() {
       electricityMeterMeasurementsProvider.handle(channelWithChildren)
       humidityMeasurementsProvider.handle(channelWithChildren)
       impulseCounterMeasurementsProvider.handle(channelWithChildren)
+      thermostatHeatpolMeasurementsProvider.handle(channelWithChildren)
     }
     confirmVerified(
       readChannelWithChildrenUseCase,
@@ -152,7 +158,8 @@ class LoadChannelMeasurementsUseCaseTest : BaseLoadMeasurementsUseCaseTest() {
       generalPurposeMeterMeasurementsProvider,
       electricityMeterMeasurementsProvider,
       humidityMeasurementsProvider,
-      impulseCounterMeasurementsProvider
+      impulseCounterMeasurementsProvider,
+      thermostatHeatpolMeasurementsProvider
     )
   }
 }

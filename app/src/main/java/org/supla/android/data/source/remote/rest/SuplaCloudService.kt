@@ -32,6 +32,7 @@ import org.supla.android.data.source.remote.rest.channel.HumidityMeasurement
 import org.supla.android.data.source.remote.rest.channel.ImpulseCounterMeasurement
 import org.supla.android.data.source.remote.rest.channel.TemperatureAndHumidityMeasurement
 import org.supla.android.data.source.remote.rest.channel.TemperatureMeasurement
+import org.supla.android.data.source.remote.rest.channel.ThermostatMeasurement
 import org.supla.android.di.GSON_FOR_API
 import org.supla.core.shared.data.model.rest.ImpulseCounterPhotoDto
 import org.supla.core.shared.data.model.rest.channel.DefaultChannelDto
@@ -170,6 +171,24 @@ interface SuplaCloudService {
     @Query("limit") limit: Int = 2,
     @Query("offset") offset: Int = 0
   ): Call<List<ImpulseCounterMeasurement>>
+
+  @GET("/api/$API_VERSION/channels/{remoteId}/measurement-logs")
+  fun getThermostatHeatpolMeasurements(
+    @Path("remoteId") remoteId: Int,
+    @Query("order") order: String = "ASC",
+    @Query("limit") limit: Int? = null,
+    @Query("offset") offset: Int? = null,
+    @Query("afterTimestamp") afterTimestamp: Long? = null,
+    @Query("beforeTimestamp") beforeTimestamp: Long? = null
+  ): Observable<List<ThermostatMeasurement>>
+
+  @GET("/api/$API_VERSION/channels/{remoteId}/measurement-logs")
+  fun getInitialThermostatHeatpolMeasurements(
+    @Path("remoteId") remoteId: Int,
+    @Query("order") order: String = "ASC",
+    @Query("limit") limit: Int = 2,
+    @Query("offset") offset: Int = 0
+  ): Call<List<ThermostatMeasurement>>
 
   @GET("/api/$API_VERSION/channels/{remoteId}/measurement-logs")
   fun getHistoryMeasurements(

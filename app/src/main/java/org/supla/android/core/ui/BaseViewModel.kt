@@ -77,12 +77,12 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
     compositeDisposable.clear()
   }
 
-  protected fun sendEvent(event: E) {
-    viewEvents.tryEmit(Event(event))
-  }
-
   protected fun updateState(updater: (S) -> S) {
     viewState.tryEmit(updater(viewState.value))
+  }
+
+  protected fun sendEvent(event: E) {
+    viewEvents.tryEmit(Event(event))
   }
 
   protected fun currentState(): S {

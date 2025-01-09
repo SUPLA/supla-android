@@ -18,8 +18,12 @@ package org.supla.android.features.channellist
  */
 
 import com.google.gson.Gson
+import io.mockk.MockKAnnotations
+import io.mockk.confirmVerified
 import io.mockk.every
+import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
+import io.mockk.verify
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
@@ -28,13 +32,6 @@ import io.reactivex.rxjava3.subjects.Subject
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoInteractions
-import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.whenever
 import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.core.BaseViewModelTest
@@ -61,7 +58,6 @@ import org.supla.android.usecases.channel.ActionException
 import org.supla.android.usecases.channel.ButtonType
 import org.supla.android.usecases.channel.ChannelActionUseCase
 import org.supla.android.usecases.channel.CreateProfileChannelsListUseCase
-import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
 import org.supla.android.usecases.details.GpmDetailType
@@ -74,46 +70,42 @@ import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
 import org.supla.core.shared.data.model.general.SuplaFunction
 
-@RunWith(MockitoJUnitRunner::class)
-class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, ChannelListViewEvent, ChannelListViewModel>() {
+class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, ChannelListViewEvent, ChannelListViewModel>(MockSchedulers.MOCKK) {
 
-  @Mock
+  @MockK
   private lateinit var channelRepository: ChannelRepository
 
-  @Mock
+  @MockK
   private lateinit var createProfileChannelsListUseCase: CreateProfileChannelsListUseCase
 
-  @Mock
+  @MockK
   private lateinit var channelActionUseCase: ChannelActionUseCase
 
-  @Mock
+  @MockK
   private lateinit var toggleLocationUseCase: ToggleLocationUseCase
 
-  @Mock
+  @MockK
   private lateinit var provideDetailTypeUseCase: ProvideChannelDetailTypeUseCase
 
-  @Mock
-  private lateinit var readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase
-
-  @Mock
+  @MockK
   private lateinit var readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase
 
-  @Mock
+  @MockK
   private lateinit var gson: Gson
 
-  @Mock
+  @MockK
   private lateinit var updateEventsManager: UpdateEventsManager
 
-  @Mock
+  @MockK
   private lateinit var executeSimpleActionUseCase: ExecuteSimpleActionUseCase
 
-  @Mock
+  @MockK(relaxed = true)
   private lateinit var preferences: Preferences
 
-  @Mock
+  @MockK
   private lateinit var dateProvider: DateProvider
 
-  @Mock
+  @MockK
   override lateinit var schedulers: SuplaSchedulers
 
   override val viewModel: ChannelListViewModel by lazy {
@@ -121,7 +113,6 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
       createProfileChannelsListUseCase,
       provideDetailTypeUseCase,
       readChannelWithChildrenUseCase,
-      readChannelByRemoteIdUseCase,
       executeSimpleActionUseCase,
       toggleLocationUseCase,
       channelActionUseCase,
@@ -137,7 +128,8 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
 
   @Before
   override fun setUp() {
-    whenever(updateEventsManager.observeChannelsUpdate()).thenReturn(listsEventsSubject)
+    MockKAnnotations.init(this)
+    every { updateEventsManager.observeChannelsUpdate() } returns listsEventsSubject
     super.setUp()
   }
 
@@ -145,7 +137,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
   fun `should load channels`() {
     // given
     val list = listOf(mockk<ListItem.ChannelItem>())
-    whenever(createProfileChannelsListUseCase()).thenReturn(Observable.just(list))
+    every { createProfileChannelsListUseCase() } returns Observable.just(list)
 
     // when
     viewModel.loadChannels()
@@ -156,16 +148,16 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
       state.copy(channels = list)
     )
     assertThat(events).isEmpty()
-    verifyNoInteractionsExcept(createProfileChannelsListUseCase)
+    confirmDependenciesVerified()
   }
 
   @Test
   fun `should toggle location collapsed and reload channels`() {
     // given
     val location = mockk<LocationEntity>()
-    whenever(toggleLocationUseCase(location, CollapsedFlag.CHANNEL)).thenReturn(Completable.complete())
+    every { toggleLocationUseCase(location, CollapsedFlag.CHANNEL) } returns Completable.complete()
     val list = listOf(mockk<ListItem.ChannelItem>())
-    whenever(createProfileChannelsListUseCase()).thenReturn(Observable.just(list))
+    every { createProfileChannelsListUseCase() } returns Observable.just(list)
 
     // when
     viewModel.toggleLocationCollapsed(location)
@@ -176,7 +168,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
       state.copy(channels = list)
     )
     assertThat(events).isEmpty()
-    verifyNoInteractionsExcept(createProfileChannelsListUseCase, toggleLocationUseCase)
+    confirmDependenciesVerified()
   }
 
   @Test
@@ -192,7 +184,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     val secondItem = mockk<ChannelDataBase>()
     every { secondItem.id } returns secondItemId
 
-    whenever(channelRepository.reorderChannels(firstItemId, firstItemLocationId, secondItemId)).thenReturn(Completable.complete())
+    every { channelRepository.reorderChannels(firstItemId, firstItemLocationId, secondItemId) } returns Completable.complete()
 
     // when
     viewModel.swapItems(firstItem, secondItem)
@@ -201,9 +193,10 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     assertThat(states).isEmpty()
     assertThat(events).isEmpty()
 
-    verify(channelRepository).reorderChannels(firstItemId, firstItemLocationId, secondItemId)
-    verifyNoMoreInteractions(channelRepository)
-    verifyNoInteractionsExcept(channelRepository)
+    verify {
+      channelRepository.reorderChannels(firstItemId, firstItemLocationId, secondItemId)
+    }
+    confirmDependenciesVerified()
   }
 
   @Test
@@ -211,7 +204,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     // given
     val channelId = 123
     val buttonType = ButtonType.LEFT
-    whenever(channelActionUseCase(channelId, buttonType)).thenReturn(Completable.error(ActionException.ValveClosedManually(channelId)))
+    every { channelActionUseCase(channelId, buttonType) } returns Completable.error(ActionException.ValveClosedManually(channelId))
 
     // when
     viewModel.performAction(channelId, buttonType)
@@ -229,7 +222,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
       )
     )
     assertThat(events).isEmpty()
-    verifyNoInteractionsExcept(channelActionUseCase)
+    confirmDependenciesVerified()
   }
 
   @Test
@@ -237,7 +230,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     // given
     val channelId = 123
     val buttonType = ButtonType.RIGHT
-    whenever(channelActionUseCase(channelId, buttonType)).thenReturn(Completable.error(ActionException.ChannelExceedAmperage(channelId)))
+    every { channelActionUseCase(channelId, buttonType) } returns Completable.error(ActionException.ChannelExceedAmperage(channelId))
 
     // when
     viewModel.performAction(channelId, buttonType)
@@ -254,7 +247,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
         )
       )
     )
-    verifyNoInteractionsExcept(channelActionUseCase)
+    confirmDependenciesVerified()
   }
 
   @Test
@@ -262,8 +255,8 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     // given
     val remoteId = 123
     val channel = mockChannelData(remoteId, SuplaFunction.RGB_LIGHTING)
-    whenever(readChannelWithChildrenUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
-    whenever(dateProvider.currentTimestamp()).thenReturn(500)
+    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Maybe.just(channel)
+    every { dateProvider.currentTimestamp() } returns 500
 
     // when
     viewModel.onListItemClick(remoteId)
@@ -271,7 +264,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     // then
     assertThat(states).isEmpty()
     assertThat(events).isEmpty()
-    verifyNoInteractionsExcept()
+    confirmDependenciesVerified()
   }
 
   @Test
@@ -282,11 +275,11 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     val deviceId = 222
     val function = SuplaFunction.LIGHTSWITCH
     val channel = mockChannelData(remoteId, function, deviceId, subValueType = SUBV_TYPE_IC_MEASUREMENTS.toShort())
-    whenever(readChannelWithChildrenUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
+    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Maybe.just(channel)
 
     val detailType = SwitchDetailType(listOf())
-    whenever(provideDetailTypeUseCase(channel)).thenReturn(detailType)
-    whenever(dateProvider.currentTimestamp()).thenReturn(500)
+    every { provideDetailTypeUseCase(channel) } returns detailType
+    every { dateProvider.currentTimestamp() } returns 500
 
     // when
     viewModel.onListItemClick(remoteId)
@@ -296,7 +289,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     assertThat(events).containsExactly(
       ChannelListViewEvent.OpenSwitchDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), detailType.pages)
     )
-    verifyNoInteractionsExcept(provideDetailTypeUseCase)
+    confirmDependenciesVerified()
   }
 
   @Test
@@ -307,11 +300,11 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     val deviceId = 222
     val function = SuplaFunction.THERMOMETER
     val channel = mockChannelData(remoteId, function, deviceId)
-    whenever(readChannelWithChildrenUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
+    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Maybe.just(channel)
 
     val detailType = ThermometerDetailType(listOf(DetailPage.THERMOMETER_HISTORY))
-    whenever(provideDetailTypeUseCase(channel)).thenReturn(detailType)
-    whenever(dateProvider.currentTimestamp()).thenReturn(500)
+    every { provideDetailTypeUseCase(channel) } returns detailType
+    every { dateProvider.currentTimestamp() } returns 500
 
     // when
     viewModel.onListItemClick(remoteId)
@@ -321,7 +314,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     assertThat(events).containsExactly(
       ChannelListViewEvent.OpenThermometerDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), detailType.pages)
     )
-    verifyNoInteractionsExcept(provideDetailTypeUseCase)
+    confirmDependenciesVerified()
   }
 
   @Test
@@ -333,11 +326,11 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     val function = SuplaFunction.HVAC_THERMOSTAT
     val pages = emptyList<DetailPage>()
     val channel = mockChannelData(remoteId, function, deviceId, SuplaChannelAvailabilityStatus.ONLINE)
-    whenever(readChannelWithChildrenUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
+    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Maybe.just(channel)
 
     val thermostatDetailType = ThermostatDetailType(pages)
-    whenever(provideDetailTypeUseCase(channel)).thenReturn(thermostatDetailType)
-    whenever(dateProvider.currentTimestamp()).thenReturn(500)
+    every { provideDetailTypeUseCase(channel) } returns thermostatDetailType
+    every { dateProvider.currentTimestamp() } returns 500
 
     // when
     viewModel.onListItemClick(remoteId)
@@ -347,7 +340,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     assertThat(events).containsExactly(
       ChannelListViewEvent.OpenThermostatDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
     )
-    verifyNoInteractionsExcept(provideDetailTypeUseCase)
+    confirmDependenciesVerified()
   }
 
   @Test
@@ -359,11 +352,11 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     val function = SuplaFunction.HVAC_THERMOSTAT
     val pages = emptyList<DetailPage>()
     val channel = mockChannelData(remoteId, function, deviceId)
-    whenever(readChannelWithChildrenUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
+    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Maybe.just(channel)
 
     val thermostatDetailType = ThermostatDetailType(pages)
-    whenever(provideDetailTypeUseCase(channel)).thenReturn(thermostatDetailType)
-    whenever(dateProvider.currentTimestamp()).thenReturn(500)
+    every { provideDetailTypeUseCase(channel) } returns thermostatDetailType
+    every { dateProvider.currentTimestamp() } returns 500
 
     // when
     viewModel.onListItemClick(remoteId)
@@ -373,7 +366,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     assertThat(events).containsExactly(
       ChannelListViewEvent.OpenThermostatDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
     )
-    verifyNoInteractionsExcept(provideDetailTypeUseCase)
+    confirmDependenciesVerified()
   }
 
   @Test
@@ -385,11 +378,11 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     val function = SuplaFunction.GENERAL_PURPOSE_MEASUREMENT
     val pages = emptyList<DetailPage>()
     val channel = mockChannelData(remoteId, function, deviceId, SuplaChannelAvailabilityStatus.ONLINE)
-    whenever(readChannelWithChildrenUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
+    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Maybe.just(channel)
 
     val gpmDetailType = GpmDetailType(pages)
-    whenever(provideDetailTypeUseCase(channel)).thenReturn(gpmDetailType)
-    whenever(dateProvider.currentTimestamp()).thenReturn(500)
+    every { provideDetailTypeUseCase(channel) } returns gpmDetailType
+    every { dateProvider.currentTimestamp() } returns 500
 
     // when
     viewModel.onListItemClick(remoteId)
@@ -399,7 +392,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     assertThat(events).containsExactly(
       ChannelListViewEvent.OpenGpmDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
     )
-    verifyNoInteractionsExcept(provideDetailTypeUseCase)
+    confirmDependenciesVerified()
   }
 
   @Test
@@ -411,11 +404,11 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     val function = SuplaFunction.GENERAL_PURPOSE_MEASUREMENT
     val pages = emptyList<DetailPage>()
     val channel = mockChannelData(remoteId, function, deviceId)
-    whenever(readChannelWithChildrenUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
+    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Maybe.just(channel)
 
     val gpmDetailType = GpmDetailType(pages)
-    whenever(provideDetailTypeUseCase(channel)).thenReturn(gpmDetailType)
-    whenever(dateProvider.currentTimestamp()).thenReturn(500)
+    every { provideDetailTypeUseCase(channel) } returns gpmDetailType
+    every { dateProvider.currentTimestamp() } returns 500
 
     // when
     viewModel.onListItemClick(remoteId)
@@ -425,7 +418,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     assertThat(events).containsExactly(
       ChannelListViewEvent.OpenGpmDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
     )
-    verifyNoInteractionsExcept(provideDetailTypeUseCase)
+    confirmDependenciesVerified()
   }
 
   @Test
@@ -437,11 +430,11 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     val function = SuplaFunction.GENERAL_PURPOSE_METER
     val pages = emptyList<DetailPage>()
     val channel = mockChannelData(remoteId, function, deviceId, SuplaChannelAvailabilityStatus.ONLINE)
-    whenever(readChannelWithChildrenUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
+    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Maybe.just(channel)
 
     val gpmDetailType = GpmDetailType(pages)
-    whenever(provideDetailTypeUseCase(channel)).thenReturn(gpmDetailType)
-    whenever(dateProvider.currentTimestamp()).thenReturn(500)
+    every { provideDetailTypeUseCase(channel) } returns gpmDetailType
+    every { dateProvider.currentTimestamp() } returns 500
 
     // when
     viewModel.onListItemClick(remoteId)
@@ -451,7 +444,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     assertThat(events).containsExactly(
       ChannelListViewEvent.OpenGpmDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
     )
-    verifyNoInteractionsExcept(provideDetailTypeUseCase)
+    confirmDependenciesVerified()
   }
 
   @Test
@@ -463,11 +456,11 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     val function = SuplaFunction.GENERAL_PURPOSE_METER
     val pages = emptyList<DetailPage>()
     val channel = mockChannelData(remoteId, function, deviceId)
-    whenever(readChannelWithChildrenUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
+    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Maybe.just(channel)
 
     val gpmDetailType = GpmDetailType(pages)
-    whenever(provideDetailTypeUseCase(channel)).thenReturn(gpmDetailType)
-    whenever(dateProvider.currentTimestamp()).thenReturn(500)
+    every { provideDetailTypeUseCase(channel) } returns gpmDetailType
+    every { dateProvider.currentTimestamp() } returns 500
 
     // when
     viewModel.onListItemClick(remoteId)
@@ -477,7 +470,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     assertThat(events).containsExactly(
       ChannelListViewEvent.OpenGpmDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
     )
-    verifyNoInteractionsExcept(provideDetailTypeUseCase)
+    confirmDependenciesVerified()
   }
 
   @Test
@@ -489,11 +482,11 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     val function = SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER
     val pages = emptyList<DetailPage>()
     val channel = mockChannelData(remoteId, function, deviceId, SuplaChannelAvailabilityStatus.ONLINE)
-    whenever(readChannelWithChildrenUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
+    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Maybe.just(channel)
 
     val rollerShutterDetail = WindowDetailType(pages)
-    whenever(provideDetailTypeUseCase(channel)).thenReturn(rollerShutterDetail)
-    whenever(dateProvider.currentTimestamp()).thenReturn(500)
+    every { provideDetailTypeUseCase(channel) } returns rollerShutterDetail
+    every { dateProvider.currentTimestamp() } returns 500
 
     // when
     viewModel.onListItemClick(remoteId)
@@ -503,7 +496,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     assertThat(events).containsExactly(
       ChannelListViewEvent.OpenWindowDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
     )
-    verifyNoInteractionsExcept(provideDetailTypeUseCase)
+    confirmDependenciesVerified()
   }
 
   @Test
@@ -515,11 +508,11 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     val function = SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER
     val pages = emptyList<DetailPage>()
     val channel = mockChannelData(remoteId, function, deviceId)
-    whenever(readChannelWithChildrenUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
+    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Maybe.just(channel)
 
     val rollerShutterDetail = WindowDetailType(pages)
-    whenever(provideDetailTypeUseCase(channel)).thenReturn(rollerShutterDetail)
-    whenever(dateProvider.currentTimestamp()).thenReturn(500)
+    every { provideDetailTypeUseCase(channel) } returns rollerShutterDetail
+    every { dateProvider.currentTimestamp() } returns 500
 
     // when
     viewModel.onListItemClick(remoteId)
@@ -529,7 +522,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     assertThat(events).containsExactly(
       ChannelListViewEvent.OpenWindowDetail(ItemBundle(channelId, deviceId, ItemType.CHANNEL, function), pages)
     )
-    verifyNoInteractionsExcept(provideDetailTypeUseCase)
+    confirmDependenciesVerified()
   }
 
   @Test
@@ -538,8 +531,8 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     val remoteId = 123
     val channelFunction = SuplaFunction.NONE
     val channel = mockChannelData(remoteId, channelFunction)
-    whenever(readChannelWithChildrenUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
-    whenever(dateProvider.currentTimestamp()).thenReturn(500)
+    every { readChannelWithChildrenUseCase.invoke(remoteId) } returns Maybe.just(channel)
+    every { dateProvider.currentTimestamp() } returns 500
 
     // when
     viewModel.onListItemClick(remoteId)
@@ -547,14 +540,14 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     // then
     assertThat(states).isEmpty()
     assertThat(events).isEmpty()
-    verifyNoInteractionsExcept(provideDetailTypeUseCase)
+    confirmDependenciesVerified()
   }
 
   @Test
   fun `should reload list on update`() {
     // given
     val list = listOf(mockk<ListItem.ChannelItem>())
-    whenever(createProfileChannelsListUseCase()).thenReturn(Observable.just(list))
+    every { createProfileChannelsListUseCase() } returns Observable.just(list)
 
     // when
     listsEventsSubject.onNext(Any())
@@ -565,22 +558,22 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
       state.copy(channels = list)
     )
     assertThat(events).isEmpty()
-    verifyNoInteractionsExcept(createProfileChannelsListUseCase)
+    confirmDependenciesVerified()
   }
 
   @Test
   fun `should not allow to process event to fast`() {
     // given
-    whenever(dateProvider.currentTimestamp()).thenReturn(10)
+    every { dateProvider.currentTimestamp() } returns 10
 
     // when
     viewModel.onListItemClick(1)
 
     // then
-    verifyNoInteractions(readChannelWithChildrenUseCase)
+    confirmVerified(readChannelWithChildrenUseCase)
   }
 
-  private fun verifyNoInteractionsExcept(vararg except: Any) {
+  private fun confirmDependenciesVerified() {
     val allDependencies = listOf(
       channelRepository,
       createProfileChannelsListUseCase,
@@ -589,9 +582,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
       provideDetailTypeUseCase
     )
     for (dependency in allDependencies) {
-      if (!except.contains(dependency)) {
-        verifyNoInteractions(dependency)
-      }
+      confirmVerified(dependency)
     }
   }
 

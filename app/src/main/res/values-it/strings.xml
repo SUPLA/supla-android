@@ -740,4 +740,6 @@
   <string name="channel_state_battery_powered">a batteria</string>
   <string name="channel_state_main_powered">a rete</string>
   <string name="cfg_temperature_precision">Precisione della temperatura</string>
+  <string name="temperature_measured">Misurato</string>
+  <string name="temperature_preset">Preimpostato</string>
 </resources>

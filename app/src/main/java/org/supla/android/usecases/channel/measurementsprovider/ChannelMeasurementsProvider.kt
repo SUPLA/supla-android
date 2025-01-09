@@ -67,7 +67,8 @@ abstract class ChannelMeasurementsProvider(
     type: ChartEntryType,
     color: Int,
     aggregation: ChartDataAggregation,
-    measurements: List<AggregatedEntity>
+    measurements: List<AggregatedEntity>,
+    valueFormatter: ValueFormatter = getValueFormatter(type, channelWithChildren)
   ): HistoryDataSet =
     HistoryDataSet(
       type = type,
@@ -82,7 +83,25 @@ abstract class ChannelMeasurementsProvider(
         },
         color = color,
       ),
-      valueFormatter = getValueFormatter(type, channelWithChildren),
+      valueFormatter = valueFormatter,
+      entities = divideSetToSubsets(
+        entities = measurements,
+        aggregation = aggregation
+      )
+    )
+
+  protected fun historyDataSet(
+    channelWithChildren: ChannelWithChildren,
+    type: ChartEntryType,
+    aggregation: ChartDataAggregation,
+    measurements: List<AggregatedEntity>,
+    label: HistoryDataSet.Label,
+    valueFormatter: ValueFormatter = getValueFormatter(type, channelWithChildren)
+  ): HistoryDataSet =
+    HistoryDataSet(
+      type = type,
+      label = label,
+      valueFormatter = valueFormatter,
       entities = divideSetToSubsets(
         entities = measurements,
         aggregation = aggregation
@@ -107,7 +126,9 @@ open class MeasurementsProvider(
       ChartEntryType.HUMIDITY,
       ChartEntryType.HUMIDITY_ONLY -> HumidityValueFormatter()
 
-      ChartEntryType.TEMPERATURE -> ThermometerValueFormatter(preferences)
+      ChartEntryType.TEMPERATURE,
+      ChartEntryType.PRESET_TEMPERATURE -> ThermometerValueFormatter(preferences)
+
       ChartEntryType.GENERAL_PURPOSE_MEASUREMENT,
       ChartEntryType.GENERAL_PURPOSE_METER ->
         GpmValueFormatter.staticFormatter(channelWithChildren.channel.configEntity?.toSuplaConfig(gson))

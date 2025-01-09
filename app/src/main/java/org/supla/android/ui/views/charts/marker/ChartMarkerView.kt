@@ -118,7 +118,9 @@ class ChartMarkerView(context: Context) : BaseMarkerView(context) {
     when (type) {
       ChartEntryType.HUMIDITY,
       ChartEntryType.HUMIDITY_ONLY -> ValueUnit.HUMIDITY.toString()
+
       ChartEntryType.TEMPERATURE,
+      ChartEntryType.PRESET_TEMPERATURE,
       ChartEntryType.GENERAL_PURPOSE_MEASUREMENT,
       ChartEntryType.GENERAL_PURPOSE_METER,
       ChartEntryType.IMPULSE_COUNTER,

@@ -712,4 +712,6 @@
   <string name="channel_state_battery_powered">batériové</string>
   <string name="channel_state_main_powered">sieťové</string>
   <string name="cfg_temperature_precision">Presnosť teploty</string>
+  <string name="temperature_measured">Namerný</string>
+  <string name="temperature_preset">Prednastavený</string>
 </resources>

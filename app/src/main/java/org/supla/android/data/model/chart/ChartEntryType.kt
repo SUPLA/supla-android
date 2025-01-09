@@ -22,6 +22,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 enum class ChartEntryType(private val axisDependency: AxisDependency) {
   TEMPERATURE(AxisDependency.LEFT),
+  PRESET_TEMPERATURE(AxisDependency.LEFT),
   HUMIDITY(AxisDependency.RIGHT),
   HUMIDITY_ONLY(AxisDependency.LEFT),
   GENERAL_PURPOSE_MEASUREMENT(AxisDependency.LEFT),

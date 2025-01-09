@@ -23,7 +23,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
-import org.supla.core.shared.data.model.function.thermostat.HeatpolThermostatValue
+import org.supla.core.shared.data.model.function.thermostat.HomePlusThermostatValue
 import org.supla.core.shared.data.model.function.thermostat.SuplaHeatpolThermostatFlag
 
 @RunWith(MockitoJUnitRunner::class)
@@ -36,7 +36,7 @@ class HeatpolThermostatValueTest {
     val bytes = byteArrayOf(1, 4, 120, 0, 80, 0)
 
     // when
-    val values = HeatpolThermostatValue.from(status, bytes)
+    val values = HomePlusThermostatValue.from(status, bytes)
 
     // then
     Assertions.assertThat(values.status).isEqualTo(status)
@@ -53,7 +53,7 @@ class HeatpolThermostatValueTest {
     val bytes = byteArrayOf(0, 0, 120, 0, 80)
 
     // when
-    val values = HeatpolThermostatValue.from(status, bytes)
+    val values = HomePlusThermostatValue.from(status, bytes)
 
     // then
     Assertions.assertThat(values.status).isEqualTo(status)

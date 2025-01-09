@@ -712,4 +712,6 @@
   <string name="channel_state_battery_powered">batterij</string>
   <string name="channel_state_main_powered">netstroom</string>
   <string name="cfg_temperature_precision">Temperatuurnauwkeurigheid</string>
+  <string name="temperature_measured">Gemeten</string>
+  <string name="temperature_preset">Vooraf ingesteld</string>
 </resources>

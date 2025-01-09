@@ -22,7 +22,7 @@ import org.supla.android.di.FORMATTER_THERMOMETER
 import org.supla.android.usecases.channel.ChannelValueStringProvider
 import org.supla.android.usecases.channel.ValueType
 import org.supla.android.usecases.channel.valueprovider.HeatpolThermostatValueProvider
-import org.supla.core.shared.data.model.function.thermostat.HeatpolThermostatValue
+import org.supla.core.shared.data.model.function.thermostat.HomePlusThermostatValue
 import org.supla.core.shared.extensions.guardLet
 import org.supla.core.shared.usecase.channel.valueformatter.NO_VALUE_TEXT
 import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
@@ -45,7 +45,7 @@ class HeatpolThermostatValueStringProvider @Inject constructor(
     valueType: ValueType,
     withUnit: Boolean
   ): String {
-    val (value) = guardLet(heatpolThermostatValueProvider.value(channelWithChildren, valueType) as HeatpolThermostatValue) {
+    val (value) = guardLet(heatpolThermostatValueProvider.value(channelWithChildren, valueType) as HomePlusThermostatValue) {
       return NO_VALUE_TEXT
     }
     return thermometerValueFormatter.format(value.measuredTemperature, withUnit(withUnit))

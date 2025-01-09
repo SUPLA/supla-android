@@ -33,7 +33,7 @@ import org.supla.core.shared.data.model.function.digiglass.DigiglassValue
 import org.supla.core.shared.data.model.function.facadeblind.FacadeBlindValue
 import org.supla.core.shared.data.model.function.relay.RelayValue
 import org.supla.core.shared.data.model.function.rollershutter.RollerShutterValue
-import org.supla.core.shared.data.model.function.thermostat.HeatpolThermostatValue
+import org.supla.core.shared.data.model.function.thermostat.HomePlusThermostatValue
 import org.supla.core.shared.data.model.function.thermostat.ThermostatValue
 import org.supla.core.shared.data.model.valve.ValveValue
 
@@ -82,7 +82,7 @@ data class ChannelValueEntity(
 
   fun asFacadeBlindValue() = FacadeBlindValue.from(status, getValueAsByteArray())
 
-  fun asHeatpolThermostatValue() = HeatpolThermostatValue.from(status, getValueAsByteArray())
+  fun asHeatpolThermostatValue() = HomePlusThermostatValue.from(status, getValueAsByteArray())
 
   fun asRelayValue() = RelayValue.from(status, getValueAsByteArray())
 

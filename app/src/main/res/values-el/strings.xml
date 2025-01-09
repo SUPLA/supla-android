@@ -708,4 +708,6 @@
   <string name="channel_state_battery_powered">μπαταρίας</string>
   <string name="channel_state_main_powered">ρεύματος</string>
   <string name="cfg_temperature_precision">Ακρίβεια θερμοκρασίας</string>
+  <string name="temperature_measured">Μετρημένος</string>
+  <string name="temperature_preset">Προκαθορισμένος</string>
 </resources>

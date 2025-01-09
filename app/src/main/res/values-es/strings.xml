@@ -699,4 +699,6 @@
   <string name="channel_state_battery_powered">a pilas</string>
   <string name="channel_state_main_powered">de red</string>
   <string name="cfg_temperature_precision">Precisión de temperatura</string>
+  <string name="temperature_measured">Medido</string>
+  <string name="temperature_preset">Preestablecido</string>
 </resources>
