@@ -160,7 +160,7 @@ public class ThermostatHP {
         };
 
     if (msgId != 0) {
-      context.getResources().getString(msgId);
+      return context.getResources().getString(msgId);
     }
 
     return "";

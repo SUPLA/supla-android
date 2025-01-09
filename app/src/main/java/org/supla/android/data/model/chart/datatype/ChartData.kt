@@ -29,6 +29,7 @@ import org.supla.android.extensions.guardLet
 import org.supla.android.extensions.ifLet
 import org.supla.android.extensions.toTimestamp
 import org.supla.android.usecases.channel.valueformatter.ChannelValueFormatter
+import kotlin.math.abs
 import kotlin.math.roundToInt
 
 const val CHART_TOP_MARGIN = 0.2f
@@ -164,11 +165,17 @@ abstract class ChartData(
       return if (max == min) {
         if (max == 0f) {
           2f
+        } else if (max > 0) {
+          max.plus(max.times(CHART_TOP_MARGIN))
         } else {
           max.minus(max.times(CHART_TOP_MARGIN))
         }
+      } else if (max == 0f) {
+        max.plus(max.minus(min).times(CHART_TOP_MARGIN))
+      } else if (max > 0) {
+        max.plus(max.plus(abs((min))).times(CHART_TOP_MARGIN))
       } else {
-        max.times(CHART_TOP_MARGIN.plus(1)).minus(min.times(CHART_TOP_MARGIN))
+        max.minus(max.minus(min).times(CHART_TOP_MARGIN))
       }
     }
 
