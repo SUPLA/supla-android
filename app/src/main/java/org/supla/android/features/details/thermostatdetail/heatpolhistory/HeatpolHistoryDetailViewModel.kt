@@ -1,4 +1,4 @@
-package org.supla.android.features.details.thermostatdetail.history
+package org.supla.android.features.details.thermostatdetail.heatpolhistory
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -18,7 +18,6 @@ package org.supla.android.features.details.thermostatdetail.history
  */
 
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.core.infrastructure.DateProvider
@@ -37,19 +36,19 @@ import org.supla.android.profile.ProfileManager
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.DeleteChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.DownloadChannelMeasurementsUseCase
-import org.supla.android.usecases.channel.LoadChannelWithChildrenMeasurementsDateRangeUseCase
-import org.supla.android.usecases.channel.LoadChannelWithChildrenMeasurementsUseCase
+import org.supla.android.usecases.channel.LoadChannelMeasurementsDataRangeUseCase
+import org.supla.android.usecases.channel.LoadChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
 import javax.inject.Inject
 
 @HiltViewModel
-class ThermostatHistoryDetailViewModel @Inject constructor(
+class HeatpolHistoryDetailViewModel @Inject constructor(
   private val downloadChannelMeasurementsUseCase: DownloadChannelMeasurementsUseCase,
-  private val loadChannelWithChildrenMeasurementsUseCase: LoadChannelWithChildrenMeasurementsUseCase,
-  private val loadChannelWithChildrenMeasurementsDateRangeUseCase: LoadChannelWithChildrenMeasurementsDateRangeUseCase,
+  private val loadChannelMeasurementsUseCase: LoadChannelMeasurementsUseCase,
+  private val loadChannelMeasurementsDataRangeUseCase: LoadChannelMeasurementsDataRangeUseCase,
   private val downloadEventsManager: DownloadEventsManager,
-  readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
   deleteChannelMeasurementsUseCase: DeleteChannelMeasurementsUseCase,
+  readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
   userStateHolder: UserStateHolder,
   profileManager: ProfileManager,
   schedulers: SuplaSchedulers,
@@ -67,25 +66,19 @@ class ThermostatHistoryDetailViewModel @Inject constructor(
     remoteId: Int,
     profileId: Long,
     spec: ChartDataSpec,
-    chartRange: ChartRange,
+    chartRange: ChartRange
   ): Single<Pair<ChartData, Optional<DateRange>>> =
     Single.zip(
-      loadChannelWithChildrenMeasurementsUseCase(remoteId, spec),
-      loadChannelWithChildrenMeasurementsDateRangeUseCase(remoteId, profileId)
-    ) { first, second -> Pair(LineChartData(DateRange(spec.startDate, spec.endDate), chartRange, spec.aggregation, first), second) }
+      loadChannelMeasurementsUseCase(remoteId, spec),
+      loadChannelMeasurementsDataRangeUseCase(remoteId, profileId)
+    ) { first, second -> Pair(LineChartData(DateRange(spec.startDate, spec.endDate), chartRange, spec.aggregation, listOf(first)), second) }
 
   override fun handleData(channelWithChildren: ChannelWithChildren, chartState: ChartState) {
-    updateState {
-      it.copy(profileId = channelWithChildren.channel.channelEntity.profileId, channelFunction = channelWithChildren.channel.function.value)
-    }
+    updateState { it.copy(profileId = channelWithChildren.profileId, channelFunction = channelWithChildren.function.value) }
 
-    if (channelWithChildren.children.none { it.channelRelationEntity.relationType.isThermometer() }) {
-      updateState { it.copy(loading = false) }
-    } else {
-      restoreRange(chartState)
-      configureDownloadObserver(channelWithChildren)
-      startInitialDataLoad(channelWithChildren)
-    }
+    restoreRange(chartState)
+    configureDownloadObserver(channelWithChildren.remoteId)
+    startInitialDataLoad(channelWithChildren)
   }
 
   private fun startInitialDataLoad(channel: ChannelWithChildren) {
@@ -94,41 +87,17 @@ class ThermostatHistoryDetailViewModel @Inject constructor(
       return
     }
     updateState { it.copy(initialLoadStarted = true) }
-
-    channel.children.firstOrNull { it.relationType.isMainThermometer() }?.let {
-      downloadChannelMeasurementsUseCase.invoke(it.withChildren)
-    }
-    channel.children.firstOrNull { it.relationType.isAuxThermometer() }?.let {
-      downloadChannelMeasurementsUseCase.invoke(it.withChildren)
-    }
+    downloadChannelMeasurementsUseCase.invoke(channel)
   }
 
-  private fun configureDownloadObserver(channel: ChannelWithChildren) {
+  private fun configureDownloadObserver(remoteId: Int) {
     if (currentState().downloadConfigured) {
       // Needs to be performed only once
       return
     }
     updateState { it.copy(downloadConfigured = true) }
 
-    val mainThermometerId = channel.children.firstOrNull { it.relationType.isMainThermometer() }?.channel?.remoteId
-    val auxThermometerId = channel.children.firstOrNull { it.relationType.isAuxThermometer() }?.channel?.remoteId
-
-    val observables = mutableListOf<Observable<DownloadEventsManager.State>>()
-    mainThermometerId?.let { observables.add(downloadEventsManager.observeProgress(it)) }
-    auxThermometerId?.let { observables.add(downloadEventsManager.observeProgress(it)) }
-
-    val observable = if (observables.count() == 2) {
-      Observable.combineLatest(observables[0], observables[1]) { first, second ->
-        Pair<DownloadEventsManager.State, DownloadEventsManager.State?>(first, second)
-      }
-    } else if (observables.count() == 1) {
-      observables[0].map { Pair<DownloadEventsManager.State, DownloadEventsManager.State?>(it, null) }
-    } else {
-      Observable.empty()
-    }
-
-    observable.attachSilent()
-      .map { mergeEvents(it.first, it.second) }
+    downloadEventsManager.observeProgress(remoteId).attachSilent()
       .distinctUntilChanged()
       .subscribeBy(
         onNext = { handleDownloadEvents(it) },

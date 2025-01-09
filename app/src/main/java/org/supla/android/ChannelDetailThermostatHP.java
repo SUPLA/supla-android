@@ -25,24 +25,16 @@ import android.graphics.Typeface;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
-import com.github.mikephil.charting.charts.CombinedChart;
 import dagger.hilt.android.AndroidEntryPoint;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.inject.Inject;
-import org.supla.android.charts.ThermostatChartHelper;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelGroup;
 import org.supla.android.lib.SuplaChannelThermostatValue;
@@ -52,14 +44,10 @@ import org.supla.android.lib.SuplaThermostatScheduleCfg;
 import org.supla.android.listview.DetailLayout;
 import org.supla.android.listview.ThermostatHPListViewCursorAdapter;
 import org.supla.android.profile.ProfileIdHolder;
-import org.supla.android.restapi.DownloadThermostatMeasurements;
-import org.supla.android.restapi.SuplaRestApiClientTask;
 
 @AndroidEntryPoint
 public class ChannelDetailThermostatHP extends DetailLayout
-    implements View.OnClickListener,
-        SuplaRestApiClientTask.IAsyncResults,
-        SuplaThermostatCalendar.OnCalendarTouchListener {
+    implements View.OnClickListener, SuplaThermostatCalendar.OnCalendarTouchListener {
 
   public static final int BTN_SET_OFF_UNKNOWN = -1;
   public static final int BTN_SET_OFF = 0;
@@ -83,20 +71,15 @@ public class ChannelDetailThermostatHP extends DetailLayout
   private Double presetTemperatureMax = null;
   private Double measuredTemperatureMin = 0.00;
   private Double measuredTemperatureMax = null;
-  private DownloadThermostatMeasurements dtm;
-  private ThermostatChartHelper chartHelper;
   private RelativeLayout rlMain;
   private RelativeLayout rlSettings;
   private RelativeLayout rlSchedule;
-  private ProgressBar progressBar;
   private List<CfgItem> cfgItems;
   private Timer delayTimer1;
   private Timer refreshTimer1;
   private Handler uiHandler;
-  private LinearLayout llChart;
   private ListView lvChannelList;
   private TextView tvErrorMessage;
-  private Spinner icSpinnerSlave;
 
   @Inject ProfileIdHolder profileIdHolder;
 
@@ -136,9 +119,6 @@ public class ChannelDetailThermostatHP extends DetailLayout
     mCalendar.setOnCalendarTouchListener(this);
     mCalendar.setFirtsDay(2);
 
-    progressBar = findViewById(R.id.hpProgressBar);
-    progressBar.setVisibility(INVISIBLE);
-
     tvTemperature = findViewById(R.id.hpTvTemperature);
 
     Typeface tfOpenSansRegular = SuplaApp.getApp().getTypefaceOpenSansRegular();
@@ -176,22 +156,6 @@ public class ChannelDetailThermostatHP extends DetailLayout
 
     btnMinus = findViewById(R.id.hpBtnMinus);
     btnMinus.setOnClickListener(this);
-
-    chartHelper = new ThermostatChartHelper(getContext());
-    CombinedChart chart = findViewById(R.id.hpCombinedChart);
-    chartHelper.setCombinedChart(chart);
-
-    ArrayAdapter<String> adapter =
-        new ArrayAdapter<>(
-            this.getContext(),
-            android.R.layout.simple_spinner_item,
-            chartHelper.getSlaveSpinnerItems(null));
-
-    icSpinnerSlave = findViewById(R.id.icSpinnerSlave);
-    icSpinnerSlave.setAdapter(adapter);
-    icSpinnerSlave.setOnItemSelectedListener(dateRangeSelectedListener(chart));
-
-    llChart = findViewById(R.id.hpllChart);
 
     tvErrorMessage = findViewById(R.id.hpTvErrorMessage);
     tvErrorMessage.setVisibility(GONE);
@@ -325,12 +289,10 @@ public class ChannelDetailThermostatHP extends DetailLayout
     if (isGroup()) {
       btnSchedule.setVisibility(GONE);
       btnSettings.setVisibility(GONE);
-      llChart.setVisibility(GONE);
       lvChannelList.setVisibility(VISIBLE);
     } else {
       btnSchedule.setVisibility(VISIBLE);
       btnSchedule.setVisibility(VISIBLE);
-      llChart.setVisibility(VISIBLE);
       lvChannelList.setVisibility(GONE);
     }
 
@@ -341,13 +303,12 @@ public class ChannelDetailThermostatHP extends DetailLayout
 
   private void updateCalendarComfortLabel(CfgItem item) {
     Resources res = getResources();
-    mCalendar.setProgram1Label(
-        res.getText(R.string.hp_calendar_comfort) + " " + item.value + "\u00B0");
+    mCalendar.setProgram1Label(res.getText(R.string.hp_calendar_comfort) + " " + item.value + "°");
   }
 
   private void updateCalendarECOLabel(CfgItem item) {
     Resources res = getResources();
-    mCalendar.setProgram0Label(res.getText(R.string.hp_calendar_eco) + " " + item.value + "\u00B0");
+    mCalendar.setProgram0Label(res.getText(R.string.hp_calendar_eco) + " " + item.value + "°");
   }
 
   public void setCfgValue(int id, int value) {
@@ -476,22 +437,6 @@ public class ChannelDetailThermostatHP extends DetailLayout
     }
   }
 
-  private void runDownloadTask() {
-    if (dtm != null && !dtm.isAlive(90)) {
-      dtm.cancel(true);
-      dtm = null;
-    }
-
-    if (dtm == null) {
-      dtm =
-          new DownloadThermostatMeasurements(
-              this.getContext(), profileIdHolder.getProfileId().intValue());
-      dtm.setChannelId(getRemoteId());
-      dtm.setDelegate(this);
-      dtm.execute();
-    }
-  }
-
   @Override
   public void onDetailShow() {
     super.onDetailShow();
@@ -516,12 +461,6 @@ public class ChannelDetailThermostatHP extends DetailLayout
     setMainViewVisible();
 
     OnChannelDataChanged();
-
-    if (!isGroup()) {
-      chartHelper.load(getRemoteId());
-
-      runDownloadTask();
-    }
   }
 
   @Override
@@ -683,25 +622,6 @@ public class ChannelDetailThermostatHP extends DetailLayout
     data[3 + idx * 2] = (byte) ((t & 0xFF00) >> 8);
 
     deviceCalCfgRequest(SuplaConst.SUPLA_THERMOSTAT_CMD_SET_TEMPERATURE, 0, data);
-  }
-
-  @Override
-  public void onRestApiTaskStarted(SuplaRestApiClientTask task) {
-    progressBar.setVisibility(VISIBLE);
-    chartHelper.setDownloadProgress(0d);
-  }
-
-  @Override
-  public void onRestApiTaskFinished(SuplaRestApiClientTask task) {
-    dtm = null;
-    progressBar.setVisibility(INVISIBLE);
-    chartHelper.setDownloadProgress(null);
-    chartHelper.load(getRemoteId());
-  }
-
-  @Override
-  public void onRestApiTaskProgressUpdate(SuplaRestApiClientTask task, Double progress) {
-    chartHelper.setDownloadProgress(progress);
   }
 
   private void cancelDelayTimer1() {
@@ -920,29 +840,5 @@ public class ChannelDetailThermostatHP extends DetailLayout
       this.value = value;
       displayValue();
     }
-  }
-
-  private OnItemSelectedListener dateRangeSelectedListener(CombinedChart chart) {
-    return new OnItemSelectedListener() {
-      @Override
-      public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        chartHelper.setDateRangeBySpinners(null, icSpinnerSlave);
-        chartHelper.load(getRemoteId(), 0);
-
-        new Handler()
-            .postDelayed(
-                () -> {
-                  if (icSpinnerSlave.getSelectedItemPosition() == 4) {
-                    chartHelper.moveToEnd();
-                  } else if (chart != null) {
-                    chart.fitScreen();
-                  }
-                },
-                100);
-      }
-
-      @Override
-      public void onNothingSelected(AdapterView<?> adapterView) {}
-    };
   }
 }

@@ -1,4 +1,5 @@
-package org.supla.android.db.room.measurements.migrations/*
+package org.supla.android.db.room.measurements.migrations
+/*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
  This program is free software; you can redistribute it and/or
@@ -18,16 +19,15 @@ package org.supla.android.db.room.measurements.migrations/*
 
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import org.supla.android.data.source.local.entity.measurements.GeneralPurposeMeterEntity
 import org.supla.android.db.room.SqlExecutor
 import org.supla.android.db.room.measurements.MeasurementsDatabase
 
-val MEASUREMENTS_DB_MIGRATION_32_33: Migration = object : Migration(32, 33), SqlExecutor {
+val MEASUREMENTS_DB_MIGRATION_35_36: Migration = object : Migration(35, 36), SqlExecutor {
 
   override fun getDatabaseNameForLog(): String = MeasurementsDatabase.NAME
 
   override fun migrate(db: SupportSQLiteDatabase) {
-    execSQL(db, "DROP TABLE ${GeneralPurposeMeterEntity.TABLE_NAME}")
-    execSQL(db, GeneralPurposeMeterEntity.SQL)
+    execSQL(db, "DROP VIEW IF EXISTS ic_log_v1")
+    execSQL(db, "DROP VIEW IF EXISTS em_log_v1")
   }
 }

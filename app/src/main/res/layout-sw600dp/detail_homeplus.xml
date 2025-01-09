@@ -468,41 +468,6 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
         android:layout_marginTop="10dp" />
-
-      <LinearLayout
-        android:id="@+id/hpllChart"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/hpButtons"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginTop="5dp"
-        android:orientation="vertical">
-
-        <Spinner
-          android:id="@+id/icSpinnerSlave"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_marginBottom="5dp" />
-
-        <ProgressBar
-          android:id="@+id/hpProgressBar"
-          style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-          android:layout_width="match_parent"
-          android:layout_height="10dp"
-          android:layout_marginBottom="10dp"
-          android:indeterminateOnly="true"
-          android:scaleY="1"
-          android:secondaryProgressTint="@color/background" />
-
-        <com.github.mikephil.charting.charts.CombinedChart
-          android:id="@+id/hpCombinedChart"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:visibility="visible" />
-
-      </LinearLayout>
-
     </RelativeLayout>
   </RelativeLayout>
 

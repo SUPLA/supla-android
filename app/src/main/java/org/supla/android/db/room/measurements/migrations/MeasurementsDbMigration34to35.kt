@@ -25,8 +25,8 @@ import org.supla.android.data.source.local.entity.measurements.HumidityLogEntity
 import org.supla.android.data.source.local.entity.measurements.HumidityLogEntity.Companion.COLUMN_ID
 import org.supla.android.data.source.local.entity.measurements.HumidityLogEntity.Companion.COLUMN_PROFILE_ID
 import org.supla.android.data.source.local.entity.measurements.HumidityLogEntity.Companion.TABLE_NAME
-import org.supla.android.db.MeasurementsDbHelper
 import org.supla.android.db.room.SqlExecutor
+import org.supla.android.db.room.measurements.MeasurementsDatabase
 
 val MEASUREMENTS_DB_MIGRATION_34_35: Migration = object : Migration(34, 35), SqlExecutor {
 
@@ -49,7 +49,7 @@ val MEASUREMENTS_DB_MIGRATION_34_35: Migration = object : Migration(34, 35), Sql
     """.trimIndent()
   )
 
-  override fun getDatabaseNameForLog(): String = MeasurementsDbHelper.DATABASE_NAME
+  override fun getDatabaseNameForLog(): String = MeasurementsDatabase.NAME
 
   override fun migrate(db: SupportSQLiteDatabase) {
     execSQL(db, CREATE_HUMIDITY_LOG_TABLE_SQLS)
