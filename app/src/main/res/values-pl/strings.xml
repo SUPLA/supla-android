@@ -809,6 +809,8 @@
   <string name="channel_state_battery_powered">bateryjne</string>
   <string name="channel_state_main_powered">sieciowe</string>
   <string name="cfg_temperature_precision">Precyzja temperatury</string>
+  <string name="temperature_measured">Zmierzona</string>
+  <string name="temperature_preset">Ustawiona</string>
 
   <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
     <item quantity="one">włączone</item>

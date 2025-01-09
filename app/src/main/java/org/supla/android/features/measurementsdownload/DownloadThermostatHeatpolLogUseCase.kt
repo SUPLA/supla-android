@@ -1,4 +1,4 @@
-package org.supla.android.usecases.details
+package org.supla.android.features.measurementsdownload
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,19 +17,15 @@ package org.supla.android.usecases.details
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.data.model.general.ChannelDataBase
-import org.supla.android.features.details.detailbase.standarddetail.DetailPage
-import org.supla.core.shared.data.model.general.SuplaFunction
+import org.supla.android.data.source.HomePlusThermostatLogRepository
+import org.supla.android.data.source.local.entity.measurements.HomePlusThermostatLogEntity
+import org.supla.android.data.source.remote.rest.SuplaCloudService
+import org.supla.android.data.source.remote.rest.channel.ThermostatMeasurement
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ProvideGroupDetailTypeUseCase @Inject constructor() : BaseDetailTypeProviderUseCase() {
-
-  operator fun invoke(channelDataBase: ChannelDataBase): DetailType? =
-    when (channelDataBase.function) {
-      SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS ->
-        ThermostatDetailType(listOf(DetailPage.THERMOSTAT_HEATPOL_GENERAL))
-      else -> provide(channelDataBase.function)
-    }
-}
+class DownloadThermostatHeatpolLogUseCase @Inject constructor(
+  homePlusThermostatLogRepository: HomePlusThermostatLogRepository,
+  suplaCloudServiceProvider: SuplaCloudService.Provider
+) : BaseDownloadLogUseCase<ThermostatMeasurement, HomePlusThermostatLogEntity>(suplaCloudServiceProvider, homePlusThermostatLogRepository)

@@ -30,14 +30,14 @@ import org.supla.android.data.source.local.entity.measurements.PowerActiveHistor
 import org.supla.android.data.source.local.entity.measurements.TemperatureAndHumidityLogEntity
 import org.supla.android.data.source.local.entity.measurements.TemperatureLogEntity
 import org.supla.android.data.source.local.entity.measurements.VoltageHistoryLogEntity
-import org.supla.android.db.MeasurementsDbHelper
 import org.supla.android.db.room.SqlExecutor
+import org.supla.android.db.room.measurements.MeasurementsDatabase
 import javax.inject.Singleton
 
 @Singleton
 object MeasurementsDbMigration36to37 : Migration(36, 37), SqlExecutor {
 
-  override fun getDatabaseNameForLog(): String = MeasurementsDbHelper.DATABASE_NAME
+  override fun getDatabaseNameForLog(): String = MeasurementsDatabase.NAME
 
   private val tables: List<Pair<String, String>> = listOf(
     Pair(CurrentHistoryLogEntity.TABLE_NAME, CurrentHistoryLogEntity.COLUMN_GROUPING_STRING),

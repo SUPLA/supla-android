@@ -711,4 +711,6 @@
   <string name="channel_state_battery_powered">batteri</string>
   <string name="channel_state_main_powered">nettstrøm</string>
   <string name="cfg_temperature_precision">Temperaturpresisjon</string>
+  <string name="temperature_measured">Målt</string>
+  <string name="temperature_preset">Forhåndsinnstilt</string>
 </resources>

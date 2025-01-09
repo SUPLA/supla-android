@@ -53,7 +53,6 @@ import org.supla.android.usecases.channel.ActionException
 import org.supla.android.usecases.channel.ButtonType
 import org.supla.android.usecases.channel.ChannelActionUseCase
 import org.supla.android.usecases.channel.CreateProfileChannelsListUseCase
-import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
 import org.supla.android.usecases.details.ContainerDetailType
@@ -77,7 +76,6 @@ class ChannelListViewModel @Inject constructor(
   private val createProfileChannelsListUseCase: CreateProfileChannelsListUseCase,
   private val provideChannelDetailTypeUseCase: ProvideChannelDetailTypeUseCase,
   private val readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
-  private val findChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
   private val executeSimpleActionUseCase: ExecuteSimpleActionUseCase,
   private val toggleLocationUseCase: ToggleLocationUseCase,
   private val channelActionUseCase: ChannelActionUseCase,

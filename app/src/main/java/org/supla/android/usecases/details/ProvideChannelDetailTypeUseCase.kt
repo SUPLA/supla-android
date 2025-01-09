@@ -33,25 +33,29 @@ import javax.inject.Singleton
 @Singleton
 class ProvideChannelDetailTypeUseCase @Inject constructor() : BaseDetailTypeProviderUseCase() {
 
-  operator fun invoke(channelWithChildren: ChannelWithChildren): DetailType? = when (val function = channelWithChildren.channel.function) {
-    SuplaFunction.LIGHTSWITCH,
-    SuplaFunction.POWER_SWITCH,
-    SuplaFunction.STAIRCASE_TIMER,
-    SuplaFunction.PUMP_SWITCH,
-    SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH -> SwitchDetailType(getSwitchDetailPages(channelWithChildren))
+  operator fun invoke(channelWithChildren: ChannelWithChildren): DetailType? =
+    when (val function = channelWithChildren.channel.function) {
+      SuplaFunction.LIGHTSWITCH,
+      SuplaFunction.POWER_SWITCH,
+      SuplaFunction.STAIRCASE_TIMER,
+      SuplaFunction.PUMP_SWITCH,
+      SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH -> SwitchDetailType(getSwitchDetailPages(channelWithChildren))
 
-    SuplaFunction.HVAC_THERMOSTAT -> ThermostatDetailType(getThermostatDetailPages(channelWithChildren))
+      SuplaFunction.HVAC_THERMOSTAT -> ThermostatDetailType(getThermostatDetailPages(channelWithChildren))
 
-    SuplaFunction.IC_ELECTRICITY_METER,
-    SuplaFunction.IC_GAS_METER,
-    SuplaFunction.IC_HEAT_METER,
-    SuplaFunction.IC_WATER_METER -> IcDetailType(getImpulseCounterPages(channelWithChildren))
+      SuplaFunction.IC_ELECTRICITY_METER,
+      SuplaFunction.IC_GAS_METER,
+      SuplaFunction.IC_HEAT_METER,
+      SuplaFunction.IC_WATER_METER -> IcDetailType(getImpulseCounterPages(channelWithChildren))
 
-    SuplaFunction.VALVE_OPEN_CLOSE,
-    SuplaFunction.VALVE_PERCENTAGE -> ValveDetailType(listOf(DetailPage.VALVE_GENERAL))
+      SuplaFunction.VALVE_OPEN_CLOSE,
+      SuplaFunction.VALVE_PERCENTAGE -> ValveDetailType(listOf(DetailPage.VALVE_GENERAL))
 
-    else -> provide(function)
-  }
+      SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS ->
+        ThermostatDetailType(listOf(DetailPage.THERMOSTAT_HEATPOL_GENERAL, DetailPage.THERMOSTAT_HEATPOL_HISTORY))
+
+      else -> provide(function)
+    }
 
   private fun getImpulseCounterPages(channelWithChildren: ChannelWithChildren): List<DetailPage> =
     if (SuplaChannelFlag.OCR inside channelWithChildren.flags) {

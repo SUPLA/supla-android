@@ -685,4 +685,6 @@
   <string name="channel_state_battery_powered">від батареї</string>
   <string name="channel_state_main_powered">від мережі</string>
   <string name="cfg_temperature_precision">Точність температури</string>
+  <string name="temperature_measured">Виміряна</string>
+  <string name="temperature_preset">Заданий</string>
 </resources>

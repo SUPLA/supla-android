@@ -701,4 +701,6 @@
   <string name="channel_state_battery_powered">a bateria</string>
   <string name="channel_state_main_powered">de rede</string>
   <string name="cfg_temperature_precision">Precisão da temperatura</string>
+  <string name="temperature_measured">Medido</string>
+  <string name="temperature_preset">Predefinido</string>
 </resources>

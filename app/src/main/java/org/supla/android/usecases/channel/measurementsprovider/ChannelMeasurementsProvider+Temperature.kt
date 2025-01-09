@@ -25,28 +25,29 @@ import org.supla.android.extensions.toTimestamp
 
 fun <T : BaseTemperatureEntity> ChannelMeasurementsProvider.aggregatingTemperature(
   measurements: List<T>,
-  aggregation: ChartDataAggregation
+  aggregation: ChartDataAggregation,
+  extractor: (T?) -> Float? = { it?.temperature }
 ): List<AggregatedEntity> {
   if (aggregation == ChartDataAggregation.MINUTES) {
     return measurements
-      .filter { it.temperature != null }
-      .map { AggregatedEntity(it.date.toTimestamp(), AggregatedValue.Single(it.temperature!!)) }
+      .filter { extractor(it) != null }
+      .map { AggregatedEntity(it.date.toTimestamp(), AggregatedValue.Single(extractor(it)!!)) }
   }
 
   return measurements
     .asSequence()
-    .filter { it.temperature != null }
+    .filter { extractor(it) != null }
     .groupBy { item -> aggregation.aggregator(item) }
     .filter { group -> group.value.isNotEmpty() }
     .map { group ->
       AggregatedEntity(
         date = aggregation.groupTimeProvider(group.value.firstOrNull()!!.date),
         value = AggregatedValue.Single(
-          value = group.value.map { it.temperature!! }.average().toFloat(),
-          min = group.value.minOf { it.temperature!! },
-          max = group.value.maxOf { it.temperature!! },
-          open = group.value.firstOrNull()?.temperature,
-          close = group.value.lastOrNull()?.temperature
+          value = group.value.map { extractor(it)!! }.average().toFloat(),
+          min = group.value.minOf { extractor(it)!! },
+          max = group.value.maxOf { extractor(it)!! },
+          open = extractor(group.value.firstOrNull()),
+          close = extractor(group.value.lastOrNull())
         )
       )
     }

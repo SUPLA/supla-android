@@ -712,4 +712,6 @@
   <string name="channel_state_battery_powered">baterijsko</string>
   <string name="channel_state_main_powered">omrežno</string>
   <string name="cfg_temperature_precision">Natančnost temperature</string>
+  <string name="temperature_measured">Izmerjena</string>
+  <string name="temperature_preset">Prednastavljeno</string>
 </resources>

@@ -24,15 +24,15 @@ import org.supla.android.data.source.local.entity.measurements.HomePlusThermosta
 import org.supla.android.data.source.local.entity.measurements.ImpulseCounterLogEntity
 import org.supla.android.data.source.local.entity.measurements.TemperatureAndHumidityLogEntity
 import org.supla.android.data.source.local.entity.measurements.TemperatureLogEntity
-import org.supla.android.db.MeasurementsDbHelper
 import org.supla.android.db.room.SqlExecutor
+import org.supla.android.db.room.measurements.MeasurementsDatabase
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class MeasurementsDbMigration29to30 @Inject constructor() : Migration(29, 30), SqlExecutor {
 
-  override fun getDatabaseNameForLog(): String = MeasurementsDbHelper.DATABASE_NAME
+  override fun getDatabaseNameForLog(): String = MeasurementsDatabase.NAME
 
   override fun migrate(db: SupportSQLiteDatabase) {
     execSQL(db, "DROP VIEW IF EXISTS ic_log_v1")

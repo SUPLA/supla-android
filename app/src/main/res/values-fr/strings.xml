@@ -699,4 +699,6 @@
   <string name="channel_state_battery_powered">par pile</string>
   <string name="channel_state_main_powered">sur secteur</string>
   <string name="cfg_temperature_precision">Précision de la température</string>
+  <string name="temperature_measured">Mesuré</string>
+  <string name="temperature_preset">Préréglé</string>
 </resources>

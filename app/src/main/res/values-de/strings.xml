@@ -800,4 +800,6 @@
   <string name="channel_state_battery_powered">Batterie</string>
   <string name="channel_state_main_powered">Netz</string>
   <string name="cfg_temperature_precision">Temperaturpräzision</string>
+  <string name="temperature_measured">Gemessen</string>
+  <string name="temperature_preset">Voreingestellt</string>
 </resources>

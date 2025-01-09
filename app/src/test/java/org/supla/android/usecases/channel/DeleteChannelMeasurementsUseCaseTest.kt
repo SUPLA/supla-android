@@ -34,6 +34,7 @@ import org.supla.android.data.source.CurrentLogRepository
 import org.supla.android.data.source.ElectricityMeterLogRepository
 import org.supla.android.data.source.GeneralPurposeMeasurementLogRepository
 import org.supla.android.data.source.GeneralPurposeMeterLogRepository
+import org.supla.android.data.source.HomePlusThermostatLogRepository
 import org.supla.android.data.source.HumidityLogRepository
 import org.supla.android.data.source.ImpulseCounterLogRepository
 import org.supla.android.data.source.PowerActiveLogRepository
@@ -81,6 +82,9 @@ class DeleteChannelMeasurementsUseCaseTest {
 
   @Mock
   private lateinit var powerActiveLogRepository: PowerActiveLogRepository
+
+  @Mock
+  private lateinit var homePlusThermostatLogRepository: HomePlusThermostatLogRepository
 
   @InjectMocks
   private lateinit var useCase: DeleteChannelMeasurementsUseCase

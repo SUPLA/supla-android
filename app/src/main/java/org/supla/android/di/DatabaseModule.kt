@@ -30,7 +30,6 @@ import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.SceneRepository
 import org.supla.android.data.source.local.LocalProfileRepository
 import org.supla.android.db.DbHelper
-import org.supla.android.db.MeasurementsDbHelper
 import org.supla.android.db.room.EmptyMigration
 import org.supla.android.db.room.app.AppDatabase
 import org.supla.android.db.room.app.AppDatabaseCallback
@@ -187,7 +186,7 @@ class DatabaseModule {
     @ApplicationContext context: Context,
     migration29to30: MeasurementsDbMigration29to30
   ) =
-    Room.databaseBuilder(context, MeasurementsDatabase::class.java, MeasurementsDbHelper.DATABASE_NAME)
+    Room.databaseBuilder(context, MeasurementsDatabase::class.java, MeasurementsDatabase.NAME)
       .let {
         if (!BuildConfig.DEBUG) {
           // Destructive migration should be activated only in production. For development we need to know about all migration failures
@@ -265,7 +264,7 @@ class DatabaseModule {
 
   @Provides
   @Singleton
-  fun homePlusThermostatLogDao(measurementsDatabase: MeasurementsDatabase) =
+  fun thermostatHeatpolLogDao(measurementsDatabase: MeasurementsDatabase) =
     measurementsDatabase.homePlusThermostatLogDao()
 
   @Provides

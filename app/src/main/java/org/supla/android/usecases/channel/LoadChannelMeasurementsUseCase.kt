@@ -28,6 +28,7 @@ import org.supla.android.usecases.channel.measurementsprovider.HumidityMeasureme
 import org.supla.android.usecases.channel.measurementsprovider.ImpulseCounterMeasurementsProvider
 import org.supla.android.usecases.channel.measurementsprovider.TemperatureAndHumidityMeasurementsProvider
 import org.supla.android.usecases.channel.measurementsprovider.TemperatureMeasurementsProvider
+import org.supla.android.usecases.channel.measurementsprovider.ThermostatHeatpolMeasurementsProvider
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -40,7 +41,8 @@ class LoadChannelMeasurementsUseCase @Inject constructor(
   generalPurposeMeterMeasurementsProvider: GeneralPurposeMeterMeasurementsProvider,
   electricityMeterMeasurementsProvider: ElectricityMeterMeasurementsProvider,
   humidityMeasurementsProvider: HumidityMeasurementsProvider,
-  impulseCounterMeasurementsProvider: ImpulseCounterMeasurementsProvider
+  impulseCounterMeasurementsProvider: ImpulseCounterMeasurementsProvider,
+  thermostatHeatpolMeasurementsProvider: ThermostatHeatpolMeasurementsProvider
 ) {
 
   private val providers: List<ChannelMeasurementsProvider> = listOf(
@@ -50,7 +52,8 @@ class LoadChannelMeasurementsUseCase @Inject constructor(
     generalPurposeMeterMeasurementsProvider,
     electricityMeterMeasurementsProvider,
     humidityMeasurementsProvider,
-    impulseCounterMeasurementsProvider
+    impulseCounterMeasurementsProvider,
+    thermostatHeatpolMeasurementsProvider
   )
 
   operator fun invoke(remoteId: Int, spec: ChartDataSpec): Single<ChannelChartSets> =
