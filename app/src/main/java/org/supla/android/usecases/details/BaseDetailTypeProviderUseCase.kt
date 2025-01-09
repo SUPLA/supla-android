@@ -74,9 +74,6 @@ abstract class BaseDetailTypeProviderUseCase {
 
     SuplaFunction.HUMIDITY -> HumidityDetailType(listOf(DetailPage.HUMIDITY_HISTORY))
 
-    SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS ->
-      LegacyDetailType.THERMOSTAT_HP
-
     SuplaFunction.HVAC_THERMOSTAT,
 //    Temporarily commented out, because is not supported yet.
 //    SuplaConst.SuplaChannelFunction.HVAC_THERMOSTAT_AUTO,
@@ -133,6 +130,7 @@ abstract class BaseDetailTypeProviderUseCase {
     SuplaFunction.WEATHER_STATION,
     SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL,
     SuplaFunction.VALVE_OPEN_CLOSE,
-    SuplaFunction.VALVE_PERCENTAGE -> null
+    SuplaFunction.VALVE_PERCENTAGE,
+    SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS -> null
   }
 }

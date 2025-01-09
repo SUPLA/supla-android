@@ -37,6 +37,7 @@ import org.supla.android.usecases.channel.stringvalueprovider.DepthSensorValueSt
 import org.supla.android.usecases.channel.stringvalueprovider.DistanceSensorValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.ElectricityMeterValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.GpmValueStringProvider
+import org.supla.android.usecases.channel.stringvalueprovider.HeatpolThermostatValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.HumidityAndTemperatureValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.HumidityValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.ImpulseCounterValueStringProvider
@@ -88,6 +89,9 @@ class GetChannelValueStringUseCaseTest {
 
   @Mock
   private lateinit var weightSensorValueStringProvider: WeightSensorValueStringProvider
+
+  @Mock
+  private lateinit var heatpolThermostatValueStringProvider: HeatpolThermostatValueStringProvider
 
   @InjectMocks
   private lateinit var useCase: GetChannelValueStringUseCase

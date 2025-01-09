@@ -39,13 +39,13 @@ import org.supla.android.data.source.local.entity.measurements.GeneralPurposeMet
 import org.supla.android.data.source.local.entity.measurements.ImpulseCounterLogEntity
 import org.supla.android.data.source.local.entity.measurements.ImpulseCounterLogEntity.Companion.COLUMN_CALCULATED_VALUE
 import org.supla.android.data.source.local.entity.measurements.ImpulseCounterLogEntity.Companion.COLUMN_COUNTER
-import org.supla.android.db.MeasurementsDbHelper
 import org.supla.android.db.room.SqlExecutor
+import org.supla.android.db.room.measurements.MeasurementsDatabase
 import org.supla.android.extensions.TAG
 
 val MEASUREMENTS_DB_MIGRATION_31_32: Migration = object : Migration(31, 32), SqlExecutor {
 
-  override fun getDatabaseNameForLog(): String = MeasurementsDbHelper.DATABASE_NAME
+  override fun getDatabaseNameForLog(): String = MeasurementsDatabase.NAME
 
   override fun migrate(db: SupportSQLiteDatabase) {
     execSQL(db, GeneralPurposeMeterEntity.SQL)

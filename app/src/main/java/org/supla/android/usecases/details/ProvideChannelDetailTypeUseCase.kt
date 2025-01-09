@@ -33,17 +33,21 @@ import javax.inject.Singleton
 @Singleton
 class ProvideChannelDetailTypeUseCase @Inject constructor() : BaseDetailTypeProviderUseCase() {
 
-  operator fun invoke(channelWithChildren: ChannelWithChildren): DetailType? = when (val function = channelWithChildren.channel.function) {
-    SuplaFunction.LIGHTSWITCH,
-    SuplaFunction.POWER_SWITCH,
-    SuplaFunction.STAIRCASE_TIMER,
-    SuplaFunction.PUMP_SWITCH,
-    SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH -> SwitchDetailType(getSwitchDetailPages(channelWithChildren))
+  operator fun invoke(channelWithChildren: ChannelWithChildren): DetailType? =
+    when (val function = channelWithChildren.channel.function) {
+      SuplaFunction.LIGHTSWITCH,
+      SuplaFunction.POWER_SWITCH,
+      SuplaFunction.STAIRCASE_TIMER,
+      SuplaFunction.PUMP_SWITCH,
+      SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH -> SwitchDetailType(getSwitchDetailPages(channelWithChildren))
 
-    SuplaFunction.HVAC_THERMOSTAT -> ThermostatDetailType(getThermostatDetailPages(channelWithChildren))
+      SuplaFunction.HVAC_THERMOSTAT -> ThermostatDetailType(getThermostatDetailPages(channelWithChildren))
 
-    else -> provide(function)
-  }
+      SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS ->
+        ThermostatDetailType(listOf(DetailPage.THERMOSTAT_HEATPOL_GENERAL, DetailPage.THERMOSTAT_HEATPOL_HISTORY))
+
+      else -> provide(function)
+    }
 
   private fun getSwitchDetailPages(channelWithChildren: ChannelWithChildren): List<DetailPage> {
     val list = mutableListOf(DetailPage.SWITCH)

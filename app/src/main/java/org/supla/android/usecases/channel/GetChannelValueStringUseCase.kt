@@ -26,6 +26,7 @@ import org.supla.android.usecases.channel.stringvalueprovider.DepthSensorValueSt
 import org.supla.android.usecases.channel.stringvalueprovider.DistanceSensorValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.ElectricityMeterValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.GpmValueStringProvider
+import org.supla.android.usecases.channel.stringvalueprovider.HeatpolThermostatValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.HumidityAndTemperatureValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.HumidityValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.ImpulseCounterValueStringProvider
@@ -53,7 +54,8 @@ class GetChannelValueStringUseCase @Inject constructor(
   rainSensorValueStringProvider: RainSensorValueStringProvider,
   humidityValueStringProvider: HumidityValueStringProvider,
   containerValueStringProvider: ContainerValueStringProvider,
-  weightSensorValueStringProvider: WeightSensorValueStringProvider
+  weightSensorValueStringProvider: WeightSensorValueStringProvider,
+  heatpolThermostatValueStringProvider: HeatpolThermostatValueStringProvider
 ) {
 
   private val providers = listOf(
@@ -70,6 +72,7 @@ class GetChannelValueStringUseCase @Inject constructor(
     humidityValueStringProvider,
     containerValueStringProvider,
     weightSensorValueStringProvider,
+    heatpolThermostatValueStringProvider,
     NoValueStringProvider(SuplaFunction.STAIRCASE_TIMER),
     NoValueStringProvider(SuplaFunction.POWER_SWITCH),
     NoValueStringProvider(SuplaFunction.LIGHTSWITCH),

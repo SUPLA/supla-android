@@ -27,17 +27,17 @@ import org.supla.android.data.source.local.dao.measurements.HumidityLogDao
 import org.supla.android.data.source.local.dao.measurements.ImpulseCounterLogDao
 import org.supla.android.data.source.local.dao.measurements.TemperatureAndHumidityLogDao
 import org.supla.android.data.source.local.dao.measurements.TemperatureLogDao
+import org.supla.android.data.source.local.dao.measurements.ThermostatHeatpolLogDao
 import org.supla.android.data.source.local.entity.measurements.CurrentHistoryLogEntity
 import org.supla.android.data.source.local.entity.measurements.ElectricityMeterLogEntity
 import org.supla.android.data.source.local.entity.measurements.GeneralPurposeMeasurementEntity
 import org.supla.android.data.source.local.entity.measurements.GeneralPurposeMeterEntity
-import org.supla.android.data.source.local.entity.measurements.HomePlusThermostatLogEntity
 import org.supla.android.data.source.local.entity.measurements.HumidityLogEntity
 import org.supla.android.data.source.local.entity.measurements.ImpulseCounterLogEntity
 import org.supla.android.data.source.local.entity.measurements.TemperatureAndHumidityLogEntity
 import org.supla.android.data.source.local.entity.measurements.TemperatureLogEntity
+import org.supla.android.data.source.local.entity.measurements.ThermostatHeatpolLogEntity
 import org.supla.android.data.source.local.entity.measurements.VoltageHistoryLogEntity
-import org.supla.android.db.MeasurementsDbHelper
 
 @Database(
   entities = [
@@ -47,12 +47,12 @@ import org.supla.android.db.MeasurementsDbHelper
     GeneralPurposeMeterEntity::class,
     ElectricityMeterLogEntity::class,
     ImpulseCounterLogEntity::class,
-    HomePlusThermostatLogEntity::class,
+    ThermostatHeatpolLogEntity::class,
     VoltageHistoryLogEntity::class,
     CurrentHistoryLogEntity::class,
     HumidityLogEntity::class
   ],
-  version = MeasurementsDbHelper.DATABASE_VERSION,
+  version = 36,
   exportSchema = false,
 )
 @TypeConverters(MeasurementsDatabaseConverters::class)
@@ -70,4 +70,10 @@ abstract class MeasurementsDatabase : RoomDatabase() {
   abstract fun humidityLogDao(): HumidityLogDao
 
   abstract fun impulseCounterLogDao(): ImpulseCounterLogDao
+
+  abstract fun thermostatHeatpolLogDao(): ThermostatHeatpolLogDao
+
+  companion object {
+    const val NAME = "supla_measurements.db"
+  }
 }

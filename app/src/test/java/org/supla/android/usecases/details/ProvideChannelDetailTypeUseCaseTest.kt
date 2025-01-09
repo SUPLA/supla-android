@@ -256,7 +256,10 @@ class ProvideChannelDetailTypeUseCaseTest {
 
   @Test
   fun `should provide detail for HP thermostat`() {
-    testDetailType(SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS, LegacyDetailType.THERMOSTAT_HP)
+    testDetailType(
+      SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS,
+      ThermostatDetailType(listOf(DetailPage.THERMOSTAT_HEATPOL_GENERAL, DetailPage.THERMOSTAT_HEATPOL_HISTORY))
+    )
   }
 
   @Test

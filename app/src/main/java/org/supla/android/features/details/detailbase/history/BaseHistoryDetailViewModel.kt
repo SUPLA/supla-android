@@ -19,6 +19,7 @@ package org.supla.android.features.details.detailbase.history
 
 import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.intl.Locale
+import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.R
@@ -47,6 +48,7 @@ import org.supla.android.data.model.general.HideableValue
 import org.supla.android.data.model.general.RangeValueType
 import org.supla.android.data.model.general.SingleSelectionList
 import org.supla.android.data.source.local.calendar.Hour
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.events.DownloadEventsManager
 import org.supla.android.extensions.dayEnd
 import org.supla.android.extensions.dayStart
@@ -68,14 +70,18 @@ import org.supla.android.extensions.yearStart
 import org.supla.android.features.details.detailbase.history.ui.ChartDataSelectionDialogState
 import org.supla.android.features.details.detailbase.history.ui.HistoryDetailProxy
 import org.supla.android.features.details.electricitymeterdetail.history.IntroductionPage
+import org.supla.android.profile.ProfileManager
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.views.SpinnerItem
 import org.supla.android.usecases.channel.DeleteChannelMeasurementsUseCase
+import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
 import java.util.Date
 
 abstract class BaseHistoryDetailViewModel(
   private val deleteChannelMeasurementsUseCase: DeleteChannelMeasurementsUseCase,
+  private val readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
   private val userStateHolder: UserStateHolder,
+  private val profileManager: ProfileManager,
   private val dateProvider: DateProvider,
   schedulers: SuplaSchedulers
 ) : BaseViewModel<HistoryDetailViewState, HistoryDetailViewEvent>(HistoryDetailViewState(), schedulers), HistoryDetailProxy {
@@ -328,7 +334,7 @@ abstract class BaseHistoryDetailViewModel(
       .disposeBySelf()
   }
 
-  protected abstract fun triggerDataLoad(remoteId: Int)
+  protected abstract fun handleData(channelWithChildren: ChannelWithChildren, chartState: ChartState)
 
   protected abstract fun measurementsMaybe(
     remoteId: Int,
@@ -362,6 +368,19 @@ abstract class BaseHistoryDetailViewModel(
       .subscribeBy(
         onSuccess = { handleMeasurements(it.first, it.second, loadChartState(profileId, remoteId)) },
         onError = defaultErrorHandler("triggerMeasurementsLoad")
+      )
+      .disposeBySelf()
+  }
+
+  private fun triggerDataLoad(remoteId: Int) {
+    Maybe.zip(
+      readChannelWithChildrenUseCase(remoteId),
+      profileManager.getCurrentProfile().map { loadChartState(it.id, remoteId) }
+    ) { first, second -> Pair(first, second) }
+      .attachSilent()
+      .subscribeBy(
+        onSuccess = { handleData(it.first, it.second) },
+        onError = defaultErrorHandler("triggerDataLoad")
       )
       .disposeBySelf()
   }

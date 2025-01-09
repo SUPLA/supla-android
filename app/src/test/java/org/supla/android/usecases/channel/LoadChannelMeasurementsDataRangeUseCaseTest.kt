@@ -63,6 +63,9 @@ class LoadChannelMeasurementsDataRangeUseCaseTest {
   @MockK
   private lateinit var impulseCounterDataRangeProvider: ImpulseCounterDataRangeProvider
 
+  @MockK
+  private lateinit var thermostatHeatpolDataRangeProvider: ThermostatHeatpolDataRangeProvider
+
   @InjectMockKs
   private lateinit var useCase: LoadChannelMeasurementsDataRangeUseCase
 
@@ -126,6 +129,7 @@ class LoadChannelMeasurementsDataRangeUseCaseTest {
     every { electricityMeterDataRangeProvide.handle(channelWithChildren) } returns false
     every { humidityDataRangeProvider.handle(channelWithChildren) } returns false
     every { impulseCounterDataRangeProvider.handle(channelWithChildren) } returns false
+    every { thermostatHeatpolDataRangeProvider.handle(channelWithChildren) } returns false
 
     // when
     val testObserver = useCase.invoke(remoteId, profileId).test()
@@ -143,6 +147,7 @@ class LoadChannelMeasurementsDataRangeUseCaseTest {
       electricityMeterDataRangeProvide.handle(channelWithChildren)
       humidityDataRangeProvider.handle(channelWithChildren)
       impulseCounterDataRangeProvider.handle(channelWithChildren)
+      thermostatHeatpolDataRangeProvider.handle(channelWithChildren)
     }
     confirmVerified(
       readChannelWithChildrenUseCase,
@@ -152,7 +157,8 @@ class LoadChannelMeasurementsDataRangeUseCaseTest {
       generalPurposeMeterDataRangeProvide,
       electricityMeterDataRangeProvide,
       humidityDataRangeProvider,
-      impulseCounterDataRangeProvider
+      impulseCounterDataRangeProvider,
+      thermostatHeatpolDataRangeProvider
     )
   }
 }

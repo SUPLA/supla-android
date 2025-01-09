@@ -1,4 +1,5 @@
-package org.supla.android.db.room.measurements.migrations/*
+package org.supla.android.data.source.remote.rest.channel
+/*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
  This program is free software; you can redistribute it and/or
@@ -16,18 +17,12 @@ package org.supla.android.db.room.measurements.migrations/*
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
-import org.supla.android.data.source.local.entity.measurements.GeneralPurposeMeterEntity
-import org.supla.android.db.room.SqlExecutor
-import org.supla.android.db.room.measurements.MeasurementsDatabase
+import com.google.gson.annotations.SerializedName
+import java.util.Date
 
-val MEASUREMENTS_DB_MIGRATION_32_33: Migration = object : Migration(32, 33), SqlExecutor {
-
-  override fun getDatabaseNameForLog(): String = MeasurementsDatabase.NAME
-
-  override fun migrate(db: SupportSQLiteDatabase) {
-    execSQL(db, "DROP TABLE ${GeneralPurposeMeterEntity.TABLE_NAME}")
-    execSQL(db, GeneralPurposeMeterEntity.SQL)
-  }
-}
+data class ThermostatMeasurement(
+  @SerializedName("date_timestamp") override val date: Date,
+  val on: Int,
+  @SerializedName("measured_temperature") val measuredTemperature: Float,
+  @SerializedName("preset_temperature") val presetTemperature: Float
+) : Measurement

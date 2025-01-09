@@ -28,7 +28,6 @@ import org.supla.android.core.networking.suplaclient.SuplaClientStateHolder
 import org.supla.android.core.storage.EncryptedPreferences
 import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.db.DbHelper
-import org.supla.android.db.MeasurementsDbHelper
 import org.supla.android.db.room.app.AppDatabase
 import org.supla.android.db.room.measurements.MeasurementsDatabase
 import org.supla.android.extensions.TAG
@@ -104,7 +103,7 @@ class InitializationUseCase @Inject constructor(
 
       Trace.e(TAG, "Could not migrate database, trying to delete it", exception)
       val result = context.deleteDatabase(DbHelper.DATABASE_NAME)
-      context.deleteDatabase(MeasurementsDbHelper.DATABASE_NAME)
+      context.deleteDatabase(MeasurementsDatabase.NAME)
       Trace.e(TAG, "Database deletion finished with $result")
 
       if (result) {
