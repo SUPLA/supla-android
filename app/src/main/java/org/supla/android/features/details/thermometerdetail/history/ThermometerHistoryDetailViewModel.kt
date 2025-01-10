@@ -18,7 +18,6 @@ package org.supla.android.features.details.thermometerdetail.history
  */
 
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.core.infrastructure.DateProvider
@@ -48,28 +47,20 @@ class ThermometerHistoryDetailViewModel @Inject constructor(
   private val loadChannelMeasurementsUseCase: LoadChannelMeasurementsUseCase,
   private val loadChannelMeasurementsDataRangeUseCase: LoadChannelMeasurementsDataRangeUseCase,
   private val downloadEventsManager: DownloadEventsManager,
-  private val profileManager: ProfileManager,
-  private val readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
   deleteChannelMeasurementsUseCase: DeleteChannelMeasurementsUseCase,
+  readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
   userStateHolder: UserStateHolder,
-  dateProvider: DateProvider,
-  schedulers: SuplaSchedulers
-) : BaseHistoryDetailViewModel(deleteChannelMeasurementsUseCase, userStateHolder, dateProvider, schedulers) {
-
-  override fun triggerDataLoad(remoteId: Int) {
-    Maybe.zip(
-      readChannelWithChildrenUseCase(remoteId),
-      profileManager.getCurrentProfile().map { loadChartState(it.id, remoteId) }
-    ) { first, second ->
-      Pair(first, second)
-    }
-      .attachSilent()
-      .subscribeBy(
-        onSuccess = { handleData(it.first, it.second) },
-        onError = defaultErrorHandler("triggerDataLoad")
-      )
-      .disposeBySelf()
-  }
+  profileManager: ProfileManager,
+  schedulers: SuplaSchedulers,
+  dateProvider: DateProvider
+) : BaseHistoryDetailViewModel(
+  deleteChannelMeasurementsUseCase,
+  readChannelWithChildrenUseCase,
+  userStateHolder,
+  profileManager,
+  dateProvider,
+  schedulers
+) {
 
   override fun measurementsMaybe(
     remoteId: Int,
@@ -82,12 +73,12 @@ class ThermometerHistoryDetailViewModel @Inject constructor(
       loadChannelMeasurementsDataRangeUseCase(remoteId, profileId)
     ) { first, second -> Pair(LineChartData(DateRange(spec.startDate, spec.endDate), chartRange, spec.aggregation, listOf(first)), second) }
 
-  private fun handleData(channel: ChannelWithChildren, chartState: ChartState) {
-    updateState { it.copy(profileId = channel.profileId, channelFunction = channel.function.value) }
+  override fun handleData(channelWithChildren: ChannelWithChildren, chartState: ChartState) {
+    updateState { it.copy(profileId = channelWithChildren.profileId, channelFunction = channelWithChildren.function.value) }
 
     restoreRange(chartState)
-    configureDownloadObserver(channel.remoteId)
-    startInitialDataLoad(channel)
+    configureDownloadObserver(channelWithChildren.remoteId)
+    startInitialDataLoad(channelWithChildren)
   }
 
   private fun startInitialDataLoad(channel: ChannelWithChildren) {

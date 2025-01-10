@@ -19,7 +19,6 @@ package org.supla.android.features.details.gpmdetail.history
 
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.core.infrastructure.DateProvider
@@ -67,15 +66,22 @@ class GpmHistoryDetailViewModel @Inject constructor(
   private val loadChannelMeasurementsDataRangeUseCase: LoadChannelMeasurementsDataRangeUseCase,
   private val loadChannelConfigUseCase: LoadChannelConfigUseCase,
   private val downloadEventsManager: DownloadEventsManager,
-  private val profileManager: ProfileManager,
-  private val readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
   private val channelConfigEventsManager: ChannelConfigEventsManager,
   @Named(GSON_FOR_REPO) private val gson: Gson,
-  userStateHolder: UserStateHolder,
   deleteChannelMeasurementsUseCase: DeleteChannelMeasurementsUseCase,
-  dateProvider: DateProvider,
-  schedulers: SuplaSchedulers
-) : BaseHistoryDetailViewModel(deleteChannelMeasurementsUseCase, userStateHolder, dateProvider, schedulers) {
+  readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
+  userStateHolder: UserStateHolder,
+  profileManager: ProfileManager,
+  schedulers: SuplaSchedulers,
+  dateProvider: DateProvider
+) : BaseHistoryDetailViewModel(
+  deleteChannelMeasurementsUseCase,
+  readChannelWithChildrenUseCase,
+  userStateHolder,
+  profileManager,
+  dateProvider,
+  schedulers
+) {
 
   override fun loadData(remoteId: Int) {
     super.loadData(remoteId)
@@ -85,21 +91,6 @@ class GpmHistoryDetailViewModel @Inject constructor(
       .subscribeBy(
         onNext = { reloadMeasurements() },
         onError = defaultErrorHandler("loadData")
-      )
-      .disposeBySelf()
-  }
-
-  override fun triggerDataLoad(remoteId: Int) {
-    Maybe.zip(
-      readChannelWithChildrenUseCase(remoteId),
-      profileManager.getCurrentProfile().map { loadChartState(it.id, remoteId) }
-    ) { first, second ->
-      Pair(first, second)
-    }
-      .attachSilent()
-      .subscribeBy(
-        onSuccess = { handleData(it.first, it.second) },
-        onError = defaultErrorHandler("triggerDataLoad")
       )
       .disposeBySelf()
   }
@@ -142,7 +133,7 @@ class GpmHistoryDetailViewModel @Inject constructor(
       .disposeBySelf()
   }
 
-  private fun handleData(channelWithChildren: ChannelWithChildren, chartState: ChartState) {
+  override fun handleData(channelWithChildren: ChannelWithChildren, chartState: ChartState) {
     val channel = channelWithChildren.channel
     updateState { it.copy(profileId = channel.channelEntity.profileId, channelFunction = channel.function.value) }
 

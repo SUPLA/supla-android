@@ -18,7 +18,6 @@ package org.supla.android.features.details.humiditydetail.history
  */
 
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.core.infrastructure.DateProvider
@@ -50,30 +49,22 @@ class HumidityHistoryDetailViewModel @Inject constructor(
   private val loadChannelMeasurementsUseCase: LoadChannelMeasurementsUseCase,
   private val loadChannelMeasurementsDataRangeUseCase: LoadChannelMeasurementsDataRangeUseCase,
   private val downloadEventsManager: DownloadEventsManager,
-  private val profileManager: ProfileManager,
-  private val readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
-  userStateHolder: UserStateHolder,
   deleteChannelMeasurementsUseCase: DeleteChannelMeasurementsUseCase,
-  dateProvider: DateProvider,
-  schedulers: SuplaSchedulers
-) : BaseHistoryDetailViewModel(deleteChannelMeasurementsUseCase, userStateHolder, dateProvider, schedulers) {
+  readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
+  userStateHolder: UserStateHolder,
+  profileManager: ProfileManager,
+  schedulers: SuplaSchedulers,
+  dateProvider: DateProvider
+) : BaseHistoryDetailViewModel(
+  deleteChannelMeasurementsUseCase,
+  readChannelWithChildrenUseCase,
+  userStateHolder,
+  profileManager,
+  dateProvider,
+  schedulers
+) {
 
   override fun chartStyle(): ChartStyle = HumidityChartStyle
-
-  override fun triggerDataLoad(remoteId: Int) {
-    Maybe.zip(
-      readChannelWithChildrenUseCase(remoteId),
-      profileManager.getCurrentProfile().map { loadChartState(it.id, remoteId) }
-    ) { first, second ->
-      Pair(first, second)
-    }
-      .attachSilent()
-      .subscribeBy(
-        onSuccess = { handleData(it.first, it.second) },
-        onError = defaultErrorHandler("triggerDataLoad")
-      )
-      .disposeBySelf()
-  }
 
   override fun measurementsMaybe(
     remoteId: Int,
@@ -86,7 +77,7 @@ class HumidityHistoryDetailViewModel @Inject constructor(
       loadChannelMeasurementsDataRangeUseCase(remoteId, profileId)
     ) { first, second -> Pair(LineChartData(DateRange(spec.startDate, spec.endDate), chartRange, spec.aggregation, listOf(first)), second) }
 
-  private fun handleData(channelWithChildren: ChannelWithChildren, chartState: ChartState) {
+  override fun handleData(channelWithChildren: ChannelWithChildren, chartState: ChartState) {
     val channel = channelWithChildren.channel
     updateState { it.copy(profileId = channel.profileId, channelFunction = channel.function.value) }
 

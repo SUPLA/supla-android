@@ -18,7 +18,6 @@ package org.supla.android.features.details.thermostatdetail.history
  */
 
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -46,31 +45,23 @@ import javax.inject.Inject
 @HiltViewModel
 class ThermostatHistoryDetailViewModel @Inject constructor(
   private val downloadChannelMeasurementsUseCase: DownloadChannelMeasurementsUseCase,
-  private val readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
   private val loadChannelWithChildrenMeasurementsUseCase: LoadChannelWithChildrenMeasurementsUseCase,
   private val loadChannelWithChildrenMeasurementsDateRangeUseCase: LoadChannelWithChildrenMeasurementsDateRangeUseCase,
   private val downloadEventsManager: DownloadEventsManager,
-  private val profileManager: ProfileManager,
-  private val userStateHolder: UserStateHolder,
+  readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
   deleteChannelMeasurementsUseCase: DeleteChannelMeasurementsUseCase,
-  dateProvider: DateProvider,
-  schedulers: SuplaSchedulers
-) : BaseHistoryDetailViewModel(deleteChannelMeasurementsUseCase, userStateHolder, dateProvider, schedulers) {
-
-  override fun triggerDataLoad(remoteId: Int) {
-    Maybe.zip(
-      readChannelWithChildrenUseCase(remoteId),
-      profileManager.getCurrentProfile().map { loadChartState(it.id, remoteId) }
-    ) { first, second ->
-      Pair(first, second)
-    }
-      .attachSilent()
-      .subscribeBy(
-        onSuccess = { handleData(it.first, it.second) },
-        onError = defaultErrorHandler("triggerDataLoad")
-      )
-      .disposeBySelf()
-  }
+  userStateHolder: UserStateHolder,
+  profileManager: ProfileManager,
+  schedulers: SuplaSchedulers,
+  dateProvider: DateProvider
+) : BaseHistoryDetailViewModel(
+  deleteChannelMeasurementsUseCase,
+  readChannelWithChildrenUseCase,
+  userStateHolder,
+  profileManager,
+  dateProvider,
+  schedulers
+) {
 
   override fun measurementsMaybe(
     remoteId: Int,
@@ -83,15 +74,17 @@ class ThermostatHistoryDetailViewModel @Inject constructor(
       loadChannelWithChildrenMeasurementsDateRangeUseCase(remoteId, profileId)
     ) { first, second -> Pair(LineChartData(DateRange(spec.startDate, spec.endDate), chartRange, spec.aggregation, first), second) }
 
-  private fun handleData(channel: ChannelWithChildren, chartState: ChartState) {
-    updateState { it.copy(profileId = channel.channel.channelEntity.profileId, channelFunction = channel.channel.function.value) }
+  override fun handleData(channelWithChildren: ChannelWithChildren, chartState: ChartState) {
+    updateState {
+      it.copy(profileId = channelWithChildren.channel.channelEntity.profileId, channelFunction = channelWithChildren.channel.function.value)
+    }
 
-    if (channel.children.none { it.channelRelationEntity.relationType.isThermometer() }) {
+    if (channelWithChildren.children.none { it.channelRelationEntity.relationType.isThermometer() }) {
       updateState { it.copy(loading = false) }
     } else {
       restoreRange(chartState)
-      configureDownloadObserver(channel)
-      startInitialDataLoad(channel)
+      configureDownloadObserver(channelWithChildren)
+      startInitialDataLoad(channelWithChildren)
     }
   }
 

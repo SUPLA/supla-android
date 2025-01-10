@@ -32,7 +32,7 @@ import org.supla.android.profile.ProfileIdHolder;
 
 public class MeasurementsDbHelper extends BaseDbHelper {
 
-  public static final int DATABASE_VERSION = 35;
+  public static final int DATABASE_VERSION = 36;
   public static final String DATABASE_NAME = "supla_measurements.db";
   private static final Object mutex = new Object();
 

@@ -18,7 +18,6 @@ package org.supla.android.features.details.electricitymeterdetail.history
  */
 
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.Preferences
@@ -71,15 +70,22 @@ class ElectricityMeterHistoryViewModel @Inject constructor(
   private val loadChannelMeasurementsDataRangeUseCase: LoadChannelMeasurementsDataRangeUseCase,
   private val downloadChannelMeasurementsUseCase: DownloadChannelMeasurementsUseCase,
   private val loadChannelMeasurementsUseCase: LoadChannelMeasurementsUseCase,
-  private val readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
   private val downloadEventsManager: DownloadEventsManager,
   private val userStateHolder: UserStateHolder,
-  private val profileManager: ProfileManager,
   private val preferences: Preferences,
   deleteChannelMeasurementsUseCase: DeleteChannelMeasurementsUseCase,
-  dateProvider: DateProvider,
-  schedulers: SuplaSchedulers
-) : BaseHistoryDetailViewModel(deleteChannelMeasurementsUseCase, userStateHolder, dateProvider, schedulers) {
+  readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
+  profileManager: ProfileManager,
+  schedulers: SuplaSchedulers,
+  dateProvider: DateProvider
+) : BaseHistoryDetailViewModel(
+  deleteChannelMeasurementsUseCase,
+  readChannelWithChildrenUseCase,
+  userStateHolder,
+  profileManager,
+  dateProvider,
+  schedulers
+) {
 
   override fun provideSelectionDialogState(
     channelChartSets: ChannelChartSets,
@@ -151,18 +157,6 @@ class ElectricityMeterHistoryViewModel @Inject constructor(
     )
   }
 
-  override fun triggerDataLoad(remoteId: Int) {
-    Maybe.zip(
-      readChannelWithChildrenUseCase(remoteId),
-      profileManager.getCurrentProfile().map { loadChartState(it.id, remoteId) }
-    ) { first, second -> Pair(first, second) }
-      .attachSilent()
-      .subscribeBy(
-        onSuccess = { handleData(it.first, it.second) }
-      )
-      .disposeBySelf()
-  }
-
   override fun measurementsMaybe(
     remoteId: Int,
     profileId: Long,
@@ -214,7 +208,7 @@ class ElectricityMeterHistoryViewModel @Inject constructor(
     updateState { it.copy(introductionPages = null) }
   }
 
-  private fun handleData(channelWithChildren: ChannelWithChildren, chartState: ChartState) {
+  override fun handleData(channelWithChildren: ChannelWithChildren, chartState: ChartState) {
     val channel = channelWithChildren.channel
     updateState { it.copy(profileId = channel.profileId, channelFunction = channel.function.value) }
 
