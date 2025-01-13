@@ -32,7 +32,6 @@ import androidx.core.content.res.ResourcesCompat
 import com.github.mikephil.charting.charts.CombinedChart
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.components.YAxis.AxisDependency
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.listener.ChartTouchListener
@@ -45,6 +44,7 @@ import org.supla.android.data.model.chart.ChartParameters
 import org.supla.android.data.model.chart.datatype.ChartData
 import org.supla.android.data.model.chart.datatype.CombinedChartData
 import org.supla.android.data.model.chart.style.ChartStyle
+import org.supla.android.data.model.chart.style.HumidityChartStyle
 import org.supla.android.extensions.toPx
 import org.supla.android.lib.SuplaConst
 import org.supla.android.usecases.channel.valueformatter.HumidityValueFormatter
@@ -114,7 +114,7 @@ fun CombinedChart(
           if (scaleX == 1f && scaleY == 1f && x == 0f && y == 0f) {
             it.fitScreen() // reset scale
           } else {
-            it.zoom(scaleX, scaleY, x, y, YAxis.AxisDependency.LEFT)
+            it.zoom(scaleX, scaleY, x, y, AxisDependency.LEFT)
           }
         }
       }
@@ -131,7 +131,8 @@ fun CombinedChart(
       // Left axis
       chart.axisLeft.valueFormatter = object : ValueFormatter() {
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
-          return data.leftAxisFormatter.format(value.toDouble(), withUnit = false, chart.axisLeft.mDecimals)
+          val withUnit = chartStyle is HumidityChartStyle
+          return data.leftAxisFormatter.format(value.toDouble(), withUnit = withUnit, chart.axisLeft.mDecimals)
         }
       }
       chart.axisLeft.isEnabled = withLeftAxis
@@ -164,7 +165,7 @@ fun CombinedChart(
         if (scaleX == 1f && scaleY == 1f && x == 0f && y == 0f) {
           chart.fitScreen() // reset scale
         } else if (chart.scaleX != scaleX || chart.scaleY != scaleY) {
-          chart.zoom(scaleX, scaleY, x, y, YAxis.AxisDependency.LEFT)
+          chart.zoom(scaleX, scaleY, x, y, AxisDependency.LEFT)
         }
       }
     }
@@ -189,13 +190,13 @@ private class ChartObserver(
 
   override fun onChartScale(me: MotionEvent?, scaleX: Float, scaleY: Float) {
     val centerPoint = chart.viewPortHandler.contentCenter
-    val centerPosition = chart.getValuesByTouchPoint(centerPoint.x, centerPoint.y, YAxis.AxisDependency.LEFT)
+    val centerPosition = chart.getValuesByTouchPoint(centerPoint.x, centerPoint.y, AxisDependency.LEFT)
     positionEvents(chart.viewPortHandler.scaleX, chart.viewPortHandler.scaleY, centerPosition.x.toFloat(), centerPosition.y.toFloat())
   }
 
   override fun onChartTranslate(me: MotionEvent?, dX: Float, dY: Float) {
     val centerPoint = chart.viewPortHandler.contentCenter
-    val centerPosition = chart.getValuesByTouchPoint(centerPoint.x, centerPoint.y, YAxis.AxisDependency.LEFT)
+    val centerPosition = chart.getValuesByTouchPoint(centerPoint.x, centerPoint.y, AxisDependency.LEFT)
     positionEvents(chart.viewPortHandler.scaleX, chart.viewPortHandler.scaleY, centerPosition.x.toFloat(), centerPosition.y.toFloat())
   }
 }

@@ -28,9 +28,9 @@ public class DiwCalibrationTool extends DimmerCalibrationTool
   private final SuplaRangeCalibrationWheel calibrationWheel;
   private final DiwCfgParameters cfgParameters;
   private final TextView tvSTMFirmwareVersion;
-  private Button btnInputMonostable;
-  private Button btnInputBistable;
-  private AppCompatImageView imgInputOption;
+  private final Button btnInputMonostable;
+  private final Button btnInputBistable;
+  private final AppCompatImageView imgInputOption;
 
   public DiwCalibrationTool(ChannelDetailRGBW detailRGB) {
     super(detailRGB);

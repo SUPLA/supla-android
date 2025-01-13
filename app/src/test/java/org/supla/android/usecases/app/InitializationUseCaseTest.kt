@@ -43,7 +43,7 @@ import org.supla.android.db.MeasurementsDbHelper
 import org.supla.android.db.room.app.AppDatabase
 import org.supla.android.db.room.measurements.MeasurementsDatabase
 
-class InitializationUseCaseTest() {
+class InitializationUseCaseTest {
 
   @MockK
   private lateinit var stateHolder: SuplaClientStateHolder

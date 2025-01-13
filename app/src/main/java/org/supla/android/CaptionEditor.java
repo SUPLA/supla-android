@@ -16,12 +16,12 @@ public abstract class CaptionEditor
     implements View.OnClickListener,
         TextWatcher,
         SuperuserAuthorizationDialog.OnAuthorizarionResultListener {
-  private Context context;
-  private Button btnCancel;
-  private Button btnOK;
-  private AlertDialog dialog;
-  private EditText edCaption;
-  private TextView tvTitle;
+  private final Context context;
+  private final Button btnCancel;
+  private final Button btnOK;
+  private final AlertDialog dialog;
+  private final EditText edCaption;
+  private final TextView tvTitle;
   private int id;
   private String originalCaption;
   SuperuserAuthorizationDialog superuserAuthorizationDialog;

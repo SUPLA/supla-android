@@ -19,19 +19,19 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 public class SuplaChannelBasicCfg {
-  private String deviceName;
-  private String deviceSoftwareVersion;
-  private int deviceId;
-  private int deviceFlags;
-  private int manufacturerId;
-  private int productId;
-  private int channelId;
-  private int number;
-  private int channelType;
-  private int func;
-  private int funcList;
-  private int channelFlags;
-  private String caption;
+  private final String deviceName;
+  private final String deviceSoftwareVersion;
+  private final int deviceId;
+  private final int deviceFlags;
+  private final int manufacturerId;
+  private final int productId;
+  private final int channelId;
+  private final int number;
+  private final int channelType;
+  private final int func;
+  private final int funcList;
+  private final int channelFlags;
+  private final String caption;
 
   public SuplaChannelBasicCfg(
       String deviceName,

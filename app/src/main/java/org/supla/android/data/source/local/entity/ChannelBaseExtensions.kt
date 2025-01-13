@@ -52,12 +52,29 @@ fun ChannelBase.isIconValueItem(): Boolean =
     function == SuplaFunction.OPEN_SENSOR_ROOF_WINDOW ||
     function == SuplaFunction.OPEN_SENSOR_ROLLER_SHUTTER ||
     function == SuplaFunction.PRESSURE_SENSOR ||
-    function == SuplaFunction.HUMIDITY
+    function == SuplaFunction.WEIGHT_SENSOR ||
+    function == SuplaFunction.HUMIDITY ||
+    function == SuplaFunction.CONTAINER ||
+    function == SuplaFunction.IC_WATER_METER ||
+    function == SuplaFunction.IC_GAS_METER ||
+    function == SuplaFunction.IC_HEAT_METER ||
+    function == SuplaFunction.IC_ELECTRICITY_METER
 
 fun ChannelBase.isSwitch(): Boolean =
   function == SuplaFunction.LIGHTSWITCH ||
     function == SuplaFunction.POWER_SWITCH ||
     function == SuplaFunction.STAIRCASE_TIMER
+
+fun ChannelBase.isRgbw(): Boolean =
+  function == SuplaFunction.RGB_LIGHTING ||
+    function == SuplaFunction.DIMMER_AND_RGB_LIGHTING ||
+    function == SuplaFunction.DIMMER
+
+fun ChannelBase.isIconWithAction(): Boolean =
+  function == SuplaFunction.CONTROLLING_THE_GATE ||
+    function == SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK ||
+    function == SuplaFunction.CONTROLLING_THE_GARAGE_DOOR ||
+    function == SuplaFunction.CONTROLLING_THE_DOOR_LOCK
 
 fun ChannelBase.isGpm(): Boolean =
   function == SuplaFunction.GENERAL_PURPOSE_METER ||

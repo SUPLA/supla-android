@@ -23,7 +23,7 @@ import org.mockito.InjectMocks
 import org.mockito.junit.MockitoJUnitRunner
 import org.supla.android.R
 import org.supla.android.data.model.general.ChannelState
-import org.supla.android.lib.SuplaConst
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 @RunWith(MockitoJUnitRunner::class)
 class WindowIconResourceProducerTest : BaseIconResourceProducerTest() {
@@ -35,7 +35,7 @@ class WindowIconResourceProducerTest : BaseIconResourceProducerTest() {
   fun `should produce open icon`() {
     test(
       state = ChannelState.Value.OPEN,
-      function = SuplaConst.SUPLA_CHANNELFNC_OPENINGSENSOR_WINDOW,
+      function = SuplaFunction.OPENING_SENSOR_WINDOW,
       expectedIcon = R.drawable.windowopen
     )
   }
@@ -44,7 +44,7 @@ class WindowIconResourceProducerTest : BaseIconResourceProducerTest() {
   fun `should produce closed icon`() {
     test(
       state = ChannelState.Value.CLOSED,
-      function = SuplaConst.SUPLA_CHANNELFNC_OPENINGSENSOR_WINDOW,
+      function = SuplaFunction.OPENING_SENSOR_WINDOW,
       expectedIcon = R.drawable.windowclosed
     )
   }

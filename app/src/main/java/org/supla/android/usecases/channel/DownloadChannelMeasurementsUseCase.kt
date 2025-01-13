@@ -20,13 +20,16 @@ package org.supla.android.usecases.channel
 import androidx.work.ExistingWorkPolicy
 import org.supla.android.Trace
 import org.supla.android.core.infrastructure.WorkManagerProxy
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.extensions.TAG
 import org.supla.android.features.measurementsdownload.workers.DownloadElectricityMeasurementsWorker
 import org.supla.android.features.measurementsdownload.workers.DownloadGeneralPurposeMeasurementsWorker
 import org.supla.android.features.measurementsdownload.workers.DownloadGeneralPurposeMeterWorker
+import org.supla.android.features.measurementsdownload.workers.DownloadHumidityWorker
+import org.supla.android.features.measurementsdownload.workers.DownloadImpulseCounterWorker
 import org.supla.android.features.measurementsdownload.workers.DownloadTemperaturesAndHumidityWorker
 import org.supla.android.features.measurementsdownload.workers.DownloadTemperaturesWorker
-import org.supla.android.lib.SuplaConst
+import org.supla.core.shared.data.model.general.SuplaFunction
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -35,44 +38,59 @@ class DownloadChannelMeasurementsUseCase @Inject constructor(
   private val workManagerProxy: WorkManagerProxy
 ) {
 
-  operator fun invoke(remoteId: Int, profileId: Long, function: Int) {
-    when (function) {
-      SuplaConst.SUPLA_CHANNELFNC_THERMOMETER ->
+  operator fun invoke(channelWithChildren: ChannelWithChildren) {
+    val remoteId = channelWithChildren.remoteId
+    val profileId = channelWithChildren.profileId
+    val function = channelWithChildren.function
+
+    when {
+      function == SuplaFunction.THERMOMETER ->
         workManagerProxy.enqueueUniqueWork(
           "${DownloadTemperaturesWorker.WORK_ID}.$remoteId",
           ExistingWorkPolicy.KEEP,
           DownloadTemperaturesWorker.build(remoteId, profileId)
         )
 
-      SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE ->
+      function == SuplaFunction.HUMIDITY_AND_TEMPERATURE ->
         workManagerProxy.enqueueUniqueWork(
           "${DownloadTemperaturesAndHumidityWorker.WORK_ID}.$remoteId",
           ExistingWorkPolicy.KEEP,
           DownloadTemperaturesAndHumidityWorker.build(remoteId, profileId)
         )
 
-      SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT ->
+      function == SuplaFunction.GENERAL_PURPOSE_MEASUREMENT ->
         workManagerProxy.enqueueUniqueWork(
           "${DownloadGeneralPurposeMeasurementsWorker.WORK_ID}.$remoteId",
           ExistingWorkPolicy.KEEP,
           DownloadGeneralPurposeMeasurementsWorker.build(remoteId, profileId)
         )
 
-      SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER ->
+      function == SuplaFunction.GENERAL_PURPOSE_METER ->
         workManagerProxy.enqueueUniqueWork(
           "${DownloadGeneralPurposeMeterWorker.WORK_ID}.$remoteId",
           ExistingWorkPolicy.KEEP,
           DownloadGeneralPurposeMeterWorker.build(remoteId, profileId)
         )
 
-      SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER,
-      SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH,
-      SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH,
-      SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER ->
+      channelWithChildren.isOrHasElectricityMeter ->
         workManagerProxy.enqueueUniqueWork(
           "${DownloadElectricityMeasurementsWorker.WORK_ID}.$remoteId",
           ExistingWorkPolicy.KEEP,
           DownloadElectricityMeasurementsWorker.build(remoteId, profileId)
+        )
+
+      channelWithChildren.isOrHasImpulseCounter ->
+        workManagerProxy.enqueueUniqueWork(
+          "${DownloadImpulseCounterWorker.WORK_ID}.$remoteId",
+          ExistingWorkPolicy.KEEP,
+          DownloadImpulseCounterWorker.build(remoteId, profileId)
+        )
+
+      function == SuplaFunction.HUMIDITY ->
+        workManagerProxy.enqueueUniqueWork(
+          "${DownloadHumidityWorker.WORK_ID}.$remoteId",
+          ExistingWorkPolicy.KEEP,
+          DownloadHumidityWorker.build(remoteId, profileId)
         )
 
       else -> Trace.w(TAG, "Tries to download something what is not supported (function: `$function`)")

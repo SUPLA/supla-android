@@ -107,7 +107,7 @@ class ChannelWithChildrenToIconValueItemUpdateEventMapperTest {
     val imageId = ImageId(123)
     val channelWithChildren = ChannelWithChildren(channel, emptyList())
     val shareable = channelWithChildren.shareable
-    whenever(getChannelValueStringUseCase.valueOrNull(channel)).thenReturn(value)
+    whenever(getChannelValueStringUseCase.valueOrNull(channelWithChildren)).thenReturn(value)
     whenever(getCaptionUseCase.invoke(channel.shareable)).thenReturn(caption)
     whenever(getChannelIconUseCase.invoke(channel)).thenReturn(imageId)
     whenever(getChannelIssuesForListUseCase.invoke(shareable)).thenReturn(ListItemIssues.empty)

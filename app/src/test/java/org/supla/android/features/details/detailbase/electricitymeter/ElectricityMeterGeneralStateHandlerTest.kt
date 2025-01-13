@@ -28,6 +28,7 @@ import org.junit.Test
 import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType
 import org.supla.android.data.source.remote.electricitymeter.ElectricityMeterPhaseSequence
@@ -35,7 +36,8 @@ import org.supla.android.lib.SuplaChannelElectricityMeterValue
 import org.supla.android.lib.SuplaChannelElectricityMeterValue.Measurement
 import org.supla.android.lib.SuplaChannelElectricityMeterValue.Summary
 import org.supla.android.lib.SuplaChannelExtendedValue
-import org.supla.android.usecases.channel.electricitymeter.ElectricityMeasurements
+import org.supla.android.ui.views.card.SummaryCardData
+import org.supla.android.usecases.channel.measurements.ElectricityMeasurements
 
 class ElectricityMeterGeneralStateHandlerTest {
   @MockK
@@ -55,8 +57,10 @@ class ElectricityMeterGeneralStateHandlerTest {
   @Test
   fun `should try create state when no extended value available`() {
     // given
-    val channel: ChannelDataEntity = mockk {
-      every { channelExtendedValueEntity } returns null
+    val channel: ChannelWithChildren = mockk {
+      every { channel } returns mockk {
+        every { channelExtendedValueEntity } returns null
+      }
     }
     val state: ElectricityMeterState = mockk()
 
@@ -90,6 +94,9 @@ class ElectricityMeterGeneralStateHandlerTest {
       every { channelExtendedValueEntity } returns mockk {
         every { getSuplaValue() } returns mockSuplaChannelExtendedValue(electricityMeterValue)
       }
+    }
+    val channelWithChildren: ChannelWithChildren = mockk {
+      every { this@mockk.channel } returns channel
       every { flags } returns 0
       every { isOnline() } returns true
     }
@@ -98,13 +105,13 @@ class ElectricityMeterGeneralStateHandlerTest {
     every { preferences.shouldShowEmGeneralIntroduction() } returns true
 
     // when
-    val result = handler.updateState(state, channel)
+    val result = handler.updateState(state, channelWithChildren)
 
     // then
     assertThat(result).isEqualTo(
       state.copy(
         online = true,
-        totalForwardActiveEnergy = EnergyData("100.0 kWh", "200.00 PLN"),
+        totalForwardActiveEnergy = SummaryCardData("100.0 kWh", "200.00 PLN"),
         phaseMeasurementTypes = listOf(
           SuplaElectricityMeasurementType.VOLTAGE,
           SuplaElectricityMeasurementType.CURRENT,
@@ -144,6 +151,9 @@ class ElectricityMeterGeneralStateHandlerTest {
       every { channelExtendedValueEntity } returns mockk {
         every { getSuplaValue() } returns mockSuplaChannelExtendedValue(electricityMeterValue)
       }
+    }
+    val channelWithChildren: ChannelWithChildren = mockk {
+      every { this@mockk.channel } returns channel
       every { flags } returns (SuplaChannelFlag.PHASE2_UNSUPPORTED.rawValue or SuplaChannelFlag.PHASE3_UNSUPPORTED.rawValue)
       every { isOnline() } returns true
     }
@@ -153,16 +163,16 @@ class ElectricityMeterGeneralStateHandlerTest {
     every { preferences.shouldShowEmGeneralIntroduction() } returns false
 
     // when
-    val result = handler.updateState(state, channel, measurements)
+    val result = handler.updateState(state, channelWithChildren, measurements)
 
     // then
     assertThat(result).isEqualTo(
       state.copy(
         online = true,
-        totalForwardActiveEnergy = EnergyData("98.00 kWh", "980.00 PLN"),
-        totalReversedActiveEnergy = EnergyData("100.0 kWh"),
-        currentMonthForwardActiveEnergy = EnergyData("21.00 kWh", "210.00 PLN"),
-        currentMonthReversedActiveEnergy = EnergyData("22.00 kWh"),
+        totalForwardActiveEnergy = SummaryCardData("98.00 kWh", "980.00 PLN"),
+        totalReversedActiveEnergy = SummaryCardData("100.0 kWh"),
+        currentMonthForwardActiveEnergy = SummaryCardData("21.00 kWh", "210.00 PLN"),
+        currentMonthReversedActiveEnergy = SummaryCardData("22.00 kWh"),
         phaseMeasurementTypes = listOf(
           SuplaElectricityMeasurementType.FORWARD_ACTIVE_ENERGY,
           SuplaElectricityMeasurementType.REVERSE_ACTIVE_ENERGY
@@ -202,6 +212,9 @@ class ElectricityMeterGeneralStateHandlerTest {
       every { channelExtendedValueEntity } returns mockk {
         every { getSuplaValue() } returns mockSuplaChannelExtendedValue(electricityMeterValue)
       }
+    }
+    val channelWithChildren: ChannelWithChildren = mockk {
+      every { this@mockk.channel } returns channel
       every { flags } returns SuplaChannelFlag.PHASE3_UNSUPPORTED.rawValue
       every { isOnline() } returns true
     }
@@ -211,16 +224,16 @@ class ElectricityMeterGeneralStateHandlerTest {
     every { preferences.shouldShowEmGeneralIntroduction() } returns false
 
     // when
-    val result = handler.updateState(state, channel, measurements)
+    val result = handler.updateState(state, channelWithChildren, measurements)
 
     // then
     assertThat(result).isEqualTo(
       state.copy(
         online = true,
-        totalForwardActiveEnergy = EnergyData("98.00 kWh"),
-        totalReversedActiveEnergy = EnergyData("100.0 kWh"),
-        currentMonthForwardActiveEnergy = EnergyData("21.00 kWh"),
-        currentMonthReversedActiveEnergy = EnergyData("22.00 kWh"),
+        totalForwardActiveEnergy = SummaryCardData("98.00 kWh"),
+        totalReversedActiveEnergy = SummaryCardData("100.0 kWh"),
+        currentMonthForwardActiveEnergy = SummaryCardData("21.00 kWh"),
+        currentMonthReversedActiveEnergy = SummaryCardData("22.00 kWh"),
         phaseMeasurementTypes = listOf(
           SuplaElectricityMeasurementType.FORWARD_ACTIVE_ENERGY,
           SuplaElectricityMeasurementType.REVERSE_ACTIVE_ENERGY

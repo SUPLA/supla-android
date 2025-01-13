@@ -64,7 +64,7 @@ public class SuplaRegisterError {
       default:
         return context.getResources().getString(R.string.status_unknown_err)
             + " ("
-            + Integer.toString(ResultCode)
+            + ResultCode
             + ")";
     }
   }

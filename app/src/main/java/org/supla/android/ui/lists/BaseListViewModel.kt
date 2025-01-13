@@ -99,7 +99,9 @@ abstract class BaseListViewModel<S : ViewState, E : ViewEvent>(
       SuplaFunction.CURTAIN,
       SuplaFunction.PROJECTOR_SCREEN,
       SuplaFunction.VERTICAL_BLIND,
-      SuplaFunction.ROLLER_GARAGE_DOOR -> true
+      SuplaFunction.ROLLER_GARAGE_DOOR,
+      SuplaFunction.CONTAINER,
+      SuplaFunction.HUMIDITY -> true
 
       SuplaFunction.LIGHTSWITCH,
       SuplaFunction.POWER_SWITCH,
@@ -121,7 +123,6 @@ abstract class BaseListViewModel<S : ViewState, E : ViewEvent>(
       SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK,
       SuplaFunction.CONTROLLING_THE_GATE,
       SuplaFunction.CONTROLLING_THE_GARAGE_DOOR,
-      SuplaFunction.HUMIDITY,
       SuplaFunction.OPEN_SENSOR_GATEWAY,
       SuplaFunction.OPEN_SENSOR_GATE,
       SuplaFunction.OPEN_SENSOR_GARAGE_DOOR,

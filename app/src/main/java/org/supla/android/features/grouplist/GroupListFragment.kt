@@ -56,6 +56,7 @@ class GroupListFragment : BaseFragment<GroupListViewState, GroupListViewEvent>(R
     super.onViewCreated(view, savedInstanceState)
 
     binding.groupsList.adapter = adapter
+    binding.groupsList.itemAnimator = null
     setupAdapter()
     binding.groupsEmptyListButton.setOnClickListener { viewModel.onAddGroupClick() }
   }

@@ -31,6 +31,8 @@ import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
+import org.supla.android.usecases.channel.stringvalueprovider.ContainerValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.DepthSensorValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.DistanceSensorValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.ElectricityMeterValueStringProvider
@@ -40,8 +42,9 @@ import org.supla.android.usecases.channel.stringvalueprovider.HumidityValueStrin
 import org.supla.android.usecases.channel.stringvalueprovider.ImpulseCounterValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.PressureSensorValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.RainSensorValueStringProvider
-import org.supla.android.usecases.channel.stringvalueprovider.SwitchWithElectricityMeterValueStringProvider
+import org.supla.android.usecases.channel.stringvalueprovider.SwitchWithMeterValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.ThermometerValueStringProvider
+import org.supla.android.usecases.channel.stringvalueprovider.WeightSensorValueStringProvider
 import org.supla.core.shared.data.model.general.SuplaFunction
 
 @RunWith(MockitoJUnitRunner::class)
@@ -66,7 +69,7 @@ class GetChannelValueStringUseCaseTest {
   private lateinit var electricityMeterValueStringProvider: ElectricityMeterValueStringProvider
 
   @Mock
-  private lateinit var switchWithElectricityMeterValueStringProvider: SwitchWithElectricityMeterValueStringProvider
+  private lateinit var switchWithMeterValueStringProvider: SwitchWithMeterValueStringProvider
 
   @Mock
   private lateinit var impulseCounterValueStringProvider: ImpulseCounterValueStringProvider
@@ -80,6 +83,12 @@ class GetChannelValueStringUseCaseTest {
   @Mock
   private lateinit var humidityValueStringProvider: HumidityValueStringProvider
 
+  @Mock
+  private lateinit var containerValueStringProvider: ContainerValueStringProvider
+
+  @Mock
+  private lateinit var weightSensorValueStringProvider: WeightSensorValueStringProvider
+
   @InjectMocks
   private lateinit var useCase: GetChannelValueStringUseCase
 
@@ -92,9 +101,12 @@ class GetChannelValueStringUseCaseTest {
         every { online } returns false
       }
     }
+    val channelWithChildren: ChannelWithChildren = mockk {
+      every { this@mockk.channel } returns channel
+    }
 
     // when
-    val valueText = useCase(channel)
+    val valueText = useCase(channelWithChildren)
 
     // then
     assertThat(valueText).isEqualTo(ValuesFormatter.NO_VALUE_TEXT)
@@ -110,16 +122,19 @@ class GetChannelValueStringUseCaseTest {
         every { online } returns true
       }
     }
+    val channelWithChildren: ChannelWithChildren = mockk {
+      every { this@mockk.channel } returns channel
+    }
 
     // when
-    val valueText = useCase(channel)
+    val valueText = useCase(channelWithChildren)
 
     // then
     assertThat(valueText).isEqualTo(ValuesFormatter.NO_VALUE_TEXT)
-    verify(thermometerValueProvider).handle(channel)
-    verify(humidityAndTemperatureValueProvider).handle(channel)
-    verify(depthSensorValueProvider).handle(channel)
-    verify(generalPurposeMeasurementValueProvider).handle(channel)
+    verify(thermometerValueProvider).handle(channelWithChildren)
+    verify(humidityAndTemperatureValueProvider).handle(channelWithChildren)
+    verify(depthSensorValueProvider).handle(channelWithChildren)
+    verify(generalPurposeMeasurementValueProvider).handle(channelWithChildren)
     verifyNoMoreInteractions(
       thermometerValueProvider,
       humidityAndTemperatureValueProvider,
@@ -139,18 +154,21 @@ class GetChannelValueStringUseCaseTest {
         every { online } returns true
       }
     }
+    val channelWithChildren: ChannelWithChildren = mockk {
+      every { this@mockk.channel } returns channel
+    }
 
-    whenever(humidityAndTemperatureValueProvider.handle(channel)).thenReturn(true)
-    whenever(humidityAndTemperatureValueProvider.value(channel, ValueType.FIRST)).thenReturn(value)
+    whenever(humidityAndTemperatureValueProvider.handle(channelWithChildren)).thenReturn(true)
+    whenever(humidityAndTemperatureValueProvider.value(channelWithChildren, ValueType.FIRST)).thenReturn(value)
 
     // when
-    val valueText = useCase(channel)
+    val valueText = useCase(channelWithChildren)
 
     // then
     assertThat(valueText).isEqualTo(value)
-    verify(thermometerValueProvider).handle(channel)
-    verify(humidityAndTemperatureValueProvider).handle(channel)
-    verify(humidityAndTemperatureValueProvider).value(channel, ValueType.FIRST)
+    verify(thermometerValueProvider).handle(channelWithChildren)
+    verify(humidityAndTemperatureValueProvider).handle(channelWithChildren)
+    verify(humidityAndTemperatureValueProvider).value(channelWithChildren, ValueType.FIRST)
     verifyNoMoreInteractions(thermometerValueProvider, humidityAndTemperatureValueProvider)
     verifyNoInteractions(depthSensorValueProvider, generalPurposeMeasurementValueProvider)
   }

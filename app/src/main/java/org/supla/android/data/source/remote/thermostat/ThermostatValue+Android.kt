@@ -19,8 +19,8 @@ package org.supla.android.data.source.remote.thermostat
 
 import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
-import org.supla.core.shared.data.model.thermostat.SuplaThermostatFlag
-import org.supla.core.shared.data.model.thermostat.ThermostatValue
+import org.supla.core.shared.data.model.function.thermostat.SuplaThermostatFlag
+import org.supla.core.shared.data.model.function.thermostat.ThermostatValue
 
 fun ThermostatValue.getIndicatorIcon() = when {
   online && flags.contains(SuplaThermostatFlag.FORCED_OFF_BY_SENSOR) -> ThermostatIndicatorIcon.FORCED_OFF_BY_SENSOR

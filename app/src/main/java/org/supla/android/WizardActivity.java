@@ -42,7 +42,7 @@ public abstract class WizardActivity extends NavigationActivity {
   private short mBtnNextPreloaderPos;
 
   private RelativeLayout mContent;
-  private ArrayList<View> mPages = new ArrayList<>();
+  private final ArrayList<View> mPages = new ArrayList<>();
 
   @Inject SuplaClientStateHolder suplaClientStateHolder;
 

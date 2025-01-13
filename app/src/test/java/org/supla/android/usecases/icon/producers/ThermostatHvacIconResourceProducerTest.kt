@@ -23,7 +23,7 @@ import org.mockito.InjectMocks
 import org.mockito.junit.MockitoJUnitRunner
 import org.supla.android.R
 import org.supla.android.data.model.general.ChannelState
-import org.supla.android.lib.SuplaConst
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 @RunWith(MockitoJUnitRunner::class)
 class ThermostatHvacIconResourceProducerTest : BaseIconResourceProducerTest() {
@@ -35,7 +35,7 @@ class ThermostatHvacIconResourceProducerTest : BaseIconResourceProducerTest() {
   fun `should produce heat icon`() {
     test(
       state = ChannelState.Value.HEAT,
-      function = SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT,
+      function = SuplaFunction.HVAC_THERMOSTAT,
       expectedIcon = R.drawable.fnc_thermostat_heat
     )
   }
@@ -44,7 +44,7 @@ class ThermostatHvacIconResourceProducerTest : BaseIconResourceProducerTest() {
   fun `should produce cool icon`() {
     test(
       state = ChannelState.Value.COOL,
-      function = SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT,
+      function = SuplaFunction.HVAC_THERMOSTAT,
       expectedIcon = R.drawable.fnc_thermostat_cool
     )
   }
@@ -53,7 +53,7 @@ class ThermostatHvacIconResourceProducerTest : BaseIconResourceProducerTest() {
   fun `should produce heat icon (night mode)`() {
     test(
       state = ChannelState.Value.HEAT,
-      function = SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT,
+      function = SuplaFunction.HVAC_THERMOSTAT,
       expectedIcon = R.drawable.fnc_thermostat_heat
     )
   }
@@ -62,7 +62,7 @@ class ThermostatHvacIconResourceProducerTest : BaseIconResourceProducerTest() {
   fun `should produce cool icon (night mode)`() {
     test(
       state = ChannelState.Value.COOL,
-      function = SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT,
+      function = SuplaFunction.HVAC_THERMOSTAT,
       expectedIcon = R.drawable.fnc_thermostat_cool
     )
   }

@@ -145,8 +145,8 @@
   <string name="hp_hour">h</string>
   <string name="total_cost">Celkové náklady</string>
   <string name="current_cost">Náklady v aktuálnom mesiaci</string>
-  <string name="current_consumption">Spotreba v aktuálnom mesiaci</string>
-  <string name="meter_value">Stav počítadla</string>
+  <string name="details_ic_current_consumption">Spotreba v aktuálnom mesiaci</string>
+  <string name="details_ic_meter_value">Stav počítadla</string>
   <string name="minutes">Minúty</string>
   <string name="hours">Hodiny</string>
   <string name="days">Dni</string>

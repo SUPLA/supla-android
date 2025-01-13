@@ -26,6 +26,7 @@ import org.supla.android.data.source.local.entity.measurements.ImpulseCounterLog
 import org.supla.android.data.source.local.entity.measurements.ImpulseCounterLogEntity.Companion.COLUMN_PROFILE_ID
 import org.supla.android.data.source.local.entity.measurements.ImpulseCounterLogEntity.Companion.COLUMN_TIMESTAMP
 import org.supla.android.data.source.local.entity.measurements.ImpulseCounterLogEntity.Companion.TABLE_NAME
+import org.supla.android.data.source.remote.rest.channel.ImpulseCounterMeasurement
 import java.util.Date
 
 @Entity(
@@ -55,13 +56,13 @@ data class ImpulseCounterLogEntity(
   @ColumnInfo(name = COLUMN_ID)
   val id: Long?,
   @ColumnInfo(name = COLUMN_CHANNEL_ID) val channelId: Int,
-  @ColumnInfo(name = COLUMN_TIMESTAMP) val date: Date,
-  @ColumnInfo(name = COLUMN_COUNTER) val counter: Int,
+  @ColumnInfo(name = COLUMN_TIMESTAMP) override val date: Date,
+  @ColumnInfo(name = COLUMN_COUNTER) val counter: Long,
   @ColumnInfo(name = COLUMN_CALCULATED_VALUE) val calculatedValue: Float,
   @ColumnInfo(name = COLUMN_MANUALLY_COMPLEMENTED) val manuallyComplemented: Boolean,
   @ColumnInfo(name = COLUMN_COUNTER_RESET) val counterReset: Boolean,
   @ColumnInfo(name = COLUMN_PROFILE_ID) val profileId: Long
-) {
+) : BaseLogEntity {
 
   companion object {
     const val TABLE_NAME = "ic_log"
@@ -92,5 +93,30 @@ data class ImpulseCounterLogEntity(
       "CREATE INDEX ${TABLE_NAME}_${COLUMN_MANUALLY_COMPLEMENTED}_index ON $TABLE_NAME ($COLUMN_MANUALLY_COMPLEMENTED);",
       "CREATE UNIQUE INDEX ${TABLE_NAME}_unique_index ON $TABLE_NAME ($COLUMN_CHANNEL_ID, $COLUMN_TIMESTAMP, $COLUMN_PROFILE_ID);"
     )
+
+    const val ALL_COLUMNS = "$COLUMN_ID, $COLUMN_CHANNEL_ID, $COLUMN_TIMESTAMP, $COLUMN_COUNTER, $COLUMN_CALCULATED_VALUE, " +
+      "$COLUMN_MANUALLY_COMPLEMENTED, $COLUMN_COUNTER_RESET, $COLUMN_PROFILE_ID"
+
+    fun create(
+      entry: ImpulseCounterMeasurement,
+      channelId: Int,
+      date: Date = entry.date,
+      counter: Long = entry.counter,
+      calculatedValue: Float = entry.calculatedValue,
+      profileId: Long,
+      id: Long? = null,
+      manuallyComplemented: Boolean = false,
+      counterReset: Boolean = false
+    ) =
+      ImpulseCounterLogEntity(
+        id,
+        channelId,
+        date,
+        counter,
+        calculatedValue,
+        manuallyComplemented,
+        counterReset,
+        profileId
+      )
   }
 }

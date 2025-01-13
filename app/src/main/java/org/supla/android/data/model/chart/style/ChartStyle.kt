@@ -20,9 +20,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import android.content.Context
 import androidx.annotation.ColorRes
 import org.supla.android.R
-import org.supla.android.ui.views.charts.BaseMarkerView
-import org.supla.android.ui.views.charts.ChartMarkerView
-import org.supla.android.ui.views.charts.ElectricityMarkerView
+import org.supla.android.ui.views.charts.marker.BaseMarkerView
+import org.supla.android.ui.views.charts.marker.ChartMarkerView
+import org.supla.android.ui.views.charts.marker.ElectricityMarkerView
+import org.supla.android.ui.views.charts.marker.ImpulseCounterMarkerView
 
 sealed class ChartStyle(
   @ColorRes val leftAxisColor: Int,
@@ -33,6 +34,13 @@ sealed class ChartStyle(
 
 data object ThermometerChartStyle : ChartStyle(
   leftAxisColor = R.color.dark_red,
+  rightAxisColor = R.color.dark_blue,
+  drawBarShadow = false,
+  markerViewProvider = { ChartMarkerView(it) }
+)
+
+data object HumidityChartStyle : ChartStyle(
+  leftAxisColor = R.color.dark_blue,
   rightAxisColor = R.color.dark_blue,
   drawBarShadow = false,
   markerViewProvider = { ChartMarkerView(it) }
@@ -50,4 +58,11 @@ data object ElectricityChartStyle : ChartStyle(
   rightAxisColor = R.color.on_background,
   drawBarShadow = true,
   markerViewProvider = { ElectricityMarkerView(it) }
+)
+
+data object ImpulseCounterChartStyle : ChartStyle(
+  leftAxisColor = R.color.on_background,
+  rightAxisColor = R.color.on_background,
+  drawBarShadow = true,
+  markerViewProvider = { ImpulseCounterMarkerView(it) }
 )

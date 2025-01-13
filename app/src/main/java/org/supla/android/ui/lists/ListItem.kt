@@ -33,6 +33,22 @@ import java.util.Date
 
 sealed interface ListItem {
 
+  fun isDifferentFrom(another: ListItem): Boolean {
+    if (this is SceneItem && another is SceneItem) {
+      return sceneData.remoteId != another.sceneData.remoteId
+    }
+    if (this is LocationItem && another is LocationItem) {
+      return location != another.location
+    }
+
+    if (this is ChannelBasedItem && another is ChannelBasedItem) {
+      return channelBase.remoteId != another.channelBase.remoteId || channelBase.function != another.channelBase.function ||
+        channelBase.isOnline() != another.channelBase.isOnline()
+    }
+
+    return true
+  }
+
   abstract class ChannelBasedItem(
     open val channelBase: ChannelDataBase
   ) : ListItem
@@ -60,13 +76,13 @@ sealed interface ListItem {
   }
 
   data class SceneItem(val sceneData: SceneDataEntity) : ListItem
-  data class ChannelItem(
+  data class LocationItem(val location: LocationEntity) : ListItem
+
+  class ChannelItem(
     override var channelBase: ChannelDataBase,
     val children: List<ChannelChildEntity>? = null,
     val legacyBase: org.supla.android.db.ChannelBase
   ) : ChannelBasedItem(channelBase)
-
-  data class LocationItem(val location: LocationEntity) : ListItem
 
   class HvacThermostatItem(
     channel: ChannelDataEntity,
@@ -130,16 +146,7 @@ sealed interface ListItem {
     issues: ListItemIssues
   ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, value, issues)
 
-  class ShadingSystemItem(
-    channel: ChannelDataEntity,
-    locationCaption: String,
-    online: ListOnlineState,
-    captionProvider: LocalizedString,
-    icon: ImageId,
-    issues: ListItemIssues
-  ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, null, issues)
-
-  class SwitchItem(
+  class IconWithButtonsItem(
     channel: ChannelDataEntity,
     locationCaption: String,
     online: ListOnlineState,
@@ -162,23 +169,26 @@ sealed interface ListItem {
     }
   }
 
-  class GeneralPurposeMeterItem(
+  class IconWithRightButtonItem(
     channel: ChannelDataEntity,
     locationCaption: String,
     online: ListOnlineState,
     captionProvider: LocalizedString,
     icon: ImageId,
-    value: String,
+    value: String?,
+    private val estimatedTimerEndDate: Date?,
     issues: ListItemIssues
-  ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, value, issues)
-
-  class GeneralPurposeMeasurementItem(
-    channel: ChannelDataEntity,
-    locationCaption: String,
-    online: ListOnlineState,
-    captionProvider: LocalizedString,
-    icon: ImageId,
-    value: String,
-    issues: ListItemIssues
-  ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, value, issues)
+  ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, value, issues) {
+    override fun toSlideableListItemData(): SlideableListItemData {
+      return SlideableListItemData.Default(
+        onlineState = online,
+        title = captionProvider,
+        icon = icon,
+        value = value,
+        issues = issues,
+        estimatedTimerEndDate = estimatedTimerEndDate,
+        infoSupported = SuplaChannelFlag.CHANNEL_STATE.inside(channel.flags)
+      )
+    }
+  }
 }

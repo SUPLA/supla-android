@@ -36,7 +36,6 @@ public class SuplaPieDataSet extends PieDataSet {
     } catch (IndexOutOfBoundsException exception) {
       result = null;
     }
-    ;
 
     return result;
   }

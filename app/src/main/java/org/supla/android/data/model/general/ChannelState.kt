@@ -10,6 +10,7 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDO
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DIMMER
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HOTELCARDSENSOR
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_MAILSENSOR
@@ -67,6 +68,11 @@ data class ChannelState(
     HEAT,
     COOL,
 
+    // fulfillment
+    FULL,
+    HALF,
+    EMPTY,
+
     // others
     NOT_USED,
     COMPLEX
@@ -80,10 +86,10 @@ data class ChannelState(
   }
 
   companion object {
-    fun getActiveValue(function: Int): Value =
+    fun active(function: Int): ChannelState =
       when (function) {
         SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL,
-        SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL -> Value.TRANSPARENT
+        SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL -> ChannelState(Value.TRANSPARENT)
 
         SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK,
         SUPLA_CHANNELFNC_CONTROLLINGTHEGATE,
@@ -99,7 +105,7 @@ data class ChannelState(
         SUPLA_CHANNELFNC_OPENINGSENSOR_WINDOW,
         SUPLA_CHANNELFNC_OPENSENSOR_ROOFWINDOW,
         SUPLA_CHANNELFNC_VALVE_OPENCLOSE,
-        SUPLA_CHANNELFNC_VALVE_PERCENTAGE -> Value.CLOSED
+        SUPLA_CHANNELFNC_VALVE_PERCENTAGE -> ChannelState(Value.CLOSED)
 
         SUPLA_CHANNELFNC_POWERSWITCH,
         SUPLA_CHANNELFNC_STAIRCASETIMER,
@@ -110,15 +116,17 @@ data class ChannelState(
         SUPLA_CHANNELFNC_ALARMARMAMENTSENSOR,
         SUPLA_CHANNELFNC_LIGHTSWITCH,
         SUPLA_CHANNELFNC_DIMMER,
-        SUPLA_CHANNELFNC_RGBLIGHTING -> Value.ON
+        SUPLA_CHANNELFNC_RGBLIGHTING -> ChannelState(Value.ON)
 
-        else -> Value.NOT_USED
+        SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING -> ChannelState(Value.COMPLEX, listOf(Value.ON, Value.ON))
+
+        else -> ChannelState(Value.NOT_USED)
       }
 
-    fun getInactiveValue(function: Int): Value =
+    fun inactive(function: Int): ChannelState =
       when (function) {
         SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL,
-        SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL -> Value.OPAQUE
+        SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL -> ChannelState(Value.OPAQUE)
 
         SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK,
         SUPLA_CHANNELFNC_CONTROLLINGTHEGATE,
@@ -134,7 +142,7 @@ data class ChannelState(
         SUPLA_CHANNELFNC_OPENINGSENSOR_WINDOW,
         SUPLA_CHANNELFNC_OPENSENSOR_ROOFWINDOW,
         SUPLA_CHANNELFNC_VALVE_OPENCLOSE,
-        SUPLA_CHANNELFNC_VALVE_PERCENTAGE -> Value.OPEN
+        SUPLA_CHANNELFNC_VALVE_PERCENTAGE -> ChannelState(Value.OPEN)
 
         SUPLA_CHANNELFNC_POWERSWITCH,
         SUPLA_CHANNELFNC_STAIRCASETIMER,
@@ -145,9 +153,11 @@ data class ChannelState(
         SUPLA_CHANNELFNC_ALARMARMAMENTSENSOR,
         SUPLA_CHANNELFNC_LIGHTSWITCH,
         SUPLA_CHANNELFNC_DIMMER,
-        SUPLA_CHANNELFNC_RGBLIGHTING -> Value.OFF
+        SUPLA_CHANNELFNC_RGBLIGHTING -> ChannelState(Value.OFF)
 
-        else -> Value.NOT_USED
+        SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING -> ChannelState(Value.COMPLEX, listOf(Value.OFF, Value.OFF))
+
+        else -> ChannelState(Value.NOT_USED)
       }
   }
 }

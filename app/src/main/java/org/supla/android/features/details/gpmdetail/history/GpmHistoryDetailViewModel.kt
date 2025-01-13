@@ -19,7 +19,6 @@ package org.supla.android.features.details.gpmdetail.history
 
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.core.infrastructure.DateProvider
@@ -37,7 +36,7 @@ import org.supla.android.data.model.chart.datatype.ChartData
 import org.supla.android.data.model.chart.datatype.LineChartData
 import org.supla.android.data.model.chart.style.ChartStyle
 import org.supla.android.data.model.chart.style.GpmChartStyle
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.remote.SuplaChannelConfig
 import org.supla.android.data.source.remote.gpm.SuplaChannelConfigMeasurementChartType
 import org.supla.android.data.source.remote.gpm.SuplaChannelConfigMeterChartType
@@ -55,7 +54,7 @@ import org.supla.android.usecases.channel.DeleteChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.DownloadChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.LoadChannelMeasurementsDataRangeUseCase
 import org.supla.android.usecases.channel.LoadChannelMeasurementsUseCase
-import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
+import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
 import org.supla.android.usecases.channelconfig.LoadChannelConfigUseCase
 import javax.inject.Inject
 import javax.inject.Named
@@ -67,15 +66,22 @@ class GpmHistoryDetailViewModel @Inject constructor(
   private val loadChannelMeasurementsDataRangeUseCase: LoadChannelMeasurementsDataRangeUseCase,
   private val loadChannelConfigUseCase: LoadChannelConfigUseCase,
   private val downloadEventsManager: DownloadEventsManager,
-  private val profileManager: ProfileManager,
-  private val readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
-  private val userStateHolder: UserStateHolder,
   private val channelConfigEventsManager: ChannelConfigEventsManager,
   @Named(GSON_FOR_REPO) private val gson: Gson,
   deleteChannelMeasurementsUseCase: DeleteChannelMeasurementsUseCase,
-  dateProvider: DateProvider,
-  schedulers: SuplaSchedulers
-) : BaseHistoryDetailViewModel(deleteChannelMeasurementsUseCase, userStateHolder, dateProvider, schedulers) {
+  readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
+  userStateHolder: UserStateHolder,
+  profileManager: ProfileManager,
+  schedulers: SuplaSchedulers,
+  dateProvider: DateProvider
+) : BaseHistoryDetailViewModel(
+  deleteChannelMeasurementsUseCase,
+  readChannelWithChildrenUseCase,
+  userStateHolder,
+  profileManager,
+  dateProvider,
+  schedulers
+) {
 
   override fun loadData(remoteId: Int) {
     super.loadData(remoteId)
@@ -85,21 +91,6 @@ class GpmHistoryDetailViewModel @Inject constructor(
       .subscribeBy(
         onNext = { reloadMeasurements() },
         onError = defaultErrorHandler("loadData")
-      )
-      .disposeBySelf()
-  }
-
-  override fun triggerDataLoad(remoteId: Int) {
-    Maybe.zip(
-      readChannelByRemoteIdUseCase(remoteId),
-      profileManager.getCurrentProfile().map { loadChartState(it.id, remoteId) }
-    ) { first, second ->
-      Pair(first, second)
-    }
-      .attachSilent()
-      .subscribeBy(
-        onSuccess = { handleData(it.first, it.second) },
-        onError = defaultErrorHandler("triggerDataLoad")
       )
       .disposeBySelf()
   }
@@ -142,13 +133,14 @@ class GpmHistoryDetailViewModel @Inject constructor(
       .disposeBySelf()
   }
 
-  private fun handleData(channel: ChannelDataEntity, chartState: ChartState) {
+  override fun handleData(channelWithChildren: ChannelWithChildren, chartState: ChartState) {
+    val channel = channelWithChildren.channel
     updateState { it.copy(profileId = channel.channelEntity.profileId, channelFunction = channel.function.value) }
 
     restoreRange(chartState)
     if ((channel.configEntity?.toSuplaConfig(gson) as? SuplaChannelGeneralPurposeBaseConfig)?.keepHistory == true) {
       configureDownloadObserver(channel.channelEntity.remoteId)
-      startInitialDataLoad(channel.channelEntity.remoteId, channel.channelEntity.profileId, channel.function.value)
+      startInitialDataLoad(channelWithChildren)
     } else {
       updateState { state ->
         triggerMeasurementsLoad(state)
@@ -160,13 +152,13 @@ class GpmHistoryDetailViewModel @Inject constructor(
     }
   }
 
-  private fun startInitialDataLoad(remoteId: Int, profileId: Long, channelFunction: Int) {
+  private fun startInitialDataLoad(channelWithChildren: ChannelWithChildren) {
     if (currentState().initialLoadStarted) {
       // Needs to be performed only once
       return
     }
     updateState { it.copy(initialLoadStarted = true) }
-    downloadChannelMeasurementsUseCase.invoke(remoteId, profileId, channelFunction)
+    downloadChannelMeasurementsUseCase.invoke(channelWithChildren)
   }
 
   private fun configureDownloadObserver(remoteId: Int) {

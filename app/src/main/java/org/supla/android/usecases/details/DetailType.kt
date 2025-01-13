@@ -24,7 +24,6 @@ sealed interface DetailType : Serializable
 
 enum class LegacyDetailType : DetailType {
   RGBW,
-  IC,
   THERMOSTAT_HP,
   DIGIGLASS
 }
@@ -41,6 +40,10 @@ data class ThermometerDetailType(
   val pages: List<DetailPage>
 ) : DetailType
 
+data class HumidityDetailType(
+  val pages: List<DetailPage>
+) : DetailType
+
 data class GpmDetailType(
   val pages: List<DetailPage>
 ) : DetailType
@@ -54,5 +57,9 @@ data class EmDetailType(
 ) : DetailType
 
 data class IcDetailType(
+  val pages: List<DetailPage>
+) : DetailType
+
+data class ContainerDetailType(
   val pages: List<DetailPage>
 ) : DetailType

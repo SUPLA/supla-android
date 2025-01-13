@@ -59,9 +59,10 @@ public class DownloadUserIcons extends SuplaRestApiClientTask {
       if (a % PACKAGE_SIZE == PACKAGE_SIZE - 1 || a == ids.size() - 1) {
         ApiRequestResult result = apiRequest("user-icons?include=images&ids=" + package_ids);
 
-        if (result != null && result.getCode() == 200 && result.getJObj() instanceof JSONArray) {
+        if (result != null
+            && result.getCode() == 200
+            && result.getJObj() instanceof JSONArray arr) {
 
-          JSONArray arr = (JSONArray) result.getJObj();
           for (int b = 0; b < arr.length(); b++) {
             try {
               JSONObject obj = arr.getJSONObject(b);

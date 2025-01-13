@@ -23,7 +23,7 @@ import java.text.DecimalFormat;
 public class SuplaFormatter {
 
   private static SuplaFormatter _sharedInstance = null;
-  private DecimalFormat _df;
+  private final DecimalFormat _df;
 
   public static SuplaFormatter sharedFormatter() {
     if (_sharedInstance == null) {

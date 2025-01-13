@@ -34,6 +34,7 @@ import org.supla.android.features.details.detailbase.standarddetail.DetailPage
 import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
 import org.supla.android.features.details.electricitymeterdetail.ElectricityMeterDetailFragment
 import org.supla.android.features.details.gpmdetail.GpmDetailFragment
+import org.supla.android.features.details.humiditydetail.HumidityDetailFragment
 import org.supla.android.features.details.impulsecounter.ImpulseCounterDetailFragment
 import org.supla.android.features.details.switchdetail.SwitchDetailFragment
 import org.supla.android.features.details.thermometerdetail.ThermometerDetailFragment
@@ -49,8 +50,10 @@ import org.supla.android.usecases.channel.ChannelActionUseCase
 import org.supla.android.usecases.channel.CreateProfileChannelsListUseCase
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
+import org.supla.android.usecases.details.ContainerDetailType
 import org.supla.android.usecases.details.EmDetailType
 import org.supla.android.usecases.details.GpmDetailType
+import org.supla.android.usecases.details.HumidityDetailType
 import org.supla.android.usecases.details.IcDetailType
 import org.supla.android.usecases.details.LegacyDetailType
 import org.supla.android.usecases.details.ProvideChannelDetailTypeUseCase
@@ -180,6 +183,8 @@ class ChannelListViewModel @Inject constructor(
       is WindowDetailType -> sendEvent(ChannelListViewEvent.OpenWindowDetail(ItemBundle.from(channel), detailType.pages))
       is EmDetailType -> sendEvent(ChannelListViewEvent.OpenEmDetail(ItemBundle.from(channel), detailType.pages))
       is IcDetailType -> sendEvent(ChannelListViewEvent.OpenIcDetail(ItemBundle.from(channel), detailType.pages))
+      is ContainerDetailType -> sendEvent(ChannelListViewEvent.OpenContainerDetail(ItemBundle.from(channel), detailType.pages))
+      is HumidityDetailType -> sendEvent(ChannelListViewEvent.OpenHumidityDetail(ItemBundle.from(channel), detailType.pages))
       is LegacyDetailType -> sendEvent(ChannelListViewEvent.OpenLegacyDetails(channel.remoteId, detailType))
       null -> {} // no action
     }
@@ -199,6 +204,9 @@ sealed class ChannelListViewEvent : ViewEvent {
   data class OpenThermometerDetail(private val itemBundle: ItemBundle, private val pages: List<DetailPage>) :
     OpenStandardDetail(R.id.thermometer_detail_fragment, ThermometerDetailFragment.bundle(itemBundle, pages.toTypedArray()))
 
+  data class OpenHumidityDetail(private val itemBundle: ItemBundle, private val pages: List<DetailPage>) :
+    OpenStandardDetail(R.id.humidity_detail_fragment, HumidityDetailFragment.bundle(itemBundle, pages.toTypedArray()))
+
   data class OpenGpmDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) :
     OpenStandardDetail(R.id.gpm_detail_fragment, GpmDetailFragment.bundle(itemBundle, pages.toTypedArray()))
 
@@ -210,6 +218,9 @@ sealed class ChannelListViewEvent : ViewEvent {
 
   data class OpenIcDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) :
     OpenStandardDetail(R.id.impulse_counter_detail_fragment, ImpulseCounterDetailFragment.bundle(itemBundle, pages.toTypedArray()))
+
+  data class OpenContainerDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) :
+    OpenStandardDetail(R.id.container_detail_fragment, ImpulseCounterDetailFragment.bundle(itemBundle, pages.toTypedArray()))
 
   data object ReassignAdapter : ChannelListViewEvent()
 

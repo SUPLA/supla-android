@@ -44,6 +44,10 @@
     android:name="org.supla.android.features.details.gpmdetail.GpmDetailFragment" />
 
   <fragment
+    android:id="@+id/humidity_detail_fragment"
+    android:name="org.supla.android.features.details.humiditydetail.HumidityDetailFragment" />
+
+  <fragment
     android:id="@+id/window_detail_fragment"
     android:name="org.supla.android.features.details.windowdetail.WindowDetailFragment" />
 
@@ -58,6 +62,10 @@
   <fragment
     android:id="@+id/counter_photo_fragment"
     android:name="org.supla.android.features.details.impulsecounter.counterphoto.CounterPhotoFragment" />
+
+  <fragment
+    android:id="@+id/container_detail_fragment"
+    android:name="org.supla.android.features.details.containerdetail.ContainerDetailFragment" />
 
   <fragment
     android:id="@+id/notifications_log_fragment"

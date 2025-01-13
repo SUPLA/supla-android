@@ -32,8 +32,8 @@ import java.util.ArrayList;
 
 public class SuplaColorListPicker extends View {
 
-  private Paint p = new Paint();
-  private RectF rectF = new RectF();
+  private final Paint p = new Paint();
+  private final RectF rectF = new RectF();
   private ArrayList<ListItem> Items = null;
   private float Space = 0;
   private float BorderWidth = 0;
@@ -42,14 +42,7 @@ public class SuplaColorListPicker extends View {
   private int BorderColorSelected = Color.YELLOW;
   private ListItem TouchedItem = null;
   private OnColorListTouchListener mOnTouchListener;
-  Runnable runnable =
-      new Runnable() {
-        @Override
-        public void run() {
-          onEdit();
-        }
-      };
-  private Handler handler = new Handler();
+  private final Handler handler = new Handler();
 
   public SuplaColorListPicker(Context context, AttributeSet attrs, int defStyle) {
     super(context, attrs, defStyle);
@@ -290,7 +283,7 @@ public class SuplaColorListPicker extends View {
           mOnTouchListener.onColorTouched(this, TouchedItem.getColor(), TouchedItem.getPercent());
         }
 
-        handler.removeCallbacks(runnable);
+        handler.removeCallbacks(this::onEdit);
 
         TouchedItem = null;
 
@@ -302,7 +295,7 @@ public class SuplaColorListPicker extends View {
         float x = event.getX();
         float y = event.getY();
 
-        handler.removeCallbacks(runnable);
+        handler.removeCallbacks(this::onEdit);
 
         for (int a = 0; a < Items.size(); a++) {
           ListItem i = Items.get(a);
@@ -312,7 +305,7 @@ public class SuplaColorListPicker extends View {
             TouchedItem = i;
             invalidate();
 
-            handler.postDelayed(runnable, 1500);
+            handler.postDelayed(this::onEdit, 1500);
           }
         }
 

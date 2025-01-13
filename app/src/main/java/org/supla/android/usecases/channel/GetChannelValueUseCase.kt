@@ -18,6 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.usecases.channel.valueprovider.ContainerValueProvider
 import org.supla.android.usecases.channel.valueprovider.DepthSensorValueProvider
 import org.supla.android.usecases.channel.valueprovider.DistanceSensorValueProvider
 import org.supla.android.usecases.channel.valueprovider.ElectricityMeterValueProvider
@@ -27,7 +28,9 @@ import org.supla.android.usecases.channel.valueprovider.ImpulseCounterValueProvi
 import org.supla.android.usecases.channel.valueprovider.PressureSensorValueProvider
 import org.supla.android.usecases.channel.valueprovider.RainSensorValueProvider
 import org.supla.android.usecases.channel.valueprovider.SwitchWithElectricityMeterValueProvider
+import org.supla.android.usecases.channel.valueprovider.SwitchWithImpulseCounterValueProvider
 import org.supla.android.usecases.channel.valueprovider.ThermometerValueProvider
+import org.supla.android.usecases.channel.valueprovider.WeightSensorValueProvider
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -41,8 +44,11 @@ class GetChannelValueUseCase @Inject constructor(
   electricityMeterValueProvider: ElectricityMeterValueProvider,
   impulseCounterValueProvider: ImpulseCounterValueProvider,
   switchWithElectricityMeterValueProvider: SwitchWithElectricityMeterValueProvider,
+  switchWithImpulseCounterValueProvider: SwitchWithImpulseCounterValueProvider,
   pressureSensorValueProvider: PressureSensorValueProvider,
-  rainSensorValueProvider: RainSensorValueProvider
+  rainSensorValueProvider: RainSensorValueProvider,
+  containerValueProvider: ContainerValueProvider,
+  weightSensorValueProvider: WeightSensorValueProvider
 ) {
 
   private val providers = listOf(
@@ -54,8 +60,11 @@ class GetChannelValueUseCase @Inject constructor(
     electricityMeterValueProvider,
     impulseCounterValueProvider,
     switchWithElectricityMeterValueProvider,
+    switchWithImpulseCounterValueProvider,
     pressureSensorValueProvider,
-    rainSensorValueProvider
+    rainSensorValueProvider,
+    containerValueProvider,
+    weightSensorValueProvider
   )
 
   @Suppress("UNCHECKED_CAST")

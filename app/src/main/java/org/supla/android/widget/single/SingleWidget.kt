@@ -139,9 +139,9 @@ class SingleWidget : WidgetProviderBase() {
       views.setViewVisibility(R.id.single_widget_text, View.VISIBLE)
     } else {
       val state = if (turnOnOrClose(configuration)) {
-        ChannelState.getActiveValue(channel.func)
+        ChannelState.active(channel.func)
       } else {
-        ChannelState.getInactiveValue(channel.func)
+        ChannelState.inactive(channel.func)
       }
 
       val icon = context.getChannelIconUseCase.invoke(channel, IconType.SINGLE, state)

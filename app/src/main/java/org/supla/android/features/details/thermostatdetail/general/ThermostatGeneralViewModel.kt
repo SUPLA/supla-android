@@ -63,11 +63,11 @@ import org.supla.android.usecases.channel.ReadChannelWithChildrenTreeUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.thermostat.CreateTemperaturesListUseCase
 import org.supla.core.shared.data.model.channel.ChannelRelationType
+import org.supla.core.shared.data.model.function.thermostat.SuplaThermostatFlag
+import org.supla.core.shared.data.model.function.thermostat.ThermostatValue
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.data.model.lists.ChannelIssueItem
 import org.supla.core.shared.data.model.lists.IssueIcon
-import org.supla.core.shared.data.model.thermostat.SuplaThermostatFlag
-import org.supla.core.shared.data.model.thermostat.ThermostatValue
 import org.supla.core.shared.extensions.fromSuplaTemperature
 import org.supla.core.shared.extensions.ifTrue
 import java.util.Date

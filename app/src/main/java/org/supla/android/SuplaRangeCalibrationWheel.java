@@ -323,7 +323,7 @@ public class SuplaRangeCalibrationWheel extends View {
     rectF.bottom -= hMargin;
 
     float step = rectF.height() / (lc - 1);
-    float width = borderLineWidth * 1F;
+    float width = borderLineWidth;
 
     for (int a = 0; a < lc; a++) {
       RectF lineRectF = new RectF();

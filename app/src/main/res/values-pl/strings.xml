@@ -188,8 +188,8 @@
   <string name="hp_hour">godz.</string>
   <string name="total_cost">Łączny koszt</string>
   <string name="current_cost">Koszt w bieżącym miesiącu</string>
-  <string name="current_consumption">Zużycie w bieżącym miesiącu</string>
-  <string name="meter_value">Stan licznika</string>
+  <string name="details_ic_current_consumption">Zużycie w bieżącym miesiącu</string>
+  <string name="details_ic_meter_value">Stan licznika</string>
   <string name="minutes">Minuty</string>
   <string name="hours">Godziny</string>
   <string name="days">Dni</string>
@@ -732,6 +732,7 @@
   <string name="details_em_voltage_phase_sequence">Kolejność faz napięcia</string>
   <string name="details_em_current_phase_sequence">Kolejność faz prądu</string>
   <string name="em_electric_grid_parameters">Parametry sieci elektrycznej</string>
+  <string name="channel_caption_container">Zbiornik</string>
 
   <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
     <item quantity="one">włączone</item>

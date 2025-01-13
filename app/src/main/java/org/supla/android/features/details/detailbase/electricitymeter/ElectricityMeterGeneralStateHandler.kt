@@ -19,8 +19,8 @@ package org.supla.android.features.details.detailbase.electricitymeter
 
 import org.supla.android.Preferences
 import org.supla.android.R
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.Electricity
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.local.entity.custom.Phase
 import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType
 import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType.CURRENT_PHASE_SEQUENCE
@@ -38,7 +38,7 @@ import org.supla.android.extensions.guardLet
 import org.supla.android.lib.SuplaChannelElectricityMeterValue
 import org.supla.android.lib.SuplaChannelElectricityMeterValue.Measurement
 import org.supla.android.lib.SuplaChannelElectricityMeterValue.Summary
-import org.supla.android.usecases.channel.electricitymeter.ElectricityMeasurements
+import org.supla.android.usecases.channel.measurements.ElectricityMeasurements
 import org.supla.android.usecases.channel.valueformatter.ChannelValueFormatter
 import org.supla.android.usecases.channel.valueformatter.ListElectricityMeterValueFormatter
 import org.supla.core.shared.extensions.ifTrue
@@ -52,17 +52,17 @@ class ElectricityMeterGeneralStateHandler @Inject constructor(
 ) {
   fun updateState(
     state: ElectricityMeterState?,
-    channel: ChannelDataEntity,
+    channelWithChildren: ChannelWithChildren,
     measurements: ElectricityMeasurements? = null
   ): ElectricityMeterState? {
-    val (extendedValue) = guardLet(channel.Electricity.value) {
-      return noExtendedValueStateHandler.updateState(state, channel, measurements)
+    val (extendedValue) = guardLet(channelWithChildren.channel.Electricity.value) {
+      return noExtendedValueStateHandler.updateState(state, channelWithChildren, measurements)
     }
     val allTypes = extendedValue.measuredValues.suplaElectricityMeterMeasuredTypes.sortedBy { it.ordering }
     val phaseTypes = allTypes.filter { it.phaseType }
 
     val moreThanOnePhase = Phase.entries
-      .filter { channel.flags and it.disabledFlag.rawValue == 0L }
+      .filter { channelWithChildren.flags and it.disabledFlag.rawValue == 0L }
       .size > 1
 
     val formatter = ListElectricityMeterValueFormatter(useNoValue = false)
@@ -74,16 +74,16 @@ class ElectricityMeterGeneralStateHandler @Inject constructor(
     }
 
     return state.copyOrCreate(
-      online = channel.isOnline(),
+      online = channelWithChildren.isOnline(),
       totalForwardActiveEnergy = extendedValue.getForwardEnergy(formatter),
       totalReversedActiveEnergy = extendedValue.getReverseEnergy(formatter),
       currentMonthForwardActiveEnergy = measurements?.toForwardEnergy(formatter, extendedValue),
       currentMonthReversedActiveEnergy = measurements?.toReverseEnergy(formatter, extendedValue),
       phaseMeasurementTypes = phaseTypes,
-      phaseMeasurementValues = getPhaseData(phaseTypes, channel.flags, extendedValue, formatter),
+      phaseMeasurementValues = getPhaseData(phaseTypes, channelWithChildren.flags, extendedValue, formatter),
       vectorBalancedValues = vectorBalancedValues,
-      electricGridParameters = getGridParameters(channel.flags, extendedValue, formatter),
-      showIntroduction = preferences.shouldShowEmGeneralIntroduction() && channel.isOnline() && moreThanOnePhase
+      electricGridParameters = getGridParameters(channelWithChildren.flags, extendedValue, formatter),
+      showIntroduction = preferences.shouldShowEmGeneralIntroduction() && channelWithChildren.isOnline() && moreThanOnePhase
     )
   }
 

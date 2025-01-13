@@ -31,11 +31,11 @@ import java.util.TimerTask;
 
 public class WifiThrottlingNotificationDialog implements DialogInterface.OnCancelListener {
 
-  private Activity activity;
-  private AlertDialog alertDialog;
+  private final Activity activity;
+  private final AlertDialog alertDialog;
   private long secondsLeft;
   private Timer timer;
-  private TextView tvTime;
+  private final TextView tvTime;
   private OnDialogResultListener onDialogResultListener;
 
   public WifiThrottlingNotificationDialog(Activity activity) {
@@ -111,4 +111,3 @@ public class WifiThrottlingNotificationDialog implements DialogInterface.OnCance
     this.onDialogResultListener = onDialogResultListener;
   }
 }
-;

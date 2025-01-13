@@ -66,11 +66,13 @@ abstract class BaseDetailTypeProviderUseCase {
     SuplaFunction.IC_GAS_METER,
     SuplaFunction.IC_WATER_METER,
     SuplaFunction.IC_HEAT_METER ->
-      IcDetailType(listOf(DetailPage.HISTORY_IC))
+      IcDetailType(listOf(DetailPage.IC_GENERAL, DetailPage.IC_HISTORY))
 
     SuplaFunction.THERMOMETER,
     SuplaFunction.HUMIDITY_AND_TEMPERATURE ->
       ThermometerDetailType(listOf(DetailPage.THERMOMETER_HISTORY))
+
+    SuplaFunction.HUMIDITY -> HumidityDetailType(listOf(DetailPage.HUMIDITY_HISTORY))
 
     SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS ->
       LegacyDetailType.THERMOSTAT_HP
@@ -99,12 +101,14 @@ abstract class BaseDetailTypeProviderUseCase {
     SuplaFunction.GENERAL_PURPOSE_METER ->
       GpmDetailType(listOf(DetailPage.GPM_HISTORY))
 
+    SuplaFunction.CONTAINER ->
+      ContainerDetailType(listOf(DetailPage.CONTAINER_GENERAL))
+
     SuplaFunction.UNKNOWN,
     SuplaFunction.NONE,
     SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK,
     SuplaFunction.CONTROLLING_THE_GATE,
     SuplaFunction.CONTROLLING_THE_GARAGE_DOOR,
-    SuplaFunction.HUMIDITY,
     SuplaFunction.OPEN_SENSOR_GATEWAY,
     SuplaFunction.OPEN_SENSOR_GATE,
     SuplaFunction.OPEN_SENSOR_GARAGE_DOOR,

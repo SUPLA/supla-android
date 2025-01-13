@@ -21,6 +21,8 @@ import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.data.Offset
 import org.junit.Test
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
+import org.supla.core.shared.data.model.function.thermostat.SuplaThermostatFlag
+import org.supla.core.shared.data.model.function.thermostat.ThermostatValue
 
 class ThermostatValueTest {
 

@@ -38,12 +38,12 @@ object Configuration {
 
   object About {
     val LOGO_RESOURCE = R.drawable.logo_light
-    val COLOR_FILLER: Int? = R.color.on_background
+    val COLOR_FILLER: Int? by lazy { R.color.on_background }
   }
 
   object Status {
     val LOGO_RESOURCE = R.drawable.logo_light
-    val COLOR_FILLER: Int? = R.color.primary
+    val COLOR_FILLER: Int? by lazy { R.color.primary }
   }
 
   object LockScreen {
@@ -52,7 +52,7 @@ object Configuration {
 
   object ProjectorScreen {
     val LOGO_RESOURCE = R.drawable.logo
-    val COLOR_FILLER: Int? = R.color.primary
+    val COLOR_FILLER: Int? by lazy { R.color.primary }
     const val LOGO_WIDTH = 120f
     const val LOGO_HEIGHT = 137f
   }

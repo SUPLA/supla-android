@@ -70,9 +70,9 @@ class LoadChannelWithChildrenMeasurementsUseCaseTest : BaseLoadMeasurementsUseCa
 
     val channelWithChildren = mockChannelWithChildren()
     whenever(readChannelWithChildrenUseCase.invoke(remoteId)).thenReturn(Maybe.just(channelWithChildren))
-    whenever(temperatureMeasurementsProvider.provide(eq(channelWithChildren.children[1].channelDataEntity), eq(spec), any()))
+    whenever(temperatureMeasurementsProvider.provide(eq(channelWithChildren.children[1].withChildren), eq(spec), any()))
       .thenReturn(Single.just(temperatureSets))
-    whenever(temperatureAndHumidityMeasurementsProvider.provide(eq(channelWithChildren.children[0].channelDataEntity), eq(spec), any()))
+    whenever(temperatureAndHumidityMeasurementsProvider.provide(eq(channelWithChildren.children[0].withChildren), eq(spec), any()))
       .thenReturn(Single.just(temperatureAndHumiditySets))
 
     // when
@@ -87,8 +87,8 @@ class LoadChannelWithChildrenMeasurementsUseCaseTest : BaseLoadMeasurementsUseCa
       .containsExactlyInAnyOrder(temperatureSets, temperatureAndHumiditySets)
 
     verify(readChannelWithChildrenUseCase).invoke(remoteId)
-    verify(temperatureMeasurementsProvider).provide(eq(channelWithChildren.children[1].channelDataEntity), eq(spec), any())
-    verify(temperatureAndHumidityMeasurementsProvider).provide(eq(channelWithChildren.children[0].channelDataEntity), eq(spec), any())
+    verify(temperatureMeasurementsProvider).provide(eq(channelWithChildren.children[1].withChildren), eq(spec), any())
+    verify(temperatureAndHumidityMeasurementsProvider).provide(eq(channelWithChildren.children[0].withChildren), eq(spec), any())
     verifyNoMoreInteractions(readChannelWithChildrenUseCase, temperatureMeasurementsProvider, temperatureAndHumidityMeasurementsProvider)
   }
 
@@ -112,5 +112,6 @@ class LoadChannelWithChildrenMeasurementsUseCaseTest : BaseLoadMeasurementsUseCa
         every { it.remoteId } returns remoteId
         every { it.function } returns function
       }
+      every { channelChild.withChildren } returns ChannelWithChildren(channelChild.channelDataEntity)
     }
 }

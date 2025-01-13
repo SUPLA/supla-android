@@ -23,7 +23,7 @@ import org.mockito.InjectMocks
 import org.mockito.junit.MockitoJUnitRunner
 import org.supla.android.R
 import org.supla.android.data.model.general.ChannelState
-import org.supla.android.lib.SuplaConst
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 @RunWith(MockitoJUnitRunner::class)
 class ElectricityMeterIconResourceProducerTest : BaseIconResourceProducerTest() {
@@ -35,7 +35,7 @@ class ElectricityMeterIconResourceProducerTest : BaseIconResourceProducerTest() 
   fun `should produce icon`() {
     test(
       state = ChannelState.Value.NOT_USED,
-      function = SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER,
+      function = SuplaFunction.ELECTRICITY_METER,
       expectedIcon = R.drawable.fnc_electricity_meter
     )
   }
@@ -44,7 +44,7 @@ class ElectricityMeterIconResourceProducerTest : BaseIconResourceProducerTest() 
   fun `should produce icon (night mode)`() {
     test(
       state = ChannelState.Value.NOT_USED,
-      function = SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER,
+      function = SuplaFunction.ELECTRICITY_METER,
       expectedIcon = R.drawable.fnc_electricity_meter
     )
   }
@@ -54,7 +54,7 @@ class ElectricityMeterIconResourceProducerTest : BaseIconResourceProducerTest() 
     test(
       state = ChannelState.Value.NOT_USED,
       altIcon = 1,
-      function = SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER,
+      function = SuplaFunction.ELECTRICITY_METER,
       expectedIcon = R.drawable.powerstation
     )
   }

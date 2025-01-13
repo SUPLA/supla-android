@@ -46,10 +46,11 @@ import org.supla.android.db.room.app.migrations.Migration25to26
 import org.supla.android.db.room.app.migrations.Migration26to27
 import org.supla.android.db.room.app.migrations.Migration27to28
 import org.supla.android.db.room.measurements.MeasurementsDatabase
-import org.supla.android.db.room.measurements.MeasurementsDatabaseCallback
 import org.supla.android.db.room.measurements.migrations.MEASUREMENTS_DB_MIGRATION_31_32
 import org.supla.android.db.room.measurements.migrations.MEASUREMENTS_DB_MIGRATION_32_33
 import org.supla.android.db.room.measurements.migrations.MEASUREMENTS_DB_MIGRATION_33_34
+import org.supla.android.db.room.measurements.migrations.MEASUREMENTS_DB_MIGRATION_34_35
+import org.supla.android.db.room.measurements.migrations.MEASUREMENTS_DB_MIGRATION_35_36
 import org.supla.android.db.room.measurements.migrations.MeasurementsDbMigration29to30
 import javax.inject.Singleton
 
@@ -167,7 +168,6 @@ class DatabaseModule {
   @Singleton
   fun provideMeasurementsDatabase(
     @ApplicationContext context: Context,
-    callback: MeasurementsDatabaseCallback,
     migration29to30: MeasurementsDbMigration29to30
   ) =
     Room.databaseBuilder(context, MeasurementsDatabase::class.java, MeasurementsDbHelper.DATABASE_NAME)
@@ -179,7 +179,6 @@ class DatabaseModule {
           it
         }
       }
-      .addCallback(callback)
       .addMigrations(
         EmptyMigration(24, 25),
         EmptyMigration(25, 26),
@@ -190,7 +189,9 @@ class DatabaseModule {
         EmptyMigration(30, 31),
         MEASUREMENTS_DB_MIGRATION_31_32,
         MEASUREMENTS_DB_MIGRATION_32_33,
-        MEASUREMENTS_DB_MIGRATION_33_34
+        MEASUREMENTS_DB_MIGRATION_33_34,
+        MEASUREMENTS_DB_MIGRATION_34_35,
+        MEASUREMENTS_DB_MIGRATION_35_36
       )
       .build()
 
@@ -218,6 +219,16 @@ class DatabaseModule {
   @Singleton
   fun provideElectricityMeterLogDao(measurementsDatabase: MeasurementsDatabase) =
     measurementsDatabase.electricityMeterLogDao()
+
+  @Provides
+  @Singleton
+  fun provideHumidityLogDao(measurementsDatabase: MeasurementsDatabase) =
+    measurementsDatabase.humidityLogDao()
+
+  @Provides
+  @Singleton
+  fun impulseCounterLogDao(measurementsDatabase: MeasurementsDatabase) =
+    measurementsDatabase.impulseCounterLogDao()
 
   @Provides
   @Singleton

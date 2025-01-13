@@ -21,7 +21,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.util.JsonReader;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -51,7 +50,7 @@ import org.supla.android.lib.SuplaOAuthToken;
 public abstract class SuplaRestApiClientTask extends AsyncTask {
 
   protected static final String log_tag = "SuplaRestApiClientTask";
-  private Context _context;
+  private final Context _context;
   private int ChannelId = 0;
   private long ActivityTime = 0;
   private SuplaOAuthToken mToken;
@@ -311,12 +310,6 @@ public abstract class SuplaRestApiClientTask extends AsyncTask {
           TotalCount = 0;
         }
 
-        JsonReader reader =
-            new JsonReader(
-                new InputStreamReader(
-                    conn.getResponseCode() == 200 ? conn.getInputStream() : conn.getErrorStream(),
-                    "UTF-8"));
-
         InputStream ins =
             new BufferedInputStream(
                 conn.getResponseCode() == 200 ? conn.getInputStream() : conn.getErrorStream());
@@ -365,9 +358,9 @@ public abstract class SuplaRestApiClientTask extends AsyncTask {
 
   protected class ApiRequestResult {
 
-    private Object JObj;
-    private int Code;
-    private int TotalCount;
+    private final Object JObj;
+    private final int Code;
+    private final int TotalCount;
 
     ApiRequestResult(Object jobj, int code, int totalCount) {
       JObj = jobj;

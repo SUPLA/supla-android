@@ -137,8 +137,8 @@
   <string name="hp_hour">std</string>
   <string name="total_cost">Gesamtkosten</string>
   <string name="current_cost">Die Kosten im laufenden Monat</string>
-  <string name="current_consumption">Verbrauch im laufenden Monat</string>
-  <string name="meter_value">Zählerstand</string>
+  <string name="details_ic_current_consumption">Verbrauch im laufenden Monat</string>
+  <string name="details_ic_meter_value">Zählerstand</string>
   <string name="minutes">Minuten</string>
   <string name="hours">Stunden</string>
   <string name="days">Tage</string>
@@ -723,4 +723,5 @@
   <string name="details_em_voltage_phase_sequence">Spannungs-Phasenfolge</string>
   <string name="details_em_current_phase_sequence">Stromphasenfolge</string>
   <string name="em_electric_grid_parameters">Stromnetzparameter</string>
+  <string name="channel_caption_container">Behälter</string>
 </resources>

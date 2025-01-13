@@ -28,7 +28,7 @@ import org.supla.android.Trace;
 public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
 
   private long AfterTimestamp = 0;
-  private long _profileId;
+  private final long _profileId;
 
   public DownloadMeasurementLogs(Context context, int profileId) {
     super(context);
@@ -71,17 +71,13 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
 
     ApiRequestResult result =
         apiRequest(
-            "channels/"
-                + Integer.toString(getChannelId())
-                + "/measurement-logs?order=ASC"
-                + "&limit=2&offset=0");
+            "channels/" + getChannelId() + "/measurement-logs?order=ASC" + "&limit=2&offset=0");
 
     if (result != null && result.getCode() == 200) {
       boolean doErase = false;
       if (result.getTotalCount() == 0) {
         doErase = true;
-      } else if (result.getJObj() instanceof JSONArray) {
-        JSONArray arr = (JSONArray) result.getJObj();
+      } else if (result.getJObj() instanceof JSONArray arr) {
         boolean found = false;
         long min = getMinTimestamp();
         for (int a = 0; a < arr.length(); a++) {
@@ -115,22 +111,20 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
       result =
           apiRequest(
               "channels/"
-                  + Integer.toString(getChannelId())
+                  + getChannelId()
                   + "/measurement-logs?order=ASC"
                   + "&limit="
-                  + Integer.toString(itemsLimitPerRequest())
+                  + itemsLimitPerRequest()
                   + "&afterTimestamp="
-                  + Long.toString(AfterTimestamp));
+                  + AfterTimestamp);
 
       if (result == null || result.getCode() != 200) {
         return null;
       }
 
-      if (!(result.getJObj() instanceof JSONArray)) {
+      if (!(result.getJObj() instanceof JSONArray arr)) {
         return null;
       }
-
-      JSONArray arr = (JSONArray) result.getJObj();
 
       if (arr == null || arr.length() <= 0) {
         break;
@@ -197,7 +191,7 @@ public abstract class DownloadMeasurementLogs extends SuplaRestApiClientTask {
         db.endTransaction();
       }
 
-      Trace.d(log_tag, "TIME: " + Long.toString(System.currentTimeMillis() - t));
+      Trace.d(log_tag, "TIME: " + (System.currentTimeMillis() - t));
 
     } while (!isCancelled());
 

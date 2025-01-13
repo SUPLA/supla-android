@@ -23,12 +23,14 @@ import org.supla.android.data.source.local.entity.ChannelGroupEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
 import org.supla.android.db.Channel
 import org.supla.android.db.ChannelBase
 import org.supla.android.db.ChannelGroup
 import org.supla.android.db.ChannelValue
 import org.supla.android.usecases.group.GetGroupActivePercentageUseCase
+import org.supla.core.shared.data.model.function.container.ContainerValue
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.data.model.general.suplaFunction
 import javax.inject.Inject
@@ -42,6 +44,9 @@ class GetChannelStateUseCase @Inject constructor(
   operator fun invoke(channelDataBase: ChannelDataBase): ChannelState {
     if (channelDataBase is ChannelDataEntity) {
       return getChannelState(channelDataBase.function, ChannelValueEntityStateWrapper(channelDataBase.channelValueEntity))
+    }
+    if (channelDataBase is ChannelWithChildren) {
+      return getChannelState(channelDataBase.function, ChannelValueEntityStateWrapper(channelDataBase.channel.channelValueEntity))
     }
     if (channelDataBase is ChannelGroupDataEntity) {
       val wrapper = ChannelGroupEntityStateWrapper(channelDataBase.channelGroupEntity, getGroupActivePercentageUseCase)
@@ -131,6 +136,14 @@ class GetChannelStateUseCase @Inject constructor(
         }
       }
 
+      SuplaFunction.CONTAINER -> {
+        when {
+          value.containerValue.level > 80 -> ChannelState(ChannelState.Value.FULL)
+          value.containerValue.level > 20 -> ChannelState(ChannelState.Value.HALF)
+          else -> ChannelState(ChannelState.Value.EMPTY)
+        }
+      }
+
       SuplaFunction.UNKNOWN,
       SuplaFunction.NONE,
       SuplaFunction.THERMOMETER,
@@ -209,6 +222,8 @@ class GetChannelStateUseCase @Inject constructor(
           else -> ChannelState(ChannelState.Value.COOL)
         }
 
+      SuplaFunction.CONTAINER -> ChannelState(ChannelState.Value.EMPTY)
+
       SuplaFunction.UNKNOWN,
       SuplaFunction.NONE,
       SuplaFunction.THERMOMETER,
@@ -271,6 +286,7 @@ interface ValueStateWrapper {
   val thermostatSubfunction: ThermostatSubfunction?
   val shadingSystemClosed: Boolean
   val shadingSystemReversedClosed: Boolean
+  val containerValue: ContainerValue
 }
 
 private class ChannelValueEntityStateWrapper(private val channelValueEntity: ChannelValueEntity) : ValueStateWrapper {
@@ -299,6 +315,8 @@ private class ChannelValueEntityStateWrapper(private val channelValueEntity: Cha
       val percentage = channelValueEntity.asRollerShutterValue().position
       return percentage < 100
     }
+  override val containerValue: ContainerValue
+    get() = channelValueEntity.asContainerValue()
 }
 
 private class ChannelGroupEntityStateWrapper(
@@ -323,6 +341,8 @@ private class ChannelGroupEntityStateWrapper(
     get() = getActivePercentage() >= 100
   override val shadingSystemReversedClosed: Boolean
     get() = getActivePercentage() < 100
+  override val containerValue: ContainerValue
+    get() = ContainerValue(group.online > 0, emptyList(), 0)
 
   private fun getActivePercentage(valueIndex: Int = 0) =
     getGroupActivePercentageUseCase(group, valueIndex)
@@ -354,6 +374,8 @@ private class ChannelValueStateWrapper(private val value: ChannelValue?) : Value
       val percentage = value?.rollerShutterValue?.closingPercentage ?: 0
       return percentage < 100
     }
+  override val containerValue: ContainerValue
+    get() = value?.asContainerValue() ?: ContainerValue(value?.onLine ?: false, emptyList(), 0)
 }
 
 private class ChannelGroupStateWrapper(
@@ -378,6 +400,8 @@ private class ChannelGroupStateWrapper(
     get() = getActivePercentage() >= 100
   override val shadingSystemReversedClosed: Boolean
     get() = getActivePercentage() <= 0
+  override val containerValue: ContainerValue
+    get() = ContainerValue(group.onLine, emptyList(), 0)
 
   private fun getActivePercentage(valueIndex: Int = 0) =
     getGroupActivePercentageUseCase(group, valueIndex)

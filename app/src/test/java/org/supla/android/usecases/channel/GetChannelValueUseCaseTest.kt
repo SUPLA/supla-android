@@ -30,6 +30,7 @@ import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.usecases.channel.valueprovider.ContainerValueProvider
 import org.supla.android.usecases.channel.valueprovider.DepthSensorValueProvider
 import org.supla.android.usecases.channel.valueprovider.DistanceSensorValueProvider
 import org.supla.android.usecases.channel.valueprovider.ElectricityMeterValueProvider
@@ -39,7 +40,9 @@ import org.supla.android.usecases.channel.valueprovider.ImpulseCounterValueProvi
 import org.supla.android.usecases.channel.valueprovider.PressureSensorValueProvider
 import org.supla.android.usecases.channel.valueprovider.RainSensorValueProvider
 import org.supla.android.usecases.channel.valueprovider.SwitchWithElectricityMeterValueProvider
+import org.supla.android.usecases.channel.valueprovider.SwitchWithImpulseCounterValueProvider
 import org.supla.android.usecases.channel.valueprovider.ThermometerValueProvider
+import org.supla.android.usecases.channel.valueprovider.WeightSensorValueProvider
 import org.supla.core.shared.data.model.general.SuplaFunction
 
 @RunWith(MockitoJUnitRunner::class)
@@ -70,10 +73,19 @@ class GetChannelValueUseCaseTest {
   private lateinit var switchWithElectricityMeterValueProvider: SwitchWithElectricityMeterValueProvider
 
   @Mock
+  private lateinit var switchWithImpulseCounterValueProvider: SwitchWithImpulseCounterValueProvider
+
+  @Mock
   private lateinit var pressureSensorValueProvider: PressureSensorValueProvider
 
   @Mock
   private lateinit var rainSensorValueProvider: RainSensorValueProvider
+
+  @Mock
+  private lateinit var containerValueProvider: ContainerValueProvider
+
+  @Mock
+  private lateinit var weightSensorValueProvider: WeightSensorValueProvider
 
   @InjectMocks
   private lateinit var useCase: GetChannelValueUseCase

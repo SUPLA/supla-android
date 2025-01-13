@@ -48,16 +48,8 @@ public class ThermostatHP {
 
   public ThermostatHP() {}
 
-  public ThermostatHP(ChannelExtendedValue cev, boolean online) {
-    assign(cev, online);
-  }
-
   public ThermostatHP(Cursor cursor) {
     assign(cursor);
-  }
-
-  public ThermostatHP(Channel channel) {
-    assign(channel);
   }
 
   public boolean assign(ChannelExtendedValue cev, boolean online) {
@@ -96,8 +88,11 @@ public class ThermostatHP {
   }
 
   public boolean assign(Channel channel) {
-    ChannelExtendedValue cev = channel == null ? null : channel.getExtendedValue();
-    return assign(cev, channel.getOnLine());
+    if (channel != null) {
+      return assign(channel.getExtendedValue(), channel.getOnLine());
+    } else {
+      return false;
+    }
   }
 
   public boolean assign(Cursor cursor) {
@@ -130,14 +125,6 @@ public class ThermostatHP {
     return ecoTemp;
   }
 
-  public Integer getFlags1() {
-    return flags1;
-  }
-
-  public Integer getFlags2() {
-    return flags2;
-  }
-
   public Integer getTurboTime() {
     return turboTime;
   }
@@ -162,27 +149,18 @@ public class ThermostatHP {
   }
 
   public String getErrorMessage(Context context) {
-    int msgId = 0;
-    switch (getError()) {
-      case 1:
-        msgId = R.string.hp_error_1;
-        break;
-      case 2:
-        msgId = R.string.hp_error_2;
-        break;
-      case 3:
-        msgId = R.string.hp_error_3;
-        break;
-      case 4:
-        msgId = R.string.hp_error_4;
-        break;
-      case 5:
-        msgId = R.string.hp_error_5;
-        break;
-    }
+    int msgId =
+        switch (getError()) {
+          case 1 -> R.string.hp_error_1;
+          case 2 -> R.string.hp_error_2;
+          case 3 -> R.string.hp_error_3;
+          case 4 -> R.string.hp_error_4;
+          case 5 -> R.string.hp_error_5;
+          default -> 0;
+        };
 
     if (msgId != 0) {
-      context.getResources().getString(msgId);
+      return context.getResources().getString(msgId);
     }
 
     return "";

@@ -62,7 +62,7 @@ import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.client.ExecuteThermostatActionUseCase
-import org.supla.core.shared.data.model.thermostat.ThermostatValue
+import org.supla.core.shared.data.model.function.thermostat.ThermostatValue
 import org.supla.core.shared.extensions.fromSuplaTemperature
 import org.supla.core.shared.extensions.ifTrue
 import java.util.Date

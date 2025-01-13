@@ -28,7 +28,7 @@ import junit.framework.TestCase;
 public class SuplaCurtainsTest extends TestCase {
 
   private SuplaCurtains curtains;
-  private Context context = mock(Context.class);
+  private final Context context = mock(Context.class);
 
   @Override
   protected void setUp() {

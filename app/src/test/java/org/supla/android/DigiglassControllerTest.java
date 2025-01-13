@@ -60,20 +60,20 @@ public class DigiglassControllerTest extends TestCase
 
   @Test
   public void testClickListenerSetterAndGetter() {
-    Assert.assertEquals(null, controller.getOnSectionClickListener());
+    Assert.assertNull(controller.getOnSectionClickListener());
     controller.setOnSectionClickListener(this);
     Assert.assertEquals(this, controller.getOnSectionClickListener());
     controller.setOnSectionClickListener(null);
-    Assert.assertEquals(null, controller.getOnSectionClickListener());
+    Assert.assertNull(controller.getOnSectionClickListener());
   }
 
   @Test
   public void testHorizontalSetterAndGetter() {
-    Assert.assertEquals(false, controller.isVertical());
+    Assert.assertFalse(controller.isVertical());
     controller.setVertical(true);
-    Assert.assertEquals(true, controller.isVertical());
+    Assert.assertTrue(controller.isVertical());
     controller.setVertical(false);
-    Assert.assertEquals(false, controller.isVertical());
+    Assert.assertFalse(controller.isVertical());
   }
 
   @Test
@@ -111,8 +111,8 @@ public class DigiglassControllerTest extends TestCase
     Assert.assertEquals(1, controller.getTransparentSections());
     controller.setSectionCount(2);
 
-    Assert.assertEquals(true, controller.isSectionTransparent(0));
-    Assert.assertEquals(false, controller.isSectionTransparent(2));
+    Assert.assertTrue(controller.isSectionTransparent(0));
+    Assert.assertFalse(controller.isSectionTransparent(2));
 
     controller.setSectionCount(6);
     controller.setTransparentSections(101);

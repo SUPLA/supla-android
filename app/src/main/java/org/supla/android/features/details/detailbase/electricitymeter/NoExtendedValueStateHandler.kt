@@ -17,11 +17,10 @@ package org.supla.android.features.details.detailbase.electricitymeter
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.data.model.general.hasElectricityMeter
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
-import org.supla.android.data.source.local.entity.complex.isElectricityMeter
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
+import org.supla.android.ui.views.card.SummaryCardData
 import org.supla.android.usecases.channel.GetChannelValueUseCase
-import org.supla.android.usecases.channel.electricitymeter.ElectricityMeasurements
+import org.supla.android.usecases.channel.measurements.ElectricityMeasurements
 import org.supla.android.usecases.channel.valueformatter.ListElectricityMeterValueFormatter
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -33,19 +32,19 @@ class NoExtendedValueStateHandler @Inject constructor(
 
   fun updateState(
     state: ElectricityMeterState?,
-    channel: ChannelDataEntity,
+    channelWithChildren: ChannelWithChildren,
     measurements: ElectricityMeasurements? = null
   ): ElectricityMeterState? {
-    if (!channel.isElectricityMeter() && !channel.hasElectricityMeter) {
+    if (!channelWithChildren.isOrHasElectricityMeter) {
       return state
     }
 
-    val value: Double = getChannelValueUseCase(channel)
+    val value: Double = getChannelValueUseCase(channelWithChildren.channel)
     val formatter = ListElectricityMeterValueFormatter(useNoValue = false)
 
     return state.copyOrCreate(
-      online = channel.isOnline(),
-      totalForwardActiveEnergy = EnergyData(energy = formatter.format(value), price = null),
+      online = channelWithChildren.isOnline(),
+      totalForwardActiveEnergy = SummaryCardData(value = formatter.format(value), price = null),
       totalReversedActiveEnergy = null,
       currentMonthForwardActiveEnergy = measurements?.toForwardEnergy(formatter),
       currentMonthReversedActiveEnergy = measurements?.toReverseEnergy(formatter),

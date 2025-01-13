@@ -18,16 +18,15 @@ package org.supla.android.usecases.icon.producers
  */
 
 import org.supla.android.R
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_IC_ELECTRICITY_METER
 import org.supla.android.usecases.icon.IconData
 import org.supla.android.usecases.icon.IconResourceProducer
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 class ElectricityMeterIconResourceProducer : IconResourceProducer {
-  override fun accepts(function: Int): Boolean =
+  override fun accepts(function: SuplaFunction): Boolean =
     when (function) {
-      SUPLA_CHANNELFNC_ELECTRICITY_METER,
-      SUPLA_CHANNELFNC_IC_ELECTRICITY_METER -> true
+      SuplaFunction.ELECTRICITY_METER,
+      SuplaFunction.IC_ELECTRICITY_METER -> true
       else -> false
     }
 

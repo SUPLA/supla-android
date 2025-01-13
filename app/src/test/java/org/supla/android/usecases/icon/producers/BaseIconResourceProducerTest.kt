@@ -22,6 +22,7 @@ import org.supla.android.data.model.general.ChannelState
 import org.supla.android.data.model.general.IconType
 import org.supla.android.usecases.icon.IconData
 import org.supla.android.usecases.icon.IconResourceProducer
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 abstract class BaseIconResourceProducerTest {
 
@@ -39,19 +40,19 @@ abstract class BaseIconResourceProducerTest {
     type: IconType = IconType.SINGLE
   ) =
     IconData(
-      function = 0,
+      function = SuplaFunction.NONE,
       altIcon = altIcon,
       state = state,
       type = type
     )
 
-  protected fun test(state: ChannelState.Value, altIcon: Int, function: Int, expectedIcon: Int) =
+  protected fun test(state: ChannelState.Value, altIcon: Int, function: SuplaFunction, expectedIcon: Int) =
     test(mockIconData(ChannelState(state), altIcon), function, expectedIcon)
 
-  protected fun test(state: ChannelState.Value, function: Int, expectedIcon: Int) =
+  protected fun test(state: ChannelState.Value, function: SuplaFunction, expectedIcon: Int) =
     test(mockIconData(ChannelState(state)), function, expectedIcon)
 
-  protected fun test(data: IconData, function: Int, expectedIcon: Int?) {
+  protected fun test(data: IconData, function: SuplaFunction, expectedIcon: Int?) {
     // when
     val accepts = producer.accepts(function)
     val icon = producer.produce(data)

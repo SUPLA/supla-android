@@ -37,7 +37,7 @@ public class SuplaThermostatScheduleCfg {
     }
 
     CfgGroup group;
-    byte hourValue[] = new byte[24];
+    byte[] hourValue = new byte[24];
     int a;
 
     for (a = 0; a < mGroups.size(); a++) {
@@ -148,25 +148,25 @@ public class SuplaThermostatScheduleCfg {
   })
   @Retention(RetentionPolicy.SOURCE)
   @interface DayOfWeek {
-    public static final int SUNDAY = 0x1;
-    public static final int MONDAY = 0x2;
-    public static final int TUESDAY = 0x4;
-    public static final int WEDNESDAY = 0x8;
-    public static final int THURSDAY = 0x10;
-    public static final int FRIDAY = 0x20;
-    public static final int SATURDAY = 0x40;
+    int SUNDAY = 0x1;
+    int MONDAY = 0x2;
+    int TUESDAY = 0x4;
+    int WEDNESDAY = 0x8;
+    int THURSDAY = 0x10;
+    int FRIDAY = 0x20;
+    int SATURDAY = 0x40;
   }
 
   @IntDef({HourValueType.TEMPERATURE, HourValueType.PROGRAM})
   @Retention(RetentionPolicy.SOURCE)
   @interface HourValueType {
-    public static final int TEMPERATURE = 0;
-    public static final int PROGRAM = 1;
+    int TEMPERATURE = 0;
+    int PROGRAM = 1;
   }
 
   private class CfgGroup {
     public int mWeekDays = 0;
     public @HourValueType int mValueType;
-    public byte mHourValue[] = new byte[24];
+    public byte[] mHourValue = new byte[24];
   }
 }

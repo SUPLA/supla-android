@@ -32,6 +32,7 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
 import org.supla.android.usecases.channel.GetChannelStateUseCase
 import org.supla.core.shared.data.model.general.SuplaFunction
+import org.supla.core.shared.data.model.general.suplaFunction
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -62,7 +63,7 @@ class GetChannelIconUseCase @Inject constructor(
     }
 
     val iconData = IconData(
-      function = channelDataBase.function.value,
+      function = channelDataBase.function,
       altIcon = channelDataBase.altIcon,
       state = state,
       type = type
@@ -73,7 +74,7 @@ class GetChannelIconUseCase @Inject constructor(
   operator fun invoke(
     channelBase: ChannelBase,
     type: IconType = IconType.SINGLE,
-    channelStateValue: ChannelState.Value? = null
+    channelState: ChannelState? = null
   ): ImageId? {
     if (type != IconType.SINGLE && channelBase.func != SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE) {
       // TODO: Should be restored when ChannelLayout removed
@@ -81,14 +82,14 @@ class GetChannelIconUseCase @Inject constructor(
       return null
     }
 
-    val state = channelStateValue?.let { ChannelState(it) } ?: getChannelStateUseCase(channelBase)
+    val state = channelState ?: getChannelStateUseCase(channelBase)
 
     ifLet(findUserIcon(channelBase, type, state)) { (id) ->
       return id
     }
 
     val iconData = IconData(
-      function = channelBase.func,
+      function = channelBase.func.suplaFunction(),
       altIcon = channelBase.altIcon,
       state = state,
       type = type

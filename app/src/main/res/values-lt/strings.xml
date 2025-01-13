@@ -119,8 +119,8 @@
   <string name="hp_hour">h</string>
   <string name="total_cost">Bendra kaina</string>
   <string name="current_cost">Kaina einamąjį mėnesį</string>
-  <string name="current_consumption">Suvartojimas einamąjį mėnesį</string>
-  <string name="meter_value">Skaitiklio būsena</string>
+  <string name="details_ic_current_consumption">Suvartojimas einamąjį mėnesį</string>
+  <string name="details_ic_meter_value">Skaitiklio būsena</string>
   <string name="minutes">Minutės</string>
   <string name="hours">Valandos</string>
   <string name="days">Dienos</string>

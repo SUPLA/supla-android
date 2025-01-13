@@ -18,7 +18,6 @@ package org.supla.android.features.details.thermometerdetail.history
  */
 
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.core.infrastructure.DateProvider
@@ -30,7 +29,7 @@ import org.supla.android.data.model.chart.ChartState
 import org.supla.android.data.model.chart.DateRange
 import org.supla.android.data.model.chart.datatype.ChartData
 import org.supla.android.data.model.chart.datatype.LineChartData
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.events.DownloadEventsManager
 import org.supla.android.features.details.detailbase.history.BaseHistoryDetailViewModel
 import org.supla.android.profile.ProfileManager
@@ -39,7 +38,7 @@ import org.supla.android.usecases.channel.DeleteChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.DownloadChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.LoadChannelMeasurementsDataRangeUseCase
 import org.supla.android.usecases.channel.LoadChannelMeasurementsUseCase
-import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
+import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
 import javax.inject.Inject
 
 @HiltViewModel
@@ -48,28 +47,20 @@ class ThermometerHistoryDetailViewModel @Inject constructor(
   private val loadChannelMeasurementsUseCase: LoadChannelMeasurementsUseCase,
   private val loadChannelMeasurementsDataRangeUseCase: LoadChannelMeasurementsDataRangeUseCase,
   private val downloadEventsManager: DownloadEventsManager,
-  private val profileManager: ProfileManager,
-  private val readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
-  private val userStateHolder: UserStateHolder,
   deleteChannelMeasurementsUseCase: DeleteChannelMeasurementsUseCase,
-  dateProvider: DateProvider,
-  schedulers: SuplaSchedulers
-) : BaseHistoryDetailViewModel(deleteChannelMeasurementsUseCase, userStateHolder, dateProvider, schedulers) {
-
-  override fun triggerDataLoad(remoteId: Int) {
-    Maybe.zip(
-      readChannelByRemoteIdUseCase(remoteId),
-      profileManager.getCurrentProfile().map { loadChartState(it.id, remoteId) }
-    ) { first, second ->
-      Pair(first, second)
-    }
-      .attachSilent()
-      .subscribeBy(
-        onSuccess = { handleData(it.first, it.second) },
-        onError = defaultErrorHandler("triggerDataLoad")
-      )
-      .disposeBySelf()
-  }
+  readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
+  userStateHolder: UserStateHolder,
+  profileManager: ProfileManager,
+  schedulers: SuplaSchedulers,
+  dateProvider: DateProvider
+) : BaseHistoryDetailViewModel(
+  deleteChannelMeasurementsUseCase,
+  readChannelWithChildrenUseCase,
+  userStateHolder,
+  profileManager,
+  dateProvider,
+  schedulers
+) {
 
   override fun measurementsMaybe(
     remoteId: Int,
@@ -82,21 +73,21 @@ class ThermometerHistoryDetailViewModel @Inject constructor(
       loadChannelMeasurementsDataRangeUseCase(remoteId, profileId)
     ) { first, second -> Pair(LineChartData(DateRange(spec.startDate, spec.endDate), chartRange, spec.aggregation, listOf(first)), second) }
 
-  private fun handleData(channel: ChannelDataEntity, chartState: ChartState) {
-    updateState { it.copy(profileId = channel.profileId, channelFunction = channel.function.value) }
+  override fun handleData(channelWithChildren: ChannelWithChildren, chartState: ChartState) {
+    updateState { it.copy(profileId = channelWithChildren.profileId, channelFunction = channelWithChildren.function.value) }
 
     restoreRange(chartState)
-    configureDownloadObserver(channel.remoteId)
-    startInitialDataLoad(channel.remoteId, channel.profileId, channel.function.value)
+    configureDownloadObserver(channelWithChildren.remoteId)
+    startInitialDataLoad(channelWithChildren)
   }
 
-  private fun startInitialDataLoad(remoteId: Int, profileId: Long, channelFunction: Int) {
+  private fun startInitialDataLoad(channel: ChannelWithChildren) {
     if (currentState().initialLoadStarted) {
       // Needs to be performed only once
       return
     }
     updateState { it.copy(initialLoadStarted = true) }
-    downloadChannelMeasurementsUseCase.invoke(remoteId, profileId, channelFunction)
+    downloadChannelMeasurementsUseCase.invoke(channel)
   }
 
   private fun configureDownloadObserver(remoteId: Int) {

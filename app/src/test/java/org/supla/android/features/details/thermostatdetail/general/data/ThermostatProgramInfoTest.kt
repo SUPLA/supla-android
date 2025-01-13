@@ -42,7 +42,7 @@ import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
 import org.supla.android.data.source.remote.hvac.SuplaWeeklyScheduleEntry
 import org.supla.android.data.source.remote.hvac.SuplaWeeklyScheduleProgram
-import org.supla.core.shared.data.model.thermostat.SuplaThermostatFlag
+import org.supla.core.shared.data.model.function.thermostat.SuplaThermostatFlag
 import java.util.EnumSet
 
 @RunWith(MockitoJUnitRunner::class)

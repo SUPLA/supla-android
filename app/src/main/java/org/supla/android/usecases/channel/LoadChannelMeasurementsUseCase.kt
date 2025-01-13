@@ -24,6 +24,8 @@ import org.supla.android.usecases.channel.measurementsprovider.ChannelMeasuremen
 import org.supla.android.usecases.channel.measurementsprovider.ElectricityConsumptionMeasurementsProvider
 import org.supla.android.usecases.channel.measurementsprovider.GeneralPurposeMeasurementMeasurementsProvider
 import org.supla.android.usecases.channel.measurementsprovider.GeneralPurposeMeterMeasurementsProvider
+import org.supla.android.usecases.channel.measurementsprovider.HumidityMeasurementsProvider
+import org.supla.android.usecases.channel.measurementsprovider.ImpulseCounterMeasurementsProvider
 import org.supla.android.usecases.channel.measurementsprovider.TemperatureAndHumidityMeasurementsProvider
 import org.supla.android.usecases.channel.measurementsprovider.TemperatureMeasurementsProvider
 import javax.inject.Inject
@@ -31,12 +33,14 @@ import javax.inject.Singleton
 
 @Singleton
 class LoadChannelMeasurementsUseCase @Inject constructor(
-  private val readChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
+  private val readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
   temperatureMeasurementsProvider: TemperatureMeasurementsProvider,
   temperatureAndHumidityMeasurementsProvider: TemperatureAndHumidityMeasurementsProvider,
   generalPurposeMeasurementMeasurementsProvider: GeneralPurposeMeasurementMeasurementsProvider,
   generalPurposeMeterMeasurementsProvider: GeneralPurposeMeterMeasurementsProvider,
-  electricityConsumptionMeasurementsProvider: ElectricityConsumptionMeasurementsProvider
+  electricityConsumptionMeasurementsProvider: ElectricityConsumptionMeasurementsProvider,
+  humidityMeasurementsProvider: HumidityMeasurementsProvider,
+  impulseCounterMeasurementsProvider: ImpulseCounterMeasurementsProvider
 ) {
 
   private val providers: List<ChannelMeasurementsProvider> = listOf(
@@ -44,15 +48,17 @@ class LoadChannelMeasurementsUseCase @Inject constructor(
     temperatureAndHumidityMeasurementsProvider,
     generalPurposeMeasurementMeasurementsProvider,
     generalPurposeMeterMeasurementsProvider,
-    electricityConsumptionMeasurementsProvider
+    electricityConsumptionMeasurementsProvider,
+    humidityMeasurementsProvider,
+    impulseCounterMeasurementsProvider
   )
 
   operator fun invoke(remoteId: Int, spec: ChartDataSpec): Single<ChannelChartSets> =
-    readChannelByRemoteIdUseCase(remoteId)
+    readChannelWithChildrenUseCase(remoteId)
       .toSingle()
       .flatMap {
         providers.forEach { provider ->
-          if (provider.handle(it.function.value)) {
+          if (provider.handle(it)) {
             return@flatMap provider.provide(it, spec)
           }
         }
