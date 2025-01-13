@@ -42,7 +42,8 @@ sealed interface ListItem {
     }
 
     if (this is ChannelBasedItem && another is ChannelBasedItem) {
-      return channelBase.remoteId != another.channelBase.remoteId || channelBase.function != another.channelBase.function
+      return channelBase.remoteId != another.channelBase.remoteId || channelBase.function != another.channelBase.function ||
+        channelBase.isOnline() != another.channelBase.isOnline()
     }
 
     return true
@@ -167,6 +168,7 @@ sealed interface ListItem {
       )
     }
   }
+
   class IconWithRightButtonItem(
     channel: ChannelDataEntity,
     locationCaption: String,
