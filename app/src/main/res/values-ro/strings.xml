@@ -142,8 +142,6 @@
   <string name="hp_calendar_comfort">Confort</string>
   <string name="hp_cfg_temp_eco">Temperatura ECO în modul AUTO</string>
   <string name="hp_hour">godz.</string>
-  <string name="total_cost">Costul total</string>
-  <string name="current_cost">Costul în luna curentă</string>
   <string name="details_ic_current_consumption">Consumul în luna curentă</string>
   <string name="details_ic_meter_value">Starea contorului</string>
   <string name="minutes">Minute</string>

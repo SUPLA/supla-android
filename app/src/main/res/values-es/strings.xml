@@ -128,8 +128,6 @@
   <string name="hp_cfg_temp_eco">Temperatura ECO en modo AUTO</string>
   <string name="hp_hour">h</string>
   <string name="details_ic_meter_value">Lectura del contador</string>
-  <string name="total_cost">Coste total</string>
-  <string name="current_cost">Coste en el mes actual</string>
   <string name="details_ic_current_consumption">Consumo en el mes actual</string>
   <string name="minutes">Minutos</string>
   <string name="hours">Horas</string>

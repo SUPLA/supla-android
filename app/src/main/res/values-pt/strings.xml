@@ -126,8 +126,6 @@
   <string name="hp_calendar_comfort">Conforto</string>
   <string name="hp_cfg_temp_eco">Temperatura ECO no modo AUTO</string>
   <string name="hp_hour">h</string>
-  <string name="total_cost">Custo total</string>
-  <string name="current_cost">Custo no mês atual</string>
   <string name="details_ic_current_consumption">Consumo no mês atual</string>
   <string name="details_ic_meter_value">Status do contador</string>
   <string name="minutes">Minutos</string>

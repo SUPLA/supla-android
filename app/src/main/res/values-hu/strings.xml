@@ -143,8 +143,6 @@
   <string name="hp_calendar_comfort">Kényelem</string>
   <string name="hp_cfg_temp_eco">ECO hőmérséklet AUTO módban</string>
   <string name="hp_hour">godz.</string>
-  <string name="total_cost">Összköltség</string>
-  <string name="current_cost">A folyó hó költsége</string>
   <string name="details_ic_current_consumption">Fogyasztás a folyó hónapban</string>
   <string name="details_ic_meter_value">Mérőóra leolvasás</string>
   <string name="minutes">Perc</string>

@@ -381,8 +381,6 @@
   <string name="hp_cfg_water_max">Максимальна температура води</string>
   <string name="hp_cfg_eco_reduction">Зниження температури в режимі ЕCО</string>
   <string name="details_ic_meter_value">Стан лічильника</string>
-  <string name="total_cost">Загальна вартість</string>
-  <string name="current_cost">Вартість поточного місяця</string>
   <string name="temperature">Температура</string>
   <string name="channel_func_opensensor_gate">Датчик відкриття воріт</string>
   <string name="channel_func_windsensor">Датчик вітру</string>

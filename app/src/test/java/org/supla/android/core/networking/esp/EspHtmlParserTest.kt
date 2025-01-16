@@ -29,8 +29,11 @@ import java.io.File
 @RunWith(MockitoJUnitRunner::class)
 class EspHtmlParserTest {
 
-  private val testFile: File?
+  private val testFileThermostat: File?
     get() = javaClass.classLoader?.getResource("arduino.html")?.path?.let { File(it) }
+
+  private val testFileDiy: File?
+    get() = javaClass.classLoader?.getResource("7.8.17.html")?.path?.let { File(it) }
 
   @InjectMocks
   private lateinit var parser: EspHtmlParser
@@ -38,7 +41,7 @@ class EspHtmlParserTest {
   @Test
   fun shouldLoadInputs() {
     // given
-    val (file) = guardLet(testFile) { throw IllegalStateException("Test file not found!") }
+    val (file) = guardLet(testFileThermostat) { throw IllegalStateException("Test file not found!") }
     val document = Jsoup.parse(file, "UTF-8")
 
     // when
@@ -57,7 +60,7 @@ class EspHtmlParserTest {
   @Test
   fun shouldLoadConfig() {
     // given
-    val (file) = guardLet(testFile) { throw IllegalStateException("Test file not found!") }
+    val (file) = guardLet(testFileThermostat) { throw IllegalStateException("Test file not found!") }
     val document = Jsoup.parse(file, "UTF-8")
     val inputs = parser.findInputs(document)
 
@@ -77,7 +80,7 @@ class EspHtmlParserTest {
   @Test
   fun shouldLoadConfig_withNeedsCloudConfig() {
     // given
-    val (file) = guardLet(testFile) { throw IllegalStateException("Test file not found!") }
+    val (file) = guardLet(testFileThermostat) { throw IllegalStateException("Test file not found!") }
     val document = Jsoup.parse(file, "UTF-8")
     val inputs = parser.findInputs(document)
     (inputs as MutableMap<String, String>)["no_visible_channels"] = "1"
@@ -93,5 +96,25 @@ class EspHtmlParserTest {
     assertThat(result.deviceGUID).isEqualTo("9F22CD27D5D799FFCE7AA50BCFD539E8")
     assertThat(result.deviceMAC).isEqualTo("58:BF:25:31:9F:04")
     assertThat(result.needsCloudConfig).isTrue()
+  }
+
+  @Test
+  fun shouldLoadConfigDiy() {
+    // given
+    val (file) = guardLet(testFileDiy) { throw IllegalStateException("Test file not found!") }
+    val document = Jsoup.parse(file, "UTF-8")
+    val inputs = parser.findInputs(document)
+
+    // then
+    val result = parser.prepareResult(document, inputs)
+
+    // then
+    assertThat(result.resultCode).isEqualTo(RESULT_FAILED)
+    assertThat(result.deviceName).isEqualTo("YoDeCo - Sonoff MINIR4")
+    assertThat(result.deviceLastState).isEqualTo("Zainicjowany")
+    assertThat(result.deviceFirmwareVersion).isEqualTo("SuplaDevice GG v7.8.17")
+    assertThat(result.deviceGUID).isEqualTo("C85A6230A251518F61CFDE8704B6A7D8")
+    assertThat(result.deviceMAC).isEqualTo("30:C9:22:D2:BE:E8")
+    assertThat(result.needsCloudConfig).isFalse()
   }
 }
