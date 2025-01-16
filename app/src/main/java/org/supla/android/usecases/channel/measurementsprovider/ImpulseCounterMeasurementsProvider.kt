@@ -30,6 +30,7 @@ import org.supla.android.data.model.chart.ChartDataAggregation
 import org.supla.android.data.model.chart.ChartDataSpec
 import org.supla.android.data.model.chart.ChartEntryType
 import org.supla.android.data.model.chart.ChartEntryType.IMPULSE_COUNTER
+import org.supla.android.data.model.chart.HistoryDataSet
 import org.supla.android.data.source.ImpulseCounterLogRepository
 import org.supla.android.data.source.local.entity.complex.ImpulseCounter
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
@@ -47,9 +48,9 @@ import javax.inject.Singleton
 @Singleton
 class ImpulseCounterMeasurementsProvider @Inject constructor(
   private val impulseCounterLogRepository: ImpulseCounterLogRepository,
+  private val getChannelIconUseCase: GetChannelIconUseCase,
   private val getCaptionUseCase: GetCaptionUseCase,
   getChannelValueStringUseCase: GetChannelValueStringUseCase,
-  getChannelIconUseCase: GetChannelIconUseCase,
   preferences: Preferences,
   @Named(GSON_FOR_REPO) gson: Gson
 ) : ChannelMeasurementsProvider(getChannelValueStringUseCase, getChannelIconUseCase, preferences, gson) {
@@ -64,10 +65,8 @@ class ImpulseCounterMeasurementsProvider @Inject constructor(
     val channel = channelWithChildren.channel
 
     return impulseCounterLogRepository.findMeasurements(channel.remoteId, channel.profileId, spec.startDate, spec.endDate)
-      .map { entities -> aggregatingImpulseCounter(entities, spec.aggregation) }
-      .map { measurements ->
-        listOf(historyDataSet(channelWithChildren, IMPULSE_COUNTER, R.color.chart_gpm, spec.aggregation, measurements))
-      }
+      .map { entities -> aggregating(entities, spec.aggregation) }
+      .map { result -> toHistoryDataSet(channelWithChildren, result, spec) }
       .map {
         ChannelChartSets(
           channel,
@@ -83,6 +82,15 @@ class ImpulseCounterMeasurementsProvider @Inject constructor(
       }
       .firstOrError()
   }
+
+  private fun aggregating(
+    measurements: List<ImpulseCounterLogEntity>,
+    aggregation: ChartDataAggregation
+  ): AggregationResult =
+    AggregationResult(
+      list = aggregatingImpulseCounter(measurements, aggregation),
+      sum = listOf(measurements.map { it.calculatedValue }.sum())
+    )
 
   private fun aggregatingImpulseCounter(
     measurements: List<ImpulseCounterLogEntity>,
@@ -117,4 +125,41 @@ class ImpulseCounterMeasurementsProvider @Inject constructor(
         }
       }
   }
+
+  private fun toHistoryDataSet(
+    channelWithChildren: ChannelWithChildren,
+    result: AggregationResult,
+    spec: ChartDataSpec
+  ) =
+    listOf(
+      historyDataSet(
+        channelWithChildren = channelWithChildren,
+        label = HistoryDataSet.Label.Single(
+          HistoryDataSet.LabelData(
+            imageId = getChannelIconUseCase(channelWithChildren.channel),
+            value = getValueFormatter(IMPULSE_COUNTER, channelWithChildren.channel).format(result.nextSum()),
+            color = R.color.chart_gpm
+          )
+        ),
+        aggregation = spec.aggregation,
+        measurements = result.list
+      )
+    )
+
+
+  private fun historyDataSet(
+    channelWithChildren: ChannelWithChildren,
+    label: HistoryDataSet.Label,
+    aggregation: ChartDataAggregation,
+    measurements: List<AggregatedEntity>
+  ): HistoryDataSet =
+    HistoryDataSet(
+      type = IMPULSE_COUNTER,
+      label = label,
+      valueFormatter = getValueFormatter(ChartEntryType.ELECTRICITY, channelWithChildren.channel),
+      entities = divideSetToSubsets(
+        entities = measurements,
+        aggregation = aggregation
+      )
+    )
 }
