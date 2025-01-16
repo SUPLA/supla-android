@@ -338,19 +338,6 @@ class ElectricityConsumptionMeasurementsProvider @Inject constructor(
     )
   }
 
-  private data class AggregationResult(
-    val list: List<AggregatedEntity>,
-    val sum: List<Float>
-  ) {
-    private var index = 0
-
-    fun nextSum(): Float =
-      if (index < sum.count()) {
-        sum[index++]
-      } else {
-        0f
-      }
-  }
 }
 
 fun HistoryDataSet.LabelData.Companion.forwarded(value: String) =
