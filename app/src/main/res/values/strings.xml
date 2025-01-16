@@ -186,8 +186,6 @@
   <string name="hp_cfg_temp_eco">Lower temperature in AUTO mode</string>
   <string name="hp_hour">h</string>
   <string name="details_ic_meter_value">Meter value</string>
-  <string name="total_cost">Total cost</string>
-  <string name="current_cost">The cost in the current month</string>
   <string name="details_ic_current_consumption">Consumption in the current month</string>
   <string name="minutes">Minutes</string>
   <string name="hours">Hours</string>

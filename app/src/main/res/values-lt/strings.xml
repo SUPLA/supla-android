@@ -117,8 +117,6 @@
   <string name="hp_calendar_comfort">Comfort</string>
   <string name="hp_cfg_temp_eco">ECO temperatūra AUTO režime</string>
   <string name="hp_hour">h</string>
-  <string name="total_cost">Bendra kaina</string>
-  <string name="current_cost">Kaina einamąjį mėnesį</string>
   <string name="details_ic_current_consumption">Suvartojimas einamąjį mėnesį</string>
   <string name="details_ic_meter_value">Skaitiklio būsena</string>
   <string name="minutes">Minutės</string>
