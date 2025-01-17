@@ -20,6 +20,7 @@
       android:maxLines="1"
       android:textAppearance="@style/AppTheme.TextAppearance.Headline5"
       android:textColor="@color/on_background"
+      android:fontFamily="@font/quicksand_regular"
       app:layout_constraintEnd_toStartOf="@+id/ivSectionCollapsed"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent" />

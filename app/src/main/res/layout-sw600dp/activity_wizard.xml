@@ -56,7 +56,8 @@
       android:text="@string/next"
       android:textAllCaps="false"
       android:textColor="@color/primary"
-      android:textSize="25sp" />
+      android:textSize="25sp"
+      android:fontFamily="@font/quicksand_regular" />
 
     <androidx.appcompat.widget.AppCompatButton
       android:id="@+id/wizard_next_right_part"

@@ -57,7 +57,6 @@ public abstract class WizardActivity extends NavigationActivity {
 
     mBtnNextMiddlePart = findViewById(R.id.wizard_next_middle_part);
     mBtnNextMiddlePart.setOnClickListener(this);
-    mBtnNextMiddlePart.setTypeface(SuplaApp.getApp().getTypefaceQuicksandRegular());
 
     mBtnNextLeftPart = findViewById(R.id.wizard_next_left_part);
     mBtnNextLeftPart.setOnClickListener(this);

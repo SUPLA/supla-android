@@ -24,7 +24,6 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import org.supla.android.R
-import org.supla.android.SuplaApp
 
 @SuppressWarnings("ResourceType")
 class SegmentedButton @JvmOverloads constructor(
@@ -44,7 +43,7 @@ class SegmentedButton @JvmOverloads constructor(
       ImageView(ctx, attrs, defStyleAttr)
     } else {
       TextView(ctx, attrs, defStyleAttr).apply {
-        typeface = SuplaApp.getApp().typefaceOpenSansRegular
+        typeface = ctx.resources.getFont(R.font.open_sans_regular)
         text = ta.getString(1)
         gravity = Gravity.CENTER
       }

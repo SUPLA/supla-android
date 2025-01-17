@@ -16,7 +16,8 @@
         android:layout_marginRight="20dp"
         android:gravity="center_horizontal"
         android:textColor="@android:color/white"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:fontFamily="@font/open_sans_regular" />
 
     <TextView
         android:id="@+id/tv_error_txt_common"
@@ -31,7 +32,8 @@
         android:text="@string/zwave_error_common_message"
         android:textColor="@android:color/white"
         android:textSize="14sp"
-        android:textStyle="italic" />
+        android:textStyle="italic"
+        android:fontFamily="@font/open_sans_regular" />
 
     <ImageView
         android:id="@+id/tv_error_icon"

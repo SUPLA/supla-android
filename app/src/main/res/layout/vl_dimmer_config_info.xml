@@ -20,7 +20,8 @@
             android:gravity="center_vertical"
             android:text="@string/information"
             android:textColor="@color/on_background"
-            android:textSize="30sp" />
+            android:textSize="30sp"
+            android:fontFamily="@font/quicksand_regular" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnClose"
@@ -57,14 +58,16 @@
                 android:layout_marginTop="20dp"
                 android:text="@string/vl_dimmer_cfg_info_txt1"
                 android:textColor="@color/on_background"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:fontFamily="@font/open_sans_bold" />
 
             <TextView
                 android:id="@+id/tvInfoTxt2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/vl_dimmer_cfg_info_txt2"
-                android:textColor="@color/vl_infotext" />
+                android:textColor="@color/vl_infotext"
+                android:fontFamily="@font/open_sans_regular" />
 
             <TextView
                 android:id="@+id/tvInfoTxt3"
@@ -73,7 +76,8 @@
                 android:layout_marginTop="10dp"
                 android:text="@string/vl_dimmer_cfg_info_txt3"
                 android:textColor="@color/vl_infotext"
-                android:textSize="12dp" />
+                android:textSize="12dp"
+                android:fontFamily="@font/open_sans_regular" />
 
             <TextView
                 android:id="@+id/tvInfoTxt4"
@@ -82,7 +86,8 @@
                 android:layout_marginTop="10dp"
                 android:text="@string/vl_dimmer_cfg_info_txt4"
                 android:textColor="@color/vl_infotext"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:fontFamily="@font/open_sans_regular" />
 
             <TextView
                 android:id="@+id/tvInfoTxt5"
@@ -91,7 +96,8 @@
                 android:layout_marginTop="10dp"
                 android:text="@string/vl_dimmer_cfg_info_txt5"
                 android:textColor="@color/vl_infotext"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:fontFamily="@font/open_sans_regular" />
 
             <TextView
                 android:id="@+id/tvInfoTxt6"
@@ -100,14 +106,16 @@
                 android:layout_marginTop="20dp"
                 android:text="@string/vl_dimmer_cfg_info_txt6"
                 android:textColor="@color/on_background"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:fontFamily="@font/open_sans_bold" />
 
             <TextView
                 android:id="@+id/tvInfoTxt7"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/vl_dimmer_cfg_info_txt7"
-                android:textColor="@color/vl_infotext" />
+                android:textColor="@color/vl_infotext"
+                android:fontFamily="@font/open_sans_regular" />
 
             <TextView
                 android:id="@+id/tvInfoTxt9"
@@ -116,7 +124,8 @@
                 android:layout_marginTop="20dp"
                 android:text="@string/status_led"
                 android:textColor="@color/on_background"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:fontFamily="@font/open_sans_regular" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -140,7 +149,8 @@
                     android:gravity="center_vertical"
                     android:text="@string/info_led_on"
                     android:textColor="@color/vl_infotext"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    android:fontFamily="@font/open_sans_regular" />
 
             </LinearLayout>
 
@@ -167,7 +177,8 @@
                     android:gravity="center_vertical"
                     android:text="@string/info_led_off"
                     android:textColor="@color/vl_infotext"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    android:fontFamily="@font/open_sans_regular" />
 
             </LinearLayout>
 
@@ -194,7 +205,8 @@
                     android:gravity="center_vertical"
                     android:text="@string/info_led_alwaysoff"
                     android:textColor="@color/vl_infotext"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    android:fontFamily="@font/open_sans_regular" />
 
             </LinearLayout>
 
@@ -204,7 +216,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:text="@string/vl_dimmer_cfg_info_txt8"
-                android:textColor="@color/vl_infotext" />
+                android:textColor="@color/vl_infotext"
+                android:fontFamily="@font/open_sans_regular" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnUrl"

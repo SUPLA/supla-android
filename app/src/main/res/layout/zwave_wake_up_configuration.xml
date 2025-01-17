@@ -22,7 +22,8 @@
             android:singleLine="true"
             android:text="@string/wake_up_frequency"
             android:textColor="@color/wake_up_settings_infotitle"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:fontFamily="@font/quicksand_regular" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnClose"

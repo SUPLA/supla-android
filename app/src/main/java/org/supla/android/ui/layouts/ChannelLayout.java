@@ -42,7 +42,6 @@ import java.util.Date;
 import javax.inject.Inject;
 import org.supla.android.Preferences;
 import org.supla.android.R;
-import org.supla.android.SuplaApp;
 import org.supla.android.SuplaChannelStatus;
 import org.supla.android.SuplaWarningIcon;
 import org.supla.android.core.shared.LocalizedStringIdExtensionsKt;
@@ -311,7 +310,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
     TextView tv = new TextView(context);
     tv.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 
-    tv.setTypeface(SuplaApp.getApp().getTypefaceOpenSansRegular());
+    tv.setTypeface(getResources().getFont(R.font.open_sans_regular));
 
     tv.setTextSize(
         TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.channel_btn_text_size));
@@ -854,7 +853,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
       if (heightScaleFactor > 1.0) {
         textSize *= heightScaleFactor;
       }
-      setTypeface(SuplaApp.getApp().getTypefaceOpenSansBold());
+      setTypeface(getResources().getFont(R.font.open_sans_bold));
       setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
       setTextColor(getResources().getColor(R.color.on_background));
       setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL);
@@ -938,7 +937,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
       AppCompatTextView Text = new AppCompatTextView(context);
       Text.setId(View.generateViewId());
 
-      Text.setTypeface(SuplaApp.getApp().getTypefaceOpenSansRegular());
+      Text.setTypeface(getResources().getFont(R.font.open_sans_regular));
 
       float textSize = getResources().getDimension(R.dimen.channel_imgtext_size);
       float sts = scaledDimension((int) textSize);
@@ -953,11 +952,11 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
       return Text;
     }
 
-    private void SetTextDimensions(TextView Text, ImageView Img, Boolean visible) {
+    private void SetTextDimensions(TextView Text, Boolean visible) {
       int h = getResources().getDimensionPixelSize(R.dimen.channel_img_height);
       int sh = scaledDimension(h);
 
-      boolean empty = Text.getText().length() == 0;
+      boolean empty = Text.getText().toString().isEmpty();
 
       Text.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
 
@@ -1033,10 +1032,10 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
         Img2.setVisibility(View.GONE);
         Text2.setVisibility(View.GONE);
       } else {
-        SetTextDimensions(Text1, Img1, true);
+        SetTextDimensions(Text1, true);
         SetImgDimensions(Img1);
         SetImgDimensions(Img2);
-        SetTextDimensions(Text2, Img2, mFunc == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE);
+        SetTextDimensions(Text2, mFunc == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE);
       }
     }
 

@@ -39,7 +39,6 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import org.supla.android.Preferences;
 import org.supla.android.R;
-import org.supla.android.SuplaApp;
 import org.supla.android.SuplaChannelStatus;
 import org.supla.android.SuplaChannelStatus.ShapeType;
 import org.supla.android.data.source.local.entity.SceneEntity;
@@ -247,7 +246,7 @@ public class SceneLayout extends LinearLayout implements SlideableItem, Swapable
     TextView tv = new TextView(context);
     tv.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 
-    tv.setTypeface(SuplaApp.getApp().getTypefaceQuicksandRegular());
+    tv.setTypeface(context.getResources().getFont(R.font.quicksand_regular));
 
     tv.setTextSize(
         TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.channel_btn_text_size));
@@ -465,7 +464,7 @@ public class SceneLayout extends LinearLayout implements SlideableItem, Swapable
       if (heightScaleFactor > 1.0) {
         textSize *= heightScaleFactor;
       }
-      setTypeface(SuplaApp.getApp().getTypefaceOpenSansBold());
+      setTypeface(getResources().getFont(R.font.open_sans_bold));
       setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
       setTextColor(getResources().getColor(R.color.on_background));
       setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL);

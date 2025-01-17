@@ -19,6 +19,7 @@
     android:minHeight="@dimen/channel_section_height"
     android:textAppearance="@style/AppTheme.TextAppearance.Headline5"
     android:textColor="@color/on_background"
+    android:fontFamily="@font/quicksand_regular"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent"

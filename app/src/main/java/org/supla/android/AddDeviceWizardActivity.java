@@ -33,7 +33,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
@@ -152,7 +151,6 @@ public class AddDeviceWizardActivity extends WizardActivity
   private CheckBox cbSavePassword;
   private Button btnEditWifiName;
   private Button btnViewPassword;
-  private TextView tvStep2Info1;
 
   private ImageView ivDot;
 
@@ -177,29 +175,16 @@ public class AddDeviceWizardActivity extends WizardActivity
 
     manager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 
-    Typeface type = SuplaApp.getApp().getTypefaceQuicksandRegular();
-
     addStepPage(R.layout.add_device_step1, PAGE_STEP_1);
 
-    TextView tv = findViewById(R.id.wizard_step1_txt1);
-    tv.setTypeface(type);
+    TextView tv = findViewById(R.id.wizard_step1_txt2);
 
-    tv = findViewById(R.id.wizard_step1_txt2);
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
-        && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-      tv.setTypeface(type);
-    } else {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O
+        || Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
       tv.setVisibility(View.GONE);
     }
 
-    tv = findViewById(R.id.wizard_step1_txt3);
-    tv.setTypeface(type);
-
     addStepPage(R.layout.add_device_step2, PAGE_STEP_2);
-
-    tvStep2Info1 = findViewById(R.id.wizard_step2_txt1);
-    tvStep2Info1.setTypeface(type);
 
     spWifiList = findViewById(R.id.wizard_wifi_list);
     spWifiList.setOnItemSelectedListener(this);
@@ -216,7 +201,6 @@ public class AddDeviceWizardActivity extends WizardActivity
     setBackground(edWifiName, R.drawable.rounded_edittext);
     setBackground(spWifiList, R.drawable.rounded_edittext);
 
-    cbSavePassword.setTypeface(type);
     cbSavePassword.setOnClickListener(this);
 
     btnViewPassword.setOnTouchListener(this);
@@ -238,55 +222,18 @@ public class AddDeviceWizardActivity extends WizardActivity
 
     addStepPage(R.layout.add_device_step3, PAGE_STEP_3);
 
-    tv = findViewById(R.id.wizard_step3_txt1);
-    tv.setTypeface(type);
-
-    tv = findViewById(R.id.wizard_step3_txt2);
-    tv.setTypeface(type);
-
-    tv = findViewById(R.id.wizard_step3_txt3);
-    tv.setTypeface(type);
-
     ivDot = findViewById(R.id.wizard_dot);
 
     addStepPage(R.layout.add_device_error, PAGE_ERROR);
 
     tvErrorMsg = findViewById(R.id.wizard_error_txt);
-    tvErrorMsg.setTypeface(type);
 
     addStepPage(R.layout.add_device_done, PAGE_DONE);
 
-    tv = findViewById(R.id.wizard_done_txt1);
-    tv.setTypeface(type);
-
-    type = SuplaApp.getApp().getTypefaceOpenSansRegular();
-
-    tv = findViewById(R.id.wizard_done_txt2);
-    tv.setTypeface(type);
-
-    tv = findViewById(R.id.wizard_done_txt3);
-    tv.setTypeface(type);
-
-    tv = findViewById(R.id.wizard_done_txt4);
-    tv.setTypeface(type);
-
-    tv = findViewById(R.id.wizard_done_txt5);
-    tv.setTypeface(type);
-
-    tv = findViewById(R.id.wizard_done_txt6);
-    tv.setTypeface(type);
-
     tvIODevName = findViewById(R.id.wizard_done_iodev_name);
-    tvIODevName.setTypeface(type);
-
     tvIODevFirmware = findViewById(R.id.wizard_done_iodev_firmware);
-    tvIODevFirmware.setTypeface(type);
-
     tvIODevMAC = findViewById(R.id.wizard_done_iodev_mac);
-    tvIODevMAC.setTypeface(type);
-
     tvIODevLastState = findViewById(R.id.wizard_done_iodev_laststate);
-    tvIODevLastState.setTypeface(type);
 
     showMenuBar();
     registerMessageHandler();
