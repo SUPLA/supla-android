@@ -18,8 +18,8 @@ package org.supla.android.usecases.channel.valueprovider
  */
 
 import org.supla.android.core.storage.UserStateHolder
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.Electricity
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.local.entity.custom.Phase
 import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType
 import org.supla.android.data.source.remote.channel.suplaElectricityMeterMeasuredTypes
@@ -35,21 +35,18 @@ class ElectricityMeterValueProvider @Inject constructor(
   private val userStateHolder: UserStateHolder
 ) : ChannelValueProvider, IntValueParser {
 
-  override fun handle(channelData: ChannelDataEntity): Boolean =
-    when (channelData.function) {
-      SuplaFunction.ELECTRICITY_METER -> true
-      else -> false
-    }
+  override fun handle(channelWithChildren: ChannelWithChildren): Boolean =
+    channelWithChildren.function == SuplaFunction.ELECTRICITY_METER
 
-  override fun value(channelData: ChannelDataEntity, valueType: ValueType): Any =
-    when (userStateHolder.getElectricityMeterSettings(channelData.profileId, channelData.remoteId).showOnListSafe) {
+  override fun value(channelWithChildren: ChannelWithChildren, valueType: ValueType): Any =
+    when (userStateHolder.getElectricityMeterSettings(channelWithChildren.profileId, channelWithChildren.remoteId).showOnListSafe) {
       SuplaElectricityMeasurementType.REVERSE_ACTIVE_ENERGY ->
-        channelData.Electricity.value?.summary?.totalReverseActiveEnergy ?: UNKNOWN_VALUE
+        channelWithChildren.channel.Electricity.value?.summary?.totalReverseActiveEnergy ?: UNKNOWN_VALUE
 
       SuplaElectricityMeasurementType.POWER_ACTIVE ->
-        channelData.Electricity.value?.let { value ->
+        channelWithChildren.channel.Electricity.value?.let { value ->
           val powerActive = Phase.entries
-            .filter { it.disabledFlag.rawValue and channelData.flags == 0L }
+            .filter { it.disabledFlag.rawValue and channelWithChildren.flags == 0L }
             .mapNotNull { value.getMeasurement(it.value, 0)?.powerActive }
             .let { if (it.isEmpty()) Double.NaN else it.sum() }
 
@@ -61,14 +58,14 @@ class ElectricityMeterValueProvider @Inject constructor(
         } ?: UNKNOWN_VALUE
 
       SuplaElectricityMeasurementType.VOLTAGE ->
-        channelData.Electricity.value?.let { value ->
+        channelWithChildren.channel.Electricity.value?.let { value ->
           Phase.entries
-            .filter { it.disabledFlag.rawValue and channelData.flags == 0L }
+            .filter { it.disabledFlag.rawValue and channelWithChildren.flags == 0L }
             .mapNotNull { value.getMeasurement(it.value, 0)?.voltage }
             .average()
         } ?: UNKNOWN_VALUE
 
-      else -> asIntValue(channelData.channelValueEntity, startPos = 1, endPos = 4)?.div(100.0) ?: UNKNOWN_VALUE
+      else -> asIntValue(channelWithChildren.channel.channelValueEntity, startPos = 1, endPos = 4)?.div(100.0) ?: UNKNOWN_VALUE
     }
 
   companion object {

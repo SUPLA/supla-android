@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.core.shared.data.model.general.SuplaFunction
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -27,8 +27,8 @@ class RainSensorValueProvider @Inject constructor() : DefaultDoubleValueProvider
 
   override val unknownValue = UNKNOWN_VALUE
 
-  override fun handle(channelData: ChannelDataEntity): Boolean =
-    channelData.function == SuplaFunction.RAIN_SENSOR
+  override fun handle(channelWithChildren: ChannelWithChildren): Boolean =
+    channelWithChildren.function == SuplaFunction.RAIN_SENSOR
 
   companion object {
     const val UNKNOWN_VALUE = -1.0

@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.usecases.channel.ChannelValueProvider
 import org.supla.android.usecases.channel.ValueType
 import org.supla.android.usecases.channel.valueprovider.parser.IntValueParser
@@ -28,11 +28,11 @@ import javax.inject.Singleton
 @Singleton
 class HumidityValueProvider @Inject constructor() : IntValueParser, ChannelValueProvider {
 
-  override fun handle(channelData: ChannelDataEntity): Boolean =
-    channelData.function == SuplaFunction.HUMIDITY
+  override fun handle(channelWithChildren: ChannelWithChildren): Boolean =
+    channelWithChildren.function == SuplaFunction.HUMIDITY
 
-  override fun value(channelData: ChannelDataEntity, valueType: ValueType): Any {
-    return asIntValue(channelData.channelValueEntity, startPos = 4, endPos = 7)?.div(1000.0) ?: UNKNOWN_VALUE
+  override fun value(channelWithChildren: ChannelWithChildren, valueType: ValueType): Any {
+    return asIntValue(channelWithChildren.channel.channelValueEntity, startPos = 4, endPos = 7)?.div(1000.0) ?: UNKNOWN_VALUE
   }
 
   companion object {

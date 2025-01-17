@@ -17,8 +17,7 @@ package org.supla.android.usecases.channel.valueprovider
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
-import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.usecases.channel.ChannelValueProvider
 import org.supla.android.usecases.channel.ValueType
 import org.supla.android.usecases.channel.valueprovider.parser.IntValueParser
@@ -29,19 +28,18 @@ import javax.inject.Singleton
 @Singleton
 class SwitchWithImpulseCounterValueProvider @Inject constructor() : ChannelValueProvider, IntValueParser {
 
-  override fun handle(channelData: ChannelDataEntity): Boolean =
-    when (channelData.function) {
+  override fun handle(channelWithChildren: ChannelWithChildren): Boolean =
+    when (channelWithChildren.function) {
       SuplaFunction.POWER_SWITCH,
       SuplaFunction.LIGHTSWITCH,
-      SuplaFunction.STAIRCASE_TIMER ->
-        channelData.channelValueEntity.subValueType == SUBV_TYPE_IC_MEASUREMENTS.toShort()
+      SuplaFunction.STAIRCASE_TIMER -> channelWithChildren.isOrHasImpulseCounter
 
       else -> false
     }
 
-  override fun value(channelData: ChannelDataEntity, valueType: ValueType): Any =
+  override fun value(channelWithChildren: ChannelWithChildren, valueType: ValueType): Any =
     asIntValue(
-      channelData.channelValueEntity.getSubValueAsByteArray(),
+      channelWithChildren.channel.channelValueEntity.getSubValueAsByteArray(),
       startPos = 1,
       endPos = 4
     )?.div(100.0) ?: UNKNOWN_VALUE

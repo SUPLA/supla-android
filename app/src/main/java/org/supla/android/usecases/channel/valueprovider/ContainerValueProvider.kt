@@ -17,7 +17,7 @@ package org.supla.android.usecases.channel.valueprovider
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.usecases.channel.ChannelValueProvider
 import org.supla.android.usecases.channel.ValueType
 import org.supla.core.shared.data.model.function.container.ContainerValue
@@ -27,9 +27,9 @@ import javax.inject.Singleton
 
 @Singleton
 class ContainerValueProvider @Inject constructor() : ChannelValueProvider {
-  override fun handle(channelData: ChannelDataEntity): Boolean =
-    channelData.function == SuplaFunction.CONTAINER
+  override fun handle(channelWithChildren: ChannelWithChildren): Boolean =
+    channelWithChildren.function == SuplaFunction.CONTAINER
 
-  override fun value(channelData: ChannelDataEntity, valueType: ValueType): ContainerValue =
-    ContainerValue.from(channelData.isOnline(), channelData.channelValueEntity.getValueAsByteArray())
+  override fun value(channelWithChildren: ChannelWithChildren, valueType: ValueType): ContainerValue =
+    ContainerValue.from(channelWithChildren.isOnline(), channelWithChildren.channel.channelValueEntity.getValueAsByteArray())
 }

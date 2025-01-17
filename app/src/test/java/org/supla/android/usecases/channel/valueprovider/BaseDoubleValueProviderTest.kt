@@ -4,7 +4,7 @@ import io.mockk.every
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.usecases.channel.ValueType
 
 abstract class BaseDoubleValueProviderTest<T : DefaultDoubleValueProvider> {
@@ -16,9 +16,11 @@ abstract class BaseDoubleValueProviderTest<T : DefaultDoubleValueProvider> {
   @Test
   fun `should get unknown value when no data`() {
     // given
-    val channelData: ChannelDataEntity = mockk {
-      every { channelValueEntity } returns mockk {
-        every { getValueAsByteArray() } returns ByteArray(0)
+    val channelData: ChannelWithChildren = mockk {
+      every { channel } returns mockk {
+        every { channelValueEntity } returns mockk {
+          every { getValueAsByteArray() } returns ByteArray(0)
+        }
       }
     }
 
@@ -46,9 +48,11 @@ abstract class BaseDoubleValueProviderTest<T : DefaultDoubleValueProvider> {
       (-54).toByte(),
       (63).toByte()
     )
-    val channelData: ChannelDataEntity = mockk {
-      every { channelValueEntity } returns mockk {
-        every { getValueAsByteArray() } returns ByteArray(8) { position -> valueBytes[position] }
+    val channelData: ChannelWithChildren = mockk {
+      every { channel } returns mockk {
+        every { channelValueEntity } returns mockk {
+          every { getValueAsByteArray() } returns ByteArray(8) { position -> valueBytes[position] }
+        }
       }
     }
 
@@ -71,9 +75,11 @@ abstract class BaseDoubleValueProviderTest<T : DefaultDoubleValueProvider> {
       (-31).toByte(),
       (-54).toByte(),
     )
-    val channelData: ChannelDataEntity = mockk {
-      every { channelValueEntity } returns mockk {
-        every { getValueAsByteArray() } returns ByteArray(7) { position -> valueBytes[position] }
+    val channelData: ChannelWithChildren = mockk {
+      every { channel } returns mockk {
+        every { channelValueEntity } returns mockk {
+          every { getValueAsByteArray() } returns ByteArray(7) { position -> valueBytes[position] }
+        }
       }
     }
 

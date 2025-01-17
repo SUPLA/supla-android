@@ -38,10 +38,10 @@ class WeightSensorValueStringProvider @Inject constructor(
   }
 
   override fun handle(channelWithChildren: ChannelWithChildren): Boolean =
-    weightSensorValueProvider.handle(channelWithChildren.channel)
+    weightSensorValueProvider.handle(channelWithChildren)
 
   override fun value(channelWithChildren: ChannelWithChildren, valueType: ValueType, withUnit: Boolean): String {
-    val (doubleValue) = guardLet(weightSensorValueProvider.value(channelWithChildren.channel, valueType) as? Double) {
+    val (doubleValue) = guardLet(weightSensorValueProvider.value(channelWithChildren, valueType) as? Double) {
       return ValuesFormatter.NO_VALUE_TEXT
     }
     if (doubleValue <= WeightSensorValueProvider.UNKNOWN_VALUE) {
