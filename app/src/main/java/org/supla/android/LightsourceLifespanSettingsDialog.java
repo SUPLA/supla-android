@@ -23,7 +23,6 @@ import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -35,7 +34,6 @@ import org.supla.android.lib.SuplaClient;
 public class LightsourceLifespanSettingsDialog
     implements DialogInterface.OnCancelListener, View.OnClickListener {
 
-  private final Context context;
   private final AlertDialog alertDialog;
   private int remoteId;
   private final int lifespan;
@@ -48,7 +46,6 @@ public class LightsourceLifespanSettingsDialog
 
   public LightsourceLifespanSettingsDialog(
       Context context, int remoteId, int lifespan, String title) {
-    this.context = context;
     this.remoteId = remoteId;
     this.lifespan = lifespan;
 
@@ -61,14 +58,7 @@ public class LightsourceLifespanSettingsDialog
     alertDialog.setOnCancelListener(this);
 
     TextView tvInfoTitle = view.findViewById(R.id.tvInfoTitle);
-
-    tvInfoTitle.setTypeface(SuplaApp.getApp().getTypefaceQuicksandRegular());
     tvInfoTitle.setText(title);
-
-    Typeface tfOpenSansRegular = SuplaApp.getApp().getTypefaceOpenSansRegular();
-    TextView tvLifespanTitle = view.findViewById(R.id.tvLifespanTitle);
-
-    tvLifespanTitle.setTypeface(tfOpenSansRegular);
 
     edLifespan = view.findViewById(R.id.edLifespan);
     btnClose = view.findViewById(R.id.btnClose);
@@ -80,7 +70,6 @@ public class LightsourceLifespanSettingsDialog
     btnOK.setOnClickListener(this);
 
     cbReset = view.findViewById(R.id.cbReset);
-    cbReset.setTypeface(tfOpenSansRegular);
   }
 
   public void show() {

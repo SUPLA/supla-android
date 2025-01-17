@@ -17,7 +17,8 @@
         android:gravity="center_horizontal"
         android:text="@string/wizard_step1_txt1"
         android:textColor="@android:color/white"
-        android:textSize="30sp" />
+        android:textSize="30sp"
+        android:fontFamily="@font/quicksand_regular" />
 
     <ImageView
         android:id="@+id/imageView3"
@@ -45,7 +46,8 @@
         android:gravity="center_horizontal"
         android:text="@string/wizard_step1_txt2"
         android:textColor="@android:color/black"
-        android:textSize="30sp" />
+        android:textSize="30sp"
+        android:fontFamily="@font/quicksand_regular" />
 
     <TextView
         android:id="@+id/wizard_step1_txt3"
@@ -62,5 +64,6 @@
         android:gravity="center_horizontal"
         android:text="@string/wizard_step1_txt3"
         android:textColor="@android:color/white"
-        android:textSize="30sp" />
+        android:textSize="30sp"
+        android:fontFamily="@font/quicksand_regular" />
 </RelativeLayout>

@@ -47,7 +47,8 @@
           android:layout_weight="1"
           android:background="@android:color/transparent"
           android:text="RGB"
-          android:textSize="@dimen/rgb_detail_tab_btn_text" />
+          android:textSize="@dimen/rgb_detail_tab_btn_text"
+          android:fontFamily="@font/open_sans_bold" />
 
         <androidx.appcompat.widget.AppCompatButton
           android:id="@+id/rgbTabBtn_Dimmer"
@@ -57,7 +58,8 @@
           android:background="@drawable/rounded_sel_btn"
           android:text="@string/channel_caption_dimmer"
           android:textColor="@android:color/white"
-          android:textSize="@dimen/rgb_detail_tab_btn_text" />
+          android:textSize="@dimen/rgb_detail_tab_btn_text"
+          android:fontFamily="@font/open_sans_bold" />
       </LinearLayout>
 
     </LinearLayout>
@@ -167,7 +169,8 @@
           android:background="@drawable/rounded_sel_btn"
           android:text="@string/wheel"
           android:textColor="@android:color/white"
-          android:textSize="@dimen/rgb_detail_tab_btn_text" />
+          android:textSize="@dimen/rgb_detail_tab_btn_text"
+          android:fontFamily="@font/open_sans_bold" />
 
         <androidx.appcompat.widget.AppCompatButton
           android:id="@+id/rgbTabBtn_Slider"
@@ -176,7 +179,8 @@
           android:layout_weight="1"
           android:background="@android:color/transparent"
           android:text="@string/slider"
-          android:textSize="@dimen/rgb_detail_tab_btn_text" />
+          android:textSize="@dimen/rgb_detail_tab_btn_text"
+          android:fontFamily="@font/open_sans_bold" />
       </LinearLayout>
 
       <org.supla.android.SuplaColorListPicker

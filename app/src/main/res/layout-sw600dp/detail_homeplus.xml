@@ -85,7 +85,8 @@
         android:layout_marginTop="10dp"
         android:layout_marginBottom="5dp"
         android:text="@string/hp_cfg_turbo_time"
-        android:textSize="30sp" />
+        android:textSize="30sp"
+        android:fontFamily="@font/open_sans_regular" />
 
       <LinearLayout
         android:layout_width="wrap_content"
@@ -107,7 +108,8 @@
           android:layout_weight="1"
           android:gravity="center_horizontal"
           android:text="TextView"
-          android:textSize="30sp" />
+          android:textSize="30sp"
+          android:fontFamily="@font/open_sans_regular" />
 
         <androidx.appcompat.widget.AppCompatButton
           android:id="@+id/hpBtnTurboPlus"
@@ -125,7 +127,8 @@
         android:layout_marginTop="10dp"
         android:layout_marginBottom="5dp"
         android:text="@string/hp_cfg_water_max"
-        android:textSize="30sp" />
+        android:textSize="30sp"
+        android:fontFamily="@font/open_sans_regular" />
 
       <LinearLayout
         android:layout_width="wrap_content"
@@ -147,7 +150,8 @@
           android:layout_weight="1"
           android:gravity="center_horizontal"
           android:text="TextView"
-          android:textSize="30sp" />
+          android:textSize="30sp"
+          android:fontFamily="@font/open_sans_regular" />
 
         <androidx.appcompat.widget.AppCompatButton
           android:id="@+id/hpBtnWaterMaxPlus"
@@ -165,7 +169,8 @@
         android:layout_marginTop="10dp"
         android:layout_marginBottom="5dp"
         android:text="@string/hp_cfg_eco_reduction"
-        android:textSize="30sp" />
+        android:textSize="30sp"
+        android:fontFamily="@font/open_sans_regular" />
 
       <LinearLayout
         android:layout_width="wrap_content"
@@ -187,7 +192,8 @@
           android:layout_weight="1"
           android:gravity="center_horizontal"
           android:text="TextView"
-          android:textSize="30sp" />
+          android:textSize="30sp"
+          android:fontFamily="@font/open_sans_regular" />
 
         <androidx.appcompat.widget.AppCompatButton
           android:id="@+id/hpBtnEcoReductionPlus"
@@ -205,7 +211,8 @@
         android:layout_marginTop="10dp"
         android:layout_marginBottom="5dp"
         android:text="@string/hp_cfg_temp_comfort_auto"
-        android:textSize="30sp" />
+        android:textSize="30sp"
+        android:fontFamily="@font/open_sans_regular" />
 
       <LinearLayout
         android:layout_width="wrap_content"
@@ -227,7 +234,8 @@
           android:layout_weight="1"
           android:gravity="center_horizontal"
           android:text="TextView"
-          android:textSize="30sp" />
+          android:textSize="30sp"
+          android:fontFamily="@font/open_sans_regular" />
 
         <androidx.appcompat.widget.AppCompatButton
           android:id="@+id/hpBtnAutoPlus"
@@ -245,7 +253,8 @@
         android:layout_marginTop="10dp"
         android:layout_marginBottom="5dp"
         android:text="@string/hp_cfg_temp_eco"
-        android:textSize="30sp" />
+        android:textSize="30sp"
+        android:fontFamily="@font/open_sans_regular" />
 
       <LinearLayout
         android:layout_width="wrap_content"
@@ -267,7 +276,8 @@
           android:layout_weight="1"
           android:gravity="center_horizontal"
           android:text="TextView"
-          android:textSize="30sp" />
+          android:textSize="30sp"
+          android:fontFamily="@font/open_sans_regular" />
 
         <androidx.appcompat.widget.AppCompatButton
           android:id="@+id/hpBtnEcoPlus"
@@ -328,7 +338,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
         android:text="0.00"
-        android:textSize="90sp" />
+        android:textSize="90sp"
+        android:fontFamily="@font/open_sans_regular" />
 
     </LinearLayout>
 

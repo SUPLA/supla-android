@@ -16,7 +16,8 @@
         android:buttonTint="@android:color/white"
         android:text="@string/wizard_remember_passwd"
         android:textColor="@android:color/white"
-        android:textSize="25sp" />
+        android:textSize="25sp"
+        android:fontFamily="@font/quicksand_regular" />
 
     <LinearLayout
         android:id="@+id/llWifiName"
@@ -108,7 +109,8 @@
         android:gravity="center_horizontal"
         android:text="@string/wizard_step2_txt1"
         android:textColor="@android:color/white"
-        android:textSize="30sp" />
+        android:textSize="30sp"
+        android:fontFamily="@font/quicksand_regular"  />
 
     <ImageView
         android:id="@+id/imageView4"

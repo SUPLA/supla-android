@@ -29,7 +29,8 @@
         android:gravity="center_horizontal"
         android:text="@string/zwave_before_search_message"
         android:textColor="@android:color/white"
-        android:textSize="15sp" />
+        android:textSize="15sp"
+        android:fontFamily="@font/open_sans_regular" />
 
     <TextView
         android:id="@+id/tv_before_search_title"
@@ -43,7 +44,8 @@
         android:gravity="center_horizontal"
         android:text="@string/zwave_before_search_title"
         android:textColor="@android:color/white"
-        android:textSize="40sp" />
+        android:textSize="40sp"
+        android:fontFamily="@font/quicksand_light" />
 
 
 </RelativeLayout>

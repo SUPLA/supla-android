@@ -23,7 +23,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.util.AttributeSet;
@@ -34,7 +33,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.core.content.res.ResourcesCompat;
 import java.util.ArrayList;
@@ -109,8 +107,8 @@ public class ChannelDetailRGBW extends DetailLayout
     pickerTypeTabs = findViewById(R.id.llPickerTypeTabs);
 
     status = findViewById(R.id.rgbwstatus);
-    status.setOnlineColor(getResources().getColor(R.color.primary));
-    status.setOfflineColor(getResources().getColor(R.color.red));
+    status.setOnlineColor(ResourcesCompat.getColor(getResources(), R.color.primary, null));
+    status.setOfflineColor(ResourcesCompat.getColor(getResources(), R.color.red, null));
 
     clPicker = findViewById(R.id.clPicker);
     clPicker.addItem(Color.WHITE, (short) 100);
@@ -147,12 +145,6 @@ public class ChannelDetailRGBW extends DetailLayout
 
     btnPowerOnOff = findViewById(R.id.rgbwBtnPowerOnOff);
     btnPowerOnOff.setOnClickListener(this);
-
-    Typeface type = SuplaApp.getApp().getTypefaceOpenSansBold();
-    tabRGB.setTypeface(type);
-    tabDimmer.setTypeface(type);
-    tabWheel.setTypeface(type);
-    tabSlider.setTypeface(type);
 
     percentageValue = findViewById(R.id.percentageValue);
 
@@ -299,8 +291,8 @@ public class ChannelDetailRGBW extends DetailLayout
 
       if (markers != null) {
         if (markers.size() == 1) {
-          if (markers.get(0).intValue() != (int) cbPicker.getBrightnessValue()) {
-            cbPicker.setBrightnessValue(markers.get(0));
+          if (markers.getFirst().intValue() != (int) cbPicker.getBrightnessValue()) {
+            cbPicker.setBrightnessValue(markers.getFirst());
           }
         } else {
           cbPicker.setBrightnessMarkers(markers);
@@ -313,8 +305,8 @@ public class ChannelDetailRGBW extends DetailLayout
 
         if (markers != null) {
           if (markers.size() == 1) {
-            if (markers.get(0).intValue() != cbPicker.getColor()) {
-              cbPicker.setColor(markers.get(0).intValue());
+            if (markers.getFirst().intValue() != cbPicker.getColor()) {
+              cbPicker.setColor(markers.getFirst().intValue());
             }
           } else {
             cbPicker.setColorMarkers(markers);
@@ -480,17 +472,6 @@ public class ChannelDetailRGBW extends DetailLayout
     final AlertDialog alertDialog = builder.create();
 
     dialogView.findViewById(R.id.btnClose).setOnClickListener(v -> alertDialog.dismiss());
-
-    Typeface quicksand = SuplaApp.getApp().getTypefaceQuicksandRegular();
-    Typeface opensansbold = SuplaApp.getApp().getTypefaceOpenSansBold();
-    Typeface opensans = SuplaApp.getApp().getTypefaceOpenSansRegular();
-
-    ((TextView) dialogView.findViewById(R.id.tvInfoTitle)).setTypeface(quicksand);
-    ((TextView) dialogView.findViewById(R.id.tvInfoTxt1)).setTypeface(opensansbold);
-    ((TextView) dialogView.findViewById(R.id.tvInfoTxt2)).setTypeface(opensans);
-    ((TextView) dialogView.findViewById(R.id.tvInfoTxt3)).setTypeface(opensans);
-    ((TextView) dialogView.findViewById(R.id.tvInfoTxt4)).setTypeface(opensans);
-    ((TextView) dialogView.findViewById(R.id.tvInfoTxt5)).setTypeface(opensans);
 
     alertDialog.show();
   }

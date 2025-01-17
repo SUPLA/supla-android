@@ -136,8 +136,6 @@ public class ChannelStatePopup
     tvLightSourceLifespan = view.findViewById(R.id.tvLightSourceLifespan);
     tvLightSourceOperatingTime = view.findViewById(R.id.tvLightSourceOperatingTime);
 
-    tvInfoTitle.setTypeface(SuplaApp.getApp().getTypefaceQuicksandRegular());
-
     Button btnClose = view.findViewById(R.id.btnClose);
     btnReset = view.findViewById(R.id.btnReset);
 

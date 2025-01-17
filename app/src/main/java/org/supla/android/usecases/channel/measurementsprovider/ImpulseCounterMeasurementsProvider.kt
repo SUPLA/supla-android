@@ -146,7 +146,6 @@ class ImpulseCounterMeasurementsProvider @Inject constructor(
       )
     )
 
-
   private fun historyDataSet(
     channelWithChildren: ChannelWithChildren,
     label: HistoryDataSet.Label,

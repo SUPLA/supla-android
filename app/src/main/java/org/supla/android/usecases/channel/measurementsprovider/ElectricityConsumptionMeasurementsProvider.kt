@@ -337,7 +337,6 @@ class ElectricityConsumptionMeasurementsProvider @Inject constructor(
       AggregatedValue.Multiple(chartBalancedValues(consumption, production))
     )
   }
-
 }
 
 fun HistoryDataSet.LabelData.Companion.forwarded(value: String) =

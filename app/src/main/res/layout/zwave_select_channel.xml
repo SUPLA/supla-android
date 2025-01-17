@@ -14,7 +14,8 @@
     android:layout_marginRight="20dp"
     android:text="@string/zwave_supla_channel"
     android:textColor="@android:color/white"
-    android:textSize="40dp" />
+    android:textSize="40dp"
+    android:fontFamily="@font/quicksand_light" />
 
   <TextView
     android:id="@+id/tv_select_channel_description"
@@ -27,7 +28,8 @@
     android:layout_marginRight="20dp"
     android:text="@string/zwave_select_channel"
     android:textColor="@android:color/white"
-    android:textSize="18sp" />
+    android:textSize="18sp"
+    android:fontFamily="@font/quicksand_regular" />
 
   <TextView
     android:id="@+id/tv_device_list_title"
@@ -40,7 +42,8 @@
     android:layout_marginRight="20dp"
     android:text="@string/bridge"
     android:textColor="@android:color/white"
-    android:textSize="18sp" />
+    android:textSize="18sp"
+    android:fontFamily="@font/open_sans_regular" />
 
   <Spinner
     android:id="@+id/zwave_device_list"
@@ -66,7 +69,8 @@
     android:layout_marginRight="20dp"
     android:text="@string/zwave_supla_channel"
     android:textColor="@android:color/white"
-    android:textSize="18sp" />
+    android:textSize="18sp"
+    android:fontFamily="@font/open_sans_regular" />
 
   <Spinner
     android:id="@+id/zwave_channel_list"
