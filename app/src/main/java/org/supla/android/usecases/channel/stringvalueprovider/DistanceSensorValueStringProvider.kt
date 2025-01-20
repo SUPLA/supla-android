@@ -32,8 +32,8 @@ class DistanceSensorValueStringProvider @Inject constructor(
 ) : ChannelValueStringProvider {
 
   override fun handle(channelWithChildren: ChannelWithChildren): Boolean =
-    distanceSensorValueProvider.handle(channelWithChildren.channel)
+    distanceSensorValueProvider.handle(channelWithChildren)
 
   override fun value(channelWithChildren: ChannelWithChildren, valueType: ValueType, withUnit: Boolean): String =
-    valuesFormatter.getDistanceString(distanceSensorValueProvider.value(channelWithChildren.channel, valueType))
+    valuesFormatter.getDistanceString(distanceSensorValueProvider.value(channelWithChildren, valueType))
 }

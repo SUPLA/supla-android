@@ -38,10 +38,10 @@ class RainSensorValueStringProvider @Inject constructor(
   }
 
   override fun handle(channelWithChildren: ChannelWithChildren): Boolean =
-    rainSensorValueProvider.handle(channelWithChildren.channel)
+    rainSensorValueProvider.handle(channelWithChildren)
 
   override fun value(channelWithChildren: ChannelWithChildren, valueType: ValueType, withUnit: Boolean): String {
-    val (doubleValue) = guardLet(rainSensorValueProvider.value(channelWithChildren.channel, valueType) as? Double) {
+    val (doubleValue) = guardLet(rainSensorValueProvider.value(channelWithChildren, valueType) as? Double) {
       return ValuesFormatter.NO_VALUE_TEXT
     }
     if (doubleValue <= RainSensorValueProvider.UNKNOWN_VALUE) {

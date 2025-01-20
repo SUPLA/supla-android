@@ -31,10 +31,10 @@ class ContainerValueStringProvider @Inject constructor(
 ) : ChannelValueStringProvider {
 
   override fun handle(channelWithChildren: ChannelWithChildren): Boolean =
-    containerValueProvider.handle(channelWithChildren.channel)
+    containerValueProvider.handle(channelWithChildren)
 
   override fun value(channelWithChildren: ChannelWithChildren, valueType: ValueType, withUnit: Boolean): String {
-    val value = containerValueProvider.value(channelWithChildren.channel, valueType)
+    val value = containerValueProvider.value(channelWithChildren, valueType)
     return if (value.levelKnown) {
       "${value.level}%"
     } else {

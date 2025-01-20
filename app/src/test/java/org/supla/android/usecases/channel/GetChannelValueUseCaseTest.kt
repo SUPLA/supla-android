@@ -29,7 +29,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.usecases.channel.valueprovider.ContainerValueProvider
 import org.supla.android.usecases.channel.valueprovider.DepthSensorValueProvider
 import org.supla.android.usecases.channel.valueprovider.DistanceSensorValueProvider
@@ -93,7 +93,7 @@ class GetChannelValueUseCaseTest {
   @Test
   fun `should check all handlers if can handle channel and throw exception that could not provide channel value`() {
     // given
-    val channel: ChannelDataEntity = mockk {
+    val channel: ChannelWithChildren = mockk {
       every { function } returns SuplaFunction.HUMIDITY
     }
 
@@ -122,10 +122,12 @@ class GetChannelValueUseCaseTest {
     // given
     val function = SuplaFunction.HUMIDITY_AND_TEMPERATURE
     val value = 12.4
-    val channel: ChannelDataEntity = mockk {
+    val channel: ChannelWithChildren = mockk {
       every { this@mockk.function } returns function
-      every { channelValueEntity } returns mockk {
-        every { online } returns true
+      every { channel } returns mockk {
+        every { channelValueEntity } returns mockk {
+          every { online } returns true
+        }
       }
     }
 

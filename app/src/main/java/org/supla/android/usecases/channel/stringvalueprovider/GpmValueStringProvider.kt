@@ -44,7 +44,7 @@ class GpmValueStringProvider @Inject constructor(
       channelWithChildren.channel.function == SuplaFunction.GENERAL_PURPOSE_METER
 
   override fun value(channelWithChildren: ChannelWithChildren, valueType: ValueType, withUnit: Boolean): String {
-    val value = gpmValueProvider.value(channelWithChildren.channel, valueType)
+    val value = gpmValueProvider.value(channelWithChildren, valueType)
     if (value.isNaN()) {
       return ValuesFormatter.NO_VALUE_TEXT
     }

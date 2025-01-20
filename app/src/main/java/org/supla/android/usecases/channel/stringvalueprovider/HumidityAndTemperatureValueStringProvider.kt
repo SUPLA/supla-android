@@ -40,7 +40,7 @@ class HumidityAndTemperatureValueStringProvider @Inject constructor(
     channelWithChildren.channel.function == SuplaFunction.HUMIDITY_AND_TEMPERATURE
 
   override fun value(channelWithChildren: ChannelWithChildren, valueType: ValueType, withUnit: Boolean): String {
-    val value = humidityAndTemperatureValueProvider.value(channelWithChildren.channel, valueType)
+    val value = humidityAndTemperatureValueProvider.value(channelWithChildren, valueType)
     return when (valueType) {
       ValueType.FIRST -> temperatureFormatter.format(value, withUnit = withUnit)
       ValueType.SECOND -> humidityFormatter.format(value, withUnit = withUnit)

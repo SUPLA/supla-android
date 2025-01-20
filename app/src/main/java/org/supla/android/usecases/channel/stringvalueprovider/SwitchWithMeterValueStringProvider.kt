@@ -54,7 +54,7 @@ class SwitchWithMeterValueStringProvider @Inject constructor(
     val meterChild = channelWithChildren.children.firstOrNull { it.relationType == ChannelRelationType.METER }
 
     if (channelWithChildren.isOrHasElectricityMeter) {
-      val value = switchWithElectricityMeterValueProvider.value(channelData, valueType)
+      val value = switchWithElectricityMeterValueProvider.value(channelWithChildren, valueType)
       val type = userStateHolder.getElectricityMeterSettings(channelData.profileId, channelData.remoteId).showOnListSafe
 
       return emFormatter.format(value, withUnit = withUnit, custom = type)
@@ -65,7 +65,7 @@ class SwitchWithMeterValueStringProvider @Inject constructor(
     }
 
     if (channelData.channelValueEntity.subValueType == SUBV_TYPE_IC_MEASUREMENTS.toShort()) {
-      val value = switchWithImpulseCounterValueProvider.value(channelData, valueType)
+      val value = switchWithImpulseCounterValueProvider.value(channelWithChildren, valueType)
       val unit = channelData.ImpulseCounter.value?.unit?.let { ImpulseCounterValueFormatter.Data(it) }
       return icFormatter.format(value, withUnit = withUnit, custom = unit)
     }

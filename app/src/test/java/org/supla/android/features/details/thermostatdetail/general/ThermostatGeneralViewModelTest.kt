@@ -761,14 +761,16 @@ class ThermostatGeneralViewModelTest :
     val thermometerEntity: ChannelDataEntity = mockk {
       every { this@mockk.remoteId } returns 999
     }
+    val thermometerWithChildren: ChannelWithChildren = mockk {
+    }
     val children = listOf(
       mockChannelChildEntity(ChannelRelationType.MAIN_THERMOMETER, SuplaConst.SUPLA_CHANNELFNC_THERMOMETER, dataEntity = thermometerEntity),
       mockChannelChildEntity(ChannelRelationType.AUX_THERMOMETER_FLOOR, remoteId = 998)
     )
 
     every { children[0].function } returns SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
-    every { children[0].channelDataEntity } returns thermometerEntity
-    whenever(getChannelValueUseCase.invoke<Double>(thermometerEntity)).thenReturn(15.3)
+    every { children[0].withChildren } returns thermometerWithChildren
+    whenever(getChannelValueUseCase.invoke<Double>(thermometerWithChildren)).thenReturn(15.3)
 
     return ChannelWithChildren(channelDataEntity, children)
   }

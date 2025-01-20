@@ -76,7 +76,7 @@ class NoExtendedValueStateHandlerTest {
       every { toReverseEnergy(any()) } returns monthReverseEnergy
     }
 
-    every { getChannelValueUseCase<Double>(channel) } returns value
+    every { getChannelValueUseCase<Double>(channelWithChildren) } returns value
 
     // when
     val result = handler.updateState(state, channelWithChildren, measurements)
@@ -102,7 +102,7 @@ class NoExtendedValueStateHandlerTest {
       every { isOrHasElectricityMeter } returns true
       every { isOnline() } returns true
     }
-    every { getChannelValueUseCase<Double>(channel) } returns Double.NaN
+    every { getChannelValueUseCase<Double>(channelWithChildren) } returns Double.NaN
 
     val state = ElectricityMeterState()
 
@@ -128,7 +128,7 @@ class NoExtendedValueStateHandlerTest {
       every { isOrHasElectricityMeter } returns true
       every { isOnline() } returns false
     }
-    every { getChannelValueUseCase<Double>(channel) } returns Double.NaN
+    every { getChannelValueUseCase<Double>(channelWithChildren) } returns Double.NaN
 
     // when
     val result = handler.updateState(null, channelWithChildren)

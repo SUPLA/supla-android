@@ -24,7 +24,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.InjectMocks
 import org.mockito.junit.MockitoJUnitRunner
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.usecases.channel.ValueType
 import org.supla.core.shared.data.model.general.SuplaFunction
 
@@ -41,7 +41,7 @@ class HumidityAndTemperatureValueProviderTest {
   @Test
   fun `should handle value`() {
     // given
-    val channel: ChannelDataEntity = mockk {
+    val channel: ChannelWithChildren = mockk {
       every { function } returns SuplaFunction.HUMIDITY_AND_TEMPERATURE
     }
 
@@ -124,9 +124,11 @@ class HumidityAndTemperatureValueProviderTest {
     assertThat(value).isEqualTo(HumidityAndTemperatureValueProvider.UNKNOWN_HUMIDITY_VALUE)
   }
 
-  private fun mockChannelData(bytes: List<Int>): ChannelDataEntity = mockk {
-    every { channelValueEntity } returns mockk {
-      every { getValueAsByteArray() } returns ByteArray(bytes.size) { position -> bytes[position].toByte() }
+  private fun mockChannelData(bytes: List<Int>): ChannelWithChildren = mockk {
+    every { channel } returns mockk {
+      every { channelValueEntity } returns mockk {
+        every { getValueAsByteArray() } returns ByteArray(bytes.size) { position -> bytes[position].toByte() }
+      }
     }
   }
 }

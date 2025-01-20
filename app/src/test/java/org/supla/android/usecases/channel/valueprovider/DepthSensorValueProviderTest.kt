@@ -7,7 +7,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.InjectMocks
 import org.mockito.junit.MockitoJUnitRunner
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.core.shared.data.model.general.SuplaFunction
 
 @RunWith(MockitoJUnitRunner::class)
@@ -21,7 +21,7 @@ class DepthSensorValueProviderTest : BaseDoubleValueProviderTest<DepthSensorValu
   @Test
   fun `check if handles`() {
     // given
-    val channel: ChannelDataEntity = mockk {
+    val channel: ChannelWithChildren = mockk {
       every { function } returns SuplaFunction.DEPTH_SENSOR
     }
 

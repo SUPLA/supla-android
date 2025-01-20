@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.usecases.channel.valueprovider.ContainerValueProvider
 import org.supla.android.usecases.channel.valueprovider.DepthSensorValueProvider
 import org.supla.android.usecases.channel.valueprovider.DistanceSensorValueProvider
@@ -68,19 +68,19 @@ class GetChannelValueUseCase @Inject constructor(
   )
 
   @Suppress("UNCHECKED_CAST")
-  operator fun <T> invoke(channel: ChannelDataEntity, valueType: ValueType = ValueType.FIRST): T {
+  operator fun <T> invoke(channelWithChildren: ChannelWithChildren, valueType: ValueType = ValueType.FIRST): T {
     providers.forEach {
-      if (it.handle(channel)) {
-        return it.value(channel, valueType) as T
+      if (it.handle(channelWithChildren)) {
+        return it.value(channelWithChildren, valueType) as T
       }
     }
 
-    throw IllegalStateException("No value provider for channel function `${channel.function}`")
+    throw IllegalStateException("No value provider for channel function `${channelWithChildren.function}`")
   }
 }
 
 interface ChannelValueProvider {
-  fun handle(channelData: ChannelDataEntity): Boolean
+  fun handle(channelWithChildren: ChannelWithChildren): Boolean
 
-  fun value(channelData: ChannelDataEntity, valueType: ValueType): Any
+  fun value(channelWithChildren: ChannelWithChildren, valueType: ValueType): Any
 }

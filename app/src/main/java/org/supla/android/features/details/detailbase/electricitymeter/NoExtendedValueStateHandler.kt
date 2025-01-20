@@ -39,7 +39,7 @@ class NoExtendedValueStateHandler @Inject constructor(
       return state
     }
 
-    val value: Double = getChannelValueUseCase(channelWithChildren.channel)
+    val value: Double = getChannelValueUseCase(channelWithChildren)
     val formatter = ListElectricityMeterValueFormatter(useNoValue = false)
 
     return state.copyOrCreate(

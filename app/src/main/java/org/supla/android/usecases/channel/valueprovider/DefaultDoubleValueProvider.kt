@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.usecases.channel.ChannelValueProvider
 import org.supla.android.usecases.channel.ValueType
 import org.supla.android.usecases.channel.valueprovider.parser.DoubleValueParser
@@ -26,6 +26,6 @@ abstract class DefaultDoubleValueProvider : ChannelValueProvider, DoubleValuePar
 
   abstract val unknownValue: Double
 
-  override fun value(channelData: ChannelDataEntity, valueType: ValueType): Double =
-    asDoubleValue(channelData.channelValueEntity) ?: unknownValue
+  override fun value(channelWithChildren: ChannelWithChildren, valueType: ValueType): Double =
+    asDoubleValue(channelWithChildren.channel.channelValueEntity) ?: unknownValue
 }

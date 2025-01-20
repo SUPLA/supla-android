@@ -520,7 +520,7 @@ class ThermostatGeneralViewModel @Inject constructor(
 
   private fun calculateCurrentTemperature(data: ChannelWithChildren, configMinTemperature: Float, configMaxTemperature: Float): Float? {
     return data.children.firstOrNull { it.relationType == ChannelRelationType.MAIN_THERMOMETER }?.let {
-      val temperature: Double = getChannelValueUseCase(it.channelDataEntity)
+      val temperature: Double = getChannelValueUseCase(it.withChildren)
 
       if (temperature <= -273) {
         null

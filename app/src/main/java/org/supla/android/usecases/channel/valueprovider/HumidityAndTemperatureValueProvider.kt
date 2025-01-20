@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.usecases.channel.ChannelValueProvider
 import org.supla.android.usecases.channel.ValueType
 import org.supla.android.usecases.channel.valueprovider.parser.IntValueParser
@@ -28,13 +28,14 @@ import javax.inject.Singleton
 @Singleton
 class HumidityAndTemperatureValueProvider @Inject constructor() : ChannelValueProvider, IntValueParser {
 
-  override fun handle(channelData: ChannelDataEntity): Boolean =
-    channelData.function == SuplaFunction.HUMIDITY_AND_TEMPERATURE
+  override fun handle(channelWithChildren: ChannelWithChildren): Boolean =
+    channelWithChildren.function == SuplaFunction.HUMIDITY_AND_TEMPERATURE
 
-  override fun value(channelData: ChannelDataEntity, valueType: ValueType): Double {
+  override fun value(channelWithChildren: ChannelWithChildren, valueType: ValueType): Double {
+    val entity = channelWithChildren.channel.channelValueEntity
     return when (valueType) {
-      ValueType.FIRST -> asIntValue(channelData.channelValueEntity)?.div(1000.0) ?: ThermometerValueProvider.UNKNOWN_VALUE
-      ValueType.SECOND -> asIntValue(channelData.channelValueEntity, 4, 7)?.div(1000.0) ?: UNKNOWN_HUMIDITY_VALUE
+      ValueType.FIRST -> asIntValue(entity)?.div(1000.0) ?: ThermometerValueProvider.UNKNOWN_VALUE
+      ValueType.SECOND -> asIntValue(entity, 4, 7)?.div(1000.0) ?: UNKNOWN_HUMIDITY_VALUE
     }
   }
 

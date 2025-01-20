@@ -35,8 +35,8 @@ class ThermometerValueStringProvider @Inject constructor(
   private val formatter = ThermometerValueFormatter(preferences)
 
   override fun handle(channelWithChildren: ChannelWithChildren): Boolean =
-    thermometerValueProvider.handle(channelWithChildren.channel)
+    thermometerValueProvider.handle(channelWithChildren)
 
   override fun value(channelWithChildren: ChannelWithChildren, valueType: ValueType, withUnit: Boolean): String =
-    formatter.format(thermometerValueProvider.value(channelWithChildren.channel, valueType), withUnit = withUnit)
+    formatter.format(thermometerValueProvider.value(channelWithChildren, valueType), withUnit = withUnit)
 }

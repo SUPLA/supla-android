@@ -17,7 +17,7 @@ package org.supla.android.usecases.channel.valueprovider
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.usecases.channel.ChannelValueProvider
 import org.supla.android.usecases.channel.ValueType
 import org.supla.android.usecases.channel.valueprovider.parser.LongValueProvider
@@ -27,8 +27,8 @@ import javax.inject.Singleton
 
 @Singleton
 class ImpulseCounterValueProvider @Inject constructor() : ChannelValueProvider, LongValueProvider {
-  override fun handle(channelData: ChannelDataEntity): Boolean =
-    when (channelData.function) {
+  override fun handle(channelWithChildren: ChannelWithChildren): Boolean =
+    when (channelWithChildren.function) {
       SuplaFunction.IC_ELECTRICITY_METER,
       SuplaFunction.IC_WATER_METER,
       SuplaFunction.IC_HEAT_METER,
@@ -37,8 +37,8 @@ class ImpulseCounterValueProvider @Inject constructor() : ChannelValueProvider, 
       else -> false
     }
 
-  override fun value(channelData: ChannelDataEntity, valueType: ValueType): Double {
-    return asLongValue(channelData.channelValueEntity)?.div(1000.0) ?: UNKNOWN_VALUE
+  override fun value(channelWithChildren: ChannelWithChildren, valueType: ValueType): Double {
+    return asLongValue(channelWithChildren.channel.channelValueEntity)?.div(1000.0) ?: UNKNOWN_VALUE
   }
 
   companion object {

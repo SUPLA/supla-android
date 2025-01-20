@@ -35,11 +35,11 @@ class ElectricityMeterValueStringProvider @Inject constructor(
   private val formatter = ListElectricityMeterValueFormatter()
 
   override fun handle(channelWithChildren: ChannelWithChildren): Boolean =
-    electricityMeterValueProvider.handle(channelWithChildren.channel)
+    electricityMeterValueProvider.handle(channelWithChildren)
 
   override fun value(channelWithChildren: ChannelWithChildren, valueType: ValueType, withUnit: Boolean): String {
     val channelData = channelWithChildren.channel
-    val value = electricityMeterValueProvider.value(channelData, valueType)
+    val value = electricityMeterValueProvider.value(channelWithChildren, valueType)
     val type = userStateHolder.getElectricityMeterSettings(channelData.profileId, channelData.remoteId).showOnListSafe
     return formatter.format(value, withUnit = withUnit, custom = type)
   }

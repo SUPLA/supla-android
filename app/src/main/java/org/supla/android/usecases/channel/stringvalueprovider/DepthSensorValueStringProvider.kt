@@ -31,8 +31,8 @@ class DepthSensorValueStringProvider @Inject constructor(
   private val valuesFormatter: ValuesFormatter
 ) : ChannelValueStringProvider {
   override fun handle(channelWithChildren: ChannelWithChildren): Boolean =
-    depthSensorValueProvider.handle(channelWithChildren.channel)
+    depthSensorValueProvider.handle(channelWithChildren)
 
   override fun value(channelWithChildren: ChannelWithChildren, valueType: ValueType, withUnit: Boolean): String =
-    valuesFormatter.getDistanceString(depthSensorValueProvider.value(channelWithChildren.channel, valueType))
+    valuesFormatter.getDistanceString(depthSensorValueProvider.value(channelWithChildren, valueType))
 }

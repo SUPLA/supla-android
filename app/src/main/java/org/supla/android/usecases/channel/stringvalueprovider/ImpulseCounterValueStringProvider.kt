@@ -35,11 +35,11 @@ class ImpulseCounterValueStringProvider @Inject constructor(
   val formatter = ImpulseCounterValueFormatter()
 
   override fun handle(channelWithChildren: ChannelWithChildren): Boolean =
-    impulseCounterValueProvider.handle(channelWithChildren.channel)
+    impulseCounterValueProvider.handle(channelWithChildren)
 
   override fun value(channelWithChildren: ChannelWithChildren, valueType: ValueType, withUnit: Boolean): String {
     val channelData = channelWithChildren.channel
-    val value = impulseCounterValueProvider.value(channelData, valueType)
+    val value = impulseCounterValueProvider.value(channelWithChildren, valueType)
 
     if (value == ImpulseCounterValueProvider.UNKNOWN_VALUE) {
       return NO_VALUE_TEXT
