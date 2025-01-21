@@ -70,6 +70,7 @@ data class HistoryDataSet(
 
   fun asLineChartData(
     aggregation: ChartDataAggregation,
+    customData: Any? = null,
     timeToCoordinateConverter: ((Float) -> Float)? = null,
     toSetConverter: (set: List<Entry>) -> LineDataSet
   ): List<ILineDataSet>? {
@@ -81,7 +82,7 @@ data class HistoryDataSet(
       entities.forEach { aggregatedEntities ->
         val entries = aggregatedEntities.map { entity ->
           val x = timeToCoordinateConverter?.let { it(entity.date.toFloat()) } ?: entity.date.toFloat()
-          toLineEntry(x, aggregation, entity)
+          toLineEntry(x, aggregation, entity, customData)
         }
 
         add(toSetConverter(entries))
@@ -155,8 +156,8 @@ data class HistoryDataSet(
     }
   }
 
-  private fun toLineEntry(x: Float, aggregation: ChartDataAggregation, entity: AggregatedEntity): Entry =
-    Entry(x, (entity.value as AggregatedValue.Single).value, chartEntryDetails(aggregation, entity))
+  private fun toLineEntry(x: Float, aggregation: ChartDataAggregation, entity: AggregatedEntity, customData: Any?): Entry =
+    Entry(x, (entity.value as AggregatedValue.Single).value, chartEntryDetails(aggregation, entity, customData))
 
   private fun toBarEntry(
     x: Float,

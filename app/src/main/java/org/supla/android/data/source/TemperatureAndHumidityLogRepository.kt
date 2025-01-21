@@ -72,11 +72,12 @@ class TemperatureAndHumidityLogRepository @Inject constructor(
   override fun insert(entries: List<TemperatureAndHumidityLogEntity>): Completable =
     temperatureAndHumidityLogDao.insert(entries)
 
-  override fun map(entry: TemperatureAndHumidityMeasurement, remoteId: Int, profileId: Long) =
+  override fun map(entry: TemperatureAndHumidityMeasurement, groupingString: String, remoteId: Int, profileId: Long) =
     TemperatureAndHumidityLogEntity(
       id = null,
       channelId = remoteId,
       date = entry.date,
+      groupingString = groupingString,
       temperature = entry.temperature,
       humidity = entry.humidity,
       profileId = profileId

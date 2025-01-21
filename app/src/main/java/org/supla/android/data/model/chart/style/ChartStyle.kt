@@ -29,10 +29,12 @@ sealed class ChartStyle(
   @ColorRes val leftAxisColor: Int,
   @ColorRes val rightAxisColor: Int,
   val drawBarShadow: Boolean,
-  val markerViewProvider: (context: Context) -> BaseMarkerView
+  val markerViewProvider: (context: Context) -> BaseMarkerView,
+  val setMinValue: Boolean = true,
+  val setMaxValue: Boolean = true
 )
 
-data object ThermometerChartStyle : ChartStyle(
+data object Default : ChartStyle(
   leftAxisColor = R.color.dark_red,
   rightAxisColor = R.color.dark_blue,
   drawBarShadow = false,
@@ -50,7 +52,8 @@ data object GpmChartStyle : ChartStyle(
   leftAxisColor = R.color.on_background,
   rightAxisColor = R.color.on_background,
   drawBarShadow = true,
-  markerViewProvider = { ChartMarkerView(it) }
+  markerViewProvider = { ChartMarkerView(it) },
+  setMinValue = false
 )
 
 data object ElectricityChartStyle : ChartStyle(
@@ -58,6 +61,15 @@ data object ElectricityChartStyle : ChartStyle(
   rightAxisColor = R.color.on_background,
   drawBarShadow = true,
   markerViewProvider = { ElectricityMarkerView(it) }
+)
+
+data object ElectricityHistoryChartStyle : ChartStyle(
+  leftAxisColor = R.color.on_background,
+  rightAxisColor = R.color.on_background,
+  drawBarShadow = true,
+  markerViewProvider = { ChartMarkerView(it) },
+  setMinValue = false,
+  setMaxValue = false
 )
 
 data object ImpulseCounterChartStyle : ChartStyle(

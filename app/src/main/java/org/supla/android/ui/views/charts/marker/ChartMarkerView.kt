@@ -19,9 +19,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.ColorStateList
 import android.view.View
 import android.widget.TableLayout
 import android.widget.TextView
+import androidx.core.content.res.ResourcesCompat
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.highlight.Highlight
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,6 +31,11 @@ import org.supla.android.R
 import org.supla.android.data.formatting.DateFormatter
 import org.supla.android.data.model.chart.ChartEntryType
 import org.supla.android.data.model.chart.marker.ChartEntryDetails
+import org.supla.android.data.source.local.entity.custom.Phase
+import org.supla.android.extensions.visibleIf
+import org.supla.android.usecases.channel.measurementsprovider.electricity.CurrentChartCustomData
+import org.supla.android.usecases.channel.measurementsprovider.electricity.PowerActiveChartCustomData
+import org.supla.android.usecases.channel.measurementsprovider.electricity.VoltageChartCustomData
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -49,6 +56,10 @@ class ChartMarkerView(context: Context) : BaseMarkerView(context) {
       withUnit = showValueUnit(details.type),
       precision = precision(details.type)
     )
+
+    val color: Int? = getIconColor(highlight, details)
+    icon.visibleIf(color != null)
+    color?.let { icon.imageTintList = ColorStateList.valueOf(it) }
 
     if (details.min != null && details.max != null) {
       val minText = details.valueFormatter.format(details.min.toDouble(), withUnit = details.type == ChartEntryType.HUMIDITY)
@@ -91,7 +102,10 @@ class ChartMarkerView(context: Context) : BaseMarkerView(context) {
     when (type) {
       ChartEntryType.HUMIDITY,
       ChartEntryType.GENERAL_PURPOSE_METER,
-      ChartEntryType.IMPULSE_COUNTER -> true
+      ChartEntryType.IMPULSE_COUNTER,
+      ChartEntryType.VOLTAGE,
+      ChartEntryType.CURRENT,
+      ChartEntryType.POWER_ACTIVE -> true
 
       else -> false
     }
@@ -101,4 +115,36 @@ class ChartMarkerView(context: Context) : BaseMarkerView(context) {
       ChartEntryType.IMPULSE_COUNTER -> 3
       else -> 2
     }
+
+  private fun getIconColor(highlight: Highlight?, details: ChartEntryDetails): Int? {
+    (details.customData as? VoltageChartCustomData)?.phases?.let { phases ->
+      getColorFromPhases(phases, highlight)?.let {
+        return it
+      }
+    }
+
+    (details.customData as? CurrentChartCustomData)?.phases?.let { phases ->
+      getColorFromPhases(phases, highlight)?.let {
+        return it
+      }
+    }
+
+    (details.customData as? PowerActiveChartCustomData)?.phases?.let { phases ->
+      getColorFromPhases(phases, highlight)?.let {
+        return it
+      }
+    }
+
+    return null
+  }
+
+  private fun getColorFromPhases(phases: List<Phase>, highlight: Highlight?): Int? {
+    highlight?.dataSetIndex?.let { dataSetIndex ->
+      phases.getOrNull(dataSetIndex)?.color?.let { phaseColor ->
+        return ResourcesCompat.getColor(resources, phaseColor, null)
+      }
+    }
+
+    return null
+  }
 }

@@ -71,11 +71,17 @@ class GeneralPurposeMeasurementLogRepository @Inject constructor(
   override fun insert(entries: List<GeneralPurposeMeasurementEntity>): Completable =
     generalPurposeMeasurementLogDao.insert(entries)
 
-  override fun map(entry: GeneralPurposeMeasurement, remoteId: Int, profileId: Long): GeneralPurposeMeasurementEntity =
+  override fun map(
+    entry: GeneralPurposeMeasurement,
+    groupingString: String,
+    remoteId: Int,
+    profileId: Long
+  ): GeneralPurposeMeasurementEntity =
     GeneralPurposeMeasurementEntity(
       id = null,
       channelId = remoteId,
       date = entry.date,
+      groupingString = groupingString,
       valueAverage = entry.average,
       valueMin = entry.min,
       valueMax = entry.max,

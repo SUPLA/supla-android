@@ -18,11 +18,11 @@ package org.supla.android.data.source.local.entity.measurements
  */
 
 import org.supla.android.data.model.chart.ChartDataAggregation
-import java.util.Date
+import org.supla.android.data.source.local.entity.custom.BalancedValue
 
-fun List<ElectricityMeterLogEntity>.balanceHourly(formatter: ChartDataAggregation.Formatter) =
+fun List<ElectricityMeterLogEntity>.balanceHourly() =
   this
-    .groupBy { item -> ChartDataAggregation.HOURS.aggregator(item.date, formatter) }
+    .groupBy { item -> ChartDataAggregation.HOURS.aggregator(item) }
     .asSequence()
     .filter { group -> group.value.isNotEmpty() }
     .map { group ->
@@ -35,11 +35,11 @@ fun List<ElectricityMeterLogEntity>.balanceHourly(formatter: ChartDataAggregatio
           group.value.map { it.phase2Rae ?: 0f }.sum() +
           group.value.map { it.phase3Rae ?: 0f }.sum()
       val result = consumption - production
-      BalancedValue(group.value.firstOrNull()!!.date, if (result > 0) result else 0f, if (result < 0) -result else 0f)
-    }
 
-data class BalancedValue(
-  val date: Date,
-  val forwarded: Float,
-  val reversed: Float
-)
+      BalancedValue(
+        date = group.value.firstOrNull()!!.date,
+        groupingString = group.value.firstOrNull()!!.groupingString,
+        forwarded = if (result > 0) result else 0f,
+        reversed = if (result < 0) -result else 0f
+      )
+    }

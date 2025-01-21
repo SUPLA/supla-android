@@ -40,11 +40,12 @@ class TemperatureLogRepository @Inject constructor(
     return temperatureLogDao.findMeasurements(remoteId, profileId, startDate.time, endDate.time)
   }
 
-  override fun map(entry: TemperatureMeasurement, remoteId: Int, profileId: Long) =
+  override fun map(entry: TemperatureMeasurement, groupingString: String, remoteId: Int, profileId: Long) =
     TemperatureLogEntity(
       id = null,
       channelId = remoteId,
       date = entry.date,
+      groupingString = groupingString,
       temperature = entry.temperature,
       profileId = profileId
     )

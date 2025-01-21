@@ -94,9 +94,8 @@ class GeneralPurposeMeterMeasurementsProvider @Inject constructor(
         }
     }
 
-    val formatter = ChartDataAggregation.Formatter()
     return measurements
-      .groupBy { item -> aggregation.aggregator(item.date, formatter) }
+      .groupBy { item -> aggregation.aggregator(item) }
       .filter { group -> group.value.isNotEmpty() }
       .map { group ->
         AggregatedEntity(

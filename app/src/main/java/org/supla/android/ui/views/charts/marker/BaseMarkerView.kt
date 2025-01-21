@@ -27,6 +27,7 @@ import android.widget.LinearLayout
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -54,6 +55,7 @@ abstract class BaseMarkerView(context: Context) : MarkerView(context, R.layout.v
 
   protected val content: ConstraintLayout = findViewById(R.id.chart_marker_content)
   protected val title: TextView = findViewById(R.id.chart_marker_title)
+  protected val icon: AppCompatImageView = findViewById(R.id.chart_marker_icon)
   protected val text: TextView = findViewById(R.id.chart_marker_text)
   protected val range: TextView = findViewById(R.id.chart_marker_range)
 

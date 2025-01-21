@@ -52,6 +52,7 @@ data class HumidityLogEntity(
   @ColumnInfo(name = COLUMN_CHANNEL_ID) val channelId: Int,
   @ColumnInfo(name = COLUMN_DATE) override val date: Date,
   @ColumnInfo(name = COLUMN_HUMIDITY) override val humidity: Float?,
+  @ColumnInfo(name = COLUMN_GROUPING_STRING) override val groupingString: String,
   @ColumnInfo(name = COLUMN_PROFILE_ID) val profileId: Long
 ) : BaseHumidityEntity {
 
@@ -61,8 +62,9 @@ data class HumidityLogEntity(
     const val COLUMN_CHANNEL_ID = "channel_id"
     const val COLUMN_DATE = "date"
     const val COLUMN_HUMIDITY = "humidity"
+    const val COLUMN_GROUPING_STRING = "grouping_string"
     const val COLUMN_PROFILE_ID = "profile_id"
 
-    const val ALL_COLUMNS = "$COLUMN_ID, $COLUMN_CHANNEL_ID, $COLUMN_DATE, $COLUMN_HUMIDITY, $COLUMN_PROFILE_ID"
+    const val ALL_COLUMNS = "$COLUMN_ID, $COLUMN_CHANNEL_ID, $COLUMN_DATE, $COLUMN_HUMIDITY, $COLUMN_GROUPING_STRING, $COLUMN_PROFILE_ID"
   }
 }

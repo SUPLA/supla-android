@@ -54,6 +54,7 @@ data class HomePlusThermostatLogEntity(
   @ColumnInfo(name = COLUMN_IS_ON) val isOn: Boolean,
   @ColumnInfo(name = COLUMN_MEASURED_TEMPERATURE) val measuredTemperature: Float?,
   @ColumnInfo(name = COLUMN_PRESET_TEMPERATURE) val presetTemperature: Float?,
+  @ColumnInfo(name = COLUMN_GROUPING_STRING) val groupingString: String,
   @ColumnInfo(name = COLUMN_PROFILE_ID) val profileId: Long
 ) {
 
@@ -65,6 +66,7 @@ data class HomePlusThermostatLogEntity(
     const val COLUMN_IS_ON = "ison"
     const val COLUMN_MEASURED_TEMPERATURE = "measured"
     const val COLUMN_PRESET_TEMPERATURE = "preset"
+    const val COLUMN_GROUPING_STRING = "grouping_string"
     const val COLUMN_PROFILE_ID = "profileid"
 
     val SQL = arrayOf(
@@ -77,6 +79,7 @@ data class HomePlusThermostatLogEntity(
           $COLUMN_IS_ON INTEGER NOT NULL,
           $COLUMN_MEASURED_TEMPERATURE REAL NULL,
           $COLUMN_PRESET_TEMPERATURE REAL NULL,
+          $COLUMN_GROUPING_STRING TEXT NOT NULL,
           $COLUMN_PROFILE_ID INTEGER NOT NULL
         )
       """.trimIndent(),

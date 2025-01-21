@@ -33,11 +33,10 @@ internal fun <T : BaseHumidityEntity> ChannelMeasurementsProvider.aggregatingHum
       .map { AggregatedEntity(it.date.toTimestamp(), AggregatedValue.Single(it.humidity!!)) }
   }
 
-  val formatter = ChartDataAggregation.Formatter()
   return measurements
     .asSequence()
     .filter { it.humidity != null }
-    .groupBy { item -> aggregation.aggregator(item.date, formatter) }
+    .groupBy { item -> aggregation.aggregator(item) }
     .filter { group -> group.value.isNotEmpty() }
     .map { group ->
       AggregatedEntity(

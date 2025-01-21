@@ -20,6 +20,9 @@ package org.supla.android.features.details.electricitymeterdetail.history
 import androidx.annotation.StringRes
 import org.supla.android.R
 import org.supla.android.ui.views.SpinnerItem
+import org.supla.core.shared.infrastructure.LocalizedString
+
+private const val KWH = "[kWh]"
 
 enum class ElectricityMeterChartType(@StringRes override val labelRes: Int) : SpinnerItem {
   FORWARDED_ACTIVE_ENERGY(R.string.details_em_forward_active_energy),
@@ -29,14 +32,28 @@ enum class ElectricityMeterChartType(@StringRes override val labelRes: Int) : Sp
   BALANCE_ARITHMETIC(R.string.details_em_balance_arithmetic),
   BALANCE_VECTOR(R.string.details_em_balance_vector),
   BALANCE_HOURLY(R.string.details_em_balance_hourly),
-  BALANCE_CHART_AGGREGATED(R.string.details_em_balance_chart_aggregated);
+  BALANCE_CHART_AGGREGATED(R.string.details_em_balance_chart_aggregated),
+  VOLTAGE(R.string.details_em_voltage),
+  CURRENT(R.string.details_em_current),
+  POWER_ACTIVE(R.string.details_em_power_active);
+
+  val label: LocalizedString
+    get() = when (this) {
+      VOLTAGE -> LocalizedString.WithResourceAndValue(labelRes, "[V]")
+      CURRENT -> LocalizedString.WithResourceAndValue(labelRes, "[A]")
+      POWER_ACTIVE -> LocalizedString.WithResourceAndValue(labelRes, "[W]")
+      else -> LocalizedString.WithResourceAndValue(labelRes, KWH)
+    }
 
   val needsPhases: Boolean
     get() = when (this) {
       FORWARDED_ACTIVE_ENERGY,
       REVERSED_ACTIVE_ENERGY,
       FORWARDED_REACTIVE_ENERGY,
-      REVERSED_REACTIVE_ENERGY -> true
+      REVERSED_REACTIVE_ENERGY,
+      VOLTAGE,
+      CURRENT,
+      POWER_ACTIVE -> true
 
       BALANCE_VECTOR,
       BALANCE_ARITHMETIC,
@@ -54,6 +71,26 @@ enum class ElectricityMeterChartType(@StringRes override val labelRes: Int) : Sp
       FORWARDED_ACTIVE_ENERGY,
       REVERSED_ACTIVE_ENERGY,
       FORWARDED_REACTIVE_ENERGY,
-      REVERSED_REACTIVE_ENERGY -> false
+      REVERSED_REACTIVE_ENERGY,
+      VOLTAGE,
+      CURRENT,
+      POWER_ACTIVE -> false
     }
+
+  fun needsRefresh(otherType: ElectricityMeterChartType): Boolean {
+    if (this == otherType) {
+      return false
+    }
+    if (this == VOLTAGE || otherType == VOLTAGE) {
+      return true
+    }
+    if (this == CURRENT || otherType == CURRENT) {
+      return true
+    }
+    if (this == POWER_ACTIVE || otherType == POWER_ACTIVE) {
+      return true
+    }
+
+    return false
+  }
 }

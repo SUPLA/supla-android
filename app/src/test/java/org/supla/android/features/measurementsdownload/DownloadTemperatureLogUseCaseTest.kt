@@ -17,25 +17,24 @@ package org.supla.android.features.measurementsdownload
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import io.mockk.MockKAnnotations
+import io.mockk.confirmVerified
 import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
+import io.mockk.slot
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import okhttp3.Headers
 import org.assertj.core.api.Assertions
+import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.ArgumentMatchers
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.ArgumentMatchers.eq
 import org.mockito.kotlin.any
-import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.whenever
 import org.supla.android.data.source.TemperatureLogRepository
 import org.supla.android.data.source.local.entity.measurements.TemperatureLogEntity
 import org.supla.android.data.source.remote.rest.SuplaCloudService
@@ -45,17 +44,21 @@ import org.supla.android.extensions.toTimestamp
 import retrofit2.Response
 import java.util.Date
 
-@RunWith(MockitoJUnitRunner::class)
 class DownloadTemperatureLogUseCaseTest {
 
-  @Mock
+  @MockK
   private lateinit var suplaCloudServiceProvider: SuplaCloudService.Provider
 
-  @Mock
+  @MockK
   private lateinit var temperatureLogRepository: TemperatureLogRepository
 
-  @InjectMocks
+  @InjectMockKs
   private lateinit var useCase: DownloadTemperatureLogUseCase
+
+  @Before
+  fun setup() {
+    MockKAnnotations.init(this)
+  }
 
   @Test
   fun `should load measurements from cloud`() {
@@ -68,19 +71,17 @@ class DownloadTemperatureLogUseCaseTest {
     }
     val cloudService: SuplaCloudService = mockk()
 
-    whenever(suplaCloudServiceProvider.provide()).thenReturn(cloudService)
+    every { suplaCloudServiceProvider.provide() } returns cloudService
     mockInitialCall(remoteId, cloudService, lastDbDate)
 
     val measurementDate = date(2023, 10, 1, 3)
     mockMeasurementsCall(measurementDate, lastDbDate, remoteId, cloudService)
 
-    whenever(temperatureLogRepository.findMinTimestamp(remoteId, profileId))
-      .thenReturn(Single.just(date(2023, 10, 1).time))
-    whenever(temperatureLogRepository.findOldestEntity(remoteId, profileId))
-      .thenReturn(Maybe.just(lastEntity))
+    every { temperatureLogRepository.findMinTimestamp(remoteId, profileId) } returns Single.just(date(2023, 10, 1).time)
+    every { temperatureLogRepository.findOldestEntity(remoteId, profileId) } returns Maybe.just(lastEntity)
 
-    whenever(temperatureLogRepository.findCount(remoteId, profileId)).thenReturn(Maybe.just(50))
-    whenever(temperatureLogRepository.insert(any())).thenReturn(Completable.complete())
+    every { temperatureLogRepository.findCount(remoteId, profileId) } returns Maybe.just(50)
+    every { temperatureLogRepository.insert(any()) } returns Completable.complete()
     mockEntityMapping(remoteId, profileId)
 
     // when
@@ -89,24 +90,26 @@ class DownloadTemperatureLogUseCaseTest {
     // then
     testObserver.assertComplete()
 
-    verify(suplaCloudServiceProvider).provide()
-    verify(temperatureLogRepository).findMinTimestamp(remoteId, profileId)
-    verify(temperatureLogRepository).findOldestEntity(remoteId, profileId)
-    verify(temperatureLogRepository).findCount(remoteId, profileId)
-    verify(temperatureLogRepository).getInitialMeasurements(cloudService, remoteId)
-    verify(temperatureLogRepository).getMeasurements(cloudService, remoteId, lastDbDate.toTimestamp())
-    verify(temperatureLogRepository).getMeasurements(cloudService, remoteId, measurementDate.toTimestamp())
-    verify(temperatureLogRepository).map(any(), ArgumentMatchers.eq(remoteId), ArgumentMatchers.eq(profileId))
+    val captor = slot<List<TemperatureLogEntity>>()
+    io.mockk.verify {
+      suplaCloudServiceProvider.provide()
+      temperatureLogRepository.findMinTimestamp(remoteId, profileId)
+      temperatureLogRepository.findOldestEntity(remoteId, profileId)
+      temperatureLogRepository.findCount(remoteId, profileId)
+      temperatureLogRepository.getInitialMeasurements(cloudService, remoteId)
+      temperatureLogRepository.getMeasurements(cloudService, remoteId, lastDbDate.toTimestamp())
+      temperatureLogRepository.getMeasurements(cloudService, remoteId, measurementDate.toTimestamp())
+      temperatureLogRepository.map(any(), eq("2023110103003"), eq(remoteId), eq(profileId))
+      temperatureLogRepository.insert(capture(captor))
+    }
 
-    val captor = argumentCaptor<List<TemperatureLogEntity>>()
-    verify(temperatureLogRepository).insert(captor.capture())
-    val result = captor.firstValue
+    val result = captor.captured
     Assertions.assertThat(result).hasSize(1)
     Assertions.assertThat(result).containsExactly(
-      TemperatureLogEntity(null, remoteId, measurementDate, 23f, profileId)
+      TemperatureLogEntity(null, remoteId, measurementDate, 23f, "2023110103003", profileId)
     )
 
-    verifyNoMoreInteractions(suplaCloudServiceProvider, temperatureLogRepository)
+    confirmVerified(suplaCloudServiceProvider, temperatureLogRepository)
   }
 
   @Test
@@ -116,7 +119,8 @@ class DownloadTemperatureLogUseCaseTest {
     val profileId = 321L
     val lastDbDate = date(2023, 10, 1)
     val cloudService: SuplaCloudService = mockk()
-    whenever(suplaCloudServiceProvider.provide()).thenReturn(cloudService)
+
+    every { suplaCloudServiceProvider.provide() } returns cloudService
     mockInitialCall(remoteId, cloudService, lastDbDate, httpCode = 500)
 
     // when
@@ -125,9 +129,12 @@ class DownloadTemperatureLogUseCaseTest {
     // then
     testObserver.assertError(IllegalStateException::class.java)
 
-    verify(suplaCloudServiceProvider).provide()
-    verify(temperatureLogRepository).getInitialMeasurements(cloudService, remoteId)
-    verifyNoMoreInteractions(suplaCloudServiceProvider, temperatureLogRepository)
+    io.mockk.verify {
+      suplaCloudServiceProvider.provide()
+      temperatureLogRepository.getInitialMeasurements(cloudService, remoteId)
+    }
+
+    confirmVerified(suplaCloudServiceProvider, temperatureLogRepository)
   }
 
   @Test
@@ -138,7 +145,7 @@ class DownloadTemperatureLogUseCaseTest {
     val lastDbDate = date(2023, 10, 1)
     val cloudService: SuplaCloudService = mockk()
 
-    whenever(suplaCloudServiceProvider.provide()).thenReturn(cloudService)
+    every { suplaCloudServiceProvider.provide() } returns cloudService
     mockInitialCall(remoteId, cloudService, lastDbDate, totalCount = null)
 
     // when
@@ -147,9 +154,12 @@ class DownloadTemperatureLogUseCaseTest {
     // then
     testObserver.assertError(IllegalStateException::class.java)
 
-    verify(suplaCloudServiceProvider).provide()
-    verify(temperatureLogRepository).getInitialMeasurements(cloudService, remoteId)
-    verifyNoMoreInteractions(suplaCloudServiceProvider, temperatureLogRepository)
+    io.mockk.verify {
+      suplaCloudServiceProvider.provide()
+      temperatureLogRepository.getInitialMeasurements(cloudService, remoteId)
+    }
+
+    confirmVerified(suplaCloudServiceProvider, temperatureLogRepository)
   }
 
   @Test
@@ -159,15 +169,14 @@ class DownloadTemperatureLogUseCaseTest {
     val profileId = 321L
     val cloudService: SuplaCloudService = mockk()
 
-    whenever(suplaCloudServiceProvider.provide()).thenReturn(cloudService)
+    every { suplaCloudServiceProvider.provide() } returns cloudService
     mockInitialCall(remoteId, cloudService, totalCount = 0)
 
-    whenever(temperatureLogRepository.getMeasurements(cloudService, remoteId, 0))
-      .thenReturn(Observable.just(emptyList()))
-    whenever(temperatureLogRepository.findOldestEntity(remoteId, profileId))
-      .thenReturn(Maybe.empty())
-    whenever(temperatureLogRepository.delete(remoteId, profileId)).thenReturn(Completable.complete())
-    whenever(temperatureLogRepository.findCount(remoteId, profileId)).thenReturn(Maybe.just(50))
+    every { temperatureLogRepository.getMeasurements(cloudService, remoteId, 0) } returns
+      Observable.just(emptyList())
+    every { temperatureLogRepository.findOldestEntity(remoteId, profileId) } returns Maybe.empty()
+    every { temperatureLogRepository.delete(remoteId, profileId) } returns Completable.complete()
+    every { temperatureLogRepository.findCount(remoteId, profileId) } returns Maybe.just(50)
 
     // when
     val testObserver = useCase.loadMeasurements(remoteId, profileId).test()
@@ -175,14 +184,16 @@ class DownloadTemperatureLogUseCaseTest {
     // then
     testObserver.assertComplete()
 
-    verify(suplaCloudServiceProvider).provide()
-    verify(temperatureLogRepository).findOldestEntity(remoteId, profileId)
-    verify(temperatureLogRepository).findCount(remoteId, profileId)
-    verify(temperatureLogRepository).delete(remoteId, profileId)
-    verify(temperatureLogRepository).getInitialMeasurements(cloudService, remoteId)
-    verify(temperatureLogRepository).getMeasurements(cloudService, remoteId, 0)
+    io.mockk.verify {
+      suplaCloudServiceProvider.provide()
+      temperatureLogRepository.findOldestEntity(remoteId, profileId)
+      temperatureLogRepository.findCount(remoteId, profileId)
+      temperatureLogRepository.delete(remoteId, profileId)
+      temperatureLogRepository.getInitialMeasurements(cloudService, remoteId)
+      temperatureLogRepository.getMeasurements(cloudService, remoteId, 0)
+    }
 
-    verifyNoMoreInteractions(suplaCloudServiceProvider, temperatureLogRepository)
+    confirmVerified(suplaCloudServiceProvider, temperatureLogRepository)
   }
 
   @Test
@@ -193,12 +204,11 @@ class DownloadTemperatureLogUseCaseTest {
     val lastDbDate = date(2023, 10, 1)
     val cloudService: SuplaCloudService = mockk()
 
-    whenever(suplaCloudServiceProvider.provide()).thenReturn(cloudService)
+    every { suplaCloudServiceProvider.provide() } returns cloudService
     mockInitialCall(remoteId, cloudService, lastDbDate)
 
-    whenever(temperatureLogRepository.findMinTimestamp(remoteId, profileId))
-      .thenReturn(Single.just(date(2023, 10, 1).time))
-    whenever(temperatureLogRepository.findCount(remoteId, profileId)).thenReturn(Maybe.just(100))
+    every { temperatureLogRepository.findMinTimestamp(remoteId, profileId) } returns Single.just(date(2023, 10, 1).time)
+    every { temperatureLogRepository.findCount(remoteId, profileId) } returns Maybe.just(100)
 
     // when
     val testObserver = useCase.loadMeasurements(remoteId, profileId).test()
@@ -206,12 +216,14 @@ class DownloadTemperatureLogUseCaseTest {
     // then
     testObserver.assertComplete()
 
-    verify(suplaCloudServiceProvider).provide()
-    verify(temperatureLogRepository).findMinTimestamp(remoteId, profileId)
-    verify(temperatureLogRepository).findCount(remoteId, profileId)
-    verify(temperatureLogRepository).getInitialMeasurements(cloudService, remoteId)
+    io.mockk.verify {
+      suplaCloudServiceProvider.provide()
+      temperatureLogRepository.findMinTimestamp(remoteId, profileId)
+      temperatureLogRepository.findCount(remoteId, profileId)
+      temperatureLogRepository.getInitialMeasurements(cloudService, remoteId)
+    }
 
-    verifyNoMoreInteractions(suplaCloudServiceProvider, temperatureLogRepository)
+    confirmVerified(suplaCloudServiceProvider, temperatureLogRepository)
   }
 
   @Test
@@ -225,19 +237,17 @@ class DownloadTemperatureLogUseCaseTest {
     }
     val cloudService: SuplaCloudService = mockk()
 
-    whenever(suplaCloudServiceProvider.provide()).thenReturn(cloudService)
+    every { suplaCloudServiceProvider.provide() } returns cloudService
     mockInitialCall(remoteId, cloudService, date(2023, 10, 5))
 
     val measurementDate = date(2023, 10, 1, 3)
     mockMeasurementsCall(measurementDate, lastDbDate, remoteId, cloudService)
 
-    whenever(temperatureLogRepository.findMinTimestamp(remoteId, profileId))
-      .thenReturn(Single.just(date(2023, 10, 1).time))
-    whenever(temperatureLogRepository.findOldestEntity(remoteId, profileId))
-      .thenReturn(Maybe.just(lastEntity))
-    whenever(temperatureLogRepository.delete(remoteId, profileId)).thenReturn(Completable.complete())
-    whenever(temperatureLogRepository.findCount(remoteId, profileId)).thenReturn(Maybe.just(50))
-    whenever(temperatureLogRepository.insert(any())).thenReturn(Completable.complete())
+    every { temperatureLogRepository.findMinTimestamp(remoteId, profileId) } returns Single.just(date(2023, 10, 1).time)
+    every { temperatureLogRepository.findOldestEntity(remoteId, profileId) } returns Maybe.just(lastEntity)
+    every { temperatureLogRepository.delete(remoteId, profileId) } returns Completable.complete()
+    every { temperatureLogRepository.findCount(remoteId, profileId) } returns Maybe.just(50)
+    every { temperatureLogRepository.insert(any()) } returns Completable.complete()
     mockEntityMapping(remoteId, profileId)
 
     // when
@@ -246,33 +256,35 @@ class DownloadTemperatureLogUseCaseTest {
     // then
     testObserver.assertComplete()
 
-    verify(suplaCloudServiceProvider).provide()
-    verify(temperatureLogRepository).findMinTimestamp(remoteId, profileId)
-    verify(temperatureLogRepository).findOldestEntity(remoteId, profileId)
-    verify(temperatureLogRepository).findCount(remoteId, profileId)
-    verify(temperatureLogRepository).delete(remoteId, profileId)
-    verify(temperatureLogRepository).getInitialMeasurements(cloudService, remoteId)
-    verify(temperatureLogRepository).map(any(), ArgumentMatchers.eq(remoteId), ArgumentMatchers.eq(profileId))
-    verify(temperatureLogRepository).getMeasurements(cloudService, remoteId, lastDbDate.toTimestamp())
-    verify(temperatureLogRepository).getMeasurements(cloudService, remoteId, measurementDate.toTimestamp())
+    val captor = slot<List<TemperatureLogEntity>>()
+    io.mockk.verify {
+      suplaCloudServiceProvider.provide()
+      temperatureLogRepository.findMinTimestamp(remoteId, profileId)
+      temperatureLogRepository.findOldestEntity(remoteId, profileId)
+      temperatureLogRepository.findCount(remoteId, profileId)
+      temperatureLogRepository.delete(remoteId, profileId)
+      temperatureLogRepository.getInitialMeasurements(cloudService, remoteId)
+      temperatureLogRepository.map(any(), eq("2023110103003"), eq(remoteId), eq(profileId))
+      temperatureLogRepository.getMeasurements(cloudService, remoteId, lastDbDate.toTimestamp())
+      temperatureLogRepository.getMeasurements(cloudService, remoteId, measurementDate.toTimestamp())
+      temperatureLogRepository.insert(capture(captor))
+    }
 
-    val captor = argumentCaptor<List<TemperatureLogEntity>>()
-    verify(temperatureLogRepository).insert(captor.capture())
-    val result = captor.firstValue
+    val result = captor.captured
     Assertions.assertThat(result).hasSize(1)
     Assertions.assertThat(result).containsExactly(
-      TemperatureLogEntity(null, remoteId, measurementDate, 23f, profileId)
+      TemperatureLogEntity(null, remoteId, measurementDate, 23f, "2023110103003", profileId)
     )
 
-    verifyNoMoreInteractions(suplaCloudServiceProvider, temperatureLogRepository)
+    confirmVerified(suplaCloudServiceProvider, temperatureLogRepository)
   }
 
   private fun mockMeasurementsCall(measurementDate: Date, lastDbDate: Date, remoteId: Int, cloudService: SuplaCloudService) {
     val measurement = TemperatureMeasurement(measurementDate, 23f)
-    whenever(temperatureLogRepository.getMeasurements(cloudService, remoteId, lastDbDate.toTimestamp()))
-      .thenReturn(Observable.just(listOf(measurement)))
-    whenever(temperatureLogRepository.getMeasurements(cloudService, remoteId, measurementDate.toTimestamp()))
-      .thenReturn(Observable.just(emptyList()))
+    every { temperatureLogRepository.getMeasurements(cloudService, remoteId, lastDbDate.toTimestamp()) } returns
+      Observable.just(listOf(measurement))
+    every { temperatureLogRepository.getMeasurements(cloudService, remoteId, measurementDate.toTimestamp()) } returns
+      Observable.just(emptyList())
   }
 
   private fun mockInitialCall(
@@ -295,17 +307,20 @@ class DownloadTemperatureLogUseCaseTest {
       every { response.headers() } returns Headers.headersOf("X-Total-Count", "$totalCount")
     }
 
-    whenever(temperatureLogRepository.getInitialMeasurements(cloudService, remoteId)).thenReturn(response)
+    every { temperatureLogRepository.getInitialMeasurements(cloudService, remoteId) } returns response
   }
 
   private fun mockEntityMapping(remoteId: Int, profileId: Long) {
-    whenever(temperatureLogRepository.map(any(), ArgumentMatchers.eq(remoteId), ArgumentMatchers.eq(profileId))).thenAnswer {
-      val entry = it.getArgument<TemperatureMeasurement>(0)
-      return@thenAnswer TemperatureLogEntity(
+    every { temperatureLogRepository.map(any(), any(), eq(remoteId), eq(profileId)) } answers {
+      val entry = it.invocation.args[0] as TemperatureMeasurement
+      val groupingString = it.invocation.args[1] as String
+
+      TemperatureLogEntity(
         id = null,
         channelId = remoteId,
         date = entry.date,
         temperature = entry.temperature,
+        groupingString = groupingString,
         profileId = profileId
       )
     }

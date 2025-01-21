@@ -141,6 +141,7 @@ class DownloadElectricityMeterLogUseCase @Inject constructor(
       listOf(
         ElectricityMeterLogEntity.create(
           entry = entry,
+          groupingString = formatter.format(entry.date),
           channelId = remoteId,
           profileId = profileId,
           electricityMeterDiff = valueDiff
@@ -159,12 +160,14 @@ class DownloadElectricityMeterLogUseCase @Inject constructor(
   ): List<ElectricityMeterLogEntity> =
     mutableListOf<ElectricityMeterLogEntity>().also { list ->
       for (itemNo in 1..<missingItemsCount) {
+        val date = Date(entry.date.time - ChartDataAggregation.MINUTES.timeInSec.times(1000).times(itemNo))
         list.add(
           ElectricityMeterLogEntity.create(
             entry = entry,
+            groupingString = formatter.format(date),
             channelId = remoteId,
             profileId = profileId,
-            date = Date(entry.date.time - ChartDataAggregation.MINUTES.timeInSec.times(1000).times(itemNo)),
+            date = date,
             electricityMeterDiff = valueDivided,
             manuallyComplemented = true,
             counterReset = if (itemNo == missingItemsCount - 1) valueDiff.resetRecognized() else false
@@ -174,6 +177,7 @@ class DownloadElectricityMeterLogUseCase @Inject constructor(
       list.add(
         ElectricityMeterLogEntity.create(
           entry = entry,
+          groupingString = formatter.format(entry.date),
           channelId = remoteId,
           profileId = profileId,
           electricityMeterDiff = valueDivided

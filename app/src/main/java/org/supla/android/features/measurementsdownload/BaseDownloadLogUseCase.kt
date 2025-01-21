@@ -17,6 +17,7 @@ package org.supla.android.features.measurementsdownload
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.annotation.SuppressLint
 import androidx.room.rxjava3.EmptyResultSetException
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.ObservableEmitter
@@ -29,6 +30,7 @@ import org.supla.android.extensions.TAG
 import org.supla.android.extensions.guardLet
 import org.supla.android.extensions.toTimestamp
 import retrofit2.Response
+import java.text.SimpleDateFormat
 
 private const val ALLOWED_TIME_DIFFERENCE = 1800_000
 
@@ -36,6 +38,8 @@ abstract class BaseDownloadLogUseCase<T : Measurement, U : BaseLogEntity>(
   private val suplaCloudServiceProvider: SuplaCloudService.Provider,
   private val baseMeasurementRepository: BaseMeasurementRepository<T, U>
 ) {
+
+  val formatter = Formatter()
 
   fun loadMeasurements(remoteId: Int, profileId: Long): Observable<Float> = Observable.create { emitter ->
     val cloudService = suplaCloudServiceProvider.provide()
@@ -157,7 +161,7 @@ abstract class BaseDownloadLogUseCase<T : Measurement, U : BaseLogEntity>(
       Trace.d(TAG, "Measurements fetched ${entries.size}")
       baseMeasurementRepository.insert(
         entries.map { entry ->
-          baseMeasurementRepository.map(entry, remoteId, profileId).also { entity ->
+          baseMeasurementRepository.map(entry, formatter.format(entry.date), remoteId, profileId).also { entity ->
             if (lastEntity?.date?.time?.let { it < entity.date.time } != false) {
               lastEntity = entity
             }
@@ -178,4 +182,7 @@ abstract class BaseDownloadLogUseCase<T : Measurement, U : BaseLogEntity>(
 
     return null
   }
+
+  @SuppressLint("SimpleDateFormat")
+  class Formatter : SimpleDateFormat("yyyyMMddHHmmu")
 }

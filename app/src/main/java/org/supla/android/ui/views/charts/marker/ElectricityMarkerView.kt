@@ -112,6 +112,10 @@ class ElectricityMarkerView(context: Context) : BaseMarkerView(context) {
         ElectricityMeterChartType.BALANCE_ARITHMETIC -> showBalanceTwoValues(highlight, barEntry, customData)
 
         ElectricityMeterChartType.BALANCE_CHART_AGGREGATED -> showBalanceThreeValues(highlight, barEntry)
+
+        ElectricityMeterChartType.VOLTAGE -> TODO()
+        ElectricityMeterChartType.CURRENT -> TODO()
+        ElectricityMeterChartType.POWER_ACTIVE -> TODO()
       }
     }
   }
