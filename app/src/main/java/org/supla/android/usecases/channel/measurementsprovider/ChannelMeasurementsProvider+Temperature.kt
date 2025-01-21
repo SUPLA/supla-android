@@ -33,11 +33,10 @@ fun <T : BaseTemperatureEntity> ChannelMeasurementsProvider.aggregatingTemperatu
       .map { AggregatedEntity(it.date.toTimestamp(), AggregatedValue.Single(it.temperature!!)) }
   }
 
-  val formatter = ChartDataAggregation.Formatter()
   return measurements
     .asSequence()
     .filter { it.temperature != null }
-    .groupBy { item -> aggregation.aggregator(item.date, formatter) }
+    .groupBy { item -> aggregation.aggregator(item) }
     .filter { group -> group.value.isNotEmpty() }
     .map { group ->
       AggregatedEntity(

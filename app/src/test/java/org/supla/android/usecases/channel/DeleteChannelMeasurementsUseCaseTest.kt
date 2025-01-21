@@ -30,13 +30,16 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
+import org.supla.android.data.source.CurrentLogRepository
 import org.supla.android.data.source.ElectricityMeterLogRepository
 import org.supla.android.data.source.GeneralPurposeMeasurementLogRepository
 import org.supla.android.data.source.GeneralPurposeMeterLogRepository
 import org.supla.android.data.source.HumidityLogRepository
 import org.supla.android.data.source.ImpulseCounterLogRepository
+import org.supla.android.data.source.PowerActiveLogRepository
 import org.supla.android.data.source.TemperatureAndHumidityLogRepository
 import org.supla.android.data.source.TemperatureLogRepository
+import org.supla.android.data.source.VoltageLogRepository
 import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
@@ -69,6 +72,15 @@ class DeleteChannelMeasurementsUseCaseTest {
 
   @Mock
   private lateinit var impulseCounterLogRepository: ImpulseCounterLogRepository
+
+  @Mock
+  private lateinit var voltageLogRepository: VoltageLogRepository
+
+  @Mock
+  private lateinit var currentLogRepository: CurrentLogRepository
+
+  @Mock
+  private lateinit var powerActiveLogRepository: PowerActiveLogRepository
 
   @InjectMocks
   private lateinit var useCase: DeleteChannelMeasurementsUseCase
@@ -210,6 +222,9 @@ class DeleteChannelMeasurementsUseCaseTest {
     }
 
     whenever(readChannelWithChildrenUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
+    whenever(voltageLogRepository.delete(remoteId, profileId)).thenReturn(Completable.complete())
+    whenever(currentLogRepository.delete(remoteId, profileId)).thenReturn(Completable.complete())
+    whenever(powerActiveLogRepository.delete(remoteId, profileId)).thenReturn(Completable.complete())
     whenever(electricityMeterLogRepository.delete(remoteId, profileId)).thenReturn(Completable.complete())
 
     // when

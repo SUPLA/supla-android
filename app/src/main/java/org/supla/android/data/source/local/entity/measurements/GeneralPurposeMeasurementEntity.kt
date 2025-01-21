@@ -56,6 +56,7 @@ data class GeneralPurposeMeasurementEntity(
   @ColumnInfo(name = COLUMN_MAX) val valueMax: Float,
   @ColumnInfo(name = COLUMN_OPEN) val valueOpen: Float,
   @ColumnInfo(name = COLUMN_CLOSE) val valueClose: Float,
+  @ColumnInfo(name = COLUMN_GROUPING_STRING) override val groupingString: String,
   @ColumnInfo(name = COLUMN_PROFILE_ID) val profileId: Long
 ) : BaseLogEntity {
 
@@ -69,6 +70,7 @@ data class GeneralPurposeMeasurementEntity(
     const val COLUMN_MAX = "value_max"
     const val COLUMN_OPEN = "value_open"
     const val COLUMN_CLOSE = "value_close"
+    const val COLUMN_GROUPING_STRING = "grouping_string"
     const val COLUMN_PROFILE_ID = "profile_id"
 
     val SQL = arrayOf(
@@ -83,6 +85,7 @@ data class GeneralPurposeMeasurementEntity(
           $COLUMN_MAX REAL NOT NULL,
           $COLUMN_OPEN REAL NOT NULL,
           $COLUMN_CLOSE REAL NOT NULL,
+          $COLUMN_GROUPING_STRING TEXT,
           $COLUMN_PROFILE_ID INTEGER NOT NULL
         );
       """.trimIndent(),
@@ -97,7 +100,7 @@ data class GeneralPurposeMeasurementEntity(
     const val ALL_COLUMNS = """
       $COLUMN_ID, $COLUMN_CHANNEL_ID, $COLUMN_DATE, $COLUMN_AVERAGE,
       $COLUMN_MIN, $COLUMN_MAX, $COLUMN_OPEN, $COLUMN_CLOSE,
-      $COLUMN_PROFILE_ID
+      $COLUMN_GROUPING_STRING, $COLUMN_PROFILE_ID
     """
   }
 }

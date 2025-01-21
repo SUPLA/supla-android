@@ -71,8 +71,6 @@ import org.supla.android.data.model.chart.datatype.CombinedChartData
 import org.supla.android.data.model.chart.datatype.LineChartData
 import org.supla.android.data.model.chart.datatype.PieChartData
 import org.supla.android.data.model.chart.singleLabel
-import org.supla.android.data.model.chart.style.ChartStyle
-import org.supla.android.data.model.chart.style.ThermometerChartStyle
 import org.supla.android.data.model.general.RangeValueType
 import org.supla.android.data.source.local.calendar.Hour
 import org.supla.android.extensions.weekEnd
@@ -91,6 +89,7 @@ import org.supla.android.ui.views.tools.Shadow
 import org.supla.android.ui.views.tools.ShadowOrientation
 import org.supla.android.usecases.channel.valueformatter.HumidityValueFormatter
 import org.supla.core.shared.data.model.general.SuplaFunction
+import org.supla.core.shared.infrastructure.LocalizedString
 import java.util.Date
 
 interface HistoryDetailProxy : BaseViewProxy<HistoryDetailViewState> {
@@ -110,7 +109,6 @@ interface HistoryDetailProxy : BaseViewProxy<HistoryDetailViewState> {
   fun customRangeEditHourDismiss() {}
   fun customRangeEditDateSave(date: Date) {}
   fun customRangeEditHourSave(hour: Hour) {}
-  fun chartStyle(): ChartStyle = ThermometerChartStyle
 }
 
 @Composable
@@ -149,7 +147,6 @@ fun HistoryDetail(viewModel: HistoryDetailProxy, viewState: HistoryDetailViewSta
         is CombinedChartData ->
           CombinedChart(
             data = data,
-            channelFunction = viewState.channelFunction,
             emptyChartMessage = viewState.emptyChartMessage(LocalContext.current),
             withRightAxis = viewState.withRightAxis,
             withLeftAxis = viewState.withLeftAxis,
@@ -157,7 +154,7 @@ fun HistoryDetail(viewModel: HistoryDetailProxy, viewState: HistoryDetailViewSta
             maxRightAxis = viewState.maxRightAxis,
             chartParametersProvider = { viewState.chartParameters?.getOptional() },
             positionEvents = viewModel::updateChartPosition,
-            chartStyle = viewModel.chartStyle(),
+            chartStyle = viewState.chartStyle,
             modifier = Modifier
               .weight(1f)
               .padding(horizontal = Distance.tiny)
@@ -167,7 +164,7 @@ fun HistoryDetail(viewModel: HistoryDetailProxy, viewState: HistoryDetailViewSta
           PieChart(
             data = data,
             emptyChartMessage = viewState.emptyChartMessage(LocalContext.current),
-            chartStyle = viewModel.chartStyle(),
+            chartStyle = viewState.chartStyle,
             modifier = Modifier
               .weight(1f)
               .padding(horizontal = Distance.tiny)
@@ -411,7 +408,7 @@ private class PreviewProxy : HistoryDetailProxy {
               ChartDataAggregation.MINUTES,
               listOf(set, set.copy(active = false)),
               null,
-              { it.getString(R.string.details_em_reverse_reactive_energy) }
+              LocalizedString.WithResource(R.string.details_em_reverse_reactive_energy)
             )
           )
         ),

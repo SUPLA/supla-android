@@ -1,4 +1,4 @@
-package org.supla.android.usecases.channel.measurementsprovider
+package org.supla.android.usecases.channel.measurementsprovider.electricity
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -18,6 +18,7 @@ package org.supla.android.usecases.channel.measurementsprovider
  */
 
 import com.google.gson.Gson
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import org.supla.android.Preferences
 import org.supla.android.R
@@ -33,23 +34,16 @@ import org.supla.android.data.model.chart.HistoryDataSet
 import org.supla.android.data.source.ElectricityMeterLogRepository
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.Electricity
+import org.supla.android.data.source.local.entity.custom.BalancedValue
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
-import org.supla.android.data.source.local.entity.measurements.BalancedValue
 import org.supla.android.data.source.local.entity.measurements.ElectricityMeterLogEntity
-import org.supla.android.data.source.local.entity.measurements.balanceHourly
 import org.supla.android.di.GSON_FOR_REPO
 import org.supla.android.extensions.toTimestamp
 import org.supla.android.features.details.electricitymeterdetail.history.ElectricityMeterChartType
 import org.supla.android.images.ImageId
 import org.supla.android.ui.views.charts.marker.ElectricityMarkerCustomData
-import org.supla.android.usecases.channel.GetChannelValueStringUseCase
-import org.supla.android.usecases.channel.measurementsprovider.electricity.ElectricityChartFilters
-import org.supla.android.usecases.channel.measurementsprovider.electricity.balanceValues
-import org.supla.android.usecases.channel.measurementsprovider.electricity.chartBalancedValues
-import org.supla.android.usecases.channel.measurementsprovider.electricity.getValues
-import org.supla.android.usecases.channel.measurementsprovider.electricity.ifPhase1
-import org.supla.android.usecases.channel.measurementsprovider.electricity.ifPhase2
-import org.supla.android.usecases.channel.measurementsprovider.electricity.ifPhase3
+import org.supla.android.usecases.channel.measurementsprovider.AggregationResult
+import org.supla.android.usecases.channel.measurementsprovider.MeasurementsProvider
 import org.supla.android.usecases.channel.valueformatter.ListElectricityMeterValueFormatter
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.core.shared.usecase.GetCaptionUseCase
@@ -58,26 +52,20 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
-class ElectricityConsumptionMeasurementsProvider @Inject constructor(
+class ElectricityConsumptionProvider @Inject constructor(
   private val electricityMeterLogRepository: ElectricityMeterLogRepository,
   private val getChannelIconUseCase: GetChannelIconUseCase,
   private val getCaptionUseCase: GetCaptionUseCase,
-  getChannelValueStringUseCase: GetChannelValueStringUseCase,
-  preferences: Preferences,
-  @Named(GSON_FOR_REPO) gson: Gson
-) : ChannelMeasurementsProvider(getChannelValueStringUseCase, getChannelIconUseCase, preferences, gson) {
+  @Named(GSON_FOR_REPO) gson: Gson,
+  preferences: Preferences
+) : MeasurementsProvider(preferences, gson) {
 
-  override fun handle(channelWithChildren: ChannelWithChildren) = channelWithChildren.isOrHasElectricityMeter
-
-  override fun provide(
+  operator fun invoke(
     channelWithChildren: ChannelWithChildren,
-    spec: ChartDataSpec,
-    colorProvider: ((ChartEntryType) -> Int)?
+    spec: ChartDataSpec
   ): Single<ChannelChartSets> {
     val channel = channelWithChildren.channel
-
-    return electricityMeterLogRepository.findMeasurements(channel.remoteId, channel.profileId, spec.startDate, spec.endDate)
-      .map { aggregating(it, spec) }
+    return getGroupedMeasurements(channel, spec)
       .map { listOf(historyDataSet(channel, labels(spec, getChannelIconUseCase(channel), it), spec.aggregation, it.list)) }
       .map { historyDataSets ->
         ChannelChartSets(
@@ -89,11 +77,37 @@ class ElectricityConsumptionMeasurementsProvider @Inject constructor(
             spec.customFilters as? ElectricityChartFilters,
             channel.Electricity.value?.pricePerUnit?.toFloat(),
             channel.Electricity.value?.currency
-          )
-        ) { context -> (spec.customFilters as? ElectricityChartFilters)?.type?.labelRes?.let { "${context.getString(it)} [kWh]" } ?: "" }
+          ),
+          (spec.customFilters as? ElectricityChartFilters)?.type?.label
+        )
       }
       .firstOrError()
   }
+
+  private fun getGroupedMeasurements(channel: ChannelDataEntity, spec: ChartDataSpec): Observable<AggregationResult> =
+    when ((spec.customFilters as? ElectricityChartFilters)?.type) {
+      ElectricityMeterChartType.BALANCE_HOURLY ->
+        electricityMeterLogRepository.findMeasurementsHourlyGrouped(
+          channel.remoteId,
+          channel.profileId,
+          spec.startDate,
+          spec.endDate,
+          spec.aggregation.groupingStringStartPosition,
+          spec.aggregation.groupingStringLength
+        )
+          .map { aggregatingBalancedValues(it, spec) }
+
+      else ->
+        electricityMeterLogRepository.findMeasurementsGrouped(
+          channel.remoteId,
+          channel.profileId,
+          spec.startDate,
+          spec.endDate,
+          spec.aggregation.groupingStringStartPosition,
+          spec.aggregation.groupingStringLength
+        )
+          .map { aggregating(it, spec) }
+    }
 
   private fun labels(spec: ChartDataSpec, icon: ImageId, result: AggregationResult): HistoryDataSet.Label {
     val formatter = ListElectricityMeterValueFormatter(useNoValue = false)
@@ -168,8 +182,22 @@ class ElectricityConsumptionMeasurementsProvider @Inject constructor(
       )
     )
 
+  private fun aggregatingBalancedValues(measurements: List<BalancedValue>, spec: ChartDataSpec): AggregationResult {
+    val aggregatedEntities = measurements.map {
+      AggregatedEntity(
+        spec.aggregation.groupTimeProvider(it.date),
+        AggregatedValue.Multiple(balanceValues(it.forwarded, it.reversed))
+      )
+    }
+
+    return AggregationResult(
+      aggregatedEntities,
+      listOf(measurements.map { it.forwarded }.sum(), measurements.map { it.reversed }.sum())
+    )
+  }
+
   private fun aggregating(measurements: List<ElectricityMeterLogEntity>, spec: ChartDataSpec): AggregationResult {
-    val aggregatedEntities = aggregatedEntities(measurements, spec)
+    val aggregatedEntities = aggregatedGroupedEntities(measurements, spec)
     val sum = when ((spec.customFilters as? ElectricityChartFilters)?.type) {
       ElectricityMeterChartType.BALANCE_VECTOR ->
         listOf(measurements.map { (it.faeBalanced ?: 0f) }.sum(), measurements.map { (it.raeBalanced ?: 0f) }.sum())
@@ -187,15 +215,14 @@ class ElectricityConsumptionMeasurementsProvider @Inject constructor(
             measurements.map { (it.phase1Rae ?: 0f) + (it.phase2Rae ?: 0f) + (it.phase3Rae ?: 0f) }.sum()
           )
         } else {
-          val formatter = ChartDataAggregation.Formatter()
           val balanced = measurements
-            .groupBy { item -> spec.aggregation.aggregator(item.date, formatter) }
-            .filter { group -> group.value.isNotEmpty() }
-            .map { group ->
-              val forwarded = group.value.map { (it.phase1Fae ?: 0f) + (it.phase2Fae ?: 0f) + (it.phase3Fae ?: 0f) }.sum()
-              val reversed = group.value.map { (it.phase1Rae ?: 0f) + (it.phase2Rae ?: 0f) + (it.phase3Rae ?: 0f) }.sum()
+            .map {
+              val forwarded = (it.phase1Fae ?: 0f) + (it.phase2Fae ?: 0f) + (it.phase3Fae ?: 0f)
+              val reversed = (it.phase1Rae ?: 0f) + (it.phase2Rae ?: 0f) + (it.phase3Rae ?: 0f)
+
               BalancedValue(
-                group.value.first().date,
+                it.date,
+                it.groupingString,
                 if (forwarded > reversed) forwarded - reversed else 0f,
                 if (reversed > forwarded) reversed - forwarded else 0f
               )
@@ -203,11 +230,6 @@ class ElectricityConsumptionMeasurementsProvider @Inject constructor(
           listOf(balanced.map { it.forwarded }.sum(), balanced.map { it.reversed }.sum())
         }
       }
-
-      ElectricityMeterChartType.BALANCE_HOURLY ->
-        measurements.balanceHourly(ChartDataAggregation.Formatter()).let { values ->
-          listOf(values.map { it.forwarded }.sum(), values.map { it.reversed }.sum())
-        }
 
       else -> {
         mutableListOf<Float>().apply {
@@ -221,7 +243,7 @@ class ElectricityConsumptionMeasurementsProvider @Inject constructor(
     return AggregationResult(aggregatedEntities, sum)
   }
 
-  private fun aggregatedEntities(measurements: List<ElectricityMeterLogEntity>, spec: ChartDataSpec): List<AggregatedEntity> {
+  private fun aggregatedGroupedEntities(measurements: List<ElectricityMeterLogEntity>, spec: ChartDataSpec): List<AggregatedEntity> {
     if (spec.aggregation == ChartDataAggregation.MINUTES) {
       return measurements
         .map { entity ->
@@ -229,21 +251,11 @@ class ElectricityConsumptionMeasurementsProvider @Inject constructor(
         }
     }
 
-    val formatter = ChartDataAggregation.Formatter()
-    return when (val type = (spec.customFilters as? ElectricityChartFilters)?.type) {
-      ElectricityMeterChartType.BALANCE_HOURLY -> aggregatedHourly(measurements, spec, formatter)
-      else ->
-        measurements
-          .groupBy { item -> spec.aggregation.aggregator(item.date, formatter) }
-          .filter { group -> group.value.isNotEmpty() }
-          .map { group ->
-            when (type) {
-              ElectricityMeterChartType.BALANCE_VECTOR -> aggregatedVectorBalance(spec, group)
-              ElectricityMeterChartType.BALANCE_ARITHMETIC -> aggregatedArithmeticBalance(spec, group)
-              ElectricityMeterChartType.BALANCE_CHART_AGGREGATED -> aggregatedChartBalance(spec, group)
-              else -> aggregatedPhases(spec, group)
-            }
-          }
+    return when ((spec.customFilters as? ElectricityChartFilters)?.type) {
+      ElectricityMeterChartType.BALANCE_VECTOR -> aggregatedVectorBalance(spec, measurements)
+      ElectricityMeterChartType.BALANCE_ARITHMETIC -> aggregatedArithmeticBalance(spec, measurements)
+      ElectricityMeterChartType.BALANCE_CHART_AGGREGATED -> aggregatedChartBalance(spec, measurements)
+      else -> aggregatedPhases(spec, measurements)
     }
       .let { list ->
         if (spec.aggregation.isRank) {
@@ -254,89 +266,66 @@ class ElectricityConsumptionMeasurementsProvider @Inject constructor(
       }
   }
 
-  private fun aggregatedHourly(
-    measurements: List<ElectricityMeterLogEntity>,
-    spec: ChartDataSpec,
-    formatter: ChartDataAggregation.Formatter
-  ): List<AggregatedEntity> =
-    measurements.balanceHourly(formatter)
-      .groupBy { item -> spec.aggregation.aggregator(item.date, formatter) }
-      .filter { group -> group.value.isNotEmpty() }
-      .map { group ->
-        AggregatedEntity(
-          spec.aggregation.groupTimeProvider(group.value.firstOrNull()!!.date),
-          AggregatedValue.Multiple(balanceValues(group.value.map { it.forwarded }.sum(), group.value.map { it.reversed }.sum()))
-        )
-      }
-      .toList()
-
   private fun aggregatedPhases(
     spec: ChartDataSpec,
-    group: Map.Entry<Long, List<ElectricityMeterLogEntity>>
-  ): AggregatedEntity {
-    val values = if (spec.aggregation.isRank) {
-      var sum = 0f
-      spec.customFilters?.ifPhase1 { sum += group.value.map { it.phase1.valueFor(spec) ?: 0f }.sum() }
-      spec.customFilters?.ifPhase2 { sum += (group.value.map { it.phase2.valueFor(spec) ?: 0f }.sum()) }
-      spec.customFilters?.ifPhase3 { sum += (group.value.map { it.phase3.valueFor(spec) ?: 0f }.sum()) }
-      AggregatedValue.Single(sum)
-    } else {
-      AggregatedValue.Multiple(
-        mutableListOf<Float>().apply {
-          spec.customFilters?.ifPhase1 { add(group.value.map { it.phase1.valueFor(spec) ?: 0f }.sum()) }
-          spec.customFilters?.ifPhase2 { add(group.value.map { it.phase2.valueFor(spec) ?: 0f }.sum()) }
-          spec.customFilters?.ifPhase3 { add(group.value.map { it.phase3.valueFor(spec) ?: 0f }.sum()) }
-        }.toFloatArray()
+    entities: List<ElectricityMeterLogEntity>
+  ): List<AggregatedEntity> {
+    return entities.map {
+      val value = if (spec.aggregation.isRank) {
+        var sum = 0f
+        spec.customFilters?.ifPhase1 { sum += it.phase1.valueFor(spec) ?: 0f }
+        spec.customFilters?.ifPhase2 { sum += it.phase2.valueFor(spec) ?: 0f }
+        spec.customFilters?.ifPhase3 { sum += it.phase3.valueFor(spec) ?: 0f }
+        AggregatedValue.Single(sum)
+      } else {
+        AggregatedValue.Multiple(
+          mutableListOf<Float>().apply {
+            spec.customFilters?.ifPhase1 { add(it.phase1.valueFor(spec) ?: 0f) }
+            spec.customFilters?.ifPhase2 { add(it.phase2.valueFor(spec) ?: 0f) }
+            spec.customFilters?.ifPhase3 { add(it.phase3.valueFor(spec) ?: 0f) }
+          }.toFloatArray()
+        )
+      }
+
+      AggregatedEntity(
+        if (spec.aggregation.isRank) it.groupingString.toLong() else spec.aggregation.groupTimeProvider(it.date),
+        value
+      )
+    }
+  }
+
+  private fun aggregatedArithmeticBalance(spec: ChartDataSpec, entities: List<ElectricityMeterLogEntity>): List<AggregatedEntity> =
+    entities.map { entity ->
+      val consumption = (entity.phase1Fae ?: 0f) + (entity.phase2Fae ?: 0f) + (entity.phase3Fae ?: 0f)
+      val production = (entity.phase1Rae ?: 0f) + (entity.phase2Rae ?: 0f) + (entity.phase3Rae ?: 0f)
+
+      AggregatedEntity(
+        spec.aggregation.groupTimeProvider(entity.date),
+        AggregatedValue.Multiple(balanceValues(consumption, production))
       )
     }
 
-    return AggregatedEntity(
-      if (spec.aggregation.isRank) group.key else spec.aggregation.groupTimeProvider(group.value.firstOrNull()!!.date),
-      values
-    )
-  }
+  private fun aggregatedVectorBalance(spec: ChartDataSpec, entities: List<ElectricityMeterLogEntity>): List<AggregatedEntity> =
+    entities.map { entity ->
+      val consumption = entity.faeBalanced ?: 0f
+      val production = entity.raeBalanced ?: 0f
 
-  private fun aggregatedArithmeticBalance(spec: ChartDataSpec, group: Map.Entry<Long, List<ElectricityMeterLogEntity>>): AggregatedEntity {
-    val consumption =
-      group.value.map { it.phase1Fae ?: 0f }.sum() +
-        group.value.map { it.phase2Fae ?: 0f }.sum() +
-        group.value.map { it.phase3Fae ?: 0f }.sum()
-    val production =
-      group.value.map { it.phase1Rae ?: 0f }.sum() +
-        group.value.map { it.phase2Rae ?: 0f }.sum() +
-        group.value.map { it.phase3Rae ?: 0f }.sum()
+      AggregatedEntity(
+        spec.aggregation.groupTimeProvider(entity.date),
+        AggregatedValue.Multiple(balanceValues(consumption, production))
+      )
+    }
 
-    return AggregatedEntity(
-      spec.aggregation.groupTimeProvider(group.value.firstOrNull()!!.date),
-      AggregatedValue.Multiple(balanceValues(consumption, production))
-    )
-  }
+  private fun aggregatedChartBalance(spec: ChartDataSpec, entities: List<ElectricityMeterLogEntity>): List<AggregatedEntity> =
+    entities.map { entity ->
+      val consumption = (entity.phase1Fae ?: 0f) + (entity.phase2Fae ?: 0f) + (entity.phase3Fae ?: 0f)
+      val production = (entity.phase1Rae ?: 0f) + (entity.phase2Rae ?: 0f) + (entity.phase3Rae ?: 0f)
 
-  private fun aggregatedVectorBalance(spec: ChartDataSpec, group: Map.Entry<Long, List<ElectricityMeterLogEntity>>): AggregatedEntity {
-    val consumption = group.value.map { it.faeBalanced ?: 0f }.sum()
-    val production = group.value.map { it.raeBalanced ?: 0f }.sum()
-
-    return AggregatedEntity(
-      spec.aggregation.groupTimeProvider(group.value.firstOrNull()!!.date),
-      AggregatedValue.Multiple(balanceValues(consumption, production))
-    )
-  }
-
-  private fun aggregatedChartBalance(spec: ChartDataSpec, group: Map.Entry<Long, List<ElectricityMeterLogEntity>>): AggregatedEntity {
-    val consumption =
-      group.value.map { it.phase1Fae ?: 0f }.sum() +
-        group.value.map { it.phase2Fae ?: 0f }.sum() +
-        group.value.map { it.phase3Fae ?: 0f }.sum()
-    val production =
-      group.value.map { it.phase1Rae ?: 0f }.sum() +
-        group.value.map { it.phase2Rae ?: 0f }.sum() +
-        group.value.map { it.phase3Rae ?: 0f }.sum()
-
-    return AggregatedEntity(
-      spec.aggregation.groupTimeProvider(group.value.firstOrNull()!!.date),
-      AggregatedValue.Multiple(chartBalancedValues(consumption, production))
-    )
-  }
+      AggregatedEntity(
+        spec.aggregation.groupTimeProvider(entity.date),
+        AggregatedValue.Multiple(chartBalancedValues(consumption, production))
+      )
+    }
 }
 
 fun HistoryDataSet.LabelData.Companion.forwarded(value: String) =

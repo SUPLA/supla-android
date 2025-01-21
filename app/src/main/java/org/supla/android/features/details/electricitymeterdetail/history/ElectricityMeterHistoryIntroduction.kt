@@ -49,6 +49,7 @@ import org.supla.android.ui.views.TextSpinner
 import org.supla.android.ui.views.buttons.IconButton
 import org.supla.android.usecases.channel.valueformatter.ListElectricityMeterValueFormatter
 import org.supla.core.shared.data.model.general.SuplaFunction
+import org.supla.core.shared.infrastructure.LocalizedString
 
 enum class IntroductionPage {
   FIRST_FOR_SINGLE_PHASE, FIRST_FOR_MULTI_PHASE, SECOND
@@ -241,7 +242,7 @@ private fun mockDataSetContainerDataMultiplePhases(): ChannelChartSets =
         valueFormatter = ListElectricityMeterValueFormatter()
       )
     ),
-    typeName = stringProvider { it.getString(R.string.channel_caption_electricitymeter) }
+    typeName = LocalizedString.WithResource(R.string.channel_caption_electricitymeter)
   )
 
 private fun mockDataSetContainerDataSinglePhases(): ChannelChartSets =
@@ -261,7 +262,7 @@ private fun mockDataSetContainerDataSinglePhases(): ChannelChartSets =
         valueFormatter = ListElectricityMeterValueFormatter()
       )
     ),
-    typeName = stringProvider { it.getString(R.string.channel_caption_electricitymeter) }
+    typeName = LocalizedString.WithResource(R.string.channel_caption_electricitymeter)
   )
 
 @Composable

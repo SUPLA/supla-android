@@ -32,6 +32,13 @@ enum class Phase(val value: Int, @StringRes val label: Int) {
       PHASE_3 -> SuplaChannelFlag.PHASE3_UNSUPPORTED
     }
 
+  val color: Int
+    get() = when (this) {
+      PHASE_1 -> R.color.phase1
+      PHASE_2 -> R.color.phase2
+      PHASE_3 -> R.color.phase3
+    }
+
   companion object {
     fun from(value: Int?): Phase? {
       entries.forEach {

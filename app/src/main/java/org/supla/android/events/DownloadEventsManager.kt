@@ -29,22 +29,29 @@ class DownloadEventsManager @Inject constructor() {
   private val subjects: MutableMap<Id, Subject<State>> = mutableMapOf()
 
   fun emitProgressState(remoteId: Int, state: State) {
-    getSubjectForChannel(remoteId).onNext(state)
+    emitProgressState(remoteId, DataType.DEFAULT_TYPE, state)
   }
 
-  fun observeProgress(remoteId: Int): Observable<State> {
-    return getSubjectForChannel(remoteId).hide()
+  fun emitProgressState(remoteId: Int, dataType: DataType, state: State) {
+    getSubjectForChannel(remoteId, dataType).onNext(state)
   }
 
-  private fun getSubjectForChannel(remoteId: Int): Subject<State> {
-    return getSubject(remoteId, IdType.CHANNEL) {
+  fun observeProgress(remoteId: Int): Observable<State> =
+    observeProgress(remoteId, DataType.DEFAULT_TYPE)
+
+  fun observeProgress(remoteId: Int, dataType: DataType): Observable<State> {
+    return getSubjectForChannel(remoteId, dataType).hide()
+  }
+
+  private fun getSubjectForChannel(remoteId: Int, dataType: DataType): Subject<State> {
+    return getSubject(remoteId, dataType, IdType.CHANNEL) {
       PublishSubject.create()
     }
   }
 
   @Synchronized
-  private fun getSubject(id: Int, type: IdType, newSubjectProvider: () -> Subject<State>): Subject<State> {
-    val subjectId = Id(type, id)
+  private fun getSubject(id: Int, dataType: DataType, subjectType: IdType, newSubjectProvider: () -> Subject<State>): Subject<State> {
+    val subjectId = Id(subjectType, id, dataType)
     val subject = subjects[subjectId]
 
     if (subject != null) {
@@ -62,11 +69,19 @@ class DownloadEventsManager @Inject constructor() {
     data class InProgress(
       val progress: Float
     ) : State(2)
+
     data object Failed : State(3)
     data object Finished : State(4)
     data object Refresh : State(5)
   }
 
+  enum class DataType {
+    DEFAULT_TYPE,
+    ELECTRICITY_CURRENT_TYPE,
+    ELECTRICITY_VOLTAGE_TYPE,
+    ELECTRICITY_POWER_ACTIVE_TYPE
+  }
+
   private enum class IdType { CHANNEL }
-  private data class Id(val type: IdType, val id: Int)
+  private data class Id(val subjectType: IdType, val id: Int, val dataType: DataType)
 }

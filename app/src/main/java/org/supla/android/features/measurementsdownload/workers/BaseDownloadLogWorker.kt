@@ -47,6 +47,10 @@ abstract class BaseDownloadLogWorker<T : Measurement, U : BaseLogEntity>(
     get() = inputData.getLong(PROFILE_ID_URI, -1).let {
       return@let if (it < 0) null else it
     }
+  protected val dataType: DownloadEventsManager.DataType
+    get() = inputData.getString(DATA_TYPE_ID_URI).let {
+      it?.let { DownloadEventsManager.DataType.valueOf(it) } ?: DownloadEventsManager.DataType.DEFAULT_TYPE
+    }
 
   override fun doWork(): Result {
     Trace.d(TAG, "Worker started with ${baseDownloadLogUseCase.javaClass.simpleName}")
@@ -64,22 +68,23 @@ abstract class BaseDownloadLogWorker<T : Measurement, U : BaseLogEntity>(
     var result = Result.failure()
     baseDownloadLogUseCase.loadMeasurements(remoteId, profileId)
       .doOnSubscribe {
-        downloadEventsManager.emitProgressState(remoteId, DownloadEventsManager.State.Started)
+        downloadEventsManager.emitProgressState(remoteId, dataType, DownloadEventsManager.State.Started)
       }
       .doOnNext {
         downloadEventsManager.emitProgressState(
           remoteId = remoteId,
+          dataType = dataType,
           state = DownloadEventsManager.State.InProgress(it)
         )
       }
       .blockingSubscribeBy(
         onComplete = {
-          downloadEventsManager.emitProgressState(remoteId, DownloadEventsManager.State.Finished)
+          downloadEventsManager.emitProgressState(remoteId, dataType, DownloadEventsManager.State.Finished)
           result = Result.success()
         },
         onError = {
           Trace.e(TAG, it.message, it)
-          downloadEventsManager.emitProgressState(remoteId, DownloadEventsManager.State.Failed)
+          downloadEventsManager.emitProgressState(remoteId, dataType, DownloadEventsManager.State.Failed)
         }
       )
 
@@ -92,12 +97,13 @@ abstract class BaseDownloadLogWorker<T : Measurement, U : BaseLogEntity>(
     private val WORK_ID: String = BaseDownloadLogWorker::class.java.simpleName
     private val REMOTE_ID_URI = "$WORK_ID.REMOTE_ID"
     private val PROFILE_ID_URI = "$WORK_ID.PROFILE_ID"
+    private val DATA_TYPE_ID_URI = "$WORK_ID.DATA_TYPE"
 
     val CONSTRAINTS = Constraints.Builder()
       .setRequiredNetworkType(NetworkType.CONNECTED)
       .build()
 
-    fun data(remoteId: Int, profileId: Long) =
-      workDataOf(REMOTE_ID_URI to remoteId, PROFILE_ID_URI to profileId)
+    fun data(remoteId: Int, profileId: Long, dataType: DownloadEventsManager.DataType = DownloadEventsManager.DataType.DEFAULT_TYPE) =
+      workDataOf(REMOTE_ID_URI to remoteId, PROFILE_ID_URI to profileId, DATA_TYPE_ID_URI to dataType.name)
   }
 }

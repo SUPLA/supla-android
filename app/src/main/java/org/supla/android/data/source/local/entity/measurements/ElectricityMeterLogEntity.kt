@@ -79,6 +79,7 @@ data class ElectricityMeterLogEntity(
   @ColumnInfo(name = COLUMN_RAE_BALANCED) val raeBalanced: Float?,
   @ColumnInfo(name = COLUMN_MANUALLY_COMPLEMENTED) val manuallyComplemented: Boolean,
   @ColumnInfo(name = COLUMN_COUNTER_RESET) val counterReset: Boolean,
+  @ColumnInfo(name = COLUMN_GROUPING_STRING) override val groupingString: String,
   @ColumnInfo(name = COLUMN_PROFILE_ID) val profileId: Long
 ) : BaseLogEntity {
 
@@ -112,17 +113,19 @@ data class ElectricityMeterLogEntity(
     const val COLUMN_RAE_BALANCED = "rae_balanced"
     const val COLUMN_MANUALLY_COMPLEMENTED = "complement"
     const val COLUMN_COUNTER_RESET = "counter_reset"
+    const val COLUMN_GROUPING_STRING = "grouping_string"
     const val COLUMN_PROFILE_ID = "profileid"
 
     const val ALL_COLUMNS = "$COLUMN_ID, $COLUMN_CHANNEL_ID, $COLUMN_TIMESTAMP, $COLUMN_PHASE1_FAE, $COLUMN_PHASE1_RAE, " +
       "$COLUMN_PHASE1_FRE, $COLUMN_PHASE1_RRE, $COLUMN_PHASE2_FAE, $COLUMN_PHASE2_RAE, $COLUMN_PHASE2_FRE, $COLUMN_PHASE2_RRE, " +
       "$COLUMN_PHASE3_FAE, $COLUMN_PHASE3_RAE, $COLUMN_PHASE3_FRE, $COLUMN_PHASE3_RRE, $COLUMN_FAE_BALANCED, " +
-      "$COLUMN_RAE_BALANCED, $COLUMN_MANUALLY_COMPLEMENTED, $COLUMN_COUNTER_RESET, $COLUMN_PROFILE_ID"
+      "$COLUMN_RAE_BALANCED, $COLUMN_MANUALLY_COMPLEMENTED, $COLUMN_COUNTER_RESET, $COLUMN_GROUPING_STRING, $COLUMN_PROFILE_ID"
 
     fun create(
       entry: ElectricityMeasurement,
       channelId: Int,
       profileId: Long,
+      groupingString: String,
       id: Long? = null,
       date: Date? = null,
       electricityMeterDiff: ElectricityMeterDiff? = null,
@@ -148,6 +151,7 @@ data class ElectricityMeterLogEntity(
       raeBalanced = electricityMeterDiff?.raeBalanced ?: entry.raeBalanced?.toKWh(),
       manuallyComplemented = manuallyComplemented,
       counterReset = electricityMeterDiff?.resetRecognized() ?: counterReset,
+      groupingString = groupingString,
       profileId = profileId
     )
   }

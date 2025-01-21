@@ -21,7 +21,7 @@ import io.reactivex.rxjava3.core.Single
 import org.supla.android.data.model.chart.ChannelChartSets
 import org.supla.android.data.model.chart.ChartDataSpec
 import org.supla.android.usecases.channel.measurementsprovider.ChannelMeasurementsProvider
-import org.supla.android.usecases.channel.measurementsprovider.ElectricityConsumptionMeasurementsProvider
+import org.supla.android.usecases.channel.measurementsprovider.ElectricityMeterMeasurementsProvider
 import org.supla.android.usecases.channel.measurementsprovider.GeneralPurposeMeasurementMeasurementsProvider
 import org.supla.android.usecases.channel.measurementsprovider.GeneralPurposeMeterMeasurementsProvider
 import org.supla.android.usecases.channel.measurementsprovider.HumidityMeasurementsProvider
@@ -38,7 +38,7 @@ class LoadChannelMeasurementsUseCase @Inject constructor(
   temperatureAndHumidityMeasurementsProvider: TemperatureAndHumidityMeasurementsProvider,
   generalPurposeMeasurementMeasurementsProvider: GeneralPurposeMeasurementMeasurementsProvider,
   generalPurposeMeterMeasurementsProvider: GeneralPurposeMeterMeasurementsProvider,
-  electricityConsumptionMeasurementsProvider: ElectricityConsumptionMeasurementsProvider,
+  electricityMeterMeasurementsProvider: ElectricityMeterMeasurementsProvider,
   humidityMeasurementsProvider: HumidityMeasurementsProvider,
   impulseCounterMeasurementsProvider: ImpulseCounterMeasurementsProvider
 ) {
@@ -48,7 +48,7 @@ class LoadChannelMeasurementsUseCase @Inject constructor(
     temperatureAndHumidityMeasurementsProvider,
     generalPurposeMeasurementMeasurementsProvider,
     generalPurposeMeterMeasurementsProvider,
-    electricityConsumptionMeasurementsProvider,
+    electricityMeterMeasurementsProvider,
     humidityMeasurementsProvider,
     impulseCounterMeasurementsProvider
   )

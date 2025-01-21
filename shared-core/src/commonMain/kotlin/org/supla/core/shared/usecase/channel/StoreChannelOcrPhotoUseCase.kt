@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import org.supla.core.shared.data.model.rest.ImpulseCounterPhoto
+import org.supla.core.shared.data.model.rest.ImpulseCounterPhotoDto
 import org.supla.core.shared.infrastructure.Base64Helper
 import org.supla.core.shared.usecase.channel.ocr.OcrImageNamingProvider
 import org.supla.core.shared.usecase.file.StoreFileInDirectoryUseCase
@@ -27,7 +27,7 @@ class StoreChannelOcrPhotoUseCase(
   private val ocrImageNamingProvider: OcrImageNamingProvider,
   private val base64Helper: Base64Helper
 ) {
-  operator fun invoke(remoteId: Int, profileId: Long, photo: ImpulseCounterPhoto) {
+  operator fun invoke(remoteId: Int, profileId: Long, photo: ImpulseCounterPhotoDto) {
     photo.image?.let {
       storeFileInDirectoryUseCase(
         directoryName = ocrImageNamingProvider.directory,

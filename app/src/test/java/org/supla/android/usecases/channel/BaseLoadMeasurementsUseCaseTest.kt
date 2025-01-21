@@ -39,6 +39,7 @@ open class BaseLoadMeasurementsUseCaseTest {
             channelId = channelId,
             date = Date(initialTime.plus(timeDistance * i)),
             temperature = i.toFloat(),
+            groupingString = "",
             profileId = 1L
           )
         )
@@ -57,6 +58,7 @@ open class BaseLoadMeasurementsUseCaseTest {
             date = Date(initialTime.plus(timeDistance * i)),
             temperature = i.toFloat(),
             humidity = (count - i).toFloat(),
+            groupingString = "",
             profileId = 1L
           )
         )
@@ -77,6 +79,7 @@ open class BaseLoadMeasurementsUseCaseTest {
             valueIncrement = i.toFloat(),
             counterReset = false,
             manuallyComplemented = false,
+            groupingString = "",
             profileId = 1L
           )
         )
@@ -98,6 +101,7 @@ open class BaseLoadMeasurementsUseCaseTest {
             valueClose = count.toFloat(),
             valueMin = 0f,
             valueMax = count.toFloat(),
+            groupingString = "",
             profileId = 1L
           )
         )

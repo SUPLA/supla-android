@@ -91,7 +91,12 @@ class DownloadGeneralPurposeMeterLogUseCase @Inject constructor(
         val oldest = oldestEntity
 
         if (oldest == null) {
-          oldestEntity = GeneralPurposeMeterEntity.create(entry = entry, channelId = remoteId, profileId = profileId)
+          oldestEntity = GeneralPurposeMeterEntity.create(
+            entry = entry,
+            groupingString = formatter.format(entry.date),
+            channelId = remoteId,
+            profileId = profileId
+          )
         } else {
           val entity = createEntityAndComplementMissing(list, entry, oldest, remoteId, profileId, channelConfig)
           list.add(entity)
@@ -130,8 +135,10 @@ class DownloadGeneralPurposeMeterLogUseCase @Inject constructor(
     val valueIncrement = when (channelConfig.counterType) {
       SuplaChannelConfigMeterCounterType.ALWAYS_INCREMENT ->
         if (reset || valueDiff < 0) 0f else valueDiff
+
       SuplaChannelConfigMeterCounterType.ALWAYS_DECREMENT ->
         if (reset || valueDiff > 0) 0f else valueDiff
+
       SuplaChannelConfigMeterCounterType.INCREMENT_AND_DECREMENT -> valueDiff
     }
 
@@ -142,6 +149,7 @@ class DownloadGeneralPurposeMeterLogUseCase @Inject constructor(
 
       GeneralPurposeMeterEntity.create(
         entry = entry,
+        groupingString = formatter.format(entry.date),
         channelId = remoteId,
         profileId = profileId,
         valueIncrement = valueDivided,
@@ -149,6 +157,7 @@ class DownloadGeneralPurposeMeterLogUseCase @Inject constructor(
     } else {
       GeneralPurposeMeterEntity.create(
         entry = entry,
+        groupingString = formatter.format(entry.date),
         channelId = remoteId,
         profileId = profileId,
         valueIncrement = valueIncrement,
@@ -167,11 +176,13 @@ class DownloadGeneralPurposeMeterLogUseCase @Inject constructor(
     reset: Boolean
   ) {
     for (itemNo in 1..<missingItemsCount) {
+      val date = Date(entry.date.time - ChartDataAggregation.MINUTES.timeInSec.times(1000).times(itemNo))
       list.add(
         GeneralPurposeMeterEntity.create(
           entry = entry,
+          groupingString = formatter.format(date),
           channelId = remoteId,
-          date = Date(entry.date.time - ChartDataAggregation.MINUTES.timeInSec.times(1000).times(itemNo)),
+          date = date,
           valueIncrement = valueDivided,
           value = entry.value - valueDivided.times(itemNo),
           manuallyComplemented = true,

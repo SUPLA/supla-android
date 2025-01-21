@@ -71,6 +71,6 @@ class ImpulseCounterLogRepository @Inject constructor(
   override fun insert(entries: List<ImpulseCounterLogEntity>): Completable =
     impulseCounterLogDao.insert(entries)
 
-  override fun map(entry: ImpulseCounterMeasurement, remoteId: Int, profileId: Long) =
-    ImpulseCounterLogEntity.create(entry = entry, channelId = remoteId, profileId = profileId)
+  override fun map(entry: ImpulseCounterMeasurement, groupingString: String, remoteId: Int, profileId: Long) =
+    ImpulseCounterLogEntity.create(entry = entry, groupingString = groupingString, channelId = remoteId, profileId = profileId)
 }

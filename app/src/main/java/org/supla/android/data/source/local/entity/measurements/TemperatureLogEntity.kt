@@ -52,6 +52,7 @@ data class TemperatureLogEntity(
   @ColumnInfo(name = COLUMN_CHANNEL_ID) val channelId: Int,
   @ColumnInfo(name = COLUMN_TIMESTAMP) override val date: Date,
   @ColumnInfo(name = COLUMN_TEMPERATURE) override val temperature: Float?,
+  @ColumnInfo(name = COLUMN_GROUPING_STRING) override val groupingString: String,
   @ColumnInfo(name = COLUMN_PROFILEID) val profileId: Long
 ) : BaseTemperatureEntity {
 
@@ -61,6 +62,7 @@ data class TemperatureLogEntity(
     const val COLUMN_CHANNEL_ID = "channelid"
     const val COLUMN_TIMESTAMP = "date"
     const val COLUMN_TEMPERATURE = "temperature"
+    const val COLUMN_GROUPING_STRING = "grouping_string"
     const val COLUMN_PROFILEID = "profileid"
 
     val SQL = arrayOf(
@@ -71,6 +73,7 @@ data class TemperatureLogEntity(
           $COLUMN_CHANNEL_ID INTEGER NOT NULL,
           $COLUMN_TIMESTAMP INTEGER NOT NULL,
           $COLUMN_TEMPERATURE REAL NULL,
+          $COLUMN_GROUPING_STRING TEXT NOT NULL,
           $COLUMN_PROFILEID INTEGER NOT NULL
         );
       """.trimIndent(),
@@ -82,6 +85,7 @@ data class TemperatureLogEntity(
       """.trimIndent()
     )
 
-    const val ALL_COLUMNS = "$COLUMN_ID, $COLUMN_CHANNEL_ID, $COLUMN_TIMESTAMP, $COLUMN_TEMPERATURE, $COLUMN_PROFILEID"
+    const val ALL_COLUMNS = "$COLUMN_ID, $COLUMN_CHANNEL_ID, $COLUMN_TIMESTAMP, " +
+      "$COLUMN_TEMPERATURE, $COLUMN_GROUPING_STRING, $COLUMN_PROFILEID"
   }
 }

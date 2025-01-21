@@ -20,6 +20,7 @@ package org.supla.android.features.details.detailbase.history
 import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.intl.Locale
 import io.reactivex.rxjava3.core.Maybe
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.R
@@ -44,6 +45,8 @@ import org.supla.android.data.model.chart.DefaultChartState
 import org.supla.android.data.model.chart.datatype.ChartData
 import org.supla.android.data.model.chart.datatype.EmptyChartData
 import org.supla.android.data.model.chart.hasCustomFilters
+import org.supla.android.data.model.chart.style.ChartStyle
+import org.supla.android.data.model.chart.style.Default
 import org.supla.android.data.model.general.HideableValue
 import org.supla.android.data.model.general.RangeValueType
 import org.supla.android.data.model.general.SingleSelectionList
@@ -75,6 +78,8 @@ import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.views.SpinnerItem
 import org.supla.android.usecases.channel.DeleteChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
+import org.supla.core.shared.data.model.rest.channel.ChannelDto
+import org.supla.core.shared.data.model.rest.channel.DefaultChannelDto
 import java.util.Date
 
 abstract class BaseHistoryDetailViewModel(
@@ -98,6 +103,7 @@ abstract class BaseHistoryDetailViewModel(
       it.copy(
         loading = true,
         initialLoadStarted = false,
+        downloadConfigured = false,
         chartData = it.chartData.empty()
       )
     }
@@ -128,6 +134,9 @@ abstract class BaseHistoryDetailViewModel(
 
     updateUserState()
   }
+
+  protected open fun cloudChannelProvider(remoteId: Int): Observable<ChannelDto> =
+    Observable.just(DefaultChannelDto(remoteId))
 
   protected open fun provideSelectionDialogState(
     channelChartSets: ChannelChartSets,
@@ -334,7 +343,7 @@ abstract class BaseHistoryDetailViewModel(
       .disposeBySelf()
   }
 
-  protected abstract fun handleData(channelWithChildren: ChannelWithChildren, chartState: ChartState)
+  protected abstract fun handleData(channelWithChildren: ChannelWithChildren, channelDto: ChannelDto, chartState: ChartState)
 
   protected abstract fun measurementsMaybe(
     remoteId: Int,
@@ -375,11 +384,12 @@ abstract class BaseHistoryDetailViewModel(
   private fun triggerDataLoad(remoteId: Int) {
     Maybe.zip(
       readChannelWithChildrenUseCase(remoteId),
-      profileManager.getCurrentProfile().map { loadChartState(it.id, remoteId) }
-    ) { first, second -> Pair(first, second) }
+      profileManager.getCurrentProfile().map { loadChartState(it.id, remoteId) },
+      cloudChannelProvider(remoteId).firstElement()
+    ) { first, second, third -> Triple(first, second, third) }
       .attachSilent()
       .subscribeBy(
-        onSuccess = { handleData(it.first, it.second) },
+        onSuccess = { handleData(it.first, it.third, it.second) },
         onError = defaultErrorHandler("triggerDataLoad")
       )
       .disposeBySelf()
@@ -596,6 +606,7 @@ data class HistoryDetailViewState(
   val chartCustomFilters: ChartDataSpec.Filters? = null,
   val chartDataSelectionDialogState: ChartDataSelectionDialogState? = null,
 
+  val chartStyle: ChartStyle = Default,
   val minDate: Date? = null,
   val maxDate: Date? = null,
   val withRightAxis: Boolean = false,

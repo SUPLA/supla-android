@@ -149,6 +149,7 @@ class DownloadImpulseCounterLogUseCase @Inject constructor(
 
       ImpulseCounterLogEntity.create(
         entry = entry,
+        groupingString = formatter.format(entry.date),
         channelId = remoteId,
         profileId = profileId,
         counter = counterDivided,
@@ -157,6 +158,7 @@ class DownloadImpulseCounterLogUseCase @Inject constructor(
     } else {
       ImpulseCounterLogEntity.create(
         entry = entry,
+        groupingString = formatter.format(entry.date),
         channelId = remoteId,
         profileId = profileId,
         counter = counterIncrement,
@@ -176,11 +178,13 @@ class DownloadImpulseCounterLogUseCase @Inject constructor(
     reset: Boolean
   ) {
     for (itemNo in 1..<missingItemsCount) {
+      val date = Date(entry.date.time - ChartDataAggregation.MINUTES.timeInSec.times(1000).times(itemNo))
       list.add(
         ImpulseCounterLogEntity.create(
           entry = entry,
           channelId = remoteId,
-          date = Date(entry.date.time - ChartDataAggregation.MINUTES.timeInSec.times(1000).times(itemNo)),
+          groupingString = formatter.format(date),
+          date = date,
           counter = counterDivided,
           calculatedValue = calculatedValueDivided,
           manuallyComplemented = true,

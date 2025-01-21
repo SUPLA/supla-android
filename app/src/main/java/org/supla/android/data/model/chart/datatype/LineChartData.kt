@@ -41,9 +41,11 @@ class LineChartData(
 ) : CombinedChartData(dateRange, chartRange, aggregation, sets) {
   override fun combinedData(resources: Resources): CombinedData? {
     val lineDataSets = mutableListOf<ILineDataSet?>().also { list ->
-      sets.flatMap { it.dataSets }.forEach {
-        it.asLineChartData(aggregation!!) { set -> lineDataSet(set, it.label, it.type, resources) }
-          ?.let { data -> list.addAll(data) }
+      sets.forEach { channelSets ->
+        channelSets.dataSets.forEach {
+          it.asLineChartData(aggregation!!, channelSets.customData) { set -> lineDataSet(set, it.label, it.type, resources) }
+            ?.let { data -> list.addAll(data) }
+        }
       }
     }
 

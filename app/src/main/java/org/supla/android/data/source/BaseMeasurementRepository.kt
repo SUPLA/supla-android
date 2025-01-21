@@ -32,7 +32,7 @@ abstract class BaseMeasurementRepository<T : Measurement, U : BaseLogEntity> {
 
   abstract fun getMeasurements(cloudService: SuplaCloudService, remoteId: Int, afterTimestamp: Long): Observable<List<T>>
 
-  abstract fun map(entry: T, remoteId: Int, profileId: Long): U
+  abstract fun map(entry: T, groupingString: String, remoteId: Int, profileId: Long): U
 
   abstract fun findMinTimestamp(remoteId: Int, profileId: Long): Single<Long>
 

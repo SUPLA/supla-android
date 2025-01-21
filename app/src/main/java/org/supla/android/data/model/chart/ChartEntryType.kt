@@ -27,7 +27,10 @@ enum class ChartEntryType(private val axisDependency: AxisDependency) {
   GENERAL_PURPOSE_MEASUREMENT(AxisDependency.LEFT),
   GENERAL_PURPOSE_METER(AxisDependency.LEFT),
   IMPULSE_COUNTER(AxisDependency.LEFT),
-  ELECTRICITY(AxisDependency.LEFT);
+  ELECTRICITY(AxisDependency.LEFT),
+  VOLTAGE(AxisDependency.LEFT),
+  CURRENT(AxisDependency.LEFT),
+  POWER_ACTIVE(AxisDependency.LEFT);
 
   fun leftAxis() = axisDependency == AxisDependency.LEFT
   fun rightAxis() = axisDependency == AxisDependency.RIGHT

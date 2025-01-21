@@ -20,7 +20,6 @@ package org.supla.android.usecases.channel.measurements.electricitymeter
 import io.reactivex.rxjava3.core.Maybe
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.storage.UserStateHolder
-import org.supla.android.data.model.chart.ChartDataAggregation
 import org.supla.android.data.model.electricitymeter.ElectricityMeterBalanceType
 import org.supla.android.data.source.ElectricityMeterLogRepository
 import org.supla.android.data.source.RoomProfileRepository
@@ -80,7 +79,7 @@ class LoadElectricityMeterMeasurementsUseCase @Inject constructor(
     )
 
   private fun hourlyBalance(measurements: List<ElectricityMeterLogEntity>): ElectricityMeasurements {
-    val balancedValue = measurements.balanceHourly(ChartDataAggregation.Formatter())
+    val balancedValue = measurements.balanceHourly()
     return ElectricityMeasurements(
       balancedValue.map { it.forwarded }.sum(),
       balancedValue.map { it.reversed }.sum()

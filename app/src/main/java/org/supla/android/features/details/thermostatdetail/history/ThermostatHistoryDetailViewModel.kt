@@ -40,6 +40,7 @@ import org.supla.android.usecases.channel.DownloadChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.LoadChannelWithChildrenMeasurementsDateRangeUseCase
 import org.supla.android.usecases.channel.LoadChannelWithChildrenMeasurementsUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
+import org.supla.core.shared.data.model.rest.channel.ChannelDto
 import javax.inject.Inject
 
 @HiltViewModel
@@ -74,7 +75,7 @@ class ThermostatHistoryDetailViewModel @Inject constructor(
       loadChannelWithChildrenMeasurementsDateRangeUseCase(remoteId, profileId)
     ) { first, second -> Pair(LineChartData(DateRange(spec.startDate, spec.endDate), chartRange, spec.aggregation, first), second) }
 
-  override fun handleData(channelWithChildren: ChannelWithChildren, chartState: ChartState) {
+  override fun handleData(channelWithChildren: ChannelWithChildren, channelDto: ChannelDto, chartState: ChartState) {
     updateState {
       it.copy(profileId = channelWithChildren.channel.channelEntity.profileId, channelFunction = channelWithChildren.channel.function.value)
     }

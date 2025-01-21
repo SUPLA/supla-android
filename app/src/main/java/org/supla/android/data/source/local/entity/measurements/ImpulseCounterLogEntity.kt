@@ -61,6 +61,7 @@ data class ImpulseCounterLogEntity(
   @ColumnInfo(name = COLUMN_CALCULATED_VALUE) val calculatedValue: Float,
   @ColumnInfo(name = COLUMN_MANUALLY_COMPLEMENTED) val manuallyComplemented: Boolean,
   @ColumnInfo(name = COLUMN_COUNTER_RESET) val counterReset: Boolean,
+  @ColumnInfo(name = COLUMN_GROUPING_STRING) override val groupingString: String,
   @ColumnInfo(name = COLUMN_PROFILE_ID) val profileId: Long
 ) : BaseLogEntity {
 
@@ -73,6 +74,7 @@ data class ImpulseCounterLogEntity(
     const val COLUMN_CALCULATED_VALUE = "calculated_value"
     const val COLUMN_MANUALLY_COMPLEMENTED = "complement"
     const val COLUMN_COUNTER_RESET = "counter_reset"
+    const val COLUMN_GROUPING_STRING = "grouping_string"
     const val COLUMN_PROFILE_ID = "profileid"
 
     val SQL = arrayOf(
@@ -85,6 +87,7 @@ data class ImpulseCounterLogEntity(
           $COLUMN_COUNTER INTEGER NOT NULL,
           $COLUMN_CALCULATED_VALUE REAL NOT NULL,
           $COLUMN_MANUALLY_COMPLEMENTED INTEGER NOT NULL,
+          $COLUMN_GROUPING_STRING TEXT NOT NULL,
           $COLUMN_PROFILE_ID INTEGER NOT NULL
         )
       """.trimIndent(),
@@ -95,11 +98,12 @@ data class ImpulseCounterLogEntity(
     )
 
     const val ALL_COLUMNS = "$COLUMN_ID, $COLUMN_CHANNEL_ID, $COLUMN_TIMESTAMP, $COLUMN_COUNTER, $COLUMN_CALCULATED_VALUE, " +
-      "$COLUMN_MANUALLY_COMPLEMENTED, $COLUMN_COUNTER_RESET, $COLUMN_PROFILE_ID"
+      "$COLUMN_MANUALLY_COMPLEMENTED, $COLUMN_COUNTER_RESET, $COLUMN_GROUPING_STRING, $COLUMN_PROFILE_ID"
 
     fun create(
       entry: ImpulseCounterMeasurement,
       channelId: Int,
+      groupingString: String,
       date: Date = entry.date,
       counter: Long = entry.counter,
       calculatedValue: Float = entry.calculatedValue,
@@ -116,6 +120,7 @@ data class ImpulseCounterLogEntity(
         calculatedValue,
         manuallyComplemented,
         counterReset,
+        groupingString,
         profileId
       )
   }

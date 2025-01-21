@@ -40,11 +40,12 @@ class HumidityLogRepository @Inject constructor(
     return humidityLogDao.findMeasurements(remoteId, profileId, startDate.time, endDate.time)
   }
 
-  override fun map(entry: HumidityMeasurement, remoteId: Int, profileId: Long) =
+  override fun map(entry: HumidityMeasurement, groupingString: String, remoteId: Int, profileId: Long) =
     HumidityLogEntity(
       id = null,
       channelId = remoteId,
       date = entry.date,
+      groupingString = groupingString,
       humidity = entry.humidity,
       profileId = profileId
     )

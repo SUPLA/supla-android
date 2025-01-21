@@ -33,22 +33,28 @@ import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.remote.gpm.SuplaChannelGeneralPurposeBaseConfig
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.channel.ValueType
+import org.supla.android.usecases.channel.measurementsprovider.ChannelMeasurementsProvider.Companion.AGGREGATING_MINUTES_DISTANCE_SEC
+import org.supla.android.usecases.channel.measurementsprovider.ChannelMeasurementsProvider.Companion.MAX_ALLOWED_DISTANCE_MULTIPLIER
 import org.supla.android.usecases.channel.valueformatter.ChannelValueFormatter
 import org.supla.android.usecases.channel.valueformatter.ChartAxisElectricityMeterValueFormatter
+import org.supla.android.usecases.channel.valueformatter.CurrentValueFormatter
 import org.supla.android.usecases.channel.valueformatter.GpmValueFormatter
 import org.supla.android.usecases.channel.valueformatter.HumidityValueFormatter
 import org.supla.android.usecases.channel.valueformatter.ImpulseCounterChartValueFormatter
+import org.supla.android.usecases.channel.valueformatter.PowerActiveValueFormatter
 import org.supla.android.usecases.channel.valueformatter.ThermometerValueFormatter
+import org.supla.android.usecases.channel.valueformatter.VoltageValueFormatter
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 
 abstract class ChannelMeasurementsProvider(
   private val getChannelValueStringUseCase: GetChannelValueStringUseCase,
   private val getChannelIconUseCase: GetChannelIconUseCase,
-  private val preferences: Preferences,
-  private val gson: Gson // GSON_FOR_REPO
-) {
+  preferences: Preferences,
+  gson: Gson // GSON_FOR_REPO
+) : MeasurementsProvider(preferences, gson) {
 
   abstract fun handle(channelWithChildren: ChannelWithChildren): Boolean
+
   abstract fun provide(
     channelWithChildren: ChannelWithChildren,
     spec: ChartDataSpec,
@@ -82,6 +88,19 @@ abstract class ChannelMeasurementsProvider(
       )
     )
 
+  companion object {
+    internal const val MAX_ALLOWED_DISTANCE_MULTIPLIER = 1.5f
+
+    // Server provides data for each 10 minutes
+    internal const val AGGREGATING_MINUTES_DISTANCE_SEC = 600.times(MAX_ALLOWED_DISTANCE_MULTIPLIER)
+  }
+}
+
+open class MeasurementsProvider(
+  private val preferences: Preferences,
+  private val gson: Gson // GSON_FOR_REPO
+) {
+
   protected fun getValueFormatter(type: ChartEntryType, channel: ChannelDataEntity): ChannelValueFormatter {
     return when (type) {
       ChartEntryType.HUMIDITY,
@@ -97,6 +116,10 @@ abstract class ChannelMeasurementsProvider(
         ImpulseCounterChartValueFormatter(
           unit = channel.channelExtendedValueEntity?.getSuplaValue()?.ImpulseCounterValue?.unit
         )
+
+      ChartEntryType.VOLTAGE -> VoltageValueFormatter
+      ChartEntryType.CURRENT -> CurrentValueFormatter
+      ChartEntryType.POWER_ACTIVE -> PowerActiveValueFormatter
     }
   }
 
@@ -127,12 +150,5 @@ abstract class ChannelMeasurementsProvider(
         list.add(sublist)
       }
     }
-  }
-
-  companion object {
-    internal const val MAX_ALLOWED_DISTANCE_MULTIPLIER = 1.5f
-
-    // Server provides data for each 10 minutes
-    internal const val AGGREGATING_MINUTES_DISTANCE_SEC = 600.times(MAX_ALLOWED_DISTANCE_MULTIPLIER)
   }
 }
