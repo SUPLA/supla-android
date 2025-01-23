@@ -91,4 +91,9 @@
     android:id="@+id/about_fragment"
     android:name="org.supla.android.features.about.AboutFragment"
     android:label="@string/menubar_title" />
+
+  <fragment
+    android:id="@+id/developer_info_fragment"
+    android:name="org.supla.android.features.developerinfo.DeveloperInfoFragment"
+    android:label="@string/developer_info_title" />
 </navigation>

@@ -26,6 +26,7 @@ import org.supla.android.data.source.local.entity.measurements.GeneralPurposeMet
 import org.supla.android.data.source.remote.rest.SuplaCloudService
 import org.supla.android.data.source.remote.rest.channel.GeneralPurposeMeter
 import org.supla.android.features.measurementsdownload.workers.BaseDownloadLogWorker
+import org.supla.android.usecases.developerinfo.CountProvider
 import retrofit2.Response
 import java.util.Date
 import javax.inject.Inject
@@ -34,7 +35,7 @@ import javax.inject.Singleton
 @Singleton
 class GeneralPurposeMeterLogRepository @Inject constructor(
   private val generalPurposeMeterLogDao: GeneralPurposeMeterLogDao
-) : BaseMeasurementRepository<GeneralPurposeMeter, GeneralPurposeMeterEntity>() {
+) : BaseMeasurementRepository<GeneralPurposeMeter, GeneralPurposeMeterEntity>(), CountProvider {
 
   fun findMeasurements(remoteId: Int, profileId: Long, startDate: Date, endDate: Date): Observable<List<GeneralPurposeMeterEntity>> =
     generalPurposeMeterLogDao.findMeasurements(remoteId, profileId, startDate.time, endDate.time)
@@ -73,4 +74,6 @@ class GeneralPurposeMeterLogRepository @Inject constructor(
 
   override fun map(entry: GeneralPurposeMeter, groupingString: String, remoteId: Int, profileId: Long) =
     GeneralPurposeMeterEntity.create(entry = entry, groupingString = groupingString, channelId = remoteId, profileId = profileId)
+
+  override fun count(): Observable<Int> = generalPurposeMeterLogDao.count()
 }

@@ -265,4 +265,7 @@ interface ChannelDao {
   """
   )
   fun findChannelsCount(profileId: Long): Single<Int>
+
+  @Query("SELECT COUNT($COLUMN_ID) FROM $TABLE_NAME")
+  fun count(): Observable<Int>
 }

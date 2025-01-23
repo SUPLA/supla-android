@@ -731,6 +731,9 @@
   <string name="details_em_current_phase_sequence">Kolejność faz prądu</string>
   <string name="em_electric_grid_parameters">Parametry sieci elektrycznej</string>
   <string name="channel_caption_container">Zbiornik</string>
+  <string name="developer_info_database_section">Baza danych</string>
+  <string name="developer_info_activated">Developer mode został aktywowany</string>
+  <string name="developer_info_title">Dane aplikacji</string>
 
   <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
     <item quantity="one">włączone</item>

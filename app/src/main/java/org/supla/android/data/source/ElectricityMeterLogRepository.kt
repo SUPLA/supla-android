@@ -26,6 +26,7 @@ import org.supla.android.data.source.local.entity.measurements.ElectricityMeterL
 import org.supla.android.data.source.remote.rest.SuplaCloudService
 import org.supla.android.data.source.remote.rest.channel.ElectricityMeasurement
 import org.supla.android.features.measurementsdownload.workers.BaseDownloadLogWorker
+import org.supla.android.usecases.developerinfo.CountProvider
 import retrofit2.Response
 import java.util.Date
 import javax.inject.Inject
@@ -34,7 +35,7 @@ import javax.inject.Singleton
 @Singleton
 class ElectricityMeterLogRepository @Inject constructor(
   private val electricityMeterLogDao: ElectricityMeterLogDao
-) : BaseMeasurementRepository<ElectricityMeasurement, ElectricityMeterLogEntity>() {
+) : BaseMeasurementRepository<ElectricityMeasurement, ElectricityMeterLogEntity>(), CountProvider {
 
   fun findMeasurements(remoteId: Int, profileId: Long, startDate: Date, endDate: Date) =
     electricityMeterLogDao.findMeasurements(remoteId, profileId, startDate.time, endDate.time)
@@ -91,4 +92,6 @@ class ElectricityMeterLogRepository @Inject constructor(
       channelId = remoteId,
       profileId = profileId
     )
+
+  override fun count(): Observable<Int> = electricityMeterLogDao.count()
 }

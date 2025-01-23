@@ -26,6 +26,7 @@ import org.supla.android.data.source.local.entity.measurements.TemperatureLogEnt
 import org.supla.android.data.source.remote.rest.SuplaCloudService
 import org.supla.android.data.source.remote.rest.channel.TemperatureMeasurement
 import org.supla.android.features.measurementsdownload.workers.BaseDownloadLogWorker
+import org.supla.android.usecases.developerinfo.CountProvider
 import retrofit2.Response
 import java.util.Date
 import javax.inject.Inject
@@ -34,7 +35,7 @@ import javax.inject.Singleton
 @Singleton
 class TemperatureLogRepository @Inject constructor(
   private val temperatureLogDao: TemperatureLogDao,
-) : BaseMeasurementRepository<TemperatureMeasurement, TemperatureLogEntity>() {
+) : BaseMeasurementRepository<TemperatureMeasurement, TemperatureLogEntity>(), CountProvider {
 
   fun findMeasurements(remoteId: Int, profileId: Long, startDate: Date, endDate: Date): Observable<List<TemperatureLogEntity>> {
     return temperatureLogDao.findMeasurements(remoteId, profileId, startDate.time, endDate.time)
@@ -81,4 +82,6 @@ class TemperatureLogRepository @Inject constructor(
 
   override fun insert(entries: List<TemperatureLogEntity>): Completable =
     temperatureLogDao.insert(entries)
+
+  override fun count(): Observable<Int> = temperatureLogDao.count()
 }

@@ -23,10 +23,12 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import org.supla.android.data.source.local.entity.ChannelConfigEntity
 import org.supla.android.data.source.local.entity.ChannelConfigEntity.Companion.ALL_COLUMNS
 import org.supla.android.data.source.local.entity.ChannelConfigEntity.Companion.COLUMN_CHANNEL_ID
+import org.supla.android.data.source.local.entity.ChannelConfigEntity.Companion.COLUMN_CONFIG
 import org.supla.android.data.source.local.entity.ChannelConfigEntity.Companion.COLUMN_CONFIG_TYPE
 import org.supla.android.data.source.local.entity.ChannelConfigEntity.Companion.COLUMN_PROFILE_ID
 import org.supla.android.data.source.local.entity.ChannelConfigEntity.Companion.TABLE_NAME
@@ -60,4 +62,7 @@ interface ChannelConfigDao {
   """
   )
   fun findForRemoteId(remoteId: Int): Maybe<ChannelConfigEntity>
+
+  @Query("SELECT COUNT($COLUMN_CONFIG) FROM $TABLE_NAME")
+  fun count(): Observable<Int>
 }

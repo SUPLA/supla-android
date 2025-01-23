@@ -20,11 +20,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import io.reactivex.rxjava3.core.Observable
 import org.supla.android.data.source.local.dao.ChannelRelationDao
 import org.supla.android.data.source.local.entity.ChannelRelationEntity
+import org.supla.android.usecases.developerinfo.CountProvider
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ChannelRelationRepository @Inject constructor(private val channelRelationDao: ChannelRelationDao) {
+class ChannelRelationRepository @Inject constructor(private val channelRelationDao: ChannelRelationDao) : CountProvider {
 
   fun insertOrUpdate(channelRelation: ChannelRelationEntity) = channelRelationDao.insertOrUpdate(channelRelation)
 
@@ -46,4 +47,6 @@ class ChannelRelationRepository @Inject constructor(private val channelRelationD
         }
       }
     }
+
+  override fun count(): Observable<Int> = channelRelationDao.count()
 }

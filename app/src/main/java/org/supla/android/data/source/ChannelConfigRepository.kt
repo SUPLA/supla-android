@@ -19,6 +19,7 @@ package org.supla.android.data.source
 
 import com.google.gson.Gson
 import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import org.supla.android.data.source.local.dao.ChannelConfigDao
 import org.supla.android.data.source.local.entity.ChannelConfigEntity
@@ -28,6 +29,7 @@ import org.supla.android.data.source.remote.gpm.SuplaChannelGeneralPurposeMeasur
 import org.supla.android.data.source.remote.gpm.SuplaChannelGeneralPurposeMeterConfig
 import org.supla.android.data.source.remote.rollershutter.SuplaChannelFacadeBlindConfig
 import org.supla.android.di.GSON_FOR_REPO
+import org.supla.android.usecases.developerinfo.CountProvider
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -36,7 +38,7 @@ import javax.inject.Singleton
 class ChannelConfigRepository @Inject constructor(
   private val channelConfigDao: ChannelConfigDao,
   @Named(GSON_FOR_REPO) private val gson: Gson
-) {
+) : CountProvider {
 
   fun findForRemoteId(remoteId: Int) = channelConfigDao.findForRemoteId(remoteId)
 
@@ -74,6 +76,8 @@ class ChannelConfigRepository @Inject constructor(
         }
       }
   }
+
+  override fun count(): Observable<Int> = channelConfigDao.count()
 }
 
 private fun SuplaChannelGeneralPurposeMeasurementConfig.toEntity(profileId: Long, gson: Gson): ChannelConfigEntity {

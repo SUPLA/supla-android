@@ -185,4 +185,7 @@ interface ElectricityMeterLogDao {
     groupingStart: Int,
     groupingLength: Int
   ): Observable<List<BalancedValue>>
+
+  @Query("SELECT COUNT($COLUMN_ID) FROM $TABLE_NAME")
+  fun count(): Observable<Int>
 }

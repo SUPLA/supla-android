@@ -19,10 +19,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import androidx.room.Dao
 import androidx.room.Query
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.ChannelGroupEntity
 import org.supla.android.data.source.local.entity.ChannelGroupRelationEntity
+import org.supla.android.data.source.local.entity.ChannelGroupRelationEntity.Companion.COLUMN_ID
+import org.supla.android.data.source.local.entity.ChannelGroupRelationEntity.Companion.TABLE_NAME
 import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupRelationDataEntity
@@ -69,7 +72,7 @@ interface ChannelGroupRelationDao {
         value.${ChannelValueEntity.COLUMN_SUB_VALUE} value_${ChannelValueEntity.COLUMN_SUB_VALUE},
         value.${ChannelValueEntity.COLUMN_VALUE} value_${ChannelValueEntity.COLUMN_VALUE},
         value.${ChannelValueEntity.COLUMN_PROFILE_ID} value_${ChannelValueEntity.COLUMN_PROFILE_ID}
-      FROM ${ChannelGroupRelationEntity.TABLE_NAME} relation
+      FROM $TABLE_NAME relation
       JOIN ${ChannelGroupEntity.TABLE_NAME} channel_group
         ON channel_group.${ChannelGroupEntity.COLUMN_REMOTE_ID} = relation.${ChannelGroupRelationEntity.COLUMN_GROUP_ID}
           AND channel_group.${ChannelGroupEntity.COLUMN_PROFILE_ID} = relation.${ChannelGroupRelationEntity.COLUMN_PROFILE_ID}
@@ -126,7 +129,7 @@ interface ChannelGroupRelationDao {
         value.${ChannelValueEntity.COLUMN_SUB_VALUE} value_${ChannelValueEntity.COLUMN_SUB_VALUE},
         value.${ChannelValueEntity.COLUMN_VALUE} value_${ChannelValueEntity.COLUMN_VALUE},
         value.${ChannelValueEntity.COLUMN_PROFILE_ID} value_${ChannelValueEntity.COLUMN_PROFILE_ID}
-      FROM ${ChannelGroupRelationEntity.TABLE_NAME} relation
+      FROM $TABLE_NAME relation
       JOIN ${ChannelGroupEntity.TABLE_NAME} channel_group
         ON channel_group.${ChannelGroupEntity.COLUMN_REMOTE_ID} = relation.${ChannelGroupRelationEntity.COLUMN_GROUP_ID}
           AND channel_group.${ChannelGroupEntity.COLUMN_PROFILE_ID} = relation.${ChannelGroupRelationEntity.COLUMN_PROFILE_ID}
@@ -143,4 +146,7 @@ interface ChannelGroupRelationDao {
     """
   )
   fun findGroupRelations(remoteId: Int): Single<List<ChannelGroupRelationDataEntity>>
+
+  @Query("SELECT COUNT($COLUMN_ID) FROM $TABLE_NAME")
+  fun count(): Observable<Int>
 }

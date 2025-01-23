@@ -21,6 +21,7 @@ import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import org.supla.android.data.source.local.dao.NotificationDao
 import org.supla.android.data.source.local.entity.NotificationEntity
+import org.supla.android.usecases.developerinfo.CountProvider
 import java.time.LocalDateTime
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -28,7 +29,7 @@ import javax.inject.Singleton
 @Singleton
 class NotificationRepository @Inject constructor(
   private val notificationDao: NotificationDao
-) {
+) : CountProvider {
   fun insert(title: String, message: String, profileName: String?): Completable =
     notificationDao.insert(
       NotificationEntity(
@@ -47,4 +48,6 @@ class NotificationRepository @Inject constructor(
   fun deleteAll() = notificationDao.deleteAll()
 
   fun deleteOlderThanMonth() = notificationDao.deleteAll(olderThan = LocalDateTime.now().minusDays(30))
+
+  override fun count(): Observable<Int> = notificationDao.count()
 }

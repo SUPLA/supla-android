@@ -1,4 +1,4 @@
-package org.supla.android.features.about
+package org.supla.android.features.developerinfo
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -19,7 +19,6 @@ package org.supla.android.features.about
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.fragment.app.viewModels
@@ -33,8 +32,8 @@ import org.supla.android.navigator.MainNavigator
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class AboutFragment : BaseFragment<AboutViewModelState, AboutViewEvent>(R.layout.fragment_compose) {
-  override val viewModel: AboutViewModel by viewModels()
+class DeveloperInfoFragment : BaseFragment<DeveloperInfoViewModelState, DeveloperInfoViewEvent>(R.layout.fragment_compose) {
+  override val viewModel: DeveloperInfoViewModel by viewModels()
   private val binding by viewBinding(FragmentComposeBinding::bind)
 
   @Inject
@@ -46,21 +45,14 @@ class AboutFragment : BaseFragment<AboutViewModelState, AboutViewEvent>(R.layout
     binding.composeContent.setContent {
       val modelState by viewModel.getViewState().collectAsState()
       SuplaTheme {
-        AboutView(
-          viewState = modelState.viewState,
-          onSuplaUrlClick = navigator::navigateToSuplaOrgExternal,
-          onVersionClick = viewModel::onVersionClick
+        DeveloperInfoView(
+          viewState = modelState.state,
         )
       }
     }
   }
 
-  override fun handleEvents(event: AboutViewEvent) {
-    when (event) {
-      AboutViewEvent.NavigateToDeveloperInfoScreen -> navigator.navigateTo(R.id.developer_info_fragment)
-      AboutViewEvent.ShowDeveloperModeActivated -> Toast.makeText(context, R.string.developer_info_activated, Toast.LENGTH_SHORT).show()
-    }
-  }
+  override fun handleEvents(event: DeveloperInfoViewEvent) {}
 
-  override fun handleViewState(state: AboutViewModelState) {}
+  override fun handleViewState(state: DeveloperInfoViewModelState) {}
 }

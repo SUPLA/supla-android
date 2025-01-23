@@ -17,15 +17,17 @@ package org.supla.android.data.source
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import io.reactivex.rxjava3.core.Observable
 import org.supla.android.data.source.local.dao.ChannelDao
 import org.supla.android.data.source.local.entity.ChannelEntity
+import org.supla.android.usecases.developerinfo.CountProvider
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class RoomChannelRepository @Inject constructor(
   private val channelDao: ChannelDao
-) {
+) : CountProvider {
 
   fun findByRemoteId(remoteId: Int) = channelDao.findByRemoteId(remoteId)
 
@@ -44,4 +46,6 @@ class RoomChannelRepository @Inject constructor(
   fun findChannelCountInLocation(locationRemoteId: Int) = channelDao.findChannelCountInLocation(locationRemoteId)
 
   fun findChannelsCount(profileId: Long) = channelDao.findChannelsCount(profileId)
+
+  override fun count(): Observable<Int> = channelDao.count()
 }
