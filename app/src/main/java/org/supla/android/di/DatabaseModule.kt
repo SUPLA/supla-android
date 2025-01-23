@@ -169,8 +169,7 @@ class DatabaseModule {
   @Singleton
   fun provideMeasurementsDatabase(
     @ApplicationContext context: Context,
-    migration29to30: MeasurementsDbMigration29to30,
-    migration36to37: MeasurementsDbMigration36to37
+    migration29to30: MeasurementsDbMigration29to30
   ) =
     Room.databaseBuilder(context, MeasurementsDatabase::class.java, MeasurementsDbHelper.DATABASE_NAME)
       .let {
@@ -194,7 +193,7 @@ class DatabaseModule {
         MEASUREMENTS_DB_MIGRATION_33_34,
         MEASUREMENTS_DB_MIGRATION_34_35,
         MEASUREMENTS_DB_MIGRATION_35_36,
-        migration36to37
+        MeasurementsDbMigration36to37
       )
       .build()
 

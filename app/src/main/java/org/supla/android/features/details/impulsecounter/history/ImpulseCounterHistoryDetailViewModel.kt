@@ -43,6 +43,7 @@ import org.supla.android.usecases.channel.DownloadChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.LoadChannelMeasurementsDataRangeUseCase
 import org.supla.android.usecases.channel.LoadChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
+import org.supla.android.usecases.migration.GroupingStringMigrationUseCase
 import org.supla.core.shared.data.model.rest.channel.ChannelDto
 import javax.inject.Inject
 
@@ -54,6 +55,7 @@ class ImpulseCounterHistoryDetailViewModel @Inject constructor(
   private val downloadEventsManager: DownloadEventsManager,
   deleteChannelMeasurementsUseCase: DeleteChannelMeasurementsUseCase,
   readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
+  groupingStringMigrationUseCase: GroupingStringMigrationUseCase,
   userStateHolder: UserStateHolder,
   profileManager: ProfileManager,
   schedulers: SuplaSchedulers,
@@ -61,6 +63,7 @@ class ImpulseCounterHistoryDetailViewModel @Inject constructor(
 ) : BaseHistoryDetailViewModel(
   deleteChannelMeasurementsUseCase,
   readChannelWithChildrenUseCase,
+  groupingStringMigrationUseCase,
   userStateHolder,
   profileManager,
   dateProvider,

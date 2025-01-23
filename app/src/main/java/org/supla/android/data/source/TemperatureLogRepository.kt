@@ -35,7 +35,7 @@ import javax.inject.Singleton
 @Singleton
 class TemperatureLogRepository @Inject constructor(
   private val temperatureLogDao: TemperatureLogDao,
-) : BaseMeasurementRepository<TemperatureMeasurement, TemperatureLogEntity>(), CountProvider {
+) : BaseMeasurementRepository<TemperatureMeasurement, TemperatureLogEntity>(temperatureLogDao), CountProvider {
 
   fun findMeasurements(remoteId: Int, profileId: Long, startDate: Date, endDate: Date): Observable<List<TemperatureLogEntity>> {
     return temperatureLogDao.findMeasurements(remoteId, profileId, startDate.time, endDate.time)

@@ -78,6 +78,7 @@ import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.views.SpinnerItem
 import org.supla.android.usecases.channel.DeleteChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
+import org.supla.android.usecases.migration.GroupingStringMigrationUseCase
 import org.supla.core.shared.data.model.rest.channel.ChannelDto
 import org.supla.core.shared.data.model.rest.channel.DefaultChannelDto
 import java.util.Date
@@ -85,6 +86,7 @@ import java.util.Date
 abstract class BaseHistoryDetailViewModel(
   private val deleteChannelMeasurementsUseCase: DeleteChannelMeasurementsUseCase,
   private val readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
+  private val groupingStringMigrationUseCase: GroupingStringMigrationUseCase,
   private val userStateHolder: UserStateHolder,
   private val profileManager: ProfileManager,
   private val dateProvider: DateProvider,
@@ -383,7 +385,8 @@ abstract class BaseHistoryDetailViewModel(
 
   private fun triggerDataLoad(remoteId: Int) {
     Maybe.zip(
-      readChannelWithChildrenUseCase(remoteId),
+      readChannelWithChildrenUseCase(remoteId)
+        .flatMap { groupingStringMigrationUseCase(it).andThen(Maybe.just(it)) },
       profileManager.getCurrentProfile().map { loadChartState(it.id, remoteId) },
       cloudChannelProvider(remoteId).firstElement()
     ) { first, second, third -> Triple(first, second, third) }

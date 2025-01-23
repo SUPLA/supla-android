@@ -35,7 +35,7 @@ import javax.inject.Singleton
 @Singleton
 class ImpulseCounterLogRepository @Inject constructor(
   private val impulseCounterLogDao: ImpulseCounterLogDao
-) : BaseMeasurementRepository<ImpulseCounterMeasurement, ImpulseCounterLogEntity>(), CountProvider {
+) : BaseMeasurementRepository<ImpulseCounterMeasurement, ImpulseCounterLogEntity>(impulseCounterLogDao), CountProvider {
 
   fun findMeasurements(remoteId: Int, profileId: Long, startDate: Date, endDate: Date): Observable<List<ImpulseCounterLogEntity>> =
     impulseCounterLogDao.findMeasurements(remoteId, profileId, startDate.time, endDate.time)

@@ -35,7 +35,7 @@ import javax.inject.Singleton
 @Singleton
 class ElectricityMeterLogRepository @Inject constructor(
   private val electricityMeterLogDao: ElectricityMeterLogDao
-) : BaseMeasurementRepository<ElectricityMeasurement, ElectricityMeterLogEntity>(), CountProvider {
+) : BaseMeasurementRepository<ElectricityMeasurement, ElectricityMeterLogEntity>(electricityMeterLogDao), CountProvider {
 
   fun findMeasurements(remoteId: Int, profileId: Long, startDate: Date, endDate: Date) =
     electricityMeterLogDao.findMeasurements(remoteId, profileId, startDate.time, endDate.time)

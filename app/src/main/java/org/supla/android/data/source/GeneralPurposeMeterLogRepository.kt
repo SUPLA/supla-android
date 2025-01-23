@@ -35,7 +35,7 @@ import javax.inject.Singleton
 @Singleton
 class GeneralPurposeMeterLogRepository @Inject constructor(
   private val generalPurposeMeterLogDao: GeneralPurposeMeterLogDao
-) : BaseMeasurementRepository<GeneralPurposeMeter, GeneralPurposeMeterEntity>(), CountProvider {
+) : BaseMeasurementRepository<GeneralPurposeMeter, GeneralPurposeMeterEntity>(generalPurposeMeterLogDao), CountProvider {
 
   fun findMeasurements(remoteId: Int, profileId: Long, startDate: Date, endDate: Date): Observable<List<GeneralPurposeMeterEntity>> =
     generalPurposeMeterLogDao.findMeasurements(remoteId, profileId, startDate.time, endDate.time)

@@ -35,7 +35,7 @@ import javax.inject.Singleton
 @Singleton
 class HumidityLogRepository @Inject constructor(
   private val humidityLogDao: HumidityLogDao
-) : BaseMeasurementRepository<HumidityMeasurement, HumidityLogEntity>(), CountProvider {
+) : BaseMeasurementRepository<HumidityMeasurement, HumidityLogEntity>(humidityLogDao), CountProvider {
 
   fun findMeasurements(remoteId: Int, profileId: Long, startDate: Date, endDate: Date): Observable<List<HumidityLogEntity>> {
     return humidityLogDao.findMeasurements(remoteId, profileId, startDate.time, endDate.time)
