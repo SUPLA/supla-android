@@ -725,4 +725,6 @@
   <string name="developer_info_database_section">Datenbankdetails</string>
   <string name="developer_info_activated">Developer mode wurde aktiviert</string>
   <string name="developer_info_title">Anwendungsdaten</string>
+  <string name="counter_photo_photos">Fotohistorie</string>
+  <string name="counter_photo_loading_error">Das Laden ist fehlgeschlagen.</string>
 </resources>

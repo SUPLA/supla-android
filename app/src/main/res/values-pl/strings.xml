@@ -734,6 +734,8 @@
   <string name="developer_info_database_section">Baza danych</string>
   <string name="developer_info_activated">Developer mode został aktywowany</string>
   <string name="developer_info_title">Dane aplikacji</string>
+  <string name="counter_photo_photos">Historia zdjęć</string>
+  <string name="counter_photo_loading_error">Nie udało się załadować zawartości.</string>
 
   <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
     <item quantity="one">włączone</item>

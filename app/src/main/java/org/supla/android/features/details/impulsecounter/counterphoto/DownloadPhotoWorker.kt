@@ -29,7 +29,6 @@ import androidx.work.workDataOf
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import org.supla.android.Trace
-import org.supla.android.core.storage.UserStateHolder
 import org.supla.android.data.source.remote.rest.SuplaCloudService
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.extensions.TAG
@@ -43,7 +42,6 @@ class DownloadPhotoWorker @AssistedInject constructor(
   private val suplaCloudServiceProvider: SuplaCloudService.Provider,
   private val storeChannelOcrPhotoUseCase: StoreChannelOcrPhotoUseCase,
   private val updateEventsManager: UpdateEventsManager,
-  private val userStateHolder: UserStateHolder
 ) : Worker(appContext, workerParameters) {
 
   private val remoteId: Int?
@@ -68,13 +66,12 @@ class DownloadPhotoWorker @AssistedInject constructor(
     }
 
     return try {
-      val photoData = suplaCloudServiceProvider.provide().getImpulseCounterPhoto(remoteId).blockingFirst()
+      val photoData = suplaCloudServiceProvider.provide().getLatestImpulseCounterPhoto(remoteId).blockingFirst()
       storeChannelOcrPhotoUseCase(
         remoteId = remoteId,
         profileId = profileId,
         photo = photoData
       )
-      userStateHolder.setOcrPhotoCreationTime(photoData.createdAt, profileId, remoteId)
       updateEventsManager.emitChannelUpdate(remoteId)
       Result.success()
     } catch (ex: Exception) {

@@ -758,6 +758,8 @@
   <string name="developer_info_database_section" translatable="false">Database details</string>
   <string name="developer_info_activated" translatable="false">Developer mode activated</string>
   <string name="developer_info_title" translatable="false">App information</string>
+  <string name="counter_photo_photos" translatable="false">Photo history</string>
+  <string name="counter_photo_loading_error" translatable="false">Loading failed.</string>
 
   <plurals name="details_timer_info_on" translatable="false">
     <item quantity="other">on</item>
