@@ -27,6 +27,7 @@ import org.supla.android.data.source.local.entity.measurements.CurrentHistoryLog
 import org.supla.android.data.source.remote.rest.SuplaCloudService
 import org.supla.android.data.source.remote.rest.channel.HistoryMeasurement
 import org.supla.android.data.source.remote.rest.channel.HistoryMeasurementType
+import org.supla.android.usecases.developerinfo.CountProvider
 import retrofit2.Response
 import java.util.Date
 import javax.inject.Inject
@@ -35,7 +36,7 @@ import javax.inject.Singleton
 @Singleton
 class CurrentLogRepository @Inject constructor(
   private val currentLogDao: CurrentLogDao
-) : BaseMeasurementRepository<HistoryMeasurement, CurrentHistoryLogEntity>() {
+) : BaseMeasurementRepository<HistoryMeasurement, CurrentHistoryLogEntity>(), CountProvider {
 
   fun findMeasurements(
     remoteId: Int,
@@ -83,4 +84,6 @@ class CurrentLogRepository @Inject constructor(
       groupingString = groupingString,
       profileId = profileId
     )
+
+  override fun count(): Observable<Int> = currentLogDao.count()
 }

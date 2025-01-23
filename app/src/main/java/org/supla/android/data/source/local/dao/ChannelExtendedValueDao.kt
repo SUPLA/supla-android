@@ -23,10 +23,12 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity
 import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity.Companion.ALL_COLUMNS
 import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity.Companion.COLUMN_CHANNEL_ID
+import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity.Companion.COLUMN_ID
 import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity.Companion.COLUMN_PROFILE_ID
 import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity.Companion.TABLE_NAME
 import org.supla.android.data.source.local.entity.ProfileEntity.Companion.SUBQUERY_ACTIVE
@@ -48,4 +50,7 @@ interface ChannelExtendedValueDao {
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   fun insert(entity: ChannelExtendedValueEntity): Completable
+
+  @Query("SELECT COUNT($COLUMN_ID) FROM $TABLE_NAME")
+  fun count(): Observable<Int>
 }

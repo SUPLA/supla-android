@@ -755,6 +755,9 @@
   <string name="details_em_current_phase_sequence" translatable="false">Current phase sequence</string>
   <string name="em_electric_grid_parameters" translatable="false">Electric grid parameters</string>
   <string name="channel_caption_container" translatable="false">Container</string>
+  <string name="developer_info_database_section" translatable="false">Database details</string>
+  <string name="developer_info_activated" translatable="false">Developer mode activated</string>
+  <string name="developer_info_title" translatable="false">App information</string>
 
   <plurals name="details_timer_info_on" translatable="false">
     <item quantity="other">on</item>

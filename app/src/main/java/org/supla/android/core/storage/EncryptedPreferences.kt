@@ -32,6 +32,7 @@ private const val FCM_TOKEN_LAST_UPDATE_KEY = "FCM_TOKEN_LAST_UPDATE_KEY"
 private const val NOTIFICATIONS_LAST_ENABLED = "NOTIFICATIONS_LAST_ENABLED"
 private const val FCM_PROFILE_TOKEN_KEY = "FCM_TOKEN_KEY_"
 private const val LOCK_SCREEN_SETTING_KEY = "LOCK_SCREEN_SETTING_KEY"
+private const val DEV_MODE_KEY = "DEV_MODE_KEY"
 
 @Singleton
 class EncryptedPreferences @Inject constructor(
@@ -77,6 +78,13 @@ class EncryptedPreferences @Inject constructor(
     get() = LockScreenSettings.from(preferences.getString(LOCK_SCREEN_SETTING_KEY, null))
     set(value) = with(preferences.edit()) {
       putString(LOCK_SCREEN_SETTING_KEY, value.asString())
+      apply()
+    }
+
+  var devModeActive: Boolean
+    get() = preferences.getBoolean(DEV_MODE_KEY, false)
+    set(value) = with(preferences.edit()) {
+      putBoolean(DEV_MODE_KEY, value)
       apply()
     }
 

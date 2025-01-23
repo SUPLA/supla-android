@@ -17,19 +17,23 @@ package org.supla.android.data.source
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import io.reactivex.rxjava3.core.Observable
 import org.supla.android.data.source.local.dao.SceneDao
 import org.supla.android.data.source.local.entity.SceneEntity
+import org.supla.android.usecases.developerinfo.CountProvider
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class RoomSceneRepository @Inject constructor(
   private val sceneDao: SceneDao
-) {
+) : CountProvider {
 
   fun findByRemoteId(remoteId: Int) = sceneDao.findByRemoteId(remoteId)
 
   fun findList() = sceneDao.findList()
 
   fun update(scenes: List<SceneEntity>) = sceneDao.update(scenes)
+
+  override fun count(): Observable<Int> = sceneDao.count()
 }

@@ -17,12 +17,14 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import io.reactivex.rxjava3.core.Observable
 import org.supla.android.data.source.local.dao.ProfileDao
+import org.supla.android.usecases.developerinfo.CountProvider
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class RoomProfileRepository @Inject constructor(private val profileDao: ProfileDao) {
+class RoomProfileRepository @Inject constructor(private val profileDao: ProfileDao) : CountProvider {
 
   fun findActiveProfile() = profileDao.findActiveProfile()
 
@@ -31,4 +33,6 @@ class RoomProfileRepository @Inject constructor(private val profileDao: ProfileD
   fun findProfile(id: Long) = profileDao.findProfile(id)
 
   fun activateProfile(id: Long) = profileDao.activateProfile(id)
+
+  override fun count(): Observable<Int> = profileDao.count()
 }

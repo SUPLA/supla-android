@@ -22,6 +22,7 @@ import androidx.room.Query
 import io.reactivex.rxjava3.core.Observable
 import org.supla.android.data.source.local.entity.UserIconEntity
 import org.supla.android.data.source.local.entity.UserIconEntity.Companion.ALL_COLUMNS
+import org.supla.android.data.source.local.entity.UserIconEntity.Companion.COLUMN_ID
 import org.supla.android.data.source.local.entity.UserIconEntity.Companion.TABLE_NAME
 
 @Dao
@@ -29,4 +30,7 @@ interface UserIconDao {
 
   @Query("SELECT $ALL_COLUMNS FROM $TABLE_NAME")
   fun loadAllIcons(): Observable<List<UserIconEntity>>
+
+  @Query("SELECT COUNT($COLUMN_ID) FROM $TABLE_NAME")
+  fun count(): Observable<Int>
 }

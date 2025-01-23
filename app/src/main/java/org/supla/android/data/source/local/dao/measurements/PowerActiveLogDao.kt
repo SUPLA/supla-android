@@ -81,4 +81,7 @@ interface PowerActiveLogDao {
     endDate: Long,
     phase: Phase
   ): Observable<List<PowerActiveHistoryLogEntity>>
+
+  @Query("SELECT COUNT($COLUMN_ID) FROM $TABLE_NAME")
+  fun count(): Observable<Int>
 }

@@ -27,6 +27,7 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import org.supla.android.data.source.local.entity.measurements.TemperatureAndHumidityLogEntity
 import org.supla.android.data.source.local.entity.measurements.TemperatureAndHumidityLogEntity.Companion.ALL_COLUMNS
+import org.supla.android.data.source.local.entity.measurements.TemperatureAndHumidityLogEntity.Companion.COLUMN_ID
 import org.supla.android.data.source.local.entity.measurements.TemperatureAndHumidityLogEntity.Companion.TABLE_NAME
 
 @Dao
@@ -56,4 +57,7 @@ interface TemperatureAndHumidityLogDao {
       "ORDER BY date asc"
   )
   fun findMeasurements(channelId: Int, profileId: Long, startDate: Long, endDate: Long): Observable<List<TemperatureAndHumidityLogEntity>>
+
+  @Query("SELECT COUNT($COLUMN_ID) FROM $TABLE_NAME")
+  fun count(): Observable<Int>
 }

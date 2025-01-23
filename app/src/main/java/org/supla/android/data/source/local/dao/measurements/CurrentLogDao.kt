@@ -81,4 +81,7 @@ interface CurrentLogDao {
     endDate: Long,
     phase: Phase
   ): Observable<List<CurrentHistoryLogEntity>>
+
+  @Query("SELECT COUNT($COLUMN_ID) FROM $TABLE_NAME")
+  fun count(): Observable<Int>
 }

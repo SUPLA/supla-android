@@ -29,6 +29,7 @@ import org.supla.android.data.source.local.entity.measurements.HumidityLogEntity
 import org.supla.android.data.source.local.entity.measurements.HumidityLogEntity.Companion.ALL_COLUMNS
 import org.supla.android.data.source.local.entity.measurements.HumidityLogEntity.Companion.COLUMN_CHANNEL_ID
 import org.supla.android.data.source.local.entity.measurements.HumidityLogEntity.Companion.COLUMN_HUMIDITY
+import org.supla.android.data.source.local.entity.measurements.HumidityLogEntity.Companion.COLUMN_ID
 import org.supla.android.data.source.local.entity.measurements.HumidityLogEntity.Companion.COLUMN_PROFILE_ID
 import org.supla.android.data.source.local.entity.measurements.HumidityLogEntity.Companion.TABLE_NAME
 
@@ -67,4 +68,7 @@ interface HumidityLogDao {
     """
   )
   fun findMeasurements(channelId: Int, profileId: Long, startDate: Long, endDate: Long): Observable<List<HumidityLogEntity>>
+
+  @Query("SELECT COUNT($COLUMN_ID) FROM $TABLE_NAME")
+  fun count(): Observable<Int>
 }
