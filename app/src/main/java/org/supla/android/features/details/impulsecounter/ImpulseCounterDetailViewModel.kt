@@ -23,6 +23,7 @@ import org.supla.android.Preferences
 import org.supla.android.core.infrastructure.WorkManagerProxy
 import org.supla.android.core.shared.shareable
 import org.supla.android.data.model.general.ChannelDataBase
+import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.features.details.detailbase.standarddetail.StandardDetailViewEvent
 import org.supla.android.features.details.detailbase.standarddetail.StandardDetailViewModel
@@ -63,19 +64,21 @@ class ImpulseCounterDetailViewModel @Inject constructor(
   override fun handleChannelBase(channelDataBase: ChannelDataBase, initialFunction: SuplaFunction) {
     super.handleChannelBase(channelDataBase, initialFunction)
 
-    updateState {
-      val hasPhoto = checkOcrPhotoExistsUseCase(channelDataBase.profileId, channelDataBase.remoteId)
+    if (SuplaChannelFlag.OCR notInside channelDataBase.flags) {
+      updateState {
+        val hasPhoto = checkOcrPhotoExistsUseCase(channelDataBase.profileId, channelDataBase.remoteId)
 
-      if (it.photoDownloaded) {
-        it.copy(hasPhoto = hasPhoto)
-      } else {
-        workManagerProxy.enqueueUniqueWork(
-          "${DownloadPhotoWorker.WORK_ID}.${channelDataBase.remoteId}",
-          ExistingWorkPolicy.KEEP,
-          DownloadPhotoWorker.build(channelDataBase.remoteId, channelDataBase.profileId)
-        )
+        if (it.photoDownloaded) {
+          it.copy(hasPhoto = hasPhoto)
+        } else {
+          workManagerProxy.enqueueUniqueWork(
+            "${DownloadPhotoWorker.WORK_ID}.${channelDataBase.remoteId}",
+            ExistingWorkPolicy.KEEP,
+            DownloadPhotoWorker.build(channelDataBase.remoteId, channelDataBase.profileId)
+          )
 
-        it.copy(photoDownloaded = true, hasPhoto = hasPhoto)
+          it.copy(photoDownloaded = true, hasPhoto = hasPhoto)
+        }
       }
     }
   }

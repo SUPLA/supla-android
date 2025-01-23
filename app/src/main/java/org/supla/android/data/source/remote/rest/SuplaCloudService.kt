@@ -205,7 +205,17 @@ interface SuplaCloudService {
     getInitialHistoryMeasurements(remoteId, limit = 2, offset = 0, logsType = measurementType.type)
 
   @GET("/api/$API_VERSION/integrations/ocr/{remoteId}/latest")
-  fun getImpulseCounterPhoto(
+  fun getLatestImpulseCounterPhotoOld(
+    @Path("remoteId") remoteId: Int
+  ): Observable<ImpulseCounterPhotoDto>
+
+  @GET("/api/$API_VERSION/integrations/ocr/{remoteId}/images")
+  fun getImpulseCounterPhotos(
+    @Path("remoteId") remoteId: Int
+  ): Observable<List<ImpulseCounterPhotoDto>>
+
+  @GET("/api/$API_VERSION/integrations/ocr/{remoteId}/images/latest")
+  fun getLatestImpulseCounterPhoto(
     @Path("remoteId") remoteId: Int
   ): Observable<ImpulseCounterPhotoDto>
 

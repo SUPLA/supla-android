@@ -18,7 +18,8 @@ package org.supla.android.data.source.remote.channel
  */
 
 enum class SuplaChannelFlag(val rawValue: Long) {
-  RS_SBS_AND_STOP_ACTIONS(0x0080),
+  OCR(0x8),
+  RS_SBS_AND_STOP_ACTIONS(0x80),
   RS_AUTO_CALIBRATION(0x1000),
   CALCFG_RESET_COUNTERS(0x2000),
   CALCFG_RECALIBRATE(0x4000),
