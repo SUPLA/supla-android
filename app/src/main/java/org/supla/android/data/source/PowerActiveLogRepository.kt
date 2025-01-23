@@ -36,7 +36,7 @@ import javax.inject.Singleton
 @Singleton
 class PowerActiveLogRepository @Inject constructor(
   private val powerActiveLogDao: PowerActiveLogDao
-) : BaseMeasurementRepository<HistoryMeasurement, PowerActiveHistoryLogEntity>(), CountProvider {
+) : BaseMeasurementRepository<HistoryMeasurement, PowerActiveHistoryLogEntity>(powerActiveLogDao), CountProvider {
 
   fun findMeasurements(
     remoteId: Int,

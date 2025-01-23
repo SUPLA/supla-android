@@ -25,16 +25,19 @@ import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
+import org.supla.android.data.source.GroupingStringMigratorDao
 import org.supla.android.data.source.local.entity.measurements.HumidityLogEntity
 import org.supla.android.data.source.local.entity.measurements.HumidityLogEntity.Companion.ALL_COLUMNS
 import org.supla.android.data.source.local.entity.measurements.HumidityLogEntity.Companion.COLUMN_CHANNEL_ID
+import org.supla.android.data.source.local.entity.measurements.HumidityLogEntity.Companion.COLUMN_DATE
+import org.supla.android.data.source.local.entity.measurements.HumidityLogEntity.Companion.COLUMN_GROUPING_STRING
 import org.supla.android.data.source.local.entity.measurements.HumidityLogEntity.Companion.COLUMN_HUMIDITY
 import org.supla.android.data.source.local.entity.measurements.HumidityLogEntity.Companion.COLUMN_ID
 import org.supla.android.data.source.local.entity.measurements.HumidityLogEntity.Companion.COLUMN_PROFILE_ID
 import org.supla.android.data.source.local.entity.measurements.HumidityLogEntity.Companion.TABLE_NAME
 
 @Dao
-interface HumidityLogDao {
+interface HumidityLogDao : GroupingStringMigratorDao {
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   fun insert(entity: List<HumidityLogEntity>): Completable
 
@@ -71,4 +74,35 @@ interface HumidityLogDao {
 
   @Query("SELECT COUNT($COLUMN_ID) FROM $TABLE_NAME")
   fun count(): Observable<Int>
+
+  @Query(
+    """
+      SELECT COUNT($COLUMN_GROUPING_STRING) 
+      FROM $TABLE_NAME 
+      WHERE $COLUMN_CHANNEL_ID = :remoteId 
+        AND $COLUMN_PROFILE_ID = :profileId 
+        AND $COLUMN_GROUPING_STRING = ''
+    """
+  )
+  override fun emptyGroupingStringCount(remoteId: Int, profileId: Long): Single<Int>
+
+  @Query(
+    """
+      UPDATE $TABLE_NAME 
+      SET $COLUMN_GROUPING_STRING = 
+        STRFTIME('%Y%m%d%H%M', DATETIME($COLUMN_DATE/1000, 'unixepoch')) || CASE (STRFTIME('%w', DATETIME($COLUMN_DATE/1000, 'unixepoch'))) 
+          WHEN '1' THEN '1' 
+          WHEN '2' THEN '2' 
+          WHEN '3' THEN '3' 
+          WHEN '4' THEN '4' 
+          WHEN '5' THEN '5' 
+          WHEN '6' THEN '6' 
+          ELSE '7' 
+        END
+      WHERE $COLUMN_CHANNEL_ID = :remoteId 
+        AND $COLUMN_PROFILE_ID = :profileId 
+        AND $COLUMN_GROUPING_STRING = ''
+    """
+  )
+  override fun migrateGroupingString(remoteId: Int, profileId: Long): Completable
 }

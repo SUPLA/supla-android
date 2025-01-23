@@ -55,21 +55,23 @@ import org.supla.android.usecases.channel.LoadChannelMeasurementsDataRangeUseCas
 import org.supla.android.usecases.channel.LoadChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
 import org.supla.android.usecases.channelconfig.LoadChannelConfigUseCase
+import org.supla.android.usecases.migration.GroupingStringMigrationUseCase
 import org.supla.core.shared.data.model.rest.channel.ChannelDto
 import javax.inject.Inject
 import javax.inject.Named
 
 @HiltViewModel
 class GpmHistoryDetailViewModel @Inject constructor(
+  private val loadChannelMeasurementsDataRangeUseCase: LoadChannelMeasurementsDataRangeUseCase,
   private val downloadChannelMeasurementsUseCase: DownloadChannelMeasurementsUseCase,
   private val loadChannelMeasurementsUseCase: LoadChannelMeasurementsUseCase,
-  private val loadChannelMeasurementsDataRangeUseCase: LoadChannelMeasurementsDataRangeUseCase,
+  private val channelConfigEventsManager: ChannelConfigEventsManager,
   private val loadChannelConfigUseCase: LoadChannelConfigUseCase,
   private val downloadEventsManager: DownloadEventsManager,
-  private val channelConfigEventsManager: ChannelConfigEventsManager,
   @Named(GSON_FOR_REPO) private val gson: Gson,
   deleteChannelMeasurementsUseCase: DeleteChannelMeasurementsUseCase,
   readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
+  groupingStringMigrationUseCase: GroupingStringMigrationUseCase,
   userStateHolder: UserStateHolder,
   profileManager: ProfileManager,
   schedulers: SuplaSchedulers,
@@ -77,6 +79,7 @@ class GpmHistoryDetailViewModel @Inject constructor(
 ) : BaseHistoryDetailViewModel(
   deleteChannelMeasurementsUseCase,
   readChannelWithChildrenUseCase,
+  groupingStringMigrationUseCase,
   userStateHolder,
   profileManager,
   dateProvider,

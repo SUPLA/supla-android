@@ -36,7 +36,7 @@ import javax.inject.Singleton
 @Singleton
 class VoltageLogRepository @Inject constructor(
   private val voltageLogDao: VoltageLogDao
-) : BaseMeasurementRepository<HistoryMeasurement, VoltageHistoryLogEntity>(), CountProvider {
+) : BaseMeasurementRepository<HistoryMeasurement, VoltageHistoryLogEntity>(voltageLogDao), CountProvider {
 
   fun findMeasurements(
     remoteId: Int,

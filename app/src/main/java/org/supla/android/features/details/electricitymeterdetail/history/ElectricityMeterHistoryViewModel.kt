@@ -65,6 +65,7 @@ import org.supla.android.usecases.channel.LoadChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
 import org.supla.android.usecases.channel.measurementsprovider.electricity.ElectricityChartFilters
 import org.supla.android.usecases.channel.measurementsprovider.electricity.PhaseItem
+import org.supla.android.usecases.migration.GroupingStringMigrationUseCase
 import org.supla.core.shared.data.model.rest.channel.ChannelDto
 import org.supla.core.shared.data.model.rest.channel.ElectricityChannelDto
 import org.supla.core.shared.data.model.rest.channel.ElectricityMeterConfigDto
@@ -84,12 +85,14 @@ class ElectricityMeterHistoryViewModel @Inject constructor(
   private val preferences: Preferences,
   deleteChannelMeasurementsUseCase: DeleteChannelMeasurementsUseCase,
   readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
+  groupingStringMigrationUseCase: GroupingStringMigrationUseCase,
   profileManager: ProfileManager,
   schedulers: SuplaSchedulers,
   dateProvider: DateProvider
 ) : BaseHistoryDetailViewModel(
   deleteChannelMeasurementsUseCase,
   readChannelWithChildrenUseCase,
+  groupingStringMigrationUseCase,
   userStateHolder,
   profileManager,
   dateProvider,
