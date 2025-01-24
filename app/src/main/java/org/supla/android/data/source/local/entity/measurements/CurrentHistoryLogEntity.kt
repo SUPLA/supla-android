@@ -57,7 +57,7 @@ data class CurrentHistoryLogEntity(
   val id: Long,
   @ColumnInfo(name = COLUMN_CHANNEL_ID) val channelId: Int,
   @ColumnInfo(name = COLUMN_TIMESTAMP) override val date: Date,
-  @ColumnInfo(name = COLUMN_PHASE) val phase: Phase,
+  @ColumnInfo(name = COLUMN_PHASE) override val phase: Phase,
   @ColumnInfo(name = COLUMN_MIN) override val min: Float,
   @ColumnInfo(name = COLUMN_MAX) override val max: Float,
   @ColumnInfo(name = COLUMN_AVG) override val avg: Float,

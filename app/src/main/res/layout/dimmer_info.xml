@@ -79,7 +79,7 @@
     android:layout_weight="0"
     android:text="@string/vl_dimmer_info_txt3"
     android:textColor="@color/vl_infotext"
-    android:fontFamily="@font/open_sans_regular" />
+    android:fontFamily="@font/open_sans_bold" />
 
   <TextView
     android:id="@+id/tvInfoTxt4"

@@ -194,7 +194,7 @@ class ElectricityMeterHistoryViewModel @Inject constructor(
     Single.zip(
       loadChannelMeasurementsUseCase(remoteId, spec),
       loadChannelMeasurementsDataRangeUseCase(remoteId, profileId, dataType)
-    ) { first, second -> Pair(getChartData(spec, chartRange, first), second) }
+    ) { first, second -> Pair(getChartData(spec, second, chartRange, first), second) }
 
   override fun aggregations(
     dateRange: DateRange,
@@ -208,7 +208,7 @@ class ElectricityMeterHistoryViewModel @Inject constructor(
 
     val aggregations = super.aggregations(dateRange, chartRange, selectedAggregation, customFilters)
       .let {
-        filters.type.isBalance.ifTrue {
+        filters.type.hideRankings.ifTrue {
           // In balance charts no ranking is available
           val aggregations = it.items.filter { aggregation -> !aggregation.isRank }
           it.copy(
@@ -322,13 +322,16 @@ class ElectricityMeterHistoryViewModel @Inject constructor(
     updateState { it.copy(chartCustomFilters = customFilters, chartStyle = chartStyle) }
   }
 
-  private fun getChartData(spec: ChartDataSpec, chartRange: ChartRange, sets: ChannelChartSets): ChartData {
-    return if (spec.isVoltageType || spec.isCurrentType || spec.isPowerActiveType) {
-      LineChartData(DateRange(spec.startDate, spec.endDate), chartRange, spec.aggregation, listOf(sets))
-    } else if (spec.aggregation.isRank) {
-      PieChartData(DateRange(spec.startDate, spec.endDate), chartRange, spec.aggregation, listOf(sets))
+  private fun getChartData(spec: ChartDataSpec, dateRange: Optional<DateRange>, chartRange: ChartRange, sets: ChannelChartSets): ChartData {
+    val rangeFromSpec = DateRange(spec.startDate, spec.endDate)
+    val newRange = (chartRange == ChartRange.ALL_HISTORY).ifTrue { dateRange.orElse(rangeFromSpec) } ?: rangeFromSpec
+
+    return if (spec.aggregation.isRank) {
+      PieChartData(newRange, chartRange, spec.aggregation, listOf(sets))
+    } else if (spec.isVoltageType || spec.isCurrentType || spec.isPowerActiveType) {
+      LineChartData(newRange, chartRange, spec.aggregation, listOf(sets))
     } else {
-      BarChartData(DateRange(spec.startDate, spec.endDate), chartRange, spec.aggregation, listOf(sets))
+      BarChartData(newRange, chartRange, spec.aggregation, listOf(sets))
     }
   }
 }

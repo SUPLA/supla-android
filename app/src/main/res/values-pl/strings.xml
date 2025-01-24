@@ -716,7 +716,6 @@
   <string name="channel_btn_expand">Rozwiń</string>
   <string name="settings_battery_level_warning">Sygnalizacja słabej baterii</string>
   <string name="channel_battery_level">Poziom baterii (%1$d - %2$s): %3$d%%</string>
-  <string name="counter_photo_toolbar">Zdjęcia licznika</string>
   <string name="counter_photo_counter_area">Obszar licznika</string>
   <string name="counter_photo_original_photo">Zdjęcie oryginalne</string>
   <string name="counter_photo_settings">Konfiguracja w Cloud</string>

@@ -740,7 +740,6 @@
   <string name="channel_btn_expand" translatable="false">Expand</string>
   <string name="settings_battery_level_warning" translatable="false">Low battery alert</string>
   <string name="channel_battery_level">Battery level (%1$d - %2$s): %3$d%%</string>
-  <string name="counter_photo_toolbar" translatable="false">Counter photos</string>
   <string name="counter_photo_counter_area" translatable="false">Counter area</string>
   <string name="counter_photo_original_photo" translatable="false">Original photo</string>
   <string name="counter_photo_settings" translatable="false">Cloud configuration</string>

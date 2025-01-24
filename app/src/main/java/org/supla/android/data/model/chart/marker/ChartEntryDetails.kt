@@ -19,19 +19,46 @@ package org.supla.android.data.model.chart.marker
 
 import org.supla.android.data.model.chart.ChartDataAggregation
 import org.supla.android.data.model.chart.ChartEntryType
+import org.supla.android.data.source.local.entity.custom.Phase
 import org.supla.android.usecases.channel.valueformatter.ChannelValueFormatter
 import java.util.Date
 
-data class ChartEntryDetails(
-  val aggregation: ChartDataAggregation,
-  val type: ChartEntryType,
-  val date: Long,
-  val min: Float? = null,
-  val max: Float? = null,
-  val open: Float? = null,
-  val close: Float? = null,
-  val valueFormatter: ChannelValueFormatter,
-  val customData: Any? = null
-) {
+sealed interface ChartEntryDetails {
+  val aggregation: ChartDataAggregation
+  val type: ChartEntryType
+  val date: Long
+  val min: Float?
+  val max: Float?
+  val open: Float?
+  val close: Float?
+  val valueFormatter: ChannelValueFormatter
+  val customData: Any?
+
   fun date(): Date = Date(date.times(1000))
+
+  data class Default(
+    override val aggregation: ChartDataAggregation,
+    override val type: ChartEntryType,
+    override val date: Long,
+    override val min: Float? = null,
+    override val max: Float? = null,
+    override val open: Float? = null,
+    override val close: Float? = null,
+    override val valueFormatter: ChannelValueFormatter,
+    override val customData: Any? = null
+  ) : ChartEntryDetails
+
+  data class WithPhase(
+    override val aggregation: ChartDataAggregation,
+    override val type: ChartEntryType,
+    override val date: Long,
+    override val min: Float? = null,
+    override val max: Float? = null,
+    override val valueFormatter: ChannelValueFormatter,
+    override val customData: Any? = null,
+    val phase: Phase
+  ) : ChartEntryDetails {
+    override val open: Float? = null
+    override val close: Float? = null
+  }
 }

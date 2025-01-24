@@ -60,10 +60,11 @@ open class ElectricityMeasurementsProvider<T : ElectricityBaseLogEntity>(
         .map {
           AggregatedEntity(
             date = it.date.toTimestamp(),
-            value = AggregatedValue.Single(
+            value = AggregatedValue.WithPhase(
               value = it.avg,
               min = it.min,
-              max = it.max
+              max = it.max,
+              phase = it.phase
             )
           )
         }
@@ -74,11 +75,12 @@ open class ElectricityMeasurementsProvider<T : ElectricityBaseLogEntity>(
       .filter { group -> group.value.isNotEmpty() }
       .map { group ->
         AggregatedEntity(
-          date = aggregation.groupTimeProvider(group.value.firstOrNull()!!.date),
-          value = AggregatedValue.Single(
+          date = aggregation.groupTimeProvider(group.value.first().date),
+          value = AggregatedValue.WithPhase(
             value = group.value.map { it.avg }.average().toFloat(),
             min = group.value.minOf { it.min },
-            max = group.value.maxOf { it.max }
+            max = group.value.maxOf { it.max },
+            phase = group.value.first().phase
           )
         )
       }

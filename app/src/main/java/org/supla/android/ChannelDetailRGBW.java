@@ -47,6 +47,9 @@ import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaConst;
 import org.supla.android.listview.DetailLayout;
 
+/**
+ * @noinspection SequencedCollectionMethodCanBeUsed
+ */
 public class ChannelDetailRGBW extends DetailLayout
     implements View.OnClickListener,
         SuplaColorBrightnessPicker.OnColorBrightnessChangeListener,
@@ -291,8 +294,8 @@ public class ChannelDetailRGBW extends DetailLayout
 
       if (markers != null) {
         if (markers.size() == 1) {
-          if (markers.getFirst().intValue() != (int) cbPicker.getBrightnessValue()) {
-            cbPicker.setBrightnessValue(markers.getFirst());
+          if (markers.get(0).intValue() != (int) cbPicker.getBrightnessValue()) {
+            cbPicker.setBrightnessValue(markers.get(0));
           }
         } else {
           cbPicker.setBrightnessMarkers(markers);
@@ -305,8 +308,8 @@ public class ChannelDetailRGBW extends DetailLayout
 
         if (markers != null) {
           if (markers.size() == 1) {
-            if (markers.getFirst().intValue() != cbPicker.getColor()) {
-              cbPicker.setColor(markers.getFirst().intValue());
+            if (markers.get(0).intValue() != cbPicker.getColor()) {
+              cbPicker.setColor(markers.get(0).intValue());
             }
           } else {
             cbPicker.setColorMarkers(markers);

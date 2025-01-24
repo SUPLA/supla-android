@@ -17,6 +17,8 @@ package org.supla.android.data.model.chart
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import org.supla.android.data.source.local.entity.custom.Phase
+
 sealed interface AggregatedValue {
   val valueMin: Float
   val valueMax: Float
@@ -58,6 +60,19 @@ sealed interface AggregatedValue {
     override fun hashCode(): Int {
       return values.contentHashCode()
     }
+  }
+
+  data class WithPhase(
+    val value: Float,
+    val min: Float? = null,
+    val max: Float? = null,
+    val phase: Phase
+  ) : AggregatedValue {
+    override val valueMin: Float
+      get() = value
+
+    override val valueMax: Float
+      get() = value
   }
 }
 

@@ -108,7 +108,7 @@ abstract class BaseMarkerView(context: Context) : MarkerView(context, R.layout.v
 
   protected fun tableLayoutParams() =
     ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.WRAP_CONTENT).also {
-      it.topToBottom = R.id.chart_marker_text
+      it.topToBottom = R.id.chart_marker_text_row
       it.topMargin = resources.getDimension(R.dimen.distance_micro).toInt()
     }
 

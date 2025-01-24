@@ -23,6 +23,7 @@ import android.view.Gravity
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.res.ResourcesCompat
 import org.supla.android.R
 
 @SuppressWarnings("ResourceType")
@@ -43,7 +44,7 @@ class SegmentedButton @JvmOverloads constructor(
       ImageView(ctx, attrs, defStyleAttr)
     } else {
       TextView(ctx, attrs, defStyleAttr).apply {
-        typeface = ctx.resources.getFont(R.font.open_sans_regular)
+        typeface = ResourcesCompat.getFont(ctx, R.font.open_sans_regular)
         text = ta.getString(1)
         gravity = Gravity.CENTER
       }

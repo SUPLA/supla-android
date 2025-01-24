@@ -560,11 +560,11 @@ abstract class BaseHistoryDetailViewModel(
 
   private fun getStartDateForRange(range: ChartRange, date: Date, currentDate: Date, dateForCustom: Date, minDate: Date) = when (range) {
     ChartRange.DAY -> date.dayStart()
-    ChartRange.LAST_DAY,
+    ChartRange.LAST_DAY -> currentDate.shift(-range.roundedDaysCount)
     ChartRange.LAST_WEEK,
     ChartRange.LAST_MONTH,
     ChartRange.LAST_QUARTER,
-    ChartRange.LAST_YEAR -> currentDate.shift(-range.roundedDaysCount)
+    ChartRange.LAST_YEAR -> currentDate.dayEnd().shift(-range.roundedDaysCount)
 
     ChartRange.WEEK -> date.weekStart()
     ChartRange.MONTH -> date.monthStart()

@@ -21,7 +21,6 @@ import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.PowerManager
 import android.provider.Settings
@@ -61,13 +60,11 @@ abstract class WidgetConfigurationActivityBase<T : Any> : FragmentActivity() {
       ?: AppWidgetManager.INVALID_APPWIDGET_ID
     viewModel().widgetId = appWidgetId
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      widgetWarningView.setOnClickListener {
-        Intent().also {
-          it.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
-          it.setData(Uri.parse("package:$packageName"))
-          startActivity(it)
-        }
+    widgetWarningView.setOnClickListener {
+      Intent().also {
+        it.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
+        it.setData(Uri.parse("package:$packageName"))
+        startActivity(it)
       }
     }
   }
@@ -75,10 +72,8 @@ abstract class WidgetConfigurationActivityBase<T : Any> : FragmentActivity() {
   override fun onResume() {
     super.onResume()
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      val powerManager = getSystemService(POWER_SERVICE) as PowerManager
-      widgetWarningView.isVisible = !powerManager.isIgnoringBatteryOptimizations(packageName)
-    }
+    val powerManager = getSystemService(POWER_SERVICE) as PowerManager
+    widgetWarningView.isVisible = !powerManager.isIgnoringBatteryOptimizations(packageName)
   }
 
   protected fun profileItemSelectedListener(

@@ -145,9 +145,14 @@ data class HistoryDataSet(
     return mutableListOf<IPieDataSet>().apply {
       entities.forEach { aggregatedEntity ->
         val entries = aggregatedEntity
-          .mapNotNull {
-            (it.value as? AggregatedValue.Single)?.let { value ->
-              PieEntry(value.value, aggregation.label(it.date), chartEntryDetails(aggregation, it, customData))
+          .map {
+            when (val value = it.value) {
+              is AggregatedValue.Single ->
+                PieEntry(value.value, aggregation.label(it.date), chartEntryDetails(aggregation, it, customData))
+              is AggregatedValue.WithPhase ->
+                PieEntry(value.value, aggregation.label(it.date), chartEntryDetails(aggregation, it, customData))
+              is AggregatedValue.Multiple ->
+                PieEntry(value.values.first(), aggregation.label(it.date), chartEntryDetails(aggregation, it, customData))
             }
           }
 
@@ -157,7 +162,11 @@ data class HistoryDataSet(
   }
 
   private fun toLineEntry(x: Float, aggregation: ChartDataAggregation, entity: AggregatedEntity, customData: Any?): Entry =
-    Entry(x, (entity.value as AggregatedValue.Single).value, chartEntryDetails(aggregation, entity, customData))
+    when (val value = entity.value) {
+      is AggregatedValue.Single -> Entry(x, value.value, chartEntryDetails(aggregation, entity, customData))
+      is AggregatedValue.WithPhase -> Entry(x, value.value, chartEntryDetails(aggregation, entity, customData))
+      is AggregatedValue.Multiple -> Entry(x, value.values.first(), chartEntryDetails(aggregation, entity, customData))
+    }
 
   private fun toBarEntry(
     x: Float,
@@ -168,6 +177,7 @@ data class HistoryDataSet(
     when (val value = entity.value) {
       is AggregatedValue.Single -> BarEntry(x, value.value, chartEntryDetails(aggregation, entity, customData))
       is AggregatedValue.Multiple -> BarEntry(x, value.values, chartEntryDetails(aggregation, entity, customData))
+      is AggregatedValue.WithPhase -> BarEntry(x, value.value, chartEntryDetails(aggregation, entity, customData))
     }
 
   private fun toCandleEntry(x: Float, aggregation: ChartDataAggregation, entity: AggregatedEntity): CandleEntry {
@@ -182,10 +192,13 @@ data class HistoryDataSet(
   private fun chartEntryDetails(aggregation: ChartDataAggregation, entity: AggregatedEntity, customData: Any? = null) =
     when (val value = entity.value) {
       is AggregatedValue.Single ->
-        ChartEntryDetails(aggregation, type, entity.date, value.min, value.max, value.open, value.close, valueFormatter, customData)
+        ChartEntryDetails.Default(aggregation, type, entity.date, value.min, value.max, value.open, value.close, valueFormatter, customData)
 
       is AggregatedValue.Multiple ->
-        ChartEntryDetails(aggregation, type, entity.date, null, null, null, null, valueFormatter, customData)
+        ChartEntryDetails.Default(aggregation, type, entity.date, valueFormatter = valueFormatter, customData = customData)
+
+      is AggregatedValue.WithPhase ->
+        ChartEntryDetails.WithPhase(aggregation, type, entity.date, value.min, value.max, valueFormatter, customData, value.phase)
     }
 
   sealed interface Label {

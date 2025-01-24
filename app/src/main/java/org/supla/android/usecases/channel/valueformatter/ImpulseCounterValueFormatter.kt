@@ -20,9 +20,12 @@ package org.supla.android.usecases.channel.valueformatter
 import org.supla.android.data.ValuesFormatter
 import org.supla.android.extensions.guardLet
 import org.supla.android.lib.SuplaConst
-import java.util.Locale
+import java.text.DecimalFormat
 
 class ImpulseCounterValueFormatter : ChannelValueFormatter {
+
+  val formatter: DecimalFormat = DecimalFormat()
+
   override fun handle(function: Int): Boolean =
     when (function) {
       SuplaConst.SUPLA_CHANNELFNC_IC_HEAT_METER,
@@ -37,11 +40,13 @@ class ImpulseCounterValueFormatter : ChannelValueFormatter {
     val (doubleValue) = guardLet(value as? Double) { return ValuesFormatter.NO_VALUE_TEXT }
     val unit = (custom as? Data)?.unit
     val precisionValue = getPrecisionValue(precision)
+    formatter.minimumFractionDigits = precisionValue
+    formatter.maximumFractionDigits = precisionValue
 
     return if (withUnit && unit != null) {
-      String.format(Locale.getDefault(), "%.${precisionValue}f $unit", doubleValue)
+      "${formatter.format(doubleValue)} $unit"
     } else {
-      String.format(Locale.getDefault(), "%.${precisionValue}f", doubleValue)
+      formatter.format(doubleValue)
     }
   }
 
