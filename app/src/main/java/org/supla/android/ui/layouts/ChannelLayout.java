@@ -34,6 +34,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.core.content.res.ResourcesCompat;
 import dagger.hilt.android.AndroidEntryPoint;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.Disposable;
@@ -155,7 +156,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
     prefs = new Preferences(context);
     setOrientation(LinearLayout.HORIZONTAL);
 
-    setBackgroundColor(getResources().getColor(R.color.surface));
+    setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.surface, null));
 
     right_btn = new FrameLayout(context);
     left_btn = new FrameLayout(context);
@@ -173,19 +174,19 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
             getResources().getDimensionPixelSize(R.dimen.channel_layout_button_width),
             channelHeight));
 
-    right_btn.setBackgroundColor(getResources().getColor(R.color.primary));
+    right_btn.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.primary, null));
 
     left_btn.setLayoutParams(
         new LayoutParams(
             getResources().getDimensionPixelSize(R.dimen.channel_layout_button_width),
             channelHeight));
 
-    left_btn.setBackgroundColor(getResources().getColor(R.color.primary));
+    left_btn.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.primary, null));
 
     content = new RelativeLayout(context);
     content.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, channelHeight));
 
-    content.setBackgroundColor(getResources().getColor(R.color.surface));
+    content.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.surface, null));
 
     addView(content);
     addView(left_btn);
@@ -225,7 +226,8 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
 
     right_ActiveStatus = new SuplaChannelStatus(context);
     right_ActiveStatus.setSingleColor(true);
-    right_ActiveStatus.setOnlineColor(getResources().getColor(R.color.primary));
+    right_ActiveStatus.setOnlineColor(
+        ResourcesCompat.getColor(getResources(), R.color.primary, null));
 
     {
       int dot_size = getResources().getDimensionPixelSize(R.dimen.channel_dot_size);
@@ -310,11 +312,11 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
     TextView tv = new TextView(context);
     tv.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 
-    tv.setTypeface(getResources().getFont(R.font.open_sans_regular));
+    tv.setTypeface(ResourcesCompat.getFont(getContext(), R.font.open_sans_regular));
 
     tv.setTextSize(
         TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.channel_btn_text_size));
-    tv.setTextColor(getResources().getColor(R.color.on_primary));
+    tv.setTextColor(ResourcesCompat.getColor(getResources(), R.color.on_primary, null));
     tv.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
 
     return tv;
@@ -379,8 +381,8 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
     SuplaChannelStatus result = new SuplaChannelStatus(context);
 
     result.setLayoutParams(getOnlineStatusLayoutParams(right));
-    result.setOfflineColor(getResources().getColor(R.color.red));
-    result.setOnlineColor(getResources().getColor(R.color.primary));
+    result.setOfflineColor(ResourcesCompat.getColor(getResources(), R.color.red, null));
+    result.setOnlineColor(ResourcesCompat.getColor(getResources(), R.color.primary, null));
 
     return result;
   }
@@ -405,7 +407,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
 
     content.layout(delta, content.getTop(), content.getWidth() + delta, content.getHeight());
 
-    int bcolor = getResources().getColor(R.color.primary);
+    int bcolor = ResourcesCompat.getColor(getResources(), R.color.primary, null);
 
     left_btn.setBackgroundColor(bcolor);
     right_btn.setBackgroundColor(bcolor);
@@ -853,9 +855,9 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
       if (heightScaleFactor > 1.0) {
         textSize *= heightScaleFactor;
       }
-      setTypeface(getResources().getFont(R.font.open_sans_bold));
+      setTypeface(ResourcesCompat.getFont(getContext(), R.font.open_sans_bold));
       setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
-      setTextColor(getResources().getColor(R.color.on_background));
+      setTextColor(ResourcesCompat.getColor(getResources(), R.color.on_background, null));
       setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL);
 
       RelativeLayout.LayoutParams lp =
@@ -937,7 +939,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
       AppCompatTextView Text = new AppCompatTextView(context);
       Text.setId(View.generateViewId());
 
-      Text.setTypeface(getResources().getFont(R.font.open_sans_regular));
+      Text.setTypeface(ResourcesCompat.getFont(getContext(), R.font.open_sans_regular));
 
       float textSize = getResources().getDimension(R.dimen.channel_imgtext_size);
       float sts = scaledDimension((int) textSize);
@@ -946,8 +948,8 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
 
       Text.setMaxLines(1);
 
-      Text.setTextColor(getResources().getColor(R.color.on_background));
-      Text.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
+      Text.setTextColor(ResourcesCompat.getColor(getResources(), R.color.on_background, null));
+      Text.setGravity(Gravity.CENTER_VERTICAL | Gravity.START);
 
       return Text;
     }
@@ -958,7 +960,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
 
       boolean empty = Text.getText().toString().isEmpty();
 
-      Text.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
+      Text.setGravity(Gravity.CENTER_VERTICAL | Gravity.START);
 
       LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, sh);
 
@@ -1017,7 +1019,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
         sdw = scaledDimension(dw);
         sdh = scaledDimension(dh);
 
-        LinearLayout.LayoutParams _lp = new LinearLayout.LayoutParams(sdw, sdh > dh ? sdh : dh);
+        LinearLayout.LayoutParams _lp = new LinearLayout.LayoutParams(sdw, Math.max(sdh, dh));
         Img1.setLayoutParams(_lp);
         Img1.setVisibility(View.VISIBLE);
 

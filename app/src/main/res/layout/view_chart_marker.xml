@@ -20,6 +20,7 @@
     tools:text="09.08.2024 16:00" />
 
   <LinearLayout
+    android:id="@+id/chart_marker_text_row"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:gravity="center"

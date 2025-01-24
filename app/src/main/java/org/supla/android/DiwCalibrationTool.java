@@ -101,9 +101,6 @@ public class DiwCalibrationTool extends DimmerCalibrationTool
 
     dialogView.findViewById(R.id.btnClose).setOnClickListener(v -> alertDialog.dismiss());
 
-    ((TextView) dialogView.findViewById(R.id.tvInfoTxt3))
-        .setTypeface(getResources().getFont(R.font.open_sans_bold));
-
     alertDialog.show();
   }
 

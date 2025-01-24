@@ -188,7 +188,7 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
 
     Button btn = new Button(getContext(), null);
     btn.setOnClickListener(this);
-    btn.setTypeface(getResources().getFont(R.font.open_sans_regular));
+    btn.setTypeface(ResourcesCompat.getFont(getContext(), R.font.open_sans_regular));
     btn.setTextSize(
         TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.menuitem_text_size));
     btn.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
@@ -226,7 +226,7 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
       btn.setTextColor(Color.WHITE);
       btn.setBackgroundColor(0);
       btn.setOnClickListener(this);
-      btn.setTypeface(getResources().getFont(R.font.open_sans_bold));
+      btn.setTypeface(ResourcesCompat.getFont(getContext(), R.font.open_sans_bold));
       mMainButtonsAreaLayout.addView(btn);
 
       params =

@@ -31,11 +31,7 @@ import org.supla.android.R
 import org.supla.android.data.formatting.DateFormatter
 import org.supla.android.data.model.chart.ChartEntryType
 import org.supla.android.data.model.chart.marker.ChartEntryDetails
-import org.supla.android.data.source.local.entity.custom.Phase
 import org.supla.android.extensions.visibleIf
-import org.supla.android.usecases.channel.measurementsprovider.electricity.CurrentChartCustomData
-import org.supla.android.usecases.channel.measurementsprovider.electricity.PowerActiveChartCustomData
-import org.supla.android.usecases.channel.measurementsprovider.electricity.VoltageChartCustomData
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -57,13 +53,15 @@ class ChartMarkerView(context: Context) : BaseMarkerView(context) {
       precision = precision(details.type)
     )
 
-    val color: Int? = getIconColor(highlight, details)
+    val color: Int? = getIconColor(details)
     icon.visibleIf(color != null)
     color?.let { icon.imageTintList = ColorStateList.valueOf(it) }
 
-    if (details.min != null && details.max != null) {
-      val minText = details.valueFormatter.format(details.min.toDouble(), withUnit = details.type == ChartEntryType.HUMIDITY)
-      val maxText = details.valueFormatter.format(details.max.toDouble(), withUnit = details.type == ChartEntryType.HUMIDITY)
+    val min = details.min
+    val max = details.max
+    if (min != null && max != null) {
+      val minText = details.valueFormatter.format(min.toDouble(), withUnit = details.type == ChartEntryType.HUMIDITY)
+      val maxText = details.valueFormatter.format(max.toDouble(), withUnit = details.type == ChartEntryType.HUMIDITY)
 
       range.text = "($minText - $maxText)"
     } else {
@@ -116,33 +114,9 @@ class ChartMarkerView(context: Context) : BaseMarkerView(context) {
       else -> 2
     }
 
-  private fun getIconColor(highlight: Highlight?, details: ChartEntryDetails): Int? {
-    (details.customData as? VoltageChartCustomData)?.phases?.let { phases ->
-      getColorFromPhases(phases, highlight)?.let {
-        return it
-      }
-    }
-
-    (details.customData as? CurrentChartCustomData)?.phases?.let { phases ->
-      getColorFromPhases(phases, highlight)?.let {
-        return it
-      }
-    }
-
-    (details.customData as? PowerActiveChartCustomData)?.phases?.let { phases ->
-      getColorFromPhases(phases, highlight)?.let {
-        return it
-      }
-    }
-
-    return null
-  }
-
-  private fun getColorFromPhases(phases: List<Phase>, highlight: Highlight?): Int? {
-    highlight?.dataSetIndex?.let { dataSetIndex ->
-      phases.getOrNull(dataSetIndex)?.color?.let { phaseColor ->
-        return ResourcesCompat.getColor(resources, phaseColor, null)
-      }
+  private fun getIconColor(details: ChartEntryDetails): Int? {
+    (details as? ChartEntryDetails.WithPhase)?.let {
+      return ResourcesCompat.getColor(resources, it.phase.color, null)
     }
 
     return null

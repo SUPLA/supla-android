@@ -61,20 +61,20 @@ enum class ElectricityMeterChartType(@StringRes override val labelRes: Int) : Sp
       BALANCE_CHART_AGGREGATED -> false
     }
 
-  val isBalance: Boolean
+  val hideRankings: Boolean
     get() = when (this) {
       BALANCE_VECTOR,
       BALANCE_ARITHMETIC,
       BALANCE_HOURLY,
-      BALANCE_CHART_AGGREGATED -> true
+      BALANCE_CHART_AGGREGATED,
+      VOLTAGE,
+      CURRENT,
+      POWER_ACTIVE -> true
 
       FORWARDED_ACTIVE_ENERGY,
       REVERSED_ACTIVE_ENERGY,
       FORWARDED_REACTIVE_ENERGY,
-      REVERSED_REACTIVE_ENERGY,
-      VOLTAGE,
-      CURRENT,
-      POWER_ACTIVE -> false
+      REVERSED_REACTIVE_ENERGY -> false
     }
 
   fun needsRefresh(otherType: ElectricityMeterChartType): Boolean {

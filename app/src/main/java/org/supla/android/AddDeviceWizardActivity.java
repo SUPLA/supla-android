@@ -938,13 +938,9 @@ public class AddDeviceWizardActivity extends WizardActivity
   }
 
   private void unbindNetwork() {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-      if (cm != null) {
-        cm.bindProcessToNetwork(null);
-      }
-    } else {
-      ConnectivityManager.setProcessDefaultNetwork(null);
+    ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+    if (cm != null) {
+      cm.bindProcessToNetwork(null);
     }
   }
 
@@ -958,11 +954,7 @@ public class AddDeviceWizardActivity extends WizardActivity
         NetworkCapabilities c = cm.getNetworkCapabilities(n);
 
         if (c != null && c.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
-          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            cm.bindProcessToNetwork(n);
-          } else {
-            ConnectivityManager.setProcessDefaultNetwork(n);
-          }
+          cm.bindProcessToNetwork(n);
         }
       }
     }

@@ -46,6 +46,9 @@ import org.supla.android.lib.SuplaConst;
 import org.supla.android.lib.ZWaveNode;
 import org.supla.android.lib.ZWaveWakeUpSettings;
 
+/**
+ * @noinspection SequencedCollectionMethodCanBeUsed
+ */
 @AndroidEntryPoint
 public class ZWaveConfigurationWizardActivity extends WizardActivity
     implements AdapterView.OnItemSelectedListener {
@@ -204,8 +207,8 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity
   private void fetchChannelBasicCfg(Integer channelId) {
 
     if (channelId == null && !mChannelBasicCfgToFetch.isEmpty()) {
-      channelId = mChannelBasicCfgToFetch.getFirst().getChannelId();
-      mChannelBasicCfgToFetch.removeFirst();
+      channelId = mChannelBasicCfgToFetch.get(0).getChannelId();
+      mChannelBasicCfgToFetch.remove(0);
     }
 
     if (channelId == null) {
@@ -947,8 +950,8 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity
       SuplaClient client = SuplaApp.getApp().getSuplaClient();
       if (client != null) {
         while (!mDevicesToRestart.isEmpty()) {
-          client.reconnectDevice(mDevicesToRestart.getFirst());
-          mDevicesToRestart.removeFirst();
+          client.reconnectDevice(mDevicesToRestart.get(0));
+          mDevicesToRestart.remove(0);
         }
       }
     }

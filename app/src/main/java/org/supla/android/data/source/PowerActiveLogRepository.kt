@@ -49,10 +49,10 @@ class PowerActiveLogRepository @Inject constructor(
   }
 
   override fun getInitialMeasurements(cloudService: SuplaCloudService, remoteId: Int): Response<List<HistoryMeasurement>> =
-    cloudService.getInitialHistoryMeasurements(remoteId, HistoryMeasurementType.CURRENT).execute()
+    cloudService.getInitialHistoryMeasurements(remoteId, HistoryMeasurementType.POWER_ACTIVE).execute()
 
   override fun getMeasurements(cloudService: SuplaCloudService, remoteId: Int, afterTimestamp: Long) =
-    cloudService.getHistoryMeasurements(remoteId, afterTimestamp = afterTimestamp, HistoryMeasurementType.CURRENT)
+    cloudService.getHistoryMeasurements(remoteId, afterTimestamp = afterTimestamp, HistoryMeasurementType.POWER_ACTIVE)
 
   override fun findMinTimestamp(remoteId: Int, profileId: Long): Single<Long> =
     powerActiveLogDao.findMinTimestamp(remoteId, profileId)

@@ -97,9 +97,6 @@
     <color name="phase3">#fed191</color>
 
     <color name="hp_chart_room_temperature">#00c2fc</color>
-    <color name="ic_chart_value">#00c2fc</color>
-    <color name="chart_marker_background">#ffdd00</color>
-    <color name="chart_marker_text">#000000</color>
     <color name="chart_color_value_positive">#e74c3c</color>
     <color name="chart_color_value_negative">#2dcc71</color>
 
