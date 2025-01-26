@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import android.app.AlertDialog;
 import android.app.NotificationManager;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -1517,6 +1518,11 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   private void onDeviceConfigUpdateOrResult(
       SuplaDeviceConfig config, ConfigResult result, boolean eol) {
     deviceConfigEventsManager.emitConfig(result, config);
+  }
+
+  private void onActionExecutionResult(
+      @Nullable ActionId actionId, @Nullable SubjectType subjectType, int subjectId, int resultCode) {
+    Trace.w(log_tag, "Action exec result " + subjectId + " resultCode "+resultCode);
   }
 
   public synchronized boolean canceled() {
