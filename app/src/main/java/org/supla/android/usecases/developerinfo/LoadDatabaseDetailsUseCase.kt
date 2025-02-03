@@ -38,6 +38,7 @@ import org.supla.android.data.source.RoomChannelRepository
 import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.data.source.RoomSceneRepository
 import org.supla.android.data.source.RoomUserIconRepository
+import org.supla.android.data.source.VoltageLogRepository
 import org.supla.android.data.source.local.entity.ChannelConfigEntity
 import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity
@@ -58,6 +59,7 @@ import org.supla.android.data.source.local.entity.measurements.GeneralPurposeMet
 import org.supla.android.data.source.local.entity.measurements.HumidityLogEntity
 import org.supla.android.data.source.local.entity.measurements.ImpulseCounterLogEntity
 import org.supla.android.data.source.local.entity.measurements.PowerActiveHistoryLogEntity
+import org.supla.android.data.source.local.entity.measurements.VoltageHistoryLogEntity
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -95,7 +97,8 @@ class LoadDatabaseDetailsUseCase @Inject constructor(
   channelRepository: RoomChannelRepository,
   profileRepository: RoomProfileRepository,
   sceneRepository: RoomSceneRepository,
-  userIconRepository: RoomUserIconRepository
+  userIconRepository: RoomUserIconRepository,
+  voltageLogRepository: VoltageLogRepository,
 ) {
 
   private val suplaCountProviders: Map<String, CountProvider> = mapOf(
@@ -122,6 +125,7 @@ class LoadDatabaseDetailsUseCase @Inject constructor(
     HumidityLogEntity.TABLE_NAME to humidityLogRepository,
     ImpulseCounterLogEntity.TABLE_NAME to impulseCounterLogRepository,
     PowerActiveHistoryLogEntity.TABLE_NAME to powerActiveLogRepository,
+    VoltageHistoryLogEntity.TABLE_NAME to voltageLogRepository
   )
 
   operator fun invoke(type: TableDetailType): Observable<List<TableDetail>> {
