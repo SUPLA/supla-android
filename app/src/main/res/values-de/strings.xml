@@ -726,4 +726,5 @@
   <string name="developer_info_title">Anwendungsdaten</string>
   <string name="counter_photo_photos">Fotohistorie</string>
   <string name="counter_photo_loading_error">Das Laden ist fehlgeschlagen.</string>
+  <string name="counter_photo_error">Fehler</string>
 </resources>

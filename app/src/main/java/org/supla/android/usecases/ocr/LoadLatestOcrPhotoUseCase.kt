@@ -19,8 +19,10 @@ package org.supla.android.usecases.ocr
 
 import android.util.Base64
 import io.reactivex.rxjava3.core.Observable
+import org.supla.android.R
 import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.remote.rest.SuplaCloudService
+import org.supla.core.shared.infrastructure.LocalizedString
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -32,8 +34,32 @@ data class OcrPhoto(
   val date: String,
   val original: Any?,
   val cropped: Any?,
-  val value: String
-)
+  val value: Value
+) {
+  sealed class Value {
+    abstract val value: LocalizedString
+    abstract val backgroundColor: Int
+    open val textColor: Int = R.color.on_primary
+
+    data object Waiting : Value() {
+      override val value: LocalizedString = LocalizedString.Constant("...")
+      override val backgroundColor: Int = R.color.impulse_counter_ocr_result_processing
+    }
+
+    data object Error : Value() {
+      override val value: LocalizedString = LocalizedString.WithResource(R.string.counter_photo_error)
+      override val backgroundColor: Int = R.color.error
+    }
+
+    data class Warning(override val value: LocalizedString) : Value() {
+      override val backgroundColor: Int = R.color.impulse_counter_ocr_result_warning
+    }
+
+    data class Success(override val value: LocalizedString) : Value() {
+      override val backgroundColor: Int = R.color.primary
+    }
+  }
+}
 
 @Singleton
 class LoadLatestOcrPhotoUseCase @Inject constructor(
@@ -54,7 +80,7 @@ class LoadLatestOcrPhotoUseCase @Inject constructor(
             date = date,
             original = photoDto.image?.let { Base64.decode(it, Base64.DEFAULT) },
             cropped = photoDto.imageCropped?.let { Base64.decode(it, Base64.DEFAULT) },
-            value = photoDto.resultMeasurement?.toString() ?: ValuesFormatter.NO_VALUE_TEXT
+            value = photoDto.toValue()
           )
         }
     }

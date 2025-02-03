@@ -759,6 +759,7 @@
   <string name="developer_info_title" translatable="false">App information</string>
   <string name="counter_photo_photos" translatable="false">Photo history</string>
   <string name="counter_photo_loading_error" translatable="false">Loading failed.</string>
+  <string name="counter_photo_error" translatable="false">Error</string>
 
   <plurals name="details_timer_info_on" translatable="false">
     <item quantity="other">on</item>

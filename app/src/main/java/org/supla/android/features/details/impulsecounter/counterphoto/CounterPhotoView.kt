@@ -22,6 +22,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -45,6 +46,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
@@ -57,11 +59,13 @@ import coil3.compose.LocalPlatformContext
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
 import org.supla.android.R
+import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.ui.views.buttons.BlueTextButton
 import org.supla.android.ui.views.buttons.OutlinedButton
 import org.supla.android.usecases.ocr.OcrPhoto
+import org.supla.core.shared.infrastructure.LocalizedString
 
 data class CounterPhotoViewState(
   val refreshing: Boolean = false,
@@ -248,17 +252,23 @@ private fun PhotoRow(photo: OcrPhoto) =
       modifier = Modifier.weight(0.3f)
     )
     Box(modifier = Modifier.weight(0.3f)) {
-      Text(
-        photo.value,
-        style = MaterialTheme.typography.bodyMedium,
-        modifier = Modifier
-          .background(colorResource(R.color.chart_pie_1), RoundedCornerShape(dimensionResource(R.dimen.radius_small)))
-          .padding(horizontal = 6.dp, vertical = 4.dp)
-          .align(Alignment.Center),
-        textAlign = TextAlign.Center
-      )
+      CounterParsedValue(photo.value)
     }
   }
+
+context(BoxScope)
+@Composable
+private fun CounterParsedValue(value: OcrPhoto.Value) =
+  Text(
+    value.value(LocalContext.current),
+    style = MaterialTheme.typography.bodyMedium,
+    modifier = Modifier
+      .background(colorResource(value.backgroundColor), RoundedCornerShape(dimensionResource(R.dimen.radius_small)))
+      .padding(horizontal = 6.dp, vertical = 4.dp)
+      .align(Alignment.Center),
+    textAlign = TextAlign.Center,
+    color = colorResource(value.textColor)
+  )
 
 @Composable
 @Preview(showBackground = true)
@@ -267,10 +277,20 @@ fun Preview() {
     CounterPhotoView(
       CounterPhotoViewState(
         refreshing = false,
-        latestPhoto = OcrPhoto(date = "12.12.2024 12:12", original = null, cropped = R.drawable.on_off_widget_preview_image, "12345"),
+        latestPhoto = OcrPhoto(
+          date = "12.12.2024 12:12",
+          original = null,
+          cropped = R.drawable.on_off_widget_preview_image,
+          OcrPhoto.Value.Warning(LocalizedString.Constant("12345"))
+        ),
         photos = listOf(
-          OcrPhoto(date = "12.12.2024 12:12", original = null, cropped = R.drawable.on_off_widget_preview_image, "12345"),
-          OcrPhoto(date = "12.12.2024 12:12", original = null, cropped = R.drawable.on_off_widget_preview_image, "12345")
+          OcrPhoto(
+            date = "12.12.2024 12:12",
+            original = null,
+            cropped = R.drawable.on_off_widget_preview_image,
+            OcrPhoto.Value.Success(LocalizedString.Constant("12345"))
+          ),
+          OcrPhoto(date = "12.12.2024 12:12", original = null, cropped = R.drawable.on_off_widget_preview_image, OcrPhoto.Value.Error)
         )
       )
     )

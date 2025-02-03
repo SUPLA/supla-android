@@ -30,6 +30,7 @@ data class ImpulseCounterPhotoDto(
   val processingTimeMs2: Int?,
   val resultCode: Int,
   val resultMessage: String?,
+  val measurementValid: Boolean,
   val image: String?,
   val imageCropped: String?
 )
