@@ -56,7 +56,7 @@ enum class ChartDataAggregation(
   ),
   MONTHS(
     R.string.months,
-    2592000,
+    2628000,
     { entity -> entity.groupingString.substring(0, 6).toLong() },
     { it.monthHalf().toTimestamp() }
   ),
