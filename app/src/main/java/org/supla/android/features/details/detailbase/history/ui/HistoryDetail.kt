@@ -240,6 +240,7 @@ private fun FiltersRow(viewState: HistoryDetailViewState, viewModel: HistoryDeta
       TextSpinner(
         options = selectableList,
         onOptionSelected = { viewModel.changeFilter(it) },
+        enabled = viewState.loading.not(),
         modifier = Modifier
           .padding(
             start = if (index == 0) Distance.small else 0.dp,

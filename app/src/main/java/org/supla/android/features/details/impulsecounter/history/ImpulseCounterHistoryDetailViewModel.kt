@@ -36,6 +36,7 @@ import org.supla.android.data.model.chart.style.ImpulseCounterChartStyle
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.events.DownloadEventsManager
 import org.supla.android.features.details.detailbase.history.BaseHistoryDetailViewModel
+import org.supla.android.features.details.detailbase.history.ui.ChartDataSelectionDialogState
 import org.supla.android.profile.ProfileManager
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.DeleteChannelMeasurementsUseCase
@@ -71,6 +72,11 @@ class ImpulseCounterHistoryDetailViewModel @Inject constructor(
 ) {
 
   override fun allAggregations() = ChartDataAggregation.entries
+
+  override fun provideSelectionDialogState(
+    channelChartSets: ChannelChartSets,
+    customFilters: ChartDataSpec.Filters?
+  ): ChartDataSelectionDialogState? = null
 
   override fun measurementsMaybe(
     remoteId: Int,
