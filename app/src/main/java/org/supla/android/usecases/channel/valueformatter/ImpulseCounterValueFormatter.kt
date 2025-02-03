@@ -20,9 +20,10 @@ package org.supla.android.usecases.channel.valueformatter
 import org.supla.android.data.ValuesFormatter
 import org.supla.android.extensions.guardLet
 import org.supla.android.lib.SuplaConst
+import org.supla.android.usecases.channel.valueprovider.ImpulseCounterValueProvider
 import java.text.DecimalFormat
 
-class ImpulseCounterValueFormatter : ChannelValueFormatter {
+class ImpulseCounterValueFormatter(private val showUnknownValue: Boolean = false) : ChannelValueFormatter {
 
   val formatter: DecimalFormat = DecimalFormat()
 
@@ -38,6 +39,10 @@ class ImpulseCounterValueFormatter : ChannelValueFormatter {
 
   override fun format(value: Any, withUnit: Boolean, precision: ChannelValueFormatter.Precision, custom: Any?): String {
     val (doubleValue) = guardLet(value as? Double) { return ValuesFormatter.NO_VALUE_TEXT }
+    if (showUnknownValue && doubleValue == ImpulseCounterValueProvider.UNKNOWN_VALUE) {
+      return ValuesFormatter.NO_VALUE_TEXT
+    }
+
     val unit = (custom as? Data)?.unit
     val precisionValue = getPrecisionValue(precision)
     formatter.minimumFractionDigits = precisionValue
