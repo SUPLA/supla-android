@@ -87,6 +87,10 @@
     <!-- Thermostat -->
     <color name="thermostat_control_circle_background">#D2D2D2</color>
 
+    <!-- Impulse counter OCR -->
+    <color name="impulse_counter_ocr_result_processing">#777</color>
+    <color name="impulse_counter_ocr_result_warning">#F0AD4E</color>
+
     <!-- new color definitions end here -->
 
     <color name="menuseparator">#fafbfc</color>

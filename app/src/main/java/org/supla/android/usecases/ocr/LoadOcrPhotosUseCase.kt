@@ -43,7 +43,7 @@ class LoadOcrPhotosUseCase @Inject constructor(
             val localDateTime = LocalDateTime.parse(photo.createdAt, DateTimeFormatter.ISO_OFFSET_DATE_TIME)
             Date.from(localDateTime.atZone(ZoneId.of("UTC")).toInstant())?.let { date ->
               valuesFormatter.getFullDateString(date)?.let { formattedDate ->
-                OcrPhoto(formattedDate, null, Base64.decode(imageCropped, Base64.DEFAULT), photo.resultMeasurement?.toString() ?: "")
+                OcrPhoto(formattedDate, null, Base64.decode(imageCropped, Base64.DEFAULT), photo.toValue())
               }
             }
           }
