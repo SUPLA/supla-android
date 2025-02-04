@@ -79,7 +79,7 @@ class DownloadChannelMeasurementsUseCase @Inject constructor(
           DownloadGeneralPurposeMeterWorker.build(remoteId, profileId)
         )
 
-      function == SuplaFunction.ELECTRICITY_METER &&
+      channelWithChildren.isOrHasElectricityMeter &&
         type == DownloadEventsManager.DataType.ELECTRICITY_VOLTAGE_TYPE ->
         workManagerProxy.enqueueUniqueWork(
           "${DownloadVoltageMeasurementsWorker.WORK_ID}.$remoteId",
@@ -87,7 +87,7 @@ class DownloadChannelMeasurementsUseCase @Inject constructor(
           DownloadVoltageMeasurementsWorker.build(remoteId, profileId)
         )
 
-      function == SuplaFunction.ELECTRICITY_METER &&
+      channelWithChildren.isOrHasElectricityMeter &&
         type == DownloadEventsManager.DataType.ELECTRICITY_CURRENT_TYPE ->
         workManagerProxy.enqueueUniqueWork(
           "${DownloadCurrentMeasurementsWorker.WORK_ID}.$remoteId",
@@ -95,7 +95,7 @@ class DownloadChannelMeasurementsUseCase @Inject constructor(
           DownloadCurrentMeasurementsWorker.build(remoteId, profileId)
         )
 
-      function == SuplaFunction.ELECTRICITY_METER &&
+      channelWithChildren.isOrHasElectricityMeter &&
         type == DownloadEventsManager.DataType.ELECTRICITY_POWER_ACTIVE_TYPE ->
         workManagerProxy.enqueueUniqueWork(
           "${DownloadPowerActiveMeasurementsWorker.WORK_ID}.$remoteId",

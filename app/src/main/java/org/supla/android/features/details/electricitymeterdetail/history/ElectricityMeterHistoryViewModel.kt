@@ -66,6 +66,7 @@ import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
 import org.supla.android.usecases.channel.measurementsprovider.electricity.ElectricityChartFilters
 import org.supla.android.usecases.channel.measurementsprovider.electricity.PhaseItem
 import org.supla.android.usecases.migration.GroupingStringMigrationUseCase
+import org.supla.core.shared.data.model.channel.ChannelRelationType
 import org.supla.core.shared.data.model.rest.channel.ChannelDto
 import org.supla.core.shared.data.model.rest.channel.ElectricityChannelDto
 import org.supla.core.shared.data.model.rest.channel.ElectricityMeterConfigDto
@@ -237,7 +238,10 @@ class ElectricityMeterHistoryViewModel @Inject constructor(
     updateState { it.copy(introductionPages = null) }
   }
 
-  override fun cloudChannelProvider(remoteId: Int): Observable<ChannelDto> {
+  override fun cloudChannelProvider(channelWithChildren: ChannelWithChildren): Observable<ChannelDto> {
+    val remoteId = channelWithChildren.children
+      .firstOrNull { it.relationType == ChannelRelationType.METER }?.channel?.remoteId ?: channelWithChildren.remoteId
+
     return suplaCloudServiceProvider.provide().getElectricityMeterChannel(remoteId).map { it }
   }
 
