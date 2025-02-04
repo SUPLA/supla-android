@@ -55,6 +55,8 @@ data class ChannelChartSets(
 
   fun deactivate(): ChannelChartSets = copy(dataSets = dataSets.map { it.copy(active = false) })
 
+  fun activate(): ChannelChartSets = copy(dataSets = dataSets.map { it.copy(active = true) })
+
   fun setActive(types: List<ChartEntryType>?): ChannelChartSets =
     copy(dataSets = dataSets.map { it.copy(active = types?.contains(it.type) == true) })
 
