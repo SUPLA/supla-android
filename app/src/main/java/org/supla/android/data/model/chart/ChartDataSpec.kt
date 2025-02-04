@@ -17,6 +17,7 @@ package org.supla.android.data.model.chart
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import org.supla.android.data.model.Optional
 import java.util.Date
 
 data class ChartDataSpec(
@@ -25,5 +26,11 @@ data class ChartDataSpec(
   val aggregation: ChartDataAggregation,
   val customFilters: Filters? = null
 ) {
+
+  fun correctBy(range: Optional<DateRange>): ChartDataSpec =
+    range.ifPresent {
+      ChartDataSpec(it.start, it.end, aggregation, customFilters)
+    } ?: this
+
   interface Filters
 }

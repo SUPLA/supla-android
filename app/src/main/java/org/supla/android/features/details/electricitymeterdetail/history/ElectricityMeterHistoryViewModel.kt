@@ -191,10 +191,13 @@ class ElectricityMeterHistoryViewModel @Inject constructor(
     spec: ChartDataSpec,
     chartRange: ChartRange
   ): Single<Pair<ChartData, Optional<DateRange>>> =
-    Single.zip(
-      loadChannelMeasurementsUseCase(remoteId, spec),
-      loadChannelMeasurementsDataRangeUseCase(remoteId, profileId, dataType)
-    ) { first, second -> Pair(getChartData(spec, second, chartRange, first), second) }
+    loadChannelMeasurementsDataRangeUseCase(remoteId, profileId, dataType)
+      .flatMap { range ->
+        // while the data range is changing (voltage, current, power active as different range) it has to be corrected
+        val correctedSpec = if (chartRange == ChartRange.ALL_HISTORY) spec.correctBy(range) else spec
+        loadChannelMeasurementsUseCase(remoteId, correctedSpec)
+          .map { Pair(getChartData(correctedSpec, chartRange, it), range) }
+      }
 
   override fun aggregations(
     dateRange: DateRange,
@@ -322,16 +325,13 @@ class ElectricityMeterHistoryViewModel @Inject constructor(
     updateState { it.copy(chartCustomFilters = customFilters, chartStyle = chartStyle) }
   }
 
-  private fun getChartData(spec: ChartDataSpec, dateRange: Optional<DateRange>, chartRange: ChartRange, sets: ChannelChartSets): ChartData {
-    val rangeFromSpec = DateRange(spec.startDate, spec.endDate)
-    val newRange = (chartRange == ChartRange.ALL_HISTORY).ifTrue { dateRange.orElse(rangeFromSpec) } ?: rangeFromSpec
-
-    return if (spec.aggregation.isRank) {
-      PieChartData(newRange, chartRange, spec.aggregation, listOf(sets))
-    } else if (spec.isVoltageType || spec.isCurrentType || spec.isPowerActiveType) {
-      LineChartData(newRange, chartRange, spec.aggregation, listOf(sets))
+  private fun getChartData(spec: ChartDataSpec, chartRange: ChartRange, sets: ChannelChartSets): ChartData {
+    return if (spec.isVoltageType || spec.isCurrentType || spec.isPowerActiveType) {
+      LineChartData(DateRange(spec.startDate, spec.endDate), chartRange, spec.aggregation, listOf(sets))
+    } else if (spec.aggregation.isRank) {
+      PieChartData(DateRange(spec.startDate, spec.endDate), chartRange, spec.aggregation, listOf(sets))
     } else {
-      BarChartData(newRange, chartRange, spec.aggregation, listOf(sets))
+      BarChartData(DateRange(spec.startDate, spec.endDate), chartRange, spec.aggregation, listOf(sets))
     }
   }
 }
