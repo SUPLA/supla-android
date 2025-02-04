@@ -116,8 +116,13 @@ abstract class BaseHistoryDetailViewModel(
     updateState { state ->
       state.chartData.sets.firstOrNull { it.remoteId == remoteId }?.let { channelSets ->
         if (channelSets.function.hasCustomFilters()) {
-          state.copy(chartDataSelectionDialogState = provideSelectionDialogState(channelSets, state.chartCustomFilters))
-        } else if (state.chartData.onlyOneSetAndActive) {
+          val dialogState = provideSelectionDialogState(channelSets, state.chartCustomFilters)
+          if (dialogState != null) {
+            return@let state.copy(chartDataSelectionDialogState = provideSelectionDialogState(channelSets, state.chartCustomFilters))
+          }
+        }
+
+        if (state.chartData.onlyOneSetAndActive) {
           state // If only one active set available - disable deactivating.
         } else {
           val chartData = state.chartData.toggleActive(remoteId, type)

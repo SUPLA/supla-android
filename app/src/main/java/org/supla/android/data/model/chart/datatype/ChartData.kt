@@ -125,6 +125,9 @@ abstract class ChartData(
   val onlyOneSetAndActive: Boolean
     get() = sets.size == 1 && sets.first().dataSets.size == 1 && sets.first().active
 
+  val onlyOneSet: Boolean
+    get() = sets.size == 1 && sets.first().dataSets.size == 1
+
   val visibleSets: List<ChartState.VisibleSet>
     get() =
       sets.mapNotNull { channelSets ->
@@ -147,17 +150,22 @@ abstract class ChartData(
     newInstance(sets.map { if (it.remoteId == remoteId) it.toggleActive(type) else it })
 
   fun activateSets(visibleSets: List<ChartState.VisibleSet>?): ChartData =
-    newInstance(
-      sets.map { set ->
-        visibleSets?.let { list ->
-          if (list.map { it.remoteId }.contains(set.remoteId)) {
-            set.setActive(visibleSets.map { it.type })
-          } else {
-            set.deactivate()
-          }
-        } ?: set
-      }
-    )
+    if (onlyOneSet) {
+      // If there is only one set, we want it always active
+      if (noActiveSet) newInstance(sets.map { it.activate() }) else this
+    } else {
+      newInstance(
+        sets.map { set ->
+          visibleSets?.let { list ->
+            if (list.map { it.remoteId }.contains(set.remoteId)) {
+              set.setActive(visibleSets.map { it.type })
+            } else {
+              set.deactivate()
+            }
+          } ?: set
+        }
+      )
+    }
 
   open fun getAxisMaxValue(filter: (ChartEntryType) -> Boolean): Float? {
     val maxValue = getAxisMaxValueRaw(filter)
