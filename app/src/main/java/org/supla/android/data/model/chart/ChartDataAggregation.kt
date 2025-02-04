@@ -103,7 +103,7 @@ enum class ChartDataAggregation(
       YEARS -> 1
       RANK_HOURS -> 9
       RANK_WEEKDAYS -> 13
-      RANK_MONTHS -> 7
+      RANK_MONTHS -> 5
     }
 
   val groupingStringLength: Int
