@@ -142,8 +142,8 @@ abstract class BaseHistoryDetailViewModel(
     updateUserState()
   }
 
-  protected open fun cloudChannelProvider(remoteId: Int): Observable<ChannelDto> =
-    Observable.just(DefaultChannelDto(remoteId))
+  protected open fun cloudChannelProvider(channelWithChildren: ChannelWithChildren): Observable<ChannelDto> =
+    Observable.just(DefaultChannelDto(channelWithChildren.remoteId))
 
   protected open fun provideSelectionDialogState(
     channelChartSets: ChannelChartSets,
@@ -393,8 +393,10 @@ abstract class BaseHistoryDetailViewModel(
       readChannelWithChildrenUseCase(remoteId)
         .flatMap { groupingStringMigrationUseCase(it).andThen(Maybe.just(it)) },
       profileManager.getCurrentProfile().map { loadChartState(it.id, remoteId) },
-      cloudChannelProvider(remoteId).firstElement()
-    ) { first, second, third -> Triple(first, second, third) }
+    ) { first, second, -> Pair(first, second) }
+      .flatMap { pair ->
+        cloudChannelProvider(pair.first).firstElement().map { Triple(pair.first, pair.second, it) }
+      }
       .attachSilent()
       .subscribeBy(
         onSuccess = { handleData(it.first, it.third, it.second) },
