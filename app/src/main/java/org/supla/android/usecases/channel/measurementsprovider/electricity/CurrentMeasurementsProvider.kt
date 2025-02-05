@@ -53,10 +53,8 @@ class CurrentMeasurementsProvider @Inject constructor(
   preferences: Preferences
 ) : ElectricityMeasurementsProvider<CurrentHistoryLogEntity>(getChannelIconUseCase, gson, preferences) {
 
-  override val currentValueProvider: (SuplaChannelElectricityMeterValue.Measurement?) -> Double
+  override val labelValueExtractor: (SuplaChannelElectricityMeterValue.Measurement?) -> Double
     get() = { it?.current ?: 0.0 }
-
-  override val currentValuePrecision: Int = 2
 
   operator fun invoke(
     channelWithChildren: ChannelWithChildren,
