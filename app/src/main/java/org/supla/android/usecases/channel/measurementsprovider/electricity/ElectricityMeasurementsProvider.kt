@@ -46,10 +46,8 @@ open class ElectricityMeasurementsProvider<T : ElectricityBaseLogEntity>(
   preferences: Preferences
 ) : MeasurementsProvider(preferences, gson) {
 
-  open val currentValueProvider: (Measurement?) -> Double
+  open val labelValueExtractor: (Measurement?) -> Double
     get() = { 0.0 }
-
-  open val currentValuePrecision: Int = 1
 
   protected fun aggregating(
     measurements: List<T>,
@@ -113,7 +111,7 @@ open class ElectricityMeasurementsProvider<T : ElectricityBaseLogEntity>(
     if (phases.contains(phase)) {
       electricity.value?.let {
         val value = VoltageValueFormatter.format(
-          value = currentValueProvider(it.getMeasurement(phase.value, 0)),
+          value = labelValueExtractor(it.getMeasurement(phase.value, 0)),
           precision = ChannelValueFormatter.Custom(value = 1),
           withUnit = false
         )

@@ -90,7 +90,8 @@ interface GeneralPurposeMeasurementLogDao : GroupingStringMigratorDao {
     """
       UPDATE $TABLE_NAME 
       SET $COLUMN_GROUPING_STRING = 
-        STRFTIME('%Y%m%d%H%M', DATETIME($COLUMN_DATE/1000, 'unixepoch')) || CASE (STRFTIME('%w', DATETIME($COLUMN_DATE/1000, 'unixepoch'))) 
+        STRFTIME('%Y%m%d%H%M', DATETIME($COLUMN_DATE/1000, 'unixepoch'), 'localtime') || 
+        CASE (STRFTIME('%w', DATETIME($COLUMN_DATE/1000, 'unixepoch'), 'localtime')) 
           WHEN '1' THEN '1' 
           WHEN '2' THEN '2' 
           WHEN '3' THEN '3' 
