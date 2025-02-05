@@ -450,10 +450,10 @@ abstract class BaseHistoryDetailViewModel(
     }
 
     val dateRange = when (selectedRange) {
-      ChartRange.LAST_DAY,
+      ChartRange.LAST_DAY -> dateProvider.currentDate().let { DateRange(it.shift(-selectedRange.roundedDaysCount), it) }
       ChartRange.LAST_WEEK,
       ChartRange.LAST_MONTH,
-      ChartRange.LAST_QUARTER -> dateProvider.currentDate().let { DateRange(it.shift(-selectedRange.roundedDaysCount), it) }
+      ChartRange.LAST_QUARTER -> dateProvider.currentDate().dayEnd().let { DateRange(it.shift(-selectedRange.roundedDaysCount), it) }
 
       else -> chartState.dateRange ?: dateProvider.currentDate().let { DateRange(it.shift(-selectedRange.roundedDaysCount), it) }
     }
