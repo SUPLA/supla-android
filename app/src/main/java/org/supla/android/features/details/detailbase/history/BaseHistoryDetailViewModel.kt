@@ -81,7 +81,9 @@ import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
 import org.supla.android.usecases.migration.GroupingStringMigrationUseCase
 import org.supla.core.shared.data.model.rest.channel.ChannelDto
 import org.supla.core.shared.data.model.rest.channel.DefaultChannelDto
+import java.util.Calendar
 import java.util.Date
+import java.util.TimeZone
 
 abstract class BaseHistoryDetailViewModel(
   private val deleteChannelMeasurementsUseCase: DeleteChannelMeasurementsUseCase,
@@ -393,7 +395,7 @@ abstract class BaseHistoryDetailViewModel(
       readChannelWithChildrenUseCase(remoteId)
         .flatMap { groupingStringMigrationUseCase(it).andThen(Maybe.just(it)) },
       profileManager.getCurrentProfile().map { loadChartState(it.id, remoteId) },
-    ) { first, second, -> Pair(first, second) }
+    ) { first, second -> Pair(first, second) }
       .flatMap { pair ->
         cloudChannelProvider(pair.first).firstElement().map { Triple(pair.first, pair.second, it) }
       }
@@ -583,11 +585,11 @@ abstract class BaseHistoryDetailViewModel(
 
   private fun getEndDateForRange(range: ChartRange, end: Date, currentDate: Date, dateForCustom: Date, maxDate: Date) = when (range) {
     ChartRange.DAY -> end.dayEnd()
-    ChartRange.LAST_DAY,
+    ChartRange.LAST_DAY -> currentDate
     ChartRange.LAST_WEEK,
     ChartRange.LAST_MONTH,
     ChartRange.LAST_QUARTER,
-    ChartRange.LAST_YEAR -> currentDate
+    ChartRange.LAST_YEAR -> currentDate.dayEnd()
 
     ChartRange.WEEK -> end.weekEnd()
     ChartRange.MONTH -> end.monthEnd()
@@ -755,13 +757,14 @@ data class HistoryDetailViewState(
   }
 
   fun editDayValidator(date: Date): Boolean {
+    val localDate = Date(date.time - TimeZone.getTimeZone(Calendar.getInstance().timeZone.id).getOffset(date.time))
     val (min, max) = guardLet(minDate, maxDate) { return true }
-    val (range) = guardLet(range) { return min.before(date) && max.after(date) }
+    val (range) = guardLet(range) { return min.before(localDate) && max.after(localDate) }
 
     return when (editDate) {
-      RangeValueType.START -> min.before(date) && range.end.after(date)
-      RangeValueType.END -> range.start.before(date) && max.after(date)
-      else -> min.before(date) && max.after(date)
+      RangeValueType.START -> min.before(localDate) && range.end.after(localDate)
+      RangeValueType.END -> range.start.before(localDate.dayEnd()) && max.after(localDate)
+      else -> min.before(localDate) && max.after(localDate)
     }
   }
 
