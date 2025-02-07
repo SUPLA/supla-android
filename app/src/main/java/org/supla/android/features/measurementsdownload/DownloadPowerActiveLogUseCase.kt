@@ -28,4 +28,6 @@ import javax.inject.Singleton
 class DownloadPowerActiveLogUseCase @Inject constructor(
   powerActiveLogRepository: PowerActiveLogRepository,
   suplaCloudServiceProvider: SuplaCloudService.Provider
-) : BaseDownloadLogUseCase<HistoryMeasurement, PowerActiveHistoryLogEntity>(suplaCloudServiceProvider, powerActiveLogRepository)
+) : BaseDownloadLogUseCase<HistoryMeasurement, PowerActiveHistoryLogEntity>(suplaCloudServiceProvider, powerActiveLogRepository) {
+  override val cleanupHistoryWhenOldestDiffers: Boolean = false
+}

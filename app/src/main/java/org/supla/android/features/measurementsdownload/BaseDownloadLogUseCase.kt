@@ -39,6 +39,8 @@ abstract class BaseDownloadLogUseCase<T : Measurement, U : BaseLogEntity>(
   private val baseMeasurementRepository: BaseMeasurementRepository<T, U>
 ) {
 
+  open val cleanupHistoryWhenOldestDiffers = true
+
   val formatter = Formatter()
 
   fun loadMeasurements(remoteId: Int, profileId: Long): Observable<Float> = Observable.create { emitter ->
@@ -101,11 +103,16 @@ abstract class BaseDownloadLogUseCase<T : Measurement, U : BaseLogEntity>(
         }
 
         Trace.d(TAG, "Found local minimal timestamp $minTimestamp")
-        for (entry in firstMeasurements) {
-          if (kotlin.math.abs(minTimestamp - entry.date.time) < ALLOWED_TIME_DIFFERENCE) {
-            Trace.d(TAG, "Entries similar - no cleaning needed")
-            return false
+        if (cleanupHistoryWhenOldestDiffers) {
+          for (entry in firstMeasurements) {
+            if (kotlin.math.abs(minTimestamp - entry.date.time) < ALLOWED_TIME_DIFFERENCE) {
+              Trace.d(TAG, "Entries similar - no cleaning needed")
+              return false
+            }
           }
+        } else {
+          Trace.d(TAG, "Oldest check skipped - no cleanup needed")
+          return false
         }
       }
       return true
