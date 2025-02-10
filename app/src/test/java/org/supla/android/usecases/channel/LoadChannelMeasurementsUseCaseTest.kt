@@ -32,7 +32,7 @@ import org.junit.Test
 import org.supla.android.data.model.chart.ChannelChartSets
 import org.supla.android.data.model.chart.ChartDataSpec
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
-import org.supla.android.usecases.channel.measurementsprovider.ElectricityConsumptionMeasurementsProvider
+import org.supla.android.usecases.channel.measurementsprovider.ElectricityMeterMeasurementsProvider
 import org.supla.android.usecases.channel.measurementsprovider.GeneralPurposeMeasurementMeasurementsProvider
 import org.supla.android.usecases.channel.measurementsprovider.GeneralPurposeMeterMeasurementsProvider
 import org.supla.android.usecases.channel.measurementsprovider.HumidityMeasurementsProvider
@@ -59,7 +59,7 @@ class LoadChannelMeasurementsUseCaseTest : BaseLoadMeasurementsUseCaseTest() {
   private lateinit var generalPurposeMeterMeasurementsProvider: GeneralPurposeMeterMeasurementsProvider
 
   @MockK
-  private lateinit var electricityConsumptionMeasurementsProvider: ElectricityConsumptionMeasurementsProvider
+  private lateinit var electricityMeterMeasurementsProvider: ElectricityMeterMeasurementsProvider
 
   @MockK
   private lateinit var humidityMeasurementsProvider: HumidityMeasurementsProvider
@@ -106,7 +106,7 @@ class LoadChannelMeasurementsUseCaseTest : BaseLoadMeasurementsUseCaseTest() {
       temperatureAndHumidityMeasurementsProvider,
       generalPurposeMeasurementMeasurementsProvider,
       generalPurposeMeterMeasurementsProvider,
-      electricityConsumptionMeasurementsProvider
+      electricityMeterMeasurementsProvider
     )
   }
 
@@ -126,7 +126,7 @@ class LoadChannelMeasurementsUseCaseTest : BaseLoadMeasurementsUseCaseTest() {
     every { temperatureAndHumidityMeasurementsProvider.handle(channelWithChildren) } returns false
     every { generalPurposeMeasurementMeasurementsProvider.handle(channelWithChildren) } returns false
     every { generalPurposeMeterMeasurementsProvider.handle(channelWithChildren) } returns false
-    every { electricityConsumptionMeasurementsProvider.handle(channelWithChildren) } returns false
+    every { electricityMeterMeasurementsProvider.handle(channelWithChildren) } returns false
     every { humidityMeasurementsProvider.handle(channelWithChildren) } returns false
     every { impulseCounterMeasurementsProvider.handle(channelWithChildren) } returns false
 
@@ -140,7 +140,7 @@ class LoadChannelMeasurementsUseCaseTest : BaseLoadMeasurementsUseCaseTest() {
       temperatureAndHumidityMeasurementsProvider.handle(channelWithChildren)
       generalPurposeMeasurementMeasurementsProvider.handle(channelWithChildren)
       generalPurposeMeterMeasurementsProvider.handle(channelWithChildren)
-      electricityConsumptionMeasurementsProvider.handle(channelWithChildren)
+      electricityMeterMeasurementsProvider.handle(channelWithChildren)
       humidityMeasurementsProvider.handle(channelWithChildren)
       impulseCounterMeasurementsProvider.handle(channelWithChildren)
     }
@@ -150,7 +150,7 @@ class LoadChannelMeasurementsUseCaseTest : BaseLoadMeasurementsUseCaseTest() {
       temperatureAndHumidityMeasurementsProvider,
       generalPurposeMeasurementMeasurementsProvider,
       generalPurposeMeterMeasurementsProvider,
-      electricityConsumptionMeasurementsProvider,
+      electricityMeterMeasurementsProvider,
       humidityMeasurementsProvider,
       impulseCounterMeasurementsProvider
     )

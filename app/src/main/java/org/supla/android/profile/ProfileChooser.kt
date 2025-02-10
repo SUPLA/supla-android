@@ -7,7 +7,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import io.reactivex.rxjava3.schedulers.Schedulers
 import org.supla.android.R
-import org.supla.android.SuplaApp
 import org.supla.android.cfg.ProfileItemViewModel
 import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.databinding.LiProfileChooserBinding
@@ -79,14 +78,12 @@ class ProfileChooser(
       parent: ViewGroup,
       viewType: Int
     ): RecyclerView.ViewHolder {
-      val type = SuplaApp.getApp().typefaceOpenSansRegular
       val inflater = LayoutInflater.from(parent.context)
       val binding = LiProfileChooserBinding.inflate(
         inflater,
         parent,
         false
       )
-      binding.profileLabel.typeface = type
       return ItemViewHolder(binding)
     }
 

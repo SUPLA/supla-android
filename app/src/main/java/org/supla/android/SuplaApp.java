@@ -22,7 +22,6 @@ import static org.supla.android.widget.shared.WidgetReloadWorker.WORK_ID;
 
 import android.app.UiModeManager;
 import android.content.Context;
-import android.graphics.Typeface;
 import android.media.AudioAttributes;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
@@ -34,6 +33,7 @@ import android.os.Build.VERSION_CODES;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.hilt.work.HiltWorkerFactory;
 import androidx.lifecycle.ProcessLifecycleOwner;
@@ -80,10 +80,6 @@ public class SuplaApp extends MultiDexApplication
   private static final Object _lck3 = new Object();
   private static SuplaClient _SuplaClient = null;
   private static SuplaApp _SuplaApp = null;
-  private Typeface mTypefaceQuicksandRegular;
-  private Typeface mTypefaceQuicksandLight;
-  private Typeface mTypefaceOpenSansRegular;
-  private Typeface mTypefaceOpenSansBold;
   private SuplaOAuthToken _OAuthToken;
   private final ArrayList<SuplaRestApiClientTask> _RestApiClientTasks = new ArrayList<>();
   private static long lastWifiScanTime;
@@ -149,7 +145,8 @@ public class SuplaApp extends MultiDexApplication
     }
   }
 
-  public SuplaClient SuplaClientInitIfNeed(Context context, String oneTimePassword) {
+  public SuplaClient SuplaClientInitIfNeed(
+      @NonNull Context context, @Nullable String oneTimePassword) {
 
     SuplaClient result;
 
@@ -213,48 +210,6 @@ public class SuplaApp extends MultiDexApplication
         _RestApiClientTasks.get(a).cancel(mayInterruptIfRunning);
       }
     }
-  }
-
-  public void initTypefaceCollection(Context context) {
-    if (context == null) {
-      return;
-    }
-
-    if (mTypefaceQuicksandRegular == null) {
-      mTypefaceQuicksandRegular =
-          Typeface.createFromAsset(context.getAssets(), "fonts/Quicksand-Regular.ttf");
-    }
-
-    if (mTypefaceQuicksandLight == null) {
-      mTypefaceQuicksandLight =
-          Typeface.createFromAsset(context.getAssets(), "fonts/Quicksand-Light.ttf");
-    }
-
-    if (mTypefaceOpenSansRegular == null) {
-      mTypefaceOpenSansRegular =
-          Typeface.createFromAsset(context.getAssets(), "fonts/OpenSans-Regular.ttf");
-    }
-
-    if (mTypefaceOpenSansBold == null) {
-      mTypefaceOpenSansBold =
-          Typeface.createFromAsset(context.getAssets(), "fonts/OpenSans-Bold.ttf");
-    }
-  }
-
-  public Typeface getTypefaceQuicksandRegular() {
-    return mTypefaceQuicksandRegular;
-  }
-
-  public Typeface getTypefaceQuicksandLight() {
-    return mTypefaceQuicksandLight;
-  }
-
-  public Typeface getTypefaceOpenSansRegular() {
-    return mTypefaceOpenSansRegular;
-  }
-
-  public Typeface getTypefaceOpenSansBold() {
-    return mTypefaceOpenSansBold;
   }
 
   public static boolean wifiStartScan(WifiManager manager) {

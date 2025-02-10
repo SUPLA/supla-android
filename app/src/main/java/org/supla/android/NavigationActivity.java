@@ -26,7 +26,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import androidx.core.content.res.ResourcesCompat;
 import dagger.hilt.android.AndroidEntryPoint;
 import javax.inject.Inject;
@@ -112,12 +111,6 @@ public class NavigationActivity extends BaseActivity
       MenuBarLayout = (RelativeLayout) Inflate(R.layout.menubar, null);
       MenuBarLayout.setVisibility(View.GONE);
 
-      TextView title = MenuBarLayout.findViewById(R.id.menubar_title);
-      title.setTypeface(SuplaApp.getApp().getTypefaceQuicksandRegular());
-
-      TextView detailTitle = MenuBarLayout.findViewById(R.id.menubar_detail_title);
-      detailTitle.setTypeface(SuplaApp.getApp().getTypefaceQuicksandRegular());
-
       getRootLayout().addView(MenuBarLayout);
 
       MenuButton = findViewById(R.id.menubutton);
@@ -136,7 +129,8 @@ public class NavigationActivity extends BaseActivity
 
     if (ContentLayout == null) {
       ContentLayout = new RelativeLayout(this);
-      ContentLayout.setBackgroundColor(getResources().getColor(R.color.background));
+      ContentLayout.setBackgroundColor(
+          ResourcesCompat.getColor(getResources(), R.color.background, null));
 
       RelativeLayout.LayoutParams lp =
           new RelativeLayout.LayoutParams(

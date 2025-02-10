@@ -42,8 +42,20 @@ class ProvideChannelDetailTypeUseCase @Inject constructor() : BaseDetailTypeProv
 
     SuplaFunction.HVAC_THERMOSTAT -> ThermostatDetailType(getThermostatDetailPages(channelWithChildren))
 
+    SuplaFunction.IC_ELECTRICITY_METER,
+    SuplaFunction.IC_GAS_METER,
+    SuplaFunction.IC_HEAT_METER,
+    SuplaFunction.IC_WATER_METER -> IcDetailType(getImpulseCounterPages(channelWithChildren))
+
     else -> provide(function)
   }
+
+  private fun getImpulseCounterPages(channelWithChildren: ChannelWithChildren): List<DetailPage> =
+    if (SuplaChannelFlag.OCR inside channelWithChildren.flags) {
+      listOf(DetailPage.IC_GENERAL, DetailPage.IC_HISTORY, DetailPage.IC_OCR)
+    } else {
+      listOf(DetailPage.IC_GENERAL, DetailPage.IC_HISTORY)
+    }
 
   private fun getSwitchDetailPages(channelWithChildren: ChannelWithChildren): List<DetailPage> {
     val list = mutableListOf(DetailPage.SWITCH)

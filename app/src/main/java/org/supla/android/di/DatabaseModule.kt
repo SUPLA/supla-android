@@ -52,6 +52,7 @@ import org.supla.android.db.room.measurements.migrations.MEASUREMENTS_DB_MIGRATI
 import org.supla.android.db.room.measurements.migrations.MEASUREMENTS_DB_MIGRATION_34_35
 import org.supla.android.db.room.measurements.migrations.MEASUREMENTS_DB_MIGRATION_35_36
 import org.supla.android.db.room.measurements.migrations.MeasurementsDbMigration29to30
+import org.supla.android.db.room.measurements.migrations.MeasurementsDbMigration36to37
 import javax.inject.Singleton
 
 @Module
@@ -191,7 +192,8 @@ class DatabaseModule {
         MEASUREMENTS_DB_MIGRATION_32_33,
         MEASUREMENTS_DB_MIGRATION_33_34,
         MEASUREMENTS_DB_MIGRATION_34_35,
-        MEASUREMENTS_DB_MIGRATION_35_36
+        MEASUREMENTS_DB_MIGRATION_35_36,
+        MeasurementsDbMigration36to37
       )
       .build()
 
@@ -229,6 +231,21 @@ class DatabaseModule {
   @Singleton
   fun impulseCounterLogDao(measurementsDatabase: MeasurementsDatabase) =
     measurementsDatabase.impulseCounterLogDao()
+
+  @Provides
+  @Singleton
+  fun voltageLogDao(measurementsDatabase: MeasurementsDatabase) =
+    measurementsDatabase.voltageLogDao()
+
+  @Provides
+  @Singleton
+  fun currentLogDao(measurementsDatabase: MeasurementsDatabase) =
+    measurementsDatabase.currentLogDao()
+
+  @Provides
+  @Singleton
+  fun powerActiveLogDao(measurementsDatabase: MeasurementsDatabase) =
+    measurementsDatabase.powerActiveLogDao()
 
   @Provides
   @Singleton

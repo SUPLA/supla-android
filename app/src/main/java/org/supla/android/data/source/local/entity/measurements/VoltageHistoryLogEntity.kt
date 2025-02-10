@@ -52,17 +52,18 @@ import java.util.Date
   ]
 )
 data class VoltageHistoryLogEntity(
-  @PrimaryKey
+  @PrimaryKey(autoGenerate = true)
   @ColumnInfo(name = COLUMN_ID)
   val id: Long,
   @ColumnInfo(name = COLUMN_CHANNEL_ID) val channelId: Int,
-  @ColumnInfo(name = COLUMN_TIMESTAMP) val date: Date,
-  @ColumnInfo(name = COLUMN_PHASE) val phase: Phase,
-  @ColumnInfo(name = COLUMN_MIN) val min: Float,
-  @ColumnInfo(name = COLUMN_MAX) val max: Float,
-  @ColumnInfo(name = COLUMN_AVG) val avg: Float,
+  @ColumnInfo(name = COLUMN_TIMESTAMP) override val date: Date,
+  @ColumnInfo(name = COLUMN_PHASE) override val phase: Phase,
+  @ColumnInfo(name = COLUMN_MIN) override val min: Float,
+  @ColumnInfo(name = COLUMN_MAX) override val max: Float,
+  @ColumnInfo(name = COLUMN_AVG) override val avg: Float,
+  @ColumnInfo(name = COLUMN_GROUPING_STRING) override val groupingString: String,
   @ColumnInfo(name = COLUMN_PROFILE_ID) val profileId: Long
-) {
+) : ElectricityBaseLogEntity {
 
   companion object {
     const val TABLE_NAME = "voltage_history_log"
@@ -73,6 +74,7 @@ data class VoltageHistoryLogEntity(
     const val COLUMN_MIN = "min"
     const val COLUMN_MAX = "max"
     const val COLUMN_AVG = "avg"
+    const val COLUMN_GROUPING_STRING = "grouping_string"
     const val COLUMN_PROFILE_ID = "profile_id"
 
     val SQL = arrayOf(
@@ -86,6 +88,7 @@ data class VoltageHistoryLogEntity(
           $COLUMN_MIN REAL NOT NULL,
           $COLUMN_MAX REAL NOT NULL,
           $COLUMN_AVG REAL NOT NULL,
+          $COLUMN_GROUPING_STRING TEXT NOT NULL,
           $COLUMN_PROFILE_ID INTEGER NOT NULL
         )
       """.trimIndent(),
@@ -97,5 +100,8 @@ data class VoltageHistoryLogEntity(
         ON $TABLE_NAME ($COLUMN_CHANNEL_ID, $COLUMN_TIMESTAMP, $COLUMN_PHASE, $COLUMN_PROFILE_ID);
       """.trimIndent()
     )
+
+    const val ALL_COLUMNS = "$COLUMN_ID, $COLUMN_CHANNEL_ID, $COLUMN_TIMESTAMP, $COLUMN_PHASE, " +
+      "$COLUMN_MIN, $COLUMN_MAX, $COLUMN_AVG, $COLUMN_GROUPING_STRING, $COLUMN_PROFILE_ID"
   }
 }

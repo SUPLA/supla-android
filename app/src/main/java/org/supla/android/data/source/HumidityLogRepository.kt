@@ -26,6 +26,7 @@ import org.supla.android.data.source.local.entity.measurements.HumidityLogEntity
 import org.supla.android.data.source.remote.rest.SuplaCloudService
 import org.supla.android.data.source.remote.rest.channel.HumidityMeasurement
 import org.supla.android.features.measurementsdownload.workers.BaseDownloadLogWorker
+import org.supla.android.usecases.developerinfo.CountProvider
 import retrofit2.Response
 import java.util.Date
 import javax.inject.Inject
@@ -34,17 +35,18 @@ import javax.inject.Singleton
 @Singleton
 class HumidityLogRepository @Inject constructor(
   private val humidityLogDao: HumidityLogDao
-) : BaseMeasurementRepository<HumidityMeasurement, HumidityLogEntity>() {
+) : BaseMeasurementRepository<HumidityMeasurement, HumidityLogEntity>(humidityLogDao), CountProvider {
 
   fun findMeasurements(remoteId: Int, profileId: Long, startDate: Date, endDate: Date): Observable<List<HumidityLogEntity>> {
     return humidityLogDao.findMeasurements(remoteId, profileId, startDate.time, endDate.time)
   }
 
-  override fun map(entry: HumidityMeasurement, remoteId: Int, profileId: Long) =
+  override fun map(entry: HumidityMeasurement, groupingString: String, remoteId: Int, profileId: Long) =
     HumidityLogEntity(
       id = null,
       channelId = remoteId,
       date = entry.date,
+      groupingString = groupingString,
       humidity = entry.humidity,
       profileId = profileId
     )
@@ -80,4 +82,6 @@ class HumidityLogRepository @Inject constructor(
 
   override fun insert(entries: List<HumidityLogEntity>): Completable =
     humidityLogDao.insert(entries)
+
+  override fun count(): Observable<Int> = humidityLogDao.count()
 }

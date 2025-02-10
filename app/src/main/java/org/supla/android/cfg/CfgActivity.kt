@@ -80,8 +80,6 @@ class CfgActivity : BaseActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
-    SuplaApp.getApp().initTypefaceCollection(this)
-
     binding = DataBindingUtil.setContentView(this, R.layout.activity_cfg)
     binding.lifecycleOwner = this
 

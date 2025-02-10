@@ -28,6 +28,7 @@ import org.supla.android.features.details.electricitymeterdetail.history.Electri
 import org.supla.android.features.details.electricitymeterdetail.settings.ElectricityMeterSettingsFragment
 import org.supla.android.features.details.gpmdetail.history.GpmHistoryDetailFragment
 import org.supla.android.features.details.humiditydetail.history.HumidityHistoryDetailFragment
+import org.supla.android.features.details.impulsecounter.counterphoto.CounterPhotoFragment
 import org.supla.android.features.details.impulsecounter.general.ImpulseCounterGeneralFragment
 import org.supla.android.features.details.impulsecounter.history.ImpulseCounterHistoryDetailFragment
 import org.supla.android.features.details.switchdetail.general.SwitchGeneralFragment
@@ -100,6 +101,7 @@ class StandardDetailPagerAdapter(
     DetailPage.IC_HISTORY -> ImpulseCounterHistoryDetailFragment().apply {
       arguments = ImpulseCounterHistoryDetailFragment.bundle(itemBundle.remoteId)
     }
+    DetailPage.IC_OCR -> CounterPhotoFragment().apply { arguments = CounterPhotoFragment.bundle(itemBundle) }
   }
 }
 
@@ -144,7 +146,8 @@ enum class DetailPage(val item: DetailBottomItem) {
 
   // IC
   IC_GENERAL(DetailBottomItem.GENERAL),
-  IC_HISTORY(DetailBottomItem.METRICS)
+  IC_HISTORY(DetailBottomItem.METRICS),
+  IC_OCR(DetailBottomItem.OCR)
 }
 
 enum class DetailBottomItem(val menuId: Int, @DrawableRes val iconRes: Int, @StringRes val stringRes: Int) {
@@ -154,5 +157,6 @@ enum class DetailBottomItem(val menuId: Int, @DrawableRes val iconRes: Int, @Str
   HISTORY(R.id.bottom_item_history, R.drawable.ic_history, R.string.details_history),
   METRICS(R.id.bottom_item_metrics, R.drawable.ic_metrics, R.string.details_metrics),
   SETTINGS(R.id.bottom_item_settings, R.drawable.ic_settings, R.string.settings),
-  LIST(R.id.bottom_item_list, R.drawable.list, R.string.details_list)
+  LIST(R.id.bottom_item_list, R.drawable.list, R.string.details_list),
+  OCR(R.id.bottom_item_ocr, R.drawable.ic_ocr_photo, R.string.toolbar_ocr)
 }

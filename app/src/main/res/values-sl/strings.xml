@@ -143,8 +143,6 @@
   <string name="hp_calendar_comfort">Udobje</string>
   <string name="hp_cfg_temp_eco">ECO temperatura v načinu AUTO</string>
   <string name="hp_hour">ura</string>
-  <string name="total_cost">Skupni stroški</string>
-  <string name="current_cost">Stroški v tekočem mesecu</string>
   <string name="details_ic_current_consumption">Poraba v tekočem mesecu</string>
   <string name="details_ic_meter_value">Stanje števca</string>
   <string name="minutes">Minute</string>

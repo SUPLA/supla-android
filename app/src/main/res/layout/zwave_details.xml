@@ -16,7 +16,8 @@
     android:layout_marginRight="20dp"
     android:text="@string/device"
     android:textColor="@android:color/white"
-    android:textSize="40sp" />
+    android:textSize="40sp"
+    android:fontFamily="@font/quicksand_light" />
 
   <TextView
     android:id="@+id/tv_details_description"
@@ -28,7 +29,8 @@
     android:layout_marginRight="20dp"
     android:text="@string/zwave_select_node"
     android:textColor="@android:color/white"
-    android:textSize="18sp" />
+    android:textSize="18sp"
+    android:fontFamily="@font/open_sans_regular" />
 
   <LinearLayout
     android:id="@+id/llList"
@@ -45,7 +47,8 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:text="@string/zwave_supla_channel"
-      android:textColor="@android:color/white" />
+      android:textColor="@android:color/white"
+      android:fontFamily="@font/open_sans_regular" />
 
     <TextView
       android:id="@+id/tv_details_channel_text"
@@ -62,7 +65,8 @@
       android:layout_height="wrap_content"
       android:layout_marginTop="6dp"
       android:text="@string/zwave_device"
-      android:textColor="@android:color/white" />
+      android:textColor="@android:color/white"
+      android:fontFamily="@font/open_sans_regular" />
 
     <LinearLayout
       android:layout_width="match_parent"
@@ -256,5 +260,6 @@
     android:background="@drawable/zwave_info_box"
     android:gravity="center"
     android:textColor="@color/zwave_info_label_text"
-    tools:text="Upłunął czas oczekiwania na naciśnięcie przycisku." />
+    tools:text="Upłunął czas oczekiwania na naciśnięcie przycisku."
+    android:fontFamily="@font/open_sans_regular" />
 </RelativeLayout>

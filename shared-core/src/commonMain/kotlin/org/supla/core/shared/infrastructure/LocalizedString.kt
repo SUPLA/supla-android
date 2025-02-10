@@ -33,6 +33,9 @@ sealed interface LocalizedString {
   data class WithResource(val id: Int) : LocalizedString
 
   @HiddenFromObjC
+  data class WithResourceAndValue(val id: Int, val value: Any) : LocalizedString
+
+  @HiddenFromObjC
   data class WithResourceIntStringInt(val id: Int, val arg1: Int, val arg2: LocalizedString, val arg3: Int) : LocalizedString
 
   @HiddenFromObjC

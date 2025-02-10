@@ -21,7 +21,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
-import android.graphics.Typeface;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.View;
@@ -141,10 +140,6 @@ public class ChannelDetailThermostatHP extends DetailLayout
 
     tvTemperature = findViewById(R.id.hpTvTemperature);
 
-    Typeface tfOpenSansRegular = SuplaApp.getApp().getTypefaceOpenSansRegular();
-
-    tvTemperature.setTypeface(tfOpenSansRegular);
-
     btnSettings = findViewById(R.id.hpBtnSettings);
     btnSettings.setOnClickListener(this);
 
@@ -197,17 +192,6 @@ public class ChannelDetailThermostatHP extends DetailLayout
     tvErrorMessage.setVisibility(GONE);
 
     lvChannelList = findViewById(R.id.hpChannelList);
-
-    ((TextView) findViewById(R.id.hpTvCaptionTurbo)).setTypeface(tfOpenSansRegular);
-    ((TextView) findViewById(R.id.hpTvTurbo)).setTypeface(tfOpenSansRegular);
-    ((TextView) findViewById(R.id.hpTvCaptionWaterMax)).setTypeface(tfOpenSansRegular);
-    ((TextView) findViewById(R.id.hpTvWaterMax)).setTypeface(tfOpenSansRegular);
-    ((TextView) findViewById(R.id.hpTvEcoReductionCaption)).setTypeface(tfOpenSansRegular);
-    ((TextView) findViewById(R.id.hpTvEcoReduction)).setTypeface(tfOpenSansRegular);
-    ((TextView) findViewById(R.id.hpTvAutoCaption)).setTypeface(tfOpenSansRegular);
-    ((TextView) findViewById(R.id.hpTvAuto)).setTypeface(tfOpenSansRegular);
-    ((TextView) findViewById(R.id.hpTvEco)).setTypeface(tfOpenSansRegular);
-    ((TextView) findViewById(R.id.hpTvEcoCaption)).setTypeface(tfOpenSansRegular);
 
     cfgItems =
         Arrays.asList(

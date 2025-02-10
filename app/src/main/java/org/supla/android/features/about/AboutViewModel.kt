@@ -19,6 +19,7 @@ package org.supla.android.features.about
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.supla.android.BuildConfig
+import org.supla.android.core.storage.EncryptedPreferences
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
@@ -30,8 +31,12 @@ import javax.inject.Inject
 @HiltViewModel
 class AboutViewModel @Inject constructor(
   private val dateFormatter: DateFormatter,
+  private val encryptedPreferences: EncryptedPreferences,
   suplaSchedulers: SuplaSchedulers
 ) : BaseViewModel<AboutViewModelState, AboutViewEvent>(AboutViewModelState(), suplaSchedulers) {
+
+  private var versionClickCount: Int = 0
+
   override fun onViewCreated() {
     updateState {
       val date = dateFormatter.getFullDateString(Date(BuildConfig.BUILD_TIME)) ?: ""
@@ -39,9 +44,23 @@ class AboutViewModel @Inject constructor(
       it.copy(viewState = it.viewState.copy(buildTime = timeString))
     }
   }
+
+  fun onVersionClick() {
+    if (encryptedPreferences.devModeActive) {
+      sendEvent(AboutViewEvent.NavigateToDeveloperInfoScreen)
+    } else if (versionClickCount < 4) {
+      versionClickCount++
+    } else {
+      sendEvent(AboutViewEvent.ShowDeveloperModeActivated)
+      encryptedPreferences.devModeActive = true
+    }
+  }
 }
 
-sealed class AboutViewEvent : ViewEvent
+sealed class AboutViewEvent : ViewEvent {
+  data object NavigateToDeveloperInfoScreen : AboutViewEvent()
+  data object ShowDeveloperModeActivated : AboutViewEvent()
+}
 
 data class AboutViewModelState(
   val viewState: AboutViewState = AboutViewState()

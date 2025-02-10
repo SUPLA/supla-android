@@ -17,17 +17,20 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import io.reactivex.rxjava3.core.Observable
 import org.supla.android.data.source.local.dao.ChannelValueDao
 import org.supla.android.data.source.local.entity.ChannelValueEntity
+import org.supla.android.usecases.developerinfo.CountProvider
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class ChannelValueRepository @Inject constructor(
   private val channelValueDao: ChannelValueDao
-) {
+) : CountProvider {
 
   fun findByRemoteId(remoteId: Int) = channelValueDao.findByRemoteId(remoteId)
   fun update(entity: ChannelValueEntity) = channelValueDao.update(entity)
   fun insert(entity: ChannelValueEntity) = channelValueDao.insert(entity)
+  override fun count(): Observable<Int> = channelValueDao.count()
 }

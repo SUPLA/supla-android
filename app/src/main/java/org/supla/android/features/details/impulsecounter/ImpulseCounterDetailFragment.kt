@@ -31,17 +31,12 @@ import org.supla.android.features.details.detailbase.standarddetail.DetailPage
 import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
 import org.supla.android.features.details.detailbase.standarddetail.StandardDetailFragment
 import org.supla.android.features.details.impulsecounter.counterphoto.CounterPhotoFragment
-import org.supla.android.navigator.MainNavigator
 import org.supla.android.ui.ToolbarItemsClickHandler
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class ImpulseCounterDetailFragment :
   StandardDetailFragment<ImpulseCounterDetailViewState, ImpulseCounterDetailViewEvent>(R.layout.fragment_standard_detail),
   ToolbarItemsClickHandler {
-
-  @Inject
-  lateinit var navigator: MainNavigator
 
   override val viewModel: ImpulseCounterDetailViewModel by viewModels()
 

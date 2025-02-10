@@ -41,7 +41,8 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/menuitem_iamge_margin"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" 
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/open_sans_regular"
         app:text="@{viewModel.title}"
         />
 

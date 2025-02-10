@@ -42,7 +42,6 @@ open class BaseActivity : AppCompatActivity(), OnSuplaClientMessageListener {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    SuplaApp.getApp().initTypefaceCollection(this)
     setStatusBarColor(R.color.primary_container, false)
   }
 
@@ -164,12 +163,15 @@ open class BaseActivity : AppCompatActivity(), OnSuplaClientMessageListener {
 
   protected open fun onZwaveSetWakeUpTimeResult(result: Int) {}
 
-  protected fun getDbHelper(): DbHelper? {
-    if (dbHelper == null) {
-      dbHelper = DbHelper.getInstance(this)
+  protected fun getDbHelper(): DbHelper {
+    val helper = dbHelper
+    if (helper != null) {
+      return helper
     }
 
-    return dbHelper
+    val instance = DbHelper.getInstance(this)
+    dbHelper = instance
+    return instance
   }
 
   protected fun invalidateDbHelper() {

@@ -17,15 +17,12 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import android.os.Bundle
-import android.view.View
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
-import org.supla.android.R
 import org.supla.android.core.ui.BaseComposeFragment
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
@@ -56,15 +53,10 @@ class CounterPhotoFragment : BaseComposeFragment<CounterPhotoViewModelState, Cou
     }
   }
 
-  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-    super.onViewCreated(view, savedInstanceState)
-    viewModel.observeUpdates(item.remoteId)
-  }
-
   override fun onStart() {
     super.onStart()
-    setToolbarTitle(getString(R.string.counter_photo_toolbar))
     viewModel.loadData(item.remoteId)
+    viewModel.onRefresh()
   }
 
   override fun handleEvents(event: CounterPhotoViewEvent) {

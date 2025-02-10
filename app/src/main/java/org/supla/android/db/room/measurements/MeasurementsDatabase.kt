@@ -20,13 +20,16 @@ package org.supla.android.db.room.measurements
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import org.supla.android.data.source.local.dao.measurements.CurrentLogDao
 import org.supla.android.data.source.local.dao.measurements.ElectricityMeterLogDao
 import org.supla.android.data.source.local.dao.measurements.GeneralPurposeMeasurementLogDao
 import org.supla.android.data.source.local.dao.measurements.GeneralPurposeMeterLogDao
 import org.supla.android.data.source.local.dao.measurements.HumidityLogDao
 import org.supla.android.data.source.local.dao.measurements.ImpulseCounterLogDao
+import org.supla.android.data.source.local.dao.measurements.PowerActiveLogDao
 import org.supla.android.data.source.local.dao.measurements.TemperatureAndHumidityLogDao
 import org.supla.android.data.source.local.dao.measurements.TemperatureLogDao
+import org.supla.android.data.source.local.dao.measurements.VoltageLogDao
 import org.supla.android.data.source.local.entity.measurements.CurrentHistoryLogEntity
 import org.supla.android.data.source.local.entity.measurements.ElectricityMeterLogEntity
 import org.supla.android.data.source.local.entity.measurements.GeneralPurposeMeasurementEntity
@@ -34,6 +37,7 @@ import org.supla.android.data.source.local.entity.measurements.GeneralPurposeMet
 import org.supla.android.data.source.local.entity.measurements.HomePlusThermostatLogEntity
 import org.supla.android.data.source.local.entity.measurements.HumidityLogEntity
 import org.supla.android.data.source.local.entity.measurements.ImpulseCounterLogEntity
+import org.supla.android.data.source.local.entity.measurements.PowerActiveHistoryLogEntity
 import org.supla.android.data.source.local.entity.measurements.TemperatureAndHumidityLogEntity
 import org.supla.android.data.source.local.entity.measurements.TemperatureLogEntity
 import org.supla.android.data.source.local.entity.measurements.VoltageHistoryLogEntity
@@ -50,7 +54,8 @@ import org.supla.android.db.MeasurementsDbHelper
     HomePlusThermostatLogEntity::class,
     VoltageHistoryLogEntity::class,
     CurrentHistoryLogEntity::class,
-    HumidityLogEntity::class
+    HumidityLogEntity::class,
+    PowerActiveHistoryLogEntity::class
   ],
   version = MeasurementsDbHelper.DATABASE_VERSION,
   exportSchema = false,
@@ -70,4 +75,10 @@ abstract class MeasurementsDatabase : RoomDatabase() {
   abstract fun humidityLogDao(): HumidityLogDao
 
   abstract fun impulseCounterLogDao(): ImpulseCounterLogDao
+
+  abstract fun voltageLogDao(): VoltageLogDao
+
+  abstract fun currentLogDao(): CurrentLogDao
+
+  abstract fun powerActiveLogDao(): PowerActiveLogDao
 }

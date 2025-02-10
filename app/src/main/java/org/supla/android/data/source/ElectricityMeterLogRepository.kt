@@ -26,6 +26,7 @@ import org.supla.android.data.source.local.entity.measurements.ElectricityMeterL
 import org.supla.android.data.source.remote.rest.SuplaCloudService
 import org.supla.android.data.source.remote.rest.channel.ElectricityMeasurement
 import org.supla.android.features.measurementsdownload.workers.BaseDownloadLogWorker
+import org.supla.android.usecases.developerinfo.CountProvider
 import retrofit2.Response
 import java.util.Date
 import javax.inject.Inject
@@ -34,10 +35,23 @@ import javax.inject.Singleton
 @Singleton
 class ElectricityMeterLogRepository @Inject constructor(
   private val electricityMeterLogDao: ElectricityMeterLogDao
-) : BaseMeasurementRepository<ElectricityMeasurement, ElectricityMeterLogEntity>() {
+) : BaseMeasurementRepository<ElectricityMeasurement, ElectricityMeterLogEntity>(electricityMeterLogDao), CountProvider {
 
   fun findMeasurements(remoteId: Int, profileId: Long, startDate: Date, endDate: Date) =
     electricityMeterLogDao.findMeasurements(remoteId, profileId, startDate.time, endDate.time)
+
+  fun findMeasurementsGrouped(remoteId: Int, profileId: Long, startDate: Date, endDate: Date, groupingStart: Int, groupingLength: Int) =
+    electricityMeterLogDao.findMeasurementsGrouped(remoteId, profileId, startDate.time, endDate.time, groupingStart, groupingLength)
+
+  fun findMeasurementsHourlyGrouped(
+    remoteId: Int,
+    profileId: Long,
+    startDate: Date,
+    endDate: Date,
+    groupingStart: Int,
+    groupingLength: Int
+  ) =
+    electricityMeterLogDao.findMeasurementsHourlyGrouped(remoteId, profileId, startDate.time, endDate.time, groupingStart, groupingLength)
 
   override fun getInitialMeasurements(cloudService: SuplaCloudService, remoteId: Int): Response<List<ElectricityMeasurement>> =
     cloudService.getInitialElectricityMeasurements(remoteId).execute()
@@ -71,10 +85,13 @@ class ElectricityMeterLogRepository @Inject constructor(
   override fun insert(entries: List<ElectricityMeterLogEntity>): Completable =
     electricityMeterLogDao.insert(entries)
 
-  override fun map(entry: ElectricityMeasurement, remoteId: Int, profileId: Long): ElectricityMeterLogEntity =
+  override fun map(entry: ElectricityMeasurement, groupingString: String, remoteId: Int, profileId: Long): ElectricityMeterLogEntity =
     ElectricityMeterLogEntity.create(
       entry = entry,
+      groupingString = groupingString,
       channelId = remoteId,
       profileId = profileId
     )
+
+  override fun count(): Observable<Int> = electricityMeterLogDao.count()
 }

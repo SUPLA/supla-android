@@ -46,4 +46,7 @@ interface NotificationDao {
 
   @Query("DELETE FROM $TABLE_NAME WHERE $COLUMN_DATE < :olderThan")
   fun deleteAll(olderThan: LocalDateTime): Completable
+
+  @Query("SELECT COUNT($COLUMN_ID) FROM $TABLE_NAME")
+  fun count(): Observable<Int>
 }

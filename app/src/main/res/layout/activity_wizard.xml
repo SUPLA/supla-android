@@ -51,7 +51,8 @@
       android:stateListAnimator="@null"
       android:text="@string/next"
       android:textAllCaps="false"
-      android:textColor="@color/primary" />
+      android:textColor="@color/primary"
+      android:fontFamily="@font/quicksand_regular" />
 
     <androidx.appcompat.widget.AppCompatButton
       android:id="@+id/wizard_next_right_part"

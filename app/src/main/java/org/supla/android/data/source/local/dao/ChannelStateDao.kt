@@ -23,8 +23,10 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
+import io.reactivex.rxjava3.core.Observable
 import org.supla.android.data.source.local.entity.ChannelStateEntity
 import org.supla.android.data.source.local.entity.ChannelStateEntity.Companion.ALL_COLUMNS
+import org.supla.android.data.source.local.entity.ChannelStateEntity.Companion.COLUMN_PROFILE_ID
 import org.supla.android.data.source.local.entity.ChannelStateEntity.Companion.TABLE_NAME
 import org.supla.android.data.source.local.entity.ProfileEntity.Companion.SUBQUERY_ACTIVE
 
@@ -34,11 +36,14 @@ interface ChannelStateDao {
     """
       SELECT $ALL_COLUMNS FROM $TABLE_NAME
       WHERE ${ChannelStateEntity.COLUMN_CHANNEL_ID} = :channelId
-        AND ${ChannelStateEntity.COLUMN_PROFILE_ID} = $SUBQUERY_ACTIVE
+        AND $COLUMN_PROFILE_ID = $SUBQUERY_ACTIVE
     """
   )
   fun getState(channelId: Int): Maybe<ChannelStateEntity>
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   fun insertOrUpdate(channelState: ChannelStateEntity): Completable
+
+  @Query("SELECT COUNT($COLUMN_PROFILE_ID) FROM $TABLE_NAME")
+  fun count(): Observable<Int>
 }

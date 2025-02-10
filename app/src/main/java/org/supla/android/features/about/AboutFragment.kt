@@ -19,6 +19,7 @@ package org.supla.android.features.about
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.fragment.app.viewModels
@@ -47,13 +48,19 @@ class AboutFragment : BaseFragment<AboutViewModelState, AboutViewEvent>(R.layout
       SuplaTheme {
         AboutView(
           viewState = modelState.viewState,
-          onSuplaUrlClick = navigator::navigateToSuplaOrgExternal
+          onSuplaUrlClick = navigator::navigateToSuplaOrgExternal,
+          onVersionClick = viewModel::onVersionClick
         )
       }
     }
   }
 
-  override fun handleEvents(event: AboutViewEvent) {}
+  override fun handleEvents(event: AboutViewEvent) {
+    when (event) {
+      AboutViewEvent.NavigateToDeveloperInfoScreen -> navigator.navigateTo(R.id.developer_info_fragment)
+      AboutViewEvent.ShowDeveloperModeActivated -> Toast.makeText(context, R.string.developer_info_activated, Toast.LENGTH_SHORT).show()
+    }
+  }
 
   override fun handleViewState(state: AboutViewModelState) {}
 }

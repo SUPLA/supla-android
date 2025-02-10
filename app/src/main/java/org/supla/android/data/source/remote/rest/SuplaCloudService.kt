@@ -26,12 +26,16 @@ import org.supla.android.core.networking.suplacloud.SuplaCloudConfigHolder
 import org.supla.android.data.source.remote.rest.channel.ElectricityMeasurement
 import org.supla.android.data.source.remote.rest.channel.GeneralPurposeMeasurement
 import org.supla.android.data.source.remote.rest.channel.GeneralPurposeMeter
+import org.supla.android.data.source.remote.rest.channel.HistoryMeasurement
+import org.supla.android.data.source.remote.rest.channel.HistoryMeasurementType
 import org.supla.android.data.source.remote.rest.channel.HumidityMeasurement
 import org.supla.android.data.source.remote.rest.channel.ImpulseCounterMeasurement
 import org.supla.android.data.source.remote.rest.channel.TemperatureAndHumidityMeasurement
 import org.supla.android.data.source.remote.rest.channel.TemperatureMeasurement
 import org.supla.android.di.GSON_FOR_API
-import org.supla.core.shared.data.model.rest.ImpulseCounterPhoto
+import org.supla.core.shared.data.model.rest.ImpulseCounterPhotoDto
+import org.supla.core.shared.data.model.rest.channel.DefaultChannelDto
+import org.supla.core.shared.data.model.rest.channel.ElectricityChannelDto
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
@@ -43,7 +47,7 @@ import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
 
-private const val API_VERSION = "2.2.0"
+private const val API_VERSION = "3"
 
 interface SuplaCloudService {
   @GET("/api/$API_VERSION/channels/{remoteId}/measurement-logs")
@@ -167,10 +171,63 @@ interface SuplaCloudService {
     @Query("offset") offset: Int = 0
   ): Call<List<ImpulseCounterMeasurement>>
 
-  @GET("/api/v3/integrations/ocr/{remoteId}/latest")
-  fun getImpulseCounterPhoto(
+  @GET("/api/$API_VERSION/channels/{remoteId}/measurement-logs")
+  fun getHistoryMeasurements(
+    @Path("remoteId") remoteId: Int,
+    @Query("logsType") logsType: String,
+    @Query("order") order: String = "ASC",
+    @Query("limit") limit: Int? = null,
+    @Query("offset") offset: Int? = null,
+    @Query("afterTimestamp") afterTimestamp: Long? = null,
+    @Query("beforeTimestamp") beforeTimestamp: Long? = null
+  ): Observable<List<HistoryMeasurement>>
+
+  fun getHistoryMeasurements(
+    remoteId: Int,
+    afterTimestamp: Long?,
+    measurementType: HistoryMeasurementType
+  ): Observable<List<HistoryMeasurement>> =
+    getHistoryMeasurements(remoteId, afterTimestamp = afterTimestamp, logsType = measurementType.type)
+
+  @GET("/api/$API_VERSION/channels/{remoteId}/measurement-logs")
+  fun getInitialHistoryMeasurements(
+    @Path("remoteId") remoteId: Int,
+    @Query("order") order: String = "ASC",
+    @Query("limit") limit: Int = 2,
+    @Query("offset") offset: Int = 0,
+    @Query("logsType") logsType: String = "currentHistory"
+  ): Call<List<HistoryMeasurement>>
+
+  fun getInitialHistoryMeasurements(
+    remoteId: Int,
+    measurementType: HistoryMeasurementType
+  ): Call<List<HistoryMeasurement>> =
+    getInitialHistoryMeasurements(remoteId, limit = 2, offset = 0, logsType = measurementType.type)
+
+  @GET("/api/$API_VERSION/integrations/ocr/{remoteId}/latest")
+  fun getLatestImpulseCounterPhotoOld(
     @Path("remoteId") remoteId: Int
-  ): Observable<ImpulseCounterPhoto>
+  ): Observable<ImpulseCounterPhotoDto>
+
+  @GET("/api/$API_VERSION/integrations/ocr/{remoteId}/images")
+  fun getImpulseCounterPhotos(
+    @Path("remoteId") remoteId: Int
+  ): Observable<List<ImpulseCounterPhotoDto>>
+
+  @GET("/api/$API_VERSION/integrations/ocr/{remoteId}/images/latest")
+  fun getLatestImpulseCounterPhoto(
+    @Path("remoteId") remoteId: Int
+  ): Observable<ImpulseCounterPhotoDto>
+
+  @GET("/api/$API_VERSION/channels/{remoteId}/")
+  fun getChannel(
+    @Path("remoteId") remoteId: Int
+  ): Observable<DefaultChannelDto>
+
+  @GET("/api/$API_VERSION/channels/{remoteId}/")
+  fun getElectricityMeterChannel(
+    @Path("remoteId") remoteId: Int
+  ): Observable<ElectricityChannelDto>
 
   @Singleton
   class Provider @Inject constructor(

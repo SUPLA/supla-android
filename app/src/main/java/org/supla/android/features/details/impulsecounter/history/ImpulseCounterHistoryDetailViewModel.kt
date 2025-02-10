@@ -32,11 +32,11 @@ import org.supla.android.data.model.chart.DateRange
 import org.supla.android.data.model.chart.datatype.BarChartData
 import org.supla.android.data.model.chart.datatype.ChartData
 import org.supla.android.data.model.chart.datatype.PieChartData
-import org.supla.android.data.model.chart.style.ChartStyle
 import org.supla.android.data.model.chart.style.ImpulseCounterChartStyle
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.events.DownloadEventsManager
 import org.supla.android.features.details.detailbase.history.BaseHistoryDetailViewModel
+import org.supla.android.features.details.detailbase.history.ui.ChartDataSelectionDialogState
 import org.supla.android.profile.ProfileManager
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.DeleteChannelMeasurementsUseCase
@@ -44,6 +44,8 @@ import org.supla.android.usecases.channel.DownloadChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.LoadChannelMeasurementsDataRangeUseCase
 import org.supla.android.usecases.channel.LoadChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
+import org.supla.android.usecases.migration.GroupingStringMigrationUseCase
+import org.supla.core.shared.data.model.rest.channel.ChannelDto
 import javax.inject.Inject
 
 @HiltViewModel
@@ -54,6 +56,7 @@ class ImpulseCounterHistoryDetailViewModel @Inject constructor(
   private val downloadEventsManager: DownloadEventsManager,
   deleteChannelMeasurementsUseCase: DeleteChannelMeasurementsUseCase,
   readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
+  groupingStringMigrationUseCase: GroupingStringMigrationUseCase,
   userStateHolder: UserStateHolder,
   profileManager: ProfileManager,
   schedulers: SuplaSchedulers,
@@ -61,15 +64,19 @@ class ImpulseCounterHistoryDetailViewModel @Inject constructor(
 ) : BaseHistoryDetailViewModel(
   deleteChannelMeasurementsUseCase,
   readChannelWithChildrenUseCase,
+  groupingStringMigrationUseCase,
   userStateHolder,
   profileManager,
   dateProvider,
   schedulers
 ) {
 
-  override fun chartStyle(): ChartStyle = ImpulseCounterChartStyle
-
   override fun allAggregations() = ChartDataAggregation.entries
+
+  override fun provideSelectionDialogState(
+    channelChartSets: ChannelChartSets,
+    customFilters: ChartDataSpec.Filters?
+  ): ChartDataSelectionDialogState? = null
 
   override fun measurementsMaybe(
     remoteId: Int,
@@ -82,9 +89,9 @@ class ImpulseCounterHistoryDetailViewModel @Inject constructor(
       loadChannelMeasurementsDataRangeUseCase(remoteId, profileId)
     ) { first, second -> Pair(getChartData(spec, chartRange, first), second) }
 
-  override fun handleData(channelWithChildren: ChannelWithChildren, chartState: ChartState) {
+  override fun handleData(channelWithChildren: ChannelWithChildren, channelDto: ChannelDto, chartState: ChartState) {
     val channel = channelWithChildren.channel
-    updateState { it.copy(profileId = channel.profileId, channelFunction = channel.function.value) }
+    updateState { it.copy(profileId = channel.profileId, channelFunction = channel.function.value, chartStyle = ImpulseCounterChartStyle) }
 
     restoreRange(chartState)
     configureDownloadObserver(channel.remoteId)

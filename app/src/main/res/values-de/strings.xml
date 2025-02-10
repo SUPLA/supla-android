@@ -135,8 +135,6 @@
   <string name="hp_calendar_comfort">Komfort</string>
   <string name="hp_cfg_temp_eco">ECO-Temperatur im AUTO-Modus</string>
   <string name="hp_hour">std</string>
-  <string name="total_cost">Gesamtkosten</string>
-  <string name="current_cost">Die Kosten im laufenden Monat</string>
   <string name="details_ic_current_consumption">Verbrauch im laufenden Monat</string>
   <string name="details_ic_meter_value">Zählerstand</string>
   <string name="minutes">Minuten</string>
@@ -665,7 +663,6 @@
   <string name="channel_btn_expand">Ausklappen</string>
   <string name="settings_battery_level_warning">Batteriestandswarnung</string>
   <string name="channel_battery_level">Batteriefüllstand (%1$d - %2$s): %3$d%%</string>
-  <string name="counter_photo_toolbar">Bilder von Zähler</string>
   <string name="counter_photo_counter_area">Zählerbereich</string>
   <string name="counter_photo_original_photo">Originalbild</string>
   <string name="counter_photo_settings">Cloudkonfiguration</string>
@@ -724,4 +721,10 @@
   <string name="details_em_current_phase_sequence">Stromphasenfolge</string>
   <string name="em_electric_grid_parameters">Stromnetzparameter</string>
   <string name="channel_caption_container">Behälter</string>
+  <string name="developer_info_database_section">Datenbankdetails</string>
+  <string name="developer_info_activated">Developer mode wurde aktiviert</string>
+  <string name="developer_info_title">Anwendungsdaten</string>
+  <string name="counter_photo_photos">Fotohistorie</string>
+  <string name="counter_photo_loading_error">Das Laden ist fehlgeschlagen.</string>
+  <string name="counter_photo_error">Fehler</string>
 </resources>

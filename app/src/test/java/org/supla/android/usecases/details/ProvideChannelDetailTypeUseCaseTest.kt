@@ -226,22 +226,42 @@ class ProvideChannelDetailTypeUseCaseTest {
 
   @Test
   fun `should provide detail for electricity IC`() {
-    testDetailType(SuplaFunction.IC_ELECTRICITY_METER, IcDetailType(listOf(DetailPage.IC_GENERAL, DetailPage.IC_HISTORY)))
+    testDetailType(
+      SuplaFunction.IC_ELECTRICITY_METER,
+      IcDetailType(listOf(DetailPage.IC_GENERAL, DetailPage.IC_HISTORY))
+    ) { channel ->
+      every { channel.flags } returns 0
+    }
   }
 
   @Test
   fun `should provide detail for gas IC`() {
-    testDetailType(SuplaFunction.IC_GAS_METER, IcDetailType(listOf(DetailPage.IC_GENERAL, DetailPage.IC_HISTORY)))
+    testDetailType(
+      SuplaFunction.IC_GAS_METER,
+      IcDetailType(listOf(DetailPage.IC_GENERAL, DetailPage.IC_HISTORY, DetailPage.IC_OCR))
+    ) { channel ->
+      every { channel.flags } returns SuplaChannelFlag.OCR.rawValue
+    }
   }
 
   @Test
   fun `should provide detail for water IC`() {
-    testDetailType(SuplaFunction.IC_WATER_METER, IcDetailType(listOf(DetailPage.IC_GENERAL, DetailPage.IC_HISTORY)))
+    testDetailType(
+      SuplaFunction.IC_WATER_METER,
+      IcDetailType(listOf(DetailPage.IC_GENERAL, DetailPage.IC_HISTORY))
+    ) { channel ->
+      every { channel.flags } returns 0
+    }
   }
 
   @Test
   fun `should provide detail for heat IC`() {
-    testDetailType(SuplaFunction.IC_HEAT_METER, IcDetailType(listOf(DetailPage.IC_GENERAL, DetailPage.IC_HISTORY)))
+    testDetailType(
+      SuplaFunction.IC_HEAT_METER,
+      IcDetailType(listOf(DetailPage.IC_GENERAL, DetailPage.IC_HISTORY))
+    ) { channel ->
+      every { channel.flags } returns 0
+    }
   }
 
   @Test

@@ -31,15 +31,15 @@ import java.util.Date
   tableName = TABLE_NAME,
   indices = [
     Index(
-      value = [ COLUMN_CHANNEL_ID ],
+      value = [COLUMN_CHANNEL_ID],
       name = "${TABLE_NAME}_${COLUMN_CHANNEL_ID}_index"
     ),
     Index(
-      value = [ COLUMN_TIMESTAMP ],
+      value = [COLUMN_TIMESTAMP],
       name = "${TABLE_NAME}_${COLUMN_TIMESTAMP}_index"
     ),
     Index(
-      value = [ COLUMN_CHANNEL_ID, COLUMN_TIMESTAMP, COLUMN_PROFILE_ID ],
+      value = [COLUMN_CHANNEL_ID, COLUMN_TIMESTAMP, COLUMN_PROFILE_ID],
       name = "${TABLE_NAME}_unique_index",
       unique = true
     )
@@ -53,6 +53,7 @@ data class TemperatureAndHumidityLogEntity(
   @ColumnInfo(name = COLUMN_TIMESTAMP) override val date: Date,
   @ColumnInfo(name = COLUMN_TEMPERATURE) override val temperature: Float?,
   @ColumnInfo(name = COLUMN_HUMIDITY) override val humidity: Float?,
+  @ColumnInfo(name = COLUMN_GROUPING_STRING) override val groupingString: String,
   @ColumnInfo(name = COLUMN_PROFILE_ID) val profileId: Long
 ) : BaseTemperatureEntity, BaseHumidityEntity {
 
@@ -63,6 +64,7 @@ data class TemperatureAndHumidityLogEntity(
     const val COLUMN_TIMESTAMP = "date"
     const val COLUMN_TEMPERATURE = "temperature"
     const val COLUMN_HUMIDITY = "humidity"
+    const val COLUMN_GROUPING_STRING = "grouping_string"
     const val COLUMN_PROFILE_ID = "profileid"
 
     val SQL = arrayOf(
@@ -74,6 +76,7 @@ data class TemperatureAndHumidityLogEntity(
           $COLUMN_TIMESTAMP INTEGER NOT NULL,
           $COLUMN_TEMPERATURE REAL NULL,
           $COLUMN_HUMIDITY REAL NULL,
+          $COLUMN_GROUPING_STRING TEXT NOT NULL,
           $COLUMN_PROFILE_ID INTEGER NOT NULL
         );
       """.trimIndent(),
@@ -85,6 +88,8 @@ data class TemperatureAndHumidityLogEntity(
       """.trimIndent()
     )
 
-    const val ALL_COLUMNS = "$COLUMN_ID, $COLUMN_CHANNEL_ID, $COLUMN_TIMESTAMP, $COLUMN_TEMPERATURE, $COLUMN_HUMIDITY, $COLUMN_PROFILE_ID"
+    const val ALL_COLUMNS =
+      "$COLUMN_ID, $COLUMN_CHANNEL_ID, $COLUMN_TIMESTAMP, $COLUMN_TEMPERATURE, " +
+        "$COLUMN_HUMIDITY, $COLUMN_GROUPING_STRING, $COLUMN_PROFILE_ID"
   }
 }

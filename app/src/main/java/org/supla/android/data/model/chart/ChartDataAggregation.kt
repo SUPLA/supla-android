@@ -17,72 +17,71 @@ package org.supla.android.data.model.chart
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.annotation.SuppressLint
 import android.content.Context
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import org.supla.android.R
+import org.supla.android.data.source.local.entity.measurements.BaseLogEntity
 import org.supla.android.extensions.dayNoon
 import org.supla.android.extensions.inHalfOfHour
 import org.supla.android.extensions.monthHalf
 import org.supla.android.extensions.toTimestamp
 import org.supla.android.extensions.yearHalf
 import org.supla.android.ui.views.SpinnerItem
-import java.text.SimpleDateFormat
 import java.util.Date
 
 enum class ChartDataAggregation(
   @StringRes val stringRes: Int,
   val timeInSec: Long,
-  val aggregator: (Date, Formatter) -> Long,
+  val aggregator: (BaseLogEntity) -> Long,
   val groupTimeProvider: (Date) -> Long // In seconds
 ) : SpinnerItem {
   MINUTES(
     R.string.minutes,
     600,
-    { date, formatter -> date.getAggregationString(formatter).substring(0, 12).toLong() },
+    { entity -> entity.groupingString.substring(0, 12).toLong() },
     { it.toTimestamp() }
   ),
   HOURS(
     R.string.hours,
     3600,
-    { date, formatter -> date.getAggregationString(formatter).substring(0, 10).toLong() },
+    { entity -> entity.groupingString.substring(0, 10).toLong() },
     { it.inHalfOfHour().toTimestamp() }
   ),
   DAYS(
     R.string.days,
     86400,
-    { date, formatter -> date.getAggregationString(formatter).substring(0, 8).toLong() },
+    { entity -> entity.groupingString.substring(0, 8).toLong() },
     { it.dayNoon().toTimestamp() }
   ),
   MONTHS(
     R.string.months,
-    2592000,
-    { date, formatter -> date.getAggregationString(formatter).substring(0, 6).toLong() },
+    2628000,
+    { entity -> entity.groupingString.substring(0, 6).toLong() },
     { it.monthHalf().toTimestamp() }
   ),
   YEARS(
     R.string.years,
     31536000,
-    { date, formatter -> date.getAggregationString(formatter).substring(0, 4).toLong() },
+    { entity -> entity.groupingString.substring(0, 4).toLong() },
     { it.yearHalf().toTimestamp() }
   ),
   RANK_HOURS(
     R.string.ranking_of_hours,
     3600,
-    { date, formatter -> date.getAggregationString(formatter).substring(8, 10).toLong() },
+    { entity -> entity.groupingString.substring(8, 10).toLong() },
     { it.inHalfOfHour().toTimestamp() }
   ),
   RANK_WEEKDAYS(
     R.string.ranking_of_weekdays,
     86400,
-    { date, formatter -> date.getAggregationString(formatter).substring(12, 13).toLong() },
+    { entity -> entity.groupingString.substring(12, 13).toLong() },
     { it.dayNoon().toTimestamp() }
   ),
   RANK_MONTHS(
     R.string.ranking_of_months,
     2592000,
-    { date, formatter -> date.getAggregationString(formatter).substring(4, 6).toLong() },
+    { entity -> entity.groupingString.substring(4, 6).toLong() },
     { it.monthHalf().toTimestamp() }
   );
 
@@ -93,6 +92,30 @@ enum class ChartDataAggregation(
     get() = when (this) {
       RANK_HOURS, RANK_WEEKDAYS, RANK_MONTHS -> true
       else -> false
+    }
+
+  val groupingStringStartPosition: Int
+    get() = when (this) {
+      MINUTES -> 1
+      HOURS -> 1
+      DAYS -> 1
+      MONTHS -> 1
+      YEARS -> 1
+      RANK_HOURS -> 9
+      RANK_WEEKDAYS -> 13
+      RANK_MONTHS -> 5
+    }
+
+  val groupingStringLength: Int
+    get() = when (this) {
+      MINUTES -> 12
+      HOURS -> 10
+      DAYS -> 8
+      MONTHS -> 6
+      YEARS -> 4
+      RANK_HOURS -> 2
+      RANK_WEEKDAYS -> 1
+      RANK_MONTHS -> 2
     }
 
   fun colors(context: Context): List<Int>? =
@@ -110,9 +133,6 @@ enum class ChartDataAggregation(
       timeInSec >= min.timeInSec && timeInSec <= max.timeInSec
     }
 
-  @SuppressLint("SimpleDateFormat")
-  class Formatter : SimpleDateFormat("yyyyMMddHHmmu")
-
   companion object {
     val defaultEntries = listOf(
       MINUTES,
@@ -122,10 +142,6 @@ enum class ChartDataAggregation(
       YEARS
     )
   }
-}
-
-private fun Date.getAggregationString(formatter: ChartDataAggregation.Formatter): String {
-  return formatter.format(this)
 }
 
 private object RankingColors {

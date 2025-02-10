@@ -31,6 +31,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import androidx.core.content.res.ResourcesCompat;
 import dagger.hilt.android.AndroidEntryPoint;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.Disposable;
@@ -39,7 +40,6 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import org.supla.android.Preferences;
 import org.supla.android.R;
-import org.supla.android.SuplaApp;
 import org.supla.android.SuplaChannelStatus;
 import org.supla.android.SuplaChannelStatus.ShapeType;
 import org.supla.android.data.source.local.entity.SceneEntity;
@@ -247,11 +247,11 @@ public class SceneLayout extends LinearLayout implements SlideableItem, Swapable
     TextView tv = new TextView(context);
     tv.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 
-    tv.setTypeface(SuplaApp.getApp().getTypefaceQuicksandRegular());
+    tv.setTypeface(ResourcesCompat.getFont(context, R.font.quicksand_regular));
 
     tv.setTextSize(
         TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.channel_btn_text_size));
-    tv.setTextColor(getResources().getColor(R.color.on_primary));
+    tv.setTextColor(ResourcesCompat.getColor(context.getResources(), R.color.on_primary, null));
     tv.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
 
     return tv;
@@ -465,9 +465,9 @@ public class SceneLayout extends LinearLayout implements SlideableItem, Swapable
       if (heightScaleFactor > 1.0) {
         textSize *= heightScaleFactor;
       }
-      setTypeface(SuplaApp.getApp().getTypefaceOpenSansBold());
+      setTypeface(ResourcesCompat.getFont(context, R.font.open_sans_bold));
       setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
-      setTextColor(getResources().getColor(R.color.on_background));
+      setTextColor(ResourcesCompat.getColor(context.getResources(), R.color.on_background, null));
       setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL);
 
       RelativeLayout.LayoutParams lp =

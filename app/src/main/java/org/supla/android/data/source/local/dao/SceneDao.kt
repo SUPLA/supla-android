@@ -22,6 +22,7 @@ import androidx.room.Query
 import androidx.room.Update
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.ProfileEntity
@@ -97,4 +98,7 @@ interface SceneDao {
 
   @Update
   fun update(scenes: List<SceneEntity>): Completable
+
+  @Query("SELECT COUNT($COLUMN_ID) FROM $TABLE_NAME")
+  fun count(): Observable<Int>
 }

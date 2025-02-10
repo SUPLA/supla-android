@@ -21,7 +21,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.res.Resources;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.style.ForegroundColorSpan;
@@ -47,6 +46,9 @@ import org.supla.android.lib.SuplaConst;
 import org.supla.android.lib.ZWaveNode;
 import org.supla.android.lib.ZWaveWakeUpSettings;
 
+/**
+ * @noinspection SequencedCollectionMethodCanBeUsed
+ */
 @AndroidEntryPoint
 public class ZWaveConfigurationWizardActivity extends WizardActivity
     implements AdapterView.OnItemSelectedListener {
@@ -123,8 +125,6 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity
     mChannelBasicCfgToFetch = new ArrayList<>();
     mDevicesToRestart = new ArrayList<>();
 
-    Typeface typeface = SuplaApp.getApp().getTypefaceQuicksandRegular();
-
     registerMessageHandler();
     addStepPage(R.layout.zwave_welcome, PAGE_WELCOME);
     addStepPage(R.layout.zwave_error, PAGE_ZWAVE_ERROR);
@@ -133,9 +133,6 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity
     addStepPage(R.layout.zwave_before_search, PAGE_BEFORE_SEARCH);
     addStepPage(R.layout.zwave_details, PAGE_ZWAVE_DETAILS);
     addStepPage(R.layout.zwave_done, PAGE_ZWAVE_DONE);
-
-    TextView label = findViewById(R.id.tv_select_channel_description);
-    label.setTypeface(typeface);
 
     mTvErrorMessage = findViewById(R.id.tv_error_txt);
     mTvErrorIcon = findViewById(R.id.tv_error_icon);
@@ -173,31 +170,6 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity
     mDeviceListSpinner.setOnItemSelectedListener(this);
     mChannelListSpinner.setOnItemSelectedListener(this);
     mFunctionListSpinner.setOnItemSelectedListener(this);
-
-    Typeface quicksandLight = SuplaApp.getApp().getTypefaceQuicksandLight();
-    Typeface openSansRegular = SuplaApp.getApp().getTypefaceOpenSansRegular();
-
-    ((TextView) findViewById(R.id.tv_welcome_title)).setTypeface(quicksandLight);
-    ((TextView) findViewById(R.id.tv_welcome_description)).setTypeface(openSansRegular);
-    ((TextView) findViewById(R.id.tv_select_channel_title)).setTypeface(quicksandLight);
-    ((TextView) findViewById(R.id.tv_select_channel_description)).setTypeface(openSansRegular);
-    ((TextView) findViewById(R.id.tv_device_list_title)).setTypeface(openSansRegular);
-    ((TextView) findViewById(R.id.tv_channel_list_title)).setTypeface(openSansRegular);
-    ((TextView) findViewById(R.id.tv_before_search_title)).setTypeface(quicksandLight);
-    ((TextView) findViewById(R.id.tv_before_seatch_msg)).setTypeface(openSansRegular);
-    ((TextView) findViewById(R.id.tv_channel_detail_title)).setTypeface(quicksandLight);
-    ((TextView) findViewById(R.id.tv_channel_detail_description)).setTypeface(openSansRegular);
-    ((TextView) findViewById(R.id.tv_error_txt)).setTypeface(openSansRegular);
-    ((TextView) findViewById(R.id.tv_error_txt_common)).setTypeface(openSansRegular);
-    ((TextView) findViewById(R.id.tv_done_txt)).setTypeface(openSansRegular);
-    ((TextView) findViewById(R.id.tv_wake_up_txt)).setTypeface(openSansRegular);
-    ((TextView) findViewById(R.id.tv_details_title)).setTypeface(quicksandLight);
-    ((TextView) findViewById(R.id.tv_details_description)).setTypeface(openSansRegular);
-    ((TextView) findViewById(R.id.tv_details_channel_title)).setTypeface(openSansRegular);
-    ((TextView) findViewById(R.id.tv_details_device_title)).setTypeface(openSansRegular);
-
-    mTvWakeUpInfo.setTypeface(openSansRegular);
-    mTvInfo.setTypeface(openSansRegular);
   }
 
   private String getChannelName(Channel channel) {
@@ -489,14 +461,11 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity
   }
 
   protected int getNextButtonTextForThePage(int pageId) {
-    switch (pageId) {
-      case PAGE_ZWAVE_ERROR:
-        return R.string.exit;
-      case PAGE_ZWAVE_DONE:
-        return R.string.ok;
-    }
-
-    return R.string.next;
+    return switch (pageId) {
+      case PAGE_ZWAVE_ERROR -> R.string.exit;
+      case PAGE_ZWAVE_DONE -> R.string.ok;
+      default -> R.string.next;
+    };
   }
 
   private void updateSelectedChannel() {
@@ -595,7 +564,8 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity
                   mTvInfo.setText(msg.toString(), TextView.BufferType.SPANNABLE);
                   Spannable s = (Spannable) mTvInfo.getText();
                   s.setSpan(
-                      new ForegroundColorSpan(res.getColor(R.color.zwave_info_label_bg)),
+                      new ForegroundColorSpan(
+                          ResourcesCompat.getColor(res, R.color.zwave_info_label_bg, null)),
                       msg.length() - (max - mWaitMessagePreloaderDotCount),
                       msg.length(),
                       Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

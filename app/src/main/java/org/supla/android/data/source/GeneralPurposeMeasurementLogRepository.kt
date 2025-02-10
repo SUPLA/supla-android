@@ -26,6 +26,7 @@ import org.supla.android.data.source.local.entity.measurements.GeneralPurposeMea
 import org.supla.android.data.source.remote.rest.SuplaCloudService
 import org.supla.android.data.source.remote.rest.channel.GeneralPurposeMeasurement
 import org.supla.android.features.measurementsdownload.workers.BaseDownloadLogWorker
+import org.supla.android.usecases.developerinfo.CountProvider
 import retrofit2.Response
 import java.util.Date
 import javax.inject.Inject
@@ -34,7 +35,7 @@ import javax.inject.Singleton
 @Singleton
 class GeneralPurposeMeasurementLogRepository @Inject constructor(
   private val generalPurposeMeasurementLogDao: GeneralPurposeMeasurementLogDao
-) : BaseMeasurementRepository<GeneralPurposeMeasurement, GeneralPurposeMeasurementEntity>() {
+) : BaseMeasurementRepository<GeneralPurposeMeasurement, GeneralPurposeMeasurementEntity>(generalPurposeMeasurementLogDao), CountProvider {
 
   fun findMeasurements(remoteId: Int, profileId: Long, startDate: Date, endDate: Date): Observable<List<GeneralPurposeMeasurementEntity>> =
     generalPurposeMeasurementLogDao.findMeasurements(remoteId, profileId, startDate.time, endDate.time)
@@ -71,11 +72,17 @@ class GeneralPurposeMeasurementLogRepository @Inject constructor(
   override fun insert(entries: List<GeneralPurposeMeasurementEntity>): Completable =
     generalPurposeMeasurementLogDao.insert(entries)
 
-  override fun map(entry: GeneralPurposeMeasurement, remoteId: Int, profileId: Long): GeneralPurposeMeasurementEntity =
+  override fun map(
+    entry: GeneralPurposeMeasurement,
+    groupingString: String,
+    remoteId: Int,
+    profileId: Long
+  ): GeneralPurposeMeasurementEntity =
     GeneralPurposeMeasurementEntity(
       id = null,
       channelId = remoteId,
       date = entry.date,
+      groupingString = groupingString,
       valueAverage = entry.average,
       valueMin = entry.min,
       valueMax = entry.max,
@@ -83,4 +90,6 @@ class GeneralPurposeMeasurementLogRepository @Inject constructor(
       valueClose = entry.close,
       profileId = profileId
     )
+
+  override fun count(): Observable<Int> = generalPurposeMeasurementLogDao.count()
 }

@@ -30,7 +30,8 @@
         android:singleLine="true"
         android:text="@string/menubar_title"
         android:textAppearance="@style/MenuBarTitle"
-        android:textSize="50sp" />
+        android:textSize="50sp"
+        android:fontFamily="@font/quicksand_regular"/>
 
     <TextView
         android:id="@+id/menubar_detail_title"
@@ -49,7 +50,8 @@
         android:text=""
         android:textAppearance="@style/MenuBarTitle"
         android:textSize="30sp"
-        android:visibility="invisible" />
+        android:visibility="invisible"
+        android:fontFamily="@font/open_sans_regular" />
 
 
     <LinearLayout

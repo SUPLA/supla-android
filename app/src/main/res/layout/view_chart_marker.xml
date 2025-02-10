@@ -17,30 +17,43 @@
     android:textSize="12sp"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent"
-    tools:text="09.08.2024 16:00"/>
+    tools:text="09.08.2024 16:00" />
 
-  <TextView
-    android:id="@+id/chart_marker_text"
+  <LinearLayout
+    android:id="@+id/chart_marker_text_row"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:fontFamily="@font/open_sans_bold"
-    android:textColor="@color/on_background"
-    android:textSize="14sp"
+    android:gravity="center"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/chart_marker_title"
-    tools:text="24,63°"/>
+    app:layout_constraintTop_toBottomOf="@id/chart_marker_title">
 
-  <TextView
-    android:id="@+id/chart_marker_range"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="@dimen/distance_tiny"
-    android:fontFamily="@font/open_sans_regular"
-    android:textColor="@color/on_background"
-    android:textSize="12sp"
-    app:layout_constraintBottom_toBottomOf="@id/chart_marker_text"
-    app:layout_constraintStart_toEndOf="@id/chart_marker_text"
-    app:layout_constraintTop_toTopOf="@id/chart_marker_text"
-    tools:text="(24,5° - 24,9°)"/>
+    <androidx.appcompat.widget.AppCompatImageView
+      android:id="@+id/chart_marker_icon"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginEnd="@dimen/distance_tiny"
+      android:src="@drawable/ic_phase_point_color"
+      android:visibility="gone" />
+
+    <TextView
+      android:id="@+id/chart_marker_text"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:fontFamily="@font/open_sans_bold"
+      android:textColor="@color/on_background"
+      android:textSize="14sp"
+      tools:text="24,63°" />
+
+    <TextView
+      android:id="@+id/chart_marker_range"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="@dimen/distance_tiny"
+      android:fontFamily="@font/open_sans_regular"
+      android:textColor="@color/on_background"
+      android:textSize="12sp"
+      tools:text="(24,5° - 24,9°)" />
+
+  </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

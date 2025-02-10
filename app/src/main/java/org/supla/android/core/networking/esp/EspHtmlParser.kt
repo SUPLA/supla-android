@@ -25,7 +25,8 @@ import java.util.regex.Pattern
 import javax.inject.Inject
 import javax.inject.Singleton
 
-private const val STATE_PATTERN = "LAST\\ STATE:\\ (.*)\\<br\\>[\\n ]*Firmware:\\ (.*)\\<br\\>[\\n ]*GUID:\\ (.*)\\<br\\>[\\n ]*MAC:\\ (.*)"
+private const val STATE_PATTERN =
+  "LAST\\ STATE:\\ (.*)\\<br\\>[\\n ]*Firmware:\\ (.*)\\<br\\>[\\n ]*GUID:\\ (.*)\\<br\\>[\\n ]*MAC:\\ ([a-fA-F0-9:]*)"
 
 private const val INPUT_NAME_NO_CHANNELS = "no_visible_channels"
 private const val INPUT_VALUE_NO_CHANNELS = "1"

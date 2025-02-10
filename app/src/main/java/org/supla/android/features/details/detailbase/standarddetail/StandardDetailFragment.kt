@@ -30,6 +30,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import org.supla.android.core.storage.RuntimeStateHolder
 import org.supla.android.core.ui.BaseFragment
 import org.supla.android.extensions.visibleIf
+import org.supla.android.navigator.MainNavigator
 import org.supla.android.ui.layouts.BottomBarHeightHandler
 import javax.inject.Inject
 
@@ -44,6 +45,9 @@ abstract class StandardDetailFragment<S : StandardDetailViewState, E : StandardD
 
   @Inject
   lateinit var bottomBarHeightHandler: BottomBarHeightHandler
+
+  @Inject
+  lateinit var navigator: MainNavigator
 
   @Suppress("DEPRECATION") // Not deprecated method can't be accessed from API 21
   protected val item: ItemBundle by lazy { requireArguments().getSerializable(ARG_SUBJECT_BUNDLE) as ItemBundle }
@@ -86,7 +90,7 @@ abstract class StandardDetailFragment<S : StandardDetailViewState, E : StandardD
   @CallSuper
   override fun handleEvents(event: E) {
     if (isCloseEvent(event)) {
-      requireActivity().finish()
+      navigator.back()
     }
   }
 

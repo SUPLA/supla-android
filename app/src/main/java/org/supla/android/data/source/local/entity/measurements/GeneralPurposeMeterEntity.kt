@@ -56,6 +56,7 @@ data class GeneralPurposeMeterEntity(
   @ColumnInfo(name = COLUMN_VALUE) val value: Float,
   @ColumnInfo(name = COLUMN_MANUALLY_COMPLEMENTED) val manuallyComplemented: Boolean,
   @ColumnInfo(name = COLUMN_COUNTER_RESET) val counterReset: Boolean,
+  @ColumnInfo(name = COLUMN_GROUPING_STRING) override val groupingString: String,
   @ColumnInfo(name = COLUMN_PROFILE_ID) val profileId: Long
 ) : BaseLogEntity {
 
@@ -68,6 +69,7 @@ data class GeneralPurposeMeterEntity(
     const val COLUMN_VALUE = "value"
     const val COLUMN_MANUALLY_COMPLEMENTED = "manually_complemented"
     const val COLUMN_COUNTER_RESET = "counter_reset"
+    const val COLUMN_GROUPING_STRING = "grouping_string"
     const val COLUMN_PROFILE_ID = "profile_id"
 
     val SQL = arrayOf(
@@ -82,6 +84,7 @@ data class GeneralPurposeMeterEntity(
           $COLUMN_VALUE REAL NOT NULL,
           $COLUMN_MANUALLY_COMPLEMENTED INTEGER NOT NULL,
           $COLUMN_COUNTER_RESET INTEGER NOT NULL,
+          $COLUMN_GROUPING_STRING TEXT NOT NULL,
           $COLUMN_PROFILE_ID INTEGER NOT NULL
         );
       """.trimIndent(),
@@ -97,12 +100,13 @@ data class GeneralPurposeMeterEntity(
     const val ALL_COLUMNS = """
       $COLUMN_ID, $COLUMN_CHANNEL_ID, $COLUMN_DATE, $COLUMN_VALUE_INCREMENT,
       $COLUMN_VALUE, $COLUMN_MANUALLY_COMPLEMENTED,
-      $COLUMN_COUNTER_RESET, $COLUMN_PROFILE_ID
+      $COLUMN_COUNTER_RESET, $COLUMN_GROUPING_STRING, $COLUMN_PROFILE_ID
     """
 
     fun create(
       entry: GeneralPurposeMeter,
       channelId: Int,
+      groupingString: String,
       date: Date = entry.date,
       valueIncrement: Float = entry.value,
       value: Float = entry.value,
@@ -119,6 +123,7 @@ data class GeneralPurposeMeterEntity(
         value,
         manuallyComplemented,
         counterReset,
+        groupingString,
         profileId
       )
   }

@@ -17,15 +17,19 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import io.reactivex.rxjava3.core.Observable
 import org.supla.android.data.source.local.dao.ChannelGroupRelationDao
+import org.supla.android.usecases.developerinfo.CountProvider
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class ChannelGroupRelationRepository @Inject constructor(
   private val channelGroupRelationDao: ChannelGroupRelationDao
-) {
+) : CountProvider {
   fun findAllVisibleRelations() = channelGroupRelationDao.allVisibleRelations()
 
   fun findGroupRelations(remoteId: Int) = channelGroupRelationDao.findGroupRelations(remoteId)
+
+  override fun count(): Observable<Int> = channelGroupRelationDao.count()
 }

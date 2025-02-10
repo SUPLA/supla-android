@@ -2,7 +2,6 @@ package org.supla.android;
 
 import android.app.AlertDialog;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -101,21 +100,6 @@ public class DiwCalibrationTool extends DimmerCalibrationTool
     final AlertDialog alertDialog = builder.create();
 
     dialogView.findViewById(R.id.btnClose).setOnClickListener(v -> alertDialog.dismiss());
-
-    Typeface quicksand = SuplaApp.getApp().getTypefaceQuicksandRegular();
-    Typeface opensansbold = SuplaApp.getApp().getTypefaceOpenSansBold();
-    Typeface opensans = SuplaApp.getApp().getTypefaceOpenSansRegular();
-
-    ((TextView) dialogView.findViewById(R.id.tvInfoTitle)).setTypeface(quicksand);
-    ((TextView) dialogView.findViewById(R.id.tvInfoTxt1)).setTypeface(opensansbold);
-    ((TextView) dialogView.findViewById(R.id.tvInfoTxt2)).setTypeface(opensans);
-    ((TextView) dialogView.findViewById(R.id.tvInfoTxt3)).setTypeface(opensansbold);
-    ((TextView) dialogView.findViewById(R.id.tvInfoTxt4)).setTypeface(opensans);
-    ((TextView) dialogView.findViewById(R.id.tvInfoTxt5)).setTypeface(opensans);
-    ((TextView) dialogView.findViewById(R.id.tvInfoTxt6)).setTypeface(opensansbold);
-    ((TextView) dialogView.findViewById(R.id.tvInfoTxt7)).setTypeface(opensans);
-    ((TextView) dialogView.findViewById(R.id.tvInfoTxt8)).setTypeface(opensans);
-    ((TextView) dialogView.findViewById(R.id.tvInfoTxt9)).setTypeface(opensans);
 
     alertDialog.show();
   }

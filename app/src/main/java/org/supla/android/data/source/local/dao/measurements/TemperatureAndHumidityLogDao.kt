@@ -25,12 +25,18 @@ import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
+import org.supla.android.data.source.GroupingStringMigratorDao
 import org.supla.android.data.source.local.entity.measurements.TemperatureAndHumidityLogEntity
 import org.supla.android.data.source.local.entity.measurements.TemperatureAndHumidityLogEntity.Companion.ALL_COLUMNS
+import org.supla.android.data.source.local.entity.measurements.TemperatureAndHumidityLogEntity.Companion.COLUMN_CHANNEL_ID
+import org.supla.android.data.source.local.entity.measurements.TemperatureAndHumidityLogEntity.Companion.COLUMN_GROUPING_STRING
+import org.supla.android.data.source.local.entity.measurements.TemperatureAndHumidityLogEntity.Companion.COLUMN_ID
+import org.supla.android.data.source.local.entity.measurements.TemperatureAndHumidityLogEntity.Companion.COLUMN_PROFILE_ID
+import org.supla.android.data.source.local.entity.measurements.TemperatureAndHumidityLogEntity.Companion.COLUMN_TIMESTAMP
 import org.supla.android.data.source.local.entity.measurements.TemperatureAndHumidityLogEntity.Companion.TABLE_NAME
 
 @Dao
-interface TemperatureAndHumidityLogDao {
+interface TemperatureAndHumidityLogDao : GroupingStringMigratorDao {
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   fun insert(entity: List<TemperatureAndHumidityLogEntity>): Completable
@@ -56,4 +62,39 @@ interface TemperatureAndHumidityLogDao {
       "ORDER BY date asc"
   )
   fun findMeasurements(channelId: Int, profileId: Long, startDate: Long, endDate: Long): Observable<List<TemperatureAndHumidityLogEntity>>
+
+  @Query("SELECT COUNT($COLUMN_ID) FROM $TABLE_NAME")
+  fun count(): Observable<Int>
+
+  @Query(
+    """
+      SELECT COUNT($COLUMN_GROUPING_STRING) 
+      FROM $TABLE_NAME 
+      WHERE $COLUMN_CHANNEL_ID = :remoteId 
+        AND $COLUMN_PROFILE_ID = :profileId 
+        AND $COLUMN_GROUPING_STRING = ''
+    """
+  )
+  override fun emptyGroupingStringCount(remoteId: Int, profileId: Long): Single<Int>
+
+  @Query(
+    """
+      UPDATE $TABLE_NAME 
+      SET $COLUMN_GROUPING_STRING = 
+        STRFTIME('%Y%m%d%H%M', DATETIME($COLUMN_TIMESTAMP/1000, 'unixepoch'), 'localtime') || 
+        CASE (STRFTIME('%w', DATETIME($COLUMN_TIMESTAMP/1000, 'unixepoch'), 'localtime')) 
+          WHEN '1' THEN '1' 
+          WHEN '2' THEN '2' 
+          WHEN '3' THEN '3' 
+          WHEN '4' THEN '4' 
+          WHEN '5' THEN '5' 
+          WHEN '6' THEN '6' 
+          ELSE '7' 
+        END
+      WHERE $COLUMN_CHANNEL_ID = :remoteId 
+        AND $COLUMN_PROFILE_ID = :profileId 
+        AND $COLUMN_GROUPING_STRING = ''
+    """
+  )
+  override fun migrateGroupingString(remoteId: Int, profileId: Long): Completable
 }

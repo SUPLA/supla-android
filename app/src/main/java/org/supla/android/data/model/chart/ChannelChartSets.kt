@@ -20,6 +20,7 @@ package org.supla.android.data.model.chart
 import org.supla.android.core.ui.StringProvider
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.core.shared.data.model.general.SuplaFunction
+import org.supla.core.shared.infrastructure.LocalizedString
 
 data class ChannelChartSets(
   val remoteId: Int,
@@ -28,7 +29,7 @@ data class ChannelChartSets(
   val aggregation: ChartDataAggregation,
   val dataSets: List<HistoryDataSet>,
   val customData: Any? = null,
-  val typeName: StringProvider? = null
+  val typeName: LocalizedString? = null
 ) {
   val active: Boolean
     get() {
@@ -54,6 +55,8 @@ data class ChannelChartSets(
 
   fun deactivate(): ChannelChartSets = copy(dataSets = dataSets.map { it.copy(active = false) })
 
+  fun activate(): ChannelChartSets = copy(dataSets = dataSets.map { it.copy(active = true) })
+
   fun setActive(types: List<ChartEntryType>?): ChannelChartSets =
     copy(dataSets = dataSets.map { it.copy(active = types?.contains(it.type) == true) })
 
@@ -66,7 +69,7 @@ data class ChannelChartSets(
       aggregation: ChartDataAggregation,
       dataSets: List<HistoryDataSet>,
       customData: Any? = null,
-      typeNameRes: StringProvider? = null
+      typeNameRes: LocalizedString? = null
     ) = ChannelChartSets(channel.remoteId, channel.function, name, aggregation, dataSets, customData, typeNameRes)
   }
 }

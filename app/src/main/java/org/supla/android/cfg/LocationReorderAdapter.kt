@@ -32,7 +32,6 @@ import android.widget.ListAdapter
 import android.widget.ListView
 import android.widget.TextView
 import org.supla.android.R
-import org.supla.android.SuplaApp
 import org.supla.android.db.Location
 import org.supla.android.listview.draganddrop.ListViewDragListener
 
@@ -152,7 +151,6 @@ class LocationReorderAdapter(
     }
     val caption: TextView? = rv?.findViewById(R.id.tvSectionCaption)
     caption?.text = obj?.caption ?: ""
-    caption?.typeface = SuplaApp.getApp().typefaceQuicksandRegular
 
     dragHolder?.tag = pos
 

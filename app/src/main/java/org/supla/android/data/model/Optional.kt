@@ -17,7 +17,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.functions.Supplier
 import java.util.Objects
 
@@ -36,10 +35,12 @@ class Optional<T : Any>(private val value: T? = null) {
   val isEmpty: Boolean
     get() = value == null
 
-  fun ifPresent(action: Consumer<in T>) {
+  fun <R> ifPresent(action: (T) -> R): R? {
     if (value != null) {
-      action.accept(value)
+      return action(value)
     }
+
+    return null
   }
 
   fun orElse(other: T): T {

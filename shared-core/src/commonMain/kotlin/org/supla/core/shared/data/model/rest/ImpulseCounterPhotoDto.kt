@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-data class ImpulseCounterPhoto(
+data class ImpulseCounterPhotoDto(
   val id: String,
   val deviceGuid: String,
   val channelNo: Int,
@@ -30,6 +30,7 @@ data class ImpulseCounterPhoto(
   val processingTimeMs2: Int?,
   val resultCode: Int,
   val resultMessage: String?,
+  val measurementValid: Boolean,
   val image: String?,
   val imageCropped: String?
 )

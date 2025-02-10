@@ -29,6 +29,7 @@ import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity
 import org.supla.android.data.source.local.entity.ChannelRelationEntity
 import org.supla.android.data.source.local.entity.ChannelRelationEntity.Companion.ALL_COLUMNS
+import org.supla.android.data.source.local.entity.ChannelRelationEntity.Companion.COLUMN_CHANNEL_RELATION_TYPE
 import org.supla.android.data.source.local.entity.ChannelRelationEntity.Companion.TABLE_NAME
 import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.LocationEntity
@@ -134,4 +135,7 @@ interface ChannelRelationDao {
   """
   )
   fun findChildrenFor(parentRemoteId: Int): Maybe<List<ChannelChildEntity>>
+
+  @Query("SELECT COUNT($COLUMN_CHANNEL_RELATION_TYPE) FROM $TABLE_NAME")
+  fun count(): Observable<Int>
 }

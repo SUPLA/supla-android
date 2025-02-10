@@ -20,7 +20,8 @@
       android:gravity="center_vertical"
       android:text="@string/information"
       android:textColor="@color/on_background"
-      android:textSize="30sp" />
+      android:textSize="30sp"
+      android:fontFamily="@font/quicksand_regular" />
 
     <androidx.appcompat.widget.AppCompatButton
       android:id="@+id/btnClose"
@@ -57,14 +58,16 @@
         android:layout_marginTop="20dp"
         android:text="@string/cfg_op_range"
         android:textColor="@color/on_background"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:fontFamily="@font/open_sans_bold" />
 
       <TextView
         android:id="@+id/tvInfoTxt2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/diw_cfg_info_oprange"
-        android:textColor="@color/vl_infotext" />
+        android:textColor="@color/vl_infotext"
+        android:fontFamily="@font/open_sans_regular" />
 
       <TextView
         android:id="@+id/tvInfoTxt3"
@@ -73,7 +76,8 @@
         android:layout_marginTop="20dp"
         android:text="@string/diw_cfg_info_in_options"
         android:textColor="@color/on_background"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:fontFamily="@font/open_sans_regular" />
 
       <LinearLayout
         android:layout_width="match_parent"
@@ -98,7 +102,8 @@
           android:gravity="center_vertical"
           android:text="@string/diw_cfg_info_mono_option"
           android:textColor="@color/vl_infotext"
-          android:textSize="12sp" />
+          android:textSize="12sp"
+          android:fontFamily="@font/open_sans_regular" />
 
       </LinearLayout>
 
@@ -125,7 +130,8 @@
           android:gravity="center_vertical"
           android:text="@string/diw_cfg_info_bi_option"
           android:textColor="@color/vl_infotext"
-          android:textSize="12sp" />
+          android:textSize="12sp"
+          android:fontFamily="@font/open_sans_regular" />
 
       </LinearLayout>
 
@@ -136,7 +142,8 @@
         android:layout_marginTop="20dp"
         android:text="@string/status_led"
         android:textColor="@color/on_background"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:fontFamily="@font/open_sans_bold" />
 
       <LinearLayout
         android:layout_width="match_parent"
@@ -161,7 +168,8 @@
           android:gravity="center_vertical"
           android:text="@string/info_led_on"
           android:textColor="@color/vl_infotext"
-          android:textSize="12sp" />
+          android:textSize="12sp"
+          android:fontFamily="@font/open_sans_regular" />
 
       </LinearLayout>
 
@@ -189,7 +197,8 @@
           android:gravity="center_vertical"
           android:text="@string/info_led_off"
           android:textColor="@color/vl_infotext"
-          android:textSize="12sp" />
+          android:textSize="12sp"
+          android:fontFamily="@font/open_sans_regular" />
 
       </LinearLayout>
 
@@ -218,7 +227,8 @@
           android:gravity="center_vertical"
           android:text="@string/info_led_alwaysoff"
           android:textColor="@color/vl_infotext"
-          android:textSize="12sp" />
+          android:textSize="12sp"
+          android:fontFamily="@font/open_sans_regular" />
 
       </LinearLayout>
 

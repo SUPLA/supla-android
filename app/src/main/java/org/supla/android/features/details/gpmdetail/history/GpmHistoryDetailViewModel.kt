@@ -34,7 +34,6 @@ import org.supla.android.data.model.chart.datatype.BarChartData
 import org.supla.android.data.model.chart.datatype.CandleChartData
 import org.supla.android.data.model.chart.datatype.ChartData
 import org.supla.android.data.model.chart.datatype.LineChartData
-import org.supla.android.data.model.chart.style.ChartStyle
 import org.supla.android.data.model.chart.style.GpmChartStyle
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.remote.SuplaChannelConfig
@@ -56,20 +55,23 @@ import org.supla.android.usecases.channel.LoadChannelMeasurementsDataRangeUseCas
 import org.supla.android.usecases.channel.LoadChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
 import org.supla.android.usecases.channelconfig.LoadChannelConfigUseCase
+import org.supla.android.usecases.migration.GroupingStringMigrationUseCase
+import org.supla.core.shared.data.model.rest.channel.ChannelDto
 import javax.inject.Inject
 import javax.inject.Named
 
 @HiltViewModel
 class GpmHistoryDetailViewModel @Inject constructor(
+  private val loadChannelMeasurementsDataRangeUseCase: LoadChannelMeasurementsDataRangeUseCase,
   private val downloadChannelMeasurementsUseCase: DownloadChannelMeasurementsUseCase,
   private val loadChannelMeasurementsUseCase: LoadChannelMeasurementsUseCase,
-  private val loadChannelMeasurementsDataRangeUseCase: LoadChannelMeasurementsDataRangeUseCase,
+  private val channelConfigEventsManager: ChannelConfigEventsManager,
   private val loadChannelConfigUseCase: LoadChannelConfigUseCase,
   private val downloadEventsManager: DownloadEventsManager,
-  private val channelConfigEventsManager: ChannelConfigEventsManager,
   @Named(GSON_FOR_REPO) private val gson: Gson,
   deleteChannelMeasurementsUseCase: DeleteChannelMeasurementsUseCase,
   readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
+  groupingStringMigrationUseCase: GroupingStringMigrationUseCase,
   userStateHolder: UserStateHolder,
   profileManager: ProfileManager,
   schedulers: SuplaSchedulers,
@@ -77,6 +79,7 @@ class GpmHistoryDetailViewModel @Inject constructor(
 ) : BaseHistoryDetailViewModel(
   deleteChannelMeasurementsUseCase,
   readChannelWithChildrenUseCase,
+  groupingStringMigrationUseCase,
   userStateHolder,
   profileManager,
   dateProvider,
@@ -109,8 +112,6 @@ class GpmHistoryDetailViewModel @Inject constructor(
       Pair(createChartData(listOf(sets), DateRange(spec.startDate, spec.endDate), chartRange, spec.aggregation, config), range)
     }
 
-  override fun chartStyle(): ChartStyle = GpmChartStyle
-
   fun reloadMeasurements() {
     val state = currentState()
     // Config check is needed to verify if history is still allowed. In case of change we need to update view appropriate
@@ -133,9 +134,15 @@ class GpmHistoryDetailViewModel @Inject constructor(
       .disposeBySelf()
   }
 
-  override fun handleData(channelWithChildren: ChannelWithChildren, chartState: ChartState) {
+  override fun handleData(channelWithChildren: ChannelWithChildren, channelDto: ChannelDto, chartState: ChartState) {
     val channel = channelWithChildren.channel
-    updateState { it.copy(profileId = channel.channelEntity.profileId, channelFunction = channel.function.value) }
+    updateState {
+      it.copy(
+        profileId = channel.channelEntity.profileId,
+        channelFunction = channel.function.value,
+        chartStyle = GpmChartStyle
+      )
+    }
 
     restoreRange(chartState)
     if ((channel.configEntity?.toSuplaConfig(gson) as? SuplaChannelGeneralPurposeBaseConfig)?.keepHistory == true) {

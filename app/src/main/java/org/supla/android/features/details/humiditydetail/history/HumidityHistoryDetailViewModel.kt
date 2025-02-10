@@ -29,7 +29,6 @@ import org.supla.android.data.model.chart.ChartState
 import org.supla.android.data.model.chart.DateRange
 import org.supla.android.data.model.chart.datatype.ChartData
 import org.supla.android.data.model.chart.datatype.LineChartData
-import org.supla.android.data.model.chart.style.ChartStyle
 import org.supla.android.data.model.chart.style.HumidityChartStyle
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.events.DownloadEventsManager
@@ -41,6 +40,8 @@ import org.supla.android.usecases.channel.DownloadChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.LoadChannelMeasurementsDataRangeUseCase
 import org.supla.android.usecases.channel.LoadChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
+import org.supla.android.usecases.migration.GroupingStringMigrationUseCase
+import org.supla.core.shared.data.model.rest.channel.ChannelDto
 import javax.inject.Inject
 
 @HiltViewModel
@@ -51,6 +52,7 @@ class HumidityHistoryDetailViewModel @Inject constructor(
   private val downloadEventsManager: DownloadEventsManager,
   deleteChannelMeasurementsUseCase: DeleteChannelMeasurementsUseCase,
   readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
+  groupingStringMigrationUseCase: GroupingStringMigrationUseCase,
   userStateHolder: UserStateHolder,
   profileManager: ProfileManager,
   schedulers: SuplaSchedulers,
@@ -58,13 +60,12 @@ class HumidityHistoryDetailViewModel @Inject constructor(
 ) : BaseHistoryDetailViewModel(
   deleteChannelMeasurementsUseCase,
   readChannelWithChildrenUseCase,
+  groupingStringMigrationUseCase,
   userStateHolder,
   profileManager,
   dateProvider,
   schedulers
 ) {
-
-  override fun chartStyle(): ChartStyle = HumidityChartStyle
 
   override fun measurementsMaybe(
     remoteId: Int,
@@ -77,9 +78,9 @@ class HumidityHistoryDetailViewModel @Inject constructor(
       loadChannelMeasurementsDataRangeUseCase(remoteId, profileId)
     ) { first, second -> Pair(LineChartData(DateRange(spec.startDate, spec.endDate), chartRange, spec.aggregation, listOf(first)), second) }
 
-  override fun handleData(channelWithChildren: ChannelWithChildren, chartState: ChartState) {
+  override fun handleData(channelWithChildren: ChannelWithChildren, channelDto: ChannelDto, chartState: ChartState) {
     val channel = channelWithChildren.channel
-    updateState { it.copy(profileId = channel.profileId, channelFunction = channel.function.value) }
+    updateState { it.copy(profileId = channel.profileId, channelFunction = channel.function.value, chartStyle = HumidityChartStyle) }
 
     restoreRange(chartState)
     configureDownloadObserver(channel.remoteId)

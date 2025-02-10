@@ -186,8 +186,6 @@
   <string name="hp_calendar_comfort">Komfort</string>
   <string name="hp_cfg_temp_eco">Temperatura ECO w trybie AUTO</string>
   <string name="hp_hour">godz.</string>
-  <string name="total_cost">Łączny koszt</string>
-  <string name="current_cost">Koszt w bieżącym miesiącu</string>
   <string name="details_ic_current_consumption">Zużycie w bieżącym miesiącu</string>
   <string name="details_ic_meter_value">Stan licznika</string>
   <string name="minutes">Minuty</string>
@@ -718,7 +716,6 @@
   <string name="channel_btn_expand">Rozwiń</string>
   <string name="settings_battery_level_warning">Sygnalizacja słabej baterii</string>
   <string name="channel_battery_level">Poziom baterii (%1$d - %2$s): %3$d%%</string>
-  <string name="counter_photo_toolbar">Zdjęcia licznika</string>
   <string name="counter_photo_counter_area">Obszar licznika</string>
   <string name="counter_photo_original_photo">Zdjęcie oryginalne</string>
   <string name="counter_photo_settings">Konfiguracja w Cloud</string>
@@ -733,6 +730,12 @@
   <string name="details_em_current_phase_sequence">Kolejność faz prądu</string>
   <string name="em_electric_grid_parameters">Parametry sieci elektrycznej</string>
   <string name="channel_caption_container">Zbiornik</string>
+  <string name="developer_info_database_section">Baza danych</string>
+  <string name="developer_info_activated">Developer mode został aktywowany</string>
+  <string name="developer_info_title">Dane aplikacji</string>
+  <string name="counter_photo_photos">Historia zdjęć</string>
+  <string name="counter_photo_loading_error">Nie udało się załadować zawartości.</string>
+  <string name="counter_photo_error">Błąd</string>
 
   <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
     <item quantity="one">włączone</item>

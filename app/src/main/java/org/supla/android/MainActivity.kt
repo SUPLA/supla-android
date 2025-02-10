@@ -223,9 +223,7 @@ class MainActivity :
     notificationBackgroundLayout.setBackgroundColor(ResourcesCompat.getColor(resources, R.color.notification_bg, null))
     rootLayout.addView(notificationView)
     notificationImage = notificationView!!.findViewById(R.id.notif_img)
-    notificationText = notificationView!!.findViewById<TextView?>(R.id.notif_txt).also {
-      it.typeface = SuplaApp.getApp().typefaceOpenSansRegular
-    }
+    notificationText = notificationView!!.findViewById(R.id.notif_txt)
 
     registerMessageHandler()
   }

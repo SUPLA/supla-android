@@ -22,7 +22,8 @@
       android:singleLine="true"
       android:text="@string/channel_func_dimmer"
       android:textColor="@color/on_background"
-      android:textSize="25sp" />
+      android:textSize="25sp"
+      android:fontFamily="@font/quicksand_regular" />
 
     <androidx.appcompat.widget.AppCompatButton
       android:id="@+id/btnClose"

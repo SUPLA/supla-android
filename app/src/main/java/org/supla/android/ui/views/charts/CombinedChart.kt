@@ -24,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -46,7 +47,6 @@ import org.supla.android.data.model.chart.datatype.CombinedChartData
 import org.supla.android.data.model.chart.style.ChartStyle
 import org.supla.android.data.model.chart.style.HumidityChartStyle
 import org.supla.android.extensions.toPx
-import org.supla.android.lib.SuplaConst
 import org.supla.android.usecases.channel.valueformatter.HumidityValueFormatter
 import java.util.Date
 
@@ -61,13 +61,13 @@ fun CombinedChart(
   chartParametersProvider: () -> ChartParameters?,
   positionEvents: (scaleX: Float, scaleY: Float, x: Float, y: Float) -> Unit,
   chartStyle: ChartStyle,
-  channelFunction: Int,
   modifier: Modifier = Modifier
 ) {
   val dateFormatter = LocalDateFormatter.current
   val combinedData = data.combinedData(LocalContext.current.resources)
   val chartParameters = if (combinedData != null) chartParametersProvider() else null
   val xAxisFormatter by remember { mutableStateOf(CombinedChartAxisXFormatter(dateFormatter)) }
+  var rememberedChartStyle by remember { mutableStateOf(chartStyle) }
   xAxisFormatter.converter = data
 
   AndroidView(
@@ -129,6 +129,8 @@ fun CombinedChart(
       data.xMax?.let { chart.xAxis.axisMaximum = it }
 
       // Left axis
+      chart.axisLeft.textColor = ResourcesCompat.getColor(chart.context.resources, chartStyle.leftAxisColor, null)
+      chart.axisLeft.gridColor = chart.axisLeft.textColor
       chart.axisLeft.valueFormatter = object : ValueFormatter() {
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
           val withUnit = chartStyle is HumidityChartStyle
@@ -136,16 +138,20 @@ fun CombinedChart(
         }
       }
       chart.axisLeft.isEnabled = withLeftAxis
-      if (isNotGpm(channelFunction)) {
+      if (chartStyle.setMinValue) {
         combinedData?.allData?.minOfOrNull { entry -> entry.yMin }?.let { yMin ->
           chart.axisLeft.axisMinimum = if (yMin > 0) 0f else yMin
         }
       }
-      maxLeftAxis?.let {
-        chart.axisLeft.axisMaximum = it
+      if (chartStyle.setMaxValue) {
+        maxLeftAxis?.let {
+          chart.axisLeft.axisMaximum = it
+        }
       }
 
       // Right axis
+      chart.axisRight.textColor = ResourcesCompat.getColor(chart.context.resources, chartStyle.rightAxisColor, null)
+      chart.axisRight.gridColor = chart.axisRight.textColor
       chart.axisRight.valueFormatter = object : ValueFormatter() {
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
           val withUnit = data.rightAxisFormatter is HumidityValueFormatter
@@ -167,6 +173,20 @@ fun CombinedChart(
         } else if (chart.scaleX != scaleX || chart.scaleY != scaleY) {
           chart.zoom(scaleX, scaleY, x, y, AxisDependency.LEFT)
         }
+      }
+
+      if (rememberedChartStyle != chartStyle) {
+        chart.marker = chartStyle.markerViewProvider(chart.context).apply { chartView = chart }
+        chart.setDrawBarShadow(chartStyle.drawBarShadow)
+
+        if (!chartStyle.setMaxValue) {
+          chart.axisLeft.resetAxisMaximum()
+        }
+        if (!chartStyle.setMinValue) {
+          chart.axisLeft.resetAxisMinimum()
+        }
+
+        rememberedChartStyle = chartStyle
       }
     }
   )
@@ -228,7 +248,3 @@ private class CombinedChartAxisXFormatter(
     }
   }
 }
-
-private fun isNotGpm(function: Int): Boolean =
-  function != SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER &&
-    function != SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT

@@ -21,14 +21,18 @@ import androidx.work.ExistingWorkPolicy
 import org.supla.android.Trace
 import org.supla.android.core.infrastructure.WorkManagerProxy
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
+import org.supla.android.events.DownloadEventsManager
 import org.supla.android.extensions.TAG
+import org.supla.android.features.measurementsdownload.workers.DownloadCurrentMeasurementsWorker
 import org.supla.android.features.measurementsdownload.workers.DownloadElectricityMeasurementsWorker
 import org.supla.android.features.measurementsdownload.workers.DownloadGeneralPurposeMeasurementsWorker
 import org.supla.android.features.measurementsdownload.workers.DownloadGeneralPurposeMeterWorker
 import org.supla.android.features.measurementsdownload.workers.DownloadHumidityWorker
 import org.supla.android.features.measurementsdownload.workers.DownloadImpulseCounterWorker
+import org.supla.android.features.measurementsdownload.workers.DownloadPowerActiveMeasurementsWorker
 import org.supla.android.features.measurementsdownload.workers.DownloadTemperaturesAndHumidityWorker
 import org.supla.android.features.measurementsdownload.workers.DownloadTemperaturesWorker
+import org.supla.android.features.measurementsdownload.workers.DownloadVoltageMeasurementsWorker
 import org.supla.core.shared.data.model.general.SuplaFunction
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -38,7 +42,10 @@ class DownloadChannelMeasurementsUseCase @Inject constructor(
   private val workManagerProxy: WorkManagerProxy
 ) {
 
-  operator fun invoke(channelWithChildren: ChannelWithChildren) {
+  operator fun invoke(
+    channelWithChildren: ChannelWithChildren,
+    type: DownloadEventsManager.DataType = DownloadEventsManager.DataType.DEFAULT_TYPE
+  ) {
     val remoteId = channelWithChildren.remoteId
     val profileId = channelWithChildren.profileId
     val function = channelWithChildren.function
@@ -70,6 +77,30 @@ class DownloadChannelMeasurementsUseCase @Inject constructor(
           "${DownloadGeneralPurposeMeterWorker.WORK_ID}.$remoteId",
           ExistingWorkPolicy.KEEP,
           DownloadGeneralPurposeMeterWorker.build(remoteId, profileId)
+        )
+
+      channelWithChildren.isOrHasElectricityMeter &&
+        type == DownloadEventsManager.DataType.ELECTRICITY_VOLTAGE_TYPE ->
+        workManagerProxy.enqueueUniqueWork(
+          "${DownloadVoltageMeasurementsWorker.WORK_ID}.$remoteId",
+          ExistingWorkPolicy.KEEP,
+          DownloadVoltageMeasurementsWorker.build(remoteId, profileId)
+        )
+
+      channelWithChildren.isOrHasElectricityMeter &&
+        type == DownloadEventsManager.DataType.ELECTRICITY_CURRENT_TYPE ->
+        workManagerProxy.enqueueUniqueWork(
+          "${DownloadCurrentMeasurementsWorker.WORK_ID}.$remoteId",
+          ExistingWorkPolicy.KEEP,
+          DownloadCurrentMeasurementsWorker.build(remoteId, profileId)
+        )
+
+      channelWithChildren.isOrHasElectricityMeter &&
+        type == DownloadEventsManager.DataType.ELECTRICITY_POWER_ACTIVE_TYPE ->
+        workManagerProxy.enqueueUniqueWork(
+          "${DownloadPowerActiveMeasurementsWorker.WORK_ID}.$remoteId",
+          ExistingWorkPolicy.KEEP,
+          DownloadPowerActiveMeasurementsWorker.build(remoteId, profileId)
         )
 
       channelWithChildren.isOrHasElectricityMeter ->

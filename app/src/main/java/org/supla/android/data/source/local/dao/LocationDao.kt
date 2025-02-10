@@ -22,6 +22,7 @@ import androidx.room.Query
 import androidx.room.Update
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
+import io.reactivex.rxjava3.core.Observable
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.LocationEntity.Companion.ALL_COLUMNS
 import org.supla.android.data.source.local.entity.LocationEntity.Companion.COLUMN_PROFILE_ID
@@ -44,4 +45,7 @@ interface LocationDao {
 
   @Update
   fun updateLocation(locationEntity: LocationEntity): Completable
+
+  @Query("SELECT COUNT($COLUMN_PROFILE_ID) FROM $TABLE_NAME")
+  fun count(): Observable<Int>
 }

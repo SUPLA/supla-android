@@ -21,4 +21,5 @@ import java.util.Date
 
 interface BaseLogEntity {
   val date: Date
+  val groupingString: String
 }

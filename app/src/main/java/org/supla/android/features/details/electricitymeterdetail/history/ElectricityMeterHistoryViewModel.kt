@@ -18,7 +18,9 @@ package org.supla.android.features.details.electricitymeterdetail.history
  */
 
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.Preferences
 import org.supla.android.R
@@ -34,16 +36,19 @@ import org.supla.android.data.model.chart.DateRange
 import org.supla.android.data.model.chart.ElectricityChartState
 import org.supla.android.data.model.chart.datatype.BarChartData
 import org.supla.android.data.model.chart.datatype.ChartData
+import org.supla.android.data.model.chart.datatype.LineChartData
 import org.supla.android.data.model.chart.datatype.PieChartData
-import org.supla.android.data.model.chart.style.ChartStyle
 import org.supla.android.data.model.chart.style.ElectricityChartStyle
+import org.supla.android.data.model.chart.style.ElectricityHistoryChartStyle
 import org.supla.android.data.model.general.MultipleSelectionList
 import org.supla.android.data.model.general.SingleSelectionList
 import org.supla.android.data.source.local.entity.complex.Electricity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.data.source.remote.channel.suplaFlags
+import org.supla.android.data.source.remote.rest.SuplaCloudService
 import org.supla.android.events.DownloadEventsManager
+import org.supla.android.events.DownloadEventsManager.DataType
 import org.supla.android.extensions.guardLet
 import org.supla.android.features.details.detailbase.history.BaseHistoryDetailViewModel
 import org.supla.android.features.details.detailbase.history.HistoryDetailViewState
@@ -60,6 +65,11 @@ import org.supla.android.usecases.channel.LoadChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
 import org.supla.android.usecases.channel.measurementsprovider.electricity.ElectricityChartFilters
 import org.supla.android.usecases.channel.measurementsprovider.electricity.PhaseItem
+import org.supla.android.usecases.migration.GroupingStringMigrationUseCase
+import org.supla.core.shared.data.model.channel.ChannelRelationType
+import org.supla.core.shared.data.model.rest.channel.ChannelDto
+import org.supla.core.shared.data.model.rest.channel.ElectricityChannelDto
+import org.supla.core.shared.data.model.rest.channel.ElectricityMeterConfigDto
 import org.supla.core.shared.extensions.ifTrue
 import javax.inject.Inject
 
@@ -70,22 +80,35 @@ class ElectricityMeterHistoryViewModel @Inject constructor(
   private val loadChannelMeasurementsDataRangeUseCase: LoadChannelMeasurementsDataRangeUseCase,
   private val downloadChannelMeasurementsUseCase: DownloadChannelMeasurementsUseCase,
   private val loadChannelMeasurementsUseCase: LoadChannelMeasurementsUseCase,
+  private val suplaCloudServiceProvider: SuplaCloudService.Provider,
   private val downloadEventsManager: DownloadEventsManager,
   private val userStateHolder: UserStateHolder,
   private val preferences: Preferences,
   deleteChannelMeasurementsUseCase: DeleteChannelMeasurementsUseCase,
   readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
+  groupingStringMigrationUseCase: GroupingStringMigrationUseCase,
   profileManager: ProfileManager,
   schedulers: SuplaSchedulers,
   dateProvider: DateProvider
 ) : BaseHistoryDetailViewModel(
   deleteChannelMeasurementsUseCase,
   readChannelWithChildrenUseCase,
+  groupingStringMigrationUseCase,
   userStateHolder,
   profileManager,
   dateProvider,
   schedulers
 ) {
+
+  private var downloadEventsDisposable: Disposable? = null
+
+  private val dataType: DataType
+    get() = when ((currentState().chartCustomFilters as? ElectricityChartFilters)?.type) {
+      ElectricityMeterChartType.VOLTAGE -> DataType.ELECTRICITY_VOLTAGE_TYPE
+      ElectricityMeterChartType.CURRENT -> DataType.ELECTRICITY_CURRENT_TYPE
+      ElectricityMeterChartType.POWER_ACTIVE -> DataType.ELECTRICITY_POWER_ACTIVE_TYPE
+      else -> DataType.DEFAULT_TYPE
+    }
 
   override fun provideSelectionDialogState(
     channelChartSets: ChannelChartSets,
@@ -113,6 +136,7 @@ class ElectricityMeterHistoryViewModel @Inject constructor(
 
   override fun confirmSelection(spinnerItem: SpinnerItem?, checkboxItems: Set<CheckboxItem>?) {
     val (type) = guardLet((spinnerItem as? ElectricityMeterChartType)) { return }
+    var previousType: ElectricityMeterChartType? = null
     val phases = checkboxItems?.filterIsInstance<PhaseItem>()?.toSet() ?: emptySet()
 
     updateState { state ->
@@ -120,6 +144,7 @@ class ElectricityMeterHistoryViewModel @Inject constructor(
       val (chartRange) = guardLet(state.filters.selectedRange) { return@updateState state }
 
       (state.chartCustomFilters as? ElectricityChartFilters)?.let {
+        previousType = it.type
         val customFilters = state.chartCustomFilters.copy(type = type, selectedPhases = phases)
         state.copy(
           chartCustomFilters = customFilters,
@@ -133,7 +158,11 @@ class ElectricityMeterHistoryViewModel @Inject constructor(
     }
     updateUserState()
 
-    triggerMeasurementsLoad(currentState())
+    if (previousType?.needsRefresh(type) != false) {
+      refresh()
+    } else {
+      triggerMeasurementsLoad(currentState())
+    }
   }
 
   override fun loadChartState(profileId: Long, remoteId: Int): ChartState =
@@ -163,12 +192,13 @@ class ElectricityMeterHistoryViewModel @Inject constructor(
     spec: ChartDataSpec,
     chartRange: ChartRange
   ): Single<Pair<ChartData, Optional<DateRange>>> =
-    Single.zip(
-      loadChannelMeasurementsUseCase(remoteId, spec),
-      loadChannelMeasurementsDataRangeUseCase(remoteId, profileId)
-    ) { first, second -> Pair(getChartData(spec, chartRange, first), second) }
-
-  override fun chartStyle(): ChartStyle = ElectricityChartStyle
+    loadChannelMeasurementsDataRangeUseCase(remoteId, profileId, dataType)
+      .flatMap { range ->
+        // while the data range is changing (voltage, current, power active as different range) it has to be corrected
+        val correctedSpec = if (chartRange == ChartRange.ALL_HISTORY) spec.correctBy(range) else spec
+        loadChannelMeasurementsUseCase(remoteId, correctedSpec)
+          .map { Pair(getChartData(correctedSpec, chartRange, it), range) }
+      }
 
   override fun aggregations(
     dateRange: DateRange,
@@ -182,7 +212,7 @@ class ElectricityMeterHistoryViewModel @Inject constructor(
 
     val aggregations = super.aggregations(dateRange, chartRange, selectedAggregation, customFilters)
       .let {
-        filters.type.isBalance.ifTrue {
+        filters.type.hideRankings.ifTrue {
           // In balance charts no ranking is available
           val aggregations = it.items.filter { aggregation -> !aggregation.isRank }
           it.copy(
@@ -208,11 +238,19 @@ class ElectricityMeterHistoryViewModel @Inject constructor(
     updateState { it.copy(introductionPages = null) }
   }
 
-  override fun handleData(channelWithChildren: ChannelWithChildren, chartState: ChartState) {
+  override fun cloudChannelProvider(channelWithChildren: ChannelWithChildren): Observable<ChannelDto> {
+    val remoteId = channelWithChildren.children
+      .firstOrNull { it.relationType == ChannelRelationType.METER }?.channel?.remoteId ?: channelWithChildren.remoteId
+
+    return suplaCloudServiceProvider.provide().getElectricityMeterChannel(remoteId).map { it }
+  }
+
+  override fun handleData(channelWithChildren: ChannelWithChildren, channelDto: ChannelDto, chartState: ChartState) {
     val channel = channelWithChildren.channel
+    val electricityMeterConfigDto = (channelDto as? ElectricityChannelDto)?.config
     updateState { it.copy(profileId = channel.profileId, channelFunction = channel.function.value) }
 
-    restoreCustomFilters(channel.flags.suplaFlags, channel.Electricity.value, chartState)
+    restoreCustomFilters(channel.flags.suplaFlags, channel.Electricity.value, electricityMeterConfigDto, chartState)
     restoreRange(chartState)
     configureDownloadObserver(channel.remoteId)
     startInitialDataLoad(channelWithChildren)
@@ -227,13 +265,18 @@ class ElectricityMeterHistoryViewModel @Inject constructor(
     }
   }
 
+  override fun onCleared() {
+    super.onCleared()
+    downloadEventsDisposable?.dispose()
+  }
+
   private fun startInitialDataLoad(channelWithChildren: ChannelWithChildren) {
     if (currentState().initialLoadStarted) {
       // Needs to be performed only once
       return
     }
     updateState { it.copy(initialLoadStarted = true) }
-    downloadChannelMeasurementsUseCase.invoke(channelWithChildren)
+    downloadChannelMeasurementsUseCase(channelWithChildren, dataType)
   }
 
   private fun configureDownloadObserver(remoteId: Int) {
@@ -241,15 +284,16 @@ class ElectricityMeterHistoryViewModel @Inject constructor(
       // Needs to be performed only once
       return
     }
+
+    downloadEventsDisposable?.dispose()
     updateState { it.copy(downloadConfigured = true) }
 
-    downloadEventsManager.observeProgress(remoteId).attachSilent()
+    downloadEventsDisposable = downloadEventsManager.observeProgress(remoteId, dataType).attachSilent()
       .distinctUntilChanged()
       .subscribeBy(
         onNext = { handleDownloadEvents(it) },
         onError = defaultErrorHandler("configureDownloadObserver")
       )
-      .disposeBySelf()
   }
 
   private fun getCheckboxOptions(
@@ -257,16 +301,10 @@ class ElectricityMeterHistoryViewModel @Inject constructor(
     availablePhases: Set<PhaseItem>,
     selectedPhases: Set<PhaseItem> = availablePhases
   ): MultipleSelectionList<CheckboxItem> {
-    val allPhases = if ((type as? ElectricityMeterChartType)?.needsPhases == true) PhaseItem.entries.toSet() else emptySet()
+    val electricityMeterChartType = (type as? ElectricityMeterChartType)
+    val allPhases = if (electricityMeterChartType?.needsPhases == true) PhaseItem.entries.toSet() else emptySet()
+    val disabledPhases = if (electricityMeterChartType?.needsPhases == true) allPhases.minus(availablePhases) else allPhases
 
-    val disabledPhases = when (type) {
-      ElectricityMeterChartType.FORWARDED_ACTIVE_ENERGY,
-      ElectricityMeterChartType.REVERSED_ACTIVE_ENERGY,
-      ElectricityMeterChartType.FORWARDED_REACTIVE_ENERGY,
-      ElectricityMeterChartType.REVERSED_REACTIVE_ENERGY -> allPhases.minus(availablePhases)
-
-      else -> allPhases
-    }
     return if (selectedPhases.isEmpty()) {
       MultipleSelectionList(allPhases.minus(disabledPhases), allPhases, R.string.details_em_phases, disabledPhases)
     } else {
@@ -274,14 +312,39 @@ class ElectricityMeterHistoryViewModel @Inject constructor(
     }
   }
 
-  private fun restoreCustomFilters(flags: List<SuplaChannelFlag>, value: SuplaChannelElectricityMeterValue?, state: ChartState) =
-    updateState { it.copy(chartCustomFilters = ElectricityChartFilters.restore(flags, value, state)) }
+  private fun restoreCustomFilters(
+    flags: List<SuplaChannelFlag>,
+    value: SuplaChannelElectricityMeterValue?,
+    electricityMeterConfigDto: ElectricityMeterConfigDto?,
+    state: ChartState
+  ) {
+    val customFilters = ElectricityChartFilters.restore(flags, value, electricityMeterConfigDto, state)
+    val chartStyle = when (customFilters.type) {
+      ElectricityMeterChartType.VOLTAGE,
+      ElectricityMeterChartType.CURRENT,
+      ElectricityMeterChartType.POWER_ACTIVE -> ElectricityHistoryChartStyle
+
+      else -> ElectricityChartStyle
+    }
+    updateState { it.copy(chartCustomFilters = customFilters, chartStyle = chartStyle) }
+  }
 
   private fun getChartData(spec: ChartDataSpec, chartRange: ChartRange, sets: ChannelChartSets): ChartData {
-    return if (spec.aggregation.isRank) {
+    return if (spec.isVoltageType || spec.isCurrentType || spec.isPowerActiveType) {
+      LineChartData(DateRange(spec.startDate, spec.endDate), chartRange, spec.aggregation, listOf(sets))
+    } else if (spec.aggregation.isRank) {
       PieChartData(DateRange(spec.startDate, spec.endDate), chartRange, spec.aggregation, listOf(sets))
     } else {
       BarChartData(DateRange(spec.startDate, spec.endDate), chartRange, spec.aggregation, listOf(sets))
     }
   }
 }
+
+private val ChartDataSpec.isVoltageType: Boolean
+  get() = (customFilters as? ElectricityChartFilters)?.type == ElectricityMeterChartType.VOLTAGE
+
+private val ChartDataSpec.isCurrentType: Boolean
+  get() = (customFilters as? ElectricityChartFilters)?.type == ElectricityMeterChartType.CURRENT
+
+private val ChartDataSpec.isPowerActiveType: Boolean
+  get() = (customFilters as? ElectricityChartFilters)?.type == ElectricityMeterChartType.POWER_ACTIVE

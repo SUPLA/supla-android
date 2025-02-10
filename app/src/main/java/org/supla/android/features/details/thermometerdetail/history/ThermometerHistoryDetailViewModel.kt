@@ -39,6 +39,8 @@ import org.supla.android.usecases.channel.DownloadChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.LoadChannelMeasurementsDataRangeUseCase
 import org.supla.android.usecases.channel.LoadChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
+import org.supla.android.usecases.migration.GroupingStringMigrationUseCase
+import org.supla.core.shared.data.model.rest.channel.ChannelDto
 import javax.inject.Inject
 
 @HiltViewModel
@@ -49,6 +51,7 @@ class ThermometerHistoryDetailViewModel @Inject constructor(
   private val downloadEventsManager: DownloadEventsManager,
   deleteChannelMeasurementsUseCase: DeleteChannelMeasurementsUseCase,
   readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
+  groupingStringMigrationUseCase: GroupingStringMigrationUseCase,
   userStateHolder: UserStateHolder,
   profileManager: ProfileManager,
   schedulers: SuplaSchedulers,
@@ -56,6 +59,7 @@ class ThermometerHistoryDetailViewModel @Inject constructor(
 ) : BaseHistoryDetailViewModel(
   deleteChannelMeasurementsUseCase,
   readChannelWithChildrenUseCase,
+  groupingStringMigrationUseCase,
   userStateHolder,
   profileManager,
   dateProvider,
@@ -73,7 +77,7 @@ class ThermometerHistoryDetailViewModel @Inject constructor(
       loadChannelMeasurementsDataRangeUseCase(remoteId, profileId)
     ) { first, second -> Pair(LineChartData(DateRange(spec.startDate, spec.endDate), chartRange, spec.aggregation, listOf(first)), second) }
 
-  override fun handleData(channelWithChildren: ChannelWithChildren, chartState: ChartState) {
+  override fun handleData(channelWithChildren: ChannelWithChildren, channelDto: ChannelDto, chartState: ChartState) {
     updateState { it.copy(profileId = channelWithChildren.profileId, channelFunction = channelWithChildren.function.value) }
 
     restoreRange(chartState)

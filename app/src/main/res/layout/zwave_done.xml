@@ -27,7 +27,8 @@
         android:gravity="center_horizontal"
         android:text="@string/zwave_done"
         android:textColor="@android:color/white"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:fontFamily="@font/open_sans_regular" />
 
     <TextView
         android:id="@+id/tv_wake_up_txt"
@@ -41,7 +42,8 @@
         android:gravity="center_horizontal"
         android:text="@string/zwave_change_wake_up_settings"
         android:textColor="@android:color/white"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:fontFamily="@font/open_sans_regular" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnWakeUpSettings"

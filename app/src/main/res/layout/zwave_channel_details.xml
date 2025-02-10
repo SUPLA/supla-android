@@ -14,7 +14,8 @@
     android:layout_marginRight="20dp"
     android:text="@string/function"
     android:textColor="@android:color/white"
-    android:textSize="40sp" />
+    android:textSize="40sp"
+    android:fontFamily="@font/quicksand_light" />
 
   <TextView
     android:id="@+id/tv_channel_detail_description"
@@ -26,7 +27,8 @@
     android:layout_marginRight="20dp"
     android:text="@string/zwave_dialog_channel_detail_message"
     android:textColor="@android:color/white"
-    android:textSize="18sp" />
+    android:textSize="18sp"
+    android:fontFamily="@font/open_sans_regular" />
 
   <LinearLayout
     android:id="@+id/ll_channel_details"

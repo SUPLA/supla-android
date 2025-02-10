@@ -27,8 +27,8 @@ android {
     minSdk = libs.versions.minSdk.get().toInt()
     targetSdk = libs.versions.targetSdk.get().toInt()
     multiDexEnabled = true
-    versionCode = 267
-    versionName = "25.01"
+    versionCode = 273
+    versionName = "25.02"
 
     ndk {
       moduleName = "suplaclient"

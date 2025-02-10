@@ -20,6 +20,7 @@ package org.supla.android.features.details.detailbase.history
 import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.intl.Locale
 import io.reactivex.rxjava3.core.Maybe
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.R
@@ -44,6 +45,8 @@ import org.supla.android.data.model.chart.DefaultChartState
 import org.supla.android.data.model.chart.datatype.ChartData
 import org.supla.android.data.model.chart.datatype.EmptyChartData
 import org.supla.android.data.model.chart.hasCustomFilters
+import org.supla.android.data.model.chart.style.ChartStyle
+import org.supla.android.data.model.chart.style.Default
 import org.supla.android.data.model.general.HideableValue
 import org.supla.android.data.model.general.RangeValueType
 import org.supla.android.data.model.general.SingleSelectionList
@@ -75,11 +78,17 @@ import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.views.SpinnerItem
 import org.supla.android.usecases.channel.DeleteChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
+import org.supla.android.usecases.migration.GroupingStringMigrationUseCase
+import org.supla.core.shared.data.model.rest.channel.ChannelDto
+import org.supla.core.shared.data.model.rest.channel.DefaultChannelDto
+import java.util.Calendar
 import java.util.Date
+import java.util.TimeZone
 
 abstract class BaseHistoryDetailViewModel(
   private val deleteChannelMeasurementsUseCase: DeleteChannelMeasurementsUseCase,
   private val readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
+  private val groupingStringMigrationUseCase: GroupingStringMigrationUseCase,
   private val userStateHolder: UserStateHolder,
   private val profileManager: ProfileManager,
   private val dateProvider: DateProvider,
@@ -98,6 +107,7 @@ abstract class BaseHistoryDetailViewModel(
       it.copy(
         loading = true,
         initialLoadStarted = false,
+        downloadConfigured = false,
         chartData = it.chartData.empty()
       )
     }
@@ -108,8 +118,13 @@ abstract class BaseHistoryDetailViewModel(
     updateState { state ->
       state.chartData.sets.firstOrNull { it.remoteId == remoteId }?.let { channelSets ->
         if (channelSets.function.hasCustomFilters()) {
-          state.copy(chartDataSelectionDialogState = provideSelectionDialogState(channelSets, state.chartCustomFilters))
-        } else if (state.chartData.onlyOneSetAndActive) {
+          val dialogState = provideSelectionDialogState(channelSets, state.chartCustomFilters)
+          if (dialogState != null) {
+            return@let state.copy(chartDataSelectionDialogState = provideSelectionDialogState(channelSets, state.chartCustomFilters))
+          }
+        }
+
+        if (state.chartData.onlyOneSetAndActive) {
           state // If only one active set available - disable deactivating.
         } else {
           val chartData = state.chartData.toggleActive(remoteId, type)
@@ -128,6 +143,9 @@ abstract class BaseHistoryDetailViewModel(
 
     updateUserState()
   }
+
+  protected open fun cloudChannelProvider(channelWithChildren: ChannelWithChildren): Observable<ChannelDto> =
+    Observable.just(DefaultChannelDto(channelWithChildren.remoteId))
 
   protected open fun provideSelectionDialogState(
     channelChartSets: ChannelChartSets,
@@ -334,7 +352,7 @@ abstract class BaseHistoryDetailViewModel(
       .disposeBySelf()
   }
 
-  protected abstract fun handleData(channelWithChildren: ChannelWithChildren, chartState: ChartState)
+  protected abstract fun handleData(channelWithChildren: ChannelWithChildren, channelDto: ChannelDto, chartState: ChartState)
 
   protected abstract fun measurementsMaybe(
     remoteId: Int,
@@ -374,12 +392,16 @@ abstract class BaseHistoryDetailViewModel(
 
   private fun triggerDataLoad(remoteId: Int) {
     Maybe.zip(
-      readChannelWithChildrenUseCase(remoteId),
-      profileManager.getCurrentProfile().map { loadChartState(it.id, remoteId) }
+      readChannelWithChildrenUseCase(remoteId)
+        .flatMap { groupingStringMigrationUseCase(it).andThen(Maybe.just(it)) },
+      profileManager.getCurrentProfile().map { loadChartState(it.id, remoteId) },
     ) { first, second -> Pair(first, second) }
+      .flatMap { pair ->
+        cloudChannelProvider(pair.first).firstElement().map { Triple(pair.first, pair.second, it) }
+      }
       .attachSilent()
       .subscribeBy(
-        onSuccess = { handleData(it.first, it.second) },
+        onSuccess = { handleData(it.first, it.third, it.second) },
         onError = defaultErrorHandler("triggerDataLoad")
       )
       .disposeBySelf()
@@ -430,10 +452,10 @@ abstract class BaseHistoryDetailViewModel(
     }
 
     val dateRange = when (selectedRange) {
-      ChartRange.LAST_DAY,
+      ChartRange.LAST_DAY -> dateProvider.currentDate().let { DateRange(it.shift(-selectedRange.roundedDaysCount), it) }
       ChartRange.LAST_WEEK,
       ChartRange.LAST_MONTH,
-      ChartRange.LAST_QUARTER -> dateProvider.currentDate().let { DateRange(it.shift(-selectedRange.roundedDaysCount), it) }
+      ChartRange.LAST_QUARTER -> dateProvider.currentDate().dayEnd().let { DateRange(it.shift(-selectedRange.roundedDaysCount), it) }
 
       else -> chartState.dateRange ?: dateProvider.currentDate().let { DateRange(it.shift(-selectedRange.roundedDaysCount), it) }
     }
@@ -547,11 +569,11 @@ abstract class BaseHistoryDetailViewModel(
 
   private fun getStartDateForRange(range: ChartRange, date: Date, currentDate: Date, dateForCustom: Date, minDate: Date) = when (range) {
     ChartRange.DAY -> date.dayStart()
-    ChartRange.LAST_DAY,
+    ChartRange.LAST_DAY -> currentDate.shift(-range.roundedDaysCount)
     ChartRange.LAST_WEEK,
     ChartRange.LAST_MONTH,
     ChartRange.LAST_QUARTER,
-    ChartRange.LAST_YEAR -> currentDate.shift(-range.roundedDaysCount)
+    ChartRange.LAST_YEAR -> currentDate.dayEnd().shift(-range.roundedDaysCount)
 
     ChartRange.WEEK -> date.weekStart()
     ChartRange.MONTH -> date.monthStart()
@@ -563,11 +585,11 @@ abstract class BaseHistoryDetailViewModel(
 
   private fun getEndDateForRange(range: ChartRange, end: Date, currentDate: Date, dateForCustom: Date, maxDate: Date) = when (range) {
     ChartRange.DAY -> end.dayEnd()
-    ChartRange.LAST_DAY,
+    ChartRange.LAST_DAY -> currentDate
     ChartRange.LAST_WEEK,
     ChartRange.LAST_MONTH,
     ChartRange.LAST_QUARTER,
-    ChartRange.LAST_YEAR -> currentDate
+    ChartRange.LAST_YEAR -> currentDate.dayEnd()
 
     ChartRange.WEEK -> end.weekEnd()
     ChartRange.MONTH -> end.monthEnd()
@@ -596,6 +618,7 @@ data class HistoryDetailViewState(
   val chartCustomFilters: ChartDataSpec.Filters? = null,
   val chartDataSelectionDialogState: ChartDataSelectionDialogState? = null,
 
+  val chartStyle: ChartStyle = Default,
   val minDate: Date? = null,
   val maxDate: Date? = null,
   val withRightAxis: Boolean = false,
@@ -734,13 +757,14 @@ data class HistoryDetailViewState(
   }
 
   fun editDayValidator(date: Date): Boolean {
+    val localDate = Date(date.time - TimeZone.getTimeZone(Calendar.getInstance().timeZone.id).getOffset(date.time))
     val (min, max) = guardLet(minDate, maxDate) { return true }
-    val (range) = guardLet(range) { return min.before(date) && max.after(date) }
+    val (range) = guardLet(range) { return min.before(localDate) && max.after(localDate) }
 
     return when (editDate) {
-      RangeValueType.START -> min.before(date) && range.end.after(date)
-      RangeValueType.END -> range.start.before(date) && max.after(date)
-      else -> min.before(date) && max.after(date)
+      RangeValueType.START -> min.before(localDate) && range.end.after(localDate)
+      RangeValueType.END -> range.start.before(localDate.dayEnd()) && max.after(localDate)
+      else -> min.before(localDate) && max.after(localDate)
     }
   }
 

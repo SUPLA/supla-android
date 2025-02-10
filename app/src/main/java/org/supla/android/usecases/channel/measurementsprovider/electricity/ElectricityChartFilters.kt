@@ -30,6 +30,8 @@ import org.supla.android.data.source.remote.channel.suplaElectricityMeterMeasure
 import org.supla.android.features.details.detailbase.history.ui.CheckboxItem
 import org.supla.android.features.details.electricitymeterdetail.history.ElectricityMeterChartType
 import org.supla.android.lib.SuplaChannelElectricityMeterValue
+import org.supla.core.shared.data.model.rest.channel.ElectricityMeterConfigDto
+import org.supla.core.shared.extensions.ifTrue
 
 @Serializable
 data class ElectricityChartFilters(
@@ -47,14 +49,19 @@ data class ElectricityChartFilters(
         availablePhases = PhaseItem.entries.toSet()
       )
 
-    fun restore(flags: List<SuplaChannelFlag>, value: SuplaChannelElectricityMeterValue?, state: ChartState): ElectricityChartFilters {
+    fun restore(
+      flags: List<SuplaChannelFlag>,
+      value: SuplaChannelElectricityMeterValue?,
+      electricityMeterConfigDto: ElectricityMeterConfigDto?,
+      state: ChartState
+    ): ElectricityChartFilters {
       val filters = (state as? ElectricityChartState)?.customFilters ?: default()
       val availablePhases = filterPhases(flags, PhaseItem.entries.toSet())
       val selectedPhases = filterPhases(flags, filters.selectedPhases)
         .let { if (it.isEmpty() && filters.type.needsPhases) availablePhases else it }
 
       return filters.copy(
-        availableTypes = buildTypes(value),
+        availableTypes = buildTypes(value, electricityMeterConfigDto),
         selectedPhases = selectedPhases,
         availablePhases = availablePhases
       )
@@ -67,7 +74,10 @@ data class ElectricityChartFilters(
         .let { if (flags.contains(SuplaChannelFlag.PHASE3_UNSUPPORTED)) it.minus(PhaseItem.PHASE_3) else it }
     }
 
-    private fun buildTypes(value: SuplaChannelElectricityMeterValue?): Set<ElectricityMeterChartType> {
+    private fun buildTypes(
+      value: SuplaChannelElectricityMeterValue?,
+      electricityMeterConfigDto: ElectricityMeterConfigDto?
+    ): Set<ElectricityMeterChartType> {
       if (value == null) {
         return emptySet()
       }
@@ -94,9 +104,10 @@ data class ElectricityChartFilters(
           add(ElectricityMeterChartType.BALANCE_HOURLY)
           add(ElectricityMeterChartType.BALANCE_CHART_AGGREGATED)
         }
-        if (measuredTypes.hasBalance) {
-          add(ElectricityMeterChartType.BALANCE_VECTOR)
-        }
+        measuredTypes.hasBalance.ifTrue { add(ElectricityMeterChartType.BALANCE_VECTOR) }
+        electricityMeterConfigDto?.voltageLoggerEnabled?.ifTrue { add(ElectricityMeterChartType.VOLTAGE) }
+        electricityMeterConfigDto?.currentLoggerEnabled?.ifTrue { add(ElectricityMeterChartType.CURRENT) }
+        electricityMeterConfigDto?.powerActiveLoggerEnabled?.ifTrue { add(ElectricityMeterChartType.POWER_ACTIVE) }
       }
     }
   }
