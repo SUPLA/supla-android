@@ -170,7 +170,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     // given
     val groupId = 123
     val buttonType = ButtonType.LEFT
-    whenever(groupActionUseCase(groupId, buttonType)).thenReturn(Completable.error(ActionException.ChannelClosedManually(groupId)))
+    whenever(groupActionUseCase(groupId, buttonType)).thenReturn(Completable.error(ActionException.ValveClosedManually(groupId)))
 
     // when
     viewModel.performAction(groupId, buttonType)
@@ -178,7 +178,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     // then
     Assertions.assertThat(states).isEmpty()
     Assertions.assertThat(events).containsExactly(
-      GroupListViewEvent.ShowValveDialog(groupId)
+      GroupListViewEvent.ShowValveClosedManuallyDialog(groupId)
     )
     verifyNoInteractionsExcept(groupActionUseCase)
   }

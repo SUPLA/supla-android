@@ -87,6 +87,7 @@ val LocalizedStringId.resourceId: Int
     LocalizedStringId.CHANNEL_CAPTION_HEAT_OR_COLD_SOURCE_SWITCH -> R.string.channel_caption_heat_or_cold_sourc_switch
     LocalizedStringId.CHANNEL_CAPTION_CONTAINER -> R.string.channel_caption_container
     LocalizedStringId.CHANNEL_CAPTION_UNKNOWN -> R.string.channel_not_supported
+    LocalizedStringId.CHANNEL_CAPTION_FLOOD_SENSOR -> R.string.channel_caption_flood_sensor
 
     LocalizedStringId.CHANNEL_BATTERY_LEVEL -> R.string.channel_battery_level
 
@@ -97,4 +98,8 @@ val LocalizedStringId.resourceId: Int
     LocalizedStringId.THERMOSTAT_THERMOMETER_ERROR -> R.string.thermostat_thermometer_error
     LocalizedStringId.THERMOSTAT_BATTER_COVER_OPEN -> R.string.thermostat_battery_cover_open
     LocalizedStringId.THERMOSTAT_CLOCK_ERROR -> R.string.thermostat_clock_error
+
+    LocalizedStringId.FLOOD_SENSOR_ACTIVE -> R.string.flooding_alarm_message
+    LocalizedStringId.VALVE_MANUALLY_CLOSED -> R.string.valve_warning_manually_closed_short
+    LocalizedStringId.VALVE_FLOODING -> R.string.valve_warning_flooding_short
   }

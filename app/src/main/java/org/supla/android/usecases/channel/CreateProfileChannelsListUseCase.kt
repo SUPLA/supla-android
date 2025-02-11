@@ -120,7 +120,8 @@ class CreateProfileChannelsListUseCase @Inject constructor(
         channelData.isProjectorScreen() ||
         channelData.isGarageDoorRoller() ||
         channelData.isSwitch() ||
-        channelData.isRgbw() -> toIconWithButtonsItem(channelData, childrenMap)
+        channelData.isRgbw() ||
+        channelData.function == SuplaFunction.VALVE_OPEN_CLOSE -> toIconWithButtonsItem(channelData, childrenMap)
 
       channelData.isIconWithAction() -> toIconWithRightButtonItem(channelData, childrenMap)
       channelData.isHvacThermostat() -> toThermostatItem(channelData, childrenMap)

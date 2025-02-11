@@ -155,7 +155,8 @@ abstract class BaseListViewModel<S : ViewState, E : ViewEvent>(
       SuplaFunction.DIGIGLASS_HORIZONTAL,
       SuplaFunction.DIGIGLASS_VERTICAL,
       SuplaFunction.PUMP_SWITCH,
-      SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH -> false
+      SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH,
+      SuplaFunction.FLOOD_SENSOR -> false
     }
 
   protected fun loadServerUrl(handler: (CloudUrl) -> Unit) {

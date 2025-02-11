@@ -34,6 +34,7 @@ import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_DI
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_DIMMER_AND_RGB_LIGHTING
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_DISTANCE_SENSOR
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_ELECTRICITY_METER
+import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_FLOOD_SENSOR
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_GENERAL_PURPOSE_MEASUREMENT
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_GENERAL_PURPOSE_METER
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_HEAT_OR_COLD_SOURCE_SWITCH
@@ -134,6 +135,7 @@ class GetChannelDefaultCaptionUseCase {
       SuplaFunction.PUMP_SWITCH -> localizedString(CHANNEL_CAPTION_PUMP_SWITCH)
       SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH -> localizedString(CHANNEL_CAPTION_HEAT_OR_COLD_SOURCE_SWITCH)
       SuplaFunction.CONTAINER -> localizedString(CHANNEL_CAPTION_CONTAINER)
+      SuplaFunction.FLOOD_SENSOR -> localizedString(CHANNEL_CAPTION_FLOOD_SENSOR)
 
       SuplaFunction.UNKNOWN,
       SuplaFunction.NONE,

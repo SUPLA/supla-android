@@ -193,7 +193,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     // given
     val channelId = 123
     val buttonType = ButtonType.LEFT
-    whenever(channelActionUseCase(channelId, buttonType)).thenReturn(Completable.error(ActionException.ChannelClosedManually(channelId)))
+    whenever(channelActionUseCase(channelId, buttonType)).thenReturn(Completable.error(ActionException.ValveClosedManually(channelId)))
 
     // when
     viewModel.performAction(channelId, buttonType)
@@ -201,7 +201,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     // then
     assertThat(states).isEmpty()
     assertThat(events).containsExactly(
-      ChannelListViewEvent.ShowValveDialog(channelId)
+      ChannelListViewEvent.ShowValveClosedManuallyDialog(channelId)
     )
     verifyNoInteractionsExcept(channelActionUseCase)
   }

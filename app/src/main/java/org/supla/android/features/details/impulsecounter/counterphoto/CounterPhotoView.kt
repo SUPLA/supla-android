@@ -129,7 +129,7 @@ private fun ErrorContent(onCloudClick: () -> Unit, onTryAgainClick: () -> Unit) 
         painter = painterResource(id = R.drawable.ic_status_error),
         contentDescription = null
       )
-      Text(stringResource(R.string.counter_photo_loading_error))
+      Text(stringResource(R.string.counter_photo_loading_error), style = MaterialTheme.typography.bodyLarge)
       BlueTextButton(
         text = stringResource(id = R.string.status_try_again),
         onClick = onTryAgainClick

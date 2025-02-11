@@ -23,8 +23,8 @@ import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.data.source.RoomChannelRepository
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.remote.relay.SuplaRelayFlag
-import org.supla.android.data.source.remote.valve.SuplaValveFlag
 import org.supla.android.lib.SuplaConst
+import org.supla.core.shared.data.model.valve.SuplaValveFlag
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -42,8 +42,12 @@ class ChannelActionUseCase @Inject constructor(
       throw ActionException.ChannelExceedAmperage(channelBase.remoteId)
     }
 
-    if (buttonType == ButtonType.LEFT && isValveChannel(channelBase.function.value) && isChannelManuallyClosedOrIsFlooding(channelBase)) {
-      throw ActionException.ChannelClosedManually(channelBase.remoteId)
+    if (buttonType == ButtonType.RIGHT && isValveChannel(channelBase.function.value)) {
+      if (isManuallyClosed(channelBase)) {
+        throw ActionException.ValveClosedManually(channelBase.remoteId)
+      } else if (isFlooding(channelBase)) {
+        throw ActionException.ValveFloodingAlarm(channelBase.remoteId)
+      }
     }
 
     super.performAction(channelBase, buttonType, forGroup)
@@ -65,8 +69,13 @@ class ChannelActionUseCase @Inject constructor(
       it.on.not() && it.flags.contains(SuplaRelayFlag.OVERCURRENT_RELAY_OFF)
     }
 
-  private fun isChannelManuallyClosedOrIsFlooding(channel: ChannelDataEntity): Boolean =
+  private fun isManuallyClosed(channel: ChannelDataEntity): Boolean =
     channel.channelValueEntity.asValveValue().let {
-      it.isClosed() && (it.flags.contains(SuplaValveFlag.FLOODING) || it.flags.contains(SuplaValveFlag.MANUALLY_CLOSED))
+      it.isClosed() && it.flags.contains(SuplaValveFlag.MANUALLY_CLOSED)
+    }
+
+  private fun isFlooding(channel: ChannelDataEntity): Boolean =
+    channel.channelValueEntity.asValveValue().let {
+      it.isClosed() && it.flags.contains(SuplaValveFlag.FLOODING)
     }
 }

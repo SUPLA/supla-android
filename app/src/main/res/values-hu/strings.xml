@@ -268,7 +268,7 @@
   <string name="uptime">Munkaidő</string>
   <string name="uv_warning1">Az uv fűtőtest élettartama %1$s. Ütemezze a cseréjét.</string>
   <string name="uv_warning2">Az uv fűtőtest élettartama %1$s. Cserélje ki a fűtőtestet.</string>
-  <string name="valve_open_warning">A szelepet kézzel vagy rádióval zárták be. Mielőtt kinyitná, győződjön meg arról, hogy az áradás miatt nem volt bezárva. A figyelmeztetés kikapcsolásához kézzel nyissa ki a szelepet. Biztosan meg szeretné nyitni a szelepet az alkalmazásból?!</string>
+  <string name="valve_warning_manually_closed">A szelepet kézzel vagy rádióval zárták be. Mielőtt kinyitná, győződjön meg arról, hogy az áradás miatt nem volt bezárva. A figyelmeztetés kikapcsolásához kézzel nyissa ki a szelepet. Biztosan meg szeretné nyitni a szelepet az alkalmazásból?!</string>
   <string name="valve_warning">A szelepet kézzel vagy rádióval zárták be. Mielőtt kinyitná, győződjön meg arról, hogy az áradás miatt nem volt bezárva. A figyelmeztetés kikapcsolásához kézzel nyissa ki a szelepet.</string>
   <string name="vector_balance_days">Vektoregyensúly - Napok</string>
   <string name="vector_balance_hours">Vektoregyensúly - Órák</string>

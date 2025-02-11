@@ -21,12 +21,12 @@ import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.data.source.remote.relay.SuplaRelayFlag
-import org.supla.android.data.source.remote.valve.SuplaValveFlag
-import org.supla.android.data.source.remote.valve.ValveValue
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.ActionParameters
 import org.supla.android.lib.actions.SubjectType
 import org.supla.core.shared.data.model.general.SuplaFunction
+import org.supla.core.shared.data.model.valve.SuplaValveFlag
+import org.supla.core.shared.data.model.valve.ValveValue
 
 @RunWith(MockitoJUnitRunner::class)
 class ChannelActionUseCaseTest {
@@ -56,15 +56,15 @@ class ChannelActionUseCaseTest {
 
   @Test
   fun `should not open valve channel when closed and flooding`() {
-    testValveException(SuplaFunction.VALVE_OPEN_CLOSE) {
+    testValveException(SuplaFunction.VALVE_OPEN_CLOSE, ActionException.ValveFloodingAlarm(123)) {
       every { it.flags } returns listOf(SuplaValveFlag.FLOODING)
     }
   }
 
   @Test
   fun `should not open valve channel when closed and closed manually`() {
-    testValveException(SuplaFunction.VALVE_PERCENTAGE) {
-      every { it.flags } returns listOf(SuplaValveFlag.FLOODING, SuplaValveFlag.MANUALLY_CLOSED)
+    testValveException(SuplaFunction.VALVE_PERCENTAGE, ActionException.ValveClosedManually(123)) {
+      every { it.flags } returns listOf(SuplaValveFlag.MANUALLY_CLOSED)
     }
   }
 
@@ -223,7 +223,7 @@ class ChannelActionUseCaseTest {
     verifyNoInteractions(suplaClientProvider)
   }
 
-  private fun testValveException(channelFunc: SuplaFunction, channelValueSetup: (ValveValue) -> Unit) {
+  private fun testValveException(channelFunc: SuplaFunction, exception: ActionException, channelValueSetup: (ValveValue) -> Unit) {
     // given
     val channelId = 123
     val channel: ChannelDataEntity = mockk()
@@ -241,10 +241,10 @@ class ChannelActionUseCaseTest {
     whenever(channelRepository.findChannelDataEntity(channelId)).thenReturn(Maybe.just(channel))
 
     // when
-    val testObserver = useCase(channelId, ButtonType.LEFT).test()
+    val testObserver = useCase(channelId, ButtonType.RIGHT).test()
 
     // then
-    testObserver.assertError(ActionException.ChannelClosedManually(channelId))
+    testObserver.assertError(exception)
     verifyNoInteractions(suplaClientProvider)
   }
 
