@@ -93,6 +93,7 @@ open class BaseActionUseCase<T : ChannelDataBase>(
 enum class ButtonType { LEFT, RIGHT }
 
 sealed class ActionException : Throwable() {
-  data class ChannelClosedManually(val remoteId: Int) : ActionException()
+  data class ValveClosedManually(val remoteId: Int) : ActionException()
+  data class ValveFloodingAlarm(val remoteId: Int) : ActionException()
   data class ChannelExceedAmperage(val remoteId: Int) : ActionException()
 }

@@ -133,6 +133,7 @@ abstract class BaseDetailTypeProviderUseCase {
     SuplaFunction.WEATHER_STATION,
     SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL,
     SuplaFunction.VALVE_OPEN_CLOSE,
-    SuplaFunction.VALVE_PERCENTAGE -> null
+    SuplaFunction.VALVE_PERCENTAGE,
+    SuplaFunction.FLOOD_SENSOR -> null
   }
 }

@@ -194,7 +194,7 @@ class ElectricityMeterHistoryViewModel @Inject constructor(
   ): Single<Pair<ChartData, Optional<DateRange>>> =
     loadChannelMeasurementsDataRangeUseCase(remoteId, profileId, dataType)
       .flatMap { range ->
-        // while the data range is changing (voltage, current, power active as different range) it has to be corrected
+        // while the data range is changing (voltage, current, power active has different range) it has to be corrected
         val correctedSpec = if (chartRange == ChartRange.ALL_HISTORY) spec.correctBy(range) else spec
         loadChannelMeasurementsUseCase(remoteId, correctedSpec)
           .map { Pair(getChartData(correctedSpec, chartRange, it), range) }

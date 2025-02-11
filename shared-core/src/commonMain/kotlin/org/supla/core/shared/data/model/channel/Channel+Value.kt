@@ -22,6 +22,7 @@ import org.supla.core.shared.data.model.function.facadeblind.FacadeBlindValue
 import org.supla.core.shared.data.model.function.rollershutter.RollerShutterValue
 import org.supla.core.shared.data.model.function.thermostat.ThermostatValue
 import org.supla.core.shared.data.model.general.Channel
+import org.supla.core.shared.data.model.valve.ValveValue
 
 val Channel.facadeBlindValue: FacadeBlindValue?
   get() = value?.let { FacadeBlindValue.from(online, it) }
@@ -34,3 +35,6 @@ val Channel.thermostatValue: ThermostatValue?
 
 val Channel.containerValue: ContainerValue?
   get() = value?.let { ContainerValue.from(online, it) }
+
+val Channel.valveValue: ValveValue?
+  get() = value?.let { ValveValue.from(online, it) }

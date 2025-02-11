@@ -269,7 +269,7 @@
   <string name="uptime">Arbeidstid</string>
   <string name="uv_warning1">UV-lampens levetid er %1$s. Planlegg utskifting.</string>
   <string name="uv_warning2">UV-lampens levetid er %1$s. Skifte ut lampen.</string>
-  <string name="valve_open_warning">Ventilen har blitt stengt manuelt eller med radio. Før du åpner den, må du sørge for at den ikke har vært stengt på grunn av vannskader. For å deaktivere advarselen, åpne ventilen manuelt. Er du sikker på at du vil åpne ventilen via appen?!</string>
+  <string name="valve_warning_manually_closed">Ventilen har blitt stengt manuelt eller med radio. Før du åpner den, må du sørge for at den ikke har vært stengt på grunn av vannskader. For å deaktivere advarselen, åpne ventilen manuelt. Er du sikker på at du vil åpne ventilen via appen?!</string>
   <string name="valve_warning">Ventilen har blitt stengt manuelt eller med radio. Før du åpner den, må du sørge for at den ikke har vært stengt på grunn av vannskader. For å deaktivere advarselen, åpne ventilen manuelt.</string>
   <string name="vector_balance_days">Vektorbalanse - Dager</string>
   <string name="vector_balance_hours">Vektorbalanse - Timer</string>

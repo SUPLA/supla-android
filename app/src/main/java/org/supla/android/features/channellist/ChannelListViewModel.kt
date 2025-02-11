@@ -127,7 +127,8 @@ class ChannelListViewModel @Inject constructor(
       .subscribeBy(
         onError = { throwable ->
           when (throwable) {
-            is ActionException.ChannelClosedManually -> sendEvent(ChannelListViewEvent.ShowValveDialog(throwable.remoteId))
+            is ActionException.ValveClosedManually -> sendEvent(ChannelListViewEvent.ShowValveClosedManuallyDialog(throwable.remoteId))
+            is ActionException.ValveFloodingAlarm -> sendEvent(ChannelListViewEvent.ShowValveFloodingDialog(throwable.remoteId))
             is ActionException.ChannelExceedAmperage -> sendEvent(ChannelListViewEvent.ShowAmperageExceededDialog(throwable.remoteId))
             else -> defaultErrorHandler("performAction($channelId, $buttonType)")(throwable)
           }
@@ -192,7 +193,8 @@ class ChannelListViewModel @Inject constructor(
 }
 
 sealed class ChannelListViewEvent : ViewEvent {
-  data class ShowValveDialog(val remoteId: Int) : ChannelListViewEvent()
+  data class ShowValveClosedManuallyDialog(val remoteId: Int) : ChannelListViewEvent()
+  data class ShowValveFloodingDialog(val remoteId: Int) : ChannelListViewEvent()
   data class ShowAmperageExceededDialog(val remoteId: Int) : ChannelListViewEvent()
   data class OpenLegacyDetails(val remoteId: Int, val type: LegacyDetailType) : ChannelListViewEvent()
   data class OpenSwitchDetail(private val itemBundle: ItemBundle, private val pages: List<DetailPage>) :

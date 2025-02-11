@@ -24,10 +24,23 @@ import org.supla.android.SuplaApp
 import org.supla.android.core.networking.suplaclient.SuplaClientApi
 import org.supla.android.core.ui.BaseFragment
 
-fun BaseFragment<*, *>.valveAlertDialog(channelId: Int, suplaClient: SuplaClientApi?): AlertDialog {
+fun BaseFragment<*, *>.valveClosedManuallyDialog(channelId: Int, suplaClient: SuplaClientApi?): AlertDialog {
   val builder = AlertDialog.Builder(context)
   builder.setTitle(android.R.string.dialog_alert_title)
-  builder.setMessage(R.string.valve_open_warning)
+  builder.setMessage(R.string.valve_warning_manually_closed)
+  builder.setPositiveButton(R.string.yes) { dialog: DialogInterface, _ ->
+    SuplaApp.Vibrate(context)
+    suplaClient?.open(channelId, false, 1)
+    dialog.cancel()
+  }
+  builder.setNeutralButton(R.string.no) { dialog: DialogInterface, _ -> dialog.cancel() }
+  return builder.create()
+}
+
+fun BaseFragment<*, *>.valveFloodingDialog(channelId: Int, suplaClient: SuplaClientApi?): AlertDialog {
+  val builder = AlertDialog.Builder(context)
+  builder.setTitle(android.R.string.dialog_alert_title)
+  builder.setMessage(R.string.valve_warning_flooding)
   builder.setPositiveButton(R.string.yes) { dialog: DialogInterface, _ ->
     SuplaApp.Vibrate(context)
     suplaClient?.open(channelId, false, 1)

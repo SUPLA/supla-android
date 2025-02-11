@@ -21,6 +21,8 @@ import org.assertj.core.api.Assertions
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
+import org.supla.core.shared.data.model.valve.SuplaValveFlag
+import org.supla.core.shared.data.model.valve.ValveValue
 
 @RunWith(MockitoJUnitRunner::class)
 class ValveValueTest {

@@ -267,7 +267,7 @@
   <string name="uptime">Timp de lucru</string>
   <string name="uv_warning1">Durata de viaţă a lămpii UV este de %1$s. Programaşi înlocuirea acestuia.</string>
   <string name="uv_warning2">Durata de viaţă a lămpii UV este de  %1$s.  Înlocuiţi lampa.</string>
-  <string name="valve_open_warning">Robinetul a fost închis manual sau prin radio. Înainte de a-l deschide, asiguraţi-vă că nu a fost închis din cauza inundaţiei Pentru a dezactiva avertizarea, deschideți manual robinetul. Sigur doriți să deschideți robinetul din aplicație?!</string>
+  <string name="valve_warning_manually_closed">Robinetul a fost închis manual sau prin radio. Înainte de a-l deschide, asiguraţi-vă că nu a fost închis din cauza inundaţiei Pentru a dezactiva avertizarea, deschideți manual robinetul. Sigur doriți să deschideți robinetul din aplicație?!</string>
   <string name="valve_warning">Robinetul a fost închis manual sau prin radio. Înainte de a-l deschide, asiguraţi-vă că nu a fost închis din cauza inundaţiei. Pentru a dezactiva avertizarea, deschideți manual robinetul.</string>
   <string name="vector_balance_days">Bilanţ vectorial - Zile</string>
   <string name="vector_balance_hours">Bilanţ vectorial - Ore</string>

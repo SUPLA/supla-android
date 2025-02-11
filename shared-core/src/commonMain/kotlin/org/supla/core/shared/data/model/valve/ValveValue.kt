@@ -1,4 +1,4 @@
-package org.supla.android.data.source.remote.valve
+package org.supla.core.shared.data.model.valve
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,18 +17,27 @@ package org.supla.android.data.source.remote.valve
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-enum class SuplaValveFlag(val value: Int) {
-  FLOODING(1),
-  MANUALLY_CLOSED(2);
+private const val VALVE_VALUE_LENGTH = 2
+
+data class ValveValue(
+  val online: Boolean,
+  val closed: Int,
+  val flags: List<SuplaValveFlag>
+) {
+
+  fun isClosed() = closed == 1
 
   companion object {
-    fun from(value: Int): List<SuplaValveFlag> =
-      mutableListOf<SuplaValveFlag>().also {
-        for (flag in entries) {
-          if (flag.value and value > 0) {
-            it.add(flag)
-          }
-        }
+    fun from(online: Boolean, bytes: ByteArray): ValveValue {
+      if (bytes.size < VALVE_VALUE_LENGTH) {
+        return ValveValue(online, 0, emptyList())
       }
+
+      return ValveValue(
+        online = online,
+        closed = bytes[0].toInt(),
+        flags = SuplaValveFlag.from(bytes[1].toInt())
+      )
+    }
   }
 }

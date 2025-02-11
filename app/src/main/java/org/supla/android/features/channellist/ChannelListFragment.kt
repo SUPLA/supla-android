@@ -36,7 +36,8 @@ import org.supla.android.lib.SuplaChannelState
 import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.navigator.MainNavigator
 import org.supla.android.ui.dialogs.exceededAmperageDialog
-import org.supla.android.ui.dialogs.valveAlertDialog
+import org.supla.android.ui.dialogs.valveClosedManuallyDialog
+import org.supla.android.ui.dialogs.valveFloodingDialog
 import org.supla.android.ui.lists.message
 import org.supla.android.usecases.channel.ButtonType
 import javax.inject.Inject
@@ -78,7 +79,8 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
   override fun handleEvents(event: ChannelListViewEvent) {
     val suplaClient = suplaClientProvider.provide()
     when (event) {
-      is ChannelListViewEvent.ShowValveDialog -> valveAlertDialog(event.remoteId, suplaClient).show()
+      is ChannelListViewEvent.ShowValveClosedManuallyDialog -> valveClosedManuallyDialog(event.remoteId, suplaClient).show()
+      is ChannelListViewEvent.ShowValveFloodingDialog -> valveFloodingDialog(event.remoteId, suplaClient).show()
       is ChannelListViewEvent.ShowAmperageExceededDialog -> exceededAmperageDialog(event.remoteId, suplaClient).show()
       is ChannelListViewEvent.OpenLegacyDetails -> {
         setToolbarTitle("")

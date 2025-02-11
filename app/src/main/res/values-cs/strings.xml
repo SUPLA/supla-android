@@ -198,7 +198,7 @@
 
   <string name="channel_btn_close">Zavřít</string>
   <string name="channel_caption_valve">Ventil</string>
-  <string name="valve_open_warning">Ventil byl uzavřen v manuálním nebo rádiovém ovládacím režimu. Před otevřením zkontrolujte, zdali nebyl uzavřen z důvodu zalití. Pro vypnutí upozornění uzavřete ventil manuálně. Opravdu chcete ventil otevřít pomocí aplikace?!</string>
+  <string name="valve_warning_manually_closed">Ventil byl uzavřen v manuálním nebo rádiovém ovládacím režimu. Před otevřením zkontrolujte, zdali nebyl uzavřen z důvodu zalití. Pro vypnutí upozornění uzavřete ventil manuálně. Opravdu chcete ventil otevřít pomocí aplikace?!</string>
   <string name="valve_warning">Ventil byl uzavřen v manuálním nebo rádiovém ovládacím režimu. Před otevřením zkontrolujte, zdali nebyl uzavřen z důvodu zalití. Pro vypnutí upozornění uzavřete ventil manuálně.  Pro vypnutí upozornění uzavřete ventil manuálně.</string>
   <string name="yes">Ano</string>
 

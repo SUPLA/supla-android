@@ -26,6 +26,7 @@ import org.supla.core.shared.usecase.channel.issues.ChannelIssuesProvider
 import org.supla.core.shared.usecase.channel.issues.ContainerIssuesProvider
 import org.supla.core.shared.usecase.channel.issues.ShadingSystemIssuesProvider
 import org.supla.core.shared.usecase.channel.issues.ThermostatIssuesProvider
+import org.supla.core.shared.usecase.channel.issues.ValveIssuesProvider
 
 class GetChannelIssuesForListUseCase(
   private val getChannelLowBatteryIssueUseCase: GetChannelLowBatteryIssueUseCase,
@@ -35,7 +36,8 @@ class GetChannelIssuesForListUseCase(
   private val otherIssuesProviders: List<ChannelIssuesProvider> = listOf(
     ThermostatIssuesProvider(),
     ShadingSystemIssuesProvider(),
-    ContainerIssuesProvider()
+    ContainerIssuesProvider(),
+    ValveIssuesProvider()
   )
 
   operator fun invoke(channelWithChildren: ChannelWithChildren): ListItemIssues {

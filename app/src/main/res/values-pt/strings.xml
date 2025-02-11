@@ -256,7 +256,7 @@
   <string name="uptime">Tempo de trabalho</string>
   <string name="uv_warning1">A vida útil da lâmpada UV é de %1$s. Planeje sua substituição.</string>
   <string name="uv_warning2">A vida útil do emissor de UV é de %1$s. Substitua o emissor.</string>
-  <string name="valve_open_warning">A válvula foi fechada manualmente ou por rádio. Antes de abri-la, certifique-se de que não foi fechada devido a alagamento. Para desativar o aviso, abra a válvula manualmente. Tem certeza de que deseja abrir a válvula do aplicativo?!</string>
+  <string name="valve_warning_manually_closed">A válvula foi fechada manualmente ou por rádio. Antes de abri-la, certifique-se de que não foi fechada devido a alagamento. Para desativar o aviso, abra a válvula manualmente. Tem certeza de que deseja abrir a válvula do aplicativo?!</string>
   <string name="valve_warning">A válvula foi fechada manualmente ou por rádio. Antes de abri-la, certifique-se de que não foi fechada devido a alagamento. Para desativar o aviso, abra a válvula manualmente.</string>
   <string name="vector_balance_days">Balanço vetorial - Dias</string>
   <string name="vector_balance_hours">Balanço vetorial - Horas</string>

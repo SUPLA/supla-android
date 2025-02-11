@@ -257,7 +257,7 @@
   <string name="uptime">Tempo di funzionamento</string>
   <string name="uv_warning1">Vita utile di radiatore uv risulta %1$s. Pianifica la sua sostituzione.</string>
   <string name="uv_warning2">Vita utile di radiatore uv risulta %1$s. Sostituisci radiatore.</string>
-  <string name="valve_open_warning">La valvola è stata chiusa manualmente o via radio. Prima di aprirla, assicurati che non sia stata chiusa a causa di allagamento. Per disabilitare l’avviso apri la valvola manualmente. Sei sicuro di voler aprire la valvola tramite l’applicazione?!</string>
+  <string name="valve_warning_manually_closed">La valvola è stata chiusa manualmente o via radio. Prima di aprirla, assicurati che non sia stata chiusa a causa di allagamento. Per disabilitare l’avviso apri la valvola manualmente. Sei sicuro di voler aprire la valvola tramite l’applicazione?!</string>
   <string name="valve_warning">La valvola è stata chiusa manualmente o via radio. Prima di aprirla, assicurati che non sia stata chiusa a causa di allagamento. Per disabilitare l’avviso apri la valvola manualmente.</string>
   <string name="vector_balance_days">Equilibrio vettoriale - Giorni</string>
   <string name="vector_balance_hours">Equilibrio vettoriale - Ore</string>
