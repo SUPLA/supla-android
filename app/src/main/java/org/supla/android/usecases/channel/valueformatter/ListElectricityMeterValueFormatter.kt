@@ -23,6 +23,7 @@ import org.supla.android.extensions.ifLet
 import org.supla.android.lib.SuplaConst
 import org.supla.android.usecases.channel.valueprovider.ElectricityMeterValueProvider
 import java.text.DecimalFormat
+import kotlin.math.abs
 
 class ListElectricityMeterValueFormatter(private val useNoValue: Boolean? = null) : BaseElectricityMeterValueFormatter() {
 
@@ -92,9 +93,9 @@ abstract class BaseElectricityMeterValueFormatter : ChannelValueFormatter {
   protected fun getPrecision(value: Double, precision: ChannelValueFormatter.Precision): Int =
     when (precision) {
       is ChannelValueFormatter.Default ->
-        if (value < 100) {
+        if (abs(value) < 100) {
           2
-        } else if (value < 1000) {
+        } else if (abs(value) < 1000) {
           1
         } else {
           0

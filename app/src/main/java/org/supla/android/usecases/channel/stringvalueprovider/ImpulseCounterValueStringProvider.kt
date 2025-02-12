@@ -20,10 +20,13 @@ package org.supla.android.usecases.channel.stringvalueprovider
 import org.supla.android.data.ValuesFormatter.Companion.NO_VALUE_TEXT
 import org.supla.android.data.source.local.entity.complex.ImpulseCounter
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
+import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType
 import org.supla.android.usecases.channel.ChannelValueStringProvider
 import org.supla.android.usecases.channel.ValueType
 import org.supla.android.usecases.channel.valueformatter.ImpulseCounterValueFormatter
+import org.supla.android.usecases.channel.valueformatter.ListElectricityMeterValueFormatter
 import org.supla.android.usecases.channel.valueprovider.ImpulseCounterValueProvider
+import org.supla.core.shared.data.model.general.SuplaFunction
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -32,7 +35,8 @@ class ImpulseCounterValueStringProvider @Inject constructor(
   private val impulseCounterValueProvider: ImpulseCounterValueProvider
 ) : ChannelValueStringProvider {
 
-  val formatter = ImpulseCounterValueFormatter()
+  private val impulseCounterFormatter = ImpulseCounterValueFormatter()
+  private val electricityMeterFormatter = ListElectricityMeterValueFormatter()
 
   override fun handle(channelWithChildren: ChannelWithChildren): Boolean =
     impulseCounterValueProvider.handle(channelWithChildren)
@@ -45,7 +49,11 @@ class ImpulseCounterValueStringProvider @Inject constructor(
       return NO_VALUE_TEXT
     }
 
-    val unit = channelData.ImpulseCounter.value?.unit?.let { ImpulseCounterValueFormatter.Data(it) }
-    return formatter.format(value, withUnit, custom = unit)
+    if (channelWithChildren.function == SuplaFunction.IC_ELECTRICITY_METER) {
+      return electricityMeterFormatter.format(value, withUnit, custom = SuplaElectricityMeasurementType.FORWARD_ACTIVE_ENERGY)
+    } else {
+      val unit = channelData.ImpulseCounter.value?.unit?.let { ImpulseCounterValueFormatter.Data(it) }
+      return impulseCounterFormatter.format(value, withUnit, custom = unit)
+    }
   }
 }
