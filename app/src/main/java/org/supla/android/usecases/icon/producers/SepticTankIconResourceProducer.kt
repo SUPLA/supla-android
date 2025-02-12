@@ -23,9 +23,9 @@ import org.supla.android.usecases.icon.IconData
 import org.supla.android.usecases.icon.IconResourceProducer
 import org.supla.core.shared.data.model.general.SuplaFunction
 
-object ContainerIconResourceProducer : IconResourceProducer {
+object SepticTankIconResourceProducer : IconResourceProducer {
   override fun accepts(function: SuplaFunction): Boolean =
-    function == SuplaFunction.CONTAINER
+    function == SuplaFunction.SEPTIC_TANK
 
   override fun produce(data: IconData): Int =
     when (data.state.value) {
@@ -37,25 +37,19 @@ object ContainerIconResourceProducer : IconResourceProducer {
 
   private fun emptyIcon(alt: Int): Int =
     when (alt) {
-      1 -> R.drawable.fnc_container_1_empty
-      2 -> R.drawable.fnc_container_2_empty
-      3 -> R.drawable.fnc_container_3_empty
-      else -> R.drawable.fnc_container_empty
+      1 -> R.drawable.fnc_septic_tank_1_empty
+      else -> R.drawable.fnc_septic_tank_empty
     }
 
   private fun halfIcon(alt: Int): Int =
     when (alt) {
-      1 -> R.drawable.fnc_container_1_half
-      2 -> R.drawable.fnc_container_2_half
-      3 -> R.drawable.fnc_container_3_half
-      else -> R.drawable.fnc_container_half
+      1 -> R.drawable.fnc_septic_tank_1_half
+      else -> R.drawable.fnc_septic_tank_half
     }
 
   private fun fullIcon(alt: Int): Int =
     when (alt) {
-      1 -> R.drawable.fnc_container_1_full
-      2 -> R.drawable.fnc_container_2_full
-      3 -> R.drawable.fnc_container_3_full
-      else -> R.drawable.fnc_container_full
+      1 -> R.drawable.fnc_septic_tank_1_full
+      else -> R.drawable.fnc_septic_tank_full
     }
 }

@@ -86,8 +86,11 @@ val LocalizedStringId.resourceId: Int
     LocalizedStringId.CHANNEL_CAPTION_PUMP_SWITCH -> R.string.channel_caption_pump_switch
     LocalizedStringId.CHANNEL_CAPTION_HEAT_OR_COLD_SOURCE_SWITCH -> R.string.channel_caption_heat_or_cold_sourc_switch
     LocalizedStringId.CHANNEL_CAPTION_CONTAINER -> R.string.channel_caption_container
-    LocalizedStringId.CHANNEL_CAPTION_UNKNOWN -> R.string.channel_not_supported
+    LocalizedStringId.CHANNEL_CAPTION_SEPTIC_TANK -> R.string.channel_caption_septic_tank
+    LocalizedStringId.CHANNEL_CAPTION_WATER_TANK -> R.string.channel_caption_water_tank
+    LocalizedStringId.CHANNEL_CAPTION_CONTAINER_LEVEL_SENSOR -> R.string.channel_caption_container_level_sensor
     LocalizedStringId.CHANNEL_CAPTION_FLOOD_SENSOR -> R.string.channel_caption_flood_sensor
+    LocalizedStringId.CHANNEL_CAPTION_UNKNOWN -> R.string.channel_not_supported
 
     LocalizedStringId.CHANNEL_BATTERY_LEVEL -> R.string.channel_battery_level
 

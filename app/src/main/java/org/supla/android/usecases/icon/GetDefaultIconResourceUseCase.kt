@@ -23,6 +23,7 @@ import org.supla.android.data.model.general.ChannelState
 import org.supla.android.data.model.general.IconType
 import org.supla.android.usecases.icon.producers.AlarmArmamentSensorIconResourceProducer
 import org.supla.android.usecases.icon.producers.ContainerIconResourceProducer
+import org.supla.android.usecases.icon.producers.ContainerLevelSensorIconResourceProducer
 import org.supla.android.usecases.icon.producers.CurtainIconResourceProducer
 import org.supla.android.usecases.icon.producers.DigiglassIconResourceProducer
 import org.supla.android.usecases.icon.producers.DimmerAndRgbIconResourceProducer
@@ -49,6 +50,7 @@ import org.supla.android.usecases.icon.producers.PumpSwitchIconResourceProducer
 import org.supla.android.usecases.icon.producers.RgbLightingIconResourceProducer
 import org.supla.android.usecases.icon.producers.RollerShutterIconResourceProducer
 import org.supla.android.usecases.icon.producers.RoofWindowIconResourceProducer
+import org.supla.android.usecases.icon.producers.SepticTankIconResourceProducer
 import org.supla.android.usecases.icon.producers.StaircaseTimerIconResourceProducer
 import org.supla.android.usecases.icon.producers.StaticIconResourceProducer
 import org.supla.android.usecases.icon.producers.TerraceAwningIconResourceProducer
@@ -57,6 +59,7 @@ import org.supla.android.usecases.icon.producers.ThermostatHomePlusIconResourceP
 import org.supla.android.usecases.icon.producers.ThermostatHvacIconResourceProducer
 import org.supla.android.usecases.icon.producers.ValveIconResourceProducer
 import org.supla.android.usecases.icon.producers.VerticalBlindsIconResourceProducer
+import org.supla.android.usecases.icon.producers.WaterTankIconResourceProducer
 import org.supla.android.usecases.icon.producers.WindowIconResourceProducer
 import org.supla.core.shared.data.model.general.SuplaFunction
 import javax.inject.Inject
@@ -112,7 +115,10 @@ class GetDefaultIconResourceUseCase @Inject constructor() {
     HeatOrColdSourceSwitchIconResourceProducer,
     PumpSwitchIconResourceProducer,
     ContainerIconResourceProducer,
-    FloodSensorIconResourceProducer
+    FloodSensorIconResourceProducer,
+    WaterTankIconResourceProducer,
+    SepticTankIconResourceProducer,
+    ContainerLevelSensorIconResourceProducer
   )
 
   @DrawableRes

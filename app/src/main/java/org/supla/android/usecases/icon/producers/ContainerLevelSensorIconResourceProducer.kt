@@ -23,39 +23,13 @@ import org.supla.android.usecases.icon.IconData
 import org.supla.android.usecases.icon.IconResourceProducer
 import org.supla.core.shared.data.model.general.SuplaFunction
 
-object ContainerIconResourceProducer : IconResourceProducer {
+object ContainerLevelSensorIconResourceProducer : IconResourceProducer {
   override fun accepts(function: SuplaFunction): Boolean =
-    function == SuplaFunction.CONTAINER
+    function == SuplaFunction.CONTAINER_LEVEL_SENSOR
 
   override fun produce(data: IconData): Int =
     when (data.state.value) {
-      ChannelState.Value.EMPTY -> emptyIcon(data.altIcon)
-      ChannelState.Value.HALF -> halfIcon(data.altIcon)
-      ChannelState.Value.FULL -> fullIcon(data.altIcon)
-      else -> R.drawable.ic_unknown_channel
-    }
-
-  private fun emptyIcon(alt: Int): Int =
-    when (alt) {
-      1 -> R.drawable.fnc_container_1_empty
-      2 -> R.drawable.fnc_container_2_empty
-      3 -> R.drawable.fnc_container_3_empty
-      else -> R.drawable.fnc_container_empty
-    }
-
-  private fun halfIcon(alt: Int): Int =
-    when (alt) {
-      1 -> R.drawable.fnc_container_1_half
-      2 -> R.drawable.fnc_container_2_half
-      3 -> R.drawable.fnc_container_3_half
-      else -> R.drawable.fnc_container_half
-    }
-
-  private fun fullIcon(alt: Int): Int =
-    when (alt) {
-      1 -> R.drawable.fnc_container_1_full
-      2 -> R.drawable.fnc_container_2_full
-      3 -> R.drawable.fnc_container_3_full
-      else -> R.drawable.fnc_container_full
+      ChannelState.Value.ON -> R.drawable.fnc_container_level_sensor_on
+      else -> R.drawable.fnc_container_level_sensor_off
     }
 }

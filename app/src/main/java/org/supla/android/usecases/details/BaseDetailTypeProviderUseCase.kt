@@ -101,7 +101,9 @@ abstract class BaseDetailTypeProviderUseCase {
     SuplaFunction.GENERAL_PURPOSE_METER ->
       GpmDetailType(listOf(DetailPage.GPM_HISTORY))
 
-    SuplaFunction.CONTAINER ->
+    SuplaFunction.CONTAINER,
+    SuplaFunction.SEPTIC_TANK,
+    SuplaFunction.WATER_TANK ->
       ContainerDetailType(listOf(DetailPage.CONTAINER_GENERAL))
 
     SuplaFunction.UNKNOWN,
@@ -134,6 +136,7 @@ abstract class BaseDetailTypeProviderUseCase {
     SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL,
     SuplaFunction.VALVE_OPEN_CLOSE,
     SuplaFunction.VALVE_PERCENTAGE,
+    SuplaFunction.CONTAINER_LEVEL_SENSOR,
     SuplaFunction.FLOOD_SENSOR -> null
   }
 }
