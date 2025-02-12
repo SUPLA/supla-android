@@ -30,6 +30,7 @@ import org.supla.android.usecases.icon.producers.DimmerIconResourceProducer
 import org.supla.android.usecases.icon.producers.DoorIconResourceProducer
 import org.supla.android.usecases.icon.producers.ElectricityMeterIconResourceProducer
 import org.supla.android.usecases.icon.producers.FacadeBlindIconResourceProducer
+import org.supla.android.usecases.icon.producers.FloodSensorIconResourceProducer
 import org.supla.android.usecases.icon.producers.GarageDoorIconResourceProducer
 import org.supla.android.usecases.icon.producers.GarageDoorRollerIconResourceProducer
 import org.supla.android.usecases.icon.producers.GateIconResourceProducer
@@ -110,7 +111,8 @@ class GetDefaultIconResourceUseCase @Inject constructor() {
     GarageDoorRollerIconResourceProducer,
     HeatOrColdSourceSwitchIconResourceProducer,
     PumpSwitchIconResourceProducer,
-    ContainerIconResourceProducer
+    ContainerIconResourceProducer,
+    FloodSensorIconResourceProducer
   )
 
   @DrawableRes
