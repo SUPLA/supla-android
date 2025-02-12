@@ -1519,6 +1519,14 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     deviceConfigEventsManager.emitConfig(result, config);
   }
 
+  private void onActionExecutionResult(
+      @Nullable ActionId actionId,
+      @Nullable SubjectType subjectType,
+      int subjectId,
+      int resultCode) {
+    Trace.w(log_tag, "Action exec result " + subjectId + " resultCode " + resultCode);
+  }
+
   public synchronized boolean canceled() {
     return _canceled;
   }

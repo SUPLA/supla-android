@@ -87,7 +87,10 @@ class GetChannelValueStringUseCase @Inject constructor(
     NoValueStringProvider(SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK),
     NoValueStringProvider(SuplaFunction.CONTROLLING_THE_DOOR_LOCK),
     NoValueStringProvider(SuplaFunction.CONTROLLING_THE_GATE),
-    NoValueStringProvider(SuplaFunction.CONTROLLING_THE_GARAGE_DOOR)
+    NoValueStringProvider(SuplaFunction.CONTROLLING_THE_GARAGE_DOOR),
+    NoValueStringProvider(SuplaFunction.VALVE_OPEN_CLOSE),
+    NoValueStringProvider(SuplaFunction.NO_LIQUID_SENSOR),
+    NoValueStringProvider(SuplaFunction.FLOOD_SENSOR)
   )
 
   operator fun invoke(channel: ChannelWithChildren, valueType: ValueType = ValueType.FIRST, withUnit: Boolean = true): String {

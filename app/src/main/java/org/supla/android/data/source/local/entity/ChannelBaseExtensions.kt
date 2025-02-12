@@ -58,7 +58,8 @@ fun ChannelBase.isIconValueItem(): Boolean =
     function == SuplaFunction.IC_WATER_METER ||
     function == SuplaFunction.IC_GAS_METER ||
     function == SuplaFunction.IC_HEAT_METER ||
-    function == SuplaFunction.IC_ELECTRICITY_METER
+    function == SuplaFunction.IC_ELECTRICITY_METER ||
+    function == SuplaFunction.FLOOD_SENSOR
 
 fun ChannelBase.isSwitch(): Boolean =
   function == SuplaFunction.LIGHTSWITCH ||
