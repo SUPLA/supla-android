@@ -120,7 +120,7 @@ fun ListItemScaffold(
 
       if (onlineState.online && showInfoIcon) {
         ListItemInfoIcon(onInfoClick, modifier = Modifier.padding(start = dimensionResource(id = R.dimen.list_horizontal_spacing)))
-      } else if (issues.isEmpty()) {
+      } else {
         ListItemIssueIconSpacing()
       }
 
