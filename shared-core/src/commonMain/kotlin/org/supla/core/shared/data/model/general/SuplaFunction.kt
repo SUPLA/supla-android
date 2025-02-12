@@ -80,6 +80,9 @@ enum class SuplaFunction(val value: Int) {
   PUMP_SWITCH(960),
   HEAT_OR_COLD_SOURCE_SWITCH(970),
   CONTAINER(980),
+  SEPTIC_TANK(981),
+  WATER_TANK(982),
+  CONTAINER_LEVEL_SENSOR(990),
   FLOOD_SENSOR(1000);
 
   companion object {

@@ -169,6 +169,9 @@ private fun ChannelGroupEntity.getGroupValue(value: ChannelValueEntity): GroupVa
     SuplaFunction.PUMP_SWITCH,
     SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH,
     SuplaFunction.CONTAINER,
+    SuplaFunction.SEPTIC_TANK,
+    SuplaFunction.WATER_TANK,
+    SuplaFunction.CONTAINER_LEVEL_SENSOR,
     SuplaFunction.FLOOD_SENSOR -> null
   }
 }

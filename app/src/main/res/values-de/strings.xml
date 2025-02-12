@@ -732,4 +732,7 @@
   <string name="flooding_alarm_message">Der Sensor meldet eine Überschwemmung!</string>
   <string name="valve_warning_manually_closed_short">Das Ventil wurde manuell oder per Funk geschlossen (mögliche Überschwemmung).</string>
   <string name="valve_warning_flooding_short">Das Ventil wurde wegen einer erkannten Überschwemmung geschlossen.</string>
+  <string name="channel_caption_septic_tank">Septischer Tank</string>
+  <string name="channel_caption_water_tank">Wassertank</string>
+  <string name="channel_caption_container_level_sensor">Behälterfüllstandssensor</string>
 </resources>

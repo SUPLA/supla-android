@@ -110,6 +110,7 @@ class GetChannelStateUseCase @Inject constructor(
       SuplaFunction.LIGHTSWITCH,
       SuplaFunction.PUMP_SWITCH,
       SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH,
+      SuplaFunction.CONTAINER_LEVEL_SENSOR,
       SuplaFunction.FLOOD_SENSOR -> getOnOff(value.isClosed)
 
       SuplaFunction.DIMMER -> getOnOff(value.brightness > 0)
@@ -137,13 +138,14 @@ class GetChannelStateUseCase @Inject constructor(
         }
       }
 
-      SuplaFunction.CONTAINER -> {
+      SuplaFunction.CONTAINER,
+      SuplaFunction.SEPTIC_TANK,
+      SuplaFunction.WATER_TANK ->
         when {
           value.containerValue.level > 80 -> ChannelState(ChannelState.Value.FULL)
           value.containerValue.level > 20 -> ChannelState(ChannelState.Value.HALF)
           else -> ChannelState(ChannelState.Value.EMPTY)
         }
-      }
 
       SuplaFunction.UNKNOWN,
       SuplaFunction.NONE,
@@ -209,6 +211,7 @@ class GetChannelStateUseCase @Inject constructor(
       SuplaFunction.RGB_LIGHTING,
       SuplaFunction.PUMP_SWITCH,
       SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH,
+      SuplaFunction.CONTAINER_LEVEL_SENSOR,
       SuplaFunction.FLOOD_SENSOR -> ChannelState(ChannelState.Value.OFF)
 
       SuplaFunction.DIMMER_AND_RGB_LIGHTING ->
@@ -224,7 +227,9 @@ class GetChannelStateUseCase @Inject constructor(
           else -> ChannelState(ChannelState.Value.COOL)
         }
 
-      SuplaFunction.CONTAINER -> ChannelState(ChannelState.Value.EMPTY)
+      SuplaFunction.CONTAINER,
+      SuplaFunction.SEPTIC_TANK,
+      SuplaFunction.WATER_TANK -> ChannelState(ChannelState.Value.EMPTY)
 
       SuplaFunction.UNKNOWN,
       SuplaFunction.NONE,

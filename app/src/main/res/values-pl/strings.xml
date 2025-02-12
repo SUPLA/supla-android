@@ -741,6 +741,9 @@
   <string name="flooding_alarm_message">Czujnik zgłasza zalanie!</string>
   <string name="valve_warning_manually_closed_short">Zawór został zamknięty w trybie manualnym lub radiowo (możliwe zalanie).</string>
   <string name="valve_warning_flooding_short">Zawór został zamknięty z powodu wykrycia zalania.</string>
+  <string name="channel_caption_septic_tank">Szambo</string>
+  <string name="channel_caption_water_tank">Zbiornik na wodę</string>
+  <string name="channel_caption_container_level_sensor">Czujnik poziomu zbiornika</string>
 
   <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
     <item quantity="one">włączone</item>

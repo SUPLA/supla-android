@@ -765,6 +765,9 @@
   <string name="flooding_alarm_message" translatable="false">The sensor reports flooding!</string>
   <string name="valve_warning_manually_closed_short" translatable="false">The valve has been closed manually or via radio (possible flooding).</string>
   <string name="valve_warning_flooding_short" translatable="false">The valve has been closed due to detected flooding.</string>
+  <string name="channel_caption_septic_tank" translatable="false">Septic tank</string>
+  <string name="channel_caption_water_tank" translatable="false">Water tank</string>
+  <string name="channel_caption_container_level_sensor" translatable="false">Container level sensor</string>
 
   <plurals name="details_timer_info_on" translatable="false">
     <item quantity="other">on</item>
