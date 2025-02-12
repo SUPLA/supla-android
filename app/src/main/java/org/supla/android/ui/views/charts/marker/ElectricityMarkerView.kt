@@ -54,7 +54,7 @@ data class ElectricityMarkerCustomData(
     }
 
   fun priceString(units: Float): String =
-    if (price != null && currency != null && showPrice) {
+    if (price != null && price != 0f && currency != null && showPrice) {
       String.format("%.2f $currency", units.times(price))
     } else {
       EMPTY
@@ -134,7 +134,7 @@ class ElectricityMarkerView(context: Context) : BaseMarkerView(context) {
       if (selectedPhases.contains(phase)) {
         rows[yIdx].icon.setImageResource(R.drawable.ic_phase_point_color)
         rows[yIdx].icon.imageTintList = ColorStateList.valueOf(ResourcesCompat.getColor(resources, phase.color, null))
-        rows[yIdx].label.text = context.getText(phase.label)
+        rows[yIdx].label.text = if (selectedPhases.size > 1) context.getText(phase.label) else ""
         if (highlight?.stackIndex == yIdx || selectedPhases.size == 1) rows[yIdx].bold() else rows[yIdx].regular()
         sum += barEntry.yVals[yIdx]
         rows[yIdx].value.text = formatter.format(barEntry.yVals[yIdx])
