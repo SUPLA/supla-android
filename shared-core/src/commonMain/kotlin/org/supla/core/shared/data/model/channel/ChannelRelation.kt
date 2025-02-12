@@ -36,8 +36,7 @@ enum class ChannelRelationType(val value: Short) {
   AUX_THERMOMETER_GENERIC_COOLER(8),
   MASTER_THERMOSTAT(20),
   HEAT_OR_COLD_SOURCE_SWITCH(21),
-  PUMP_SWITCH(22),
-  FLOOD_SENSOR(23);
+  PUMP_SWITCH(22);
 
   fun isThermometer(): Boolean {
     return isMainThermometer() || isAuxThermometer()

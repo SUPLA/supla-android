@@ -36,7 +36,7 @@ class ValveIssuesProvider : ChannelIssuesProvider {
       return emptyList()
     }
 
-    val children = channelWithChildren.children.filter { it.relation.relationType == ChannelRelationType.FLOOD_SENSOR }
+    val children = channelWithChildren.children.filter { it.relation.relationType == ChannelRelationType.DEFAULT }
     val issues = mutableListOf<ChannelIssueItem>()
 
     val anyActive = children.firstOrNull { it.channel.value?.get(0)?.toInt() == 1 } != null

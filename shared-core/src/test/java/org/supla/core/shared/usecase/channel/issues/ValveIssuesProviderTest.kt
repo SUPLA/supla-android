@@ -84,7 +84,7 @@ class ValveIssuesProviderTest {
     // given
     val child: ChannelChild = mockk {
       every { relation } returns mockk {
-        every { relationType } returns ChannelRelationType.FLOOD_SENSOR
+        every { relationType } returns ChannelRelationType.DEFAULT
       }
       every { channel } returns mockk {
         every { value } returns byteArrayOf(0)
@@ -111,7 +111,7 @@ class ValveIssuesProviderTest {
     // given
     val child: ChannelChild = mockk {
       every { relation } returns mockk {
-        every { relationType } returns ChannelRelationType.FLOOD_SENSOR
+        every { relationType } returns ChannelRelationType.DEFAULT
       }
       every { channel } returns mockk {
         every { value } returns byteArrayOf(1)
@@ -138,7 +138,7 @@ class ValveIssuesProviderTest {
     // given
     val child: ChannelChild = mockk {
       every { relation } returns mockk {
-        every { relationType } returns ChannelRelationType.FLOOD_SENSOR
+        every { relationType } returns ChannelRelationType.DEFAULT
       }
       every { channel } returns mockk {
         every { value } returns byteArrayOf(1)
