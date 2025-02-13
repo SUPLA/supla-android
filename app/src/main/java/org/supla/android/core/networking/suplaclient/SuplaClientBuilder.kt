@@ -28,6 +28,7 @@ import org.supla.android.events.UpdateEventsManager
 import org.supla.android.lib.SuplaClient
 import org.supla.android.profile.ProfileIdHolder
 import org.supla.android.profile.ProfileManager
+import org.supla.android.usecases.channel.ChannelToRootRelationHolderUseCase
 import org.supla.android.usecases.channel.UpdateChannelExtendedValueUseCase
 import org.supla.android.usecases.channel.UpdateChannelUseCase
 import org.supla.android.usecases.channel.UpdateChannelValueUseCase
@@ -72,6 +73,7 @@ data class SuplaClientDependencies @Inject constructor(
   val profileIdHolder: ProfileIdHolder,
 
   val updateChannelGroupTotalValueUseCase: UpdateChannelGroupTotalValueUseCase,
+  val channelToRootRelationHolderUseCase: ChannelToRootRelationHolderUseCase,
 
   val suplaClientStateHolder: SuplaClientStateHolder
 )

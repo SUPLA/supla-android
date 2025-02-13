@@ -26,6 +26,7 @@ import org.supla.android.data.source.RoomSceneRepository
 import org.supla.android.data.source.local.entity.SceneEntity
 import org.supla.android.db.Channel
 import org.supla.android.db.ChannelGroup
+import org.supla.android.usecases.channel.ChannelToRootRelationHolderUseCase
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -33,7 +34,8 @@ import javax.inject.Singleton
 @Singleton
 class UpdateEventsManager @Inject constructor(
   private val channelRepository: ChannelRepository,
-  private val sceneRepository: RoomSceneRepository
+  private val sceneRepository: RoomSceneRepository,
+  private val channelToRootRelationHolderUseCase: ChannelToRootRelationHolderUseCase
 ) {
 
   private val subjects: MutableMap<Id, Subject<State>> = mutableMapOf()
@@ -53,6 +55,10 @@ class UpdateEventsManager @Inject constructor(
 
   fun emitChannelUpdate(channelId: Int) {
     getSubjectForChannel(channelId).onNext(State.Channel)
+
+    channelToRootRelationHolderUseCase.getParent(channelId)?.let {
+      getSubjectForChannel(it).onNext(State.Channel)
+    }
   }
 
   fun emitGroupUpdate(groupId: Int) {

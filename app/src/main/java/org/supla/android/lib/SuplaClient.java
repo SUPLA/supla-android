@@ -77,6 +77,7 @@ import org.supla.android.lib.actions.SubjectType;
 import org.supla.android.profile.AuthInfo;
 import org.supla.android.profile.ProfileIdHolder;
 import org.supla.android.profile.ProfileManager;
+import org.supla.android.usecases.channel.ChannelToRootRelationHolderUseCase;
 import org.supla.android.usecases.channel.UpdateChannelExtendedValueUseCase;
 import org.supla.android.usecases.channel.UpdateChannelUseCase;
 import org.supla.android.usecases.channel.UpdateChannelValueUseCase;
@@ -133,6 +134,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   private final ProfileIdHolder profileIdHolder;
   private final UpdateChannelGroupTotalValueUseCase updateChannelGroupTotalValueUseCase;
   private final SuplaClientStateHolder suplaClientStateHolder;
+  private final ChannelToRootRelationHolderUseCase channelToRootRelationHolderUseCase;
 
   public SuplaClient(
       Context context, String oneTimePassword, SuplaClientDependencies dependencies) {
@@ -163,6 +165,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     this.profileIdHolder = dependencies.getProfileIdHolder();
     this.updateChannelGroupTotalValueUseCase =
         dependencies.getUpdateChannelGroupTotalValueUseCase();
+    this.channelToRootRelationHolderUseCase = dependencies.getChannelToRootRelationHolderUseCase();
     this.suplaClientStateHolder = dependencies.getSuplaClientStateHolder();
   }
 
@@ -1176,6 +1179,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
     if (channel_relation.isEol()) {
       deleteRemovableChannelRelationsUseCase.invoke().blockingSubscribe();
+      channelToRootRelationHolderUseCase.reloadRelations();
       updateEventsManager.emitChannelsUpdate();
     }
   }
