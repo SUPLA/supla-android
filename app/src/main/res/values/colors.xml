@@ -41,7 +41,7 @@
     <color name="chart_temperature_2">#FFFF8C53</color>
     <color name="chart_humidity_1">#FF57A0FF</color>
     <color name="chart_humidity_2">#FF33FFEC</color>
-    <color name="chart_gpm">#FF01C2FB</color>
+    <color name="chart_gpm">@color/chart_pie_15</color>
     <color name="chart_pie_1">#F4A261</color>
     <color name="chart_pie_2">#C2DF4E</color>
     <color name="chart_pie_3">#2A9D8F</color>
@@ -96,8 +96,8 @@
     <color name="menuseparator">#fafbfc</color>
     <color name="notification_bg">#fee700</color>
 
-    <color name="phase1">#90ebfe</color>
-    <color name="phase2">#9791ff</color>
+    <color name="phase1">@color/chart_pie_15</color>
+    <color name="phase2">@color/chart_pie_16</color>
     <color name="phase3">#fed191</color>
 
     <color name="hp_chart_room_temperature">#00c2fc</color>

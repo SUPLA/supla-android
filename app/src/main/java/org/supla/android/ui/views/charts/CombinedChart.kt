@@ -41,6 +41,7 @@ import com.github.mikephil.charting.utils.ViewPortHandler
 import org.supla.android.R
 import org.supla.android.data.formatting.DateFormatter
 import org.supla.android.data.formatting.LocalDateFormatter
+import org.supla.android.data.model.chart.ChartDataAggregation
 import org.supla.android.data.model.chart.ChartParameters
 import org.supla.android.data.model.chart.datatype.ChartData
 import org.supla.android.data.model.chart.datatype.CombinedChartData
@@ -233,9 +234,12 @@ private class CombinedChartAxisXFormatter(
     val left = chart.getValuesByTouchPoint(handler.contentLeft(), handler.contentTop(), AxisDependency.LEFT)
     val right = chart.getValuesByTouchPoint(handler.contentRight(), handler.contentTop(), AxisDependency.LEFT)
 
-    val distanceInDaysFromChart = (converter.fromCoordinate(right.x.toFloat()) - converter.fromCoordinate(left.x.toFloat())) / 3600 / 24
+    val distanceInDaysFromChart = converter.distanceInDays(left.x.toFloat(), right.x.toFloat())
     val distanceInDays = converter.distanceInDays ?: 1
     return when {
+      converter.aggregation == ChartDataAggregation.YEARS ->
+        dateFormatter.getYearString(Date(converter.fromCoordinate(value).times(1000).toLong())) ?: ""
+
       distanceInDays > 1 && distanceInDaysFromChart <= 2 ->
         dateFormatter.getDayAndHourShortDateString(Date(converter.fromCoordinate(value).times(1000).toLong())) ?: ""
 

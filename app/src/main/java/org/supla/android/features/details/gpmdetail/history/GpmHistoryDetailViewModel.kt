@@ -104,13 +104,17 @@ class GpmHistoryDetailViewModel @Inject constructor(
     spec: ChartDataSpec,
     chartRange: ChartRange
   ): Single<Pair<ChartData, Optional<DateRange>>> =
-    Single.zip(
-      loadChannelMeasurementsUseCase(remoteId, spec),
-      loadChannelMeasurementsDataRangeUseCase(remoteId, profileId),
-      loadChannelConfigUseCase(profileId, remoteId)
-    ) { sets, range, config ->
-      Pair(createChartData(listOf(sets), DateRange(spec.startDate, spec.endDate), chartRange, spec.aggregation, config), range)
-    }
+    loadChannelMeasurementsDataRangeUseCase(remoteId, profileId)
+      .flatMap { range ->
+        // while the data range is changing (voltage, current, power active has different range) it has to be corrected
+        val correctedSpec = if (chartRange == ChartRange.ALL_HISTORY) spec.correctBy(range) else spec
+        Single.zip(
+          loadChannelMeasurementsUseCase(remoteId, correctedSpec),
+          loadChannelConfigUseCase(profileId, remoteId)
+        ) { sets, config ->
+          Pair(createChartData(listOf(sets), DateRange(spec.startDate, spec.endDate), chartRange, spec.aggregation, config), range)
+        }
+      }
 
   fun reloadMeasurements() {
     val state = currentState()

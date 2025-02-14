@@ -73,10 +73,13 @@ class ThermostatHistoryDetailViewModel @Inject constructor(
     spec: ChartDataSpec,
     chartRange: ChartRange,
   ): Single<Pair<ChartData, Optional<DateRange>>> =
-    Single.zip(
-      loadChannelWithChildrenMeasurementsUseCase(remoteId, spec),
-      loadChannelWithChildrenMeasurementsDateRangeUseCase(remoteId, profileId)
-    ) { first, second -> Pair(LineChartData(DateRange(spec.startDate, spec.endDate), chartRange, spec.aggregation, first), second) }
+    loadChannelWithChildrenMeasurementsDateRangeUseCase(remoteId, profileId)
+      .flatMap { range ->
+        // while the data range is changing (voltage, current, power active has different range) it has to be corrected
+        val correctedSpec = if (chartRange == ChartRange.ALL_HISTORY) spec.correctBy(range) else spec
+        loadChannelWithChildrenMeasurementsUseCase(remoteId, correctedSpec)
+          .map { Pair(LineChartData(DateRange(spec.startDate, spec.endDate), chartRange, spec.aggregation, it), range) }
+      }
 
   override fun handleData(channelWithChildren: ChannelWithChildren, channelDto: ChannelDto, chartState: ChartState) {
     updateState {
