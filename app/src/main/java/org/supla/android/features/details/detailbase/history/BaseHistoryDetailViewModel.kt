@@ -492,6 +492,7 @@ abstract class BaseHistoryDetailViewModel(
         maxRightAxis = dataWithActiveSet.getAxisMaxValue { it.rightAxis() },
         minDate = if (dateRange.isEmpty) state.minDate else dateRange.get().start,
         maxDate = if (dateRange.isEmpty) state.maxDate else dateRange.get().end,
+        range = dateRange.ifPresent { if (chartData.chartRange == ChartRange.ALL_HISTORY) it else state.range } ?: state.range,
         loading = false
       )
     }

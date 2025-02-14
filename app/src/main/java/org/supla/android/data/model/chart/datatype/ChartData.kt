@@ -60,6 +60,8 @@ interface CoordinatesConverter {
    * @return x divided by [divider]
    */
   fun toCoordinate(x: Float): Float
+
+  fun distanceInDays(start: Float, end: Float): Float
 }
 
 abstract class CombinedChartData(
@@ -192,8 +194,9 @@ abstract class ChartData(
     return null
   }
 
-  override fun fromCoordinate(x: Float): Float =
-    x.times(divider)
+  override fun fromCoordinate(x: Float): Float = x.times(divider)
+
+  override fun distanceInDays(start: Float, end: Float) = (fromCoordinate(end) - fromCoordinate(start)) / 3600 / 24
 
   override fun toCoordinate(x: Float): Float = toCoordinate(x as Float?)!!
 

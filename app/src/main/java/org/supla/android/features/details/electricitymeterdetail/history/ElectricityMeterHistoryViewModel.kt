@@ -34,8 +34,8 @@ import org.supla.android.data.model.chart.ChartRange
 import org.supla.android.data.model.chart.ChartState
 import org.supla.android.data.model.chart.DateRange
 import org.supla.android.data.model.chart.ElectricityChartState
-import org.supla.android.data.model.chart.datatype.BarChartData
 import org.supla.android.data.model.chart.datatype.ChartData
+import org.supla.android.data.model.chart.datatype.ImpulseBarChartData
 import org.supla.android.data.model.chart.datatype.LineChartData
 import org.supla.android.data.model.chart.datatype.PieChartData
 import org.supla.android.data.model.chart.style.ElectricityChartStyle
@@ -335,7 +335,7 @@ class ElectricityMeterHistoryViewModel @Inject constructor(
     } else if (spec.aggregation.isRank) {
       PieChartData(DateRange(spec.startDate, spec.endDate), chartRange, spec.aggregation, listOf(sets))
     } else {
-      BarChartData(DateRange(spec.startDate, spec.endDate), chartRange, spec.aggregation, listOf(sets))
+      ImpulseBarChartData(DateRange(spec.startDate, spec.endDate), chartRange, spec.aggregation, listOf(sets))
     }
   }
 }

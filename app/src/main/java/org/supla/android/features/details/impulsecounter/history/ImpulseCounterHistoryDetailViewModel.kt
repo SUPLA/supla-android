@@ -29,8 +29,8 @@ import org.supla.android.data.model.chart.ChartDataSpec
 import org.supla.android.data.model.chart.ChartRange
 import org.supla.android.data.model.chart.ChartState
 import org.supla.android.data.model.chart.DateRange
-import org.supla.android.data.model.chart.datatype.BarChartData
 import org.supla.android.data.model.chart.datatype.ChartData
+import org.supla.android.data.model.chart.datatype.ImpulseBarChartData
 import org.supla.android.data.model.chart.datatype.PieChartData
 import org.supla.android.data.model.chart.style.ImpulseCounterChartStyle
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
@@ -84,10 +84,13 @@ class ImpulseCounterHistoryDetailViewModel @Inject constructor(
     spec: ChartDataSpec,
     chartRange: ChartRange
   ): Single<Pair<ChartData, Optional<DateRange>>> =
-    Single.zip(
-      loadChannelMeasurementsUseCase(remoteId, spec),
-      loadChannelMeasurementsDataRangeUseCase(remoteId, profileId)
-    ) { first, second -> Pair(getChartData(spec, chartRange, first), second) }
+    loadChannelMeasurementsDataRangeUseCase(remoteId, profileId)
+      .flatMap { range ->
+        // while the data range is changing (voltage, current, power active has different range) it has to be corrected
+        val correctedSpec = if (chartRange == ChartRange.ALL_HISTORY) spec.correctBy(range) else spec
+        loadChannelMeasurementsUseCase(remoteId, correctedSpec)
+          .map { Pair(getChartData(correctedSpec, chartRange, it), range) }
+      }
 
   override fun handleData(channelWithChildren: ChannelWithChildren, channelDto: ChannelDto, chartState: ChartState) {
     val channel = channelWithChildren.channel
@@ -127,7 +130,7 @@ class ImpulseCounterHistoryDetailViewModel @Inject constructor(
     return if (spec.aggregation.isRank) {
       PieChartData(DateRange(spec.startDate, spec.endDate), chartRange, spec.aggregation, listOf(sets))
     } else {
-      BarChartData(DateRange(spec.startDate, spec.endDate), chartRange, spec.aggregation, listOf(sets))
+      ImpulseBarChartData(DateRange(spec.startDate, spec.endDate), chartRange, spec.aggregation, listOf(sets))
     }
   }
 }
