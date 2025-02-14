@@ -146,7 +146,7 @@ enum class DetailPage(val item: DetailBottomItem) {
 
   // IC
   IC_GENERAL(DetailBottomItem.GENERAL),
-  IC_HISTORY(DetailBottomItem.METRICS),
+  IC_HISTORY(DetailBottomItem.HISTORY),
   IC_OCR(DetailBottomItem.OCR)
 }
 
