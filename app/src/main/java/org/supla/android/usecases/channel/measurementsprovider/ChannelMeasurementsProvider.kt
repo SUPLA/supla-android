@@ -28,7 +28,7 @@ import org.supla.android.data.model.chart.ChartEntryType
 import org.supla.android.data.model.chart.HistoryDataSet
 import org.supla.android.data.model.chart.singleLabel
 import org.supla.android.data.model.general.IconType
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.local.entity.complex.isImpulseCounter
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.remote.gpm.SuplaChannelGeneralPurposeBaseConfig
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
@@ -45,6 +45,7 @@ import org.supla.android.usecases.channel.valueformatter.PowerActiveValueFormatt
 import org.supla.android.usecases.channel.valueformatter.ThermometerValueFormatter
 import org.supla.android.usecases.channel.valueformatter.VoltageValueFormatter
 import org.supla.android.usecases.icon.GetChannelIconUseCase
+import org.supla.core.shared.data.model.channel.ChannelRelationType
 
 abstract class ChannelMeasurementsProvider(
   private val getChannelValueStringUseCase: GetChannelValueStringUseCase,
@@ -81,7 +82,7 @@ abstract class ChannelMeasurementsProvider(
         },
         color = color,
       ),
-      valueFormatter = getValueFormatter(type, channelWithChildren.channel),
+      valueFormatter = getValueFormatter(type, channelWithChildren),
       entities = divideSetToSubsets(
         entities = measurements,
         aggregation = aggregation
@@ -101,7 +102,7 @@ open class MeasurementsProvider(
   private val gson: Gson // GSON_FOR_REPO
 ) {
 
-  protected fun getValueFormatter(type: ChartEntryType, channel: ChannelDataEntity): ChannelValueFormatter {
+  protected fun getValueFormatter(type: ChartEntryType, channelWithChildren: ChannelWithChildren): ChannelValueFormatter {
     return when (type) {
       ChartEntryType.HUMIDITY,
       ChartEntryType.HUMIDITY_ONLY -> HumidityValueFormatter()
@@ -109,14 +110,10 @@ open class MeasurementsProvider(
       ChartEntryType.TEMPERATURE -> ThermometerValueFormatter(preferences)
       ChartEntryType.GENERAL_PURPOSE_MEASUREMENT,
       ChartEntryType.GENERAL_PURPOSE_METER ->
-        GpmValueFormatter(channel.configEntity?.toSuplaConfig(gson) as? SuplaChannelGeneralPurposeBaseConfig)
+        GpmValueFormatter(channelWithChildren.channel.configEntity?.toSuplaConfig(gson) as? SuplaChannelGeneralPurposeBaseConfig)
 
       ChartEntryType.ELECTRICITY -> ChartAxisElectricityMeterValueFormatter()
-      ChartEntryType.IMPULSE_COUNTER ->
-        ImpulseCounterChartValueFormatter(
-          unit = channel.channelExtendedValueEntity?.getSuplaValue()?.ImpulseCounterValue?.unit
-        )
-
+      ChartEntryType.IMPULSE_COUNTER -> ImpulseCounterChartValueFormatter(unit = getImpulseCounterUnit(channelWithChildren))
       ChartEntryType.VOLTAGE -> VoltageValueFormatter
       ChartEntryType.CURRENT -> CurrentValueFormatter
       ChartEntryType.POWER_ACTIVE -> PowerActiveValueFormatter
@@ -151,4 +148,13 @@ open class MeasurementsProvider(
       }
     }
   }
+
+  private fun getImpulseCounterUnit(channelWithChildren: ChannelWithChildren): String? =
+    if (channelWithChildren.channel.isImpulseCounter()) {
+      channelWithChildren.channel.channelExtendedValueEntity?.getSuplaValue()?.ImpulseCounterValue?.unit
+    } else {
+      channelWithChildren.children
+        .firstOrNull { it.relationType == ChannelRelationType.METER }
+        ?.channelDataEntity?.channelExtendedValueEntity?.getSuplaValue()?.ImpulseCounterValue?.unit
+    }
 }

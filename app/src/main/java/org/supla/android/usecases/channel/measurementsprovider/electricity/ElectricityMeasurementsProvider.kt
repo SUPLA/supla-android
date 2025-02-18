@@ -28,6 +28,7 @@ import org.supla.android.data.model.chart.ChartEntryType
 import org.supla.android.data.model.chart.HistoryDataSet
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.Electricity
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.local.entity.custom.Phase
 import org.supla.android.data.source.local.entity.measurements.ElectricityBaseLogEntity
 import org.supla.android.di.GSON_FOR_REPO
@@ -86,7 +87,7 @@ open class ElectricityMeasurementsProvider<T : ElectricityBaseLogEntity>(
   }
 
   protected fun historyDataSet(
-    channel: ChannelDataEntity,
+    channelWithChildren: ChannelWithChildren,
     phase: Phase,
     isFirst: Boolean,
     type: ChartEntryType,
@@ -95,8 +96,8 @@ open class ElectricityMeasurementsProvider<T : ElectricityBaseLogEntity>(
   ): HistoryDataSet =
     HistoryDataSet(
       type = type,
-      label = createLabel(channel, phase, isFirst),
-      valueFormatter = getValueFormatter(type, channel),
+      label = createLabel(channelWithChildren.channel, phase, isFirst),
+      valueFormatter = getValueFormatter(type, channelWithChildren),
       entities = divideSetToSubsets(
         entities = measurements,
         aggregation = aggregation
