@@ -28,7 +28,6 @@ import org.supla.android.data.model.chart.ChartDataSpec
 import org.supla.android.data.model.chart.ChartEntryType
 import org.supla.android.data.model.chart.HistoryDataSet
 import org.supla.android.data.source.PowerActiveLogRepository
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.local.entity.custom.Phase
 import org.supla.android.data.source.local.entity.measurements.PowerActiveHistoryLogEntity
@@ -94,7 +93,13 @@ class PowerActiveMeasurementsProvider @Inject constructor(
     isFirst: Boolean,
     phase: Phase
   ): Observable<Pair<Phase, HistoryDataSet>> =
-    powerActiveLogRepository.findMeasurements(channelWithChildren.remoteId, channelWithChildren.profileId, spec.startDate, spec.endDate, phase)
+    powerActiveLogRepository.findMeasurements(
+      channelWithChildren.remoteId,
+      channelWithChildren.profileId,
+      spec.startDate,
+      spec.endDate,
+      phase
+    )
       .map { aggregating(it, spec.aggregation) }
       .map { Pair(phase, historyDataSet(channelWithChildren, phase, isFirst, ChartEntryType.POWER_ACTIVE, spec.aggregation, it)) }
 }

@@ -28,7 +28,6 @@ import org.supla.android.data.model.chart.ChartDataSpec
 import org.supla.android.data.model.chart.ChartEntryType
 import org.supla.android.data.model.chart.HistoryDataSet
 import org.supla.android.data.source.CurrentLogRepository
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.local.entity.custom.Phase
 import org.supla.android.data.source.local.entity.measurements.CurrentHistoryLogEntity
