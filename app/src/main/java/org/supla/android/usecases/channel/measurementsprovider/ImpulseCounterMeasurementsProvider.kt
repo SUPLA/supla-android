@@ -136,7 +136,7 @@ class ImpulseCounterMeasurementsProvider @Inject constructor(
         label = HistoryDataSet.Label.Single(
           HistoryDataSet.LabelData(
             imageId = getChannelIconUseCase(channelWithChildren.channel),
-            value = getValueFormatter(IMPULSE_COUNTER, channelWithChildren.channel).format(result.nextSum()),
+            value = getValueFormatter(IMPULSE_COUNTER, channelWithChildren).format(result.nextSum()),
             color = R.color.chart_gpm
           )
         ),
@@ -154,7 +154,7 @@ class ImpulseCounterMeasurementsProvider @Inject constructor(
     HistoryDataSet(
       type = IMPULSE_COUNTER,
       label = label,
-      valueFormatter = getValueFormatter(ChartEntryType.ELECTRICITY, channelWithChildren.channel),
+      valueFormatter = getValueFormatter(IMPULSE_COUNTER, channelWithChildren),
       entities = divideSetToSubsets(
         entities = measurements,
         aggregation = aggregation
