@@ -53,7 +53,8 @@ data object GpmChartStyle : ChartStyle(
   rightAxisColor = R.color.on_background,
   drawBarShadow = true,
   markerViewProvider = { ChartMarkerView(it) },
-  setMinValue = false
+  setMinValue = false,
+  setMaxValue = false
 )
 
 data object ElectricityChartStyle : ChartStyle(
