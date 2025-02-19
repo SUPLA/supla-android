@@ -98,6 +98,10 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
     compositeDisposable.add(this)
   }
 
+  fun handle(disposable: Disposable) {
+    compositeDisposable.add(disposable)
+  }
+
   fun <T : Any> Maybe<T>.attach(): Maybe<T> {
     return attachSilent()
       .doOnSubscribe { loadingState.tryEmit(true) }

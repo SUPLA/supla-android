@@ -30,11 +30,13 @@ import org.supla.core.shared.infrastructure.storage.CacheFileAccess
 import org.supla.core.shared.usecase.GetCaptionUseCase
 import org.supla.core.shared.usecase.GetChannelActionStringUseCase
 import org.supla.core.shared.usecase.channel.CheckOcrPhotoExistsUseCase
+import org.supla.core.shared.usecase.channel.GetAllChannelIssuesUseCase
 import org.supla.core.shared.usecase.channel.GetChannelBatteryIconUseCase
 import org.supla.core.shared.usecase.channel.GetChannelDefaultCaptionUseCase
 import org.supla.core.shared.usecase.channel.GetChannelIssuesForListUseCase
 import org.supla.core.shared.usecase.channel.GetChannelIssuesForSlavesUseCase
 import org.supla.core.shared.usecase.channel.GetChannelLowBatteryIssueUseCase
+import org.supla.core.shared.usecase.channel.GetChannelSpecificIssuesUseCase
 import org.supla.core.shared.usecase.channel.StoreChannelOcrPhotoUseCase
 import org.supla.core.shared.usecase.channel.ocr.OcrImageNamingProvider
 import org.supla.core.shared.usecase.file.StoreFileInDirectoryUseCase
@@ -71,17 +73,30 @@ class CoreSharedModule {
 
   @Singleton
   @Provides
+  fun provideGetChannelSpecificIssuesUseCase() = GetChannelSpecificIssuesUseCase()
+
+  @Singleton
+  @Provides
   fun provideGetChannelIssuesForListUseCase(
     getChannelLowBatteryIssueUseCase: GetChannelLowBatteryIssueUseCase,
-    getChannelBatteryIconUseCase: GetChannelBatteryIconUseCase
-  ) = GetChannelIssuesForListUseCase(getChannelLowBatteryIssueUseCase, getChannelBatteryIconUseCase)
+    getChannelBatteryIconUseCase: GetChannelBatteryIconUseCase,
+    getChannelSpecificIssuesUseCase: GetChannelSpecificIssuesUseCase
+  ) = GetChannelIssuesForListUseCase(getChannelLowBatteryIssueUseCase, getChannelBatteryIconUseCase, getChannelSpecificIssuesUseCase)
 
   @Singleton
   @Provides
   fun provideGetChannelIssuesForSlavesUseCase(
     getChannelLowBatteryIssueUseCase: GetChannelLowBatteryIssueUseCase,
-    getChannelBatteryIconUseCase: GetChannelBatteryIconUseCase
-  ) = GetChannelIssuesForSlavesUseCase(getChannelLowBatteryIssueUseCase, getChannelBatteryIconUseCase)
+    getChannelBatteryIconUseCase: GetChannelBatteryIconUseCase,
+    getChannelSpecificIssuesUseCase: GetChannelSpecificIssuesUseCase
+  ) = GetChannelIssuesForSlavesUseCase(getChannelLowBatteryIssueUseCase, getChannelBatteryIconUseCase, getChannelSpecificIssuesUseCase)
+
+  @Singleton
+  @Provides
+  fun provideGetAllChannelIssuesUseCase(
+    getChannelLowBatteryIssueUseCase: GetChannelLowBatteryIssueUseCase,
+    getChannelSpecificIssuesUseCase: GetChannelSpecificIssuesUseCase
+  ) = GetAllChannelIssuesUseCase(getChannelLowBatteryIssueUseCase, getChannelSpecificIssuesUseCase)
 
   @Singleton
   @Provides

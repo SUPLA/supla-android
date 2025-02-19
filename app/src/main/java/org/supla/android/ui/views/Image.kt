@@ -52,7 +52,8 @@ fun Image(
   modifier: Modifier = Modifier,
   alignment: Alignment = Alignment.Center,
   contentScale: ContentScale = ContentScale.Fit,
-  contentDescription: String? = null
+  contentDescription: String? = null,
+  tint: Color? = null
 ) {
   if (imageId.userImage) {
     androidx.compose.foundation.Image(
@@ -60,7 +61,8 @@ fun Image(
       contentDescription = contentDescription,
       modifier = modifier,
       alignment = alignment,
-      contentScale = contentScale
+      contentScale = contentScale,
+      colorFilter = tint?.let { ColorFilter.tint(it) }
     )
   } else {
     androidx.compose.foundation.Image(
@@ -68,7 +70,8 @@ fun Image(
       contentDescription = contentDescription,
       modifier = modifier,
       alignment = alignment,
-      contentScale = contentScale
+      contentScale = contentScale,
+      colorFilter = tint?.let { ColorFilter.tint(it) }
     )
   }
 }

@@ -47,6 +47,9 @@ class ProvideChannelDetailTypeUseCase @Inject constructor() : BaseDetailTypeProv
     SuplaFunction.IC_HEAT_METER,
     SuplaFunction.IC_WATER_METER -> IcDetailType(getImpulseCounterPages(channelWithChildren))
 
+    SuplaFunction.VALVE_OPEN_CLOSE,
+    SuplaFunction.VALVE_PERCENTAGE -> ValveDetailType(listOf(DetailPage.VALVE_GENERAL))
+
     else -> provide(function)
   }
 

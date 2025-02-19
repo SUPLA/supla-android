@@ -735,4 +735,8 @@
   <string name="channel_caption_septic_tank">Septischer Tank</string>
   <string name="channel_caption_water_tank">Wassertank</string>
   <string name="channel_caption_container_level_sensor">Behälterfüllstandssensor</string>
+  <string name="state_opened">geöffnet</string>
+  <string name="state_closed">geschlossen</string>
+  <string name="valve_detail_sensors">Verbundene Sensoren</string>
+  <string name="valve_action_error">Ein Kommunikationfehler ist aufgetreten. Bitte versuchen Sie später noch mal.</string>
 </resources>

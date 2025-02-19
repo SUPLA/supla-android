@@ -39,6 +39,7 @@ import org.supla.android.features.details.thermostatdetail.history.ThermostatHis
 import org.supla.android.features.details.thermostatdetail.schedule.ScheduleDetailFragment
 import org.supla.android.features.details.thermostatdetail.slaves.ThermostatSlavesListFragment
 import org.supla.android.features.details.thermostatdetail.timer.TimerDetailFragment
+import org.supla.android.features.details.valveDetail.general.ValveGeneralDetailFragment
 import org.supla.android.features.details.windowdetail.curtain.CurtainFragment
 import org.supla.android.features.details.windowdetail.facadeblinds.FacadeBlindsFragment
 import org.supla.android.features.details.windowdetail.garagedoor.GarageDoorFragment
@@ -102,6 +103,8 @@ class StandardDetailPagerAdapter(
       arguments = ImpulseCounterHistoryDetailFragment.bundle(itemBundle.remoteId)
     }
     DetailPage.IC_OCR -> CounterPhotoFragment().apply { arguments = CounterPhotoFragment.bundle(itemBundle) }
+
+    DetailPage.VALVE_GENERAL -> ValveGeneralDetailFragment().apply { arguments = ValveGeneralDetailFragment.bundle(itemBundle) }
   }
 }
 
@@ -147,7 +150,10 @@ enum class DetailPage(val item: DetailBottomItem) {
   // IC
   IC_GENERAL(DetailBottomItem.GENERAL),
   IC_HISTORY(DetailBottomItem.HISTORY),
-  IC_OCR(DetailBottomItem.OCR)
+  IC_OCR(DetailBottomItem.OCR),
+
+  // Valve
+  VALVE_GENERAL(DetailBottomItem.GENERAL)
 }
 
 enum class DetailBottomItem(val menuId: Int, @DrawableRes val iconRes: Int, @StringRes val stringRes: Int) {

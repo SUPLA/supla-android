@@ -68,6 +68,10 @@
     android:name="org.supla.android.features.details.containerdetail.ContainerDetailFragment" />
 
   <fragment
+    android:id="@+id/valve_detail_fragment"
+    android:name="org.supla.android.features.details.valveDetail.ValveDetailFragment" />
+
+  <fragment
     android:id="@+id/notifications_log_fragment"
     android:name="org.supla.android.features.notificationslog.NotificationsLogFragment"
     android:label="@string/menu_notifications" />

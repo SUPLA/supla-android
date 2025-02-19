@@ -22,7 +22,6 @@ import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.Preferences
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
-import org.supla.android.core.shared.provider
 import org.supla.android.core.shared.shareable
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
@@ -81,20 +80,12 @@ class ThermostatSlavesListViewModel @Inject constructor(
       .disposeBySelf()
   }
 
-  fun onStart() {
-    stateDialogViewModelState.startRefreshing(dateProvider, suplaClientProvider)
-  }
-
   fun showMessage(message: String) {
     updateState { it.copy(showMessage = message) }
   }
 
   fun closeMessage() {
     updateState { it.copy(showMessage = null) }
-  }
-
-  fun onStop() {
-    stateDialogViewModelState.stopRefreshing()
   }
 
   private fun handle(channelWithChildren: ChannelWithChildren) {
@@ -119,7 +110,7 @@ class ThermostatSlavesListViewModel @Inject constructor(
     return ThermostatData(
       channelId = channel.remoteId,
       onlineState = channel.channelValueEntity.onlineState,
-      caption = getCaptionUseCase(channel.shareable).provider(),
+      caption = getCaptionUseCase(channel.shareable),
       imageId = getChannelIconUseCase(channel),
       currentPower = thermostatValue.state.power,
       value = mainThermometer?.let { getChannelValueStringUseCase(it.withChildren) } ?: NO_VALUE_TEXT,
@@ -138,7 +129,7 @@ class ThermostatSlavesListViewModel @Inject constructor(
     return ThermostatData(
       channelId = channel.remoteId,
       onlineState = channelDataEntity.channelValueEntity.onlineState,
-      caption = getCaptionUseCase(channelDataEntity.shareable).provider(),
+      caption = getCaptionUseCase(channelDataEntity.shareable),
       imageId = getChannelIconUseCase(channelDataEntity),
       currentPower = thermostatValue.state.power,
       value = mainThermometer?.let { getChannelValueStringUseCase(it.withChildren) } ?: NO_VALUE_TEXT,
