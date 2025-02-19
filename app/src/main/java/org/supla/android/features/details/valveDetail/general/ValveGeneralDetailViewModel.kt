@@ -24,10 +24,9 @@ import org.supla.android.R
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.shared.shareable
-import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
-import org.supla.android.core.ui.ViewState
 import org.supla.android.data.model.general.ChannelState
+import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.shareable
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
@@ -39,6 +38,9 @@ import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.tools.VibrationHelper
+import org.supla.android.ui.dialogs.AuthorizationDialogState
+import org.supla.android.ui.dialogs.authorize.AuthorizationModelState
+import org.supla.android.ui.dialogs.authorize.BaseAuthorizationViewModel
 import org.supla.android.ui.dialogs.state.StateDialogHandler
 import org.supla.android.ui.dialogs.state.StateDialogViewModelState
 import org.supla.android.ui.dialogs.state.StateDialogViewState
@@ -47,7 +49,9 @@ import org.supla.android.usecases.channel.ActionException
 import org.supla.android.usecases.channel.ButtonType
 import org.supla.android.usecases.channel.ChannelActionUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
+import org.supla.android.usecases.client.AuthorizeUseCase
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
+import org.supla.android.usecases.client.LoginUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.core.shared.data.model.channel.ChannelRelationType
 import org.supla.core.shared.data.model.valve.ValveValue
@@ -70,8 +74,15 @@ class ValveGeneralDetailViewModel @Inject constructor(
   override val suplaClientProvider: SuplaClientProvider,
   override val updateEventsManager: UpdateEventsManager,
   override val schedulers: SuplaSchedulers,
-  override val dateProvider: DateProvider
-) : BaseViewModel<ValveGeneralDetailViewModeState, ValveGeneralDetailViewEvent>(
+  override val dateProvider: DateProvider,
+  roomProfileRepository: RoomProfileRepository,
+  loginUseCase: LoginUseCase,
+  authorizeUseCase: AuthorizeUseCase
+) : BaseAuthorizationViewModel<ValveGeneralDetailViewModeState, ValveGeneralDetailViewEvent>(
+  suplaClientProvider,
+  roomProfileRepository,
+  loginUseCase,
+  authorizeUseCase,
   ValveGeneralDetailViewModeState(),
   schedulers
 ),
@@ -82,6 +93,14 @@ class ValveGeneralDetailViewModel @Inject constructor(
 
   override fun updateDialogState(updater: (StateDialogViewState?) -> StateDialogViewState?) {
     updateState { it.copy(stateDialogViewState = updater(it.stateDialogViewState)) }
+  }
+
+  override fun updateAuthorizationDialogState(updater: (AuthorizationDialogState?) -> AuthorizationDialogState?) {
+    updateState { it.copy(authorizationDialogState = updater(it.authorizationDialogState)) }
+  }
+
+  override fun onAuthorized() {
+    TODO("Not yet implemented")
   }
 
   fun loadData(remoteId: Int) {
@@ -102,10 +121,16 @@ class ValveGeneralDetailViewModel @Inject constructor(
         onError = { error ->
           when (error) {
             is ActionException.ValveFloodingAlarm ->
-              updateState { it.copy(dialog = ValveAlertDialog.Confirmation(R.string.valve_warning_flooding)) }
+              updateState { it.copy(dialog = ValveAlertDialog.Confirmation(R.string.valve_warning_flooding, ActionId.OPEN)) }
 
             is ActionException.ValveClosedManually ->
-              updateState { it.copy(dialog = ValveAlertDialog.Confirmation(R.string.valve_warning_manually_closed)) }
+              updateState { it.copy(dialog = ValveAlertDialog.Confirmation(R.string.valve_warning_manually_closed, ActionId.OPEN)) }
+
+            is ActionException.ValveMotorProblemOpening ->
+              updateState { it.copy(dialog = ValveAlertDialog.Confirmation(R.string.valve_warning_motor_problem_opening, ActionId.OPEN)) }
+
+            is ActionException.ValveMotorProblemClosing ->
+              updateState { it.copy(dialog = ValveAlertDialog.Confirmation(R.string.valve_warning_motor_problem_closing, ActionId.CLOSE)) }
 
             else -> updateState { it.copy(dialog = ValveAlertDialog.Failure) }
           }
@@ -114,16 +139,22 @@ class ValveGeneralDetailViewModel @Inject constructor(
       .disposeBySelf()
   }
 
-  fun forceOpen(remoteId: Int) {
-    updateState { it.copy(dialog = null) }
-    executeSimpleActionUseCase(ActionId.OPEN, SubjectType.CHANNEL, remoteId)
-      .attachSilent()
-      .subscribe()
-      .disposeBySelf()
+  fun forceAction(remoteId: Int, action: ActionId?) {
+    if (action != null) {
+      updateState { it.copy(dialog = null) }
+      executeSimpleActionUseCase(action, SubjectType.CHANNEL, remoteId)
+        .attachSilent()
+        .subscribe()
+        .disposeBySelf()
+    }
   }
 
   fun closeErrorDialog() {
     updateState { it.copy(dialog = null) }
+  }
+
+  override fun onChannelUpdate(channelWithChildren: ChannelWithChildren) {
+    handle(channelWithChildren)
   }
 
   private fun handle(channelWithChildren: ChannelWithChildren) {
@@ -154,10 +185,6 @@ class ValveGeneralDetailViewModel @Inject constructor(
     }
   }
 
-  override fun onChannelUpdate(channelWithChildren: ChannelWithChildren) {
-    handle(channelWithChildren)
-  }
-
   private fun ChannelChildEntity.toSensor() =
     SensorData(
       channelId = channel.remoteId,
@@ -181,22 +208,26 @@ sealed class ValveGeneralDetailViewEvent : ViewEvent
 data class ValveGeneralDetailViewModeState(
   val viewState: ValveGeneralDetailViewState = ValveGeneralDetailViewState(),
   val dialog: ValveAlertDialog? = null,
-  val stateDialogViewState: StateDialogViewState? = null
-) : ViewState()
+  val stateDialogViewState: StateDialogViewState? = null,
+  override val authorizationDialogState: AuthorizationDialogState? = null
+) : AuthorizationModelState()
 
 sealed interface ValveAlertDialog {
   val messageRes: Int
   val positiveButtonRes: Int?
   val negativeButtonRes: Int?
+  val action: ActionId?
 
-  data class Confirmation(override val messageRes: Int) : ValveAlertDialog {
+  data class Confirmation(override val messageRes: Int, override val action: ActionId) : ValveAlertDialog {
     override val positiveButtonRes: Int = R.string.yes
     override val negativeButtonRes: Int = R.string.no
   }
+
   data object Failure : ValveAlertDialog {
     override val messageRes: Int = R.string.valve_action_error
     override val positiveButtonRes: Int? = null
     override val negativeButtonRes: Int = R.string.ok
+    override val action: ActionId? = null
   }
 }
 

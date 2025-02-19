@@ -382,7 +382,7 @@ class TestAuthorizationViewModel(
   TestAuthorizationModelState(),
   schedulers
 ) {
-  override fun updateDialogState(updater: (AuthorizationDialogState?) -> AuthorizationDialogState?) {
+  override fun updateAuthorizationDialogState(updater: (AuthorizationDialogState?) -> AuthorizationDialogState?) {
     updateState { it.copy(authorizationDialogState = updater(it.authorizationDialogState)) }
   }
 

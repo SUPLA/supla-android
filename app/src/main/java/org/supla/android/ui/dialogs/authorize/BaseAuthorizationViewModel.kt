@@ -41,7 +41,7 @@ abstract class BaseAuthorizationViewModel<S : AuthorizationModelState, E : ViewE
   schedulers: SuplaSchedulers,
 ) : BaseViewModel<S, E>(defaultState, schedulers) {
 
-  protected abstract fun updateDialogState(updater: (AuthorizationDialogState?) -> AuthorizationDialogState?)
+  protected abstract fun updateAuthorizationDialogState(updater: (AuthorizationDialogState?) -> AuthorizationDialogState?)
 
   abstract fun onAuthorized()
 
@@ -50,7 +50,7 @@ abstract class BaseAuthorizationViewModel<S : AuthorizationModelState, E : ViewE
   }
 
   fun updateAuthorizationState(state: AuthorizationDialogState) {
-    updateDialogState { state }
+    updateAuthorizationDialogState { state }
   }
 
   fun showAuthorizationDialog() {
@@ -63,7 +63,7 @@ abstract class BaseAuthorizationViewModel<S : AuthorizationModelState, E : ViewE
       .attach()
       .subscribeBy(
         onSuccess = { profile ->
-          updateDialogState {
+          updateAuthorizationDialogState {
             it?.copy(
               userName = profile.email ?: "",
               isCloudAccount = profile.isCloudAccount,
@@ -82,19 +82,19 @@ abstract class BaseAuthorizationViewModel<S : AuthorizationModelState, E : ViewE
   fun authorize(userName: String, password: String) {
     authorizeUseCase(userName, password)
       .attachSilent()
-      .doOnSubscribe { updateDialogState { it?.copy(processing = true) } }
-      .doOnTerminate { updateDialogState { it?.copy(processing = false) } }
+      .doOnSubscribe { updateAuthorizationDialogState { it?.copy(processing = true) } }
+      .doOnTerminate { updateAuthorizationDialogState { it?.copy(processing = false) } }
       .subscribeBy(
         onSuccess = {
           if (it.isAuthorized()) {
             onAuthorized()
           } else {
-            updateDialogState { state -> state?.copy(error = { context -> context.getString(R.string.status_unknown_err) }) }
+            updateAuthorizationDialogState { state -> state?.copy(error = { context -> context.getString(R.string.status_unknown_err) }) }
           }
         },
         onError = { error ->
           if (error is AuthorizationException) {
-            updateDialogState { state ->
+            updateAuthorizationDialogState { state ->
               state?.copy(error = { it.getString(error.messageId ?: R.string.status_unknown_err) })
             }
           } else {
@@ -108,19 +108,19 @@ abstract class BaseAuthorizationViewModel<S : AuthorizationModelState, E : ViewE
   fun login(userName: String, password: String) {
     loginUseCase(userName, password)
       .attachSilent()
-      .doOnSubscribe { updateDialogState { it?.copy(processing = true) } }
-      .doOnTerminate { updateDialogState { it?.copy(processing = false) } }
+      .doOnSubscribe { updateAuthorizationDialogState { it?.copy(processing = true) } }
+      .doOnTerminate { updateAuthorizationDialogState { it?.copy(processing = false) } }
       .subscribeBy(
         onSuccess = {
           if (it.isAuthorized()) {
             onAuthorized()
           } else {
-            updateDialogState { state -> state?.copy(error = { context -> context.getString(R.string.status_unknown_err) }) }
+            updateAuthorizationDialogState { state -> state?.copy(error = { context -> context.getString(R.string.status_unknown_err) }) }
           }
         },
         onError = { error ->
           if (error is AuthorizationException) {
-            updateDialogState { state ->
+            updateAuthorizationDialogState { state ->
               val registerError = SuplaRegisterError().also { it.ResultCode = error.messageId!! }
               state?.copy(error = { registerError.codeToString(it, true) })
             }
@@ -133,7 +133,7 @@ abstract class BaseAuthorizationViewModel<S : AuthorizationModelState, E : ViewE
   }
 
   fun hideAuthorizationDialog() {
-    updateDialogState { null }
+    updateAuthorizationDialogState { null }
   }
 
   private fun isAuthorized(): Boolean {
