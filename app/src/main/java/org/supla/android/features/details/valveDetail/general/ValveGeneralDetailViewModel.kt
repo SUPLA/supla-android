@@ -38,6 +38,7 @@ import org.supla.android.events.UpdateEventsManager
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.VibrationHelper
 import org.supla.android.ui.dialogs.state.StateDialogHandler
 import org.supla.android.ui.dialogs.state.StateDialogViewModelState
 import org.supla.android.ui.dialogs.state.StateDialogViewState
@@ -58,17 +59,18 @@ import javax.inject.Inject
 @HiltViewModel
 class ValveGeneralDetailViewModel @Inject constructor(
   private val readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
-  private val getChannelIconUseCase: GetChannelIconUseCase,
-  private val getAllChannelIssuesUseCase: GetAllChannelIssuesUseCase,
-  private val getCaptionUseCase: GetCaptionUseCase,
   private val getChannelBatteryIconUseCase: GetChannelBatteryIconUseCase,
-  private val preferences: Preferences,
-  private val channelActionUseCase: ChannelActionUseCase,
   private val executeSimpleActionUseCase: ExecuteSimpleActionUseCase,
+  private val getAllChannelIssuesUseCase: GetAllChannelIssuesUseCase,
+  private val getChannelIconUseCase: GetChannelIconUseCase,
+  private val channelActionUseCase: ChannelActionUseCase,
+  private val getCaptionUseCase: GetCaptionUseCase,
+  private val vibrationHelper: VibrationHelper,
+  private val preferences: Preferences,
   override val suplaClientProvider: SuplaClientProvider,
-  override val dateProvider: DateProvider,
   override val updateEventsManager: UpdateEventsManager,
-  override val schedulers: SuplaSchedulers
+  override val schedulers: SuplaSchedulers,
+  override val dateProvider: DateProvider
 ) : BaseViewModel<ValveGeneralDetailViewModeState, ValveGeneralDetailViewEvent>(
   ValveGeneralDetailViewModeState(),
   schedulers
@@ -93,6 +95,7 @@ class ValveGeneralDetailViewModel @Inject constructor(
   }
 
   fun onActionClick(remoteId: Int, action: ValveAction) {
+    vibrationHelper.vibrate()
     channelActionUseCase(remoteId, action.buttonType)
       .attach()
       .subscribeBy(
@@ -162,7 +165,7 @@ class ValveGeneralDetailViewModel @Inject constructor(
       icon = getChannelIconUseCase(channelDataEntity),
       caption = getCaptionUseCase(channelDataEntity.shareable),
       batteryIcon = getChannelBatteryIconUseCase(channelDataEntity.shareable),
-      showChannelStateIcon = SuplaChannelFlag.CHANNEL_STATE inside channel.flags
+      showChannelStateIcon = channelDataEntity.channelValueEntity.online && SuplaChannelFlag.CHANNEL_STATE inside channel.flags
     )
 
   private fun ValveValue.getStateStringRes(): Int =

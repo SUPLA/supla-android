@@ -20,10 +20,8 @@ package org.supla.android.features.details.valveDetail.general
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -95,7 +93,7 @@ fun ValveGeneralDetailView(
   ) {
     Column(
       horizontalAlignment = Alignment.CenterHorizontally,
-      verticalArrangement = Arrangement.spacedBy(Distance.default),
+      verticalArrangement = Arrangement.spacedBy(Distance.small),
       modifier = Modifier
         .verticalScroll(rememberScrollState())
         .weight(1f)
@@ -157,14 +155,16 @@ private fun DeviceState(icon: ImageId?, stateValue: String?, offline: Boolean) {
 @Composable
 private fun Issues(issues: List<ChannelIssueItem>) {
   issues.forEach {
-    Row(
-      modifier = Modifier
-        .fillMaxWidth()
-        .padding(horizontal = Distance.default),
-      horizontalArrangement = Arrangement.spacedBy(Distance.tiny)
-    ) {
-      Image(drawableId = it.icon.resource)
-      Text(it.message.invoke(LocalContext.current), textAlign = TextAlign.Justify)
+    it.messages.forEach { message ->
+      Row(
+        modifier = Modifier
+          .fillMaxWidth()
+          .padding(horizontal = Distance.default),
+        horizontalArrangement = Arrangement.spacedBy(Distance.tiny)
+      ) {
+        Image(drawableId = it.icon.resource, modifier = Modifier.size(dimensionResource(R.dimen.icon_default_size)))
+        Text(message.invoke(LocalContext.current), textAlign = TextAlign.Justify)
+      }
     }
   }
 }
@@ -183,7 +183,6 @@ private fun Sensors(sensors: List<SensorData>, scale: Float, onInfoClick: (Senso
           verticalAlignment = Alignment.CenterVertically,
           modifier = Modifier
             .fillMaxWidth()
-            .height(IntrinsicSize.Max)
             .padding(bottom = 1.dp)
             .background(MaterialTheme.colorScheme.surface)
             .padding(start = Distance.small, end = Distance.default)
@@ -194,10 +193,12 @@ private fun Sensors(sensors: List<SensorData>, scale: Float, onInfoClick: (Senso
             text = sensor.caption(LocalContext.current),
             onItemClick = {},
             onLongClick = {},
-            modifier = Modifier.padding(start = Distance.tiny),
-            scale = scale
+            modifier = Modifier
+              .padding(start = Distance.tiny)
+              .weight(1f),
+            scale = scale,
+            maxLines = 2
           )
-          Spacer(modifier = Modifier.weight(1f))
           sensor.batteryIcon?.let {
             Image(
               drawableId = it.resource,
@@ -234,7 +235,8 @@ private fun Preview() {
         issues = listOf(
           ChannelIssueItem.error(R.string.flooding_alarm_message),
           ChannelIssueItem.error(R.string.valve_warning_flooding_short),
-          ChannelIssueItem.error(R.string.valve_warning_manually_closed_short)
+          ChannelIssueItem.error(R.string.valve_warning_manually_closed_short),
+          ChannelIssueItem.LowBattery(listOf(LocalizedString.Constant("Low battery 1"), LocalizedString.Constant("Low battery 2")))
         ),
         sensors = listOf(
           SensorData(
@@ -257,7 +259,7 @@ private fun Preview() {
             channelId = 123,
             onlineState = ListOnlineState.ONLINE,
             icon = ImageId(R.drawable.fnc_container_level_sensor_on),
-            caption = LocalizedString.Constant("Flood sensor"),
+            caption = LocalizedString.Constant("Flood sensor flood sensor flood sensor flood sensor"),
             batteryIcon = IssueIcon.Battery50,
             showChannelStateIcon = true
           ),
