@@ -103,6 +103,8 @@ abstract class BaseListViewModel<S : ViewState, E : ViewEvent>(
       SuplaFunction.CONTAINER,
       SuplaFunction.SEPTIC_TANK,
       SuplaFunction.WATER_TANK,
+      SuplaFunction.VALVE_OPEN_CLOSE,
+      SuplaFunction.VALVE_PERCENTAGE,
       SuplaFunction.HUMIDITY -> true
 
       SuplaFunction.LIGHTSWITCH,
@@ -152,8 +154,6 @@ abstract class BaseListViewModel<S : ViewState, E : ViewEvent>(
       SuplaFunction.WEATHER_STATION,
       SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS,
       SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL,
-      SuplaFunction.VALVE_OPEN_CLOSE,
-      SuplaFunction.VALVE_PERCENTAGE,
       SuplaFunction.DIGIGLASS_HORIZONTAL,
       SuplaFunction.DIGIGLASS_VERTICAL,
       SuplaFunction.PUMP_SWITCH,

@@ -45,7 +45,7 @@ import androidx.compose.ui.tooling.preview.PreviewFontScale
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
-import org.supla.android.core.ui.StringProvider
+import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.formatting.LocalPercentageFormatter
@@ -65,6 +65,7 @@ import org.supla.android.ui.views.list.components.SetpointIndicator
 import org.supla.android.ui.views.list.components.SetpointText
 import org.supla.core.shared.data.model.lists.IssueIcon
 import org.supla.core.shared.data.model.lists.ListItemIssues
+import org.supla.core.shared.infrastructure.LocalizedString
 
 data class ThermostatSlavesListViewState(
   val master: ThermostatData? = null,
@@ -75,7 +76,7 @@ data class ThermostatSlavesListViewState(
 data class ThermostatData(
   val channelId: Int,
   val onlineState: ListOnlineState,
-  val caption: StringProvider,
+  val caption: LocalizedString,
   val imageId: ImageId,
   val currentPower: Float?,
   val value: String,
@@ -207,7 +208,7 @@ private fun Preview() {
 private fun sampleSlave(channelId: Int) = ThermostatData(
   channelId,
   ((channelId % 2) == 0).onlineState,
-  { "FHC #$channelId" },
+  LocalizedString.Constant("FHC #$channelId"),
   ImageId(R.drawable.fnc_thermostat_heat),
   25f,
   "22,7°C",

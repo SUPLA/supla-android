@@ -39,6 +39,7 @@ import org.supla.android.features.details.impulsecounter.ImpulseCounterDetailFra
 import org.supla.android.features.details.switchdetail.SwitchDetailFragment
 import org.supla.android.features.details.thermometerdetail.ThermometerDetailFragment
 import org.supla.android.features.details.thermostatdetail.ThermostatDetailFragment
+import org.supla.android.features.details.valveDetail.ValveDetailFragment
 import org.supla.android.features.details.windowdetail.WindowDetailFragment
 import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.tools.SuplaSchedulers
@@ -60,6 +61,7 @@ import org.supla.android.usecases.details.ProvideChannelDetailTypeUseCase
 import org.supla.android.usecases.details.SwitchDetailType
 import org.supla.android.usecases.details.ThermometerDetailType
 import org.supla.android.usecases.details.ThermostatDetailType
+import org.supla.android.usecases.details.ValveDetailType
 import org.supla.android.usecases.details.WindowDetailType
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
@@ -186,6 +188,7 @@ class ChannelListViewModel @Inject constructor(
       is IcDetailType -> sendEvent(ChannelListViewEvent.OpenIcDetail(ItemBundle.from(channel), detailType.pages))
       is ContainerDetailType -> sendEvent(ChannelListViewEvent.OpenContainerDetail(ItemBundle.from(channel), detailType.pages))
       is HumidityDetailType -> sendEvent(ChannelListViewEvent.OpenHumidityDetail(ItemBundle.from(channel), detailType.pages))
+      is ValveDetailType -> sendEvent(ChannelListViewEvent.OpenValveDetail(ItemBundle.from(channel), detailType.pages))
       is LegacyDetailType -> sendEvent(ChannelListViewEvent.OpenLegacyDetails(channel.remoteId, detailType))
       null -> {} // no action
     }
@@ -223,6 +226,9 @@ sealed class ChannelListViewEvent : ViewEvent {
 
   data class OpenContainerDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) :
     OpenStandardDetail(R.id.container_detail_fragment, ImpulseCounterDetailFragment.bundle(itemBundle, pages.toTypedArray()))
+
+  data class OpenValveDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) :
+    OpenStandardDetail(R.id.container_detail_fragment, ValveDetailFragment.bundle(itemBundle, pages.toTypedArray()))
 
   data object ReassignAdapter : ChannelListViewEvent()
 

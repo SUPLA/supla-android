@@ -768,6 +768,10 @@
   <string name="channel_caption_septic_tank" translatable="false">Septic tank</string>
   <string name="channel_caption_water_tank" translatable="false">Water tank</string>
   <string name="channel_caption_container_level_sensor" translatable="false">Container level sensor</string>
+  <string name="state_opened" translatable="false">opened</string>
+  <string name="state_closed" translatable="false">closed</string>
+  <string name="valve_detail_sensors" translatable="false">Connected sensors</string>
+  <string name="valve_action_error" translatable="false">Communication error occurred. Please try again later.</string>
 
   <plurals name="details_timer_info_on" translatable="false">
     <item quantity="other">on</item>

@@ -61,7 +61,7 @@ class ThermostatSlavesListFragment : BaseComposeFragment<ThermostatSlavesListVie
       ThermostatSlavesListView(
         state = modelState.viewState,
         onShowMessage = viewModel::showMessage,
-        onShowInfo = viewModel::showStateDialog
+        onShowInfo = { viewModel.showStateDialog(it.channelId, it.caption) }
       )
     }
   }

@@ -25,8 +25,8 @@ import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.extensions.TAG
 import org.supla.android.extensions.guardLet
-import org.supla.android.features.details.thermostatdetail.slaves.ThermostatData
 import org.supla.android.lib.SuplaChannelState
+import org.supla.core.shared.infrastructure.LocalizedString
 import java.util.concurrent.TimeUnit
 
 private const val REFRESH_INTERVAL_MS = 4000
@@ -82,13 +82,21 @@ interface StateDialogHandler {
 
   fun default(): StateDialogViewModelState = StateDialogViewModelStateImpl()
 
-  fun showStateDialog(thermostat: ThermostatData) {
+  fun onStart() {
+    stateDialogViewModelState.startRefreshing(dateProvider, suplaClientProvider)
+  }
+
+  fun onStop() {
+    stateDialogViewModelState.stopRefreshing()
+  }
+
+  fun showStateDialog(remoteId: Int, caption: LocalizedString) {
     updateDialogState {
-      StateDialogViewState(remoteId = thermostat.channelId, title = thermostat.caption)
+      StateDialogViewState(remoteId = remoteId, title = caption)
     }
 
-    suplaClientProvider.provide()?.getChannelState(thermostat.channelId)
-    stateDialogViewModelState.remoteId = thermostat.channelId
+    suplaClientProvider.provide()?.getChannelState(remoteId)
+    stateDialogViewModelState.remoteId = remoteId
     stateDialogViewModelState.lastRefreshTimestamp = dateProvider.currentTimestamp()
     stateDialogViewModelState.startRefreshing(dateProvider, suplaClientProvider)
   }
