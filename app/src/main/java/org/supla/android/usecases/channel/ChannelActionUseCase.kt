@@ -42,11 +42,22 @@ class ChannelActionUseCase @Inject constructor(
       throw ActionException.ChannelExceedAmperage(channelBase.remoteId)
     }
 
-    if (buttonType == ButtonType.RIGHT && isValveChannel(channelBase.function.value)) {
-      if (isManuallyClosed(channelBase)) {
-        throw ActionException.ValveClosedManually(channelBase.remoteId)
-      } else if (isFlooding(channelBase)) {
-        throw ActionException.ValveFloodingAlarm(channelBase.remoteId)
+    if (isValveChannel(channelBase.function.value)) {
+      when (buttonType) {
+        ButtonType.RIGHT -> {
+          if (isManuallyClosed(channelBase)) {
+            throw ActionException.ValveClosedManually(channelBase.remoteId)
+          } else if (isFlooding(channelBase)) {
+            throw ActionException.ValveFloodingAlarm(channelBase.remoteId)
+          } else if (isValveMotorProblem(channelBase)) {
+            throw ActionException.ValveMotorProblemOpening(channelBase.remoteId)
+          }
+        }
+        ButtonType.LEFT -> {
+          if (isValveMotorProblem(channelBase)) {
+            throw ActionException.ValveMotorProblemClosing(channelBase.remoteId)
+          }
+        }
       }
     }
 
@@ -78,4 +89,7 @@ class ChannelActionUseCase @Inject constructor(
     channel.channelValueEntity.asValveValue().let {
       it.isClosed() && it.flags.contains(SuplaValveFlag.FLOODING)
     }
+
+  private fun isValveMotorProblem(channel: ChannelDataEntity): Boolean =
+    channel.channelValueEntity.asValveValue().flags.contains(SuplaValveFlag.MOTOR_PROBLEM)
 }

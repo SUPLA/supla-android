@@ -112,7 +112,7 @@ class StatusViewModel @Inject constructor(
     suplaClientStateHolder.handleEvent(SuplaClientEvent.Initialized)
   }
 
-  override fun updateDialogState(updater: (AuthorizationDialogState?) -> AuthorizationDialogState?) {
+  override fun updateAuthorizationDialogState(updater: (AuthorizationDialogState?) -> AuthorizationDialogState?) {
     updateState { it.copy(authorizationDialogState = updater(it.authorizationDialogState)) }
   }
 

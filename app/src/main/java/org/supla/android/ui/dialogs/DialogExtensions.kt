@@ -23,6 +23,7 @@ import org.supla.android.R
 import org.supla.android.SuplaApp
 import org.supla.android.core.networking.suplaclient.SuplaClientApi
 import org.supla.android.core.ui.BaseFragment
+import org.supla.android.lib.actions.ActionId
 
 fun BaseFragment<*, *>.valveClosedManuallyDialog(channelId: Int, suplaClient: SuplaClientApi?): AlertDialog {
   val builder = AlertDialog.Builder(context)
@@ -44,6 +45,27 @@ fun BaseFragment<*, *>.valveFloodingDialog(channelId: Int, suplaClient: SuplaCli
   builder.setPositiveButton(R.string.yes) { dialog: DialogInterface, _ ->
     SuplaApp.Vibrate(context)
     suplaClient?.open(channelId, false, 1)
+    dialog.cancel()
+  }
+  builder.setNeutralButton(R.string.no) { dialog: DialogInterface, _ -> dialog.cancel() }
+  return builder.create()
+}
+
+fun BaseFragment<*, *>.valveMotorProblemDialog(channelId: Int, actionId: ActionId, suplaClient: SuplaClientApi?): AlertDialog {
+  val builder = AlertDialog.Builder(context)
+  builder.setTitle(android.R.string.dialog_alert_title)
+  if (actionId == ActionId.OPEN) {
+    builder.setMessage(R.string.valve_warning_motor_problem_opening)
+  } else {
+    builder.setMessage(R.string.valve_warning_motor_problem_closing)
+  }
+  builder.setPositiveButton(R.string.yes) { dialog: DialogInterface, _ ->
+    SuplaApp.Vibrate(context)
+    if (actionId == ActionId.OPEN) {
+      suplaClient?.open(channelId, false, 1)
+    } else {
+      suplaClient?.open(channelId, false, 0)
+    }
     dialog.cancel()
   }
   builder.setNeutralButton(R.string.no) { dialog: DialogInterface, _ -> dialog.cancel() }

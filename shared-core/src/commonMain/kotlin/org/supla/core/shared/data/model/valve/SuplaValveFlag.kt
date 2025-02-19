@@ -19,7 +19,8 @@ package org.supla.core.shared.data.model.valve
 
 enum class SuplaValveFlag(val value: Int) {
   FLOODING(1),
-  MANUALLY_CLOSED(2);
+  MANUALLY_CLOSED(2),
+  MOTOR_PROBLEM(4);
 
   companion object {
     fun from(value: Int): List<SuplaValveFlag> =

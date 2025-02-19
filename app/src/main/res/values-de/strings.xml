@@ -739,4 +739,7 @@
   <string name="state_closed">geschlossen</string>
   <string name="valve_detail_sensors">Verbundene Sensoren</string>
   <string name="valve_action_error">Ein Kommunikationfehler ist aufgetreten. Bitte versuchen Sie später noch mal.</string>
+  <string name="valve_warning_motor_problem_opening">Es wurde ein Motorproblem erkannt. Stellen Sie sicher, dass das Ventil nicht blockiert ist. Das Ventil ist möglicherweise teilweise geöffnet. Möchten Sie es wirklich öffnen?</string>
+  <string name="valve_warning_motor_problem_closing">Es wurde ein Motorproblem erkannt. Stellen Sie sicher, dass das Ventil nicht blockiert ist. Das Ventil ist möglicherweise teilweise geöffnet. Möchten Sie es wirklich schließen?</string>
+  <string name="valve_warning_motor_problem">Es wurde ein Motorproblem erkannt. Stellen Sie sicher, dass das Ventil nicht blockiert ist. Das Ventil ist möglicherweise teilweise geöffnet.</string>
 </resources>

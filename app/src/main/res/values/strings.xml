@@ -772,6 +772,9 @@
   <string name="state_closed" translatable="false">closed</string>
   <string name="valve_detail_sensors" translatable="false">Connected sensors</string>
   <string name="valve_action_error" translatable="false">Communication error occurred. Please try again later.</string>
+  <string name="valve_warning_motor_problem_opening" translatable="false">A motor problem has been detected. Make sure nothing is blocking the valve. The valve may be partially open. Are you sure you want to open it?</string>
+  <string name="valve_warning_motor_problem_closing" translatable="false">A motor problem has been detected. Make sure nothing is blocking the valve. The valve may be partially open. Are you sure you want to close it?</string>
+  <string name="valve_warning_motor_problem" translatable="false">A motor problem has been detected. Make sure nothing is blocking the valve. The valve may be partially open.</string>
 
   <plurals name="details_timer_info_on" translatable="false">
     <item quantity="other">on</item>

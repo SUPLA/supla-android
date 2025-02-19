@@ -95,5 +95,7 @@ enum class ButtonType { LEFT, RIGHT }
 sealed class ActionException : Throwable() {
   data class ValveClosedManually(val remoteId: Int) : ActionException()
   data class ValveFloodingAlarm(val remoteId: Int) : ActionException()
+  data class ValveMotorProblemOpening(val remoteId: Int) : ActionException()
+  data class ValveMotorProblemClosing(val remoteId: Int) : ActionException()
   data class ChannelExceedAmperage(val remoteId: Int) : ActionException()
 }

@@ -42,6 +42,7 @@ import org.supla.android.features.details.thermostatdetail.ThermostatDetailFragm
 import org.supla.android.features.details.valveDetail.ValveDetailFragment
 import org.supla.android.features.details.windowdetail.WindowDetailFragment
 import org.supla.android.lib.SuplaClientMsg
+import org.supla.android.lib.actions.ActionId
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.lists.BaseListViewModel
 import org.supla.android.ui.lists.ListItem
@@ -131,6 +132,12 @@ class ChannelListViewModel @Inject constructor(
           when (throwable) {
             is ActionException.ValveClosedManually -> sendEvent(ChannelListViewEvent.ShowValveClosedManuallyDialog(throwable.remoteId))
             is ActionException.ValveFloodingAlarm -> sendEvent(ChannelListViewEvent.ShowValveFloodingDialog(throwable.remoteId))
+            is ActionException.ValveMotorProblemClosing ->
+              sendEvent(ChannelListViewEvent.ShowValveMotorProblemDialog(throwable.remoteId, ActionId.CLOSE))
+
+            is ActionException.ValveMotorProblemOpening ->
+              sendEvent(ChannelListViewEvent.ShowValveMotorProblemDialog(throwable.remoteId, ActionId.OPEN))
+
             is ActionException.ChannelExceedAmperage -> sendEvent(ChannelListViewEvent.ShowAmperageExceededDialog(throwable.remoteId))
             else -> defaultErrorHandler("performAction($channelId, $buttonType)")(throwable)
           }
@@ -198,6 +205,7 @@ class ChannelListViewModel @Inject constructor(
 sealed class ChannelListViewEvent : ViewEvent {
   data class ShowValveClosedManuallyDialog(val remoteId: Int) : ChannelListViewEvent()
   data class ShowValveFloodingDialog(val remoteId: Int) : ChannelListViewEvent()
+  data class ShowValveMotorProblemDialog(val remoteId: Int, val action: ActionId) : ChannelListViewEvent()
   data class ShowAmperageExceededDialog(val remoteId: Int) : ChannelListViewEvent()
   data class OpenLegacyDetails(val remoteId: Int, val type: LegacyDetailType) : ChannelListViewEvent()
   data class OpenSwitchDetail(private val itemBundle: ItemBundle, private val pages: List<DetailPage>) :

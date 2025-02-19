@@ -59,7 +59,7 @@ class ValveGeneralDetailFragment : BaseComposeFragment<ValveGeneralDetailViewMod
           message = stringResource(dialog.messageRes),
           positiveButtonTitle = dialog.positiveButtonRes?.let { stringResource(it) },
           negativeButtonTitle = dialog.negativeButtonRes?.let { stringResource(it) },
-          onPositiveClick = { viewModel.forceOpen(item.remoteId) },
+          onPositiveClick = { viewModel.forceAction(item.remoteId, dialog.action) },
           onNegativeClick = viewModel::closeErrorDialog
         )
       }
