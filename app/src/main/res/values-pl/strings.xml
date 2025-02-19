@@ -748,6 +748,9 @@
   <string name="state_closed">zamknięty</string>
   <string name="valve_detail_sensors">Powiązane czujniki</string>
   <string name="valve_action_error">Wystąpił błąd podczas komunikacji. Spróbuj ponownie później.</string>
+  <string name="valve_warning_motor_problem_opening">Wystąpił problem z silnikiem. Upewnij się, czy nic nie blokuje zaworu. Zawór może być częściowo otwarty. Czy na pewno chcesz go otworzyć?</string>
+  <string name="valve_warning_motor_problem_closing">Wystąpił problem z silnikiem. Upewnij się, czy nic nie blokuje zaworu. Zawór może być częściowo otwarty. Czy na pewno chcesz go zamknąć?</string>
+  <string name="valve_warning_motor_problem">Wystąpił problem z silnikiem. Upewnij się, czy nic nie blokuje zaworu. Zawór może być częściowo otwarty.</string>
 
   <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
     <item quantity="one">włączone</item>

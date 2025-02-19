@@ -169,7 +169,7 @@ abstract class BaseWindowViewModel<S : BaseWindowViewModelState>(
     updateState { stateCopy(it, showCalibrationDialog = false) }
   }
 
-  override fun updateDialogState(updater: (AuthorizationDialogState?) -> AuthorizationDialogState?) {
+  override fun updateAuthorizationDialogState(updater: (AuthorizationDialogState?) -> AuthorizationDialogState?) {
     updateState { stateCopy(it, authorizationDialogState = updater(it.authorizationDialogState)) }
   }
 

@@ -105,4 +105,5 @@ val LocalizedStringId.resourceId: Int
     LocalizedStringId.FLOOD_SENSOR_ACTIVE -> R.string.flooding_alarm_message
     LocalizedStringId.VALVE_MANUALLY_CLOSED -> R.string.valve_warning_manually_closed_short
     LocalizedStringId.VALVE_FLOODING -> R.string.valve_warning_flooding_short
+    LocalizedStringId.VALVE_MOTOR_PROBLEM -> R.string.valve_warning_motor_problem
   }
