@@ -22,28 +22,17 @@ import org.supla.core.shared.data.model.lists.ChannelIssueItem
 import org.supla.core.shared.data.model.lists.IssueIcon
 import org.supla.core.shared.data.model.lists.ListItemIssues
 import org.supla.core.shared.infrastructure.LocalizedString
-import org.supla.core.shared.usecase.channel.issues.ChannelIssuesProvider
-import org.supla.core.shared.usecase.channel.issues.ContainerIssuesProvider
-import org.supla.core.shared.usecase.channel.issues.ShadingSystemIssuesProvider
-import org.supla.core.shared.usecase.channel.issues.ThermostatIssuesProvider
-import org.supla.core.shared.usecase.channel.issues.ValveIssuesProvider
 
 class GetChannelIssuesForListUseCase(
   private val getChannelLowBatteryIssueUseCase: GetChannelLowBatteryIssueUseCase,
-  private val getChannelBatteryIconUseCase: GetChannelBatteryIconUseCase
+  private val getChannelBatteryIconUseCase: GetChannelBatteryIconUseCase,
+  private val getChannelSpecificIssuesUseCase: GetChannelSpecificIssuesUseCase
 ) {
-
-  private val otherIssuesProviders: List<ChannelIssuesProvider> = listOf(
-    ThermostatIssuesProvider(),
-    ShadingSystemIssuesProvider(),
-    ContainerIssuesProvider(),
-    ValveIssuesProvider()
-  )
 
   operator fun invoke(channelWithChildren: ChannelWithChildren): ListItemIssues {
     val batteryIssue = getChannelLowBatteryIssueUseCase(channelWithChildren)
     val otherIssues = mutableListOf<ChannelIssueItem>()
-    otherIssuesProviders.forEach { otherIssues.addAll(it.provide(channelWithChildren)) }
+    otherIssues.addAll(getChannelSpecificIssuesUseCase(channelWithChildren))
 
     val icons = mutableListOf<IssueIcon>()
     val messages = mutableListOf<LocalizedString>()

@@ -38,7 +38,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
 import org.supla.android.core.shared.invoke
-import org.supla.android.core.ui.StringProvider
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.ui.dialogs.Dialog
@@ -51,7 +50,7 @@ import org.supla.core.shared.infrastructure.LocalizedString
 
 data class StateDialogViewState(
   val remoteId: Int,
-  val title: StringProvider,
+  val title: LocalizedString,
   val loading: Boolean = true,
   val values: Map<StateDialogItem, LocalizedString> = emptyMap()
 )
@@ -123,7 +122,7 @@ private fun Preview() {
     StateDialog(
       state = StateDialogViewState(
         remoteId = 1,
-        title = { "Dimmer" },
+        title = LocalizedString.Constant("Dimmer"),
         loading = false,
         values = mapOf(
           StateDialogItem.CHANNEL_ID to LocalizedString.Constant("123456"),

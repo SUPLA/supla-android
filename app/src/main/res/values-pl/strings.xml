@@ -744,6 +744,10 @@
   <string name="channel_caption_septic_tank">Szambo</string>
   <string name="channel_caption_water_tank">Zbiornik na wodę</string>
   <string name="channel_caption_container_level_sensor">Czujnik poziomu zbiornika</string>
+  <string name="state_opened">otwarty</string>
+  <string name="state_closed">zamknięty</string>
+  <string name="valve_detail_sensors">Powiązane czujniki</string>
+  <string name="valve_action_error">Wystąpił błąd podczas komunikacji. Spróbuj ponownie później.</string>
 
   <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
     <item quantity="one">włączone</item>

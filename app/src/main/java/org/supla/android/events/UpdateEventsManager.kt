@@ -24,9 +24,11 @@ import io.reactivex.rxjava3.subjects.Subject
 import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.RoomSceneRepository
 import org.supla.android.data.source.local.entity.SceneEntity
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.db.Channel
 import org.supla.android.db.ChannelGroup
 import org.supla.android.usecases.channel.ChannelToRootRelationHolderUseCase
+import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -35,6 +37,7 @@ import javax.inject.Singleton
 class UpdateEventsManager @Inject constructor(
   private val channelRepository: ChannelRepository,
   private val sceneRepository: RoomSceneRepository,
+  private val readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
   private val channelToRootRelationHolderUseCase: ChannelToRootRelationHolderUseCase
 ) {
 
@@ -86,6 +89,11 @@ class UpdateEventsManager @Inject constructor(
   fun observeChannel(channelId: Int): Observable<Channel> {
     return getSubjectForChannel(channelId).hide()
       .map { channelRepository.getChannel(channelId) }
+  }
+
+  fun observeChannelWithChildren(channelId: Int): Observable<ChannelWithChildren> {
+    return getSubjectForChannel(channelId).hide()
+      .flatMap { readChannelWithChildrenUseCase(channelId).toObservable() }
   }
 
   fun observeChannelEvents(channelId: Int): Observable<State> = getSubjectForChannel(channelId).hide()
