@@ -42,6 +42,7 @@ enum class ElectricityMeterChartType(@StringRes override val labelRes: Int) : Sp
       VOLTAGE -> LocalizedString.WithResourceAndValue(labelRes, "[V]")
       CURRENT -> LocalizedString.WithResourceAndValue(labelRes, "[A]")
       POWER_ACTIVE -> LocalizedString.WithResourceAndValue(labelRes, "[W]")
+      FORWARDED_REACTIVE_ENERGY, REVERSED_REACTIVE_ENERGY -> LocalizedString.WithResourceAndValue(labelRes, "[kvarh]")
       else -> LocalizedString.WithResourceAndValue(labelRes, KWH)
     }
 
