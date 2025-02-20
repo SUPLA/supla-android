@@ -28,7 +28,10 @@ import javax.inject.Singleton
 @Singleton
 class ContainerValueProvider @Inject constructor() : ChannelValueProvider {
   override fun handle(channelWithChildren: ChannelWithChildren): Boolean =
-    channelWithChildren.function == SuplaFunction.CONTAINER
+    when (channelWithChildren.function) {
+      SuplaFunction.CONTAINER, SuplaFunction.SEPTIC_TANK, SuplaFunction.WATER_TANK -> true
+      else -> false
+    }
 
   override fun value(channelWithChildren: ChannelWithChildren, valueType: ValueType): ContainerValue =
     ContainerValue.from(channelWithChildren.isOnline(), channelWithChildren.channel.channelValueEntity.getValueAsByteArray())
