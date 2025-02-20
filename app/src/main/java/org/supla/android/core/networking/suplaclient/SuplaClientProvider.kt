@@ -56,4 +56,12 @@ interface SuplaClientApi {
   fun superUserAuthorizationRequest(email: String, password: String)
 
   fun deviceCalCfgRequest(remoteId: Int, isGroup: Boolean, command: Int, dataType: Int, data: ByteArray?): Boolean
+
+  fun setChannelCaption(remoteId: Int, caption: String): Boolean
+
+  fun setChannelGroupCaption(remoteId: Int, caption: String): Boolean
+
+  fun setLocationCaption(remoteId: Int, caption: String): Boolean
+
+  fun setSceneCaption(remoteId: Int, caption: String): Boolean
 }

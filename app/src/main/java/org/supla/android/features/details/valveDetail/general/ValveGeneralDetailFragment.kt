@@ -17,7 +17,6 @@ package org.supla.android.features.details.valveDetail.general
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.R
 import android.os.Bundle
 import android.view.View
 import androidx.compose.runtime.Composable
@@ -27,11 +26,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
+import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.BaseComposeFragment
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
 import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.ui.dialogs.AlertDialog
+import org.supla.android.ui.dialogs.AuthorizationDialog
+import org.supla.android.ui.dialogs.CaptionChangeDialog
 import org.supla.android.ui.dialogs.state.StateDialog
 
 private const val ARG_ITEM_BUNDLE = "ARG_ITEM_BUNDLE"
@@ -55,7 +57,7 @@ class ValveGeneralDetailFragment : BaseComposeFragment<ValveGeneralDetailViewMod
     SuplaTheme {
       modelState.dialog?.let { dialog ->
         AlertDialog(
-          title = stringResource(id = R.string.dialog_alert_title),
+          title = stringResource(id = android.R.string.dialog_alert_title),
           message = stringResource(dialog.messageRes),
           positiveButtonTitle = dialog.positiveButtonRes?.let { stringResource(it) },
           negativeButtonTitle = dialog.negativeButtonRes?.let { stringResource(it) },
@@ -66,11 +68,29 @@ class ValveGeneralDetailFragment : BaseComposeFragment<ValveGeneralDetailViewMod
       modelState.stateDialogViewState?.let {
         StateDialog(state = it, onDismiss = viewModel::closeStateDialog)
       }
+      modelState.captionChangeDialogState?.let {
+        CaptionChangeDialog(
+          state = it,
+          onDismiss = viewModel::closeCaptionChangeDialog,
+          onStateChange = viewModel::updateCaptionChangeDialogState,
+          onOk = viewModel::onCaptionChange
+        )
+      }
+      modelState.authorizationDialogState?.let {
+        AuthorizationDialog(
+          dialogState = it,
+          onDismiss = viewModel::onCaptionChangeNotAuthorized,
+          onCancel = viewModel::onCaptionChangeNotAuthorized,
+          onAuthorize = viewModel::authorize,
+          onStateChange = viewModel::updateAuthorizationState
+        )
+      }
       ValveGeneralDetailView(
         state = modelState.viewState,
         onOpenClick = { viewModel.onActionClick(item.remoteId, ValveAction.OPEN) },
         onCloseClick = { viewModel.onActionClick(item.remoteId, ValveAction.CLOSE) },
-        onInfoClick = { viewModel.showStateDialog(it.channelId, it.caption) }
+        onInfoClick = { viewModel.showStateDialog(it.channelId, it.caption) },
+        onCaptionLongPress = { viewModel.changeChannelCaption(it.caption.invoke(requireContext()), it.channelId, it.profileId) }
       )
     }
   }

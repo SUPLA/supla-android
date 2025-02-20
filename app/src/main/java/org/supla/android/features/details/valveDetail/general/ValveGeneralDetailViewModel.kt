@@ -39,12 +39,15 @@ import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.tools.VibrationHelper
 import org.supla.android.ui.dialogs.AuthorizationDialogState
+import org.supla.android.ui.dialogs.CaptionChangeDialogState
 import org.supla.android.ui.dialogs.authorize.AuthorizationModelState
 import org.supla.android.ui.dialogs.authorize.BaseAuthorizationViewModel
 import org.supla.android.ui.dialogs.state.StateDialogHandler
 import org.supla.android.ui.dialogs.state.StateDialogViewModelState
 import org.supla.android.ui.dialogs.state.StateDialogViewState
 import org.supla.android.ui.views.buttons.SwitchButtonState
+import org.supla.android.usecases.captionchange.CaptionChangeHandler
+import org.supla.android.usecases.captionchange.CaptionChangeUseCase
 import org.supla.android.usecases.channel.ActionException
 import org.supla.android.usecases.channel.ButtonType
 import org.supla.android.usecases.channel.ChannelActionUseCase
@@ -71,6 +74,7 @@ class ValveGeneralDetailViewModel @Inject constructor(
   private val getCaptionUseCase: GetCaptionUseCase,
   private val vibrationHelper: VibrationHelper,
   private val preferences: Preferences,
+  override val captionChangeUseCase: CaptionChangeUseCase,
   override val suplaClientProvider: SuplaClientProvider,
   override val updateEventsManager: UpdateEventsManager,
   override val schedulers: SuplaSchedulers,
@@ -87,9 +91,13 @@ class ValveGeneralDetailViewModel @Inject constructor(
   schedulers
 ),
   StateDialogHandler,
-  ChannelUpdatesObserver {
+  ChannelUpdatesObserver,
+  CaptionChangeHandler<ValveGeneralDetailViewModeState, ValveGeneralDetailViewEvent> {
 
   override val stateDialogViewModelState: StateDialogViewModelState = default()
+
+  override val captionChangeDialogState: CaptionChangeDialogState?
+    get() = currentState().captionChangeDialogState
 
   override fun updateDialogState(updater: (StateDialogViewState?) -> StateDialogViewState?) {
     updateState { it.copy(stateDialogViewState = updater(it.stateDialogViewState)) }
@@ -99,8 +107,20 @@ class ValveGeneralDetailViewModel @Inject constructor(
     updateState { it.copy(authorizationDialogState = updater(it.authorizationDialogState)) }
   }
 
+  override fun updateCaptionChangeDialogState(updater: (CaptionChangeDialogState?) -> CaptionChangeDialogState?) {
+    updateState { it.copy(captionChangeDialogState = updater(it.captionChangeDialogState)) }
+  }
+
   override fun onAuthorized() {
-    TODO("Not yet implemented")
+    updateState { it.copy(authorizationDialogState = null) }
+  }
+
+  override fun onCaptionChange() {
+    onChannelCaptionChange()
+  }
+
+  override fun onChannelUpdate(channelWithChildren: ChannelWithChildren) {
+    handle(channelWithChildren)
   }
 
   fun loadData(remoteId: Int) {
@@ -153,10 +173,6 @@ class ValveGeneralDetailViewModel @Inject constructor(
     updateState { it.copy(dialog = null) }
   }
 
-  override fun onChannelUpdate(channelWithChildren: ChannelWithChildren) {
-    handle(channelWithChildren)
-  }
-
   private fun handle(channelWithChildren: ChannelWithChildren) {
     val value = channelWithChildren.channel.channelValueEntity.asValveValue()
     updateState { state ->
@@ -188,6 +204,7 @@ class ValveGeneralDetailViewModel @Inject constructor(
   private fun ChannelChildEntity.toSensor() =
     SensorData(
       channelId = channel.remoteId,
+      profileId = channel.profileId,
       onlineState = channelDataEntity.channelValueEntity.onlineState,
       icon = getChannelIconUseCase(channelDataEntity),
       caption = getCaptionUseCase(channelDataEntity.shareable),
@@ -209,6 +226,7 @@ data class ValveGeneralDetailViewModeState(
   val viewState: ValveGeneralDetailViewState = ValveGeneralDetailViewState(),
   val dialog: ValveAlertDialog? = null,
   val stateDialogViewState: StateDialogViewState? = null,
+  val captionChangeDialogState: CaptionChangeDialogState? = null,
   override val authorizationDialogState: AuthorizationDialogState? = null
 ) : AuthorizationModelState()
 

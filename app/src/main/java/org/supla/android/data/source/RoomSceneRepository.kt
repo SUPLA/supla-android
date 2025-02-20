@@ -17,9 +17,11 @@ package org.supla.android.data.source
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import org.supla.android.data.source.local.dao.SceneDao
 import org.supla.android.data.source.local.entity.SceneEntity
+import org.supla.android.usecases.captionchange.CaptionChangeUseCase
 import org.supla.android.usecases.developerinfo.CountProvider
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -27,7 +29,7 @@ import javax.inject.Singleton
 @Singleton
 class RoomSceneRepository @Inject constructor(
   private val sceneDao: SceneDao
-) : CountProvider {
+) : CountProvider, CaptionChangeUseCase.Updater {
 
   fun findByRemoteId(remoteId: Int) = sceneDao.findByRemoteId(remoteId)
 
@@ -36,4 +38,7 @@ class RoomSceneRepository @Inject constructor(
   fun update(scenes: List<SceneEntity>) = sceneDao.update(scenes)
 
   override fun count(): Observable<Int> = sceneDao.count()
+
+  override fun updateCaption(caption: String, remoteId: Int, profileId: Long): Completable =
+    sceneDao.updateCaption(caption, remoteId, profileId)
 }
