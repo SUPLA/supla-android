@@ -17,15 +17,19 @@ package org.supla.android.data.source
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import org.supla.android.data.source.local.dao.ChannelGroupDao
 import org.supla.android.data.source.local.entity.ChannelGroupEntity
+import org.supla.android.usecases.captionchange.CaptionChangeUseCase
 import org.supla.android.usecases.developerinfo.CountProvider
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ChannelGroupRepository @Inject constructor(private val channelGroupDao: ChannelGroupDao) : CountProvider {
+class ChannelGroupRepository @Inject constructor(
+  private val channelGroupDao: ChannelGroupDao
+) : CountProvider, CaptionChangeUseCase.Updater {
 
   fun findByRemoteId(remoteId: Int) = channelGroupDao.findByRemoteId(remoteId)
 
@@ -38,4 +42,7 @@ class ChannelGroupRepository @Inject constructor(private val channelGroupDao: Ch
   fun update(groups: List<ChannelGroupEntity>) = channelGroupDao.update(groups)
 
   override fun count(): Observable<Int> = channelGroupDao.count()
+
+  override fun updateCaption(caption: String, remoteId: Int, profileId: Long): Completable =
+    channelGroupDao.updateCaption(caption, remoteId, profileId)
 }

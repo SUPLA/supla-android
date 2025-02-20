@@ -742,4 +742,7 @@
   <string name="valve_warning_motor_problem_opening">Es wurde ein Motorproblem erkannt. Stellen Sie sicher, dass das Ventil nicht blockiert ist. Das Ventil ist möglicherweise teilweise geöffnet. Möchten Sie es wirklich öffnen?</string>
   <string name="valve_warning_motor_problem_closing">Es wurde ein Motorproblem erkannt. Stellen Sie sicher, dass das Ventil nicht blockiert ist. Das Ventil ist möglicherweise teilweise geöffnet. Möchten Sie es wirklich schließen?</string>
   <string name="valve_warning_motor_problem">Es wurde ein Motorproblem erkannt. Stellen Sie sicher, dass das Ventil nicht blockiert ist. Das Ventil ist möglicherweise teilweise geöffnet.</string>
+  <string name="change_caption_header">Änderung der Beschriftung</string>
+  <string name="group_name">Gruppenname</string>
+  <string name="caption_change_failed">Änderung der Beschriftung fehlgeschlagen!</string>
 </resources>
