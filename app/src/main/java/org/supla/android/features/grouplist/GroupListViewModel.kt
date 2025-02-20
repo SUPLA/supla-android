@@ -112,7 +112,8 @@ class GroupListViewModel @Inject constructor(
       .subscribeBy(
         onError = { throwable ->
           when (throwable) {
-            is ActionException.ChannelClosedManually -> sendEvent(GroupListViewEvent.ShowValveDialog(throwable.remoteId))
+            is ActionException.ValveClosedManually -> sendEvent(GroupListViewEvent.ShowValveClosedManuallyDialog(throwable.remoteId))
+            is ActionException.ValveFloodingAlarm -> sendEvent(GroupListViewEvent.ShowValveFloodingDialog(throwable.remoteId))
             is ActionException.ChannelExceedAmperage -> sendEvent(GroupListViewEvent.ShowAmperageExceededDialog(throwable.remoteId))
             else -> defaultErrorHandler("performAction($channelId, $buttonType)")(throwable)
           }
@@ -177,7 +178,8 @@ class GroupListViewModel @Inject constructor(
 }
 
 sealed class GroupListViewEvent : ViewEvent {
-  data class ShowValveDialog(val remoteId: Int) : GroupListViewEvent()
+  data class ShowValveClosedManuallyDialog(val remoteId: Int) : GroupListViewEvent()
+  data class ShowValveFloodingDialog(val remoteId: Int) : GroupListViewEvent()
   data class ShowAmperageExceededDialog(val remoteId: Int) : GroupListViewEvent()
   data class OpenLegacyDetails(val remoteId: Int, val type: LegacyDetailType) : GroupListViewEvent()
   data object ReassignAdapter : GroupListViewEvent()

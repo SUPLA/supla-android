@@ -268,7 +268,7 @@
   <string name="uptime">Werktijd</string>
   <string name="uv_warning1">De levensduur van de uv-lamp is %1$s. Plan de vervanging ervan.</string>
   <string name="uv_warning2">De levensduur van de uv-lamp is %1$s. Vervang de lamp.</string>
-  <string name="valve_open_warning">De klep is handmatig of per radio gesloten. Voordat u het opent, moet u ervoor zorgen dat ze niet is gesloten vanwege wateroverlast. Om de waarschuwing uit te schakelen, opent u de klep handmatig. Weet u zeker dat u de klep vanuit de app wilt openen?!</string>
+  <string name="valve_warning_manually_closed">De klep is handmatig of per radio gesloten. Voordat u het opent, moet u ervoor zorgen dat ze niet is gesloten vanwege wateroverlast. Om de waarschuwing uit te schakelen, opent u de klep handmatig. Weet u zeker dat u de klep vanuit de app wilt openen?!</string>
   <string name="valve_warning">De klep is handmatig of per radio gesloten. Voordat u ze opent, moet u ervoor zorgen dat het niet is gesloten vanwege wateroverlast. Om de waarschuwing uit te schakelen, opent u de klep handmatig.</string>
   <string name="vector_balance_days">Vector saldo - Dagen</string>
   <string name="vector_balance_hours">Vector saldo - Uren</string>

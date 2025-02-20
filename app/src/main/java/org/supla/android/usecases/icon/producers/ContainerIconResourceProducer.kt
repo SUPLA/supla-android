@@ -29,9 +29,33 @@ object ContainerIconResourceProducer : IconResourceProducer {
 
   override fun produce(data: IconData): Int =
     when (data.state.value) {
-      ChannelState.Value.EMPTY -> R.drawable.fnc_container_empty
-      ChannelState.Value.HALF -> R.drawable.fnc_container_half
-      ChannelState.Value.FULL -> R.drawable.fnc_container_full
+      ChannelState.Value.EMPTY -> emptyIcon(data.altIcon)
+      ChannelState.Value.HALF -> halfIcon(data.altIcon)
+      ChannelState.Value.FULL -> fullIcon(data.altIcon)
       else -> R.drawable.ic_unknown_channel
+    }
+
+  private fun emptyIcon(alt: Int): Int =
+    when (alt) {
+      1 -> R.drawable.fnc_container_1_empty
+      2 -> R.drawable.fnc_container_2_empty
+      3 -> R.drawable.fnc_container_3_empty
+      else -> R.drawable.fnc_container_empty
+    }
+
+  private fun halfIcon(alt: Int): Int =
+    when (alt) {
+      1 -> R.drawable.fnc_container_1_half
+      2 -> R.drawable.fnc_container_2_half
+      3 -> R.drawable.fnc_container_3_half
+      else -> R.drawable.fnc_container_half
+    }
+
+  private fun fullIcon(alt: Int): Int =
+    when (alt) {
+      1 -> R.drawable.fnc_container_1_full
+      2 -> R.drawable.fnc_container_2_full
+      3 -> R.drawable.fnc_container_3_full
+      else -> R.drawable.fnc_container_full
     }
 }

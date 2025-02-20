@@ -133,7 +133,11 @@ fun SuplaFunction.hasCustomFilters(): Boolean =
     SuplaFunction.HUMIDITY_AND_TEMPERATURE,
     SuplaFunction.PUMP_SWITCH,
     SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH,
-    SuplaFunction.CONTAINER -> false
+    SuplaFunction.CONTAINER,
+    SuplaFunction.SEPTIC_TANK,
+    SuplaFunction.WATER_TANK,
+    SuplaFunction.CONTAINER_LEVEL_SENSOR,
+    SuplaFunction.FLOOD_SENSOR -> false
 
     SuplaFunction.ELECTRICITY_METER,
     SuplaFunction.POWER_SWITCH,

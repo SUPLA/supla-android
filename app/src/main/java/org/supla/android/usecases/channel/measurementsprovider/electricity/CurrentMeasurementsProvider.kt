@@ -28,7 +28,6 @@ import org.supla.android.data.model.chart.ChartDataSpec
 import org.supla.android.data.model.chart.ChartEntryType
 import org.supla.android.data.model.chart.HistoryDataSet
 import org.supla.android.data.source.CurrentLogRepository
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.local.entity.custom.Phase
 import org.supla.android.data.source.local.entity.measurements.CurrentHistoryLogEntity
@@ -60,19 +59,18 @@ class CurrentMeasurementsProvider @Inject constructor(
     channelWithChildren: ChannelWithChildren,
     spec: ChartDataSpec
   ): Single<ChannelChartSets> {
-    val channel = channelWithChildren.channel
-
     val observables: MutableList<Observable<Pair<Phase, HistoryDataSet>>> = mutableListOf()
     spec.customFilters?.ifPhase1 {
-      observables.add(findMeasurementsForPhase(channel, spec, observables.isEmpty(), Phase.PHASE_1))
+      observables.add(findMeasurementsForPhase(channelWithChildren, spec, observables.isEmpty(), Phase.PHASE_1))
     }
     spec.customFilters?.ifPhase2 {
-      observables.add(findMeasurementsForPhase(channel, spec, observables.isEmpty(), Phase.PHASE_2))
+      observables.add(findMeasurementsForPhase(channelWithChildren, spec, observables.isEmpty(), Phase.PHASE_2))
     }
     spec.customFilters?.ifPhase3 {
-      observables.add(findMeasurementsForPhase(channel, spec, observables.isEmpty(), Phase.PHASE_3))
+      observables.add(findMeasurementsForPhase(channelWithChildren, spec, observables.isEmpty(), Phase.PHASE_3))
     }
 
+    val channel = channelWithChildren.channel
     return Observable.zip(
       observables
     ) { it.filterIsInstance<Pair<Phase, HistoryDataSet>>() }
@@ -90,12 +88,12 @@ class CurrentMeasurementsProvider @Inject constructor(
   }
 
   private fun findMeasurementsForPhase(
-    channel: ChannelDataEntity,
+    channelWithChildren: ChannelWithChildren,
     spec: ChartDataSpec,
     isFirst: Boolean,
     phase: Phase
   ): Observable<Pair<Phase, HistoryDataSet>> =
-    currentLogRepository.findMeasurements(channel.remoteId, channel.profileId, spec.startDate, spec.endDate, phase)
+    currentLogRepository.findMeasurements(channelWithChildren.remoteId, channelWithChildren.profileId, spec.startDate, spec.endDate, phase)
       .map { aggregating(it, spec.aggregation) }
-      .map { Pair(phase, historyDataSet(channel, phase, isFirst, ChartEntryType.CURRENT, spec.aggregation, it)) }
+      .map { Pair(phase, historyDataSet(channelWithChildren, phase, isFirst, ChartEntryType.CURRENT, spec.aggregation, it)) }
 }

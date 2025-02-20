@@ -258,7 +258,7 @@
 
   <string name="channel_caption_valve">Valve</string>
   <string name="channel_btn_close">Close</string>
-  <string name="valve_open_warning">The valve has been closed in manual or radio mode. Before you open it, make sure it has not been closed due to flooding. To turn off the warning, open the valve manually. Are you sure you want to open it from the application ?!</string>
+  <string name="valve_warning_manually_closed">The valve has been closed in manual or radio mode. Before you open it, make sure it has not been closed due to flooding. To turn off the warning, open the valve manually. Are you sure you want to open it from the application ?!</string>
   <string name="valve_warning">The valve has been closed in manual or radio mode. Before you open it, make sure it has not been closed due to flooding. To turn off the warning, open the valve manually.</string>
   <string name="yes">Yes</string>
   <string name="no">No</string>
@@ -760,6 +760,14 @@
   <string name="counter_photo_photos" translatable="false">Photo history</string>
   <string name="counter_photo_loading_error" translatable="false">Loading failed.</string>
   <string name="counter_photo_error" translatable="false">Error</string>
+  <string name="valve_warning_flooding" translatable="false">The valve has been closed due to detected flooding. Before opening the valve, ensure that the cause has been resolved. Opening the valve clears the alarm.</string>
+  <string name="channel_caption_flood_sensor" translatable="false">Flood sensor</string>
+  <string name="flooding_alarm_message" translatable="false">The sensor reports flooding!</string>
+  <string name="valve_warning_manually_closed_short" translatable="false">The valve has been closed manually or via radio (possible flooding).</string>
+  <string name="valve_warning_flooding_short" translatable="false">The valve has been closed due to detected flooding.</string>
+  <string name="channel_caption_septic_tank" translatable="false">Septic tank</string>
+  <string name="channel_caption_water_tank" translatable="false">Water tank</string>
+  <string name="channel_caption_container_level_sensor" translatable="false">Container level sensor</string>
 
   <plurals name="details_timer_info_on" translatable="false">
     <item quantity="other">on</item>

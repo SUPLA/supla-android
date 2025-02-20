@@ -247,7 +247,7 @@
   <string name="uptime">Darbo laikas</string>
   <string name="uv_warning1">UV spinduolio eksploatavimo laikas siekia %1$s. Suplanuokite jo keitimą.</string>
   <string name="uv_warning2">UV spinduolio eksploatavimo laikas siekia %1$s. Pakeiskite spinduolį.</string>
-  <string name="valve_open_warning">Vožtuvas uždarytas rankiniu būdu arba radijo ryšiu. Prieš jo atidarymą reikia įsitikinti, kad nebuvo uždarytas dėl užliejimo. Norėdami išjungti įspėjimą, vožtuvą atidarykite rankiniu būdu. Ar tikrai norite vožtuvą atidaryti programėlės pagalba?</string>
+  <string name="valve_warning_manually_closed">Vožtuvas uždarytas rankiniu būdu arba radijo ryšiu. Prieš jo atidarymą reikia įsitikinti, kad nebuvo uždarytas dėl užliejimo. Norėdami išjungti įspėjimą, vožtuvą atidarykite rankiniu būdu. Ar tikrai norite vožtuvą atidaryti programėlės pagalba?</string>
   <string name="valve_warning">Vožtuvas uždarytas rankiniu būdu arba radijo ryšiu. Prieš jo atidarymą reikia įsitikinti, kad nebuvo uždarytas dėl užliejimo. Norėdami išjungti įspėjimą, vožtuvą atidarykite rankiniu būdu.</string>
   <string name="vector_balance_days">Vektorinis balansas – Dienos</string>
   <string name="vector_balance_hours">Vektorinis balansas – Valandos</string>

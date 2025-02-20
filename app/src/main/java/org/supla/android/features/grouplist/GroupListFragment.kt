@@ -32,7 +32,8 @@ import org.supla.android.extensions.toPx
 import org.supla.android.extensions.visibleIf
 import org.supla.android.navigator.MainNavigator
 import org.supla.android.ui.dialogs.exceededAmperageDialog
-import org.supla.android.ui.dialogs.valveAlertDialog
+import org.supla.android.ui.dialogs.valveClosedManuallyDialog
+import org.supla.android.ui.dialogs.valveFloodingDialog
 import org.supla.android.usecases.channel.ButtonType
 import javax.inject.Inject
 
@@ -72,7 +73,8 @@ class GroupListFragment : BaseFragment<GroupListViewState, GroupListViewEvent>(R
       is GroupListViewEvent.NavigateToPrivateCloud -> navigator.navigateToWeb(event.url)
       is GroupListViewEvent.NavigateToSuplaCloud -> navigator.navigateToCloudExternal()
       is GroupListViewEvent.NavigateToSuplaBetaCloud -> navigator.navigateToBetaCloudExternal()
-      is GroupListViewEvent.ShowValveDialog -> valveAlertDialog(event.remoteId, suplaClient).show()
+      is GroupListViewEvent.ShowValveClosedManuallyDialog -> valveClosedManuallyDialog(event.remoteId, suplaClient).show()
+      is GroupListViewEvent.ShowValveFloodingDialog -> valveFloodingDialog(event.remoteId, suplaClient).show()
       is GroupListViewEvent.ShowAmperageExceededDialog -> exceededAmperageDialog(event.remoteId, suplaClient).show()
       is GroupListViewEvent.OpenLegacyDetails -> {
         setToolbarTitle("")

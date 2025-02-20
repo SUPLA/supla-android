@@ -101,6 +101,8 @@ abstract class BaseListViewModel<S : ViewState, E : ViewEvent>(
       SuplaFunction.VERTICAL_BLIND,
       SuplaFunction.ROLLER_GARAGE_DOOR,
       SuplaFunction.CONTAINER,
+      SuplaFunction.SEPTIC_TANK,
+      SuplaFunction.WATER_TANK,
       SuplaFunction.HUMIDITY -> true
 
       SuplaFunction.LIGHTSWITCH,
@@ -155,7 +157,9 @@ abstract class BaseListViewModel<S : ViewState, E : ViewEvent>(
       SuplaFunction.DIGIGLASS_HORIZONTAL,
       SuplaFunction.DIGIGLASS_VERTICAL,
       SuplaFunction.PUMP_SWITCH,
-      SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH -> false
+      SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH,
+      SuplaFunction.CONTAINER_LEVEL_SENSOR,
+      SuplaFunction.FLOOD_SENSOR -> false
     }
 
   protected fun loadServerUrl(handler: (CloudUrl) -> Unit) {

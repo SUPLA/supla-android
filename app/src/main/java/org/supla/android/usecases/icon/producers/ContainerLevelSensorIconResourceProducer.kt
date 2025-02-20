@@ -1,4 +1,4 @@
-package org.supla.android.data.source.remote.valve
+package org.supla.android.usecases.icon.producers
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,27 +17,19 @@ package org.supla.android.data.source.remote.valve
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-private const val VALVE_VALUE_LENGTH = 2
+import org.supla.android.R
+import org.supla.android.data.model.general.ChannelState
+import org.supla.android.usecases.icon.IconData
+import org.supla.android.usecases.icon.IconResourceProducer
+import org.supla.core.shared.data.model.general.SuplaFunction
 
-data class ValveValue(
-  val online: Boolean,
-  val closed: Int,
-  val flags: List<SuplaValveFlag>
-) {
+object ContainerLevelSensorIconResourceProducer : IconResourceProducer {
+  override fun accepts(function: SuplaFunction): Boolean =
+    function == SuplaFunction.CONTAINER_LEVEL_SENSOR
 
-  fun isClosed() = closed == 1
-
-  companion object {
-    fun from(online: Boolean, bytes: ByteArray): ValveValue {
-      if (bytes.size < VALVE_VALUE_LENGTH) {
-        return ValveValue(online, 0, emptyList())
-      }
-
-      return ValveValue(
-        online = online,
-        closed = bytes[0].toInt(),
-        flags = SuplaValveFlag.from(bytes[1].toInt())
-      )
+  override fun produce(data: IconData): Int =
+    when (data.state.value) {
+      ChannelState.Value.ON -> R.drawable.fnc_container_level_sensor_on
+      else -> R.drawable.fnc_container_level_sensor_off
     }
-  }
 }

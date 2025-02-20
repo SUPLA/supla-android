@@ -55,10 +55,14 @@ fun ChannelBase.isIconValueItem(): Boolean =
     function == SuplaFunction.WEIGHT_SENSOR ||
     function == SuplaFunction.HUMIDITY ||
     function == SuplaFunction.CONTAINER ||
+    function == SuplaFunction.WATER_TANK ||
+    function == SuplaFunction.SEPTIC_TANK ||
     function == SuplaFunction.IC_WATER_METER ||
     function == SuplaFunction.IC_GAS_METER ||
     function == SuplaFunction.IC_HEAT_METER ||
-    function == SuplaFunction.IC_ELECTRICITY_METER
+    function == SuplaFunction.IC_ELECTRICITY_METER ||
+    function == SuplaFunction.FLOOD_SENSOR ||
+    function == SuplaFunction.CONTAINER_LEVEL_SENSOR
 
 fun ChannelBase.isSwitch(): Boolean =
   function == SuplaFunction.LIGHTSWITCH ||

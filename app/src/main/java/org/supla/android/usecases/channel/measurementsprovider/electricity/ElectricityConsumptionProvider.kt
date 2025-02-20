@@ -66,7 +66,7 @@ class ElectricityConsumptionProvider @Inject constructor(
   ): Single<ChannelChartSets> {
     val channel = channelWithChildren.channel
     return getGroupedMeasurements(channel, spec)
-      .map { listOf(historyDataSet(channel, labels(spec, getChannelIconUseCase(channel), it), spec.aggregation, it.list)) }
+      .map { listOf(historyDataSet(channelWithChildren, labels(spec, getChannelIconUseCase(channel), it), spec.aggregation, it.list)) }
       .map { historyDataSets ->
         ChannelChartSets(
           channel,
@@ -167,7 +167,7 @@ class ElectricityConsumptionProvider @Inject constructor(
   }
 
   private fun historyDataSet(
-    channel: ChannelDataEntity,
+    channelWithChildren: ChannelWithChildren,
     label: HistoryDataSet.Label,
     aggregation: ChartDataAggregation,
     measurements: List<AggregatedEntity>
@@ -175,7 +175,7 @@ class ElectricityConsumptionProvider @Inject constructor(
     HistoryDataSet(
       type = ChartEntryType.ELECTRICITY,
       label = label,
-      valueFormatter = getValueFormatter(ChartEntryType.ELECTRICITY, channel),
+      valueFormatter = getValueFormatter(ChartEntryType.ELECTRICITY, channelWithChildren),
       entities = divideSetToSubsets(
         entities = measurements,
         aggregation = aggregation

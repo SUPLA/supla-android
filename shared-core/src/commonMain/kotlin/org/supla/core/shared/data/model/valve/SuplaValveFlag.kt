@@ -1,4 +1,4 @@
-package org.supla.android.data.source.remote.valve
+package org.supla.core.shared.data.model.valve
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 

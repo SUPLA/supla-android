@@ -20,6 +20,7 @@ package org.supla.core.shared.usecase.channel
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_ALARM_ARMAMENT_SENSOR
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_CONTAINER
+import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_CONTAINER_LEVEL_SENSOR
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_CONTROLLING_THE_DOOR_LOCK
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_CONTROLLING_THE_FACADE_BLIND
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_CONTROLLING_THE_GARAGE_DOOR
@@ -34,6 +35,7 @@ import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_DI
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_DIMMER_AND_RGB_LIGHTING
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_DISTANCE_SENSOR
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_ELECTRICITY_METER
+import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_FLOOD_SENSOR
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_GENERAL_PURPOSE_MEASUREMENT
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_GENERAL_PURPOSE_METER
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_HEAT_OR_COLD_SOURCE_SWITCH
@@ -60,6 +62,7 @@ import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_PU
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_RAIN_SENSOR
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_RGB_LIGHTING
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_ROLLER_GARAGE_DOOR
+import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_SEPTIC_TANK
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_STAIRCASE_TIMER
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_TERRACE_AWNING
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_THERMOMETER
@@ -68,6 +71,7 @@ import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_TH
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_UNKNOWN
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_VALVE
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_VERTICAL_BLIND
+import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_WATER_TANK
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_WEIGHT_SENSOR
 import org.supla.core.shared.infrastructure.LocalizedStringId.CHANNEL_CAPTION_WIND_SENSOR
 import org.supla.core.shared.infrastructure.localizedString
@@ -134,6 +138,10 @@ class GetChannelDefaultCaptionUseCase {
       SuplaFunction.PUMP_SWITCH -> localizedString(CHANNEL_CAPTION_PUMP_SWITCH)
       SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH -> localizedString(CHANNEL_CAPTION_HEAT_OR_COLD_SOURCE_SWITCH)
       SuplaFunction.CONTAINER -> localizedString(CHANNEL_CAPTION_CONTAINER)
+      SuplaFunction.SEPTIC_TANK -> localizedString(CHANNEL_CAPTION_SEPTIC_TANK)
+      SuplaFunction.WATER_TANK -> localizedString(CHANNEL_CAPTION_WATER_TANK)
+      SuplaFunction.CONTAINER_LEVEL_SENSOR -> localizedString(CHANNEL_CAPTION_CONTAINER_LEVEL_SENSOR)
+      SuplaFunction.FLOOD_SENSOR -> localizedString(CHANNEL_CAPTION_FLOOD_SENSOR)
 
       SuplaFunction.UNKNOWN,
       SuplaFunction.NONE,

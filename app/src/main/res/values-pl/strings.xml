@@ -261,7 +261,7 @@
   <string name="z_wave">Most z-wave</string>
   <string name="channel_caption_valve">Zawór</string>
   <string name="channel_btn_close">Zamknij</string>
-  <string name="valve_open_warning">Zawór został zamknięty w trybie manualnym lub radiowo. Zanim go otworzysz upewnij się, że nie został zamknięty z powodu zalania. Aby wyłączyć ostrzeżenie otwórz zawór manualnie. Czy na pewno chcesz otworzyć zawór z aplikacji?!</string>
+  <string name="valve_warning_manually_closed">Zawór został zamknięty w trybie manualnym lub radiowo. Zanim go otworzysz upewnij się, że nie został zamknięty z powodu zalania. Aby wyłączyć ostrzeżenie otwórz zawór manualnie. Czy na pewno chcesz otworzyć zawór z aplikacji?!</string>
   <string name="valve_warning">Zawór został zamknięty w trybie manualnym lub radiowo. Zanim go otworzysz upewnij się, że nie został zamknięty z powodu zalania. Aby wyłączyć ostrzeżenie otwórz zawór manualnie.</string>
   <string name="yes">Tak</string>
   <string name="no">Nie</string>
@@ -736,6 +736,14 @@
   <string name="counter_photo_photos">Historia zdjęć</string>
   <string name="counter_photo_loading_error">Nie udało się załadować zawartości.</string>
   <string name="counter_photo_error">Błąd</string>
+  <string name="valve_warning_flooding">Zawór został zamknięty z powodu wykrycia zalania. Przed otwarciem zaworu upewnij się, że przyczyna została usunięta. Otwarcie zaworu czyści alarm.</string>
+  <string name="channel_caption_flood_sensor">Czujnik zalania</string>
+  <string name="flooding_alarm_message">Czujnik zgłasza zalanie!</string>
+  <string name="valve_warning_manually_closed_short">Zawór został zamknięty w trybie manualnym lub radiowo (możliwe zalanie).</string>
+  <string name="valve_warning_flooding_short">Zawór został zamknięty z powodu wykrycia zalania.</string>
+  <string name="channel_caption_septic_tank">Szambo</string>
+  <string name="channel_caption_water_tank">Zbiornik na wodę</string>
+  <string name="channel_caption_container_level_sensor">Czujnik poziomu zbiornika</string>
 
   <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
     <item quantity="one">włączone</item>

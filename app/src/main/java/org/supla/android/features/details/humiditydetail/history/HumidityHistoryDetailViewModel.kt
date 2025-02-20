@@ -73,10 +73,13 @@ class HumidityHistoryDetailViewModel @Inject constructor(
     spec: ChartDataSpec,
     chartRange: ChartRange
   ): Single<Pair<ChartData, Optional<DateRange>>> =
-    Single.zip(
-      loadChannelMeasurementsUseCase(remoteId, spec),
-      loadChannelMeasurementsDataRangeUseCase(remoteId, profileId)
-    ) { first, second -> Pair(LineChartData(DateRange(spec.startDate, spec.endDate), chartRange, spec.aggregation, listOf(first)), second) }
+    loadChannelMeasurementsDataRangeUseCase(remoteId, profileId)
+      .flatMap { range ->
+        // while the data range is changing (voltage, current, power active has different range) it has to be corrected
+        val correctedSpec = if (chartRange == ChartRange.ALL_HISTORY) spec.correctBy(range) else spec
+        loadChannelMeasurementsUseCase(remoteId, correctedSpec)
+          .map { Pair(LineChartData(DateRange(spec.startDate, spec.endDate), chartRange, spec.aggregation, listOf(it)), range) }
+      }
 
   override fun handleData(channelWithChildren: ChannelWithChildren, channelDto: ChannelDto, chartState: ChartState) {
     val channel = channelWithChildren.channel

@@ -20,5 +20,6 @@ package org.supla.android.data.source.remote.channel
 enum class SuplaChannelAvailabilityStatus(val rawValue: Int) {
   ONLINE(1),
   OFFLINE(0),
-  ONLINE_BUT_NOT_AVAILABLE(2)
+  ONLINE_BUT_NOT_AVAILABLE(2),
+  OFFLINE_REMOTE_WAKEUP_NOT_SUPPORTED(3)
 }
