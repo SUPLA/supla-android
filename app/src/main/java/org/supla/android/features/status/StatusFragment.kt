@@ -49,7 +49,7 @@ class StatusFragment : BaseFragment<StatusViewModelState, StatusViewEvent>(R.lay
         modelState.authorizationDialogState?.let {
           AuthorizationDialog(
             dialogState = it,
-            onCancel = { viewModel.hideAuthorizationDialog() },
+            onCancel = { viewModel.closeAuthorizationDialog() },
             onAuthorize = viewModel::login,
             onStateChange = viewModel::updateAuthorizationState
           )

@@ -132,7 +132,7 @@ abstract class BaseAuthorizationViewModel<S : AuthorizationModelState, E : ViewE
       .disposeBySelf()
   }
 
-  fun hideAuthorizationDialog() {
+  fun closeAuthorizationDialog() {
     updateAuthorizationDialogState { null }
   }
 

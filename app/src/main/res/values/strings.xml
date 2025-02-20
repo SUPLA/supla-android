@@ -775,6 +775,9 @@
   <string name="valve_warning_motor_problem_opening" translatable="false">A motor problem has been detected. Make sure nothing is blocking the valve. The valve may be partially open. Are you sure you want to open it?</string>
   <string name="valve_warning_motor_problem_closing" translatable="false">A motor problem has been detected. Make sure nothing is blocking the valve. The valve may be partially open. Are you sure you want to close it?</string>
   <string name="valve_warning_motor_problem" translatable="false">A motor problem has been detected. Make sure nothing is blocking the valve. The valve may be partially open.</string>
+  <string name="change_caption_header" translatable="false">Caption Change</string>
+  <string name="group_name" translatable="false">Group name</string>
+  <string name="caption_change_failed" translatable="false">Caption change failed!</string>
 
   <plurals name="details_timer_info_on" translatable="false">
     <item quantity="other">on</item>

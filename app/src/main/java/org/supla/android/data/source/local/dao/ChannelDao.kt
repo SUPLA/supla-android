@@ -29,6 +29,7 @@ import io.reactivex.rxjava3.core.Single
 import org.supla.android.data.source.local.entity.ChannelConfigEntity
 import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.ChannelEntity.Companion.ALL_COLUMNS
+import org.supla.android.data.source.local.entity.ChannelEntity.Companion.COLUMN_CAPTION
 import org.supla.android.data.source.local.entity.ChannelEntity.Companion.COLUMN_CHANNEL_REMOTE_ID
 import org.supla.android.data.source.local.entity.ChannelEntity.Companion.COLUMN_ID
 import org.supla.android.data.source.local.entity.ChannelEntity.Companion.COLUMN_LOCATION_ID
@@ -268,4 +269,12 @@ interface ChannelDao {
 
   @Query("SELECT COUNT($COLUMN_ID) FROM $TABLE_NAME")
   fun count(): Observable<Int>
+
+  @Query(
+    """
+      UPDATE $TABLE_NAME SET $COLUMN_CAPTION = :caption 
+      WHERE $COLUMN_CHANNEL_REMOTE_ID = :remoteId AND $COLUMN_PROFILE_ID = :profileId
+    """
+  )
+  fun updateCaption(caption: String, remoteId: Int, profileId: Long): Completable
 }

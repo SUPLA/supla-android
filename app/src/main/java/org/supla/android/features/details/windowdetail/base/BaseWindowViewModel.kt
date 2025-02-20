@@ -174,7 +174,7 @@ abstract class BaseWindowViewModel<S : BaseWindowViewModelState>(
   }
 
   override fun onAuthorized() {
-    hideAuthorizationDialog()
+    closeAuthorizationDialog()
 
     val (remoteId) = guardLet(currentState().remoteId) { return }
     callSuplaClientOperationUseCase(remoteId, ItemType.CHANNEL, SuplaClientOperation.Command.Recalibrate)

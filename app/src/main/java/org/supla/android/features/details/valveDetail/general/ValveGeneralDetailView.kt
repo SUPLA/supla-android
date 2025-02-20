@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalFoundationApi::class)
+
 package org.supla.android.features.details.valveDetail.general
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
@@ -17,6 +19,7 @@ package org.supla.android.features.details.valveDetail.general
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -73,6 +76,7 @@ data class ValveGeneralDetailViewState(
 
 data class SensorData(
   val channelId: Int,
+  val profileId: Long,
   val onlineState: ListOnlineState,
   val icon: ImageId?,
   val caption: LocalizedString,
@@ -85,7 +89,8 @@ fun ValveGeneralDetailView(
   state: ValveGeneralDetailViewState,
   onInfoClick: (SensorData) -> Unit = {},
   onCloseClick: () -> Unit = {},
-  onOpenClick: () -> Unit = {}
+  onOpenClick: () -> Unit = {},
+  onCaptionLongPress: (SensorData) -> Unit = {}
 ) {
   Column(
     horizontalAlignment = Alignment.CenterHorizontally,
@@ -105,7 +110,7 @@ fun ValveGeneralDetailView(
         offline = state.offline
       )
       Issues(state.issues)
-      Sensors(state.sensors, state.scale, onInfoClick)
+      Sensors(state.sensors, state.scale, onInfoClick, onCaptionLongPress)
     }
 
     SwitchButtons(
@@ -170,7 +175,12 @@ private fun Issues(issues: List<ChannelIssueItem>) {
 }
 
 @Composable
-private fun Sensors(sensors: List<SensorData>, scale: Float, onInfoClick: (SensorData) -> Unit) {
+private fun Sensors(
+  sensors: List<SensorData>,
+  scale: Float,
+  onInfoClick: (SensorData) -> Unit,
+  onCaptionLongPress: (SensorData) -> Unit
+) {
   if (sensors.isNotEmpty()) {
     Column(modifier = Modifier.padding(top = Distance.small)) {
       Text(
@@ -192,7 +202,7 @@ private fun Sensors(sensors: List<SensorData>, scale: Float, onInfoClick: (Senso
           ListItemTitle(
             text = sensor.caption(LocalContext.current),
             onItemClick = {},
-            onLongClick = {},
+            onLongClick = { onCaptionLongPress(sensor) },
             modifier = Modifier
               .padding(start = Distance.tiny)
               .weight(1f),
@@ -241,6 +251,7 @@ private fun Preview() {
         sensors = listOf(
           SensorData(
             channelId = 123,
+            profileId = 1L,
             onlineState = ListOnlineState.ONLINE,
             icon = ImageId(R.drawable.fnc_flood_sensor_on),
             caption = LocalizedString.Constant("Flood sensor"),
@@ -249,6 +260,7 @@ private fun Preview() {
           ),
           SensorData(
             channelId = 123,
+            profileId = 1L,
             onlineState = ListOnlineState.OFFLINE,
             icon = ImageId(R.drawable.fnc_flood_sensor_off),
             caption = LocalizedString.Constant("Flood sensor"),
@@ -257,6 +269,7 @@ private fun Preview() {
           ),
           SensorData(
             channelId = 123,
+            profileId = 1L,
             onlineState = ListOnlineState.ONLINE,
             icon = ImageId(R.drawable.fnc_container_level_sensor_on),
             caption = LocalizedString.Constant("Flood sensor flood sensor flood sensor flood sensor"),
@@ -265,6 +278,7 @@ private fun Preview() {
           ),
           SensorData(
             channelId = 123,
+            profileId = 1L,
             onlineState = ListOnlineState.OFFLINE,
             icon = ImageId(R.drawable.fnc_container_level_sensor_off),
             caption = LocalizedString.Constant("Flood sensor"),
@@ -273,6 +287,7 @@ private fun Preview() {
           ),
           SensorData(
             channelId = 123,
+            profileId = 1L,
             onlineState = ListOnlineState.ONLINE,
             icon = ImageId(R.drawable.fnc_container_level_sensor_on),
             caption = LocalizedString.Constant("Flood sensor"),
@@ -281,6 +296,7 @@ private fun Preview() {
           ),
           SensorData(
             channelId = 123,
+            profileId = 1L,
             onlineState = ListOnlineState.OFFLINE,
             icon = ImageId(R.drawable.fnc_container_level_sensor_off),
             caption = LocalizedString.Constant("Flood sensor"),

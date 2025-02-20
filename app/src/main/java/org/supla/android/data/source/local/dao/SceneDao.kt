@@ -101,4 +101,7 @@ interface SceneDao {
 
   @Query("SELECT COUNT($COLUMN_ID) FROM $TABLE_NAME")
   fun count(): Observable<Int>
+
+  @Query("UPDATE $TABLE_NAME SET $COLUMN_CAPTION = :caption WHERE $COLUMN_REMOTE_ID = :remoteId AND $COLUMN_PROFILE_ID = :profileId")
+  fun updateCaption(caption: String, remoteId: Int, profileId: Long): Completable
 }

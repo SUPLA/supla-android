@@ -78,7 +78,7 @@ fun AuthorizationDialog(
   onAuthorize: (userName: String, password: String) -> Unit = { _, _ -> },
   onStateChange: (AuthorizationDialogState) -> Unit = { }
 ) {
-  var password by rememberSaveable { mutableStateOf("") }
+  var password by rememberSaveable(dialogState.userName) { mutableStateOf("") }
   var passwordVisible by rememberSaveable { mutableStateOf(false) }
 
   Dialog(onDismiss = onDismiss) {
