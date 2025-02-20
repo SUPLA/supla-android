@@ -27,7 +27,7 @@ android {
     minSdk = libs.versions.minSdk.get().toInt()
     targetSdk = libs.versions.targetSdk.get().toInt()
     multiDexEnabled = true
-    versionCode = 274
+    versionCode = 276
     versionName = "25.02.01"
 
     ndk {
