@@ -30,9 +30,9 @@ class ChannelToRootRelationHolderUseCase @Inject constructor(
   private val channelRelationRepository: ChannelRelationRepository
 ) {
 
-  private val channelToRootMap: MutableMap<Int, Int> = mutableMapOf()
+  private val channelToRootMap: MutableMap<Int, MutableList<Int>> = mutableMapOf()
 
-  fun getParent(channelId: Int): Int? = channelToRootMap[channelId]
+  fun getParents(channelId: Int): List<Int>? = channelToRootMap[channelId]
 
   fun reloadRelations() {
     val channels = channelRepository.findList().blockingGet()
@@ -42,7 +42,11 @@ class ChannelToRootRelationHolderUseCase @Inject constructor(
     channels.forEach { channel ->
       val childrenIds = getChildrenIds(channel.remoteId, parentsMap, channelsMap, mutableListOf())
       childrenIds.forEach { childId ->
-        channelToRootMap[childId] = channel.remoteId
+        if (channelToRootMap[childId] == null) {
+          channelToRootMap[childId] = mutableListOf(channel.remoteId)
+        } else {
+          channelToRootMap[childId]?.add(channel.remoteId)
+        }
       }
     }
   }

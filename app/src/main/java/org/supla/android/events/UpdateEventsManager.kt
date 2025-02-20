@@ -59,8 +59,10 @@ class UpdateEventsManager @Inject constructor(
   fun emitChannelUpdate(channelId: Int) {
     getSubjectForChannel(channelId).onNext(State.Channel)
 
-    channelToRootRelationHolderUseCase.getParent(channelId)?.let {
-      getSubjectForChannel(it).onNext(State.Channel)
+    channelToRootRelationHolderUseCase.getParents(channelId)?.let { parents ->
+      parents.forEach {
+        getSubjectForChannel(it).onNext(State.Channel)
+      }
     }
   }
 
