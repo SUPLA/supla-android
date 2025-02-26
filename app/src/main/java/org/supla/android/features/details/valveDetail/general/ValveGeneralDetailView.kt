@@ -80,6 +80,7 @@ data class SensorData(
   val onlineState: ListOnlineState,
   val icon: ImageId?,
   val caption: LocalizedString,
+  val userCaption: String,
   val batteryIcon: IssueIcon?,
   val showChannelStateIcon: Boolean
 )
@@ -259,6 +260,7 @@ private fun Preview() {
             onlineState = ListOnlineState.ONLINE,
             icon = ImageId(R.drawable.fnc_flood_sensor_on),
             caption = LocalizedString.Constant("Flood sensor"),
+            userCaption = "",
             batteryIcon = IssueIcon.Battery50,
             showChannelStateIcon = true
           ),
@@ -268,6 +270,7 @@ private fun Preview() {
             onlineState = ListOnlineState.OFFLINE,
             icon = ImageId(R.drawable.fnc_flood_sensor_off),
             caption = LocalizedString.Constant("Flood sensor"),
+            userCaption = "",
             batteryIcon = IssueIcon.Battery25,
             showChannelStateIcon = false
           ),
@@ -277,6 +280,7 @@ private fun Preview() {
             onlineState = ListOnlineState.ONLINE,
             icon = ImageId(R.drawable.fnc_container_level_sensor_on),
             caption = LocalizedString.Constant("Flood sensor flood sensor flood sensor flood sensor"),
+            userCaption = "",
             batteryIcon = IssueIcon.Battery50,
             showChannelStateIcon = true
           ),
@@ -286,6 +290,7 @@ private fun Preview() {
             onlineState = ListOnlineState.OFFLINE,
             icon = ImageId(R.drawable.fnc_container_level_sensor_off),
             caption = LocalizedString.Constant("Flood sensor"),
+            userCaption = "",
             batteryIcon = IssueIcon.Battery25,
             showChannelStateIcon = false
           ),
@@ -295,6 +300,7 @@ private fun Preview() {
             onlineState = ListOnlineState.ONLINE,
             icon = ImageId(R.drawable.fnc_container_level_sensor_on),
             caption = LocalizedString.Constant("Flood sensor"),
+            userCaption = "",
             batteryIcon = IssueIcon.Battery50,
             showChannelStateIcon = true
           ),
@@ -304,6 +310,7 @@ private fun Preview() {
             onlineState = ListOnlineState.OFFLINE,
             icon = ImageId(R.drawable.fnc_container_level_sensor_off),
             caption = LocalizedString.Constant("Flood sensor"),
+            userCaption = "",
             batteryIcon = IssueIcon.Battery25,
             showChannelStateIcon = false
           )

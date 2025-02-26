@@ -82,7 +82,7 @@ class ThermostatSlavesListFragment : BaseComposeFragment<ThermostatSlavesListVie
         state = modelState.viewState,
         onShowMessage = viewModel::showMessage,
         onShowInfo = { viewModel.showStateDialog(it.channelId, it.caption) },
-        onCaptionLongPress = { viewModel.changeChannelCaption(it.caption.invoke(requireContext()), it.channelId, it.profileId) }
+        onCaptionLongPress = { viewModel.changeChannelCaption(it.userCaption, it.channelId, it.profileId) }
       )
     }
   }

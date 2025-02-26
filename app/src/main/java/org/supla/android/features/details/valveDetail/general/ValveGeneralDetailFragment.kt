@@ -90,7 +90,7 @@ class ValveGeneralDetailFragment : BaseComposeFragment<ValveGeneralDetailViewMod
         onOpenClick = { viewModel.onActionClick(item.remoteId, ValveAction.OPEN) },
         onCloseClick = { viewModel.onActionClick(item.remoteId, ValveAction.CLOSE) },
         onInfoClick = { viewModel.showStateDialog(it.channelId, it.caption) },
-        onCaptionLongPress = { viewModel.changeChannelCaption(it.caption.invoke(requireContext()), it.channelId, it.profileId) }
+        onCaptionLongPress = { viewModel.changeChannelCaption(it.userCaption, it.channelId, it.profileId) }
       )
     }
   }
