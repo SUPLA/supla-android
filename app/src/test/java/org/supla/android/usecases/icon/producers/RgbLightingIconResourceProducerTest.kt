@@ -36,7 +36,7 @@ class RgbLightingIconResourceProducerTest : BaseIconResourceProducerTest() {
     test(
       state = ChannelState.Value.ON,
       function = SuplaFunction.RGB_LIGHTING,
-      expectedIcon = R.drawable.rgbon
+      expectedIcon = R.drawable.fnc_rgb_on
     )
   }
 
@@ -45,7 +45,7 @@ class RgbLightingIconResourceProducerTest : BaseIconResourceProducerTest() {
     test(
       state = ChannelState.Value.OFF,
       function = SuplaFunction.RGB_LIGHTING,
-      expectedIcon = R.drawable.rgboff
+      expectedIcon = R.drawable.fnc_rgb_off
     )
   }
 }

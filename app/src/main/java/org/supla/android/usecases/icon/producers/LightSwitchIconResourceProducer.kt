@@ -30,21 +30,21 @@ class LightSwitchIconResourceProducer : IconResourceProducer {
   override fun produce(data: IconData): Int =
     when (data.altIcon) {
       1 -> if (data.state.value == ChannelState.Value.ON) {
-        R.drawable.xmastreeon
+        R.drawable.fnc_light_1_on
       } else {
-        R.drawable.xmastreeoff
+        R.drawable.fnc_light_1_off
       }
 
       2 -> if (data.state.value == ChannelState.Value.ON) {
-        R.drawable.uvon
+        R.drawable.fnc_light_2_on
       } else {
-        R.drawable.uvoff
+        R.drawable.fnc_light_2_off
       }
 
       else -> if (data.state.value == ChannelState.Value.ON) {
-        R.drawable.lighton
+        R.drawable.fnc_light_on
       } else {
-        R.drawable.lightoff
+        R.drawable.fnc_light_off
       }
     }
 }

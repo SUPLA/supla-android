@@ -34,7 +34,7 @@ class DoorIconResourceProducer : IconResourceProducer {
 
   override fun produce(data: IconData): Int =
     when (data.state.value) {
-      ChannelState.Value.OPEN -> R.drawable.dooropen
-      else -> R.drawable.doorclosed
+      ChannelState.Value.OPEN -> R.drawable.fnc_door_opened
+      else -> R.drawable.fnc_door_closed
     }
 }

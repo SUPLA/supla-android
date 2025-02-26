@@ -168,7 +168,11 @@ private fun Issues(issues: List<ChannelIssueItem>) {
         horizontalArrangement = Arrangement.spacedBy(Distance.tiny)
       ) {
         Image(drawableId = it.icon.resource, modifier = Modifier.size(dimensionResource(R.dimen.icon_default_size)))
-        Text(message.invoke(LocalContext.current), textAlign = TextAlign.Justify)
+        Text(
+          text = message.invoke(LocalContext.current),
+          textAlign = TextAlign.Justify,
+          style = MaterialTheme.typography.bodyMedium
+        )
       }
     }
   }
@@ -240,7 +244,7 @@ private fun Preview() {
   SuplaTheme {
     ValveGeneralDetailView(
       ValveGeneralDetailViewState(
-        icon = ImageId(R.drawable.valveopen),
+        icon = ImageId(R.drawable.fnc_valve_opened),
         stateStringRes = R.string.state_opened,
         issues = listOf(
           ChannelIssueItem.error(R.string.flooding_alarm_message),
@@ -304,8 +308,8 @@ private fun Preview() {
             showChannelStateIcon = false
           )
         ),
-        rightButtonState = SwitchButtonState(ImageId(R.drawable.valveclosed), R.string.channel_btn_close, false),
-        leftButtonState = SwitchButtonState(ImageId(R.drawable.valveopen), R.string.channel_btn_open, false)
+        rightButtonState = SwitchButtonState(ImageId(R.drawable.fnc_valve_closed), R.string.channel_btn_close, false),
+        leftButtonState = SwitchButtonState(ImageId(R.drawable.fnc_valve_opened), R.string.channel_btn_open, false)
       )
     )
   }

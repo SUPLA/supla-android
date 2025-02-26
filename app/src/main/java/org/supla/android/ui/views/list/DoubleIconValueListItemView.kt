@@ -190,12 +190,12 @@ private fun Preview() {
           data = SlideableListItemData.DoubleValue(
             onlineState = ListOnlineState.ONLINE,
             title = LocalizedString.Constant("Humidity and temperature"),
-            icon = ImageId(R.drawable.thermometer),
+            icon = ImageId(R.drawable.fnc_thermometer),
             value = "20,7°C",
             issues = ListItemIssues(icons = listOf(IssueIcon.Warning, IssueIcon.Battery50)),
             estimatedTimerEndDate = null,
             infoSupported = true,
-            secondIcon = ImageId(R.drawable.humidity),
+            secondIcon = ImageId(R.drawable.fnc_humidity),
             secondValue = "57,1"
           ),
           true,
@@ -212,12 +212,12 @@ private fun Preview() {
           data = SlideableListItemData.DoubleValue(
             onlineState = ListOnlineState.PARTIALLY_ONLINE,
             title = LocalizedString.Constant("Humidity and temperature"),
-            icon = ImageId(R.drawable.thermometer),
+            icon = ImageId(R.drawable.fnc_thermometer),
             value = "20,7°C",
             issues = ListItemIssues(icons = listOf(IssueIcon.Warning, IssueIcon.Battery25)),
             estimatedTimerEndDate = null,
             infoSupported = true,
-            secondIcon = ImageId(R.drawable.humidity),
+            secondIcon = ImageId(R.drawable.fnc_humidity),
             secondValue = "57,1"
           ),
           false,
@@ -234,12 +234,12 @@ private fun Preview() {
           data = SlideableListItemData.DoubleValue(
             onlineState = ListOnlineState.ONLINE,
             title = LocalizedString.Constant("Humidity and temperature"),
-            icon = ImageId(R.drawable.thermometer),
+            icon = ImageId(R.drawable.fnc_thermometer),
             value = "20,7°C",
             issues = ListItemIssues.empty,
             estimatedTimerEndDate = null,
             infoSupported = true,
-            secondIcon = ImageId(R.drawable.humidity),
+            secondIcon = ImageId(R.drawable.fnc_humidity),
             secondValue = "57,1"
           ),
           true,
@@ -256,12 +256,12 @@ private fun Preview() {
           data = SlideableListItemData.DoubleValue(
             onlineState = ListOnlineState.ONLINE,
             title = LocalizedString.Constant("Humidity and temperature with very long name which  must be cut"),
-            icon = ImageId(R.drawable.thermometer),
+            icon = ImageId(R.drawable.fnc_thermometer),
             value = "20,7°C",
             issues = ListItemIssues(IssueIcon.Warning),
             estimatedTimerEndDate = null,
             infoSupported = true,
-            secondIcon = ImageId(R.drawable.humidity),
+            secondIcon = ImageId(R.drawable.fnc_humidity),
             secondValue = "57,1"
           ),
           false,
@@ -292,12 +292,12 @@ private fun Preview_Narrow() {
           data = SlideableListItemData.DoubleValue(
             onlineState = ListOnlineState.ONLINE,
             title = LocalizedString.Constant("Thermostat"),
-            icon = ImageId(R.drawable.thermometer),
+            icon = ImageId(R.drawable.fnc_thermometer),
             value = "20,7°C",
             issues = ListItemIssues(IssueIcon.Warning),
             estimatedTimerEndDate = null,
             infoSupported = true,
-            secondIcon = ImageId(R.drawable.humidity),
+            secondIcon = ImageId(R.drawable.fnc_humidity),
             secondValue = "57,1"
           ),
           true,
@@ -314,12 +314,12 @@ private fun Preview_Narrow() {
           data = SlideableListItemData.DoubleValue(
             onlineState = ListOnlineState.ONLINE,
             title = LocalizedString.Constant("Thermostat"),
-            icon = ImageId(R.drawable.thermometer),
+            icon = ImageId(R.drawable.fnc_thermometer),
             value = "20,7°C",
             issues = ListItemIssues(IssueIcon.Error),
             estimatedTimerEndDate = null,
             infoSupported = true,
-            secondIcon = ImageId(R.drawable.humidity),
+            secondIcon = ImageId(R.drawable.fnc_humidity),
             secondValue = "57,1"
           ),
           false,
@@ -336,12 +336,12 @@ private fun Preview_Narrow() {
           data = SlideableListItemData.DoubleValue(
             onlineState = ListOnlineState.ONLINE,
             title = LocalizedString.Constant("Thermostat"),
-            icon = ImageId(R.drawable.thermometer),
+            icon = ImageId(R.drawable.fnc_thermometer),
             value = "20,7°C",
             issues = ListItemIssues(IssueIcon.Error),
             estimatedTimerEndDate = null,
             infoSupported = true,
-            secondIcon = ImageId(R.drawable.humidity),
+            secondIcon = ImageId(R.drawable.fnc_humidity),
             secondValue = "57,1"
           ),
           false,

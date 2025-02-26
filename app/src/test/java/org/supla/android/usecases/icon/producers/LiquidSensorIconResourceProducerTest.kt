@@ -36,7 +36,7 @@ class LiquidSensorIconResourceProducerTest : BaseIconResourceProducerTest() {
     test(
       state = ChannelState.Value.ON,
       function = SuplaFunction.NO_LIQUID_SENSOR,
-      expectedIcon = R.drawable.liquid
+      expectedIcon = R.drawable.fnc_no_liquid_on
     )
   }
 
@@ -45,7 +45,7 @@ class LiquidSensorIconResourceProducerTest : BaseIconResourceProducerTest() {
     test(
       state = ChannelState.Value.OFF,
       function = SuplaFunction.NO_LIQUID_SENSOR,
-      expectedIcon = R.drawable.noliquid
+      expectedIcon = R.drawable.fnc_no_liquid_off
     )
   }
 }

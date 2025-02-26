@@ -36,7 +36,7 @@ class GatewayIconResourceProducerTest : BaseIconResourceProducerTest() {
     test(
       state = ChannelState.Value.OPEN,
       function = SuplaFunction.OPEN_SENSOR_GATEWAY,
-      expectedIcon = R.drawable.gatewayopen
+      expectedIcon = R.drawable.fnc_gateway_opened
     )
   }
 
@@ -45,7 +45,7 @@ class GatewayIconResourceProducerTest : BaseIconResourceProducerTest() {
     test(
       state = ChannelState.Value.CLOSED,
       function = SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK,
-      expectedIcon = R.drawable.gatewayclosed
+      expectedIcon = R.drawable.fnc_gateway_closed
     )
   }
 }

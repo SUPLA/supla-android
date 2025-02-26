@@ -36,7 +36,7 @@ class LightSwitchIconResourceProducerTest : BaseIconResourceProducerTest() {
     test(
       state = ChannelState.Value.ON,
       function = SuplaFunction.LIGHTSWITCH,
-      expectedIcon = R.drawable.lighton
+      expectedIcon = R.drawable.fnc_light_on
     )
   }
 
@@ -45,7 +45,7 @@ class LightSwitchIconResourceProducerTest : BaseIconResourceProducerTest() {
     test(
       state = ChannelState.Value.OFF,
       function = SuplaFunction.LIGHTSWITCH,
-      expectedIcon = R.drawable.lightoff
+      expectedIcon = R.drawable.fnc_light_off
     )
   }
 
@@ -55,7 +55,7 @@ class LightSwitchIconResourceProducerTest : BaseIconResourceProducerTest() {
       state = ChannelState.Value.ON,
       altIcon = 1,
       function = SuplaFunction.LIGHTSWITCH,
-      expectedIcon = R.drawable.xmastreeon
+      expectedIcon = R.drawable.fnc_light_1_on
     )
   }
 
@@ -65,7 +65,7 @@ class LightSwitchIconResourceProducerTest : BaseIconResourceProducerTest() {
       state = ChannelState.Value.OFF,
       altIcon = 1,
       function = SuplaFunction.LIGHTSWITCH,
-      expectedIcon = R.drawable.xmastreeoff
+      expectedIcon = R.drawable.fnc_light_1_off
     )
   }
 
@@ -75,7 +75,7 @@ class LightSwitchIconResourceProducerTest : BaseIconResourceProducerTest() {
       state = ChannelState.Value.ON,
       altIcon = 2,
       function = SuplaFunction.LIGHTSWITCH,
-      expectedIcon = R.drawable.uvon
+      expectedIcon = R.drawable.fnc_light_2_on
     )
   }
 
@@ -85,7 +85,7 @@ class LightSwitchIconResourceProducerTest : BaseIconResourceProducerTest() {
       state = ChannelState.Value.OFF,
       altIcon = 2,
       function = SuplaFunction.LIGHTSWITCH,
-      expectedIcon = R.drawable.uvoff
+      expectedIcon = R.drawable.fnc_light_2_off
     )
   }
 }

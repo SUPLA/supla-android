@@ -29,7 +29,7 @@ class WindowIconResourceProducer : IconResourceProducer {
 
   override fun produce(data: IconData): Int =
     when (data.state.value) {
-      ChannelState.Value.OPEN -> R.drawable.windowopen
-      else -> R.drawable.windowclosed
+      ChannelState.Value.OPEN -> R.drawable.fnc_window_opened
+      else -> R.drawable.fnc_window_closed
     }
 }

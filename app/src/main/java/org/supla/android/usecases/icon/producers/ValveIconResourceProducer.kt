@@ -34,7 +34,7 @@ class ValveIconResourceProducer : IconResourceProducer {
 
   override fun produce(data: IconData): Int =
     when (data.state.value) {
-      ChannelState.Value.OPEN -> R.drawable.valveopen
-      else -> R.drawable.valveclosed
+      ChannelState.Value.OPEN -> R.drawable.fnc_valve_opened
+      else -> R.drawable.fnc_valve_closed
     }
 }

@@ -25,7 +25,8 @@ import org.supla.android.usecases.icon.producers.AlarmArmamentSensorIconResource
 import org.supla.android.usecases.icon.producers.ContainerIconResourceProducer
 import org.supla.android.usecases.icon.producers.ContainerLevelSensorIconResourceProducer
 import org.supla.android.usecases.icon.producers.CurtainIconResourceProducer
-import org.supla.android.usecases.icon.producers.DigiglassIconResourceProducer
+import org.supla.android.usecases.icon.producers.DigiglassHorizontalIconResourceProducer
+import org.supla.android.usecases.icon.producers.DigiglassVerticalIconResourceProducer
 import org.supla.android.usecases.icon.producers.DimmerAndRgbIconResourceProducer
 import org.supla.android.usecases.icon.producers.DimmerIconResourceProducer
 import org.supla.android.usecases.icon.producers.DoorIconResourceProducer
@@ -82,12 +83,12 @@ class GetDefaultIconResourceUseCase @Inject constructor() {
     static(SuplaFunction.HVAC_DOMESTIC_HOT_WATER, R.drawable.fnc_thermostat_dhw),
     ThermostatHvacIconResourceProducer(),
     ThermometerIconResourceProducer(),
-    static(SuplaFunction.HUMIDITY, R.drawable.humidity),
+    static(SuplaFunction.HUMIDITY, R.drawable.fnc_humidity),
     HumidityAndTemperatureIconResourceProducer(),
-    static(SuplaFunction.WIND_SENSOR, R.drawable.wind),
-    static(SuplaFunction.PRESSURE_SENSOR, R.drawable.pressure),
-    static(SuplaFunction.RAIN_SENSOR, R.drawable.rain),
-    static(SuplaFunction.WEIGHT_SENSOR, R.drawable.weight),
+    static(SuplaFunction.WIND_SENSOR, R.drawable.fnc_wind),
+    static(SuplaFunction.PRESSURE_SENSOR, R.drawable.fnc_pressure),
+    static(SuplaFunction.RAIN_SENSOR, R.drawable.fnc_rain),
+    static(SuplaFunction.WEIGHT_SENSOR, R.drawable.fnc_weight),
     LiquidSensorIconResourceProducer(),
     DimmerIconResourceProducer(),
     RgbLightingIconResourceProducer(),
@@ -104,7 +105,8 @@ class GetDefaultIconResourceUseCase @Inject constructor() {
     static(SuplaFunction.IC_HEAT_METER, R.drawable.fnc_heatmeter),
     ThermostatHomePlusIconResourceProducer(),
     ValveIconResourceProducer(),
-    DigiglassIconResourceProducer(),
+    DigiglassVerticalIconResourceProducer(),
+    DigiglassHorizontalIconResourceProducer(),
     GeneralPurposeMeasurementIconResourceProducer(),
     GeneralPurposeMeterIconResourceProducer(),
     TerraceAwningIconResourceProducer(),

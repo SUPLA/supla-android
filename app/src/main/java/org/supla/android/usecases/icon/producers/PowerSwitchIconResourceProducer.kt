@@ -30,27 +30,27 @@ class PowerSwitchIconResourceProducer : IconResourceProducer {
   override fun produce(data: IconData): Int =
     when (data.altIcon) {
       1 -> if (data.state.value == ChannelState.Value.ON) {
-        R.drawable.tvon
+        R.drawable.fnc_switch_1_on
       } else {
-        R.drawable.tvoff
+        R.drawable.fnc_switch_1_off
       }
 
       2 -> if (data.state.value == ChannelState.Value.ON) {
-        R.drawable.radioon
+        R.drawable.fnc_switch_2_on
       } else {
-        R.drawable.radiooff
+        R.drawable.fnc_switch_2_off
       }
 
       3 -> if (data.state.value == ChannelState.Value.ON) {
-        R.drawable.pcon
+        R.drawable.fnc_switch_3_on
       } else {
-        R.drawable.pcoff
+        R.drawable.fnc_switch_3_off
       }
 
       4 -> if (data.state.value == ChannelState.Value.ON) {
-        R.drawable.fanon
+        R.drawable.fnc_switch_4_on
       } else {
-        R.drawable.fanoff
+        R.drawable.fnc_switch_4_off
       }
 
       else -> if (data.state.value == ChannelState.Value.ON) {

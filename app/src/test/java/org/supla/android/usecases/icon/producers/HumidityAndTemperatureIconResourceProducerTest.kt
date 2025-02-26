@@ -37,7 +37,7 @@ class HumidityAndTemperatureIconResourceProducerTest : BaseIconResourceProducerT
     test(
       data = mockIconData(stateValue = ChannelState.Value.NOT_USED, type = IconType.SECOND),
       function = SuplaFunction.HUMIDITY_AND_TEMPERATURE,
-      expectedIcon = R.drawable.humidity
+      expectedIcon = R.drawable.fnc_humidity
     )
   }
 
@@ -46,7 +46,7 @@ class HumidityAndTemperatureIconResourceProducerTest : BaseIconResourceProducerT
     test(
       data = mockIconData(stateValue = ChannelState.Value.NOT_USED, type = IconType.FIRST),
       function = SuplaFunction.HUMIDITY_AND_TEMPERATURE,
-      expectedIcon = R.drawable.thermometer
+      expectedIcon = R.drawable.fnc_thermometer
     )
   }
 
@@ -55,7 +55,7 @@ class HumidityAndTemperatureIconResourceProducerTest : BaseIconResourceProducerT
     test(
       data = mockIconData(stateValue = ChannelState.Value.NOT_USED, type = IconType.SINGLE),
       function = SuplaFunction.HUMIDITY_AND_TEMPERATURE,
-      expectedIcon = R.drawable.thermometer
+      expectedIcon = R.drawable.fnc_thermometer
     )
   }
 }

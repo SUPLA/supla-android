@@ -29,7 +29,7 @@ class HumidityAndTemperatureIconResourceProducer : IconResourceProducer {
 
   override fun produce(data: IconData): Int =
     when (data.type) {
-      IconType.SECOND -> R.drawable.humidity
+      IconType.SECOND -> R.drawable.fnc_humidity
       else -> thermometerIcon(data)
     }
 
@@ -42,6 +42,6 @@ class HumidityAndTemperatureIconResourceProducer : IconResourceProducer {
       5 -> R.drawable.fnc_thermometer_cooling
       6 -> R.drawable.fnc_thermometer_heater
       7 -> R.drawable.fnc_thermometer_home
-      else -> R.drawable.thermometer
+      else -> R.drawable.fnc_thermometer
     }
 }
