@@ -32,7 +32,7 @@ class ElectricityMeterIconResourceProducer : IconResourceProducer {
 
   override fun produce(data: IconData): Int =
     when (data.altIcon) {
-      1 -> R.drawable.powerstation
+      1 -> R.drawable.fnc_electricity_meter_1
       else -> R.drawable.fnc_electricity_meter
     }
 }

@@ -36,7 +36,7 @@ class ValveIconResourceProducerTest : BaseIconResourceProducerTest() {
     test(
       state = ChannelState.Value.OPEN,
       function = SuplaFunction.VALVE_PERCENTAGE,
-      expectedIcon = R.drawable.valveopen
+      expectedIcon = R.drawable.fnc_valve_opened
     )
   }
 
@@ -45,7 +45,7 @@ class ValveIconResourceProducerTest : BaseIconResourceProducerTest() {
     test(
       state = ChannelState.Value.CLOSED,
       function = SuplaFunction.VALVE_PERCENTAGE,
-      expectedIcon = R.drawable.valveclosed
+      expectedIcon = R.drawable.fnc_valve_closed
     )
   }
 }

@@ -36,7 +36,7 @@ class DimmerIconResourceProducerTest : BaseIconResourceProducerTest() {
     test(
       state = ChannelState.Value.ON,
       function = SuplaFunction.DIMMER,
-      expectedIcon = R.drawable.dimmeron
+      expectedIcon = R.drawable.fnc_dimmer_on
     )
   }
 
@@ -45,7 +45,7 @@ class DimmerIconResourceProducerTest : BaseIconResourceProducerTest() {
     test(
       state = ChannelState.Value.OFF,
       function = SuplaFunction.DIMMER,
-      expectedIcon = R.drawable.dimmeroff
+      expectedIcon = R.drawable.fnc_dimmer_off
     )
   }
 }

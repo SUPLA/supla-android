@@ -29,7 +29,7 @@ class LiquidSensorIconResourceProducer : IconResourceProducer {
 
   override fun produce(data: IconData): Int =
     when (data.state.value) {
-      ChannelState.Value.ON -> R.drawable.liquid
-      else -> R.drawable.noliquid
+      ChannelState.Value.ON -> R.drawable.fnc_no_liquid_on
+      else -> R.drawable.fnc_no_liquid_off
     }
 }

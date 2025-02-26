@@ -55,7 +55,7 @@ class ElectricityMeterIconResourceProducerTest : BaseIconResourceProducerTest() 
       state = ChannelState.Value.NOT_USED,
       altIcon = 1,
       function = SuplaFunction.ELECTRICITY_METER,
-      expectedIcon = R.drawable.powerstation
+      expectedIcon = R.drawable.fnc_electricity_meter_1
     )
   }
 }

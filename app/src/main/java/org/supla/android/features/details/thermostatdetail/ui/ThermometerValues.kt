@@ -129,7 +129,7 @@ private fun ThermometerIcon(icon: ImageId, modifier: Modifier = Modifier.size(48
 private fun Preview() {
   SuplaTheme {
     ThermometersValues(
-      listOf(MeasurementValue(0, ImageId(R.drawable.thermometer), "21,5", IssueIcon.Battery50))
+      listOf(MeasurementValue(0, ImageId(R.drawable.fnc_thermometer), "21,5", IssueIcon.Battery50))
     )
   }
 }

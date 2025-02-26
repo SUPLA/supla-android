@@ -36,7 +36,7 @@ class RoofWindowIconResourceProducerTest : BaseIconResourceProducerTest() {
     test(
       state = ChannelState.Value.OPEN,
       function = SuplaFunction.OPEN_SENSOR_ROOF_WINDOW,
-      expectedIcon = R.drawable.roofwindowopen
+      expectedIcon = R.drawable.fnc_roof_window_opened
     )
   }
 
@@ -45,7 +45,7 @@ class RoofWindowIconResourceProducerTest : BaseIconResourceProducerTest() {
     test(
       state = ChannelState.Value.CLOSED,
       function = SuplaFunction.OPEN_SENSOR_ROOF_WINDOW,
-      expectedIcon = R.drawable.roofwindowclosed
+      expectedIcon = R.drawable.fnc_roof_window_closed
     )
   }
 }

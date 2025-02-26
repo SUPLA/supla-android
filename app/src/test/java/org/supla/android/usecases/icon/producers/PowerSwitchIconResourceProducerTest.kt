@@ -55,7 +55,7 @@ class PowerSwitchIconResourceProducerTest : BaseIconResourceProducerTest() {
       state = ChannelState.Value.ON,
       altIcon = 1,
       function = SuplaFunction.POWER_SWITCH,
-      expectedIcon = R.drawable.tvon
+      expectedIcon = R.drawable.fnc_switch_1_on
     )
   }
 
@@ -65,7 +65,7 @@ class PowerSwitchIconResourceProducerTest : BaseIconResourceProducerTest() {
       state = ChannelState.Value.OFF,
       altIcon = 1,
       function = SuplaFunction.POWER_SWITCH,
-      expectedIcon = R.drawable.tvoff
+      expectedIcon = R.drawable.fnc_switch_1_off
     )
   }
 
@@ -75,7 +75,7 @@ class PowerSwitchIconResourceProducerTest : BaseIconResourceProducerTest() {
       state = ChannelState.Value.ON,
       altIcon = 2,
       function = SuplaFunction.POWER_SWITCH,
-      expectedIcon = R.drawable.radioon
+      expectedIcon = R.drawable.fnc_switch_2_on
     )
   }
 
@@ -85,7 +85,7 @@ class PowerSwitchIconResourceProducerTest : BaseIconResourceProducerTest() {
       state = ChannelState.Value.OFF,
       altIcon = 2,
       function = SuplaFunction.POWER_SWITCH,
-      expectedIcon = R.drawable.radiooff
+      expectedIcon = R.drawable.fnc_switch_2_off
     )
   }
 
@@ -95,7 +95,7 @@ class PowerSwitchIconResourceProducerTest : BaseIconResourceProducerTest() {
       state = ChannelState.Value.ON,
       altIcon = 3,
       function = SuplaFunction.POWER_SWITCH,
-      expectedIcon = R.drawable.pcon
+      expectedIcon = R.drawable.fnc_switch_3_on
     )
   }
 
@@ -105,7 +105,7 @@ class PowerSwitchIconResourceProducerTest : BaseIconResourceProducerTest() {
       state = ChannelState.Value.OFF,
       altIcon = 3,
       function = SuplaFunction.POWER_SWITCH,
-      expectedIcon = R.drawable.pcoff
+      expectedIcon = R.drawable.fnc_switch_3_off
     )
   }
 
@@ -115,7 +115,7 @@ class PowerSwitchIconResourceProducerTest : BaseIconResourceProducerTest() {
       state = ChannelState.Value.ON,
       altIcon = 4,
       function = SuplaFunction.POWER_SWITCH,
-      expectedIcon = R.drawable.fanon
+      expectedIcon = R.drawable.fnc_switch_4_on
     )
   }
 
@@ -125,7 +125,7 @@ class PowerSwitchIconResourceProducerTest : BaseIconResourceProducerTest() {
       state = ChannelState.Value.OFF,
       altIcon = 4,
       function = SuplaFunction.POWER_SWITCH,
-      expectedIcon = R.drawable.fanoff
+      expectedIcon = R.drawable.fnc_switch_4_off
     )
   }
 }

@@ -36,7 +36,7 @@ class DimmerAndRgbIconResourceProducerTest : BaseIconResourceProducerTest() {
     test(
       data = mockIconData(state = ChannelState(ChannelState.Value.COMPLEX, listOf(ChannelState.Value.OFF, ChannelState.Value.OFF))),
       function = SuplaFunction.DIMMER_AND_RGB_LIGHTING,
-      expectedIcon = R.drawable.dimmerrgboffoff
+      expectedIcon = R.drawable.fnc_dimmer_rgb_off_off
     )
   }
 
@@ -45,7 +45,7 @@ class DimmerAndRgbIconResourceProducerTest : BaseIconResourceProducerTest() {
     test(
       data = mockIconData(state = ChannelState(ChannelState.Value.COMPLEX, listOf(ChannelState.Value.ON, ChannelState.Value.OFF))),
       function = SuplaFunction.DIMMER_AND_RGB_LIGHTING,
-      expectedIcon = R.drawable.dimmerrgbonoff
+      expectedIcon = R.drawable.fnc_dimmer_rgb_on_off
     )
   }
 
@@ -54,7 +54,7 @@ class DimmerAndRgbIconResourceProducerTest : BaseIconResourceProducerTest() {
     test(
       data = mockIconData(state = ChannelState(ChannelState.Value.COMPLEX, listOf(ChannelState.Value.OFF, ChannelState.Value.ON))),
       function = SuplaFunction.DIMMER_AND_RGB_LIGHTING,
-      expectedIcon = R.drawable.dimmerrgboffon
+      expectedIcon = R.drawable.fnc_dimmer_rgb_off_on
     )
   }
 
@@ -63,7 +63,7 @@ class DimmerAndRgbIconResourceProducerTest : BaseIconResourceProducerTest() {
     test(
       data = mockIconData(state = ChannelState(ChannelState.Value.COMPLEX, listOf(ChannelState.Value.ON, ChannelState.Value.ON))),
       function = SuplaFunction.DIMMER_AND_RGB_LIGHTING,
-      expectedIcon = R.drawable.dimmerrgbonon
+      expectedIcon = R.drawable.fnc_dimmer_rgb_on_on
     )
   }
 

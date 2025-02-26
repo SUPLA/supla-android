@@ -34,8 +34,8 @@ class GarageDoorIconResourceProducer : IconResourceProducer {
 
   override fun produce(data: IconData): Int =
     when (data.state.value) {
-      ChannelState.Value.PARTIALLY_OPENED -> R.drawable.garagedoorclosed50percent
-      ChannelState.Value.OPEN -> R.drawable.garagedooropen
-      else -> R.drawable.garagedoorclosed
+      ChannelState.Value.PARTIALLY_OPENED -> R.drawable.fnc_garage_door_closed_50_percent
+      ChannelState.Value.OPEN -> R.drawable.fnc_garage_door_opened
+      else -> R.drawable.fnc_garage_door_closed
     }
 }

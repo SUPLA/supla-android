@@ -63,7 +63,7 @@ interface CaptionChangeHandler<S : AuthorizationModelState, E : ViewEvent> {
   fun onChannelCaptionChange() {
     captionChangeDialogState?.let { state ->
       updateCaptionChangeDialogState { it?.copy(loading = true) }
-      captionChangeUseCase.invoke(state.caption, CaptionChangeUseCase.Type.CHANNEL, state.remoteId, state.profileId)
+      captionChangeUseCase(state.caption, CaptionChangeUseCase.Type.CHANNEL, state.remoteId, state.profileId)
         .attachSilent()
         .subscribeBy(
           onComplete = { closeCaptionChangeDialog() },

@@ -4,11 +4,11 @@
       
     <path android:fillColor="#00000000" android:pathData="M256,480m-16,0a16,16 0,1 1,32 0a16,16 0,1 1,-32 0" android:strokeColor="#00D151" android:strokeWidth="20"/>
       
-    <path android:fillColor="#00000000" android:pathData="M11,16h490v56h-490z" android:strokeColor="#B4B7BA" android:strokeLineJoin="round" android:strokeWidth="20"/>
+    <path android:fillColor="#00000000" android:pathData="M11,16h490v56h-490z" android:strokeColor="#FCFCFC" android:strokeLineJoin="round" android:strokeWidth="20"/>
       
-    <path android:fillColor="#00000000" android:pathData="M24,432H488" android:strokeColor="#B4B7BA" android:strokeLineCap="round" android:strokeLineJoin="round" android:strokeWidth="20"/>
+    <path android:fillColor="#00000000" android:pathData="M24,432H488" android:strokeColor="#FCFCFC" android:strokeLineCap="round" android:strokeLineJoin="round" android:strokeWidth="20"/>
       
-    <path android:fillColor="#00000000" android:pathData="M44,72h424v360h-424z" android:strokeColor="#B4B7BA" android:strokeLineJoin="round" android:strokeWidth="20"/>
+    <path android:fillColor="#00000000" android:pathData="M44,72h424v360h-424z" android:strokeColor="#FCFCFC" android:strokeLineJoin="round" android:strokeWidth="20"/>
       
     <group>
             
