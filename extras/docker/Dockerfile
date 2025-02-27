@@ -1,4 +1,4 @@
-FROM debian:12.7
+FROM debian:12.9
 
 ENV ANDROID_SDK_ROOT=/usr/lib/android-sdk
 ENV PATH="$ANDROID_SDK_ROOT/platform-tools:$ANDROID_SDK_ROOT/cmdline-tools/bin:$ANDROID_SDK_ROOT/tools:${PATH}"
