@@ -164,8 +164,6 @@ public class ChannelDetailRGBW extends DetailLayout
     pickerTypeTabs.setVisibility(GONE);
     llExtraButtons.setVisibility(GONE);
     btnPowerOnOff.setVisibility(GONE);
-
-    channelDataToViews();
   }
 
   private void showDimmer() {
@@ -214,7 +212,6 @@ public class ChannelDetailRGBW extends DetailLayout
     cbPicker.setMinBrightness(varilight || zamel || comelit ? 1f : 0f);
 
     onClick(typeSlider ? tabSlider : tabWheel);
-    channelDataToViews();
   }
 
   @Override
@@ -232,6 +229,8 @@ public class ChannelDetailRGBW extends DetailLayout
       dimmerCalibrationTool.Hide();
     }
     rlMain.setVisibility(VISIBLE);
+
+    channelDataToViews();
   }
 
   private void hideDimmerConfigurationToolIfNotLocked() {
@@ -251,9 +250,14 @@ public class ChannelDetailRGBW extends DetailLayout
     zamel = false;
     comelit = false;
 
+    channelDataToViews();
+  }
+
+  private void channelDataToViews() {
+
     hideDimmerConfigurationToolIfNotLocked();
 
-    switch (channel.getFunc()) {
+    switch (getChannelBase().getFunc()) {
       case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
         showDimmer();
         tabs.setVisibility(View.GONE);
@@ -272,11 +276,6 @@ public class ChannelDetailRGBW extends DetailLayout
 
         break;
     }
-
-    channelDataToViews();
-  }
-
-  private void channelDataToViews() {
 
     cbPicker.setColorMarkers(null);
     cbPicker.setBrightnessMarkers(null);
