@@ -24,7 +24,7 @@ import org.supla.android.data.source.ChannelConfigRepository
 import org.supla.android.data.source.remote.ChannelConfigType
 import org.supla.android.extensions.TAG
 import org.supla.android.lib.SuplaChannel
-import org.supla.android.lib.SuplaConst
+import org.supla.core.shared.data.model.general.SuplaFunction
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -59,8 +59,11 @@ class RequestChannelConfigUseCase @Inject constructor(
     }
 
   private fun shouldObserveChannelConfig(suplaChannel: SuplaChannel) =
-    suplaChannel.Func == SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER ||
-      suplaChannel.Func == SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT ||
-      suplaChannel.Func == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND ||
-      suplaChannel.Func == SuplaConst.SUPLA_CHANNELFNC_VERTICAL_BLIND
+    suplaChannel.Func == SuplaFunction.GENERAL_PURPOSE_METER.value ||
+      suplaChannel.Func == SuplaFunction.GENERAL_PURPOSE_MEASUREMENT.value ||
+      suplaChannel.Func == SuplaFunction.CONTROLLING_THE_FACADE_BLIND.value ||
+      suplaChannel.Func == SuplaFunction.VERTICAL_BLIND.value ||
+      suplaChannel.Func == SuplaFunction.CONTAINER.value ||
+      suplaChannel.Func == SuplaFunction.WATER_TANK.value ||
+      suplaChannel.Func == SuplaFunction.SEPTIC_TANK.value
 }

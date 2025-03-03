@@ -42,7 +42,11 @@ class ContainerGeneralDetailFragment : BaseComposeFragment<ContainerGeneralDetai
     val modelState by viewModel.getViewState().collectAsState()
 
     SuplaTheme {
-      ContainerGeneralDetailView(modelState.viewState)
+      ContainerGeneralDetailView(
+        state = modelState.viewState,
+        onInfoClick = {},
+        onCaptionLongPress = {}
+      )
     }
   }
 

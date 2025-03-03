@@ -778,6 +778,7 @@
   <string name="change_caption_header" translatable="false">Caption Change</string>
   <string name="group_name" translatable="false">Group name</string>
   <string name="caption_change_failed" translatable="false">Caption change failed!</string>
+  <string name="container_fill_level" translatable="false">Fill level</string>
 
   <plurals name="details_timer_info_on" translatable="false">
     <item quantity="other">on</item>
