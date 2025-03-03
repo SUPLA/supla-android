@@ -25,7 +25,7 @@ data class CreateAccountViewState(
 ) : ViewState() {
 
   fun toProfileItem() = AuthProfileItem(
-    name = accountName,
+    name = accountName.trim(),
     authInfo = AuthInfo(
       emailAuth = authorizeByEmail,
       serverAutoDetect = autoServerAddress,
