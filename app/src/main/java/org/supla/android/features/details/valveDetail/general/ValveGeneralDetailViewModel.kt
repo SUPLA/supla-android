@@ -45,6 +45,7 @@ import org.supla.android.ui.dialogs.authorize.BaseAuthorizationViewModel
 import org.supla.android.ui.dialogs.state.StateDialogHandler
 import org.supla.android.ui.dialogs.state.StateDialogViewModelState
 import org.supla.android.ui.dialogs.state.StateDialogViewState
+import org.supla.android.ui.lists.sensordata.SensorItemData
 import org.supla.android.ui.views.buttons.SwitchButtonState
 import org.supla.android.usecases.captionchange.CaptionChangeHandler
 import org.supla.android.usecases.captionchange.CaptionChangeUseCase
@@ -202,7 +203,7 @@ class ValveGeneralDetailViewModel @Inject constructor(
   }
 
   private fun ChannelChildEntity.toSensor() =
-    SensorData(
+    SensorItemData(
       channelId = channel.remoteId,
       profileId = channel.profileId,
       onlineState = channelDataEntity.channelValueEntity.onlineState,

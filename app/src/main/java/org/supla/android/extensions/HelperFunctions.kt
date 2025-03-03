@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 
@@ -60,6 +61,17 @@ fun fontDimensionResource(@DimenRes id: Int): TextUnit {
   val resources = LocalContext.current.resources
   val fontScale = resources.configuration.fontScale
   val dimension = resources.getDimension(id)
+
+  return dimension.div(density).div(fontScale).sp
+}
+
+@Composable
+@ReadOnlyComposable
+fun fontDpSize(dp: Dp): TextUnit {
+  val density = LocalDensity.current.density
+  val resources = LocalContext.current.resources
+  val fontScale = resources.configuration.fontScale
+  val dimension = dp.toPx()
 
   return dimension.div(density).div(fontScale).sp
 }

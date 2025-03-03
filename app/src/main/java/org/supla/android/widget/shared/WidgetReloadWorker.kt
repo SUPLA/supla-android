@@ -89,7 +89,7 @@ class WidgetReloadWorker @AssistedInject constructor(
     updateWidget: (context: Context, widgetId: Int) -> Unit
   ) {
     val channelConfig = try {
-      loadChannelConfigUseCase(configuration.profileId, configuration.itemId).blockingGet()
+      loadChannelConfigUseCase(configuration.itemId).blockingGet()
     } catch (ex: Exception) {
       null
     }

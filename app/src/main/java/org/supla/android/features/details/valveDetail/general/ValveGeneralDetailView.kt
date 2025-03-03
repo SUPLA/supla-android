@@ -20,10 +20,8 @@ package org.supla.android.features.details.valveDetail.general
  */
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -36,28 +34,23 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
-import org.supla.android.core.shared.data.model.lists.resource
-import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.images.ImageId
+import org.supla.android.tools.BACKGROUND_COLOR
 import org.supla.android.ui.lists.ListOnlineState
+import org.supla.android.ui.lists.channelissues.ChannelIssuesView
 import org.supla.android.ui.lists.data.error
+import org.supla.android.ui.lists.sensordata.SensorItemData
+import org.supla.android.ui.lists.sensordata.SensorsItemsView
 import org.supla.android.ui.views.Image
 import org.supla.android.ui.views.buttons.SwitchButtonState
 import org.supla.android.ui.views.buttons.SwitchButtons
-import org.supla.android.ui.views.list.ListItemDot
-import org.supla.android.ui.views.list.components.ListItemIcon
-import org.supla.android.ui.views.list.components.ListItemInfoIcon
-import org.supla.android.ui.views.list.components.ListItemTitle
 import org.supla.core.shared.data.model.lists.ChannelIssueItem
 import org.supla.core.shared.data.model.lists.IssueIcon
 import org.supla.core.shared.infrastructure.LocalizedString
@@ -66,7 +59,7 @@ data class ValveGeneralDetailViewState(
   val icon: ImageId? = null,
   val stateStringRes: Int? = null,
   val issues: List<ChannelIssueItem> = emptyList(),
-  val sensors: List<SensorData> = emptyList(),
+  val sensors: List<SensorItemData> = emptyList(),
   val offline: Boolean = false,
   val scale: Float = 1f,
 
@@ -74,24 +67,13 @@ data class ValveGeneralDetailViewState(
   val rightButtonState: SwitchButtonState? = null
 )
 
-data class SensorData(
-  val channelId: Int,
-  val profileId: Long,
-  val onlineState: ListOnlineState,
-  val icon: ImageId?,
-  val caption: LocalizedString,
-  val userCaption: String,
-  val batteryIcon: IssueIcon?,
-  val showChannelStateIcon: Boolean
-)
-
 @Composable
 fun ValveGeneralDetailView(
   state: ValveGeneralDetailViewState,
-  onInfoClick: (SensorData) -> Unit = {},
+  onInfoClick: (SensorItemData) -> Unit = {},
   onCloseClick: () -> Unit = {},
   onOpenClick: () -> Unit = {},
-  onCaptionLongPress: (SensorData) -> Unit = {}
+  onCaptionLongPress: (SensorItemData) -> Unit = {}
 ) {
   Column(
     horizontalAlignment = Alignment.CenterHorizontally,
@@ -110,8 +92,8 @@ fun ValveGeneralDetailView(
         stateValue = state.stateStringRes?.let { stringResource(it) },
         offline = state.offline
       )
-      Issues(state.issues)
-      Sensors(state.sensors, state.scale, onInfoClick, onCaptionLongPress)
+      ChannelIssuesView(state.issues)
+      SensorsItemsView(state.sensors, state.scale, onInfoClick, onCaptionLongPress)
     }
 
     SwitchButtons(
@@ -158,88 +140,7 @@ private fun DeviceState(icon: ImageId?, stateValue: String?, offline: Boolean) {
   }
 }
 
-@Composable
-private fun Issues(issues: List<ChannelIssueItem>) {
-  issues.forEach {
-    it.messages.forEach { message ->
-      Row(
-        modifier = Modifier
-          .fillMaxWidth()
-          .padding(horizontal = Distance.default),
-        horizontalArrangement = Arrangement.spacedBy(Distance.tiny)
-      ) {
-        Image(drawableId = it.icon.resource, modifier = Modifier.size(dimensionResource(R.dimen.icon_default_size)))
-        Text(
-          text = message.invoke(LocalContext.current),
-          textAlign = TextAlign.Justify,
-          style = MaterialTheme.typography.bodyMedium
-        )
-      }
-    }
-  }
-}
-
-@Composable
-private fun Sensors(
-  sensors: List<SensorData>,
-  scale: Float,
-  onInfoClick: (SensorData) -> Unit,
-  onCaptionLongPress: (SensorData) -> Unit
-) {
-  if (sensors.isNotEmpty()) {
-    Column(modifier = Modifier.padding(top = Distance.small)) {
-      Text(
-        text = stringResource(id = R.string.valve_detail_sensors).uppercase(),
-        style = MaterialTheme.typography.bodyMedium,
-        modifier = Modifier.padding(start = Distance.default, bottom = Distance.tiny, end = Distance.default)
-      )
-      sensors.forEach { sensor ->
-        Row(
-          verticalAlignment = Alignment.CenterVertically,
-          modifier = Modifier
-            .fillMaxWidth()
-            .padding(bottom = 1.dp)
-            .background(MaterialTheme.colorScheme.surface)
-            .padding(start = Distance.small, end = Distance.default)
-            .padding(vertical = Distance.tiny)
-        ) {
-          sensor.icon?.let { ListItemIcon(imageId = it, scale = scale) }
-          ListItemTitle(
-            text = sensor.caption(LocalContext.current),
-            onItemClick = {},
-            onLongClick = { onCaptionLongPress(sensor) },
-            modifier = Modifier
-              .padding(start = Distance.tiny)
-              .weight(1f),
-            scale = scale,
-            maxLines = 2
-          )
-          sensor.batteryIcon?.let {
-            Image(
-              drawableId = it.resource,
-              modifier = Modifier
-                .padding(end = Distance.small)
-                .size(dimensionResource(R.dimen.icon_default_size))
-            )
-          }
-          if (sensor.showChannelStateIcon) {
-            ListItemInfoIcon(
-              onClick = { onInfoClick(sensor) },
-              modifier = Modifier.padding(end = Distance.small)
-            )
-          }
-          ListItemDot(
-            onlineState = sensor.onlineState,
-            withButton = false,
-            paddingValues = PaddingValues(0.dp)
-          )
-        }
-      }
-    }
-  }
-}
-
-@Preview(showBackground = true, showSystemUi = true, backgroundColor = 0x00F5F6F7)
+@Preview(showBackground = true, showSystemUi = true, backgroundColor = BACKGROUND_COLOR)
 @Composable
 private fun Preview() {
   SuplaTheme {
@@ -254,7 +155,7 @@ private fun Preview() {
           ChannelIssueItem.LowBattery(listOf(LocalizedString.Constant("Low battery 1"), LocalizedString.Constant("Low battery 2")))
         ),
         sensors = listOf(
-          SensorData(
+          SensorItemData(
             channelId = 123,
             profileId = 1L,
             onlineState = ListOnlineState.ONLINE,
@@ -264,7 +165,7 @@ private fun Preview() {
             batteryIcon = IssueIcon.Battery50,
             showChannelStateIcon = true
           ),
-          SensorData(
+          SensorItemData(
             channelId = 123,
             profileId = 1L,
             onlineState = ListOnlineState.OFFLINE,
@@ -274,7 +175,7 @@ private fun Preview() {
             batteryIcon = IssueIcon.Battery25,
             showChannelStateIcon = false
           ),
-          SensorData(
+          SensorItemData(
             channelId = 123,
             profileId = 1L,
             onlineState = ListOnlineState.ONLINE,
@@ -284,7 +185,7 @@ private fun Preview() {
             batteryIcon = IssueIcon.Battery50,
             showChannelStateIcon = true
           ),
-          SensorData(
+          SensorItemData(
             channelId = 123,
             profileId = 1L,
             onlineState = ListOnlineState.OFFLINE,
@@ -294,7 +195,7 @@ private fun Preview() {
             batteryIcon = IssueIcon.Battery25,
             showChannelStateIcon = false
           ),
-          SensorData(
+          SensorItemData(
             channelId = 123,
             profileId = 1L,
             onlineState = ListOnlineState.ONLINE,
@@ -304,7 +205,7 @@ private fun Preview() {
             batteryIcon = IssueIcon.Battery50,
             showChannelStateIcon = true
           ),
-          SensorData(
+          SensorItemData(
             channelId = 123,
             profileId = 1L,
             onlineState = ListOnlineState.OFFLINE,

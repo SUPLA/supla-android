@@ -57,14 +57,15 @@ class LoadChannelConfigUseCaseTest {
     val remoteId = 123
     val channelEntity: ChannelEntity = mockk {
       every { function } returns SuplaFunction.GENERAL_PURPOSE_MEASUREMENT
+      every { this@mockk.profileId } returns profileId
     }
     val config: SuplaChannelConfig = mockk()
-    whenever(channelRepository.findByRemoteId(profileId, remoteId)).thenReturn(Maybe.just(channelEntity))
+    whenever(channelRepository.findByRemoteId(remoteId)).thenReturn(Maybe.just(channelEntity))
     whenever(channelConfigRepository.findChannelConfig(profileId, remoteId, ChannelConfigType.GENERAL_PURPOSE_MEASUREMENT))
       .thenReturn(Single.just(config))
 
     // when
-    val resultConfig = useCase(profileId, remoteId).test()
+    val resultConfig = useCase(remoteId).test()
 
     // then
     resultConfig.assertComplete()
@@ -78,14 +79,15 @@ class LoadChannelConfigUseCaseTest {
     val remoteId = 123
     val channelEntity: ChannelEntity = mockk {
       every { function } returns SuplaFunction.GENERAL_PURPOSE_METER
+      every { this@mockk.profileId } returns profileId
     }
     val config: SuplaChannelConfig = mockk()
-    whenever(channelRepository.findByRemoteId(profileId, remoteId)).thenReturn(Maybe.just(channelEntity))
+    whenever(channelRepository.findByRemoteId(remoteId)).thenReturn(Maybe.just(channelEntity))
     whenever(channelConfigRepository.findChannelConfig(profileId, remoteId, ChannelConfigType.GENERAL_PURPOSE_METER))
       .thenReturn(Single.just(config))
 
     // when
-    val resultConfig = useCase(profileId, remoteId).test()
+    val resultConfig = useCase(remoteId).test()
 
     // then
     resultConfig.assertComplete()
@@ -96,16 +98,16 @@ class LoadChannelConfigUseCaseTest {
   @Test
   fun `should fail when function not supported yet`() {
     // given
-    val profileId = 213L
     val remoteId = 123
     val channelEntity: ChannelEntity = mockk {
       every { function } returns SuplaFunction.ALARM
+      every { profileId } returns 1L
     }
-    whenever(channelRepository.findByRemoteId(profileId, remoteId)).thenReturn(Maybe.just(channelEntity))
+    whenever(channelRepository.findByRemoteId(remoteId)).thenReturn(Maybe.just(channelEntity))
 
     // when
     val throwable = catchThrowable {
-      useCase(profileId, remoteId).blockingGet()
+      useCase(remoteId).blockingGet()
     }
 
     // then

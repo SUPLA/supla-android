@@ -1,4 +1,4 @@
-package org.supla.android.usecases.channelconfig
+package org.supla.android.data.source.remote.container
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,23 +17,24 @@ package org.supla.android.usecases.channelconfig
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import io.reactivex.rxjava3.core.Single
-import org.supla.android.data.source.ChannelConfigRepository
-import org.supla.android.data.source.RoomChannelRepository
-import org.supla.android.data.source.remote.ChannelConfigType
 import org.supla.android.data.source.remote.SuplaChannelConfig
-import javax.inject.Inject
-import javax.inject.Singleton
+import org.supla.android.tools.UsedFromNativeCode
 
-@Singleton
-class LoadChannelConfigUseCase @Inject constructor(
-  private val channelConfigRepository: ChannelConfigRepository,
-  private val channelRepository: RoomChannelRepository
-) {
+@UsedFromNativeCode
+data class SuplaChannelContainerConfig(
+  override val remoteId: Int,
+  override val func: Int?,
+  override val crc32: Long,
+  val warningAboveLevel: Int,
+  val alarmAboveLevel: Int,
+  val warningBelowLevel: Int,
+  val alarmBelowLevel: Int,
+  val muteAlarmSoundWithoutAdditionalAuth: Boolean,
+  val sensors: List<SuplaSensorInfo>
+) : SuplaChannelConfig(remoteId, func, crc32)
 
-  operator fun invoke(remoteId: Int): Single<SuplaChannelConfig> {
-    return channelRepository.findByRemoteId(remoteId)
-      .flatMapSingle { channelConfigRepository.findChannelConfig(it.profileId, remoteId, ChannelConfigType.from(it)) }
-      .toSingle()
-  }
-}
+@UsedFromNativeCode
+data class SuplaSensorInfo(
+  val fillLevel: Int,
+  val channelId: Int
+)
