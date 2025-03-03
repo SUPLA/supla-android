@@ -160,6 +160,35 @@ class SaveProfileUseCaseTest {
   }
 
   @Test
+  fun `should throw when name is duplicated (trimming)`() {
+    // given
+    val profile = profileWithEmailMock()
+
+    whenever(profileManager.create(profile)).thenReturn(Completable.complete())
+    whenever(profileManager.getAllProfiles()).thenReturn(
+      Observable.just(
+        listOf(
+          profileWithEmailMock().apply {
+            id = 123
+            name += " "
+          }
+        )
+      )
+    )
+
+    // when
+    val testObserver = useCase(profile).test()
+
+    // then
+    testObserver.assertError(SaveProfileUseCase.SaveAccountException.DuplicatedName)
+
+    verify(profileManager).getAllProfiles()
+    verify(profileManager).create(profile)
+    verifyNoMoreInteractions(profileManager)
+    verifyNoInteractions(profileIdHolder)
+  }
+
+  @Test
   fun `should throw when auth data is not complete`() {
     // given
     val profile = profileWithEmailMock().apply { authInfo.emailAddress = "" }
