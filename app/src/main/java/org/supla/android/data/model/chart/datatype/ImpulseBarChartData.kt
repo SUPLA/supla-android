@@ -111,7 +111,7 @@ class ImpulseBarChartData(
       return coordinateToDateMap.values.lastOrNull()?.plus(coordinateToDateMap.size.minus(x).times(aggregation!!.timeInSec)) ?: 0f
     }
 
-    return coordinateToDateMap[x] ?: 0f
+    return coordinateToDateMap[x.roundToInt().toFloat()] ?: 0f
   }
 
   override fun distanceInDays(start: Float, end: Float): Float = end.times(aggregation!!.timeInSec) / 3600 / 24
