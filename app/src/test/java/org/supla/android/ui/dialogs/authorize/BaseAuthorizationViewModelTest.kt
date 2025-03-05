@@ -27,6 +27,7 @@ import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.lib.SuplaConst.SUPLA_RESULTCODE_CLIENT_LIMITEXCEEDED
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.dialogs.AuthorizationDialogState
+import org.supla.android.ui.dialogs.AuthorizationReason
 import org.supla.android.usecases.client.AuthorizationException
 import org.supla.android.usecases.client.AuthorizeUseCase
 import org.supla.android.usecases.client.LoginUseCase
@@ -386,7 +387,7 @@ class TestAuthorizationViewModel(
     updateState { it.copy(authorizationDialogState = updater(it.authorizationDialogState)) }
   }
 
-  override fun onAuthorized() {
+  override fun onAuthorized(reason: AuthorizationReason) {
     updateState { it.copy(authorizationsCount = it.authorizationsCount + 1) }
   }
 

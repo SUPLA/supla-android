@@ -779,6 +779,11 @@
   <string name="group_name" translatable="false">Group name</string>
   <string name="caption_change_failed" translatable="false">Caption change failed!</string>
   <string name="container_fill_level" translatable="false">Fill level</string>
+  <string name="container_warning_level" translatable="false">Container level warning</string>
+  <string name="container_alarm_level" translatable="false">Container level alarm!</string>
+  <string name="container_invalid_sensor_state" translatable="false">Invalid sensor state</string>
+  <string name="container_sound_alarm" translatable="false">Sound alarm active</string>
+  <string name="container_caption" translatable="false">%1$s (%2$d%%)</string>
 
   <plurals name="details_timer_info_on" translatable="false">
     <item quantity="other">on</item>

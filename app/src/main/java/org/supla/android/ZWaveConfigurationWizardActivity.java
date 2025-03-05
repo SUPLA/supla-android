@@ -45,6 +45,7 @@ import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaConst;
 import org.supla.android.lib.ZWaveNode;
 import org.supla.android.lib.ZWaveWakeUpSettings;
+import org.supla.core.shared.data.model.general.SuplaCallConfigCommand;
 
 /**
  * @noinspection SequencedCollectionMethodCanBeUsed
@@ -905,7 +906,7 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity
   @Override
   protected void onCalCfgProgressReport(int channelId, int command, short progress) {
     if (mSelectedCahnnel != null
-        && command == SuplaConst.SUPLA_CALCFG_CMD_ZWAVE_GET_NODE_LIST
+        && command == SuplaCallConfigCommand.ZWAVE_GET_NODE_LIST.getValue()
         && getVisiblePageId() == PAGE_ZWAVE_DETAILS) {
       mProgress = progress;
     }

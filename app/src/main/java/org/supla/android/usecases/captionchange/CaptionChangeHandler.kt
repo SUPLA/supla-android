@@ -17,29 +17,42 @@ package org.supla.android.usecases.captionchange
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import io.reactivex.rxjava3.kotlin.subscribeBy
+import io.reactivex.rxjava3.core.Completable
 import org.supla.android.R
-import org.supla.android.core.ui.ViewEvent
 import org.supla.android.lib.actions.SubjectType
+import org.supla.android.tools.VibrationHelper
+import org.supla.android.ui.dialogs.AuthorizationReason
+import org.supla.android.ui.dialogs.CaptionChangeDialogScope
 import org.supla.android.ui.dialogs.CaptionChangeDialogState
-import org.supla.android.ui.dialogs.authorize.AuthorizationModelState
-import org.supla.android.ui.dialogs.authorize.BaseAuthorizationViewModel
 import org.supla.core.shared.infrastructure.LocalizedString
 
-interface CaptionChangeHandler<S : AuthorizationModelState, E : ViewEvent> {
+data object CaptionChange : AuthorizationReason
 
+interface CaptionChangeHandler : CaptionChangeDialogScope {
+
+  val vibrationHelper: VibrationHelper
   val captionChangeDialogState: CaptionChangeDialogState?
   val captionChangeUseCase: CaptionChangeUseCase
 
+  fun subscribeSilent(completable: Completable, onComplete: () -> Unit = {}, onError: (Throwable) -> Unit = {})
+
   fun updateCaptionChangeDialogState(updater: (CaptionChangeDialogState?) -> CaptionChangeDialogState?)
 
-  fun showAuthorizationDialog()
+  fun showAuthorizationDialog(reason: AuthorizationReason)
 
   fun closeAuthorizationDialog()
 
-  fun onCaptionChange()
+  override fun onCaptionChangeDismiss() {
+    updateCaptionChangeDialogState { null }
+    closeAuthorizationDialog()
+  }
+
+  override fun onStateChange(state: CaptionChangeDialogState) {
+    updateCaptionChangeDialogState { state }
+  }
 
   fun changeChannelCaption(caption: String, remoteId: Int, profileId: Long) {
+    vibrationHelper.vibrate()
     updateCaptionChangeDialogState {
       CaptionChangeDialogState(
         remoteId = remoteId,
@@ -48,37 +61,28 @@ interface CaptionChangeHandler<S : AuthorizationModelState, E : ViewEvent> {
         caption = caption
       )
     }
-    showAuthorizationDialog()
+    showAuthorizationDialog(reason = CaptionChange)
   }
 
-  fun closeCaptionChangeDialog() {
-    updateCaptionChangeDialogState { null }
-  }
-
-  fun updateCaptionChangeDialogState(state: CaptionChangeDialogState) {
-    updateCaptionChangeDialogState { state }
-  }
-
-  context(BaseAuthorizationViewModel<S, E>)
-  fun onChannelCaptionChange() {
+  override fun onCaptionChangeConfirmed() {
     captionChangeDialogState?.let { state ->
       updateCaptionChangeDialogState { it?.copy(loading = true) }
-      captionChangeUseCase(state.caption, CaptionChangeUseCase.Type.CHANNEL, state.remoteId, state.profileId)
-        .attachSilent()
-        .subscribeBy(
-          onComplete = { closeCaptionChangeDialog() },
-          onError = {
-            updateCaptionChangeDialogState {
-              it?.copy(loading = false, error = LocalizedString.WithResource(R.string.caption_change_failed))
-            }
+      subscribeSilent(
+        completable = captionChangeUseCase(state.caption, state.subjectType.asCaptionChangeType, state.remoteId, state.profileId),
+        onComplete = { updateCaptionChangeDialogState { null } },
+        onError = {
+          updateCaptionChangeDialogState {
+            it?.copy(loading = false, error = LocalizedString.WithResource(R.string.caption_change_failed))
           }
-        )
-        .disposeBySelf()
+        }
+      )
     }
   }
-
-  fun onCaptionChangeNotAuthorized() {
-    closeCaptionChangeDialog()
-    closeAuthorizationDialog()
-  }
 }
+
+val SubjectType.asCaptionChangeType: CaptionChangeUseCase.Type
+  get() = when (this) {
+    SubjectType.CHANNEL -> CaptionChangeUseCase.Type.CHANNEL
+    SubjectType.GROUP -> CaptionChangeUseCase.Type.GROUP
+    SubjectType.SCENE -> CaptionChangeUseCase.Type.SCENE
+  }

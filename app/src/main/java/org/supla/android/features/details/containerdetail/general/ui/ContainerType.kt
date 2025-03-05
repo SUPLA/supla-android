@@ -1,4 +1,4 @@
-package org.supla.core.shared.data.model.lists
+package org.supla.android.features.details.containerdetail.general.ui
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,15 +17,29 @@ package org.supla.core.shared.data.model.lists
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-sealed class IssueIcon {
-  data object Warning : IssueIcon()
-  data object Error : IssueIcon()
-  data object Battery : IssueIcon()
-  data object Battery0 : IssueIcon()
-  data object Battery25 : IssueIcon()
-  data object Battery50 : IssueIcon()
-  data object Battery75 : IssueIcon()
-  data object Battery100 : IssueIcon()
-  data object BatteryNotUsed : IssueIcon()
-  data object Sound : IssueIcon()
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
+
+enum class ContainerType {
+  DEFAULT,
+  WATER,
+  SEPTIC;
+
+  @Composable
+  fun primary(): Color {
+    return when (this) {
+      DEFAULT -> MaterialTheme.colorScheme.primaryContainer
+      WATER -> MaterialTheme.colorScheme.secondary
+      SEPTIC -> MaterialTheme.colorScheme.tertiary
+    }
+  }
+
+  fun secondary(): Color {
+    return when (this) {
+      DEFAULT -> Color(0xFF0E8618)
+      WATER -> Color(0xFF0067D4)
+      SEPTIC -> Color(0xFF8A4F07)
+    }
+  }
 }

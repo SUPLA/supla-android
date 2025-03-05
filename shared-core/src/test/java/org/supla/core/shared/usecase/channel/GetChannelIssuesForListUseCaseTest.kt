@@ -124,4 +124,21 @@ class GetChannelIssuesForListUseCaseTest {
     assertThat(issues.icons).containsExactly(IssueIcon.Error)
     assertThat(issues.issuesStrings).containsExactly(LocalizedString.WithId(LocalizedStringId.THERMOSTAT_CLOCK_ERROR))
   }
+
+  @Test
+  fun `should get only sound icon if only sound flag active`() {
+    // given
+    val channelWithChildren: ChannelWithChildren = mockk()
+
+    every { getChannelLowBatteryIssueUseCase.invoke(channelWithChildren) } returns null
+    every { getChannelBatteryIconUseCase.invoke(channelWithChildren) } returns null
+    every { getChannelSpecificIssuesUseCase.invoke(channelWithChildren) } returns listOf(ChannelIssueItem.SoundAlarm())
+
+    // when
+    val issues = useCase(channelWithChildren)
+
+    // then
+    assertThat(issues.icons).containsExactly(IssueIcon.Sound)
+    assertThat(issues.issuesStrings).isEmpty()
+  }
 }

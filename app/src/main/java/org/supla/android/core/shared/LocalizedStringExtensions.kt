@@ -26,6 +26,7 @@ operator fun LocalizedString.invoke(context: Context): String {
     is LocalizedString.Constant -> text
     LocalizedString.Empty -> ""
     is LocalizedString.WithId -> context.getString(id.resourceId)
+    is LocalizedString.WithResourceStringInt -> context.getString(id, arg1(context), arg2)
     is LocalizedString.WithResourceIntStringInt -> context.getString(id, arg1, arg2(context), arg3)
     is LocalizedString.WithResource -> context.getString(id)
     is LocalizedString.WithIdIntStringInt -> context.getString(id.resourceId, arg1, arg2(context), arg3)

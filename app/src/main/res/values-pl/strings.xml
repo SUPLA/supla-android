@@ -755,6 +755,10 @@
   <string name="group_name">Nazwa grupy</string>
   <string name="caption_change_failed">Zmiana nazwy nieudana!</string>
   <string name="container_fill_level">Poziom napełnienia</string>
+  <string name="container_warning_level">Poziom ostrzegawczy</string>
+  <string name="container_alarm_level">Poziom alarmowy!</string>
+  <string name="container_invalid_sensor_state">Nieprawidłowy stan czujników</string>
+  <string name="container_sound_alarm">Alarm dźwiękowy aktywny</string>
 
   <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
     <item quantity="one">włączone</item>

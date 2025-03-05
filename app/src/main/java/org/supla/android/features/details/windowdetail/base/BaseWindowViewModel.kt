@@ -40,6 +40,7 @@ import org.supla.android.features.details.windowdetail.base.ui.WindowViewState
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.dialogs.AuthorizationDialogState
+import org.supla.android.ui.dialogs.AuthorizationReason
 import org.supla.android.ui.dialogs.authorize.AuthorizationModelState
 import org.supla.android.ui.dialogs.authorize.BaseAuthorizationViewModel
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
@@ -173,7 +174,7 @@ abstract class BaseWindowViewModel<S : BaseWindowViewModelState>(
     updateState { stateCopy(it, authorizationDialogState = updater(it.authorizationDialogState)) }
   }
 
-  override fun onAuthorized() {
+  override fun onAuthorized(reason: AuthorizationReason) {
     closeAuthorizationDialog()
 
     val (remoteId) = guardLet(currentState().remoteId) { return }

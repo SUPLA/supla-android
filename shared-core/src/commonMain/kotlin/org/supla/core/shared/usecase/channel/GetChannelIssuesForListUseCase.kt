@@ -37,16 +37,24 @@ class GetChannelIssuesForListUseCase(
     val icons = mutableListOf<IssueIcon>()
     val messages = mutableListOf<LocalizedString>()
     otherIssues.minByOrNull { it.priority }?.let { icons.add(it.icon) }
+    if (!icons.contains(IssueIcon.Sound)) {
+      otherIssues.firstOrNull { it is ChannelIssueItem.SoundAlarm }?.let { icons.add(it.icon) }
+    }
     otherIssues.forEach { messages.addAll(it.messages) }
-    batteryIssue?.let {
+
+    batteryIssue?.let { issue ->
       if (!icons.contains(IssueIcon.Error)) {
         icons.clear()
         icons.add(IssueIcon.Error)
+        otherIssues.firstOrNull { it is ChannelIssueItem.SoundAlarm }?.let { icons.add(it.icon) }
       }
-      messages.addAll(it.messages)
+      messages.addAll(issue.messages)
     }
 
-    getChannelBatteryIconUseCase(channelWithChildren)?.let { icons.add(it) }
+    // Add battery icon only if there is place for that
+    if (otherIssues.size < 2) {
+      getChannelBatteryIconUseCase(channelWithChildren)?.let { icons.add(it) }
+    }
 
     return ListItemIssues(icons, messages)
   }

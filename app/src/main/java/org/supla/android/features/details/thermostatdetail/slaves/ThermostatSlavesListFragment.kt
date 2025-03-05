@@ -26,7 +26,6 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
-import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.BaseComposeFragment
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
@@ -62,21 +61,10 @@ class ThermostatSlavesListFragment : BaseComposeFragment<ThermostatSlavesListVie
         StateDialog(state = it, onDismiss = viewModel::closeStateDialog)
       }
       modelState.captionChangeDialogState?.let {
-        CaptionChangeDialog(
-          state = it,
-          onDismiss = viewModel::closeCaptionChangeDialog,
-          onStateChange = viewModel::updateCaptionChangeDialogState,
-          onOk = viewModel::onCaptionChange
-        )
+        viewModel.CaptionChangeDialog(state = it)
       }
       modelState.authorizationDialogState?.let {
-        AuthorizationDialog(
-          dialogState = it,
-          onDismiss = viewModel::onCaptionChangeNotAuthorized,
-          onCancel = viewModel::onCaptionChangeNotAuthorized,
-          onAuthorize = viewModel::authorize,
-          onStateChange = viewModel::updateAuthorizationState
-        )
+        viewModel.AuthorizationDialog(state = it)
       }
       ThermostatSlavesListView(
         state = modelState.viewState,

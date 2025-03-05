@@ -32,6 +32,7 @@ val IssueIcon.resource: Int
     IssueIcon.Battery75 -> R.drawable.battery_75
     IssueIcon.Battery100 -> R.drawable.battery_100
     IssueIcon.BatteryNotUsed -> R.drawable.battery_not_used
+    IssueIcon.Sound -> R.drawable.ic_sound_on
   }
 
 val IssueIcon.width: Int
