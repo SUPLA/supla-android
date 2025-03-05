@@ -17,6 +17,8 @@ package org.supla.android.features.details.containerdetail.general
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.os.Bundle
+import android.view.View
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -27,6 +29,9 @@ import org.supla.android.core.ui.BaseComposeFragment
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
 import org.supla.android.lib.SuplaClientMsg
+import org.supla.android.ui.dialogs.AuthorizationDialog
+import org.supla.android.ui.dialogs.CaptionChangeDialog
+import org.supla.android.ui.dialogs.state.StateDialog
 
 private const val ARG_ITEM_BUNDLE = "ARG_ITEM_BUNDLE"
 
@@ -37,16 +42,27 @@ class ContainerGeneralDetailFragment : BaseComposeFragment<ContainerGeneralDetai
 
   private val item: ItemBundle by lazy { requireSerializable(ARG_ITEM_BUNDLE, ItemBundle::class.java) }
 
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    viewModel.observe(item.remoteId)
+  }
+
   @Composable
   override fun ComposableContent() {
     val modelState by viewModel.getViewState().collectAsState()
 
     SuplaTheme {
-      ContainerGeneralDetailView(
-        state = modelState.viewState,
-        onInfoClick = {},
-        onCaptionLongPress = {}
-      )
+      viewModel.View(state = modelState.viewState)
+
+      modelState.stateDialogViewState?.let {
+        StateDialog(state = it, onDismiss = viewModel::closeStateDialog)
+      }
+      modelState.captionChangeDialogState?.let {
+        viewModel.CaptionChangeDialog(state = it)
+      }
+      modelState.authorizationDialogState?.let {
+        viewModel.AuthorizationDialog(state = it)
+      }
     }
   }
 
@@ -56,8 +72,8 @@ class ContainerGeneralDetailFragment : BaseComposeFragment<ContainerGeneralDetai
   }
 
   override fun onSuplaMessage(message: SuplaClientMsg) {
-    if (message.type == SuplaClientMsg.onDataChanged && message.channelId == item.remoteId) {
-      viewModel.loadData(remoteId = item.remoteId)
+    when (message.type) {
+      SuplaClientMsg.onChannelState -> viewModel.updateStateDialog(message.channelState)
     }
   }
 

@@ -1,4 +1,4 @@
-package org.supla.core.shared.data.model.lists
+package org.supla.android.features.details.containerdetail.general.ui
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,15 +17,35 @@ package org.supla.core.shared.data.model.lists
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-sealed class IssueIcon {
-  data object Warning : IssueIcon()
-  data object Error : IssueIcon()
-  data object Battery : IssueIcon()
-  data object Battery0 : IssueIcon()
-  data object Battery25 : IssueIcon()
-  data object Battery50 : IssueIcon()
-  data object Battery75 : IssueIcon()
-  data object Battery100 : IssueIcon()
-  data object BatteryNotUsed : IssueIcon()
-  data object Sound : IssueIcon()
+import androidx.compose.ui.graphics.Color
+
+sealed class ControlLevel {
+  abstract val level: Float
+  abstract val levelString: String
+  abstract val type: Type
+  abstract val color: Color
+
+  var levelPosition: Float? = null
+
+  enum class Type {
+    UPPER, LOWER
+  }
+}
+
+data class ErrorLevel(
+  override val level: Float,
+  override val levelString: String,
+  override val type: Type
+) : ControlLevel() {
+  override val color: Color
+    get() = Color(0xFFEB3A28)
+}
+
+data class WarningLevel(
+  override val level: Float,
+  override val levelString: String,
+  override val type: Type
+) : ControlLevel() {
+  override val color: Color
+    get() = Color(0xFFE3A400)
 }

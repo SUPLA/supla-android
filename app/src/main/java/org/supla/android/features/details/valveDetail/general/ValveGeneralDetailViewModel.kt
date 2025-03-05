@@ -39,6 +39,7 @@ import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.tools.VibrationHelper
 import org.supla.android.ui.dialogs.AuthorizationDialogState
+import org.supla.android.ui.dialogs.AuthorizationReason
 import org.supla.android.ui.dialogs.CaptionChangeDialogState
 import org.supla.android.ui.dialogs.authorize.AuthorizationModelState
 import org.supla.android.ui.dialogs.authorize.BaseAuthorizationViewModel
@@ -73,16 +74,16 @@ class ValveGeneralDetailViewModel @Inject constructor(
   private val getChannelIconUseCase: GetChannelIconUseCase,
   private val channelActionUseCase: ChannelActionUseCase,
   private val getCaptionUseCase: GetCaptionUseCase,
-  private val vibrationHelper: VibrationHelper,
   private val preferences: Preferences,
   override val captionChangeUseCase: CaptionChangeUseCase,
   override val suplaClientProvider: SuplaClientProvider,
   override val updateEventsManager: UpdateEventsManager,
+  override val vibrationHelper: VibrationHelper,
   override val schedulers: SuplaSchedulers,
   override val dateProvider: DateProvider,
   roomProfileRepository: RoomProfileRepository,
-  loginUseCase: LoginUseCase,
-  authorizeUseCase: AuthorizeUseCase
+  authorizeUseCase: AuthorizeUseCase,
+  loginUseCase: LoginUseCase
 ) : BaseAuthorizationViewModel<ValveGeneralDetailViewModeState, ValveGeneralDetailViewEvent>(
   suplaClientProvider,
   roomProfileRepository,
@@ -93,7 +94,7 @@ class ValveGeneralDetailViewModel @Inject constructor(
 ),
   StateDialogHandler,
   ChannelUpdatesObserver,
-  CaptionChangeHandler<ValveGeneralDetailViewModeState, ValveGeneralDetailViewEvent> {
+  CaptionChangeHandler {
 
   override val stateDialogViewModelState: StateDialogViewModelState = default()
 
@@ -112,12 +113,23 @@ class ValveGeneralDetailViewModel @Inject constructor(
     updateState { it.copy(captionChangeDialogState = updater(it.captionChangeDialogState)) }
   }
 
-  override fun onAuthorized() {
-    updateState { it.copy(authorizationDialogState = null) }
+  override fun onAuthorizationCancel() {
+    updateCaptionChangeDialogState { null }
+    super.onAuthorizationCancel()
   }
 
-  override fun onCaptionChange() {
-    onChannelCaptionChange()
+  override fun onAuthorizationDismiss() {
+    updateCaptionChangeDialogState { null }
+    super.onAuthorizationDismiss()
+  }
+
+  override fun onAuthorized(reason: AuthorizationReason) {
+    updateState {
+      it.copy(
+        authorizationDialogState = null,
+        captionChangeDialogState = it.captionChangeDialogState?.copy(authorized = true)
+      )
+    }
   }
 
   override fun onChannelUpdate(channelWithChildren: ChannelWithChildren) {

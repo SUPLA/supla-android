@@ -48,51 +48,57 @@ data class CaptionChangeDialogState(
   val profileId: Long,
   val subjectType: SubjectType,
   val caption: String,
+  val authorized: Boolean = false,
   val loading: Boolean = false,
   val error: LocalizedString? = null
 )
 
+interface CaptionChangeDialogScope {
+  fun onCaptionChangeDismiss()
+  fun onStateChange(state: CaptionChangeDialogState)
+  fun onCaptionChangeConfirmed()
+}
+
 @Composable
-fun CaptionChangeDialog(
-  state: CaptionChangeDialogState,
-  onDismiss: () -> Unit = {},
-  onStateChange: (CaptionChangeDialogState) -> Unit = {},
-  onOk: () -> Unit = {}
+fun CaptionChangeDialogScope.CaptionChangeDialog(
+  state: CaptionChangeDialogState
 ) {
-  Dialog(onDismiss = onDismiss) {
-    DialogHeader(title = stringResource(R.string.change_caption_header))
-    Separator(style = SeparatorStyle.LIGHT)
+  if (state.authorized) {
+    Dialog(onDismiss = { onCaptionChangeDismiss() }) {
+      DialogHeader(title = stringResource(R.string.change_caption_header))
+      Separator(style = SeparatorStyle.LIGHT)
 
-    CaptionTextField(
-      state = state,
-      onStateChange = onStateChange
-    )
-    state.error?.let {
-      ErrorText(text = it(LocalContext.current))
-    }
-
-    Separator(style = SeparatorStyle.LIGHT, modifier = Modifier.padding(top = Distance.default))
-    DialogButtonsRow {
-      OutlinedButton(
-        onClick = onDismiss,
-        text = stringResource(id = R.string.cancel),
-        modifier = Modifier.weight(1f)
+      CaptionTextField(
+        state = state,
+        onStateChange = { onStateChange(it) }
       )
+      state.error?.let {
+        ErrorText(text = it(LocalContext.current))
+      }
 
-      if (state.loading) {
-        Box(modifier = Modifier.weight(1f)) {
-          CircularProgressIndicator(
-            modifier = Modifier
-              .align(Alignment.Center)
-              .size(32.dp)
-          )
-        }
-      } else {
-        Button(
-          onClick = onOk,
-          text = stringResource(id = R.string.ok),
+      Separator(style = SeparatorStyle.LIGHT, modifier = Modifier.padding(top = Distance.default))
+      DialogButtonsRow {
+        OutlinedButton(
+          onClick = { onCaptionChangeDismiss() },
+          text = stringResource(id = R.string.cancel),
           modifier = Modifier.weight(1f)
         )
+
+        if (state.loading) {
+          Box(modifier = Modifier.weight(1f)) {
+            CircularProgressIndicator(
+              modifier = Modifier
+                .align(Alignment.Center)
+                .size(32.dp)
+            )
+          }
+        } else {
+          Button(
+            onClick = { onCaptionChangeConfirmed() },
+            text = stringResource(id = R.string.ok),
+            modifier = Modifier.weight(1f)
+          )
+        }
       }
     }
   }
@@ -134,11 +140,17 @@ private val CaptionChangeDialogState.captionLabelRes: Int
     SubjectType.SCENE -> R.string.scene_name
   }
 
+private val emptyScope = object : CaptionChangeDialogScope {
+  override fun onCaptionChangeDismiss() {}
+  override fun onStateChange(state: CaptionChangeDialogState) {}
+  override fun onCaptionChangeConfirmed() {}
+}
+
 @Preview
 @Composable
 private fun Preview() {
   SuplaTheme {
-    CaptionChangeDialog(
+    emptyScope.CaptionChangeDialog(
       CaptionChangeDialogState(
         remoteId = 123,
         profileId = 1L,
@@ -154,7 +166,7 @@ private fun Preview() {
 @Composable
 private fun Preview_Error() {
   SuplaTheme {
-    CaptionChangeDialog(
+    emptyScope.CaptionChangeDialog(
       CaptionChangeDialogState(
         remoteId = 123,
         profileId = 1L,

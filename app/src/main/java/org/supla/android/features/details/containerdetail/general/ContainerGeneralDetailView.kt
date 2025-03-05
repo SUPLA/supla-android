@@ -18,6 +18,7 @@ package org.supla.android.features.details.containerdetail.general
  */
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -37,13 +38,19 @@ import androidx.compose.ui.unit.dp
 import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
-import org.supla.android.extensions.fontDpSize
+import org.supla.android.features.details.containerdetail.general.ui.ContainerIconView
+import org.supla.android.features.details.containerdetail.general.ui.ContainerType
+import org.supla.android.features.details.containerdetail.general.ui.ControlLevel
+import org.supla.android.features.details.containerdetail.general.ui.ErrorLevel
+import org.supla.android.features.details.containerdetail.general.ui.WarningLevel
 import org.supla.android.images.ImageId
 import org.supla.android.tools.BACKGROUND_COLOR
 import org.supla.android.ui.lists.ListOnlineState
 import org.supla.android.ui.lists.channelissues.ChannelIssuesView
 import org.supla.android.ui.lists.sensordata.SensorItemData
 import org.supla.android.ui.lists.sensordata.SensorsItemsView
+import org.supla.android.ui.views.buttons.supla.SuplaButton
+import org.supla.android.ui.views.buttons.supla.SuplaButtonDefaults
 import org.supla.core.shared.data.model.lists.ChannelIssueItem
 import org.supla.core.shared.data.model.lists.IssueIcon
 import org.supla.core.shared.infrastructure.LocalizedString
@@ -52,17 +59,25 @@ import org.supla.core.shared.infrastructure.LocalizedStringId
 data class ContainerGeneralDetailViewState(
   val fluidLevel: Float? = null,
   val fluidLevelString: String = "",
+  val containerType: ContainerType = ContainerType.DEFAULT,
   val controlLevels: List<ControlLevel> = emptyList(),
   val scale: Float = 1f,
   val sensors: List<SensorItemData> = emptyList(),
-  val issues: List<ChannelIssueItem> = emptyList()
+  val issues: List<ChannelIssueItem> = emptyList(),
+  val offline: Boolean = false,
+
+  val soundOn: Boolean = false
 )
 
+interface ContainerGeneralDetailViewScope {
+  fun onInfoClick(data: SensorItemData)
+  fun onCaptionLongPress(data: SensorItemData)
+  fun onMuteClick()
+}
+
 @Composable
-fun ContainerGeneralDetailView(
-  state: ContainerGeneralDetailViewState,
-  onInfoClick: (SensorItemData) -> Unit,
-  onCaptionLongPress: (SensorItemData) -> Unit
+fun ContainerGeneralDetailViewScope.View(
+  state: ContainerGeneralDetailViewState
 ) {
   Column(
     horizontalAlignment = Alignment.CenterHorizontally,
@@ -74,50 +89,72 @@ fun ContainerGeneralDetailView(
   ) {
     Row(
       verticalAlignment = Alignment.CenterVertically,
-      horizontalArrangement = Arrangement.spacedBy(Distance.default),
+      horizontalArrangement = Arrangement.spacedBy(Distance.tiny),
       modifier = Modifier
         .height(288.dp)
         .padding(Distance.default)
     ) {
-      Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.weight(1f)) {
-        Text(
-          text = stringResource(R.string.container_fill_level),
-          style = MaterialTheme.typography.titleSmall,
-          color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-        Text(
-          text = state.fluidLevelString,
-          style = MaterialTheme.typography.bodyMedium.copy(fontSize = fontDpSize(56.dp))
-        )
+      Box(
+        modifier = Modifier
+          .weight(1f)
+          .fillMaxHeight()
+      ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.align(Alignment.Center)) {
+          Text(
+            text = stringResource(R.string.container_fill_level),
+            style = MaterialTheme.typography.titleSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+          )
+          Text(
+            text = state.fluidLevelString,
+            style = MaterialTheme.typography.displaySmall
+          )
+        }
+
+        if (state.soundOn) {
+          SuplaButton(
+            iconRes = R.drawable.ic_sound_off,
+            colors = SuplaButtonDefaults.buttonColors(content = MaterialTheme.colorScheme.primary),
+            onClick = { onMuteClick() },
+            modifier = Modifier.align(Alignment.BottomCenter)
+          )
+        }
       }
       ContainerIconView(
         fillLevel = state.fluidLevel,
         controlLevels = state.controlLevels,
         modifier = Modifier
           .weight(1f)
-          .fillMaxHeight()
+          .fillMaxHeight(),
+        type = state.containerType
       )
     }
     ChannelIssuesView(issues = state.issues)
     SensorsItemsView(
       sensors = state.sensors,
       scale = state.scale,
-      onInfoClick = onInfoClick,
-      onCaptionLongPress = onCaptionLongPress
+      onInfoClick = { onInfoClick(it) },
+      onCaptionLongPress = { onCaptionLongPress(it) }
     )
   }
+}
+
+private val emptyScope = object : ContainerGeneralDetailViewScope {
+  override fun onInfoClick(data: SensorItemData) {}
+  override fun onCaptionLongPress(data: SensorItemData) {}
+  override fun onMuteClick() {}
 }
 
 @Preview(showBackground = true, showSystemUi = true, backgroundColor = BACKGROUND_COLOR)
 @Composable
 private fun Preview() {
   SuplaTheme {
-    ContainerGeneralDetailView(
+    emptyScope.View(
       state = ContainerGeneralDetailViewState(
         fluidLevel = 0.6f,
         fluidLevelString = "60%",
         controlLevels = listOf(
-          ErrorLevel(0.9f, "90%")
+          ErrorLevel(0.9f, "90%", ControlLevel.Type.UPPER)
         ),
         sensors = listOf(
           SensorItemData(
@@ -141,9 +178,7 @@ private fun Preview() {
             showChannelStateIcon = false
           )
         )
-      ),
-      onInfoClick = {},
-      onCaptionLongPress = {}
+      )
     )
   }
 }
@@ -152,12 +187,12 @@ private fun Preview() {
 @Composable
 private fun Preview_NoLevel() {
   SuplaTheme {
-    ContainerGeneralDetailView(
+    emptyScope.View(
       state = ContainerGeneralDetailViewState(
         fluidLevel = null,
         fluidLevelString = "---",
-        listOf(
-          WarningLevel(0.85f, "90%")
+        controlLevels = listOf(
+          WarningLevel(0.85f, "90%", ControlLevel.Type.UPPER)
         ),
         sensors = listOf(
           SensorItemData(
@@ -181,9 +216,7 @@ private fun Preview_NoLevel() {
             showChannelStateIcon = false
           )
         )
-      ),
-      onInfoClick = {},
-      onCaptionLongPress = {}
+      )
     )
   }
 }

@@ -4,6 +4,7 @@
     <color name="primary">#12a71e</color>
     <color name="on_primary">#FFFFFF</color>
     <color name="secondary">#54A6FF</color>
+    <color name="tertiary">#C8965A</color>
     <color name="primary_container">#003910</color>
     <color name="on_primary_container">#E4E4E4</color>
     <color name="surface">#262626</color>

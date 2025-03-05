@@ -35,7 +35,9 @@ import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.data.source.remote.thermostat.getIndicatorIcon
 import org.supla.android.data.source.remote.thermostat.getSetpointText
 import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.tools.VibrationHelper
 import org.supla.android.ui.dialogs.AuthorizationDialogState
+import org.supla.android.ui.dialogs.AuthorizationReason
 import org.supla.android.ui.dialogs.CaptionChangeDialogState
 import org.supla.android.ui.dialogs.authorize.AuthorizationModelState
 import org.supla.android.ui.dialogs.authorize.BaseAuthorizationViewModel
@@ -58,15 +60,16 @@ import javax.inject.Inject
 @HiltViewModel
 class ThermostatSlavesListViewModel @Inject constructor(
   private val readChannelWithChildrenTreeUseCase: ReadChannelWithChildrenTreeUseCase,
-  private val getChannelValueStringUseCase: GetChannelValueStringUseCase,
   private val getChannelIssuesForSlavesUseCase: GetChannelIssuesForSlavesUseCase,
-  private val getCaptionUseCase: GetCaptionUseCase,
+  private val getChannelValueStringUseCase: GetChannelValueStringUseCase,
   private val getChannelIconUseCase: GetChannelIconUseCase,
-  override val suplaClientProvider: SuplaClientProvider,
+  private val getCaptionUseCase: GetCaptionUseCase,
   private val valuesFormatter: ValuesFormatter,
   override val dateProvider: DateProvider,
   private val preferences: Preferences,
   override val captionChangeUseCase: CaptionChangeUseCase,
+  override val suplaClientProvider: SuplaClientProvider,
+  override val vibrationHelper: VibrationHelper,
   roomProfileRepository: RoomProfileRepository,
   authorizeUseCase: AuthorizeUseCase,
   loginUseCase: LoginUseCase,
@@ -80,7 +83,7 @@ class ThermostatSlavesListViewModel @Inject constructor(
   schedulers
 ),
   StateDialogHandler,
-  CaptionChangeHandler<ThermostatSlavesListViewModelState, ThermostatSlavesListViewEvent> {
+  CaptionChangeHandler {
 
   override val stateDialogViewModelState: StateDialogViewModelState = default()
   override val captionChangeDialogState: CaptionChangeDialogState?
@@ -88,10 +91,6 @@ class ThermostatSlavesListViewModel @Inject constructor(
 
   override fun updateCaptionChangeDialogState(updater: (CaptionChangeDialogState?) -> CaptionChangeDialogState?) {
     updateState { it.copy(captionChangeDialogState = updater(it.captionChangeDialogState)) }
-  }
-
-  override fun onCaptionChange() {
-    onChannelCaptionChange()
   }
 
   override fun updateDialogState(updater: (StateDialogViewState?) -> StateDialogViewState?) {
@@ -102,8 +101,23 @@ class ThermostatSlavesListViewModel @Inject constructor(
     updateState { it.copy(authorizationDialogState = updater(it.authorizationDialogState)) }
   }
 
-  override fun onAuthorized() {
-    updateState { it.copy(authorizationDialogState = null) }
+  override fun onAuthorizationCancel() {
+    updateCaptionChangeDialogState { null }
+    super.onAuthorizationCancel()
+  }
+
+  override fun onAuthorizationDismiss() {
+    updateCaptionChangeDialogState { null }
+    super.onAuthorizationDismiss()
+  }
+
+  override fun onAuthorized(reason: AuthorizationReason) {
+    updateState {
+      it.copy(
+        authorizationDialogState = null,
+        captionChangeDialogState = it.captionChangeDialogState?.copy(authorized = true)
+      )
+    }
   }
 
   fun onCreate(remoteId: Int) {

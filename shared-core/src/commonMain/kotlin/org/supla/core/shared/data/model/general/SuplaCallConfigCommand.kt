@@ -1,4 +1,4 @@
-package org.supla.core.shared.data.model.lists
+package org.supla.core.shared.data.model.general
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,15 +17,8 @@ package org.supla.core.shared.data.model.lists
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-sealed class IssueIcon {
-  data object Warning : IssueIcon()
-  data object Error : IssueIcon()
-  data object Battery : IssueIcon()
-  data object Battery0 : IssueIcon()
-  data object Battery25 : IssueIcon()
-  data object Battery50 : IssueIcon()
-  data object Battery75 : IssueIcon()
-  data object Battery100 : IssueIcon()
-  data object BatteryNotUsed : IssueIcon()
-  data object Sound : IssueIcon()
+enum class SuplaCallConfigCommand(val value: Int) {
+  ZWAVE_GET_NODE_LIST(2030),
+  RECALIBRATE(8000),
+  MUTE_ALARM_SOUND(9430)
 }

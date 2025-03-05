@@ -746,4 +746,8 @@
   <string name="group_name">Gruppenname</string>
   <string name="caption_change_failed">Änderung der Beschriftung fehlgeschlagen!</string>
   <string name="container_fill_level">Füllstand</string>
+  <string name="container_warning_level">Behälterfüllstandswarnung</string>
+  <string name="container_alarm_level">Behälterfüllstandsalarm!</string>
+  <string name="container_invalid_sensor_state">Ungültiger Sensorzustand</string>
+  <string name="container_sound_alarm">Akustischer Alarm aktiv</string>
 </resources>

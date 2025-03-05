@@ -1,4 +1,4 @@
-package org.supla.android.features.details.containerdetail.general
+package org.supla.android.features.details.containerdetail.general.ui
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -33,54 +33,24 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.RoundRect
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.graphics.drawscope.translate
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.graphics.vector.VectorPainter
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import org.supla.android.R
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.extensions.fontDpSize
 import org.supla.android.extensions.toPx
 import org.supla.core.shared.extensions.ifTrue
 import kotlin.math.abs
-
-sealed class ControlLevel {
-  abstract val level: Float
-  abstract val levelString: String
-  abstract val color: Color
-
-  var levelPosition: Float? = null
-}
-
-data class ErrorLevel(
-  override val level: Float,
-  override val levelString: String
-) : ControlLevel() {
-  override val color: Color
-    get() = Color(0xFFEB3A28)
-}
-
-data class WarningLevel(
-  override val level: Float,
-  override val levelString: String
-) : ControlLevel() {
-  override val color: Color
-    get() = Color(0xFFE3A400)
-}
 
 private const val CONTAINER_WIDTH = 150f
 private const val CONTAINER_HEIGHT = 240f
@@ -98,99 +68,45 @@ private val CONTAINER_SPECIFICATION = ContainerSpecification(
   levelMargin = 10f,
   dashWidth = 5f,
   dashSpace = 3f,
-  alertSize = 20f,
-  alertStartMargin = 20f,
   alertTextMargin = 4f
 )
 
-private data class ContainerSpecification(
-  val bottomPartHeight: Float,
-  val topPartWidth: Float,
-  val containerRadius: Float,
-  val coverHeight: Float,
-  val coverWidth: Float,
-  val coverRadius: Float,
-  val waveX: Float,
-  val waveY: Float,
-  val levelMargin: Float,
-  val dashWidth: Float,
-  val dashSpace: Float,
-  val alertSize: Float,
-  val alertStartMargin: Float,
-  val alertTextMargin: Float
-) {
-  val containerCornerRadius = CornerRadius(containerRadius, containerRadius)
-  val coverCornerRadius = CornerRadius(coverRadius, coverRadius)
-
-  fun scale(scale: Float) = copy(
-    bottomPartHeight = bottomPartHeight.times(scale),
-    topPartWidth = topPartWidth.times(scale),
-    containerRadius = containerRadius.times(scale),
-    coverHeight = coverHeight.times(scale),
-    coverWidth = coverWidth.times(scale),
-    coverRadius = coverRadius.times(scale),
-    waveX = waveX.times(scale),
-    waveY = waveY.times(scale),
-    levelMargin = levelMargin.times(scale),
-    dashWidth = dashWidth.times(scale),
-    dashSpace = dashSpace.times(scale),
-    alertSize = alertSize.times(scale),
-    alertStartMargin = alertStartMargin.times(scale),
-    alertTextMargin = alertTextMargin.times(scale)
-  )
-
-  fun levelPosition(targetRect: Rect, level: Float) =
-    targetRect.bottom
-      .minus(bottomPartHeight.minus(levelMargin.times(2)).times(level))
-      .minus(levelMargin)
-}
-
 @Composable
-fun ContainerIconView(fillLevel: Float?, modifier: Modifier = Modifier, controlLevels: List<ControlLevel> = emptyList()) {
+fun ContainerIconView(
+  fillLevel: Float?,
+  modifier: Modifier = Modifier,
+  controlLevels: List<ControlLevel> = emptyList(),
+  type: ContainerType = ContainerType.DEFAULT
+) {
   var scale by remember { mutableFloatStateOf(0f) }
 
   // Colors
   val borderColor = MaterialTheme.colorScheme.outline
-  val fluidColor = MaterialTheme.colorScheme.secondary
+  val fluidColor = type.primary()
   val contentColor = MaterialTheme.colorScheme.surface
-
-  // Alert icon
-  val alertVector = ImageVector.vectorResource(R.drawable.ic_alert_triangle)
-  val alertPainter = rememberVectorPainter(alertVector)
+  val waveColor = remember(type) { type.secondary() }
 
   // Alert text
   val textMeasurer = rememberTextMeasurer()
   val titleSmallStyle = MaterialTheme.typography.titleSmall
-  val fontSize = fontDpSize(5.4.dp)
+  val fontSize = fontDpSize(6.dp)
   val textStyle = remember(scale) { titleSmallStyle.copy(fontSize = fontSize.times(scale)) }
   val textLayoutResults = remember(controlLevels, textStyle) {
     controlLevels.associateWith { textMeasurer.measure(it.levelString, textStyle) }
   }
 
-  val context = remember(scale) {
-    object : ContainerViewScope {
-      override lateinit var targetRect: Rect
-
-      override val containerMargin: Float = 4.dp.toPx()
-      override val containerStrokeWidth: Float = 2.dp.toPx()
-      override val controlLevelStrokeWidth: Float = 1.dp.toPx()
-
-      override val clipPath: Path = Path()
-      override val containerPath: Path = Path()
-      override val fluidPath: Path = Path()
-      override val wavePath: Path = Path()
-
-      override val waveColor: Color = Color(0xFF0067D4)
+  val context = remember(scale, type) {
+    object : ContainerViewScope() {
+      override val waveColor: Color = waveColor
       override val borderColor: Color = borderColor
       override val contentColor: Color = contentColor
       override val fluidColor: Color = fluidColor
-
       override val specification: ContainerSpecification = CONTAINER_SPECIFICATION.scale(scale)
     }
   }
 
   Canvas(modifier = modifier) {
-    context.drawFluidContainer(fillLevel, controlLevels, alertPainter, textLayoutResults) {
+    context.drawFluidContainer(fillLevel, controlLevels, textLayoutResults) {
       targetRect.width.div(CONTAINER_WIDTH).let {
         (it != scale).ifTrue { scale = it }
       }
@@ -198,38 +114,40 @@ fun ContainerIconView(fillLevel: Float?, modifier: Modifier = Modifier, controlL
   }
 }
 
-private interface ContainerViewScope {
-  var targetRect: Rect
+private abstract class ContainerViewScope {
+  lateinit var targetRect: Rect
 
-  val containerMargin: Float
-  val containerStrokeWidth: Float
-  val controlLevelStrokeWidth: Float
+  val containerMargin: Float = 4.dp.toPx()
+  val containerStrokeWidth: Float = 2.dp.toPx()
+  val controlLevelStrokeWidth: Float = 1.dp.toPx()
 
-  val containerPath: Path
-  val fluidPath: Path
-  val clipPath: Path
-  val wavePath: Path
+  val containerPath: Path = Path()
+  val fluidPath: Path = Path()
+  val clipPath: Path = Path()
+  val wavePath: Path = Path()
+  val labelPath: Path = Path()
 
-  val waveColor: Color
-  val contentColor: Color
-  val fluidColor: Color
-  val borderColor: Color
+  var alarmUpper: ControlLevel? = null
+  var alarmLower: ControlLevel? = null
+  var warningUpper: ControlLevel? = null
+  var warningLower: ControlLevel? = null
 
-  val specification: ContainerSpecification
+  abstract val waveColor: Color
+  abstract val contentColor: Color
+  abstract val fluidColor: Color
+  abstract val borderColor: Color
+
+  abstract val specification: ContainerSpecification
 }
-
-private val ContainerViewScope.doubleMargin: Float
-  get() = containerMargin.times(2)
 
 context(DrawScope)
 private fun ContainerViewScope.drawFluidContainer(
   fillLevel: Float?,
   controlLevels: List<ControlLevel>,
-  alertPainter: VectorPainter,
   textLayoutResults: Map<ControlLevel, TextLayoutResult>,
   updateScaleCallback: ContainerViewScope.() -> Unit
 ) {
-  targetRect = targetRect(doubleMargin, containerMargin)
+  targetRect = targetRect(containerMargin)
   updateScaleCallback()
 
   val containerRect = containerRect(targetRect, specification)
@@ -239,13 +157,18 @@ private fun ContainerViewScope.drawFluidContainer(
 
   drawPath(path = containerPath, color = contentColor)
   drawFluid(fillLevel)
-  drawControlLevels(controlLevels, alertPainter, textLayoutResults)
+  drawControlLevelsLines(controlLevels)
 
   drawPath(
     path = containerPath,
     color = borderColor,
     style = Stroke(width = containerStrokeWidth, pathEffect = PathEffect.cornerPathEffect(1f))
   )
+
+  warningUpper?.let { drawWarningControlLevel(it, textLayoutResults[it], nextLevel = warningLower) }
+  warningLower?.let { drawWarningControlLevel(it, textLayoutResults[it], previousLevel = warningUpper) }
+  alarmUpper?.let { drawAlarmControlLevel(it, textLayoutResults[it], nextLevel = alarmLower) }
+  alarmLower?.let { drawAlarmControlLevel(it, textLayoutResults[it], previousLevel = alarmUpper) }
 }
 
 context(DrawScope)
@@ -261,26 +184,22 @@ private fun ContainerViewScope.drawFluid(fillLevel: Float?) {
 }
 
 context(DrawScope)
-private fun ContainerViewScope.drawControlLevels(
-  controlLevels: List<ControlLevel>,
-  alertPainter: VectorPainter,
-  textLayoutResults: Map<ControlLevel, TextLayoutResult>
-) {
-  for (i in controlLevels.indices) {
-    val controlLevel = controlLevels[i]
-    drawControlLevel(
-      controlLevel = controlLevel,
-      previousLevel = controlLevels.getOrNull(i - 1),
-      nextLevel = controlLevels.getOrNull(i + 1),
-      alertPainter = alertPainter,
-      textLayoutResult = textLayoutResults[controlLevel]
-    )
-  }
+private fun ContainerViewScope.drawControlLevelsLines(controlLevels: List<ControlLevel>) {
+  alarmUpper = controlLevels.firstOrNull { it is ErrorLevel && it.type == ControlLevel.Type.UPPER }
+  alarmLower = controlLevels.firstOrNull { it is ErrorLevel && it.type == ControlLevel.Type.LOWER }
+  warningUpper = controlLevels.firstOrNull { it is WarningLevel && it.type == ControlLevel.Type.UPPER }
+  warningLower = controlLevels.firstOrNull { it is WarningLevel && it.type == ControlLevel.Type.LOWER }
+
+  warningLower?.let { drawControlLine(it) }
+  warningUpper?.let { drawControlLine(it) }
+  alarmLower?.let { drawControlLine(it) }
+  alarmUpper?.let { drawControlLine(it) }
 }
 
 context(DrawScope)
-private fun ContainerViewScope.targetRect(doubleMargin: Float, containerMargin: Float): Rect {
+private fun ContainerViewScope.targetRect(containerMargin: Float): Rect {
   val canvasRatio = size.width / size.height
+  val doubleMargin = containerMargin.times(2)
 
   return if (canvasRatio < RATIO) {
     val height = size.width.minus(doubleMargin).div(RATIO)
@@ -312,43 +231,67 @@ private fun containerRect(targetRect: Rect, specification: ContainerSpecificatio
 }
 
 context(DrawScope)
-private fun ContainerViewScope.drawControlLevel(
+private fun ContainerViewScope.drawControlLine(
   controlLevel: ControlLevel,
-  previousLevel: ControlLevel?,
-  nextLevel: ControlLevel?,
-  alertPainter: VectorPainter,
-  textLayoutResult: TextLayoutResult?
+) {
+  val levelPosition = specification.levelPosition(targetRect, controlLevel.level)
+  drawLine(
+    color = controlLevel.color,
+    start = Offset(targetRect.left, levelPosition),
+    end = Offset(targetRect.right, levelPosition),
+    pathEffect = PathEffect.dashPathEffect(floatArrayOf(specification.dashWidth, specification.dashSpace)),
+    strokeWidth = controlLevelStrokeWidth
+  )
+}
+
+context(DrawScope)
+private fun ContainerViewScope.drawAlarmControlLevel(
+  controlLevel: ControlLevel,
+  textLayoutResult: TextLayoutResult?,
+  previousLevel: ControlLevel? = null,
+  nextLevel: ControlLevel? = null
 ) {
   val textWidth = textLayoutResult?.size?.width ?: 0
   val levelPosition = specification.levelPosition(targetRect, controlLevel.level)
-  val iconStartPosition = targetRect.right
-    .minus(specification.alertStartMargin)
-    .minus(specification.alertTextMargin.times(2))
+  val textStartPosition = targetRect.right
+    .minus(containerStrokeWidth)
     .minus(textWidth)
 
   val topPosition = getControlLevelTextPosition(previousLevel, nextLevel, levelPosition, textLayoutResult)
   controlLevel.levelPosition = levelPosition
 
-  with(alertPainter) {
-    translate(left = iconStartPosition, top = topPosition) {
-      draw(Size(specification.alertSize, specification.alertSize), colorFilter = ColorFilter.tint(controlLevel.color))
-    }
-    textLayoutResult?.let {
-      translate(
-        left = targetRect.right - specification.alertTextMargin - textWidth,
-        top = topPosition
-      ) {
-        drawText(it, color = controlLevel.color)
-      }
+  textLayoutResult?.let {
+    translate(left = textStartPosition, top = topPosition) {
+      labelPath.setupLabel(specification, controlLevel, it.size)
+      drawPath(labelPath, contentColor)
+      drawPath(labelPath, borderColor, style = Stroke(containerStrokeWidth))
+      drawText(it, color = controlLevel.color)
     }
   }
-  drawLine(
-    color = controlLevel.color,
-    start = Offset(targetRect.left, levelPosition),
-    end = Offset(iconStartPosition, levelPosition),
-    pathEffect = PathEffect.dashPathEffect(floatArrayOf(specification.dashWidth, specification.dashSpace)),
-    strokeWidth = controlLevelStrokeWidth
-  )
+}
+
+context(DrawScope)
+private fun ContainerViewScope.drawWarningControlLevel(
+  controlLevel: ControlLevel,
+  textLayoutResult: TextLayoutResult?,
+  previousLevel: ControlLevel? = null,
+  nextLevel: ControlLevel? = null
+) {
+  val levelPosition = specification.levelPosition(targetRect, controlLevel.level)
+  val textStartPosition = targetRect.left
+    .plus(containerStrokeWidth)
+
+  val topPosition = getControlLevelTextPosition(previousLevel, nextLevel, levelPosition, textLayoutResult)
+  controlLevel.levelPosition = levelPosition
+
+  textLayoutResult?.let {
+    translate(left = textStartPosition, top = topPosition) {
+      labelPath.setupLabel(specification, controlLevel, it.size)
+      drawPath(labelPath, contentColor)
+      drawPath(labelPath, borderColor, style = Stroke(containerStrokeWidth))
+      drawText(it, color = controlLevel.color)
+    }
+  }
 }
 
 private fun ContainerViewScope.getControlLevelTextPosition(
@@ -362,13 +305,14 @@ private fun ContainerViewScope.getControlLevelTextPosition(
 
   return when {
     previousLevel != null -> {
+      val previousLevelPosition = specification.levelPosition(targetRect, previousLevel.level)
       val desiredPosition = levelPosition - halfTextHeight
-      val previousDesiredPosition = (previousLevel.levelPosition ?: 0f)
-      if (desiredPosition > previousDesiredPosition) {
+      val previousDesiredPosition = previousLevelPosition - halfTextHeight
+      if (desiredPosition > previousDesiredPosition + textHeight - specification.alertTextMargin) {
         desiredPosition
       } else {
-        val middleLine = previousDesiredPosition + abs(desiredPosition - previousDesiredPosition) / 2
-        middleLine + specification.alertTextMargin
+        val middleLine = previousLevelPosition + abs(levelPosition - previousLevelPosition).div(2)
+        middleLine - specification.alertTextMargin
       }
     }
 
@@ -379,7 +323,7 @@ private fun ContainerViewScope.getControlLevelTextPosition(
       if (nextDesiredPosition > desiredPosition + textHeight + specification.alertTextMargin) {
         desiredPosition
       } else {
-        val middleLine = desiredPosition + abs(nextDesiredPosition - desiredPosition) / 2
+        val middleLine = levelPosition + abs(nextDesiredPosition - levelPosition) / 2
         middleLine - textHeight + specification.alertTextMargin
       }
     }
@@ -461,7 +405,62 @@ private fun Path.setupWave(fillLevel: Float, targetRect: Rect, specification: Co
   close()
 }
 
-@Preview(showBackground = true)
+private fun Path.setupLabel(specification: ContainerSpecification, controlLevel: ControlLevel, size: IntSize) {
+  val correction = specification.alertTextMargin.div(2)
+
+  reset()
+  moveTo(-correction, specification.alertTextMargin)
+  lineTo(-correction, size.height.toFloat().minus(correction))
+  if (controlLevel.type == ControlLevel.Type.LOWER) {
+    lineTo(size.width.toFloat().div(2), size.height.toFloat().plus(correction))
+  }
+  lineTo(size.width.toFloat() + correction, size.height.toFloat().minus(correction))
+  lineTo(size.width.toFloat() + correction, specification.alertTextMargin)
+  if (controlLevel.type == ControlLevel.Type.UPPER) {
+    lineTo(size.width.toFloat().div(2), -(correction))
+  }
+  close()
+}
+
+private data class ContainerSpecification(
+  val bottomPartHeight: Float,
+  val topPartWidth: Float,
+  val containerRadius: Float,
+  val coverHeight: Float,
+  val coverWidth: Float,
+  val coverRadius: Float,
+  val waveX: Float,
+  val waveY: Float,
+  val levelMargin: Float,
+  val dashWidth: Float,
+  val dashSpace: Float,
+  val alertTextMargin: Float
+) {
+  val containerCornerRadius = CornerRadius(containerRadius, containerRadius)
+  val coverCornerRadius = CornerRadius(coverRadius, coverRadius)
+
+  fun scale(scale: Float) = copy(
+    bottomPartHeight = bottomPartHeight.times(scale),
+    topPartWidth = topPartWidth.times(scale),
+    containerRadius = containerRadius.times(scale),
+    coverHeight = coverHeight.times(scale),
+    coverWidth = coverWidth.times(scale),
+    coverRadius = coverRadius.times(scale),
+    waveX = waveX.times(scale),
+    waveY = waveY.times(scale),
+    levelMargin = levelMargin.times(scale),
+    dashWidth = dashWidth.times(scale),
+    dashSpace = dashSpace.times(scale),
+    alertTextMargin = alertTextMargin.times(scale)
+  )
+
+  fun levelPosition(targetRect: Rect, level: Float) =
+    targetRect.bottom
+      .minus(bottomPartHeight.minus(levelMargin.times(2)).times(level))
+      .minus(levelMargin)
+}
+
+@Preview(showBackground = true, heightDp = 1500)
 @Composable
 private fun Preview() {
   SuplaTheme {
@@ -469,34 +468,30 @@ private fun Preview() {
       ContainerIconView(
         fillLevel = 0f,
         controlLevels = listOf(
-          ErrorLevel(0.95f, "90%"),
-          WarningLevel(0.9f, "85%")
+          ErrorLevel(0.99f, "99%", ControlLevel.Type.UPPER),
+          WarningLevel(0.9f, "85%", ControlLevel.Type.UPPER),
+          WarningLevel(0.15f, "15%", ControlLevel.Type.LOWER)
         ),
         modifier = Modifier.size(width = 75.dp, height = 120.dp)
       )
       ContainerIconView(
         fillLevel = 1f,
-        controlLevels = listOf(WarningLevel(0.9f, "90%")),
-        modifier = Modifier.size(width = 150.dp, height = 240.dp)
+        controlLevels = listOf(
+          WarningLevel(0.9f, "90%", ControlLevel.Type.UPPER),
+          WarningLevel(0.86f, "86%", ControlLevel.Type.LOWER)
+        ),
+        modifier = Modifier.size(width = 150.dp, height = 240.dp),
+        type = ContainerType.WATER
       )
       ContainerIconView(
         fillLevel = 0.5f,
-        controlLevels = listOf(ErrorLevel(0.9f, "90%")),
-        modifier = Modifier.size(width = 200.dp, height = 240.dp)
+        controlLevels = listOf(ErrorLevel(0.9f, "90%", ControlLevel.Type.UPPER)),
+        modifier = Modifier.size(width = 200.dp, height = 240.dp),
+        type = ContainerType.SEPTIC
       )
-    }
-  }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun Preview_NoValue() {
-  SuplaTheme {
-    Column(verticalArrangement = Arrangement.spacedBy(8.dp), horizontalAlignment = Alignment.CenterHorizontally) {
       ContainerIconView(
         fillLevel = 1f,
-        modifier = Modifier
-          .size(width = 150.dp, height = 300.dp)
+        modifier = Modifier.size(width = 150.dp, height = 300.dp)
       )
       ContainerIconView(
         fillLevel = null,
