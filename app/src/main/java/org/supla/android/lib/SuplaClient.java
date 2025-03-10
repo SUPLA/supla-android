@@ -1304,7 +1304,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   }
 
   private void onEvent(SuplaEvent event) {
-    Trace.d(log_tag, "Event");
+    Trace.d(log_tag, "Supla Event");
 
     SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onEvent);
     event.Owner = event.SenderID == _client_id;

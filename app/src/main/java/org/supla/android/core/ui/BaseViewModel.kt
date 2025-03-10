@@ -24,6 +24,7 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
+import io.reactivex.rxjava3.kotlin.subscribeBy
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
@@ -96,6 +97,21 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
 
   fun Disposable.disposeBySelf() {
     compositeDisposable.add(this)
+  }
+
+  fun handle(disposable: Disposable) {
+    compositeDisposable.add(disposable)
+  }
+
+  fun subscribeSilent(completable: Completable, onComplete: () -> Unit = {}, onError: (Throwable) -> Unit = {}) {
+    compositeDisposable.add(
+      completable
+        .attachSilent()
+        .subscribeBy(
+          onComplete = onComplete,
+          onError = onError
+        )
+    )
   }
 
   fun <T : Any> Maybe<T>.attach(): Maybe<T> {

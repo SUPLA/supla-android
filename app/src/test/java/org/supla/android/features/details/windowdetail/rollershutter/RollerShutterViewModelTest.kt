@@ -59,6 +59,7 @@ import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.tools.VibrationHelper
 import org.supla.android.ui.dialogs.AuthorizationDialogState
+import org.supla.android.ui.dialogs.AuthorizationReason
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.client.AuthorizeUseCase
 import org.supla.android.usecases.client.CallSuplaClientOperationUseCase
@@ -604,7 +605,7 @@ class RollerShutterViewModelTest :
 
     // when
     viewModel.loadData(remoteId, ItemType.CHANNEL)
-    viewModel.onAuthorized()
+    viewModel.onAuthorized(AuthorizationReason.Default)
 
     // then
     val state = RollerShutterViewModelState(

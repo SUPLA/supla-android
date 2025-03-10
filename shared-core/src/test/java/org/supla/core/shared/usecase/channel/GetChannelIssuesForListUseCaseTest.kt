@@ -22,15 +22,10 @@ import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
-import io.mockk.mockkStatic
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.supla.core.shared.data.model.channel.ChannelWithChildren
-import org.supla.core.shared.data.model.channel.thermostatValue
-import org.supla.core.shared.data.model.function.thermostat.SuplaThermostatFlag
-import org.supla.core.shared.data.model.function.thermostat.ThermostatValue
-import org.supla.core.shared.data.model.general.Channel
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.data.model.lists.ChannelIssueItem
 import org.supla.core.shared.data.model.lists.IssueIcon
@@ -43,6 +38,9 @@ class GetChannelIssuesForListUseCaseTest {
 
   @MockK
   private lateinit var getChannelBatteryIconUseCase: GetChannelBatteryIconUseCase
+
+  @MockK
+  private lateinit var getChannelSpecificIssuesUseCase: GetChannelSpecificIssuesUseCase
 
   @InjectMockKs
   private lateinit var useCase: GetChannelIssuesForListUseCase
@@ -63,6 +61,7 @@ class GetChannelIssuesForListUseCaseTest {
 
     every { getChannelLowBatteryIssueUseCase.invoke(channelWithChildren) } returns null
     every { getChannelBatteryIconUseCase.invoke(channelWithChildren) } returns IssueIcon.Battery
+    every { getChannelSpecificIssuesUseCase.invoke(channelWithChildren) } returns emptyList()
 
     // when
     val issues = useCase(channelWithChildren)
@@ -75,18 +74,12 @@ class GetChannelIssuesForListUseCaseTest {
   @Test
   fun `should get warning icon and battery icon if there is issue and battery powering`() {
     // given
-    mockkStatic(Channel::thermostatValue)
-    val thermometerError = SuplaThermostatFlag.THERMOMETER_ERROR.value.toByte()
-    val channelWithChildren: ChannelWithChildren = mockk {
-      every { channel } returns mockk {
-        every { function } returns SuplaFunction.HVAC_THERMOSTAT
-        every { online } returns true
-        every { thermostatValue } returns ThermostatValue.from(true, byteArrayOf(0, 2, 120, 0, 80, 0, thermometerError, 0))
-      }
-    }
+    val channelWithChildren: ChannelWithChildren = mockk()
 
     every { getChannelLowBatteryIssueUseCase.invoke(channelWithChildren) } returns null
     every { getChannelBatteryIconUseCase.invoke(channelWithChildren) } returns IssueIcon.Battery
+    every { getChannelSpecificIssuesUseCase.invoke(channelWithChildren) } returns
+      listOf(ChannelIssueItem.Error(LocalizedStringId.THERMOSTAT_THERMOMETER_ERROR))
 
     // when
     val issues = useCase(channelWithChildren)
@@ -99,18 +92,12 @@ class GetChannelIssuesForListUseCaseTest {
   @Test
   fun `should get only warning icon if there is no battery`() {
     // given
-    mockkStatic(Channel::thermostatValue)
-    val thermometerError = SuplaThermostatFlag.THERMOMETER_ERROR.value.toByte()
-    val channelWithChildren: ChannelWithChildren = mockk {
-      every { channel } returns mockk {
-        every { function } returns SuplaFunction.HVAC_THERMOSTAT
-        every { online } returns true
-        every { thermostatValue } returns ThermostatValue.from(true, byteArrayOf(0, 2, 120, 0, 80, 0, thermometerError, 0))
-      }
-    }
+    val channelWithChildren: ChannelWithChildren = mockk()
 
     every { getChannelLowBatteryIssueUseCase.invoke(channelWithChildren) } returns null
     every { getChannelBatteryIconUseCase.invoke(channelWithChildren) } returns null
+    every { getChannelSpecificIssuesUseCase.invoke(channelWithChildren) } returns
+      listOf(ChannelIssueItem.Error(LocalizedStringId.THERMOSTAT_THERMOMETER_ERROR))
 
     // when
     val issues = useCase(channelWithChildren)
@@ -123,17 +110,12 @@ class GetChannelIssuesForListUseCaseTest {
   @Test
   fun `should get warning icon if there is low battery and thermostat issue`() {
     // given
-    mockkStatic(Channel::thermostatValue)
-    val channelWithChildren: ChannelWithChildren = mockk {
-      every { channel } returns mockk {
-        every { function } returns SuplaFunction.HVAC_THERMOSTAT
-        every { online } returns true
-        every { thermostatValue } returns ThermostatValue.from(true, byteArrayOf(0, 2, 120, 0, 80, 0, 0, 1))
-      }
-    }
+    val channelWithChildren: ChannelWithChildren = mockk()
 
     every { getChannelLowBatteryIssueUseCase.invoke(channelWithChildren) } returns ChannelIssueItem.LowBattery(emptyList())
     every { getChannelBatteryIconUseCase.invoke(channelWithChildren) } returns null
+    every { getChannelSpecificIssuesUseCase.invoke(channelWithChildren) } returns
+      listOf(ChannelIssueItem.Error(LocalizedStringId.THERMOSTAT_CLOCK_ERROR))
 
     // when
     val issues = useCase(channelWithChildren)
@@ -141,5 +123,22 @@ class GetChannelIssuesForListUseCaseTest {
     // then
     assertThat(issues.icons).containsExactly(IssueIcon.Error)
     assertThat(issues.issuesStrings).containsExactly(LocalizedString.WithId(LocalizedStringId.THERMOSTAT_CLOCK_ERROR))
+  }
+
+  @Test
+  fun `should get only sound icon if only sound flag active`() {
+    // given
+    val channelWithChildren: ChannelWithChildren = mockk()
+
+    every { getChannelLowBatteryIssueUseCase.invoke(channelWithChildren) } returns null
+    every { getChannelBatteryIconUseCase.invoke(channelWithChildren) } returns null
+    every { getChannelSpecificIssuesUseCase.invoke(channelWithChildren) } returns listOf(ChannelIssueItem.SoundAlarm())
+
+    // when
+    val issues = useCase(channelWithChildren)
+
+    // then
+    assertThat(issues.icons).containsExactly(IssueIcon.Sound)
+    assertThat(issues.issuesStrings).isEmpty()
   }
 }

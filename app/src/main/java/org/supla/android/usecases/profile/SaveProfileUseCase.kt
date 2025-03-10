@@ -48,7 +48,7 @@ class SaveProfileUseCase @Inject constructor(
     profile: AuthProfileItem,
     allProfiles: List<AuthProfileItem>
   ): Completable = Completable.fromRunnable {
-    if (allProfiles.isNotEmpty() && profile.name.trim().isEmpty() && preferences.isAnyAccountRegistered) {
+    if (allProfiles.isNotEmpty() && profile.name.isEmpty() && preferences.isAnyAccountRegistered) {
       throw SaveAccountException.EmptyName
     } else if (isNameDuplicated(profile, allProfiles)) {
       throw SaveAccountException.DuplicatedName
@@ -63,7 +63,8 @@ class SaveProfileUseCase @Inject constructor(
   ): Boolean =
     allProfiles
       .filter { it.id != profile.id }
-      .firstOrNull { it.name == profile.name.trim() } != null
+      // New profile name is trimmed by creation. Old profile name may not be trimmed!
+      .firstOrNull { it.name.trim() == profile.name } != null
 
   private fun setAccountRegistered(profile: AuthProfileItem): Completable = Completable.fromRunnable {
     if (preferences.isAnyAccountRegistered.not()) {

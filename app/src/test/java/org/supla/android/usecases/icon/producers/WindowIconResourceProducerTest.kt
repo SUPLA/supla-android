@@ -36,7 +36,7 @@ class WindowIconResourceProducerTest : BaseIconResourceProducerTest() {
     test(
       state = ChannelState.Value.OPEN,
       function = SuplaFunction.OPENING_SENSOR_WINDOW,
-      expectedIcon = R.drawable.windowopen
+      expectedIcon = R.drawable.fnc_window_opened
     )
   }
 
@@ -45,7 +45,7 @@ class WindowIconResourceProducerTest : BaseIconResourceProducerTest() {
     test(
       state = ChannelState.Value.CLOSED,
       function = SuplaFunction.OPENING_SENSOR_WINDOW,
-      expectedIcon = R.drawable.windowclosed
+      expectedIcon = R.drawable.fnc_window_closed
     )
   }
 }

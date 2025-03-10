@@ -31,7 +31,7 @@ sealed class ChannelIssueItem(
   val message: LocalizedString
     get() = messages.firstOrNull() ?: LocalizedString.Empty
 
-  data class Warning(private val string: LocalizedString? = null) : ChannelIssueItem(IssueIcon.Warning) {
+  data class Error(private val string: LocalizedString? = null) : ChannelIssueItem(IssueIcon.Error) {
     override val messages: List<LocalizedString>
       get() = string?.let { listOf(it) } ?: emptyList()
     override val priority: Int
@@ -39,11 +39,11 @@ sealed class ChannelIssueItem(
 
     companion object {
       operator fun invoke(stringId: LocalizedStringId) =
-        Warning(localizedString(stringId))
+        Error(localizedString(stringId))
     }
   }
 
-  data class Error(private val string: LocalizedString? = null) : ChannelIssueItem(IssueIcon.Error) {
+  data class Warning(private val string: LocalizedString? = null) : ChannelIssueItem(IssueIcon.Warning) {
     override val messages: List<LocalizedString>
       get() = string?.let { listOf(it) } ?: emptyList()
     override val priority: Int
@@ -51,13 +51,25 @@ sealed class ChannelIssueItem(
 
     companion object {
       operator fun invoke(stringId: LocalizedStringId) =
-        Error(localizedString(stringId))
+        Warning(localizedString(stringId))
+    }
+  }
+
+  data class SoundAlarm(private val string: LocalizedString? = null) : ChannelIssueItem(IssueIcon.Sound) {
+    override val messages: List<LocalizedString>
+      get() = string?.let { listOf(it) } ?: emptyList()
+    override val priority: Int
+      get() = 3
+
+    companion object {
+      operator fun invoke(stringId: LocalizedStringId) =
+        SoundAlarm(localizedString(stringId))
     }
   }
 
   data class LowBattery(override val messages: List<LocalizedString>) : ChannelIssueItem(IssueIcon.Battery0) {
     override val priority: Int
-      get() = 3
+      get() = 4
   }
 
   companion object

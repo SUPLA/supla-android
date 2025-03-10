@@ -31,10 +31,9 @@ class LoadChannelConfigUseCase @Inject constructor(
   private val channelRepository: RoomChannelRepository
 ) {
 
-  operator fun invoke(profileId: Long, remoteId: Int): Single<SuplaChannelConfig> {
-    return channelRepository.findByRemoteId(profileId, remoteId)
-      .map(ChannelConfigType::from)
-      .flatMapSingle { channelConfigRepository.findChannelConfig(profileId, remoteId, it) }
+  operator fun invoke(remoteId: Int): Single<SuplaChannelConfig> {
+    return channelRepository.findByRemoteId(remoteId)
+      .flatMapSingle { channelConfigRepository.findChannelConfig(it.profileId, remoteId, ChannelConfigType.from(it)) }
       .toSingle()
   }
 }

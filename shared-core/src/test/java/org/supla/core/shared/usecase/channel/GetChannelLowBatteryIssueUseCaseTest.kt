@@ -84,7 +84,7 @@ class GetChannelLowBatteryIssueUseCaseTest {
         LocalizedString.WithIdIntStringInt(LocalizedStringId.CHANNEL_BATTERY_LEVEL, 2, LocalizedString.Constant("Child"), 5)
       )
     )
-    assertThat(issue?.priority).isEqualTo(3)
+    assertThat(issue?.priority).isEqualTo(4)
   }
 
   @Test
@@ -150,7 +150,7 @@ class GetChannelLowBatteryIssueUseCaseTest {
         LocalizedString.WithIdIntStringInt(LocalizedStringId.CHANNEL_BATTERY_LEVEL, 3, LocalizedString.Constant("Child 2"), 4)
       )
     )
-    assertThat(issue?.priority).isEqualTo(3)
+    assertThat(issue?.priority).isEqualTo(4)
   }
 
   private fun mockChannelWithBatteryLevel(id: Int, batteryLevel: Int): Channel =

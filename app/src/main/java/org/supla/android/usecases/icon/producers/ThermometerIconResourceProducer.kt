@@ -35,6 +35,6 @@ class ThermometerIconResourceProducer : IconResourceProducer {
       5 -> R.drawable.fnc_thermometer_cooling
       6 -> R.drawable.fnc_thermometer_heater
       7 -> R.drawable.fnc_thermometer_home
-      else -> R.drawable.thermometer
+      else -> R.drawable.fnc_thermometer
     }
 }

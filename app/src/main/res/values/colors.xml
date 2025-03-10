@@ -4,6 +4,7 @@
     <color name="primary">#12a71e</color>
     <color name="on_primary">#ffffff</color>
     <color name="secondary">#007AFF</color>
+    <color name="tertiary">#AD6309</color>
     <color name="primary_container">@color/primary</color>
     <color name="on_primary_container">@color/on_primary</color>
     <color name="surface">#ffffff</color>

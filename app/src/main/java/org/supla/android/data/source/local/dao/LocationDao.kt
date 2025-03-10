@@ -25,6 +25,7 @@ import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.LocationEntity.Companion.ALL_COLUMNS
+import org.supla.android.data.source.local.entity.LocationEntity.Companion.COLUMN_CAPTION
 import org.supla.android.data.source.local.entity.LocationEntity.Companion.COLUMN_PROFILE_ID
 import org.supla.android.data.source.local.entity.LocationEntity.Companion.COLUMN_REMOTE_ID
 import org.supla.android.data.source.local.entity.LocationEntity.Companion.TABLE_NAME
@@ -48,4 +49,7 @@ interface LocationDao {
 
   @Query("SELECT COUNT($COLUMN_PROFILE_ID) FROM $TABLE_NAME")
   fun count(): Observable<Int>
+
+  @Query("UPDATE $TABLE_NAME SET $COLUMN_CAPTION = :caption WHERE $COLUMN_REMOTE_ID = :remoteId AND $COLUMN_PROFILE_ID = :profileId")
+  fun updateCaption(caption: String, remoteId: Int, profileId: Long): Completable
 }

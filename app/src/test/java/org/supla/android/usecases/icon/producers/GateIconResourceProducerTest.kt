@@ -36,7 +36,7 @@ class GateIconResourceProducerTest : BaseIconResourceProducerTest() {
     test(
       state = ChannelState.Value.OPEN,
       function = SuplaFunction.OPEN_SENSOR_GATE,
-      expectedIcon = R.drawable.gateopen
+      expectedIcon = R.drawable.fnc_gate_opened
     )
   }
 
@@ -45,7 +45,7 @@ class GateIconResourceProducerTest : BaseIconResourceProducerTest() {
     test(
       state = ChannelState.Value.CLOSED,
       function = SuplaFunction.CONTROLLING_THE_GATE,
-      expectedIcon = R.drawable.gateclosed
+      expectedIcon = R.drawable.fnc_gate_closed
     )
   }
 
@@ -54,7 +54,7 @@ class GateIconResourceProducerTest : BaseIconResourceProducerTest() {
     test(
       state = ChannelState.Value.PARTIALLY_OPENED,
       function = SuplaFunction.CONTROLLING_THE_GATE,
-      expectedIcon = R.drawable.gateclosed50percent
+      expectedIcon = R.drawable.fnc_gate_closed_50_percent
     )
   }
 
@@ -64,7 +64,7 @@ class GateIconResourceProducerTest : BaseIconResourceProducerTest() {
       state = ChannelState.Value.OPEN,
       altIcon = 1,
       function = SuplaFunction.CONTROLLING_THE_GATE,
-      expectedIcon = R.drawable.gatealt1open
+      expectedIcon = R.drawable.fnc_gate_1_opened
     )
   }
 
@@ -74,7 +74,7 @@ class GateIconResourceProducerTest : BaseIconResourceProducerTest() {
       state = ChannelState.Value.CLOSED,
       altIcon = 1,
       function = SuplaFunction.CONTROLLING_THE_GATE,
-      expectedIcon = R.drawable.gatealt1closed
+      expectedIcon = R.drawable.fnc_gate_1_closed
     )
   }
 
@@ -84,7 +84,7 @@ class GateIconResourceProducerTest : BaseIconResourceProducerTest() {
       state = ChannelState.Value.PARTIALLY_OPENED,
       altIcon = 1,
       function = SuplaFunction.CONTROLLING_THE_GATE,
-      expectedIcon = R.drawable.gatealt1closed50percent
+      expectedIcon = R.drawable.fnc_gate_1_closed_50_percent
     )
   }
 
@@ -94,7 +94,7 @@ class GateIconResourceProducerTest : BaseIconResourceProducerTest() {
       state = ChannelState.Value.OPEN,
       altIcon = 2,
       function = SuplaFunction.OPEN_SENSOR_GATE,
-      expectedIcon = R.drawable.barieropen
+      expectedIcon = R.drawable.fnc_barier_opened
     )
   }
 
@@ -104,7 +104,7 @@ class GateIconResourceProducerTest : BaseIconResourceProducerTest() {
       state = ChannelState.Value.CLOSED,
       altIcon = 2,
       function = SuplaFunction.CONTROLLING_THE_GATE,
-      expectedIcon = R.drawable.barierclosed
+      expectedIcon = R.drawable.fnc_barier_closed
     )
   }
 }

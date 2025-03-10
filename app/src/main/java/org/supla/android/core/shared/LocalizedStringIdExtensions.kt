@@ -105,4 +105,10 @@ val LocalizedStringId.resourceId: Int
     LocalizedStringId.FLOOD_SENSOR_ACTIVE -> R.string.flooding_alarm_message
     LocalizedStringId.VALVE_MANUALLY_CLOSED -> R.string.valve_warning_manually_closed_short
     LocalizedStringId.VALVE_FLOODING -> R.string.valve_warning_flooding_short
+    LocalizedStringId.VALVE_MOTOR_PROBLEM -> R.string.valve_warning_motor_problem
+
+    LocalizedStringId.CONTAINER_WARNING_LEVEL -> R.string.container_warning_level
+    LocalizedStringId.CONTAINER_ALARM_LEVEL -> R.string.container_alarm_level
+    LocalizedStringId.CONTAINER_INVALID_SENSOR_STATE -> R.string.container_invalid_sensor_state
+    LocalizedStringId.CONTAINER_SOUND_ALARM -> R.string.container_sound_alarm
   }

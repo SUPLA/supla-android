@@ -38,13 +38,13 @@ class DimmerAndRgbIconResourceProducer : IconResourceProducer {
         val state2 = data.state.complex[1]
 
         return if (state1 == ChannelState.Value.ON && state2 == ChannelState.Value.ON) {
-          R.drawable.dimmerrgbonon
+          R.drawable.fnc_dimmer_rgb_on_on
         } else if (state1 == ChannelState.Value.OFF && state2 == ChannelState.Value.ON) {
-          R.drawable.dimmerrgboffon
+          R.drawable.fnc_dimmer_rgb_off_on
         } else if (state1 == ChannelState.Value.ON && state2 == ChannelState.Value.OFF) {
-          R.drawable.dimmerrgbonoff
+          R.drawable.fnc_dimmer_rgb_on_off
         } else {
-          R.drawable.dimmerrgboffoff
+          R.drawable.fnc_dimmer_rgb_off_off
         }
       }
 

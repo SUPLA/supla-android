@@ -290,9 +290,6 @@ public class SuplaConst {
   public static final int SUPLA_VALVE_FLAG_FLOODING = 0x1;
   public static final int SUPLA_VALVE_FLAG_MANUALLY_CLOSED = 0x2;
 
-  public static final int SUPLA_CALCFG_CMD_ZWAVE_GET_NODE_LIST = 2030;
-  public static final int SUPLA_CALCFG_CMD_RECALIBRATE = 8000;
-
   public static final int ZWAVE_NODE_FLAG_CHANNEL_ASSIGNED = 0x1;
   public static final int ZWAVE_NODE_FLAG_WAKEUP_TIME_SETTABLE = 0x2;
 

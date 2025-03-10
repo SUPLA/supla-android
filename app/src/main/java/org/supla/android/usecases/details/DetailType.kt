@@ -63,3 +63,7 @@ data class IcDetailType(
 data class ContainerDetailType(
   val pages: List<DetailPage>
 ) : DetailType
+
+data class ValveDetailType(
+  val pages: List<DetailPage>
+) : DetailType

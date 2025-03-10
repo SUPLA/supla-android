@@ -32,7 +32,8 @@ fun ListItemTitle(
   onLongClick: () -> Unit,
   onItemClick: () -> Unit,
   modifier: Modifier = Modifier,
-  scale: Float = 1f
+  scale: Float = 1f,
+  maxLines: Int = 1
 ) {
   val textSize = MaterialTheme.typography.listItemCaption().fontSize.times(java.lang.Float.max(scale, 1f))
   Text(
@@ -42,7 +43,7 @@ fun ListItemTitle(
       .pointerInput(onLongClick, onItemClick) {
         detectTapGestures(onLongPress = { onLongClick() }, onTap = { onItemClick() })
       },
-    maxLines = 1,
+    maxLines = maxLines,
     overflow = TextOverflow.Ellipsis,
     fontSize = textSize
   )

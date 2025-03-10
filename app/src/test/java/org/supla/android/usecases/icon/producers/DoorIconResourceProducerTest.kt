@@ -36,7 +36,7 @@ class DoorIconResourceProducerTest : BaseIconResourceProducerTest() {
     test(
       state = ChannelState.Value.OPEN,
       function = SuplaFunction.OPEN_SENSOR_DOOR,
-      expectedIcon = R.drawable.dooropen
+      expectedIcon = R.drawable.fnc_door_opened
     )
   }
 
@@ -45,7 +45,7 @@ class DoorIconResourceProducerTest : BaseIconResourceProducerTest() {
     test(
       state = ChannelState.Value.CLOSED,
       function = SuplaFunction.CONTROLLING_THE_DOOR_LOCK,
-      expectedIcon = R.drawable.doorclosed
+      expectedIcon = R.drawable.fnc_door_closed
     )
   }
 }

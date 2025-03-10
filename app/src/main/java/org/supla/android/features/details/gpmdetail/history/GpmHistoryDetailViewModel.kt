@@ -110,7 +110,7 @@ class GpmHistoryDetailViewModel @Inject constructor(
         val correctedSpec = if (chartRange == ChartRange.ALL_HISTORY) spec.correctBy(range) else spec
         Single.zip(
           loadChannelMeasurementsUseCase(remoteId, correctedSpec),
-          loadChannelConfigUseCase(profileId, remoteId)
+          loadChannelConfigUseCase(remoteId)
         ) { sets, config ->
           Pair(createChartData(listOf(sets), DateRange(spec.startDate, spec.endDate), chartRange, spec.aggregation, config), range)
         }
@@ -119,7 +119,7 @@ class GpmHistoryDetailViewModel @Inject constructor(
   fun reloadMeasurements() {
     val state = currentState()
     // Config check is needed to verify if history is still allowed. In case of change we need to update view appropriate
-    loadChannelConfigUseCase(state.profileId, state.remoteId)
+    loadChannelConfigUseCase(state.remoteId)
       .attachSilent()
       .subscribeBy(
         onSuccess = {

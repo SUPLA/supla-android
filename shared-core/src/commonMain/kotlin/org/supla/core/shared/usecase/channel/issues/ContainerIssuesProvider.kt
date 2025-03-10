@@ -22,10 +22,11 @@ import org.supla.core.shared.data.model.channel.containerValue
 import org.supla.core.shared.data.model.function.container.ContainerFlag
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.data.model.lists.ChannelIssueItem
+import org.supla.core.shared.infrastructure.LocalizedStringId
 
 class ContainerIssuesProvider : ChannelIssuesProvider {
   override fun provide(channelWithChildren: ChannelWithChildren): List<ChannelIssueItem> {
-    if (channelWithChildren.channel.function != SuplaFunction.CONTAINER) {
+    if (!channelWithChildren.isContainer) {
       return emptyList()
     }
 
@@ -37,12 +38,27 @@ class ContainerIssuesProvider : ChannelIssuesProvider {
     val issues = mutableListOf<ChannelIssueItem>()
 
     if (flags.contains(ContainerFlag.ALARM_LEVEL)) {
-      issues.add(ChannelIssueItem.Error())
+      issues.add(ChannelIssueItem.Error(LocalizedStringId.CONTAINER_ALARM_LEVEL))
+    }
+    if (flags.contains(ContainerFlag.INVALID_SENSOR_STATE)) {
+      issues.add(ChannelIssueItem.Error(LocalizedStringId.CONTAINER_INVALID_SENSOR_STATE))
     }
     if (flags.contains(ContainerFlag.WARNING_LEVEL)) {
-      issues.add(ChannelIssueItem.Warning())
+      issues.add(ChannelIssueItem.Warning(LocalizedStringId.CONTAINER_WARNING_LEVEL))
+    }
+    if (flags.contains(ContainerFlag.SOUND_ALARM_ON)) {
+      issues.add(ChannelIssueItem.SoundAlarm(LocalizedStringId.CONTAINER_SOUND_ALARM))
     }
 
     return issues
   }
 }
+
+private val ChannelWithChildren.isContainer: Boolean
+  get() = when (channel.function) {
+    SuplaFunction.CONTAINER,
+    SuplaFunction.WATER_TANK,
+    SuplaFunction.SEPTIC_TANK -> true
+
+    else -> false
+  }

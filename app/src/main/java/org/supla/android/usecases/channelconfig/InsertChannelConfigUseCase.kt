@@ -26,13 +26,14 @@ import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.data.source.remote.ChannelConfigType
 import org.supla.android.data.source.remote.ConfigResult
 import org.supla.android.data.source.remote.SuplaChannelConfig
+import org.supla.android.data.source.remote.container.SuplaChannelContainerConfig
 import org.supla.android.data.source.remote.gpm.SuplaChannelGeneralPurposeMeasurementConfig
 import org.supla.android.data.source.remote.gpm.SuplaChannelGeneralPurposeMeterConfig
 import org.supla.android.data.source.remote.rollershutter.SuplaChannelFacadeBlindConfig
 import org.supla.android.events.DownloadEventsManager
 import org.supla.android.extensions.TAG
 import org.supla.android.extensions.ifLet
-import org.supla.android.lib.SuplaConst
+import org.supla.core.shared.data.model.general.SuplaFunction
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -49,22 +50,28 @@ class InsertChannelConfigUseCase @Inject constructor(
       return Completable.complete()
     }
 
+    ifLet(config as? SuplaChannelContainerConfig) { (config) ->
+      return profileRepository.findActiveProfile().flatMapCompletable {
+        Trace.d(TAG, "Saving config (remoteId: `${config.remoteId}`, function: `${config.func}`) - container")
+        channelConfigRepository.insertOrUpdate(it.id!!, config)
+      }
+    }
     ifLet(config as? SuplaChannelGeneralPurposeMeasurementConfig) { (config) ->
       return profileRepository.findActiveProfile().flatMapCompletable {
-        Trace.d(TAG, "Saving config (remoteId: `${config.remoteId}`, function: `${config.func}`)")
+        Trace.d(TAG, "Saving config (remoteId: `${config.remoteId}`, function: `${config.func}`) - measurement")
         channelConfigRepository.insertOrUpdate(it.id!!, config)
       }
     }
     // Order is important as the SuplaChannelFacadeBlindConfig is child of SuplaChannelRollerShutterConfig
     ifLet(config as? SuplaChannelFacadeBlindConfig) { (config) ->
       return profileRepository.findActiveProfile().flatMapCompletable {
-        Trace.d(TAG, "Saving config (remoteId: `${config.remoteId}`, function: `${config.func}`)")
+        Trace.d(TAG, "Saving config (remoteId: `${config.remoteId}`, function: `${config.func}`) - facade blind")
         channelConfigRepository.insertOrUpdate(it.id!!, config)
       }
     }
     ifLet(config as? SuplaChannelGeneralPurposeMeterConfig) { (config) ->
       return profileRepository.findActiveProfile().flatMapCompletable { profile ->
-        Trace.d(TAG, "Saving config (remoteId: `${config.remoteId}`, function: `${config.func}`)")
+        Trace.d(TAG, "Saving config (remoteId: `${config.remoteId}`, function: `${config.func}`) - meter")
         channelConfigRepository.findChannelConfig(profile.id!!, config.remoteId, ChannelConfigType.GENERAL_PURPOSE_METER)
           .flatMapCompletable { oldConfig ->
             if (shouldCleanupHistory(oldConfig, config)) {
@@ -107,10 +114,13 @@ class InsertChannelConfigUseCase @Inject constructor(
   }
 
   private fun shouldHandle(config: SuplaChannelConfig): Boolean =
-    config.func == SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER ||
-      config.func == SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT ||
-      config.func == SuplaConst.SUPLA_CHANNELFNC_VERTICAL_BLIND ||
-      config.func == SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND
+    config.func == SuplaFunction.GENERAL_PURPOSE_MEASUREMENT.value ||
+      config.func == SuplaFunction.GENERAL_PURPOSE_METER.value ||
+      config.func == SuplaFunction.VERTICAL_BLIND.value ||
+      config.func == SuplaFunction.CONTROLLING_THE_FACADE_BLIND.value ||
+      config.func == SuplaFunction.CONTAINER.value ||
+      config.func == SuplaFunction.WATER_TANK.value ||
+      config.func == SuplaFunction.SEPTIC_TANK.value
 
   private fun shouldCleanupHistory(oldConfig: SuplaChannelConfig, newConfig: SuplaChannelGeneralPurposeMeterConfig): Boolean {
     if (oldConfig is SuplaChannelGeneralPurposeMeterConfig) {

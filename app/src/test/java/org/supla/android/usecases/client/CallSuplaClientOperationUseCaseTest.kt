@@ -35,7 +35,7 @@ class CallSuplaClientOperationUseCaseTest {
     val operation = SuplaClientOperation.Command.Recalibrate
 
     val suplaClient: SuplaClientApi = mockk {
-      every { deviceCalCfgRequest(remoteId, false, operation.command, 0, null) } returns true
+      every { deviceCalCfgRequest(remoteId, false, operation.command.value, 0, null) } returns true
     }
     whenever(suplaClientProvider.provide()).thenReturn(suplaClient)
 
@@ -47,7 +47,7 @@ class CallSuplaClientOperationUseCaseTest {
     verify(suplaClientProvider).provide()
     verify(vibrationHelper).vibrate()
     io.mockk.verify {
-      suplaClient.deviceCalCfgRequest(remoteId, false, operation.command, 0, null)
+      suplaClient.deviceCalCfgRequest(remoteId, false, operation.command.value, 0, null)
     }
     verifyNoMoreInteractions(suplaClientProvider, vibrationHelper)
   }

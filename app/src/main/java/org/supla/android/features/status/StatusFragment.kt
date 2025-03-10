@@ -47,12 +47,7 @@ class StatusFragment : BaseFragment<StatusViewModelState, StatusViewEvent>(R.lay
       val modelState by viewModel.getViewState().collectAsState()
       SuplaTheme {
         modelState.authorizationDialogState?.let {
-          AuthorizationDialog(
-            dialogState = it,
-            onCancel = { viewModel.hideAuthorizationDialog() },
-            onAuthorize = viewModel::login,
-            onStateChange = viewModel::updateAuthorizationState
-          )
+          viewModel.AuthorizationDialog(state = it)
         }
 
         when (modelState.viewType) {

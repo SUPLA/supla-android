@@ -319,7 +319,7 @@ abstract class WidgetConfigurationViewModelBase(
 
   private fun getGpmWidgetValue(channel: Channel): String {
     val channelConfig = try {
-      loadChannelConfigUseCase(channel.profileId, channel.remoteId).blockingGet()
+      loadChannelConfigUseCase(channel.remoteId).blockingGet()
     } catch (ex: Exception) {
       null
     }

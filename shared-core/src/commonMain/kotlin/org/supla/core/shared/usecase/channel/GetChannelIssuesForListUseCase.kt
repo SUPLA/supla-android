@@ -22,42 +22,39 @@ import org.supla.core.shared.data.model.lists.ChannelIssueItem
 import org.supla.core.shared.data.model.lists.IssueIcon
 import org.supla.core.shared.data.model.lists.ListItemIssues
 import org.supla.core.shared.infrastructure.LocalizedString
-import org.supla.core.shared.usecase.channel.issues.ChannelIssuesProvider
-import org.supla.core.shared.usecase.channel.issues.ContainerIssuesProvider
-import org.supla.core.shared.usecase.channel.issues.ShadingSystemIssuesProvider
-import org.supla.core.shared.usecase.channel.issues.ThermostatIssuesProvider
-import org.supla.core.shared.usecase.channel.issues.ValveIssuesProvider
 
 class GetChannelIssuesForListUseCase(
   private val getChannelLowBatteryIssueUseCase: GetChannelLowBatteryIssueUseCase,
-  private val getChannelBatteryIconUseCase: GetChannelBatteryIconUseCase
+  private val getChannelBatteryIconUseCase: GetChannelBatteryIconUseCase,
+  private val getChannelSpecificIssuesUseCase: GetChannelSpecificIssuesUseCase
 ) {
-
-  private val otherIssuesProviders: List<ChannelIssuesProvider> = listOf(
-    ThermostatIssuesProvider(),
-    ShadingSystemIssuesProvider(),
-    ContainerIssuesProvider(),
-    ValveIssuesProvider()
-  )
 
   operator fun invoke(channelWithChildren: ChannelWithChildren): ListItemIssues {
     val batteryIssue = getChannelLowBatteryIssueUseCase(channelWithChildren)
     val otherIssues = mutableListOf<ChannelIssueItem>()
-    otherIssuesProviders.forEach { otherIssues.addAll(it.provide(channelWithChildren)) }
+    otherIssues.addAll(getChannelSpecificIssuesUseCase(channelWithChildren))
 
     val icons = mutableListOf<IssueIcon>()
     val messages = mutableListOf<LocalizedString>()
     otherIssues.minByOrNull { it.priority }?.let { icons.add(it.icon) }
+    if (!icons.contains(IssueIcon.Sound)) {
+      otherIssues.firstOrNull { it is ChannelIssueItem.SoundAlarm }?.let { icons.add(it.icon) }
+    }
     otherIssues.forEach { messages.addAll(it.messages) }
-    batteryIssue?.let {
+
+    batteryIssue?.let { issue ->
       if (!icons.contains(IssueIcon.Error)) {
         icons.clear()
         icons.add(IssueIcon.Error)
+        otherIssues.firstOrNull { it is ChannelIssueItem.SoundAlarm }?.let { icons.add(it.icon) }
       }
-      messages.addAll(it.messages)
+      messages.addAll(issue.messages)
     }
 
-    getChannelBatteryIconUseCase(channelWithChildren)?.let { icons.add(it) }
+    // Add battery icon only if there is place for that
+    if (otherIssues.size < 2) {
+      getChannelBatteryIconUseCase(channelWithChildren)?.let { icons.add(it) }
+    }
 
     return ListItemIssues(icons, messages)
   }

@@ -59,12 +59,7 @@ abstract class BaseWindowFragment<S : BaseWindowViewModelState> : BaseFragment<S
           )
         }
         modelState.authorizationDialogState?.let {
-          AuthorizationDialog(
-            dialogState = it,
-            onCancel = { viewModel.hideAuthorizationDialog() },
-            onAuthorize = viewModel::authorize,
-            onStateChange = viewModel::updateAuthorizationState
-          )
+          viewModel.AuthorizationDialog(state = it)
         }
 
         Box {

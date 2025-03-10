@@ -31,23 +31,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
-import org.supla.android.extensions.disabledOverlay
 import org.supla.android.features.details.detailbase.electricitymeter.ElectricityMeterMetricsView
 import org.supla.android.features.details.detailbase.impulsecounter.ImpulseCounterMetricsView
 import org.supla.android.images.ImageId
 import org.supla.android.ui.views.Image
-import org.supla.android.ui.views.buttons.supla.SuplaButton
-import org.supla.android.ui.views.buttons.supla.SuplaButtonColors
-import org.supla.android.ui.views.buttons.supla.SuplaButtonDefaults
+import org.supla.android.ui.views.buttons.SwitchButtons
 import org.supla.android.ui.views.tools.Shadow
 import org.supla.android.ui.views.tools.ShadowOrientation
 
@@ -82,29 +77,13 @@ fun SwitchGeneralView(
     }
 
     if (state.showButtons) {
-      Row(
-        horizontalArrangement = Arrangement.spacedBy(Distance.default),
-        modifier = Modifier.padding(all = Distance.default)
-      ) {
-        Button(
-          icon = state.offIcon,
-          text = stringResource(id = R.string.channel_btn_off),
-          colors = SuplaButtonDefaults.errorColors(),
-          disabled = state.online == false,
-          pressed = state.deviceStateValue == R.string.details_timer_device_off,
-          onClick = onTurnOff,
-          modifier = Modifier.weight(1f)
-        )
-        Button(
-          icon = state.onIcon,
-          text = stringResource(id = R.string.channel_btn_on),
-          colors = SuplaButtonDefaults.primaryColors(),
-          disabled = state.online == false,
-          pressed = state.deviceStateValue == R.string.details_timer_device_on,
-          onClick = onTurnOn,
-          modifier = Modifier.weight(1f)
-        )
-      }
+      SwitchButtons(
+        leftButton = state.leftButtonState,
+        rightButton = state.rightButtonState,
+        disabled = state.online == false,
+        leftButtonClick = onTurnOff,
+        rightButtonClick = onTurnOn
+      )
     }
   }
 }
@@ -135,52 +114,6 @@ private fun DeviceState(stateLabel: String, icon: ImageId?, stateValue: String) 
     )
     Spacer(modifier = Modifier.weight(1f))
   }
-
-@Composable
-private fun Button(
-  text: String,
-  icon: ImageId?,
-  modifier: Modifier = Modifier,
-  disabled: Boolean = false,
-  pressed: Boolean = false,
-  colors: SuplaButtonColors = SuplaButtonDefaults.buttonColors(),
-  onClick: () -> Unit
-) {
-  val shape = SuplaButtonDefaults.allRoundedShape()
-  SuplaButton(
-    onClick = onClick,
-    modifier = modifier.disabledOverlay(disabled, radius = shape.topEndRadius),
-    disabled = disabled,
-    active = pressed,
-    colors = colors,
-    shape = shape
-  ) {
-    Row(
-      modifier = Modifier
-        .align(Alignment.Center)
-        .padding(horizontal = Distance.small),
-      verticalAlignment = Alignment.CenterVertically,
-      horizontalArrangement = Arrangement.spacedBy(Distance.tiny)
-    ) {
-      icon?.let {
-        Image(
-          imageId = it,
-          contentDescription = null,
-          alignment = Alignment.Center,
-          modifier = Modifier.size(dimensionResource(id = R.dimen.icon_default_size)),
-        )
-      }
-      Text(
-        text = text,
-        style = MaterialTheme.typography.labelLarge,
-        color = it,
-        maxLines = 1,
-        overflow = TextOverflow.Ellipsis,
-        modifier = Modifier
-      )
-    }
-  }
-}
 
 @Preview(showBackground = true)
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)

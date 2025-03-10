@@ -20,9 +20,8 @@ package org.supla.android.usecases.client
 import io.reactivex.rxjava3.core.Completable
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.data.source.runtime.ItemType
-import org.supla.android.lib.SuplaConst.SUPLA_CALCFG_CMD_RECALIBRATE
-import org.supla.android.lib.SuplaConst.SUPLA_CALCFG_CMD_ZWAVE_GET_NODE_LIST
 import org.supla.android.tools.VibrationHelper
+import org.supla.core.shared.data.model.general.SuplaCallConfigCommand
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -41,7 +40,7 @@ class CallSuplaClientOperationUseCase @Inject constructor(
         when (operation) {
           is SuplaClientOperation.MoveUp -> open(remoteId, type.isGroup(), 2)
           is SuplaClientOperation.MoveDown -> open(remoteId, type.isGroup(), 1)
-          is SuplaClientOperation.Command -> deviceCalCfgRequest(remoteId, type.isGroup(), operation.command, 0, null)
+          is SuplaClientOperation.Command -> deviceCalCfgRequest(remoteId, type.isGroup(), operation.command.value, 0, null)
         }.let { success ->
           if (success) {
             vibrationHelper.vibrate()
@@ -65,16 +64,21 @@ sealed interface SuplaClientOperation {
 
   sealed interface Command : SuplaClientOperation {
 
-    val command: Int
+    val command: SuplaCallConfigCommand
 
-    object Recalibrate : Command {
-      override val command: Int
-        get() = SUPLA_CALCFG_CMD_RECALIBRATE
+    data object Recalibrate : Command {
+      override val command: SuplaCallConfigCommand
+        get() = SuplaCallConfigCommand.RECALIBRATE
     }
 
-    object ZwaveGetNodeList : Command {
-      override val command: Int
-        get() = SUPLA_CALCFG_CMD_ZWAVE_GET_NODE_LIST
+    data object ZwaveGetNodeList : Command {
+      override val command: SuplaCallConfigCommand
+        get() = SuplaCallConfigCommand.ZWAVE_GET_NODE_LIST
+    }
+
+    data object MuteAlarmSound : Command {
+      override val command: SuplaCallConfigCommand
+        get() = SuplaCallConfigCommand.MUTE_ALARM_SOUND
     }
   }
 }

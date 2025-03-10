@@ -744,6 +744,21 @@
   <string name="channel_caption_septic_tank">Szambo</string>
   <string name="channel_caption_water_tank">Zbiornik na wodę</string>
   <string name="channel_caption_container_level_sensor">Czujnik poziomu zbiornika</string>
+  <string name="state_opened">otwarty</string>
+  <string name="state_closed">zamknięty</string>
+  <string name="valve_detail_sensors">Powiązane czujniki</string>
+  <string name="valve_action_error">Wystąpił błąd podczas komunikacji. Spróbuj ponownie później.</string>
+  <string name="valve_warning_motor_problem_opening">Wystąpił problem z silnikiem. Upewnij się, czy nic nie blokuje zaworu. Zawór może być częściowo otwarty. Czy na pewno chcesz go otworzyć?</string>
+  <string name="valve_warning_motor_problem_closing">Wystąpił problem z silnikiem. Upewnij się, czy nic nie blokuje zaworu. Zawór może być częściowo otwarty. Czy na pewno chcesz go zamknąć?</string>
+  <string name="valve_warning_motor_problem">Wystąpił problem z silnikiem. Upewnij się, czy nic nie blokuje zaworu. Zawór może być częściowo otwarty.</string>
+  <string name="change_caption_header">Zmiana nazwy</string>
+  <string name="group_name">Nazwa grupy</string>
+  <string name="caption_change_failed">Zmiana nazwy nieudana!</string>
+  <string name="container_fill_level">Poziom napełnienia</string>
+  <string name="container_warning_level">Poziom ostrzegawczy</string>
+  <string name="container_alarm_level">Poziom alarmowy!</string>
+  <string name="container_invalid_sensor_state">Nieprawidłowy stan czujników</string>
+  <string name="container_sound_alarm">Alarm dźwiękowy aktywny</string>
 
   <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
     <item quantity="one">włączone</item>

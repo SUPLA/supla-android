@@ -45,7 +45,7 @@ import androidx.compose.ui.tooling.preview.PreviewFontScale
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
-import org.supla.android.core.ui.StringProvider
+import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.formatting.LocalPercentageFormatter
@@ -65,6 +65,7 @@ import org.supla.android.ui.views.list.components.SetpointIndicator
 import org.supla.android.ui.views.list.components.SetpointText
 import org.supla.core.shared.data.model.lists.IssueIcon
 import org.supla.core.shared.data.model.lists.ListItemIssues
+import org.supla.core.shared.infrastructure.LocalizedString
 
 data class ThermostatSlavesListViewState(
   val master: ThermostatData? = null,
@@ -74,8 +75,10 @@ data class ThermostatSlavesListViewState(
 
 data class ThermostatData(
   val channelId: Int,
+  val profileId: Long,
   val onlineState: ListOnlineState,
-  val caption: StringProvider,
+  val caption: LocalizedString,
+  val userCaption: String,
   val imageId: ImageId,
   val currentPower: Float?,
   val value: String,
@@ -91,7 +94,8 @@ data class ThermostatData(
 fun ThermostatSlavesListView(
   state: ThermostatSlavesListViewState,
   onShowMessage: (String) -> Unit,
-  onShowInfo: (ThermostatData) -> Unit
+  onShowInfo: (ThermostatData) -> Unit,
+  onCaptionLongPress: (ThermostatData) -> Unit
 ) {
   Column {
     state.master?.let {
@@ -100,7 +104,13 @@ fun ThermostatSlavesListView(
         style = MaterialTheme.typography.bodyMedium,
         modifier = Modifier.padding(start = Distance.small, bottom = Distance.tiny, end = Distance.small, top = Distance.default)
       )
-      SlaveRow(slave = it, scale = state.scale, onShowMessage = onShowMessage, onShowInfo = onShowInfo)
+      SlaveRow(
+        slave = it,
+        scale = state.scale,
+        onShowMessage = onShowMessage,
+        onShowInfo = onShowInfo,
+        onCaptionLongPress = onCaptionLongPress
+      )
     }
     Text(
       text = stringResource(id = R.string.thermostat_detail_other_thermostats).uppercase(),
@@ -111,13 +121,27 @@ fun ThermostatSlavesListView(
       items(
         items = state.slaves,
         key = { it.channelId }
-      ) { SlaveRow(slave = it, scale = state.scale, onShowMessage = onShowMessage, onShowInfo = onShowInfo) }
+      ) {
+        SlaveRow(
+          slave = it,
+          scale = state.scale,
+          onShowMessage = onShowMessage,
+          onShowInfo = onShowInfo,
+          onCaptionLongPress = onCaptionLongPress
+        )
+      }
     }
   }
 }
 
 @Composable
-private fun SlaveRow(slave: ThermostatData, scale: Float, onShowMessage: (String) -> Unit, onShowInfo: (ThermostatData) -> Unit) {
+private fun SlaveRow(
+  slave: ThermostatData,
+  scale: Float,
+  onShowMessage: (String) -> Unit,
+  onShowInfo: (ThermostatData) -> Unit,
+  onCaptionLongPress: (ThermostatData) -> Unit
+) {
   Box(
     modifier = Modifier
       .fillMaxWidth()
@@ -155,7 +179,7 @@ private fun SlaveRow(slave: ThermostatData, scale: Float, onShowMessage: (String
         }
         ListItemTitle(
           text = slave.caption(LocalContext.current),
-          onLongClick = { },
+          onLongClick = { onCaptionLongPress(slave) },
           onItemClick = { },
           modifier = Modifier.padding(top = Distance.tiny, end = Distance.default)
         )
@@ -199,15 +223,18 @@ private fun Preview() {
         slaves = listOf(sampleSlave(1), sampleSlave(2))
       ),
       onShowMessage = {},
-      onShowInfo = {}
+      onShowInfo = {},
+      onCaptionLongPress = {}
     )
   }
 }
 
 private fun sampleSlave(channelId: Int) = ThermostatData(
   channelId,
+  1L,
   ((channelId % 2) == 0).onlineState,
-  { "FHC #$channelId" },
+  LocalizedString.Constant("FHC #$channelId"),
+  "",
   ImageId(R.drawable.fnc_thermostat_heat),
   25f,
   "22,7°C",

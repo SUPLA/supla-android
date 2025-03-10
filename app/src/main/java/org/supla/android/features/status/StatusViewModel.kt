@@ -32,6 +32,7 @@ import org.supla.android.extensions.TAG
 import org.supla.android.lib.SuplaConst.SUPLA_RESULT_HOST_NOT_FOUND
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.dialogs.AuthorizationDialogState
+import org.supla.android.ui.dialogs.AuthorizationReason
 import org.supla.android.ui.dialogs.authorize.AuthorizationModelState
 import org.supla.android.ui.dialogs.authorize.BaseAuthorizationViewModel
 import org.supla.android.usecases.client.AuthorizeUseCase
@@ -112,14 +113,18 @@ class StatusViewModel @Inject constructor(
     suplaClientStateHolder.handleEvent(SuplaClientEvent.Initialized)
   }
 
-  override fun updateDialogState(updater: (AuthorizationDialogState?) -> AuthorizationDialogState?) {
+  override fun updateAuthorizationDialogState(updater: (AuthorizationDialogState?) -> AuthorizationDialogState?) {
     updateState { it.copy(authorizationDialogState = updater(it.authorizationDialogState)) }
   }
 
-  override fun onAuthorized() {
+  override fun onAuthorized(reason: AuthorizationReason) {
     updateState {
       it.copy(authorizationDialogState = null)
     }
+  }
+
+  override fun onAuthorize(userName: String, password: String) {
+    login(userName, password)
   }
 
   private fun handleErrorState(state: SuplaClientState.Finished) {

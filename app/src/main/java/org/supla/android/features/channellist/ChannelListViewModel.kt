@@ -39,8 +39,10 @@ import org.supla.android.features.details.impulsecounter.ImpulseCounterDetailFra
 import org.supla.android.features.details.switchdetail.SwitchDetailFragment
 import org.supla.android.features.details.thermometerdetail.ThermometerDetailFragment
 import org.supla.android.features.details.thermostatdetail.ThermostatDetailFragment
+import org.supla.android.features.details.valveDetail.ValveDetailFragment
 import org.supla.android.features.details.windowdetail.WindowDetailFragment
 import org.supla.android.lib.SuplaClientMsg
+import org.supla.android.lib.actions.ActionId
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.lists.BaseListViewModel
 import org.supla.android.ui.lists.ListItem
@@ -60,6 +62,7 @@ import org.supla.android.usecases.details.ProvideChannelDetailTypeUseCase
 import org.supla.android.usecases.details.SwitchDetailType
 import org.supla.android.usecases.details.ThermometerDetailType
 import org.supla.android.usecases.details.ThermostatDetailType
+import org.supla.android.usecases.details.ValveDetailType
 import org.supla.android.usecases.details.WindowDetailType
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
@@ -129,6 +132,12 @@ class ChannelListViewModel @Inject constructor(
           when (throwable) {
             is ActionException.ValveClosedManually -> sendEvent(ChannelListViewEvent.ShowValveClosedManuallyDialog(throwable.remoteId))
             is ActionException.ValveFloodingAlarm -> sendEvent(ChannelListViewEvent.ShowValveFloodingDialog(throwable.remoteId))
+            is ActionException.ValveMotorProblemClosing ->
+              sendEvent(ChannelListViewEvent.ShowValveMotorProblemDialog(throwable.remoteId, ActionId.CLOSE))
+
+            is ActionException.ValveMotorProblemOpening ->
+              sendEvent(ChannelListViewEvent.ShowValveMotorProblemDialog(throwable.remoteId, ActionId.OPEN))
+
             is ActionException.ChannelExceedAmperage -> sendEvent(ChannelListViewEvent.ShowAmperageExceededDialog(throwable.remoteId))
             else -> defaultErrorHandler("performAction($channelId, $buttonType)")(throwable)
           }
@@ -186,6 +195,7 @@ class ChannelListViewModel @Inject constructor(
       is IcDetailType -> sendEvent(ChannelListViewEvent.OpenIcDetail(ItemBundle.from(channel), detailType.pages))
       is ContainerDetailType -> sendEvent(ChannelListViewEvent.OpenContainerDetail(ItemBundle.from(channel), detailType.pages))
       is HumidityDetailType -> sendEvent(ChannelListViewEvent.OpenHumidityDetail(ItemBundle.from(channel), detailType.pages))
+      is ValveDetailType -> sendEvent(ChannelListViewEvent.OpenValveDetail(ItemBundle.from(channel), detailType.pages))
       is LegacyDetailType -> sendEvent(ChannelListViewEvent.OpenLegacyDetails(channel.remoteId, detailType))
       null -> {} // no action
     }
@@ -195,6 +205,7 @@ class ChannelListViewModel @Inject constructor(
 sealed class ChannelListViewEvent : ViewEvent {
   data class ShowValveClosedManuallyDialog(val remoteId: Int) : ChannelListViewEvent()
   data class ShowValveFloodingDialog(val remoteId: Int) : ChannelListViewEvent()
+  data class ShowValveMotorProblemDialog(val remoteId: Int, val action: ActionId) : ChannelListViewEvent()
   data class ShowAmperageExceededDialog(val remoteId: Int) : ChannelListViewEvent()
   data class OpenLegacyDetails(val remoteId: Int, val type: LegacyDetailType) : ChannelListViewEvent()
   data class OpenSwitchDetail(private val itemBundle: ItemBundle, private val pages: List<DetailPage>) :
@@ -223,6 +234,9 @@ sealed class ChannelListViewEvent : ViewEvent {
 
   data class OpenContainerDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) :
     OpenStandardDetail(R.id.container_detail_fragment, ImpulseCounterDetailFragment.bundle(itemBundle, pages.toTypedArray()))
+
+  data class OpenValveDetail(val itemBundle: ItemBundle, val pages: List<DetailPage>) :
+    OpenStandardDetail(R.id.container_detail_fragment, ValveDetailFragment.bundle(itemBundle, pages.toTypedArray()))
 
   data object ReassignAdapter : ChannelListViewEvent()
 

@@ -617,7 +617,7 @@ private class PreviewProxy(private var initialState: ThermostatGeneralViewState 
         temperatures = listOf(
           MeasurementValue(
             remoteId = 123,
-            imageId = ImageId(R.drawable.thermometer),
+            imageId = ImageId(R.drawable.fnc_thermometer),
             value = "12.3"
           )
         )

@@ -36,7 +36,7 @@ class MailSensorIconResourceProducerTest : BaseIconResourceProducerTest() {
     test(
       state = ChannelState.Value.ON,
       function = SuplaFunction.MAIL_SENSOR,
-      expectedIcon = R.drawable.mail
+      expectedIcon = R.drawable.fnc_mail_on
     )
   }
 
@@ -45,7 +45,7 @@ class MailSensorIconResourceProducerTest : BaseIconResourceProducerTest() {
     test(
       state = ChannelState.Value.OFF,
       function = SuplaFunction.MAIL_SENSOR,
-      expectedIcon = R.drawable.nomail
+      expectedIcon = R.drawable.fnc_mail_off
     )
   }
 }

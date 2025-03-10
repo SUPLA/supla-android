@@ -43,6 +43,7 @@ import org.supla.android.features.details.detailbase.impulsecounter.ImpulseCount
 import org.supla.android.images.ImageId
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.ui.views.buttons.SwitchButtonState
 import org.supla.android.usecases.channel.DownloadChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.GetChannelStateUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
@@ -256,7 +257,21 @@ data class SwitchGeneralViewState(
 
   val electricityMeterState: ElectricityMeterState? = null,
   val impulseCounterState: ImpulseCounterState? = null
-) : ViewState()
+) : ViewState() {
+  val leftButtonState: SwitchButtonState
+    get() = SwitchButtonState(
+      icon = offIcon,
+      textRes = R.string.channel_btn_off,
+      pressed = deviceStateValue == R.string.details_timer_device_off
+    )
+
+  val rightButtonState: SwitchButtonState
+    get() = SwitchButtonState(
+      icon = onIcon,
+      textRes = R.string.channel_btn_on,
+      pressed = deviceStateValue == R.string.details_timer_device_on
+    )
+}
 
 private val SuplaFunction.switchWithButtons: Boolean
   get() = when (this) {

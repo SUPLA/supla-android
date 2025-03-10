@@ -328,7 +328,7 @@ abstract class WidgetCommandWorkerBase(
 
   private fun handleGpmWidget(widgetId: Int, configuration: WidgetConfiguration): Result {
     val channelConfig = try {
-      loadChannelConfigUseCase(configuration.profileId, configuration.itemId).blockingGet()
+      loadChannelConfigUseCase(configuration.itemId).blockingGet()
     } catch (ex: Exception) {
       null
     }

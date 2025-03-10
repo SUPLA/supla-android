@@ -36,7 +36,7 @@ class GarageDoorIconResourceProducerTest : BaseIconResourceProducerTest() {
     test(
       state = ChannelState.Value.OPEN,
       function = SuplaFunction.OPEN_SENSOR_GARAGE_DOOR,
-      expectedIcon = R.drawable.garagedooropen
+      expectedIcon = R.drawable.fnc_garage_door_opened
     )
   }
 
@@ -45,7 +45,7 @@ class GarageDoorIconResourceProducerTest : BaseIconResourceProducerTest() {
     test(
       state = ChannelState.Value.CLOSED,
       function = SuplaFunction.OPEN_SENSOR_GARAGE_DOOR,
-      expectedIcon = R.drawable.garagedoorclosed
+      expectedIcon = R.drawable.fnc_garage_door_closed
     )
   }
 
@@ -54,7 +54,7 @@ class GarageDoorIconResourceProducerTest : BaseIconResourceProducerTest() {
     test(
       state = ChannelState.Value.PARTIALLY_OPENED,
       function = SuplaFunction.CONTROLLING_THE_GARAGE_DOOR,
-      expectedIcon = R.drawable.garagedoorclosed50percent
+      expectedIcon = R.drawable.fnc_garage_door_closed_50_percent
     )
   }
 }

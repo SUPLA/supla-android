@@ -26,7 +26,8 @@ enum class ChannelConfigType(val value: Int) {
   WEEKLY_SCHEDULE(2),
   GENERAL_PURPOSE_MEASUREMENT(3),
   GENERAL_PURPOSE_METER(4),
-  FACADE_BLIND(5);
+  FACADE_BLIND(5),
+  CONTAINER(6);
 
   companion object {
     fun from(value: Int): ChannelConfigType {
@@ -46,6 +47,10 @@ enum class ChannelConfigType(val value: Int) {
 
         SuplaFunction.VERTICAL_BLIND,
         SuplaFunction.CONTROLLING_THE_FACADE_BLIND -> FACADE_BLIND
+
+        SuplaFunction.CONTAINER,
+        SuplaFunction.SEPTIC_TANK,
+        SuplaFunction.WATER_TANK -> CONTAINER
 
         else -> throw IllegalArgumentException("Channel not supported (function: `${channel.function}`)")
       }

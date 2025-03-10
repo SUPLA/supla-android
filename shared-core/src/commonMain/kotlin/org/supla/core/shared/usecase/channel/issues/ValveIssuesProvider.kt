@@ -51,6 +51,9 @@ class ValveIssuesProvider : ChannelIssuesProvider {
     value?.flags?.contains(SuplaValveFlag.MANUALLY_CLOSED)?.ifTrue {
       issues.add(ChannelIssueItem.Error(LocalizedStringId.VALVE_MANUALLY_CLOSED))
     }
+    value?.flags?.contains(SuplaValveFlag.MOTOR_PROBLEM)?.ifTrue {
+      issues.add(ChannelIssueItem.Error(LocalizedStringId.VALVE_MOTOR_PROBLEM))
+    }
 
     return issues
   }

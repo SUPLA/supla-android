@@ -42,10 +42,15 @@ class ImpulseBarChartData(
   sets: List<ChannelChartSets>
 ) : CombinedChartData(dateRange, chartRange, aggregation, sets) {
 
-  private val barsCount = ceil(dateRange.end.time.minus(dateRange.start.time).div(1000f).div(aggregation.timeInSec)).roundToInt()
+  private val barsCount = when {
+    chartRange == ChartRange.LAST_WEEK && aggregation == ChartDataAggregation.DAYS -> 7
+    chartRange == ChartRange.LAST_MONTH && aggregation == ChartDataAggregation.DAYS -> 30
+    chartRange == ChartRange.LAST_QUARTER && aggregation == ChartDataAggregation.DAYS -> 90
+    else -> ceil(dateRange.end.time.minus(dateRange.start.time).div(1000f).div(aggregation.timeInSec)).roundToInt()
+  }
 
   private val coordinateToDateMap: MutableMap<Float, Float> = mutableMapOf<Float, Float>().apply {
-    for (i in 0..barsCount) {
+    for (i in 0..<barsCount) {
       put(i.toFloat(), dateRange.start.toTimestamp().plus(i.times(aggregation.timeInSec)).toFloat())
     }
   }
@@ -53,7 +58,7 @@ class ImpulseBarChartData(
   override val xMin: Float = -0.5f
 
   override val xMax: Float
-    get() = barsCount.toFloat() + 0.5f
+    get() = barsCount.toFloat() - 0.5f
 
   private fun getIndexForDate(firstEntryDate: Long): Int {
     if (chartRange == ChartRange.ALL_HISTORY) {
@@ -111,7 +116,7 @@ class ImpulseBarChartData(
       return coordinateToDateMap.values.lastOrNull()?.plus(coordinateToDateMap.size.minus(x).times(aggregation!!.timeInSec)) ?: 0f
     }
 
-    return coordinateToDateMap[x] ?: 0f
+    return coordinateToDateMap[x.roundToInt().toFloat()] ?: 0f
   }
 
   override fun distanceInDays(start: Float, end: Float): Float = end.times(aggregation!!.timeInSec) / 3600 / 24

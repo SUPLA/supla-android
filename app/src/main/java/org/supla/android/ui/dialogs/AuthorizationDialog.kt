@@ -67,49 +67,57 @@ data class AuthorizationDialogState(
   val isCloudAccount: Boolean,
   val userNameEnabled: Boolean,
   val error: StringProvider? = null,
-  val processing: Boolean = false
+  val processing: Boolean = false,
+  val reason: AuthorizationReason = AuthorizationReason.Default
 )
 
+interface AuthorizationReason {
+  data object Default : AuthorizationReason
+}
+
+interface AuthorizationDialogScope {
+  fun onAuthorizationDismiss()
+  fun onAuthorizationCancel()
+  fun onAuthorize(userName: String, password: String)
+  fun onStateChange(state: AuthorizationDialogState)
+}
+
 @Composable
-fun AuthorizationDialog(
-  dialogState: AuthorizationDialogState,
-  onDismiss: () -> Unit = {},
-  onCancel: () -> Unit = {},
-  onAuthorize: (userName: String, password: String) -> Unit = { _, _ -> },
-  onStateChange: (AuthorizationDialogState) -> Unit = { }
+fun AuthorizationDialogScope.AuthorizationDialog(
+  state: AuthorizationDialogState
 ) {
-  var password by rememberSaveable { mutableStateOf("") }
+  var password by rememberSaveable(state.userName) { mutableStateOf("") }
   var passwordVisible by rememberSaveable { mutableStateOf(false) }
 
-  Dialog(onDismiss = onDismiss) {
-    DialogHeader(title = getDialogTitle(isCloudAccount = dialogState.isCloudAccount))
+  Dialog(onDismiss = { onAuthorizationDismiss() }) {
+    DialogHeader(title = getDialogTitle(isCloudAccount = state.isCloudAccount))
     Separator(style = SeparatorStyle.LIGHT)
 
     UserNameTextField(
-      state = dialogState,
-      enabled = dialogState.userNameEnabled && dialogState.processing.not(),
-      onStateChange = onStateChange
+      state = state,
+      enabled = state.userNameEnabled && state.processing.not(),
+      onStateChange = { onStateChange(it) }
     )
     PasswordTextField(
       password = password,
       passwordVisible = passwordVisible,
-      isError = dialogState.error != null,
-      enabled = dialogState.processing.not(),
+      isError = state.error != null,
+      enabled = state.processing.not(),
       onVisibilityChange = { passwordVisible = !passwordVisible },
       onValueChange = { password = it }
     )
-    ErrorText(text = dialogState.error?.let { it(LocalContext.current) } ?: "")
+    ErrorText(text = state.error?.let { it(LocalContext.current) } ?: "")
 
     Separator(style = SeparatorStyle.LIGHT, modifier = Modifier.padding(top = Distance.default))
     DialogButtonsRow {
       OutlinedButton(
-        onClick = onCancel,
+        onClick = { onAuthorizationCancel() },
         text = stringResource(id = R.string.cancel),
         modifier = Modifier.weight(1f),
-        enabled = dialogState.processing.not()
+        enabled = state.processing.not()
       )
 
-      if (dialogState.processing) {
+      if (state.processing) {
         Box(modifier = Modifier.weight(1f)) {
           CircularProgressIndicator(
             modifier = Modifier
@@ -119,7 +127,7 @@ fun AuthorizationDialog(
         }
       } else {
         Button(
-          onClick = { onAuthorize(dialogState.userName, password) },
+          onClick = { onAuthorize(state.userName, password) },
           text = stringResource(id = R.string.ok),
           enabled = password.isNotEmpty(),
           modifier = Modifier.weight(1f)
@@ -242,11 +250,18 @@ private fun ErrorText(text: String) =
     )
   )
 
+private val emptyScope = object : AuthorizationDialogScope {
+  override fun onAuthorizationDismiss() {}
+  override fun onAuthorizationCancel() {}
+  override fun onAuthorize(userName: String, password: String) {}
+  override fun onStateChange(state: AuthorizationDialogState) {}
+}
+
 @Preview
 @Composable
 private fun Preview_Normal() {
   SuplaTheme {
-    AuthorizationDialog(
+    emptyScope.AuthorizationDialog(
       AuthorizationDialogState(
         userName = "some_user@supla.org",
         isCloudAccount = true,
@@ -260,7 +275,7 @@ private fun Preview_Normal() {
 @Composable
 private fun Preview_Loading() {
   SuplaTheme {
-    AuthorizationDialog(
+    emptyScope.AuthorizationDialog(
       AuthorizationDialogState(
         userName = "some_user@supla.org",
         isCloudAccount = true,
