@@ -258,7 +258,6 @@ private fun ContainerViewScope.drawAlarmControlLevel(
     .minus(textWidth)
 
   val topPosition = getControlLevelTextPosition(previousLevel, nextLevel, levelPosition, textLayoutResult)
-  controlLevel.levelPosition = levelPosition
 
   textLayoutResult?.let {
     translate(left = textStartPosition, top = topPosition) {
@@ -282,7 +281,6 @@ private fun ContainerViewScope.drawWarningControlLevel(
     .plus(containerStrokeWidth)
 
   val topPosition = getControlLevelTextPosition(previousLevel, nextLevel, levelPosition, textLayoutResult)
-  controlLevel.levelPosition = levelPosition
 
   textLayoutResult?.let {
     translate(left = textStartPosition, top = topPosition) {
