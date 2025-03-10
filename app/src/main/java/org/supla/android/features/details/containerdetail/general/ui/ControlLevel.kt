@@ -25,8 +25,6 @@ sealed class ControlLevel {
   abstract val type: Type
   abstract val color: Color
 
-  var levelPosition: Float? = null
-
   enum class Type {
     UPPER, LOWER
   }
