@@ -215,7 +215,8 @@ private fun Preview_NoLevel() {
             batteryIcon = null,
             showChannelStateIcon = false
           )
-        )
+        ),
+        soundOn = true
       )
     )
   }
