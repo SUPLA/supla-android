@@ -727,7 +727,7 @@
   <string name="counter_photo_photos">Fotohistorie</string>
   <string name="counter_photo_loading_error">Das Laden ist fehlgeschlagen.</string>
   <string name="counter_photo_error">Fehler</string>
-  <string name="valve_warning_flooding">Das Ventil wurde aufgrund einer Überflutung geschlossen. Stellen Sie vor dem Öffnen des Ventils sicher, dass die Ursache behoben wurde. Durch Öffnen des Ventils wird der Alarm gelöscht.</string>
+  <string name="valve_warning_flooding">Das Ventil wurde aufgrund einer Überflutung geschlossen. Stellen Sie vor dem Öffnen des Ventils sicher, dass die Ursache behoben wurde. Durch Öffnen des Ventils wird der Alarm gelöscht. Möchten Sie es wirklich öffnen?</string>
   <string name="channel_caption_flood_sensor">Flutsensor</string>
   <string name="flooding_alarm_message">Der Sensor meldet eine Überschwemmung!</string>
   <string name="valve_warning_manually_closed_short">Das Ventil wurde manuell oder per Funk geschlossen (mögliche Überschwemmung).</string>
