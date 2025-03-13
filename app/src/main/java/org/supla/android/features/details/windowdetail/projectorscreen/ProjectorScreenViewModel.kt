@@ -108,7 +108,7 @@ class ProjectorScreenViewModel @Inject constructor(
       updateChannel(state, channel, value) {
         it.copy(
           windowState = it.windowState.copy(
-            position = WindowGroupedValue.Similar(if (value.online) position.toFloat() else 25f)
+            position = WindowGroupedValue.Similar(if (value.status.online) position.toFloat() else 25f)
           ),
           viewState = it.viewState.copy(positionPresentation = ShadingSystemPositionPresentation.AS_EXTENSION)
         )
@@ -129,7 +129,7 @@ class ProjectorScreenViewModel @Inject constructor(
         it.copy(
           remoteId = group.groupDataEntity.remoteId,
           windowState = it.windowState.copy(
-            position = if (group.groupDataEntity.isOnline()) overallPosition else WindowGroupedValue.Similar(25f),
+            position = if (group.groupDataEntity.status.online) overallPosition else WindowGroupedValue.Similar(25f),
             markers = if (overallPosition is WindowGroupedValue.Different) positions else emptyList()
           ),
           viewState = it.viewState.copy(

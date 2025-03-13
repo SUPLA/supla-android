@@ -23,11 +23,11 @@ import org.supla.core.shared.data.model.function.thermostat.SuplaThermostatFlag
 import org.supla.core.shared.data.model.function.thermostat.ThermostatValue
 
 fun ThermostatValue.getIndicatorIcon() = when {
-  online && flags.contains(SuplaThermostatFlag.FORCED_OFF_BY_SENSOR) -> ThermostatIndicatorIcon.FORCED_OFF_BY_SENSOR
-  online && flags.contains(SuplaThermostatFlag.COOLING) -> ThermostatIndicatorIcon.COOLING
-  online && flags.contains(SuplaThermostatFlag.HEATING) -> ThermostatIndicatorIcon.HEATING
-  online && mode != SuplaHvacMode.OFF -> ThermostatIndicatorIcon.STANDBY
-  online -> ThermostatIndicatorIcon.OFF
+  status.online && flags.contains(SuplaThermostatFlag.FORCED_OFF_BY_SENSOR) -> ThermostatIndicatorIcon.FORCED_OFF_BY_SENSOR
+  status.online && flags.contains(SuplaThermostatFlag.COOLING) -> ThermostatIndicatorIcon.COOLING
+  status.online && flags.contains(SuplaThermostatFlag.HEATING) -> ThermostatIndicatorIcon.HEATING
+  status.online && mode != SuplaHvacMode.OFF -> ThermostatIndicatorIcon.STANDBY
+  status.online -> ThermostatIndicatorIcon.OFF
   else -> ThermostatIndicatorIcon.OFFLINE
 }
 
@@ -35,7 +35,7 @@ fun ThermostatValue.getSetpointText(valuesFormatter: ValuesFormatter): String {
   val temperatureMin = valuesFormatter.getTemperatureString(setpointTemperatureHeat, false)
   val temperatureMax = valuesFormatter.getTemperatureString(setpointTemperatureCool, false)
   return when {
-    online.not() -> ""
+    status.offline -> ""
     mode == SuplaHvacMode.COOL -> temperatureMax
     mode == SuplaHvacMode.HEAT_COOL -> "$temperatureMin - $temperatureMax"
     mode == SuplaHvacMode.HEAT -> temperatureMin

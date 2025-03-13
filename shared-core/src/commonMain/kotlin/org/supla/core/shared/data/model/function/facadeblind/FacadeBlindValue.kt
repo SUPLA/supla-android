@@ -17,6 +17,7 @@ package org.supla.core.shared.data.model.function.facadeblind
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.core.shared.data.model.shadingsystem.ShadingSystemValue
 import org.supla.core.shared.data.model.shadingsystem.SuplaShadingSystemFlag
 import org.supla.core.shared.extensions.toShort
@@ -25,7 +26,7 @@ import kotlin.math.max
 private const val FACADE_BLIND_VALUE_LENGTH = 5
 
 data class FacadeBlindValue(
-  override val online: Boolean,
+  override val status: SuplaChannelAvailabilityStatus,
   override val position: Int,
   val tilt: Int,
   override val flags: List<SuplaShadingSystemFlag>
@@ -37,13 +38,13 @@ data class FacadeBlindValue(
   fun hasValidTilt() = tilt != INVALID_VALUE
 
   companion object {
-    fun from(online: Boolean, bytes: ByteArray): FacadeBlindValue {
+    fun from(status: SuplaChannelAvailabilityStatus, bytes: ByteArray): FacadeBlindValue {
       if (bytes.size < FACADE_BLIND_VALUE_LENGTH) {
-        return FacadeBlindValue(online, INVALID_VALUE, INVALID_VALUE, listOf())
+        return FacadeBlindValue(status, INVALID_VALUE, INVALID_VALUE, listOf())
       }
 
       return FacadeBlindValue(
-        online = online,
+        status = status,
         position = bytes[0].toInt().let { if (it < INVALID_VALUE || it > MAX_VALUE) INVALID_VALUE else it },
         tilt = bytes[1].toInt().let { if (it < INVALID_VALUE || it > MAX_VALUE) INVALID_VALUE else it },
         flags = SuplaShadingSystemFlag.from(bytes.toShort(3, 4).toInt())

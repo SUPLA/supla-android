@@ -131,8 +131,8 @@ class FacadeBlindsViewModel @Inject constructor(
       updateChannel(state, channel, value) {
         it.copy(
           windowState = it.windowState.copy(
-            position = WindowGroupedValue.Similar(if (value.online) position.toFloat() else 25f),
-            slatTilt = tilt?.let { t -> WindowGroupedValue.Similar(if (value.online) t.toFloat() else 50f) },
+            position = WindowGroupedValue.Similar(if (value.status.online) position.toFloat() else 25f),
+            slatTilt = tilt?.let { t -> WindowGroupedValue.Similar(if (value.status.online) t.toFloat() else 50f) },
             positionTextFormat = positionTextFormat
           ),
           lastPosition = position
@@ -157,9 +157,9 @@ class FacadeBlindsViewModel @Inject constructor(
         it.copy(
           remoteId = group.groupDataEntity.remoteId,
           windowState = it.windowState.copy(
-            position = if (group.groupDataEntity.isOnline()) overallPosition else WindowGroupedValue.Similar(25f),
-            slatTilt = if (group.groupDataEntity.isOnline()) overallTilt else WindowGroupedValue.Similar(50f),
-            markers = if (group.groupDataEntity.isOnline()) markers else emptyList(),
+            position = if (group.groupDataEntity.status.online) overallPosition else WindowGroupedValue.Similar(25f),
+            slatTilt = if (group.groupDataEntity.status.online) overallTilt else WindowGroupedValue.Similar(50f),
+            markers = if (group.groupDataEntity.status.online) markers else emptyList(),
             positionTextFormat = positionTextFormat
           ),
           viewState = it.viewState.copy(

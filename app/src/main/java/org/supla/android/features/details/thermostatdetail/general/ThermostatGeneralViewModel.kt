@@ -350,8 +350,9 @@ class ThermostatGeneralViewModel @Inject constructor(
     val (configMinTemperature) = guardLet(data.config.temperatures.roomMin?.fromSuplaTemperature()) { return }
     val (configMaxTemperature) = guardLet(data.config.temperatures.roomMax?.fromSuplaTemperature()) { return }
 
-    val isOff = value.online.not() || thermostatValue.mode == SuplaHvacMode.OFF || thermostatValue.mode == SuplaHvacMode.NOT_SET
-    val currentPower = if (value.online) thermostatValue.state.power else null
+    val online = value.status.online
+    val isOff = value.status.offline || thermostatValue.mode == SuplaHvacMode.OFF || thermostatValue.mode == SuplaHvacMode.NOT_SET
+    val currentPower = if (online) thermostatValue.state.power else null
 
     updateState {
       if (it.changing) {
@@ -382,7 +383,7 @@ class ThermostatGeneralViewModel @Inject constructor(
 
         temperatures = data.temperatures,
 
-        isOffline = !value.online,
+        isOffline = value.status.offline,
         isOff = isOff,
         currentPower = currentPower,
         isAutoFunction = channelData.function == SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL,
@@ -391,8 +392,8 @@ class ThermostatGeneralViewModel @Inject constructor(
 
         showHeatingIndicator = isFlagActive(data.channelWithChildren, SuplaThermostatFlag.HEATING),
         showCoolingIndicator = isFlagActive(data.channelWithChildren, SuplaThermostatFlag.COOLING),
-        pumpSwitchIcon = value.online.ifTrue { pumpSwitchIcon(data.channelWithChildren) },
-        heatOrColdSourceSwitchIcon = value.online.ifTrue { heatOrColdSourceSwitchIcon(data.channelWithChildren) },
+        pumpSwitchIcon = online.ifTrue { pumpSwitchIcon(data.channelWithChildren) },
+        heatOrColdSourceSwitchIcon = online.ifTrue { heatOrColdSourceSwitchIcon(data.channelWithChildren) },
 
         configMinTemperatureString = valuesFormatter.getTemperatureString(configMinTemperature),
         configMaxTemperatureString = valuesFormatter.getTemperatureString(configMaxTemperature),
@@ -400,10 +401,10 @@ class ThermostatGeneralViewModel @Inject constructor(
         currentTemperaturePercentage = calculateCurrentTemperature(data.channelWithChildren, configMinTemperature, configMaxTemperature),
 
         manualModeActive = isOff.not() && thermostatValue.flags.contains(SuplaThermostatFlag.WEEKLY_SCHEDULE).not(),
-        programmedModeActive = value.online && thermostatValue.flags.contains(SuplaThermostatFlag.WEEKLY_SCHEDULE),
+        programmedModeActive = online && thermostatValue.flags.contains(SuplaThermostatFlag.WEEKLY_SCHEDULE),
 
-        temporaryChangeActive = value.online && thermostatValue.flags.contains(SuplaThermostatFlag.WEEKLY_SCHEDULE_TEMPORAL_OVERRIDE),
-        temporaryProgramInfo = buildProgramInfo(data.weeklySchedule, data.deviceConfig, thermostatValue, value.online),
+        temporaryChangeActive = online && thermostatValue.flags.contains(SuplaThermostatFlag.WEEKLY_SCHEDULE_TEMPORAL_OVERRIDE),
+        temporaryProgramInfo = buildProgramInfo(data.weeklySchedule, data.deviceConfig, thermostatValue, online),
 
         sensorIssue = SensorIssue.build(thermostatValue, data.channelWithChildren.children, getChannelIconUseCase),
 
@@ -835,5 +836,5 @@ data class ThermostatGeneralViewModelState(
 
 private fun ChannelDataEntity.isActive(flag: SuplaThermostatFlag): Boolean {
   val value = channelValueEntity.asThermostatValue()
-  return channelValueEntity.online && value.state.isOn() && value.flags.contains(flag)
+  return channelValueEntity.status.online && value.state.isOn() && value.flags.contains(flag)
 }

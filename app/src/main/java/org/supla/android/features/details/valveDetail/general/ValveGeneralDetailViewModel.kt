@@ -197,17 +197,17 @@ class ValveGeneralDetailViewModel @Inject constructor(
           sensors = channelWithChildren.children
             .filter { it.relationType == ChannelRelationType.DEFAULT }
             .map { it.toSensor() },
-          offline = value.online.not(),
+          offline = value.status.offline,
           scale = preferences.scale,
           leftButtonState = SwitchButtonState(
             getChannelIconUseCase(channelWithChildren, channelStateValue = ChannelState.Value.CLOSED),
             textRes = R.string.channel_btn_close,
-            pressed = value.online && value.isClosed()
+            pressed = value.status.online && value.isClosed()
           ),
           rightButtonState = SwitchButtonState(
             getChannelIconUseCase(channelWithChildren, channelStateValue = ChannelState.Value.OPEN),
             textRes = R.string.channel_btn_open,
-            pressed = value.online && value.isClosed().not()
+            pressed = value.status.online && value.isClosed().not()
           )
         )
       )
@@ -223,12 +223,12 @@ class ValveGeneralDetailViewModel @Inject constructor(
       caption = getCaptionUseCase(channelDataEntity.shareable),
       userCaption = channel.caption,
       batteryIcon = getChannelBatteryIconUseCase(channelDataEntity.shareable),
-      showChannelStateIcon = channelDataEntity.channelValueEntity.online && SuplaChannelFlag.CHANNEL_STATE inside channel.flags
+      showChannelStateIcon = channelDataEntity.channelValueEntity.status.online && SuplaChannelFlag.CHANNEL_STATE inside channel.flags
     )
 
   private fun ValveValue.getStateStringRes(): Int =
     when {
-      !online -> R.string.offline
+      status.offline -> R.string.offline
       isClosed() -> R.string.state_closed
       else -> R.string.state_opened
     }

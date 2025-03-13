@@ -25,12 +25,15 @@ import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
+import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.core.shared.data.model.channel.ChannelWithChildren
+import org.supla.core.shared.data.model.general.Channel
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.data.model.lists.ChannelIssueItem
 import org.supla.core.shared.data.model.lists.IssueIcon
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.LocalizedStringId
+import org.supla.core.shared.infrastructure.localizedString
 
 class GetChannelIssuesForListUseCaseTest {
   @MockK
@@ -56,6 +59,7 @@ class GetChannelIssuesForListUseCaseTest {
     val channelWithChildren: ChannelWithChildren = mockk {
       every { channel } returns mockk {
         every { function } returns SuplaFunction.POWER_SWITCH
+        every { status } returns SuplaChannelAvailabilityStatus.ONLINE
       }
     }
 
@@ -74,7 +78,7 @@ class GetChannelIssuesForListUseCaseTest {
   @Test
   fun `should get warning icon and battery icon if there is issue and battery powering`() {
     // given
-    val channelWithChildren: ChannelWithChildren = mockk()
+    val channelWithChildren: ChannelWithChildren = mockChannelWithChildren()
 
     every { getChannelLowBatteryIssueUseCase.invoke(channelWithChildren) } returns null
     every { getChannelBatteryIconUseCase.invoke(channelWithChildren) } returns IssueIcon.Battery
@@ -92,7 +96,7 @@ class GetChannelIssuesForListUseCaseTest {
   @Test
   fun `should get only warning icon if there is no battery`() {
     // given
-    val channelWithChildren: ChannelWithChildren = mockk()
+    val channelWithChildren: ChannelWithChildren = mockChannelWithChildren()
 
     every { getChannelLowBatteryIssueUseCase.invoke(channelWithChildren) } returns null
     every { getChannelBatteryIconUseCase.invoke(channelWithChildren) } returns null
@@ -110,7 +114,7 @@ class GetChannelIssuesForListUseCaseTest {
   @Test
   fun `should get warning icon if there is low battery and thermostat issue`() {
     // given
-    val channelWithChildren: ChannelWithChildren = mockk()
+    val channelWithChildren: ChannelWithChildren = mockChannelWithChildren()
 
     every { getChannelLowBatteryIssueUseCase.invoke(channelWithChildren) } returns ChannelIssueItem.LowBattery(emptyList())
     every { getChannelBatteryIconUseCase.invoke(channelWithChildren) } returns null
@@ -128,7 +132,7 @@ class GetChannelIssuesForListUseCaseTest {
   @Test
   fun `should get only sound icon if only sound flag active`() {
     // given
-    val channelWithChildren: ChannelWithChildren = mockk()
+    val channelWithChildren: ChannelWithChildren = mockChannelWithChildren()
 
     every { getChannelLowBatteryIssueUseCase.invoke(channelWithChildren) } returns null
     every { getChannelBatteryIconUseCase.invoke(channelWithChildren) } returns null
@@ -140,5 +144,40 @@ class GetChannelIssuesForListUseCaseTest {
     // then
     assertThat(issues.icons).containsExactly(IssueIcon.Sound)
     assertThat(issues.issuesStrings).isEmpty()
+  }
+
+  @Test
+  fun `should get update icon if channel is in update status`() {
+    // given
+    val channelWithChildren: ChannelWithChildren = mockChannelWithChildren(SuplaChannelAvailabilityStatus.FIRMWARE_UPDATE_ONGOING)
+
+    // when
+    val issues = useCase(channelWithChildren)
+
+    // then
+    assertThat(issues.icons).containsExactly(IssueIcon.Update)
+    assertThat(issues.issuesStrings).containsExactly(localizedString(LocalizedStringId.CHANNEL_STATUS_UPDATING))
+  }
+
+  @Test
+  fun `should notify with error and message when channel is not available`() {
+    // given
+    val channelWithChildren: ChannelWithChildren = mockChannelWithChildren(SuplaChannelAvailabilityStatus.ONLINE_BUT_NOT_AVAILABLE)
+
+    // when
+    val issues = useCase(channelWithChildren)
+
+    // then
+    assertThat(issues.icons).containsExactly(IssueIcon.Error)
+    assertThat(issues.issuesStrings).containsExactly(localizedString(LocalizedStringId.CHANNEL_STATUS_NOT_AVAILABLE))
+  }
+
+  private fun mockChannelWithChildren(status: SuplaChannelAvailabilityStatus = SuplaChannelAvailabilityStatus.ONLINE): ChannelWithChildren {
+    val channel: Channel = mockk {
+      every { this@mockk.status } returns status
+    }
+    return mockk {
+      every { this@mockk.channel } returns channel
+    }
   }
 }

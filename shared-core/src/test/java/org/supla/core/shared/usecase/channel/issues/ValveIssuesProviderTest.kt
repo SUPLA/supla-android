@@ -24,6 +24,7 @@ import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
+import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.core.shared.data.model.channel.ChannelChild
 import org.supla.core.shared.data.model.channel.ChannelRelationType
 import org.supla.core.shared.data.model.channel.ChannelWithChildren
@@ -48,7 +49,7 @@ class ValveIssuesProviderTest {
     val channelWithChildren = ChannelWithChildren(
       channel = mockk {
         every { function } returns SuplaFunction.VALVE_OPEN_CLOSE
-        every { online } returns false
+        every { status } returns SuplaChannelAvailabilityStatus.OFFLINE
       },
       children = emptyList()
     )
@@ -66,7 +67,7 @@ class ValveIssuesProviderTest {
     val channelWithChildren = ChannelWithChildren(
       channel = mockk {
         every { function } returns SuplaFunction.VALVE_OPEN_CLOSE
-        every { online } returns true
+        every { status } returns SuplaChannelAvailabilityStatus.ONLINE
         every { value } returns byteArrayOf(0, 0)
       },
       children = emptyList()
@@ -93,7 +94,7 @@ class ValveIssuesProviderTest {
     val channelWithChildren = ChannelWithChildren(
       channel = mockk {
         every { function } returns SuplaFunction.VALVE_OPEN_CLOSE
-        every { online } returns true
+        every { status } returns SuplaChannelAvailabilityStatus.ONLINE
         every { value } returns byteArrayOf(0, 0)
       },
       children = listOf(child)
@@ -120,7 +121,7 @@ class ValveIssuesProviderTest {
     val channelWithChildren = ChannelWithChildren(
       channel = mockk {
         every { function } returns SuplaFunction.VALVE_OPEN_CLOSE
-        every { online } returns true
+        every { status } returns SuplaChannelAvailabilityStatus.ONLINE
         every { value } returns byteArrayOf(0, 0)
       },
       children = listOf(child)
@@ -147,7 +148,7 @@ class ValveIssuesProviderTest {
     val channelWithChildren = ChannelWithChildren(
       channel = mockk {
         every { function } returns SuplaFunction.VALVE_OPEN_CLOSE
-        every { online } returns true
+        every { status } returns SuplaChannelAvailabilityStatus.ONLINE
         every { value } returns byteArrayOf(0, (SuplaValveFlag.FLOODING.value or SuplaValveFlag.MANUALLY_CLOSED.value).toByte())
       },
       children = listOf(child)

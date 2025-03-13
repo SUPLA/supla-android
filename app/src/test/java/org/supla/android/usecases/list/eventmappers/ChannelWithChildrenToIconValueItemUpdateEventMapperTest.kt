@@ -29,6 +29,7 @@ import org.mockito.kotlin.whenever
 import org.supla.android.core.shared.shareable
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
+import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.android.db.Channel
 import org.supla.android.images.ImageId
 import org.supla.android.testhelpers.extensions.mockShareable
@@ -90,7 +91,7 @@ class ChannelWithChildrenToIconValueItemUpdateEventMapperTest {
   @Test
   fun `should map channel data to item`() {
     // given
-    val online = true
+    val status = SuplaChannelAvailabilityStatus.ONLINE
     val caption = LocalizedString.Constant("caption")
     val value = "value"
 
@@ -99,7 +100,7 @@ class ChannelWithChildrenToIconValueItemUpdateEventMapperTest {
     every { channel.function } returns SuplaFunction.DEPTH_SENSOR
     every { channel.channelEntity } returns mockk { every { function } returns SuplaFunction.DEPTH_SENSOR }
     every { channel.channelValueEntity } returns mockk {
-      every { this@mockk.online } returns online
+      every { this@mockk.status } returns status
       every { getValueAsByteArray() } returns byteArrayOf()
     }
     every { channel.flags } returns 0

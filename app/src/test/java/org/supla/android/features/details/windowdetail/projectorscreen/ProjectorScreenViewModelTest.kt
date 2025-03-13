@@ -40,6 +40,7 @@ import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.data.source.local.entity.custom.GroupOnlineSummary
+import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.LoadingTimeoutManager
@@ -200,7 +201,7 @@ class ProjectorScreenViewModelTest : BaseViewModelTest<ProjectorScreenViewModelS
       every { this@mockk.bottomPosition } returns bottomPosition
       every { this@mockk.flags } returns valueFlags
       every { hasValidPosition() } returns hasValidPosition
-      every { online } returns true
+      every { status } returns SuplaChannelAvailabilityStatus.ONLINE
     }
     val value: ChannelValueEntity = mockk {
       every { asRollerShutterValue() } returns rollerShutterValue
@@ -230,7 +231,7 @@ class ProjectorScreenViewModelTest : BaseViewModelTest<ProjectorScreenViewModelS
       every { this@mockk.remoteId } returns remoteId
       every { this@mockk.function } returns SuplaFunction.PROJECTOR_SCREEN
       every { channelGroupEntity } returns group
-      every { isOnline() } returns true
+      every { status } returns SuplaChannelAvailabilityStatus.ONLINE
     }
 
     whenever(readChannelGroupByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(groupData))

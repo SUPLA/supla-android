@@ -750,4 +750,7 @@
   <string name="container_alarm_level">Behälterfüllstandsalarm!</string>
   <string name="container_invalid_sensor_state">Ungültiger Sensorzustand</string>
   <string name="container_sound_alarm">Akustischer Alarm aktiv</string>
+  <string name="channel_not_available">Der Kanal ist aufgrund der Konfiguration nicht verfügbar. Wir empfehlen Ihnen, den Kanal auszublenden, damit er in der App nicht sichtbar ist.</string>
+  <string name="channel_status_awaiting">Dieses Gerät kann nicht per Fernzugriff aktiviert werden. Wir warten auf eine Kommunikation mit dem Gerät…</string>
+  <string name="channel_status_updating">Software-Update läuft…</string>
 </resources>

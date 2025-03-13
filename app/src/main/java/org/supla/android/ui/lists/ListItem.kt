@@ -43,7 +43,7 @@ sealed interface ListItem {
 
     if (this is ChannelBasedItem && another is ChannelBasedItem) {
       return channelBase.remoteId != another.channelBase.remoteId || channelBase.function != another.channelBase.function ||
-        channelBase.isOnline() != another.channelBase.isOnline()
+        channelBase.status != another.channelBase.status
     }
 
     return true

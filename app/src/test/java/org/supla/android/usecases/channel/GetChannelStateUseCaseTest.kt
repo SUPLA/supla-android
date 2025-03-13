@@ -28,6 +28,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.supla.android.data.model.general.ChannelState
 import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
 import org.supla.android.usecases.group.GetGroupActivePercentageUseCase
 import org.supla.core.shared.data.model.general.SuplaFunction
@@ -420,7 +421,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get offline state for open-close function`() {
     // given
-    val channelData = mockChannelDataEntity(SuplaFunction.OPEN_SENSOR_GATEWAY, online = false)
+    val channelData = mockChannelDataEntity(SuplaFunction.OPEN_SENSOR_GATEWAY, status = SuplaChannelAvailabilityStatus.OFFLINE)
 
     // when
     val state = useCase(channelData)
@@ -432,7 +433,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get offline state for on-off function`() {
     // given
-    val channelData = mockChannelDataEntity(SuplaFunction.MAIL_SENSOR, online = false)
+    val channelData = mockChannelDataEntity(SuplaFunction.MAIL_SENSOR, status = SuplaChannelAvailabilityStatus.OFFLINE)
 
     // when
     val state = useCase(channelData)
@@ -444,7 +445,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get offline state for complex state`() {
     // given
-    val channelData = mockChannelDataEntity(SuplaFunction.DIMMER_AND_RGB_LIGHTING, online = false)
+    val channelData = mockChannelDataEntity(SuplaFunction.DIMMER_AND_RGB_LIGHTING, status = SuplaChannelAvailabilityStatus.OFFLINE)
 
     // when
     val state = useCase(channelData)
@@ -457,7 +458,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get offline state for transparent-opaque function`() {
     // given
-    val channelData = mockChannelDataEntity(SuplaFunction.DIGIGLASS_HORIZONTAL, online = false)
+    val channelData = mockChannelDataEntity(SuplaFunction.DIGIGLASS_HORIZONTAL, status = SuplaChannelAvailabilityStatus.OFFLINE)
 
     // when
     val state = useCase(channelData)
@@ -469,8 +470,11 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get offline state for heat thermostat`() {
     // given
-    val channelData =
-      mockChannelDataEntity(SuplaFunction.HVAC_THERMOSTAT, online = false, thermostatSubfunction = ThermostatSubfunction.HEAT)
+    val channelData = mockChannelDataEntity(
+      SuplaFunction.HVAC_THERMOSTAT,
+      status = SuplaChannelAvailabilityStatus.OFFLINE,
+      thermostatSubfunction = ThermostatSubfunction.HEAT
+    )
 
     // when
     val state = useCase(channelData)
@@ -482,8 +486,11 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get offline state for cool thermostat`() {
     // given
-    val channelData =
-      mockChannelDataEntity(SuplaFunction.HVAC_THERMOSTAT, online = false, thermostatSubfunction = ThermostatSubfunction.COOL)
+    val channelData = mockChannelDataEntity(
+      SuplaFunction.HVAC_THERMOSTAT,
+      status = SuplaChannelAvailabilityStatus.OFFLINE,
+      thermostatSubfunction = ThermostatSubfunction.COOL
+    )
 
     // when
     val state = useCase(channelData)
@@ -507,7 +514,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get not used state for offline`() {
     // given
-    val channelData = mockChannelDataEntity(SuplaFunction.RING, online = false)
+    val channelData = mockChannelDataEntity(SuplaFunction.RING, status = SuplaChannelAvailabilityStatus.OFFLINE)
 
     // when
     val state = useCase(channelData)
@@ -543,7 +550,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get off state for hear or cold source switch - offline`() {
     // given
-    val channelData = mockChannelDataEntity(SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH, online = false)
+    val channelData = mockChannelDataEntity(SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH, status = SuplaChannelAvailabilityStatus.OFFLINE)
 
     // when
     val state = useCase(channelData)
@@ -579,7 +586,7 @@ class GetChannelStateUseCaseTest {
   @Test
   fun `should get off state for pump switch - offline`() {
     // given
-    val channelData = mockChannelDataEntity(SuplaFunction.PUMP_SWITCH, online = false)
+    val channelData = mockChannelDataEntity(SuplaFunction.PUMP_SWITCH, status = SuplaChannelAvailabilityStatus.OFFLINE)
 
     // when
     val state = useCase(channelData)
@@ -590,7 +597,7 @@ class GetChannelStateUseCaseTest {
 
   private fun mockChannelDataEntity(
     function: SuplaFunction,
-    online: Boolean = true,
+    status: SuplaChannelAvailabilityStatus = SuplaChannelAvailabilityStatus.ONLINE,
     subValueHi: Int = 0,
     rollerShutterPosition: Int = 0,
     isClosed: Boolean = false,
@@ -602,7 +609,7 @@ class GetChannelStateUseCaseTest {
     mockk {
       every { this@mockk.function } returns function
       every { channelValueEntity } returns mockk<ChannelValueEntity>().also {
-        every { it.online } returns online
+        every { it.status } returns status
         every { it.getSubValueHi() } returns subValueHi
         every { it.isClosed() } returns isClosed
         every { it.asBrightness() } returns brightness

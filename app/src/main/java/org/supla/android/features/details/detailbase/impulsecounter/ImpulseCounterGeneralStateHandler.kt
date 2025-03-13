@@ -46,7 +46,7 @@ class ImpulseCounterGeneralStateHandler @Inject constructor(
     val unit = channelWithChildren.channel.ImpulseCounter.value?.unit?.let { ImpulseCounterValueFormatter.Data(it) }
     val (value) = guardLet(channelWithChildren.channel.ImpulseCounter.value) {
       return state.copyOrCreate(
-        online = channelWithChildren.isOnline(),
+        online = channelWithChildren.status.online,
         totalData = SummaryCardData(value = getChannelValueStringUseCase(channelWithChildren)),
         currentMonthData = measurements?.toSummaryCardData(formatter)
       )
@@ -54,7 +54,7 @@ class ImpulseCounterGeneralStateHandler @Inject constructor(
 
     val formatterWithUnknownValue = ImpulseCounterValueFormatter(showUnknownValue = true)
     return state.copyOrCreate(
-      online = channelWithChildren.isOnline(),
+      online = channelWithChildren.status.online,
       totalData = SummaryCardData(formatterWithUnknownValue, value.calculatedValue, value.pricePerUnit, value.currency, unit),
       currentMonthData = measurements?.toSummaryCardData(formatter, value)
     )

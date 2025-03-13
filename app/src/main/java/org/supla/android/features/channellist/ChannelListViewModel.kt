@@ -181,7 +181,7 @@ class ChannelListViewModel @Inject constructor(
 
   private fun openDetailsByChannelFunction(data: ChannelWithChildren) {
     val channel = data.channel
-    if (isAvailableInOffline(channel, data.children).not() && channel.isOnline().not()) {
+    if (isAvailableInOffline(channel, data.children).not() && channel.status.offline) {
       return // do not open details for offline channels
     }
 

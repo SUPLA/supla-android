@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.data.Offset
 import org.junit.Test
+import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.core.shared.data.model.function.thermostat.SuplaThermostatFlag
 import org.supla.core.shared.data.model.function.thermostat.ThermostatValue
@@ -29,13 +30,14 @@ class ThermostatValueTest {
   @Test
   fun `should create thermostat value from byte array`() {
     // given
+    val status = SuplaChannelAvailabilityStatus.ONLINE
     val bytes = byteArrayOf(0, 2, 120, 0, 80, 0, 8, 0)
 
     // when
-    val values = ThermostatValue.from(true, bytes)
+    val values = ThermostatValue.from(status, bytes)
 
     // then
-    assertThat(values.online).isTrue()
+    assertThat(values.status).isEqualTo(status)
     assertThat(values.state.isOff()).isTrue
     assertThat(values.mode).isEqualTo(SuplaHvacMode.HEAT)
     assertThat(values.setpointTemperatureHeat).isEqualTo(1.2f, Offset.offset(0.001f))
@@ -47,12 +49,13 @@ class ThermostatValueTest {
   fun `should create thermostat value from byte array (flag on second byte)`() {
     // given
     val bytes = byteArrayOf(0, 2, 120, 0, 80, 0, 8, 2)
+    val status = SuplaChannelAvailabilityStatus.OFFLINE
 
     // when
-    val values = ThermostatValue.from(false, bytes)
+    val values = ThermostatValue.from(status, bytes)
 
     // then
-    assertThat(values.online).isFalse()
+    assertThat(values.status).isEqualTo(status)
     assertThat(values.state.isOff()).isTrue
     assertThat(values.mode).isEqualTo(SuplaHvacMode.HEAT)
     assertThat(values.setpointTemperatureHeat).isEqualTo(1.2f, Offset.offset(0.001f))

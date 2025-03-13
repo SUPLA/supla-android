@@ -92,6 +92,10 @@ val LocalizedStringId.resourceId: Int
     LocalizedStringId.CHANNEL_CAPTION_FLOOD_SENSOR -> R.string.channel_caption_flood_sensor
     LocalizedStringId.CHANNEL_CAPTION_UNKNOWN -> R.string.channel_not_supported
 
+    LocalizedStringId.CHANNEL_STATUS_AWAITING -> R.string.channel_status_awaiting
+    LocalizedStringId.CHANNEL_STATUS_UPDATING -> R.string.channel_status_updating
+    LocalizedStringId.CHANNEL_STATUS_NOT_AVAILABLE -> R.string.channel_not_available
+
     LocalizedStringId.CHANNEL_BATTERY_LEVEL -> R.string.channel_battery_level
 
     LocalizedStringId.MOTOR_PROBLEM -> R.string.motor_problem

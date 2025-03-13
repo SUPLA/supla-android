@@ -68,7 +68,7 @@ class ChannelWithChildrenToThermostatUpdateEventMapper @Inject constructor(
     val thermostatValue = channelData.channelValueEntity.asThermostatValue()
     val mainThermometerChild = children.firstOrNull { it.relationType == ChannelRelationType.MAIN_THERMOMETER }?.withChildren
     val indicatorIcon = thermostatValue.getIndicatorIcon() mergeWith children.indicatorIcon
-    val onlineState = channelData.channelValueEntity.online.onlineState mergeWith children.onlineState
+    val onlineState = channelData.channelValueEntity.status.onlineState mergeWith children.onlineState
 
     return SlideableListItemData.Thermostat(
       onlineState = onlineState,

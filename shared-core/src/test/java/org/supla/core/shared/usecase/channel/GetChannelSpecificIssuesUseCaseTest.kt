@@ -25,6 +25,7 @@ import io.mockk.mockkStatic
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
+import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.core.shared.data.model.channel.ChannelRelationType
 import org.supla.core.shared.data.model.channel.ChannelWithChildren
 import org.supla.core.shared.data.model.channel.thermostatValue
@@ -56,8 +57,9 @@ class GetChannelSpecificIssuesUseCaseTest {
     val channelWithChildren: ChannelWithChildren = mockk {
       every { channel } returns mockk {
         every { function } returns SuplaFunction.HVAC_THERMOSTAT
-        every { online } returns true
-        every { thermostatValue } returns ThermostatValue.from(true, byteArrayOf(0, 2, 120, 0, 80, 0, thermometerError, 0))
+        every { status } returns SuplaChannelAvailabilityStatus.ONLINE
+        every { thermostatValue } returns
+          ThermostatValue.from(SuplaChannelAvailabilityStatus.ONLINE, byteArrayOf(0, 2, 120, 0, 80, 0, thermometerError, 0))
       }
     }
 
@@ -75,8 +77,9 @@ class GetChannelSpecificIssuesUseCaseTest {
     val channelWithChildren: ChannelWithChildren = mockk {
       every { channel } returns mockk {
         every { function } returns SuplaFunction.HVAC_THERMOSTAT
-        every { online } returns true
-        every { thermostatValue } returns ThermostatValue.from(true, byteArrayOf(0, 2, 120, 0, 80, 0, 0, 1))
+        every { status } returns SuplaChannelAvailabilityStatus.ONLINE
+        every { thermostatValue } returns
+          ThermostatValue.from(SuplaChannelAvailabilityStatus.ONLINE, byteArrayOf(0, 2, 120, 0, 80, 0, 0, 1))
       }
     }
 
@@ -94,8 +97,12 @@ class GetChannelSpecificIssuesUseCaseTest {
     val channelWithChildren: ChannelWithChildren = mockk {
       every { channel } returns mockk {
         every { function } returns SuplaFunction.VALVE_OPEN_CLOSE
-        every { online } returns true
-        every { valveValue } returns ValveValue(online = true, closed = 0, listOf(SuplaValveFlag.FLOODING, SuplaValveFlag.MANUALLY_CLOSED))
+        every { status } returns SuplaChannelAvailabilityStatus.ONLINE
+        every { valveValue } returns ValveValue(
+          status = SuplaChannelAvailabilityStatus.ONLINE,
+          closed = 0,
+          flags = listOf(SuplaValveFlag.FLOODING, SuplaValveFlag.MANUALLY_CLOSED)
+        )
       }
       every { children } returns listOf(
         mockk {

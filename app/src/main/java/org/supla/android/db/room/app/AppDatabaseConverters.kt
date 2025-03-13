@@ -19,6 +19,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import androidx.room.TypeConverter
 import org.supla.android.data.source.remote.ChannelConfigType
+import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.core.shared.data.model.channel.ChannelRelationType
 import org.supla.core.shared.data.model.general.SuplaFunction
 import java.time.LocalDateTime
@@ -73,4 +74,12 @@ class AppDatabaseConverters {
   @TypeConverter
   fun intToSuplaChannelFunction(value: Int?): SuplaFunction? =
     value?.let { SuplaFunction.from(it) }
+
+  @TypeConverter
+  fun suplaStatusToInt(status: SuplaChannelAvailabilityStatus): Int =
+    status.rawValue
+
+  @TypeConverter
+  fun intToSuplaStatus(value: Int): SuplaChannelAvailabilityStatus =
+    SuplaChannelAvailabilityStatus.from(value)
 }

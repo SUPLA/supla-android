@@ -165,7 +165,7 @@ class GroupListViewModel @Inject constructor(
   }
 
   private fun openDetailsByChannelFunction(group: ChannelGroupDataEntity) {
-    if (isAvailableInOffline(group, null).not() && group.isOnline().not()) {
+    if (isAvailableInOffline(group, null).not() && group.status.offline) {
       return // do not open details for offline channels
     }
 

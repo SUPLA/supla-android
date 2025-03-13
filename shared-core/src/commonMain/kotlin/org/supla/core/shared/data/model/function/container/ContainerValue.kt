@@ -17,12 +17,13 @@ package org.supla.core.shared.data.model.function.container
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.core.shared.extensions.toShort
 
 private const val CONTAINER_VALUE_LENGTH = 8
 
 data class ContainerValue(
-  val online: Boolean,
+  val status: SuplaChannelAvailabilityStatus,
   val flags: List<ContainerFlag>,
   private val rawLevel: Int
 ) {
@@ -33,13 +34,13 @@ data class ContainerValue(
     get() = rawLevel != 0
 
   companion object {
-    fun from(online: Boolean, bytes: ByteArray): ContainerValue {
+    fun from(status: SuplaChannelAvailabilityStatus, bytes: ByteArray): ContainerValue {
       if (bytes.count() < CONTAINER_VALUE_LENGTH) {
-        return ContainerValue(online, emptyList(), 0)
+        return ContainerValue(status, emptyList(), 0)
       }
 
       return ContainerValue(
-        online = online,
+        status = status,
         flags = ContainerFlag.from(bytes.toShort(1, 2)),
         rawLevel = bytes[0].toInt()
       )

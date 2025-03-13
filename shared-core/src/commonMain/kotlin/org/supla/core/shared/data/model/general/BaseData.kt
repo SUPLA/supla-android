@@ -17,6 +17,7 @@ package org.supla.core.shared.data.model.general
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.core.shared.data.model.battery.BatteryInfo
 
 sealed interface BaseData {
@@ -27,7 +28,7 @@ sealed interface BaseData {
 data class Channel(
   override val remoteId: Int,
   override val caption: String,
-  val online: Boolean,
+  val status: SuplaChannelAvailabilityStatus,
   val function: SuplaFunction,
   val batteryInfo: BatteryInfo?,
   val value: ByteArray?

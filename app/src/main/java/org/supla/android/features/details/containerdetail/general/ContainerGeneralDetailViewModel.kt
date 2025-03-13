@@ -187,7 +187,7 @@ class ContainerGeneralDetailViewModel @Inject constructor(
     val value = channelWithChildren.channel.channelValueEntity.asContainerValue()
     val level = value.levelKnown.ifTrue { value.level.div(100f) }
     val levelString = when {
-      value.online.not() -> "offline"
+      value.status.offline -> "offline"
       level == null -> "---"
       else -> valuesFormatter.getPercentageString(level)
     }
@@ -205,8 +205,7 @@ class ContainerGeneralDetailViewModel @Inject constructor(
             .filter { it.relationType == ChannelRelationType.DEFAULT }
             .map { it.toSensorData(channelToLevelMap) },
           issues = getAllChannelIssuesUseCase(channelWithChildren.shareable),
-          offline = value.online.not(),
-          soundOn = value.online && value.flags.contains(ContainerFlag.SOUND_ALARM_ON)
+          soundOn = value.status.online && value.flags.contains(ContainerFlag.SOUND_ALARM_ON)
         )
       )
     }
@@ -226,7 +225,7 @@ class ContainerGeneralDetailViewModel @Inject constructor(
       caption = captionWithPercentage ?: caption,
       userCaption = channel.caption,
       batteryIcon = getChannelBatteryIconUseCase(channelDataEntity.shareable),
-      showChannelStateIcon = channelDataEntity.channelValueEntity.online && SuplaChannelFlag.CHANNEL_STATE inside channel.flags
+      showChannelStateIcon = channelDataEntity.channelValueEntity.status.online && SuplaChannelFlag.CHANNEL_STATE inside channel.flags
     )
   }
 

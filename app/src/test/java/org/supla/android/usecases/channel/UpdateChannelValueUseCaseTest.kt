@@ -40,6 +40,7 @@ import org.supla.android.data.source.ChannelValueRepository
 import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.ProfileEntity
+import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.android.testhelpers.suplaChannel
 import org.supla.android.testhelpers.suplaChannelValue
 
@@ -61,7 +62,7 @@ class UpdateChannelValueUseCaseTest {
     val channelRemoteId = 123
     val profileId = 321L
     val suplaChannelValue = suplaChannelValue()
-    val suplaChannel = suplaChannel(channelId = channelRemoteId, value = suplaChannelValue, online = true)
+    val suplaChannel = suplaChannel(channelId = channelRemoteId, value = suplaChannelValue, status = SuplaChannelAvailabilityStatus.ONLINE)
     val profileEntity: ProfileEntity = mockk {
       every { id } returns profileId
     }
@@ -84,7 +85,7 @@ class UpdateChannelValueUseCaseTest {
     verify(channelValueRepository).insert(captor.capture())
     with(captor.firstValue) {
       assertThat(this.channelRemoteId).isEqualTo(channelRemoteId)
-      assertThat(online).isTrue()
+      assertThat(status).isEqualTo(SuplaChannelAvailabilityStatus.ONLINE)
       assertThat(this.profileId).isEqualTo(profileId)
     }
 
@@ -96,11 +97,11 @@ class UpdateChannelValueUseCaseTest {
     // given
     val channelRemoteId = 123
     val suplaChannelValue = suplaChannelValue()
-    val online = false
-    val suplaChannel = suplaChannel(channelId = channelRemoteId, value = suplaChannelValue, online = online)
+    val status = SuplaChannelAvailabilityStatus.OFFLINE
+    val suplaChannel = suplaChannel(channelId = channelRemoteId, value = suplaChannelValue, status = status)
     val channelValueEntity: ChannelValueEntity = mockk {
-      every { differsFrom(suplaChannelValue, online) } returns true
-      every { updatedBy(suplaChannelValue, online) } returns this
+      every { differsFrom(suplaChannelValue, status) } returns true
+      every { updatedBy(suplaChannelValue, status) } returns this
     }
 
     whenever(channelValueRepository.findByRemoteId(channelRemoteId)).thenReturn(Maybe.just(channelValueEntity))
@@ -117,8 +118,8 @@ class UpdateChannelValueUseCaseTest {
     verify(channelValueRepository).update(channelValueEntity)
 
     io.mockk.verify {
-      channelValueEntity.differsFrom(suplaChannelValue, online)
-      channelValueEntity.updatedBy(suplaChannelValue, online)
+      channelValueEntity.differsFrom(suplaChannelValue, status)
+      channelValueEntity.updatedBy(suplaChannelValue, status)
     }
 
     verifyNoMoreInteractions(channelValueRepository)
@@ -130,10 +131,10 @@ class UpdateChannelValueUseCaseTest {
     // given
     val channelRemoteId = 123
     val suplaChannelValue = suplaChannelValue()
-    val online = false
-    val suplaChannel = suplaChannel(channelId = channelRemoteId, value = suplaChannelValue, online = online)
+    val status = SuplaChannelAvailabilityStatus.OFFLINE
+    val suplaChannel = suplaChannel(channelId = channelRemoteId, value = suplaChannelValue, status = status)
     val channelValueEntity: ChannelValueEntity = mockk {
-      every { differsFrom(suplaChannelValue, online) } returns false
+      every { differsFrom(suplaChannelValue, status) } returns false
     }
 
     whenever(channelValueRepository.findByRemoteId(channelRemoteId)).thenReturn(Maybe.just(channelValueEntity))
@@ -147,7 +148,7 @@ class UpdateChannelValueUseCaseTest {
 
     verify(channelValueRepository).findByRemoteId(channelRemoteId)
 
-    io.mockk.verify { channelValueEntity.differsFrom(suplaChannelValue, online) }
+    io.mockk.verify { channelValueEntity.differsFrom(suplaChannelValue, status) }
     confirmVerified(channelValueEntity)
 
     verifyNoMoreInteractions(channelValueRepository)

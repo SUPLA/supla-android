@@ -21,6 +21,7 @@ import androidx.room.Embedded
 import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.source.local.entity.ChannelGroupEntity
 import org.supla.android.data.source.local.entity.LocationEntity
+import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.android.db.ChannelGroup
 import org.supla.core.shared.data.model.general.Group
 import org.supla.core.shared.data.model.general.SuplaFunction
@@ -52,7 +53,8 @@ data class ChannelGroupDataEntity(
   override val locationCaption: String
     get() = locationEntity.caption
 
-  override fun isOnline(): Boolean = channelGroupEntity.online > 0
+  override val status: SuplaChannelAvailabilityStatus
+    get() = if (channelGroupEntity.online > 0) SuplaChannelAvailabilityStatus.ONLINE else SuplaChannelAvailabilityStatus.OFFLINE
 
   override fun onlinePercentage(): Int =
     if (channelGroupEntity.online > 100) {

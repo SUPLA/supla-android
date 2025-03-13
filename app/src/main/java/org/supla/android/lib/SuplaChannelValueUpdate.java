@@ -33,8 +33,4 @@ public class SuplaChannelValueUpdate {
   public SuplaChannelValueUpdate() {
     // This constructor is used by native code
   }
-
-  public boolean isOnLine() {
-    return AvailabilityStatus == SuplaChannelAvailabilityStatus.ONLINE;
-  }
 }

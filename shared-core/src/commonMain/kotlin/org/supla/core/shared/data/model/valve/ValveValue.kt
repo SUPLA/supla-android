@@ -17,10 +17,12 @@ package org.supla.core.shared.data.model.valve
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
+
 private const val VALVE_VALUE_LENGTH = 2
 
 data class ValveValue(
-  val online: Boolean,
+  val status: SuplaChannelAvailabilityStatus,
   val closed: Int,
   val flags: List<SuplaValveFlag>
 ) {
@@ -28,13 +30,13 @@ data class ValveValue(
   fun isClosed() = closed == 1
 
   companion object {
-    fun from(online: Boolean, bytes: ByteArray): ValveValue {
+    fun from(status: SuplaChannelAvailabilityStatus, bytes: ByteArray): ValveValue {
       if (bytes.size < VALVE_VALUE_LENGTH) {
-        return ValveValue(online, 0, emptyList())
+        return ValveValue(status, 0, emptyList())
       }
 
       return ValveValue(
-        online = online,
+        status = status,
         closed = bytes[0].toInt(),
         flags = SuplaValveFlag.from(bytes[1].toInt())
       )

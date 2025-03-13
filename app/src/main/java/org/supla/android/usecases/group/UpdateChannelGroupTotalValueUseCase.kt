@@ -60,7 +60,7 @@ class UpdateChannelGroupTotalValueUseCase @Inject constructor(
           }
 
           group.getGroupValue(relation.channelValueEntity)?.let { value ->
-            groupTotalValue.add(value, relation.channelValueEntity.online)
+            groupTotalValue.add(value, relation.channelValueEntity.status.online)
           }
         }
 

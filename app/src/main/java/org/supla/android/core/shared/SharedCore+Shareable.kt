@@ -38,7 +38,7 @@ val ChannelDataBase.shareable: BaseData
       caption = caption,
       function = function,
       batteryInfo = batteryInfo,
-      online = isOnline(),
+      status = status,
       value = channelValueEntity.getValueAsByteArray()
     )
 

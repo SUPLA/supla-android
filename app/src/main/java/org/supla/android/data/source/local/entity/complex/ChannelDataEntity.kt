@@ -25,6 +25,7 @@ import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity
 import org.supla.android.data.source.local.entity.ChannelStateEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.LocationEntity
+import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.android.db.Channel
 import org.supla.android.db.ChannelExtendedValue
 import org.supla.android.db.ChannelValue
@@ -65,10 +66,11 @@ data class ChannelDataEntity(
   override val locationCaption: String
     get() = locationEntity.caption
 
-  override fun isOnline(): Boolean = channelValueEntity.online
+  override val status: SuplaChannelAvailabilityStatus
+    get() = channelValueEntity.status
 
   override fun onlinePercentage(): Int =
-    if (channelValueEntity.online) {
+    if (channelValueEntity.status.online) {
       100
     } else {
       0
@@ -96,7 +98,7 @@ data class ChannelDataEntity(
     channel.value = ChannelValue().also { value ->
       value.id = channelValueEntity.id
       value.channelId = channelValueEntity.channelRemoteId
-      value.onLine = channelValueEntity.online
+      value.onLine = channelValueEntity.status.online
       value.setChannelStringValue(channelValueEntity.value)
       value.setChannelStringSubValue(channelValueEntity.subValue)
       value.subValueType = channelValueEntity.subValueType
@@ -121,7 +123,7 @@ val ChannelDataEntity.shareable: org.supla.core.shared.data.model.general.Channe
     caption = caption,
     function = function,
     batteryInfo = batteryInfo,
-    online = isOnline(),
+    status = status,
     value = channelValueEntity.getValueAsByteArray()
   )
 
