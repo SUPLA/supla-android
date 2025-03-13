@@ -22,5 +22,26 @@ enum class SuplaChannelAvailabilityStatus(val rawValue: Int) {
   OFFLINE(0),
   ONLINE_BUT_NOT_AVAILABLE(2),
   OFFLINE_REMOTE_WAKEUP_NOT_SUPPORTED(3),
-  FIRMWARE_UPDATE_ONGOING(4)
+  FIRMWARE_UPDATE_ONGOING(4);
+
+  val online: Boolean
+    get() = this == ONLINE || this == FIRMWARE_UPDATE_ONGOING
+
+  val offline: Boolean
+    get() = !online
+
+  companion object {
+    fun from(value: Int): SuplaChannelAvailabilityStatus {
+      for (status in entries) {
+        if (status.rawValue == value) {
+          return status
+        }
+      }
+
+      return OFFLINE
+    }
+
+    fun from(online: Boolean): SuplaChannelAvailabilityStatus =
+      if (online) ONLINE else OFFLINE
+  }
 }

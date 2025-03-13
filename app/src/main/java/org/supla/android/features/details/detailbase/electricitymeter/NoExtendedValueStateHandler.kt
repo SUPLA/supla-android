@@ -43,7 +43,7 @@ class NoExtendedValueStateHandler @Inject constructor(
     val formatter = ListElectricityMeterValueFormatter(useNoValue = false)
 
     return state.copyOrCreate(
-      online = channelWithChildren.isOnline(),
+      online = channelWithChildren.status.online,
       totalForwardActiveEnergy = SummaryCardData(value = formatter.format(value), price = null),
       totalReversedActiveEnergy = null,
       currentMonthForwardActiveEnergy = measurements?.toForwardEnergy(formatter),

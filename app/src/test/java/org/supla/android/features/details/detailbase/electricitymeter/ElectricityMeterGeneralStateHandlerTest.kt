@@ -29,6 +29,7 @@ import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
+import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType
 import org.supla.android.data.source.remote.electricitymeter.ElectricityMeterPhaseSequence
@@ -98,7 +99,7 @@ class ElectricityMeterGeneralStateHandlerTest {
     val channelWithChildren: ChannelWithChildren = mockk {
       every { this@mockk.channel } returns channel
       every { flags } returns 0
-      every { isOnline() } returns true
+      every { status } returns SuplaChannelAvailabilityStatus.ONLINE
     }
     val state = ElectricityMeterState()
 
@@ -155,7 +156,7 @@ class ElectricityMeterGeneralStateHandlerTest {
     val channelWithChildren: ChannelWithChildren = mockk {
       every { this@mockk.channel } returns channel
       every { flags } returns (SuplaChannelFlag.PHASE2_UNSUPPORTED.rawValue or SuplaChannelFlag.PHASE3_UNSUPPORTED.rawValue)
-      every { isOnline() } returns true
+      every { status } returns SuplaChannelAvailabilityStatus.ONLINE
     }
     val measurements = ElectricityMeasurements(21f, 22f)
     val state = ElectricityMeterState()
@@ -216,7 +217,7 @@ class ElectricityMeterGeneralStateHandlerTest {
     val channelWithChildren: ChannelWithChildren = mockk {
       every { this@mockk.channel } returns channel
       every { flags } returns SuplaChannelFlag.PHASE3_UNSUPPORTED.rawValue
-      every { isOnline() } returns true
+      every { status } returns SuplaChannelAvailabilityStatus.ONLINE
     }
     val measurements = ElectricityMeasurements(21f, 22f)
     val state = ElectricityMeterState()

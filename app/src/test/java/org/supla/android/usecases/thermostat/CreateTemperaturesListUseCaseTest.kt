@@ -31,6 +31,7 @@ import org.supla.android.data.source.local.entity.ChannelRelationEntity
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
+import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.android.features.details.thermostatdetail.general.MeasurementValue
 import org.supla.android.images.ImageId
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
@@ -141,7 +142,7 @@ class CreateTemperaturesListUseCaseTest {
     every { channel.function } returns function
     every { channel.caption } returns ""
     every { channel.stateEntity } returns null
-    every { channel.isOnline() } returns true
+    every { channel.status } returns SuplaChannelAvailabilityStatus.ONLINE
     every { channel.channelValueEntity } returns mockk {
       every { getValueAsByteArray() } returns byteArrayOf()
     }

@@ -34,5 +34,5 @@ class ContainerValueProvider @Inject constructor() : ChannelValueProvider {
     }
 
   override fun value(channelWithChildren: ChannelWithChildren, valueType: ValueType): ContainerValue =
-    ContainerValue.from(channelWithChildren.isOnline(), channelWithChildren.channel.channelValueEntity.getValueAsByteArray())
+    ContainerValue.from(channelWithChildren.status, channelWithChildren.channel.channelValueEntity.getValueAsByteArray())
 }

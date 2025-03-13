@@ -147,7 +147,7 @@ class SwitchGeneralViewModel @Inject constructor(
       state.copy(
         remoteId = data.remoteId,
         itemType = if (data is ChannelGroupDataEntity) ItemType.GROUP else ItemType.CHANNEL,
-        online = data.isOnline(),
+        online = data.status.online,
         initialDataLoadStarted = true,
         deviceStateLabel = getDeviceStateLabel(data),
         deviceStateIcon = getChannelIconUseCase(data),
@@ -189,7 +189,7 @@ class SwitchGeneralViewModel @Inject constructor(
   }
 
   private fun getDeviceStateValue(data: ChannelDataBase) = when {
-    data.isOnline().not() -> R.string.offline
+    data.status.offline -> R.string.offline
     getChannelStateUseCase(data).isActive() -> R.string.details_timer_device_on
     else -> R.string.details_timer_device_off
   }

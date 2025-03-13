@@ -22,6 +22,7 @@ import org.assertj.core.data.Offset
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
+import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 
 @RunWith(MockitoJUnitRunner::class)
 class HeatpolThermostatValueTest {
@@ -29,13 +30,14 @@ class HeatpolThermostatValueTest {
   @Test
   fun `should create thermostat value from byte array`() {
     // given
+    val status = SuplaChannelAvailabilityStatus.ONLINE
     val bytes = byteArrayOf(1, 4, 120, 0, 80, 0)
 
     // when
-    val values = HeatpolThermostatValue.from(true, bytes)
+    val values = HeatpolThermostatValue.from(status, bytes)
 
     // then
-    Assertions.assertThat(values.online).isTrue()
+    Assertions.assertThat(values.status).isEqualTo(status)
     Assertions.assertThat(values.on).isTrue
     Assertions.assertThat(values.flags).containsExactly(SuplaHeatpolThermostatFlag.COOL_MODE)
     Assertions.assertThat(values.measuredTemperature).isEqualTo(1.2f, Offset.offset(0.001f))
@@ -45,13 +47,14 @@ class HeatpolThermostatValueTest {
   @Test
   fun `should create default value when array to short`() {
     // given
+    val status = SuplaChannelAvailabilityStatus.OFFLINE
     val bytes = byteArrayOf(0, 0, 120, 0, 80)
 
     // when
-    val values = HeatpolThermostatValue.from(false, bytes)
+    val values = HeatpolThermostatValue.from(status, bytes)
 
     // then
-    Assertions.assertThat(values.online).isFalse()
+    Assertions.assertThat(values.status).isEqualTo(status)
     Assertions.assertThat(values.on).isFalse()
     Assertions.assertThat(values.flags).isEmpty()
     Assertions.assertThat(values.measuredTemperature).isEqualTo(0f, Offset.offset(0.001f))

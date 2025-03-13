@@ -34,6 +34,7 @@ import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.shareable
+import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.UpdateEventsManager
@@ -159,7 +160,7 @@ class ThermostatDetailViewModelTest :
       every { caption } returns ""
       every { channelExtendedValueEntity } returns null
       every { stateEntity } returns null
-      every { isOnline() } returns true
+      every { status } returns SuplaChannelAvailabilityStatus.ONLINE
     }
   }
 }

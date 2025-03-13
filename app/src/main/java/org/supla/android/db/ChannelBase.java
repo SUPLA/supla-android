@@ -367,7 +367,7 @@ public abstract class ChannelBase extends DbItem {
 
     return base.Id != getRemoteId()
         || !base.Caption.equals(getCaption())
-        || base.getOnLine() != getOnLine()
+        || base.getStatus().getOnline() != getOnLine()
         || base.Flags != getFlags()
         || base.AltIcon != getAltIcon()
         || base.UserIcon != getUserIconId();

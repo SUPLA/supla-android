@@ -232,7 +232,7 @@ private fun Preview() {
 private fun sampleSlave(channelId: Int) = ThermostatData(
   channelId,
   1L,
-  ((channelId % 2) == 0).onlineState,
+  if ((channelId % 2) == 0) ListOnlineState.ONLINE else ListOnlineState.OFFLINE,
   LocalizedString.Constant("FHC #$channelId"),
   "",
   ImageId(R.drawable.fnc_thermostat_heat),

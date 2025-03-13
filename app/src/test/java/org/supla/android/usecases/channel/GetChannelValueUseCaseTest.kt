@@ -30,6 +30,7 @@ import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
+import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.android.usecases.channel.valueprovider.ContainerValueProvider
 import org.supla.android.usecases.channel.valueprovider.DepthSensorValueProvider
 import org.supla.android.usecases.channel.valueprovider.DistanceSensorValueProvider
@@ -126,7 +127,7 @@ class GetChannelValueUseCaseTest {
       every { this@mockk.function } returns function
       every { channel } returns mockk {
         every { channelValueEntity } returns mockk {
-          every { online } returns true
+          every { status } returns SuplaChannelAvailabilityStatus.ONLINE
         }
       }
     }

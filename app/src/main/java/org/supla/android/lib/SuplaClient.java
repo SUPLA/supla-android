@@ -1095,8 +1095,8 @@ public class SuplaClient extends Thread implements SuplaClientApi {
             + channel.Id
             + " channel Location ID: "
             + channel.LocationID
-            + " OnLine: "
-            + channel.getOnLine()
+            + " status: "
+            + channel.getAvailabilityStatus()
             + " AltIcon: "
             + channel.AltIcon
             + " UserIcon: "
@@ -1277,8 +1277,8 @@ public class SuplaClient extends Thread implements SuplaClientApi {
             + channelValueUpdate.Id
             + " value: "
             + channelValueUpdate.Value
-            + " online:"
-            + channelValueUpdate.isOnLine()
+            + " status:"
+            + channelValueUpdate.AvailabilityStatus
             + " EOL:"
             + channelValueUpdate.EOL);
     if (updateChannelValueUseCase.invoke(channelValueUpdate).blockingGet()

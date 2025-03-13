@@ -17,11 +17,13 @@ package org.supla.core.shared.usecase.channel
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.core.shared.data.model.channel.ChannelWithChildren
 import org.supla.core.shared.data.model.lists.ChannelIssueItem
 import org.supla.core.shared.data.model.lists.IssueIcon
 import org.supla.core.shared.data.model.lists.ListItemIssues
 import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.infrastructure.LocalizedStringId
 
 class GetChannelIssuesForListUseCase(
   private val getChannelLowBatteryIssueUseCase: GetChannelLowBatteryIssueUseCase,
@@ -30,9 +32,30 @@ class GetChannelIssuesForListUseCase(
 ) {
 
   operator fun invoke(channelWithChildren: ChannelWithChildren): ListItemIssues {
+    return when (channelWithChildren.channel.status) {
+      SuplaChannelAvailabilityStatus.ONLINE_BUT_NOT_AVAILABLE -> handleNotAvailable()
+      SuplaChannelAvailabilityStatus.FIRMWARE_UPDATE_ONGOING -> handleUpdate()
+      else -> provideIssues(channelWithChildren)
+    }
+  }
+
+  private fun handleNotAvailable(): ListItemIssues =
+    ListItemIssues(
+      icons = listOf(IssueIcon.Error),
+      issuesStrings = listOf(LocalizedString.WithId(LocalizedStringId.CHANNEL_STATUS_NOT_AVAILABLE))
+    )
+
+  private fun handleUpdate(): ListItemIssues =
+    ListItemIssues(
+      icons = listOf(IssueIcon.Update),
+      issuesStrings = listOf(LocalizedString.WithId(LocalizedStringId.CHANNEL_STATUS_UPDATING))
+    )
+
+  private fun provideIssues(channelWithChildren: ChannelWithChildren): ListItemIssues {
     val batteryIssue = getChannelLowBatteryIssueUseCase(channelWithChildren)
     val otherIssues = mutableListOf<ChannelIssueItem>()
     otherIssues.addAll(getChannelSpecificIssuesUseCase(channelWithChildren))
+    getAvailabilityIssues(channelWithChildren)?.let { otherIssues.add(it) }
 
     val icons = mutableListOf<IssueIcon>()
     val messages = mutableListOf<LocalizedString>()
@@ -57,6 +80,14 @@ class GetChannelIssuesForListUseCase(
     }
 
     return ListItemIssues(icons, messages)
+  }
+
+  private fun getAvailabilityIssues(channelWithChildren: ChannelWithChildren): ChannelIssueItem? {
+    if (channelWithChildren.channel.status == SuplaChannelAvailabilityStatus.OFFLINE_REMOTE_WAKEUP_NOT_SUPPORTED) {
+      return ChannelIssueItem.Warning(LocalizedStringId.CHANNEL_STATUS_AWAITING)
+    }
+
+    return null
   }
 }
 

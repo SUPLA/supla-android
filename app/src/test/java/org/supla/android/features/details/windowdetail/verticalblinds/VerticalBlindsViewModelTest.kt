@@ -43,6 +43,7 @@ import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.data.source.local.entity.custom.GroupOnlineSummary
 import org.supla.android.data.source.remote.ConfigResult
+import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.android.data.source.remote.rollershutter.SuplaChannelFacadeBlindConfig
 import org.supla.android.data.source.remote.rollershutter.SuplaTiltControlType
 import org.supla.android.data.source.runtime.ItemType
@@ -168,7 +169,7 @@ class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelSta
     val remoteId = 123
     val position = 10
     val tilt = 33
-    val channelData = mockChannel(remoteId, position, tilt, online = false)
+    val channelData = mockChannel(remoteId, position, tilt, status = SuplaChannelAvailabilityStatus.OFFLINE)
 
     whenever(readChannelByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(channelData))
     whenever(preferences.isShowOpeningPercent).thenReturn(false)
@@ -661,7 +662,7 @@ class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelSta
   fun `should load group`() {
     // given
     val remoteId = 123
-    val group = mockGroup(remoteId, online = true)
+    val group = mockGroup(remoteId, status = SuplaChannelAvailabilityStatus.ONLINE)
     val onlineSummary = GroupOnlineSummary(2, 5)
 
     whenever(readChannelGroupByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(group))
@@ -697,7 +698,7 @@ class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelSta
   fun `should load offline group`() {
     // given
     val remoteId = 1234
-    val group = mockGroup(remoteId, online = false)
+    val group = mockGroup(remoteId, status = SuplaChannelAvailabilityStatus.OFFLINE)
     val onlineSummary = GroupOnlineSummary(2, 5)
 
     whenever(readChannelGroupByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(group))
@@ -732,13 +733,13 @@ class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelSta
     remoteId: Int,
     position: Int,
     tilt: Int,
-    online: Boolean = true,
+    status: SuplaChannelAvailabilityStatus = SuplaChannelAvailabilityStatus.ONLINE,
     flags: List<SuplaShadingSystemFlag> = listOf(SuplaShadingSystemFlag.TILT_IS_SET)
   ): ChannelDataEntity {
     val facadeBlindValue: FacadeBlindValue = mockk {
       every { this@mockk.position } returns position
       every { this@mockk.tilt } returns tilt
-      every { this@mockk.online } returns online
+      every { this@mockk.status } returns status
       every { this@mockk.flags } returns flags
       every { hasValidPosition() } returns (position != -1)
       every { hasValidTilt() } returns (tilt != -1)
@@ -753,7 +754,7 @@ class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelSta
     }
   }
 
-  private fun mockGroup(remoteId: Int, online: Boolean): ChannelGroupDataEntity {
+  private fun mockGroup(remoteId: Int, status: SuplaChannelAvailabilityStatus): ChannelGroupDataEntity {
     val group: ChannelGroupEntity = mockk {
       every { groupTotalValues } returns listOf(ShadowingBlindGroupValue(50, 85), ShadowingBlindGroupValue(30, 25))
     }
@@ -761,7 +762,7 @@ class VerticalBlindsViewModelTest : BaseViewModelTest<VerticalBlindsViewModelSta
       every { id } returns 321L
       every { this@mockk.remoteId } returns remoteId
       every { channelGroupEntity } returns group
-      every { this@mockk.isOnline() } returns online
+      every { this@mockk.status } returns status
     }
   }
 

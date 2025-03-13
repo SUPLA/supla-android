@@ -29,10 +29,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -42,9 +42,14 @@ import org.supla.android.ui.lists.ListOnlineState
 
 @Composable
 fun ListItemDot(onlineState: ListOnlineState, withButton: Boolean, paddingValues: PaddingValues, modifier: Modifier = Modifier) {
-  val onlineColor = colorResource(id = R.color.primary)
-  val offlineColor = colorResource(id = R.color.red)
-  val color = if (onlineState.online) onlineColor else offlineColor
+  val onlineColor = MaterialTheme.colorScheme.primary
+  val offlineColor = MaterialTheme.colorScheme.error
+  val updateColor = MaterialTheme.colorScheme.secondary
+  val color = when (onlineState) {
+    ListOnlineState.ONLINE, ListOnlineState.PARTIALLY_ONLINE -> onlineColor
+    ListOnlineState.UPDATING -> updateColor
+    else -> offlineColor
+  }
   val size = dimensionResource(id = R.dimen.channel_dot_size)
   val background = if (withButton) color else Color.Transparent
   if (onlineState == ListOnlineState.PARTIALLY_ONLINE && withButton) {
@@ -94,6 +99,8 @@ private fun Preview() {
       ListItemDot(onlineState = ListOnlineState.OFFLINE, withButton = false, paddingValues = PaddingValues(0.dp))
       ListItemDot(onlineState = ListOnlineState.PARTIALLY_ONLINE, withButton = true, paddingValues = PaddingValues(0.dp))
       ListItemDot(onlineState = ListOnlineState.PARTIALLY_ONLINE, withButton = false, paddingValues = PaddingValues(0.dp))
+      ListItemDot(onlineState = ListOnlineState.UPDATING, withButton = true, paddingValues = PaddingValues(0.dp))
+      ListItemDot(onlineState = ListOnlineState.UPDATING, withButton = false, paddingValues = PaddingValues(0.dp))
     }
   }
 }

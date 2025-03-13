@@ -24,6 +24,7 @@ import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
+import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
 import org.supla.android.db.Channel
 import org.supla.android.db.ChannelBase
@@ -298,7 +299,7 @@ interface ValueStateWrapper {
 
 private class ChannelValueEntityStateWrapper(private val channelValueEntity: ChannelValueEntity) : ValueStateWrapper {
   override val online: Boolean
-    get() = channelValueEntity.online
+    get() = channelValueEntity.status.online
   override val subValueHi: Int
     get() = channelValueEntity.getSubValueHi()
   override val isClosed: Boolean
@@ -349,7 +350,7 @@ private class ChannelGroupEntityStateWrapper(
   override val shadingSystemReversedClosed: Boolean
     get() = getActivePercentage() < 100
   override val containerValue: ContainerValue
-    get() = ContainerValue(group.online > 0, emptyList(), 0)
+    get() = ContainerValue(SuplaChannelAvailabilityStatus.Companion.from(group.online > 0), emptyList(), 0)
 
   private fun getActivePercentage(valueIndex: Int = 0) =
     getGroupActivePercentageUseCase(group, valueIndex)
@@ -382,7 +383,11 @@ private class ChannelValueStateWrapper(private val value: ChannelValue?) : Value
       return percentage < 100
     }
   override val containerValue: ContainerValue
-    get() = value?.asContainerValue() ?: ContainerValue(value?.onLine ?: false, emptyList(), 0)
+    get() = value?.asContainerValue() ?: ContainerValue(
+      SuplaChannelAvailabilityStatus.Companion.from(value?.onLine ?: false),
+      emptyList(),
+      0
+    )
 }
 
 private class ChannelGroupStateWrapper(
@@ -408,7 +413,7 @@ private class ChannelGroupStateWrapper(
   override val shadingSystemReversedClosed: Boolean
     get() = getActivePercentage() <= 0
   override val containerValue: ContainerValue
-    get() = ContainerValue(group.onLine, emptyList(), 0)
+    get() = ContainerValue(SuplaChannelAvailabilityStatus.Companion.from(group.onLine), emptyList(), 0)
 
   private fun getActivePercentage(valueIndex: Int = 0) =
     getGroupActivePercentageUseCase(group, valueIndex)

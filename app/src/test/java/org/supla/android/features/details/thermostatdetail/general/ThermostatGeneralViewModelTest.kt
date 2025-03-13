@@ -42,6 +42,7 @@ import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.remote.ConfigResult
+import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.android.data.source.remote.hvac.SuplaChannelHvacConfig
 import org.supla.android.data.source.remote.hvac.SuplaChannelWeeklyScheduleConfig
 import org.supla.android.data.source.remote.hvac.SuplaHvacAlgorithm
@@ -729,7 +730,7 @@ class ThermostatGeneralViewModelTest :
     timerEndDate: Date? = null
   ): ChannelWithChildren {
     val thermostatValue: ThermostatValue = mockk {
-      every { online } returns true
+      every { status } returns SuplaChannelAvailabilityStatus.ONLINE
       every { state } returns ThermostatState(1)
       every { this@mockk.mode } returns mode
       every { this@mockk.setpointTemperatureHeat } returns (setpointTemperatureHeat ?: 0f)
@@ -742,7 +743,7 @@ class ThermostatGeneralViewModelTest :
     }
 
     val value: ChannelValueEntity = mockk()
-    every { value.online } returns true
+    every { value.status } returns SuplaChannelAvailabilityStatus.ONLINE
     every { value.asThermostatValue() } returns thermostatValue
 
     val suplaExtendedValue = SuplaChannelExtendedValue()

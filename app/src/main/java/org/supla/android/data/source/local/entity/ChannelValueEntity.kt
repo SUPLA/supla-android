@@ -25,6 +25,7 @@ import androidx.room.PrimaryKey
 import org.supla.android.data.source.local.entity.ChannelValueEntity.Companion.COLUMN_CHANNEL_REMOTE_ID
 import org.supla.android.data.source.local.entity.ChannelValueEntity.Companion.COLUMN_PROFILE_ID
 import org.supla.android.data.source.local.entity.ChannelValueEntity.Companion.TABLE_NAME
+import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.android.data.source.remote.relay.RelayValue
 import org.supla.android.data.source.remote.thermostat.HeatpolThermostatValue
 import org.supla.android.lib.DigiglassValue
@@ -52,14 +53,14 @@ import org.supla.core.shared.data.model.valve.ValveValue
 data class ChannelValueEntity(
   @ColumnInfo(name = COLUMN_ID) @PrimaryKey val id: Long?,
   @ColumnInfo(name = COLUMN_CHANNEL_REMOTE_ID) val channelRemoteId: Int,
-  @ColumnInfo(name = COLUMN_ONLINE) val online: Boolean,
+  @ColumnInfo(name = COLUMN_ONLINE) val status: SuplaChannelAvailabilityStatus,
   @ColumnInfo(name = COLUMN_SUB_VALUE) val subValue: String?,
   @ColumnInfo(name = COLUMN_SUB_VALUE_TYPE) val subValueType: Short,
   @ColumnInfo(name = COLUMN_VALUE) val value: String?,
   @ColumnInfo(name = COLUMN_PROFILE_ID) val profileId: Long,
 ) {
 
-  fun asThermostatValue() = ThermostatValue.from(online, getValueAsByteArray())
+  fun asThermostatValue() = ThermostatValue.from(status, getValueAsByteArray())
 
   fun asBrightness() = asShortValue(0)?.let { if (it > 100) 0 else it }?.toInt() ?: 0
 
@@ -77,17 +78,17 @@ data class ChannelValueEntity(
 
   fun asDigiglassValue() = DigiglassValue(getValueAsByteArray())
 
-  fun asRollerShutterValue() = RollerShutterValue.from(online, getValueAsByteArray())
+  fun asRollerShutterValue() = RollerShutterValue.from(status, getValueAsByteArray())
 
-  fun asFacadeBlindValue() = FacadeBlindValue.from(online, getValueAsByteArray())
+  fun asFacadeBlindValue() = FacadeBlindValue.from(status, getValueAsByteArray())
 
-  fun asHeatpolThermostatValue() = HeatpolThermostatValue.from(online, getValueAsByteArray())
+  fun asHeatpolThermostatValue() = HeatpolThermostatValue.from(status, getValueAsByteArray())
 
-  fun asRelayValue() = RelayValue.from(online, getValueAsByteArray())
+  fun asRelayValue() = RelayValue.from(status, getValueAsByteArray())
 
-  fun asValveValue() = ValveValue.from(online, getValueAsByteArray())
+  fun asValveValue() = ValveValue.from(status, getValueAsByteArray())
 
-  fun asContainerValue() = ContainerValue.from(online, getValueAsByteArray())
+  fun asContainerValue() = ContainerValue.from(status, getValueAsByteArray())
 
   fun getSubValueHi(): Int =
     getSubValueAsByteArray().let {
@@ -120,24 +121,24 @@ data class ChannelValueEntity(
 
   fun getSubValueAsByteArray(): ByteArray = toByteArray(subValue)
 
-  fun differsFrom(suplaChannelValue: SuplaChannelValue, online: Boolean): Boolean {
+  fun differsFrom(suplaChannelValue: SuplaChannelValue, status: SuplaChannelAvailabilityStatus): Boolean {
     val suplaValue = Companion.toString(suplaChannelValue.Value)
     val suplaSubValue = Companion.toString(suplaChannelValue.SubValue)
 
     return value != suplaValue ||
       subValue != suplaSubValue ||
       subValueType != suplaChannelValue.SubValueType ||
-      this.online != online
+      this.status != status
   }
 
-  fun updatedBy(suplaChannelValue: SuplaChannelValue, online: Boolean): ChannelValueEntity =
+  fun updatedBy(suplaChannelValue: SuplaChannelValue, status: SuplaChannelAvailabilityStatus): ChannelValueEntity =
     ChannelValueEntity(
       id = id,
       channelRemoteId = channelRemoteId,
-      online = online,
-      subValue = if (online) Companion.toString(suplaChannelValue.SubValue) else subValue,
-      subValueType = if (online) suplaChannelValue.SubValueType else subValueType,
-      value = if (online) Companion.toString(suplaChannelValue.Value) else value,
+      status = status,
+      subValue = if (status.online) Companion.toString(suplaChannelValue.SubValue) else subValue,
+      subValueType = if (status.online) suplaChannelValue.SubValueType else subValueType,
+      value = if (status.online) Companion.toString(suplaChannelValue.Value) else value,
       profileId = profileId
     )
 
@@ -181,11 +182,16 @@ data class ChannelValueEntity(
     const val ALL_COLUMNS =
       "$COLUMN_ID, $COLUMN_CHANNEL_REMOTE_ID, $COLUMN_ONLINE, $COLUMN_SUB_VALUE_TYPE, $COLUMN_SUB_VALUE, $COLUMN_VALUE, $COLUMN_PROFILE_ID"
 
-    fun from(suplaChannelValue: SuplaChannelValue, channelRemoteId: Int, online: Boolean, profileId: Long): ChannelValueEntity {
+    fun from(
+      suplaChannelValue: SuplaChannelValue,
+      channelRemoteId: Int,
+      status: SuplaChannelAvailabilityStatus,
+      profileId: Long
+    ): ChannelValueEntity {
       return ChannelValueEntity(
         id = null,
         channelRemoteId = channelRemoteId,
-        online = online,
+        status = status,
         subValue = getValue(suplaChannelValue.SubValue),
         subValueType = suplaChannelValue.SubValueType,
         value = getValue(suplaChannelValue.Value),

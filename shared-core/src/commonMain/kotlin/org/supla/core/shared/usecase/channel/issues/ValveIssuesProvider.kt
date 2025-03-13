@@ -32,7 +32,7 @@ class ValveIssuesProvider : ChannelIssuesProvider {
       return emptyList()
     }
 
-    if (!channelWithChildren.channel.online) {
+    if (channelWithChildren.channel.status.offline) {
       return emptyList()
     }
 

@@ -36,6 +36,7 @@ import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.data.source.local.entity.complex.shareable
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
+import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.images.ImageId
@@ -309,7 +310,7 @@ class CreateListItemUpdateEventDataUseCaseTest {
     val imageId: ImageId = mockk()
 
     val channelGroup: ChannelGroupDataEntity = mockk {
-      every { isOnline() } returns true
+      every { status } returns SuplaChannelAvailabilityStatus.ONLINE
       every { this@mockk.remoteId } returns remoteId
       every { this@mockk.function } returns SuplaFunction.POWER_SWITCH
       every { this@mockk.caption } returns ""
