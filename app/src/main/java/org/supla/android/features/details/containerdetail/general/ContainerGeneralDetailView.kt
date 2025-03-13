@@ -64,7 +64,6 @@ data class ContainerGeneralDetailViewState(
   val scale: Float = 1f,
   val sensors: List<SensorItemData> = emptyList(),
   val issues: List<ChannelIssueItem> = emptyList(),
-  val offline: Boolean = false,
 
   val soundOn: Boolean = false
 )

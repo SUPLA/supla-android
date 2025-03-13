@@ -74,7 +74,7 @@ class ElectricityMeterGeneralStateHandler @Inject constructor(
     }
 
     return state.copyOrCreate(
-      online = channelWithChildren.isOnline(),
+      online = channelWithChildren.status.online,
       totalForwardActiveEnergy = extendedValue.getForwardEnergy(formatter),
       totalReversedActiveEnergy = extendedValue.getReverseEnergy(formatter),
       currentMonthForwardActiveEnergy = measurements?.toForwardEnergy(formatter, extendedValue),
@@ -83,7 +83,7 @@ class ElectricityMeterGeneralStateHandler @Inject constructor(
       phaseMeasurementValues = getPhaseData(phaseTypes, channelWithChildren.flags, extendedValue, formatter),
       vectorBalancedValues = vectorBalancedValues,
       electricGridParameters = getGridParameters(channelWithChildren.flags, extendedValue, formatter),
-      showIntroduction = preferences.shouldShowEmGeneralIntroduction() && channelWithChildren.isOnline() && moreThanOnePhase
+      showIntroduction = preferences.shouldShowEmGeneralIntroduction() && channelWithChildren.status.online && moreThanOnePhase
     )
   }
 

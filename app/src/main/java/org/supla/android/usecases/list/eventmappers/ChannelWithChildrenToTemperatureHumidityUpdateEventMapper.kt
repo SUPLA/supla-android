@@ -58,7 +58,7 @@ class ChannelWithChildrenToTemperatureHumidityUpdateEventMapper @Inject construc
   private fun toSlideableListItemData(channelWithChildren: ChannelWithChildren): SlideableListItemData.DoubleValue {
     val channelData = channelWithChildren.channel
     val children = channelWithChildren.children
-    val onlineState = channelData.channelValueEntity.online.onlineState mergeWith children.onlineState
+    val onlineState = channelData.channelValueEntity.status.onlineState mergeWith children.onlineState
 
     return SlideableListItemData.DoubleValue(
       onlineState = onlineState,

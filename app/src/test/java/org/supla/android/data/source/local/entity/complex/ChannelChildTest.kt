@@ -22,6 +22,7 @@ import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.supla.android.data.source.local.entity.ChannelValueEntity
+import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.data.source.remote.thermostat.ThermostatIndicatorIcon
 import org.supla.android.ui.lists.ListOnlineState
@@ -75,9 +76,9 @@ class ChannelChildTest {
   @Test
   fun `check if online state is calculated properly - all online`() {
     // given
-    val first = mockChild(true)
-    val second = mockChild(true)
-    val third = mockChild(true)
+    val first = mockChild(SuplaChannelAvailabilityStatus.ONLINE)
+    val second = mockChild(SuplaChannelAvailabilityStatus.ONLINE)
+    val third = mockChild(SuplaChannelAvailabilityStatus.ONLINE)
 
     // when
     val state = listOf(first, second, third).onlineState
@@ -89,9 +90,9 @@ class ChannelChildTest {
   @Test
   fun `check if online state is calculated properly - all offline`() {
     // given
-    val first = mockChild(false)
-    val second = mockChild(false)
-    val third = mockChild(false)
+    val first = mockChild(SuplaChannelAvailabilityStatus.OFFLINE)
+    val second = mockChild(SuplaChannelAvailabilityStatus.OFFLINE)
+    val third = mockChild(SuplaChannelAvailabilityStatus.OFFLINE)
 
     // when
     val state = listOf(first, second, third).onlineState
@@ -103,9 +104,9 @@ class ChannelChildTest {
   @Test
   fun `check if online state is calculated properly - first online then offline`() {
     // given
-    val first = mockChild(true)
-    val second = mockChild(false)
-    val third = mockChild(false)
+    val first = mockChild(SuplaChannelAvailabilityStatus.ONLINE)
+    val second = mockChild(SuplaChannelAvailabilityStatus.OFFLINE)
+    val third = mockChild(SuplaChannelAvailabilityStatus.OFFLINE)
 
     // when
     val state = listOf(first, second, third).onlineState
@@ -117,9 +118,23 @@ class ChannelChildTest {
   @Test
   fun `check if online state is calculated properly - offline, online, offline`() {
     // given
-    val first = mockChild(false)
-    val second = mockChild(true)
-    val third = mockChild(false)
+    val first = mockChild(SuplaChannelAvailabilityStatus.OFFLINE)
+    val second = mockChild(SuplaChannelAvailabilityStatus.ONLINE)
+    val third = mockChild(SuplaChannelAvailabilityStatus.OFFLINE)
+
+    // when
+    val state = listOf(first, second, third).onlineState
+
+    // then
+    assertThat(state).isEqualTo(ListOnlineState.PARTIALLY_ONLINE)
+  }
+
+  @Test
+  fun `check if online state is calculated properly - other`() {
+    // given
+    val first = mockChild(SuplaChannelAvailabilityStatus.ONLINE_BUT_NOT_AVAILABLE)
+    val second = mockChild(SuplaChannelAvailabilityStatus.ONLINE)
+    val third = mockChild(SuplaChannelAvailabilityStatus.FIRMWARE_UPDATE_ONGOING)
 
     // when
     val state = listOf(first, second, third).onlineState
@@ -134,7 +149,7 @@ class ChannelChildTest {
       every { channelDataEntity } returns mockk {
         every { channelValueEntity } returns mockk {
           every { asThermostatValue() } returns mockk {
-            every { online } returns true
+            every { status } returns SuplaChannelAvailabilityStatus.ONLINE
             every { flags } returns flag.toList()
             every { mode } returns hvacMode
           }
@@ -142,9 +157,9 @@ class ChannelChildTest {
       }
     }
 
-  private fun mockChild(online: Boolean): ChannelChildEntity {
+  private fun mockChild(status: SuplaChannelAvailabilityStatus): ChannelChildEntity {
     val value: ChannelValueEntity = mockk {
-      every { this@mockk.online } returns online
+      every { this@mockk.status } returns status
     }
 
     return mockk {

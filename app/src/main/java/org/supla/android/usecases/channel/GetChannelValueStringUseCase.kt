@@ -99,7 +99,7 @@ class GetChannelValueStringUseCase @Inject constructor(
 
   fun valueOrNull(channel: ChannelWithChildren, valueType: ValueType = ValueType.FIRST, withUnit: Boolean = true): String? {
     providers.firstOrNull { it.handle(channel) }?.let {
-      if (channel.channel.channelValueEntity.online.not() && it !is NoValueStringProvider) {
+      if (channel.channel.channelValueEntity.status.offline && it !is NoValueStringProvider) {
         return ValuesFormatter.NO_VALUE_TEXT
       }
 

@@ -32,6 +32,7 @@ import org.mockito.kotlin.whenever
 import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
+import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.android.usecases.channel.stringvalueprovider.ContainerValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.DepthSensorValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.DistanceSensorValueStringProvider
@@ -98,7 +99,7 @@ class GetChannelValueStringUseCaseTest {
     val channel: ChannelDataEntity = mockk {
       every { channelValueEntity } returns mockk {
         every { function } returns SuplaFunction.HUMIDITY_AND_TEMPERATURE
-        every { online } returns false
+        every { status } returns SuplaChannelAvailabilityStatus.OFFLINE
       }
     }
     val channelWithChildren: ChannelWithChildren = mockk {
@@ -119,7 +120,7 @@ class GetChannelValueStringUseCaseTest {
     val channel: ChannelDataEntity = mockk {
       every { this@mockk.function } returns function
       every { channelValueEntity } returns mockk {
-        every { online } returns true
+        every { status } returns SuplaChannelAvailabilityStatus.ONLINE
       }
     }
     val channelWithChildren: ChannelWithChildren = mockk {
@@ -151,7 +152,7 @@ class GetChannelValueStringUseCaseTest {
     val channel: ChannelDataEntity = mockk {
       every { this@mockk.function } returns function
       every { channelValueEntity } returns mockk {
-        every { online } returns true
+        every { status } returns SuplaChannelAvailabilityStatus.ONLINE
       }
     }
     val channelWithChildren: ChannelWithChildren = mockk {

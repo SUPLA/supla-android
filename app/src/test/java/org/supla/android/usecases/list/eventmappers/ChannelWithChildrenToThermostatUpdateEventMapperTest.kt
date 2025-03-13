@@ -33,6 +33,7 @@ import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.shareable
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
+import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.db.Channel
@@ -116,7 +117,7 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
     val subValue = "some sub value"
     val channelIssues = ListItemIssues(IssueIcon.Warning)
     val thermostatValue = mockk<ThermostatValue> {
-      every { online } returns true
+      every { status } returns SuplaChannelAvailabilityStatus.ONLINE
       every { flags } returns emptyList()
       every { setpointTemperatureHeat } returns 12.5f
       every { setpointTemperatureCool } returns 12.5f
@@ -141,13 +142,13 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
       every { remoteId } returns 123
       every { this@mockk.caption } returns captionString
       every { function } returns SuplaFunction.HVAC_THERMOSTAT
-      every { isOnline() } returns true
+      every { status } returns SuplaChannelAvailabilityStatus.ONLINE
       every { stateEntity } returns null
       every { channelEntity } returns mockk {
         every { function } returns SuplaFunction.HVAC_THERMOSTAT
       }
       every { channelValueEntity } returns mockk {
-        every { online } returns true
+        every { status } returns SuplaChannelAvailabilityStatus.ONLINE
         every { asThermostatValue() } returns thermostatValue
         every { getValueAsByteArray() } returns byteArrayOf()
       }
@@ -192,7 +193,7 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
     val channelIssues = ListItemIssues(IssueIcon.Warning)
     val estimatedEndDate = date(2023, 11, 21)
     val thermostatValue = mockk<ThermostatValue> {
-      every { online } returns true
+      every { status } returns SuplaChannelAvailabilityStatus.ONLINE
       every { flags } returns emptyList()
       every { setpointTemperatureHeat } returns 12.5f
       every { setpointTemperatureCool } returns 12.5f
@@ -202,13 +203,13 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
       every { remoteId } returns 123
       every { this@mockk.caption } returns captionString
       every { function } returns SuplaFunction.HVAC_THERMOSTAT
-      every { isOnline() } returns true
+      every { status } returns SuplaChannelAvailabilityStatus.ONLINE
       every { stateEntity } returns null
       every { channelEntity } returns mockk {
         every { function } returns SuplaFunction.HVAC_THERMOSTAT
       }
       every { channelValueEntity } returns mockk {
-        every { online } returns true
+        every { status } returns SuplaChannelAvailabilityStatus.ONLINE
         every { asThermostatValue() } returns thermostatValue
         every { getValueAsByteArray() } returns byteArrayOf()
       }

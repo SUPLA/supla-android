@@ -91,7 +91,7 @@ class CreateListItemUpdateEventDataUseCase @Inject constructor(
 
     (item as? ChannelWithChildren)?.let {
       return SlideableListItemData.Default(
-        onlineState = it.channel.isOnline().onlineState,
+        onlineState = it.channel.status.onlineState,
         title = getCaptionUseCase(it.channel.shareable),
         icon = getChannelIconUseCase(it.channel),
         issues = getChannelIssuesForListUseCase(item.shareable),
@@ -101,7 +101,7 @@ class CreateListItemUpdateEventDataUseCase @Inject constructor(
     }
     (item as? ChannelGroupDataEntity)?.let {
       return SlideableListItemData.Default(
-        onlineState = it.isOnline().onlineState,
+        onlineState = it.status.onlineState,
         title = getCaptionUseCase(it.shareable),
         icon = getChannelIconUseCase(it),
         issues = ListItemIssues.empty,

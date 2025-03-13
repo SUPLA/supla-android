@@ -23,6 +23,7 @@ import org.supla.android.data.model.general.EntityUpdateResult
 import org.supla.android.data.source.ChannelValueRepository
 import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.data.source.local.entity.ChannelValueEntity
+import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.android.extensions.TAG
 import org.supla.android.lib.SuplaChannel
 import org.supla.android.lib.SuplaChannelValue
@@ -37,40 +38,44 @@ class UpdateChannelValueUseCase @Inject constructor(
 ) {
 
   operator fun invoke(suplaChannelValueUpdate: SuplaChannelValueUpdate): Single<EntityUpdateResult> =
-    update(suplaChannelValueUpdate.Value, suplaChannelValueUpdate.Id, suplaChannelValueUpdate.isOnLine)
+    update(suplaChannelValueUpdate.Value, suplaChannelValueUpdate.Id, suplaChannelValueUpdate.AvailabilityStatus)
 
   operator fun invoke(suplaChannel: SuplaChannel): Single<EntityUpdateResult> =
-    update(suplaChannel.Value, suplaChannel.Id, suplaChannel.OnLine)
+    update(suplaChannel.Value, suplaChannel.Id, suplaChannel.status)
 
-  private fun update(suplaChannelValue: SuplaChannelValue, channelRemoteId: Int, online: Boolean): Single<EntityUpdateResult> =
+  private fun update(
+    suplaChannelValue: SuplaChannelValue,
+    channelRemoteId: Int,
+    status: SuplaChannelAvailabilityStatus
+  ): Single<EntityUpdateResult> =
     channelValueRepository.findByRemoteId(channelRemoteId)
       .toSingle()
       .flatMap { channelValueEntity ->
-        if (channelValueEntity.differsFrom(suplaChannelValue, online)) {
+        if (channelValueEntity.differsFrom(suplaChannelValue, status)) {
           Trace.d(TAG, "Updating channel value for $channelRemoteId subtype ${suplaChannelValue.SubValueType}")
-          update(channelValueEntity, suplaChannelValue, online)
+          update(channelValueEntity, suplaChannelValue, status)
         } else {
           Single.just(EntityUpdateResult.NOP)
         }
       }.onErrorResumeNext { throwable ->
         if (throwable is NoSuchElementException) {
           Trace.d(TAG, "Inserting channel value for $channelRemoteId subtype ${suplaChannelValue.SubValueType}")
-          insert(suplaChannelValue, channelRemoteId, online)
+          insert(suplaChannelValue, channelRemoteId, status)
         } else {
           Trace.e(TAG, "Channel value update failed!", throwable)
           Single.just(EntityUpdateResult.ERROR)
         }
       }
 
-  private fun update(channelValueEntity: ChannelValueEntity, suplaChannelValue: SuplaChannelValue, online: Boolean) =
+  private fun update(channelValueEntity: ChannelValueEntity, suplaChannelValue: SuplaChannelValue, status: SuplaChannelAvailabilityStatus) =
     channelValueRepository
-      .update(channelValueEntity.updatedBy(suplaChannelValue, online))
+      .update(channelValueEntity.updatedBy(suplaChannelValue, status))
       .andThen(Single.just(EntityUpdateResult.UPDATED))
 
-  private fun insert(suplaChannelValue: SuplaChannelValue, channelRemoteId: Int, online: Boolean) =
+  private fun insert(suplaChannelValue: SuplaChannelValue, channelRemoteId: Int, status: SuplaChannelAvailabilityStatus) =
     profileRepository.findActiveProfile()
       .flatMapCompletable {
-        channelValueRepository.insert(ChannelValueEntity.from(suplaChannelValue, channelRemoteId, online, it.id!!))
+        channelValueRepository.insert(ChannelValueEntity.from(suplaChannelValue, channelRemoteId, status, it.id!!))
       }
       .andThen(Single.just(EntityUpdateResult.UPDATED))
 }

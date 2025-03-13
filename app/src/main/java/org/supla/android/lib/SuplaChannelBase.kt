@@ -42,11 +42,12 @@ open class SuplaChannelBase @UsedFromNativeCode constructor() {
 
   @JvmField
   var Flags: Long = 0
+
   var AvailabilityStatus: SuplaChannelAvailabilityStatus? = null
 
   @JvmField
   var Caption: String = ""
 
-  val OnLine: Boolean
-    get() = AvailabilityStatus == SuplaChannelAvailabilityStatus.ONLINE
+  val status: SuplaChannelAvailabilityStatus
+    get() = AvailabilityStatus ?: SuplaChannelAvailabilityStatus.OFFLINE
 }

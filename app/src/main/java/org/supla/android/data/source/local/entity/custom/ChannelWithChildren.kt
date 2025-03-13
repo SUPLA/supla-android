@@ -23,6 +23,7 @@ import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.isElectricityMeter
 import org.supla.android.data.source.local.entity.isElectricityMeter
 import org.supla.android.data.source.local.entity.isImpulseCounter
+import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS
 import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS
 import org.supla.core.shared.data.model.channel.ChannelRelationType
@@ -56,6 +57,8 @@ data class ChannelWithChildren(
     get() = channel.altIcon
   override val profileId: Long
     get() = channel.profileId
+  override val status: SuplaChannelAvailabilityStatus
+    get() = channel.status
 
   val allDescendantFlat: List<ChannelChildEntity>
     get() = getChildren(children)
@@ -73,8 +76,6 @@ data class ChannelWithChildren(
   val isOrHasElectricityMeter: Boolean
     get() = channel.isElectricityMeter() || channel.channelValueEntity.subValueType == SUBV_TYPE_ELECTRICITY_MEASUREMENTS.toShort() ||
       children.firstOrNull { it.relationType == ChannelRelationType.METER }?.channel?.isElectricityMeter() == true
-
-  override fun isOnline(): Boolean = channel.isOnline()
 
   override fun onlinePercentage(): Int = channel.onlinePercentage()
 

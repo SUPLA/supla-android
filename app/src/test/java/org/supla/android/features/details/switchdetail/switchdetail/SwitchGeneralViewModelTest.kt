@@ -39,6 +39,7 @@ import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
+import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.DownloadEventsManager
 import org.supla.android.features.details.detailbase.electricitymeter.ElectricityMeterGeneralStateHandler
@@ -243,7 +244,7 @@ class SwitchGeneralViewModelTest :
     val group: ChannelGroupDataEntity = mockk {
       every { this@mockk.function } returns function
       every { this@mockk.remoteId } returns remoteId
-      every { isOnline() } returns true
+      every { status } returns SuplaChannelAvailabilityStatus.ONLINE
     }
     val stateIcon: ImageId = mockk()
     val onIcon: ImageId = mockk()
@@ -487,7 +488,7 @@ class SwitchGeneralViewModelTest :
       every { isOrHasImpulseCounter } returns false
       every { this@mockk.function } returns function
       every { this@mockk.remoteId } returns remoteId
-      every { isOnline() } returns true
+      every { status } returns SuplaChannelAvailabilityStatus.ONLINE
     }
   }
 }

@@ -17,6 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
 import org.supla.core.shared.data.model.function.thermostat.SuplaThermostatFlag.HEAT_OR_COOL
@@ -27,7 +28,7 @@ private const val THERMOSTAT_VALUE_LENGTH = 8
 
 @ExposedCopyVisibility
 data class ThermostatValue private constructor(
-  val online: Boolean,
+  val status: SuplaChannelAvailabilityStatus,
   val state: ThermostatState,
   val mode: SuplaHvacMode,
   val setpointTemperatureHeat: Float,
@@ -39,13 +40,13 @@ data class ThermostatValue private constructor(
     get() = if (flags.contains(HEAT_OR_COOL)) ThermostatSubfunction.COOL else ThermostatSubfunction.HEAT
 
   companion object {
-    fun from(online: Boolean, bytes: ByteArray): ThermostatValue {
+    fun from(status: SuplaChannelAvailabilityStatus, bytes: ByteArray): ThermostatValue {
       if (bytes.size < THERMOSTAT_VALUE_LENGTH) {
-        return ThermostatValue(online, ThermostatState(0), SuplaHvacMode.UNKNOWN, 0f, 0f, emptyList())
+        return ThermostatValue(status, ThermostatState(0), SuplaHvacMode.UNKNOWN, 0f, 0f, emptyList())
       }
 
       return ThermostatValue(
-        online = online,
+        status = status,
         state = ThermostatState(bytes[0].toShort()),
         mode = SuplaHvacMode.from(bytes[1].toInt()),
         setpointTemperatureHeat = bytes.toTemperature(2, 3),

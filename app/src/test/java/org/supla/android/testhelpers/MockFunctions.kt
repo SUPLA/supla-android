@@ -43,7 +43,7 @@ fun suplaChannel(
   function: Int = 0,
   crc32: Long = 0,
   value: SuplaChannelValue? = null,
-  online: Boolean = false,
+  status: SuplaChannelAvailabilityStatus = SuplaChannelAvailabilityStatus.OFFLINE,
   userIcon: Int = 0,
   altIcon: Int = 0
 ) = SuplaChannel().apply {
@@ -53,7 +53,7 @@ fun suplaChannel(
   Func = function
   DefaultConfigCRC32 = crc32
   value?.let { Value = value }
-  AvailabilityStatus = if (online) SuplaChannelAvailabilityStatus.ONLINE else SuplaChannelAvailabilityStatus.OFFLINE
+  AvailabilityStatus = status
   UserIcon = userIcon
   AltIcon = altIcon
 }

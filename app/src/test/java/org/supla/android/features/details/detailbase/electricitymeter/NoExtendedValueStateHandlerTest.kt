@@ -27,6 +27,7 @@ import org.junit.Before
 import org.junit.Test
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
+import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.android.ui.views.card.SummaryCardData
 import org.supla.android.usecases.channel.GetChannelValueUseCase
 import org.supla.android.usecases.channel.measurements.ElectricityMeasurements
@@ -65,7 +66,7 @@ class NoExtendedValueStateHandlerTest {
     val channelWithChildren: ChannelWithChildren = mockk {
       every { this@mockk.channel } returns channel
       every { isOrHasElectricityMeter } returns true
-      every { isOnline() } returns true
+      every { status } returns SuplaChannelAvailabilityStatus.ONLINE
     }
     val value = 123.45
     val state = ElectricityMeterState()
@@ -100,7 +101,7 @@ class NoExtendedValueStateHandlerTest {
     val channelWithChildren: ChannelWithChildren = mockk {
       every { this@mockk.channel } returns channel
       every { isOrHasElectricityMeter } returns true
-      every { isOnline() } returns true
+      every { status } returns SuplaChannelAvailabilityStatus.ONLINE
     }
     every { getChannelValueUseCase<Double>(channelWithChildren) } returns Double.NaN
 
@@ -126,7 +127,7 @@ class NoExtendedValueStateHandlerTest {
     val channelWithChildren: ChannelWithChildren = mockk {
       every { this@mockk.channel } returns channel
       every { isOrHasElectricityMeter } returns true
-      every { isOnline() } returns false
+      every { status } returns SuplaChannelAvailabilityStatus.OFFLINE
     }
     every { getChannelValueUseCase<Double>(channelWithChildren) } returns Double.NaN
 

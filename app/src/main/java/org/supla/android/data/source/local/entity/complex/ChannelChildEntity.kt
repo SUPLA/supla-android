@@ -59,15 +59,15 @@ val List<ChannelChildEntity>.indicatorIcon: ThermostatIndicatorIcon
 
 val List<ChannelChildEntity>.onlineState: ListOnlineState
   get() = filter { it.relationType == ChannelRelationType.MASTER_THERMOSTAT }
-    .map { it.channelDataEntity.channelValueEntity.online }
+    .map { it.channelDataEntity.channelValueEntity.status }
     .fold(ListOnlineState.UNKNOWN) { result, online ->
-      if (result == ListOnlineState.UNKNOWN && online) {
+      if (result == ListOnlineState.UNKNOWN && online.online) {
         ListOnlineState.ONLINE
       } else if (result == ListOnlineState.UNKNOWN) {
         ListOnlineState.OFFLINE
-      } else if (result == ListOnlineState.ONLINE && !online) {
+      } else if (result == ListOnlineState.ONLINE && online.offline) {
         ListOnlineState.PARTIALLY_ONLINE
-      } else if (result == ListOnlineState.OFFLINE && online) {
+      } else if (result == ListOnlineState.OFFLINE && online.online) {
         ListOnlineState.PARTIALLY_ONLINE
       } else {
         result

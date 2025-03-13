@@ -14,7 +14,6 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.whenever
-import org.supla.android.core.shared.shareable
 import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.ChannelRelationRepository
 import org.supla.android.data.source.RoomChannelRepository
@@ -23,6 +22,7 @@ import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.shareable
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
+import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.images.ImageId
 import org.supla.android.ui.lists.ListItem
@@ -189,7 +189,7 @@ class CreateProfileChannelsListUseCaseTest {
     every { remoteId } returns channelRemoteId
     every { function } returns channelFunction
     every { caption } returns ""
-    every { isOnline() } returns true
+    every { status } returns SuplaChannelAvailabilityStatus.ONLINE
     every { stateEntity } returns null
     every { locationEntity } returns mockk {
       every { remoteId } returns locationRemoteId
@@ -204,7 +204,7 @@ class CreateProfileChannelsListUseCaseTest {
       every { remoteId } returns channelRemoteId
     }
     every { channelValueEntity } returns mockk {
-      every { online } returns true
+      every { status } returns SuplaChannelAvailabilityStatus.ONLINE
       if (channelFunction == SuplaFunction.HVAC_THERMOSTAT) {
         every { asThermostatValue() } returns mockThermostatValue()
       }
@@ -233,7 +233,7 @@ class CreateProfileChannelsListUseCaseTest {
   }
 
   private fun mockThermostatValue(): ThermostatValue = mockk {
-    every { online } returns true
+    every { status } returns SuplaChannelAvailabilityStatus.ONLINE
     every { flags } returns emptyList()
     every { mode } returns SuplaHvacMode.OFF
     every { setpointTemperatureHeat } returns 10.4f

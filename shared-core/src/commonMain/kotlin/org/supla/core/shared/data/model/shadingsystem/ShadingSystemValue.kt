@@ -17,11 +17,12 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.core.shared.data.model.lists.ChannelIssueItem
 import kotlin.math.max
 
 abstract class ShadingSystemValue {
-  abstract val online: Boolean
+  abstract val status: SuplaChannelAvailabilityStatus
   abstract val position: Int
   abstract val flags: List<SuplaShadingSystemFlag>
 
@@ -31,9 +32,9 @@ abstract class ShadingSystemValue {
   fun hasValidPosition() = position != INVALID_VALUE
 
   fun getChannelIssue(): ChannelIssueItem? = when {
-    online && flags.contains(SuplaShadingSystemFlag.MOTOR_PROBLEM) -> SuplaShadingSystemFlag.MOTOR_PROBLEM
-    online && flags.contains(SuplaShadingSystemFlag.CALIBRATION_LOST) -> SuplaShadingSystemFlag.CALIBRATION_LOST
-    online && flags.contains(SuplaShadingSystemFlag.CALIBRATION_FAILED) -> SuplaShadingSystemFlag.CALIBRATION_FAILED
+    status.online && flags.contains(SuplaShadingSystemFlag.MOTOR_PROBLEM) -> SuplaShadingSystemFlag.MOTOR_PROBLEM
+    status.online && flags.contains(SuplaShadingSystemFlag.CALIBRATION_LOST) -> SuplaShadingSystemFlag.CALIBRATION_LOST
+    status.online && flags.contains(SuplaShadingSystemFlag.CALIBRATION_FAILED) -> SuplaShadingSystemFlag.CALIBRATION_FAILED
     else -> null
   }?.asChannelIssues()
 

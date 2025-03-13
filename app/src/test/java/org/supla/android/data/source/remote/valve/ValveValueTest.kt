@@ -21,6 +21,7 @@ import org.assertj.core.api.Assertions
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
+import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.core.shared.data.model.valve.SuplaValveFlag
 import org.supla.core.shared.data.model.valve.ValveValue
 
@@ -29,13 +30,13 @@ class ValveValueTest {
   @Test
   fun `should load valve value from byte array`() {
     // given
-    val online = true
+    val status = SuplaChannelAvailabilityStatus.ONLINE_BUT_NOT_AVAILABLE
     val bytes = byteArrayOf(1, 2)
 
     // when
-    val value = ValveValue.from(online, bytes)
+    val value = ValveValue.from(status, bytes)
 
     // then
-    Assertions.assertThat(value).isEqualTo(ValveValue(true, 1, listOf(SuplaValveFlag.MANUALLY_CLOSED)))
+    Assertions.assertThat(value).isEqualTo(ValveValue(status, 1, listOf(SuplaValveFlag.MANUALLY_CLOSED)))
   }
 }
