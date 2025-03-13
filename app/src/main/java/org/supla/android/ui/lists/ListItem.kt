@@ -42,8 +42,10 @@ sealed interface ListItem {
     }
 
     if (this is ChannelBasedItem && another is ChannelBasedItem) {
-      return channelBase.remoteId != another.channelBase.remoteId || channelBase.function != another.channelBase.function ||
-        channelBase.status != another.channelBase.status
+      return channelBase.remoteId != another.channelBase.remoteId ||
+        channelBase.function != another.channelBase.function ||
+        channelBase.status != another.channelBase.status ||
+        channelBase.caption != another.channelBase.caption
     }
 
     return true
