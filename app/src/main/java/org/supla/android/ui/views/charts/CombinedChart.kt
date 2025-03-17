@@ -17,7 +17,6 @@ package org.supla.android.ui.views.charts
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.graphics.drawable.ColorDrawable
 import android.view.MotionEvent
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
@@ -30,6 +29,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.graphics.drawable.toDrawable
 import com.github.mikephil.charting.charts.CombinedChart
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.XAxis
@@ -101,7 +101,7 @@ fun CombinedChart(
         it.xAxis.textColor = onBackgroundColor
         // Others
         it.data = combinedData
-        it.background = ColorDrawable(ResourcesCompat.getColor(context.resources, R.color.background, null))
+        it.background = ResourcesCompat.getColor(context.resources, R.color.background, null).toDrawable()
         it.legend.isEnabled = false
         it.description.isEnabled = false
         it.onChartGestureListener = ChartObserver(positionEvents, it)
@@ -135,7 +135,7 @@ fun CombinedChart(
       chart.axisLeft.valueFormatter = object : ValueFormatter() {
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
           val withUnit = chartStyle is HumidityChartStyle
-          return data.leftAxisFormatter.format(value.toDouble(), withUnit = withUnit, chart.axisLeft.mDecimals)
+          return data.leftAxisFormatter.formatChartLabel(value.toDouble(), chart.axisLeft.mDecimals, withUnit = withUnit)
         }
       }
       chart.axisLeft.isEnabled = withLeftAxis
@@ -156,7 +156,7 @@ fun CombinedChart(
       chart.axisRight.valueFormatter = object : ValueFormatter() {
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
           val withUnit = data.rightAxisFormatter is HumidityValueFormatter
-          return data.rightAxisFormatter.format(value.toDouble(), withUnit = withUnit, chart.axisRight.mDecimals)
+          return data.rightAxisFormatter.formatChartLabel(value.toDouble(), chart.axisRight.mDecimals, withUnit = withUnit)
         }
       }
       chart.axisRight.isEnabled = withRightAxis
