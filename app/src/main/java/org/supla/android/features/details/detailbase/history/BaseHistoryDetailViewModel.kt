@@ -97,7 +97,12 @@ abstract class BaseHistoryDetailViewModel(
 
   open fun loadData(remoteId: Int) {
     updateState { state ->
-      state.copy(remoteId = remoteId, loading = true)
+      state.copy(
+        remoteId = remoteId,
+        initialLoadStarted = false,
+        downloadConfigured = false,
+        loading = true
+      )
     }
     triggerDataLoad(remoteId)
   }
