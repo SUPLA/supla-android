@@ -23,6 +23,9 @@ interface ChannelValueFormatter {
   fun format(value: Any, withUnit: Boolean = true, precision: Int, custom: Any? = null) =
     format(value, withUnit, Default(precision), custom)
 
+  fun formatChartLabel(value: Any, precision: Int, withUnit: Boolean = true) =
+    format(value, false, Default(precision))
+
   sealed interface Precision {
     val value: Int
   }
