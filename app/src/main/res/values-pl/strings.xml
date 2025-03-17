@@ -762,6 +762,7 @@
   <string name="channel_not_available">Kanał nie jest dostępny ze względu na konfigurację. Zalecamy ukrycie kanału, aby nie był widoczny w aplikacji.</string>
   <string name="channel_status_awaiting">Tego urządzenia nie można zdalnie wybudzić. Oczekujemy na komunikację ze strony urządzenia…</string>
   <string name="channel_status_updating">Trwa aktualizacja oprogramowania…</string>
+  <string name="thermostat_calibration_error">Błąd kalibracji</string>
 
   <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
     <item quantity="one">włączone</item>
