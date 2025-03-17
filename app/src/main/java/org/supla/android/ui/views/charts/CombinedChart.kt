@@ -66,7 +66,6 @@ fun CombinedChart(
 ) {
   val dateFormatter = LocalDateFormatter.current
   val combinedData = data.combinedData(LocalContext.current.resources)
-  val chartParameters = if (combinedData != null) chartParametersProvider() else null
   val xAxisFormatter by remember { mutableStateOf(CombinedChartAxisXFormatter(dateFormatter)) }
   var rememberedChartStyle by remember { mutableStateOf(chartStyle) }
   xAxisFormatter.converter = data
@@ -111,6 +110,7 @@ fun CombinedChart(
         it.setDrawMarkers(true)
         it.setDrawBarShadow(chartStyle.drawBarShadow)
 
+        val chartParameters = if (combinedData != null) chartParametersProvider() else null
         chartParameters?.apply {
           if (scaleX == 1f && scaleY == 1f && x == 0f && y == 0f) {
             it.fitScreen() // reset scale
@@ -168,6 +168,7 @@ fun CombinedChart(
       chart.setNoDataText(emptyChartMessage)
       chart.invalidate()
 
+      val chartParameters = if (combinedData != null) chartParametersProvider() else null
       chartParameters?.apply {
         if (scaleX == 1f && scaleY == 1f && x == 0f && y == 0f) {
           chart.fitScreen() // reset scale

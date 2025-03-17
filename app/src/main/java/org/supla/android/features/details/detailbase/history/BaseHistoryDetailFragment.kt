@@ -45,8 +45,6 @@ abstract class BaseHistoryDetailFragment :
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    viewModel.loadData(remoteId)
-
     binding.composeContent.setContent {
       val viewState by viewModel.getViewState().collectAsState()
       SuplaTheme {
@@ -62,6 +60,7 @@ abstract class BaseHistoryDetailFragment :
 
   override fun onResume() {
     super.onResume()
+    viewModel.loadData(remoteId)
     setToolbarItemVisible(R.id.toolbar_delete_chart_history, true)
   }
 
