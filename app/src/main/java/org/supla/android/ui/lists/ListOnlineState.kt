@@ -29,11 +29,6 @@ enum class ListOnlineState {
     get() = this == ONLINE || this == PARTIALLY_ONLINE
 
   infix fun mergeWith(other: ListOnlineState?): ListOnlineState = merge(this, other)
-
-  companion object {
-    fun from(online: Boolean): ListOnlineState =
-      if (online) ONLINE else OFFLINE
-  }
 }
 
 val SuplaChannelAvailabilityStatus.onlineState: ListOnlineState
