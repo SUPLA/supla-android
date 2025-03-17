@@ -787,6 +787,7 @@
   <string name="channel_not_available" translatable="false">The channel is not available due to the configuration. We recommend hiding the channel so it is not visible in the app.</string>
   <string name="channel_status_awaiting" translatable="false">This device cannot be remotely awakened. We are awaiting communication from the device…</string>
   <string name="channel_status_updating" translatable="false">Software update in progress…</string>
+  <string name="thermostat_calibration_error" translatable="false">Calibration error</string>
 
   <plurals name="details_timer_info_on" translatable="false">
     <item quantity="other">on</item>

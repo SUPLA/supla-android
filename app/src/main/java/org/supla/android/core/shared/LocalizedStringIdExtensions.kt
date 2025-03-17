@@ -105,6 +105,7 @@ val LocalizedStringId.resourceId: Int
     LocalizedStringId.THERMOSTAT_THERMOMETER_ERROR -> R.string.thermostat_thermometer_error
     LocalizedStringId.THERMOSTAT_BATTER_COVER_OPEN -> R.string.thermostat_battery_cover_open
     LocalizedStringId.THERMOSTAT_CLOCK_ERROR -> R.string.thermostat_clock_error
+    LocalizedStringId.THERMOSTAT_CALIBRATION_ERROR -> R.string.thermostat_calibration_error
 
     LocalizedStringId.FLOOD_SENSOR_ACTIVE -> R.string.flooding_alarm_message
     LocalizedStringId.VALVE_MANUALLY_CLOSED -> R.string.valve_warning_manually_closed_short

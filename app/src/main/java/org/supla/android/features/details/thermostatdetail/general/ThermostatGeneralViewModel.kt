@@ -26,6 +26,7 @@ import org.supla.android.Trace
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.networking.suplaclient.DelayableState
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
+import org.supla.android.core.shared.shareable
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.StringProvider
 import org.supla.android.core.ui.ViewEvent
@@ -56,8 +57,6 @@ import org.supla.android.features.details.thermostatdetail.general.ui.Thermostat
 import org.supla.android.features.details.thermostatdetail.ui.TimerHeaderState
 import org.supla.android.images.ImageId
 import org.supla.android.tools.SuplaSchedulers
-import org.supla.android.ui.lists.data.error
-import org.supla.android.ui.lists.data.warning
 import org.supla.android.usecases.channel.GetChannelValueUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenTreeUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
@@ -70,6 +69,7 @@ import org.supla.core.shared.data.model.lists.ChannelIssueItem
 import org.supla.core.shared.data.model.lists.IssueIcon
 import org.supla.core.shared.extensions.fromSuplaTemperature
 import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.usecase.channel.issues.ThermostatIssuesProvider
 import java.util.Date
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -97,6 +97,7 @@ class ThermostatGeneralViewModel @Inject constructor(
 
   private val updateSubject: PublishSubject<Int> = PublishSubject.create()
   private val channelSubject: PublishSubject<ChannelWithChildren> = PublishSubject.create()
+  private val thermostatIssuesProvider = ThermostatIssuesProvider()
 
   override fun onViewCreated() {
     loadingTimeoutManager.watch({ currentState().loadingState }) {
@@ -408,7 +409,7 @@ class ThermostatGeneralViewModel @Inject constructor(
 
         sensorIssue = SensorIssue.build(thermostatValue, data.channelWithChildren.children, getChannelIconUseCase),
 
-        issues = createThermostatIssues(thermostatValue.flags),
+        issues = createThermostatIssues(data.channelWithChildren),
 
         loadingState = it.loadingState.changingLoading(false, dateProvider)
       )
@@ -643,18 +644,8 @@ class ThermostatGeneralViewModel @Inject constructor(
     }
   }
 
-  private fun createThermostatIssues(flags: List<SuplaThermostatFlag>): List<ChannelIssueItem> =
-    mutableListOf<ChannelIssueItem>().apply {
-      if (flags.contains(SuplaThermostatFlag.THERMOMETER_ERROR)) {
-        add(ChannelIssueItem.error(R.string.thermostat_thermometer_error))
-      }
-      if (flags.contains(SuplaThermostatFlag.BATTERY_COVER_OPEN)) {
-        add(ChannelIssueItem.error(R.string.thermostat_battery_cover_open))
-      }
-      if (flags.contains(SuplaThermostatFlag.CLOCK_ERROR)) {
-        add(ChannelIssueItem.warning(R.string.thermostat_clock_error))
-      }
-    }
+  private fun createThermostatIssues(channelWithChildren: ChannelWithChildren): List<ChannelIssueItem> =
+    thermostatIssuesProvider.provide(channelWithChildren.shareable)
 
   private fun getModeForOffChanges(state: ThermostatGeneralViewState, modelState: ThermostatGeneralViewModelState): SuplaHvacMode =
     if (modelState.mode == SuplaHvacMode.OFF && state.isOffline.not() && state.programmedModeActive) {
