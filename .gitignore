@@ -80,3 +80,5 @@ lint/tmp/
 
 #mac
 .DS_Store
+
+.kotlin
