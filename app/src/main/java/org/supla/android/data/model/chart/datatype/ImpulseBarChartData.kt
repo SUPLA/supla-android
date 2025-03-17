@@ -30,7 +30,11 @@ import org.supla.android.data.model.chart.ChartEntryType
 import org.supla.android.data.model.chart.ChartRange
 import org.supla.android.data.model.chart.DateRange
 import org.supla.android.data.model.chart.HistoryDataSet
+import org.supla.android.extensions.monthEnd
+import org.supla.android.extensions.monthStart
 import org.supla.android.extensions.toTimestamp
+import org.supla.android.extensions.yearEnd
+import org.supla.android.extensions.yearStart
 import kotlin.math.abs
 import kotlin.math.ceil
 import kotlin.math.roundToInt
@@ -46,6 +50,10 @@ class ImpulseBarChartData(
     chartRange == ChartRange.LAST_WEEK && aggregation == ChartDataAggregation.DAYS -> 7
     chartRange == ChartRange.LAST_MONTH && aggregation == ChartDataAggregation.DAYS -> 30
     chartRange == ChartRange.LAST_QUARTER && aggregation == ChartDataAggregation.DAYS -> 90
+    aggregation == ChartDataAggregation.MONTHS ->
+      dateRange.end.monthEnd().time.minus(dateRange.start.monthStart().time).div(1000f).div(aggregation.timeInSec).roundToInt()
+    aggregation == ChartDataAggregation.YEARS ->
+      dateRange.end.yearEnd().time.minus(dateRange.start.yearStart().time).div(1000f).div(aggregation.timeInSec).roundToInt()
     else -> ceil(dateRange.end.time.minus(dateRange.start.time).div(1000f).div(aggregation.timeInSec)).roundToInt()
   }
 
