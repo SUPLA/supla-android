@@ -29,7 +29,10 @@ import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity
 import org.supla.android.data.source.local.entity.ChannelRelationEntity
 import org.supla.android.data.source.local.entity.ChannelRelationEntity.Companion.ALL_COLUMNS
+import org.supla.android.data.source.local.entity.ChannelRelationEntity.Companion.COLUMN_CHANNEL_ID
 import org.supla.android.data.source.local.entity.ChannelRelationEntity.Companion.COLUMN_CHANNEL_RELATION_TYPE
+import org.supla.android.data.source.local.entity.ChannelRelationEntity.Companion.COLUMN_PARENT_ID
+import org.supla.android.data.source.local.entity.ChannelRelationEntity.Companion.COLUMN_PROFILE_ID
 import org.supla.android.data.source.local.entity.ChannelRelationEntity.Companion.TABLE_NAME
 import org.supla.android.data.source.local.entity.ChannelStateEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity
@@ -42,14 +45,19 @@ interface ChannelRelationDao {
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   fun insertOrUpdate(channelRelation: ChannelRelationEntity): Completable
 
-  @Query("SELECT $ALL_COLUMNS FROM $TABLE_NAME WHERE ${ChannelRelationEntity.COLUMN_PROFILE_ID} = ${ProfileEntity.SUBQUERY_ACTIVE}")
+  @Query(
+    "DELETE FROM $TABLE_NAME WHERE ($COLUMN_CHANNEL_ID = :remoteId OR $COLUMN_PARENT_ID = :remoteId) AND $COLUMN_PROFILE_ID = :profileId"
+  )
+  suspend fun deleteKtx(remoteId: Int, profileId: Long)
+
+  @Query("SELECT $ALL_COLUMNS FROM $TABLE_NAME WHERE $COLUMN_PROFILE_ID = ${ProfileEntity.SUBQUERY_ACTIVE}")
   fun getForActiveProfile(): Observable<List<ChannelRelationEntity>>
 
   @Query(
     """
       SELECT $ALL_COLUMNS FROM $TABLE_NAME 
-        WHERE ${ChannelRelationEntity.COLUMN_PROFILE_ID} = :profileId 
-        AND ${ChannelRelationEntity.COLUMN_PARENT_ID} = :parentId
+        WHERE $COLUMN_PROFILE_ID = :profileId 
+        AND $COLUMN_PARENT_ID = :parentId
     """
   )
   fun findChildren(profileId: Long, parentId: Int): Observable<List<ChannelRelationEntity>>
@@ -58,7 +66,7 @@ interface ChannelRelationDao {
     """
       UPDATE $TABLE_NAME 
         SET ${ChannelRelationEntity.COLUMN_DELETE_FLAG} = 1 
-        WHERE ${ChannelRelationEntity.COLUMN_PROFILE_ID} = :profileId 
+        WHERE $COLUMN_PROFILE_ID = :profileId 
     """
   )
   fun markAsRemovable(profileId: Long): Completable
@@ -69,11 +77,11 @@ interface ChannelRelationDao {
   @Query(
     """
     SELECT 
-      relation.${ChannelRelationEntity.COLUMN_PARENT_ID} relation_${ChannelRelationEntity.COLUMN_PARENT_ID},
-      relation.${ChannelRelationEntity.COLUMN_CHANNEL_ID} relation_${ChannelRelationEntity.COLUMN_CHANNEL_ID},
-      relation.${ChannelRelationEntity.COLUMN_CHANNEL_RELATION_TYPE} relation_${ChannelRelationEntity.COLUMN_CHANNEL_RELATION_TYPE},
+      relation.$COLUMN_PARENT_ID relation_$COLUMN_PARENT_ID,
+      relation.$COLUMN_CHANNEL_ID relation_$COLUMN_CHANNEL_ID,
+      relation.$COLUMN_CHANNEL_RELATION_TYPE relation_$COLUMN_CHANNEL_RELATION_TYPE,
       relation.${ChannelRelationEntity.COLUMN_DELETE_FLAG} relation_${ChannelRelationEntity.COLUMN_DELETE_FLAG},
-      relation.${ChannelRelationEntity.COLUMN_PROFILE_ID} relation_${ChannelRelationEntity.COLUMN_PROFILE_ID},
+      relation.$COLUMN_PROFILE_ID relation_$COLUMN_PROFILE_ID,
       channel.${ChannelEntity.COLUMN_ID} channel_${ChannelEntity.COLUMN_ID}, 
       channel.${ChannelEntity.COLUMN_CHANNEL_REMOTE_ID} channel_${ChannelEntity.COLUMN_CHANNEL_REMOTE_ID}, 
       channel.${ChannelEntity.COLUMN_DEVICE_ID} channel_${ChannelEntity.COLUMN_DEVICE_ID}, 
@@ -134,8 +142,8 @@ interface ChannelRelationDao {
       state.${ChannelStateEntity.COLUMN_PROFILE_ID} state_${ChannelStateEntity.COLUMN_PROFILE_ID}
     FROM $TABLE_NAME relation
     JOIN ${ChannelEntity.TABLE_NAME} channel
-      ON relation.${ChannelRelationEntity.COLUMN_CHANNEL_ID} = channel.${ChannelEntity.COLUMN_CHANNEL_REMOTE_ID}
-        AND relation.${ChannelRelationEntity.COLUMN_PROFILE_ID} = channel.${ChannelEntity.COLUMN_PROFILE_ID}
+      ON relation.$COLUMN_CHANNEL_ID = channel.${ChannelEntity.COLUMN_CHANNEL_REMOTE_ID}
+        AND relation.$COLUMN_PROFILE_ID = channel.${ChannelEntity.COLUMN_PROFILE_ID}
     JOIN ${ChannelValueEntity.TABLE_NAME} value
       ON channel.${ChannelEntity.COLUMN_CHANNEL_REMOTE_ID} = value.${ChannelValueEntity.COLUMN_CHANNEL_REMOTE_ID}
         AND channel.${ChannelEntity.COLUMN_PROFILE_ID} = value.${ChannelValueEntity.COLUMN_PROFILE_ID}
@@ -151,8 +159,8 @@ interface ChannelRelationDao {
     LEFT JOIN ${ChannelStateEntity.TABLE_NAME} state
       ON channel.${ChannelEntity.COLUMN_CHANNEL_REMOTE_ID} = state.${ChannelStateEntity.COLUMN_CHANNEL_ID}
         AND channel.${ChannelEntity.COLUMN_PROFILE_ID} = state.${ChannelStateEntity.COLUMN_PROFILE_ID}
-    WHERE relation.${ChannelRelationEntity.COLUMN_PARENT_ID} = :parentRemoteId
-      AND relation.${ChannelRelationEntity.COLUMN_PROFILE_ID} = ${ProfileEntity.SUBQUERY_ACTIVE}
+    WHERE relation.$COLUMN_PARENT_ID = :parentRemoteId
+      AND relation.$COLUMN_PROFILE_ID = ${ProfileEntity.SUBQUERY_ACTIVE}
   """
   )
   fun findChildrenFor(parentRemoteId: Int): Maybe<List<ChannelChildEntity>>

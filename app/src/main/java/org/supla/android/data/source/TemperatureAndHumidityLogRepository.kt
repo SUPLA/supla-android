@@ -26,6 +26,7 @@ import org.supla.android.data.source.local.entity.measurements.TemperatureAndHum
 import org.supla.android.data.source.remote.rest.SuplaCloudService
 import org.supla.android.data.source.remote.rest.channel.TemperatureAndHumidityMeasurement
 import org.supla.android.features.measurementsdownload.workers.BaseDownloadLogWorker
+import org.supla.android.usecases.channel.RemoveHiddenChannelsUseCase
 import org.supla.android.usecases.developerinfo.CountProvider
 import retrofit2.Response
 import java.util.Date
@@ -36,7 +37,8 @@ import javax.inject.Singleton
 class TemperatureAndHumidityLogRepository @Inject constructor(
   private val temperatureAndHumidityLogDao: TemperatureAndHumidityLogDao
 ) : BaseMeasurementRepository<TemperatureAndHumidityMeasurement, TemperatureAndHumidityLogEntity>(temperatureAndHumidityLogDao),
-  CountProvider {
+  CountProvider,
+  RemoveHiddenChannelsUseCase.Deletable {
 
   fun findMeasurements(remoteId: Int, profileId: Long, startDate: Date, endDate: Date): Observable<List<TemperatureAndHumidityLogEntity>> {
     return temperatureAndHumidityLogDao.findMeasurements(remoteId, profileId, startDate.time, endDate.time)
@@ -86,4 +88,6 @@ class TemperatureAndHumidityLogRepository @Inject constructor(
     )
 
   override fun count(): Observable<Int> = temperatureAndHumidityLogDao.count()
+
+  override suspend fun deleteKtx(remoteId: Int, profileId: Long) = temperatureAndHumidityLogDao.deleteKtx(remoteId, profileId)
 }

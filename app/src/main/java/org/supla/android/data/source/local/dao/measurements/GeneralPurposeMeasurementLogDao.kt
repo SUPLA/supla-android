@@ -41,6 +41,9 @@ interface GeneralPurposeMeasurementLogDao : GroupingStringMigratorDao {
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   fun insert(entity: List<GeneralPurposeMeasurementEntity>): Completable
 
+  @Query("DELETE FROM $TABLE_NAME WHERE $COLUMN_CHANNEL_ID = :remoteId AND $COLUMN_PROFILE_ID = :profileId")
+  suspend fun deleteKtx(remoteId: Int, profileId: Long)
+
   @Query("SELECT MIN(date) FROM general_purpose_measurement_log WHERE channel_id = :channelId AND profile_id = :profileId")
   fun findMinTimestamp(channelId: Int, profileId: Long): Single<Long>
 

@@ -20,6 +20,7 @@ package org.supla.android.data.source
 import io.reactivex.rxjava3.core.Observable
 import org.supla.android.data.source.local.dao.ChannelExtendedValueDao
 import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity
+import org.supla.android.usecases.channel.RemoveHiddenChannelsUseCase
 import org.supla.android.usecases.developerinfo.CountProvider
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -27,9 +28,10 @@ import javax.inject.Singleton
 @Singleton
 class ChannelExtendedValueRepository @Inject constructor(
   private val channelExtendedValueDao: ChannelExtendedValueDao
-) : CountProvider {
+) : CountProvider, RemoveHiddenChannelsUseCase.Deletable {
   fun findByRemoteId(remoteId: Int) = channelExtendedValueDao.findByRemoteId(remoteId)
   fun update(entity: ChannelExtendedValueEntity) = channelExtendedValueDao.update(entity)
   fun insert(entity: ChannelExtendedValueEntity) = channelExtendedValueDao.insert(entity)
   override fun count(): Observable<Int> = channelExtendedValueDao.count()
+  override suspend fun deleteKtx(remoteId: Int, profileId: Long) = channelExtendedValueDao.deleteKtx(remoteId, profileId)
 }

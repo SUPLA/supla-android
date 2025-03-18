@@ -41,6 +41,9 @@ interface TemperatureLogDao : GroupingStringMigratorDao {
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   fun insert(entity: List<TemperatureLogEntity>): Completable
 
+  @Query("DELETE FROM $TABLE_NAME WHERE $COLUMN_CHANNEL_ID = :remoteId AND $COLUMN_PROFILEID = :profileId")
+  suspend fun deleteKtx(remoteId: Int, profileId: Long)
+
   @Query("SELECT MIN(date) FROM $TABLE_NAME WHERE channelid = :channelId AND profileid = :profileId")
   fun findMinTimestamp(channelId: Int, profileId: Long): Single<Long>
 

@@ -1,4 +1,4 @@
-package org.supla.android.core.infrastructure
+package org.supla.android.features.channelscleanup
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,24 +17,28 @@ package org.supla.android.core.infrastructure
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.content.Context
 import androidx.work.ExistingWorkPolicy
-import androidx.work.OneTimeWorkRequest
-import androidx.work.WorkManager
-import dagger.hilt.android.qualifiers.ApplicationContext
+import org.supla.android.Trace
+import org.supla.android.core.infrastructure.WorkManagerProxy
+import org.supla.android.extensions.TAG
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class WorkManagerProxy @Inject constructor(
-  @ApplicationContext private val context: Context
+class RemoveHiddenChannelsManager @Inject constructor(
+  private val workManagerProxy: WorkManagerProxy
 ) {
-
-  fun enqueueUniqueWork(uniqueWorkName: String, existingWorkPolicy: ExistingWorkPolicy, work: OneTimeWorkRequest) {
-    WorkManager.getInstance(context).enqueueUniqueWork(uniqueWorkName, existingWorkPolicy, work)
+  fun start() {
+    Trace.i(TAG, "Starting hidden channels removal manager")
+    workManagerProxy.enqueueUniqueWork(
+      RemoveHiddenChannelsWorker.WORK_ID,
+      ExistingWorkPolicy.REPLACE,
+      RemoveHiddenChannelsWorker.build()
+    )
   }
 
-  fun cancelByTag(tag: String) {
-    WorkManager.getInstance(context).cancelAllWorkByTag(tag)
+  fun kill() {
+    Trace.i(TAG, "Killing hidden channels removal manager")
+    workManagerProxy.cancelByTag(RemoveHiddenChannelsWorker.TAG)
   }
 }

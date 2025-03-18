@@ -35,6 +35,10 @@ import org.supla.android.data.source.local.entity.ProfileEntity.Companion.SUBQUE
 
 @Dao
 interface ChannelExtendedValueDao {
+
+  @Query("DELETE FROM $TABLE_NAME WHERE $COLUMN_CHANNEL_ID = :remoteId AND $COLUMN_PROFILE_ID = :profileId")
+  suspend fun deleteKtx(remoteId: Int, profileId: Long)
+
   @Query(
     """
       SELECT $ALL_COLUMNS 

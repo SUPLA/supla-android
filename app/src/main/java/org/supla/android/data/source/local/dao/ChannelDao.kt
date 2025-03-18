@@ -52,6 +52,9 @@ interface ChannelDao {
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   fun insert(entity: ChannelEntity): Completable
 
+  @Query("DELETE FROM $TABLE_NAME WHERE $COLUMN_CHANNEL_REMOTE_ID = :remoteId AND $COLUMN_PROFILE_ID = :profileId")
+  suspend fun deleteKtx(remoteId: Int, profileId: Long)
+
   @Query(
     """
     SELECT $ALL_COLUMNS FROM channel
@@ -78,7 +81,7 @@ interface ChannelDao {
       channel.$COLUMN_ID channel_$COLUMN_ID, 
       channel.$COLUMN_CHANNEL_REMOTE_ID channel_$COLUMN_CHANNEL_REMOTE_ID, 
       channel.${ChannelEntity.COLUMN_DEVICE_ID} channel_${ChannelEntity.COLUMN_DEVICE_ID}, 
-      channel.${ChannelEntity.COLUMN_CAPTION} channel_${ChannelEntity.COLUMN_CAPTION},
+      channel.$COLUMN_CAPTION channel_$COLUMN_CAPTION,
       channel.${ChannelEntity.COLUMN_TYPE} channel_${ChannelEntity.COLUMN_TYPE}, 
       channel.${ChannelEntity.COLUMN_FUNCTION} channel_${ChannelEntity.COLUMN_FUNCTION}, 
       channel.$COLUMN_VISIBLE channel_$COLUMN_VISIBLE, 
@@ -157,7 +160,7 @@ interface ChannelDao {
       location.${LocationEntity.COLUMN_CAPTION} COLLATE LOCALIZED,
       channel.${ChannelEntity.COLUMN_POSITION},
       channel.${ChannelEntity.COLUMN_FUNCTION} DESC,
-      channel.${ChannelEntity.COLUMN_CAPTION} COLLATE LOCALIZED
+      channel.$COLUMN_CAPTION COLLATE LOCALIZED
   """
   )
   fun findList(): Observable<List<ChannelDataEntity>>
@@ -168,7 +171,7 @@ interface ChannelDao {
       channel.$COLUMN_ID channel_$COLUMN_ID, 
       channel.$COLUMN_CHANNEL_REMOTE_ID channel_$COLUMN_CHANNEL_REMOTE_ID, 
       channel.${ChannelEntity.COLUMN_DEVICE_ID} channel_${ChannelEntity.COLUMN_DEVICE_ID}, 
-      channel.${ChannelEntity.COLUMN_CAPTION} channel_${ChannelEntity.COLUMN_CAPTION},
+      channel.$COLUMN_CAPTION channel_$COLUMN_CAPTION,
       channel.${ChannelEntity.COLUMN_TYPE} channel_${ChannelEntity.COLUMN_TYPE}, 
       channel.${ChannelEntity.COLUMN_FUNCTION} channel_${ChannelEntity.COLUMN_FUNCTION}, 
       channel.$COLUMN_VISIBLE channel_$COLUMN_VISIBLE, 
@@ -277,4 +280,30 @@ interface ChannelDao {
     """
   )
   fun updateCaption(caption: String, remoteId: Int, profileId: Long): Completable
+
+  @Query(
+    """
+      SELECT
+        $COLUMN_ID, 
+        $COLUMN_CHANNEL_REMOTE_ID, 
+        ${ChannelEntity.COLUMN_DEVICE_ID}, 
+        $COLUMN_CAPTION,
+        ${ChannelEntity.COLUMN_TYPE}, 
+        ${ChannelEntity.COLUMN_FUNCTION}, 
+        $COLUMN_VISIBLE, 
+        $COLUMN_LOCATION_ID,
+        ${ChannelEntity.COLUMN_ALT_ICON}, 
+        ${ChannelEntity.COLUMN_USER_ICON}, 
+        ${ChannelEntity.COLUMN_MANUFACTURER_ID}, 
+        ${ChannelEntity.COLUMN_PRODUCT_ID},
+        ${ChannelEntity.COLUMN_FLAGS}, 
+        ${ChannelEntity.COLUMN_PROTOCOL_VERSION}, 
+        ${ChannelEntity.COLUMN_POSITION}, 
+        $COLUMN_PROFILE_ID
+      FROM $TABLE_NAME
+      WHERE
+        $COLUMN_VISIBLE == 0 AND $COLUMN_PROFILE_ID = ${ProfileEntity.SUBQUERY_ACTIVE}
+    """
+  )
+  suspend fun findHiddenChannels(): List<ChannelEntity>
 }

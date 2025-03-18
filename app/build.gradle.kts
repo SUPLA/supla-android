@@ -143,6 +143,7 @@ dependencies {
   implementation(libs.androidx.lifecycle.extensions)
   implementation(libs.androidx.room.runtime)
   implementation(libs.androidx.room.rxjava)
+  implementation(libs.androidx.room.ktx)
   implementation(libs.androidx.security.crypto)
   implementation(libs.androidx.navigation.fragment)
   implementation(libs.androidx.navigation.ui)
