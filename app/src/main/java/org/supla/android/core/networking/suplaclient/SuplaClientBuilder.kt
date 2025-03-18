@@ -25,6 +25,7 @@ import org.supla.android.db.room.measurements.MeasurementsDatabase
 import org.supla.android.events.ChannelConfigEventsManager
 import org.supla.android.events.DeviceConfigEventsManager
 import org.supla.android.events.UpdateEventsManager
+import org.supla.android.features.channelscleanup.RemoveHiddenChannelsManager
 import org.supla.android.lib.SuplaClient
 import org.supla.android.profile.ProfileIdHolder
 import org.supla.android.profile.ProfileManager
@@ -75,5 +76,6 @@ data class SuplaClientDependencies @Inject constructor(
   val updateChannelGroupTotalValueUseCase: UpdateChannelGroupTotalValueUseCase,
   val channelToRootRelationHolderUseCase: ChannelToRootRelationHolderUseCase,
 
-  val suplaClientStateHolder: SuplaClientStateHolder
+  val suplaClientStateHolder: SuplaClientStateHolder,
+  val removeHiddenChannelsManager: RemoveHiddenChannelsManager
 )

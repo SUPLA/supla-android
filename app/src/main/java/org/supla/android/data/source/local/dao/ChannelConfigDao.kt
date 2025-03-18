@@ -41,6 +41,9 @@ interface ChannelConfigDao {
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   fun insertOrUpdate(entity: ChannelConfigEntity): Completable
 
+  @Query("DELETE FROM $TABLE_NAME WHERE $COLUMN_CHANNEL_ID = :remoteId AND $COLUMN_PROFILE_ID = :profileId")
+  suspend fun deleteKtx(remoteId: Int, profileId: Long)
+
   @Query(
     """
     SELECT $ALL_COLUMNS 
