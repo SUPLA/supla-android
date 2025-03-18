@@ -22,6 +22,7 @@ import io.reactivex.rxjava3.core.Observable
 import org.supla.android.data.source.local.dao.ChannelDao
 import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.usecases.captionchange.CaptionChangeUseCase
+import org.supla.android.usecases.channel.RemoveHiddenChannelsUseCase
 import org.supla.android.usecases.developerinfo.CountProvider
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -29,7 +30,7 @@ import javax.inject.Singleton
 @Singleton
 class RoomChannelRepository @Inject constructor(
   private val channelDao: ChannelDao
-) : CountProvider, CaptionChangeUseCase.Updater {
+) : CountProvider, CaptionChangeUseCase.Updater, RemoveHiddenChannelsUseCase.Deletable {
 
   fun findByRemoteId(remoteId: Int) = channelDao.findByRemoteId(remoteId)
 
@@ -49,8 +50,14 @@ class RoomChannelRepository @Inject constructor(
 
   fun findChannelsCount(profileId: Long) = channelDao.findChannelsCount(profileId)
 
+  suspend fun findHiddenChannels() = channelDao.findHiddenChannels()
+
   override fun count(): Observable<Int> = channelDao.count()
 
   override fun updateCaption(caption: String, remoteId: Int, profileId: Long): Completable =
     channelDao.updateCaption(caption, remoteId, profileId)
+
+  override suspend fun deleteKtx(remoteId: Int, profileId: Long) {
+    channelDao.deleteKtx(remoteId, profileId)
+  }
 }

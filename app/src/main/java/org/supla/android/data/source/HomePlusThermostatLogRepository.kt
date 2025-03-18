@@ -17,24 +17,14 @@ package org.supla.android.data.source
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import io.reactivex.rxjava3.core.Observable
-import org.supla.android.data.source.local.dao.ChannelStateDao
-import org.supla.android.data.source.local.entity.ChannelStateEntity
+import org.supla.android.data.source.local.dao.measurements.HomePlusThermostatLogDao
 import org.supla.android.usecases.channel.RemoveHiddenChannelsUseCase
-import org.supla.android.usecases.developerinfo.CountProvider
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ChannelStateRepository @Inject constructor(
-  private val channelStateDao: ChannelStateDao
-) : CountProvider, RemoveHiddenChannelsUseCase.Deletable {
-
-  fun getState(channelId: Int) = channelStateDao.getState(channelId)
-
-  fun insertOrUpdate(state: ChannelStateEntity) = channelStateDao.insertOrUpdate(state)
-
-  override fun count(): Observable<Int> = channelStateDao.count()
-
-  override suspend fun deleteKtx(remoteId: Int, profileId: Long) = channelStateDao.deleteKtx(remoteId, profileId)
+class HomePlusThermostatLogRepository @Inject constructor(
+  private val homePlusThermostatLogDao: HomePlusThermostatLogDao
+) : RemoveHiddenChannelsUseCase.Deletable {
+  override suspend fun deleteKtx(remoteId: Int, profileId: Long) = homePlusThermostatLogDao.deleteKtx(remoteId, profileId)
 }

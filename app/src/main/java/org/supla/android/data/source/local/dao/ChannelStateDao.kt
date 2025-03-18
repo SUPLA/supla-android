@@ -26,6 +26,7 @@ import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
 import org.supla.android.data.source.local.entity.ChannelStateEntity
 import org.supla.android.data.source.local.entity.ChannelStateEntity.Companion.ALL_COLUMNS
+import org.supla.android.data.source.local.entity.ChannelStateEntity.Companion.COLUMN_CHANNEL_ID
 import org.supla.android.data.source.local.entity.ChannelStateEntity.Companion.COLUMN_PROFILE_ID
 import org.supla.android.data.source.local.entity.ChannelStateEntity.Companion.TABLE_NAME
 import org.supla.android.data.source.local.entity.ProfileEntity.Companion.SUBQUERY_ACTIVE
@@ -35,7 +36,7 @@ interface ChannelStateDao {
   @Query(
     """
       SELECT $ALL_COLUMNS FROM $TABLE_NAME
-      WHERE ${ChannelStateEntity.COLUMN_CHANNEL_ID} = :channelId
+      WHERE $COLUMN_CHANNEL_ID = :channelId
         AND $COLUMN_PROFILE_ID = $SUBQUERY_ACTIVE
     """
   )
@@ -46,4 +47,7 @@ interface ChannelStateDao {
 
   @Query("SELECT COUNT($COLUMN_PROFILE_ID) FROM $TABLE_NAME")
   fun count(): Observable<Int>
+
+  @Query("DELETE FROM $TABLE_NAME WHERE $COLUMN_CHANNEL_ID = :remoteId AND $COLUMN_PROFILE_ID = :profileId")
+  suspend fun deleteKtx(remoteId: Int, profileId: Long)
 }

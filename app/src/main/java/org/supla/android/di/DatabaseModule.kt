@@ -249,6 +249,11 @@ class DatabaseModule {
 
   @Provides
   @Singleton
+  fun homePlusThermostatLogDao(measurementsDatabase: MeasurementsDatabase) =
+    measurementsDatabase.homePlusThermostatLogDao()
+
+  @Provides
+  @Singleton
   fun provideDbHelper(@ApplicationContext context: Context) =
     DbHelper.getInstance(context)
 
