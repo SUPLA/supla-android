@@ -763,6 +763,7 @@
   <string name="channel_status_awaiting">Tego urządzenia nie można zdalnie wybudzić. Oczekujemy na komunikację ze strony urządzenia…</string>
   <string name="channel_status_updating">Trwa aktualizacja oprogramowania…</string>
   <string name="thermostat_calibration_error">Błąd kalibracji</string>
+  <string name="state_dialog_index">(%1$d z %2$d)</string>
 
   <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
     <item quantity="one">włączone</item>

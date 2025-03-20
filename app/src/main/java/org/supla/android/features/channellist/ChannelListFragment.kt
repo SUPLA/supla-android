@@ -20,21 +20,26 @@ package org.supla.android.features.channellist
 import android.app.AlertDialog
 import android.os.Bundle
 import android.view.View
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.fragment.app.viewModels
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
-import org.supla.android.ChannelStatePopup
+import org.supla.android.LightsourceLifespanSettingsDialog
 import org.supla.android.R
 import org.supla.android.SuplaApp
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
+import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.BaseFragment
+import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.databinding.FragmentChannelListBinding
 import org.supla.android.extensions.toPx
 import org.supla.android.extensions.visibleIf
-import org.supla.android.lib.SuplaChannelState
+import org.supla.android.features.statedialog.StateDialog
 import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.navigator.MainNavigator
+import org.supla.android.ui.dialogs.AuthorizationDialog
 import org.supla.android.ui.dialogs.exceededAmperageDialog
 import org.supla.android.ui.dialogs.valveClosedManuallyDialog
 import org.supla.android.ui.dialogs.valveFloodingDialog
@@ -48,7 +53,6 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
 
   override val viewModel: ChannelListViewModel by viewModels()
   private val binding by viewBinding(FragmentChannelListBinding::bind)
-  private lateinit var statePopup: ChannelStatePopup
   private var scrollDownOnReload = false
 
   @Inject
@@ -65,16 +69,33 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
 
     binding.channelsList.adapter = adapter
     binding.channelsList.itemAnimator = null
-    statePopup = ChannelStatePopup(requireActivity())
     setupAdapter()
     binding.channelsEmptyListButton.setOnClickListener {
       navigator.navigateToAddWizard()
+    }
+
+    binding.yourComposeView.setContent {
+      val modelState by viewModel.getViewState().collectAsState()
+      SuplaTheme {
+        modelState.stateDialogViewState?.let {
+          viewModel.StateDialog(state = it)
+        }
+        modelState.authorizationDialogState?.let {
+          viewModel.AuthorizationDialog(state = it)
+        }
+      }
     }
   }
 
   override fun onStart() {
     super.onStart()
     viewModel.loadChannels()
+    viewModel.onStart()
+  }
+
+  override fun onStop() {
+    super.onStop()
+    viewModel.onStop()
   }
 
   override fun handleEvents(event: ChannelListViewEvent) {
@@ -102,6 +123,15 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
         destinationId = event.fragmentId,
         bundle = event.fragmentArguments
       )
+
+      is ChannelListViewEvent.ShowLifespanSettingsDialog -> {
+        LightsourceLifespanSettingsDialog(
+          context,
+          event.remoteId,
+          event.lightSourceLifespan ?: 0,
+          event.caption(requireContext())
+        ).show()
+      }
     }
   }
 
@@ -133,27 +163,14 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
       viewModel.toggleLocationCollapsed(location)
       scrollDownOnReload = scrollDown
     }
-    adapter.infoButtonClickCallback = { statePopup.show(it) }
+    adapter.infoButtonClickCallback = { viewModel.showStateDialog(it) }
     adapter.issueButtonClickCallback = { showAlertPopup(it.message(requireContext())) }
     adapter.listItemClickCallback = { viewModel.onListItemClick(it) }
   }
 
   override fun onSuplaMessage(message: SuplaClientMsg) {
     when (message.type) {
-      SuplaClientMsg.onChannelState -> handleChannelState(message.channelState)
-      SuplaClientMsg.onDataChanged -> handleChannelChange(message.channelId)
-    }
-  }
-
-  private fun handleChannelState(state: SuplaChannelState?) {
-    if (state != null && statePopup.isVisible && statePopup.remoteId == state.channelId) {
-      statePopup.update(state)
-    }
-  }
-
-  private fun handleChannelChange(channelId: Int) {
-    if (statePopup.isVisible && statePopup.remoteId == channelId) {
-      statePopup.update(channelId)
+      SuplaClientMsg.onChannelState -> viewModel.updateStateDialog(message.channelState)
     }
   }
 

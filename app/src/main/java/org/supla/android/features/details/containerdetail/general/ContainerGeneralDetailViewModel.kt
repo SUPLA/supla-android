@@ -42,6 +42,9 @@ import org.supla.android.features.details.containerdetail.general.ui.ContainerTy
 import org.supla.android.features.details.containerdetail.general.ui.ControlLevel
 import org.supla.android.features.details.containerdetail.general.ui.ErrorLevel
 import org.supla.android.features.details.containerdetail.general.ui.WarningLevel
+import org.supla.android.features.statedialog.StateDialogHandler
+import org.supla.android.features.statedialog.StateDialogViewModelState
+import org.supla.android.features.statedialog.StateDialogViewState
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.tools.VibrationHelper
 import org.supla.android.ui.dialogs.AuthorizationDialogState
@@ -49,12 +52,10 @@ import org.supla.android.ui.dialogs.AuthorizationReason
 import org.supla.android.ui.dialogs.CaptionChangeDialogState
 import org.supla.android.ui.dialogs.authorize.AuthorizationModelState
 import org.supla.android.ui.dialogs.authorize.BaseAuthorizationViewModel
-import org.supla.android.ui.dialogs.state.StateDialogHandler
-import org.supla.android.ui.dialogs.state.StateDialogViewModelState
-import org.supla.android.ui.dialogs.state.StateDialogViewState
 import org.supla.android.ui.lists.sensordata.SensorItemData
 import org.supla.android.usecases.captionchange.CaptionChangeHandler
 import org.supla.android.usecases.captionchange.CaptionChangeUseCase
+import org.supla.android.usecases.channel.ReadChannelWithChildrenTreeUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
 import org.supla.android.usecases.channelconfig.LoadChannelConfigUseCase
 import org.supla.android.usecases.client.AuthorizeUseCase
@@ -80,12 +81,13 @@ class ContainerGeneralDetailViewModel @Inject constructor(
   private val getAllChannelIssuesUseCase: GetAllChannelIssuesUseCase,
   private val loadChannelConfigUseCase: LoadChannelConfigUseCase,
   private val getChannelIconUseCase: GetChannelIconUseCase,
-  private val getCaptionUseCase: GetCaptionUseCase,
   private val valuesFormatter: ValuesFormatter,
   private val preferences: Preferences,
+  override val readChannelWithChildrenTreeUseCase: ReadChannelWithChildrenTreeUseCase,
   override val captionChangeUseCase: CaptionChangeUseCase,
   override val suplaClientProvider: SuplaClientProvider,
   override val updateEventsManager: UpdateEventsManager,
+  override val getCaptionUseCase: GetCaptionUseCase,
   override val vibrationHelper: VibrationHelper,
   override val schedulers: SuplaSchedulers,
   override val dateProvider: DateProvider,
@@ -147,7 +149,7 @@ class ContainerGeneralDetailViewModel @Inject constructor(
   }
 
   override fun onInfoClick(data: SensorItemData) {
-    showStateDialog(data.channelId, data.caption)
+    showStateDialog(data.channelId)
   }
 
   override fun onCaptionLongPress(data: SensorItemData) {
