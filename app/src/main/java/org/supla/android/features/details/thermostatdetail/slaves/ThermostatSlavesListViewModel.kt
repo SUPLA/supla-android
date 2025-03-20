@@ -34,6 +34,9 @@ import org.supla.android.data.source.local.entity.extensions.onlineState
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.data.source.remote.thermostat.getIndicatorIcon
 import org.supla.android.data.source.remote.thermostat.getSetpointText
+import org.supla.android.features.statedialog.StateDialogHandler
+import org.supla.android.features.statedialog.StateDialogViewModelState
+import org.supla.android.features.statedialog.StateDialogViewState
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.tools.VibrationHelper
 import org.supla.android.ui.dialogs.AuthorizationDialogState
@@ -41,9 +44,6 @@ import org.supla.android.ui.dialogs.AuthorizationReason
 import org.supla.android.ui.dialogs.CaptionChangeDialogState
 import org.supla.android.ui.dialogs.authorize.AuthorizationModelState
 import org.supla.android.ui.dialogs.authorize.BaseAuthorizationViewModel
-import org.supla.android.ui.dialogs.state.StateDialogHandler
-import org.supla.android.ui.dialogs.state.StateDialogViewModelState
-import org.supla.android.ui.dialogs.state.StateDialogViewState
 import org.supla.android.usecases.captionchange.CaptionChangeHandler
 import org.supla.android.usecases.captionchange.CaptionChangeUseCase
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
@@ -59,21 +59,21 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ThermostatSlavesListViewModel @Inject constructor(
-  private val readChannelWithChildrenTreeUseCase: ReadChannelWithChildrenTreeUseCase,
   private val getChannelIssuesForSlavesUseCase: GetChannelIssuesForSlavesUseCase,
   private val getChannelValueStringUseCase: GetChannelValueStringUseCase,
   private val getChannelIconUseCase: GetChannelIconUseCase,
-  private val getCaptionUseCase: GetCaptionUseCase,
   private val valuesFormatter: ValuesFormatter,
-  override val dateProvider: DateProvider,
   private val preferences: Preferences,
+  override val readChannelWithChildrenTreeUseCase: ReadChannelWithChildrenTreeUseCase,
   override val captionChangeUseCase: CaptionChangeUseCase,
   override val suplaClientProvider: SuplaClientProvider,
+  override val getCaptionUseCase: GetCaptionUseCase,
   override val vibrationHelper: VibrationHelper,
+  override val dateProvider: DateProvider,
   roomProfileRepository: RoomProfileRepository,
   authorizeUseCase: AuthorizeUseCase,
-  loginUseCase: LoginUseCase,
-  schedulers: SuplaSchedulers
+  schedulers: SuplaSchedulers,
+  loginUseCase: LoginUseCase
 ) : BaseAuthorizationViewModel<ThermostatSlavesListViewModelState, ThermostatSlavesListViewEvent>(
   suplaClientProvider,
   roomProfileRepository,

@@ -37,8 +37,11 @@ import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.Preferences
 import org.supla.android.core.BaseViewModelTest
+import org.supla.android.core.infrastructure.DateProvider
+import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.source.ChannelRepository
+import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.data.source.local.entity.ChannelConfigEntity
 import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity
@@ -55,6 +58,8 @@ import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.channel.*
+import org.supla.android.usecases.client.AuthorizeUseCase
+import org.supla.android.usecases.client.LoginUseCase
 import org.supla.android.usecases.details.GpmDetailType
 import org.supla.android.usecases.details.ProvideChannelDetailTypeUseCase
 import org.supla.android.usecases.details.SwitchDetailType
@@ -64,6 +69,7 @@ import org.supla.android.usecases.details.WindowDetailType
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
 import org.supla.core.shared.data.model.general.SuplaFunction
+import org.supla.core.shared.usecase.GetCaptionUseCase
 
 @RunWith(MockitoJUnitRunner::class)
 class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, ChannelListViewEvent, ChannelListViewModel>() {
@@ -90,6 +96,9 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
   private lateinit var readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase
 
   @Mock
+  private lateinit var readChannelWithChildrenTreeUseCase: ReadChannelWithChildrenTreeUseCase
+
+  @Mock
   private lateinit var gson: Gson
 
   @Mock
@@ -101,16 +110,41 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
   @Mock
   override lateinit var schedulers: SuplaSchedulers
 
+  @Mock
+  private lateinit var getCaptionUseCase: GetCaptionUseCase
+
+  @Mock
+  private lateinit var suplaClientProvider: SuplaClientProvider
+
+  @Mock
+  private lateinit var dateProvider: DateProvider
+
+  @Mock
+  private lateinit var roomProfileRepository: RoomProfileRepository
+
+  @Mock
+  private lateinit var authorizeUseCase: AuthorizeUseCase
+
+  @Mock
+  private lateinit var loginUseCase: LoginUseCase
+
   override val viewModel: ChannelListViewModel by lazy {
     ChannelListViewModel(
-      channelRepository,
       createProfileChannelsListUseCase,
-      channelActionUseCase,
-      toggleLocationUseCase,
       provideDetailTypeUseCase,
-      readChannelByRemoteIdUseCase,
       readChannelWithChildrenUseCase,
+      readChannelByRemoteIdUseCase,
+      toggleLocationUseCase,
+      channelActionUseCase,
+      channelRepository,
+      readChannelWithChildrenTreeUseCase,
+      suplaClientProvider,
+      getCaptionUseCase,
+      dateProvider,
+      roomProfileRepository,
       updateEventsManager,
+      authorizeUseCase,
+      loginUseCase,
       preferences,
       schedulers
     )

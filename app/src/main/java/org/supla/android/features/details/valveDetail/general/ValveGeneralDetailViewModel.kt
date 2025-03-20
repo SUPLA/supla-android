@@ -34,6 +34,9 @@ import org.supla.android.data.source.local.entity.extensions.onlineState
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.events.ChannelUpdatesObserver
 import org.supla.android.events.UpdateEventsManager
+import org.supla.android.features.statedialog.StateDialogHandler
+import org.supla.android.features.statedialog.StateDialogViewModelState
+import org.supla.android.features.statedialog.StateDialogViewState
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaSchedulers
@@ -43,9 +46,6 @@ import org.supla.android.ui.dialogs.AuthorizationReason
 import org.supla.android.ui.dialogs.CaptionChangeDialogState
 import org.supla.android.ui.dialogs.authorize.AuthorizationModelState
 import org.supla.android.ui.dialogs.authorize.BaseAuthorizationViewModel
-import org.supla.android.ui.dialogs.state.StateDialogHandler
-import org.supla.android.ui.dialogs.state.StateDialogViewModelState
-import org.supla.android.ui.dialogs.state.StateDialogViewState
 import org.supla.android.ui.lists.sensordata.SensorItemData
 import org.supla.android.ui.views.buttons.SwitchButtonState
 import org.supla.android.usecases.captionchange.CaptionChangeHandler
@@ -53,6 +53,7 @@ import org.supla.android.usecases.captionchange.CaptionChangeUseCase
 import org.supla.android.usecases.channel.ActionException
 import org.supla.android.usecases.channel.ButtonType
 import org.supla.android.usecases.channel.ChannelActionUseCase
+import org.supla.android.usecases.channel.ReadChannelWithChildrenTreeUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
 import org.supla.android.usecases.client.AuthorizeUseCase
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
@@ -73,11 +74,12 @@ class ValveGeneralDetailViewModel @Inject constructor(
   private val getAllChannelIssuesUseCase: GetAllChannelIssuesUseCase,
   private val getChannelIconUseCase: GetChannelIconUseCase,
   private val channelActionUseCase: ChannelActionUseCase,
-  private val getCaptionUseCase: GetCaptionUseCase,
   private val preferences: Preferences,
+  override val readChannelWithChildrenTreeUseCase: ReadChannelWithChildrenTreeUseCase,
   override val captionChangeUseCase: CaptionChangeUseCase,
   override val suplaClientProvider: SuplaClientProvider,
   override val updateEventsManager: UpdateEventsManager,
+  override val getCaptionUseCase: GetCaptionUseCase,
   override val vibrationHelper: VibrationHelper,
   override val schedulers: SuplaSchedulers,
   override val dateProvider: DateProvider,
