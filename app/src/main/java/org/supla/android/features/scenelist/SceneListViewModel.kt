@@ -21,14 +21,20 @@ import android.net.Uri
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.Preferences
+import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.ui.ViewEvent
-import org.supla.android.core.ui.ViewState
+import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.complex.SceneDataEntity
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.ui.dialogs.AuthorizationDialogState
+import org.supla.android.ui.dialogs.AuthorizationReason
+import org.supla.android.ui.dialogs.authorize.AuthorizationModelState
 import org.supla.android.ui.lists.BaseListViewModel
 import org.supla.android.ui.lists.ListItem
+import org.supla.android.usecases.client.AuthorizeUseCase
+import org.supla.android.usecases.client.LoginUseCase
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
 import org.supla.android.usecases.profile.CloudUrl
@@ -43,14 +49,34 @@ class SceneListViewModel @Inject constructor(
   private val createProfileScenesListUseCase: CreateProfileScenesListUseCase,
   private val updateSceneOrderUseCase: UpdateSceneOrderUseCase,
   loadActiveProfileUrlUseCase: LoadActiveProfileUrlUseCase,
+  roomProfileRepository: RoomProfileRepository,
   updateEventsManager: UpdateEventsManager,
+  suplaClientProvider: SuplaClientProvider,
+  authorizeUseCase: AuthorizeUseCase,
+  loginUseCase: LoginUseCase,
   preferences: Preferences,
   schedulers: SuplaSchedulers
-) : BaseListViewModel<SceneListViewState, SceneListViewEvent>(preferences, SceneListViewState(), schedulers, loadActiveProfileUrlUseCase) {
+) : BaseListViewModel<SceneListViewState, SceneListViewEvent>(
+  preferences,
+  roomProfileRepository,
+  suplaClientProvider,
+  authorizeUseCase,
+  schedulers,
+  loginUseCase,
+  SceneListViewState(),
+  loadActiveProfileUrlUseCase
+) {
 
   override fun sendReassignEvent() = sendEvent(SceneListViewEvent.ReassignAdapter)
 
   override fun reloadList() = loadScenes()
+
+  override fun updateAuthorizationDialogState(updater: (AuthorizationDialogState?) -> AuthorizationDialogState?) {
+    updateState { it.copy(authorizationDialogState = updater(it.authorizationDialogState)) }
+  }
+
+  override fun onAuthorized(reason: AuthorizationReason) {
+  }
 
   init {
     observeUpdates(updateEventsManager.observeScenesUpdate())
@@ -102,5 +128,6 @@ sealed class SceneListViewEvent : ViewEvent {
 }
 
 data class SceneListViewState(
-  val scenes: List<ListItem>? = null
-) : ViewState()
+  val scenes: List<ListItem>? = null,
+  override val authorizationDialogState: AuthorizationDialogState? = null
+) : AuthorizationModelState()

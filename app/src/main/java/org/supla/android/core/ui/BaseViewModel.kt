@@ -114,6 +114,17 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
     )
   }
 
+  fun <T : Any> subscribe(maybe: Maybe<T>, onSuccess: (T) -> Unit = {}, onError: (Throwable) -> Unit = {}) {
+    compositeDisposable.add(
+      maybe
+        .attach()
+        .subscribeBy(
+          onSuccess = onSuccess,
+          onError = onError
+        )
+    )
+  }
+
   fun <T : Any> Maybe<T>.attach(): Maybe<T> {
     return attachSilent()
       .doOnSubscribe { loadingState.tryEmit(true) }

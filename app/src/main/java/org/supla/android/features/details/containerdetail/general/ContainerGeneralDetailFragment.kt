@@ -28,10 +28,10 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.core.ui.BaseComposeFragment
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
+import org.supla.android.features.statedialog.StateDialog
 import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.ui.dialogs.AuthorizationDialog
 import org.supla.android.ui.dialogs.CaptionChangeDialog
-import org.supla.android.ui.dialogs.state.StateDialog
 
 private const val ARG_ITEM_BUNDLE = "ARG_ITEM_BUNDLE"
 
@@ -55,7 +55,7 @@ class ContainerGeneralDetailFragment : BaseComposeFragment<ContainerGeneralDetai
       viewModel.View(state = modelState.viewState)
 
       modelState.stateDialogViewState?.let {
-        StateDialog(state = it, onDismiss = viewModel::closeStateDialog)
+        viewModel.StateDialog(state = it)
       }
       modelState.captionChangeDialogState?.let {
         viewModel.CaptionChangeDialog(state = it)

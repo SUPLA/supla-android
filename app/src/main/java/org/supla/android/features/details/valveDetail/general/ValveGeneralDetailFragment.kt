@@ -29,11 +29,11 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.core.ui.BaseComposeFragment
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
+import org.supla.android.features.statedialog.StateDialog
 import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.ui.dialogs.AlertDialog
 import org.supla.android.ui.dialogs.AuthorizationDialog
 import org.supla.android.ui.dialogs.CaptionChangeDialog
-import org.supla.android.ui.dialogs.state.StateDialog
 
 private const val ARG_ITEM_BUNDLE = "ARG_ITEM_BUNDLE"
 
@@ -65,7 +65,7 @@ class ValveGeneralDetailFragment : BaseComposeFragment<ValveGeneralDetailViewMod
         )
       }
       modelState.stateDialogViewState?.let {
-        StateDialog(state = it, onDismiss = viewModel::closeStateDialog)
+        viewModel.StateDialog(state = it)
       }
       modelState.captionChangeDialogState?.let {
         viewModel.CaptionChangeDialog(state = it)
@@ -77,7 +77,7 @@ class ValveGeneralDetailFragment : BaseComposeFragment<ValveGeneralDetailViewMod
         state = modelState.viewState,
         onOpenClick = { viewModel.onActionClick(item.remoteId, ValveAction.OPEN) },
         onCloseClick = { viewModel.onActionClick(item.remoteId, ValveAction.CLOSE) },
-        onInfoClick = { viewModel.showStateDialog(it.channelId, it.caption) },
+        onInfoClick = { viewModel.showStateDialog(it.channelId) },
         onCaptionLongPress = { viewModel.changeChannelCaption(it.userCaption, it.channelId, it.profileId) }
       )
     }

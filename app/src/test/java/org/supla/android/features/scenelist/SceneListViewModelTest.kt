@@ -19,11 +19,15 @@ import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.Preferences
 import org.supla.android.core.BaseViewModelTest
+import org.supla.android.core.networking.suplaclient.SuplaClientProvider
+import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.complex.SceneDataEntity
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.lists.ListItem
+import org.supla.android.usecases.client.AuthorizeUseCase
+import org.supla.android.usecases.client.LoginUseCase
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
 import org.supla.android.usecases.profile.CloudUrl
@@ -55,13 +59,29 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
   @Mock
   override lateinit var schedulers: SuplaSchedulers
 
+  @Mock
+  private lateinit var suplaClientProvider: SuplaClientProvider
+
+  @Mock
+  private lateinit var roomProfileRepository: RoomProfileRepository
+
+  @Mock
+  private lateinit var authorizeUseCase: AuthorizeUseCase
+
+  @Mock
+  private lateinit var loginUseCase: LoginUseCase
+
   override val viewModel: SceneListViewModel by lazy {
     SceneListViewModel(
       toggleLocationUseCase,
       createProfileScenesListUseCase,
       updateSceneOrderUseCase,
       loadActiveProfileUrlUseCase,
+      roomProfileRepository,
       updateEventsManager,
+      suplaClientProvider,
+      authorizeUseCase,
+      loginUseCase,
       preferences,
       schedulers
     )
