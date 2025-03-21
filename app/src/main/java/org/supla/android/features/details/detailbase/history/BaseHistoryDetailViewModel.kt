@@ -53,6 +53,7 @@ import org.supla.android.data.model.general.SingleSelectionList
 import org.supla.android.data.source.local.calendar.Hour
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.events.DownloadEventsManager
+import org.supla.android.extensions.beginOfNextHour
 import org.supla.android.extensions.dayEnd
 import org.supla.android.extensions.dayStart
 import org.supla.android.extensions.guardLet
@@ -575,7 +576,7 @@ abstract class BaseHistoryDetailViewModel(
 
   private fun getStartDateForRange(range: ChartRange, date: Date, currentDate: Date, dateForCustom: Date, minDate: Date) = when (range) {
     ChartRange.DAY -> date.dayStart()
-    ChartRange.LAST_DAY -> currentDate.shift(-range.roundedDaysCount)
+    ChartRange.LAST_DAY -> currentDate.shift(-range.roundedDaysCount).beginOfNextHour()
     ChartRange.LAST_WEEK,
     ChartRange.LAST_MONTH,
     ChartRange.LAST_QUARTER,
