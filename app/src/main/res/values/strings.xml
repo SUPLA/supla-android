@@ -789,6 +789,7 @@
   <string name="channel_status_updating" translatable="false">Software update in progress…</string>
   <string name="thermostat_calibration_error" translatable="false">Calibration error</string>
   <string name="state_dialog_index" translatable="false">(%1$d of %2$d)</string>
+  <string name="state_switch_cycle_count" translatable="false">Switch cycles</string>
 
   <plurals name="details_timer_info_on" translatable="false">
     <item quantity="other">on</item>

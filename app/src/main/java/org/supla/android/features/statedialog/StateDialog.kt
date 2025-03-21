@@ -121,7 +121,7 @@ private fun ValueRow(item: StateDialogItem, value: LocalizedString) =
       modifier = Modifier
         .background(MaterialTheme.colorScheme.surface)
         .weight(0.5f)
-        .padding(horizontal = Distance.tiny)
+        .padding(start = Distance.tiny, end = 4.dp)
         .fillMaxHeight()
     )
     Text(
@@ -130,7 +130,7 @@ private fun ValueRow(item: StateDialogItem, value: LocalizedString) =
       modifier = Modifier
         .background(MaterialTheme.colorScheme.surface)
         .weight(0.5f)
-        .padding(horizontal = Distance.tiny)
+        .padding(start = 4.dp, end = Distance.tiny)
         .fillMaxHeight()
     )
   }
