@@ -37,6 +37,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -44,8 +45,10 @@ import org.supla.android.R
 import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
+import org.supla.android.core.ui.theme.gray
 import org.supla.android.ui.dialogs.Dialog
 import org.supla.android.ui.dialogs.DialogButtonsRow
+import org.supla.android.ui.views.Image
 import org.supla.android.ui.views.Separator
 import org.supla.android.ui.views.SeparatorStyle
 import org.supla.android.ui.views.buttons.IconButton
@@ -54,6 +57,7 @@ import org.supla.core.shared.infrastructure.LocalizedString
 
 data class StateDialogViewState(
   val title: LocalizedString,
+  val online: Boolean,
   val subtitle: LocalizedString? = null,
   val loading: Boolean = true,
   val showArrows: Boolean = false,
@@ -76,7 +80,25 @@ fun StateDialogScope.StateDialog(
     Header(state)
     Separator(style = SeparatorStyle.LIGHT)
 
-    if (state.loading) {
+    if (!state.online) {
+      Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(Distance.tiny),
+        modifier = Modifier
+          .fillMaxWidth()
+          .padding(vertical = Distance.small)
+      ) {
+        Spacer(modifier = Modifier.weight(1f))
+        Image(R.drawable.ic_offline, tint = MaterialTheme.colorScheme.gray)
+        Text(
+          text = "offline",
+          textAlign = TextAlign.Center,
+          style = MaterialTheme.typography.bodyMedium,
+          color = MaterialTheme.colorScheme.gray
+        )
+        Spacer(modifier = Modifier.weight(1f))
+      }
+    } else if (state.loading) {
       CircularProgressIndicator(
         modifier = Modifier
           .align(Alignment.CenterHorizontally)
@@ -126,7 +148,7 @@ private fun ValueRow(item: StateDialogItem, value: LocalizedString) =
     )
     Text(
       text = value(LocalContext.current),
-      style = MaterialTheme.typography.labelSmall,
+      style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold),
       modifier = Modifier
         .background(MaterialTheme.colorScheme.surface)
         .weight(0.5f)
@@ -219,6 +241,7 @@ private fun Preview() {
     emptyScope.StateDialog(
       state = StateDialogViewState(
         title = LocalizedString.Constant("Dimmer"),
+        online = true,
         loading = false,
         values = mapOf(
           StateDialogItem.CHANNEL_ID to LocalizedString.Constant("123456"),
@@ -236,6 +259,7 @@ private fun Preview_ManyIds() {
     emptyScope.StateDialog(
       state = StateDialogViewState(
         title = LocalizedString.Constant("Dimmer 1"),
+        online = true,
         subtitle = LocalizedString.WithResourceIntInt(R.string.state_dialog_index, 1, 2),
         loading = false,
         showArrows = true,
@@ -244,6 +268,20 @@ private fun Preview_ManyIds() {
           StateDialogItem.BRIDGE_SIGNAL to LocalizedString.Constant("100%")
         ),
         showChangeLifespanButton = true
+      )
+    )
+  }
+}
+
+@Composable
+@Preview
+private fun Preview_Offline() {
+  SuplaTheme {
+    emptyScope.StateDialog(
+      state = StateDialogViewState(
+        title = LocalizedString.Constant("Dimmer"),
+        online = false,
+        loading = false,
       )
     )
   }

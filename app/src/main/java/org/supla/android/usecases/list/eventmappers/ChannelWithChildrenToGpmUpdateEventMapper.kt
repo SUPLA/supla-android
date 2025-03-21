@@ -49,7 +49,7 @@ class ChannelWithChildrenToGpmUpdateEventMapper @Inject constructor(
 
   private fun toSlideableListItemData(channelWithChildren: ChannelWithChildren): SlideableListItemData.Default =
     SlideableListItemData.Default(
-      onlineState = channelWithChildren.channel.channelValueEntity.onlineState,
+      onlineState = channelWithChildren.onlineState,
       title = getCaptionUseCase(channelWithChildren.channel.shareable),
       icon = getChannelIconUseCase.invoke(channelWithChildren.channel),
       value = getChannelValueStringUseCase(channelWithChildren),

@@ -37,6 +37,7 @@ import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.data.source.remote.container.SuplaChannelContainerConfig
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.ChannelUpdatesObserver
+import org.supla.android.events.OnlineEventsManager
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.features.details.containerdetail.general.ui.ContainerType
 import org.supla.android.features.details.containerdetail.general.ui.ControlLevel
@@ -85,6 +86,7 @@ class ContainerGeneralDetailViewModel @Inject constructor(
   private val preferences: Preferences,
   override val readChannelWithChildrenTreeUseCase: ReadChannelWithChildrenTreeUseCase,
   override val captionChangeUseCase: CaptionChangeUseCase,
+  override val onlineEventsManager: OnlineEventsManager,
   override val suplaClientProvider: SuplaClientProvider,
   override val updateEventsManager: UpdateEventsManager,
   override val getCaptionUseCase: GetCaptionUseCase,

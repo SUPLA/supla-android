@@ -50,6 +50,7 @@ import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.android.data.source.runtime.ItemType
+import org.supla.android.events.OnlineEventsManager
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.features.details.detailbase.standarddetail.DetailPage
 import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
@@ -128,6 +129,9 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
   @Mock
   private lateinit var loginUseCase: LoginUseCase
 
+  @Mock
+  private lateinit var onlineEventsManager: OnlineEventsManager
+
   override val viewModel: ChannelListViewModel by lazy {
     ChannelListViewModel(
       createProfileChannelsListUseCase,
@@ -138,6 +142,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
       channelActionUseCase,
       channelRepository,
       readChannelWithChildrenTreeUseCase,
+      onlineEventsManager,
       suplaClientProvider,
       getCaptionUseCase,
       dateProvider,

@@ -84,7 +84,7 @@ fun ListItemScaffold(
   hasLeftButton: Boolean = false,
   hasRightButton: Boolean = false,
   scale: Float = LocalContext.current.preferences.scale,
-  showInfoIcon: Boolean = LocalContext.current.preferences.isShowChannelInfo,
+  showInfoIcon: Boolean = false,
   content: @Composable BoxScope.() -> Unit
 ) {
   var title by remember { mutableStateOf(itemTitle) }

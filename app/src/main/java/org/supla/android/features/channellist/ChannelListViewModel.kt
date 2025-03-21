@@ -31,6 +31,7 @@ import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
+import org.supla.android.events.OnlineEventsManager
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.features.details.detailbase.standarddetail.DetailPage
 import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
@@ -92,6 +93,7 @@ class ChannelListViewModel @Inject constructor(
   private val channelActionUseCase: ChannelActionUseCase,
   private val channelRepository: ChannelRepository,
   override val readChannelWithChildrenTreeUseCase: ReadChannelWithChildrenTreeUseCase,
+  override val onlineEventsManager: OnlineEventsManager,
   override var suplaClientProvider: SuplaClientProvider,
   override val getCaptionUseCase: GetCaptionUseCase,
   override var dateProvider: DateProvider,

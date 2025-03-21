@@ -29,7 +29,7 @@ import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.shareable
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
-import org.supla.android.extensions.TAG
+import org.supla.android.events.OnlineEventsManager
 import org.supla.android.extensions.guardLet
 import org.supla.android.lib.SuplaChannelState
 import org.supla.android.ui.dialogs.AuthorizationReason
@@ -40,6 +40,7 @@ import org.supla.core.shared.usecase.GetCaptionUseCase
 import java.util.concurrent.TimeUnit
 
 private const val REFRESH_INTERVAL_MS = 4000
+private const val TAG = "StateDialogHandler"
 
 data class LifespanSettingsReason(
   val remoteId: Int,
@@ -51,7 +52,8 @@ interface StateDialogViewModelState {
   var channels: List<ChannelData>?
   var lightSourceLifespan: Int?
   var lastRefreshTimestamp: Long?
-  var disposable: Disposable?
+  var refreshDisposable: Disposable?
+  var onlineDisposable: Disposable?
   var idx: Int
 
   val remoteId: Int?
@@ -60,59 +62,67 @@ interface StateDialogViewModelState {
   val title: LocalizedString?
     get() = channels?.getOrNull(idx)?.caption
 
-  fun startRefreshing(dateProvider: DateProvider, suplaClientProvider: SuplaClientProvider) {
-    channels?.getOrNull(idx)?.remoteId?.let { id ->
-      disposable =
-        Observable.interval(100, TimeUnit.MILLISECONDS)
-          .subscribeBy(
-            onNext = {
-              lastRefreshTimestamp?.let {
-                val currentTimestamp = dateProvider.currentTimestamp()
-                if (it + REFRESH_INTERVAL_MS < currentTimestamp) {
-                  Trace.d(TAG, "Asking for channel state $id")
-                  lastRefreshTimestamp = currentTimestamp
-                  suplaClientProvider.provide()?.getChannelState(id)
-                }
-              }
-            }
-          )
-    }
-  }
-
-  fun stopRefreshing() {
-    disposable?.dispose()
-  }
-
-  fun cleanup() {
-    channels = null
-    lightSourceLifespan = null
-    idx = 0
-    lastRefreshTimestamp = null
-    disposable?.dispose()
-    disposable = null
-  }
+  val online: Boolean
+    get() = channels?.getOrNull(idx)?.online ?: false
 }
 
 data class ChannelData(
   val remoteId: Int,
   val caption: LocalizedString,
-  val showLifespanSettingsButton: Boolean
+  val showLifespanSettingsButton: Boolean,
+  var online: Boolean
 )
 
 private data class StateDialogViewModelStateImpl(
   override var channels: List<ChannelData>? = null,
   override var lightSourceLifespan: Int? = null,
   override var lastRefreshTimestamp: Long? = null,
-  override var disposable: Disposable? = null,
+  override var refreshDisposable: Disposable? = null,
+  override var onlineDisposable: Disposable? = null,
   override var idx: Int = 0
 ) : StateDialogViewModelState
 
+private fun StateDialogViewModelState.startRefreshing(dateProvider: DateProvider, suplaClientProvider: SuplaClientProvider) {
+  channels?.getOrNull(idx)?.remoteId?.let { id ->
+    refreshDisposable =
+      Observable.interval(100, TimeUnit.MILLISECONDS)
+        .subscribeBy(
+          onNext = {
+            lastRefreshTimestamp?.let {
+              val currentTimestamp = dateProvider.currentTimestamp()
+              if (it + REFRESH_INTERVAL_MS < currentTimestamp) {
+                Trace.d(TAG, "Asking for channel state $id")
+                lastRefreshTimestamp = currentTimestamp
+                suplaClientProvider.provide()?.getChannelState(id)
+              }
+            }
+          }
+        )
+  }
+}
+
+fun StateDialogViewModelState.stopRefreshing() {
+  refreshDisposable?.dispose()
+}
+
+fun StateDialogViewModelState.cleanup() {
+  channels = null
+  lightSourceLifespan = null
+  idx = 0
+  lastRefreshTimestamp = null
+  refreshDisposable?.dispose()
+  refreshDisposable = null
+  onlineDisposable?.dispose()
+  onlineDisposable = null
+}
+
 interface StateDialogHandler : StateDialogScope {
   val readChannelWithChildrenTreeUseCase: ReadChannelWithChildrenTreeUseCase
+  val stateDialogViewModelState: StateDialogViewModelState
+  val onlineEventsManager: OnlineEventsManager
   val suplaClientProvider: SuplaClientProvider
   val getCaptionUseCase: GetCaptionUseCase
   val dateProvider: DateProvider
-  val stateDialogViewModelState: StateDialogViewModelState
 
   fun <T : Any> subscribe(maybe: Maybe<T>, onSuccess: (T) -> Unit = {}, onError: (Throwable) -> Unit = {})
 
@@ -150,36 +160,45 @@ interface StateDialogHandler : StateDialogScope {
     updateDialogState {
       StateDialogViewState(
         title = channels[0].caption,
+        online = channels[0].online,
         subtitle = (channels.size > 1).ifTrue { LocalizedString.WithResourceIntInt(R.string.state_dialog_index, 1, channels.size) },
         showArrows = channels.size > 1,
-        showChangeLifespanButton = channels[0].showLifespanSettingsButton
+        showChangeLifespanButton = channels[0].showLifespanSettingsButton,
       )
     }
 
-    suplaClientProvider.provide()?.getChannelState(channels[0].remoteId)
     stateDialogViewModelState.channels = channels
     stateDialogViewModelState.idx = 0
-    stateDialogViewModelState.lastRefreshTimestamp = dateProvider.currentTimestamp()
-    stateDialogViewModelState.startRefreshing(dateProvider, suplaClientProvider)
+    startRefreshing(channels[0].remoteId)
+
+    stateDialogViewModelState.onlineDisposable = onlineEventsManager.observe()
+      .subscribeBy(
+        onNext = { onlineData ->
+          stateDialogViewModelState.channels?.firstOrNull { it.remoteId == onlineData.remoteId }?.online = onlineData.online
+          if (stateDialogViewModelState.remoteId == onlineData.remoteId) {
+            updateDialogState {
+              it?.copy(online = onlineData.online)
+            }
+          }
+        }
+      )
   }
 
   fun updateStateDialog(state: SuplaChannelState?) {
     val (channelState) = guardLet(state) { return }
+    Trace.i(TAG, "Handling channel state for ${channelState.channelId}")
 
-    updateDialogState { viewState ->
-      if (stateDialogViewModelState.remoteId == channelState.channelId) {
+    if (stateDialogViewModelState.remoteId == channelState.channelId) {
+      Trace.i(TAG, "Updating channel state for ${channelState.channelId}")
+
+      updateDialogState { viewState ->
         stateDialogViewModelState.lightSourceLifespan = state?.lightSourceLifespan
 
         val values = StateDialogItem.entries.associateWith { it.extractor(channelState) }
           .filter { it.value != null }
           .mapValues { it.value!! }
 
-        viewState?.copy(
-          loading = false,
-          values = values,
-        )
-      } else {
-        viewState
+        viewState?.copy(loading = false, values = values)
       }
     }
   }
@@ -234,9 +253,19 @@ interface StateDialogHandler : StateDialogScope {
       it?.copy(
         title = stateDialogViewModelState.title ?: LocalizedString.Empty,
         subtitle = LocalizedString.WithResourceIntInt(R.string.state_dialog_index, idx, count),
-        loading = true
+        loading = true,
+        online = stateDialogViewModelState.online
       )
     }
+
+    stateDialogViewModelState.remoteId?.let {
+      startRefreshing(it)
+    }
+  }
+
+  private fun startRefreshing(remoteId: Int) {
+    suplaClientProvider.provide()?.getChannelState(remoteId)
+    stateDialogViewModelState.lastRefreshTimestamp = dateProvider.currentTimestamp()
     stateDialogViewModelState.startRefreshing(dateProvider, suplaClientProvider)
   }
 
@@ -244,11 +273,13 @@ interface StateDialogHandler : StateDialogScope {
     get() = SuplaChannelFlag.LIGHT_SOURCE_LIFESPAN_SETTABLE inside flags
 
   private val ChannelDataEntity.channelData: ChannelData
-    get() = ChannelData(remoteId, getCaptionUseCase(shareable), showLifespanSettingsButton)
+    get() = ChannelData(remoteId, getCaptionUseCase(shareable), showLifespanSettingsButton, status.online)
 
   private val ChannelWithChildren.channels: List<ChannelData>
-    get() = mutableListOf<ChannelData>().apply {
-      add(channel.channelData)
-      addAll(allDescendantFlat.map { it.channelDataEntity.channelData })
-    }
+    get() = mutableListOf<ChannelData>()
+      .apply {
+        add(channel.channelData)
+        addAll(allDescendantFlat.map { it.channelDataEntity.channelData })
+      }
+      .distinctBy { it.remoteId }
 }
