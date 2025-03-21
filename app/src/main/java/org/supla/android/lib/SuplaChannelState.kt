@@ -119,6 +119,9 @@ class SuplaChannelState(
       causeResources.getOrNull(cause)?.let { LocalizedString.WithResource(it) } ?: LocalizedString.Constant("$cause")
     }
 
+  val switchCycleCountString: String?
+    get() = hasField(FIELD_SWITCH_CYCLE_COUNT).ifTrue { "$rawDefaultIconField" }
+
   val lightSourceLifespan: Int?
     get() = hasField(FIELD_LIGHTSOURCELIFESPAN).ifTrue { rawLightSourceLifespan }
 
@@ -205,5 +208,6 @@ class SuplaChannelState(
     const val FIELD_LASTCONNECTIONRESETCAUSE: Int = 0x0800
     const val FIELD_LIGHTSOURCELIFESPAN: Int = 0x1000
     const val FIELD_LIGHTSOURCELIFEOPERATINGTIME: Int = 0x2000
+    const val FIELD_SWITCH_CYCLE_COUNT: Int = 0x8000
   }
 }
