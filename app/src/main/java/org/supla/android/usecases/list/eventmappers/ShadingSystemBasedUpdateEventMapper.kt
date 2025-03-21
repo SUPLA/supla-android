@@ -34,7 +34,7 @@ abstract class ShadingSystemBasedUpdateEventMapper(
 ) : CreateListItemUpdateEventDataUseCase.Mapper {
   protected fun toListItemData(channelWithChildren: ChannelWithChildren): SlideableListItemData.Default {
     return SlideableListItemData.Default(
-      onlineState = channelWithChildren.channel.channelValueEntity.onlineState,
+      onlineState = channelWithChildren.onlineState,
       title = getCaptionUseCase(channelWithChildren.channel.shareable),
       icon = getChannelIconUseCase.invoke(channelWithChildren.channel),
       value = null,

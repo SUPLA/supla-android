@@ -137,7 +137,7 @@ class CreateProfileChannelsListUseCase @Inject constructor(
       ListItem.IconValueItem(
         channelData,
         channelData.locationEntity.caption,
-        channelData.channelValueEntity.status.onlineState,
+        it.onlineState,
         getCaptionUseCase(channelData.shareable),
         getChannelIconUseCase(channelData),
         getChannelValueStringUseCase.valueOrNull(it),
@@ -150,10 +150,10 @@ class CreateProfileChannelsListUseCase @Inject constructor(
     childrenMap: MutableMap<Int, List<ChannelChildEntity?>>
   ): ListItem.HvacThermostatItem {
     val thermostatValue = channelData.channelValueEntity.asThermostatValue()
-    val children = childrenMap[channelData.remoteId]
-    val mainThermometerChild = children?.firstOrNull { it?.relationType == ChannelRelationType.MAIN_THERMOMETER }
-    val indicatorIcon = thermostatValue.getIndicatorIcon() mergeWith children?.filterNotNull()?.indicatorIcon
-    val onlineState = channelData.channelValueEntity.status.onlineState mergeWith children?.filterNotNull()?.onlineState
+    val children = childrenMap[channelData.remoteId]?.filterNotNull()
+    val mainThermometerChild = children?.firstOrNull { it.relationType == ChannelRelationType.MAIN_THERMOMETER }
+    val indicatorIcon = thermostatValue.getIndicatorIcon() mergeWith children?.indicatorIcon
+    val onlineState = channelData.channelValueEntity.status.onlineState mergeWith children?.onlineState
 
     return ListItem.HvacThermostatItem(
       channelData,
@@ -177,7 +177,7 @@ class CreateProfileChannelsListUseCase @Inject constructor(
       ListItem.IconWithButtonsItem(
         channelData,
         channelData.locationEntity.caption,
-        channelData.channelValueEntity.status.onlineState,
+        it.onlineState,
         getCaptionUseCase(channelData.shareable),
         getChannelIconUseCase(channelData),
         value = getChannelValueStringUseCase.valueOrNull(it),
@@ -195,7 +195,7 @@ class CreateProfileChannelsListUseCase @Inject constructor(
       ListItem.IconWithRightButtonItem(
         channelData,
         channelData.locationEntity.caption,
-        channelData.channelValueEntity.status.onlineState,
+        it.onlineState,
         getCaptionUseCase(channelData.shareable),
         getChannelIconUseCase(channelData),
         value = getChannelValueStringUseCase.valueOrNull(it),
@@ -213,7 +213,7 @@ class CreateProfileChannelsListUseCase @Inject constructor(
       ListItem.DoubleValueItem(
         channelData,
         channelData.locationEntity.caption,
-        channelData.channelValueEntity.status.onlineState,
+        it.onlineState,
         getCaptionUseCase(channelData.shareable),
         getChannelIconUseCase(channelData),
         value = getChannelValueStringUseCase.valueOrNull(it),
@@ -235,7 +235,7 @@ class CreateProfileChannelsListUseCase @Inject constructor(
     childrenMap: MutableMap<Int, List<ChannelChildEntity?>>
   ): ChannelWithChildren {
     val children = mutableListOf<ChannelChildEntity>().apply {
-      childrenMap[channelData.remoteId]?.forEach { it?.let { add(it) } }
+      childrenMap[channelData.remoteId]?.filterIsInstance<ChannelChildEntity>()?.let { addAll(it) }
     }
     return ChannelWithChildren(channelData, children)
   }

@@ -71,6 +71,7 @@ import org.supla.android.db.room.app.AppDatabase;
 import org.supla.android.db.room.measurements.MeasurementsDatabase;
 import org.supla.android.events.ChannelConfigEventsManager;
 import org.supla.android.events.DeviceConfigEventsManager;
+import org.supla.android.events.OnlineEventsManager;
 import org.supla.android.events.UpdateEventsManager;
 import org.supla.android.features.channelscleanup.RemoveHiddenChannelsManager;
 import org.supla.android.lib.actions.ActionId;
@@ -138,6 +139,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   private final SuplaClientStateHolder suplaClientStateHolder;
   private final ChannelToRootRelationHolderUseCase channelToRootRelationHolderUseCase;
   private final RemoveHiddenChannelsManager removeHiddenChannelsManager;
+  private final OnlineEventsManager onlineEventsManager;
 
   public SuplaClient(
       Context context, String oneTimePassword, SuplaClientDependencies dependencies) {
@@ -171,6 +173,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     this.channelToRootRelationHolderUseCase = dependencies.getChannelToRootRelationHolderUseCase();
     this.suplaClientStateHolder = dependencies.getSuplaClientStateHolder();
     this.removeHiddenChannelsManager = dependencies.getRemoveHiddenChannelsManager();
+    this.onlineEventsManager = dependencies.getOnlineEventsManager();
   }
 
   public static SuplaRegisterError getLastRegisterError() {
@@ -1109,6 +1112,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
             + channel.Flags);
 
     // Update channel value before update the channel
+    onlineEventsManager.emit(channel.Id, channel.getStatus().getOnline());
     if (!isChannelExcluded(channel)) {
       if (updateChannelValueUseCase.invoke(channel).blockingGet() == EntityUpdateResult.UPDATED) {
         _DataChanged = true;
@@ -1286,6 +1290,9 @@ public class SuplaClient extends Thread implements SuplaClientApi {
             + channelValueUpdate.AvailabilityStatus
             + " EOL:"
             + channelValueUpdate.EOL);
+
+    onlineEventsManager.emit(
+        channelValueUpdate.Id, channelValueUpdate.AvailabilityStatus.getOnline());
     if (updateChannelValueUseCase.invoke(channelValueUpdate).blockingGet()
         == EntityUpdateResult.UPDATED) {
       onDataChanged(channelValueUpdate.Id, 0);
