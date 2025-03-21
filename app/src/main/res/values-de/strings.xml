@@ -755,4 +755,5 @@
   <string name="channel_status_updating">Software-Update läuft…</string>
   <string name="thermostat_calibration_error">Kalibrierungsfehler</string>
   <string name="state_dialog_index">(%1$d von %2$d)</string>
+  <string name="state_switch_cycle_count">Schaltzyklusanzahl</string>
 </resources>
