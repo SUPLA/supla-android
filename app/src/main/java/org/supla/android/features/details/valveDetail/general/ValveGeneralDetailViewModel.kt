@@ -33,6 +33,7 @@ import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.local.entity.extensions.onlineState
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.events.ChannelUpdatesObserver
+import org.supla.android.events.OnlineEventsManager
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.features.statedialog.StateDialogHandler
 import org.supla.android.features.statedialog.StateDialogViewModelState
@@ -64,6 +65,7 @@ import org.supla.core.shared.data.model.valve.ValveValue
 import org.supla.core.shared.usecase.GetCaptionUseCase
 import org.supla.core.shared.usecase.channel.GetAllChannelIssuesUseCase
 import org.supla.core.shared.usecase.channel.GetChannelBatteryIconUseCase
+import org.supla.core.shared.usecase.channel.GetChannelDefaultCaptionUseCase
 import javax.inject.Inject
 
 @HiltViewModel
@@ -76,7 +78,9 @@ class ValveGeneralDetailViewModel @Inject constructor(
   private val channelActionUseCase: ChannelActionUseCase,
   private val preferences: Preferences,
   override val readChannelWithChildrenTreeUseCase: ReadChannelWithChildrenTreeUseCase,
+  override val getChannelDefaultCaptionUseCase: GetChannelDefaultCaptionUseCase,
   override val captionChangeUseCase: CaptionChangeUseCase,
+  override val onlineEventsManager: OnlineEventsManager,
   override val suplaClientProvider: SuplaClientProvider,
   override val updateEventsManager: UpdateEventsManager,
   override val getCaptionUseCase: GetCaptionUseCase,

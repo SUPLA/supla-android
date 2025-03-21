@@ -53,7 +53,7 @@ class ChannelWithChildrenToIconValueItemUpdateEventMapper @Inject constructor(
 
   private fun toListItemData(channelWithChildren: ChannelWithChildren): SlideableListItemData.Default =
     SlideableListItemData.Default(
-      onlineState = channelWithChildren.channel.channelValueEntity.onlineState,
+      onlineState = channelWithChildren.onlineState,
       title = getCaptionUseCase(channelWithChildren.channel.shareable),
       icon = getChannelIconUseCase.invoke(channelWithChildren.channel),
       value = getChannelValueStringUseCase.valueOrNull(channelWithChildren),

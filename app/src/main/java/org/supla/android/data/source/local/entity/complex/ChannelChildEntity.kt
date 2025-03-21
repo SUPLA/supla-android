@@ -58,8 +58,7 @@ val List<ChannelChildEntity>.indicatorIcon: ThermostatIndicatorIcon
     .fold(ThermostatIndicatorIcon.OFF) { result, value -> if (value moreImportantThan result) value else result }
 
 val List<ChannelChildEntity>.onlineState: ListOnlineState
-  get() = filter { it.relationType == ChannelRelationType.MASTER_THERMOSTAT }
-    .map { it.channelDataEntity.channelValueEntity.status }
+  get() = map { it.channelDataEntity.channelValueEntity.status }
     .fold(ListOnlineState.UNKNOWN) { result, online ->
       if (result == ListOnlineState.UNKNOWN && online.online) {
         ListOnlineState.ONLINE

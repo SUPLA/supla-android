@@ -31,6 +31,7 @@ import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
+import org.supla.android.events.OnlineEventsManager
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.features.details.detailbase.standarddetail.DetailPage
 import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
@@ -80,6 +81,7 @@ import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.usecase.GetCaptionUseCase
+import org.supla.core.shared.usecase.channel.GetChannelDefaultCaptionUseCase
 import javax.inject.Inject
 
 @HiltViewModel
@@ -92,6 +94,8 @@ class ChannelListViewModel @Inject constructor(
   private val channelActionUseCase: ChannelActionUseCase,
   private val channelRepository: ChannelRepository,
   override val readChannelWithChildrenTreeUseCase: ReadChannelWithChildrenTreeUseCase,
+  override val getChannelDefaultCaptionUseCase: GetChannelDefaultCaptionUseCase,
+  override val onlineEventsManager: OnlineEventsManager,
   override var suplaClientProvider: SuplaClientProvider,
   override val getCaptionUseCase: GetCaptionUseCase,
   override var dateProvider: DateProvider,
