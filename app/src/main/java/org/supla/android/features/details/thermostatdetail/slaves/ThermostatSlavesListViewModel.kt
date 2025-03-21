@@ -34,6 +34,7 @@ import org.supla.android.data.source.local.entity.extensions.onlineState
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.data.source.remote.thermostat.getIndicatorIcon
 import org.supla.android.data.source.remote.thermostat.getSetpointText
+import org.supla.android.events.OnlineEventsManager
 import org.supla.android.features.statedialog.StateDialogHandler
 import org.supla.android.features.statedialog.StateDialogViewModelState
 import org.supla.android.features.statedialog.StateDialogViewState
@@ -54,6 +55,7 @@ import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.core.shared.data.model.channel.ChannelRelationType
 import org.supla.core.shared.extensions.ifTrue
 import org.supla.core.shared.usecase.GetCaptionUseCase
+import org.supla.core.shared.usecase.channel.GetChannelDefaultCaptionUseCase
 import org.supla.core.shared.usecase.channel.GetChannelIssuesForSlavesUseCase
 import javax.inject.Inject
 
@@ -65,8 +67,10 @@ class ThermostatSlavesListViewModel @Inject constructor(
   private val valuesFormatter: ValuesFormatter,
   private val preferences: Preferences,
   override val readChannelWithChildrenTreeUseCase: ReadChannelWithChildrenTreeUseCase,
+  override val getChannelDefaultCaptionUseCase: GetChannelDefaultCaptionUseCase,
   override val captionChangeUseCase: CaptionChangeUseCase,
   override val suplaClientProvider: SuplaClientProvider,
+  override val onlineEventsManager: OnlineEventsManager,
   override val getCaptionUseCase: GetCaptionUseCase,
   override val vibrationHelper: VibrationHelper,
   override val dateProvider: DateProvider,

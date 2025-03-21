@@ -50,6 +50,7 @@ import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.android.data.source.runtime.ItemType
+import org.supla.android.events.OnlineEventsManager
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.features.details.detailbase.standarddetail.DetailPage
 import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
@@ -70,6 +71,7 @@ import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.usecase.GetCaptionUseCase
+import org.supla.core.shared.usecase.channel.GetChannelDefaultCaptionUseCase
 
 @RunWith(MockitoJUnitRunner::class)
 class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, ChannelListViewEvent, ChannelListViewModel>() {
@@ -97,6 +99,9 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
 
   @Mock
   private lateinit var readChannelWithChildrenTreeUseCase: ReadChannelWithChildrenTreeUseCase
+
+  @Mock
+  private lateinit var getChannelDefaultCaptionUseCase: GetChannelDefaultCaptionUseCase
 
   @Mock
   private lateinit var gson: Gson
@@ -128,6 +133,9 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
   @Mock
   private lateinit var loginUseCase: LoginUseCase
 
+  @Mock
+  private lateinit var onlineEventsManager: OnlineEventsManager
+
   override val viewModel: ChannelListViewModel by lazy {
     ChannelListViewModel(
       createProfileChannelsListUseCase,
@@ -138,6 +146,8 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
       channelActionUseCase,
       channelRepository,
       readChannelWithChildrenTreeUseCase,
+      getChannelDefaultCaptionUseCase,
+      onlineEventsManager,
       suplaClientProvider,
       getCaptionUseCase,
       dateProvider,

@@ -31,6 +31,7 @@ fun ChannelDataEntity.mockShareable(
   status: SuplaChannelAvailabilityStatus = SuplaChannelAvailabilityStatus.ONLINE,
   value: ChannelValueEntity = mockk {
     every { getValueAsByteArray() } returns byteArrayOf()
+    every { this@mockk.status } returns status
   }
 ) {
   every { this@mockShareable.remoteId } returns remoteId
