@@ -17,12 +17,11 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.infrastructure.LocalizedString
 
 data class ChannelData(
   val remoteId: Int,
-  val function: SuplaFunction,
+  val function: LocalizedString,
   val caption: LocalizedString,
   val showLifespanSettingsButton: Boolean,
   var online: Boolean
