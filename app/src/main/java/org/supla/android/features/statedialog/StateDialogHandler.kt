@@ -89,7 +89,7 @@ interface StateDialogHandler : StateDialogScope {
         subtitle = (channels.size > 1).ifTrue { LocalizedString.WithResourceIntInt(R.string.state_dialog_index, 1, channels.size) },
         showArrows = channels.size > 1,
         showChangeLifespanButton = channels[0].showLifespanSettingsButton,
-        function = getChannelDefaultCaptionUseCase(channels[0].function)
+        function = channels[0].function
       )
     }
 
@@ -186,7 +186,7 @@ interface StateDialogHandler : StateDialogScope {
         subtitle = LocalizedString.WithResourceIntInt(R.string.state_dialog_index, idx, count),
         loading = true,
         online = stateDialogViewModelState.online,
-        function = stateDialogViewModelState.function?.let { getChannelDefaultCaptionUseCase(it) }
+        function = stateDialogViewModelState.function
       )
     }
 
@@ -205,7 +205,13 @@ interface StateDialogHandler : StateDialogScope {
     get() = SuplaChannelFlag.LIGHT_SOURCE_LIFESPAN_SETTABLE inside flags
 
   private val ChannelDataEntity.channelData: ChannelData
-    get() = ChannelData(remoteId, function, getCaptionUseCase(shareable), showLifespanSettingsButton, status.online)
+    get() = ChannelData(
+      remoteId = remoteId,
+      function = getChannelDefaultCaptionUseCase(function),
+      caption = getCaptionUseCase(shareable),
+      showLifespanSettingsButton = showLifespanSettingsButton,
+      online = status.online
+    )
 
   private val ChannelWithChildren.channels: List<ChannelData>
     get() = mutableListOf<ChannelData>()
@@ -233,7 +239,7 @@ interface StateDialogViewModelState {
   val online: Boolean
     get() = channels?.getOrNull(idx)?.online ?: false
 
-  val function: SuplaFunction?
+  val function: LocalizedString?
     get() = channels?.getOrNull(idx)?.function
 }
 
