@@ -34,7 +34,6 @@ import org.supla.android.extensions.guardLet
 import org.supla.android.lib.SuplaChannelState
 import org.supla.android.ui.dialogs.AuthorizationReason
 import org.supla.android.usecases.channel.ReadChannelWithChildrenTreeUseCase
-import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.extensions.ifTrue
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.usecase.GetCaptionUseCase
