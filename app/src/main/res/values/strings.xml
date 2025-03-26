@@ -371,7 +371,7 @@
   <string name="wifi_rssi">WiFi RSSI</string>
   <string name="wifi_signal_strength">Wifi signal strength</string>
   <string name="bridge_node_online">Bridge node - online</string>
-  <string name="bridge_signal_strength">Bridge signal strength</string>
+  <string name="bridge_signal_strength">Radio signal strength</string>
   <string name="uptime">Uptime</string>
   <string name="connection_time">Connection time</string>
   <string name="battery_health">Battery health</string>
