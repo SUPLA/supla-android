@@ -63,11 +63,13 @@ class ElectricityMeterSettingsViewModel @Inject constructor(
     val (measuredValues) = guardLet(channelData.Electricity.measuredTypes) { return }
     val settings = userStateHolder.getElectricityMeterSettings(channelData.profileId, channelData.remoteId)
 
-    val balancingItems = if (channelData.Electricity.phases.size > 1 || channelData.Electricity.hasBalance) {
+    val hasForwardEnergy = channelData.Electricity.measuredTypes.contains(SuplaElectricityMeasurementType.FORWARD_ACTIVE_ENERGY)
+    val hasReverseEnergy = channelData.Electricity.measuredTypes.contains(SuplaElectricityMeasurementType.REVERSE_ACTIVE_ENERGY)
+    val balancingItems = if ((hasReverseEnergy && hasForwardEnergy) || channelData.Electricity.hasBalance) {
       ElectricityMeterSettings.balancingAllItems.filter {
         when (it) {
           ElectricityMeterBalanceType.VECTOR -> channelData.Electricity.hasBalance
-          else -> channelData.Electricity.phases.size > 1
+          else -> true
         }
       }
     } else {
