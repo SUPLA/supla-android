@@ -94,6 +94,8 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
   }
 
   open fun onViewCreated() {}
+  open fun onStart() {}
+  open fun onStop() {}
 
   fun Disposable.disposeBySelf() {
     compositeDisposable.add(this)

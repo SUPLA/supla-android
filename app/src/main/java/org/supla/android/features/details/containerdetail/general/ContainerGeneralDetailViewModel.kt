@@ -22,7 +22,6 @@ import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.Preferences
 import org.supla.android.R
-import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.shared.shareable
 import org.supla.android.core.ui.ViewEvent
@@ -37,26 +36,18 @@ import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.data.source.remote.container.SuplaChannelContainerConfig
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.ChannelUpdatesObserver
-import org.supla.android.events.OnlineEventsManager
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.features.details.containerdetail.general.ui.ContainerType
 import org.supla.android.features.details.containerdetail.general.ui.ControlLevel
 import org.supla.android.features.details.containerdetail.general.ui.ErrorLevel
 import org.supla.android.features.details.containerdetail.general.ui.WarningLevel
-import org.supla.android.features.statedialog.StateDialogHandler
-import org.supla.android.features.statedialog.StateDialogViewModelState
-import org.supla.android.features.statedialog.StateDialogViewState
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.tools.VibrationHelper
 import org.supla.android.ui.dialogs.AuthorizationDialogState
 import org.supla.android.ui.dialogs.AuthorizationReason
-import org.supla.android.ui.dialogs.CaptionChangeDialogState
 import org.supla.android.ui.dialogs.authorize.AuthorizationModelState
 import org.supla.android.ui.dialogs.authorize.BaseAuthorizationViewModel
 import org.supla.android.ui.lists.sensordata.SensorItemData
-import org.supla.android.usecases.captionchange.CaptionChangeHandler
-import org.supla.android.usecases.captionchange.CaptionChangeUseCase
-import org.supla.android.usecases.channel.ReadChannelWithChildrenTreeUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
 import org.supla.android.usecases.channelconfig.LoadChannelConfigUseCase
 import org.supla.android.usecases.client.AuthorizeUseCase
@@ -72,7 +63,6 @@ import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.usecase.GetCaptionUseCase
 import org.supla.core.shared.usecase.channel.GetAllChannelIssuesUseCase
 import org.supla.core.shared.usecase.channel.GetChannelBatteryIconUseCase
-import org.supla.core.shared.usecase.channel.GetChannelDefaultCaptionUseCase
 import javax.inject.Inject
 
 @HiltViewModel
@@ -83,18 +73,13 @@ class ContainerGeneralDetailViewModel @Inject constructor(
   private val getAllChannelIssuesUseCase: GetAllChannelIssuesUseCase,
   private val loadChannelConfigUseCase: LoadChannelConfigUseCase,
   private val getChannelIconUseCase: GetChannelIconUseCase,
+  private val getCaptionUseCase: GetCaptionUseCase,
+  private val vibrationHelper: VibrationHelper,
   private val valuesFormatter: ValuesFormatter,
   private val preferences: Preferences,
-  override val readChannelWithChildrenTreeUseCase: ReadChannelWithChildrenTreeUseCase,
-  override val getChannelDefaultCaptionUseCase: GetChannelDefaultCaptionUseCase,
-  override val captionChangeUseCase: CaptionChangeUseCase,
-  override val onlineEventsManager: OnlineEventsManager,
-  override val suplaClientProvider: SuplaClientProvider,
   override val updateEventsManager: UpdateEventsManager,
-  override val getCaptionUseCase: GetCaptionUseCase,
-  override val vibrationHelper: VibrationHelper,
   override val schedulers: SuplaSchedulers,
-  override val dateProvider: DateProvider,
+  suplaClientProvider: SuplaClientProvider,
   profileRepository: RoomProfileRepository,
   authorizeUseCase: AuthorizeUseCase,
   loginUseCase: LoginUseCase
@@ -107,57 +92,18 @@ class ContainerGeneralDetailViewModel @Inject constructor(
   schedulers
 ),
   ContainerGeneralDetailViewScope,
-  StateDialogHandler,
-  ChannelUpdatesObserver,
-  CaptionChangeHandler {
-
-  override val stateDialogViewModelState: StateDialogViewModelState = default()
-
-  override val captionChangeDialogState: CaptionChangeDialogState?
-    get() = currentState().captionChangeDialogState
-
-  override fun updateDialogState(updater: (StateDialogViewState?) -> StateDialogViewState?) {
-    updateState { it.copy(stateDialogViewState = updater(it.stateDialogViewState)) }
-  }
-
-  override fun updateCaptionChangeDialogState(updater: (CaptionChangeDialogState?) -> CaptionChangeDialogState?) {
-    updateState { it.copy(captionChangeDialogState = updater(it.captionChangeDialogState)) }
-  }
+  ChannelUpdatesObserver {
 
   override fun updateAuthorizationDialogState(updater: (AuthorizationDialogState?) -> AuthorizationDialogState?) {
     updateState { it.copy(authorizationDialogState = updater(it.authorizationDialogState)) }
   }
 
-  override fun onAuthorizationCancel() {
-    updateCaptionChangeDialogState { null }
-    super.onAuthorizationCancel()
-  }
-
-  override fun onAuthorizationDismiss() {
-    updateCaptionChangeDialogState { null }
-    super.onAuthorizationDismiss()
-  }
-
   override fun onAuthorized(reason: AuthorizationReason) {
+    closeAuthorizationDialog()
+
     if (reason is MuteSound) {
-      closeAuthorizationDialog()
       muteAlarmSound()
-    } else {
-      updateState {
-        it.copy(
-          authorizationDialogState = null,
-          captionChangeDialogState = it.captionChangeDialogState?.copy(authorized = true)
-        )
-      }
     }
-  }
-
-  override fun onInfoClick(data: SensorItemData) {
-    showStateDialog(data.channelId)
-  }
-
-  override fun onCaptionLongPress(data: SensorItemData) {
-    changeChannelCaption(data.userCaption, data.channelId, data.profileId)
   }
 
   override fun onMuteClick() {
@@ -280,8 +226,6 @@ data class ContainerGeneralDetailViewModeState(
   val remoteId: Int = 0,
   val muteAuthorizationNeeded: Boolean = false,
   val viewState: ContainerGeneralDetailViewState = ContainerGeneralDetailViewState(),
-  val stateDialogViewState: StateDialogViewState? = null,
-  val captionChangeDialogState: CaptionChangeDialogState? = null,
   override val authorizationDialogState: AuthorizationDialogState? = null
 ) : AuthorizationModelState()
 

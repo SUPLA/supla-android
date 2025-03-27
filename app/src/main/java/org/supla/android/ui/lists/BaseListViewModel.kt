@@ -23,35 +23,27 @@ import androidx.annotation.VisibleForTesting
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.Preferences
-import org.supla.android.core.networking.suplaclient.SuplaClientProvider
+import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
+import org.supla.android.core.ui.ViewState
 import org.supla.android.data.model.general.ChannelDataBase
-import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.lib.SuplaChannelValue
 import org.supla.android.lib.SuplaClientMessageHandler.OnSuplaClientMessageListener
 import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.tools.SuplaSchedulers
-import org.supla.android.ui.dialogs.authorize.AuthorizationModelState
-import org.supla.android.ui.dialogs.authorize.BaseAuthorizationViewModel
-import org.supla.android.usecases.client.AuthorizeUseCase
-import org.supla.android.usecases.client.LoginUseCase
 import org.supla.android.usecases.profile.CloudUrl
 import org.supla.android.usecases.profile.LoadActiveProfileUrlUseCase
 import org.supla.core.shared.data.model.channel.ChannelRelationType
 import org.supla.core.shared.data.model.general.SuplaFunction
 
-abstract class BaseListViewModel<S : AuthorizationModelState, E : ViewEvent>(
+abstract class BaseListViewModel<S : ViewState, E : ViewEvent>(
   private val preferences: Preferences,
-  roomProfileRepository: RoomProfileRepository,
-  suplaClientProvider: SuplaClientProvider,
-  authorizeUseCase: AuthorizeUseCase,
   schedulers: SuplaSchedulers,
-  loginUseCase: LoginUseCase,
   defaultState: S,
   private val loadActiveProfileUrlUseCase: LoadActiveProfileUrlUseCase? = null,
-) : BaseAuthorizationViewModel<S, E>(suplaClientProvider, roomProfileRepository, loginUseCase, authorizeUseCase, defaultState, schedulers) {
+) : BaseViewModel<S, E>(defaultState, schedulers) {
 
   private val preferencesChangeListener = OnSharedPreferenceChangeListener { _, key ->
     if (key.equals(Preferences.pref_channel_height)) {

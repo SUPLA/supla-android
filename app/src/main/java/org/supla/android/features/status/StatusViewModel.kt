@@ -58,7 +58,7 @@ class StatusViewModel @Inject constructor(
   suplaSchedulers
 ) {
 
-  fun onStart() {
+  override fun onStart() {
     suplaClientStateHolder.state()
       .attachSilent()
       .subscribeBy(

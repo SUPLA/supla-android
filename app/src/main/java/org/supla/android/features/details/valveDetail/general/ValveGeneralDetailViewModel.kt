@@ -21,51 +21,35 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.Preferences
 import org.supla.android.R
-import org.supla.android.core.infrastructure.DateProvider
-import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.shared.shareable
+import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
+import org.supla.android.core.ui.ViewState
 import org.supla.android.data.model.general.ChannelState
-import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.shareable
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.local.entity.extensions.onlineState
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.events.ChannelUpdatesObserver
-import org.supla.android.events.OnlineEventsManager
 import org.supla.android.events.UpdateEventsManager
-import org.supla.android.features.statedialog.StateDialogHandler
-import org.supla.android.features.statedialog.StateDialogViewModelState
-import org.supla.android.features.statedialog.StateDialogViewState
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.tools.VibrationHelper
-import org.supla.android.ui.dialogs.AuthorizationDialogState
-import org.supla.android.ui.dialogs.AuthorizationReason
-import org.supla.android.ui.dialogs.CaptionChangeDialogState
-import org.supla.android.ui.dialogs.authorize.AuthorizationModelState
-import org.supla.android.ui.dialogs.authorize.BaseAuthorizationViewModel
 import org.supla.android.ui.lists.sensordata.SensorItemData
 import org.supla.android.ui.views.buttons.SwitchButtonState
-import org.supla.android.usecases.captionchange.CaptionChangeHandler
-import org.supla.android.usecases.captionchange.CaptionChangeUseCase
 import org.supla.android.usecases.channel.ActionException
 import org.supla.android.usecases.channel.ButtonType
 import org.supla.android.usecases.channel.ChannelActionUseCase
-import org.supla.android.usecases.channel.ReadChannelWithChildrenTreeUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
-import org.supla.android.usecases.client.AuthorizeUseCase
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
-import org.supla.android.usecases.client.LoginUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.core.shared.data.model.channel.ChannelRelationType
 import org.supla.core.shared.data.model.valve.ValveValue
 import org.supla.core.shared.usecase.GetCaptionUseCase
 import org.supla.core.shared.usecase.channel.GetAllChannelIssuesUseCase
 import org.supla.core.shared.usecase.channel.GetChannelBatteryIconUseCase
-import org.supla.core.shared.usecase.channel.GetChannelDefaultCaptionUseCase
 import javax.inject.Inject
 
 @HiltViewModel
@@ -76,67 +60,16 @@ class ValveGeneralDetailViewModel @Inject constructor(
   private val getAllChannelIssuesUseCase: GetAllChannelIssuesUseCase,
   private val getChannelIconUseCase: GetChannelIconUseCase,
   private val channelActionUseCase: ChannelActionUseCase,
+  private val getCaptionUseCase: GetCaptionUseCase,
+  private val vibrationHelper: VibrationHelper,
   private val preferences: Preferences,
-  override val readChannelWithChildrenTreeUseCase: ReadChannelWithChildrenTreeUseCase,
-  override val getChannelDefaultCaptionUseCase: GetChannelDefaultCaptionUseCase,
-  override val captionChangeUseCase: CaptionChangeUseCase,
-  override val onlineEventsManager: OnlineEventsManager,
-  override val suplaClientProvider: SuplaClientProvider,
   override val updateEventsManager: UpdateEventsManager,
-  override val getCaptionUseCase: GetCaptionUseCase,
-  override val vibrationHelper: VibrationHelper,
-  override val schedulers: SuplaSchedulers,
-  override val dateProvider: DateProvider,
-  roomProfileRepository: RoomProfileRepository,
-  authorizeUseCase: AuthorizeUseCase,
-  loginUseCase: LoginUseCase
-) : BaseAuthorizationViewModel<ValveGeneralDetailViewModeState, ValveGeneralDetailViewEvent>(
-  suplaClientProvider,
-  roomProfileRepository,
-  loginUseCase,
-  authorizeUseCase,
+  override val schedulers: SuplaSchedulers
+) : BaseViewModel<ValveGeneralDetailViewModeState, ValveGeneralDetailViewEvent>(
   ValveGeneralDetailViewModeState(),
   schedulers
 ),
-  StateDialogHandler,
-  ChannelUpdatesObserver,
-  CaptionChangeHandler {
-
-  override val stateDialogViewModelState: StateDialogViewModelState = default()
-
-  override val captionChangeDialogState: CaptionChangeDialogState?
-    get() = currentState().captionChangeDialogState
-
-  override fun updateDialogState(updater: (StateDialogViewState?) -> StateDialogViewState?) {
-    updateState { it.copy(stateDialogViewState = updater(it.stateDialogViewState)) }
-  }
-
-  override fun updateAuthorizationDialogState(updater: (AuthorizationDialogState?) -> AuthorizationDialogState?) {
-    updateState { it.copy(authorizationDialogState = updater(it.authorizationDialogState)) }
-  }
-
-  override fun updateCaptionChangeDialogState(updater: (CaptionChangeDialogState?) -> CaptionChangeDialogState?) {
-    updateState { it.copy(captionChangeDialogState = updater(it.captionChangeDialogState)) }
-  }
-
-  override fun onAuthorizationCancel() {
-    updateCaptionChangeDialogState { null }
-    super.onAuthorizationCancel()
-  }
-
-  override fun onAuthorizationDismiss() {
-    updateCaptionChangeDialogState { null }
-    super.onAuthorizationDismiss()
-  }
-
-  override fun onAuthorized(reason: AuthorizationReason) {
-    updateState {
-      it.copy(
-        authorizationDialogState = null,
-        captionChangeDialogState = it.captionChangeDialogState?.copy(authorized = true)
-      )
-    }
-  }
+  ChannelUpdatesObserver {
 
   override fun onChannelUpdate(channelWithChildren: ChannelWithChildren) {
     handle(channelWithChildren)
@@ -244,11 +177,8 @@ sealed class ValveGeneralDetailViewEvent : ViewEvent
 
 data class ValveGeneralDetailViewModeState(
   val viewState: ValveGeneralDetailViewState = ValveGeneralDetailViewState(),
-  val dialog: ValveAlertDialog? = null,
-  val stateDialogViewState: StateDialogViewState? = null,
-  val captionChangeDialogState: CaptionChangeDialogState? = null,
-  override val authorizationDialogState: AuthorizationDialogState? = null
-) : AuthorizationModelState()
+  val dialog: ValveAlertDialog? = null
+) : ViewState()
 
 sealed interface ValveAlertDialog {
   val messageRes: Int

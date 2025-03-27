@@ -24,11 +24,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.Preferences
 import org.supla.android.R
-import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.ui.ViewEvent
+import org.supla.android.core.ui.ViewState
 import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.source.ChannelRepository
-import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.events.UpdateEventsManager
@@ -37,16 +36,11 @@ import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
 import org.supla.android.features.details.windowdetail.WindowDetailFragment
 import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.tools.SuplaSchedulers
-import org.supla.android.ui.dialogs.AuthorizationDialogState
-import org.supla.android.ui.dialogs.AuthorizationReason
-import org.supla.android.ui.dialogs.authorize.AuthorizationModelState
 import org.supla.android.ui.lists.BaseListViewModel
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.channel.ActionException
 import org.supla.android.usecases.channel.ButtonType
 import org.supla.android.usecases.channel.GroupActionUseCase
-import org.supla.android.usecases.client.AuthorizeUseCase
-import org.supla.android.usecases.client.LoginUseCase
 import org.supla.android.usecases.details.LegacyDetailType
 import org.supla.android.usecases.details.ProvideGroupDetailTypeUseCase
 import org.supla.android.usecases.details.WindowDetailType
@@ -60,27 +54,19 @@ import javax.inject.Inject
 
 @HiltViewModel
 class GroupListViewModel @Inject constructor(
-  private val channelRepository: ChannelRepository,
   private val createProfileGroupsListUseCase: CreateProfileGroupsListUseCase,
-  private val groupActionUseCase: GroupActionUseCase,
-  private val toggleLocationUseCase: ToggleLocationUseCase,
   private val provideGroupDetailTypeUseCase: ProvideGroupDetailTypeUseCase,
   private val findGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase,
+  private val toggleLocationUseCase: ToggleLocationUseCase,
+  private val groupActionUseCase: GroupActionUseCase,
+  private val channelRepository: ChannelRepository,
   loadActiveProfileUrlUseCase: LoadActiveProfileUrlUseCase,
-  roomProfileRepository: RoomProfileRepository,
-  suplaClientProvider: SuplaClientProvider,
   updateEventsManager: UpdateEventsManager,
-  authorizationUseCase: AuthorizeUseCase,
-  loginUseCase: LoginUseCase,
   preferences: Preferences,
   schedulers: SuplaSchedulers
 ) : BaseListViewModel<GroupListViewState, GroupListViewEvent>(
   preferences,
-  roomProfileRepository,
-  suplaClientProvider,
-  authorizationUseCase,
   schedulers,
-  loginUseCase,
   GroupListViewState(),
   loadActiveProfileUrlUseCase
 ) {
@@ -168,14 +154,6 @@ class GroupListViewModel @Inject constructor(
     }
   }
 
-  override fun updateAuthorizationDialogState(updater: (AuthorizationDialogState?) -> AuthorizationDialogState?) {
-    updateState { it.copy(authorizationDialogState = updater(it.authorizationDialogState)) }
-  }
-
-  override fun onAuthorized(reason: AuthorizationReason) {
-    // Not used yet
-  }
-
   private fun updateGroup(remoteId: Int) {
     if (remoteId > 0) {
       findGroupByRemoteIdUseCase(remoteId = remoteId)
@@ -226,6 +204,5 @@ sealed class GroupListViewEvent : ViewEvent {
 }
 
 data class GroupListViewState(
-  val groups: List<ListItem>? = null,
-  override val authorizationDialogState: AuthorizationDialogState? = null
-) : AuthorizationModelState()
+  val groups: List<ListItem>? = null
+) : ViewState()
