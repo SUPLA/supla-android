@@ -20,26 +20,25 @@ package org.supla.android.features.channellist
 import android.app.AlertDialog
 import android.os.Bundle
 import android.view.View
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.fragment.app.viewModels
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
-import org.supla.android.LightsourceLifespanSettingsDialog
 import org.supla.android.R
 import org.supla.android.SuplaApp
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
-import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.BaseFragment
+import org.supla.android.core.ui.BaseViewModel
+import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.databinding.FragmentChannelListBinding
 import org.supla.android.extensions.toPx
 import org.supla.android.extensions.visibleIf
-import org.supla.android.features.statedialog.StateDialog
+import org.supla.android.features.statedialog.StateDialogViewModel
+import org.supla.android.features.statedialog.View
+import org.supla.android.features.statedialog.handleStateDialogViewEvent
 import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.navigator.MainNavigator
-import org.supla.android.ui.dialogs.AuthorizationDialog
 import org.supla.android.ui.dialogs.exceededAmperageDialog
 import org.supla.android.ui.dialogs.valveClosedManuallyDialog
 import org.supla.android.ui.dialogs.valveFloodingDialog
@@ -52,6 +51,10 @@ import javax.inject.Inject
 class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEvent>(R.layout.fragment_channel_list) {
 
   override val viewModel: ChannelListViewModel by viewModels()
+  override val helperViewModels: List<BaseViewModel<*, *>>
+    get() = listOf(stateDialogViewModel)
+
+  private val stateDialogViewModel: StateDialogViewModel by viewModels()
   private val binding by viewBinding(FragmentChannelListBinding::bind)
   private var scrollDownOnReload = false
 
@@ -75,14 +78,8 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
     }
 
     binding.yourComposeView.setContent {
-      val modelState by viewModel.getViewState().collectAsState()
       SuplaTheme {
-        modelState.stateDialogViewState?.let {
-          viewModel.StateDialog(state = it)
-        }
-        modelState.authorizationDialogState?.let {
-          viewModel.AuthorizationDialog(state = it)
-        }
+        stateDialogViewModel.View()
       }
     }
   }
@@ -90,12 +87,6 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
   override fun onStart() {
     super.onStart()
     viewModel.loadChannels()
-    viewModel.onStart()
-  }
-
-  override fun onStop() {
-    super.onStop()
-    viewModel.onStop()
   }
 
   override fun handleEvents(event: ChannelListViewEvent) {
@@ -123,16 +114,11 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
         destinationId = event.fragmentId,
         bundle = event.fragmentArguments
       )
-
-      is ChannelListViewEvent.ShowLifespanSettingsDialog -> {
-        LightsourceLifespanSettingsDialog(
-          context,
-          event.remoteId,
-          event.lightSourceLifespan ?: 0,
-          event.caption(requireContext())
-        ).show()
-      }
     }
+  }
+
+  override fun handleHelperEvents(event: ViewEvent) {
+    handleStateDialogViewEvent(event)
   }
 
   override fun handleViewState(state: ChannelListViewState) {
@@ -163,14 +149,14 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
       viewModel.toggleLocationCollapsed(location)
       scrollDownOnReload = scrollDown
     }
-    adapter.infoButtonClickCallback = { viewModel.showStateDialog(it) }
+    adapter.infoButtonClickCallback = { stateDialogViewModel.showDialog(it) }
     adapter.issueButtonClickCallback = { showAlertPopup(it.message(requireContext())) }
     adapter.listItemClickCallback = { viewModel.onListItemClick(it) }
   }
 
   override fun onSuplaMessage(message: SuplaClientMsg) {
     when (message.type) {
-      SuplaClientMsg.onChannelState -> viewModel.updateStateDialog(message.channelState)
+      SuplaClientMsg.onChannelState -> stateDialogViewModel.updateStateDialog(message.channelState)
     }
   }
 

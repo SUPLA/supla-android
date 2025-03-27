@@ -26,6 +26,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.FlowPreview
 import org.supla.android.MainActivity
+import org.supla.android.Trace
+import org.supla.android.extensions.TAG
 import org.supla.android.extensions.visibleIf
 import org.supla.android.lib.SuplaClientMessageHandler
 import org.supla.android.lib.SuplaClientMessageHandler.OnSuplaClientMessageListener
@@ -45,6 +47,7 @@ abstract class BaseFragment<S : ViewState, E : ViewEvent>(@LayoutRes contentLayo
   constructor() : this(0)
 
   protected abstract val viewModel: BaseViewModel<S, E>
+  protected open val helperViewModels: List<BaseViewModel<*, *>> = emptyList()
 
   protected val viewState: S
     get() = viewModel.getViewState().value
@@ -59,10 +62,18 @@ abstract class BaseFragment<S : ViewState, E : ViewEvent>(@LayoutRes contentLayo
     }
 
     lifecycleScope.launchWhenStarted { viewModel.getViewEvents().collect { event -> handleEvents(event) } }
+    lifecycleScope.launchWhenStarted { helperViewModels.onEach { it.getViewEvents().collect { event -> handleHelperEvents(event) } } }
     lifecycleScope.launchWhenStarted { viewModel.getViewState().collect { state -> handleViewState(state) } }
 
     viewModel.onViewCreated()
     (activity as? ToolbarVisibilityController)?.setToolbarVisible(getToolbarVisible())
+  }
+
+  @CallSuper
+  override fun onStart() {
+    super.onStart()
+    viewModel.onStart()
+    helperViewModels.onEach { it.onStart() }
   }
 
   @CallSuper
@@ -83,9 +94,20 @@ abstract class BaseFragment<S : ViewState, E : ViewEvent>(@LayoutRes contentLayo
     super.onPause()
   }
 
+  @CallSuper
+  override fun onStop() {
+    super.onStop()
+    viewModel.onStop()
+    helperViewModels.onEach { it.onStop() }
+  }
+
   protected abstract fun handleViewState(state: S)
 
   protected abstract fun handleEvents(event: E)
+
+  protected open fun handleHelperEvents(event: ViewEvent) {
+    Trace.w(TAG, "Got event `$event`, but no handler implemented!")
+  }
 
   protected open fun onSuplaMessage(message: SuplaClientMsg) {
   }

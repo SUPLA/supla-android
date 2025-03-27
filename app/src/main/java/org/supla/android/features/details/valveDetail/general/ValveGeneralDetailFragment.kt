@@ -27,13 +27,17 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.core.ui.BaseComposeFragment
+import org.supla.android.core.ui.BaseViewModel
+import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.theme.SuplaTheme
+import org.supla.android.features.captionchangedialog.CaptionChangeViewModel
+import org.supla.android.features.captionchangedialog.View
 import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
-import org.supla.android.features.statedialog.StateDialog
+import org.supla.android.features.statedialog.StateDialogViewModel
+import org.supla.android.features.statedialog.View
+import org.supla.android.features.statedialog.handleStateDialogViewEvent
 import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.ui.dialogs.AlertDialog
-import org.supla.android.ui.dialogs.AuthorizationDialog
-import org.supla.android.ui.dialogs.CaptionChangeDialog
 
 private const val ARG_ITEM_BUNDLE = "ARG_ITEM_BUNDLE"
 
@@ -41,6 +45,11 @@ private const val ARG_ITEM_BUNDLE = "ARG_ITEM_BUNDLE"
 class ValveGeneralDetailFragment : BaseComposeFragment<ValveGeneralDetailViewModeState, ValveGeneralDetailViewEvent>() {
 
   override val viewModel: ValveGeneralDetailViewModel by viewModels()
+  override val helperViewModels: List<BaseViewModel<*, *>>
+    get() = listOf(stateDialogViewModel, captionChangeViewModel)
+
+  private val stateDialogViewModel: StateDialogViewModel by viewModels()
+  private val captionChangeViewModel: CaptionChangeViewModel by viewModels()
 
   private val item: ItemBundle by lazy { requireSerializable(ARG_ITEM_BUNDLE, ItemBundle::class.java) }
 
@@ -64,21 +73,14 @@ class ValveGeneralDetailFragment : BaseComposeFragment<ValveGeneralDetailViewMod
           onNegativeClick = viewModel::closeErrorDialog
         )
       }
-      modelState.stateDialogViewState?.let {
-        viewModel.StateDialog(state = it)
-      }
-      modelState.captionChangeDialogState?.let {
-        viewModel.CaptionChangeDialog(state = it)
-      }
-      modelState.authorizationDialogState?.let {
-        viewModel.AuthorizationDialog(state = it)
-      }
+      stateDialogViewModel.View()
+      captionChangeViewModel.View()
       ValveGeneralDetailView(
         state = modelState.viewState,
         onOpenClick = { viewModel.onActionClick(item.remoteId, ValveAction.OPEN) },
         onCloseClick = { viewModel.onActionClick(item.remoteId, ValveAction.CLOSE) },
-        onInfoClick = { viewModel.showStateDialog(it.channelId) },
-        onCaptionLongPress = { viewModel.changeChannelCaption(it.userCaption, it.channelId, it.profileId) }
+        onInfoClick = { stateDialogViewModel.showDialog(it.channelId) },
+        onCaptionLongPress = { captionChangeViewModel.showDialog(it.userCaption, it.channelId, it.profileId) }
       )
     }
   }
@@ -86,21 +88,19 @@ class ValveGeneralDetailFragment : BaseComposeFragment<ValveGeneralDetailViewMod
   override fun onStart() {
     super.onStart()
     viewModel.loadData(remoteId = item.remoteId)
-    viewModel.onStart()
-  }
-
-  override fun onStop() {
-    super.onStop()
-    viewModel.onStop()
   }
 
   override fun onSuplaMessage(message: SuplaClientMsg) {
     when (message.type) {
-      SuplaClientMsg.onChannelState -> viewModel.updateStateDialog(message.channelState)
+      SuplaClientMsg.onChannelState -> stateDialogViewModel.updateStateDialog(message.channelState)
     }
   }
 
   override fun handleEvents(event: ValveGeneralDetailViewEvent) {
+  }
+
+  override fun handleHelperEvents(event: ViewEvent) {
+    handleStateDialogViewEvent(event)
   }
 
   companion object {

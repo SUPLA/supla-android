@@ -67,8 +67,8 @@ import org.supla.android.ui.views.buttons.OutlinedButton
 import org.supla.core.shared.infrastructure.LocalizedString
 
 data class StateDialogViewState(
-  val title: LocalizedString,
-  val online: Boolean,
+  val title: LocalizedString = LocalizedString.Empty,
+  val online: Boolean = false,
   val subtitle: LocalizedString? = null,
   val loading: Boolean = true,
   val showArrows: Boolean = false,
@@ -78,20 +78,20 @@ data class StateDialogViewState(
 )
 
 interface StateDialogScope {
-  fun onStateDialogDismiss()
-  fun onStateDialogNext()
-  fun onStateDialogPrevious()
-  fun onStateDialogChangeLifespan()
+  fun onDismiss()
+  fun onNext()
+  fun onPrevious()
+  fun onChangeLifespan()
 }
 
 @Composable
-fun StateDialogScope.StateDialog(
+fun StateDialogScope.Dialog(
   state: StateDialogViewState
 ) {
   var offset by remember { mutableFloatStateOf(0f) }
 
   Dialog(
-    onDismiss = { onStateDialogDismiss() },
+    onDismiss = { onDismiss() },
     modifier = Modifier.pointerInput(Unit) {
       detectHorizontalDragGestures(
         onDragStart = { offset = 0f },
@@ -99,9 +99,9 @@ fun StateDialogScope.StateDialog(
         onDragEnd = {
           if (state.showArrows) {
             if (offset > 100.dp.toPx()) {
-              onStateDialogPrevious()
+              onPrevious()
             } else if (offset < -(100.dp.toPx())) {
-              onStateDialogNext()
+              onNext()
             }
           }
         }
@@ -233,7 +233,7 @@ private fun StateDialogScope.Buttons(state: StateDialogViewState) =
     }
     Spacer(modifier = Modifier.weight(0.5f))
     OutlinedButton(
-      onClick = { onStateDialogDismiss() },
+      onClick = { onDismiss() },
       text = stringResource(id = R.string.channel_btn_close),
       modifier = Modifier.height(48.dp)
     )
@@ -267,7 +267,7 @@ private fun SubTitle(text: String) =
 private fun StateDialogScope.LeftArrow() =
   IconButton(
     icon = R.drawable.ic_arrow_right,
-    onClick = { onStateDialogPrevious() },
+    onClick = { onPrevious() },
     rotate = true,
     tint = MaterialTheme.colorScheme.onBackground,
     modifier = Modifier.border(
@@ -281,7 +281,7 @@ private fun StateDialogScope.LeftArrow() =
 private fun StateDialogScope.RightArrow() =
   IconButton(
     icon = R.drawable.ic_arrow_right,
-    onClick = { onStateDialogNext() },
+    onClick = { onNext() },
     tint = MaterialTheme.colorScheme.onBackground,
     modifier = Modifier.border(
       width = 1.dp,
@@ -293,7 +293,7 @@ private fun StateDialogScope.RightArrow() =
 @Composable
 private fun StateDialogScope.ChangeLifespanButton() =
   TextButton(
-    onClick = { onStateDialogChangeLifespan() },
+    onClick = { onChangeLifespan() },
     modifier = Modifier.padding(horizontal = Distance.default)
   ) {
     Text(
@@ -305,17 +305,17 @@ private fun StateDialogScope.ChangeLifespanButton() =
   }
 
 private val emptyScope = object : StateDialogScope {
-  override fun onStateDialogDismiss() {}
-  override fun onStateDialogNext() {}
-  override fun onStateDialogPrevious() {}
-  override fun onStateDialogChangeLifespan() {}
+  override fun onDismiss() {}
+  override fun onNext() {}
+  override fun onPrevious() {}
+  override fun onChangeLifespan() {}
 }
 
 @Composable
 @Preview
 private fun Preview() {
   SuplaTheme {
-    emptyScope.StateDialog(
+    emptyScope.Dialog(
       state = StateDialogViewState(
         title = LocalizedString.Constant("Dimmer"),
         online = true,
@@ -333,7 +333,7 @@ private fun Preview() {
 @Preview
 private fun Preview_ManyIds() {
   SuplaTheme {
-    emptyScope.StateDialog(
+    emptyScope.Dialog(
       state = StateDialogViewState(
         title = LocalizedString.Constant("Dimmer 1"),
         online = true,
@@ -354,7 +354,7 @@ private fun Preview_ManyIds() {
 @Preview
 private fun Preview_Offline() {
   SuplaTheme {
-    emptyScope.StateDialog(
+    emptyScope.Dialog(
       state = StateDialogViewState(
         title = LocalizedString.Constant("Dimmer"),
         online = false,
@@ -372,7 +372,7 @@ private fun Preview_Offline() {
 @Preview
 private fun Preview_Loading() {
   SuplaTheme {
-    emptyScope.StateDialog(
+    emptyScope.Dialog(
       state = StateDialogViewState(
         title = LocalizedString.Constant("Dimmer"),
         online = false,

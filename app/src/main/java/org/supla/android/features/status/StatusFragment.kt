@@ -70,11 +70,6 @@ class StatusFragment : BaseFragment<StatusViewModelState, StatusViewEvent>(R.lay
 
   override fun getToolbarVisible(): Boolean = false
 
-  override fun onStart() {
-    super.onStart()
-    viewModel.onStart()
-  }
-
   override fun handleEvents(event: StatusViewEvent) {
     when (event) {
       is StatusViewEvent.NavigateToMain -> navigator.navigateToMain()
