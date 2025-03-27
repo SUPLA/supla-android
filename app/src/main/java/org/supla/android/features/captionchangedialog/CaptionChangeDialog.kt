@@ -1,4 +1,4 @@
-package org.supla.android.ui.dialogs
+package org.supla.android.features.captionchangedialog
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -36,6 +36,9 @@ import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.lib.actions.SubjectType
+import org.supla.android.ui.dialogs.Dialog
+import org.supla.android.ui.dialogs.DialogButtonsRow
+import org.supla.android.ui.dialogs.DialogHeader
 import org.supla.android.ui.views.Separator
 import org.supla.android.ui.views.SeparatorStyle
 import org.supla.android.ui.views.TextField
@@ -60,7 +63,7 @@ interface CaptionChangeDialogScope {
 }
 
 @Composable
-fun CaptionChangeDialogScope.CaptionChangeDialog(
+fun CaptionChangeDialogScope.Dialog(
   state: CaptionChangeDialogState
 ) {
   if (state.authorized) {
@@ -150,7 +153,7 @@ private val emptyScope = object : CaptionChangeDialogScope {
 @Composable
 private fun Preview() {
   SuplaTheme {
-    emptyScope.CaptionChangeDialog(
+    emptyScope.Dialog(
       CaptionChangeDialogState(
         remoteId = 123,
         profileId = 1L,
@@ -166,7 +169,7 @@ private fun Preview() {
 @Composable
 private fun Preview_Error() {
   SuplaTheme {
-    emptyScope.CaptionChangeDialog(
+    emptyScope.Dialog(
       CaptionChangeDialogState(
         remoteId = 123,
         profileId = 1L,

@@ -23,15 +23,12 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.Preferences
 import org.supla.android.R
-import org.supla.android.core.infrastructure.DateProvider
-import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.ui.ViewEvent
+import org.supla.android.core.ui.ViewState
 import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.source.ChannelRepository
-import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
-import org.supla.android.events.OnlineEventsManager
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.features.details.detailbase.standarddetail.DetailPage
 import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
@@ -44,16 +41,9 @@ import org.supla.android.features.details.thermometerdetail.ThermometerDetailFra
 import org.supla.android.features.details.thermostatdetail.ThermostatDetailFragment
 import org.supla.android.features.details.valveDetail.ValveDetailFragment
 import org.supla.android.features.details.windowdetail.WindowDetailFragment
-import org.supla.android.features.statedialog.LifespanSettingsReason
-import org.supla.android.features.statedialog.StateDialogHandler
-import org.supla.android.features.statedialog.StateDialogViewModelState
-import org.supla.android.features.statedialog.StateDialogViewState
 import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.tools.SuplaSchedulers
-import org.supla.android.ui.dialogs.AuthorizationDialogState
-import org.supla.android.ui.dialogs.AuthorizationReason
-import org.supla.android.ui.dialogs.authorize.AuthorizationModelState
 import org.supla.android.ui.lists.BaseListViewModel
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.channel.ActionException
@@ -61,10 +51,7 @@ import org.supla.android.usecases.channel.ButtonType
 import org.supla.android.usecases.channel.ChannelActionUseCase
 import org.supla.android.usecases.channel.CreateProfileChannelsListUseCase
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
-import org.supla.android.usecases.channel.ReadChannelWithChildrenTreeUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
-import org.supla.android.usecases.client.AuthorizeUseCase
-import org.supla.android.usecases.client.LoginUseCase
 import org.supla.android.usecases.details.ContainerDetailType
 import org.supla.android.usecases.details.EmDetailType
 import org.supla.android.usecases.details.GpmDetailType
@@ -79,9 +66,6 @@ import org.supla.android.usecases.details.ValveDetailType
 import org.supla.android.usecases.details.WindowDetailType
 import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.android.usecases.location.ToggleLocationUseCase
-import org.supla.core.shared.infrastructure.LocalizedString
-import org.supla.core.shared.usecase.GetCaptionUseCase
-import org.supla.core.shared.usecase.channel.GetChannelDefaultCaptionUseCase
 import javax.inject.Inject
 
 @HiltViewModel
@@ -93,30 +77,14 @@ class ChannelListViewModel @Inject constructor(
   private val toggleLocationUseCase: ToggleLocationUseCase,
   private val channelActionUseCase: ChannelActionUseCase,
   private val channelRepository: ChannelRepository,
-  override val readChannelWithChildrenTreeUseCase: ReadChannelWithChildrenTreeUseCase,
-  override val getChannelDefaultCaptionUseCase: GetChannelDefaultCaptionUseCase,
-  override val onlineEventsManager: OnlineEventsManager,
-  override var suplaClientProvider: SuplaClientProvider,
-  override val getCaptionUseCase: GetCaptionUseCase,
-  override var dateProvider: DateProvider,
-  roomProfileRepository: RoomProfileRepository,
   updateEventsManager: UpdateEventsManager,
-  authorizeUseCase: AuthorizeUseCase,
-  loginUseCase: LoginUseCase,
   preferences: Preferences,
   schedulers: SuplaSchedulers
 ) : BaseListViewModel<ChannelListViewState, ChannelListViewEvent>(
   preferences,
-  roomProfileRepository,
-  suplaClientProvider,
-  authorizeUseCase,
   schedulers,
-  loginUseCase,
   ChannelListViewState()
-),
-  StateDialogHandler {
-
-  override val stateDialogViewModelState: StateDialogViewModelState = default()
+) {
 
   override fun sendReassignEvent() = sendEvent(ChannelListViewEvent.ReassignAdapter)
 
@@ -198,21 +166,6 @@ class ChannelListViewModel @Inject constructor(
     }
   }
 
-  override fun updateAuthorizationDialogState(updater: (AuthorizationDialogState?) -> AuthorizationDialogState?) {
-    updateState { it.copy(authorizationDialogState = updater(it.authorizationDialogState)) }
-  }
-
-  override fun onAuthorized(reason: AuthorizationReason) {
-    closeAuthorizationDialog()
-    if (reason is LifespanSettingsReason) {
-      sendEvent(ChannelListViewEvent.ShowLifespanSettingsDialog(reason.remoteId, reason.caption, reason.lifespan))
-    }
-  }
-
-  override fun updateDialogState(updater: (StateDialogViewState?) -> StateDialogViewState?) {
-    updateState { it.copy(stateDialogViewState = updater(it.stateDialogViewState)) }
-  }
-
   private fun updateChannel(remoteId: Int) {
     if (remoteId > 0) {
       findChannelByRemoteIdUseCase(remoteId = remoteId)
@@ -291,12 +244,6 @@ sealed class ChannelListViewEvent : ViewEvent {
 
   data object ReassignAdapter : ChannelListViewEvent()
 
-  data class ShowLifespanSettingsDialog(
-    val remoteId: Int,
-    val caption: LocalizedString,
-    val lightSourceLifespan: Int?
-  ) : ChannelListViewEvent()
-
   abstract class OpenStandardDetail(
     @IdRes val fragmentId: Int,
     val fragmentArguments: Bundle
@@ -304,7 +251,5 @@ sealed class ChannelListViewEvent : ViewEvent {
 }
 
 data class ChannelListViewState(
-  val channels: List<ListItem>? = null,
-  val stateDialogViewState: StateDialogViewState? = null,
-  override val authorizationDialogState: AuthorizationDialogState? = null
-) : AuthorizationModelState()
+  val channels: List<ListItem>? = null
+) : ViewState()
