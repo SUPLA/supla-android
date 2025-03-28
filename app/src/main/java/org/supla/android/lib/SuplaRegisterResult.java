@@ -18,6 +18,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import org.supla.android.tools.UsedFromNativeCode;
+
 public class SuplaRegisterResult {
 
   public int ResultCode;
@@ -31,6 +33,7 @@ public class SuplaRegisterResult {
   public int Version;
   public int VersionMin;
 
+  @UsedFromNativeCode
   public SuplaRegisterResult() {
     // This constructor is used by native code
   }

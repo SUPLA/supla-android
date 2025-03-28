@@ -18,20 +18,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import android.content.res.Resources
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.sp
 import java.util.Locale
 
 const val DAY_IN_SEC = 24 * 60 * 60
 const val HOUR_IN_SEC = 60 * 60
 const val MINUTE_IN_SEC = 60
-
-fun Int.toDp(): Dp {
-  return Dp(this / Resources.getSystem().displayMetrics.density)
-}
 
 val Int.nonScaledSp
   get() = (this / Resources.getSystem().configuration.fontScale).sp
@@ -50,9 +42,6 @@ val Int.minutesInHour
 
 val Int.secondsInMinute
   get() = this.mod(MINUTE_IN_SEC)
-
-@Composable
-fun Int.asColor(): Color = colorResource(id = this)
 
 val Int.ipV4String: String
   get() =

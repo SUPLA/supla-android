@@ -463,10 +463,6 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
 
     final AnimParams params = new AnimParams();
 
-    params.left_btn_rotation = 90;
-    params.left_btn_left = left_btn.getWidth() * -1;
-    params.left_btn_right = 0;
-
     if (content.getLeft() > 0) {
 
       if (!start_pos && content.getLeft() >= left_btn.getWidth() / 2) {
@@ -571,10 +567,6 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
       AnimateToRestingPosition(true);
       LeftButtonEnabled = leftButtonEnabled;
     }
-  }
-
-  public String getCaption() {
-    return caption_text.getText().toString();
   }
 
   public void setBackgroundColor(int color) {
@@ -828,12 +820,8 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
   }
 
   private static class AnimParams {
-
     public int content_left;
     public int content_right;
-    public int left_btn_rotation;
-    public int left_btn_left;
-    public int left_btn_right;
   }
 
   class CaptionView extends androidx.appcompat.widget.AppCompatTextView {

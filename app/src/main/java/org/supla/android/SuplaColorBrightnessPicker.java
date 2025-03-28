@@ -816,10 +816,6 @@ public class SuplaColorBrightnessPicker extends View {
     invalidate();
   }
 
-  public float getMinBrightness() {
-    return minBrightness;
-  }
-
   public void setMinBrightness(float minBrightness) {
     this.minBrightness = minBrightness;
   }

@@ -48,20 +48,8 @@ public class SuplaChannelImpulseCounterValue implements Serializable {
     this.Unit = Unit;
   }
 
-  public int getImpulsesPerUnit() {
-    return ImpulsesPerUnit;
-  }
-
-  public long getCounter() {
-    return Counter;
-  }
-
   public double getCalculatedValue() {
     return CalculatedValue;
-  }
-
-  public double getTotalCost() {
-    return TotalCost;
   }
 
   public double getPricePerUnit() {

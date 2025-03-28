@@ -253,10 +253,6 @@ public class ChannelValue extends DbItem {
     return result;
   }
 
-  public byte getPercent() {
-    return getPercent((short) 0);
-  }
-
   private byte getBrightness(short n) {
     return getPercent(n);
   }
@@ -350,10 +346,6 @@ public class ChannelValue extends DbItem {
     }
 
     return 0;
-  }
-
-  public long getLong() {
-    return getLong(false);
   }
 
   public double getImpulseCounterCalculatedValue(boolean subValue) {

@@ -1,34 +1,20 @@
 package org.supla.android.ui.animations
+/*
+ Copyright (C) AC SOFTWARE SP. Z O.O.
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
-import android.animation.ObjectAnimator
-import android.view.View
-import com.google.android.material.bottomappbar.BottomAppBar
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
 
 const val DEFAULT_ANIMATION_DURATION = 300L
-
-fun animateFadeOut(bar: BottomAppBar) {
-  ObjectAnimator.ofFloat(bar, "translationX", -bar.width.toFloat()).apply {
-    duration = DEFAULT_ANIMATION_DURATION
-    addListener(BottomBarAnimatorListener { bar.visibility = View.GONE })
-    start()
-  }
-}
-
-fun animateFadeIn(bar: BottomAppBar, animationEndCallback: () -> Unit) {
-  bar.visibility = View.VISIBLE
-
-  ObjectAnimator.ofFloat(bar, "translationX", 0f).apply {
-    duration = DEFAULT_ANIMATION_DURATION
-    addListener(BottomBarAnimatorListener { animationEndCallback() })
-    start()
-  }
-}
-
-private class BottomBarAnimatorListener(private val animationEndCallback: () -> Unit) : AnimatorListenerAdapter() {
-
-  override fun onAnimationEnd(p0: Animator) {
-    animationEndCallback()
-  }
-}

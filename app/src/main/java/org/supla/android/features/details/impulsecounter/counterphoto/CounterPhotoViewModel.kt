@@ -90,8 +90,7 @@ class CounterPhotoViewModel @Inject constructor(
           loadingError = false
         ),
         configurationAddress = configurationAddress,
-        remoteId = channel.remoteId,
-        profileId = channel.profileId
+        remoteId = channel.remoteId
       )
     }
   }
@@ -111,6 +110,5 @@ sealed class CounterPhotoViewEvent : ViewEvent {
 data class CounterPhotoViewModelState(
   val viewState: CounterPhotoViewState = CounterPhotoViewState(),
   val configurationAddress: String? = null,
-  val remoteId: Int? = null,
-  val profileId: Long? = null
+  val remoteId: Int? = null
 ) : ViewState()

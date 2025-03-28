@@ -21,15 +21,6 @@ import androidx.compose.ui.geometry.Offset
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-fun Offset?.isInside(midPoint: Offset, radius: Float): Boolean {
-  if (this == null) {
-    return false
-  }
-
-  return x > midPoint.x.minus(radius) && x < midPoint.x.plus(radius) &&
-    y > midPoint.y.minus(radius) && y < midPoint.y.plus(radius)
-}
-
 fun Offset?.distanceTo(other: Offset?): Float? {
   if (this == null || other == null) {
     return null

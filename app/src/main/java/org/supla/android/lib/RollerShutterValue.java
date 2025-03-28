@@ -21,8 +21,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 public class RollerShutterValue {
 
   private byte closingPercentage;
-  private byte tilt;
-  private byte bottomPosition;
   private short flags;
 
   public RollerShutterValue(byte[] value) {
@@ -30,8 +28,6 @@ public class RollerShutterValue {
 
     if (value != null && value.length >= 5) {
       closingPercentage = value[0];
-      tilt = value[1];
-      bottomPosition = value[2];
       flags = value[3];
       flags |= (short) (value[4] << 8);
     }
@@ -43,14 +39,6 @@ public class RollerShutterValue {
 
   public byte getClosingPercentage() {
     return closingPercentage;
-  }
-
-  public byte getTilt() {
-    return tilt;
-  }
-
-  public byte getBottomPosition() {
-    return bottomPosition;
   }
 
   public short getFlags() {

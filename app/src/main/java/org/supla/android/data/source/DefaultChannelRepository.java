@@ -28,7 +28,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
-import org.supla.android.core.infrastructure.DateProvider;
 import org.supla.android.data.source.local.ChannelDao;
 import org.supla.android.data.source.local.LocationDao;
 import org.supla.android.data.source.local.entity.ChannelGroupEntity;
@@ -46,13 +45,10 @@ public class DefaultChannelRepository implements ChannelRepository {
 
   private final ChannelDao channelDao;
   private final LocationDao locationDao;
-  private final DateProvider dateProvider;
 
-  public DefaultChannelRepository(
-      ChannelDao channelDao, LocationDao locationDao, DateProvider dateProvider) {
+  public DefaultChannelRepository(ChannelDao channelDao, LocationDao locationDao) {
     this.channelDao = channelDao;
     this.locationDao = locationDao;
-    this.dateProvider = dateProvider;
   }
 
   @Override
@@ -63,11 +59,6 @@ public class DefaultChannelRepository implements ChannelRepository {
   @Override
   public ChannelGroup getChannelGroup(int groupId) {
     return channelDao.getChannelGroup(groupId);
-  }
-
-  @Override
-  public void updateChannel(Channel channel) {
-    channelDao.update(channel);
   }
 
   @Override

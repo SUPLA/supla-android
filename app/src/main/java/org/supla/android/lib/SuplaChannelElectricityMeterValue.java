@@ -76,10 +76,6 @@ public class SuplaChannelElectricityMeterValue implements Serializable {
         ElectricityMeterPhaseSequence.Companion.from((PhaseSequence & 0x2) == 0);
   }
 
-  public double getTotalCost() {
-    return totalCost;
-  }
-
   @UsedFromNativeCode
   public void addSummary(int Phase, Summary Sum) {
     if (Phase >= 1 && Phase <= 3) {

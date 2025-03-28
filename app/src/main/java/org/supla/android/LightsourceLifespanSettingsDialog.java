@@ -38,8 +38,6 @@ public class LightsourceLifespanSettingsDialog
   private int remoteId;
   private final int lifespan;
 
-  private final Button btnClose;
-  private final Button btnCancel;
   private final Button btnOK;
   private final EditText edLifespan;
   private final CheckBox cbReset;
@@ -61,8 +59,8 @@ public class LightsourceLifespanSettingsDialog
     tvInfoTitle.setText(title);
 
     edLifespan = view.findViewById(R.id.edLifespan);
-    btnClose = view.findViewById(R.id.btnClose);
-    btnCancel = view.findViewById(R.id.btnCancel);
+    Button btnClose = view.findViewById(R.id.btnClose);
+    Button btnCancel = view.findViewById(R.id.btnCancel);
     btnOK = view.findViewById(R.id.btnOK);
 
     btnClose.setOnClickListener(this);
@@ -75,14 +73,6 @@ public class LightsourceLifespanSettingsDialog
   public void show() {
     this.edLifespan.setText(Integer.toString(lifespan));
     alertDialog.show();
-  }
-
-  public boolean isVisible() {
-    return alertDialog.isShowing();
-  }
-
-  public int getRemoteId() {
-    return remoteId;
   }
 
   @Override

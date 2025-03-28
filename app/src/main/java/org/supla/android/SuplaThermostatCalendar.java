@@ -37,11 +37,8 @@ import java.text.DateFormatSymbols;
 public class SuplaThermostatCalendar extends View {
 
   private Paint mPaint;
-  private DisplayMetrics mMetrics;
   private float mSpacing;
   private float mTextSize;
-  private float mGridHeight;
-  private float mGridWidth;
 
   private float mBoxHeight;
   private float mBoxWidth;
@@ -59,7 +56,6 @@ public class SuplaThermostatCalendar extends View {
   private boolean mSetHourProgramTo1;
   private int mLastHour = -1;
   private int mLastDay = -1;
-  private boolean mReadOnly = false;
   private boolean mTouched = false;
   private OnCalendarTouchListener mOnCalendarTouchListener;
 
@@ -91,7 +87,7 @@ public class SuplaThermostatCalendar extends View {
       mSpacing = 5;
       mTextSize = 20;
     } else {
-      mMetrics = res.getDisplayMetrics();
+      DisplayMetrics mMetrics = res.getDisplayMetrics();
       mSpacing = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (float) 3, mMetrics);
       mTextSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, (float) 10, mMetrics);
     }
@@ -112,8 +108,8 @@ public class SuplaThermostatCalendar extends View {
   }
 
   protected void calculateGridArea() {
-    mGridHeight = getHeight();
-    mGridWidth = getWidth();
+    float mGridHeight = getHeight();
+    float mGridWidth = getWidth();
 
     mBoxHeight = (mGridHeight - mSpacing * 25f) / 26f;
     mBoxWidth = (mGridWidth - mSpacing * 7f) / 8f;
@@ -200,10 +196,8 @@ public class SuplaThermostatCalendar extends View {
 
   @Override
   public boolean onTouchEvent(MotionEvent event) {
-
-    if (mReadOnly
-        || (event.getAction() != MotionEvent.ACTION_DOWN
-            && event.getAction() != MotionEvent.ACTION_MOVE)) {
+    if ((event.getAction() != MotionEvent.ACTION_DOWN
+        && event.getAction() != MotionEvent.ACTION_MOVE)) {
       mLastHour = -1;
       mLastDay = -1;
       mTouched = false;
@@ -262,41 +256,6 @@ public class SuplaThermostatCalendar extends View {
     return areTheDayAndHourCorrect(day, hour) && mHourProgramGrid[day - 1][hour];
   }
 
-  public boolean isReadOnly() {
-    return mReadOnly;
-  }
-
-  public void setReadOnly(boolean readOnly) {
-    this.mReadOnly = readOnly;
-  }
-
-  public int getHourProgram0Color() {
-    return mHourProgram0Color;
-  }
-
-  public void setHourProgram0Color(int hourProgram0Color) {
-    this.mHourProgram0Color = hourProgram0Color;
-    invalidate();
-  }
-
-  public int getHourProgram1Color() {
-    return mHourProgram1Color;
-  }
-
-  public void setHourProgram1Color(int hourProgram1Color) {
-    this.mHourProgram1Color = hourProgram1Color;
-    invalidate();
-  }
-
-  public int getFontColor() {
-    return mFontColor;
-  }
-
-  public void setFontColor(int fontColor) {
-    this.mFontColor = fontColor;
-    invalidate();
-  }
-
   public float getTextSize() {
     return mTextSize;
   }
@@ -306,17 +265,9 @@ public class SuplaThermostatCalendar extends View {
     invalidate();
   }
 
-  public String getProgram0Label() {
-    return mProgram0Label;
-  }
-
   public void setProgram0Label(String program0Label) {
     this.mProgram0Label = program0Label;
     invalidate();
-  }
-
-  public String getProgram1Label() {
-    return mProgram1Label;
   }
 
   public void setProgram1Label(String program1Label) {
@@ -333,10 +284,6 @@ public class SuplaThermostatCalendar extends View {
       this.mFirtsDay = firtsDay;
       invalidate();
     }
-  }
-
-  public OnCalendarTouchListener getOnCalendarTouchListener() {
-    return mOnCalendarTouchListener;
   }
 
   public void setOnCalendarTouchListener(OnCalendarTouchListener mOnCalendarTouchListener) {

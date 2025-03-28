@@ -46,11 +46,6 @@ class ProfileChooser(
     }
   }
 
-  fun dismiss() {
-    dialog?.dismiss()
-    dialog = null
-  }
-
   fun selectProfile(idx: Int) {
     val activated = try {
       activateProfileUseCase(profiles[idx].id!!, false)

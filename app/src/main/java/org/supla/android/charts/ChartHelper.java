@@ -26,7 +26,6 @@ import android.database.Cursor;
 import android.view.View;
 import android.widget.Spinner;
 import androidx.core.content.res.ResourcesCompat;
-import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.charts.PieChart;
@@ -95,10 +94,6 @@ public abstract class ChartHelper extends ValueFormatter {
     combinedChart = chart;
   }
 
-  public void setPieChart(PieChart chart) {
-    pieChart = chart;
-  }
-
   public boolean isPieChartType(ChartType chartType) {
     switch (chartType) {
       case Pie_HourRank:
@@ -122,34 +117,6 @@ public abstract class ChartHelper extends ValueFormatter {
     }
 
     return false;
-  }
-
-  public void setVisibility(int visibility) {
-    if (combinedChart != null) {
-      combinedChart.setVisibility(View.GONE);
-    }
-
-    if (pieChart != null) {
-      pieChart.setVisibility(View.GONE);
-    }
-
-    if (isPieChartType(ctype)) {
-      if (pieChart != null) {
-        pieChart.setVisibility(visibility);
-      }
-    } else {
-      if (combinedChart != null) {
-        combinedChart.setVisibility(visibility);
-      }
-    }
-  }
-
-  public void animate() {
-    if (combinedChart != null && combinedChart.getVisibility() == View.VISIBLE) {
-      combinedChart.animateY(1000);
-    } else if (pieChart != null && pieChart.getVisibility() == View.VISIBLE) {
-      pieChart.spin(500, 0, -360f, Easing.EaseInOutQuad);
-    }
   }
 
   @Override
@@ -484,15 +451,6 @@ public abstract class ChartHelper extends ValueFormatter {
     }
   }
 
-  public String getUnit() {
-    return unit;
-  }
-
-  public void setUnit(String unit) {
-    this.unit = unit;
-    updateDescription();
-  }
-
   public void load(int channelId, ChartType ctype) {
     this.ctype = ctype;
 
@@ -501,95 +459,6 @@ public abstract class ChartHelper extends ValueFormatter {
     } else {
       loadCombinedChart(channelId);
     }
-  }
-
-  public String[] getMasterSpinnerItems(int limit) {
-
-    if (limit <= 0 || limit > 24) {
-      limit = 24;
-    }
-
-    String[] result = new String[limit];
-    Resources r = context.getResources();
-
-    for (int a = 0; a < limit; a++) {
-      switch (a) {
-        case 0:
-          result[a] = r.getString(R.string.minutes);
-          break;
-        case 1:
-          result[a] = r.getString(R.string.hours);
-          break;
-        case 2:
-          result[a] = r.getString(R.string.days);
-          break;
-        case 3:
-          result[a] = r.getString(R.string.months);
-          break;
-        case 4:
-          result[a] = r.getString(R.string.years);
-          break;
-        case 5:
-          result[a] = r.getString(R.string.comparsion_minmin);
-          break;
-        case 6:
-          result[a] = r.getString(R.string.comparsion_hourhour);
-          break;
-        case 7:
-          result[a] = r.getString(R.string.comparsion_dayday);
-          break;
-        case 8:
-          result[a] = r.getString(R.string.comparsion_monthmonth);
-          break;
-        case 9:
-          result[a] = r.getString(R.string.comparsion_yearyear);
-          break;
-        case 10:
-          result[a] = r.getString(R.string.ranking_of_hours);
-          break;
-        case 11:
-          result[a] = r.getString(R.string.ranking_of_weekdays);
-          break;
-        case 12:
-          result[a] = r.getString(R.string.ranking_of_months);
-          break;
-        case 13:
-          result[a] = r.getString(R.string.consumption_acording_to_phases);
-          break;
-        case 14:
-          result[a] = r.getString(R.string.aritmetic_balance_minutes);
-          break;
-        case 15:
-          result[a] = r.getString(R.string.aritmetic_balance_hours);
-          break;
-        case 16:
-          result[a] = r.getString(R.string.aritmetic_balance_days);
-          break;
-        case 17:
-          result[a] = r.getString(R.string.aritmetic_balance_months);
-          break;
-        case 18:
-          result[a] = r.getString(R.string.aritmetic_balance_years);
-          break;
-        case 19:
-          result[a] = r.getString(R.string.vector_balance_minutes);
-          break;
-        case 20:
-          result[a] = r.getString(R.string.vector_balance_hours);
-          break;
-        case 21:
-          result[a] = r.getString(R.string.vector_balance_days);
-          break;
-        case 22:
-          result[a] = r.getString(R.string.vector_balance_months);
-          break;
-        case 23:
-          result[a] = r.getString(R.string.vector_balance_years);
-          break;
-      }
-    }
-
-    return result;
   }
 
   public ChartType chartTypeByIndex(int chartTypeIdx) {
@@ -682,59 +551,6 @@ public abstract class ChartHelper extends ValueFormatter {
     return result;
   }
 
-  public int getSlaveSpinnerPosition(Spinner master, Object lastSelection, List<String> newItems) {
-    Resources r = context.getResources();
-    if (master != null) {
-      switch (chartTypeByIndex(master.getSelectedItemPosition())) {
-        case Bar_Minutes:
-        case Bar_Comparsion_MinMin:
-        case Bar_AritmeticBalance_Minutes:
-        case Bar_VectorBalance_Minutes:
-          if (lastSelection == null
-              || lastSelection.equals(r.getString(R.string.all_available_history))
-              || newItems == null) {
-            return 0;
-          } else {
-            return getMappedPosition(newItems, lastSelection, 0);
-          }
-        case Bar_Hours:
-        case Bar_Comparsion_HourHour:
-        case Bar_AritmeticBalance_Hours:
-        case Bar_VectorBalance_Hours:
-          if (lastSelection == null
-              || lastSelection.equals(r.getString(R.string.history_range_last_day))
-              || lastSelection.equals(r.getString(R.string.all_available_history))
-              || newItems == null) {
-            return 1;
-          } else {
-            return getMappedPosition(newItems, lastSelection, 1);
-          }
-        case Bar_Days:
-        case Bar_Comparsion_DayDay:
-        case Bar_AritmeticBalance_Days:
-        case Bar_VectorBalance_Days:
-          if (lastSelection == null
-              || lastSelection.equals(r.getString(R.string.history_range_last_day))
-              || lastSelection.equals(r.getString(R.string.all_available_history))
-              || newItems == null) {
-            return 0;
-          } else {
-            return getMappedPosition(newItems, lastSelection, 0);
-          }
-      }
-    }
-
-    return 0;
-  }
-
-  private int getMappedPosition(List<String> newItems, Object lastSelection, int defaultPosition) {
-    int newPosition = newItems.indexOf(lastSelection);
-    if (newPosition < 0) {
-      return defaultPosition;
-    }
-    return newPosition;
-  }
-
   public void load(int channelId, int chartTypeIdx) {
     load(channelId, chartTypeByIndex(chartTypeIdx));
   }
@@ -746,39 +562,6 @@ public abstract class ChartHelper extends ValueFormatter {
   public void setDateRange(Date from, Date to) {
     dateFrom = from;
     dateTo = to;
-  }
-
-  public void persistSpinners(int func, Spinner master, Spinner slave) {
-    int profileId = profileManager.getCurrentProfile().blockingGet().getId().intValue();
-    prefs.setChartType(profileId, func, 0, master.getSelectedItemPosition());
-    prefs.setChartType(profileId, func, 1, slave.getSelectedItemPosition());
-  }
-
-  private int getCorrectPosition(Spinner spinner, int position) {
-    if (spinner != null && spinner.getAdapter() != null && spinner.getAdapter().getCount() > 0) {
-      if (position < 0) {
-        position = 0;
-      }
-      if (position >= spinner.getAdapter().getCount()) {
-        position = spinner.getAdapter().getCount() - 1;
-      }
-      return position;
-    }
-
-    return -1;
-  }
-
-  public void restoreSpinners(int func, Spinner master, Spinner slave, Runnable slaveReload) {
-    int profileId = profileManager.getCurrentProfile().blockingGet().getId().intValue();
-
-    int mct, sct;
-    mct = prefs.getChartType(profileId, func, 0, -1);
-    sct = prefs.getChartType(profileId, func, 1, -1);
-
-    master.setSelection(getCorrectPosition(master, mct));
-    slaveReload.run();
-
-    slave.setSelection(getCorrectPosition(slave, sct));
   }
 
   public void setDateRangeBySpinners(Spinner master, Spinner slave) {
@@ -841,14 +624,6 @@ public abstract class ChartHelper extends ValueFormatter {
     }
 
     setDateRange(dateFrom, dateTo);
-  }
-
-  public boolean isVisible() {
-    if (combinedChart != null && combinedChart.getVisibility() == View.VISIBLE) {
-      return true;
-    }
-
-    return pieChart != null && pieChart.getVisibility() == View.VISIBLE;
   }
 
   public void setDownloadProgress(Double downloadProgress) {

@@ -42,10 +42,6 @@ public class ThermostatHPListViewCursorAdapter extends ResourceCursorAdapter {
     super(context, layout, c, flags);
   }
 
-  private boolean isOn(TextView tv) {
-    return tv != null && ((Integer) tv.getTag()).intValue() == 1;
-  }
-
   private void setOn(TextView tv, boolean on) {
     if (tv != null) {
       if (on) {

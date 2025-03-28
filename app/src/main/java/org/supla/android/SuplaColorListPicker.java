@@ -28,6 +28,7 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
+import androidx.annotation.NonNull;
 import java.util.ArrayList;
 
 public class SuplaColorListPicker extends View {
@@ -37,9 +38,6 @@ public class SuplaColorListPicker extends View {
   private ArrayList<ListItem> Items = null;
   private float Space = 0;
   private float BorderWidth = 0;
-  private int BorderColor = Color.WHITE;
-  private int BrightnessLevelColor = Color.BLACK;
-  private int BorderColorSelected = Color.YELLOW;
   private ListItem TouchedItem = null;
   private OnColorListTouchListener mOnTouchListener;
   private final Handler handler = new Handler();
@@ -81,28 +79,11 @@ public class SuplaColorListPicker extends View {
   }
 
   public int addItem() {
-
     return addItem(Color.TRANSPARENT, (short) 0);
-  }
-
-  public void removeItem(int idx) {
-
-    if (idx >= 0 && idx < Items.size()) {
-      TouchedItem = null;
-      Items.remove(idx);
-      invalidate();
-    }
   }
 
   public int count() {
     return Items.size();
-  }
-
-  public int getItemColor(int idx) {
-
-    if (idx >= 0 && idx < Items.size()) return Items.get(idx).getColor();
-
-    return Color.TRANSPARENT;
   }
 
   public void setItemColor(int idx, int color) {
@@ -113,13 +94,6 @@ public class SuplaColorListPicker extends View {
     }
   }
 
-  public short getItemPercent(int idx) {
-
-    if (idx >= 0 && idx < Items.size()) return Items.get(idx).getPercent();
-
-    return 0;
-  }
-
   public void setItemPercent(int idx, short percent) {
 
     if (idx >= 0 && idx < Items.size()) {
@@ -128,79 +102,10 @@ public class SuplaColorListPicker extends View {
     }
   }
 
-  public Object getExtraParam1(int idx) {
-
-    if (idx >= 0 && idx < Items.size()) return Items.get(idx).getExtraParam1();
-
-    return null;
-  }
-
-  public void setExtraParam1(int idx, Object param1) {
-
-    if (idx >= 0 && idx < Items.size()) Items.get(idx).setExtraParam1(param1);
-  }
-
-  public Object getExtraParam2(int idx) {
-
-    if (idx >= 0 && idx < Items.size()) return Items.get(idx).getExtraParam2();
-
-    return null;
-  }
-
-  public void setExtraParam2(int idx, Object param2) {
-
-    if (idx >= 0 && idx < Items.size()) Items.get(idx).setExtraParam1(param2);
-  }
-
-  public float getSpace() {
-    return Space;
-  }
-
-  public void setSpace(float space) {
-    Space = space;
-    invalidate();
-  }
-
-  public float getBorderWidth() {
-    return BorderWidth;
-  }
-
-  public void setBorderWidth(float borderWidth) {
-    BorderWidth = borderWidth;
-    invalidate();
-  }
-
-  public int getBorderColor() {
-    return BorderColor;
-  }
-
-  public void setBorderColor(int borderColor) {
-    BorderColor = borderColor;
-    invalidate();
-  }
-
-  public int getBorderColorSelected() {
-    return BorderColorSelected;
-  }
-
-  public void setBorderColorSelected(int borderColorSelected) {
-    BorderColorSelected = borderColorSelected;
-    invalidate();
-  }
-
-  public int getBrightnessLevelColor() {
-    return BrightnessLevelColor;
-  }
-
-  public void setBrightnessLevelColor(int brightnessLevelColor) {
-    BrightnessLevelColor = brightnessLevelColor;
-    invalidate();
-  }
-
   @Override
-  protected void onDraw(Canvas canvas) {
+  protected void onDraw(@NonNull Canvas canvas) {
 
-    if (Items.size() == 0) return;
+    if (Items.isEmpty()) return;
 
     p.setAntiAlias(true);
 
@@ -226,7 +131,9 @@ public class SuplaColorListPicker extends View {
       rectF.set(l, bw, r, b);
       canvas.drawRoundRect(rectF, 20, 20, p);
 
-      p.setColor(i == TouchedItem ? BorderColorSelected : BorderColor);
+      int borderColor = Color.WHITE;
+      int borderColorSelected = Color.YELLOW;
+      p.setColor(i == TouchedItem ? borderColorSelected : borderColor);
       p.setStyle(Paint.Style.STROKE);
       p.setStrokeWidth(BorderWidth);
 
@@ -236,7 +143,8 @@ public class SuplaColorListPicker extends View {
 
       if (i.getPercent() > 0) {
 
-        p.setColor(BrightnessLevelColor);
+        int brightnessLevelColor = Color.BLACK;
+        p.setColor(brightnessLevelColor);
 
         double rl_margin = width * 0.05;
         double b_margin = width * 0.1;
@@ -247,7 +155,7 @@ public class SuplaColorListPicker extends View {
         r = left + p_width - bw;
 
         b = r - l;
-        b *= i.getPercent() / 100.00;
+        b *= i.getPercent() / 100.0;
         b = (r - l) - b;
 
         l += b / 2;
@@ -325,12 +233,10 @@ public class SuplaColorListPicker extends View {
     void onEdit(SuplaColorListPicker sclPicker, int idx);
   }
 
-  private class ListItem {
+  private static class ListItem {
 
     private int mColor = Color.TRANSPARENT;
     private short Percent = 0;
-    private Object ExtraParam1 = null;
-    private Object ExtraParam2 = null;
     private RectF Rect = null;
 
     public ListItem() {}
@@ -361,22 +267,6 @@ public class SuplaColorListPicker extends View {
 
     public void setRect(RectF rect) {
       Rect = rect == null ? null : new RectF(rect);
-    }
-
-    public Object getExtraParam1() {
-      return ExtraParam1;
-    }
-
-    public void setExtraParam1(Object extraParam1) {
-      ExtraParam1 = extraParam1;
-    }
-
-    public Object getExtraParam2() {
-      return ExtraParam2;
-    }
-
-    public void setExtraParam2(Object extraParam2) {
-      ExtraParam2 = extraParam2;
     }
   }
 }

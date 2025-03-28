@@ -19,12 +19,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import java.util.Date;
+import org.supla.android.tools.UsedFromNativeCode;
 
 public class SuplaRegistrationEnabled {
 
   public long ClientTimestamp;
   public long IODeviceTimestamp;
 
+  @UsedFromNativeCode
   public SuplaRegistrationEnabled() {
     // This constructor is used by native code
   }
@@ -36,26 +38,12 @@ public class SuplaRegistrationEnabled {
     }
   }
 
-  public Date ClientRegistrationExpirationDate() {
-    if (ClientTimestamp > 0) {
-      return new Date(ClientTimestamp * 1000L);
-    }
-
-    return null;
-  }
-
   public Date IODeviceRegistrationExpirationDate() {
     if (IODeviceTimestamp > 0) {
       return new Date(IODeviceTimestamp * 1000L);
     }
 
     return null;
-  }
-
-  public boolean IsClientRegistrationEnabled() {
-
-    Date d = ClientRegistrationExpirationDate();
-    return d != null && (new Date()).before(d);
   }
 
   public boolean IsIODeviceRegistrationEnabled() {
