@@ -125,18 +125,6 @@ data class Scene(
     return rv
   }
 
-  fun isExecuting(): Boolean {
-    val sst = startedAt
-    val now = Date()
-    if (sst != null && sst < now) {
-      val eet = estimatedEndDate
-      if (eet == null || eet > now) {
-        return true
-      }
-    }
-    return false
-  }
-
   fun getImageId(): ImageId {
     val standardIcons: IntArray = intArrayOf(
       R.drawable.scene0, R.drawable.scene1,

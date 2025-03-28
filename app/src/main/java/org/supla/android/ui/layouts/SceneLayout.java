@@ -342,10 +342,6 @@ public class SceneLayout extends LinearLayout implements SlideableItem, Swapable
     right_btn.layout(left, 0, left + right_btn.getWidth(), right_btn.getHeight());
   }
 
-  public String getCaption() {
-    return caption_text.getText().toString();
-  }
-
   public void setLocationCaption(String locationCaption) {
     this.locationCaption = locationCaption;
   }

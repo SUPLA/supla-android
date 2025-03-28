@@ -1,16 +1,5 @@
 package org.supla.android;
 
-import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.RectF;
-import android.util.AttributeSet;
-import android.util.DisplayMetrics;
-import android.util.TypedValue;
-import android.view.View;
-import androidx.annotation.Nullable;
-
 /*
 Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -29,6 +18,18 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.RectF;
+import android.util.AttributeSet;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
+import android.view.View;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 public class SuplaChannelStatus extends View {
 
   private ShapeType shapeType = ShapeType.LinearVertical;
@@ -36,7 +37,6 @@ public class SuplaChannelStatus extends View {
   private int OnlineColor = Color.GREEN;
   private int OfflineColor = Color.RED;
   private boolean mSingleColor = false;
-  private int BorderlineColor = Color.BLACK;
   private final RectF rectf = new RectF();
   private final Paint paint = new Paint();
   private final DisplayMetrics metrics = getResources().getDisplayMetrics();
@@ -55,17 +55,9 @@ public class SuplaChannelStatus extends View {
     super(context, attrs, defStyleAttr);
   }
 
-  public ShapeType getShapeType() {
-    return shapeType;
-  }
-
   public void setShapeType(ShapeType shapeType) {
     this.shapeType = shapeType;
     invalidate();
-  }
-
-  public float getPercent() {
-    return Percent;
   }
 
   public void setPercent(float percent) {
@@ -101,20 +93,11 @@ public class SuplaChannelStatus extends View {
   }
 
   public int getBorderLineColor() {
-    return BorderlineColor;
-  }
-
-  public void setBorderLineColor(int borderLineColor) {
-    BorderlineColor = borderLineColor;
-    invalidate();
-  }
-
-  public float getBorderLineWidth() {
-    return FrameLineWidth;
+    return Color.BLACK;
   }
 
   @Override
-  protected void onDraw(Canvas canvas) {
+  protected void onDraw(@NonNull Canvas canvas) {
 
     paint.setColor(getOfflineColor());
     paint.setStyle(Paint.Style.FILL);
@@ -157,8 +140,8 @@ public class SuplaChannelStatus extends View {
 
       canvas.drawColor(Color.TRANSPARENT);
       canvas.drawCircle(
-          getWidth() / 2,
-          getHeight() / 2,
+          getWidth() / 2f,
+          getHeight() / 2f,
           size - (shapeType == ShapeType.Ring ? FrameLineWidth / 2 : 0),
           paint);
       return;

@@ -18,21 +18,19 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import org.supla.android.tools.UsedFromNativeCode;
+
 public class SuplaChannelBasicCfg {
   private final String deviceName;
   private final String deviceSoftwareVersion;
   private final int deviceId;
-  private final int deviceFlags;
-  private final int manufacturerId;
-  private final int productId;
   private final int channelId;
   private final int number;
-  private final int channelType;
   private final int func;
   private final int funcList;
-  private final int channelFlags;
   private final String caption;
 
+  @UsedFromNativeCode
   public SuplaChannelBasicCfg(
       String deviceName,
       String deviceSoftwareVersion,
@@ -50,15 +48,10 @@ public class SuplaChannelBasicCfg {
     this.deviceName = deviceName;
     this.deviceSoftwareVersion = deviceSoftwareVersion;
     this.deviceId = deviceId;
-    this.deviceFlags = deviceFlags;
-    this.manufacturerId = manufacturerId;
-    this.productId = productId;
     this.channelId = channelId;
     this.number = number;
-    this.channelType = channelType;
     this.func = func;
     this.funcList = funcList;
-    this.channelFlags = channelFlags;
     this.caption = caption;
   }
 
@@ -74,18 +67,6 @@ public class SuplaChannelBasicCfg {
     return deviceId;
   }
 
-  public int getDeviceFlags() {
-    return deviceFlags;
-  }
-
-  public int getManufacturerId() {
-    return manufacturerId;
-  }
-
-  public int getProductId() {
-    return productId;
-  }
-
   public int getChannelId() {
     return channelId;
   }
@@ -94,20 +75,12 @@ public class SuplaChannelBasicCfg {
     return number;
   }
 
-  public int getChannelType() {
-    return channelType;
-  }
-
   public int getFunc() {
     return func;
   }
 
   public int getFuncList() {
     return funcList;
-  }
-
-  public int getChannelFlags() {
-    return channelFlags;
   }
 
   public String getCaption() {

@@ -32,11 +32,6 @@ public abstract class MeasurementItem extends DbItem {
     Timestamp = 0;
   }
 
-  public MeasurementItem(MeasurementItem src) {
-    ChannelId = src.ChannelId;
-    Timestamp = src.Timestamp;
-  }
-
   public long getProfileId() {
     return profileId;
   }
@@ -68,13 +63,6 @@ public abstract class MeasurementItem extends DbItem {
     return null;
   }
 
-  protected long getLong(JSONObject obj, String name) throws JSONException {
-    if (!obj.isNull(name)) {
-      return obj.getLong(name);
-    }
-    return 0;
-  }
-
   protected boolean getBoolean(JSONObject obj, String name) throws JSONException {
     boolean result = false;
 
@@ -86,14 +74,6 @@ public abstract class MeasurementItem extends DbItem {
       }
     }
     return result;
-  }
-
-  protected void putNullOrDouble(ContentValues values, String name, double value) {
-    if (value == 0) {
-      values.putNull(name);
-    } else {
-      values.put(name, value);
-    }
   }
 
   protected Double getTemperature(JSONObject obj, String name) throws JSONException {
