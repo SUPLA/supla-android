@@ -25,16 +25,25 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
 import org.supla.android.SuplaApp
 import org.supla.android.core.ui.BaseFragment
+import org.supla.android.core.ui.BaseViewModel
+import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.databinding.FragmentSceneListBinding
 import org.supla.android.extensions.toPx
 import org.supla.android.extensions.visibleIf
+import org.supla.android.features.captionchangedialog.CaptionChangeViewModel
+import org.supla.android.features.captionchangedialog.View
 import org.supla.android.navigator.MainNavigator
+import org.supla.core.shared.extensions.ifTrue
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class SceneListFragment : BaseFragment<SceneListViewState, SceneListViewEvent>(R.layout.fragment_scene_list) {
 
   override val viewModel: SceneListViewModel by viewModels()
+  override val helperViewModels: List<BaseViewModel<*, *>>
+    get() = listOf(captionChangeViewModel)
+
+  private val captionChangeViewModel: CaptionChangeViewModel by viewModels()
   private val binding by viewBinding(FragmentSceneListBinding::bind)
   private var scrollDownOnReload = false
 
@@ -50,7 +59,14 @@ class SceneListFragment : BaseFragment<SceneListViewState, SceneListViewEvent>(R
     binding.scenesList.adapter = adapter
     binding.scenesList.itemAnimator = null
     setupAdapter()
+    captionChangeViewModel.finishedCallback = { it.isLocation.ifTrue { viewModel.loadScenes() } }
     binding.scenesEmptyListButton.setOnClickListener { viewModel.onAddGroupClick() }
+
+    binding.composeView.setContent {
+      SuplaTheme {
+        captionChangeViewModel.View()
+      }
+    }
   }
 
   override fun onStart() {
@@ -85,18 +101,19 @@ class SceneListFragment : BaseFragment<SceneListViewState, SceneListViewEvent>(R
 
   private fun setupAdapter() {
     adapter.leftButtonClickCallback = {
-      SuplaApp.Vibrate(context)
+      vibrationHelper.vibrate()
       SuplaApp.getApp().getSuplaClient()?.stopScene(it)
     }
     adapter.rightButtonClickCallback = {
-      SuplaApp.Vibrate(context)
+      vibrationHelper.vibrate()
       SuplaApp.getApp().getSuplaClient()?.startScene(it)
     }
     adapter.movementFinishedCallback = { viewModel.onSceneOrderUpdate(it) }
-    adapter.reloadCallback = { viewModel.loadScenes() }
     adapter.toggleLocationCallback = { location, scrollDown ->
       viewModel.toggleLocationCollapsed(location)
       scrollDownOnReload = scrollDown
     }
+    adapter.captionLongPressCallback = captionChangeViewModel::showSceneDialog
+    adapter.locationCaptionLongPressCallback = captionChangeViewModel::showLocationDialog
   }
 }

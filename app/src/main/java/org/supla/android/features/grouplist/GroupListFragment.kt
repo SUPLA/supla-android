@@ -23,24 +23,32 @@ import androidx.fragment.app.viewModels
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
-import org.supla.android.SuplaApp
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.ui.BaseFragment
+import org.supla.android.core.ui.BaseViewModel
+import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.databinding.FragmentGroupListBinding
 import org.supla.android.extensions.toPx
 import org.supla.android.extensions.visibleIf
+import org.supla.android.features.captionchangedialog.CaptionChangeViewModel
+import org.supla.android.features.captionchangedialog.View
 import org.supla.android.navigator.MainNavigator
 import org.supla.android.ui.dialogs.exceededAmperageDialog
 import org.supla.android.ui.dialogs.valveClosedManuallyDialog
 import org.supla.android.ui.dialogs.valveFloodingDialog
 import org.supla.android.usecases.channel.ButtonType
+import org.supla.core.shared.extensions.ifTrue
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class GroupListFragment : BaseFragment<GroupListViewState, GroupListViewEvent>(R.layout.fragment_group_list) {
 
   override val viewModel: GroupListViewModel by viewModels()
+  override val helperViewModels: List<BaseViewModel<*, *>>
+    get() = listOf(captionChangeViewModel)
+
+  private val captionChangeViewModel: CaptionChangeViewModel by viewModels()
   private val binding by viewBinding(FragmentGroupListBinding::bind)
   private var scrollDownOnReload = false
 
@@ -59,7 +67,13 @@ class GroupListFragment : BaseFragment<GroupListViewState, GroupListViewEvent>(R
     binding.groupsList.adapter = adapter
     binding.groupsList.itemAnimator = null
     setupAdapter()
+    captionChangeViewModel.finishedCallback = { it.isLocation.ifTrue { viewModel.loadGroups() } }
     binding.groupsEmptyListButton.setOnClickListener { viewModel.onAddGroupClick() }
+    binding.composeView.setContent {
+      SuplaTheme {
+        captionChangeViewModel.View()
+      }
+    }
   }
 
   override fun onStart() {
@@ -112,19 +126,20 @@ class GroupListFragment : BaseFragment<GroupListViewState, GroupListViewEvent>(R
 
   private fun setupAdapter() {
     adapter.leftButtonClickCallback = {
-      SuplaApp.Vibrate(context)
+      vibrationHelper.vibrate()
       viewModel.performAction(it, ButtonType.LEFT)
     }
     adapter.rightButtonClickCallback = {
-      SuplaApp.Vibrate(context)
+      vibrationHelper.vibrate()
       viewModel.performAction(it, ButtonType.RIGHT)
     }
     adapter.swappedElementsCallback = { firstItem, secondItem -> viewModel.swapItems(firstItem, secondItem) }
-    adapter.reloadCallback = { viewModel.loadGroups() }
     adapter.toggleLocationCallback = { location, scrollDown ->
       viewModel.toggleLocationCollapsed(location)
       scrollDownOnReload = scrollDown
     }
     adapter.listItemClickCallback = { viewModel.onListItemClick(it) }
+    adapter.captionLongPressCallback = captionChangeViewModel::showGroupDialog
+    adapter.locationCaptionLongPressCallback = captionChangeViewModel::showLocationDialog
   }
 }
