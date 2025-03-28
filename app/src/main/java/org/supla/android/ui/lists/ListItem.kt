@@ -35,7 +35,8 @@ sealed interface ListItem {
 
   fun isDifferentFrom(another: ListItem): Boolean {
     if (this is SceneItem && another is SceneItem) {
-      return sceneData.remoteId != another.sceneData.remoteId
+      return sceneData.remoteId != another.sceneData.remoteId ||
+        sceneData.sceneEntity.caption != another.sceneData.sceneEntity.caption
     }
     if (this is LocationItem && another is LocationItem) {
       return location != another.location

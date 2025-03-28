@@ -71,7 +71,10 @@ class CaptionChangeUseCase @Inject constructor(
     }
 
   enum class Type {
-    LOCATION, CHANNEL, GROUP, SCENE
+    LOCATION, CHANNEL, GROUP, SCENE;
+
+    val isLocation: Boolean
+      get() = this == LOCATION
   }
 
   interface Updater {

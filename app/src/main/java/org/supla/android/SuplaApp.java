@@ -22,16 +22,12 @@ import static org.supla.android.widget.shared.WidgetReloadWorker.WORK_ID;
 
 import android.app.UiModeManager;
 import android.content.Context;
-import android.media.AudioAttributes;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
 import android.net.NetworkRequest;
 import android.net.wifi.WifiManager;
-import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
-import android.os.VibrationEffect;
-import android.os.Vibrator;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -125,24 +121,6 @@ public class SuplaApp extends MultiDexApplication
 
     enqueueWidgetRefresh();
     enqueueInitialization();
-  }
-
-  public static void Vibrate(Context context) {
-    Vibrator v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-    if (v == null) {
-      return;
-    }
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-      v.vibrate(
-          VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE),
-          new AudioAttributes.Builder()
-              .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-              .setUsage(AudioAttributes.USAGE_ALARM)
-              .build());
-    } else {
-      v.vibrate(100); // deprecated in API 26
-    }
   }
 
   public SuplaClient SuplaClientInitIfNeed(

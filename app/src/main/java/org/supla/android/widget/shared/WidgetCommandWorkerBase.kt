@@ -30,7 +30,6 @@ import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import org.supla.android.Preferences
 import org.supla.android.R
-import org.supla.android.SuplaApp
 import org.supla.android.Trace
 import org.supla.android.core.notifications.NotificationsHelper
 import org.supla.android.data.source.remote.gpm.SuplaChannelGeneralPurposeBaseConfig
@@ -70,6 +69,7 @@ import org.supla.android.lib.actions.SubjectType
 import org.supla.android.lib.singlecall.DoubleValue
 import org.supla.android.lib.singlecall.ResultException
 import org.supla.android.lib.singlecall.TemperatureAndHumidity
+import org.supla.android.tools.VibrationHelper
 import org.supla.android.usecases.channel.valueformatter.GpmValueFormatter
 import org.supla.android.usecases.channel.valueprovider.GpmValueProvider
 import org.supla.android.usecases.channelconfig.LoadChannelConfigUseCase
@@ -80,8 +80,9 @@ import org.supla.android.widget.shared.configuration.ItemType
 private const val INTERNAL_ERROR = -10
 
 abstract class WidgetCommandWorkerBase(
-  private val notificationsHelper: NotificationsHelper,
   private val loadChannelConfigUseCase: LoadChannelConfigUseCase,
+  private val notificationsHelper: NotificationsHelper,
+  private val vibrationHelper: VibrationHelper,
   appPreferences: Preferences,
   appContext: Context,
   workerParams: WorkerParameters
@@ -123,7 +124,7 @@ abstract class WidgetCommandWorkerBase(
       return Result.failure()
     }
 
-    SuplaApp.Vibrate(applicationContext)
+    vibrationHelper.vibrate()
 
     return perform(widgetId, configuration)
   }

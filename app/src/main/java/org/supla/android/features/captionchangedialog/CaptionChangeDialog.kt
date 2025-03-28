@@ -35,7 +35,6 @@ import org.supla.android.R
 import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
-import org.supla.android.lib.actions.SubjectType
 import org.supla.android.ui.dialogs.Dialog
 import org.supla.android.ui.dialogs.DialogButtonsRow
 import org.supla.android.ui.dialogs.DialogHeader
@@ -47,10 +46,8 @@ import org.supla.android.ui.views.buttons.OutlinedButton
 import org.supla.core.shared.infrastructure.LocalizedString
 
 data class CaptionChangeDialogState(
-  val remoteId: Int,
-  val profileId: Long,
-  val subjectType: SubjectType,
-  val caption: String,
+  val caption: String = "",
+  val label: LocalizedString = LocalizedString.Empty,
   val authorized: Boolean = false,
   val loading: Boolean = false,
   val error: LocalizedString? = null
@@ -117,7 +114,7 @@ private fun CaptionTextField(
     modifier = Modifier
       .fillMaxWidth()
       .padding(start = Distance.default, top = Distance.default, end = Distance.default),
-    label = { Text(text = stringResource(id = state.captionLabelRes)) },
+    label = { Text(text = state.label(LocalContext.current)) },
     singleLine = true,
     onValueChange = { onStateChange(state.copy(caption = it)) }
   )
@@ -136,13 +133,6 @@ private fun ErrorText(text: String) =
     )
   )
 
-private val CaptionChangeDialogState.captionLabelRes: Int
-  get() = when (subjectType) {
-    SubjectType.CHANNEL -> R.string.channel_name
-    SubjectType.GROUP -> R.string.group_name
-    SubjectType.SCENE -> R.string.scene_name
-  }
-
 private val emptyScope = object : CaptionChangeDialogScope {
   override fun onCaptionChangeDismiss() {}
   override fun onStateChange(state: CaptionChangeDialogState) {}
@@ -155,10 +145,8 @@ private fun Preview() {
   SuplaTheme {
     emptyScope.Dialog(
       CaptionChangeDialogState(
-        remoteId = 123,
-        profileId = 1L,
-        subjectType = SubjectType.CHANNEL,
         caption = "Thermostat",
+        label = LocalizedString.WithResource(R.string.channel_name),
         error = null
       )
     )
@@ -171,10 +159,8 @@ private fun Preview_Error() {
   SuplaTheme {
     emptyScope.Dialog(
       CaptionChangeDialogState(
-        remoteId = 123,
-        profileId = 1L,
-        subjectType = SubjectType.CHANNEL,
         caption = "Thermostat",
+        label = LocalizedString.WithResource(R.string.channel_name),
         error = LocalizedString.Constant("Some error!")
       )
     )

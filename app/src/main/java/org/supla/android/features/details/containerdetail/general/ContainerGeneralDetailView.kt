@@ -76,7 +76,7 @@ interface ContainerGeneralDetailViewScope {
 fun ContainerGeneralDetailViewScope.View(
   state: ContainerGeneralDetailViewState,
   showStateDialog: (Int) -> Unit,
-  showCaptionChangeDialog: (String, Int, Long) -> Unit
+  showCaptionChangeDialog: (Int, Long, String) -> Unit
 ) {
   Column(
     horizontalAlignment = Alignment.CenterHorizontally,
@@ -133,7 +133,7 @@ fun ContainerGeneralDetailViewScope.View(
       sensors = state.sensors,
       scale = state.scale,
       onInfoClick = { showStateDialog(it.channelId) },
-      onCaptionLongPress = { showCaptionChangeDialog(it.userCaption, it.channelId, it.profileId) }
+      onCaptionLongPress = { showCaptionChangeDialog(it.channelId, it.profileId, it.userCaption) }
     )
   }
 }

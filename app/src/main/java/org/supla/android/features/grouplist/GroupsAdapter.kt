@@ -20,24 +20,16 @@ package org.supla.android.features.grouplist
 import android.content.Context
 import dagger.hilt.android.qualifiers.ActivityContext
 import org.supla.android.Preferences
-import org.supla.android.SuplaApp
 import org.supla.android.data.source.local.entity.LocationEntity
-import org.supla.android.ui.dialogs.ChannelGroupCaptionEditor
-import org.supla.android.ui.layouts.ChannelLayout
+import org.supla.android.tools.VibrationHelper
 import org.supla.android.ui.lists.BaseChannelsAdapter
 import javax.inject.Inject
 
 class GroupsAdapter @Inject constructor(
   @ActivityContext private val context: Context,
+  vibrationHelper: VibrationHelper,
   preferences: Preferences
-) : BaseChannelsAdapter(context, preferences), ChannelLayout.Listener {
+) : BaseChannelsAdapter(vibrationHelper, context, preferences) {
 
   override fun isLocationCollapsed(location: LocationEntity) = ((location.collapsed and 0x2) > 0)
-
-  override fun onCaptionLongPress(groupId: Int) {
-    SuplaApp.Vibrate(context)
-    val editor = ChannelGroupCaptionEditor(context)
-    editor.captionChangedListener = reloadCallback
-    editor.edit(groupId)
-  }
 }

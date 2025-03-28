@@ -24,7 +24,6 @@ import androidx.fragment.app.viewModels
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
-import org.supla.android.SuplaApp
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.ui.BaseFragment
 import org.supla.android.core.ui.BaseViewModel
@@ -34,6 +33,8 @@ import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.databinding.FragmentChannelListBinding
 import org.supla.android.extensions.toPx
 import org.supla.android.extensions.visibleIf
+import org.supla.android.features.captionchangedialog.CaptionChangeViewModel
+import org.supla.android.features.captionchangedialog.View
 import org.supla.android.features.statedialog.StateDialogViewModel
 import org.supla.android.features.statedialog.View
 import org.supla.android.features.statedialog.handleStateDialogViewEvent
@@ -45,6 +46,7 @@ import org.supla.android.ui.dialogs.valveFloodingDialog
 import org.supla.android.ui.dialogs.valveMotorProblemDialog
 import org.supla.android.ui.lists.message
 import org.supla.android.usecases.channel.ButtonType
+import org.supla.core.shared.extensions.ifTrue
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -52,9 +54,10 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
 
   override val viewModel: ChannelListViewModel by viewModels()
   override val helperViewModels: List<BaseViewModel<*, *>>
-    get() = listOf(stateDialogViewModel)
+    get() = listOf(stateDialogViewModel, captionChangeViewModel)
 
   private val stateDialogViewModel: StateDialogViewModel by viewModels()
+  private val captionChangeViewModel: CaptionChangeViewModel by viewModels()
   private val binding by viewBinding(FragmentChannelListBinding::bind)
   private var scrollDownOnReload = false
 
@@ -73,13 +76,15 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
     binding.channelsList.adapter = adapter
     binding.channelsList.itemAnimator = null
     setupAdapter()
+    captionChangeViewModel.finishedCallback = { it.isLocation.ifTrue { viewModel.loadChannels() } }
     binding.channelsEmptyListButton.setOnClickListener {
       navigator.navigateToAddWizard()
     }
 
-    binding.yourComposeView.setContent {
+    binding.composeView.setContent {
       SuplaTheme {
         stateDialogViewModel.View()
+        captionChangeViewModel.View()
       }
     }
   }
@@ -136,15 +141,14 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
 
   private fun setupAdapter() {
     adapter.leftButtonClickCallback = {
-      SuplaApp.Vibrate(context)
+      vibrationHelper.vibrate()
       viewModel.performAction(it, ButtonType.LEFT)
     }
     adapter.rightButtonClickCallback = {
-      SuplaApp.Vibrate(context)
+      vibrationHelper.vibrate()
       viewModel.performAction(it, ButtonType.RIGHT)
     }
     adapter.swappedElementsCallback = { first, second -> viewModel.swapItems(first, second) }
-    adapter.reloadCallback = { viewModel.loadChannels() }
     adapter.toggleLocationCallback = { location, scrollDown ->
       viewModel.toggleLocationCollapsed(location)
       scrollDownOnReload = scrollDown
@@ -152,6 +156,8 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
     adapter.infoButtonClickCallback = { stateDialogViewModel.showDialog(it) }
     adapter.issueButtonClickCallback = { showAlertPopup(it.message(requireContext())) }
     adapter.listItemClickCallback = { viewModel.onListItemClick(it) }
+    adapter.captionLongPressCallback = captionChangeViewModel::showChannelDialog
+    adapter.locationCaptionLongPressCallback = captionChangeViewModel::showLocationDialog
   }
 
   override fun onSuplaMessage(message: SuplaClientMsg) {
