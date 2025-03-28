@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import org.supla.android.core.infrastructure.DateProvider;
 import org.supla.android.data.source.ChannelRepository;
 import org.supla.android.data.source.ColorListRepository;
 import org.supla.android.data.source.DefaultChannelRepository;
@@ -64,8 +63,7 @@ public class DbHelper extends BaseDbHelper {
   private DbHelper(Context context, ProfileIdProvider profileIdProvider) {
     super(context, DATABASE_NAME, null, DATABASE_VERSION, profileIdProvider);
     this.channelRepository =
-        new DefaultChannelRepository(
-            new ChannelDao(this), new LocationDao(this), new DateProvider());
+        new DefaultChannelRepository(new ChannelDao(this), new LocationDao(this));
     this.colorListRepository = new DefaultColorListRepository(new ColorListDao(this));
     this.userIconRepository =
         new DefaultUserIconRepository(
@@ -121,20 +119,12 @@ public class DbHelper extends BaseDbHelper {
     return channelRepository.updateLocation(suplaLocation);
   }
 
-  public void updateLocation(Location location) {
-    channelRepository.updateLocation(location);
-  }
-
   public Channel getChannel(int channelId) {
     return channelRepository.getChannel(channelId);
   }
 
   public ChannelGroup getChannelGroup(int groupId) {
     return channelRepository.getChannelGroup(groupId);
-  }
-
-  public void updateChannel(Channel channel) {
-    channelRepository.updateChannel(channel);
   }
 
   public boolean updateChannelGroup(SuplaChannelGroup suplaChannelGroup) {

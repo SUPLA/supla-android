@@ -183,18 +183,6 @@ public class Channel extends ChannelBase {
     return values;
   }
 
-  public double getDouble(double unknown) {
-    return Value != null ? Value.getDouble(unknown) : unknown;
-  }
-
-  public double getHumidity() {
-    return Value != null ? Value.getDistance() : -1;
-  }
-
-  public double getDistance() {
-    return Value != null ? Value.getDistance() : -1;
-  }
-
   public byte getColorBrightness() {
     return Value != null ? Value.getColorBrightness() : 0;
   }

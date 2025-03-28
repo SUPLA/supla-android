@@ -34,8 +34,6 @@ public interface ChannelRepository {
 
   ChannelGroup getChannelGroup(int groupId);
 
-  void updateChannel(Channel channel);
-
   boolean updateChannelGroup(SuplaChannelGroup suplaChannelGroup);
 
   boolean updateChannelGroupRelation(SuplaChannelGroupRelation suplaChannelGroupRelation);

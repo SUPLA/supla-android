@@ -22,7 +22,6 @@ import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Region
 import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.MotionEvent.ACTION_CANCEL
@@ -57,7 +56,6 @@ class ListCallback(
 
   private var swipeBack = false
   private var state: ItemState = ItemState.Closed
-  private var previousPosition = ItemPosition.CLOSED
   private var lastActivePosition = 0f
   private var lastActiveFlag = false
   private var moved = false
@@ -164,7 +162,6 @@ class ListCallback(
           lastActivePosition = correctedX
         }
         lastActiveFlag -> {
-          previousPosition = state.position
           state = calculateState(viewHolder)
           animateOnFingerRelease(viewHolder.itemView)
         }
@@ -290,5 +287,3 @@ sealed class ItemState(val position: ItemPosition) {
   ) :
     ItemState(position)
 }
-
-fun Region.contains(event: MotionEvent): Boolean = contains(event.x.toInt(), event.y.toInt())

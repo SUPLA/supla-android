@@ -18,11 +18,9 @@ package org.supla.android.data.source.local
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.content.ContentValues
 import org.supla.android.Encryption
 import org.supla.android.Preferences
 import org.supla.android.SuplaApp
-import org.supla.android.Trace
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.data.source.local.entity.ChannelConfigEntity
 import org.supla.android.data.source.local.entity.ChannelEntity
@@ -38,7 +36,6 @@ import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.data.source.local.entity.SceneEntity
 import org.supla.android.data.source.local.entity.UserIconEntity
 import org.supla.android.db.AuthProfileItem
-import org.supla.android.extensions.TAG
 import org.supla.android.lib.SuplaConst
 import org.supla.android.profile.AuthInfo
 import kotlin.random.Random
@@ -111,35 +108,6 @@ class LocalProfileRepository(provider: DatabaseAccessProvider) : ProfileReposito
         rv
       }
     }
-
-  override fun setProfileActive(id: Long): Boolean {
-    return write<Boolean> { db ->
-      var rv = false
-      db.beginTransaction()
-      try {
-        val cv1 = ContentValues()
-        cv1.put(ProfileEntity.COLUMN_ACTIVE, 0)
-        db.update(ProfileEntity.TABLE_NAME, cv1, null, null)
-        val cv2 = ContentValues()
-        cv2.put(ProfileEntity.COLUMN_ACTIVE, 1)
-        db.update(
-          ProfileEntity.TABLE_NAME,
-          cv2,
-          ProfileEntity.COLUMN_ID + " = ?",
-          arrayOf(id.toString())
-        )
-
-        Trace.d(TAG, "activated profile: $id")
-        db.setTransactionSuccessful()
-        rv = true
-      } catch (e: Exception) {
-        Trace.e(TAG, "failed to activate profile: $id", e)
-      } finally {
-        db.endTransaction()
-      }
-      rv
-    }
-  }
 
   private fun makeEmptyAuthItem(): AuthProfileItem {
     return AuthProfileItem(

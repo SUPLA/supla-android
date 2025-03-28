@@ -20,53 +20,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import android.database.Cursor;
 import androidx.annotation.NonNull;
-import java.util.Calendar;
 import java.util.Date;
 
 public abstract class MeasurementsBaseDao extends BaseDao {
 
   MeasurementsBaseDao(@NonNull DatabaseAccessProvider databaseAccessProvider) {
     super(databaseAccessProvider);
-  }
-
-  double getLastMeasurementValue(
-      String tableName,
-      String colTimestamp,
-      String colChannelId,
-      String colValue,
-      int monthOffset,
-      int channelId) {
-    String[] projection = {"SUM(" + colValue + ")"};
-
-    String selection = colChannelId + " = ? AND " + colTimestamp + " <= ?" + " AND profileid = ? ";
-
-    String[] selectionArgs = {
-      String.valueOf(channelId),
-      String.valueOf(lastSecondInMonthWithOffset(monthOffset).getTimeInMillis() / 1000),
-      String.valueOf(getCachedProfileId())
-    };
-
-    return read(
-        sqLiteDatabase -> {
-          Cursor c =
-              sqLiteDatabase.query(
-                  tableName,
-                  projection,
-                  selection,
-                  selectionArgs,
-                  null,
-                  null,
-                  colTimestamp + " DESC",
-                  "1");
-
-          double result = c.getCount();
-          if (c.moveToFirst()) {
-            result = c.getDouble(0);
-          }
-          c.close();
-
-          return result;
-        });
   }
 
   int getMeasurementTimestamp(
@@ -98,19 +57,5 @@ public abstract class MeasurementsBaseDao extends BaseDao {
 
   long toMilis(Date date) {
     return date.getTime() / 1000;
-  }
-
-  private Calendar lastSecondInMonthWithOffset(int monthOffset) {
-    Calendar calendar = Calendar.getInstance();
-    calendar.setTimeInMillis(System.currentTimeMillis());
-    calendar.set(Calendar.DAY_OF_MONTH, 1);
-    calendar.set(Calendar.HOUR_OF_DAY, 0);
-    calendar.set(Calendar.MINUTE, 0);
-    calendar.set(Calendar.SECOND, 0);
-    calendar.set(Calendar.MILLISECOND, 0);
-    calendar.add(Calendar.MONTH, 1);
-    calendar.add(Calendar.MONTH, monthOffset);
-    calendar.add(Calendar.SECOND, -1);
-    return calendar;
   }
 }
