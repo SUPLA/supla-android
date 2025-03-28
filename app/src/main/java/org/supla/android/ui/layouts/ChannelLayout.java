@@ -59,6 +59,7 @@ import org.supla.android.lib.SuplaChannelExtendedValue;
 import org.supla.android.lib.SuplaChannelValue;
 import org.supla.android.lib.SuplaConst;
 import org.supla.android.lib.SuplaTimerState;
+import org.supla.android.ui.lists.OnClick;
 import org.supla.android.ui.lists.SlideableItem;
 import org.supla.android.ui.lists.SwapableListItem;
 import org.supla.android.usecases.group.GetGroupActivePercentageUseCase;
@@ -105,28 +106,20 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
 
   private Preferences prefs;
 
-  private Listener listener;
-
   private Disposable changesDisposable = null;
 
   private TextView durationTimer;
   private CountDownTimer countDownTimer;
 
+  @NonNull public OnClick onLeftButtonClick = () -> {};
+  @NonNull public OnClick onRightButtonClick = () -> {};
+  @NonNull public OnClick onItemClick = () -> {};
+  @NonNull public OnClick onCaptionLongPressed = () -> {};
+
   @NonNull
   @Override
   public String getLocationCaption() {
     return locationCaption;
-  }
-
-  public interface Listener {
-
-    void onLeftButtonClick(int channelId);
-
-    void onRightButtonClick(int channelId);
-
-    void onCaptionLongPress(int channelId);
-
-    void onItemClick(int remoteId);
   }
 
   public ChannelLayout(Context context) {
@@ -142,10 +135,6 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
   public ChannelLayout(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
     init(context);
-  }
-
-  public void setChannelListener(Listener l) {
-    listener = l;
   }
 
   public void setInfoIconClickListener(OnClickListener listener) {
@@ -251,8 +240,8 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
     caption_text = new CaptionView(context, imgl.getId(), heightScaleFactor);
     channelIconContainer.addView(caption_text);
 
-    left_btn.setOnClickListener(v -> listener.onLeftButtonClick(channelBase.getRemoteId()));
-    right_btn.setOnClickListener(v -> listener.onRightButtonClick(channelBase.getRemoteId()));
+    left_btn.setOnClickListener(v -> onLeftButtonClick.onClick());
+    right_btn.setOnClickListener(v -> onRightButtonClick.onClick());
 
     right_onlineStatus.setVisibility(INVISIBLE);
     left_onlineStatus.setVisibility(INVISIBLE);
@@ -418,7 +407,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
 
   private void UpdateLeftBtn() {
 
-    float pr = content.getLeft() * 100 / left_btn.getWidth();
+    float pr = content.getLeft() * 100f / left_btn.getWidth();
 
     if (pr <= 0) {
       pr = 0;
@@ -443,7 +432,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
 
   private void UpdateRightBtn() {
 
-    float pr = (content.getLeft() * -1) * 100 / right_btn.getWidth();
+    float pr = content.getLeft() * -100f / right_btn.getWidth();
 
     if (pr <= 0) {
       pr = 0;
@@ -497,7 +486,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
 
         btn_animr = ObjectAnimator.ofFloat(left_btn, "RotationY", left_btn.getRotationY(), 90f);
         btn_animx =
-            ObjectAnimator.ofFloat(left_btn, "x", left_btn.getLeft(), left_btn.getWidth() / 2 * -1);
+            ObjectAnimator.ofFloat(left_btn, "x", left_btn.getLeft(), left_btn.getWidth() / -2f);
         content_animx = ObjectAnimator.ofFloat(content, "x", content.getLeft(), 0f);
       }
 
@@ -522,7 +511,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
         btn_animr = ObjectAnimator.ofFloat(right_btn, "RotationY", right_btn.getRotationY(), -90f);
         btn_animx =
             ObjectAnimator.ofFloat(
-                right_btn, "x", right_btn.getLeft(), getWidth() + right_btn.getWidth() / 2);
+                right_btn, "x", right_btn.getLeft(), getWidth() + right_btn.getWidth() / 2f);
         content_animx = ObjectAnimator.ofFloat(content, "x", content.getLeft(), 0f);
       }
     }
@@ -537,12 +526,12 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
           new Animator.AnimatorListener() {
 
             @Override
-            public void onAnimationStart(Animator animation) {
+            public void onAnimationStart(@NonNull Animator animation) {
               Anim = true;
             }
 
             @Override
-            public void onAnimationEnd(Animator animation) {
+            public void onAnimationEnd(@NonNull Animator animation) {
 
               content.setTranslationX(0);
               content.layout(
@@ -556,12 +545,12 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
             }
 
             @Override
-            public void onAnimationCancel(Animator animation) {
+            public void onAnimationCancel(@NonNull Animator animation) {
               onAnimationEnd(animation);
             }
 
             @Override
-            public void onAnimationRepeat(Animator animation) {}
+            public void onAnimationRepeat(@NonNull Animator animation) {}
           });
 
       as.start();
@@ -779,10 +768,10 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
 
     caption_text.setOnLongClickListener(
         v -> {
-          listener.onCaptionLongPress(channelBase.getRemoteId());
+          onCaptionLongPressed.onClick();
           return true;
         });
-    caption_text.setOnClickListener(v -> listener.onItemClick(channelBase.getRemoteId()));
+    caption_text.setOnClickListener(v -> onItemClick.onClick());
     caption_text.setClickable(false);
     caption_text.setLongClickable(true);
 
@@ -838,7 +827,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
     countDownTimer.start();
   }
 
-  private class AnimParams {
+  private static class AnimParams {
 
     public int content_left;
     public int content_right;

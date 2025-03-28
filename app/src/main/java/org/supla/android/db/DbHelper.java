@@ -21,6 +21,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import androidx.annotation.NonNull;
 import dagger.hilt.android.EntryPointAccessors;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -100,6 +101,7 @@ public class DbHelper extends BaseDbHelper {
     return sceneRepository;
   }
 
+  @NonNull
   @Override
   public String getDatabaseNameForLog() {
     return DATABASE_NAME;
@@ -113,10 +115,6 @@ public class DbHelper extends BaseDbHelper {
   @Override
   public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
     // Moved to Room (see DatabaseModule)
-  }
-
-  public Location getLocation(int locationId) {
-    return channelRepository.getLocation(locationId);
   }
 
   public boolean updateLocation(SuplaLocation suplaLocation) {
@@ -141,10 +139,6 @@ public class DbHelper extends BaseDbHelper {
 
   public boolean updateChannelGroup(SuplaChannelGroup suplaChannelGroup) {
     return channelRepository.updateChannelGroup(suplaChannelGroup);
-  }
-
-  public void updateChannelGroup(ChannelGroup channelGroup) {
-    channelRepository.updateChannelGroup(channelGroup);
   }
 
   public boolean updateChannelGroupRelation(SuplaChannelGroupRelation suplaChannelGroupRelation) {

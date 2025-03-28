@@ -20,7 +20,6 @@ package org.supla.android.ui.dialogs
 import android.app.AlertDialog
 import android.content.DialogInterface
 import org.supla.android.R
-import org.supla.android.SuplaApp
 import org.supla.android.core.networking.suplaclient.SuplaClientApi
 import org.supla.android.core.ui.BaseFragment
 import org.supla.android.lib.actions.ActionId
@@ -30,7 +29,7 @@ fun BaseFragment<*, *>.valveClosedManuallyDialog(channelId: Int, suplaClient: Su
   builder.setTitle(android.R.string.dialog_alert_title)
   builder.setMessage(R.string.valve_warning_manually_closed)
   builder.setPositiveButton(R.string.yes) { dialog: DialogInterface, _ ->
-    SuplaApp.Vibrate(context)
+    vibrationHelper.vibrate()
     suplaClient?.open(channelId, false, 1)
     dialog.cancel()
   }
@@ -43,7 +42,7 @@ fun BaseFragment<*, *>.valveFloodingDialog(channelId: Int, suplaClient: SuplaCli
   builder.setTitle(android.R.string.dialog_alert_title)
   builder.setMessage(R.string.valve_warning_flooding)
   builder.setPositiveButton(R.string.yes) { dialog: DialogInterface, _ ->
-    SuplaApp.Vibrate(context)
+    vibrationHelper.vibrate()
     suplaClient?.open(channelId, false, 1)
     dialog.cancel()
   }
@@ -60,7 +59,7 @@ fun BaseFragment<*, *>.valveMotorProblemDialog(channelId: Int, actionId: ActionI
     builder.setMessage(R.string.valve_warning_motor_problem_closing)
   }
   builder.setPositiveButton(R.string.yes) { dialog: DialogInterface, _ ->
-    SuplaApp.Vibrate(context)
+    vibrationHelper.vibrate()
     if (actionId == ActionId.OPEN) {
       suplaClient?.open(channelId, false, 1)
     } else {
@@ -78,7 +77,7 @@ fun BaseFragment<*, *>.exceededAmperageDialog(channelId: Int, suplaClient: Supla
   builder.setMessage(R.string.overcurrent_question)
   builder.setPositiveButton(R.string.yes) { dialog, _ ->
     dialog.dismiss()
-    SuplaApp.Vibrate(context)
+    vibrationHelper.vibrate()
     suplaClient?.open(channelId, false, 1)
   }
   builder.setNeutralButton(R.string.no) { dialog, _ -> dialog.cancel() }

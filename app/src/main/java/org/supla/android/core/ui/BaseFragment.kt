@@ -32,6 +32,7 @@ import org.supla.android.extensions.visibleIf
 import org.supla.android.lib.SuplaClientMessageHandler
 import org.supla.android.lib.SuplaClientMessageHandler.OnSuplaClientMessageListener
 import org.supla.android.lib.SuplaClientMsg
+import org.supla.android.tools.VibrationHelper
 import org.supla.android.ui.AppBar
 import org.supla.android.ui.LoadableContent
 import org.supla.android.ui.ToolbarItemsClickHandler
@@ -39,6 +40,7 @@ import org.supla.android.ui.ToolbarItemsController
 import org.supla.android.ui.ToolbarTitleController
 import org.supla.android.ui.ToolbarVisibilityController
 import java.io.Serializable
+import javax.inject.Inject
 
 abstract class BaseFragment<S : ViewState, E : ViewEvent>(@LayoutRes contentLayoutId: Int) : Fragment(contentLayoutId) {
 
@@ -51,6 +53,9 @@ abstract class BaseFragment<S : ViewState, E : ViewEvent>(@LayoutRes contentLayo
 
   protected val viewState: S
     get() = viewModel.getViewState().value
+
+  @Inject
+  lateinit var vibrationHelper: VibrationHelper
 
   @OptIn(FlowPreview::class)
   @CallSuper

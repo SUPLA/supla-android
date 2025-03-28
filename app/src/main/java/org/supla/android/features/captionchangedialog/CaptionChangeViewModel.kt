@@ -20,10 +20,11 @@ package org.supla.android.features.captionchangedialog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.R
+import org.supla.android.Trace
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.data.source.RoomProfileRepository
-import org.supla.android.lib.actions.SubjectType
+import org.supla.android.extensions.TAG
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.tools.VibrationHelper
 import org.supla.android.ui.dialogs.AuthorizationDialogState
@@ -55,15 +56,34 @@ class CaptionChangeViewModel @Inject constructor(
 ),
   CaptionChangeDialogScope {
 
-  fun showDialog(caption: String, remoteId: Int, profileId: Long) {
+  var finishedCallback: ((CaptionChangeUseCase.Type) -> Unit)? = null
+
+  fun showChannelDialog(remoteId: Int, profileId: Long, caption: String) {
+    showDialog(caption, remoteId, profileId, CaptionChangeUseCase.Type.CHANNEL)
+  }
+
+  fun showGroupDialog(remoteId: Int, profileId: Long, caption: String) {
+    showDialog(caption, remoteId, profileId, CaptionChangeUseCase.Type.GROUP)
+  }
+
+  fun showSceneDialog(remoteId: Int, profileId: Long, caption: String) {
+    showDialog(caption, remoteId, profileId, CaptionChangeUseCase.Type.SCENE)
+  }
+
+  fun showLocationDialog(remoteId: Int, profileId: Long, caption: String) {
+    showDialog(caption, remoteId, profileId, CaptionChangeUseCase.Type.LOCATION)
+  }
+
+  private fun showDialog(caption: String, remoteId: Int, profileId: Long, type: CaptionChangeUseCase.Type) {
     vibrationHelper.vibrate()
     updateState {
       it.copy(
+        remoteId = remoteId,
+        profileId = profileId,
+        type = type,
         viewState = CaptionChangeDialogState(
-          remoteId = remoteId,
-          profileId = profileId,
-          subjectType = SubjectType.CHANNEL,
-          caption = caption
+          caption = caption,
+          label = type.label
         )
       )
     }
@@ -92,22 +112,31 @@ class CaptionChangeViewModel @Inject constructor(
 
   override fun onCaptionChangeConfirmed() {
     updateState { it.copy(viewState = it.viewState?.copy(loading = true)) }
-    currentState().viewState?.let { state ->
-      captionChangeUseCase(state.caption, state.subjectType.asCaptionChangeType, state.remoteId, state.profileId)
-        .attachSilent()
-        .subscribeBy(
-          onComplete = { updateState { it.copy(viewState = null) } },
-          onError = {
-            updateState {
-              it.copy(
-                viewState = it.viewState?.copy(
-                  loading = false,
-                  error = LocalizedString.WithResource(R.string.caption_change_failed)
-                )
-              )
-            }
-          }
+    currentState().let { state ->
+      state.viewState?.let { viewState ->
+        captionChangeUseCase(viewState.caption, state.type, state.remoteId, state.profileId)
+          .attachSilent()
+          .subscribeBy(
+            onComplete = {
+              finishedCallback?.invoke(state.type)
+              updateState { it.copy(viewState = null) }
+            },
+            onError = this::showError
+          )
+      }
+    }
+  }
+
+  private fun showError(error: Throwable) {
+    Trace.d(TAG, "Could not change caption", error)
+
+    updateState {
+      it.copy(
+        viewState = it.viewState?.copy(
+          loading = false,
+          error = LocalizedString.WithResource(R.string.caption_change_failed)
         )
+      )
     }
   }
 }
@@ -117,13 +146,17 @@ data object CaptionChange : AuthorizationReason
 sealed class CaptionChangeViewEvent : ViewEvent
 
 data class CaptionChangeViewModelState(
+  val remoteId: Int = 0,
+  val profileId: Long = 0,
+  val type: CaptionChangeUseCase.Type = CaptionChangeUseCase.Type.CHANNEL,
   val viewState: CaptionChangeDialogState? = null,
   override val authorizationDialogState: AuthorizationDialogState? = null
 ) : AuthorizationModelState()
 
-private val SubjectType.asCaptionChangeType: CaptionChangeUseCase.Type
+private val CaptionChangeUseCase.Type.label: LocalizedString
   get() = when (this) {
-    SubjectType.CHANNEL -> CaptionChangeUseCase.Type.CHANNEL
-    SubjectType.GROUP -> CaptionChangeUseCase.Type.GROUP
-    SubjectType.SCENE -> CaptionChangeUseCase.Type.SCENE
+    CaptionChangeUseCase.Type.CHANNEL -> LocalizedString.WithResource(R.string.channel_name)
+    CaptionChangeUseCase.Type.LOCATION -> LocalizedString.WithResource(R.string.location_name)
+    CaptionChangeUseCase.Type.GROUP -> LocalizedString.WithResource(R.string.group_name)
+    CaptionChangeUseCase.Type.SCENE -> LocalizedString.WithResource(R.string.scene_name)
   }

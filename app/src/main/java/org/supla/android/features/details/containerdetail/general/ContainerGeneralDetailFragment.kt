@@ -64,7 +64,7 @@ class ContainerGeneralDetailFragment : BaseComposeFragment<ContainerGeneralDetai
       viewModel.View(
         state = modelState.viewState,
         showStateDialog = stateDialogViewModel::showDialog,
-        showCaptionChangeDialog = captionChangeViewModel::showDialog
+        showCaptionChangeDialog = captionChangeViewModel::showChannelDialog
       )
 
       stateDialogViewModel.View()

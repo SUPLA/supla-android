@@ -18,7 +18,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -40,7 +39,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.supla.android.BuildConfig;
-import org.supla.android.R;
 import org.supla.android.SuplaApp;
 import org.supla.android.Trace;
 import org.supla.android.core.networking.suplaclient.SuplaClientApi;
@@ -65,7 +63,6 @@ import org.supla.android.data.source.remote.FieldType;
 import org.supla.android.data.source.remote.SuplaChannelConfig;
 import org.supla.android.data.source.remote.SuplaDeviceConfig;
 import org.supla.android.db.AuthProfileItem;
-import org.supla.android.db.Channel;
 import org.supla.android.db.DbHelper;
 import org.supla.android.db.room.app.AppDatabase;
 import org.supla.android.db.room.measurements.MeasurementsDatabase;
@@ -521,59 +518,6 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     } finally {
       unlockClientPtr();
     }
-  }
-
-  public boolean turnOnOff(
-      Context context,
-      boolean turnOn,
-      int remoteId,
-      boolean group,
-      int channelFunc,
-      boolean vibrate) {
-    if ((channelFunc == SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH
-        || channelFunc == SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH
-        || channelFunc == SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER)) {
-      if (turnOn) {
-        DbHelper helper = DbHelper.getInstance(context);
-        if (helper == null) {
-          return false;
-        }
-        Channel channel = helper.getChannel(remoteId);
-        if (channel == null) {
-          return false;
-        }
-        if (!channel.getValue().hiValue() && channel.getValue().overcurrentRelayOff()) {
-          AlertDialog.Builder builder = new AlertDialog.Builder(context);
-          builder.setTitle(android.R.string.dialog_alert_title);
-          builder.setMessage(R.string.overcurrent_question);
-
-          builder.setPositiveButton(
-              R.string.yes,
-              (dialog, which) -> {
-                dialog.dismiss();
-
-                if (vibrate) {
-                  SuplaApp.Vibrate(context);
-                }
-                open(remoteId, group, 1);
-              });
-
-          builder.setNeutralButton(R.string.no, (dialog, id) -> dialog.cancel());
-
-          AlertDialog alert = builder.create();
-          alert.show();
-          return true;
-        }
-      }
-
-      if (vibrate) {
-        SuplaApp.Vibrate(context);
-      }
-      open(remoteId, group, turnOn ? 1 : 0);
-      return true;
-    }
-
-    return false;
   }
 
   public void superUserAuthorizationRequest(String email, String password) {

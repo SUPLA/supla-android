@@ -17,21 +17,17 @@ package org.supla.android.ui.lists
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import org.supla.android.Preferences
-import org.supla.android.SuplaApp
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.databinding.LiLocationItemBinding
-import org.supla.android.ui.dialogs.LocationCaptionEditor
 import kotlin.math.max
 
 abstract class BaseListAdapter<D>(
-  private val context: Context,
   private val preferences: Preferences
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -41,11 +37,12 @@ abstract class BaseListAdapter<D>(
 
   var movementFinishedCallback: (items: List<D>) -> Unit = { }
   var swappedElementsCallback: (firstItem: D?, secondItem: D?) -> Unit = { _, _ -> }
-  var reloadCallback: () -> Unit = { }
   var toggleLocationCallback: (location: LocationEntity, scrollDown: Boolean) -> Unit = { _, _ -> }
 
   var leftButtonClickCallback: (id: Int) -> Unit = { _ -> }
   var rightButtonClickCallback: (id: Int) -> Unit = { _ -> }
+  var captionLongPressCallback: (remoteId: Int, profileId: Long, caption: String) -> Unit = { _, _, _ -> }
+  var locationCaptionLongPressCallback: (remoteId: Int, profileId: Long, caption: String) -> Unit = { _, _, _ -> }
 
   private var movedStartPosition: Int? = null
   protected var movedItem: ListItem? = null
@@ -96,7 +93,10 @@ abstract class BaseListAdapter<D>(
           callback.closeWhenSwiped(withAnimation = false)
           toggleLocationCallback(location, it.isLocationOnBottom())
         }
-        holder.binding.container.setOnLongClickListener { changeLocationCaption(location.remoteId) }
+        holder.binding.container.setOnLongClickListener {
+          locationCaptionLongPressCallback(location.remoteId, location.profileId, location.caption)
+          return@setOnLongClickListener true
+        }
         holder.binding.tvSectionCaption.text = location.caption
         holder.binding.ivSectionCollapsed.visibility = if (isLocationCollapsed(location)) {
           RecyclerView.VISIBLE
@@ -170,15 +170,6 @@ abstract class BaseListAdapter<D>(
     movedStartPosition = null
   }
 
-  private fun changeLocationCaption(locationId: Int): Boolean {
-    SuplaApp.Vibrate(context)
-    val editor = LocationCaptionEditor(context)
-    editor.captionChangedListener = reloadCallback
-    editor.edit(locationId)
-
-    return true
-  }
-
   class LocationListItemViewHolder(val binding: LiLocationItemBinding) :
     RecyclerView.ViewHolder(binding.root)
 
@@ -198,4 +189,8 @@ abstract class BaseListAdapter<D>(
     val parentAsGroup = parent as? ViewGroup ?: return false
     return y + height >= parentAsGroup.height
   }
+}
+
+fun interface OnClick {
+  fun onClick()
 }

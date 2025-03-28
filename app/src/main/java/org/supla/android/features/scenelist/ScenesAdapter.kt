@@ -23,22 +23,22 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import dagger.hilt.android.qualifiers.ActivityContext
 import org.supla.android.Preferences
-import org.supla.android.SuplaApp
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.complex.SceneDataEntity
 import org.supla.android.databinding.LiSceneItemBinding
-import org.supla.android.ui.dialogs.SceneCaptionEditor
-import org.supla.android.ui.layouts.SceneLayout
+import org.supla.android.tools.VibrationHelper
 import org.supla.android.ui.lists.BaseListAdapter
 import org.supla.android.ui.lists.ListCallback
 import org.supla.android.ui.lists.ListItem
+import org.supla.android.ui.lists.OnClick
 import org.supla.android.usecases.location.CollapsedFlag
 import javax.inject.Inject
 
 class ScenesAdapter @Inject constructor(
   @ActivityContext private val context: Context,
+  private val vibrationHelper: VibrationHelper,
   preferences: Preferences
-) : BaseListAdapter<SceneDataEntity>(context, preferences), SceneLayout.Listener {
+) : BaseListAdapter<SceneDataEntity>(preferences) {
 
   override val callback = ListCallback(context, this).also {
     it.onMovedListener = { fromPos, toPos -> swapInternally(fromPos, toPos) }
@@ -78,10 +78,16 @@ class ScenesAdapter @Inject constructor(
       is SceneListItemViewHolder -> {
         val item = (items[position] as ListItem.SceneItem)
         holder.binding.sceneLayout.tag = item.sceneData.remoteId
-        holder.binding.sceneLayout.setSceneListener(this)
         holder.binding.sceneLayout.setScene(item.sceneData.sceneEntity)
         holder.binding.sceneLayout.setLocationCaption(item.sceneData.locationCaption)
         holder.binding.sceneLayout.setOnLongClickListener { onLongPress(holder) }
+        holder.binding.sceneLayout.onLeftButtonClick = OnClick { onLeftButtonClick(item.sceneData.sceneEntity.remoteId) }
+        holder.binding.sceneLayout.onRightButtonClick = OnClick { onRightButtonClick(item.sceneData.sceneEntity.remoteId) }
+        holder.binding.sceneLayout.onCaptionLongPressed = OnClick {
+          item.sceneData.sceneEntity.profileId?.toLongOrNull()?.let { profileId ->
+            captionLongPressCallback(item.sceneData.remoteId, profileId, item.sceneData.sceneEntity.caption)
+          }
+        }
       }
       else -> super.onBindViewHolder(holder, position)
     }
@@ -93,15 +99,8 @@ class ScenesAdapter @Inject constructor(
     return position.toLong()
   }
 
-  override fun onCaptionLongPress(sceneId: Int) {
-    SuplaApp.Vibrate(context)
-    val editor = SceneCaptionEditor(context)
-    editor.captionChangedListener = reloadCallback
-    editor.edit(sceneId)
-  }
-
   private fun onLongPress(viewHolder: ViewHolder): Boolean {
-    SuplaApp.Vibrate(context)
+    vibrationHelper.vibrate()
     callback.closeWhenSwiped()
     itemTouchHelper.startDrag(viewHolder)
 
