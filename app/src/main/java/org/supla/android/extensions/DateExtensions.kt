@@ -22,6 +22,7 @@ import org.supla.android.data.source.local.calendar.Hour
 import java.util.Calendar
 import java.util.Date
 import java.util.GregorianCalendar
+import java.util.TimeZone
 import kotlin.math.abs
 
 val Date.dayOfMonth: Int
@@ -52,6 +53,11 @@ val Date.minute: Int
   get() = Calendar.getInstance().let {
     it.time = this
     it.get(Calendar.MINUTE)
+  }
+
+val Date.gmt: Long
+  get() {
+    return time + TimeZone.getDefault().getOffset(time)
   }
 
 fun Date.dayStart(): Date = startOfDay(this).time

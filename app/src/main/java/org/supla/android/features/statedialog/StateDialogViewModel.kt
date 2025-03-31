@@ -194,9 +194,13 @@ class StateDialogViewModel @Inject constructor(
           title = channels[0].caption,
           online = channels[0].online,
           subtitle = (channels.size > 1).ifTrue { LocalizedString.WithResourceIntInt(R.string.state_dialog_index, 1, channels.size) },
+          loading = channels[0].online && channels[0].infoSupported,
           showArrows = channels.size > 1,
           showChangeLifespanButton = channels[0].showLifespanSettingsButton,
-          function = channels[0].function
+          function = channels[0].function,
+          values = mapOf(
+            StateDialogItem.CHANNEL_ID to LocalizedString.Constant("${channels[0].remoteId}")
+          )
         )
       )
     }
@@ -224,15 +228,21 @@ class StateDialogViewModel @Inject constructor(
 
     val idxToDisplay = idx + 1
     val count = channels?.size ?: 1
+    val loading = currentChannel?.let { it.online && it.infoSupported } ?: false
 
     updateState { state ->
       state.copy(
         viewState = state.viewState?.copy(
           title = currentChannel?.caption ?: LocalizedString.Empty,
           subtitle = LocalizedString.WithResourceIntInt(R.string.state_dialog_index, idxToDisplay, count),
-          loading = true,
+          loading = loading,
           online = currentChannel?.online ?: false,
-          function = currentChannel?.function
+          function = currentChannel?.function,
+          values = currentChannel?.let {
+            it.infoSupported.not().ifTrue {
+              mapOf(StateDialogItem.CHANNEL_ID to LocalizedString.Constant("${it.remoteId}"))
+            }
+          } ?: state.viewState.values
         )
       )
     }
@@ -275,6 +285,7 @@ class StateDialogViewModel @Inject constructor(
       function = getChannelDefaultCaptionUseCase(function),
       caption = getCaptionUseCase(shareable),
       showLifespanSettingsButton = showLifespanSettingsButton,
+      infoSupported = SuplaChannelFlag.CHANNEL_STATE.inside(flags),
       online = status.online
     )
 
