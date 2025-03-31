@@ -24,5 +24,6 @@ data class ChannelData(
   val function: LocalizedString,
   val caption: LocalizedString,
   val showLifespanSettingsButton: Boolean,
+  val infoSupported: Boolean,
   var online: Boolean
 )
