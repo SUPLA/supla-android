@@ -21,6 +21,7 @@ import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.Preferences
 import org.supla.android.core.BaseViewModelTest
+import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.local.entity.LocationEntity
@@ -76,6 +77,9 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
   private lateinit var preferences: Preferences
 
   @Mock
+  private lateinit var dateProvider: DateProvider
+
+  @Mock
   override lateinit var schedulers: SuplaSchedulers
 
   override val viewModel: GroupListViewModel by lazy {
@@ -88,6 +92,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
       channelRepository,
       loadActiveProfileUrlUseCase,
       updateEventsManager,
+      dateProvider,
       preferences,
       schedulers
     )
@@ -210,6 +215,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     every { groupData.status } returns SuplaChannelAvailabilityStatus.OFFLINE
 
     whenever(findGroupByRemoteIdUseCase(remoteId)).thenReturn(Maybe.just(groupData))
+    whenever(dateProvider.currentTimestamp()).thenReturn(500)
 
     // when
     viewModel.onListItemClick(remoteId)
@@ -234,6 +240,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     whenever(provideGroupDetailTypeUseCase(groupData)).thenReturn(detailType)
 
     whenever(findGroupByRemoteIdUseCase(remoteId)).thenReturn(Maybe.just(groupData))
+    whenever(dateProvider.currentTimestamp()).thenReturn(500)
 
     // when
     viewModel.onListItemClick(remoteId)
@@ -255,6 +262,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     every { groupData.function } returns groupFunction
 
     whenever(findGroupByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(groupData))
+    whenever(dateProvider.currentTimestamp()).thenReturn(500)
 
     // when
     viewModel.onListItemClick(remoteId)
@@ -279,6 +287,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     whenever(provideGroupDetailTypeUseCase(groupData)).thenReturn(detailType)
 
     whenever(findGroupByRemoteIdUseCase(remoteId)).thenReturn(Maybe.just(groupData))
+    whenever(dateProvider.currentTimestamp()).thenReturn(500)
 
     // when
     viewModel.onListItemClick(remoteId)
@@ -384,6 +393,18 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     verify(loadActiveProfileUrlUseCase).invoke()
     verifyNoMoreInteractions(loadActiveProfileUrlUseCase)
     verifyNoInteractionsExcept(loadActiveProfileUrlUseCase)
+  }
+
+  @Test
+  fun `should not allow to process event to fast`() {
+    // given
+    whenever(dateProvider.currentTimestamp()).thenReturn(10)
+
+    // when
+    viewModel.onListItemClick(1)
+
+    // then
+    verifyNoInteractions(findGroupByRemoteIdUseCase)
   }
 
   private fun verifyNoInteractionsExcept(vararg except: Any) {

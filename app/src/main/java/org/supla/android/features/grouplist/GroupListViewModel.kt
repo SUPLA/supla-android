@@ -24,6 +24,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.Preferences
 import org.supla.android.R
+import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.model.general.ChannelDataBase
@@ -62,10 +63,12 @@ class GroupListViewModel @Inject constructor(
   private val channelRepository: ChannelRepository,
   loadActiveProfileUrlUseCase: LoadActiveProfileUrlUseCase,
   updateEventsManager: UpdateEventsManager,
+  dateProvider: DateProvider,
   preferences: Preferences,
   schedulers: SuplaSchedulers
 ) : BaseListViewModel<GroupListViewState, GroupListViewEvent>(
   preferences,
+  dateProvider,
   schedulers,
   GroupListViewState(),
   loadActiveProfileUrlUseCase
@@ -130,13 +133,15 @@ class GroupListViewModel @Inject constructor(
   }
 
   fun onListItemClick(remoteId: Int) {
-    findGroupByRemoteIdUseCase(remoteId)
-      .attach()
-      .subscribeBy(
-        onSuccess = { openDetailsByChannelFunction(it) },
-        onError = defaultErrorHandler("onListItemClick($remoteId)")
-      )
-      .disposeBySelf()
+    if (isEventAllowed()) {
+      findGroupByRemoteIdUseCase(remoteId)
+        .attach()
+        .subscribeBy(
+          onSuccess = { openDetailsByChannelFunction(it) },
+          onError = defaultErrorHandler("onListItemClick($remoteId)")
+        )
+        .disposeBySelf()
+    }
   }
 
   fun onAddGroupClick() {

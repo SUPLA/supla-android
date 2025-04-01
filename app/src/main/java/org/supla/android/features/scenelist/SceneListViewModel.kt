@@ -21,6 +21,7 @@ import android.net.Uri
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.Preferences
+import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.source.local.entity.LocationEntity
@@ -45,9 +46,11 @@ class SceneListViewModel @Inject constructor(
   loadActiveProfileUrlUseCase: LoadActiveProfileUrlUseCase,
   updateEventsManager: UpdateEventsManager,
   schedulers: SuplaSchedulers,
+  dateProvider: DateProvider,
   preferences: Preferences
 ) : BaseListViewModel<SceneListViewState, SceneListViewEvent>(
   preferences,
+  dateProvider,
   schedulers,
   SceneListViewState(),
   loadActiveProfileUrlUseCase
