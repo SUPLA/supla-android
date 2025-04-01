@@ -80,6 +80,9 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
     binding.channelsEmptyListButton.setOnClickListener {
       navigator.navigateToAddWizard()
     }
+    binding.channelsEmptyListDevicesButton.setOnClickListener {
+      navigator.navigateTo(R.id.device_catalog_fragment)
+    }
 
     binding.composeView.setContent {
       SuplaTheme {
@@ -129,9 +132,11 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
   override fun handleViewState(state: ChannelListViewState) {
     state.channels?.let { adapter.setItems(it) }
 
-    binding.channelsEmptyListIcon.visibleIf(state.channels?.isEmpty() == true)
-    binding.channelsEmptyListLabel.visibleIf(state.channels?.isEmpty() == true)
-    binding.channelsEmptyListButton.visibleIf(state.channels?.isEmpty() == true)
+    val empty = state.channels?.isEmpty() == true
+    binding.channelsEmptyListIcon.visibleIf(empty)
+    binding.channelsEmptyListLabel.visibleIf(empty)
+    binding.channelsEmptyListButton.visibleIf(empty)
+    binding.channelsEmptyListDevicesButton.visibleIf(empty)
 
     if (scrollDownOnReload) {
       binding.channelsList.smoothScrollBy(0, 50.toPx())

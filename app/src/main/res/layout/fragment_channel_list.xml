@@ -53,13 +53,22 @@
       app:layout_constraintBottom_toTopOf="@id/channels_vertical_center_guideline" />
 
     <androidx.appcompat.widget.AppCompatButton
+      android:id="@+id/channels_empty_list_devices_button"
+      style="@style/AppTheme.Button.Outlined"
+      android:layout_marginTop="@dimen/distance_small"
+      android:text="@string/menu_device_catalog"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/channels_vertical_center_guideline" />
+
+    <androidx.appcompat.widget.AppCompatButton
       android:id="@+id/channels_empty_list_button"
       style="@style/AppTheme.Button.Outlined"
       android:layout_marginTop="@dimen/distance_small"
       android:text="@string/add_device"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@id/channels_vertical_center_guideline" />
+      app:layout_constraintTop_toBottomOf="@id/channels_empty_list_devices_button" />
 
   </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
