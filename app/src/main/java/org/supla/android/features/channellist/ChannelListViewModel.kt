@@ -23,6 +23,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.Preferences
 import org.supla.android.R
+import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.model.general.ChannelDataBase
@@ -78,10 +79,12 @@ class ChannelListViewModel @Inject constructor(
   private val channelActionUseCase: ChannelActionUseCase,
   private val channelRepository: ChannelRepository,
   updateEventsManager: UpdateEventsManager,
+  dateProvider: DateProvider,
   preferences: Preferences,
   schedulers: SuplaSchedulers
 ) : BaseListViewModel<ChannelListViewState, ChannelListViewEvent>(
   preferences,
+  dateProvider,
   schedulers,
   ChannelListViewState()
 ) {
@@ -151,13 +154,15 @@ class ChannelListViewModel @Inject constructor(
   }
 
   fun onListItemClick(remoteId: Int) {
-    readChannelWithChildrenUseCase(remoteId)
-      .attach()
-      .subscribeBy(
-        onSuccess = { openDetailsByChannelFunction(it) },
-        onError = defaultErrorHandler("onListItemClick($remoteId)")
-      )
-      .disposeBySelf()
+    if (isEventAllowed()) {
+      readChannelWithChildrenUseCase(remoteId)
+        .attach()
+        .subscribeBy(
+          onSuccess = { openDetailsByChannelFunction(it) },
+          onError = defaultErrorHandler("onListItemClick($remoteId)")
+        )
+        .disposeBySelf()
+    }
   }
 
   override fun onSuplaMessage(message: SuplaClientMsg) {
