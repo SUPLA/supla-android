@@ -19,6 +19,7 @@ import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.Preferences
 import org.supla.android.core.BaseViewModelTest
+import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.complex.SceneDataEntity
 import org.supla.android.events.UpdateEventsManager
@@ -53,6 +54,9 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
   private lateinit var preferences: Preferences
 
   @Mock
+  private lateinit var dateProvider: DateProvider
+
+  @Mock
   override lateinit var schedulers: SuplaSchedulers
 
   override val viewModel: SceneListViewModel by lazy {
@@ -63,6 +67,7 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
       loadActiveProfileUrlUseCase,
       updateEventsManager,
       schedulers,
+      dateProvider,
       preferences
     )
   }

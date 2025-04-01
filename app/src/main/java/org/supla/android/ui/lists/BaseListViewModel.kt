@@ -23,6 +23,7 @@ import androidx.annotation.VisibleForTesting
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.Preferences
+import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
@@ -37,12 +38,17 @@ import org.supla.android.usecases.profile.LoadActiveProfileUrlUseCase
 import org.supla.core.shared.data.model.channel.ChannelRelationType
 import org.supla.core.shared.data.model.general.SuplaFunction
 
+private const val CLICK_EVENT_DELAY_MS = 250
+
 abstract class BaseListViewModel<S : ViewState, E : ViewEvent>(
   private val preferences: Preferences,
+  private val dateProvider: DateProvider,
   schedulers: SuplaSchedulers,
   defaultState: S,
   private val loadActiveProfileUrlUseCase: LoadActiveProfileUrlUseCase? = null,
 ) : BaseViewModel<S, E>(defaultState, schedulers) {
+
+  protected var lastItemOpenTime: Long = 0
 
   private val preferencesChangeListener = OnSharedPreferenceChangeListener { _, key ->
     if (key.equals(Preferences.pref_channel_height)) {
@@ -75,6 +81,16 @@ abstract class BaseListViewModel<S : ViewState, E : ViewEvent>(
         onNext = { reloadList() }
       )
       .disposeBySelf()
+  }
+
+  protected fun isEventAllowed(): Boolean {
+    val currentTimestamp = dateProvider.currentTimestamp()
+    if (currentTimestamp - lastItemOpenTime < CLICK_EVENT_DELAY_MS) {
+      // Skip opening details when fast clicking...
+      return false
+    }
+    lastItemOpenTime = currentTimestamp
+    return true
   }
 
   protected fun isAvailableInOffline(channel: ChannelDataBase, children: List<ChannelChildEntity>?) =
