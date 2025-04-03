@@ -25,7 +25,9 @@ import org.supla.android.data.source.local.dao.measurements.ImpulseCounterLogDao
 import org.supla.android.data.source.local.entity.measurements.ImpulseCounterLogEntity
 import org.supla.android.data.source.remote.rest.SuplaCloudService
 import org.supla.android.data.source.remote.rest.channel.ImpulseCounterMeasurement
+import org.supla.android.extensions.gmt
 import org.supla.android.features.measurementsdownload.workers.BaseDownloadLogWorker
+import org.supla.android.usecases.channel.RemoveHiddenChannelsUseCase
 import org.supla.android.usecases.developerinfo.CountProvider
 import retrofit2.Response
 import java.util.Date
@@ -35,10 +37,12 @@ import javax.inject.Singleton
 @Singleton
 class ImpulseCounterLogRepository @Inject constructor(
   private val impulseCounterLogDao: ImpulseCounterLogDao
-) : BaseMeasurementRepository<ImpulseCounterMeasurement, ImpulseCounterLogEntity>(impulseCounterLogDao), CountProvider {
+) : BaseMeasurementRepository<ImpulseCounterMeasurement, ImpulseCounterLogEntity>(impulseCounterLogDao),
+  CountProvider,
+  RemoveHiddenChannelsUseCase.Deletable {
 
   fun findMeasurements(remoteId: Int, profileId: Long, startDate: Date, endDate: Date): Observable<List<ImpulseCounterLogEntity>> =
-    impulseCounterLogDao.findMeasurements(remoteId, profileId, startDate.time, endDate.time)
+    impulseCounterLogDao.findMeasurements(remoteId, profileId, startDate.gmt, endDate.gmt)
 
   override fun getInitialMeasurements(cloudService: SuplaCloudService, remoteId: Int): Response<List<ImpulseCounterMeasurement>> =
     cloudService.getInitialImpulseCounterMeasurements(remoteId).execute()
@@ -76,4 +80,6 @@ class ImpulseCounterLogRepository @Inject constructor(
     ImpulseCounterLogEntity.create(entry = entry, groupingString = groupingString, channelId = remoteId, profileId = profileId)
 
   override fun count(): Observable<Int> = impulseCounterLogDao.count()
+
+  override suspend fun deleteKtx(remoteId: Int, profileId: Long) = impulseCounterLogDao.deleteKtx(remoteId, profileId)
 }

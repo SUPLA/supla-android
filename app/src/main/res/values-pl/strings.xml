@@ -359,7 +359,7 @@
   <string name="wifi_rssi">WiFi RSSI</string>
   <string name="wifi_signal_strength">Siła sygnału WiFi</string>
   <string name="bridge_node_online">Węzeł mostu - online</string>
-  <string name="bridge_signal_strength">Węzeł mostu - siła sygnału</string>
+  <string name="bridge_signal_strength">Siła sygnału radia</string>
   <string name="uptime">Czas pracy</string>
   <string name="connection_time">Czas połączenia</string>
   <string name="battery_health">Żywotność baterii</string>
@@ -759,6 +759,12 @@
   <string name="container_alarm_level">Poziom alarmowy!</string>
   <string name="container_invalid_sensor_state">Nieprawidłowy stan czujników</string>
   <string name="container_sound_alarm">Alarm dźwiękowy aktywny</string>
+  <string name="channel_not_available">Kanał nie jest dostępny ze względu na konfigurację. Zalecamy ukrycie kanału, aby nie był widoczny w aplikacji.</string>
+  <string name="channel_status_awaiting">Tego urządzenia nie można zdalnie wybudzić. Oczekujemy na komunikację ze strony urządzenia…</string>
+  <string name="channel_status_updating">Trwa aktualizacja oprogramowania…</string>
+  <string name="thermostat_calibration_error">Błąd kalibracji</string>
+  <string name="state_dialog_index">(%1$d z %2$d)</string>
+  <string name="state_switch_cycle_count">Przełączenia przekaźnika</string>
 
   <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
     <item quantity="one">włączone</item>

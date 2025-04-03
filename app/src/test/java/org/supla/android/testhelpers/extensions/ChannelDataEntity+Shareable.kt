@@ -22,20 +22,22 @@ import io.mockk.mockk
 import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
+import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 
 fun ChannelDataEntity.mockShareable(
   remoteId: Int = 1,
   caption: String = "",
   extendedValue: ChannelExtendedValueEntity? = null,
-  isOnline: Boolean = true,
+  status: SuplaChannelAvailabilityStatus = SuplaChannelAvailabilityStatus.ONLINE,
   value: ChannelValueEntity = mockk {
     every { getValueAsByteArray() } returns byteArrayOf()
+    every { this@mockk.status } returns status
   }
 ) {
   every { this@mockShareable.remoteId } returns remoteId
   every { this@mockShareable.caption } returns caption
   every { this@mockShareable.channelExtendedValueEntity } returns extendedValue
-  every { this@mockShareable.isOnline() } returns isOnline
+  every { this@mockShareable.status } returns status
   every { this@mockShareable.channelValueEntity } returns value
   every { this@mockShareable.stateEntity } returns null
 }

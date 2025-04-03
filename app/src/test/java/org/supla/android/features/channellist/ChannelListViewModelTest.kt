@@ -45,6 +45,7 @@ import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
+import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.features.details.detailbase.standarddetail.DetailPage
@@ -102,13 +103,13 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
 
   override val viewModel: ChannelListViewModel by lazy {
     ChannelListViewModel(
-      channelRepository,
       createProfileChannelsListUseCase,
-      channelActionUseCase,
-      toggleLocationUseCase,
       provideDetailTypeUseCase,
-      readChannelByRemoteIdUseCase,
       readChannelWithChildrenUseCase,
+      readChannelByRemoteIdUseCase,
+      toggleLocationUseCase,
+      channelActionUseCase,
+      channelRepository,
       updateEventsManager,
       preferences,
       schedulers
@@ -296,7 +297,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     val deviceId = 222
     val function = SuplaFunction.HVAC_THERMOSTAT
     val pages = emptyList<DetailPage>()
-    val channel = mockChannelData(remoteId, function, deviceId, true)
+    val channel = mockChannelData(remoteId, function, deviceId, SuplaChannelAvailabilityStatus.ONLINE)
     whenever(readChannelWithChildrenUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
 
     val thermostatDetailType = ThermostatDetailType(pages)
@@ -346,7 +347,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     val deviceId = 222
     val function = SuplaFunction.GENERAL_PURPOSE_MEASUREMENT
     val pages = emptyList<DetailPage>()
-    val channel = mockChannelData(remoteId, function, deviceId, true)
+    val channel = mockChannelData(remoteId, function, deviceId, SuplaChannelAvailabilityStatus.ONLINE)
     whenever(readChannelWithChildrenUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
 
     val gpmDetailType = GpmDetailType(pages)
@@ -396,7 +397,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     val deviceId = 222
     val function = SuplaFunction.GENERAL_PURPOSE_METER
     val pages = emptyList<DetailPage>()
-    val channel = mockChannelData(remoteId, function, deviceId, true)
+    val channel = mockChannelData(remoteId, function, deviceId, SuplaChannelAvailabilityStatus.ONLINE)
     whenever(readChannelWithChildrenUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
 
     val gpmDetailType = GpmDetailType(pages)
@@ -446,7 +447,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     val deviceId = 222
     val function = SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER
     val pages = emptyList<DetailPage>()
-    val channel = mockChannelData(remoteId, function, deviceId, true)
+    val channel = mockChannelData(remoteId, function, deviceId, SuplaChannelAvailabilityStatus.ONLINE)
     whenever(readChannelWithChildrenUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
 
     val rollerShutterDetail = WindowDetailType(pages)
@@ -471,7 +472,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     val deviceId = 222
     val function = SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER
     val pages = emptyList<DetailPage>()
-    val channel = mockChannelData(remoteId, function, deviceId, false)
+    val channel = mockChannelData(remoteId, function, deviceId)
     whenever(readChannelWithChildrenUseCase.invoke(remoteId)).thenReturn(Maybe.just(channel))
 
     val rollerShutterDetail = WindowDetailType(pages)
@@ -587,7 +588,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     remoteId: Int,
     function: SuplaFunction,
     deviceId: Int? = null,
-    online: Boolean = false,
+    status: SuplaChannelAvailabilityStatus = SuplaChannelAvailabilityStatus.OFFLINE,
     configEntity: ChannelConfigEntity? = null,
     subValueType: Short? = null
   ): ChannelWithChildren {
@@ -603,7 +604,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
       every { this@mockk.channelEntity } returns channelEntity
       every { this@mockk.channelValueEntity } returns channelValueEntity
       every { this@mockk.configEntity } returns configEntity
-      every { isOnline() } returns online
+      every { this@mockk.status } returns status
     }
 
     return ChannelWithChildren(channel, emptyList())

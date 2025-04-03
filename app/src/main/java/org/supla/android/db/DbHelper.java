@@ -21,12 +21,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import androidx.annotation.NonNull;
 import dagger.hilt.android.EntryPointAccessors;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import org.supla.android.core.infrastructure.DateProvider;
 import org.supla.android.data.source.ChannelRepository;
 import org.supla.android.data.source.ColorListRepository;
 import org.supla.android.data.source.DefaultChannelRepository;
@@ -63,8 +63,7 @@ public class DbHelper extends BaseDbHelper {
   private DbHelper(Context context, ProfileIdProvider profileIdProvider) {
     super(context, DATABASE_NAME, null, DATABASE_VERSION, profileIdProvider);
     this.channelRepository =
-        new DefaultChannelRepository(
-            new ChannelDao(this), new LocationDao(this), new DateProvider());
+        new DefaultChannelRepository(new ChannelDao(this), new LocationDao(this));
     this.colorListRepository = new DefaultColorListRepository(new ColorListDao(this));
     this.userIconRepository =
         new DefaultUserIconRepository(
@@ -100,6 +99,7 @@ public class DbHelper extends BaseDbHelper {
     return sceneRepository;
   }
 
+  @NonNull
   @Override
   public String getDatabaseNameForLog() {
     return DATABASE_NAME;
@@ -115,16 +115,8 @@ public class DbHelper extends BaseDbHelper {
     // Moved to Room (see DatabaseModule)
   }
 
-  public Location getLocation(int locationId) {
-    return channelRepository.getLocation(locationId);
-  }
-
   public boolean updateLocation(SuplaLocation suplaLocation) {
     return channelRepository.updateLocation(suplaLocation);
-  }
-
-  public void updateLocation(Location location) {
-    channelRepository.updateLocation(location);
   }
 
   public Channel getChannel(int channelId) {
@@ -135,16 +127,8 @@ public class DbHelper extends BaseDbHelper {
     return channelRepository.getChannelGroup(groupId);
   }
 
-  public void updateChannel(Channel channel) {
-    channelRepository.updateChannel(channel);
-  }
-
   public boolean updateChannelGroup(SuplaChannelGroup suplaChannelGroup) {
     return channelRepository.updateChannelGroup(suplaChannelGroup);
-  }
-
-  public void updateChannelGroup(ChannelGroup channelGroup) {
-    channelRepository.updateChannelGroup(channelGroup);
   }
 
   public boolean updateChannelGroupRelation(SuplaChannelGroupRelation suplaChannelGroupRelation) {

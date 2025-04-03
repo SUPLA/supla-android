@@ -23,8 +23,6 @@ class MainViewModel @Inject constructor(
     }
 
   fun getBottomMenuVisible() = preferences.isShowBottomMenu
-
-  fun getBottomLabelVisible() = preferences.isShowBottomLabel
 }
 
 sealed class MainViewEvent : ViewEvent

@@ -1,4 +1,4 @@
-package org.supla.android.data.source.remote.channel
+package org.supla.android.data.source
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,10 +17,14 @@ package org.supla.android.data.source.remote.channel
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-enum class SuplaChannelAvailabilityStatus(val rawValue: Int) {
-  ONLINE(1),
-  OFFLINE(0),
-  ONLINE_BUT_NOT_AVAILABLE(2),
-  OFFLINE_REMOTE_WAKEUP_NOT_SUPPORTED(3),
-  FIRMWARE_UPDATE_ONGOING(4)
+import org.supla.android.data.source.local.dao.ColorDao
+import org.supla.android.usecases.channel.RemoveHiddenChannelsUseCase
+import javax.inject.Inject
+import javax.inject.Singleton
+
+@Singleton
+class RoomColorListRepository @Inject constructor(
+  private val colorListDao: ColorDao
+) : RemoveHiddenChannelsUseCase.Deletable {
+  override suspend fun deleteKtx(remoteId: Int, profileId: Long) = colorListDao.deleteKtx(remoteId, profileId)
 }

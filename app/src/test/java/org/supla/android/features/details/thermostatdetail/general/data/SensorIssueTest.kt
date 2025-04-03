@@ -24,6 +24,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
+import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.core.shared.data.model.function.thermostat.SuplaThermostatFlag
@@ -37,7 +38,7 @@ class SensorIssueTest {
   fun `should not create issue when no flag set`() {
     // given
     val value: ThermostatValue = mockk {
-      every { online } returns true
+      every { status } returns SuplaChannelAvailabilityStatus.ONLINE
       every { state } returns ThermostatState(0)
       every { mode } returns SuplaHvacMode.OFF
       every { setpointTemperatureHeat } returns 10f
@@ -58,7 +59,7 @@ class SensorIssueTest {
   fun `should create issue`() {
     // given
     val value: ThermostatValue = mockk {
-      every { online } returns true
+      every { status } returns SuplaChannelAvailabilityStatus.ONLINE
       every { state } returns ThermostatState(0)
       every { mode } returns SuplaHvacMode.OFF
       every { setpointTemperatureHeat } returns 10f

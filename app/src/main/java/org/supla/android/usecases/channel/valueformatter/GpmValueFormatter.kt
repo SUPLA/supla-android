@@ -33,6 +33,7 @@ class GpmValueFormatter(
     minimumFractionDigits = config?.valuePrecision ?: 2
     maximumFractionDigits = config?.valuePrecision ?: 2
   }
+  private val labelFormatter = DecimalFormat()
 
   override fun handle(function: Int): Boolean =
     function == SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT ||
@@ -48,6 +49,21 @@ class GpmValueFormatter(
       "$beforeValue${valueFormatter.format(doubleValue)}$afterValue"
     } else {
       valueFormatter.format(doubleValue)
+    }
+  }
+
+  override fun formatChartLabel(value: Any, precision: Int, withUnit: Boolean): String {
+    val (doubleValue) = guardLet(value as? Double) { return ValuesFormatter.NO_VALUE_TEXT }
+    if (doubleValue.isNaN()) {
+      return ValuesFormatter.NO_VALUE_TEXT
+    }
+    labelFormatter.minimumFractionDigits = precision
+    labelFormatter.maximumFractionDigits = precision
+
+    return if (withUnit) {
+      "$beforeValue${labelFormatter.format(doubleValue)}$afterValue"
+    } else {
+      labelFormatter.format(doubleValue)
     }
   }
 }

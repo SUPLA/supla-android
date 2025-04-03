@@ -1,4 +1,4 @@
-package org.supla.android.ui.dialogs.state
+package org.supla.android.features.statedialog
 /*
 Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -36,6 +36,7 @@ enum class StateDialogItem(val captionResource: Int) {
   CONNECTION_TIME(R.string.connection_time),
   BATTERY_HEALTH(R.string.battery_health),
   CONNECTION_RESET(R.string.connection_reset_cause),
+  SWITCH_CYCLE_COUNT(R.string.state_switch_cycle_count),
   LIGHT_SOURCE_LIFESPAN(R.string.light_source_lifespan),
   LIGHT_SOURCE_OPERATING_TIME(R.string.light_source_operatingtime);
 
@@ -55,6 +56,8 @@ enum class StateDialogItem(val captionResource: Int) {
       CONNECTION_TIME -> { state -> state.connectionUptimeString }
       BATTERY_HEALTH -> { state -> state.batteryHealthString?.let { LocalizedString.Constant(it) } }
       CONNECTION_RESET -> { state -> state.lastConnectionResetCauseString }
-      else -> { _ -> null }
+      SWITCH_CYCLE_COUNT -> { state -> state.switchCycleCountString?.let { LocalizedString.Constant(it) } }
+      LIGHT_SOURCE_LIFESPAN -> { state -> state.lightSourceLifespanString?.let { LocalizedString.Constant(it) } }
+      LIGHT_SOURCE_OPERATING_TIME -> { state -> state.lightSourceOperatingTimeString?.let { LocalizedString.Constant(it) } }
     }
 }

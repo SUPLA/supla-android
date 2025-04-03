@@ -371,7 +371,7 @@
   <string name="wifi_rssi">WiFi RSSI</string>
   <string name="wifi_signal_strength">Wifi signal strength</string>
   <string name="bridge_node_online">Bridge node - online</string>
-  <string name="bridge_signal_strength">Bridge - signal strength</string>
+  <string name="bridge_signal_strength">Radio signal strength</string>
   <string name="uptime">Uptime</string>
   <string name="connection_time">Connection time</string>
   <string name="battery_health">Battery health</string>
@@ -784,6 +784,12 @@
   <string name="container_invalid_sensor_state" translatable="false">Invalid sensor state</string>
   <string name="container_sound_alarm" translatable="false">Sound alarm active</string>
   <string name="container_caption" translatable="false">%1$s (%2$d%%)</string>
+  <string name="channel_not_available" translatable="false">The channel is not available due to the configuration. We recommend hiding the channel so it is not visible in the app.</string>
+  <string name="channel_status_awaiting" translatable="false">This device cannot be remotely awakened. We are awaiting communication from the device…</string>
+  <string name="channel_status_updating" translatable="false">Software update in progress…</string>
+  <string name="thermostat_calibration_error" translatable="false">Calibration error</string>
+  <string name="state_dialog_index" translatable="false">(%1$d of %2$d)</string>
+  <string name="state_switch_cycle_count" translatable="false">Switch cycles</string>
 
   <plurals name="details_timer_info_on" translatable="false">
     <item quantity="other">on</item>

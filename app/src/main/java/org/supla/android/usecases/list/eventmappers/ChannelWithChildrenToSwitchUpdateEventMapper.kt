@@ -54,7 +54,7 @@ class ChannelWithChildrenToSwitchUpdateEventMapper @Inject constructor(
   private fun toListItemData(channelWithChildren: ChannelWithChildren): SlideableListItemData.Default {
     val channelData = channelWithChildren.channel
     return SlideableListItemData.Default(
-      onlineState = channelData.channelValueEntity.onlineState,
+      onlineState = channelWithChildren.onlineState,
       title = getCaptionUseCase(channelData.shareable),
       icon = getChannelIconUseCase.invoke(channelData),
       value = getChannelValueStringUseCase.valueOrNull(channelWithChildren),

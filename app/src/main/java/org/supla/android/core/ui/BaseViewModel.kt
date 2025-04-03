@@ -94,6 +94,8 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
   }
 
   open fun onViewCreated() {}
+  open fun onStart() {}
+  open fun onStop() {}
 
   fun Disposable.disposeBySelf() {
     compositeDisposable.add(this)
@@ -109,6 +111,17 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
         .attachSilent()
         .subscribeBy(
           onComplete = onComplete,
+          onError = onError
+        )
+    )
+  }
+
+  fun <T : Any> subscribe(maybe: Maybe<T>, onSuccess: (T) -> Unit = {}, onError: (Throwable) -> Unit = {}) {
+    compositeDisposable.add(
+      maybe
+        .attach()
+        .subscribeBy(
+          onSuccess = onSuccess,
           onError = onError
         )
     )

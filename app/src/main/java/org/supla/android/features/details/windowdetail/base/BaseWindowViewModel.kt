@@ -278,7 +278,7 @@ abstract class BaseWindowViewModel<S : BaseWindowViewModelState>(
       stateCopy(state, remoteId = channel.remoteId) {
         it.copy(
           issues = createIssues(value.flags),
-          enabled = value.online,
+          enabled = value.status.online,
           positionPresentation = getPositionPresentation(),
           positionUnknown = value.hasValidPosition().not(),
           calibrating = value.flags.contains(SuplaShadingSystemFlag.CALIBRATION_IN_PROGRESS),
@@ -296,7 +296,7 @@ abstract class BaseWindowViewModel<S : BaseWindowViewModelState>(
     customHandler(
       stateCopy(state, remoteId = group.remoteId) {
         it.copy(
-          enabled = group.isOnline(),
+          enabled = group.status.online,
           positionPresentation = getPositionPresentation(),
           calibrating = false,
           calibrationPossible = false,

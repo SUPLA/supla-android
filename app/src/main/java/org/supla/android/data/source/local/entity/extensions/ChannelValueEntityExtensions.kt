@@ -22,4 +22,4 @@ import org.supla.android.ui.lists.ListOnlineState
 import org.supla.android.ui.lists.onlineState
 
 val ChannelValueEntity.onlineState: ListOnlineState
-  get() = online.onlineState
+  get() = status.onlineState

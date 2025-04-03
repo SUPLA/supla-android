@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import org.supla.android.data.source.local.entity.ChannelEntity;
-import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity;
 import org.supla.android.data.source.local.entity.ChannelGroupEntity;
 import org.supla.android.data.source.local.entity.ChannelGroupRelationEntity;
 import org.supla.android.data.source.local.entity.ChannelValueEntity;
@@ -36,10 +35,8 @@ import org.supla.android.data.source.local.entity.LocationEntity;
 import org.supla.android.data.source.local.entity.UserIconEntity;
 import org.supla.android.data.source.local.view.ChannelView;
 import org.supla.android.db.Channel;
-import org.supla.android.db.ChannelExtendedValue;
 import org.supla.android.db.ChannelGroup;
 import org.supla.android.db.ChannelGroupRelation;
-import org.supla.android.db.ChannelValue;
 import org.supla.android.db.Location;
 import org.supla.android.lib.SuplaConst;
 
@@ -99,64 +96,6 @@ public class ChannelDao extends BaseDao {
         key(ChannelGroupRelationEntity.COLUMN_GROUP_ID, groupId),
         key(ChannelGroupRelationEntity.COLUMN_CHANNEL_ID, channelId),
         key(ChannelGroupRelationEntity.COLUMN_PROFILE_ID, getCachedProfileId()));
-  }
-
-  public ChannelExtendedValue getChannelExtendedValue(int channelId) {
-    String[] projection = {
-      ChannelExtendedValueEntity.COLUMN_ID,
-      ChannelExtendedValueEntity.COLUMN_CHANNEL_ID,
-      ChannelExtendedValueEntity.COLUMN_VALUE,
-      ChannelExtendedValueEntity.COLUMN_PROFILE_ID,
-      ChannelExtendedValueEntity.COLUMN_TIMER_START_TIME
-    };
-
-    return getItem(
-        ChannelExtendedValue::new,
-        projection,
-        ChannelExtendedValueEntity.TABLE_NAME,
-        key(ChannelExtendedValueEntity.COLUMN_CHANNEL_ID, channelId),
-        key(ChannelValueEntity.COLUMN_PROFILE_ID, getCachedProfileId()));
-  }
-
-  public void insert(Channel channel) {
-    if (channel.getProfileId() == -1) {
-      channel.setProfileId(getCachedProfileId());
-    }
-    insert(channel, ChannelEntity.TABLE_NAME);
-  }
-
-  public void update(Channel channel) {
-    update(
-        channel,
-        ChannelEntity.TABLE_NAME,
-        key(ChannelEntity.COLUMN_ID, channel.getId()),
-        key(ChannelEntity.COLUMN_PROFILE_ID, channel.getProfileId()));
-  }
-
-  public void insert(ChannelValue channelValue) {
-    channelValue.setProfileId(getCachedProfileId());
-    insert(channelValue, ChannelValueEntity.TABLE_NAME);
-  }
-
-  public void update(ChannelValue channelValue) {
-    update(
-        channelValue,
-        ChannelValueEntity.TABLE_NAME,
-        key(ChannelValueEntity.COLUMN_ID, channelValue.getId()),
-        key(ChannelValueEntity.COLUMN_PROFILE_ID, channelValue.getProfileId()));
-  }
-
-  public void insert(ChannelExtendedValue channelExtendedValue) {
-    channelExtendedValue.setProfileId(getCachedProfileId());
-    insert(channelExtendedValue, ChannelExtendedValueEntity.TABLE_NAME);
-  }
-
-  public void update(ChannelExtendedValue channelExtendedValue) {
-    update(
-        channelExtendedValue,
-        ChannelExtendedValueEntity.TABLE_NAME,
-        key(ChannelExtendedValueEntity.COLUMN_ID, channelExtendedValue.getId()),
-        key(ChannelValueEntity.COLUMN_PROFILE_ID, channelExtendedValue.getProfileId()));
   }
 
   public void insert(ChannelGroup channelGroup) {

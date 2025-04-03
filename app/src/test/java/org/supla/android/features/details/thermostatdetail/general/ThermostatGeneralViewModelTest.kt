@@ -42,6 +42,7 @@ import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.remote.ConfigResult
+import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.android.data.source.remote.hvac.SuplaChannelHvacConfig
 import org.supla.android.data.source.remote.hvac.SuplaChannelWeeklyScheduleConfig
 import org.supla.android.data.source.remote.hvac.SuplaHvacAlgorithm
@@ -729,7 +730,7 @@ class ThermostatGeneralViewModelTest :
     timerEndDate: Date? = null
   ): ChannelWithChildren {
     val thermostatValue: ThermostatValue = mockk {
-      every { online } returns true
+      every { status } returns SuplaChannelAvailabilityStatus.ONLINE
       every { state } returns ThermostatState(1)
       every { this@mockk.mode } returns mode
       every { this@mockk.setpointTemperatureHeat } returns (setpointTemperatureHeat ?: 0f)
@@ -742,7 +743,8 @@ class ThermostatGeneralViewModelTest :
     }
 
     val value: ChannelValueEntity = mockk()
-    every { value.online } returns true
+    every { value.status } returns SuplaChannelAvailabilityStatus.ONLINE
+    every { value.getValueAsByteArray() } returns byteArrayOf()
     every { value.asThermostatValue() } returns thermostatValue
 
     val suplaExtendedValue = SuplaChannelExtendedValue()
@@ -756,16 +758,24 @@ class ThermostatGeneralViewModelTest :
       every { this@mockk.function } returns func
       every { this@mockk.channelExtendedValueEntity } returns extendedValue
       every { this@mockk.channelValueEntity } returns value
+      every { caption } returns "caption"
+      every { stateEntity } returns null
+      every { status } returns SuplaChannelAvailabilityStatus.ONLINE
     }
 
     val thermometerEntity: ChannelDataEntity = mockk {
       every { this@mockk.remoteId } returns 999
+      every { function } returns SuplaFunction.THERMOMETER
+      every { caption } returns "caption"
+      every { stateEntity } returns null
+      every { status } returns SuplaChannelAvailabilityStatus.ONLINE
+      every { channelValueEntity } returns mockk(relaxed = true)
     }
     val thermometerWithChildren: ChannelWithChildren = mockk {
     }
     val children = listOf(
-      mockChannelChildEntity(ChannelRelationType.MAIN_THERMOMETER, SuplaConst.SUPLA_CHANNELFNC_THERMOMETER, dataEntity = thermometerEntity),
-      mockChannelChildEntity(ChannelRelationType.AUX_THERMOMETER_FLOOR, remoteId = 998)
+      mockChannelChildEntity(ChannelRelationType.MAIN_THERMOMETER, SuplaFunction.THERMOMETER, dataEntity = thermometerEntity),
+      mockChannelChildEntity(ChannelRelationType.AUX_THERMOMETER_FLOOR, SuplaFunction.THERMOMETER, remoteId = 998)
     )
 
     every { children[0].function } returns SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
@@ -827,17 +837,27 @@ class ThermostatGeneralViewModelTest :
 
   private fun mockChannelChildEntity(
     relationType: ChannelRelationType,
-    function: Int? = null,
+    function: SuplaFunction? = null,
     dataEntity: ChannelDataEntity? = null,
     remoteId: Int? = null
   ): ChannelChildEntity {
-    val channelDataEntity = dataEntity ?: remoteId?.let { mockk { every { this@mockk.remoteId } returns it } } ?: mockk()
+    val channelDataEntity = dataEntity ?: remoteId?.let {
+      mockk {
+        every { this@mockk.remoteId } returns it
+        every { caption } returns ""
+        function?.let { every { this@mockk.function } returns it }
+        every { stateEntity } returns null
+        every { status } returns SuplaChannelAvailabilityStatus.ONLINE
+        every { channelValueEntity } returns mockk(relaxed = true)
+      }
+    } ?: mockk()
 
     return mockk<ChannelChildEntity> {
-      function?.let { every { this@mockk.function } returns it }
+      function?.let { every { this@mockk.function } returns it.value }
       every { this@mockk.relationType } returns relationType
       every { this@mockk.children } returns emptyList()
       every { this@mockk.channelDataEntity } returns channelDataEntity
+      every { channelRelationEntity } returns mockk(relaxed = true)
     }
   }
 }

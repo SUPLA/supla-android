@@ -1,4 +1,4 @@
-package org.supla.android.extensions
+package org.supla.android.data.source.remote.channel
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,11 +17,31 @@ package org.supla.android.extensions
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import com.github.mikephil.charting.data.Entry
-import java.util.Date
+enum class SuplaChannelAvailabilityStatus(val rawValue: Int) {
+  ONLINE(1),
+  OFFLINE(0),
+  ONLINE_BUT_NOT_AVAILABLE(2),
+  OFFLINE_REMOTE_WAKEUP_NOT_SUPPORTED(3),
+  FIRMWARE_UPDATE_ONGOING(4);
 
-val Entry.xAsDate
-  get() = Date(x.toLong().times(1000))
+  val online: Boolean
+    get() = this == ONLINE || this == FIRMWARE_UPDATE_ONGOING
 
-val Entry.xAsTime
-  get() = x.toLong().times(1000)
+  val offline: Boolean
+    get() = !online
+
+  companion object {
+    fun from(value: Int): SuplaChannelAvailabilityStatus {
+      for (status in entries) {
+        if (status.rawValue == value) {
+          return status
+        }
+      }
+
+      return OFFLINE
+    }
+
+    fun from(online: Boolean): SuplaChannelAvailabilityStatus =
+      if (online) ONLINE else OFFLINE
+  }
+}

@@ -58,12 +58,4 @@ public class SuplaBarDataSet extends BarDataSet {
 
     return super.getColor(index);
   }
-
-  public boolean isColorDependsOnTheValue() {
-    return colorDependsOnTheValue;
-  }
-
-  public void setColorDependsOnTheValue(boolean colorDependsOnTheValue) {
-    this.colorDependsOnTheValue = colorDependsOnTheValue;
-  }
 }

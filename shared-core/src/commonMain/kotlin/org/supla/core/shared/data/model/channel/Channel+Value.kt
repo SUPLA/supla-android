@@ -25,16 +25,16 @@ import org.supla.core.shared.data.model.general.Channel
 import org.supla.core.shared.data.model.valve.ValveValue
 
 val Channel.facadeBlindValue: FacadeBlindValue?
-  get() = value?.let { FacadeBlindValue.from(online, it) }
+  get() = value?.let { FacadeBlindValue.from(status, it) }
 
 val Channel.rollerShutterValue: RollerShutterValue?
-  get() = value?.let { RollerShutterValue.from(online, it) }
+  get() = value?.let { RollerShutterValue.from(status, it) }
 
 val Channel.thermostatValue: ThermostatValue?
-  get() = value?.let { ThermostatValue.from(online, it) }
+  get() = value?.let { ThermostatValue.from(status, it) }
 
 val Channel.containerValue: ContainerValue?
-  get() = value?.let { ContainerValue.from(online, it) }
+  get() = value?.let { ContainerValue.from(status, it) }
 
 val Channel.valveValue: ValveValue?
-  get() = value?.let { ValveValue.from(online, it) }
+  get() = value?.let { ValveValue.from(status, it) }

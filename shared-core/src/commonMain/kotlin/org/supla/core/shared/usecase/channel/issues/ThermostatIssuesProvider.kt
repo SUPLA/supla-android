@@ -30,7 +30,7 @@ class ThermostatIssuesProvider : ChannelIssuesProvider {
       return emptyList()
     }
 
-    if (!channelWithChildren.channel.online) {
+    if (channelWithChildren.channel.status.offline) {
       return emptyList()
     }
 
@@ -45,6 +45,9 @@ class ThermostatIssuesProvider : ChannelIssuesProvider {
     }
     if (flags.contains(SuplaThermostatFlag.CLOCK_ERROR)) {
       issues.add(ChannelIssueItem.Warning(LocalizedStringId.THERMOSTAT_CLOCK_ERROR))
+    }
+    if (flags.contains(SuplaThermostatFlag.CALIBRATION_ERROR)) {
+      issues.add(ChannelIssueItem.Error(LocalizedStringId.THERMOSTAT_CALIBRATION_ERROR))
     }
 
     return issues

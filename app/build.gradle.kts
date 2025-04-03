@@ -27,8 +27,8 @@ android {
     minSdk = libs.versions.minSdk.get().toInt()
     targetSdk = libs.versions.targetSdk.get().toInt()
     multiDexEnabled = true
-    versionCode = 279
-    versionName = "25.03.01"
+    versionCode = 281
+    versionName = "25.04"
 
     ndk {
       moduleName = "suplaclient"
@@ -143,6 +143,7 @@ dependencies {
   implementation(libs.androidx.lifecycle.extensions)
   implementation(libs.androidx.room.runtime)
   implementation(libs.androidx.room.rxjava)
+  implementation(libs.androidx.room.ktx)
   implementation(libs.androidx.security.crypto)
   implementation(libs.androidx.navigation.fragment)
   implementation(libs.androidx.navigation.ui)

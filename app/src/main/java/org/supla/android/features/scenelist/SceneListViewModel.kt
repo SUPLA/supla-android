@@ -39,14 +39,19 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SceneListViewModel @Inject constructor(
-  private val toggleLocationUseCase: ToggleLocationUseCase,
   private val createProfileScenesListUseCase: CreateProfileScenesListUseCase,
   private val updateSceneOrderUseCase: UpdateSceneOrderUseCase,
+  private val toggleLocationUseCase: ToggleLocationUseCase,
   loadActiveProfileUrlUseCase: LoadActiveProfileUrlUseCase,
   updateEventsManager: UpdateEventsManager,
-  preferences: Preferences,
-  schedulers: SuplaSchedulers
-) : BaseListViewModel<SceneListViewState, SceneListViewEvent>(preferences, SceneListViewState(), schedulers, loadActiveProfileUrlUseCase) {
+  schedulers: SuplaSchedulers,
+  preferences: Preferences
+) : BaseListViewModel<SceneListViewState, SceneListViewEvent>(
+  preferences,
+  schedulers,
+  SceneListViewState(),
+  loadActiveProfileUrlUseCase
+) {
 
   override fun sendReassignEvent() = sendEvent(SceneListViewEvent.ReassignAdapter)
 

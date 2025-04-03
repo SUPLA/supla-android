@@ -26,12 +26,17 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.core.ui.BaseComposeFragment
+import org.supla.android.core.ui.BaseViewModel
+import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.theme.SuplaTheme
+import org.supla.android.features.captionchangedialog.CaptionChangeViewModel
+import org.supla.android.features.captionchangedialog.View
 import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
+import org.supla.android.features.statedialog.StateDialogViewModel
+import org.supla.android.features.statedialog.View
+import org.supla.android.features.statedialog.handleStateDialogViewEvent
 import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.ui.dialogs.AuthorizationDialog
-import org.supla.android.ui.dialogs.CaptionChangeDialog
-import org.supla.android.ui.dialogs.state.StateDialog
 
 private const val ARG_ITEM_BUNDLE = "ARG_ITEM_BUNDLE"
 
@@ -39,6 +44,11 @@ private const val ARG_ITEM_BUNDLE = "ARG_ITEM_BUNDLE"
 class ContainerGeneralDetailFragment : BaseComposeFragment<ContainerGeneralDetailViewModeState, ContainerGeneralDetailViewEvent>() {
 
   override val viewModel: ContainerGeneralDetailViewModel by viewModels()
+  override val helperViewModels: List<BaseViewModel<*, *>>
+    get() = listOf(stateDialogViewModel, captionChangeViewModel)
+
+  private val stateDialogViewModel: StateDialogViewModel by viewModels()
+  private val captionChangeViewModel: CaptionChangeViewModel by viewModels()
 
   private val item: ItemBundle by lazy { requireSerializable(ARG_ITEM_BUNDLE, ItemBundle::class.java) }
 
@@ -50,16 +60,16 @@ class ContainerGeneralDetailFragment : BaseComposeFragment<ContainerGeneralDetai
   @Composable
   override fun ComposableContent() {
     val modelState by viewModel.getViewState().collectAsState()
-
     SuplaTheme {
-      viewModel.View(state = modelState.viewState)
+      viewModel.View(
+        state = modelState.viewState,
+        showStateDialog = stateDialogViewModel::showDialog,
+        showCaptionChangeDialog = captionChangeViewModel::showChannelDialog
+      )
 
-      modelState.stateDialogViewState?.let {
-        StateDialog(state = it, onDismiss = viewModel::closeStateDialog)
-      }
-      modelState.captionChangeDialogState?.let {
-        viewModel.CaptionChangeDialog(state = it)
-      }
+      stateDialogViewModel.View()
+      captionChangeViewModel.View()
+
       modelState.authorizationDialogState?.let {
         viewModel.AuthorizationDialog(state = it)
       }
@@ -73,11 +83,15 @@ class ContainerGeneralDetailFragment : BaseComposeFragment<ContainerGeneralDetai
 
   override fun onSuplaMessage(message: SuplaClientMsg) {
     when (message.type) {
-      SuplaClientMsg.onChannelState -> viewModel.updateStateDialog(message.channelState)
+      SuplaClientMsg.onChannelState -> stateDialogViewModel.updateStateDialog(message.channelState)
     }
   }
 
   override fun handleEvents(event: ContainerGeneralDetailViewEvent) {
+  }
+
+  override fun handleHelperEvents(event: ViewEvent) {
+    handleStateDialogViewEvent(event)
   }
 
   companion object {

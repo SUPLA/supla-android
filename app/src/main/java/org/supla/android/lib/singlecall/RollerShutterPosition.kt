@@ -1,7 +1,4 @@
 package org.supla.android.lib.singlecall
-
-import org.supla.android.tools.UsedFromNativeCode
-
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -20,8 +17,10 @@ import org.supla.android.tools.UsedFromNativeCode
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import org.supla.android.tools.UsedFromNativeCode
+
 /*
-Percentage is null if the position is out of range or the roler is being calibrated
+Percentage is null if the position is out of range or the roller is being calibrated
 */
 
 @UsedFromNativeCode

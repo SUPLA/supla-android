@@ -70,17 +70,21 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ChannelListViewModel @Inject constructor(
-  private val channelRepository: ChannelRepository,
   private val createProfileChannelsListUseCase: CreateProfileChannelsListUseCase,
-  private val channelActionUseCase: ChannelActionUseCase,
-  private val toggleLocationUseCase: ToggleLocationUseCase,
   private val provideChannelDetailTypeUseCase: ProvideChannelDetailTypeUseCase,
-  private val findChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
   private val readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
+  private val findChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
+  private val toggleLocationUseCase: ToggleLocationUseCase,
+  private val channelActionUseCase: ChannelActionUseCase,
+  private val channelRepository: ChannelRepository,
   updateEventsManager: UpdateEventsManager,
   preferences: Preferences,
   schedulers: SuplaSchedulers
-) : BaseListViewModel<ChannelListViewState, ChannelListViewEvent>(preferences, ChannelListViewState(), schedulers) {
+) : BaseListViewModel<ChannelListViewState, ChannelListViewEvent>(
+  preferences,
+  schedulers,
+  ChannelListViewState()
+) {
 
   override fun sendReassignEvent() = sendEvent(ChannelListViewEvent.ReassignAdapter)
 
@@ -181,7 +185,7 @@ class ChannelListViewModel @Inject constructor(
 
   private fun openDetailsByChannelFunction(data: ChannelWithChildren) {
     val channel = data.channel
-    if (isAvailableInOffline(channel, data.children).not() && channel.isOnline().not()) {
+    if (isAvailableInOffline(channel, data.children).not() && channel.status.offline) {
       return // do not open details for offline channels
     }
 

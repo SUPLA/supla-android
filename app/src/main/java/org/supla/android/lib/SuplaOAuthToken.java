@@ -21,6 +21,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import android.util.Base64;
 import java.net.MalformedURLException;
 import java.net.URL;
+import org.supla.android.tools.UsedFromNativeCode;
 
 public class SuplaOAuthToken {
 
@@ -30,6 +31,7 @@ public class SuplaOAuthToken {
   private int ExpiresIn;
   private String Token;
 
+  @UsedFromNativeCode
   public SuplaOAuthToken(int resultCode, int expiresIn, String token) {
     ResultCode = resultCode;
     Birthday = System.currentTimeMillis() / 1000L;
@@ -45,14 +47,6 @@ public class SuplaOAuthToken {
       ExpiresIn = token.ExpiresIn;
       Token = token.Token;
     }
-  }
-
-  public int getResultCode() {
-    return ResultCode;
-  }
-
-  public int getExpiresIn() {
-    return ExpiresIn;
   }
 
   public String getToken() {

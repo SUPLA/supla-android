@@ -64,20 +64,19 @@ data class ContainerGeneralDetailViewState(
   val scale: Float = 1f,
   val sensors: List<SensorItemData> = emptyList(),
   val issues: List<ChannelIssueItem> = emptyList(),
-  val offline: Boolean = false,
 
   val soundOn: Boolean = false
 )
 
 interface ContainerGeneralDetailViewScope {
-  fun onInfoClick(data: SensorItemData)
-  fun onCaptionLongPress(data: SensorItemData)
   fun onMuteClick()
 }
 
 @Composable
 fun ContainerGeneralDetailViewScope.View(
-  state: ContainerGeneralDetailViewState
+  state: ContainerGeneralDetailViewState,
+  showStateDialog: (Int) -> Unit,
+  showCaptionChangeDialog: (Int, Long, String) -> Unit
 ) {
   Column(
     horizontalAlignment = Alignment.CenterHorizontally,
@@ -133,15 +132,13 @@ fun ContainerGeneralDetailViewScope.View(
     SensorsItemsView(
       sensors = state.sensors,
       scale = state.scale,
-      onInfoClick = { onInfoClick(it) },
-      onCaptionLongPress = { onCaptionLongPress(it) }
+      onInfoClick = { showStateDialog(it.channelId) },
+      onCaptionLongPress = { showCaptionChangeDialog(it.channelId, it.profileId, it.userCaption) }
     )
   }
 }
 
 private val emptyScope = object : ContainerGeneralDetailViewScope {
-  override fun onInfoClick(data: SensorItemData) {}
-  override fun onCaptionLongPress(data: SensorItemData) {}
   override fun onMuteClick() {}
 }
 
@@ -178,7 +175,9 @@ private fun Preview() {
             showChannelStateIcon = false
           )
         )
-      )
+      ),
+      showStateDialog = {},
+      showCaptionChangeDialog = { _, _, _ -> }
     )
   }
 }
@@ -217,7 +216,9 @@ private fun Preview_NoLevel() {
           )
         ),
         soundOn = true
-      )
+      ),
+      showStateDialog = {},
+      showCaptionChangeDialog = { _, _, _ -> }
     )
   }
 }

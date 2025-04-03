@@ -30,7 +30,6 @@ import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.lib.SuplaChannelValue
-import org.supla.android.lib.SuplaClientMessageHandler.OnSuplaClientMessageListener
 import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.profile.CloudUrl
@@ -40,8 +39,8 @@ import org.supla.core.shared.data.model.general.SuplaFunction
 
 abstract class BaseListViewModel<S : ViewState, E : ViewEvent>(
   private val preferences: Preferences,
-  defaultState: S,
   schedulers: SuplaSchedulers,
+  defaultState: S,
   private val loadActiveProfileUrlUseCase: LoadActiveProfileUrlUseCase? = null,
 ) : BaseViewModel<S, E>(defaultState, schedulers) {
 
@@ -50,7 +49,6 @@ abstract class BaseListViewModel<S : ViewState, E : ViewEvent>(
       sendReassignEvent()
     }
   }
-  private val suplaMessageListener: OnSuplaClientMessageListener = OnSuplaClientMessageListener { onSuplaMessage(it) }
 
   init {
     preferences.registerChangeListener(preferencesChangeListener)

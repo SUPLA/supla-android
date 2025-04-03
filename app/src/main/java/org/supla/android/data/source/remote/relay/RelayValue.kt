@@ -17,22 +17,24 @@ package org.supla.android.data.source.remote.relay
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
+
 private const val RELAY_VALUE_LENGTH = 2
 
 data class RelayValue(
-  val online: Boolean,
+  val status: SuplaChannelAvailabilityStatus,
   val on: Boolean,
   val flags: List<SuplaRelayFlag>
 ) {
 
   companion object {
-    fun from(online: Boolean, bytes: ByteArray): RelayValue {
+    fun from(status: SuplaChannelAvailabilityStatus, bytes: ByteArray): RelayValue {
       if (bytes.size < RELAY_VALUE_LENGTH) {
-        return RelayValue(online, false, emptyList())
+        return RelayValue(status, false, emptyList())
       }
 
       return RelayValue(
-        online = online,
+        status = status,
         on = bytes[0] >= 1,
         flags = SuplaRelayFlag.from(bytes[1].toInt())
       )

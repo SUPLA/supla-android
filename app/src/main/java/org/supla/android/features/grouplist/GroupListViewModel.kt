@@ -38,7 +38,9 @@ import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.lists.BaseListViewModel
 import org.supla.android.ui.lists.ListItem
-import org.supla.android.usecases.channel.*
+import org.supla.android.usecases.channel.ActionException
+import org.supla.android.usecases.channel.ButtonType
+import org.supla.android.usecases.channel.GroupActionUseCase
 import org.supla.android.usecases.details.LegacyDetailType
 import org.supla.android.usecases.details.ProvideGroupDetailTypeUseCase
 import org.supla.android.usecases.details.WindowDetailType
@@ -52,17 +54,22 @@ import javax.inject.Inject
 
 @HiltViewModel
 class GroupListViewModel @Inject constructor(
-  private val channelRepository: ChannelRepository,
   private val createProfileGroupsListUseCase: CreateProfileGroupsListUseCase,
-  private val groupActionUseCase: GroupActionUseCase,
-  private val toggleLocationUseCase: ToggleLocationUseCase,
   private val provideGroupDetailTypeUseCase: ProvideGroupDetailTypeUseCase,
   private val findGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase,
+  private val toggleLocationUseCase: ToggleLocationUseCase,
+  private val groupActionUseCase: GroupActionUseCase,
+  private val channelRepository: ChannelRepository,
   loadActiveProfileUrlUseCase: LoadActiveProfileUrlUseCase,
   updateEventsManager: UpdateEventsManager,
   preferences: Preferences,
   schedulers: SuplaSchedulers
-) : BaseListViewModel<GroupListViewState, GroupListViewEvent>(preferences, GroupListViewState(), schedulers, loadActiveProfileUrlUseCase) {
+) : BaseListViewModel<GroupListViewState, GroupListViewEvent>(
+  preferences,
+  schedulers,
+  GroupListViewState(),
+  loadActiveProfileUrlUseCase
+) {
 
   override fun sendReassignEvent() = sendEvent(GroupListViewEvent.ReassignAdapter)
 
@@ -165,7 +172,7 @@ class GroupListViewModel @Inject constructor(
   }
 
   private fun openDetailsByChannelFunction(group: ChannelGroupDataEntity) {
-    if (isAvailableInOffline(group, null).not() && group.isOnline().not()) {
+    if (isAvailableInOffline(group, null).not() && group.status.offline) {
       return // do not open details for offline channels
     }
 

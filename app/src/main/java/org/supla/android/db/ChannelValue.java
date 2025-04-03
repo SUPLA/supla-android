@@ -25,6 +25,7 @@ import android.util.Base64;
 import androidx.annotation.NonNull;
 import java.nio.ByteBuffer;
 import org.supla.android.data.source.local.entity.ChannelValueEntity;
+import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus;
 import org.supla.android.lib.DigiglassValue;
 import org.supla.android.lib.RollerShutterValue;
 import org.supla.android.lib.SuplaConst;
@@ -252,10 +253,6 @@ public class ChannelValue extends DbItem {
     return result;
   }
 
-  public byte getPercent() {
-    return getPercent((short) 0);
-  }
-
   private byte getBrightness(short n) {
     return getPercent(n);
   }
@@ -351,10 +348,6 @@ public class ChannelValue extends DbItem {
     return 0;
   }
 
-  public long getLong() {
-    return getLong(false);
-  }
-
   public double getImpulseCounterCalculatedValue(boolean subValue) {
     return getLong(subValue) / 1000.0;
   }
@@ -402,11 +395,19 @@ public class ChannelValue extends DbItem {
   }
 
   public ThermostatValue asThermostatValue() {
-    return ThermostatValue.Companion.from(getOnLine(), Value);
+    SuplaChannelAvailabilityStatus status =
+        getOnLine()
+            ? SuplaChannelAvailabilityStatus.ONLINE
+            : SuplaChannelAvailabilityStatus.OFFLINE;
+    return ThermostatValue.Companion.from(status, Value);
   }
 
   public ContainerValue asContainerValue() {
-    return ContainerValue.Companion.from(getOnLine(), Value);
+    SuplaChannelAvailabilityStatus status =
+        getOnLine()
+            ? SuplaChannelAvailabilityStatus.ONLINE
+            : SuplaChannelAvailabilityStatus.OFFLINE;
+    return ContainerValue.Companion.from(status, Value);
   }
 
   @NonNull

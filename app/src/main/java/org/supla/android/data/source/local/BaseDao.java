@@ -22,8 +22,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import java.util.Calendar;
-import java.util.Date;
 import org.supla.android.db.DbItem;
 
 public abstract class BaseDao {
@@ -192,21 +190,6 @@ public abstract class BaseDao {
 
   public Long getCachedProfileId() {
     return databaseAccessProvider.getCachedProfileId();
-  }
-
-  public static boolean timestampStartsWithTheCurrentMonth(long timestamp) {
-    if (timestamp == 0) {
-      return true;
-    } else {
-      Calendar now = Calendar.getInstance();
-      now.setTime(new Date());
-
-      Calendar minDate = Calendar.getInstance();
-      minDate.setTime(new Date(timestamp * 1000));
-
-      return minDate.get(Calendar.YEAR) == now.get(Calendar.YEAR)
-          && minDate.get(Calendar.MONTH) == now.get(Calendar.MONTH);
-    }
   }
 
   public interface DatabaseAccessProvider {

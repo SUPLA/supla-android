@@ -53,12 +53,14 @@ import org.supla.android.data.model.general.SingleSelectionList
 import org.supla.android.data.source.local.calendar.Hour
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.events.DownloadEventsManager
+import org.supla.android.extensions.beginOfNextHour
 import org.supla.android.extensions.dayEnd
 import org.supla.android.extensions.dayStart
 import org.supla.android.extensions.guardLet
 import org.supla.android.extensions.hour
 import org.supla.android.extensions.monthEnd
 import org.supla.android.extensions.monthStart
+import org.supla.android.extensions.nextDay
 import org.supla.android.extensions.quarterEnd
 import org.supla.android.extensions.quarterStart
 import org.supla.android.extensions.setDay
@@ -97,7 +99,12 @@ abstract class BaseHistoryDetailViewModel(
 
   open fun loadData(remoteId: Int) {
     updateState { state ->
-      state.copy(remoteId = remoteId, loading = true)
+      state.copy(
+        remoteId = remoteId,
+        initialLoadStarted = false,
+        downloadConfigured = false,
+        loading = true
+      )
     }
     triggerDataLoad(remoteId)
   }
@@ -452,10 +459,12 @@ abstract class BaseHistoryDetailViewModel(
     }
 
     val dateRange = when (selectedRange) {
-      ChartRange.LAST_DAY -> dateProvider.currentDate().let { DateRange(it.shift(-selectedRange.roundedDaysCount), it) }
+      ChartRange.LAST_DAY -> dateProvider.currentDate().beginOfNextHour().let { DateRange(it.shift(-selectedRange.roundedDaysCount), it) }
       ChartRange.LAST_WEEK,
       ChartRange.LAST_MONTH,
-      ChartRange.LAST_QUARTER -> dateProvider.currentDate().dayEnd().let { DateRange(it.shift(-selectedRange.roundedDaysCount), it) }
+      ChartRange.LAST_QUARTER -> dateProvider.currentDate().let {
+        DateRange(it.shift(-selectedRange.roundedDaysCount).dayStart().nextDay(), it.dayEnd())
+      }
 
       else -> chartState.dateRange ?: dateProvider.currentDate().let { DateRange(it.shift(-selectedRange.roundedDaysCount), it) }
     }
@@ -570,11 +579,11 @@ abstract class BaseHistoryDetailViewModel(
 
   private fun getStartDateForRange(range: ChartRange, date: Date, currentDate: Date, dateForCustom: Date, minDate: Date) = when (range) {
     ChartRange.DAY -> date.dayStart()
-    ChartRange.LAST_DAY -> currentDate.shift(-range.roundedDaysCount)
+    ChartRange.LAST_DAY -> currentDate.shift(-range.roundedDaysCount).beginOfNextHour()
     ChartRange.LAST_WEEK,
     ChartRange.LAST_MONTH,
     ChartRange.LAST_QUARTER,
-    ChartRange.LAST_YEAR -> currentDate.dayEnd().shift(-range.roundedDaysCount)
+    ChartRange.LAST_YEAR -> currentDate.shift(-range.roundedDaysCount).dayStart().nextDay()
 
     ChartRange.WEEK -> date.weekStart()
     ChartRange.MONTH -> date.monthStart()

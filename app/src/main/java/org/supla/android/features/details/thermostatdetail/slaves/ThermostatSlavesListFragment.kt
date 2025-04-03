@@ -27,13 +27,17 @@ import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
 import org.supla.android.core.ui.BaseComposeFragment
+import org.supla.android.core.ui.BaseViewModel
+import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.theme.SuplaTheme
+import org.supla.android.features.captionchangedialog.CaptionChangeViewModel
+import org.supla.android.features.captionchangedialog.View
 import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
+import org.supla.android.features.statedialog.StateDialogViewModel
+import org.supla.android.features.statedialog.View
+import org.supla.android.features.statedialog.handleStateDialogViewEvent
 import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.ui.dialogs.AlertDialog
-import org.supla.android.ui.dialogs.AuthorizationDialog
-import org.supla.android.ui.dialogs.CaptionChangeDialog
-import org.supla.android.ui.dialogs.state.StateDialog
 
 private const val ARG_ITEM_BUNDLE = "ARG_ITEM_BUNDLE"
 
@@ -41,6 +45,12 @@ private const val ARG_ITEM_BUNDLE = "ARG_ITEM_BUNDLE"
 class ThermostatSlavesListFragment : BaseComposeFragment<ThermostatSlavesListViewModelState, ThermostatSlavesListViewEvent>() {
 
   override val viewModel: ThermostatSlavesListViewModel by viewModels()
+  override val helperViewModels: List<BaseViewModel<*, *>>
+    get() = listOf(stateDialogViewModel, captionChangeViewModel)
+
+  private val stateDialogViewModel: StateDialogViewModel by viewModels()
+  private val captionChangeViewModel: CaptionChangeViewModel by viewModels()
+
   private val item: ItemBundle by lazy { requireSerializable(ARG_ITEM_BUNDLE, ItemBundle::class.java) }
 
   @Composable
@@ -57,20 +67,14 @@ class ThermostatSlavesListFragment : BaseComposeFragment<ThermostatSlavesListVie
           onPositiveClick = viewModel::closeMessage
         )
       }
-      modelState.stateDialogViewState?.let {
-        StateDialog(state = it, onDismiss = viewModel::closeStateDialog)
-      }
-      modelState.captionChangeDialogState?.let {
-        viewModel.CaptionChangeDialog(state = it)
-      }
-      modelState.authorizationDialogState?.let {
-        viewModel.AuthorizationDialog(state = it)
-      }
+      stateDialogViewModel.View()
+      captionChangeViewModel.View()
+
       ThermostatSlavesListView(
         state = modelState.viewState,
         onShowMessage = viewModel::showMessage,
-        onShowInfo = { viewModel.showStateDialog(it.channelId, it.caption) },
-        onCaptionLongPress = { viewModel.changeChannelCaption(it.userCaption, it.channelId, it.profileId) }
+        onShowInfo = { stateDialogViewModel.showDialog(it.channelId) },
+        onCaptionLongPress = { captionChangeViewModel.showChannelDialog(it.channelId, it.profileId, it.userCaption) }
       )
     }
   }
@@ -93,9 +97,13 @@ class ThermostatSlavesListFragment : BaseComposeFragment<ThermostatSlavesListVie
   override fun handleEvents(event: ThermostatSlavesListViewEvent) {
   }
 
+  override fun handleHelperEvents(event: ViewEvent) {
+    handleStateDialogViewEvent(event)
+  }
+
   override fun onSuplaMessage(message: SuplaClientMsg) {
     when (message.type) {
-      SuplaClientMsg.onChannelState -> viewModel.updateStateDialog(message.channelState)
+      SuplaClientMsg.onChannelState -> stateDialogViewModel.updateStateDialog(message.channelState)
     }
   }
 

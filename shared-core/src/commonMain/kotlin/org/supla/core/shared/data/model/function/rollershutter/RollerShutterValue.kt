@@ -17,6 +17,7 @@ package org.supla.core.shared.data.model.function.rollershutter
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.core.shared.data.model.shadingsystem.ShadingSystemValue
 import org.supla.core.shared.data.model.shadingsystem.SuplaShadingSystemFlag
 import org.supla.core.shared.extensions.toShort
@@ -24,7 +25,7 @@ import org.supla.core.shared.extensions.toShort
 private const val ROLLER_SHUTTER_VALUE_LENGTH = 5
 
 data class RollerShutterValue(
-  override val online: Boolean,
+  override val status: SuplaChannelAvailabilityStatus,
   override val position: Int,
   val bottomPosition: Int,
   override val flags: List<SuplaShadingSystemFlag>
@@ -33,13 +34,13 @@ data class RollerShutterValue(
   companion object {
     private const val INVALID_BOTTOM_POSITION = 0 // more precisely <= 0
 
-    fun from(online: Boolean, bytes: ByteArray): RollerShutterValue {
+    fun from(status: SuplaChannelAvailabilityStatus, bytes: ByteArray): RollerShutterValue {
       if (bytes.size < ROLLER_SHUTTER_VALUE_LENGTH) {
-        return RollerShutterValue(online, INVALID_VALUE, 0, emptyList())
+        return RollerShutterValue(status, INVALID_VALUE, 0, emptyList())
       }
 
       return RollerShutterValue(
-        online = online,
+        status = status,
         position = bytes[0].toInt().let { if (it < INVALID_VALUE || it > MAX_VALUE) INVALID_VALUE else it },
         bottomPosition = bytes[2].toInt().let { if (it <= INVALID_BOTTOM_POSITION || it > MAX_VALUE) MAX_VALUE else it },
         flags = SuplaShadingSystemFlag.from(bytes.toShort(3, 4).toInt())

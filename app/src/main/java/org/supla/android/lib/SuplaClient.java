@@ -18,13 +18,13 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -39,7 +39,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.supla.android.BuildConfig;
-import org.supla.android.R;
 import org.supla.android.SuplaApp;
 import org.supla.android.Trace;
 import org.supla.android.core.networking.suplaclient.SuplaClientApi;
@@ -64,13 +63,14 @@ import org.supla.android.data.source.remote.FieldType;
 import org.supla.android.data.source.remote.SuplaChannelConfig;
 import org.supla.android.data.source.remote.SuplaDeviceConfig;
 import org.supla.android.db.AuthProfileItem;
-import org.supla.android.db.Channel;
 import org.supla.android.db.DbHelper;
 import org.supla.android.db.room.app.AppDatabase;
 import org.supla.android.db.room.measurements.MeasurementsDatabase;
 import org.supla.android.events.ChannelConfigEventsManager;
 import org.supla.android.events.DeviceConfigEventsManager;
+import org.supla.android.events.OnlineEventsManager;
 import org.supla.android.events.UpdateEventsManager;
+import org.supla.android.features.channelscleanup.RemoveHiddenChannelsManager;
 import org.supla.android.lib.actions.ActionId;
 import org.supla.android.lib.actions.ActionParameters;
 import org.supla.android.lib.actions.SubjectType;
@@ -135,6 +135,8 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   private final UpdateChannelGroupTotalValueUseCase updateChannelGroupTotalValueUseCase;
   private final SuplaClientStateHolder suplaClientStateHolder;
   private final ChannelToRootRelationHolderUseCase channelToRootRelationHolderUseCase;
+  private final RemoveHiddenChannelsManager removeHiddenChannelsManager;
+  private final OnlineEventsManager onlineEventsManager;
 
   public SuplaClient(
       Context context, String oneTimePassword, SuplaClientDependencies dependencies) {
@@ -167,6 +169,8 @@ public class SuplaClient extends Thread implements SuplaClientApi {
         dependencies.getUpdateChannelGroupTotalValueUseCase();
     this.channelToRootRelationHolderUseCase = dependencies.getChannelToRootRelationHolderUseCase();
     this.suplaClientStateHolder = dependencies.getSuplaClientStateHolder();
+    this.removeHiddenChannelsManager = dependencies.getRemoveHiddenChannelsManager();
+    this.onlineEventsManager = dependencies.getOnlineEventsManager();
   }
 
   public static SuplaRegisterError getLastRegisterError() {
@@ -516,59 +520,6 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     }
   }
 
-  public boolean turnOnOff(
-      Context context,
-      boolean turnOn,
-      int remoteId,
-      boolean group,
-      int channelFunc,
-      boolean vibrate) {
-    if ((channelFunc == SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH
-        || channelFunc == SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH
-        || channelFunc == SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER)) {
-      if (turnOn) {
-        DbHelper helper = DbHelper.getInstance(context);
-        if (helper == null) {
-          return false;
-        }
-        Channel channel = helper.getChannel(remoteId);
-        if (channel == null) {
-          return false;
-        }
-        if (!channel.getValue().hiValue() && channel.getValue().overcurrentRelayOff()) {
-          AlertDialog.Builder builder = new AlertDialog.Builder(context);
-          builder.setTitle(android.R.string.dialog_alert_title);
-          builder.setMessage(R.string.overcurrent_question);
-
-          builder.setPositiveButton(
-              R.string.yes,
-              (dialog, which) -> {
-                dialog.dismiss();
-
-                if (vibrate) {
-                  SuplaApp.Vibrate(context);
-                }
-                open(remoteId, group, 1);
-              });
-
-          builder.setNeutralButton(R.string.no, (dialog, id) -> dialog.cancel());
-
-          AlertDialog alert = builder.create();
-          alert.show();
-          return true;
-        }
-      }
-
-      if (vibrate) {
-        SuplaApp.Vibrate(context);
-      }
-      open(remoteId, group, turnOn ? 1 : 0);
-      return true;
-    }
-
-    return false;
-  }
-
   public void superUserAuthorizationRequest(String email, String password) {
     long _supla_client_ptr = lockClientPtr();
     try {
@@ -665,7 +616,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     }
   }
 
-  public boolean setChannelCaption(int ChannelID, String Caption) {
+  public boolean setChannelCaption(int ChannelID, @NonNull String Caption) {
     long _supla_client_ptr = lockClientPtr();
     try {
       return _supla_client_ptr != 0 && scSetChannelCaption(_supla_client_ptr, ChannelID, Caption);
@@ -674,7 +625,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     }
   }
 
-  public boolean setChannelGroupCaption(int ChannelGroupID, String Caption) {
+  public boolean setChannelGroupCaption(int ChannelGroupID, @NonNull String Caption) {
     long _supla_client_ptr = lockClientPtr();
     try {
       return _supla_client_ptr != 0
@@ -684,7 +635,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     }
   }
 
-  public boolean setLocationCaption(int LocationID, String Caption) {
+  public boolean setLocationCaption(int LocationID, @NonNull String Caption) {
     long _supla_client_ptr = lockClientPtr();
     try {
       return _supla_client_ptr != 0 && scSetLocationCaption(_supla_client_ptr, LocationID, Caption);
@@ -693,10 +644,10 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     }
   }
 
-  public boolean setSceneCaption(int SceneID, String Caption) {
+  public boolean setSceneCaption(int SceneID, @NonNull String caption) {
     long _supla_client_ptr = lockClientPtr();
     try {
-      return _supla_client_ptr != 0 && scSetSceneCaption(_supla_client_ptr, SceneID, Caption);
+      return _supla_client_ptr != 0 && scSetSceneCaption(_supla_client_ptr, SceneID, caption);
     } finally {
       unlockClientPtr();
     }
@@ -1095,8 +1046,8 @@ public class SuplaClient extends Thread implements SuplaClientApi {
             + channel.Id
             + " channel Location ID: "
             + channel.LocationID
-            + " OnLine: "
-            + channel.getOnLine()
+            + " status: "
+            + channel.getAvailabilityStatus()
             + " AltIcon: "
             + channel.AltIcon
             + " UserIcon: "
@@ -1105,6 +1056,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
             + channel.Flags);
 
     // Update channel value before update the channel
+    onlineEventsManager.emit(channel.Id, channel.getStatus().getOnline());
     if (!isChannelExcluded(channel)) {
       if (updateChannelValueUseCase.invoke(channel).blockingGet() == EntityUpdateResult.UPDATED) {
         _DataChanged = true;
@@ -1116,6 +1068,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
     if (channel.EOL) {
       _DataChanged = DbH.setChannelsVisible(0, 2);
+      removeHiddenChannelsManager.start();
       updateEventsManager.emitChannelsUpdate();
     }
 
@@ -1277,10 +1230,13 @@ public class SuplaClient extends Thread implements SuplaClientApi {
             + channelValueUpdate.Id
             + " value: "
             + channelValueUpdate.Value
-            + " online:"
-            + channelValueUpdate.isOnLine()
+            + " status:"
+            + channelValueUpdate.AvailabilityStatus
             + " EOL:"
             + channelValueUpdate.EOL);
+
+    onlineEventsManager.emit(
+        channelValueUpdate.Id, channelValueUpdate.AvailabilityStatus.getOnline());
     if (updateChannelValueUseCase.invoke(channelValueUpdate).blockingGet()
         == EntityUpdateResult.UPDATED) {
       onDataChanged(channelValueUpdate.Id, 0);
@@ -1702,6 +1658,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
       } finally {
         free();
+        removeHiddenChannelsManager.kill();
       }
 
       if (!canceled()) {

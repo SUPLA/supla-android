@@ -35,15 +35,18 @@ sealed interface ListItem {
 
   fun isDifferentFrom(another: ListItem): Boolean {
     if (this is SceneItem && another is SceneItem) {
-      return sceneData.remoteId != another.sceneData.remoteId
+      return sceneData.remoteId != another.sceneData.remoteId ||
+        sceneData.sceneEntity.caption != another.sceneData.sceneEntity.caption
     }
     if (this is LocationItem && another is LocationItem) {
       return location != another.location
     }
 
     if (this is ChannelBasedItem && another is ChannelBasedItem) {
-      return channelBase.remoteId != another.channelBase.remoteId || channelBase.function != another.channelBase.function ||
-        channelBase.isOnline() != another.channelBase.isOnline()
+      return channelBase.remoteId != another.channelBase.remoteId ||
+        channelBase.function != another.channelBase.function ||
+        channelBase.status != another.channelBase.status ||
+        channelBase.caption != another.channelBase.caption
     }
 
     return true

@@ -53,4 +53,7 @@ interface ChannelValueDao {
 
   @Query("SELECT COUNT($COLUMN_PROFILE_ID) FROM $TABLE_NAME")
   fun count(): Observable<Int>
+
+  @Query("DELETE FROM $TABLE_NAME WHERE $COLUMN_CHANNEL_REMOTE_ID = :remoteId AND $COLUMN_PROFILE_ID = :profileId")
+  suspend fun deleteKtx(remoteId: Int, profileId: Long)
 }

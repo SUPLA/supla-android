@@ -25,7 +25,9 @@ import org.supla.android.data.source.local.dao.measurements.ElectricityMeterLogD
 import org.supla.android.data.source.local.entity.measurements.ElectricityMeterLogEntity
 import org.supla.android.data.source.remote.rest.SuplaCloudService
 import org.supla.android.data.source.remote.rest.channel.ElectricityMeasurement
+import org.supla.android.extensions.gmt
 import org.supla.android.features.measurementsdownload.workers.BaseDownloadLogWorker
+import org.supla.android.usecases.channel.RemoveHiddenChannelsUseCase
 import org.supla.android.usecases.developerinfo.CountProvider
 import retrofit2.Response
 import java.util.Date
@@ -35,13 +37,15 @@ import javax.inject.Singleton
 @Singleton
 class ElectricityMeterLogRepository @Inject constructor(
   private val electricityMeterLogDao: ElectricityMeterLogDao
-) : BaseMeasurementRepository<ElectricityMeasurement, ElectricityMeterLogEntity>(electricityMeterLogDao), CountProvider {
+) : BaseMeasurementRepository<ElectricityMeasurement, ElectricityMeterLogEntity>(electricityMeterLogDao),
+  CountProvider,
+  RemoveHiddenChannelsUseCase.Deletable {
 
   fun findMeasurements(remoteId: Int, profileId: Long, startDate: Date, endDate: Date) =
-    electricityMeterLogDao.findMeasurements(remoteId, profileId, startDate.time, endDate.time)
+    electricityMeterLogDao.findMeasurements(remoteId, profileId, startDate.gmt, endDate.gmt)
 
   fun findMeasurementsGrouped(remoteId: Int, profileId: Long, startDate: Date, endDate: Date, groupingStart: Int, groupingLength: Int) =
-    electricityMeterLogDao.findMeasurementsGrouped(remoteId, profileId, startDate.time, endDate.time, groupingStart, groupingLength)
+    electricityMeterLogDao.findMeasurementsGrouped(remoteId, profileId, startDate.gmt, endDate.gmt, groupingStart, groupingLength)
 
   fun findMeasurementsHourlyGrouped(
     remoteId: Int,
@@ -51,7 +55,7 @@ class ElectricityMeterLogRepository @Inject constructor(
     groupingStart: Int,
     groupingLength: Int
   ) =
-    electricityMeterLogDao.findMeasurementsHourlyGrouped(remoteId, profileId, startDate.time, endDate.time, groupingStart, groupingLength)
+    electricityMeterLogDao.findMeasurementsHourlyGrouped(remoteId, profileId, startDate.gmt, endDate.gmt, groupingStart, groupingLength)
 
   override fun getInitialMeasurements(cloudService: SuplaCloudService, remoteId: Int): Response<List<ElectricityMeasurement>> =
     cloudService.getInitialElectricityMeasurements(remoteId).execute()
@@ -94,4 +98,6 @@ class ElectricityMeterLogRepository @Inject constructor(
     )
 
   override fun count(): Observable<Int> = electricityMeterLogDao.count()
+
+  override suspend fun deleteKtx(remoteId: Int, profileId: Long) = electricityMeterLogDao.deleteKtx(remoteId, profileId)
 }

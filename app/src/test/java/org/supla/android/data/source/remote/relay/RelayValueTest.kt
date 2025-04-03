@@ -21,19 +21,20 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
+import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 
 @RunWith(MockitoJUnitRunner::class)
 class RelayValueTest {
   @Test
   fun `should load relay value from byte array`() {
     // given
-    val online = true
+    val status = SuplaChannelAvailabilityStatus.ONLINE
     val bytes = byteArrayOf(1, 1, 0)
 
     // when
-    val value = RelayValue.from(online, bytes)
+    val value = RelayValue.from(status, bytes)
 
     // then
-    assertThat(value).isEqualTo(RelayValue(online = true, on = true, flags = listOf(SuplaRelayFlag.OVERCURRENT_RELAY_OFF)))
+    assertThat(value).isEqualTo(RelayValue(status = status, on = true, flags = listOf(SuplaRelayFlag.OVERCURRENT_RELAY_OFF)))
   }
 }

@@ -25,6 +25,7 @@ import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
+import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.features.details.detailbase.standarddetail.DetailPage
@@ -79,12 +80,12 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
 
   override val viewModel: GroupListViewModel by lazy {
     GroupListViewModel(
-      channelRepository,
       createProfileGroupsListUseCase,
-      groupActionUseCase,
-      toggleLocationUseCase,
       provideGroupDetailTypeUseCase,
       findGroupByRemoteIdUseCase,
+      toggleLocationUseCase,
+      groupActionUseCase,
+      channelRepository,
       loadActiveProfileUrlUseCase,
       updateEventsManager,
       preferences,
@@ -206,7 +207,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     // given
     val remoteId = 123
     val groupData: ChannelGroupDataEntity = mockk()
-    every { groupData.isOnline() } returns false
+    every { groupData.status } returns SuplaChannelAvailabilityStatus.OFFLINE
 
     whenever(findGroupByRemoteIdUseCase(remoteId)).thenReturn(Maybe.just(groupData))
 
@@ -226,7 +227,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     val groupFunction = SuplaFunction.THERMOMETER
     val groupData: ChannelGroupDataEntity = mockk()
     every { groupData.remoteId } returns remoteId
-    every { groupData.isOnline() } returns true
+    every { groupData.status } returns SuplaChannelAvailabilityStatus.ONLINE
     every { groupData.function } returns groupFunction
 
     val detailType = ThermometerDetailType(listOf(DetailPage.THERMOMETER_HISTORY))
@@ -250,7 +251,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     val groupFunction = SuplaFunction.THERMOMETER
     val groupData: ChannelGroupDataEntity = mockk()
     every { groupData.remoteId } returns remoteId
-    every { groupData.isOnline() } returns true
+    every { groupData.status } returns SuplaChannelAvailabilityStatus.ONLINE
     every { groupData.function } returns groupFunction
 
     whenever(findGroupByRemoteIdUseCase.invoke(remoteId)).thenReturn(Maybe.just(groupData))
@@ -272,7 +273,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     val groupData: ChannelGroupDataEntity = mockk()
     every { groupData.remoteId } returns remoteId
     every { groupData.function } returns function
-    every { groupData.isOnline() } returns false
+    every { groupData.status } returns SuplaChannelAvailabilityStatus.OFFLINE
 
     val detailType = WindowDetailType(listOf(DetailPage.ROLLER_SHUTTER))
     whenever(provideGroupDetailTypeUseCase(groupData)).thenReturn(detailType)

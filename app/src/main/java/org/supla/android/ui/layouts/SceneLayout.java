@@ -31,6 +31,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
 import dagger.hilt.android.AndroidEntryPoint;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -46,6 +47,7 @@ import org.supla.android.data.source.local.entity.SceneEntity;
 import org.supla.android.events.UpdateEventsManager;
 import org.supla.android.images.ImageCache;
 import org.supla.android.images.ImageId;
+import org.supla.android.ui.lists.OnClick;
 import org.supla.android.ui.lists.SlideableItem;
 import org.supla.android.ui.lists.SwapableListItem;
 import org.supla.android.usecases.icon.GetSceneIconUseCase;
@@ -73,20 +75,13 @@ public class SceneLayout extends LinearLayout implements SlideableItem, Swapable
   private CountDownTimer sceneCountDown;
   private Handler uiThreadHandler;
 
-  private Listener listener;
-
   private int sceneId;
   private String locationCaption;
   private Disposable sceneChangesDisposable = null;
 
-  public interface Listener {
-
-    void onLeftButtonClick(int sceneId);
-
-    void onRightButtonClick(int sceneId);
-
-    void onCaptionLongPress(int sceneId);
-  }
+  @NonNull public OnClick onLeftButtonClick = () -> {};
+  @NonNull public OnClick onRightButtonClick = () -> {};
+  @NonNull public OnClick onCaptionLongPressed = () -> {};
 
   public SceneLayout(Context context) {
     super(context);
@@ -98,16 +93,12 @@ public class SceneLayout extends LinearLayout implements SlideableItem, Swapable
     return locationCaption;
   }
 
-  public int getSceneId() {
-    return sceneId;
-  }
-
   private void init(Context context) {
     uiThreadHandler = new Handler(Looper.getMainLooper());
     Preferences prefs = new Preferences(context);
     setOrientation(LinearLayout.HORIZONTAL);
 
-    setBackgroundColor(getResources().getColor(R.color.surface));
+    setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.surface, null));
 
     right_btn = new FrameLayout(context);
     left_btn = new FrameLayout(context);
@@ -123,19 +114,19 @@ public class SceneLayout extends LinearLayout implements SlideableItem, Swapable
             getResources().getDimensionPixelSize(R.dimen.channel_layout_button_width),
             channelHeight));
 
-    right_btn.setBackgroundColor(getResources().getColor(R.color.primary));
+    right_btn.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.primary, null));
 
     left_btn.setLayoutParams(
         new LayoutParams(
             getResources().getDimensionPixelSize(R.dimen.channel_layout_button_width),
             channelHeight));
 
-    left_btn.setBackgroundColor(getResources().getColor(R.color.primary));
+    left_btn.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.primary, null));
 
     content = new RelativeLayout(context);
     content.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, channelHeight));
 
-    content.setBackgroundColor(getResources().getColor(R.color.surface));
+    content.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.surface, null));
 
     addView(content);
     addView(left_btn);
@@ -165,7 +156,8 @@ public class SceneLayout extends LinearLayout implements SlideableItem, Swapable
 
     SuplaChannelStatus right_ActiveStatus = new SuplaChannelStatus(context);
     right_ActiveStatus.setSingleColor(true);
-    right_ActiveStatus.setOnlineColor(getResources().getColor(R.color.primary));
+    right_ActiveStatus.setOnlineColor(
+        ResourcesCompat.getColor(getResources(), R.color.primary, null));
 
     int dot_size = getResources().getDimensionPixelSize(R.dimen.channel_dot_size);
     RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(dot_size / 2, dot_size * 2);
@@ -187,13 +179,13 @@ public class SceneLayout extends LinearLayout implements SlideableItem, Swapable
     caption_text = new CaptionView(context, imgl.getId(), heightScaleFactor);
     caption_text.setOnLongClickListener(
         v -> {
-          listener.onCaptionLongPress(sceneId);
+          onCaptionLongPressed.onClick();
           return true;
         });
     channelIconContainer.addView(caption_text);
 
-    left_btn.setOnClickListener(v -> listener.onLeftButtonClick(sceneId));
-    right_btn.setOnClickListener(v -> listener.onRightButtonClick(sceneId));
+    left_btn.setOnClickListener(v -> onLeftButtonClick.onClick());
+    right_btn.setOnClickListener(v -> onRightButtonClick.onClick());
   }
 
   public SceneLayout(Context context, AttributeSet attrs) {
@@ -204,10 +196,6 @@ public class SceneLayout extends LinearLayout implements SlideableItem, Swapable
   public SceneLayout(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
     init(context);
-  }
-
-  public void setSceneListener(Listener l) {
-    listener = l;
   }
 
   @Override
@@ -282,8 +270,8 @@ public class SceneLayout extends LinearLayout implements SlideableItem, Swapable
     SuplaChannelStatus result = new SuplaChannelStatus(context);
 
     result.setLayoutParams(getOnlineStatusLayoutParams(right));
-    result.setOfflineColor(getResources().getColor(R.color.red));
-    result.setOnlineColor(getResources().getColor(R.color.primary));
+    result.setOfflineColor(ResourcesCompat.getColor(getResources(), R.color.red, null));
+    result.setOnlineColor(ResourcesCompat.getColor(getResources(), R.color.primary, null));
 
     return result;
   }
@@ -299,7 +287,7 @@ public class SceneLayout extends LinearLayout implements SlideableItem, Swapable
   public void slide(int delta) {
     content.layout(delta, content.getTop(), content.getWidth() + delta, content.getHeight());
 
-    int bcolor = getResources().getColor(R.color.primary);
+    int bcolor = ResourcesCompat.getColor(getResources(), R.color.primary, null);
 
     left_btn.setBackgroundColor(bcolor);
     right_btn.setBackgroundColor(bcolor);
@@ -352,10 +340,6 @@ public class SceneLayout extends LinearLayout implements SlideableItem, Swapable
     }
 
     right_btn.layout(left, 0, left + right_btn.getWidth(), right_btn.getHeight());
-  }
-
-  public String getCaption() {
-    return caption_text.getText().toString();
   }
 
   public void setLocationCaption(String locationCaption) {

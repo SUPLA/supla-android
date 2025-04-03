@@ -19,8 +19,6 @@ package org.supla.android.extensions
 
 import java.util.Locale
 
-fun String?.convertToTemperature() = this?.replace(",", ".")?.toFloatOrNull()
-
 fun String.ucFirst(locale: Locale = Locale.getDefault()) = replaceFirstChar {
   if (it.isLowerCase()) it.titlecase(locale) else it.toString()
 }

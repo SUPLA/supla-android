@@ -92,6 +92,10 @@ val LocalizedStringId.resourceId: Int
     LocalizedStringId.CHANNEL_CAPTION_FLOOD_SENSOR -> R.string.channel_caption_flood_sensor
     LocalizedStringId.CHANNEL_CAPTION_UNKNOWN -> R.string.channel_not_supported
 
+    LocalizedStringId.CHANNEL_STATUS_AWAITING -> R.string.channel_status_awaiting
+    LocalizedStringId.CHANNEL_STATUS_UPDATING -> R.string.channel_status_updating
+    LocalizedStringId.CHANNEL_STATUS_NOT_AVAILABLE -> R.string.channel_not_available
+
     LocalizedStringId.CHANNEL_BATTERY_LEVEL -> R.string.channel_battery_level
 
     LocalizedStringId.MOTOR_PROBLEM -> R.string.motor_problem
@@ -101,6 +105,7 @@ val LocalizedStringId.resourceId: Int
     LocalizedStringId.THERMOSTAT_THERMOMETER_ERROR -> R.string.thermostat_thermometer_error
     LocalizedStringId.THERMOSTAT_BATTER_COVER_OPEN -> R.string.thermostat_battery_cover_open
     LocalizedStringId.THERMOSTAT_CLOCK_ERROR -> R.string.thermostat_clock_error
+    LocalizedStringId.THERMOSTAT_CALIBRATION_ERROR -> R.string.thermostat_calibration_error
 
     LocalizedStringId.FLOOD_SENSOR_ACTIVE -> R.string.flooding_alarm_message
     LocalizedStringId.VALVE_MANUALLY_CLOSED -> R.string.valve_warning_manually_closed_short

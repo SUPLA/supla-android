@@ -30,7 +30,8 @@ enum class SuplaThermostatFlag(val value: Int) {
   FORCED_OFF_BY_SENSOR(1 shl 9),
   HEAT_OR_COOL(1 shl 10), // If set cool else heat
   WEEKLY_SCHEDULE_TEMPORAL_OVERRIDE(1 shl 11),
-  BATTERY_COVER_OPEN(1 shl 12);
+  BATTERY_COVER_OPEN(1 shl 12),
+  CALIBRATION_ERROR(1 shl 13);
 
   companion object {
     fun from(short: Short): List<SuplaThermostatFlag> {

@@ -1,5 +1,4 @@
 package org.supla.android.core.infrastructure
-
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -33,5 +32,9 @@ class WorkManagerProxy @Inject constructor(
 
   fun enqueueUniqueWork(uniqueWorkName: String, existingWorkPolicy: ExistingWorkPolicy, work: OneTimeWorkRequest) {
     WorkManager.getInstance(context).enqueueUniqueWork(uniqueWorkName, existingWorkPolicy, work)
+  }
+
+  fun cancelByTag(tag: String) {
+    WorkManager.getInstance(context).cancelAllWorkByTag(tag)
   }
 }

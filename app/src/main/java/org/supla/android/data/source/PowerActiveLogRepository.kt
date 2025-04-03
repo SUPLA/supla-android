@@ -27,6 +27,7 @@ import org.supla.android.data.source.local.entity.measurements.PowerActiveHistor
 import org.supla.android.data.source.remote.rest.SuplaCloudService
 import org.supla.android.data.source.remote.rest.channel.HistoryMeasurement
 import org.supla.android.data.source.remote.rest.channel.HistoryMeasurementType
+import org.supla.android.usecases.channel.RemoveHiddenChannelsUseCase
 import org.supla.android.usecases.developerinfo.CountProvider
 import retrofit2.Response
 import java.util.Date
@@ -36,7 +37,9 @@ import javax.inject.Singleton
 @Singleton
 class PowerActiveLogRepository @Inject constructor(
   private val powerActiveLogDao: PowerActiveLogDao
-) : BaseMeasurementRepository<HistoryMeasurement, PowerActiveHistoryLogEntity>(powerActiveLogDao), CountProvider {
+) : BaseMeasurementRepository<HistoryMeasurement, PowerActiveHistoryLogEntity>(powerActiveLogDao),
+  CountProvider,
+  RemoveHiddenChannelsUseCase.Deletable {
 
   fun findMeasurements(
     remoteId: Int,
@@ -86,4 +89,6 @@ class PowerActiveLogRepository @Inject constructor(
     )
 
   override fun count(): Observable<Int> = powerActiveLogDao.count()
+
+  override suspend fun deleteKtx(remoteId: Int, profileId: Long) = powerActiveLogDao.deleteKtx(remoteId, profileId)
 }

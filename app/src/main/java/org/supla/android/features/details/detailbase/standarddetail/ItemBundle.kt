@@ -20,9 +20,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.data.source.runtime.ItemType
-import org.supla.android.db.Channel
 import org.supla.core.shared.data.model.general.SuplaFunction
-import org.supla.core.shared.data.model.general.suplaFunction
 import java.io.Serializable
 
 data class ItemBundle(
@@ -32,14 +30,6 @@ data class ItemBundle(
   val function: SuplaFunction
 ) : Serializable {
   companion object {
-    fun from(channel: Channel): ItemBundle =
-      ItemBundle(
-        remoteId = channel.remoteId,
-        deviceId = channel.deviceID,
-        itemType = ItemType.CHANNEL,
-        function = channel.func.suplaFunction()
-      )
-
     fun from(channelData: ChannelDataEntity): ItemBundle =
       ItemBundle(
         remoteId = channelData.remoteId,

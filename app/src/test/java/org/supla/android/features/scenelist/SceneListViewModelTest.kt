@@ -57,13 +57,13 @@ class SceneListViewModelTest : BaseViewModelTest<SceneListViewState, SceneListVi
 
   override val viewModel: SceneListViewModel by lazy {
     SceneListViewModel(
-      toggleLocationUseCase,
       createProfileScenesListUseCase,
       updateSceneOrderUseCase,
+      toggleLocationUseCase,
       loadActiveProfileUrlUseCase,
       updateEventsManager,
-      preferences,
-      schedulers
+      schedulers,
+      preferences
     )
   }
 

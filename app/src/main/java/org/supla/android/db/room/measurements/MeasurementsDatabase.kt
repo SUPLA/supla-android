@@ -24,6 +24,7 @@ import org.supla.android.data.source.local.dao.measurements.CurrentLogDao
 import org.supla.android.data.source.local.dao.measurements.ElectricityMeterLogDao
 import org.supla.android.data.source.local.dao.measurements.GeneralPurposeMeasurementLogDao
 import org.supla.android.data.source.local.dao.measurements.GeneralPurposeMeterLogDao
+import org.supla.android.data.source.local.dao.measurements.HomePlusThermostatLogDao
 import org.supla.android.data.source.local.dao.measurements.HumidityLogDao
 import org.supla.android.data.source.local.dao.measurements.ImpulseCounterLogDao
 import org.supla.android.data.source.local.dao.measurements.PowerActiveLogDao
@@ -81,4 +82,6 @@ abstract class MeasurementsDatabase : RoomDatabase() {
   abstract fun currentLogDao(): CurrentLogDao
 
   abstract fun powerActiveLogDao(): PowerActiveLogDao
+
+  abstract fun homePlusThermostatLogDao(): HomePlusThermostatLogDao
 }
