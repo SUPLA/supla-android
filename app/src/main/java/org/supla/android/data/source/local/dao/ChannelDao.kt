@@ -306,4 +306,30 @@ interface ChannelDao {
     """
   )
   suspend fun findHiddenChannels(): List<ChannelEntity>
+
+  @Query(
+    """
+      SELECT
+        $COLUMN_ID, 
+        $COLUMN_CHANNEL_REMOTE_ID, 
+        ${ChannelEntity.COLUMN_DEVICE_ID}, 
+        $COLUMN_CAPTION,
+        ${ChannelEntity.COLUMN_TYPE}, 
+        ${ChannelEntity.COLUMN_FUNCTION}, 
+        $COLUMN_VISIBLE, 
+        $COLUMN_LOCATION_ID,
+        ${ChannelEntity.COLUMN_ALT_ICON}, 
+        ${ChannelEntity.COLUMN_USER_ICON}, 
+        ${ChannelEntity.COLUMN_MANUFACTURER_ID}, 
+        ${ChannelEntity.COLUMN_PRODUCT_ID},
+        ${ChannelEntity.COLUMN_FLAGS}, 
+        ${ChannelEntity.COLUMN_PROTOCOL_VERSION}, 
+        ${ChannelEntity.COLUMN_POSITION}, 
+        $COLUMN_PROFILE_ID
+      FROM $TABLE_NAME
+      WHERE
+        $COLUMN_VISIBLE > 0 AND $COLUMN_PROFILE_ID = :profileId
+    """
+  )
+  fun findProfileChannels(profileId: Long): Single<List<ChannelEntity>>
 }

@@ -38,11 +38,10 @@ class ElectricityMeterSettingsFragment :
   private val item: ItemBundle by lazy { requireSerializable(ARG_ITEM_BUNDLE, ItemBundle::class.java) }
 
   @Composable
-  override fun ComposableContent() {
-    val state by viewModel.getViewState().collectAsState()
+  override fun ComposableContent(modelState: ElectricityMeterSettingsViewModelState) {
     SuplaTheme {
       ElectricityMeterSettingsView(
-        state = state.viewState,
+        state = modelState.viewState,
         onListValueChanged = viewModel::onListValueChange,
         onBalancingChanged = viewModel::onBalanceValueChange
       )

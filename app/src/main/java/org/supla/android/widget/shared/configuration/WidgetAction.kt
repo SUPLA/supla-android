@@ -29,7 +29,7 @@ enum class WidgetAction(
   TURN_OFF(2, R.string.channel_btn_off, ActionId.TURN_OFF),
   MOVE_UP(3, R.string.channel_btn_open, ActionId.REVEAL),
   MOVE_DOWN(4, R.string.channel_btn_close, ActionId.SHUT),
-  TOGGLE(5, R.string.widget_action_toggle, ActionId.TOGGLE),
+  TOGGLE(5, R.string.channel_btn_toggle, ActionId.TOGGLE),
   EXECUTE(6, R.string.btn_execute, ActionId.EXECUTE),
   INTERRUPT(7, R.string.btn_abort, ActionId.INTERRUPT),
   INTERRUPT_AND_EXECUTE(8, R.string.btn_abort_and_execute, ActionId.INTERRUPT_AND_EXECUTE),
@@ -39,7 +39,7 @@ enum class WidgetAction(
 
   companion object {
     fun fromId(actionId: Long?): WidgetAction? {
-      return values().firstOrNull { it.actionId == actionId }
+      return entries.firstOrNull { it.actionId == actionId }
     }
   }
 }

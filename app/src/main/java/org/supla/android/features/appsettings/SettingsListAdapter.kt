@@ -221,6 +221,17 @@ sealed class SettingItem(val viewResource: Int) {
     }
   }
 
+  data class AndroidAuto(
+    val callback: () -> Unit = {}
+  ) : SettingItem(R.layout.li_settings_arrow_button) {
+    override fun bind(holder: SettingItemViewHolder<*>) {
+      holder.binding.root.setOnClickListener { callback() }
+      (holder.binding as? LiSettingsArrowButtonBinding)?.apply {
+        settingsButtonLabel.setText(R.string.settings_android_auto_label)
+      }
+    }
+  }
+
   data class NotificationsItem(
     val allowed: Boolean,
     val callback: () -> Unit = {}

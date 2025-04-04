@@ -45,8 +45,7 @@ class SwitchGeneralFragment : BaseComposeFragment<SwitchGeneralViewState, Switch
   lateinit var getChannelIconUseCase: GetChannelIconUseCase
 
   @Composable
-  override fun ComposableContent() {
-    val modelState by viewModel.getViewState().collectAsState()
+  override fun ComposableContent(modelState: SwitchGeneralViewState) {
     SuplaTheme {
       SwitchGeneralView(
         state = modelState,

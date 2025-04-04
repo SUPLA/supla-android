@@ -59,9 +59,7 @@ class ValveGeneralDetailFragment : BaseComposeFragment<ValveGeneralDetailViewMod
   }
 
   @Composable
-  override fun ComposableContent() {
-    val modelState by viewModel.getViewState().collectAsState()
-
+  override fun ComposableContent(modelState: ValveGeneralDetailViewModeState) {
     SuplaTheme {
       modelState.dialog?.let { dialog ->
         AlertDialog(

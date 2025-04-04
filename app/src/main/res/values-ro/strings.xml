@@ -475,7 +475,7 @@
   <string name="widget_command_no_access">Fără acces! (code: %1$d)</string>
   <string name="widget_group">grupa</string>
   <string name="widget_scene">scena</string>
-  <string name="widget_action_toggle">Comutare</string>
+  <string name="channel_btn_toggle">Comutare</string>
   <string name="associeted_with_push_error">Funcția canalului asociat cu notificările PUSH nu poate fi modificată.</string>
   <string name="associeted_with_vbt_error">Funcția canalului asociat cu reacțiile nu poate fi modificată.</string>
   <string name="rs_display_mode">Obloane rulante, jaluzele, perdele %</string>

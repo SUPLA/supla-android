@@ -54,9 +54,7 @@ class ThermostatSlavesListFragment : BaseComposeFragment<ThermostatSlavesListVie
   private val item: ItemBundle by lazy { requireSerializable(ARG_ITEM_BUNDLE, ItemBundle::class.java) }
 
   @Composable
-  override fun ComposableContent() {
-    val modelState by viewModel.getViewState().collectAsState()
-
+  override fun ComposableContent(modelState: ThermostatSlavesListViewModelState) {
     SuplaTheme {
       modelState.showMessage?.let {
         AlertDialog(

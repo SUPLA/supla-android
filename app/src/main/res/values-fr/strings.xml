@@ -460,7 +460,7 @@
   <string name="widget_command_no_access">Pas d\'accès !  (code :%1$d)</string>
   <string name="widget_group">groupe</string>
   <string name="widget_scene">scène</string>
-  <string name="widget_action_toggle">Changez</string>
+  <string name="channel_btn_toggle">Changez</string>
   <string name="associeted_with_push_error">La fonction de la chaîne associée aux notifications PUSH ne peut pas être modifiée.</string>
   <string name="associeted_with_vbt_error">La fonction de la chaîne associée aux réactions ne peut pas être modifiée.</string>
   <string name="rs_display_mode">Volets roulants, stores, rideaux %</string>

@@ -78,7 +78,7 @@ class ElectricityConsumptionProvider @Inject constructor(
             channel.Electricity.value?.pricePerUnit?.toFloat(),
             channel.Electricity.value?.currency
           ),
-          (spec.customFilters as? ElectricityChartFilters)?.type?.label
+          (spec.customFilters as? ElectricityChartFilters)?.type?.labelWithUnit
         )
       }
       .firstOrError()

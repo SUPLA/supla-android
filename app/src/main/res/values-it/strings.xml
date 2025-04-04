@@ -469,7 +469,7 @@
   <string name="widget_command_no_access">Nessun accesso! (codice: %1$d)</string>
   <string name="widget_group">gruppo</string>
   <string name="widget_scene">scena</string>
-  <string name="widget_action_toggle">Cambia</string>
+  <string name="channel_btn_toggle">Cambia</string>
   <string name="associeted_with_push_error">La funzione del canale associato alle notifiche PUSH non può essere modificata.</string>
   <string name="associeted_with_vbt_error">La funzione del canale associato alle reazioni non può essere modificata.</string>
   <string name="rs_display_mode">Tapparelle, persiane, tende %</string>

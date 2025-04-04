@@ -22,6 +22,7 @@ import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.supla.android.Trace
+import org.supla.android.data.source.AndroidAutoItemRepository
 import org.supla.android.data.source.ChannelConfigRepository
 import org.supla.android.data.source.ChannelExtendedValueRepository
 import org.supla.android.data.source.ChannelRelationRepository
@@ -53,6 +54,7 @@ class RemoveHiddenChannelsUseCase @Inject constructor(
   channelValueRepository: ChannelValueRepository,
   colorListRepository: RoomColorListRepository,
   currentLogRepository: CurrentLogRepository,
+  androidAutoItemRepository: AndroidAutoItemRepository,
   electricityMeterLogRepository: ElectricityMeterLogRepository,
   generalPurposeMeterLogRepository: GeneralPurposeMeterLogRepository,
   generalPurposeMeasurementLogRepository: GeneralPurposeMeasurementLogRepository,
@@ -74,6 +76,7 @@ class RemoveHiddenChannelsUseCase @Inject constructor(
     channelValueRepository,
     colorListRepository,
     currentLogRepository,
+    androidAutoItemRepository,
     electricityMeterLogRepository,
     generalPurposeMeterLogRepository,
     generalPurposeMeasurementLogRepository,

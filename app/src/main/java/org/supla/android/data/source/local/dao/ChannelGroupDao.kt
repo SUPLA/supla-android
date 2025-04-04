@@ -162,6 +162,15 @@ interface ChannelGroupDao {
   )
   fun findGroupOnlineCount(groupId: Long): Maybe<GroupOnlineSummary>
 
+  @Query(
+    """
+      SELECT $ALL_COLUMNS
+      FROM $TABLE_NAME 
+      WHERE $COLUMN_VISIBLE > 0 AND $COLUMN_PROFILE_ID = :profileId
+    """
+  )
+  fun findProfileGroups(profileId: Long): Single<List<ChannelGroupEntity>>
+
   @Update
   fun update(groups: List<ChannelGroupEntity>): Completable
 

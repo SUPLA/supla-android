@@ -469,7 +469,7 @@
   <string name="widget_command_no_access">Δεν υπάρχει πρόσβαση!  (κωδικός: %1$d)</string>
   <string name="widget_group">ομάδα</string>
   <string name="widget_scene">σκηνή</string>
-  <string name="widget_action_toggle">Εναλλαγή</string>
+  <string name="channel_btn_toggle">Εναλλαγή</string>
   <string name="associeted_with_push_error">Η λειτουργία του καναλιού που σχετίζεται με τις ειδοποιήσεις PUSH δεν μπορεί να αλλάξει.</string>
   <string name="associeted_with_vbt_error">Η λειτουργία του καναλιού που σχετίζεται με τις αντιδράσεις δεν μπορεί να αλλάξει.</string>
   <string name="rs_display_mode">Ρολά, περσίδες, κουρτίνες %.</string>

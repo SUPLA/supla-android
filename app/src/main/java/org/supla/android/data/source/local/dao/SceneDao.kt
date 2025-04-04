@@ -96,6 +96,15 @@ interface SceneDao {
   )
   fun findList(): Single<List<SceneDataEntity>>
 
+  @Query(
+    """
+      SELECT $ALL_COLUMNS
+      FROM $TABLE_NAME
+      WHERE $COLUMN_PROFILE_ID = :profileId AND $COLUMN_VISIBLE > 0
+    """
+  )
+  fun findProfileScenes(profileId: Long): Single<List<SceneEntity>>
+
   @Update
   fun update(scenes: List<SceneEntity>): Completable
 

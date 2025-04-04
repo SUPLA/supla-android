@@ -81,7 +81,11 @@ data class ChannelWithChildren(
       children.firstOrNull { it.relationType == ChannelRelationType.METER }?.channel?.isElectricityMeter() == true
 
   val onlineState: ListOnlineState
-    get() = channel.channelValueEntity.status.onlineState mergeWith children.onlineState
+    get() = if (children.isEmpty()) {
+      channel.channelValueEntity.status.onlineState
+    } else {
+      channel.channelValueEntity.status.onlineState mergeWith children.onlineState
+    }
 
   override fun onlinePercentage(): Int = channel.onlinePercentage()
 

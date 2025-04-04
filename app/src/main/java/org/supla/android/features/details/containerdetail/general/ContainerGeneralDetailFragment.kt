@@ -58,8 +58,7 @@ class ContainerGeneralDetailFragment : BaseComposeFragment<ContainerGeneralDetai
   }
 
   @Composable
-  override fun ComposableContent() {
-    val modelState by viewModel.getViewState().collectAsState()
+  override fun ComposableContent(modelState: ContainerGeneralDetailViewModeState) {
     SuplaTheme {
       viewModel.View(
         state = modelState.viewState,

@@ -460,7 +460,7 @@
   <string name="widget_command_no_access">¡No hay acceso! (código: %1$d)</string>
   <string name="widget_group">grupo</string>
   <string name="widget_scene">escena</string>
-  <string name="widget_action_toggle">Cambiar</string>
+  <string name="channel_btn_toggle">Cambiar</string>
 
   <string name="associeted_with_push_error">La función del canal asociado a las notificaciones PUSH no puede modificarse.</string>
   <string name="associeted_with_vbt_error">La función del canal asociado a las reacciones no puede modificarse.</string>

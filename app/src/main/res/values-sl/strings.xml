@@ -473,7 +473,7 @@
   <string name="widget_command_no_access">Brez dostopa! (koda: %1$d)</string>
   <string name="widget_group">skupina</string>
   <string name="widget_scene">scena</string>
-  <string name="widget_action_toggle">Preklopi</string>
+  <string name="channel_btn_toggle">Preklopi</string>
 
   <string name="associeted_with_push_error">Funkcije kanala, povezanega s potisnimi obvestili, ni mogoče spremeniti.</string>
   <string name="associeted_with_vbt_error">Funkcije kanala, povezanega z reakcijami, ni mogoče spremeniti.</string>

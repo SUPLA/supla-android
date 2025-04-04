@@ -451,7 +451,7 @@
   <string name="widget_command_no_access">Žádný přístup! (code: %1$d)</string>
   <string name="widget_group">skupina</string>
   <string name="widget_scene">scéna</string>
-  <string name="widget_action_toggle">Přepnout</string>
+  <string name="channel_btn_toggle">Přepnout</string>
   <string name="associeted_with_push_error">Funkci kanálu spojeného s oznámeními PUSH nelze změnit.</string>
   <string name="associeted_with_vbt_error">Funkci kanálu spojeného s reakcemi nelze změnit.</string>
   <string name="rs_display_mode">Rolety, žaluzie, závěsy %.</string>

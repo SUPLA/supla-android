@@ -50,6 +50,8 @@ class RoomChannelRepository @Inject constructor(
 
   fun findChannelsCount(profileId: Long) = channelDao.findChannelsCount(profileId)
 
+  fun findProfileChannels(profileId: Long) = channelDao.findProfileChannels(profileId)
+
   suspend fun findHiddenChannels() = channelDao.findHiddenChannels()
 
   override fun count(): Observable<Int> = channelDao.count()

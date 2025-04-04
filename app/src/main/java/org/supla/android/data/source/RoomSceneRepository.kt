@@ -37,6 +37,8 @@ class RoomSceneRepository @Inject constructor(
 
   fun update(scenes: List<SceneEntity>) = sceneDao.update(scenes)
 
+  fun findProfileScenes(profileId: Long) = sceneDao.findProfileScenes(profileId)
+
   override fun count(): Observable<Int> = sceneDao.count()
 
   override fun updateCaption(caption: String, remoteId: Int, profileId: Long): Completable =

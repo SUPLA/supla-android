@@ -20,6 +20,7 @@ package org.supla.android.events
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
+import io.reactivex.rxjava3.subjects.PublishSubject
 import io.reactivex.rxjava3.subjects.Subject
 import org.supla.android.data.source.ChannelRepository
 import org.supla.android.data.source.RoomSceneRepository

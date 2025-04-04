@@ -39,6 +39,8 @@ class ChannelGroupRepository @Inject constructor(
 
   fun findGroupOnlineCount(groupId: Long) = channelGroupDao.findGroupOnlineCount(groupId)
 
+  fun findProfileGroups(profileId: Long) = channelGroupDao.findProfileGroups(profileId)
+
   fun update(groups: List<ChannelGroupEntity>) = channelGroupDao.update(groups)
 
   override fun count(): Observable<Int> = channelGroupDao.count()

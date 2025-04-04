@@ -451,7 +451,7 @@
   <string name="widget_command_no_access">Nėra prieigos! (kodas: %1$d)</string>
   <string name="widget_group">grupė</string>
   <string name="widget_scene">scena</string>
-  <string name="widget_action_toggle">Perjungti</string>
+  <string name="channel_btn_toggle">Perjungti</string>
   <string name="associeted_with_push_error">Negalima pakeisti kanalo, susieto su PUSH pranešimais, funkcijos.</string>
   <string name="associeted_with_vbt_error">Negalima pakeisti kanalo, susieto su reakcijomis, funkcijos.</string>
   <string name="rs_display_mode">Roletai, žaliuzės, užuolaidos %</string>

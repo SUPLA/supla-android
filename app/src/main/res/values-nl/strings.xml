@@ -473,7 +473,7 @@
   <string name="widget_command_no_access">Geen toegang! (code: %1$d)</string>
   <string name="widget_group">groep</string>
   <string name="widget_scene">podium</string>
-  <string name="widget_action_toggle">Schakel</string>
+  <string name="channel_btn_toggle">Schakel</string>
 
   <string name="associeted_with_push_error">De functie van het kanaal dat is gekoppeld aan PUSH-meldingen kan niet worden gewijzigd.</string>
   <string name="associeted_with_vbt_error">De functie van het kanaal dat gekoppeld is aan de reacties kan niet worden gewijzigd.</string>

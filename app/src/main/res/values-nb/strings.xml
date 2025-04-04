@@ -473,7 +473,7 @@
   <string name="widget_command_no_access">Ingen adgang! (kode: %1$d)</string>
   <string name="widget_group">gruppe</string>
   <string name="widget_scene">scene</string>
-  <string name="widget_action_toggle">Bytt om</string>
+  <string name="channel_btn_toggle">Bytt om</string>
 
   <string name="associeted_with_push_error">Funksjonen til kanalen som er knyttet til PUSH-varsler, kan ikke endres.</string>
   <string name="associeted_with_vbt_error">Funksjonen til kanalen som er knyttet til reaksjonene, kan ikke endres.</string>

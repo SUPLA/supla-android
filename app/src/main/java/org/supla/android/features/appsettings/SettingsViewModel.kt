@@ -76,6 +76,7 @@ class SettingsViewModel @Inject constructor(
       SettingItem.LockScreen(lockScreenScope = encryptedPreferences.lockScreenSettings.scope, this::updateLockScreen),
       SettingItem.BatteryWarningLevel(level = applicationPreferences.batteryWarningLevel, this::updateBatteryWarningLevel),
       SettingItem.LocalizationOrdering { sendEvent(SettingsViewEvent.NavigateToLocalizationsOrdering) },
+      SettingItem.AndroidAuto { sendEvent(SettingsViewEvent.NavigateToAndroidAuto) },
 
       SettingItem.HeaderItem(headerResource = R.string.settings_permissions),
       SettingItem.NotificationsItem(allowed = areNotificationsEnabled(), this::goToSettings),
@@ -157,6 +158,7 @@ class SettingsViewModel @Inject constructor(
 
 sealed class SettingsViewEvent : ViewEvent {
   data object NavigateToLocalizationsOrdering : SettingsViewEvent()
+  data object NavigateToAndroidAuto : SettingsViewEvent()
   data object NavigateToSettings : SettingsViewEvent()
   data class NavigateToPinVerification(val verificationAction: UnlockAction) : SettingsViewEvent()
   data class NavigateToPinSetup(val lockScreenScope: LockScreenScope) : SettingsViewEvent()

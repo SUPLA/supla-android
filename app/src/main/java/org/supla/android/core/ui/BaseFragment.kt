@@ -139,4 +139,13 @@ abstract class BaseFragment<S : ViewState, E : ViewEvent>(@LayoutRes contentLayo
       requireArguments().getSerializable(key) as T
     }
   }
+
+  protected fun <T : Serializable> requireSerializableOptional(key: String, clazz: Class<T>): T? {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+      arguments?.getSerializable(key, clazz)
+    } else {
+      @Suppress("DEPRECATION", "UNCHECKED_CAST")
+      arguments?.getSerializable(key) as T?
+    }
+  }
 }
