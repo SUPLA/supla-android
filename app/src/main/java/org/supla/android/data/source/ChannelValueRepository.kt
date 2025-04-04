@@ -28,11 +28,11 @@ import javax.inject.Singleton
 @Singleton
 class ChannelValueRepository @Inject constructor(
   private val channelValueDao: ChannelValueDao
-) : CountProvider, RemoveHiddenChannelsUseCase.Deletable {
+) : CountProvider, RemoveHiddenChannelsUseCase.ChannelsDeletable {
 
   fun findByRemoteId(remoteId: Int) = channelValueDao.findByRemoteId(remoteId)
   fun update(entity: ChannelValueEntity) = channelValueDao.update(entity)
   fun insert(entity: ChannelValueEntity) = channelValueDao.insert(entity)
   override fun count(): Observable<Int> = channelValueDao.count()
-  override suspend fun deleteKtx(remoteId: Int, profileId: Long) = channelValueDao.deleteKtx(remoteId, profileId)
+  override suspend fun deleteChannelRelated(remoteId: Int, profileId: Long) = channelValueDao.deleteKtx(remoteId, profileId)
 }

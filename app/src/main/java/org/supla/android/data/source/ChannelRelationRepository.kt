@@ -28,7 +28,7 @@ import javax.inject.Singleton
 @Singleton
 class ChannelRelationRepository @Inject constructor(
   private val channelRelationDao: ChannelRelationDao
-) : CountProvider, RemoveHiddenChannelsUseCase.Deletable {
+) : CountProvider, RemoveHiddenChannelsUseCase.ChannelsDeletable {
 
   fun insertOrUpdate(channelRelation: ChannelRelationEntity) = channelRelationDao.insertOrUpdate(channelRelation)
 
@@ -53,5 +53,5 @@ class ChannelRelationRepository @Inject constructor(
 
   override fun count(): Observable<Int> = channelRelationDao.count()
 
-  override suspend fun deleteKtx(remoteId: Int, profileId: Long) = channelRelationDao.deleteKtx(remoteId, profileId)
+  override suspend fun deleteChannelRelated(remoteId: Int, profileId: Long) = channelRelationDao.deleteKtx(remoteId, profileId)
 }

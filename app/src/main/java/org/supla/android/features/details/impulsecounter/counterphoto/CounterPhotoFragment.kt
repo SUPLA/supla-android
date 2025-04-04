@@ -18,7 +18,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
@@ -42,11 +41,10 @@ class CounterPhotoFragment : BaseComposeFragment<CounterPhotoViewModelState, Cou
   lateinit var navigator: MainNavigator
 
   @Composable
-  override fun ComposableContent() {
-    val state by viewModel.getViewState().collectAsState()
+  override fun ComposableContent(modelState: CounterPhotoViewModelState) {
     SuplaTheme {
       CounterPhotoView(
-        state = state.viewState,
+        state = modelState.viewState,
         onCloudClick = viewModel::onCloudClick,
         onRefresh = viewModel::onRefresh
       )

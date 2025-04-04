@@ -431,7 +431,7 @@
   <string name="widget_channel" translatable="false">@string/zwave_supla_channel</string>
   <string name="widget_group">group</string>
   <string name="widget_scene">scene</string>
-  <string name="widget_action_toggle">Toggle</string>
+  <string name="channel_btn_toggle">Toggle</string>
 
   <string name="channel_caption_roofwindowopeningsensor">Roof window opening sensor</string>
   <string name="channel_caption_roofwindow">Roof window</string>
@@ -790,6 +790,19 @@
   <string name="thermostat_calibration_error" translatable="false">Calibration error</string>
   <string name="state_dialog_index" translatable="false">(%1$d of %2$d)</string>
   <string name="state_switch_cycle_count" translatable="false">Switch cycles</string>
+  <string name="settings_android_auto_label" translatable="false">Android Auto</string>
+  <string name="android_auto_add" translatable="false">Add Android Auto item</string>
+  <string name="channel_btn_stop" translatable="false">Stop</string>
+  <string name="android_auto_action" translatable="false">Action: %1$s</string>
+  <string name="android_auto_empty" translatable="false">Android Auto not configured. Go to Supla App -> Settings -> Android Auto and prepare configuration.</string>
+  <string name="android_auto_executing" translatable="false">Executing…</string>
+  <string name="android_auto_delete_title" translatable="false">Deleting item</string>
+  <string name="android_auto_delete_message" translatable="false">Do you want to continue?</string>
+  <string name="android_auto_delete_confirm" translatable="false">Delete</string>
+  <string name="channel_not_found" translatable="false">Channel not found</string>
+  <string name="scene_inactive" translatable="false">Scene is inactive</string>
+  <string name="android_auto_error" translatable="false">Execution failed</string>
+  <string name="android_auto_play_messages" translatable="false">Play messages</string>
 
   <plurals name="details_timer_info_on" translatable="false">
     <item quantity="other">on</item>

@@ -66,6 +66,9 @@ class SettingsFragment : BaseFragment<SettingsViewState, SettingsViewEvent>(R.la
       SettingsViewEvent.NavigateToLocalizationsOrdering ->
         navigator.navigateTo(R.id.location_ordering_fragment)
 
+      SettingsViewEvent.NavigateToAndroidAuto ->
+        navigator.navigateTo(R.id.android_auto_items_fragment)
+
       is SettingsViewEvent.NavigateToPinSetup ->
         navigator.navigateTo(R.id.pin_setup_fragment, PinSetupFragment.bundle(event.lockScreenScope))
 

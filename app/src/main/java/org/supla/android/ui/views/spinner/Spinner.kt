@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package org.supla.android.ui.views
+package org.supla.android.ui.views.spinner
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -30,8 +30,6 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.Text
@@ -42,20 +40,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
+import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.model.chart.ChartRange
 import org.supla.android.data.model.general.SingleSelectionList
 import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.infrastructure.LocalizedString
 
 @Composable
 fun <T> Spinner(
@@ -63,11 +61,12 @@ fun <T> Spinner(
   options: Map<T, String>,
   modifier: Modifier = Modifier,
   enabled: Boolean = true,
+  fillMaxWidth: Boolean = false,
   onOptionSelected: (selectedId: T) -> Unit
 ) {
   var expanded by remember { mutableStateOf(false) }
   val firstOptionText = options[options.keys.first()] ?: ""
-  var selectedOptionText by remember { mutableStateOf(firstOptionText) }
+  var selectedOptionText by remember(options) { mutableStateOf(firstOptionText) }
 
   Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(4.dp)) {
     Text(
@@ -77,18 +76,7 @@ fun <T> Spinner(
       color = colorResource(id = R.color.on_surface_variant)
     )
     ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = { ifTrue(enabled) { expanded = it } }) {
-      TextField(
-        value = selectedOptionText,
-        readOnly = true,
-        trailingIcon = {
-          SpinnerTrailingIcon(
-            expanded = expanded,
-            enabled,
-            modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable)
-          )
-        },
-        modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryEditable)
-      )
+      SpinnerTextField(selectedOptionText, expanded, enabled, fillMaxWidth)
       ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
         options.forEach { option ->
           DropdownMenuItem(
@@ -106,7 +94,50 @@ fun <T> Spinner(
 }
 
 interface SpinnerItem {
-  val labelRes: Int
+  val label: LocalizedString
+}
+
+@Composable
+fun <T : SpinnerItem> Spinner(
+  options: SingleSelectionList<T>,
+  modifier: Modifier = Modifier,
+  enabled: Boolean = true,
+  fillMaxWidth: Boolean = false,
+  labelTextColor: Color = colorResource(id = R.color.on_surface_variant),
+  onOptionSelected: (selected: T) -> Unit
+) {
+  var expanded by remember { mutableStateOf(false) }
+  val selectedOptionText = options.selected.label(LocalContext.current)
+
+  Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(4.dp)) {
+    options.label?.let {
+      Text(
+        text = stringResource(id = it).uppercase(),
+        style = MaterialTheme.typography.bodySmall,
+        color = labelTextColor,
+        modifier = Modifier.padding(horizontal = 12.dp),
+      )
+    }
+    ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = { ifTrue(enabled) { expanded = it } }) {
+      SpinnerTextField(selectedOptionText, expanded, enabled, fillMaxWidth)
+      ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+        options.items.forEach { option ->
+          DropdownMenuItem(
+            text = {
+              Text(
+                text = option.label(LocalContext.current),
+                style = MaterialTheme.typography.bodyLarge
+              )
+            },
+            onClick = {
+              onOptionSelected(option)
+              expanded = false
+            }
+          )
+        }
+      }
+    }
+  }
 }
 
 @Composable
@@ -119,7 +150,7 @@ fun <T : SpinnerItem> TextSpinner(
   onOptionSelected: (selectedId: T) -> Unit
 ) {
   var expanded by remember { mutableStateOf(false) }
-  val selectedOptionText = options.selected.labelRes
+  val selectedOptionText = options.selected.label(LocalContext.current)
 
   Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(4.dp)) {
     options.label?.let {
@@ -136,10 +167,12 @@ fun <T : SpinnerItem> TextSpinner(
     ) {
       Row(verticalAlignment = Alignment.CenterVertically) {
         Text(
-          text = stringResource(id = selectedOptionText),
+          text = selectedOptionText,
           style = MaterialTheme.typography.bodyMedium,
           color = if (enabled) MaterialTheme.colorScheme.onBackground else MaterialTheme.colorScheme.outline,
-          modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryEditable).weight(1f, false),
+          modifier = Modifier
+            .menuAnchor(MenuAnchorType.PrimaryEditable)
+            .weight(1f, false),
           maxLines = 1,
           overflow = TextOverflow.Ellipsis
         )
@@ -155,7 +188,12 @@ fun <T : SpinnerItem> TextSpinner(
       DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
         options.items.forEach { option ->
           DropdownMenuItem(
-            text = { Text(stringResource(id = option.labelRes), style = MaterialTheme.typography.bodyMedium) },
+            text = {
+              Text(
+                text = option.label(LocalContext.current),
+                style = MaterialTheme.typography.bodyMedium
+              )
+            },
             onClick = {
               onOptionSelected(option)
               expanded = false
@@ -166,23 +204,6 @@ fun <T : SpinnerItem> TextSpinner(
     }
   }
 }
-
-@Composable
-private fun SpinnerTrailingIcon(expanded: Boolean, enabled: Boolean, modifier: Modifier = Modifier) =
-  IconButton(modifier = Modifier.clearAndSetSemantics { }, onClick = { }) {
-    Icon(
-      painter = painterResource(id = R.drawable.ic_dropdown),
-      contentDescription = null,
-      tint = if (enabled) MaterialTheme.colorScheme.onBackground else MaterialTheme.colorScheme.outline,
-      modifier = modifier.rotate(
-        if (expanded) {
-          180f
-        } else {
-          360f
-        }
-      )
-    )
-  }
 
 @Preview
 @Composable

@@ -18,7 +18,8 @@ package org.supla.android.data.model.chart
  */
 
 import org.supla.android.R
-import org.supla.android.ui.views.SpinnerItem
+import org.supla.android.ui.views.spinner.SpinnerItem
+import org.supla.core.shared.infrastructure.LocalizedString
 
 enum class ChartRange(val stringRes: Int, val roundedDaysCount: Int) : SpinnerItem {
   LAST_DAY(R.string.history_range_last_day, 1),
@@ -36,6 +37,6 @@ enum class ChartRange(val stringRes: Int, val roundedDaysCount: Int) : SpinnerIt
   CUSTOM(R.string.history_range_custom, -1),
   ALL_HISTORY(R.string.all_available_history, -1);
 
-  override val labelRes: Int
-    get() = stringRes
+  override val label: LocalizedString
+    get() = LocalizedString.WithResource(stringRes)
 }

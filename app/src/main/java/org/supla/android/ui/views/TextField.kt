@@ -24,6 +24,8 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -31,6 +33,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -43,8 +46,11 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
+import org.supla.android.core.ui.theme.Distance
+import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.core.ui.theme.gray
 
 @Composable
@@ -111,6 +117,10 @@ fun TextField(
     isFocused && focusedColor != null -> focusedColor
     else -> colorResource(id = R.color.gray_lighter)
   }
+  val textColor = when {
+    enabled -> MaterialTheme.colorScheme.onBackground
+    else -> MaterialTheme.colorScheme.outline
+  }
 
   BasicTextField(
     value = value,
@@ -124,7 +134,7 @@ fun TextField(
     onValueChange = onValueChange,
     enabled = enabled,
     readOnly = readOnly,
-    textStyle = textStyle.merge(color = MaterialTheme.colorScheme.onBackground),
+    textStyle = textStyle.merge(TextStyle(color = textColor)),
     cursorBrush = SolidColor(cursorColor),
     visualTransformation = visualTransformation,
     keyboardOptions = keyboardOptions,
@@ -155,4 +165,16 @@ fun TextField(
       )
     }
   )
+}
+
+@Preview
+@Composable
+private fun Preview() {
+  SuplaTheme {
+    Column(verticalArrangement = Arrangement.spacedBy(Distance.default)) {
+      TextField("Without label")
+      TextField("With label", label = { Text("Label") })
+      TextField("Disabled", enabled = false)
+    }
+  }
 }

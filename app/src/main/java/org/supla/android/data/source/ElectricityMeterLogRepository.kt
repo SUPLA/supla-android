@@ -38,7 +38,7 @@ class ElectricityMeterLogRepository @Inject constructor(
   private val electricityMeterLogDao: ElectricityMeterLogDao
 ) : BaseMeasurementRepository<ElectricityMeasurement, ElectricityMeterLogEntity>(electricityMeterLogDao),
   CountProvider,
-  RemoveHiddenChannelsUseCase.Deletable {
+  RemoveHiddenChannelsUseCase.ChannelsDeletable {
 
   fun findMeasurements(remoteId: Int, profileId: Long, startDate: Date, endDate: Date) =
     electricityMeterLogDao.findMeasurements(remoteId, profileId, startDate.time, endDate.time)
@@ -98,5 +98,5 @@ class ElectricityMeterLogRepository @Inject constructor(
 
   override fun count(): Observable<Int> = electricityMeterLogDao.count()
 
-  override suspend fun deleteKtx(remoteId: Int, profileId: Long) = electricityMeterLogDao.deleteKtx(remoteId, profileId)
+  override suspend fun deleteChannelRelated(remoteId: Int, profileId: Long) = electricityMeterLogDao.deleteKtx(remoteId, profileId)
 }

@@ -19,7 +19,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import android.os.Bundle
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import androidx.core.os.bundleOf
@@ -54,9 +53,7 @@ class ThermostatSlavesListFragment : BaseComposeFragment<ThermostatSlavesListVie
   private val item: ItemBundle by lazy { requireSerializable(ARG_ITEM_BUNDLE, ItemBundle::class.java) }
 
   @Composable
-  override fun ComposableContent() {
-    val modelState by viewModel.getViewState().collectAsState()
-
+  override fun ComposableContent(modelState: ThermostatSlavesListViewModelState) {
     SuplaTheme {
       modelState.showMessage?.let {
         AlertDialog(

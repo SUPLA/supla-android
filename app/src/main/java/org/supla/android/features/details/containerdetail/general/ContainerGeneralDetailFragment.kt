@@ -20,7 +20,6 @@ package org.supla.android.features.details.containerdetail.general
 import android.os.Bundle
 import android.view.View
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
@@ -58,8 +57,7 @@ class ContainerGeneralDetailFragment : BaseComposeFragment<ContainerGeneralDetai
   }
 
   @Composable
-  override fun ComposableContent() {
-    val modelState by viewModel.getViewState().collectAsState()
+  override fun ComposableContent(modelState: ContainerGeneralDetailViewModeState) {
     SuplaTheme {
       viewModel.View(
         state = modelState.viewState,

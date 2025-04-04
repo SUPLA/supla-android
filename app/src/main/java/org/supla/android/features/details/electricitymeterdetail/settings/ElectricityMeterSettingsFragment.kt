@@ -18,7 +18,6 @@ package org.supla.android.features.details.electricitymeterdetail.settings
  */
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
@@ -38,11 +37,10 @@ class ElectricityMeterSettingsFragment :
   private val item: ItemBundle by lazy { requireSerializable(ARG_ITEM_BUNDLE, ItemBundle::class.java) }
 
   @Composable
-  override fun ComposableContent() {
-    val state by viewModel.getViewState().collectAsState()
+  override fun ComposableContent(modelState: ElectricityMeterSettingsViewModelState) {
     SuplaTheme {
       ElectricityMeterSettingsView(
-        state = state.viewState,
+        state = modelState.viewState,
         onListValueChanged = viewModel::onListValueChange,
         onBalancingChanged = viewModel::onBalanceValueChange
       )

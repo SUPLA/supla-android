@@ -27,7 +27,8 @@ import org.supla.android.extensions.inHalfOfHour
 import org.supla.android.extensions.monthHalf
 import org.supla.android.extensions.toTimestamp
 import org.supla.android.extensions.yearHalf
-import org.supla.android.ui.views.SpinnerItem
+import org.supla.android.ui.views.spinner.SpinnerItem
+import org.supla.core.shared.infrastructure.LocalizedString
 import java.util.Date
 
 enum class ChartDataAggregation(
@@ -85,8 +86,8 @@ enum class ChartDataAggregation(
     { it.monthHalf().toTimestamp() }
   );
 
-  override val labelRes: Int
-    get() = stringRes
+  override val label: LocalizedString
+    get() = LocalizedString.WithResource(stringRes)
 
   val isRank: Boolean
     get() = when (this) {

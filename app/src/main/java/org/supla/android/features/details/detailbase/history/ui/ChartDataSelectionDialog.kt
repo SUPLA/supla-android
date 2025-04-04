@@ -52,10 +52,10 @@ import org.supla.android.ui.dialogs.DialogButtonsRow
 import org.supla.android.ui.dialogs.DialogHeader
 import org.supla.android.ui.views.Separator
 import org.supla.android.ui.views.SeparatorStyle
-import org.supla.android.ui.views.SpinnerItem
-import org.supla.android.ui.views.TextSpinner
 import org.supla.android.ui.views.buttons.Button
 import org.supla.android.ui.views.buttons.OutlinedButton
+import org.supla.android.ui.views.spinner.SpinnerItem
+import org.supla.android.ui.views.spinner.TextSpinner
 import org.supla.android.usecases.channel.measurementsprovider.electricity.PhaseItem
 
 @Immutable

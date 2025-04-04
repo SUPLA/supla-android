@@ -38,7 +38,7 @@ class ImpulseCounterLogRepository @Inject constructor(
   private val impulseCounterLogDao: ImpulseCounterLogDao
 ) : BaseMeasurementRepository<ImpulseCounterMeasurement, ImpulseCounterLogEntity>(impulseCounterLogDao),
   CountProvider,
-  RemoveHiddenChannelsUseCase.Deletable {
+  RemoveHiddenChannelsUseCase.ChannelsDeletable {
 
   fun findMeasurements(remoteId: Int, profileId: Long, startDate: Date, endDate: Date): Observable<List<ImpulseCounterLogEntity>> =
     impulseCounterLogDao.findMeasurements(remoteId, profileId, startDate.time, endDate.time)
@@ -80,5 +80,5 @@ class ImpulseCounterLogRepository @Inject constructor(
 
   override fun count(): Observable<Int> = impulseCounterLogDao.count()
 
-  override suspend fun deleteKtx(remoteId: Int, profileId: Long) = impulseCounterLogDao.deleteKtx(remoteId, profileId)
+  override suspend fun deleteChannelRelated(remoteId: Int, profileId: Long) = impulseCounterLogDao.deleteKtx(remoteId, profileId)
 }

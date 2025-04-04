@@ -473,7 +473,7 @@
   <string name="widget_command_no_access">Bez prístupu! (kód: %1$d)</string>
   <string name="widget_group">skupina</string>
   <string name="widget_scene">scéna</string>
-  <string name="widget_action_toggle">Prepnúť</string>
+  <string name="channel_btn_toggle">Prepnúť</string>
 
   <string name="associeted_with_push_error">Funkciu kanála spojeného s oznámeniami PUSH nemožno zmeniť.</string>
   <string name="associeted_with_vbt_error">Funkciu kanála spojeného s reakciami nemožno zmeniť.</string>

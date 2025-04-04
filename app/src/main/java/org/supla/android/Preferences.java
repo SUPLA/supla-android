@@ -55,6 +55,7 @@ public class Preferences {
       "pref_should_show_em_history_introduction";
   private static final String pref_should_show_em_general_introduction =
       "pref_should_show_em_general_introduction";
+  private static final String pref_play_android_auto = "pref_play_android_auto";
 
   private final SharedPreferences _prefs;
 
@@ -206,20 +207,6 @@ public class Preferences {
     ed.apply();
   }
 
-  private String getChartTypeKey(int profileId, int channel, int idx) {
-    return String.format(pref_chart_type, channel, profileId, idx);
-  }
-
-  public int getChartType(int profileId, int channel, int idx, int def) {
-    return _prefs.getInt(getChartTypeKey(profileId, channel, idx), def);
-  }
-
-  public void setChartType(int profileId, int channel, int idx, int charttype) {
-    SharedPreferences.Editor ed = _prefs.edit();
-    ed.putInt(getChartTypeKey(profileId, channel, idx), charttype);
-    ed.apply();
-  }
-
   public boolean isAnyAccountRegistered() {
     return _prefs.getBoolean(pref_any_account_registered, false);
   }
@@ -274,6 +261,14 @@ public class Preferences {
 
   public void setEmGeneralIntroductionShown() {
     _prefs.edit().putBoolean(pref_should_show_em_general_introduction, false).apply();
+  }
+
+  public boolean playAndroidAuto() {
+    return _prefs.getBoolean(pref_play_android_auto, true);
+  }
+
+  public void setPlayAndroidAuto(boolean active) {
+    _prefs.edit().putBoolean(pref_play_android_auto, active).apply();
   }
 
   public void registerChangeListener(OnSharedPreferenceChangeListener listener) {

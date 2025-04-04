@@ -154,6 +154,8 @@ dependencies {
   implementation(libs.androidx.compose.material3)
   implementation(libs.androidx.compose.material3.adaptive)
   implementation(libs.androidx.compose.constraintLayout)
+  implementation(libs.androidx.car.app)
+  implementation(libs.androidx.car.app.automotive)
 
   implementation(libs.rxjava)
   implementation(libs.rxandroid)
@@ -170,6 +172,8 @@ dependencies {
   implementation(libs.kotlinx.serialization)
   implementation(libs.jsoup)
   implementation(libs.coil)
+  implementation(libs.guava)
+  implementation(libs.reorderable)
 
   coreLibraryDesugaring(libs.android.tools.desugar)
 

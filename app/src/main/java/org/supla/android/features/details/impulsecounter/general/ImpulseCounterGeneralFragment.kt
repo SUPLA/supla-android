@@ -20,7 +20,6 @@ package org.supla.android.features.details.impulsecounter.general
 import android.os.Bundle
 import android.view.View
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
@@ -41,9 +40,7 @@ class ImpulseCounterGeneralFragment : BaseComposeFragment<ImpulseCounterGeneralV
   private val item: ItemBundle by lazy { requireSerializable(ARG_ITEM_BUNDLE, ItemBundle::class.java) }
 
   @Composable
-  override fun ComposableContent() {
-    val modelState by viewModel.getViewState().collectAsState()
-
+  override fun ComposableContent(modelState: ImpulseCounterGeneralViewModelState) {
     SuplaTheme {
       ImpulseCounterMetricsView(modelState.viewState)
     }

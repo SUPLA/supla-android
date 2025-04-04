@@ -39,7 +39,7 @@ class VoltageLogRepository @Inject constructor(
   private val voltageLogDao: VoltageLogDao
 ) : BaseMeasurementRepository<HistoryMeasurement, VoltageHistoryLogEntity>(voltageLogDao),
   CountProvider,
-  RemoveHiddenChannelsUseCase.Deletable {
+  RemoveHiddenChannelsUseCase.ChannelsDeletable {
 
   fun findMeasurements(
     remoteId: Int,
@@ -89,5 +89,5 @@ class VoltageLogRepository @Inject constructor(
     )
 
   override fun count(): Observable<Int> = voltageLogDao.count()
-  override suspend fun deleteKtx(remoteId: Int, profileId: Long) = voltageLogDao.deleteKtx(remoteId, profileId)
+  override suspend fun deleteChannelRelated(remoteId: Int, profileId: Long) = voltageLogDao.deleteKtx(remoteId, profileId)
 }

@@ -63,7 +63,7 @@ class SegmentedComponent @JvmOverloads constructor(
   @Composable
   override fun Content() {
     SuplaTheme {
-      SegmentedComponent(items, activeItem = activeItem, disabled = disabled) {
+      SegmentedComponent(items, activeItem = activeItem, enabled = !disabled) {
         if (disabled.not()) {
           activeItem = it
           selectedItemListener(it)
@@ -78,7 +78,7 @@ fun SegmentedComponent(
   items: List<String>,
   modifier: Modifier = Modifier,
   activeItem: Int = 0,
-  disabled: Boolean = false,
+  enabled: Boolean = true,
   onClick: (Int) -> Unit = {}
 ) {
   Row(
@@ -99,7 +99,7 @@ fun SegmentedComponent(
       Text(
         text = item,
         style = MaterialTheme.typography.bodyMedium.copy(
-          color = if (disabled) colorResource(id = R.color.item_unselected) else MaterialTheme.colorScheme.onBackground,
+          color = if (enabled) MaterialTheme.colorScheme.onBackground else colorResource(id = R.color.item_unselected),
           textAlign = TextAlign.Center
         ),
         modifier = textModifier
@@ -107,7 +107,7 @@ fun SegmentedComponent(
           .fillMaxHeight()
           .weight(1f)
           .clickable {
-            if (activeItem != i) {
+            if (activeItem != i && enabled) {
               onClick(i)
             }
           }
@@ -122,8 +122,8 @@ private fun Preview() {
   Box(modifier = Modifier.background(Color.White)) {
     SuplaTheme {
       Column {
-        SegmentedComponent(listOf("Turn on", "Turn off"), activeItem = 1, disabled = true)
-        SegmentedComponent(listOf("Turn on", "Turn off"), activeItem = 0, disabled = false)
+        SegmentedComponent(listOf("Turn on", "Turn off"), activeItem = 1, enabled = true)
+        SegmentedComponent(listOf("Turn on", "Turn off"), activeItem = 0, enabled = false)
       }
     }
   }

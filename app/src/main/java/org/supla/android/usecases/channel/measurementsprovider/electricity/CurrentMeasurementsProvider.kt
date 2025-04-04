@@ -81,7 +81,7 @@ class CurrentMeasurementsProvider @Inject constructor(
           spec.aggregation,
           historyDataSets.map { it.second },
           CurrentChartCustomData(historyDataSets.map { it.first }),
-          (spec.customFilters as? ElectricityChartFilters)?.type?.label
+          (spec.customFilters as? ElectricityChartFilters)?.type?.labelWithUnit
         )
       }
       .firstOrError()
