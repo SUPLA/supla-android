@@ -77,7 +77,7 @@ import org.supla.android.features.details.detailbase.history.ui.HistoryDetailPro
 import org.supla.android.features.details.electricitymeterdetail.history.IntroductionPage
 import org.supla.android.profile.ProfileManager
 import org.supla.android.tools.SuplaSchedulers
-import org.supla.android.ui.views.SpinnerItem
+import org.supla.android.ui.views.spinner.SpinnerItem
 import org.supla.android.usecases.channel.DeleteChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
 import org.supla.android.usecases.migration.GroupingStringMigrationUseCase

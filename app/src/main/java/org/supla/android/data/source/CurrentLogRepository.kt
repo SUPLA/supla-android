@@ -39,7 +39,7 @@ class CurrentLogRepository @Inject constructor(
   private val currentLogDao: CurrentLogDao
 ) : BaseMeasurementRepository<HistoryMeasurement, CurrentHistoryLogEntity>(currentLogDao),
   CountProvider,
-  RemoveHiddenChannelsUseCase.Deletable {
+  RemoveHiddenChannelsUseCase.ChannelsDeletable {
 
   fun findMeasurements(
     remoteId: Int,
@@ -90,5 +90,5 @@ class CurrentLogRepository @Inject constructor(
 
   override fun count(): Observable<Int> = currentLogDao.count()
 
-  override suspend fun deleteKtx(remoteId: Int, profileId: Long) = currentLogDao.deleteKtx(remoteId, profileId)
+  override suspend fun deleteChannelRelated(remoteId: Int, profileId: Long) = currentLogDao.deleteKtx(remoteId, profileId)
 }

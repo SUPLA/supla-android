@@ -38,7 +38,7 @@ class HumidityLogRepository @Inject constructor(
   private val humidityLogDao: HumidityLogDao
 ) : BaseMeasurementRepository<HumidityMeasurement, HumidityLogEntity>(humidityLogDao),
   CountProvider,
-  RemoveHiddenChannelsUseCase.Deletable {
+  RemoveHiddenChannelsUseCase.ChannelsDeletable {
 
   fun findMeasurements(remoteId: Int, profileId: Long, startDate: Date, endDate: Date): Observable<List<HumidityLogEntity>> {
     return humidityLogDao.findMeasurements(remoteId, profileId, startDate.time, endDate.time)
@@ -88,5 +88,5 @@ class HumidityLogRepository @Inject constructor(
 
   override fun count(): Observable<Int> = humidityLogDao.count()
 
-  override suspend fun deleteKtx(remoteId: Int, profileId: Long) = humidityLogDao.deleteKtx(remoteId, profileId)
+  override suspend fun deleteChannelRelated(remoteId: Int, profileId: Long) = humidityLogDao.deleteKtx(remoteId, profileId)
 }

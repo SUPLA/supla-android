@@ -96,6 +96,12 @@ enum class SuplaFunction(val value: Int) {
       return UNKNOWN
     }
   }
+
+  val hasThermostatSubfunction: Boolean
+    get() = when (this) {
+      HVAC_DOMESTIC_HOT_WATER, HVAC_THERMOSTAT, HVAC_THERMOSTAT_HEAT_COOL -> true
+      else -> false
+    }
 }
 
 fun Int.suplaFunction() = SuplaFunction.from(this)

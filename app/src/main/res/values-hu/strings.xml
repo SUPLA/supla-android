@@ -473,7 +473,7 @@
   <string name="widget_command_no_access">Hozzáférés hiánya! (kód: %1$d)</string>
   <string name="widget_group">csoport</string>
   <string name="widget_scene">jelenet</string>
-  <string name="widget_action_toggle">Átkapcsolás</string>
+  <string name="channel_btn_toggle">Átkapcsolás</string>
   <string name="associeted_with_push_error">A PUSH értesítésekhez tartozó csatorna funkciója nem módosítható.</string>
   <string name="associeted_with_vbt_error">A reakciókhoz társított csatorna funkciója nem módosítható.</string>
   <string name="rs_display_mode">Redőnyök, zsalu, függönyök %</string>

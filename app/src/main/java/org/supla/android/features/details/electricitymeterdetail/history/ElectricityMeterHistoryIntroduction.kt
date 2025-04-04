@@ -45,8 +45,8 @@ import org.supla.android.data.model.chart.HistoryDataSet
 import org.supla.android.data.model.general.SingleSelectionList
 import org.supla.android.features.details.detailbase.history.ui.DataSetContainer
 import org.supla.android.images.ImageId
-import org.supla.android.ui.views.TextSpinner
 import org.supla.android.ui.views.buttons.IconButton
+import org.supla.android.ui.views.spinner.TextSpinner
 import org.supla.android.usecases.channel.valueformatter.ListElectricityMeterValueFormatter
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.infrastructure.LocalizedString

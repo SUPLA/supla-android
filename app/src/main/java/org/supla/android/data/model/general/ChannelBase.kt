@@ -17,6 +17,7 @@ package org.supla.android.data.model.general
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import org.supla.android.usecases.channel.GetChannelStateUseCase
 import org.supla.core.shared.data.model.general.SuplaFunction
 
 interface ChannelBase {
@@ -30,4 +31,7 @@ interface ChannelBase {
   val userIcon: Int
   val altIcon: Int
   val profileId: Long
+
+  val offlineState: ChannelState
+    get() = GetChannelStateUseCase.getOfflineState(function)
 }

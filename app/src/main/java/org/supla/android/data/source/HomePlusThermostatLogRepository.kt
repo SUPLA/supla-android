@@ -25,6 +25,6 @@ import javax.inject.Singleton
 @Singleton
 class HomePlusThermostatLogRepository @Inject constructor(
   private val homePlusThermostatLogDao: HomePlusThermostatLogDao
-) : RemoveHiddenChannelsUseCase.Deletable {
-  override suspend fun deleteKtx(remoteId: Int, profileId: Long) = homePlusThermostatLogDao.deleteKtx(remoteId, profileId)
+) : RemoveHiddenChannelsUseCase.ChannelsDeletable {
+  override suspend fun deleteChannelRelated(remoteId: Int, profileId: Long) = homePlusThermostatLogDao.deleteKtx(remoteId, profileId)
 }

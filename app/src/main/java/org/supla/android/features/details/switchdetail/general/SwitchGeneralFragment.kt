@@ -20,7 +20,6 @@ package org.supla.android.features.details.switchdetail.general
 import android.os.Bundle
 import android.view.View
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
@@ -45,8 +44,7 @@ class SwitchGeneralFragment : BaseComposeFragment<SwitchGeneralViewState, Switch
   lateinit var getChannelIconUseCase: GetChannelIconUseCase
 
   @Composable
-  override fun ComposableContent() {
-    val modelState by viewModel.getViewState().collectAsState()
+  override fun ComposableContent(modelState: SwitchGeneralViewState) {
     SuplaTheme {
       SwitchGeneralView(
         state = modelState,

@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import org.supla.android.data.source.local.dao.AndroidAutoItemDao
 import org.supla.android.data.source.local.dao.ChannelConfigDao
 import org.supla.android.data.source.local.dao.ChannelDao
 import org.supla.android.data.source.local.dao.ChannelExtendedValueDao
@@ -34,6 +35,7 @@ import org.supla.android.data.source.local.dao.NotificationDao
 import org.supla.android.data.source.local.dao.ProfileDao
 import org.supla.android.data.source.local.dao.SceneDao
 import org.supla.android.data.source.local.dao.UserIconDao
+import org.supla.android.data.source.local.entity.AndroidAutoItemEntity
 import org.supla.android.data.source.local.entity.ChannelConfigEntity
 import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity
@@ -65,7 +67,8 @@ import org.supla.android.db.DbHelper
     ChannelGroupRelationEntity::class,
     ChannelExtendedValueEntity::class,
     NotificationEntity::class,
-    ChannelStateEntity::class
+    ChannelStateEntity::class,
+    AndroidAutoItemEntity::class
   ],
   version = DbHelper.DATABASE_VERSION,
   exportSchema = false
@@ -86,4 +89,5 @@ abstract class AppDatabase : RoomDatabase() {
   abstract fun channelExtendedValueDao(): ChannelExtendedValueDao
   abstract fun notificationDao(): NotificationDao
   abstract fun channelStateDao(): ChannelStateDao
+  abstract fun androidAutoItemDao(): AndroidAutoItemDao
 }

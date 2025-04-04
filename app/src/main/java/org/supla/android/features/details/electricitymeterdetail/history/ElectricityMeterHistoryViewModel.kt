@@ -57,7 +57,7 @@ import org.supla.android.features.details.detailbase.history.ui.CheckboxItem
 import org.supla.android.lib.SuplaChannelElectricityMeterValue
 import org.supla.android.profile.ProfileManager
 import org.supla.android.tools.SuplaSchedulers
-import org.supla.android.ui.views.SpinnerItem
+import org.supla.android.ui.views.spinner.SpinnerItem
 import org.supla.android.usecases.channel.DeleteChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.DownloadChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.LoadChannelMeasurementsDataRangeUseCase

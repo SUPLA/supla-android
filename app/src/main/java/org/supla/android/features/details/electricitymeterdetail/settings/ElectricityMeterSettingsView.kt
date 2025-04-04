@@ -41,8 +41,8 @@ import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.model.electricitymeter.ElectricityMeterBalanceType
 import org.supla.android.data.model.general.SingleSelectionList
 import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType
-import org.supla.android.ui.views.SpinnerItem
-import org.supla.android.ui.views.TextSpinner
+import org.supla.android.ui.views.spinner.SpinnerItem
+import org.supla.android.ui.views.spinner.TextSpinner
 
 data class ElectricityMeterSettingsViewState(
   val channelName: StringProvider = { "" },

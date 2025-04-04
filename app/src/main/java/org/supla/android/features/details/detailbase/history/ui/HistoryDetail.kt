@@ -79,12 +79,12 @@ import org.supla.android.features.details.detailbase.history.HistoryDetailViewSt
 import org.supla.android.images.ImageId
 import org.supla.android.ui.dialogs.DatePickerDialog
 import org.supla.android.ui.dialogs.TimePickerDialog
-import org.supla.android.ui.views.SpinnerItem
 import org.supla.android.ui.views.TextField
-import org.supla.android.ui.views.TextSpinner
 import org.supla.android.ui.views.buttons.IconButton
 import org.supla.android.ui.views.charts.CombinedChart
 import org.supla.android.ui.views.charts.PieChart
+import org.supla.android.ui.views.spinner.SpinnerItem
+import org.supla.android.ui.views.spinner.TextSpinner
 import org.supla.android.ui.views.tools.Shadow
 import org.supla.android.ui.views.tools.ShadowOrientation
 import org.supla.android.usecases.channel.valueformatter.HumidityValueFormatter

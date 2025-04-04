@@ -162,6 +162,46 @@ interface ChannelGroupDao {
   )
   fun findGroupOnlineCount(groupId: Long): Maybe<GroupOnlineSummary>
 
+  @Query(
+    """
+      SELECT
+        channel_group.$COLUMN_ID group_$COLUMN_ID,
+        channel_group.$COLUMN_REMOTE_ID group_$COLUMN_REMOTE_ID,
+        channel_group.$COLUMN_CAPTION group_$COLUMN_CAPTION,
+        channel_group.$COLUMN_ONLINE group_$COLUMN_ONLINE,
+        channel_group.$COLUMN_FUNCTION group_$COLUMN_FUNCTION,
+        channel_group.$COLUMN_VISIBLE group_$COLUMN_VISIBLE,
+        channel_group.$COLUMN_LOCATION_ID group_$COLUMN_LOCATION_ID,
+        channel_group.$COLUMN_ALT_ICON group_$COLUMN_ALT_ICON,
+        channel_group.$COLUMN_USER_ICON group_$COLUMN_USER_ICON,
+        channel_group.$COLUMN_FLAGS group_$COLUMN_FLAGS,
+        channel_group.$COLUMN_TOTAL_VALUE group_$COLUMN_TOTAL_VALUE,
+        channel_group.$COLUMN_POSITION group_$COLUMN_POSITION,
+        channel_group.$COLUMN_PROFILE_ID group_$COLUMN_PROFILE_ID,
+        location.${LocationEntity.COLUMN_ID} location_${LocationEntity.COLUMN_ID},
+        location.${LocationEntity.COLUMN_REMOTE_ID} location_${LocationEntity.COLUMN_REMOTE_ID},
+        location.${LocationEntity.COLUMN_CAPTION} location_${LocationEntity.COLUMN_CAPTION},
+        location.${LocationEntity.COLUMN_VISIBLE} location_${LocationEntity.COLUMN_VISIBLE},
+        location.${LocationEntity.COLUMN_COLLAPSED} location_${LocationEntity.COLUMN_COLLAPSED},
+        location.${LocationEntity.COLUMN_SORTING} location_${LocationEntity.COLUMN_SORTING},
+        location.${LocationEntity.COLUMN_SORT_ORDER} location_${LocationEntity.COLUMN_SORT_ORDER},
+        location.${LocationEntity.COLUMN_PROFILE_ID} location_${LocationEntity.COLUMN_PROFILE_ID}
+      FROM $TABLE_NAME channel_group
+      JOIN ${LocationEntity.TABLE_NAME} location
+        ON channel_group.$COLUMN_LOCATION_ID = location.${LocationEntity.COLUMN_REMOTE_ID}
+          AND channel_group.$COLUMN_PROFILE_ID = location.${LocationEntity.COLUMN_PROFILE_ID}
+      WHERE channel_group.$COLUMN_VISIBLE > 0
+        AND channel_group.$COLUMN_PROFILE_ID = :profileId
+      ORDER BY 
+        location.${LocationEntity.COLUMN_SORT_ORDER},
+        location.${LocationEntity.COLUMN_CAPTION} COLLATE LOCALIZED,
+        channel_group.$COLUMN_POSITION,
+        channel_group.$COLUMN_FUNCTION DESC,
+        channel_group.$COLUMN_CAPTION COLLATE LOCALIZED
+    """
+  )
+  fun findProfileGroups(profileId: Long): Single<List<ChannelGroupDataEntity>>
+
   @Update
   fun update(groups: List<ChannelGroupEntity>): Completable
 

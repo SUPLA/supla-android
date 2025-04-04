@@ -1,5 +1,6 @@
 package org.supla.android.lib.singlecall
 
+import org.supla.android.data.source.remote.SuplaResultCode
 import org.supla.android.tools.UsedFromNativeCode
 
 /*
@@ -47,4 +48,7 @@ import org.supla.android.tools.UsedFromNativeCode
  */
 
 @UsedFromNativeCode
-class ResultException(val result: Int) : Exception("The server returned a result number $result")
+class ResultException(val result: Int) : Exception("The server returned a result number $result") {
+  val resultCode: SuplaResultCode
+    get() = SuplaResultCode.from(result)
+}

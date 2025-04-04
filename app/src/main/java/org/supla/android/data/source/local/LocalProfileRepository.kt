@@ -22,6 +22,7 @@ import org.supla.android.Encryption
 import org.supla.android.Preferences
 import org.supla.android.SuplaApp
 import org.supla.android.data.source.ProfileRepository
+import org.supla.android.data.source.local.entity.AndroidAutoItemEntity
 import org.supla.android.data.source.local.entity.ChannelConfigEntity
 import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity
@@ -139,7 +140,8 @@ class LocalProfileRepository(provider: DatabaseAccessProvider) : ProfileReposito
       UserIconEntity.TABLE_NAME to UserIconEntity.COLUMN_PROFILE_ID,
       ChannelRelationEntity.TABLE_NAME to ChannelRelationEntity.COLUMN_PROFILE_ID,
       ChannelConfigEntity.TABLE_NAME to ChannelConfigEntity.COLUMN_PROFILE_ID,
-      ChannelStateEntity.TABLE_NAME to ChannelStateEntity.COLUMN_PROFILE_ID
+      ChannelStateEntity.TABLE_NAME to ChannelStateEntity.COLUMN_PROFILE_ID,
+      AndroidAutoItemEntity.TABLE_NAME to AndroidAutoItemEntity.COLUMN_PROFILE_ID
     )
     for ((table, column) in tables) {
       delete(table, key(column, id))

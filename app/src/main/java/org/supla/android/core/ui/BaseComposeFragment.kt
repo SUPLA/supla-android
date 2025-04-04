@@ -20,6 +20,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import android.os.Bundle
 import android.view.View
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import org.supla.android.R
 import org.supla.android.databinding.FragmentComposeBinding
@@ -32,12 +34,13 @@ abstract class BaseComposeFragment<S : ViewState, E : ViewEvent> : BaseFragment<
     super.onViewCreated(view, savedInstanceState)
 
     binding.composeContent.setContent {
-      ComposableContent()
+      val state by viewModel.getViewState().collectAsState()
+      ComposableContent(state)
     }
   }
 
   @Composable
-  abstract fun ComposableContent()
+  abstract fun ComposableContent(modelState: S)
 
   override fun handleViewState(state: S) {
   }

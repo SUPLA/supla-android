@@ -38,7 +38,7 @@ class GeneralPurposeMeasurementLogRepository @Inject constructor(
   private val generalPurposeMeasurementLogDao: GeneralPurposeMeasurementLogDao
 ) : BaseMeasurementRepository<GeneralPurposeMeasurement, GeneralPurposeMeasurementEntity>(generalPurposeMeasurementLogDao),
   CountProvider,
-  RemoveHiddenChannelsUseCase.Deletable {
+  RemoveHiddenChannelsUseCase.ChannelsDeletable {
 
   fun findMeasurements(remoteId: Int, profileId: Long, startDate: Date, endDate: Date): Observable<List<GeneralPurposeMeasurementEntity>> =
     generalPurposeMeasurementLogDao.findMeasurements(remoteId, profileId, startDate.time, endDate.time)
@@ -96,5 +96,5 @@ class GeneralPurposeMeasurementLogRepository @Inject constructor(
 
   override fun count(): Observable<Int> = generalPurposeMeasurementLogDao.count()
 
-  override suspend fun deleteKtx(remoteId: Int, profileId: Long) = generalPurposeMeasurementLogDao.deleteKtx(remoteId, profileId)
+  override suspend fun deleteChannelRelated(remoteId: Int, profileId: Long) = generalPurposeMeasurementLogDao.deleteKtx(remoteId, profileId)
 }
