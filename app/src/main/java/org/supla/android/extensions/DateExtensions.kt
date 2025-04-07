@@ -22,7 +22,6 @@ import org.supla.android.data.source.local.calendar.Hour
 import java.util.Calendar
 import java.util.Date
 import java.util.GregorianCalendar
-import java.util.TimeZone
 import kotlin.math.abs
 
 val Date.dayOfMonth: Int
@@ -53,11 +52,6 @@ val Date.minute: Int
   get() = Calendar.getInstance().let {
     it.time = this
     it.get(Calendar.MINUTE)
-  }
-
-val Date.gmt: Long
-  get() {
-    return time + TimeZone.getDefault().getOffset(time)
   }
 
 fun Date.dayStart(): Date = startOfDay(this).time
@@ -198,7 +192,11 @@ fun Date.daysInCurrentQuarter(): Int {
 }
 
 fun Date.shift(days: Int): Date =
-  Date(time + days.toLong().times(24).times(60).times(60).times(1000))
+  Calendar.getInstance().let {
+    it.time = this
+    it.add(Calendar.DATE, days)
+    it.time
+  }
 
 fun Date.shiftByHour(hour: Int): Date =
   Date(time + hour.toLong().times(60).times(60).times(1000))
