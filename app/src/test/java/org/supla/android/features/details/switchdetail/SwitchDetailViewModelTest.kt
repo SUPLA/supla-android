@@ -34,7 +34,6 @@ import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.Preferences
 import org.supla.android.core.BaseViewModelTest
-import org.supla.android.core.shared.shareable
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.data.source.local.entity.complex.shareable
@@ -84,8 +83,7 @@ class SwitchDetailViewModelTest : BaseViewModelTest<SwitchDetailViewState, Switc
     val function = SuplaFunction.DIMMER
     val channelData: ChannelDataEntity = mockk()
     every { channelData.visible } returns 1
-    every { channelData.function } returns function
-    channelData.mockShareable()
+    channelData.mockShareable(function = function)
     val caption: LocalizedString = mockk()
 
     whenever(getCaptionUseCase.invoke(channelData.shareable)).thenReturn(caption)
@@ -181,8 +179,7 @@ class SwitchDetailViewModelTest : BaseViewModelTest<SwitchDetailViewState, Switc
     val function = SuplaFunction.DIMMER
     val channelData: ChannelDataEntity = mockk()
     every { channelData.visible } returns 1
-    every { channelData.function } returns function
-    channelData.mockShareable()
+    channelData.mockShareable(function = function)
     val caption: LocalizedString = mockk()
 
     whenever(getCaptionUseCase.invoke(channelData.shareable)).thenReturn(caption)

@@ -60,7 +60,7 @@ fun SwitchButtons(
       Button(
         icon = it.icon,
         text = stringResource(id = it.textRes),
-        colors = SuplaButtonDefaults.errorColors(),
+        colors = SuplaButtonDefaults.errorColors(contentDisabled = MaterialTheme.colorScheme.onSurface),
         disabled = disabled,
         pressed = it.pressed,
         onClick = leftButtonClick,
@@ -71,7 +71,7 @@ fun SwitchButtons(
       Button(
         icon = it.icon,
         text = stringResource(id = it.textRes),
-        colors = SuplaButtonDefaults.primaryColors(),
+        colors = SuplaButtonDefaults.primaryColors(contentDisabled = MaterialTheme.colorScheme.onSurface),
         disabled = disabled,
         pressed = it.pressed,
         onClick = rightButtonClick,
@@ -87,7 +87,7 @@ private fun Button(
   modifier: Modifier = Modifier,
   disabled: Boolean = false,
   pressed: Boolean = false,
-  colors: SuplaButtonColors = SuplaButtonDefaults.buttonColors(),
+  colors: SuplaButtonColors,
   onClick: () -> Unit
 ) {
   val shape = SuplaButtonDefaults.allRoundedShape()

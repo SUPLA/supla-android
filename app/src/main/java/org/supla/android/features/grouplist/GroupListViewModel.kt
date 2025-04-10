@@ -165,7 +165,7 @@ class GroupListViewModel @Inject constructor(
     updateState { it.copy(actionAlertDialogState = null) }
 
     if (remoteId != null && actionId != null) {
-      executeSimpleActionUseCase.invoke(actionId, SubjectType.CHANNEL, remoteId)
+      executeSimpleActionUseCase.invoke(actionId, SubjectType.GROUP, remoteId)
         .attachSilent()
         .subscribeBy(
           onError = defaultErrorHandler("forceAction")
@@ -202,7 +202,7 @@ class GroupListViewModel @Inject constructor(
   }
 
   private fun openDetailsByChannelFunction(group: ChannelGroupDataEntity) {
-    if (isAvailableInOffline(group, null).not() && group.status.offline) {
+    if (isAvailableInOffline(group).not() && group.status.offline) {
       return // do not open details for offline channels
     }
 

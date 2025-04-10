@@ -139,7 +139,7 @@ fun Modifier.innerShadow(
 fun Modifier.disabledOverlay(disabled: Boolean, radius: Dp? = null, color: Color = colorResource(id = R.color.disabledOverlay)) =
   composed {
     val paint = remember {
-      Paint().also { it.color = color }
+      Paint().also { it.color = color.copy(alpha = 0.7f) }
     }
 
     drawWithContent {

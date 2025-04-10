@@ -41,6 +41,7 @@ import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.features.details.detailbase.electricitymeter.ElectricityMeterMetricsView
 import org.supla.android.features.details.detailbase.impulsecounter.ImpulseCounterMetricsView
 import org.supla.android.images.ImageId
+import org.supla.android.ui.lists.channelissues.ChannelIssuesView
 import org.supla.android.ui.views.Image
 import org.supla.android.ui.views.buttons.SwitchButtons
 import org.supla.android.ui.views.tools.Shadow
@@ -55,6 +56,7 @@ fun SwitchGeneralView(
 ) {
   Column {
     if (state.electricityMeterState != null) {
+      state.channelIssues?.let { ChannelIssuesView(it, modifier = Modifier.padding(top = Distance.default)) }
       Box(modifier = Modifier.weight(1f)) {
         ElectricityMeterMetricsView(
           state = state.electricityMeterState,
@@ -63,6 +65,7 @@ fun SwitchGeneralView(
         Shadow(orientation = ShadowOrientation.STARTING_BOTTOM, modifier = Modifier.align(Alignment.BottomCenter))
       }
     } else if (state.impulseCounterState != null) {
+      state.channelIssues?.let { ChannelIssuesView(it, modifier = Modifier.padding(top = Distance.default)) }
       Box(modifier = Modifier.weight(1f)) {
         ImpulseCounterMetricsView(state = state.impulseCounterState)
         Shadow(orientation = ShadowOrientation.STARTING_BOTTOM, modifier = Modifier.align(Alignment.BottomCenter))
@@ -73,6 +76,7 @@ fun SwitchGeneralView(
         icon = state.deviceStateIcon,
         stateValue = stringResource(id = state.deviceStateValue)
       )
+      state.channelIssues?.let { ChannelIssuesView(it) }
       Spacer(modifier = Modifier.weight(1f))
     }
 
