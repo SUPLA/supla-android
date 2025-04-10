@@ -170,7 +170,7 @@ class ChannelListViewModel @Inject constructor(
     updateState { it.copy(actionAlertDialogState = null) }
 
     if (remoteId != null && actionId != null) {
-      executeSimpleActionUseCase.invoke(actionId, SubjectType.GROUP, remoteId)
+      executeSimpleActionUseCase.invoke(actionId, SubjectType.CHANNEL, remoteId)
         .attachSilent()
         .subscribeBy(
           onError = defaultErrorHandler("forceAction")
@@ -219,7 +219,7 @@ class ChannelListViewModel @Inject constructor(
 
   private fun openDetailsByChannelFunction(data: ChannelWithChildren) {
     val channel = data.channel
-    if (isAvailableInOffline(channel, data.children).not() && channel.status.offline) {
+    if (isAvailableInOffline(channel).not() && channel.status.offline) {
       return // do not open details for offline channels
     }
 

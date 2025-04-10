@@ -25,6 +25,7 @@ import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.core.infrastructure.DateProvider
+import org.supla.android.core.shared.shareable
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.StringProvider
 import org.supla.android.core.ui.ViewEvent
@@ -57,7 +58,9 @@ import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.core.shared.data.model.function.relay.SuplaRelayFlag
 import org.supla.core.shared.data.model.general.SuplaFunction
+import org.supla.core.shared.data.model.lists.ChannelIssueItem
 import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.usecase.channel.GetAllChannelIssuesUseCase
 import java.util.Date
 import javax.inject.Inject
 
@@ -71,6 +74,7 @@ class SwitchGeneralViewModel @Inject constructor(
   private val readChannelGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase,
   private val readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
   private val executeSimpleActionUseCase: ExecuteSimpleActionUseCase,
+  private val getAllChannelIssuesUseCase: GetAllChannelIssuesUseCase,
   private val getChannelStateUseCase: GetChannelStateUseCase,
   private val getChannelIconUseCase: GetChannelIconUseCase,
   private val downloadEventsManager: DownloadEventsManager,
@@ -118,6 +122,7 @@ class SwitchGeneralViewModel @Inject constructor(
   }
 
   fun forceTurnOn(remoteId: Int, itemType: ItemType) {
+    updateState { it.copy(showOvercurrentDialog = false) }
     performAction(ActionId.TURN_ON, itemType, remoteId)
   }
 
@@ -157,6 +162,10 @@ class SwitchGeneralViewModel @Inject constructor(
       }
       val showButtons = data.function.switchWithButtons
       val flags = (data as? ChannelWithChildren)?.channel?.channelValueEntity?.asRelayValue()?.flags ?: emptyList()
+      val issues = when (data) {
+        is ChannelWithChildren -> getAllChannelIssuesUseCase(data.shareable)
+        else -> null
+      }
 
       state.copy(
         remoteId = data.remoteId,
@@ -168,6 +177,7 @@ class SwitchGeneralViewModel @Inject constructor(
         deviceStateIcon = getChannelIconUseCase(data),
         deviceStateValue = getDeviceStateValue(data),
         showButtons = showButtons,
+        channelIssues = issues,
         onIcon = showButtons.ifTrue(getChannelIconUseCase(data, channelStateValue = ChannelState.Value.ON)),
         offIcon = showButtons.ifTrue(getChannelIconUseCase(data, channelStateValue = ChannelState.Value.OFF)),
         electricityMeterState = electricityMeterGeneralStateHandler
@@ -270,6 +280,7 @@ data class SwitchGeneralViewState(
   val showButtons: Boolean = true,
   val onIcon: ImageId? = null,
   val offIcon: ImageId? = null,
+  val channelIssues: List<ChannelIssueItem>? = null,
 
   val showOvercurrentDialog: Boolean = false,
   val electricityMeterState: ElectricityMeterState? = null,

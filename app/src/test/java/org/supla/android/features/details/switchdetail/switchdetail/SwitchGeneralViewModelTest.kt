@@ -52,6 +52,7 @@ import org.supla.android.lib.SuplaChannelExtendedValue
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.testhelpers.extensions.extract
 import org.supla.android.testhelpers.extensions.extractResId
+import org.supla.android.testhelpers.extensions.mockShareable
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.DownloadChannelMeasurementsUseCase
 import org.supla.android.usecases.channel.GetChannelStateUseCase
@@ -64,6 +65,7 @@ import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.core.shared.data.model.function.relay.RelayValue
 import org.supla.core.shared.data.model.general.SuplaFunction
+import org.supla.core.shared.usecase.channel.GetAllChannelIssuesUseCase
 import java.util.Date
 
 class SwitchGeneralViewModelTest :
@@ -114,6 +116,9 @@ class SwitchGeneralViewModelTest :
   @MockK
   private lateinit var impulseCounterGeneralStateHandler: ImpulseCounterGeneralStateHandler
 
+  @MockK
+  private lateinit var getAllChannelIssuesUseCase: GetAllChannelIssuesUseCase
+
   @InjectMockKs
   override lateinit var viewModel: SwitchGeneralViewModel
 
@@ -141,6 +146,7 @@ class SwitchGeneralViewModelTest :
     every { dateProvider.currentDate() } returns Date()
     every { electricityMeterGeneralStateHandler.updateState(any(), any(), any()) } answers { firstArg() }
     every { impulseCounterGeneralStateHandler.updateState(any(), any(), any()) } answers { firstArg() }
+    every { getAllChannelIssuesUseCase.invoke(any()) } returns emptyList()
 
     // when
     viewModel.loadData(remoteId, ItemType.CHANNEL)
@@ -198,6 +204,7 @@ class SwitchGeneralViewModelTest :
     every { dateProvider.currentDate() } returns Date()
     every { electricityMeterGeneralStateHandler.updateState(any(), any(), any()) } answers { firstArg() }
     every { impulseCounterGeneralStateHandler.updateState(any(), any(), any()) } answers { firstArg() }
+    every { getAllChannelIssuesUseCase.invoke(any()) } returns emptyList()
 
     // when
     viewModel.loadData(remoteId, ItemType.CHANNEL)
@@ -364,6 +371,7 @@ class SwitchGeneralViewModelTest :
     every { getChannelIconUseCase.invoke(channelData, channelStateValue = ChannelState.Value.OFF) } returns offIcon
     every { electricityMeterGeneralStateHandler.updateState(any(), any(), any()) } answers { firstArg() }
     every { impulseCounterGeneralStateHandler.updateState(any(), any(), any()) } answers { firstArg() }
+    every { getAllChannelIssuesUseCase.invoke(any()) } returns emptyList()
 
     // when
     viewModel.loadData(remoteId, ItemType.CHANNEL)
@@ -430,6 +438,7 @@ class SwitchGeneralViewModelTest :
     every { getChannelIconUseCase.invoke(channelData, channelStateValue = ChannelState.Value.OFF) } returns offIcon
     every { electricityMeterGeneralStateHandler.updateState(any(), any(), any()) } answers { firstArg() }
     every { impulseCounterGeneralStateHandler.updateState(any(), any(), any()) } answers { firstArg() }
+    every { getAllChannelIssuesUseCase.invoke(any()) } returns emptyList()
 
     // when
     viewModel.loadData(remoteId, ItemType.CHANNEL)
@@ -480,14 +489,17 @@ class SwitchGeneralViewModelTest :
 
   private fun mockChannelData(remoteId: Int, function: SuplaFunction, estimatedEndDate: Date? = null): ChannelWithChildren {
     val channel: ChannelDataEntity = mockk {
+      mockShareable(remoteId = remoteId, function = function)
       every { channelValueEntity } returns mockk {
         every { asRelayValue() } returns RelayValue(SuplaChannelAvailabilityStatus.OFFLINE, false, emptyList())
+        every { getValueAsByteArray() } returns byteArrayOf()
       }
       every { channelExtendedValueEntity } returns estimatedEndDate?.let { mockTimerState(estimatedEndDate) }
     }
 
     return mockk {
       every { this@mockk.channel } returns channel
+      every { children } returns emptyList()
       every { isOrHasElectricityMeter } returns false
       every { isOrHasImpulseCounter } returns false
       every { this@mockk.function } returns function
