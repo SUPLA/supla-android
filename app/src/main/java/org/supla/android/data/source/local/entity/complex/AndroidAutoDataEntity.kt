@@ -18,17 +18,45 @@ package org.supla.android.data.source.local.entity.complex
  */
 
 import androidx.room.Embedded
+import org.supla.android.data.model.general.ChannelState
 import org.supla.android.data.source.local.entity.AndroidAutoItemEntity
 import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.ChannelGroupEntity
+import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.data.source.local.entity.SceneEntity
+import org.supla.android.images.ImageId
+import org.supla.android.lib.actions.SubjectType
+import org.supla.android.usecases.channel.GetChannelStateUseCase
+import org.supla.android.usecases.icon.GetChannelIconUseCase
+import org.supla.android.usecases.icon.GetSceneIconUseCase
+import org.supla.core.shared.extensions.ifTrue
 
 data class AndroidAutoDataEntity(
   @Embedded(prefix = "channel_") val channelEntity: ChannelEntity?,
+  @Embedded(prefix = "value_") val channelValueEntity: ChannelValueEntity?,
   @Embedded(prefix = "channel_group_") val groupEntity: ChannelGroupEntity?,
   @Embedded(prefix = "scene_") val sceneEntity: SceneEntity?,
 
   @Embedded(prefix = "profile_") val profileEntity: ProfileEntity,
   @Embedded(prefix = "item_") val androidAutoItemEntity: AndroidAutoItemEntity
-)
+) {
+  val offlineState: ChannelState
+    get() {
+      val function = channelEntity?.function ?: groupEntity?.function
+      val thermostatSubfunction = function?.hasThermostatSubfunction?.ifTrue { channelValueEntity?.asThermostatValue()?.subfunction }
+
+      return if (function != null) {
+        GetChannelStateUseCase.getOfflineState(function = function, thermostatSubfunction = thermostatSubfunction)
+      } else {
+        ChannelState(ChannelState.Value.NOT_USED)
+      }
+    }
+
+  fun icon(getChannelIconUseCase: GetChannelIconUseCase, getSceneIconUseCase: GetSceneIconUseCase): ImageId =
+    when (androidAutoItemEntity.subjectType) {
+      SubjectType.GROUP -> getChannelIconUseCase.forState(groupEntity!!, offlineState)
+      SubjectType.SCENE -> getSceneIconUseCase(sceneEntity!!)
+      SubjectType.CHANNEL -> getChannelIconUseCase.forState(channelEntity!!, offlineState)
+    }
+}

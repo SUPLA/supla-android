@@ -37,6 +37,7 @@ import org.supla.android.data.source.local.entity.AndroidAutoItemEntity.Companio
 import org.supla.android.data.source.local.entity.AndroidAutoItemEntity.Companion.TABLE_NAME
 import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.ChannelGroupEntity
+import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.data.source.local.entity.SceneEntity
 import org.supla.android.data.source.local.entity.complex.AndroidAutoDataEntity
@@ -47,8 +48,8 @@ abstract class AndroidAutoItemDao {
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   abstract fun insert(item: AndroidAutoItemEntity): Completable
 
-  @Query("SELECT COUNT($COLUMN_ID) FROM $TABLE_NAME")
-  abstract fun count(): Single<Int>
+  @Query("SELECT MAX($COLUMN_ORDER) FROM $TABLE_NAME")
+  abstract fun lastOrderNo(): Single<Int>
 
   @Query(
     """
@@ -85,6 +86,13 @@ abstract class AndroidAutoItemDao {
         channel.${ChannelEntity.COLUMN_PROTOCOL_VERSION} channel_${ChannelEntity.COLUMN_PROTOCOL_VERSION}, 
         channel.${ChannelEntity.COLUMN_POSITION} channel_${ChannelEntity.COLUMN_POSITION}, 
         channel.${ChannelEntity.COLUMN_PROFILE_ID} channel_${ChannelEntity.COLUMN_PROFILE_ID},
+        value.${ChannelValueEntity.COLUMN_ID} value_${ChannelValueEntity.COLUMN_ID},
+        value.${ChannelValueEntity.COLUMN_CHANNEL_REMOTE_ID} value_${ChannelValueEntity.COLUMN_CHANNEL_REMOTE_ID},
+        value.${ChannelValueEntity.COLUMN_ONLINE} value_${ChannelValueEntity.COLUMN_ONLINE},
+        value.${ChannelValueEntity.COLUMN_SUB_VALUE_TYPE} value_${ChannelValueEntity.COLUMN_SUB_VALUE_TYPE},
+        value.${ChannelValueEntity.COLUMN_SUB_VALUE} value_${ChannelValueEntity.COLUMN_SUB_VALUE},
+        value.${ChannelValueEntity.COLUMN_VALUE} value_${ChannelValueEntity.COLUMN_VALUE},
+        value.${ChannelValueEntity.COLUMN_PROFILE_ID} value_${ChannelValueEntity.COLUMN_PROFILE_ID},
         channel_group.${ChannelGroupEntity.COLUMN_ID} channel_group_${ChannelGroupEntity.COLUMN_ID},
         channel_group.${ChannelGroupEntity.COLUMN_REMOTE_ID} channel_group_${ChannelGroupEntity.COLUMN_REMOTE_ID},
         channel_group.${ChannelGroupEntity.COLUMN_CAPTION} channel_group_${ChannelGroupEntity.COLUMN_CAPTION},
@@ -132,6 +140,10 @@ abstract class AndroidAutoItemDao {
         ON item.$COLUMN_SUBJECT_ID = channel.${ChannelEntity.COLUMN_CHANNEL_REMOTE_ID}
           AND item.$COLUMN_SUBJECT_TYPE = ${SubjectTypeValue.CHANNEL}
           AND item.$COLUMN_PROFILE_ID = channel.${ChannelEntity.COLUMN_PROFILE_ID}
+      LEFT JOIN ${ChannelValueEntity.TABLE_NAME} value
+        ON value.${ChannelValueEntity.COLUMN_CHANNEL_REMOTE_ID} = item.$COLUMN_SUBJECT_ID
+          AND channel.${ChannelEntity.COLUMN_PROFILE_ID} = item.$COLUMN_PROFILE_ID
+          AND item.$COLUMN_SUBJECT_TYPE = ${SubjectTypeValue.CHANNEL}
       LEFT JOIN ${ChannelGroupEntity.TABLE_NAME} channel_group
         ON item.$COLUMN_SUBJECT_ID = channel_group.${ChannelGroupEntity.COLUMN_REMOTE_ID}
           AND item.$COLUMN_SUBJECT_TYPE = ${SubjectTypeValue.GROUP}

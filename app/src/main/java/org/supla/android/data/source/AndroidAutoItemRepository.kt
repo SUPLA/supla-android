@@ -31,7 +31,7 @@ class AndroidAutoItemRepository @Inject constructor(
 
   fun findAll() = androidAutoItemDao.findAll()
 
-  fun count() = androidAutoItemDao.count()
+  fun lastOrderNo() = androidAutoItemDao.lastOrderNo().onErrorReturnItem(0)
 
   fun findById(id: Long) = androidAutoItemDao.findById(id)
 
