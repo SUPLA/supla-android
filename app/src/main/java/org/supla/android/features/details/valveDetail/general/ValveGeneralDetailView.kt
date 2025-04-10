@@ -151,7 +151,7 @@ private fun Preview() {
         issues = listOf(
           ChannelIssueItem.error(R.string.flooding_alarm_message),
           ChannelIssueItem.error(R.string.valve_warning_flooding_short),
-          ChannelIssueItem.error(R.string.valve_warning_manually_closed_short),
+          ChannelIssueItem.error(R.string.valve_warning),
           ChannelIssueItem.LowBattery(listOf(LocalizedString.Constant("Low battery 1"), LocalizedString.Constant("Low battery 2")))
         ),
         sensors = listOf(

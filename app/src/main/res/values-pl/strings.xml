@@ -739,7 +739,6 @@
   <string name="valve_warning_flooding">Zawór został zamknięty z powodu wykrycia zalania. Przed otwarciem zaworu upewnij się, że przyczyna została usunięta. Otwarcie zaworu czyści alarm. Czy na pewno chcesz go otworzyć?</string>
   <string name="channel_caption_flood_sensor">Czujnik zalania</string>
   <string name="flooding_alarm_message">Czujnik zgłasza zalanie!</string>
-  <string name="valve_warning_manually_closed_short">Zawór został zamknięty w trybie manualnym lub radiowo (możliwe zalanie).</string>
   <string name="valve_warning_flooding_short">Zawór został zamknięty z powodu wykrycia zalania.</string>
   <string name="channel_caption_septic_tank">Szambo</string>
   <string name="channel_caption_water_tank">Zbiornik na wodę</string>

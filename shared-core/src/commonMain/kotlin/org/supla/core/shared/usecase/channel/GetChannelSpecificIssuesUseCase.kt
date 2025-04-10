@@ -21,6 +21,7 @@ import org.supla.core.shared.data.model.channel.ChannelWithChildren
 import org.supla.core.shared.data.model.lists.ChannelIssueItem
 import org.supla.core.shared.usecase.channel.issues.ChannelIssuesProvider
 import org.supla.core.shared.usecase.channel.issues.ContainerIssuesProvider
+import org.supla.core.shared.usecase.channel.issues.RelayIssuesProvider
 import org.supla.core.shared.usecase.channel.issues.ShadingSystemIssuesProvider
 import org.supla.core.shared.usecase.channel.issues.ThermostatIssuesProvider
 import org.supla.core.shared.usecase.channel.issues.ValveIssuesProvider
@@ -31,7 +32,8 @@ class GetChannelSpecificIssuesUseCase {
     ThermostatIssuesProvider(),
     ShadingSystemIssuesProvider(),
     ContainerIssuesProvider(),
-    ValveIssuesProvider()
+    ValveIssuesProvider(),
+    RelayIssuesProvider()
   )
 
   operator fun invoke(channelWithChildren: ChannelWithChildren): List<ChannelIssueItem> {

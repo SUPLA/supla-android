@@ -17,14 +17,14 @@ package org.supla.android.features.channellist
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.app.AlertDialog
 import android.os.Bundle
 import android.view.View
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.fragment.app.viewModels
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
-import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.ui.BaseFragment
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
@@ -40,10 +40,6 @@ import org.supla.android.features.statedialog.View
 import org.supla.android.features.statedialog.handleStateDialogViewEvent
 import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.navigator.MainNavigator
-import org.supla.android.ui.dialogs.exceededAmperageDialog
-import org.supla.android.ui.dialogs.valveClosedManuallyDialog
-import org.supla.android.ui.dialogs.valveFloodingDialog
-import org.supla.android.ui.dialogs.valveMotorProblemDialog
 import org.supla.android.ui.lists.message
 import org.supla.android.usecases.channel.ButtonType
 import org.supla.core.shared.extensions.ifTrue
@@ -65,9 +61,6 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
   lateinit var adapter: ChannelsAdapter
 
   @Inject
-  lateinit var suplaClientProvider: SuplaClientProvider
-
-  @Inject
   lateinit var navigator: MainNavigator
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -85,9 +78,14 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
     }
 
     binding.composeView.setContent {
+      val modelState by viewModel.getViewState().collectAsState()
       SuplaTheme {
         stateDialogViewModel.View()
         captionChangeViewModel.View()
+        modelState.actionAlertDialogState?.View(
+          onPositiveClick = { remoteId, actionId -> viewModel.forceAction(remoteId, actionId) },
+          onNegativeClick = viewModel::dismissActionDialog
+        )
       }
     }
   }
@@ -98,12 +96,7 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
   }
 
   override fun handleEvents(event: ChannelListViewEvent) {
-    val suplaClient = suplaClientProvider.provide()
     when (event) {
-      is ChannelListViewEvent.ShowValveClosedManuallyDialog -> valveClosedManuallyDialog(event.remoteId, suplaClient).show()
-      is ChannelListViewEvent.ShowValveFloodingDialog -> valveFloodingDialog(event.remoteId, suplaClient).show()
-      is ChannelListViewEvent.ShowValveMotorProblemDialog -> valveMotorProblemDialog(event.remoteId, event.action, suplaClient).show()
-      is ChannelListViewEvent.ShowAmperageExceededDialog -> exceededAmperageDialog(event.remoteId, suplaClient).show()
       is ChannelListViewEvent.OpenLegacyDetails -> {
         setToolbarTitle("")
         navigator.navigateToLegacyDetails(
@@ -159,7 +152,7 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
       scrollDownOnReload = scrollDown
     }
     adapter.infoButtonClickCallback = { stateDialogViewModel.showDialog(it) }
-    adapter.issueButtonClickCallback = { showAlertPopup(it.message(requireContext())) }
+    adapter.issueButtonClickCallback = { viewModel.showAlert(it.message(requireContext())) }
     adapter.listItemClickCallback = { viewModel.onListItemClick(it) }
     adapter.captionLongPressCallback = captionChangeViewModel::showChannelDialog
     adapter.locationCaptionLongPressCallback = captionChangeViewModel::showLocationDialog
@@ -169,13 +162,5 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
     when (message.type) {
       SuplaClientMsg.onChannelState -> stateDialogViewModel.updateStateDialog(message.channelState)
     }
-  }
-
-  private fun showAlertPopup(messageId: String) {
-    val builder = AlertDialog.Builder(context)
-    builder.setTitle(android.R.string.dialog_alert_title)
-    builder.setMessage(messageId)
-    builder.setNeutralButton(R.string.ok) { dialog, _ -> dialog.cancel() }
-    builder.create().show()
   }
 }

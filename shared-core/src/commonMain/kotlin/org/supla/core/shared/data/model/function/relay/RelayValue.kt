@@ -1,4 +1,4 @@
-package org.supla.android.data.source.remote.relay
+package org.supla.core.shared.data.model.function.relay
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,17 +17,27 @@ package org.supla.android.data.source.remote.relay
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-enum class SuplaRelayFlag(val value: Int) {
-  OVERCURRENT_RELAY_OFF(1);
+import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
+
+private const val RELAY_VALUE_LENGTH = 2
+
+data class RelayValue(
+  val status: SuplaChannelAvailabilityStatus,
+  val on: Boolean,
+  val flags: List<SuplaRelayFlag>
+) {
 
   companion object {
-    fun from(value: Int): List<SuplaRelayFlag> =
-      mutableListOf<SuplaRelayFlag>().also {
-        for (flag in entries) {
-          if (flag.value and value > 0) {
-            it.add(flag)
-          }
-        }
+    fun from(status: SuplaChannelAvailabilityStatus, bytes: ByteArray): RelayValue {
+      if (bytes.size < RELAY_VALUE_LENGTH) {
+        return RelayValue(status, false, emptyList())
       }
+
+      return RelayValue(
+        status = status,
+        on = bytes[0] >= 1,
+        flags = SuplaRelayFlag.from(bytes[1].toInt())
+      )
+    }
   }
 }

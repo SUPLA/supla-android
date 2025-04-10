@@ -763,7 +763,6 @@
   <string name="valve_warning_flooding" translatable="false">The valve has been closed due to detected flooding. Before opening the valve, ensure that the cause has been resolved. Opening the valve clears the alarm. Are you sure you want to open it?</string>
   <string name="channel_caption_flood_sensor" translatable="false">Flood sensor</string>
   <string name="flooding_alarm_message" translatable="false">The sensor reports flooding!</string>
-  <string name="valve_warning_manually_closed_short" translatable="false">The valve has been closed manually or via radio (possible flooding).</string>
   <string name="valve_warning_flooding_short" translatable="false">The valve has been closed due to detected flooding.</string>
   <string name="channel_caption_septic_tank" translatable="false">Septic tank</string>
   <string name="channel_caption_water_tank" translatable="false">Water tank</string>

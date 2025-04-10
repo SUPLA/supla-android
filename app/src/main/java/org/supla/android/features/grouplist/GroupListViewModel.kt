@@ -36,12 +36,17 @@ import org.supla.android.features.details.detailbase.standarddetail.DetailPage
 import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
 import org.supla.android.features.details.windowdetail.WindowDetailFragment
 import org.supla.android.lib.SuplaClientMsg
+import org.supla.android.lib.actions.ActionId
+import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.ui.dialogs.ActionAlertDialogState
+import org.supla.android.ui.dialogs.dialogState
 import org.supla.android.ui.lists.BaseListViewModel
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.channel.ActionException
 import org.supla.android.usecases.channel.ButtonType
 import org.supla.android.usecases.channel.GroupActionUseCase
+import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
 import org.supla.android.usecases.details.LegacyDetailType
 import org.supla.android.usecases.details.ProvideGroupDetailTypeUseCase
 import org.supla.android.usecases.details.WindowDetailType
@@ -58,6 +63,7 @@ class GroupListViewModel @Inject constructor(
   private val createProfileGroupsListUseCase: CreateProfileGroupsListUseCase,
   private val provideGroupDetailTypeUseCase: ProvideGroupDetailTypeUseCase,
   private val findGroupByRemoteIdUseCase: ReadChannelGroupByRemoteIdUseCase,
+  private val executeSimpleActionUseCase: ExecuteSimpleActionUseCase,
   private val toggleLocationUseCase: ToggleLocationUseCase,
   private val groupActionUseCase: GroupActionUseCase,
   private val channelRepository: ChannelRepository,
@@ -122,9 +128,11 @@ class GroupListViewModel @Inject constructor(
       .subscribeBy(
         onError = { throwable ->
           when (throwable) {
-            is ActionException.ValveClosedManually -> sendEvent(GroupListViewEvent.ShowValveClosedManuallyDialog(throwable.remoteId))
-            is ActionException.ValveFloodingAlarm -> sendEvent(GroupListViewEvent.ShowValveFloodingDialog(throwable.remoteId))
-            is ActionException.ChannelExceedAmperage -> sendEvent(GroupListViewEvent.ShowAmperageExceededDialog(throwable.remoteId))
+            is ActionException.ValveClosedManually -> updateState { it.copy(actionAlertDialogState = throwable.dialogState) }
+            is ActionException.ValveFloodingAlarm -> updateState { it.copy(actionAlertDialogState = throwable.dialogState) }
+            is ActionException.ValveMotorProblemClosing -> updateState { it.copy(actionAlertDialogState = throwable.dialogState) }
+            is ActionException.ValveMotorProblemOpening -> updateState { it.copy(actionAlertDialogState = throwable.dialogState) }
+            is ActionException.ChannelExceedAmperage -> updateState { it.copy(actionAlertDialogState = throwable.dialogState) }
             else -> defaultErrorHandler("performAction($channelId, $buttonType)")(throwable)
           }
         }
@@ -151,6 +159,23 @@ class GroupListViewModel @Inject constructor(
         is CloudUrl.ServerUri -> sendEvent(GroupListViewEvent.NavigateToPrivateCloud(it.url))
       }
     }
+  }
+
+  fun forceAction(remoteId: Int?, actionId: ActionId?) {
+    updateState { it.copy(actionAlertDialogState = null) }
+
+    if (remoteId != null && actionId != null) {
+      executeSimpleActionUseCase.invoke(actionId, SubjectType.CHANNEL, remoteId)
+        .attachSilent()
+        .subscribeBy(
+          onError = defaultErrorHandler("forceAction")
+        )
+        .disposeBySelf()
+    }
+  }
+
+  fun dismissActionDialog() {
+    updateState { it.copy(actionAlertDialogState = null) }
   }
 
   override fun onSuplaMessage(message: SuplaClientMsg) {
@@ -190,9 +215,6 @@ class GroupListViewModel @Inject constructor(
 }
 
 sealed class GroupListViewEvent : ViewEvent {
-  data class ShowValveClosedManuallyDialog(val remoteId: Int) : GroupListViewEvent()
-  data class ShowValveFloodingDialog(val remoteId: Int) : GroupListViewEvent()
-  data class ShowAmperageExceededDialog(val remoteId: Int) : GroupListViewEvent()
   data class OpenLegacyDetails(val remoteId: Int, val type: LegacyDetailType) : GroupListViewEvent()
   data object ReassignAdapter : GroupListViewEvent()
   data object NavigateToSuplaCloud : GroupListViewEvent()
@@ -209,5 +231,6 @@ sealed class GroupListViewEvent : ViewEvent {
 }
 
 data class GroupListViewState(
-  val groups: List<ListItem>? = null
+  val groups: List<ListItem>? = null,
+  val actionAlertDialogState: ActionAlertDialogState? = null
 ) : ViewState()
