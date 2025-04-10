@@ -44,7 +44,10 @@ import org.supla.android.features.details.valveDetail.ValveDetailFragment
 import org.supla.android.features.details.windowdetail.WindowDetailFragment
 import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.lib.actions.ActionId
+import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.ui.dialogs.ActionAlertDialogState
+import org.supla.android.ui.dialogs.dialogState
 import org.supla.android.ui.lists.BaseListViewModel
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.channel.ActionException
@@ -53,6 +56,7 @@ import org.supla.android.usecases.channel.ChannelActionUseCase
 import org.supla.android.usecases.channel.CreateProfileChannelsListUseCase
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
+import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
 import org.supla.android.usecases.details.ContainerDetailType
 import org.supla.android.usecases.details.EmDetailType
 import org.supla.android.usecases.details.GpmDetailType
@@ -75,6 +79,7 @@ class ChannelListViewModel @Inject constructor(
   private val provideChannelDetailTypeUseCase: ProvideChannelDetailTypeUseCase,
   private val readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
   private val findChannelByRemoteIdUseCase: ReadChannelByRemoteIdUseCase,
+  private val executeSimpleActionUseCase: ExecuteSimpleActionUseCase,
   private val toggleLocationUseCase: ToggleLocationUseCase,
   private val channelActionUseCase: ChannelActionUseCase,
   private val channelRepository: ChannelRepository,
@@ -137,15 +142,11 @@ class ChannelListViewModel @Inject constructor(
       .subscribeBy(
         onError = { throwable ->
           when (throwable) {
-            is ActionException.ValveClosedManually -> sendEvent(ChannelListViewEvent.ShowValveClosedManuallyDialog(throwable.remoteId))
-            is ActionException.ValveFloodingAlarm -> sendEvent(ChannelListViewEvent.ShowValveFloodingDialog(throwable.remoteId))
-            is ActionException.ValveMotorProblemClosing ->
-              sendEvent(ChannelListViewEvent.ShowValveMotorProblemDialog(throwable.remoteId, ActionId.CLOSE))
-
-            is ActionException.ValveMotorProblemOpening ->
-              sendEvent(ChannelListViewEvent.ShowValveMotorProblemDialog(throwable.remoteId, ActionId.OPEN))
-
-            is ActionException.ChannelExceedAmperage -> sendEvent(ChannelListViewEvent.ShowAmperageExceededDialog(throwable.remoteId))
+            is ActionException.ValveClosedManually -> updateState { it.copy(actionAlertDialogState = throwable.dialogState) }
+            is ActionException.ValveFloodingAlarm -> updateState { it.copy(actionAlertDialogState = throwable.dialogState) }
+            is ActionException.ValveMotorProblemClosing -> updateState { it.copy(actionAlertDialogState = throwable.dialogState) }
+            is ActionException.ValveMotorProblemOpening -> updateState { it.copy(actionAlertDialogState = throwable.dialogState) }
+            is ActionException.ChannelExceedAmperage -> updateState { it.copy(actionAlertDialogState = throwable.dialogState) }
             else -> defaultErrorHandler("performAction($channelId, $buttonType)")(throwable)
           }
         }
@@ -162,6 +163,34 @@ class ChannelListViewModel @Inject constructor(
           onError = defaultErrorHandler("onListItemClick($remoteId)")
         )
         .disposeBySelf()
+    }
+  }
+
+  fun forceAction(remoteId: Int?, actionId: ActionId?) {
+    updateState { it.copy(actionAlertDialogState = null) }
+
+    if (remoteId != null && actionId != null) {
+      executeSimpleActionUseCase.invoke(actionId, SubjectType.GROUP, remoteId)
+        .attachSilent()
+        .subscribeBy(
+          onError = defaultErrorHandler("forceAction")
+        )
+        .disposeBySelf()
+    }
+  }
+
+  fun dismissActionDialog() {
+    updateState { it.copy(actionAlertDialogState = null) }
+  }
+
+  fun showAlert(message: String) {
+    updateState {
+      it.copy(
+        actionAlertDialogState = ActionAlertDialogState(
+          messageString = message,
+          positiveButtonRes = R.string.ok,
+        )
+      )
     }
   }
 
@@ -212,10 +241,6 @@ class ChannelListViewModel @Inject constructor(
 }
 
 sealed class ChannelListViewEvent : ViewEvent {
-  data class ShowValveClosedManuallyDialog(val remoteId: Int) : ChannelListViewEvent()
-  data class ShowValveFloodingDialog(val remoteId: Int) : ChannelListViewEvent()
-  data class ShowValveMotorProblemDialog(val remoteId: Int, val action: ActionId) : ChannelListViewEvent()
-  data class ShowAmperageExceededDialog(val remoteId: Int) : ChannelListViewEvent()
   data class OpenLegacyDetails(val remoteId: Int, val type: LegacyDetailType) : ChannelListViewEvent()
   data class OpenSwitchDetail(private val itemBundle: ItemBundle, private val pages: List<DetailPage>) :
     OpenStandardDetail(R.id.switch_detail_fragment, SwitchDetailFragment.bundle(itemBundle, pages.toTypedArray()))
@@ -256,5 +281,6 @@ sealed class ChannelListViewEvent : ViewEvent {
 }
 
 data class ChannelListViewState(
-  val channels: List<ListItem>? = null
+  val channels: List<ListItem>? = null,
+  val actionAlertDialogState: ActionAlertDialogState? = null
 ) : ViewState()

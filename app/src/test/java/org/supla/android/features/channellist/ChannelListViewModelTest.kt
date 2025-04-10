@@ -36,6 +36,7 @@ import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.Preferences
+import org.supla.android.R
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.data.model.general.ChannelDataBase
@@ -53,7 +54,9 @@ import org.supla.android.features.details.detailbase.standarddetail.DetailPage
 import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
 import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS
 import org.supla.android.lib.SuplaClientMsg
+import org.supla.android.lib.actions.ActionId
 import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.ui.dialogs.ActionAlertDialogState
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.channel.ActionException
 import org.supla.android.usecases.channel.ButtonType
@@ -61,6 +64,7 @@ import org.supla.android.usecases.channel.ChannelActionUseCase
 import org.supla.android.usecases.channel.CreateProfileChannelsListUseCase
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
+import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
 import org.supla.android.usecases.details.GpmDetailType
 import org.supla.android.usecases.details.ProvideChannelDetailTypeUseCase
 import org.supla.android.usecases.details.SwitchDetailType
@@ -102,6 +106,9 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
   private lateinit var updateEventsManager: UpdateEventsManager
 
   @Mock
+  private lateinit var executeSimpleActionUseCase: ExecuteSimpleActionUseCase
+
+  @Mock
   private lateinit var preferences: Preferences
 
   @Mock
@@ -116,6 +123,7 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
       provideDetailTypeUseCase,
       readChannelWithChildrenUseCase,
       readChannelByRemoteIdUseCase,
+      executeSimpleActionUseCase,
       toggleLocationUseCase,
       channelActionUseCase,
       channelRepository,
@@ -210,10 +218,18 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     viewModel.performAction(channelId, buttonType)
 
     // then
-    assertThat(states).isEmpty()
-    assertThat(events).containsExactly(
-      ChannelListViewEvent.ShowValveClosedManuallyDialog(channelId)
+    assertThat(states).containsExactly(
+      ChannelListViewState(
+        actionAlertDialogState = ActionAlertDialogState(
+          messageRes = R.string.valve_warning_manually_closed,
+          positiveButtonRes = R.string.yes,
+          negativeButtonRes = R.string.no,
+          actionId = ActionId.OPEN,
+          remoteId = channelId
+        )
+      )
     )
+    assertThat(events).isEmpty()
     verifyNoInteractionsExcept(channelActionUseCase)
   }
 
@@ -228,9 +244,16 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     viewModel.performAction(channelId, buttonType)
 
     // then
-    assertThat(states).isEmpty()
-    assertThat(events).containsExactly(
-      ChannelListViewEvent.ShowAmperageExceededDialog(channelId)
+    assertThat(states).containsExactly(
+      ChannelListViewState(
+        actionAlertDialogState = ActionAlertDialogState(
+          messageRes = R.string.overcurrent_question,
+          positiveButtonRes = R.string.yes,
+          negativeButtonRes = R.string.no,
+          actionId = ActionId.TURN_ON,
+          remoteId = channelId
+        )
+      )
     )
     verifyNoInteractionsExcept(channelActionUseCase)
   }

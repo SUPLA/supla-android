@@ -19,11 +19,12 @@ package org.supla.android.features.grouplist
 
 import android.os.Bundle
 import android.view.View
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.fragment.app.viewModels
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
-import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.ui.BaseFragment
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.theme.SuplaTheme
@@ -34,9 +35,6 @@ import org.supla.android.extensions.visibleIf
 import org.supla.android.features.captionchangedialog.CaptionChangeViewModel
 import org.supla.android.features.captionchangedialog.View
 import org.supla.android.navigator.MainNavigator
-import org.supla.android.ui.dialogs.exceededAmperageDialog
-import org.supla.android.ui.dialogs.valveClosedManuallyDialog
-import org.supla.android.ui.dialogs.valveFloodingDialog
 import org.supla.android.usecases.channel.ButtonType
 import org.supla.core.shared.extensions.ifTrue
 import javax.inject.Inject
@@ -56,9 +54,6 @@ class GroupListFragment : BaseFragment<GroupListViewState, GroupListViewEvent>(R
   lateinit var adapter: GroupsAdapter
 
   @Inject
-  lateinit var suplaClientProvider: SuplaClientProvider
-
-  @Inject
   lateinit var navigator: MainNavigator
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -70,8 +65,13 @@ class GroupListFragment : BaseFragment<GroupListViewState, GroupListViewEvent>(R
     captionChangeViewModel.finishedCallback = { it.isLocation.ifTrue { viewModel.loadGroups() } }
     binding.groupsEmptyListButton.setOnClickListener { viewModel.onAddGroupClick() }
     binding.composeView.setContent {
+      val modelState by viewModel.getViewState().collectAsState()
       SuplaTheme {
         captionChangeViewModel.View()
+        modelState.actionAlertDialogState?.View(
+          onPositiveClick = { remoteId, actionId -> viewModel.forceAction(remoteId, actionId) },
+          onNegativeClick = viewModel::dismissActionDialog
+        )
       }
     }
   }
@@ -82,14 +82,10 @@ class GroupListFragment : BaseFragment<GroupListViewState, GroupListViewEvent>(R
   }
 
   override fun handleEvents(event: GroupListViewEvent) {
-    val suplaClient = suplaClientProvider.provide()
     when (event) {
       is GroupListViewEvent.NavigateToPrivateCloud -> navigator.navigateToWeb(event.url)
       is GroupListViewEvent.NavigateToSuplaCloud -> navigator.navigateToCloudExternal()
       is GroupListViewEvent.NavigateToSuplaBetaCloud -> navigator.navigateToBetaCloudExternal()
-      is GroupListViewEvent.ShowValveClosedManuallyDialog -> valveClosedManuallyDialog(event.remoteId, suplaClient).show()
-      is GroupListViewEvent.ShowValveFloodingDialog -> valveFloodingDialog(event.remoteId, suplaClient).show()
-      is GroupListViewEvent.ShowAmperageExceededDialog -> exceededAmperageDialog(event.remoteId, suplaClient).show()
       is GroupListViewEvent.OpenLegacyDetails -> {
         setToolbarTitle("")
         navigator.navigateToLegacyDetails(

@@ -20,6 +20,7 @@ import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
 import org.supla.android.Preferences
+import org.supla.android.R
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.data.model.general.ChannelDataBase
@@ -32,9 +33,12 @@ import org.supla.android.events.UpdateEventsManager
 import org.supla.android.features.details.detailbase.standarddetail.DetailPage
 import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
 import org.supla.android.lib.SuplaClientMsg
+import org.supla.android.lib.actions.ActionId
 import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.ui.dialogs.ActionAlertDialogState
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.channel.*
+import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
 import org.supla.android.usecases.details.ProvideGroupDetailTypeUseCase
 import org.supla.android.usecases.details.ThermometerDetailType
 import org.supla.android.usecases.details.WindowDetailType
@@ -74,6 +78,9 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
   private lateinit var loadActiveProfileUrlUseCase: LoadActiveProfileUrlUseCase
 
   @Mock
+  private lateinit var executeSimpleActionUseCase: ExecuteSimpleActionUseCase
+
+  @Mock
   private lateinit var preferences: Preferences
 
   @Mock
@@ -87,6 +94,7 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
       createProfileGroupsListUseCase,
       provideGroupDetailTypeUseCase,
       findGroupByRemoteIdUseCase,
+      executeSimpleActionUseCase,
       toggleLocationUseCase,
       groupActionUseCase,
       channelRepository,
@@ -182,10 +190,18 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     viewModel.performAction(groupId, buttonType)
 
     // then
-    Assertions.assertThat(states).isEmpty()
-    Assertions.assertThat(events).containsExactly(
-      GroupListViewEvent.ShowValveClosedManuallyDialog(groupId)
+    Assertions.assertThat(states).containsExactly(
+      GroupListViewState(
+        actionAlertDialogState = ActionAlertDialogState(
+          messageRes = R.string.valve_warning_manually_closed,
+          positiveButtonRes = R.string.yes,
+          negativeButtonRes = R.string.no,
+          actionId = ActionId.OPEN,
+          remoteId = groupId
+        )
+      )
     )
+    Assertions.assertThat(events).isEmpty()
     verifyNoInteractionsExcept(groupActionUseCase)
   }
 
@@ -200,10 +216,18 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     viewModel.performAction(groupId, buttonType)
 
     // then
-    Assertions.assertThat(states).isEmpty()
-    Assertions.assertThat(events).containsExactly(
-      GroupListViewEvent.ShowAmperageExceededDialog(groupId)
+    Assertions.assertThat(states).containsExactly(
+      GroupListViewState(
+        actionAlertDialogState = ActionAlertDialogState(
+          messageRes = R.string.overcurrent_question,
+          positiveButtonRes = R.string.yes,
+          negativeButtonRes = R.string.no,
+          actionId = ActionId.TURN_ON,
+          remoteId = groupId
+        )
+      )
     )
+    Assertions.assertThat(events).isEmpty()
     verifyNoInteractionsExcept(groupActionUseCase)
   }
 

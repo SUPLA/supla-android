@@ -20,14 +20,16 @@ package org.supla.android.features.details.switchdetail.general
 import android.os.Bundle
 import android.view.View
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.ui.res.stringResource
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
+import org.supla.android.R
 import org.supla.android.core.ui.BaseComposeFragment
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
 import org.supla.android.lib.SuplaClientMsg
+import org.supla.android.ui.dialogs.AlertDialog
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import javax.inject.Inject
 
@@ -52,6 +54,17 @@ class SwitchGeneralFragment : BaseComposeFragment<SwitchGeneralViewState, Switch
         onTurnOff = { viewModel.turnOff(item.remoteId, item.itemType) },
         onIntroductionClose = viewModel::onIntroductionClose
       )
+
+      if (modelState.showOvercurrentDialog) {
+        AlertDialog(
+          title = stringResource(android.R.string.dialog_alert_title),
+          message = stringResource(R.string.overcurrent_question),
+          positiveButtonTitle = stringResource(R.string.yes),
+          negativeButtonTitle = stringResource(R.string.no),
+          onPositiveClick = { viewModel.forceTurnOn(item.remoteId, item.itemType) },
+          onNegativeClick = viewModel::hideOvercurrentDialog
+        )
+      }
     }
   }
 

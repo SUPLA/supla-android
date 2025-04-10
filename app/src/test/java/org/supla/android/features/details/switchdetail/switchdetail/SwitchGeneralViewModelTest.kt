@@ -62,6 +62,7 @@ import org.supla.android.usecases.channel.measurements.impulsecounter.LoadImpuls
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
+import org.supla.core.shared.data.model.function.relay.RelayValue
 import org.supla.core.shared.data.model.general.SuplaFunction
 import java.util.Date
 
@@ -479,6 +480,9 @@ class SwitchGeneralViewModelTest :
 
   private fun mockChannelData(remoteId: Int, function: SuplaFunction, estimatedEndDate: Date? = null): ChannelWithChildren {
     val channel: ChannelDataEntity = mockk {
+      every { channelValueEntity } returns mockk {
+        every { asRelayValue() } returns RelayValue(SuplaChannelAvailabilityStatus.OFFLINE, false, emptyList())
+      }
       every { channelExtendedValueEntity } returns estimatedEndDate?.let { mockTimerState(estimatedEndDate) }
     }
 

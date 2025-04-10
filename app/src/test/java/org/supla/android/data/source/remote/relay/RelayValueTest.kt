@@ -22,6 +22,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
+import org.supla.core.shared.data.model.function.relay.RelayValue
+import org.supla.core.shared.data.model.function.relay.SuplaRelayFlag
 
 @RunWith(MockitoJUnitRunner::class)
 class RelayValueTest {
