@@ -51,7 +51,6 @@ import org.supla.android.events.UpdateEventsManager
 import org.supla.android.extensions.TAG
 import org.supla.android.extensions.ucFirst
 import org.supla.android.images.ImageCache
-import org.supla.android.images.ImageId
 import org.supla.android.lib.actions.ActionParameters
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.lib.singlecall.ResultException
@@ -149,7 +148,7 @@ class MainScreen(
       val gridItem = GridItem.Builder()
         .setTitle(item.androidAutoItemEntity.caption)
 
-      val imageId = item.icon
+      val imageId = item.icon(getChannelIconUseCase, getSceneIconUseCase)
       if (imageId.userImage) {
         val bitmap = ImageCache.getBitmapForAuto(carContext, imageId, true)
         IconCompat.createFromIcon(carContext, Icon.createWithBitmap(bitmap))
@@ -226,13 +225,6 @@ class MainScreen(
 
     return R.string.scene_inactive
   }
-
-  private val AndroidAutoDataEntity.icon: ImageId
-    get() = when (androidAutoItemEntity.subjectType) {
-      SubjectType.GROUP -> getChannelIconUseCase.forState(groupEntity!!, groupEntity.offlineState)
-      SubjectType.SCENE -> getSceneIconUseCase(sceneEntity!!)
-      SubjectType.CHANNEL -> getChannelIconUseCase.forState(channelEntity!!, channelEntity.offlineState)
-    }
 }
 
 private data class MainScreenState(

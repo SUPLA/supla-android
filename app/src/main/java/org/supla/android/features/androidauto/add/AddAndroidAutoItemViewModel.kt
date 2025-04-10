@@ -117,7 +117,8 @@ class AddAndroidAutoItemViewModel @Inject constructor(
                 actions = subjects.firstOrNull { it.id == item.subjectId }?.actionsList(item.action),
                 showDelete = true
               ),
-              id = itemId
+              id = itemId,
+              orderNo = item.order
             )
           }
         }
@@ -219,8 +220,14 @@ class AddAndroidAutoItemViewModel @Inject constructor(
     val (caption) = guardLet(state.viewState.caption) { return }
     val (action) = guardLet(state.viewState.actions?.selected) { return }
 
-    androidAutoItemRepository.count()
-      .map { count ->
+    val positionFetcher = if (state.orderNo == null) {
+      androidAutoItemRepository.lastOrderNo().map { it + 1 }
+    } else {
+      Single.just(state.orderNo)
+    }
+
+    positionFetcher
+      .map { position ->
         AndroidAutoItemEntity(
           id = state.id ?: 0,
           subjectId = subjectId,
@@ -228,7 +235,7 @@ class AddAndroidAutoItemViewModel @Inject constructor(
           caption = caption,
           action = action,
           profileId = profileId,
-          order = count + 1
+          order = position
         )
       }.flatMapCompletable { androidAutoItemRepository.insert(it) }
       .attach()
@@ -375,6 +382,7 @@ sealed class AddAndroidAutoItemViewEvent : ViewEvent {
 
 data class AddAndroidAutoItemViewModelState(
   val id: Long? = null,
+  val orderNo: Int? = null,
   val viewState: AddAndroidAutoItemViewState = AddAndroidAutoItemViewState(),
   val selections: Set<Selection> = emptySet(),
   val showDeletePopup: Boolean = false

@@ -25,8 +25,6 @@ import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.source.AndroidAutoItemRepository
 import org.supla.android.data.source.local.entity.complex.AndroidAutoDataEntity
-import org.supla.android.images.ImageId
-import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.icon.GetSceneIconUseCase
@@ -97,17 +95,10 @@ class AndroidAutoItemsViewModel @Inject constructor(
       subjectId = androidAutoItemEntity.subjectId,
       subjectType = androidAutoItemEntity.subjectType,
       action = androidAutoItemEntity.action,
-      icon = icon,
+      icon = icon(getChannelIconUseCase, getSceneIconUseCase),
       caption = androidAutoItemEntity.caption,
       profileName = profileEntity.name
     )
-
-  private val AndroidAutoDataEntity.icon: ImageId
-    get() = when (androidAutoItemEntity.subjectType) {
-      SubjectType.GROUP -> getChannelIconUseCase.forState(groupEntity!!, groupEntity.offlineState)
-      SubjectType.SCENE -> getSceneIconUseCase(sceneEntity!!)
-      SubjectType.CHANNEL -> getChannelIconUseCase.forState(channelEntity!!, channelEntity.offlineState)
-    }
 }
 
 sealed class AndroidAutoItemsViewEvent : ViewEvent {
