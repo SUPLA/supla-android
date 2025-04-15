@@ -28,7 +28,7 @@ import java.io.Serializable
 import java.util.Locale
 
 @UsedFromNativeCode
-class SuplaChannelState(
+data class SuplaChannelState(
   val channelId: Int,
   private val fields: Int,
   private val rawDefaultIconField: Int,

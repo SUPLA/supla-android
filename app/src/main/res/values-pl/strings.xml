@@ -417,7 +417,7 @@
   <string name="location_name">Nazwa lokalizacji</string>
   <string name="str_default">Domyślnie</string>
   <string name="overcurrent_warning">Zasilanie zostało wyłączone po przekroczeniu ustawionego progu dopuszczalnego natężenia prądu.</string>
-  <string name="overcurrent_question">Zasilanie zostało wyłączone po przekroczeniu ustawionego progu dopuszczalnego natężenia prądu. Czy na pewno chcesz włączyć zasilanie ?</string>
+  <string name="overcurrent_question">Zasilanie zostało wyłączone po przekroczeniu ustawionego progu dopuszczalnego natężenia prądu. Czy na pewno chcesz włączyć zasilanie?</string>
   <string name="roller_shutter_start_calibration_message">Czy na pewno chcesz rozpocząć kalibrację ?</string>
   <string name="calibration_failed">Kalibracja nie powiodła się.</string>
   <string name="calibration_lost">Kalibracja została utracona.</string>
