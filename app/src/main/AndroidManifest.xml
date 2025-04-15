@@ -22,8 +22,6 @@
     android:smallScreens="true"
     android:xlargeScreens="true" />
 
-  <uses-sdk tools:overrideLibrary="androidx.car.app.automotive" />
-
   <queries>
     <intent>
       <action android:name="android.intent.action.TTS_SERVICE" />
