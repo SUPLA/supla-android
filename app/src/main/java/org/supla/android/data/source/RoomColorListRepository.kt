@@ -25,6 +25,6 @@ import javax.inject.Singleton
 @Singleton
 class RoomColorListRepository @Inject constructor(
   private val colorListDao: ColorDao
-) : RemoveHiddenChannelsUseCase.Deletable {
-  override suspend fun deleteKtx(remoteId: Int, profileId: Long) = colorListDao.deleteKtx(remoteId, profileId)
+) : RemoveHiddenChannelsUseCase.ChannelsDeletable {
+  override suspend fun deleteChannelRelated(remoteId: Int, profileId: Long) = colorListDao.deleteKtx(remoteId, profileId)
 }

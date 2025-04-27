@@ -22,6 +22,12 @@
     android:smallScreens="true"
     android:xlargeScreens="true" />
 
+  <queries>
+    <intent>
+      <action android:name="android.intent.action.TTS_SERVICE" />
+    </intent>
+  </queries>
+
   <application
     android:name="org.supla.android.SuplaApp"
     android:allowBackup="false"
@@ -42,6 +48,12 @@
     <meta-data
       android:name="com.google.firebase.messaging.default_notification_channel_id"
       android:value="@string/default_notification_channel_id" />
+    <meta-data
+      android:name="com.google.android.gms.car.application"
+      android:resource="@xml/automotive_app_desc" />
+    <meta-data
+      android:name="androidx.car.app.minCarApiLevel"
+      android:value="1" />
 
     <receiver
       android:name=".widget.onoff.OnOffWidget"
@@ -126,6 +138,14 @@
     <service
       android:name="androidx.work.impl.foreground.SystemForegroundService"
       android:foregroundServiceType="shortService" />
+
+    <service android:name=".automotive.SuplaCarAppService"
+      android:exported="true">
+      <intent-filter>
+        <action android:name="androidx.car.app.CarAppService" />
+        <category android:name="androidx.car.app.category.IOT" />
+      </intent-filter>
+    </service>
 
     <provider
       android:name="androidx.startup.InitializationProvider"

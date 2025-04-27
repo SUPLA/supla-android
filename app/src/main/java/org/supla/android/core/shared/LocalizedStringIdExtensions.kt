@@ -102,13 +102,15 @@ val LocalizedStringId.resourceId: Int
     LocalizedStringId.CALIBRATION_LOST -> R.string.calibration_lost
     LocalizedStringId.CALIBRATION_FAILED -> R.string.calibration_failed
 
+    LocalizedStringId.OVERCURRENT_WARNING -> R.string.overcurrent_warning
+
     LocalizedStringId.THERMOSTAT_THERMOMETER_ERROR -> R.string.thermostat_thermometer_error
     LocalizedStringId.THERMOSTAT_BATTER_COVER_OPEN -> R.string.thermostat_battery_cover_open
     LocalizedStringId.THERMOSTAT_CLOCK_ERROR -> R.string.thermostat_clock_error
     LocalizedStringId.THERMOSTAT_CALIBRATION_ERROR -> R.string.thermostat_calibration_error
 
     LocalizedStringId.FLOOD_SENSOR_ACTIVE -> R.string.flooding_alarm_message
-    LocalizedStringId.VALVE_MANUALLY_CLOSED -> R.string.valve_warning_manually_closed_short
+    LocalizedStringId.VALVE_MANUALLY_CLOSED -> R.string.valve_warning
     LocalizedStringId.VALVE_FLOODING -> R.string.valve_warning_flooding_short
     LocalizedStringId.VALVE_MOTOR_PROBLEM -> R.string.valve_warning_motor_problem
 

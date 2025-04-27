@@ -71,6 +71,7 @@ import org.supla.android.events.DeviceConfigEventsManager;
 import org.supla.android.events.OnlineEventsManager;
 import org.supla.android.events.UpdateEventsManager;
 import org.supla.android.features.channelscleanup.RemoveHiddenChannelsManager;
+import org.supla.android.features.scenescleanup.RemoveHiddenScenesManager;
 import org.supla.android.lib.actions.ActionId;
 import org.supla.android.lib.actions.ActionParameters;
 import org.supla.android.lib.actions.SubjectType;
@@ -136,6 +137,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   private final SuplaClientStateHolder suplaClientStateHolder;
   private final ChannelToRootRelationHolderUseCase channelToRootRelationHolderUseCase;
   private final RemoveHiddenChannelsManager removeHiddenChannelsManager;
+  private final RemoveHiddenScenesManager removeHiddenScenesManager;
   private final OnlineEventsManager onlineEventsManager;
 
   public SuplaClient(
@@ -170,6 +172,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     this.channelToRootRelationHolderUseCase = dependencies.getChannelToRootRelationHolderUseCase();
     this.suplaClientStateHolder = dependencies.getSuplaClientStateHolder();
     this.removeHiddenChannelsManager = dependencies.getRemoveHiddenChannelsManager();
+    this.removeHiddenScenesManager = dependencies.getRemoveHiddenScenesManager();
     this.onlineEventsManager = dependencies.getOnlineEventsManager();
   }
 
@@ -1194,6 +1197,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     if (scene.isEol()) {
       updateEventsManager.emitScenesUpdate();
       sr.setScenesVisible(0, 2);
+      removeHiddenScenesManager.start();
     }
   }
 
@@ -1659,6 +1663,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
       } finally {
         free();
         removeHiddenChannelsManager.kill();
+        removeHiddenScenesManager.kill();
       }
 
       if (!canceled()) {

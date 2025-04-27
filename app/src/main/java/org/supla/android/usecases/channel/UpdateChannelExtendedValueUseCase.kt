@@ -45,7 +45,7 @@ class UpdateChannelExtendedValueUseCase @Inject constructor(
 ) {
 
   operator fun invoke(channelId: Int, suplaChannelExtendedValue: SuplaChannelExtendedValue): Single<UpdateExtendedValueResult> =
-    updateChannelStateUseCase.invoke(suplaChannelExtendedValue.ChannelStateValue)
+    updateChannelStateUseCase.invoke(suplaChannelExtendedValue.ChannelStateValue?.copy(channelId = channelId))
       .andThen(channelExtendedValueRepository.findByRemoteId(channelId))
       .flatMap { value ->
         val oldDate: Date? = value.getSuplaValue()?.timerEstimatedEndDate

@@ -318,7 +318,7 @@
   <string name="widget_removed_label">Канал видалено</string>
   <string name="widget_group">група</string>
   <string name="widget_scene">етап</string>
-  <string name="widget_action_toggle">Переключити</string>
+  <string name="channel_btn_toggle">Переключити</string>
   <string name="channel_caption_roofwindowopeningsensor">Датчик відчинення мансардного вікна</string>
   <string name="channel_caption_roofwindow">Мансардне вікно</string>
   <string name="channel_func_controllingtheroofwindow">Відчинення та зачинення мансардного вікна</string>

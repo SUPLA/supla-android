@@ -18,7 +18,7 @@ package org.supla.android.data.model.chart
  */
 
 import org.supla.android.data.model.general.SingleSelectionList
-import org.supla.android.ui.views.SpinnerItem
+import org.supla.android.ui.views.spinner.SpinnerItem
 
 class ChartFilters private constructor(private val filters: Map<FilterableKey, SingleSelectionList<SpinnerItem>>) {
 

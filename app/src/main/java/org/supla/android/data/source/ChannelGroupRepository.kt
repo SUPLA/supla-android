@@ -19,8 +19,10 @@ package org.supla.android.data.source
 
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 import org.supla.android.data.source.local.dao.ChannelGroupDao
 import org.supla.android.data.source.local.entity.ChannelGroupEntity
+import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.usecases.captionchange.CaptionChangeUseCase
 import org.supla.android.usecases.developerinfo.CountProvider
 import javax.inject.Inject
@@ -38,6 +40,8 @@ class ChannelGroupRepository @Inject constructor(
   fun findGroupDataEntity(remoteId: Int) = channelGroupDao.findGroupDataEntity(remoteId)
 
   fun findGroupOnlineCount(groupId: Long) = channelGroupDao.findGroupOnlineCount(groupId)
+
+  fun findProfileGroups(profileId: Long): Single<List<ChannelGroupDataEntity>> = channelGroupDao.findProfileGroups(profileId)
 
   fun update(groups: List<ChannelGroupEntity>) = channelGroupDao.update(groups)
 

@@ -30,7 +30,7 @@ import javax.inject.Singleton
 @Singleton
 class RoomChannelRepository @Inject constructor(
   private val channelDao: ChannelDao
-) : CountProvider, CaptionChangeUseCase.Updater, RemoveHiddenChannelsUseCase.Deletable {
+) : CountProvider, CaptionChangeUseCase.Updater, RemoveHiddenChannelsUseCase.ChannelsDeletable {
 
   fun findByRemoteId(remoteId: Int) = channelDao.findByRemoteId(remoteId)
 
@@ -50,6 +50,8 @@ class RoomChannelRepository @Inject constructor(
 
   fun findChannelsCount(profileId: Long) = channelDao.findChannelsCount(profileId)
 
+  fun findProfileChannels(profileId: Long) = channelDao.findProfileChannels(profileId)
+
   suspend fun findHiddenChannels() = channelDao.findHiddenChannels()
 
   override fun count(): Observable<Int> = channelDao.count()
@@ -57,7 +59,7 @@ class RoomChannelRepository @Inject constructor(
   override fun updateCaption(caption: String, remoteId: Int, profileId: Long): Completable =
     channelDao.updateCaption(caption, remoteId, profileId)
 
-  override suspend fun deleteKtx(remoteId: Int, profileId: Long) {
+  override suspend fun deleteChannelRelated(remoteId: Int, profileId: Long) {
     channelDao.deleteKtx(remoteId, profileId)
   }
 }

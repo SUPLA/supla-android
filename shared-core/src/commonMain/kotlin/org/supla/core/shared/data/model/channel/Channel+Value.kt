@@ -19,6 +19,7 @@ package org.supla.core.shared.data.model.channel
 
 import org.supla.core.shared.data.model.function.container.ContainerValue
 import org.supla.core.shared.data.model.function.facadeblind.FacadeBlindValue
+import org.supla.core.shared.data.model.function.relay.RelayValue
 import org.supla.core.shared.data.model.function.rollershutter.RollerShutterValue
 import org.supla.core.shared.data.model.function.thermostat.ThermostatValue
 import org.supla.core.shared.data.model.general.Channel
@@ -38,3 +39,6 @@ val Channel.containerValue: ContainerValue?
 
 val Channel.valveValue: ValveValue?
   get() = value?.let { ValveValue.from(status, it) }
+
+val Channel.relayValue: RelayValue?
+  get() = value?.let { RelayValue.from(status, it) }

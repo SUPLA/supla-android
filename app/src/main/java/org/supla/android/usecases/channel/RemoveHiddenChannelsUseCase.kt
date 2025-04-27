@@ -22,6 +22,7 @@ import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.supla.android.Trace
+import org.supla.android.data.source.AndroidAutoItemRepository
 import org.supla.android.data.source.ChannelConfigRepository
 import org.supla.android.data.source.ChannelExtendedValueRepository
 import org.supla.android.data.source.ChannelRelationRepository
@@ -53,6 +54,7 @@ class RemoveHiddenChannelsUseCase @Inject constructor(
   channelValueRepository: ChannelValueRepository,
   colorListRepository: RoomColorListRepository,
   currentLogRepository: CurrentLogRepository,
+  androidAutoItemRepository: AndroidAutoItemRepository,
   electricityMeterLogRepository: ElectricityMeterLogRepository,
   generalPurposeMeterLogRepository: GeneralPurposeMeterLogRepository,
   generalPurposeMeasurementLogRepository: GeneralPurposeMeasurementLogRepository,
@@ -65,7 +67,7 @@ class RemoveHiddenChannelsUseCase @Inject constructor(
   voltageLogRepository: VoltageLogRepository
 ) {
 
-  private val relatedRepositories: List<Deletable> = listOf(
+  private val relatedRepositories: List<ChannelsDeletable> = listOf(
     channelRepository,
     channelConfigRepository,
     channelExtendedValueRepository,
@@ -74,6 +76,7 @@ class RemoveHiddenChannelsUseCase @Inject constructor(
     channelValueRepository,
     colorListRepository,
     currentLogRepository,
+    androidAutoItemRepository,
     electricityMeterLogRepository,
     generalPurposeMeterLogRepository,
     generalPurposeMeasurementLogRepository,
@@ -93,7 +96,7 @@ class RemoveHiddenChannelsUseCase @Inject constructor(
 
       hiddenChannels.flatMap { channel ->
         relatedRepositories.map {
-          launch { it.deleteKtx(channel.remoteId, channel.profileId) }
+          launch { it.deleteChannelRelated(channel.remoteId, channel.profileId) }
         }
       }.joinAll()
 
@@ -101,8 +104,8 @@ class RemoveHiddenChannelsUseCase @Inject constructor(
     }
   }
 
-  interface Deletable {
-    suspend fun deleteKtx(remoteId: Int, profileId: Long)
+  interface ChannelsDeletable {
+    suspend fun deleteChannelRelated(remoteId: Int, profileId: Long)
   }
 
   companion object {

@@ -100,4 +100,14 @@
     android:id="@+id/developer_info_fragment"
     android:name="org.supla.android.features.developerinfo.DeveloperInfoFragment"
     android:label="@string/developer_info_title" />
+
+  <fragment
+    android:id="@+id/android_auto_items_fragment"
+    android:name="org.supla.android.features.androidauto.AndroidAutoItemsFragment"
+    android:label="@string/settings_android_auto_label" />
+
+  <fragment
+    android:id="@+id/android_auto_add_item_fragment"
+    android:name="org.supla.android.features.androidauto.add.AddAndroidAutoItemFragment"
+    android:label="@string/settings_android_auto_label" />
 </navigation>

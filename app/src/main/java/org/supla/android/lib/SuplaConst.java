@@ -39,8 +39,6 @@ public class SuplaConst {
   public static final int SUPLA_RESULT_VERSION_ERROR = -1;
 
   // SUPLA_RESULTCODE_ are sent in TSuplaDataPacket.data
-  public static final int SUPLA_RESULTCODE_NONE = 0;
-  public static final int SUPLA_RESULTCODE_UNSUPORTED = 1;
   public static final int SUPLA_RESULTCODE_FALSE = 2;
   public static final int SUPLA_RESULTCODE_TRUE = 3;
   public static final int SUPLA_RESULTCODE_TEMPORARILY_UNAVAILABLE = 4;

@@ -19,6 +19,7 @@ package org.supla.android.data.source.local.entity.complex
 
 import androidx.room.Embedded
 import org.supla.android.data.model.general.ChannelDataBase
+import org.supla.android.data.model.general.ChannelState
 import org.supla.android.data.source.local.entity.ChannelConfigEntity
 import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity
@@ -30,6 +31,7 @@ import org.supla.android.db.Channel
 import org.supla.android.db.ChannelExtendedValue
 import org.supla.android.db.ChannelValue
 import org.supla.android.lib.SuplaChannelExtendedValue
+import org.supla.android.usecases.channel.GetChannelStateUseCase
 import org.supla.core.shared.data.model.battery.BatteryInfo
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.extensions.ifTrue
@@ -75,6 +77,12 @@ data class ChannelDataEntity(
     } else {
       0
     }
+
+  override val offlineState: ChannelState
+    get() = GetChannelStateUseCase.getOfflineState(
+      function = function,
+      thermostatSubfunction = function.hasThermostatSubfunction.ifTrue { channelValueEntity.asThermostatValue().subfunction }
+    )
 
   @Deprecated("Please use channelDataEntity if possible")
   fun getLegacyChannel(): Channel = Channel().also { channel ->

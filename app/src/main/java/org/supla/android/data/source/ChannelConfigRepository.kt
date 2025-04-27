@@ -40,7 +40,7 @@ import javax.inject.Singleton
 class ChannelConfigRepository @Inject constructor(
   private val channelConfigDao: ChannelConfigDao,
   @Named(GSON_FOR_REPO) private val gson: Gson
-) : CountProvider, RemoveHiddenChannelsUseCase.Deletable {
+) : CountProvider, RemoveHiddenChannelsUseCase.ChannelsDeletable {
 
   fun findForRemoteId(remoteId: Int) = channelConfigDao.findForRemoteId(remoteId)
 
@@ -88,7 +88,7 @@ class ChannelConfigRepository @Inject constructor(
 
   override fun count(): Observable<Int> = channelConfigDao.count()
 
-  override suspend fun deleteKtx(remoteId: Int, profileId: Long) = channelConfigDao.deleteKtx(remoteId, profileId)
+  override suspend fun deleteChannelRelated(remoteId: Int, profileId: Long) = channelConfigDao.deleteKtx(remoteId, profileId)
 }
 
 private fun SuplaChannelGeneralPurposeMeasurementConfig.toEntity(profileId: Long, gson: Gson): ChannelConfigEntity {

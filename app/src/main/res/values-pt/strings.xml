@@ -461,7 +461,7 @@
   <string name="widget_command_no_access">Sem acesso! (código: %1$d)</string>
   <string name="widget_group">grupo</string>
   <string name="widget_scene">cena</string>
-  <string name="widget_action_toggle">Alternar</string>
+  <string name="channel_btn_toggle">Alternar</string>
 
   <string name="associeted_with_push_error">Não é possível alterar a função do canal associado às notificações PUSH.</string>
   <string name="associeted_with_vbt_error">Não é possível alterar a função do canal associado às reações.</string>

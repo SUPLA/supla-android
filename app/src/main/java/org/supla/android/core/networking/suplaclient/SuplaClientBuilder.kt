@@ -27,6 +27,7 @@ import org.supla.android.events.DeviceConfigEventsManager
 import org.supla.android.events.OnlineEventsManager
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.features.channelscleanup.RemoveHiddenChannelsManager
+import org.supla.android.features.scenescleanup.RemoveHiddenScenesManager
 import org.supla.android.lib.SuplaClient
 import org.supla.android.profile.ProfileIdHolder
 import org.supla.android.profile.ProfileManager
@@ -79,5 +80,6 @@ data class SuplaClientDependencies @Inject constructor(
 
   val suplaClientStateHolder: SuplaClientStateHolder,
   val removeHiddenChannelsManager: RemoveHiddenChannelsManager,
+  val removeHiddenScenesManager: RemoveHiddenScenesManager,
   val onlineEventsManager: OnlineEventsManager
 )

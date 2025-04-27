@@ -37,11 +37,11 @@ import org.supla.android.ui.views.Image
 import org.supla.core.shared.data.model.lists.ChannelIssueItem
 
 @Composable
-fun ChannelIssuesView(issues: List<ChannelIssueItem>) {
+fun ChannelIssuesView(issues: List<ChannelIssueItem>, modifier: Modifier = Modifier) {
   issues.forEach {
     it.messages.forEach { message ->
       Row(
-        modifier = Modifier
+        modifier = modifier
           .fillMaxWidth()
           .padding(horizontal = Distance.default),
         horizontalArrangement = Arrangement.spacedBy(Distance.tiny)

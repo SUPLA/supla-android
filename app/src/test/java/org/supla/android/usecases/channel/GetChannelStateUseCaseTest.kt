@@ -448,7 +448,7 @@ class GetChannelStateUseCaseTest {
     val channelData = mockChannelDataEntity(SuplaFunction.DIMMER_AND_RGB_LIGHTING, status = SuplaChannelAvailabilityStatus.OFFLINE)
 
     // when
-    val state = useCase(channelData)
+    val state = useCase.invoke(channelData)
 
     // then
     assertThat(state.value).isEqualTo(ChannelState.Value.COMPLEX)
