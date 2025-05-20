@@ -43,6 +43,10 @@ class ValveIssuesProvider : ChannelIssuesProvider {
     if (anyActive) {
       issues.add(ChannelIssueItem.Error(LocalizedStringId.FLOOD_SENSOR_ACTIVE))
     }
+    val anyOffline = children.firstOrNull { it.channel.status.offline } != null
+    if (anyOffline) {
+      issues.add(ChannelIssueItem.Error(LocalizedStringId.VALVE_SENSOR_OFFLINE))
+    }
 
     val value = channelWithChildren.channel.valveValue
     value?.flags?.contains(SuplaValveFlag.FLOODING)?.ifTrue {

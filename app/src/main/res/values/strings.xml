@@ -774,6 +774,7 @@
   <string name="valve_warning_motor_problem_opening" translatable="false">A motor problem has been detected. Make sure nothing is blocking the valve. The valve may be partially open. Are you sure you want to open it?</string>
   <string name="valve_warning_motor_problem_closing" translatable="false">A motor problem has been detected. Make sure nothing is blocking the valve. The valve may be partially open. Are you sure you want to close it?</string>
   <string name="valve_warning_motor_problem" translatable="false">A motor problem has been detected. Make sure nothing is blocking the valve. The valve may be partially open.</string>
+  <string name="valve_error_sensor_offline" translatable="false">Unavailable flooding sensor - possible undetected flooding</string>
   <string name="change_caption_header" translatable="false">Caption Change</string>
   <string name="group_name" translatable="false">Group name</string>
   <string name="caption_change_failed" translatable="false">Caption change failed!</string>
@@ -792,7 +793,7 @@
   <string name="settings_android_auto_label" translatable="false">Android Auto</string>
   <string name="android_auto_add" translatable="false">Add Android Auto item</string>
   <string name="channel_btn_stop" translatable="false">Stop</string>
-  <string name="android_auto_action" translatable="false">Action: %1$s</string>
+  <string name="android_auto_action">Action: %1$s</string>
   <string name="android_auto_empty" translatable="false">Android Auto not configured. Go to Supla App -> Settings -> Android Auto and prepare configuration.</string>
   <string name="android_auto_executing" translatable="false">Executing…</string>
   <string name="android_auto_delete_title" translatable="false">Deleting item</string>
