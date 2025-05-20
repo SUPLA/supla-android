@@ -223,7 +223,7 @@ class MainScreen(
       }
     }
 
-    return R.string.scene_inactive
+    return R.string.android_auto_error
   }
 }
 

@@ -113,6 +113,7 @@ val LocalizedStringId.resourceId: Int
     LocalizedStringId.VALVE_MANUALLY_CLOSED -> R.string.valve_warning
     LocalizedStringId.VALVE_FLOODING -> R.string.valve_warning_flooding_short
     LocalizedStringId.VALVE_MOTOR_PROBLEM -> R.string.valve_warning_motor_problem
+    LocalizedStringId.VALVE_SENSOR_OFFLINE -> R.string.valve_error_sensor_offline
 
     LocalizedStringId.CONTAINER_WARNING_LEVEL -> R.string.container_warning_level
     LocalizedStringId.CONTAINER_ALARM_LEVEL -> R.string.container_alarm_level
