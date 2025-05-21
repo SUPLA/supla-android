@@ -41,7 +41,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import org.supla.android.R
+import org.supla.android.core.ui.theme.SuplaTheme
 
 @Composable
 fun ThermostatThumb(
@@ -90,6 +93,18 @@ fun ThermostatThumb(
         .align(Alignment.Center)
         .background(color = color, shape = CircleShape)
         .padding(all = 3.dp)
+    )
+  }
+}
+
+@Preview
+@Composable
+private fun Preview() {
+  SuplaTheme {
+    ThermostatThumb(
+      interactionSource = remember { MutableInteractionSource() },
+      iconRes = R.drawable.ic_heat,
+      color = MaterialTheme.colorScheme.error
     )
   }
 }

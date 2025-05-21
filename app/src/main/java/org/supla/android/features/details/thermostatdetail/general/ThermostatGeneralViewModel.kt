@@ -61,13 +61,12 @@ import org.supla.android.usecases.channel.GetChannelValueUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenTreeUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.thermostat.CreateTemperaturesListUseCase
+import org.supla.android.usecases.thermostat.MeasurementValue
 import org.supla.core.shared.data.model.channel.ChannelRelationType
 import org.supla.core.shared.data.model.function.thermostat.SuplaThermostatFlag
 import org.supla.core.shared.data.model.function.thermostat.ThermostatValue
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.data.model.lists.ChannelIssueItem
-import org.supla.core.shared.data.model.lists.IssueIcon
-import org.supla.core.shared.extensions.fromSuplaTemperature
 import org.supla.core.shared.extensions.ifTrue
 import org.supla.core.shared.usecase.channel.issues.ThermostatIssuesProvider
 import java.util.Date
@@ -348,8 +347,8 @@ class ThermostatGeneralViewModel @Inject constructor(
     val setpointHeatTemperature = getSetpointHeatTemperature(channelData, thermostatValue)
     val setpointCoolTemperature = getSetpointCoolTemperature(channelData, thermostatValue)
 
-    val (configMinTemperature) = guardLet(data.config.temperatures.roomMin?.fromSuplaTemperature()) { return }
-    val (configMaxTemperature) = guardLet(data.config.temperatures.roomMax?.fromSuplaTemperature()) { return }
+    val (configMinTemperature) = guardLet(data.config.minTemperature) { return }
+    val (configMaxTemperature) = guardLet(data.config.maxTemperature) { return }
 
     val online = value.status.online
     val isOff = value.status.offline || thermostatValue.mode == SuplaHvacMode.OFF || thermostatValue.mode == SuplaHvacMode.NOT_SET
@@ -798,13 +797,6 @@ data class ThermostatGeneralViewState(
       viewModelState?.setpointCoolTemperature
     )
 }
-
-data class MeasurementValue(
-  val remoteId: Int,
-  val imageId: ImageId,
-  val value: String,
-  val batteryIcon: IssueIcon? = null
-)
 
 data class ThermostatGeneralViewModelState(
   val remoteId: Int,

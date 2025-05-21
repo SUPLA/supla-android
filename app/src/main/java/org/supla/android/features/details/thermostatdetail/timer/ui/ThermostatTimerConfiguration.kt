@@ -413,6 +413,19 @@ private fun Preview() {
   }
 }
 
+@Preview
+@Composable
+private fun Preview_Manual() {
+  SuplaTheme {
+    ThermostatTimerConfiguration(
+      state = TimerDetailViewState(
+        selectedMode = DeviceMode.MANUAL
+      ),
+      viewProxy = PreviewProxy2(TimerDetailViewState())
+    )
+  }
+}
+
 private class PreviewProxy2(val state: TimerDetailViewState) : TimerDetailViewProxy {
   override val timerLeftTime: Int = 0
   override fun getViewState(): StateFlow<TimerDetailViewState> =

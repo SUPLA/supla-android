@@ -64,7 +64,6 @@ import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.formatting.LocalPercentageFormatter
 import org.supla.android.data.model.temperature.TemperatureCorrection
 import org.supla.android.events.LoadingTimeoutManager
-import org.supla.android.features.details.thermostatdetail.general.MeasurementValue
 import org.supla.android.features.details.thermostatdetail.general.ThermostatGeneralViewState
 import org.supla.android.features.details.thermostatdetail.general.data.ThermostatProgramInfo
 import org.supla.android.features.details.thermostatdetail.ui.ThermometersValues
@@ -79,6 +78,7 @@ import org.supla.android.ui.views.thermostat.TemperatureControlButton
 import org.supla.android.ui.views.tools.Shadow
 import org.supla.android.ui.views.tools.ShadowOrientation
 import org.supla.android.ui.views.tools.ThermostatControl
+import org.supla.android.usecases.thermostat.MeasurementValue
 import org.supla.core.shared.data.model.lists.ChannelIssueItem
 
 interface ThermostatGeneralViewProxy : BaseViewProxy<ThermostatGeneralViewState> {

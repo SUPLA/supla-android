@@ -18,7 +18,10 @@ package org.supla.android.data.source.remote.hvac
  */
 
 import org.supla.android.data.source.remote.SuplaChannelConfig
+import org.supla.android.tools.UsedFromNativeCode
+import org.supla.core.shared.extensions.fromSuplaTemperature
 
+@UsedFromNativeCode
 data class SuplaHvacTemperatures(
   val freezeProtection: Short?,
   val eco: Short?,
@@ -40,6 +43,7 @@ data class SuplaHvacTemperatures(
   val heatCoolOffsetMax: Short?
 )
 
+@UsedFromNativeCode
 enum class SuplaHvacThermometerType(value: Int) {
   NOT_SET(0),
   DISABLED(1),
@@ -49,12 +53,21 @@ enum class SuplaHvacThermometerType(value: Int) {
   GENERIC_COOLER(5)
 }
 
+@UsedFromNativeCode
 enum class SuplaHvacAlgorithm(value: Int) {
   NOT_SET(0),
   ON_OFF_SETPOINT_MIDDLE(1),
   ON_OFF_SETPOINT_AT_MOST(2)
 }
 
+@UsedFromNativeCode
+enum class SuplaTemperatureControlType(value: Int) {
+  NOT_SUPPORTED(0),
+  ROOM_TEMPERATURE(1),
+  AUX_HEATER_COOLER_TEMPERATURE(2)
+}
+
+@UsedFromNativeCode
 data class SuplaChannelHvacConfig(
   override val remoteId: Int,
   override val func: Int?,
@@ -70,5 +83,20 @@ data class SuplaChannelHvacConfig(
   val outputValueOnError: Int,
   val subfunction: ThermostatSubfunction,
   val temperatureSetpointChangeSwitchesToManualMode: Boolean,
+  val temperatureControlType: SuplaTemperatureControlType,
   val temperatures: SuplaHvacTemperatures
-) : SuplaChannelConfig(remoteId, func, crc32)
+) : SuplaChannelConfig(remoteId, func, crc32) {
+  val minTemperature: Float?
+    get() =
+      when (temperatureControlType) {
+        SuplaTemperatureControlType.AUX_HEATER_COOLER_TEMPERATURE -> temperatures.auxMin
+        else -> temperatures.roomMin
+      }?.fromSuplaTemperature()
+
+  val maxTemperature: Float?
+    get() =
+      when (temperatureControlType) {
+        SuplaTemperatureControlType.AUX_HEATER_COOLER_TEMPERATURE -> temperatures.auxMax
+        else -> temperatures.roomMax
+      }?.fromSuplaTemperature()
+}

@@ -63,13 +63,15 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL
 import org.supla.android.tools.SuplaSchedulers
-import org.supla.core.shared.extensions.fromSuplaTemperature
+import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.extensions.ifFalse
 import java.util.Calendar
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 private const val REFRESH_DELAY_MS = 3000L
+private const val DEFAULT_HEAT_TEMPERATURE = 21f
+private const val DEFAULT_WATER_TEMPERATURE = 40f
 
 @HiltViewModel
 class ScheduleDetailViewModel @Inject constructor(
@@ -425,14 +427,20 @@ class ScheduleDetailViewModel @Inject constructor(
   private fun createProgramSettingData(state: ScheduleDetailViewState, program: SuplaScheduleProgram): ProgramSettingsData? {
     for (programBox in state.programs) {
       if (programBox.scheduleProgram.program == program) {
+        val heatTemperature = state.alignTemperature(programBox.setpointTemperatureHeat)
+        val coolTemperature = state.alignTemperature(programBox.setpointTemperatureCool)
         return ProgramSettingsData(
           program = program,
           modes = programAvailableModes(state),
           selectedMode = programBox.modeForModify,
-          setpointTemperatureHeat = programBox.temperatureMinForModify,
-          setpointTemperatureCool = programBox.temperatureMaxForModify,
-          setpointTemperatureHeatString = valuesFormatter.getTemperatureString(programBox.temperatureMinForModify, withDegree = false),
-          setpointTemperatureCoolString = valuesFormatter.getTemperatureString(programBox.temperatureMaxForModify, withDegree = false),
+          setpointTemperatureHeat = heatTemperature,
+          setpointTemperatureCool = coolTemperature,
+          setpointTemperatureHeatString = valuesFormatter.getTemperatureString(heatTemperature, withDegree = false),
+          setpointTemperatureCoolString = valuesFormatter.getTemperatureString(coolTemperature, withDegree = false),
+          setpointTemperatureCoolPlusAllowed = coolTemperature < state.configTemperatureMax,
+          setpointTemperatureCoolMinusAllowed = coolTemperature > state.configTemperatureMin,
+          setpointTemperatureHeatPlusAllowed = heatTemperature < state.configTemperatureMax,
+          setpointTemperatureHeatMinusAllowed = heatTemperature > state.configTemperatureMin,
           temperatureUnit = preferences.temperatureUnit
         )
       }
@@ -471,10 +479,7 @@ class ScheduleDetailViewModel @Inject constructor(
     val (channelFunction) = guardLet(data.weeklyScheduleConfig.func) {
       return
     }
-    val (configTemperatureMin, configTemperatureMax) = guardLet(
-      data.defaultConfig.temperatures.roomMin?.fromSuplaTemperature(),
-      data.defaultConfig.temperatures.roomMax?.fromSuplaTemperature()
-    ) {
+    val (minTemperature, maxTemperature) = guardLet(data.defaultConfig.minTemperature, data.defaultConfig.maxTemperature) {
       return
     }
 
@@ -498,8 +503,8 @@ class ScheduleDetailViewModel @Inject constructor(
         channelFunction = channelFunction,
         schedule = data.weeklyScheduleConfig.viewScheduleBoxesMap(),
         programs = data.weeklyScheduleConfig.viewProgramBoxesList(thermostatFunction),
-        configTemperatureMin = configTemperatureMin,
-        configTemperatureMax = configTemperatureMax,
+        configTemperatureMin = minTemperature,
+        configTemperatureMax = maxTemperature,
         currentDayOfWeek = data.deviceConfig.isAutomaticTimeSyncDisabled().ifFalse(DayOfWeek.from(calendar.get(Calendar.DAY_OF_WEEK) - 1)),
         currentHour = data.deviceConfig.isAutomaticTimeSyncDisabled().ifFalse(calendar.get(Calendar.HOUR_OF_DAY)),
         thermostatFunction = thermostatFunction
@@ -601,6 +606,18 @@ data class ScheduleDetailViewState(
       add(SuplaWeeklyScheduleEntry(entry.key.dayOfWeek, entry.key.hour.toInt(), QuarterOfHour.SECOND, entry.value.secondQuarterProgram))
       add(SuplaWeeklyScheduleEntry(entry.key.dayOfWeek, entry.key.hour.toInt(), QuarterOfHour.THIRD, entry.value.thirdQuarterProgram))
       add(SuplaWeeklyScheduleEntry(entry.key.dayOfWeek, entry.key.hour.toInt(), QuarterOfHour.FOURTH, entry.value.fourthQuarterProgram))
+    }
+  }
+
+  fun alignTemperature(temperature: Float?): Float {
+    val temperatureToAlign = temperature
+      ?: if (channelFunction == SuplaFunction.HVAC_DOMESTIC_HOT_WATER.value) DEFAULT_WATER_TEMPERATURE else DEFAULT_HEAT_TEMPERATURE
+    return if (temperatureToAlign < configTemperatureMin) {
+      configTemperatureMin
+    } else if (temperatureToAlign > configTemperatureMax) {
+      configTemperatureMax
+    } else {
+      temperatureToAlign
     }
   }
 
