@@ -17,6 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import com.google.gson.Gson
 import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
@@ -25,6 +26,8 @@ import org.supla.android.data.source.local.entity.complex.onlineState
 import org.supla.android.data.source.local.entity.isElectricityMeter
 import org.supla.android.data.source.local.entity.isImpulseCounter
 import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
+import org.supla.android.data.source.remote.hvac.SuplaChannelHvacConfig
+import org.supla.android.data.source.remote.hvac.SuplaTemperatureControlType
 import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS
 import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS
 import org.supla.android.ui.lists.ListOnlineState
@@ -88,6 +91,9 @@ data class ChannelWithChildren(
     }
 
   override fun onlinePercentage(): Int = channel.onlinePercentage()
+
+  fun temperatureControlType(gson: Gson): SuplaTemperatureControlType? =
+    (channel.configEntity?.toSuplaConfig(gson) as? SuplaChannelHvacConfig)?.temperatureControlType
 
   private fun getChildren(tree: List<ChannelChildEntity>): List<ChannelChildEntity> =
     tree.flatMap { if (it.children.isEmpty()) mutableListOf(it) else getChildren(it.children).add(it) }

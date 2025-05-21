@@ -18,7 +18,9 @@ package org.supla.android.data.source.remote.hvac
  */
 
 import org.supla.android.data.source.remote.SuplaChannelConfig
+import org.supla.android.data.source.remote.hvac.SuplaTemperatureControlType.AUX_HEATER_COOLER_TEMPERATURE
 import org.supla.android.tools.UsedFromNativeCode
+import org.supla.core.shared.data.model.channel.ChannelRelationType
 import org.supla.core.shared.extensions.fromSuplaTemperature
 
 @UsedFromNativeCode
@@ -67,6 +69,17 @@ enum class SuplaTemperatureControlType(value: Int) {
   AUX_HEATER_COOLER_TEMPERATURE(2)
 }
 
+fun SuplaTemperatureControlType?.filterRelationType(relationType: ChannelRelationType): Boolean =
+  when (relationType) {
+    ChannelRelationType.AUX_THERMOMETER_FLOOR,
+    ChannelRelationType.AUX_THERMOMETER_WATER,
+    ChannelRelationType.AUX_THERMOMETER_GENERIC_COOLER,
+    ChannelRelationType.AUX_THERMOMETER_GENERIC_HEATER -> this == AUX_HEATER_COOLER_TEMPERATURE
+
+    ChannelRelationType.MAIN_THERMOMETER -> this != AUX_HEATER_COOLER_TEMPERATURE
+    else -> false
+  }
+
 @UsedFromNativeCode
 data class SuplaChannelHvacConfig(
   override val remoteId: Int,
@@ -89,14 +102,14 @@ data class SuplaChannelHvacConfig(
   val minTemperature: Float?
     get() =
       when (temperatureControlType) {
-        SuplaTemperatureControlType.AUX_HEATER_COOLER_TEMPERATURE -> temperatures.auxMin
+        AUX_HEATER_COOLER_TEMPERATURE -> temperatures.auxMinSetpoint ?: temperatures.auxMin
         else -> temperatures.roomMin
       }?.fromSuplaTemperature()
 
   val maxTemperature: Float?
     get() =
       when (temperatureControlType) {
-        SuplaTemperatureControlType.AUX_HEATER_COOLER_TEMPERATURE -> temperatures.auxMax
+        AUX_HEATER_COOLER_TEMPERATURE -> temperatures.auxMaxSetpoint ?: temperatures.auxMax
         else -> temperatures.roomMax
       }?.fromSuplaTemperature()
 }

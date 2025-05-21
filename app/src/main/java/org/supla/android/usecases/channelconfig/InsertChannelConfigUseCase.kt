@@ -29,6 +29,7 @@ import org.supla.android.data.source.remote.SuplaChannelConfig
 import org.supla.android.data.source.remote.container.SuplaChannelContainerConfig
 import org.supla.android.data.source.remote.gpm.SuplaChannelGeneralPurposeMeasurementConfig
 import org.supla.android.data.source.remote.gpm.SuplaChannelGeneralPurposeMeterConfig
+import org.supla.android.data.source.remote.hvac.SuplaChannelHvacConfig
 import org.supla.android.data.source.remote.rollershutter.SuplaChannelFacadeBlindConfig
 import org.supla.android.events.DownloadEventsManager
 import org.supla.android.extensions.TAG
@@ -53,6 +54,12 @@ class InsertChannelConfigUseCase @Inject constructor(
     ifLet(config as? SuplaChannelContainerConfig) { (config) ->
       return profileRepository.findActiveProfile().flatMapCompletable {
         Trace.d(TAG, "Saving config (remoteId: `${config.remoteId}`, function: `${config.func}`) - container")
+        channelConfigRepository.insertOrUpdate(it.id!!, config)
+      }
+    }
+    ifLet(config as? SuplaChannelHvacConfig) { (config) ->
+      return profileRepository.findActiveProfile().flatMapCompletable {
+        Trace.d(TAG, "Saving config (remoteId: `${config.remoteId}`, function: `${config.func}`) - hvac")
         channelConfigRepository.insertOrUpdate(it.id!!, config)
       }
     }

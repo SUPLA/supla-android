@@ -42,11 +42,11 @@ import org.supla.android.data.source.remote.SuplaChannelConfig
 import org.supla.android.data.source.remote.gpm.SuplaChannelConfigMeterCounterType
 import org.supla.android.data.source.remote.gpm.SuplaChannelGeneralPurposeMeasurementConfig
 import org.supla.android.data.source.remote.gpm.SuplaChannelGeneralPurposeMeterConfig
-import org.supla.android.data.source.remote.hvac.SuplaChannelHvacConfig
+import org.supla.android.data.source.remote.hvac.SuplaChannelWeeklyScheduleConfig
 import org.supla.android.events.DownloadEventsManager
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT
+import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_NONE
 
 @RunWith(MockitoJUnitRunner::class)
 class InsertChannelConfigUseCaseTest {
@@ -243,9 +243,9 @@ class InsertChannelConfigUseCaseTest {
   fun `should do nothing if config should not be stored`() {
     // given
     val result = ConfigResult.RESULT_TRUE
-    val config: SuplaChannelHvacConfig = mockk {
+    val config: SuplaChannelWeeklyScheduleConfig = mockk {
       every { remoteId } returns 123
-      every { func } returns SUPLA_CHANNELFNC_HVAC_THERMOSTAT
+      every { func } returns SUPLA_CHANNELFNC_NONE
     }
 
     // when

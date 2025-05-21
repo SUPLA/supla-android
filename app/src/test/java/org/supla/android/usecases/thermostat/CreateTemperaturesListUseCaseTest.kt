@@ -33,7 +33,6 @@ import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
-import org.supla.android.data.source.remote.hvac.SuplaChannelHvacConfig
 import org.supla.android.data.source.remote.hvac.SuplaTemperatureControlType
 import org.supla.android.images.ImageId
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
@@ -79,6 +78,7 @@ class CreateTemperaturesListUseCaseTest {
       every { channel } returns mockk {
         every { configEntity } returns null
       }
+      every { temperatureControlType(gson) } returns SuplaTemperatureControlType.ROOM_TEMPERATURE
     }
     every { channelWithChildren.children } returns listOf(child1, child2)
 
@@ -107,15 +107,9 @@ class CreateTemperaturesListUseCaseTest {
     val child2 = createChild(ChannelRelationType.AUX_THERMOMETER_FLOOR, 222, "22.0", imageId = child2ImageId)
 
     val channelWithChildren: ChannelWithChildren = mockk {
-      every { channel } returns mockk {
-        every { configEntity } returns mockk {
-          every { toSuplaConfig(gson) } returns mockk<SuplaChannelHvacConfig> {
-            every { temperatureControlType } returns SuplaTemperatureControlType.AUX_HEATER_COOLER_TEMPERATURE
-          }
-        }
-      }
+      every { temperatureControlType(gson) } returns SuplaTemperatureControlType.AUX_HEATER_COOLER_TEMPERATURE
+      every { children } returns listOf(child1, child2)
     }
-    every { channelWithChildren.children } returns listOf(child1, child2)
 
     every { getChannelBatteryIconUseCase.invoke(any<Channel>()) } returns null
 
@@ -139,8 +133,9 @@ class CreateTemperaturesListUseCaseTest {
       every { channel } returns mockk {
         every { configEntity } returns null
       }
+      every { temperatureControlType(gson) } returns SuplaTemperatureControlType.ROOM_TEMPERATURE
+      every { children } returns emptyList()
     }
-    every { channelWithChildren.children } returns emptyList()
 
     // when
     val temperatures = useCase.invoke(channelWithChildren)
@@ -161,8 +156,9 @@ class CreateTemperaturesListUseCaseTest {
       every { channel } returns mockk {
         every { configEntity } returns null
       }
+      every { children } returns listOf(child2)
+      every { temperatureControlType(gson) } returns SuplaTemperatureControlType.ROOM_TEMPERATURE
     }
-    every { channelWithChildren.children } returns listOf(child2)
 
     every { getChannelBatteryIconUseCase.invoke(any<Channel>()) } returns null
 
