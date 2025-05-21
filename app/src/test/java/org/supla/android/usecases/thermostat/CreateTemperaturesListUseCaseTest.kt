@@ -17,6 +17,7 @@ package org.supla.android.usecases.thermostat
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import com.google.gson.Gson
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -32,7 +33,7 @@ import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
-import org.supla.android.features.details.thermostatdetail.general.MeasurementValue
+import org.supla.android.data.source.remote.hvac.SuplaTemperatureControlType
 import org.supla.android.images.ImageId
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.channel.ValueType
@@ -53,6 +54,9 @@ class CreateTemperaturesListUseCaseTest {
   @MockK
   private lateinit var getChannelBatteryIconUseCase: GetChannelBatteryIconUseCase
 
+  @MockK
+  private lateinit var gson: Gson
+
   @InjectMockKs
   lateinit var useCase: CreateTemperaturesListUseCase
 
@@ -70,7 +74,12 @@ class CreateTemperaturesListUseCaseTest {
       createChild(ChannelRelationType.MAIN_THERMOMETER, 111, "11.0", SuplaFunction.HUMIDITY_AND_TEMPERATURE, "12.0", child1ImageId)
     val child2 = createChild(ChannelRelationType.AUX_THERMOMETER_FLOOR, 222, "22.0", imageId = child2ImageId)
 
-    val channelWithChildren: ChannelWithChildren = mockk()
+    val channelWithChildren: ChannelWithChildren = mockk {
+      every { channel } returns mockk {
+        every { configEntity } returns null
+      }
+      every { temperatureControlType(gson) } returns SuplaTemperatureControlType.ROOM_TEMPERATURE
+    }
     every { channelWithChildren.children } returns listOf(child1, child2)
 
     every { getChannelBatteryIconUseCase.invoke(any<Channel>()) } returns null
@@ -89,10 +98,44 @@ class CreateTemperaturesListUseCaseTest {
   }
 
   @Test
+  fun `should set aux temperature first when control type is aux`() {
+    // given
+    val child1ImageId: ImageId = mockk()
+    val child2ImageId: ImageId = mockk()
+    val child1 =
+      createChild(ChannelRelationType.MAIN_THERMOMETER, 111, "11.0", SuplaFunction.HUMIDITY_AND_TEMPERATURE, "12.0", child1ImageId)
+    val child2 = createChild(ChannelRelationType.AUX_THERMOMETER_FLOOR, 222, "22.0", imageId = child2ImageId)
+
+    val channelWithChildren: ChannelWithChildren = mockk {
+      every { temperatureControlType(gson) } returns SuplaTemperatureControlType.AUX_HEATER_COOLER_TEMPERATURE
+      every { children } returns listOf(child1, child2)
+    }
+
+    every { getChannelBatteryIconUseCase.invoke(any<Channel>()) } returns null
+
+    // when
+    val temperatures = useCase.invoke(channelWithChildren)
+
+    // then
+    assertThat(temperatures).hasSize(3)
+    assertThat(temperatures)
+      .containsExactly(
+        MeasurementValue(222, child2ImageId, "22.0"),
+        MeasurementValue(111, child1ImageId, "11.0"),
+        MeasurementValue(111, child1ImageId, "12.0")
+      )
+  }
+
+  @Test
   fun `should make list with one entry even if there is no thermometer`() {
     // given
-    val channelWithChildren: ChannelWithChildren = mockk()
-    every { channelWithChildren.children } returns emptyList()
+    val channelWithChildren: ChannelWithChildren = mockk {
+      every { channel } returns mockk {
+        every { configEntity } returns null
+      }
+      every { temperatureControlType(gson) } returns SuplaTemperatureControlType.ROOM_TEMPERATURE
+      every { children } returns emptyList()
+    }
 
     // when
     val temperatures = useCase.invoke(channelWithChildren)
@@ -109,8 +152,13 @@ class CreateTemperaturesListUseCaseTest {
     val imageId: ImageId = mockk()
     val child2 = createChild(ChannelRelationType.AUX_THERMOMETER_FLOOR, 222, "22.0", imageId = imageId)
 
-    val channelWithChildren: ChannelWithChildren = mockk()
-    every { channelWithChildren.children } returns listOf(child2)
+    val channelWithChildren: ChannelWithChildren = mockk {
+      every { channel } returns mockk {
+        every { configEntity } returns null
+      }
+      every { children } returns listOf(child2)
+      every { temperatureControlType(gson) } returns SuplaTemperatureControlType.ROOM_TEMPERATURE
+    }
 
     every { getChannelBatteryIconUseCase.invoke(any<Channel>()) } returns null
 

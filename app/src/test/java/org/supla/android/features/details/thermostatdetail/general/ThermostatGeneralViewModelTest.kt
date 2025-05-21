@@ -49,6 +49,7 @@ import org.supla.android.data.source.remote.hvac.SuplaHvacAlgorithm
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.data.source.remote.hvac.SuplaHvacTemperatures
 import org.supla.android.data.source.remote.hvac.SuplaHvacThermometerType
+import org.supla.android.data.source.remote.hvac.SuplaTemperatureControlType
 import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
 import org.supla.android.events.ChannelConfigEventsManager
 import org.supla.android.events.DeviceConfigEventsManager
@@ -804,6 +805,7 @@ class ThermostatGeneralViewModelTest :
       outputValueOnError = 0,
       subfunction = subfunction,
       temperatureSetpointChangeSwitchesToManualMode = false,
+      temperatureControlType = SuplaTemperatureControlType.ROOM_TEMPERATURE,
       temperatures = SuplaHvacTemperatures(
         freezeProtection = null,
         eco = null,

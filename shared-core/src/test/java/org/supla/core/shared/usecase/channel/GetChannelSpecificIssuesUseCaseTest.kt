@@ -111,6 +111,7 @@ class GetChannelSpecificIssuesUseCaseTest {
           }
           every { channel } returns mockk {
             every { value } returns byteArrayOf(1)
+            every { status } returns SuplaChannelAvailabilityStatus.ONLINE
           }
         }
       )

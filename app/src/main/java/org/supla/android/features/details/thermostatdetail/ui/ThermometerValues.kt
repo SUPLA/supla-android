@@ -45,9 +45,9 @@ import androidx.compose.ui.unit.min
 import org.supla.android.R
 import org.supla.android.core.shared.data.model.lists.resource
 import org.supla.android.core.ui.theme.SuplaTheme
-import org.supla.android.features.details.thermostatdetail.general.MeasurementValue
 import org.supla.android.images.ImageId
 import org.supla.android.ui.views.Image
+import org.supla.android.usecases.thermostat.MeasurementValue
 import org.supla.core.shared.data.model.lists.IssueIcon
 
 @Composable

@@ -28,6 +28,7 @@ import org.supla.android.data.source.remote.SuplaChannelConfig
 import org.supla.android.data.source.remote.container.SuplaChannelContainerConfig
 import org.supla.android.data.source.remote.gpm.SuplaChannelGeneralPurposeMeasurementConfig
 import org.supla.android.data.source.remote.gpm.SuplaChannelGeneralPurposeMeterConfig
+import org.supla.android.data.source.remote.hvac.SuplaChannelHvacConfig
 import org.supla.android.data.source.remote.rollershutter.SuplaChannelFacadeBlindConfig
 import org.supla.android.di.GSON_FOR_REPO
 import org.supla.android.usecases.channel.RemoveHiddenChannelsUseCase
@@ -60,6 +61,10 @@ class ChannelConfigRepository @Inject constructor(
     return channelConfigDao.insertOrUpdate(config.toEntity(profileId, gson))
   }
 
+  fun insertOrUpdate(profileId: Long, config: SuplaChannelHvacConfig): Completable {
+    return channelConfigDao.insertOrUpdate(config.toEntity(profileId, gson))
+  }
+
   fun delete(profileId: Long, channelId: Int): Completable {
     return channelConfigDao.delete(profileId, channelId)
   }
@@ -79,6 +84,9 @@ class ChannelConfigRepository @Inject constructor(
 
           ChannelConfigType.CONTAINER ->
             gson.fromJson(it.config, SuplaChannelContainerConfig::class.java)
+
+          ChannelConfigType.HVAC ->
+            gson.fromJson(it.config, SuplaChannelHvacConfig::class.java)
 
           else ->
             gson.fromJson(it.config, SuplaChannelConfig::class.java)
@@ -127,5 +135,14 @@ private fun SuplaChannelContainerConfig.toEntity(profileId: Long, gson: Gson): C
     profileId = profileId,
     config = gson.toJson(this),
     configType = ChannelConfigType.CONTAINER,
+    configCrc32 = crc32
+  )
+
+private fun SuplaChannelHvacConfig.toEntity(profileId: Long, gson: Gson): ChannelConfigEntity =
+  ChannelConfigEntity(
+    channelId = remoteId,
+    profileId = profileId,
+    config = gson.toJson(this),
+    configType = ChannelConfigType.HVAC,
     configCrc32 = crc32
   )

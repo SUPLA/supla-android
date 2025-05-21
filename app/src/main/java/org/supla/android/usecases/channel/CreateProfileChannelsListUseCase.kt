@@ -17,6 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import com.google.gson.Gson
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import org.supla.android.core.shared.shareable
@@ -40,19 +41,22 @@ import org.supla.android.data.source.local.entity.isIconWithAction
 import org.supla.android.data.source.local.entity.isProjectorScreen
 import org.supla.android.data.source.local.entity.isRgbw
 import org.supla.android.data.source.local.entity.isSwitch
+import org.supla.android.data.source.remote.hvac.SuplaChannelHvacConfig
+import org.supla.android.data.source.remote.hvac.filterRelationType
 import org.supla.android.data.source.remote.thermostat.getIndicatorIcon
 import org.supla.android.data.source.remote.thermostat.getSetpointText
+import org.supla.android.di.GSON_FOR_REPO
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.ui.lists.onlineState
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.location.CollapsedFlag
-import org.supla.core.shared.data.model.channel.ChannelRelationType
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.usecase.GetCaptionUseCase
 import org.supla.core.shared.usecase.channel.GetChannelIssuesForListUseCase
 import java.util.Collections
 import java.util.LinkedList
 import javax.inject.Inject
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
@@ -64,7 +68,8 @@ class CreateProfileChannelsListUseCase @Inject constructor(
   private val getChannelValueStringUseCase: GetChannelValueStringUseCase,
   private val valuesFormatter: ValuesFormatter,
   private val getChannelIssuesForListUseCase: GetChannelIssuesForListUseCase,
-  private val getChannelChildrenTreeUseCase: GetChannelChildrenTreeUseCase
+  private val getChannelChildrenTreeUseCase: GetChannelChildrenTreeUseCase,
+  @Named(GSON_FOR_REPO) private val gson: Gson
 ) {
 
   operator fun invoke(): Observable<List<ListItem>> =
@@ -151,7 +156,8 @@ class CreateProfileChannelsListUseCase @Inject constructor(
   ): ListItem.HvacThermostatItem {
     val thermostatValue = channelData.channelValueEntity.asThermostatValue()
     val children = childrenMap[channelData.remoteId]?.filterNotNull()
-    val mainThermometerChild = children?.firstOrNull { it.relationType == ChannelRelationType.MAIN_THERMOMETER }
+    val temperatureControlType = (channelData.configEntity?.toSuplaConfig(gson) as? SuplaChannelHvacConfig)?.temperatureControlType
+    val thermometerChild = children?.firstOrNull { temperatureControlType.filterRelationType(it.relationType) }
     val indicatorIcon = thermostatValue.getIndicatorIcon() mergeWith children?.indicatorIcon
     val onlineState = channelData.channelValueEntity.status.onlineState mergeWith children?.onlineState
 
@@ -161,7 +167,7 @@ class CreateProfileChannelsListUseCase @Inject constructor(
       onlineState,
       getCaptionUseCase(channelData.shareable),
       getChannelIconUseCase(channelData),
-      mainThermometerChild?.let { getChannelValueStringUseCase(it.withChildren) } ?: ValuesFormatter.NO_VALUE_TEXT,
+      thermometerChild?.let { getChannelValueStringUseCase(it.withChildren) } ?: ValuesFormatter.NO_VALUE_TEXT,
       getChannelIssuesForListUseCase(channelWithChildren(channelData, childrenMap).shareable),
       channelData.channelExtendedValueEntity?.getSuplaValue()?.TimerStateValue?.countdownEndsAt,
       thermostatValue.getSetpointText(valuesFormatter),

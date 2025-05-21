@@ -255,6 +255,7 @@ class CreateListItemUpdateEventDataUseCaseTest {
     val channelWithChildren: ChannelWithChildren = mockk()
     every { channelWithChildren.channel } returns channel
     every { channelWithChildren.children } returns emptyList()
+    every { channelWithChildren.onlineState } returns ListOnlineState.ONLINE
     val channelShareable = channel.shareable
     val channelWithChildrenShareable = channelWithChildren.shareable
 
