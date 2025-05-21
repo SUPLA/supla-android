@@ -1,6 +1,6 @@
 package org.supla.android.usecases.channel
 
-import android.content.Context
+import com.google.gson.Gson
 import io.mockk.every
 import io.mockk.mockk
 import io.reactivex.rxjava3.core.Observable
@@ -62,6 +62,9 @@ class CreateProfileChannelsListUseCaseTest {
   @Mock
   private lateinit var getChannelChildrenTreeUseCase: GetChannelChildrenTreeUseCase
 
+  @Mock
+  private lateinit var gson: Gson
+
   @InjectMocks
   private lateinit var usecase: CreateProfileChannelsListUseCase
 
@@ -84,7 +87,6 @@ class CreateProfileChannelsListUseCaseTest {
 
     // then
     testObserver.assertComplete()
-    val context: Context = mockk()
     val list = testObserver.values()[0]
 
     assertThat(list).hasSize(8)
@@ -216,6 +218,7 @@ class CreateProfileChannelsListUseCaseTest {
         }
       }
       every { getValueAsByteArray() } returns byteArrayOf()
+      every { configEntity } returns null
     }
 
     if (channelFunction == SuplaFunction.HVAC_THERMOSTAT) {

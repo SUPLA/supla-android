@@ -17,25 +17,26 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import com.google.gson.Gson
 import org.supla.android.core.shared.shareable
 import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.local.entity.complex.indicatorIcon
 import org.supla.android.data.source.local.entity.complex.isHvacThermostat
-import org.supla.android.data.source.local.entity.complex.onlineState
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
+import org.supla.android.data.source.remote.hvac.filterRelationType
 import org.supla.android.data.source.remote.thermostat.getIndicatorIcon
 import org.supla.android.data.source.remote.thermostat.getSetpointText
+import org.supla.android.di.GSON_FOR_REPO
 import org.supla.android.extensions.guardLet
 import org.supla.android.ui.lists.data.SlideableListItemData
-import org.supla.android.ui.lists.onlineState
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.list.CreateListItemUpdateEventDataUseCase
-import org.supla.core.shared.data.model.channel.ChannelRelationType
 import org.supla.core.shared.usecase.GetCaptionUseCase
 import org.supla.core.shared.usecase.channel.GetChannelIssuesForListUseCase
 import javax.inject.Inject
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
@@ -44,7 +45,8 @@ class ChannelWithChildrenToThermostatUpdateEventMapper @Inject constructor(
   private val getChannelIconUseCase: GetChannelIconUseCase,
   private val getChannelValueStringUseCase: GetChannelValueStringUseCase,
   private val getChannelIssuesForListUseCase: GetChannelIssuesForListUseCase,
-  private val valuesFormatter: ValuesFormatter
+  private val valuesFormatter: ValuesFormatter,
+  @Named(GSON_FOR_REPO) private val gson: Gson
 ) :
   CreateListItemUpdateEventDataUseCase.Mapper {
   override fun handle(item: Any): Boolean {
@@ -66,14 +68,15 @@ class ChannelWithChildrenToThermostatUpdateEventMapper @Inject constructor(
     val channelData = channelWithChildren.channel
     val children = channelWithChildren.children
     val thermostatValue = channelData.channelValueEntity.asThermostatValue()
-    val mainThermometerChild = children.firstOrNull { it.relationType == ChannelRelationType.MAIN_THERMOMETER }?.withChildren
+    val temperatureControlType = channelWithChildren.temperatureControlType(gson)
+    val thermometerChild = children.firstOrNull { temperatureControlType.filterRelationType(it.relationType) }?.withChildren
     val indicatorIcon = thermostatValue.getIndicatorIcon() mergeWith children.indicatorIcon
 
     return SlideableListItemData.Thermostat(
       onlineState = channelWithChildren.onlineState,
       title = getCaptionUseCase(channelData.shareable),
       icon = getChannelIconUseCase.invoke(channelData),
-      value = mainThermometerChild?.let { getChannelValueStringUseCase(it) } ?: ValuesFormatter.NO_VALUE_TEXT,
+      value = thermometerChild?.let { getChannelValueStringUseCase(it) } ?: ValuesFormatter.NO_VALUE_TEXT,
       subValue = thermostatValue.getSetpointText(valuesFormatter),
       indicatorIcon = indicatorIcon.resource,
       issues = getChannelIssuesForListUseCase(channelWithChildren.shareable),

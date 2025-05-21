@@ -24,7 +24,6 @@ import org.supla.android.data.model.general.IconType
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.shareable
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
-import org.supla.android.data.source.remote.hvac.SuplaChannelHvacConfig
 import org.supla.android.data.source.remote.hvac.SuplaTemperatureControlType
 import org.supla.android.di.GSON_FOR_REPO
 import org.supla.android.images.ImageId
@@ -48,7 +47,7 @@ class CreateTemperaturesListUseCase @Inject constructor(
 
   operator fun invoke(channelWithChildren: ChannelWithChildren): List<MeasurementValue> =
     mutableListOf<MeasurementValue>().apply {
-      val controlType = channelWithChildren.temperatureControlType
+      val controlType = channelWithChildren.temperatureControlType(gson)
       val sortedChildren = channelWithChildren.children
         .filter { it.relationType.isThermometer() }
         .let {
@@ -92,9 +91,6 @@ class CreateTemperaturesListUseCase @Inject constructor(
       value = getChannelValueStringUseCase(ChannelWithChildren(channelData), ValueType.SECOND, withUnit = false),
       batteryIcon = getChannelBatteryIconUseCase(channelData.shareable)
     )
-
-  private val ChannelWithChildren.temperatureControlType: SuplaTemperatureControlType?
-    get() = (channel.configEntity?.toSuplaConfig(gson) as? SuplaChannelHvacConfig)?.temperatureControlType
 }
 
 data class MeasurementValue(

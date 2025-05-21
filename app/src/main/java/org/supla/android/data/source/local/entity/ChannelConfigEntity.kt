@@ -25,8 +25,11 @@ import org.supla.android.data.source.local.entity.ChannelConfigEntity.Companion.
 import org.supla.android.data.source.local.entity.ChannelConfigEntity.Companion.TABLE_NAME
 import org.supla.android.data.source.remote.ChannelConfigType
 import org.supla.android.data.source.remote.SuplaChannelConfig
+import org.supla.android.data.source.remote.container.SuplaChannelContainerConfig
 import org.supla.android.data.source.remote.gpm.SuplaChannelGeneralPurposeMeasurementConfig
 import org.supla.android.data.source.remote.gpm.SuplaChannelGeneralPurposeMeterConfig
+import org.supla.android.data.source.remote.hvac.SuplaChannelHvacConfig
+import org.supla.android.data.source.remote.rollershutter.SuplaChannelFacadeBlindConfig
 
 @Entity(
   tableName = TABLE_NAME,
@@ -48,7 +51,18 @@ data class ChannelConfigEntity(
       ChannelConfigType.GENERAL_PURPOSE_METER ->
         gson.fromJson(config, SuplaChannelGeneralPurposeMeterConfig::class.java)
 
-      else ->
+      ChannelConfigType.HVAC ->
+        gson.fromJson(config, SuplaChannelHvacConfig::class.java)
+
+      ChannelConfigType.CONTAINER ->
+        gson.fromJson(config, SuplaChannelContainerConfig::class.java)
+
+      ChannelConfigType.FACADE_BLIND ->
+        gson.fromJson(config, SuplaChannelFacadeBlindConfig::class.java)
+
+      ChannelConfigType.DEFAULT,
+      ChannelConfigType.WEEKLY_SCHEDULE,
+      ChannelConfigType.UNKNOWN ->
         gson.fromJson(config, SuplaChannelConfig::class.java)
     }
 

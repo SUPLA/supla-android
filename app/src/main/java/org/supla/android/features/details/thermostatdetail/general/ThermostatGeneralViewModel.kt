@@ -42,6 +42,7 @@ import org.supla.android.data.source.remote.hvac.SuplaChannelHvacConfig
 import org.supla.android.data.source.remote.hvac.SuplaChannelWeeklyScheduleConfig
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
+import org.supla.android.data.source.remote.hvac.filterRelationType
 import org.supla.android.events.ChannelConfigEventsManager
 import org.supla.android.events.DeviceConfigEventsManager
 import org.supla.android.events.LoadingTimeoutManager
@@ -49,7 +50,6 @@ import org.supla.android.events.UpdateEventsManager
 import org.supla.android.extensions.TAG
 import org.supla.android.extensions.guardLet
 import org.supla.android.extensions.ifLet
-import org.supla.android.extensions.mapMerged
 import org.supla.android.features.details.thermostatdetail.general.data.SensorIssue
 import org.supla.android.features.details.thermostatdetail.general.data.ThermostatProgramInfo
 import org.supla.android.features.details.thermostatdetail.general.data.build
@@ -128,17 +128,18 @@ class ThermostatGeneralViewModel @Inject constructor(
       .disposeBySelf()
 
     Observable.combineLatest(
-      channelSubject.mapMerged { createTemperaturesListUseCase(it) },
+      channelSubject,
       channelConfigEventsManager.observerConfig(remoteId)
-        .filter { it.config is SuplaChannelHvacConfig && it.result == ConfigResult.RESULT_TRUE },
+        .filter { it.config is SuplaChannelHvacConfig && it.result == ConfigResult.RESULT_TRUE }
+        .map { it.config as SuplaChannelHvacConfig },
       channelConfigEventsManager.observerConfig(remoteId)
         .filter { it.config is SuplaChannelWeeklyScheduleConfig },
       deviceConfigEventsManager.observerConfig(deviceId)
-    ) { pair, channelConfig, weeklySchedule, deviceConfig ->
+    ) { channelWithChildren, hvacConfig, weeklySchedule, deviceConfig ->
       LoadedData(
-        channelWithChildren = pair.first,
-        temperatures = pair.second,
-        config = channelConfig.config as SuplaChannelHvacConfig,
+        channelWithChildren = channelWithChildren,
+        temperatures = createTemperaturesListUseCase(channelWithChildren),
+        config = hvacConfig,
         weeklySchedule = weeklySchedule.config as SuplaChannelWeeklyScheduleConfig,
         deviceConfig = deviceConfig.config
       )
@@ -398,7 +399,7 @@ class ThermostatGeneralViewModel @Inject constructor(
         configMinTemperatureString = valuesFormatter.getTemperatureString(configMinTemperature),
         configMaxTemperatureString = valuesFormatter.getTemperatureString(configMaxTemperature),
 
-        currentTemperaturePercentage = calculateCurrentTemperature(data.channelWithChildren, configMinTemperature, configMaxTemperature),
+        currentTemperaturePercentage = calculateCurrentTemperature(data, configMinTemperature, configMaxTemperature),
 
         manualModeActive = isOff.not() && thermostatValue.flags.contains(SuplaThermostatFlag.WEEKLY_SCHEDULE).not(),
         programmedModeActive = online && thermostatValue.flags.contains(SuplaThermostatFlag.WEEKLY_SCHEDULE),
@@ -519,8 +520,12 @@ class ThermostatGeneralViewModel @Inject constructor(
     }
   }
 
-  private fun calculateCurrentTemperature(data: ChannelWithChildren, configMinTemperature: Float, configMaxTemperature: Float): Float? {
-    return data.children.firstOrNull { it.relationType == ChannelRelationType.MAIN_THERMOMETER }?.let {
+  private fun calculateCurrentTemperature(
+    data: LoadedData,
+    configMinTemperature: Float,
+    configMaxTemperature: Float
+  ): Float? {
+    return data.channelWithChildren.children.firstOrNull { data.config.temperatureControlType.filterRelationType(it.relationType) }?.let {
       val temperature: Double = getChannelValueUseCase(it.withChildren)
 
       if (temperature <= -273) {
