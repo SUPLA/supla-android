@@ -89,6 +89,7 @@ class ValveIssuesProviderTest {
       }
       every { channel } returns mockk {
         every { value } returns byteArrayOf(0)
+        every { status } returns SuplaChannelAvailabilityStatus.ONLINE
       }
     }
     val channelWithChildren = ChannelWithChildren(
@@ -116,6 +117,7 @@ class ValveIssuesProviderTest {
       }
       every { channel } returns mockk {
         every { value } returns byteArrayOf(1)
+        every { status } returns SuplaChannelAvailabilityStatus.ONLINE
       }
     }
     val channelWithChildren = ChannelWithChildren(
@@ -135,7 +137,7 @@ class ValveIssuesProviderTest {
   }
 
   @Test
-  fun `should provide three types of issues`() {
+  fun `should provide four types of issues`() {
     // given
     val child: ChannelChild = mockk {
       every { relation } returns mockk {
@@ -143,6 +145,7 @@ class ValveIssuesProviderTest {
       }
       every { channel } returns mockk {
         every { value } returns byteArrayOf(1)
+        every { status } returns SuplaChannelAvailabilityStatus.OFFLINE
       }
     }
     val channelWithChildren = ChannelWithChildren(
@@ -160,6 +163,7 @@ class ValveIssuesProviderTest {
     // then
     assertThat(issues).containsExactly(
       ChannelIssueItem.Error(LocalizedStringId.FLOOD_SENSOR_ACTIVE),
+      ChannelIssueItem.Error(LocalizedStringId.VALVE_SENSOR_OFFLINE),
       ChannelIssueItem.Error(LocalizedStringId.VALVE_FLOODING),
       ChannelIssueItem.Error(LocalizedStringId.VALVE_MANUALLY_CLOSED)
     )

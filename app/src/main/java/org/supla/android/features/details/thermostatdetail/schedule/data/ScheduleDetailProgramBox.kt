@@ -60,31 +60,6 @@ data class ScheduleDetailProgramBox(
       scheduleProgram.mode
     }
 
-  val temperatureMinForModify: Float
-    get() {
-      setpointTemperatureHeat?.let {
-        if (it > 0) {
-          return it
-        }
-      }
-
-      return if (channelFunction == SUPLA_CHANNELFNC_HVAC_DOMESTIC_HOT_WATER && scheduleProgram.mode == SuplaHvacMode.HEAT) {
-        40f
-      } else {
-        21f
-      }
-    }
-
-  val temperatureMaxForModify: Float
-    get() {
-      setpointTemperatureCool?.let {
-        if (it > 0) {
-          return it
-        }
-      }
-      return 24f
-    }
-
   companion object {
     fun default() = listOf(
       ScheduleDetailProgramBox(
