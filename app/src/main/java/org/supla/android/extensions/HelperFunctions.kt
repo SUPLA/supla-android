@@ -17,6 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import android.annotation.SuppressLint
 import androidx.annotation.DimenRes
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
@@ -56,6 +57,7 @@ fun max(a: TextUnit, b: TextUnit): TextUnit {
 
 @Composable
 @ReadOnlyComposable
+@SuppressLint("LocalContextConfigurationRead")
 fun fontDimensionResource(@DimenRes id: Int): TextUnit {
   val density = LocalDensity.current.density
   val resources = LocalContext.current.resources
@@ -67,6 +69,7 @@ fun fontDimensionResource(@DimenRes id: Int): TextUnit {
 
 @Composable
 @ReadOnlyComposable
+@SuppressLint("LocalContextConfigurationRead")
 fun fontDpSize(dp: Dp): TextUnit {
   val density = LocalDensity.current.density
   val resources = LocalContext.current.resources
