@@ -65,7 +65,8 @@
         android:layout_gravity="center"
         android:layout_marginStart="5dp"
         android:layout_weight="0"
-        android:background="@drawable/lookblack" />
+        android:background="@drawable/lookblack"
+        android:backgroundTint="@color/on_surface" />
 
 
     </LinearLayout>
