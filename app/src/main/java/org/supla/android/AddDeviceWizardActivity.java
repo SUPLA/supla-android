@@ -896,7 +896,10 @@ public class AddDeviceWizardActivity extends WizardActivity
 
       Set<String> set = new HashSet<>(spinnerArray);
 
-      if (!sr.SSID.equals(CurrrentSSID) && !espNetworkName(sr.SSID) && !set.contains(sr.SSID)) {
+      if (!sr.SSID.equals(CurrrentSSID)
+          && !espNetworkName(sr.SSID)
+          && !set.contains(sr.SSID)
+          && sr.frequency < 2500) {
         spinnerArray.add(sr.SSID);
       }
     }
