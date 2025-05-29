@@ -32,6 +32,7 @@ import org.supla.android.lib.SuplaChannel
 import org.supla.android.usecases.channelconfig.RequestChannelConfigUseCase
 import org.supla.android.widget.WidgetManager
 import org.supla.android.widget.WidgetPreferences
+import org.supla.core.shared.data.model.general.SuplaFunction
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -101,7 +102,11 @@ class UpdateChannelUseCase @Inject constructor(
       widgetManager.findWidgetConfig(profileId, suplaChannel.Id)?.let { (widgetId, configuration) ->
         widgetPreferences.setWidgetConfiguration(
           widgetId,
-          configuration.copy(userIcon = suplaChannel.UserIcon, altIcon = suplaChannel.AltIcon, itemFunction = suplaChannel.Func)
+          configuration.copy(
+            userIcon = suplaChannel.UserIcon,
+            altIcon = suplaChannel.AltIcon,
+            subjectFunction = SuplaFunction.from(suplaChannel.Func)
+          )
         )
         widgetManager.updateWidget(widgetId)
       }

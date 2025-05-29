@@ -33,18 +33,6 @@ import org.supla.android.R
 import org.supla.android.Trace
 import org.supla.android.core.notifications.NotificationsHelper
 import org.supla.android.data.source.remote.gpm.SuplaChannelGeneralPurposeBaseConfig
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DIMMER
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER
-import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
 import org.supla.android.lib.SuplaConst.SUPLA_RESULTCODE_ACCESSID_DISABLED
 import org.supla.android.lib.SuplaConst.SUPLA_RESULTCODE_ACCESSID_INACTIVE
 import org.supla.android.lib.SuplaConst.SUPLA_RESULTCODE_ACCESSID_NOT_ASSIGNED
@@ -65,7 +53,6 @@ import org.supla.android.lib.SuplaConst.SUPLA_RESULT_VERSION_ERROR
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.ActionParameters
 import org.supla.android.lib.actions.RgbwActionParameters
-import org.supla.android.lib.actions.SubjectType
 import org.supla.android.lib.singlecall.DoubleValue
 import org.supla.android.lib.singlecall.ResultException
 import org.supla.android.lib.singlecall.TemperatureAndHumidity
@@ -74,8 +61,7 @@ import org.supla.android.usecases.channel.valueformatter.GpmValueFormatter
 import org.supla.android.usecases.channel.valueprovider.GpmValueProvider
 import org.supla.android.usecases.channelconfig.LoadChannelConfigUseCase
 import org.supla.android.widget.WidgetConfiguration
-import org.supla.android.widget.onoff.ARG_TURN_ON
-import org.supla.android.widget.shared.configuration.ItemType
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 private const val INTERNAL_ERROR = -10
 
@@ -117,7 +103,7 @@ abstract class WidgetCommandWorkerBase(
       )
       return Result.failure()
     }
-    setForegroundAsync(createForegroundInfo(configuration.itemCaption))
+    setForegroundAsync(createForegroundInfo(configuration.caption))
 
     if (!isNetworkAvailable()) {
       showToast(R.string.widget_command_no_connection, Toast.LENGTH_LONG)
@@ -132,61 +118,52 @@ abstract class WidgetCommandWorkerBase(
   protected abstract fun updateWidget(widgetId: Int)
   protected abstract fun valueWithUnit(): Boolean
 
-  protected open fun perform(
+  protected abstract fun perform(
     widgetId: Int,
     configuration: WidgetConfiguration
-  ): Result = performCommon(
-    widgetId,
-    configuration,
-    inputData.getBoolean(ARG_TURN_ON, false)
-  )
+  ): Result
 
   protected fun performCommon(
     widgetId: Int,
     configuration: WidgetConfiguration,
-    turnOnOrClose: Boolean
+    actionId: ActionId?
   ): Result {
-    when (configuration.itemFunction) {
-      SUPLA_CHANNELFNC_LIGHTSWITCH,
-      SUPLA_CHANNELFNC_POWERSWITCH,
-      SUPLA_CHANNELFNC_STAIRCASETIMER ->
-        callAction(configuration, if (turnOnOrClose) ActionId.TURN_ON else ActionId.TURN_OFF)
+    when (configuration.subjectFunction) {
+      SuplaFunction.LIGHTSWITCH,
+      SuplaFunction.POWER_SWITCH,
+      SuplaFunction.STAIRCASE_TIMER,
+      SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER,
+      SuplaFunction.CONTROLLING_THE_ROOF_WINDOW ->
+        actionId?.let { callAction(configuration, it) }
 
-      SUPLA_CHANNELFNC_DIMMER,
-      SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING,
-      SUPLA_CHANNELFNC_RGBLIGHTING -> callRgbwAction(configuration, turnOnOrClose)
+      SuplaFunction.DIMMER,
+      SuplaFunction.DIMMER_AND_RGB_LIGHTING,
+      SuplaFunction.RGB_LIGHTING -> callRgbwAction(configuration, actionId)
 
-      SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER,
-      SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW ->
-        callAction(configuration, if (turnOnOrClose) ActionId.SHUT else ActionId.REVEAL)
-
-      SUPLA_CHANNELFNC_THERMOMETER,
-      SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE ->
+      SuplaFunction.THERMOMETER,
+      SuplaFunction.HUMIDITY_AND_TEMPERATURE ->
         return handleThermometerWidget(widgetId, configuration)
 
-      SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER,
-      SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT ->
+      SuplaFunction.GENERAL_PURPOSE_METER,
+      SuplaFunction.GENERAL_PURPOSE_MEASUREMENT ->
         return handleGpmWidget(widgetId, configuration)
+
+      else -> {}
     }
     return Result.success()
   }
 
   protected fun callAction(configuration: WidgetConfiguration, action: ActionId) {
-    val type = when (configuration.itemType) {
-      ItemType.CHANNEL -> SubjectType.CHANNEL
-      ItemType.GROUP -> SubjectType.GROUP
-      ItemType.SCENE -> SubjectType.SCENE
-    }
-    callAction(configuration, ActionParameters(action, type, configuration.itemId))
+    callAction(configuration, ActionParameters(action, configuration.subjectType, configuration.itemId))
   }
 
-  private fun callRgbwAction(configuration: WidgetConfiguration, turnOnOrClose: Boolean) {
-    val brightness = getBrightness(turnOnOrClose)
+  private fun callRgbwAction(configuration: WidgetConfiguration, actionId: ActionId?) {
+    val brightness = getBrightness(actionId)
     callAction(
       configuration,
       RgbwActionParameters(
         ActionId.SET_RGBW_PARAMETERS,
-        if (configuration.itemType.isGroup()) SubjectType.GROUP else SubjectType.CHANNEL,
+        configuration.subjectType,
         configuration.itemId,
         brightness,
         brightness,
@@ -263,13 +240,8 @@ abstract class WidgetCommandWorkerBase(
     showToast(message, Toast.LENGTH_LONG)
   }
 
-  private fun getItemTypeText(configuration: WidgetConfiguration): String {
-    return when (configuration.itemType) {
-      ItemType.CHANNEL -> applicationContext.resources.getString(R.string.widget_channel)
-      ItemType.GROUP -> applicationContext.resources.getString(R.string.widget_group)
-      ItemType.SCENE -> applicationContext.resources.getString(R.string.widget_scene)
-    }
-  }
+  private fun getItemTypeText(configuration: WidgetConfiguration): String =
+    applicationContext.resources.getString(configuration.subjectType.nameRes)
 
   private fun showToast(stringId: Int, length: Int) {
     handler.post {
@@ -309,8 +281,8 @@ abstract class WidgetCommandWorkerBase(
     return false
   }
 
-  private fun getBrightness(turnOnOrClose: Boolean): Short =
-    if (turnOnOrClose) {
+  private fun getBrightness(actionId: ActionId?): Short =
+    if (actionId == ActionId.TURN_ON) {
       100
     } else {
       0

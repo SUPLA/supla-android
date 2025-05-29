@@ -31,10 +31,10 @@ object SubjectTypeValue {
   const val SCENE = 3
 }
 
-enum class SubjectType(val value: Int, val nameRes: Int) {
-  CHANNEL(SubjectTypeValue.CHANNEL, R.string.widget_channel),
-  GROUP(SubjectTypeValue.GROUP, R.string.widget_group),
-  SCENE(SubjectTypeValue.SCENE, R.string.widget_scene);
+enum class SubjectType(val value: Int, val nameRes: Int, val widgetNameRes: Int) {
+  CHANNEL(SubjectTypeValue.CHANNEL, R.string.widget_channel, R.string.widget_configure_type_channel_label),
+  GROUP(SubjectTypeValue.GROUP, R.string.widget_group, R.string.widget_configure_type_group_label),
+  SCENE(SubjectTypeValue.SCENE, R.string.widget_scene, R.string.widget_configure_type_scene_label);
 
   companion object {
     fun from(value: Int): SubjectType {

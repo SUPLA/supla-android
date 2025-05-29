@@ -21,6 +21,7 @@ import android.app.NotificationManager
 import android.app.UiModeManager
 import android.appwidget.AppWidgetManager
 import android.content.Context
+import android.os.PowerManager
 import androidx.biometric.BiometricManager
 import dagger.Module
 import dagger.Provides
@@ -105,6 +106,10 @@ class ApplicationModule {
   @Provides
   fun provideBiometricManager(@ApplicationContext context: Context) =
     BiometricManager.from(context)
+
+  @Provides
+  fun providePowerManager(@ApplicationContext context: Context) =
+    context.getSystemService(Context.POWER_SERVICE) as PowerManager
 
   @Provides
   @Singleton

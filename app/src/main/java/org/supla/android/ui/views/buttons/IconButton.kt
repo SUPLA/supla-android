@@ -29,6 +29,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import org.supla.android.R
 import org.supla.android.core.ui.theme.SuplaTheme
 
@@ -39,11 +40,12 @@ fun IconButton(
   modifier: Modifier = Modifier,
   enabled: Boolean = true,
   rotate: Boolean = false,
-  tint: Color = MaterialTheme.colorScheme.primary
+  tint: Color = MaterialTheme.colorScheme.primary,
+  iconSize: Dp = dimensionResource(id = R.dimen.icon_default_size)
 ) =
   IconButton(onClick = onClick, enabled = enabled, modifier = modifier) {
     val iconModifier = Modifier
-      .size(dimensionResource(id = R.dimen.icon_default_size))
+      .size(iconSize)
 
     Icon(
       painter = painterResource(id = icon),

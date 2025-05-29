@@ -27,8 +27,8 @@ import org.supla.android.Trace
 import org.supla.android.extensions.getAllWidgetIds
 import org.supla.android.features.icons.LoadUserIconsIntoCacheWorker
 import org.supla.android.images.ImageCache
-import org.supla.android.widget.INVALID_CHANNEL_ID
-import org.supla.android.widget.INVALID_PROFILE_ID
+import org.supla.android.widget.INVALID_INT
+import org.supla.android.widget.INVALID_LONG
 import org.supla.android.widget.RemoveWidgetsWorker
 import org.supla.android.widget.WidgetConfiguration
 import org.supla.android.widget.WidgetPreferences
@@ -87,8 +87,8 @@ abstract class WidgetProviderBase : AppWidgetProvider() {
 }
 
 internal fun isWidgetValid(configuration: WidgetConfiguration) = configuration.visibility &&
-  configuration.profileId != INVALID_PROFILE_ID &&
-  configuration.itemId != INVALID_CHANNEL_ID
+  configuration.profileId != INVALID_LONG &&
+  configuration.itemId != INVALID_INT
 
 internal fun getWorkId(widgetIds: IntArray): String {
   return if (widgetIds.size != 1) {

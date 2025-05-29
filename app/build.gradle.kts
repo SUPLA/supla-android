@@ -148,6 +148,7 @@ dependencies {
   implementation(libs.androidx.navigation.fragment)
   implementation(libs.androidx.navigation.ui)
   implementation(libs.androidx.compose.ui)
+  implementation(libs.androidx.compose.activity)
   implementation(libs.androidx.compose.ui.tooling)
   implementation(libs.androidx.compose.ui.toolingPreview)
   implementation(libs.androidx.compose.material.icons)
