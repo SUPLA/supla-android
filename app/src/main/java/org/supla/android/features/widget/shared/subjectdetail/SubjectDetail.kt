@@ -1,4 +1,4 @@
-package org.supla.android.widget.shared.configuration
+package org.supla.android.features.widget.shared.subjectdetail
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,16 +17,15 @@ package org.supla.android.widget.shared.configuration
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.content.Context
+import org.supla.android.lib.actions.ActionId
+import org.supla.android.ui.views.spinner.SpinnerItem
+import org.supla.core.shared.infrastructure.LocalizedString
 
-class WidgetConfigurationActionsSpinnerAdapter(
-  context: Context,
-  objects: MutableList<WidgetAction>
-) : WidgetConfigurationSpinnerBase<WidgetAction>(context, objects) {
+sealed interface SubjectDetail : SpinnerItem
 
-  override fun getItemText(item: WidgetAction): String =
-    context.resources.getString(item.text)
-
-  override fun getItemId(position: Int): Long =
-    getItem(position)!!.actionId
+data class ActionDetail(
+  val actionId: ActionId
+) : SubjectDetail {
+  override val label: LocalizedString
+    get() = actionId.label
 }

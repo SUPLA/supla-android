@@ -24,27 +24,24 @@ import android.content.Intent
 import android.os.Build
 import android.view.View
 import android.widget.RemoteViews
-import androidx.work.Data
-import androidx.work.ExistingWorkPolicy
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
+import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
 import org.supla.android.Trace
+import org.supla.android.core.infrastructure.WorkManagerProxy
 import org.supla.android.data.model.general.ChannelState
-import org.supla.android.data.model.general.IconType
+import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.Scene
-import org.supla.android.db.Channel
-import org.supla.android.extensions.getChannelIconUseCase
-import org.supla.android.extensions.isGpm
-import org.supla.android.extensions.isThermometer
+import org.supla.android.data.source.local.entity.isGpm
+import org.supla.android.data.source.local.entity.isThermometer
 import org.supla.android.images.ImageCache
 import org.supla.android.lib.SuplaConst
+import org.supla.android.lib.actions.ActionId
+import org.supla.android.lib.actions.SubjectType
+import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.widget.WidgetConfiguration
 import org.supla.android.widget.shared.WidgetProviderBase
-import org.supla.android.widget.shared.configuration.ItemType
-import org.supla.android.widget.shared.configuration.WidgetAction
-import org.supla.android.widget.shared.getWorkId
 import org.supla.android.widget.shared.isWidgetValid
+import javax.inject.Inject
 
 private const val ACTION_PRESSED = "ACTION_PRESSED"
 
@@ -55,7 +52,14 @@ private const val ACTION_PRESSED = "ACTION_PRESSED"
  * RGB lightning [SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING],
  * dimmer with RGB lightning [SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING]
  */
+@AndroidEntryPoint
 class SingleWidget : WidgetProviderBase() {
+
+  @Inject
+  lateinit var getChannelIconUseCase: GetChannelIconUseCase
+
+  @Inject
+  lateinit var workManagerProxy: WorkManagerProxy
 
   override fun updateAppWidget(
     context: Context,
@@ -66,9 +70,9 @@ class SingleWidget : WidgetProviderBase() {
     // Construct the RemoteViews object
     val views = buildWidget(context, widgetId)
     if (configuration != null && isWidgetValid(configuration)) {
-      views.setTextViewText(R.id.single_widget_channel_name, configuration.itemCaption)
+      views.setTextViewText(R.id.single_widget_channel_name, configuration.caption)
 
-      if (configuration.itemType == ItemType.SCENE) {
+      if (configuration.subjectType == SubjectType.SCENE) {
         val scene = Scene(
           profileId = configuration.profileId,
           altIcon = configuration.altIcon,
@@ -85,7 +89,7 @@ class SingleWidget : WidgetProviderBase() {
         }
         views.setViewVisibility(R.id.single_widget_button, View.VISIBLE)
       } else {
-        setChannelIcons(configuration, views, context)
+        setChannelIcons(configuration, views)
       }
 
       views.setViewVisibility(R.id.single_widget_removed_label, View.GONE)
@@ -100,37 +104,24 @@ class SingleWidget : WidgetProviderBase() {
 
   override fun onReceive(context: Context, intent: Intent?) {
     super.onReceive(context, intent)
-    Trace.i(TAG, "Got intent with action: " + intent?.action)
+    Trace.i(TAG, "[SingleWidget] Got intent with action: " + intent?.action)
 
     if (intent?.action == ACTION_PRESSED) {
       val widgetIds = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS) ?: IntArray(0)
-      val inputData = Data.Builder()
-        .putIntArray(AppWidgetManager.EXTRA_APPWIDGET_IDS, widgetIds)
-        .build()
-
-      val removeWidgetsWork = OneTimeWorkRequestBuilder<SingleWidgetCommandWorker>()
-        .setInputData(inputData)
-        .build()
-
-      // Work for widget ID is unique, so no other worker for the same ID will be started
-      WorkManager.getInstance(context).enqueueUniqueWork(
-        getWorkId(widgetIds),
-        ExistingWorkPolicy.KEEP,
-        removeWidgetsWork
-      )
+      SingleWidgetCommandWorker.enqueue(widgetIds, workManagerProxy)
     }
   }
 
   private fun setChannelIcons(
     configuration: WidgetConfiguration,
-    views: RemoteViews,
-    context: Context
+    views: RemoteViews
   ) {
-    val channel = Channel()
-    channel.profileId = configuration.profileId
-    channel.func = configuration.itemFunction
-    channel.altIcon = configuration.altIcon
-    channel.userIconId = configuration.userIcon
+    val channel = ChannelEntity.create(
+      function = configuration.subjectFunction,
+      altIcon = configuration.altIcon,
+      userIcon = configuration.userIcon,
+      profileId = configuration.profileId
+    )
 
     if (channel.isThermometer() || channel.isGpm()) {
       views.setTextViewText(R.id.single_widget_text, configuration.value)
@@ -139,12 +130,12 @@ class SingleWidget : WidgetProviderBase() {
       views.setViewVisibility(R.id.single_widget_text, View.VISIBLE)
     } else {
       val state = if (turnOnOrClose(configuration)) {
-        ChannelState.active(channel.func)
+        ChannelState.active(channel.function.value)
       } else {
-        ChannelState.inactive(channel.func)
+        ChannelState.inactive(channel.function.value)
       }
 
-      val icon = context.getChannelIconUseCase.invoke(channel, IconType.SINGLE, state)
+      val icon = getChannelIconUseCase.forState(channel, state)
       ImageCache.loadBitmapForWidgetView(icon, views, R.id.single_widget_button, false)
       ImageCache.loadBitmapForWidgetView(icon, views, R.id.single_widget_button_night_mode, true)
 
@@ -155,7 +146,7 @@ class SingleWidget : WidgetProviderBase() {
   }
 
   companion object {
-    private val TAG = SingleWidget::javaClass.name
+    private val TAG = SingleWidget::class.simpleName
   }
 }
 
@@ -178,10 +169,11 @@ internal fun pendingIntent(context: Context, intentAction: String, widgetId: Int
   )
 }
 
-internal fun turnOnOrClose(configuration: WidgetConfiguration): Boolean {
-  return configuration.actionId == WidgetAction.TURN_ON.actionId ||
-    configuration.actionId == WidgetAction.MOVE_DOWN.actionId
-}
+internal fun turnOnOrClose(configuration: WidgetConfiguration): Boolean =
+  configuration.actionId == ActionId.TURN_ON ||
+    configuration.actionId == ActionId.CLOSE ||
+    configuration.actionId == ActionId.SHUT ||
+    configuration.actionId == ActionId.EXPAND
 
 fun updateSingleWidget(context: Context, widgetId: Int) =
   context.sendBroadcast(intent(context, AppWidgetManager.ACTION_APPWIDGET_UPDATE, widgetId))

@@ -17,23 +17,28 @@ package org.supla.android.widget.single
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.appwidget.AppWidgetManager
 import android.content.Context
 import androidx.hilt.work.HiltWorker
+import androidx.work.Data
+import androidx.work.ExistingWorkPolicy
+import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import org.supla.android.Preferences
+import org.supla.android.core.infrastructure.WorkManagerProxy
 import org.supla.android.core.notifications.NotificationsHelper
 import org.supla.android.core.notifications.SINGLE_WIDGET_NOTIFICATION_ID
 import org.supla.android.lib.SuplaConst
-import org.supla.android.lib.SuplaConst.*
 import org.supla.android.lib.actions.ActionId
+import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.VibrationHelper
 import org.supla.android.usecases.channelconfig.LoadChannelConfigUseCase
 import org.supla.android.widget.WidgetConfiguration
 import org.supla.android.widget.shared.WidgetCommandWorkerBase
-import org.supla.android.widget.shared.configuration.ItemType
-import org.supla.android.widget.shared.configuration.WidgetAction
+import org.supla.android.widget.shared.getWorkId
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 /**
  * Worker which is implemented for turning on/off switches. It supports following channel functions:
@@ -60,31 +65,30 @@ class SingleWidgetCommandWorker @AssistedInject constructor(
   override fun valueWithUnit(): Boolean = false
 
   override fun perform(widgetId: Int, configuration: WidgetConfiguration): Result {
-    val action = WidgetAction.fromId(configuration.actionId)
-    if (configuration.itemType == ItemType.SCENE) {
-      if (action != null) {
-        callAction(configuration, action.suplaAction)
+    if (configuration.subjectType == SubjectType.SCENE) {
+      if (configuration.actionId != null) {
+        callAction(configuration, configuration.actionId)
       }
     } else {
-      when (configuration.itemFunction) {
-        SUPLA_CHANNELFNC_CONTROLLINGTHEGATE,
-        SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR -> if (action != null) {
-          callAction(configuration, action.suplaAction)
+      when (configuration.subjectFunction) {
+        SuplaFunction.CONTROLLING_THE_GATE,
+        SuplaFunction.CONTROLLING_THE_GARAGE_DOOR -> if (configuration.actionId != null) {
+          callAction(configuration, configuration.actionId)
         }
 
-        SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK,
-        SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK -> callAction(configuration, ActionId.OPEN)
+        SuplaFunction.CONTROLLING_THE_DOOR_LOCK,
+        SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK -> callAction(configuration, ActionId.OPEN)
 
-        SUPLA_CHANNELFNC_LIGHTSWITCH,
-        SUPLA_CHANNELFNC_POWERSWITCH,
-        SUPLA_CHANNELFNC_STAIRCASETIMER,
-        SUPLA_CHANNELFNC_DIMMER,
-        SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING,
-        SUPLA_CHANNELFNC_RGBLIGHTING -> {
-          if (action == null) {
+        SuplaFunction.LIGHTSWITCH,
+        SuplaFunction.POWER_SWITCH,
+        SuplaFunction.STAIRCASE_TIMER,
+        SuplaFunction.DIMMER,
+        SuplaFunction.DIMMER_AND_RGB_LIGHTING,
+        SuplaFunction.RGB_LIGHTING -> {
+          if (configuration.actionId == null) {
             return callCommon(widgetId, configuration)
           }
-          callAction(configuration, action.suplaAction)
+          callAction(configuration, configuration.actionId)
         }
 
         else -> return callCommon(widgetId, configuration)
@@ -94,8 +98,21 @@ class SingleWidgetCommandWorker @AssistedInject constructor(
   }
 
   private fun callCommon(widgetId: Int, configuration: WidgetConfiguration): Result {
-    val turnOnOrClose = configuration.actionId == WidgetAction.TURN_ON.actionId ||
-      configuration.actionId == WidgetAction.MOVE_DOWN.actionId
-    return performCommon(widgetId, configuration, turnOnOrClose)
+    return performCommon(widgetId, configuration, configuration.actionId)
+  }
+
+  companion object {
+    fun enqueue(widgetIds: IntArray, workManagerProxy: WorkManagerProxy) {
+      val inputData = Data.Builder()
+        .putIntArray(AppWidgetManager.EXTRA_APPWIDGET_IDS, widgetIds)
+        .build()
+
+      val removeWidgetsWork = OneTimeWorkRequestBuilder<SingleWidgetCommandWorker>()
+        .setInputData(inputData)
+        .build()
+
+      // Work for widget ID is unique, so no other worker for the same ID will be started
+      workManagerProxy.enqueueUniqueWork(getWorkId(widgetIds), ExistingWorkPolicy.KEEP, removeWidgetsWork)
+    }
   }
 }

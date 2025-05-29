@@ -171,5 +171,42 @@ data class ChannelEntity(
         position = 0,
         profileId = profileId
       )
+
+    fun create(
+      id: Long? = null,
+      remoteId: Int = 0,
+      deviceId: Int? = null,
+      caption: String = "",
+      type: Int = 0,
+      function: SuplaFunction = SuplaFunction.UNKNOWN,
+      visible: Int = 0,
+      locationId: Int = 0,
+      altIcon: Int = 0,
+      userIcon: Int = 0,
+      manufacturerId: Short = 0,
+      productId: Short = 0,
+      flags: Long = 0,
+      protocolVersion: Int = 0,
+      position: Int = 0,
+      profileId: Long = 0
+    ): ChannelEntity =
+      ChannelEntity(
+        id = id,
+        remoteId = remoteId,
+        deviceId = deviceId,
+        caption = caption,
+        type = type,
+        function = function,
+        visible = visible,
+        locationId = locationId,
+        altIcon = altIcon,
+        userIcon = userIcon,
+        manufacturerId = manufacturerId,
+        productId = productId,
+        flags = flags,
+        protocolVersion = protocolVersion,
+        position = position,
+        profileId = profileId
+      )
   }
 }

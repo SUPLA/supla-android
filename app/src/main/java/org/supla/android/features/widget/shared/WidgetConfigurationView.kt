@@ -1,4 +1,4 @@
-package org.supla.android.features.androidauto.add
+package org.supla.android.features.widget.shared
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,13 +17,18 @@ package org.supla.android.features.androidauto.add
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -32,6 +37,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -43,46 +49,49 @@ import org.supla.android.data.model.general.SingleSelectionList
 import org.supla.android.data.model.spinner.ProfileItem
 import org.supla.android.data.model.spinner.SubjectItem
 import org.supla.android.extensions.ucFirst
+import org.supla.android.features.widget.shared.subjectdetail.ActionDetail
+import org.supla.android.features.widget.shared.subjectdetail.SubjectDetail
 import org.supla.android.images.ImageId
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.BACKGROUND_COLOR
 import org.supla.android.ui.views.EmptyListInfoView
+import org.supla.android.ui.views.Image
 import org.supla.android.ui.views.SegmentedComponent
 import org.supla.android.ui.views.TextField
 import org.supla.android.ui.views.buttons.Button
-import org.supla.android.ui.views.buttons.OutlinedButton
+import org.supla.android.ui.views.buttons.IconButton
 import org.supla.android.ui.views.spinner.LabelledSpinner
 import org.supla.android.ui.views.spinner.Spinner
 import org.supla.core.shared.infrastructure.LocalizedString
 
-data class AddAndroidAutoItemViewState(
+data class WidgetConfigurationViewState(
   val profiles: SingleSelectionList<ProfileItem>? = null,
+  val subjectTypes: List<SubjectType>? = null,
   val subjectType: SubjectType = SubjectType.CHANNEL,
-
   val subjects: SingleSelectionList<SubjectItem>? = null,
+  val subjectDetails: SingleSelectionList<SubjectDetail>? = null,
   val caption: String? = null,
-  val actions: SingleSelectionList<ActionId>? = null,
 
-  val saveEnabled: Boolean = true,
-  val showDelete: Boolean = false
-) {
-  val profilesEnabled: Boolean = !showDelete
-  val subjectsEnabled: Boolean = !showDelete
-}
+  val showWarning: Boolean = false,
+  val saveEnabled: Boolean = false
+)
 
-interface AddAndroidAutoItemScope {
+interface WidgetConfigurationScope {
+  fun onWarningClick()
   fun onProfileSelected(profileItem: ProfileItem)
   fun onSubjectTypeSelected(subjectType: SubjectType)
   fun onSubjectSelected(subjectItem: SubjectItem)
   fun onCaptionChange(caption: String)
-  fun onActionChange(actionId: ActionId)
-  fun onSave()
-  fun onDelete()
+  fun onDetailChange(detail: SubjectDetail)
+  fun onClose()
+  fun onOk()
 }
 
 @Composable
-fun AddAndroidAutoItemScope.View(viewState: AddAndroidAutoItemViewState) {
+fun WidgetConfigurationScope.View(
+  viewState: WidgetConfigurationViewState
+) {
   if (viewState.caption == null && viewState.subjects?.selected != null) {
     onCaptionChange(viewState.subjects.selected.caption(LocalContext.current))
   }
@@ -96,75 +105,113 @@ fun AddAndroidAutoItemScope.View(viewState: AddAndroidAutoItemViewState) {
       verticalArrangement = Arrangement.spacedBy(Distance.small),
       horizontalAlignment = Alignment.CenterHorizontally
     ) {
-      viewState.profiles?.let { profiles ->
-        Profiles(profiles, viewState.profilesEnabled)
-        SegmentedComponent(
-          items = SubjectType.entries.map { stringResource(it.nameRes).ucFirst() },
-          activeItem = viewState.subjectType.value - 1,
-          onClick = { onSubjectTypeSelected(SubjectType.from(it + 1)) },
-          enabled = viewState.profilesEnabled
-        )
+      Header()
+      if (viewState.showWarning) {
+        Warning()
       }
-      viewState.subjects?.let { subjects ->
-        Subjects(subjects, viewState.subjectsEnabled)
-        viewState.caption?.let { Caption(it) }
-        viewState.actions?.let { Actions(it) }
-      } ?: EmptyListInfoView(modifier = Modifier.padding(Distance.default))
+      viewState.profiles?.let { profiles ->
+        Profiles(profiles)
+      }
+      viewState.subjectTypes?.let { types ->
+        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+          Text(
+            text = stringResource(id = R.string.widget_configure_type_label).uppercase(),
+            style = MaterialTheme.typography.bodySmall,
+            color = colorResource(id = R.color.on_surface_variant),
+            modifier = Modifier.padding(horizontal = 12.dp),
+          )
+          SegmentedComponent(
+            items = types.map { stringResource(it.widgetNameRes).ucFirst() },
+            activeItem = viewState.subjectType.value - 1,
+            onClick = { onSubjectTypeSelected(SubjectType.from(it + 1)) }
+          )
+        }
+      }
+      if (viewState.subjects == null) {
+        EmptyListInfoView(modifier = Modifier.padding(Distance.default))
+      } else {
+        Subjects(viewState.subjects)
+        viewState.caption?.let { Caption(it, !viewState.saveEnabled) }
+        viewState.subjectDetails?.let { SubjectDetails(it) }
+      }
     }
 
-    if (viewState.showDelete) {
-      Row(
-        modifier = Modifier
-          .padding(Distance.default)
-          .align(Alignment.BottomCenter),
-        horizontalArrangement = Arrangement.spacedBy(Distance.default)
-      ) {
-        OutlinedButton(
-          text = stringResource(R.string.delete_account),
-          modifier = Modifier.weight(1f),
-          onClick = { onDelete() }
-        )
-        Button(
-          text = stringResource(R.string.save),
-          onClick = { onSave() },
-          enabled = viewState.saveEnabled,
-          modifier = Modifier.weight(1f)
-        )
-      }
-    } else {
-      Button(
-        text = stringResource(R.string.save),
-        onClick = { onSave() },
-        enabled = viewState.saveEnabled,
-        modifier = Modifier
-          .align(Alignment.BottomCenter)
-          .padding(Distance.default)
-          .fillMaxWidth()
-      )
-    }
+    Button(
+      text = stringResource(R.string.ok),
+      onClick = { onOk() },
+      enabled = viewState.saveEnabled,
+      modifier = Modifier
+        .align(Alignment.BottomCenter)
+        .padding(Distance.default)
+        .fillMaxWidth()
+    )
   }
 }
 
 @Composable
-private fun AddAndroidAutoItemScope.Profiles(profiles: SingleSelectionList<ProfileItem>, enabled: Boolean) =
+private fun WidgetConfigurationScope.Header() =
+  Row(verticalAlignment = Alignment.Bottom) {
+    Text(
+      stringResource(R.string.widget_configure_title),
+      style = MaterialTheme.typography.titleLarge,
+      modifier = Modifier.weight(1f)
+    )
+    IconButton(
+      icon = R.drawable.ic_close,
+      onClick = { onClose() },
+      iconSize = dimensionResource(R.dimen.icon_default_size),
+      tint = MaterialTheme.colorScheme.onBackground
+    )
+  }
+
+@Composable
+private fun WidgetConfigurationScope.Warning() =
+  Row(
+    verticalAlignment = Alignment.CenterVertically,
+    horizontalArrangement = Arrangement.spacedBy(Distance.small),
+    modifier = Modifier
+      .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(dimensionResource(R.dimen.radius_default)))
+      .border(
+        width = 1.dp,
+        color = colorResource(id = R.color.gray_lighter),
+        shape = RoundedCornerShape(dimensionResource(R.dimen.radius_default))
+      )
+      .padding(Distance.small)
+      .clickable { onWarningClick() }
+  ) {
+    Image(
+      drawableId = R.drawable.channel_warning_level1,
+      modifier = Modifier.size(dimensionResource(R.dimen.icon_big_size))
+    )
+    Text(
+      text = stringResource(R.string.widget_warning_battery_limitations),
+      style = MaterialTheme.typography.bodyMedium,
+      modifier = Modifier.weight(1f)
+    )
+    Image(
+      drawableId = R.drawable.ic_arrow_right,
+      modifier = Modifier.size(dimensionResource(R.dimen.icon_big_size)),
+    )
+  }
+
+@Composable
+private fun WidgetConfigurationScope.Profiles(profiles: SingleSelectionList<ProfileItem>) =
   Spinner(
     options = profiles,
     fillMaxWidth = true,
-    onOptionSelected = { onProfileSelected(it) },
-    enabled = enabled
+    onOptionSelected = { onProfileSelected(it) }
   )
 
 @Composable
-private fun AddAndroidAutoItemScope.Subjects(subjects: SingleSelectionList<SubjectItem>, enabled: Boolean) =
+private fun WidgetConfigurationScope.Subjects(subjects: SingleSelectionList<SubjectItem>) =
   LabelledSpinner(
     options = subjects,
     fillMaxWidth = true,
-    onOptionSelected = { onSubjectSelected(it) },
-    enabled = enabled
+    onOptionSelected = { onSubjectSelected(it) }
   )
 
 @Composable
-private fun AddAndroidAutoItemScope.Caption(caption: String) =
+private fun WidgetConfigurationScope.Caption(caption: String, isError: Boolean) =
   Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
     Text(
       text = stringResource(R.string.widget_configure_name_label).uppercase(),
@@ -176,26 +223,28 @@ private fun AddAndroidAutoItemScope.Caption(caption: String) =
       value = caption,
       onValueChange = { onCaptionChange(it) },
       modifier = Modifier.fillMaxWidth(),
-      singleLine = true
+      singleLine = true,
+      isError = isError
     )
   }
 
 @Composable
-private fun AddAndroidAutoItemScope.Actions(actions: SingleSelectionList<ActionId>) =
+private fun WidgetConfigurationScope.SubjectDetails(actions: SingleSelectionList<SubjectDetail>) =
   Spinner(
     options = actions,
     fillMaxWidth = true,
-    onOptionSelected = { onActionChange(it) }
+    onOptionSelected = { onDetailChange(it) }
   )
 
-private val emptyScope = object : AddAndroidAutoItemScope {
+private val emptyScope = object : WidgetConfigurationScope {
+  override fun onWarningClick() {}
   override fun onProfileSelected(profileItem: ProfileItem) {}
   override fun onSubjectTypeSelected(subjectType: SubjectType) {}
   override fun onSubjectSelected(subjectItem: SubjectItem) {}
   override fun onCaptionChange(caption: String) {}
-  override fun onActionChange(actionId: ActionId) {}
-  override fun onSave() {}
-  override fun onDelete() {}
+  override fun onDetailChange(detail: SubjectDetail) {}
+  override fun onClose() {}
+  override fun onOk() {}
 }
 
 @Preview(showBackground = true, backgroundColor = BACKGROUND_COLOR)
@@ -209,7 +258,7 @@ private fun Preview() {
   )
   SuplaTheme {
     emptyScope.View(
-      AddAndroidAutoItemViewState(
+      WidgetConfigurationViewState(
         profiles = SingleSelectionList(
           selected = firstProfile,
           label = R.string.widget_configure_profile_label,
@@ -218,39 +267,21 @@ private fun Preview() {
             ProfileItem(2, LocalizedString.Constant("Test"))
           )
         ),
+        subjectTypes = SubjectType.entries,
         subjects = SingleSelectionList(
           selected = firstSubject,
-          label = R.string.widget_channel,
+          label = R.string.widget_configure_channel_label,
           items = listOf(
             firstSubject
           )
         ),
         caption = "Thermostat",
-        actions = SingleSelectionList(
-          selected = ActionId.OPEN,
+        subjectDetails = SingleSelectionList(
+          selected = ActionDetail(ActionId.OPEN),
           label = R.string.widget_configure_action_label,
-          items = listOf(ActionId.OPEN)
-        )
-      )
-    )
-  }
-}
-
-@Preview(showBackground = true, backgroundColor = BACKGROUND_COLOR)
-@Composable
-private fun Preview_NoSubjects() {
-  val firstProfile = ProfileItem(1, LocalizedString.Constant("Default"))
-  SuplaTheme {
-    emptyScope.View(
-      AddAndroidAutoItemViewState(
-        profiles = SingleSelectionList(
-          selected = firstProfile,
-          label = R.string.widget_configure_profile_label,
-          items = listOf(
-            firstProfile,
-            ProfileItem(2, LocalizedString.Constant("Test"))
-          )
-        )
+          items = listOf(ActionDetail(ActionId.OPEN))
+        ),
+        showWarning = true,
       )
     )
   }

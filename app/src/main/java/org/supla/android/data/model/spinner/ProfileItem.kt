@@ -1,4 +1,4 @@
-package org.supla.android.widget.shared.configuration
+package org.supla.android.data.model.spinner
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,15 +17,10 @@ package org.supla.android.widget.shared.configuration
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import android.content.Context
-import org.supla.android.db.AuthProfileItem
+import org.supla.android.ui.views.spinner.SpinnerItem
+import org.supla.core.shared.infrastructure.LocalizedString
 
-class WidgetConfigurationProfilesSpinnerAdapter(
-  context: Context,
-  objects: MutableList<AuthProfileItem>
-) : WidgetConfigurationSpinnerBase<AuthProfileItem>(context, objects) {
-
-  override fun getItemText(item: AuthProfileItem): String = item.name
-
-  override fun getItemId(position: Int): Long = getItem(position)?.id!!
-}
+data class ProfileItem(
+  val id: Long,
+  override val label: LocalizedString
+) : SpinnerItem

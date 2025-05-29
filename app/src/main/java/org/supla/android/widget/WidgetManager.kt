@@ -25,10 +25,10 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import org.supla.android.extensions.getAllWidgetIds
 import org.supla.android.extensions.getOnOffWidgetIds
 import org.supla.android.extensions.getSingleWidgetIds
+import org.supla.android.lib.actions.SubjectType
 import org.supla.android.widget.onoff.OnOffWidget
 import org.supla.android.widget.onoff.updateOnOffWidget
 import org.supla.android.widget.onoff.updateOnOffWidgets
-import org.supla.android.widget.shared.configuration.ItemType
 import org.supla.android.widget.single.updateSingleWidget
 import org.supla.android.widget.single.updateSingleWidgets
 import javax.inject.Inject
@@ -44,7 +44,7 @@ class WidgetManager @Inject constructor(
   fun findWidgetConfig(profileId: Long, channelId: Int): Pair<Int, WidgetConfiguration>? {
     appWidgetManager.getAllWidgetIds(context).forEach { widgetId ->
       widgetPreferences.getWidgetConfiguration(widgetId)?.let { configuration ->
-        if (configuration.profileId == profileId && configuration.itemId == channelId && configuration.itemType == ItemType.CHANNEL) {
+        if (configuration.profileId == profileId && configuration.itemId == channelId && configuration.subjectType == SubjectType.CHANNEL) {
           return Pair(widgetId, configuration)
         }
       }
@@ -82,7 +82,7 @@ class WidgetManager @Inject constructor(
     appWidgetManager.getAllWidgetIds(context).forEach {
       val widgetConfig = widgetPreferences.getWidgetConfiguration(it) ?: return@forEach
       if (widgetConfig.profileId == profileId) {
-        widgetPreferences.setWidgetConfiguration(it, widgetConfig.copy(profileId = INVALID_PROFILE_ID))
+        widgetPreferences.setWidgetConfiguration(it, widgetConfig.copy(profileId = INVALID_LONG))
         updateWidget(it)
       }
     }

@@ -437,7 +437,7 @@ class UpdateChannelUseCaseTest {
       every { profileId } returns channelProfileId
     }
     val widgetConfiguration: WidgetConfiguration = mockk {
-      every { copy(altIcon = altIcon, userIcon = userIcon) } returns this
+      every { copy(altIcon = altIcon, subjectFunction = SuplaFunction.NONE, userIcon = userIcon) } returns this
     }
 
     whenever(locationRepository.findByRemoteId(locationRemoteId)).thenReturn(Maybe.just(locationEntity))
