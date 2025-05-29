@@ -113,14 +113,14 @@
       android:screenOrientation="sensorPortrait" />
 
     <activity
-      android:name=".widget.onoff.configuration.OnOffWidgetConfigurationActivity"
+      android:name=".features.widget.doublewidget.DoubleWidgetConfigurationActivity"
       android:exported="true">
       <intent-filter>
         <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
       </intent-filter>
     </activity>
     <activity
-      android:name=".widget.single.configuration.SingleWidgetConfigurationActivity"
+      android:name=".features.widget.singlewidget.SingleWidgetConfigurationActivity"
       android:exported="true">
       <intent-filter>
         <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />

@@ -109,6 +109,7 @@ androidx-room-compiler = { group = "androidx.room", name = "room-compiler", vers
 androidx-room-rxjava = { group = "androidx.room", name = "room-rxjava3", version.ref = "androidx-room" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "androidx-room" }
 androidx-compose-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "androidx-compose-core" }
+androidx-compose-activity = { group = "androidx.activity", name = "activity-compose", version.ref = "androidx-compose-core" }
 androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "androidx-compose-core" }
 androidx-compose-ui-toolingPreview = { group = "androidx.compose.ui", name = "ui-tooling-preview", version.ref = "androidx-compose-core" }
 androidx-compose-material-icons = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "androidx-material-icons-extended" }
