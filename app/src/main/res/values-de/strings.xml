@@ -398,6 +398,7 @@
   <string name="widget_configure_no_scene">Keine Szene verfügbar</string>
   <string name="double_button_widget_description">Zweitasten-Widget</string>
   <string name="single_button_widget_description">Eintasten-Widget</string>
+  <string name="extended_value_widget_description">Energiezählerwertvorschau.</string>
   <string name="channel_btn_toggle">Umschalten</string>
   <string name="channel_caption_roofwindowopeningsensor">Dachfenster-Öffnungssensor</string>
   <string name="channel_caption_roofwindow">Dachfenster</string>
@@ -767,4 +768,7 @@
   <string name="scene_inactive">Die Szene ist nicht aktiv</string>
   <string name="android_auto_error">Das Ausführen ist fehlgeschlagen</string>
   <string name="android_auto_play_messages">Nachrichten abspielen</string>
+  <string name="widget_not_supported">Der ausgewählte Kanal wird nicht unterstützt.</string>
+  <string name="widget_update_time_long">Aktualisierung: %1$s</string>
+  <string name="widget_no_value">Kein Wert verfügbar</string>
 </resources>

@@ -419,6 +419,7 @@
   <string name="widget_configure_no_scene">No scenes available</string>
   <string name="double_button_widget_description">Double-button widget.</string>
   <string name="single_button_widget_description">Single-button widget.</string>
+  <string name="extended_value_widget_description" translatable="false">Electricity meter preview widget.</string>
   <string name="widget_app_not_initialized">Please login first!</string>
   <string name="widget_command_no_connection">No internet connection!</string>
   <string name="widget_command_error">Problem occurred! (code: %1$d)</string>
@@ -803,6 +804,9 @@
   <string name="scene_inactive" translatable="false">Scene is inactive</string>
   <string name="android_auto_error" translatable="false">Execution failed</string>
   <string name="android_auto_play_messages" translatable="false">Play messages</string>
+  <string name="widget_not_supported" translatable="false">Selected channel is not supported.</string>
+  <string name="widget_update_time_long" translatable="false">Update time: %1$s</string>
+  <string name="widget_no_value" translatable="false">No value available</string>
 
   <plurals name="details_timer_info_on" translatable="false">
     <item quantity="other">on</item>

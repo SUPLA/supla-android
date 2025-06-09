@@ -64,6 +64,7 @@ import org.supla.android.lib.SuplaClientMsg;
 import org.supla.android.lib.SuplaOAuthToken;
 import org.supla.android.profile.ProfileManager;
 import org.supla.android.restapi.SuplaRestApiClientTask;
+import org.supla.android.widget.extended.ExtendedValueWidgetWorker;
 import org.supla.android.widget.shared.WidgetReloadWorker;
 
 @HiltAndroidApp
@@ -121,6 +122,7 @@ public class SuplaApp extends MultiDexApplication
 
     enqueueWidgetRefresh();
     enqueueInitialization();
+    enqueueExtendedValueWidgetUpdates();
   }
 
   public SuplaClient SuplaClientInitIfNeed(
@@ -304,5 +306,9 @@ public class SuplaApp extends MultiDexApplication
             InitializationWorker.NAME,
             ExistingWorkPolicy.KEEP,
             InitializationWorker.Companion.build());
+  }
+
+  private void enqueueExtendedValueWidgetUpdates() {
+    ExtendedValueWidgetWorker.Companion.enqueuePeriodic(WorkManager.getInstance(this));
   }
 }

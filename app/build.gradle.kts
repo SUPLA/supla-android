@@ -122,6 +122,7 @@ dependencies {
   implementation(libs.androidChart)
   implementation(libs.googleMaterial)
   implementation(libs.coroutines)
+  implementation(libs.coroutines.rx3)
   implementation(libs.fragmentViewBinding)
 
   implementation(libs.hilt)
@@ -156,6 +157,10 @@ dependencies {
   implementation(libs.androidx.compose.material3.adaptive)
   implementation(libs.androidx.compose.constraintLayout)
   implementation(libs.androidx.car.app)
+  implementation(libs.androidx.glance.widget)
+  implementation(libs.androidx.glance.widget.preview)
+  implementation(libs.androidx.glance.material)
+  implementation(libs.androidx.glance.preview)
 
   implementation(libs.rxjava)
   implementation(libs.rxandroid)

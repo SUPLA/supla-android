@@ -39,6 +39,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
@@ -74,7 +75,8 @@ data class WidgetConfigurationViewState(
   val caption: String? = null,
 
   val showWarning: Boolean = false,
-  val saveEnabled: Boolean = false
+  val saveEnabled: Boolean = false,
+  val error: LocalizedString? = null
 )
 
 interface WidgetConfigurationScope {
@@ -134,6 +136,15 @@ fun WidgetConfigurationScope.View(
         viewState.caption?.let { Caption(it, !viewState.saveEnabled) }
         viewState.subjectDetails?.let { SubjectDetails(it) }
       }
+    }
+
+    viewState.error?.let {
+      Text(
+        text = it(LocalContext.current),
+        textAlign = TextAlign.Center,
+        color = MaterialTheme.colorScheme.error,
+        modifier = Modifier.fillMaxWidth().padding(vertical = Distance.small)
+      )
     }
 
     Button(

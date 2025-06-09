@@ -44,6 +44,7 @@ import org.supla.android.db.room.app.migrations.MIGRATION_35_36
 import org.supla.android.db.room.app.migrations.MIGRATION_36_37
 import org.supla.android.db.room.app.migrations.MIGRATION_37_38
 import org.supla.android.db.room.app.migrations.MIGRATION_38_39
+import org.supla.android.db.room.app.migrations.MIGRATION_39_40
 import org.supla.android.db.room.app.migrations.Migration25to26
 import org.supla.android.db.room.app.migrations.Migration26to27
 import org.supla.android.db.room.app.migrations.Migration27to28
@@ -95,7 +96,8 @@ class DatabaseModule {
         MIGRATION_35_36,
         MIGRATION_36_37,
         MIGRATION_37_38,
-        MIGRATION_38_39
+        MIGRATION_38_39,
+        MIGRATION_39_40
       )
       .build()
 
@@ -173,6 +175,11 @@ class DatabaseModule {
   @Singleton
   fun provideAndroidAutoItemDao(appDatabase: AppDatabase) =
     appDatabase.androidAutoItemDao()
+
+  @Provides
+  @Singleton
+  fun widgetConfigurationDao(appDatabase: AppDatabase) =
+    appDatabase.widgetConfigurationDao()
 
   @Provides
   @Singleton

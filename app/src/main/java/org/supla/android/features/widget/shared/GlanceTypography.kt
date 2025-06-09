@@ -1,4 +1,4 @@
-package org.supla.android.images
+package org.supla.android.features.widget.shared
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,33 +17,21 @@ package org.supla.android.images
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import kotlinx.serialization.Serializable
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.unit.sp
+import androidx.glance.GlanceTheme
+import androidx.glance.text.TextStyle
 
-@Suppress("DataClassPrivateConstructor")
-@Serializable
-data class ImageId private constructor(
-  val id: Int,
-  val subId: Int,
-  val profileId: Long,
-  val userImage: Boolean,
-  private var nightMode: Boolean = false
-) {
+object GlanceTypography {
+  val bodySmall: TextStyle
+    @Composable
+    get() = TextStyle(color = GlanceTheme.colors.onBackground, fontSize = 12.sp)
 
-  constructor(id: Int) : this(id, 0, 0, false)
-  constructor(id: Int, subId: Int, profileId: Long) : this(id, subId, profileId, true)
+  val bodyMedium: TextStyle
+    @Composable
+    get() = TextStyle(color = GlanceTheme.colors.onBackground, fontSize = 14.sp)
 
-  fun setNightMode(nightMode: Boolean): ImageId {
-    this.nightMode = nightMode
-    return this
-  }
-
-  companion object {
-    fun equals(id1: ImageId?, id2: ImageId?): Boolean {
-      if (id1 == null || id2 == null) {
-        return false
-      }
-
-      return id1 == id2
-    }
-  }
+  val bodyLarge: TextStyle
+    @Composable
+    get() = TextStyle(color = GlanceTheme.colors.onBackground, fontSize = 16.sp)
 }

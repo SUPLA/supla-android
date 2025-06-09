@@ -1,4 +1,4 @@
-package org.supla.android.images
+package org.supla.android.features.widget.shared
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,33 +17,10 @@ package org.supla.android.images
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import kotlinx.serialization.Serializable
+import androidx.compose.ui.unit.dp
 
-@Suppress("DataClassPrivateConstructor")
-@Serializable
-data class ImageId private constructor(
-  val id: Int,
-  val subId: Int,
-  val profileId: Long,
-  val userImage: Boolean,
-  private var nightMode: Boolean = false
-) {
-
-  constructor(id: Int) : this(id, 0, 0, false)
-  constructor(id: Int, subId: Int, profileId: Long) : this(id, subId, profileId, true)
-
-  fun setNightMode(nightMode: Boolean): ImageId {
-    this.nightMode = nightMode
-    return this
-  }
-
-  companion object {
-    fun equals(id1: ImageId?, id2: ImageId?): Boolean {
-      if (id1 == null || id2 == null) {
-        return false
-      }
-
-      return id1 == id2
-    }
-  }
+object GlanceDistance {
+  val tiny = 8.dp
+  val small = 16.dp
+  val normal = 32.dp
 }

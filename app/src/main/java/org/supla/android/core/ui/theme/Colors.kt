@@ -18,7 +18,6 @@ package org.supla.android.core.ui.theme
  */
 
 import android.content.Context
-import android.os.Build
 import androidx.annotation.ColorRes
 import androidx.compose.material3.ColorScheme
 import androidx.compose.ui.graphics.Color
@@ -113,10 +112,5 @@ val ColorScheme.gray: Color
   get() = Color(0xFF7E8082)
 
 private fun colorResource(context: Context, @ColorRes id: Int): Color {
-  return if (Build.VERSION.SDK_INT >= 23) {
-    Color(context.resources.getColor(id, context.theme))
-  } else {
-    @Suppress("DEPRECATION")
-    Color(context.resources.getColor(id))
-  }
+  return Color(context.resources.getColor(id, context.theme))
 }

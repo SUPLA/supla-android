@@ -39,12 +39,7 @@ abstract class BaseWidgetActivity : ComponentActivity() {
     // set default response
     setResult(RESULT_CANCELED)
 
-    viewModel.setWidgetId(
-      intent?.extras?.getInt(
-        AppWidgetManager.EXTRA_APPWIDGET_ID,
-        AppWidgetManager.INVALID_APPWIDGET_ID
-      )
-    )
+    viewModel.setWidgetId(getWidgetId())
 
     setContent {
       val state by viewModel.getViewState().collectAsState()
@@ -58,7 +53,23 @@ abstract class BaseWidgetActivity : ComponentActivity() {
   @Composable
   abstract fun ComposableContent(modelState: WidgetConfigurationViewModelState)
 
+  override fun onStart() {
+    super.onStart()
+    viewModel.onStart()
+  }
+
+  override fun onStop() {
+    super.onStop()
+    viewModel.onStop()
+  }
+
   protected abstract fun updateIntent(widgetId: Int): Intent
+
+  protected fun getWidgetId(): Int? =
+    intent?.extras?.getInt(
+      AppWidgetManager.EXTRA_APPWIDGET_ID,
+      AppWidgetManager.INVALID_APPWIDGET_ID
+    )
 
   @SuppressLint("BatteryLife")
   protected open fun handleEvent(event: WidgetConfigurationViewEvent) {
@@ -77,15 +88,5 @@ abstract class BaseWidgetActivity : ComponentActivity() {
         finish()
       }
     }
-  }
-
-  override fun onStart() {
-    super.onStart()
-    viewModel.onStart()
-  }
-
-  override fun onStop() {
-    super.onStop()
-    viewModel.onStop()
   }
 }
