@@ -17,6 +17,9 @@ package org.supla.core.shared.data.model.general
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 enum class SuplaFunction(val value: Int) {
   UNKNOWN(-1),
   NONE(0),

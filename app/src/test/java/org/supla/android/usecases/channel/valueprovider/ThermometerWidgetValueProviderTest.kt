@@ -28,7 +28,7 @@ import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.core.shared.data.model.general.SuplaFunction
 
 @RunWith(MockitoJUnitRunner::class)
-class ThermometerValueProviderTest : BaseDoubleValueProviderTest<ThermometerValueProvider>() {
+class ThermometerWidgetValueProviderTest : BaseDoubleWidgetValueProviderTest<ThermometerValueProvider>() {
 
   override val unknownValue: Double = ThermometerValueProvider.UNKNOWN_VALUE
 

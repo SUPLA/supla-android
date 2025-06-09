@@ -106,7 +106,7 @@ abstract class BaseWidgetViewModel(
           .map { scenes -> scenesSubjectItems(scenes) }
     }
 
-  protected fun filter(channelBase: ChannelBase) =
+  protected open fun filter(channelBase: ChannelBase) =
     channelBase.function.actions.isNotEmpty() ||
       channelBase.isThermometer() || channelBase.isGpm()
 
@@ -129,6 +129,7 @@ sealed class WidgetConfigurationViewEvent : ViewEvent {
 
 data class WidgetConfigurationViewModelState(
   val widgetId: Int? = null,
+  val entityId: Long? = null,
   val viewState: WidgetConfigurationViewState = WidgetConfigurationViewState(),
   val selections: Set<Selection> = emptySet(),
 ) : ViewState() {

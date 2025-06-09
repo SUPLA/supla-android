@@ -1,4 +1,4 @@
-package org.supla.android.images
+package org.supla.android.widget.extended
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -18,32 +18,38 @@ package org.supla.android.images
  */
 
 import kotlinx.serialization.Serializable
+import org.supla.android.data.source.local.entity.custom.Phase
+import org.supla.android.images.ImageId
+import org.supla.core.shared.data.model.general.SuplaFunction
 
-@Suppress("DataClassPrivateConstructor")
 @Serializable
-data class ImageId private constructor(
-  val id: Int,
-  val subId: Int,
-  val profileId: Long,
-  val userImage: Boolean,
-  private var nightMode: Boolean = false
-) {
+data class ExtendedValueWidgetState(
+  val icon: ImageId,
+  val caption: String,
+  val function: SuplaFunction,
+  val value: WidgetValue,
+  val updateTime: Long
+)
 
-  constructor(id: Int) : this(id, 0, 0, false)
-  constructor(id: Int, subId: Int, profileId: Long) : this(id, subId, profileId, true)
+@Serializable
+sealed interface WidgetValue {
 
-  fun setNightMode(nightMode: Boolean): ImageId {
-    this.nightMode = nightMode
-    return this
+  @Serializable
+  data class ElectricityMeter(
+    val totalEnergy: Energy,
+    val phases: Map<Phase, Energy>
+  ) : WidgetValue {
+
+    @Serializable
+    data class Energy(
+      val forwarded: String,
+      val reversed: String?
+    )
   }
 
-  companion object {
-    fun equals(id1: ImageId?, id2: ImageId?): Boolean {
-      if (id1 == null || id2 == null) {
-        return false
-      }
+  @Serializable
+  data object Empty : WidgetValue
 
-      return id1 == id2
-    }
-  }
+  @Serializable
+  data object Unknown : WidgetValue
 }

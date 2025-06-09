@@ -50,6 +50,7 @@ enum class SubjectType(val value: Int, val nameRes: Int, val widgetNameRes: Int)
 }
 
 enum class ActionId(val value: Int, val nameRes: Int?) : SpinnerItem {
+  NONE(0, null),
   OPEN(10, R.string.channel_btn_open),
   CLOSE(20, R.string.channel_btn_close),
   SHUT(30, R.string.channel_btn_shut),

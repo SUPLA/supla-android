@@ -35,6 +35,7 @@ import org.supla.android.data.source.local.dao.NotificationDao
 import org.supla.android.data.source.local.dao.ProfileDao
 import org.supla.android.data.source.local.dao.SceneDao
 import org.supla.android.data.source.local.dao.UserIconDao
+import org.supla.android.data.source.local.dao.WidgetConfigurationDao
 import org.supla.android.data.source.local.entity.AndroidAutoItemEntity
 import org.supla.android.data.source.local.entity.ChannelConfigEntity
 import org.supla.android.data.source.local.entity.ChannelEntity
@@ -50,6 +51,7 @@ import org.supla.android.data.source.local.entity.NotificationEntity
 import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.data.source.local.entity.SceneEntity
 import org.supla.android.data.source.local.entity.UserIconEntity
+import org.supla.android.data.source.local.entity.WidgetConfigurationEntity
 import org.supla.android.db.DbHelper
 
 @Database(
@@ -68,7 +70,8 @@ import org.supla.android.db.DbHelper
     ChannelExtendedValueEntity::class,
     NotificationEntity::class,
     ChannelStateEntity::class,
-    AndroidAutoItemEntity::class
+    AndroidAutoItemEntity::class,
+    WidgetConfigurationEntity::class
   ],
   version = DbHelper.DATABASE_VERSION,
   exportSchema = false
@@ -90,4 +93,5 @@ abstract class AppDatabase : RoomDatabase() {
   abstract fun notificationDao(): NotificationDao
   abstract fun channelStateDao(): ChannelStateDao
   abstract fun androidAutoItemDao(): AndroidAutoItemDao
+  abstract fun widgetConfigurationDao(): WidgetConfigurationDao
 }

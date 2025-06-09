@@ -29,7 +29,7 @@ import org.supla.android.usecases.channel.ValueType
 import org.supla.core.shared.data.model.general.SuplaFunction
 
 @RunWith(MockitoJUnitRunner::class)
-class HumidityAndTemperatureValueProviderTest {
+class HumidityAndTemperatureWidgetValueProviderTest {
 
   @InjectMocks
   private lateinit var valueProvider: HumidityAndTemperatureValueProvider
