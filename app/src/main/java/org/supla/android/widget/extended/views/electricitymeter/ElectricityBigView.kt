@@ -35,15 +35,21 @@ import androidx.glance.layout.height
 import androidx.glance.layout.padding
 import androidx.glance.layout.size
 import androidx.glance.layout.width
+import androidx.glance.preview.ExperimentalGlancePreviewApi
+import androidx.glance.preview.Preview
 import androidx.glance.text.Text
 import androidx.glance.text.TextAlign
 import androidx.glance.text.TextStyle
 import org.supla.android.R
+import org.supla.android.core.ui.theme.SuplaGlanceTheme
 import org.supla.android.data.formatting.LocalDateFormatter
+import org.supla.android.data.source.local.entity.custom.Phase
+import org.supla.android.extensions.date
 import org.supla.android.extensions.isNotNull
 import org.supla.android.features.widget.shared.GlanceDistance
 import org.supla.android.features.widget.shared.GlanceTypography
 import org.supla.android.widget.extended.WidgetValue
+import java.util.Calendar
 import java.util.Date
 
 private val FIRST_ROW_WIDTH = 50.dp
@@ -82,7 +88,8 @@ fun ElectricityBigView(value: WidgetValue.ElectricityMeter, updateTime: Date) {
       DataRow(
         forwardEnergy = it.value.forwarded,
         reverseEnergy = it.value.reversed,
-        label = RowLabel.Text(LocalContext.current.getString(it.key.label))
+        label = RowLabel.Text(LocalContext.current.getString(it.key.label)),
+        padding = 2.dp
       )
     }
 
@@ -110,7 +117,7 @@ private fun EnergyHeader(iconRes: Int, stringRes: Int, modifier: GlanceModifier)
     Text(
       text = LocalContext.current.getString(stringRes),
       style = GlanceTypography.bodySmall.copy(color = GlanceTheme.colors.onSurfaceVariant),
-      modifier = GlanceModifier.padding(GlanceDistance.tiny)
+      modifier = GlanceModifier.padding(horizontal = GlanceDistance.tiny, vertical = 4.dp)
     )
   }
 
@@ -153,3 +160,22 @@ private fun DataRow(
       )
     }
   }
+
+@OptIn(ExperimentalGlancePreviewApi::class)
+@Preview(widthDp = 250, heightDp = 180)
+@Composable
+private fun Preview() {
+  SuplaGlanceTheme {
+    ElectricityBigView(
+      value = WidgetValue.ElectricityMeter(
+        totalEnergy = WidgetValue.ElectricityMeter.Energy("280.0 kWh", "120.0 kWh"),
+        mapOf(
+          Phase.PHASE_1 to WidgetValue.ElectricityMeter.Energy("100.0 kWh", "40 kWh"),
+          Phase.PHASE_2 to WidgetValue.ElectricityMeter.Energy("120.0 kWh", "30 kWh"),
+          Phase.PHASE_3 to WidgetValue.ElectricityMeter.Energy("60.0 kWh", "50 kWh")
+        )
+      ),
+      updateTime = date(2025, Calendar.JUNE, 10, 13, 34)
+    )
+  }
+}

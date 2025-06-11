@@ -65,7 +65,7 @@ class ElectricityMeterWidgetValueProvider(
 
     if (channelValue is ElectricityMeterValue) {
       val hasReverseEnergy = channelValue.measuredValues
-        .contains(SuplaElectricityMeasurementType.REVERSE_ACTIVE_ENERGY_BALANCED)
+        .contains(SuplaElectricityMeasurementType.REVERSE_ACTIVE_ENERGY)
       val forwardEnergy = channelValue.phases.sumOf { it.forwardActiveEnergy }
       val reversedEnergy = hasReverseEnergy.ifTrue { channelValue.phases.sumOf { it.reverseActiveEnergy } }
 

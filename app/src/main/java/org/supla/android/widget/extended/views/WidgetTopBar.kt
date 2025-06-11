@@ -34,14 +34,17 @@ import org.supla.android.features.widget.shared.GlanceDistance
 import org.supla.android.features.widget.shared.GlanceTypography
 import org.supla.android.images.ImageId
 import org.supla.android.ui.glance.Image
-import org.supla.android.widget.extended.ExtendedValueWidget
+import org.supla.android.widget.extended.isBig
+import org.supla.android.widget.extended.isMedium
+import org.supla.android.widget.extended.isMin
 
 @Composable
 fun WidgetTopBar(icon: ImageId, caption: String, widgetSize: DpSize) =
-  when (widgetSize) {
-    ExtendedValueWidget.BIG -> WidgetTopBarBig(icon, caption)
-    ExtendedValueWidget.MEDIUM -> WidgetTopBarMedium(icon, caption)
-    else -> WidgetTopBarSmall(caption)
+  when {
+    widgetSize.isBig -> WidgetTopBarBig(icon, caption)
+    widgetSize.isMedium -> WidgetTopBarMedium(icon, caption)
+    widgetSize.isMin -> WidgetTopBarSmall(caption)
+    else -> WidgetTopBarMicro(caption)
   }
 
 @Composable
@@ -49,7 +52,7 @@ fun WidgetTopBarBig(icon: ImageId, caption: String) =
   Row(
     verticalAlignment = Alignment.Vertical.CenterVertically,
     horizontalAlignment = Alignment.Horizontal.CenterHorizontally,
-    modifier = GlanceModifier.padding(GlanceDistance.tiny).fillMaxWidth()
+    modifier = GlanceModifier.padding(4.dp).fillMaxWidth()
   ) {
     Image(
       imageId = icon,
@@ -86,5 +89,14 @@ fun WidgetTopBarSmall(caption: String) =
     text = caption,
     style = GlanceTypography.bodyMedium.copy(textAlign = TextAlign.Center),
     maxLines = 1,
-    modifier = GlanceModifier.fillMaxWidth().padding(vertical = 4.dp)
+    modifier = GlanceModifier.fillMaxWidth().padding(vertical = 2.dp)
+  )
+
+@Composable
+fun WidgetTopBarMicro(caption: String) =
+  Text(
+    text = caption,
+    style = GlanceTypography.bodySmall.copy(textAlign = TextAlign.Center),
+    maxLines = 1,
+    modifier = GlanceModifier.fillMaxWidth()
   )

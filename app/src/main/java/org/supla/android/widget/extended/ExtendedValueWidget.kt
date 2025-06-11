@@ -36,6 +36,7 @@ import kotlinx.coroutines.coroutineScope
 import org.supla.android.R
 import org.supla.android.Trace
 import org.supla.android.core.ui.theme.SuplaGlanceTheme
+import org.supla.android.data.source.local.entity.custom.Phase
 import org.supla.android.di.entrypoints.WidgetConfigurationDaoEntryPoint
 import org.supla.android.images.ImageId
 import org.supla.android.widget.extended.views.InvalidWidgetContent
@@ -45,9 +46,7 @@ import java.util.Date
 
 class ExtendedValueWidget : GlanceAppWidget() {
 
-  override val sizeMode: SizeMode = SizeMode.Responsive(
-    setOf(SMALL, MEDIUM, BIG)
-  )
+  override val sizeMode: SizeMode = SizeMode.Exact
 
   override val stateDefinition = ExtendedValueWidgetStateDefinition
 
@@ -77,13 +76,25 @@ class ExtendedValueWidget : GlanceAppWidget() {
   }
 
   companion object {
-    val SMALL = DpSize(160.dp, 90.dp)
-    val MEDIUM = DpSize(200.dp, 90.dp)
-    val BIG = DpSize(250.dp, 210.dp)
+    val DESIRED_SMALL = DpSize(140.dp, 110.dp)
+    val DESIRED_MEDIUM = DpSize(270.dp, 110.dp)
+    val DESIRED_BIG = DpSize(270.dp, 190.dp)
 
     val TAG = ExtendedValueWidget::class.simpleName
   }
 }
+
+val DpSize.isMicroLong: Boolean
+  get() = width > 180.dp
+
+val DpSize.isMin: Boolean
+  get() = height > 65.dp
+
+val DpSize.isMedium: Boolean
+  get() = height > 65.dp && width > 180.dp
+
+val DpSize.isBig: Boolean
+  get() = width > 250.dp && height > 180.dp
 
 @Composable
 private fun View(state: ExtendedValueWidgetState, widgetSize: DpSize) {
@@ -111,39 +122,64 @@ private val PREVIEW_STATE = ExtendedValueWidgetState(
   icon = ImageId(R.drawable.fnc_electricity_meter),
   caption = "Electricity Meter",
   function = SuplaFunction.ELECTRICITY_METER,
-  value = WidgetValue.Empty,
+  value = WidgetValue.ElectricityMeter(
+    totalEnergy = WidgetValue.ElectricityMeter.Energy("120 kWh", "130 kWh"),
+    mapOf(
+      Phase.PHASE_1 to WidgetValue.ElectricityMeter.Energy("100.0 kWh", "40 kWh"),
+      Phase.PHASE_2 to WidgetValue.ElectricityMeter.Energy("120.0 kWh", "30 kWh"),
+      Phase.PHASE_3 to WidgetValue.ElectricityMeter.Energy("60.0 kWh", "50 kWh")
+    )
+  ),
   updateTime = Date().time
 )
 
 @OptIn(ExperimentalGlancePreviewApi::class)
-@Preview(widthDp = 258, heightDp = 213)
+@Preview(widthDp = 250, heightDp = 180)
 @Composable
 private fun Preview() {
   SuplaGlanceTheme {
-    View(PREVIEW_STATE, ExtendedValueWidget.BIG)
+    View(PREVIEW_STATE, ExtendedValueWidget.DESIRED_BIG)
   }
 }
 
 @OptIn(ExperimentalGlancePreviewApi::class)
-@Preview(widthDp = 258, heightDp = 100)
+@Preview(widthDp = 180, heightDp = 110)
 @Composable
 private fun Preview_Medium() {
   SuplaGlanceTheme {
-    View(PREVIEW_STATE, ExtendedValueWidget.MEDIUM)
+    View(PREVIEW_STATE, ExtendedValueWidget.DESIRED_MEDIUM)
   }
 }
 
 @OptIn(ExperimentalGlancePreviewApi::class)
-@Preview(widthDp = 167, heightDp = 98)
+@Preview(widthDp = 110, heightDp = 110)
 @Composable
 private fun Preview_Small() {
   SuplaGlanceTheme {
-    View(PREVIEW_STATE, ExtendedValueWidget.SMALL)
+    View(PREVIEW_STATE, ExtendedValueWidget.DESIRED_SMALL)
   }
 }
 
 @OptIn(ExperimentalGlancePreviewApi::class)
-@Preview(widthDp = 167, heightDp = 98)
+@Preview(widthDp = 110, heightDp = 40)
+@Composable
+private fun Preview_Micro() {
+  SuplaGlanceTheme {
+    View(PREVIEW_STATE, DpSize(110.dp, 25.dp))
+  }
+}
+
+@OptIn(ExperimentalGlancePreviewApi::class)
+@Preview(widthDp = 220, heightDp = 40)
+@Composable
+private fun Preview_MicroLong() {
+  SuplaGlanceTheme {
+    View(PREVIEW_STATE, DpSize(220.dp, 25.dp))
+  }
+}
+
+@OptIn(ExperimentalGlancePreviewApi::class)
+@Preview(widthDp = 130, heightDp = 98)
 @Composable
 private fun Preview_Invalid() {
   SuplaGlanceTheme {
@@ -155,7 +191,7 @@ private fun Preview_Invalid() {
         WidgetValue.Empty,
         Date().time
       ),
-      widgetSize = ExtendedValueWidget.MEDIUM
+      widgetSize = ExtendedValueWidget.DESIRED_SMALL
     )
   }
 }
