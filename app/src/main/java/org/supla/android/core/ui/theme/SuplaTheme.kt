@@ -22,7 +22,6 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.ui.platform.LocalContext
 import androidx.glance.GlanceTheme
 import androidx.glance.material3.ColorProviders
 
@@ -31,10 +30,7 @@ fun SuplaTheme(
   darkMode: Boolean = isSystemInDarkTheme(),
   content: @Composable () -> Unit
 ) {
-  val suplaDarkColors = SuplaDarkColors(LocalContext.current)
-  val suplaLightColors = SuplaLightColors(LocalContext.current)
-  val colorScheme = if (darkMode) suplaDarkColors.toMaterial() else suplaLightColors.toMaterial()
-
+  val colorScheme = if (darkMode) SuplaColors.dark else SuplaColors.light
   MaterialTheme(
     colorScheme = colorScheme,
     typography = suplaTypography(),
@@ -48,11 +44,8 @@ fun SuplaTheme(
 fun SuplaGlanceTheme(
   content: @Composable () -> Unit
 ) {
-  val suplaDarkColors = SuplaDarkColors(androidx.glance.LocalContext.current)
-  val suplaLightColors = SuplaLightColors(androidx.glance.LocalContext.current)
-
   GlanceTheme(
-    colors = ColorProviders(light = suplaLightColors.toMaterial(), dark = suplaDarkColors.toMaterial()),
+    colors = ColorProviders(light = SuplaColors.light, dark = SuplaColors.dark),
     content = content
   )
 }

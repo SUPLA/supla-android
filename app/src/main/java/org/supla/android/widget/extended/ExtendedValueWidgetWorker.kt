@@ -18,11 +18,13 @@ package org.supla.android.widget.extended
  */
 
 import android.content.Context
+import androidx.glance.GlanceId
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.state.updateAppWidgetState
 import androidx.hilt.work.HiltWorker
 import androidx.work.Constraints
 import androidx.work.CoroutineWorker
+import androidx.work.Data
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.ExistingWorkPolicy
 import androidx.work.NetworkType
@@ -54,43 +56,51 @@ class ExtendedValueWidgetWorker @AssistedInject constructor(
   private val extendedValueWidgetProvider: ExtendedValueWidgetProvider
 ) : CoroutineWorker(context, workerParameters) {
 
+  private val glanceId: String?
+    get() = inputData.getString(GLANCE_ID)
+
   override suspend fun doWork(): Result {
-    Trace.d(TAG, "Extended value widget worker started")
+    Trace.d(TAG, "Extended value widget worker started (glance id: `$glanceId`)")
 
     val appWidgetManager = GlanceAppWidgetManager(context = context)
-    appWidgetManager.getGlanceIds(ExtendedValueWidget::class.java).forEach { glanceId ->
+    appWidgetManager.getGlanceIds(ExtendedValueWidget::class.java)
+      .filter { glanceId == null || it.toString() == glanceId }
+      .forEach { glanceId ->
 
-      Trace.d(TAG, "Extended value widget worker updating widget with id `$glanceId`")
-      val configuration = withContext(Dispatchers.IO) { widgetConfigurationDao.findBy(glanceId.toString()) }
+        Trace.d(TAG, "Extended value widget worker updating widget with id `$glanceId`")
+        val configuration = withContext(Dispatchers.IO) { widgetConfigurationDao.findBy(glanceId.toString()) }
 
-      configuration?.let {
-        val value = withContext(Dispatchers.IO) { extendedValueWidgetProvider.provide(configuration) }
+        configuration?.let {
+          val value = withContext(Dispatchers.IO) { extendedValueWidgetProvider.provide(configuration) }
 
-        Trace.d(TAG, "Extended value widget worker setting configuration `$configuration`")
-        val state = ExtendedValueWidgetState(
-          icon = configuration.icon(getChannelIconUseCase, getSceneIconUseCase),
-          caption = configuration.widgetConfiguration.caption,
-          function = configuration.function,
-          value = value,
-          updateTime = Date().time
-        )
+          Trace.d(TAG, "Extended value widget worker setting configuration `$configuration`")
+          val state = ExtendedValueWidgetState(
+            icon = configuration.icon(getChannelIconUseCase, getSceneIconUseCase),
+            caption = configuration.widgetConfiguration.caption,
+            function = configuration.function,
+            value = value,
+            updateTime = Date().time
+          )
 
-        updateAppWidgetState(
-          context = context,
-          definition = ExtendedValueWidgetStateDefinition,
-          glanceId = glanceId,
-          updateState = { state }
-        )
+          updateAppWidgetState(
+            context = context,
+            definition = ExtendedValueWidgetStateDefinition,
+            glanceId = glanceId,
+            updateState = { state }
+          )
 
-        ExtendedValueWidget().update(context, glanceId)
+          ExtendedValueWidget().update(context, glanceId)
+        }
       }
-    }
+
     return Result.success()
   }
 
   companion object {
     private val PERIODIC_WORK_ID = "PERIODIC_${ExtendedValueWidgetWorker::class.java.simpleName}"
     private val UNIQUE_WORK_ID = "UNIQUE_${ExtendedValueWidgetWorker::class.java.simpleName}"
+
+    private val GLANCE_ID = "GLANCE_ID"
 
     fun enqueuePeriodic(workManager: WorkManager) {
       workManager.enqueueUniquePeriodicWork(
@@ -102,11 +112,17 @@ class ExtendedValueWidgetWorker @AssistedInject constructor(
       )
     }
 
-    fun singleRun(workManager: WorkManager) {
+    fun singleRun(workManager: WorkManager, glanceId: GlanceId? = null) {
       workManager.enqueueUniqueWork(
         UNIQUE_WORK_ID,
         ExistingWorkPolicy.KEEP,
-        OneTimeWorkRequestBuilder<ExtendedValueWidgetWorker>().build()
+        OneTimeWorkRequestBuilder<ExtendedValueWidgetWorker>()
+          .setInputData(
+            Data.Builder()
+              .putString(GLANCE_ID, glanceId.toString())
+              .build()
+          )
+          .build()
       )
     }
   }

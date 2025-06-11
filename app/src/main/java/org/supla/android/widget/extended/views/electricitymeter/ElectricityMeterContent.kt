@@ -22,20 +22,30 @@ import androidx.compose.ui.unit.DpSize
 import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
 import androidx.glance.LocalContext
+import androidx.glance.LocalGlanceId
+import androidx.glance.action.clickable
 import androidx.glance.appwidget.components.Scaffold
+import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.padding
 import androidx.glance.text.Text
+import androidx.work.WorkManager
 import org.supla.android.R
 import org.supla.android.features.widget.shared.GlanceDistance
 import org.supla.android.features.widget.shared.GlanceTypography
-import org.supla.android.widget.extended.ExtendedValueWidget
 import org.supla.android.widget.extended.ExtendedValueWidgetState
+import org.supla.android.widget.extended.ExtendedValueWidgetWorker
 import org.supla.android.widget.extended.WidgetValue
+import org.supla.android.widget.extended.isBig
+import org.supla.android.widget.extended.isMedium
+import org.supla.android.widget.extended.isMicroLong
+import org.supla.android.widget.extended.isMin
 import org.supla.android.widget.extended.views.WidgetTopBar
 import java.util.Date
 
 @Composable
-fun ElectricityMeterContent(state: ExtendedValueWidgetState, widgetSize: DpSize) =
+fun ElectricityMeterContent(state: ExtendedValueWidgetState, widgetSize: DpSize) {
+  val context = LocalContext.current
+  val glanceId = LocalGlanceId.current
   Scaffold(
     titleBar = {
       WidgetTopBar(
@@ -45,19 +55,25 @@ fun ElectricityMeterContent(state: ExtendedValueWidgetState, widgetSize: DpSize)
       )
     },
     backgroundColor = GlanceTheme.colors.background,
+    modifier = GlanceModifier.fillMaxSize()
+      .clickable { ExtendedValueWidgetWorker.singleRun(WorkManager.getInstance(context), glanceId) }
   ) {
     when (state.value) {
       is WidgetValue.ElectricityMeter ->
-        when (widgetSize) {
-          ExtendedValueWidget.BIG -> ElectricityBigView(state.value, Date(state.updateTime))
-          ExtendedValueWidget.MEDIUM -> ElectricityMediumView(state.value, Date(state.updateTime))
-          else -> ElectricitySmallView(state.value, Date(state.updateTime))
+        when {
+          widgetSize.isBig -> ElectricityBigView(state.value, Date(state.updateTime))
+          widgetSize.isMedium -> ElectricityMediumView(state.value, Date(state.updateTime))
+          widgetSize.isMin -> ElectricitySmallView(state.value, Date(state.updateTime))
+          widgetSize.isMicroLong -> ElectricityMicroLongView(state.icon, state.value)
+          else -> ElectricityMicroView(state.value)
         }
+
       else -> {
         NoValue()
       }
     }
   }
+}
 
 @Composable
 private fun NoValue() =
