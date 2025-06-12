@@ -76,10 +76,8 @@ class LoadChannelMeasurementsDataRangeUseCase @Inject constructor(
       .flatMap { channel ->
         providers.forEach {
           if (it.handle(channel, type)) {
-            return@flatMap Single.zip(
-              it.minTime(remoteId, profileId).map { long -> Date(long) },
-              it.maxTime(remoteId, profileId).map { long -> Date(long) }
-            ) { min, max -> Optional.of(DateRange(min, max)) }
+            return@flatMap it.minTime(remoteId, profileId).map { long -> Date(long) }
+              .flatMap { minTime -> it.maxTime(remoteId, profileId).map { long -> Optional.of(DateRange(minTime, Date(long))) } }
               .onErrorReturnItem(Optional.empty())
           }
         }

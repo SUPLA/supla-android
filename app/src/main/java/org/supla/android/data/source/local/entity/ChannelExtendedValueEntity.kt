@@ -63,9 +63,9 @@ data class ChannelExtendedValueEntity(
       val objectStream = ObjectInputStream(byteStream)
       return objectStream.readObject()
     } catch (e: IOException) {
-      Trace.w(TAG, "Could not convert to object", e)
+      Trace.w(TAG, "Could not convert to object (IOException)", e)
     } catch (e: ClassNotFoundException) {
-      Trace.w(TAG, "Could not convert to object", e)
+      Trace.w(TAG, "Could not convert to object (ClassNotFoundException)", e)
     }
     return null
   }
