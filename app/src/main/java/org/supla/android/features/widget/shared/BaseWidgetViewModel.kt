@@ -19,6 +19,7 @@ package org.supla.android.features.widget.shared
 
 import android.content.Context
 import android.os.PowerManager
+import androidx.glance.GlanceId
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.reactivex.rxjava3.core.Single
 import org.supla.android.core.ui.BaseViewModel
@@ -124,7 +125,7 @@ abstract class BaseWidgetViewModel(
 sealed class WidgetConfigurationViewEvent : ViewEvent {
   data object Close : WidgetConfigurationViewEvent()
   data object OpenSettings : WidgetConfigurationViewEvent()
-  data class Finished(val widgetId: Int) : WidgetConfigurationViewEvent()
+  data class Finished(val widgetId: Int, val glanceId: GlanceId? = null) : WidgetConfigurationViewEvent()
 }
 
 data class WidgetConfigurationViewModelState(

@@ -60,7 +60,8 @@ class ExtendedValueWidgetConfigurationActivity : BaseWidgetActivity() {
   override fun handleEvent(event: WidgetConfigurationViewEvent) {
     when (event) {
       is WidgetConfigurationViewEvent.Finished -> {
-        ExtendedValueWidgetWorker.singleRun(WorkManager.getInstance(this@ExtendedValueWidgetConfigurationActivity))
+        val workManager = WorkManager.getInstance(this@ExtendedValueWidgetConfigurationActivity)
+        ExtendedValueWidgetWorker.singleRun(workManager, event.glanceId)
         setResult(RESULT_OK, Intent().putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, event.widgetId))
         finish()
       }

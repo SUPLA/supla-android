@@ -17,11 +17,15 @@ package org.supla.android.widget.extended.value
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import org.supla.android.Trace
 import org.supla.android.data.source.local.entity.complex.WidgetConfigurationDataEntity
 import org.supla.android.data.source.local.entity.custom.Phase
+import org.supla.android.data.source.remote.SuplaResultCode
 import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType
+import org.supla.android.extensions.TAG
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.lib.singlecall.ElectricityMeterValue
+import org.supla.android.lib.singlecall.ResultException
 import org.supla.android.lib.singlecall.SingleCall
 import org.supla.android.usecases.channel.valueformatter.ListElectricityMeterValueFormatter
 import org.supla.android.widget.extended.WidgetValue
@@ -61,7 +65,17 @@ class ElectricityMeterWidgetValueProvider(
 
   override fun provide(configuration: WidgetConfigurationDataEntity): WidgetValue {
     val singleCall = singleCallProvider.provide(configuration.widgetConfiguration.profileId)
-    val channelValue = singleCall.getChannelValue(configuration.widgetConfiguration.subjectId)
+    val channelValue =
+      try {
+        singleCall.getChannelValue(configuration.widgetConfiguration.subjectId)
+      } catch (ex: ResultException) {
+        Trace.e(TAG, "Could not load channel value", ex)
+        return if (ex.resultCode == SuplaResultCode.CHANNEL_IS_OFFLINE) {
+          WidgetValue.Offline
+        } else {
+          WidgetValue.Unknown
+        }
+      }
 
     if (channelValue is ElectricityMeterValue) {
       val hasReverseEnergy = channelValue.measuredValues

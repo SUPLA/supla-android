@@ -41,9 +41,9 @@ import org.supla.android.widget.extended.isMin
 @Composable
 fun WidgetTopBar(icon: ImageId, caption: String, widgetSize: DpSize) =
   when {
-    widgetSize.isBig -> WidgetTopBarBig(icon, caption)
-    widgetSize.isMedium -> WidgetTopBarMedium(icon, caption)
-    widgetSize.isMin -> WidgetTopBarSmall(caption)
+    widgetSize.isBig() -> WidgetTopBarBig(icon, caption)
+    widgetSize.isMedium() -> WidgetTopBarMedium(icon, caption)
+    widgetSize.isMin() -> WidgetTopBarSmall(caption)
     else -> WidgetTopBarMicro(caption)
   }
 
@@ -61,7 +61,8 @@ fun WidgetTopBarBig(icon: ImageId, caption: String) =
     Spacer(modifier = GlanceModifier.width(GlanceDistance.tiny))
     Text(
       text = caption,
-      style = GlanceTypography.bodyMedium
+      style = GlanceTypography.bodyMedium,
+      maxLines = 1
     )
   }
 
@@ -79,7 +80,8 @@ fun WidgetTopBarMedium(icon: ImageId, caption: String) =
     Spacer(modifier = GlanceModifier.width(4.dp))
     Text(
       text = caption,
-      style = GlanceTypography.bodyMedium
+      style = GlanceTypography.bodyMedium,
+      maxLines = 1
     )
   }
 

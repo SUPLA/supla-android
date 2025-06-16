@@ -17,6 +17,7 @@ package org.supla.android.widget.extended
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.annotation.SuppressLint
 import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
@@ -24,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.glance.GlanceId
+import androidx.glance.LocalContext
 import androidx.glance.LocalSize
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.SizeMode
@@ -84,17 +86,39 @@ class ExtendedValueWidget : GlanceAppWidget() {
   }
 }
 
-val DpSize.isMicroLong: Boolean
-  get() = width > 180.dp
+@Composable
+@SuppressLint("LocalContextConfigurationRead")
+fun DpSize.isMicroLong(): Boolean =
+  width / LocalContext.current.widthScaleFactor > 180.dp
 
-val DpSize.isMin: Boolean
-  get() = height > 65.dp
+@Composable
+@SuppressLint("LocalContextConfigurationRead")
+fun DpSize.isMin(): Boolean =
+  height / LocalContext.current.heightScaleFactor > 65.dp
 
-val DpSize.isMedium: Boolean
-  get() = height > 65.dp && width > 180.dp
+@Composable
+@SuppressLint("LocalContextConfigurationRead")
+fun DpSize.isMedium(): Boolean =
+  height / LocalContext.current.heightScaleFactor > 65.dp && width / LocalContext.current.widthScaleFactor > 180.dp
 
-val DpSize.isBig: Boolean
-  get() = width > 250.dp && height > 180.dp
+@Composable
+@SuppressLint("LocalContextConfigurationRead")
+fun DpSize.isBig(): Boolean =
+  width / LocalContext.current.widthScaleFactor > 250.dp && height / LocalContext.current.heightScaleFactor > 180.dp
+
+private val Context.widthScaleFactor: Float
+  get() =
+    resources.configuration.fontScale.let { fontScale ->
+      if (fontScale > 1) {
+        1f + (fontScale - 1) / 2
+      } else {
+        fontScale
+      }
+    }
+
+private val Context.heightScaleFactor: Float
+  get() =
+    resources.configuration.fontScale
 
 @Composable
 private fun View(state: ExtendedValueWidgetState, widgetSize: DpSize) {

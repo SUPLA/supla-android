@@ -52,4 +52,7 @@ sealed interface WidgetValue {
 
   @Serializable
   data object Unknown : WidgetValue
+
+  @Serializable
+  data object Offline : WidgetValue
 }

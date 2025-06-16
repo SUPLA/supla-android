@@ -45,6 +45,7 @@ fun ElectricitySmallView(value: WidgetValue.ElectricityMeter, updateTime: Date) 
     horizontalAlignment = Alignment.Horizontal.CenterHorizontally,
     modifier = GlanceModifier.fillMaxHeight()
   ) {
+    Spacer(modifier = GlanceModifier.defaultWeight())
     Row(
       modifier = GlanceModifier.fillMaxWidth().padding(top = GlanceDistance.tiny),
       horizontalAlignment = Alignment.Horizontal.CenterHorizontally
@@ -59,8 +60,8 @@ fun ElectricitySmallView(value: WidgetValue.ElectricityMeter, updateTime: Date) 
         EnergyRow(R.drawable.ic_reversed_energy, it)
       }
     }
-
     Spacer(modifier = GlanceModifier.defaultWeight())
+
     LocalDateFormatter.current.getHourString(updateTime)?.let {
       Text(
         text = it,

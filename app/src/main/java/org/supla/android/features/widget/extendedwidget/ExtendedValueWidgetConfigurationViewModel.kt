@@ -211,7 +211,7 @@ class ExtendedValueWidgetConfigurationViewModel @Inject constructor(
       .attach()
       .subscribeBy(
         onComplete = {
-          sendEvent(WidgetConfigurationViewEvent.Finished(widgetId))
+          sendEvent(WidgetConfigurationViewEvent.Finished(widgetId, glanceId))
         },
         onError = {
           updateState {
