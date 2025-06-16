@@ -26,8 +26,10 @@ import androidx.glance.LocalGlanceId
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.components.Scaffold
 import androidx.glance.layout.fillMaxSize
+import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.padding
 import androidx.glance.text.Text
+import androidx.glance.text.TextAlign
 import androidx.work.WorkManager
 import org.supla.android.R
 import org.supla.android.features.widget.shared.GlanceDistance
@@ -61,16 +63,15 @@ fun ElectricityMeterContent(state: ExtendedValueWidgetState, widgetSize: DpSize)
     when (state.value) {
       is WidgetValue.ElectricityMeter ->
         when {
-          widgetSize.isBig -> ElectricityBigView(state.value, Date(state.updateTime))
-          widgetSize.isMedium -> ElectricityMediumView(state.value, Date(state.updateTime))
-          widgetSize.isMin -> ElectricitySmallView(state.value, Date(state.updateTime))
-          widgetSize.isMicroLong -> ElectricityMicroLongView(state.icon, state.value)
+          widgetSize.isBig() -> ElectricityBigView(state.value, Date(state.updateTime))
+          widgetSize.isMedium() -> ElectricityMediumView(state.value, Date(state.updateTime))
+          widgetSize.isMin() -> ElectricitySmallView(state.value, Date(state.updateTime))
+          widgetSize.isMicroLong() -> ElectricityMicroLongView(state.icon, state.value)
           else -> ElectricityMicroView(state.value)
         }
 
-      else -> {
-        NoValue()
-      }
+      is WidgetValue.Offline -> Offline()
+      else -> NoValue()
     }
   }
 }
@@ -79,6 +80,14 @@ fun ElectricityMeterContent(state: ExtendedValueWidgetState, widgetSize: DpSize)
 private fun NoValue() =
   Text(
     text = LocalContext.current.getString(R.string.widget_no_value),
-    style = GlanceTypography.bodyMedium,
-    modifier = GlanceModifier.padding(GlanceDistance.tiny)
+    style = GlanceTypography.bodyMedium.copy(textAlign = TextAlign.Center),
+    modifier = GlanceModifier.fillMaxWidth().padding(GlanceDistance.tiny)
+  )
+
+@Composable
+private fun Offline() =
+  Text(
+    text = LocalContext.current.getString(R.string.channel_offline),
+    style = GlanceTypography.bodyMedium.copy(textAlign = TextAlign.Center),
+    modifier = GlanceModifier.fillMaxWidth().padding(GlanceDistance.tiny)
   )

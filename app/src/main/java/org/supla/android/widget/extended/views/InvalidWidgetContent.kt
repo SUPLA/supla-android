@@ -22,18 +22,25 @@ import androidx.compose.ui.unit.DpSize
 import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
 import androidx.glance.LocalContext
+import androidx.glance.LocalGlanceId
+import androidx.glance.action.clickable
 import androidx.glance.appwidget.components.Scaffold
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Box
 import androidx.glance.layout.fillMaxSize
 import androidx.glance.text.Text
 import androidx.glance.text.TextAlign
+import androidx.work.WorkManager
 import org.supla.android.R
 import org.supla.android.features.widget.shared.GlanceTypography
 import org.supla.android.images.ImageId
+import org.supla.android.widget.extended.ExtendedValueWidgetWorker
 
 @Composable
-fun InvalidWidgetContent(widgetSize: DpSize, stringRes: Int) =
+fun InvalidWidgetContent(widgetSize: DpSize, stringRes: Int) {
+  val context = LocalContext.current
+  val glanceId = LocalGlanceId.current
+
   Scaffold(
     titleBar = {
       WidgetTopBar(
@@ -43,6 +50,8 @@ fun InvalidWidgetContent(widgetSize: DpSize, stringRes: Int) =
       )
     },
     backgroundColor = GlanceTheme.colors.background,
+    modifier = GlanceModifier
+      .clickable { ExtendedValueWidgetWorker.singleRun(WorkManager.getInstance(context), glanceId) },
   ) {
     Box(modifier = GlanceModifier.fillMaxSize(), contentAlignment = Alignment.Center) {
       Text(
@@ -51,3 +60,4 @@ fun InvalidWidgetContent(widgetSize: DpSize, stringRes: Int) =
       )
     }
   }
+}
