@@ -42,15 +42,13 @@ class LoadChannelWithChildrenMeasurementsDateRangeUseCase @Inject constructor(
   operator fun invoke(remoteId: Int, profileId: Long): Single<Optional<DateRange>> =
     readChannelWithChildrenUseCase(remoteId)
       .toSingle()
-      .flatMap {
-        if (it.channel.isHvacThermostat()) {
-          Single.zip(
-            findMinTime(it, profileId).map { long -> Date(long) },
-            findMaxTime(it, profileId).map { long -> Date(long) }
-          ) { min, max -> Optional.of(DateRange(min, max)) }
+      .flatMap { channel ->
+        if (channel.channel.isHvacThermostat()) {
+          findMinTime(channel, profileId).map { long -> Date(long) }
+            .flatMap { minTime -> findMaxTime(channel, profileId).map { long -> Optional.of(DateRange(minTime, Date(long))) } }
             .onErrorReturnItem(Optional.empty())
         } else {
-          Single.error(IllegalArgumentException("Channel function not supported (${it.channel.channelEntity.function}"))
+          Single.error(IllegalArgumentException("Channel function not supported (${channel.channel.channelEntity.function}"))
         }
       }
 
