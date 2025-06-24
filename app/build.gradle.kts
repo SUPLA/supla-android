@@ -27,8 +27,8 @@ android {
     minSdk = libs.versions.minSdk.get().toInt()
     targetSdk = libs.versions.targetSdk.get().toInt()
     multiDexEnabled = true
-    versionCode = 287
-    versionName = "25.04.02"
+    versionCode = 290
+    versionName = "25.06"
 
     ndk {
       moduleName = "suplaclient"
@@ -122,6 +122,7 @@ dependencies {
   implementation(libs.androidChart)
   implementation(libs.googleMaterial)
   implementation(libs.coroutines)
+  implementation(libs.coroutines.rx3)
   implementation(libs.fragmentViewBinding)
 
   implementation(libs.hilt)
@@ -148,6 +149,7 @@ dependencies {
   implementation(libs.androidx.navigation.fragment)
   implementation(libs.androidx.navigation.ui)
   implementation(libs.androidx.compose.ui)
+  implementation(libs.androidx.compose.activity)
   implementation(libs.androidx.compose.ui.tooling)
   implementation(libs.androidx.compose.ui.toolingPreview)
   implementation(libs.androidx.compose.material.icons)
@@ -155,6 +157,10 @@ dependencies {
   implementation(libs.androidx.compose.material3.adaptive)
   implementation(libs.androidx.compose.constraintLayout)
   implementation(libs.androidx.car.app)
+  implementation(libs.androidx.glance.widget)
+  implementation(libs.androidx.glance.widget.preview)
+  implementation(libs.androidx.glance.material)
+  implementation(libs.androidx.glance.preview)
 
   implementation(libs.rxjava)
   implementation(libs.rxandroid)

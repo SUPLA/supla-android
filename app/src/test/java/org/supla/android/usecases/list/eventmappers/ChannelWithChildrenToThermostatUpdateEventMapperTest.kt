@@ -17,6 +17,7 @@ package org.supla.android.usecases.list.eventmappers
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import com.google.gson.Gson
 import io.mockk.every
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
@@ -73,6 +74,9 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
 
   @Mock
   lateinit var valuesFormatter: ValuesFormatter
+
+  @Mock
+  private lateinit var gson: Gson
 
   @InjectMocks
   lateinit var mapper: ChannelWithChildrenToThermostatUpdateEventMapper
@@ -156,6 +160,7 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
         every { getSuplaValue() } returns null
       }
       every { flags } returns SuplaChannelFlag.CHANNEL_STATE.rawValue
+      every { configEntity } returns null
     }
     val channelWithChildren = ChannelWithChildren(channel, listOf(thermometerChild))
 
@@ -219,6 +224,7 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
         }
       }
       every { flags } returns 0
+      every { configEntity } returns null
     }
     val channelWithChildren = ChannelWithChildren(channel, listOf())
 

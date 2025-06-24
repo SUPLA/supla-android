@@ -40,6 +40,8 @@ import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.model.general.SingleSelectionList
+import org.supla.android.data.model.spinner.ProfileItem
+import org.supla.android.data.model.spinner.SubjectItem
 import org.supla.android.extensions.ucFirst
 import org.supla.android.images.ImageId
 import org.supla.android.lib.actions.ActionId
@@ -52,8 +54,6 @@ import org.supla.android.ui.views.buttons.Button
 import org.supla.android.ui.views.buttons.OutlinedButton
 import org.supla.android.ui.views.spinner.LabelledSpinner
 import org.supla.android.ui.views.spinner.Spinner
-import org.supla.android.ui.views.spinner.SpinnerItem
-import org.supla.android.ui.views.spinner.SubjectSpinnerItem
 import org.supla.core.shared.infrastructure.LocalizedString
 
 data class AddAndroidAutoItemViewState(
@@ -69,34 +69,6 @@ data class AddAndroidAutoItemViewState(
 ) {
   val profilesEnabled: Boolean = !showDelete
   val subjectsEnabled: Boolean = !showDelete
-}
-
-data class ProfileItem(
-  val id: Long,
-  override val label: LocalizedString
-) : SpinnerItem
-
-data class SubjectItem(
-  val id: Int,
-  val caption: LocalizedString,
-  val actions: List<ActionId>,
-  override val icon: ImageId?,
-  override val isLocation: Boolean
-) : SubjectSpinnerItem {
-
-  override val label: LocalizedString
-    get() = caption
-
-  fun actionsList(selectedAction: ActionId? = null): SingleSelectionList<ActionId>? =
-    if (actions.isEmpty()) {
-      null
-    } else {
-      SingleSelectionList(
-        selected = actions.firstOrNull { it == selectedAction } ?: actions.first(),
-        label = R.string.widget_configure_action_label,
-        items = actions
-      )
-    }
 }
 
 interface AddAndroidAutoItemScope {
@@ -230,7 +202,11 @@ private val emptyScope = object : AddAndroidAutoItemScope {
 @Composable
 private fun Preview() {
   val firstProfile = ProfileItem(1, LocalizedString.Constant("Default"))
-  val firstSubject = SubjectItem(1, LocalizedString.Constant("Thermostat"), emptyList(), ImageId(R.drawable.fnc_thermostat_dhw), false)
+  val firstSubject = SubjectItem.create(
+    id = 1,
+    caption = LocalizedString.Constant("Thermostat"),
+    icon = ImageId(R.drawable.fnc_thermostat_dhw)
+  )
   SuplaTheme {
     emptyScope.View(
       AddAndroidAutoItemViewState(

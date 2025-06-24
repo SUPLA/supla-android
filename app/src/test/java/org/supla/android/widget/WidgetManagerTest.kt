@@ -20,7 +20,8 @@ import org.mockito.kotlin.whenever
 import org.supla.android.extensions.getAllWidgetIds
 import org.supla.android.extensions.getOnOffWidgetIds
 import org.supla.android.extensions.getSingleWidgetIds
-import org.supla.android.widget.shared.configuration.ItemType
+import org.supla.android.lib.actions.SubjectType
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 @RunWith(MockitoJUnitRunner::class)
 class WidgetManagerTest {
@@ -50,13 +51,13 @@ class WidgetManagerTest {
 
     val widgetConfiguration = WidgetConfiguration(
       channelId,
-      ItemType.CHANNEL,
+      SubjectType.CHANNEL,
       null,
-      0,
+      SuplaFunction.NONE,
       "0",
       profileId,
       true,
-      -1,
+      null,
       1,
       2
     )
@@ -74,7 +75,7 @@ class WidgetManagerTest {
     verify(widgetPreferences).getWidgetConfiguration(widgetId)
     verify(widgetPreferences).setWidgetConfiguration(
       eq(widgetId),
-      argThat { conf -> conf.profileId == INVALID_PROFILE_ID }
+      argThat { conf -> conf.profileId == INVALID_LONG }
     )
     verify(context).sendBroadcast(any())
     io.mockk.verify {

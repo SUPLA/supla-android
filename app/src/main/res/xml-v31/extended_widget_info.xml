@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+  android:configure="org.supla.android.features.widget.extendedwidget.ExtendedValueWidgetConfigurationActivity"
+  android:description="@string/extended_value_widget_description"
+  android:initialLayout="@layout/glance_default_loading_layout"
+  android:minWidth="110dp"
+  android:minHeight="40dp"
+  android:maxResizeWidth="450dp"
+  android:maxResizeHeight="250dp"
+  android:previewImage="@drawable/extended_value_widget"
+  android:resizeMode="horizontal|vertical"
+  android:updatePeriodMillis="1800000"
+  android:widgetCategory="home_screen"
+  android:widgetFeatures="reconfigurable" />

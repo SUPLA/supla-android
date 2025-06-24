@@ -398,6 +398,7 @@
   <string name="widget_configure_no_scene">Keine Szene verfügbar</string>
   <string name="double_button_widget_description">Zweitasten-Widget</string>
   <string name="single_button_widget_description">Eintasten-Widget</string>
+  <string name="extended_value_widget_description">Energiezählerwertvorschau.</string>
   <string name="channel_btn_toggle">Umschalten</string>
   <string name="channel_caption_roofwindowopeningsensor">Dachfenster-Öffnungssensor</string>
   <string name="channel_caption_roofwindow">Dachfenster</string>
@@ -728,6 +729,7 @@
   <string name="counter_photo_loading_error">Das Laden ist fehlgeschlagen.</string>
   <string name="counter_photo_error">Fehler</string>
   <string name="valve_warning_flooding">Das Ventil wurde aufgrund einer Überflutung geschlossen. Stellen Sie vor dem Öffnen des Ventils sicher, dass die Ursache behoben wurde. Durch Öffnen des Ventils wird der Alarm gelöscht. Möchten Sie es wirklich öffnen?</string>
+  <string name="valve_error_sensor_offline">Überflutungssensor nicht verfügbar – Gefahr einer unentdeckten Überschwemmung</string>
   <string name="channel_caption_flood_sensor">Flutsensor</string>
   <string name="flooding_alarm_message">Der Sensor meldet eine Überschwemmung!</string>
   <string name="valve_warning_flooding_short">Das Ventil wurde wegen einer erkannten Überschwemmung geschlossen.</string>
@@ -760,10 +762,13 @@
   <string name="android_auto_empty">Android Auto nicht konfiguriert. Öffnen Sie bitte Supla App -> Einstelllungen -> Android Auto und konfiguriere dort.</string>
   <string name="android_auto_executing">Ausführen…</string>
   <string name="android_auto_delete_title">Eintrag löschen</string>
-  <string name="android_auto_delete_message">Wollen Sie fortfahren</string>
+  <string name="android_auto_delete_message">Wollen Sie fortfahren?</string>
   <string name="android_auto_delete_confirm">Löschen</string>
   <string name="channel_not_found">Das Kanal wurde nicht gefunden</string>
   <string name="scene_inactive">Die Szene ist nicht aktiv</string>
   <string name="android_auto_error">Das Ausführen ist fehlgeschlagen</string>
   <string name="android_auto_play_messages">Nachrichten abspielen</string>
+  <string name="widget_not_supported">Der ausgewählte Kanal wird nicht unterstützt.</string>
+  <string name="widget_update_time_long">Aktualisierung: %1$s</string>
+  <string name="widget_no_value">Kein Wert verfügbar</string>
 </resources>

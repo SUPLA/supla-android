@@ -79,6 +79,18 @@
         android:resource="@xml/single_widget_info" />
     </receiver>
 
+    <receiver
+      android:name=".widget.extended.ExtendedValueWidgetReceiver"
+      android:exported="true">
+      <intent-filter>
+        <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+      </intent-filter>
+
+      <meta-data
+        android:name="android.appwidget.provider"
+        android:resource="@xml/extended_widget_info" />
+    </receiver>
+
     <uses-library
       android:name="android.test.runner"
       android:required="false" />
@@ -113,19 +125,26 @@
       android:screenOrientation="sensorPortrait" />
 
     <activity
-      android:name=".widget.onoff.configuration.OnOffWidgetConfigurationActivity"
+      android:name=".features.widget.doublewidget.DoubleWidgetConfigurationActivity"
       android:exported="true">
       <intent-filter>
         <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
       </intent-filter>
     </activity>
     <activity
-      android:name=".widget.single.configuration.SingleWidgetConfigurationActivity"
+      android:name=".features.widget.singlewidget.SingleWidgetConfigurationActivity"
       android:exported="true">
       <intent-filter>
         <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
       </intent-filter>
     </activity>
+    <activity
+    android:name=".features.widget.extendedwidget.ExtendedValueWidgetConfigurationActivity"
+    android:exported="true">
+    <intent-filter>
+      <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+    </intent-filter>
+  </activity>
 
     <service
       android:name=".core.notifications.NotificationMessagingService"

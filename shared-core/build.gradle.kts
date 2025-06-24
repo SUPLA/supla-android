@@ -5,6 +5,7 @@ plugins {
   alias(libs.plugins.android.library)
   alias(libs.plugins.skie)
   alias(libs.plugins.spotless)
+  alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -57,6 +58,7 @@ kotlin {
     val iosSimulatorArm64Main by getting
 
     commonMain.dependencies {
+      implementation(libs.kotlinx.serialization)
       implementation(libs.kotlin.endians)
     }
   }

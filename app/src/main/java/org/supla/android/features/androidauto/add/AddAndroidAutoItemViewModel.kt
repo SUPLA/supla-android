@@ -20,33 +20,24 @@ package org.supla.android.features.androidauto.add
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.subscribeBy
-import org.supla.android.R
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
-import org.supla.android.data.model.general.SingleSelectionList
+import org.supla.android.data.model.spinner.ProfileItem
+import org.supla.android.data.model.spinner.SubjectItem
+import org.supla.android.data.model.spinner.SubjectItemConversionScope
 import org.supla.android.data.source.AndroidAutoItemRepository
 import org.supla.android.data.source.ChannelGroupRepository
 import org.supla.android.data.source.RoomChannelRepository
 import org.supla.android.data.source.RoomSceneRepository
 import org.supla.android.data.source.local.entity.AndroidAutoItemEntity
-import org.supla.android.data.source.local.entity.LocationEntity
-import org.supla.android.data.source.local.entity.ProfileEntity
-import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
-import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
-import org.supla.android.data.source.local.entity.complex.SceneDataEntity
-import org.supla.android.data.source.local.entity.complex.shareable
 import org.supla.android.extensions.guardLet
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaSchedulers
-import org.supla.android.ui.views.spinner.SpinnerItem
-import org.supla.android.usecases.extensions.invoke
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.icon.GetSceneIconUseCase
 import org.supla.android.usecases.profile.ReadAllProfilesUseCase
-import org.supla.core.shared.data.model.general.SuplaFunction
-import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.usecase.GetCaptionUseCase
 import java.util.Objects
 import javax.inject.Inject
@@ -56,14 +47,15 @@ class AddAndroidAutoItemViewModel @Inject constructor(
   private val androidAutoItemRepository: AndroidAutoItemRepository,
   private val readAllProfilesUseCase: ReadAllProfilesUseCase,
   private val channelGroupRepository: ChannelGroupRepository,
-  private val getChannelIconUseCase: GetChannelIconUseCase,
-  private val getSceneIconUseCase: GetSceneIconUseCase,
+  override val getChannelIconUseCase: GetChannelIconUseCase,
+  override val getSceneIconUseCase: GetSceneIconUseCase,
   private val channelRepository: RoomChannelRepository,
-  private val getCaptionUseCase: GetCaptionUseCase,
+  override val getCaptionUseCase: GetCaptionUseCase,
   private val sceneRepository: RoomSceneRepository,
   schedulers: SuplaSchedulers
 ) : BaseViewModel<AddAndroidAutoItemViewModelState, AddAndroidAutoItemViewEvent>(AddAndroidAutoItemViewModelState(), schedulers),
-  AddAndroidAutoItemScope {
+  AddAndroidAutoItemScope,
+  SubjectItemConversionScope {
 
   fun onViewCreated(itemId: Long?) {
     if (itemId == null) {
@@ -282,98 +274,6 @@ class AddAndroidAutoItemViewModel @Inject constructor(
         sceneRepository.findProfileScenes(profileId)
           .map { scenes -> scenesSubjectItems(scenes) }
     }
-
-  private fun List<SubjectItem>.asSingleSelectionList(type: SubjectType, selectedId: Int? = null): SingleSelectionList<SubjectItem>? =
-    if (isEmpty()) {
-      null
-    } else {
-      SingleSelectionList(
-        selected = firstOrNull { it.id == selectedId } ?: first { !it.isLocation },
-        label = type.nameRes,
-        items = this
-      )
-    }
-
-  private fun List<ProfileEntity>.asSingleSelectionList(selectedId: Long? = null): SingleSelectionList<ProfileItem>? =
-    map { ProfileItem(it.id!!, LocalizedString.Constant(it.name)) }
-      .asSingleSelectionList(R.string.widget_configure_profile_label)
-      ?.let { list ->
-        list.copy(selected = list.items.firstOrNull { it.id == selectedId } ?: list.items.first())
-      }
-
-  private fun <T : SpinnerItem> List<T>.asSingleSelectionList(label: Int): SingleSelectionList<T>? =
-    if (isEmpty()) {
-      null
-    } else {
-      SingleSelectionList(
-        selected = first(),
-        label = label,
-        items = this
-      )
-    }
-
-  private fun channelsSubjectItems(items: List<ChannelDataEntity>): List<SubjectItem> =
-    toSubjectItems(items, { it.locationEntity }, { it.subjectItem })
-
-  private fun groupsSubjectItems(items: List<ChannelGroupDataEntity>): List<SubjectItem> =
-    toSubjectItems(items, { it.locationEntity }, { it.subjectItem })
-
-  private fun scenesSubjectItems(items: List<SceneDataEntity>): List<SubjectItem> =
-    toSubjectItems(items, { it.locationEntity }, { it.subjectItem })
-
-  private fun <T> toSubjectItems(
-    items: List<T>,
-    locationExporter: (T) -> LocationEntity,
-    converter: (T) -> SubjectItem
-  ): List<SubjectItem> {
-    if (items.isEmpty()) {
-      return emptyList()
-    }
-
-    return mutableListOf<SubjectItem>().apply {
-      var location = locationExporter(items.first())
-      add(location.subjectItem)
-
-      items.forEach {
-        val currentLocation = locationExporter(it)
-        if (location.caption != currentLocation.caption) {
-          location = currentLocation
-          add(location.subjectItem)
-        }
-        add(converter(it))
-      }
-    }
-  }
-
-  private val LocationEntity.subjectItem: SubjectItem
-    get() = SubjectItem(remoteId, LocalizedString.Constant(caption), emptyList(), null, true)
-
-  private val ChannelDataEntity.subjectItem: SubjectItem
-    get() = SubjectItem(
-      id = remoteId,
-      caption = getCaptionUseCase(shareable),
-      actions = function.actions,
-      icon = getChannelIconUseCase.forState(channelEntity, offlineState),
-      isLocation = false
-    )
-
-  private val ChannelGroupDataEntity.subjectItem: SubjectItem
-    get() = SubjectItem(
-      id = remoteId,
-      caption = getCaptionUseCase(shareable),
-      actions = function.actions,
-      icon = getChannelIconUseCase.forState(channelGroupEntity, offlineState),
-      isLocation = false
-    )
-
-  private val SceneDataEntity.subjectItem: SubjectItem
-    get() = SubjectItem(
-      id = remoteId,
-      caption = getCaptionUseCase(sceneEntity),
-      actions = listOf(ActionId.EXECUTE, ActionId.INTERRUPT, ActionId.INTERRUPT_AND_EXECUTE),
-      icon = getSceneIconUseCase(sceneEntity),
-      isLocation = false
-    )
 }
 
 sealed class AddAndroidAutoItemViewEvent : ViewEvent {
@@ -457,78 +357,3 @@ data class Selection(
     return true
   }
 }
-
-private val SuplaFunction.actions: List<ActionId>
-  get() = when (this) {
-    SuplaFunction.OPEN_SENSOR_GATEWAY,
-    SuplaFunction.OPEN_SENSOR_GATE,
-    SuplaFunction.OPEN_SENSOR_GARAGE_DOOR,
-    SuplaFunction.OPEN_SENSOR_DOOR,
-    SuplaFunction.NO_LIQUID_SENSOR,
-    SuplaFunction.DEPTH_SENSOR,
-    SuplaFunction.DISTANCE_SENSOR,
-    SuplaFunction.OPENING_SENSOR_WINDOW,
-    SuplaFunction.HOTEL_CARD_SENSOR,
-    SuplaFunction.ALARM_ARMAMENT_SENSOR,
-    SuplaFunction.MAIL_SENSOR,
-    SuplaFunction.WIND_SENSOR,
-    SuplaFunction.PRESSURE_SENSOR,
-    SuplaFunction.RAIN_SENSOR,
-    SuplaFunction.WEIGHT_SENSOR,
-    SuplaFunction.WEATHER_STATION,
-    SuplaFunction.THERMOMETER,
-    SuplaFunction.HUMIDITY,
-    SuplaFunction.HUMIDITY_AND_TEMPERATURE,
-    SuplaFunction.UNKNOWN,
-    SuplaFunction.OPEN_SENSOR_ROLLER_SHUTTER,
-    SuplaFunction.OPEN_SENSOR_ROOF_WINDOW,
-    SuplaFunction.RING,
-    SuplaFunction.ALARM,
-    SuplaFunction.NOTIFICATION,
-    SuplaFunction.ELECTRICITY_METER,
-    SuplaFunction.IC_ELECTRICITY_METER,
-    SuplaFunction.IC_GAS_METER,
-    SuplaFunction.IC_WATER_METER,
-    SuplaFunction.IC_HEAT_METER,
-    SuplaFunction.GENERAL_PURPOSE_MEASUREMENT,
-    SuplaFunction.GENERAL_PURPOSE_METER,
-    SuplaFunction.DIGIGLASS_HORIZONTAL,
-    SuplaFunction.DIGIGLASS_VERTICAL,
-    SuplaFunction.CONTAINER,
-    SuplaFunction.SEPTIC_TANK,
-    SuplaFunction.WATER_TANK,
-    SuplaFunction.CONTAINER_LEVEL_SENSOR,
-    SuplaFunction.FLOOD_SENSOR,
-    SuplaFunction.PUMP_SWITCH,
-    SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH,
-    SuplaFunction.NONE -> emptyList()
-
-    SuplaFunction.CONTROLLING_THE_DOOR_LOCK,
-    SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK -> listOf(ActionId.OPEN)
-    SuplaFunction.CONTROLLING_THE_GATE,
-    SuplaFunction.CONTROLLING_THE_GARAGE_DOOR -> listOf(ActionId.OPEN_CLOSE, ActionId.OPEN, ActionId.CLOSE)
-
-    SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER,
-    SuplaFunction.CONTROLLING_THE_ROOF_WINDOW,
-    SuplaFunction.CONTROLLING_THE_FACADE_BLIND,
-    SuplaFunction.VERTICAL_BLIND,
-    SuplaFunction.ROLLER_GARAGE_DOOR -> listOf(ActionId.SHUT, ActionId.REVEAL)
-
-    SuplaFunction.POWER_SWITCH,
-    SuplaFunction.LIGHTSWITCH,
-    SuplaFunction.STAIRCASE_TIMER,
-    SuplaFunction.DIMMER,
-    SuplaFunction.RGB_LIGHTING,
-    SuplaFunction.DIMMER_AND_RGB_LIGHTING,
-    SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS,
-    SuplaFunction.HVAC_THERMOSTAT,
-    SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL,
-    SuplaFunction.HVAC_DOMESTIC_HOT_WATER -> listOf(ActionId.TURN_ON, ActionId.TURN_OFF, ActionId.TOGGLE)
-
-    SuplaFunction.VALVE_OPEN_CLOSE,
-    SuplaFunction.VALVE_PERCENTAGE -> listOf(ActionId.OPEN, ActionId.CLOSE)
-
-    SuplaFunction.TERRACE_AWNING,
-    SuplaFunction.PROJECTOR_SCREEN,
-    SuplaFunction.CURTAIN -> listOf(ActionId.EXPAND, ActionId.COLLAPSE)
-  }

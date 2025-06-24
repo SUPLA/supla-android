@@ -441,6 +441,7 @@
   <string name="widget_configure_no_scene">Brak dostępnch scen</string>
   <string name="double_button_widget_description">Widżet dwuprzyciskowy</string>
   <string name="single_button_widget_description">Widżet jednoprzyciskowy</string>
+  <string name="extended_value_widget_description">Podgląd wartości licznika energii.</string>
   <string name="widget_app_not_initialized">Proszę się zalogować!</string>
   <string name="widget_command_no_connection">Brak połączenia z internetem!</string>
   <string name="widget_command_error">Wystąpił błąd! (kod: %1$d)</string>
@@ -750,6 +751,7 @@
   <string name="valve_warning_motor_problem_opening">Wystąpił problem z silnikiem. Upewnij się, czy nic nie blokuje zaworu. Zawór może być częściowo otwarty. Czy na pewno chcesz go otworzyć?</string>
   <string name="valve_warning_motor_problem_closing">Wystąpił problem z silnikiem. Upewnij się, czy nic nie blokuje zaworu. Zawór może być częściowo otwarty. Czy na pewno chcesz go zamknąć?</string>
   <string name="valve_warning_motor_problem">Wystąpił problem z silnikiem. Upewnij się, czy nic nie blokuje zaworu. Zawór może być częściowo otwarty.</string>
+  <string name="valve_error_sensor_offline">Niedostępny czujnik zalania - istnieje ryzyko niewykrycia zalania</string>
   <string name="change_caption_header">Zmiana nazwy</string>
   <string name="group_name">Nazwa grupy</string>
   <string name="caption_change_failed">Zmiana nazwy nieudana!</string>
@@ -775,6 +777,9 @@
   <string name="scene_inactive">Scena jest nieaktywna</string>
   <string name="android_auto_error">Wykonanie nie powiodło się</string>
   <string name="android_auto_play_messages">Odtwarzaj komunikaty</string>
+  <string name="widget_not_supported">Wybrany kanał nie jest wspierany.</string>
+  <string name="widget_update_time_long">Aktualizacja: %1$s</string>
+  <string name="widget_no_value">Brak wartości</string>
 
   <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
     <item quantity="one">włączone</item>

@@ -711,4 +711,5 @@
   <plurals name="second_pattern" tools:ignore="MissingQuantity">
   <item quantity="other">%1$d sec</item>
   </plurals>
+  <string name="android_auto_action">Azione: %1$s</string>
 </resources>

@@ -11,7 +11,7 @@ import org.supla.android.Trace
 import org.supla.android.data.source.remote.gpm.SuplaChannelGeneralPurposeBaseConfig
 import org.supla.android.extensions.TAG
 import org.supla.android.extensions.getAppWidgetManager
-import org.supla.android.lib.SuplaConst
+import org.supla.android.lib.actions.SubjectType
 import org.supla.android.lib.singlecall.DoubleValue
 import org.supla.android.lib.singlecall.TemperatureAndHumidity
 import org.supla.android.usecases.channel.valueformatter.GpmValueFormatter
@@ -20,9 +20,9 @@ import org.supla.android.usecases.channelconfig.LoadChannelConfigUseCase
 import org.supla.android.widget.WidgetConfiguration
 import org.supla.android.widget.onoff.OnOffWidget
 import org.supla.android.widget.onoff.updateOnOffWidget
-import org.supla.android.widget.shared.configuration.ItemType
 import org.supla.android.widget.single.SingleWidget
 import org.supla.android.widget.single.updateSingleWidget
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 @HiltWorker
 class WidgetReloadWorker @AssistedInject constructor(
@@ -105,17 +105,17 @@ class WidgetReloadWorker @AssistedInject constructor(
   }
 
   private fun isThermometer(configuration: WidgetConfiguration): Boolean =
-    configuration.itemType == ItemType.CHANNEL &&
+    configuration.subjectType == SubjectType.CHANNEL &&
       (
-        configuration.itemFunction == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER ||
-          configuration.itemFunction == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE
+        configuration.subjectFunction == SuplaFunction.THERMOMETER ||
+          configuration.subjectFunction == SuplaFunction.HUMIDITY_AND_TEMPERATURE
         )
 
   private fun isGpm(configuration: WidgetConfiguration): Boolean =
-    configuration.itemType == ItemType.CHANNEL &&
+    configuration.subjectType == SubjectType.CHANNEL &&
       (
-        configuration.itemFunction == SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_MEASUREMENT ||
-          configuration.itemFunction == SuplaConst.SUPLA_CHANNELFNC_GENERAL_PURPOSE_METER
+        configuration.subjectFunction == SuplaFunction.GENERAL_PURPOSE_MEASUREMENT ||
+          configuration.subjectFunction == SuplaFunction.GENERAL_PURPOSE_METER
         )
 
   companion object {

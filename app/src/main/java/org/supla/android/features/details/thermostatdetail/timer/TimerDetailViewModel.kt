@@ -63,7 +63,6 @@ import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.client.ExecuteThermostatActionUseCase
 import org.supla.core.shared.data.model.function.thermostat.ThermostatValue
-import org.supla.core.shared.extensions.fromSuplaTemperature
 import org.supla.core.shared.extensions.ifTrue
 import java.util.Date
 import javax.inject.Inject
@@ -297,11 +296,7 @@ class TimerDetailViewModel @Inject constructor(
     val timerState = channel.getTimerStateValue()
     val thermostatValue = channel.value.asThermostatValue()
     val isTimerOn = timerState != null && timerState.countdownEndsAt != null && timerState.countdownEndsAt.after(currentDate)
-
-    val (configMinTemperature, configMaxTemperature) = guardLet(
-      hvacConfig.temperatures.roomMin?.fromSuplaTemperature(),
-      hvacConfig.temperatures.roomMax?.fromSuplaTemperature()
-    ) { return }
+    val (minTemperature, maxTemperature) = guardLet(hvacConfig.minTemperature, hvacConfig.maxTemperature) { return }
 
     val initialCalendarDate = currentDate.shift(7)
     updateState {
@@ -316,8 +311,8 @@ class TimerDetailViewModel @Inject constructor(
         timerEndDate = if (isTimerOn) timerState?.countdownEndsAt else null,
 
         subfunction = thermostatValue.subfunction,
-        minTemperature = configMinTemperature,
-        maxTemperature = configMaxTemperature,
+        minTemperature = minTemperature,
+        maxTemperature = maxTemperature,
         currentTemperature = getSetpointTemperature(channel, thermostatValue),
         usingHeatSetpoint = useHeatSetpoint(channel, thermostatValue),
 
