@@ -83,7 +83,7 @@
 
   <string name="add_wizard_is_not_available">De Toevoegen-Wizard is alleen beschikbaar als er op basis van het ingevoerde e-mailadres! een verbinding met de server tot stand is gebracht (Schakel geavanceerde opties in uw accountconfiguratie uit)</string>
 
-  <string name="wizard_step1_txt1">Welkom bij de wizard voor het toevoegen van apparaten, waarmee u op een snelle en eenvoudige manier een nieuw apparaat aan het systeem kunt toevoegen.</string>
+  <string name="add_wizard_step_1_welcome">Welkom bij de wizard voor het toevoegen van apparaten, waarmee u op een snelle en eenvoudige manier een nieuw apparaat aan het systeem kunt toevoegen.</string>
   <string name="wizard_step1_txt3">Druk op <b>Volgende</b> om door te gaan.</string>
   <string name="next">Doorgaan</string>
   <string name="start">OPSTARTEN</string><![CDATA[>
@@ -94,7 +94,7 @@
 
   <string name="wizard_step3_txt1">Sluit uw uitvoerende apparaat aan op stroom. Het apparaat zou standaard in de configuratiemodus moeten werken, signalering door de status-LED als volgt te knipperen</string>
   <string name="wizard_step3_txt2">JAls het apparaat niet werkt in de configuratiemodus na het inschakelen van de stroom, houdt u de knop <b>CONFIG</b> minimaal 5 seconden ingedrukt.</string>
-  <string name="wizard_step3_txt3">Druk op de knop <b>START</b> om de configuratie te starten.</string>
+  <string name="add_wizard_step_3_message_3">Druk op de knop <b>START</b> om de configuratie te starten.</string>
 
   <string name="wizard_no_internetwifi">Voordat u begint, maakt u verbinding met internet via een WiFi-netwerk, dat ook door de uitvoerende apparaten wordt gebruikt om verbinding te maken met de server.</string>
   <string name="wizard_wifi_error">Het WiFi-netwerk is uitgeschakeld of de ID of naam kan niet worden gelezen!</string>
@@ -304,7 +304,7 @@
   <string name="wifi_signal_strength">WiFi-signaalsterkte</string>
   <string name="wifi_throttling">Wacht de hierboven weergegeven tijd vanwege de beperkingen van het scannen van wifi-netwerken die worden opgelegd door het Android-systeem.</string>
   <string name="wizard_step1_txt2">Zorg ervoor dat uw mobiele data is uitgeschakeld wanneer u apparaten toevoegt. Anders kan de toevoeging mislukken.</string>
-  <string name="wizard_step2_txt1">Voer de naam en het wachtwoord van uw thuis- of bedrijfs-WIFI-netwerk in waarmee het apparaat verbinding kan maken met de server.</string>
+  <string name="add_wizard_step_2_message">Voer de naam en het wachtwoord van uw thuis- of bedrijfs-WIFI-netwerk in waarmee het apparaat verbinding kan maken met de server.</string>
   <string name="yes">Ja</string>
   <string name="z_wave">Z-wave brug</string>
   <string name="zwave_add_device">Voeg apparaat toe</string>

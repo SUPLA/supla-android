@@ -84,7 +84,7 @@
   <string name="wizard_step3_txt2">Si tras conectar la alimentación el dispositivo no funciona en el modo de configuración, mantén presionada la tecla <b>CONFIG</b> durante al menos 5 segundos.</string>
   <string name="wizard_done">Configuración del dispositivo completada con éxito :)</string>
   <string name="wizard_result_failed">¡Configuración no completada con éxito!</string>
-  <string name="wizard_step3_txt3">Presiona la tecla <b>START</b> para iniciar la configuración.</string>
+  <string name="add_wizard_step_3_message_3">Presiona la tecla <b>START</b> para iniciar la configuración.</string>
   <string name="wizard_iodev_name">Nombre</string>
   <string name="next">Siguiente</string>
   <string name="wizard_addnetwork_error">¡No se puede añadir la configuración de la red WiFi!</string>
@@ -102,7 +102,7 @@
   <string name="wizard_location_error">Para que el asistente para agregar funcione correctamente, es necesario que esté habilitado en este dispositivo el servicio de localización. Para habilitarlo, seleccione la opción “Localización” en la configuración del sistema y asegúrese de que esté activado.</string>
   <string name="start">START</string>
   <string name="wizard_result_compat_error">¡El dispositivo con el que se ha establecido la conexión no es compatible con este asistente!</string>
-  <string name="wizard_step1_txt1">Bienvenido al asistente de adición de dispositivos, que le ayudará a añadir nuevos dispositivos al sistema de forma sencilla y rápida.</string>
+  <string name="add_wizard_step_1_welcome">Bienvenido al asistente de adición de dispositivos, que le ayudará a añadir nuevos dispositivos al sistema de forma sencilla y rápida.</string>
   <string name="device_reg_request_timeout">¡Se ha superado el tiempo de espera para la información sobre la disponibilidad de registro de dispositivos!</string>
   <string name="wizard_no_internetwifi">Antes de empezar, acceda a internet conectándose a la red WiFi que será la utilizada por el actuador para conectarse al servidor.</string>
   <string name="wizard_not_enought_permissions">La aplicación no tiene permisos suficientes. Pase al administrador de aplicaciones en los ajustes del sistema. A continuación, busque la aplicación %1$s y active todos los permisos que exija.</string>
@@ -206,7 +206,7 @@
   <string name="channel_func_valve_percentage">Valve</string>
 
   <string name="channel_caption_heatmeter">Medidor de calor</string>
-  <string name="wizard_step2_txt1">Introduzca el nombre y la contraseña de la red WiFi de su casa o empresa a través de la cual el dispositivo ejecutivo podrá establecer una conexión con el servidor.</string>
+  <string name="add_wizard_step_2_message">Introduzca el nombre y la contraseña de la red WiFi de su casa o empresa a través de la cual el dispositivo ejecutivo podrá establecer una conexión con el servidor.</string>
   <string name="aritmetic_balance_days">Balance aritmético – Días</string>
   <string name="aritmetic_balance_hours">Balance aritmético – Horas</string>
   <string name="aritmetic_balance_minutes">Balance aritmético – Minutos</string>

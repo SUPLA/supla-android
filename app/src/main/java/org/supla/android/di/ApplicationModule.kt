@@ -21,6 +21,8 @@ import android.app.NotificationManager
 import android.app.UiModeManager
 import android.appwidget.AppWidgetManager
 import android.content.Context
+import android.net.ConnectivityManager
+import android.net.wifi.WifiManager
 import android.os.PowerManager
 import androidx.biometric.BiometricManager
 import dagger.Module
@@ -110,6 +112,14 @@ class ApplicationModule {
   @Provides
   fun providePowerManager(@ApplicationContext context: Context) =
     context.getSystemService(Context.POWER_SERVICE) as PowerManager
+
+  @Provides
+  fun provideWifiManager(@ApplicationContext context: Context): WifiManager =
+    context.getSystemService(WifiManager::class.java)
+
+  @Provides
+  fun provideConnectivityManager(@ApplicationContext context: Context): ConnectivityManager =
+    context.getSystemService(ConnectivityManager::class.java)
 
   @Provides
   @Singleton

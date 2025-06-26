@@ -85,7 +85,7 @@
   <string name="wizard_done">Configurazione del dispositivo terminata con successo :)</string>
   <string name="wizard_result_failed">Configurazione fallita!</string>
   <string name="wizard_iodev_laststate">Stato precedente</string>
-  <string name="wizard_step3_txt3">Premii il tasto <b>START</b> per iniziare la configurazione.</string>
+  <string name="add_wizard_step_3_message_3">Premii il tasto <b>START</b> per iniziare la configurazione.</string>
   <string name="wizard_iodev_name">Nome</string>
   <string name="next">Avanti</string>
   <string name="wizard_addnetwork_error">Impossibile aggiungere la configurazione della rete WiFi!</string>
@@ -102,7 +102,7 @@
   <string name="wizard_wifi_error">La rete WiFi è spenta oppure è impossibile rilevare il suo identificatore o il nome!</string>
   <string name="wizard_location_error">Affinché la procedura guidata di aggiunta funzioni correttamente, il servizio di Localizzazione deve essere abilitato su questo dispositivo. Vai alle impostazioni di sistema, quindi seleziona ″Localizzazione” e assicurati che sia abilitata.</string>
   <string name="wizard_result_compat_error">Il dispositivo con il quale è stata stabilita la connessione non è compatibile con questa procedura guidata!</string>
-  <string name="wizard_step1_txt1">Benvenuto nella procedura guidata Aggiungi un dispositivo che Ti aiuterà in modo semplice e veloce ad aggiungere un nuovo dispositivo al sistema.</string>
+  <string name="add_wizard_step_1_welcome">Benvenuto nella procedura guidata Aggiungi un dispositivo che Ti aiuterà in modo semplice e veloce ad aggiungere un nuovo dispositivo al sistema.</string>
   <string name="device_reg_request_timeout">Le délai d\'attente pour des informations sur la disponibilité d\'enregistrement des dispositifs est dépassé !</string>
   <string name="wizard_no_internetwifi">Prima di iniziare, collegati all’Internet tramite la rete WiFi che verrà utilizzata anche dal dispositivo di I/O per la connessione con il server.</string>
   <string name="wizard_not_enought_permissions">Aplikacja nie posiada wystarczających uprawnień. Przejdź do zarządzania aplikacjami w ustawieniach systemowych. Następnie odszukaj aplikację %1$s i włącz wszystkie wymagane przez anią uprawnienia.</string>
@@ -206,7 +206,7 @@
   <string name="channel_func_valve_percentage">Valve</string>
 
   <string name="channel_caption_heatmeter">Contatore di calore</string>
-  <string name="wizard_step2_txt1">Inserisci il nome e la password della Tua rete Wi-Fi domestica o aziendale tramite la quale l’attuatore potrà collegarsi al server.</string>
+  <string name="add_wizard_step_2_message">Inserisci il nome e la password della Tua rete Wi-Fi domestica o aziendale tramite la quale l’attuatore potrà collegarsi al server.</string>
   <string name="aritmetic_balance_days">Equilibrio aritmetico – Giorni</string>
   <string name="aritmetic_balance_hours">Equilibrio aritmetico - Ore</string>
   <string name="aritmetic_balance_minutes">Equilibrio aritmetico – Minuti</string>

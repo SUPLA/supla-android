@@ -19,6 +19,7 @@ package org.supla.android.core.storage
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.core.content.edit
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -33,6 +34,8 @@ private const val NOTIFICATIONS_LAST_ENABLED = "NOTIFICATIONS_LAST_ENABLED"
 private const val FCM_PROFILE_TOKEN_KEY = "FCM_TOKEN_KEY_"
 private const val LOCK_SCREEN_SETTING_KEY = "LOCK_SCREEN_SETTING_KEY"
 private const val DEV_MODE_KEY = "DEV_MODE_KEY"
+private const val WIZARD_WIFI_NAME = "WIZARD_WIFI_NAME"
+private const val WIZARD_WIFI_PASSWORD = "WIZARD_WIFI_PASSWORD"
 
 @Singleton
 class EncryptedPreferences @Inject constructor(
@@ -49,7 +52,7 @@ class EncryptedPreferences @Inject constructor(
 
   var fcmToken: String?
     get() = preferences.getString(FCM_TOKEN_KEY, null)
-    set(value) = with(preferences.edit()) {
+    set(value) = preferences.edit {
       putString(FCM_TOKEN_KEY, value)
       apply()
     }
@@ -62,29 +65,43 @@ class EncryptedPreferences @Inject constructor(
         null
       }
     }
-    set(value) = with(preferences.edit()) {
+    set(value) = preferences.edit {
       putLong(FCM_TOKEN_LAST_UPDATE_KEY, value!!.time)
       apply()
     }
 
   var notificationsLastEnabled: Boolean
     get() = preferences.getBoolean(NOTIFICATIONS_LAST_ENABLED, false)
-    set(value) = with(preferences.edit()) {
+    set(value) = preferences.edit {
       putBoolean(NOTIFICATIONS_LAST_ENABLED, value)
       apply()
     }
 
   var lockScreenSettings: LockScreenSettings
     get() = LockScreenSettings.from(preferences.getString(LOCK_SCREEN_SETTING_KEY, null))
-    set(value) = with(preferences.edit()) {
+    set(value) = preferences.edit {
       putString(LOCK_SCREEN_SETTING_KEY, value.asString())
       apply()
     }
 
   var devModeActive: Boolean
     get() = preferences.getBoolean(DEV_MODE_KEY, false)
-    set(value) = with(preferences.edit()) {
+    set(value) = preferences.edit {
       putBoolean(DEV_MODE_KEY, value)
+      apply()
+    }
+
+  var wizardWifiName: String?
+    get() = preferences.getString(WIZARD_WIFI_NAME, null)
+    set(value) = preferences.edit {
+      putString(WIZARD_WIFI_NAME, value)
+      apply()
+    }
+
+  var wizardWifiPassword: String?
+    get() = preferences.getString(WIZARD_WIFI_PASSWORD, null)
+    set(value) = preferences.edit {
+      putString(WIZARD_WIFI_PASSWORD, value)
       apply()
     }
 
@@ -93,7 +110,7 @@ class EncryptedPreferences @Inject constructor(
   }
 
   fun setFcmProfileToken(profileId: Long, token: String) {
-    with(preferences.edit()) {
+    preferences.edit {
       putString(FCM_PROFILE_TOKEN_KEY + profileId, token)
       apply()
     }

@@ -20,35 +20,36 @@ package org.supla.android.features.details.electricitymeterdetail.history
 import org.supla.android.R
 import org.supla.android.ui.views.spinner.SpinnerItem
 import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.infrastructure.localizedString
 
 private const val KWH = "[kWh]"
 
 enum class ElectricityMeterChartType(override val label: LocalizedString) : SpinnerItem {
-  FORWARDED_ACTIVE_ENERGY(LocalizedString.WithResource(R.string.details_em_forward_active_energy)),
-  REVERSED_ACTIVE_ENERGY(LocalizedString.WithResource(R.string.details_em_reverse_active_energy)),
-  FORWARDED_REACTIVE_ENERGY(LocalizedString.WithResource(R.string.details_em_forward_reactive_energy)),
-  REVERSED_REACTIVE_ENERGY(LocalizedString.WithResource(R.string.details_em_reverse_reactive_energy)),
-  BALANCE_ARITHMETIC(LocalizedString.WithResource(R.string.details_em_balance_arithmetic)),
-  BALANCE_VECTOR(LocalizedString.WithResource(R.string.details_em_balance_vector)),
-  BALANCE_HOURLY(LocalizedString.WithResource(R.string.details_em_balance_hourly)),
-  BALANCE_CHART_AGGREGATED(LocalizedString.WithResource(R.string.details_em_balance_chart_aggregated)),
-  VOLTAGE(LocalizedString.WithResource(R.string.details_em_voltage)),
-  CURRENT(LocalizedString.WithResource(R.string.details_em_current)),
-  POWER_ACTIVE(LocalizedString.WithResource(R.string.details_em_power_active));
+  FORWARDED_ACTIVE_ENERGY(localizedString(R.string.details_em_forward_active_energy)),
+  REVERSED_ACTIVE_ENERGY(localizedString(R.string.details_em_reverse_active_energy)),
+  FORWARDED_REACTIVE_ENERGY(localizedString(R.string.details_em_forward_reactive_energy)),
+  REVERSED_REACTIVE_ENERGY(localizedString(R.string.details_em_reverse_reactive_energy)),
+  BALANCE_ARITHMETIC(localizedString(R.string.details_em_balance_arithmetic)),
+  BALANCE_VECTOR(localizedString(R.string.details_em_balance_vector)),
+  BALANCE_HOURLY(localizedString(R.string.details_em_balance_hourly)),
+  BALANCE_CHART_AGGREGATED(localizedString(R.string.details_em_balance_chart_aggregated)),
+  VOLTAGE(localizedString(R.string.details_em_voltage)),
+  CURRENT(localizedString(R.string.details_em_current)),
+  POWER_ACTIVE(localizedString(R.string.details_em_power_active));
 
   val labelWithUnit: LocalizedString
     get() = when (this) {
-      FORWARDED_ACTIVE_ENERGY -> LocalizedString.WithResourceAndValue(R.string.details_em_forward_active_energy, KWH)
-      REVERSED_ACTIVE_ENERGY -> LocalizedString.WithResourceAndValue(R.string.details_em_reverse_active_energy, KWH)
-      FORWARDED_REACTIVE_ENERGY -> LocalizedString.WithResourceAndValue(R.string.details_em_forward_reactive_energy, "[kvarh]")
-      REVERSED_REACTIVE_ENERGY -> LocalizedString.WithResourceAndValue(R.string.details_em_reverse_reactive_energy, "[kvarh]")
-      BALANCE_ARITHMETIC -> LocalizedString.WithResourceAndValue(R.string.details_em_balance_arithmetic, KWH)
-      BALANCE_VECTOR -> LocalizedString.WithResourceAndValue(R.string.details_em_balance_vector, KWH)
-      BALANCE_HOURLY -> LocalizedString.WithResourceAndValue(R.string.details_em_balance_hourly, KWH)
-      BALANCE_CHART_AGGREGATED -> LocalizedString.WithResourceAndValue(R.string.details_em_balance_chart_aggregated, KWH)
-      VOLTAGE -> LocalizedString.WithResourceAndValue(R.string.details_em_voltage, "[V]")
-      CURRENT -> LocalizedString.WithResourceAndValue(R.string.details_em_current, "[A]")
-      POWER_ACTIVE -> LocalizedString.WithResourceAndValue(R.string.details_em_power_active, "[W]")
+      FORWARDED_ACTIVE_ENERGY -> LocalizedString.WithResourceAndString(R.string.details_em_forward_active_energy, KWH)
+      REVERSED_ACTIVE_ENERGY -> LocalizedString.WithResourceAndString(R.string.details_em_reverse_active_energy, KWH)
+      FORWARDED_REACTIVE_ENERGY -> LocalizedString.WithResourceAndString(R.string.details_em_forward_reactive_energy, "[kvarh]")
+      REVERSED_REACTIVE_ENERGY -> LocalizedString.WithResourceAndString(R.string.details_em_reverse_reactive_energy, "[kvarh]")
+      BALANCE_ARITHMETIC -> LocalizedString.WithResourceAndString(R.string.details_em_balance_arithmetic, KWH)
+      BALANCE_VECTOR -> LocalizedString.WithResourceAndString(R.string.details_em_balance_vector, KWH)
+      BALANCE_HOURLY -> LocalizedString.WithResourceAndString(R.string.details_em_balance_hourly, KWH)
+      BALANCE_CHART_AGGREGATED -> LocalizedString.WithResourceAndString(R.string.details_em_balance_chart_aggregated, KWH)
+      VOLTAGE -> LocalizedString.WithResourceAndString(R.string.details_em_voltage, "[V]")
+      CURRENT -> LocalizedString.WithResourceAndString(R.string.details_em_current, "[A]")
+      POWER_ACTIVE -> LocalizedString.WithResourceAndString(R.string.details_em_power_active, "[W]")
     }
 
   val needsPhases: Boolean

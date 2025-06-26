@@ -84,7 +84,7 @@
   <string name="wizard_done">Configuration du dispositif est terminée avec succès :)</string>
   <string name="wizard_result_failed">Échec de la configuration!</string>
   <string name="wizard_iodev_laststate">Statut précédent</string>
-  <string name="wizard_step3_txt3">Appuyez sur <b>DÉMARRER</b> pour commencer la configuration.</string>
+  <string name="add_wizard_step_3_message_3">Appuyez sur <b>DÉMARRER</b> pour commencer la configuration.</string>
   <string name="wizard_iodev_name">Nom</string>
   <string name="next">Continuer</string>
   <string name="wizard_addnetwork_error">Impossible d\'ajouter la configuration de réseau WiFi !</string>
@@ -101,7 +101,7 @@
   <string name="wizard_location_error">Pour que l\'assistant de création fonctionne correctement, le service de localisation doit être activé sur cet appareil. Allez dans les paramètres de votre système, puis sélectionnez l\'option « Localisation » et assurez-vous qu\'elle est activée.</string>
   <string name="start">DÉMARRER</string>
   <string name="wizard_result_compat_error">Le dispositif connecté n\'est pas compatible avec cet assistant!</string>
-  <string name="wizard_step1_txt1">Bienvenue dans l\'assistant d\'ajout des dispositifs qui vous aidera d\'une manière simple et rapide à ajouter un nouveau dispositif au système.</string>
+  <string name="add_wizard_step_1_welcome">Bienvenue dans l\'assistant d\'ajout des dispositifs qui vous aidera d\'une manière simple et rapide à ajouter un nouveau dispositif au système.</string>
   <string name="device_reg_request_timeout">Le délai d\'attente pour des informations sur la disponibilité d\'enregistrement des dispositifs est dépassé !</string>
   <string name="wizard_no_internetwifi">Avant de commencer, connectez-vous à Internet par le biais du réseau Wifi qui sera également utilisé par votre actionneur pour vous connecter au serveur.</string>
   <string name="wizard_not_enought_permissions">Cette application n\'a pas d\'autorisations suffisantes. Accédez à la gestion des applications dans les paramètres du système. Ensuite, trouvez l\'application %1$s et activez toutes les autorisations qu\'elle exige.</string>
@@ -205,7 +205,7 @@
   <string name="channel_func_valve_percentage">Valve</string>
 
   <string name="channel_caption_heatmeter">Compteur de chaleur</string>
-  <string name="wizard_step2_txt1">Saisissez le nom et le mot de passe de votre réseau WiFi domestique ou d\'entreprise via lequel l\'appareil exécutif pourra établir une connexion avec le serveur.</string>
+  <string name="add_wizard_step_2_message">Saisissez le nom et le mot de passe de votre réseau WiFi domestique ou d\'entreprise via lequel l\'appareil exécutif pourra établir une connexion avec le serveur.</string>
   <string name="aritmetic_balance_days">Bilan arithmétique - Jours</string>
   <string name="aritmetic_balance_hours">Bilan arithmétique - Heures</string>
   <string name="aritmetic_balance_minutes">Bilan arithmétique - Minutes</string>

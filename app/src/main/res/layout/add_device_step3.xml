@@ -45,7 +45,7 @@
       android:layout_alignRight="@+id/wizard_step3_txt2"
       android:layout_marginTop="5dp"
       android:gravity="center_horizontal"
-      android:text="@string/wizard_step3_txt3"
+      android:text="@string/add_wizard_step_3_message_3"
       android:textColor="@android:color/white"
       android:textSize="14dp"
       android:fontFamily="@font/quicksand_regular" />

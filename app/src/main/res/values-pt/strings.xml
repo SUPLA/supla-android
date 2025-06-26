@@ -84,7 +84,7 @@
   <string name="wizard_done">O dispositivo foi configurado com sucesso :)</string>
   <string name="wizard_result_failed">A configuração falhou!</string>
   <string name="wizard_iodev_laststate">Estatuto anterior</string>
-  <string name="wizard_step3_txt3">Carregue no botão <b>START</b> para iniciar uma configuração.</string>
+  <string name="add_wizard_step_3_message_3">Carregue no botão <b>START</b> para iniciar uma configuração.</string>
   <string name="wizard_iodev_name">Nome</string>
   <string name="next">Continuar</string>
   <string name="wizard_addnetwork_error">Impossível adicionar uma configuração da rede WiFi!</string>
@@ -101,7 +101,7 @@
   <string name="wizard_location_error">Para que o assistente de adição funcione corretamente, o serviço de localização tem de estar ativado neste dispositivo. Vá para as configurações do sistema, seleccione "Localização" e verifique se está ativado.</string>
   <string name="start">START</string>
   <string name="wizard_result_compat_error">O dispositivo que conectou não é compatível com este assistente!</string>
-  <string name="wizard_step1_txt1">Bem-vindo ao assistente para adicionar dispositivos que lhe permitirá adicionar novos dispositivos ao sistema de maneira simples e rápida.</string>
+  <string name="add_wizard_step_1_welcome">Bem-vindo ao assistente para adicionar dispositivos que lhe permitirá adicionar novos dispositivos ao sistema de maneira simples e rápida.</string>
   <string name="device_reg_request_timeout">O tempo-limite de informação sobre a disponibilidade do registo dos dispositivos foi excedido!</string>
   <string name="wizard_no_internetwifi">Antes de iniciar, conecte-se à Internet através da rede WiFi que também será utilizada por um atuador para se conectar ao servidor.</string>
   <string name="wizard_not_enought_permissions">A aplicação não dispõe de poderes suficientes. Vá para a gestão das aplicações nas configurações do sistema. A seguir, encontre a aplicação %1$s e ative todos os poderes requeridos por ela.</string>
@@ -205,7 +205,7 @@
   <string name="channel_func_valve_percentage">Valve</string>
 
   <string name="channel_caption_heatmeter">Medidor de calor</string>
-  <string name="wizard_step2_txt1">Insira o nome e a senha da rede WiFi da sua casa ou empresa, através da qual o dispositivo executivo poderá estabelecer uma conexão com o servidor.</string>
+  <string name="add_wizard_step_2_message">Insira o nome e a senha da rede WiFi da sua casa ou empresa, através da qual o dispositivo executivo poderá estabelecer uma conexão com o servidor.</string>
   <string name="aritmetic_balance_days">Balanço aritmético - Dias</string>
   <string name="aritmetic_balance_hours">Balanço aritmético - Horas</string>
   <string name="aritmetic_balance_minutes">Balanço aritmético - Minutos</string>

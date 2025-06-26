@@ -108,7 +108,7 @@
       android:layout_marginRight="20dp"
       android:fontFamily="@font/quicksand_regular"
       android:gravity="center_horizontal"
-      android:text="@string/wizard_step2_txt1"
+      android:text="@string/add_wizard_step_2_message"
       android:textColor="@android:color/white"
       android:textAppearance="@style/AppTheme.TextAppearance.Body2" />
 

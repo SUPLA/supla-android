@@ -133,7 +133,7 @@
 
   <string name="add_wizard_is_not_available">Add Wizard is only available when server connection has been set based on the email address. (Disable advanced options in your account settings)</string>
 
-  <string name="wizard_step1_txt1">Welcome to Add I/O Device Wizard which will help you to add a new device to your system in a few simple steps.</string>
+  <string name="add_wizard_step_1_welcome">Welcome to Add I/O Device Wizard which will help you to add a new device to your system in a few simple steps.</string>
   <string name="wizard_step1_txt3">Press <b>Next</b> to continue.</string>
   <string name="next">Next</string>
   <string name="start">START</string>
@@ -143,7 +143,7 @@
 
   <string name="wizard_step3_txt1">Power up your I/O Device and make sure it is configuration mode - the status LED should be flashing rapidly.</string>
   <string name="wizard_step3_txt2">*Configuration mode is enabled by default on brand new products. It can also be enabled manually by pressing and holding <b>CONFIG</b> button or dimmer knob for around 5s.</string>
-  <string name="wizard_step3_txt3">Press <b>START</b> to start configuration.</string>
+  <string name="add_wizard_step_3_message_3">Press <b>START</b> to start configuration.</string>
 
   <string name="wizard_no_internetwifi">Before you start, set up your Internet connection with the WiFi also used by the I/O device when connecting with server.</string>
   <string name="wizard_wifi_error">WiFi Network is disabled or it is impossible to read its identifier or name!</string>
@@ -384,7 +384,7 @@
   <string name="lightsource_warning">The lifespan of the light source is %1$s</string>
   <string name="uv_warning1">The lifespan of the uv radiator is %1$s. Schedule its replacement.</string>
   <string name="uv_warning2">The lifespan of the uv radiator is %1$s. Replace the radiator.</string>
-  <string name="wizard_step2_txt1">Enter WiFi Network name and password to use with new I/O Device</string>
+  <string name="add_wizard_step_2_message">Enter WiFi Network name and password to use with new I/O Device</string>
   <string name="enabling_registration_timeout">Timeout for enabling registration has expired!</string>
   <string name="wifi_throttling">Oops...! It looks like the Android OS WiFi scanning limit has been reached. Setup can be continued after this window closes.</string>
   <string name="enter_suplaorg_credentails">Please enter your Supla Cloud login details.</string>
@@ -807,6 +807,18 @@
   <string name="widget_not_supported" translatable="false">Selected channel is not supported.</string>
   <string name="widget_update_time_long" translatable="false">Update time: %1$s</string>
   <string name="widget_no_value" translatable="false">No value available</string>
+  <string name="add_wizard_step_1_qr_info" translatable="false">If you have a QR code, use the scanner. For devices without a QR code, press <b>Next</b> to continue.</string>
+  <string name="add_wizard_network_name" translatable="false">Network name</string>
+  <string name="add_wizard_step_2_search_network" translatable="false">Search for network</string>
+  <string name="add_wizard_step_3_message_1" translatable="false">Connect your device to the power supply. The device should, by default, operate in configuration mode, indicated by the status LED flashing as follows.</string>
+  <string name="add_wizard_step_3_message_2" translatable="false">If the device isn\'t in configuration mode after powering on, press and hold the CONFIG button for at least 5 seconds.</string>
+  <string name="add_wizard_wrong_qr_code" translatable="false">Wrong QR-code</string>
+  <string name="add_wizard_network_scan" translatable="false">Network scanning</string>
+  <string name="select" translatable="false">Select</string>
+  <string name="add_wizard_network_scan_limit_warning" translatable="false">Due to Wi-Fi scanning limitations imposed by the Android system, a subsequent scan was not possible. The list contains networks found during the previous scan.</string>
+  <string name="add_wizard_network_scan_in_progress" translatable="false">Scanning…</string>
+  <string name="add_wizard_network_scan_empty" translatable="false">No Wi-Fi networks found. Make sure Wi-Fi is enabled and you\'re within range of a network.</string>
+  <string name="add_wizard_network_manual_connect" translatable="false">I connected to the network manually, continue.</string>
 
   <plurals name="details_timer_info_on" translatable="false">
     <item quantity="other">on</item>

@@ -89,7 +89,7 @@ import org.supla.android.ui.views.tools.Shadow
 import org.supla.android.ui.views.tools.ShadowOrientation
 import org.supla.android.usecases.channel.valueformatter.HumidityValueFormatter
 import org.supla.core.shared.data.model.general.SuplaFunction
-import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.infrastructure.localizedString
 import java.util.Date
 
 interface HistoryDetailProxy : BaseViewProxy<HistoryDetailViewState> {
@@ -409,7 +409,7 @@ private class PreviewProxy : HistoryDetailProxy {
               ChartDataAggregation.MINUTES,
               listOf(set, set.copy(active = false)),
               null,
-              LocalizedString.WithResource(R.string.details_em_reverse_reactive_energy)
+              localizedString(R.string.details_em_reverse_reactive_energy)
             )
           )
         ),

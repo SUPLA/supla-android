@@ -82,7 +82,7 @@
 
   <string name="add_wizard_is_not_available">Add Wizard este disponibil numai atunci când conexiunea la server a fost stabilită pe baza adresei de e-mail introdusă! (Dezactivați opțiunile avansate în configurația contului dvs.)</string>
 
-  <string name="wizard_step1_txt1">Bine ați venit la creatorul pentru adăugarea dispozitivelor care vă va ajuta să adăugați un dispozitiv nou la sistem într-un mod rapid și simplu.</string>
+  <string name="add_wizard_step_1_welcome">Bine ați venit la creatorul pentru adăugarea dispozitivelor care vă va ajuta să adăugați un dispozitiv nou la sistem într-un mod rapid și simplu.</string>
   <string name="wizard_step1_txt3">Pentru a continua, apăsați<b>Mai departe</b>.</string>
   <string name="next">Mai departe</string>
   <string name="start">START</string><![CDATA[>
@@ -93,7 +93,7 @@
 
   <string name="wizard_step3_txt1">Conectați dispozitivul de acționare la alimentare. Dispozitivul trebuie să funcționeze în mod implicit în modul de configurare, semnalizând acest lucru prin pâlpâirea diodei de stare după cum urmează</string>
   <string name="wizard_step3_txt2">Dacă, după pornirea alimentării, dispozitivul nu funcționează în modul de configurare, țineți apăsat butonul<b>CONFIG</b>timp de cel puțin 5 secunde.</string>
-  <string name="wizard_step3_txt3">Apăsați butonul<b>START</b>pentru a începe configurarea.</string>
+  <string name="add_wizard_step_3_message_3">Apăsați butonul<b>START</b>pentru a începe configurarea.</string>
 
   <string name="wizard_no_internetwifi">Înainte de a începe, conectați-vă la Internet printr-o rețea WiFi, careva fi folosită și de dispozitivele de acționare pentru a se conecta la server.</string>
   <string name="wizard_wifi_error">Rețeaua WiFi este dezactivată sau identificatorul sau numele acesteia nu poate fi citit!</string>
@@ -303,7 +303,7 @@
   <string name="wifi_signal_strength">Puterea semnalului WiFi</string>
   <string name="wifi_throttling">Datorită limitelor de scanare a reţelei WiFi impuse de sistemul Android, veţi aştepta timpul afişat mai sus.</string>
   <string name="wizard_step1_txt2">Asiguraţi-vă că datele mobile sunt dezactivate atunci când adăugaţi dispozitive. În caz contrar, adăugarea poate eşua.</string>
-  <string name="wizard_step2_txt1">Introduceţi numele şi parola reţelei WiFi de acasă sau a companiei prin care dispozitivul executiv va putea stabili o conexiune cu serverul.</string>
+  <string name="add_wizard_step_2_message">Introduceţi numele şi parola reţelei WiFi de acasă sau a companiei prin care dispozitivul executiv va putea stabili o conexiune cu serverul.</string>
   <string name="yes">Da</string>
   <string name="z_wave">Podul   Z-Wave</string>
   <string name="zwave_add_device">Adăugaţi un dispozitiv</string>

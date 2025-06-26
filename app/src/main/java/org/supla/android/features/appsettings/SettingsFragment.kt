@@ -23,7 +23,7 @@ import android.os.Bundle
 import android.provider.Settings
 import android.view.View
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -38,7 +38,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class SettingsFragment : BaseFragment<SettingsViewState, SettingsViewEvent>(R.layout.fragment_settings) {
 
-  override val viewModel: SettingsViewModel by activityViewModels()
+  override val viewModel: SettingsViewModel by viewModels()
   private val binding by viewBinding(FragmentSettingsBinding::bind)
 
   @Inject

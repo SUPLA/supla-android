@@ -29,6 +29,10 @@ public class Trace {
     if (loggingLevel() >= ERRORS_WARNINGS_INFO) Log.i(tag, msg);
   }
 
+  public static void i(String tag, String msg, Throwable throwable) {
+    if (loggingLevel() >= ERRORS_WARNINGS_INFO) Log.i(tag, msg, throwable);
+  }
+
   public static void d(String tag, String msg) {
     if (loggingLevel() >= ERRORS_WARNINGS_INFO_DEBUG) Log.d(tag, msg);
   }

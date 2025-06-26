@@ -22,3 +22,10 @@ import java.util.Locale
 fun String.ucFirst(locale: Locale = Locale.getDefault()) = replaceFirstChar {
   if (it.isLowerCase()) it.titlecase(locale) else it.toString()
 }
+
+fun String.skipQuotation() =
+  if (startsWith("\"") && endsWith("\"")) {
+    substring(1, length - 1)
+  } else {
+    this
+  }

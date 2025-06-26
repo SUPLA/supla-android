@@ -64,4 +64,8 @@ interface SuplaClientApi {
   fun setLocationCaption(remoteId: Int, caption: String): Boolean
 
   fun setSceneCaption(remoteId: Int, caption: String): Boolean
+
+  fun getRegistrationEnabled()
+
+  fun setRegistrationEnabled(ioDeviceRegTimeSec: Int, clientRegTimeSec: Int): Boolean
 }

@@ -35,6 +35,7 @@ import org.supla.android.usecases.captionchange.CaptionChangeUseCase
 import org.supla.android.usecases.client.AuthorizeUseCase
 import org.supla.android.usecases.client.LoginUseCase
 import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.infrastructure.localizedString
 import javax.inject.Inject
 
 @HiltViewModel
@@ -134,7 +135,7 @@ class CaptionChangeViewModel @Inject constructor(
       it.copy(
         viewState = it.viewState?.copy(
           loading = false,
-          error = LocalizedString.WithResource(R.string.caption_change_failed)
+          error = localizedString(R.string.caption_change_failed)
         )
       )
     }
@@ -155,8 +156,8 @@ data class CaptionChangeViewModelState(
 
 private val CaptionChangeUseCase.Type.label: LocalizedString
   get() = when (this) {
-    CaptionChangeUseCase.Type.CHANNEL -> LocalizedString.WithResource(R.string.channel_name)
-    CaptionChangeUseCase.Type.LOCATION -> LocalizedString.WithResource(R.string.location_name)
-    CaptionChangeUseCase.Type.GROUP -> LocalizedString.WithResource(R.string.group_name)
-    CaptionChangeUseCase.Type.SCENE -> LocalizedString.WithResource(R.string.scene_name)
+    CaptionChangeUseCase.Type.CHANNEL -> localizedString(R.string.channel_name)
+    CaptionChangeUseCase.Type.LOCATION -> localizedString(R.string.location_name)
+    CaptionChangeUseCase.Type.GROUP -> localizedString(R.string.group_name)
+    CaptionChangeUseCase.Type.SCENE -> localizedString(R.string.scene_name)
   }

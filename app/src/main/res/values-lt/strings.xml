@@ -69,14 +69,14 @@
   <string name="rate_no_thanks">Ne, ačiū</string>
   <string name="roller_shutter_calibrating">Kalibravimas…</string>
   <string name="add_wizard_is_not_available">Pridėjimo vedlys prieinamas tik tada, kai pagal įvestą el. pašto adresą užmegztas ryšys su serveriu! (Savo paskyros konfigūracijoje išjunkite išplėstines parinktis)</string>
-  <string name="wizard_step1_txt1">Sveiki atvykę į įrenginių pridėjimo vedlį, kuris padės Jums lengvai ir greitai pridėti naujus įrenginius prie sistemos.</string>
+  <string name="add_wizard_step_1_welcome">Sveiki atvykę į įrenginių pridėjimo vedlį, kuris padės Jums lengvai ir greitai pridėti naujus įrenginius prie sistemos.</string>
   <string name="wizard_step1_txt3">Norėdami tęsti, paspauskite <b>Toliau</b>.</string>
   <string name="next">Toliau</string>
   <string name="start">STARTAS</string>
   <string name="wizard_remember_passwd">Išsaugoti slaptažodį</string>
   <string name="wizard_step3_txt1">Savo vykdomąjį įrenginį prijunkite prie maitinimo šaltinio. Įrenginys standartiškai turi veikti konfigūracijos režime, signalizuojant tai statuso diodo mirksėjimu šiuo būdu</string>
   <string name="wizard_step3_txt2">minimum 5 sekund. Jei įrenginys įjungus maitinimą neveikia konfigūracijos režimu, palaikykite paspaustą mygtuką <b>CONFIG</b> bent 5 sekundes.</string>
-  <string name="wizard_step3_txt3">Paspauskite mygtuką <b>START</b>, kad pradėti konfigūravimą.</string>
+  <string name="add_wizard_step_3_message_3">Paspauskite mygtuką <b>START</b>, kad pradėti konfigūravimą.</string>
   <string name="wizard_no_internetwifi">Prieš pradedami prisijunkite prie interneto WiFi tinklo pagalba, kurį taip pat naudos vykdomasis įrenginys prisijungimui prie serverio.</string>
   <string name="wizard_wifi_error">WiFi tinklas yra išjungtas arba negalima atpažinti jo identifikatoriaus arba pavadinimo!</string>
   <string name="wizard_location_error">Kad pridėjimo vedlys veiktų tinkamai, šiame įrenginyje turi būti įjungta Vietos paslauga. Eikite į sistemos nustatymus, tada pasirinkite „Vieta“ ir įsitikinkite, kad įjungta.</string>
@@ -196,7 +196,7 @@
   <string name="channel_func_valve_percentage">Valve</string>
 
   <string name="channel_caption_heatmeter">Šilumos skaitiklis</string>
-  <string name="wizard_step2_txt1">Įveskite savo namų ar įmonės WiFi tinklo, kurio pagalba vykdomasis įrenginys galės prisijungti prie serverio, pavadinimą ir slaptažodį.</string>
+  <string name="add_wizard_step_2_message">Įveskite savo namų ar įmonės WiFi tinklo, kurio pagalba vykdomasis įrenginys galės prisijungti prie serverio, pavadinimą ir slaptažodį.</string>
   <string name="aritmetic_balance_days">Asimetrinis balansas – Dienos</string>
   <string name="aritmetic_balance_hours">Asimetrinis balansas – Valandos</string>
   <string name="aritmetic_balance_minutes">Asimetrinis balansas – Minutės</string>

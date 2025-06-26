@@ -61,7 +61,7 @@ class EspHtmlParser @Inject constructor() {
 
       if (name.trim().isEmpty()) {
         Trace.w(TAG, "Skipping select with empty name: `${element.html()}`")
-      } else if (option != null && option.hasAttr("selected")) {
+      } else if (option.hasAttr("selected")) {
         map[name] = option.`val`()
       }
     }

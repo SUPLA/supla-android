@@ -29,11 +29,13 @@ import org.supla.android.core.ui.BaseFragment
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.databinding.FragmentComposeBinding
 import org.supla.android.navigator.MainNavigator
+import org.supla.android.navigator.NavigationSubcontroller
+import org.supla.android.ui.ToolbarVisibilityController
 import org.supla.android.ui.dialogs.AuthorizationDialog
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class StatusFragment : BaseFragment<StatusViewModelState, StatusViewEvent>(R.layout.fragment_compose) {
+class StatusFragment : BaseFragment<StatusViewModelState, StatusViewEvent>(R.layout.fragment_compose), NavigationSubcontroller {
   override val viewModel: StatusViewModel by viewModels()
   private val binding by viewBinding(FragmentComposeBinding::bind)
 
@@ -68,7 +70,8 @@ class StatusFragment : BaseFragment<StatusViewModelState, StatusViewEvent>(R.lay
     }
   }
 
-  override fun getToolbarVisible(): Boolean = false
+  override fun getToolbarVisibility(): ToolbarVisibilityController.ToolbarVisibility =
+    ToolbarVisibilityController.ToolbarVisibility(false)
 
   override fun handleEvents(event: StatusViewEvent) {
     when (event) {
@@ -79,4 +82,6 @@ class StatusFragment : BaseFragment<StatusViewModelState, StatusViewEvent>(R.lay
 
   override fun handleViewState(state: StatusViewModelState) {
   }
+
+  override fun screenTakeoverAllowed(): Boolean = false
 }

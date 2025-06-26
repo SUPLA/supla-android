@@ -22,12 +22,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -48,14 +43,13 @@ import androidx.compose.ui.platform.LocalAutofillTree
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
 import org.supla.android.core.ui.StringProvider
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
+import org.supla.android.ui.views.PasswordTextField
 import org.supla.android.ui.views.Separator
 import org.supla.android.ui.views.SeparatorStyle
 import org.supla.android.ui.views.TextField
@@ -104,7 +98,11 @@ fun AuthorizationDialogScope.AuthorizationDialog(
       isError = state.error != null,
       enabled = state.processing.not(),
       onVisibilityChange = { passwordVisible = !passwordVisible },
-      onValueChange = { password = it }
+      label = { Text(text = stringResource(id = R.string.password)) },
+      onValueChange = { password = it },
+      modifier = Modifier
+        .fillMaxWidth()
+        .padding(start = Distance.default, top = Distance.default, end = Distance.default)
     )
     ErrorText(text = state.error?.let { it(LocalContext.current) } ?: "")
 
@@ -182,58 +180,6 @@ private fun UserNameTextField(
     enabled = enabled,
     singleLine = true,
     onValueChange = { onStateChange(state.copy(userName = it)) }
-  )
-}
-
-@OptIn(ExperimentalComposeUiApi::class)
-@Composable
-private fun PasswordTextField(
-  password: String,
-  passwordVisible: Boolean,
-  isError: Boolean,
-  enabled: Boolean,
-  onVisibilityChange: () -> Unit,
-  onValueChange: (String) -> Unit = { }
-) {
-  val emailAutofill = AutofillNode(
-    autofillTypes = listOf(AutofillType.Password),
-    onFill = { onValueChange(it) }
-  )
-  val autofill = LocalAutofill.current
-
-  LocalAutofillTree.current += emailAutofill
-  TextField(
-    value = password,
-    modifier = Modifier
-      .fillMaxWidth()
-      .padding(start = Distance.default, top = Distance.default, end = Distance.default)
-      .onGloballyPositioned {
-        emailAutofill.boundingBox = it.boundsInWindow()
-      }
-      .onFocusChanged {
-        autofill?.run {
-          if (it.isFocused) {
-            requestAutofillForNode(emailAutofill)
-          } else {
-            cancelAutofillForNode(emailAutofill)
-          }
-        }
-      },
-    visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-    label = { Text(text = stringResource(id = R.string.password)) },
-    keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Password),
-    singleLine = true,
-    onValueChange = onValueChange,
-    isError = isError,
-    enabled = enabled,
-    trailingIcon = {
-      IconButton(onClick = onVisibilityChange) {
-        Icon(
-          imageVector = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
-          contentDescription = null
-        )
-      }
-    }
   )
 }
 

@@ -70,14 +70,14 @@
   <string name="rate_no_thanks">Ne, děkuji</string>
   <string name="roller_shutter_calibrating">Kalibrace…</string>
   <string name="add_wizard_is_not_available">Průvodce přidáním je dostupný pouze v případě, že bylo navázáno připojení k serveru na základě zadané e-mailové adresy! (vypněte možnost pokročilé konfigurace účtu)</string>
-  <string name="wizard_step1_txt1">Vítejte v Průvodci přidáním zařízení, který vám pomůže rychle a snadno přidat nové zařízení do vašeho systému.</string>
+  <string name="add_wizard_step_1_welcome">Vítejte v Průvodci přidáním zařízení, který vám pomůže rychle a snadno přidat nové zařízení do vašeho systému.</string>
   <string name="wizard_step1_txt3">Chcete-li pokračovat, stiskněte tlačítko <b>Další</b>.</string>
   <string name="next">Dále</string>
   <string name="start">START</string>
   <string name="wizard_remember_passwd">Zapamatujte si heslo</string>
   <string name="wizard_step3_txt1">Připojte výkonné zařízení k napájení. Přístroj by měl ve výchozím nastavení fungovat v konfiguračním režimu a signalizovat tak, že bliká stavová LED dioda následujícím způsobem</string>
   <string name="wizard_step3_txt2">Pokud zařízení nepracuje v konfiguračním režimu po zapnutí, držte stisknuté tlačítko <b>CONFIG</b> minimálně po dobu 5 sekund.</string>
-  <string name="wizard_step3_txt3">Stisknutím tlačítka <b>START</b> spustíte konfiguraci.</string>
+  <string name="add_wizard_step_3_message_3">Stisknutím tlačítka <b>START</b> spustíte konfiguraci.</string>
   <string name="wizard_no_internetwifi">Než začnete, připojte se k síti Internet pomocí WiFi, které budou také využívány výkonávajícími zařízeními pro připojení k serveru</string>
   <string name="wizard_wifi_error">Síť WiFi je vypnuta nebo její ID nebo jméno nelze přečíst!</string>
   <string name="wizard_location_error">Aby průvodce přidáním fungoval správně, musí být v tomto zařízení povolena služba určování polohy. Přejděte do nastavení systému, vyberte možnost "Umístění" a zkontrolujte, zda je povolena.</string>
@@ -204,7 +204,7 @@
 
   <string name="channel_caption_heatmeter">Měřič tepla</string>
   <string name="event_openedclosedthevalve">Otevírání/zavírání ventilu</string>
-  <string name="wizard_step2_txt1">Zadejte název a heslo Vaší domácí nebo firemní WiFi sítě, prostřednictvím kterého bude možné dané zařízení připojit k serveru.</string>
+  <string name="add_wizard_step_2_message">Zadejte název a heslo Vaší domácí nebo firemní WiFi sítě, prostřednictvím kterého bude možné dané zařízení připojit k serveru.</string>
   <string name="aritmetic_balance_days">Aritmetická zová rovnováha - Dny</string>
   <string name="aritmetic_balance_hours">Aritmetická rovnováha - Hodiny</string>
   <string name="aritmetic_balance_minutes">Fázová rovnováha - Minuty</string>
