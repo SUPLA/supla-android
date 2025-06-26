@@ -98,7 +98,7 @@
   <string name="add_wizard_is_not_available">Майстер додавання доступний лише тоді, коли встановлено з’єднання з сервером на основі введеної електронної адреси! (Вимкніть додаткові параметри в налаштуваннях облікового запису)</string>
   <string name="next">Далі</string>
   <string name="wizard_step3_txt1">Підключіть пристрій до джерела живлення. За замовчуванням пристрій має працювати в режимі конфігурації, сигналізуючи про це блиманням світлодіода стану наступним чином</string>
-  <string name="wizard_step3_txt3">Натисніть кнопку <b>СТАРТ</b>, щоб почати налаштування.</string>
+  <string name="add_wizard_step_3_message_3">Натисніть кнопку <b>СТАРТ</b>, щоб почати налаштування.</string>
   <string name="wizard_step1_txt3">Натисніть <b>Далі</b>, щоб продовжити.</string>
   <string name="wizard_step3_txt2">Якщо пристрій не перебуває в режимі налаштування після ввімкнення живлення, утримуйте кнопку <b>CONFIG</b> принаймні 5 секунд.</string>
   <string name="wizard_no_internetwifi">Перш ніж почати, підключіться до Інтернету через Wi-Fi, який також використовуватиметься виконуючими пристроями для підключення до сервера.</string>
@@ -280,7 +280,7 @@
   <string name="lightsource_warning">Термін служби джерела світла %1$s</string>
   <string name="uv_warning1">Термін служби УФ-випромінювача %1$s. Заплануйте його заміну.</string>
   <string name="uv_warning2">Термін служби УФ-випромінювача %1$s. Замінити випромінювач.</string>
-  <string name="wizard_step2_txt1">Введіть ім\'я та пароль вашої домашньої або корпоративної WiFi мережі, через яку виконавчий пристрій зможе встановити з\'єднання з сервером.</string>
+  <string name="add_wizard_step_2_message">Введіть ім\'я та пароль вашої домашньої або корпоративної WiFi мережі, через яку виконавчий пристрій зможе встановити з\'єднання з сервером.</string>
   <string name="enabling_registration_timeout">Час реєстрації минув!</string>
   <string name="wifi_throttling">Через обмеження сканування мереж Wi-Fi, встановлені системою Android, будь ласка, зачекайте вказаний вище час.</string>
   <string name="enter_suplaorg_credentails">Введіть дані для входу в Supla Cloud.</string>
@@ -368,7 +368,7 @@
   <string name="cfg_profile_active_indicator">активний</string>
   <string name="menubar_appsettings">Налаштування додатків</string>
   <string name="about_app">This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.\n\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place – Suite 330, Boston, MA  02111–1307, USA</string>
-  <string name="wizard_step1_txt1">Вітаємо у майстрі додавання пристроїв, який допоможе Вам швидко та легко додати новий пристрій до системи.</string>
+  <string name="add_wizard_step_1_welcome">Вітаємо у майстрі додавання пристроїв, який допоможе Вам швидко та легко додати новий пристрій до системи.</string>
   <string name="start">СТАРТ</string>
   <string name="wizard_remember_passwd">Запам’ятати пароль</string>
   <string name="wizard_iodevice_notfound">Пристроїв не знайдено! Переконайтеся, що пристрій, який Ви хочете налаштувати, знаходиться в режимі налаштування, а потім повторіть спробу. ВАЖЛИВО - Деякі версії Android вимагають увімкнення GPS для того, щоб програми могли шукати мережі Wi-Fi, тому переконайтеся, що GPS також увімкнено.</string>

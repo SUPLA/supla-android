@@ -15,7 +15,7 @@
         android:layout_marginTop="44dp"
         android:layout_marginRight="20dp"
         android:gravity="center_horizontal"
-        android:text="@string/wizard_step1_txt1"
+        android:text="@string/add_wizard_step_1_welcome"
         android:textColor="@android:color/white"
         android:textSize="30sp"
         android:fontFamily="@font/quicksand_regular" />

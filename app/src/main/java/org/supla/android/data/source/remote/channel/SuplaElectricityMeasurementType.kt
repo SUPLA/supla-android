@@ -22,6 +22,7 @@ import org.supla.android.R
 import org.supla.android.lib.SuplaChannelElectricityMeterValue
 import org.supla.android.ui.views.spinner.SpinnerItem
 import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.infrastructure.localizedString
 
 enum class SuplaElectricityMeasurementType(val rawValue: Int, val ordering: Int, @StringRes val labelRes: Int) : SpinnerItem {
   FREQUENCY(0x1, 1, R.string.details_em_frequency),
@@ -48,7 +49,7 @@ enum class SuplaElectricityMeasurementType(val rawValue: Int, val ordering: Int,
   POWER_APPARENT_KVA(0x400000, 7, R.string.details_em_power_apparent);
 
   override val label: LocalizedString
-    get() = LocalizedString.WithResource(labelRes)
+    get() = localizedString(labelRes)
 
   val phaseType: Boolean
     get() = when (this) {

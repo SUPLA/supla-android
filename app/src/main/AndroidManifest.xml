@@ -54,6 +54,9 @@
     <meta-data
       android:name="androidx.car.app.minCarApiLevel"
       android:value="1" />
+    <meta-data
+      android:name="com.google.mlkit.vision.DEPENDENCIES"
+      android:value="barcode_ui"/>
 
     <receiver
       android:name=".widget.onoff.OnOffWidget"

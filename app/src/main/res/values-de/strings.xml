@@ -91,7 +91,7 @@
   <string name="wizard_done">Die Konfiguration wurde erfolgreich abgeschlossen :)</string>
   <string name="wizard_result_failed">Die Konfiguration war nicht erfolgreich!</string>
   <string name="wizard_iodev_laststate">Vorheriger Status</string>
-  <string name="wizard_step3_txt3">Drücken Sie die Taste <b>START</b>, um die Konfiguration zu beginnen.</string>
+  <string name="add_wizard_step_3_message_3">Drücken Sie die Taste <b>START</b>, um die Konfiguration zu beginnen.</string>
   <string name="wizard_iodev_name">Name</string>
   <string name="next">Weiter</string>
   <string name="wizard_addnetwork_error">Die Konfiguration des WiFi-Netzwerkes kann nicht hinzugefügt werden!</string>
@@ -110,7 +110,7 @@
   <string name="turn_on">Einschalten</string>
   <string name="turn_off">Ausschalten</string>
   <string name="wizard_result_compat_error">Das Gerät, mit dem die Verbindung hergestellt wurde, ist mit diesem Assistenten nicht kompatibel!</string>
-  <string name="wizard_step1_txt1">Willkommen bei dem Assistenten zum Hinzufügen der Geräte! Er hilft Ihnen, ein neues Gerät an das System hinzuzufügen.</string>
+  <string name="add_wizard_step_1_welcome">Willkommen bei dem Assistenten zum Hinzufügen der Geräte! Er hilft Ihnen, ein neues Gerät an das System hinzuzufügen.</string>
   <string name="device_reg_request_timeout">Für die Information von der Verfügbarkeit der Geräteregistrierung wurde das Zeitlimit überschritten!</string>
   <string name="wizard_no_internetwifi">Bevor Sie beginnen, stellen Sie eine Verbindung zum Internet über ein WiFi-Netzwerk her, das auch vom Ausführungsgerät verwendet wird, um eine Verbindung zum Server herzustellen.</string>
   <string name="wizard_not_enought_permissions">Die Anwendung verfügt nicht über ausreichende Berechtigungen. Gehen Sie zur Anwendungsverwaltung in Systemeinstellungen über. Suchen Sie dann die %1$s -Anwendung und aktivieren Sie alle Berechtigungen, die sie erfordert.</string>
@@ -308,7 +308,7 @@
   <string name="wifi_signal_strength">WLAN-Signalstärke</string>
   <string name="wifi_throttling">Warten Sie aufgrund der vom Android-System festgelegten Grenzen für das Scannen von WLAN-Netzwerken die oben angegebene Zeit ab.</string>
   <string name="wizard_step1_txt2">Stellen Sie sicher, dass mobile Daten beim Hinzufügen von Geräten deaktiviert sind. Andernfalls kann das Hinzufügen fehlschlagen.</string>
-  <string name="wizard_step2_txt1">Geben Sie den Namen und das Kennwort Ihres Heim- oder Firmen-WLAN-Netzwerks ein, über das der Aktor eine Verbindung zum Server herstellen kann.</string>
+  <string name="add_wizard_step_2_message">Geben Sie den Namen und das Kennwort Ihres Heim- oder Firmen-WLAN-Netzwerks ein, über das der Aktor eine Verbindung zum Server herstellen kann.</string>
   <string name="zwave_add_device">Gerät hinzufügen</string>
   <string name="zwave_before_search_message">Stellen Sie sicher, dass alle Ihre Z-Wave-Geräte online sind, bevor Sie fortfahren. Durch Drücken von \"Weiter\" wird Ihr Z-Wave-Netzwerk gescannt, was einige Sekunden bis einige Minuten dauern kann.</string>
   <string name="zwave_before_search_title">Es dauert eine Weile</string>
@@ -771,4 +771,16 @@
   <string name="widget_not_supported">Der ausgewählte Kanal wird nicht unterstützt.</string>
   <string name="widget_update_time_long">Aktualisierung: %1$s</string>
   <string name="widget_no_value">Kein Wert verfügbar</string>
+  <string name="add_wizard_step_1_qr_info">Wenn Sie einen QR-Code haben, verwenden Sie den Scanner. Für Geräte ohne QR-Code drücken Sie <b>Weiter</b>, um fortzufahren.</string>
+  <string name="add_wizard_network_name">Netzwerkname</string>
+  <string name="add_wizard_step_2_search_network">Netzwerk suchen</string>
+  <string name="add_wizard_step_3_message_1">Schließen Sie Ihr Gerät an die Stromversorgung an. Das Gerät sollte standardmäßig im Konfigurationsmodus arbeiten, was durch das Blinken der Status-LED wie folgt signalisiert wird.</string>
+  <string name="add_wizard_step_3_message_2">Wenn das Gerät nach dem Einschalten nicht im Konfigurationsmodus arbeitet, halten Sie die Taste CONFIG für mindestens 5 Sekunden gedrückt.</string>
+  <string name="add_wizard_wrong_qr_code">Ungültiger QR-Code</string>
+  <string name="add_wizard_network_scan">Netzwerk-Scan</string>
+  <string name="select">Auswählen</string>
+  <string name="add_wizard_network_scan_limit_warning">Aufgrund der vom Android-System auferlegten WLAN-Scan-Beschränkungen war ein weiteres Scannen nicht möglich. Die Liste enthält Netzwerke, die beim vorherigen Scan gefunden wurden.</string>
+  <string name="add_wizard_network_scan_in_progress">Scannen…</string>
+  <string name="add_wizard_network_scan_empty">Keine WLAN-Netzwerke gefunden. Stellen Sie sicher, dass WLAN aktiviert ist und Sie sich in Reichweite eines Netzwerks befinden.</string>
+  <string name="add_wizard_network_manual_connect">Ich habe mich manuell mit dem Netzwerk verbunden, fahre fort.</string>
 </resources>

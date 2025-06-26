@@ -24,6 +24,7 @@ import org.supla.android.tools.UsedFromNativeCode
 import org.supla.core.shared.extensions.ifTrue
 import org.supla.core.shared.extensions.toHex
 import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.infrastructure.localizedString
 import java.io.Serializable
 import java.util.Locale
 
@@ -64,7 +65,7 @@ data class SuplaChannelState(
     get() = hasField(FIELD_BATTERYPOWERED).ifTrue { rawBatteryPowered > 0 }
 
   val batterPoweredString: LocalizedString?
-    get() = batteryPowered?.let { LocalizedString.WithResource(if (it) R.string.yes else R.string.no) }
+    get() = batteryPowered?.let { localizedString(if (it) R.string.yes else R.string.no) }
 
   val wifiRssi: Int?
     get() = hasField(FIELD_WIFIRSSI).ifTrue { rawWifiRssi.toInt() }
@@ -116,7 +117,7 @@ data class SuplaChannelState(
         R.string.lastconnectionresetcause_wifi_connection_lost,
         R.string.lastconnectionresetcause_server_connection_lost
       )
-      causeResources.getOrNull(cause)?.let { LocalizedString.WithResource(it) } ?: LocalizedString.Constant("$cause")
+      causeResources.getOrNull(cause)?.let { localizedString(it) } ?: LocalizedString.Constant("$cause")
     }
 
   val switchCycleCountString: String?
@@ -185,7 +186,7 @@ data class SuplaChannelState(
 
   private fun hasField(field: Int): Boolean = (fields and field) > 0
 
-  private fun getUptimeString(time: Int): LocalizedString = LocalizedString.WithResourceIntIntIntInt(
+  private fun getUptimeString(time: Int): LocalizedString = localizedString(
     id = R.string.channel_state_uptime,
     arg1 = time / 86400,
     arg2 = time % 86400 / 3600,

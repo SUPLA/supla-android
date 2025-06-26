@@ -83,7 +83,7 @@
 
   <string name="add_wizard_is_not_available">Čarovnik za dodajanje je na voljo le, če je na podlagi vnesenega e-poštnega naslova vzpostavljena povezava s strežnikom! (Onemogočite napredne možnosti v konfiguraciji računa)</string>
 
-  <string name="wizard_step1_txt1">Dobrodošli v čarovniku za dodajanje naprav, ki vam bo pomagal hitro in enostavno dodati novo napravo v sistem.</string>
+  <string name="add_wizard_step_1_welcome">Dobrodošli v čarovniku za dodajanje naprav, ki vam bo pomagal hitro in enostavno dodati novo napravo v sistem.</string>
   <string name="wizard_step1_txt3">Če želite nadaljevati, pritisnite <b> Naprej </b>.</string>
   <string name="next">Naprej</string>
   <string name="start">START</string><![CDATA[>
@@ -94,7 +94,7 @@
 
   <string name="wizard_step3_txt1">Priključite svojo izvršno napravo na napajanje. Naprava naj bi privzeto delovala v konfiguracijskem načinu in to signalizirala z utripanjem LED diode na naslednji način</string>
   <string name="wizard_step3_txt2">Če naprava po vklopu napajanja ne deluje v konfiguracijskem načinu, držite gumb <b> CONFIG </b> najmanj 5 sekund.</string>
-  <string name="wizard_step3_txt3">Pritisnite tipko <b> START </b> da začnete konfiguracijo.</string>
+  <string name="add_wizard_step_3_message_3">Pritisnite tipko <b> START </b> da začnete konfiguracijo.</string>
 
   <string name="wizard_no_internetwifi">Preden začnete, se povežite z internetom prek omrežja WiFi, ki ga bodo tudi izvršne naprave uporabile za povezavo s strežnikom.</string>
   <string name="wizard_wifi_error">Omrežje WiFi je izklopljeno ali njegovega identifikatorja ali imena ni mogoče prebrati!</string>
@@ -218,7 +218,7 @@
   <string name="channel_func_valve_percentage">Valve</string>
 
   <string name="channel_caption_heatmeter">Merilnik toplote</string>
-  <string name="wizard_step2_txt1">Vnesite ime in geslo domačega ali službenega omrežja WiFi, prek katerega bo izvrševalna naprava lahko vzpostavila povezavo s strežnikom.</string>
+  <string name="add_wizard_step_2_message">Vnesite ime in geslo domačega ali službenega omrežja WiFi, prek katerega bo izvrševalna naprava lahko vzpostavila povezavo s strežnikom.</string>
   <string name="aritmetic_balance_days">Aritmetično ravnotežje - Dnevi</string>
   <string name="aritmetic_balance_hours">Aritmetično ravnotežje - Ure</string>
   <string name="aritmetic_balance_minutes">Aritmetično ravnotežje - Minute</string>

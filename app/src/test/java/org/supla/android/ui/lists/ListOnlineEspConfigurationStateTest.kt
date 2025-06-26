@@ -46,7 +46,7 @@ private val TESTING_TABLE: List<TestEntry> = listOf(
   TestEntry(ListOnlineState.UNKNOWN, null, ListOnlineState.OFFLINE),
 )
 
-class ListOnlineStateTest {
+class ListOnlineEspConfigurationStateTest {
   @Test
   fun `verify merge is working correctly`() {
     TESTING_TABLE.forEach { testingEntry ->

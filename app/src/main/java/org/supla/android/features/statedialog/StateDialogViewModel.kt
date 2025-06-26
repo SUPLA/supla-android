@@ -44,6 +44,7 @@ import org.supla.android.usecases.client.AuthorizeUseCase
 import org.supla.android.usecases.client.LoginUseCase
 import org.supla.core.shared.extensions.ifTrue
 import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.infrastructure.localizedString
 import org.supla.core.shared.usecase.GetCaptionUseCase
 import org.supla.core.shared.usecase.channel.GetChannelDefaultCaptionUseCase
 import java.util.concurrent.TimeUnit
@@ -193,7 +194,7 @@ class StateDialogViewModel @Inject constructor(
         viewState = StateDialogViewState(
           title = channels[0].caption,
           online = channels[0].online,
-          subtitle = (channels.size > 1).ifTrue { LocalizedString.WithResourceIntInt(R.string.state_dialog_index, 1, channels.size) },
+          subtitle = (channels.size > 1).ifTrue { localizedString(R.string.state_dialog_index, 1, channels.size) },
           loading = channels[0].online && channels[0].infoSupported,
           showArrows = channels.size > 1,
           showChangeLifespanButton = channels[0].showLifespanSettingsButton,
@@ -234,7 +235,7 @@ class StateDialogViewModel @Inject constructor(
       state.copy(
         viewState = state.viewState?.copy(
           title = currentChannel?.caption ?: LocalizedString.Empty,
-          subtitle = LocalizedString.WithResourceIntInt(R.string.state_dialog_index, idxToDisplay, count),
+          subtitle = localizedString(R.string.state_dialog_index, idxToDisplay, count),
           loading = loading,
           online = currentChannel?.online ?: false,
           function = currentChannel?.function,

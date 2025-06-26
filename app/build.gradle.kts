@@ -179,6 +179,7 @@ dependencies {
   implementation(libs.coil)
   implementation(libs.guava)
   implementation(libs.reorderable)
+  implementation(libs.google.barcode.scanner)
 
   coreLibraryDesugaring(libs.android.tools.desugar)
 

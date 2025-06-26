@@ -71,7 +71,7 @@ abstract class BaseFragment<S : ViewState, E : ViewEvent>(@LayoutRes contentLayo
     lifecycleScope.launchWhenStarted { viewModel.getViewState().collect { state -> handleViewState(state) } }
 
     viewModel.onViewCreated()
-    (activity as? ToolbarVisibilityController)?.setToolbarVisible(getToolbarVisible())
+    (activity as? ToolbarVisibilityController)?.setToolbarVisible(getToolbarVisibility())
   }
 
   @CallSuper
@@ -129,7 +129,8 @@ abstract class BaseFragment<S : ViewState, E : ViewEvent>(@LayoutRes contentLayo
     (activity as? ToolbarItemsController)?.setToolbarItemVisible(itemId, visible)
   }
 
-  protected open fun getToolbarVisible(): Boolean = true
+  protected open fun getToolbarVisibility(): ToolbarVisibilityController.ToolbarVisibility =
+    ToolbarVisibilityController.ToolbarVisibility(true)
 
   protected fun <T : Serializable> requireSerializable(key: String, clazz: Class<T>): T {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {

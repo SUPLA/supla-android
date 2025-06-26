@@ -47,7 +47,7 @@ import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.icon.GetSceneIconUseCase
 import org.supla.android.usecases.profile.ReadAllProfilesUseCase
 import org.supla.core.shared.data.model.general.SuplaFunction
-import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.infrastructure.localizedString
 import org.supla.core.shared.usecase.GetCaptionUseCase
 import javax.inject.Inject
 
@@ -215,7 +215,7 @@ class ExtendedValueWidgetConfigurationViewModel @Inject constructor(
         },
         onError = {
           updateState {
-            it.copy(viewState = it.viewState.copy(error = LocalizedString.WithResource(R.string.widget_configure_error)))
+            it.copy(viewState = it.viewState.copy(error = localizedString(R.string.widget_configure_error)))
           }
         }
       )

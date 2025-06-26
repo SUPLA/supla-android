@@ -523,10 +523,10 @@ class MainActivity :
     toolbar.menu.findItem(itemId).isVisible = visible
   }
 
-  override fun setToolbarVisible(visible: Boolean) {
-    appBarLayout.visibleIf(visible)
-    appBarLayoutSpacer.visibleIf(visible)
-    setStatusBarColor(if (visible) R.color.primary_container else R.color.background, visible.not())
+  override fun setToolbarVisible(visibility: ToolbarVisibilityController.ToolbarVisibility) {
+    appBarLayout.visibleIf(visibility.visible)
+    appBarLayoutSpacer.visibleIf(visibility.visible)
+    setStatusBarColor(visibility.toolbarColorRes, visibility.navigationBarColorRes, visibility.isLight)
   }
 
   private fun handleSplashScreen() {

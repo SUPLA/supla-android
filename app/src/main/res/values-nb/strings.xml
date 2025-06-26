@@ -83,7 +83,7 @@
 
   <string name="add_wizard_is_not_available">Veiviseren legg er kun tilgjengelig når tilkobling til serveren er etablert basert på e-postadressen som er angitt! (Deaktiver avanserte innstillinger i kontokonfigurasjonen din).</string>
 
-  <string name="wizard_step1_txt1">Velkommen til assistenten for å legge til enheter som vil hjelpe deg å legge til enheter til systemet på en enkel og rask måte.</string>
+  <string name="add_wizard_step_1_welcome">Velkommen til assistenten for å legge til enheter som vil hjelpe deg å legge til enheter til systemet på en enkel og rask måte.</string>
   <string name="wizard_step1_txt3">For å fortsette trykk på <b>Videre</b>.</string>
   <string name="next">Videre</string>
   <string name="start">START</string><![CDATA[>
@@ -94,7 +94,7 @@
 
   <string name="wizard_step3_txt1">Sett din aktuator til lading. Enheten bør jobbe i standard konfigurasjonsmodus, og signalisere det ved en LED-diode blinkende på denne måten</string>
   <string name="wizard_step3_txt2">Hvis enheten etter å ha blitt satt til lading ikke jobber i konfigurasjonsmodus hold inne knappen <b>CONFIG</b> i 5 sekunder.</string>
-  <string name="wizard_step3_txt3">Trykk på knappen <b>START</b> for å starte konfigurasjonen.</string>
+  <string name="add_wizard_step_3_message_3">Trykk på knappen <b>START</b> for å starte konfigurasjonen.</string>
 
   <string name="wizard_no_internetwifi">Før du begynner må du koble til Internett via trådløs nettverk. Det trådløse nettverket blir også brukt av enheter for tilkobling til serveren.</string>
   <string name="wizard_wifi_error">Trådløs nettverket er skrudd av eller så er det ikke mulig å avlese dens identifikator eller navn!</string>
@@ -218,7 +218,7 @@
   <string name="channel_func_valve_percentage">Valve</string>
 
   <string name="channel_caption_heatmeter">Varmemåler</string>
-  <string name="wizard_step2_txt1">Skriv inn navnet og passordet til hjemme- eller firma WiFi-nettverket, der den utøvende enheten vil kunne opprette en tilkobling til serveren.</string>
+  <string name="add_wizard_step_2_message">Skriv inn navnet og passordet til hjemme- eller firma WiFi-nettverket, der den utøvende enheten vil kunne opprette en tilkobling til serveren.</string>
   <string name="aritmetic_balance_days">Aritmetisk balanse - Dager</string>
   <string name="aritmetic_balance_hours">Aritmetisk balanse - Timer</string>
   <string name="aritmetic_balance_minutes">Aritmetisk balanse - Minutter</string>

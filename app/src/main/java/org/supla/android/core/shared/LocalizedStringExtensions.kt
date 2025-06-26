@@ -26,14 +26,31 @@ operator fun LocalizedString.invoke(context: Context): String {
     is LocalizedString.Constant -> text
     LocalizedString.Empty -> ""
     is LocalizedString.WithId -> context.getString(id.resourceId)
-    is LocalizedString.WithResourceStringInt -> context.getString(id, arg1(context), arg2)
-    is LocalizedString.WithResourceIntStringInt -> context.getString(id, arg1, arg2(context), arg3)
-    is LocalizedString.WithResource -> context.getString(id)
     is LocalizedString.WithIdIntStringInt -> context.getString(id.resourceId, arg1, arg2(context), arg3)
-    is LocalizedString.WithResourceIntInt -> context.getString(id, arg1, arg2)
-    is LocalizedString.WithResourceIntIntIntInt -> context.getString(id, arg1, arg2, arg3, arg4)
-    is LocalizedString.WithResourceAndValue -> "${context.getString(id)} $value"
+    is LocalizedString.WithResourceAndString -> "${context.getString(id)} $value"
+    is LocalizedString.WithResourceAndArguments -> {
+      val parsed = arguments.map { if (it is LocalizedString) it(context) else it }
+      if (arguments.hasAllowedTypes) {
+        when (parsed.size) {
+          0 -> context.getString(id)
+          1 -> context.getString(id, parsed[0])
+          2 -> context.getString(id, parsed[0], parsed[1])
+          3 -> context.getString(id, parsed[0], parsed[1], parsed[2])
+          4 -> context.getString(id, parsed[0], parsed[1], parsed[2], parsed[3])
+          5 -> context.getString(id, parsed[0], parsed[1], parsed[2], parsed[3], parsed[4])
+          6 -> context.getString(id, parsed[0], parsed[1], parsed[2], parsed[3], parsed[4], parsed[5])
+          else -> throw IllegalStateException("To many arguments: ${arguments.size}")
+        }
+      } else {
+        throw IllegalStateException("Arguments contain unsupported type: $arguments")
+      }
+    }
   }
 }
 
 fun LocalizedString.provider(): StringProvider = { context -> invoke(context) }
+
+private val List<Any>.hasAllowedTypes: Boolean
+  get() = fold(true) { acc, item ->
+    acc && (item is Int || item is Long || item is String)
+  }

@@ -18,6 +18,9 @@ package org.supla.android.extensions
  */
 
 import android.content.Context
+import android.content.pm.ApplicationInfo
+import android.content.pm.PackageManager
+import androidx.core.content.ContextCompat
 import dagger.hilt.android.EntryPointAccessors
 import org.supla.android.Preferences
 import org.supla.android.data.ValuesFormatter
@@ -51,3 +54,15 @@ val Context.getChannelDefaultCaptionUseCase: GetChannelDefaultCaptionUseCase
     applicationContext,
     GetChannelDefaultCaptionUseCaseEntryPoint::class.java
   ).provideGetChannelDefaultCaptionUseCase()
+
+val Context.applicationName: String
+  get() {
+    val applicationInfo: ApplicationInfo = applicationInfo
+    val stringId = applicationInfo.labelRes
+    return if (stringId == 0) applicationInfo.nonLocalizedLabel.toString() else getString(stringId)
+  }
+
+fun Context.allGranted(permissions: List<String>): Boolean =
+  permissions.fold(true) { acc, permission ->
+    acc && (ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED)
+  }

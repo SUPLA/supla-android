@@ -42,7 +42,7 @@ open class BaseActivity : AppCompatActivity(), OnSuplaClientMessageListener {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setStatusBarColor(R.color.primary_container, false)
+    setStatusBarColor(R.color.primary_container, R.color.surface, false)
   }
 
   override fun onResume() {

@@ -51,7 +51,7 @@ import org.supla.android.usecases.profile.LoadActiveProfileUrlUseCase
 import org.supla.core.shared.data.model.general.SuplaFunction
 
 @RunWith(MockitoJUnitRunner::class)
-class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListViewEvent, GroupListViewModel>() {
+class GroupListEspConfigurationControllerTest : BaseViewModelTest<GroupListViewState, GroupListViewEvent, GroupListViewModel>() {
 
   @Mock
   private lateinit var channelRepository: ChannelRepository
