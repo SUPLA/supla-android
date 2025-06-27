@@ -17,6 +17,7 @@ package org.supla.android.ui.views
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
@@ -39,6 +40,8 @@ fun PasswordTextField(
   passwordVisible: Boolean = false,
   isError: Boolean = false,
   enabled: Boolean = true,
+  keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+  keyboardActions: KeyboardActions = KeyboardActions.Default,
   onVisibilityChange: () -> Unit,
   label: @Composable (() -> Unit)? = null,
   onValueChange: (String) -> Unit = { }
@@ -49,7 +52,8 @@ fun PasswordTextField(
       .semantics { contentType = ContentType.Password },
     visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
     label = label,
-    keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Password),
+    keyboardOptions = keyboardOptions.copy(keyboardType = KeyboardType.Password),
+    keyboardActions = keyboardActions,
     singleLine = true,
     onValueChange = onValueChange,
     isError = isError,

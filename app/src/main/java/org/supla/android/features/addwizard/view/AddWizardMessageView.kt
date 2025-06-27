@@ -54,6 +54,8 @@ private val previewScope = object : AddWizardMessageScope {
 @Composable
 private fun Preview() {
   SuplaTheme {
-    previewScope.AddWizardMessageView(AddWizardScreen.Message(R.drawable.wizard_error, localizedString(R.string.wizard_iodevice_notfound)))
+    previewScope.AddWizardMessageView(
+      AddWizardScreen.Message(R.drawable.add_wizard_error, localizedString(R.string.wizard_iodevice_notfound))
+    )
   }
 }

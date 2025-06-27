@@ -21,6 +21,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
@@ -62,6 +63,7 @@ private const val numberOfDots = 10
 fun AddWizardScaffold(
   @DrawableRes iconRes: Int,
   @StringRes buttonTextId: Int,
+  backButton: (@Composable BoxScope.() -> Unit)? = null,
   processing: Boolean = false,
   onNext: () -> Unit = {},
   onClose: () -> Unit = {},
@@ -72,8 +74,6 @@ fun AddWizardScaffold(
     verticalArrangement = Arrangement.spacedBy(Distance.default),
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
-    TitleBar(onClose = onClose)
-
     Column(
       modifier = Modifier
         .weight(1f)
@@ -82,6 +82,8 @@ fun AddWizardScaffold(
       verticalArrangement = Arrangement.spacedBy(Distance.default),
       horizontalAlignment = Alignment.CenterHorizontally
     ) {
+      TitleBar(onClose = onClose)
+
       Image(
         drawableId = iconRes,
         modifier = Modifier.size(140.dp)
@@ -92,6 +94,7 @@ fun AddWizardScaffold(
 
     NavigationButtons(
       buttonTextId = buttonTextId,
+      backButton = backButton,
       onNext = onNext,
       processing = processing
     )
@@ -121,10 +124,12 @@ private fun TitleBar(onClose: () -> Unit) =
 @Composable
 private fun NavigationButtons(
   @StringRes buttonTextId: Int,
+  backButton: (@Composable BoxScope.() -> Unit)? = null,
   processing: Boolean,
   onNext: () -> Unit
 ) =
   Box(modifier = Modifier.fillMaxWidth().padding(Distance.tiny)) {
+    backButton?.let { it() }
     OutlinedButton(
       colors = ButtonDefaults.addWizardButtonColors(),
       contentPadding = PaddingValues(start = Distance.default, top = Distance.small, end = Distance.small, bottom = Distance.small),
@@ -173,7 +178,7 @@ private fun ProcessingText() {
 }
 
 @Composable
-private fun ButtonDefaults.addWizardButtonColors() =
+fun ButtonDefaults.addWizardButtonColors() =
   outlinedButtonColors(
     containerColor = MaterialTheme.colorScheme.surface,
     contentColor = MaterialTheme.colorScheme.onSurface,

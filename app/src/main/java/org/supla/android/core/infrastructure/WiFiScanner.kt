@@ -71,16 +71,18 @@ class WiFiScanner @Inject constructor(
     mutex.withLock {
       Trace.i(TAG, "Scan started")
       processingRequest = true
-      if (wifiManager.startScan()) {
-        Trace.d(TAG, "Scan allowed")
-        semaphore.acquire()
+      try {
+        if (wifiManager.startScan()) {
+          Trace.d(TAG, "Scan allowed")
+          semaphore.acquire()
+          Trace.d(TAG, "Scan finished")
+          return Result.Success(ssids)
+        } else {
+          Trace.d(TAG, "Scan not allowed")
+          return Result.NotAllowed(ssids)
+        }
+      } finally {
         processingRequest = false
-        Trace.d(TAG, "Scan finished")
-        return Result.Success(ssids)
-      } else {
-        Trace.d(TAG, "Scan not allowed")
-        processingRequest = false
-        return Result.NotAllowed(ssids)
       }
     }
   }

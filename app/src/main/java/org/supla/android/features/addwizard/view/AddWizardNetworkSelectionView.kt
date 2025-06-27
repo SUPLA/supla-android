@@ -24,14 +24,20 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.WifiFind
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.FocusRequester.Companion.FocusRequesterFactory.component1
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
@@ -75,12 +81,16 @@ fun AddWizardNetworkSelectionScope.AddWizardNetworkSelectionView(
   ) {
     AddWizardContentText(R.string.add_wizard_step_2_message)
 
+    val (passwordFocusRequester) = FocusRequester.createRefs()
+
     TextFieldScaffold(R.string.add_wizard_network_name) {
       TextField(
         value = state.networkName,
         modifier = Modifier.fillMaxWidth(),
         onValueChange = { onNetworkNameChanged(it) },
-        isError = state.error
+        isError = state.error,
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+        keyboardActions = KeyboardActions { passwordFocusRequester.requestFocus() }
       )
     }
 
@@ -90,8 +100,10 @@ fun AddWizardNetworkSelectionScope.AddWizardNetworkSelectionView(
         passwordVisible = state.networkPasswordVisible,
         onVisibilityChange = { onNetworkPasswordVisibilityChanged() },
         onValueChange = { onNetworkPasswordChanged(it) },
-        modifier = Modifier.fillMaxWidth(),
-        isError = state.error
+        modifier = Modifier.fillMaxWidth().focusRequester(passwordFocusRequester),
+        isError = state.error,
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+        keyboardActions = KeyboardActions { onStepFinished(AddWizardScreen.NetworkSelection) }
       )
       Checkbox(
         checked = state.rememberPassword,

@@ -24,6 +24,7 @@ import org.junit.runner.RunWith
 import org.mockito.InjectMocks
 import org.mockito.junit.MockitoJUnitRunner
 import org.supla.android.extensions.guardLet
+import org.supla.android.features.addwizard.model.EspHtmlParser
 import java.io.File
 
 @RunWith(MockitoJUnitRunner::class)
@@ -68,7 +69,6 @@ class EspHtmlParserTest {
     val result = parser.prepareResult(document, inputs)
 
     // then
-    assertThat(result.resultCode).isEqualTo(RESULT_FAILED)
     assertThat(result.deviceName).isEqualTo("Basic thermostat")
     assertThat(result.deviceLastState).isEqualTo("Config mode (145), Registered and ready (3)")
     assertThat(result.deviceFirmwareVersion).isEqualTo("SDK 23.12.02-dev")
@@ -89,7 +89,6 @@ class EspHtmlParserTest {
     val result = parser.prepareResult(document, inputs)
 
     // then
-    assertThat(result.resultCode).isEqualTo(RESULT_FAILED)
     assertThat(result.deviceName).isEqualTo("Basic thermostat")
     assertThat(result.deviceLastState).isEqualTo("Config mode (145), Registered and ready (3)")
     assertThat(result.deviceFirmwareVersion).isEqualTo("SDK 23.12.02-dev")
@@ -109,7 +108,6 @@ class EspHtmlParserTest {
     val result = parser.prepareResult(document, inputs)
 
     // then
-    assertThat(result.resultCode).isEqualTo(RESULT_FAILED)
     assertThat(result.deviceName).isEqualTo("YoDeCo - Sonoff MINIR4")
     assertThat(result.deviceLastState).isEqualTo("Zainicjowany")
     assertThat(result.deviceFirmwareVersion).isEqualTo("SuplaDevice GG v7.8.17")

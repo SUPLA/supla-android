@@ -46,19 +46,19 @@ class MainNavigator @Inject constructor(@ActivityContext private val activityCon
     get() = (activityContext as Activity).findNavController(R.id.nav_host_fragment)
 
   fun navigateTo(@IdRes destinationId: Int, bundle: Bundle? = null) {
-    navController.navigate(destinationId, bundle, animationOptions)
+    navController.navigate(destinationId, bundle, defaultAnimationOptions)
   }
 
   fun navigateToLegacyDetails(remoteId: Int, legacyDetailType: LegacyDetailType, itemType: ItemType) {
     navController.navigate(
       R.id.legacy_detail_fragment,
       LegacyDetailFragment.bundle(remoteId, legacyDetailType, itemType),
-      animationOptions
+      defaultAnimationOptions
     )
   }
 
   fun navigateToAddWizard() {
-    navigateTo(R.id.add_wizard_fragment)
+    navController.navigate(R.id.add_wizard_fragment, null, addWizardAnimationOptions)
   }
 
   fun navigateToProfiles() {
@@ -115,11 +115,18 @@ class MainNavigator @Inject constructor(@ActivityContext private val activityCon
     }
   }
 
-  private val animationOptions = NavOptions.Builder()
+  private val defaultAnimationOptions = NavOptions.Builder()
     .setEnterAnim(R.anim.slide_left_in)
     .setExitAnim(R.anim.slide_left_out)
     .setPopEnterAnim(R.anim.slide_right_in)
     .setPopExitAnim(R.anim.slide_right_out)
+    .build()
+
+  private val addWizardAnimationOptions = NavOptions.Builder()
+    .setEnterAnim(R.anim.fade_in)
+    .setExitAnim(R.anim.fade_out)
+    .setPopEnterAnim(R.anim.fade_in)
+    .setPopExitAnim(R.anim.fade_out)
     .build()
 
   private fun navigationToStatusAllowed(): Boolean {

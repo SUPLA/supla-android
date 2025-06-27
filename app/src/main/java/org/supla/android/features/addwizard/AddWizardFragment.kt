@@ -60,6 +60,8 @@ class AddWizardFragment : BaseComposeFragment<AddWizardViewModelState, AddWizard
       val allGranted = isGranted.values.fold(true) { acc, granted -> acc && granted }
       if (!allGranted) {
         viewModel.showMissingPermissionError(requireContext().applicationName)
+      } else {
+        viewModel.registerSsidObserver()
       }
     }
 
@@ -122,6 +124,7 @@ class AddWizardFragment : BaseComposeFragment<AddWizardViewModelState, AddWizard
       Manifest.permission.CHANGE_NETWORK_STATE
     )
     if (requireContext().allGranted(permissions)) {
+      viewModel.registerSsidObserver()
       return
     }
     if (permissions.anyPermissionRevoked) {

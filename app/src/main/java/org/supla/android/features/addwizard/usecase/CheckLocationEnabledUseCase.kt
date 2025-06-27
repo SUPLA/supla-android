@@ -1,4 +1,4 @@
-package org.supla.android.features.addwizard.model
+package org.supla.android.features.addwizard.usecase
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,11 +17,19 @@ package org.supla.android.features.addwizard.model
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.features.addwizard.configuration.EspConfigurationError
+import android.location.LocationManager
+import javax.inject.Inject
+import javax.inject.Singleton
 
-sealed interface AddWizardFinalAction {
-  data object Close : AddWizardFinalAction
-  data class Error(val error: EspConfigurationError) : AddWizardFinalAction
-  data object Success : AddWizardFinalAction
-  data object Back : AddWizardFinalAction
+@Singleton
+class CheckLocationEnabledUseCase @Inject constructor(
+  private val locationManager: LocationManager
+) {
+
+  operator fun invoke(): Boolean {
+    val gpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+    val networkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+
+    return gpsEnabled || networkEnabled
+  }
 }

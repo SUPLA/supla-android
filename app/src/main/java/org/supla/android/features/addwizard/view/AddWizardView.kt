@@ -50,14 +50,14 @@ fun AddWizardScope.View(modelState: AddWizardViewModelState) {
       .fillMaxSize()
       .background(MaterialTheme.colorScheme.primaryContainer)
   ) {
-    when (modelState.screen) {
-      AddWizardScreen.Welcome -> AddWizardWelcomeView()
+    when (val screen = modelState.screen) {
+      AddWizardScreen.Welcome, null -> AddWizardWelcomeView()
       AddWizardScreen.NetworkSelection -> AddWizardNetworkSelectionView(
         state = modelState.networkSelectionState ?: AddWizardNetworkSelectionState()
       )
 
       AddWizardScreen.Configuration -> AddWizardConfigurationView(modelState.processing)
-      is AddWizardScreen.Message -> AddWizardMessageView(modelState.screen)
+      is AddWizardScreen.Message -> AddWizardMessageView(screen)
       is AddWizardScreen.Success -> AddWizardSuccessView(modelState.parameters)
     }
 

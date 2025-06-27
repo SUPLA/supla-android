@@ -41,12 +41,13 @@ class CurrentWifiNetworkInfoProvider @Inject constructor(
 ) {
 
   private var networkInfo: NetworkInfo? = null
+  private var registered: Boolean = false
 
   private val connectivityManager = context.getSystemService(ConnectivityManager::class.java)
   private val wifiManager = context.getSystemService(WifiManager::class.java)
 
-  init {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+  fun register() {
+    if (!registered && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
       val request =
         NetworkRequest.Builder()
           .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
@@ -65,6 +66,8 @@ class CurrentWifiNetworkInfoProvider @Inject constructor(
         }
       }
       connectivityManager.registerNetworkCallback(request, networkCallback)
+
+      registered = true
     }
   }
 

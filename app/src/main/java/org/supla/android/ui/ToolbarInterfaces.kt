@@ -17,7 +17,7 @@ interface ToolbarVisibilityController {
 
   data class ToolbarVisibility(
     val visible: Boolean,
-    @ColorRes val toolbarColorRes: Int = if (visible) R.color.primary else R.color.background,
+    @ColorRes val toolbarColorRes: Int = if (visible) R.color.primary_container else R.color.background,
     @ColorRes val navigationBarColorRes: Int = R.color.surface,
     val isLight: Boolean = visible.not()
   )

@@ -21,6 +21,7 @@ sealed interface EspConfigurationEvent {
   data object Start : EspConfigurationEvent
 
   data object Cancel : EspConfigurationEvent
+  data object Back : EspConfigurationEvent
   data object Canceled : EspConfigurationEvent
 
   data object RegistrationDisabled : EspConfigurationEvent
