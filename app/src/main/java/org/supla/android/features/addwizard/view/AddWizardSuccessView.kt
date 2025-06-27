@@ -20,14 +20,23 @@ package org.supla.android.features.addwizard.view
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Replay
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
@@ -37,8 +46,12 @@ import org.supla.android.features.addwizard.view.components.AddWizardContentText
 import org.supla.android.features.addwizard.view.components.AddWizardScaffold
 import org.supla.android.features.addwizard.view.components.DeviceParameter
 import org.supla.android.features.addwizard.view.components.DeviceParametersTable
+import org.supla.android.features.addwizard.view.components.addWizardButtonColors
+import org.supla.android.ui.views.buttons.OutlinedButton
 
-interface AddWizardSuccessScope : AddWizardScope
+interface AddWizardSuccessScope : AddWizardScope {
+  fun onAgain()
+}
 
 @Composable
 fun AddWizardSuccessScope.AddWizardSuccessView(deviceParameters: List<DeviceParameter>) {
@@ -67,12 +80,37 @@ fun AddWizardSuccessScope.AddWizardSuccessView(deviceParameters: List<DevicePara
     }
 
     AddWizardContentText(R.string.wizard_done_explentations)
+
+    Spacer(modifier = Modifier.weight(1f))
+    BackButton()
+    Spacer(modifier = Modifier.weight(1f))
   }
 }
+
+@Composable
+private fun AddWizardSuccessScope.BackButton(modifier: Modifier = Modifier) =
+  OutlinedButton(
+    colors = ButtonDefaults.addWizardButtonColors(),
+    contentPadding = PaddingValues(start = Distance.small, top = Distance.small, end = Distance.small, bottom = Distance.small),
+    onClick = { onAgain() },
+    modifier = modifier.defaultMinSize(minWidth = 130.dp, minHeight = 56.dp),
+  ) {
+    androidx.compose.foundation.Image(
+      imageVector = Icons.Default.Replay,
+      contentDescription = null,
+      colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
+    )
+    Spacer(modifier = Modifier.width(Distance.tiny))
+    Text(
+      text = "Dodaj kolejne",
+      style = MaterialTheme.typography.labelLarge,
+    )
+  }
 
 private val previewScope = object : AddWizardSuccessScope {
   override fun onStepFinished(step: AddWizardScreen) {}
   override fun onClose(step: AddWizardScreen) {}
+  override fun onAgain() {}
 }
 
 @Preview(backgroundColor = 0xFF12A71E, showBackground = true)

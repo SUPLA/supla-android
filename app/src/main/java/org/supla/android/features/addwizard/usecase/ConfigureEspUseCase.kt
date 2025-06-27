@@ -21,14 +21,14 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.withTimeoutOrNull
 import okio.IOException
 import org.supla.android.Trace
-import org.supla.android.core.networking.esp.EspConfigResult
-import org.supla.android.core.networking.esp.EspHtmlParser
 import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.data.source.remote.esp.EspDeviceProtocol
 import org.supla.android.data.source.remote.esp.EspPostData
 import org.supla.android.data.source.remote.esp.EspService
 import org.supla.android.extensions.TAG
 import org.supla.android.extensions.isNotNull
+import org.supla.android.features.addwizard.model.EspConfigResult
+import org.supla.android.features.addwizard.model.EspHtmlParser
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.time.Duration.Companion.milliseconds

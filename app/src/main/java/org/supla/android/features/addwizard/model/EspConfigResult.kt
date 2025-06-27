@@ -1,4 +1,4 @@
-package org.supla.android.core.networking.esp
+package org.supla.android.features.addwizard.model
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,27 +17,11 @@ package org.supla.android.core.networking.esp
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-const val RESULT_PARAM_ERROR = -3
-const val RESULT_COMPAT_ERROR = -2
-const val RESULT_CONN_ERROR = -1
-const val RESULT_FAILED = 0
-const val RESULT_SUCCESS = 1
-
 data class EspConfigResult(
-  var resultCode: Int = RESULT_FAILED,
   var deviceName: String? = null,
   var deviceLastState: String? = null,
   var deviceFirmwareVersion: String? = null,
   var deviceGUID: String? = null,
   var deviceMAC: String? = null,
   var needsCloudConfig: Boolean = false
-) {
-  fun merge(result: EspConfigResult) {
-    deviceName = result.deviceName
-    deviceLastState = result.deviceLastState
-    deviceFirmwareVersion = result.deviceFirmwareVersion
-    deviceGUID = result.deviceGUID
-    deviceMAC = result.deviceMAC
-    needsCloudConfig = result.needsCloudConfig
-  }
-}
+)

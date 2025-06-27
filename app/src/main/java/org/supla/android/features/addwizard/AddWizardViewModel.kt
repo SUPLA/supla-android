@@ -33,7 +33,6 @@ import org.supla.android.R
 import org.supla.android.Trace
 import org.supla.android.core.infrastructure.CurrentWifiNetworkInfoProvider
 import org.supla.android.core.infrastructure.WiFiScanner
-import org.supla.android.core.networking.esp.EspConfigResult
 import org.supla.android.core.networking.suplaclient.SuplaClientEvent
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientStateHolder
@@ -48,12 +47,15 @@ import org.supla.android.features.addwizard.configuration.EspConfigurationEvent
 import org.supla.android.features.addwizard.configuration.EspConfigurationStateHolder
 import org.supla.android.features.addwizard.model.AddWizardScreen
 import org.supla.android.features.addwizard.model.Esp
-import org.supla.android.features.addwizard.usecase.AwaitInternetUseCase
+import org.supla.android.features.addwizard.model.EspConfigResult
+import org.supla.android.features.addwizard.usecase.CheckLocationEnabledUseCase
 import org.supla.android.features.addwizard.usecase.CheckRegistrationEnabledUseCase
 import org.supla.android.features.addwizard.usecase.ConfigureEspUseCase
 import org.supla.android.features.addwizard.usecase.ConnectToSsidUseCase
 import org.supla.android.features.addwizard.usecase.EnableRegistrationUseCase
 import org.supla.android.features.addwizard.usecase.FindEspSsidUseCase
+import org.supla.android.features.addwizard.usecase.ReconnectToInternetUseCase
+import org.supla.android.features.addwizard.usecase.receiver.ConnectResult
 import org.supla.android.features.addwizard.view.AddWizardNetworkSelectionState
 import org.supla.android.features.addwizard.view.AddWizardScope
 import org.supla.android.features.addwizard.view.components.DeviceParameter
@@ -75,10 +77,11 @@ class AddWizardViewModel @Inject constructor(
   @ApplicationContext private val context: Context,
   private val checkRegistrationEnabledUseCase: CheckRegistrationEnabledUseCase,
   private val currentWifiNetworkInfoProvider: CurrentWifiNetworkInfoProvider,
+  private val checkLocationEnabledUseCase: CheckLocationEnabledUseCase,
+  private val reconnectToInternetUseCase: ReconnectToInternetUseCase,
   private val enableRegistrationUseCase: EnableRegistrationUseCase,
   private val loadActiveProfileUseCase: LoadActiveProfileUseCase,
   private val suplaClientStateHolder: SuplaClientStateHolder,
-  private val awaitInternetUseCase: AwaitInternetUseCase,
   private val connectToSsidUseCase: ConnectToSsidUseCase,
   private val encryptedPreferences: EncryptedPreferences,
   private val configureEspUseCase: ConfigureEspUseCase,
@@ -127,15 +130,16 @@ class AddWizardViewModel @Inject constructor(
   override fun onViewCreated() {
     configurationStateHolder = EspConfigurationStateHolder(this)
     if (hasWiFiConnection().not()) {
-      updateState { it.copy(screen = AddWizardScreen.Message.NoWifi) }
+      updateState { it.openOnly(screen = AddWizardScreen.Message.NoWifi) }
     } else {
       loadActiveProfileUseCase()
         .attach()
         .subscribeBy(
           onSuccess = { profile ->
             if (profile.emailAuth.not()) {
-              updateState { it.copy(screen = AddWizardScreen.Message.WizardUnavailable) }
+              updateState { it.openOnly(screen = AddWizardScreen.Message.WizardUnavailable) }
             } else {
+              updateState { it.navigateTo(screen = AddWizardScreen.Welcome) }
               sendEvent(AddWizardViewEvent.CheckPermissions)
             }
           }
@@ -282,30 +286,33 @@ class AddWizardViewModel @Inject constructor(
 
   fun showMissingPermissionError(appName: String) {
     updateState {
-      it.copy(
+      it.openOnly(
         screen = AddWizardScreen.Message(
-          iconRes = R.drawable.wizard_error,
+          iconRes = R.drawable.add_wizard_error,
           message = localizedString(R.string.wizard_not_enought_permissions, appName)
         )
       )
     }
   }
 
-  fun onBackPressed(): Boolean =
-    when (currentState().screen) {
-      AddWizardScreen.Welcome, is AddWizardScreen.Message, is AddWizardScreen.Success -> false
-      is AddWizardScreen.NetworkSelection -> {
-        updateState { it.copy(screen = AddWizardScreen.Welcome) }
-        true
-      }
+  fun registerSsidObserver() {
+    currentWifiNetworkInfoProvider.register()
+  }
 
-      AddWizardScreen.Configuration -> {
-        if (configurationStateHolder.isIdle) {
-          updateState { it.copy(screen = AddWizardScreen.NetworkSelection) }
-        }
-        true
-      }
+  fun onBackPressed(): Boolean {
+    val state = currentState()
+    if (state.screens.size == 1) {
+      return false
     }
+
+    if (configurationStateHolder.isInactive) {
+      updateState { it.back() }
+    } else {
+      configurationStateHolder.handleEvent(event = EspConfigurationEvent.Back)
+    }
+
+    return true
+  }
 
   override fun checkRegistration() {
     currentJob = viewModelScope.launch {
@@ -366,8 +373,9 @@ class AddWizardViewModel @Inject constructor(
     currentJob = viewModelScope.launch {
       val result = withContext(Dispatchers.IO) { connectToSsidUseCase.connect(ssid) }
       when (result) {
-        ConnectToSsidUseCase.Result.CONNECTED -> configurationStateHolder.handleEvent(EspConfigurationEvent.NetworkConnected)
-        ConnectToSsidUseCase.Result.FAILURE -> configurationStateHolder.handleEvent(EspConfigurationEvent.NetworkConnectionFailure)
+        ConnectResult.SUCCESS -> configurationStateHolder.handleEvent(EspConfigurationEvent.NetworkConnected)
+        ConnectResult.FAILURE,
+        ConnectResult.TIMEOUT -> configurationStateHolder.handleEvent(EspConfigurationEvent.NetworkConnectionFailure)
       }
     }
   }
@@ -407,27 +415,31 @@ class AddWizardViewModel @Inject constructor(
   override fun reconnect() {
     suplaClientStateHolder.handleEvent(SuplaClientEvent.AddWizardFinished)
     currentJob = viewModelScope.launch {
-      connectToSsidUseCase.disconnect()
-      val result = withContext(Dispatchers.IO) { awaitInternetUseCase() }
+      val result = withContext(Dispatchers.IO) { reconnectToInternetUseCase(currentState().networkId) }
 
       when (result) {
-        AwaitInternetUseCase.Result.SUCCESS -> configurationStateHolder.handleEvent(EspConfigurationEvent.Reconnected)
-        AwaitInternetUseCase.Result.TIMEOUT -> configurationStateHolder.handleEvent(EspConfigurationEvent.ReconnectTimeout)
+        ConnectResult.SUCCESS -> configurationStateHolder.handleEvent(EspConfigurationEvent.Reconnected)
+        ConnectResult.FAILURE,
+        ConnectResult.TIMEOUT -> configurationStateHolder.handleEvent(EspConfigurationEvent.ReconnectTimeout)
       }
     }
   }
 
   override fun showFinished() {
     updateState {
-      it.copy(
-        screen = AddWizardScreen.Success,
-        showCloudFollowupPopup = it.espConfigResult?.needsCloudConfig == true
-      )
+      it.navigateTo(AddWizardScreen.Success)
+        .copy(
+          showCloudFollowupPopup = it.espConfigResult?.needsCloudConfig == true,
+          processing = false
+        )
     }
   }
 
   override fun showError(error: EspConfigurationError) {
-    updateState { it.copy(screen = AddWizardScreen.Message(iconRes = error.iconRes, message = error.message)) }
+    updateState {
+      it.navigateTo(screen = AddWizardScreen.Message(iconRes = error.iconRes, message = error.message))
+        .copy(processing = false)
+    }
   }
 
   override fun cancel() {
@@ -446,6 +458,10 @@ class AddWizardViewModel @Inject constructor(
     sendEvent(AddWizardViewEvent.Close)
   }
 
+  override fun back() {
+    updateState { it.back().copy(processing = false, canceling = false) }
+  }
+
   private fun hasWiFiConnection(): Boolean {
     val connectivityManager = context.getSystemService(ConnectivityManager::class.java)
     val activeNetwork = connectivityManager.activeNetwork ?: return false
@@ -453,19 +469,28 @@ class AddWizardViewModel @Inject constructor(
     return capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
   }
 
+  private fun hasLocationEnabled(): Boolean = checkLocationEnabledUseCase()
+
   private fun welcomeNextStep() {
-    val networkName = encryptedPreferences.wizardWifiName
-    val networkPassword = encryptedPreferences.wizardWifiPassword
-    updateState {
-      it.copy(
-        screen = AddWizardScreen.NetworkSelection,
-        networkSelectionState = it.networkSelectionState ?: AddWizardNetworkSelectionState(
-          networkName = networkName ?: currentWifiNetworkInfoProvider.provide()?.ssid ?: "",
-          networkPassword = networkName.isNotNull.ifTrue { encryptedPreferences.wizardWifiPassword } ?: "",
-          rememberPassword = networkName.isNotNull && networkPassword.isNotNull,
-          error = false
-        )
-      )
+    if (!hasLocationEnabled()) {
+      updateState { it.navigateTo(screen = AddWizardScreen.Message.LocationDisabled) }
+    } else {
+      val networkName = encryptedPreferences.wizardWifiName
+      val networkPassword = encryptedPreferences.wizardWifiPassword
+      val currentNetwork = currentWifiNetworkInfoProvider.provide()
+
+      updateState {
+        it.navigateTo(screen = AddWizardScreen.NetworkSelection)
+          .copy(
+            networkSelectionState = it.networkSelectionState ?: AddWizardNetworkSelectionState(
+              networkName = networkName ?: currentNetwork?.ssid ?: "",
+              networkPassword = networkName.isNotNull.ifTrue { encryptedPreferences.wizardWifiPassword } ?: "",
+              rememberPassword = networkName.isNotNull && networkPassword.isNotNull,
+              error = false,
+            ),
+            networkId = currentNetwork?.networkId
+          )
+      }
     }
   }
 
@@ -474,15 +499,23 @@ class AddWizardViewModel @Inject constructor(
       if (state.networkSelectionState?.networkName.isNullOrEmpty() || state.networkSelectionState.networkPassword.isEmpty()) {
         state.copy(networkSelectionState = state.networkSelectionState?.copy(error = true))
       } else {
-        encryptedPreferences.wizardWifiName = state.networkSelectionState.networkName
-        if (state.networkSelectionState.rememberPassword) {
+        val ssid = state.networkSelectionState.networkName
+        if (ssid.isNotEmpty()) {
+          encryptedPreferences.wizardWifiName = ssid
+        }
+        val password = state.networkSelectionState.networkPassword
+        if (state.networkSelectionState.rememberPassword && password.isNotEmpty()) {
           encryptedPreferences.wizardWifiPassword = state.networkSelectionState.networkPassword
         } else if (!state.networkSelectionState.rememberPassword) {
           encryptedPreferences.wizardWifiPassword = null
         }
-        state.copy(screen = AddWizardScreen.Configuration)
+        state.navigateTo(screen = AddWizardScreen.Configuration)
       }
     }
+  }
+
+  override fun onAgain() {
+    onBackPressed()
   }
 }
 
@@ -494,15 +527,19 @@ sealed interface AddWizardViewEvent : ViewEvent {
 }
 
 data class AddWizardViewModelState(
-  val screen: AddWizardScreen = AddWizardScreen.Welcome,
+  val screens: List<AddWizardScreen> = emptyList(),
   val processing: Boolean = false,
   val networkSelectionState: AddWizardNetworkSelectionState? = null,
   val scannerDialogState: WiFiListDialogState? = null,
   val espConfigResult: EspConfigResult? = null,
   val showCloudFollowupPopup: Boolean = false,
   val canceling: Boolean = false,
+  val networkId: Int? = null,
   override val authorizationDialogState: AuthorizationDialogState? = null
 ) : AuthorizationModelState() {
+
+  val screen: AddWizardScreen?
+    get() = screens.lastOrNull()
 
   val parameters: List<DeviceParameter>
     get() = mutableListOf<DeviceParameter>().apply {
@@ -511,4 +548,22 @@ data class AddWizardViewModelState(
       espConfigResult?.deviceMAC?.let { add(DeviceParameter(R.string.wizard_iodev_mac, it)) }
       espConfigResult?.deviceLastState?.let { add(DeviceParameter(R.string.wizard_iodev_laststate, it)) }
     }
+
+  fun navigateTo(screen: AddWizardScreen): AddWizardViewModelState =
+    copy(
+      screens = mutableListOf<AddWizardScreen>().apply {
+        addAll(screens)
+        add(screen)
+      }
+    )
+
+  fun openOnly(screen: AddWizardScreen): AddWizardViewModelState =
+    copy(screens = listOf(screen))
+
+  fun back(): AddWizardViewModelState =
+    copy(
+      screens = mutableListOf<AddWizardScreen>().apply {
+        addAll(screens.subList(0, screens.size - 1))
+      }
+    )
 }

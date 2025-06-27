@@ -18,14 +18,11 @@ package org.supla.android.features.addwizard.usecase
  */
 
 import android.Manifest
-import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.Intent
 import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
-import android.net.NetworkInfo
 import android.net.NetworkRequest
 import android.net.wifi.WifiConfiguration
 import android.net.wifi.WifiManager
@@ -42,14 +39,17 @@ import org.supla.android.Trace
 import org.supla.android.core.networking.suplaclient.SuplaClientState
 import org.supla.android.extensions.TAG
 import org.supla.android.extensions.isNull
-import org.supla.android.features.addwizard.usecase.ConnectToSsidUseCase.Result
+import org.supla.android.features.addwizard.usecase.receiver.ConnectResult
+import org.supla.android.features.addwizard.usecase.receiver.LegacyNetworkBroadcastReceiver
 import org.supla.android.usecases.client.DisconnectUseCase
 import javax.inject.Inject
+import javax.inject.Singleton
 import kotlin.time.Duration.Companion.seconds
 
 private val TIMEOUT = 60.seconds
 private const val INVALID_INT = -1
 
+@Singleton
 class ConnectToSsidUseCase @Inject constructor(
   private val disconnectUseCase: DisconnectUseCase,
   connectivityManager: ConnectivityManager,
@@ -59,9 +59,9 @@ class ConnectToSsidUseCase @Inject constructor(
 
   private val mutex = Mutex()
   private val connectivityHandler = ConnectivityHandler(connectivityManager)
-  private val legacyConnectivityHandler = LegacyConnectivityHandler(context, wifiManager, connectivityManager)
+  private val legacyConnectivityHandler = LegacyConnectivityHandler(context, wifiManager)
 
-  suspend fun connect(ssid: String): Result {
+  suspend fun connect(ssid: String): ConnectResult {
     mutex.withLock {
       disconnectUseCase.invokeSynchronous(SuplaClientState.Reason.AddWizardStarted)
       return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -73,7 +73,7 @@ class ConnectToSsidUseCase @Inject constructor(
           legacyConnectivityHandler.connect(ssid)
         } catch (exception: SecurityException) {
           Trace.e(TAG, "Could not connect to ESP WiFi", exception)
-          Result.FAILURE
+          ConnectResult.FAILURE
         }
       }
     }
@@ -82,13 +82,7 @@ class ConnectToSsidUseCase @Inject constructor(
   fun disconnect() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
       connectivityHandler.disconnect()
-    } else {
-      legacyConnectivityHandler.disconnect()
     }
-  }
-
-  enum class Result {
-    CONNECTED, FAILURE
   }
 }
 
@@ -96,7 +90,7 @@ private class ConnectivityHandler(
   private val connectivityManager: ConnectivityManager
 ) {
   private val semaphore = Semaphore(1, 1)
-  private var result: Result? = null
+  private var result: ConnectResult? = null
 
   private val networkCallback = object : ConnectivityManager.NetworkCallback() {
     override fun onAvailable(network: Network) {
@@ -104,7 +98,7 @@ private class ConnectivityHandler(
 
       if (result.isNull) {
         connectivityManager.bindProcessToNetwork(network)
-        result = Result.CONNECTED
+        result = ConnectResult.SUCCESS
       }
 
       semaphore.release()
@@ -113,14 +107,14 @@ private class ConnectivityHandler(
     override fun onUnavailable() {
       super.onUnavailable()
       if (result.isNull) {
-        result = Result.FAILURE
+        result = ConnectResult.FAILURE
       }
       semaphore.release()
     }
   }
 
   @RequiresApi(Build.VERSION_CODES.Q)
-  suspend fun connect(ssid: String): Result {
+  suspend fun connect(ssid: String): ConnectResult {
     result = null
     val specifier = WifiNetworkSpecifier.Builder().setSsid(ssid).build()
     val request = NetworkRequest.Builder()
@@ -136,7 +130,7 @@ private class ConnectivityHandler(
     }
 
     Trace.d(TAG, "Finishing with result $result")
-    return result ?: Result.FAILURE
+    return result ?: ConnectResult.FAILURE
   }
 
   fun disconnect() {
@@ -149,38 +143,11 @@ private class ConnectivityHandler(
 @Suppress("DEPRECATION")
 private class LegacyConnectivityHandler(
   private val context: Context,
-  private val wifiManager: WifiManager,
-  private val connectivityManager: ConnectivityManager
+  private val wifiManager: WifiManager
 ) {
-  private val semaphore = Semaphore(1, 1)
-  private var result: Result? = null
-  private var networkId = INVALID_INT
-
-  private val changeReceiver = object : BroadcastReceiver() {
-    override fun onReceive(context: Context?, intent: Intent?) {
-      val info = intent?.getParcelableExtra<NetworkInfo>(WifiManager.EXTRA_NETWORK_INFO)
-      if (info?.isConnected != true) {
-        return
-      }
-
-      val wifiInfo = wifiManager.connectionInfo
-      if (wifiInfo.networkId != networkId) {
-        return
-      }
-
-      if (result.isNull) {
-        connectivityManager.bindToWifiNetwork()
-        result = Result.CONNECTED
-      }
-
-      semaphore.release()
-    }
-  }
-
   @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_WIFI_STATE])
-  suspend fun connect(ssid: String): Result {
-    result = Result.FAILURE
-    networkId = INVALID_INT
+  suspend fun connect(ssid: String): ConnectResult {
+    var networkId = INVALID_INT
 
     val wifiConfiguration = WifiConfiguration()
     wifiConfiguration.SSID = "\"$ssid\""
@@ -201,6 +168,9 @@ private class LegacyConnectivityHandler(
       throw IllegalStateException("Could not find network!")
     }
 
+    val semaphore = Semaphore(1, 1)
+    val changeReceiver = LegacyNetworkBroadcastReceiver(wifiManager, networkId, semaphore)
+
     wifiManager.disconnect()
     context.registerReceiver(changeReceiver, IntentFilter().apply { addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION) })
     wifiManager.enableNetwork(networkId, true)
@@ -214,11 +184,7 @@ private class LegacyConnectivityHandler(
       context.unregisterReceiver(changeReceiver)
     }
 
-    return result ?: Result.FAILURE
-  }
-
-  fun disconnect() {
-    connectivityManager.bindProcessToNetwork(null)
+    return changeReceiver.result ?: ConnectResult.FAILURE
   }
 
   private val maxConfigurationPriority: Int
@@ -227,15 +193,4 @@ private class LegacyConnectivityHandler(
       val configurations = wifiManager.configuredNetworks
       return configurations.maxOfOrNull { it.priority } ?: 0
     }
-}
-
-@Suppress("DEPRECATION")
-private fun ConnectivityManager.bindToWifiNetwork() {
-  val networks = allNetworks
-  for (network in networks) {
-    val capabilities = getNetworkCapabilities(network)
-    if (capabilities != null && capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
-      bindProcessToNetwork(network)
-    }
-  }
 }

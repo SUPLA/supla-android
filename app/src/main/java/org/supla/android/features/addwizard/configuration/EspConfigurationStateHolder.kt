@@ -33,16 +33,14 @@ interface EspConfigurationController {
   fun showError(error: EspConfigurationError)
   fun cancel()
   fun close()
+  fun back()
 }
 
 class EspConfigurationStateHolder(espConfigurationController: EspConfigurationController) {
 
-  val isIdle: Boolean
-    get() = state is Idle
-
   val isInactive: Boolean
     get() = when (state) {
-      is Idle, Finished, Canceled, ConfigurationFailure -> true
+      is Idle, is Finished, is ConfigurationFailure, Canceled -> true
       else -> false
     }
 

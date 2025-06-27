@@ -1,4 +1,4 @@
-package org.supla.android.core.networking.esp
+package org.supla.android.features.addwizard.model
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 

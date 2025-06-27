@@ -975,7 +975,7 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity
   }
 
   private void showError(String message) {
-    showError(message, R.drawable.wizard_error);
+    showError(message, R.drawable.add_wizard_error);
   }
 
   private void showError(int msgResId, int errorType) {

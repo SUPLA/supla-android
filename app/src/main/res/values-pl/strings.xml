@@ -265,7 +265,7 @@
   <string name="valve_warning">Zawór został zamknięty w trybie manualnym lub radiowo. Zanim go otworzysz upewnij się, że nie został zamknięty z powodu zalania. Aby wyłączyć ostrzeżenie otwórz zawór manualnie.</string>
   <string name="yes">Tak</string>
   <string name="no">Nie</string>
-  <string name="exit">Wyjście</string>
+  <string name="exit">Zakończ</string>
   <string name="zwave_select_channel">Wybierz most z-wave, a następnie kanał który chcesz skonfigurować.</string>
   <string name="device_name">Nazwa urządzenia</string>
   <string name="channel_number">Numer kanału</string>

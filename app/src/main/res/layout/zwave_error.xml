@@ -42,7 +42,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="51dp"
-        android:background="@drawable/wizard_error"
+        android:background="@drawable/add_wizard_error"
         tools:ignore="ContentDescription" />
 
 

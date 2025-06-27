@@ -36,8 +36,8 @@ fun Checkbox(
   checked: Boolean,
   label: String,
   enabled: Boolean = true,
-  checkedColor: Color = MaterialTheme.colorScheme.surface,
-  uncheckedColor: Color = MaterialTheme.colorScheme.surface,
+  checkedColor: Color = MaterialTheme.colorScheme.onPrimaryContainer,
+  uncheckedColor: Color = MaterialTheme.colorScheme.onPrimaryContainer,
   checkmarkColor: Color = MaterialTheme.colorScheme.onBackground,
   labelColor: Color = MaterialTheme.colorScheme.onBackground,
   onCheckedChange: (Boolean) -> Unit = { }

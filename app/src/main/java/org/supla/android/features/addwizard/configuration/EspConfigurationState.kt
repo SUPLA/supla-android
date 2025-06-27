@@ -37,7 +37,7 @@ class Idle(private val espConfigurationController: EspConfigurationController) :
 
       else -> {
         espConfigurationController.showError(EspConfigurationError.RegistrationCheck)
-        ConfigurationFailure
+        ConfigurationFailure(espConfigurationController)
       }
     }
 }
@@ -61,12 +61,17 @@ class CheckingRegistration(private val espConfigurationController: EspConfigurat
 
       EspConfigurationEvent.Cancel -> {
         espConfigurationController.cancel()
-        Canceling(espConfigurationController)
+        Canceling(espConfigurationController, AddWizardFinalAction.Close)
+      }
+
+      EspConfigurationEvent.Back -> {
+        espConfigurationController.cancel()
+        Canceling(espConfigurationController, AddWizardFinalAction.Back)
       }
 
       else -> {
         espConfigurationController.showError(EspConfigurationError.RegistrationCheck)
-        ConfigurationFailure
+        ConfigurationFailure(espConfigurationController)
       }
     }
 }
@@ -81,12 +86,17 @@ class Authorizing(private val espConfigurationController: EspConfigurationContro
 
       EspConfigurationEvent.Cancel -> {
         espConfigurationController.cancel()
-        Canceling(espConfigurationController)
+        Canceling(espConfigurationController, AddWizardFinalAction.Close)
+      }
+
+      EspConfigurationEvent.Back -> {
+        espConfigurationController.cancel()
+        Canceling(espConfigurationController, AddWizardFinalAction.Back)
       }
 
       else -> {
         espConfigurationController.showError(EspConfigurationError.RegistrationCheck)
-        ConfigurationFailure
+        ConfigurationFailure(espConfigurationController)
       }
     }
 }
@@ -101,12 +111,17 @@ class ActivatingRegistration(private val espConfigurationController: EspConfigur
 
       EspConfigurationEvent.Cancel -> {
         espConfigurationController.cancel()
-        Canceling(espConfigurationController)
+        Canceling(espConfigurationController, AddWizardFinalAction.Close)
+      }
+
+      EspConfigurationEvent.Back -> {
+        espConfigurationController.cancel()
+        Canceling(espConfigurationController, AddWizardFinalAction.Back)
       }
 
       else -> {
         espConfigurationController.showError(EspConfigurationError.RegistrationEnable)
-        ConfigurationFailure
+        ConfigurationFailure(espConfigurationController)
       }
     }
 }
@@ -131,17 +146,22 @@ class NetworkSearch(private val espConfigurationController: EspConfigurationCont
 
       is EspConfigurationEvent.NetworkNotFound -> {
         espConfigurationController.showError(EspConfigurationError.NotFound)
-        ConfigurationFailure
+        ConfigurationFailure(espConfigurationController)
       }
 
       EspConfigurationEvent.Cancel -> {
         espConfigurationController.cancel()
-        Canceling(espConfigurationController)
+        Canceling(espConfigurationController, AddWizardFinalAction.Close)
+      }
+
+      EspConfigurationEvent.Back -> {
+        espConfigurationController.cancel()
+        Canceling(espConfigurationController, AddWizardFinalAction.Back)
       }
 
       else -> {
         espConfigurationController.showError(EspConfigurationError.Scan)
-        ConfigurationFailure
+        ConfigurationFailure(espConfigurationController)
       }
     }
 }
@@ -156,7 +176,12 @@ class ChangingNetwork(private val espConfigurationController: EspConfigurationCo
 
       EspConfigurationEvent.Cancel -> {
         espConfigurationController.cancel()
-        Canceling(espConfigurationController, AddWizardFinalAction.Close)
+        Canceling(espConfigurationController, AddWizardFinalAction.Close, reconnect = true)
+      }
+
+      EspConfigurationEvent.Back -> {
+        espConfigurationController.cancel()
+        Canceling(espConfigurationController, AddWizardFinalAction.Back, reconnect = true)
       }
 
       else -> {
@@ -181,7 +206,12 @@ class ConfiguringEsp(private val espConfigurationController: EspConfigurationCon
 
       EspConfigurationEvent.Cancel -> {
         espConfigurationController.cancel()
-        Canceling(espConfigurationController, AddWizardFinalAction.Close)
+        Canceling(espConfigurationController, AddWizardFinalAction.Close, reconnect = true)
+      }
+
+      EspConfigurationEvent.Back -> {
+        espConfigurationController.cancel()
+        Canceling(espConfigurationController, AddWizardFinalAction.Back, reconnect = true)
       }
 
       else -> {
@@ -198,53 +228,39 @@ class Reconnecting(
   override fun handle(event: EspConfigurationEvent): EspConfigurationState =
     when (event) {
       EspConfigurationEvent.Reconnected -> {
-        when (finalAction) {
-          AddWizardFinalAction.Close -> {
-            espConfigurationController.close()
-            Canceled
-          }
-
-          is AddWizardFinalAction.Error -> {
-            espConfigurationController.showError(finalAction.error)
-            ConfigurationFailure
-          }
-
-          AddWizardFinalAction.Success -> {
-            espConfigurationController.showFinished()
-            Finished
-          }
-        }
+        handleFinalAction(finalAction, espConfigurationController)
       }
 
-      EspConfigurationEvent.Cancel -> {
+      EspConfigurationEvent.Cancel,
+      EspConfigurationEvent.Back -> {
         // Do nothing, just wait for result
         Reconnecting(espConfigurationController, finalAction)
       }
 
       else -> {
         espConfigurationController.showError(EspConfigurationError.Reconnect)
-        ConfigurationFailure
+        ConfigurationFailure(espConfigurationController)
       }
     }
 }
 
 class Canceling(
   private val espConfigurationController: EspConfigurationController,
-  private val reconnectAction: AddWizardFinalAction? = null
+  private val finalAction: AddWizardFinalAction,
+  private val reconnect: Boolean = false
 ) : EspConfigurationState {
   override fun handle(event: EspConfigurationEvent): EspConfigurationState =
     when (event) {
       EspConfigurationEvent.Canceled -> {
-        if (reconnectAction != null) {
+        if (reconnect) {
           espConfigurationController.reconnect()
-          Reconnecting(espConfigurationController, reconnectAction)
+          Reconnecting(espConfigurationController, finalAction)
         } else {
-          espConfigurationController.close()
-          Canceled
+          handleFinalAction(finalAction, espConfigurationController)
         }
       }
 
-      else -> Canceling(espConfigurationController, reconnectAction)
+      else -> Canceling(espConfigurationController, finalAction)
     }
 }
 
@@ -258,10 +274,60 @@ data object Canceled : EspConfigurationState {
   }
 }
 
-data object Finished : EspConfigurationState {
-  override fun handle(event: EspConfigurationEvent): EspConfigurationState = Finished
+class Finished(
+  private val espConfigurationController: EspConfigurationController
+) : EspConfigurationState {
+  override fun handle(event: EspConfigurationEvent): EspConfigurationState =
+    when (event) {
+      EspConfigurationEvent.Start -> {
+        espConfigurationController.checkRegistration()
+        CheckingRegistration(espConfigurationController)
+      }
+
+      else -> Finished(espConfigurationController)
+    }
 }
 
-data object ConfigurationFailure : EspConfigurationState {
-  override fun handle(event: EspConfigurationEvent): EspConfigurationState = ConfigurationFailure
+class ConfigurationFailure(
+  private val espConfigurationController: EspConfigurationController
+) : EspConfigurationState {
+  override fun handle(event: EspConfigurationEvent): EspConfigurationState =
+    when (event) {
+      EspConfigurationEvent.Start -> {
+        espConfigurationController.checkRegistration()
+        CheckingRegistration(espConfigurationController)
+      }
+
+      else -> ConfigurationFailure(espConfigurationController)
+    }
 }
+
+/**
+ * Helper function
+ */
+
+private fun handleFinalAction(
+  finalAction: AddWizardFinalAction,
+  espConfigurationController: EspConfigurationController
+): EspConfigurationState =
+  when (finalAction) {
+    AddWizardFinalAction.Close -> {
+      espConfigurationController.close()
+      Canceled
+    }
+
+    is AddWizardFinalAction.Error -> {
+      espConfigurationController.showError(finalAction.error)
+      ConfigurationFailure(espConfigurationController)
+    }
+
+    AddWizardFinalAction.Success -> {
+      espConfigurationController.showFinished()
+      Finished(espConfigurationController)
+    }
+
+    AddWizardFinalAction.Back -> {
+      espConfigurationController.back()
+      Idle(espConfigurationController)
+    }
+  }

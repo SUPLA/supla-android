@@ -21,6 +21,7 @@ import android.app.NotificationManager
 import android.app.UiModeManager
 import android.appwidget.AppWidgetManager
 import android.content.Context
+import android.location.LocationManager
 import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
 import android.os.PowerManager
@@ -98,28 +99,39 @@ class ApplicationModule {
     SuplaClientMessageHandler.getGlobalInstance()
 
   @Provides
+  @Singleton
   fun provideNotificationManager(@ApplicationContext context: Context) =
     context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
   @Provides
+  @Singleton
   fun provideModeManager(@ApplicationContext context: Context) =
     context.getSystemService(Context.UI_MODE_SERVICE) as UiModeManager
 
   @Provides
+  @Singleton
   fun provideBiometricManager(@ApplicationContext context: Context) =
     BiometricManager.from(context)
 
   @Provides
+  @Singleton
   fun providePowerManager(@ApplicationContext context: Context) =
     context.getSystemService(Context.POWER_SERVICE) as PowerManager
 
   @Provides
+  @Singleton
   fun provideWifiManager(@ApplicationContext context: Context): WifiManager =
     context.getSystemService(WifiManager::class.java)
 
   @Provides
+  @Singleton
   fun provideConnectivityManager(@ApplicationContext context: Context): ConnectivityManager =
     context.getSystemService(ConnectivityManager::class.java)
+
+  @Provides
+  @Singleton
+  fun provideLocationManager(@ApplicationContext context: Context): LocationManager =
+    context.getSystemService(LocationManager::class.java)
 
   @Provides
   @Singleton
