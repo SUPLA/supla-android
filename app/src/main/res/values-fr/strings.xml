@@ -671,4 +671,6 @@
 
   <string name="channel_battery_level">Niveau de batterie (%1$d - %2$s): %3$d%%</string>
   <string name="android_auto_action">Action: %1$s</string>
+  <string name="add_wizard_add_more">Ajouter plus</string>
+  <string name="add_wizard_repeat">Réessayez</string>
 </resources>

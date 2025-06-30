@@ -34,7 +34,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -66,12 +65,11 @@ fun AddWizardScaffold(
   backButton: (@Composable BoxScope.() -> Unit)? = null,
   processing: Boolean = false,
   onNext: () -> Unit = {},
-  onClose: () -> Unit = {},
   content: @Composable ColumnScope.() -> Unit
 ) {
   Column(
     modifier = Modifier.padding(Distance.small),
-    verticalArrangement = Arrangement.spacedBy(Distance.default),
+    verticalArrangement = Arrangement.spacedBy(Distance.tiny),
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
     Column(
@@ -79,11 +77,9 @@ fun AddWizardScaffold(
         .weight(1f)
         .verticalScroll(rememberScrollState())
         .padding(horizontal = Distance.small),
-      verticalArrangement = Arrangement.spacedBy(Distance.default),
+      verticalArrangement = Arrangement.spacedBy(Distance.small),
       horizontalAlignment = Alignment.CenterHorizontally
     ) {
-      TitleBar(onClose = onClose)
-
       Image(
         drawableId = iconRes,
         modifier = Modifier.size(140.dp)
@@ -100,26 +96,6 @@ fun AddWizardScaffold(
     )
   }
 }
-
-@Composable
-private fun TitleBar(onClose: () -> Unit) =
-  Box(modifier = Modifier.fillMaxWidth()) {
-    Text(
-      text = stringResource(R.string.app_name).lowercase(),
-      style = MaterialTheme.typography.titleLarge,
-      modifier = Modifier.align(Alignment.Center),
-      color = MaterialTheme.colorScheme.onPrimaryContainer
-    )
-    IconButton(
-      onClick = onClose,
-      modifier = Modifier.align(Alignment.CenterEnd)
-    ) {
-      Image(
-        drawableId = R.drawable.ic_close,
-        tint = MaterialTheme.colorScheme.onPrimaryContainer
-      )
-    }
-  }
 
 @Composable
 private fun NavigationButtons(

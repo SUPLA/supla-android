@@ -41,7 +41,6 @@ fun AddWizardWelcomeScope.AddWizardWelcomeView() {
     iconRes = R.drawable.add_wizard_step_1,
     buttonTextId = R.string.next,
     onNext = { onStepFinished(AddWizardScreen.Welcome) },
-    onClose = { onClose(AddWizardScreen.Welcome) }
   ) {
     AddWizardContentText(R.string.add_wizard_step_1_welcome)
     AddWizardContentText(R.string.add_wizard_step_1_qr_info)

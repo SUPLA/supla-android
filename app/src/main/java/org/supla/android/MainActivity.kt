@@ -38,6 +38,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.children
+import androidx.core.view.isVisible
 import androidx.customview.widget.Openable
 import androidx.navigation.NavDestination
 import androidx.navigation.fragment.NavHostFragment
@@ -53,9 +54,12 @@ import org.supla.android.core.networking.suplaclient.SuplaClientState
 import org.supla.android.core.networking.suplaclient.SuplaClientStateHolder
 import org.supla.android.core.notifications.NotificationsHelper
 import org.supla.android.core.ui.BackHandleOwner
+import org.supla.android.extensions.MenuItemsAnimationType
 import org.supla.android.extensions.TAG
 import org.supla.android.extensions.getChannelIconUseCase
+import org.supla.android.extensions.hide
 import org.supla.android.extensions.setStatusBarColor
+import org.supla.android.extensions.show
 import org.supla.android.extensions.visibleIf
 import org.supla.android.features.lockscreen.LockScreenFragment
 import org.supla.android.features.lockscreen.UnlockAction
@@ -72,6 +76,7 @@ import org.supla.android.ui.ToolbarItemsClickHandler
 import org.supla.android.ui.ToolbarItemsController
 import org.supla.android.ui.ToolbarTitleController
 import org.supla.android.ui.ToolbarVisibilityController
+import org.supla.core.shared.extensions.ifTrue
 import java.text.SimpleDateFormat
 import java.util.Date
 import javax.inject.Inject
@@ -236,6 +241,10 @@ class MainActivity :
 
     val appBarConfiguration = AppBarConfiguration
       .Builder(setOf(R.id.status_fragment, R.id.main_fragment))
+      .setFallbackOnNavigateUpListener {
+        finishAffinity()
+        true
+      }
       .setOpenableLayout(menuListener)
       .build()
 
@@ -244,6 +253,19 @@ class MainActivity :
       navController,
       appBarConfiguration
     )
+
+    toolbar.setNavigationOnClickListener {
+      val currentDestination = navController.currentDestination
+      if (currentDestination?.let { appBarConfiguration.isTopLevelDestination(it) } ?: false) {
+        appBarConfiguration.openableLayout?.open()
+      } else {
+        if (!isUpHandledInChildFragment(supportFragmentManager)) {
+          if (!navController.navigateUp()) {
+            appBarConfiguration.fallbackOnNavigateUpListener?.onNavigateUp()
+          }
+        }
+      }
+    }
   }
 
   private fun toolbarSetup() {
@@ -278,8 +300,6 @@ class MainActivity :
         override fun handleOnBackPressed() {
           if (menuIsVisible()) {
             setMenuVisible(false)
-          } else if (isBackHandledInChildFragment(supportFragmentManager)) {
-            return // Do nothing, is consumed by child fragment
           } else if (!navigator.back()) {
             finishAffinity()
           }
@@ -434,52 +454,37 @@ class MainActivity :
   }
 
   private fun menuIsVisible(): Boolean {
-    return menuLayout.visibility == View.VISIBLE
+    return menuLayout.isVisible
   }
 
-  private fun setMenuVisible(visible: Boolean) {
+  private fun setMenuVisible(visible: Boolean, animationType: MenuItemsAnimationType = MenuItemsAnimationType.TRANSLATION) {
     if (visible && menuIsVisible()) return
     if (!visible && !menuIsVisible()) return
 
     if (visible) {
       if (animatingMenu) return
-      val btns =
-        if (getDbHelper()?.isZWaveBridgeChannelAvailable == true) {
+      val buttons =
+        if (getDbHelper().isZWaveBridgeChannelAvailable) {
           MenuItemsLayout.BTN_ALL
         } else {
           MenuItemsLayout.BTN_ALL xor MenuItemsLayout.BTN_Z_WAVE
         }
-      menuLayout.setButtonsAvailable(btns)
+      menuLayout.setButtonsAvailable(buttons)
       menuLayout.y = (-menuLayout.btnAreaHeight).toFloat()
       menuLayout.visibility = View.VISIBLE
       animatingMenu = true
-      menuLayout.animate()
-        .translationY(0f)
-        .setDuration(200)
-        .setListener(
-          object : AnimatorListenerAdapter() {
-            override fun onAnimationEnd(animation: Animator) {
-              super.onAnimationEnd(animation)
-              animatingMenu = false
-            }
-          }
-        )
+      menuLayout
+        .show(animationType) {
+          animatingMenu = false
+        }
     } else {
       if (animatingMenu) return
       animatingMenu = true
       menuLayout
-        .animate()
-        .translationY(-menuLayout.btnAreaHeight.toFloat())
-        .setDuration(200)
-        .setListener(
-          object : AnimatorListenerAdapter() {
-            override fun onAnimationEnd(animation: Animator) {
-              super.onAnimationEnd(animation)
-              menuLayout.visibility = View.GONE
-              animatingMenu = false
-            }
-          }
-        )
+        .hide(-menuLayout.btnAreaHeight.toFloat(), animationType) {
+          menuLayout.visibility = View.GONE
+          animatingMenu = false
+        }
     }
   }
 
@@ -503,9 +508,16 @@ class MainActivity :
   override fun getLoadingIndicator(): View = findViewById(R.id.loadingIndicator)
 
   private fun handleMenuClicks(v: View) {
-    setMenuVisible(false)
+    val buttonId = MenuItemsLayout.getButtonId(v)
+    val animationType =
+      if (buttonId == MenuItemsLayout.BTN_ADD_DEVICE) {
+        MenuItemsAnimationType.FADE_IN_OUT
+      } else {
+        MenuItemsAnimationType.TRANSLATION
+      }
+    setMenuVisible(false, animationType)
 
-    when (MenuItemsLayout.getButtonId(v)) {
+    when (buttonId) {
       MenuItemsLayout.BTN_SETTINGS -> navigator.navigateTo(R.id.application_settings_fragment)
       MenuItemsLayout.BTN_ABOUT -> navigator.navigateTo(R.id.about_fragment)
       MenuItemsLayout.BTN_ADD_DEVICE -> navigator.navigateToAddWizard()
@@ -526,6 +538,7 @@ class MainActivity :
   override fun setToolbarVisible(visibility: ToolbarVisibilityController.ToolbarVisibility) {
     appBarLayout.visibleIf(visibility.visible)
     appBarLayoutSpacer.visibleIf(visibility.visible)
+    appBarLayout.elevation = visibility.shadowVisible.ifTrue { resources.getDimension(R.dimen.segmented_button_elevation) } ?: 0f
     setStatusBarColor(visibility.toolbarColorRes, visibility.navigationBarColorRes, visibility.isLight)
   }
 

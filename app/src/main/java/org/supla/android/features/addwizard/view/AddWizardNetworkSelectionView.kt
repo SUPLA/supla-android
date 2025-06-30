@@ -77,7 +77,6 @@ fun AddWizardNetworkSelectionScope.AddWizardNetworkSelectionView(
     iconRes = R.drawable.add_wizard_step_2,
     buttonTextId = R.string.next,
     onNext = { onStepFinished(AddWizardScreen.NetworkSelection) },
-    onClose = { onClose(AddWizardScreen.NetworkSelection) }
   ) {
     AddWizardContentText(R.string.add_wizard_step_2_message)
 

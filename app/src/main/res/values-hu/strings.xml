@@ -681,7 +681,8 @@
   <string name="thermostat_detail_main_thermostat">Fő termosztát</string>
   <string name="thermostat_detail_other_thermostats">Mellék termosztátok</string>
   <string name="thermostat_battery_cover_open">Elemfedél nyitva</string>
-
   <string name="channel_battery_level">Az akkumulátor töltöttségi szintje (%1$d - %2$s): %3$d%%</string>
   <string name="android_auto_action">Akció: %1$s</string>
+  <string name="add_wizard_add_more">Többet hozzáad</string>
+  <string name="add_wizard_repeat">Próbáld újra</string>
 </resources>

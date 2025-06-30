@@ -150,7 +150,7 @@ class CfgActivity : BaseActivity() {
   }
 
   private fun backLogic() {
-    if (isBackHandledInChildFragment(supportFragmentManager) || navigator.back()) {
+    if (navigator.back()) {
       return
     }
 
