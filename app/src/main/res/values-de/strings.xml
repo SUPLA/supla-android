@@ -783,4 +783,6 @@
   <string name="add_wizard_network_scan_in_progress">Scannen…</string>
   <string name="add_wizard_network_scan_empty">Keine WLAN-Netzwerke gefunden. Stellen Sie sicher, dass WLAN aktiviert ist und Sie sich in Reichweite eines Netzwerks befinden.</string>
   <string name="add_wizard_network_manual_connect">Ich habe mich manuell mit dem Netzwerk verbunden, fahre fort.</string>
+  <string name="add_wizard_add_more">Weitere hinzufügen</string>
+  <string name="add_wizard_repeat">Nochmal versuchen</string>
 </resources>

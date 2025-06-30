@@ -3,6 +3,7 @@
   <string name="dont_have_account_yet">Don\'t have an account in Supla Cloud yet?</string>
 
   <string name="app_name" translatable="false">SUPLA</string>
+  <string name="app_name_lowercased" translatable="false">supla</string>
   <string name="profiles_title">Accounts</string>
   <string name="profile_name_label">ACCOUNT NAME</string>
   <string name="profile_default_name">Default account</string>
@@ -819,6 +820,8 @@
   <string name="add_wizard_network_scan_in_progress" translatable="false">Scanning…</string>
   <string name="add_wizard_network_scan_empty" translatable="false">No Wi-Fi networks found. Make sure Wi-Fi is enabled and you\'re within range of a network.</string>
   <string name="add_wizard_network_manual_connect" translatable="false">I connected to the network manually, continue.</string>
+  <string name="add_wizard_add_more" translatable="false">Add more</string>
+  <string name="add_wizard_repeat" translatable="false">Try again</string>
 
   <plurals name="details_timer_info_on" translatable="false">
     <item quantity="other">on</item>

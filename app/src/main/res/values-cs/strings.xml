@@ -664,4 +664,6 @@
 
   <string name="channel_battery_level">Stav baterie (%1$d - %2$s): %3$d%%</string>
   <string name="android_auto_action">Akce: %1$s</string>
+  <string name="add_wizard_add_more">Přidejte další</string>
+  <string name="add_wizard_repeat">Zkusit znovu</string>
 </resources>

@@ -792,6 +792,8 @@
   <string name="add_wizard_network_scan_in_progress">Skanowanie…</string>
   <string name="add_wizard_network_scan_empty">Nie znaleziono żadnych sieci Wi-Fi. Upewnij się, że Wi-Fi jest włączone i znajdujesz się w zasięgu sieci.</string>
   <string name="add_wizard_network_manual_connect">Podłączyłem do sieci ręcznie, kontynuuj.</string>
+  <string name="add_wizard_add_more">Dodaj kolejne</string>
+  <string name="add_wizard_repeat">Spróbuj ponownie</string>
 
   <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
     <item quantity="one">włączone</item>

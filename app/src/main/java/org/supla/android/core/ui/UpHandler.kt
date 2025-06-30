@@ -17,21 +17,6 @@ package org.supla.android.core.ui
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.fragment.app.FragmentManager
-import org.supla.android.extensions.iterateVisibleFragments
-
-interface BackHandleOwner {
-  fun isUpHandledInChildFragment(supportFragmentManager: FragmentManager): Boolean {
-    var result = false
-    supportFragmentManager.iterateVisibleFragments {
-      if (it is UpHandler && it.onUpPressed()) {
-        result = true
-        true
-      } else {
-        false
-      }
-    }
-
-    return result
-  }
+interface UpHandler {
+  fun onUpPressed(): Boolean
 }

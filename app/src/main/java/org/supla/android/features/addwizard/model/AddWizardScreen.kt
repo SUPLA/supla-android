@@ -30,13 +30,14 @@ sealed class AddWizardScreen {
 
   data class Message(
     @DrawableRes val iconRes: Int,
-    val message: LocalizedString
+    val message: LocalizedString,
+    val showRepeat: Boolean
   ) : AddWizardScreen() {
 
     companion object {
-      val NoWifi = Message(R.drawable.add_wizard_error, localizedString(R.string.wizard_no_internetwifi))
-      val WizardUnavailable = Message(R.drawable.add_wizard_error, localizedString(R.string.add_wizard_is_not_available))
-      val LocationDisabled = Message(R.drawable.add_wizard_error, message = localizedString(R.string.wizard_location_error))
+      val NoWifi = Message(R.drawable.add_wizard_error, localizedString(R.string.wizard_no_internetwifi), false)
+      val WizardUnavailable = Message(R.drawable.add_wizard_error, localizedString(R.string.add_wizard_is_not_available), false)
+      val LocationDisabled = Message(R.drawable.add_wizard_error, message = localizedString(R.string.wizard_location_error), false)
     }
   }
 }

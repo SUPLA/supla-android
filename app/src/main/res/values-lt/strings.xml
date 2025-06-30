@@ -659,7 +659,8 @@
   <string name="thermostat_detail_main_thermostat">Pagrindinis termostatas</string>
   <string name="thermostat_detail_other_thermostats">Priklausomi termostatai</string>
   <string name="thermostat_battery_cover_open">Baterijos dangtelis atidarytas</string>
-
   <string name="channel_battery_level">Baterijos lygis (%1$d - %2$s): %3$d%%</string>
   <string name="android_auto_action">Veiksmas: %1$s</string>
+  <string name="add_wizard_add_more">Pridėti daugiau</string>
+  <string name="add_wizard_repeat">Bandykite dar kartą</string>
 </resources>

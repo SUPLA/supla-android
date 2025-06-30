@@ -683,7 +683,8 @@
   <string name="thermostat_detail_main_thermostat">Termostat principal</string>
   <string name="thermostat_detail_other_thermostats">Termostate dependente</string>
   <string name="thermostat_battery_cover_open">Deschideți capacul bateriei</string>
-
   <string name="channel_battery_level">Nivelul bateriei (%1$d - %2$s): %3$d%%</string>
   <string name="android_auto_action">Acțiune: %1$s</string>
+  <string name="add_wizard_add_more">Adaugă mai mult</string>
+  <string name="add_wizard_repeat">Încearcă din nou</string>
 </resources>

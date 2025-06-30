@@ -17,7 +17,9 @@ package org.supla.android.features.addwizard.view
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import org.supla.android.R
@@ -26,10 +28,13 @@ import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.features.addwizard.AddWizardScope
 import org.supla.android.features.addwizard.model.AddWizardScreen
 import org.supla.android.features.addwizard.view.components.AddWizardContentText
+import org.supla.android.features.addwizard.view.components.AddWizardRepeatButton
 import org.supla.android.features.addwizard.view.components.AddWizardScaffold
 import org.supla.core.shared.infrastructure.localizedString
 
-interface AddWizardMessageScope : AddWizardScope
+interface AddWizardMessageScope : AddWizardScope {
+  fun onAgain()
+}
 
 @Composable
 fun AddWizardMessageScope.AddWizardMessageView(
@@ -39,15 +44,20 @@ fun AddWizardMessageScope.AddWizardMessageView(
     step.iconRes,
     buttonTextId = R.string.exit,
     onNext = { onStepFinished(step) },
-    onClose = { onClose(step) }
   ) {
     AddWizardContentText(step.message(LocalContext.current))
+    if (step.showRepeat) {
+      Spacer(modifier = Modifier.weight(1f))
+      AddWizardRepeatButton(textRes = R.string.add_wizard_repeat) { onAgain() }
+      Spacer(modifier = Modifier.weight(1f))
+    }
   }
 }
 
 private val previewScope = object : AddWizardMessageScope {
   override fun onStepFinished(step: AddWizardScreen) {}
   override fun onClose(step: AddWizardScreen) {}
+  override fun onAgain() {}
 }
 
 @Preview(backgroundColor = 0xFF12A71E, showBackground = true)
@@ -55,7 +65,7 @@ private val previewScope = object : AddWizardMessageScope {
 private fun Preview() {
   SuplaTheme {
     previewScope.AddWizardMessageView(
-      AddWizardScreen.Message(R.drawable.add_wizard_error, localizedString(R.string.wizard_iodevice_notfound))
+      AddWizardScreen.Message(R.drawable.add_wizard_error, localizedString(R.string.wizard_iodevice_notfound), true)
     )
   }
 }

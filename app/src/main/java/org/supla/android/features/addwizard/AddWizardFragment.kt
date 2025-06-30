@@ -18,7 +18,9 @@ package org.supla.android.features.addwizard
  */
 
 import android.Manifest
+import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -34,8 +36,8 @@ import com.google.mlkit.vision.codescanner.GmsBarcodeScanning
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
 import org.supla.android.Trace
-import org.supla.android.core.ui.BackHandler
 import org.supla.android.core.ui.BaseComposeFragment
+import org.supla.android.core.ui.UpHandler
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.extensions.TAG
 import org.supla.android.extensions.allGranted
@@ -48,9 +50,15 @@ import org.supla.android.ui.dialogs.AuthorizationDialog
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class AddWizardFragment : BaseComposeFragment<AddWizardViewModelState, AddWizardViewEvent>(), BackHandler, NavigationSubcontroller {
+class AddWizardFragment : BaseComposeFragment<AddWizardViewModelState, AddWizardViewEvent>(), NavigationSubcontroller, UpHandler {
 
   override val viewModel: AddWizardViewModel by viewModels()
+
+  private val onBackPressedDispatcher = object : OnBackPressedCallback(true) {
+    override fun handleOnBackPressed() {
+      viewModel.onBackPressed()
+    }
+  }
 
   @Inject
   lateinit var navigator: MainNavigator
@@ -72,6 +80,11 @@ class AddWizardFragment : BaseComposeFragment<AddWizardViewModelState, AddWizard
       .build()
 
     GmsBarcodeScanning.getClient(requireContext(), options)
+  }
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    requireActivity().onBackPressedDispatcher.addCallback(this, onBackPressedDispatcher)
   }
 
   @Composable
@@ -105,15 +118,19 @@ class AddWizardFragment : BaseComposeFragment<AddWizardViewModelState, AddWizard
     }
   }
 
+  override fun handleViewState(state: AddWizardViewModelState) {
+    super.handleViewState(state)
+    onBackPressedDispatcher.isEnabled = state.customBackEnabled
+  }
+
   override fun getToolbarVisibility(): ToolbarVisibilityController.ToolbarVisibility =
     ToolbarVisibilityController.ToolbarVisibility(
-      visible = false,
+      visible = true,
       toolbarColorRes = R.color.primary_container,
       navigationBarColorRes = R.color.primary_container,
+      shadowVisible = false,
       isLight = false
     )
-
-  override fun onBackPressed(): Boolean = viewModel.onBackPressed()
 
   private fun checkPermissions() {
     val permissions = listOf(
@@ -141,4 +158,10 @@ class AddWizardFragment : BaseComposeFragment<AddWizardViewModelState, AddWizard
     }
 
   override fun screenTakeoverAllowed(): Boolean = false
+
+  override fun onUpPressed(): Boolean =
+    viewState.screen?.let {
+      viewModel.onClose(it)
+      true
+    } ?: false
 }

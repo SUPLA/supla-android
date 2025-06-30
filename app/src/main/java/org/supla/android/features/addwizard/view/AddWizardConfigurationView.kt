@@ -54,7 +54,6 @@ fun AddWizardConfigurationScope.AddWizardConfigurationView(
     buttonTextId = R.string.start,
     processing = processing,
     onNext = { onStepFinished(AddWizardScreen.Configuration) },
-    onClose = { onClose(AddWizardScreen.Configuration) }
   ) {
     AddWizardContentText(R.string.add_wizard_step_3_message_1)
     BlinkingDot()

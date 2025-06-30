@@ -131,6 +131,8 @@ class AddWizardViewModel @Inject constructor(
     configurationStateHolder = EspConfigurationStateHolder(this)
     if (hasWiFiConnection().not()) {
       updateState { it.openOnly(screen = AddWizardScreen.Message.NoWifi) }
+    } else if (hasLocationEnabled().not()) {
+      updateState { it.openOnly(screen = AddWizardScreen.Message.LocationDisabled) }
     } else {
       loadActiveProfileUseCase()
         .attach()
@@ -289,7 +291,8 @@ class AddWizardViewModel @Inject constructor(
       it.openOnly(
         screen = AddWizardScreen.Message(
           iconRes = R.drawable.add_wizard_error,
-          message = localizedString(R.string.wizard_not_enought_permissions, appName)
+          message = localizedString(R.string.wizard_not_enought_permissions, appName),
+          showRepeat = false
         )
       )
     }
@@ -299,10 +302,10 @@ class AddWizardViewModel @Inject constructor(
     currentWifiNetworkInfoProvider.register()
   }
 
-  fun onBackPressed(): Boolean {
+  fun onBackPressed() {
     val state = currentState()
     if (state.screens.size == 1) {
-      return false
+      return
     }
 
     if (configurationStateHolder.isInactive) {
@@ -310,8 +313,6 @@ class AddWizardViewModel @Inject constructor(
     } else {
       configurationStateHolder.handleEvent(event = EspConfigurationEvent.Back)
     }
-
-    return true
   }
 
   override fun checkRegistration() {
@@ -437,7 +438,7 @@ class AddWizardViewModel @Inject constructor(
 
   override fun showError(error: EspConfigurationError) {
     updateState {
-      it.navigateTo(screen = AddWizardScreen.Message(iconRes = error.iconRes, message = error.message))
+      it.navigateTo(screen = AddWizardScreen.Message(iconRes = error.iconRes, message = error.message, true))
         .copy(processing = false)
     }
   }
@@ -537,6 +538,9 @@ data class AddWizardViewModelState(
   val networkId: Int? = null,
   override val authorizationDialogState: AuthorizationDialogState? = null
 ) : AuthorizationModelState() {
+
+  val customBackEnabled: Boolean
+    get() = screens.size > 1
 
   val screen: AddWizardScreen?
     get() = screens.lastOrNull()

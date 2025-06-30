@@ -669,8 +669,8 @@
   <string name="thermostat_detail_main_thermostat">Termostato principal</string>
   <string name="thermostat_detail_other_thermostats">Termostatos dependientes</string>
   <string name="thermostat_battery_cover_open">Tapa de la batería abierta</string>
-
-
   <string name="channel_battery_level">Nivel de batería (%1$d - %2$s): %3$d%%</string>
   <string name="android_auto_action">Acción: %1$s</string>
+  <string name="add_wizard_add_more">Añadir más</string>
+  <string name="add_wizard_repeat">Intenta de nuevo</string>
 </resources>

@@ -712,4 +712,6 @@
   <item quantity="other">%1$d sec</item>
   </plurals>
   <string name="android_auto_action">Azione: %1$s</string>
+  <string name="add_wizard_add_more">Aggiungi altro</string>
+  <string name="add_wizard_repeat">Riprova</string>
 </resources>
