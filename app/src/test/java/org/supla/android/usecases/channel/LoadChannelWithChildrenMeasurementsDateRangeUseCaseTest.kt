@@ -141,10 +141,6 @@ class LoadChannelWithChildrenMeasurementsDateRangeUseCaseTest {
       .thenReturn(Single.error(EmptyResultSetException("")))
     whenever(temperatureLogRepository.findMinTimestamp(3, profileId))
       .thenReturn(Single.error(EmptyResultSetException("")))
-    whenever(temperatureAndHumidityLogRepository.findMaxTimestamp(2, profileId))
-      .thenReturn(Single.error(EmptyResultSetException("")))
-    whenever(temperatureLogRepository.findMaxTimestamp(3, profileId))
-      .thenReturn(Single.error(EmptyResultSetException("")))
 
     // when
     val testObserver = useCase.invoke(remoteId, profileId).test()
@@ -155,9 +151,7 @@ class LoadChannelWithChildrenMeasurementsDateRangeUseCaseTest {
 
     verify(readChannelWithChildrenUseCase).invoke(remoteId)
     verify(temperatureAndHumidityLogRepository).findMinTimestamp(2, profileId)
-    verify(temperatureAndHumidityLogRepository).findMaxTimestamp(2, profileId)
     verify(temperatureLogRepository).findMinTimestamp(3, profileId)
-    verify(temperatureLogRepository).findMaxTimestamp(3, profileId)
     verifyNoMoreInteractions(readChannelWithChildrenUseCase, temperatureAndHumidityLogRepository, temperatureLogRepository)
   }
 
