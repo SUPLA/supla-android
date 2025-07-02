@@ -5,7 +5,6 @@ import org.supla.android.data.source.ChannelGroupRepository
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.location.CollapsedFlag
-import java.util.Collections
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -29,13 +28,13 @@ class CreateProfileGroupsListUseCase @Inject constructor(
           }
         }
 
-        location?.let { locationEntity ->
+        location.let { locationEntity ->
           if (!locationEntity.isCollapsed(CollapsedFlag.GROUP)) {
             groups.add(ListItem.ChannelItem(it, null, it.getLegacyGroup()))
           }
         }
       }
 
-      Collections.unmodifiableList(groups)
+      groups.toList()
     }.toObservable()
 }

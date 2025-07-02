@@ -59,7 +59,7 @@ kotlin {
 
     commonMain.dependencies {
       implementation(libs.kotlinx.serialization)
-      implementation(libs.kotlin.endians)
+      implementation(libs.kotlin.bitops.endian)
     }
   }
 }

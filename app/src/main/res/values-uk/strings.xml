@@ -657,6 +657,18 @@
   <string name="thermostat_battery_cover_open">Кришка акумулятора відкрита</string>
   <string name="channel_battery_level">Рівень заряду батареї (%1$d - %2$s): %3$d%%</string>
   <string name="android_auto_action">Подія: %1$s</string>
+  <string name="add_wizard_step_1_qr_info">Якщо у вас є QR-код, скористайтеся сканером. Для пристроїв без QR-коду натисніть <b>Далі</b>, щоб продовжити.</string>
+  <string name="add_wizard_network_name">Назва мережі</string>
+  <string name="add_wizard_step_2_search_network">Шукати мережу</string>
+  <string name="add_wizard_step_3_message_1">Підключіть пристрій до джерела живлення. Пристрій за замовчуванням повинен працювати в режимі конфігурації, про що свідчить миготіння індикатора стану наступним чином.</string>
+  <string name="add_wizard_step_3_message_2">Якщо пристрій не перебуває в режимі конфігурації після увімкнення, натисніть і утримуйте кнопку CONFIG протягом щонайменше 5 секунд.</string>
+  <string name="select">Вибрати</string>
+  <string name="add_wizard_network_scan">Сканування мережі</string>
+  <string name="add_wizard_network_scan_limit_warning">Через обмеження сканування Wi-Fi, накладені системою Android, подальше сканування було неможливим. Список містить мережі, знайдені під час попереднього сканування.</string>
+  <string name="add_wizard_network_scan_in_progress">Сканування…</string>
+  <string name="add_wizard_network_scan_empty">Мережі Wi-Fi не знайдено. Переконайтеся, що Wi-Fi увімкнено та ви перебуваєте в зоні дії мережі.</string>
+  <string name="add_wizard_network_manual_connect">Я підключився до мережі вручну, продовжуйте.</string>
   <string name="add_wizard_add_more">Додати більше</string>
   <string name="add_wizard_repeat">Спробуйте ще раз</string>
+  <string name="add_wizard_password_clarification">Реєстрація нових пристроїв у Хмарі вимкнена. Увімкніть її вручну або надайте пароль до свого облікового запису, щоб майстер автоматично увімкнув її на час реєстрації нових пристроїв.</string>
 </resources>

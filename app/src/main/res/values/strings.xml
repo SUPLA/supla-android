@@ -808,20 +808,21 @@
   <string name="widget_not_supported" translatable="false">Selected channel is not supported.</string>
   <string name="widget_update_time_long" translatable="false">Update time: %1$s</string>
   <string name="widget_no_value" translatable="false">No value available</string>
-  <string name="add_wizard_step_1_qr_info" translatable="false">If you have a QR code, use the scanner. For devices without a QR code, press <b>Next</b> to continue.</string>
-  <string name="add_wizard_network_name" translatable="false">Network name</string>
-  <string name="add_wizard_step_2_search_network" translatable="false">Search for network</string>
-  <string name="add_wizard_step_3_message_1" translatable="false">Connect your device to the power supply. The device should, by default, operate in configuration mode, indicated by the status LED flashing as follows.</string>
-  <string name="add_wizard_step_3_message_2" translatable="false">If the device isn\'t in configuration mode after powering on, press and hold the CONFIG button for at least 5 seconds.</string>
+  <string name="add_wizard_step_1_qr_info">If you have a QR code, use the scanner. For devices without a QR code, press <b>Next</b> to continue.</string>
+  <string name="add_wizard_network_name">Network name</string>
+  <string name="add_wizard_step_2_search_network">Search for network</string>
+  <string name="add_wizard_step_3_message_1">Connect your device to the power supply. The device should, by default, operate in configuration mode, indicated by the status LED flashing as follows.</string>
+  <string name="add_wizard_step_3_message_2">If the device isn\'t in configuration mode after powering on, press and hold the CONFIG button for at least 5 seconds.</string>
   <string name="add_wizard_wrong_qr_code" translatable="false">Wrong QR-code</string>
-  <string name="add_wizard_network_scan" translatable="false">Network scanning</string>
-  <string name="select" translatable="false">Select</string>
-  <string name="add_wizard_network_scan_limit_warning" translatable="false">Due to Wi-Fi scanning limitations imposed by the Android system, a subsequent scan was not possible. The list contains networks found during the previous scan.</string>
-  <string name="add_wizard_network_scan_in_progress" translatable="false">Scanning…</string>
-  <string name="add_wizard_network_scan_empty" translatable="false">No Wi-Fi networks found. Make sure Wi-Fi is enabled and you\'re within range of a network.</string>
-  <string name="add_wizard_network_manual_connect" translatable="false">I connected to the network manually, continue.</string>
-  <string name="add_wizard_add_more" translatable="false">Add more</string>
-  <string name="add_wizard_repeat" translatable="false">Try again</string>
+  <string name="add_wizard_network_scan">Network scanning</string>
+  <string name="select">Select</string>
+  <string name="add_wizard_network_scan_limit_warning">Due to Wi-Fi scanning limitations imposed by the Android system, a subsequent scan was not possible. The list contains networks found during the previous scan.</string>
+  <string name="add_wizard_network_scan_in_progress">Scanning…</string>
+  <string name="add_wizard_network_scan_empty">No Wi-Fi networks found. Make sure Wi-Fi is enabled and you\'re within range of a network.</string>
+  <string name="add_wizard_network_manual_connect">I connected to the network manually, continue.</string>
+  <string name="add_wizard_add_more">Add more</string>
+  <string name="add_wizard_repeat">Try again</string>
+  <string name="add_wizard_password_clarification">Registration of new devices in the Cloud is disabled. Enable it manually or provide your account password for the wizard to enable it automatically during the new device registration.</string>
 
   <plurals name="details_timer_info_on" translatable="false">
     <item quantity="other">on</item>

@@ -683,6 +683,18 @@
   <string name="thermostat_battery_cover_open">Elemfedél nyitva</string>
   <string name="channel_battery_level">Az akkumulátor töltöttségi szintje (%1$d - %2$s): %3$d%%</string>
   <string name="android_auto_action">Akció: %1$s</string>
+  <string name="add_wizard_step_1_qr_info">Ha van QR-kódja, használja a szkennert. QR-kód nélküli eszközök esetén nyomja meg a <b>Tovább</b> gombot a folytatáshoz.</string>
+  <string name="add_wizard_network_name">Hálózat neve</string>
+  <string name="add_wizard_step_2_search_network">Hálózat keresése</string>
+  <string name="add_wizard_step_3_message_1">Csatlakoztassa eszközét a tápegységhez. Az eszköznek alapértelmezés szerint konfigurációs módban kell működnie, amit az állapotjelző LED alábbi villogása jelez.</string>
+  <string name="add_wizard_step_3_message_2">Ha a készülék bekapcsolás után nincs konfigurációs módban, nyomja meg és tartsa lenyomva a CONFIG gombot legalább 5 másodpercig.</string>
+  <string name="add_wizard_network_scan">Hálózatkeresés</string>
+  <string name="select">Kiválaszt</string>
+  <string name="add_wizard_network_scan_limit_warning">Az Android rendszer által előírt Wi-Fi szkennelési korlátozások miatt további szkennelés nem lehetséges. A lista az előző szkennelés során talált hálózatokat tartalmazza.</string>
+  <string name="add_wizard_network_scan_in_progress">Beolvasás…</string>
+  <string name="add_wizard_network_scan_empty">Nincsenek Wi-Fi hálózatok. Győződjön meg róla, hogy a Wi-Fi be van kapcsolva, és hatótávolságon belül van egy hálózat.</string>
+  <string name="add_wizard_network_manual_connect">Kézzel csatlakoztam a hálózathoz, folytassa.</string>
   <string name="add_wizard_add_more">Többet hozzáad</string>
   <string name="add_wizard_repeat">Próbáld újra</string>
+  <string name="add_wizard_password_clarification">Az új eszközök regisztrációja a felhőben le van tiltva. Engedélyezze manuálisan, vagy adja meg fiókja jelszavát, hogy a varázsló automatikusan engedélyezze az új eszközök regisztrációjának idejére.</string>
 </resources>

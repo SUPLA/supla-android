@@ -671,6 +671,18 @@
   <string name="thermostat_battery_cover_open">Tapa de la batería abierta</string>
   <string name="channel_battery_level">Nivel de batería (%1$d - %2$s): %3$d%%</string>
   <string name="android_auto_action">Acción: %1$s</string>
+  <string name="add_wizard_step_1_qr_info">Si tiene un código QR, use el escáner. Para dispositivos sin código QR, presione <b>Siguiente</b> para continuar.</string>
+  <string name="add_wizard_network_name">Nombre de la red</string>
+  <string name="add_wizard_step_2_search_network">Buscar red</string>
+  <string name="add_wizard_step_3_message_1">Conecte su dispositivo a la fuente de alimentación. El dispositivo debería, por defecto, operar en modo de configuración, indicado por el parpadeo del LED de estado de la siguiente manera.</string>
+  <string name="add_wizard_step_3_message_2">Si el dispositivo no está en modo de configuración después de encenderlo, mantenga presionado el botón CONFIG durante al menos 5 segundos.</string>
+  <string name="add_wizard_network_scan">Escaneo de red</string>
+  <string name="select">Seleccionar</string>
+  <string name="add_wizard_network_scan_limit_warning">Debido a las limitaciones de escaneo de Wi-Fi impuestas por el sistema Android, no fue posible realizar un escaneo posterior. La lista contiene las redes encontradas durante el escaneo anterior.</string>
+  <string name="add_wizard_network_scan_in_progress">Escaneando…</string>
+  <string name="add_wizard_network_scan_empty">No se encontraron redes Wi-Fi. Asegúrese de que el Wi-Fi esté habilitado y de que se encuentre dentro del alcance de una red.</string>
+  <string name="add_wizard_network_manual_connect">Me conecté a la red manualmente, continúe.</string>
   <string name="add_wizard_add_more">Añadir más</string>
   <string name="add_wizard_repeat">Intenta de nuevo</string>
+  <string name="add_wizard_password_clarification">El registro de nuevos dispositivos en la Nube está deshabilitado. Habilítelo manualmente o proporcione la contraseña de su cuenta para que el asistente lo habilite automáticamente durante el registro de nuevos dispositivos.</string>
 </resources>

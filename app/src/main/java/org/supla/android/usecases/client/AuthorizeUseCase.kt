@@ -56,7 +56,8 @@ class AuthorizeUseCase @Inject constructor(
       try {
         waitForResponse(
           authorizedProvider = { authorized },
-          errorProvider = { error }
+          errorProvider = { error },
+          isLogin = false
         )
       } finally {
         suplaClientMessageHandlerWrapper.unregisterMessageListener(listener)

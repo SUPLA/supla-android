@@ -673,6 +673,18 @@
   <string name="thermostat_battery_cover_open">Tampa da bateria aberta</string>
   <string name="channel_battery_level">Nível de bateria (%1$d - %2$s): %3$d%%</string>
   <string name="android_auto_action">Acção: %1$s</string>
+  <string name="add_wizard_step_1_qr_info">Se você tiver um código QR, use o leitor. Para dispositivos sem código QR, pressione <b>Próximo</b> para continuar.</string>
+  <string name="add_wizard_network_name">Nome da rede</string>
+  <string name="add_wizard_step_2_search_network">Procurar rede</string>
+  <string name="add_wizard_step_3_message_1">Conecte seu dispositivo à fonte de alimentação. O dispositivo deve, por padrão, operar no modo de configuração, indicado pelo LED de status piscando da seguinte forma.</string>
+  <string name="add_wizard_step_3_message_2">Se o dispositivo não estiver no modo de configuração após ligar, pressione e segure o botão CONFIG por pelo menos 5 segundos.</string>
+  <string name="add_wizard_network_scan">Escaneamento de rede</string>
+  <string name="select">Selecionar</string>
+  <string name="add_wizard_network_scan_limit_warning">Devido às limitações de varredura de Wi-Fi impostas pelo sistema Android, uma varredura subsequente não foi possível. A lista contém as redes encontradas durante a varredura anterior.</string>
+  <string name="add_wizard_network_scan_in_progress">Escaneando…</string>
+  <string name="add_wizard_network_scan_empty">Nenhuma rede Wi-Fi encontrada. Certifique-se de que o Wi-Fi está ativado e que você está dentro do alcance de uma rede.</string>
+  <string name="add_wizard_network_manual_connect">Conectei-me à rede manualmente, continue.</string>
   <string name="add_wizard_add_more">Adicionar mais</string>
   <string name="add_wizard_repeat">Tente novamente</string>
+  <string name="add_wizard_password_clarification">O registro de novos dispositivos na Nuvem está desativado. Ative-o manualmente ou forneça a senha da sua conta para que o assistente o ative automaticamente durante o registro de novos dispositivos.</string>
 </resources>

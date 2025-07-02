@@ -684,6 +684,18 @@
   <string name="thermostat_battery_cover_open">Odprt pokrov baterije</string>
   <string name="channel_battery_level">Raven baterije (%1$d - %2$s): %3$d%%</string>
   <string name="android_auto_action">Dejanje: %1$s</string>
+  <string name="add_wizard_step_1_qr_info">Če imate QR kodo, uporabite skener. Za naprave brez QR kode pritisnite <b>Naprej</b> za nadaljevanje.</string>
+  <string name="add_wizard_network_name">Ime omrežja</string>
+  <string name="add_wizard_step_2_search_network">Iskanje omrežja</string>
+  <string name="add_wizard_step_3_message_1">Priključite napravo na napajanje. Naprava bi morala privzeto delovati v konfiguracijskem načinu, kar označuje utripanje LED lučke stanja na naslednji način.</string>
+  <string name="add_wizard_step_3_message_2">Če naprava po vklopu ni v načinu konfiguracije, pritisnite in držite gumb CONFIG vsaj 5 sekund.</string>
+  <string name="add_wizard_network_scan">Iskanje omrežij</string>
+  <string name="select">Izberite</string>
+  <string name="add_wizard_network_scan_limit_warning">Zaradi omejitev skeniranja Wi-Fi, ki jih nalaga sistem Android, naknadno skeniranje ni bilo možno. Seznam vsebuje omrežja, najdena med prejšnjim skeniranjem.</string>
+  <string name="add_wizard_network_scan_in_progress">Skeniranje…</string>
+  <string name="add_wizard_network_scan_empty">Ni najdenih omrežij Wi-Fi. Prepričajte se, da je Wi-Fi omogočen in da ste v dosegu omrežja.</string>
+  <string name="add_wizard_network_manual_connect">Ročno sem se povezal z omrežjem, nadaljujte.</string>
   <string name="add_wizard_add_more">Dodaj več</string>
   <string name="add_wizard_repeat">Poskusite znova</string>
+  <string name="add_wizard_password_clarification">Registracija novih naprav v oblaku je onemogočena. Omogočite jo ročno ali vnesite geslo svojega računa, da jo čarovnik samodejno omogoči med registracijo novih naprav.</string>
 </resources>

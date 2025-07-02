@@ -664,6 +664,18 @@
 
   <string name="channel_battery_level">Stav baterie (%1$d - %2$s): %3$d%%</string>
   <string name="android_auto_action">Akce: %1$s</string>
+  <string name="add_wizard_step_1_qr_info">Pokud máte QR kód, použijte skener. Pro zařízení bez QR kódu stiskněte <b>Další</b> pro pokračování.</string>
+  <string name="add_wizard_network_name">Název sítě</string>
+  <string name="add_wizard_step_2_search_network">Vyhledat síť</string>
+  <string name="add_wizard_step_3_message_1">Připojte zařízení k napájení. Zařízení by mělo ve výchozím nastavení fungovat v konfiguračním režimu, indikovaném blikáním stavové LED diody následovně.</string>
+  <string name="add_wizard_step_3_message_2">Pokud zařízení po zapnutí není v konfiguračním režimu, stiskněte a podržte tlačítko CONFIG po dobu alespoň 5 sekund.</string>
+  <string name="add_wizard_network_scan">Skenování sítě</string>
+  <string name="select">Vybrat</string>
+  <string name="add_wizard_network_scan_limit_warning">Kvůli omezením skenování Wi-Fi, která jsou uložena systémem Android, nebylo možné provést následné skenování. Seznam obsahuje sítě nalezené během předchozího skenování.</string>
+  <string name="add_wizard_network_scan_in_progress">Skenuji…</string>
+  <string name="add_wizard_network_scan_empty">Nebyly nalezeny žádné sítě Wi-Fi. Ujistěte se, že je Wi-Fi zapnuté a že jste v dosahu sítě.</string>
+  <string name="add_wizard_network_manual_connect">Připojil jsem se k síti ručně, pokračujte.</string>
   <string name="add_wizard_add_more">Přidejte další</string>
   <string name="add_wizard_repeat">Zkusit znovu</string>
+  <string name="add_wizard_password_clarification">Registrace nových zařízení v Cloudu je zakázána. Povolte ji ručně, nebo zadejte heslo ke svému účtu, aby ji průvodce automaticky povolil po dobu registrace nových zařízení.</string>
 </resources>

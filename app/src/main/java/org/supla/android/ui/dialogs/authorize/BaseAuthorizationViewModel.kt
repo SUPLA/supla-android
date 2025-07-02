@@ -25,7 +25,6 @@ import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.extensions.guardLet
-import org.supla.android.lib.SuplaRegisterError
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.dialogs.AuthorizationDialogScope
 import org.supla.android.ui.dialogs.AuthorizationDialogState
@@ -33,6 +32,8 @@ import org.supla.android.ui.dialogs.AuthorizationReason
 import org.supla.android.usecases.client.AuthorizationException
 import org.supla.android.usecases.client.AuthorizeUseCase
 import org.supla.android.usecases.client.LoginUseCase
+import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.infrastructure.localizedString
 
 abstract class BaseAuthorizationViewModel<S : AuthorizationModelState, E : ViewEvent>(
   private val suplaClientProvider: SuplaClientProvider,
@@ -67,7 +68,10 @@ abstract class BaseAuthorizationViewModel<S : AuthorizationModelState, E : ViewE
     updateAuthorizationDialogState { state }
   }
 
-  fun showAuthorizationDialog(reason: AuthorizationReason = AuthorizationReason.Default) {
+  fun showAuthorizationDialog(
+    reason: AuthorizationReason = AuthorizationReason.Default,
+    clarificationMessage: LocalizedString? = null
+  ) {
     if (isAuthorized()) {
       onAuthorized(reason)
       return
@@ -82,12 +86,14 @@ abstract class BaseAuthorizationViewModel<S : AuthorizationModelState, E : ViewE
               userName = profile.email ?: "",
               isCloudAccount = profile.isCloudAccount,
               userNameEnabled = suplaClientProvider.provide()?.registered() == true,
-              reason = reason
+              reason = reason,
+              clarification = clarificationMessage
             ) ?: AuthorizationDialogState(
               userName = profile.email ?: "",
               isCloudAccount = profile.isCloudAccount,
               userNameEnabled = suplaClientProvider.provide()?.registered() == true,
-              reason = reason
+              reason = reason,
+              clarification = clarificationMessage
             )
           }
         }
@@ -105,13 +111,13 @@ abstract class BaseAuthorizationViewModel<S : AuthorizationModelState, E : ViewE
           if (it.isAuthorized()) {
             onAuthorized(currentState().authorizationDialogState?.reason ?: AuthorizationReason.Default)
           } else {
-            updateAuthorizationDialogState { state -> state?.copy(error = { context -> context.getString(R.string.status_unknown_err) }) }
+            updateAuthorizationDialogState { state -> state?.copy(error = localizedString(R.string.status_unknown_err)) }
           }
         },
         onError = { error ->
           if (error is AuthorizationException) {
             updateAuthorizationDialogState { state ->
-              state?.copy(error = { it.getString(error.messageId ?: R.string.status_unknown_err) })
+              state?.copy(error = error.localizedErrorMessange)
             }
           } else {
             onError(error)
@@ -131,14 +137,13 @@ abstract class BaseAuthorizationViewModel<S : AuthorizationModelState, E : ViewE
           if (it.isAuthorized()) {
             onAuthorized(currentState().authorizationDialogState?.reason ?: AuthorizationReason.Default)
           } else {
-            updateAuthorizationDialogState { state -> state?.copy(error = { context -> context.getString(R.string.status_unknown_err) }) }
+            updateAuthorizationDialogState { state -> state?.copy(error = localizedString(R.string.status_unknown_err)) }
           }
         },
         onError = { error ->
           if (error is AuthorizationException) {
             updateAuthorizationDialogState { state ->
-              val registerError = SuplaRegisterError().also { it.ResultCode = error.messageId!! }
-              state?.copy(error = { registerError.codeToString(it, true) })
+              state?.copy(error = error.localizedErrorMessange)
             }
           } else {
             onError(error)

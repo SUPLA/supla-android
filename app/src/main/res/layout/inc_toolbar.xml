@@ -12,9 +12,9 @@
 
       <org.supla.android.ui.AppBar
         android:id="@+id/supla_toolbar"
-        android:theme="@style/SuplaToolbarStyle"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/top_bar_height">
+        android:layout_height="@dimen/top_bar_height"
+        android:theme="@style/SuplaToolbarStyle">
 
         <TextView
           android:id="@+id/supla_toolbar_title"
@@ -28,7 +28,7 @@
           android:maxLines="1"
           android:textAppearance="@style/AppTheme.TextAppearance.Headline6"
           android:textColor="@color/on_primary_container" />
-        
+
         <androidx.appcompat.widget.AppCompatImageView
           android:id="@+id/supla_toolbar_icon"
           android:layout_width="wrap_content"

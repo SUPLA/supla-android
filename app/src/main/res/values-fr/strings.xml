@@ -671,6 +671,18 @@
 
   <string name="channel_battery_level">Niveau de batterie (%1$d - %2$s): %3$d%%</string>
   <string name="android_auto_action">Action: %1$s</string>
+  <string name="add_wizard_step_1_qr_info">Si vous avez un code QR, utilisez le scanner. Pour les appareils sans code QR, appuyez sur <b>Suivant</b> pour continuer.</string>
+  <string name="add_wizard_network_name">Nom du réseau</string>
+  <string name="add_wizard_step_2_search_network">Rechercher un réseau</string>
+  <string name="add_wizard_step_3_message_1">Connectez votre appareil à l\'alimentation électrique. L\'appareil devrait, par défaut, fonctionner en mode de configuration, indiqué par le clignotement de la LED d\'état comme suit.</string>
+  <string name="add_wizard_step_3_message_2">Si l\'appareil n\'est pas en mode de configuration après la mise sous tension, appuyez et maintenez le bouton CONFIG enfoncé pendant au moins 5 secondes.</string>
+  <string name="add_wizard_network_scan">Balayage réseau</string>
+  <string name="select">Sélectionner</string>
+  <string name="add_wizard_network_scan_limit_warning">En raison des limitations de balayage Wi-Fi imposées par le système Android, une analyse ultérieure n\'a pas été possible. La liste contient les réseaux trouvés lors de l\'analyse précédente.</string>
+  <string name="add_wizard_network_scan_in_progress">Numérisation…</string>
+  <string name="add_wizard_network_scan_empty">Aucun réseau Wi-Fi trouvé. Assurez-vous que le Wi-Fi est activé et que vous êtes à portée d\'un réseau.</string>
+  <string name="add_wizard_network_manual_connect">Je me suis connecté au réseau manuellement, continuez.</string>
   <string name="add_wizard_add_more">Ajouter plus</string>
   <string name="add_wizard_repeat">Réessayez</string>
+  <string name="add_wizard_password_clarification">L\'enregistrement de nouveaux appareils dans le Cloud est désactivé. Activez-le manuellement ou fournissez le mot de passe de votre compte pour que l\'assistant l\'active automatiquement pendant l\'enregistrement de nouveaux appareils.</string>
 </resources>

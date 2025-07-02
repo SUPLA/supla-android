@@ -79,7 +79,7 @@ class LoginUseCaseTest {
     var listener: SuplaClientMessageHandler.OnSuplaClientMessageListener? = null
     doAnswer {
       listener = it.arguments[0] as SuplaClientMessageHandler.OnSuplaClientMessageListener
-      listener?.onSuplaClientMessageReceived(message)
+      listener.onSuplaClientMessageReceived(message)
     }.whenever(suplaClientMessageHandlerWrapper).registerMessageListener(any())
 
     // when
@@ -89,7 +89,7 @@ class LoginUseCaseTest {
     observer.assertComplete()
     verify(suplaAppProvider).provide()
     verify(suplaClientMessageHandlerWrapper).registerMessageListener(listener!!)
-    verify(suplaClientMessageHandlerWrapper, times(2)).unregisterMessageListener(listener!!)
+    verify(suplaClientMessageHandlerWrapper, times(2)).unregisterMessageListener(listener)
     verifyNoMoreInteractions(suplaAppProvider, suplaClientMessageHandlerWrapper)
   }
 
@@ -117,18 +117,18 @@ class LoginUseCaseTest {
     var listener: SuplaClientMessageHandler.OnSuplaClientMessageListener? = null
     doAnswer {
       listener = it.arguments[0] as SuplaClientMessageHandler.OnSuplaClientMessageListener
-      listener?.onSuplaClientMessageReceived(message)
+      listener.onSuplaClientMessageReceived(message)
     }.whenever(suplaClientMessageHandlerWrapper).registerMessageListener(any())
 
     // when
     val observer = useCase.invoke(userName, password).test()
 
     // then
-    observer.assertError(AuthorizationException(SUPLA_RESULTCODE_CLIENT_LIMITEXCEEDED))
+    observer.assertError(AuthorizationException.WithErrorCode(SUPLA_RESULTCODE_CLIENT_LIMITEXCEEDED, isLogin = true))
 
     verify(suplaAppProvider).provide()
     verify(suplaClientMessageHandlerWrapper).registerMessageListener(listener!!)
-    verify(suplaClientMessageHandlerWrapper, times(2)).unregisterMessageListener(listener!!)
+    verify(suplaClientMessageHandlerWrapper, times(2)).unregisterMessageListener(listener)
     verifyNoMoreInteractions(suplaAppProvider, suplaClientMessageHandlerWrapper)
   }
 }

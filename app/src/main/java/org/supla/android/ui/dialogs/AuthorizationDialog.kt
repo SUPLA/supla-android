@@ -33,20 +33,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.autofill.AutofillNode
-import androidx.compose.ui.autofill.AutofillType
-import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.layout.boundsInWindow
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalAutofill
-import androidx.compose.ui.platform.LocalAutofillTree
+import androidx.compose.ui.autofill.ContentType
+import androidx.compose.ui.platform.LocalAutofillManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentType
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
-import org.supla.android.core.ui.StringProvider
+import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.ui.views.PasswordTextField
@@ -55,12 +53,14 @@ import org.supla.android.ui.views.SeparatorStyle
 import org.supla.android.ui.views.TextField
 import org.supla.android.ui.views.buttons.Button
 import org.supla.android.ui.views.buttons.OutlinedButton
+import org.supla.core.shared.infrastructure.LocalizedString
 
 data class AuthorizationDialogState(
   val userName: String,
   val isCloudAccount: Boolean,
   val userNameEnabled: Boolean,
-  val error: StringProvider? = null,
+  val error: LocalizedString? = null,
+  val clarification: LocalizedString? = null,
   val processing: Boolean = false,
   val reason: AuthorizationReason = AuthorizationReason.Default
 )
@@ -82,10 +82,23 @@ fun AuthorizationDialogScope.AuthorizationDialog(
 ) {
   var password by rememberSaveable(state.userName) { mutableStateOf("") }
   var passwordVisible by rememberSaveable { mutableStateOf(false) }
+  val autofillManager = LocalAutofillManager.current
 
   Dialog(onDismiss = { onAuthorizationDismiss() }) {
     DialogHeader(title = getDialogTitle(isCloudAccount = state.isCloudAccount))
     Separator(style = SeparatorStyle.LIGHT)
+
+    state.clarification?.let {
+      Text(
+        text = it(LocalContext.current),
+        style = MaterialTheme.typography.bodySmall,
+        textAlign = TextAlign.Center,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        modifier = Modifier
+          .fillMaxWidth()
+          .padding(start = Distance.small, top = Distance.small, end = Distance.small)
+      )
+    }
 
     UserNameTextField(
       state = state,
@@ -106,10 +119,13 @@ fun AuthorizationDialogScope.AuthorizationDialog(
     )
     ErrorText(text = state.error?.let { it(LocalContext.current) } ?: "")
 
-    Separator(style = SeparatorStyle.LIGHT, modifier = Modifier.padding(top = Distance.default))
+    Separator(style = SeparatorStyle.LIGHT, modifier = Modifier.padding(top = Distance.small))
     DialogButtonsRow {
       OutlinedButton(
-        onClick = { onAuthorizationCancel() },
+        onClick = {
+          autofillManager?.cancel()
+          onAuthorizationCancel()
+        },
         text = stringResource(id = R.string.cancel),
         modifier = Modifier.weight(1f),
         enabled = state.processing.not()
@@ -125,7 +141,10 @@ fun AuthorizationDialogScope.AuthorizationDialog(
         }
       } else {
         Button(
-          onClick = { onAuthorize(state.userName, password) },
+          onClick = {
+            autofillManager?.commit()
+            onAuthorize(state.userName, password)
+          },
           text = stringResource(id = R.string.ok),
           enabled = password.isNotEmpty(),
           modifier = Modifier.weight(1f)
@@ -150,31 +169,12 @@ private fun UserNameTextField(
   enabled: Boolean,
   onStateChange: (AuthorizationDialogState) -> Unit = { }
 ) {
-  val emailAutofill = AutofillNode(
-    autofillTypes = listOf(AutofillType.EmailAddress),
-    onFill = { onStateChange(state.copy(userName = it)) }
-  )
-  val autofill = LocalAutofill.current
-
-  LocalAutofillTree.current += emailAutofill
-
   TextField(
     value = state.userName,
     modifier = Modifier
       .fillMaxWidth()
       .padding(start = Distance.default, top = Distance.default, end = Distance.default)
-      .onGloballyPositioned {
-        emailAutofill.boundingBox = it.boundsInWindow()
-      }
-      .onFocusChanged {
-        autofill?.run {
-          if (it.isFocused) {
-            requestAutofillForNode(emailAutofill)
-          } else {
-            cancelAutofillForNode(emailAutofill)
-          }
-        }
-      },
+      .semantics { contentType = ContentType.EmailAddress },
     label = { Text(text = stringResource(id = R.string.email)) },
     keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Email),
     enabled = enabled,
@@ -211,7 +211,8 @@ private fun Preview_Normal() {
       AuthorizationDialogState(
         userName = "some_user@supla.org",
         isCloudAccount = true,
-        userNameEnabled = true
+        userNameEnabled = true,
+        clarification = LocalizedString.Constant("Simple clarification message which explains a reason of this dialog poped up")
       )
     )
   }

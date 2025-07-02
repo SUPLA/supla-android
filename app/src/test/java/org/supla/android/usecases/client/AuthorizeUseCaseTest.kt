@@ -74,11 +74,11 @@ class AuthorizeUseCaseTest {
     val observer = useCase.invoke(userName, password).test()
 
     // then
-    observer.assertError(AuthorizationException(R.string.time_exceeded))
+    observer.assertError(AuthorizationException.WithResource(R.string.time_exceeded))
 
     verify(suplaClientProvider).provide()
     verify(suplaClientMessageHandlerWrapper).registerMessageListener(listener!!)
-    verify(suplaClientMessageHandlerWrapper).unregisterMessageListener(listener!!)
+    verify(suplaClientMessageHandlerWrapper).unregisterMessageListener(listener)
     verifyNoMoreInteractions(suplaClientProvider, suplaClientMessageHandlerWrapper)
   }
 
@@ -100,7 +100,7 @@ class AuthorizeUseCaseTest {
     var listener: SuplaClientMessageHandler.OnSuplaClientMessageListener? = null
     doAnswer {
       listener = it.arguments[0] as SuplaClientMessageHandler.OnSuplaClientMessageListener
-      listener?.onSuplaClientMessageReceived(message)
+      listener.onSuplaClientMessageReceived(message)
     }.whenever(suplaClientMessageHandlerWrapper).registerMessageListener(any())
 
     // when
@@ -110,7 +110,7 @@ class AuthorizeUseCaseTest {
     observer.assertComplete()
     verify(suplaClientProvider).provide()
     verify(suplaClientMessageHandlerWrapper).registerMessageListener(listener!!)
-    verify(suplaClientMessageHandlerWrapper, times(2)).unregisterMessageListener(listener!!)
+    verify(suplaClientMessageHandlerWrapper, times(2)).unregisterMessageListener(listener)
     verifyNoMoreInteractions(suplaClientProvider, suplaClientMessageHandlerWrapper)
   }
 
@@ -147,7 +147,7 @@ class AuthorizeUseCaseTest {
     doAuthorizationTestWithError(message, R.string.status_unknown_err)
   }
 
-  private fun doAuthorizationTestWithError(message: SuplaClientMsg, errorMessage: Int) {
+  private fun doAuthorizationTestWithError(message: SuplaClientMsg, errorCode: Int) {
     // given
     val userName = "test@supla.org"
     val password = "password"
@@ -160,18 +160,18 @@ class AuthorizeUseCaseTest {
     var listener: SuplaClientMessageHandler.OnSuplaClientMessageListener? = null
     doAnswer {
       listener = it.arguments[0] as SuplaClientMessageHandler.OnSuplaClientMessageListener
-      listener?.onSuplaClientMessageReceived(message)
+      listener.onSuplaClientMessageReceived(message)
     }.whenever(suplaClientMessageHandlerWrapper).registerMessageListener(any())
 
     // when
     val observer = useCase.invoke(userName, password).test()
 
     // then
-    observer.assertError(AuthorizationException(errorMessage))
+    observer.assertError(AuthorizationException.WithErrorCode(errorCode, isLogin = false))
 
     verify(suplaClientProvider).provide()
     verify(suplaClientMessageHandlerWrapper).registerMessageListener(listener!!)
-    verify(suplaClientMessageHandlerWrapper, times(2)).unregisterMessageListener(listener!!)
+    verify(suplaClientMessageHandlerWrapper, times(2)).unregisterMessageListener(listener)
     verifyNoMoreInteractions(suplaClientProvider, suplaClientMessageHandlerWrapper)
   }
 }

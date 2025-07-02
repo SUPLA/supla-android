@@ -684,6 +684,18 @@
   <string name="thermostat_battery_cover_open">Batterijklep openen</string>
   <string name="channel_battery_level">Batterijniveau (%1$d - %2$s): %3$d%%</string>
   <string name="android_auto_action">Actie: %1$s</string>
+  <string name="add_wizard_step_1_qr_info">Als u een QR-code heeft, gebruik dan de scanner. Druk voor apparaten zonder een QR-code op <b>Volgende</b> om verder te gaan.</string>
+  <string name="add_wizard_network_name">Netwerknaam</string>
+  <string name="add_wizard_step_2_search_network">Zoeken naar netwerk</string>
+  <string name="add_wizard_step_3_message_1">Sluit uw apparaat aan op de stroomvoorziening. Het apparaat zou standaard in de configuratiemodus moeten werken, aangegeven door de status-LED die als volgt knippert.</string>
+  <string name="add_wizard_step_3_message_2">Als het apparaat na het inschakelen niet in de configuratiemodus staat, houd dan de CONFIG-knop minstens 5 seconden ingedrukt.</string>
+  <string name="add_wizard_network_scan">Netwerk scannen</string>
+  <string name="select">Selecteren</string>
+  <string name="add_wizard_network_scan_limit_warning">Vanwege Wi-Fi-scanbeperkingen opgelegd door het Android-systeem, was een volgende scan niet mogelijk. De lijst bevat netwerken die zijn gevonden tijdens de vorige scan.</string>
+  <string name="add_wizard_network_scan_in_progress">Scannen…</string>
+  <string name="add_wizard_network_scan_empty">Geen Wi-Fi-netwerken gevonden. Zorg ervoor dat Wi-Fi is ingeschakeld en dat u binnen bereik van een netwerk bent.</string>
+  <string name="add_wizard_network_manual_connect">Ik heb handmatig verbinding gemaakt met het netwerk, ga verder.</string>
   <string name="add_wizard_add_more">Toevoegen</string>
   <string name="add_wizard_repeat">Probeer het opnieuw</string>
+  <string name="add_wizard_password_clarification">Registratie van nieuwe apparaten in de Cloud is uitgeschakeld. Schakel deze handmatig in of geef uw accountwachtwoord op zodat de wizard deze automatisch kan inschakelen tijdens de registratie van nieuwe apparaten.</string>
 </resources>
