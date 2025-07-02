@@ -683,6 +683,18 @@
   <string name="thermostat_battery_cover_open">Åpne batteridekselet</string>
   <string name="channel_battery_level">Batterinivå (%1$d - %2$s): %3$d%%</string>
   <string name="android_auto_action">Handling: %1$s</string>
+  <string name="add_wizard_step_1_qr_info">Hvis du har en QR-kode, bruk skanneren. For enheter uten QR-kode, trykk <b>Neste</b> for å fortsette.</string>
+  <string name="add_wizard_network_name">Nettverksnavn</string>
+  <string name="add_wizard_step_2_search_network">Søk etter nettverk</string>
+  <string name="add_wizard_step_3_message_1">Koble enheten til strømforsyningen. Enheten skal som standard fungere i konfigurasjonsmodus, indikert av status-LED-en som blinker som følger.</string>
+  <string name="add_wizard_step_3_message_2">Hvis enheten ikke er i konfigurasjonsmodus etter oppstart, trykk og hold CONFIG-knappen i minst 5 sekunder.</string>
+  <string name="add_wizard_network_scan">Nettverksskanning</string>
+  <string name="select">Velg</string>
+  <string name="add_wizard_network_scan_limit_warning">På grunn av Wi-Fi-skannebegrensninger pålagt av Android-systemet, var en påfølgende skanning ikke mulig. Listen inneholder nettverk funnet under forrige skanning.</string>
+  <string name="add_wizard_network_scan_in_progress">Skanner…</string>
+  <string name="add_wizard_network_scan_empty">Ingen Wi-Fi-nettverk funnet. Sørg for at Wi-Fi er aktivert og at du er innen rekkevidde av et nettverk.</string>
+  <string name="add_wizard_network_manual_connect">Jeg koblet til nettverket manuelt, fortsett.</string>
   <string name="add_wizard_add_more">Legg til mer</string>
   <string name="add_wizard_repeat">Prøv igjen</string>
+  <string name="add_wizard_password_clarification">Registrering av nye enheter i skyen er deaktivert. Aktiver den manuelt eller oppgi kontopassordet ditt slik at veiviseren kan aktivere den automatisk under registrering av nye enheter.</string>
 </resources>

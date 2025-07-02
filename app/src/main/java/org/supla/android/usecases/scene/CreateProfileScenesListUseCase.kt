@@ -22,7 +22,6 @@ import org.supla.android.data.source.RoomSceneRepository
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.location.CollapsedFlag
-import java.util.Collections
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -46,13 +45,13 @@ class CreateProfileScenesListUseCase @Inject constructor(
           }
         }
 
-        location?.let { locationEntity ->
+        location.let { locationEntity ->
           if (!locationEntity.isCollapsed(CollapsedFlag.SCENE)) {
             result.add(ListItem.SceneItem(it))
           }
         }
       }
 
-      Collections.unmodifiableList(result)
+      result.toList()
     }.toObservable()
 }

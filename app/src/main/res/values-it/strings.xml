@@ -712,6 +712,18 @@
   <item quantity="other">%1$d sec</item>
   </plurals>
   <string name="android_auto_action">Azione: %1$s</string>
+  <string name="add_wizard_network_name">Nome rete</string>
+  <string name="add_wizard_step_1_qr_info">Se hai un codice QR, usa lo scanner. Per i dispositivi senza codice QR, premi <b>Avanti</b> per continuare.</string>
+  <string name="add_wizard_step_2_search_network">Cerca rete</string>
+  <string name="add_wizard_step_3_message_1">Collega il tuo dispositivo all\'alimentazione. Il dispositivo dovrebbe, per impostazione predefinita, operare in modalità di configurazione, indicata dal lampeggio del LED di stato come segue.</string>
+  <string name="add_wizard_step_3_message_2">Se il dispositivo non è in modalità configurazione dopo l\'accensione, tenere premuto il pulsante CONFIG per almeno 5 secondi.</string>
+  <string name="add_wizard_network_scan">Scansione rete</string>
+  <string name="select">Selezionare</string>
+  <string name="add_wizard_network_scan_limit_warning">A causa delle limitazioni di scansione Wi-Fi imposte dal sistema Android, non è stata possibile una scansione successiva. L\'elenco contiene le reti trovate durante la scansione precedente.</string>
+  <string name="add_wizard_network_scan_in_progress">Scansione…</string>
+  <string name="add_wizard_network_scan_empty">Nessuna rete Wi-Fi trovata. Assicurati che il Wi-Fi sia abilitato e che tu sia nel raggio di azione di una rete.</string>
+  <string name="add_wizard_network_manual_connect">Mi sono connesso alla rete manualmente, continua.</string>
   <string name="add_wizard_add_more">Aggiungi altro</string>
   <string name="add_wizard_repeat">Riprova</string>
+  <string name="add_wizard_password_clarification">La registrazione di nuovi dispositivi nel Cloud è disabilitata. Abilitala manualmente o fornisci la password del tuo account affinché la procedura guidata la abiliti automaticamente durante la registrazione di nuovi dispositivi.</string>
 </resources>

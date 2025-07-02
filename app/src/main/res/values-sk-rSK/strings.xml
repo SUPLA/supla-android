@@ -684,6 +684,18 @@
   <string name="thermostat_battery_cover_open">Otvorte kryt batérie</string>
   <string name="channel_battery_level">Úroveň batérie (%1$d - %2$s): %3$d%%</string>
   <string name="android_auto_action">Činnosť: %1$s</string>
+  <string name="add_wizard_step_1_qr_info">Ak máte QR kód, použite skener. Pre zariadenia bez QR kódu stlačte <b>Ďalej</b> pre pokračovanie.</string>
+  <string name="add_wizard_network_name">Názov siete</string>
+  <string name="add_wizard_step_2_search_network">Vyhľadať sieť</string>
+  <string name="add_wizard_step_3_message_1">Pripojte zariadenie k napájaniu. Zariadenie by malo štandardne fungovať v konfiguračnom režime, indikovanom blikaním stavovej LED diódy nasledovne.</string>
+  <string name="add_wizard_step_3_message_2">Ak zariadenie po zapnutí nie je v konfiguračnom režime, stlačte a podržte tlačidlo CONFIG po dobu aspoň 5 sekúnd.</string>
+  <string name="add_wizard_network_scan">Skenovanie siete</string>
+  <string name="select">Vybrať</string>
+  <string name="add_wizard_network_scan_limit_warning">Z dôvodu obmedzení skenovania Wi-Fi, ktoré ukladá systém Android, nebolo možné vykonať následné skenovanie. Zoznam obsahuje siete nájdené počas predchádzajúceho skenovania.</string>
+  <string name="add_wizard_network_scan_in_progress">Skenovanie…</string>
+  <string name="add_wizard_network_scan_empty">Nenašli sa žiadne siete Wi-Fi. Uistite sa, že je Wi-Fi zapnuté a že ste v dosahu siete.</string>
+  <string name="add_wizard_network_manual_connect">Pripojil som sa k sieti ručne, pokračujte.</string>
   <string name="add_wizard_add_more">Pridať ďalšie</string>
   <string name="add_wizard_repeat">Skúsiť znova</string>
+  <string name="add_wizard_password_clarification">Registrácia nových zariadení v Cloude je vypnutá. Povoľte ju manuálne alebo zadajte heslo k vášmu účtu, aby ju sprievodca automaticky povolil počas registrácie nových zariadení.</string>
 </resources>

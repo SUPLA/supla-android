@@ -685,6 +685,18 @@
   <string name="thermostat_battery_cover_open">Deschideți capacul bateriei</string>
   <string name="channel_battery_level">Nivelul bateriei (%1$d - %2$s): %3$d%%</string>
   <string name="android_auto_action">Acțiune: %1$s</string>
+  <string name="add_wizard_step_1_qr_info">Dacă aveți un cod QR, utilizați scanerul. Pentru dispozitivele fără un cod QR, apăsați <b>Următorul</b> pentru a continua.</string>
+  <string name="add_wizard_network_name">Nume rețea</string>
+  <string name="add_wizard_step_2_search_network">Căutați rețea</string>
+  <string name="add_wizard_step_3_message_1">Conectați dispozitivul la sursa de alimentare. Dispozitivul ar trebui, implicit, să funcționeze în modul de configurare, indicat de LED-ul de stare care clipește după cum urmează.</string>
+  <string name="add_wizard_step_3_message_2">Dacă dispozitivul nu este în modul de configurare după pornire, apăsați și mențineți apăsat butonul CONFIG timp de cel puțin 5 secunde.</string>
+  <string name="add_wizard_network_scan">Scanare rețea</string>
+  <string name="select">Selectați</string>
+  <string name="add_wizard_network_scan_limit_warning">Din cauza limitărilor de scanare Wi-Fi impuse de sistemul Android, o scanare ulterioară nu a fost posibilă. Lista conține rețelele găsite în timpul scanării anterioare.</string>
+  <string name="add_wizard_network_scan_in_progress">Scanare…</string>
+  <string name="add_wizard_network_scan_empty">Nu au fost găsite rețele Wi-Fi. Asigurați-vă că Wi-Fi este activat și că vă aflați în raza de acțiune a unei rețele.</string>
+  <string name="add_wizard_network_manual_connect">M-am conectat manual la rețea, continuați.</string>
   <string name="add_wizard_add_more">Adaugă mai mult</string>
   <string name="add_wizard_repeat">Încearcă din nou</string>
+  <string name="add_wizard_password_clarification">Înregistrarea dispozitivelor noi în Cloud este dezactivată. Activați-o manual sau furnizați parola contului dvs. pentru ca asistentul să o activeze automat pe durata înregistrării dispozitivelor noi.</string>
 </resources>

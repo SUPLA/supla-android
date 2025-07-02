@@ -27,9 +27,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import org.supla.android.ui.views.TextField
 
-context(ExposedDropdownMenuBoxScope)
 @Composable
-fun SpinnerTextField(text: String, expanded: Boolean, enabled: Boolean = true, fillMaxWidth: Boolean = false) {
+fun ExposedDropdownMenuBoxScope.SpinnerTextField(text: String, expanded: Boolean, enabled: Boolean = true, fillMaxWidth: Boolean = false) {
   var textFieldModifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable)
   if (fillMaxWidth) {
     textFieldModifier = textFieldModifier.fillMaxWidth()

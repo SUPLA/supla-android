@@ -48,8 +48,7 @@ fun PasswordTextField(
 ) {
   TextField(
     value = password,
-    modifier = modifier
-      .semantics { contentType = ContentType.Password },
+    modifier = modifier.semantics { contentType = ContentType.Password },
     visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
     label = label,
     keyboardOptions = keyboardOptions.copy(keyboardType = KeyboardType.Password),

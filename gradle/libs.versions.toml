@@ -1,18 +1,19 @@
 [versions]
 
-compileSdk = "35"
+compileSdk = "36"
 targetSdk = "35"
 minSdk = "24"
 buildTools = "35.0.0"
 
 androidGradlePlugin = "8.11.0"
 
+# 2.2.0 is blocked becouse hilt worker does not support it
 kotlin = "2.1.10"
-hilt = "2.54"
-googleServices = "4.4.2"
-spotless = "6.23.3"
+hilt = "2.56.2"
+googleServices = "4.4.3"
+spotless = "7.0.4"
 ksp = "2.1.10-1.0.30"
-skie = "0.10.1"
+skie = "0.10.4"
 
 hiltWorker = "1.2.0"
 multidex = "2.0.1"
@@ -22,7 +23,7 @@ coroutines-rx3 = "1.10.2"
 googleMaterial = "1.12.0"
 ktlint = "0.48.1"
 fragmentViewBinding = "1.0.2"
-firebase = "33.15.0"
+firebase = "33.16.0"
 
 androidx-fragment = "1.8.8"
 androidx-lifecycle = "2.9.1"
@@ -32,13 +33,13 @@ androidx-constraintLayout = "2.2.1"
 androidx-core = "1.16.0"
 androidx-core-splashscreen = "1.0.1"
 androidx-preferences = "1.2.1"
-androidx-worker = "2.10.1"
+androidx-worker = "2.10.2"
 androidx-recyclerView = "1.4.0"
 androidx-security = "1.1.0-beta01"
-androidx-room = "2.7.1"
+androidx-room = "2.7.2"
 androidx-appCompat = "1.7.1"
 androidx-biometric = "1.1.0"
-androidx-compose-core = "1.8.2"
+androidx-compose-core = "1.8.3"
 androidx-activity-compose = "1.10.1"
 androidx-material-icons-extended = "1.7.8"
 androidx-compose-constraintLayout = "1.1.1"
@@ -51,30 +52,30 @@ rxjava = "3.1.10"
 rxandroid = "3.0.2"
 rxkoltin = "3.0.1"
 
-retrofit = "2.11.0"
+retrofit = "3.0.0"
 retrofit-logging = "4.12.0"
 
-kotlinx-serialization = "1.8.0"
+kotlinx-serialization = "1.8.1"
 android-tools-desugar = "2.1.5"
-jsoup = "1.18.1"
-coil = "3.0.0"
-guava = "31.1-android"
-reorderable = "2.4.3"
+jsoup = "1.21.1"
+coil = "3.2.0"
+guava = "33.4.8-android"
+reorderable = "2.5.1"
 google-barcode-scanner = "16.1.0"
 
 testing-junit = "4.13.2"
 testing-hamcrest = "1.3"
-testing-mockk = "1.13.12"
-testing-assertj = "3.26.0"
-testing-mockito = "5.12.0"
-testing-mockito-kotlin = "5.3.1"
+testing-mockk = "1.14.4"
+testing-assertj = "3.27.3"
+testing-mockito = "5.18.0"
+testing-mockito-kotlin = "5.4.0"
 testing-androidx = "1.6.1"
 testing-androidx-runner = "1.6.2"
 testing-androidx-rules = "1.6.1"
 testing-androidx-junit-extension = "1.2.1"
 testing-androidx-arch-core = "2.2.0"
 
-kotlin-endians = "0.3.1"
+kotlin-bitops-endian = "0.2.0"
 
 googleJavaFormat = "1.19.2"
 
@@ -147,7 +148,7 @@ guava = { group = "com.google.guava", name = "guava", version.ref = "guava" }
 reorderable = { module = "sh.calvin.reorderable:reorderable", version.ref = "reorderable" }
 google-barcode-scanner = { group = "com.google.android.gms", name = "play-services-code-scanner", version.ref = "google-barcode-scanner" }
 
-kotlin-endians = { group = "org.kotlincrypto.endians", name = "endians", version.ref = "kotlin-endians" }
+kotlin-bitops-endian = { group = "org.kotlincrypto.bitops", name = "endian", version.ref = "kotlin-bitops-endian" }
 
 testing-junit = { group = "junit", name = "junit", version.ref = "testing-junit" }
 testing-hamcrest = { group = "org.hamcrest", name = "hamcrest-all", version.ref = "testing-hamcrest" }

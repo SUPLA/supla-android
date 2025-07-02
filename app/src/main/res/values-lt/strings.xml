@@ -661,6 +661,18 @@
   <string name="thermostat_battery_cover_open">Baterijos dangtelis atidarytas</string>
   <string name="channel_battery_level">Baterijos lygis (%1$d - %2$s): %3$d%%</string>
   <string name="android_auto_action">Veiksmas: %1$s</string>
+  <string name="add_wizard_step_1_qr_info">Jei turite QR kodą, naudokite skaitytuvą. Įrenginiams be QR kodo, paspauskite <b>Kitas</b>, kad tęstumėte.</string>
+  <string name="add_wizard_network_name">Tinklo pavadinimas</string>
+  <string name="add_wizard_step_2_search_network">Ieškoti tinklo</string>
+  <string name="add_wizard_step_3_message_1">Prijunkite įrenginį prie maitinimo šaltinio. Įrenginys pagal numatytuosius nustatymus turėtų veikti konfigūravimo režimu, kurį rodo šviesos diodo mirksėjimas taip.</string>
+  <string name="add_wizard_step_3_message_2">Jei įrenginys po įjungimo nėra konfigūracijos režime, paspauskite ir palaikykite mygtuką CONFIG bent 5 sekundes.</string>
+  <string name="add_wizard_network_scan">Tinklo nuskaitymas</string>
+  <string name="select">Pasirinkti</string>
+  <string name="add_wizard_network_scan_limit_warning">Dėl „Android“ sistemos taikomų „Wi-Fi“ nuskaitymo apribojimų tolesnis nuskaitymas nebuvo įmanomas. Sąraše pateikiami tinklai, rasti ankstesnio nuskaitymo metu.</string>
+  <string name="add_wizard_network_scan_in_progress">Nuskaitoma…</string>
+  <string name="add_wizard_network_scan_empty">Nerasta jokių „Wi-Fi“ tinklų. Įsitikinkite, kad „Wi-Fi“ įjungtas ir esate tinklo veikimo zonoje.</string>
+  <string name="add_wizard_network_manual_connect">Prijungiau prie tinklo rankiniu būdu, tęskite.</string>
   <string name="add_wizard_add_more">Pridėti daugiau</string>
   <string name="add_wizard_repeat">Bandykite dar kartą</string>
+  <string name="add_wizard_password_clarification">Naujų įrenginių registracija Debesyje yra išjungta. Įjunkite ją rankiniu būdu arba pateikite savo paskyros slaptažodį, kad vedlys automatiškai ją įjungtų naujų įrenginių registracijos metu.</string>
 </resources>

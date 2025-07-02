@@ -680,6 +680,18 @@
 
   <string name="channel_battery_level">Επίπεδο μπαταρίας (%1$d - %2$s): %3$d%%</string>
   <string name="android_auto_action">Ενέργεια: %1$s</string>
+  <string name="add_wizard_step_1_qr_info">Εάν έχετε κωδικό QR, χρησιμοποιήστε τον σαρωτή. Για συσκευές χωρίς κωδικό QR, πατήστε <b>Επόμενο</b> για να συνεχίσετε.</string>
+  <string name="add_wizard_network_name">Όνομα δικτύου</string>
+  <string name="add_wizard_step_2_search_network">Αναζήτηση δικτύου</string>
+  <string name="add_wizard_step_3_message_1">Συνδέστε τη συσκευή σας στην παροχή ρεύματος. Η συσκευή θα πρέπει, εξ ορισμού, να λειτουργεί σε λειτουργία διαμόρφωσης, όπως υποδεικνύεται από το LED κατάστασης που αναβοσβήνει ως εξής.</string>
+  <string name="add_wizard_step_3_message_2">Εάν η συσκευή δεν είναι σε λειτουργία διαμόρφωσης μετά την ενεργοποίηση, πατήστε και κρατήστε πατημένο το κουμπί CONFIG για τουλάχιστον 5 δευτερόλεπτα.</string>
+  <string name="add_wizard_network_scan">Σάρωση δικτύου</string>
+  <string name="select">Επιλέξτε</string>
+  <string name="add_wizard_network_scan_limit_warning">Λόγω των περιορισμών σάρωσης Wi-Fi που επιβάλλει το σύστημα Android, δεν ήταν δυνατή μια επακόλουθη σάρωση. Η λίστα περιέχει δίκτυα που βρέθηκαν κατά την προηγούμενη σάρωση.</string>
+  <string name="add_wizard_network_scan_in_progress">Σάρωση…</string>
+  <string name="add_wizard_network_scan_empty">Δεν βρέθηκαν δίκτυα Wi-Fi. Βεβαιωθείτε ότι το Wi-Fi είναι ενεργοποιημένο και ότι βρίσκεστε εντός εμβέλειας ενός δικτύου.</string>
+  <string name="add_wizard_network_manual_connect">Συνδέθηκα χειροκίνητα στο δίκτυο, συνεχίστε.</string>
   <string name="add_wizard_add_more">Πρόσθεσε κι άλλα</string>
   <string name="add_wizard_repeat">Προσπάθησε ξανά</string>
+  <string name="add_wizard_password_clarification">Η εγγραφή νέων συσκευών στο Cloud είναι απενεργοποιημένη. Ενεργοποιήστε την χειροκίνητα ή δώστε τον κωδικό πρόσβασης του λογαριασμού σας για να την ενεργοποιήσει αυτόματα ο οδηγός κατά την εγγραφή νέων συσκευών.</string>
 </resources>

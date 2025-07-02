@@ -30,9 +30,8 @@ fun Activity.setStatusBarColor(statusBarColorId: Int, navigationBarColorId: Int,
   window.statusBarColor = color
   val navigationBarColor = ResourcesCompat.getColor(resources, navigationBarColorId, null)
   window.navigationBarColor = navigationBarColor
-  val view = window.decorView
 
-  with(WindowInsetsControllerCompat(window, view)) {
+  with(WindowInsetsControllerCompat(window, window.decorView)) {
     isAppearanceLightStatusBars = isLight
     isAppearanceLightNavigationBars = true
   }

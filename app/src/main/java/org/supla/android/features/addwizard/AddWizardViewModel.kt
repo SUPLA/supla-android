@@ -332,7 +332,9 @@ class AddWizardViewModel @Inject constructor(
   }
 
   override fun authorize() {
-    showAuthorizationDialog()
+    showAuthorizationDialog(
+      clarificationMessage = localizedString(R.string.add_wizard_password_clarification)
+    )
   }
 
   override fun activateRegistration() {

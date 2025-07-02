@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package org.supla.android.features.addwizard.usecase.receiver
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
@@ -25,7 +27,6 @@ import android.net.wifi.WifiManager
 import kotlinx.coroutines.sync.Semaphore
 import org.supla.android.extensions.isNull
 
-@Suppress("DEPRECATION")
 class LegacyNetworkBroadcastReceiver(
   private val wifiManager: WifiManager,
   private val networkId: Int,
