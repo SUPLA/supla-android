@@ -96,10 +96,8 @@
   <string name="roller_shutter_calibrating">Калібрування…</string>
   <string name="add_wizard_is_not_available">Майстер додавання доступний лише тоді, коли встановлено з’єднання з сервером на основі введеної електронної адреси! (Вимкніть додаткові параметри в налаштуваннях облікового запису)</string>
   <string name="next">Далі</string>
-  <string name="wizard_step3_txt1">Підключіть пристрій до джерела живлення. За замовчуванням пристрій має працювати в режимі конфігурації, сигналізуючи про це блиманням світлодіода стану наступним чином</string>
-  <string name="add_wizard_step_3_message_3">Натисніть кнопку <b>СТАРТ</b>, щоб почати налаштування.</string>
-  <string name="wizard_step1_txt3">Натисніть <b>Далі</b>, щоб продовжити.</string>
-  <string name="wizard_step3_txt2">Якщо пристрій не перебуває в режимі налаштування після ввімкнення живлення, утримуйте кнопку <b>CONFIG</b> принаймні 5 секунд.</string>
+  <string name="add_wizard_step_3_message_3"><![CDATA[Натисніть кнопку <b>СТАРТ</b>, щоб почати налаштування.]]></string>
+  <string name="add_wizard_step_1_continue"><![CDATA[Натисніть <b>Далі</b>, щоб продовжити.]]></string>
   <string name="wizard_no_internetwifi">Перш ніж почати, підключіться до Інтернету через Wi-Fi, який також використовуватиметься виконуючими пристроями для підключення до сервера.</string>
   <string name="wizard_wifi_error">Wi-Fi вимкнено або не може прочитати свій ідентифікатор чи назву!</string>
   <string name="wizard_location_error">Для коректної роботи майстра додавання повинна бути ввімкнена функція Місцезнаходження на цьому пристрої. Перейдіть до налаштувань системи, оберіть опцію "Місцезнаходження" та переконайтеся, що вона увімкнена.</string>
@@ -369,7 +367,7 @@
   <string name="about_app">This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.\n\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place – Suite 330, Boston, MA  02111–1307, USA</string>
   <string name="add_wizard_step_1_welcome">Вітаємо у майстрі додавання пристроїв, який допоможе Вам швидко та легко додати новий пристрій до системи.</string>
   <string name="start">СТАРТ</string>
-  <string name="wizard_remember_passwd">Запам’ятати пароль</string>
+  <string name="add_wizard_remember_passwd">Запам’ятати пароль</string>
   <string name="wizard_iodevice_notfound">Пристроїв не знайдено! Переконайтеся, що пристрій, який Ви хочете налаштувати, знаходиться в режимі налаштування, а потім повторіть спробу. ВАЖЛИВО - Деякі версії Android вимагають увімкнення GPS для того, щоб програми могли шукати мережі Wi-Fi, тому переконайтеся, що GPS також увімкнено.</string>
   <string name="wizard_done">Налаштування перенесено на пристрій.</string>
   <string name="wizard_iodev_data">Дані пристрою</string>
@@ -657,7 +655,7 @@
   <string name="thermostat_battery_cover_open">Кришка акумулятора відкрита</string>
   <string name="channel_battery_level">Рівень заряду батареї (%1$d - %2$s): %3$d%%</string>
   <string name="android_auto_action">Подія: %1$s</string>
-  <string name="add_wizard_step_1_qr_info">Якщо у вас є QR-код, скористайтеся сканером. Для пристроїв без QR-коду натисніть <b>Далі</b>, щоб продовжити.</string>
+  <string name="add_wizard_step_1_qr_info"><![CDATA[Якщо у вас є QR-код, скористайтеся сканером. Для пристроїв без QR-коду натисніть <b>Далі</b>, щоб продовжити.]]></string>
   <string name="add_wizard_network_name">Назва мережі</string>
   <string name="add_wizard_step_2_search_network">Шукати мережу</string>
   <string name="add_wizard_step_3_message_1">Підключіть пристрій до джерела живлення. Пристрій за замовчуванням повинен працювати в режимі конфігурації, про що свідчить миготіння індикатора стану наступним чином.</string>

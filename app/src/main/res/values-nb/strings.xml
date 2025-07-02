@@ -84,17 +84,15 @@
   <string name="add_wizard_is_not_available">Veiviseren legg er kun tilgjengelig når tilkobling til serveren er etablert basert på e-postadressen som er angitt! (Deaktiver avanserte innstillinger i kontokonfigurasjonen din).</string>
 
   <string name="add_wizard_step_1_welcome">Velkommen til assistenten for å legge til enheter som vil hjelpe deg å legge til enheter til systemet på en enkel og rask måte.</string>
-  <string name="wizard_step1_txt3">For å fortsette trykk på <b>Videre</b>.</string>
+  <string name="add_wizard_step_1_continue"><![CDATA[For å fortsette trykk på <b>Videre</b>.]]></string>
   <string name="next">Videre</string>
   <string name="start">START</string><![CDATA[>
 
 
     ]]>
-  <string name="wizard_remember_passwd">Husk passord</string>
+  <string name="add_wizard_remember_passwd">Husk passord</string>
 
-  <string name="wizard_step3_txt1">Sett din aktuator til lading. Enheten bør jobbe i standard konfigurasjonsmodus, og signalisere det ved en LED-diode blinkende på denne måten</string>
-  <string name="wizard_step3_txt2">Hvis enheten etter å ha blitt satt til lading ikke jobber i konfigurasjonsmodus hold inne knappen <b>CONFIG</b> i 5 sekunder.</string>
-  <string name="add_wizard_step_3_message_3">Trykk på knappen <b>START</b> for å starte konfigurasjonen.</string>
+  <string name="add_wizard_step_3_message_3"><![CDATA[Trykk på knappen <b>START</b> for å starte konfigurasjonen.]]></string>
 
   <string name="wizard_no_internetwifi">Før du begynner må du koble til Internett via trådløs nettverk. Det trådløse nettverket blir også brukt av enheter for tilkobling til serveren.</string>
   <string name="wizard_wifi_error">Trådløs nettverket er skrudd av eller så er det ikke mulig å avlese dens identifikator eller navn!</string>
@@ -683,7 +681,7 @@
   <string name="thermostat_battery_cover_open">Åpne batteridekselet</string>
   <string name="channel_battery_level">Batterinivå (%1$d - %2$s): %3$d%%</string>
   <string name="android_auto_action">Handling: %1$s</string>
-  <string name="add_wizard_step_1_qr_info">Hvis du har en QR-kode, bruk skanneren. For enheter uten QR-kode, trykk <b>Neste</b> for å fortsette.</string>
+  <string name="add_wizard_step_1_qr_info"><![CDATA[Hvis du har en QR-kode, bruk skanneren. For enheter uten QR-kode, trykk <b>Neste</b> for å fortsette.]]></string>
   <string name="add_wizard_network_name">Nettverksnavn</string>
   <string name="add_wizard_step_2_search_network">Søk etter nettverk</string>
   <string name="add_wizard_step_3_message_1">Koble enheten til strømforsyningen. Enheten skal som standard fungere i konfigurasjonsmodus, indikert av status-LED-en som blinker som følger.</string>

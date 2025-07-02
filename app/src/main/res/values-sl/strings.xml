@@ -84,17 +84,15 @@
   <string name="add_wizard_is_not_available">Čarovnik za dodajanje je na voljo le, če je na podlagi vnesenega e-poštnega naslova vzpostavljena povezava s strežnikom! (Onemogočite napredne možnosti v konfiguraciji računa)</string>
 
   <string name="add_wizard_step_1_welcome">Dobrodošli v čarovniku za dodajanje naprav, ki vam bo pomagal hitro in enostavno dodati novo napravo v sistem.</string>
-  <string name="wizard_step1_txt3">Če želite nadaljevati, pritisnite <b> Naprej </b>.</string>
+  <string name="add_wizard_step_1_continue"><![CDATA[Če želite nadaljevati, pritisnite <b> Naprej </b>.]]></string>
   <string name="next">Naprej</string>
   <string name="start">START</string><![CDATA[>
 
 
     ]]>
-  <string name="wizard_remember_passwd">Shranite geslo</string>
+  <string name="add_wizard_remember_passwd">Shranite geslo</string>
 
-  <string name="wizard_step3_txt1">Priključite svojo izvršno napravo na napajanje. Naprava naj bi privzeto delovala v konfiguracijskem načinu in to signalizirala z utripanjem LED diode na naslednji način</string>
-  <string name="wizard_step3_txt2">Če naprava po vklopu napajanja ne deluje v konfiguracijskem načinu, držite gumb <b> CONFIG </b> najmanj 5 sekund.</string>
-  <string name="add_wizard_step_3_message_3">Pritisnite tipko <b> START </b> da začnete konfiguracijo.</string>
+  <string name="add_wizard_step_3_message_3"><![CDATA[Pritisnite tipko <b> START </b> da začnete konfiguracijo.]]></string>
 
   <string name="wizard_no_internetwifi">Preden začnete, se povežite z internetom prek omrežja WiFi, ki ga bodo tudi izvršne naprave uporabile za povezavo s strežnikom.</string>
   <string name="wizard_wifi_error">Omrežje WiFi je izklopljeno ali njegovega identifikatorja ali imena ni mogoče prebrati!</string>
@@ -684,7 +682,7 @@
   <string name="thermostat_battery_cover_open">Odprt pokrov baterije</string>
   <string name="channel_battery_level">Raven baterije (%1$d - %2$s): %3$d%%</string>
   <string name="android_auto_action">Dejanje: %1$s</string>
-  <string name="add_wizard_step_1_qr_info">Če imate QR kodo, uporabite skener. Za naprave brez QR kode pritisnite <b>Naprej</b> za nadaljevanje.</string>
+  <string name="add_wizard_step_1_qr_info"><![CDATA[Če imate QR kodo, uporabite skener. Za naprave brez QR kode pritisnite <b>Naprej</b> za nadaljevanje.]]></string>
   <string name="add_wizard_network_name">Ime omrežja</string>
   <string name="add_wizard_step_2_search_network">Iskanje omrežja</string>
   <string name="add_wizard_step_3_message_1">Priključite napravo na napajanje. Naprava bi morala privzeto delovati v konfiguracijskem načinu, kar označuje utripanje LED lučke stanja na naslednji način.</string>

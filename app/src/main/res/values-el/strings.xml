@@ -84,14 +84,12 @@
   <string name="add_wizard_is_not_available">Ο Οδηγός εγκατάστασης είναι διαθέσιμος μόνο όταν έχει δημιουργηθεί σύνδεση με τον διακομιστή με βάση τη διεύθυνση e-mail που είχατε εισαγάγει! (Απενεργοποιήστε τις σύνθετες επιλογές στη διαμόρφωση του λογαριασμού σας)</string>
 
   <string name="add_wizard_step_1_welcome">Καλώς ορίσατε στον οδηγό προσθήκης συσκευής, ο οποίος θα σας βοηθήσει να προσθέσετε μια νέα συσκευή στο σύστημα με γρήγορο και εύκολο τρόπο.</string>
-  <string name="wizard_step1_txt3">Για να συνεχίσετε, πατήστε <b>Επόμενο</b>.</string>
+  <string name="add_wizard_step_1_continue"><![CDATA[Για να συνεχίσετε, πατήστε <b>Επόμενο</b>.]]></string>
   <string name="next">Επόμενο</string>
   <string name="start">ΕΝΑΡΞΗ</string>
-  <string name="wizard_remember_passwd">Απομνημόνευση κωδικού πρόσβασης</string>
+  <string name="add_wizard_remember_passwd">Απομνημόνευση κωδικού πρόσβασης</string>
 
-  <string name="wizard_step3_txt1">Συνδέστε την εκτελεστική συσκευή σας με την παροχή ρεύματος. Η συσκευή έχει ως την προεπιλογή τη λειτουργία διαμόρφωσης και μας ειδοποιεί σχετικά με το να αναβοσβήνει ένα LED λαμπάκι της κατάστασης ως εξής</string>
-  <string name="wizard_step3_txt2">Όταν η συσκευή κατόπιν  ενεργοποίησης δεν εκτελεί τη λειτουργία διαμόρφωσης, κρατήστε πατημένο το κουμπί <b>CONFIG</b> για τουλάχιστον 5 δευτερόλεπτα.</string>
-  <string name="add_wizard_step_3_message_3">Πατήστε το κουμπί <b>START</b> για να ξεκινήσει η διαμόρφωση.</string>
+  <string name="add_wizard_step_3_message_3"><![CDATA[Πατήστε το κουμπί <b>START</b> για να ξεκινήσει η διαμόρφωση.]]></string>
 
   <string name="wizard_no_internetwifi">Πριν ξεκινήσετε, συνδεθείτε στο Διαδἰκτυο μέσω ενός δικτύου WiFi, το οποίο θα χρησιμοποιηθεί για τη σύνδεση με το διακομιστή και από τις εκτελεστικές συσκευές.</string>
   <string name="wizard_wifi_error">Το δίκτυο WiFi είναι απενεργοποιημένο ή δεν μπορούν να διαβαστούν το αναγνωριστικό ή το όνομα του!</string>
@@ -680,7 +678,7 @@
 
   <string name="channel_battery_level">Επίπεδο μπαταρίας (%1$d - %2$s): %3$d%%</string>
   <string name="android_auto_action">Ενέργεια: %1$s</string>
-  <string name="add_wizard_step_1_qr_info">Εάν έχετε κωδικό QR, χρησιμοποιήστε τον σαρωτή. Για συσκευές χωρίς κωδικό QR, πατήστε <b>Επόμενο</b> για να συνεχίσετε.</string>
+  <string name="add_wizard_step_1_qr_info"><![CDATA[Εάν έχετε κωδικό QR, χρησιμοποιήστε τον σαρωτή. Για συσκευές χωρίς κωδικό QR, πατήστε <b>Επόμενο</b> για να συνεχίσετε.]]></string>
   <string name="add_wizard_network_name">Όνομα δικτύου</string>
   <string name="add_wizard_step_2_search_network">Αναζήτηση δικτύου</string>
   <string name="add_wizard_step_3_message_1">Συνδέστε τη συσκευή σας στην παροχή ρεύματος. Η συσκευή θα πρέπει, εξ ορισμού, να λειτουργεί σε λειτουργία διαμόρφωσης, όπως υποδεικνύεται από το LED κατάστασης που αναβοσβήνει ως εξής.</string>

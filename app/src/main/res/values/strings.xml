@@ -132,19 +132,16 @@
 
   <string name="roller_shutter_calibrating">Calibration…</string>
 
-  <string name="add_wizard_is_not_available">Add Wizard is only available when server connection has been set based on the email address. (Disable advanced options in your account settings)</string>
-
-  <string name="add_wizard_step_1_welcome">Welcome to Add I/O Device Wizard which will help you to add a new device to your system in a few simple steps.</string>
-  <string name="wizard_step1_txt3">Press <b>Next</b> to continue.</string>
   <string name="next">Next</string>
   <string name="start">START</string>
   <string name="turn_on">Turn on</string>
   <string name="turn_off">Turn off</string>
-  <string name="wizard_remember_passwd">Remember password</string>
 
-  <string name="wizard_step3_txt1">Power up your I/O Device and make sure it is configuration mode - the status LED should be flashing rapidly.</string>
-  <string name="wizard_step3_txt2">*Configuration mode is enabled by default on brand new products. It can also be enabled manually by pressing and holding <b>CONFIG</b> button or dimmer knob for around 5s.</string>
-  <string name="add_wizard_step_3_message_3">Press <b>START</b> to start configuration.</string>
+  <string name="add_wizard_is_not_available">Add Wizard is only available when server connection has been set based on the email address. (Disable advanced options in your account settings)</string>
+  <string name="add_wizard_step_1_welcome">Welcome to Add I/O Device Wizard which will help you to add a new device to your system in a few simple steps.</string>
+  <string name="add_wizard_step_1_continue"><![CDATA[Press <b>Next</b> to continue.]]></string>
+  <string name="add_wizard_remember_passwd">Remember password</string>
+  <string name="add_wizard_step_3_message_3"><![CDATA[Press <b>START</b> to start configuration.]]></string>
 
   <string name="wizard_no_internetwifi">Before you start, set up your Internet connection with the WiFi also used by the I/O device when connecting with server.</string>
   <string name="wizard_wifi_error">WiFi Network is disabled or it is impossible to read its identifier or name!</string>
@@ -808,7 +805,7 @@
   <string name="widget_not_supported" translatable="false">Selected channel is not supported.</string>
   <string name="widget_update_time_long" translatable="false">Update time: %1$s</string>
   <string name="widget_no_value" translatable="false">No value available</string>
-  <string name="add_wizard_step_1_qr_info">If you have a QR code, use the scanner. For devices without a QR code, press <b>Next</b> to continue.</string>
+  <string name="add_wizard_step_1_qr_info"><![CDATA[If you have a QR code, use the scanner. For devices without a QR code, press <b>Next</b> to continue.]]></string>
   <string name="add_wizard_network_name">Network name</string>
   <string name="add_wizard_step_2_search_network">Search for network</string>
   <string name="add_wizard_step_3_message_1">Connect your device to the power supply. The device should, by default, operate in configuration mode, indicated by the status LED flashing as follows.</string>
