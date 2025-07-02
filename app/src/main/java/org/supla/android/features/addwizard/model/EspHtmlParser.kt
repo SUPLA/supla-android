@@ -26,7 +26,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 private const val STATE_PATTERN =
-  "LAST\\ STATE:\\ (.*)\\<br\\>[\\n ]*Firmware:\\ (.*)\\<br\\>[\\n ]*GUID:\\ (.*)\\<br\\>[\\n ]*MAC:\\ ([a-fA-F0-9:]*)"
+  "LAST STATE: (.*)[\\n ]*<br>[\\n ]*Firmware: (.*)[\\n ]*<br>[\\n ]*GUID: (.*)[\\n ]*<br>[\\n ]*MAC: ([a-fA-F0-9:]*)"
 
 private const val INPUT_NAME_NO_CHANNELS = "no_visible_channels"
 private const val INPUT_VALUE_NO_CHANNELS = "1"
