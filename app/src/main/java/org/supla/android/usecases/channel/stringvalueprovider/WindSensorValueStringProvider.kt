@@ -22,33 +22,33 @@ import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.extensions.guardLet
 import org.supla.android.usecases.channel.ChannelValueStringProvider
 import org.supla.android.usecases.channel.ValueType
-import org.supla.android.usecases.channel.valueprovider.PressureSensorValueProvider
+import org.supla.android.usecases.channel.valueprovider.WindSensorValueProvider
 import java.text.DecimalFormat
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class PressureSensorValueStringProvider @Inject constructor(
-  private val pressureSensorValueProvider: PressureSensorValueProvider
+class WindSensorValueStringProvider @Inject constructor(
+  private val windSensorValueProvider: WindSensorValueProvider
 ) : ChannelValueStringProvider {
   val formatter: DecimalFormat = DecimalFormat().apply {
-    minimumFractionDigits = 0
-    maximumFractionDigits = 0
+    minimumFractionDigits = 1
+    maximumFractionDigits = 1
   }
 
   override fun handle(channelWithChildren: ChannelWithChildren): Boolean =
-    pressureSensorValueProvider.handle(channelWithChildren)
+    windSensorValueProvider.handle(channelWithChildren)
 
   override fun value(channelWithChildren: ChannelWithChildren, valueType: ValueType, withUnit: Boolean): String {
-    val (doubleValue) = guardLet(pressureSensorValueProvider.value(channelWithChildren, valueType)) {
+    val (doubleValue) = guardLet(windSensorValueProvider.value(channelWithChildren, valueType)) {
       return ValuesFormatter.NO_VALUE_TEXT
     }
-    if (doubleValue <= PressureSensorValueProvider.UNKNOWN_VALUE) {
+    if (doubleValue <= WindSensorValueProvider.UNKNOWN_VALUE) {
       return ValuesFormatter.NO_VALUE_TEXT
     }
 
     return if (withUnit) {
-      "${formatter.format(doubleValue)} hPa"
+      "${formatter.format(doubleValue)} m/s"
     } else {
       formatter.format(doubleValue)
     }
