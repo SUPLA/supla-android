@@ -71,13 +71,11 @@
   <string name="roller_shutter_calibrating">Kalibrace…</string>
   <string name="add_wizard_is_not_available">Průvodce přidáním je dostupný pouze v případě, že bylo navázáno připojení k serveru na základě zadané e-mailové adresy! (vypněte možnost pokročilé konfigurace účtu)</string>
   <string name="add_wizard_step_1_welcome">Vítejte v Průvodci přidáním zařízení, který vám pomůže rychle a snadno přidat nové zařízení do vašeho systému.</string>
-  <string name="wizard_step1_txt3">Chcete-li pokračovat, stiskněte tlačítko <b>Další</b>.</string>
+  <string name="add_wizard_step_1_continue"><![CDATA[Chcete-li pokračovat, stiskněte tlačítko <b>Další</b>.]]></string>
   <string name="next">Dále</string>
   <string name="start">START</string>
-  <string name="wizard_remember_passwd">Zapamatujte si heslo</string>
-  <string name="wizard_step3_txt1">Připojte výkonné zařízení k napájení. Přístroj by měl ve výchozím nastavení fungovat v konfiguračním režimu a signalizovat tak, že bliká stavová LED dioda následujícím způsobem</string>
-  <string name="wizard_step3_txt2">Pokud zařízení nepracuje v konfiguračním režimu po zapnutí, držte stisknuté tlačítko <b>CONFIG</b> minimálně po dobu 5 sekund.</string>
-  <string name="add_wizard_step_3_message_3">Stisknutím tlačítka <b>START</b> spustíte konfiguraci.</string>
+  <string name="add_wizard_remember_passwd">Zapamatujte si heslo</string>
+  <string name="add_wizard_step_3_message_3"><![CDATA[Stisknutím tlačítka <b>START</b> spustíte konfiguraci.]]></string>
   <string name="wizard_no_internetwifi">Než začnete, připojte se k síti Internet pomocí WiFi, které budou také využívány výkonávajícími zařízeními pro připojení k serveru</string>
   <string name="wizard_wifi_error">Síť WiFi je vypnuta nebo její ID nebo jméno nelze přečíst!</string>
   <string name="wizard_location_error">Aby průvodce přidáním fungoval správně, musí být v tomto zařízení povolena služba určování polohy. Přejděte do nastavení systému, vyberte možnost "Umístění" a zkontrolujte, zda je povolena.</string>
@@ -664,7 +662,7 @@
 
   <string name="channel_battery_level">Stav baterie (%1$d - %2$s): %3$d%%</string>
   <string name="android_auto_action">Akce: %1$s</string>
-  <string name="add_wizard_step_1_qr_info">Pokud máte QR kód, použijte skener. Pro zařízení bez QR kódu stiskněte <b>Další</b> pro pokračování.</string>
+  <string name="add_wizard_step_1_qr_info"><![CDATA[Pokud máte QR kód, použijte skener. Pro zařízení bez QR kódu stiskněte <b>Další</b> pro pokračování.]]></string>
   <string name="add_wizard_network_name">Název sítě</string>
   <string name="add_wizard_step_2_search_network">Vyhledat síť</string>
   <string name="add_wizard_step_3_message_1">Připojte zařízení k napájení. Zařízení by mělo ve výchozím nastavení fungovat v konfiguračním režimu, indikovaném blikáním stavové LED diody následovně.</string>

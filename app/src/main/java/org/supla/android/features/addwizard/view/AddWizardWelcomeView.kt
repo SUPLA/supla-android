@@ -17,9 +17,6 @@ package org.supla.android.features.addwizard.view
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.QrCodeScanner
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import org.supla.android.R
@@ -28,8 +25,6 @@ import org.supla.android.features.addwizard.AddWizardScope
 import org.supla.android.features.addwizard.model.AddWizardScreen
 import org.supla.android.features.addwizard.view.components.AddWizardContentText
 import org.supla.android.features.addwizard.view.components.AddWizardScaffold
-import org.supla.android.ui.views.buttons.supla.SuplaButton
-import org.supla.android.ui.views.buttons.supla.SuplaButtonDefaults
 
 interface AddWizardWelcomeScope : AddWizardScope {
   fun onBarCodeScan()
@@ -43,12 +38,7 @@ fun AddWizardWelcomeScope.AddWizardWelcomeView() {
     onNext = { onStepFinished(AddWizardScreen.Welcome) },
   ) {
     AddWizardContentText(R.string.add_wizard_step_1_welcome)
-    AddWizardContentText(R.string.add_wizard_step_1_qr_info)
-    SuplaButton(
-      imageVector = Icons.Filled.QrCodeScanner,
-      colors = SuplaButtonDefaults.buttonColors(content = MaterialTheme.colorScheme.primary),
-      onClick = { onBarCodeScan() }
-    )
+    AddWizardContentText(R.string.add_wizard_step_1_continue)
   }
 }
 

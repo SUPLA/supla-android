@@ -106,7 +106,7 @@ fun AddWizardNetworkSelectionScope.AddWizardNetworkSelectionView(
       )
       Checkbox(
         checked = state.rememberPassword,
-        label = stringResource(R.string.wizard_remember_passwd),
+        label = stringResource(R.string.add_wizard_remember_passwd),
         labelColor = MaterialTheme.colorScheme.onPrimaryContainer,
         checkmarkColor = MaterialTheme.colorScheme.primary,
         onCheckedChange = { onNetworkRememberPasswordChanged(it) }
