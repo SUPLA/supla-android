@@ -41,7 +41,7 @@ class RainSensorValueStringProvider @Inject constructor(
     rainSensorValueProvider.handle(channelWithChildren)
 
   override fun value(channelWithChildren: ChannelWithChildren, valueType: ValueType, withUnit: Boolean): String {
-    val (doubleValue) = guardLet(rainSensorValueProvider.value(channelWithChildren, valueType) as? Double) {
+    val (doubleValue) = guardLet(rainSensorValueProvider.value(channelWithChildren, valueType)) {
       return ValuesFormatter.NO_VALUE_TEXT
     }
     if (doubleValue <= RainSensorValueProvider.UNKNOWN_VALUE) {
@@ -49,7 +49,7 @@ class RainSensorValueStringProvider @Inject constructor(
     }
 
     return if (withUnit) {
-      "${formatter.format(doubleValue / 1000)} l/m²"
+      "${formatter.format(doubleValue / 1000)} mm"
     } else {
       formatter.format(doubleValue / 1000)
     }
