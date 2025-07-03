@@ -43,7 +43,7 @@ class WindSensorValueStringProvider @Inject constructor(
     val (doubleValue) = guardLet(windSensorValueProvider.value(channelWithChildren, valueType)) {
       return ValuesFormatter.NO_VALUE_TEXT
     }
-    if (doubleValue <= WindSensorValueProvider.UNKNOWN_VALUE) {
+    if (doubleValue <= WindSensorValueProvider.UNKNOWN_VALUE || doubleValue.isNaN()) {
       return ValuesFormatter.NO_VALUE_TEXT
     }
 
