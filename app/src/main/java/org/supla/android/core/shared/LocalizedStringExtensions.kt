@@ -30,7 +30,7 @@ operator fun LocalizedString.invoke(context: Context): String {
     is LocalizedString.WithResourceAndString -> "${context.getString(id)} $value"
     is LocalizedString.WithResourceAndArguments -> {
       val parsed = arguments.map { if (it is LocalizedString) it(context) else it }
-      if (arguments.hasAllowedTypes) {
+      if (parsed.hasAllowedTypes) {
         when (parsed.size) {
           0 -> context.getString(id)
           1 -> context.getString(id, parsed[0])
