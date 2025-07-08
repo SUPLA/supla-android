@@ -53,7 +53,6 @@ import org.supla.android.events.UpdateEventsManager
 import org.supla.android.features.details.detailbase.standarddetail.DetailPage
 import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
 import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS
-import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.dialogs.ActionAlertDialogState
@@ -578,10 +577,6 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
     every { channel.remoteId } returns channelId
     whenever(readChannelByRemoteIdUseCase.invoke(channelId)).thenReturn(Maybe.just(channel))
 
-    val suplaMessage: SuplaClientMsg = mockk()
-    every { suplaMessage.channelId } returns channelId
-    every { suplaMessage.type } returns SuplaClientMsg.onDataChanged
-
     val list = listOf(mockk<ListItem.ChannelItem>())
     every { list[0].channelBase } returns channel
     every { list[0].channelBase = channel } answers { }
@@ -589,29 +584,13 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
 
     // when
     viewModel.loadChannels()
-    viewModel.onSuplaMessage(suplaMessage)
+    viewModel.updateChannel(channelId)
 
     // then
     assertThat(states).containsExactly(ChannelListViewState(channels = list))
     assertThat(events).isEmpty()
     verifyNoInteractionsExcept(createProfileChannelsListUseCase, readChannelByRemoteIdUseCase)
     io.mockk.verify { list[0].channelBase = channel }
-  }
-
-  @Test
-  fun `should do nothing when update is not for channel`() {
-    // given
-    val suplaMessage: SuplaClientMsg = mockk()
-    every { suplaMessage.channelId } returns 0
-    every { suplaMessage.type } returns SuplaClientMsg.onDataChanged
-
-    // when
-    viewModel.onSuplaMessage(suplaMessage)
-
-    // then
-    assertThat(states).isEmpty()
-    assertThat(events).isEmpty()
-    verifyNoInteractionsExcept()
   }
 
   @Test

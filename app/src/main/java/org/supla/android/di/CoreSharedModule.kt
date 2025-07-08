@@ -24,11 +24,15 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import org.supla.android.core.infrastructure.CacheFileAccessProxy
+import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.storage.ApplicationPreferences
+import org.supla.android.lib.AndroidSuplaClientMessageHandler
 import org.supla.core.shared.infrastructure.Base64Helper
 import org.supla.core.shared.infrastructure.storage.CacheFileAccess
 import org.supla.core.shared.usecase.GetCaptionUseCase
 import org.supla.core.shared.usecase.GetChannelActionStringUseCase
+import org.supla.core.shared.usecase.addwizard.CheckRegistrationEnabledUseCase
+import org.supla.core.shared.usecase.addwizard.EnableRegistrationUseCase
 import org.supla.core.shared.usecase.channel.CheckOcrPhotoExistsUseCase
 import org.supla.core.shared.usecase.channel.GetAllChannelIssuesUseCase
 import org.supla.core.shared.usecase.channel.GetChannelBatteryIconUseCase
@@ -131,4 +135,16 @@ class CoreSharedModule {
     ocrImageNamingProvider: OcrImageNamingProvider,
     cacheFileAccess: CacheFileAccess
   ) = CheckOcrPhotoExistsUseCase(ocrImageNamingProvider, cacheFileAccess)
+
+  @Singleton
+  @Provides
+  fun provideCheckRegistrationEnabledUseCase(
+    suplaClientProvider: SuplaClientProvider
+  ) = CheckRegistrationEnabledUseCase(AndroidSuplaClientMessageHandler.getGlobalInstance(), suplaClientProvider)
+
+  @Singleton
+  @Provides
+  fun provideEnableRegistrationUseCase(
+    suplaClientProvider: SuplaClientProvider
+  ) = EnableRegistrationUseCase(AndroidSuplaClientMessageHandler.getGlobalInstance(), suplaClientProvider)
 }

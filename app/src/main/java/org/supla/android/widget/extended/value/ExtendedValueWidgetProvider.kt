@@ -20,7 +20,6 @@ package org.supla.android.widget.extended.value
 import org.supla.android.Trace
 import org.supla.android.data.source.local.entity.complex.WidgetConfigurationDataEntity
 import org.supla.android.data.source.local.entity.custom.Phase
-import org.supla.android.data.source.remote.SuplaResultCode
 import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType
 import org.supla.android.extensions.TAG
 import org.supla.android.lib.actions.SubjectType
@@ -30,6 +29,7 @@ import org.supla.android.lib.singlecall.SingleCall
 import org.supla.android.usecases.channel.valueformatter.ListElectricityMeterValueFormatter
 import org.supla.android.widget.extended.WidgetValue
 import org.supla.core.shared.data.model.general.SuplaFunction
+import org.supla.core.shared.data.model.suplaclient.SuplaResultCode
 import org.supla.core.shared.extensions.ifTrue
 import javax.inject.Inject
 import javax.inject.Singleton

@@ -25,6 +25,7 @@ import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.data.source.local.entity.ChannelStateEntity
 import org.supla.android.extensions.TAG
 import org.supla.android.lib.SuplaChannelState
+import org.supla.android.lib.toEntity
 import javax.inject.Inject
 import javax.inject.Singleton
 

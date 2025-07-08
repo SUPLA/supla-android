@@ -28,12 +28,13 @@ import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import org.supla.android.R
 import org.supla.android.core.ui.BaseFragment
 import org.supla.android.core.ui.theme.SuplaTheme
+import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.databinding.FragmentComposeBinding
 import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
 import org.supla.android.features.details.windowdetail.base.ui.WindowView
-import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.ui.dialogs.AlertDialog
 import org.supla.android.ui.dialogs.AuthorizationDialog
+import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
 
 abstract class BaseWindowFragment<S : BaseWindowViewModelState> : BaseFragment<S, BaseWindowViewEvent>(R.layout.fragment_compose) {
 
@@ -92,9 +93,16 @@ abstract class BaseWindowFragment<S : BaseWindowViewModelState> : BaseFragment<S
   override fun handleViewState(state: S) {
   }
 
-  override fun onSuplaMessage(message: SuplaClientMsg) {
-    if (message.type == SuplaClientMsg.onDataChanged && (message.channelId == item.remoteId || message.channelGroupId == item.remoteId)) {
-      viewModel.loadData(item.remoteId, item.itemType)
+  override fun onSuplaMessage(message: SuplaClientMessage) {
+    (message as? SuplaClientMessage.ChannelDataChanged)?.let {
+      if (it.channelId == item.remoteId && item.itemType == ItemType.CHANNEL) {
+        viewModel.loadData(item.remoteId, item.itemType)
+      }
+    }
+    (message as? SuplaClientMessage.GroupDataChanged)?.let {
+      if (it.groupId == item.remoteId && item.itemType == ItemType.GROUP) {
+        viewModel.loadData(item.remoteId, item.itemType)
+      }
     }
   }
 }

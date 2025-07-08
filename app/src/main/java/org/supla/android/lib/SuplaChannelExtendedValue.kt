@@ -1,5 +1,4 @@
-package org.supla.android.lib;
-
+package org.supla.android.lib
 /*
 Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -18,24 +17,31 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import java.io.Serializable;
-import java.util.Date;
+import kotlinx.serialization.Serializable
+import java.util.Date
 
-public class SuplaChannelExtendedValue implements Serializable {
-  public SuplaChannelElectricityMeterValue ElectricityMeterValue = null;
-  public SuplaChannelImpulseCounterValue ImpulseCounterValue = null;
-  public SuplaChannelThermostatValue ThermostatValue = null;
-  public SuplaChannelState ChannelStateValue = null;
-  public SuplaTimerState TimerStateValue = null;
+@Serializable
+class SuplaChannelExtendedValue {
+  @JvmField
+  var ElectricityMeterValue: SuplaChannelElectricityMeterValue? = null
 
-  public SuplaChannelExtendedValue() {
-    // This constructor is used by native code
-  }
+  @JvmField
+  var ImpulseCounterValue: SuplaChannelImpulseCounterValue? = null
 
-  public Date getTimerEstimatedEndDate() {
-    if (TimerStateValue == null) {
-      return null;
+  @JvmField
+  var ThermostatValue: SuplaChannelThermostatValue? = null
+
+  @JvmField
+  var ChannelStateValue: SuplaChannelState? = null
+
+  @JvmField
+  var TimerStateValue: SuplaTimerState? = null
+
+  val timerEstimatedEndDate: Date?
+    get() {
+      if (TimerStateValue == null) {
+        return null
+      }
+      return TimerStateValue!!.countdownEndsAt
     }
-    return TimerStateValue.getCountdownEndsAt();
-  }
 }

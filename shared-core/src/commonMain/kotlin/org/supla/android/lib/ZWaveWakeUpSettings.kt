@@ -1,4 +1,4 @@
-package org.supla.android.features.addwizard.model
+package org.supla.android.lib
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,11 +17,9 @@ package org.supla.android.features.addwizard.model
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.features.addwizard.configuration.EspConfigurationError
-
-sealed interface AddWizardFinalAction {
-  data object Close : AddWizardFinalAction
-  data class Error(val error: EspConfigurationError) : AddWizardFinalAction
-  data object Success : AddWizardFinalAction
-  data object Back : AddWizardFinalAction
-}
+data class ZWaveWakeUpSettings(
+  val minimum: Int,
+  val maximum: Int,
+  var value: Int,
+  val step: Int
+)

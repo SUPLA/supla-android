@@ -30,6 +30,7 @@ import org.supla.android.ui.dialogs.AuthorizationReason
 import org.supla.android.usecases.client.AuthorizationException
 import org.supla.android.usecases.client.AuthorizeUseCase
 import org.supla.android.usecases.client.LoginUseCase
+import org.supla.core.shared.infrastructure.LocalizedStringId
 import org.supla.core.shared.infrastructure.localizedString
 
 @RunWith(MockitoJUnitRunner::class)
@@ -312,7 +313,7 @@ class BaseAuthorizationViewModelTest :
     // given
     val userName = "test@supla.org"
     val password = "password"
-    val exception = AuthorizationException.WithErrorCode(SUPLA_RESULTCODE_CLIENT_LIMITEXCEEDED, isLogin = true)
+    val exception = AuthorizationException.WithLocalizedString(localizedString(LocalizedStringId.RESULT_CODE_CLIENT_LIMIT_EXCEEDED))
     whenever(loginUseCase.invoke(userName, password))
       .thenReturn(Single.error(exception))
 
@@ -343,7 +344,7 @@ class BaseAuthorizationViewModelTest :
         tuple(null, false, 0, 0),
         tuple(null, true, 0, 0),
         tuple(null, false, 0, 0),
-        tuple(localizedString(R.string.status_climit_exceded), false, 0, 0)
+        tuple(localizedString(LocalizedStringId.RESULT_CODE_CLIENT_LIMIT_EXCEEDED), false, 0, 0)
       )
     verify(suplaClientProvider, times(2)).provide()
     verify(profileRepository).findActiveProfile()

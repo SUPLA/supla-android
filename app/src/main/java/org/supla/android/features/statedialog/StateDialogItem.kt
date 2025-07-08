@@ -19,6 +19,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import org.supla.android.R
 import org.supla.android.lib.SuplaChannelState
+import org.supla.android.lib.lightSourceLifespanString
+import org.supla.android.lib.lightSourceOperatingTimeString
 import org.supla.core.shared.extensions.localizedString
 import org.supla.core.shared.infrastructure.LocalizedString
 

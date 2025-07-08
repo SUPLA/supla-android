@@ -35,7 +35,6 @@ import org.supla.android.events.UpdateEventsManager
 import org.supla.android.features.details.detailbase.standarddetail.DetailPage
 import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
 import org.supla.android.features.details.windowdetail.WindowDetailFragment
-import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaSchedulers
@@ -178,13 +177,7 @@ class GroupListViewModel @Inject constructor(
     updateState { it.copy(actionAlertDialogState = null) }
   }
 
-  override fun onSuplaMessage(message: SuplaClientMsg) {
-    when (message.type) {
-      SuplaClientMsg.onDataChanged -> updateGroup(message.channelGroupId)
-    }
-  }
-
-  private fun updateGroup(remoteId: Int) {
+  fun updateGroup(remoteId: Int) {
     if (remoteId > 0) {
       findGroupByRemoteIdUseCase(remoteId = remoteId)
         .attachSilent()
@@ -192,7 +185,7 @@ class GroupListViewModel @Inject constructor(
           onSuccess = { channel ->
             currentState().groups
               ?.filterIsInstance<ListItem.ChannelItem>()
-              ?.first { it.channelBase.remoteId == channel.remoteId }
+              ?.firstOrNull { it.channelBase.remoteId == channel.remoteId }
               ?.channelBase = channel
           },
           onError = defaultErrorHandler("updateGroup($remoteId)")

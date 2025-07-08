@@ -124,10 +124,6 @@ public abstract class SuplaRestApiClientTask extends AsyncTask {
     notify();
   }
 
-  public synchronized SuplaOAuthToken getTokenWhenIsAlive() {
-    return mToken != null && mToken.isAlive() ? getToken() : null;
-  }
-
   public synchronized boolean isAlive(int timeout) {
     return isCancelled() && ActivityTime - (System.currentTimeMillis() / 1000L) < timeout;
   }

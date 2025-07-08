@@ -19,22 +19,13 @@ package org.supla.android.features.addwizard.configuration
 
 import org.supla.android.Trace
 import org.supla.android.extensions.TAG
-
-interface EspConfigurationController {
-  fun checkRegistration()
-  fun authorize()
-  fun activateRegistration()
-  fun findEspNetwork()
-  fun showNetworkSelector(ssids: List<String>, cached: Boolean)
-  fun connectToNetwork(ssid: String)
-  fun configureEsp()
-  fun reconnect()
-  fun showFinished()
-  fun showError(error: EspConfigurationError)
-  fun cancel()
-  fun close()
-  fun back()
-}
+import org.supla.core.shared.data.model.addwizard.Canceled
+import org.supla.core.shared.data.model.addwizard.ConfigurationFailure
+import org.supla.core.shared.data.model.addwizard.EspConfigurationController
+import org.supla.core.shared.data.model.addwizard.EspConfigurationEvent
+import org.supla.core.shared.data.model.addwizard.EspConfigurationState
+import org.supla.core.shared.data.model.addwizard.Finished
+import org.supla.core.shared.data.model.addwizard.Idle
 
 class EspConfigurationStateHolder(espConfigurationController: EspConfigurationController) {
 

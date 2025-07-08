@@ -1,4 +1,4 @@
-package org.supla.android.features.addwizard.configuration
+package org.supla.core.shared.data.model.addwizard
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -16,8 +16,6 @@ package org.supla.android.features.addwizard.configuration
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-
-import org.supla.android.features.addwizard.model.AddWizardFinalAction
 
 sealed interface EspConfigurationState {
   fun handle(event: EspConfigurationEvent): EspConfigurationState

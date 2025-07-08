@@ -35,7 +35,7 @@ import org.supla.android.extensions.TAG
 import org.supla.android.extensions.getChannelIconUseCase
 import org.supla.android.extensions.visibleIf
 import org.supla.android.images.ImageCache
-import org.supla.android.lib.SuplaClientMsg
+import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
 import java.util.*
 import javax.inject.Inject
 
@@ -194,10 +194,9 @@ class TimersDetailFragment : BaseFragment<TimersDetailViewState, TimersDetailVie
     }
   }
 
-  override fun onSuplaMessage(message: SuplaClientMsg) {
-    super.onSuplaMessage(message)
-    when (message.type) {
-      SuplaClientMsg.onDataChanged -> if (message.channelId == remoteId && (message.isTimerValue || !message.isExtendedValue)) {
+  override fun onSuplaMessage(message: SuplaClientMessage) {
+    (message as? SuplaClientMessage.ChannelDataChanged)?.let {
+      if (it.channelId == remoteId && (it.timerValueChanged || !it.extendedValueChanged)) {
         Trace.i(TAG, "Detail got data changed event")
         timer?.cancel()
         timerActive = false

@@ -38,11 +38,11 @@ import org.supla.android.features.captionchangedialog.View
 import org.supla.android.features.statedialog.StateDialogViewModel
 import org.supla.android.features.statedialog.View
 import org.supla.android.features.statedialog.handleStateDialogViewEvent
-import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.navigator.MainNavigator
 import org.supla.android.ui.lists.message
 import org.supla.android.usecases.channel.ButtonType
 import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -158,9 +158,8 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
     adapter.locationCaptionLongPressCallback = captionChangeViewModel::showLocationDialog
   }
 
-  override fun onSuplaMessage(message: SuplaClientMsg) {
-    when (message.type) {
-      SuplaClientMsg.onChannelState -> stateDialogViewModel.updateStateDialog(message.channelState)
-    }
+  override fun onSuplaMessage(message: SuplaClientMessage) {
+    (message as? SuplaClientMessage.ChannelState)?.let { stateDialogViewModel.updateStateDialog(it.channelState) }
+    (message as? SuplaClientMessage.ChannelDataChanged)?.let { viewModel.updateChannel(message.channelId) }
   }
 }

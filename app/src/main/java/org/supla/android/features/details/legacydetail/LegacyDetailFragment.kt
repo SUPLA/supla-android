@@ -35,10 +35,10 @@ import org.supla.android.core.ui.BaseFragment
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.databinding.FragmentLegacyDetailBinding
 import org.supla.android.db.ChannelBase
-import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.listview.DetailLayout
 import org.supla.android.ui.animations.DEFAULT_ANIMATION_DURATION
 import org.supla.android.usecases.details.LegacyDetailType
+import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
 
 private const val ARG_REMOTE_ID = "ARG_REMOTE_ID"
 private const val ARG_DETAIL_TYPE = "ARG_DETAIL_TYPE"
@@ -107,18 +107,18 @@ class LegacyDetailFragment : BaseFragment<LegacyDetailViewState, LegacyDetailVie
   override fun handleViewState(state: LegacyDetailViewState) {
   }
 
-  override fun onSuplaMessage(message: SuplaClientMsg) {
-    when (message.type) {
-      SuplaClientMsg.onDataChanged -> {
-        if (this::detailView.isInitialized.not()) {
-          return // view will not handle updates because it's not initialized
-        }
-        if (itemType == ItemType.CHANNEL && message.channelId != remoteId) {
-          return // message for another channel
-        }
-        if (itemType == ItemType.GROUP && message.channelGroupId != remoteId) {
-          return // message for another group
-        }
+  override fun onSuplaMessage(message: SuplaClientMessage) {
+    if (this::detailView.isInitialized.not()) {
+      return // view will not handle updates because it's not initialized
+    }
+
+    (message as? SuplaClientMessage.ChannelDataChanged)?.let {
+      if (itemType == ItemType.CHANNEL && message.channelId == remoteId) {
+        detailView.OnChannelDataChanged()
+      }
+    }
+    (message as? SuplaClientMessage.GroupDataChanged)?.let {
+      if (itemType == ItemType.GROUP && message.groupId == remoteId) {
         detailView.OnChannelDataChanged()
       }
     }

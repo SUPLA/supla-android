@@ -58,7 +58,9 @@ kotlin {
     val iosSimulatorArm64Main by getting
 
     commonMain.dependencies {
+      implementation(libs.coroutines.core)
       implementation(libs.kotlinx.serialization)
+      implementation(libs.kotlinx.datetime)
       implementation(libs.kotlin.bitops.endian)
     }
   }

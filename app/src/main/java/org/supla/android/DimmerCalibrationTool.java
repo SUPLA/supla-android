@@ -28,17 +28,20 @@ import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.core.content.res.ResourcesCompat;
 import java.util.Timer;
 import java.util.TimerTask;
-import org.supla.android.lib.SuplaClientMessageHandler;
-import org.supla.android.lib.SuplaClientMsg;
+import org.supla.android.lib.AndroidSuplaClientMessageHandler;
+import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage;
+import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage.CallConfigResult;
+import org.supla.core.shared.infrastructure.messaging.SuplaClientMessageHandler;
 
 public abstract class DimmerCalibrationTool
     implements View.OnClickListener,
         SuperuserAuthorizationDialog.OnAuthorizarionResultListener,
-        SuplaClientMessageHandler.OnSuplaClientMessageListener {
+        SuplaClientMessageHandler.Listener {
 
   private static final int DISPLAY_DELAY_TIME = 1000;
   private static final int MIN_SEND_DELAY_TIME = 500;
@@ -74,11 +77,11 @@ public abstract class DimmerCalibrationTool
   @Override
   public void onSuperuserOnAuthorizarionResult(
       SuperuserAuthorizationDialog dialog, boolean Success, int Code) {
-    SuplaClientMessageHandler.getGlobalInstance().unregisterMessageListener(this);
+    AndroidSuplaClientMessageHandler.Companion.getGlobalInstance().unregister(this);
     mSuperuserAuthorizationStarted = false;
 
     if (Success) {
-      SuplaClientMessageHandler.getGlobalInstance().registerMessageListener(this);
+      AndroidSuplaClientMessageHandler.Companion.getGlobalInstance().register(this);
       onSuperuserOnAuthorizarionSuccess();
     }
   }
@@ -86,7 +89,7 @@ public abstract class DimmerCalibrationTool
   @Override
   public void authorizationCanceled() {
     mSuperuserAuthorizationStarted = false;
-    SuplaClientMessageHandler.getGlobalInstance().unregisterMessageListener(this);
+    AndroidSuplaClientMessageHandler.Companion.getGlobalInstance().unregister(this);
   }
 
   protected void setImgViews(int imgOnResId, int imgOffResId, int imgAlwaysOffResId) {
@@ -358,7 +361,7 @@ public abstract class DimmerCalibrationTool
   public void Hide() {
     onHide();
     closePreloaderPopup();
-    SuplaClientMessageHandler.getGlobalInstance().unregisterMessageListener(this);
+    AndroidSuplaClientMessageHandler.Companion.getGlobalInstance().unregister(this);
 
     if (getMainView().getVisibility() == View.VISIBLE) {
       getMainView().setVisibility(View.GONE);
@@ -471,12 +474,11 @@ public abstract class DimmerCalibrationTool
   }
 
   @Override
-  public void onSuplaClientMessageReceived(SuplaClientMsg msg) {
-    if (msg != null
-        && msg.getType() == SuplaClientMsg.onCalCfgResult
-        && isDetailVisible()
-        && msg.getChannelId() == getRemoteId()) {
-      onCalCfgResult(msg.getCommand(), msg.getResult(), msg.getData());
+  public void onReceived(@NonNull SuplaClientMessage message) {
+    if (message instanceof CallConfigResult result) {
+      if (isDetailVisible() && result.getChannelId() == getRemoteId()) {
+        onCalCfgResult(result.getCommand(), result.getResult(), result.getData());
+      }
     }
   }
 
