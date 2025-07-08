@@ -26,7 +26,8 @@ sealed interface LocalizedString {
 
   data object Empty : LocalizedString
   data class Constant(val text: String) : LocalizedString
-  data class WithId(val id: LocalizedStringId) : LocalizedString
+  data class WithId(val id: LocalizedStringId, val arguments: List<Any> = emptyList()) : LocalizedString
+  data class WithIdAndString(val id: LocalizedStringId, val text: String) : LocalizedString
   data class WithIdIntStringInt(val id: LocalizedStringId, val arg1: Int, val arg2: LocalizedString, val arg3: Int) : LocalizedString
 
   @HiddenFromObjC
@@ -41,6 +42,9 @@ sealed interface LocalizedString {
 }
 
 fun localizedString(id: LocalizedStringId?): LocalizedString = id?.let { LocalizedString.WithId(it) } ?: LocalizedString.Empty
+
+fun localizedString(id: LocalizedStringId, arg1: Any, arg2: Any, arg3: Any, arg4: Any): LocalizedString =
+  LocalizedString.WithId(id, listOf(arg1, arg2, arg3, arg4))
 
 fun localizedString(id: LocalizedStringId, arg1: Int, arg2: LocalizedString, arg3: Int): LocalizedString =
   LocalizedString.WithIdIntStringInt(id, arg1, arg2, arg3)

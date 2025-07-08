@@ -52,26 +52,26 @@ import org.supla.android.core.networking.suplaclient.SuplaClientNetworkCallback;
 import org.supla.android.core.networking.suplaclient.workers.InitializationWorker;
 import org.supla.android.core.notifications.NotificationsHelper;
 import org.supla.android.core.observers.AppLifecycleObserver;
+import org.supla.android.core.shared.SuplaClientMessageExtensionsKt;
 import org.supla.android.core.storage.ApplicationPreferences;
 import org.supla.android.data.ValuesFormatter;
 import org.supla.android.data.model.general.NightModeSetting;
 import org.supla.android.db.DbHelper;
 import org.supla.android.db.room.app.AppDatabase;
 import org.supla.android.features.icons.LoadUserIconsIntoCacheWorker;
+import org.supla.android.lib.AndroidSuplaClientMessageHandler;
 import org.supla.android.lib.SuplaClient;
-import org.supla.android.lib.SuplaClientMessageHandler;
-import org.supla.android.lib.SuplaClientMsg;
 import org.supla.android.lib.SuplaOAuthToken;
 import org.supla.android.profile.ProfileManager;
 import org.supla.android.restapi.SuplaRestApiClientTask;
 import org.supla.android.widget.extended.ExtendedValueWidgetWorker;
 import org.supla.android.widget.shared.WidgetReloadWorker;
+import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage;
+import org.supla.core.shared.infrastructure.messaging.SuplaClientMessageHandler;
 
 @HiltAndroidApp
 public class SuplaApp extends MultiDexApplication
-    implements SuplaClientMessageHandler.OnSuplaClientMessageListener,
-        ValuesFormatterProvider,
-        SuplaAppApi {
+    implements SuplaClientMessageHandler.Listener, ValuesFormatterProvider, SuplaAppApi {
 
   private static final Object _lck1 = new Object();
   private static final Object _lck3 = new Object();
@@ -94,7 +94,7 @@ public class SuplaApp extends MultiDexApplication
   @Inject ApplicationPreferences applicationPreferences;
 
   public SuplaApp() {
-    SuplaClientMessageHandler.getGlobalInstance().registerMessageListener(this);
+    AndroidSuplaClientMessageHandler.Companion.getGlobalInstance().register(this);
   }
 
   public static SuplaApp getApp() {
@@ -208,10 +208,10 @@ public class SuplaApp extends MultiDexApplication
   }
 
   @Override
-  public void onSuplaClientMessageReceived(SuplaClientMsg msg) {
-    if (msg.getType() == SuplaClientMsg.onOAuthTokenRequestResult) {
+  public void onReceived(@NonNull SuplaClientMessage message) {
+    if (message instanceof SuplaClientMessage.OAuthToken authToken) {
       synchronized (_lck3) {
-        _OAuthToken = msg.getOAuthToken();
+        _OAuthToken = SuplaClientMessageExtensionsKt.getSuplaToken(authToken);
         for (int a = 0; a < _RestApiClientTasks.size(); a++) {
           _RestApiClientTasks.get(a).setToken(_OAuthToken);
         }

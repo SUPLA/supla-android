@@ -46,7 +46,6 @@ import org.supla.android.core.infrastructure.TextToSpeechHelper
 import org.supla.android.data.source.AndroidAutoItemRepository
 import org.supla.android.data.source.local.entity.AndroidAutoItemEntity
 import org.supla.android.data.source.local.entity.complex.AndroidAutoDataEntity
-import org.supla.android.data.source.remote.SuplaResultCode
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.extensions.TAG
 import org.supla.android.extensions.ucFirst
@@ -58,6 +57,7 @@ import org.supla.android.lib.singlecall.SingleCall
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.icon.GetSceneIconUseCase
+import org.supla.core.shared.data.model.suplaclient.SuplaResultCode
 
 class MainScreen(
   private val androidAutoItemRepository: AndroidAutoItemRepository,

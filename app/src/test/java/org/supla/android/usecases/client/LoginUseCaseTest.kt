@@ -36,11 +36,11 @@ import org.supla.android.core.SuplaAppProvider
 import org.supla.android.core.infrastructure.ThreadHandler
 import org.supla.android.core.networking.suplaclient.SuplaClientApi
 import org.supla.android.core.networking.suplaclient.SuplaClientMessageHandlerWrapper
-import org.supla.android.lib.SuplaClientMessageHandler
-import org.supla.android.lib.SuplaClientMsg
-import org.supla.android.lib.SuplaConst.SUPLA_RESULTCODE_CLIENT_LIMITEXCEEDED
-import org.supla.android.lib.SuplaConst.SUPLA_RESULTCODE_UNAUTHORIZED
-import org.supla.android.lib.SuplaRegisterError
+import org.supla.core.shared.data.model.suplaclient.SuplaResultCode
+import org.supla.core.shared.infrastructure.LocalizedStringId
+import org.supla.core.shared.infrastructure.localizedString
+import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
+import org.supla.core.shared.infrastructure.messaging.SuplaClientMessageHandler
 
 @RunWith(MockitoJUnitRunner::class)
 class LoginUseCaseTest {
@@ -73,13 +73,11 @@ class LoginUseCaseTest {
     }
     whenever(suplaAppProvider.provide()).thenReturn(suplaApp)
 
-    val message: SuplaClientMsg = mockk {
-      every { type } returns SuplaClientMsg.onRegistered
-    }
-    var listener: SuplaClientMessageHandler.OnSuplaClientMessageListener? = null
+    val message = SuplaClientMessage.ClientRegistered
+    var listener: SuplaClientMessageHandler.Listener? = null
     doAnswer {
-      listener = it.arguments[0] as SuplaClientMessageHandler.OnSuplaClientMessageListener
-      listener.onSuplaClientMessageReceived(message)
+      listener = it.arguments[0] as SuplaClientMessageHandler.Listener
+      listener.onReceived(message)
     }.whenever(suplaClientMessageHandlerWrapper).registerMessageListener(any())
 
     // when
@@ -107,24 +105,18 @@ class LoginUseCaseTest {
     }
     whenever(suplaAppProvider.provide()).thenReturn(suplaApp)
 
-    val message: SuplaClientMsg = mockk {
-      every { type } returns SuplaClientMsg.onRegisterError
-      every { registerError } returns SuplaRegisterError().also {
-        it.ResultCode = SUPLA_RESULTCODE_CLIENT_LIMITEXCEEDED
-      }
-      every { code } returns SUPLA_RESULTCODE_UNAUTHORIZED
-    }
-    var listener: SuplaClientMessageHandler.OnSuplaClientMessageListener? = null
+    val message = SuplaClientMessage.ClientRegistrationError(SuplaResultCode.CLIENT_LIMIT_EXCEEDED)
+    var listener: SuplaClientMessageHandler.Listener? = null
     doAnswer {
-      listener = it.arguments[0] as SuplaClientMessageHandler.OnSuplaClientMessageListener
-      listener.onSuplaClientMessageReceived(message)
+      listener = it.arguments[0] as SuplaClientMessageHandler.Listener
+      listener.onReceived(message)
     }.whenever(suplaClientMessageHandlerWrapper).registerMessageListener(any())
 
     // when
     val observer = useCase.invoke(userName, password).test()
 
     // then
-    observer.assertError(AuthorizationException.WithErrorCode(SUPLA_RESULTCODE_CLIENT_LIMITEXCEEDED, isLogin = true))
+    observer.assertError(AuthorizationException.WithLocalizedString(localizedString(LocalizedStringId.RESULT_CODE_CLIENT_LIMIT_EXCEEDED)))
 
     verify(suplaAppProvider).provide()
     verify(suplaClientMessageHandlerWrapper).registerMessageListener(listener!!)

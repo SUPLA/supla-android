@@ -1,4 +1,4 @@
-package org.supla.android.data.source.remote
+package org.supla.core.shared.data.model.suplaclient
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,8 +17,9 @@ package org.supla.android.data.source.remote
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.Trace
-import org.supla.android.extensions.TAG
+import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.infrastructure.LocalizedStringId
+import org.supla.core.shared.infrastructure.localizedString
 
 enum class SuplaResultCode(val value: Int) {
   UNKNOWN(-1),
@@ -67,6 +68,23 @@ enum class SuplaResultCode(val value: Int) {
   IDENTIFY_REQUESTED(43),
   MALFORMED_EMAIL(44);
 
+  fun message(isLogin: Boolean): LocalizedString =
+    when (this) {
+      TEMPORARILY_UNAVAILABLE -> localizedString(LocalizedStringId.RESULT_CODE_TEMPORARILY_UNAVAILABLE)
+      CLIENT_LIMIT_EXCEEDED -> localizedString(LocalizedStringId.RESULT_CODE_CLIENT_LIMIT_EXCEEDED)
+      CLIENT_DISABLED -> localizedString(LocalizedStringId.RESULT_CODE_DEVICE_DISABLED)
+      ACCESS_ID_DISABLED -> localizedString(LocalizedStringId.RESULT_CODE_ACCESS_ID_DISABLED)
+      REGISTRATION_DISABLED -> localizedString(LocalizedStringId.RESULT_CODE_REGISTRATION_DISABLED)
+      ACCESS_ID_NOT_ASSIGNED -> localizedString(LocalizedStringId.RESULT_CODE_ACCESS_ID_NOT_ASSIGNED)
+      INACTIVE -> localizedString(LocalizedStringId.RESULT_CODE_INACTIVE)
+      UNAUTHORIZED -> localizedString(LocalizedStringId.RESULT_CODE_INCORRECT_EMAIL_OR_PASSWORD)
+      BAD_CREDENTIALS ->
+        localizedString(
+          if (isLogin) LocalizedStringId.RESULT_CODE_INCORRECT_EMAIL_OR_PASSWORD else LocalizedStringId.RESULT_CODE_BAD_CREDENTIALS
+        )
+      else -> LocalizedString.WithIdAndString(LocalizedStringId.RESULT_CODE_UNKNOWN_ERROR, " ($value)")
+    }
+
   companion object {
     fun from(value: Int): SuplaResultCode {
       val code = entries.firstOrNull { it.value == value }
@@ -74,7 +92,6 @@ enum class SuplaResultCode(val value: Int) {
         return code
       }
 
-      Trace.e(TAG, "Could not find SuplaResultCode for `$value`")
       return UNKNOWN
     }
   }

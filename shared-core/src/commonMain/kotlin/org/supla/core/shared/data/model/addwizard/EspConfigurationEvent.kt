@@ -1,4 +1,4 @@
-package org.supla.android.features.addwizard.configuration
+package org.supla.core.shared.data.model.addwizard
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 

@@ -85,4 +85,16 @@ public class SuplaOAuthToken {
   public boolean isAlive() {
     return Birthday + ExpiresIn - (System.currentTimeMillis() / 1000L) >= 20;
   }
+
+  public long getBirthday() {
+    return Birthday;
+  }
+
+  public int getResultCode() {
+    return ResultCode;
+  }
+
+  public int getExpiresIn() {
+    return ExpiresIn;
+  }
 }

@@ -117,7 +117,7 @@ abstract class BaseAuthorizationViewModel<S : AuthorizationModelState, E : ViewE
         onError = { error ->
           if (error is AuthorizationException) {
             updateAuthorizationDialogState { state ->
-              state?.copy(error = error.localizedErrorMessange)
+              state?.copy(error = error.localizedErrorMessage)
             }
           } else {
             onError(error)
@@ -143,7 +143,7 @@ abstract class BaseAuthorizationViewModel<S : AuthorizationModelState, E : ViewE
         onError = { error ->
           if (error is AuthorizationException) {
             updateAuthorizationDialogState { state ->
-              state?.copy(error = error.localizedErrorMessange)
+              state?.copy(error = error.localizedErrorMessage)
             }
           } else {
             onError(error)

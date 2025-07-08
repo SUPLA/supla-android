@@ -121,7 +121,7 @@ class TimersDetailViewModel @Inject constructor(
   private fun handleChannel(channel: Channel) {
     val currentTime = dateProvider.currentDate()
     val timerState = channel.getTimerStateValue()
-    val isTimerOn = timerState != null && timerState.countdownEndsAt != null && timerState.countdownEndsAt.after(currentTime)
+    val isTimerOn = timerState != null && timerState.countdownEndsAt?.after(currentTime) == true
     val startDate = channel.extendedValue?.timerStartTimestamp?.asDate()
     Trace.d(TAG, "Handling channel update $timerState")
 
@@ -142,7 +142,7 @@ class TimersDetailViewModel @Inject constructor(
         channel = channel,
         timerData = if (isTimerOn) {
           TimerProgressData(
-            endTime = timerState!!.countdownEndsAt,
+            endTime = timerState.countdownEndsAt!!,
             startTime = startDate ?: currentTime,
             indeterminate = startDate == null,
             timerValue = if (timerState.expectedHiValue()) TimerValue.OFF else TimerValue.ON

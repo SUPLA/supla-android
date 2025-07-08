@@ -17,19 +17,19 @@ package org.supla.android.core.networking.suplaclient
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.lib.SuplaClientMessageHandler
-import org.supla.android.lib.SuplaClientMessageHandler.OnSuplaClientMessageListener
+import org.supla.android.lib.AndroidSuplaClientMessageHandler
+import org.supla.core.shared.infrastructure.messaging.SuplaClientMessageHandler
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class SuplaClientMessageHandlerWrapper @Inject constructor() {
 
-  fun registerMessageListener(listener: OnSuplaClientMessageListener) {
-    SuplaClientMessageHandler.getGlobalInstance().registerMessageListener(listener)
+  fun registerMessageListener(listener: SuplaClientMessageHandler.Listener) {
+    AndroidSuplaClientMessageHandler.getGlobalInstance().register(listener)
   }
 
-  fun unregisterMessageListener(listener: OnSuplaClientMessageListener) {
-    SuplaClientMessageHandler.getGlobalInstance().unregisterMessageListener(listener)
+  fun unregisterMessageListener(listener: SuplaClientMessageHandler.Listener) {
+    AndroidSuplaClientMessageHandler.getGlobalInstance().unregister(listener)
   }
 }

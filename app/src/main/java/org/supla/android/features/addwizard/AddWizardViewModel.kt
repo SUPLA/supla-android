@@ -36,23 +36,20 @@ import org.supla.android.core.infrastructure.WiFiScanner
 import org.supla.android.core.networking.suplaclient.SuplaClientEvent
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientStateHolder
+import org.supla.android.core.shared.resource
 import org.supla.android.core.storage.EncryptedPreferences
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.extensions.TAG
 import org.supla.android.extensions.isNotNull
-import org.supla.android.features.addwizard.configuration.EspConfigurationController
-import org.supla.android.features.addwizard.configuration.EspConfigurationError
-import org.supla.android.features.addwizard.configuration.EspConfigurationEvent
 import org.supla.android.features.addwizard.configuration.EspConfigurationStateHolder
 import org.supla.android.features.addwizard.model.AddWizardScreen
 import org.supla.android.features.addwizard.model.Esp
 import org.supla.android.features.addwizard.model.EspConfigResult
 import org.supla.android.features.addwizard.usecase.CheckLocationEnabledUseCase
-import org.supla.android.features.addwizard.usecase.CheckRegistrationEnabledUseCase
 import org.supla.android.features.addwizard.usecase.ConfigureEspUseCase
 import org.supla.android.features.addwizard.usecase.ConnectToSsidUseCase
-import org.supla.android.features.addwizard.usecase.EnableRegistrationUseCase
+import org.supla.core.shared.usecase.addwizard.EnableRegistrationUseCase
 import org.supla.android.features.addwizard.usecase.FindEspSsidUseCase
 import org.supla.android.features.addwizard.usecase.ReconnectToInternetUseCase
 import org.supla.android.features.addwizard.usecase.receiver.ConnectResult
@@ -68,8 +65,12 @@ import org.supla.android.ui.dialogs.authorize.BaseAuthorizationViewModel
 import org.supla.android.usecases.client.AuthorizeUseCase
 import org.supla.android.usecases.client.LoginUseCase
 import org.supla.android.usecases.profile.LoadActiveProfileUseCase
+import org.supla.core.shared.data.model.addwizard.EspConfigurationController
+import org.supla.core.shared.data.model.addwizard.EspConfigurationError
+import org.supla.core.shared.data.model.addwizard.EspConfigurationEvent
 import org.supla.core.shared.extensions.ifTrue
 import org.supla.core.shared.infrastructure.localizedString
+import org.supla.core.shared.usecase.addwizard.CheckRegistrationEnabledUseCase
 import javax.inject.Inject
 
 @HiltViewModel
@@ -440,7 +441,7 @@ class AddWizardViewModel @Inject constructor(
 
   override fun showError(error: EspConfigurationError) {
     updateState {
-      it.navigateTo(screen = AddWizardScreen.Message(iconRes = error.iconRes, message = error.message, true))
+      it.navigateTo(screen = AddWizardScreen.Message(iconRes = error.icon.resource, message = error.message, true))
         .copy(processing = false)
     }
   }

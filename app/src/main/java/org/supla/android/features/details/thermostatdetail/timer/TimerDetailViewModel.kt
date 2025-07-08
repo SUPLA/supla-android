@@ -295,7 +295,7 @@ class TimerDetailViewModel @Inject constructor(
     val currentDate = dateProvider.currentDate()
     val timerState = channel.getTimerStateValue()
     val thermostatValue = channel.value.asThermostatValue()
-    val isTimerOn = timerState != null && timerState.countdownEndsAt != null && timerState.countdownEndsAt.after(currentDate)
+    val isTimerOn = timerState != null && timerState.countdownEndsAt?.after(currentDate) == true
     val (minTemperature, maxTemperature) = guardLet(hvacConfig.minTemperature, hvacConfig.maxTemperature) { return }
 
     val initialCalendarDate = currentDate.shift(7)
@@ -308,7 +308,7 @@ class TimerDetailViewModel @Inject constructor(
         calendarTimeValue = initialCalendarDate.hour(),
         isTimerOn = isTimerOn,
         isChannelOnline = channel.onLine,
-        timerEndDate = if (isTimerOn) timerState?.countdownEndsAt else null,
+        timerEndDate = if (isTimerOn) timerState.countdownEndsAt else null,
 
         subfunction = thermostatValue.subfunction,
         minTemperature = minTemperature,

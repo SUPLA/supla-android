@@ -29,9 +29,7 @@ import org.supla.android.MainActivity
 import org.supla.android.Trace
 import org.supla.android.extensions.TAG
 import org.supla.android.extensions.visibleIf
-import org.supla.android.lib.SuplaClientMessageHandler
-import org.supla.android.lib.SuplaClientMessageHandler.OnSuplaClientMessageListener
-import org.supla.android.lib.SuplaClientMsg
+import org.supla.android.lib.AndroidSuplaClientMessageHandler
 import org.supla.android.tools.VibrationHelper
 import org.supla.android.ui.AppBar
 import org.supla.android.ui.LoadableContent
@@ -39,12 +37,18 @@ import org.supla.android.ui.ToolbarItemsClickHandler
 import org.supla.android.ui.ToolbarItemsController
 import org.supla.android.ui.ToolbarTitleController
 import org.supla.android.ui.ToolbarVisibilityController
+import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
+import org.supla.core.shared.infrastructure.messaging.SuplaClientMessageHandler
 import java.io.Serializable
 import javax.inject.Inject
 
 abstract class BaseFragment<S : ViewState, E : ViewEvent>(@LayoutRes contentLayoutId: Int) : Fragment(contentLayoutId) {
 
-  private val suplaMessageListener: OnSuplaClientMessageListener = OnSuplaClientMessageListener { onSuplaMessage(it) }
+  private val suplaMessageListener: SuplaClientMessageHandler.Listener = object : SuplaClientMessageHandler.Listener {
+    override fun onReceived(message: SuplaClientMessage) {
+      onSuplaMessage(message)
+    }
+  }
 
   constructor() : this(0)
 
@@ -84,7 +88,7 @@ abstract class BaseFragment<S : ViewState, E : ViewEvent>(@LayoutRes contentLayo
   @CallSuper
   override fun onResume() {
     super.onResume()
-    SuplaClientMessageHandler.getGlobalInstance().registerMessageListener(suplaMessageListener)
+    AndroidSuplaClientMessageHandler.getGlobalInstance().register(suplaMessageListener)
     if (this is ToolbarItemsClickHandler) {
       (requireActivity() as? MainActivity)?.registerMenuItemClickHandler(this)
     }
@@ -95,7 +99,7 @@ abstract class BaseFragment<S : ViewState, E : ViewEvent>(@LayoutRes contentLayo
     if (this is ToolbarItemsClickHandler) {
       (requireActivity() as? MainActivity)?.unregisterMenuItemClickHandler(this)
     }
-    SuplaClientMessageHandler.getGlobalInstance().unregisterMessageListener(suplaMessageListener)
+    AndroidSuplaClientMessageHandler.getGlobalInstance().unregister(suplaMessageListener)
     super.onPause()
   }
 
@@ -114,7 +118,7 @@ abstract class BaseFragment<S : ViewState, E : ViewEvent>(@LayoutRes contentLayo
     Trace.w(TAG, "Got event `$event`, but no handler implemented!")
   }
 
-  protected open fun onSuplaMessage(message: SuplaClientMsg) {
+  protected open fun onSuplaMessage(message: SuplaClientMessage) {
   }
 
   protected fun setToolbarTitle(title: String) {

@@ -121,7 +121,7 @@ dependencies {
   implementation(libs.multidex)
   implementation(libs.androidChart)
   implementation(libs.googleMaterial)
-  implementation(libs.coroutines)
+  implementation(libs.coroutines.android)
   implementation(libs.coroutines.rx3)
   implementation(libs.fragmentViewBinding)
 

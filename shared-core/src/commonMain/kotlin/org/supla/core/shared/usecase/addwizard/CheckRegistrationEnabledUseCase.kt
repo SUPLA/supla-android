@@ -1,4 +1,6 @@
-package org.supla.android.features.addwizard.usecase
+@file:OptIn(ExperimentalTime::class)
+
+package org.supla.core.shared.usecase.addwizard
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -19,49 +21,48 @@ package org.supla.android.features.addwizard.usecase
 
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.withTimeoutOrNull
-import org.supla.android.core.networking.suplaclient.SuplaClientProvider
-import org.supla.android.data.source.remote.SuplaResultCode
-import org.supla.android.extensions.isNull
-import org.supla.android.lib.SuplaClientMessageHandler
-import org.supla.android.lib.SuplaClientMessageHandler.OnSuplaClientMessageListener
-import org.supla.android.lib.SuplaClientMsg
-import org.supla.core.shared.extensions.ifTrue
-import javax.inject.Inject
-import javax.inject.Singleton
+import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
+import org.supla.core.shared.infrastructure.messaging.SuplaClientMessageHandler
+import org.supla.core.shared.networking.SuplaClientSharedProvider
+import org.supla.core.shared.usecase.channel.isNull
 import kotlin.time.Duration.Companion.seconds
+import kotlin.time.ExperimentalTime
 
-private const val DEVICE_REGISTRATION_TIME = 3600
-
-@Singleton
-class EnableRegistrationUseCase @Inject constructor(
+class CheckRegistrationEnabledUseCase(
   private val suplaClientMessageHandler: SuplaClientMessageHandler,
-  private val suplaClientProvider: SuplaClientProvider
+  private val suplaClientProvider: SuplaClientSharedProvider
 ) {
+
   suspend operator fun invoke(): Result {
     val semaphore = Semaphore(1, 1)
     val suplaMessageListener = MessageListener(semaphore)
 
-    suplaClientMessageHandler.registerMessageListener(suplaMessageListener)
-    suplaClientProvider.provide()?.setRegistrationEnabled(DEVICE_REGISTRATION_TIME, -1)
+    suplaClientMessageHandler.register(suplaMessageListener)
+    suplaClientProvider.provide()?.getRegistrationEnabled()
 
     try {
       withTimeoutOrNull(10.seconds) {
         semaphore.acquire()
       }
     } finally {
-      suplaClientMessageHandler.unregisterMessageListener(suplaMessageListener)
+      suplaClientMessageHandler.unregister(suplaMessageListener)
     }
 
     return suplaMessageListener.result ?: Result.TIMEOUT
   }
 
-  private class MessageListener(private val semaphore: Semaphore) : OnSuplaClientMessageListener {
+  private class MessageListener(private val semaphore: Semaphore) : SuplaClientMessageHandler.Listener {
     var result: Result? = null
 
-    override fun onSuplaClientMessageReceived(message: SuplaClientMsg?) {
-      if (message?.type == SuplaClientMsg.onSetRegistrationEnabledResult) {
-        if (result.isNull) {
-          result = (message.code == SuplaResultCode.TRUE.value).ifTrue { Result.SUCCESS } ?: Result.FAILURE
+    override fun onReceived(message: SuplaClientMessage) {
+      (message as? SuplaClientMessage.RegistrationEnabled)?.let { registrationEnabled ->
+        if (result.isNull()) {
+          result =
+            if (registrationEnabled.isDeviceRegistrationEnabled) {
+              Result.ENABLED
+            } else {
+              Result.DISABLED
+            }
         }
         semaphore.release()
       }
@@ -69,6 +70,6 @@ class EnableRegistrationUseCase @Inject constructor(
   }
 
   enum class Result {
-    SUCCESS, FAILURE, TIMEOUT
+    ENABLED, DISABLED, TIMEOUT
   }
 }

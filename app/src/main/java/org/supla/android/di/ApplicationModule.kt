@@ -38,8 +38,8 @@ import org.supla.android.core.SuplaAppProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.data.formatting.DateFormatter
 import org.supla.android.data.source.ProfileRepository
+import org.supla.android.lib.AndroidSuplaClientMessageHandler
 import org.supla.android.lib.SuplaClient
-import org.supla.android.lib.SuplaClientMessageHandler
 import org.supla.android.lib.singlecall.SingleCall
 import org.supla.android.profile.MultiAccountProfileManager
 import org.supla.android.profile.ProfileIdHolder
@@ -95,8 +95,8 @@ class ApplicationModule {
 
   @Provides
   @Singleton
-  fun provideSuplaClientMessageHandler(): SuplaClientMessageHandler =
-    SuplaClientMessageHandler.getGlobalInstance()
+  fun provideSuplaClientMessageHandler(): AndroidSuplaClientMessageHandler =
+    AndroidSuplaClientMessageHandler.getGlobalInstance()
 
   @Provides
   @Singleton

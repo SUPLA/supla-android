@@ -21,15 +21,15 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import kotlinx.serialization.SerializationException
+import kotlinx.serialization.json.Json
 import org.supla.android.Trace
 import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity.Companion.COLUMN_CHANNEL_ID
 import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity.Companion.COLUMN_PROFILE_ID
 import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity.Companion.TABLE_NAME
 import org.supla.android.extensions.TAG
 import org.supla.android.lib.SuplaChannelExtendedValue
-import java.io.ByteArrayInputStream
 import java.io.IOException
-import java.io.ObjectInputStream
 import java.util.Date
 
 @Entity(
@@ -59,13 +59,15 @@ data class ChannelExtendedValueEntity(
 
   private fun toObject(value: ByteArray): Any? {
     try {
-      val byteStream = ByteArrayInputStream(value)
-      val objectStream = ObjectInputStream(byteStream)
-      return objectStream.readObject()
+      return Json.decodeFromString<SuplaChannelExtendedValue>(String(bytes = value))
     } catch (e: IOException) {
       Trace.w(TAG, "Could not convert to object (IOException)", e)
     } catch (e: ClassNotFoundException) {
       Trace.w(TAG, "Could not convert to object (ClassNotFoundException)", e)
+    } catch (e: SerializationException) {
+      Trace.w(TAG, "Could not convert to object (SerializationException) - skipping")
+    } catch (e: Exception) {
+      Trace.w(TAG, "Could not convert to object", e)
     }
     return null
   }

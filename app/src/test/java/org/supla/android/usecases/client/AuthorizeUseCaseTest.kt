@@ -35,9 +35,12 @@ import org.supla.android.core.infrastructure.ThreadHandler
 import org.supla.android.core.networking.suplaclient.SuplaClientApi
 import org.supla.android.core.networking.suplaclient.SuplaClientMessageHandlerWrapper
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
-import org.supla.android.lib.SuplaClientMessageHandler
-import org.supla.android.lib.SuplaClientMsg
-import org.supla.android.lib.SuplaConst
+import org.supla.core.shared.data.model.suplaclient.SuplaResultCode
+import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.infrastructure.LocalizedStringId
+import org.supla.core.shared.infrastructure.localizedString
+import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
+import org.supla.core.shared.infrastructure.messaging.SuplaClientMessageHandler
 
 @RunWith(MockitoJUnitRunner::class)
 class AuthorizeUseCaseTest {
@@ -65,9 +68,9 @@ class AuthorizeUseCaseTest {
     }
     whenever(suplaClientProvider.provide()).thenReturn(suplaClient)
 
-    var listener: SuplaClientMessageHandler.OnSuplaClientMessageListener? = null
+    var listener: SuplaClientMessageHandler.Listener? = null
     doAnswer {
-      listener = it.arguments[0] as SuplaClientMessageHandler.OnSuplaClientMessageListener
+      listener = it.arguments[0] as SuplaClientMessageHandler.Listener
     }.whenever(suplaClientMessageHandlerWrapper).registerMessageListener(any())
 
     // when
@@ -93,14 +96,11 @@ class AuthorizeUseCaseTest {
     }
     whenever(suplaClientProvider.provide()).thenReturn(suplaClient)
 
-    val message: SuplaClientMsg = mockk {
-      every { type } returns SuplaClientMsg.onSuperuserAuthorizationResult
-      every { isSuccess } returns true
-    }
-    var listener: SuplaClientMessageHandler.OnSuplaClientMessageListener? = null
+    val message = SuplaClientMessage.AuthorizationResult(true, SuplaResultCode.TRUE)
+    var listener: SuplaClientMessageHandler.Listener? = null
     doAnswer {
-      listener = it.arguments[0] as SuplaClientMessageHandler.OnSuplaClientMessageListener
-      listener.onSuplaClientMessageReceived(message)
+      listener = it.arguments[0] as SuplaClientMessageHandler.Listener
+      listener.onReceived(message)
     }.whenever(suplaClientMessageHandlerWrapper).registerMessageListener(any())
 
     // when
@@ -116,38 +116,24 @@ class AuthorizeUseCaseTest {
 
   @Test
   fun `should authorize with unauthorized error`() {
-    val message: SuplaClientMsg = mockk {
-      every { type } returns SuplaClientMsg.onSuperuserAuthorizationResult
-      every { isSuccess } returns false
-      every { code } returns SuplaConst.SUPLA_RESULTCODE_UNAUTHORIZED
-    }
-
-    doAuthorizationTestWithError(message, R.string.incorrect_email_or_password)
+    val message = SuplaClientMessage.AuthorizationResult(false, SuplaResultCode.UNAUTHORIZED)
+    doAuthorizationTestWithError(message, localizedString(LocalizedStringId.RESULT_CODE_INCORRECT_EMAIL_OR_PASSWORD))
   }
 
   @Test
   fun `should authorize with temporarily unavailable error`() {
-    val message: SuplaClientMsg = mockk {
-      every { type } returns SuplaClientMsg.onSuperuserAuthorizationResult
-      every { isSuccess } returns false
-      every { code } returns SuplaConst.SUPLA_RESULTCODE_TEMPORARILY_UNAVAILABLE
-    }
-
-    doAuthorizationTestWithError(message, R.string.status_temporarily_unavailable)
+    val message = SuplaClientMessage.AuthorizationResult(false, SuplaResultCode.TEMPORARILY_UNAVAILABLE)
+    doAuthorizationTestWithError(message, localizedString(LocalizedStringId.RESULT_CODE_TEMPORARILY_UNAVAILABLE))
   }
 
   @Test
   fun `should authorize with unknown error`() {
-    val message: SuplaClientMsg = mockk {
-      every { type } returns SuplaClientMsg.onSuperuserAuthorizationResult
-      every { isSuccess } returns false
-      every { code } returns 0
-    }
+    val message = SuplaClientMessage.AuthorizationResult(false, SuplaResultCode.FALSE)
 
-    doAuthorizationTestWithError(message, R.string.status_unknown_err)
+    doAuthorizationTestWithError(message, LocalizedString.WithIdAndString(LocalizedStringId.RESULT_CODE_UNKNOWN_ERROR, " (2)"))
   }
 
-  private fun doAuthorizationTestWithError(message: SuplaClientMsg, errorCode: Int) {
+  private fun doAuthorizationTestWithError(message: SuplaClientMessage, errorMessage: LocalizedString) {
     // given
     val userName = "test@supla.org"
     val password = "password"
@@ -157,17 +143,17 @@ class AuthorizeUseCaseTest {
     }
     whenever(suplaClientProvider.provide()).thenReturn(suplaClient)
 
-    var listener: SuplaClientMessageHandler.OnSuplaClientMessageListener? = null
+    var listener: SuplaClientMessageHandler.Listener? = null
     doAnswer {
-      listener = it.arguments[0] as SuplaClientMessageHandler.OnSuplaClientMessageListener
-      listener.onSuplaClientMessageReceived(message)
+      listener = it.arguments[0] as SuplaClientMessageHandler.Listener
+      listener.onReceived(message)
     }.whenever(suplaClientMessageHandlerWrapper).registerMessageListener(any())
 
     // when
     val observer = useCase.invoke(userName, password).test()
 
     // then
-    observer.assertError(AuthorizationException.WithErrorCode(errorCode, isLogin = false))
+    observer.assertError(AuthorizationException.WithLocalizedString(errorMessage))
 
     verify(suplaClientProvider).provide()
     verify(suplaClientMessageHandlerWrapper).registerMessageListener(listener!!)

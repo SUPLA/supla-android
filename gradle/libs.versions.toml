@@ -55,7 +55,6 @@ rxkoltin = "3.0.1"
 retrofit = "3.0.0"
 retrofit-logging = "4.12.0"
 
-kotlinx-serialization = "1.8.1"
 android-tools-desugar = "2.1.5"
 jsoup = "1.21.1"
 coil = "3.2.0"
@@ -75,6 +74,8 @@ testing-androidx-rules = "1.6.1"
 testing-androidx-junit-extension = "1.2.1"
 testing-androidx-arch-core = "2.2.0"
 
+kotlinx-serialization = "1.8.1"
+kotlinx-datetime = "0.6.2" # newer version is not compiling on iOS
 kotlin-bitops-endian = "0.2.0"
 
 googleJavaFormat = "1.19.2"
@@ -83,7 +84,8 @@ googleJavaFormat = "1.19.2"
 multidex = { group = "androidx.multidex", name = "multidex", version.ref = "multidex" }
 kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlin" }
 androidChart = { group = "com.github.PhilJay", name = "MPAndroidChart", version.ref = "androidChart" }
-coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
+coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
+coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
 coroutines-rx3 = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-rx3", version.ref = "coroutines-rx3" }
 googleMaterial = { group = "com.google.android.material", name = "material", version.ref = "googleMaterial" }
 fragmentViewBinding = { group = "com.github.Zhuinden", name = "fragmentviewbindingdelegate-kt", version.ref = "fragmentViewBinding" }
@@ -141,6 +143,8 @@ firebase = { group = "com.google.firebase", name = "firebase-bom", version.ref =
 firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging-ktx" }
 
 kotlinx-serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
+kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinx-datetime" }
+
 android-tools-desugar = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "android-tools-desugar" }
 jsoup = { group = "org.jsoup", name = "jsoup", version.ref = "jsoup" }
 coil = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
