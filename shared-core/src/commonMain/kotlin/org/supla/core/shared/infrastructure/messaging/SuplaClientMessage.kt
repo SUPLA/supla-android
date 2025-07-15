@@ -72,7 +72,7 @@ sealed interface SuplaClientMessage {
     val channelId: Int,
     val command: Int,
     val result: Int,
-    val data: ByteArray
+    val data: ByteArray?
   ) : SuplaClientMessage {
     override fun equals(other: Any?): Boolean {
       if (this === other) return true

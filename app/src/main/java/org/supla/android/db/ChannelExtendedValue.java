@@ -22,15 +22,15 @@ import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.database.Cursor;
 import androidx.annotation.Nullable;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import org.supla.android.core.infrastructure.serialization.JavaInterface;
 import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity;
 import org.supla.android.lib.SuplaChannelExtendedValue;
 
 public class ChannelExtendedValue extends DbItem {
+
   private int ChannelId;
   private long profileId;
   private Long timerStartTimestamp;
@@ -80,17 +80,7 @@ public class ChannelExtendedValue extends DbItem {
   }
 
   private Object ByteArrayToObject(byte[] value) {
-    try {
-      ByteArrayInputStream byteStream = new ByteArrayInputStream(value);
-      ObjectInputStream objectStream = new ObjectInputStream(byteStream);
-      return objectStream.readObject();
-    } catch (IOException e) {
-      e.printStackTrace();
-    } catch (ClassNotFoundException e) {
-      e.printStackTrace();
-    }
-
-    return null;
+    return JavaInterface.INSTANCE.deserialize(value);
   }
 
   @SuppressLint("Range")
