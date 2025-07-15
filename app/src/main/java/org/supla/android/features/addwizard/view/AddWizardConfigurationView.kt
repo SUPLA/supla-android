@@ -76,7 +76,7 @@ private fun BlinkingDot() =
     if (dotVisible) {
       Box(
         modifier = Modifier
-          .size(32.dp)
+          .size(20.dp)
           .background(Color(0xFF50F949), shape = CircleShape)
           .align(Alignment.CenterEnd)
       )
