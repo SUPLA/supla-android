@@ -116,6 +116,7 @@ fun AuthorizationDialogScope.AuthorizationDialog(
       modifier = Modifier
         .fillMaxWidth()
         .padding(start = Distance.default, top = Distance.default, end = Distance.default)
+        .semantics { contentType = ContentType.Password }
     )
     ErrorText(text = state.error?.let { it(LocalContext.current) } ?: "")
 

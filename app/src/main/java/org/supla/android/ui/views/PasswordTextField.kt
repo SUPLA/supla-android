@@ -26,9 +26,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.autofill.ContentType
-import androidx.compose.ui.semantics.contentType
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -48,7 +45,7 @@ fun PasswordTextField(
 ) {
   TextField(
     value = password,
-    modifier = modifier.semantics { contentType = ContentType.Password },
+    modifier = modifier,
     visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
     label = label,
     keyboardOptions = keyboardOptions.copy(keyboardType = KeyboardType.Password),

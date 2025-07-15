@@ -32,11 +32,15 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.autofill.ContentType
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.FocusRequester.Companion.FocusRequesterFactory.component1
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalAutofillManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentType
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import org.supla.android.R
@@ -73,10 +77,15 @@ interface AddWizardNetworkSelectionScope : AddWizardScope {
 fun AddWizardNetworkSelectionScope.AddWizardNetworkSelectionView(
   state: AddWizardNetworkSelectionState
 ) {
+  val autofillManager = LocalAutofillManager.current
+
   AddWizardScaffold(
     iconRes = R.drawable.add_wizard_step_2,
     buttonTextId = R.string.next,
-    onNext = { onStepFinished(AddWizardScreen.NetworkSelection) },
+    onNext = {
+      autofillManager?.commit()
+      onStepFinished(AddWizardScreen.NetworkSelection)
+    }
   ) {
     AddWizardContentText(R.string.add_wizard_step_2_message)
 
@@ -99,7 +108,10 @@ fun AddWizardNetworkSelectionScope.AddWizardNetworkSelectionView(
         passwordVisible = state.networkPasswordVisible,
         onVisibilityChange = { onNetworkPasswordVisibilityChanged() },
         onValueChange = { onNetworkPasswordChanged(it) },
-        modifier = Modifier.fillMaxWidth().focusRequester(passwordFocusRequester),
+        modifier = Modifier
+          .fillMaxWidth()
+          .focusRequester(passwordFocusRequester)
+          .semantics { contentType = ContentType.Password },
         isError = state.error,
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
         keyboardActions = KeyboardActions { onStepFinished(AddWizardScreen.NetworkSelection) }

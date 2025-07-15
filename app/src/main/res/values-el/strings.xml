@@ -89,7 +89,7 @@
   <string name="start">ΕΝΑΡΞΗ</string>
   <string name="add_wizard_remember_passwd">Απομνημόνευση κωδικού πρόσβασης</string>
 
-  <string name="add_wizard_step_3_message_3"><![CDATA[Πατήστε το κουμπί <b>START</b> για να ξεκινήσει η διαμόρφωση.]]></string>
+  <string name="add_wizard_step_3_message_3"><![CDATA[Πατήστε το κουμπί <b>ΕΝΑΡΞΗ</b> για να ξεκινήσει η διαμόρφωση.]]></string>
 
   <string name="wizard_no_internetwifi">Πριν ξεκινήσετε, συνδεθείτε στο Διαδἰκτυο μέσω ενός δικτύου WiFi, το οποίο θα χρησιμοποιηθεί για τη σύνδεση με το διακομιστή και από τις εκτελεστικές συσκευές.</string>
   <string name="wizard_wifi_error">Το δίκτυο WiFi είναι απενεργοποιημένο ή δεν μπορούν να διαβαστούν το αναγνωριστικό ή το όνομα του!</string>

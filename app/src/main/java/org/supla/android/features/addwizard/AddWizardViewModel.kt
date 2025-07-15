@@ -49,7 +49,6 @@ import org.supla.android.features.addwizard.model.EspConfigResult
 import org.supla.android.features.addwizard.usecase.CheckLocationEnabledUseCase
 import org.supla.android.features.addwizard.usecase.ConfigureEspUseCase
 import org.supla.android.features.addwizard.usecase.ConnectToSsidUseCase
-import org.supla.core.shared.usecase.addwizard.EnableRegistrationUseCase
 import org.supla.android.features.addwizard.usecase.FindEspSsidUseCase
 import org.supla.android.features.addwizard.usecase.ReconnectToInternetUseCase
 import org.supla.android.features.addwizard.usecase.receiver.ConnectResult
@@ -71,6 +70,7 @@ import org.supla.core.shared.data.model.addwizard.EspConfigurationEvent
 import org.supla.core.shared.extensions.ifTrue
 import org.supla.core.shared.infrastructure.localizedString
 import org.supla.core.shared.usecase.addwizard.CheckRegistrationEnabledUseCase
+import org.supla.core.shared.usecase.addwizard.EnableRegistrationUseCase
 import javax.inject.Inject
 
 @HiltViewModel
