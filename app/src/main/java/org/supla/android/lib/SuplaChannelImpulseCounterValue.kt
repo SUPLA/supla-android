@@ -36,8 +36,8 @@ class SuplaChannelImpulseCounterValue internal constructor(
     impulsesPerUnit: Int,
     counter: Long,
     calculatedValue: Long,
-    pricePerUnit: Int,
     totalCost: Int,
+    pricePerUnit: Int,
     currency: String?,
     unit: String?
   ) : this(
