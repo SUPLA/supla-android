@@ -258,7 +258,7 @@ class Canceling(
         }
       }
 
-      else -> Canceling(espConfigurationController, finalAction)
+      else -> Canceling(espConfigurationController, finalAction, reconnect)
     }
 }
 
