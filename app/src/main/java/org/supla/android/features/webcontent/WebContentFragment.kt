@@ -65,14 +65,16 @@ abstract class WebContentFragment<S : WebContentViewState, E : ViewEvent> : Base
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     binding.apply {
+      val agent = binding.webBrowser.settings.userAgentString
+      binding.webBrowser.settings.userAgentString = "$agent SuplaApp (Android)"
       webBrowser.settings.javaScriptEnabled = true
       webBrowser.settings.domStorageEnabled = true
       webBrowser.clearCache(true)
 
       caProgressBar.progressDrawable = ResourcesCompat.getDrawable(resources, R.drawable.progressbar, null)
 
-      binding.webBrowser.webViewClient = client
-      binding.webBrowser.loadUrl(url)
+      webBrowser.webViewClient = client
+      webBrowser.loadUrl(url)
     }
   }
 
