@@ -47,14 +47,14 @@ sealed interface SuplaClientMessage {
   ) : SuplaClientMessage {
     val isClientRegistrationEnabled: Boolean
       get() {
-        val expirationInstant = Instant.fromEpochMilliseconds(clientRegistrationExpirationTimestamp)
+        val expirationInstant = Instant.fromEpochMilliseconds(clientRegistrationExpirationTimestamp * 1000)
         val currentInstant = Clock.System.now()
         return expirationInstant.toEpochMilliseconds() > currentInstant.toEpochMilliseconds()
       }
 
     val isDeviceRegistrationEnabled: Boolean
       get() {
-        val expirationInstant = Instant.fromEpochMilliseconds(deviceRegistrationExpirationTimestamp)
+        val expirationInstant = Instant.fromEpochMilliseconds(deviceRegistrationExpirationTimestamp * 1000)
         val currentInstant = Clock.System.now()
         return expirationInstant.toEpochMilliseconds() > currentInstant.toEpochMilliseconds()
       }

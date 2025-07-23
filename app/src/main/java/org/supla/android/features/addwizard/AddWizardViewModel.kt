@@ -42,7 +42,7 @@ import org.supla.android.core.ui.ViewEvent
 import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.extensions.TAG
 import org.supla.android.extensions.isNotNull
-import org.supla.android.features.addwizard.configuration.EspConfigurationStateHolder
+import org.supla.android.features.addwizard.configuration.AndroidEspConfigurationStateHolder
 import org.supla.android.features.addwizard.model.AddWizardScreen
 import org.supla.android.features.addwizard.model.Esp
 import org.supla.android.features.addwizard.model.EspConfigResult
@@ -105,7 +105,7 @@ class AddWizardViewModel @Inject constructor(
   EspConfigurationController {
 
   private var currentJob: Job? = null
-  private lateinit var configurationStateHolder: EspConfigurationStateHolder
+  private lateinit var configurationStateHolder: AndroidEspConfigurationStateHolder
 
   override fun updateAuthorizationDialogState(updater: (AuthorizationDialogState?) -> AuthorizationDialogState?) {
     updateState { it.copy(authorizationDialogState = updater(it.authorizationDialogState)) }
@@ -119,17 +119,17 @@ class AddWizardViewModel @Inject constructor(
   override fun onAuthorizationCancel() {
     super.onAuthorizationCancel()
     updateState { it.copy(processing = false) }
-    configurationStateHolder = EspConfigurationStateHolder(this)
+    configurationStateHolder = AndroidEspConfigurationStateHolder(this)
   }
 
   override fun onAuthorizationDismiss() {
     super.onAuthorizationDismiss()
     updateState { it.copy(processing = false) }
-    configurationStateHolder = EspConfigurationStateHolder(this)
+    configurationStateHolder = AndroidEspConfigurationStateHolder(this)
   }
 
   override fun onViewCreated() {
-    configurationStateHolder = EspConfigurationStateHolder(this)
+    configurationStateHolder = AndroidEspConfigurationStateHolder(this)
     if (hasWiFiConnection().not()) {
       updateState { it.openOnly(screen = AddWizardScreen.Message.NoWifi) }
     } else if (hasLocationEnabled().not()) {

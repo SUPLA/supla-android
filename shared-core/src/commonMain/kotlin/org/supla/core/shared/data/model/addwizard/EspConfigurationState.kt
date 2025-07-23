@@ -18,248 +18,288 @@ package org.supla.core.shared.data.model.addwizard
  */
 
 sealed interface EspConfigurationState {
-  fun handle(event: EspConfigurationEvent): EspConfigurationState
+  fun handle(event: EspConfigurationEvent)
+}
+
+interface EspConfigurationStateHolder {
+  fun setState(state: EspConfigurationState)
 }
 
 /**
  * Initial state
  */
 
-class Idle(private val espConfigurationController: EspConfigurationController) : EspConfigurationState {
-  override fun handle(event: EspConfigurationEvent): EspConfigurationState =
+class Idle(
+  private val stateHolder: EspConfigurationStateHolder,
+  private val espConfigurationController: EspConfigurationController
+) : EspConfigurationState {
+  override fun handle(event: EspConfigurationEvent) {
     when (event) {
       EspConfigurationEvent.Start -> {
+        stateHolder.setState(CheckingRegistration(stateHolder, espConfigurationController))
         espConfigurationController.checkRegistration()
-        CheckingRegistration(espConfigurationController)
       }
 
       else -> {
+        stateHolder.setState(ConfigurationFailure(stateHolder, espConfigurationController))
         espConfigurationController.showError(EspConfigurationError.RegistrationCheck)
-        ConfigurationFailure(espConfigurationController)
       }
     }
+  }
 }
 
 /**
  * Processing states
  */
 
-class CheckingRegistration(private val espConfigurationController: EspConfigurationController) : EspConfigurationState {
-  override fun handle(event: EspConfigurationEvent): EspConfigurationState =
+class CheckingRegistration(
+  private val stateHolder: EspConfigurationStateHolder,
+  private val espConfigurationController: EspConfigurationController
+) : EspConfigurationState {
+  override fun handle(event: EspConfigurationEvent) {
     when (event) {
       EspConfigurationEvent.RegistrationEnabled -> {
+        stateHolder.setState(NetworkSearch(stateHolder, espConfigurationController))
         espConfigurationController.findEspNetwork()
-        NetworkSearch(espConfigurationController)
       }
 
       EspConfigurationEvent.RegistrationDisabled -> {
+        stateHolder.setState(Authorizing(stateHolder, espConfigurationController))
         espConfigurationController.authorize()
-        Authorizing(espConfigurationController)
       }
 
       EspConfigurationEvent.Cancel -> {
+        stateHolder.setState(Canceling(stateHolder, espConfigurationController, AddWizardFinalAction.Close))
         espConfigurationController.cancel()
-        Canceling(espConfigurationController, AddWizardFinalAction.Close)
       }
 
       EspConfigurationEvent.Back -> {
+        stateHolder.setState(Canceling(stateHolder, espConfigurationController, AddWizardFinalAction.Back))
         espConfigurationController.cancel()
-        Canceling(espConfigurationController, AddWizardFinalAction.Back)
       }
 
       else -> {
+        stateHolder.setState(ConfigurationFailure(stateHolder, espConfigurationController))
         espConfigurationController.showError(EspConfigurationError.RegistrationCheck)
-        ConfigurationFailure(espConfigurationController)
       }
     }
+  }
 }
 
-class Authorizing(private val espConfigurationController: EspConfigurationController) : EspConfigurationState {
-  override fun handle(event: EspConfigurationEvent): EspConfigurationState =
+class Authorizing(
+  private val stateHolder: EspConfigurationStateHolder,
+  private val espConfigurationController: EspConfigurationController
+) : EspConfigurationState {
+  override fun handle(event: EspConfigurationEvent) {
     when (event) {
       EspConfigurationEvent.Authorized -> {
+        stateHolder.setState(ActivatingRegistration(stateHolder, espConfigurationController))
         espConfigurationController.activateRegistration()
-        ActivatingRegistration(espConfigurationController)
       }
 
       EspConfigurationEvent.Cancel -> {
+        stateHolder.setState(Canceling(stateHolder, espConfigurationController, AddWizardFinalAction.Close))
         espConfigurationController.cancel()
-        Canceling(espConfigurationController, AddWizardFinalAction.Close)
       }
 
       EspConfigurationEvent.Back -> {
+        stateHolder.setState(Canceling(stateHolder, espConfigurationController, AddWizardFinalAction.Back))
         espConfigurationController.cancel()
-        Canceling(espConfigurationController, AddWizardFinalAction.Back)
       }
 
       else -> {
+        stateHolder.setState(ConfigurationFailure(stateHolder, espConfigurationController))
         espConfigurationController.showError(EspConfigurationError.RegistrationCheck)
-        ConfigurationFailure(espConfigurationController)
       }
     }
+  }
 }
 
-class ActivatingRegistration(private val espConfigurationController: EspConfigurationController) : EspConfigurationState {
-  override fun handle(event: EspConfigurationEvent): EspConfigurationState =
+class ActivatingRegistration(
+  private val stateHolder: EspConfigurationStateHolder,
+  private val espConfigurationController: EspConfigurationController
+) : EspConfigurationState {
+  override fun handle(event: EspConfigurationEvent) {
     when (event) {
       EspConfigurationEvent.RegistrationActivated -> {
+        stateHolder.setState(NetworkSearch(stateHolder, espConfigurationController))
         espConfigurationController.findEspNetwork()
-        NetworkSearch(espConfigurationController)
       }
 
       EspConfigurationEvent.Cancel -> {
+        stateHolder.setState(Canceling(stateHolder, espConfigurationController, AddWizardFinalAction.Close))
         espConfigurationController.cancel()
-        Canceling(espConfigurationController, AddWizardFinalAction.Close)
       }
 
       EspConfigurationEvent.Back -> {
+        stateHolder.setState(Canceling(stateHolder, espConfigurationController, AddWizardFinalAction.Back))
         espConfigurationController.cancel()
-        Canceling(espConfigurationController, AddWizardFinalAction.Back)
       }
 
       else -> {
+        stateHolder.setState(ConfigurationFailure(stateHolder, espConfigurationController))
         espConfigurationController.showError(EspConfigurationError.RegistrationEnable)
-        ConfigurationFailure(espConfigurationController)
       }
     }
+  }
 }
 
-class NetworkSearch(private val espConfigurationController: EspConfigurationController) : EspConfigurationState {
-  override fun handle(event: EspConfigurationEvent): EspConfigurationState =
+class NetworkSearch(
+  private val stateHolder: EspConfigurationStateHolder,
+  private val espConfigurationController: EspConfigurationController
+) : EspConfigurationState {
+  override fun handle(event: EspConfigurationEvent) {
     when (event) {
       is EspConfigurationEvent.NetworkFound -> {
+        stateHolder.setState(ChangingNetwork(stateHolder, espConfigurationController))
         espConfigurationController.connectToNetwork(event.ssid)
-        ChangingNetwork(espConfigurationController)
       }
 
       is EspConfigurationEvent.MultipleNetworksFound -> {
+        stateHolder.setState(NetworkSearch(stateHolder, espConfigurationController))
         espConfigurationController.showNetworkSelector(event.ssids, false)
-        NetworkSearch(espConfigurationController)
       }
 
       is EspConfigurationEvent.NetworkScanDisabled -> {
+        stateHolder.setState(NetworkSearch(stateHolder, espConfigurationController))
         espConfigurationController.showNetworkSelector(event.cached, true)
-        NetworkSearch(espConfigurationController)
       }
 
       is EspConfigurationEvent.NetworkNotFound -> {
+        stateHolder.setState(ConfigurationFailure(stateHolder, espConfigurationController))
         espConfigurationController.showError(EspConfigurationError.NotFound)
-        ConfigurationFailure(espConfigurationController)
       }
 
       EspConfigurationEvent.Cancel -> {
+        stateHolder.setState(Canceling(stateHolder, espConfigurationController, AddWizardFinalAction.Close))
         espConfigurationController.cancel()
-        Canceling(espConfigurationController, AddWizardFinalAction.Close)
       }
 
       EspConfigurationEvent.Back -> {
+        stateHolder.setState(Canceling(stateHolder, espConfigurationController, AddWizardFinalAction.Back))
         espConfigurationController.cancel()
-        Canceling(espConfigurationController, AddWizardFinalAction.Back)
       }
 
       else -> {
+        stateHolder.setState(ConfigurationFailure(stateHolder, espConfigurationController))
         espConfigurationController.showError(EspConfigurationError.Scan)
-        ConfigurationFailure(espConfigurationController)
       }
     }
+  }
 }
 
-class ChangingNetwork(private val espConfigurationController: EspConfigurationController) : EspConfigurationState {
-  override fun handle(event: EspConfigurationEvent): EspConfigurationState =
+class ChangingNetwork(
+  private val stateHolder: EspConfigurationStateHolder,
+  private val espConfigurationController: EspConfigurationController
+) : EspConfigurationState {
+  override fun handle(event: EspConfigurationEvent) {
     when (event) {
       EspConfigurationEvent.NetworkConnected -> {
+        stateHolder.setState(ConfiguringEsp(stateHolder, espConfigurationController))
         espConfigurationController.configureEsp()
-        ConfiguringEsp(espConfigurationController)
       }
 
       EspConfigurationEvent.Cancel -> {
+        stateHolder.setState(Canceling(stateHolder, espConfigurationController, AddWizardFinalAction.Close, reconnect = true))
         espConfigurationController.cancel()
-        Canceling(espConfigurationController, AddWizardFinalAction.Close, reconnect = true)
       }
 
       EspConfigurationEvent.Back -> {
+        stateHolder.setState(Canceling(stateHolder, espConfigurationController, AddWizardFinalAction.Back, reconnect = true))
         espConfigurationController.cancel()
-        Canceling(espConfigurationController, AddWizardFinalAction.Back, reconnect = true)
       }
 
       else -> {
+        val finalAction = AddWizardFinalAction.Error(EspConfigurationError.Connect)
+        stateHolder.setState(Reconnecting(stateHolder, espConfigurationController, finalAction))
         espConfigurationController.reconnect()
-        Reconnecting(espConfigurationController, AddWizardFinalAction.Error(EspConfigurationError.Connect))
       }
     }
+  }
 }
 
-class ConfiguringEsp(private val espConfigurationController: EspConfigurationController) : EspConfigurationState {
-  override fun handle(event: EspConfigurationEvent): EspConfigurationState =
+class ConfiguringEsp(
+  private val stateHolder: EspConfigurationStateHolder,
+  private val espConfigurationController: EspConfigurationController
+) : EspConfigurationState {
+  override fun handle(event: EspConfigurationEvent) {
     when (event) {
       EspConfigurationEvent.EspConfigured -> {
+        stateHolder.setState(Reconnecting(stateHolder, espConfigurationController, AddWizardFinalAction.Success))
         espConfigurationController.reconnect()
-        Reconnecting(espConfigurationController, AddWizardFinalAction.Success)
       }
 
       is EspConfigurationEvent.EspConfigurationFailure -> {
+        val finalAction = AddWizardFinalAction.Error(event.error)
+        stateHolder.setState(Reconnecting(stateHolder, espConfigurationController, finalAction))
         espConfigurationController.reconnect()
-        Reconnecting(espConfigurationController, AddWizardFinalAction.Error(event.error))
       }
 
       EspConfigurationEvent.Cancel -> {
+        stateHolder.setState(Canceling(stateHolder, espConfigurationController, AddWizardFinalAction.Close, reconnect = true))
         espConfigurationController.cancel()
-        Canceling(espConfigurationController, AddWizardFinalAction.Close, reconnect = true)
       }
 
       EspConfigurationEvent.Back -> {
+        stateHolder.setState(Canceling(stateHolder, espConfigurationController, AddWizardFinalAction.Back, reconnect = true))
         espConfigurationController.cancel()
-        Canceling(espConfigurationController, AddWizardFinalAction.Back, reconnect = true)
       }
 
       else -> {
+        val finalAction = AddWizardFinalAction.Error(EspConfigurationError.ConfigureTimeout)
+        stateHolder.setState(Reconnecting(stateHolder, espConfigurationController, finalAction))
         espConfigurationController.reconnect()
-        Reconnecting(espConfigurationController, AddWizardFinalAction.Error(EspConfigurationError.ConfigureTimeout))
       }
     }
+  }
 }
 
 class Reconnecting(
+  private val stateHolder: EspConfigurationStateHolder,
   private val espConfigurationController: EspConfigurationController,
   private val finalAction: AddWizardFinalAction
 ) : EspConfigurationState {
-  override fun handle(event: EspConfigurationEvent): EspConfigurationState =
+  override fun handle(event: EspConfigurationEvent) {
     when (event) {
       EspConfigurationEvent.Reconnected -> {
-        handleFinalAction(finalAction, espConfigurationController)
+        handleFinalAction(stateHolder, finalAction, espConfigurationController)
       }
 
       EspConfigurationEvent.Cancel,
       EspConfigurationEvent.Back -> {
         // Do nothing, just wait for result
-        Reconnecting(espConfigurationController, finalAction)
       }
 
       else -> {
+        stateHolder.setState(ConfigurationFailure(stateHolder, espConfigurationController))
         espConfigurationController.showError(EspConfigurationError.Reconnect)
-        ConfigurationFailure(espConfigurationController)
       }
     }
+  }
 }
 
 class Canceling(
+  private val stateHolder: EspConfigurationStateHolder,
   private val espConfigurationController: EspConfigurationController,
   private val finalAction: AddWizardFinalAction,
   private val reconnect: Boolean = false
 ) : EspConfigurationState {
-  override fun handle(event: EspConfigurationEvent): EspConfigurationState =
+  override fun handle(event: EspConfigurationEvent) {
     when (event) {
       EspConfigurationEvent.Canceled -> {
         if (reconnect) {
+          stateHolder.setState(Reconnecting(stateHolder, espConfigurationController, finalAction))
           espConfigurationController.reconnect()
-          Reconnecting(espConfigurationController, finalAction)
         } else {
-          handleFinalAction(finalAction, espConfigurationController)
+          handleFinalAction(stateHolder, finalAction, espConfigurationController)
         }
       }
 
-      else -> Canceling(espConfigurationController, finalAction, reconnect)
+      else -> {
+        // Do nothing
+      }
     }
+  }
 }
 
 /**
@@ -267,37 +307,45 @@ class Canceling(
  */
 
 data object Canceled : EspConfigurationState {
-  override fun handle(event: EspConfigurationEvent): EspConfigurationState {
+  override fun handle(event: EspConfigurationEvent) {
     throw IllegalStateException("Should not get any event!")
   }
 }
 
 class Finished(
+  private val stateHolder: EspConfigurationStateHolder,
   private val espConfigurationController: EspConfigurationController
 ) : EspConfigurationState {
-  override fun handle(event: EspConfigurationEvent): EspConfigurationState =
+  override fun handle(event: EspConfigurationEvent) {
     when (event) {
       EspConfigurationEvent.Start -> {
+        stateHolder.setState(CheckingRegistration(stateHolder, espConfigurationController))
         espConfigurationController.checkRegistration()
-        CheckingRegistration(espConfigurationController)
       }
 
-      else -> Finished(espConfigurationController)
+      else -> {
+        // Do nothing
+      }
     }
+  }
 }
 
 class ConfigurationFailure(
+  private val stateHolder: EspConfigurationStateHolder,
   private val espConfigurationController: EspConfigurationController
 ) : EspConfigurationState {
-  override fun handle(event: EspConfigurationEvent): EspConfigurationState =
+  override fun handle(event: EspConfigurationEvent) {
     when (event) {
       EspConfigurationEvent.Start -> {
+        stateHolder.setState(CheckingRegistration(stateHolder, espConfigurationController))
         espConfigurationController.checkRegistration()
-        CheckingRegistration(espConfigurationController)
       }
 
-      else -> ConfigurationFailure(espConfigurationController)
+      else -> {
+        // Do nothing
+      }
     }
+  }
 }
 
 /**
@@ -305,27 +353,29 @@ class ConfigurationFailure(
  */
 
 private fun handleFinalAction(
+  stateHolder: EspConfigurationStateHolder,
   finalAction: AddWizardFinalAction,
   espConfigurationController: EspConfigurationController
-): EspConfigurationState =
+) {
   when (finalAction) {
     AddWizardFinalAction.Close -> {
+      stateHolder.setState(Canceled)
       espConfigurationController.close()
-      Canceled
     }
 
     is AddWizardFinalAction.Error -> {
+      stateHolder.setState(ConfigurationFailure(stateHolder, espConfigurationController))
       espConfigurationController.showError(finalAction.error)
-      ConfigurationFailure(espConfigurationController)
     }
 
     AddWizardFinalAction.Success -> {
+      stateHolder.setState(Finished(stateHolder, espConfigurationController))
       espConfigurationController.showFinished()
-      Finished(espConfigurationController)
     }
 
     AddWizardFinalAction.Back -> {
+      stateHolder.setState(Idle(stateHolder, espConfigurationController))
       espConfigurationController.back()
-      Idle(espConfigurationController)
     }
   }
+}
