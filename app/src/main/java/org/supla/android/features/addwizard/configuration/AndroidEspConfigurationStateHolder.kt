@@ -24,10 +24,11 @@ import org.supla.core.shared.data.model.addwizard.ConfigurationFailure
 import org.supla.core.shared.data.model.addwizard.EspConfigurationController
 import org.supla.core.shared.data.model.addwizard.EspConfigurationEvent
 import org.supla.core.shared.data.model.addwizard.EspConfigurationState
+import org.supla.core.shared.data.model.addwizard.EspConfigurationStateHolder
 import org.supla.core.shared.data.model.addwizard.Finished
 import org.supla.core.shared.data.model.addwizard.Idle
 
-class EspConfigurationStateHolder(espConfigurationController: EspConfigurationController) {
+class AndroidEspConfigurationStateHolder(espConfigurationController: EspConfigurationController) : EspConfigurationStateHolder {
 
   val isInactive: Boolean
     get() = when (state) {
@@ -35,13 +36,17 @@ class EspConfigurationStateHolder(espConfigurationController: EspConfigurationCo
       else -> false
     }
 
-  private var state: EspConfigurationState = Idle(espConfigurationController)
+  private var state: EspConfigurationState = Idle(this, espConfigurationController)
 
   fun handleEvent(event: EspConfigurationEvent) {
     synchronized(this) {
       Trace.i(TAG, "Handling event `$event` by state `$state`")
-      state = state.handle(event)
-      Trace.i(TAG, "Event handled, new state `$state`")
+      state.handle(event)
     }
+  }
+
+  override fun setState(state: EspConfigurationState) {
+    Trace.i(TAG, "State changed to `$state`")
+    this.state = state
   }
 }
