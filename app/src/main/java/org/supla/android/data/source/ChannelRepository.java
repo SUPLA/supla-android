@@ -68,10 +68,6 @@ public interface ChannelRepository {
 
   void updateLocation(Location location);
 
-  Cursor getAllProfileChannels(Long profileId);
-
-  Cursor getAllProfileChannelGroups(Long profileId);
-
   @NotNull
   List<Location> getAllLocations();
 }

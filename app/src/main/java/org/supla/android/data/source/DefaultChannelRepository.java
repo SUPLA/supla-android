@@ -231,23 +231,6 @@ public class DefaultChannelRepository implements ChannelRepository {
     locationDao.update(location);
   }
 
-  @Override
-  public Cursor getAllProfileChannels(Long profileId) {
-    return channelDao.getAllChannels(
-        ChannelView.COLUMN_CHANNEL_FUNCTION
-            + " <> 0 "
-            + " AND (C."
-            + ChannelView.COLUMN_CHANNEL_PROFILE_ID
-            + " = "
-            + profileId
-            + ") ");
-  }
-
-  @Override
-  public Cursor getAllProfileChannelGroups(Long profileId) {
-    return channelDao.getAllChannelGroupsForProfileId(profileId);
-  }
-
   @NonNull
   @Override
   public List<Location> getAllLocations() {
