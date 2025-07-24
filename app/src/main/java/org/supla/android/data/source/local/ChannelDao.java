@@ -187,32 +187,6 @@ public class ChannelDao extends BaseDao {
     return getChannelListCursor(orderBY, where);
   }
 
-  public Cursor getAllChannels(String where) {
-    String orderBY =
-        "L."
-            + LocationEntity.COLUMN_SORT_ORDER
-            + ", "
-            + "L."
-            + LocationEntity.COLUMN_CAPTION
-            + " COLLATE LOCALIZED, "
-            + "C."
-            + ChannelEntity.COLUMN_POSITION
-            + ", "
-            + "C."
-            + ChannelView.COLUMN_CHANNEL_FUNCTION
-            + " DESC, "
-            + "C."
-            + ChannelView.COLUMN_CHANNEL_CAPTION
-            + " COLLATE LOCALIZED";
-
-    return getChannelListCursor(orderBY, where);
-  }
-
-  public Cursor getAllChannelGroupsForProfileId(Long profileId) {
-    return getChannelGroupListCursor(
-        "G." + ChannelGroupEntity.COLUMN_PROFILE_ID + " = " + profileId);
-  }
-
   public boolean isZWaveBridgeChannelAvailable() {
     String[] projection = {ChannelView.COLUMN_CHANNEL_ID};
 

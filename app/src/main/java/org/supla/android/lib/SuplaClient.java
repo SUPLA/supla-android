@@ -532,7 +532,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     }
   }
 
-  public void superUserAuthorizationRequest(String email, String password) {
+  public void superUserAuthorizationRequest(@NonNull String email, @NonNull String password) {
     long _supla_client_ptr = lockClientPtr();
     try {
       if (_supla_client_ptr != 0) {
@@ -555,7 +555,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   }
 
   public boolean isSuperUserAuthorized() {
-    boolean result = false;
+    boolean result;
     synchronized (sc_lck) {
       result = superUserAuthorized;
     }
@@ -711,7 +711,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     long _supla_client_ptr = lockClientPtr();
     try {
       return _supla_client_ptr != 0
-          && scZWaveConfigModeActive(_supla_client_ptr, DeviceID.intValue());
+          && scZWaveConfigModeActive(_supla_client_ptr, DeviceID);
     } finally {
       unlockClientPtr();
     }
@@ -724,7 +724,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
     long _supla_client_ptr = lockClientPtr();
     try {
-      return _supla_client_ptr != 0 && scZWaveResetAndClear(_supla_client_ptr, DeviceID.intValue());
+      return _supla_client_ptr != 0 && scZWaveResetAndClear(_supla_client_ptr, DeviceID);
     } finally {
       unlockClientPtr();
     }
@@ -737,7 +737,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
     long _supla_client_ptr = lockClientPtr();
     try {
-      return _supla_client_ptr != 0 && scZWaveAddNode(_supla_client_ptr, DeviceID.intValue());
+      return _supla_client_ptr != 0 && scZWaveAddNode(_supla_client_ptr, DeviceID);
     } finally {
       unlockClientPtr();
     }
@@ -750,7 +750,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
     long _supla_client_ptr = lockClientPtr();
     try {
-      return _supla_client_ptr != 0 && scZWaveRemoveNode(_supla_client_ptr, DeviceID.intValue());
+      return _supla_client_ptr != 0 && scZWaveRemoveNode(_supla_client_ptr, DeviceID);
     } finally {
       unlockClientPtr();
     }
@@ -763,7 +763,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
     long _supla_client_ptr = lockClientPtr();
     try {
-      return _supla_client_ptr != 0 && scZWaveGetNodeList(_supla_client_ptr, DeviceID.intValue());
+      return _supla_client_ptr != 0 && scZWaveGetNodeList(_supla_client_ptr, DeviceID);
     } finally {
       unlockClientPtr();
     }
@@ -826,7 +826,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     }
   }
 
-  public boolean registerPushNotificationClientToken(int appId, String token, String profileName) {
+  public boolean registerPushNotificationClientToken(int appId, @NonNull String token, @NonNull String profileName) {
     long _supla_client_ptr = lockClientPtr();
     try {
       return _supla_client_ptr != 0
@@ -1428,10 +1428,11 @@ public class SuplaClient extends Thread implements SuplaClientApi {
         .authority("autodiscover.supla.org")
         .appendPath("users")
         .appendPath(email);
+    String urlString = builder.build().toString();
 
     URL url;
     try {
-      url = new URL(builder.build().toString());
+      url = new URL(urlString);
 
       StringBuilder json = new StringBuilder();
       String line;
@@ -1452,42 +1453,51 @@ public class SuplaClient extends Thread implements SuplaClientApi {
             result = jsonResult.getString("server");
           }
         } catch (JSONException e) {
-          e.printStackTrace();
+          Trace.e(log_tag, "Deserialization failed", e);
         }
 
       } catch (IOException e) {
-        e.printStackTrace();
+        Trace.e(log_tag, "Autodiscover failed", e);
       }
 
     } catch (MalformedURLException e) {
-      e.printStackTrace();
+      Trace.e(log_tag, "Wrong url " + urlString, e);
     }
 
     return result;
   }
 
-  private void setVisible(int Visible, int WhereVisible) {
+  private void prepareChannelsToVisibilityUpdate() {
 
     boolean _DataChanged = false;
+    boolean emitChannelsUpdate = false;
+    boolean emitGroupsUpdate = false;
 
-    if (DbH.setChannelsVisible(Visible, WhereVisible)) {
-      _DataChanged = true;
+    if (DbH.setChannelsVisible(2, 1)) {
+      emitChannelsUpdate = true;
     }
 
-    if (DbH.setChannelGroupsVisible(Visible, WhereVisible)) {
-      _DataChanged = true;
+    if (DbH.setChannelGroupsVisible(2, 1)) {
+      emitGroupsUpdate = true;
     }
 
-    if (DbH.setChannelGroupRelationsVisible(Visible, WhereVisible)) {
-      _DataChanged = true;
+    if (DbH.setChannelGroupRelationsVisible(2, 1)) {
+      emitGroupsUpdate = true;
     }
 
-    if (DbH.getSceneRepository().setScenesVisible(Visible, WhereVisible)) {
-      _DataChanged = true;
+    if (DbH.getSceneRepository().setScenesVisible(2, 1)) {
+      updateEventsManager.emitScenesUpdate();
     }
 
     if (DbH.setChannelsOffline()) {
-      _DataChanged = true;
+      emitChannelsUpdate = true;
+    }
+
+    if (emitChannelsUpdate) {
+      updateEventsManager.emitChannelsUpdate();
+    }
+    if (emitGroupsUpdate) {
+      updateEventsManager.emitGroupsUpdate();
     }
   }
 
@@ -1513,7 +1523,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
       long _connectingStatusLastTime = System.currentTimeMillis();
 
       onConnecting();
-      setVisible(2, 1);
+      prepareChannelsToVisibilityUpdate();
       markChannelRelationsAsRemovableUseCase.invoke().blockingSubscribe();
 
       try {
