@@ -23,8 +23,14 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import org.supla.android.Trace
+import org.supla.android.data.source.remote.esp.EspCommonNameValidationInterceptor
+import org.supla.android.data.source.remote.esp.EspCookiesInterceptor
+import org.supla.android.data.source.remote.esp.EspCustomRootCaProvider
+import org.supla.android.data.source.remote.esp.EspSchemeInterceptor
 import org.supla.android.data.source.remote.esp.EspService
 import org.supla.android.data.source.remote.esp.JsoupConverterFactory
+import org.supla.android.extensions.TAG
 import retrofit2.Retrofit
 import javax.inject.Named
 import javax.inject.Singleton
@@ -39,13 +45,38 @@ class EspModule {
   @Singleton
   @Provides
   @Named(ESP_OKHTTP)
-  fun provideOkHttp(): OkHttpClient =
+  fun provideOkHttp(
+    espSchemeInterceptor: EspSchemeInterceptor,
+    espCustomRootCaProvider: EspCustomRootCaProvider,
+    espCommonNameValidationInterceptor: EspCommonNameValidationInterceptor,
+    espCookiesInterceptor: EspCookiesInterceptor
+  ): OkHttpClient =
     OkHttpClient.Builder()
+      .followRedirects(false)
       .addInterceptor(
         HttpLoggingInterceptor().also {
           it.level = HttpLoggingInterceptor.Level.BODY
         }
       )
+      .addInterceptor(espSchemeInterceptor)
+      .addInterceptor(espCommonNameValidationInterceptor)
+      .addInterceptor(espCookiesInterceptor)
+      .let {
+        val sslFactory = espCustomRootCaProvider.sslContext?.socketFactory
+        val trustManager = espCustomRootCaProvider.customTrustManager
+
+        if (sslFactory != null && trustManager != null) {
+          Trace.i(TAG, "Custom CA loaded, setting in client")
+          it.sslSocketFactory(sslFactory, trustManager)
+        } else {
+          Trace.e(TAG, "Custom CA is not loaded!")
+          it
+        }
+      }
+      .hostnameVerifier { hostname, session ->
+        Trace.d("!@#", "Verifying host name $hostname")
+        true
+      }
       .build()
 
   @Singleton

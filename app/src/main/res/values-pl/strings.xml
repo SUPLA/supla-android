@@ -411,6 +411,7 @@
   <string name="dgf_regeneration_after20h">Trwa regeneracja zainicjowana po 20h pracy.</string>
   <string name="wizard_done_explentations">Jeśli urządzenie nie pojawi się w aplikacji, powtórz niniejszą procedurę dodawania jeszcze raz i odczytaj „Poprzedni status” widoczny powyżej. Zawiera on informację umożliwiającą ustalenie dlaczego urządzenie nie połączyło się z serwerem. Komunikat \"SSID not found\" oznacza, że wprowadzona nazwa sieci WiFi 2,4 GHz nie została odnaleziona lub sieć ta jest poza zasięgiem.</string>
   <string name="incorrect_email_or_password">Błędny adres email lub hasło</string>
+  <string name="incorrect_password">Nieprawidłowe hasło</string>
   <string name="channel_name">Nazwa kanału</string>
   <string name="location_name">Nazwa lokalizacji</string>
   <string name="str_default">Domyślnie</string>
@@ -793,6 +794,17 @@
   <string name="add_wizard_add_more">Dodaj kolejne</string>
   <string name="add_wizard_repeat">Spróbuj ponownie</string>
   <string name="add_wizard_password_clarification">Rejestracja nowych urządzeń w Cloud jest wyłączona. Włącz ją ręcznie lub podaj hasło do Twojego konta, aby kreator samodzielnie ją włączył na czas rejestracji nowych urządzeń.</string>
+  <string name="add_wizard_password_rules">Hasło powinno mieć co najmniej 8 znaków i zawierać co najmniej jedną wielką literę, jedną małą literę oraz jedną cyfrę.</string>
+  <string name="add_wizard_password_set_title">Ustaw hasło do urządzenia</string>
+  <string name="add_wizard_password_new_label">Nowe hasło</string>
+  <string name="add_wizard_password_repeat_label">Powtórz hasło</string>
+  <string name="add_wizard_password_enter_title">Hasło do urządzenia</string>
+  <string name="add_wizard_device_temporarily_locked">Limit nieudanych prób logowania został przekroczony. Spróbuj ponownie później…</string>
+  <string name="wizard_state_preparing">Przygotowywanie procesu…</string>
+  <string name="wizard_state_connecting">Łączenie z urządzeniem…</string>
+  <string name="wizard_state_configuring">Konfigurowanie urządzenia…</string>
+  <string name="wizard_state_finishing">Finalizacja…</string>
+  <string name="add_wizard_password_instruction">Zastosuj hasło dostępu używane do lokalnej strony konfiguracyjnej.\n\nZapomniałeś hasła? Możesz je zmienić w Supla Cloud lub zresetować urządzenie do ustawień fabrycznych.</string>
 
   <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
     <item quantity="one">włączone</item>

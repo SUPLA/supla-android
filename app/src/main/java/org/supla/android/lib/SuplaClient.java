@@ -710,8 +710,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
     long _supla_client_ptr = lockClientPtr();
     try {
-      return _supla_client_ptr != 0
-          && scZWaveConfigModeActive(_supla_client_ptr, DeviceID);
+      return _supla_client_ptr != 0 && scZWaveConfigModeActive(_supla_client_ptr, DeviceID);
     } finally {
       unlockClientPtr();
     }
@@ -826,7 +825,8 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     }
   }
 
-  public boolean registerPushNotificationClientToken(int appId, @NonNull String token, @NonNull String profileName) {
+  public boolean registerPushNotificationClientToken(
+      int appId, @NonNull String token, @NonNull String profileName) {
     long _supla_client_ptr = lockClientPtr();
     try {
       return _supla_client_ptr != 0

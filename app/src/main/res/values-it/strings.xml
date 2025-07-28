@@ -352,6 +352,7 @@
   <string name="channel_func_digiglass">Digiglass</string>
   <string name="wizard_done_explentations">Se il tuo nuovo dispositivo I/O non viene visualizzato nell\'app Comelit WiFree, esegui nuovamente la procedura guidata \"Aggiungi dispositivo I/O\" e fai riferimento alle informazioni sullo \"Stato precedente\" in questa pagina per la risoluzione dei problemi. Viene visualizzato \"SSID non trovato\" quando la rete WiFi scelta non è disponibile o il suo nome non è corretto.</string>
   <string name="incorrect_email_or_password">Indirizzo Mail o Password errato</string>
+  <string name="incorrect_password">Password errata</string>
   <string name="channel_name">Nome Canale</string>
   <string name="location_name">Nome Ambiente</string>
   <string name="channel_caption_roofwindowopeningsensor">Sensore apertura Lucernario</string>
@@ -724,4 +725,15 @@
   <string name="add_wizard_add_more">Aggiungi altro</string>
   <string name="add_wizard_repeat">Riprova</string>
   <string name="add_wizard_password_clarification">La registrazione di nuovi dispositivi nel Cloud è disabilitata. Abilitala manualmente o fornisci la password del tuo account affinché la procedura guidata la abiliti automaticamente durante la registrazione di nuovi dispositivi.</string>
+  <string name="add_wizard_password_rules">La password deve essere lunga almeno 8 caratteri e contenere almeno una lettera maiuscola, una lettera minuscola e un numero.</string>
+  <string name="add_wizard_password_set_title">Imposta password dispositivo</string>
+  <string name="add_wizard_password_new_label">Nuova password</string>
+  <string name="add_wizard_password_repeat_label">Ripeti password</string>
+  <string name="add_wizard_password_enter_title">Password del dispositivo</string>
+  <string name="add_wizard_device_temporarily_locked">Il limite di tentativi di accesso non riusciti è stato superato. Riprova più tardi…</string>
+  <string name="wizard_state_preparing">Preparazione del processo…</string>
+  <string name="wizard_state_connecting">Connessione al dispositivo…</string>
+  <string name="wizard_state_configuring">Configurazione del dispositivo…</string>
+  <string name="wizard_state_finishing">Completamento…</string>
+  <string name="add_wizard_password_instruction">Si prega di utilizzare la password usata per l\'accesso alla pagina web di configurazione locale.\n\nHai dimenticato la password? Puoi cambiarla su Supla Cloud o ripristinare il dispositivo alle impostazioni di fabbrica.</string>
 </resources>

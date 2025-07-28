@@ -406,6 +406,7 @@
   <string name="dgf_regeneration_after20h">Regenerering pågår, startet etter 20 timers drift.</string>
   <string name="wizard_done_explentations">Hvis enheten ikke vises i applikasjonen, gjenta denne tilleggsprosedyren igjen og les \"Forrige status\" vist ovenfor. Den inneholder informasjon som gjør det mulig å finne ut hvorfor enheten ikke klarte å koble til serveren. Meldingen \"SSID not found\" betyr at det angitte navnet på 2,4 GHz WiFi-nettverket ikke ble funnet eller at nettverket er utenfor rekkevidde.</string>
   <string name="incorrect_email_or_password">Feil e-postadresse eller passord</string>
+  <string name="incorrect_password">Feil passord</string>
   <string name="channel_name">Kanalnavn</string>
   <string name="location_name">Stedsnavn</string>
   <string name="overcurrent_warning">Strømmen ble slått av etter at den innstilte terskelen for den tillatte strømmen ble overskredet.</string>
@@ -695,4 +696,15 @@
   <string name="add_wizard_add_more">Legg til mer</string>
   <string name="add_wizard_repeat">Prøv igjen</string>
   <string name="add_wizard_password_clarification">Registrering av nye enheter i skyen er deaktivert. Aktiver den manuelt eller oppgi kontopassordet ditt slik at veiviseren kan aktivere den automatisk under registrering av nye enheter.</string>
+  <string name="add_wizard_password_rules">Passordet må være minst 8 tegn langt og inneholde minst én stor bokstav, én liten bokstav og ett tall.</string>
+  <string name="add_wizard_password_set_title">Angi enhetspassord</string>
+  <string name="add_wizard_password_new_label">Nytt passord</string>
+  <string name="add_wizard_password_repeat_label">Gjenta passord</string>
+  <string name="add_wizard_password_enter_title">Enhetspassord</string>
+  <string name="add_wizard_device_temporarily_locked">Grensen for mislykkede påloggingsforsøk er overskredet. Vennligst prøv igjen senere…</string>
+  <string name="wizard_state_preparing">Forberedelse av prosessen…</string>
+  <string name="wizard_state_connecting">Kobler til enheten…</string>
+  <string name="wizard_state_configuring">Konfigurering av enheten…</string>
+  <string name="wizard_state_finishing">Ferdigstilling…</string>
+  <string name="add_wizard_password_instruction">Vennligst bruk passordet som ble brukt for tilgang til den lokale konfigurasjonswebsiden.\n\nGlemt passordet ditt? Du kan endre det på Supla Cloud eller tilbakestille enheten til fabrikkinnstillinger.</string>
 </resources>

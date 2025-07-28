@@ -132,6 +132,11 @@ val LocalizedStringId.resourceId: Int
     LocalizedStringId.ADD_WIZARD_RESULT_CONNECTION_ERROR -> R.string.wizard_result_conn_error
     LocalizedStringId.ADD_WIZARD_RESULT_FAILED -> R.string.wizard_result_failed
     LocalizedStringId.ADD_WIZARD_RECONNECT_TIMEOUT -> R.string.wizard_reconnect_timeout
+    LocalizedStringId.ADD_WIZARD_DEVICE_TEMPORARILY_LOCKED -> R.string.add_wizard_device_temporarily_locked
+    LocalizedStringId.ADD_WIZARD_STATE_PREPARING -> R.string.wizard_state_preparing
+    LocalizedStringId.ADD_WIZARD_STATE_CONNECTING -> R.string.wizard_state_connecting
+    LocalizedStringId.ADD_WIZARD_STATE_CONFIGURING -> R.string.wizard_state_configuring
+    LocalizedStringId.ADD_WIZARD_STATE_FINISHING -> R.string.wizard_state_finishing
 
     LocalizedStringId.CHANNEL_STATE_UPTIME -> R.string.channel_state_uptime
     LocalizedStringId.LAST_CONNECTION_RESET_CAUSE_UNKNOWN -> R.string.lastconnectionresetcause_unknown

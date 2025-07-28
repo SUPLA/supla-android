@@ -420,6 +420,7 @@
   <string name="dgf_regeneration_after20h">Es läuft die nach 20 Betriebsstunden begonnene Regeneration.</string>
   <string name="wizard_done_explentations">Wenn das Gerät nicht in der App erscheint, wiederholen Sie dieses Hinzufügungsverfahren noch einmal und lesen Sie „Bisheriger Status“, das oben zu sehen ist, ab. Er enthält eine Information, warum das Gerät sich nicht mit dem Server verbunden hat. Meldung „SSID not found“ bedeutet, dass der eingeführte Name des WiFi-Netzwerks 2,4 GHz nicht gefunden wurde oder dieses Netzwerk sich außerhalb der Reichweite befindet.</string>
   <string name="incorrect_email_or_password">Falsche E-Mail-Adresse oder Kennwort</string>
+  <string name="incorrect_password">Falsches Passwort</string>
   <string name="channel_name">Name des Kanals</string>
   <string name="location_name">Name der Lokalisierung</string>
   <string name="str_default">Standard</string>
@@ -784,4 +785,15 @@
   <string name="add_wizard_add_more">Weitere hinzufügen</string>
   <string name="add_wizard_repeat">Nochmal versuchen</string>
   <string name="add_wizard_password_clarification">Die Registrierung neuer Geräte in der Cloud ist deaktiviert. Aktivieren Sie sie manuell oder geben Sie Ihr Kontopasswort ein, damit der Assistent sie während der Registrierung neuer Geräte automatisch aktiviert.</string>
+  <string name="add_wizard_password_rules">Das Passwort sollte mindestens 8 Zeichen lang sein und mindestens einen Großbuchstaben, einen Kleinbuchstaben und eine Zahl enthalten.</string>
+  <string name="add_wizard_password_set_title">Gerätepasswort festlegen</string>
+  <string name="add_wizard_password_new_label">Neues Passwort</string>
+  <string name="add_wizard_password_repeat_label">Passwort wiederholen</string>
+  <string name="add_wizard_password_enter_title">Gerätepasswort</string>
+  <string name="add_wizard_device_temporarily_locked">Das Limit für erfolglose Anmeldeversuche wurde überschritten. Bitte versuchen Sie es später noch einmal…</string>
+  <string name="wizard_state_preparing">Prozessvorbereitung…</string>
+  <string name="wizard_state_connecting">Verbindung zum Gerät…</string>
+  <string name="wizard_state_configuring">Gerätekonfiguration…</string>
+  <string name="wizard_state_finishing">Abschluss…</string>
+  <string name="add_wizard_password_instruction">Bitte verwenden Sie das Passwort, das für den Zugriff auf die lokale Konfigurationswebseite verwendet wurde.\n\nPasswort vergessen? Sie können es in der Supla Cloud ändern oder das Gerät auf die Werkseinstellungen zurücksetzen.</string>
 </resources>

@@ -336,6 +336,7 @@
   <string name="dgf_regeneration_after20h">Триває регенерація, розпочата після 20 годин роботи.</string>
   <string name="wizard_done_explentations">Якщо пристрій не відображається в додатку, повторіть процедуру додавання ще раз і прочитайте «попередній статус», показаний вище. Він містить інформацію, яка дозволяє визначити, чому пристрій не підключився до сервера. Повідомлення \\\"SSID not found \\\" («SSID не знайдено»)означає, що введене ім\'я мережі Wi-Fi 2,4 ГГц не знайдено або ця мережа недоступна.</string>
   <string name="incorrect_email_or_password">Неправильна адреса електронної пошти або пароль</string>
+  <string name="incorrect_password">Неправильний пароль</string>
   <string name="channel_name">Назва каналу</string>
   <string name="location_name">Назва місця</string>
   <string name="lastconnectionresetcause_unknown">0: невідомо</string>
@@ -669,4 +670,15 @@
   <string name="add_wizard_add_more">Додати більше</string>
   <string name="add_wizard_repeat">Спробуйте ще раз</string>
   <string name="add_wizard_password_clarification">Реєстрація нових пристроїв у Хмарі вимкнена. Увімкніть її вручну або надайте пароль до свого облікового запису, щоб майстер автоматично увімкнув її на час реєстрації нових пристроїв.</string>
+  <string name="add_wizard_password_rules">Пароль має бути довжиною щонайменше 8 символів і містити принаймні одну велику, одну малу літеру та одну цифру.</string>
+  <string name="add_wizard_password_set_title">Встановити пароль пристрою</string>
+  <string name="add_wizard_password_new_label">Новий пароль</string>
+  <string name="add_wizard_password_repeat_label">Повторіть пароль</string>
+  <string name="add_wizard_password_enter_title">Пароль пристрою</string>
+  <string name="add_wizard_device_temporarily_locked">Перевищено ліміт невдалих спроб входу. Будь ласка, спробуйте ще раз пізніше…</string>
+  <string name="wizard_state_preparing">Підготовка процесу…</string>
+  <string name="wizard_state_connecting">Підключення до пристрою…</string>
+  <string name="wizard_state_configuring">Налаштування пристрою…</string>
+  <string name="wizard_state_finishing">Завершення…</string>
+  <string name="add_wizard_password_instruction">Будь ласка, використовуйте пароль, який використовувався для доступу до локальної веб-сторінки конфігурації.\n\nЗабули пароль? Ви можете змінити його в Supla Cloud або скинути пристрій до заводських налаштувань.</string>
 </resources>

@@ -406,6 +406,7 @@
   <string name="dgf_regeneration_after20h">Obnova je v teku po 20 urah dela.</string>
   <string name="wizard_done_explentations">Če se naprava ne prikaže v aplikaciji, ponovite ta postopek dodajanja še enkrat in preberite \"Prejšnje stanje\", prikazano zgoraj. Vsebuje informacije, na podlagi katerih je mogoče ugotoviti, zakaj naprava ni vzpostavila povezave s strežnikom. Sporočilo »SSID not found« pomeni, da vnesenega imena 2,4 GHz WiFi omrežja ni bilo mogoče najti ali pa je omrežje izven dosega.</string>
   <string name="incorrect_email_or_password">Napačen e-naslov ali geslo</string>
+  <string name="incorrect_password">Napačno geslo</string>
   <string name="channel_name">Ime kanala</string>
   <string name="location_name">Ime lokacije</string>
   <string name="overcurrent_warning">Napeljava je bila onemogočena po prekoračitvi nastavljenega praga dovoljenega električnega toka.</string>
@@ -696,4 +697,15 @@
   <string name="add_wizard_add_more">Dodaj več</string>
   <string name="add_wizard_repeat">Poskusite znova</string>
   <string name="add_wizard_password_clarification">Registracija novih naprav v oblaku je onemogočena. Omogočite jo ročno ali vnesite geslo svojega računa, da jo čarovnik samodejno omogoči med registracijo novih naprav.</string>
+  <string name="add_wizard_password_rules">Geslo mora biti dolgo vsaj 8 znakov in vsebovati vsaj eno veliko, eno malo črko in eno številko.</string>
+  <string name="add_wizard_password_set_title">Nastavi geslo naprave</string>
+  <string name="add_wizard_password_new_label">Novo geslo</string>
+  <string name="add_wizard_password_repeat_label">Ponovi geslo</string>
+  <string name="add_wizard_password_enter_title">Geslo naprave</string>
+  <string name="add_wizard_device_temporarily_locked">Prekoračena je bila omejitev neuspešnih poskusov prijave. Prosimo, poskusite znova kasneje…</string>
+  <string name="wizard_state_preparing">Priprava procesa…</string>
+  <string name="wizard_state_connecting">Povezovanje z napravo…</string>
+  <string name="wizard_state_configuring">Konfiguracija naprave…</string>
+  <string name="wizard_state_finishing">Zaključevanje…</string>
+  <string name="add_wizard_password_instruction">Prosimo, uporabite geslo, ki je bilo uporabljeno za dostop do spletne strani lokalne konfiguracije.\n\nSte pozabili geslo? Lahko ga spremenite na Supla Cloud ali ponastavite napravo na tovarniške nastavitve.</string>
 </resources>

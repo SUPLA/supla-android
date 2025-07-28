@@ -18,6 +18,7 @@ package org.supla.core.shared.data.model.addwizard
  */
 
 sealed interface AddWizardFinalAction {
+  data object Reinitialize : AddWizardFinalAction
   data object Close : AddWizardFinalAction
   data class Error(val error: EspConfigurationError) : AddWizardFinalAction
   data object Success : AddWizardFinalAction

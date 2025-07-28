@@ -1,4 +1,7 @@
 package org.supla.core.shared.data.model.addwizard
+
+import org.supla.core.shared.infrastructure.LocalizedString
+
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -18,6 +21,7 @@ package org.supla.core.shared.data.model.addwizard
  */
 
 interface EspConfigurationController {
+  fun updateProgress(progress: Float, descriptionLabel: LocalizedString?)
   fun checkRegistration()
   fun authorize()
   fun activateRegistration()
@@ -25,10 +29,14 @@ interface EspConfigurationController {
   fun showNetworkSelector(ssids: List<String>, cached: Boolean)
   fun connectToNetwork(ssid: String)
   fun configureEsp()
+  fun configurePassword()
+  fun providePassword()
   fun reconnect()
   fun showFinished()
   fun showError(error: EspConfigurationError)
   fun cancel()
   fun close()
   fun back()
+  fun setupEspConfiguration()
+  fun reinitialize()
 }

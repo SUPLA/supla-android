@@ -402,6 +402,7 @@
   <string name="dgf_planned_regeneration_in_progress">Η προγραμματισμένη αναγέννηση βρίσκεται σε εξέλιξη.</string>
   <string name="dgf_regeneration_after20h">Η αναγέννηση βρίσκεται σε εξέλιξη μετά από 20 ώρες εργασίας.</string>
   <string name="wizard_done_explentations">Εάν η συσκευή σας δεν εμφανίζεται στην εφαρμογή, επαναλάβετε αυτήν τη διαδικασία προσθήκης ξανά και διαβάστε την ενότητα \"Προηγούμενη κατάσταση\" που εμφανίζεται παραπάνω. Περιέχει πληροφορίες για να προσδιορίσετε γιατί η συσκευή δεν συνδέθηκε στο διακομιστή. Το μήνυμα \"Το SSID δεν βρέθηκε\" σημαίνει ότι το όνομα δικτύου WiFi 2,4 GHz που εισαγάγατε δεν βρέθηκε ή το δίκτυο είναι εκτός εμβέλειας.</string>
+  <string name="incorrect_password">Λανθασμένος κωδικός πρόσβασης</string>
   <string name="channel_name">Όνομα καναλιού</string>
   <string name="incorrect_email_or_password">Λάθος διεύθυνση ηλεκτρονικού ταχυδρομείου ή κωδικός πρόσβασης</string>
   <string name="location_name">Όνομα τοποθεσίας</string>
@@ -692,4 +693,15 @@
   <string name="add_wizard_add_more">Πρόσθεσε κι άλλα</string>
   <string name="add_wizard_repeat">Προσπάθησε ξανά</string>
   <string name="add_wizard_password_clarification">Η εγγραφή νέων συσκευών στο Cloud είναι απενεργοποιημένη. Ενεργοποιήστε την χειροκίνητα ή δώστε τον κωδικό πρόσβασης του λογαριασμού σας για να την ενεργοποιήσει αυτόματα ο οδηγός κατά την εγγραφή νέων συσκευών.</string>
+  <string name="add_wizard_password_rules">Ο κωδικός πρόσβασης πρέπει να έχει μήκος τουλάχιστον 8 χαρακτήρες και να περιέχει τουλάχιστον ένα κεφαλαίο, ένα πεζό γράμμα και έναν αριθμό.</string>
+  <string name="add_wizard_password_set_title">Ορισμός κωδικού πρόσβασης συσκευής</string>
+  <string name="add_wizard_password_new_label">Νέος κωδικός πρόσβασης</string>
+  <string name="add_wizard_password_repeat_label">Επανάληψη κωδικού πρόσβασης</string>
+  <string name="add_wizard_password_enter_title">Κωδικός πρόσβασης συσκευής</string>
+  <string name="add_wizard_device_temporarily_locked">Έχει ξεπεραστεί το όριο των ανεπιτυχών προσπαθειών σύνδεσης. Παρακαλώ δοκιμάστε ξανά αργότερα…</string>
+  <string name="wizard_state_preparing">Προετοιμασία της διαδικασίας…</string>
+  <string name="wizard_state_connecting">Σύνδεση με τη συσκευή…</string>
+  <string name="wizard_state_configuring">Διαμόρφωση της συσκευής…</string>
+  <string name="wizard_state_finishing">Ολοκλήρωση…</string>
+  <string name="add_wizard_password_instruction">Παρακαλώ χρησιμοποιήστε τον κωδικό πρόσβασης που χρησιμοποιήθηκε για την πρόσβαση στην τοπική ιστοσελίδα διαμόρφωσης.\n\nΞεχάσατε τον κωδικό πρόσβασης; Μπορείτε να τον αλλάξετε στο Supla Cloud ή να επαναφέρετε τη συσκευή στις εργοστασιακές ρυθμίσεις.</string>
 </resources>

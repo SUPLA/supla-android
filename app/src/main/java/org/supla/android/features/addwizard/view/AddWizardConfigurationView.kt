@@ -18,11 +18,18 @@ package org.supla.android.features.addwizard.view
  */
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -32,22 +39,32 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import org.supla.android.R
+import org.supla.android.core.shared.invoke
+import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.features.addwizard.AddWizardScope
 import org.supla.android.features.addwizard.model.AddWizardScreen
 import org.supla.android.features.addwizard.view.components.AddWizardContentText
 import org.supla.android.features.addwizard.view.components.AddWizardScaffold
+import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.infrastructure.LocalizedStringId
+import org.supla.core.shared.infrastructure.localizedString
 import kotlin.time.Duration.Companion.milliseconds
 
 interface AddWizardConfigurationScope : AddWizardScope
 
 @Composable
 fun AddWizardConfigurationScope.AddWizardConfigurationView(
-  processing: Boolean
+  processing: Boolean,
+  progress: Float,
+  progressLabel: LocalizedString?
 ) {
   AddWizardScaffold(
     iconRes = R.drawable.add_wizard_step_3,
@@ -59,12 +76,20 @@ fun AddWizardConfigurationScope.AddWizardConfigurationView(
     BlinkingDot()
     AddWizardContentText(R.string.add_wizard_step_3_message_2)
     AddWizardContentText(R.string.add_wizard_step_3_message_3)
+
+    if (processing) {
+      ProgressView(progress, progressLabel)
+    }
   }
 }
 
 @Composable
 private fun BlinkingDot() =
-  Box(modifier = Modifier.fillMaxWidth().height(32.dp)) {
+  Box(
+    modifier = Modifier
+      .fillMaxWidth()
+      .height(32.dp)
+  ) {
     var dotVisible by remember { mutableStateOf(true) }
     LaunchedEffect(Any()) {
       while (true) {
@@ -83,6 +108,35 @@ private fun BlinkingDot() =
     }
   }
 
+@Composable
+private fun ProgressView(progress: Float, progressLabel: LocalizedString?) {
+  Column(
+    modifier = Modifier.padding(top = Distance.default),
+    horizontalAlignment = Alignment.CenterHorizontally,
+    verticalArrangement = Arrangement.spacedBy(4.dp)
+  ) {
+    Box(
+      modifier = Modifier.background(MaterialTheme.colorScheme.onPrimaryContainer, RoundedCornerShape(6.dp))
+    ) {
+      LinearProgressIndicator(
+        progress = { progress },
+        color = colorResource(R.color.primary),
+        trackColor = colorResource(R.color.on_primary_container),
+        strokeCap = StrokeCap.Round,
+        modifier = Modifier.padding(4.dp),
+        drawStopIndicator = {}
+      )
+    }
+    progressLabel?.let {
+      Text(
+        text = it(LocalContext.current),
+        style = MaterialTheme.typography.bodySmall,
+        color = MaterialTheme.colorScheme.onPrimaryContainer
+      )
+    }
+  }
+}
+
 private val previewScope = object : AddWizardConfigurationScope {
   override fun onStepFinished(step: AddWizardScreen) {}
   override fun onClose(step: AddWizardScreen) {}
@@ -92,6 +146,10 @@ private val previewScope = object : AddWizardConfigurationScope {
 @Composable
 private fun Preview() {
   SuplaTheme {
-    previewScope.AddWizardConfigurationView(false)
+    previewScope.AddWizardConfigurationView(
+      processing = false,
+      progress = 0.2f,
+      progressLabel = localizedString(LocalizedStringId.ADD_WIZARD_STATE_PREPARING)
+    )
   }
 }

@@ -405,6 +405,7 @@
   <string name="dgf_regeneration_after20h">Regenerarea este în desfășurare, inițiată după 20 de ore de funcționare.</string>
   <string name="wizard_done_explentations">Dacă dispozitivul nu apare în aplicație, repeta această procedură de adăugare din nou și citiți „Starea anterioară” prezentată mai sus. Conține informație care face posibilă determinarea motivului pentru care dispozitivul nu a reușit să se conecteze la server. Mesajul „SSID not found” înseamnă că denumirea introdusă a rețelei WiFi de 2,4 GHz nu a fost  găsită sau rețeaua este în afara razei de acțiune.</string>
   <string name="incorrect_email_or_password">Adresă de e-mail sau parolă greșită</string>
+  <string name="incorrect_password">Parolă incorectă</string>
   <string name="channel_name">Denumirea canalului</string>
   <string name="location_name">Denumirea locației</string>
   <string name="overcurrent_warning">Alimentarea a fost oprită după depăşirea pragului stabilit de intensitate admisibilă a curentului.</string>
@@ -697,4 +698,15 @@
   <string name="add_wizard_add_more">Adaugă mai mult</string>
   <string name="add_wizard_repeat">Încearcă din nou</string>
   <string name="add_wizard_password_clarification">Înregistrarea dispozitivelor noi în Cloud este dezactivată. Activați-o manual sau furnizați parola contului dvs. pentru ca asistentul să o activeze automat pe durata înregistrării dispozitivelor noi.</string>
+  <string name="add_wizard_password_rules">Parola trebuie să aibă cel puțin 8 caractere și să conțină cel puțin o literă mare, o literă mică și o cifră.</string>
+  <string name="add_wizard_password_set_title">Setați parola dispozitivului</string>
+  <string name="add_wizard_password_new_label">Parolă nouă</string>
+  <string name="add_wizard_password_repeat_label">Repetă parola</string>
+  <string name="add_wizard_password_enter_title">Parola dispozitivului</string>
+  <string name="add_wizard_device_temporarily_locked">Limita de încercări de conectare eșuate a fost depășită. Vă rugăm să încercați din nou mai târziu…</string>
+  <string name="wizard_state_preparing">Pregătirea procesului…</string>
+  <string name="wizard_state_connecting">Conectarea la dispozitiv…</string>
+  <string name="wizard_state_configuring">Configurarea dispozitivului…</string>
+  <string name="wizard_state_finishing">Finalizare…</string>
+  <string name="add_wizard_password_instruction">Vă rugăm să utilizați parola folosită pentru accesul la pagina web de configurare locală.\n\nAți uitat parola? O puteți schimba în Supla Cloud sau puteți reseta dispozitivul la setările din fabrică.</string>
 </resources>

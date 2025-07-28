@@ -1,4 +1,4 @@
-package org.supla.android.features.addwizard.view.wifi
+package org.supla.android.features.addwizard.view.dialogs
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
