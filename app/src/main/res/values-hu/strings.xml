@@ -406,6 +406,7 @@
   <string name="dgf_regeneration_after20h">20 üzemóra után kezdődő helyreállítás folyamatban.</string>
   <string name="wizard_done_explentations">Ha a készülék nem jelenik meg az alkalmazásban, ismételje meg ezt az eljárást, és olvassa el a fenti „Előző állapotot”. Ez azt jelzi, hogy a készülék miért nem csatlakozott a szerverhez. Az \"SSID not found\" üzenet azt jelenti, hogy a megadott 2,4 GHz-es WiFi nevet nem találták meg, vagy a hálózat nem érhető el.</string>
   <string name="incorrect_email_or_password">Hibás email cím vagy jelszó</string>
+  <string name="incorrect_password">Helytelen jelszó</string>
   <string name="channel_name">Csatorna neve</string>
   <string name="location_name">Helyszín neve</string>
   <string name="overcurrent_warning">Az áramellátás a megengedett áramerősség beállított küszöbértékének túllépése után kikapcsolt.</string>
@@ -695,4 +696,15 @@
   <string name="add_wizard_add_more">Többet hozzáad</string>
   <string name="add_wizard_repeat">Próbáld újra</string>
   <string name="add_wizard_password_clarification">Az új eszközök regisztrációja a felhőben le van tiltva. Engedélyezze manuálisan, vagy adja meg fiókja jelszavát, hogy a varázsló automatikusan engedélyezze az új eszközök regisztrációjának idejére.</string>
+  <string name="add_wizard_password_rules">A jelszónak legalább 8 karakter hosszúnak kell lennie, és tartalmaznia kell legalább egy nagybetűt, egy kisbetűt és egy számot.</string>
+  <string name="add_wizard_password_set_title">Eszközjelszó beállítása</string>
+  <string name="add_wizard_password_new_label">Új jelszó</string>
+  <string name="add_wizard_password_repeat_label">Jelszó ismétlése</string>
+  <string name="add_wizard_password_enter_title">Eszközjelszó</string>
+  <string name="add_wizard_device_temporarily_locked">Túllépte a sikertelen bejelentkezési kísérletek számát. Kérjük, próbálja meg később…</string>
+  <string name="wizard_state_preparing">A folyamat előkészítése…</string>
+  <string name="wizard_state_connecting">Csatlakozás az eszközhöz…</string>
+  <string name="wizard_state_configuring">Az eszköz konfigurálása…</string>
+  <string name="wizard_state_finishing">Befejezés…</string>
+  <string name="add_wizard_password_instruction">Kérjük, használja a helyi konfigurációs weboldal hozzáféréséhez használt jelszót.\n\nElfelejtetted a jelszavad? Megváltoztathatod a Supla Cloudon, vagy visszaállíthatod az eszközt gyári beállításokra.</string>
 </resources>

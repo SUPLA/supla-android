@@ -384,6 +384,7 @@
   <string name="dgf_regeneration_after20h">Vyksta regeneravimas, kuris paleidžiamas po 20 darbo valandų.</string>
   <string name="wizard_done_explentations">Jei įrenginys nebus matomas programoje, pakartokite šią pridėjimo procedūrą dar kartą ir nuskaitykite žemiau matomą „Ankstesnį statusą“. Jame yra informacija, kuri leidžia nustatyti, kodėl įrenginys neprisijungė prie serverio. Pranešimas “SSID not found“ reiškia, kad įvestas Wi-Fi 2,4 GHz tinklo pavadinimas nebuvo rastas arba tinklas neprieinamas.</string>
   <string name="incorrect_email_or_password">Neteisingas el. pašto adresas arba slaptažodis</string>
+  <string name="incorrect_password">Neteisingas slaptažodis</string>
   <string name="channel_name">Kanalo pavadinimas</string>
   <string name="location_name">Vietos pavadinimas</string>
   <string name="overcurrent_warning">Maitinimas buvo atjungtas viršijus nustatytą leistinos elektros srovės ribą.</string>
@@ -673,4 +674,15 @@
   <string name="add_wizard_add_more">Pridėti daugiau</string>
   <string name="add_wizard_repeat">Bandykite dar kartą</string>
   <string name="add_wizard_password_clarification">Naujų įrenginių registracija Debesyje yra išjungta. Įjunkite ją rankiniu būdu arba pateikite savo paskyros slaptažodį, kad vedlys automatiškai ją įjungtų naujų įrenginių registracijos metu.</string>
+  <string name="add_wizard_password_rules">Slaptažodis turi būti bent 8 simbolių ilgio ir jame turi būti bent viena didžioji, viena mažoji raidė ir vienas skaičius.</string>
+  <string name="add_wizard_password_set_title">Nustatyti įrenginio slaptažodį</string>
+  <string name="add_wizard_password_new_label">Naujas slaptažodis</string>
+  <string name="add_wizard_password_repeat_label">Pakartoti slaptažodį</string>
+  <string name="add_wizard_password_enter_title">Įrenginio slaptažodis</string>
+  <string name="add_wizard_device_temporarily_locked">Viršytas nesėkmingų prisijungimo bandymų limitas. Bandykite dar kartą vėliau…</string>
+  <string name="wizard_state_preparing">Proceso paruošimas…</string>
+  <string name="wizard_state_connecting">Prisijungimas prie įrenginio…</string>
+  <string name="wizard_state_configuring">Įrenginio konfigūravimas…</string>
+  <string name="wizard_state_finishing">Baigimas…</string>
+  <string name="add_wizard_password_instruction">Prašome naudoti slaptažodį, kuris buvo naudojamas vietinės konfigūracijos tinklalapio prieigai.\n\nPamiršote slaptažodį? Galite jį pakeisti Supla Cloud sistemoje arba atkurti gamyklinius įrenginio nustatymus.</string>
 </resources>

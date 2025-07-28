@@ -27,9 +27,14 @@ import androidx.compose.ui.res.stringResource
 import org.supla.android.R
 import org.supla.android.features.addwizard.AddWizardViewModelState
 import org.supla.android.features.addwizard.model.AddWizardScreen
-import org.supla.android.features.addwizard.view.wifi.WiFiListDialog
-import org.supla.android.features.addwizard.view.wifi.WiFiListDialogScope
+import org.supla.android.features.addwizard.view.dialogs.ProvidePasswordDialog
+import org.supla.android.features.addwizard.view.dialogs.ProvidePasswordScope
+import org.supla.android.features.addwizard.view.dialogs.SetPasswordDialog
+import org.supla.android.features.addwizard.view.dialogs.SetPasswordScope
+import org.supla.android.features.addwizard.view.dialogs.WiFiListDialog
+import org.supla.android.features.addwizard.view.dialogs.WiFiListDialogScope
 import org.supla.android.ui.dialogs.AlertDialog
+import org.supla.android.ui.extensions.ifTrue
 import org.supla.android.ui.views.LoadingScrim
 
 interface AddWizardScope :
@@ -38,7 +43,9 @@ interface AddWizardScope :
   AddWizardConfigurationScope,
   AddWizardMessageScope,
   AddWizardSuccessScope,
-  WiFiListDialogScope {
+  WiFiListDialogScope,
+  ProvidePasswordScope,
+  SetPasswordScope {
   fun closeCloudDialog()
   fun openCloud()
 }
@@ -51,22 +58,27 @@ fun AddWizardScope.View(modelState: AddWizardViewModelState) {
       .background(MaterialTheme.colorScheme.primaryContainer)
   ) {
     when (val screen = modelState.screen) {
-      AddWizardScreen.Welcome, null -> AddWizardWelcomeView()
       AddWizardScreen.NetworkSelection -> AddWizardNetworkSelectionView(
         state = modelState.networkSelectionState ?: AddWizardNetworkSelectionState()
       )
 
-      AddWizardScreen.Configuration -> AddWizardConfigurationView(modelState.processing)
+      AddWizardScreen.Configuration ->
+        AddWizardConfigurationView(
+          processing = modelState.processing,
+          progress = modelState.processingProgress,
+          progressLabel = modelState.processingProgressLabel
+        )
+
+      AddWizardScreen.Welcome, null -> AddWizardWelcomeView()
       is AddWizardScreen.Message -> AddWizardMessageView(screen)
       is AddWizardScreen.Success -> AddWizardSuccessView(modelState.parameters)
     }
 
     modelState.scannerDialogState?.let { WiFiListDialog(it) }
-    if (modelState.showCloudFollowupPopup) { FollowupPopup() }
-
-    if (modelState.canceling) {
-      LoadingScrim()
-    }
+    modelState.showCloudFollowupPopup.ifTrue { FollowupPopup() }
+    modelState.setPasswordState?.let { SetPasswordDialog(it) }
+    modelState.providePasswordState?.let { ProvidePasswordDialog(it) }
+    modelState.canceling.ifTrue { LoadingScrim() }
   }
 }
 

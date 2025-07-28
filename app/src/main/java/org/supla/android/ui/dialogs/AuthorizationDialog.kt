@@ -17,12 +17,9 @@ package org.supla.android.ui.dialogs
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,7 +27,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.autofill.ContentType
@@ -42,17 +38,15 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import org.supla.android.R
 import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
+import org.supla.android.ui.views.FieldErrorText
 import org.supla.android.ui.views.PasswordTextField
 import org.supla.android.ui.views.Separator
 import org.supla.android.ui.views.SeparatorStyle
 import org.supla.android.ui.views.TextField
-import org.supla.android.ui.views.buttons.Button
-import org.supla.android.ui.views.buttons.OutlinedButton
 import org.supla.core.shared.infrastructure.LocalizedString
 
 data class AuthorizationDialogState(
@@ -118,40 +112,24 @@ fun AuthorizationDialogScope.AuthorizationDialog(
         .padding(start = Distance.default, top = Distance.default, end = Distance.default)
         .semantics { contentType = ContentType.Password }
     )
-    ErrorText(text = state.error?.let { it(LocalContext.current) } ?: "")
+    FieldErrorText(
+      text = state.error?.let { it(LocalContext.current) } ?: "",
+      modifier = Modifier.padding(horizontal = Distance.default.plus(Distance.small))
+    )
 
     Separator(style = SeparatorStyle.LIGHT, modifier = Modifier.padding(top = Distance.small))
-    DialogButtonsRow {
-      OutlinedButton(
-        onClick = {
-          autofillManager?.cancel()
-          onAuthorizationCancel()
-        },
-        text = stringResource(id = R.string.cancel),
-        modifier = Modifier.weight(1f),
-        enabled = state.processing.not()
-      )
-
-      if (state.processing) {
-        Box(modifier = Modifier.weight(1f)) {
-          CircularProgressIndicator(
-            modifier = Modifier
-              .align(Alignment.Center)
-              .size(32.dp)
-          )
-        }
-      } else {
-        Button(
-          onClick = {
-            autofillManager?.commit()
-            onAuthorize(state.userName, password)
-          },
-          text = stringResource(id = R.string.ok),
-          enabled = password.isNotEmpty(),
-          modifier = Modifier.weight(1f)
-        )
-      }
-    }
+    DialogDoubleButtons(
+      onNegativeClick = {
+        autofillManager?.cancel()
+        onAuthorizationCancel()
+      },
+      onPositiveClick = {
+        autofillManager?.commit()
+        onAuthorize(state.userName, password)
+      },
+      processing = state.processing,
+      positiveEnabled = password.isNotEmpty()
+    )
   }
 }
 
@@ -183,19 +161,6 @@ private fun UserNameTextField(
     onValueChange = { onStateChange(state.copy(userName = it)) }
   )
 }
-
-@Composable
-private fun ErrorText(text: String) =
-  Text(
-    text = text,
-    style = MaterialTheme.typography.titleSmall,
-    color = MaterialTheme.colorScheme.error,
-    modifier = Modifier.padding(
-      start = Distance.default.plus(Distance.small),
-      end = Distance.default.plus(Distance.small),
-      top = 4.dp
-    )
-  )
 
 private val emptyScope = object : AuthorizationDialogScope {
   override fun onAuthorizationDismiss() {}

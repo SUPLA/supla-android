@@ -393,6 +393,7 @@
   <string name="dgf_regeneration_after20h">Régénération initiée après 20h de fonctionnement en cours.</string>
   <string name="wizard_done_explentations">Si l\'appareil n\'apparaît pas dans l\'application, répétez à nouveau cette procédure d\'ajout et lisez le « Statut précédent » indiqué ci-dessus. Il contient des informations permettant de déterminer pourquoi l\'appareil ne s\'est pas connecté au serveur. Le message « SSID non trouvé » signifie que le nom du réseau WiFi 2,4 GHz saisi n\'a pas été trouvé ou que le réseau est hors de portée.</string>
   <string name="incorrect_email_or_password">Adresse e-mail ou mot de passe incorrect(e)</string>
+  <string name="incorrect_password">Mot de passe incorrect</string>
   <string name="channel_name">Nom du canal</string>
   <string name="location_name">Nom de la localisation</string>
   <string name="overcurrent_warning">L\'alimentation a été coupée après avoir dépassé le seuil de limite de courant fixé.</string>
@@ -683,4 +684,15 @@
   <string name="add_wizard_add_more">Ajouter plus</string>
   <string name="add_wizard_repeat">Réessayez</string>
   <string name="add_wizard_password_clarification">L\'enregistrement de nouveaux appareils dans le Cloud est désactivé. Activez-le manuellement ou fournissez le mot de passe de votre compte pour que l\'assistant l\'active automatiquement pendant l\'enregistrement de nouveaux appareils.</string>
+  <string name="add_wizard_password_rules">Le mot de passe doit contenir au moins 8 caractères et inclure au moins une lettre majuscule, une lettre minuscule et un chiffre.</string>
+  <string name="add_wizard_password_set_title">Définir le mot de passe de l\'appareil</string>
+  <string name="add_wizard_password_new_label">Nouveau mot de passe</string>
+  <string name="add_wizard_password_repeat_label">Répéter le mot de passe</string>
+  <string name="add_wizard_password_enter_title">Mot de passe de l\'appareil</string>
+  <string name="add_wizard_device_temporarily_locked">La limite de tentatives de connexion infructueuses a été dépassée. Veuillez réessayer plus tard…</string>
+  <string name="wizard_state_preparing">Préparation du processus…</string>
+  <string name="wizard_state_connecting">Connexion à l\'appareil…</string>
+  <string name="wizard_state_configuring">Configuration de l\'appareil…</string>
+  <string name="wizard_state_finishing">Finalisation…</string>
+  <string name="add_wizard_password_instruction">Veuillez utiliser le mot de passe utilisé pour l\'accès à la page web de configuration locale.\n\nMot de passe oublié ? Vous pouvez le modifier sur Supla Cloud ou réinitialiser l\'appareil aux paramètres d\'usine.</string>
 </resources>

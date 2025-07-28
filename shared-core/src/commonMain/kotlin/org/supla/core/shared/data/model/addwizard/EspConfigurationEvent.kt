@@ -20,8 +20,9 @@ package org.supla.core.shared.data.model.addwizard
 sealed interface EspConfigurationEvent {
   data object Start : EspConfigurationEvent
 
-  data object Cancel : EspConfigurationEvent
-  data object Back : EspConfigurationEvent
+  data object Close : EspConfigurationEvent // Used to cancel and close the add wizard
+  data object Cancel : EspConfigurationEvent // Used to cancel and restart process staying on the configuration screen
+  data object Back : EspConfigurationEvent // Used to cancel and go back to network selection screen
   data object Canceled : EspConfigurationEvent
 
   data object RegistrationDisabled : EspConfigurationEvent
@@ -43,7 +44,10 @@ sealed interface EspConfigurationEvent {
   data object NetworkConnectionFailure : EspConfigurationEvent
 
   data object EspConfigured : EspConfigurationEvent
+  data object SetupNeeded : EspConfigurationEvent
+  data object CredentialsNeeded : EspConfigurationEvent
   data class EspConfigurationFailure(val error: EspConfigurationError) : EspConfigurationEvent
+  data object PasswordProvided : EspConfigurationEvent
 
   data object Reconnected : EspConfigurationEvent
   data object ReconnectTimeout : EspConfigurationEvent

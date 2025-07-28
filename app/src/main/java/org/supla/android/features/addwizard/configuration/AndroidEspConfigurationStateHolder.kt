@@ -28,7 +28,7 @@ import org.supla.core.shared.data.model.addwizard.EspConfigurationStateHolder
 import org.supla.core.shared.data.model.addwizard.Finished
 import org.supla.core.shared.data.model.addwizard.Idle
 
-class AndroidEspConfigurationStateHolder(espConfigurationController: EspConfigurationController) : EspConfigurationStateHolder {
+class AndroidEspConfigurationStateHolder(private val espConfigurationController: EspConfigurationController) : EspConfigurationStateHolder {
 
   val isInactive: Boolean
     get() = when (state) {
@@ -48,5 +48,6 @@ class AndroidEspConfigurationStateHolder(espConfigurationController: EspConfigur
   override fun setState(state: EspConfigurationState) {
     Trace.i(TAG, "State changed to `$state`")
     this.state = state
+    espConfigurationController.updateProgress(state.progress, state.progressLabel)
   }
 }

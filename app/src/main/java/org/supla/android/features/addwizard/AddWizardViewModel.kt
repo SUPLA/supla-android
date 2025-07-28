@@ -39,22 +39,27 @@ import org.supla.android.core.networking.suplaclient.SuplaClientStateHolder
 import org.supla.android.core.storage.EncryptedPreferences
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.data.source.RoomProfileRepository
+import org.supla.android.data.source.remote.esp.EspConfigurationSession
 import org.supla.android.extensions.TAG
 import org.supla.android.extensions.isNotNull
 import org.supla.android.features.addwizard.configuration.AndroidEspConfigurationStateHolder
 import org.supla.android.features.addwizard.model.AddWizardScreen
 import org.supla.android.features.addwizard.model.Esp
 import org.supla.android.features.addwizard.model.EspConfigResult
+import org.supla.android.features.addwizard.usecase.AuthorizeEspUseCase
 import org.supla.android.features.addwizard.usecase.CheckLocationEnabledUseCase
 import org.supla.android.features.addwizard.usecase.ConfigureEspUseCase
 import org.supla.android.features.addwizard.usecase.ConnectToSsidUseCase
+import org.supla.android.features.addwizard.usecase.CreateEspPasswordUseCase
 import org.supla.android.features.addwizard.usecase.FindEspSsidUseCase
 import org.supla.android.features.addwizard.usecase.ReconnectToInternetUseCase
 import org.supla.android.features.addwizard.usecase.receiver.ConnectResult
 import org.supla.android.features.addwizard.view.AddWizardNetworkSelectionState
 import org.supla.android.features.addwizard.view.AddWizardScope
 import org.supla.android.features.addwizard.view.components.DeviceParameter
-import org.supla.android.features.addwizard.view.wifi.WiFiListDialogState
+import org.supla.android.features.addwizard.view.dialogs.ProvidePasswordState
+import org.supla.android.features.addwizard.view.dialogs.SetPasswordState
+import org.supla.android.features.addwizard.view.dialogs.WiFiListDialogState
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.dialogs.AuthorizationDialogState
 import org.supla.android.ui.dialogs.AuthorizationReason
@@ -66,7 +71,30 @@ import org.supla.android.usecases.profile.LoadActiveProfileUseCase
 import org.supla.core.shared.data.model.addwizard.EspConfigurationController
 import org.supla.core.shared.data.model.addwizard.EspConfigurationError
 import org.supla.core.shared.data.model.addwizard.EspConfigurationEvent
+import org.supla.core.shared.data.model.addwizard.EspConfigurationEvent.Authorized
+import org.supla.core.shared.data.model.addwizard.EspConfigurationEvent.Back
+import org.supla.core.shared.data.model.addwizard.EspConfigurationEvent.Cancel
+import org.supla.core.shared.data.model.addwizard.EspConfigurationEvent.Canceled
+import org.supla.core.shared.data.model.addwizard.EspConfigurationEvent.Close
+import org.supla.core.shared.data.model.addwizard.EspConfigurationEvent.CredentialsNeeded
+import org.supla.core.shared.data.model.addwizard.EspConfigurationEvent.EspConfigurationFailure
+import org.supla.core.shared.data.model.addwizard.EspConfigurationEvent.EspConfigured
+import org.supla.core.shared.data.model.addwizard.EspConfigurationEvent.MultipleNetworksFound
+import org.supla.core.shared.data.model.addwizard.EspConfigurationEvent.NetworkFound
+import org.supla.core.shared.data.model.addwizard.EspConfigurationEvent.NetworkNotFound
+import org.supla.core.shared.data.model.addwizard.EspConfigurationEvent.NetworkScanDisabled
+import org.supla.core.shared.data.model.addwizard.EspConfigurationEvent.PasswordProvided
+import org.supla.core.shared.data.model.addwizard.EspConfigurationEvent.ReconnectTimeout
+import org.supla.core.shared.data.model.addwizard.EspConfigurationEvent.Reconnected
+import org.supla.core.shared.data.model.addwizard.EspConfigurationEvent.RegistrationActivated
+import org.supla.core.shared.data.model.addwizard.EspConfigurationEvent.RegistrationDisabled
+import org.supla.core.shared.data.model.addwizard.EspConfigurationEvent.RegistrationEnabled
+import org.supla.core.shared.data.model.addwizard.EspConfigurationEvent.RegistrationNotActivated
+import org.supla.core.shared.data.model.addwizard.EspConfigurationEvent.RegistrationUnknown
+import org.supla.core.shared.data.model.addwizard.EspConfigurationEvent.SetupNeeded
+import org.supla.core.shared.data.model.addwizard.EspConfigurationEvent.Start
 import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.localizedString
 import org.supla.core.shared.usecase.addwizard.CheckRegistrationEnabledUseCase
 import org.supla.core.shared.usecase.addwizard.EnableRegistrationUseCase
@@ -81,9 +109,12 @@ class AddWizardViewModel @Inject constructor(
   private val reconnectToInternetUseCase: ReconnectToInternetUseCase,
   private val enableRegistrationUseCase: EnableRegistrationUseCase,
   private val loadActiveProfileUseCase: LoadActiveProfileUseCase,
+  private val createEspPasswordUseCase: CreateEspPasswordUseCase,
+  private val espConfigurationSession: EspConfigurationSession,
   private val suplaClientStateHolder: SuplaClientStateHolder,
   private val connectToSsidUseCase: ConnectToSsidUseCase,
   private val encryptedPreferences: EncryptedPreferences,
+  private val authorizeEspUseCase: AuthorizeEspUseCase,
   private val configureEspUseCase: ConfigureEspUseCase,
   private val findEspSsidUseCase: FindEspSsidUseCase,
   private val wiFiScanner: WiFiScanner,
@@ -112,7 +143,7 @@ class AddWizardViewModel @Inject constructor(
 
   override fun onAuthorized(reason: AuthorizationReason) {
     closeAuthorizationDialog()
-    configurationStateHolder.handleEvent(EspConfigurationEvent.Authorized)
+    configurationStateHolder.handleEvent(Authorized)
   }
 
   override fun onAuthorizationCancel() {
@@ -219,8 +250,14 @@ class AddWizardViewModel @Inject constructor(
       AddWizardScreen.Welcome -> welcomeNextStep()
       is AddWizardScreen.NetworkSelection -> networkSelectionNextStep()
       AddWizardScreen.Configuration -> {
-        updateState { it.copy(processing = true) }
-        configurationStateHolder.handleEvent(EspConfigurationEvent.Start)
+        if (!hasWiFiConnection()) {
+          updateState { it.navigateTo(screen = AddWizardScreen.Message.NoWifi) }
+        } else if (!hasLocationEnabled()) {
+          updateState { it.navigateTo(screen = AddWizardScreen.Message.LocationDisabled) }
+        } else {
+          configurationStateHolder.handleEvent(Start)
+          updateState { it.copy(processing = true) }
+        }
       }
 
       is AddWizardScreen.Message, is AddWizardScreen.Success -> sendEvent(AddWizardViewEvent.Close)
@@ -231,7 +268,7 @@ class AddWizardViewModel @Inject constructor(
     if (step !is AddWizardScreen.Configuration || configurationStateHolder.isInactive) {
       sendEvent(AddWizardViewEvent.Close)
     } else {
-      configurationStateHolder.handleEvent(EspConfigurationEvent.Cancel)
+      configurationStateHolder.handleEvent(Close)
     }
   }
 
@@ -243,7 +280,7 @@ class AddWizardViewModel @Inject constructor(
 
   override fun onWiFiListCancel() {
     if (currentState().screen is AddWizardScreen.Configuration) {
-      configurationStateHolder.handleEvent(EspConfigurationEvent.NetworkNotFound)
+      configurationStateHolder.handleEvent(NetworkNotFound)
     }
     updateState { it.copy(scannerDialogState = null) }
   }
@@ -252,9 +289,9 @@ class AddWizardViewModel @Inject constructor(
     val state = currentState()
     if (state.screen is AddWizardScreen.Configuration) {
       if (state.scannerDialogState?.selected != null) {
-        configurationStateHolder.handleEvent(EspConfigurationEvent.NetworkFound(state.scannerDialogState.selected))
+        configurationStateHolder.handleEvent(NetworkFound(state.scannerDialogState.selected))
       } else {
-        configurationStateHolder.handleEvent(EspConfigurationEvent.NetworkNotFound)
+        configurationStateHolder.handleEvent(NetworkNotFound)
       }
     }
 
@@ -305,8 +342,12 @@ class AddWizardViewModel @Inject constructor(
     if (configurationStateHolder.isInactive) {
       updateState { it.back() }
     } else {
-      configurationStateHolder.handleEvent(event = EspConfigurationEvent.Back)
+      configurationStateHolder.handleEvent(event = Back)
     }
+  }
+
+  override fun updateProgress(progress: Float, descriptionLabel: LocalizedString?) {
+    updateState { it.copy(processingProgress = progress, processingProgressLabel = descriptionLabel) }
   }
 
   override fun checkRegistration() {
@@ -318,9 +359,9 @@ class AddWizardViewModel @Inject constructor(
       }
 
       when (result) {
-        CheckRegistrationEnabledUseCase.Result.ENABLED -> configurationStateHolder.handleEvent(EspConfigurationEvent.RegistrationEnabled)
-        CheckRegistrationEnabledUseCase.Result.DISABLED -> configurationStateHolder.handleEvent(EspConfigurationEvent.RegistrationDisabled)
-        CheckRegistrationEnabledUseCase.Result.TIMEOUT -> configurationStateHolder.handleEvent(EspConfigurationEvent.RegistrationUnknown)
+        CheckRegistrationEnabledUseCase.Result.ENABLED -> configurationStateHolder.handleEvent(RegistrationEnabled)
+        CheckRegistrationEnabledUseCase.Result.DISABLED -> configurationStateHolder.handleEvent(RegistrationDisabled)
+        CheckRegistrationEnabledUseCase.Result.TIMEOUT -> configurationStateHolder.handleEvent(RegistrationUnknown)
       }
     }
   }
@@ -335,8 +376,8 @@ class AddWizardViewModel @Inject constructor(
     currentJob = viewModelScope.launch {
       val result = withContext(Dispatchers.IO) { enableRegistrationUseCase() }
       when (result) {
-        EnableRegistrationUseCase.Result.SUCCESS -> configurationStateHolder.handleEvent(EspConfigurationEvent.RegistrationActivated)
-        else -> configurationStateHolder.handleEvent(EspConfigurationEvent.RegistrationNotActivated)
+        EnableRegistrationUseCase.Result.SUCCESS -> configurationStateHolder.handleEvent(RegistrationActivated)
+        else -> configurationStateHolder.handleEvent(RegistrationNotActivated)
       }
     }
   }
@@ -345,17 +386,10 @@ class AddWizardViewModel @Inject constructor(
     currentJob = viewModelScope.launch {
       val result = withContext(Dispatchers.IO) { findEspSsidUseCase() }
       when (result) {
-        is FindEspSsidUseCase.Result.Cached ->
-          configurationStateHolder.handleEvent(EspConfigurationEvent.NetworkScanDisabled(result.ssids))
-
-        FindEspSsidUseCase.Result.Empty ->
-          configurationStateHolder.handleEvent(EspConfigurationEvent.NetworkNotFound)
-
-        is FindEspSsidUseCase.Result.Multiple ->
-          configurationStateHolder.handleEvent(EspConfigurationEvent.MultipleNetworksFound(result.ssids))
-
-        is FindEspSsidUseCase.Result.Single ->
-          configurationStateHolder.handleEvent(EspConfigurationEvent.NetworkFound(result.ssid))
+        is FindEspSsidUseCase.Result.Cached -> configurationStateHolder.handleEvent(NetworkScanDisabled(result.ssids))
+        FindEspSsidUseCase.Result.Empty -> configurationStateHolder.handleEvent(NetworkNotFound)
+        is FindEspSsidUseCase.Result.Multiple -> configurationStateHolder.handleEvent(MultipleNetworksFound(result.ssids))
+        is FindEspSsidUseCase.Result.Single -> configurationStateHolder.handleEvent(NetworkFound(result.ssid))
       }
     }
   }
@@ -382,7 +416,7 @@ class AddWizardViewModel @Inject constructor(
     val ssid = state.networkSelectionState?.networkName
     val password = state.networkSelectionState?.networkPassword
     if (ssid == null || password == null) {
-      configurationStateHolder.handleEvent(EspConfigurationEvent.EspConfigurationFailure(EspConfigurationError.Wifi))
+      configurationStateHolder.handleEvent(EspConfigurationFailure(EspConfigurationError.Wifi))
       return
     }
 
@@ -390,22 +424,51 @@ class AddWizardViewModel @Inject constructor(
       val result = withContext(Dispatchers.IO) { configureEspUseCase(ConfigureEspUseCase.InputData(ssid, password)) }
       when (result) {
         ConfigureEspUseCase.Result.ConnectionError ->
-          configurationStateHolder.handleEvent(EspConfigurationEvent.EspConfigurationFailure(EspConfigurationError.Communication))
+          configurationStateHolder.handleEvent(EspConfigurationFailure(EspConfigurationError.Communication))
 
         ConfigureEspUseCase.Result.Failed ->
-          configurationStateHolder.handleEvent(EspConfigurationEvent.EspConfigurationFailure(EspConfigurationError.Configuration))
+          configurationStateHolder.handleEvent(EspConfigurationFailure(EspConfigurationError.Configuration))
 
         ConfigureEspUseCase.Result.Incompatible ->
-          configurationStateHolder.handleEvent(EspConfigurationEvent.EspConfigurationFailure(EspConfigurationError.Compatibility))
+          configurationStateHolder.handleEvent(EspConfigurationFailure(EspConfigurationError.Compatibility))
 
         ConfigureEspUseCase.Result.Timeout ->
-          configurationStateHolder.handleEvent(EspConfigurationEvent.EspConfigurationFailure(EspConfigurationError.ConfigureTimeout))
+          configurationStateHolder.handleEvent(EspConfigurationFailure(EspConfigurationError.ConfigureTimeout))
+
+        ConfigureEspUseCase.Result.CredentialsNeeded ->
+          configurationStateHolder.handleEvent(CredentialsNeeded)
+
+        ConfigureEspUseCase.Result.SetupNeeded ->
+          configurationStateHolder.handleEvent(SetupNeeded)
+
+        ConfigureEspUseCase.Result.TemporarilyLocked ->
+          configurationStateHolder.handleEvent(EspConfigurationFailure(EspConfigurationError.TemporarilyLocked))
 
         is ConfigureEspUseCase.Result.Success -> {
           updateState { it.copy(espConfigResult = result.result) }
-          configurationStateHolder.handleEvent(EspConfigurationEvent.EspConfigured)
+          configurationStateHolder.handleEvent(EspConfigured)
         }
       }
+    }
+  }
+
+  override fun configurePassword() {
+    updateState {
+      it.copy(
+        setPasswordState = SetPasswordState(
+          ssid = currentWifiNetworkInfoProvider.provide()?.ssid
+        )
+      )
+    }
+  }
+
+  override fun providePassword() {
+    updateState {
+      it.copy(
+        providePasswordState = ProvidePasswordState(
+          ssid = currentWifiNetworkInfoProvider.provide()?.ssid
+        )
+      )
     }
   }
 
@@ -415,9 +478,9 @@ class AddWizardViewModel @Inject constructor(
       val result = withContext(Dispatchers.IO) { reconnectToInternetUseCase(currentState().networkId) }
 
       when (result) {
-        ConnectResult.SUCCESS -> configurationStateHolder.handleEvent(EspConfigurationEvent.Reconnected)
+        ConnectResult.SUCCESS -> configurationStateHolder.handleEvent(Reconnected)
         ConnectResult.FAILURE,
-        ConnectResult.TIMEOUT -> configurationStateHolder.handleEvent(EspConfigurationEvent.ReconnectTimeout)
+        ConnectResult.TIMEOUT -> configurationStateHolder.handleEvent(ReconnectTimeout)
       }
     }
   }
@@ -447,7 +510,7 @@ class AddWizardViewModel @Inject constructor(
           currentJob?.cancelAndJoin()
         }
       }
-      configurationStateHolder.handleEvent(EspConfigurationEvent.Canceled)
+      configurationStateHolder.handleEvent(Canceled)
     }
   }
 
@@ -457,6 +520,14 @@ class AddWizardViewModel @Inject constructor(
 
   override fun back() {
     updateState { it.back().copy(processing = false, canceling = false) }
+  }
+
+  override fun reinitialize() {
+    updateState { it.copy(processing = false, canceling = false) }
+  }
+
+  override fun setupEspConfiguration() {
+    espConfigurationSession.reset()
   }
 
   private fun hasWiFiConnection(): Boolean {
@@ -514,6 +585,82 @@ class AddWizardViewModel @Inject constructor(
   override fun onAgain() {
     onBackPressed()
   }
+
+  override fun closeProvidePasswordDialog() {
+    updateState { it.copy(providePasswordState = null) }
+    configurationStateHolder.handleEvent(Cancel)
+  }
+
+  override fun onPasswordProvided(password: String) {
+    updateState { it.copy(providePasswordState = it.providePasswordState?.copy(error = null, processing = true)) }
+
+    currentJob = viewModelScope.launch {
+      val result = withContext(Dispatchers.IO) { authorizeEspUseCase(password) }
+
+      when (result) {
+        AuthorizeEspUseCase.Result.SUCCESS -> {
+          updateState { it.copy(providePasswordState = null) }
+          configurationStateHolder.handleEvent(PasswordProvided)
+        }
+
+        AuthorizeEspUseCase.Result.FAILURE_WRONG_PASSWORD ->
+          updateState {
+            it.copy(
+              providePasswordState = it.providePasswordState?.copy(
+                error = ProvidePasswordState.Error.INVALID_CREDENTIALS,
+                processing = false
+              )
+            )
+          }
+
+        AuthorizeEspUseCase.Result.FAILURE_UNKNOWN ->
+          updateState {
+            it.copy(
+              providePasswordState = it.providePasswordState?.copy(
+                error = ProvidePasswordState.Error.UNKNOWN_ERROR,
+                processing = false
+              )
+            )
+          }
+
+        AuthorizeEspUseCase.Result.TEMPORARILY_LOCKED -> {
+          updateState { it.copy(providePasswordState = null) }
+          configurationStateHolder.handleEvent(EspConfigurationFailure(EspConfigurationError.TemporarilyLocked))
+        }
+      }
+    }
+  }
+
+  override fun closeSetPasswordDialog() {
+    updateState { it.copy(setPasswordState = null) }
+    configurationStateHolder.handleEvent(Cancel)
+  }
+
+  override fun onPasswordSet(password: String, repeatPassword: String) {
+    if (password.isAcceptablePassword() && password == repeatPassword) {
+      updateState { it.copy(setPasswordState = it.setPasswordState?.copy(processing = true)) }
+      currentJob = viewModelScope.launch {
+        val result = withContext(Dispatchers.IO) { createEspPasswordUseCase(password) }
+
+        when (result) {
+          CreateEspPasswordUseCase.Result.SUCCESS -> {
+            updateState { it.copy(setPasswordState = null) }
+            configurationStateHolder.handleEvent(PasswordProvided)
+          }
+
+          CreateEspPasswordUseCase.Result.FAILURE ->
+            updateState { it.copy(setPasswordState = it.setPasswordState?.copy(error = true, processing = false)) }
+
+          CreateEspPasswordUseCase.Result.TEMPORARILY_LOCKED -> {
+            updateState { it.copy(setPasswordState = null) }
+            configurationStateHolder.handleEvent(EspConfigurationFailure(EspConfigurationError.TemporarilyLocked))
+          }
+        }
+      }
+    } else {
+      updateState { it.copy(setPasswordState = it.setPasswordState?.copy(error = true)) }
+    }
+  }
 }
 
 sealed interface AddWizardViewEvent : ViewEvent {
@@ -526,12 +673,16 @@ sealed interface AddWizardViewEvent : ViewEvent {
 data class AddWizardViewModelState(
   val screens: List<AddWizardScreen> = emptyList(),
   val processing: Boolean = false,
+  val processingProgress: Float = 0f,
+  val processingProgressLabel: LocalizedString? = null,
   val networkSelectionState: AddWizardNetworkSelectionState? = null,
   val scannerDialogState: WiFiListDialogState? = null,
   val espConfigResult: EspConfigResult? = null,
   val showCloudFollowupPopup: Boolean = false,
   val canceling: Boolean = false,
   val networkId: Int? = null,
+  val setPasswordState: SetPasswordState? = null,
+  val providePasswordState: ProvidePasswordState? = null,
   override val authorizationDialogState: AuthorizationDialogState? = null
 ) : AuthorizationModelState() {
 
@@ -566,4 +717,12 @@ data class AddWizardViewModelState(
         addAll(screens.subList(0, screens.size - 1))
       }
     )
+}
+
+private fun String.isAcceptablePassword(): Boolean {
+  val hasLowercase = matches(Regex(".*[a-z].*"))
+  val hasUppercase = matches(Regex(".*[A-Z].*"))
+  val hasDigit = matches(Regex(".*[0-9].*"))
+
+  return hasLowercase && hasUppercase && hasDigit
 }

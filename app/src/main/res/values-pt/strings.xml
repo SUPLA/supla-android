@@ -391,6 +391,7 @@
   <string name="dgf_planned_regeneration_in_progress">A regeneração planeada está em curso.</string>
   <string name="dgf_regeneration_after20h">A regeneração iniciará  após 20 horas de trabalho.</string>
   <string name="incorrect_email_or_password">Erro de morada de emailou de palavra passe</string>
+  <string name="incorrect_password">Senha incorreta</string>
   <string name="channel_name">Nome do canal</string>
   <string name="location_name">Nome da localização</string>
   <string name="overcurrent_warning">A potência foi desligada quando o limiar definido de corrente admissível foi ultrapassado.</string>
@@ -685,4 +686,15 @@
   <string name="add_wizard_add_more">Adicionar mais</string>
   <string name="add_wizard_repeat">Tente novamente</string>
   <string name="add_wizard_password_clarification">O registro de novos dispositivos na Nuvem está desativado. Ative-o manualmente ou forneça a senha da sua conta para que o assistente o ative automaticamente durante o registro de novos dispositivos.</string>
+  <string name="add_wizard_password_rules">A palavra-passe deve ter pelo menos 8 caracteres e conter pelo menos uma letra maiúscula, uma letra minúscula e um número.</string>
+  <string name="add_wizard_password_set_title">Definir senha do dispositivo</string>
+  <string name="add_wizard_password_new_label">Nova palavra-passe</string>
+  <string name="add_wizard_password_repeat_label">Repetir palavra-passe</string>
+  <string name="add_wizard_password_enter_title">Senha do dispositivo</string>
+  <string name="add_wizard_device_temporarily_locked">O limite de tentativas de login sem sucesso foi excedido. Por favor, tente novamente mais tarde…</string>
+  <string name="wizard_state_preparing">Preparando o processo…</string>
+  <string name="wizard_state_connecting">Conectando ao dispositivo…</string>
+  <string name="wizard_state_configuring">Configurando o dispositivo…</string>
+  <string name="wizard_state_finishing">Finalização…</string>
+  <string name="add_wizard_password_instruction">Por favor, use a senha usada para o acesso à página web de configuração local.\n\nEsqueceu sua senha? Você pode alterá-la no Supla Cloud ou redefinir o dispositivo para as configurações de fábrica.</string>
 </resources>

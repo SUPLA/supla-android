@@ -406,6 +406,7 @@
   <string name="dgf_regeneration_after20h">Prebieha regenerácia, ktorá bola spustená po 20 h prevádzky.</string>
   <string name="wizard_done_explentations">Ak sa zariadenie v aplikácii nezobrazí, zopakujte postup pridávania znova a prečítajte si „Predchádzajúci status” zobrazený vyššie. Obsahuje informácie, na základe ktorých vieme určiť, prečo sa zariadeniu nepodarilo pripojiť k serveru. Hlásenie “SSID Not Found” znamená, že zadaný názov WiFi siete 2,4 GHz nebol nájdený alebo je sieť mimo dosahu.</string>
   <string name="incorrect_email_or_password">Nesprávna e-mailová adresa alebo heslo</string>
+  <string name="incorrect_password">Nesprávne heslo</string>
   <string name="channel_name">Názov kanála</string>
   <string name="location_name">Názov miesta</string>
   <string name="overcurrent_warning">Napájanie bolo vypnuté po prekročení nastavenej prahovej hodnoty povoleného prúdu.</string>
@@ -696,4 +697,15 @@
   <string name="add_wizard_add_more">Pridať ďalšie</string>
   <string name="add_wizard_repeat">Skúsiť znova</string>
   <string name="add_wizard_password_clarification">Registrácia nových zariadení v Cloude je vypnutá. Povoľte ju manuálne alebo zadajte heslo k vášmu účtu, aby ju sprievodca automaticky povolil počas registrácie nových zariadení.</string>
+  <string name="add_wizard_password_rules">Heslo by malo mať aspoň 8 znakov a obsahovať minimálne jedno veľké, jedno malé písmeno a jednu číslicu.</string>
+  <string name="add_wizard_password_set_title">Nastaviť heslo zariadenia</string>
+  <string name="add_wizard_password_new_label">Nové heslo</string>
+  <string name="add_wizard_password_repeat_label">Zopakovať heslo</string>
+  <string name="add_wizard_password_enter_title">Heslo zariadenia</string>
+  <string name="add_wizard_device_temporarily_locked">Bol prekročený limit neúspešných pokusov o prihlásenie. Skúste to prosím neskôr…</string>
+  <string name="wizard_state_preparing">Príprava procesu…</string>
+  <string name="wizard_state_connecting">Pripájanie k zariadeniu…</string>
+  <string name="wizard_state_configuring">Konfigurácia zariadenia…</string>
+  <string name="wizard_state_finishing">Dokončovanie…</string>
+  <string name="add_wizard_password_instruction">Použite heslo, ktoré bolo použité pre prístup k webovej stránke lokálnej konfigurácie.\n\nZabudli ste heslo? Môžete ho zmeniť na Supla Cloud alebo resetovať zariadenie na výrobné nastavenia.</string>
 </resources>

@@ -1,4 +1,4 @@
-package org.supla.android.data.source.remote.esp
+package org.supla.android.ui.views
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,26 +17,18 @@ package org.supla.android.data.source.remote.esp
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.jsoup.nodes.Document
-import retrofit2.http.FieldMap
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.GET
-import retrofit2.http.POST
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 
-interface EspService {
-
-  @GET("/")
-  suspend fun read(): Document
-
-  @POST("/")
-  @FormUrlEncoded
-  suspend fun store(@FieldMap data: Map<String, String>): Document
-
-  @POST("/setup")
-  @FormUrlEncoded
-  suspend fun setup(@FieldMap data: Map<String, String>): Document
-
-  @POST("/login")
-  @FormUrlEncoded
-  suspend fun login(@FieldMap data: Map<String, String>)
-}
+@Composable
+fun FieldErrorText(text: String, modifier: Modifier = Modifier) =
+  Text(
+    text = text,
+    style = MaterialTheme.typography.titleSmall,
+    color = MaterialTheme.colorScheme.error,
+    modifier = modifier.padding(top = 4.dp)
+  )

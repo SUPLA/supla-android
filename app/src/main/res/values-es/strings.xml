@@ -394,6 +394,7 @@
   <string name="dgf_regeneration_after20h">La regeneración está en curso, iniciada después de 20 horas de funcionamiento.</string>
   <string name="wizard_done_explentations">Si el dispositivo no aparece en la aplicación, repite este procedimiento de adición nuevamente y lee el \"Estado anterior\" que se muestra arriba. Contiene información que permite determinar por qué el dispositivo no pudo conectarse al servidor. El mensaje \"SSID no encontrado\" significa que no se encontró el nombre ingresado de la red WiFi de 2,4 GHz o que la red está fuera del alcance.</string>
   <string name="incorrect_email_or_password">Dirección de correo electrónico o contraseña incorrecta</string>
+  <string name="incorrect_password">Contraseña incorrecta</string>
   <string name="channel_name">Nombre del canal</string>
   <string name="location_name">Nombre de la localización</string>
   <string name="overcurrent_warning">La alimentación se desactivo al superar el umbral establecido de corriente permitida.</string>
@@ -683,4 +684,15 @@
   <string name="add_wizard_add_more">Añadir más</string>
   <string name="add_wizard_repeat">Intenta de nuevo</string>
   <string name="add_wizard_password_clarification">El registro de nuevos dispositivos en la Nube está deshabilitado. Habilítelo manualmente o proporcione la contraseña de su cuenta para que el asistente lo habilite automáticamente durante el registro de nuevos dispositivos.</string>
+  <string name="add_wizard_password_rules">La contraseña debe tener al menos 8 caracteres y contener al menos una letra mayúscula, una letra minúscula y un número.</string>
+  <string name="add_wizard_password_set_title">Establecer contraseña del dispositivo</string>
+  <string name="add_wizard_password_new_label">Nueva contraseña</string>
+  <string name="add_wizard_password_repeat_label">Repetir contraseña</string>
+  <string name="add_wizard_password_enter_title">Contraseña del dispositivo</string>
+  <string name="add_wizard_device_temporarily_locked">Se ha excedido el límite de intentos de inicio de sesión fallidos. Por favor, inténtelo de nuevo más tarde…</string>
+  <string name="wizard_state_preparing">Preparando el proceso…</string>
+  <string name="wizard_state_connecting">Conectando al dispositivo…</string>
+  <string name="wizard_state_configuring">Configurando el dispositivo…</string>
+  <string name="wizard_state_finishing">Finalización…</string>
+  <string name="add_wizard_password_instruction">Por favor, use la contraseña utilizada para el acceso a la página web de configuración local.\n\n¿Olvidaste tu contraseña? Puedes cambiarla en Supla Cloud o restablecer el dispositivo a la configuración de fábrica.</string>
 </resources>
