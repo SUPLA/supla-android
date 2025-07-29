@@ -27,8 +27,8 @@ android {
     minSdk = libs.versions.minSdk.get().toInt()
     targetSdk = libs.versions.targetSdk.get().toInt()
     multiDexEnabled = true
-    versionCode = 290
-    versionName = "25.06"
+    versionCode = 296
+    versionName = "25.07"
 
     ndk {
       moduleName = "suplaclient"
@@ -121,7 +121,7 @@ dependencies {
   implementation(libs.multidex)
   implementation(libs.androidChart)
   implementation(libs.googleMaterial)
-  implementation(libs.coroutines)
+  implementation(libs.coroutines.android)
   implementation(libs.coroutines.rx3)
   implementation(libs.fragmentViewBinding)
 
@@ -179,6 +179,7 @@ dependencies {
   implementation(libs.coil)
   implementation(libs.guava)
   implementation(libs.reorderable)
+  implementation(libs.google.barcode.scanner)
 
   coreLibraryDesugaring(libs.android.tools.desugar)
 

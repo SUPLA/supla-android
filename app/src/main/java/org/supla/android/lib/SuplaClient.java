@@ -54,6 +54,7 @@ import org.supla.android.core.networking.suplaclient.SuplaClientState.Reason.Ver
 import org.supla.android.core.networking.suplaclient.SuplaClientStateHolder;
 import org.supla.android.core.networking.suplacloud.SuplaCloudConfigHolder;
 import org.supla.android.core.notifications.NotificationsHelper;
+import org.supla.android.core.shared.SuplaClientMessageExtensionsKt;
 import org.supla.android.core.storage.EncryptedPreferences;
 import org.supla.android.data.model.general.EntityUpdateResult;
 import org.supla.android.data.source.SceneRepository;
@@ -89,6 +90,8 @@ import org.supla.android.usecases.channelrelation.InsertChannelRelationForProfil
 import org.supla.android.usecases.channelrelation.MarkChannelRelationsAsRemovableUseCase;
 import org.supla.android.usecases.channelstate.UpdateChannelStateUseCase;
 import org.supla.android.usecases.group.UpdateChannelGroupTotalValueUseCase;
+import org.supla.core.shared.data.model.suplaclient.SuplaResultCode;
+import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage;
 
 @SuppressWarnings("unused")
 public class SuplaClient extends Thread implements SuplaClientApi {
@@ -298,11 +301,17 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   private native boolean scGetDeviceConfig(
       long _supla_client, int deviceId, @NotNull EnumSet<FieldType> fieldTypes);
 
-  private void sendMessage(SuplaClientMsg msg) {
+  private void sendMessage(SuplaClientMessage msg) {
     if (canceled()) {
       return;
     }
-    SuplaClientMessageHandler.getGlobalInstance().sendMessage(msg);
+    AndroidSuplaClientMessageHandler.Companion.getGlobalInstance().sendMessage(msg);
+  }
+
+  private void sendMessage(Runnable command) {
+    if (!canceled()) {
+      command.run();
+    }
   }
 
   private void init(SuplaCfg cfg) {
@@ -879,28 +888,17 @@ public class SuplaClient extends Thread implements SuplaClientApi {
       return;
     }
 
-    SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onVersionError);
-    msg.setVersionError(versionError);
-    sendMessage(msg);
-
     cancel();
     suplaClientStateHolder.handleEvent(new SuplaClientEvent.Error(VersionError.INSTANCE));
   }
 
   private void onConnecting() {
     Trace.d(log_tag, "Connecting");
-
-    sendMessage(new SuplaClientMsg(this, SuplaClientMsg.onConnecting));
     suplaClientStateHolder.handleEvent(Connecting.INSTANCE);
   }
 
   private void onConnError(SuplaConnError connError) {
-
     Trace.d(log_tag, connError.codeToString(_context));
-
-    SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onConnError);
-    msg.setConnError(connError);
-    sendMessage(msg);
 
     if (connError.Code == SuplaConst.SUPLA_RESULT_HOST_NOT_FOUND) {
       cancel();
@@ -912,19 +910,15 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   private void onConnected() {
     Trace.d(log_tag, "connected");
     DbH = DbHelper.getInstance(_context);
-
-    sendMessage(new SuplaClientMsg(this, SuplaClientMsg.onConnected));
   }
 
   private void onDisconnected() {
-    sendMessage(new SuplaClientMsg(this, SuplaClientMsg.onDisconnected));
+    Trace.d(log_tag, "disconnected");
   }
 
   private void onRegistering() {
     Trace.d(log_tag, "Registering");
-
     regTryCounter++;
-    sendMessage(new SuplaClientMsg(this, SuplaClientMsg.onRegistering));
   }
 
   private void onRegistered(SuplaRegisterResult registerResult) {
@@ -959,21 +953,16 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     Trace.d(log_tag, "registerResult.ChannelGroupCount=" + registerResult.ChannelGroupCount);
 
     if (registerResult.ChannelCount == 0 && DbH.setChannelsVisible(0, 2)) {
-      onDataChanged();
       updateEventsManager.emitChannelsUpdate();
     }
     if (registerResult.ChannelGroupCount == 0 && DbH.setChannelGroupsVisible(0, 2)) {
-      onDataChanged();
       updateEventsManager.emitGroupsUpdate();
     }
     if (registerResult.SceneCount == 0 && DbH.getSceneRepository().setScenesVisible(0, 2)) {
-      onDataChanged();
       updateEventsManager.emitScenesUpdate();
     }
 
-    SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onRegistered);
-    msg.setRegisterResult(registerResult);
-    sendMessage(msg);
+    sendMessage(SuplaClientMessage.ClientRegistered.INSTANCE);
     suplaClientStateHolder.handleEvent(SuplaClientEvent.Connected.INSTANCE);
 
     NotificationManager notificationManager =
@@ -995,9 +984,8 @@ public class SuplaClient extends Thread implements SuplaClientApi {
       lastRegisterError = registerError;
     }
 
-    SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onRegisterError);
-    msg.setRegisterError(registerError);
-    sendMessage(msg);
+    SuplaResultCode resultCode = SuplaResultCode.Companion.from(registerError.ResultCode);
+    sendMessage(new SuplaClientMessage.ClientRegistrationError(resultCode));
 
     cancel();
     suplaClientStateHolder.handleEvent(
@@ -1005,12 +993,10 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   }
 
   private void onRegistrationEnabled(SuplaRegistrationEnabled registrationEnabled) {
-
     Trace.d(log_tag, "onRegistrationEnabled");
-
-    SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onRegistrationEnabled);
-    msg.setRegistrationEnabled(registrationEnabled);
-    sendMessage(msg);
+    sendMessage(
+        new SuplaClientMessage.RegistrationEnabled(
+            registrationEnabled.ClientTimestamp, registrationEnabled.IODeviceTimestamp));
   }
 
   private void onMinVersionRequired(SuplaMinVersionRequired minVersionRequired) {
@@ -1028,7 +1014,6 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
     if (DbH.updateLocation(location)) {
       Trace.d(log_tag, "Location updated");
-      onDataChanged();
     }
   }
 
@@ -1077,14 +1062,16 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
     if (_DataChanged) {
       Trace.d(log_tag, "Channel updated");
-      onDataChanged(channel.Id, 0);
+      sendMessage(new SuplaClientMessage.ChannelDataChanged(channel.Id, false, false));
+      updateEventsManager.emitChannelUpdate(channel.Id);
     }
   }
 
   private void onChannelGroupValueChanged() {
     List<Integer> groupIds = updateChannelGroupTotalValueUseCase.invoke().blockingGet();
     for (int groupId : groupIds) {
-      onDataChanged(0, groupId);
+      sendMessage(new SuplaClientMessage.GroupDataChanged(groupId));
+      updateEventsManager.emitGroupUpdate(groupId);
     }
   }
 
@@ -1120,7 +1107,8 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
     if (_DataChanged) {
       Trace.d(log_tag, "Channel Group updated");
-      onDataChanged(0, channel_group.Id);
+      sendMessage(new SuplaClientMessage.GroupDataChanged(channel_group.Id));
+      updateEventsManager.emitGroupUpdate(channel_group.Id);
     }
   }
 
@@ -1165,7 +1153,8 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
     if (_DataChanged) {
       Trace.d(log_tag, "Channel Group Relation updated");
-      onDataChanged(0, channelgroup_relation.ChannelGroupID);
+      sendMessage(new SuplaClientMessage.GroupDataChanged(channelgroup_relation.ChannelGroupID));
+      updateEventsManager.emitGroupUpdate(channelgroup_relation.ChannelGroupID);
     }
   }
 
@@ -1188,9 +1177,6 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
     SceneRepository sr = DbH.getSceneRepository();
     if (sr.updateSuplaScene(scene)) {
-      SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onSceneChanged);
-      msg.setSceneId(scene.getId());
-      sendMessage(msg);
       updateEventsManager.emitSceneUpdate(scene.getId());
     }
 
@@ -1220,9 +1206,6 @@ public class SuplaClient extends Thread implements SuplaClientApi {
               + state.getInitiatorName()
               + " EOL: "
               + state.isEol());
-      SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onSceneChanged);
-      msg.setSceneId(state.getSceneId());
-      sendMessage(msg);
       updateEventsManager.emitSceneUpdate(state.getSceneId());
     }
   }
@@ -1243,7 +1226,8 @@ public class SuplaClient extends Thread implements SuplaClientApi {
         channelValueUpdate.Id, channelValueUpdate.AvailabilityStatus.getOnline());
     if (updateChannelValueUseCase.invoke(channelValueUpdate).blockingGet()
         == EntityUpdateResult.UPDATED) {
-      onDataChanged(channelValueUpdate.Id, 0);
+      sendMessage(new SuplaClientMessage.ChannelDataChanged(channelValueUpdate.Id, false, false));
+      updateEventsManager.emitChannelUpdate(channelValueUpdate.Id);
     }
 
     if (channelValueUpdate.EOL) {
@@ -1259,17 +1243,17 @@ public class SuplaClient extends Thread implements SuplaClientApi {
             .blockingGet();
 
     if (result.getResult() == EntityUpdateResult.UPDATED) {
-      onDataChanged(channelExtendedValueUpdate.Id, 0, true, result.getTimerChanged());
+      sendMessage(
+          new SuplaClientMessage.ChannelDataChanged(
+              channelExtendedValueUpdate.Id, true, result.getTimerChanged()));
+      updateEventsManager.emitChannelUpdate(channelExtendedValueUpdate.Id);
     }
   }
 
   private void onEvent(SuplaEvent event) {
     Trace.d(log_tag, "Supla Event");
-
-    SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onEvent);
-    event.Owner = event.SenderID == _client_id;
-    msg.setEvent(event);
-    sendMessage(msg);
+    sendMessage(
+        SuplaClientMessageExtensionsKt.from(SuplaClientMessage.Companion, event, _client_id));
   }
 
   private void onOAuthTokenRequestResult(SuplaOAuthToken token) {
@@ -1284,27 +1268,17 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     }
 
     suplaCloudConfigHolder.setToken(token);
-
-    SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onOAuthTokenRequestResult);
-    msg.setOAuthToken(token);
-    sendMessage(msg);
+    if (token != null) {
+      sendMessage(SuplaClientMessageExtensionsKt.from(SuplaClientMessage.Companion, token));
+    }
   }
 
   private void onDeviceCalCfgResult(int ChannelId, int Command, int Result, byte[] Data) {
-    SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onCalCfgResult);
-    msg.setChannelId(ChannelId);
-    msg.setCommand(Command);
-    msg.setResult(Result);
-    msg.setData(Data);
-    sendMessage(msg);
+    sendMessage(new SuplaClientMessage.CallConfigResult(ChannelId, Command, Result, Data));
   }
 
   private void onDeviceCalCfgProgressReport(int ChannelId, int Command, short Progress) {
-    SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onCalCfgProgressReport);
-    msg.setChannelId(ChannelId);
-    msg.setCommand(Command);
-    msg.setProgress(Progress);
-    sendMessage(msg);
+    sendMessage(new SuplaClientMessage.CallConfigProgressReport(ChannelId, Command, Progress));
   }
 
   private void onDeviceCalCfgDebugString(String str) {
@@ -1314,160 +1288,100 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   private void onChannelState(SuplaChannelState state) {
     Trace.d(log_tag, "onChannelState channelId: " + state.getChannelId());
     updateChannelStateUseCase.invoke(state).blockingSubscribe();
-    SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onChannelState);
-    msg.setChannelState(state);
-    sendMessage(msg);
+    sendMessage(new SuplaClientMessage.ChannelState(state));
     updateEventsManager.emitChannelUpdate(state.getChannelId());
   }
 
   private void onChannelBasicCfg(SuplaChannelBasicCfg cfg) {
-    SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onChannelBasicCfg);
-    msg.setChannelBasicCfg(cfg);
-    sendMessage(msg);
+    sendMessage(new SuplaClientMessage.ChannelBasicConfig(cfg));
   }
 
   private void onChannelFunctionSetResult(int ChannelID, int Func, int ResultCode) {
-    SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onChannelFunctionSetResult);
-    msg.setCode(ResultCode);
-    msg.setFunc(Func);
-    msg.setChannelId(ChannelID);
-    sendMessage(msg);
+    sendMessage(new SuplaClientMessage.ChannelFunctionSetResult(ChannelID, Func, ResultCode));
   }
 
   private void onChannelCaptionSetResult(int ChannelID, String Caption, int ResultCode) {
-    SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onChannelCaptionSetResult);
-    msg.setCode(ResultCode);
-    msg.setText(Caption);
-    msg.setChannelId(ChannelID);
-    sendMessage(msg);
+    sendMessage(
+        () ->
+            AndroidSuplaClientMessageHandlerKt.sendChannelCaptionSetResult(
+                AndroidSuplaClientMessageHandler.Companion.getGlobalInstance(),
+                ChannelID,
+                Caption,
+                ResultCode));
   }
 
   private void onChannelGroupCaptionSetResult(int ChannelGroupID, String Caption, int ResultCode) {
-    SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onChannelGroupCaptionSetResult);
-    msg.setCode(ResultCode);
-    msg.setText(Caption);
-    msg.setChannelGroupId(ChannelGroupID);
-    sendMessage(msg);
+    Trace.i(
+        log_tag,
+        "onChannelGroupCaptionSetResult("
+            + ChannelGroupID
+            + ", "
+            + Caption
+            + ", "
+            + ResultCode
+            + ")");
   }
 
   private void onLocationCaptionSetResult(int LocationID, String Caption, int ResultCode) {
-    SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onLocationCaptionSetResult);
-    msg.setCode(ResultCode);
-    msg.setText(Caption);
-    msg.setLocationId(LocationID);
-    sendMessage(msg);
+    Trace.i(
+        log_tag,
+        "onLocationCaptionSetResult(" + LocationID + ", " + Caption + ", " + ResultCode + ")");
   }
 
   private void onSceneCaptionSetResult(int SceneID, String Caption, int ResultCode) {
-    SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onSceneCaptionSetResult);
-    msg.setCode(ResultCode);
-    msg.setText(Caption);
-    msg.setSceneId(SceneID);
-    sendMessage(msg);
+    Trace.i(
+        log_tag, "onSceneCaptionSetResult(" + SceneID + ", " + Caption + ", " + ResultCode + ")");
   }
 
   private void onClientsReconnectResult(int ResultCode) {
-    SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onClientsReconnectResult);
-    msg.setCode(ResultCode);
-    sendMessage(msg);
+    Trace.i(log_tag, "onClientReconnectResult(" + ResultCode + ")");
   }
 
   private void onSetRegistrationEnabledResult(int ResultCode) {
-    SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onSetRegistrationEnabledResult);
-    msg.setCode(ResultCode);
-    sendMessage(msg);
+    sendMessage(
+        new SuplaClientMessage.SetRegistrationEnabledResult(
+            SuplaResultCode.Companion.from(ResultCode)));
   }
 
   private void onSuperUserAuthorizationResult(boolean authorized, int code) {
     synchronized (sc_lck) {
       superUserAuthorized = authorized && code == SuplaConst.SUPLA_RESULTCODE_AUTHORIZED;
     }
-
-    SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onSuperuserAuthorizationResult);
-    msg.setSuccess(authorized);
-    msg.setCode(code);
-    sendMessage(msg);
-  }
-
-  private void onDataChanged(
-      int ChannelId, int GroupId, boolean extendedValue, boolean timerValue) {
-
-    SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onDataChanged);
-    msg.setChannelId(ChannelId);
-    msg.setChannelGroupId(GroupId);
-    msg.setExtendedValue(extendedValue);
-    msg.setTimerValue(timerValue);
-
-    sendMessage(msg);
-
-    if (ChannelId != 0) {
-      updateEventsManager.emitChannelUpdate(ChannelId);
-    }
-    if (GroupId != 0) {
-      updateEventsManager.emitGroupUpdate(GroupId);
-    }
-  }
-
-  private void onDataChanged(int ChannelId, int GroupId) {
-    onDataChanged(ChannelId, GroupId, false, false);
-  }
-
-  private void onDataChanged() {
-    onDataChanged(0, 0, false, false);
+    sendMessage(
+        new SuplaClientMessage.AuthorizationResult(
+            authorized, SuplaResultCode.Companion.from(code)));
   }
 
   private void onZWaveResetAndClearResult(int result) {
-    SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onZWaveResetAndClearResult);
-    msg.setResult(result);
-    sendMessage(msg);
+    sendMessage(new SuplaClientMessage.ZWaveResetAndClearResult(result));
   }
 
   private void onZWaveAddNodeResult(int result, ZWaveNode node) {
-    SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onZWaveAddNodeResult);
-    msg.setResult(result);
-    msg.setNode(node);
-    sendMessage(msg);
+    sendMessage(new SuplaClientMessage.ZWaveAddNodeResult(result, node));
   }
 
   private void onZWaveRemoveNodeResult(int result, short nodeId) {
-    SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onZWaveRemoveNodeResult);
-    msg.setResult(result);
-    msg.setNodeId(nodeId);
-    sendMessage(msg);
+    sendMessage(new SuplaClientMessage.ZWaveRemoveNodeResult(result, nodeId));
   }
 
   private void onZWaveGetNodeListResult(int result, ZWaveNode node) {
-    SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onZWaveGetNodeListResult);
-    msg.setResult(result);
-    msg.setNode(node);
-    sendMessage(msg);
+    sendMessage(new SuplaClientMessage.ZWaveGetNodeListResult(result, node));
   }
 
   private void onZWaveGetAssignedNodeIdResult(int result, short nodeId) {
-    SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onZWaveGetAssignedNodeIdResult);
-    msg.setResult(result);
-    msg.setNodeId(nodeId);
-    sendMessage(msg);
+    sendMessage(new SuplaClientMessage.ZWaveGetAssignedNodeIdResult(result, nodeId));
   }
 
   private void onZWaveAssignNodeIdResult(int result, short nodeId) {
-    SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onZWaveAssignNodeIdResult);
-    msg.setResult(result);
-    msg.setNodeId(nodeId);
-    sendMessage(msg);
+    sendMessage(new SuplaClientMessage.ZWaveAssignNodeIdResult(result, nodeId));
   }
 
   private void onZWaveWakeUpSettingsReport(int result, ZWaveWakeUpSettings settings) {
-    SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onZWaveWakeUpSettingsReport);
-    msg.setResult(result);
-    msg.setWakeUpSettings(settings);
-    sendMessage(msg);
+    sendMessage(new SuplaClientMessage.ZWaveWakeUpSettingsReport(result, settings));
   }
 
   private void onZWaveSetWakeUpTimeResult(int result) {
-    SuplaClientMsg msg = new SuplaClientMsg(this, SuplaClientMsg.onZWaveSetWakeUpTimeResult);
-    msg.setResult(result);
-    sendMessage(msg);
+    sendMessage(new SuplaClientMessage.ZWaveSetWakeUpTimeResult(result));
   }
 
   private void onChannelConfigUpdateOrResult(SuplaChannelConfig config, ConfigResult result) {
@@ -1575,10 +1489,6 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     if (DbH.setChannelsOffline()) {
       _DataChanged = true;
     }
-
-    if (_DataChanged) {
-      onDataChanged();
-    }
   }
 
   public void run() {
@@ -1589,9 +1499,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
     // After database is ready - set current profile id
     AuthProfileItem currentProfile = profileManager.getCurrentProfile().blockingGet();
-    if (currentProfile != null) {
-      profileIdHolder.setProfileId(currentProfile.getId());
-    }
+    profileIdHolder.setProfileId(currentProfile.getId());
 
     DbH = DbHelper.getInstance(_context);
 

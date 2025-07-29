@@ -19,7 +19,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import android.os.Bundle
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
@@ -35,8 +34,8 @@ import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
 import org.supla.android.features.statedialog.StateDialogViewModel
 import org.supla.android.features.statedialog.View
 import org.supla.android.features.statedialog.handleStateDialogViewEvent
-import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.ui.dialogs.AlertDialog
+import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
 
 private const val ARG_ITEM_BUNDLE = "ARG_ITEM_BUNDLE"
 
@@ -98,10 +97,8 @@ class ThermostatSlavesListFragment : BaseComposeFragment<ThermostatSlavesListVie
     handleStateDialogViewEvent(event)
   }
 
-  override fun onSuplaMessage(message: SuplaClientMsg) {
-    when (message.type) {
-      SuplaClientMsg.onChannelState -> stateDialogViewModel.updateStateDialog(message.channelState)
-    }
+  override fun onSuplaMessage(message: SuplaClientMessage) {
+    (message as? SuplaClientMessage.ChannelState)?.let { stateDialogViewModel.updateStateDialog(it.channelState) }
   }
 
   companion object {

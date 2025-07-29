@@ -78,9 +78,8 @@ fun ThermometersValues(temperatures: List<MeasurementValue>) {
   }
 }
 
-context(RowScope)
 @Composable
-private fun TemperatureAndHumidityCell(temperature: MeasurementValue, weight: Float, small: Boolean, availableWidthDp: Int) =
+private fun RowScope.TemperatureAndHumidityCell(temperature: MeasurementValue, weight: Float, small: Boolean, availableWidthDp: Int) =
   Row(
     modifier = Modifier
       .background(MaterialTheme.colorScheme.surface)

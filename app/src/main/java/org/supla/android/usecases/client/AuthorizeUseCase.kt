@@ -18,14 +18,13 @@ package org.supla.android.usecases.client
  */
 
 import io.reactivex.rxjava3.core.Single
-import org.supla.android.R
 import org.supla.android.core.infrastructure.ThreadHandler
 import org.supla.android.core.networking.suplaclient.SuplaClientMessageHandlerWrapper
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.extensions.guardLet
-import org.supla.android.lib.SuplaClientMessageHandler
-import org.supla.android.lib.SuplaClientMsg
-import org.supla.android.lib.SuplaConst
+import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
+import org.supla.core.shared.infrastructure.messaging.SuplaClientMessageHandler
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -43,9 +42,9 @@ class AuthorizeUseCase @Inject constructor(
       }
 
       var authorized: Boolean? = null
-      var error: Int? = null
+      var error: LocalizedString? = null
 
-      val listener: SuplaClientMessageHandler.OnSuplaClientMessageListener = getAuthorizeMessageListener(
+      val listener: SuplaClientMessageHandler.Listener = getAuthorizeMessageListener(
         onAuthorized = { authorized = true },
         onError = { error = it }
       )
@@ -56,7 +55,7 @@ class AuthorizeUseCase @Inject constructor(
       try {
         waitForResponse(
           authorizedProvider = { authorized },
-          errorProvider = { error }
+          errorMessageProvider = { error }
         )
       } finally {
         suplaClientMessageHandlerWrapper.unregisterMessageListener(listener)
@@ -69,22 +68,14 @@ class AuthorizeUseCase @Inject constructor(
       }
     }
 
-  private fun getAuthorizeMessageListener(onAuthorized: () -> Unit, onError: (Int) -> Unit) =
-    object : SuplaClientMessageHandler.OnSuplaClientMessageListener {
-      override fun onSuplaClientMessageReceived(msg: SuplaClientMsg?) {
-        val (message) = guardLet(msg) { return }
-
-        if (message.type == SuplaClientMsg.onSuperuserAuthorizationResult) {
-          if (message.isSuccess) {
+  private fun getAuthorizeMessageListener(onAuthorized: () -> Unit, onError: (LocalizedString) -> Unit) =
+    object : SuplaClientMessageHandler.Listener {
+      override fun onReceived(message: SuplaClientMessage) {
+        (message as? SuplaClientMessage.AuthorizationResult)?.let {
+          if (it.authorized) {
             onAuthorized()
           } else {
-            onError(
-              when (message.code) {
-                SuplaConst.SUPLA_RESULTCODE_UNAUTHORIZED -> R.string.incorrect_email_or_password
-                SuplaConst.SUPLA_RESULTCODE_TEMPORARILY_UNAVAILABLE -> R.string.status_temporarily_unavailable
-                else -> R.string.status_unknown_err
-              }
-            )
+            onError(it.code.message(false))
           }
 
           // Unregister after first message, so the result doesn't get overwritten.

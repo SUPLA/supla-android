@@ -17,10 +17,10 @@ package org.supla.core.shared.extensions
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.kotlincrypto.endians.LittleEndian
+import org.kotlincrypto.bitops.endian.Endian
 
 fun ByteArray.toShort(first: Int = 0, second: Int = 1): Short {
-  return LittleEndian.bytesToShort(this[first], this[second])
+  return Endian.Little.shortOf(this[first], this[second])
 }
 
 fun ByteArray.toTemperature(first: Int = 0, second: Int = 1): Float {

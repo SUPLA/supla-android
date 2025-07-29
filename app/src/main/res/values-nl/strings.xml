@@ -83,18 +83,16 @@
 
   <string name="add_wizard_is_not_available">De Toevoegen-Wizard is alleen beschikbaar als er op basis van het ingevoerde e-mailadres! een verbinding met de server tot stand is gebracht (Schakel geavanceerde opties in uw accountconfiguratie uit)</string>
 
-  <string name="wizard_step1_txt1">Welkom bij de wizard voor het toevoegen van apparaten, waarmee u op een snelle en eenvoudige manier een nieuw apparaat aan het systeem kunt toevoegen.</string>
-  <string name="wizard_step1_txt3">Druk op <b>Volgende</b> om door te gaan.</string>
+  <string name="add_wizard_step_1_welcome">Welkom bij de wizard voor het toevoegen van apparaten, waarmee u op een snelle en eenvoudige manier een nieuw apparaat aan het systeem kunt toevoegen.</string>
+  <string name="add_wizard_step_1_continue"><![CDATA[Druk op <b>Volgende</b> om door te gaan.]]></string>
   <string name="next">Doorgaan</string>
   <string name="start">OPSTARTEN</string><![CDATA[>
 
 
     ]]>
-  <string name="wizard_remember_passwd">Wachtwoord onthouden</string>
+  <string name="add_wizard_remember_passwd">Wachtwoord onthouden</string>
 
-  <string name="wizard_step3_txt1">Sluit uw uitvoerende apparaat aan op stroom. Het apparaat zou standaard in de configuratiemodus moeten werken, signalering door de status-LED als volgt te knipperen</string>
-  <string name="wizard_step3_txt2">JAls het apparaat niet werkt in de configuratiemodus na het inschakelen van de stroom, houdt u de knop <b>CONFIG</b> minimaal 5 seconden ingedrukt.</string>
-  <string name="wizard_step3_txt3">Druk op de knop <b>START</b> om de configuratie te starten.</string>
+  <string name="add_wizard_step_3_message_3"><![CDATA[Druk op de knop <b>START</b> om de configuratie te starten.]]></string>
 
   <string name="wizard_no_internetwifi">Voordat u begint, maakt u verbinding met internet via een WiFi-netwerk, dat ook door de uitvoerende apparaten wordt gebruikt om verbinding te maken met de server.</string>
   <string name="wizard_wifi_error">Het WiFi-netwerk is uitgeschakeld of de ID of naam kan niet worden gelezen!</string>
@@ -304,7 +302,7 @@
   <string name="wifi_signal_strength">WiFi-signaalsterkte</string>
   <string name="wifi_throttling">Wacht de hierboven weergegeven tijd vanwege de beperkingen van het scannen van wifi-netwerken die worden opgelegd door het Android-systeem.</string>
   <string name="wizard_step1_txt2">Zorg ervoor dat uw mobiele data is uitgeschakeld wanneer u apparaten toevoegt. Anders kan de toevoeging mislukken.</string>
-  <string name="wizard_step2_txt1">Voer de naam en het wachtwoord van uw thuis- of bedrijfs-WIFI-netwerk in waarmee het apparaat verbinding kan maken met de server.</string>
+  <string name="add_wizard_step_2_message">Voer de naam en het wachtwoord van uw thuis- of bedrijfs-WIFI-netwerk in waarmee het apparaat verbinding kan maken met de server.</string>
   <string name="yes">Ja</string>
   <string name="z_wave">Z-wave brug</string>
   <string name="zwave_add_device">Voeg apparaat toe</string>
@@ -682,7 +680,20 @@
   <string name="thermostat_detail_main_thermostat">Hoofdthermostaat</string>
   <string name="thermostat_detail_other_thermostats">Afhankelijke thermostaten</string>
   <string name="thermostat_battery_cover_open">Batterijklep openen</string>
-
   <string name="channel_battery_level">Batterijniveau (%1$d - %2$s): %3$d%%</string>
   <string name="android_auto_action">Actie: %1$s</string>
+  <string name="add_wizard_step_1_qr_info"><![CDATA[Als u een QR-code heeft, gebruik dan de scanner. Druk voor apparaten zonder een QR-code op <b>Volgende</b> om verder te gaan.]]></string>
+  <string name="add_wizard_network_name">Netwerknaam</string>
+  <string name="add_wizard_step_2_search_network">Zoeken naar netwerk</string>
+  <string name="add_wizard_step_3_message_1">Sluit uw apparaat aan op de stroomvoorziening. Het apparaat zou standaard in de configuratiemodus moeten werken, aangegeven door de status-LED die als volgt knippert.</string>
+  <string name="add_wizard_step_3_message_2">Als het apparaat na het inschakelen niet in de configuratiemodus staat, houd dan de CONFIG-knop minstens 5 seconden ingedrukt.</string>
+  <string name="add_wizard_network_scan">Netwerk scannen</string>
+  <string name="select">Selecteren</string>
+  <string name="add_wizard_network_scan_limit_warning">Vanwege Wi-Fi-scanbeperkingen opgelegd door het Android-systeem, was een volgende scan niet mogelijk. De lijst bevat netwerken die zijn gevonden tijdens de vorige scan.</string>
+  <string name="add_wizard_network_scan_in_progress">Scannen…</string>
+  <string name="add_wizard_network_scan_empty">Geen Wi-Fi-netwerken gevonden. Zorg ervoor dat Wi-Fi is ingeschakeld en dat u binnen bereik van een netwerk bent.</string>
+  <string name="add_wizard_network_manual_connect">Ik heb handmatig verbinding gemaakt met het netwerk, ga verder.</string>
+  <string name="add_wizard_add_more">Toevoegen</string>
+  <string name="add_wizard_repeat">Probeer het opnieuw</string>
+  <string name="add_wizard_password_clarification">Registratie van nieuwe apparaten in de Cloud is uitgeschakeld. Schakel deze handmatig in of geef uw accountwachtwoord op zodat de wizard deze automatisch kan inschakelen tijdens de registratie van nieuwe apparaten.</string>
 </resources>

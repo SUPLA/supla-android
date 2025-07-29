@@ -65,6 +65,7 @@ import org.supla.android.ui.views.SeparatorStyle
 import org.supla.android.ui.views.buttons.IconButton
 import org.supla.android.ui.views.buttons.OutlinedButton
 import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.infrastructure.localizedString
 
 data class StateDialogViewState(
   val title: LocalizedString = LocalizedString.Empty,
@@ -337,7 +338,7 @@ private fun Preview_ManyIds() {
       state = StateDialogViewState(
         title = LocalizedString.Constant("Dimmer 1"),
         online = true,
-        subtitle = LocalizedString.WithResourceIntInt(R.string.state_dialog_index, 1, 2),
+        subtitle = localizedString(R.string.state_dialog_index, 1, 2),
         loading = false,
         showArrows = true,
         values = mapOf(

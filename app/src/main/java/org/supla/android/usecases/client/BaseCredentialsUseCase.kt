@@ -17,39 +17,54 @@ package org.supla.android.usecases.client
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import androidx.annotation.StringRes
 import org.supla.android.R
+import org.supla.android.Trace
 import org.supla.android.core.infrastructure.ThreadHandler
+import org.supla.android.extensions.TAG
 import org.supla.android.extensions.ifLet
+import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.infrastructure.localizedString
 
 private const val WAIT_TIME_MS: Long = 1000
 
 open class BaseCredentialsUseCase(private val threadHandler: ThreadHandler) {
-  protected fun waitForResponse(authorizedProvider: () -> Boolean?, errorProvider: () -> Int?) {
+  protected fun waitForResponse(authorizedProvider: () -> Boolean?, errorMessageProvider: () -> LocalizedString?) {
     try {
       for (i in 0 until 10) {
         val authorized = authorizedProvider()
-        val error = errorProvider()
+        val errorMessage = errorMessageProvider()
 
         ifLet(authorized) { _ ->
           return
         }
-        ifLet(error) { (error) ->
-          throw AuthorizationException(error)
+        ifLet(errorMessage) { (error) ->
+          throw AuthorizationException.WithLocalizedString(error)
         }
 
         threadHandler.sleep(WAIT_TIME_MS)
       }
     } catch (exception: InterruptedException) {
+      Trace.e(TAG, "Awaiting for response failed", exception)
       // Because of some reasons the process should stop so escape from the method
       return
     } catch (exception: AuthorizationException) {
       throw exception // just rethrow it
     } catch (exception: Exception) {
-      throw AuthorizationException(R.string.status_unknown_err)
+      Trace.e(TAG, "Awaiting for response failed", exception)
+      throw AuthorizationException.WithResource(R.string.status_unknown_err)
     }
 
-    throw AuthorizationException(R.string.time_exceeded)
+    throw AuthorizationException.WithResource(R.string.time_exceeded)
   }
 }
 
-data class AuthorizationException(val messageId: Int?) : Exception()
+sealed class AuthorizationException : Exception() {
+  abstract val localizedErrorMessage: LocalizedString
+
+  data class WithResource(@StringRes private val resourceId: Int) : AuthorizationException() {
+    override val localizedErrorMessage: LocalizedString = localizedString(resourceId)
+  }
+
+  data class WithLocalizedString(override val localizedErrorMessage: LocalizedString) : AuthorizationException()
+}

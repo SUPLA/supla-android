@@ -20,13 +20,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
 import androidx.viewpager2.widget.ViewPager2
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
 import org.supla.android.core.notifications.NotificationsHelper
-import org.supla.android.core.ui.BackHandler
 import org.supla.android.core.ui.BaseFragment
 import org.supla.android.databinding.FragmentMainBinding
 import org.supla.android.extensions.visibleIf
@@ -36,17 +36,29 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainFragment :
-  BaseFragment<MainViewState, MainViewEvent>(R.layout.fragment_main), BackHandler {
+  BaseFragment<MainViewState, MainViewEvent>(R.layout.fragment_main) {
 
   override val viewModel: MainViewModel by viewModels()
   private val binding by viewBinding(FragmentMainBinding::bind)
   private val pages = ListPage.entries.toTypedArray()
+
+  private val onBackCallback = object : OnBackPressedCallback(true) {
+    override fun handleOnBackPressed() {
+      binding.mainViewPager.setCurrentItem(0, false)
+    }
+  }
 
   @Inject
   lateinit var notificationsHelper: NotificationsHelper
 
   @Inject
   lateinit var bottomBarHeightHandler: BottomBarHeightHandler
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+
+    requireActivity().onBackPressedDispatcher.addCallback(this, onBackCallback)
+  }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
@@ -78,7 +90,9 @@ class MainFragment :
   }
 
   private fun onBottomMenuItemSelected(menuItem: MenuItem): Boolean {
-    binding.mainViewPager.setCurrentItem(pages.map { it.menuId }.indexOf(menuItem.itemId), false)
+    val currentItem = pages.map { it.menuId }.indexOf(menuItem.itemId)
+    binding.mainViewPager.setCurrentItem(currentItem, false)
+    onBackCallback.isEnabled = currentItem != 0
     return true
   }
 
@@ -86,14 +100,5 @@ class MainFragment :
     override fun onPageSelected(position: Int) {
       binding.mainBottomBar.selectedItemId = pages[position].menuId
     }
-  }
-
-  override fun onBackPressed(): Boolean {
-    if (binding.mainViewPager.currentItem != 0) {
-      binding.mainViewPager.setCurrentItem(0, false)
-      return true
-    }
-
-    return false
   }
 }

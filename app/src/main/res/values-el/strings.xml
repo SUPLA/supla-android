@@ -83,15 +83,13 @@
 
   <string name="add_wizard_is_not_available">Ο Οδηγός εγκατάστασης είναι διαθέσιμος μόνο όταν έχει δημιουργηθεί σύνδεση με τον διακομιστή με βάση τη διεύθυνση e-mail που είχατε εισαγάγει! (Απενεργοποιήστε τις σύνθετες επιλογές στη διαμόρφωση του λογαριασμού σας)</string>
 
-  <string name="wizard_step1_txt1">Καλώς ορίσατε στον οδηγό προσθήκης συσκευής, ο οποίος θα σας βοηθήσει να προσθέσετε μια νέα συσκευή στο σύστημα με γρήγορο και εύκολο τρόπο.</string>
-  <string name="wizard_step1_txt3">Για να συνεχίσετε, πατήστε <b>Επόμενο</b>.</string>
+  <string name="add_wizard_step_1_welcome">Καλώς ορίσατε στον οδηγό προσθήκης συσκευής, ο οποίος θα σας βοηθήσει να προσθέσετε μια νέα συσκευή στο σύστημα με γρήγορο και εύκολο τρόπο.</string>
+  <string name="add_wizard_step_1_continue"><![CDATA[Για να συνεχίσετε, πατήστε <b>Επόμενο</b>.]]></string>
   <string name="next">Επόμενο</string>
   <string name="start">ΕΝΑΡΞΗ</string>
-  <string name="wizard_remember_passwd">Απομνημόνευση κωδικού πρόσβασης</string>
+  <string name="add_wizard_remember_passwd">Απομνημόνευση κωδικού πρόσβασης</string>
 
-  <string name="wizard_step3_txt1">Συνδέστε την εκτελεστική συσκευή σας με την παροχή ρεύματος. Η συσκευή έχει ως την προεπιλογή τη λειτουργία διαμόρφωσης και μας ειδοποιεί σχετικά με το να αναβοσβήνει ένα LED λαμπάκι της κατάστασης ως εξής</string>
-  <string name="wizard_step3_txt2">Όταν η συσκευή κατόπιν  ενεργοποίησης δεν εκτελεί τη λειτουργία διαμόρφωσης, κρατήστε πατημένο το κουμπί <b>CONFIG</b> για τουλάχιστον 5 δευτερόλεπτα.</string>
-  <string name="wizard_step3_txt3">Πατήστε το κουμπί <b>START</b> για να ξεκινήσει η διαμόρφωση.</string>
+  <string name="add_wizard_step_3_message_3"><![CDATA[Πατήστε το κουμπί <b>ΕΝΑΡΞΗ</b> για να ξεκινήσει η διαμόρφωση.]]></string>
 
   <string name="wizard_no_internetwifi">Πριν ξεκινήσετε, συνδεθείτε στο Διαδἰκτυο μέσω ενός δικτύου WiFi, το οποίο θα χρησιμοποιηθεί για τη σύνδεση με το διακομιστή και από τις εκτελεστικές συσκευές.</string>
   <string name="wizard_wifi_error">Το δίκτυο WiFi είναι απενεργοποιημένο ή δεν μπορούν να διαβαστούν το αναγνωριστικό ή το όνομα του!</string>
@@ -215,7 +213,7 @@
   <string name="channel_func_valve_percentage">Valve</string>
 
   <string name="channel_caption_heatmeter">Μετρητής θερμότητας</string>
-  <string name="wizard_step2_txt1">Εισαγάγετε το όνομα και τον κωδικό πρόσβασης του δικτύου WiFi οικίας ή εταιρείας μέσω του οποίου η εκτελεστική συσκευή θα μπορεί να δημιουργήσει σύνδεση με τον διακομιστή.</string>
+  <string name="add_wizard_step_2_message">Εισαγάγετε το όνομα και τον κωδικό πρόσβασης του δικτύου WiFi οικίας ή εταιρείας μέσω του οποίου η εκτελεστική συσκευή θα μπορεί να δημιουργήσει σύνδεση με τον διακομιστή.</string>
   <string name="aritmetic_balance_days">Αριθμητικός ισολογισμός - Ημέρες</string>
   <string name="aritmetic_balance_hours">Αριθμητικός ισολογισμός - Ώρες</string>
   <string name="aritmetic_balance_minutes">Αριθμητικός ισολογισμός - Λεπτά</string>
@@ -680,4 +678,18 @@
 
   <string name="channel_battery_level">Επίπεδο μπαταρίας (%1$d - %2$s): %3$d%%</string>
   <string name="android_auto_action">Ενέργεια: %1$s</string>
+  <string name="add_wizard_step_1_qr_info"><![CDATA[Εάν έχετε κωδικό QR, χρησιμοποιήστε τον σαρωτή. Για συσκευές χωρίς κωδικό QR, πατήστε <b>Επόμενο</b> για να συνεχίσετε.]]></string>
+  <string name="add_wizard_network_name">Όνομα δικτύου</string>
+  <string name="add_wizard_step_2_search_network">Αναζήτηση δικτύου</string>
+  <string name="add_wizard_step_3_message_1">Συνδέστε τη συσκευή σας στην παροχή ρεύματος. Η συσκευή θα πρέπει, εξ ορισμού, να λειτουργεί σε λειτουργία διαμόρφωσης, όπως υποδεικνύεται από το LED κατάστασης που αναβοσβήνει ως εξής.</string>
+  <string name="add_wizard_step_3_message_2">Εάν η συσκευή δεν είναι σε λειτουργία διαμόρφωσης μετά την ενεργοποίηση, πατήστε και κρατήστε πατημένο το κουμπί CONFIG για τουλάχιστον 5 δευτερόλεπτα.</string>
+  <string name="add_wizard_network_scan">Σάρωση δικτύου</string>
+  <string name="select">Επιλέξτε</string>
+  <string name="add_wizard_network_scan_limit_warning">Λόγω των περιορισμών σάρωσης Wi-Fi που επιβάλλει το σύστημα Android, δεν ήταν δυνατή μια επακόλουθη σάρωση. Η λίστα περιέχει δίκτυα που βρέθηκαν κατά την προηγούμενη σάρωση.</string>
+  <string name="add_wizard_network_scan_in_progress">Σάρωση…</string>
+  <string name="add_wizard_network_scan_empty">Δεν βρέθηκαν δίκτυα Wi-Fi. Βεβαιωθείτε ότι το Wi-Fi είναι ενεργοποιημένο και ότι βρίσκεστε εντός εμβέλειας ενός δικτύου.</string>
+  <string name="add_wizard_network_manual_connect">Συνδέθηκα χειροκίνητα στο δίκτυο, συνεχίστε.</string>
+  <string name="add_wizard_add_more">Πρόσθεσε κι άλλα</string>
+  <string name="add_wizard_repeat">Προσπάθησε ξανά</string>
+  <string name="add_wizard_password_clarification">Η εγγραφή νέων συσκευών στο Cloud είναι απενεργοποιημένη. Ενεργοποιήστε την χειροκίνητα ή δώστε τον κωδικό πρόσβασης του λογαριασμού σας για να την ενεργοποιήσει αυτόματα ο οδηγός κατά την εγγραφή νέων συσκευών.</string>
 </resources>

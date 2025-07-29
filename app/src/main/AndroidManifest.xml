@@ -54,6 +54,9 @@
     <meta-data
       android:name="androidx.car.app.minCarApiLevel"
       android:value="1" />
+    <meta-data
+      android:name="com.google.mlkit.vision.DEPENDENCIES"
+      android:value="barcode_ui"/>
 
     <receiver
       android:name=".widget.onoff.OnOffWidget"
@@ -99,6 +102,7 @@
       android:name=".MainActivity"
       android:exported="true"
       android:launchMode="singleTop"
+      android:windowSoftInputMode="adjustResize"
       android:screenOrientation="sensorPortrait">
 
       <intent-filter>
@@ -110,11 +114,6 @@
 
     <activity
       android:name=".cfg.CfgActivity"
-      android:launchMode="singleTop"
-      android:screenOrientation="sensorPortrait" />
-
-    <activity
-      android:name=".AddDeviceWizardActivity"
       android:launchMode="singleTop"
       android:screenOrientation="sensorPortrait" />
 

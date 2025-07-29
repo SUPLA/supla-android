@@ -74,34 +74,32 @@
   <string name="rate_no_thanks">Non, merci</string>
   <string name="roller_shutter_calibrating">Calibration…</string>
   <string name="add_wizard_is_not_available">L\'assistant d\'ajout n\'est disponible que lorsqu\'une connexion au serveur a été établie sur la base de l\'adresse électronique saisie ! (Désactivez les options avancées dans la configuration de votre compte)</string>
-  <string name="wizard_step1_txt3">Pour continuer, appuyez sur <b>Continuer</b>.</string>
+  <string name="add_wizard_step_1_continue"><![CDATA[Pour continuer, appuyez sur <b>Continuer</b>.]]></string>
   <string name="add_device">Ajoutez un dispositif</string>
   <string name="advanced_settings">Paramètres avancés</string>
   <string name="wizard_result_param_error">Paramètres d\'entrée erronés!</string>
   <string name="wizard_iodev_data">Données du dispositif</string>
   <string name="email">ADRESSE E-MAIL</string>
-  <string name="wizard_step3_txt2">Si le dispositif est allumé mais ne fonctionne pas en mode de configuration, maintenez la touche <b>CONFIG</b> pendant au moins 5 secondes.</string>
   <string name="wizard_done">Configuration du dispositif est terminée avec succès :)</string>
   <string name="wizard_result_failed">Échec de la configuration!</string>
   <string name="wizard_iodev_laststate">Statut précédent</string>
-  <string name="wizard_step3_txt3">Appuyez sur <b>DÉMARRER</b> pour commencer la configuration.</string>
+  <string name="add_wizard_step_3_message_3"><![CDATA[Appuyez sur <b>DÉMARRER</b> pour commencer la configuration.]]></string>
   <string name="wizard_iodev_name">Nom</string>
   <string name="next">Continuer</string>
   <string name="wizard_addnetwork_error">Impossible d\'ajouter la configuration de réseau WiFi !</string>
   <string name="wizard_result_conn_error">Impossible de se connecter au dispositif!</string>
   <string name="wizard_iodevice_notfound">Aucun dispositif n\'a été trouvé ! Assurez-vous que le dispositif que vous souhaitez configurer fonctionne en mode de configuration, puis essayez à nouveau. IMPORTANT - Certaines versions Android nécessitent l\'activation du GPS pour permettre aux applications de rechercher le WiFi, assurez-vous donc que le GPS est activé.</string>
-  <string name="wizard_step3_txt1">Connectez votre dispositif à l\'alimentation. Par défaut, le dispositif doit fonctionner en mode de configuration, ce qui est indiqué par la LED qui clignote de la manière suivante</string>
   <string name="wizard_wifi_timeout">Le délai d\'attente pour les données sur le réseau WiFi actuel est dépassé! Accédez aux Paramètres Wifi sur Android, choisissez l\'Option Avancés et séléctionnez ensuite « Activez le Wifi automatiquement »</string>
   <string name="wizard_connect_timeout">Le délai d\'attente pour établir une connexion avec le dispositif d\'entrée/sortie est dépassé!</string>
   <string name="wizard_reconnect_timeout">Le délai d\'attente pour revenir au réseau WiFi de base est dépassé!</string>
   <string name="wizard_configure_timeout">Le délai d\'attente pour la configuration du dispositif est dépassé!</string>
   <string name="wizard_scan_timeout">Le délai d\'attente pour la recherche des réseaux WiFi est dépassé!</string>
-  <string name="wizard_remember_passwd">Enregistrer le mot de passe</string>
+  <string name="add_wizard_remember_passwd">Enregistrer le mot de passe</string>
   <string name="wizard_wifi_error">Le réseau WiFi est désactivé ou il est impossible de lire son l\'ID ou nom!</string>
   <string name="wizard_location_error">Pour que l\'assistant de création fonctionne correctement, le service de localisation doit être activé sur cet appareil. Allez dans les paramètres de votre système, puis sélectionnez l\'option « Localisation » et assurez-vous qu\'elle est activée.</string>
   <string name="start">DÉMARRER</string>
   <string name="wizard_result_compat_error">Le dispositif connecté n\'est pas compatible avec cet assistant!</string>
-  <string name="wizard_step1_txt1">Bienvenue dans l\'assistant d\'ajout des dispositifs qui vous aidera d\'une manière simple et rapide à ajouter un nouveau dispositif au système.</string>
+  <string name="add_wizard_step_1_welcome">Bienvenue dans l\'assistant d\'ajout des dispositifs qui vous aidera d\'une manière simple et rapide à ajouter un nouveau dispositif au système.</string>
   <string name="device_reg_request_timeout">Le délai d\'attente pour des informations sur la disponibilité d\'enregistrement des dispositifs est dépassé !</string>
   <string name="wizard_no_internetwifi">Avant de commencer, connectez-vous à Internet par le biais du réseau Wifi qui sera également utilisé par votre actionneur pour vous connecter au serveur.</string>
   <string name="wizard_not_enought_permissions">Cette application n\'a pas d\'autorisations suffisantes. Accédez à la gestion des applications dans les paramètres du système. Ensuite, trouvez l\'application %1$s et activez toutes les autorisations qu\'elle exige.</string>
@@ -205,7 +203,7 @@
   <string name="channel_func_valve_percentage">Valve</string>
 
   <string name="channel_caption_heatmeter">Compteur de chaleur</string>
-  <string name="wizard_step2_txt1">Saisissez le nom et le mot de passe de votre réseau WiFi domestique ou d\'entreprise via lequel l\'appareil exécutif pourra établir une connexion avec le serveur.</string>
+  <string name="add_wizard_step_2_message">Saisissez le nom et le mot de passe de votre réseau WiFi domestique ou d\'entreprise via lequel l\'appareil exécutif pourra établir une connexion avec le serveur.</string>
   <string name="aritmetic_balance_days">Bilan arithmétique - Jours</string>
   <string name="aritmetic_balance_hours">Bilan arithmétique - Heures</string>
   <string name="aritmetic_balance_minutes">Bilan arithmétique - Minutes</string>
@@ -671,4 +669,18 @@
 
   <string name="channel_battery_level">Niveau de batterie (%1$d - %2$s): %3$d%%</string>
   <string name="android_auto_action">Action: %1$s</string>
+  <string name="add_wizard_step_1_qr_info"><![CDATA[Si vous avez un code QR, utilisez le scanner. Pour les appareils sans code QR, appuyez sur <b>Suivant</b> pour continuer.]]></string>
+  <string name="add_wizard_network_name">Nom du réseau</string>
+  <string name="add_wizard_step_2_search_network">Rechercher un réseau</string>
+  <string name="add_wizard_step_3_message_1">Connectez votre appareil à l\'alimentation électrique. L\'appareil devrait, par défaut, fonctionner en mode de configuration, indiqué par le clignotement de la LED d\'état comme suit.</string>
+  <string name="add_wizard_step_3_message_2">Si l\'appareil n\'est pas en mode de configuration après la mise sous tension, appuyez et maintenez le bouton CONFIG enfoncé pendant au moins 5 secondes.</string>
+  <string name="add_wizard_network_scan">Balayage réseau</string>
+  <string name="select">Sélectionner</string>
+  <string name="add_wizard_network_scan_limit_warning">En raison des limitations de balayage Wi-Fi imposées par le système Android, une analyse ultérieure n\'a pas été possible. La liste contient les réseaux trouvés lors de l\'analyse précédente.</string>
+  <string name="add_wizard_network_scan_in_progress">Numérisation…</string>
+  <string name="add_wizard_network_scan_empty">Aucun réseau Wi-Fi trouvé. Assurez-vous que le Wi-Fi est activé et que vous êtes à portée d\'un réseau.</string>
+  <string name="add_wizard_network_manual_connect">Je me suis connecté au réseau manuellement, continuez.</string>
+  <string name="add_wizard_add_more">Ajouter plus</string>
+  <string name="add_wizard_repeat">Réessayez</string>
+  <string name="add_wizard_password_clarification">L\'enregistrement de nouveaux appareils dans le Cloud est désactivé. Activez-le manuellement ou fournissez le mot de passe de votre compte pour que l\'assistant l\'active automatiquement pendant l\'enregistrement de nouveaux appareils.</string>
 </resources>

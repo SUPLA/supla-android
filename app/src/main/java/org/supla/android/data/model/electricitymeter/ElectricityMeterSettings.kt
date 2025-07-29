@@ -26,6 +26,7 @@ import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementT
 import org.supla.android.extensions.TAG
 import org.supla.android.ui.views.spinner.SpinnerItem
 import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.infrastructure.localizedString
 
 @Serializable
 data class ElectricityMeterSettings(
@@ -68,7 +69,7 @@ data class ElectricityMeterSettings(
 
 enum class ElectricityMeterBalanceType(override val label: LocalizedString) : SpinnerItem {
   DEFAULT(LocalizedString.Empty),
-  VECTOR(LocalizedString.WithResource(R.string.details_em_balance_vector)),
-  ARITHMETIC(LocalizedString.WithResource(R.string.details_em_balance_arithmetic)),
-  HOURLY(LocalizedString.WithResource(R.string.details_em_balance_hourly))
+  VECTOR(localizedString(R.string.details_em_balance_vector)),
+  ARITHMETIC(localizedString(R.string.details_em_balance_arithmetic)),
+  HOURLY(localizedString(R.string.details_em_balance_hourly))
 }

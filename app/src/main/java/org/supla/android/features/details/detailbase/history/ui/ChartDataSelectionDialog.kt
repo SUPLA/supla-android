@@ -17,23 +17,15 @@ package org.supla.android.features.details.detailbase.history.ui
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -50,6 +42,7 @@ import org.supla.android.features.details.electricitymeterdetail.history.Electri
 import org.supla.android.ui.dialogs.Dialog
 import org.supla.android.ui.dialogs.DialogButtonsRow
 import org.supla.android.ui.dialogs.DialogHeader
+import org.supla.android.ui.views.Checkbox
 import org.supla.android.ui.views.Separator
 import org.supla.android.ui.views.SeparatorStyle
 import org.supla.android.ui.views.buttons.Button
@@ -113,7 +106,6 @@ private fun ContentSpinner(list: SingleSelectionList<SpinnerItem>, localState: M
   }
 
 @Composable
-@OptIn(ExperimentalLayoutApi::class)
 private fun ContentCheckBoxes(list: MultipleSelectionList<CheckboxItem>, localState: MutableState<ChartDataSelectionDialogState>) {
   if (list.items.count() > 1) {
     list.label?.let {
@@ -129,7 +121,9 @@ private fun ContentCheckBoxes(list: MultipleSelectionList<CheckboxItem>, localSt
         Checkbox(
           checked = list.selected.contains(item),
           enabled = !list.disabled.contains(item),
-          color = colorResource(id = item.color),
+          checkedColor = colorResource(id = item.color),
+          uncheckedColor = colorResource(id = item.color),
+          checkmarkColor = Color.White,
           label = stringResource(id = item.label),
           onCheckedChange = {
             localState.value = if (it) {
@@ -158,33 +152,6 @@ private fun Buttons(onPositiveClick: () -> Unit, onNegativeClick: () -> Unit) =
       modifier = Modifier.weight(1f)
     )
   }
-
-@Composable
-private fun Checkbox(checked: Boolean, enabled: Boolean, color: Color, label: String, onCheckedChange: (Boolean) -> Unit) {
-  Row(verticalAlignment = Alignment.CenterVertically) {
-    Checkbox(
-      checked = checked,
-      enabled = enabled,
-      onCheckedChange = onCheckedChange,
-      colors = CheckboxDefaults.colors(
-        checkedColor = color,
-        uncheckedColor = color
-      )
-    )
-    Text(
-      text = label,
-      style = MaterialTheme.typography.bodyMedium,
-      color = if (enabled) MaterialTheme.colorScheme.onBackground else MaterialTheme.colorScheme.outline,
-      modifier = Modifier
-        .clickable(
-          interactionSource = remember { MutableInteractionSource() },
-          enabled = enabled,
-          indication = ripple(),
-          onClick = { onCheckedChange(!checked) }
-        )
-    )
-  }
-}
 
 @Composable
 @Preview

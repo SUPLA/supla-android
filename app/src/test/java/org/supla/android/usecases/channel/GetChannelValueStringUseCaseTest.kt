@@ -46,6 +46,7 @@ import org.supla.android.usecases.channel.stringvalueprovider.RainSensorValueStr
 import org.supla.android.usecases.channel.stringvalueprovider.SwitchWithMeterValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.ThermometerValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.WeightSensorValueStringProvider
+import org.supla.android.usecases.channel.stringvalueprovider.WindSensorValueStringProvider
 import org.supla.core.shared.data.model.general.SuplaFunction
 
 @RunWith(MockitoJUnitRunner::class)
@@ -89,6 +90,9 @@ class GetChannelValueStringUseCaseTest {
 
   @Mock
   private lateinit var weightSensorValueStringProvider: WeightSensorValueStringProvider
+
+  @Mock
+  private lateinit var windSensorValueStringProvider: WindSensorValueStringProvider
 
   @InjectMocks
   private lateinit var useCase: GetChannelValueStringUseCase

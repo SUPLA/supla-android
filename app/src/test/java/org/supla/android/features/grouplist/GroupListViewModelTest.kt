@@ -32,12 +32,13 @@ import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.features.details.detailbase.standarddetail.DetailPage
 import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
-import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.dialogs.ActionAlertDialogState
 import org.supla.android.ui.lists.ListItem
-import org.supla.android.usecases.channel.*
+import org.supla.android.usecases.channel.ActionException
+import org.supla.android.usecases.channel.ButtonType
+import org.supla.android.usecases.channel.GroupActionUseCase
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
 import org.supla.android.usecases.details.ProvideGroupDetailTypeUseCase
 import org.supla.android.usecases.details.ThermometerDetailType
@@ -350,10 +351,6 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
     every { group.remoteId } returns groupId
     whenever(findGroupByRemoteIdUseCase(groupId)).thenReturn(Maybe.just(group))
 
-    val suplaMessage: SuplaClientMsg = mockk()
-    every { suplaMessage.channelGroupId } returns groupId
-    every { suplaMessage.type } returns SuplaClientMsg.onDataChanged
-
     val list = listOf(mockk<ListItem.ChannelItem>())
     every { list[0].channelBase } returns group
     every { list[0].channelBase = group } answers { }
@@ -361,29 +358,13 @@ class GroupListViewModelTest : BaseViewModelTest<GroupListViewState, GroupListVi
 
     // when
     viewModel.loadGroups()
-    viewModel.onSuplaMessage(suplaMessage)
+    viewModel.updateGroup(groupId)
 
     // then
     Assertions.assertThat(states).containsExactly(GroupListViewState(groups = list))
     Assertions.assertThat(events).isEmpty()
     verifyNoInteractionsExcept(findGroupByRemoteIdUseCase, createProfileGroupsListUseCase)
     io.mockk.verify { list[0].channelBase = group }
-  }
-
-  @Test
-  fun `should do nothing when update is not for group`() {
-    // given
-    val suplaMessage: SuplaClientMsg = mockk()
-    every { suplaMessage.channelGroupId } returns 0
-    every { suplaMessage.type } returns SuplaClientMsg.onDataChanged
-
-    // when
-    viewModel.onSuplaMessage(suplaMessage)
-
-    // then
-    Assertions.assertThat(states).isEmpty()
-    Assertions.assertThat(events).isEmpty()
-    verifyNoInteractionsExcept()
   }
 
   @Test

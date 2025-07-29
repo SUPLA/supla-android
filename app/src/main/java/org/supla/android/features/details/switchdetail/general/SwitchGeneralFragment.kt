@@ -27,10 +27,11 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
 import org.supla.android.core.ui.BaseComposeFragment
 import org.supla.android.core.ui.theme.SuplaTheme
+import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
-import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.ui.dialogs.AlertDialog
 import org.supla.android.usecases.icon.GetChannelIconUseCase
+import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
 import javax.inject.Inject
 
 private const val ARG_ITEM_BUNDLE = "ARG_ITEM_BUNDLE"
@@ -81,12 +82,15 @@ class SwitchGeneralFragment : BaseComposeFragment<SwitchGeneralViewState, Switch
   override fun handleEvents(event: SwitchGeneralViewEvent) {
   }
 
-  override fun onSuplaMessage(message: SuplaClientMsg) {
-    when (message.type) {
-      SuplaClientMsg.onDataChanged -> {
-        if (message.channelId == item.remoteId) {
-          viewModel.loadData(item.remoteId, item.itemType)
-        }
+  override fun onSuplaMessage(message: SuplaClientMessage) {
+    (message as? SuplaClientMessage.ChannelDataChanged)?.let {
+      if (it.channelId == item.remoteId && item.itemType == ItemType.CHANNEL) {
+        viewModel.loadData(item.remoteId, item.itemType)
+      }
+    }
+    (message as? SuplaClientMessage.GroupDataChanged)?.let {
+      if (it.groupId == item.remoteId && item.itemType == ItemType.GROUP) {
+        viewModel.loadData(item.remoteId, item.itemType)
       }
     }
   }

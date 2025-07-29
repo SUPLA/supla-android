@@ -25,14 +25,12 @@ import androidx.fragment.app.viewModels
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
-import org.supla.android.Trace
 import org.supla.android.core.ui.BaseFragment
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.databinding.FragmentComposeBinding
-import org.supla.android.extensions.TAG
 import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
 import org.supla.android.features.details.thermostatdetail.timer.ui.ThermostatTimerDetail
-import org.supla.android.lib.SuplaClientMsg
+import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
 
 private const val ARG_ITEM_BUNDLE = "ARG_ITEM_BUNDLE"
 
@@ -67,11 +65,9 @@ class TimerDetailFragment : BaseFragment<TimerDetailViewState, TimerDetailViewEv
   override fun handleViewState(state: TimerDetailViewState) {
   }
 
-  override fun onSuplaMessage(message: SuplaClientMsg) {
-    super.onSuplaMessage(message)
-    when (message.type) {
-      SuplaClientMsg.onDataChanged -> if (message.channelId == item.remoteId && (message.isTimerValue || !message.isExtendedValue)) {
-        Trace.i(TAG, "Detail got data changed event")
+  override fun onSuplaMessage(message: SuplaClientMessage) {
+    (message as? SuplaClientMessage.ChannelDataChanged)?.let {
+      if (it.channelId == item.remoteId && (it.timerValueChanged || !it.extendedValueChanged)) {
         viewModel.loadData(item.remoteId)
       }
     }

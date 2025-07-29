@@ -75,7 +75,7 @@ class DatabaseModule {
       .let {
         if (!BuildConfig.DEBUG) {
           // Destructive migration should be activated only in production. For development we need to know about all migration failures
-          it.fallbackToDestructiveMigration()
+          it.fallbackToDestructiveMigration(true)
         } else {
           it
         }

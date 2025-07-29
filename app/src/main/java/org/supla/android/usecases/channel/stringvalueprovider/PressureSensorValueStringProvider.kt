@@ -40,7 +40,7 @@ class PressureSensorValueStringProvider @Inject constructor(
     pressureSensorValueProvider.handle(channelWithChildren)
 
   override fun value(channelWithChildren: ChannelWithChildren, valueType: ValueType, withUnit: Boolean): String {
-    val (doubleValue) = guardLet(pressureSensorValueProvider.value(channelWithChildren, valueType) as? Double) {
+    val (doubleValue) = guardLet(pressureSensorValueProvider.value(channelWithChildren, valueType)) {
       return ValuesFormatter.NO_VALUE_TEXT
     }
     if (doubleValue <= PressureSensorValueProvider.UNKNOWN_VALUE) {

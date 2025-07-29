@@ -127,17 +127,15 @@
 
   <string name="add_wizard_is_not_available">Kreator dodawania jest dostępny tylko gdy nawiązano połączenie z serwerem na podstawie wprowadzonego adresu email! (Wyłącz opcje zaawansowane w konfiguracji Twojego konta)</string>
 
-  <string name="wizard_step1_txt1">Witaj w kreatorze dodawania urządzeń, który pomoże Ci w prosty i szybki sposób dodać nowe urządzenie do systemu.</string>
-  <string name="wizard_step1_txt3">Aby kontynuować naciśnij <b>Dalej</b>.</string>
+  <string name="add_wizard_step_1_welcome">Witaj w kreatorze dodawania urządzeń, który pomoże Ci w prosty i szybki sposób dodać nowe urządzenie do systemu.</string>
+  <string name="add_wizard_step_1_continue"><![CDATA[Aby kontynuować naciśnij <b>Dalej</b>.]]></string>
   <string name="next">Dalej</string>
   <string name="start">START</string>
   <string name="turn_on">Włącz</string>
   <string name="turn_off">Wyłącz</string>
-  <string name="wizard_remember_passwd">Zapamiętaj hasło</string>
+  <string name="add_wizard_remember_passwd">Zapamiętaj hasło</string>
 
-  <string name="wizard_step3_txt1">Podłącz Twoje urządzenie wykonawcze do zasilania. Urządzenie powinno domyślnie pracować w trybie konfiguracji, sygnalizując to miganiem diody statusu w następujący sposób</string>
-  <string name="wizard_step3_txt2">Jeżeli urządzenie po włączeniu zasilania nie pracuje w trybie konfiguracji, przytrzymaj wciśnięty przycisk <b>CONFIG</b> przez minimum 5 sekund.</string>
-  <string name="wizard_step3_txt3">Naciśnij przycisk <b>START</b> aby rozpocząć konfigurację.</string>
+  <string name="add_wizard_step_3_message_3"><![CDATA[Naciśnij przycisk <b>START</b> aby rozpocząć konfigurację.]]></string>
 
   <string name="wizard_no_internetwifi">Zanim rozpoczniesz, połącz się z Internetem za pośrednictwem sieci WiFi, która będzie również wykorzystywana przez urządzenia wykonawcze do łączenia się z serwerem.</string>
   <string name="wizard_wifi_error">Sieć WiFi jest wyłączona lub nie można odczytać jej identyfikatora lub nazwy!</string>
@@ -265,7 +263,7 @@
   <string name="valve_warning">Zawór został zamknięty w trybie manualnym lub radiowo. Zanim go otworzysz upewnij się, że nie został zamknięty z powodu zalania. Aby wyłączyć ostrzeżenie otwórz zawór manualnie.</string>
   <string name="yes">Tak</string>
   <string name="no">Nie</string>
-  <string name="exit">Wyjście</string>
+  <string name="exit">Zakończ</string>
   <string name="zwave_select_channel">Wybierz most z-wave, a następnie kanał który chcesz skonfigurować.</string>
   <string name="device_name">Nazwa urządzenia</string>
   <string name="channel_number">Numer kanału</string>
@@ -372,7 +370,7 @@
   <string name="lightsource_warning">Żywotność źródła światła wynosi %1$s</string>
   <string name="uv_warning1">Żywotność promiennika uv wynosi %1$s. Zaplanuj jego wymianę.</string>
   <string name="uv_warning2">Żywotność promiennika uv wynosi %1$s. Wymień promiennik.</string>
-  <string name="wizard_step2_txt1">Wprowadź nazwę oraz hasło Twojej domowej lub firmowej sieci WiFi za pośrednictwem której urządzenie wykonawcze będzie mogło nawiązać połączenie z serwerem.</string>
+  <string name="add_wizard_step_2_message">Wprowadź nazwę oraz hasło Twojej domowej lub firmowej sieci WiFi za pośrednictwem której urządzenie wykonawcze będzie mogło nawiązać połączenie z serwerem.</string>
   <string name="enabling_registration_timeout">Upłynął czas oczekiwania na włączenie rejestracji!</string>
   <string name="wifi_throttling">Z uwagi na limity skanowania sieci WiFi narzucone przez system Android, należy odczekać czas prezentowany powyżej.</string>
   <string name="enter_suplaorg_credentails">Wprowadź Twoje dane logowania do Supla Cloud.</string>
@@ -780,6 +778,21 @@
   <string name="widget_not_supported">Wybrany kanał nie jest wspierany.</string>
   <string name="widget_update_time_long">Aktualizacja: %1$s</string>
   <string name="widget_no_value">Brak wartości</string>
+  <string name="add_wizard_step_1_qr_info"><![CDATA[Jeżeli posiadasz kod QR użyj skanera, dla urządzeń bez kodu QR naciśnij <b>Dalej</b> aby kontynuować.]]></string>
+  <string name="add_wizard_network_name">Nazwa sieci</string>
+  <string name="add_wizard_step_2_search_network">Szukaj sieci</string>
+  <string name="add_wizard_step_3_message_1">Podłącz Twoje urządzenie wykonawcze do zasilania. Urządzenie powinno domyślnie pracować w trybie konfiguracji, sygnalizując to miganie diody statusu w następujący sposób.</string>
+  <string name="add_wizard_step_3_message_2">Jeżeli urządzenie po włączeniu zasilania nie pracuje w trybie konfiguracji, przytrzymaj wciśnięty przycisk CONFIG przez minimum 5 sekund.</string>
+  <string name="add_wizard_wrong_qr_code">Nieprawidłowy kod QR</string>
+  <string name="add_wizard_network_scan">Skanowanie sieci</string>
+  <string name="select">Wybierz</string>
+  <string name="add_wizard_network_scan_limit_warning">Z uwagi na limity skanowania sieci WiFi narzucone przez system Android kolejne skanowanie nie było możliwe. Lista zawiera sieci znalezione podczas poprzedniego skanowania.</string>
+  <string name="add_wizard_network_scan_in_progress">Skanowanie…</string>
+  <string name="add_wizard_network_scan_empty">Nie znaleziono żadnych sieci Wi-Fi. Upewnij się, że Wi-Fi jest włączone i znajdujesz się w zasięgu sieci.</string>
+  <string name="add_wizard_network_manual_connect">Podłączyłem do sieci ręcznie, kontynuuj.</string>
+  <string name="add_wizard_add_more">Dodaj kolejne</string>
+  <string name="add_wizard_repeat">Spróbuj ponownie</string>
+  <string name="add_wizard_password_clarification">Rejestracja nowych urządzeń w Cloud jest wyłączona. Włącz ją ręcznie lub podaj hasło do Twojego konta, aby kreator samodzielnie ją włączył na czas rejestracji nowych urządzeń.</string>
 
   <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
     <item quantity="one">włączone</item>

@@ -166,7 +166,7 @@ class ContainerGeneralDetailViewModel @Inject constructor(
   private fun ChannelChildEntity.toSensorData(channelToLevelMap: Map<Int, Int>?): SensorItemData {
     val caption = getCaptionUseCase(channelDataEntity.shareable)
     val captionWithPercentage = channelToLevelMap?.get(channel.remoteId)?.let {
-      LocalizedString.WithResourceStringInt(R.string.container_caption, caption, it)
+      LocalizedString.WithResourceAndArguments(R.string.container_caption, caption, it)
     }
 
     return SensorItemData(

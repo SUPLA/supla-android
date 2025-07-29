@@ -21,9 +21,11 @@ import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -60,6 +62,8 @@ fun OutlinedButton(
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
   enabled: Boolean = true,
+  colors: ButtonColors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.onBackground),
+  contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
   content: @Composable RowScope.() -> Unit
 ) {
   androidx.compose.material3.OutlinedButton(
@@ -67,9 +71,10 @@ fun OutlinedButton(
     modifier = modifier,
     enabled = enabled,
     border = BorderStroke(1.dp, if (enabled) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline),
+    contentPadding = contentPadding,
     shape = RoundedCornerShape(dimensionResource(id = R.dimen.radius_default)),
     content = content,
-    colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.onBackground)
+    colors = colors
   )
 }
 
@@ -78,7 +83,11 @@ fun OutlinedButton(
 @Composable
 private fun Preview() {
   SuplaTheme {
-    Column(modifier = Modifier.background(MaterialTheme.colorScheme.background).padding(Distance.default)) {
+    Column(
+      modifier = Modifier
+        .background(MaterialTheme.colorScheme.background)
+        .padding(Distance.default)
+    ) {
       OutlinedButton(text = "Label") { }
       OutlinedButton(text = "Label", enabled = false) { }
     }

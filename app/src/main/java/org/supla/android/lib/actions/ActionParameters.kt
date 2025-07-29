@@ -21,6 +21,7 @@ import org.supla.android.R
 import org.supla.android.tools.UsedFromNativeCode
 import org.supla.android.ui.views.spinner.SpinnerItem
 import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.infrastructure.localizedString
 
 @UsedFromNativeCode
 open class ActionParameters(var action: ActionId, var subjectType: SubjectType, var subjectId: Int)
@@ -76,7 +77,7 @@ enum class ActionId(val value: Int, val nameRes: Int?) : SpinnerItem {
   INTERRUPT_AND_EXECUTE(3002, R.string.btn_abort_and_execute);
 
   override val label: LocalizedString
-    get() = nameRes?.let { LocalizedString.WithResource(it) } ?: LocalizedString.Empty
+    get() = nameRes?.let { localizedString(it) } ?: LocalizedString.Empty
 
   companion object {
     fun from(value: Int): ActionId {

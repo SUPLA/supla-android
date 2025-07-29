@@ -83,18 +83,16 @@
 
   <string name="add_wizard_is_not_available">A Hozzáadás varázsló csak akkor érhető el, ha a megadott e-mail cím alapján létrejött a kapcsolat a szerverrel! (A speciális beállítások letiltása a fiókkonfigurációban)</string>
 
-  <string name="wizard_step1_txt1">Üdvözöljük az eszköz hozzáadása varázslóban, amely segít új eszköz gyors és egyszerű hozzáadásával a rendszerhez.</string>
-  <string name="wizard_step1_txt3">A folytatáshoz nyomja meg a <b> Következő </b> gombot.</string>
+  <string name="add_wizard_step_1_welcome">Üdvözöljük az eszköz hozzáadása varázslóban, amely segít új eszköz gyors és egyszerű hozzáadásával a rendszerhez.</string>
+  <string name="add_wizard_step_1_continue"><![CDATA[A folytatáshoz nyomja meg a <b> Következő </b> gombot.]]></string>
   <string name="next">Tovább</string>
   <string name="start">START</string><![CDATA[>
 
 
     ]]>
-  <string name="wizard_remember_passwd">Emlékezzen a jelszavamra</string>
+  <string name="add_wizard_remember_passwd">Emlékezzen a jelszavamra</string>
 
-  <string name="wizard_step3_txt1">Csatlakoztassa a végrehajtó eszközt a hálózathoz. Az eszköznek alapértelmezés szerint konfigurációs módban kell működnie, és az állapotjelző LED villogásával az alábbiak szerint kell jeleznie</string>
-  <string name="wizard_step3_txt2">Ha a készülék a tápellátás bekapcsolása után nem működik konfigurációs módban, tartsa lenyomva a <b> CONFIG </b> gombot legalább 5 másodpercig.</string>
-  <string name="wizard_step3_txt3">A konfiguráció elindításához nyomja meg a <b> START </b> gombot.</string>
+  <string name="add_wizard_step_3_message_3"><![CDATA[A konfiguráció elindításához nyomja meg a <b> START </b> gombot.]]></string>
 
   <string name="wizard_no_internetwifi">Mielőtt elkezdené, csatlakozzon az internethez egy WiFi-hálózaton keresztül, amelyet a végrehajtó eszközök is használnak a szerverhez történő csatlakozáshoz.</string>
   <string name="wizard_wifi_error">A WiFi hálózat ki van kapcsolva, vagy az azonosítója vagy a neve nem olvasható!</string>
@@ -304,7 +302,7 @@
   <string name="wifi_signal_strength">WiFi jelerősség</string>
   <string name="wifi_throttling">Az Android rendszer által a WiFi hálózat keresésének korlátai miatt várjon a fent bemutatott idő alatt.</string>
   <string name="wizard_step1_txt2">Az eszközök hozzáadásakor ellenőrizze, hogy a mobil adat ki van-e kapcsolva. Ellenkező esetben az hozzáadás sikertelen lehet.</string>
-  <string name="wizard_step2_txt1">Írja be annak otthoni vagy vállalati WiFi hálózatának nevét és jelszavát, amelyen keresztül a végrehajtó eszköz képes kapcsolatot létesíteni a szerverrel.</string>
+  <string name="add_wizard_step_2_message">Írja be annak otthoni vagy vállalati WiFi hálózatának nevét és jelszavát, amelyen keresztül a végrehajtó eszköz képes kapcsolatot létesíteni a szerverrel.</string>
   <string name="yes">Igen</string>
   <string name="z_wave">Z-wave híd</string>
   <string name="zwave_add_device">Eszköz hozzáadása</string>
@@ -681,7 +679,20 @@
   <string name="thermostat_detail_main_thermostat">Fő termosztát</string>
   <string name="thermostat_detail_other_thermostats">Mellék termosztátok</string>
   <string name="thermostat_battery_cover_open">Elemfedél nyitva</string>
-
   <string name="channel_battery_level">Az akkumulátor töltöttségi szintje (%1$d - %2$s): %3$d%%</string>
   <string name="android_auto_action">Akció: %1$s</string>
+  <string name="add_wizard_step_1_qr_info"><![CDATA[Ha van QR-kódja, használja a szkennert. QR-kód nélküli eszközök esetén nyomja meg a <b>Tovább</b> gombot a folytatáshoz.]]></string>
+  <string name="add_wizard_network_name">Hálózat neve</string>
+  <string name="add_wizard_step_2_search_network">Hálózat keresése</string>
+  <string name="add_wizard_step_3_message_1">Csatlakoztassa eszközét a tápegységhez. Az eszköznek alapértelmezés szerint konfigurációs módban kell működnie, amit az állapotjelző LED alábbi villogása jelez.</string>
+  <string name="add_wizard_step_3_message_2">Ha a készülék bekapcsolás után nincs konfigurációs módban, nyomja meg és tartsa lenyomva a CONFIG gombot legalább 5 másodpercig.</string>
+  <string name="add_wizard_network_scan">Hálózatkeresés</string>
+  <string name="select">Kiválaszt</string>
+  <string name="add_wizard_network_scan_limit_warning">Az Android rendszer által előírt Wi-Fi szkennelési korlátozások miatt további szkennelés nem lehetséges. A lista az előző szkennelés során talált hálózatokat tartalmazza.</string>
+  <string name="add_wizard_network_scan_in_progress">Beolvasás…</string>
+  <string name="add_wizard_network_scan_empty">Nincsenek Wi-Fi hálózatok. Győződjön meg róla, hogy a Wi-Fi be van kapcsolva, és hatótávolságon belül van egy hálózat.</string>
+  <string name="add_wizard_network_manual_connect">Kézzel csatlakoztam a hálózathoz, folytassa.</string>
+  <string name="add_wizard_add_more">Többet hozzáad</string>
+  <string name="add_wizard_repeat">Próbáld újra</string>
+  <string name="add_wizard_password_clarification">Az új eszközök regisztrációja a felhőben le van tiltva. Engedélyezze manuálisan, vagy adja meg fiókja jelszavát, hogy a varázsló automatikusan engedélyezze az új eszközök regisztrációjának idejére.</string>
 </resources>

@@ -21,6 +21,9 @@ import android.app.NotificationManager
 import android.app.UiModeManager
 import android.appwidget.AppWidgetManager
 import android.content.Context
+import android.location.LocationManager
+import android.net.ConnectivityManager
+import android.net.wifi.WifiManager
 import android.os.PowerManager
 import androidx.biometric.BiometricManager
 import dagger.Module
@@ -35,8 +38,8 @@ import org.supla.android.core.SuplaAppProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.data.formatting.DateFormatter
 import org.supla.android.data.source.ProfileRepository
+import org.supla.android.lib.AndroidSuplaClientMessageHandler
 import org.supla.android.lib.SuplaClient
-import org.supla.android.lib.SuplaClientMessageHandler
 import org.supla.android.lib.singlecall.SingleCall
 import org.supla.android.profile.MultiAccountProfileManager
 import org.supla.android.profile.ProfileIdHolder
@@ -92,24 +95,43 @@ class ApplicationModule {
 
   @Provides
   @Singleton
-  fun provideSuplaClientMessageHandler(): SuplaClientMessageHandler =
-    SuplaClientMessageHandler.getGlobalInstance()
+  fun provideSuplaClientMessageHandler(): AndroidSuplaClientMessageHandler =
+    AndroidSuplaClientMessageHandler.getGlobalInstance()
 
   @Provides
+  @Singleton
   fun provideNotificationManager(@ApplicationContext context: Context) =
     context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
   @Provides
+  @Singleton
   fun provideModeManager(@ApplicationContext context: Context) =
     context.getSystemService(Context.UI_MODE_SERVICE) as UiModeManager
 
   @Provides
+  @Singleton
   fun provideBiometricManager(@ApplicationContext context: Context) =
     BiometricManager.from(context)
 
   @Provides
+  @Singleton
   fun providePowerManager(@ApplicationContext context: Context) =
     context.getSystemService(Context.POWER_SERVICE) as PowerManager
+
+  @Provides
+  @Singleton
+  fun provideWifiManager(@ApplicationContext context: Context): WifiManager =
+    context.getSystemService(WifiManager::class.java)
+
+  @Provides
+  @Singleton
+  fun provideConnectivityManager(@ApplicationContext context: Context): ConnectivityManager =
+    context.getSystemService(ConnectivityManager::class.java)
+
+  @Provides
+  @Singleton
+  fun provideLocationManager(@ApplicationContext context: Context): LocationManager =
+    context.getSystemService(LocationManager::class.java)
 
   @Provides
   @Singleton

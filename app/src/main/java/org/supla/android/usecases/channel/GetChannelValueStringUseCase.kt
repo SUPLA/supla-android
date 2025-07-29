@@ -35,6 +35,7 @@ import org.supla.android.usecases.channel.stringvalueprovider.RainSensorValueStr
 import org.supla.android.usecases.channel.stringvalueprovider.SwitchWithMeterValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.ThermometerValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.WeightSensorValueStringProvider
+import org.supla.android.usecases.channel.stringvalueprovider.WindSensorValueStringProvider
 import org.supla.core.shared.data.model.general.SuplaFunction
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -53,7 +54,8 @@ class GetChannelValueStringUseCase @Inject constructor(
   rainSensorValueStringProvider: RainSensorValueStringProvider,
   humidityValueStringProvider: HumidityValueStringProvider,
   containerValueStringProvider: ContainerValueStringProvider,
-  weightSensorValueStringProvider: WeightSensorValueStringProvider
+  weightSensorValueStringProvider: WeightSensorValueStringProvider,
+  windSensorValueStringProvider: WindSensorValueStringProvider
 ) {
 
   private val providers = listOf(
@@ -70,6 +72,7 @@ class GetChannelValueStringUseCase @Inject constructor(
     humidityValueStringProvider,
     containerValueStringProvider,
     weightSensorValueStringProvider,
+    windSensorValueStringProvider,
     NoValueStringProvider(SuplaFunction.STAIRCASE_TIMER),
     NoValueStringProvider(SuplaFunction.POWER_SWITCH),
     NoValueStringProvider(SuplaFunction.LIGHTSWITCH),
@@ -88,9 +91,11 @@ class GetChannelValueStringUseCase @Inject constructor(
     NoValueStringProvider(SuplaFunction.CONTROLLING_THE_DOOR_LOCK),
     NoValueStringProvider(SuplaFunction.CONTROLLING_THE_GATE),
     NoValueStringProvider(SuplaFunction.CONTROLLING_THE_GARAGE_DOOR),
+    NoValueStringProvider(SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER),
     NoValueStringProvider(SuplaFunction.VALVE_OPEN_CLOSE),
     NoValueStringProvider(SuplaFunction.NO_LIQUID_SENSOR),
-    NoValueStringProvider(SuplaFunction.FLOOD_SENSOR)
+    NoValueStringProvider(SuplaFunction.FLOOD_SENSOR),
+    NoValueStringProvider(SuplaFunction.HOTEL_CARD_SENSOR)
   )
 
   operator fun invoke(channel: ChannelWithChildren, valueType: ValueType = ValueType.FIRST, withUnit: Boolean = true): String {

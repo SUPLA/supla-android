@@ -1,6 +1,5 @@
 package org.supla.android.ui.dialogs.authorize
 
-import android.content.Context
 import io.mockk.every
 import io.mockk.mockk
 import io.reactivex.rxjava3.core.Single
@@ -24,13 +23,14 @@ import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.data.source.local.entity.ProfileEntity
-import org.supla.android.lib.SuplaConst.SUPLA_RESULTCODE_CLIENT_LIMITEXCEEDED
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.dialogs.AuthorizationDialogState
 import org.supla.android.ui.dialogs.AuthorizationReason
 import org.supla.android.usecases.client.AuthorizationException
 import org.supla.android.usecases.client.AuthorizeUseCase
 import org.supla.android.usecases.client.LoginUseCase
+import org.supla.core.shared.infrastructure.LocalizedStringId
+import org.supla.core.shared.infrastructure.localizedString
 
 @RunWith(MockitoJUnitRunner::class)
 class BaseAuthorizationViewModelTest :
@@ -160,7 +160,7 @@ class BaseAuthorizationViewModelTest :
     val userName = "test@supla.org"
     val password = "password"
     whenever(authorizeUseCase.invoke(userName, password))
-      .thenReturn(Single.error(AuthorizationException(R.string.incorrect_email_or_password)))
+      .thenReturn(Single.error(AuthorizationException.WithResource(R.string.incorrect_email_or_password)))
 
     val profile: ProfileEntity = mockk {
       every { email } returns userName
@@ -178,12 +178,9 @@ class BaseAuthorizationViewModelTest :
     viewModel.authorize(userName, password)
 
     // then
-    val context: Context = mockk {
-      every { getString(any()) } answers { "${it.invocation.args.first()}" }
-    }
     assertThat(states)
       .extracting(
-        { it.authorizationDialogState?.error?.let { it(context) }?.toInt() },
+        { it.authorizationDialogState?.error },
         { it.authorizationDialogState?.processing },
         { it.errors.count() },
         { it.authorizationsCount }
@@ -192,7 +189,7 @@ class BaseAuthorizationViewModelTest :
         tuple(null, false, 0, 0),
         tuple(null, true, 0, 0),
         tuple(null, false, 0, 0),
-        tuple(R.string.incorrect_email_or_password, false, 0, 0)
+        tuple(localizedString(R.string.incorrect_email_or_password), false, 0, 0)
       )
     verify(suplaClientProvider, times(2)).provide()
     verify(profileRepository).findActiveProfile()
@@ -225,12 +222,9 @@ class BaseAuthorizationViewModelTest :
     viewModel.authorize(userName, password)
 
     // then
-    val context: Context = mockk {
-      every { getString(any()) } answers { "${it.invocation.args.first()}" }
-    }
     assertThat(states)
       .extracting(
-        { it.authorizationDialogState?.error?.let { it(context) }?.toInt() },
+        { it.authorizationDialogState?.error },
         { it.authorizationDialogState?.processing },
         { it.errors.count() },
         { it.authorizationsCount }
@@ -239,7 +233,7 @@ class BaseAuthorizationViewModelTest :
         tuple(null, false, 0, 0),
         tuple(null, true, 0, 0),
         tuple(null, false, 0, 0),
-        tuple(R.string.status_unknown_err, false, 0, 0)
+        tuple(localizedString(R.string.status_unknown_err), false, 0, 0)
       )
     verify(suplaClientProvider, times(2)).provide()
     verify(profileRepository).findActiveProfile()
@@ -293,15 +287,9 @@ class BaseAuthorizationViewModelTest :
     viewModel.login(userName, password)
 
     // then
-    val context: Context = mockk {
-      every { resources } returns mockk {
-        every { getString(any()) } answers { "${it.invocation.args.first()}" }
-      }
-      every { getString(any()) } answers { "${it.invocation.args.first()}" }
-    }
     assertThat(states)
       .extracting(
-        { it.authorizationDialogState?.error?.let { it(context) }?.toInt() },
+        { it.authorizationDialogState?.error },
         { it.authorizationDialogState?.processing },
         { it.errors.count() },
         { it.authorizationsCount }
@@ -310,7 +298,7 @@ class BaseAuthorizationViewModelTest :
         tuple(null, false, 0, 0),
         tuple(null, true, 0, 0),
         tuple(null, false, 0, 0),
-        tuple(R.string.status_unknown_err, false, 0, 0)
+        tuple(localizedString(R.string.status_unknown_err), false, 0, 0)
       )
     verify(suplaClientProvider, times(2)).provide()
     verify(profileRepository).findActiveProfile()
@@ -324,8 +312,9 @@ class BaseAuthorizationViewModelTest :
     // given
     val userName = "test@supla.org"
     val password = "password"
+    val exception = AuthorizationException.WithLocalizedString(localizedString(LocalizedStringId.RESULT_CODE_CLIENT_LIMIT_EXCEEDED))
     whenever(loginUseCase.invoke(userName, password))
-      .thenReturn(Single.error(AuthorizationException(SUPLA_RESULTCODE_CLIENT_LIMITEXCEEDED)))
+      .thenReturn(Single.error(exception))
 
     val profile: ProfileEntity = mockk {
       every { email } returns userName
@@ -343,14 +332,9 @@ class BaseAuthorizationViewModelTest :
     viewModel.login(userName, password)
 
     // then
-    val context: Context = mockk {
-      every { resources } returns mockk {
-        every { getString(any()) } answers { "${it.invocation.args.first()}" }
-      }
-    }
     assertThat(states)
       .extracting(
-        { it.authorizationDialogState?.error?.let { it(context) }?.toInt() },
+        { it.authorizationDialogState?.error },
         { it.authorizationDialogState?.processing },
         { it.errors.count() },
         { it.authorizationsCount }
@@ -359,7 +343,7 @@ class BaseAuthorizationViewModelTest :
         tuple(null, false, 0, 0),
         tuple(null, true, 0, 0),
         tuple(null, false, 0, 0),
-        tuple(R.string.status_climit_exceded, false, 0, 0)
+        tuple(localizedString(LocalizedStringId.RESULT_CODE_CLIENT_LIMIT_EXCEEDED), false, 0, 0)
       )
     verify(suplaClientProvider, times(2)).provide()
     verify(profileRepository).findActiveProfile()

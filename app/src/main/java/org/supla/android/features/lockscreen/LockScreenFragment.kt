@@ -35,6 +35,7 @@ import org.supla.android.databinding.FragmentComposeBinding
 import org.supla.android.features.createaccount.CreateAccountFragment
 import org.supla.android.navigator.CfgActivityNavigator
 import org.supla.android.navigator.MainNavigator
+import org.supla.android.ui.ToolbarVisibilityController
 import org.supla.android.ui.dialogs.AlertDialog
 import org.supla.android.ui.views.LoadingScrim
 import javax.inject.Inject
@@ -108,7 +109,8 @@ class LockScreenFragment : BaseFragment<LockScreenViewModelState, LockScreenView
     }
   }
 
-  override fun getToolbarVisible(): Boolean = unlockAction.showToolbar
+  override fun getToolbarVisibility(): ToolbarVisibilityController.ToolbarVisibility =
+    ToolbarVisibilityController.ToolbarVisibility(unlockAction.showToolbar)
 
   override fun handleEvents(event: LockScreenViewEvent) {
     when (event) {

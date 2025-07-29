@@ -21,13 +21,13 @@ import android.content.Context
 import androidx.annotation.StringRes
 import org.supla.android.core.shared.invoke
 import org.supla.core.shared.data.model.lists.ChannelIssueItem
-import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.infrastructure.localizedString
 
 fun ChannelIssueItem.Companion.error(@StringRes stringRes: Int): ChannelIssueItem =
-  ChannelIssueItem.Error(LocalizedString.WithResource(stringRes))
+  ChannelIssueItem.Error(localizedString(stringRes))
 
 fun ChannelIssueItem.Companion.warning(@StringRes stringRes: Int): ChannelIssueItem =
-  ChannelIssueItem.Warning(LocalizedString.WithResource(stringRes))
+  ChannelIssueItem.Warning(localizedString(stringRes))
 
 fun List<ChannelIssueItem>.message(context: Context): String =
   flatMap { it.messages }.fold("") { acc, item -> if (acc.isEmpty()) item(context) else "$acc\n${item(context)}" }

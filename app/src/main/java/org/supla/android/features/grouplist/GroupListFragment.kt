@@ -37,6 +37,7 @@ import org.supla.android.features.captionchangedialog.View
 import org.supla.android.navigator.MainNavigator
 import org.supla.android.usecases.channel.ButtonType
 import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -118,6 +119,10 @@ class GroupListFragment : BaseFragment<GroupListViewState, GroupListViewEvent>(R
       binding.groupsList.smoothScrollBy(0, 50.toPx())
       scrollDownOnReload = false
     }
+  }
+
+  override fun onSuplaMessage(message: SuplaClientMessage) {
+    (message as? SuplaClientMessage.GroupDataChanged)?.let { viewModel.updateGroup(it.groupId) }
   }
 
   private fun setupAdapter() {

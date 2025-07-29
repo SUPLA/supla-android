@@ -83,18 +83,16 @@
 
   <string name="add_wizard_is_not_available">Sprievodca pridávaním je dostupný len po nadviazaní spojenia so serverom na základe zadanej e-mailovej adresy! (Vypnite pokročilé možnosti v nastavení svojho účtu)</string>
 
-  <string name="wizard_step1_txt1">Vitajte v sprievodcovi pridaním zariadenia, ktorý vám pomôže rýchlo a jednoducho pridať nové zariadenie do systému.</string>
-  <string name="wizard_step1_txt3">Pokračujte stlačením <b>Ďalej</b>.</string>
+  <string name="add_wizard_step_1_welcome">Vitajte v sprievodcovi pridaním zariadenia, ktorý vám pomôže rýchlo a jednoducho pridať nové zariadenie do systému.</string>
+  <string name="add_wizard_step_1_continue"><![CDATA[Pokračujte stlačením <b>Ďalej</b>.]]></string>
   <string name="next">Ďalej</string>
   <string name="start">ŠTART</string><![CDATA[>
 
 
     ]]>
-  <string name="wizard_remember_passwd">Zapamätať si heslo</string>
+  <string name="add_wizard_remember_passwd">Zapamätať si heslo</string>
 
-  <string name="wizard_step3_txt1">Pripojte vaše vykonávacie zariadenie k el. napätiu. Zariadenie musí byť predvolene spustené v konfiguračnom režime, čo signalizuje blikanie kontrolky stavu nasledujúcim spôsobom</string>
-  <string name="wizard_step3_txt2">Ak zariadenie po pripojení k el. napätiu nie je spustené v konfiguračnom režime, stlačte a na aspoň 5 sekúnd podržte tlačidlo <b>CONFIG</b>.</string>
-  <string name="wizard_step3_txt3">Stlačte tlačidlo <b>ŠTART</b> a začnite konfiguráciu.</string>
+  <string name="add_wizard_step_3_message_3"><![CDATA[Stlačte tlačidlo <b>ŠTART</b> a začnite konfiguráciu.]]></string>
 
   <string name="wizard_no_internetwifi">Predtým, ako začnete, pripojte sa k internetu cez WiFi sieť, ktorá bude používať aj vykonávacie zariadenia na pripojenie k serveru.</string>
   <string name="wizard_wifi_error">WiFi sieť je vypnutá alebo sa nedá načítať jej identifikátor alebo názov!</string>
@@ -218,7 +216,7 @@
   <string name="channel_func_valve_percentage">Valve</string>
 
   <string name="channel_caption_heatmeter">Merač tepla</string>
-  <string name="wizard_step2_txt1">Zadaj názov a heslo svojej domácej alebo firemnej WiFi siete prostredníctvom ktorej bude môcť ovládač nadviazať spojenie so serverom.</string>
+  <string name="add_wizard_step_2_message">Zadaj názov a heslo svojej domácej alebo firemnej WiFi siete prostredníctvom ktorej bude môcť ovládač nadviazať spojenie so serverom.</string>
   <string name="aritmetic_balance_days">Aritmetická bilancia – dni</string>
   <string name="aritmetic_balance_hours">Aritmetická bilancia – hodiny</string>
   <string name="aritmetic_balance_minutes">Aritmetická bilancia – minúty</string>
@@ -682,7 +680,20 @@
   <string name="thermostat_detail_main_thermostat">Hlavný termostat</string>
   <string name="thermostat_detail_other_thermostats">Závislé termostaty</string>
   <string name="thermostat_battery_cover_open">Otvorte kryt batérie</string>
-
   <string name="channel_battery_level">Úroveň batérie (%1$d - %2$s): %3$d%%</string>
   <string name="android_auto_action">Činnosť: %1$s</string>
+  <string name="add_wizard_step_1_qr_info"><![CDATA[Ak máte QR kód, použite skener. Pre zariadenia bez QR kódu stlačte <b>Ďalej</b> pre pokračovanie.]]></string>
+  <string name="add_wizard_network_name">Názov siete</string>
+  <string name="add_wizard_step_2_search_network">Vyhľadať sieť</string>
+  <string name="add_wizard_step_3_message_1">Pripojte zariadenie k napájaniu. Zariadenie by malo štandardne fungovať v konfiguračnom režime, indikovanom blikaním stavovej LED diódy nasledovne.</string>
+  <string name="add_wizard_step_3_message_2">Ak zariadenie po zapnutí nie je v konfiguračnom režime, stlačte a podržte tlačidlo CONFIG po dobu aspoň 5 sekúnd.</string>
+  <string name="add_wizard_network_scan">Skenovanie siete</string>
+  <string name="select">Vybrať</string>
+  <string name="add_wizard_network_scan_limit_warning">Z dôvodu obmedzení skenovania Wi-Fi, ktoré ukladá systém Android, nebolo možné vykonať následné skenovanie. Zoznam obsahuje siete nájdené počas predchádzajúceho skenovania.</string>
+  <string name="add_wizard_network_scan_in_progress">Skenovanie…</string>
+  <string name="add_wizard_network_scan_empty">Nenašli sa žiadne siete Wi-Fi. Uistite sa, že je Wi-Fi zapnuté a že ste v dosahu siete.</string>
+  <string name="add_wizard_network_manual_connect">Pripojil som sa k sieti ručne, pokračujte.</string>
+  <string name="add_wizard_add_more">Pridať ďalšie</string>
+  <string name="add_wizard_repeat">Skúsiť znova</string>
+  <string name="add_wizard_password_clarification">Registrácia nových zariadení v Cloude je vypnutá. Povoľte ju manuálne alebo zadajte heslo k vášmu účtu, aby ju sprievodca automaticky povolil počas registrácie nových zariadení.</string>
 </resources>

@@ -21,18 +21,18 @@ import android.app.Activity
 import android.view.WindowManager
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import org.supla.android.R
 
-fun Activity.setStatusBarColor(colorId: Int, isLight: Boolean) {
+fun Activity.setStatusBarColor(statusBarColorId: Int, navigationBarColorId: Int, isLight: Boolean) {
   val window = window
   window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
   window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-  val color = ResourcesCompat.getColor(resources, colorId, null)
+  val color = ResourcesCompat.getColor(resources, statusBarColorId, null)
   window.statusBarColor = color
-  val navigationBarColor = ResourcesCompat.getColor(resources, R.color.surface, null)
+  val navigationBarColor = ResourcesCompat.getColor(resources, navigationBarColorId, null)
   window.navigationBarColor = navigationBarColor
-  val view = window.decorView
 
-  WindowInsetsControllerCompat(window, view).isAppearanceLightStatusBars = isLight
-  WindowInsetsControllerCompat(window, view).isAppearanceLightNavigationBars = true
+  with(WindowInsetsControllerCompat(window, window.decorView)) {
+    isAppearanceLightStatusBars = isLight
+    isAppearanceLightNavigationBars = true
+  }
 }

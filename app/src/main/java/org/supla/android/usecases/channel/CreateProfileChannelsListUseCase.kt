@@ -53,7 +53,6 @@ import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.usecase.GetCaptionUseCase
 import org.supla.core.shared.usecase.channel.GetChannelIssuesForListUseCase
-import java.util.Collections
 import java.util.LinkedList
 import javax.inject.Inject
 import javax.inject.Named
@@ -106,14 +105,14 @@ class CreateProfileChannelsListUseCase @Inject constructor(
             }
           }
 
-          location?.let { locationEntity ->
+          location.let { locationEntity ->
             if (!locationEntity.isCollapsed(CollapsedFlag.CHANNEL)) {
               channels.add(createChannelListItem(it, childrenMap))
             }
           }
         }
 
-        Collections.unmodifiableList(channels)
+        channels.toList()
       }.toObservable()
 
   private fun createChannelListItem(channelData: ChannelDataEntity, childrenMap: MutableMap<Int, List<ChannelChildEntity?>>) =

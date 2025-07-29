@@ -119,4 +119,34 @@ val LocalizedStringId.resourceId: Int
     LocalizedStringId.CONTAINER_ALARM_LEVEL -> R.string.container_alarm_level
     LocalizedStringId.CONTAINER_INVALID_SENSOR_STATE -> R.string.container_invalid_sensor_state
     LocalizedStringId.CONTAINER_SOUND_ALARM -> R.string.container_sound_alarm
+
+    // Add wizard
+    LocalizedStringId.DEVICE_REGISTRATION_REQUEST_TIMEOUT -> R.string.device_reg_request_timeout
+    LocalizedStringId.ENABLING_REGISTRATION_TIMEOUT -> R.string.enabling_registration_timeout
+    LocalizedStringId.ADD_WIZARD_SCAN_TIMEOUT -> R.string.wizard_scan_timeout
+    LocalizedStringId.ADD_WIZARD_DEVICE_NOT_FOUND -> R.string.wizard_iodevice_notfound
+    LocalizedStringId.ADD_WIZARD_CONNECT_TIMEOUT -> R.string.wizard_connect_timeout
+    LocalizedStringId.ADD_WIZARD_CONFIGURE_TIMEOUT -> R.string.wizard_configure_timeout
+    LocalizedStringId.ADD_WIZARD_WIFI_ERROR -> R.string.wizard_wifi_error
+    LocalizedStringId.ADD_WIZARD_RESULT_NOT_COMPATIBLE -> R.string.wizard_result_compat_error
+    LocalizedStringId.ADD_WIZARD_RESULT_CONNECTION_ERROR -> R.string.wizard_result_conn_error
+    LocalizedStringId.ADD_WIZARD_RESULT_FAILED -> R.string.wizard_result_failed
+    LocalizedStringId.ADD_WIZARD_RECONNECT_TIMEOUT -> R.string.wizard_reconnect_timeout
+
+    LocalizedStringId.CHANNEL_STATE_UPTIME -> R.string.channel_state_uptime
+    LocalizedStringId.LAST_CONNECTION_RESET_CAUSE_UNKNOWN -> R.string.lastconnectionresetcause_unknown
+    LocalizedStringId.LAST_CONNECTION_RESET_CAUSE_ACTIVITY_TIMEOUT -> R.string.lastconnectionresetcause_activity_timeout
+    LocalizedStringId.LAST_CONNECTION_RESET_CAUSE_WIFI_CONNECTION_LOST -> R.string.lastconnectionresetcause_wifi_connection_lost
+    LocalizedStringId.LAST_CONNECTION_RESET_CAUSE_SERVER_CONNECTION_LOST -> R.string.lastconnectionresetcause_server_connection_lost
+
+    LocalizedStringId.RESULT_CODE_TEMPORARILY_UNAVAILABLE -> R.string.status_temporarily_unavailable
+    LocalizedStringId.RESULT_CODE_CLIENT_LIMIT_EXCEEDED -> R.string.status_climit_exceded
+    LocalizedStringId.RESULT_CODE_DEVICE_DISABLED -> R.string.status_device_disabled
+    LocalizedStringId.RESULT_CODE_ACCESS_ID_DISABLED -> R.string.status_accessid_disabled
+    LocalizedStringId.RESULT_CODE_REGISTRATION_DISABLED -> R.string.status_reg_disabled
+    LocalizedStringId.RESULT_CODE_ACCESS_ID_NOT_ASSIGNED -> R.string.status_access_id_not_assigned
+    LocalizedStringId.RESULT_CODE_INACTIVE -> R.string.status_accessid_inactive
+    LocalizedStringId.RESULT_CODE_INCORRECT_EMAIL_OR_PASSWORD -> R.string.incorrect_email_or_password
+    LocalizedStringId.RESULT_CODE_BAD_CREDENTIALS -> R.string.status_bad_credentials
+    LocalizedStringId.RESULT_CODE_UNKNOWN_ERROR -> R.string.status_unknown_err
   }

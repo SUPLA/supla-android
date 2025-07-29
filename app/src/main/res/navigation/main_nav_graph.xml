@@ -110,4 +110,9 @@
     android:id="@+id/android_auto_add_item_fragment"
     android:name="org.supla.android.features.androidauto.add.AddAndroidAutoItemFragment"
     android:label="@string/settings_android_auto_label" />
+
+  <fragment
+    android:id="@+id/add_wizard_fragment"
+    android:name="org.supla.android.features.addwizard.AddWizardFragment"
+    android:label="@string/app_name_lowercased" />
 </navigation>

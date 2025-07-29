@@ -157,7 +157,7 @@ interface ChannelDao {
       AND channel.$COLUMN_VISIBLE > 0
     ORDER BY
       location.${LocationEntity.COLUMN_SORT_ORDER},
-      location.${LocationEntity.COLUMN_CAPTION} COLLATE LOCALIZED,
+      location.${LocationEntity.COLUMN_CAPTION} COLLATE UNICODE,
       channel.${ChannelEntity.COLUMN_POSITION},
       channel.${ChannelEntity.COLUMN_FUNCTION} DESC,
       channel.$COLUMN_CAPTION COLLATE LOCALIZED

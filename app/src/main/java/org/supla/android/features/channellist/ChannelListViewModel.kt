@@ -42,7 +42,6 @@ import org.supla.android.features.details.thermometerdetail.ThermometerDetailFra
 import org.supla.android.features.details.thermostatdetail.ThermostatDetailFragment
 import org.supla.android.features.details.valveDetail.ValveDetailFragment
 import org.supla.android.features.details.windowdetail.WindowDetailFragment
-import org.supla.android.lib.SuplaClientMsg
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaSchedulers
@@ -194,13 +193,7 @@ class ChannelListViewModel @Inject constructor(
     }
   }
 
-  override fun onSuplaMessage(message: SuplaClientMsg) {
-    when (message.type) {
-      SuplaClientMsg.onDataChanged -> updateChannel(message.channelId)
-    }
-  }
-
-  private fun updateChannel(remoteId: Int) {
+  fun updateChannel(remoteId: Int) {
     if (remoteId > 0) {
       findChannelByRemoteIdUseCase(remoteId = remoteId)
         .attachSilent()
@@ -208,7 +201,7 @@ class ChannelListViewModel @Inject constructor(
           onSuccess = { channel ->
             currentState().channels
               ?.filterIsInstance<ListItem.ChannelItem>()
-              ?.first { it.channelBase.remoteId == channel.remoteId }
+              ?.firstOrNull { it.channelBase.remoteId == channel.remoteId }
               ?.channelBase = channel
           },
           onError = defaultErrorHandler("updateChannel($remoteId)")

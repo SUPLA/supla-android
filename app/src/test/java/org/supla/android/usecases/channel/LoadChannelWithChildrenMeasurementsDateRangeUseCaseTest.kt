@@ -130,7 +130,7 @@ class LoadChannelWithChildrenMeasurementsDateRangeUseCaseTest {
   }
 
   @Test
-  fun `should load measurements range when all children have no measurements`() {
+  fun `should load measurements range when all children have no min measurements`() {
     // given
     val remoteId = 1
     val profileId = 321L
@@ -141,6 +141,32 @@ class LoadChannelWithChildrenMeasurementsDateRangeUseCaseTest {
       .thenReturn(Single.error(EmptyResultSetException("")))
     whenever(temperatureLogRepository.findMinTimestamp(3, profileId))
       .thenReturn(Single.error(EmptyResultSetException("")))
+
+    // when
+    val testObserver = useCase.invoke(remoteId, profileId).test()
+
+    // then
+    testObserver.assertComplete()
+    assertThat(testObserver.values()).containsExactly(Optional.empty())
+
+    verify(readChannelWithChildrenUseCase).invoke(remoteId)
+    verify(temperatureAndHumidityLogRepository).findMinTimestamp(2, profileId)
+    verify(temperatureLogRepository).findMinTimestamp(3, profileId)
+    verifyNoMoreInteractions(readChannelWithChildrenUseCase, temperatureAndHumidityLogRepository, temperatureLogRepository)
+  }
+
+  @Test
+  fun `should load measurements range when all children have no max measurements`() {
+    // given
+    val remoteId = 1
+    val profileId = 321L
+
+    val channelWithChildren = mockChannelWithChildren()
+    whenever(readChannelWithChildrenUseCase.invoke(remoteId)).thenReturn(Maybe.just(channelWithChildren))
+    whenever(temperatureAndHumidityLogRepository.findMinTimestamp(2, profileId))
+      .thenReturn(Single.just(1L))
+    whenever(temperatureLogRepository.findMinTimestamp(3, profileId))
+      .thenReturn(Single.just(1L))
     whenever(temperatureAndHumidityLogRepository.findMaxTimestamp(2, profileId))
       .thenReturn(Single.error(EmptyResultSetException("")))
     whenever(temperatureLogRepository.findMaxTimestamp(3, profileId))
@@ -155,8 +181,8 @@ class LoadChannelWithChildrenMeasurementsDateRangeUseCaseTest {
 
     verify(readChannelWithChildrenUseCase).invoke(remoteId)
     verify(temperatureAndHumidityLogRepository).findMinTimestamp(2, profileId)
-    verify(temperatureAndHumidityLogRepository).findMaxTimestamp(2, profileId)
     verify(temperatureLogRepository).findMinTimestamp(3, profileId)
+    verify(temperatureAndHumidityLogRepository).findMaxTimestamp(2, profileId)
     verify(temperatureLogRepository).findMaxTimestamp(3, profileId)
     verifyNoMoreInteractions(readChannelWithChildrenUseCase, temperatureAndHumidityLogRepository, temperatureLogRepository)
   }

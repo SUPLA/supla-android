@@ -59,6 +59,20 @@ class GeneralPurposeMeasurementIconResourceProducer : IconResourceProducer {
       29 -> R.drawable.fnc_gpm_transfer
       30 -> R.drawable.fnc_gpm_voltage_1
       31 -> R.drawable.fnc_gpm_voltage_2
+      32 -> R.drawable.fnc_gpm_no_1
+      33 -> R.drawable.fnc_gpm_no_2
+      34 -> R.drawable.fnc_gpm_no_3
+      35 -> R.drawable.fnc_gpm_no2_1
+      36 -> R.drawable.fnc_gpm_no2_2
+      37 -> R.drawable.fnc_gpm_no2_3
+      38 -> R.drawable.fnc_gpm_o3_1
+      39 -> R.drawable.fnc_gpm_o3_2
+      40 -> R.drawable.fnc_gpm_o3_3
+      41 -> R.drawable.fnc_gpm_co_1
+      42 -> R.drawable.fnc_gpm_co_2
+      43 -> R.drawable.fnc_gpm_co_3
+      44 -> R.drawable.fnc_gpm_cash_1
+      45 -> R.drawable.fnc_gpm_cash_2
       else -> R.drawable.fnc_gpm_5
     }
 }

@@ -23,6 +23,7 @@ import org.supla.android.R
 import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.remote.rest.SuplaCloudService
 import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.infrastructure.localizedString
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -47,7 +48,7 @@ data class OcrPhoto(
     }
 
     data object Error : Value() {
-      override val value: LocalizedString = LocalizedString.WithResource(R.string.counter_photo_error)
+      override val value: LocalizedString = localizedString(R.string.counter_photo_error)
       override val backgroundColor: Int = R.color.error
     }
 

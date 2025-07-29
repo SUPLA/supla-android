@@ -70,14 +70,12 @@
   <string name="rate_no_thanks">Ne, děkuji</string>
   <string name="roller_shutter_calibrating">Kalibrace…</string>
   <string name="add_wizard_is_not_available">Průvodce přidáním je dostupný pouze v případě, že bylo navázáno připojení k serveru na základě zadané e-mailové adresy! (vypněte možnost pokročilé konfigurace účtu)</string>
-  <string name="wizard_step1_txt1">Vítejte v Průvodci přidáním zařízení, který vám pomůže rychle a snadno přidat nové zařízení do vašeho systému.</string>
-  <string name="wizard_step1_txt3">Chcete-li pokračovat, stiskněte tlačítko <b>Další</b>.</string>
+  <string name="add_wizard_step_1_welcome">Vítejte v Průvodci přidáním zařízení, který vám pomůže rychle a snadno přidat nové zařízení do vašeho systému.</string>
+  <string name="add_wizard_step_1_continue"><![CDATA[Chcete-li pokračovat, stiskněte tlačítko <b>Další</b>.]]></string>
   <string name="next">Dále</string>
   <string name="start">START</string>
-  <string name="wizard_remember_passwd">Zapamatujte si heslo</string>
-  <string name="wizard_step3_txt1">Připojte výkonné zařízení k napájení. Přístroj by měl ve výchozím nastavení fungovat v konfiguračním režimu a signalizovat tak, že bliká stavová LED dioda následujícím způsobem</string>
-  <string name="wizard_step3_txt2">Pokud zařízení nepracuje v konfiguračním režimu po zapnutí, držte stisknuté tlačítko <b>CONFIG</b> minimálně po dobu 5 sekund.</string>
-  <string name="wizard_step3_txt3">Stisknutím tlačítka <b>START</b> spustíte konfiguraci.</string>
+  <string name="add_wizard_remember_passwd">Zapamatujte si heslo</string>
+  <string name="add_wizard_step_3_message_3"><![CDATA[Stisknutím tlačítka <b>START</b> spustíte konfiguraci.]]></string>
   <string name="wizard_no_internetwifi">Než začnete, připojte se k síti Internet pomocí WiFi, které budou také využívány výkonávajícími zařízeními pro připojení k serveru</string>
   <string name="wizard_wifi_error">Síť WiFi je vypnuta nebo její ID nebo jméno nelze přečíst!</string>
   <string name="wizard_location_error">Aby průvodce přidáním fungoval správně, musí být v tomto zařízení povolena služba určování polohy. Přejděte do nastavení systému, vyberte možnost "Umístění" a zkontrolujte, zda je povolena.</string>
@@ -204,7 +202,7 @@
 
   <string name="channel_caption_heatmeter">Měřič tepla</string>
   <string name="event_openedclosedthevalve">Otevírání/zavírání ventilu</string>
-  <string name="wizard_step2_txt1">Zadejte název a heslo Vaší domácí nebo firemní WiFi sítě, prostřednictvím kterého bude možné dané zařízení připojit k serveru.</string>
+  <string name="add_wizard_step_2_message">Zadejte název a heslo Vaší domácí nebo firemní WiFi sítě, prostřednictvím kterého bude možné dané zařízení připojit k serveru.</string>
   <string name="aritmetic_balance_days">Aritmetická zová rovnováha - Dny</string>
   <string name="aritmetic_balance_hours">Aritmetická rovnováha - Hodiny</string>
   <string name="aritmetic_balance_minutes">Fázová rovnováha - Minuty</string>
@@ -664,4 +662,18 @@
 
   <string name="channel_battery_level">Stav baterie (%1$d - %2$s): %3$d%%</string>
   <string name="android_auto_action">Akce: %1$s</string>
+  <string name="add_wizard_step_1_qr_info"><![CDATA[Pokud máte QR kód, použijte skener. Pro zařízení bez QR kódu stiskněte <b>Další</b> pro pokračování.]]></string>
+  <string name="add_wizard_network_name">Název sítě</string>
+  <string name="add_wizard_step_2_search_network">Vyhledat síť</string>
+  <string name="add_wizard_step_3_message_1">Připojte zařízení k napájení. Zařízení by mělo ve výchozím nastavení fungovat v konfiguračním režimu, indikovaném blikáním stavové LED diody následovně.</string>
+  <string name="add_wizard_step_3_message_2">Pokud zařízení po zapnutí není v konfiguračním režimu, stiskněte a podržte tlačítko CONFIG po dobu alespoň 5 sekund.</string>
+  <string name="add_wizard_network_scan">Skenování sítě</string>
+  <string name="select">Vybrat</string>
+  <string name="add_wizard_network_scan_limit_warning">Kvůli omezením skenování Wi-Fi, která jsou uložena systémem Android, nebylo možné provést následné skenování. Seznam obsahuje sítě nalezené během předchozího skenování.</string>
+  <string name="add_wizard_network_scan_in_progress">Skenuji…</string>
+  <string name="add_wizard_network_scan_empty">Nebyly nalezeny žádné sítě Wi-Fi. Ujistěte se, že je Wi-Fi zapnuté a že jste v dosahu sítě.</string>
+  <string name="add_wizard_network_manual_connect">Připojil jsem se k síti ručně, pokračujte.</string>
+  <string name="add_wizard_add_more">Přidejte další</string>
+  <string name="add_wizard_repeat">Zkusit znovu</string>
+  <string name="add_wizard_password_clarification">Registrace nových zařízení v Cloudu je zakázána. Povolte ji ručně, nebo zadejte heslo ke svému účtu, aby ji průvodce automaticky povolil po dobu registrace nových zařízení.</string>
 </resources>

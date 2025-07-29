@@ -39,6 +39,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import org.supla.android.core.shared.SuplaChannelBasicCfgExtensionsKt;
+import org.supla.android.core.shared.ZWaveNodeExtensionsKt;
 import org.supla.android.db.Channel;
 import org.supla.android.lib.SuplaChannelBasicCfg;
 import org.supla.android.lib.SuplaClient;
@@ -337,8 +339,9 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity
     for (ZWaveNode node : mNodeList) {
       n++;
       String title = "#" + node.getNodeId() + " " + node.getName();
-      if (node.getChannelId() != null && node.getChannelId() != mSelectedCahnnel.getChannelId()) {
-        title += " (" + used + " #" + node.getChannelId().toString() + ")";
+      if (node.getChannelId() != null
+          && ZWaveNodeExtensionsKt.channelIdEqualsTo(node, mSelectedCahnnel.getChannelId())) {
+        title += " (" + used + " #" + node.getChannelId() + ")";
       }
       spinnerList.add(title);
       if ((selectNodeId != null && node.getNodeId() == selectNodeId)
@@ -752,8 +755,8 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity
         ZWaveNode node = getSelectedNode();
         if (node == null
             || node.getChannelId() == null
-            || node.getChannelId() == 0
-            || node.getChannelId() == mSelectedCahnnel.getChannelId()) {
+            || ZWaveNodeExtensionsKt.channelIdEqualsTo(node, 0)
+            || ZWaveNodeExtensionsKt.channelIdEqualsTo(node, mSelectedCahnnel.getChannelId())) {
           assignNodeId();
         } else {
           showNodeAssignConfirmDialog();
@@ -791,12 +794,12 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity
       mDevicesToRestart.add(getDevivceId());
     }
 
-    mTvDeviceName.setText(basicCfg.getDeviceName());
-    mTvSoftVer.setText(basicCfg.getDeviceSoftwareVersion());
+    SuplaChannelBasicCfgExtensionsKt.setDeviceName(basicCfg, mTvDeviceName);
+    SuplaChannelBasicCfgExtensionsKt.setDeviceSoftwareVersion(basicCfg, mTvSoftVer);
     mTvChannelNumber.setText(Integer.toString(basicCfg.getNumber()));
     mTvChannelId.setText(Integer.toString(basicCfg.getChannelId()));
     mTvDeviceId.setText(Integer.toString(basicCfg.getDeviceId()));
-    mEtCaption.setText(basicCfg.getCaption());
+    SuplaChannelBasicCfgExtensionsKt.setCaption(basicCfg, mEtCaption);
     mEtCaption.setEnabled(true);
 
     String functionName = SuplaConst.getFunctionName(0, this);
@@ -859,7 +862,7 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity
       return;
     }
 
-    if (mEtCaption.getText().toString().equals(cfg.getCaption())) {
+    if (SuplaChannelBasicCfgExtensionsKt.captionEqualsTo(cfg, mEtCaption.getText().toString())) {
       applyChannelFunctionSelection();
     } else {
       wathdogActivate(
@@ -975,7 +978,7 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity
   }
 
   private void showError(String message) {
-    showError(message, R.drawable.wizard_error);
+    showError(message, R.drawable.add_wizard_error);
   }
 
   private void showError(int msgResId, int errorType) {
@@ -1144,7 +1147,8 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity
     if (mSelectedCahnnel != null) {
 
       for (ZWaveNode n : mNodeList) {
-        if (n.getChannelId() != null && n.getChannelId() == mSelectedCahnnel.getChannelId()) {
+        if (n.getChannelId() != null
+            && ZWaveNodeExtensionsKt.channelIdEqualsTo(n, mSelectedCahnnel.getChannelId())) {
           n.setChannelId(null);
         }
       }
@@ -1153,7 +1157,8 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity
       if (_nodeId > 0) {
         for (ZWaveNode n : mNodeList) {
           if (n.getNodeId() == _nodeId) {
-            n.setChannelId(nodeId > 0 ? mSelectedCahnnel.getChannelId() : null);
+            ZWaveNodeExtensionsKt.updateChannelId(
+                n, nodeId > 0 ? mSelectedCahnnel.getChannelId() : null);
             break;
           }
         }
@@ -1214,10 +1219,10 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity
     if (node == null) {
       if (mAssignedNodeId > 0 && nodeIdNotExists(mAssignedNodeId)) {
         node =
-            new ZWaveNode(
+            ZWaveNodeExtensionsKt.createNode(
                 mAssignedNodeId,
                 (short) 0,
-                (short) 0,
+                0,
                 mSelectedCahnnel == null ? 0 : mSelectedCahnnel.getChannelId(),
                 getResources().getString(R.string.zwave_offline));
         mNodeList.add(node);

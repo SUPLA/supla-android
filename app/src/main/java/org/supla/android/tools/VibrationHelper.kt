@@ -37,11 +37,13 @@ class VibrationHelper @Inject constructor(@ApplicationContext private val contex
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE), getVibrationAttributes())
       } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        @Suppress("DEPRECATION")
         vibrate(
           VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE),
           getAudioAttributes()
         )
       } else {
+        @Suppress("DEPRECATION")
         vibrate(100) // deprecated in API 26
       }
     }

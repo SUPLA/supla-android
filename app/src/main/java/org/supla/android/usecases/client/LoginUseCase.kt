@@ -24,8 +24,9 @@ import org.supla.android.core.SuplaAppProvider
 import org.supla.android.core.infrastructure.ThreadHandler
 import org.supla.android.core.networking.suplaclient.SuplaClientMessageHandlerWrapper
 import org.supla.android.extensions.guardLet
-import org.supla.android.lib.SuplaClientMessageHandler
-import org.supla.android.lib.SuplaClientMsg
+import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
+import org.supla.core.shared.infrastructure.messaging.SuplaClientMessageHandler
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -44,9 +45,9 @@ class LoginUseCase @Inject constructor(
       }
 
       var authorized: Boolean? = null
-      var error: Int? = null
+      var error: LocalizedString? = null
 
-      val listener: SuplaClientMessageHandler.OnSuplaClientMessageListener = getLoginMessageListener(
+      val listener: SuplaClientMessageHandler.Listener = getLoginMessageListener(
         onAuthorized = { authorized = true },
         onError = { error = it }
       )
@@ -57,7 +58,7 @@ class LoginUseCase @Inject constructor(
       try {
         waitForResponse(
           authorizedProvider = { authorized },
-          errorProvider = { error }
+          errorMessageProvider = { error },
         )
       } finally {
         suplaClientMessageHandlerWrapper.unregisterMessageListener(listener)
@@ -70,18 +71,15 @@ class LoginUseCase @Inject constructor(
       }
     }
 
-  private fun getLoginMessageListener(onAuthorized: () -> Unit, onError: (Int) -> Unit) =
-    object : SuplaClientMessageHandler.OnSuplaClientMessageListener {
-      override fun onSuplaClientMessageReceived(msg: SuplaClientMsg?) {
-        val (message) = guardLet(msg) { return }
-
-        if (message.type == SuplaClientMsg.onRegisterError) {
-          onError(message.registerError.ResultCode)
-          // Unregister after first message, so the result doesn't get overwritten.
+  private fun getLoginMessageListener(onAuthorized: () -> Unit, onError: (LocalizedString) -> Unit) =
+    object : SuplaClientMessageHandler.Listener {
+      override fun onReceived(message: SuplaClientMessage) {
+        (message as? SuplaClientMessage.ClientRegistrationError)?.let {
+          onError(message.resultCode.message(true))
           suplaClientMessageHandlerWrapper.unregisterMessageListener(this)
-        } else if (message.type == SuplaClientMsg.onRegistered) {
+        }
+        (message as? SuplaClientMessage.ClientRegistered)?.let {
           onAuthorized()
-          // Unregister after first message, so the result doesn't get overwritten.
           suplaClientMessageHandlerWrapper.unregisterMessageListener(this)
         }
       }
@@ -93,6 +91,7 @@ class LoginUseCase @Inject constructor(
     data object Authorized : Result {
       override fun isAuthorized() = true
     }
+
     data object Unauthorized : Result {
       override fun isAuthorized() = false
     }

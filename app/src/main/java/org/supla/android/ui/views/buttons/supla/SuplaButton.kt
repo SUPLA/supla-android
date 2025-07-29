@@ -41,6 +41,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
@@ -74,6 +75,36 @@ fun SuplaButton(
   ) {
     Image(
       painter = painterResource(id = iconRes),
+      contentDescription = null,
+      alignment = Alignment.Center,
+      modifier = Modifier
+        .size(dimensionResource(id = R.dimen.icon_default_size))
+        .align(Alignment.Center),
+      colorFilter = ColorFilter.tint(color = it),
+    )
+  }
+}
+
+@Composable
+fun SuplaButton(
+  imageVector: ImageVector,
+  modifier: Modifier = Modifier,
+  disabled: Boolean = false,
+  pressed: Boolean = false,
+  colors: SuplaButtonColors = SuplaButtonDefaults.buttonColors(),
+  shape: SuplaButtonShape = SuplaButtonDefaults.allRoundedShape(),
+  onClick: () -> Unit
+) {
+  SuplaButton(
+    onClick = onClick,
+    modifier = modifier,
+    disabled = disabled,
+    active = pressed,
+    shape = shape,
+    colors = colors
+  ) {
+    Image(
+      imageVector = imageVector,
       contentDescription = null,
       alignment = Alignment.Center,
       modifier = Modifier

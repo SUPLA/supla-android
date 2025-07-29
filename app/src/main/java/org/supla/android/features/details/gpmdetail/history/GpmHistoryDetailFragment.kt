@@ -21,7 +21,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.features.details.detailbase.history.BaseHistoryDetailFragment
-import org.supla.android.lib.SuplaClientMsg
+import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
 
 private const val ARG_REMOTE_ID = "ARG_REMOTE_ID"
 
@@ -30,12 +30,10 @@ class GpmHistoryDetailFragment : BaseHistoryDetailFragment() {
 
   override val viewModel: GpmHistoryDetailViewModel by viewModels()
 
-  override fun onSuplaMessage(message: SuplaClientMsg) {
-    when (message.type) {
-      SuplaClientMsg.onDataChanged -> {
-        if (message.channelId == remoteId) {
-          viewModel.reloadMeasurements()
-        }
+  override fun onSuplaMessage(message: SuplaClientMessage) {
+    (message as? SuplaClientMessage.ChannelDataChanged)?.let {
+      if (it.channelId == remoteId) {
+        viewModel.reloadMeasurements()
       }
     }
   }

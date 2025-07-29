@@ -1,8 +1,4 @@
 package org.supla.android.lib.singlecall
-
-import org.supla.android.data.source.remote.SuplaResultCode
-import org.supla.android.tools.UsedFromNativeCode
-
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -20,6 +16,9 @@ import org.supla.android.tools.UsedFromNativeCode
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+
+import org.supla.android.tools.UsedFromNativeCode
+import org.supla.core.shared.data.model.suplaclient.SuplaResultCode
 
 /**
  * Possible codes:

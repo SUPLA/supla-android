@@ -31,6 +31,7 @@ import org.supla.android.usecases.channel.valueprovider.SwitchWithElectricityMet
 import org.supla.android.usecases.channel.valueprovider.SwitchWithImpulseCounterValueProvider
 import org.supla.android.usecases.channel.valueprovider.ThermometerValueProvider
 import org.supla.android.usecases.channel.valueprovider.WeightSensorValueProvider
+import org.supla.android.usecases.channel.valueprovider.WindSensorValueProvider
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -48,7 +49,8 @@ class GetChannelValueUseCase @Inject constructor(
   pressureSensorValueProvider: PressureSensorValueProvider,
   rainSensorValueProvider: RainSensorValueProvider,
   containerValueProvider: ContainerValueProvider,
-  weightSensorValueProvider: WeightSensorValueProvider
+  weightSensorValueProvider: WeightSensorValueProvider,
+  windSensorValueProvider: WindSensorValueProvider
 ) {
 
   private val providers = listOf(
@@ -64,7 +66,8 @@ class GetChannelValueUseCase @Inject constructor(
     pressureSensorValueProvider,
     rainSensorValueProvider,
     containerValueProvider,
-    weightSensorValueProvider
+    weightSensorValueProvider,
+    windSensorValueProvider
   )
 
   @Suppress("UNCHECKED_CAST")

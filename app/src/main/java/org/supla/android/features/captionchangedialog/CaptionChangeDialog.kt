@@ -44,6 +44,7 @@ import org.supla.android.ui.views.TextField
 import org.supla.android.ui.views.buttons.Button
 import org.supla.android.ui.views.buttons.OutlinedButton
 import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.infrastructure.localizedString
 
 data class CaptionChangeDialogState(
   val caption: String = "",
@@ -146,7 +147,7 @@ private fun Preview() {
     emptyScope.Dialog(
       CaptionChangeDialogState(
         caption = "Thermostat",
-        label = LocalizedString.WithResource(R.string.channel_name),
+        label = localizedString(R.string.channel_name),
         error = null
       )
     )
@@ -160,7 +161,7 @@ private fun Preview_Error() {
     emptyScope.Dialog(
       CaptionChangeDialogState(
         caption = "Thermostat",
-        label = LocalizedString.WithResource(R.string.channel_name),
+        label = localizedString(R.string.channel_name),
         error = LocalizedString.Constant("Some error!")
       )
     )
