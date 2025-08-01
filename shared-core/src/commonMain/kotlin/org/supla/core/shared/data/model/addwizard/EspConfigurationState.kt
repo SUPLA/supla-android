@@ -272,7 +272,11 @@ class Reconnecting(
 
       else -> {
         stateHolder.setState(ConfigurationFailure(stateHolder, espConfigurationController))
-        espConfigurationController.showError(EspConfigurationError.Reconnect)
+        if (finalAction is AddWizardFinalAction.Error) {
+          espConfigurationController.showError(finalAction.error.combine(EspConfigurationError.Reconnect))
+        } else {
+          espConfigurationController.showError(EspConfigurationError.Reconnect)
+        }
       }
     }
   }

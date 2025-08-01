@@ -41,11 +41,14 @@ fun AddWizardMessageScope.AddWizardMessageView(
   step: AddWizardScreen.Message
 ) {
   AddWizardScaffold(
-    step.iconRes,
+    iconRes = R.drawable.add_wizard_error,
     buttonTextId = R.string.exit,
     onNext = { onStepFinished(step) },
   ) {
-    AddWizardContentText(step.message(LocalContext.current))
+    for (message in step.messages) {
+      AddWizardContentText(message(LocalContext.current))
+    }
+
     if (step.showRepeat) {
       Spacer(modifier = Modifier.weight(1f))
       AddWizardRepeatButton(textRes = R.string.add_wizard_repeat) { onAgain() }
@@ -65,7 +68,7 @@ private val previewScope = object : AddWizardMessageScope {
 private fun Preview() {
   SuplaTheme {
     previewScope.AddWizardMessageView(
-      AddWizardScreen.Message(R.drawable.add_wizard_error, localizedString(R.string.wizard_iodevice_notfound), true)
+      AddWizardScreen.Message(localizedString(R.string.wizard_iodevice_notfound), true)
     )
   }
 }
