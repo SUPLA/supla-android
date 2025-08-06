@@ -108,6 +108,17 @@ class DoubleWidgetConfigurationViewModel @Inject constructor(
               )
             )
           }
+        },
+        onError = {
+          updateState { state ->
+            state.copy(
+              viewState = state.viewState.copy(
+                profiles = null,
+                subjects = null,
+                caption = null
+              )
+            )
+          }
         }
       )
       .disposeBySelf()
@@ -128,6 +139,17 @@ class DoubleWidgetConfigurationViewModel @Inject constructor(
                 subjectType = configuration.subjectType,
                 caption = configuration.caption,
                 saveEnabled = true
+              )
+            )
+          }
+        },
+        onError = {
+          updateState { state ->
+            state.copy(
+              viewState = state.viewState.copy(
+                profiles = null,
+                subjects = null,
+                caption = null
               )
             )
           }

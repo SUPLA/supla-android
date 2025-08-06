@@ -112,6 +112,17 @@ class ExtendedValueWidgetConfigurationViewModel @Inject constructor(
               )
             )
           }
+        },
+        onError = {
+          updateState { state ->
+            state.copy(
+              viewState = state.viewState.copy(
+                profiles = null,
+                subjects = null,
+                caption = null
+              )
+            )
+          }
         }
       )
       .disposeBySelf()
@@ -132,6 +143,17 @@ class ExtendedValueWidgetConfigurationViewModel @Inject constructor(
                 subjectType = configuration.subjectType,
                 caption = configuration.caption,
                 saveEnabled = true
+              )
+            )
+          }
+        },
+        onError = {
+          updateState { state ->
+            state.copy(
+              viewState = state.viewState.copy(
+                profiles = null,
+                subjects = null,
+                caption = null
               )
             )
           }
