@@ -24,6 +24,7 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.R
+import org.supla.android.Trace
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.storage.UserStateHolder
 import org.supla.android.core.ui.BaseViewModel
@@ -53,6 +54,7 @@ import org.supla.android.data.model.general.SingleSelectionList
 import org.supla.android.data.source.local.calendar.Hour
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.events.DownloadEventsManager
+import org.supla.android.extensions.TAG
 import org.supla.android.extensions.beginOfNextHour
 import org.supla.android.extensions.dayEnd
 import org.supla.android.extensions.dayStart
@@ -404,12 +406,21 @@ abstract class BaseHistoryDetailViewModel(
       profileManager.getCurrentProfile().map { loadChartState(it.id, remoteId) },
     ) { first, second -> Pair(first, second) }
       .flatMap { pair ->
-        cloudChannelProvider(pair.first).firstElement().map { Triple(pair.first, pair.second, it) }
+        try {
+          cloudChannelProvider(pair.first)
+            .firstElement()
+            .map { Triple(pair.first, pair.second, it) }
+        } catch (ex: Exception) {
+          Maybe.error(ex)
+        }
       }
       .attachSilent()
       .subscribeBy(
         onSuccess = { handleData(it.first, it.third, it.second) },
-        onError = defaultErrorHandler("triggerDataLoad")
+        onError = { error ->
+          Trace.e(TAG, "Subscription failed! (${this::class.java.name}:triggerDataLoad)", error)
+          updateState { it.copy(loading = false, downloadState = DownloadEventsManager.State.Failed) }
+        }
       )
       .disposeBySelf()
   }
