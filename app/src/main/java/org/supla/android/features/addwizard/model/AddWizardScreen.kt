@@ -17,7 +17,6 @@ package org.supla.android.features.addwizard.model
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.annotation.DrawableRes
 import org.supla.android.R
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.localizedString
@@ -29,15 +28,17 @@ sealed class AddWizardScreen {
   data object Success : AddWizardScreen()
 
   data class Message(
-    @DrawableRes val iconRes: Int,
-    val message: LocalizedString,
+    val messages: List<LocalizedString>,
     val showRepeat: Boolean
   ) : AddWizardScreen() {
 
     companion object {
-      val NoWifi = Message(R.drawable.add_wizard_error, localizedString(R.string.wizard_no_internetwifi), false)
-      val WizardUnavailable = Message(R.drawable.add_wizard_error, localizedString(R.string.add_wizard_is_not_available), false)
-      val LocationDisabled = Message(R.drawable.add_wizard_error, message = localizedString(R.string.wizard_location_error), false)
+      operator fun invoke(message: LocalizedString, showRepeat: Boolean): Message =
+        Message(listOf(message), showRepeat)
+
+      val NoWifi = Message(localizedString(R.string.wizard_no_internetwifi), false)
+      val WizardUnavailable = Message(localizedString(R.string.add_wizard_is_not_available), false)
+      val LocationDisabled = Message(localizedString(R.string.wizard_location_error), false)
     }
   }
 }

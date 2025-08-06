@@ -36,7 +36,6 @@ import org.supla.android.core.infrastructure.WiFiScanner
 import org.supla.android.core.networking.suplaclient.SuplaClientEvent
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientStateHolder
-import org.supla.android.core.shared.resource
 import org.supla.android.core.storage.EncryptedPreferences
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.data.source.RoomProfileRepository
@@ -149,11 +148,6 @@ class AddWizardViewModel @Inject constructor(
         )
         .disposeBySelf()
     }
-  }
-
-  override fun onStop() {
-    super.onStop()
-    suplaClientStateHolder.handleEvent(SuplaClientEvent.AddWizardStopped)
   }
 
   override fun closeCloudDialog() {
@@ -291,7 +285,6 @@ class AddWizardViewModel @Inject constructor(
     updateState {
       it.openOnly(
         screen = AddWizardScreen.Message(
-          iconRes = R.drawable.add_wizard_error,
           message = localizedString(R.string.wizard_not_enought_permissions, appName),
           showRepeat = false
         )
@@ -441,7 +434,7 @@ class AddWizardViewModel @Inject constructor(
 
   override fun showError(error: EspConfigurationError) {
     updateState {
-      it.navigateTo(screen = AddWizardScreen.Message(iconRes = error.icon.resource, message = error.message, true))
+      it.navigateTo(screen = AddWizardScreen.Message(messages = error.messages, true))
         .copy(processing = false)
     }
   }

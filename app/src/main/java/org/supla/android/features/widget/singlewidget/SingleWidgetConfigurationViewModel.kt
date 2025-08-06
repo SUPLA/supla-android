@@ -110,6 +110,17 @@ class SingleWidgetConfigurationViewModel @Inject constructor(
               )
             )
           }
+        },
+        onError = {
+          updateState { state ->
+            state.copy(
+              viewState = state.viewState.copy(
+                profiles = null,
+                subjects = null,
+                caption = null
+              )
+            )
+          }
         }
       )
       .disposeBySelf()
@@ -133,6 +144,17 @@ class SingleWidgetConfigurationViewModel @Inject constructor(
                   subjects.firstOrNull { it.id == configuration.itemId }?.details(ActionDetail(actionId))
                 },
                 saveEnabled = true
+              )
+            )
+          }
+        },
+        onError = {
+          updateState { state ->
+            state.copy(
+              viewState = state.viewState.copy(
+                profiles = null,
+                subjects = null,
+                caption = null
               )
             )
           }

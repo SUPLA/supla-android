@@ -17,15 +17,24 @@ package org.supla.core.shared.data.model.addwizard
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.core.shared.infrastructure.Icon
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.LocalizedStringId
 import org.supla.core.shared.infrastructure.localizedString
 
 sealed class EspConfigurationError(
-  val message: LocalizedString,
-  val icon: Icon = Icon.ADD_WIZARD_ERROR,
+  open val messages: List<LocalizedString>
 ) {
+
+  constructor(message: LocalizedString) : this(listOf(message))
+
+  fun combine(error: EspConfigurationError): EspConfigurationError =
+    Combined(
+      mutableListOf<LocalizedString>().apply {
+        addAll(messages)
+        addAll(error.messages)
+      }
+    )
+
   data object RegistrationCheck : EspConfigurationError(message = localizedString(LocalizedStringId.DEVICE_REGISTRATION_REQUEST_TIMEOUT))
   data object RegistrationEnable : EspConfigurationError(message = localizedString(LocalizedStringId.ENABLING_REGISTRATION_TIMEOUT))
   data object Scan : EspConfigurationError(message = localizedString(LocalizedStringId.ADD_WIZARD_SCAN_TIMEOUT))
@@ -37,4 +46,5 @@ sealed class EspConfigurationError(
   data object Communication : EspConfigurationError(message = localizedString(LocalizedStringId.ADD_WIZARD_RESULT_CONNECTION_ERROR))
   data object Configuration : EspConfigurationError(message = localizedString(LocalizedStringId.ADD_WIZARD_RESULT_FAILED))
   data object Reconnect : EspConfigurationError(message = localizedString(LocalizedStringId.ADD_WIZARD_RECONNECT_TIMEOUT))
+  data class Combined(override val messages: List<LocalizedString>) : EspConfigurationError(messages)
 }

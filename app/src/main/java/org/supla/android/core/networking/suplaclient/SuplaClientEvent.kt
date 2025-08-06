@@ -27,7 +27,6 @@ sealed interface SuplaClientEvent {
   data object OnStart : SuplaClientEvent
   data object NetworkConnected : SuplaClientEvent
   data object AddWizardFinished : SuplaClientEvent
-  data object AddWizardStopped : SuplaClientEvent
 
   data class Cancel(val reason: SuplaClientState.Reason? = null) : SuplaClientEvent
   data class Finish(val reason: SuplaClientState.Reason? = null) : SuplaClientEvent
