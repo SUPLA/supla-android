@@ -150,11 +150,6 @@ class AddWizardViewModel @Inject constructor(
     }
   }
 
-  override fun onStop() {
-    super.onStop()
-    suplaClientStateHolder.handleEvent(SuplaClientEvent.AddWizardStopped)
-  }
-
   override fun closeCloudDialog() {
     updateState { it.copy(showCloudFollowupPopup = false) }
   }
