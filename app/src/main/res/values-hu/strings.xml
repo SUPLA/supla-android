@@ -95,17 +95,17 @@
   <string name="add_wizard_step_3_message_3"><![CDATA[A konfiguráció elindításához nyomja meg a <b> START </b> gombot.]]></string>
 
   <string name="wizard_no_internetwifi">Mielőtt elkezdené, csatlakozzon az internethez egy WiFi-hálózaton keresztül, amelyet a végrehajtó eszközök is használnak a szerverhez történő csatlakozáshoz.</string>
-  <string name="wizard_wifi_error">A WiFi hálózat ki van kapcsolva, vagy az azonosítója vagy a neve nem olvasható!</string>
+  <string name="wizard_wifi_error">A Wi-Fi hálózat ki van kapcsolva, vagy az azonosítója vagy a neve nem olvasható!</string>
   <string name="wizard_location_error">Ahhoz, hogy a hozzáadási varázsló megfelelően működjön, engedélyezni kell a helyinformációt ezen az eszközön. Lépjen a rendszerbeállításokba, majd válassza a „Helyinformáció” lehetőséget, és győződjön meg róla, hogy engedélyezve van.</string>
-  <string name="wizard_addnetwork_error">Nem lehet hozzáadni a WiFi hálózati konfigurációt!</string>
-  <string name="wizard_wifi_timeout">A várakozási idő túllépte a jelenlegi WiFi hálózati adatokat! Az Android rendszerrel rendelkező készülékén a beállítások-nál válassza ki a Wi-Fi menüpontot, a megjelenő ablakon válassza ki a További beállítások feliratot, majd jelölje be a "WiFi automatikus bekapcsolása" opciót.</string>
-  <string name="wizard_scan_timeout">A WiFi halózat keresése a várakozási időt túllépte!</string>
+  <string name="wizard_addnetwork_error">Nem lehet hozzáadni a Wi-Fi hálózati konfigurációt!</string>
+  <string name="wizard_wifi_timeout">A várakozási idő túllépte a jelenlegi Wi-Fi hálózati adatokat! Az Android rendszerrel rendelkező készülékén a beállítások-nál válassza ki a Wi-Fi menüpontot, a megjelenő ablakon válassza ki a További beállítások feliratot, majd jelölje be a "Wi-Fi automatikus bekapcsolása" opciót.</string>
+  <string name="wizard_scan_timeout">A Wi-Fi halózat keresése a várakozási időt túllépte!</string>
   <string name="wizard_connect_timeout">A végrehajtó eszközzel való kapcsolat létrehozásának várakozási ideje túllépve!</string>
   <string name="wizard_configure_timeout">Az eszközkonfiguráció befejezésének várakozási ideje túllépve!</string>
-  <string name="wizard_reconnect_timeout">Az elsődleges WiFi hálózathoz való visszatérés várakozási ideje túllépve!</string>
+  <string name="wizard_reconnect_timeout">Az elsődleges Wi-Fi hálózathoz való visszatérés várakozási ideje túllépve!</string>
   <string name="device_reg_request_timeout">Az eszköz regisztráció elérhetőségére vonatkozó információk várakozási ideje túllépve!</string>
 
-  <string name="wizard_iodevice_notfound">Semmilyen eszköz sem található! Ellenőrizze, hogy a konfigurálni kívánt eszköz konfigurációs módban van-e, majd próbálja újra. FONTOS - Az Android néhány verziója megköveteli a GPS engedélyezését, hogy az alkalmazások lehetővé tegyék a WiFi hálózaton keresztüli keresést, ezért ellenőrizze, hogy a GPS is engedélyezve van-e.</string>
+  <string name="wizard_iodevice_notfound">Semmilyen eszköz sem található! Ellenőrizze, hogy a konfigurálni kívánt eszköz konfigurációs módban van-e, majd próbálja újra. FONTOS - Az Android néhány verziója megköveteli a GPS engedélyezését, hogy az alkalmazások lehetővé tegyék a Wi-Fi hálózaton keresztüli keresést, ezért ellenőrizze, hogy a GPS is engedélyezve van-e.</string>
 
 
   <string name="wizard_done">Az eszköz konfigurálása sikeres :)</string>
@@ -298,11 +298,11 @@
   <string name="wake_up_frequency">Ébresztési gyakoriság</string>
   <string name="wakeup_info">*) A megadott beállításokat a csomópont következő ébredésekor alkalmazzák.</string>
   <string name="wheel">Kerék</string>
-  <string name="wifi_rssi">WiFi RSSI</string>
-  <string name="wifi_signal_strength">WiFi jelerősség</string>
-  <string name="wifi_throttling">Az Android rendszer által a WiFi hálózat keresésének korlátai miatt várjon a fent bemutatott idő alatt.</string>
+  <string name="wifi_rssi">Wi-Fi RSSI</string>
+  <string name="wifi_signal_strength">Wi-Fi jelerősség</string>
+  <string name="wifi_throttling">Az Android rendszer által a Wi-Fi hálózat keresésének korlátai miatt várjon a fent bemutatott idő alatt.</string>
   <string name="wizard_step1_txt2">Az eszközök hozzáadásakor ellenőrizze, hogy a mobil adat ki van-e kapcsolva. Ellenkező esetben az hozzáadás sikertelen lehet.</string>
-  <string name="add_wizard_step_2_message">Írja be annak otthoni vagy vállalati WiFi hálózatának nevét és jelszavát, amelyen keresztül a végrehajtó eszköz képes kapcsolatot létesíteni a szerverrel.</string>
+  <string name="add_wizard_step_2_message">Írja be annak otthoni vagy vállalati Wi-Fi hálózatának nevét és jelszavát, amelyen keresztül a végrehajtó eszköz képes kapcsolatot létesíteni a szerverrel.</string>
   <string name="yes">Igen</string>
   <string name="z_wave">Z-wave híd</string>
   <string name="zwave_add_device">Eszköz hozzáadása</string>
@@ -392,7 +392,7 @@
   <string name="status_led">LED állapot</string>
   <string name="info_led_on">A LED világít, ha létrejött a kapcsolat a szerverrel.</string>
   <string name="info_led_off">A LED nem világít, ha létrejött a kapcsolat a szerverrel.</string>
-  <string name="info_led_alwaysoff">A LED mindig ki van kapcsolva, kivéve, ha az eszköz wifi konfigurációs módban dolgozik (AP mód) van.</string>
+  <string name="info_led_alwaysoff">A LED mindig ki van kapcsolva, kivéve, ha az eszköz Wi-Fi konfigurációs módban dolgozik (AP mód) van.</string>
   <string name="input">Bemenet</string>
   <string name="monostable">Monostabil</string>
   <string name="bistable">Bistabil</string>
@@ -404,7 +404,7 @@
   <string name="dgf_too_long_operation_warning">Az üvegszekciók több mint 20 órán át lefedetlenek, ez negatívan befolyásolhatja az élettartamukat. Javasoljuk, hogy az összes szekciót legalább 4 órán át takarja el a helyreállítás érdekében.</string>
   <string name="dgf_planned_regeneration_in_progress">Tervezett helyreállítás folyamatban.</string>
   <string name="dgf_regeneration_after20h">20 üzemóra után kezdődő helyreállítás folyamatban.</string>
-  <string name="wizard_done_explentations">Ha a készülék nem jelenik meg az alkalmazásban, ismételje meg ezt az eljárást, és olvassa el a fenti „Előző állapotot”. Ez azt jelzi, hogy a készülék miért nem csatlakozott a szerverhez. Az \"SSID not found\" üzenet azt jelenti, hogy a megadott 2,4 GHz-es WiFi nevet nem találták meg, vagy a hálózat nem érhető el.</string>
+  <string name="wizard_done_explentations">Ha a készülék nem jelenik meg az alkalmazásban, ismételje meg ezt az eljárást, és olvassa el a fenti „Előző állapotot”. Ez azt jelzi, hogy a készülék miért nem csatlakozott a szerverhez. Az \"SSID not found\" üzenet azt jelenti, hogy a megadott 2,4 GHz-es Wi-Fi nevet nem találták meg, vagy a hálózat nem érhető el.</string>
   <string name="incorrect_email_or_password">Hibás email cím vagy jelszó</string>
   <string name="incorrect_password">Helytelen jelszó</string>
   <string name="channel_name">Csatorna neve</string>
@@ -417,7 +417,7 @@
   <string name="motor_problem">Motorhiba / Váratlan leállás.</string>
   <string name="lastconnectionresetcause_unknown">0: ismeretlen</string>
   <string name="lastconnectionresetcause_activity_timeout">1: szerver válasz hiánya</string>
-  <string name="lastconnectionresetcause_wifi_connection_lost">2: WiFi kapcsolat elvesztése</string>
+  <string name="lastconnectionresetcause_wifi_connection_lost">2: Wi-Fi kapcsolat elvesztése</string>
   <string name="lastconnectionresetcause_server_connection_lost">3: szerver kapcsolat visszaállítása</string>
   <string name="basic_profile_warning">Ez a mód elérhetetlen</string>
   <string name="basic_config_unavailable">A haladó üzemmód kikapcsolódása előtt válassza az email hitelesítést automatikus szerver felderítéssel</string>

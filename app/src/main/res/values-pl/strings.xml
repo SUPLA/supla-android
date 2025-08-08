@@ -137,18 +137,18 @@
 
   <string name="add_wizard_step_3_message_3"><![CDATA[Naciśnij przycisk <b>START</b> aby rozpocząć konfigurację.]]></string>
 
-  <string name="wizard_no_internetwifi">Zanim rozpoczniesz, połącz się z Internetem za pośrednictwem sieci WiFi, która będzie również wykorzystywana przez urządzenia wykonawcze do łączenia się z serwerem.</string>
-  <string name="wizard_wifi_error">Sieć WiFi jest wyłączona lub nie można odczytać jej identyfikatora lub nazwy!</string>
+  <string name="wizard_no_internetwifi">Zanim rozpoczniesz, połącz się z Internetem za pośrednictwem sieci Wi-Fi, która będzie również wykorzystywana przez urządzenia wykonawcze do łączenia się z serwerem.</string>
+  <string name="wizard_wifi_error">Sieć Wi-Fi jest wyłączona lub nie można odczytać jej identyfikatora lub nazwy!</string>
   <string name="wizard_location_error">Aby kreator dodawania działał poprawnie, usługa Lokalizacji musi być włączona na tym urządzeniu. Przejdź do ustawień systemu, następnie wybierz opcję „Lokalizacja” i upewnij się, że jest włączona.</string>
-  <string name="wizard_addnetwork_error">Nie można dodać konfiguracji sieci WiFi!</string>
-  <string name="wizard_wifi_timeout">Przekroczono czas oczekiwania na dane o bieżącej sieci WiFi! Przejdź do ustawień WiFi systemu Android, wybierz Zaawansowane, a następnie zaznacz opcję "Włącz WiFi automatycznie"</string>
-  <string name="wizard_scan_timeout">Przekroczono czas oczekiwania na zakończenie przeszukiwania sieci WiFi!</string>
+  <string name="wizard_addnetwork_error">Nie można dodać konfiguracji sieci Wi-Fi!</string>
+  <string name="wizard_wifi_timeout">Przekroczono czas oczekiwania na dane o bieżącej sieci Wi-Fi! Przejdź do ustawień Wi-Fi systemu Android, wybierz Zaawansowane, a następnie zaznacz opcję "Włącz Wi-Fi automatycznie"</string>
+  <string name="wizard_scan_timeout">Przekroczono czas oczekiwania na zakończenie przeszukiwania sieci Wi-Fi!</string>
   <string name="wizard_connect_timeout">Przekroczono czas oczekiwania na nawiązanie połączenia z urządzeniem wykonawczym!</string>
   <string name="wizard_configure_timeout">Przekroczono czas oczekiwania na zakończenie konfiguracji urządzenia!</string>
-  <string name="wizard_reconnect_timeout">Przekroczono czas oczekiwania na powrót do podstawowej sieci WiFi!</string>
+  <string name="wizard_reconnect_timeout">Przekroczono czas oczekiwania na powrót do podstawowej sieci Wi-Fi!</string>
   <string name="device_reg_request_timeout">Przekroczono czas oczekiwania na informację o dostępności rejestracji urządzeń!</string>
 
-  <string name="wizard_iodevice_notfound">Nie znaleziono żadnych urządzeń! Upewnij się, że urządzenie, które chcesz skonfigurować pracuje w trybie konfiguracji, a następnie spróbuj ponownie. WAŻNE - Niektóre wersje Androida wymagają włączonego GPS-a w celu umożliwienia aplikacjom przeszukanie sieci WiFi, w związku z tym upewnij się również, że GPS jest włączony.</string>
+  <string name="wizard_iodevice_notfound">Nie znaleziono żadnych urządzeń! Upewnij się, że urządzenie, które chcesz skonfigurować pracuje w trybie konfiguracji, a następnie spróbuj ponownie. WAŻNE - Niektóre wersje Androida wymagają włączonego GPS-a w celu umożliwienia aplikacjom przeszukanie sieci Wi-Fi, w związku z tym upewnij się również, że GPS jest włączony.</string>
 
 
   <string name="wizard_done">Ustawienia zostały przesłane do urządzenia.</string>
@@ -354,8 +354,8 @@
   <string name="time_exceeded">Przekroczono czas. Spróbuj ponownie.</string>
   <string name="battery_level">Poziom baterii</string>
   <string name="battery_powered">Zasilanie bateryjne</string>
-  <string name="wifi_rssi">WiFi RSSI</string>
-  <string name="wifi_signal_strength">Siła sygnału WiFi</string>
+  <string name="wifi_rssi">Wi-Fi RSSI</string>
+  <string name="wifi_signal_strength">Siła sygnału Wi-Fi</string>
   <string name="bridge_node_online">Węzeł mostu - online</string>
   <string name="bridge_signal_strength">Siła sygnału radia</string>
   <string name="uptime">Czas pracy</string>
@@ -370,9 +370,9 @@
   <string name="lightsource_warning">Żywotność źródła światła wynosi %1$s</string>
   <string name="uv_warning1">Żywotność promiennika uv wynosi %1$s. Zaplanuj jego wymianę.</string>
   <string name="uv_warning2">Żywotność promiennika uv wynosi %1$s. Wymień promiennik.</string>
-  <string name="add_wizard_step_2_message">Wprowadź nazwę oraz hasło Twojej domowej lub firmowej sieci WiFi za pośrednictwem której urządzenie wykonawcze będzie mogło nawiązać połączenie z serwerem.</string>
+  <string name="add_wizard_step_2_message">Wprowadź nazwę oraz hasło Twojej domowej lub firmowej sieci Wi-Fi za pośrednictwem której urządzenie wykonawcze będzie mogło nawiązać połączenie z serwerem.</string>
   <string name="enabling_registration_timeout">Upłynął czas oczekiwania na włączenie rejestracji!</string>
-  <string name="wifi_throttling">Z uwagi na limity skanowania sieci WiFi narzucone przez system Android, należy odczekać czas prezentowany powyżej.</string>
+  <string name="wifi_throttling">Z uwagi na limity skanowania sieci Wi-Fi narzucone przez system Android, należy odczekać czas prezentowany powyżej.</string>
   <string name="enter_suplaorg_credentails">Wprowadź Twoje dane logowania do Supla Cloud.</string>
   <string name="save_without_saving">Czy na pewno chcesz wyjść bez zapisu?</string>
   <string name="do_you_want_to_save">Czy chcesz zapisać ustawienia?</string>
@@ -397,11 +397,11 @@
   <string name="status_led">Dioda statusu</string>
   <string name="info_led_on">Dioda LED świeci jeśli nawiązano połączenie z serwerem.</string>
   <string name="info_led_off">Dioda LED nie świeci jeśli nawiązano połączenie z serwerem.</string>
-  <string name="info_led_alwaysoff">Dioda zawsze wyłączona, chyba, że urządzenie pracuje w trybie konfiguracji wifi (Tryb AP).</string>
+  <string name="info_led_alwaysoff">Dioda zawsze wyłączona, chyba, że urządzenie pracuje w trybie konfiguracji Wi-Fi (Tryb AP).</string>
   <string name="input">Wejście</string>
   <string name="monostable">Monostabilne</string>
   <string name="bistable">Bistabilne</string>
-  <string name="wizard_iodev_connect_failed">Próba nawiązania połączenia WiFi z urządzeniem wykonawczym zakończyła się niepowodzeniem.</string>
+  <string name="wizard_iodev_connect_failed">Próba nawiązania połączenia Wi-Fi z urządzeniem wykonawczym zakończyła się niepowodzeniem.</string>
   <string name="diw_cfg_info_oprange">Dostosuj zakres pracy ściemniacza poprzez ustawienie minimalnego oraz maksymalnego poziomu jasności. Wartość minimalną oraz maksymalną można ustawić przesuwając suwaki umieszczone po obu stronach koła.</string>
   <string name="diw_cfg_info_in_options">Opcje wejścia</string>
   <string name="diw_cfg_info_mono_option">Opcja zmienia zachowanie wejścia do którego podłączony jest przycisk monostabilny. W przypadku gdy opcja jest wyłączona, ściemniacz zatrzymuje proces rozjaśniania w momencie osiągnięcia maksymalnego poziomu jasności, a w przypadku ściemniania gdy osiągnie poziom minimalny. Włączenie tej opcji spowoduje przejście do poziomu minimalnego zaraz po osiągnięciu maksimum jasności, a w przypadku ściemniania do wartości maksymalnej, zaraz po osiągnięciu minumum. Rozjaśnianie/ściemnianie będzie trwało tak długo jak długo będzie naciśnięty przycisk.</string>
@@ -409,7 +409,7 @@
   <string name="dgf_too_long_operation_warning">Sekcje szyby są odsłonięte dłużej niż 20 godzin co może negatywnie wpłynąć na ich żywotność. Zalecane jest zasłonięcie wszystkich sekcji na minimum 4 godziny w celu ich regeneracji.</string>
   <string name="dgf_planned_regeneration_in_progress">Trwa zaplanowana regeneracja.</string>
   <string name="dgf_regeneration_after20h">Trwa regeneracja zainicjowana po 20h pracy.</string>
-  <string name="wizard_done_explentations">Jeśli urządzenie nie pojawi się w aplikacji, powtórz niniejszą procedurę dodawania jeszcze raz i odczytaj „Poprzedni status” widoczny powyżej. Zawiera on informację umożliwiającą ustalenie dlaczego urządzenie nie połączyło się z serwerem. Komunikat \"SSID not found\" oznacza, że wprowadzona nazwa sieci WiFi 2,4 GHz nie została odnaleziona lub sieć ta jest poza zasięgiem.</string>
+  <string name="wizard_done_explentations">Jeśli urządzenie nie pojawi się w aplikacji, powtórz niniejszą procedurę dodawania jeszcze raz i odczytaj „Poprzedni status” widoczny powyżej. Zawiera on informację umożliwiającą ustalenie dlaczego urządzenie nie połączyło się z serwerem. Komunikat \"SSID not found\" oznacza, że wprowadzona nazwa sieci Wi-Fi 2,4 GHz nie została odnaleziona lub sieć ta jest poza zasięgiem.</string>
   <string name="incorrect_email_or_password">Błędny adres email lub hasło</string>
   <string name="incorrect_password">Nieprawidłowe hasło</string>
   <string name="channel_name">Nazwa kanału</string>
@@ -456,7 +456,7 @@
 
   <string name="lastconnectionresetcause_unknown">0: nieznany</string>
   <string name="lastconnectionresetcause_activity_timeout">1: brak odpowiedzi serwera</string>
-  <string name="lastconnectionresetcause_wifi_connection_lost">2: utrata połączenia WiFi</string>
+  <string name="lastconnectionresetcause_wifi_connection_lost">2: utrata połączenia Wi-Fi</string>
   <string name="lastconnectionresetcause_server_connection_lost">3: reset połączenia z serwerem</string>
   <string name="basic_profile_warning">Tryb niedostępny</string>
   <string name="basic_config_unavailable">Przed wyłączeniem trybu zaawansowanego wybierz uwierzytelnianie email z automatycznym wykrywaniem serwera.</string>
@@ -787,7 +787,7 @@
   <string name="add_wizard_wrong_qr_code">Nieprawidłowy kod QR</string>
   <string name="add_wizard_network_scan">Skanowanie sieci</string>
   <string name="select">Wybierz</string>
-  <string name="add_wizard_network_scan_limit_warning">Z uwagi na limity skanowania sieci WiFi narzucone przez system Android kolejne skanowanie nie było możliwe. Lista zawiera sieci znalezione podczas poprzedniego skanowania.</string>
+  <string name="add_wizard_network_scan_limit_warning">Z uwagi na limity skanowania sieci Wi-Fi narzucone przez system Android kolejne skanowanie nie było możliwe. Lista zawiera sieci znalezione podczas poprzedniego skanowania.</string>
   <string name="add_wizard_network_scan_in_progress">Skanowanie…</string>
   <string name="add_wizard_network_scan_empty">Nie znaleziono żadnych sieci Wi-Fi. Upewnij się, że Wi-Fi jest włączone i znajdujesz się w zasięgu sieci.</string>
   <string name="add_wizard_network_manual_connect">Podłączyłem do sieci ręcznie, kontynuuj.</string>

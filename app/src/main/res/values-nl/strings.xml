@@ -300,7 +300,7 @@
   <string name="wheel">Cirkel</string>
   <string name="wifi_rssi">WiFi RSSI</string>
   <string name="wifi_signal_strength">WiFi-signaalsterkte</string>
-  <string name="wifi_throttling">Wacht de hierboven weergegeven tijd vanwege de beperkingen van het scannen van wifi-netwerken die worden opgelegd door het Android-systeem.</string>
+  <string name="wifi_throttling">Wacht de hierboven weergegeven tijd vanwege de beperkingen van het scannen van WiFi-netwerken die worden opgelegd door het Android-systeem.</string>
   <string name="wizard_step1_txt2">Zorg ervoor dat uw mobiele data is uitgeschakeld wanneer u apparaten toevoegt. Anders kan de toevoeging mislukken.</string>
   <string name="add_wizard_step_2_message">Voer de naam en het wachtwoord van uw thuis- of bedrijfs-WIFI-netwerk in waarmee het apparaat verbinding kan maken met de server.</string>
   <string name="yes">Ja</string>
@@ -392,7 +392,7 @@
   <string name="status_led">Status-LED</string>
   <string name="info_led_on">De LED licht op als een verbinding met de server tot stand is gebracht.</string>
   <string name="info_led_off">De LED licht niet op als er een verbinding met de server tot stand is gebracht.</string>
-  <string name="info_led_alwaysoff">Licht altijd uit, tenzij het apparaat zich in wifi-configuratiemodus (AP-modus) bevindt.</string>
+  <string name="info_led_alwaysoff">Licht altijd uit, tenzij het apparaat zich in WiFi-configuratiemodus (AP-modus) bevindt.</string>
   <string name="input">Ingang</string>
   <string name="monostable">Mono-stabiel</string>
   <string name="bistable">Bi-stabiel</string>

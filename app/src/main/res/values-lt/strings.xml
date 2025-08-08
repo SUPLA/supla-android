@@ -75,17 +75,17 @@
   <string name="start">STARTAS</string>
   <string name="add_wizard_remember_passwd">Išsaugoti slaptažodį</string>
   <string name="add_wizard_step_3_message_3"><![CDATA[Paspauskite mygtuką <b>START</b>, kad pradėti konfigūravimą.]]></string>
-  <string name="wizard_no_internetwifi">Prieš pradedami prisijunkite prie interneto WiFi tinklo pagalba, kurį taip pat naudos vykdomasis įrenginys prisijungimui prie serverio.</string>
-  <string name="wizard_wifi_error">WiFi tinklas yra išjungtas arba negalima atpažinti jo identifikatoriaus arba pavadinimo!</string>
+  <string name="wizard_no_internetwifi">Prieš pradedami prisijunkite prie interneto Wi-Fi tinklo pagalba, kurį taip pat naudos vykdomasis įrenginys prisijungimui prie serverio.</string>
+  <string name="wizard_wifi_error">Wi-Fi tinklas yra išjungtas arba negalima atpažinti jo identifikatoriaus arba pavadinimo!</string>
   <string name="wizard_location_error">Kad pridėjimo vedlys veiktų tinkamai, šiame įrenginyje turi būti įjungta Vietos paslauga. Eikite į sistemos nustatymus, tada pasirinkite „Vieta“ ir įsitikinkite, kad įjungta.</string>
-  <string name="wizard_addnetwork_error">Negalima pridėti WiFi tinklo konfigūravimo!</string>
-  <string name="wizard_wifi_timeout">Viršytas aktualaus WiFi tinklo duomenų laukimo laikas! Eikite į Android sistemos Wi-Fi nustatymus, pasirinkite Išplėstiniai parametrai, o tada pažymėkite "Įjungti Wi-Fi automatiškai".</string>
-  <string name="wizard_scan_timeout">Viršytas WiFi tinklo paieškos pabaigimo laukimo laikas!</string>
+  <string name="wizard_addnetwork_error">Negalima pridėti Wi-Fi tinklo konfigūravimo!</string>
+  <string name="wizard_wifi_timeout">Viršytas aktualaus Wi-Fi tinklo duomenų laukimo laikas! Eikite į Android sistemos Wi-Fi nustatymus, pasirinkite Išplėstiniai parametrai, o tada pažymėkite "Įjungti Wi-Fi automatiškai".</string>
+  <string name="wizard_scan_timeout">Viršytas Wi-Fi tinklo paieškos pabaigimo laukimo laikas!</string>
   <string name="wizard_connect_timeout">Viršytas ryšio užmezgimo su vykdomuoju įrenginiu laukimo laikas!</string>
   <string name="wizard_configure_timeout">Viršytas įrenginio konfigūracijos užbaigimo laukimo laikas!</string>
-  <string name="wizard_reconnect_timeout">Viršytas grįžimo prie pagrindinio WiFi tinklo laukimo laikas!</string>
+  <string name="wizard_reconnect_timeout">Viršytas grįžimo prie pagrindinio Wi-Fi tinklo laukimo laikas!</string>
   <string name="device_reg_request_timeout">Viršytas informacijos apie įrenginių registracijos prieinamumą laukimo laikas!</string>
-  <string name="wizard_iodevice_notfound">Nerasta jokių įrenginių! Įsitikinkite, kad įrenginys, kurį norite konfigūruoti veikia konfigūracijos režime, o tada pabandykite dar kartą. SVARBU – Kai kuriose Android versijose būtina įjungti GPS, kad programos galėtų ieškoti WiFi tinklo, todėl taip pat įsitikinkite, kad GPS yra įjungtas.</string>
+  <string name="wizard_iodevice_notfound">Nerasta jokių įrenginių! Įsitikinkite, kad įrenginys, kurį norite konfigūruoti veikia konfigūracijos režime, o tada pabandykite dar kartą. SVARBU – Kai kuriose Android versijose būtina įjungti GPS, kad programos galėtų ieškoti Wi-Fi tinklo, todėl taip pat įsitikinkite, kad GPS yra įjungtas.</string>
   <string name="wizard_done">Įrenginio konfigūravimas baigtas sėkmingai :)</string>
   <string name="wizard_iodev_data">Įrenginio duomenys</string>
   <string name="wizard_iodev_name">Pavadinimas</string>
@@ -194,7 +194,7 @@
   <string name="channel_func_valve_percentage">Valve</string>
 
   <string name="channel_caption_heatmeter">Šilumos skaitiklis</string>
-  <string name="add_wizard_step_2_message">Įveskite savo namų ar įmonės WiFi tinklo, kurio pagalba vykdomasis įrenginys galės prisijungti prie serverio, pavadinimą ir slaptažodį.</string>
+  <string name="add_wizard_step_2_message">Įveskite savo namų ar įmonės Wi-Fi tinklo, kurio pagalba vykdomasis įrenginys galės prisijungti prie serverio, pavadinimą ir slaptažodį.</string>
   <string name="aritmetic_balance_days">Asimetrinis balansas – Dienos</string>
   <string name="aritmetic_balance_hours">Asimetrinis balansas – Valandos</string>
   <string name="aritmetic_balance_minutes">Asimetrinis balansas – Minutės</string>
@@ -277,9 +277,9 @@
   <string name="wake_up_frequency">Pabudimo dažnumas</string>
   <string name="wakeup_info">*) Įvesti nustatymai bus taikomi, kai artimiausiu metu bus pabudintas mazgas.</string>
   <string name="wheel">Ratas</string>
-  <string name="wifi_rssi">WiFi RSSI</string>
-  <string name="wifi_signal_strength">WiFi signalo stiprumas</string>
-  <string name="wifi_throttling">Dėl Android sistemos nustatytų WiFi tinklo nuskaitymo apribojimų reikia palaukti aukščiau nurodytą laiką.</string>
+  <string name="wifi_rssi">Wi-Fi RSSI</string>
+  <string name="wifi_signal_strength">Wi-Fi signalo stiprumas</string>
+  <string name="wifi_throttling">Dėl Android sistemos nustatytų Wi-Fi tinklo nuskaitymo apribojimų reikia palaukti aukščiau nurodytą laiką.</string>
   <string name="wizard_step1_txt2">Pridėdami įrenginius įsitikinkite, kad mobilieji duomenys yra išjungti. Kitu atveju pridėjimas gali nepavykti.</string>
   <string name="yes">Taip</string>
   <string name="z_wave">Z-wave tiltas</string>

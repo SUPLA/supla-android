@@ -101,9 +101,9 @@
   <string name="wizard_no_internetwifi">Перш ніж почати, підключіться до Інтернету через Wi-Fi, який також використовуватиметься виконуючими пристроями для підключення до сервера.</string>
   <string name="wizard_wifi_error">Wi-Fi вимкнено або не може прочитати свій ідентифікатор чи назву!</string>
   <string name="wizard_location_error">Для коректної роботи майстра додавання повинна бути ввімкнена функція Місцезнаходження на цьому пристрої. Перейдіть до налаштувань системи, оберіть опцію "Місцезнаходження" та переконайтеся, що вона увімкнена.</string>
-  <string name="wizard_addnetwork_error">Неможливо додати конфігурацію WiFi!</string>
-  <string name="wizard_wifi_timeout">Минув час очікування даних про поточну мережу WiFi! Перейдіть до налаштувань WiFi в системі Android, оберіть пункт "Додатково", а потім поставте галочку навпроти опції "Вмикати WiFi автоматично".</string>
-  <string name="wizard_scan_timeout">Минув час очікування завершення сканування мережі WiFi!</string>
+  <string name="wizard_addnetwork_error">Неможливо додати конфігурацію Wi-Fi!</string>
+  <string name="wizard_wifi_timeout">Минув час очікування даних про поточну мережу Wi-Fi! Перейдіть до налаштувань Wi-Fi в системі Android, оберіть пункт "Додатково", а потім поставте галочку навпроти опції "Вмикати Wi-Fi автоматично".</string>
+  <string name="wizard_scan_timeout">Минув час очікування завершення сканування мережі Wi-Fi!</string>
   <string name="wizard_connect_timeout">Минув час очікування встановлення з\'єднання з пристроєм виконання!</string>
   <string name="wizard_configure_timeout">Час очікування завершення налаштування пристрою минув!</string>
   <string name="wizard_reconnect_timeout">Минув час для повернення до основного Wi-Fi!</string>
@@ -264,7 +264,7 @@
   <string name="time_exceeded">Час вийшов. Спробуйте знову.</string>
   <string name="battery_level">Рівень заряду батареї</string>
   <string name="battery_powered">Працює від батареї</string>
-  <string name="wifi_signal_strength">Потужність сигналу WiFi</string>
+  <string name="wifi_signal_strength">Потужність сигналу Wi-Fi</string>
   <string name="bridge_node_online">Мостовий вузол - онлайн</string>
   <string name="bridge_signal_strength">Мостовий вузол  - потужність сигналу</string>
   <string name="uptime">Час роботи</string>
@@ -277,7 +277,7 @@
   <string name="lightsource_warning">Термін служби джерела світла %1$s</string>
   <string name="uv_warning1">Термін служби УФ-випромінювача %1$s. Заплануйте його заміну.</string>
   <string name="uv_warning2">Термін служби УФ-випромінювача %1$s. Замінити випромінювач.</string>
-  <string name="add_wizard_step_2_message">Введіть ім\'я та пароль вашої домашньої або корпоративної WiFi мережі, через яку виконавчий пристрій зможе встановити з\'єднання з сервером.</string>
+  <string name="add_wizard_step_2_message">Введіть ім\'я та пароль вашої домашньої або корпоративної Wi-Fi мережі, через яку виконавчий пристрій зможе встановити з\'єднання з сервером.</string>
   <string name="enabling_registration_timeout">Час реєстрації минув!</string>
   <string name="wifi_throttling">Через обмеження сканування мереж Wi-Fi, встановлені системою Android, будь ласка, зачекайте вказаний вище час.</string>
   <string name="enter_suplaorg_credentails">Введіть дані для входу в Supla Cloud.</string>
@@ -326,7 +326,7 @@
   <string name="info_led_alwaysoff">Світлодіодний індикатор завжди вимкнений, якщо пристрій не перебуває в режимі налаштування Wi-Fi (режим AP).</string>
   <string name="monostable">Моностабільний</string>
   <string name="bistable">Бістабільний</string>
-  <string name="wizard_iodev_connect_failed">Спроба встановити WiFi-з\'єднання з приводом не вдалася.</string>
+  <string name="wizard_iodev_connect_failed">Спроба встановити Wi-Fi-з\'єднання з приводом не вдалася.</string>
   <string name="diw_cfg_info_oprange">Відрегулюйте робочий діапазон регулятора яскравості, встановивши мінімальний і максимальний рівень яскравості. Мінімальне і максимальне значення можна встановити, пересуваючи повзунки, розташовані по обидва боки колеса.</string>
   <string name="diw_cfg_info_in_options">Параметри введення</string>
   <string name="diw_cfg_info_mono_option">Параметр змінює поведінку входу, до якого підключено моностабільну кнопку. Коли опція вимкнена, регулятор припиняє процес освітлення, коли досягає максимального рівня яскравості, а в разі затемнення – коли досягає мінімального рівня. Увімкнення цієї опції призведе до переходу на мінімальний рівень одразу після досягнення максимальної яскравості, а у разі затемнення до максимального значення – відразу після досягнення мінімальної. Затухання триватиме, поки натиснуто кнопку.</string>
