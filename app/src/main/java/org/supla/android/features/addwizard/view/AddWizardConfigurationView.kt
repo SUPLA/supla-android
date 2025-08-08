@@ -153,3 +153,15 @@ private fun Preview() {
     )
   }
 }
+
+@Preview(backgroundColor = 0xFF12A71E, showBackground = true)
+@Composable
+private fun Preview_Processing() {
+  SuplaTheme {
+    previewScope.AddWizardConfigurationView(
+      processing = true,
+      progress = 0.2f,
+      progressLabel = localizedString(LocalizedStringId.ADD_WIZARD_STATE_PREPARING)
+    )
+  }
+}

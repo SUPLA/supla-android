@@ -94,18 +94,18 @@
 
   <string name="add_wizard_step_3_message_3"><![CDATA[Stlačte tlačidlo <b>ŠTART</b> a začnite konfiguráciu.]]></string>
 
-  <string name="wizard_no_internetwifi">Predtým, ako začnete, pripojte sa k internetu cez WiFi sieť, ktorá bude používať aj vykonávacie zariadenia na pripojenie k serveru.</string>
-  <string name="wizard_wifi_error">WiFi sieť je vypnutá alebo sa nedá načítať jej identifikátor alebo názov!</string>
+  <string name="wizard_no_internetwifi">Predtým, ako začnete, pripojte sa k internetu cez Wi-Fi sieť, ktorá bude používať aj vykonávacie zariadenia na pripojenie k serveru.</string>
+  <string name="wizard_wifi_error">Wi-Fi sieť je vypnutá alebo sa nedá načítať jej identifikátor alebo názov!</string>
   <string name="wizard_location_error">Ak má sprievodca pridávania fungovať správne, musí byť na danom zariadení zapnutá služba lokalizácie. Prejdite na nastavenia systému, následne si vyberte možnosť „Lokalizácia” a uistite sa, že je zapnutá.</string>
-  <string name="wizard_addnetwork_error">Nedá sa pridať konfigurácia WiFi siete!</string>
-  <string name="wizard_wifi_timeout">Bola prekročená lehota čakania na údaje o aktuálnej WiFi sieti! Prejdite do nastavení WiFi systému Android, vyberte Rozšírené a následne možnosť "Zapnúť WiFi automaticky"</string>
-  <string name="wizard_scan_timeout">Bola prekročená lehota čakana na dokončenie vyhľadávania WiFi sietí!</string>
+  <string name="wizard_addnetwork_error">Nedá sa pridať konfigurácia Wi-Fi siete!</string>
+  <string name="wizard_wifi_timeout">Bola prekročená lehota čakania na údaje o aktuálnej Wi-Fi sieti! Prejdite do nastavení Wi-Fi systému Android, vyberte Rozšírené a následne možnosť "Zapnúť Wi-Fi automaticky"</string>
+  <string name="wizard_scan_timeout">Bola prekročená lehota čakana na dokončenie vyhľadávania Wi-Fi sietí!</string>
   <string name="wizard_connect_timeout">Bola prekročená lehota čakania na nadviazanie spojenia s vykonávacím zariadením!</string>
   <string name="wizard_configure_timeout">Bola prekročená lehota čakania na dokončenie konfigurácie zariadenia!</string>
-  <string name="wizard_reconnect_timeout">Bola prekročená lehota čakania na návrat do základnej WiFi siete!</string>
+  <string name="wizard_reconnect_timeout">Bola prekročená lehota čakania na návrat do základnej Wi-Fi siete!</string>
   <string name="device_reg_request_timeout">Bola prekročená lehota čakania na informácie o dostupnosti registrácie zariadení!</string>
 
-  <string name="wizard_iodevice_notfound">Nenašli sa žiadne zariadenia! Skontrolujte, či zariadenie, ktoré chcete konfigurovať, pracuje v konfiguračnom režime, a potom to skúste znova. DÔLEŽITÉ – Niektoré verzie systému Android vyžadujú, aby bolo aktivované GPS s cieľom umožniť aplikáciám vyhľadávať WiFi site. Preto skontrolujte, že je GPS spustené.</string>
+  <string name="wizard_iodevice_notfound">Nenašli sa žiadne zariadenia! Skontrolujte, či zariadenie, ktoré chcete konfigurovať, pracuje v konfiguračnom režime, a potom to skúste znova. DÔLEŽITÉ – Niektoré verzie systému Android vyžadujú, aby bolo aktivované GPS s cieľom umožniť aplikáciám vyhľadávať Wi-Fi site. Preto skontrolujte, že je GPS spustené.</string>
 
 
   <string name="wizard_done">Konfigurácia zariadenia bola úspešne dokončená :)</string>
@@ -216,7 +216,7 @@
   <string name="channel_func_valve_percentage">Valve</string>
 
   <string name="channel_caption_heatmeter">Merač tepla</string>
-  <string name="add_wizard_step_2_message">Zadaj názov a heslo svojej domácej alebo firemnej WiFi siete prostredníctvom ktorej bude môcť ovládač nadviazať spojenie so serverom.</string>
+  <string name="add_wizard_step_2_message">Zadaj názov a heslo svojej domácej alebo firemnej Wi-Fi siete prostredníctvom ktorej bude môcť ovládač nadviazať spojenie so serverom.</string>
   <string name="aritmetic_balance_days">Aritmetická bilancia – dni</string>
   <string name="aritmetic_balance_hours">Aritmetická bilancia – hodiny</string>
   <string name="aritmetic_balance_minutes">Aritmetická bilancia – minúty</string>
@@ -299,9 +299,9 @@
   <string name="wake_up_frequency">Frekvencia budenia</string>
   <string name="wakeup_info">*) Vložené nastavenia sa použijú pri najbližšom vybudení uzla.</string>
   <string name="wheel">Koliesko</string>
-  <string name="wifi_rssi">WiFi RSSI</string>
-  <string name="wifi_signal_strength">Intenzita WiFi signálu</string>
-  <string name="wifi_throttling">Kvôli limitom skenovania WiFi siete predpísaným systémom Android je potrebné čakať po vyššie uvedený čas.</string>
+  <string name="wifi_rssi">Wi-Fi RSSI</string>
+  <string name="wifi_signal_strength">Intenzita Wi-Fi signálu</string>
+  <string name="wifi_throttling">Kvôli limitom skenovania Wi-Fi siete predpísaným systémom Android je potrebné čakať po vyššie uvedený čas.</string>
   <string name="wizard_step1_txt2">Uisti sa, že mobilné dáta sú počas pridávania zariadení vypnuté. V opačnom prípade sa pridávanie nemusí podariť.</string>
   <string name="yes">Áno</string>
   <string name="z_wave">Most z-wave</string>
@@ -392,11 +392,11 @@
   <string name="status_led">Dióda statusu</string>
   <string name="info_led_on">Kontrolka LED sa rozsvieti, keď sa vytvorí spojenie so serverom.</string>
   <string name="info_led_off">Kontrolka LED prestane svietiť, keď sa vytvorí spojenie so serverom.</string>
-  <string name="info_led_alwaysoff">Kontrolka je vždy vypnutá, pokiaľ nie je zariadenie v režime konfigurácie wifi (Režim AP).</string>
+  <string name="info_led_alwaysoff">Kontrolka je vždy vypnutá, pokiaľ nie je zariadenie v režime konfigurácie Wi-Fi (Režim AP).</string>
   <string name="input">Vstup</string>
   <string name="monostable">Monostabilný</string>
   <string name="bistable">Bistabilný</string>
-  <string name="wizard_iodev_connect_failed">Pokus o vytvorenie pripojenia WiFi s vykonávacím zariadením zlyhal.</string>
+  <string name="wizard_iodev_connect_failed">Pokus o vytvorenie pripojenia Wi-Fi s vykonávacím zariadením zlyhal.</string>
   <string name="diw_cfg_info_oprange">Prispôsobte tiež rozsah činnosti stmievača nastavením minimálnej a maximálnej úrovne jasu. Minimálnu a maximálnu hodnotu môžete nastaviť presunutím bežcov umiestnených na oboch stranách kolieska.</string>
   <string name="diw_cfg_info_in_options">Možnosti vstupu</string>
   <string name="diw_cfg_info_mono_option">Táto možnosť mení správanie vstupu, ku ktorému je pripojené monostabilné tlačidlo. Ak je táto možnosť vypnutá, stmievač zastaví proces rozjasňovania pri dosiahnutí maximálnej úrovne jasu a v prípade stmievania, keď dosiahne minimálnu úroveň. Zapnutím tejto možnosti sa prepne na minimálnu úroveň hneď po dosiahnutí maximálneho jasu a v prípade stmievania na maximálnu hodnotu hneď po dosiahnutí minima. Rozjasňovanie/stmievanie bude pokračovať, kým bude stlačené tlačidlo.</string>
@@ -404,7 +404,7 @@
   <string name="dgf_too_long_operation_warning">Zasklenie je odhalené viac ako 20 hodín, čo môže mať negatívny vplyv na jeho životnosť. Odporúča sa všetky úseky pokryť minimálne 4 hodiny, aby sa zregenerovali.</string>
   <string name="dgf_planned_regeneration_in_progress">Prebieha plánovaná regenerácia.</string>
   <string name="dgf_regeneration_after20h">Prebieha regenerácia, ktorá bola spustená po 20 h prevádzky.</string>
-  <string name="wizard_done_explentations">Ak sa zariadenie v aplikácii nezobrazí, zopakujte postup pridávania znova a prečítajte si „Predchádzajúci status” zobrazený vyššie. Obsahuje informácie, na základe ktorých vieme určiť, prečo sa zariadeniu nepodarilo pripojiť k serveru. Hlásenie “SSID Not Found” znamená, že zadaný názov WiFi siete 2,4 GHz nebol nájdený alebo je sieť mimo dosahu.</string>
+  <string name="wizard_done_explentations">Ak sa zariadenie v aplikácii nezobrazí, zopakujte postup pridávania znova a prečítajte si „Predchádzajúci status” zobrazený vyššie. Obsahuje informácie, na základe ktorých vieme určiť, prečo sa zariadeniu nepodarilo pripojiť k serveru. Hlásenie “SSID Not Found” znamená, že zadaný názov Wi-Fi siete 2,4 GHz nebol nájdený alebo je sieť mimo dosahu.</string>
   <string name="incorrect_email_or_password">Nesprávna e-mailová adresa alebo heslo</string>
   <string name="incorrect_password">Nesprávne heslo</string>
   <string name="channel_name">Názov kanála</string>
@@ -417,7 +417,7 @@
   <string name="motor_problem">Problém s motorom / Neočakávané zastavenie.</string>
   <string name="lastconnectionresetcause_unknown">0: neznámy</string>
   <string name="lastconnectionresetcause_activity_timeout">1: žiadna odpoveď zo servera</string>
-  <string name="lastconnectionresetcause_wifi_connection_lost">2: stratené WiFi pripojenie</string>
+  <string name="lastconnectionresetcause_wifi_connection_lost">2: stratené Wi-Fi pripojenie</string>
   <string name="lastconnectionresetcause_server_connection_lost">3: obnovenie pripojenia k serveru</string>
   <string name="basic_profile_warning">Režim je nedostupný</string>
   <string name="basic_config_unavailable">Pred vypnutím pokročilého režimu vyberte overenie e-mailu s automatickou detekciou servera.</string>

@@ -299,8 +299,8 @@
   <string name="wake_up_frequency">Vekkefrekvensen</string>
   <string name="wakeup_info">*) De angitte innstillingene blir brukt neste gang noden vekkes.</string>
   <string name="wheel">Hjul</string>
-  <string name="wifi_rssi">WiFi RSSI</string>
-  <string name="wifi_signal_strength">WiFi signalstyrke</string>
+  <string name="wifi_rssi">Wi-Fi RSSI</string>
+  <string name="wifi_signal_strength">Wi-Fi signalstyrke</string>
   <string name="wifi_throttling">På grunn av begrensningene for skanning av WiFi-nettverk pålagt av Android-systemet, må du vente den tiden som er presentert ovenfor.</string>
   <string name="wizard_step1_txt2">Forsikre deg om at mobildata er slått av når du legger til enheter. Ellers kan tillegging mislykkes.</string>
   <string name="yes">Ja</string>
@@ -392,7 +392,7 @@
   <string name="status_led">Status LED</string>
   <string name="info_led_on">LED-en lyser når tilkoblingen til serveren er etablert.</string>
   <string name="info_led_off">LED-en lyser ikke når forbindelsen med serveren er etablert.</string>
-  <string name="info_led_alwaysoff">Lysdioden er alltid av, med mindre enheten er i wifi-konfigurasjonsmodus (AP-modus).</string>
+  <string name="info_led_alwaysoff">Lysdioden er alltid av, med mindre enheten er i WiFi-konfigurasjonsmodus (AP-modus).</string>
   <string name="input">Inngang</string>
   <string name="monostable">Monostabil</string>
   <string name="bistable">Bistabil</string>
