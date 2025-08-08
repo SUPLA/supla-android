@@ -37,5 +37,5 @@ fun InstructionText(@StringRes instructionRes: Int, color: Color = MaterialTheme
     color = color,
     modifier = Modifier
       .padding(horizontal = Distance.default)
-      .padding(top = Distance.small)
+      .padding(vertical = Distance.small)
   )
