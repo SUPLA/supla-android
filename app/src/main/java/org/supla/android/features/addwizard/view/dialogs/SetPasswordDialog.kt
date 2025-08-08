@@ -99,6 +99,8 @@ fun SetPasswordScope.SetPasswordDialog(state: SetPasswordState) {
       color = if (state.error) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant
     )
 
+    Separator(style = SeparatorStyle.LIGHT)
+
     DialogDoubleButtons(
       onNegativeClick = {
         autofillManager?.cancel()

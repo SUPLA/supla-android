@@ -90,6 +90,7 @@ fun ProvidePasswordScope.ProvidePasswordDialog(state: ProvidePasswordState) {
       modifier = Modifier.padding(horizontal = Distance.default)
     )
     InstructionText(R.string.add_wizard_password_instruction)
+    Separator(style = SeparatorStyle.LIGHT)
     DialogDoubleButtons(
       onNegativeClick = {
         autofillManager?.cancel()

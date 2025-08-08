@@ -265,7 +265,7 @@ private fun CalendarWeeks(state: CalendarPickerState, visibleDate: Date, onDaySe
       Spacer(modifier = Modifier.weight(1f))
 
       var date = dateRange.start
-      for (i in 0..6) {
+      (0..6).forEach { i ->
         val day = date.dayStart()
         CalendarDayBox(
           text = day.dayOfMonth.toString(),
@@ -347,7 +347,6 @@ private fun CalendarHourInput(
       }
     }
   } else {
-    var hourValue by remember { mutableStateOf("00:00") }
     var hourCorrect by remember { mutableStateOf(true) }
     CalendarHourTextField(label = stringResource(id = R.string.calendar_picker_end_hour), correct = hourCorrect, value = "00:00") {
       val hour = Hour.from(it)
@@ -355,7 +354,6 @@ private fun CalendarHourInput(
         onHourSelected(hour, null)
       }
       hourCorrect = hour != null
-      hourValue = it
     }
   }
 }
