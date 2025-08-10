@@ -695,4 +695,5 @@
   <string name="wizard_state_configuring">Configuration de l\'appareil…</string>
   <string name="wizard_state_finishing">Finalisation…</string>
   <string name="add_wizard_password_instruction">Veuillez utiliser le mot de passe utilisé pour l\'accès à la page web de configuration locale.\n\nMot de passe oublié ? Vous pouvez le modifier sur Supla Cloud ou réinitialiser l\'appareil aux paramètres d\'usine.</string>
+  <string name="add_wizard_manual_reconnect">La connexion réseau à l\'appareil a été établie manuellement. Assurez-vous que votre téléphone est à nouveau connecté à Internet et poursuivez le processus.</string>
 </resources>

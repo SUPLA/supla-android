@@ -48,6 +48,7 @@ interface AddWizardScope :
   SetPasswordScope {
   fun closeCloudDialog()
   fun openCloud()
+  fun continueAfterManualReconnect()
 }
 
 @Composable
@@ -79,6 +80,7 @@ fun AddWizardScope.View(modelState: AddWizardViewModelState) {
     modelState.setPasswordState?.let { SetPasswordDialog(it) }
     modelState.providePasswordState?.let { ProvidePasswordDialog(it) }
     modelState.canceling.ifTrue { LoadingScrim() }
+    modelState.showReconnectDialog.ifTrue { ReconnectDialog() }
   }
 }
 
@@ -91,4 +93,14 @@ private fun AddWizardScope.FollowupPopup() =
     positiveButtonTitle = stringResource(R.string.add_device_needs_cloud_go),
     onPositiveClick = { openCloud() },
     onNegativeClick = { closeCloudDialog() }
+  )
+
+@Composable
+private fun AddWizardScope.ReconnectDialog() =
+  AlertDialog(
+    title = stringResource(R.string.wizard_state_finishing),
+    message = stringResource(R.string.add_wizard_manual_reconnect),
+    positiveButtonTitle = stringResource(R.string.next),
+    negativeButtonTitle = null,
+    onPositiveClick = { continueAfterManualReconnect() }
   )

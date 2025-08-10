@@ -805,6 +805,7 @@
   <string name="wizard_state_configuring">Konfigurowanie urządzenia…</string>
   <string name="wizard_state_finishing">Finalizacja…</string>
   <string name="add_wizard_password_instruction">Zastosuj hasło dostępu używane do lokalnej strony konfiguracyjnej.\n\nZapomniałeś hasła? Możesz je zmienić w Supla Cloud lub zresetować urządzenie do ustawień fabrycznych.</string>
+  <string name="add_wizard_manual_reconnect">Połączenie sieciowe z urządzeniem zostało ustanowione manualnie. Upewnij się, że telefon przełączył się na sieć z internetem i kontynuuj proces.</string>
 
   <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
     <item quantity="one">włączone</item>

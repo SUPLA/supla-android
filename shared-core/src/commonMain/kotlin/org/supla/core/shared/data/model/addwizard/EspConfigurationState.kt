@@ -208,6 +208,11 @@ class NetworkSearch(
         espConfigurationController.cancel()
       }
 
+      EspConfigurationEvent.NetworkConnected -> {
+        stateHolder.setState(ConfiguringEsp(stateHolder, espConfigurationController))
+        espConfigurationController.configureEsp()
+      }
+
       else -> {
         stateHolder.setState(ConfigurationFailure(stateHolder, espConfigurationController))
         espConfigurationController.showError(EspConfigurationError.Scan)
@@ -325,6 +330,11 @@ class ConfiguringPassword(
         espConfigurationController.reconnect()
       }
 
+      EspConfigurationEvent.Back -> {
+        stateHolder.setState(Reconnecting(stateHolder, espConfigurationController, AddWizardFinalAction.Back))
+        espConfigurationController.reconnect()
+      }
+
       else -> {
         val finalAction = AddWizardFinalAction.Error(EspConfigurationError.Configuration)
         stateHolder.setState(Reconnecting(stateHolder, espConfigurationController, finalAction))
@@ -356,6 +366,11 @@ class ProvidingPassword(
 
       is EspConfigurationEvent.EspConfigurationFailure -> {
         stateHolder.setState(Reconnecting(stateHolder, espConfigurationController, AddWizardFinalAction.Error(event.error)))
+        espConfigurationController.reconnect()
+      }
+
+      EspConfigurationEvent.Back -> {
+        stateHolder.setState(Reconnecting(stateHolder, espConfigurationController, AddWizardFinalAction.Back))
         espConfigurationController.reconnect()
       }
 

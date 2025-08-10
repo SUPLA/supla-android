@@ -832,6 +832,7 @@
   <string name="wizard_state_finishing">Finishing…</string>
   <string name="add_wizard_device_temporarily_locked">The limit of unsuccessful login attempts has been exceeded. Please try again later…</string>
   <string name="add_wizard_password_instruction">Please use the password used for local configuration web page access.\n\nForgot your password? You can change it on Supla Cloud or reset the device to factory settings.</string>
+  <string name="add_wizard_manual_reconnect">The network connection to the device was established manually. Make sure your phone has connected back to the internet and continue the process.</string>
 
   <plurals name="details_timer_info_on" translatable="false">
     <item quantity="other">on</item>

@@ -708,4 +708,5 @@
   <string name="wizard_state_configuring">Konfiguracija naprave…</string>
   <string name="wizard_state_finishing">Zaključevanje…</string>
   <string name="add_wizard_password_instruction">Prosimo, uporabite geslo, ki je bilo uporabljeno za dostop do spletne strani lokalne konfiguracije.\n\nSte pozabili geslo? Lahko ga spremenite na Supla Cloud ali ponastavite napravo na tovarniške nastavitve.</string>
+  <string name="add_wizard_manual_reconnect">Omrežna povezava z napravo je bila vzpostavljena ročno. Prepričajte se, da je vaš telefon ponovno povezan z internetom, in nadaljujte postopek.</string>
 </resources>

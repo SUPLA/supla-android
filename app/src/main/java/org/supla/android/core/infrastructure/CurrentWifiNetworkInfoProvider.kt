@@ -59,8 +59,9 @@ class CurrentWifiNetworkInfoProvider @Inject constructor(
           Trace.i(CurrentWifiNetworkInfoProvider::class.simpleName, "onCapabilitiesChanged ${wifiInfo?.ssid}")
           wifiInfo?.let {
             networkInfo = NetworkInfo(
-              it.ssid?.skipQuotation()?.skipUnknownSsid(),
-              it.networkId
+              ssid = it.ssid?.skipQuotation()?.skipUnknownSsid(),
+              networkId = it.networkId,
+              networkType = if (it.frequency < 2500) NetworkType.TYPE_2_4_GHZ else NetworkType.TYPE_5_GHZ
             )
           }
         }
@@ -84,15 +85,21 @@ class CurrentWifiNetworkInfoProvider @Inject constructor(
       wifiManager.connectionInfo?.let {
         NetworkInfo(
           ssid = it.ssid?.skipQuotation()?.skipUnknownSsid(),
-          networkId = it.networkId
+          networkId = it.networkId,
+          networkType = if (it.frequency < 2500) NetworkType.TYPE_2_4_GHZ else NetworkType.TYPE_5_GHZ
         )
       }
     }
 
   data class NetworkInfo(
     val ssid: String?,
-    val networkId: Int
+    val networkId: Int,
+    val networkType: NetworkType
   )
+
+  enum class NetworkType {
+    TYPE_2_4_GHZ, TYPE_5_GHZ
+  }
 }
 
 private fun String.skipUnknownSsid(): String? =

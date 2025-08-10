@@ -707,4 +707,5 @@
   <string name="wizard_state_configuring">Az eszköz konfigurálása…</string>
   <string name="wizard_state_finishing">Befejezés…</string>
   <string name="add_wizard_password_instruction">Kérjük, használja a helyi konfigurációs weboldal hozzáféréséhez használt jelszót.\n\nElfelejtetted a jelszavad? Megváltoztathatod a Supla Cloudon, vagy visszaállíthatod az eszközt gyári beállításokra.</string>
+  <string name="add_wizard_manual_reconnect">A hálózati kapcsolatot az eszközzel manuálisan hozták létre. Győződjön meg róla, hogy a telefonja ismét csatlakozik az internethez, és folytassa a folyamatot.</string>
 </resources>
