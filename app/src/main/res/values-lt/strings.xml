@@ -685,4 +685,5 @@
   <string name="wizard_state_configuring">Įrenginio konfigūravimas…</string>
   <string name="wizard_state_finishing">Baigimas…</string>
   <string name="add_wizard_password_instruction">Prašome naudoti slaptažodį, kuris buvo naudojamas vietinės konfigūracijos tinklalapio prieigai.\n\nPamiršote slaptažodį? Galite jį pakeisti Supla Cloud sistemoje arba atkurti gamyklinius įrenginio nustatymus.</string>
+  <string name="add_wizard_manual_reconnect">Tinklo ryšys su įrenginiu buvo nustatytas rankiniu būdu. Įsitikinkite, kad jūsų telefonas vėl prisijungė prie interneto, ir tęskite procesą.</string>
 </resources>

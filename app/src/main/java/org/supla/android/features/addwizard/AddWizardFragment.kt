@@ -103,7 +103,7 @@ class AddWizardFragment : BaseComposeFragment<AddWizardViewModelState, AddWizard
 
   override fun handleEvents(event: AddWizardViewEvent) {
     when (event) {
-      AddWizardViewEvent.Close -> navigator.back()
+      is AddWizardViewEvent.Close -> if (event.clientWorking) navigator.back() else navigator.forcePopToStatus()
       AddWizardViewEvent.OpenScanner ->
         barCodeScanner.startScan()
           .addOnSuccessListener {

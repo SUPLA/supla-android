@@ -18,6 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.R
 import org.supla.android.Trace
@@ -58,8 +59,10 @@ class StatusViewModel @Inject constructor(
   suplaSchedulers
 ) {
 
+  private var stateDisposable: Disposable? = null
+
   override fun onStart() {
-    suplaClientStateHolder.state()
+    stateDisposable = suplaClientStateHolder.state()
       .attachSilent()
       .subscribeBy(
         onNext = { state ->
@@ -102,7 +105,10 @@ class StatusViewModel @Inject constructor(
           }
         }
       )
-      .disposeBySelf()
+  }
+
+  override fun onStop() {
+    stateDisposable?.dispose()
   }
 
   fun cancelAndOpenProfiles() {

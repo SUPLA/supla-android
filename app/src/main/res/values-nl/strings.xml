@@ -708,4 +708,5 @@
   <string name="wizard_state_configuring">Configureren van het apparaat…</string>
   <string name="wizard_state_finishing">Afronding…</string>
   <string name="add_wizard_password_instruction">Gebruik het wachtwoord dat is gebruikt voor toegang tot de lokale configuratie webpagina.\n\nWachtwoord vergeten? Je kunt het wijzigen op Supla Cloud of het apparaat terugzetten naar de fabrieksinstellingen.</string>
+  <string name="add_wizard_manual_reconnect">De netwerkverbinding met het apparaat is handmatig tot stand gebracht. Zorg ervoor dat uw telefoon opnieuw verbinding heeft met internet en vervolg het proces.</string>
 </resources>

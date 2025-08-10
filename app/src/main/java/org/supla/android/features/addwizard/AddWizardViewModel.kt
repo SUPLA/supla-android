@@ -35,6 +35,7 @@ import org.supla.android.core.infrastructure.CurrentWifiNetworkInfoProvider
 import org.supla.android.core.infrastructure.WiFiScanner
 import org.supla.android.core.networking.suplaclient.SuplaClientEvent
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
+import org.supla.android.core.networking.suplaclient.SuplaClientState
 import org.supla.android.core.networking.suplaclient.SuplaClientStateHolder
 import org.supla.android.core.storage.EncryptedPreferences
 import org.supla.android.core.ui.ViewEvent
@@ -66,6 +67,7 @@ import org.supla.android.ui.dialogs.AuthorizationReason
 import org.supla.android.ui.dialogs.authorize.AuthorizationModelState
 import org.supla.android.ui.dialogs.authorize.BaseAuthorizationViewModel
 import org.supla.android.usecases.client.AuthorizeUseCase
+import org.supla.android.usecases.client.DisconnectUseCase
 import org.supla.android.usecases.client.LoginUseCase
 import org.supla.android.usecases.profile.LoadActiveProfileUseCase
 import org.supla.core.shared.data.model.addwizard.EspConfigurationController
@@ -117,6 +119,7 @@ class AddWizardViewModel @Inject constructor(
   private val authorizeEspUseCase: AuthorizeEspUseCase,
   private val configureEspUseCase: ConfigureEspUseCase,
   private val findEspSsidUseCase: FindEspSsidUseCase,
+  private val disconnectUseCase: DisconnectUseCase,
   private val wiFiScanner: WiFiScanner,
   suplaClientProvider: SuplaClientProvider,
   profileRepository: RoomProfileRepository,
@@ -135,6 +138,7 @@ class AddWizardViewModel @Inject constructor(
   EspConfigurationController {
 
   private var currentJob: Job? = null
+  private var networkSelectedManually = false
   private lateinit var configurationStateHolder: AndroidEspConfigurationStateHolder
 
   override fun updateAuthorizationDialogState(updater: (AuthorizationDialogState?) -> AuthorizationDialogState?) {
@@ -187,6 +191,12 @@ class AddWizardViewModel @Inject constructor(
 
   override fun openCloud() {
     sendEvent(AddWizardViewEvent.OpenCloud)
+  }
+
+  override fun continueAfterManualReconnect() {
+    updateState { it.copy(showReconnectDialog = false) }
+    configurationStateHolder.handleEvent(Reconnected)
+    suplaClientStateHolder.handleEvent(SuplaClientEvent.AddWizardFinished)
   }
 
   override fun onBarCodeScan() {
@@ -260,13 +270,14 @@ class AddWizardViewModel @Inject constructor(
         }
       }
 
-      is AddWizardScreen.Message, is AddWizardScreen.Success -> sendEvent(AddWizardViewEvent.Close)
+      is AddWizardScreen.Message, is AddWizardScreen.Success ->
+        sendEvent(AddWizardViewEvent.Close(suplaClientStateHolder.isNotFinished))
     }
   }
 
   override fun onClose(step: AddWizardScreen) {
     if (step !is AddWizardScreen.Configuration || configurationStateHolder.isInactive) {
-      sendEvent(AddWizardViewEvent.Close)
+      sendEvent(AddWizardViewEvent.Close(suplaClientStateHolder.isNotFinished))
     } else {
       configurationStateHolder.handleEvent(Close)
     }
@@ -314,8 +325,12 @@ class AddWizardViewModel @Inject constructor(
   }
 
   override fun onForceNextClick() {
-    configureEsp()
+    networkSelectedManually = true
     updateState { it.copy(scannerDialogState = null) }
+    viewModelScope.launch {
+      withContext(Dispatchers.IO) { disconnectUseCase.invokeSynchronous(SuplaClientState.Reason.AddWizardStarted) }
+      configurationStateHolder.handleEvent(EspConfigurationEvent.NetworkConnected)
+    }
   }
 
   fun showMissingPermissionError(appName: String) {
@@ -383,6 +398,8 @@ class AddWizardViewModel @Inject constructor(
   }
 
   override fun findEspNetwork() {
+    // Clean flag before searching network. If scan limit reached, user may select network manually and continue
+    networkSelectedManually = false
     currentJob = viewModelScope.launch {
       val result = withContext(Dispatchers.IO) { findEspSsidUseCase() }
       when (result) {
@@ -473,14 +490,20 @@ class AddWizardViewModel @Inject constructor(
   }
 
   override fun reconnect() {
-    suplaClientStateHolder.handleEvent(SuplaClientEvent.AddWizardFinished)
-    currentJob = viewModelScope.launch {
-      val result = withContext(Dispatchers.IO) { reconnectToInternetUseCase(currentState().networkId) }
+    if (networkSelectedManually) {
+      // If connection with ESP device was made manually, automatic reconnect is not possible.
+      // User has to do it manually, so information popup is displayed.
+      updateState { it.copy(showReconnectDialog = true) }
+    } else {
+      currentJob = viewModelScope.launch {
+        val result = withContext(Dispatchers.IO) { reconnectToInternetUseCase(currentState().networkId) }
 
-      when (result) {
-        ConnectResult.SUCCESS -> configurationStateHolder.handleEvent(Reconnected)
-        ConnectResult.FAILURE,
-        ConnectResult.TIMEOUT -> configurationStateHolder.handleEvent(ReconnectTimeout)
+        suplaClientStateHolder.handleEvent(SuplaClientEvent.AddWizardFinished)
+        when (result) {
+          ConnectResult.SUCCESS -> configurationStateHolder.handleEvent(Reconnected)
+          ConnectResult.FAILURE,
+          ConnectResult.TIMEOUT -> configurationStateHolder.handleEvent(ReconnectTimeout)
+        }
       }
     }
   }
@@ -515,7 +538,7 @@ class AddWizardViewModel @Inject constructor(
   }
 
   override fun close() {
-    sendEvent(AddWizardViewEvent.Close)
+    sendEvent(AddWizardViewEvent.Close(suplaClientStateHolder.isNotFinished))
   }
 
   override fun back() {
@@ -545,7 +568,10 @@ class AddWizardViewModel @Inject constructor(
     } else {
       val networkName = encryptedPreferences.wizardWifiName
       val networkPassword = encryptedPreferences.wizardWifiPassword
+
+      // Propose current network, but only if it is 2.4 GHz
       val currentNetwork = currentWifiNetworkInfoProvider.provide()
+        ?.let { if (it.networkType == CurrentWifiNetworkInfoProvider.NetworkType.TYPE_2_4_GHZ) it else null }
 
       updateState {
         it.navigateTo(screen = AddWizardScreen.NetworkSelection)
@@ -664,7 +690,7 @@ class AddWizardViewModel @Inject constructor(
 }
 
 sealed interface AddWizardViewEvent : ViewEvent {
-  data object Close : AddWizardViewEvent
+  data class Close(val clientWorking: Boolean) : AddWizardViewEvent
   data object OpenScanner : AddWizardViewEvent
   data object CheckPermissions : AddWizardViewEvent
   data object OpenCloud : AddWizardViewEvent
@@ -683,6 +709,7 @@ data class AddWizardViewModelState(
   val networkId: Int? = null,
   val setPasswordState: SetPasswordState? = null,
   val providePasswordState: ProvidePasswordState? = null,
+  val showReconnectDialog: Boolean = false,
   override val authorizationDialogState: AuthorizationDialogState? = null
 ) : AuthorizationModelState() {
 
@@ -726,3 +753,9 @@ private fun String.isAcceptablePassword(): Boolean {
 
   return hasLowercase && hasUppercase && hasDigit
 }
+
+private val SuplaClientStateHolder.isNotFinished: Boolean
+  get() = when (stateOrNull()) {
+    is SuplaClientState.Finished -> false
+    else -> true
+  }
