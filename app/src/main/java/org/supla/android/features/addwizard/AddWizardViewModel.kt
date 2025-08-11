@@ -32,6 +32,7 @@ import kotlinx.coroutines.withContext
 import org.supla.android.R
 import org.supla.android.Trace
 import org.supla.android.core.infrastructure.CurrentWifiNetworkInfoProvider
+import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.infrastructure.WiFiScanner
 import org.supla.android.core.networking.suplaclient.SuplaClientEvent
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
@@ -120,6 +121,7 @@ class AddWizardViewModel @Inject constructor(
   private val configureEspUseCase: ConfigureEspUseCase,
   private val findEspSsidUseCase: FindEspSsidUseCase,
   private val disconnectUseCase: DisconnectUseCase,
+  private val dateProvider: DateProvider,
   private val wiFiScanner: WiFiScanner,
   suplaClientProvider: SuplaClientProvider,
   profileRepository: RoomProfileRepository,
@@ -139,6 +141,7 @@ class AddWizardViewModel @Inject constructor(
 
   private var currentJob: Job? = null
   private var networkSelectedManually = false
+  private var registrationActivationTime: Long? = null
   private lateinit var configurationStateHolder: AndroidEspConfigurationStateHolder
 
   override fun updateAuthorizationDialogState(updater: (AuthorizationDialogState?) -> AuthorizationDialogState?) {
@@ -367,7 +370,7 @@ class AddWizardViewModel @Inject constructor(
 
   override fun checkRegistration() {
     currentJob = viewModelScope.launch {
-      var result = withContext(Dispatchers.IO) { checkRegistrationEnabledUseCase() }
+      var result = withContext(Dispatchers.IO) { checkRegistrationEnabled() }
       if (result == CheckRegistrationEnabledUseCase.Result.TIMEOUT) {
         Trace.i(TAG, "First timeout reached, awaiting second time")
         result = withContext(Dispatchers.IO) { checkRegistrationEnabledUseCase() }
@@ -379,6 +382,19 @@ class AddWizardViewModel @Inject constructor(
         CheckRegistrationEnabledUseCase.Result.TIMEOUT -> configurationStateHolder.handleEvent(RegistrationUnknown)
       }
     }
+  }
+
+  private suspend fun checkRegistrationEnabled(): CheckRegistrationEnabledUseCase.Result {
+    val currentTime = dateProvider.currentTimestamp()
+    registrationActivationTime?.let {
+      if (currentTime < it + 3600_000) {
+        Trace.d(TAG, "Check registration activation skipped")
+        return CheckRegistrationEnabledUseCase.Result.ENABLED
+      }
+    }
+
+    registrationActivationTime = currentTime
+    return checkRegistrationEnabledUseCase()
   }
 
   override fun authorize() {
