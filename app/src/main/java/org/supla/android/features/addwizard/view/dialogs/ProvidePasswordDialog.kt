@@ -111,7 +111,7 @@ private val previewScope = object : ProvidePasswordScope {
   override fun onPasswordProvided(password: String) {}
 }
 
-@Preview
+@Preview(locale = "pl")
 @Composable
 private fun Preview() {
   SuplaTheme {

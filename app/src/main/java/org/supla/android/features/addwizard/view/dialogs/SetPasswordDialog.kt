@@ -122,7 +122,7 @@ private val previewScope = object : SetPasswordScope {
   override fun onPasswordSet(password: String, repeatPassword: String) {}
 }
 
-@Preview
+@Preview(locale = "pl")
 @Composable
 private fun Preview() {
   SuplaTheme {

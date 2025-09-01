@@ -794,7 +794,7 @@
   <string name="add_wizard_add_more">Dodaj kolejne</string>
   <string name="add_wizard_repeat">Spróbuj ponownie</string>
   <string name="add_wizard_password_clarification">Rejestracja nowych urządzeń w Cloud jest wyłączona. Włącz ją ręcznie lub podaj hasło do Twojego konta, aby kreator samodzielnie ją włączył na czas rejestracji nowych urządzeń.</string>
-  <string name="add_wizard_password_rules">Hasło powinno mieć co najmniej 8 znaków i zawierać co najmniej jedną wielką literę, jedną małą literę oraz jedną cyfrę.</string>
+  <string name="add_wizard_password_rules">Ustaw hasło, które zabezpiecza urządzenie przed zmianami przez osoby nieuprawnione (hasło do strony https://192.168.4.1).\n\nHasło powinno mieć co najmniej 8 znaków i zawierać co najmniej jedną wielką literę, jedną małą literę oraz jedną cyfrę.</string>
   <string name="add_wizard_password_set_title">Ustaw hasło do urządzenia</string>
   <string name="add_wizard_password_new_label">Nowe hasło</string>
   <string name="add_wizard_password_repeat_label">Powtórz hasło</string>
@@ -804,7 +804,7 @@
   <string name="wizard_state_connecting">Łączenie z urządzeniem…</string>
   <string name="wizard_state_configuring">Konfigurowanie urządzenia…</string>
   <string name="wizard_state_finishing">Finalizacja…</string>
-  <string name="add_wizard_password_instruction">Zastosuj hasło dostępu używane do lokalnej strony konfiguracyjnej.\n\nZapomniałeś hasła? Możesz je zmienić w Supla Cloud lub zresetować urządzenie do ustawień fabrycznych.</string>
+  <string name="add_wizard_password_instruction">Wprowadź hasło, które zabezpiecza urządzenie przed zmianami ustawień przez osoby nieuprawnione (Hasło do strony https://192.168.4.1).\n\nZapomniałeś hasła? Możesz je zmienić w Supla Cloud lub zresetować urządzenie do ustawień fabrycznych.</string>
   <string name="add_wizard_manual_reconnect">Połączenie sieciowe z urządzeniem zostało ustanowione manualnie. Upewnij się, że telefon przełączył się na sieć z internetem i kontynuuj proces.</string>
 
   <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
