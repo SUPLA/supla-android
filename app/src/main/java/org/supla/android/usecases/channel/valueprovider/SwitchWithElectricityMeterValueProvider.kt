@@ -46,6 +46,7 @@ class SwitchWithElectricityMeterValueProvider @Inject constructor(
     when (userStateHolder.getElectricityMeterSettings(channelWithChildren.profileId, channelWithChildren.remoteId).showOnListSafe) {
       SuplaElectricityMeasurementType.REVERSE_ACTIVE_ENERGY,
       SuplaElectricityMeasurementType.POWER_ACTIVE,
+      SuplaElectricityMeasurementType.POWER_ACTIVE_KW,
       SuplaElectricityMeasurementType.VOLTAGE ->
         electricityMeterValueProvider.value(channelWithChildren, valueType)
 
