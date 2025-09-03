@@ -18,7 +18,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import android.content.Context
-import org.supla.android.Preferences
 import org.supla.android.Trace
 import org.supla.android.core.infrastructure.BuildConfigProxy
 import org.supla.android.core.infrastructure.DateProvider
@@ -42,7 +41,6 @@ class InitializationUseCase @Inject constructor(
   private val stateHolder: SuplaClientStateHolder,
   private val appDatabase: AppDatabase,
   private val measurementsDatabase: MeasurementsDatabase,
-  private val preferences: Preferences,
   private val profileRepository: RoomProfileRepository,
   private val encryptedPreferences: EncryptedPreferences,
   private val dateProvider: DateProvider,
@@ -58,7 +56,7 @@ class InitializationUseCase @Inject constructor(
     // Check if there is an active profile
     val profileFound = try {
       profileRepository.findActiveProfile().blockingGet().active ?: false
-    } catch (ex: Exception) {
+    } catch (_: Exception) {
       // No active profile
       false
     }
@@ -77,7 +75,7 @@ class InitializationUseCase @Inject constructor(
     if (initializationTime < INITIALIZATION_MIN_TIME_MS) {
       try {
         threadHandler.sleep(INITIALIZATION_MIN_TIME_MS - initializationTime)
-      } catch (ex: Exception) {
+      } catch (_: Exception) {
         // Nothing to do
       }
     }
@@ -103,13 +101,9 @@ class InitializationUseCase @Inject constructor(
       }
 
       Trace.e(TAG, "Could not migrate database, trying to delete it", exception)
-      val result = context.deleteDatabase(DbHelper.DATABASE_NAME)
+      context.deleteDatabase(DbHelper.DATABASE_NAME)
       context.deleteDatabase(MeasurementsDbHelper.DATABASE_NAME)
-      Trace.e(TAG, "Database deletion finished with $result")
-
-      if (result) {
-        preferences.isAnyAccountRegistered = false
-      }
+      Trace.e(TAG, "Database deletion finished")
     }
   }
 }

@@ -33,6 +33,7 @@ import org.supla.android.data.source.remote.rollershutter.SuplaChannelFacadeBlin
 import org.supla.android.di.GSON_FOR_REPO
 import org.supla.android.usecases.channel.RemoveHiddenChannelsUseCase
 import org.supla.android.usecases.developerinfo.CountProvider
+import org.supla.android.usecases.profile.DeleteProfileUseCase
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -41,7 +42,7 @@ import javax.inject.Singleton
 class ChannelConfigRepository @Inject constructor(
   private val channelConfigDao: ChannelConfigDao,
   @Named(GSON_FOR_REPO) private val gson: Gson
-) : CountProvider, RemoveHiddenChannelsUseCase.ChannelsDeletable {
+) : CountProvider, RemoveHiddenChannelsUseCase.ChannelsDeletable, DeleteProfileUseCase.ProfileRemover {
 
   fun findForRemoteId(remoteId: Int) = channelConfigDao.findForRemoteId(remoteId)
 
@@ -97,6 +98,8 @@ class ChannelConfigRepository @Inject constructor(
   override fun count(): Observable<Int> = channelConfigDao.count()
 
   override suspend fun deleteChannelRelated(remoteId: Int, profileId: Long) = channelConfigDao.deleteKtx(remoteId, profileId)
+
+  override fun deleteByProfile(profileId: Long): Completable = channelConfigDao.deleteByProfile(profileId)
 }
 
 private fun SuplaChannelGeneralPurposeMeasurementConfig.toEntity(profileId: Long, gson: Gson): ChannelConfigEntity {

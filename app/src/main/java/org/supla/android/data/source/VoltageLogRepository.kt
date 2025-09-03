@@ -29,6 +29,7 @@ import org.supla.android.data.source.remote.rest.channel.HistoryMeasurement
 import org.supla.android.data.source.remote.rest.channel.HistoryMeasurementType
 import org.supla.android.usecases.channel.RemoveHiddenChannelsUseCase
 import org.supla.android.usecases.developerinfo.CountProvider
+import org.supla.android.usecases.profile.DeleteProfileUseCase
 import retrofit2.Response
 import java.util.Date
 import javax.inject.Inject
@@ -39,7 +40,8 @@ class VoltageLogRepository @Inject constructor(
   private val voltageLogDao: VoltageLogDao
 ) : BaseMeasurementRepository<HistoryMeasurement, VoltageHistoryLogEntity>(voltageLogDao),
   CountProvider,
-  RemoveHiddenChannelsUseCase.ChannelsDeletable {
+  RemoveHiddenChannelsUseCase.ChannelsDeletable,
+  DeleteProfileUseCase.ProfileRemover {
 
   fun findMeasurements(
     remoteId: Int,
@@ -89,5 +91,8 @@ class VoltageLogRepository @Inject constructor(
     )
 
   override fun count(): Observable<Int> = voltageLogDao.count()
+
   override suspend fun deleteChannelRelated(remoteId: Int, profileId: Long) = voltageLogDao.deleteKtx(remoteId, profileId)
+
+  override fun deleteByProfile(profileId: Long): Completable = voltageLogDao.deleteByProfile(profileId)
 }

@@ -17,21 +17,24 @@ package org.supla.android.data.source
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import org.supla.android.data.source.local.dao.ChannelExtendedValueDao
 import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity
 import org.supla.android.usecases.channel.RemoveHiddenChannelsUseCase
 import org.supla.android.usecases.developerinfo.CountProvider
+import org.supla.android.usecases.profile.DeleteProfileUseCase
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class ChannelExtendedValueRepository @Inject constructor(
   private val channelExtendedValueDao: ChannelExtendedValueDao
-) : CountProvider, RemoveHiddenChannelsUseCase.ChannelsDeletable {
+) : CountProvider, RemoveHiddenChannelsUseCase.ChannelsDeletable, DeleteProfileUseCase.ProfileRemover {
   fun findByRemoteId(remoteId: Int) = channelExtendedValueDao.findByRemoteId(remoteId)
   fun update(entity: ChannelExtendedValueEntity) = channelExtendedValueDao.update(entity)
   fun insert(entity: ChannelExtendedValueEntity) = channelExtendedValueDao.insert(entity)
   override fun count(): Observable<Int> = channelExtendedValueDao.count()
   override suspend fun deleteChannelRelated(remoteId: Int, profileId: Long) = channelExtendedValueDao.deleteKtx(remoteId, profileId)
+  override fun deleteByProfile(profileId: Long): Completable = channelExtendedValueDao.deleteByProfile(profileId)
 }

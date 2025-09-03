@@ -20,18 +20,11 @@ package org.supla.android.profile
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
-import org.supla.android.Trace
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.db.AuthProfileItem
-import org.supla.android.extensions.TAG
-import org.supla.android.lib.SuplaClient
-import org.supla.android.lib.singlecall.SingleCall
-import org.supla.android.widget.WidgetManager
 
 class MultiAccountProfileManager(
   private val profileRepository: ProfileRepository,
-  private val widgetManager: WidgetManager,
-  private val singleCallProvider: SingleCall.Provider,
 ) : ProfileManager {
 
   override fun create(profile: AuthProfileItem): Completable = Completable.fromRunnable {
@@ -50,19 +43,6 @@ class MultiAccountProfileManager(
       throw IllegalArgumentException("It's not possible update entity without ID!")
     }
     profileRepository.updateProfile(profile)
-  }
-
-  override fun delete(id: Long): Completable = Completable.fromRunnable {
-    profileRepository.getProfile(id)?.let {
-      try {
-        singleCallProvider.provide(id).registerPushNotificationClientToken(SuplaClient.SUPLA_APP_ID, "", it)
-      } catch (ex: Exception) {
-        Trace.w(TAG, "Token cleanup failed while profile removal (profile id: `$id`)", ex)
-      }
-    }
-
-    profileRepository.deleteProfile(id)
-    widgetManager.onProfileRemoved(id)
   }
 
   override fun getAllProfiles(): Observable<List<AuthProfileItem>> = Observable.fromCallable {

@@ -68,4 +68,7 @@ interface ChannelConfigDao {
 
   @Query("SELECT COUNT($COLUMN_CONFIG) FROM $TABLE_NAME")
   fun count(): Observable<Int>
+
+  @Query("DELETE FROM $TABLE_NAME WHERE $COLUMN_PROFILE_ID = :profileId")
+  fun deleteByProfile(profileId: Long): Completable
 }

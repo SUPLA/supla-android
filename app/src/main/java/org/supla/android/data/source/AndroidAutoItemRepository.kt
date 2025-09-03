@@ -17,9 +17,11 @@ package org.supla.android.data.source
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import io.reactivex.rxjava3.core.Completable
 import org.supla.android.data.source.local.dao.AndroidAutoItemDao
 import org.supla.android.data.source.local.entity.AndroidAutoItemEntity
 import org.supla.android.usecases.channel.RemoveHiddenChannelsUseCase
+import org.supla.android.usecases.profile.DeleteProfileUseCase
 import org.supla.android.usecases.scene.RemoveHiddenScenesUseCase
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -27,7 +29,7 @@ import javax.inject.Singleton
 @Singleton
 class AndroidAutoItemRepository @Inject constructor(
   private val androidAutoItemDao: AndroidAutoItemDao
-) : RemoveHiddenChannelsUseCase.ChannelsDeletable, RemoveHiddenScenesUseCase.ScenesDeletable {
+) : RemoveHiddenChannelsUseCase.ChannelsDeletable, RemoveHiddenScenesUseCase.ScenesDeletable, DeleteProfileUseCase.ProfileRemover {
 
   fun findAll() = androidAutoItemDao.findAll()
 
@@ -40,6 +42,8 @@ class AndroidAutoItemRepository @Inject constructor(
   fun insert(item: AndroidAutoItemEntity) = androidAutoItemDao.insert(item)
 
   fun setItemsOrder(orderedIds: List<Long>) = androidAutoItemDao.setItemsOrder(orderedIds)
+
+  override fun deleteByProfile(profileId: Long): Completable = androidAutoItemDao.deleteByProfile(profileId)
 
   override suspend fun deleteChannelRelated(remoteId: Int, profileId: Long) =
     androidAutoItemDao.deleteChannelRelated(remoteId, profileId)

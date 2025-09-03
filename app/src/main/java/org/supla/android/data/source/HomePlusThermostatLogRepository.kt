@@ -17,14 +17,17 @@ package org.supla.android.data.source
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import io.reactivex.rxjava3.core.Completable
 import org.supla.android.data.source.local.dao.measurements.HomePlusThermostatLogDao
 import org.supla.android.usecases.channel.RemoveHiddenChannelsUseCase
+import org.supla.android.usecases.profile.DeleteProfileUseCase
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class HomePlusThermostatLogRepository @Inject constructor(
   private val homePlusThermostatLogDao: HomePlusThermostatLogDao
-) : RemoveHiddenChannelsUseCase.ChannelsDeletable {
+) : RemoveHiddenChannelsUseCase.ChannelsDeletable, DeleteProfileUseCase.ProfileRemover {
   override suspend fun deleteChannelRelated(remoteId: Int, profileId: Long) = homePlusThermostatLogDao.deleteKtx(remoteId, profileId)
+  override fun deleteByProfile(profileId: Long): Completable = homePlusThermostatLogDao.deleteByProfile(profileId)
 }

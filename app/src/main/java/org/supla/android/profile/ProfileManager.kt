@@ -47,11 +47,6 @@ interface ProfileManager {
   fun update(profile: AuthProfileItem): Completable
 
   /**
-   * Deletes profile with the given ID from DB
-   */
-  fun delete(id: Long): Completable
-
-  /**
    * Gets a list of all profiles stored in DB
    */
   fun getAllProfiles(): Observable<List<AuthProfileItem>>

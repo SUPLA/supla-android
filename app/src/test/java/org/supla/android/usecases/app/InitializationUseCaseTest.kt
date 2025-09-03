@@ -30,7 +30,6 @@ import io.reactivex.rxjava3.core.Single
 import org.assertj.core.api.Assertions
 import org.junit.Before
 import org.junit.Test
-import org.supla.android.Preferences
 import org.supla.android.core.infrastructure.BuildConfigProxy
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.infrastructure.ThreadHandler
@@ -53,9 +52,6 @@ class InitializationUseCaseTest {
 
   @MockK
   private lateinit var measurementsDatabase: MeasurementsDatabase
-
-  @MockK
-  private lateinit var preferences: Preferences
 
   @MockK
   private lateinit var profileRepository: RoomProfileRepository
@@ -100,7 +96,7 @@ class InitializationUseCaseTest {
       stateHolder.handleEvent(SuplaClientEvent.Lock)
       threadHandler.sleep(495)
     }
-    confirmVerified(stateHolder, threadHandler, preferences, context)
+    confirmVerified(stateHolder, threadHandler, context)
   }
 
   @Test
@@ -114,7 +110,6 @@ class InitializationUseCaseTest {
     every { appDatabase.openHelper } returns mockk { every { readableDatabase } answers { throw SQLiteException() } }
     every { profileRepository.findActiveProfile() } returns Single.just(mockk { every { active } returns true })
     every { encryptedPreferences.lockScreenSettings } returns mockk { every { pinForAppRequired } returns false }
-    every { preferences.isAnyAccountRegistered = false } answers {}
     every { threadHandler.sleep(any()) } answers {}
     every { stateHolder.handleEvent(SuplaClientEvent.Initialized) } answers {}
     every { buildConfigProxy.debug } returns false
@@ -126,11 +121,10 @@ class InitializationUseCaseTest {
     verify {
       stateHolder.handleEvent(SuplaClientEvent.Initialized)
       threadHandler.sleep(495)
-      preferences.isAnyAccountRegistered = false
       context.deleteDatabase(DbHelper.DATABASE_NAME)
       context.deleteDatabase(MeasurementsDbHelper.DATABASE_NAME)
     }
-    confirmVerified(stateHolder, threadHandler, preferences, context)
+    confirmVerified(stateHolder, threadHandler, context)
   }
 
   @Test
@@ -144,7 +138,6 @@ class InitializationUseCaseTest {
     every { appDatabase.openHelper } returns mockk { every { readableDatabase } answers { throw SQLiteException() } }
     every { profileRepository.findActiveProfile() } returns Single.error(NoSuchElementException())
     every { encryptedPreferences.lockScreenSettings } returns mockk { every { pinForAppRequired } returns false }
-    every { preferences.isAnyAccountRegistered = false } answers {}
     every { threadHandler.sleep(any()) } answers {}
     every { stateHolder.handleEvent(SuplaClientEvent.NoAccount) } answers {}
     every { buildConfigProxy.debug } returns false
@@ -158,7 +151,7 @@ class InitializationUseCaseTest {
       context.deleteDatabase(DbHelper.DATABASE_NAME)
       context.deleteDatabase(MeasurementsDbHelper.DATABASE_NAME)
     }
-    confirmVerified(stateHolder, threadHandler, preferences, context)
+    confirmVerified(stateHolder, threadHandler, context)
   }
 
   @Test
@@ -174,6 +167,6 @@ class InitializationUseCaseTest {
     Assertions.assertThatThrownBy { useCase.invoke(context) }.isSameAs(exception)
 
     // then
-    confirmVerified(stateHolder, threadHandler, preferences, context)
+    confirmVerified(stateHolder, threadHandler, context)
   }
 }

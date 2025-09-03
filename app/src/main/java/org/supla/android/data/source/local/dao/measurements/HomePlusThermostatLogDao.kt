@@ -19,6 +19,7 @@ package org.supla.android.data.source.local.dao.measurements
 
 import androidx.room.Dao
 import androidx.room.Query
+import io.reactivex.rxjava3.core.Completable
 import org.supla.android.data.source.local.entity.measurements.HomePlusThermostatLogEntity.Companion.COLUMN_CHANNEL_ID
 import org.supla.android.data.source.local.entity.measurements.HomePlusThermostatLogEntity.Companion.COLUMN_PROFILE_ID
 import org.supla.android.data.source.local.entity.measurements.HomePlusThermostatLogEntity.Companion.TABLE_NAME
@@ -28,4 +29,7 @@ interface HomePlusThermostatLogDao {
 
   @Query("DELETE FROM $TABLE_NAME WHERE $COLUMN_CHANNEL_ID = :remoteId AND $COLUMN_PROFILE_ID = :profileId")
   suspend fun deleteKtx(remoteId: Int, profileId: Long)
+
+  @Query("DELETE FROM $TABLE_NAME WHERE $COLUMN_PROFILE_ID = :profileId")
+  fun deleteByProfile(profileId: Long): Completable
 }
