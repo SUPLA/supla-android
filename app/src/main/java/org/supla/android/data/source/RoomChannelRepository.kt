@@ -24,13 +24,14 @@ import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.usecases.captionchange.CaptionChangeUseCase
 import org.supla.android.usecases.channel.RemoveHiddenChannelsUseCase
 import org.supla.android.usecases.developerinfo.CountProvider
+import org.supla.android.usecases.profile.DeleteProfileUseCase
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class RoomChannelRepository @Inject constructor(
   private val channelDao: ChannelDao
-) : CountProvider, CaptionChangeUseCase.Updater, RemoveHiddenChannelsUseCase.ChannelsDeletable {
+) : CountProvider, CaptionChangeUseCase.Updater, RemoveHiddenChannelsUseCase.ChannelsDeletable, DeleteProfileUseCase.ProfileRemover {
 
   fun findByRemoteId(remoteId: Int) = channelDao.findByRemoteId(remoteId)
 
@@ -62,4 +63,6 @@ class RoomChannelRepository @Inject constructor(
   override suspend fun deleteChannelRelated(remoteId: Int, profileId: Long) {
     channelDao.deleteKtx(remoteId, profileId)
   }
+
+  override fun deleteByProfile(profileId: Long): Completable = channelDao.deleteByProfile(profileId)
 }

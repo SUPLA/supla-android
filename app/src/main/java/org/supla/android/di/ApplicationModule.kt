@@ -40,11 +40,9 @@ import org.supla.android.data.formatting.DateFormatter
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.lib.AndroidSuplaClientMessageHandler
 import org.supla.android.lib.SuplaClient
-import org.supla.android.lib.singlecall.SingleCall
 import org.supla.android.profile.MultiAccountProfileManager
 import org.supla.android.profile.ProfileIdHolder
 import org.supla.android.profile.ProfileManager
-import org.supla.android.widget.WidgetManager
 import org.supla.android.widget.WidgetPreferences
 import javax.inject.Singleton
 
@@ -58,13 +56,7 @@ class ApplicationModule {
 
   @Provides
   @Singleton
-  fun provideProfileManager(
-    profileRepository: ProfileRepository,
-    widgetManager: WidgetManager,
-    singleCallProvider: SingleCall.Provider
-  ): ProfileManager {
-    return MultiAccountProfileManager(profileRepository, widgetManager, singleCallProvider)
-  }
+  fun provideProfileManager(profileRepository: ProfileRepository): ProfileManager = MultiAccountProfileManager(profileRepository)
 
   @Provides
   @Singleton

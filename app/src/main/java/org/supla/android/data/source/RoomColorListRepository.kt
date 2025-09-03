@@ -17,14 +17,17 @@ package org.supla.android.data.source
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.data.source.local.dao.ColorDao
+import io.reactivex.rxjava3.core.Completable
+import org.supla.android.data.source.local.dao.ColorListDao
 import org.supla.android.usecases.channel.RemoveHiddenChannelsUseCase
+import org.supla.android.usecases.profile.DeleteProfileUseCase
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class RoomColorListRepository @Inject constructor(
-  private val colorListDao: ColorDao
-) : RemoveHiddenChannelsUseCase.ChannelsDeletable {
+  private val colorListDao: ColorListDao
+) : RemoveHiddenChannelsUseCase.ChannelsDeletable, DeleteProfileUseCase.ProfileRemover {
   override suspend fun deleteChannelRelated(remoteId: Int, profileId: Long) = colorListDao.deleteKtx(remoteId, profileId)
+  override fun deleteByProfile(profileId: Long): Completable = colorListDao.deleteByProfile(profileId)
 }

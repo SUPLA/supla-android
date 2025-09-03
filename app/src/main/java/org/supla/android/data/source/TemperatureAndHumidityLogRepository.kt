@@ -28,6 +28,7 @@ import org.supla.android.data.source.remote.rest.channel.TemperatureAndHumidityM
 import org.supla.android.features.measurementsdownload.workers.BaseDownloadLogWorker
 import org.supla.android.usecases.channel.RemoveHiddenChannelsUseCase
 import org.supla.android.usecases.developerinfo.CountProvider
+import org.supla.android.usecases.profile.DeleteProfileUseCase
 import retrofit2.Response
 import java.util.Date
 import javax.inject.Inject
@@ -38,7 +39,8 @@ class TemperatureAndHumidityLogRepository @Inject constructor(
   private val temperatureAndHumidityLogDao: TemperatureAndHumidityLogDao
 ) : BaseMeasurementRepository<TemperatureAndHumidityMeasurement, TemperatureAndHumidityLogEntity>(temperatureAndHumidityLogDao),
   CountProvider,
-  RemoveHiddenChannelsUseCase.ChannelsDeletable {
+  RemoveHiddenChannelsUseCase.ChannelsDeletable,
+  DeleteProfileUseCase.ProfileRemover {
 
   fun findMeasurements(remoteId: Int, profileId: Long, startDate: Date, endDate: Date): Observable<List<TemperatureAndHumidityLogEntity>> {
     return temperatureAndHumidityLogDao.findMeasurements(remoteId, profileId, startDate.time, endDate.time)
@@ -90,4 +92,6 @@ class TemperatureAndHumidityLogRepository @Inject constructor(
   override fun count(): Observable<Int> = temperatureAndHumidityLogDao.count()
 
   override suspend fun deleteChannelRelated(remoteId: Int, profileId: Long) = temperatureAndHumidityLogDao.deleteKtx(remoteId, profileId)
+
+  override fun deleteByProfile(profileId: Long): Completable = temperatureAndHumidityLogDao.deleteByProfile(profileId)
 }

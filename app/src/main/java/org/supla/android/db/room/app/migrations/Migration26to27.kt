@@ -21,7 +21,6 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase.CONFLICT_REPLACE
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import org.supla.android.Preferences
 import org.supla.android.Trace
 import org.supla.android.data.source.local.entity.LegacyScene
 import org.supla.android.data.source.local.entity.ProfileEntity
@@ -35,9 +34,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class Migration26to27 @Inject constructor(
-  private val preferences: Preferences
-) : Migration(26, 27), SqlExecutor {
+class Migration26to27 @Inject constructor() : Migration(26, 27), SqlExecutor {
 
   override fun migrate(db: SupportSQLiteDatabase) {
     migrateUserProfiles(db)
@@ -54,7 +51,6 @@ class Migration26to27 @Inject constructor(
             val profile: AuthProfileItem = makeEmptyAuthItem()
             profile.AssignCursorData(cursor)
             if (profile.authInfo.isAuthDataComplete) {
-              preferences.isAnyAccountRegistered = true
               validAccountAvailable = true
             }
           } catch (ex: Exception) {

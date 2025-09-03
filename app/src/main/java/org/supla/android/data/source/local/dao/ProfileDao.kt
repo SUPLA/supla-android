@@ -18,6 +18,9 @@ package org.supla.android.data.source.local.dao
  */
 
 import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import io.reactivex.rxjava3.core.Completable
@@ -31,6 +34,9 @@ import org.supla.android.data.source.local.entity.ProfileEntity.Companion.TABLE_
 
 @Dao
 abstract class ProfileDao {
+
+  @Insert(onConflict = OnConflictStrategy.REPLACE)
+  abstract fun save(profileEntity: ProfileEntity): Completable
 
   @Query(
     """
@@ -53,6 +59,9 @@ abstract class ProfileDao {
   @Query("SELECT $ALL_COLUMNS_STRING FROM $TABLE_NAME")
   abstract fun findAllProfiles(): Observable<List<ProfileEntity>>
 
+  @Query("SELECT $ALL_COLUMNS_STRING FROM $TABLE_NAME")
+  abstract suspend fun findAllProfilesKtx(): List<ProfileEntity>
+
   @Query(
     """
     SELECT $ALL_COLUMNS_STRING 
@@ -61,6 +70,9 @@ abstract class ProfileDao {
   """
   )
   abstract fun findProfile(id: Long): Single<ProfileEntity>
+
+  @Delete
+  abstract fun delete(profile: ProfileEntity): Completable
 
   fun activateProfile(id: Long): Completable = Completable.fromRunnable {
     activateProfileTransaction(id)

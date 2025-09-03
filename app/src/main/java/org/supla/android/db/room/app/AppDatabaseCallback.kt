@@ -20,7 +20,6 @@ package org.supla.android.db.room.app
 import android.database.sqlite.SQLiteDatabase
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
-import org.supla.android.Preferences
 import org.supla.android.Trace
 import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.data.source.local.view.ChannelView
@@ -34,7 +33,6 @@ import javax.inject.Singleton
 
 @Singleton
 class AppDatabaseCallback @Inject constructor(
-  private val preferences: Preferences,
   private val profileMigrator: ProfileMigrator
 ) : RoomDatabase.Callback(), SqlExecutor {
 
@@ -54,7 +52,6 @@ class AppDatabaseCallback @Inject constructor(
     val profile = profileMigrator.makeProfileUsingPreferences() ?: return
     try {
       db.insert(ProfileEntity.TABLE_NAME, SQLiteDatabase.CONFLICT_IGNORE, profile.contentValues)
-      preferences.isAnyAccountRegistered = true
       Trace.i(TAG, "Destructively migrated - profile restored")
     } catch (exception: Exception) {
       Trace.w(TAG, "Profile restore failed - ${exception.message}", exception)
@@ -63,7 +60,6 @@ class AppDatabaseCallback @Inject constructor(
 
   override fun onDestructiveMigration(db: SupportSQLiteDatabase) {
     destructivelyMigrated = true
-    preferences.isAnyAccountRegistered = false
 
     silentSql(db, "DROP VIEW ${SceneView.NAME}")
     silentSql(db, "DROP VIEW $CHANNEL_GROUP_VALUE_VIEW_NAME")

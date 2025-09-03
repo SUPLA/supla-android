@@ -33,6 +33,7 @@ import org.supla.android.Trace
 import org.supla.android.extensions.TAG
 import org.supla.android.extensions.allGranted
 import org.supla.android.extensions.skipQuotation
+import java.util.Collections
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -45,7 +46,7 @@ class WiFiScanner @Inject constructor(
   val cashedSsids: List<String>
     get() = ssids
 
-  private val ssids = mutableListOf<String>()
+  private val ssids = Collections.synchronizedList(mutableListOf<String>())
   private val semaphore = Semaphore(1, 1)
   private val mutex = Mutex()
 
@@ -76,10 +77,10 @@ class WiFiScanner @Inject constructor(
           Trace.d(TAG, "Scan allowed")
           semaphore.acquire()
           Trace.d(TAG, "Scan finished")
-          return Result.Success(ssids)
+          return Result.Success(ssids.toList())
         } else {
           Trace.d(TAG, "Scan not allowed")
-          return Result.NotAllowed(ssids)
+          return Result.NotAllowed(ssids.toList())
         }
       } finally {
         processingRequest = false

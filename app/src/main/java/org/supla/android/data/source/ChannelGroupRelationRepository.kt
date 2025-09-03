@@ -17,19 +17,23 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import org.supla.android.data.source.local.dao.ChannelGroupRelationDao
 import org.supla.android.usecases.developerinfo.CountProvider
+import org.supla.android.usecases.profile.DeleteProfileUseCase
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class ChannelGroupRelationRepository @Inject constructor(
   private val channelGroupRelationDao: ChannelGroupRelationDao
-) : CountProvider {
+) : CountProvider, DeleteProfileUseCase.ProfileRemover {
   fun findAllVisibleRelations() = channelGroupRelationDao.allVisibleRelations()
 
   fun findGroupRelations(remoteId: Int) = channelGroupRelationDao.findGroupRelations(remoteId)
 
   override fun count(): Observable<Int> = channelGroupRelationDao.count()
+
+  override fun deleteByProfile(profileId: Long): Completable = channelGroupRelationDao.deleteByProfile(profileId)
 }

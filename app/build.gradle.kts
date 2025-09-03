@@ -232,7 +232,3 @@ spotless {
   }
 }
 
-composeCompiler {
-  featureFlags.add(ComposeFeatureFlag.StrongSkipping)
-}
-

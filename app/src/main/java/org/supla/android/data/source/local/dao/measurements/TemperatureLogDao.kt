@@ -100,4 +100,7 @@ interface TemperatureLogDao : GroupingStringMigratorDao {
     """
   )
   override fun migrateGroupingString(remoteId: Int, profileId: Long): Completable
+
+  @Query("DELETE FROM $TABLE_NAME WHERE $COLUMN_PROFILEID = :profileId")
+  fun deleteByProfile(profileId: Long): Completable
 }

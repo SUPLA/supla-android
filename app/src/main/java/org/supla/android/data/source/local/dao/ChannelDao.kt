@@ -281,6 +281,9 @@ interface ChannelDao {
   )
   fun updateCaption(caption: String, remoteId: Int, profileId: Long): Completable
 
+  @Query("DELETE FROM $TABLE_NAME WHERE $COLUMN_PROFILE_ID = :profileId")
+  fun deleteByProfile(profileId: Long): Completable
+
   @Query(
     """
       SELECT

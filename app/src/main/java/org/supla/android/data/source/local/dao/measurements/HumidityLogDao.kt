@@ -109,4 +109,7 @@ interface HumidityLogDao : GroupingStringMigratorDao {
     """
   )
   override fun migrateGroupingString(remoteId: Int, profileId: Long): Completable
+
+  @Query("DELETE FROM $TABLE_NAME WHERE $COLUMN_PROFILE_ID = :profileId")
+  fun deleteByProfile(profileId: Long): Completable
 }

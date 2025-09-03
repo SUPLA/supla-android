@@ -160,7 +160,7 @@ class UpdateChannelUseCaseTest {
     whenever(channelRepository.findByRemoteId(channelRemoteId)).thenReturn(Maybe.empty())
     whenever(profileRepository.findActiveProfile()).thenReturn(Single.just(profileEntity))
     whenever(channelRepository.insert(any())).thenReturn(Completable.complete())
-    whenever(channelRepository.findChannelCountInLocation(locationRemoteId)).thenReturn(Single.just(5))
+    whenever(channelRepository.findMaxPositionInLocation(locationRemoteId)).thenReturn(Single.just(5))
     whenever(requestChannelConfigUseCase.invoke(suplaChannel)).thenReturn(Completable.complete())
 
     // when
@@ -173,7 +173,7 @@ class UpdateChannelUseCaseTest {
     verify(locationRepository).findByRemoteId(locationRemoteId)
     verify(channelRepository).findByRemoteId(channelRemoteId)
     verify(profileRepository).findActiveProfile()
-    verify(channelRepository).findChannelCountInLocation(locationRemoteId)
+    verify(channelRepository).findMaxPositionInLocation(locationRemoteId)
     verify(requestChannelConfigUseCase).invoke(suplaChannel)
 
     val captor = argumentCaptor<ChannelEntity>()
@@ -262,7 +262,7 @@ class UpdateChannelUseCaseTest {
     whenever(locationRepository.findByRemoteId(locationRemoteId)).thenReturn(Maybe.just(locationEntity))
     whenever(channelRepository.findByRemoteId(channelRemoteId)).thenReturn(Maybe.just(channelEntity))
     whenever(channelRepository.update(channelEntity)).thenReturn(Completable.complete())
-    whenever(channelRepository.findChannelCountInLocation(locationRemoteId)).thenReturn(Single.just(5))
+    whenever(channelRepository.findMaxPositionInLocation(locationRemoteId)).thenReturn(Single.just(5))
     whenever(requestChannelConfigUseCase.invoke(suplaChannel)).thenReturn(Completable.complete())
 
     // when
@@ -275,7 +275,7 @@ class UpdateChannelUseCaseTest {
     verify(locationRepository).findByRemoteId(locationRemoteId)
     verify(channelRepository).findByRemoteId(channelRemoteId)
     verify(channelRepository).update(channelEntity)
-    verify(channelRepository).findChannelCountInLocation(locationRemoteId)
+    verify(channelRepository).findMaxPositionInLocation(locationRemoteId)
     verify(requestChannelConfigUseCase).invoke(suplaChannel)
 
     io.mockk.verify {

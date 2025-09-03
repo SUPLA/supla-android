@@ -29,7 +29,7 @@ import org.supla.android.data.source.local.dao.ChannelGroupRelationDao
 import org.supla.android.data.source.local.dao.ChannelRelationDao
 import org.supla.android.data.source.local.dao.ChannelStateDao
 import org.supla.android.data.source.local.dao.ChannelValueDao
-import org.supla.android.data.source.local.dao.ColorDao
+import org.supla.android.data.source.local.dao.ColorListDao
 import org.supla.android.data.source.local.dao.LocationDao
 import org.supla.android.data.source.local.dao.NotificationDao
 import org.supla.android.data.source.local.dao.ProfileDao
@@ -85,7 +85,7 @@ abstract class AppDatabase : RoomDatabase() {
   abstract fun sceneDao(): SceneDao
   abstract fun locationDao(): LocationDao
   abstract fun channelValueDao(): ChannelValueDao
-  abstract fun colorDao(): ColorDao
+  abstract fun colorDao(): ColorListDao
   abstract fun channelGroupDao(): ChannelGroupDao
   abstract fun userIconDao(): UserIconDao
   abstract fun channelGroupRelationDao(): ChannelGroupRelationDao

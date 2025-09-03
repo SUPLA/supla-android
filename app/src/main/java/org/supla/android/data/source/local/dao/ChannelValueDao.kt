@@ -56,4 +56,7 @@ interface ChannelValueDao {
 
   @Query("DELETE FROM $TABLE_NAME WHERE $COLUMN_CHANNEL_REMOTE_ID = :remoteId AND $COLUMN_PROFILE_ID = :profileId")
   suspend fun deleteKtx(remoteId: Int, profileId: Long)
+
+  @Query("DELETE FROM $TABLE_NAME WHERE $COLUMN_PROFILE_ID = :profileId")
+  fun deleteByProfile(profileId: Long): Completable
 }

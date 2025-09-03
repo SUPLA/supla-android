@@ -294,10 +294,6 @@ public class SuplaApp extends MultiDexApplication
       Trace.e(
           SuplaApp.class.getSimpleName(),
           "Database deletion finished with " + (result ? "success" : "failure"));
-
-      if (result) {
-        preferences.setAnyAccountRegistered(false);
-      }
     }
   }
 

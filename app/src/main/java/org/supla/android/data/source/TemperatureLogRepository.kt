@@ -28,6 +28,7 @@ import org.supla.android.data.source.remote.rest.channel.TemperatureMeasurement
 import org.supla.android.features.measurementsdownload.workers.BaseDownloadLogWorker
 import org.supla.android.usecases.channel.RemoveHiddenChannelsUseCase
 import org.supla.android.usecases.developerinfo.CountProvider
+import org.supla.android.usecases.profile.DeleteProfileUseCase
 import retrofit2.Response
 import java.util.Date
 import javax.inject.Inject
@@ -38,7 +39,8 @@ class TemperatureLogRepository @Inject constructor(
   private val temperatureLogDao: TemperatureLogDao,
 ) : BaseMeasurementRepository<TemperatureMeasurement, TemperatureLogEntity>(temperatureLogDao),
   CountProvider,
-  RemoveHiddenChannelsUseCase.ChannelsDeletable {
+  RemoveHiddenChannelsUseCase.ChannelsDeletable,
+  DeleteProfileUseCase.ProfileRemover {
 
   fun findMeasurements(remoteId: Int, profileId: Long, startDate: Date, endDate: Date): Observable<List<TemperatureLogEntity>> {
     return temperatureLogDao.findMeasurements(remoteId, profileId, startDate.time, endDate.time)
@@ -89,4 +91,6 @@ class TemperatureLogRepository @Inject constructor(
   override fun count(): Observable<Int> = temperatureLogDao.count()
 
   override suspend fun deleteChannelRelated(remoteId: Int, profileId: Long) = temperatureLogDao.deleteKtx(remoteId, profileId)
+
+  override fun deleteByProfile(profileId: Long): Completable = temperatureLogDao.deleteByProfile(profileId)
 }

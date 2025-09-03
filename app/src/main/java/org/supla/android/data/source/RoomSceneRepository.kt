@@ -23,6 +23,7 @@ import org.supla.android.data.source.local.dao.SceneDao
 import org.supla.android.data.source.local.entity.SceneEntity
 import org.supla.android.usecases.captionchange.CaptionChangeUseCase
 import org.supla.android.usecases.developerinfo.CountProvider
+import org.supla.android.usecases.profile.DeleteProfileUseCase
 import org.supla.android.usecases.scene.RemoveHiddenScenesUseCase
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -30,7 +31,7 @@ import javax.inject.Singleton
 @Singleton
 class RoomSceneRepository @Inject constructor(
   private val sceneDao: SceneDao
-) : CountProvider, CaptionChangeUseCase.Updater, RemoveHiddenScenesUseCase.ScenesDeletable {
+) : CountProvider, CaptionChangeUseCase.Updater, RemoveHiddenScenesUseCase.ScenesDeletable, DeleteProfileUseCase.ProfileRemover {
 
   fun findByRemoteId(remoteId: Int) = sceneDao.findByRemoteId(remoteId)
 
@@ -49,4 +50,6 @@ class RoomSceneRepository @Inject constructor(
 
   override suspend fun deleteScenesRelated(remoteId: Int, profileId: Long) =
     sceneDao.deleteScene(profileId, remoteId)
+
+  override fun deleteByProfile(profileId: Long): Completable = sceneDao.deleteByProfile(profileId)
 }

@@ -28,6 +28,7 @@ import org.supla.android.data.source.remote.rest.channel.GeneralPurposeMeter
 import org.supla.android.features.measurementsdownload.workers.BaseDownloadLogWorker
 import org.supla.android.usecases.channel.RemoveHiddenChannelsUseCase
 import org.supla.android.usecases.developerinfo.CountProvider
+import org.supla.android.usecases.profile.DeleteProfileUseCase
 import retrofit2.Response
 import java.util.Date
 import javax.inject.Inject
@@ -38,7 +39,8 @@ class GeneralPurposeMeterLogRepository @Inject constructor(
   private val generalPurposeMeterLogDao: GeneralPurposeMeterLogDao
 ) : BaseMeasurementRepository<GeneralPurposeMeter, GeneralPurposeMeterEntity>(generalPurposeMeterLogDao),
   CountProvider,
-  RemoveHiddenChannelsUseCase.ChannelsDeletable {
+  RemoveHiddenChannelsUseCase.ChannelsDeletable,
+  DeleteProfileUseCase.ProfileRemover {
 
   fun findMeasurements(remoteId: Int, profileId: Long, startDate: Date, endDate: Date): Observable<List<GeneralPurposeMeterEntity>> =
     generalPurposeMeterLogDao.findMeasurements(remoteId, profileId, startDate.time, endDate.time)
@@ -81,4 +83,6 @@ class GeneralPurposeMeterLogRepository @Inject constructor(
   override fun count(): Observable<Int> = generalPurposeMeterLogDao.count()
 
   override suspend fun deleteChannelRelated(remoteId: Int, profileId: Long) = generalPurposeMeterLogDao.deleteKtx(remoteId, profileId)
+
+  override fun deleteByProfile(profileId: Long): Completable = generalPurposeMeterLogDao.deleteByProfile(profileId)
 }

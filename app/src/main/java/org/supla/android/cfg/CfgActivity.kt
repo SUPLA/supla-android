@@ -20,11 +20,15 @@ package org.supla.android.cfg
 import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.supla.android.NavigationActivity.INTENT_SENDER
 import org.supla.android.NavigationActivity.INTENT_SENDER_MAIN
 import org.supla.android.Preferences
@@ -39,6 +43,7 @@ import org.supla.android.features.createaccount.CreateAccountFragment
 import org.supla.android.navigator.CfgActivityNavigator
 import org.supla.android.profile.ProfileManager
 import org.supla.android.ui.AppBar
+import org.supla.android.usecases.profile.GetProfilesCountUseCase
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -59,6 +64,9 @@ class CfgActivity : BaseActivity() {
 
   @Inject
   lateinit var suplaClientStateHolder: SuplaClientStateHolder
+
+  @Inject
+  lateinit var getProfilesCountUseCase: GetProfilesCountUseCase
 
   @Inject
   lateinit var preferences: Preferences
@@ -154,16 +162,19 @@ class CfgActivity : BaseActivity() {
       return
     }
 
-    if (Preferences(this).isAnyAccountRegistered) {
-      val client = SuplaApp.getApp().getSuplaClient()
+    lifecycleScope.launch {
+      val isAnyAccountRegistered = withContext(Dispatchers.IO) { getProfilesCountUseCase() > 0 }
 
-      if (client == null || !client.registered()) {
-        suplaClientStateHolder.handleEvent(SuplaClientEvent.Initialized)
+      if (isAnyAccountRegistered) {
+        val client = SuplaApp.getApp().getSuplaClient()
+        if (client == null || !client.registered()) {
+          suplaClientStateHolder.handleEvent(SuplaClientEvent.Initialized)
+        }
+
+        finish()
+      } else {
+        finishAffinity()
       }
-
-      finish()
-    } else {
-      finishAffinity()
     }
   }
 }

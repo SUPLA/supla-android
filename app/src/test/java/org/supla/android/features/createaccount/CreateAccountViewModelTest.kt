@@ -1,20 +1,24 @@
 package org.supla.android.features.createaccount
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import io.mockk.MockKAnnotations
+import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
+import io.mockk.mockk
+import io.mockk.slot
+import io.mockk.verify
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
-import io.reactivex.rxjava3.schedulers.Schedulers
+import io.reactivex.rxjava3.core.Observable
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.*
-import org.supla.android.Preferences
 import org.supla.android.core.BaseViewModelTest
+import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.db.AuthProfileItem
 import org.supla.android.features.deleteaccountweb.DeleteAccountWebFragment
 import org.supla.android.profile.AuthInfo
@@ -25,44 +29,44 @@ import org.supla.android.usecases.profile.DeleteProfileUseCase
 import org.supla.android.usecases.profile.SaveProfileUseCase
 
 @RunWith(MockitoJUnitRunner::class)
-class CreateAccountViewModelTest : BaseViewModelTest<CreateAccountViewState, CreateAccountViewEvent, CreateAccountViewModel>() {
+class CreateAccountViewModelTest : BaseViewModelTest<CreateAccountViewState, CreateAccountViewEvent, CreateAccountViewModel>(
+  MockSchedulers.MOCKK
+) {
 
   @get:Rule
   var instantTaskExecutorRule = InstantTaskExecutorRule()
 
-  @Mock
+  @MockK
   private lateinit var profileManager: ProfileManager
 
-  @Mock
-  private lateinit var preferences: Preferences
-
-  @Mock
-  override lateinit var schedulers: SuplaSchedulers
-
-  @Mock
+  @MockK
   private lateinit var saveProfileUseCase: SaveProfileUseCase
 
-  @Mock
+  @MockK
   private lateinit var deleteProfileUseCase: DeleteProfileUseCase
 
-  @Mock
+  @MockK
+  private lateinit var profileRepository: RoomProfileRepository
+
+  @MockK
   private lateinit var reconnectUseCase: ReconnectUseCase
 
-  @InjectMocks
+  @MockK
+  override lateinit var schedulers: SuplaSchedulers
+
+  @InjectMockKs
   override lateinit var viewModel: CreateAccountViewModel
 
   @Before
   override fun setUp() {
+    MockKAnnotations.init(this)
     super.setUp()
-    whenever(schedulers.io).thenReturn(Schedulers.trampoline())
-    whenever(schedulers.ui).thenReturn(Schedulers.trampoline())
   }
 
   @Test
   fun `should only update state when creating new profile`() {
     // given
-    whenever(preferences.isAnyAccountRegistered).thenReturn(true)
-
+    every { profileRepository.findAllProfiles() } returns Observable.just(listOf(mockk()))
     // when
     viewModel.loadProfile(null)
 
@@ -78,7 +82,8 @@ class CreateAccountViewModelTest : BaseViewModelTest<CreateAccountViewState, Cre
     // given
     val profileId = 123L
     val profile = profileMock()
-    whenever(profileManager.read(profileId)).thenReturn(Maybe.just(profile))
+    every { profileManager.read(profileId) } returns Maybe.just(profile)
+    every { profileRepository.findAllProfiles() } returns Observable.just(listOf())
 
     // when
     viewModel.loadProfile(profileId)
@@ -306,40 +311,46 @@ class CreateAccountViewModelTest : BaseViewModelTest<CreateAccountViewState, Cre
     assertThat(events).isEmpty()
   }
 
-//  @Test
-//  fun `should save new profile as active when no other profile exists`() {
-//    // given
-//    whenever(saveProfileUseCase(any())).thenReturn(Completable.complete())
-//
-//    val defaultName = "default profile"
-//    val email = "test@supla.org"
-//    viewModel.loadProfile(null)
-//    viewModel.changeEmail(email)
-//
-//    // when
-//    viewModel.saveProfile(null, defaultName)
-//
-//    // then
-//    assertThat(states).containsExactly(
-//      CreateAccountViewState(emailAddress = email)
-//    )
-//    assertThat(events).containsExactly(
-//      CreateAccountViewEvent.Reconnect
-//    )
-//
-//    verify(saveProfileUseCase, times(1)).invoke(
-//      argThat { profile ->
-//        profile.isActive && profile.name == defaultName && profile.authInfo.emailAuth &&
-//          profile.authInfo.emailAddress == email && profile.advancedAuthSetup.not()
-//      }
-//    )
-//  }
+  @Test
+  fun `should save new profile as active when no other profile exists`() {
+    // given
+    val profileSlot = slot<AuthProfileItem>()
+    every { saveProfileUseCase(profile = capture(profileSlot)) } returns Completable.complete()
+    every { profileRepository.findAllProfiles() } returns Observable.just(listOf())
+    every { reconnectUseCase() } returns Completable.complete()
+
+    val defaultName = "default profile"
+    val email = "test@supla.org"
+    viewModel.loadProfile(null)
+    viewModel.changeEmail(email)
+
+    // when
+    viewModel.saveProfile(null, defaultName)
+
+    // then
+    assertThat(states).containsExactly(
+      CreateAccountViewState(emailAddress = email)
+    )
+    assertThat(events).containsExactly(
+      CreateAccountViewEvent.Close
+    )
+
+    verify {
+      saveProfileUseCase(any())
+    }
+    assertThat(profileSlot.captured.isActive).isTrue
+    assertThat(profileSlot.captured.name).isEqualTo(defaultName)
+    assertThat(profileSlot.captured.authInfo.emailAuth).isTrue
+    assertThat(profileSlot.captured.authInfo.emailAddress).isEqualTo(email)
+    assertThat(profileSlot.captured.advancedAuthSetup).isFalse
+  }
 
   @Test
   fun `should save new profile as inactive when other profile exist`() {
     // given
-    whenever(saveProfileUseCase(any())).thenReturn(Completable.complete())
-    whenever(preferences.isAnyAccountRegistered).thenReturn(true)
+    val profileSlot = slot<AuthProfileItem>()
+    every { saveProfileUseCase(profile = capture(profileSlot)) } returns Completable.complete()
+    every { profileRepository.findAllProfiles() } returns Observable.just(listOf(mockk()))
 
     val defaultName = "default profile"
     val email = "test@supla.org"
@@ -357,25 +368,28 @@ class CreateAccountViewModelTest : BaseViewModelTest<CreateAccountViewState, Cre
     assertThat(events).containsExactly(
       CreateAccountViewEvent.Close
     )
-    verify(saveProfileUseCase, times(1)).invoke(
-      argThat { profile ->
-        profile.isActive.not() && profile.name.isEmpty() && profile.authInfo.emailAuth &&
-          profile.authInfo.emailAddress == email && profile.advancedAuthSetup.not()
-      }
-    )
+    verify {
+      saveProfileUseCase.invoke(any())
+    }
+    assertThat(profileSlot.captured.isActive).isFalse
+    assertThat(profileSlot.captured.name).isEmpty()
+    assertThat(profileSlot.captured.authInfo.emailAuth).isTrue
+    assertThat(profileSlot.captured.authInfo.emailAddress).isEqualTo(email)
+    assertThat(profileSlot.captured.advancedAuthSetup).isFalse
   }
 
   @Test
   fun `should update profile without reconnect when no authorized data changed`() {
     // given
-    whenever(saveProfileUseCase(any())).thenReturn(Completable.complete())
-    whenever(preferences.isAnyAccountRegistered).thenReturn(true)
+    val profileSlot = slot<AuthProfileItem>()
+    every { saveProfileUseCase(profile = capture(profileSlot)) } returns Completable.complete()
+    every { profileRepository.findAllProfiles() } returns Observable.just(listOf(mockk()))
 
     val profileId = 123L
     val profile = profileWithEmailMock()
     val newName = "new name"
     val originalName = profile.name
-    whenever(profileManager.read(profileId)).thenReturn(Maybe.just(profile))
+    every { profileManager.read(profileId) } returns Maybe.just(profile)
 
     // when
     viewModel.loadProfile(profileId)
@@ -392,135 +406,15 @@ class CreateAccountViewModelTest : BaseViewModelTest<CreateAccountViewState, Cre
     assertThat(events).containsExactly(
       CreateAccountViewEvent.Close
     )
-    verify(saveProfileUseCase, times(1)).invoke(
-      argThat { arg ->
-        arg.isActive.not() && arg.authInfo.emailAuth &&
-          arg.name == newName && arg.advancedAuthSetup.not()
-      }
-    )
+
+    verify {
+      saveProfileUseCase.invoke(any())
+    }
+    assertThat(profileSlot.captured.isActive).isFalse
+    assertThat(profileSlot.captured.name).isEqualTo(newName)
+    assertThat(profileSlot.captured.authInfo.emailAuth).isTrue
+    assertThat(profileSlot.captured.advancedAuthSetup).isFalse
   }
-
-//  @Test
-//  fun `should update profile with reconnect when email changed`() {
-//    // given
-//    whenever(saveProfileUseCase(any())).thenReturn(Completable.complete())
-//    whenever(preferences.isAnyAccountRegistered).thenReturn(true)
-//
-//    val profileId = 123L
-//    val profile = profileWithEmailMock()
-//    val newEmail = "other@supla.org"
-//    val originalEmail = profile.authInfo.emailAddress
-//    whenever(profileManager.read(profileId)).thenReturn(Maybe.just(profile))
-//
-//    // when
-//    viewModel.loadProfile(profileId)
-//    viewModel.changeEmail(newEmail)
-//    viewModel.saveProfile(profileId, "default name")
-//
-//    // then
-//    val state = CreateAccountViewState(profileNameVisible = true, deleteButtonVisible = true)
-//    assertThat(states).containsExactly(
-//      state,
-//      state.copy(emailAddress = originalEmail, accountName = profile.name),
-//      state.copy(emailAddress = newEmail, accountName = profile.name)
-//    )
-//    assertThat(events).containsExactly(
-//      CreateAccountViewEvent.Reconnect
-//    )
-//    verify(saveProfileUseCase, times(1)).invoke(
-//      argThat { arg ->
-//        arg.isActive.not() && arg.authInfo.emailAuth &&
-//          arg.authInfo.emailAddress == newEmail && arg.advancedAuthSetup.not()
-//      }
-//    )
-//  }
-
-//  @Test
-//  fun `should update profile with reconnect when server for email changed`() {
-//    // given
-//    val profile = profileWithEmailMock()
-//
-//    // when & then
-//    testAuthorizationDataChange(profile) {
-//      viewModel.changeEmailAddressServer("test")
-//    }
-//  }
-//
-//  @Test
-//  fun `should update profile with reconnect when server for access ID changed`() {
-//    // given
-//    val profile = profileWithEmailMock()
-//
-//    // when & then
-//    testAuthorizationDataChange(profile) {
-//      viewModel.changeAccessIdentifierServer("test")
-//    }
-//  }
-//
-//  @Test
-//  fun `should update profile with reconnect when access ID password changed`() {
-//    // given
-//    val profile = profileWithEmailMock()
-//
-//    // when & then
-//    testAuthorizationDataChange(profile) {
-//      viewModel.changeAccessIdentifierPassword("test")
-//    }
-//  }
-//
-//  @Test
-//  fun `should update profile with reconnect when access ID changed`() {
-//    // given
-//    val profile = profileWithEmailMock()
-//
-//    // when & then
-//    testAuthorizationDataChange(profile) {
-//      viewModel.changeAccessIdentifier("1234")
-//    }
-//  }
-//
-//  @Test
-//  fun `should update profile with reconnect when server auto detection changed`() {
-//    // given
-//    val profile = profileWithEmailMock()
-//
-//    // when & then
-//    testAuthorizationDataChange(profile) {
-//      viewModel.toggleServerAutoDiscovery()
-//    }
-//  }
-//
-//  @Test
-//  fun `should update profile with reconnect when authentication type changed`() {
-//    // given
-//    val profile = profileWithEmailMock()
-//
-//    // when & then
-//    testAuthorizationDataChange(profile) {
-//      viewModel.changeAuthorizeByEmail(false)
-//    }
-//  }
-
-//  private fun testAuthorizationDataChange(profile: AuthProfileItem, action: (CreateAccountViewModel) -> Unit) {
-//    // given
-//    whenever(saveProfileUseCase(any())).thenReturn(Completable.complete())
-//    whenever(preferences.isAnyAccountRegistered).thenReturn(true)
-//
-//    val profileId = 123L
-//    whenever(profileManager.read(profileId)).thenReturn(Maybe.just(profile))
-//
-//    // when
-//    viewModel.loadProfile(profileId)
-//    action(viewModel)
-//    viewModel.saveProfile(profileId, "default name")
-//
-//    // then
-//    assertThat(states).hasSize(3)
-//    assertThat(events).containsExactly(
-//      CreateAccountViewEvent.Reconnect
-//    )
-//    verify(saveProfileUseCase, times(1)).invoke(profile)
-//  }
 
   @Test
   fun `should show empty name dialog`() {
@@ -556,12 +450,12 @@ class CreateAccountViewModelTest : BaseViewModelTest<CreateAccountViewState, Cre
 
   private fun testSaveFailure(saveResult: Completable, expectedEvent: CreateAccountViewEvent) {
     // given
-    whenever(saveProfileUseCase(any())).thenReturn(saveResult)
-    whenever(preferences.isAnyAccountRegistered).thenReturn(true)
+    every { profileRepository.findAllProfiles() } returns Observable.just(listOf(mockk()))
 
     val profileId = 123L
     val profile = profileWithEmailMock()
-    whenever(profileManager.read(profileId)).thenReturn(Maybe.just(profile))
+    every { profileManager.read(profileId) } returns Maybe.just(profile)
+    every { saveProfileUseCase(profile) } returns saveResult
 
     // when
     viewModel.loadProfile(profileId)
@@ -574,34 +468,29 @@ class CreateAccountViewModelTest : BaseViewModelTest<CreateAccountViewState, Cre
       state.copy(emailAddress = profile.authInfo.emailAddress, accountName = profile.name)
     )
     assertThat(events).containsExactly(expectedEvent)
-    verify(saveProfileUseCase, times(1)).invoke(profile)
+    verify {
+      saveProfileUseCase(profile)
+    }
   }
 
   @Test
   fun `should delete profile and close fragment`() {
-    whenever(preferences.isAnyAccountRegistered).thenReturn(true)
+    every { profileRepository.findAllProfiles() } returns Observable.just(listOf(mockk()))
     localDeleteTest(profileWithEmailMock(), CreateAccountViewEvent.Close)
   }
 
-//  @Test
-//  fun `should delete profile and reconnect`() {
-//    whenever(preferences.isAnyAccountRegistered).thenReturn(true)
-//    val profile = profileWithEmailMock().apply { isActive = true }
-//    localDeleteTest(profile, CreateAccountViewEvent.Reconnect)
-//  }
-
   @Test
   fun `should delete profile and restart`() {
-    val profile = profileWithEmailMock().apply { isActive = true }
-    localDeleteTest(profile, CreateAccountViewEvent.RestartFlow)
+    every { profileRepository.findAllProfiles() } returns Observable.just(listOf())
+    localDeleteTest(profileWithEmailMock(), CreateAccountViewEvent.RestartFlow)
   }
 
   private fun localDeleteTest(profile: AuthProfileItem, event: CreateAccountViewEvent) {
     // given
     val profileId = 123L
     profile.id = profileId
-    whenever(profileManager.read(profileId)).thenReturn(Maybe.just(profile))
-    whenever(deleteProfileUseCase(profileId)).thenReturn(Completable.complete())
+    every { profileManager.read(profileId) } returns Maybe.just(profile)
+    every { deleteProfileUseCase(profileId) } returns Completable.complete()
 
     // when
     viewModel.deleteProfile(profileId)
@@ -609,12 +498,13 @@ class CreateAccountViewModelTest : BaseViewModelTest<CreateAccountViewState, Cre
     // then
     assertThat(states).isEmpty()
     assertThat(events).containsExactly(event)
-    verify(deleteProfileUseCase, times(1)).invoke(profileId)
+
+    verify { deleteProfileUseCase(profileId) }
   }
 
   @Test
   fun `should delete profile and navigate to web removal`() {
-    whenever(preferences.isAnyAccountRegistered).thenReturn(true)
+    every { profileRepository.findAllProfiles() } returns Observable.just(listOf(mockk()))
     val serverAddress = "beta-cloud.supla.org"
     localAndWebDeleteTest(
       profileWithEmailMock().apply { authInfo.serverForEmail = serverAddress },
@@ -625,22 +515,11 @@ class CreateAccountViewModelTest : BaseViewModelTest<CreateAccountViewState, Cre
     )
   }
 
-//  @Test
-//  fun `should delete profile and navigate to web removal with reconnect`() {
-//    whenever(preferences.isAnyAccountRegistered).thenReturn(true)
-//    localAndWebDeleteTest(
-//      profileWithEmailMock().apply { isActive = true },
-//      CreateAccountViewEvent.NavigateToWebRemoval(
-//        serverAddress = "",
-//        DeleteAccountWebFragment.EndDestination.RECONNECT
-//      )
-//    )
-//  }
-
   @Test
   fun `should delete profile and navigate to web removal with restart`() {
+    every { profileRepository.findAllProfiles() } returns Observable.just(listOf())
     localAndWebDeleteTest(
-      profileWithEmailMock().apply { isActive = true },
+      profileWithEmailMock(),
       CreateAccountViewEvent.NavigateToWebRemoval(
         serverAddress = "",
         DeleteAccountWebFragment.EndDestination.RESTART
@@ -652,8 +531,8 @@ class CreateAccountViewModelTest : BaseViewModelTest<CreateAccountViewState, Cre
     // given
     val profileId = 123L
     profile.id = profileId
-    whenever(profileManager.read(profileId)).thenReturn(Maybe.just(profile))
-    whenever(deleteProfileUseCase(profileId)).thenReturn(Completable.complete())
+    every { profileManager.read(profileId) } returns Maybe.just(profile)
+    every { deleteProfileUseCase(profileId) } returns Completable.complete()
 
     // when
     viewModel.deleteProfileWithCloud(profileId)
@@ -661,7 +540,7 @@ class CreateAccountViewModelTest : BaseViewModelTest<CreateAccountViewState, Cre
     // then
     assertThat(states).isEmpty()
     assertThat(events).containsExactly(event)
-    verify(deleteProfileUseCase, times(1)).invoke(profileId)
+    verify { deleteProfileUseCase(profileId) }
   }
 
   private fun profileMock(): AuthProfileItem {
