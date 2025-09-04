@@ -86,7 +86,7 @@ class UpdateChannelUseCase @Inject constructor(
 
   private fun updatePosition(locationEntity: LocationEntity, channelEntity: ChannelEntity, locationChanged: Boolean) =
     if (locationEntity.sorting == Location.SortingType.USER_DEFINED && (channelEntity.id == null || locationChanged)) {
-      channelRepository.findChannelCountInLocation(locationEntity.remoteId)
+      channelRepository.findMaxPositionInLocation(locationEntity.remoteId)
         .map { count ->
           Trace.i(TAG, "Updating channel position to `$count`")
           return@map channelEntity.copy(position = count + 1)

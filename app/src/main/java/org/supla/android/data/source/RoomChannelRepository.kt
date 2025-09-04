@@ -47,7 +47,7 @@ class RoomChannelRepository @Inject constructor(
 
   fun insert(entity: ChannelEntity) = channelDao.insert(entity)
 
-  fun findChannelCountInLocation(locationRemoteId: Int) = channelDao.findChannelCountInLocation(locationRemoteId)
+  fun findMaxPositionInLocation(locationRemoteId: Int) = channelDao.findMaxPositionInLocation(locationRemoteId)
 
   fun findChannelsCount(profileId: Long) = channelDao.findChannelsCount(profileId)
 
