@@ -33,6 +33,7 @@ import org.supla.android.data.source.local.entity.ChannelEntity.Companion.COLUMN
 import org.supla.android.data.source.local.entity.ChannelEntity.Companion.COLUMN_CHANNEL_REMOTE_ID
 import org.supla.android.data.source.local.entity.ChannelEntity.Companion.COLUMN_ID
 import org.supla.android.data.source.local.entity.ChannelEntity.Companion.COLUMN_LOCATION_ID
+import org.supla.android.data.source.local.entity.ChannelEntity.Companion.COLUMN_POSITION
 import org.supla.android.data.source.local.entity.ChannelEntity.Companion.COLUMN_PROFILE_ID
 import org.supla.android.data.source.local.entity.ChannelEntity.Companion.COLUMN_VISIBLE
 import org.supla.android.data.source.local.entity.ChannelEntity.Companion.TABLE_NAME
@@ -250,14 +251,14 @@ interface ChannelDao {
 
   @Query(
     """
-    SELECT COUNT($COLUMN_ID)
+    SELECT MAX($COLUMN_POSITION)
     FROM $TABLE_NAME
     WHERE $COLUMN_LOCATION_ID = :locationRemoteId
       AND $COLUMN_PROFILE_ID = ${ProfileEntity.SUBQUERY_ACTIVE}
-      AND $COLUMN_VISIBLE > 0
+    GROUP BY $COLUMN_LOCATION_ID
   """
   )
-  fun findChannelCountInLocation(locationRemoteId: Int): Single<Int>
+  fun findMaxPositionInLocation(locationRemoteId: Int): Single<Int>
 
   @Query(
     """
