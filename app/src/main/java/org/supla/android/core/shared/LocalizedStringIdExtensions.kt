@@ -139,6 +139,8 @@ val LocalizedStringId.resourceId: Int
     LocalizedStringId.ADD_WIZARD_STATE_FINISHING -> R.string.wizard_state_finishing
 
     LocalizedStringId.CHANNEL_STATE_UPTIME -> R.string.channel_state_uptime
+    LocalizedStringId.CHANNEL_STATE_BATTERY_POWERED -> R.string.channel_state_battery_powered
+    LocalizedStringId.CHANNEL_STATE_MAINS_POWERED -> R.string.channel_state_main_powered
     LocalizedStringId.LAST_CONNECTION_RESET_CAUSE_UNKNOWN -> R.string.lastconnectionresetcause_unknown
     LocalizedStringId.LAST_CONNECTION_RESET_CAUSE_ACTIVITY_TIMEOUT -> R.string.lastconnectionresetcause_activity_timeout
     LocalizedStringId.LAST_CONNECTION_RESET_CAUSE_WIFI_CONNECTION_LOST -> R.string.lastconnectionresetcause_wifi_connection_lost

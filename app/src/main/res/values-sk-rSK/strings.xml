@@ -225,7 +225,7 @@
   <string name="associeted_with_scene_error">Nedá sa zmeniť funkcia kanálu, ktorý je spojený so scénou.</string>
   <string name="battery_health">Životnosť batérií</string>
   <string name="battery_level">Úroveň batérie</string>
-  <string name="battery_powered">Napájanie batériou</string>
+  <string name="state_power_supply">Napájanie</string>
   <string name="belongs_to_group_error">Nedá sa zmeniť funkcia kanálu, ktorý patrí ku skupine.</string>
   <string name="bridge">Most</string>
   <string name="bridge_node_online">Uzol mosta – online</string>
@@ -709,4 +709,6 @@
   <string name="wizard_state_finishing">Dokončovanie…</string>
   <string name="add_wizard_password_instruction">Použite heslo, ktoré bolo použité pre prístup k webovej stránke lokálnej konfigurácie.\n\nZabudli ste heslo? Môžete ho zmeniť na Supla Cloud alebo resetovať zariadenie na výrobné nastavenia.</string>
   <string name="add_wizard_manual_reconnect">Sieťové pripojenie k zariadeniu bolo nadviazané manuálne. Uistite sa, že sa váš telefón znova pripojil na internet, a pokračujte v procese.</string>
+  <string name="channel_state_battery_powered">batériové</string>
+  <string name="channel_state_main_powered">sieťové</string>
 </resources>

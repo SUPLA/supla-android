@@ -224,7 +224,7 @@
   <string name="associeted_with_scene_error">Egy jelenettel társított csatorna funkciója nem módosítható.</string>
   <string name="battery_health">Az akkumulátor élettartama</string>
   <string name="battery_level">Az akkumulátor töltöttségi szintje</string>
-  <string name="battery_powered">Akkumulátoros üzemmód</string>
+  <string name="state_power_supply">Tápellátás</string>
   <string name="belongs_to_group_error">Nem változtathatja meg a csoport részét képező csatorna funkcióját.</string>
   <string name="bridge">Híd</string>
   <string name="bridge_node_online">Hídcsomópont - online</string>
@@ -708,4 +708,6 @@
   <string name="wizard_state_finishing">Befejezés…</string>
   <string name="add_wizard_password_instruction">Kérjük, használja a helyi konfigurációs weboldal hozzáféréséhez használt jelszót.\n\nElfelejtetted a jelszavad? Megváltoztathatod a Supla Cloudon, vagy visszaállíthatod az eszközt gyári beállításokra.</string>
   <string name="add_wizard_manual_reconnect">A hálózati kapcsolatot az eszközzel manuálisan hozták létre. Győződjön meg róla, hogy a telefonja ismét csatlakozik az internethez, és folytassa a folyamatot.</string>
+  <string name="channel_state_battery_powered">elemes</string>
+  <string name="channel_state_main_powered">hálózati</string>
 </resources>

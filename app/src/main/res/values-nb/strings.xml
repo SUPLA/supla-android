@@ -225,7 +225,7 @@
   <string name="associeted_with_scene_error">Du kan ikke endre funksjonen til en kanal som er tilknyttet en scene.</string>
   <string name="battery_health">Batteritid</string>
   <string name="battery_level">Batterinivå</string>
-  <string name="battery_powered">Batteriforsyning</string>
+  <string name="state_power_supply">Strømforsyning</string>
   <string name="belongs_to_group_error">Du kan ikke endre funksjonen til en kanal som tilhører en gruppe.</string>
   <string name="bridge">Bro</string>
   <string name="bridge_node_online">Bridge node (bronode) - online</string>
@@ -708,4 +708,6 @@
   <string name="wizard_state_finishing">Ferdigstilling…</string>
   <string name="add_wizard_password_instruction">Vennligst bruk passordet som ble brukt for tilgang til den lokale konfigurasjonswebsiden.\n\nGlemt passordet ditt? Du kan endre det på Supla Cloud eller tilbakestille enheten til fabrikkinnstillinger.</string>
   <string name="add_wizard_manual_reconnect">Nettverkstilkoblingen til enheten ble etablert manuelt. Sørg for at telefonen din er koblet til internett igjen og fortsett prosessen.</string>
+  <string name="channel_state_battery_powered">batteri</string>
+  <string name="channel_state_main_powered">nettstrøm</string>
 </resources>

@@ -228,7 +228,7 @@
   <string name="associeted_with_scene_error">Sie können die Funktion eines Kanals, der einer Szene zugewiesen ist, nicht ändern.</string>
   <string name="battery_health">Batterielaufzeit</string>
   <string name="battery_level">Batteriefüllstand</string>
-  <string name="battery_powered">Batteriebetrieb</string>
+  <string name="state_power_supply">Stromversorgung</string>
   <string name="belongs_to_group_error">Sie können die Funktion eines Kanals, der einer Gruppe zugewiesen ist, nicht ändern.</string>
   <string name="bridge">Brücke</string>
   <string name="bridge_node_online">Brückenknoten - Online</string>
@@ -797,4 +797,6 @@
   <string name="wizard_state_finishing">Abschluss…</string>
   <string name="add_wizard_password_instruction">Bitte verwenden Sie das Passwort, das für den Zugriff auf die lokale Konfigurationswebseite verwendet wurde.\n\nPasswort vergessen? Sie können es in der Supla Cloud ändern oder das Gerät auf die Werkseinstellungen zurücksetzen.</string>
   <string name="add_wizard_manual_reconnect">Die Netzwerkverbindung zum Gerät wurde manuell hergestellt. Stellen Sie sicher, dass Ihr Telefon wieder mit dem Internet verbunden ist, und fahren Sie mit dem Vorgang fort.</string>
+  <string name="channel_state_battery_powered">Batterie</string>
+  <string name="channel_state_main_powered">Netz</string>
 </resources>

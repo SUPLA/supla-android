@@ -203,7 +203,7 @@
   <string name="associeted_with_scene_error">Negalima pakeisti kanalo, kuris susietas su scena, funkcijų.</string>
   <string name="battery_health">Baterijos eksploatavimo laikas</string>
   <string name="battery_level">Baterijos lygis</string>
-  <string name="battery_powered">Maitinimas baterija</string>
+  <string name="state_power_supply">Maitinimas</string>
   <string name="belongs_to_group_error">Negalima pakeisti kanalo, kuris priklauso grupei, funkcijų.</string>
   <string name="bridge">Tiltas</string>
   <string name="bridge_node_online">Tilto mazgas – online</string>
@@ -686,4 +686,6 @@
   <string name="wizard_state_finishing">Baigimas…</string>
   <string name="add_wizard_password_instruction">Prašome naudoti slaptažodį, kuris buvo naudojamas vietinės konfigūracijos tinklalapio prieigai.\n\nPamiršote slaptažodį? Galite jį pakeisti Supla Cloud sistemoje arba atkurti gamyklinius įrenginio nustatymus.</string>
   <string name="add_wizard_manual_reconnect">Tinklo ryšys su įrenginiu buvo nustatytas rankiniu būdu. Įsitikinkite, kad jūsų telefonas vėl prisijungė prie interneto, ir tęskite procesą.</string>
+  <string name="channel_state_battery_powered">iš baterijų</string>
+  <string name="channel_state_main_powered">iš tinklo</string>
 </resources>
