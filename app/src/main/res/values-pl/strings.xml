@@ -353,7 +353,7 @@
   <string name="vl_dimmer_cfg_info_txt8">Więcej informacji na temat ściemniacza znajdziesz na</string>
   <string name="time_exceeded">Przekroczono czas. Spróbuj ponownie.</string>
   <string name="battery_level">Poziom baterii</string>
-  <string name="battery_powered">Zasilanie bateryjne</string>
+  <string name="state_power_supply">Zasilanie</string>
   <string name="wifi_rssi">Wi-Fi RSSI</string>
   <string name="wifi_signal_strength">Siła sygnału Wi-Fi</string>
   <string name="bridge_node_online">Węzeł mostu - online</string>
@@ -806,6 +806,8 @@
   <string name="wizard_state_finishing">Finalizacja…</string>
   <string name="add_wizard_password_instruction">Wprowadź hasło, które zabezpiecza urządzenie przed zmianami ustawień przez osoby nieuprawnione (Hasło do strony https://192.168.4.1).\n\nZapomniałeś hasła? Możesz je zmienić w Supla Cloud lub zresetować urządzenie do ustawień fabrycznych.</string>
   <string name="add_wizard_manual_reconnect">Połączenie sieciowe z urządzeniem zostało ustanowione manualnie. Upewnij się, że telefon przełączył się na sieć z internetem i kontynuuj proces.</string>
+  <string name="channel_state_battery_powered">bateryjne</string>
+  <string name="channel_state_main_powered">sieciowe</string>
 
   <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
     <item quantity="one">włączone</item>

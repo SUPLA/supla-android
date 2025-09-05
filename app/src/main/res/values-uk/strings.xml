@@ -263,7 +263,7 @@
   <string name="vl_dimmer_cfg_info_txt8">Додаткову інформацію про регулятор освітлення можна знайти на</string>
   <string name="time_exceeded">Час вийшов. Спробуйте знову.</string>
   <string name="battery_level">Рівень заряду батареї</string>
-  <string name="battery_powered">Працює від батареї</string>
+  <string name="state_power_supply">Живлення</string>
   <string name="wifi_signal_strength">Потужність сигналу Wi-Fi</string>
   <string name="bridge_node_online">Мостовий вузол - онлайн</string>
   <string name="bridge_signal_strength">Мостовий вузол  - потужність сигналу</string>
@@ -682,4 +682,6 @@
   <string name="wizard_state_finishing">Завершення…</string>
   <string name="add_wizard_password_instruction">Будь ласка, використовуйте пароль, який використовувався для доступу до локальної веб-сторінки конфігурації.\n\nЗабули пароль? Ви можете змінити його в Supla Cloud або скинути пристрій до заводських налаштувань.</string>
   <string name="add_wizard_manual_reconnect">Мережеве з\'єднання з пристроєм було встановлено вручну. Переконайтеся, що ваш телефон знову підключився до Інтернету, і продовжуйте процес.</string>
+  <string name="channel_state_battery_powered">від батареї</string>
+  <string name="channel_state_main_powered">від мережі</string>
 </resources>

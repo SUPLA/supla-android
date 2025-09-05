@@ -225,7 +225,7 @@
   <string name="associeted_with_scene_error">Funkcije kanala, ki je povezan s sceno, ne morete spremeniti.</string>
   <string name="battery_health">Življenjska doba baterije</string>
   <string name="battery_level">Raven baterije</string>
-  <string name="battery_powered">Baterija</string>
+  <string name="state_power_supply">Napajanje</string>
   <string name="belongs_to_group_error">Funkcije kanala, ki je del skupine, ne morete spremeniti.</string>
   <string name="bridge">Most</string>
   <string name="bridge_node_online">Vozlišče mosta - online</string>
@@ -709,4 +709,6 @@
   <string name="wizard_state_finishing">Zaključevanje…</string>
   <string name="add_wizard_password_instruction">Prosimo, uporabite geslo, ki je bilo uporabljeno za dostop do spletne strani lokalne konfiguracije.\n\nSte pozabili geslo? Lahko ga spremenite na Supla Cloud ali ponastavite napravo na tovarniške nastavitve.</string>
   <string name="add_wizard_manual_reconnect">Omrežna povezava z napravo je bila vzpostavljena ročno. Prepričajte se, da je vaš telefon ponovno povezan z internetom, in nadaljujte postopek.</string>
+  <string name="channel_state_battery_powered">baterijsko</string>
+  <string name="channel_state_main_powered">omrežno</string>
 </resources>

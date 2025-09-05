@@ -212,7 +212,7 @@
   <string name="associeted_with_scene_error">Vous ne pouvez pas changer la fonction d\'une chaîne associée à une scène.</string>
   <string name="battery_health">Vie de la batterie</string>
   <string name="battery_level">Niveau de batterie</string>
-  <string name="battery_powered">Alimenté par pile</string>
+  <string name="state_power_supply">Alimentation</string>
   <string name="belongs_to_group_error">Vous ne pouvez pas modifier les fonctions d’une chaîne qui fait partie d\'un groupe.</string>
   <string name="bridge">Pont</string>
   <string name="bridge_node_online">Nœud de pont - en ligne</string>
@@ -696,4 +696,6 @@
   <string name="wizard_state_finishing">Finalisation…</string>
   <string name="add_wizard_password_instruction">Veuillez utiliser le mot de passe utilisé pour l\'accès à la page web de configuration locale.\n\nMot de passe oublié ? Vous pouvez le modifier sur Supla Cloud ou réinitialiser l\'appareil aux paramètres d\'usine.</string>
   <string name="add_wizard_manual_reconnect">La connexion réseau à l\'appareil a été établie manuellement. Assurez-vous que votre téléphone est à nouveau connecté à Internet et poursuivez le processus.</string>
+  <string name="channel_state_battery_powered">par pile</string>
+  <string name="channel_state_main_powered">sur secteur</string>
 </resources>

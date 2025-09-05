@@ -222,7 +222,7 @@
   <string name="associeted_with_scene_error">Δεν μπορείτε να αλλάξετε τη λειτουργία ενός καναλιού που σχετίζεται με μια σκηνή.</string>
   <string name="battery_health">Διάρκεια ζωής μπαταρίας</string>
   <string name="battery_level">Επίπεδο μπαταρίας</string>
-  <string name="battery_powered">Τροφοδοσία μπαταρίας</string>
+  <string name="state_power_supply">Τροφοδοσία</string>
   <string name="belongs_to_group_error">Δεν μπορείτε να αλλάξετε τις λειτουργίες ενός καναλιού που ανήκει σε μια ομάδα.</string>
   <string name="bridge">Γέφυρα</string>
   <string name="bridge_node_online">Κόμβος γέφυρας - online</string>
@@ -705,4 +705,6 @@
   <string name="wizard_state_finishing">Ολοκλήρωση…</string>
   <string name="add_wizard_password_instruction">Παρακαλώ χρησιμοποιήστε τον κωδικό πρόσβασης που χρησιμοποιήθηκε για την πρόσβαση στην τοπική ιστοσελίδα διαμόρφωσης.\n\nΞεχάσατε τον κωδικό πρόσβασης; Μπορείτε να τον αλλάξετε στο Supla Cloud ή να επαναφέρετε τη συσκευή στις εργοστασιακές ρυθμίσεις.</string>
   <string name="add_wizard_manual_reconnect">Η σύνδεση δικτύου με τη συσκευή πραγματοποιήθηκε χειροκίνητα. Βεβαιωθείτε ότι το τηλέφωνό σας έχει συνδεθεί ξανά στο διαδίκτυο και συνεχίστε τη διαδικασία.</string>
+  <string name="channel_state_battery_powered">μπαταρίας</string>
+  <string name="channel_state_main_powered">ρεύματος</string>
 </resources>

@@ -223,7 +223,7 @@
   <string name="associeted_with_scene_error">Nu se poate schimba funcţia unui canal care este asociat cu o scenă</string>
   <string name="battery_health">Durata de viaţă a bateriei</string>
   <string name="battery_level">Nivelul bateriei</string>
-  <string name="battery_powered">Alimentare cu baterie</string>
+  <string name="state_power_supply">Alimentare</string>
   <string name="belongs_to_group_error">Nu se poate schimba funcţia unui canal care face parte dintr-un grup.</string>
   <string name="bridge">Podul</string>
   <string name="bridge_node_online">Nodul podului - online</string>
@@ -710,4 +710,6 @@
   <string name="wizard_state_finishing">Finalizare…</string>
   <string name="add_wizard_password_instruction">Vă rugăm să utilizați parola folosită pentru accesul la pagina web de configurare locală.\n\nAți uitat parola? O puteți schimba în Supla Cloud sau puteți reseta dispozitivul la setările din fabrică.</string>
   <string name="add_wizard_manual_reconnect">Conexiunea de rețea cu dispozitivul a fost stabilită manual. Asigurați-vă că telefonul dumneavoastră s-a reconectat la internet și continuați procesul.</string>
+  <string name="channel_state_battery_powered">cu baterii</string>
+  <string name="channel_state_main_powered">de la rețea</string>
 </resources>

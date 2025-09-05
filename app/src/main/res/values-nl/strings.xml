@@ -224,7 +224,7 @@
   <string name="associeted_with_scene_error">U kunt de functie van het kanaal dat gerelateerd is aan de scène niet wijzigen.</string>
   <string name="battery_health">Levensduur van de batterij</string>
   <string name="battery_level">Batterijniveau</string>
-  <string name="battery_powered">Batterijstroomvoorziening</string>
+  <string name="state_power_supply">Voeding</string>
   <string name="belongs_to_group_error">U kunt de functie van een kanaal dat bij een groep hoort niet veranderen.</string>
   <string name="bridge">Brug</string>
   <string name="bridge_node_online">Brugknooppunt - online</string>
@@ -709,4 +709,6 @@
   <string name="wizard_state_finishing">Afronding…</string>
   <string name="add_wizard_password_instruction">Gebruik het wachtwoord dat is gebruikt voor toegang tot de lokale configuratie webpagina.\n\nWachtwoord vergeten? Je kunt het wijzigen op Supla Cloud of het apparaat terugzetten naar de fabrieksinstellingen.</string>
   <string name="add_wizard_manual_reconnect">De netwerkverbinding met het apparaat is handmatig tot stand gebracht. Zorg ervoor dat uw telefoon opnieuw verbinding heeft met internet en vervolg het proces.</string>
+  <string name="channel_state_battery_powered">batterij</string>
+  <string name="channel_state_main_powered">netstroom</string>
 </resources>

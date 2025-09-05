@@ -213,7 +213,7 @@
   <string name="associeted_with_scene_error">Non è possibile cambiare la funzione del canale che risulta collegato alla scena.</string>
   <string name="battery_health">Vita utile della batteria</string>
   <string name="battery_level">Livello batteria</string>
-  <string name="battery_powered">Alimentazione a batteria</string>
+  <string name="state_power_supply">Alimentazione</string>
   <string name="belongs_to_group_error">Non è possibile cambiare la funzione del canale che appartiene al gruppo.</string>
   <string name="bridge">Ponte</string>
   <string name="bridge_node_online">Nodo ponte – online</string>
@@ -737,4 +737,6 @@
   <string name="wizard_state_finishing">Completamento…</string>
   <string name="add_wizard_password_instruction">Si prega di utilizzare la password usata per l\'accesso alla pagina web di configurazione locale.\n\nHai dimenticato la password? Puoi cambiarla su Supla Cloud o ripristinare il dispositivo alle impostazioni di fabbrica.</string>
   <string name="add_wizard_manual_reconnect">La connessione di rete al dispositivo è stata stabilita manualmente. Assicurati che il tuo telefono si sia ricollegato a Internet e continua il processo.</string>
+  <string name="channel_state_battery_powered">a batteria</string>
+  <string name="channel_state_main_powered">a rete</string>
 </resources>
