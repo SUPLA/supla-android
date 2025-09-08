@@ -60,6 +60,7 @@ import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.GetChannelValueUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenTreeUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
+import org.supla.android.usecases.thermostat.CheckIsSlaveThermostatUseCase
 import org.supla.android.usecases.thermostat.CreateTemperaturesListUseCase
 import org.supla.android.usecases.thermostat.MeasurementValue
 import org.supla.core.shared.data.model.channel.ChannelRelationType
@@ -79,18 +80,19 @@ private const val REFRESH_DELAY_MS = 3000
 @HiltViewModel
 class ThermostatGeneralViewModel @Inject constructor(
   private val readChannelWithChildrenTreeUseCase: ReadChannelWithChildrenTreeUseCase,
-  private val createTemperaturesListUseCase: CreateTemperaturesListUseCase,
-  private val getChannelValueUseCase: GetChannelValueUseCase,
-  private val getChannelIconUseCase: GetChannelIconUseCase,
-  private val valuesFormatter: ValuesFormatter,
   private val delayedThermostatActionSubject: DelayedThermostatActionSubject,
+  private val createTemperaturesListUseCase: CreateTemperaturesListUseCase,
+  private val checkIsSlaveThermostatUseCase: CheckIsSlaveThermostatUseCase,
   private val channelConfigEventsManager: ChannelConfigEventsManager,
   private val deviceConfigEventsManager: DeviceConfigEventsManager,
-  private val suplaClientProvider: SuplaClientProvider,
+  private val getChannelValueUseCase: GetChannelValueUseCase,
+  private val getChannelIconUseCase: GetChannelIconUseCase,
   private val loadingTimeoutManager: LoadingTimeoutManager,
-  private val dateProvider: DateProvider,
+  private val updateEventsManager: UpdateEventsManager,
+  private val suplaClientProvider: SuplaClientProvider,
+  private val valuesFormatter: ValuesFormatter,
   private val schedulers: SuplaSchedulers,
-  private val updateEventsManager: UpdateEventsManager
+  private val dateProvider: DateProvider,
 ) : BaseViewModel<ThermostatGeneralViewState, ThermostatGeneralViewEvent>(ThermostatGeneralViewState(), schedulers),
   ThermostatGeneralViewProxy {
 
@@ -134,14 +136,16 @@ class ThermostatGeneralViewModel @Inject constructor(
         .map { it.config as SuplaChannelHvacConfig },
       channelConfigEventsManager.observerConfig(remoteId)
         .filter { it.config is SuplaChannelWeeklyScheduleConfig },
-      deviceConfigEventsManager.observerConfig(deviceId)
-    ) { channelWithChildren, hvacConfig, weeklySchedule, deviceConfig ->
+      deviceConfigEventsManager.observerConfig(deviceId),
+      checkIsSlaveThermostatUseCase(remoteId).toObservable()
+    ) { channelWithChildren, hvacConfig, weeklySchedule, deviceConfig, isSlave ->
       LoadedData(
         channelWithChildren = channelWithChildren,
         temperatures = createTemperaturesListUseCase(channelWithChildren),
         config = hvacConfig,
         weeklySchedule = weeklySchedule.config as SuplaChannelWeeklyScheduleConfig,
-        deviceConfig = deviceConfig.config
+        deviceConfig = deviceConfig.config,
+        isSlaveThermostat = isSlave
       )
     }
       .debounce(50, TimeUnit.MILLISECONDS, schedulers.computation)
@@ -384,6 +388,7 @@ class ThermostatGeneralViewModel @Inject constructor(
 
         temperatures = data.temperatures,
 
+        buttonsDisabled = value.status.offline || data.isSlaveThermostat,
         isOffline = value.status.offline,
         isOff = isOff,
         currentPower = currentPower,
@@ -677,7 +682,8 @@ class ThermostatGeneralViewModel @Inject constructor(
     val temperatures: List<MeasurementValue>,
     val config: SuplaChannelHvacConfig,
     val weeklySchedule: SuplaChannelWeeklyScheduleConfig,
-    val deviceConfig: SuplaDeviceConfig?
+    val deviceConfig: SuplaDeviceConfig?,
+    val isSlaveThermostat: Boolean
   )
 }
 
@@ -691,6 +697,7 @@ data class ThermostatGeneralViewState(
   val isOffline: Boolean = false,
   val isOff: Boolean = false,
   val currentPower: Float? = null,
+  val buttonsDisabled: Boolean = false,
 
   val isAutoFunction: Boolean = false,
   val heatingModeActive: Boolean = false,

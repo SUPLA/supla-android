@@ -34,6 +34,9 @@ import org.supla.android.data.source.local.entity.extensions.onlineState
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.data.source.remote.thermostat.getIndicatorIcon
 import org.supla.android.data.source.remote.thermostat.getSetpointText
+import org.supla.android.data.source.runtime.ItemType
+import org.supla.android.features.details.detailbase.standarddetail.DetailPage
+import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenTreeUseCase
@@ -58,7 +61,8 @@ class ThermostatSlavesListViewModel @Inject constructor(
 ) : BaseViewModel<ThermostatSlavesListViewModelState, ThermostatSlavesListViewEvent>(
   ThermostatSlavesListViewModelState(),
   schedulers
-) {
+),
+  ThermostatSlavesListScope {
 
   fun onCreate(remoteId: Int) {
     readChannelWithChildrenTreeUseCase(remoteId)
@@ -70,8 +74,25 @@ class ThermostatSlavesListViewModel @Inject constructor(
       .disposeBySelf()
   }
 
-  fun showMessage(message: String) {
+  override fun onShowMessage(message: String) {
     updateState { it.copy(showMessage = message) }
+  }
+
+  override fun onShowInfo(slave: ThermostatData) {
+    sendEvent(ThermostatSlavesListViewEvent.ShowInfo(slave))
+  }
+
+  override fun onCaptionLongPress(slave: ThermostatData) {
+    sendEvent(ThermostatSlavesListViewEvent.ChangeCaption(slave))
+  }
+
+  override fun onSlaveClick(slave: ThermostatData) {
+    sendEvent(
+      ThermostatSlavesListViewEvent.OpenDetails(
+        bundle = ItemBundle(slave.channelId, slave.deviceId, ItemType.CHANNEL, slave.function),
+        pages = listOf(DetailPage.THERMOSTAT, DetailPage.THERMOSTAT_HISTORY)
+      )
+    )
   }
 
   fun closeMessage() {
@@ -99,6 +120,8 @@ class ThermostatSlavesListViewModel @Inject constructor(
     val mainThermometer = children.firstOrNull { it.relationType == ChannelRelationType.MAIN_THERMOMETER }
     return ThermostatData(
       channelId = channel.remoteId,
+      deviceId = channel.channelEntity.deviceId ?: 0,
+      function = channel.function,
       profileId = channel.profileId,
       onlineState = channel.channelValueEntity.onlineState,
       caption = getCaptionUseCase(channel.shareable),
@@ -120,6 +143,8 @@ class ThermostatSlavesListViewModel @Inject constructor(
     val mainThermometer = children.firstOrNull { it.relationType == ChannelRelationType.MAIN_THERMOMETER }
     return ThermostatData(
       channelId = channel.remoteId,
+      deviceId = channel.deviceId ?: 0,
+      function = channel.function,
       profileId = channel.profileId,
       onlineState = channelDataEntity.channelValueEntity.onlineState,
       caption = getCaptionUseCase(channelDataEntity.shareable),
@@ -137,7 +162,11 @@ class ThermostatSlavesListViewModel @Inject constructor(
   }
 }
 
-sealed class ThermostatSlavesListViewEvent : ViewEvent
+sealed interface ThermostatSlavesListViewEvent : ViewEvent {
+  data class ShowInfo(val data: ThermostatData) : ThermostatSlavesListViewEvent
+  data class ChangeCaption(val data: ThermostatData) : ThermostatSlavesListViewEvent
+  data class OpenDetails(val bundle: ItemBundle, val pages: List<DetailPage>) : ThermostatSlavesListViewEvent
+}
 
 data class ThermostatSlavesListViewModelState(
   val viewState: ThermostatSlavesListViewState = ThermostatSlavesListViewState(),
