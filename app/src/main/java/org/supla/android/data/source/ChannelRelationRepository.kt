@@ -40,6 +40,8 @@ class ChannelRelationRepository @Inject constructor(
 
   fun findChildrenForParent(parentId: Int) = channelRelationDao.findChildrenFor(parentId)
 
+  fun findParentsOf(childId: Int) = channelRelationDao.findParentsOf(childId)
+
   fun findChildrenToParentsRelations(): Observable<Map<Int, List<ChannelRelationEntity>>> =
     channelRelationDao.getForActiveProfile().map { entities ->
       mutableMapOf<Int, MutableList<ChannelRelationEntity>>().also { map ->

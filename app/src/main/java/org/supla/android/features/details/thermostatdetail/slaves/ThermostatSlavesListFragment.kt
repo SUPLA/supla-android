@@ -31,11 +31,14 @@ import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.features.captionchangedialog.CaptionChangeViewModel
 import org.supla.android.features.captionchangedialog.View
 import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
+import org.supla.android.features.details.thermostatdetail.ThermostatDetailFragment
 import org.supla.android.features.statedialog.StateDialogViewModel
 import org.supla.android.features.statedialog.View
 import org.supla.android.features.statedialog.handleStateDialogViewEvent
+import org.supla.android.navigator.MainNavigator
 import org.supla.android.ui.dialogs.AlertDialog
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
+import javax.inject.Inject
 
 private const val ARG_ITEM_BUNDLE = "ARG_ITEM_BUNDLE"
 
@@ -50,6 +53,9 @@ class ThermostatSlavesListFragment : BaseComposeFragment<ThermostatSlavesListVie
   private val captionChangeViewModel: CaptionChangeViewModel by viewModels()
 
   private val item: ItemBundle by lazy { requireSerializable(ARG_ITEM_BUNDLE, ItemBundle::class.java) }
+
+  @Inject
+  lateinit var navigator: MainNavigator
 
   @Composable
   override fun ComposableContent(modelState: ThermostatSlavesListViewModelState) {
@@ -66,11 +72,8 @@ class ThermostatSlavesListFragment : BaseComposeFragment<ThermostatSlavesListVie
       stateDialogViewModel.View()
       captionChangeViewModel.View()
 
-      ThermostatSlavesListView(
+      viewModel.View(
         state = modelState.viewState,
-        onShowMessage = viewModel::showMessage,
-        onShowInfo = { stateDialogViewModel.showDialog(it.channelId) },
-        onCaptionLongPress = { captionChangeViewModel.showChannelDialog(it.channelId, it.profileId, it.userCaption) }
       )
     }
   }
@@ -91,6 +94,16 @@ class ThermostatSlavesListFragment : BaseComposeFragment<ThermostatSlavesListVie
   }
 
   override fun handleEvents(event: ThermostatSlavesListViewEvent) {
+    when (event) {
+      is ThermostatSlavesListViewEvent.ChangeCaption ->
+        captionChangeViewModel.showChannelDialog(event.data.channelId, event.data.profileId, event.data.userCaption)
+
+      is ThermostatSlavesListViewEvent.OpenDetails ->
+        navigator.navigateTo(R.id.thermostat_detail_fragment, ThermostatDetailFragment.bundle(event.bundle, event.pages.toTypedArray()))
+
+      is ThermostatSlavesListViewEvent.ShowInfo ->
+        stateDialogViewModel.showDialog(event.data.channelId)
+    }
   }
 
   override fun handleHelperEvents(event: ViewEvent) {

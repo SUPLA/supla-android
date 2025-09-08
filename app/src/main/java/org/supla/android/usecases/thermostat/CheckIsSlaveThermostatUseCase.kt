@@ -1,4 +1,4 @@
-package org.supla.android.ui.views.buttons.supla
+package org.supla.android.usecases.thermostat
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,32 +17,22 @@ package org.supla.android.ui.views.buttons.supla
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import androidx.compose.runtime.Immutable
-import androidx.compose.ui.graphics.Color
+import io.reactivex.rxjava3.core.Single
+import org.supla.android.data.source.ChannelRelationRepository
+import org.supla.android.extensions.isNotNull
+import org.supla.core.shared.data.model.channel.ChannelRelationType
+import javax.inject.Inject
+import javax.inject.Singleton
 
-@Immutable
-class SuplaButtonColors(
-  val border: Color,
-  val borderPressed: Color,
-  val borderDisabled: Color,
-  val content: Color,
-  val contentPressed: Color,
-  val contentDisabled: Color,
-  val shadow: Color,
-  val shadowPressed: Color
+@Singleton
+class CheckIsSlaveThermostatUseCase @Inject constructor(
+  private val channelRelationRepository: ChannelRelationRepository
 ) {
 
-  fun border(active: Boolean, disabled: Boolean) =
-    when {
-      disabled -> borderDisabled
-      active -> borderPressed
-      else -> border
-    }
-
-  fun content(active: Boolean, disabled: Boolean) =
-    when {
-      disabled -> contentDisabled
-      active -> contentPressed
-      else -> content
-    }
+  operator fun invoke(remoteId: Int): Single<Boolean> =
+    channelRelationRepository
+      .findParentsOf(remoteId)
+      .map { parents ->
+        parents.find { it.relationType == ChannelRelationType.MASTER_THERMOSTAT }.isNotNull
+      }
 }
