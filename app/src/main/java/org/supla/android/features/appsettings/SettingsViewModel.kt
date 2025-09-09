@@ -66,7 +66,8 @@ class SettingsViewModel @Inject constructor(
     return@fromCallable listOf(
       SettingItem.HeaderItem(headerResource = R.string.menubar_appsettings),
       SettingItem.ChannelHeightItem(height = getChannelHeight(), this::updateChannelHeight),
-      SettingItem.TemperatureUnitItem(unit = preferences.temperatureUnit, this::updateTemperatureUnit),
+      SettingItem.TemperatureUnitItem(unit = applicationPreferences.temperatureUnit, this::updateTemperatureUnit),
+      SettingItem.TemperaturePrecisionItem(precision = applicationPreferences.temperaturePrecision, this::updateTemperaturePrecision),
       SettingItem.ButtonAutoHide(active = preferences.isButtonAutohide, this::updateButtonAutoHide),
       SettingItem.InfoButton(visible = preferences.isShowChannelInfo, this::updateInfoButton),
       SettingItem.BottomMenu(visible = preferences.isShowBottomMenu, this::updateBottomMenu),
@@ -98,7 +99,11 @@ class SettingsViewModel @Inject constructor(
   }
 
   private fun updateTemperatureUnit(position: Int) {
-    preferences.temperatureUnit = TemperatureUnit.forPosition(position)
+    applicationPreferences.temperatureUnit = TemperatureUnit.forPosition(position)
+  }
+
+  private fun updateTemperaturePrecision(position: Int) {
+    applicationPreferences.temperaturePrecision = position + 1
   }
 
   private fun updateButtonAutoHide(value: Boolean) {

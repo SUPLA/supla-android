@@ -710,4 +710,5 @@
   <string name="add_wizard_manual_reconnect">A hálózati kapcsolatot az eszközzel manuálisan hozták létre. Győződjön meg róla, hogy a telefonja ismét csatlakozik az internethez, és folytassa a folyamatot.</string>
   <string name="channel_state_battery_powered">elemes</string>
   <string name="channel_state_main_powered">hálózati</string>
+  <string name="cfg_temperature_precision">Hőmérséklet-pontosság</string>
 </resources>

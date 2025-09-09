@@ -18,8 +18,8 @@ package org.supla.android.data
  */
 
 import android.annotation.SuppressLint
-import org.supla.android.Preferences
 import org.supla.android.R
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.core.ui.StringProvider
 import org.supla.android.data.source.local.calendar.Hour
 import org.supla.android.data.source.runtime.appsettings.TemperatureUnit
@@ -28,30 +28,28 @@ import org.supla.android.extensions.guardLet
 import org.supla.android.extensions.hours
 import org.supla.android.extensions.minutesInHour
 import org.supla.android.extensions.secondsInMinute
-import org.supla.android.lib.singlecall.TemperatureAndHumidity
 import org.supla.android.usecases.channel.valueprovider.ThermometerValueProvider
 import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.roundToInt
 
 @Singleton
 class ValuesFormatter @Inject constructor(
-  private val preferences: Preferences
+  private val applicationPreferences: ApplicationPreferences
 ) {
 
   fun isTemperatureDefined(rawValue: Double?): Boolean {
     return rawValue != null && rawValue > TEMPERATURE_NA_VALUE
   }
 
-  fun getTemperatureString(rawValue: Float?, withUnit: Boolean = false, withDegree: Boolean = true, precision: Int = 1) =
-    getTemperatureString(rawValue?.toDouble(), withUnit, withDegree, precision)
+  fun getTemperatureString(rawValue: Float?, withUnit: Boolean = false, withDegree: Boolean = true) =
+    getTemperatureString(rawValue?.toDouble(), withUnit, withDegree)
 
-  fun getTemperatureString(rawValue: Double?, withUnit: Boolean = false, withDegree: Boolean = true) =
-    getTemperatureString(rawValue, withUnit, withDegree, 1)
-
-  fun getTemperatureString(rawValue: Double?, withUnit: Boolean = false, withDegree: Boolean = true, precision: Int = 1): String {
+  fun getTemperatureString(rawValue: Double?, withUnit: Boolean = false, withDegree: Boolean = true): String {
+    val precision = applicationPreferences.temperaturePrecision
     return when {
       !isTemperatureDefined(rawValue) && withUnit ->
         String.format("%s%s", NO_VALUE_TEXT, getUnitString())
@@ -79,13 +77,13 @@ class ValuesFormatter @Inject constructor(
     }
 
     return if (distance >= 1000) {
-      String.format("%.2f km", distance / 1000f)
+      String.format(Locale.getDefault(), "%.2f km", distance / 1000f)
     } else if (distance >= 1) {
-      String.format("%.2f m", distance)
+      String.format(Locale.getDefault(), "%.2f m", distance)
     } else if (distance * 100 >= 1) {
-      String.format("%.1f cm", distance.times(100))
+      String.format(Locale.getDefault(), "%.1f cm", distance.times(100))
     } else {
-      String.format("%d mm", distance.times(1000).roundToInt())
+      String.format(Locale.getDefault(), "%d mm", distance.times(1000).roundToInt())
     }
   }
 
@@ -95,16 +93,6 @@ class ValuesFormatter @Inject constructor(
     } else {
       toFahrenheit(value)
     }
-  }
-
-  fun getTemperatureAndHumidityString(
-    temperatureAndHumidity: TemperatureAndHumidity?,
-    withUnit: Boolean = false
-  ): String {
-    val temperatureString = getTemperatureString(temperatureAndHumidity?.temperature, withUnit)
-    val humidityString = getHumidityString(temperatureAndHumidity?.humidity)
-
-    return String.format("%s\n%s", temperatureString, humidityString)
   }
 
   fun getHourWithMinutes(minutes: Int): StringProvider {
@@ -160,23 +148,10 @@ class ValuesFormatter @Inject constructor(
     }
   }
 
-  private fun getHumidityString(rawValue: Double?): String {
-    return when {
-      !isHumidityDefined(rawValue) ->
-        String.format("%s%s", NO_VALUE_TEXT, '%')
-
-      else -> String.format("%.1f%s", rawValue, '%')
-    }
-  }
-
-  private fun isHumidityDefined(rawValue: Double?): Boolean {
-    return rawValue != null && rawValue > 0
-  }
-
-  private fun isCelsius(): Boolean = preferences.temperatureUnit == TemperatureUnit.CELSIUS
+  private fun isCelsius(): Boolean = applicationPreferences.temperatureUnit == TemperatureUnit.CELSIUS
 
   private fun getUnitString(): String {
-    return if (preferences.temperatureUnit == TemperatureUnit.FAHRENHEIT) {
+    return if (applicationPreferences.temperatureUnit == TemperatureUnit.FAHRENHEIT) {
       "\u00B0F"
     } else {
       "\u00B0C"

@@ -691,4 +691,5 @@
   <string name="add_wizard_manual_reconnect">Síťové připojení k zařízení bylo navázáno ručně. Ujistěte se, že je váš telefon znovu připojen k internetu, a pokračujte v procesu.</string>
   <string name="channel_state_battery_powered">bateriové</string>
   <string name="channel_state_main_powered">síťové</string>
+  <string name="cfg_temperature_precision">Přesnost teploty</string>
 </resources>

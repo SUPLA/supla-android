@@ -17,23 +17,27 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import io.mockk.MockKAnnotations
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
-import org.supla.android.Preferences
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.source.local.calendar.Hour
 
-@RunWith(MockitoJUnitRunner::class)
 class ValuesFormatterTest {
 
-  @Mock
-  private lateinit var preferences: Preferences
+  @MockK
+  private lateinit var preferences: ApplicationPreferences
 
-  @InjectMocks
+  @InjectMockKs
   private lateinit var formatter: ValuesFormatter
+
+  @Before
+  fun setUp() {
+    MockKAnnotations.init(this)
+  }
 
   @Test
   fun `should format hour and minute`() {

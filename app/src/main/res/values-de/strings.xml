@@ -799,4 +799,5 @@
   <string name="add_wizard_manual_reconnect">Die Netzwerkverbindung zum Gerät wurde manuell hergestellt. Stellen Sie sicher, dass Ihr Telefon wieder mit dem Internet verbunden ist, und fahren Sie mit dem Vorgang fort.</string>
   <string name="channel_state_battery_powered">Batterie</string>
   <string name="channel_state_main_powered">Netz</string>
+  <string name="cfg_temperature_precision">Temperaturpräzision</string>
 </resources>

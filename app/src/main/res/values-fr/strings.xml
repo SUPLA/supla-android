@@ -698,4 +698,5 @@
   <string name="add_wizard_manual_reconnect">La connexion réseau à l\'appareil a été établie manuellement. Assurez-vous que votre téléphone est à nouveau connecté à Internet et poursuivez le processus.</string>
   <string name="channel_state_battery_powered">par pile</string>
   <string name="channel_state_main_powered">sur secteur</string>
+  <string name="cfg_temperature_precision">Précision de la température</string>
 </resources>

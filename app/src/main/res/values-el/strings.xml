@@ -707,4 +707,5 @@
   <string name="add_wizard_manual_reconnect">Η σύνδεση δικτύου με τη συσκευή πραγματοποιήθηκε χειροκίνητα. Βεβαιωθείτε ότι το τηλέφωνό σας έχει συνδεθεί ξανά στο διαδίκτυο και συνεχίστε τη διαδικασία.</string>
   <string name="channel_state_battery_powered">μπαταρίας</string>
   <string name="channel_state_main_powered">ρεύματος</string>
+  <string name="cfg_temperature_precision">Ακρίβεια θερμοκρασίας</string>
 </resources>

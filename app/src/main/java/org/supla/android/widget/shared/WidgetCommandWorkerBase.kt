@@ -28,10 +28,10 @@ import android.os.Looper
 import android.widget.Toast
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
-import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.Trace
 import org.supla.android.core.notifications.NotificationsHelper
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.source.remote.gpm.SuplaChannelGeneralPurposeBaseConfig
 import org.supla.android.lib.SuplaConst.SUPLA_RESULTCODE_ACCESSID_DISABLED
 import org.supla.android.lib.SuplaConst.SUPLA_RESULTCODE_ACCESSID_INACTIVE
@@ -69,7 +69,7 @@ abstract class WidgetCommandWorkerBase(
   private val loadChannelConfigUseCase: LoadChannelConfigUseCase,
   private val notificationsHelper: NotificationsHelper,
   private val vibrationHelper: VibrationHelper,
-  appPreferences: Preferences,
+  appPreferences: ApplicationPreferences,
   appContext: Context,
   workerParams: WorkerParameters
 ) : WidgetWorkerBase(appPreferences, appContext, workerParams) {

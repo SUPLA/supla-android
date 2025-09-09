@@ -711,4 +711,5 @@
   <string name="add_wizard_manual_reconnect">Sieťové pripojenie k zariadeniu bolo nadviazané manuálne. Uistite sa, že sa váš telefón znova pripojil na internet, a pokračujte v procese.</string>
   <string name="channel_state_battery_powered">batériové</string>
   <string name="channel_state_main_powered">sieťové</string>
+  <string name="cfg_temperature_precision">Presnosť teploty</string>
 </resources>

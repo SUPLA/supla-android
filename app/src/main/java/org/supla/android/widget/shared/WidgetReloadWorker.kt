@@ -6,8 +6,8 @@ import androidx.hilt.work.HiltWorker
 import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import org.supla.android.Preferences
 import org.supla.android.Trace
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.source.remote.gpm.SuplaChannelGeneralPurposeBaseConfig
 import org.supla.android.extensions.TAG
 import org.supla.android.extensions.getAppWidgetManager
@@ -27,7 +27,7 @@ import org.supla.core.shared.data.model.general.SuplaFunction
 @HiltWorker
 class WidgetReloadWorker @AssistedInject constructor(
   private val loadChannelConfigUseCase: LoadChannelConfigUseCase,
-  appPreferences: Preferences,
+  appPreferences: ApplicationPreferences,
   @Assisted context: Context,
   @Assisted workerParameters: WorkerParameters
 ) : WidgetWorkerBase(appPreferences, context, workerParameters) {

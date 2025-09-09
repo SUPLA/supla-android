@@ -17,11 +17,11 @@ package org.supla.android.data.source.runtime.appsettings
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-enum class TemperatureUnit {
-  CELSIUS, FAHRENHEIT;
+enum class TemperatureUnit(val value: String) {
+  CELSIUS("C"), FAHRENHEIT("F");
 
   fun position(): Int {
-    for ((position, unit) in TemperatureUnit.values().withIndex()) {
+    for ((position, unit) in entries.withIndex()) {
       if (unit == this) {
         return position
       }
@@ -32,13 +32,23 @@ enum class TemperatureUnit {
 
   companion object {
     fun forPosition(position: Int): TemperatureUnit {
-      for ((i, unit) in TemperatureUnit.values().withIndex()) {
+      for ((i, unit) in entries.withIndex()) {
         if (i == position) {
           return unit
         }
       }
 
       throw IllegalStateException("Position not found!")
+    }
+
+    fun fromValue(value: String?): TemperatureUnit {
+      for (entry in entries) {
+        if (entry.value == value) {
+          return entry
+        }
+      }
+
+      return CELSIUS
     }
   }
 }

@@ -20,7 +20,7 @@ package org.supla.android.widget.shared
 import android.content.Context
 import androidx.work.Worker
 import androidx.work.WorkerParameters
-import org.supla.android.Preferences
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.ValuesFormatter
 import org.supla.android.extensions.getSingleCallProvider
 import org.supla.android.extensions.getWidgetPreferences
@@ -33,7 +33,7 @@ import org.supla.android.widget.WidgetConfiguration
 import org.supla.core.shared.data.model.general.SuplaFunction
 
 abstract class WidgetWorkerBase(
-  appPreferences: Preferences,
+  appPreferences: ApplicationPreferences,
   appContext: Context,
   workerParams: WorkerParameters
 ) : Worker(appContext, workerParams) {

@@ -684,4 +684,5 @@
   <string name="add_wizard_manual_reconnect">Мережеве з\'єднання з пристроєм було встановлено вручну. Переконайтеся, що ваш телефон знову підключився до Інтернету, і продовжуйте процес.</string>
   <string name="channel_state_battery_powered">від батареї</string>
   <string name="channel_state_main_powered">від мережі</string>
+  <string name="cfg_temperature_precision">Точність температури</string>
 </resources>

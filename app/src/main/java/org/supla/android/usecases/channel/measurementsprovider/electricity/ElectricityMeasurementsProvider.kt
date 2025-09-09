@@ -18,8 +18,8 @@ package org.supla.android.usecases.channel.measurementsprovider.electricity
  */
 
 import com.google.gson.Gson
-import org.supla.android.Preferences
 import org.supla.android.R
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.model.chart.AggregatedEntity
 import org.supla.android.data.model.chart.AggregatedValue
@@ -44,7 +44,7 @@ import javax.inject.Named
 open class ElectricityMeasurementsProvider<T : ElectricityBaseLogEntity>(
   private val getChannelIconUseCase: GetChannelIconUseCase,
   @Named(GSON_FOR_REPO) gson: Gson,
-  preferences: Preferences
+  preferences: ApplicationPreferences
 ) : MeasurementsProvider(preferences, gson) {
 
   open val labelValueExtractor: (Measurement?) -> Double

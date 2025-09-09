@@ -19,10 +19,10 @@ package org.supla.android.usecases.channel.measurementsprovider
 
 import com.google.gson.Gson
 import io.reactivex.rxjava3.core.Single
-import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.core.shared.provider
 import org.supla.android.core.shared.shareable
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.model.chart.AggregatedEntity
 import org.supla.android.data.model.chart.AggregatedValue
 import org.supla.android.data.model.chart.ChannelChartSets
@@ -49,7 +49,7 @@ class GeneralPurposeMeterMeasurementsProvider @Inject constructor(
   private val getCaptionUseCase: GetCaptionUseCase,
   getChannelValueStringUseCase: GetChannelValueStringUseCase,
   getChannelIconUseCase: GetChannelIconUseCase,
-  preferences: Preferences,
+  preferences: ApplicationPreferences,
   @Named(GSON_FOR_REPO) gson: Gson
 ) : ChannelMeasurementsProvider(getChannelValueStringUseCase, getChannelIconUseCase, preferences, gson) {
 
