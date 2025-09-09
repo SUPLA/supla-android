@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="@dimen/settings_cell_height"
+  android:background="@color/cell_bg_new"
+  android:paddingLeft="@dimen/new_screen_margin"
+  android:paddingRight="@dimen/new_screen_margin">
+
+  <TextView
+    android:id="@+id/settings_temperature_precision_label"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentStart="true"
+    android:layout_centerVertical="true"
+    android:text="@string/cfg_temperature_precision"
+    android:textAppearance="@style/AppTheme.TextAppearance.Body2" />
+
+  <org.supla.android.ui.SegmentedButtonGroup
+    android:id="@+id/settings_temperature_precision"
+    style="@style/SegmentedButtonGroupDayOnly"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentEnd="true"
+    android:layout_centerVertical="true">
+
+    <org.supla.android.ui.SegmentedButton
+      android:id="@+id/settings_temperature_precision_one_digit"
+      style="@style/SegmentedButton"
+      android:layout_width="@dimen/segmented_button_width_small"
+      android:layout_height="@dimen/segmented_button_height"
+      android:layout_margin="4dp"
+      android:text="" />
+
+    <org.supla.android.ui.SegmentedButton
+      android:id="@+id/settings_temperature_precision_two_digits"
+      style="@style/SegmentedButton"
+      android:layout_width="@dimen/segmented_button_width_small"
+      android:layout_height="@dimen/segmented_button_height"
+      android:layout_margin="4dp"
+      android:text="" />
+  </org.supla.android.ui.SegmentedButtonGroup>
+</RelativeLayout>

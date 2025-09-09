@@ -37,7 +37,9 @@ import org.supla.android.databinding.LiSettingsNightModeBinding
 import org.supla.android.databinding.LiSettingsPermissionBinding
 import org.supla.android.databinding.LiSettingsRollerShutterBinding
 import org.supla.android.databinding.LiSettingsSwitchBinding
+import org.supla.android.databinding.LiSettingsTemperaturePrecisionBinding
 import org.supla.android.databinding.LiSettingsTemperatureUnitBinding
+import java.text.DecimalFormatSymbols
 import javax.inject.Inject
 
 class SettingsListAdapter @Inject constructor() : RecyclerView.Adapter<SettingItemViewHolder<*>>() {
@@ -100,6 +102,21 @@ sealed class SettingItem(val viewResource: Int) {
       (holder.binding as LiSettingsTemperatureUnitBinding).apply {
         settingsTemperatureUnit.position = unit.position()
         settingsTemperatureUnit.setOnPositionChangedListener(callback)
+      }
+    }
+  }
+
+  data class TemperaturePrecisionItem(
+    val precision: Int,
+    val callback: (Int) -> Unit = { }
+  ) : SettingItem(R.layout.li_settings_temperature_precision) {
+    override fun bind(holder: SettingItemViewHolder<*>) {
+      (holder.binding as LiSettingsTemperaturePrecisionBinding).apply {
+        settingsTemperaturePrecisionOneDigit.setText("X${DecimalFormatSymbols.getInstance().decimalSeparator}X°")
+        settingsTemperaturePrecisionTwoDigits.setText("X${DecimalFormatSymbols.getInstance().decimalSeparator}XX°")
+
+        settingsTemperaturePrecision.position = precision - 1
+        settingsTemperaturePrecision.setOnPositionChangedListener(callback)
       }
     }
   }
@@ -281,6 +298,10 @@ data class SettingItemViewHolder<T : ViewBinding>(val binding: T) : RecyclerView
 
         R.layout.li_settings_temperature_unit -> {
           SettingItemViewHolder(LiSettingsTemperatureUnitBinding.inflate(inflater, parent, false))
+        }
+
+        R.layout.li_settings_temperature_precision -> {
+          SettingItemViewHolder(LiSettingsTemperaturePrecisionBinding.inflate(inflater, parent, false))
         }
 
         R.layout.li_settings_roller_shutter -> {

@@ -17,14 +17,14 @@ package org.supla.android.usecases.channel.valueformatter
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.Preferences
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.ValuesFormatter.Companion.NO_VALUE_TEXT
 import org.supla.android.data.source.runtime.appsettings.TemperatureUnit
 import org.supla.android.extensions.guardLet
 import org.supla.android.lib.SuplaConst
 import org.supla.android.usecases.channel.valueprovider.ThermometerValueProvider
 
-class ThermometerValueFormatter(private val preferences: Preferences) : ChannelValueFormatter {
+class ThermometerValueFormatter(private val preferences: ApplicationPreferences) : ChannelValueFormatter {
   override fun handle(function: Int): Boolean =
     function == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
 
@@ -37,9 +37,9 @@ class ThermometerValueFormatter(private val preferences: Preferences) : ChannelV
     val unit = getUnit()
     val valueForUnit = getTemperature(doubleValue)
     return if (withUnit) {
-      String.format("%.${precision.value}f$unit", valueForUnit)
+      String.format("%.${preferences.temperaturePrecision}f$unit", valueForUnit)
     } else {
-      String.format("%.${precision.value}f°", valueForUnit)
+      String.format("%.${preferences.temperaturePrecision}f°", valueForUnit)
     }
   }
 

@@ -700,4 +700,5 @@
   <string name="add_wizard_manual_reconnect">A conexão de rede com o dispositivo foi estabelecida manualmente. Certifique-se de que seu telefone se conectou novamente à internet e continue o processo.</string>
   <string name="channel_state_battery_powered">a bateria</string>
   <string name="channel_state_main_powered">de rede</string>
+  <string name="cfg_temperature_precision">Precisão da temperatura</string>
 </resources>

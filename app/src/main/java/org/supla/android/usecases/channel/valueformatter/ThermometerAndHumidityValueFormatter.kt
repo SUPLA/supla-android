@@ -1,6 +1,6 @@
 package org.supla.android.usecases.channel.valueformatter
 
-import org.supla.android.Preferences
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.ValuesFormatter
 import org.supla.android.extensions.guardLet
 import org.supla.android.lib.SuplaConst
@@ -8,7 +8,7 @@ import org.supla.android.lib.singlecall.TemperatureAndHumidity
 import org.supla.android.usecases.channel.valueprovider.HumidityAndTemperatureValueProvider
 import org.supla.android.usecases.channel.valueprovider.ThermometerValueProvider
 
-class ThermometerAndHumidityValueFormatter(private val preferences: Preferences) : ChannelValueFormatter {
+class ThermometerAndHumidityValueFormatter(preferences: ApplicationPreferences) : ChannelValueFormatter {
 
   private val thermometerValueFormatter = ThermometerValueFormatter(preferences)
   private val humidityValueFormatter = HumidityValueFormatter()

@@ -19,7 +19,7 @@ package org.supla.android.usecases.channel.measurementsprovider
 
 import com.google.gson.Gson
 import io.reactivex.rxjava3.core.Single
-import org.supla.android.Preferences
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.model.chart.AggregatedEntity
 import org.supla.android.data.model.chart.ChannelChartSets
 import org.supla.android.data.model.chart.ChartDataAggregation
@@ -50,7 +50,7 @@ import org.supla.core.shared.data.model.channel.ChannelRelationType
 abstract class ChannelMeasurementsProvider(
   private val getChannelValueStringUseCase: GetChannelValueStringUseCase,
   private val getChannelIconUseCase: GetChannelIconUseCase,
-  preferences: Preferences,
+  preferences: ApplicationPreferences,
   gson: Gson // GSON_FOR_REPO
 ) : MeasurementsProvider(preferences, gson) {
 
@@ -98,7 +98,7 @@ abstract class ChannelMeasurementsProvider(
 }
 
 open class MeasurementsProvider(
-  private val preferences: Preferences,
+  private val preferences: ApplicationPreferences,
   private val gson: Gson // GSON_FOR_REPO
 ) {
 

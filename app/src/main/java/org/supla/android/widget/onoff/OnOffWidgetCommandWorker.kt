@@ -26,10 +26,10 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import org.supla.android.Preferences
 import org.supla.android.core.infrastructure.WorkManagerProxy
 import org.supla.android.core.notifications.NotificationsHelper
 import org.supla.android.core.notifications.ON_OFF_WIDGET_NOTIFICATION_ID
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.lib.SuplaConst
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.tools.VibrationHelper
@@ -57,7 +57,7 @@ class OnOffWidgetCommandWorker @AssistedInject constructor(
   loadChannelConfigUseCase: LoadChannelConfigUseCase,
   notificationsHelper: NotificationsHelper,
   vibrationHelper: VibrationHelper,
-  appPreferences: Preferences,
+  appPreferences: ApplicationPreferences,
   @Assisted appContext: Context,
   @Assisted workerParams: WorkerParameters
 ) : WidgetCommandWorkerBase(loadChannelConfigUseCase, notificationsHelper, vibrationHelper, appPreferences, appContext, workerParams) {

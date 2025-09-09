@@ -20,9 +20,9 @@ package org.supla.android.usecases.channel.measurementsprovider.electricity
 import com.google.gson.Gson
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
-import org.supla.android.Preferences
 import org.supla.android.core.shared.provider
 import org.supla.android.core.shared.shareable
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.model.chart.ChannelChartSets
 import org.supla.android.data.model.chart.ChartDataSpec
 import org.supla.android.data.model.chart.ChartEntryType
@@ -49,7 +49,7 @@ class CurrentMeasurementsProvider @Inject constructor(
   private val getCaptionUseCase: GetCaptionUseCase,
   getChannelIconUseCase: GetChannelIconUseCase,
   @Named(GSON_FOR_REPO) gson: Gson,
-  preferences: Preferences
+  preferences: ApplicationPreferences
 ) : ElectricityMeasurementsProvider<CurrentHistoryLogEntity>(getChannelIconUseCase, gson, preferences) {
 
   override val labelValueExtractor: (SuplaChannelElectricityMeterValue.Measurement?) -> Double

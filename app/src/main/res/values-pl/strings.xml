@@ -808,6 +808,7 @@
   <string name="add_wizard_manual_reconnect">Połączenie sieciowe z urządzeniem zostało ustanowione manualnie. Upewnij się, że telefon przełączył się na sieć z internetem i kontynuuj proces.</string>
   <string name="channel_state_battery_powered">bateryjne</string>
   <string name="channel_state_main_powered">sieciowe</string>
+  <string name="cfg_temperature_precision">Precyzja temperatury</string>
 
   <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
     <item quantity="one">włączone</item>

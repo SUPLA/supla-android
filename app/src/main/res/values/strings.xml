@@ -835,6 +835,7 @@
   <string name="add_wizard_manual_reconnect">The network connection to the device was established manually. Make sure your phone has connected back to the internet and continue the process.</string>
   <string name="channel_state_battery_powered">battery</string>
   <string name="channel_state_main_powered">mains</string>
+  <string name="cfg_temperature_precision">Temperature precision</string>
 
   <plurals name="details_timer_info_on" translatable="false">
     <item quantity="other">on</item>

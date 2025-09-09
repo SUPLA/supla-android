@@ -711,4 +711,5 @@
   <string name="add_wizard_manual_reconnect">De netwerkverbinding met het apparaat is handmatig tot stand gebracht. Zorg ervoor dat uw telefoon opnieuw verbinding heeft met internet en vervolg het proces.</string>
   <string name="channel_state_battery_powered">batterij</string>
   <string name="channel_state_main_powered">netstroom</string>
+  <string name="cfg_temperature_precision">Temperatuurnauwkeurigheid</string>
 </resources>

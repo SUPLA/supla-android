@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import org.supla.android.Preferences
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.usecases.channel.ChannelValueStringProvider
 import org.supla.android.usecases.channel.ValueType
@@ -31,7 +31,7 @@ import javax.inject.Singleton
 @Singleton
 class HumidityAndTemperatureValueStringProvider @Inject constructor(
   private val humidityAndTemperatureValueProvider: HumidityAndTemperatureValueProvider,
-  preferences: Preferences
+  preferences: ApplicationPreferences
 ) : ChannelValueStringProvider {
 
   private val temperatureFormatter = ThermometerValueFormatter(preferences)

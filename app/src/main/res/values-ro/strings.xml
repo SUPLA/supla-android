@@ -712,4 +712,5 @@
   <string name="add_wizard_manual_reconnect">Conexiunea de rețea cu dispozitivul a fost stabilită manual. Asigurați-vă că telefonul dumneavoastră s-a reconectat la internet și continuați procesul.</string>
   <string name="channel_state_battery_powered">cu baterii</string>
   <string name="channel_state_main_powered">de la rețea</string>
+  <string name="cfg_temperature_precision">Precizie de temperatură</string>
 </resources>

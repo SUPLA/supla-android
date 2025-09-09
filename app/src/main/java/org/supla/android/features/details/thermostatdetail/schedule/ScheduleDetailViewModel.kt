@@ -27,6 +27,7 @@ import org.supla.android.Trace
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.networking.suplaclient.DelayableState
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
@@ -75,14 +76,15 @@ private const val DEFAULT_WATER_TEMPERATURE = 40f
 
 @HiltViewModel
 class ScheduleDetailViewModel @Inject constructor(
-  private val valuesFormatter: ValuesFormatter,
-  private val suplaClientProvider: SuplaClientProvider,
+  private val delayedWeeklyScheduleConfigSubject: DelayedWeeklyScheduleConfigSubject,
   private val channelConfigEventsManager: ChannelConfigEventsManager,
   private val deviceConfigEventsManager: DeviceConfigEventsManager,
-  private val delayedWeeklyScheduleConfigSubject: DelayedWeeklyScheduleConfigSubject,
+  private val applicationPreferences: ApplicationPreferences,
   private val loadingTimeoutManager: LoadingTimeoutManager,
-  private val preferences: Preferences,
+  private val suplaClientProvider: SuplaClientProvider,
+  private val valuesFormatter: ValuesFormatter,
   private val dateProvider: DateProvider,
+  private val preferences: Preferences,
   schedulers: SuplaSchedulers
 ) : BaseViewModel<ScheduleDetailViewState, ScheduleDetailViewEvent>(ScheduleDetailViewState(), schedulers), ScheduleDetailViewProxy {
 
@@ -441,7 +443,7 @@ class ScheduleDetailViewModel @Inject constructor(
           setpointTemperatureCoolMinusAllowed = coolTemperature > state.configTemperatureMin,
           setpointTemperatureHeatPlusAllowed = heatTemperature < state.configTemperatureMax,
           setpointTemperatureHeatMinusAllowed = heatTemperature > state.configTemperatureMin,
-          temperatureUnit = preferences.temperatureUnit
+          temperatureUnit = applicationPreferences.temperatureUnit
         )
       }
     }

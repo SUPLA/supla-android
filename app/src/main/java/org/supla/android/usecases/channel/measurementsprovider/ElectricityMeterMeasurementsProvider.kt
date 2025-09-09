@@ -19,7 +19,7 @@ package org.supla.android.usecases.channel.measurementsprovider
 
 import com.google.gson.Gson
 import io.reactivex.rxjava3.core.Single
-import org.supla.android.Preferences
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.model.chart.ChannelChartSets
 import org.supla.android.data.model.chart.ChartDataSpec
 import org.supla.android.data.model.chart.ChartEntryType
@@ -45,7 +45,7 @@ class ElectricityMeterMeasurementsProvider @Inject constructor(
   private val powerActiveMeasurementsProvider: PowerActiveMeasurementsProvider,
   getChannelIconUseCase: GetChannelIconUseCase,
   getChannelValueStringUseCase: GetChannelValueStringUseCase,
-  preferences: Preferences,
+  preferences: ApplicationPreferences,
   @Named(GSON_FOR_REPO) gson: Gson
 ) : ChannelMeasurementsProvider(getChannelValueStringUseCase, getChannelIconUseCase, preferences, gson) {
 
