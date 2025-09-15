@@ -63,7 +63,6 @@ import org.supla.android.core.ui.StringProvider
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.formatting.LocalTimeFormatter
-import org.supla.android.extensions.guardLet
 import org.supla.android.ui.views.BodyLarge
 import org.supla.android.ui.views.BodyMedium
 import org.supla.android.ui.views.BodySmall
@@ -71,6 +70,7 @@ import org.supla.android.ui.views.HeadlineSmall
 import org.supla.android.ui.views.Image
 import org.supla.android.ui.views.PinTextField
 import org.supla.android.ui.views.buttons.TextButton
+import org.supla.core.shared.extensions.guardLet
 
 data class LockScreenViewState(
   val pin: String = "",

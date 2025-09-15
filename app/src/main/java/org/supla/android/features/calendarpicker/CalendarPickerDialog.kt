@@ -63,9 +63,7 @@ import org.supla.android.data.source.local.calendar.Hour
 import org.supla.android.extensions.date
 import org.supla.android.extensions.dayOfMonth
 import org.supla.android.extensions.dayStart
-import org.supla.android.extensions.guardLet
 import org.supla.android.extensions.hour
-import org.supla.android.extensions.ifLet
 import org.supla.android.extensions.inside
 import org.supla.android.extensions.monthEnd
 import org.supla.android.extensions.monthNo
@@ -85,6 +83,8 @@ import org.supla.android.ui.views.TextField
 import org.supla.android.ui.views.buttons.Button
 import org.supla.android.ui.views.buttons.IconButton
 import org.supla.android.ui.views.buttons.TextButton
+import org.supla.core.shared.extensions.guardLet
+import org.supla.core.shared.extensions.ifLet
 import java.util.Date
 
 sealed interface CalendarPickerState {

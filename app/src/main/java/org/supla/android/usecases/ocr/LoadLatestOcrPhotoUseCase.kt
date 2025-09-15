@@ -24,6 +24,7 @@ import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.remote.rest.SuplaCloudService
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.localizedString
+import org.supla.core.shared.usecase.channel.valueformatter.NO_VALUE_TEXT
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -75,7 +76,7 @@ class LoadLatestOcrPhotoUseCase @Inject constructor(
         .map { photoDto ->
           val localDateTime = LocalDateTime.parse(photoDto.createdAt, DateTimeFormatter.ISO_OFFSET_DATE_TIME)
           val date = Date.from(localDateTime.atZone(ZoneId.of("UTC")).toInstant())
-            ?.let { valuesFormatter.getFullDateString(it) } ?: ValuesFormatter.NO_VALUE_TEXT
+            ?.let { valuesFormatter.getFullDateString(it) } ?: NO_VALUE_TEXT
 
           OcrPhoto(
             date = date,

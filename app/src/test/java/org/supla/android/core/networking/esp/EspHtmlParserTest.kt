@@ -23,8 +23,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.InjectMocks
 import org.mockito.junit.MockitoJUnitRunner
-import org.supla.android.extensions.guardLet
 import org.supla.android.features.addwizard.model.EspHtmlParser
+import org.supla.core.shared.extensions.guardLet
 import java.io.File
 
 @RunWith(MockitoJUnitRunner::class)

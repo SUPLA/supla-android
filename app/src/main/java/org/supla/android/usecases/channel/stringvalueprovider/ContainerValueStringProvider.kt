@@ -17,11 +17,11 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.usecases.channel.ChannelValueStringProvider
 import org.supla.android.usecases.channel.ValueType
 import org.supla.android.usecases.channel.valueprovider.ContainerValueProvider
+import org.supla.core.shared.usecase.channel.valueformatter.NO_VALUE_TEXT
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -38,7 +38,7 @@ class ContainerValueStringProvider @Inject constructor(
     return if (value.levelKnown) {
       "${value.level}%"
     } else {
-      ValuesFormatter.NO_VALUE_TEXT
+      NO_VALUE_TEXT
     }
   }
 }

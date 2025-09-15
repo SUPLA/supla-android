@@ -27,30 +27,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 
-fun notNull(vararg elements: Any?): Boolean {
-  for (element in elements) {
-    if (element == null) {
-      return false
-    }
-  }
-
-  return true
-}
-
-inline fun <T : Any> guardLet(vararg elements: T?, closure: () -> Nothing): List<T> {
-  return if (elements.all { it != null }) {
-    elements.filterNotNull()
-  } else {
-    closure()
-  }
-}
-
-inline fun <T : Any> ifLet(vararg elements: T?, closure: (List<T>) -> Unit) {
-  if (elements.all { it != null }) {
-    closure(elements.filterNotNull())
-  }
-}
-
 fun max(a: TextUnit, b: TextUnit): TextUnit {
   return if (a.value < b.value) b else a
 }

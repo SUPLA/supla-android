@@ -39,7 +39,7 @@ import org.supla.android.data.model.chart.ChartDataAggregation.RANK_WEEKDAYS
 import org.supla.android.data.model.chart.marker.ChartEntryDetails
 import org.supla.android.extensions.ucFirst
 import org.supla.android.images.ImageId
-import org.supla.android.usecases.channel.valueformatter.ChannelValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
 import java.time.DayOfWeek
 import java.time.Month
 import java.time.format.TextStyle
@@ -48,7 +48,7 @@ import java.util.Locale
 data class HistoryDataSet(
   val type: ChartEntryType,
   val label: Label,
-  val valueFormatter: ChannelValueFormatter,
+  val valueFormatter: ValueFormatter,
   val active: Boolean = true,
   val entities: List<List<AggregatedEntity>> = emptyList()
 ) {

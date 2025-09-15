@@ -28,7 +28,6 @@ import org.supla.android.core.shared.LocalizedStringExtensionsKt;
 import org.supla.android.data.ValuesFormatter;
 import org.supla.android.extensions.ContextExtensionsKt;
 import org.supla.android.lib.SuplaChannelBase;
-import org.supla.android.lib.SuplaConst;
 import org.supla.core.shared.data.model.general.SuplaFunction;
 
 public abstract class ChannelBase extends DbItem {
@@ -80,14 +79,14 @@ public abstract class ChannelBase extends DbItem {
     String preset;
     ValuesFormatter tp = getTemperaturePresenter();
 
-    measured = tp.getTemperatureString(measuredTempFrom, true, true);
+    measured = tp.getTemperatureString(measuredTempFrom, true);
     if (tp.isTemperatureDefined(measuredTempTo)) {
-      measured += " - " + tp.getTemperatureString(measuredTempTo, true, true);
+      measured += " - " + tp.getTemperatureString(measuredTempTo, true);
     }
 
-    preset = "/" + tp.getTemperatureString(presetTempFrom, true, true);
+    preset = "/" + tp.getTemperatureString(presetTempFrom, true);
     if (tp.isTemperatureDefined(presetTempTo)) {
-      preset += " - " + tp.getTemperatureString(presetTempTo, true, true);
+      preset += " - " + tp.getTemperatureString(presetTempTo, true);
     }
 
     SpannableString ss = new SpannableString(measured + preset);
@@ -100,20 +99,6 @@ public abstract class ChannelBase extends DbItem {
         0);
 
     return ss;
-  }
-
-  @SuppressLint("DefaultLocale")
-  public CharSequence getHumanReadableThermostatTemperature(
-      Double measuredTempFrom, Double measuredTempTo, Double presetTempFrom, Double presetTempTo) {
-
-    return getHumanReadableThermostatTemperature(
-        measuredTempFrom, measuredTempTo, presetTempFrom, presetTempTo, 1.0f, 0.7f);
-  }
-
-  @SuppressLint("DefaultLocale")
-  public CharSequence getHumanReadableThermostatTemperature(
-      Double measuredTemp, Double presetTemp) {
-    return getHumanReadableThermostatTemperature(measuredTemp, null, presetTemp, null);
   }
 
   public int getRemoteId() {
@@ -222,134 +207,9 @@ public abstract class ChannelBase extends DbItem {
     profileId = pid;
   }
 
-  @SuppressLint("DefaultLocale")
-  protected CharSequence getHumanReadableValue(WhichOne whichOne, ChannelValue value) {
-
-    if (value == null) {
-      return ValuesFormatter.NO_VALUE_TEXT;
-    }
-
-    if (whichOne == WhichOne.Second) {
-
-      if (getFunc() == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE) {
-        if (getOnLine() && value.getHumidity() >= 0) {
-          return String.format("%.1f", value.getHumidity());
-        } else {
-          return ValuesFormatter.NO_VALUE_TEXT;
-        }
-      }
-
-      return null;
-    }
-
-    switch (getFunc()) {
-      case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
-      case SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE:
-        double temperature = value.getTemp(getFunc());
-        if (getOnLine() && getTemperaturePresenter().isTemperatureDefined(temperature)) {
-          return getTemperaturePresenter().getTemperatureString(temperature, true, true);
-        } else {
-          return ValuesFormatter.NO_VALUE_TEXT;
-        }
-
-      case SuplaConst.SUPLA_CHANNELFNC_HUMIDITY:
-        double humidity = value.getHumidity();
-
-        if (getOnLine() && humidity >= 0) {
-          return String.format("%.1f", humidity);
-        } else {
-          return ValuesFormatter.NO_VALUE_TEXT;
-        }
-
-      case SuplaConst.SUPLA_CHANNELFNC_WINDSENSOR:
-        double wind = value.getDouble(-1);
-
-        if (getOnLine() && wind >= 0) {
-          return String.format("%.1f m/s", wind);
-        } else {
-          return ValuesFormatter.NO_VALUE_TEXT;
-        }
-      case SuplaConst.SUPLA_CHANNELFNC_PRESSURESENSOR:
-        double pressure = value.getDouble(-1);
-
-        if (getOnLine() && pressure >= 0) {
-          return String.format("%d hPa", (int) pressure);
-        } else {
-          return ValuesFormatter.NO_VALUE_TEXT;
-        }
-      case SuplaConst.SUPLA_CHANNELFNC_RAINSENSOR:
-        double rain = value.getDouble(-1);
-
-        if (getOnLine() && rain >= 0) {
-          return String.format("%.2f l/m²", rain / 1000.00);
-        } else {
-          return ValuesFormatter.NO_VALUE_TEXT;
-        }
-      case SuplaConst.SUPLA_CHANNELFNC_WEIGHTSENSOR:
-        double weight = value.getDouble(-1);
-
-        if (getOnLine() && weight >= 0) {
-          if (Math.abs(weight) >= 2000) {
-            return String.format("%.2f kg", weight / 1000.00);
-          } else {
-            return String.format("%d g", (int) weight);
-          }
-        } else {
-          return ValuesFormatter.NO_VALUE_TEXT;
-        }
-
-      case SuplaConst.SUPLA_CHANNELFNC_DISTANCESENSOR:
-      case SuplaConst.SUPLA_CHANNELFNC_DEPTHSENSOR:
-        if (getOnLine() && value.getDistance() >= 0) {
-
-          double distance = value.getDistance();
-
-          if (Math.abs(distance) >= 1000) {
-
-            return String.format("%.2f km", distance / 1000.00);
-
-          } else if (Math.abs(distance) >= 1) {
-
-            return String.format("%.2f m", distance);
-
-          } else {
-            distance *= 100;
-
-            if (Math.abs(distance) >= 1) {
-              return String.format("%.1f cm", distance);
-            } else {
-              distance *= 10;
-
-              return String.format("%d mm", (int) distance);
-            }
-          }
-
-        } else {
-          return ValuesFormatter.NO_VALUE_TEXT;
-        }
-
-      case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
-        double doubleValue = value.getTotalForwardActiveEnergy();
-        return doubleValue > 0
-            ? String.format("%.2f kWh", doubleValue)
-            : ValuesFormatter.NO_VALUE_TEXT;
-
-      case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
-        return getHumanReadableThermostatTemperature(
-            getOnLine() ? value.getMeasuredTemp(getFunc()) : null,
-            getOnLine() ? value.getPresetTemp(getFunc()) : null);
-    }
-
-    return null;
-  }
-
   protected ValuesFormatter getTemperaturePresenter() {
     return valuesFormatterProvider.getValuesFormatter();
   }
-
-  public abstract CharSequence getHumanReadableValue(WhichOne whichOne);
-
-  public abstract CharSequence getHumanReadableValue();
 
   public void Assign(SuplaChannelBase base, int profileId) {
 
@@ -371,10 +231,5 @@ public abstract class ChannelBase extends DbItem {
         || base.Flags != getFlags()
         || base.AltIcon != getAltIcon()
         || base.UserIcon != getUserIconId();
-  }
-
-  public enum WhichOne {
-    First,
-    Second
   }
 }

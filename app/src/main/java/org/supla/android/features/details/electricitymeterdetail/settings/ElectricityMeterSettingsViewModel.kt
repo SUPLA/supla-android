@@ -32,9 +32,9 @@ import org.supla.android.data.model.general.SingleSelectionList
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.Electricity
 import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType
-import org.supla.android.extensions.guardLet
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
+import org.supla.core.shared.extensions.guardLet
 import org.supla.core.shared.usecase.GetCaptionUseCase
 import javax.inject.Inject
 

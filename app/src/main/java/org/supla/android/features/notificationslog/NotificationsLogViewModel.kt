@@ -25,11 +25,11 @@ import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.source.local.entity.NotificationEntity
-import org.supla.android.extensions.guardLet
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.notifications.DeleteNotificationUseCase
 import org.supla.android.usecases.notifications.DeleteNotificationsUseCase
 import org.supla.android.usecases.notifications.LoadAllNotificationsUseCase
+import org.supla.core.shared.extensions.guardLet
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 

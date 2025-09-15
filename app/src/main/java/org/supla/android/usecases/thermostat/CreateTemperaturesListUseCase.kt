@@ -19,7 +19,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import com.google.gson.Gson
 import org.supla.android.R
-import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.model.general.IconType
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.shareable
@@ -33,6 +32,7 @@ import org.supla.android.usecases.channel.ValueType
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.core.shared.data.model.lists.IssueIcon
 import org.supla.core.shared.usecase.channel.GetChannelBatteryIconUseCase
+import org.supla.core.shared.usecase.channel.valueformatter.NO_VALUE_TEXT
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -63,7 +63,7 @@ class CreateTemperaturesListUseCase @Inject constructor(
           MeasurementValue(
             remoteId = -1,
             imageId = ImageId(R.drawable.ic_unknown_channel),
-            value = ValuesFormatter.NO_VALUE_TEXT
+            value = NO_VALUE_TEXT
           )
         )
       }

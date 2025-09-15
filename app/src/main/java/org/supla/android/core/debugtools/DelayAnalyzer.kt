@@ -19,7 +19,7 @@ package org.supla.android.core.debugtools
 
 import android.util.Log
 import org.supla.android.extensions.TAG
-import org.supla.android.extensions.guardLet
+import org.supla.core.shared.extensions.guardLet
 import java.util.Date
 
 object DelayAnalyzer {

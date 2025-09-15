@@ -34,10 +34,10 @@ import org.supla.android.NavigationActivity
 import org.supla.android.R
 import org.supla.android.cfg.CfgActivity
 import org.supla.android.data.source.runtime.ItemType
-import org.supla.android.extensions.guardLet
 import org.supla.android.extensions.iterateVisibleFragments
 import org.supla.android.features.details.legacydetail.LegacyDetailFragment
 import org.supla.android.usecases.details.LegacyDetailType
+import org.supla.core.shared.extensions.guardLet
 import javax.inject.Inject
 
 @ActivityScoped

@@ -20,8 +20,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import android.annotation.SuppressLint
 import org.supla.android.Trace
 import org.supla.android.extensions.TAG
-import org.supla.android.extensions.guardLet
 import org.supla.android.lib.SuplaOAuthToken
+import org.supla.core.shared.extensions.guardLet
 import java.security.KeyStore
 import java.security.NoSuchAlgorithmException
 import java.security.SecureRandom

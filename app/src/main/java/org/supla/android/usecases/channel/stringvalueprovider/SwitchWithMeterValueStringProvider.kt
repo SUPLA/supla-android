@@ -22,14 +22,17 @@ import org.supla.android.data.source.local.entity.complex.ImpulseCounter
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.local.entity.isImpulseCounter
 import org.supla.android.data.source.local.entity.isSwitch
+import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType
 import org.supla.android.lib.SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS
 import org.supla.android.usecases.channel.ChannelValueStringProvider
 import org.supla.android.usecases.channel.ValueType
-import org.supla.android.usecases.channel.valueformatter.ImpulseCounterValueFormatter
-import org.supla.android.usecases.channel.valueformatter.ListElectricityMeterValueFormatter
 import org.supla.android.usecases.channel.valueprovider.SwitchWithElectricityMeterValueProvider
 import org.supla.android.usecases.channel.valueprovider.SwitchWithImpulseCounterValueProvider
 import org.supla.core.shared.data.model.channel.ChannelRelationType
+import org.supla.core.shared.usecase.channel.valueformatter.formatters.ElectricityMeterValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.formatters.ImpulseCounterValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.types.ValueFormat
+import org.supla.core.shared.usecase.channel.valueformatter.types.withUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -41,7 +44,7 @@ class SwitchWithMeterValueStringProvider @Inject constructor(
   private val userStateHolder: UserStateHolder
 ) : ChannelValueStringProvider {
 
-  private val emFormatter = ListElectricityMeterValueFormatter()
+  private val emFormatter = ElectricityMeterValueFormatter()
   private val icFormatter = ImpulseCounterValueFormatter()
 
   override fun handle(channelWithChildren: ChannelWithChildren): Boolean {
@@ -57,7 +60,18 @@ class SwitchWithMeterValueStringProvider @Inject constructor(
       val value = switchWithElectricityMeterValueProvider.value(channelWithChildren, valueType)
       val type = userStateHolder.getElectricityMeterSettings(channelData.profileId, channelData.remoteId).showOnListSafe
 
-      return emFormatter.format(value, withUnit = withUnit, custom = type)
+      return if (type == SuplaElectricityMeasurementType.FORWARD_ACTIVE_ENERGY) {
+        emFormatter.format(value, withUnit(withUnit))
+      } else {
+        emFormatter.format(
+          value = value,
+          format = ValueFormat(
+            withUnit = withUnit,
+            customUnit = " ${type.unit}",
+            showNoValueText = false
+          )
+        )
+      }
     }
 
     if (meterChild?.channel?.isImpulseCounter() == true) {
@@ -66,8 +80,10 @@ class SwitchWithMeterValueStringProvider @Inject constructor(
 
     if (channelData.channelValueEntity.subValueType == SUBV_TYPE_IC_MEASUREMENTS.toShort()) {
       val value = switchWithImpulseCounterValueProvider.value(channelWithChildren, valueType)
-      val unit = channelData.ImpulseCounter.value?.unit?.let { ImpulseCounterValueFormatter.Data(it) }
-      return icFormatter.format(value, withUnit = withUnit, custom = unit)
+      return icFormatter.format(
+        value = value,
+        format = withUnit(withUnit = withUnit, unit = channelData.ImpulseCounter.value?.unit)
+      )
     }
 
     return null

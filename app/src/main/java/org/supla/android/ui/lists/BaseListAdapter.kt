@@ -63,6 +63,7 @@ abstract class BaseListAdapter<D>(
     return when (items[pos]) {
       is ListItem.ChannelItem -> ViewType.CHANNEL_ITEM
       is ListItem.HvacThermostatItem -> ViewType.HVAC_ITEM
+      is ListItem.HeatpolThermostatItem -> ViewType.HEATPOL_ITEM
       is ListItem.IconValueItem -> ViewType.ICON_VALUE_ITEM
       is ListItem.SceneItem -> ViewType.SCENE_ITEM
       is ListItem.LocationItem -> ViewType.LOCATION_ITEM
@@ -180,6 +181,7 @@ abstract class BaseListAdapter<D>(
 
     ICON_VALUE_ITEM,
     HVAC_ITEM,
+    HEATPOL_ITEM,
     ICON_WITH_BUTTONS_ITEM,
     DOUBLE_VALUE_ITEM,
     ICON_WITH_RIGHT_BUTTON_ITEM

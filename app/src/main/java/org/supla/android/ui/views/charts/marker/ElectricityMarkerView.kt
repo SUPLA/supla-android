@@ -30,11 +30,12 @@ import org.supla.android.R
 import org.supla.android.data.formatting.DateFormatter
 import org.supla.android.data.model.chart.ChartDataAggregation
 import org.supla.android.data.model.chart.marker.ChartEntryDetails
-import org.supla.android.extensions.guardLet
 import org.supla.android.features.details.electricitymeterdetail.history.ElectricityMeterChartType
 import org.supla.android.usecases.channel.measurementsprovider.electricity.ElectricityChartFilters
 import org.supla.android.usecases.channel.measurementsprovider.electricity.PhaseItem
-import org.supla.android.usecases.channel.valueformatter.ListElectricityMeterValueFormatter
+import org.supla.core.shared.extensions.guardLet
+import org.supla.core.shared.usecase.channel.valueformatter.formatters.ElectricityMeterValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.types.forChartMarker
 import javax.inject.Inject
 
 data class ElectricityMarkerCustomData(
@@ -68,7 +69,7 @@ data class ElectricityMarkerCustomData(
 @AndroidEntryPoint
 class ElectricityMarkerView(context: Context) : BaseMarkerView(context) {
 
-  private val formatter = ListElectricityMeterValueFormatter(useNoValue = false)
+  private val formatter = ElectricityMeterValueFormatter()
   private val tableId: Int = R.id.chart_marker_table_id
   private lateinit var firstRow: Row
   private lateinit var secondRow: Row
@@ -137,7 +138,7 @@ class ElectricityMarkerView(context: Context) : BaseMarkerView(context) {
         rows[yIdx].label.text = if (selectedPhases.size > 1) context.getText(phase.label) else ""
         if (highlight?.stackIndex == yIdx || selectedPhases.size == 1) rows[yIdx].bold() else rows[yIdx].regular()
         sum += barEntry.yVals[yIdx]
-        rows[yIdx].value.text = formatter.format(barEntry.yVals[yIdx])
+        rows[yIdx].value.text = formatter.format(barEntry.yVals[yIdx], forChartMarker())
         rows[yIdx].cost.text = customData.priceString(barEntry.yVals[yIdx])
         rows[yIdx].show()
 
@@ -147,7 +148,7 @@ class ElectricityMarkerView(context: Context) : BaseMarkerView(context) {
 
     if (selectedPhases.size > 1) {
       rows[yIdx].label.text = context.getText(R.string.details_em_sum)
-      rows[yIdx].value.text = formatter.format(sum)
+      rows[yIdx].value.text = formatter.format(sum, forChartMarker())
       rows[yIdx].cost.text = customData.priceString(sum)
       rows[yIdx].show(withIcon = false)
     }
@@ -156,14 +157,14 @@ class ElectricityMarkerView(context: Context) : BaseMarkerView(context) {
   private fun showBalanceTwoValues(highlight: Highlight?, barEntry: BarEntry, customData: ElectricityMarkerCustomData) {
     firstRow.icon.setImageResource(R.drawable.ic_forward_energy)
     firstRow.icon.imageTintList = null
-    firstRow.value.text = formatter.format(barEntry.yVals[0])
+    firstRow.value.text = formatter.format(barEntry.yVals[0], forChartMarker())
     firstRow.cost.text = customData.priceString(barEntry.yVals[0])
     if (highlight?.stackIndex == 0) firstRow.bold() else firstRow.regular()
     firstRow.show(withLabel = false)
 
     secondRow.icon.setImageResource(R.drawable.ic_reversed_energy)
     secondRow.icon.imageTintList = null
-    secondRow.value.text = formatter.format(barEntry.yVals[1])
+    secondRow.value.text = formatter.format(barEntry.yVals[1], forChartMarker())
     secondRow.cost.text = ElectricityMarkerCustomData.EMPTY
     if (highlight?.stackIndex == 1) secondRow.bold() else secondRow.regular()
     secondRow.show(withLabel = false)
@@ -172,28 +173,28 @@ class ElectricityMarkerView(context: Context) : BaseMarkerView(context) {
   private fun showBalanceThreeValues(highlight: Highlight?, barEntry: BarEntry) {
     firstRow.icon.setImageResource(R.drawable.ic_phase_point_color)
     firstRow.icon.imageTintList = ColorStateList.valueOf(ResourcesCompat.getColor(resources, R.color.on_surface_variant, null))
-    firstRow.value.text = formatter.format(barEntry.yVals[3])
+    firstRow.value.text = formatter.format(barEntry.yVals[3], forChartMarker())
     firstRow.cost.text = ElectricityMarkerCustomData.EMPTY
     if (highlight?.stackIndex == 3) firstRow.bold() else firstRow.regular()
     firstRow.show(withLabel = false)
 
     secondRow.icon.setImageResource(R.drawable.ic_forward_energy)
     secondRow.icon.imageTintList = null
-    secondRow.value.text = formatter.format(barEntry.yVals[1])
+    secondRow.value.text = formatter.format(barEntry.yVals[1], forChartMarker())
     secondRow.cost.text = ElectricityMarkerCustomData.EMPTY
     if (highlight?.stackIndex == 1) secondRow.bold() else secondRow.regular()
     secondRow.show(withLabel = false)
 
     thirdRow.icon.setImageResource(R.drawable.ic_reversed_energy)
     thirdRow.icon.imageTintList = null
-    thirdRow.value.text = formatter.format(barEntry.yVals[2])
+    thirdRow.value.text = formatter.format(barEntry.yVals[2], forChartMarker())
     thirdRow.cost.text = ElectricityMarkerCustomData.EMPTY
     if (highlight?.stackIndex == 2) thirdRow.bold() else thirdRow.regular()
     thirdRow.show(withLabel = false)
 
     fourthRow.icon.setImageResource(R.drawable.ic_phase_point_color)
     fourthRow.icon.imageTintList = ColorStateList.valueOf(ResourcesCompat.getColor(resources, R.color.on_surface_variant, null))
-    fourthRow.value.text = formatter.format(barEntry.yVals[0])
+    fourthRow.value.text = formatter.format(barEntry.yVals[0], forChartMarker())
     fourthRow.cost.text = ElectricityMarkerCustomData.EMPTY
     if (highlight?.stackIndex == 0) fourthRow.bold() else fourthRow.regular()
     fourthRow.show(withLabel = false)
@@ -206,7 +207,7 @@ class ElectricityMarkerView(context: Context) : BaseMarkerView(context) {
         firstRow.icon.imageTintList = ColorStateList.valueOf(color)
       }
     }
-    firstRow.value.text = formatter.format(pieEntry.value)
+    firstRow.value.text = formatter.format(pieEntry.value, forChartMarker())
     firstRow.cost.text = customData.priceString(pieEntry.value)
     firstRow.regular()
     firstRow.show(withLabel = false)

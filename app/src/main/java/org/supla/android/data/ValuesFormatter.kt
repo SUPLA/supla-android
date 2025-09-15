@@ -22,70 +22,35 @@ import org.supla.android.R
 import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.core.ui.StringProvider
 import org.supla.android.data.source.local.calendar.Hour
-import org.supla.android.data.source.runtime.appsettings.TemperatureUnit
+import org.supla.android.di.FORMATTER_THERMOMETER
 import org.supla.android.extensions.days
-import org.supla.android.extensions.guardLet
 import org.supla.android.extensions.hours
 import org.supla.android.extensions.minutesInHour
 import org.supla.android.extensions.secondsInMinute
 import org.supla.android.usecases.channel.valueprovider.ThermometerValueProvider
+import org.supla.core.shared.data.model.thermometer.TemperatureUnit
+import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.types.withUnit
 import java.text.SimpleDateFormat
 import java.util.Date
-import java.util.Locale
 import javax.inject.Inject
+import javax.inject.Named
 import javax.inject.Singleton
-import kotlin.math.roundToInt
 
 @Singleton
 class ValuesFormatter @Inject constructor(
-  private val applicationPreferences: ApplicationPreferences
+  private val applicationPreferences: ApplicationPreferences,
+  @Named(FORMATTER_THERMOMETER) private val thermometerValueFormatter: ValueFormatter
 ) {
 
   fun isTemperatureDefined(rawValue: Double?): Boolean {
     return rawValue != null && rawValue > TEMPERATURE_NA_VALUE
   }
 
-  fun getTemperatureString(rawValue: Float?, withUnit: Boolean = false, withDegree: Boolean = true) =
-    getTemperatureString(rawValue?.toDouble(), withUnit, withDegree)
+  fun getTemperatureString(rawValue: Float?) = thermometerValueFormatter.format(rawValue)
 
-  fun getTemperatureString(rawValue: Double?, withUnit: Boolean = false, withDegree: Boolean = true): String {
-    val precision = applicationPreferences.temperaturePrecision
-    return when {
-      !isTemperatureDefined(rawValue) && withUnit ->
-        String.format("%s%s", NO_VALUE_TEXT, getUnitString())
-
-      !isTemperatureDefined(rawValue) -> NO_VALUE_TEXT
-
-      withUnit -> String.format(
-        "%.${precision}f%s",
-        getTemperatureInConfiguredUnit(rawValue!!),
-        getUnitString()
-      )
-
-      else -> String.format(
-        "%.${precision}f%s",
-        getTemperatureInConfiguredUnit(rawValue!!),
-        if (withDegree) getUnitString().substring(0, 1) else ""
-      )
-    }
-  }
-
-  fun getDistanceString(rawValue: Double?): String {
-    val (distance) = guardLet(rawValue) { return "$NO_VALUE_TEXT m" }
-    if (distance < 0 || distance.isNaN()) {
-      return "$NO_VALUE_TEXT m"
-    }
-
-    return if (distance >= 1000) {
-      String.format(Locale.getDefault(), "%.2f km", distance / 1000f)
-    } else if (distance >= 1) {
-      String.format(Locale.getDefault(), "%.2f m", distance)
-    } else if (distance * 100 >= 1) {
-      String.format(Locale.getDefault(), "%.1f cm", distance.times(100))
-    } else {
-      String.format(Locale.getDefault(), "%d mm", distance.times(1000).roundToInt())
-    }
-  }
+  fun getTemperatureString(rawValue: Double?, withUnit: Boolean = false) =
+    thermometerValueFormatter.format(rawValue, withUnit(withUnit))
 
   fun getTemperatureInConfiguredUnit(value: Double): Double {
     return if (!isTemperatureDefined(value) || isCelsius()) {
@@ -150,21 +115,11 @@ class ValuesFormatter @Inject constructor(
 
   private fun isCelsius(): Boolean = applicationPreferences.temperatureUnit == TemperatureUnit.CELSIUS
 
-  private fun getUnitString(): String {
-    return if (applicationPreferences.temperatureUnit == TemperatureUnit.FAHRENHEIT) {
-      "\u00B0F"
-    } else {
-      "\u00B0C"
-    }
-  }
-
   private fun toFahrenheit(celsiusValue: Double): Double {
     return 9.0 / 5.0 * celsiusValue + 32.0
   }
 
   companion object {
-    const val NO_VALUE_TEXT = "---"
-
     /**
      * Special magic constant used to represent temperature value representing
      * that temperature data is not available. This should be done differently

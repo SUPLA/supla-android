@@ -23,7 +23,7 @@ import org.supla.android.data.source.ChannelGroupRelationRepository
 import org.supla.android.data.source.remote.ChannelConfigType
 import org.supla.android.data.source.remote.rollershutter.SuplaChannelFacadeBlindConfig
 import org.supla.android.data.source.remote.rollershutter.SuplaTiltControlType
-import org.supla.android.extensions.ifLet
+import org.supla.core.shared.extensions.ifLet
 import javax.inject.Inject
 import javax.inject.Singleton
 

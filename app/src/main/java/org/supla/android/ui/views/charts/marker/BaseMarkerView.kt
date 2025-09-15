@@ -43,9 +43,9 @@ import org.supla.android.data.model.chart.ChartDataAggregation.RANK_HOURS
 import org.supla.android.data.model.chart.ChartDataAggregation.RANK_MONTHS
 import org.supla.android.data.model.chart.ChartDataAggregation.RANK_WEEKDAYS
 import org.supla.android.data.model.chart.marker.ChartEntryDetails
-import org.supla.android.extensions.guardLet
 import org.supla.android.extensions.toPx
 import org.supla.android.extensions.ucFirst
+import org.supla.core.shared.extensions.guardLet
 import java.time.DayOfWeek
 import java.time.Month
 import java.time.format.TextStyle

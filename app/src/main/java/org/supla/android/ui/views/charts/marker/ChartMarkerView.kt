@@ -20,7 +20,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.ColorStateList
-import android.view.View
 import android.widget.TableLayout
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
@@ -32,6 +31,9 @@ import org.supla.android.data.formatting.DateFormatter
 import org.supla.android.data.model.chart.ChartEntryType
 import org.supla.android.data.model.chart.marker.ChartEntryDetails
 import org.supla.android.extensions.visibleIf
+import org.supla.core.shared.usecase.channel.valueformatter.types.ValueFormat
+import org.supla.core.shared.usecase.channel.valueformatter.types.ValueUnit
+import org.supla.core.shared.usecase.channel.valueformatter.types.withUnit
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -49,8 +51,11 @@ class ChartMarkerView(context: Context) : BaseMarkerView(context) {
     title.text = getFormattedDate(details)
     text.text = details.valueFormatter.format(
       value = entry.y.toDouble(),
-      withUnit = showValueUnit(details.type),
-      precision = precision(details.type)
+      format = ValueFormat(
+        withUnit = showValueUnit(details.type),
+        customUnit = showCustomUnit(details.type),
+        showNoValueText = false
+      )
     )
 
     val color: Int? = getIconColor(details)
@@ -60,8 +65,8 @@ class ChartMarkerView(context: Context) : BaseMarkerView(context) {
     val min = details.min
     val max = details.max
     if (min != null && max != null) {
-      val minText = details.valueFormatter.format(min.toDouble(), withUnit = details.type == ChartEntryType.HUMIDITY)
-      val maxText = details.valueFormatter.format(max.toDouble(), withUnit = details.type == ChartEntryType.HUMIDITY)
+      val minText = details.valueFormatter.format(min.toDouble(), withUnit(details.type == ChartEntryType.HUMIDITY))
+      val maxText = details.valueFormatter.format(max.toDouble(), withUnit(details.type == ChartEntryType.HUMIDITY))
 
       range.text = "($minText - $maxText)"
     } else {
@@ -72,16 +77,16 @@ class ChartMarkerView(context: Context) : BaseMarkerView(context) {
     if (showOpenClose) {
       val table = findViewById(tableId) ?: createTableLayout()
       table.visibility = VISIBLE
-      openingValueView.text = details.valueFormatter.format(details.open!!.toDouble(), withUnit = false)
-      closingValueView.text = details.valueFormatter.format(details.close!!.toDouble(), withUnit = false)
+      openingValueView.text = details.valueFormatter.format(details.open!!.toDouble(), ValueFormat.WithoutUnit)
+      closingValueView.text = details.valueFormatter.format(details.close!!.toDouble(), ValueFormat.WithoutUnit)
     } else {
       findViewById<TableLayout>(tableId)?.visibility = GONE
     }
   }
 
   private fun createTableLayout(): TableLayout {
-    openingValueView = textView(alignment = View.TEXT_ALIGNMENT_VIEW_END)
-    closingValueView = textView(alignment = View.TEXT_ALIGNMENT_VIEW_END)
+    openingValueView = textView(alignment = TEXT_ALIGNMENT_VIEW_END)
+    closingValueView = textView(alignment = TEXT_ALIGNMENT_VIEW_END)
 
     return TableLayoutBuilder()
       .addCell(textView(text = resources.getString(R.string.chart_marker_opening)))
@@ -103,15 +108,24 @@ class ChartMarkerView(context: Context) : BaseMarkerView(context) {
       ChartEntryType.IMPULSE_COUNTER,
       ChartEntryType.VOLTAGE,
       ChartEntryType.CURRENT,
-      ChartEntryType.POWER_ACTIVE -> true
+      ChartEntryType.POWER_ACTIVE,
+      ChartEntryType.HUMIDITY_ONLY -> true
 
       else -> false
     }
 
-  private fun precision(type: ChartEntryType) =
+  private fun showCustomUnit(type: ChartEntryType) =
     when (type) {
-      ChartEntryType.IMPULSE_COUNTER -> 3
-      else -> 2
+      ChartEntryType.HUMIDITY,
+      ChartEntryType.HUMIDITY_ONLY -> ValueUnit.HUMIDITY.toString()
+      ChartEntryType.TEMPERATURE,
+      ChartEntryType.GENERAL_PURPOSE_MEASUREMENT,
+      ChartEntryType.GENERAL_PURPOSE_METER,
+      ChartEntryType.IMPULSE_COUNTER,
+      ChartEntryType.ELECTRICITY,
+      ChartEntryType.VOLTAGE,
+      ChartEntryType.CURRENT,
+      ChartEntryType.POWER_ACTIVE -> null
     }
 
   private fun getIconColor(details: ChartEntryDetails): Int? {

@@ -22,7 +22,7 @@ import io.mockk.mockk
 import org.assertj.core.api.Assertions
 import org.junit.Test
 import org.supla.android.ui.views.card.SummaryCardData
-import org.supla.android.usecases.channel.valueformatter.ChannelValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
 
 class SummaryCardDataTest {
 
@@ -34,7 +34,7 @@ class SummaryCardDataTest {
     val currency = "PLN"
     val energyString = "123,45 kWh"
 
-    val formatter: ChannelValueFormatter = mockk {
+    val formatter: ValueFormatter = mockk {
       every { format(energy) } returns energyString
     }
 
@@ -55,7 +55,7 @@ class SummaryCardDataTest {
     val currency = "PLN"
     val energyString = "123,45 kWh"
 
-    val formatter: ChannelValueFormatter = mockk {
+    val formatter: ValueFormatter = mockk {
       every { format(energy) } returns energyString
     }
 

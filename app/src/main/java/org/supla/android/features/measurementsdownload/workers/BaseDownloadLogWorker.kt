@@ -29,8 +29,8 @@ import org.supla.android.data.source.local.entity.measurements.BaseLogEntity
 import org.supla.android.data.source.remote.rest.channel.Measurement
 import org.supla.android.events.DownloadEventsManager
 import org.supla.android.extensions.TAG
-import org.supla.android.extensions.guardLet
 import org.supla.android.features.measurementsdownload.BaseDownloadLogUseCase
+import org.supla.core.shared.extensions.guardLet
 
 abstract class BaseDownloadLogWorker<T : Measurement, U : BaseLogEntity>(
   appContext: Context,

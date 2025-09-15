@@ -25,7 +25,7 @@ import android.os.Build
 import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
 import org.supla.android.Trace
-import org.supla.android.extensions.guardLet
+import org.supla.core.shared.extensions.guardLet
 import java.util.Locale
 
 class TextToSpeechHelper(

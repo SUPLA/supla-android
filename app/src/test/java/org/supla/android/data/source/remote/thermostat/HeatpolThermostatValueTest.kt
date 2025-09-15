@@ -23,6 +23,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
+import org.supla.core.shared.data.model.function.thermostat.HeatpolThermostatValue
+import org.supla.core.shared.data.model.function.thermostat.SuplaHeatpolThermostatFlag
 
 @RunWith(MockitoJUnitRunner::class)
 class HeatpolThermostatValueTest {

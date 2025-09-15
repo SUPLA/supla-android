@@ -22,7 +22,7 @@ import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import dagger.hilt.android.qualifiers.ApplicationContext
 import org.supla.android.data.model.general.NightModeSetting
-import org.supla.android.data.source.runtime.appsettings.TemperatureUnit
+import org.supla.core.shared.data.model.thermometer.TemperatureUnit
 import org.supla.core.shared.infrastructure.storage.ApplicationPreferences
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -48,11 +48,11 @@ class ApplicationPreferences @Inject constructor(@ApplicationContext context: Co
     get() = preferences.getInt(KEY_BATTERY_WARNING_LEVEL, DEFAULT_BATTERY_WARNING_LEVEL)
     set(level) = preferences.edit { putInt(KEY_BATTERY_WARNING_LEVEL, level) }
 
-  var temperaturePrecision: Int
+  override var temperaturePrecision: Int
     get() = preferences.getInt(KEY_TEMPERATURE_PRECISION, DEFAULT_TEMPERATURE_PRECISION)
     set(precision) = preferences.edit { putInt(KEY_TEMPERATURE_PRECISION, precision) }
 
-  var temperatureUnit: TemperatureUnit
-    get() = TemperatureUnit.fromValue(preferences.getString(KEY_TEMPERATURE_UNIT, TemperatureUnit.CELSIUS.value))
-    set(unit) = preferences.edit { putString(KEY_TEMPERATURE_UNIT, unit.value) }
+  override var temperatureUnit: TemperatureUnit
+    get() = TemperatureUnit.fromValue(preferences.getString(KEY_TEMPERATURE_UNIT, TemperatureUnit.CELSIUS.rawValue))
+    set(unit) = preferences.edit { putString(KEY_TEMPERATURE_UNIT, unit.rawValue) }
 }

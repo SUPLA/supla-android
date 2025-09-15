@@ -31,7 +31,6 @@ import org.supla.android.data.model.chart.ChannelChartSets
 import org.supla.android.data.model.chart.ChartDataAggregation
 import org.supla.android.data.model.chart.ChartRange
 import org.supla.android.data.model.chart.DateRange
-import org.supla.android.usecases.channel.valueformatter.ChannelValueFormatter
 
 class PieChartData(
   dateRange: DateRange,
@@ -70,7 +69,7 @@ class PieChartData(
     set: List<PieEntry>,
     typeface: Typeface?,
     aggregation: ChartDataAggregation,
-    formatter: ChannelValueFormatter,
+    formatter: org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter,
     context: Context
   ) =
     PieDataSet(set, "").apply {

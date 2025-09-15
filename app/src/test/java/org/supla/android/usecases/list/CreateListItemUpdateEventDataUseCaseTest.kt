@@ -49,6 +49,7 @@ import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToGarageDoorUpdateEventMapper
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToGpmUpdateEventMapper
+import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToHeatpolThermostatUpdateEventMapper
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToIconValueItemUpdateEventMapper
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToProjectScreenUpdateEventMapper
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToShadingSystemUpdateEventMapper
@@ -96,6 +97,9 @@ class CreateListItemUpdateEventDataUseCaseTest {
 
   @RelaxedMockK
   private lateinit var channelWithChildrenToTemperatureHumidityUpdateEventMapper: ChannelWithChildrenToTemperatureHumidityUpdateEventMapper
+
+  @RelaxedMockK
+  private lateinit var channelWithChildrenToHeatpolThermostatUpdateEventMapper: ChannelWithChildrenToHeatpolThermostatUpdateEventMapper
 
   @MockK
   private lateinit var getCaptionUseCase: GetCaptionUseCase

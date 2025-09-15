@@ -47,9 +47,9 @@ import org.supla.android.features.details.detailbase.history.ui.DataSetContainer
 import org.supla.android.images.ImageId
 import org.supla.android.ui.views.buttons.IconButton
 import org.supla.android.ui.views.spinner.TextSpinner
-import org.supla.android.usecases.channel.valueformatter.ListElectricityMeterValueFormatter
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.infrastructure.localizedString
+import org.supla.core.shared.usecase.channel.valueformatter.formatters.ElectricityMeterValueFormatter
 
 enum class IntroductionPage {
   FIRST_FOR_SINGLE_PHASE, FIRST_FOR_MULTI_PHASE, SECOND
@@ -239,7 +239,7 @@ private fun mockDataSetContainerDataMultiplePhases(): ChannelChartSets =
             HistoryDataSet.LabelData(null, "28,66", R.color.phase3)
           )
         ),
-        valueFormatter = ListElectricityMeterValueFormatter()
+        valueFormatter = ElectricityMeterValueFormatter()
       )
     ),
     typeName = localizedString(R.string.channel_caption_electricitymeter)
@@ -259,7 +259,7 @@ private fun mockDataSetContainerDataSinglePhases(): ChannelChartSets =
             HistoryDataSet.LabelData(ImageId(R.drawable.fnc_electricity_meter), "78,08", R.color.phase1)
           )
         ),
-        valueFormatter = ListElectricityMeterValueFormatter()
+        valueFormatter = ElectricityMeterValueFormatter()
       )
     ),
     typeName = localizedString(R.string.channel_caption_electricitymeter)

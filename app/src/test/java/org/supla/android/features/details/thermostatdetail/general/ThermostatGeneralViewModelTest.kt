@@ -35,7 +35,6 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
-import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.model.temperature.TemperatureCorrection
 import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity
 import org.supla.android.data.source.local.entity.ChannelValueEntity
@@ -72,6 +71,7 @@ import org.supla.core.shared.data.model.function.thermostat.SuplaThermostatFlag
 import org.supla.core.shared.data.model.function.thermostat.ThermostatState
 import org.supla.core.shared.data.model.function.thermostat.ThermostatValue
 import org.supla.core.shared.data.model.general.SuplaFunction
+import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
 import java.util.Date
 import java.util.concurrent.TimeUnit
 
@@ -87,9 +87,6 @@ class ThermostatGeneralViewModelTest :
 
   @MockK
   lateinit var getChannelValueUseCase: GetChannelValueUseCase
-
-  @MockK
-  lateinit var valuesFormatter: ValuesFormatter
 
   @MockK
   lateinit var delayedThermostatActionSubject: DelayedThermostatActionSubject
@@ -120,6 +117,9 @@ class ThermostatGeneralViewModelTest :
 
   @MockK
   lateinit var checkIsSlaveThermostatUseCase: CheckIsSlaveThermostatUseCase
+
+  @MockK
+  lateinit var valueFormatter: ValueFormatter
 
   @InjectMockKs
   override lateinit var viewModel: ThermostatGeneralViewModel
@@ -203,8 +203,8 @@ class ThermostatGeneralViewModelTest :
       Observable.just(DeviceConfigEventsManager.ConfigEvent(ConfigResult.RESULT_FALSE, null))
     every { readChannelWithChildrenTreeUseCase.invoke(remoteId) } returns Observable.just(channelWithChildren)
     every { createTemperaturesListUseCase.invoke(channelWithChildren) } returns emptyList()
-    every { valuesFormatter.getTemperatureString(10f) } returns "10,0"
-    every { valuesFormatter.getTemperatureString(40f) } returns "40,0"
+    every { valueFormatter.format(10f) } returns "10,0"
+    every { valueFormatter.format(40f) } returns "40,0"
     every { checkIsSlaveThermostatUseCase(remoteId) } returns Single.just(false)
 
     // when
@@ -729,8 +729,8 @@ class ThermostatGeneralViewModelTest :
     every { readChannelWithChildrenTreeUseCase.invoke(remoteId) } returns
       Observable.just(channelWithChildren)
     every { createTemperaturesListUseCase.invoke(channelWithChildren) } returns emptyList()
-    every { valuesFormatter.getTemperatureString(10f) } returns "10,0"
-    every { valuesFormatter.getTemperatureString(40f) } returns "40,0"
+    every { valueFormatter.format(10f) } returns "10,0"
+    every { valueFormatter.format(40f) } returns "40,0"
   }
 
   private fun mockCoolThermostat(remoteId: Int, deviceId: Int, setpointTemperature: Float, weeklyScheduleActive: Boolean = false) {
@@ -762,8 +762,8 @@ class ThermostatGeneralViewModelTest :
       Observable.just(DeviceConfigEventsManager.ConfigEvent(ConfigResult.RESULT_FALSE, null))
     every { readChannelWithChildrenTreeUseCase.invoke(remoteId) } returns Observable.just(channelWithChildren)
     every { createTemperaturesListUseCase.invoke(channelWithChildren) } returns emptyList()
-    every { valuesFormatter.getTemperatureString(10f) } returns "10,0"
-    every { valuesFormatter.getTemperatureString(40f) } returns "40,0"
+    every { valueFormatter.format(10f) } returns "10,0"
+    every { valueFormatter.format(40f) } returns "40,0"
   }
 
   private fun mockChannelWithChildren(
@@ -802,6 +802,7 @@ class ThermostatGeneralViewModelTest :
     val channelDataEntity: ChannelDataEntity = mockk {
       every { this@mockk.remoteId } returns remoteId
       every { this@mockk.function } returns func
+      every { this@mockk.altIcon } returns 0
       every { this@mockk.channelExtendedValueEntity } returns extendedValue
       every { this@mockk.channelValueEntity } returns value
       every { caption } returns "caption"
@@ -812,6 +813,7 @@ class ThermostatGeneralViewModelTest :
     val thermometerEntity: ChannelDataEntity = mockk {
       every { this@mockk.remoteId } returns 999
       every { function } returns SuplaFunction.THERMOMETER
+      every { this@mockk.altIcon } returns 0
       every { caption } returns "caption"
       every { stateEntity } returns null
       every { status } returns SuplaChannelAvailabilityStatus.ONLINE
@@ -892,6 +894,7 @@ class ThermostatGeneralViewModelTest :
       mockk {
         every { this@mockk.remoteId } returns it
         every { caption } returns ""
+        every { this@mockk.altIcon } returns 0
         function?.let { every { this@mockk.function } returns it }
         every { stateEntity } returns null
         every { status } returns SuplaChannelAvailabilityStatus.ONLINE

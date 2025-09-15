@@ -37,9 +37,9 @@ import org.supla.android.core.ui.ViewState
 import org.supla.android.data.model.general.LockScreenScope
 import org.supla.android.data.model.general.NightModeSetting
 import org.supla.android.data.source.runtime.appsettings.ChannelHeight
-import org.supla.android.data.source.runtime.appsettings.TemperatureUnit
 import org.supla.android.features.lockscreen.UnlockAction
 import org.supla.android.tools.SuplaSchedulers
+import org.supla.core.shared.data.model.thermometer.TemperatureUnit
 import javax.inject.Inject
 
 @HiltViewModel

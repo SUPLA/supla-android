@@ -33,6 +33,7 @@ import org.supla.android.Trace
 import org.supla.android.core.notifications.NotificationsHelper
 import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.source.remote.gpm.SuplaChannelGeneralPurposeBaseConfig
+import org.supla.android.data.source.remote.gpm.toValueFormat
 import org.supla.android.lib.SuplaConst.SUPLA_RESULTCODE_ACCESSID_DISABLED
 import org.supla.android.lib.SuplaConst.SUPLA_RESULTCODE_ACCESSID_INACTIVE
 import org.supla.android.lib.SuplaConst.SUPLA_RESULTCODE_ACCESSID_NOT_ASSIGNED
@@ -57,11 +58,11 @@ import org.supla.android.lib.singlecall.DoubleValue
 import org.supla.android.lib.singlecall.ResultException
 import org.supla.android.lib.singlecall.TemperatureAndHumidity
 import org.supla.android.tools.VibrationHelper
-import org.supla.android.usecases.channel.valueformatter.GpmValueFormatter
 import org.supla.android.usecases.channel.valueprovider.GpmValueProvider
 import org.supla.android.usecases.channelconfig.LoadChannelConfigUseCase
 import org.supla.android.widget.WidgetConfiguration
 import org.supla.core.shared.data.model.general.SuplaFunction
+import org.supla.core.shared.usecase.channel.valueformatter.formatters.GpmValueFormatter
 
 private const val INTERNAL_ERROR = -10
 
@@ -75,6 +76,7 @@ abstract class WidgetCommandWorkerBase(
 ) : WidgetWorkerBase(appPreferences, appContext, workerParams) {
 
   private val handler = Handler(Looper.getMainLooper())
+  private val formatter = GpmValueFormatter()
 
   protected abstract val notificationId: Int
 
@@ -302,17 +304,20 @@ abstract class WidgetCommandWorkerBase(
   private fun handleGpmWidget(widgetId: Int, configuration: WidgetConfiguration): Result {
     val channelConfig = try {
       loadChannelConfigUseCase(configuration.itemId).blockingGet()
-    } catch (ex: Exception) {
+    } catch (_: Exception) {
       null
     }
     val doubleValue = try {
       (loadValue(configuration) as DoubleValue).value
-    } catch (ex: Exception) {
+    } catch (_: Exception) {
       null
     } ?: GpmValueProvider.UNKNOWN_VALUE
 
-    val formatter = GpmValueFormatter(channelConfig as? SuplaChannelGeneralPurposeBaseConfig)
-    updateWidgetConfiguration(widgetId, configuration.copy(value = formatter.format(doubleValue, valueWithUnit())))
+    val value = formatter.format(
+      value = doubleValue,
+      format = (channelConfig as? SuplaChannelGeneralPurposeBaseConfig).toValueFormat(valueWithUnit())
+    )
+    updateWidgetConfiguration(widgetId, configuration.copy(value = value))
     updateWidget(widgetId)
     return Result.success()
   }
@@ -337,7 +342,7 @@ internal fun loadTemperatureAndHumidity(
 ): String {
   val rawValue: TemperatureAndHumidity? = try {
     remoteCall()
-  } catch (ex: Exception) {
+  } catch (_: Exception) {
     null
   }
 

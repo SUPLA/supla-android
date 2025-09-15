@@ -17,22 +17,25 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.usecases.channel.ChannelValueStringProvider
 import org.supla.android.usecases.channel.ValueType
 import org.supla.android.usecases.channel.valueprovider.DepthSensorValueProvider
+import org.supla.core.shared.usecase.channel.valueformatter.formatters.DistanceValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.types.withUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class DepthSensorValueStringProvider @Inject constructor(
-  private val depthSensorValueProvider: DepthSensorValueProvider,
-  private val valuesFormatter: ValuesFormatter
+  private val depthSensorValueProvider: DepthSensorValueProvider
 ) : ChannelValueStringProvider {
   override fun handle(channelWithChildren: ChannelWithChildren): Boolean =
     depthSensorValueProvider.handle(channelWithChildren)
 
   override fun value(channelWithChildren: ChannelWithChildren, valueType: ValueType, withUnit: Boolean): String =
-    valuesFormatter.getDistanceString(depthSensorValueProvider.value(channelWithChildren, valueType))
+    DistanceValueFormatter.format(
+      value = depthSensorValueProvider.value(channelWithChildren, valueType),
+      format = withUnit(withUnit)
+    )
 }

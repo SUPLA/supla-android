@@ -52,7 +52,6 @@ import org.supla.android.data.source.local.calendar.DayOfWeek
 import org.supla.android.data.source.local.calendar.QuarterOfHour
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
-import org.supla.android.extensions.ifLet
 import org.supla.android.features.details.thermostatdetail.schedule.ScheduleDetailViewState
 import org.supla.android.features.details.thermostatdetail.schedule.data.ScheduleDetailEntryBoxKey
 import org.supla.android.features.details.thermostatdetail.schedule.data.ScheduleDetailEntryBoxValue
@@ -64,6 +63,7 @@ import org.supla.android.features.details.thermostatdetail.schedule.ui.dialogs.Q
 import org.supla.android.ui.views.LoadingScrim
 import org.supla.android.ui.views.tools.Shadow
 import org.supla.android.ui.views.tools.ShadowOrientation
+import org.supla.core.shared.extensions.ifLet
 
 interface ScheduleDetailViewProxy : BaseViewProxy<ScheduleDetailViewState> {
   fun updateSchedule()

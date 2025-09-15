@@ -31,7 +31,6 @@ import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.StringProvider
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
-import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.model.temperature.TemperatureCorrection
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
@@ -43,13 +42,12 @@ import org.supla.android.data.source.remote.hvac.SuplaChannelWeeklyScheduleConfi
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
 import org.supla.android.data.source.remote.hvac.filterRelationType
+import org.supla.android.di.FORMATTER_THERMOMETER
 import org.supla.android.events.ChannelConfigEventsManager
 import org.supla.android.events.DeviceConfigEventsManager
 import org.supla.android.events.LoadingTimeoutManager
 import org.supla.android.events.UpdateEventsManager
 import org.supla.android.extensions.TAG
-import org.supla.android.extensions.guardLet
-import org.supla.android.extensions.ifLet
 import org.supla.android.features.details.thermostatdetail.general.data.SensorIssue
 import org.supla.android.features.details.thermostatdetail.general.data.ThermostatProgramInfo
 import org.supla.android.features.details.thermostatdetail.general.data.build
@@ -68,11 +66,15 @@ import org.supla.core.shared.data.model.function.thermostat.SuplaThermostatFlag
 import org.supla.core.shared.data.model.function.thermostat.ThermostatValue
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.data.model.lists.ChannelIssueItem
+import org.supla.core.shared.extensions.guardLet
+import org.supla.core.shared.extensions.ifLet
 import org.supla.core.shared.extensions.ifTrue
 import org.supla.core.shared.usecase.channel.issues.ThermostatIssuesProvider
+import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
 import java.util.Date
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import javax.inject.Named
 import kotlin.math.roundToInt
 
 private const val REFRESH_DELAY_MS = 3000
@@ -90,9 +92,9 @@ class ThermostatGeneralViewModel @Inject constructor(
   private val loadingTimeoutManager: LoadingTimeoutManager,
   private val updateEventsManager: UpdateEventsManager,
   private val suplaClientProvider: SuplaClientProvider,
-  private val valuesFormatter: ValuesFormatter,
   private val schedulers: SuplaSchedulers,
   private val dateProvider: DateProvider,
+  @Named(FORMATTER_THERMOMETER) private val thermometerValueFormatter: ValueFormatter
 ) : BaseViewModel<ThermostatGeneralViewState, ThermostatGeneralViewEvent>(ThermostatGeneralViewState(), schedulers),
   ThermostatGeneralViewProxy {
 
@@ -401,8 +403,8 @@ class ThermostatGeneralViewModel @Inject constructor(
         pumpSwitchIcon = online.ifTrue { pumpSwitchIcon(data.channelWithChildren) },
         heatOrColdSourceSwitchIcon = online.ifTrue { heatOrColdSourceSwitchIcon(data.channelWithChildren) },
 
-        configMinTemperatureString = valuesFormatter.getTemperatureString(configMinTemperature),
-        configMaxTemperatureString = valuesFormatter.getTemperatureString(configMaxTemperature),
+        configMinTemperatureString = thermometerValueFormatter.format(configMinTemperature),
+        configMaxTemperatureString = thermometerValueFormatter.format(configMaxTemperature),
 
         currentTemperaturePercentage = calculateCurrentTemperature(data, configMinTemperature, configMaxTemperature),
 
@@ -512,8 +514,8 @@ class ThermostatGeneralViewModel @Inject constructor(
   }
 
   private fun getOnlineTemperatureText(setpointMinTemperature: Float?, setpointMaxTemperature: Float?): String {
-    val setPointMinTemperatureString = setpointMinTemperature?.let { valuesFormatter.getTemperatureString(it.toDouble()) }
-    val setPointMaxTemperatureString = setpointMaxTemperature?.let { valuesFormatter.getTemperatureString(it.toDouble()) }
+    val setPointMinTemperatureString = setpointMinTemperature?.let { thermometerValueFormatter.format(it.toDouble()) }
+    val setPointMaxTemperatureString = setpointMaxTemperature?.let { thermometerValueFormatter.format(it.toDouble()) }
 
     return when {
       setPointMinTemperatureString != null && setPointMaxTemperatureString != null ->

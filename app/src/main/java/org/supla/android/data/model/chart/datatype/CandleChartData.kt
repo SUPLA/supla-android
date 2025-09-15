@@ -34,7 +34,7 @@ import org.supla.android.data.model.chart.ChartRange
 import org.supla.android.data.model.chart.DateRange
 import org.supla.android.data.model.chart.HistoryDataSet
 import org.supla.android.extensions.DAY_IN_SEC
-import org.supla.android.extensions.guardLet
+import org.supla.core.shared.extensions.guardLet
 
 class CandleChartData(
   dateRange: DateRange,

@@ -26,11 +26,11 @@ import org.supla.android.lib.actions.SubjectType
 import org.supla.android.lib.singlecall.ElectricityMeterValue
 import org.supla.android.lib.singlecall.ResultException
 import org.supla.android.lib.singlecall.SingleCall
-import org.supla.android.usecases.channel.valueformatter.ListElectricityMeterValueFormatter
 import org.supla.android.widget.extended.WidgetValue
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.data.model.suplaclient.SuplaResultCode
 import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.usecase.channel.valueformatter.formatters.ElectricityMeterValueFormatter
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -57,7 +57,7 @@ interface WidgetValueProvider {
 class ElectricityMeterWidgetValueProvider(
   private val singleCallProvider: SingleCall.Provider
 ) : WidgetValueProvider {
-  val formatter = ListElectricityMeterValueFormatter()
+  val formatter = ElectricityMeterValueFormatter()
 
   override fun handle(configuration: WidgetConfigurationDataEntity) =
     configuration.widgetConfiguration.subjectType == SubjectType.CHANNEL &&

@@ -27,8 +27,8 @@ import org.supla.android.data.source.local.entity.measurements.BaseLogEntity
 import org.supla.android.data.source.remote.rest.SuplaCloudService
 import org.supla.android.data.source.remote.rest.channel.Measurement
 import org.supla.android.extensions.TAG
-import org.supla.android.extensions.guardLet
 import org.supla.android.extensions.toTimestamp
+import org.supla.core.shared.extensions.guardLet
 import retrofit2.Response
 import java.text.SimpleDateFormat
 

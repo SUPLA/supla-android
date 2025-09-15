@@ -21,9 +21,9 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.unit.IntSize
-import org.supla.android.extensions.guardLet
 import org.supla.android.extensions.limit
 import org.supla.android.features.details.windowdetail.base.ui.MoveState
+import org.supla.core.shared.extensions.guardLet
 
 interface WindowDimensBase {
   val canvasRect: Rect

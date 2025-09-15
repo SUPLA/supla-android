@@ -156,4 +156,11 @@ val LocalizedStringId.resourceId: Int
     LocalizedStringId.RESULT_CODE_INCORRECT_EMAIL_OR_PASSWORD -> R.string.incorrect_email_or_password
     LocalizedStringId.RESULT_CODE_BAD_CREDENTIALS -> R.string.status_bad_credentials
     LocalizedStringId.RESULT_CODE_UNKNOWN_ERROR -> R.string.status_unknown_err
+
+    LocalizedStringId.LIFESPAN_WARNING_REPLACE -> R.string.uv_warning2
+    LocalizedStringId.LIFESPAN_WARNING_SCHEDULE -> R.string.uv_warning1
+    LocalizedStringId.LIFESPAN_WARNING -> R.string.lightsource_warning
+    LocalizedStringId.DIGIGLASS_PLANNED_REGENERATION -> R.string.dgf_planned_regeneration_in_progress
+    LocalizedStringId.DIGIGLASS_REGENERATION_AFTER_20H -> R.string.dgf_regeneration_after20h
+    LocalizedStringId.DIGIGLASS_TO_LONG_OPERATION -> R.string.dgf_too_long_operation_warning
   }

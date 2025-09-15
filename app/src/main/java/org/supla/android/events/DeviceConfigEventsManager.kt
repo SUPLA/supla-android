@@ -21,7 +21,7 @@ import org.supla.android.Trace
 import org.supla.android.data.source.remote.ConfigResult
 import org.supla.android.data.source.remote.SuplaDeviceConfig
 import org.supla.android.extensions.TAG
-import org.supla.android.extensions.guardLet
+import org.supla.core.shared.extensions.guardLet
 import javax.inject.Inject
 import javax.inject.Singleton
 

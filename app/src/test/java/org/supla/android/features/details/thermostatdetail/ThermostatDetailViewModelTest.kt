@@ -155,6 +155,7 @@ class ThermostatDetailViewModelTest :
       every { this@mockk.remoteId } returns remoteId
       every { this@mockk.channelEntity } returns channel
       every { this@mockk.function } returns SuplaFunction.HVAC_THERMOSTAT
+      every { this@mockk.altIcon } returns 0
       every { this@mockk.visible } returns visible
       every { this@mockk.channelValueEntity } returns value
       every { caption } returns ""

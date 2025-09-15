@@ -34,7 +34,6 @@ import org.supla.android.data.source.RoomChannelRepository
 import org.supla.android.data.source.RoomSceneRepository
 import org.supla.android.data.source.local.dao.WidgetConfigurationDao
 import org.supla.android.data.source.local.entity.WidgetConfigurationEntity
-import org.supla.android.extensions.guardLet
 import org.supla.android.features.widget.shared.BaseWidgetViewModel
 import org.supla.android.features.widget.shared.WidgetConfigurationScope
 import org.supla.android.features.widget.shared.WidgetConfigurationViewEvent
@@ -47,6 +46,7 @@ import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.icon.GetSceneIconUseCase
 import org.supla.android.usecases.profile.ReadAllProfilesUseCase
 import org.supla.core.shared.data.model.general.SuplaFunction
+import org.supla.core.shared.extensions.guardLet
 import org.supla.core.shared.infrastructure.localizedString
 import org.supla.core.shared.usecase.GetCaptionUseCase
 import javax.inject.Inject

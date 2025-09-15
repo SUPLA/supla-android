@@ -26,14 +26,14 @@ import org.supla.android.data.source.local.entity.ChannelValueEntity.Companion.C
 import org.supla.android.data.source.local.entity.ChannelValueEntity.Companion.COLUMN_PROFILE_ID
 import org.supla.android.data.source.local.entity.ChannelValueEntity.Companion.TABLE_NAME
 import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
-import org.supla.android.data.source.remote.thermostat.HeatpolThermostatValue
-import org.supla.android.lib.DigiglassValue
 import org.supla.android.lib.SuplaChannelValue
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELVALUE_SIZE
 import org.supla.core.shared.data.model.function.container.ContainerValue
+import org.supla.core.shared.data.model.function.digiglass.DigiglassValue
 import org.supla.core.shared.data.model.function.facadeblind.FacadeBlindValue
 import org.supla.core.shared.data.model.function.relay.RelayValue
 import org.supla.core.shared.data.model.function.rollershutter.RollerShutterValue
+import org.supla.core.shared.data.model.function.thermostat.HeatpolThermostatValue
 import org.supla.core.shared.data.model.function.thermostat.ThermostatValue
 import org.supla.core.shared.data.model.valve.ValveValue
 
@@ -76,7 +76,7 @@ data class ChannelValueEntity(
       ((it[4].toInt() shl 16) and 0x00FF0000)
   }
 
-  fun asDigiglassValue() = DigiglassValue(getValueAsByteArray())
+  fun asDigiglassValue() = DigiglassValue.from(status, getValueAsByteArray())
 
   fun asRollerShutterValue() = RollerShutterValue.from(status, getValueAsByteArray())
 

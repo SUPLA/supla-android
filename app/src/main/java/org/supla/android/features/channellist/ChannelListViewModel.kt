@@ -193,23 +193,6 @@ class ChannelListViewModel @Inject constructor(
     }
   }
 
-  fun updateChannel(remoteId: Int) {
-    if (remoteId > 0) {
-      findChannelByRemoteIdUseCase(remoteId = remoteId)
-        .attachSilent()
-        .subscribeBy(
-          onSuccess = { channel ->
-            currentState().channels
-              ?.filterIsInstance<ListItem.ChannelItem>()
-              ?.firstOrNull { it.channelBase.remoteId == channel.remoteId }
-              ?.channelBase = channel
-          },
-          onError = defaultErrorHandler("updateChannel($remoteId)")
-        )
-        .disposeBySelf()
-    }
-  }
-
   private fun openDetailsByChannelFunction(data: ChannelWithChildren) {
     val channel = data.channel
     if (isAvailableInOffline(channel).not() && channel.status.offline) {

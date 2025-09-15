@@ -56,11 +56,11 @@ import org.supla.android.R
 import org.supla.android.core.branding.Configuration
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
-import org.supla.android.extensions.guardLet
 import org.supla.android.features.details.windowdetail.base.data.ProjectorScreenState
 import org.supla.android.features.details.windowdetail.base.data.WindowGroupedValue
 import org.supla.android.features.details.windowdetail.base.ui.MoveState
 import org.supla.android.features.details.windowdetail.base.ui.applyForWindow
+import org.supla.core.shared.extensions.guardLet
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
