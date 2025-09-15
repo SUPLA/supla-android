@@ -17,6 +17,10 @@ package org.supla.core.shared.infrastructure.storage
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import org.supla.core.shared.data.model.thermometer.TemperatureUnit
+
 interface ApplicationPreferences {
   var batteryWarningLevel: Int
+  var temperaturePrecision: Int
+  var temperatureUnit: TemperatureUnit
 }

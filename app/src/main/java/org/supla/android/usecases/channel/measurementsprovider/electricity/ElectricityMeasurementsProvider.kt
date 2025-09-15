@@ -20,7 +20,6 @@ package org.supla.android.usecases.channel.measurementsprovider.electricity
 import com.google.gson.Gson
 import org.supla.android.R
 import org.supla.android.core.storage.ApplicationPreferences
-import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.model.chart.AggregatedEntity
 import org.supla.android.data.model.chart.AggregatedValue
 import org.supla.android.data.model.chart.ChartDataAggregation
@@ -35,10 +34,13 @@ import org.supla.android.di.GSON_FOR_REPO
 import org.supla.android.extensions.toTimestamp
 import org.supla.android.lib.SuplaChannelElectricityMeterValue.Measurement
 import org.supla.android.usecases.channel.measurementsprovider.MeasurementsProvider
-import org.supla.android.usecases.channel.valueformatter.ChannelValueFormatter
-import org.supla.android.usecases.channel.valueformatter.VoltageValueFormatter
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.usecase.channel.valueformatter.NO_VALUE_TEXT
+import org.supla.core.shared.usecase.channel.valueformatter.formatters.VoltageValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.types.ValueFormat
+import org.supla.core.shared.usecase.channel.valueformatter.types.ValuePrecision
+import org.supla.core.shared.usecase.channel.valueformatter.types.custom
 import javax.inject.Named
 
 open class ElectricityMeasurementsProvider<T : ElectricityBaseLogEntity>(
@@ -113,13 +115,12 @@ open class ElectricityMeasurementsProvider<T : ElectricityBaseLogEntity>(
       electricity.value?.let {
         val value = VoltageValueFormatter.format(
           value = labelValueExtractor(it.getMeasurement(phase.value, 0)),
-          precision = ChannelValueFormatter.Custom(value = 1),
-          withUnit = false
+          format = ValueFormat(precision = custom(ValuePrecision.exact(1)), withUnit = false),
         )
         return HistoryDataSet.Label.Single(HistoryDataSet.LabelData(icon, value, phase.color))
       }
     }
 
-    return HistoryDataSet.Label.Single(HistoryDataSet.LabelData(icon, ValuesFormatter.NO_VALUE_TEXT, R.color.disabled))
+    return HistoryDataSet.Label.Single(HistoryDataSet.LabelData(icon, NO_VALUE_TEXT, R.color.disabled))
   }
 }

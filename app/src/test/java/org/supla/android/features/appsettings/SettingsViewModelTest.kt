@@ -22,9 +22,9 @@ import org.supla.android.data.model.general.LockScreenScope
 import org.supla.android.data.model.general.LockScreenSettings
 import org.supla.android.data.model.general.NightModeSetting
 import org.supla.android.data.source.runtime.appsettings.ChannelHeight
-import org.supla.android.data.source.runtime.appsettings.TemperatureUnit
 import org.supla.android.features.lockscreen.UnlockAction
 import org.supla.android.tools.SuplaSchedulers
+import org.supla.core.shared.data.model.thermometer.TemperatureUnit
 
 class SettingsViewModelTest : BaseViewModelTest<SettingsViewState, SettingsViewEvent, SettingsViewModel>(MockSchedulers.MOCKK) {
 

@@ -29,7 +29,6 @@ import org.supla.android.data.source.remote.rollershutter.SuplaTiltControlType
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.ChannelConfigEventsManager
 import org.supla.android.extensions.TAG
-import org.supla.android.extensions.guardLet
 import org.supla.android.features.details.windowdetail.base.BaseWindowViewModel
 import org.supla.android.features.details.windowdetail.base.BaseWindowViewModelState
 import org.supla.android.features.details.windowdetail.base.data.ShadingBlindMarker
@@ -49,6 +48,7 @@ import org.supla.android.usecases.group.GetGroupOnlineSummaryUseCase
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
 import org.supla.android.usecases.group.ReadGroupTiltingDetailsUseCase
 import org.supla.android.usecases.group.TiltingDetails
+import org.supla.core.shared.extensions.guardLet
 import kotlin.math.max
 import kotlin.math.min
 

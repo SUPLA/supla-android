@@ -51,7 +51,6 @@ import androidx.compose.ui.unit.dp
 import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
-import org.supla.android.extensions.guardLet
 import org.supla.android.features.details.windowdetail.base.data.TerraceAwningState
 import org.supla.android.features.details.windowdetail.base.data.WindowGroupedValue
 import org.supla.android.features.details.windowdetail.base.ui.MoveState
@@ -60,6 +59,7 @@ import org.supla.android.features.details.windowdetail.base.ui.applyForShadow
 import org.supla.android.features.details.windowdetail.base.ui.applyForSlat
 import org.supla.android.features.details.windowdetail.base.ui.applyForWindow
 import org.supla.android.features.details.windowdetail.base.ui.windowview.WINDOW_FRAME_RADIUS
+import org.supla.core.shared.extensions.guardLet
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable

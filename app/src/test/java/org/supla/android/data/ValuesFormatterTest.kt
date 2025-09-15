@@ -25,11 +25,15 @@ import org.junit.Before
 import org.junit.Test
 import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.source.local.calendar.Hour
+import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
 
 class ValuesFormatterTest {
 
   @MockK
   private lateinit var preferences: ApplicationPreferences
+
+  @MockK
+  private lateinit var valueFormatter: ValueFormatter
 
   @InjectMockKs
   private lateinit var formatter: ValuesFormatter

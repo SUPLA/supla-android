@@ -21,8 +21,6 @@ import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.model.general.ChannelState
 import org.supla.android.data.model.general.IconType
 import org.supla.android.db.ChannelBase
-import org.supla.android.extensions.guardLet
-import org.supla.android.extensions.ifLet
 import org.supla.android.images.ImageCacheProxy
 import org.supla.android.images.ImageId
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR
@@ -33,6 +31,8 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOMETER
 import org.supla.android.usecases.channel.GetChannelStateUseCase
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.data.model.general.suplaFunction
+import org.supla.core.shared.extensions.guardLet
+import org.supla.core.shared.extensions.ifLet
 import javax.inject.Inject
 import javax.inject.Singleton
 

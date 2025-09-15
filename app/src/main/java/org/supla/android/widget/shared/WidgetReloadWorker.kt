@@ -9,12 +9,12 @@ import dagger.assisted.AssistedInject
 import org.supla.android.Trace
 import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.source.remote.gpm.SuplaChannelGeneralPurposeBaseConfig
+import org.supla.android.data.source.remote.gpm.toValueFormat
 import org.supla.android.extensions.TAG
 import org.supla.android.extensions.getAppWidgetManager
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.lib.singlecall.DoubleValue
 import org.supla.android.lib.singlecall.TemperatureAndHumidity
-import org.supla.android.usecases.channel.valueformatter.GpmValueFormatter
 import org.supla.android.usecases.channel.valueprovider.GpmValueProvider
 import org.supla.android.usecases.channelconfig.LoadChannelConfigUseCase
 import org.supla.android.widget.WidgetConfiguration
@@ -23,6 +23,7 @@ import org.supla.android.widget.onoff.updateOnOffWidget
 import org.supla.android.widget.single.SingleWidget
 import org.supla.android.widget.single.updateSingleWidget
 import org.supla.core.shared.data.model.general.SuplaFunction
+import org.supla.core.shared.usecase.channel.valueformatter.formatters.GpmValueFormatter
 
 @HiltWorker
 class WidgetReloadWorker @AssistedInject constructor(
@@ -33,6 +34,7 @@ class WidgetReloadWorker @AssistedInject constructor(
 ) : WidgetWorkerBase(appPreferences, context, workerParameters) {
 
   private val appWidgetManager = getAppWidgetManager()
+  private val formatter = GpmValueFormatter()
 
   override fun doWork(): Result {
     Trace.i(TAG, "Widget reload worker started")
@@ -90,17 +92,20 @@ class WidgetReloadWorker @AssistedInject constructor(
   ) {
     val channelConfig = try {
       loadChannelConfigUseCase(configuration.itemId).blockingGet()
-    } catch (ex: Exception) {
+    } catch (_: Exception) {
       null
     }
     val doubleValue = try {
       (loadValue(configuration) as DoubleValue).value
-    } catch (ex: Exception) {
+    } catch (_: Exception) {
       null
     } ?: GpmValueProvider.UNKNOWN_VALUE
 
-    val formatter = GpmValueFormatter(channelConfig as? SuplaChannelGeneralPurposeBaseConfig)
-    updateWidgetConfiguration(widgetId, configuration.copy(value = formatter.format(doubleValue, valueWithUnit)))
+    val value = formatter.format(
+      value = doubleValue,
+      format = (channelConfig as? SuplaChannelGeneralPurposeBaseConfig).toValueFormat(valueWithUnit)
+    )
+    updateWidgetConfiguration(widgetId, configuration.copy(value = value))
     updateWidget(applicationContext, widgetId)
   }
 

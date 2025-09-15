@@ -18,6 +18,7 @@ package org.supla.android.data.source.local.entity.complex
  */
 
 import androidx.room.Embedded
+import org.supla.android.core.shared.shareable
 import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.model.general.ChannelState
 import org.supla.android.data.source.local.entity.ChannelConfigEntity
@@ -130,7 +131,9 @@ val ChannelDataEntity.shareable: org.supla.core.shared.data.model.general.Channe
     remoteId = remoteId,
     caption = caption,
     function = function,
+    altIcon = altIcon,
     batteryInfo = batteryInfo,
+    channelState = stateEntity?.shareable,
     status = status,
     value = channelValueEntity.getValueAsByteArray()
   )

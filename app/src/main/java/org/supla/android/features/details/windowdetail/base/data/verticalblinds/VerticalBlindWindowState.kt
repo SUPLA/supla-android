@@ -19,11 +19,11 @@ package org.supla.android.features.details.windowdetail.base.data.verticalblinds
 
 import org.supla.android.R
 import org.supla.android.core.ui.StringProvider
-import org.supla.android.extensions.guardLet
 import org.supla.android.features.details.windowdetail.base.data.ShadingBlindMarker
 import org.supla.android.features.details.windowdetail.base.data.ShadingBlindWindowState
 import org.supla.android.features.details.windowdetail.base.data.WindowGroupedValue
 import org.supla.android.features.details.windowdetail.base.data.WindowGroupedValueFormat
+import org.supla.core.shared.extensions.guardLet
 
 data class VerticalBlindWindowState(
   /**

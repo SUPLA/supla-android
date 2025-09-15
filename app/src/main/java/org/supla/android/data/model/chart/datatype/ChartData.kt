@@ -25,13 +25,12 @@ import org.supla.android.data.model.chart.ChartEntryType
 import org.supla.android.data.model.chart.ChartRange
 import org.supla.android.data.model.chart.ChartState
 import org.supla.android.data.model.chart.DateRange
-import org.supla.android.extensions.guardLet
-import org.supla.android.extensions.ifLet
 import org.supla.android.extensions.toTimestamp
-import org.supla.android.usecases.channel.valueformatter.ChannelValueFormatter
+import org.supla.core.shared.extensions.guardLet
+import org.supla.core.shared.extensions.ifLet
+import org.supla.core.shared.usecase.channel.valueformatter.DefaultValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
 import kotlin.math.abs
-import kotlin.math.max
-import kotlin.math.min
 import kotlin.math.roundToInt
 
 const val CHART_TOP_MARGIN = 0.2f
@@ -100,11 +99,11 @@ abstract class ChartData(
       return toCoordinate(dateRange?.end?.toTimestamp()?.plus(chartRangeMargin(daysCount))?.toFloat())
     }
 
-  val leftAxisFormatter: ChannelValueFormatter
-    get() = sets.map { it.dataSets.firstOrNull { set -> set.type.leftAxis() }?.valueFormatter }.firstOrNull() ?: DefaultValueFormatter()
+  val leftAxisFormatter: ValueFormatter
+    get() = sets.map { it.dataSets.firstOrNull { set -> set.type.leftAxis() }?.valueFormatter }.firstOrNull() ?: DefaultValueFormatter
 
-  val rightAxisFormatter: ChannelValueFormatter
-    get() = sets.map { it.dataSets.firstOrNull { set -> set.type.rightAxis() }?.valueFormatter }.firstOrNull() ?: DefaultValueFormatter()
+  val rightAxisFormatter: ValueFormatter
+    get() = sets.map { it.dataSets.firstOrNull { set -> set.type.rightAxis() }?.valueFormatter }.firstOrNull() ?: DefaultValueFormatter
 
   val distanceInDays: Int? = dateRange?.daysCount
 
@@ -241,23 +240,5 @@ abstract class ChartData(
     }
 
     return aggregation.timeInSec.times(0.6).toInt()
-  }
-}
-
-private class DefaultValueFormatter : ChannelValueFormatter {
-  override fun handle(function: Int): Boolean = true
-
-  override fun format(value: Any, withUnit: Boolean, precision: ChannelValueFormatter.Precision, custom: Any?): String {
-    (value as? Double)?.let {
-      return String.format("%.2f", it)
-    }
-    (value as? Float)?.let {
-      return String.format("%.2f", it)
-    }
-    (value as? Int)?.let {
-      return "$it"
-    }
-
-    return value.toString()
   }
 }

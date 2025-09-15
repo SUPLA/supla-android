@@ -119,13 +119,13 @@ class ElectricityMeterGeneralStateHandlerTest {
           SuplaElectricityMeasurementType.FORWARD_ACTIVE_ENERGY
         ),
         phaseMeasurementValues = listOf(
-          phaseWithMeasurements(R.string.em_chart_all_phases, "11 - 31 ", forwardActiveEnergy = "600.00000 "),
-          phaseWithMeasurements(R.string.details_em_phase1, "11.00 ", "12.00 ", "100.00000 "),
-          phaseWithMeasurements(R.string.details_em_phase2, "21.00 ", "22.00 ", "200.00000 "),
-          phaseWithMeasurements(R.string.details_em_phase3, "31.00 ", "32.00 ", "300.00000 ")
+          phaseWithMeasurements(R.string.em_chart_all_phases, "11 - 31", forwardActiveEnergy = "600.00000"),
+          phaseWithMeasurements(R.string.details_em_phase1, "11.00", "12.00", "100.00000"),
+          phaseWithMeasurements(R.string.details_em_phase2, "21.00", "22.00", "200.00000"),
+          phaseWithMeasurements(R.string.details_em_phase3, "31.00", "32.00", "300.00000")
         ),
         electricGridParameters = mapOf(
-          SuplaElectricityMeasurementType.FREQUENCY to "10.00 "
+          SuplaElectricityMeasurementType.FREQUENCY to "10.00"
         ),
         showIntroduction = true
       )
@@ -179,11 +179,11 @@ class ElectricityMeterGeneralStateHandlerTest {
           SuplaElectricityMeasurementType.REVERSE_ACTIVE_ENERGY
         ),
         phaseMeasurementValues = listOf(
-          phaseWithMeasurements(R.string.details_em_phase1, forwardActiveEnergy = "100.00000 ", reverseActiveEnergy = "101.00000 "),
+          phaseWithMeasurements(R.string.details_em_phase1, forwardActiveEnergy = "100.00000", reverseActiveEnergy = "101.00000"),
         ),
         electricGridParameters = mapOf(
-          SuplaElectricityMeasurementType.VOLTAGE_PHASE_ANGLE_12 to "12.3 ",
-          SuplaElectricityMeasurementType.VOLTAGE_PHASE_ANGLE_13 to "23.4 "
+          SuplaElectricityMeasurementType.VOLTAGE_PHASE_ANGLE_12 to "12.3",
+          SuplaElectricityMeasurementType.VOLTAGE_PHASE_ANGLE_13 to "23.4"
         )
       )
     )
@@ -240,13 +240,13 @@ class ElectricityMeterGeneralStateHandlerTest {
           SuplaElectricityMeasurementType.REVERSE_ACTIVE_ENERGY
         ),
         phaseMeasurementValues = listOf(
-          phaseWithMeasurements(R.string.em_chart_all_phases, forwardActiveEnergy = "300.00000 ", reverseActiveEnergy = "302.00000 "),
-          phaseWithMeasurements(R.string.details_em_phase1, forwardActiveEnergy = "100.00000 ", reverseActiveEnergy = "101.00000 "),
-          phaseWithMeasurements(R.string.details_em_phase2, forwardActiveEnergy = "200.00000 ", reverseActiveEnergy = "201.00000 "),
+          phaseWithMeasurements(R.string.em_chart_all_phases, forwardActiveEnergy = "300.00000", reverseActiveEnergy = "302.00000"),
+          phaseWithMeasurements(R.string.details_em_phase1, forwardActiveEnergy = "100.00000", reverseActiveEnergy = "101.00000"),
+          phaseWithMeasurements(R.string.details_em_phase2, forwardActiveEnergy = "200.00000", reverseActiveEnergy = "201.00000"),
         ),
         vectorBalancedValues = mapOf(
-          SuplaElectricityMeasurementType.FORWARD_ACTIVE_ENERGY_BALANCED to "111.1 ",
-          SuplaElectricityMeasurementType.REVERSE_ACTIVE_ENERGY_BALANCED to "222.2 "
+          SuplaElectricityMeasurementType.FORWARD_ACTIVE_ENERGY_BALANCED to "111.1",
+          SuplaElectricityMeasurementType.REVERSE_ACTIVE_ENERGY_BALANCED to "222.2"
         ),
         electricGridParameters = mapOf(
           SuplaElectricityMeasurementType.VOLTAGE_PHASE_SEQUENCE to "1-2-3",

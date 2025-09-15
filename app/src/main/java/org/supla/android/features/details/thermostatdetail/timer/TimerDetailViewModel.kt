@@ -37,6 +37,7 @@ import org.supla.android.data.source.remote.hvac.SuplaChannelHvacConfig
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
 import org.supla.android.db.Channel
+import org.supla.android.di.FORMATTER_THERMOMETER
 import org.supla.android.events.ChannelConfigEventsManager
 import org.supla.android.events.LoadingTimeoutManager
 import org.supla.android.extensions.DAY_IN_SEC
@@ -46,7 +47,6 @@ import org.supla.android.extensions.dayStart
 import org.supla.android.extensions.days
 import org.supla.android.extensions.differenceInSeconds
 import org.supla.android.extensions.getTimerStateValue
-import org.supla.android.extensions.guardLet
 import org.supla.android.extensions.hour
 import org.supla.android.extensions.hoursInDay
 import org.supla.android.extensions.minutesInHour
@@ -63,9 +63,12 @@ import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.client.ExecuteThermostatActionUseCase
 import org.supla.core.shared.data.model.function.thermostat.ThermostatValue
+import org.supla.core.shared.extensions.guardLet
 import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
 import java.util.Date
 import javax.inject.Inject
+import javax.inject.Named
 
 @HiltViewModel
 class TimerDetailViewModel @Inject constructor(
@@ -76,6 +79,7 @@ class TimerDetailViewModel @Inject constructor(
   private val dateProvider: DateProvider,
   private val loadingTimeoutManager: LoadingTimeoutManager,
   private val valuesFormatter: ValuesFormatter,
+  @Named(FORMATTER_THERMOMETER) private val thermometerValueFormatter: ValueFormatter,
   schedulers: SuplaSchedulers
 ) : BaseViewModel<TimerDetailViewState, TimerDetailViewEvent>(TimerDetailViewState(), schedulers), TimerDetailViewProxy {
 
@@ -176,11 +180,22 @@ class TimerDetailViewModel @Inject constructor(
   }
 
   override fun onTemperatureChange(temperature: Float) {
-    updateState { it.copy(currentTemperature = temperature) }
+    updateState {
+      it.copy(
+        currentTemperature = temperature,
+        currentTemperatureString = thermometerValueFormatter.format(temperature)
+      )
+    }
   }
 
   override fun onTemperatureChange(step: TemperatureCorrection) {
-    updateState { it.copy(currentTemperature = it.currentTemperature?.plus(step.step())) }
+    updateState {
+      val temperature = it.currentTemperature?.plus(step.step())
+      it.copy(
+        currentTemperature = temperature,
+        currentTemperatureString = thermometerValueFormatter.format(temperature)
+      )
+    }
   }
 
   override fun onStartTimer() {
@@ -299,6 +314,7 @@ class TimerDetailViewModel @Inject constructor(
     val (minTemperature, maxTemperature) = guardLet(hvacConfig.minTemperature, hvacConfig.maxTemperature) { return }
 
     val initialCalendarDate = currentDate.shift(7)
+    val temperature = getSetpointTemperature(channel, thermostatValue)
     updateState {
       it.copy(
         remoteId = channel.remoteId,
@@ -314,6 +330,7 @@ class TimerDetailViewModel @Inject constructor(
         minTemperature = minTemperature,
         maxTemperature = maxTemperature,
         currentTemperature = getSetpointTemperature(channel, thermostatValue),
+        currentTemperatureString = thermometerValueFormatter.format(temperature),
         usingHeatSetpoint = useHeatSetpoint(channel, thermostatValue),
 
         loadingState = it.loadingState.changingLoading(false, dateProvider)
@@ -352,6 +369,7 @@ data class TimerDetailViewState(
   val minTemperature: Float? = null,
   val maxTemperature: Float? = null,
   val currentTemperature: Float? = null,
+  val currentTemperatureString: String? = null,
   val usingHeatSetpoint: Boolean = false,
   var loadingState: LoadingTimeoutManager.LoadingState = LoadingTimeoutManager.LoadingState(),
 

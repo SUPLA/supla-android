@@ -20,8 +20,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.usecases.channel.ChannelValueStringProvider
 import org.supla.android.usecases.channel.ValueType
-import org.supla.android.usecases.channel.valueformatter.HumidityValueFormatter
 import org.supla.android.usecases.channel.valueprovider.HumidityValueProvider
+import org.supla.core.shared.usecase.channel.valueformatter.formatters.HumidityValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.types.withUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -36,6 +37,6 @@ class HumidityValueStringProvider @Inject constructor(
 
   override fun value(channelWithChildren: ChannelWithChildren, valueType: ValueType, withUnit: Boolean): String {
     val value = humidityValueProvider.value(channelWithChildren, valueType)
-    return humidityFormatter.format(value, withUnit = withUnit)
+    return humidityFormatter.format(value, withUnit(withUnit))
   }
 }

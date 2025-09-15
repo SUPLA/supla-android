@@ -20,7 +20,7 @@ package org.supla.android.data.model.chart.marker
 import org.supla.android.data.model.chart.ChartDataAggregation
 import org.supla.android.data.model.chart.ChartEntryType
 import org.supla.android.data.source.local.entity.custom.Phase
-import org.supla.android.usecases.channel.valueformatter.ChannelValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
 import java.util.Date
 
 sealed interface ChartEntryDetails {
@@ -31,7 +31,7 @@ sealed interface ChartEntryDetails {
   val max: Float?
   val open: Float?
   val close: Float?
-  val valueFormatter: ChannelValueFormatter
+  val valueFormatter: ValueFormatter
   val customData: Any?
 
   fun date(): Date = Date(date.times(1000))
@@ -44,7 +44,7 @@ sealed interface ChartEntryDetails {
     override val max: Float? = null,
     override val open: Float? = null,
     override val close: Float? = null,
-    override val valueFormatter: ChannelValueFormatter,
+    override val valueFormatter: ValueFormatter,
     override val customData: Any? = null
   ) : ChartEntryDetails
 
@@ -54,7 +54,7 @@ sealed interface ChartEntryDetails {
     override val date: Long,
     override val min: Float? = null,
     override val max: Float? = null,
-    override val valueFormatter: ChannelValueFormatter,
+    override val valueFormatter: ValueFormatter,
     override val customData: Any? = null,
     val phase: Phase
   ) : ChartEntryDetails {

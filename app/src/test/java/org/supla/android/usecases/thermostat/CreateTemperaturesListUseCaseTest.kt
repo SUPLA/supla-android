@@ -188,6 +188,7 @@ class CreateTemperaturesListUseCaseTest {
     val channel = mockk<ChannelDataEntity>()
     every { channel.remoteId } returns remoteId
     every { channel.function } returns function
+    every { channel.altIcon } returns 0
     every { channel.caption } returns ""
     every { channel.stateEntity } returns null
     every { channel.status } returns SuplaChannelAvailabilityStatus.ONLINE

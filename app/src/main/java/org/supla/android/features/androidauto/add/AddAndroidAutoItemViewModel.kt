@@ -31,13 +31,13 @@ import org.supla.android.data.source.ChannelGroupRepository
 import org.supla.android.data.source.RoomChannelRepository
 import org.supla.android.data.source.RoomSceneRepository
 import org.supla.android.data.source.local.entity.AndroidAutoItemEntity
-import org.supla.android.extensions.guardLet
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.icon.GetSceneIconUseCase
 import org.supla.android.usecases.profile.ReadAllProfilesUseCase
+import org.supla.core.shared.extensions.guardLet
 import org.supla.core.shared.usecase.GetCaptionUseCase
 import java.util.Objects
 import javax.inject.Inject

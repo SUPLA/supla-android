@@ -569,31 +569,6 @@ class ChannelListViewModelTest : BaseViewModelTest<ChannelListViewState, Channel
   }
 
   @Test
-  fun `should load channel on update`() {
-    // given
-    val channelId = 223
-
-    val channel: ChannelDataEntity = mockk()
-    every { channel.remoteId } returns channelId
-    whenever(readChannelByRemoteIdUseCase.invoke(channelId)).thenReturn(Maybe.just(channel))
-
-    val list = listOf(mockk<ListItem.ChannelItem>())
-    every { list[0].channelBase } returns channel
-    every { list[0].channelBase = channel } answers { }
-    whenever(createProfileChannelsListUseCase()).thenReturn(Observable.just(list))
-
-    // when
-    viewModel.loadChannels()
-    viewModel.updateChannel(channelId)
-
-    // then
-    assertThat(states).containsExactly(ChannelListViewState(channels = list))
-    assertThat(events).isEmpty()
-    verifyNoInteractionsExcept(createProfileChannelsListUseCase, readChannelByRemoteIdUseCase)
-    io.mockk.verify { list[0].channelBase = channel }
-  }
-
-  @Test
   fun `should not allow to process event to fast`() {
     // given
     whenever(dateProvider.currentTimestamp()).thenReturn(10)

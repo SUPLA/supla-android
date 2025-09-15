@@ -19,9 +19,9 @@ package org.supla.android.usecases.list.eventmappers
 
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.local.entity.isProjectorScreen
-import org.supla.android.extensions.guardLet
 import org.supla.android.ui.lists.data.SlideableListItemData
 import org.supla.android.usecases.icon.GetChannelIconUseCase
+import org.supla.core.shared.extensions.guardLet
 import org.supla.core.shared.usecase.GetCaptionUseCase
 import org.supla.core.shared.usecase.channel.GetChannelIssuesForListUseCase
 import javax.inject.Inject

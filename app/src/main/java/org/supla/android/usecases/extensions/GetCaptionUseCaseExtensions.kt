@@ -36,7 +36,9 @@ private val ChannelEntity.shareable: BaseData
     remoteId = remoteId,
     caption = caption,
     function = function,
+    altIcon = altIcon,
     batteryInfo = null,
+    channelState = null,
     status = SuplaChannelAvailabilityStatus.OFFLINE,
     value = null
   )

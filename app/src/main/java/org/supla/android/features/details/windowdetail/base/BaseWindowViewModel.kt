@@ -29,8 +29,6 @@ import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.data.source.local.entity.custom.GroupOnlineSummary
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.data.source.runtime.ItemType
-import org.supla.android.extensions.guardLet
-import org.supla.android.extensions.ifLet
 import org.supla.android.features.details.windowdetail.base.data.WindowGroupedValue
 import org.supla.android.features.details.windowdetail.base.data.WindowGroupedValueFormat
 import org.supla.android.features.details.windowdetail.base.data.WindowState
@@ -54,6 +52,8 @@ import org.supla.android.usecases.group.GetGroupOnlineSummaryUseCase
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
 import org.supla.core.shared.data.model.shadingsystem.ShadingSystemValue
 import org.supla.core.shared.data.model.shadingsystem.SuplaShadingSystemFlag
+import org.supla.core.shared.extensions.guardLet
+import org.supla.core.shared.extensions.ifLet
 import kotlin.math.abs
 
 abstract class BaseWindowViewModel<S : BaseWindowViewModelState>(

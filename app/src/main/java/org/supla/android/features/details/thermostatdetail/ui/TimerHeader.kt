@@ -36,8 +36,8 @@ import org.supla.android.R
 import org.supla.android.core.ui.StringProvider
 import org.supla.android.core.ui.theme.gray
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
-import org.supla.android.extensions.guardLet
 import org.supla.android.extensions.valuesFormatter
+import org.supla.core.shared.extensions.guardLet
 import java.util.Date
 
 interface TimerHeaderState {

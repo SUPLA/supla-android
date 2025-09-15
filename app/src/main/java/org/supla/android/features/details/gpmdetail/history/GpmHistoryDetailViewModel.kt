@@ -45,7 +45,6 @@ import org.supla.android.data.source.remote.gpm.SuplaChannelGeneralPurposeMeterC
 import org.supla.android.di.GSON_FOR_REPO
 import org.supla.android.events.ChannelConfigEventsManager
 import org.supla.android.events.DownloadEventsManager
-import org.supla.android.extensions.ifLet
 import org.supla.android.features.details.detailbase.history.BaseHistoryDetailViewModel
 import org.supla.android.profile.ProfileManager
 import org.supla.android.tools.SuplaSchedulers
@@ -57,6 +56,7 @@ import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
 import org.supla.android.usecases.channelconfig.LoadChannelConfigUseCase
 import org.supla.android.usecases.migration.GroupingStringMigrationUseCase
 import org.supla.core.shared.data.model.rest.channel.ChannelDto
+import org.supla.core.shared.extensions.ifLet
 import javax.inject.Inject
 import javax.inject.Named
 

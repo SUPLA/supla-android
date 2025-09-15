@@ -17,18 +17,16 @@ package org.supla.android.usecases.channel
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import io.mockk.MockKAnnotations
+import io.mockk.confirmVerified
 import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
+import io.mockk.verify
 import org.assertj.core.api.Assertions
+import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoInteractions
-import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.whenever
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.android.usecases.channel.valueprovider.ContainerValueProvider
@@ -36,6 +34,7 @@ import org.supla.android.usecases.channel.valueprovider.DepthSensorValueProvider
 import org.supla.android.usecases.channel.valueprovider.DistanceSensorValueProvider
 import org.supla.android.usecases.channel.valueprovider.ElectricityMeterValueProvider
 import org.supla.android.usecases.channel.valueprovider.GpmValueProvider
+import org.supla.android.usecases.channel.valueprovider.HeatpolThermostatValueProvider
 import org.supla.android.usecases.channel.valueprovider.HumidityAndTemperatureValueProvider
 import org.supla.android.usecases.channel.valueprovider.ImpulseCounterValueProvider
 import org.supla.android.usecases.channel.valueprovider.PressureSensorValueProvider
@@ -47,56 +46,63 @@ import org.supla.android.usecases.channel.valueprovider.WeightSensorValueProvide
 import org.supla.android.usecases.channel.valueprovider.WindSensorValueProvider
 import org.supla.core.shared.data.model.general.SuplaFunction
 
-@RunWith(MockitoJUnitRunner::class)
 class GetChannelValueUseCaseTest {
 
-  @Mock
+  @MockK(relaxed = true)
   private lateinit var depthSensorValueProvider: DepthSensorValueProvider
 
-  @Mock
+  @MockK(relaxed = true)
   private lateinit var gpmValueProvider: GpmValueProvider
 
-  @Mock
+  @MockK(relaxed = true)
   private lateinit var humidityAndTemperatureValueProvider: HumidityAndTemperatureValueProvider
 
-  @Mock
+  @MockK(relaxed = true)
   private lateinit var thermometerValueProvider: ThermometerValueProvider
 
-  @Mock
+  @MockK(relaxed = true)
   private lateinit var distanceSensorValueProvider: DistanceSensorValueProvider
 
-  @Mock
+  @MockK(relaxed = true)
   private lateinit var electricityMeterValueProvider: ElectricityMeterValueProvider
 
-  @Mock
+  @MockK(relaxed = true)
   private lateinit var impulseCounterValueProvider: ImpulseCounterValueProvider
 
-  @Mock
+  @MockK(relaxed = true)
   private lateinit var switchWithElectricityMeterValueProvider: SwitchWithElectricityMeterValueProvider
 
-  @Mock
+  @MockK(relaxed = true)
   private lateinit var switchWithImpulseCounterValueProvider: SwitchWithImpulseCounterValueProvider
 
-  @Mock
+  @MockK(relaxed = true)
   private lateinit var pressureSensorValueProvider: PressureSensorValueProvider
 
-  @Mock
+  @MockK(relaxed = true)
   private lateinit var rainSensorValueProvider: RainSensorValueProvider
 
-  @Mock
+  @MockK(relaxed = true)
   private lateinit var containerValueProvider: ContainerValueProvider
 
-  @Mock
+  @MockK(relaxed = true)
   private lateinit var weightSensorValueProvider: WeightSensorValueProvider
 
-  @Mock
+  @MockK(relaxed = true)
   private lateinit var windSensorValueProvider: WindSensorValueProvider
 
-  @InjectMocks
+  @MockK(relaxed = true)
+  private lateinit var heatpolThermostatValueProvider: HeatpolThermostatValueProvider
+
+  @InjectMockKs
   private lateinit var useCase: GetChannelValueUseCase
 
+  @Before
+  fun setup() {
+    MockKAnnotations.init(this)
+  }
+
   @Test
-  fun `should check all handlers if can handle channel and throw exception that could not provide channel value`() {
+  fun `should check all providers if can handle channel and throw exception that could not provide channel value`() {
     // given
     val channel: ChannelWithChildren = mockk {
       every { function } returns SuplaFunction.HUMIDITY
@@ -110,15 +116,39 @@ class GetChannelValueUseCaseTest {
       .isInstanceOf(IllegalStateException::class.java)
 
     // then
-    verify(thermometerValueProvider).handle(channel)
-    verify(humidityAndTemperatureValueProvider).handle(channel)
-    verify(depthSensorValueProvider).handle(channel)
-    verify(gpmValueProvider).handle(channel)
-    verifyNoMoreInteractions(
+    verify {
+      thermometerValueProvider.handle(channel)
+      humidityAndTemperatureValueProvider.handle(channel)
+      depthSensorValueProvider.handle(channel)
+      gpmValueProvider.handle(channel)
+      distanceSensorValueProvider.handle(channel)
+      electricityMeterValueProvider.handle(channel)
+      impulseCounterValueProvider.handle(channel)
+      switchWithElectricityMeterValueProvider.handle(channel)
+      switchWithImpulseCounterValueProvider.handle(channel)
+      pressureSensorValueProvider.handle(channel)
+      rainSensorValueProvider.handle(channel)
+      containerValueProvider.handle(channel)
+      weightSensorValueProvider.handle(channel)
+      windSensorValueProvider.handle(channel)
+      heatpolThermostatValueProvider.handle(channel)
+    }
+    confirmVerified(
       thermometerValueProvider,
       humidityAndTemperatureValueProvider,
       depthSensorValueProvider,
-      gpmValueProvider
+      gpmValueProvider,
+      distanceSensorValueProvider,
+      electricityMeterValueProvider,
+      impulseCounterValueProvider,
+      switchWithElectricityMeterValueProvider,
+      switchWithImpulseCounterValueProvider,
+      pressureSensorValueProvider,
+      rainSensorValueProvider,
+      containerValueProvider,
+      weightSensorValueProvider,
+      windSensorValueProvider,
+      heatpolThermostatValueProvider
     )
   }
 
@@ -136,19 +166,36 @@ class GetChannelValueUseCaseTest {
       }
     }
 
-    whenever(humidityAndTemperatureValueProvider.handle(channel)).thenReturn(true)
-    whenever(humidityAndTemperatureValueProvider.value(channel, ValueType.FIRST)).thenReturn(value)
+    every { humidityAndTemperatureValueProvider.handle(channel) } returns true
+    every { humidityAndTemperatureValueProvider.value(channel, ValueType.FIRST) } returns value
 
     // when
     val valueText: Double = useCase(channel)
 
     // then
     Assertions.assertThat(valueText).isEqualTo(value)
-    verify(depthSensorValueProvider).handle(channel)
-    verify(gpmValueProvider).handle(channel)
-    verify(humidityAndTemperatureValueProvider).handle(channel)
-    verify(humidityAndTemperatureValueProvider).value(channel, ValueType.FIRST)
-    verifyNoMoreInteractions(depthSensorValueProvider, gpmValueProvider, humidityAndTemperatureValueProvider)
-    verifyNoInteractions(thermometerValueProvider)
+    verify {
+      depthSensorValueProvider.handle(channel)
+      gpmValueProvider.handle(channel)
+      humidityAndTemperatureValueProvider.handle(channel)
+      humidityAndTemperatureValueProvider.value(channel, ValueType.FIRST)
+    }
+    confirmVerified(
+      thermometerValueProvider,
+      humidityAndTemperatureValueProvider,
+      depthSensorValueProvider,
+      gpmValueProvider,
+      distanceSensorValueProvider,
+      electricityMeterValueProvider,
+      impulseCounterValueProvider,
+      switchWithElectricityMeterValueProvider,
+      switchWithImpulseCounterValueProvider,
+      pressureSensorValueProvider,
+      rainSensorValueProvider,
+      containerValueProvider,
+      weightSensorValueProvider,
+      windSensorValueProvider,
+      heatpolThermostatValueProvider
+    )
   }
 }

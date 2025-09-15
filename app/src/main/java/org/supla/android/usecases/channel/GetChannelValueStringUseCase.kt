@@ -18,7 +18,6 @@ package org.supla.android.usecases.channel
  */
 
 import org.supla.android.Trace
-import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.extensions.TAG
 import org.supla.android.usecases.channel.stringvalueprovider.ContainerValueStringProvider
@@ -26,6 +25,7 @@ import org.supla.android.usecases.channel.stringvalueprovider.DepthSensorValueSt
 import org.supla.android.usecases.channel.stringvalueprovider.DistanceSensorValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.ElectricityMeterValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.GpmValueStringProvider
+import org.supla.android.usecases.channel.stringvalueprovider.HeatpolThermostatValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.HumidityAndTemperatureValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.HumidityValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.ImpulseCounterValueStringProvider
@@ -37,6 +37,7 @@ import org.supla.android.usecases.channel.stringvalueprovider.ThermometerValueSt
 import org.supla.android.usecases.channel.stringvalueprovider.WeightSensorValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.WindSensorValueStringProvider
 import org.supla.core.shared.data.model.general.SuplaFunction
+import org.supla.core.shared.usecase.channel.valueformatter.NO_VALUE_TEXT
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -55,7 +56,8 @@ class GetChannelValueStringUseCase @Inject constructor(
   humidityValueStringProvider: HumidityValueStringProvider,
   containerValueStringProvider: ContainerValueStringProvider,
   weightSensorValueStringProvider: WeightSensorValueStringProvider,
-  windSensorValueStringProvider: WindSensorValueStringProvider
+  windSensorValueStringProvider: WindSensorValueStringProvider,
+  heatpolThermostatValueStringProvider: HeatpolThermostatValueStringProvider
 ) {
 
   private val providers = listOf(
@@ -73,6 +75,7 @@ class GetChannelValueStringUseCase @Inject constructor(
     containerValueStringProvider,
     weightSensorValueStringProvider,
     windSensorValueStringProvider,
+    heatpolThermostatValueStringProvider,
     NoValueStringProvider(SuplaFunction.STAIRCASE_TIMER),
     NoValueStringProvider(SuplaFunction.POWER_SWITCH),
     NoValueStringProvider(SuplaFunction.LIGHTSWITCH),
@@ -99,13 +102,13 @@ class GetChannelValueStringUseCase @Inject constructor(
   )
 
   operator fun invoke(channel: ChannelWithChildren, valueType: ValueType = ValueType.FIRST, withUnit: Boolean = true): String {
-    return valueOrNull(channel, valueType, withUnit) ?: ValuesFormatter.NO_VALUE_TEXT
+    return valueOrNull(channel, valueType, withUnit) ?: NO_VALUE_TEXT
   }
 
   fun valueOrNull(channel: ChannelWithChildren, valueType: ValueType = ValueType.FIRST, withUnit: Boolean = true): String? {
     providers.firstOrNull { it.handle(channel) }?.let {
       if (channel.channel.channelValueEntity.status.offline && it !is NoValueStringProvider) {
-        return ValuesFormatter.NO_VALUE_TEXT
+        return NO_VALUE_TEXT
       }
 
       return it.value(channel, valueType, withUnit)

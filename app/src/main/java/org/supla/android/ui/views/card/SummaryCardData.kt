@@ -18,7 +18,7 @@ package org.supla.android.ui.views.card
  */
 
 import org.supla.android.extensions.ifNotZero
-import org.supla.android.usecases.channel.valueformatter.ChannelValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
 import java.text.DecimalFormat
 
 data class SummaryCardData(
@@ -27,14 +27,13 @@ data class SummaryCardData(
 ) {
   companion object {
     operator fun invoke(
-      formatter: ChannelValueFormatter,
+      formatter: ValueFormatter,
       energy: Double,
       pricePerUnit: Double,
-      currency: String,
-      custom: Any? = null
+      currency: String
     ): SummaryCardData =
       SummaryCardData(
-        value = formatter.format(energy, custom = custom),
+        value = formatter.format(energy),
         price = pricePerUnit.ifNotZero {
           val decimalFormatter = DecimalFormat()
           decimalFormatter.minimumFractionDigits = 2

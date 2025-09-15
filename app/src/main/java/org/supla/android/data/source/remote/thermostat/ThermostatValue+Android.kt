@@ -17,10 +17,11 @@ package org.supla.android.data.source.remote.thermostat
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.core.shared.data.model.function.thermostat.SuplaThermostatFlag
 import org.supla.core.shared.data.model.function.thermostat.ThermostatValue
+import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.types.ValueFormat
 
 fun ThermostatValue.getIndicatorIcon() = when {
   status.online && flags.contains(SuplaThermostatFlag.FORCED_OFF_BY_SENSOR) -> ThermostatIndicatorIcon.FORCED_OFF_BY_SENSOR
@@ -31,9 +32,9 @@ fun ThermostatValue.getIndicatorIcon() = when {
   else -> ThermostatIndicatorIcon.OFFLINE
 }
 
-fun ThermostatValue.getSetpointText(valuesFormatter: ValuesFormatter): String {
-  val temperatureMin = valuesFormatter.getTemperatureString(setpointTemperatureHeat, false)
-  val temperatureMax = valuesFormatter.getTemperatureString(setpointTemperatureCool, false)
+fun ThermostatValue.getSetpointText(formatter: ValueFormatter): String {
+  val temperatureMin = formatter.format(setpointTemperatureHeat, ValueFormat.WithoutUnit)
+  val temperatureMax = formatter.format(setpointTemperatureCool, ValueFormat.WithoutUnit)
   return when {
     status.offline -> ""
     mode == SuplaHvacMode.COOL -> temperatureMax

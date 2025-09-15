@@ -9,10 +9,10 @@ import java.util.Timer;
 import java.util.TimerTask;
 import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
-import org.supla.android.lib.DigiglassValue;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaConst;
 import org.supla.android.listview.DetailLayout;
+import org.supla.core.shared.data.model.function.digiglass.DigiglassValue;
 
 public class ChannelDetailDigiglass extends DetailLayout
     implements View.OnClickListener, DigiglassController.OnSectionClickListener {

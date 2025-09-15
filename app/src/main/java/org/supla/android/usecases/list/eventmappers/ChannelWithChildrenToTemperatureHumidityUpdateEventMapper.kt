@@ -19,17 +19,15 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import org.supla.android.core.shared.shareable
 import org.supla.android.data.model.general.IconType
-import org.supla.android.data.source.local.entity.complex.onlineState
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
-import org.supla.android.extensions.guardLet
 import org.supla.android.ui.lists.data.SlideableListItemData
-import org.supla.android.ui.lists.onlineState
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.channel.ValueType
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.list.CreateListItemUpdateEventDataUseCase
 import org.supla.core.shared.data.model.general.SuplaFunction
+import org.supla.core.shared.extensions.guardLet
 import org.supla.core.shared.usecase.GetCaptionUseCase
 import org.supla.core.shared.usecase.channel.GetChannelIssuesForListUseCase
 import javax.inject.Inject

@@ -30,22 +30,22 @@ import org.supla.android.data.model.chart.singleLabel
 import org.supla.android.data.model.general.IconType
 import org.supla.android.data.source.local.entity.complex.isImpulseCounter
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
-import org.supla.android.data.source.remote.gpm.SuplaChannelGeneralPurposeBaseConfig
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.channel.ValueType
 import org.supla.android.usecases.channel.measurementsprovider.ChannelMeasurementsProvider.Companion.AGGREGATING_MINUTES_DISTANCE_SEC
 import org.supla.android.usecases.channel.measurementsprovider.ChannelMeasurementsProvider.Companion.MAX_ALLOWED_DISTANCE_MULTIPLIER
-import org.supla.android.usecases.channel.valueformatter.ChannelValueFormatter
-import org.supla.android.usecases.channel.valueformatter.ChartAxisElectricityMeterValueFormatter
-import org.supla.android.usecases.channel.valueformatter.CurrentValueFormatter
-import org.supla.android.usecases.channel.valueformatter.GpmValueFormatter
-import org.supla.android.usecases.channel.valueformatter.HumidityValueFormatter
-import org.supla.android.usecases.channel.valueformatter.ImpulseCounterChartValueFormatter
-import org.supla.android.usecases.channel.valueformatter.PowerActiveValueFormatter
-import org.supla.android.usecases.channel.valueformatter.ThermometerValueFormatter
-import org.supla.android.usecases.channel.valueformatter.VoltageValueFormatter
+import org.supla.android.usecases.channel.valueformatter.staticFormatter
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.core.shared.data.model.channel.ChannelRelationType
+import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.formatters.CurrentValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.formatters.ElectricityMeterValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.formatters.GpmValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.formatters.HumidityValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.formatters.ImpulseCounterValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.formatters.PowerActiveValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.formatters.ThermometerValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.formatters.VoltageValueFormatter
 
 abstract class ChannelMeasurementsProvider(
   private val getChannelValueStringUseCase: GetChannelValueStringUseCase,
@@ -102,7 +102,7 @@ open class MeasurementsProvider(
   private val gson: Gson // GSON_FOR_REPO
 ) {
 
-  protected fun getValueFormatter(type: ChartEntryType, channelWithChildren: ChannelWithChildren): ChannelValueFormatter {
+  protected fun getValueFormatter(type: ChartEntryType, channelWithChildren: ChannelWithChildren): ValueFormatter {
     return when (type) {
       ChartEntryType.HUMIDITY,
       ChartEntryType.HUMIDITY_ONLY -> HumidityValueFormatter()
@@ -110,10 +110,10 @@ open class MeasurementsProvider(
       ChartEntryType.TEMPERATURE -> ThermometerValueFormatter(preferences)
       ChartEntryType.GENERAL_PURPOSE_MEASUREMENT,
       ChartEntryType.GENERAL_PURPOSE_METER ->
-        GpmValueFormatter(channelWithChildren.channel.configEntity?.toSuplaConfig(gson) as? SuplaChannelGeneralPurposeBaseConfig)
+        GpmValueFormatter.staticFormatter(channelWithChildren.channel.configEntity?.toSuplaConfig(gson))
 
-      ChartEntryType.ELECTRICITY -> ChartAxisElectricityMeterValueFormatter()
-      ChartEntryType.IMPULSE_COUNTER -> ImpulseCounterChartValueFormatter(unit = getImpulseCounterUnit(channelWithChildren))
+      ChartEntryType.ELECTRICITY -> ElectricityMeterValueFormatter()
+      ChartEntryType.IMPULSE_COUNTER -> ImpulseCounterValueFormatter.staticFormatter(channelWithChildren)
       ChartEntryType.VOLTAGE -> VoltageValueFormatter
       ChartEntryType.CURRENT -> CurrentValueFormatter
       ChartEntryType.POWER_ACTIVE -> PowerActiveValueFormatter

@@ -17,26 +17,30 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
+import org.supla.android.di.FORMATTER_THERMOMETER
 import org.supla.android.usecases.channel.ChannelValueStringProvider
 import org.supla.android.usecases.channel.ValueType
-import org.supla.android.usecases.channel.valueformatter.ThermometerValueFormatter
 import org.supla.android.usecases.channel.valueprovider.ThermometerValueProvider
+import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.types.ValueFormat
 import javax.inject.Inject
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
 class ThermometerValueStringProvider @Inject constructor(
   private val thermometerValueProvider: ThermometerValueProvider,
-  preferences: ApplicationPreferences
+  @Named(FORMATTER_THERMOMETER) private val thermometerValueFormatter: ValueFormatter
 ) : ChannelValueStringProvider {
-
-  private val formatter = ThermometerValueFormatter(preferences)
 
   override fun handle(channelWithChildren: ChannelWithChildren): Boolean =
     thermometerValueProvider.handle(channelWithChildren)
 
   override fun value(channelWithChildren: ChannelWithChildren, valueType: ValueType, withUnit: Boolean): String =
-    formatter.format(thermometerValueProvider.value(channelWithChildren, valueType), withUnit = withUnit)
+    thermometerValueFormatter.format(
+      value = thermometerValueProvider.value(channelWithChildren, valueType),
+      format = withUnit.ifTrue { ValueFormat.WithUnit } ?: ValueFormat.TemperatureWithDegree
+    )
 }

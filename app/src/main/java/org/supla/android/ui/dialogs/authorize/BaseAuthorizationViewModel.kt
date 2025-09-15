@@ -24,7 +24,6 @@ import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.source.RoomProfileRepository
-import org.supla.android.extensions.guardLet
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.dialogs.AuthorizationDialogScope
 import org.supla.android.ui.dialogs.AuthorizationDialogState
@@ -32,6 +31,7 @@ import org.supla.android.ui.dialogs.AuthorizationReason
 import org.supla.android.usecases.client.AuthorizationException
 import org.supla.android.usecases.client.AuthorizeUseCase
 import org.supla.android.usecases.client.LoginUseCase
+import org.supla.core.shared.extensions.guardLet
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.localizedString
 

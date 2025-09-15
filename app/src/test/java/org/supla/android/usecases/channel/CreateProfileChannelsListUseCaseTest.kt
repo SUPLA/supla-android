@@ -1,26 +1,21 @@
 package org.supla.android.usecases.channel
 
 import com.google.gson.Gson
+import io.mockk.MockKAnnotations
 import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.any
-import org.mockito.kotlin.eq
-import org.mockito.kotlin.whenever
-import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.ChannelRelationRepository
 import org.supla.android.data.source.RoomChannelRepository
 import org.supla.android.data.source.local.entity.ChannelRelationEntity
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
-import org.supla.android.data.source.local.entity.complex.shareable
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
@@ -28,45 +23,52 @@ import org.supla.android.images.ImageId
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.location.CollapsedFlag
+import org.supla.core.shared.data.model.channel.ChannelRelationType
 import org.supla.core.shared.data.model.function.thermostat.ThermostatValue
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.data.model.lists.ListItemIssues
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.usecase.GetCaptionUseCase
 import org.supla.core.shared.usecase.channel.GetChannelIssuesForListUseCase
+import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.types.ValueFormat
 
-@RunWith(MockitoJUnitRunner::class)
 class CreateProfileChannelsListUseCaseTest {
 
-  @Mock
+  @MockK
   private lateinit var channelRelationRepository: ChannelRelationRepository
 
-  @Mock
+  @MockK
   private lateinit var channelRepository: RoomChannelRepository
 
-  @Mock
+  @MockK
   private lateinit var getCaptionUseCase: GetCaptionUseCase
 
-  @Mock
+  @MockK
   private lateinit var getChannelIconUseCase: GetChannelIconUseCase
 
-  @Mock
+  @MockK
   private lateinit var getChannelValueStringUseCase: GetChannelValueStringUseCase
 
-  @Mock
-  private lateinit var valuesFormatter: ValuesFormatter
+  @MockK
+  private lateinit var valueFormatter: ValueFormatter
 
-  @Mock
+  @MockK
   private lateinit var getChannelIssuesForListUseCase: GetChannelIssuesForListUseCase
 
-  @Mock
+  @MockK
   private lateinit var getChannelChildrenTreeUseCase: GetChannelChildrenTreeUseCase
 
-  @Mock
+  @MockK
   private lateinit var gson: Gson
 
-  @InjectMocks
+  @InjectMockKs
   private lateinit var usecase: CreateProfileChannelsListUseCase
+
+  @Before
+  fun setup() {
+    MockKAnnotations.init(this)
+  }
 
   @Test
   fun `should create list of channels and locations`() {
@@ -78,9 +80,9 @@ class CreateProfileChannelsListUseCaseTest {
     val fifth = mockListEntity(51, 42, channelFunction = SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER)
     val sixth = mockListEntity(61, 42, channelFunction = SuplaFunction.PROJECTOR_SCREEN)
 
-    whenever(channelRepository.findList()).thenReturn(Single.just(listOf(first, second, third, fourth, fifth, sixth)))
-    whenever(channelRelationRepository.findChildrenToParentsRelations()).thenReturn(Observable.just(emptyMap()))
-    whenever(getChannelIssuesForListUseCase.invoke(any())).thenReturn(ListItemIssues.empty)
+    every { channelRepository.findList() } returns Single.just(listOf(first, second, third, fourth, fifth, sixth))
+    every { channelRelationRepository.findChildrenToParentsRelations() } returns Observable.just(emptyMap())
+    every { getChannelIssuesForListUseCase.invoke(any()) } returns ListItemIssues.empty
 
     // when
     val testObserver = usecase().test()
@@ -91,7 +93,7 @@ class CreateProfileChannelsListUseCaseTest {
 
     assertThat(list).hasSize(8)
     assertThat(list[0]).isInstanceOf(ListItem.LocationItem::class.java)
-    assertThat(list[1]).isInstanceOf(ListItem.ChannelItem::class.java)
+    assertThat(list[1]).isInstanceOf(ListItem.IconValueItem::class.java)
     assertThat(list[2]).isInstanceOf(ListItem.HvacThermostatItem::class.java)
     assertThat(list[3]).isInstanceOf(ListItem.LocationItem::class.java)
     assertThat(list[4]).isInstanceOf(ListItem.LocationItem::class.java)
@@ -99,7 +101,7 @@ class CreateProfileChannelsListUseCaseTest {
     assertThat(list[6]).isInstanceOf(ListItem.IconWithButtonsItem::class.java)
     assertThat(list[7]).isInstanceOf(ListItem.IconWithButtonsItem::class.java)
 
-    assertThat((list[1] as ListItem.ChannelItem).channelBase.remoteId).isEqualTo(11)
+    assertThat((list[1] as ListItem.IconValueItem).captionProvider).isEqualTo(LocalizedString.Constant("caption 11"))
     assertThat((list[2] as ListItem.HvacThermostatItem).captionProvider).isEqualTo(LocalizedString.Constant("caption 21"))
     assertThat((list[5] as ListItem.IconValueItem).captionProvider).isEqualTo(LocalizedString.Constant("caption 41"))
     assertThat((list[6] as ListItem.IconWithButtonsItem).captionProvider).isEqualTo(LocalizedString.Constant("caption 51"))
@@ -118,9 +120,9 @@ class CreateProfileChannelsListUseCaseTest {
     val third = mockListEntity(31, 32, locationName = "12")
     val fourth = mockListEntity(41, 42)
 
-    whenever(channelRepository.findList()).thenReturn(Single.just(listOf(first, second, third, fourth)))
-    whenever(channelRelationRepository.findChildrenToParentsRelations()).thenReturn(Observable.just(emptyMap()))
-    whenever(getChannelIssuesForListUseCase.invoke(any())).thenReturn(ListItemIssues.empty)
+    every { channelRepository.findList() } returns Single.just(listOf(first, second, third, fourth))
+    every { channelRelationRepository.findChildrenToParentsRelations() } returns Observable.just(emptyMap())
+    every { getChannelIssuesForListUseCase.invoke(any()) } returns ListItemIssues.empty
 
     // when
     val testObserver = usecase().test()
@@ -133,14 +135,14 @@ class CreateProfileChannelsListUseCaseTest {
     assertThat(list[0]).isInstanceOf(ListItem.LocationItem::class.java)
     assertThat(list[1]).isInstanceOf(ListItem.IconValueItem::class.java)
     assertThat(list[2]).isInstanceOf(ListItem.IconValueItem::class.java)
-    assertThat(list[3]).isInstanceOf(ListItem.ChannelItem::class.java)
+    assertThat(list[3]).isInstanceOf(ListItem.IconValueItem::class.java)
     assertThat(list[4]).isInstanceOf(ListItem.LocationItem::class.java)
-    assertThat(list[5]).isInstanceOf(ListItem.ChannelItem::class.java)
+    assertThat(list[5]).isInstanceOf(ListItem.IconValueItem::class.java)
 
     assertThat((list[1] as ListItem.IconValueItem).value).isEqualTo("value 11")
     assertThat((list[2] as ListItem.IconValueItem).value).isEqualTo("value 21")
-    assertThat((list[3] as ListItem.ChannelItem).channelBase.remoteId).isEqualTo(31)
-    assertThat((list[5] as ListItem.ChannelItem).channelBase.remoteId).isEqualTo(41)
+    assertThat((list[3] as ListItem.IconValueItem).value).isEqualTo("value 31")
+    assertThat((list[5] as ListItem.IconValueItem).value).isEqualTo("value 41")
 
     assertThat((list[0] as ListItem.LocationItem).location.caption).isEqualTo("12")
     assertThat((list[4] as ListItem.LocationItem).location.caption).isEqualTo("42")
@@ -153,14 +155,26 @@ class CreateProfileChannelsListUseCaseTest {
     val second = mockListEntity(21, 12)
     val third = mockListEntity(31, 12)
 
-    whenever(channelRepository.findList()).thenReturn(Single.just(listOf(first, second, third)))
-    val childrenRelation = mockk<ChannelRelationEntity> { every { channelId } returns 21 }
+    every { channelRepository.findList() } returns Single.just(listOf(first, second, third))
+    val childrenRelation = mockk<ChannelRelationEntity> {
+      every { channelId } returns 21
+      every { parentId } returns 11
+      every { relationType } returns ChannelRelationType.DEFAULT
+    }
     val relationMap = mapOf(11 to listOf(childrenRelation))
-    whenever(channelRelationRepository.findChildrenToParentsRelations()).thenReturn(
-      Observable.just(relationMap)
-    )
-    whenever(getChannelChildrenTreeUseCase.invoke(eq(11), eq(relationMap), any(), any()))
-      .thenReturn(listOf(ChannelChildEntity(childrenRelation, second)))
+    every { channelRelationRepository.findChildrenToParentsRelations() } returns Observable.just(relationMap)
+    val childEntity = ChannelChildEntity(childrenRelation, second)
+    every {
+      getChannelChildrenTreeUseCase.invoke(eq(11), eq(relationMap), any(), any())
+    } returns listOf(childEntity)
+    every {
+      getChannelValueStringUseCase.valueOrNull(
+        channel = eq(ChannelWithChildren(first, listOf(childEntity))),
+        valueType = eq(ValueType.FIRST),
+        withUnit = eq(true)
+      )
+    } returns "value 11"
+    every { getChannelIssuesForListUseCase.invoke(any()) } returns ListItemIssues.empty
 
     // when
     val testObserver = usecase().test()
@@ -171,14 +185,11 @@ class CreateProfileChannelsListUseCaseTest {
 
     assertThat(list).hasSize(3)
     assertThat(list[0]).isInstanceOf(ListItem.LocationItem::class.java)
-    assertThat(list[1]).isInstanceOf(ListItem.ChannelItem::class.java)
-    assertThat(list[2]).isInstanceOf(ListItem.ChannelItem::class.java)
-    assertThat((list[1] as ListItem.ChannelItem).children).isEqualTo(listOf(ChannelChildEntity(childrenRelation, second)))
-
-    assertThat((list[1] as ListItem.ChannelItem).channelBase.remoteId).isEqualTo(11)
-    assertThat((list[2] as ListItem.ChannelItem).channelBase.remoteId).isEqualTo(31)
-
+    assertThat(list[1]).isInstanceOf(ListItem.IconValueItem::class.java)
+    assertThat(list[2]).isInstanceOf(ListItem.IconValueItem::class.java)
     assertThat((list[0] as ListItem.LocationItem).location.caption).isEqualTo("12")
+    assertThat((list[1] as ListItem.IconValueItem).channelBase.remoteId).isEqualTo(11)
+    assertThat((list[2] as ListItem.IconValueItem).channelBase.remoteId).isEqualTo(31)
   }
 
   private fun mockListEntity(
@@ -191,6 +202,7 @@ class CreateProfileChannelsListUseCaseTest {
     every { remoteId } returns channelRemoteId
     every { function } returns channelFunction
     every { caption } returns ""
+    every { altIcon } returns 0
     every { status } returns SuplaChannelAvailabilityStatus.ONLINE
     every { stateEntity } returns null
     every { locationEntity } returns mockk {
@@ -200,9 +212,6 @@ class CreateProfileChannelsListUseCaseTest {
     }
     every { channelEntity } returns mockk {
       every { function } returns channelFunction
-      every { remoteId } returns channelRemoteId
-    }
-    every { getLegacyChannel() } returns mockk {
       every { remoteId } returns channelRemoteId
     }
     every { channelValueEntity } returns mockk {
@@ -229,17 +238,29 @@ class CreateProfileChannelsListUseCaseTest {
       every { channelExtendedValueEntity } returns null
     }
 
-    whenever(getCaptionUseCase.invoke(shareable)).thenReturn(LocalizedString.Constant("caption $channelRemoteId"))
-    whenever(getChannelValueStringUseCase.valueOrNull(eq(ChannelWithChildren(this)), eq(ValueType.FIRST), eq(true)))
-      .thenReturn("value $channelRemoteId")
-    whenever(getChannelIconUseCase.invoke(this)).thenReturn(ImageId(channelRemoteId))
+    every {
+      getCaptionUseCase.invoke(match { it.remoteId == channelRemoteId })
+    } returns LocalizedString.Constant("caption $channelRemoteId")
+    every {
+      getChannelValueStringUseCase.valueOrNull(
+        channel = eq(ChannelWithChildren(this@mockk)),
+        valueType = eq(ValueType.FIRST),
+        withUnit = eq(true)
+      )
+    } returns "value $channelRemoteId"
+    every { getChannelIconUseCase.invoke(this@mockk) } returns ImageId(channelRemoteId)
   }
 
   private fun mockThermostatValue(): ThermostatValue = mockk {
+    val heatTemperature = 10.4f
+    val coolTemperature = 18.3f
     every { status } returns SuplaChannelAvailabilityStatus.ONLINE
     every { flags } returns emptyList()
     every { mode } returns SuplaHvacMode.OFF
-    every { setpointTemperatureHeat } returns 10.4f
-    every { setpointTemperatureCool } returns 18.3f
+    every { setpointTemperatureHeat } returns heatTemperature
+    every { setpointTemperatureCool } returns coolTemperature
+
+    every { valueFormatter.format(heatTemperature, ValueFormat.WithoutUnit) } returns "10.4"
+    every { valueFormatter.format(coolTemperature, ValueFormat.WithoutUnit) } returns "18.3"
   }
 }

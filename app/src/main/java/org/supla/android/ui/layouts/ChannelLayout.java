@@ -22,7 +22,6 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
-import android.os.CountDownTimer;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -39,26 +38,20 @@ import dagger.hilt.android.AndroidEntryPoint;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
-import java.util.Date;
 import javax.inject.Inject;
 import org.supla.android.Preferences;
 import org.supla.android.R;
 import org.supla.android.SuplaChannelStatus;
-import org.supla.android.SuplaWarningIcon;
+import org.supla.android.Trace;
 import org.supla.android.core.shared.LocalizedStringIdExtensionsKt;
 import org.supla.android.data.model.general.IconType;
-import org.supla.android.db.Channel;
 import org.supla.android.db.ChannelBase;
-import org.supla.android.db.ChannelExtendedValue;
 import org.supla.android.db.ChannelGroup;
 import org.supla.android.events.UpdateEventsManager;
 import org.supla.android.extensions.ContextExtensionsKt;
 import org.supla.android.images.ImageCache;
 import org.supla.android.images.ImageId;
-import org.supla.android.lib.SuplaChannelExtendedValue;
-import org.supla.android.lib.SuplaChannelValue;
 import org.supla.android.lib.SuplaConst;
-import org.supla.android.lib.SuplaTimerState;
 import org.supla.android.ui.lists.OnClick;
 import org.supla.android.ui.lists.SlideableItem;
 import org.supla.android.ui.lists.SwapableListItem;
@@ -74,10 +67,10 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
   @Inject DurationTimerHelper durationTimerHelper;
   @Inject GetGroupActivePercentageUseCase getGroupActivePercentageUseCase;
   @Inject GetChannelActionStringUseCase getChannelActionStringUseCase;
+  @Inject Preferences preferences;
 
-  private ChannelBase channelBase;
+  private int remoteId;
   private int mFunc;
-  private boolean mGroup;
 
   public String locationCaption;
 
@@ -95,21 +88,13 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
   private SuplaChannelStatus right_ActiveStatus;
   private SuplaChannelStatus left_onlineStatus;
   private ImageView channelStateIcon;
-  private SuplaWarningIcon channelWarningIcon;
 
   private boolean Anim;
 
   private boolean RightButtonEnabled;
   private boolean LeftButtonEnabled;
 
-  private boolean shouldUpdateChannelStateLayout;
-
-  private Preferences prefs;
-
   private Disposable changesDisposable = null;
-
-  private TextView durationTimer;
-  private CountDownTimer countDownTimer;
 
   @NonNull public OnClick onLeftButtonClick = () -> {};
   @NonNull public OnClick onRightButtonClick = () -> {};
@@ -142,17 +127,13 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
   }
 
   private void init(Context context) {
-    prefs = new Preferences(context);
     setOrientation(LinearLayout.HORIZONTAL);
-
     setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.surface, null));
 
     right_btn = new FrameLayout(context);
     left_btn = new FrameLayout(context);
 
-    shouldUpdateChannelStateLayout = true;
-
-    float heightScaleFactor = (prefs.getChannelHeight() + 0f) / 100f;
+    float heightScaleFactor = (preferences.getChannelHeight() + 0f) / 100f;
     int channelHeight =
         (int)
             (((float) getResources().getDimensionPixelSize(R.dimen.channel_layout_height))
@@ -194,11 +175,6 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
     left_onlineStatus.setId(View.generateViewId());
     content.addView(left_onlineStatus);
 
-    durationTimer = durationTimerHelper.createTimerView(context, heightScaleFactor);
-    content.addView(durationTimer);
-    durationTimer.setLayoutParams(
-        durationTimerHelper.getTimerViewLayoutParams(context, heightScaleFactor));
-
     RelativeLayout channelIconContainer = new RelativeLayout(context);
     content.addView(channelIconContainer);
     channelIconContainer.setLayoutParams(getChannelIconContainerLayoutParams());
@@ -207,11 +183,6 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
     channelStateIcon.setId(View.generateViewId());
     content.addView(channelStateIcon);
     channelStateIcon.setLayoutParams(getChannelStateImageLayoutParams());
-
-    channelWarningIcon = new SuplaWarningIcon(context);
-    channelWarningIcon.setId(View.generateViewId());
-    content.addView(channelWarningIcon);
-    channelWarningIcon.setLayoutParams(getChannelWarningImageLayoutParams());
 
     right_ActiveStatus = new SuplaChannelStatus(context);
     right_ActiveStatus.setSingleColor(true);
@@ -268,21 +239,12 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
       changesDisposable.dispose();
     }
 
-    if (mGroup) {
-      changesDisposable =
-          eventsManager
-              .observeGroup(channelBase.getRemoteId())
-              .observeOn(AndroidSchedulers.mainThread())
-              .subscribeOn(Schedulers.io())
-              .subscribe(this::configureBasedOnData);
-    } else {
-      changesDisposable =
-          eventsManager
-              .observeChannel(channelBase.getRemoteId())
-              .observeOn(AndroidSchedulers.mainThread())
-              .subscribeOn(Schedulers.io())
-              .subscribe(this::configureBasedOnData);
-    }
+    changesDisposable =
+        eventsManager
+            .observeGroup(remoteId)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .subscribe(this::configureBasedOnData);
   }
 
   private RelativeLayout.LayoutParams getChannelIconContainerLayoutParams() {
@@ -315,9 +277,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
 
     int dot_size = getResources().getDimensionPixelSize(R.dimen.channel_dot_size);
 
-    RelativeLayout.LayoutParams lp =
-        new RelativeLayout.LayoutParams(
-            mGroup ? dot_size / 2 : dot_size, mGroup ? dot_size * 2 : dot_size);
+    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(dot_size / 2, dot_size * 2);
 
     int margin = getResources().getDimensionPixelSize(R.dimen.list_horizontal_spacing);
 
@@ -347,20 +307,6 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
 
     lp.addRule(RelativeLayout.RIGHT_OF, left_onlineStatus.getId());
     lp.addRule(RelativeLayout.END_OF, left_onlineStatus.getId());
-    lp.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
-    return lp;
-  }
-
-  protected RelativeLayout.LayoutParams getChannelWarningImageLayoutParams() {
-
-    int size = getResources().getDimensionPixelSize(R.dimen.channel_warning_image_size);
-    int margin = getResources().getDimensionPixelSize(R.dimen.distance_default);
-
-    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(size, size);
-    lp.rightMargin = margin;
-
-    lp.addRule(RelativeLayout.LEFT_OF, right_onlineStatus.getId());
-    lp.addRule(RelativeLayout.START_OF, right_onlineStatus.getId());
     lp.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
     return lp;
   }
@@ -579,7 +525,13 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
   }
 
   public void setChannelData(ChannelBase cbase) {
-    configureBasedOnData(cbase);
+    if (cbase instanceof ChannelGroup) {
+      configureBasedOnData((ChannelGroup) cbase);
+    } else {
+      Trace.e(
+          ChannelLayout.class.getSimpleName(),
+          "Channel layout used with something different from ChannelGroup!");
+    }
     observeChanges();
   }
 
@@ -587,176 +539,50 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
     this.locationCaption = locationCaption;
   }
 
-  private void configureBasedOnData(ChannelBase cbase) {
-    int OldFunc = mFunc;
-    mFunc = cbase.getFunc();
-    boolean OldGroup = mGroup;
-    mGroup = cbase instanceof ChannelGroup;
+  private void configureBasedOnData(ChannelGroup channelGroup) {
+    mFunc = channelGroup.getFunc();
+    remoteId = channelGroup.getRemoteId();
 
     imgl.setImage(
-        ContextExtensionsKt.getGetChannelIconUseCase(getContext()).invoke(cbase, IconType.SINGLE),
-        ContextExtensionsKt.getGetChannelIconUseCase(getContext()).invoke(cbase, IconType.SECOND));
+        ContextExtensionsKt.getGetChannelIconUseCase(getContext())
+            .invoke(channelGroup, IconType.SINGLE),
+        ContextExtensionsKt.getGetChannelIconUseCase(getContext())
+            .invoke(channelGroup, IconType.SECOND));
 
-    imgl.setText1(cbase.getHumanReadableValue());
-    imgl.setText2(cbase.getHumanReadableValue(ChannelBase.WhichOne.Second));
+    imgl.setText1(channelGroup.getHumanReadableValue());
+    imgl.setText2(null);
 
     channelStateIcon.setVisibility(INVISIBLE);
-    channelWarningIcon.setChannel(cbase);
 
-    boolean isMeasurementChannel =
-        !mGroup
-            && (((Channel) cbase).getValue().getSubValueType()
-                    == SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS
-                || ((Channel) cbase).getValue().getSubValueType()
-                    == SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS);
-    boolean wasMeasurementChannel =
-        !mGroup
-            && channelBase != null
-            && (((Channel) channelBase).getValue().getSubValueType()
-                    == SuplaChannelValue.SUBV_TYPE_IC_MEASUREMENTS
-                || ((Channel) channelBase).getValue().getSubValueType()
-                    == SuplaChannelValue.SUBV_TYPE_ELECTRICITY_MEASUREMENTS);
+    SuplaChannelStatus.ShapeType shapeType = SuplaChannelStatus.ShapeType.LinearVertical;
 
-    if (OldFunc != mFunc || isMeasurementChannel != wasMeasurementChannel) {
-      imgl.SetDimensions();
-      shouldUpdateChannelStateLayout = true;
-    }
+    left_onlineStatus.setLayoutParams(getOnlineStatusLayoutParams(false));
+    right_onlineStatus.setLayoutParams(getOnlineStatusLayoutParams(true));
 
-    channelBase = cbase;
-
-    {
-      SuplaChannelStatus.ShapeType shapeType =
-          mGroup ? SuplaChannelStatus.ShapeType.LinearVertical : SuplaChannelStatus.ShapeType.Dot;
-
-      if (mGroup != OldGroup) {
-        left_onlineStatus.setLayoutParams(getOnlineStatusLayoutParams(false));
-        right_onlineStatus.setLayoutParams(getOnlineStatusLayoutParams(true));
-      }
-
-      left_onlineStatus.setPercent(cbase.getOnLinePercent());
-      left_onlineStatus.setShapeType(shapeType);
-      right_onlineStatus.setPercent(cbase.getOnLinePercent());
-      right_onlineStatus.setShapeType(shapeType);
-    }
+    left_onlineStatus.setPercent(channelGroup.getOnLinePercent());
+    left_onlineStatus.setShapeType(shapeType);
+    right_onlineStatus.setPercent(channelGroup.getOnLinePercent());
+    right_onlineStatus.setShapeType(shapeType);
 
     int activePercent;
 
-    if (mGroup
-        && (activePercent = getGroupActivePercentageUseCase.invoke((ChannelGroup) cbase, 0)) >= 0) {
+    if ((activePercent = getGroupActivePercentageUseCase.invoke(channelGroup, 0)) >= 0) {
       right_ActiveStatus.setVisibility(View.VISIBLE);
       right_ActiveStatus.setPercent(activePercent);
-    } else {
-      right_ActiveStatus.setVisibility(View.GONE);
-      int stateIcon = 0;
-
-      if (cbase instanceof Channel && prefs.isShowChannelInfo()) {
-        stateIcon = ((Channel) cbase).getChannelStateIcon();
-      }
-
-      if (stateIcon != 0) {
-        channelStateIcon.setImageResource(stateIcon);
-        if (shouldUpdateChannelStateLayout) {
-          channelStateIcon.setLayoutParams(getChannelStateImageLayoutParams());
-          shouldUpdateChannelStateLayout = false;
-        }
-        channelStateIcon.setVisibility(VISIBLE);
-      }
     }
 
-    {
-      LocalizedStringId left =
-          getChannelActionStringUseCase.leftButton(SuplaFunction.Companion.from(mFunc));
-      int lidx = left != null ? LocalizedStringIdExtensionsKt.getResourceId(left) : -1;
-      LocalizedStringId right =
-          getChannelActionStringUseCase.rightButton(SuplaFunction.Companion.from(mFunc));
-      int ridx = right != null ? LocalizedStringIdExtensionsKt.getResourceId(right) : -1;
+    LocalizedStringId left =
+        getChannelActionStringUseCase.leftButton(SuplaFunction.Companion.from(mFunc));
+    int lidx = left != null ? LocalizedStringIdExtensionsKt.getResourceId(left) : -1;
+    LocalizedStringId right =
+        getChannelActionStringUseCase.rightButton(SuplaFunction.Companion.from(mFunc));
+    int ridx = right != null ? LocalizedStringIdExtensionsKt.getResourceId(right) : -1;
 
-      setRightBtnText(ridx == -1 ? "" : getResources().getString(ridx));
-      setLeftBtnText(lidx == -1 ? "" : getResources().getString(lidx));
-    }
+    setRightBtnText(ridx == -1 ? "" : getResources().getString(ridx));
+    setLeftBtnText(lidx == -1 ? "" : getResources().getString(lidx));
 
-    {
-      boolean lenabled = false;
-      boolean renabled = false;
-
-      switch (mFunc) {
-        case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE:
-        case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR:
-        case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK:
-        case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK:
-          left_onlineStatus.setVisibility(View.INVISIBLE);
-          right_onlineStatus.setVisibility(View.VISIBLE);
-
-          renabled = true;
-
-          break;
-        case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
-        case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
-        case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
-        case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
-        case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING:
-        case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
-        case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
-        case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
-          left_onlineStatus.setVisibility(View.VISIBLE);
-          right_onlineStatus.setVisibility(View.VISIBLE);
-
-          lenabled = true;
-          renabled = true;
-
-          break;
-
-        case SuplaConst.SUPLA_CHANNELFNC_NOLIQUIDSENSOR:
-        case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_DOOR:
-        case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GARAGEDOOR:
-        case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATE:
-        case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATEWAY:
-        case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROLLERSHUTTER:
-        case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROOFWINDOW:
-        case SuplaConst.SUPLA_CHANNELFNC_OPENINGSENSOR_WINDOW:
-        case SuplaConst.SUPLA_CHANNELFNC_HOTELCARDSENSOR:
-        case SuplaConst.SUPLA_CHANNELFNC_ALARMARMAMENTSENSOR:
-        case SuplaConst.SUPLA_CHANNELFNC_MAILSENSOR:
-        case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
-          left_onlineStatus.setVisibility(View.VISIBLE);
-          left_onlineStatus.setShapeType(SuplaChannelStatus.ShapeType.Ring);
-          right_onlineStatus.setVisibility(View.VISIBLE);
-          right_onlineStatus.setShapeType(SuplaChannelStatus.ShapeType.Ring);
-
-          break;
-
-        case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
-        case SuplaConst.SUPLA_CHANNELFNC_IC_ELECTRICITY_METER:
-        case SuplaConst.SUPLA_CHANNELFNC_IC_GAS_METER:
-        case SuplaConst.SUPLA_CHANNELFNC_IC_WATER_METER:
-        case SuplaConst.SUPLA_CHANNELFNC_IC_HEAT_METER:
-        case SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE:
-        case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL:
-        case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL:
-          left_onlineStatus.setVisibility(View.INVISIBLE);
-          right_onlineStatus.setVisibility(View.VISIBLE);
-          break;
-
-        case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
-        case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW:
-        case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND:
-          lenabled = true;
-          renabled = true;
-
-          left_onlineStatus.setVisibility(View.INVISIBLE);
-          right_onlineStatus.setVisibility(View.VISIBLE);
-          break;
-
-        default:
-          left_onlineStatus.setVisibility(View.INVISIBLE);
-          right_onlineStatus.setVisibility(View.INVISIBLE);
-          break;
-      }
-
-      setLeftButtonEnabled(lenabled && cbase.getOnLine());
-      setRightButtonEnabled(renabled && cbase.getOnLine());
-    }
-    caption_text.setText(cbase.getCaption(getContext()));
+    setupStatus(mFunc, channelGroup.getOnLine());
+    caption_text.setText(channelGroup.getCaption(getContext()));
 
     caption_text.setOnLongClickListener(
         v -> {
@@ -766,65 +592,97 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
     caption_text.setOnClickListener(v -> onItemClick.onClick());
     caption_text.setClickable(false);
     caption_text.setLongClickable(true);
-
-    setupTimer(cbase);
   }
 
-  private void setupTimer(ChannelBase cbase) {
-    if (!(cbase instanceof Channel)) {
-      return;
+  private void setupStatus(int function, boolean online) {
+    boolean lenabled = false;
+    boolean renabled = false;
+
+    switch (function) {
+      case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATE:
+      case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGARAGEDOOR:
+      case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEDOORLOCK:
+      case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEGATEWAYLOCK:
+        left_onlineStatus.setVisibility(View.INVISIBLE);
+        right_onlineStatus.setVisibility(View.VISIBLE);
+
+        renabled = true;
+
+        break;
+      case SuplaConst.SUPLA_CHANNELFNC_POWERSWITCH:
+      case SuplaConst.SUPLA_CHANNELFNC_LIGHTSWITCH:
+      case SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER:
+      case SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE:
+      case SuplaConst.SUPLA_CHANNELFNC_RGBLIGHTING:
+      case SuplaConst.SUPLA_CHANNELFNC_DIMMER:
+      case SuplaConst.SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING:
+      case SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS:
+        left_onlineStatus.setVisibility(View.VISIBLE);
+        right_onlineStatus.setVisibility(View.VISIBLE);
+
+        lenabled = true;
+        renabled = true;
+
+        break;
+
+      case SuplaConst.SUPLA_CHANNELFNC_NOLIQUIDSENSOR:
+      case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_DOOR:
+      case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GARAGEDOOR:
+      case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATE:
+      case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_GATEWAY:
+      case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROLLERSHUTTER:
+      case SuplaConst.SUPLA_CHANNELFNC_OPENSENSOR_ROOFWINDOW:
+      case SuplaConst.SUPLA_CHANNELFNC_OPENINGSENSOR_WINDOW:
+      case SuplaConst.SUPLA_CHANNELFNC_HOTELCARDSENSOR:
+      case SuplaConst.SUPLA_CHANNELFNC_ALARMARMAMENTSENSOR:
+      case SuplaConst.SUPLA_CHANNELFNC_MAILSENSOR:
+      case SuplaConst.SUPLA_CHANNELFNC_THERMOMETER:
+        left_onlineStatus.setVisibility(View.VISIBLE);
+        left_onlineStatus.setShapeType(SuplaChannelStatus.ShapeType.Ring);
+        right_onlineStatus.setVisibility(View.VISIBLE);
+        right_onlineStatus.setShapeType(SuplaChannelStatus.ShapeType.Ring);
+
+        break;
+
+      case SuplaConst.SUPLA_CHANNELFNC_ELECTRICITY_METER:
+      case SuplaConst.SUPLA_CHANNELFNC_IC_ELECTRICITY_METER:
+      case SuplaConst.SUPLA_CHANNELFNC_IC_GAS_METER:
+      case SuplaConst.SUPLA_CHANNELFNC_IC_WATER_METER:
+      case SuplaConst.SUPLA_CHANNELFNC_IC_HEAT_METER:
+      case SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE:
+      case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_VERTICAL:
+      case SuplaConst.SUPLA_CHANNELFNC_DIGIGLASS_HORIZONTAL:
+        left_onlineStatus.setVisibility(View.INVISIBLE);
+        right_onlineStatus.setVisibility(View.VISIBLE);
+        break;
+
+      case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROLLERSHUTTER:
+      case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEROOFWINDOW:
+      case SuplaConst.SUPLA_CHANNELFNC_CONTROLLINGTHEFACADEBLIND:
+        lenabled = true;
+        renabled = true;
+
+        left_onlineStatus.setVisibility(View.INVISIBLE);
+        right_onlineStatus.setVisibility(View.VISIBLE);
+        break;
+
+      default:
+        left_onlineStatus.setVisibility(View.INVISIBLE);
+        right_onlineStatus.setVisibility(View.INVISIBLE);
+        break;
     }
 
-    if (countDownTimer != null) {
-      countDownTimer.cancel();
-      durationTimer.setVisibility(GONE);
-    }
-
-    ChannelExtendedValue extendedValue = ((Channel) cbase).getExtendedValue();
-    if (extendedValue == null) {
-      return;
-    }
-    SuplaChannelExtendedValue suplaExtendedValue = extendedValue.getExtendedValue();
-    if (suplaExtendedValue == null) {
-      return;
-    }
-    SuplaTimerState timerState = suplaExtendedValue.TimerStateValue;
-    if (timerState == null) {
-      return;
-    }
-    Date endsAt = timerState.getCountdownEndsAt();
-    if (endsAt == null) {
-      return;
-    }
-    Date now = new Date();
-    if (endsAt.before(now)) {
-      return;
-    }
-    Long leftTime = endsAt.getTime() - now.getTime();
-
-    durationTimer.setVisibility(VISIBLE);
-    countDownTimer =
-        new CountDownTimer(leftTime, 100) {
-          @Override
-          public void onTick(long millisUntilFinished) {
-            durationTimer.setText(durationTimerHelper.formatMillis(millisUntilFinished));
-          }
-
-          @Override
-          public void onFinish() {
-            countDownTimer = null;
-            durationTimer.setVisibility(GONE);
-          }
-        };
-    countDownTimer.start();
+    setLeftButtonEnabled(lenabled && online);
+    setRightButtonEnabled(renabled && online);
   }
 
   private static class AnimParams {
+
     public int content_left;
     public int content_right;
   }
 
-  class CaptionView extends androidx.appcompat.widget.AppCompatTextView {
+  static class CaptionView extends androidx.appcompat.widget.AppCompatTextView {
 
     public CaptionView(Context context, int imgl_id, float heightScaleFactor) {
       super(context);
@@ -860,7 +718,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
     private ImageId Img2Id;
     private final TextView Text1;
     private final TextView Text2;
-    private float heightScaleFactor = 1f;
+    private final float heightScaleFactor;
     private int mOldFunc;
 
     public ChannelImageLayout(Context context, float heightScaleFactor) {

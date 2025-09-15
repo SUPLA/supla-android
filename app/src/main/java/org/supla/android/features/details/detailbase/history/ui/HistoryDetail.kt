@@ -87,9 +87,9 @@ import org.supla.android.ui.views.spinner.SpinnerItem
 import org.supla.android.ui.views.spinner.TextSpinner
 import org.supla.android.ui.views.tools.Shadow
 import org.supla.android.ui.views.tools.ShadowOrientation
-import org.supla.android.usecases.channel.valueformatter.HumidityValueFormatter
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.infrastructure.localizedString
+import org.supla.core.shared.usecase.channel.valueformatter.formatters.HumidityValueFormatter
 import java.util.Date
 
 interface HistoryDetailProxy : BaseViewProxy<HistoryDetailViewState> {

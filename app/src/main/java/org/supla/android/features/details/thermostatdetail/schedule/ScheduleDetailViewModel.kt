@@ -31,7 +31,6 @@ import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
-import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.model.temperature.TemperatureCorrection
 import org.supla.android.data.source.local.calendar.DayOfWeek
 import org.supla.android.data.source.local.calendar.QuarterOfHour
@@ -46,11 +45,11 @@ import org.supla.android.data.source.remote.hvac.SuplaWeeklyScheduleEntry
 import org.supla.android.data.source.remote.hvac.SuplaWeeklyScheduleProgram
 import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
 import org.supla.android.data.source.remote.isAutomaticTimeSyncDisabled
+import org.supla.android.di.FORMATTER_THERMOMETER
 import org.supla.android.events.ChannelConfigEventsManager
 import org.supla.android.events.DeviceConfigEventsManager
 import org.supla.android.events.LoadingTimeoutManager
 import org.supla.android.extensions.TAG
-import org.supla.android.extensions.guardLet
 import org.supla.android.extensions.toSuplaTemperature
 import org.supla.android.features.details.thermostatdetail.schedule.data.ProgramSettingsData
 import org.supla.android.features.details.thermostatdetail.schedule.data.QuartersSelectionData
@@ -65,10 +64,14 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.core.shared.data.model.general.SuplaFunction
+import org.supla.core.shared.extensions.guardLet
 import org.supla.core.shared.extensions.ifFalse
+import org.supla.core.shared.usecase.channel.valueformatter.DefaultValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
 import java.util.Calendar
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import javax.inject.Named
 
 private const val REFRESH_DELAY_MS = 3000L
 private const val DEFAULT_HEAT_TEMPERATURE = 21f
@@ -82,9 +85,9 @@ class ScheduleDetailViewModel @Inject constructor(
   private val applicationPreferences: ApplicationPreferences,
   private val loadingTimeoutManager: LoadingTimeoutManager,
   private val suplaClientProvider: SuplaClientProvider,
-  private val valuesFormatter: ValuesFormatter,
   private val dateProvider: DateProvider,
   private val preferences: Preferences,
+  @Named(FORMATTER_THERMOMETER) private val thermometerValueFormatter: ValueFormatter,
   schedulers: SuplaSchedulers
 ) : BaseViewModel<ScheduleDetailViewState, ScheduleDetailViewEvent>(ScheduleDetailViewState(), schedulers), ScheduleDetailViewProxy {
 
@@ -260,7 +263,7 @@ class ScheduleDetailViewModel @Inject constructor(
     changeProgramTemperature(
       programMode,
       modeForTemperature,
-      { valuesFormatter.getTemperatureString(it.toDouble(), withDegree = false) },
+      { DefaultValueFormatter.format(it.toDouble()) },
       { it.plus(correction.step()) },
       true
     )
@@ -437,8 +440,8 @@ class ScheduleDetailViewModel @Inject constructor(
           selectedMode = programBox.modeForModify,
           setpointTemperatureHeat = heatTemperature,
           setpointTemperatureCool = coolTemperature,
-          setpointTemperatureHeatString = valuesFormatter.getTemperatureString(heatTemperature, withDegree = false),
-          setpointTemperatureCoolString = valuesFormatter.getTemperatureString(coolTemperature, withDegree = false),
+          setpointTemperatureHeatString = thermometerValueFormatter.format(heatTemperature),
+          setpointTemperatureCoolString = thermometerValueFormatter.format(coolTemperature),
           setpointTemperatureCoolPlusAllowed = coolTemperature < state.configTemperatureMax,
           setpointTemperatureCoolMinusAllowed = coolTemperature > state.configTemperatureMin,
           setpointTemperatureHeatPlusAllowed = heatTemperature < state.configTemperatureMax,

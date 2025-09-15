@@ -18,10 +18,8 @@ package org.supla.android.ui.lists
  */
 
 import androidx.annotation.DrawableRes
-import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.source.local.entity.LocationEntity
-import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.SceneDataEntity
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
@@ -29,6 +27,7 @@ import org.supla.android.images.ImageId
 import org.supla.android.ui.lists.data.SlideableListItemData
 import org.supla.core.shared.data.model.lists.ListItemIssues
 import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.usecase.channel.valueformatter.NO_VALUE_TEXT
 import java.util.Date
 
 sealed interface ListItem {
@@ -83,7 +82,6 @@ sealed interface ListItem {
 
   class ChannelItem(
     override var channelBase: ChannelDataBase,
-    val children: List<ChannelChildEntity>? = null,
     val legacyBase: org.supla.android.db.ChannelBase
   ) : ChannelBasedItem(channelBase)
 
@@ -106,9 +104,34 @@ sealed interface ListItem {
         icon = icon,
         issues = issues,
         estimatedTimerEndDate = estimatedTimerEndDate,
-        value = value ?: ValuesFormatter.NO_VALUE_TEXT,
+        value = value ?: NO_VALUE_TEXT,
         subValue = subValue,
         indicatorIcon = indicatorIcon,
+        infoSupported = SuplaChannelFlag.CHANNEL_STATE.inside(channel.flags)
+      )
+    }
+  }
+
+  class HeatpolThermostatItem(
+    channel: ChannelDataEntity,
+    locationCaption: String,
+    online: ListOnlineState,
+    captionProvider: LocalizedString,
+    icon: ImageId,
+    value: String?,
+    issues: ListItemIssues,
+    private val subValue: String,
+  ) : DefaultItem(channel, locationCaption, online, captionProvider, icon, value, issues) {
+    override fun toSlideableListItemData(): SlideableListItemData {
+      return SlideableListItemData.Thermostat(
+        onlineState = online,
+        title = captionProvider,
+        icon = icon,
+        issues = issues,
+        estimatedTimerEndDate = null,
+        value = value ?: NO_VALUE_TEXT,
+        subValue = subValue,
+        indicatorIcon = null,
         infoSupported = SuplaChannelFlag.CHANNEL_STATE.inside(channel.flags)
       )
     }
@@ -131,7 +154,7 @@ sealed interface ListItem {
         title = captionProvider,
         icon = icon,
         issues = issues,
-        value = value ?: ValuesFormatter.NO_VALUE_TEXT,
+        value = value ?: NO_VALUE_TEXT,
         infoSupported = SuplaChannelFlag.CHANNEL_STATE.inside(channel.flags),
         secondIcon = secondIcon,
         secondValue = secondValue

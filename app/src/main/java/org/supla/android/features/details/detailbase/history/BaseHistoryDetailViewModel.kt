@@ -58,7 +58,6 @@ import org.supla.android.extensions.TAG
 import org.supla.android.extensions.beginOfNextHour
 import org.supla.android.extensions.dayEnd
 import org.supla.android.extensions.dayStart
-import org.supla.android.extensions.guardLet
 import org.supla.android.extensions.hour
 import org.supla.android.extensions.monthEnd
 import org.supla.android.extensions.monthStart
@@ -85,6 +84,7 @@ import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
 import org.supla.android.usecases.migration.GroupingStringMigrationUseCase
 import org.supla.core.shared.data.model.rest.channel.ChannelDto
 import org.supla.core.shared.data.model.rest.channel.DefaultChannelDto
+import org.supla.core.shared.extensions.guardLet
 import java.util.Calendar
 import java.util.Date
 import java.util.TimeZone

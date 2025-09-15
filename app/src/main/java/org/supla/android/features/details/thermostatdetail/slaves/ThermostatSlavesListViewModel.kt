@@ -25,8 +25,6 @@ import org.supla.android.core.shared.shareable
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
-import org.supla.android.data.ValuesFormatter
-import org.supla.android.data.ValuesFormatter.Companion.NO_VALUE_TEXT
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.shareable
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
@@ -35,6 +33,7 @@ import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.data.source.remote.thermostat.getIndicatorIcon
 import org.supla.android.data.source.remote.thermostat.getSetpointText
 import org.supla.android.data.source.runtime.ItemType
+import org.supla.android.di.FORMATTER_THERMOMETER
 import org.supla.android.features.details.detailbase.standarddetail.DetailPage
 import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
 import org.supla.android.tools.SuplaSchedulers
@@ -45,15 +44,18 @@ import org.supla.core.shared.data.model.channel.ChannelRelationType
 import org.supla.core.shared.extensions.ifTrue
 import org.supla.core.shared.usecase.GetCaptionUseCase
 import org.supla.core.shared.usecase.channel.GetChannelIssuesForSlavesUseCase
+import org.supla.core.shared.usecase.channel.valueformatter.NO_VALUE_TEXT
+import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
 import javax.inject.Inject
+import javax.inject.Named
 
 @HiltViewModel
 class ThermostatSlavesListViewModel @Inject constructor(
+  @Named(FORMATTER_THERMOMETER) private val thermometerValueFormatter: ValueFormatter,
   private val readChannelWithChildrenTreeUseCase: ReadChannelWithChildrenTreeUseCase,
   private val getChannelIssuesForSlavesUseCase: GetChannelIssuesForSlavesUseCase,
   private val getChannelValueStringUseCase: GetChannelValueStringUseCase,
   private val getChannelIconUseCase: GetChannelIconUseCase,
-  private val valuesFormatter: ValuesFormatter,
   private val preferences: Preferences,
   val getCaptionUseCase: GetCaptionUseCase,
   val dateProvider: DateProvider,
@@ -132,7 +134,7 @@ class ThermostatSlavesListViewModel @Inject constructor(
       indicatorIcon = thermostatValue.getIndicatorIcon(),
       channelIssueItem = getChannelIssuesForSlavesUseCase(shareable),
       showChannelStateIcon = SuplaChannelFlag.CHANNEL_STATE inside channel.flags,
-      subValue = withSetpointValue.ifTrue { thermostatValue.getSetpointText(valuesFormatter) },
+      subValue = withSetpointValue.ifTrue { thermostatValue.getSetpointText(thermometerValueFormatter) },
       pumpSwitchIcon = pumpSwitchChild?.let { getChannelIconUseCase(it.channelDataEntity) },
       sourceSwitchIcon = heatOrColdSourceSwitchChild?.let { getChannelIconUseCase(it.channelDataEntity) }
     )
@@ -155,7 +157,7 @@ class ThermostatSlavesListViewModel @Inject constructor(
       indicatorIcon = thermostatValue.getIndicatorIcon(),
       channelIssueItem = getChannelIssuesForSlavesUseCase(channelDataEntity.shareable),
       showChannelStateIcon = SuplaChannelFlag.CHANNEL_STATE inside channel.flags,
-      subValue = withSetpointValue.ifTrue { thermostatValue.getSetpointText(valuesFormatter) },
+      subValue = withSetpointValue.ifTrue { thermostatValue.getSetpointText(thermometerValueFormatter) },
       pumpSwitchIcon = pumpSwitchChild?.let { getChannelIconUseCase(it.channelDataEntity) },
       sourceSwitchIcon = heatOrColdSourceSwitchChild?.let { getChannelIconUseCase(it.channelDataEntity) }
     )

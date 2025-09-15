@@ -23,7 +23,7 @@ import androidx.compose.ui.res.stringResource
 import org.supla.android.R
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
-import org.supla.android.data.source.runtime.appsettings.TemperatureUnit
+import org.supla.core.shared.data.model.thermometer.TemperatureUnit
 
 data class ProgramSettingsData(
   val program: SuplaScheduleProgram,

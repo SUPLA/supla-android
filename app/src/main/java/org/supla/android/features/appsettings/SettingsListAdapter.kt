@@ -27,7 +27,6 @@ import org.supla.android.R
 import org.supla.android.data.model.general.LockScreenScope
 import org.supla.android.data.model.general.NightModeSetting
 import org.supla.android.data.source.runtime.appsettings.ChannelHeight
-import org.supla.android.data.source.runtime.appsettings.TemperatureUnit
 import org.supla.android.databinding.LiSettingsArrowButtonBinding
 import org.supla.android.databinding.LiSettingsChannelHeightBinding
 import org.supla.android.databinding.LiSettingsEditTextBinding
@@ -39,6 +38,7 @@ import org.supla.android.databinding.LiSettingsRollerShutterBinding
 import org.supla.android.databinding.LiSettingsSwitchBinding
 import org.supla.android.databinding.LiSettingsTemperaturePrecisionBinding
 import org.supla.android.databinding.LiSettingsTemperatureUnitBinding
+import org.supla.core.shared.data.model.thermometer.TemperatureUnit
 import java.text.DecimalFormatSymbols
 import javax.inject.Inject
 

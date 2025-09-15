@@ -48,7 +48,10 @@ import org.supla.android.data.model.chart.datatype.CombinedChartData
 import org.supla.android.data.model.chart.style.ChartStyle
 import org.supla.android.data.model.chart.style.HumidityChartStyle
 import org.supla.android.extensions.toPx
-import org.supla.android.usecases.channel.valueformatter.HumidityValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.formatters.HumidityValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.types.ValueFormat
+import org.supla.core.shared.usecase.channel.valueformatter.types.ValuePrecision.Companion.exact
+import org.supla.core.shared.usecase.channel.valueformatter.types.custom
 import java.util.Date
 
 @Composable
@@ -135,7 +138,14 @@ fun CombinedChart(
       chart.axisLeft.valueFormatter = object : ValueFormatter() {
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
           val withUnit = chartStyle is HumidityChartStyle
-          return data.leftAxisFormatter.formatChartLabel(value.toDouble(), chart.axisLeft.mDecimals, withUnit = withUnit)
+          return data.leftAxisFormatter.format(
+            value = value.toDouble(),
+            format = ValueFormat(
+              withUnit = withUnit,
+              precision = custom(exact(chart.axisLeft.mDecimals)),
+              showNoValueText = false
+            )
+          )
         }
       }
       chart.axisLeft.isEnabled = withLeftAxis
@@ -156,7 +166,14 @@ fun CombinedChart(
       chart.axisRight.valueFormatter = object : ValueFormatter() {
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
           val withUnit = data.rightAxisFormatter is HumidityValueFormatter
-          return data.rightAxisFormatter.formatChartLabel(value.toDouble(), chart.axisRight.mDecimals, withUnit = withUnit)
+          return data.rightAxisFormatter.format(
+            value = value.toDouble(),
+            format = ValueFormat(
+              withUnit = withUnit,
+              precision = custom(exact(chart.axisRight.mDecimals)),
+              showNoValueText = false
+            )
+          )
         }
       }
       chart.axisRight.isEnabled = withRightAxis

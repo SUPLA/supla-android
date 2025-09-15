@@ -22,9 +22,8 @@ import org.supla.android.data.source.remote.electricitymeter.hasReverseEnergy
 import org.supla.android.lib.SuplaChannelElectricityMeterValue
 import org.supla.android.lib.SuplaChannelImpulseCounterValue
 import org.supla.android.ui.views.card.SummaryCardData
-import org.supla.android.usecases.channel.valueformatter.ImpulseCounterValueFormatter
-import org.supla.android.usecases.channel.valueformatter.ListElectricityMeterValueFormatter
 import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
 
 sealed interface SummarizedMeasurements
 
@@ -33,7 +32,7 @@ data class ElectricityMeasurements(
   val reversedActiveEnergy: Float
 ) : SummarizedMeasurements {
   fun toForwardEnergy(
-    formatter: ListElectricityMeterValueFormatter,
+    formatter: ValueFormatter,
     electricityMeterValue: SuplaChannelElectricityMeterValue? = null
   ): SummaryCardData? =
     if (electricityMeterValue != null) {
@@ -45,7 +44,7 @@ data class ElectricityMeasurements(
     }
 
   fun toReverseEnergy(
-    formatter: ListElectricityMeterValueFormatter,
+    formatter: ValueFormatter,
     electricityMeterValue: SuplaChannelElectricityMeterValue? = null
   ): SummaryCardData? =
     if (electricityMeterValue != null) {
@@ -59,11 +58,10 @@ data class ImpulseCounterMeasurements(
   val counter: Float
 ) : SummarizedMeasurements {
   fun toSummaryCardData(
-    formatter: ImpulseCounterValueFormatter,
+    formatter: ValueFormatter,
     impulseCounterValue: SuplaChannelImpulseCounterValue? = null
   ): SummaryCardData =
     impulseCounterValue?.let {
-      val unit = impulseCounterValue.unit?.let { ImpulseCounterValueFormatter.Data(it) }
-      SummaryCardData(formatter, counter.toDouble(), impulseCounterValue.pricePerUnit, impulseCounterValue.currency, unit)
+      SummaryCardData(formatter, counter.toDouble(), impulseCounterValue.pricePerUnit, impulseCounterValue.currency)
     } ?: SummaryCardData(formatter.format(counter.toDouble()))
 }

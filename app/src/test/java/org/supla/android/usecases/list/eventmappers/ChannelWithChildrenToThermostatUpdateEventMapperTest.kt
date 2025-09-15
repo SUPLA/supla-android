@@ -18,18 +18,16 @@ package org.supla.android.usecases.list.eventmappers
  */
 
 import com.google.gson.Gson
+import io.mockk.MockKAnnotations
 import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.whenever
 import org.supla.android.R
 import org.supla.android.core.shared.shareable
-import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.shareable
@@ -56,30 +54,37 @@ import org.supla.core.shared.data.model.lists.ListItemIssues
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.usecase.GetCaptionUseCase
 import org.supla.core.shared.usecase.channel.GetChannelIssuesForListUseCase
+import org.supla.core.shared.usecase.channel.valueformatter.NO_VALUE_TEXT
+import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.types.ValueFormat
 
-@RunWith(MockitoJUnitRunner::class)
 class ChannelWithChildrenToThermostatUpdateEventMapperTest {
 
-  @Mock
+  @MockK
   private lateinit var getCaptionUseCase: GetCaptionUseCase
 
-  @Mock
+  @MockK
   private lateinit var getChannelIconUseCase: GetChannelIconUseCase
 
-  @Mock
+  @MockK
   private lateinit var getChannelValueStringUseCase: GetChannelValueStringUseCase
 
-  @Mock
+  @MockK
   private lateinit var getChannelIssuesForListUseCase: GetChannelIssuesForListUseCase
 
-  @Mock
-  lateinit var valuesFormatter: ValuesFormatter
+  @MockK
+  lateinit var valueFormatter: ValueFormatter
 
-  @Mock
+  @MockK
   private lateinit var gson: Gson
 
-  @InjectMocks
+  @InjectMockKs
   lateinit var mapper: ChannelWithChildrenToThermostatUpdateEventMapper
+
+  @Before
+  fun setup() {
+    MockKAnnotations.init(this)
+  }
 
   @Test
   fun `should handle channel with children`() {
@@ -144,6 +149,7 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
     }
     val channel = mockk<ChannelDataEntity> {
       every { remoteId } returns 123
+      every { altIcon } returns 0
       every { this@mockk.caption } returns captionString
       every { function } returns SuplaFunction.HVAC_THERMOSTAT
       every { status } returns SuplaChannelAvailabilityStatus.ONLINE
@@ -165,12 +171,12 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
     val channelWithChildren = ChannelWithChildren(channel, listOf(thermometerChild))
 
     val channelShareable = channel.shareable
-    whenever(getCaptionUseCase.invoke(channelShareable)).thenReturn(caption)
-    whenever(getChannelIconUseCase.invoke(channel)).thenReturn(icon)
-    whenever(getChannelValueStringUseCase(thermometerChannelWithChildren)).thenReturn(value)
+    every { getCaptionUseCase.invoke(channelShareable) } returns caption
+    every { getChannelIconUseCase.invoke(channel) } returns icon
+    every { getChannelValueStringUseCase(thermometerChannelWithChildren) } returns value
     val channelWithChildrenShareable = channelWithChildren.shareable
-    whenever(getChannelIssuesForListUseCase(channelWithChildrenShareable)).thenReturn(channelIssues)
-    whenever(valuesFormatter.getTemperatureString(12.5f)).thenReturn(subValue)
+    every { getChannelIssuesForListUseCase(channelWithChildrenShareable) } returns channelIssues
+    every { valueFormatter.format(12.5f, ValueFormat.WithoutUnit) } returns subValue
 
     // when
     val result = mapper.map(channelWithChildren) as SlideableListItemData.Thermostat
@@ -193,7 +199,7 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
     val captionString = "some title"
     val caption = LocalizedString.Constant(captionString)
     val icon: ImageId = mockk()
-    val value = ValuesFormatter.NO_VALUE_TEXT
+    val value = NO_VALUE_TEXT
     val subValue = "some sub value"
     val channelIssues = ListItemIssues(IssueIcon.Warning)
     val estimatedEndDate = date(2023, 11, 21)
@@ -206,6 +212,7 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
     }
     val channel = mockk<ChannelDataEntity> {
       every { remoteId } returns 123
+      every { altIcon } returns 0
       every { this@mockk.caption } returns captionString
       every { function } returns SuplaFunction.HVAC_THERMOSTAT
       every { status } returns SuplaChannelAvailabilityStatus.ONLINE
@@ -228,10 +235,12 @@ class ChannelWithChildrenToThermostatUpdateEventMapperTest {
     }
     val channelWithChildren = ChannelWithChildren(channel, listOf())
 
-    whenever(getCaptionUseCase.invoke(channel.shareable)).thenReturn(caption)
-    whenever(getChannelIconUseCase.invoke(channel)).thenReturn(icon)
-    whenever(getChannelIssuesForListUseCase.invoke(channelWithChildren.shareable)).thenReturn(channelIssues)
-    whenever(valuesFormatter.getTemperatureString(12.5f)).thenReturn(subValue)
+    val channelShareable = channel.shareable
+    every { getCaptionUseCase.invoke(channelShareable) } returns caption
+    every { getChannelIconUseCase.invoke(channel) } returns icon
+    val channelWithChildrenShareable = channelWithChildren.shareable
+    every { getChannelIssuesForListUseCase.invoke(channelWithChildrenShareable) } returns channelIssues
+    every { valueFormatter.format(12.5f, ValueFormat.WithoutUnit) } returns subValue
 
     // when
     val result = mapper.map(channelWithChildren) as SlideableListItemData.Thermostat

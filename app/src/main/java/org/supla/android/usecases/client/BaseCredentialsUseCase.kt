@@ -22,7 +22,7 @@ import org.supla.android.R
 import org.supla.android.Trace
 import org.supla.android.core.infrastructure.ThreadHandler
 import org.supla.android.extensions.TAG
-import org.supla.android.extensions.ifLet
+import org.supla.core.shared.extensions.ifLet
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.localizedString
 

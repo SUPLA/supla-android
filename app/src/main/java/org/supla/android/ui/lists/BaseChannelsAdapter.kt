@@ -26,6 +26,7 @@ import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.databinding.LiChannelItemBinding
 import org.supla.android.databinding.LiMainDoubleValueItemBinding
+import org.supla.android.databinding.LiMainHeatpolThermostatItemBinding
 import org.supla.android.databinding.LiMainIconValueItemBinding
 import org.supla.android.databinding.LiMainIconValueWithButtonsItemBinding
 import org.supla.android.databinding.LiMainIconValueWithRightButtonItemBinding
@@ -74,6 +75,9 @@ abstract class BaseChannelsAdapter(
       ViewType.HVAC_ITEM.ordinal ->
         ThermostatListItemViewHolder(LiMainThermostatItemBinding.inflate(inflater, parent, false))
 
+      ViewType.HEATPOL_ITEM.ordinal ->
+        HeatpolThermostatListItemViewHolder(LiMainHeatpolThermostatItemBinding.inflate(inflater, parent, false))
+
       ViewType.ICON_VALUE_ITEM.ordinal ->
         IconValueListItemViewHolder(LiMainIconValueItemBinding.inflate(inflater, parent, false))
 
@@ -95,6 +99,7 @@ abstract class BaseChannelsAdapter(
     when (holder) {
       is ChannelListItemViewHolder -> holder.bind(item as ListItem.ChannelItem)
       is ThermostatListItemViewHolder -> holder.bind(item as ListItem.HvacThermostatItem)
+      is HeatpolThermostatListItemViewHolder -> holder.bind(item as ListItem.HeatpolThermostatItem)
       is IconValueListItemViewHolder -> holder.bind(item as ListItem.IconValueItem)
       is IconWithButtonsItemViewHolder -> holder.bind(item as ListItem.IconWithButtonsItem)
       is DoubleValueListItemViewHolder -> holder.bind(item as ListItem.DoubleValueItem)
@@ -133,6 +138,27 @@ abstract class BaseChannelsAdapter(
 
   inner class ThermostatListItemViewHolder(val binding: LiMainThermostatItemBinding) : ViewHolder(binding.root) {
     fun bind(item: ListItem.HvacThermostatItem) {
+      val data = item.toSlideableListItemData() as SlideableListItemData.Thermostat
+      binding.listItemRoot.bind(locationCaption = item.locationCaption, function = item.channelBase.function)
+      binding.listItemContent.bind(
+        itemType = ItemType.CHANNEL,
+        remoteId = item.channel.remoteId,
+        data = data,
+        onInfoClick = { infoButtonClickCallback(item.channel.remoteId) },
+        onIssueClick = { issueButtonClickCallback(it) },
+        onTitleLongClick = { captionLongPressCallback(item.channel.remoteId, item.channel.profileId, item.channel.caption) },
+        onItemClick = { listItemClickCallback(item.channel.remoteId) }
+      )
+
+      binding.listItemContent.setOnClickListener { listItemClickCallback(item.channel.remoteId) }
+      binding.listItemContent.setOnLongClickListener { onLongPress(this) }
+      binding.listItemLeftItem.setOnClickListener { onLeftButtonClick(item.channel.remoteId) }
+      binding.listItemRightItem.setOnClickListener { onRightButtonClick(item.channel.remoteId) }
+    }
+  }
+
+  inner class HeatpolThermostatListItemViewHolder(val binding: LiMainHeatpolThermostatItemBinding) : ViewHolder(binding.root) {
+    fun bind(item: ListItem.HeatpolThermostatItem) {
       val data = item.toSlideableListItemData() as SlideableListItemData.Thermostat
       binding.listItemRoot.bind(locationCaption = item.locationCaption, function = item.channelBase.function)
       binding.listItemContent.bind(
