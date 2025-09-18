@@ -240,7 +240,7 @@
   <string name="light_source_lifespan">Durée de vie de la source lumineuse</string>
   <string name="light_source_lifespan_hours">Durée de vie de la source lumineuse (heures)</string>
   <string name="light_source_operatingtime">Temps de travail de la source lumineuse</string>
-  <string name="lightsource_warning">La durée de vie de la source lumineuse est de %1$s</string>
+  <string name="lightsource_warning">La durée de vie de la source lumineuse est de %1$.0f%%</string>
   <string name="mode_change_in_progress">Changement de mode en cours</string>
   <string name="no">Non</string>
   <string name="reset_lightsource_usage_counter">Réinitialiser le compteur d\'utilisation de la source lumineuse</string>
@@ -252,8 +252,8 @@
   <string name="soft_ver">Version de logiciel</string>
   <string name="time_exceeded">Temps expiré. Réessayer.</string>
   <string name="uptime">Temps de travail</string>
-  <string name="uv_warning1">La durée de vie de la lampe UV est de %1$s. Planifiez son remplacement.</string>
-  <string name="uv_warning2">La durée de vie de la lampe UV est de %1$s. Remplacez le radiateur.</string>
+  <string name="uv_warning1">La durée de vie de la lampe UV est de %1$.0f%%. Planifiez son remplacement.</string>
+  <string name="uv_warning2">La durée de vie de la lampe UV est de %1$.0f%%. Remplacez le radiateur.</string>
   <string name="valve_warning_manually_closed">La valve a été fermée manuellement ou par radio. Avant de l\'ouvrir, assurez-vous qu\'elle n\'a pas été fermée en raison d\'une inondation. Pour désactiver l\'avertissement, ouvrez la valve manuellement. Voulez-vous vraiment ouvrir la valve depuis l’application ?!</string>
   <string name="valve_warning">La valve a été fermée manuellement ou par radio. Avant de l\'ouvrir, assurez-vous qu\'elle n\'a pas été fermée en raison d\'une inondation. Pour désactiver l\'avertissement, ouvrez la valve manuellement.</string>
   <string name="vector_balance_days">Bilan vectorielle - Jours</string>

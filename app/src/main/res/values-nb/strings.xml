@@ -253,7 +253,7 @@
   <string name="light_source_lifespan">Lyskildens levetid</string>
   <string name="light_source_lifespan_hours">Lyskildens levetid (timer)</string>
   <string name="light_source_operatingtime">Lyskildens arbeidstid</string>
-  <string name="lightsource_warning">Lyskildens levetid er på %1$s</string>
+  <string name="lightsource_warning">Lyskildens levetid er på %1$.0f%%</string>
   <string name="mode_change_in_progress">Endring av modus pågår</string>
   <string name="no">Nei</string>
   <string name="reset_lightsource_usage_counter">Tilbakestill telleren for lyskildens forbruk</string>
@@ -265,8 +265,8 @@
   <string name="soft_ver">Programvareversjon</string>
   <string name="time_exceeded">Tiden er utløpt. Prøv igjen.</string>
   <string name="uptime">Arbeidstid</string>
-  <string name="uv_warning1">UV-lampens levetid er %1$s. Planlegg utskifting.</string>
-  <string name="uv_warning2">UV-lampens levetid er %1$s. Skifte ut lampen.</string>
+  <string name="uv_warning1">UV-lampens levetid er %1$.0f%%. Planlegg utskifting.</string>
+  <string name="uv_warning2">UV-lampens levetid er %1$.0f%%. Skifte ut lampen.</string>
   <string name="valve_warning_manually_closed">Ventilen har blitt stengt manuelt eller med radio. Før du åpner den, må du sørge for at den ikke har vært stengt på grunn av vannskader. For å deaktivere advarselen, åpne ventilen manuelt. Er du sikker på at du vil åpne ventilen via appen?!</string>
   <string name="valve_warning">Ventilen har blitt stengt manuelt eller med radio. Før du åpner den, må du sørge for at den ikke har vært stengt på grunn av vannskader. For å deaktivere advarselen, åpne ventilen manuelt.</string>
   <string name="vector_balance_days">Vektorbalanse - Dager</string>

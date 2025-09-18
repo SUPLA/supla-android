@@ -70,5 +70,5 @@ fun LocalizedString.provider(): StringProvider = { context -> invoke(context) }
 
 private val List<Any>.hasAllowedTypes: Boolean
   get() = fold(true) { acc, item ->
-    acc && (item is Int || item is Long || item is String)
+    acc && (item is Int || item is Long || item is String || item is Double || item is Float)
   }

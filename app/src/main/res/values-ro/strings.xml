@@ -251,7 +251,7 @@
   <string name="light_source_lifespan">Durata de viaţă a sursei de lumină</string>
   <string name="light_source_lifespan_hours">Durata de viaţă a sursei de lumină (ore)</string>
   <string name="light_source_operatingtime">Timp de lucru al sursei de lumină</string>
-  <string name="lightsource_warning">Durata de viaţă a sursei de lumină este de %1$s</string>
+  <string name="lightsource_warning">Durata de viaţă a sursei de lumină este de %1$.0f%%</string>
   <string name="mode_change_in_progress">Schimbarea modului este în desfăşurare</string>
   <string name="no">Nu</string>
   <string name="reset_lightsource_usage_counter">Resetaţi contorul de utilizare a sursei de lumină</string>
@@ -263,8 +263,8 @@
   <string name="soft_ver">Versiunea de operare</string>
   <string name="time_exceeded">Timpul a fost depăşit. Încercaţi din nou.</string>
   <string name="uptime">Timp de lucru</string>
-  <string name="uv_warning1">Durata de viaţă a lămpii UV este de %1$s. Programaşi înlocuirea acestuia.</string>
-  <string name="uv_warning2">Durata de viaţă a lămpii UV este de  %1$s.  Înlocuiţi lampa.</string>
+  <string name="uv_warning1">Durata de viaţă a lămpii UV este de %1$.0f%%. Programaşi înlocuirea acestuia.</string>
+  <string name="uv_warning2">Durata de viaţă a lămpii UV este de %1$.0f%%.  Înlocuiţi lampa.</string>
   <string name="valve_warning_manually_closed">Robinetul a fost închis manual sau prin radio. Înainte de a-l deschide, asiguraţi-vă că nu a fost închis din cauza inundaţiei Pentru a dezactiva avertizarea, deschideți manual robinetul. Sigur doriți să deschideți robinetul din aplicație?!</string>
   <string name="valve_warning">Robinetul a fost închis manual sau prin radio. Înainte de a-l deschide, asiguraţi-vă că nu a fost închis din cauza inundaţiei. Pentru a dezactiva avertizarea, deschideți manual robinetul.</string>
   <string name="vector_balance_days">Bilanţ vectorial - Zile</string>

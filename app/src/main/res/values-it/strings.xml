@@ -241,7 +241,7 @@
   <string name="light_source_lifespan">Vita utile di sorgente luminosa</string>
   <string name="light_source_lifespan_hours">Vita utile di sorgente luminosa (ore)</string>
   <string name="light_source_operatingtime">Tempo di funzionamento di sorgente luminosa</string>
-  <string name="lightsource_warning">Vita utile di sorgente luminosa risulta %1$s</string>
+  <string name="lightsource_warning">Vita utile di sorgente luminosa risulta %1$.0f%%</string>
   <string name="mode_change_in_progress">Cambio della modalità in corso</string>
   <string name="no">No</string>
   <string name="reset_lightsource_usage_counter">Resetta il contatore di consumo di sorgente luminosa</string>
@@ -253,8 +253,8 @@
   <string name="soft_ver">Versione software</string>
   <string name="time_exceeded">Tempo scaduto. Riprova.</string>
   <string name="uptime">Tempo di funzionamento</string>
-  <string name="uv_warning1">Vita utile di radiatore uv risulta %1$s. Pianifica la sua sostituzione.</string>
-  <string name="uv_warning2">Vita utile di radiatore uv risulta %1$s. Sostituisci radiatore.</string>
+  <string name="uv_warning1">Vita utile di radiatore uv risulta %1$.0f%%. Pianifica la sua sostituzione.</string>
+  <string name="uv_warning2">Vita utile di radiatore uv risulta %1$.0f%%. Sostituisci radiatore.</string>
   <string name="valve_warning_manually_closed">La valvola è stata chiusa manualmente o via radio. Prima di aprirla, assicurati che non sia stata chiusa a causa di allagamento. Per disabilitare l’avviso apri la valvola manualmente. Sei sicuro di voler aprire la valvola tramite l’applicazione?!</string>
   <string name="valve_warning">La valvola è stata chiusa manualmente o via radio. Prima di aprirla, assicurati che non sia stata chiusa a causa di allagamento. Per disabilitare l’avviso apri la valvola manualmente.</string>
   <string name="vector_balance_days">Equilibrio vettoriale - Giorni</string>

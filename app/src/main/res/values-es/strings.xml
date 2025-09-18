@@ -241,7 +241,7 @@
   <string name="light_source_lifespan">Vida útil de la fuente de luz</string>
   <string name="light_source_lifespan_hours">Duración de la luz (horas)</string>
   <string name="light_source_operatingtime">Tiempo de trabajo de la fuente de luz</string>
-  <string name="lightsource_warning">Duración de la fuente de luz es %1$s</string>
+  <string name="lightsource_warning">Duración de la fuente de luz es %1$.0f%%</string>
   <string name="mode_change_in_progress">Cambio de modo en curso</string>
   <string name="no">No</string>
   <string name="reset_lightsource_usage_counter">Resetear el contador de uso de la fuente de luz</string>
@@ -253,8 +253,8 @@
   <string name="soft_ver">Versión</string>
   <string name="time_exceeded">¡Se ha superado el tiempo! Inténtalo de nuevo.</string>
   <string name="uptime">Tiempo de trabajo</string>
-  <string name="uv_warning1">Duración de la lámpara ultravioleta es %1$s. Planee su reemplazo.</string>
-  <string name="uv_warning2">Duración de la lámpara ultravioleta es %1$s. Reemplácela.</string>
+  <string name="uv_warning1">Duración de la lámpara ultravioleta es %1$.0f%%. Planee su reemplazo.</string>
+  <string name="uv_warning2">Duración de la lámpara ultravioleta es %1$.0f%%. Reemplácela.</string>
   <string name="valve_warning_manually_closed">La válvula se ha cerrado manualmente o por radio. Antes de abrirla, asegúrese de que no se haya cerrado debido a una inundación. Para desactivar la advertencia, abra la válvula manualmente. ¿Está seguro de que quiere abrir la válvula desde la aplicación?</string>
   <string name="valve_warning">La válvula se ha cerrado manualmente o por radio. Antes de abrirla, asegúrese de que no se haya cerrado debido a una inundación. Para desactivar la advertencia, abra la válvula manualmente.</string>
   <string name="vector_balance_days">Balance vectorial – Días</string>
