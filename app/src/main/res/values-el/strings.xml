@@ -250,7 +250,7 @@
   <string name="light_source_lifespan">Διάρκεια ζωής της πηγής φωτός</string>
   <string name="light_source_lifespan_hours">Ζωή πηγής φωτός (ώρες)</string>
   <string name="light_source_operatingtime">Χρόνος εργασίας πηγής φωτός</string>
-  <string name="lightsource_warning">Η διάρκεια ζωής της πηγής φωτός είναι %1$s</string>
+  <string name="lightsource_warning">Η διάρκεια ζωής της πηγής φωτός είναι %1$.0f%%</string>
   <string name="mode_change_in_progress">Αλλαγή λειτουργίας σε εξέλιξη</string>
   <string name="no">Όχι</string>
   <string name="reset_lightsource_usage_counter">Επαναφορά μετρητή χρήσης πηγής φωτός</string>
@@ -262,8 +262,8 @@
   <string name="soft_ver">Έκδοση λογισμικού</string>
   <string name="time_exceeded">Τέλος χρόνου. Προσπαθήστε ξανά.</string>
   <string name="uptime">Χρόνος εργασίας</string>
-  <string name="uv_warning1">Η διάρκεια ζωής της λυχνίας UV είναι %1$s. Προγραμματίστε την αντικατάστασή της.</string>
-  <string name="uv_warning2">Η διάρκεια ζωής της λυχνίας UV είναι %1$s. Αντικαταστήστε τη λυχνία.</string>
+  <string name="uv_warning1">Η διάρκεια ζωής της λυχνίας UV είναι %1$.0f%%. Προγραμματίστε την αντικατάστασή της.</string>
+  <string name="uv_warning2">Η διάρκεια ζωής της λυχνίας UV είναι %1$.0f%%. Αντικαταστήστε τη λυχνία.</string>
   <string name="valve_warning_manually_closed">Η βαλβίδα έχει κλείσει χειροκίνητα ή μέσω ραδιοφώνου. Πριν την ανοίξετε, βεβαιωθείτε ότι δεν έχει κλείσει λόγω πλημμύρας. Για να απενεργοποιήσετε την προειδοποίηση, ανοίξτε τη βαλβίδα χειροκίνητα. Είστε βέβαιοι ότι θέλετε να ανοίξετε τη βαλβίδα μέσω της εφαρμογής;</string>
   <string name="valve_warning">Η βαλβίδα έχει κλείσει χειροκίνητα ή μέσω ραδιοφώνου. Πριν την ανοίξετε, βεβαιωθείτε ότι δεν έχει κλείσει λόγω πλημμύρας. Για να απενεργοποιήσετε την προειδοποίηση, ανοίξτε τη βαλβίδα χειροκίνητα.</string>
   <string name="vector_balance_days">Διανυσματικός ισολογισμός - Ημέρες</string>

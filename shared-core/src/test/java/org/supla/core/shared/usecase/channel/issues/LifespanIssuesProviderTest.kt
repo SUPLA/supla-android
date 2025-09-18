@@ -26,114 +26,114 @@ class LifespanIssuesProviderTest {
 
   @Test
   fun `should produce replace error for UV lamp`() {
-    // given
     val lifespan = 3.0f
-    val channelState: ChannelState = mockk {
-      every { lightSourceLifespanLeft } returns lifespan
-    }
-    val channel: Channel = mockk {
-      every { this@mockk.function } returns SuplaFunction.LIGHTSWITCH
-      every { this@mockk.channelState } returns channelState
-      every { this@mockk.altIcon } returns 2
-    }
-    val channelWithChildren: ChannelWithChildren = mockk {
-      every { this@mockk.channel } returns channel
-    }
-
-    // when
-    val issues = provider.provide(channelWithChildren)
-
-    // then
-    assertThat(issues).containsExactly(
-      ChannelIssueItem.Error(LocalizedString.WithId(LocalizedStringId.LIFESPAN_WARNING_REPLACE, listOf(lifespan)))
+    performTest(
+      lifespanLeft = lifespan,
+      expectedIssue = ChannelIssueItem.Error(LocalizedString.WithId(LocalizedStringId.LIFESPAN_WARNING_REPLACE, listOf(lifespan)))
     )
   }
 
   @Test
   fun `should produce schedule warning for UV lamp`() {
-    // given
     val lifespan = 12.0f
-    val channelState: ChannelState = mockk {
-      every { lightSourceLifespanLeft } returns lifespan
-    }
-    val channel: Channel = mockk {
-      every { this@mockk.function } returns SuplaFunction.LIGHTSWITCH
-      every { this@mockk.channelState } returns channelState
-      every { this@mockk.altIcon } returns 2
-    }
-    val channelWithChildren: ChannelWithChildren = mockk {
-      every { this@mockk.channel } returns channel
-    }
-
-    // when
-    val issues = provider.provide(channelWithChildren)
-
-    // then
-    assertThat(issues).containsExactly(
-      ChannelIssueItem.Warning(LocalizedString.WithId(LocalizedStringId.LIFESPAN_WARNING_SCHEDULE, listOf(lifespan)))
+    performTest(
+      lifespanLeft = lifespan,
+      expectedIssue = ChannelIssueItem.Warning(LocalizedString.WithId(LocalizedStringId.LIFESPAN_WARNING_SCHEDULE, listOf(lifespan)))
     )
   }
 
   @Test
   fun `should produce lifespan error for other light switch`() {
-    // given
     val lifespan = 3.0f
-    val channelState: ChannelState = mockk {
-      every { lightSourceLifespanLeft } returns lifespan
-    }
-    val channel: Channel = mockk {
-      every { this@mockk.function } returns SuplaFunction.LIGHTSWITCH
-      every { this@mockk.channelState } returns channelState
-      every { this@mockk.altIcon } returns 0
-    }
-    val channelWithChildren: ChannelWithChildren = mockk {
-      every { this@mockk.channel } returns channel
-    }
-
-    // when
-    val issues = provider.provide(channelWithChildren)
-
-    // then
-    assertThat(issues).containsExactly(
-      ChannelIssueItem.Error(LocalizedString.WithId(LocalizedStringId.LIFESPAN_WARNING, listOf(lifespan)))
+    performTest(
+      lifespanLeft = lifespan,
+      altIcon = 0,
+      expectedIssue = ChannelIssueItem.Error(LocalizedString.WithId(LocalizedStringId.LIFESPAN_WARNING, listOf(lifespan)))
     )
   }
 
   @Test
   fun `should produce lifespan warning for other light switch`() {
-    // given
     val lifespan = 13.0f
-    val channelState: ChannelState = mockk {
-      every { lightSourceLifespanLeft } returns lifespan
-    }
-    val channel: Channel = mockk {
-      every { this@mockk.function } returns SuplaFunction.LIGHTSWITCH
-      every { this@mockk.channelState } returns channelState
-      every { this@mockk.altIcon } returns 0
-    }
-    val channelWithChildren: ChannelWithChildren = mockk {
-      every { this@mockk.channel } returns channel
-    }
-
-    // when
-    val issues = provider.provide(channelWithChildren)
-
-    // then
-    assertThat(issues).containsExactly(
-      ChannelIssueItem.Warning(LocalizedString.WithId(LocalizedStringId.LIFESPAN_WARNING, listOf(lifespan)))
+    performTest(
+      lifespanLeft = lifespan,
+      altIcon = 0,
+      expectedIssue = ChannelIssueItem.Warning(LocalizedString.WithId(LocalizedStringId.LIFESPAN_WARNING, listOf(lifespan)))
     )
   }
 
   @Test
-  fun `should not produce issues if lifespan bigger than 20`() {
-    // given
+  fun `should not produce issues if lifespan bigger than 20 percent`() {
     val lifespan = 22.0f
+    performTest(
+      lifespanLeft = lifespan,
+      altIcon = 0,
+    )
+  }
+
+  @Test
+  fun `should produce replace error for UV lamp - based on left percent`() {
+    val lifespan = 3.0f
+    performTest(
+      operatingTimeLeft = lifespan,
+      expectedIssue = ChannelIssueItem.Error(LocalizedString.WithId(LocalizedStringId.LIFESPAN_WARNING_REPLACE, listOf(lifespan)))
+    )
+  }
+
+  @Test
+  fun `should produce schedule warning for UV lamp - based on left percent`() {
+    val lifespan = 12.0f
+    performTest(
+      operatingTimeLeft = lifespan,
+      expectedIssue = ChannelIssueItem.Warning(LocalizedString.WithId(LocalizedStringId.LIFESPAN_WARNING_SCHEDULE, listOf(lifespan)))
+    )
+  }
+
+  @Test
+  fun `should produce lifespan error for other light switch - based on left percent`() {
+    val lifespan = 3.0f
+    performTest(
+      operatingTimeLeft = lifespan,
+      altIcon = 0,
+      expectedIssue = ChannelIssueItem.Error(LocalizedString.WithId(LocalizedStringId.LIFESPAN_WARNING, listOf(lifespan)))
+    )
+  }
+
+  @Test
+  fun `should produce lifespan warning for other light switch - based on left percent`() {
+    val lifespan = 13.0f
+    performTest(
+      operatingTimeLeft = lifespan,
+      altIcon = 0,
+      expectedIssue = ChannelIssueItem.Warning(LocalizedString.WithId(LocalizedStringId.LIFESPAN_WARNING, listOf(lifespan)))
+    )
+  }
+
+  @Test
+  fun `should not produce issues if lifespan bigger than 20 percent - based on left percent`() {
+    val lifespan = 22.0f
+    performTest(
+      operatingTimeLeft = lifespan,
+      altIcon = 0,
+    )
+  }
+
+  private fun performTest(
+    lifespanLeft: Float? = null,
+    operatingTimeLeft: Float? = null,
+    altIcon: Int = 2,
+    expectedIssue: ChannelIssueItem? = null
+  ) {
+    // given
     val channelState: ChannelState = mockk {
-      every { lightSourceLifespanLeft } returns lifespan
+      every { lightSourceLifespan } returns 100
+      every { lightSourceLifespanLeft } returns lifespanLeft
+      every { lightSourceOperatingTimePercentLeft } returns operatingTimeLeft
     }
     val channel: Channel = mockk {
       every { this@mockk.function } returns SuplaFunction.LIGHTSWITCH
       every { this@mockk.channelState } returns channelState
+      every { this@mockk.altIcon } returns altIcon
     }
     val channelWithChildren: ChannelWithChildren = mockk {
       every { this@mockk.channel } returns channel
@@ -143,6 +143,10 @@ class LifespanIssuesProviderTest {
     val issues = provider.provide(channelWithChildren)
 
     // then
-    assertThat(issues).isEmpty()
+    if (expectedIssue == null) {
+      assertThat(issues).isEmpty()
+    } else {
+      assertThat(issues).containsExactly(expectedIssue)
+    }
   }
 }

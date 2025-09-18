@@ -231,7 +231,7 @@
   <string name="light_source_lifespan">Šviesos šaltinio eksploatavimo laikas</string>
   <string name="light_source_lifespan_hours">Šviesos šaltinio eksploatavimo laikas (valandos)</string>
   <string name="light_source_operatingtime">Šviesos šaltinio veikimo laikas</string>
-  <string name="lightsource_warning">Šviesos šaltinio eksploatavimo laikas siekia %1$s</string>
+  <string name="lightsource_warning">Šviesos šaltinio eksploatavimo laikas siekia %1$.0f%%</string>
   <string name="mode_change_in_progress">Keičiamas režimas</string>
   <string name="no">Ne</string>
   <string name="reset_lightsource_usage_counter">Atkurti šviesis šaltinio sunaudojimo skaitiklį</string>
@@ -243,8 +243,8 @@
   <string name="soft_ver">Programinės įrangos versija</string>
   <string name="time_exceeded">Laikas baigėsi. Pabandykite vėl.</string>
   <string name="uptime">Darbo laikas</string>
-  <string name="uv_warning1">UV spinduolio eksploatavimo laikas siekia %1$s. Suplanuokite jo keitimą.</string>
-  <string name="uv_warning2">UV spinduolio eksploatavimo laikas siekia %1$s. Pakeiskite spinduolį.</string>
+  <string name="uv_warning1">UV spinduolio eksploatavimo laikas siekia %1$.0f%%. Suplanuokite jo keitimą.</string>
+  <string name="uv_warning2">UV spinduolio eksploatavimo laikas siekia %1$.0f%%. Pakeiskite spinduolį.</string>
   <string name="valve_warning_manually_closed">Vožtuvas uždarytas rankiniu būdu arba radijo ryšiu. Prieš jo atidarymą reikia įsitikinti, kad nebuvo uždarytas dėl užliejimo. Norėdami išjungti įspėjimą, vožtuvą atidarykite rankiniu būdu. Ar tikrai norite vožtuvą atidaryti programėlės pagalba?</string>
   <string name="valve_warning">Vožtuvas uždarytas rankiniu būdu arba radijo ryšiu. Prieš jo atidarymą reikia įsitikinti, kad nebuvo uždarytas dėl užliejimo. Norėdami išjungti įspėjimą, vožtuvą atidarykite rankiniu būdu.</string>
   <string name="vector_balance_days">Vektorinis balansas – Dienos</string>

@@ -253,7 +253,7 @@
   <string name="light_source_lifespan">Životnosť svetelného zdroja</string>
   <string name="light_source_lifespan_hours">Životnosť svetelného zdroja (hodiny)</string>
   <string name="light_source_operatingtime">Prevádzkový čas svetelného zdroja</string>
-  <string name="lightsource_warning">Životnosť svetelného zdroja je %1$s</string>
+  <string name="lightsource_warning">Životnosť svetelného zdroja je %1$.0f%%</string>
   <string name="mode_change_in_progress">Prebieha zmena režimu</string>
   <string name="no">Nie</string>
   <string name="reset_lightsource_usage_counter">Reštartuj počítadlo spotreby svetelného zdroja</string>
@@ -265,8 +265,8 @@
   <string name="soft_ver">Verzia programu</string>
   <string name="time_exceeded">Došlo k prekročeniu lehoty. Skús znova.</string>
   <string name="uptime">Prevádzkový čas</string>
-  <string name="uv_warning1">Životnosť UV žiariča je %1$s. Naplánuj jeho výmenu.</string>
-  <string name="uv_warning2">Životnosť UV žiariča je %1$s. Vymeň žiarič.</string>
+  <string name="uv_warning1">Životnosť UV žiariča je %1$.0f%%. Naplánuj jeho výmenu.</string>
+  <string name="uv_warning2">Životnosť UV žiariča je %1$.0f%%. Vymeň žiarič.</string>
   <string name="valve_warning_manually_closed">Ventil bol zatvorený manuálne alebo rádiovo. Kým ho otvoríš, uisti sa, že nebol zatvorený kvôli zaplaveniu. Pre vypnutie upozornenia zavri ventil manuálne. Naozaj chceš otvoriť ventil pomocou aplikácie?!</string>
   <string name="valve_warning">Ventil bol zatvorený manuálne alebo rádiovo. Kým ho otvoríš, uisti sa, že nebol zatvorený kvôli zaplaveniu. Pre vypnutie upozornenia zavri ventil manuálne.</string>
   <string name="vector_balance_days">Vektorová bilancia – dni</string>

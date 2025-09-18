@@ -28,23 +28,33 @@ class LifespanIssuesProvider : ChannelIssuesProvider {
     if (channelWithChildren.channel.function != SuplaFunction.LIGHTSWITCH) {
       return emptyList()
     }
-    val lightSourceLifespanLeft = channelWithChildren.channel.channelState?.lightSourceLifespanLeft
-    if (lightSourceLifespanLeft == null || lightSourceLifespanLeft > 20) {
+
+    val channelState = channelWithChildren.channel.channelState
+    if (channelState == null) {
+      return emptyList()
+    }
+
+    if (channelState.lightSourceLifespan == null || channelState.lightSourceLifespan <= 0) {
+      return emptyList()
+    }
+
+    val lifespanLeft = channelState.lightSourceLifespanLeft ?: channelState.lightSourceOperatingTimePercentLeft
+    if (lifespanLeft == null || lifespanLeft > 20) {
       return emptyList()
     }
 
     val issue =
       if (channelWithChildren.channel.altIcon == 2) {
-        if (lightSourceLifespanLeft <= 5) {
-          ChannelIssueItem.Error(LocalizedString.WithId(LocalizedStringId.LIFESPAN_WARNING_REPLACE, listOf(lightSourceLifespanLeft)))
+        if (lifespanLeft <= 5) {
+          ChannelIssueItem.Error(LocalizedString.WithId(LocalizedStringId.LIFESPAN_WARNING_REPLACE, listOf(lifespanLeft)))
         } else {
-          ChannelIssueItem.Warning(LocalizedString.WithId(LocalizedStringId.LIFESPAN_WARNING_SCHEDULE, listOf(lightSourceLifespanLeft)))
+          ChannelIssueItem.Warning(LocalizedString.WithId(LocalizedStringId.LIFESPAN_WARNING_SCHEDULE, listOf(lifespanLeft)))
         }
       } else {
-        if (lightSourceLifespanLeft <= 5) {
-          ChannelIssueItem.Error(LocalizedString.WithId(LocalizedStringId.LIFESPAN_WARNING, listOf(lightSourceLifespanLeft)))
+        if (lifespanLeft <= 5) {
+          ChannelIssueItem.Error(LocalizedString.WithId(LocalizedStringId.LIFESPAN_WARNING, listOf(lifespanLeft)))
         } else {
-          ChannelIssueItem.Warning(LocalizedString.WithId(LocalizedStringId.LIFESPAN_WARNING, listOf(lightSourceLifespanLeft)))
+          ChannelIssueItem.Warning(LocalizedString.WithId(LocalizedStringId.LIFESPAN_WARNING, listOf(lifespanLeft)))
         }
       }
 

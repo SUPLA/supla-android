@@ -37,6 +37,9 @@ enum class ValueUnit(val text: String, val leadingSpace: Boolean) {
   DISTANCE_KILO("km", true),
   DISTANCE_DEFAULT("m", true);
 
+  // Used in iOS as the toString method is not available there
+  fun getString() = toString()
+
   override fun toString(): String =
     if (leadingSpace) " $text" else text
 }
