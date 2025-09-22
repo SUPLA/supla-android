@@ -85,7 +85,7 @@ class SceneDao(dap: DatabaseAccessProvider) : BaseDao(dap) {
         selectionArgs = arrayOf(profileId.toString())
       }
       val order = SceneView.COLUMN_LOCATION_SORT_ORDER + ", " +
-        SceneView.COLUMN_LOCATION_NAME + " COLLATE LOCALIZED, " +
+        SceneView.COLUMN_LOCATION_NAME + " COLLATE UNICODE, " +
         SceneEntity.COLUMN_SORT_ORDER + ", " +
         SceneEntity.COLUMN_CAPTION + " COLLATE LOCALIZED, " +
         SceneEntity.COLUMN_REMOTE_ID

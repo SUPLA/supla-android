@@ -17,26 +17,22 @@ package org.supla.android.data.source.remote.esp
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.jsoup.nodes.Document
-import retrofit2.http.FieldMap
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.GET
-import retrofit2.http.POST
+import okhttp3.Interceptor
+import okhttp3.Response
+import javax.inject.Inject
+import javax.inject.Singleton
 
-interface EspService {
+@Singleton
+class EspSchemeInterceptor @Inject constructor(
+  private var session: EspConfigurationSession
+) : Interceptor {
 
-  @GET("/")
-  suspend fun read(): Document
-
-  @POST("/")
-  @FormUrlEncoded
-  suspend fun store(@FieldMap data: Map<String, String>): Document
-
-  @POST("/setup")
-  @FormUrlEncoded
-  suspend fun setup(@FieldMap data: Map<String, String>): Document
-
-  @POST("/login")
-  @FormUrlEncoded
-  suspend fun login(@FieldMap data: Map<String, String>)
+  override fun intercept(chain: Interceptor.Chain): Response =
+    if (session.useSecureLayer) {
+      val request = chain.request()
+      val newUrl = request.url.newBuilder().scheme("https").build()
+      chain.proceed(request.newBuilder().url(newUrl).build())
+    } else {
+      chain.proceed(chain.request())
+    }
 }

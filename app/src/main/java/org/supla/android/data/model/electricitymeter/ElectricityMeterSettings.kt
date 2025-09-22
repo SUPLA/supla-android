@@ -56,6 +56,7 @@ data class ElectricityMeterSettings(
       SuplaElectricityMeasurementType.FORWARD_ACTIVE_ENERGY,
       SuplaElectricityMeasurementType.REVERSE_ACTIVE_ENERGY,
       SuplaElectricityMeasurementType.POWER_ACTIVE,
+      SuplaElectricityMeasurementType.POWER_ACTIVE_KW,
       SuplaElectricityMeasurementType.VOLTAGE
     )
 

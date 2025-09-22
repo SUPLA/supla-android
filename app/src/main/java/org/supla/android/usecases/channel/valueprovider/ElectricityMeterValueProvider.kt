@@ -43,7 +43,8 @@ class ElectricityMeterValueProvider @Inject constructor(
       SuplaElectricityMeasurementType.REVERSE_ACTIVE_ENERGY ->
         channelWithChildren.channel.Electricity.value?.summary?.totalReverseActiveEnergy ?: UNKNOWN_VALUE
 
-      SuplaElectricityMeasurementType.POWER_ACTIVE ->
+      SuplaElectricityMeasurementType.POWER_ACTIVE,
+      SuplaElectricityMeasurementType.POWER_ACTIVE_KW ->
         channelWithChildren.channel.Electricity.value?.let { value ->
           val powerActive = Phase.entries
             .filter { it.disabledFlag.rawValue and channelWithChildren.flags == 0L }

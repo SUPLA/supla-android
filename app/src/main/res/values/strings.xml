@@ -143,15 +143,15 @@
   <string name="add_wizard_remember_passwd">Remember password</string>
   <string name="add_wizard_step_3_message_3"><![CDATA[Press <b>START</b> to start configuration.]]></string>
 
-  <string name="wizard_no_internetwifi">Before you start, set up your Internet connection with the WiFi also used by the I/O device when connecting with server.</string>
-  <string name="wizard_wifi_error">WiFi Network is disabled or it is impossible to read its identifier or name!</string>
+  <string name="wizard_no_internetwifi">Before you start, set up your Internet connection with the Wi-Fi also used by the I/O device when connecting with server.</string>
+  <string name="wizard_wifi_error">Wi-Fi Network is disabled or it is impossible to read its identifier or name!</string>
   <string name="wizard_location_error">For the Add Device Wizard to work properly, the Location service must be enabled on this device. Go to your system settings, then select „Location” and make sure it\'s turned on.</string>
-  <string name="wizard_addnetwork_error">WiFi Network configuration can not be added!</string>
-  <string name="wizard_wifi_timeout">Current WiFi Network Data timeout. Go to your Android WiFi settings, select Advanced, then check "Turn on WiFi automatically"</string>
-  <string name="wizard_scan_timeout">WiFi Network Scan timeout!</string>
+  <string name="wizard_addnetwork_error">Wi-Fi Network configuration can not be added!</string>
+  <string name="wizard_wifi_timeout">Current Wi-Fi Network Data timeout. Go to your Android Wi-Fi settings, select Advanced, then check "Turn on Wi-Fi automatically"</string>
+  <string name="wizard_scan_timeout">Wi-Fi Network Scan timeout!</string>
   <string name="wizard_connect_timeout">I/O Device connection setting timeout!</string>
   <string name="wizard_configure_timeout">Device Configuration Completion timeout!</string>
-  <string name="wizard_reconnect_timeout">Basic WiFi Network return timeout!</string>
+  <string name="wizard_reconnect_timeout">Basic Wi-Fi Network return timeout!</string>
   <string name="device_reg_request_timeout">Device registration availability information timeout!</string>
 
   <string name="wizard_iodevice_notfound">No I/O Devices found! Please check if your I/O Device is ON and in configuration mode.</string>
@@ -366,8 +366,8 @@
   <string name="MAC" translatable="false">MAC</string>
   <string name="battery_level">Battery level</string>
   <string name="battery_powered">Battery powered</string>
-  <string name="wifi_rssi">WiFi RSSI</string>
-  <string name="wifi_signal_strength">Wifi signal strength</string>
+  <string name="wifi_rssi">Wi-Fi RSSI</string>
+  <string name="wifi_signal_strength">Wi-Fi signal strength</string>
   <string name="bridge_node_online">Bridge node - online</string>
   <string name="bridge_signal_strength">Radio signal strength</string>
   <string name="uptime">Uptime</string>
@@ -382,9 +382,9 @@
   <string name="lightsource_warning">The lifespan of the light source is %1$s</string>
   <string name="uv_warning1">The lifespan of the uv radiator is %1$s. Schedule its replacement.</string>
   <string name="uv_warning2">The lifespan of the uv radiator is %1$s. Replace the radiator.</string>
-  <string name="add_wizard_step_2_message">Enter WiFi Network name and password to use with new I/O Device</string>
+  <string name="add_wizard_step_2_message">Enter Wi-Fi Network name and password to use with new I/O Device</string>
   <string name="enabling_registration_timeout">Timeout for enabling registration has expired!</string>
-  <string name="wifi_throttling">Oops...! It looks like the Android OS WiFi scanning limit has been reached. Setup can be continued after this window closes.</string>
+  <string name="wifi_throttling">Oops…! It looks like the Android OS Wi-Fi scanning limit has been reached. Setup can be continued after this window closes.</string>
   <string name="enter_suplaorg_credentails">Please enter your Supla Cloud login details.</string>
   <string name="save_without_saving">Do you want to quit without saving?</string>
   <string name="do_you_want_to_save">Do you want to save the settings?</string>
@@ -441,11 +441,11 @@
   <string name="status_led">Status LED</string>
   <string name="info_led_on">The LED is on if there is a connection to the server.</string>
   <string name="info_led_off">The LED is off if there is a connection to the server.</string>
-  <string name="info_led_alwaysoff">The LED is always off, unless the device is in wifi configuration mode (AP Mode).</string>
+  <string name="info_led_alwaysoff">The LED is always off, unless the device is in Wi-Fi configuration mode (AP Mode).</string>
   <string name="input">Input</string>
   <string name="monostable">Monostable</string>
   <string name="bistable">Bistable</string>
-  <string name="wizard_iodev_connect_failed">The attempt to establish a WiFi connection with the i/o device has failed.</string>
+  <string name="wizard_iodev_connect_failed">The attempt to establish a Wi-Fi connection with the i/o device has failed.</string>
   <string name="diw_cfg_info_oprange">Change the operating range by moving the dark grey sliders around the wheel to adjust the minimum and maximum brightness levels.</string>
   <string name="diw_cfg_info_in_options">Input options</string>
   <string name="diw_cfg_info_mono_option">This option changes the behavior of the input to which the monostable button is connected. In case the option is disabled, the dimmer stops brightening the light when the full brightness level is reached and in case of dimming, at the lowest brightness level. Enabling this option will switch to the minimum level as soon as the maximum brightness is reached, and in the case of dimming to the maximum value, as soon as the minimum is reached. Brightening / dimming will continue as long as the button is pressed.</string>
@@ -457,6 +457,7 @@
   <string name="dgf_regeneration_after20h">Regeneration initiated after 20 hours of operation is in progress.</string>
   <string name="wizard_done_explentations">If your new I/O device fails to appear in the Supla app please run “Add I/O Device” wizard again and refer to the “Previous State” information on this page for troubleshooting. “SSID Not Found” is displayed when the chosen 2.4 GHz network is ether not in range or its name was incorrect.</string>
   <string name="incorrect_email_or_password">Incorrect Email Address or Password</string>
+  <string name="incorrect_password">Incorrect password</string>
   <string name="channel_name">Channel name</string>
   <string name="location_name">Location name</string>
   <string name="str_default">Default</string>
@@ -468,7 +469,7 @@
   <string name="motor_problem">Motor problem / Unexpected stop.</string>
   <string name="lastconnectionresetcause_unknown">0: unknown</string>
   <string name="lastconnectionresetcause_activity_timeout">1: server timeout</string>
-  <string name="lastconnectionresetcause_wifi_connection_lost">2: WiFi connection lost</string>
+  <string name="lastconnectionresetcause_wifi_connection_lost">2: Wi-Fi connection lost</string>
   <string name="lastconnectionresetcause_server_connection_lost">3: server connection lost</string>
   <string name="basic_profile_warning">Setting not available</string>
   <string name="basic_config_unavailable">Before turning advanced mode off you need to switch to email authentication and enable automatic server detection.</string>
@@ -820,6 +821,18 @@
   <string name="add_wizard_add_more">Add more</string>
   <string name="add_wizard_repeat">Try again</string>
   <string name="add_wizard_password_clarification">Registration of new devices in the Cloud is disabled. Enable it manually or provide your account password for the wizard to enable it automatically during the new device registration.</string>
+  <string name="add_wizard_password_rules">Password should be at least 8 characters long and contain at least one uppercase, one lowercase letter and one number.</string>
+  <string name="add_wizard_password_set_title">Set Device Password</string>
+  <string name="add_wizard_password_new_label">New password</string>
+  <string name="add_wizard_password_repeat_label">Repeat password</string>
+  <string name="add_wizard_password_enter_title">Device Password</string>
+  <string name="wizard_state_preparing">Preparation…</string>
+  <string name="wizard_state_connecting">Connecting…</string>
+  <string name="wizard_state_configuring">Configuring…</string>
+  <string name="wizard_state_finishing">Finishing…</string>
+  <string name="add_wizard_device_temporarily_locked">The limit of unsuccessful login attempts has been exceeded. Please try again later…</string>
+  <string name="add_wizard_password_instruction">Please use the password used for local configuration web page access.\n\nForgot your password? You can change it on Supla Cloud or reset the device to factory settings.</string>
+  <string name="add_wizard_manual_reconnect">The network connection to the device was established manually. Make sure your phone has connected back to the internet and continue the process.</string>
 
   <plurals name="details_timer_info_on" translatable="false">
     <item quantity="other">on</item>

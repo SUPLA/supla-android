@@ -300,7 +300,7 @@
   <string name="wheel">Cirkel</string>
   <string name="wifi_rssi">WiFi RSSI</string>
   <string name="wifi_signal_strength">WiFi-signaalsterkte</string>
-  <string name="wifi_throttling">Wacht de hierboven weergegeven tijd vanwege de beperkingen van het scannen van wifi-netwerken die worden opgelegd door het Android-systeem.</string>
+  <string name="wifi_throttling">Wacht de hierboven weergegeven tijd vanwege de beperkingen van het scannen van WiFi-netwerken die worden opgelegd door het Android-systeem.</string>
   <string name="wizard_step1_txt2">Zorg ervoor dat uw mobiele data is uitgeschakeld wanneer u apparaten toevoegt. Anders kan de toevoeging mislukken.</string>
   <string name="add_wizard_step_2_message">Voer de naam en het wachtwoord van uw thuis- of bedrijfs-WIFI-netwerk in waarmee het apparaat verbinding kan maken met de server.</string>
   <string name="yes">Ja</string>
@@ -392,7 +392,7 @@
   <string name="status_led">Status-LED</string>
   <string name="info_led_on">De LED licht op als een verbinding met de server tot stand is gebracht.</string>
   <string name="info_led_off">De LED licht niet op als er een verbinding met de server tot stand is gebracht.</string>
-  <string name="info_led_alwaysoff">Licht altijd uit, tenzij het apparaat zich in wifi-configuratiemodus (AP-modus) bevindt.</string>
+  <string name="info_led_alwaysoff">Licht altijd uit, tenzij het apparaat zich in WiFi-configuratiemodus (AP-modus) bevindt.</string>
   <string name="input">Ingang</string>
   <string name="monostable">Mono-stabiel</string>
   <string name="bistable">Bi-stabiel</string>
@@ -406,6 +406,7 @@
   <string name="dgf_regeneration_after20h">De regeneratie die na 20h in werking is gesteld, is aan de gang.</string>
   <string name="wizard_done_explentations">Als het toestel niet in de toepassing verschijnt, herhaalt u deze toevoegingsprocedure nogmaals en leest u de hierboven getoonde \"Vorige status\". Dit bevat informatie om te bepalen waarom het toestel geen verbinding maakte met de server. De melding \"SSID niet gevonden\" betekent dat de ingevoerde 2,4 GHz WiFi-netwerknaam niet is gevonden of dat het netwerk buiten bereik is.</string>
   <string name="incorrect_email_or_password">Onjuist e-mailadres of wachtwoord</string>
+  <string name="incorrect_password">Onjuist wachtwoord</string>
   <string name="channel_name">Naam kanaal</string>
   <string name="location_name">Naam van de plaats</string>
   <string name="overcurrent_warning">De stroomvoorziening werd uitgeschakeld toen de ingestelde stroomlimiet werd overschreden.</string>
@@ -696,4 +697,16 @@
   <string name="add_wizard_add_more">Toevoegen</string>
   <string name="add_wizard_repeat">Probeer het opnieuw</string>
   <string name="add_wizard_password_clarification">Registratie van nieuwe apparaten in de Cloud is uitgeschakeld. Schakel deze handmatig in of geef uw accountwachtwoord op zodat de wizard deze automatisch kan inschakelen tijdens de registratie van nieuwe apparaten.</string>
+  <string name="add_wizard_password_rules">Het wachtwoord moet minimaal 8 tekens lang zijn en ten minste één hoofdletter, één kleine letter en één cijfer bevatten.</string>
+  <string name="add_wizard_password_set_title">Apparaatwachtwoord instellen</string>
+  <string name="add_wizard_password_new_label">Nieuw wachtwoord</string>
+  <string name="add_wizard_password_repeat_label">Herhaal wachtwoord</string>
+  <string name="add_wizard_password_enter_title">Apparaatwachtwoord</string>
+  <string name="add_wizard_device_temporarily_locked">Het limiet voor mislukte inlogpogingen is overschreden. Probeer het later opnieuw…</string>
+  <string name="wizard_state_preparing">Voorbereiden van het proces…</string>
+  <string name="wizard_state_connecting">Verbinden met het apparaat…</string>
+  <string name="wizard_state_configuring">Configureren van het apparaat…</string>
+  <string name="wizard_state_finishing">Afronding…</string>
+  <string name="add_wizard_password_instruction">Gebruik het wachtwoord dat is gebruikt voor toegang tot de lokale configuratie webpagina.\n\nWachtwoord vergeten? Je kunt het wijzigen op Supla Cloud of het apparaat terugzetten naar de fabrieksinstellingen.</string>
+  <string name="add_wizard_manual_reconnect">De netwerkverbinding met het apparaat is handmatig tot stand gebracht. Zorg ervoor dat uw telefoon opnieuw verbinding heeft met internet en vervolg het proces.</string>
 </resources>

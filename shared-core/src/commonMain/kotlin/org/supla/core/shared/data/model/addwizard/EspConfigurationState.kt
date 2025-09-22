@@ -1,4 +1,9 @@
 package org.supla.core.shared.data.model.addwizard
+
+import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.infrastructure.LocalizedStringId
+import org.supla.core.shared.infrastructure.localizedString
+
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -18,6 +23,8 @@ package org.supla.core.shared.data.model.addwizard
  */
 
 sealed interface EspConfigurationState {
+  val progress: Float
+  val progressLabel: LocalizedString?
   fun handle(event: EspConfigurationEvent)
 }
 
@@ -33,10 +40,15 @@ class Idle(
   private val stateHolder: EspConfigurationStateHolder,
   private val espConfigurationController: EspConfigurationController
 ) : EspConfigurationState {
+
+  override val progress: Float = 0f
+  override val progressLabel: LocalizedString? = null
+
   override fun handle(event: EspConfigurationEvent) {
     when (event) {
       EspConfigurationEvent.Start -> {
         stateHolder.setState(CheckingRegistration(stateHolder, espConfigurationController))
+        espConfigurationController.setupEspConfiguration()
         espConfigurationController.checkRegistration()
       }
 
@@ -56,6 +68,10 @@ class CheckingRegistration(
   private val stateHolder: EspConfigurationStateHolder,
   private val espConfigurationController: EspConfigurationController
 ) : EspConfigurationState {
+
+  override val progress: Float = 0.1f
+  override val progressLabel: LocalizedString? = localizedString(LocalizedStringId.ADD_WIZARD_STATE_PREPARING)
+
   override fun handle(event: EspConfigurationEvent) {
     when (event) {
       EspConfigurationEvent.RegistrationEnabled -> {
@@ -68,7 +84,7 @@ class CheckingRegistration(
         espConfigurationController.authorize()
       }
 
-      EspConfigurationEvent.Cancel -> {
+      EspConfigurationEvent.Close -> {
         stateHolder.setState(Canceling(stateHolder, espConfigurationController, AddWizardFinalAction.Close))
         espConfigurationController.cancel()
       }
@@ -90,6 +106,10 @@ class Authorizing(
   private val stateHolder: EspConfigurationStateHolder,
   private val espConfigurationController: EspConfigurationController
 ) : EspConfigurationState {
+
+  override val progress: Float = 0.2f
+  override val progressLabel: LocalizedString? = localizedString(LocalizedStringId.ADD_WIZARD_STATE_PREPARING)
+
   override fun handle(event: EspConfigurationEvent) {
     when (event) {
       EspConfigurationEvent.Authorized -> {
@@ -97,7 +117,7 @@ class Authorizing(
         espConfigurationController.activateRegistration()
       }
 
-      EspConfigurationEvent.Cancel -> {
+      EspConfigurationEvent.Close -> {
         stateHolder.setState(Canceling(stateHolder, espConfigurationController, AddWizardFinalAction.Close))
         espConfigurationController.cancel()
       }
@@ -119,6 +139,10 @@ class ActivatingRegistration(
   private val stateHolder: EspConfigurationStateHolder,
   private val espConfigurationController: EspConfigurationController
 ) : EspConfigurationState {
+
+  override val progress: Float = 0.3f
+  override val progressLabel: LocalizedString? = localizedString(LocalizedStringId.ADD_WIZARD_STATE_PREPARING)
+
   override fun handle(event: EspConfigurationEvent) {
     when (event) {
       EspConfigurationEvent.RegistrationActivated -> {
@@ -126,7 +150,7 @@ class ActivatingRegistration(
         espConfigurationController.findEspNetwork()
       }
 
-      EspConfigurationEvent.Cancel -> {
+      EspConfigurationEvent.Close -> {
         stateHolder.setState(Canceling(stateHolder, espConfigurationController, AddWizardFinalAction.Close))
         espConfigurationController.cancel()
       }
@@ -148,6 +172,10 @@ class NetworkSearch(
   private val stateHolder: EspConfigurationStateHolder,
   private val espConfigurationController: EspConfigurationController
 ) : EspConfigurationState {
+
+  override val progress: Float = 0.4f
+  override val progressLabel: LocalizedString? = localizedString(LocalizedStringId.ADD_WIZARD_STATE_CONNECTING)
+
   override fun handle(event: EspConfigurationEvent) {
     when (event) {
       is EspConfigurationEvent.NetworkFound -> {
@@ -170,7 +198,7 @@ class NetworkSearch(
         espConfigurationController.showError(EspConfigurationError.NotFound)
       }
 
-      EspConfigurationEvent.Cancel -> {
+      EspConfigurationEvent.Close -> {
         stateHolder.setState(Canceling(stateHolder, espConfigurationController, AddWizardFinalAction.Close))
         espConfigurationController.cancel()
       }
@@ -178,6 +206,11 @@ class NetworkSearch(
       EspConfigurationEvent.Back -> {
         stateHolder.setState(Canceling(stateHolder, espConfigurationController, AddWizardFinalAction.Back))
         espConfigurationController.cancel()
+      }
+
+      EspConfigurationEvent.NetworkConnected -> {
+        stateHolder.setState(ConfiguringEsp(stateHolder, espConfigurationController))
+        espConfigurationController.configureEsp()
       }
 
       else -> {
@@ -192,6 +225,10 @@ class ChangingNetwork(
   private val stateHolder: EspConfigurationStateHolder,
   private val espConfigurationController: EspConfigurationController
 ) : EspConfigurationState {
+
+  override val progress: Float = 0.5f
+  override val progressLabel: LocalizedString? = localizedString(LocalizedStringId.ADD_WIZARD_STATE_CONNECTING)
+
   override fun handle(event: EspConfigurationEvent) {
     when (event) {
       EspConfigurationEvent.NetworkConnected -> {
@@ -199,7 +236,7 @@ class ChangingNetwork(
         espConfigurationController.configureEsp()
       }
 
-      EspConfigurationEvent.Cancel -> {
+      EspConfigurationEvent.Close -> {
         stateHolder.setState(Canceling(stateHolder, espConfigurationController, AddWizardFinalAction.Close, reconnect = true))
         espConfigurationController.cancel()
       }
@@ -222,11 +259,25 @@ class ConfiguringEsp(
   private val stateHolder: EspConfigurationStateHolder,
   private val espConfigurationController: EspConfigurationController
 ) : EspConfigurationState {
+
+  override val progress: Float = 0.6f
+  override val progressLabel: LocalizedString? = localizedString(LocalizedStringId.ADD_WIZARD_STATE_CONFIGURING)
+
   override fun handle(event: EspConfigurationEvent) {
     when (event) {
       EspConfigurationEvent.EspConfigured -> {
         stateHolder.setState(Reconnecting(stateHolder, espConfigurationController, AddWizardFinalAction.Success))
         espConfigurationController.reconnect()
+      }
+
+      EspConfigurationEvent.SetupNeeded -> {
+        stateHolder.setState(ConfiguringPassword(stateHolder, espConfigurationController))
+        espConfigurationController.configurePassword()
+      }
+
+      EspConfigurationEvent.CredentialsNeeded -> {
+        stateHolder.setState(ProvidingPassword(stateHolder, espConfigurationController))
+        espConfigurationController.providePassword()
       }
 
       is EspConfigurationEvent.EspConfigurationFailure -> {
@@ -235,7 +286,7 @@ class ConfiguringEsp(
         espConfigurationController.reconnect()
       }
 
-      EspConfigurationEvent.Cancel -> {
+      EspConfigurationEvent.Close -> {
         stateHolder.setState(Canceling(stateHolder, espConfigurationController, AddWizardFinalAction.Close, reconnect = true))
         espConfigurationController.cancel()
       }
@@ -254,17 +305,100 @@ class ConfiguringEsp(
   }
 }
 
+class ConfiguringPassword(
+  private val stateHolder: EspConfigurationStateHolder,
+  private val espConfigurationController: EspConfigurationController
+) : EspConfigurationState {
+
+  override val progress: Float = 0.7f
+  override val progressLabel: LocalizedString? = localizedString(LocalizedStringId.ADD_WIZARD_STATE_CONFIGURING)
+
+  override fun handle(event: EspConfigurationEvent) {
+    when (event) {
+      EspConfigurationEvent.PasswordProvided -> {
+        stateHolder.setState(ConfiguringEsp(stateHolder, espConfigurationController))
+        espConfigurationController.configureEsp()
+      }
+
+      EspConfigurationEvent.Cancel -> {
+        stateHolder.setState(Reconnecting(stateHolder, espConfigurationController, AddWizardFinalAction.Reinitialize))
+        espConfigurationController.reconnect()
+      }
+
+      is EspConfigurationEvent.EspConfigurationFailure -> {
+        stateHolder.setState(Reconnecting(stateHolder, espConfigurationController, AddWizardFinalAction.Error(event.error)))
+        espConfigurationController.reconnect()
+      }
+
+      EspConfigurationEvent.Back -> {
+        stateHolder.setState(Reconnecting(stateHolder, espConfigurationController, AddWizardFinalAction.Back))
+        espConfigurationController.reconnect()
+      }
+
+      else -> {
+        val finalAction = AddWizardFinalAction.Error(EspConfigurationError.Configuration)
+        stateHolder.setState(Reconnecting(stateHolder, espConfigurationController, finalAction))
+        espConfigurationController.reconnect()
+      }
+    }
+  }
+}
+
+class ProvidingPassword(
+  private val stateHolder: EspConfigurationStateHolder,
+  private val espConfigurationController: EspConfigurationController
+) : EspConfigurationState {
+
+  override val progress: Float = 0.7f
+  override val progressLabel: LocalizedString? = localizedString(LocalizedStringId.ADD_WIZARD_STATE_CONFIGURING)
+
+  override fun handle(event: EspConfigurationEvent) {
+    when (event) {
+      EspConfigurationEvent.PasswordProvided -> {
+        stateHolder.setState(ConfiguringEsp(stateHolder, espConfigurationController))
+        espConfigurationController.configureEsp()
+      }
+
+      EspConfigurationEvent.Cancel -> {
+        stateHolder.setState(Reconnecting(stateHolder, espConfigurationController, AddWizardFinalAction.Reinitialize))
+        espConfigurationController.reconnect()
+      }
+
+      is EspConfigurationEvent.EspConfigurationFailure -> {
+        stateHolder.setState(Reconnecting(stateHolder, espConfigurationController, AddWizardFinalAction.Error(event.error)))
+        espConfigurationController.reconnect()
+      }
+
+      EspConfigurationEvent.Back -> {
+        stateHolder.setState(Reconnecting(stateHolder, espConfigurationController, AddWizardFinalAction.Back))
+        espConfigurationController.reconnect()
+      }
+
+      else -> {
+        val finalAction = AddWizardFinalAction.Error(EspConfigurationError.Configuration)
+        stateHolder.setState(Reconnecting(stateHolder, espConfigurationController, finalAction))
+        espConfigurationController.reconnect()
+      }
+    }
+  }
+}
+
 class Reconnecting(
   private val stateHolder: EspConfigurationStateHolder,
   private val espConfigurationController: EspConfigurationController,
   private val finalAction: AddWizardFinalAction
 ) : EspConfigurationState {
+
+  override val progress: Float = 0.8f
+  override val progressLabel: LocalizedString? = localizedString(LocalizedStringId.ADD_WIZARD_STATE_FINISHING)
+
   override fun handle(event: EspConfigurationEvent) {
     when (event) {
       EspConfigurationEvent.Reconnected -> {
         handleFinalAction(stateHolder, finalAction, espConfigurationController)
       }
 
+      EspConfigurationEvent.Close,
       EspConfigurationEvent.Cancel,
       EspConfigurationEvent.Back -> {
         // Do nothing, just wait for result
@@ -288,6 +422,10 @@ class Canceling(
   private val finalAction: AddWizardFinalAction,
   private val reconnect: Boolean = false
 ) : EspConfigurationState {
+
+  override val progress: Float = 0.9f
+  override val progressLabel: LocalizedString? = localizedString(LocalizedStringId.ADD_WIZARD_STATE_FINISHING)
+
   override fun handle(event: EspConfigurationEvent) {
     when (event) {
       EspConfigurationEvent.Canceled -> {
@@ -311,6 +449,10 @@ class Canceling(
  */
 
 data object Canceled : EspConfigurationState {
+
+  override val progress: Float = 1f
+  override val progressLabel: LocalizedString? = null
+
   override fun handle(event: EspConfigurationEvent) {
     throw IllegalStateException("Should not get any event!")
   }
@@ -320,6 +462,10 @@ class Finished(
   private val stateHolder: EspConfigurationStateHolder,
   private val espConfigurationController: EspConfigurationController
 ) : EspConfigurationState {
+
+  override val progress: Float = 1f
+  override val progressLabel: LocalizedString? = null
+
   override fun handle(event: EspConfigurationEvent) {
     when (event) {
       EspConfigurationEvent.Start -> {
@@ -338,6 +484,10 @@ class ConfigurationFailure(
   private val stateHolder: EspConfigurationStateHolder,
   private val espConfigurationController: EspConfigurationController
 ) : EspConfigurationState {
+
+  override val progress: Float = 1f
+  override val progressLabel: LocalizedString? = null
+
   override fun handle(event: EspConfigurationEvent) {
     when (event) {
       EspConfigurationEvent.Start -> {
@@ -380,6 +530,11 @@ private fun handleFinalAction(
     AddWizardFinalAction.Back -> {
       stateHolder.setState(Idle(stateHolder, espConfigurationController))
       espConfigurationController.back()
+    }
+
+    AddWizardFinalAction.Reinitialize -> {
+      stateHolder.setState(Idle(stateHolder, espConfigurationController))
+      espConfigurationController.reinitialize()
     }
   }
 }

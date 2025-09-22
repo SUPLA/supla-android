@@ -47,4 +47,5 @@ sealed class EspConfigurationError(
   data object Configuration : EspConfigurationError(message = localizedString(LocalizedStringId.ADD_WIZARD_RESULT_FAILED))
   data object Reconnect : EspConfigurationError(message = localizedString(LocalizedStringId.ADD_WIZARD_RECONNECT_TIMEOUT))
   data class Combined(override val messages: List<LocalizedString>) : EspConfigurationError(messages)
+  data object TemporarilyLocked : EspConfigurationError(message = localizedString(LocalizedStringId.ADD_WIZARD_DEVICE_TEMPORARILY_LOCKED))
 }

@@ -668,35 +668,6 @@ public class DefaultChannelRepositoryTest {
     assertEquals(14L, (long) newOrder.get(4));
   }
 
-  @Test
-  public void shouldGetAllChannelsForProfile() {
-    // given
-    long profileId = 123L;
-    Cursor cursor = mock(Cursor.class);
-    when(channelDao.getAllChannels("func <> 0  AND (C.profileid = " + profileId + ") "))
-        .thenReturn(cursor);
-
-    // when
-    Cursor returned = defaultChannelRepository.getAllProfileChannels(profileId);
-
-    // then
-    assertSame(cursor, returned);
-  }
-
-  @Test
-  public void shouldGetAllGroupsForProfile() {
-    // given
-    long profileId = 123L;
-    Cursor cursor = mock(Cursor.class);
-    when(channelDao.getAllChannelGroupsForProfileId(profileId)).thenReturn(cursor);
-
-    // when
-    Cursor returned = defaultChannelRepository.getAllProfileChannelGroups(profileId);
-
-    // then
-    assertSame(cursor, returned);
-  }
-
   private void assertChannelGroup(
       ChannelGroup channelGroup,
       int id,

@@ -1,4 +1,4 @@
-package org.supla.android.features.addwizard.view.wifi
+package org.supla.android.features.addwizard.view.dialogs
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -49,6 +49,8 @@ import org.supla.android.ui.dialogs.Dialog
 import org.supla.android.ui.dialogs.DialogButtonsRow
 import org.supla.android.ui.dialogs.DialogHeader
 import org.supla.android.ui.views.Image
+import org.supla.android.ui.views.Separator
+import org.supla.android.ui.views.SeparatorStyle
 import org.supla.android.ui.views.buttons.Button
 import org.supla.android.ui.views.buttons.OutlinedButton
 import org.supla.android.ui.views.buttons.TextButton
@@ -74,7 +76,7 @@ fun WiFiListDialogScope.WiFiListDialog(
 ) {
   Dialog(onDismiss = { onWiFiListDismiss() }, horizontalAlignment = Alignment.CenterHorizontally) {
     DialogHeader(stringResource(R.string.add_wizard_network_scan))
-
+    Separator(style = SeparatorStyle.LIGHT)
     if (state.warning) {
       Warning()
     }
@@ -84,12 +86,12 @@ fun WiFiListDialogScope.WiFiListDialog(
         Text(
           text = stringResource(R.string.add_wizard_network_scan_empty),
           style = MaterialTheme.typography.bodyMedium,
-          modifier = Modifier.padding(horizontal = Distance.default),
+          modifier = Modifier.padding(Distance.default),
           textAlign = TextAlign.Center
         )
       } else {
         LazyColumn(
-          modifier = Modifier.padding(horizontal = Distance.default)
+          modifier = Modifier.padding(horizontal = Distance.default).padding(top = Distance.default)
         ) {
           itemsIndexed(ssids) { index, item ->
             SsidItem(item, item == state.selected)
@@ -115,7 +117,7 @@ fun WiFiListDialogScope.WiFiListDialog(
       )
       TextButton(onClick = { onForceNextClick() }, text = stringResource(R.string.next))
     }
-
+    Separator(style = SeparatorStyle.LIGHT)
     Buttons(state)
   }
 }
@@ -127,6 +129,7 @@ private fun Warning() =
     horizontalArrangement = Arrangement.spacedBy(Distance.tiny),
     modifier = Modifier
       .padding(horizontal = Distance.default)
+      .padding(top = Distance.default)
       .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(dimensionResource(R.dimen.radius_default)))
       .border(
         width = 1.dp,
@@ -150,7 +153,8 @@ private fun Warning() =
 private fun ScanningIndicator() =
   Row(
     verticalAlignment = Alignment.CenterVertically,
-    horizontalArrangement = Arrangement.spacedBy(Distance.small)
+    horizontalArrangement = Arrangement.spacedBy(Distance.small),
+    modifier = Modifier.padding(vertical = Distance.default)
   ) {
     CircularProgressIndicator()
     Text(

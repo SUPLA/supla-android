@@ -1,4 +1,4 @@
-package org.supla.android.data.source.remote.esp
+package org.supla.android.extensions
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -17,26 +17,7 @@ package org.supla.android.data.source.remote.esp
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.jsoup.nodes.Document
-import retrofit2.http.FieldMap
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.GET
-import retrofit2.http.POST
+import retrofit2.HttpException
 
-interface EspService {
-
-  @GET("/")
-  suspend fun read(): Document
-
-  @POST("/")
-  @FormUrlEncoded
-  suspend fun store(@FieldMap data: Map<String, String>): Document
-
-  @POST("/setup")
-  @FormUrlEncoded
-  suspend fun setup(@FieldMap data: Map<String, String>): Document
-
-  @POST("/login")
-  @FormUrlEncoded
-  suspend fun login(@FieldMap data: Map<String, String>)
-}
+val HttpException.locationHeader: String?
+  get() = response()?.raw()?.headers["Location"]

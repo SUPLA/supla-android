@@ -101,9 +101,9 @@
   <string name="wizard_no_internetwifi">Перш ніж почати, підключіться до Інтернету через Wi-Fi, який також використовуватиметься виконуючими пристроями для підключення до сервера.</string>
   <string name="wizard_wifi_error">Wi-Fi вимкнено або не може прочитати свій ідентифікатор чи назву!</string>
   <string name="wizard_location_error">Для коректної роботи майстра додавання повинна бути ввімкнена функція Місцезнаходження на цьому пристрої. Перейдіть до налаштувань системи, оберіть опцію "Місцезнаходження" та переконайтеся, що вона увімкнена.</string>
-  <string name="wizard_addnetwork_error">Неможливо додати конфігурацію WiFi!</string>
-  <string name="wizard_wifi_timeout">Минув час очікування даних про поточну мережу WiFi! Перейдіть до налаштувань WiFi в системі Android, оберіть пункт "Додатково", а потім поставте галочку навпроти опції "Вмикати WiFi автоматично".</string>
-  <string name="wizard_scan_timeout">Минув час очікування завершення сканування мережі WiFi!</string>
+  <string name="wizard_addnetwork_error">Неможливо додати конфігурацію Wi-Fi!</string>
+  <string name="wizard_wifi_timeout">Минув час очікування даних про поточну мережу Wi-Fi! Перейдіть до налаштувань Wi-Fi в системі Android, оберіть пункт "Додатково", а потім поставте галочку навпроти опції "Вмикати Wi-Fi автоматично".</string>
+  <string name="wizard_scan_timeout">Минув час очікування завершення сканування мережі Wi-Fi!</string>
   <string name="wizard_connect_timeout">Минув час очікування встановлення з\'єднання з пристроєм виконання!</string>
   <string name="wizard_configure_timeout">Час очікування завершення налаштування пристрою минув!</string>
   <string name="wizard_reconnect_timeout">Минув час для повернення до основного Wi-Fi!</string>
@@ -264,7 +264,7 @@
   <string name="time_exceeded">Час вийшов. Спробуйте знову.</string>
   <string name="battery_level">Рівень заряду батареї</string>
   <string name="battery_powered">Працює від батареї</string>
-  <string name="wifi_signal_strength">Потужність сигналу WiFi</string>
+  <string name="wifi_signal_strength">Потужність сигналу Wi-Fi</string>
   <string name="bridge_node_online">Мостовий вузол - онлайн</string>
   <string name="bridge_signal_strength">Мостовий вузол  - потужність сигналу</string>
   <string name="uptime">Час роботи</string>
@@ -277,7 +277,7 @@
   <string name="lightsource_warning">Термін служби джерела світла %1$s</string>
   <string name="uv_warning1">Термін служби УФ-випромінювача %1$s. Заплануйте його заміну.</string>
   <string name="uv_warning2">Термін служби УФ-випромінювача %1$s. Замінити випромінювач.</string>
-  <string name="add_wizard_step_2_message">Введіть ім\'я та пароль вашої домашньої або корпоративної WiFi мережі, через яку виконавчий пристрій зможе встановити з\'єднання з сервером.</string>
+  <string name="add_wizard_step_2_message">Введіть ім\'я та пароль вашої домашньої або корпоративної Wi-Fi мережі, через яку виконавчий пристрій зможе встановити з\'єднання з сервером.</string>
   <string name="enabling_registration_timeout">Час реєстрації минув!</string>
   <string name="wifi_throttling">Через обмеження сканування мереж Wi-Fi, встановлені системою Android, будь ласка, зачекайте вказаний вище час.</string>
   <string name="enter_suplaorg_credentails">Введіть дані для входу в Supla Cloud.</string>
@@ -326,7 +326,7 @@
   <string name="info_led_alwaysoff">Світлодіодний індикатор завжди вимкнений, якщо пристрій не перебуває в режимі налаштування Wi-Fi (режим AP).</string>
   <string name="monostable">Моностабільний</string>
   <string name="bistable">Бістабільний</string>
-  <string name="wizard_iodev_connect_failed">Спроба встановити WiFi-з\'єднання з приводом не вдалася.</string>
+  <string name="wizard_iodev_connect_failed">Спроба встановити Wi-Fi-з\'єднання з приводом не вдалася.</string>
   <string name="diw_cfg_info_oprange">Відрегулюйте робочий діапазон регулятора яскравості, встановивши мінімальний і максимальний рівень яскравості. Мінімальне і максимальне значення можна встановити, пересуваючи повзунки, розташовані по обидва боки колеса.</string>
   <string name="diw_cfg_info_in_options">Параметри введення</string>
   <string name="diw_cfg_info_mono_option">Параметр змінює поведінку входу, до якого підключено моностабільну кнопку. Коли опція вимкнена, регулятор припиняє процес освітлення, коли досягає максимального рівня яскравості, а в разі затемнення – коли досягає мінімального рівня. Увімкнення цієї опції призведе до переходу на мінімальний рівень одразу після досягнення максимальної яскравості, а у разі затемнення до максимального значення – відразу після досягнення мінімальної. Затухання триватиме, поки натиснуто кнопку.</string>
@@ -336,6 +336,7 @@
   <string name="dgf_regeneration_after20h">Триває регенерація, розпочата після 20 годин роботи.</string>
   <string name="wizard_done_explentations">Якщо пристрій не відображається в додатку, повторіть процедуру додавання ще раз і прочитайте «попередній статус», показаний вище. Він містить інформацію, яка дозволяє визначити, чому пристрій не підключився до сервера. Повідомлення \\\"SSID not found \\\" («SSID не знайдено»)означає, що введене ім\'я мережі Wi-Fi 2,4 ГГц не знайдено або ця мережа недоступна.</string>
   <string name="incorrect_email_or_password">Неправильна адреса електронної пошти або пароль</string>
+  <string name="incorrect_password">Неправильний пароль</string>
   <string name="channel_name">Назва каналу</string>
   <string name="location_name">Назва місця</string>
   <string name="lastconnectionresetcause_unknown">0: невідомо</string>
@@ -669,4 +670,16 @@
   <string name="add_wizard_add_more">Додати більше</string>
   <string name="add_wizard_repeat">Спробуйте ще раз</string>
   <string name="add_wizard_password_clarification">Реєстрація нових пристроїв у Хмарі вимкнена. Увімкніть її вручну або надайте пароль до свого облікового запису, щоб майстер автоматично увімкнув її на час реєстрації нових пристроїв.</string>
+  <string name="add_wizard_password_rules">Пароль має бути довжиною щонайменше 8 символів і містити принаймні одну велику, одну малу літеру та одну цифру.</string>
+  <string name="add_wizard_password_set_title">Встановити пароль пристрою</string>
+  <string name="add_wizard_password_new_label">Новий пароль</string>
+  <string name="add_wizard_password_repeat_label">Повторіть пароль</string>
+  <string name="add_wizard_password_enter_title">Пароль пристрою</string>
+  <string name="add_wizard_device_temporarily_locked">Перевищено ліміт невдалих спроб входу. Будь ласка, спробуйте ще раз пізніше…</string>
+  <string name="wizard_state_preparing">Підготовка процесу…</string>
+  <string name="wizard_state_connecting">Підключення до пристрою…</string>
+  <string name="wizard_state_configuring">Налаштування пристрою…</string>
+  <string name="wizard_state_finishing">Завершення…</string>
+  <string name="add_wizard_password_instruction">Будь ласка, використовуйте пароль, який використовувався для доступу до локальної веб-сторінки конфігурації.\n\nЗабули пароль? Ви можете змінити його в Supla Cloud або скинути пристрій до заводських налаштувань.</string>
+  <string name="add_wizard_manual_reconnect">Мережеве з\'єднання з пристроєм було встановлено вручну. Переконайтеся, що ваш телефон знову підключився до Інтернету, і продовжуйте процес.</string>
 </resources>

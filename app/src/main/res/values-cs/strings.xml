@@ -76,17 +76,17 @@
   <string name="start">START</string>
   <string name="add_wizard_remember_passwd">Zapamatujte si heslo</string>
   <string name="add_wizard_step_3_message_3"><![CDATA[Stisknutím tlačítka <b>START</b> spustíte konfiguraci.]]></string>
-  <string name="wizard_no_internetwifi">Než začnete, připojte se k síti Internet pomocí WiFi, které budou také využívány výkonávajícími zařízeními pro připojení k serveru</string>
-  <string name="wizard_wifi_error">Síť WiFi je vypnuta nebo její ID nebo jméno nelze přečíst!</string>
+  <string name="wizard_no_internetwifi">Než začnete, připojte se k síti Internet pomocí Wi-Fi, které budou také využívány výkonávajícími zařízeními pro připojení k serveru</string>
+  <string name="wizard_wifi_error">Síť Wi-Fi je vypnuta nebo její ID nebo jméno nelze přečíst!</string>
   <string name="wizard_location_error">Aby průvodce přidáním fungoval správně, musí být v tomto zařízení povolena služba určování polohy. Přejděte do nastavení systému, vyberte možnost "Umístění" a zkontrolujte, zda je povolena.</string>
-  <string name="wizard_addnetwork_error">Nelze přidat konfiguraci sítě WiFi!</string>
-  <string name="wizard_wifi_timeout">Doba čekání na data v aktuální síti WiFi byla překročena! Přejděte do nastavení WiFi v systému Android, vyberte možnost Upřesnit a zaškrtněte možnost „Zapnout WiFi automaticky".</string>
-  <string name="wizard_scan_timeout">Byla překročena doba čekání na dokončení vyhledávání sítě WiFi!</string>
+  <string name="wizard_addnetwork_error">Nelze přidat konfiguraci sítě Wi-Fi!</string>
+  <string name="wizard_wifi_timeout">Doba čekání na data v aktuální síti Wi-Fi byla překročena! Přejděte do nastavení Wi-Fi v systému Android, vyberte možnost Upřesnit a zaškrtněte možnost „Zapnout WiFi automaticky".</string>
+  <string name="wizard_scan_timeout">Byla překročena doba čekání na dokončení vyhledávání sítě Wi-Fi!</string>
   <string name="wizard_connect_timeout">Doba čekání na spojení s vykonávajícím zařízením byla překročena!</string>
   <string name="wizard_configure_timeout">Doba čekání na dokončení konfigurace zařízení byla překročena!</string>
-  <string name="wizard_reconnect_timeout">Doba čekání na návrat do základní sítě WiFi byla překročena!</string>
+  <string name="wizard_reconnect_timeout">Doba čekání na návrat do základní sítě Wi-Fi byla překročena!</string>
   <string name="device_reg_request_timeout">Doba čekání na informace o dostupnosti registrace zařízení byla překročena!</string>
-  <string name="wizard_iodevice_notfound">Nebyly nalezeny žádné přístroje! Ujistěte se, že zařízení, které chcete konfigurovat, je v konfiguračním režimu a zkuste to znovu. DŮLEŽITÉ - Některé verze systému Android vyžadují službu GPS umožňující aplikacím vyhledávat v síti WiFi, proto se také ujistěte, že GPS je zapnuté.</string>
+  <string name="wizard_iodevice_notfound">Nebyly nalezeny žádné přístroje! Ujistěte se, že zařízení, které chcete konfigurovat, je v konfiguračním režimu a zkuste to znovu. DŮLEŽITÉ - Některé verze systému Android vyžadují službu GPS umožňující aplikacím vyhledávat v síti Wi-Fi, proto se také ujistěte, že GPS je zapnuté.</string>
   <string name="wizard_done">Konfigurace zařízení byla úspěšně dokončena :)</string>
   <string name="wizard_iodev_data">Data zařízení</string>
   <string name="wizard_iodev_name">Název</string>
@@ -202,7 +202,7 @@
 
   <string name="channel_caption_heatmeter">Měřič tepla</string>
   <string name="event_openedclosedthevalve">Otevírání/zavírání ventilu</string>
-  <string name="add_wizard_step_2_message">Zadejte název a heslo Vaší domácí nebo firemní WiFi sítě, prostřednictvím kterého bude možné dané zařízení připojit k serveru.</string>
+  <string name="add_wizard_step_2_message">Zadejte název a heslo Vaší domácí nebo firemní Wi-Fi sítě, prostřednictvím kterého bude možné dané zařízení připojit k serveru.</string>
   <string name="aritmetic_balance_days">Aritmetická zová rovnováha - Dny</string>
   <string name="aritmetic_balance_hours">Aritmetická rovnováha - Hodiny</string>
   <string name="aritmetic_balance_minutes">Fázová rovnováha - Minuty</string>
@@ -280,9 +280,9 @@
   <string name="wake_up_frequency">Četnost probuzení uzlu</string>
   <string name="wakeup_info">*) Zadané nastavení bude použito při nejbližším probuzení uzlu.</string>
   <string name="wheel">Kolečko</string>
-  <string name="wifi_rssi">Wifi RSSl</string>
-  <string name="wifi_signal_strength">Síla signálu WiFi</string>
-  <string name="wifi_throttling">Vzhledem k časovým limitům skenování Wifi sítě, které stanovuje systém android je nutné počkat tak dlouho jak je výše znázorněno.</string>
+  <string name="wifi_rssi">Wi-Fi RSSl</string>
+  <string name="wifi_signal_strength">Síla signálu Wi-Fi</string>
+  <string name="wifi_throttling">Vzhledem k časovým limitům skenování Wi-Fi sítě, které stanovuje systém android je nutné počkat tak dlouho jak je výše znázorněno.</string>
   <string name="wizard_step1_txt2">Ujistěte se, že mobilní data jsou během přidávání zařízení vypnuta. V opačném případě se nemusí podařit proces přidání zařízení.</string>
   <string name="z_wave">Z-wave můstek</string>
   <string name="zwave_add_device">Přidat zařízení</string>
@@ -372,11 +372,11 @@
   <string name="status_led">Stavová kontrolka</string>
   <string name="info_led_on">Pokud bylo navázáno spojení se serverem, kontrolka LED svítí.</string>
   <string name="info_led_off">Pokud bylo navázáno spojení se serverem, kontrolka LED nesvítí.</string>
-  <string name="info_led_alwaysoff">LED dioda je vždy vypnutá, pokud zařízení není v režimu nastavení wifi (režim AP).</string>
+  <string name="info_led_alwaysoff">LED dioda je vždy vypnutá, pokud zařízení není v režimu nastavení Wi-Fi (režim AP).</string>
   <string name="input">Vstup</string>
   <string name="monostable">Monostabilní</string>
   <string name="bistable">Bistabilní</string>
-  <string name="wizard_iodev_connect_failed">Pokus o navázání připojení WiFi se zařízením provádějícím činnosti se nezdařil.</string>
+  <string name="wizard_iodev_connect_failed">Pokus o navázání připojení Wi-Fi se zařízením provádějícím činnosti se nezdařil.</string>
   <string name="diw_cfg_info_oprange">Vybráním minimální nebo maximální úrovně jasu, můžete upravit provozní rozsah stmívače. Minimální a maximální hodnotu můžete nastavit přesouváním posuvníku umístěného na obou stranách kolečka.</string>
   <string name="diw_cfg_info_in_options">Možnosti vstupu</string>
   <string name="diw_cfg_info_mono_option">Tato volba mění chování vstupu, ke kterému je připojeno monostabilní tlačítko. Pokud je tato možnost vypnutá, stmívač přestane zesvětlovat, když dosáhne maximální úrovně jasu, a stmívat, když dosáhne minimální úrovně. Pokud je tato možnost zapnutá, přepne se stmívač na minimální úroveň, jakmile je dosaženo maximální úrovně jasu, a v případě stmívání na maximální hodnotu a to hned po dosažení minima. Rozjasňování/stmívání bude pokračovat, dokud bude tlačítko stisknuté.</string>
@@ -384,8 +384,9 @@
   <string name="dgf_too_long_operation_warning">Části skla jsou vystaveny světlu déle než 20 hodin, což může ovlivnit jejich životnost. Pro jejich obnovu se doporučuje zakrýt všechny části na minimálně 4 hodiny.</string>
   <string name="dgf_planned_regeneration_in_progress">Probíhá plánovaná obnova.</string>
   <string name="dgf_regeneration_after20h">Obnova byla zahájena po 20h provozní činnosti.</string>
-  <string name="wizard_done_explentations">Pokud se zařízení v aplikaci nezobrazí, zopakujte tento postup přidání znovu a přečtěte si výše uvedený \"Předchozí stav\". Obsahuje informace, díky nímž lze zjistit, proč se zařízení nepřipojilo k serveru. Zpráva  \"SSID not found“ znamená, že zadaný název sítě WiFi 2,4 GHz nebyl nalezen nebo je síť mimo dosah.</string>
+  <string name="wizard_done_explentations">Pokud se zařízení v aplikaci nezobrazí, zopakujte tento postup přidání znovu a přečtěte si výše uvedený \"Předchozí stav\". Obsahuje informace, díky nímž lze zjistit, proč se zařízení nepřipojilo k serveru. Zpráva  \"SSID not found“ znamená, že zadaný název sítě Wi-Fi 2,4 GHz nebyl nalezen nebo je síť mimo dosah.</string>
   <string name="incorrect_email_or_password">Nesprávná e-mailová adresa nebo heslo</string>
+  <string name="incorrect_password">Nesprávné heslo</string>
   <string name="channel_name">Název kanálu</string>
   <string name="location_name">Název umístění</string>
   <string name="overcurrent_warning">Při překročení nastaveného proudového limitu došlo k vypnutí napájení.</string>
@@ -396,7 +397,7 @@
   <string name="motor_problem">Problém s motorem / Neočekávané zastavení.</string>
   <string name="lastconnectionresetcause_unknown">0: neznámý</string>
   <string name="lastconnectionresetcause_activity_timeout">1: žádná odpověď serveru</string>
-  <string name="lastconnectionresetcause_wifi_connection_lost">2: ztráta WiFi připojení</string>
+  <string name="lastconnectionresetcause_wifi_connection_lost">2: ztráta Wi-Fi připojení</string>
   <string name="lastconnectionresetcause_server_connection_lost">3: restart připojení k serveru</string>
   <string name="basic_profile_warning">Režim není k dispozici</string>
   <string name="basic_config_unavailable">Před vypnutím rozšířeného režimu vyberte možnost ověřování e-mailu s automatickou detekcí serveru.</string>
@@ -676,4 +677,16 @@
   <string name="add_wizard_add_more">Přidejte další</string>
   <string name="add_wizard_repeat">Zkusit znovu</string>
   <string name="add_wizard_password_clarification">Registrace nových zařízení v Cloudu je zakázána. Povolte ji ručně, nebo zadejte heslo ke svému účtu, aby ji průvodce automaticky povolil po dobu registrace nových zařízení.</string>
+  <string name="add_wizard_password_rules">Heslo by mělo mít alespoň 8 znaků a obsahovat minimálně jedno velké, jedno malé písmeno a jednu číslici.</string>
+  <string name="add_wizard_password_set_title">Nastavit heslo zařízení</string>
+  <string name="add_wizard_password_new_label">Nové heslo</string>
+  <string name="add_wizard_password_repeat_label">Zopakujte heslo</string>
+  <string name="add_wizard_password_enter_title">Heslo zařízení</string>
+  <string name="add_wizard_device_temporarily_locked">Byl překročen limit neúspěšných pokusů o přihlášení. Zkuste to prosím později…</string>
+  <string name="wizard_state_preparing">Příprava procesu…</string>
+  <string name="wizard_state_connecting">Připojování k zařízení…</string>
+  <string name="wizard_state_configuring">Konfigurace zařízení…</string>
+  <string name="wizard_state_finishing">Dokončování…</string>
+  <string name="add_wizard_password_instruction">Použijte heslo, které bylo použito pro přístup k webové stránce místní konfigurace.\n\nZapomněli jste heslo? Můžete ho změnit na Supla Cloud nebo resetovat zařízení na tovární nastavení.</string>
+  <string name="add_wizard_manual_reconnect">Síťové připojení k zařízení bylo navázáno ručně. Ujistěte se, že je váš telefon znovu připojen k internetu, a pokračujte v procesu.</string>
 </resources>

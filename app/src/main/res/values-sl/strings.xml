@@ -94,18 +94,18 @@
 
   <string name="add_wizard_step_3_message_3"><![CDATA[Pritisnite tipko <b>START</b> da začnete konfiguracijo.]]></string>
 
-  <string name="wizard_no_internetwifi">Preden začnete, se povežite z internetom prek omrežja WiFi, ki ga bodo tudi izvršne naprave uporabile za povezavo s strežnikom.</string>
-  <string name="wizard_wifi_error">Omrežje WiFi je izklopljeno ali njegovega identifikatorja ali imena ni mogoče prebrati!</string>
+  <string name="wizard_no_internetwifi">Preden začnete, se povežite z internetom prek omrežja Wi-Fi, ki ga bodo tudi izvršne naprave uporabile za povezavo s strežnikom.</string>
+  <string name="wizard_wifi_error">Omrežje Wi-Fi je izklopljeno ali njegovega identifikatorja ali imena ni mogoče prebrati!</string>
   <string name="wizard_location_error">Za pravilno delovanje čarovnika za dodajanje mora biti v tej napravi omogočena storitev lokacije. Pojdite v sistemske nastavitve, nato izberite »Lokacija« in se prepričajte, da je ta vklopljena.</string>
-  <string name="wizard_addnetwork_error">Konfiguracije omrežja WiFi ni mogoče dodati!</string>
-  <string name="wizard_wifi_timeout">Čakalna doba za trenutne podatke WiFi je prekoračena! Pojdite v nastavitve WiFi v sistemu Android, izberite Dodatne nastavitve in potrdite polje »Samodejno vklopi WiFi«.</string>
-  <string name="wizard_scan_timeout">Čakalna doba za dokončanje iskanja WiFi je prekoračena!</string>
+  <string name="wizard_addnetwork_error">Konfiguracije omrežja Wi-Fi ni mogoče dodati!</string>
+  <string name="wizard_wifi_timeout">Čakalna doba za trenutne podatke Wi-Fi je prekoračena! Pojdite v nastavitve Wi-Fi v sistemu Android, izberite Dodatne nastavitve in potrdite polje »Samodejno vklopi Wi-Fi«.</string>
+  <string name="wizard_scan_timeout">Čakalna doba za dokončanje iskanja Wi-Fi je prekoračena!</string>
   <string name="wizard_connect_timeout">Čakalna doba za vzpostavitev povezave z izvršilno napravo je prekoračena!</string>
   <string name="wizard_configure_timeout">Čakalna doba za dokončanje konfiguracije naprave je prekoračena!</string>
-  <string name="wizard_reconnect_timeout">Čakalna doba za vrnitev v primarno omrežje WiFi je prekoračena!</string>
+  <string name="wizard_reconnect_timeout">Čakalna doba za vrnitev v primarno omrežje Wi-Fi je prekoračena!</string>
   <string name="device_reg_request_timeout">Čakalna doba za pridobitev informacije o razpoložljivosti registracije naprav je prekoračena!</string>
 
-  <string name="wizard_iodevice_notfound">Ni najdenih naprav! Prepričajte se, da je naprava, ki jo želite konfigurirati, v konfiguracijskem načinu in poskusite znova. POMEMBNO - Nekatere različice Androida zahtevajo, da je vklopljen GPS, kar aplikacijam omogoča iskanje po omrežju WiFi, zato preverite tudi, ali je vklopljen GPS.</string>
+  <string name="wizard_iodevice_notfound">Ni najdenih naprav! Prepričajte se, da je naprava, ki jo želite konfigurirati, v konfiguracijskem načinu in poskusite znova. POMEMBNO - Nekatere različice Androida zahtevajo, da je vklopljen GPS, kar aplikacijam omogoča iskanje po omrežju Wi-Fi, zato preverite tudi, ali je vklopljen GPS.</string>
 
 
   <string name="wizard_done">Konfiguracija naprave je bila uspešna :)</string>
@@ -216,7 +216,7 @@
   <string name="channel_func_valve_percentage">Valve</string>
 
   <string name="channel_caption_heatmeter">Merilnik toplote</string>
-  <string name="add_wizard_step_2_message">Vnesite ime in geslo domačega ali službenega omrežja WiFi, prek katerega bo izvrševalna naprava lahko vzpostavila povezavo s strežnikom.</string>
+  <string name="add_wizard_step_2_message">Vnesite ime in geslo domačega ali službenega omrežja Wi-Fi, prek katerega bo izvrševalna naprava lahko vzpostavila povezavo s strežnikom.</string>
   <string name="aritmetic_balance_days">Aritmetično ravnotežje - Dnevi</string>
   <string name="aritmetic_balance_hours">Aritmetično ravnotežje - Ure</string>
   <string name="aritmetic_balance_minutes">Aritmetično ravnotežje - Minute</string>
@@ -299,9 +299,9 @@
   <string name="wake_up_frequency">Pogostost zbujanja</string>
   <string name="wakeup_info">*) Vnesene nastavitve bodo uporabljene naslednjič, ko se najbližje vozlišče zbudi.</string>
   <string name="wheel">Kolo</string>
-  <string name="wifi_rssi">WiFi RSSI</string>
-  <string name="wifi_signal_strength">Moč WiFi signala</string>
-  <string name="wifi_throttling">Zaradi omejitev skeniranja omrežja WiFi, ki jih nalaga sistem Android, počakajte na zgoraj navedeni čas.</string>
+  <string name="wifi_rssi">Wi-Fi RSSI</string>
+  <string name="wifi_signal_strength">Moč Wi-Fi signala</string>
+  <string name="wifi_throttling">Zaradi omejitev skeniranja omrežja Wi-Fi, ki jih nalaga sistem Android, počakajte na zgoraj navedeni čas.</string>
   <string name="wizard_step1_txt2">Pri dodajanju naprav se prepričajte, da so mobilni podatki izklopljeni. V nasprotnem primeru dodajanje morda ne bo uspešno.</string>
   <string name="yes">Da</string>
   <string name="z_wave">Most z-wave</string>
@@ -392,11 +392,11 @@
   <string name="status_led">Status LED diode</string>
   <string name="info_led_on">LED dioda zasveti, ko je vzpostavljena povezava s strežnikom.</string>
   <string name="info_led_off">LED dioda zasveti, ko je vzpostavljena povezava s strežnikom.</string>
-  <string name="info_led_alwaysoff">Dioda je vedno izklopljena, razen če naprava deluje v načinu wifi konfiguracije (Način AP).</string>
+  <string name="info_led_alwaysoff">Dioda je vedno izklopljena, razen če naprava deluje v načinu Wi-Fi konfiguracije (Način AP).</string>
   <string name="input">Vhod</string>
   <string name="monostable">Monostabilni</string>
   <string name="bistable">Bistabilni</string>
-  <string name="wizard_iodev_connect_failed">Poskus vzpostavitve WiFi povezave z izvršno napravo ni uspel.</string>
+  <string name="wizard_iodev_connect_failed">Poskus vzpostavitve Wi-Fi povezave z izvršno napravo ni uspel.</string>
   <string name="diw_cfg_info_oprange">Delovanje zatemnitve prilagodite tako, da nastavite najmanjšo in največjo raven svetlosti. Najmanjšo in največjo vrednost lahko nastavite s premikanjem drsnikov na obeh straneh kolesa.</string>
   <string name="diw_cfg_info_in_options">Možnosti vhoda</string>
   <string name="diw_cfg_info_mono_option">Možnost spremeni obnašanje vhoda, na katerega je priključen monostabilni gumb. Če je možnost onemogočena, zatemnilnik ustavi osvetljevanje, ko je dosežena najvišja raven svetlosti, v primeru zatemnitve pa, ko doseže minimalno stopnjo. Če omogočite to možnost, se preklopi na minimalno raven takoj, ko je dosežena največja raven svetlosti, v primeru zatemnitve na največjo vrednost pa takoj, ko je dosežena najmanjša. Osvetljevanje/zatemnitev se bo nadaljevalo do takrat ko je gumb pritisnjen.</string>
@@ -404,8 +404,9 @@
   <string name="dgf_too_long_operation_warning">Stekleni deli so izpostavljeni več kot 20 ur, kar lahko negativno vpliva na njihovo življenjsko dobo. Priporočljivo je, da vse dele prekrijete za najmanj 4 ure, da se obnovijo.</string>
   <string name="dgf_planned_regeneration_in_progress">Načrtovana obnova je v teku.</string>
   <string name="dgf_regeneration_after20h">Obnova je v teku po 20 urah dela.</string>
-  <string name="wizard_done_explentations">Če se naprava ne prikaže v aplikaciji, ponovite ta postopek dodajanja še enkrat in preberite \"Prejšnje stanje\", prikazano zgoraj. Vsebuje informacije, na podlagi katerih je mogoče ugotoviti, zakaj naprava ni vzpostavila povezave s strežnikom. Sporočilo »SSID not found« pomeni, da vnesenega imena 2,4 GHz WiFi omrežja ni bilo mogoče najti ali pa je omrežje izven dosega.</string>
+  <string name="wizard_done_explentations">Če se naprava ne prikaže v aplikaciji, ponovite ta postopek dodajanja še enkrat in preberite \"Prejšnje stanje\", prikazano zgoraj. Vsebuje informacije, na podlagi katerih je mogoče ugotoviti, zakaj naprava ni vzpostavila povezave s strežnikom. Sporočilo »SSID not found« pomeni, da vnesenega imena 2,4 GHz Wi-Fi omrežja ni bilo mogoče najti ali pa je omrežje izven dosega.</string>
   <string name="incorrect_email_or_password">Napačen e-naslov ali geslo</string>
+  <string name="incorrect_password">Napačno geslo</string>
   <string name="channel_name">Ime kanala</string>
   <string name="location_name">Ime lokacije</string>
   <string name="overcurrent_warning">Napeljava je bila onemogočena po prekoračitvi nastavljenega praga dovoljenega električnega toka.</string>
@@ -416,7 +417,7 @@
   <string name="motor_problem">Težava z motorjem / Nepričakovana zaustavitev.</string>
   <string name="lastconnectionresetcause_unknown">0: neznan</string>
   <string name="lastconnectionresetcause_activity_timeout">1: ni odgovora strežnika</string>
-  <string name="lastconnectionresetcause_wifi_connection_lost">2: izguba WiFi povezave</string>
+  <string name="lastconnectionresetcause_wifi_connection_lost">2: izguba Wi-Fi povezave</string>
   <string name="lastconnectionresetcause_server_connection_lost">3: ponovni zagon povezave s strežnikom</string>
   <string name="basic_profile_warning">Način ni na voljo</string>
   <string name="basic_config_unavailable">Preden izključite napredni način izberite email avtentifikacijo s samodejnim zaznavanjem strežnika.</string>
@@ -696,4 +697,16 @@
   <string name="add_wizard_add_more">Dodaj več</string>
   <string name="add_wizard_repeat">Poskusite znova</string>
   <string name="add_wizard_password_clarification">Registracija novih naprav v oblaku je onemogočena. Omogočite jo ročno ali vnesite geslo svojega računa, da jo čarovnik samodejno omogoči med registracijo novih naprav.</string>
+  <string name="add_wizard_password_rules">Geslo mora biti dolgo vsaj 8 znakov in vsebovati vsaj eno veliko, eno malo črko in eno številko.</string>
+  <string name="add_wizard_password_set_title">Nastavi geslo naprave</string>
+  <string name="add_wizard_password_new_label">Novo geslo</string>
+  <string name="add_wizard_password_repeat_label">Ponovi geslo</string>
+  <string name="add_wizard_password_enter_title">Geslo naprave</string>
+  <string name="add_wizard_device_temporarily_locked">Prekoračena je bila omejitev neuspešnih poskusov prijave. Prosimo, poskusite znova kasneje…</string>
+  <string name="wizard_state_preparing">Priprava procesa…</string>
+  <string name="wizard_state_connecting">Povezovanje z napravo…</string>
+  <string name="wizard_state_configuring">Konfiguracija naprave…</string>
+  <string name="wizard_state_finishing">Zaključevanje…</string>
+  <string name="add_wizard_password_instruction">Prosimo, uporabite geslo, ki je bilo uporabljeno za dostop do spletne strani lokalne konfiguracije.\n\nSte pozabili geslo? Lahko ga spremenite na Supla Cloud ali ponastavite napravo na tovarniške nastavitve.</string>
+  <string name="add_wizard_manual_reconnect">Omrežna povezava z napravo je bila vzpostavljena ročno. Prepričajte se, da je vaš telefon ponovno povezan z internetom, in nadaljujte postopek.</string>
 </resources>

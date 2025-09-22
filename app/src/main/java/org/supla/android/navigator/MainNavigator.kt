@@ -23,6 +23,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.annotation.IdRes
+import androidx.core.net.toUri
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
@@ -81,11 +82,11 @@ class MainNavigator @Inject constructor(@ActivityContext private val activityCon
   }
 
   fun navigateToCloudExternal() {
-    activityContext.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(activityContext.resources.getString(R.string.cloud_url))))
+    activityContext.startActivity(Intent(Intent.ACTION_VIEW, activityContext.resources.getString(R.string.cloud_url).toUri()))
   }
 
   fun navigateToBetaCloudExternal() {
-    activityContext.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(activityContext.resources.getString(R.string.beta_cloud_url))))
+    activityContext.startActivity(Intent(Intent.ACTION_VIEW, activityContext.resources.getString(R.string.beta_cloud_url).toUri()))
   }
 
   fun navigateToWeb(url: Uri) {
@@ -93,7 +94,7 @@ class MainNavigator @Inject constructor(@ActivityContext private val activityCon
   }
 
   fun navigateToSuplaOrgExternal() {
-    navigateToWeb(Uri.parse(activityContext.getString(R.string.homepage_url)))
+    navigateToWeb(activityContext.getString(R.string.homepage_url).toUri())
   }
 
   fun back(): Boolean =
@@ -107,6 +108,10 @@ class MainNavigator @Inject constructor(@ActivityContext private val activityCon
         navController.navigate(R.id.status_fragment)
       }
     }
+  }
+
+  fun forcePopToStatus() {
+    navController.popBackStack(R.id.status_fragment, false)
   }
 
   fun navigateToMain() {

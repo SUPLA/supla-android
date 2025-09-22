@@ -25,8 +25,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
+import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.ui.views.Separator
 import org.supla.android.ui.views.SeparatorStyle
 import org.supla.android.ui.views.buttons.Button
@@ -76,3 +78,16 @@ private fun DialogMessage(message: String) =
       .padding(all = Distance.default)
       .fillMaxWidth()
   )
+
+@Composable
+@Preview
+private fun Preview() {
+  SuplaTheme {
+    AlertDialog(
+      title = stringResource(R.string.notification_delete_all_title),
+      message = stringResource(R.string.notification_delete_all_message),
+      positiveButtonTitle = stringResource(R.string.notification_delete_all_proceed),
+      negativeButtonTitle = stringResource(R.string.cancel)
+    )
+  }
+}
