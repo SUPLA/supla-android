@@ -29,6 +29,7 @@ fun GpmValueFormatter.Companion.staticFormatter(config: SuplaChannelConfig?): Gp
   return GpmValueFormatter(
     defaultFormatSpecification = ValueFormatSpecification(
       precision = ValuePrecision.exact(gpmConfig?.valuePrecision ?: 2),
+      withUnit = true,
       unit = gpmConfig?.unitAfterValue?.let {
         if (it.isEmpty()) {
           null

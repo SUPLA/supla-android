@@ -393,7 +393,7 @@ private class PreviewProxy : HistoryDetailProxy {
         value = "Label",
         color = R.color.light_red
       ),
-      valueFormatter = HumidityValueFormatter(),
+      valueFormatter = HumidityValueFormatter,
     )
     return MutableStateFlow(
       value = HistoryDetailViewState(

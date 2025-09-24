@@ -19,7 +19,6 @@ package org.supla.android.data
 
 import android.annotation.SuppressLint
 import org.supla.android.R
-import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.core.ui.StringProvider
 import org.supla.android.data.source.local.calendar.Hour
 import org.supla.android.di.FORMATTER_THERMOMETER
@@ -28,7 +27,6 @@ import org.supla.android.extensions.hours
 import org.supla.android.extensions.minutesInHour
 import org.supla.android.extensions.secondsInMinute
 import org.supla.android.usecases.channel.valueprovider.ThermometerValueProvider
-import org.supla.core.shared.data.model.thermometer.TemperatureUnit
 import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
 import org.supla.core.shared.usecase.channel.valueformatter.types.withUnit
 import java.text.SimpleDateFormat
@@ -39,7 +37,6 @@ import javax.inject.Singleton
 
 @Singleton
 class ValuesFormatter @Inject constructor(
-  private val applicationPreferences: ApplicationPreferences,
   @Named(FORMATTER_THERMOMETER) private val thermometerValueFormatter: ValueFormatter
 ) {
 
@@ -47,18 +44,10 @@ class ValuesFormatter @Inject constructor(
     return rawValue != null && rawValue > TEMPERATURE_NA_VALUE
   }
 
-  fun getTemperatureString(rawValue: Float?) = thermometerValueFormatter.format(rawValue)
+  fun getTemperatureString(rawValue: Float?) = thermometerValueFormatter.format(rawValue, withUnit(false))
 
   fun getTemperatureString(rawValue: Double?, withUnit: Boolean = false) =
     thermometerValueFormatter.format(rawValue, withUnit(withUnit))
-
-  fun getTemperatureInConfiguredUnit(value: Double): Double {
-    return if (!isTemperatureDefined(value) || isCelsius()) {
-      value
-    } else {
-      toFahrenheit(value)
-    }
-  }
 
   fun getHourWithMinutes(minutes: Int): StringProvider {
     val hours = minutes.div(60)
@@ -111,12 +100,6 @@ class ValuesFormatter @Inject constructor(
     } else {
       { getTimeString(time.hours, time.minutesInHour, time.secondsInMinute) }
     }
-  }
-
-  private fun isCelsius(): Boolean = applicationPreferences.temperatureUnit == TemperatureUnit.CELSIUS
-
-  private fun toFahrenheit(celsiusValue: Double): Double {
-    return 9.0 / 5.0 * celsiusValue + 32.0
   }
 
   companion object {

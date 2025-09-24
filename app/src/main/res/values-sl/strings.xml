@@ -253,7 +253,7 @@
   <string name="light_source_lifespan">Življenjska doba svetlobnega vira</string>
   <string name="light_source_lifespan_hours">Življenjska doba svetlobnega vira (ure)</string>
   <string name="light_source_operatingtime">Delovni čas svetlobnega vira</string>
-  <string name="lightsource_warning">Življenjska doba svetlobnega vira znaša %1$.0f%%</string>
+  <string name="channel_lightsource_warning">Življenjska doba svetlobnega vira znaša %1$.01f%%</string>
   <string name="mode_change_in_progress">Spreminjanje načina poteka</string>
   <string name="no">Ne</string>
   <string name="reset_lightsource_usage_counter">Ponastavite števec porabe svetlobnega vira</string>
@@ -265,8 +265,8 @@
   <string name="soft_ver">Različica</string>
   <string name="time_exceeded">Časovna prekoračitev. Poskusite ponovno.</string>
   <string name="uptime">Čas delovanja</string>
-  <string name="uv_warning1">Življenjska doba infrardeče IR grelne žarnice znaša %1$.0f%%. Načrtujte njeno menjavo.</string>
-  <string name="uv_warning2">Življenjska doba infrardeče IR grelne žarnice znaša %1$.0f%%. Menjajte žarnico.</string>
+  <string name="channel_uv_warning">Življenjska doba infrardeče IR grelne žarnice znaša %1$.01f%%. Načrtujte njeno menjavo.</string>
+  <string name="channel_uv_error">Življenjska doba infrardeče IR grelne žarnice znaša %1$.01f%%. Menjajte žarnico.</string>
   <string name="valve_warning_manually_closed">Ventil je bil zaprt ročno ali na daljavo. Preden ga odprete, se prepričajte, da ni zaprt zaradi poplave. Če želite onemogočiti opozorilo, ročno odprite ventil. Ali ste prepričani, da želite odpreti ventil z aplikacijo?!</string>
   <string name="valve_warning">Ventil je bil zaprt ročno ali na daljavo. Preden ga odprete, se prepričajte, da ni bil zaprt zaradi poplave. Če želite onemogočiti opozorilo, odprite ventil ročno.</string>
   <string name="vector_balance_days">Vektorsko ravnotežje - Dnevi</string>

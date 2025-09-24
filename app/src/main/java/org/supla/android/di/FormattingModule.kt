@@ -45,5 +45,5 @@ class FormattingModule {
   @Singleton
   @Provides
   @Named(FORMATTER_HUMIDITY)
-  fun provideHumidityValueFormatter(): ValueFormatter = HumidityValueFormatter()
+  fun provideHumidityValueFormatter(): ValueFormatter = HumidityValueFormatter
 }

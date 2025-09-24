@@ -26,8 +26,11 @@ import org.supla.core.shared.usecase.channel.valueformatter.types.ValuePrecision
 import kotlin.math.abs
 
 class ElectricityMeterValueFormatter(
-  override val defaultFormatSpecification: ValueFormatSpecification = ValueFormatSpecification.Companion.ElectricityMeter
+  override val defaultFormatSpecification: ValueFormatSpecification
 ) : ValueFormatter() {
+
+  constructor() : this(defaultFormatSpecification = ValueFormatSpecification.Companion.ElectricityMeter)
+
   override val invalidValue: InvalidValue = InvalidValue.Companion.ElectricityMeter
 
   override fun format(value: Any?): String =

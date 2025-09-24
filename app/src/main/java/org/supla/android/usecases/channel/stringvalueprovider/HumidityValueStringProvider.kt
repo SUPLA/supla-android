@@ -31,7 +31,7 @@ class HumidityValueStringProvider @Inject constructor(
   private val humidityValueProvider: HumidityValueProvider,
 ) : ChannelValueStringProvider {
 
-  private val humidityFormatter = HumidityValueFormatter()
+  private val humidityFormatter = HumidityValueFormatter
   override fun handle(channelWithChildren: ChannelWithChildren): Boolean =
     humidityValueProvider.handle(channelWithChildren)
 

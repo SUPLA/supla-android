@@ -367,9 +367,9 @@
   <string name="chanel_lightsource_lifespan_settings">Zmień ustawienia żywotności źródła światła</string>
   <string name="light_source_lifespan_hours">Żywotność źródła światła (godziny)</string>
   <string name="reset_lightsource_usage_counter">Resetuj licznik zużycia źródła światła</string>
-  <string name="lightsource_warning">Żywotność źródła światła wynosi %1$.0f%%</string>
-  <string name="uv_warning1">Żywotność promiennika uv wynosi %1$.0f%%. Zaplanuj jego wymianę.</string>
-  <string name="uv_warning2">Żywotność promiennika uv wynosi %1$.0f%%. Wymień promiennik.</string>
+  <string name="channel_lightsource_warning">Żywotność źródła światła wynosi %1$.01f%%</string>
+  <string name="channel_uv_warning">Żywotność promiennika uv wynosi %1$.01f%%. Zaplanuj jego wymianę.</string>
+  <string name="channel_uv_error">Żywotność promiennika uv wynosi %1$.01f%%. Wymień promiennik.</string>
   <string name="add_wizard_step_2_message">Wprowadź nazwę oraz hasło Twojej domowej lub firmowej sieci Wi-Fi za pośrednictwem której urządzenie wykonawcze będzie mogło nawiązać połączenie z serwerem.</string>
   <string name="enabling_registration_timeout">Upłynął czas oczekiwania na włączenie rejestracji!</string>
   <string name="wifi_throttling">Z uwagi na limity skanowania sieci Wi-Fi narzucone przez system Android, należy odczekać czas prezentowany powyżej.</string>

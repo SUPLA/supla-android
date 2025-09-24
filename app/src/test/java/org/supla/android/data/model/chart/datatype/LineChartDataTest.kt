@@ -104,7 +104,7 @@ class LineChartDataTest {
             HistoryDataSet(
               type = ChartEntryType.HUMIDITY_ONLY,
               label = HistoryDataSet.Label.Single(HistoryDataSet.LabelData(123)),
-              valueFormatter = HumidityValueFormatter(),
+              valueFormatter = HumidityValueFormatter,
               active = true,
               entities = listOf(
                 listOf(

@@ -252,7 +252,7 @@
   <string name="light_source_lifespan">Levensduur van de lichtbron</string>
   <string name="light_source_lifespan_hours">Levensduur lichtbron (uren)</string>
   <string name="light_source_operatingtime">Lichtbron werktijd</string>
-  <string name="lightsource_warning">De levensduur van de lichtbron is %1$.0f%%</string>
+  <string name="channel_lightsource_warning">De levensduur van de lichtbron is %1$.01f%%</string>
   <string name="mode_change_in_progress">De moduswijziging is aan de gang</string>
   <string name="no">Nee</string>
   <string name="reset_lightsource_usage_counter">Gebruiksteller lichtbron resetten</string>
@@ -264,8 +264,8 @@
   <string name="soft_ver">Software versie</string>
   <string name="time_exceeded">De tijd is om. Probeer het nog eens.</string>
   <string name="uptime">Werktijd</string>
-  <string name="uv_warning1">De levensduur van de uv-lamp is %1$.0f%%. Plan de vervanging ervan.</string>
-  <string name="uv_warning2">De levensduur van de uv-lamp is %1$.0f%%. Vervang de lamp.</string>
+  <string name="channel_uv_warning">De levensduur van de uv-lamp is %1$.01f%%. Plan de vervanging ervan.</string>
+  <string name="channel_uv_error">De levensduur van de uv-lamp is %1$.01f%%. Vervang de lamp.</string>
   <string name="valve_warning_manually_closed">De klep is handmatig of per radio gesloten. Voordat u het opent, moet u ervoor zorgen dat ze niet is gesloten vanwege wateroverlast. Om de waarschuwing uit te schakelen, opent u de klep handmatig. Weet u zeker dat u de klep vanuit de app wilt openen?!</string>
   <string name="valve_warning">De klep is handmatig of per radio gesloten. Voordat u ze opent, moet u ervoor zorgen dat het niet is gesloten vanwege wateroverlast. Om de waarschuwing uit te schakelen, opent u de klep handmatig.</string>
   <string name="vector_balance_days">Vector saldo - Dagen</string>
