@@ -21,9 +21,8 @@ import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatSpecifica
 import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
 import org.supla.core.shared.usecase.channel.valueformatter.types.InvalidValue
 
-class HumidityValueFormatter(
+object HumidityValueFormatter : ValueFormatter() {
   override val defaultFormatSpecification: ValueFormatSpecification = ValueFormatSpecification.Companion.Humidity
-) : ValueFormatter() {
 
   override val invalidValue: InvalidValue = InvalidValue.Companion.Humidity
 }

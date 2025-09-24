@@ -379,9 +379,9 @@
   <string name="chanel_lightsource_lifespan_settings">Change the light source lifespan settings</string>
   <string name="light_source_lifespan_hours">Light source lifespan (hours)</string>
   <string name="reset_lightsource_usage_counter">Reset the light source usage counter</string>
-  <string name="lightsource_warning">The lifespan of the light source is %1$.0f%%</string>
-  <string name="uv_warning1">The lifespan of the uv radiator is %1$.0f%%. Schedule its replacement.</string>
-  <string name="uv_warning2">The lifespan of the uv radiator is %1$.0f%%. Replace the radiator.</string>
+  <string name="channel_lightsource_warning">The lifespan of the light source is %1$.01f%%</string>
+  <string name="channel_uv_warning">The lifespan of the uv radiator is %1$.01f%%. Schedule its replacement.</string>
+  <string name="channel_uv_error">The lifespan of the uv radiator is %1$.01f%%. Replace the radiator.</string>
   <string name="add_wizard_step_2_message">Enter Wi-Fi Network name and password to use with new I/O Device</string>
   <string name="enabling_registration_timeout">Timeout for enabling registration has expired!</string>
   <string name="wifi_throttling">Oops…! It looks like the Android OS Wi-Fi scanning limit has been reached. Setup can be continued after this window closes.</string>

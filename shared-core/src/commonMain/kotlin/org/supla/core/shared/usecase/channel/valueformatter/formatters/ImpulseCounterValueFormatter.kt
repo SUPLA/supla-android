@@ -22,8 +22,10 @@ import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
 import org.supla.core.shared.usecase.channel.valueformatter.types.InvalidValue
 
 class ImpulseCounterValueFormatter(
-  override val defaultFormatSpecification: ValueFormatSpecification = ValueFormatSpecification.Companion.ImpulseCounter
+  override val defaultFormatSpecification: ValueFormatSpecification
 ) : ValueFormatter() {
+
+  constructor() : this(defaultFormatSpecification = ValueFormatSpecification.Companion.ImpulseCounter)
 
   override val invalidValue: InvalidValue = InvalidValue.Companion.ImpulseCounter
 

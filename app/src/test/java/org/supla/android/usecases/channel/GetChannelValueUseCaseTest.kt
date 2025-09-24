@@ -36,6 +36,7 @@ import org.supla.android.usecases.channel.valueprovider.ElectricityMeterValuePro
 import org.supla.android.usecases.channel.valueprovider.GpmValueProvider
 import org.supla.android.usecases.channel.valueprovider.HeatpolThermostatValueProvider
 import org.supla.android.usecases.channel.valueprovider.HumidityAndTemperatureValueProvider
+import org.supla.android.usecases.channel.valueprovider.HumidityValueProvider
 import org.supla.android.usecases.channel.valueprovider.ImpulseCounterValueProvider
 import org.supla.android.usecases.channel.valueprovider.PressureSensorValueProvider
 import org.supla.android.usecases.channel.valueprovider.RainSensorValueProvider
@@ -93,6 +94,9 @@ class GetChannelValueUseCaseTest {
   @MockK(relaxed = true)
   private lateinit var heatpolThermostatValueProvider: HeatpolThermostatValueProvider
 
+  @MockK(relaxed = true)
+  private lateinit var humidityValueProvider: HumidityValueProvider
+
   @InjectMockKs
   private lateinit var useCase: GetChannelValueUseCase
 
@@ -132,6 +136,7 @@ class GetChannelValueUseCaseTest {
       weightSensorValueProvider.handle(channel)
       windSensorValueProvider.handle(channel)
       heatpolThermostatValueProvider.handle(channel)
+      humidityValueProvider.handle(channel)
     }
     confirmVerified(
       thermometerValueProvider,
@@ -148,7 +153,8 @@ class GetChannelValueUseCaseTest {
       containerValueProvider,
       weightSensorValueProvider,
       windSensorValueProvider,
-      heatpolThermostatValueProvider
+      heatpolThermostatValueProvider,
+      humidityValueProvider
     )
   }
 
@@ -195,7 +201,8 @@ class GetChannelValueUseCaseTest {
       containerValueProvider,
       weightSensorValueProvider,
       windSensorValueProvider,
-      heatpolThermostatValueProvider
+      heatpolThermostatValueProvider,
+      humidityValueProvider
     )
   }
 }

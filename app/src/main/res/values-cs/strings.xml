@@ -236,7 +236,7 @@
   <string name="light_source_lifespan">Životnost světelného zdroje</string>
   <string name="light_source_lifespan_hours">Životnost světelného zdroje (hodiny)</string>
   <string name="light_source_operatingtime">Provozní doba světelného zdroje</string>
-  <string name="lightsource_warning">Životnost světelného zdroje je %1$.0f%%</string>
+  <string name="channel_lightsource_warning">Životnost světelného zdroje je %1$.01f%%</string>
   <string name="mode_change_in_progress">Probíhá změna režimu</string>
   <string name="no">Ne</string>
   <string name="reset_lightsource_usage_counter">Restartovat čítač spotřeby světelného zdroje</string>
@@ -248,8 +248,8 @@
   <string name="soft_ver">Verze softwaru.</string>
   <string name="time_exceeded">Časový limit překročen. Zkuste to znovu.</string>
   <string name="uptime">Provozní doba</string>
-  <string name="uv_warning1">Životnost UV zářivky je %1$.0f%%. Naplánujte si její výměnu.</string>
-  <string name="uv_warning2">Životnost UV zářivky je %1$.0f%%. Vyměňte zářivku.</string>
+  <string name="channel_uv_warning">Životnost UV zářivky je %1$.01f%%. Naplánujte si její výměnu.</string>
+  <string name="channel_uv_error">Životnost UV zářivky je %1$.01f%%. Vyměňte zářivku.</string>
   <string name="vector_balance_days">Vektorová rovnováha - Dny</string>
   <string name="vector_balance_hours">Vektorová rovnováha - Hodiny</string>
   <string name="vector_balance_minutes">Vektorová rovnováha - Minuty</string>

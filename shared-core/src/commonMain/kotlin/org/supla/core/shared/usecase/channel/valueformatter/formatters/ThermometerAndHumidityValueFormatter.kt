@@ -34,7 +34,7 @@ class ThermometerAndHumidityValueFormatter(
   override val invalidValue: InvalidValue = InvalidValue.None
 
   private val thermometerValueFormatter = ThermometerValueFormatter(preferences)
-  private val humidityValueFormatter = HumidityValueFormatter()
+  private val humidityValueFormatter = HumidityValueFormatter
 
   override fun format(value: Any?, format: ValueFormat): String {
     val (temperatureAndHumidity) = guardLet(value as? TemperatureAndHumidity) { return NO_VALUE_TEXT }

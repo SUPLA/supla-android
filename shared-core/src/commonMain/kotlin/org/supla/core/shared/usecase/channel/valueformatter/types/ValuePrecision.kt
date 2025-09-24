@@ -19,6 +19,9 @@ package org.supla.core.shared.usecase.channel.valueformatter.types
 
 import kotlin.jvm.JvmInline
 
+private const val MASK = 0xFFFF
+private const val SHIFT = 16
+
 @JvmInline
 value class ValuePrecision internal constructor(private val value: Int) {
 
@@ -32,15 +35,11 @@ value class ValuePrecision internal constructor(private val value: Int) {
     fun exact(value: Int): ValuePrecision = pack(value, value)
     fun atMost(value: Int): ValuePrecision = pack(0, value)
     fun between(min: Int, max: Int): ValuePrecision = pack(min, max)
-
-    private fun pack(min: Int, max: Int): ValuePrecision {
-      return ValuePrecision(max.and(MASK).or(min.and(MASK).shl(SHIFT)))
-    }
-
-    private const val MASK = 0xFFFF
-    private const val SHIFT = 16
   }
 }
+
+// used in iOS
+fun exactPrecision(value: Int): ValuePrecision = pack(value, value)
 
 val DefaultPrecision = ValuePrecision.exact(1)
 
@@ -54,3 +53,7 @@ val ImpulseCounterPrecision = ValuePrecision.exact(3)
 val DistanceMilliPrecision = ValuePrecision.exact(0)
 val DistanceCentiPrecision = ValuePrecision.exact(1)
 val DistanceDefaultPrecision = ValuePrecision.exact(2)
+
+private fun pack(min: Int, max: Int): ValuePrecision {
+  return ValuePrecision(max.and(MASK).or(min.and(MASK).shl(SHIFT)))
+}

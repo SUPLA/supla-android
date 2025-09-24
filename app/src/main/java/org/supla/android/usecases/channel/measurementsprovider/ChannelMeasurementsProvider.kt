@@ -124,7 +124,7 @@ open class MeasurementsProvider(
   protected fun getValueFormatter(type: ChartEntryType, channelWithChildren: ChannelWithChildren): ValueFormatter {
     return when (type) {
       ChartEntryType.HUMIDITY,
-      ChartEntryType.HUMIDITY_ONLY -> HumidityValueFormatter()
+      ChartEntryType.HUMIDITY_ONLY -> HumidityValueFormatter
 
       ChartEntryType.TEMPERATURE,
       ChartEntryType.PRESET_TEMPERATURE -> ThermometerValueFormatter(preferences)

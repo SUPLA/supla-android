@@ -114,9 +114,9 @@ class ElectricityMarkerView(context: Context) : BaseMarkerView(context) {
 
         ElectricityMeterChartType.BALANCE_CHART_AGGREGATED -> showBalanceThreeValues(highlight, barEntry)
 
-        ElectricityMeterChartType.VOLTAGE -> TODO()
-        ElectricityMeterChartType.CURRENT -> TODO()
-        ElectricityMeterChartType.POWER_ACTIVE -> TODO()
+        ElectricityMeterChartType.VOLTAGE,
+        ElectricityMeterChartType.CURRENT,
+        ElectricityMeterChartType.POWER_ACTIVE -> {} // nothing to do, as here is line chart used
       }
     }
   }

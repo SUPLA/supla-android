@@ -25,6 +25,7 @@ import org.supla.android.usecases.channel.valueprovider.ElectricityMeterValuePro
 import org.supla.android.usecases.channel.valueprovider.GpmValueProvider
 import org.supla.android.usecases.channel.valueprovider.HeatpolThermostatValueProvider
 import org.supla.android.usecases.channel.valueprovider.HumidityAndTemperatureValueProvider
+import org.supla.android.usecases.channel.valueprovider.HumidityValueProvider
 import org.supla.android.usecases.channel.valueprovider.ImpulseCounterValueProvider
 import org.supla.android.usecases.channel.valueprovider.PressureSensorValueProvider
 import org.supla.android.usecases.channel.valueprovider.RainSensorValueProvider
@@ -52,7 +53,8 @@ class GetChannelValueUseCase @Inject constructor(
   containerValueProvider: ContainerValueProvider,
   weightSensorValueProvider: WeightSensorValueProvider,
   windSensorValueProvider: WindSensorValueProvider,
-  heatpolThermostatValueProvider: HeatpolThermostatValueProvider
+  heatpolThermostatValueProvider: HeatpolThermostatValueProvider,
+  humidityValueProvider: HumidityValueProvider
 ) {
 
   private val providers = listOf(
@@ -70,7 +72,8 @@ class GetChannelValueUseCase @Inject constructor(
     containerValueProvider,
     weightSensorValueProvider,
     windSensorValueProvider,
-    heatpolThermostatValueProvider
+    heatpolThermostatValueProvider,
+    humidityValueProvider
   )
 
   @Suppress("UNCHECKED_CAST")
