@@ -44,7 +44,7 @@ class ReadChannelWithChildrenTreeUseCase @Inject constructor(
         val channel = entities.firstOrNull { it.remoteId == remoteId }
         if (channel == null) {
           Trace.w(TAG, "Could not find channel where channels tree was requested!")
-          return@flatMap Observable.empty()
+          return@flatMap Observable.error(NoSuchElementException())
         }
         val channelsMap = mutableMapOf<Int, ChannelDataEntity>().also { map -> entities.forEach { map[it.remoteId] = it } }
         val childrenList = LinkedList<Int>()

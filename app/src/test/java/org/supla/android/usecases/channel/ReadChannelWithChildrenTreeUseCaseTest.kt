@@ -147,7 +147,7 @@ class ReadChannelWithChildrenTreeUseCaseTest {
 
     // then
     result.assertNoValues()
-    result.assertComplete()
+    result.assertError(NoSuchElementException::class.java)
   }
 
   private fun channelRelationEntity(

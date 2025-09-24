@@ -54,7 +54,6 @@ import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
 import org.supla.android.events.ChannelConfigEventsManager
 import org.supla.android.events.DeviceConfigEventsManager
 import org.supla.android.events.LoadingTimeoutManager
-import org.supla.android.events.UpdateEventsManager
 import org.supla.android.extensions.date
 import org.supla.android.extensions.shift
 import org.supla.android.lib.SuplaChannelExtendedValue
@@ -104,9 +103,6 @@ class ThermostatGeneralViewModelTest :
   lateinit var dateProvider: DateProvider
 
   @MockK
-  lateinit var updateEventsManager: UpdateEventsManager
-
-  @MockK
   lateinit var deviceConfigEventsManager: DeviceConfigEventsManager
 
   @MockK
@@ -129,7 +125,6 @@ class ThermostatGeneralViewModelTest :
     MockKAnnotations.init(this)
     super.setUp()
     every { schedulers.computation } returns testScheduler
-    every { updateEventsManager.observeChannelsUpdate() } returns Observable.empty()
   }
 
   @Test
@@ -144,7 +139,6 @@ class ThermostatGeneralViewModelTest :
 
     // when
     viewModel.observeData(remoteId, deviceId)
-    viewModel.triggerDataLoad(remoteId)
     testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
 
     // then
@@ -209,7 +203,6 @@ class ThermostatGeneralViewModelTest :
 
     // when
     viewModel.observeData(remoteId, deviceId)
-    viewModel.triggerDataLoad(remoteId)
     testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
 
     // then
@@ -254,7 +247,6 @@ class ThermostatGeneralViewModelTest :
 
     // when
     viewModel.observeData(remoteId, deviceId)
-    viewModel.triggerDataLoad(remoteId)
     testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
     viewModel.setpointTemperatureChanged(0.5f, null)
     testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
@@ -292,7 +284,6 @@ class ThermostatGeneralViewModelTest :
 
     // when
     viewModel.observeData(remoteId, deviceId)
-    viewModel.triggerDataLoad(remoteId)
     testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
     viewModel.setpointTemperatureChanged(0.5f, null)
     testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
@@ -329,7 +320,6 @@ class ThermostatGeneralViewModelTest :
 
     // when
     viewModel.observeData(remoteId, deviceId)
-    viewModel.triggerDataLoad(remoteId)
     testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
     viewModel.setpointTemperatureChanged(null, 0.5f)
     testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
@@ -373,7 +363,6 @@ class ThermostatGeneralViewModelTest :
 
     // when
     viewModel.observeData(remoteId, deviceId)
-    viewModel.triggerDataLoad(remoteId)
     testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
     viewModel.setpointTemperatureChanged(null, 0.5f)
     testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
@@ -418,7 +407,6 @@ class ThermostatGeneralViewModelTest :
 
     // when
     viewModel.observeData(remoteId, deviceId)
-    viewModel.triggerDataLoad(remoteId)
     testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
     viewModel.changeSetpointTemperature(TemperatureCorrection.UP)
     testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
@@ -464,7 +452,6 @@ class ThermostatGeneralViewModelTest :
 
     // when
     viewModel.observeData(remoteId, deviceId)
-    viewModel.triggerDataLoad(remoteId)
     testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
     viewModel.changeSetpointTemperature(TemperatureCorrection.DOWN)
     testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
@@ -507,7 +494,6 @@ class ThermostatGeneralViewModelTest :
 
     // when
     viewModel.observeData(remoteId, deviceId)
-    viewModel.triggerDataLoad(remoteId)
     testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
     viewModel.turnOnOffClicked()
     testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
@@ -552,7 +538,6 @@ class ThermostatGeneralViewModelTest :
 
     // when
     viewModel.observeData(remoteId, deviceId)
-    viewModel.triggerDataLoad(remoteId)
     testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
     viewModel.turnOnOffClicked()
     testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
@@ -598,7 +583,6 @@ class ThermostatGeneralViewModelTest :
 
     // when
     viewModel.observeData(remoteId, deviceId)
-    viewModel.triggerDataLoad(remoteId)
     testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
     viewModel.turnOnOffClicked()
     testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
@@ -630,7 +614,6 @@ class ThermostatGeneralViewModelTest :
 
     // when
     viewModel.observeData(remoteId, deviceId)
-    viewModel.triggerDataLoad(remoteId)
     testScheduler.advanceTimeBy(50, TimeUnit.MILLISECONDS)
 
     // then

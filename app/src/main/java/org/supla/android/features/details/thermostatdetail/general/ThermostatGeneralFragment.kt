@@ -29,7 +29,6 @@ import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.databinding.FragmentComposeBinding
 import org.supla.android.features.details.detailbase.standarddetail.ItemBundle
 import org.supla.android.features.details.thermostatdetail.general.ui.ThermostatDetail
-import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
 
 private const val ARG_ITEM_BUNDLE = "ARG_ITEM_BUNDLE"
 
@@ -63,14 +62,6 @@ class ThermostatGeneralFragment : BaseFragment<ThermostatGeneralViewState, Therm
   }
 
   override fun handleViewState(state: ThermostatGeneralViewState) {
-  }
-
-  override fun onSuplaMessage(message: SuplaClientMessage) {
-    (message as? SuplaClientMessage.ChannelDataChanged)?.let {
-      if (it.channelId == item.remoteId) {
-        viewModel.handleDataChangedEvent(item.remoteId)
-      }
-    }
   }
 
   companion object {
