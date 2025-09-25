@@ -25,6 +25,7 @@ import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.data.source.local.entity.complex.SceneDataEntity
 import org.supla.android.data.source.local.entity.complex.shareable
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.features.widget.shared.subjectdetail.ActionDetail
 import org.supla.android.features.widget.shared.subjectdetail.SubjectDetail
 import org.supla.android.images.ImageId
@@ -32,6 +33,8 @@ import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.ui.views.spinner.SpinnerItem
 import org.supla.android.ui.views.spinner.SubjectSpinnerItem
+import org.supla.android.usecases.channel.GetChannelValueStringUseCase
+import org.supla.android.usecases.channel.ValueType
 import org.supla.android.usecases.extensions.invoke
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.icon.GetSceneIconUseCase
@@ -39,6 +42,7 @@ import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.extensions.ifTrue
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.usecase.GetCaptionUseCase
+import org.supla.core.shared.usecase.channel.valueformatter.NO_VALUE_TEXT
 
 data class SubjectItem(
   val id: Int,
@@ -47,8 +51,9 @@ data class SubjectItem(
   val function: SuplaFunction?,
   val userIcon: Int?,
   val altIcon: Int?,
+  val value: String?,
   override val icon: ImageId?,
-  override val isLocation: Boolean
+  override val isLocation: Boolean,
 ) : SubjectSpinnerItem {
 
   override val label: LocalizedString
@@ -85,7 +90,8 @@ data class SubjectItem(
       userIcon: Int? = null,
       altIcon: Int? = null,
       icon: ImageId? = null,
-      isLocation: Boolean = false
+      isLocation: Boolean = false,
+      value: String? = null
     ): SubjectItem =
       SubjectItem(
         id = id,
@@ -95,7 +101,8 @@ data class SubjectItem(
         userIcon = userIcon,
         altIcon = altIcon,
         icon = icon,
-        isLocation = isLocation
+        isLocation = isLocation,
+        value = value
       )
   }
 }
@@ -105,8 +112,8 @@ interface SubjectItemConversionScope {
   val getChannelIconUseCase: GetChannelIconUseCase
   val getSceneIconUseCase: GetSceneIconUseCase
 
-  fun channelsSubjectItems(items: List<ChannelDataEntity>): List<SubjectItem> =
-    toSubjectItems(items, { it.locationEntity }, { it.subjectItem })
+  fun channelsSubjectItems(items: List<ChannelDataEntity>, getChannelValueStringUseCase: GetChannelValueStringUseCase): List<SubjectItem> =
+    toSubjectItems(items, { it.locationEntity }, { it.subjectItem(getChannelValueStringUseCase) })
 
   fun groupsSubjectItems(items: List<ChannelGroupDataEntity>): List<SubjectItem> =
     toSubjectItems(items, { it.locationEntity }, { it.subjectItem })
@@ -172,11 +179,12 @@ interface SubjectItemConversionScope {
       userIcon = null,
       altIcon = null,
       icon = null,
-      isLocation = true
+      isLocation = true,
+      value = null
     )
 
-  val ChannelDataEntity.subjectItem: SubjectItem
-    get() = SubjectItem(
+  fun ChannelDataEntity.subjectItem(getChannelValueStringUseCase: GetChannelValueStringUseCase): SubjectItem =
+    SubjectItem(
       id = remoteId,
       caption = getCaptionUseCase(shareable),
       actions = function.actions,
@@ -184,7 +192,24 @@ interface SubjectItemConversionScope {
       userIcon = userIcon,
       altIcon = altIcon,
       icon = getChannelIconUseCase.forState(channelEntity, offlineState),
-      isLocation = false
+      isLocation = false,
+      value = when (function) {
+        SuplaFunction.DIMMER -> "0"
+        SuplaFunction.RGB_LIGHTING,
+        SuplaFunction.DIMMER_AND_RGB_LIGHTING -> "${channelValueEntity.asColor()}"
+
+        SuplaFunction.THERMOMETER,
+        SuplaFunction.GENERAL_PURPOSE_METER,
+        SuplaFunction.GENERAL_PURPOSE_MEASUREMENT -> getChannelValueStringUseCase.invoke(ChannelWithChildren(this))
+
+        SuplaFunction.HUMIDITY_AND_TEMPERATURE -> ChannelWithChildren(this).let {
+          val temperature = getChannelValueStringUseCase(it)
+          val humidity = getChannelValueStringUseCase(it, valueType = ValueType.SECOND)
+          "$temperature\n$humidity"
+        }
+
+        else -> NO_VALUE_TEXT
+      }
     )
 
   val ChannelGroupDataEntity.subjectItem: SubjectItem
@@ -196,7 +221,14 @@ interface SubjectItemConversionScope {
       userIcon = userIcon,
       altIcon = altIcon,
       icon = getChannelIconUseCase.forState(channelGroupEntity, offlineState),
-      isLocation = false
+      isLocation = false,
+      value = when (function) {
+        SuplaFunction.RGB_LIGHTING,
+        SuplaFunction.DIMMER_AND_RGB_LIGHTING,
+        SuplaFunction.DIMMER -> "0"
+
+        else -> NO_VALUE_TEXT
+      }
     )
 
   val SceneDataEntity.subjectItem: SubjectItem
@@ -208,7 +240,8 @@ interface SubjectItemConversionScope {
       userIcon = sceneEntity.userIcon,
       altIcon = sceneEntity.altIcon,
       icon = getSceneIconUseCase(sceneEntity),
-      isLocation = false
+      isLocation = false,
+      value = NO_VALUE_TEXT
     )
 
   val SuplaFunction.actions: List<ActionId>
@@ -258,6 +291,7 @@ interface SubjectItemConversionScope {
 
       SuplaFunction.CONTROLLING_THE_DOOR_LOCK,
       SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK -> listOf(ActionId.OPEN)
+
       SuplaFunction.CONTROLLING_THE_GATE,
       SuplaFunction.CONTROLLING_THE_GARAGE_DOOR -> listOf(ActionId.OPEN_CLOSE, ActionId.OPEN, ActionId.CLOSE)
 

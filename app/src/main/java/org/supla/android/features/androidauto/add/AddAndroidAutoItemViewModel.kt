@@ -34,6 +34,7 @@ import org.supla.android.data.source.local.entity.AndroidAutoItemEntity
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.icon.GetSceneIconUseCase
 import org.supla.android.usecases.profile.ReadAllProfilesUseCase
@@ -44,6 +45,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddAndroidAutoItemViewModel @Inject constructor(
+  private val getChannelValueStringUseCase: GetChannelValueStringUseCase,
   private val androidAutoItemRepository: AndroidAutoItemRepository,
   private val readAllProfilesUseCase: ReadAllProfilesUseCase,
   private val channelGroupRepository: ChannelGroupRepository,
@@ -264,7 +266,7 @@ class AddAndroidAutoItemViewModel @Inject constructor(
     when (subjectType) {
       SubjectType.CHANNEL ->
         channelRepository.findProfileChannels(profileId)
-          .map { channels -> channelsSubjectItems(channels.filter { it.function.actions.isNotEmpty() }) }
+          .map { channels -> channelsSubjectItems(channels.filter { it.function.actions.isNotEmpty() }, getChannelValueStringUseCase) }
 
       SubjectType.GROUP ->
         channelGroupRepository.findProfileGroups(profileId)

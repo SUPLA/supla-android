@@ -36,6 +36,7 @@ import org.supla.android.features.widget.shared.WidgetConfigurationViewEvent
 import org.supla.android.features.widget.shared.subjectdetail.SubjectDetail
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.icon.GetSceneIconUseCase
 import org.supla.android.usecases.profile.ReadAllProfilesUseCase
@@ -57,6 +58,7 @@ class DoubleWidgetConfigurationViewModel @Inject constructor(
   override val getCaptionUseCase: GetCaptionUseCase,
   private val widgetPreferences: WidgetPreferences,
   private val workManagerProxy: WorkManagerProxy,
+  getChannelValueStringUseCase: GetChannelValueStringUseCase,
   channelGroupRepository: ChannelGroupRepository,
   channelRepository: RoomChannelRepository,
   sceneRepository: RoomSceneRepository,
@@ -66,6 +68,7 @@ class DoubleWidgetConfigurationViewModel @Inject constructor(
   getChannelIconUseCase,
   getSceneIconUseCase,
   getCaptionUseCase,
+  getChannelValueStringUseCase,
   channelGroupRepository,
   channelRepository,
   sceneRepository,
@@ -231,7 +234,7 @@ class DoubleWidgetConfigurationViewModel @Inject constructor(
       subjectType = currentState().viewState.subjectType,
       caption = caption,
       subjectFunction = subject.function ?: SuplaFunction.NONE,
-      value = NO_VALUE_TEXT,
+      value = subject.value ?: NO_VALUE_TEXT,
       profileId = profileId,
       visibility = true,
       actionId = null,
