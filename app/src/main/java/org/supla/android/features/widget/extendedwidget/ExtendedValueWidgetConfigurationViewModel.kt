@@ -42,6 +42,7 @@ import org.supla.android.features.widget.shared.subjectdetail.SubjectDetail
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.icon.GetSceneIconUseCase
 import org.supla.android.usecases.profile.ReadAllProfilesUseCase
@@ -59,6 +60,7 @@ class ExtendedValueWidgetConfigurationViewModel @Inject constructor(
   override val getChannelIconUseCase: GetChannelIconUseCase,
   override val getSceneIconUseCase: GetSceneIconUseCase,
   override val getCaptionUseCase: GetCaptionUseCase,
+  getChannelValueStringUseCase: GetChannelValueStringUseCase,
   channelGroupRepository: ChannelGroupRepository,
   channelRepository: RoomChannelRepository,
   sceneRepository: RoomSceneRepository,
@@ -68,6 +70,7 @@ class ExtendedValueWidgetConfigurationViewModel @Inject constructor(
   getChannelIconUseCase,
   getSceneIconUseCase,
   getCaptionUseCase,
+  getChannelValueStringUseCase,
   channelGroupRepository,
   channelRepository,
   sceneRepository,

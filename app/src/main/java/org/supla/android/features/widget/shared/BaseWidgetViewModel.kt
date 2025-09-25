@@ -36,6 +36,7 @@ import org.supla.android.data.source.local.entity.isThermometer
 import org.supla.android.features.widget.shared.subjectdetail.SubjectDetail
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.icon.GetSceneIconUseCase
 import org.supla.core.shared.data.model.general.SuplaFunction
@@ -46,6 +47,7 @@ abstract class BaseWidgetViewModel(
   override val getChannelIconUseCase: GetChannelIconUseCase,
   override val getSceneIconUseCase: GetSceneIconUseCase,
   override val getCaptionUseCase: GetCaptionUseCase,
+  private val getChannelValueStringUseCase: GetChannelValueStringUseCase,
   private val channelGroupRepository: ChannelGroupRepository,
   private val channelRepository: RoomChannelRepository,
   private val sceneRepository: RoomSceneRepository,
@@ -96,7 +98,7 @@ abstract class BaseWidgetViewModel(
     when (subjectType) {
       SubjectType.CHANNEL ->
         channelRepository.findProfileChannels(profileId)
-          .map { channels -> channelsSubjectItems(channels.filter { filter(it) }) }
+          .map { channels -> channelsSubjectItems(channels.filter { filter(it) }, getChannelValueStringUseCase) }
 
       SubjectType.GROUP ->
         channelGroupRepository.findProfileGroups(profileId)

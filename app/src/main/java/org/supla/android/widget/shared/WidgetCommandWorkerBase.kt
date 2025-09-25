@@ -178,9 +178,11 @@ abstract class WidgetCommandWorkerBase(
 
   private fun callAction(configuration: WidgetConfiguration, parameters: ActionParameters) {
     try {
-      singleCallProvider.provide(configuration.profileId)
-        .executeAction(parameters)
-      showToast(R.string.widget_command_started, Toast.LENGTH_SHORT)
+      singleCallProvider.provide(configuration.profileId).executeAction(parameters)
+      handler.post {
+        val text = "${configuration.caption}: ${applicationContext.getString(R.string.widget_command_started)}"
+        Toast.makeText(applicationContext, text, Toast.LENGTH_SHORT).show()
+      }
     } catch (ex: ResultException) {
       Trace.e(WidgetCommandWorkerBase::javaClass.name, "Could not perform action", ex)
       when (ex.result) {
