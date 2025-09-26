@@ -838,6 +838,8 @@
   <string name="cfg_temperature_precision">Temperature precision</string>
   <string name="temperature_measured">Measured</string>
   <string name="temperature_preset">Preset</string>
+  <string name="thermostat_detail_antifreeze_active">Antifreeze protection active</string>
+  <string name="thermostat_detail_overheat_active">Overheat protection active</string>
 
   <plurals name="details_timer_info_on" translatable="false">
     <item quantity="other">on</item>

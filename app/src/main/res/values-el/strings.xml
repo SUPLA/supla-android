@@ -710,4 +710,6 @@
   <string name="cfg_temperature_precision">Ακρίβεια θερμοκρασίας</string>
   <string name="temperature_measured">Μετρημένος</string>
   <string name="temperature_preset">Προκαθορισμένος</string>
+  <string name="thermostat_detail_antifreeze_active">Ενεργή αντιπαγωτική προστασία</string>
+  <string name="thermostat_detail_overheat_active">Ενεργή προστασία από υπερθέρμανση</string>
 </resources>

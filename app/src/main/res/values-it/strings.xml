@@ -742,4 +742,6 @@
   <string name="cfg_temperature_precision">Precisione della temperatura</string>
   <string name="temperature_measured">Misurato</string>
   <string name="temperature_preset">Preimpostato</string>
+  <string name="thermostat_detail_antifreeze_active">Protezione antigelo attiva</string>
+  <string name="thermostat_detail_overheat_active">Protezione contro il surriscaldamento attiva</string>
 </resources>

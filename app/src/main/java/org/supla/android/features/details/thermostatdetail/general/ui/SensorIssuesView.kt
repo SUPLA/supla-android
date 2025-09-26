@@ -20,6 +20,7 @@ package org.supla.android.features.details.thermostatdetail.general.ui
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -34,10 +35,13 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.supla.android.R
+import org.supla.android.core.shared.invoke
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.features.details.thermostatdetail.general.data.SensorIssue
 import org.supla.android.images.ImageId
 import org.supla.android.ui.views.Image
+import org.supla.core.shared.infrastructure.LocalizedString
+import org.supla.core.shared.infrastructure.localizedString
 
 @Composable
 fun SensorIssueView(sensorIssue: SensorIssue) {
@@ -62,13 +66,15 @@ fun SensorIssueView(sensorIssue: SensorIssue) {
             .size(dimensionResource(id = R.dimen.icon_big_size))
             .align(Alignment.TopCenter)
         )
-        Image(
-          drawableId = R.drawable.ic_sensor_alert_circle,
-          contentDescription = null,
-          modifier = Modifier.align(Alignment.BottomStart)
-        )
+        if (sensorIssue.showSensorIcon) {
+          Image(
+            drawableId = R.drawable.ic_sensor_alert_circle,
+            contentDescription = null,
+            modifier = Modifier.align(Alignment.BottomStart)
+          )
+        }
       }
-    } else {
+    } else if (sensorIssue.showSensorIcon) {
       Image(
         drawableId = R.drawable.ic_sensor_alert_circle,
         contentDescription = null,
@@ -76,7 +82,7 @@ fun SensorIssueView(sensorIssue: SensorIssue) {
       )
     }
     Text(
-      text = sensorIssue.textProvider(LocalContext.current),
+      text = sensorIssue.message(LocalContext.current),
       style = MaterialTheme.typography.bodyMedium,
       color = MaterialTheme.colorScheme.onBackground
     )
@@ -87,11 +93,19 @@ fun SensorIssueView(sensorIssue: SensorIssue) {
 @Composable
 private fun Preview() {
   SuplaTheme {
-    Box(modifier = Modifier.background(color = MaterialTheme.colorScheme.background)) {
+    Column(modifier = Modifier.background(color = MaterialTheme.colorScheme.background)) {
       SensorIssueView(
         sensorIssue = SensorIssue(
           imageId = ImageId(R.drawable.fnc_hotel_card_on),
-          textProvider = { "Wyłączone przez czujnik" }
+          showSensorIcon = true,
+          message = LocalizedString.Constant("Wyłączone przez czujnik")
+        )
+      )
+      SensorIssueView(
+        sensorIssue = SensorIssue(
+          imageId = ImageId(R.drawable.ic_overheat),
+          showSensorIcon = false,
+          message = localizedString(R.string.thermostat_detail_overheat_active)
         )
       )
     }

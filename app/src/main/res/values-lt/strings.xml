@@ -691,4 +691,6 @@
   <string name="cfg_temperature_precision">Temperatūros tikslumas</string>
   <string name="temperature_measured">Išmatuotas</string>
   <string name="temperature_preset">Iš anksto nustatytas</string>
+  <string name="thermostat_detail_antifreeze_active">Aktyvi apsauga nuo užšalimo</string>
+  <string name="thermostat_detail_overheat_active">Aktyvi apsauga nuo perkaitimo</string>
 </resources>

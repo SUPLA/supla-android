@@ -802,4 +802,6 @@
   <string name="cfg_temperature_precision">Temperaturpräzision</string>
   <string name="temperature_measured">Gemessen</string>
   <string name="temperature_preset">Voreingestellt</string>
+  <string name="thermostat_detail_antifreeze_active">Frostschutz aktiv</string>
+  <string name="thermostat_detail_overheat_active">Überhitzungsschutz aktiv</string>
 </resources>
