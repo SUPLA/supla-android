@@ -714,4 +714,6 @@
   <string name="cfg_temperature_precision">Presnosť teploty</string>
   <string name="temperature_measured">Namerný</string>
   <string name="temperature_preset">Prednastavený</string>
+  <string name="thermostat_detail_antifreeze_active">Aktívna protimrazová ochrana</string>
+  <string name="thermostat_detail_overheat_active">Aktívna ochrana proti prehriatiu</string>
 </resources>

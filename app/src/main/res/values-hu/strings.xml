@@ -713,4 +713,6 @@
   <string name="cfg_temperature_precision">Hőmérséklet-pontosság</string>
   <string name="temperature_measured">Mért</string>
   <string name="temperature_preset">Előre beállított</string>
+  <string name="thermostat_detail_antifreeze_active">Fagyvédelem aktív</string>
+  <string name="thermostat_detail_overheat_active">Túlmelegedés elleni védelem aktív</string>
 </resources>

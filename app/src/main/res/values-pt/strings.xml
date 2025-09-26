@@ -703,4 +703,6 @@
   <string name="cfg_temperature_precision">Precisão da temperatura</string>
   <string name="temperature_measured">Medido</string>
   <string name="temperature_preset">Predefinido</string>
+  <string name="thermostat_detail_antifreeze_active">Proteção anticongelante ativa</string>
+  <string name="thermostat_detail_overheat_active">Proteção contra superaquecimento ativa</string>
 </resources>

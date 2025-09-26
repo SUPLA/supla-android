@@ -687,4 +687,6 @@
   <string name="cfg_temperature_precision">Точність температури</string>
   <string name="temperature_measured">Виміряна</string>
   <string name="temperature_preset">Заданий</string>
+  <string name="thermostat_detail_antifreeze_active">Активний захист від замерзання</string>
+  <string name="thermostat_detail_overheat_active">Активний захист від перегріву</string>
 </resources>
