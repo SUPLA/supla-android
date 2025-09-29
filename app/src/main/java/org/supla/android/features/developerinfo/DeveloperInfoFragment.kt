@@ -25,9 +25,11 @@ import androidx.fragment.app.viewModels
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.core.ui.BaseFragment
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.databinding.FragmentComposeBinding
+import org.supla.android.extensions.setupOrientationLock
 import org.supla.android.navigator.MainNavigator
 import javax.inject.Inject
 
@@ -39,20 +41,28 @@ class DeveloperInfoFragment : BaseFragment<DeveloperInfoViewModelState, Develope
   @Inject
   internal lateinit var navigator: MainNavigator
 
+  @Inject
+  internal lateinit var applicationPreferences: ApplicationPreferences
+
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
 
     binding.composeContent.setContent {
       val modelState by viewModel.getViewState().collectAsState()
       SuplaTheme {
-        DeveloperInfoView(
-          viewState = modelState.state,
+        viewModel.View(
+          viewState = modelState.state
         )
       }
     }
   }
 
-  override fun handleEvents(event: DeveloperInfoViewEvent) {}
+  override fun handleEvents(event: DeveloperInfoViewEvent) {
+    when (event) {
+      DeveloperInfoViewEvent.UpdateOrientationLock ->
+        activity?.setupOrientationLock(applicationPreferences)
+    }
+  }
 
   override fun handleViewState(state: DeveloperInfoViewModelState) {}
 }

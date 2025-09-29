@@ -712,4 +712,8 @@
   <string name="temperature_preset">Προκαθορισμένος</string>
   <string name="thermostat_detail_antifreeze_active">Ενεργή αντιπαγωτική προστασία</string>
   <string name="thermostat_detail_overheat_active">Ενεργή προστασία από υπερθέρμανση</string>
+  <string name="developer_option">Επιλογές προγραμματιστή</string>
+  <string name="developer_info_activated">Λειτουργία προγραμματιστή ενεργοποιήθηκε</string>
+  <string name="developer_info_screen_orientation">Ενεργοποιήθηκε η περιστροφή οθόνης</string>
+  <string name="developer_info_settings">Πειραματικές ρυθμίσεις</string>
 </resources>

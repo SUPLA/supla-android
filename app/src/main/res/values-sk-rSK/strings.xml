@@ -716,4 +716,8 @@
   <string name="temperature_preset">Prednastavený</string>
   <string name="thermostat_detail_antifreeze_active">Aktívna protimrazová ochrana</string>
   <string name="thermostat_detail_overheat_active">Aktívna ochrana proti prehriatiu</string>
+  <string name="developer_option">Možnosti pre vývojárov</string>
+  <string name="developer_info_activated">Režim pre vývojárov aktivovaný</string>
+  <string name="developer_info_screen_orientation">Otočenie obrazovky povolené</string>
+  <string name="developer_info_settings">Experimentálne nastavenia</string>
 </resources>

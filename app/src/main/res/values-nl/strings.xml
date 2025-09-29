@@ -716,4 +716,8 @@
   <string name="temperature_preset">Vooraf ingesteld</string>
   <string name="thermostat_detail_antifreeze_active">Vorstbeveiliging actief</string>
   <string name="thermostat_detail_overheat_active">Oververhittingsbeveiliging actief</string>
+  <string name="developer_option">Ontwikkelaarsopties</string>
+  <string name="developer_info_activated">Ontwikkelaarsmodus geactiveerd</string>
+  <string name="developer_info_screen_orientation">Schermrotatie ingeschakeld</string>
+  <string name="developer_info_settings">Experimentele instellingen</string>
 </resources>

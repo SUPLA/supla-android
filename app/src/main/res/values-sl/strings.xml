@@ -716,4 +716,8 @@
   <string name="temperature_preset">Prednastavljeno</string>
   <string name="thermostat_detail_antifreeze_active">Aktivna zaščita pred zmrzaljo</string>
   <string name="thermostat_detail_overheat_active">Aktivna zaščita pred pregrevanjem</string>
+  <string name="developer_option">Možnosti za razvijalce</string>
+  <string name="developer_info_activated">Razvijalski način aktiviran</string>
+  <string name="developer_info_screen_orientation">Omogočeno vrtenje zaslona</string>
+  <string name="developer_info_settings">Eksperimentalne nastavitve</string>
 </resources>

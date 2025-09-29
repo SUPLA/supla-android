@@ -17,10 +17,13 @@ package org.supla.android.extensions
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.pm.ActivityInfo
 import android.view.WindowManager
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import org.supla.android.core.storage.ApplicationPreferences
 
 fun Activity.setStatusBarColor(statusBarColorId: Int, navigationBarColorId: Int, isLight: Boolean) {
   val window = window
@@ -35,4 +38,14 @@ fun Activity.setStatusBarColor(statusBarColorId: Int, navigationBarColorId: Int,
     isAppearanceLightStatusBars = isLight
     isAppearanceLightNavigationBars = true
   }
+}
+
+@SuppressLint("SourceLockedOrientationActivity")
+fun Activity.setupOrientationLock(preferences: ApplicationPreferences) {
+  requestedOrientation =
+    if (preferences.rotationEnabled) {
+      ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+    } else {
+      ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+    }
 }

@@ -57,7 +57,6 @@ class AboutFragment : BaseFragment<AboutViewModelState, AboutViewEvent>(R.layout
 
   override fun handleEvents(event: AboutViewEvent) {
     when (event) {
-      AboutViewEvent.NavigateToDeveloperInfoScreen -> navigator.navigateTo(R.id.developer_info_fragment)
       AboutViewEvent.ShowDeveloperModeActivated -> Toast.makeText(context, R.string.developer_info_activated, Toast.LENGTH_SHORT).show()
     }
   }

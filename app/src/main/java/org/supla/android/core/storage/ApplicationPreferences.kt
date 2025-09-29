@@ -34,6 +34,7 @@ private const val KEY_NIGHT_MODE = "pref_night_mode"
 private const val KEY_BATTERY_WARNING_LEVEL = "pref_battery_warning_level"
 private const val KEY_TEMPERATURE_UNIT = "pref_temperature_unit"
 private const val KEY_TEMPERATURE_PRECISION = "pref_temperature_precision"
+private const val KEY_ROTATION_ENABLED = "pref_rotation_enabled"
 
 @Singleton
 class ApplicationPreferences @Inject constructor(@ApplicationContext context: Context) : ApplicationPreferences {
@@ -43,6 +44,10 @@ class ApplicationPreferences @Inject constructor(@ApplicationContext context: Co
   var nightMode: NightModeSetting
     get() = NightModeSetting.from(preferences.getInt(KEY_NIGHT_MODE, NightModeSetting.UNSET.value))
     set(setting) = preferences.edit { putInt(KEY_NIGHT_MODE, setting.value) }
+
+  var rotationEnabled: Boolean
+    get() = preferences.getBoolean(KEY_ROTATION_ENABLED, false)
+    set(enabled) = preferences.edit { putBoolean(KEY_ROTATION_ENABLED, enabled) }
 
   override var batteryWarningLevel: Int
     get() = preferences.getInt(KEY_BATTERY_WARNING_LEVEL, DEFAULT_BATTERY_WARNING_LEVEL)
