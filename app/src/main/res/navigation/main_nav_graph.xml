@@ -99,7 +99,7 @@
   <fragment
     android:id="@+id/developer_info_fragment"
     android:name="org.supla.android.features.developerinfo.DeveloperInfoFragment"
-    android:label="@string/developer_info_title" />
+    android:label="@string/developer_option" />
 
   <fragment
     android:id="@+id/android_auto_items_fragment"

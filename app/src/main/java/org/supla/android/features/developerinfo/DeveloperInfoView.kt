@@ -39,15 +39,22 @@ import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.source.local.entity.ChannelStateEntity
+import org.supla.android.ui.views.settings.SettingsList
+import org.supla.android.ui.views.settings.SettingsListItem
 import org.supla.android.usecases.developerinfo.TableDetail
 
 data class DeveloperInfoViewState(
+  val rotationEnabled: Boolean = false,
   val suplaTableDetails: List<TableDetail> = emptyList(),
   val measurementTableDetails: List<TableDetail> = emptyList()
 )
 
+interface DeveloperInfoScope {
+  fun setRotationEnabled(enabled: Boolean)
+}
+
 @Composable
-fun DeveloperInfoView(
+fun DeveloperInfoScope.View(
   viewState: DeveloperInfoViewState
 ) {
   Column(
@@ -55,22 +62,31 @@ fun DeveloperInfoView(
     modifier = Modifier
       .fillMaxSize()
       .background(MaterialTheme.colorScheme.background)
-      .padding(all = Distance.default)
+      .padding(top = Distance.default)
       .verticalScroll(rememberScrollState())
   ) {
-    Text(stringResource(R.string.developer_info_database_section), style = MaterialTheme.typography.titleLarge)
+    HeaderLarge(text = stringResource(R.string.developer_info_settings))
+    SettingsList {
+      SettingsListItem(
+        label = stringResource(R.string.developer_info_screen_orientation),
+        checked = viewState.rotationEnabled
+      ) { setRotationEnabled(it) }
+    }
+
     Spacer(modifier = Modifier.height(Distance.tiny))
-    Text("Supla", style = MaterialTheme.typography.bodyLarge)
+
+    HeaderLarge(text = stringResource(R.string.developer_info_database_section))
+    HeaderSmall(text = "Supla")
     viewState.suplaTableDetails.forEach {
-      Row {
+      Row(modifier = Modifier.padding(horizontal = Distance.default)) {
         Text("${it.name}: ", style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold))
         Spacer(modifier = Modifier.weight(1f))
         Text(it.count.toString(), style = MaterialTheme.typography.bodyMedium)
       }
     }
-    Text("Measurements", style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(top = Distance.tiny))
+    HeaderSmall("Measurements")
     viewState.measurementTableDetails.forEach {
-      Row {
+      Row(modifier = Modifier.padding(horizontal = Distance.default)) {
         Text("${it.name}: ", style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold))
         Spacer(modifier = Modifier.weight(1f))
         Text(it.count.toString(), style = MaterialTheme.typography.bodyMedium)
@@ -79,12 +95,33 @@ fun DeveloperInfoView(
   }
 }
 
+@Composable
+private fun HeaderLarge(text: String) =
+  Text(
+    text = text,
+    style = MaterialTheme.typography.titleLarge,
+    modifier = Modifier.padding(horizontal = Distance.default)
+      .padding(bottom = Distance.tiny)
+  )
+
+@Composable
+private fun HeaderSmall(text: String) =
+  Text(
+    text = text,
+    style = MaterialTheme.typography.bodyLarge,
+    modifier = Modifier.padding(horizontal = Distance.default)
+  )
+
+val previewScope = object : DeveloperInfoScope {
+  override fun setRotationEnabled(enabled: Boolean) {}
+}
+
 @PreviewScreenSizes
 @PreviewFontScale
 @Composable
 private fun Preview() {
   SuplaTheme {
-    DeveloperInfoView(
+    previewScope.View(
       DeveloperInfoViewState(
         suplaTableDetails = listOf(
           TableDetail(ChannelStateEntity.TABLE_NAME, 15),

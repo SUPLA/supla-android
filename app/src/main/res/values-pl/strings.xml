@@ -731,7 +731,7 @@
   <string name="em_electric_grid_parameters">Parametry sieci elektrycznej</string>
   <string name="channel_caption_container">Zbiornik</string>
   <string name="developer_info_database_section">Baza danych</string>
-  <string name="developer_info_activated">Developer mode został aktywowany</string>
+  <string name="developer_info_activated">Tryb programisty aktywowany</string>
   <string name="developer_info_title">Dane aplikacji</string>
   <string name="counter_photo_photos">Historia zdjęć</string>
   <string name="counter_photo_loading_error">Nie udało się załadować zawartości.</string>
@@ -813,6 +813,9 @@
   <string name="temperature_preset">Ustawiona</string>
   <string name="thermostat_detail_antifreeze_active">Aktywna ochrona przeciwzamrożeniowa</string>
   <string name="thermostat_detail_overheat_active">Aktywna ochrona przed przegrzaniem</string>
+  <string name="developer_option">Opcje programisty\t</string>
+  <string name="developer_info_screen_orientation">Obracanie ekranu</string>
+  <string name="developer_info_settings">Ustawienia eksperymentalne</string>
 
   <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
     <item quantity="one">włączone</item>

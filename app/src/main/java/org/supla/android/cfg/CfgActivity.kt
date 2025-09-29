@@ -36,9 +36,11 @@ import org.supla.android.R
 import org.supla.android.SuplaApp
 import org.supla.android.core.networking.suplaclient.SuplaClientEvent
 import org.supla.android.core.networking.suplaclient.SuplaClientStateHolder
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.core.ui.BaseActivity
 import org.supla.android.data.ValuesFormatter
 import org.supla.android.databinding.ActivityCfgBinding
+import org.supla.android.extensions.setupOrientationLock
 import org.supla.android.features.createaccount.CreateAccountFragment
 import org.supla.android.navigator.CfgActivityNavigator
 import org.supla.android.profile.ProfileManager
@@ -71,6 +73,9 @@ class CfgActivity : BaseActivity() {
   @Inject
   lateinit var preferences: Preferences
 
+  @Inject
+  lateinit var applicationPreferences: ApplicationPreferences
+
   private lateinit var binding: ActivityCfgBinding
   private var shouldShowBack = false
 
@@ -87,6 +92,7 @@ class CfgActivity : BaseActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+    setupOrientationLock(applicationPreferences)
 
     binding = DataBindingUtil.setContentView(this, R.layout.activity_cfg)
     binding.lifecycleOwner = this

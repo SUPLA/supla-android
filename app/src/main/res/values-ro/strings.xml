@@ -717,4 +717,8 @@
   <string name="temperature_preset">Predefinit</string>
   <string name="thermostat_detail_antifreeze_active">Protecție anti-îngheț activă</string>
   <string name="thermostat_detail_overheat_active">Protecție la supraîncălzire activă</string>
+  <string name="developer_option">Opțiuni pentru dezvoltatori</string>
+  <string name="developer_info_activated">Modul dezvoltator a fost activat</string>
+  <string name="developer_info_screen_orientation">Rotirea ecranului activată</string>
+  <string name="developer_info_settings">Setări experimentale</string>
 </resources>

@@ -693,4 +693,8 @@
   <string name="temperature_preset">Iš anksto nustatytas</string>
   <string name="thermostat_detail_antifreeze_active">Aktyvi apsauga nuo užšalimo</string>
   <string name="thermostat_detail_overheat_active">Aktyvi apsauga nuo perkaitimo</string>
+  <string name="developer_option">Kūrėjo parinktys</string>
+  <string name="developer_info_activated">Kūrėjo režimas aktyvuotas</string>
+  <string name="developer_info_screen_orientation">Ekrano pasukimas įjungtas</string>
+  <string name="developer_info_settings">Eksperimentiniai nustatymai</string>
 </resources>

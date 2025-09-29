@@ -715,4 +715,8 @@
   <string name="temperature_preset">Forhåndsinnstilt</string>
   <string name="thermostat_detail_antifreeze_active">Frostsikring aktiv</string>
   <string name="thermostat_detail_overheat_active">Overopphetingsvern aktiv</string>
+  <string name="developer_option">Utvikleralternativer</string>
+  <string name="developer_info_activated">Utviklermodus aktivert</string>
+  <string name="developer_info_screen_orientation">Skjermrotasjon aktivert</string>
+  <string name="developer_info_settings">Eksperimentelle innstillinger</string>
 </resources>

@@ -703,4 +703,8 @@
   <string name="temperature_preset">Préréglé</string>
   <string name="thermostat_detail_antifreeze_active">Protection antigel active</string>
   <string name="thermostat_detail_overheat_active">Protection contre la surchauffe active</string>
+  <string name="developer_option">Options pour les développeurs</string>
+  <string name="developer_info_activated">Mode développeur activé</string>
+  <string name="developer_info_screen_orientation">Rotation de l\'écran activée</string>
+  <string name="developer_info_settings">Paramètres expérimentaux</string>
 </resources>

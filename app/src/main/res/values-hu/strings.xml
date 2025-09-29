@@ -715,4 +715,8 @@
   <string name="temperature_preset">Előre beállított</string>
   <string name="thermostat_detail_antifreeze_active">Fagyvédelem aktív</string>
   <string name="thermostat_detail_overheat_active">Túlmelegedés elleni védelem aktív</string>
+  <string name="developer_option">Fejlesztői lehetőségek</string>
+  <string name="developer_info_activated">Fejlesztői mód aktiválva</string>
+  <string name="developer_info_screen_orientation">Képernyőforgatás engedélyezve</string>
+  <string name="developer_info_settings">Kísérleti beállítások</string>
 </resources>

@@ -19,6 +19,7 @@ package org.supla.android.features.developerinfo
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.subscribeBy
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
@@ -31,11 +32,15 @@ import javax.inject.Inject
 @HiltViewModel
 class DeveloperInfoViewModel @Inject constructor(
   private val loadDatabaseDetailsUseCase: LoadDatabaseDetailsUseCase,
+  private val applicationPreferences: ApplicationPreferences,
   suplaSchedulers: SuplaSchedulers
-) : BaseViewModel<DeveloperInfoViewModelState, DeveloperInfoViewEvent>(DeveloperInfoViewModelState(), suplaSchedulers) {
+) : BaseViewModel<DeveloperInfoViewModelState, DeveloperInfoViewEvent>(DeveloperInfoViewModelState(), suplaSchedulers),
+  DeveloperInfoScope {
 
   override fun onViewCreated() {
     super.onViewCreated()
+
+    updateState { it.copy(state = it.state.copy(rotationEnabled = applicationPreferences.rotationEnabled)) }
 
     loadDatabaseDetailsUseCase(TableDetailType.SUPLA)
       .attach()
@@ -63,9 +68,17 @@ class DeveloperInfoViewModel @Inject constructor(
       it.copy(state = it.state.copy(measurementTableDetails = details))
     }
   }
+
+  override fun setRotationEnabled(enabled: Boolean) {
+    applicationPreferences.rotationEnabled = enabled
+    updateState { it.copy(state = it.state.copy(rotationEnabled = enabled)) }
+    sendEvent(DeveloperInfoViewEvent.UpdateOrientationLock)
+  }
 }
 
-sealed class DeveloperInfoViewEvent : ViewEvent
+sealed class DeveloperInfoViewEvent : ViewEvent {
+  data object UpdateOrientationLock : DeveloperInfoViewEvent()
+}
 
 data class DeveloperInfoViewModelState(
   val state: DeveloperInfoViewState = DeveloperInfoViewState()
