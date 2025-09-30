@@ -43,6 +43,7 @@ fun OutlinedButton(
   text: String,
   modifier: Modifier = Modifier,
   enabled: Boolean = true,
+  singleLine: Boolean = true,
   onClick: () -> Unit
 ) {
   OutlinedButton(
@@ -53,6 +54,7 @@ fun OutlinedButton(
     Text(
       text = text,
       style = MaterialTheme.typography.labelLarge,
+      maxLines = if (singleLine) 1 else Int.MAX_VALUE
     )
   }
 }

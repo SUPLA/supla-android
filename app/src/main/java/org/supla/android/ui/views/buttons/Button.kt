@@ -31,9 +31,10 @@ import org.supla.android.R
 @Composable
 fun Button(
   text: String,
-  onClick: () -> Unit,
   modifier: Modifier = Modifier,
-  enabled: Boolean = true
+  enabled: Boolean = true,
+  singleLine: Boolean = true,
+  onClick: () -> Unit
 ) {
   Button(
     onClick = onClick,
@@ -43,7 +44,8 @@ fun Button(
   ) {
     Text(
       text = text,
-      style = MaterialTheme.typography.labelLarge
+      style = MaterialTheme.typography.labelLarge,
+      maxLines = if (singleLine) 1 else Int.MAX_VALUE
     )
   }
 }
