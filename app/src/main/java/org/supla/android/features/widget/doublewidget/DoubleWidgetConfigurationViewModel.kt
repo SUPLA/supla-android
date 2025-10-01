@@ -243,7 +243,7 @@ class DoubleWidgetConfigurationViewModel @Inject constructor(
     )
 
     widgetPreferences.setWidgetConfiguration(widgetId, configuration)
-    if (needsReload(subject.function)) {
+    if (isValueWidget(subject.function)) {
       OnOffWidgetCommandWorker.enqueue(IntArray(widgetId), null, workManagerProxy)
     }
 

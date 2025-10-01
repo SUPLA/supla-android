@@ -31,8 +31,6 @@ import org.supla.android.data.model.spinner.SubjectItemConversionScope
 import org.supla.android.data.source.ChannelGroupRepository
 import org.supla.android.data.source.RoomChannelRepository
 import org.supla.android.data.source.RoomSceneRepository
-import org.supla.android.data.source.local.entity.isGpm
-import org.supla.android.data.source.local.entity.isThermometer
 import org.supla.android.features.widget.shared.subjectdetail.SubjectDetail
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaSchedulers
@@ -110,15 +108,17 @@ abstract class BaseWidgetViewModel(
     }
 
   protected open fun filter(channelBase: ChannelBase) =
-    channelBase.function.actions.isNotEmpty() ||
-      channelBase.isThermometer() || channelBase.isGpm()
+    channelBase.function.actions.isNotEmpty() || isValueWidget(channelBase.function)
 
-  protected fun needsReload(function: SuplaFunction?): Boolean =
+  protected fun isValueWidget(function: SuplaFunction?): Boolean =
     when (function) {
       SuplaFunction.THERMOMETER,
       SuplaFunction.HUMIDITY_AND_TEMPERATURE,
       SuplaFunction.GENERAL_PURPOSE_METER,
-      SuplaFunction.GENERAL_PURPOSE_MEASUREMENT -> true
+      SuplaFunction.GENERAL_PURPOSE_MEASUREMENT,
+      SuplaFunction.CONTAINER,
+      SuplaFunction.SEPTIC_TANK,
+      SuplaFunction.WATER_TANK -> true
 
       else -> false
     }

@@ -54,6 +54,7 @@ import org.supla.android.lib.SuplaConst.SUPLA_RESULT_VERSION_ERROR
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.ActionParameters
 import org.supla.android.lib.actions.RgbwActionParameters
+import org.supla.android.lib.singlecall.ContainerLevel
 import org.supla.android.lib.singlecall.DoubleValue
 import org.supla.android.lib.singlecall.ResultException
 import org.supla.android.lib.singlecall.TemperatureAndHumidity
@@ -62,6 +63,7 @@ import org.supla.android.usecases.channel.valueprovider.GpmValueProvider
 import org.supla.android.usecases.channelconfig.LoadChannelConfigUseCase
 import org.supla.android.widget.WidgetConfiguration
 import org.supla.core.shared.data.model.general.SuplaFunction
+import org.supla.core.shared.usecase.channel.valueformatter.formatters.ContainerValueFormatter
 import org.supla.core.shared.usecase.channel.valueformatter.formatters.GpmValueFormatter
 
 private const val INTERNAL_ERROR = -10
@@ -149,6 +151,11 @@ abstract class WidgetCommandWorkerBase(
       SuplaFunction.GENERAL_PURPOSE_METER,
       SuplaFunction.GENERAL_PURPOSE_MEASUREMENT ->
         return handleGpmWidget(widgetId, configuration)
+
+      SuplaFunction.CONTAINER,
+      SuplaFunction.WATER_TANK,
+      SuplaFunction.SEPTIC_TANK ->
+        return handleContainer(widgetId, configuration)
 
       else -> {}
     }
@@ -320,6 +327,19 @@ abstract class WidgetCommandWorkerBase(
       format = (channelConfig as? SuplaChannelGeneralPurposeBaseConfig).toValueFormat(valueWithUnit())
     )
     updateWidgetConfiguration(widgetId, configuration.copy(value = value))
+    updateWidget(widgetId)
+    return Result.success()
+  }
+
+  private fun handleContainer(widgetId: Int, configuration: WidgetConfiguration): Result {
+    val level = try {
+      (loadValue(configuration) as ContainerLevel)
+    } catch (_: Exception) {
+      null
+    }
+
+    val formatted = ContainerValueFormatter.format(level)
+    updateWidgetConfiguration(widgetId, configuration.copy(value = formatted))
     updateWidget(widgetId)
     return Result.success()
   }

@@ -35,7 +35,8 @@ enum class ValueUnit(val text: String, val leadingSpace: Boolean) {
   DISTANCE_MILLI("mm", true),
   DISTANCE_CENTI("cm", true),
   DISTANCE_KILO("km", true),
-  DISTANCE_DEFAULT("m", true);
+  DISTANCE_DEFAULT("m", true),
+  PERCENTAGE("%", false);
 
   // Used in iOS as the toString method is not available there
   fun getString() = toString()

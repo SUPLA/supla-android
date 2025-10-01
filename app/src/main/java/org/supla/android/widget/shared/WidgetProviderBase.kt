@@ -24,6 +24,7 @@ import androidx.work.Data
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import org.supla.android.Trace
+import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.extensions.getAllWidgetIds
 import org.supla.android.features.icons.LoadUserIconsIntoCacheWorker
 import org.supla.android.images.ImageCache
@@ -32,6 +33,7 @@ import org.supla.android.widget.INVALID_LONG
 import org.supla.android.widget.RemoveWidgetsWorker
 import org.supla.android.widget.WidgetConfiguration
 import org.supla.android.widget.WidgetPreferences
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 private const val WORK_ID_PREFIX = "ON_OF_WIDGET_"
 
@@ -80,6 +82,15 @@ abstract class WidgetProviderBase : AppWidgetProvider() {
     widgetId: Int,
     configuration: WidgetConfiguration?
   )
+
+  protected val ChannelEntity.isValueWidget: Boolean
+    get() = function == SuplaFunction.THERMOMETER ||
+      function == SuplaFunction.HUMIDITY_AND_TEMPERATURE ||
+      function == SuplaFunction.GENERAL_PURPOSE_METER ||
+      function == SuplaFunction.GENERAL_PURPOSE_MEASUREMENT ||
+      function == SuplaFunction.CONTAINER ||
+      function == SuplaFunction.WATER_TANK ||
+      function === SuplaFunction.SEPTIC_TANK
 
   companion object {
     private val TAG = WidgetProviderBase::class.simpleName
