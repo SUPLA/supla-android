@@ -17,8 +17,11 @@ package org.supla.android.features.developerinfo
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import android.content.Context
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import io.reactivex.rxjava3.kotlin.subscribeBy
+import org.supla.android.core.notifications.NotificationsHelper
 import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
@@ -33,6 +36,8 @@ import javax.inject.Inject
 class DeveloperInfoViewModel @Inject constructor(
   private val loadDatabaseDetailsUseCase: LoadDatabaseDetailsUseCase,
   private val applicationPreferences: ApplicationPreferences,
+  private val notificationsHelper: NotificationsHelper,
+  @ApplicationContext private val context: Context,
   suplaSchedulers: SuplaSchedulers
 ) : BaseViewModel<DeveloperInfoViewModelState, DeveloperInfoViewEvent>(DeveloperInfoViewModelState(), suplaSchedulers),
   DeveloperInfoScope {
@@ -73,6 +78,10 @@ class DeveloperInfoViewModel @Inject constructor(
     applicationPreferences.rotationEnabled = enabled
     updateState { it.copy(state = it.state.copy(rotationEnabled = enabled)) }
     sendEvent(DeveloperInfoViewEvent.UpdateOrientationLock)
+  }
+
+  override fun sendTestNotification() {
+    notificationsHelper.showNotification(context, "Test notification title", "Test notification message", "Test profile")
   }
 }
 

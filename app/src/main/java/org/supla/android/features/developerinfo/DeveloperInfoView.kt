@@ -23,7 +23,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -39,6 +39,7 @@ import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.data.source.local.entity.ChannelStateEntity
+import org.supla.android.ui.views.buttons.Button
 import org.supla.android.ui.views.settings.SettingsList
 import org.supla.android.ui.views.settings.SettingsListItem
 import org.supla.android.usecases.developerinfo.TableDetail
@@ -51,6 +52,7 @@ data class DeveloperInfoViewState(
 
 interface DeveloperInfoScope {
   fun setRotationEnabled(enabled: Boolean)
+  fun sendTestNotification()
 }
 
 @Composable
@@ -73,9 +75,10 @@ fun DeveloperInfoScope.View(
       ) { setRotationEnabled(it) }
     }
 
-    Spacer(modifier = Modifier.height(Distance.tiny))
-
-    HeaderLarge(text = stringResource(R.string.developer_info_database_section))
+    HeaderLarge(
+      text = stringResource(R.string.developer_info_database_section),
+      modifier = Modifier.padding(top = Distance.small)
+    )
     HeaderSmall(text = "Supla")
     viewState.suplaTableDetails.forEach {
       Row(modifier = Modifier.padding(horizontal = Distance.default)) {
@@ -92,15 +95,25 @@ fun DeveloperInfoScope.View(
         Text(it.count.toString(), style = MaterialTheme.typography.bodyMedium)
       }
     }
+
+    HeaderLarge(
+      text = "Other",
+      modifier = Modifier.padding(top = Distance.small)
+    )
+    Button(
+      text = "Test notification",
+      modifier = Modifier.fillMaxWidth().padding(horizontal = Distance.default),
+      onClick = { sendTestNotification() }
+    )
   }
 }
 
 @Composable
-private fun HeaderLarge(text: String) =
+private fun HeaderLarge(text: String, modifier: Modifier = Modifier) =
   Text(
     text = text,
     style = MaterialTheme.typography.titleLarge,
-    modifier = Modifier.padding(horizontal = Distance.default)
+    modifier = modifier.padding(horizontal = Distance.default)
       .padding(bottom = Distance.tiny)
   )
 
@@ -114,6 +127,7 @@ private fun HeaderSmall(text: String) =
 
 val previewScope = object : DeveloperInfoScope {
   override fun setRotationEnabled(enabled: Boolean) {}
+  override fun sendTestNotification() {}
 }
 
 @PreviewScreenSizes
