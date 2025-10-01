@@ -31,8 +31,6 @@ import org.supla.android.core.infrastructure.WorkManagerProxy
 import org.supla.android.data.model.general.ChannelState
 import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.Scene
-import org.supla.android.data.source.local.entity.isGpm
-import org.supla.android.data.source.local.entity.isThermometer
 import org.supla.android.images.ImageCache
 import org.supla.android.lib.SuplaConst
 import org.supla.android.lib.actions.ActionId
@@ -123,7 +121,7 @@ class SingleWidget : WidgetProviderBase() {
       profileId = configuration.profileId
     )
 
-    if (channel.isThermometer() || channel.isGpm()) {
+    if (channel.isValueWidget) {
       views.setTextViewText(R.id.single_widget_text, configuration.value)
       views.setViewVisibility(R.id.single_widget_button, View.GONE)
       views.setViewVisibility(R.id.single_widget_button_night_mode, View.GONE)

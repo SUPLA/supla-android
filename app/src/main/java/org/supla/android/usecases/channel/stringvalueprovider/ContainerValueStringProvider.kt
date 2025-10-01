@@ -21,7 +21,7 @@ import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.usecases.channel.ChannelValueStringProvider
 import org.supla.android.usecases.channel.ValueType
 import org.supla.android.usecases.channel.valueprovider.ContainerValueProvider
-import org.supla.core.shared.usecase.channel.valueformatter.NO_VALUE_TEXT
+import org.supla.core.shared.usecase.channel.valueformatter.formatters.ContainerValueFormatter
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -34,11 +34,6 @@ class ContainerValueStringProvider @Inject constructor(
     containerValueProvider.handle(channelWithChildren)
 
   override fun value(channelWithChildren: ChannelWithChildren, valueType: ValueType, withUnit: Boolean): String {
-    val value = containerValueProvider.value(channelWithChildren, valueType)
-    return if (value.levelKnown) {
-      "${value.level}%"
-    } else {
-      NO_VALUE_TEXT
-    }
+    return ContainerValueFormatter.format(containerValueProvider.value(channelWithChildren, valueType))
   }
 }

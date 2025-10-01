@@ -54,6 +54,8 @@ val DistanceMilliPrecision = ValuePrecision.exact(0)
 val DistanceCentiPrecision = ValuePrecision.exact(1)
 val DistanceDefaultPrecision = ValuePrecision.exact(2)
 
+val PercentageDefaultPrecision = ValuePrecision.exact(0)
+
 private fun pack(min: Int, max: Int): ValuePrecision {
   return ValuePrecision(max.and(MASK).or(min.and(MASK).shl(SHIFT)))
 }

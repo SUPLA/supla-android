@@ -261,7 +261,7 @@ class SingleWidgetConfigurationViewModel @Inject constructor(
     )
 
     widgetPreferences.setWidgetConfiguration(widgetId, configuration)
-    if (needsReload(subject.function)) {
+    if (isValueWidget(subject.function)) {
       SingleWidgetCommandWorker.enqueue(intArrayOf(widgetId), workManagerProxy)
     }
 

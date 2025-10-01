@@ -30,8 +30,6 @@ import org.supla.android.Trace
 import org.supla.android.core.infrastructure.WorkManagerProxy
 import org.supla.android.data.model.general.ChannelState
 import org.supla.android.data.source.local.entity.ChannelEntity
-import org.supla.android.data.source.local.entity.isGpm
-import org.supla.android.data.source.local.entity.isThermometer
 import org.supla.android.images.ImageCache
 import org.supla.android.lib.SuplaConst
 import org.supla.android.usecases.icon.GetChannelIconUseCase
@@ -112,7 +110,7 @@ class OnOffWidget : WidgetProviderBase() {
       profileId = configuration.profileId
     )
 
-    val iconViewId = if (channel.isThermometer() || channel.isGpm()) {
+    val iconViewId = if (channel.isValueWidget) {
       R.id.on_off_widget_value_icon
     } else {
       R.id.on_off_widget_turn_on_button
@@ -121,7 +119,7 @@ class OnOffWidget : WidgetProviderBase() {
     val activeIcon = getChannelIconUseCase.forState(channel, ChannelState.active(channel.function.value))
     ImageCache.loadBitmapForWidgetView(activeIcon, views, iconViewId, false)
 
-    val viewIdNightMode = if (channel.isThermometer() || channel.isGpm()) {
+    val viewIdNightMode = if (channel.isValueWidget) {
       R.id.on_off_widget_value_icon_night_mode
     } else {
       R.id.on_off_widget_turn_on_button_night_mode
@@ -131,7 +129,7 @@ class OnOffWidget : WidgetProviderBase() {
       ImageCache.loadBitmapForWidgetView(activeIcon, views, viewIdNightMode, true)
     }
 
-    if (channel.isThermometer() || channel.isGpm()) {
+    if (channel.isValueWidget) {
       views.setTextViewText(R.id.on_off_widget_value_text, configuration.value)
       views.setViewVisibility(R.id.on_off_widget_buttons, View.GONE)
       views.setViewVisibility(R.id.on_off_widget_value, View.VISIBLE)

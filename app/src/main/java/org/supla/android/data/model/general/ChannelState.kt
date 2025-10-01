@@ -28,6 +28,7 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_STAIRCASETIMER
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_VALVE_OPENCLOSE
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_VALVE_PERCENTAGE
+import org.supla.core.shared.data.model.general.SuplaFunction
 
 /*
  Copyright (C) AC SOFTWARE SP. Z O.O.
@@ -120,6 +121,10 @@ data class ChannelState(
 
         SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING -> ChannelState(Value.COMPLEX, listOf(Value.ON, Value.ON))
 
+        SuplaFunction.CONTAINER.value,
+        SuplaFunction.WATER_TANK.value,
+        SuplaFunction.SEPTIC_TANK.value -> ChannelState(Value.FULL)
+
         else -> ChannelState(Value.NOT_USED)
       }
 
@@ -156,6 +161,10 @@ data class ChannelState(
         SUPLA_CHANNELFNC_RGBLIGHTING -> ChannelState(Value.OFF)
 
         SUPLA_CHANNELFNC_DIMMERANDRGBLIGHTING -> ChannelState(Value.COMPLEX, listOf(Value.OFF, Value.OFF))
+
+        SuplaFunction.CONTAINER.value,
+        SuplaFunction.WATER_TANK.value,
+        SuplaFunction.SEPTIC_TANK.value -> ChannelState(Value.EMPTY)
 
         else -> ChannelState(Value.NOT_USED)
       }

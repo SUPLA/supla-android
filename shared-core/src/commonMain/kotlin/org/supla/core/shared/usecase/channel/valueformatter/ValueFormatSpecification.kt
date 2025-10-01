@@ -23,6 +23,7 @@ import org.supla.core.shared.usecase.channel.valueformatter.types.DistanceDefaul
 import org.supla.core.shared.usecase.channel.valueformatter.types.DistanceMilliPrecision
 import org.supla.core.shared.usecase.channel.valueformatter.types.GpmPrecision
 import org.supla.core.shared.usecase.channel.valueformatter.types.ImpulseCounterPrecision
+import org.supla.core.shared.usecase.channel.valueformatter.types.PercentageDefaultPrecision
 import org.supla.core.shared.usecase.channel.valueformatter.types.PressurePrecision
 import org.supla.core.shared.usecase.channel.valueformatter.types.RainPrecision
 import org.supla.core.shared.usecase.channel.valueformatter.types.ValuePrecision
@@ -134,6 +135,12 @@ data class ValueFormatSpecification(
       ValueFormatSpecification(
         precision = DistanceDefaultPrecision,
         unit = ValueUnit.DISTANCE_KILO.toString()
+      )
+    val Percentage =
+      ValueFormatSpecification(
+        precision = PercentageDefaultPrecision,
+        withUnit = true,
+        unit = ValueUnit.PERCENTAGE.toString()
       )
   }
 }
