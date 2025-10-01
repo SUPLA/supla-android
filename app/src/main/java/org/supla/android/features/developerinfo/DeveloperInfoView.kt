@@ -45,12 +45,14 @@ import org.supla.android.ui.views.settings.SettingsListItem
 import org.supla.android.usecases.developerinfo.TableDetail
 
 data class DeveloperInfoViewState(
+  val developerOptions: Boolean = false,
   val rotationEnabled: Boolean = false,
   val suplaTableDetails: List<TableDetail> = emptyList(),
   val measurementTableDetails: List<TableDetail> = emptyList()
 )
 
 interface DeveloperInfoScope {
+  fun setDeveloperOptionEnabled(enabled: Boolean)
   fun setRotationEnabled(enabled: Boolean)
   fun sendTestNotification()
 }
@@ -69,6 +71,10 @@ fun DeveloperInfoScope.View(
   ) {
     HeaderLarge(text = stringResource(R.string.developer_info_settings))
     SettingsList {
+      SettingsListItem(
+        label = stringResource(R.string.developer_option),
+        checked = viewState.developerOptions
+      ) { setDeveloperOptionEnabled(it) }
       SettingsListItem(
         label = stringResource(R.string.developer_info_screen_orientation),
         checked = viewState.rotationEnabled
@@ -126,6 +132,7 @@ private fun HeaderSmall(text: String) =
   )
 
 val previewScope = object : DeveloperInfoScope {
+  override fun setDeveloperOptionEnabled(enabled: Boolean) {}
   override fun setRotationEnabled(enabled: Boolean) {}
   override fun sendTestNotification() {}
 }

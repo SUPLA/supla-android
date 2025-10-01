@@ -23,6 +23,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.core.notifications.NotificationsHelper
 import org.supla.android.core.storage.ApplicationPreferences
+import org.supla.android.core.storage.EncryptedPreferences
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
@@ -36,6 +37,7 @@ import javax.inject.Inject
 class DeveloperInfoViewModel @Inject constructor(
   private val loadDatabaseDetailsUseCase: LoadDatabaseDetailsUseCase,
   private val applicationPreferences: ApplicationPreferences,
+  private val encryptedPreferences: EncryptedPreferences,
   private val notificationsHelper: NotificationsHelper,
   @ApplicationContext private val context: Context,
   suplaSchedulers: SuplaSchedulers
@@ -45,7 +47,14 @@ class DeveloperInfoViewModel @Inject constructor(
   override fun onViewCreated() {
     super.onViewCreated()
 
-    updateState { it.copy(state = it.state.copy(rotationEnabled = applicationPreferences.rotationEnabled)) }
+    updateState {
+      it.copy(
+        state = it.state.copy(
+          developerOptions = encryptedPreferences.devModeActive,
+          rotationEnabled = applicationPreferences.rotationEnabled
+        )
+      )
+    }
 
     loadDatabaseDetailsUseCase(TableDetailType.SUPLA)
       .attach()
@@ -72,6 +81,11 @@ class DeveloperInfoViewModel @Inject constructor(
     updateState {
       it.copy(state = it.state.copy(measurementTableDetails = details))
     }
+  }
+
+  override fun setDeveloperOptionEnabled(enabled: Boolean) {
+    encryptedPreferences.devModeActive = enabled
+    updateState { it.copy(state = it.state.copy(developerOptions = enabled)) }
   }
 
   override fun setRotationEnabled(enabled: Boolean) {
