@@ -86,6 +86,7 @@ class UpdateChannelUseCase @Inject constructor(
   private fun updatePosition(locationEntity: LocationEntity, channelEntity: ChannelEntity, locationChanged: Boolean) =
     if (locationEntity.sorting == Location.SortingType.USER_DEFINED && (channelEntity.id == null || locationChanged)) {
       channelRepository.findMaxPositionInLocation(locationEntity.remoteId)
+        .onErrorReturnItem(0)
         .map { count ->
           Timber.i("Updating channel position to `$count`")
           return@map channelEntity.copy(position = count + 1)
