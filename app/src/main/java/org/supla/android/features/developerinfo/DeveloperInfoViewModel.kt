@@ -18,9 +18,13 @@ package org.supla.android.features.developerinfo
  */
 
 import android.content.Context
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.reactivex.rxjava3.kotlin.subscribeBy
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.supla.android.core.infrastructure.storage.DebugFileLoggingTree
 import org.supla.android.core.infrastructure.storage.FileUtils
 import org.supla.android.core.notifications.NotificationsHelper
@@ -30,6 +34,7 @@ import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.usecases.db.MakeAnonymizedDatabaseCopyUseCase
 import org.supla.android.usecases.developerinfo.LoadDatabaseDetailsUseCase
 import org.supla.android.usecases.developerinfo.TableDetail
 import org.supla.android.usecases.developerinfo.TableDetailType
@@ -38,6 +43,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DeveloperInfoViewModel @Inject constructor(
+  private val makeAnonymizedDatabaseCopyUseCase: MakeAnonymizedDatabaseCopyUseCase,
   private val loadDatabaseDetailsUseCase: LoadDatabaseDetailsUseCase,
   private val applicationPreferences: ApplicationPreferences,
   private val encryptedPreferences: EncryptedPreferences,
@@ -134,7 +140,15 @@ class DeveloperInfoViewModel @Inject constructor(
   }
 
   override fun exportSuplaDatabase() {
-    sendEvent(DeveloperInfoViewEvent.ExportSuplaDatabase)
+    viewModelScope.launch {
+      val dbPrepared = withContext(Dispatchers.IO) { makeAnonymizedDatabaseCopyUseCase() }
+
+      if (dbPrepared) {
+        sendEvent(DeveloperInfoViewEvent.ExportSuplaDatabase)
+      } else {
+        sendEvent(DeveloperInfoViewEvent.SuplaExportNotPossible)
+      }
+    }
   }
 
   override fun exportMeasurementsDatabase() {
@@ -167,6 +181,7 @@ class DeveloperInfoViewModel @Inject constructor(
 sealed class DeveloperInfoViewEvent : ViewEvent {
   data object UpdateOrientationLock : DeveloperInfoViewEvent()
   data object ExportSuplaDatabase : DeveloperInfoViewEvent()
+  data object SuplaExportNotPossible : DeveloperInfoViewEvent()
   data object ExportMeasurementsDatabase : DeveloperInfoViewEvent()
   data object ExportLogFile : DeveloperInfoViewEvent()
 

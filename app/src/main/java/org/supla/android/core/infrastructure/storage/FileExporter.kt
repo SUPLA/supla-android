@@ -33,7 +33,42 @@ import java.nio.channels.FileChannel
  */
 object FileExporter {
 
-  private const val TAG = "DatabaseExporter"
+  /**
+   * Copies the current application database file to a new, specified location.
+   * This is useful for creating backups or preparing a staging copy.
+   *
+   * @param source Source file.
+   * @param destination Destination file.
+   * @return true if the copy was successful, false otherwise.
+   */
+  fun copyFile(source: File, destination: File): Boolean {
+    if (!source.exists()) {
+      Timber.e("Source database file does not exist: ${source.absolutePath}")
+      return false
+    }
+
+    var sourceChannel: FileChannel? = null
+    var destinationChannel: FileChannel? = null
+
+    try {
+      sourceChannel = FileInputStream(source).channel
+      destinationChannel = FileOutputStream(destination).channel
+      destinationChannel.transferFrom(sourceChannel, 0, sourceChannel.size())
+
+      Timber.i("Database successfully copied from ${source.absolutePath} to ${destination.absolutePath}")
+      return true
+    } catch (e: IOException) {
+      Timber.e(e, "Failed to copy database file.")
+      return false
+    } finally {
+      try {
+        sourceChannel?.close()
+        destinationChannel?.close()
+      } catch (e: IOException) {
+        Timber.e(e, "Error closing file channels.")
+      }
+    }
+  }
 
   /**
    * Copies the application's private SQLite database file to a destination URI

@@ -34,10 +34,10 @@ import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.core.ui.BaseFragment
 import org.supla.android.core.ui.theme.SuplaTheme
 import org.supla.android.databinding.FragmentComposeBinding
-import org.supla.android.db.DbHelper
 import org.supla.android.db.room.measurements.MeasurementsDatabase
 import org.supla.android.extensions.setupOrientationLock
 import org.supla.android.navigator.MainNavigator
+import org.supla.android.usecases.db.MakeAnonymizedDatabaseCopyUseCase
 import java.io.File
 import javax.inject.Inject
 
@@ -55,13 +55,16 @@ class DeveloperInfoFragment : BaseFragment<DeveloperInfoViewModelState, Develope
   @Inject
   internal lateinit var debugFileLoggingTree: DebugFileLoggingTree
 
+  @Inject
+  internal lateinit var makeAnonymizedDatabaseCopyUseCase: MakeAnonymizedDatabaseCopyUseCase
+
   private val exportSuplaDbLauncher = registerForActivityResult(
     ActivityResultContracts.CreateDocument("application/octet-stream")
-  ) { uri: Uri? -> performDatabaseExport(uri, DbHelper.DATABASE_NAME) }
+  ) { uri: Uri? -> performFileExport(uri, makeAnonymizedDatabaseCopyUseCase.file) }
 
   private val exportMeasurementsDbLauncher = registerForActivityResult(
     ActivityResultContracts.CreateDocument("application/octet-stream")
-  ) { uri: Uri? -> performDatabaseExport(uri, MeasurementsDatabase.NAME) }
+  ) { uri: Uri? -> performMeasurementsDabataseExport(uri) }
 
   private val exportLogFileLauncher = registerForActivityResult(
     ActivityResultContracts.CreateDocument("application/octet-stream")
@@ -99,20 +102,22 @@ class DeveloperInfoFragment : BaseFragment<DeveloperInfoViewModelState, Develope
 
       DeveloperInfoViewEvent.LogFileRemoved ->
         Toast.makeText(requireContext(), "Log file removed", Toast.LENGTH_SHORT).show()
+
+      DeveloperInfoViewEvent.SuplaExportNotPossible ->
+        Toast.makeText(requireContext(), "Export failed", Toast.LENGTH_SHORT).show()
     }
   }
 
   override fun handleViewState(state: DeveloperInfoViewModelState) {}
 
-  private fun performDatabaseExport(uri: Uri?, databaseName: String) {
+  private fun performMeasurementsDabataseExport(uri: Uri?) {
     if (uri != null) {
-      if (FileExporter.copyDatabaseToUri(requireContext(), databaseName, uri)) {
+      if (FileExporter.copyDatabaseToUri(requireContext(), MeasurementsDatabase.NAME, uri)) {
         Toast.makeText(requireContext(), "Database successfully exported.", Toast.LENGTH_SHORT).show()
       } else {
         Toast.makeText(requireContext(), "Export failed!", Toast.LENGTH_LONG).show()
       }
     } else {
-      // User cancelled the file picker.
       Toast.makeText(requireContext(), "Database export cancelled.", Toast.LENGTH_SHORT).show()
     }
   }
@@ -125,7 +130,6 @@ class DeveloperInfoFragment : BaseFragment<DeveloperInfoViewModelState, Develope
         Toast.makeText(requireContext(), "Export failed!", Toast.LENGTH_LONG).show()
       }
     } else {
-      // User cancelled the file picker.
       Toast.makeText(requireContext(), "File export cancelled.", Toast.LENGTH_SHORT).show()
     }
   }
