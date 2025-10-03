@@ -43,7 +43,7 @@ class DebugFileLoggingTree @Inject constructor(
 
   private val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.US)
   private val tagFormat = "%-23s" // Fixed width for clean column alignment
-  val logFile = File(context.filesDir, FILE_NAME)
+  val logFile = File(context.cacheDir, FILE_NAME)
 
   // This is the core function called every time Timber.log() is used.
   @SuppressLint("LogNotTimber")
