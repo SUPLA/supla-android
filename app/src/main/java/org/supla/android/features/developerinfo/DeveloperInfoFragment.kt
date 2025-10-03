@@ -52,6 +52,9 @@ class DeveloperInfoFragment : BaseFragment<DeveloperInfoViewModelState, Develope
   @Inject
   internal lateinit var applicationPreferences: ApplicationPreferences
 
+  @Inject
+  internal lateinit var debugFileLoggingTree: DebugFileLoggingTree
+
   private val exportSuplaDbLauncher = registerForActivityResult(
     ActivityResultContracts.CreateDocument("application/octet-stream")
   ) { uri: Uri? -> performDatabaseExport(uri, DbHelper.DATABASE_NAME) }
@@ -62,7 +65,7 @@ class DeveloperInfoFragment : BaseFragment<DeveloperInfoViewModelState, Develope
 
   private val exportLogFileLauncher = registerForActivityResult(
     ActivityResultContracts.CreateDocument("application/octet-stream")
-  ) { uri: Uri? -> performFileExport(uri, File(requireContext().filesDir, DebugFileLoggingTree.FILE_NAME)) }
+  ) { uri: Uri? -> performFileExport(uri, debugFileLoggingTree.logFile) }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
