@@ -23,7 +23,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.subscribeBy
-import org.supla.android.core.infrastructure.WorkManagerProxy
 import org.supla.android.data.model.spinner.ProfileItem
 import org.supla.android.data.model.spinner.SubjectItem
 import org.supla.android.data.model.spinner.SubjectItemConversionScope
@@ -42,7 +41,6 @@ import org.supla.android.usecases.icon.GetSceneIconUseCase
 import org.supla.android.usecases.profile.ReadAllProfilesUseCase
 import org.supla.android.widget.WidgetConfiguration
 import org.supla.android.widget.WidgetPreferences
-import org.supla.android.widget.onoff.OnOffWidgetCommandWorker
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.extensions.guardLet
 import org.supla.core.shared.usecase.GetCaptionUseCase
@@ -57,7 +55,6 @@ class DoubleWidgetConfigurationViewModel @Inject constructor(
   override val getSceneIconUseCase: GetSceneIconUseCase,
   override val getCaptionUseCase: GetCaptionUseCase,
   private val widgetPreferences: WidgetPreferences,
-  private val workManagerProxy: WorkManagerProxy,
   getChannelValueStringUseCase: GetChannelValueStringUseCase,
   channelGroupRepository: ChannelGroupRepository,
   channelRepository: RoomChannelRepository,
@@ -243,10 +240,6 @@ class DoubleWidgetConfigurationViewModel @Inject constructor(
     )
 
     widgetPreferences.setWidgetConfiguration(widgetId, configuration)
-    if (isValueWidget(subject.function)) {
-      OnOffWidgetCommandWorker.enqueue(IntArray(widgetId), null, workManagerProxy)
-    }
-
     sendEvent(WidgetConfigurationViewEvent.Finished(widgetId))
   }
 }
