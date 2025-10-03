@@ -18,12 +18,11 @@ syays GNU General Public License for more details.
  */
 
 import io.reactivex.rxjava3.core.Single
-import org.supla.android.Trace
 import org.supla.android.data.source.RoomUserIconRepository
 import org.supla.android.data.source.local.entity.UserIconEntity
-import org.supla.android.extensions.TAG
 import org.supla.android.images.ImageCacheProxy
 import org.supla.android.images.ImageId
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -42,12 +41,12 @@ class LoadUserIconsIntoCacheUseCase @Inject constructor(
     userIconRepository.loadAllIcons()
       .firstOrError()
       .map { icons ->
-        Trace.d(TAG, "Icons loading started")
+        Timber.d("Icons loading started")
         val initialSum = imageCacheProxy.sum()
         icons.forEach { icon ->
           ImageType.entries.forEach { addImage(icon, it) }
         }
-        Trace.d(TAG, "Icons loading finished")
+        Timber.d("Icons loading finished")
 
         IconsCacheStatistics(
           iconsCount = imageCacheProxy.size(),

@@ -17,11 +17,10 @@ package org.supla.android.events
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.Trace
 import org.supla.android.data.source.remote.ConfigResult
 import org.supla.android.data.source.remote.SuplaChannelConfig
-import org.supla.android.extensions.TAG
 import org.supla.core.shared.extensions.guardLet
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -30,7 +29,7 @@ class ChannelConfigEventsManager @Inject constructor() : BaseConfigEventsManager
 
   fun emitConfig(result: ConfigResult, config: SuplaChannelConfig?) {
     val (remoteId) = guardLet(config?.remoteId) {
-      Trace.e(TAG, "Got result `$result` without config `$config`")
+      Timber.e("Got result `$result` without config `$config`")
       return
     }
     super.emitConfig(remoteId, ConfigEvent(result, config))

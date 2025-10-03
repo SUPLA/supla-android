@@ -18,7 +18,6 @@ package org.supla.android.features.measurementsdownload
  */
 
 import io.reactivex.rxjava3.core.ObservableEmitter
-import org.supla.android.Trace
 import org.supla.android.data.model.chart.ChartDataAggregation
 import org.supla.android.data.source.ChannelConfigRepository
 import org.supla.android.data.source.GeneralPurposeMeterLogRepository
@@ -28,8 +27,8 @@ import org.supla.android.data.source.remote.gpm.SuplaChannelConfigMeterCounterTy
 import org.supla.android.data.source.remote.gpm.SuplaChannelGeneralPurposeMeterConfig
 import org.supla.android.data.source.remote.rest.SuplaCloudService
 import org.supla.android.data.source.remote.rest.channel.GeneralPurposeMeter
-import org.supla.android.extensions.TAG
 import org.supla.android.extensions.toTimestamp
+import timber.log.Timber
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -64,11 +63,11 @@ class DownloadGeneralPurposeMeterLogUseCase @Inject constructor(
       val entries = generalPurposeMeterLogRepository.getMeasurements(cloudService, remoteId, afterTimestamp).blockingFirst()
 
       if (entries.isEmpty()) {
-        Trace.d(TAG, "Measurements end reached")
+        Timber.d("Measurements end reached")
         return
       }
 
-      Trace.d(TAG, "Measurements fetched ${entries.size}")
+      Timber.d("Measurements fetched ${entries.size}")
       lastEntity = saveMeasurements(lastEntity, entries, remoteId, profileId, channelConfig)
       afterTimestamp = lastEntity?.date?.toTimestamp() ?: 0
 

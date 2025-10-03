@@ -18,16 +18,15 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import io.reactivex.rxjava3.core.Single
-import org.supla.android.Trace
 import org.supla.android.data.model.general.EntityUpdateResult
 import org.supla.android.data.source.ChannelValueRepository
 import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.data.source.local.entity.ChannelValueEntity
 import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
-import org.supla.android.extensions.TAG
 import org.supla.android.lib.SuplaChannel
 import org.supla.android.lib.SuplaChannelValue
 import org.supla.android.lib.SuplaChannelValueUpdate
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -52,17 +51,17 @@ class UpdateChannelValueUseCase @Inject constructor(
       .toSingle()
       .flatMap { channelValueEntity ->
         if (channelValueEntity.differsFrom(suplaChannelValue, status)) {
-          Trace.d(TAG, "Updating channel value for $channelRemoteId subtype ${suplaChannelValue.SubValueType}")
+          Timber.d("Updating channel value for $channelRemoteId subtype ${suplaChannelValue.SubValueType}")
           update(channelValueEntity, suplaChannelValue, status)
         } else {
           Single.just(EntityUpdateResult.NOP)
         }
       }.onErrorResumeNext { throwable ->
         if (throwable is NoSuchElementException) {
-          Trace.d(TAG, "Inserting channel value for $channelRemoteId subtype ${suplaChannelValue.SubValueType}")
+          Timber.d("Inserting channel value for $channelRemoteId subtype ${suplaChannelValue.SubValueType}")
           insert(suplaChannelValue, channelRemoteId, status)
         } else {
-          Trace.e(TAG, "Channel value update failed!", throwable)
+          Timber.e(throwable, "Channel value update failed!")
           Single.just(EntityUpdateResult.ERROR)
         }
       }

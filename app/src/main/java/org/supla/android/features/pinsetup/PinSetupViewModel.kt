@@ -19,7 +19,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.supla.android.R
-import org.supla.android.Trace
 import org.supla.android.core.infrastructure.BiometricUtils
 import org.supla.android.core.infrastructure.ShaHashHelper
 import org.supla.android.core.storage.EncryptedPreferences
@@ -28,9 +27,9 @@ import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.data.model.general.LockScreenScope
 import org.supla.android.data.model.general.LockScreenSettings
-import org.supla.android.extensions.TAG
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.views.PIN_LENGTH
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -81,7 +80,7 @@ class PinSetupViewModel @Inject constructor(
       encryptedPreferences.lockScreenSettings = LockScreenSettings(lockScreenScope, pinHash, state.biometricAuthentication)
       sendEvent(PinSetupViewEvent.Close)
     } catch (exception: Exception) {
-      Trace.e(TAG, "Pin setup failed!", exception)
+      Timber.e(exception, "Pin setup failed!")
 
       updateState { it.copy(viewState = it.viewState.copy(errorStringRes = R.string.pin_setup_failed)) }
     }

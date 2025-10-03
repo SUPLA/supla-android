@@ -18,12 +18,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import io.reactivex.rxjava3.core.Completable
-import org.supla.android.Trace
 import org.supla.android.core.SuplaAppProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientState
 import org.supla.android.events.UpdateEventsManager
-import org.supla.android.extensions.TAG
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -45,7 +44,7 @@ class DisconnectUseCase @Inject constructor(
       try {
         suplaClient.join()
       } catch (ex: InterruptedException) {
-        Trace.w(TAG, "Supla client thread joining broken by InterruptedException", ex)
+        Timber.w(ex, "Supla client thread joining broken by InterruptedException")
       }
     } else {
       // It may happen, that supla client is not running but created

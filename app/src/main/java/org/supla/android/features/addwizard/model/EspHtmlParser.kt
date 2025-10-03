@@ -19,8 +19,7 @@ package org.supla.android.features.addwizard.model
 
 import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
-import org.supla.android.Trace
-import org.supla.android.extensions.TAG
+import timber.log.Timber
 import java.util.regex.Pattern
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -48,7 +47,7 @@ class EspHtmlParser @Inject constructor() {
 
       val name = element.attr("name")
       if (name.trim().isEmpty()) {
-        Trace.w(TAG, "Skipping input with empty name: `${element.html()}`")
+        Timber.w("Skipping input with empty name: `${element.html()}`")
       } else if (appendToList) {
         map[name] = element.`val`()
       }
@@ -60,7 +59,7 @@ class EspHtmlParser @Inject constructor() {
       val name = element.attr("name")
 
       if (name.trim().isEmpty()) {
-        Trace.w(TAG, "Skipping select with empty name: `${element.html()}`")
+        Timber.w("Skipping select with empty name: `${element.html()}`")
       } else if (option.hasAttr("selected")) {
         map[name] = option.`val`()
       }

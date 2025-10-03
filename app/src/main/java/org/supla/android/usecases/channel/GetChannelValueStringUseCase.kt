@@ -17,9 +17,7 @@ package org.supla.android.usecases.channel
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.Trace
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
-import org.supla.android.extensions.TAG
 import org.supla.android.usecases.channel.stringvalueprovider.ContainerValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.DepthSensorValueStringProvider
 import org.supla.android.usecases.channel.stringvalueprovider.DistanceSensorValueStringProvider
@@ -38,6 +36,7 @@ import org.supla.android.usecases.channel.stringvalueprovider.WeightSensorValueS
 import org.supla.android.usecases.channel.stringvalueprovider.WindSensorValueStringProvider
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.usecase.channel.valueformatter.NO_VALUE_TEXT
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -114,7 +113,7 @@ class GetChannelValueStringUseCase @Inject constructor(
       return it.value(channel, valueType, withUnit)
     }
 
-    Trace.e(TAG, "No value formatter for channel function `${channel.channel.function}`")
+    Timber.e("No value formatter for channel function `${channel.channel.function}`")
     return null
   }
 }

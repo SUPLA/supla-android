@@ -23,15 +23,14 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import org.supla.android.Trace
 import org.supla.android.data.source.remote.esp.EspCommonNameValidationInterceptor
 import org.supla.android.data.source.remote.esp.EspCookiesInterceptor
 import org.supla.android.data.source.remote.esp.EspCustomRootCaProvider
 import org.supla.android.data.source.remote.esp.EspSchemeInterceptor
 import org.supla.android.data.source.remote.esp.EspService
 import org.supla.android.data.source.remote.esp.JsoupConverterFactory
-import org.supla.android.extensions.TAG
 import retrofit2.Retrofit
+import timber.log.Timber
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -66,15 +65,15 @@ class EspModule {
         val trustManager = espCustomRootCaProvider.customTrustManager
 
         if (sslFactory != null && trustManager != null) {
-          Trace.i(TAG, "Custom CA loaded, setting in client")
+          Timber.i("Custom CA loaded, setting in client")
           it.sslSocketFactory(sslFactory, trustManager)
         } else {
-          Trace.e(TAG, "Custom CA is not loaded!")
+          Timber.e("Custom CA is not loaded!")
           it
         }
       }
       .hostnameVerifier { hostname, session ->
-        Trace.d("!@#", "Verifying host name $hostname")
+        Timber.d("Verifying host name $hostname")
         true
       }
       .build()

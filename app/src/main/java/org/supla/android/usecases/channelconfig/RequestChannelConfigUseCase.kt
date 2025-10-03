@@ -18,13 +18,12 @@ package org.supla.android.usecases.channelconfig
  */
 
 import io.reactivex.rxjava3.core.Completable
-import org.supla.android.Trace
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.data.source.ChannelConfigRepository
 import org.supla.android.data.source.remote.ChannelConfigType
-import org.supla.android.extensions.TAG
 import org.supla.android.lib.SuplaChannel
 import org.supla.core.shared.data.model.general.SuplaFunction
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -39,9 +38,9 @@ class RequestChannelConfigUseCase @Inject constructor(
       channelConfigRepository.findForRemoteId(suplaChannel.Id)
         .toSingle()
         .doOnSuccess { config ->
-          Trace.i(TAG, "Channel config found (remoteId: `${suplaChannel.Id}`)")
+          Timber.i("Channel config found (remoteId: `${suplaChannel.Id}`)")
           if (config.configCrc32 != suplaChannel.DefaultConfigCRC32) {
-            Trace.i(TAG, "Channel config asked (remoteId: `${suplaChannel.Id}`)")
+            Timber.i("Channel config asked (remoteId: `${suplaChannel.Id}`)")
             suplaClientProvider.provide()?.getChannelConfig(suplaChannel.Id, ChannelConfigType.DEFAULT)
           }
         }
@@ -49,7 +48,7 @@ class RequestChannelConfigUseCase @Inject constructor(
         .onErrorResumeNext {
           Completable.fromRunnable {
             if (it is NoSuchElementException) {
-              Trace.i(TAG, "Channel config not found (remoteId: `${suplaChannel.Id}`)")
+              Timber.i("Channel config not found (remoteId: `${suplaChannel.Id}`)")
               suplaClientProvider.provide()?.getChannelConfig(suplaChannel.Id, ChannelConfigType.DEFAULT)
             }
           }

@@ -19,7 +19,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
-import org.supla.android.Trace
 import org.supla.android.data.model.general.EntityUpdateResult
 import org.supla.android.data.source.LocationRepository
 import org.supla.android.data.source.RoomChannelRepository
@@ -27,12 +26,12 @@ import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.db.Location
-import org.supla.android.extensions.TAG
 import org.supla.android.lib.SuplaChannel
 import org.supla.android.usecases.channelconfig.RequestChannelConfigUseCase
 import org.supla.android.widget.WidgetManager
 import org.supla.android.widget.WidgetPreferences
 import org.supla.core.shared.data.model.general.SuplaFunction
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -62,7 +61,7 @@ class UpdateChannelUseCase @Inject constructor(
           if (throwable is NoSuchElementException) {
             insertChannel(locationEntity, suplaChannel)
           } else {
-            Trace.e(TAG, "Channel update failed!", throwable)
+            Timber.e(throwable, "Channel update failed!")
             Single.just(EntityUpdateResult.ERROR)
           }
         }
@@ -88,7 +87,7 @@ class UpdateChannelUseCase @Inject constructor(
     if (locationEntity.sorting == Location.SortingType.USER_DEFINED && (channelEntity.id == null || locationChanged)) {
       channelRepository.findMaxPositionInLocation(locationEntity.remoteId)
         .map { count ->
-          Trace.i(TAG, "Updating channel position to `$count`")
+          Timber.i("Updating channel position to `$count`")
           return@map channelEntity.copy(position = count + 1)
         }
     } else if (locationEntity.sorting == Location.SortingType.DEFAULT && channelEntity.position != 0) {
@@ -118,7 +117,7 @@ class UpdateChannelUseCase @Inject constructor(
       .flatMap { updater(it) }
       .onErrorResumeNext {
         if (it !is NoSuchElementException) {
-          Trace.e(TAG, "Channel update - location check failed!", it)
+          Timber.e(it, "Channel update - location check failed!")
         }
         Single.just(EntityUpdateResult.ERROR)
       }

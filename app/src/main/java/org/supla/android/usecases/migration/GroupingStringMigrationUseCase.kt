@@ -18,7 +18,6 @@ package org.supla.android.usecases.migration
  */
 
 import io.reactivex.rxjava3.core.Completable
-import org.supla.android.Trace
 import org.supla.android.data.source.ElectricityMeterLogRepository
 import org.supla.android.data.source.GeneralPurposeMeasurementLogRepository
 import org.supla.android.data.source.GeneralPurposeMeterLogRepository
@@ -29,8 +28,8 @@ import org.supla.android.data.source.TemperatureLogRepository
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.local.entity.isGpMeasurement
 import org.supla.android.data.source.local.entity.isGpMeter
-import org.supla.android.extensions.TAG
 import org.supla.core.shared.data.model.general.SuplaFunction
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -70,7 +69,7 @@ class GroupingStringMigrationUseCase @Inject constructor(
 
       else ->
         Completable.fromRunnable {
-          Trace.w(TAG, "No migration defined for function: ${channelWithChildren.function} (channel id: ${channelWithChildren.remoteId})")
+          Timber.w("No migration defined for function: ${channelWithChildren.function} (channel id: ${channelWithChildren.remoteId})")
         }
     }
   }

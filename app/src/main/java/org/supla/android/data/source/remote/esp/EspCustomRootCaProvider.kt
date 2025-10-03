@@ -19,8 +19,7 @@ package org.supla.android.data.source.remote.esp
 
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
-import org.supla.android.Trace
-import org.supla.android.extensions.TAG
+import timber.log.Timber
 import java.io.BufferedInputStream
 import java.security.KeyStore
 import java.security.cert.CertificateFactory
@@ -56,7 +55,7 @@ class EspCustomRootCaProvider @Inject constructor(
       }
 
       tmf.trustManagers.filterIsInstance<X509TrustManager>().firstOrNull()?.let { customTrustManager ->
-        Trace.i(TAG, "Supla Custom Root CA loaded successfully")
+        Timber.i("Supla Custom Root CA loaded successfully")
         this.customTrustManager = customTrustManager
         this.sslContext = SSLContext.getInstance("TLS").apply {
           init(null, arrayOf<TrustManager>(customTrustManager), null)
@@ -74,7 +73,7 @@ class EspCustomRootCaProvider @Inject constructor(
         }
       }
     } catch (ex: Exception) {
-      Trace.e(TAG, "Could not generate certificate from assets", ex)
+      Timber.e(ex, "Could not generate certificate from assets")
       null
     }
 }

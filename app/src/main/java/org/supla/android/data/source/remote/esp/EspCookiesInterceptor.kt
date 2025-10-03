@@ -19,8 +19,7 @@ package org.supla.android.data.source.remote.esp
 
 import okhttp3.Interceptor
 import okhttp3.Response
-import org.supla.android.Trace
-import org.supla.android.extensions.TAG
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -37,7 +36,7 @@ class EspCookiesInterceptor @Inject constructor(
       if (sessionCookie == null) {
         chain.request()
       } else {
-        Trace.i(TAG, "Setting session cookie `$sessionCookie`")
+        Timber.i("Setting session cookie `$sessionCookie`")
         chain.request().newBuilder()
           .addHeader("Cookie", sessionCookie)
           .build()
@@ -46,7 +45,7 @@ class EspCookiesInterceptor @Inject constructor(
     val response = chain.proceed(request)
 
     for (cookie in response.headers("Set-Cookie")) {
-      Trace.i(TAG, "Got new cookie: $cookie")
+      Timber.i("Got new cookie: $cookie")
 
       val cookieParts = cookie.split(";")
       if (cookieParts.isEmpty()) {
@@ -54,7 +53,7 @@ class EspCookiesInterceptor @Inject constructor(
       }
       val cookieValue = cookieParts[0]
       if (cookieValue.startsWith("$COOKIE_SESSION_NAME=")) {
-        Trace.i(TAG, "Overtaking session cookie `$cookieValue`")
+        Timber.i("Overtaking session cookie `$cookieValue`")
         session.sessionCookie = cookieValue
       }
     }

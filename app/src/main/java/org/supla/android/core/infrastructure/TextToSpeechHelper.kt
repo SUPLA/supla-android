@@ -24,8 +24,8 @@ import android.media.AudioManager
 import android.os.Build
 import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
-import org.supla.android.Trace
 import org.supla.core.shared.extensions.guardLet
+import timber.log.Timber
 import java.util.Locale
 
 class TextToSpeechHelper(
@@ -53,7 +53,7 @@ class TextToSpeechHelper(
       textToSpeech?.shutdown()
       textToSpeechAllowed = false
       textToSpeech = TextToSpeech(context) { status ->
-        Trace.i(TAG, "Text to speech status: $status")
+        Timber.i("Text to speech status: $status")
         if (status == TextToSpeech.SUCCESS) {
           textToSpeechAllowed = true
         }
@@ -77,18 +77,18 @@ class TextToSpeechHelper(
 
   fun speak(message: String, queueMode: Int = TextToSpeech.QUEUE_ADD) {
     if (!textToSpeechAllowed) {
-      Trace.w(TAG, "Text to speech not initialized yet!")
+      Timber.w("Text to speech not initialized yet!")
       return
     }
 
     synchronized(this) {
       val (speaker) = guardLet(textToSpeech) {
-        Trace.w(TAG, "Text to speech not initialized")
+        Timber.w("Text to speech not initialized")
         return
       }
 
       if (requestAudioFocus() != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-        Trace.w(TAG, "Could not get audio focus")
+        Timber.w("Could not get audio focus")
         return
       }
 

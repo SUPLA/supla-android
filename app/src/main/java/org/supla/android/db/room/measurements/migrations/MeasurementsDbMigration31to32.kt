@@ -18,7 +18,6 @@ package org.supla.android.db.room.measurements.migrations/*
 
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import org.supla.android.Trace
 import org.supla.android.data.source.local.entity.measurements.ElectricityMeterLogEntity
 import org.supla.android.data.source.local.entity.measurements.ElectricityMeterLogEntity.Companion.COLUMN_FAE_BALANCED
 import org.supla.android.data.source.local.entity.measurements.ElectricityMeterLogEntity.Companion.COLUMN_PHASE1_FAE
@@ -41,7 +40,7 @@ import org.supla.android.data.source.local.entity.measurements.ImpulseCounterLog
 import org.supla.android.data.source.local.entity.measurements.ImpulseCounterLogEntity.Companion.COLUMN_COUNTER
 import org.supla.android.db.room.SqlExecutor
 import org.supla.android.db.room.measurements.MeasurementsDatabase
-import org.supla.android.extensions.TAG
+import timber.log.Timber
 
 val MEASUREMENTS_DB_MIGRATION_31_32: Migration = object : Migration(31, 32), SqlExecutor {
 
@@ -55,7 +54,7 @@ val MEASUREMENTS_DB_MIGRATION_31_32: Migration = object : Migration(31, 32), Sql
       findAndRemoveChannelsWithNegativeLogEntries(db, ElectricityMeterLogEntity.TABLE_NAME, emColumns)
       findAndRemoveChannelsWithNegativeLogEntries(db, ImpulseCounterLogEntity.TABLE_NAME, icColumns)
     } catch (ex: Exception) {
-      Trace.e(TAG, "Removing data with negative log entries failed!", ex)
+      Timber.e(ex, "Removing data with negative log entries failed!")
     }
   }
 

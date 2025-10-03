@@ -19,7 +19,6 @@ package org.supla.android.features.details.windowdetail.base.ui
 
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.Preferences
-import org.supla.android.Trace
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.data.source.RoomProfileRepository
@@ -28,7 +27,6 @@ import org.supla.android.data.source.remote.rollershutter.SuplaChannelFacadeBlin
 import org.supla.android.data.source.remote.rollershutter.SuplaTiltControlType
 import org.supla.android.data.source.runtime.ItemType
 import org.supla.android.events.ChannelConfigEventsManager
-import org.supla.android.extensions.TAG
 import org.supla.android.features.details.windowdetail.base.BaseWindowViewModel
 import org.supla.android.features.details.windowdetail.base.BaseWindowViewModelState
 import org.supla.android.features.details.windowdetail.base.data.ShadingBlindMarker
@@ -49,6 +47,7 @@ import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
 import org.supla.android.usecases.group.ReadGroupTiltingDetailsUseCase
 import org.supla.android.usecases.group.TiltingDetails
 import org.supla.core.shared.extensions.guardLet
+import timber.log.Timber
 import kotlin.math.max
 import kotlin.math.min
 
@@ -200,7 +199,7 @@ abstract class BaseBlindsViewModel<S : BaseBlindsViewModelState>(
               if (it is TiltingDetails.Similar) {
                 updateTiltingDetails(it.tilt0Angle.toFloat(), it.tilt100Angle.toFloat(), it.tiltControlType)
               } else {
-                Trace.i(TAG, "Tilting details differs from Similar: $it")
+                Timber.i("Tilting details differs from Similar: $it")
               }
             },
             onError = defaultErrorHandler("loadConfig")

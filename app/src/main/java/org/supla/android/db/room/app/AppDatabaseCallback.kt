@@ -20,14 +20,13 @@ package org.supla.android.db.room.app
 import android.database.sqlite.SQLiteDatabase
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
-import org.supla.android.Trace
 import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.data.source.local.view.ChannelView
 import org.supla.android.data.source.local.view.SceneView
 import org.supla.android.db.room.SqlExecutor
 import org.supla.android.db.room.app.migrations.CHANNEL_GROUP_VALUE_VIEW_NAME
-import org.supla.android.extensions.TAG
 import org.supla.android.profile.ProfileMigrator
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -47,14 +46,14 @@ class AppDatabaseCallback @Inject constructor(
     if (!destructivelyMigrated) {
       return
     }
-    Trace.i(TAG, "Destructively migrated - trying to restore profile")
+    Timber.i("Destructively migrated - trying to restore profile")
 
     val profile = profileMigrator.makeProfileUsingPreferences() ?: return
     try {
       db.insert(ProfileEntity.TABLE_NAME, SQLiteDatabase.CONFLICT_IGNORE, profile.contentValues)
-      Trace.i(TAG, "Destructively migrated - profile restored")
+      Timber.i("Destructively migrated - profile restored")
     } catch (exception: Exception) {
-      Trace.w(TAG, "Profile restore failed - ${exception.message}", exception)
+      Timber.w(exception, "Profile restore failed - ${exception.message}")
     }
   }
 
@@ -72,7 +71,7 @@ class AppDatabaseCallback @Inject constructor(
     try {
       execSQL(db, sqlString)
     } catch (exception: Exception) {
-      Trace.w(TAG, "Failed by `$sqlString` - ${exception.message}", exception)
+      Timber.w(exception, "Failed by `$sqlString` - ${exception.message}")
     }
   }
 }

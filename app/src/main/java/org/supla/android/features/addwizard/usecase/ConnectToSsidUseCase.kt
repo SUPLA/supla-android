@@ -35,13 +35,12 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withTimeoutOrNull
-import org.supla.android.Trace
 import org.supla.android.core.networking.suplaclient.SuplaClientState
-import org.supla.android.extensions.TAG
 import org.supla.android.extensions.isNull
 import org.supla.android.features.addwizard.usecase.receiver.ConnectResult
 import org.supla.android.features.addwizard.usecase.receiver.LegacyNetworkBroadcastReceiver
 import org.supla.android.usecases.client.DisconnectUseCase
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.time.Duration.Companion.seconds
@@ -65,14 +64,14 @@ class ConnectToSsidUseCase @Inject constructor(
     mutex.withLock {
       disconnectUseCase.invokeSynchronous(SuplaClientState.Reason.AddWizardStarted)
       return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-        Trace.i(TAG, "Asking connectivity handler")
+        Timber.i("Asking connectivity handler")
         connectivityHandler.connect(ssid)
       } else {
-        Trace.i(TAG, "Asking legacy connectivity handler")
+        Timber.i("Asking legacy connectivity handler")
         try {
           legacyConnectivityHandler.connect(ssid)
         } catch (exception: SecurityException) {
-          Trace.e(TAG, "Could not connect to ESP WiFi", exception)
+          Timber.e(exception, "Could not connect to ESP WiFi")
           ConnectResult.FAILURE
         }
       }
@@ -123,11 +122,11 @@ private class ConnectivityHandler(
     connectivityManager.requestNetwork(request, networkCallback)
 
     withTimeoutOrNull(TIMEOUT) {
-      Trace.d(TAG, "Awaiting network availability")
+      Timber.d("Awaiting network availability")
       semaphore.acquire()
     }
 
-    Trace.d(TAG, "Finishing with result $result")
+    Timber.d("Finishing with result $result")
     return result ?: ConnectResult.FAILURE
   }
 

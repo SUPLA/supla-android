@@ -21,7 +21,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.supla.android.Trace
 import org.supla.android.data.source.AndroidAutoItemRepository
 import org.supla.android.data.source.ChannelConfigRepository
 import org.supla.android.data.source.ChannelExtendedValueRepository
@@ -41,6 +40,7 @@ import org.supla.android.data.source.RoomColorListRepository
 import org.supla.android.data.source.TemperatureAndHumidityLogRepository
 import org.supla.android.data.source.TemperatureLogRepository
 import org.supla.android.data.source.VoltageLogRepository
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -92,7 +92,7 @@ class RemoveHiddenChannelsUseCase @Inject constructor(
   suspend operator fun invoke() {
     withContext(Dispatchers.IO) {
       val hiddenChannels = channelRepository.findHiddenChannels()
-      Trace.i(TAG, "Found channels to remove: ${hiddenChannels.count()}")
+      Timber.i("Found channels to remove: ${hiddenChannels.count()}")
 
       hiddenChannels.flatMap { channel ->
         relatedRepositories.map {
@@ -100,15 +100,11 @@ class RemoveHiddenChannelsUseCase @Inject constructor(
         }
       }.joinAll()
 
-      Trace.i(TAG, "Hidden channels removal finished")
+      Timber.i("Hidden channels removal finished")
     }
   }
 
   interface ChannelsDeletable {
     suspend fun deleteChannelRelated(remoteId: Int, profileId: Long)
-  }
-
-  companion object {
-    private val TAG = RemoveHiddenChannelsUseCase::class.java.simpleName
   }
 }

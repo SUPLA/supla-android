@@ -6,11 +6,9 @@ import androidx.hilt.work.HiltWorker
 import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import org.supla.android.Trace
 import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.source.remote.gpm.SuplaChannelGeneralPurposeBaseConfig
 import org.supla.android.data.source.remote.gpm.toValueFormat
-import org.supla.android.extensions.TAG
 import org.supla.android.extensions.getAppWidgetManager
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.lib.singlecall.DoubleValue
@@ -24,6 +22,7 @@ import org.supla.android.widget.single.SingleWidget
 import org.supla.android.widget.single.updateSingleWidget
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.usecase.channel.valueformatter.formatters.GpmValueFormatter
+import timber.log.Timber
 
 @HiltWorker
 class WidgetReloadWorker @AssistedInject constructor(
@@ -37,7 +36,7 @@ class WidgetReloadWorker @AssistedInject constructor(
   private val formatter = GpmValueFormatter()
 
   override fun doWork(): Result {
-    Trace.i(TAG, "Widget reload worker started")
+    Timber.i("Widget reload worker started")
     val onOffWidgetIds =
       appWidgetManager.getAppWidgetIds(ComponentName(applicationContext, OnOffWidget::class.java))
     handleWidgets(onOffWidgetIds, true) { context, widgetId ->

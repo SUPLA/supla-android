@@ -18,11 +18,9 @@ package org.supla.android.usecases.channel
  */
 
 import androidx.work.ExistingWorkPolicy
-import org.supla.android.Trace
 import org.supla.android.core.infrastructure.WorkManagerProxy
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.events.DownloadEventsManager
-import org.supla.android.extensions.TAG
 import org.supla.android.features.measurementsdownload.workers.DownloadCurrentMeasurementsWorker
 import org.supla.android.features.measurementsdownload.workers.DownloadElectricityMeasurementsWorker
 import org.supla.android.features.measurementsdownload.workers.DownloadGeneralPurposeMeasurementsWorker
@@ -35,6 +33,7 @@ import org.supla.android.features.measurementsdownload.workers.DownloadTemperatu
 import org.supla.android.features.measurementsdownload.workers.DownloadThermostatHeatpolWorker
 import org.supla.android.features.measurementsdownload.workers.DownloadVoltageMeasurementsWorker
 import org.supla.core.shared.data.model.general.SuplaFunction
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -132,7 +131,7 @@ class DownloadChannelMeasurementsUseCase @Inject constructor(
           DownloadHumidityWorker.build(remoteId, profileId)
         )
 
-      else -> Trace.w(TAG, "Tries to download something what is not supported (function: `$function`)")
+      else -> Timber.w("Tries to download something what is not supported (function: `$function`)")
     }
   }
 }

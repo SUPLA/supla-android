@@ -17,11 +17,10 @@ package org.supla.android.usecases.channel
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.Trace
 import org.supla.android.data.source.local.entity.ChannelRelationEntity
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
-import org.supla.android.extensions.TAG
+import timber.log.Timber
 import java.util.LinkedList
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -39,7 +38,7 @@ class GetChannelChildrenTreeUseCase @Inject constructor() {
     val result = relationMap[forChannelId]?.mapNotNull {
       channelsMap[it.channelId]?.let { child ->
         if (childrenList.contains(child.remoteId)) {
-          Trace.w(TAG, "Cycle dependency found! Skipping child ${child.remoteId}")
+          Timber.w("Cycle dependency found! Skipping child ${child.remoteId}")
           null
         } else {
           ChannelChildEntity(

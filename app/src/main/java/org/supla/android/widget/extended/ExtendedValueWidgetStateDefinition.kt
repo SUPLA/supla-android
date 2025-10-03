@@ -26,10 +26,9 @@ import androidx.glance.state.GlanceStateDefinition
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import org.supla.android.R
-import org.supla.android.Trace
 import org.supla.android.images.ImageId
-import org.supla.android.widget.extended.ExtendedValueWidget.Companion.TAG
 import org.supla.core.shared.data.model.general.SuplaFunction
+import timber.log.Timber
 import java.io.File
 import java.io.InputStream
 import java.io.OutputStream
@@ -65,7 +64,7 @@ object ExtendedValueWidgetStateDefinition : GlanceStateDefinition<ExtendedValueW
           input.readBytes().decodeToString()
         )
       } catch (exception: SerializationException) {
-        Trace.e(TAG, "Could decode from string", exception)
+        Timber.e(exception, "Could decode from string")
         defaultValue
       }
 
@@ -75,7 +74,7 @@ object ExtendedValueWidgetStateDefinition : GlanceStateDefinition<ExtendedValueW
           it.write(Json.encodeToString(ExtendedValueWidgetState.serializer(), t).encodeToByteArray())
         }
       } catch (exception: Exception) {
-        Trace.e(TAG, "Could encode to string", exception)
+        Timber.e(exception, "Could encode to string")
         throw exception
       }
   }

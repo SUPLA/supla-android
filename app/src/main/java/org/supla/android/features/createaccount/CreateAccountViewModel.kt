@@ -20,17 +20,16 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.subscribeBy
-import org.supla.android.Trace
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.db.AuthProfileItem
-import org.supla.android.extensions.TAG
 import org.supla.android.features.deleteaccountweb.DeleteAccountWebFragment
 import org.supla.android.profile.ProfileManager
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.client.ReconnectUseCase
 import org.supla.android.usecases.profile.DeleteProfileUseCase
 import org.supla.android.usecases.profile.SaveProfileUseCase
+import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -73,7 +72,7 @@ class CreateAccountViewModel @Inject constructor(
         .subscribeBy(
           onSuccess = this::onProfileLoaded,
           onError = { throwable ->
-            Trace.e(TAG, "Could not find profile", throwable)
+            Timber.e(throwable, "Could not find profile")
           }
         )
         .disposeBySelf()

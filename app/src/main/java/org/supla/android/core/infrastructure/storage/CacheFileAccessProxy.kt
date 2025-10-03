@@ -1,4 +1,4 @@
-package org.supla.android.core.infrastructure
+package org.supla.android.core.infrastructure.storage
 /*
 Copyright (C) AC SOFTWARE SP. Z O.O.
 
@@ -20,7 +20,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import android.content.Context
 import org.supla.android.core.shared.file
 import org.supla.core.shared.infrastructure.storage.CacheFileAccess
-import java.io.File
 
 class CacheFileAccessProxy(
   val applicationContext: Context
@@ -29,12 +28,12 @@ class CacheFileAccessProxy(
     file.file(applicationContext.cacheDir).exists()
 
   override fun dirExists(name: String): Boolean =
-    with(File(applicationContext.cacheDir, name)) {
+    with(java.io.File(applicationContext.cacheDir, name)) {
       isDirectory && exists()
     }
 
   override fun mkdir(name: String): Boolean =
-    File(applicationContext.cacheDir, name).mkdir()
+    java.io.File(applicationContext.cacheDir, name).mkdir()
 
   override fun delete(file: CacheFileAccess.File): Boolean =
     file.file(applicationContext.cacheDir).delete()

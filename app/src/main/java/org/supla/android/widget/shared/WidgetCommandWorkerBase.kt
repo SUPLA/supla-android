@@ -29,7 +29,6 @@ import android.widget.Toast
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import org.supla.android.R
-import org.supla.android.Trace
 import org.supla.android.core.notifications.NotificationsHelper
 import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.source.remote.gpm.SuplaChannelGeneralPurposeBaseConfig
@@ -65,6 +64,7 @@ import org.supla.android.widget.WidgetConfiguration
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.usecase.channel.valueformatter.formatters.ContainerValueFormatter
 import org.supla.core.shared.usecase.channel.valueformatter.formatters.GpmValueFormatter
+import timber.log.Timber
 
 private const val INTERNAL_ERROR = -10
 
@@ -191,7 +191,7 @@ abstract class WidgetCommandWorkerBase(
         Toast.makeText(applicationContext, text, Toast.LENGTH_SHORT).show()
       }
     } catch (ex: ResultException) {
-      Trace.e(WidgetCommandWorkerBase::javaClass.name, "Could not perform action", ex)
+      Timber.e(ex, "Could not perform action")
       when (ex.result) {
         SUPLA_RESULT_VERSION_ERROR,
         SUPLA_RESULTCODE_FALSE,

@@ -21,9 +21,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.supla.android.Trace
 import org.supla.android.data.source.AndroidAutoItemRepository
 import org.supla.android.data.source.RoomSceneRepository
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -40,7 +40,7 @@ class RemoveHiddenScenesUseCase @Inject constructor(
   suspend operator fun invoke() {
     withContext(Dispatchers.IO) {
       val hiddenScenes = sceneRepository.findHiddenScenes()
-      Trace.i(TAG, "Found scenes to remove: ${hiddenScenes.count()}")
+      Timber.i("Found scenes to remove: ${hiddenScenes.count()}")
 
       hiddenScenes.flatMap { scene ->
         relatedRepositories.map {
@@ -48,7 +48,7 @@ class RemoveHiddenScenesUseCase @Inject constructor(
         }
       }.joinAll()
 
-      Trace.i(TAG, "Hidden scenes removal finished")
+      Timber.i("Hidden scenes removal finished")
     }
   }
 

@@ -18,7 +18,6 @@ package org.supla.android.usecases.channel
  */
 
 import io.reactivex.rxjava3.core.Completable
-import org.supla.android.Trace
 import org.supla.android.data.source.CurrentLogRepository
 import org.supla.android.data.source.ElectricityMeterLogRepository
 import org.supla.android.data.source.GeneralPurposeMeasurementLogRepository
@@ -32,6 +31,7 @@ import org.supla.android.data.source.TemperatureLogRepository
 import org.supla.android.data.source.VoltageLogRepository
 import org.supla.android.data.source.local.entity.isHvacThermostat
 import org.supla.core.shared.data.model.general.SuplaFunction
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -106,6 +106,6 @@ class DeleteChannelMeasurementsUseCase @Inject constructor(
 
   private fun invalidFunctionCompletable(function: SuplaFunction) =
     Completable.fromRunnable {
-      Trace.e(DeleteChannelMeasurementsUseCase::class.simpleName, "Unsupported function while deleting $function")
+      Timber.e("Unsupported function while deleting $function")
     }
 }

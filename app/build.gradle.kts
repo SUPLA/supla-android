@@ -180,6 +180,7 @@ dependencies {
   implementation(libs.guava)
   implementation(libs.reorderable)
   implementation(libs.google.barcode.scanner)
+  implementation(libs.timber)
 
   coreLibraryDesugaring(libs.android.tools.desugar)
 

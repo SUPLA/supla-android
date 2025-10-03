@@ -27,15 +27,14 @@ import androidx.fragment.app.viewModels
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
-import org.supla.android.Trace
 import org.supla.android.core.storage.RuntimeStateHolder
 import org.supla.android.core.ui.BaseFragment
 import org.supla.android.databinding.FragmentTimersDetailBinding
-import org.supla.android.extensions.TAG
 import org.supla.android.extensions.getChannelIconUseCase
 import org.supla.android.extensions.visibleIf
 import org.supla.android.images.ImageCache
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
+import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 
@@ -126,7 +125,7 @@ class TimersDetailFragment : BaseFragment<TimersDetailViewState, TimersDetailVie
   }
 
   private fun handleTimerState(state: TimersDetailViewState) {
-    Trace.d(TAG, "Handling timer state: ${state.timerData}")
+    Timber.d("Handling timer state: ${state.timerData}")
     if (state.timerData != null) {
       setupTimer(state.timerData.startTime, state.timerData.endTime)
       setTimerValues(state.timerData.startTime, state.timerData.endTime)
@@ -197,7 +196,7 @@ class TimersDetailFragment : BaseFragment<TimersDetailViewState, TimersDetailVie
   override fun onSuplaMessage(message: SuplaClientMessage) {
     (message as? SuplaClientMessage.ChannelDataChanged)?.let {
       if (it.channelId == remoteId && (it.timerValueChanged || !it.extendedValueChanged)) {
-        Trace.i(TAG, "Detail got data changed event")
+        Timber.i("Detail got data changed event")
         timer?.cancel()
         timerActive = false
         viewModel.loadData(remoteId)

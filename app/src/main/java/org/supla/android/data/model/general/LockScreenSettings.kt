@@ -17,10 +17,9 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import org.supla.android.Trace
 import org.supla.android.core.infrastructure.DateProvider
-import org.supla.android.extensions.TAG
 import org.supla.core.shared.extensions.guardLet
+import timber.log.Timber
 import java.util.Date
 
 data class LockScreenSettings(
@@ -63,7 +62,7 @@ data class LockScreenSettings(
 
         return LockScreenSettings(scope, pinSum, biometricAllowed, failsCount, lockTime)
       } catch (ex: Exception) {
-        Trace.e(TAG, "Could not parse LockScreenSettings string", ex)
+        Timber.e(ex, "Could not parse LockScreenSettings string")
         return DEFAULT
       }
     }

@@ -18,12 +18,11 @@ package org.supla.android.usecases.client
  */
 
 import io.reactivex.rxjava3.core.Completable
-import org.supla.android.Trace
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.data.source.remote.hvac.SuplaChannelWeeklyScheduleConfig
 import org.supla.android.data.source.remote.hvac.SuplaWeeklyScheduleEntry
 import org.supla.android.data.source.remote.hvac.SuplaWeeklyScheduleProgram
-import org.supla.android.extensions.TAG
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -47,7 +46,7 @@ class SetWeeklyScheduleConfigUseCase @Inject constructor(
       )
 
       val result = client.setChannelConfig(config)
-      Trace.i(TAG, "Weekly schedule config change ended up with '$result'")
+      Timber.i("Weekly schedule config change ended up with '$result'")
     }
   }
 }

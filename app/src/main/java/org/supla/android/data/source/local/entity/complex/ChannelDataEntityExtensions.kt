@@ -17,7 +17,6 @@ package org.supla.android.data.source.local.entity.complex
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.Trace
 import org.supla.android.data.source.local.entity.custom.Phase
 import org.supla.android.data.source.local.entity.hasMeasurements
 import org.supla.android.data.source.local.entity.isElectricityMeter
@@ -28,9 +27,9 @@ import org.supla.android.data.source.local.entity.isShadingSystem
 import org.supla.android.data.source.local.entity.isThermometer
 import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType
 import org.supla.android.data.source.remote.channel.suplaElectricityMeterMeasuredTypes
-import org.supla.android.extensions.TAG
 import org.supla.android.lib.SuplaChannelElectricityMeterValue
 import org.supla.android.lib.SuplaChannelImpulseCounterValue
+import timber.log.Timber
 
 fun ChannelDataEntity.isIconValueItem() = channelEntity.isIconValueItem()
 
@@ -62,7 +61,7 @@ value class ChannelDataElectricityExtension(private val channelData: ChannelData
     get() = try {
       channelData.channelExtendedValueEntity?.getSuplaValue()?.ElectricityMeterValue
     } catch (ex: Exception) {
-      Trace.w(TAG, "Could not get electricity meter value", ex)
+      Timber.w(ex, "Could not get electricity meter value")
       null
     }
 
@@ -80,7 +79,7 @@ value class ChannelDataImpulseCounterExtension(private val channelData: ChannelD
     get() = try {
       channelData.channelExtendedValueEntity?.getSuplaValue()?.ImpulseCounterValue
     } catch (ex: Exception) {
-      Trace.w(TAG, "Could not get impulse counter value", ex)
+      Timber.w(ex, "Could not get impulse counter value")
       null
     }
 }

@@ -30,7 +30,6 @@ import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.supla.android.R
-import org.supla.android.Trace
 import org.supla.android.core.infrastructure.CurrentWifiNetworkInfoProvider
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.infrastructure.WiFiScanner
@@ -42,7 +41,6 @@ import org.supla.android.core.storage.EncryptedPreferences
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.data.source.remote.esp.EspConfigurationSession
-import org.supla.android.extensions.TAG
 import org.supla.android.extensions.isNotNull
 import org.supla.android.features.addwizard.configuration.AndroidEspConfigurationStateHolder
 import org.supla.android.features.addwizard.model.AddWizardScreen
@@ -101,6 +99,7 @@ import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.localizedString
 import org.supla.core.shared.usecase.addwizard.CheckRegistrationEnabledUseCase
 import org.supla.core.shared.usecase.addwizard.EnableRegistrationUseCase
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -372,7 +371,7 @@ class AddWizardViewModel @Inject constructor(
     currentJob = viewModelScope.launch {
       var result = withContext(Dispatchers.IO) { checkRegistrationEnabled() }
       if (result == CheckRegistrationEnabledUseCase.Result.TIMEOUT) {
-        Trace.i(TAG, "First timeout reached, awaiting second time")
+        Timber.i("First timeout reached, awaiting second time")
         result = withContext(Dispatchers.IO) { checkRegistrationEnabledUseCase() }
       }
 
@@ -388,7 +387,7 @@ class AddWizardViewModel @Inject constructor(
     val currentTime = dateProvider.currentTimestamp()
     registrationActivationTime?.let {
       if (currentTime < it + 3600_000) {
-        Trace.d(TAG, "Check registration activation skipped")
+        Timber.d("Check registration activation skipped")
         return CheckRegistrationEnabledUseCase.Result.ENABLED
       }
     }

@@ -20,13 +20,11 @@ package org.supla.android.features.details.switchdetail.timer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.kotlin.subscribeBy
-import org.supla.android.Trace
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
 import org.supla.android.db.Channel
-import org.supla.android.extensions.TAG
 import org.supla.android.extensions.asDate
 import org.supla.android.extensions.getTimerStateValue
 import org.supla.android.lib.actions.ActionId
@@ -36,6 +34,7 @@ import org.supla.android.usecases.channel.ReadChannelByRemoteIdUseCase
 import org.supla.android.usecases.client.ExecuteSimpleActionUseCase
 import org.supla.android.usecases.client.StartTimerUseCase
 import org.supla.android.usecases.client.StartTimerUseCase.InvalidTimeException
+import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 
@@ -123,7 +122,7 @@ class TimersDetailViewModel @Inject constructor(
     val timerState = channel.getTimerStateValue()
     val isTimerOn = timerState != null && timerState.countdownEndsAt?.after(currentTime) == true
     val startDate = channel.extendedValue?.timerStartTimestamp?.asDate()
-    Trace.d(TAG, "Handling channel update $timerState")
+    Timber.d("Handling channel update $timerState")
 
     updateState { state ->
       var editMode = state.editMode
