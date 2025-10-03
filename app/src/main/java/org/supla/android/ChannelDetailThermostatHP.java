@@ -43,6 +43,7 @@ import org.supla.android.lib.SuplaThermostatScheduleCfg;
 import org.supla.android.listview.DetailLayout;
 import org.supla.android.listview.ThermostatHPListViewCursorAdapter;
 import org.supla.android.profile.ProfileIdHolder;
+import timber.log.Timber;
 
 @AndroidEntryPoint
 public class ChannelDetailThermostatHP extends DetailLayout
@@ -381,7 +382,7 @@ public class ChannelDetailThermostatHP extends DetailLayout
     }
 
     if (thermostat.getTurboTime() != null) {
-      Trace.d("TURBO", Integer.toString(thermostat.getTurboTime()));
+      Timber.d("TURBO: %d", thermostat.getTurboTime());
       setCfgValue(CfgItem.ID_TURBO_TIME, thermostat.getTurboTime());
     }
 

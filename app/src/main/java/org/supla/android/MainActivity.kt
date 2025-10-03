@@ -59,7 +59,6 @@ import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.core.storage.EncryptedPreferences
 import org.supla.android.core.ui.BackHandleOwner
 import org.supla.android.extensions.MenuItemsAnimationType
-import org.supla.android.extensions.TAG
 import org.supla.android.extensions.getChannelIconUseCase
 import org.supla.android.extensions.hide
 import org.supla.android.extensions.setStatusBarColor
@@ -82,6 +81,7 @@ import org.supla.android.ui.ToolbarItemsController
 import org.supla.android.ui.ToolbarTitleController
 import org.supla.android.ui.ToolbarVisibilityController
 import org.supla.core.shared.extensions.ifTrue
+import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.Date
 import javax.inject.Inject
@@ -193,7 +193,7 @@ class MainActivity :
         .observeOn(suplaSchedulers.ui)
         .subscribeBy(
           onNext = {
-            Trace.d(TAG, "Got state $it")
+            Timber.d("Got state $it")
             when (it) {
               SuplaClientState.FirstProfileCreation -> navigator.navigateToNewProfile()
               is SuplaClientState.Connecting,
@@ -364,7 +364,7 @@ class MainActivity :
   }
 
   private fun runDownloadTask() {
-    Trace.d("RubDownloadTask", "RunDownloadTask")
+    Timber.d("RunDownloadTask")
     if (downloadUserIcons != null && !downloadUserIcons!!.isAlive(90)) {
       downloadUserIcons!!.cancel(true)
       downloadUserIcons = null

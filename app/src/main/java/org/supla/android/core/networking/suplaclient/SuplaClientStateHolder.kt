@@ -23,10 +23,9 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.BehaviorSubject
-import org.supla.android.Trace
 import org.supla.android.core.SuplaAppProvider
-import org.supla.android.extensions.TAG
 import org.supla.android.tools.SuplaSchedulers
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -46,7 +45,7 @@ class SuplaClientStateHolder @Inject constructor(
       .observeOn(suplaSchedulers.io)
       .subscribeBy(
         onNext = {
-          Trace.i(TAG, "Supla client state: $it")
+          Timber.i("Supla client state: $it")
 
           when (it) {
             is SuplaClientState.Connecting -> {
@@ -79,6 +78,6 @@ class SuplaClientStateHolder @Inject constructor(
       stateSubject.onNext(it)
     }
 
-    Trace.i(TAG, message)
+    Timber.i(message)
   }
 }

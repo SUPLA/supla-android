@@ -21,9 +21,8 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import org.supla.android.Trace
-import org.supla.android.extensions.TAG
 import org.supla.android.usecases.channel.measurementsprovider.electricity.ElectricityChartFilters
+import timber.log.Timber
 
 sealed interface ChartState {
   val aggregation: ChartDataAggregation
@@ -66,7 +65,7 @@ data class DefaultChartState(
       try {
         Json.decodeFromString<DefaultChartState>(text)
       } catch (ex: SerializationException) {
-        Trace.w(TAG, "Could not restore chart state!", ex)
+        Timber.w(ex, "Could not restore chart state!")
         null
       }
   }
@@ -99,7 +98,7 @@ data class ElectricityChartState(
       try {
         Json.decodeFromString<ElectricityChartState>(text)
       } catch (ex: SerializationException) {
-        Trace.w(TAG, "Could not restore chart state!", ex)
+        Timber.w(ex, "Could not restore chart state!")
         null
       }
   }

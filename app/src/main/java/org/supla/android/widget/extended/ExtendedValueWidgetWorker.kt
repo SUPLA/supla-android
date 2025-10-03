@@ -36,12 +36,11 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.supla.android.Trace
 import org.supla.android.data.source.local.dao.WidgetConfigurationDao
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.icon.GetSceneIconUseCase
-import org.supla.android.widget.extended.ExtendedValueWidget.Companion.TAG
 import org.supla.android.widget.extended.value.ExtendedValueWidgetProvider
+import timber.log.Timber
 import java.util.Date
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.toJavaDuration
@@ -60,20 +59,20 @@ class ExtendedValueWidgetWorker @AssistedInject constructor(
     get() = inputData.getString(GLANCE_ID)
 
   override suspend fun doWork(): Result {
-    Trace.d(TAG, "Extended value widget worker started (glance id: `$glanceId`)")
+    Timber.d("Extended value widget worker started (glance id: `$glanceId`)")
 
     val appWidgetManager = GlanceAppWidgetManager(context = context)
     appWidgetManager.getGlanceIds(ExtendedValueWidget::class.java)
       .filter { glanceId == null || it.toString() == glanceId }
       .forEach { glanceId ->
 
-        Trace.d(TAG, "Extended value widget worker updating widget with id `$glanceId`")
+        Timber.d("Extended value widget worker updating widget with id `$glanceId`")
         val configuration = withContext(Dispatchers.IO) { widgetConfigurationDao.findBy(glanceId.toString()) }
 
         configuration?.let {
           val value = withContext(Dispatchers.IO) { extendedValueWidgetProvider.provide(configuration) }
 
-          Trace.d(TAG, "Extended value widget worker setting configuration `$configuration`")
+          Timber.d("Extended value widget worker setting configuration `$configuration`")
           val state = ExtendedValueWidgetState(
             icon = configuration.icon(getChannelIconUseCase, getSceneIconUseCase),
             caption = configuration.widgetConfiguration.caption,

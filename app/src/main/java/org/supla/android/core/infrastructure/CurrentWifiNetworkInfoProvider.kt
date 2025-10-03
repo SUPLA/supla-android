@@ -27,9 +27,9 @@ import android.net.wifi.WifiInfo
 import android.net.wifi.WifiManager
 import android.os.Build
 import dagger.hilt.android.qualifiers.ApplicationContext
-import org.supla.android.Trace
 import org.supla.android.extensions.skipQuotation
 import org.supla.core.shared.extensions.ifTrue
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -56,7 +56,7 @@ class CurrentWifiNetworkInfoProvider @Inject constructor(
       val networkCallback = object : NetworkCallback(FLAG_INCLUDE_LOCATION_INFO) {
         override fun onCapabilitiesChanged(network: Network, networkCapabilities: NetworkCapabilities) {
           val wifiInfo = networkCapabilities.transportInfo as? WifiInfo
-          Trace.i(CurrentWifiNetworkInfoProvider::class.simpleName, "onCapabilitiesChanged ${wifiInfo?.ssid}")
+          Timber.i("onCapabilitiesChanged ${wifiInfo?.ssid}")
           wifiInfo?.let {
             networkInfo = NetworkInfo(
               ssid = it.ssid?.skipQuotation()?.skipUnknownSsid(),

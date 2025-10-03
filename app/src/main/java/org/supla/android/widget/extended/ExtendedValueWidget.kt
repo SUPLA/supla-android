@@ -36,7 +36,6 @@ import androidx.glance.preview.Preview
 import dagger.hilt.android.EntryPointAccessors
 import kotlinx.coroutines.coroutineScope
 import org.supla.android.R
-import org.supla.android.Trace
 import org.supla.android.core.ui.theme.SuplaGlanceTheme
 import org.supla.android.data.source.local.entity.custom.Phase
 import org.supla.android.di.entrypoints.WidgetConfigurationDaoEntryPoint
@@ -44,6 +43,7 @@ import org.supla.android.images.ImageId
 import org.supla.android.widget.extended.views.InvalidWidgetContent
 import org.supla.android.widget.extended.views.electricitymeter.ElectricityMeterContent
 import org.supla.core.shared.data.model.general.SuplaFunction
+import timber.log.Timber
 import java.util.Date
 
 class ExtendedValueWidget : GlanceAppWidget() {
@@ -134,7 +134,7 @@ fun intent(context: Context, intentAction: String, widgetId: Int): Intent =
   intent(context, intentAction, intArrayOf(widgetId))
 
 fun intent(context: Context, intentAction: String, widgetIds: IntArray): Intent {
-  Trace.d(ExtendedValueWidget::javaClass.name, "Creating intent with action: $intentAction")
+  Timber.d("Creating intent with action: $intentAction")
   return Intent(context, ExtendedValueWidget::class.java).apply {
     action = intentAction
     flags = Intent.FLAG_RECEIVER_FOREGROUND

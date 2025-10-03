@@ -25,12 +25,11 @@ import org.supla.android.BuildConfig
 import org.supla.android.MainActivity
 import org.supla.android.Preferences
 import org.supla.android.R
-import org.supla.android.Trace
 import org.supla.android.core.infrastructure.WorkManagerProxy
 import org.supla.android.core.storage.EncryptedPreferences
 import org.supla.android.data.source.NotificationRepository
-import org.supla.android.extensions.TAG
 import org.supla.android.features.updatetoken.UpdateTokenWorker
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.random.Random
@@ -89,7 +88,7 @@ class NotificationsHelper @Inject constructor(
   fun registerForToken() {
     FirebaseMessaging.getInstance().token.addOnCompleteListener {
       if (!it.isSuccessful) {
-        Trace.w(TAG, "Could not fetch FCM Token")
+        Timber.w("Could not fetch FCM Token")
         return@addOnCompleteListener
       }
 
@@ -98,7 +97,7 @@ class NotificationsHelper @Inject constructor(
   }
 
   fun updateToken(token: String = encryptedPreferences.fcmToken ?: "") {
-    Trace.i(TAG, "Updating FCM Token: $token")
+    Timber.i("Updating FCM Token: $token")
     encryptedPreferences.fcmToken = token
 
     val workRequest = if (areNotificationsEnabled(notificationManager)) {

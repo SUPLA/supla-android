@@ -27,10 +27,9 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import org.supla.android.Trace
-import org.supla.android.extensions.TAG
 import org.supla.android.usecases.icon.LoadUserIconsIntoCacheUseCase
 import org.supla.android.widget.WidgetManager
+import timber.log.Timber
 
 @HiltWorker
 class LoadUserIconsIntoCacheWorker @AssistedInject constructor(
@@ -46,8 +45,8 @@ class LoadUserIconsIntoCacheWorker @AssistedInject constructor(
         widgetManager.updateAllWidgets()
       }
       Result.success()
-    } catch (ex: Exception) {
-      Trace.e(TAG, "Load user icons into cache worker failed!")
+    } catch (_: Exception) {
+      Timber.e("Load user icons into cache worker failed!")
       Result.failure()
     }
   }

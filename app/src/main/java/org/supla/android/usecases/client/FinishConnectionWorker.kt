@@ -26,13 +26,12 @@ import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import org.supla.android.BuildConfig
-import org.supla.android.Trace
 import org.supla.android.core.networking.suplaclient.SuplaClientEvent
 import org.supla.android.core.networking.suplaclient.SuplaClientState
 import org.supla.android.core.networking.suplaclient.SuplaClientStateHolder
 import org.supla.android.data.model.general.LockScreenScope
-import org.supla.android.extensions.TAG
 import org.supla.android.usecases.lock.GetLockScreenSettingUseCase
+import timber.log.Timber
 
 private const val BACKGROUND_ACTIVITY_TIME_DEBUG_S = 10
 private const val BACKGROUND_ACTIVITY_TIME_S = 120
@@ -46,14 +45,14 @@ class FinishConnectionWorker @AssistedInject constructor(
   private val getLockScreenSettingUseCase: GetLockScreenSettingUseCase,
 ) : Worker(appContext, workerParameters) {
   override fun doWork(): Result {
-    Trace.d(TAG, "Starting supla client process terminator")
+    Timber.d("Starting supla client process terminator")
     timeout()
 
     if (isStopped) {
-      Trace.d(TAG, "Supla client process terminator canceled")
+      Timber.d("Supla client process terminator canceled")
     } else {
       disconnectUseCase.invokeSynchronous()
-      Trace.d(TAG, "Supla client process terminated")
+      Timber.d("Supla client process terminated")
 
       if (getLockScreenSettingUseCase() == LockScreenScope.APPLICATION) {
         suplaClientStateHolder.handleEvent(SuplaClientEvent.Lock)
@@ -67,7 +66,7 @@ class FinishConnectionWorker @AssistedInject constructor(
 
   override fun onStopped() {
     super.onStopped()
-    Trace.d(TAG, "Supla client process terminator was active - stopping")
+    Timber.d("Supla client process terminator was active - stopping")
   }
 
   private fun timeout() {
@@ -78,7 +77,7 @@ class FinishConnectionWorker @AssistedInject constructor(
         Thread.sleep(250L)
         iteration++
       }
-    } catch (exception: Exception) {
+    } catch (_: Exception) {
       // Ignore
     }
   }

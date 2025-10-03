@@ -40,14 +40,12 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.supla.android.Preferences
 import org.supla.android.R
-import org.supla.android.Trace
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.infrastructure.TextToSpeechHelper
 import org.supla.android.data.source.AndroidAutoItemRepository
 import org.supla.android.data.source.local.entity.AndroidAutoItemEntity
 import org.supla.android.data.source.local.entity.complex.AndroidAutoDataEntity
 import org.supla.android.events.UpdateEventsManager
-import org.supla.android.extensions.TAG
 import org.supla.android.extensions.ucFirst
 import org.supla.android.images.ImageCache
 import org.supla.android.lib.actions.ActionParameters
@@ -58,6 +56,7 @@ import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.icon.GetSceneIconUseCase
 import org.supla.core.shared.data.model.suplaclient.SuplaResultCode
+import timber.log.Timber
 
 class MainScreen(
   private val androidAutoItemRepository: AndroidAutoItemRepository,
@@ -191,7 +190,7 @@ class MainScreen(
             )
           )
         } catch (e: Exception) {
-          Trace.e(TAG, "Could not execute action", e)
+          Timber.e(e, "Could not execute action")
           val errorString = carContext.getString(getErrorMessage(e, item.androidAutoItemEntity))
           state.errors[item.androidAutoItemEntity.id] = errorString
           if (preferences.playAndroidAuto()) {

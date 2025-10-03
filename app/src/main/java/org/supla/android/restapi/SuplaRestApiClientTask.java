@@ -41,10 +41,10 @@ import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 import org.json.JSONTokener;
 import org.supla.android.SuplaApp;
-import org.supla.android.Trace;
 import org.supla.android.db.DbHelper;
 import org.supla.android.lib.SuplaClient;
 import org.supla.android.lib.SuplaOAuthToken;
+import timber.log.Timber;
 
 public abstract class SuplaRestApiClientTask extends AsyncTask {
 
@@ -137,7 +137,7 @@ public abstract class SuplaRestApiClientTask extends AsyncTask {
 
     SuplaClient client = SuplaApp.getApp().getSuplaClient();
     if (client == null) {
-      Trace.d(log_tag, "Client is not available");
+      Timber.d("Client is not available");
       return;
     }
 
@@ -147,7 +147,7 @@ public abstract class SuplaRestApiClientTask extends AsyncTask {
       try {
         this.wait(5000);
       } catch (InterruptedException e) {
-        e.printStackTrace();
+        Timber.e(e);
       }
     }
   }
@@ -166,12 +166,12 @@ public abstract class SuplaRestApiClientTask extends AsyncTask {
     SuplaOAuthToken Token = getToken();
 
     if (Token == null) {
-      Trace.d(log_tag, "Token == null");
+      Timber.d("Token == null");
       return null;
     }
 
     if (Token.getUrl() == null) {
-      Trace.d(log_tag, "Token.getUrl() == null");
+      Timber.d("Token.getUrl() == null");
       return null;
     }
 
@@ -189,7 +189,7 @@ public abstract class SuplaRestApiClientTask extends AsyncTask {
     try {
       url = new URL(builder.build().toString());
     } catch (MalformedURLException e) {
-      e.printStackTrace();
+      Timber.e(e);
       return null;
     }
 
@@ -201,7 +201,7 @@ public abstract class SuplaRestApiClientTask extends AsyncTask {
     try {
       conn = (HttpsURLConnection) url.openConnection();
     } catch (IOException e) {
-      e.printStackTrace();
+      Timber.e(e);
       return null;
     }
 
@@ -209,7 +209,7 @@ public abstract class SuplaRestApiClientTask extends AsyncTask {
     try {
       sc = SSLContext.getInstance("TLS");
     } catch (NoSuchAlgorithmException e) {
-      e.printStackTrace();
+      Timber.e(e);
       return null;
     }
     try {
@@ -286,8 +286,8 @@ public abstract class SuplaRestApiClientTask extends AsyncTask {
 
       conn.connect();
       try {
-        Trace.d(log_tag, "CODE: " + conn.getResponseCode());
-        Trace.d(log_tag, "URL: " + url);
+        Timber.d("CODE: %d", conn.getResponseCode());
+        Timber.d("URL: %s", url);
 
         int TotalCount;
         try {
@@ -308,8 +308,6 @@ public abstract class SuplaRestApiClientTask extends AsyncTask {
           sb.append(inputLine);
         }
 
-        // Trace.d(log_tag, sb.toString());
-        // Trace.d(log_tag, "Result size: "+Integer.toString(sb.length()));
         Object obj = new JSONTokener(sb.toString()).nextValue();
         result = new ApiRequestResult(obj, conn.getResponseCode(), TotalCount);
 

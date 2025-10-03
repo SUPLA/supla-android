@@ -18,7 +18,6 @@ package org.supla.android.features.measurementsdownload
  */
 
 import io.reactivex.rxjava3.core.ObservableEmitter
-import org.supla.android.Trace
 import org.supla.android.data.model.chart.ChartDataAggregation
 import org.supla.android.data.source.ElectricityMeterLogRepository
 import org.supla.android.data.source.local.entity.custom.EnergyType
@@ -28,8 +27,8 @@ import org.supla.android.data.source.local.entity.measurements.PhaseValues
 import org.supla.android.data.source.local.entity.measurements.toKWh
 import org.supla.android.data.source.remote.rest.SuplaCloudService
 import org.supla.android.data.source.remote.rest.channel.ElectricityMeasurement
-import org.supla.android.extensions.TAG
 import org.supla.android.extensions.toTimestamp
+import timber.log.Timber
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -57,7 +56,7 @@ class DownloadElectricityMeterLogUseCase @Inject constructor(
     var lastEntry = getLastEntry(cloudService, remoteId, afterTimestamp)
 
     if (afterTimestamp > 0 && lastEntry == null) {
-      Trace.w(TAG, "Local entries found, but no remote entry, cleaning database entries")
+      Timber.w("Local entries found, but no remote entry, cleaning database entries")
       electricityMeterLogRepository.delete(remoteId, profileId).blockingAwait()
       afterTimestamp = 0
     }
@@ -66,11 +65,11 @@ class DownloadElectricityMeterLogUseCase @Inject constructor(
       val entries = electricityMeterLogRepository.getMeasurements(cloudService, remoteId, afterTimestamp).blockingFirst()
 
       if (entries.isEmpty()) {
-        Trace.d(TAG, "Measurements end reached")
+        Timber.d("Measurements end reached")
         return
       }
 
-      Trace.d(TAG, "Measurements fetched ${entries.size}")
+      Timber.d("Measurements fetched ${entries.size}")
       lastEntry = saveMeasurements(lastEntry, entries, remoteId, profileId)
       afterTimestamp = lastEntry?.date?.toTimestamp() ?: 0
 

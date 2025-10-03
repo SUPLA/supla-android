@@ -20,7 +20,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.reactivex.rxjava3.core.Completable
-import org.supla.android.Trace
 import org.supla.android.core.SuplaAppProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientEvent
 import org.supla.android.core.networking.suplaclient.SuplaClientStateHolder
@@ -50,12 +49,12 @@ import org.supla.android.data.source.TemperatureAndHumidityLogRepository
 import org.supla.android.data.source.TemperatureLogRepository
 import org.supla.android.data.source.VoltageLogRepository
 import org.supla.android.data.source.local.entity.ProfileEntity
-import org.supla.android.extensions.TAG
 import org.supla.android.lib.SuplaClient
 import org.supla.android.lib.singlecall.SingleCall
 import org.supla.android.profile.ProfileIdHolder
 import org.supla.android.usecases.client.DisconnectUseCase
 import org.supla.android.widget.WidgetManager
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -175,7 +174,7 @@ class DeleteProfileUseCase @Inject constructor(
         try {
           singleCallProvider.provide(id).registerPushNotificationClientToken(SuplaClient.SUPLA_APP_ID, "", profileEntity)
         } catch (ex: Exception) {
-          Trace.w(TAG, "Token cleanup failed while profile removal (profile id: `$id`)", ex)
+          Timber.w(ex, "Token cleanup failed while profile removal (profile id: `$id`)")
         }
         widgetManager.onProfileRemoved(id)
       }

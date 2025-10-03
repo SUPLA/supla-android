@@ -27,6 +27,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Refresh
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -47,6 +51,8 @@ import org.supla.android.usecases.developerinfo.TableDetail
 data class DeveloperInfoViewState(
   val developerOptions: Boolean = false,
   val rotationEnabled: Boolean = false,
+  val debugLoggingEnabled: Boolean = false,
+  val debugLogSize: String? = null,
   val suplaTableDetails: List<TableDetail> = emptyList(),
   val measurementTableDetails: List<TableDetail> = emptyList()
 )
@@ -54,7 +60,13 @@ data class DeveloperInfoViewState(
 interface DeveloperInfoScope {
   fun setDeveloperOptionEnabled(enabled: Boolean)
   fun setRotationEnabled(enabled: Boolean)
+  fun setDebugLoggingEnabled(enabled: Boolean)
+  fun downloadLogFile()
+  fun deleteLogFile()
+  fun refreshLogFileSize()
   fun sendTestNotification()
+  fun exportSuplaDatabase()
+  fun exportMeasurementsDatabase()
 }
 
 @Composable
@@ -82,10 +94,65 @@ fun DeveloperInfoScope.View(
     }
 
     HeaderLarge(
+      text = "Logging",
+      modifier = Modifier.padding(top = Distance.small)
+    )
+    SettingsList {
+      SettingsListItem(
+        label = "Debug logging",
+        checked = viewState.debugLoggingEnabled,
+        description = viewState.debugLogSize
+      ) { setDebugLoggingEnabled(it) }
+    }
+    if (viewState.debugLoggingEnabled) {
+      Row(
+        horizontalArrangement = Arrangement.spacedBy(Distance.default),
+        modifier = Modifier.fillMaxWidth().padding(horizontal = Distance.default)
+      ) {
+        Button(
+          text = "Export",
+          modifier = Modifier.weight(1f),
+          onClick = { downloadLogFile() }
+        )
+        Button(
+          text = "Delete",
+          modifier = Modifier.weight(1f),
+          onClick = { deleteLogFile() }
+        )
+        IconButton(onClick = { refreshLogFileSize() }) {
+          Icon(imageVector = Icons.Outlined.Refresh, contentDescription = "Refresh")
+        }
+      }
+    }
+
+    HeaderLarge(
+      text = "Testing",
+      modifier = Modifier.padding(top = Distance.small)
+    )
+    Button(
+      text = "Test notification",
+      modifier = Modifier.fillMaxWidth().padding(horizontal = Distance.default),
+      onClick = { sendTestNotification() }
+    )
+
+    HeaderLarge(
       text = stringResource(R.string.developer_info_database_section),
       modifier = Modifier.padding(top = Distance.small)
     )
-    HeaderSmall(text = "Supla")
+    Button(
+      text = "Export Supla database",
+      modifier = Modifier.fillMaxWidth().padding(horizontal = Distance.default),
+      onClick = { exportSuplaDatabase() }
+    )
+    Button(
+      text = "Export measurements database",
+      modifier = Modifier.fillMaxWidth().padding(horizontal = Distance.default),
+      onClick = { exportMeasurementsDatabase() }
+    )
+    HeaderSmall(
+      text = "Supla",
+      modifier = Modifier.padding(top = Distance.tiny)
+    )
     viewState.suplaTableDetails.forEach {
       Row(modifier = Modifier.padding(horizontal = Distance.default)) {
         Text("${it.name}: ", style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold))
@@ -101,16 +168,6 @@ fun DeveloperInfoScope.View(
         Text(it.count.toString(), style = MaterialTheme.typography.bodyMedium)
       }
     }
-
-    HeaderLarge(
-      text = "Other",
-      modifier = Modifier.padding(top = Distance.small)
-    )
-    Button(
-      text = "Test notification",
-      modifier = Modifier.fillMaxWidth().padding(horizontal = Distance.default),
-      onClick = { sendTestNotification() }
-    )
   }
 }
 
@@ -124,17 +181,23 @@ private fun HeaderLarge(text: String, modifier: Modifier = Modifier) =
   )
 
 @Composable
-private fun HeaderSmall(text: String) =
+private fun HeaderSmall(text: String, modifier: Modifier = Modifier) =
   Text(
     text = text,
     style = MaterialTheme.typography.bodyLarge,
-    modifier = Modifier.padding(horizontal = Distance.default)
+    modifier = modifier.padding(horizontal = Distance.default)
   )
 
 val previewScope = object : DeveloperInfoScope {
   override fun setDeveloperOptionEnabled(enabled: Boolean) {}
   override fun setRotationEnabled(enabled: Boolean) {}
+  override fun setDebugLoggingEnabled(enabled: Boolean) {}
+  override fun downloadLogFile() {}
+  override fun deleteLogFile() {}
+  override fun refreshLogFileSize() {}
   override fun sendTestNotification() {}
+  override fun exportSuplaDatabase() {}
+  override fun exportMeasurementsDatabase() {}
 }
 
 @PreviewScreenSizes
@@ -144,6 +207,7 @@ private fun Preview() {
   SuplaTheme {
     previewScope.View(
       DeveloperInfoViewState(
+        debugLoggingEnabled = true,
         suplaTableDetails = listOf(
           TableDetail(ChannelStateEntity.TABLE_NAME, 15),
           TableDetail(ChannelStateEntity.TABLE_NAME, 15)

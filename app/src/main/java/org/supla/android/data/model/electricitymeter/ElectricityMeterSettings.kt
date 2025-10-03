@@ -21,12 +21,11 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import org.supla.android.R
-import org.supla.android.Trace
 import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType
-import org.supla.android.extensions.TAG
 import org.supla.android.ui.views.spinner.SpinnerItem
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.localizedString
+import timber.log.Timber
 
 @Serializable
 data class ElectricityMeterSettings(
@@ -48,7 +47,7 @@ data class ElectricityMeterSettings(
       try {
         Json.decodeFromString<ElectricityMeterSettings>(text)
       } catch (ex: SerializationException) {
-        Trace.w(TAG, "Could not restore chart state!", ex)
+        Timber.w(ex, "Could not restore chart state!")
         null
       }
 

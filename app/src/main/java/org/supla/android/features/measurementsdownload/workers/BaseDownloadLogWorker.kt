@@ -24,13 +24,12 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import io.reactivex.rxjava3.kotlin.blockingSubscribeBy
-import org.supla.android.Trace
 import org.supla.android.data.source.local.entity.measurements.BaseLogEntity
 import org.supla.android.data.source.remote.rest.channel.Measurement
 import org.supla.android.events.DownloadEventsManager
-import org.supla.android.extensions.TAG
 import org.supla.android.features.measurementsdownload.BaseDownloadLogUseCase
 import org.supla.core.shared.extensions.guardLet
+import timber.log.Timber
 
 abstract class BaseDownloadLogWorker<T : Measurement, U : BaseLogEntity>(
   appContext: Context,
@@ -53,17 +52,17 @@ abstract class BaseDownloadLogWorker<T : Measurement, U : BaseLogEntity>(
     }
 
   override fun doWork(): Result {
-    Trace.d(TAG, "Worker started with ${baseDownloadLogUseCase.javaClass.simpleName}")
+    Timber.d("Worker started with ${baseDownloadLogUseCase.javaClass.simpleName}")
 
     val (remoteId) = guardLet(remoteId) {
-      Trace.w(TAG, "Download temperatures worker failed - remoteId < 0!")
+      Timber.w("Download temperatures worker failed - remoteId < 0!")
       return Result.failure()
     }
     val (profileId) = guardLet(profileId) {
-      Trace.w(TAG, "Download temperatures worker failed - profileId < 0!")
+      Timber.w("Download temperatures worker failed - profileId < 0!")
       return Result.failure()
     }
-    Trace.d(TAG, "Worker parameters - remoteId: $remoteId, profileId: $profileId")
+    Timber.d("Worker parameters - remoteId: $remoteId, profileId: $profileId")
 
     var result = Result.failure()
     baseDownloadLogUseCase.loadMeasurements(remoteId, profileId)
@@ -83,7 +82,7 @@ abstract class BaseDownloadLogWorker<T : Measurement, U : BaseLogEntity>(
           result = Result.success()
         },
         onError = {
-          Trace.e(TAG, it.message, it)
+          Timber.e(it)
           downloadEventsManager.emitProgressState(remoteId, dataType, DownloadEventsManager.State.Failed)
         }
       )

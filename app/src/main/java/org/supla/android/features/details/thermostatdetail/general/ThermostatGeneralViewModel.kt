@@ -22,7 +22,6 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import org.supla.android.R
-import org.supla.android.Trace
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.networking.suplaclient.DelayableState
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
@@ -46,7 +45,6 @@ import org.supla.android.di.FORMATTER_THERMOMETER
 import org.supla.android.events.ChannelConfigEventsManager
 import org.supla.android.events.DeviceConfigEventsManager
 import org.supla.android.events.LoadingTimeoutManager
-import org.supla.android.extensions.TAG
 import org.supla.android.features.details.thermostatdetail.general.data.SensorIssue
 import org.supla.android.features.details.thermostatdetail.general.data.ThermostatProgramInfo
 import org.supla.android.features.details.thermostatdetail.general.data.build
@@ -70,6 +68,7 @@ import org.supla.core.shared.extensions.ifLet
 import org.supla.core.shared.extensions.ifTrue
 import org.supla.core.shared.usecase.channel.issues.ThermostatIssuesProvider
 import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
+import timber.log.Timber
 import java.util.Date
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -330,15 +329,15 @@ class ThermostatGeneralViewModel @Inject constructor(
 
     updateState {
       if (it.changing) {
-        Trace.d(TAG, "update skipped because of changing")
+        Timber.d("update skipped because of changing")
         return@updateState it // Do not change anything, when user makes manual operations
       }
       if (it.lastInteractionTime != null && it.lastInteractionTime + REFRESH_DELAY_MS > dateProvider.currentTimestamp()) {
-        Trace.d(TAG, "update skipped because of last interaction time")
+        Timber.d("update skipped because of last interaction time")
         updateSubject.onNext(0)
         return@updateState it // Do not change anything during 3 secs after last user interaction
       }
-      Trace.d(TAG, "updating state with data")
+      Timber.d("updating state with data")
 
       it.copy(
         viewModelState = ThermostatGeneralViewModelState(

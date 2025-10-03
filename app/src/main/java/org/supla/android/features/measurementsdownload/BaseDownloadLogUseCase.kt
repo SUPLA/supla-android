@@ -21,15 +21,14 @@ import android.annotation.SuppressLint
 import androidx.room.rxjava3.EmptyResultSetException
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.ObservableEmitter
-import org.supla.android.Trace
 import org.supla.android.data.source.BaseMeasurementRepository
 import org.supla.android.data.source.local.entity.measurements.BaseLogEntity
 import org.supla.android.data.source.remote.rest.SuplaCloudService
 import org.supla.android.data.source.remote.rest.channel.Measurement
-import org.supla.android.extensions.TAG
 import org.supla.android.extensions.toTimestamp
 import org.supla.core.shared.extensions.guardLet
 import retrofit2.Response
+import timber.log.Timber
 import java.text.SimpleDateFormat
 
 private const val ALLOWED_TIME_DIFFERENCE = 1800_000
@@ -53,7 +52,7 @@ abstract class BaseDownloadLogUseCase<T : Measurement, U : BaseLogEntity>(
 
     val firstMeasurements = initialMeasurementsPair.first
     val totalCount = initialMeasurementsPair.second
-    Trace.d(TAG, "Found initial remote entries (count: ${firstMeasurements.size}, total count: $totalCount)")
+    Timber.d("Found initial remote entries (count: ${firstMeasurements.size}, total count: $totalCount)")
 
     // Check cleanup needed
     val (cleanMeasurements) = guardLet(checkCleanNeeded(firstMeasurements, remoteId, profileId)) {
@@ -73,7 +72,7 @@ abstract class BaseDownloadLogUseCase<T : Measurement, U : BaseLogEntity>(
     try {
       val firstMeasurementsResponse = baseMeasurementRepository.getInitialMeasurements(cloudService, remoteId)
       if (firstMeasurementsResponse.code() != 200) {
-        Trace.e(TAG, "Initial measurements load failed: ${firstMeasurementsResponse.message()}")
+        Timber.e("Initial measurements load failed: ${firstMeasurementsResponse.message()}")
         return null
       }
       val firstMeasurements = firstMeasurementsResponse.body()
@@ -83,7 +82,7 @@ abstract class BaseDownloadLogUseCase<T : Measurement, U : BaseLogEntity>(
         return Pair(firstMeasurements, totalCount)
       }
     } catch (ex: Exception) {
-      Trace.e(TAG, "Initial measurements load failed", ex)
+      Timber.e(ex, "Initial measurements load failed")
     }
 
     return null
@@ -92,32 +91,32 @@ abstract class BaseDownloadLogUseCase<T : Measurement, U : BaseLogEntity>(
   private fun checkCleanNeeded(firstMeasurements: List<T>, remoteId: Int, profileId: Long): Boolean? {
     try {
       if (firstMeasurements.isEmpty()) {
-        Trace.d(TAG, "No entries to get - cleaning measurements")
+        Timber.d("No entries to get - cleaning measurements")
         return true
       } else {
         val minTimestamp = try {
           baseMeasurementRepository.findMinTimestamp(remoteId, profileId).blockingGet()
-        } catch (ex: EmptyResultSetException) {
-          Trace.d(TAG, "No entries in DB - no cleaning needed")
+        } catch (_: EmptyResultSetException) {
+          Timber.d("No entries in DB - no cleaning needed")
           return false
         }
 
-        Trace.d(TAG, "Found local minimal timestamp $minTimestamp")
+        Timber.d("Found local minimal timestamp $minTimestamp")
         if (cleanupHistoryWhenOldestDiffers) {
           for (entry in firstMeasurements) {
             if (kotlin.math.abs(minTimestamp - entry.date.time) < ALLOWED_TIME_DIFFERENCE) {
-              Trace.d(TAG, "Entries similar - no cleaning needed")
+              Timber.d("Entries similar - no cleaning needed")
               return false
             }
           }
         } else {
-          Trace.d(TAG, "Oldest check skipped - no cleanup needed")
+          Timber.d("Oldest check skipped - no cleanup needed")
           return false
         }
       }
       return true
     } catch (ex: Exception) {
-      Trace.e(TAG, "Could not verify if clean needed", ex)
+      Timber.e(ex, "Could not verify if clean needed")
       return null
     }
   }
@@ -130,18 +129,18 @@ abstract class BaseDownloadLogUseCase<T : Measurement, U : BaseLogEntity>(
     cloudService: SuplaCloudService,
     emitter: ObservableEmitter<Float>
   ) {
-    Trace.d(TAG, "Will clean measurements - $cleanMeasurements")
+    Timber.d("Will clean measurements - $cleanMeasurements")
     if (cleanMeasurements) {
       baseMeasurementRepository.delete(remoteId, profileId).blockingAwait()
     }
 
     val databaseCount = baseMeasurementRepository.findCount(remoteId, profileId).blockingGet() ?: 0
     if (databaseCount == totalCount && !cleanMeasurements) {
-      Trace.i(TAG, "Database and cloud has same size of measurements. Import skipped")
+      Timber.i("Database and cloud has same size of measurements. Import skipped")
       return
     }
 
-    Trace.i(TAG, "Measurements import started (db count: $databaseCount, remote count: $totalCount)")
+    Timber.i("Measurements import started (db count: $databaseCount, remote count: $totalCount)")
     iterateAndImport(remoteId, profileId, totalCount, databaseCount, cloudService, emitter)
   }
 
@@ -161,11 +160,11 @@ abstract class BaseDownloadLogUseCase<T : Measurement, U : BaseLogEntity>(
       val entries = baseMeasurementRepository.getMeasurements(cloudService, remoteId, afterTimestamp).blockingFirst()
 
       if (entries.isEmpty()) {
-        Trace.d(TAG, "Measurements end reached")
+        Timber.d("Measurements end reached")
         return
       }
 
-      Trace.d(TAG, "Measurements fetched ${entries.size}")
+      Timber.d("Measurements fetched ${entries.size}")
       baseMeasurementRepository.insert(
         entries.map { entry ->
           baseMeasurementRepository.map(entry, formatter.format(entry.date), remoteId, profileId).also { entity ->

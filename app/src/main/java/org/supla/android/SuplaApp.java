@@ -47,6 +47,8 @@ import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import org.supla.android.core.SuplaAppApi;
+import org.supla.android.core.infrastructure.storage.DebugFileLoggingTree;
+import org.supla.android.core.infrastructure.storage.ReleaseLoggingTree;
 import org.supla.android.core.networking.suplaclient.SuplaClientBuilder;
 import org.supla.android.core.networking.suplaclient.SuplaClientNetworkCallback;
 import org.supla.android.core.networking.suplaclient.workers.InitializationWorker;
@@ -54,6 +56,7 @@ import org.supla.android.core.notifications.NotificationsHelper;
 import org.supla.android.core.observers.AppLifecycleObserver;
 import org.supla.android.core.shared.SuplaClientMessageExtensionsKt;
 import org.supla.android.core.storage.ApplicationPreferences;
+import org.supla.android.core.storage.EncryptedPreferences;
 import org.supla.android.data.ValuesFormatter;
 import org.supla.android.data.model.general.NightModeSetting;
 import org.supla.android.db.DbHelper;
@@ -68,6 +71,8 @@ import org.supla.android.widget.extended.ExtendedValueWidgetWorker;
 import org.supla.android.widget.shared.WidgetReloadWorker;
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage;
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessageHandler;
+import timber.log.Timber;
+import timber.log.Timber.DebugTree;
 
 @HiltAndroidApp
 public class SuplaApp extends MultiDexApplication
@@ -92,6 +97,8 @@ public class SuplaApp extends MultiDexApplication
   @Inject UiModeManager modeManager;
   @Inject SuplaClientNetworkCallback suplaClientNetworkCallback;
   @Inject ApplicationPreferences applicationPreferences;
+  @Inject EncryptedPreferences encryptedPreferences;
+  @Inject DebugFileLoggingTree debugFileLoggingTree;
 
   public SuplaApp() {
     AndroidSuplaClientMessageHandler.Companion.getGlobalInstance().register(this);
@@ -104,6 +111,7 @@ public class SuplaApp extends MultiDexApplication
   @Override
   public void onCreate() {
     super.onCreate();
+    setupTimber();
     setupNightMode();
     setupNetworkCallback();
     SuplaApp._SuplaApp = this;
@@ -228,6 +236,17 @@ public class SuplaApp extends MultiDexApplication
     _OAuthToken = null;
   }
 
+  private void setupTimber() {
+    if (BuildConfig.DEBUG) {
+      Timber.plant(new DebugTree());
+    } else {
+      Timber.plant(new ReleaseLoggingTree());
+    }
+    if (encryptedPreferences.getDevLogActive()) {
+      Timber.plant(debugFileLoggingTree);
+    }
+  }
+
   private void setupNightMode() {
     NightModeSetting nightModeSetting = applicationPreferences.getNightMode();
     if (VERSION.SDK_INT < VERSION_CODES.S) {
@@ -286,14 +305,9 @@ public class SuplaApp extends MultiDexApplication
         throw exception;
       }
 
-      Trace.e(
-          SuplaApp.class.getSimpleName(),
-          "Could not migrated database, trying to delete it",
-          exception);
+      Timber.e(exception, "Could not migrated database, trying to delete it");
       boolean result = deleteDatabase(DbHelper.DATABASE_NAME);
-      Trace.e(
-          SuplaApp.class.getSimpleName(),
-          "Database deletion finished with " + (result ? "success" : "failure"));
+      Timber.e("Database deletion finished with %s", (result ? "success" : "failure"));
     }
   }
 

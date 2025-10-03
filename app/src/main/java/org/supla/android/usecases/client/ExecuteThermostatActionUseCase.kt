@@ -18,14 +18,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import io.reactivex.rxjava3.core.Completable
-import org.supla.android.Trace
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
-import org.supla.android.extensions.TAG
 import org.supla.android.extensions.toSuplaTemperature
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.HvacActionParameters
 import org.supla.android.lib.actions.SubjectType
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -53,10 +52,10 @@ class ExecuteThermostatActionUseCase @Inject constructor(
           setpointTemperatureHeat = setpointTemperatureHeat?.toSuplaTemperature(),
           setpointTemperatureCool = setpointTemperatureCool?.toSuplaTemperature()
         )
-        Trace.d(TAG, "Executing thermostat action with parameters: $parameters")
+        Timber.d("Executing thermostat action with parameters: $parameters")
 
         val result = executeAction(parameters)
-        Trace.i(TAG, "Thermostat action ended up with '$result'")
+        Timber.i("Thermostat action ended up with '$result'")
       }
     }
 }

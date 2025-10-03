@@ -18,12 +18,11 @@ package org.supla.android.features.addwizard.usecase
  */
 
 import kotlinx.coroutines.delay
-import org.supla.android.Trace
 import org.supla.android.data.source.remote.esp.EspConfigurationSession
 import org.supla.android.data.source.remote.esp.EspService
-import org.supla.android.extensions.TAG
 import org.supla.android.extensions.locationHeader
 import retrofit2.HttpException
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.time.Duration.Companion.milliseconds
@@ -44,24 +43,24 @@ class AuthorizeEspUseCase @Inject constructor(
       espService.login(fieldMap)
 
       if (session.lastAuthStatus == EspConfigurationSession.AuthStatus.Failed) {
-        Trace.e(TAG, "Authorize request failed - wrong password")
+        Timber.e("Authorize request failed - wrong password")
         Result.FAILURE_WRONG_PASSWORD
       } else {
-        Trace.e(TAG, "Authorize request failed - no redirect")
+        Timber.e("Authorize request failed - no redirect")
         Result.FAILURE_UNKNOWN
       }
     } catch (ex: HttpException) {
       if (ex.code() == 303 && ex.locationHeader == "/") {
         Result.SUCCESS
       } else if (ex.code() == 403) {
-        Trace.e(TAG, "Authorize request failed - temporarily locked", ex)
+        Timber.e(ex, "Authorize request failed - temporarily locked")
         Result.TEMPORARILY_LOCKED
       } else {
-        Trace.e(TAG, "Authorize request failed", ex)
+        Timber.e(ex, "Authorize request failed")
         Result.FAILURE_UNKNOWN
       }
     } catch (ex: Exception) {
-      Trace.e(TAG, "Authorize request failed", ex)
+      Timber.e(ex, "Authorize request failed")
       Result.FAILURE_UNKNOWN
     }
   }

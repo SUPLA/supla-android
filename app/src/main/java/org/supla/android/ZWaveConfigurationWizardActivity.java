@@ -48,6 +48,7 @@ import org.supla.android.lib.SuplaConst;
 import org.supla.android.lib.ZWaveNode;
 import org.supla.android.lib.ZWaveWakeUpSettings;
 import org.supla.core.shared.data.model.general.SuplaCallConfigCommand;
+import timber.log.Timber;
 
 /**
  * @noinspection SequencedCollectionMethodCanBeUsed
@@ -1082,9 +1083,9 @@ public class ZWaveConfigurationWizardActivity extends WizardActivity
   protected void onCalCfgResult(int channelId, int command, int result, byte[] data) {
     super.onCalCfgResult(channelId, command, result, data);
     if (command != 5000) {
-      Trace.d(
-          "onCalCfgResult",
-          channelId + "," + command + "," + result + "," + (data == null ? 0 : data.length));
+      Timber.d(
+          "onCalCfgResult %d, %d, %d, %d",
+          channelId, command, result, (data == null ? 0 : data.length));
     }
 
     if (mSelectedCahnnel != null) {

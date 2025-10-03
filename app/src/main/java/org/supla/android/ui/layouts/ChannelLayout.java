@@ -42,7 +42,6 @@ import javax.inject.Inject;
 import org.supla.android.Preferences;
 import org.supla.android.R;
 import org.supla.android.SuplaChannelStatus;
-import org.supla.android.Trace;
 import org.supla.android.core.shared.LocalizedStringIdExtensionsKt;
 import org.supla.android.data.model.general.IconType;
 import org.supla.android.db.ChannelBase;
@@ -59,6 +58,7 @@ import org.supla.android.usecases.group.GetGroupActivePercentageUseCase;
 import org.supla.core.shared.data.model.general.SuplaFunction;
 import org.supla.core.shared.infrastructure.LocalizedStringId;
 import org.supla.core.shared.usecase.GetChannelActionStringUseCase;
+import timber.log.Timber;
 
 @AndroidEntryPoint
 public class ChannelLayout extends LinearLayout implements SlideableItem, SwapableListItem {
@@ -528,9 +528,7 @@ public class ChannelLayout extends LinearLayout implements SlideableItem, Swapab
     if (cbase instanceof ChannelGroup) {
       configureBasedOnData((ChannelGroup) cbase);
     } else {
-      Trace.e(
-          ChannelLayout.class.getSimpleName(),
-          "Channel layout used with something different from ChannelGroup!");
+      Timber.e("Channel layout used with something different from ChannelGroup!");
     }
     observeChanges();
   }

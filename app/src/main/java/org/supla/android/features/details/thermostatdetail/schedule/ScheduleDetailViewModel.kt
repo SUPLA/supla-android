@@ -23,7 +23,6 @@ import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.PublishSubject
 import org.supla.android.Preferences
 import org.supla.android.R
-import org.supla.android.Trace
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.networking.suplaclient.DelayableState
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
@@ -49,7 +48,6 @@ import org.supla.android.di.FORMATTER_THERMOMETER
 import org.supla.android.events.ChannelConfigEventsManager
 import org.supla.android.events.DeviceConfigEventsManager
 import org.supla.android.events.LoadingTimeoutManager
-import org.supla.android.extensions.TAG
 import org.supla.android.extensions.toSuplaTemperature
 import org.supla.android.features.details.thermostatdetail.schedule.data.ProgramSettingsData
 import org.supla.android.features.details.thermostatdetail.schedule.data.QuartersSelectionData
@@ -68,6 +66,7 @@ import org.supla.core.shared.extensions.guardLet
 import org.supla.core.shared.extensions.ifFalse
 import org.supla.core.shared.usecase.channel.valueformatter.DefaultValueFormatter
 import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
+import timber.log.Timber
 import java.util.Calendar
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -476,7 +475,7 @@ class ScheduleDetailViewModel @Inject constructor(
   }
 
   private fun onConfigLoaded(data: LoadedData) {
-    Trace.i(TAG, "Schedule detail got data: $data")
+    Timber.i("Schedule detail got data: $data")
 
     if (data.weeklyScheduleResult != ConfigResult.RESULT_TRUE || data.defaultResult != ConfigResult.RESULT_TRUE) {
       return
@@ -492,17 +491,17 @@ class ScheduleDetailViewModel @Inject constructor(
 
     updateState {
       if (it.changing) {
-        Trace.d(TAG, "update skipped because of changing")
+        Timber.d("update skipped because of changing")
         return@updateState it // Do not change anything, when user makes manual operations
       }
       if (it.lastInteractionTime != null && it.lastInteractionTime + REFRESH_DELAY_MS > System.currentTimeMillis()) {
-        Trace.d(TAG, "update skipped because of last interaction time")
+        Timber.d("update skipped because of last interaction time")
         updateSubject.onNext(0)
         return@updateState it // Do not change anything during 3 secs after last user interaction
       }
       val thermostatFunction = data.defaultConfig.subfunction
 
-      Trace.d(TAG, "updating state with data")
+      Timber.d("updating state with data")
       it.copy(
         loadingState = it.loadingState.changingLoading(false, dateProvider),
         channelFunction = channelFunction,

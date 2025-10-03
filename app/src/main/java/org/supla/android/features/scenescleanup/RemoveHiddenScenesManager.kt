@@ -18,9 +18,8 @@ package org.supla.android.features.scenescleanup
  */
 
 import androidx.work.ExistingWorkPolicy
-import org.supla.android.Trace
 import org.supla.android.core.infrastructure.WorkManagerProxy
-import org.supla.android.extensions.TAG
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -29,7 +28,7 @@ class RemoveHiddenScenesManager @Inject constructor(
   private val workManagerProxy: WorkManagerProxy
 ) {
   fun start() {
-    Trace.i(TAG, "Starting hidden scenes removal manager")
+    Timber.i("Starting hidden scenes removal manager")
     workManagerProxy.enqueueUniqueWork(
       RemoveHiddenScenesWorker.WORK_ID,
       ExistingWorkPolicy.REPLACE,
@@ -38,7 +37,7 @@ class RemoveHiddenScenesManager @Inject constructor(
   }
 
   fun kill() {
-    Trace.i(TAG, "Killing hidden scenes removal manager")
+    Timber.i("Killing hidden scenes removal manager")
     workManagerProxy.cancelByTag(RemoveHiddenScenesWorker.TAG)
   }
 }

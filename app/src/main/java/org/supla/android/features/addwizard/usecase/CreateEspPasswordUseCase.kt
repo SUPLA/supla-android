@@ -18,11 +18,10 @@ package org.supla.android.features.addwizard.usecase
  */
 
 import kotlinx.coroutines.delay
-import org.supla.android.Trace
 import org.supla.android.data.source.remote.esp.EspService
-import org.supla.android.extensions.TAG
 import org.supla.android.extensions.locationHeader
 import retrofit2.HttpException
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.time.Duration.Companion.milliseconds
@@ -44,7 +43,7 @@ class CreateEspPasswordUseCase @Inject constructor(
       // Delay added to show a loading indicator on view for a moment, so the user see, that something is happening
       delay(500.milliseconds)
       espService.setup(fieldMap)
-      Trace.e(TAG, "Setup request failed - no redirect")
+      Timber.e("Setup request failed - no redirect")
       Result.FAILURE
     } catch (ex: HttpException) {
       if (ex.code() == 303 && ex.locationHeader == "/") {
@@ -52,11 +51,11 @@ class CreateEspPasswordUseCase @Inject constructor(
       } else if (ex.code() == 403) {
         Result.TEMPORARILY_LOCKED
       } else {
-        Trace.e(TAG, "Setup request failed", ex)
+        Timber.e(ex, "Setup request failed")
         Result.FAILURE
       }
     } catch (ex: Exception) {
-      Trace.e(TAG, "Setup request failed", ex)
+      Timber.e(ex, "Setup request failed")
       Result.FAILURE
     }
   }

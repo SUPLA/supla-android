@@ -21,7 +21,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.R
-import org.supla.android.Trace
 import org.supla.android.core.networking.suplaclient.SuplaClientEvent
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientState
@@ -29,7 +28,6 @@ import org.supla.android.core.networking.suplaclient.SuplaClientStateHolder
 import org.supla.android.core.ui.StringProvider
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.data.source.RoomProfileRepository
-import org.supla.android.extensions.TAG
 import org.supla.android.lib.SuplaConst.SUPLA_RESULT_HOST_NOT_FOUND
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.dialogs.AuthorizationDialogState
@@ -39,6 +37,7 @@ import org.supla.android.ui.dialogs.authorize.BaseAuthorizationViewModel
 import org.supla.android.usecases.client.AuthorizeUseCase
 import org.supla.android.usecases.client.DisconnectUseCase
 import org.supla.android.usecases.client.LoginUseCase
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -171,10 +170,10 @@ class StatusViewModel @Inject constructor(
       .subscribeBy(
         onComplete = { sendEvent(StatusViewEvent.NavigateToProfiles) },
         onError = {
-          Trace.i(TAG, "Disconnecting broken.")
+          Timber.i("Disconnecting broken.")
 
           if (it !is InterruptedException) {
-            Trace.e(TAG, "Could not disconnect Supla client!", it)
+            Timber.e(it, "Could not disconnect Supla client!")
           }
         }
       )

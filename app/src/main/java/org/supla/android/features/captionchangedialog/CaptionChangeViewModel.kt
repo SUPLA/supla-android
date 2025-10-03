@@ -20,11 +20,9 @@ package org.supla.android.features.captionchangedialog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.R
-import org.supla.android.Trace
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.data.source.RoomProfileRepository
-import org.supla.android.extensions.TAG
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.tools.VibrationHelper
 import org.supla.android.ui.dialogs.AuthorizationDialogState
@@ -36,6 +34,7 @@ import org.supla.android.usecases.client.AuthorizeUseCase
 import org.supla.android.usecases.client.LoginUseCase
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.localizedString
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -129,7 +128,7 @@ class CaptionChangeViewModel @Inject constructor(
   }
 
   private fun showError(error: Throwable) {
-    Trace.d(TAG, "Could not change caption", error)
+    Timber.d(error, "Could not change caption")
 
     updateState {
       it.copy(

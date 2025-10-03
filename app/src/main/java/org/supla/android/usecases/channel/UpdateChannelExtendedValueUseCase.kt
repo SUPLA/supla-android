@@ -20,15 +20,14 @@ package org.supla.android.usecases.channel
 import androidx.room.rxjava3.EmptyResultSetException
 import io.reactivex.rxjava3.core.Single
 import kotlinx.serialization.json.Json
-import org.supla.android.Trace
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.data.model.general.EntityUpdateResult
 import org.supla.android.data.source.ChannelExtendedValueRepository
 import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity
-import org.supla.android.extensions.TAG
 import org.supla.android.lib.SuplaChannelExtendedValue
 import org.supla.android.usecases.channelstate.UpdateChannelStateUseCase
+import timber.log.Timber
 import java.io.IOException
 import java.util.Date
 import javax.inject.Inject
@@ -70,7 +69,7 @@ class UpdateChannelExtendedValueUseCase @Inject constructor(
         if (throwable is NoSuchElementException || throwable is EmptyResultSetException) {
           insert(channelId, suplaChannelExtendedValue)
         } else {
-          Trace.e(TAG, "Could not create/update channel extended value", throwable)
+          Timber.e(throwable, "Could not create/update channel extended value")
           Single.just(UpdateExtendedValueResult(EntityUpdateResult.ERROR, false))
         }
       }
@@ -101,7 +100,7 @@ fun SuplaChannelExtendedValue.toByteArray(): ByteArray? {
   try {
     return Json.encodeToString(this).toByteArray()
   } catch (ex: IOException) {
-    Trace.e(TAG, "Could not convert value to byte array", ex)
+    Timber.e(ex, "Could not convert value to byte array")
     return null
   }
 }

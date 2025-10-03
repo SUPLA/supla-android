@@ -24,6 +24,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
+import timber.log.Timber;
 
 public class Preferences {
 
@@ -68,7 +69,7 @@ public class Preferences {
 
       id += "-" + Build.BOARD + "-" + Build.BRAND + "-" + Build.DEVICE + "-" + Build.HARDWARE;
     } catch (Exception e) {
-      Trace.e(TAG, "getDeviceID error", e);
+      Timber.e(e, "getDeviceID error");
     }
 
     return id == null ? "unknown" : id;

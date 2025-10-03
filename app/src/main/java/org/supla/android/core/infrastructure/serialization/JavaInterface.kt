@@ -19,9 +19,8 @@ package org.supla.android.core.infrastructure.serialization
 
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
-import org.supla.android.Trace
-import org.supla.android.extensions.TAG
 import org.supla.android.lib.SuplaChannelExtendedValue
+import timber.log.Timber
 import java.io.IOException
 
 object JavaInterface {
@@ -29,13 +28,13 @@ object JavaInterface {
     try {
       return Json.decodeFromString<SuplaChannelExtendedValue>(String(bytes = value))
     } catch (e: IOException) {
-      Trace.w(TAG, "Could not convert to object (IOException)", e)
+      Timber.w(e, "Could not convert to object (IOException)")
     } catch (e: ClassNotFoundException) {
-      Trace.w(TAG, "Could not convert to object (ClassNotFoundException)", e)
+      Timber.w(e, "Could not convert to object (ClassNotFoundException)")
     } catch (e: SerializationException) {
-      Trace.w(TAG, "Could not convert to object (SerializationException) - skipping")
+      Timber.w("Could not convert to object (SerializationException) - skipping")
     } catch (e: Exception) {
-      Trace.w(TAG, "Could not convert to object", e)
+      Timber.w(e, "Could not convert to object")
     }
     return null
   }

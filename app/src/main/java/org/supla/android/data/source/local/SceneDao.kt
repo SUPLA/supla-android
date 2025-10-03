@@ -20,14 +20,13 @@ package org.supla.android.data.source.local
 import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import org.supla.android.Trace
 import org.supla.android.data.source.local.entity.Scene
 import org.supla.android.data.source.local.entity.SceneEntity
 import org.supla.android.data.source.local.entity.SceneEntity.Companion.COLUMN_PROFILE_ID
 import org.supla.android.data.source.local.entity.SceneEntity.Companion.COLUMN_VISIBLE
 import org.supla.android.data.source.local.entity.UserIconEntity
 import org.supla.android.data.source.local.view.SceneView
-import org.supla.android.extensions.TAG
+import timber.log.Timber
 
 class SceneDao(dap: DatabaseAccessProvider) : BaseDao(dap) {
 
@@ -112,7 +111,7 @@ class SceneDao(dap: DatabaseAccessProvider) : BaseDao(dap) {
       )
       true
     } catch (e: Exception) {
-      Trace.w(TAG, "updateScene", e)
+      Timber.w(e, "updateScene")
       false
     }
   }
@@ -125,7 +124,7 @@ class SceneDao(dap: DatabaseAccessProvider) : BaseDao(dap) {
       )
       true
     } catch (e: Exception) {
-      Trace.w(TAG, "insertScene", e)
+      Timber.w(e, "insertScene")
       false
     }
   }

@@ -21,12 +21,11 @@ import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
-import org.supla.android.Trace
 import org.supla.android.data.source.local.entity.measurements.BaseLogEntity
 import org.supla.android.data.source.remote.rest.SuplaCloudService
 import org.supla.android.data.source.remote.rest.channel.Measurement
-import org.supla.android.extensions.TAG
 import retrofit2.Response
+import timber.log.Timber
 
 interface GroupingStringMigratorDao {
   fun emptyGroupingStringCount(remoteId: Int, profileId: Long): Single<Int>
@@ -56,11 +55,11 @@ abstract class BaseMeasurementRepository<T : Measurement, U : BaseLogEntity>(pri
   fun migrateGroupingString(remoteId: Int, profileId: Long): Completable =
     dao.emptyGroupingStringCount(remoteId, profileId)
       .flatMapCompletable {
-        Trace.d(this@BaseMeasurementRepository.TAG, "Found $it entries to migrate (channel id: $remoteId, profile id: $profileId)")
+        Timber.d("Found $it entries to migrate (channel id: $remoteId, profile id: $profileId)")
         if (it > 0) {
           dao.migrateGroupingString(remoteId, profileId)
             .doOnComplete {
-              Trace.d(this@BaseMeasurementRepository.TAG, "Migration finished (channel id: $remoteId, profile id: $profileId)")
+              Timber.d("Migration finished (channel id: $remoteId, profile id: $profileId)")
             }
         } else {
           Completable.complete()
