@@ -31,6 +31,7 @@ object Configuration {
 
   const val ASK_FOR_RATE = true
   const val SHOW_LICENCE = true
+  const val ANDROID_AUTO_SUPPORT = true
 
   object Toolbar {
     val LOGO_INSTEAD_OFF_APP_NAME: AppBar.Title? = null
