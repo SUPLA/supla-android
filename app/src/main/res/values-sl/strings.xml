@@ -720,4 +720,8 @@
   <string name="developer_info_activated">Razvijalski način aktiviran</string>
   <string name="developer_info_screen_orientation">Omogočeno vrtenje zaslona</string>
   <string name="developer_info_settings">Eksperimentalne nastavitve</string>
+  <string name="profiles_list_sorting">Razvrščanje</string>
+  <string name="profiles_list_sorting_default">Privzeto</string>
+  <string name="profiles_list_sorting_name">Ime</string>
+  <string name="profiles_list_sorting_added">Zadnje dodano</string>
 </resources>

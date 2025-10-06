@@ -720,4 +720,8 @@
   <string name="developer_info_activated">Ontwikkelaarsmodus geactiveerd</string>
   <string name="developer_info_screen_orientation">Schermrotatie ingeschakeld</string>
   <string name="developer_info_settings">Experimentele instellingen</string>
+  <string name="profiles_list_sorting">Sorteren</string>
+  <string name="profiles_list_sorting_default">Standaard</string>
+  <string name="profiles_list_sorting_name">Naam</string>
+  <string name="profiles_list_sorting_added">Laatst toegevoegd</string>
 </resources>

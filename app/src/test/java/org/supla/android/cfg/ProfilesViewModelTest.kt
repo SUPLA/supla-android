@@ -17,48 +17,54 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import io.mockk.MockKAnnotations
+import io.mockk.confirmVerified
+import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
+import io.mockk.verify
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoInteractions
-import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.whenever
 import org.supla.android.core.BaseViewModelTest
 import org.supla.android.data.model.general.LockScreenScope
+import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.features.lockscreen.UnlockAction
+import org.supla.android.features.profileslist.ProfilesListState
+import org.supla.android.features.profileslist.ProfilesListViewEvent
+import org.supla.android.features.profileslist.ProfilesListViewModel
+import org.supla.android.features.profileslist.ProfilesListViewState
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.lock.GetLockScreenSettingUseCase
 import org.supla.android.usecases.profile.ActivateProfileUseCase
 import org.supla.android.usecases.profile.ReadAllProfilesUseCase
 
-@RunWith(MockitoJUnitRunner::class)
-class ProfilesViewModelTest : BaseViewModelTest<ProfilesViewState, ProfilesViewEvent, ProfilesViewModel>() {
-  @Mock
+class ProfilesViewModelTest : BaseViewModelTest<ProfilesListState, ProfilesListViewEvent, ProfilesListViewModel>(MockSchedulers.MOCKK) {
+  @MockK
   private lateinit var readAllProfilesUseCase: ReadAllProfilesUseCase
 
-  @Mock
+  @MockK
   private lateinit var activateProfileUseCase: ActivateProfileUseCase
 
-  @Mock
+  @MockK
   private lateinit var getLockScreenSettingUseCase: GetLockScreenSettingUseCase
 
-  @Mock
+  @MockK
+  private lateinit var profileRepository: RoomProfileRepository
+
+  @MockK
   override lateinit var schedulers: SuplaSchedulers
 
-  @InjectMocks
-  override lateinit var viewModel: ProfilesViewModel
+  @InjectMockKs
+  override lateinit var viewModel: ProfilesListViewModel
 
   @Before
   override fun setUp() {
+    MockKAnnotations.init(this)
     super.setUp()
   }
 
@@ -66,85 +72,91 @@ class ProfilesViewModelTest : BaseViewModelTest<ProfilesViewState, ProfilesViewE
   fun `should load profiles`() {
     // given
     val profiles = listOf<ProfileEntity>(mockk())
-    whenever(readAllProfilesUseCase.invoke()).thenReturn(Observable.just(profiles))
+    every { readAllProfilesUseCase.invoke() } returns Observable.just(profiles)
 
     // when
     viewModel.onViewCreated()
 
     // then
-    assertThat(states).containsExactly(ProfilesViewState(profiles))
+    assertThat(states).containsExactly(ProfilesListState(ProfilesListViewState(profiles)))
     assertThat(events).isEmpty()
 
-    verify(readAllProfilesUseCase).invoke()
-    verifyNoMoreInteractions(readAllProfilesUseCase)
-    verifyNoInteractions(activateProfileUseCase)
+    verify {
+      readAllProfilesUseCase.invoke()
+    }
+    confirmVerified(readAllProfilesUseCase, activateProfileUseCase)
   }
 
   @Test
   fun `should activate profile`() {
     // given
     val profileId = 123L
-    whenever(activateProfileUseCase.invoke(profileId, force = true)).thenReturn(Completable.complete())
+    val profile: ProfileEntity = mockk {
+      every { id } returns profileId
+      every { active } returns false
+    }
+    every { activateProfileUseCase.invoke(profileId, force = true) } returns Completable.complete()
 
     // when
-    viewModel.activateProfile(profileId)
+    viewModel.onProfileSelected(profile)
 
     // then
     assertThat(states).isEmpty()
-    assertThat(events).containsExactly(ProfilesViewEvent.Finish)
+    assertThat(events).containsExactly(ProfilesListViewEvent.Finish)
 
-    verify(activateProfileUseCase).invoke(profileId, force = true)
-    verifyNoMoreInteractions(activateProfileUseCase)
-    verifyNoInteractions(readAllProfilesUseCase)
+    verify {
+      activateProfileUseCase.invoke(profileId, force = true)
+    }
+    confirmVerified(readAllProfilesUseCase, activateProfileUseCase)
   }
 
   @Test
   fun `should open profile edit view`() {
     // given
     val profileId: Long = 123
-    whenever(getLockScreenSettingUseCase.invoke()).thenReturn(LockScreenScope.NONE)
+    every { getLockScreenSettingUseCase.invoke() } returns LockScreenScope.NONE
 
     // when
-    viewModel.onEditProfileClick(profileId)
+    viewModel.onEditClicked(profileId)
 
     // then
-    assertThat(events).containsExactly(ProfilesViewEvent.NavigateToProfileEdit(profileId))
+    assertThat(events).containsExactly(ProfilesListViewEvent.NavigateToProfileEdit(profileId))
   }
 
   @Test
   fun `should open lock screen when user wants to edit profile but lock scope is set to accounts`() {
     // given
     val profileId: Long = 123
-    whenever(getLockScreenSettingUseCase.invoke()).thenReturn(LockScreenScope.ACCOUNTS)
+    every { getLockScreenSettingUseCase.invoke() } returns LockScreenScope.ACCOUNTS
 
     // when
-    viewModel.onEditProfileClick(profileId)
+    viewModel.onEditClicked(profileId)
 
     // then
-    assertThat(events).containsExactly(ProfilesViewEvent.NavigateToLockScreen(UnlockAction.AuthorizeAccountsEdit(profileId)))
+    assertThat(events).containsExactly(ProfilesListViewEvent.NavigateToLockScreen(UnlockAction.AuthorizeAccountsEdit(profileId)))
   }
 
   @Test
   fun `should open new profile view`() {
     // given
-    whenever(getLockScreenSettingUseCase.invoke()).thenReturn(LockScreenScope.NONE)
+    every { getLockScreenSettingUseCase.invoke() } returns LockScreenScope.NONE
 
     // when
-    viewModel.onCreateProfileClick()
+    viewModel.onAddAccount()
 
     // then
-    assertThat(events).containsExactly(ProfilesViewEvent.NavigateToProfileCreate)
+    assertThat(events).containsExactly(ProfilesListViewEvent.NavigateToProfileCreate)
   }
 
   @Test
   fun `should open lock screen when user wants to add profile but lock scope is set to accounts`() {
     // given
-    whenever(getLockScreenSettingUseCase.invoke()).thenReturn(LockScreenScope.ACCOUNTS)
+    every { getLockScreenSettingUseCase.invoke() } returns LockScreenScope.ACCOUNTS
 
     // when
-    viewModel.onCreateProfileClick()
+    viewModel.onAddAccount()
 
     // then
-    assertThat(events).containsExactly(ProfilesViewEvent.NavigateToLockScreen(UnlockAction.AuthorizeAccountsCreate))
+    assertThat(events).containsExactly(ProfilesListViewEvent.NavigateToLockScreen(UnlockAction.AuthorizeAccountsCreate))
   }
 }

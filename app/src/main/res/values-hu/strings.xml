@@ -719,4 +719,8 @@
   <string name="developer_info_activated">Fejlesztői mód aktiválva</string>
   <string name="developer_info_screen_orientation">Képernyőforgatás engedélyezve</string>
   <string name="developer_info_settings">Kísérleti beállítások</string>
+  <string name="profiles_list_sorting">Rendezés</string>
+  <string name="profiles_list_sorting_default">Alapértelmezett</string>
+  <string name="profiles_list_sorting_name">Név</string>
+  <string name="profiles_list_sorting_added">Utoljára hozzáadott</string>
 </resources>

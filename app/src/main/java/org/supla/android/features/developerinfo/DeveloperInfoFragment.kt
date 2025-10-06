@@ -18,22 +18,16 @@ package org.supla.android.features.developerinfo
  */
 
 import android.net.Uri
-import android.os.Bundle
-import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.Composable
 import androidx.fragment.app.viewModels
-import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
-import org.supla.android.R
 import org.supla.android.core.infrastructure.storage.DebugFileLoggingTree
 import org.supla.android.core.infrastructure.storage.FileExporter
 import org.supla.android.core.storage.ApplicationPreferences
-import org.supla.android.core.ui.BaseFragment
+import org.supla.android.core.ui.BaseComposeFragment
 import org.supla.android.core.ui.theme.SuplaTheme
-import org.supla.android.databinding.FragmentComposeBinding
 import org.supla.android.db.room.measurements.MeasurementsDatabase
 import org.supla.android.extensions.setupOrientationLock
 import org.supla.android.navigator.MainNavigator
@@ -42,9 +36,8 @@ import java.io.File
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class DeveloperInfoFragment : BaseFragment<DeveloperInfoViewModelState, DeveloperInfoViewEvent>(R.layout.fragment_compose) {
+class DeveloperInfoFragment : BaseComposeFragment<DeveloperInfoViewModelState, DeveloperInfoViewEvent>() {
   override val viewModel: DeveloperInfoViewModel by viewModels()
-  private val binding by viewBinding(FragmentComposeBinding::bind)
 
   @Inject
   internal lateinit var navigator: MainNavigator
@@ -70,16 +63,12 @@ class DeveloperInfoFragment : BaseFragment<DeveloperInfoViewModelState, Develope
     ActivityResultContracts.CreateDocument("application/octet-stream")
   ) { uri: Uri? -> performFileExport(uri, debugFileLoggingTree.logFile) }
 
-  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-    super.onViewCreated(view, savedInstanceState)
-
-    binding.composeContent.setContent {
-      val modelState by viewModel.getViewState().collectAsState()
-      SuplaTheme {
-        viewModel.View(
-          viewState = modelState.state
-        )
-      }
+  @Composable
+  override fun ComposableContent(modelState: DeveloperInfoViewModelState) {
+    SuplaTheme {
+      viewModel.View(
+        viewState = modelState.state
+      )
     }
   }
 

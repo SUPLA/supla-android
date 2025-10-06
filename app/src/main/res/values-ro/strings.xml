@@ -721,4 +721,8 @@
   <string name="developer_info_activated">Modul dezvoltator a fost activat</string>
   <string name="developer_info_screen_orientation">Rotirea ecranului activată</string>
   <string name="developer_info_settings">Setări experimentale</string>
+  <string name="profiles_list_sorting">Sortare</string>
+  <string name="profiles_list_sorting_default">Implicit</string>
+  <string name="profiles_list_sorting_name">Nume</string>
+  <string name="profiles_list_sorting_added">Adăugat cel mai recent</string>
 </resources>

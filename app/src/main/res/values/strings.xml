@@ -866,4 +866,8 @@
   <plurals name="second_pattern" translatable="false">
     <item quantity="other">%1$d sec</item>
   </plurals>
+  <string name="profiles_list_sorting">Sorting</string>
+  <string name="profiles_list_sorting_default">Default</string>
+  <string name="profiles_list_sorting_name">Name</string>
+  <string name="profiles_list_sorting_added">Last added</string>
 </resources>

@@ -720,4 +720,8 @@
   <string name="developer_info_activated">Režim pre vývojárov aktivovaný</string>
   <string name="developer_info_screen_orientation">Otočenie obrazovky povolené</string>
   <string name="developer_info_settings">Experimentálne nastavenia</string>
+  <string name="profiles_list_sorting">Zoradenie</string>
+  <string name="profiles_list_sorting_default">Predvolené</string>
+  <string name="profiles_list_sorting_name">Názov</string>
+  <string name="profiles_list_sorting_added">Naposledy pridané</string>
 </resources>

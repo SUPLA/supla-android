@@ -807,4 +807,8 @@
   <string name="developer_option">Entwickleroptionen</string>
   <string name="developer_info_screen_orientation">Bildschirmdrehung aktiviert</string>
   <string name="developer_info_settings">Experimentelle Einstellungen</string>
+  <string name="profiles_list_sorting">Sortierung</string>
+  <string name="profiles_list_sorting_default">Standard</string>
+  <string name="profiles_list_sorting_name">Name</string>
+  <string name="profiles_list_sorting_added">Zuletzt hinzugefügt</string>
 </resources>

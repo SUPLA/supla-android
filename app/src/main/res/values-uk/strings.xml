@@ -693,4 +693,8 @@
   <string name="developer_info_activated">Режим розробника активовано</string>
   <string name="developer_info_screen_orientation">Обертання екрана ввімкнено</string>
   <string name="developer_info_settings">Експериментальні налаштування</string>
+  <string name="profiles_list_sorting">Сортування</string>
+  <string name="profiles_list_sorting_default">За замовчуванням</string>
+  <string name="profiles_list_sorting_name">Назва</string>
+  <string name="profiles_list_sorting_added">Останнє додавання</string>
 </resources>
