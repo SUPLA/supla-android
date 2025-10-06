@@ -84,7 +84,8 @@ class Migration26to27 @Inject constructor() : Migration(26, 27), SqlExecutor {
         authKey = byteArrayOf(0)
       ),
       advancedAuthSetup = false,
-      isActive = false
+      isActive = false,
+      position = 0
     )
   }
 

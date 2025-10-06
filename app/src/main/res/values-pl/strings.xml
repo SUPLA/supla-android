@@ -839,4 +839,8 @@
   <plurals name="second_pattern" tools:ignore="MissingQuantity">
     <item quantity="other">%1$d sek.</item>
   </plurals>
+  <string name="profiles_list_sorting">Sortowanie</string>
+  <string name="profiles_list_sorting_default">Domyślne</string>
+  <string name="profiles_list_sorting_name">Nazwa</string>
+  <string name="profiles_list_sorting_added">Ostatnio dodane</string>
 </resources>

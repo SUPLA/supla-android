@@ -26,7 +26,7 @@
 
   <fragment
     android:id="@+id/cfgProfiles"
-    android:name="org.supla.android.cfg.ProfilesFragment"
+    android:name="org.supla.android.features.profileslist.ProfilesListFragment"
     android:label="@string/profiles_title">
     <action
       android:id="@+id/editProfile"

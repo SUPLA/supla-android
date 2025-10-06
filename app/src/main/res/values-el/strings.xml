@@ -716,4 +716,8 @@
   <string name="developer_info_activated">Λειτουργία προγραμματιστή ενεργοποιήθηκε</string>
   <string name="developer_info_screen_orientation">Ενεργοποιήθηκε η περιστροφή οθόνης</string>
   <string name="developer_info_settings">Πειραματικές ρυθμίσεις</string>
+  <string name="profiles_list_sorting">Ταξινόμηση</string>
+  <string name="profiles_list_sorting_default">Προεπιλογή</string>
+  <string name="profiles_list_sorting_name">Όνομα</string>
+  <string name="profiles_list_sorting_added">Τελευταία προσθήκη</string>
 </resources>

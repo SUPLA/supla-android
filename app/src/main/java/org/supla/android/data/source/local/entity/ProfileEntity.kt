@@ -41,6 +41,7 @@ data class ProfileEntity(
   @ColumnInfo(name = COLUMN_PREFERRED_PROTOCOL_VERSION) val preferredProtocolVersion: Int?,
   @ColumnInfo(name = COLUMN_ACTIVE) val active: Boolean?,
   @ColumnInfo(name = COLUMN_ADVANCED_MODE) val advancedMode: Boolean?,
+  @ColumnInfo(name = COLUMN_POSITION, defaultValue = "0") val position: Int,
   @ColumnInfo(name = COLUMN_GUID, typeAffinity = ColumnInfo.BLOB) val guid: ByteArray?,
   @ColumnInfo(name = COLUMN_AUTH_KEY, typeAffinity = ColumnInfo.BLOB) val authKey: ByteArray?,
 ) {
@@ -72,6 +73,7 @@ data class ProfileEntity(
       put(COLUMN_PREFERRED_PROTOCOL_VERSION, preferredProtocolVersion)
       put(COLUMN_ACTIVE, active)
       put(COLUMN_ADVANCED_MODE, advancedMode)
+      put(COLUMN_POSITION, position)
       put(COLUMN_GUID, guid)
       put(COLUMN_AUTH_KEY, authKey)
     }
@@ -94,28 +96,9 @@ data class ProfileEntity(
     const val COLUMN_PREFERRED_PROTOCOL_VERSION = "pref_protcol_ver"
     const val COLUMN_ACTIVE = "is_active"
     const val COLUMN_ADVANCED_MODE = "is_advanced"
+    const val COLUMN_POSITION = "position"
     const val COLUMN_GUID = "guid"
     const val COLUMN_AUTH_KEY = "auth_key"
-
-    val SQL = """
-      CREATE TABLE $TABLE_NAME
-      (
-        $COLUMN_ID INTEGER PRIMARY KEY,
-        $COLUMN_NAME TEXT NOT NULL UNIQUE,
-        $COLUMN_EMAIL TEXT,
-        $COLUMN_SERVER_FOR_ACCESS_ID TEXT,
-        $COLUMN_SERVER_FOR_EMAIL TEXT,
-        $COLUMN_SERVER_AUTO_DETECT INTEGER NOT NULL,
-        $COLUMN_EMAIL_AUTH INTEGER NOT NULL,
-        $COLUMN_ACCESS_ID INTEGER,
-        $COLUMN_ACCESS_ID_PASSWORD TEXT,
-        $COLUMN_PREFERRED_PROTOCOL_VERSION INTEGER,
-        $COLUMN_ACTIVE INTEGER,
-        $COLUMN_ADVANCED_MODE INTEGER,
-        $COLUMN_GUID BLOB,
-        $COLUMN_AUTH_KEY BLOB
-      )
-    """.trimIndent()
 
     val ALL_COLUMNS = arrayOf(
       COLUMN_ID,
@@ -130,6 +113,7 @@ data class ProfileEntity(
       COLUMN_PREFERRED_PROTOCOL_VERSION,
       COLUMN_ACTIVE,
       COLUMN_ADVANCED_MODE,
+      COLUMN_POSITION,
       COLUMN_GUID,
       COLUMN_AUTH_KEY
     )
@@ -147,6 +131,7 @@ data class ProfileEntity(
       $COLUMN_PREFERRED_PROTOCOL_VERSION,
       $COLUMN_ACTIVE,
       $COLUMN_ADVANCED_MODE,
+      $COLUMN_POSITION,
       $COLUMN_GUID,
       $COLUMN_AUTH_KEY
     """
@@ -172,6 +157,7 @@ data class ProfileEntity(
     if (preferredProtocolVersion != other.preferredProtocolVersion) return false
     if (active != other.active) return false
     if (advancedMode != other.advancedMode) return false
+    if (position != other.position) return false
     if (!guid.contentEquals(other.guid)) return false
     return authKey.contentEquals(other.authKey)
   }
@@ -189,6 +175,7 @@ data class ProfileEntity(
     result = 31 * result + (preferredProtocolVersion ?: 0)
     result = 31 * result + active.hashCode()
     result = 31 * result + advancedMode.hashCode()
+    result = 31 * result + position.hashCode()
     result = 31 * result + guid.contentHashCode()
     result = 31 * result + authKey.contentHashCode()
     return result

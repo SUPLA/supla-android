@@ -30,6 +30,7 @@ import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.data.source.local.entity.ProfileEntity.Companion.ALL_COLUMNS_STRING
 import org.supla.android.data.source.local.entity.ProfileEntity.Companion.COLUMN_ACTIVE
 import org.supla.android.data.source.local.entity.ProfileEntity.Companion.COLUMN_ID
+import org.supla.android.data.source.local.entity.ProfileEntity.Companion.COLUMN_POSITION
 import org.supla.android.data.source.local.entity.ProfileEntity.Companion.TABLE_NAME
 
 @Dao
@@ -56,7 +57,7 @@ abstract class ProfileDao {
   )
   abstract suspend fun findActiveProfileKtx(): ProfileEntity
 
-  @Query("SELECT $ALL_COLUMNS_STRING FROM $TABLE_NAME")
+  @Query("SELECT $ALL_COLUMNS_STRING FROM $TABLE_NAME ORDER BY $COLUMN_POSITION, $COLUMN_ID")
   abstract fun findAllProfiles(): Observable<List<ProfileEntity>>
 
   @Query("SELECT $ALL_COLUMNS_STRING FROM $TABLE_NAME")
@@ -92,4 +93,16 @@ abstract class ProfileDao {
 
   @Query("SELECT ($COLUMN_ID) FROM $TABLE_NAME")
   abstract fun count(): Observable<Int>
+
+  @Query("UPDATE $TABLE_NAME SET $COLUMN_POSITION = :order WHERE $COLUMN_ID = :id")
+  abstract fun setOrder(id: Long, order: Int)
+
+  @Transaction
+  open fun setOrder(orderedIds: List<Long>) {
+    var orderNo = 1
+    orderedIds.forEach { setOrder(it, orderNo++) }
+  }
+
+  fun setItemsOrder(orderedIds: List<Long>): Completable =
+    Completable.fromRunnable { setOrder(orderedIds) }
 }

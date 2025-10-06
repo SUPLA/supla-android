@@ -22,6 +22,7 @@ package org.supla.android.ui.views.spinner
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -147,6 +148,8 @@ fun <T : SpinnerItem> TextSpinner(
   enabled: Boolean = true,
   active: Boolean = true,
   labelTextColor: Color = colorResource(id = R.color.on_surface_variant),
+  labelAlignment: Alignment.Horizontal = Alignment.Start,
+  labelPadding: PaddingValues = PaddingValues(0.dp),
   onOptionSelected: (selectedId: T) -> Unit
 ) {
   var expanded by remember { mutableStateOf(false) }
@@ -157,7 +160,9 @@ fun <T : SpinnerItem> TextSpinner(
       Text(
         text = stringResource(id = it).uppercase(),
         style = MaterialTheme.typography.bodySmall,
-        color = labelTextColor
+        color = labelTextColor,
+        modifier = Modifier.align(labelAlignment).padding(labelPadding),
+        maxLines = 1
       )
     }
     ExposedDropdownMenuBox(
@@ -168,7 +173,7 @@ fun <T : SpinnerItem> TextSpinner(
       Row(verticalAlignment = Alignment.CenterVertically) {
         Text(
           text = selectedOptionText,
-          style = MaterialTheme.typography.bodyMedium,
+          style = MaterialTheme.typography.bodySmall,
           color = if (enabled) MaterialTheme.colorScheme.onBackground else MaterialTheme.colorScheme.outline,
           modifier = Modifier
             .menuAnchor(MenuAnchorType.PrimaryEditable)

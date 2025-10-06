@@ -41,5 +41,7 @@ class RoomProfileRepository @Inject constructor(private val profileDao: ProfileD
 
   fun deleteProfile(profileEntity: ProfileEntity) = profileDao.delete(profileEntity)
 
+  fun setItemsOrder(orderedIds: List<Long>) = profileDao.setItemsOrder(orderedIds)
+
   override fun count(): Observable<Int> = profileDao.count()
 }

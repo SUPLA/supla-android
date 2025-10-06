@@ -719,4 +719,8 @@
   <string name="developer_info_activated">Utviklermodus aktivert</string>
   <string name="developer_info_screen_orientation">Skjermrotasjon aktivert</string>
   <string name="developer_info_settings">Eksperimentelle innstillinger</string>
+  <string name="profiles_list_sorting">Sortering</string>
+  <string name="profiles_list_sorting_default">Standard</string>
+  <string name="profiles_list_sorting_name">Navn</string>
+  <string name="profiles_list_sorting_added">Sist lagt til</string>
 </resources>

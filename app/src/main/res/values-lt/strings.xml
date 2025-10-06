@@ -697,4 +697,8 @@
   <string name="developer_info_activated">Kūrėjo režimas aktyvuotas</string>
   <string name="developer_info_screen_orientation">Ekrano pasukimas įjungtas</string>
   <string name="developer_info_settings">Eksperimentiniai nustatymai</string>
+  <string name="profiles_list_sorting">Rūšiavimas</string>
+  <string name="profiles_list_sorting_default">Numatytasis</string>
+  <string name="profiles_list_sorting_name">Pavadinimas</string>
+  <string name="profiles_list_sorting_added">Paskiausiai pridėtas</string>
 </resources>

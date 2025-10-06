@@ -707,4 +707,8 @@
   <string name="developer_info_activated">Modo de desarrollador activado</string>
   <string name="developer_info_screen_orientation">Rotación de pantalla activada</string>
   <string name="developer_info_settings">Ajustes experimentales</string>
+  <string name="profiles_list_sorting">Ordenar</string>
+  <string name="profiles_list_sorting_default">Predeterminado</string>
+  <string name="profiles_list_sorting_name">Nombre</string>
+  <string name="profiles_list_sorting_added">Último añadido</string>
 </resources>

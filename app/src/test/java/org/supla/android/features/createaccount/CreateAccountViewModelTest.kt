@@ -556,7 +556,8 @@ class CreateAccountViewModelTest : BaseViewModelTest<CreateAccountViewState, Cre
         accessIDpwd = "Test password"
       ),
       advancedAuthSetup = true,
-      isActive = true
+      isActive = true,
+      position = 0
     )
   }
 
@@ -573,7 +574,8 @@ class CreateAccountViewModelTest : BaseViewModelTest<CreateAccountViewState, Cre
         accessIDpwd = ""
       ),
       advancedAuthSetup = false,
-      isActive = false
+      isActive = false,
+      position = 0
     )
   }
 }

@@ -36,7 +36,8 @@ data class CreateAccountViewState(
       accessIDpwd = accessIdentifierPassword
     ),
     advancedAuthSetup = advancedMode,
-    isActive = false
+    isActive = false,
+    position = 0
   )
 
   fun updateProfile(profile: AuthProfileItem): AuthProfileItem {
