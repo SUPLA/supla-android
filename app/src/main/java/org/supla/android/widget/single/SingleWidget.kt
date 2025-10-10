@@ -92,6 +92,7 @@ class SingleWidget : WidgetProviderBase() {
 
       views.setViewVisibility(R.id.single_widget_removed_label, View.GONE)
     } else {
+      views.setViewVisibility(R.id.single_widget_text, View.GONE)
       views.setViewVisibility(R.id.single_widget_button, View.GONE)
       views.setViewVisibility(R.id.single_widget_button_night_mode, View.GONE)
       views.setViewVisibility(R.id.single_widget_removed_label, View.VISIBLE)
