@@ -42,6 +42,7 @@ sealed interface EspConfigurationEvent {
 
   data object NetworkConnected : EspConfigurationEvent
   data object NetworkConnectionFailure : EspConfigurationEvent
+  data object NetworkConnectionInternalError : EspConfigurationEvent
 
   data object EspConfigured : EspConfigurationEvent
   data object SetupNeeded : EspConfigurationEvent
