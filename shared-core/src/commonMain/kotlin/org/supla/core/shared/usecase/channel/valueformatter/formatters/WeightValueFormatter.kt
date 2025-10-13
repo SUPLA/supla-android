@@ -39,7 +39,7 @@ object WeightValueFormatter : ValueFormatter() {
   override fun format(value: Any?, format: ValueFormat): String {
     val doubleValue = value.toDouble()
     return if (abs(doubleValue) >= 2000) {
-      WeightHeavyValueFormatter.format(doubleValue, format)
+      WeightHeavyValueFormatter.format(doubleValue.div(1000), format)
     } else {
       WeightLightValueFormatter.format(doubleValue, format)
     }

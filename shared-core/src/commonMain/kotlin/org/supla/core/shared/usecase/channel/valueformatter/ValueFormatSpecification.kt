@@ -29,7 +29,8 @@ import org.supla.core.shared.usecase.channel.valueformatter.types.RainPrecision
 import org.supla.core.shared.usecase.channel.valueformatter.types.ValuePrecision
 import org.supla.core.shared.usecase.channel.valueformatter.types.ValueUnit
 import org.supla.core.shared.usecase.channel.valueformatter.types.VoltagePrecision
-import org.supla.core.shared.usecase.channel.valueformatter.types.WeightPrecision
+import org.supla.core.shared.usecase.channel.valueformatter.types.WeightDefaultPrecision
+import org.supla.core.shared.usecase.channel.valueformatter.types.WeightKiloPrecision
 
 data class ValueFormatSpecification(
   val precision: ValuePrecision,
@@ -108,12 +109,12 @@ data class ValueFormatSpecification(
       )
     val WeightKilo =
       ValueFormatSpecification(
-        precision = WeightPrecision,
+        precision = WeightKiloPrecision,
         unit = ValueUnit.WEIGHT_KILO.toString()
       )
     val WeightDefault =
       ValueFormatSpecification(
-        precision = WeightPrecision,
+        precision = WeightDefaultPrecision,
         unit = ValueUnit.WEIGHT_DEFAULT.toString()
       )
     val DistanceMilli =

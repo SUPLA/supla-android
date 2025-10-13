@@ -44,10 +44,11 @@ fun exactPrecision(value: Int): ValuePrecision = pack(value, value)
 val DefaultPrecision = ValuePrecision.exact(1)
 
 val PressurePrecision = ValuePrecision.exact(0)
+val WeightDefaultPrecision = ValuePrecision.exact(0)
 val GpmPrecision = ValuePrecision.exact(2)
 val VoltagePrecision = ValuePrecision.exact(2)
 val RainPrecision = ValuePrecision.exact(2)
-val WeightPrecision = ValuePrecision.exact(2)
+val WeightKiloPrecision = ValuePrecision.exact(2)
 val ImpulseCounterPrecision = ValuePrecision.exact(3)
 
 val DistanceMilliPrecision = ValuePrecision.exact(0)
