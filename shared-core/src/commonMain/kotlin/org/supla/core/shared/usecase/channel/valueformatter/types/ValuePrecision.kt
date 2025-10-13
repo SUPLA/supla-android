@@ -53,7 +53,7 @@ val ImpulseCounterPrecision = ValuePrecision.exact(3)
 
 val DistanceMilliPrecision = ValuePrecision.exact(0)
 val DistanceCentiPrecision = ValuePrecision.exact(1)
-val DistanceDefaultPrecision = ValuePrecision.exact(2)
+val DistanceDefaultPrecision = ValuePrecision.exact(1)
 
 val PercentageDefaultPrecision = ValuePrecision.exact(0)
 
