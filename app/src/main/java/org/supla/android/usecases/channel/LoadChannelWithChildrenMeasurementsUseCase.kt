@@ -36,7 +36,7 @@ import javax.inject.Singleton
 class LoadChannelWithChildrenMeasurementsUseCase @Inject constructor(
   private val readChannelWithChildrenUseCase: ReadChannelWithChildrenUseCase,
   private val temperatureMeasurementsProvider: TemperatureMeasurementsProvider,
-  private val temperatureAndHumidityMeasurementsProvider: TemperatureAndHumidityMeasurementsProvider,
+  private val temperatureAndHumidityMeasurementsProvider: TemperatureAndHumidityMeasurementsProvider
 ) {
 
   operator fun invoke(

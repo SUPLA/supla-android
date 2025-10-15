@@ -27,13 +27,22 @@ sealed interface SuplaClientState {
   fun nextState(event: SuplaClientEvent): SuplaClientState?
 
   data object Initialization : SuplaClientState {
+    private var initialized = false
+    private var started = false
+
     override fun nextState(event: SuplaClientEvent): SuplaClientState? {
       return when (event) {
-        SuplaClientEvent.OnStart,
+        SuplaClientEvent.OnStart -> {
+          started = true
+          if (initialized) Connecting() else null
+        }
         SuplaClientEvent.NetworkConnected -> null
 
         SuplaClientEvent.Lock -> Locked
-        SuplaClientEvent.Initialized -> Connecting()
+        SuplaClientEvent.Initialized -> {
+          initialized = true
+          if (started) Connecting() else null
+        }
         SuplaClientEvent.NoAccount -> FirstProfileCreation
         else -> {
           throw IllegalStateException("Unexpected event in Initialization: $event")

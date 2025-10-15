@@ -23,14 +23,13 @@ import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.PublishSubject
 import org.supla.android.Preferences
 import org.supla.android.R
-import org.supla.android.Trace
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.networking.suplaclient.DelayableState
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
-import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.model.temperature.TemperatureCorrection
 import org.supla.android.data.source.local.calendar.DayOfWeek
 import org.supla.android.data.source.local.calendar.QuarterOfHour
@@ -45,11 +44,10 @@ import org.supla.android.data.source.remote.hvac.SuplaWeeklyScheduleEntry
 import org.supla.android.data.source.remote.hvac.SuplaWeeklyScheduleProgram
 import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
 import org.supla.android.data.source.remote.isAutomaticTimeSyncDisabled
+import org.supla.android.di.FORMATTER_THERMOMETER
 import org.supla.android.events.ChannelConfigEventsManager
 import org.supla.android.events.DeviceConfigEventsManager
 import org.supla.android.events.LoadingTimeoutManager
-import org.supla.android.extensions.TAG
-import org.supla.android.extensions.guardLet
 import org.supla.android.extensions.toSuplaTemperature
 import org.supla.android.features.details.thermostatdetail.schedule.data.ProgramSettingsData
 import org.supla.android.features.details.thermostatdetail.schedule.data.QuartersSelectionData
@@ -64,10 +62,15 @@ import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT
 import org.supla.android.lib.SuplaConst.SUPLA_CHANNELFNC_HVAC_THERMOSTAT_HEAT_COOL
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.core.shared.data.model.general.SuplaFunction
+import org.supla.core.shared.extensions.guardLet
 import org.supla.core.shared.extensions.ifFalse
+import org.supla.core.shared.usecase.channel.valueformatter.DefaultValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
+import timber.log.Timber
 import java.util.Calendar
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import javax.inject.Named
 
 private const val REFRESH_DELAY_MS = 3000L
 private const val DEFAULT_HEAT_TEMPERATURE = 21f
@@ -75,14 +78,15 @@ private const val DEFAULT_WATER_TEMPERATURE = 40f
 
 @HiltViewModel
 class ScheduleDetailViewModel @Inject constructor(
-  private val valuesFormatter: ValuesFormatter,
-  private val suplaClientProvider: SuplaClientProvider,
+  private val delayedWeeklyScheduleConfigSubject: DelayedWeeklyScheduleConfigSubject,
   private val channelConfigEventsManager: ChannelConfigEventsManager,
   private val deviceConfigEventsManager: DeviceConfigEventsManager,
-  private val delayedWeeklyScheduleConfigSubject: DelayedWeeklyScheduleConfigSubject,
+  private val applicationPreferences: ApplicationPreferences,
   private val loadingTimeoutManager: LoadingTimeoutManager,
-  private val preferences: Preferences,
+  private val suplaClientProvider: SuplaClientProvider,
   private val dateProvider: DateProvider,
+  private val preferences: Preferences,
+  @Named(FORMATTER_THERMOMETER) private val thermometerValueFormatter: ValueFormatter,
   schedulers: SuplaSchedulers
 ) : BaseViewModel<ScheduleDetailViewState, ScheduleDetailViewEvent>(ScheduleDetailViewState(), schedulers), ScheduleDetailViewProxy {
 
@@ -258,7 +262,7 @@ class ScheduleDetailViewModel @Inject constructor(
     changeProgramTemperature(
       programMode,
       modeForTemperature,
-      { valuesFormatter.getTemperatureString(it.toDouble(), withDegree = false) },
+      { DefaultValueFormatter.format(it.toDouble()) },
       { it.plus(correction.step()) },
       true
     )
@@ -435,13 +439,13 @@ class ScheduleDetailViewModel @Inject constructor(
           selectedMode = programBox.modeForModify,
           setpointTemperatureHeat = heatTemperature,
           setpointTemperatureCool = coolTemperature,
-          setpointTemperatureHeatString = valuesFormatter.getTemperatureString(heatTemperature, withDegree = false),
-          setpointTemperatureCoolString = valuesFormatter.getTemperatureString(coolTemperature, withDegree = false),
+          setpointTemperatureHeatString = thermometerValueFormatter.format(heatTemperature),
+          setpointTemperatureCoolString = thermometerValueFormatter.format(coolTemperature),
           setpointTemperatureCoolPlusAllowed = coolTemperature < state.configTemperatureMax,
           setpointTemperatureCoolMinusAllowed = coolTemperature > state.configTemperatureMin,
           setpointTemperatureHeatPlusAllowed = heatTemperature < state.configTemperatureMax,
           setpointTemperatureHeatMinusAllowed = heatTemperature > state.configTemperatureMin,
-          temperatureUnit = preferences.temperatureUnit
+          temperatureUnit = applicationPreferences.temperatureUnit
         )
       }
     }
@@ -471,7 +475,7 @@ class ScheduleDetailViewModel @Inject constructor(
   }
 
   private fun onConfigLoaded(data: LoadedData) {
-    Trace.i(TAG, "Schedule detail got data: $data")
+    Timber.i("Schedule detail got data: $data")
 
     if (data.weeklyScheduleResult != ConfigResult.RESULT_TRUE || data.defaultResult != ConfigResult.RESULT_TRUE) {
       return
@@ -487,17 +491,17 @@ class ScheduleDetailViewModel @Inject constructor(
 
     updateState {
       if (it.changing) {
-        Trace.d(TAG, "update skipped because of changing")
+        Timber.d("update skipped because of changing")
         return@updateState it // Do not change anything, when user makes manual operations
       }
       if (it.lastInteractionTime != null && it.lastInteractionTime + REFRESH_DELAY_MS > System.currentTimeMillis()) {
-        Trace.d(TAG, "update skipped because of last interaction time")
+        Timber.d("update skipped because of last interaction time")
         updateSubject.onNext(0)
         return@updateState it // Do not change anything during 3 secs after last user interaction
       }
       val thermostatFunction = data.defaultConfig.subfunction
 
-      Trace.d(TAG, "updating state with data")
+      Timber.d("updating state with data")
       it.copy(
         loadingState = it.loadingState.changingLoading(false, dateProvider),
         channelFunction = channelFunction,

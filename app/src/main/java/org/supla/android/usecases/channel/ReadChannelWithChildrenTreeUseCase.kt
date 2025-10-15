@@ -18,12 +18,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import io.reactivex.rxjava3.core.Observable
-import org.supla.android.Trace
 import org.supla.android.data.source.ChannelRelationRepository
 import org.supla.android.data.source.RoomChannelRepository
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
-import org.supla.android.extensions.TAG
+import timber.log.Timber
 import java.util.LinkedList
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -43,8 +42,8 @@ class ReadChannelWithChildrenTreeUseCase @Inject constructor(
       .flatMap { (relationMap, entities) ->
         val channel = entities.firstOrNull { it.remoteId == remoteId }
         if (channel == null) {
-          Trace.w(TAG, "Could not find channel where channels tree was requested!")
-          return@flatMap Observable.empty()
+          Timber.w("Could not find channel where channels tree was requested!")
+          return@flatMap Observable.error(NoSuchElementException())
         }
         val channelsMap = mutableMapOf<Int, ChannelDataEntity>().also { map -> entities.forEach { map[it.remoteId] = it } }
         val childrenList = LinkedList<Int>()

@@ -21,7 +21,8 @@ import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.ui.views.card.SummaryCardData
 import org.supla.android.usecases.channel.GetChannelValueUseCase
 import org.supla.android.usecases.channel.measurements.ElectricityMeasurements
-import org.supla.android.usecases.channel.valueformatter.ListElectricityMeterValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatSpecification
+import org.supla.core.shared.usecase.channel.valueformatter.formatters.ElectricityMeterValueFormatter
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -40,7 +41,7 @@ class NoExtendedValueStateHandler @Inject constructor(
     }
 
     val value: Double = getChannelValueUseCase(channelWithChildren)
-    val formatter = ListElectricityMeterValueFormatter(useNoValue = false)
+    val formatter = ElectricityMeterValueFormatter(ValueFormatSpecification.ElectricityMeterForGeneral.copy(showNoValueText = true))
 
     return state.copyOrCreate(
       online = channelWithChildren.status.online,

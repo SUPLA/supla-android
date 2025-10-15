@@ -202,10 +202,6 @@ public class ChannelGroup extends ChannelBase {
     return getMinMaxTemperature(true, false);
   }
 
-  public CharSequence getHumanReadableValue(WhichOne whichOne) {
-    return null;
-  }
-
   public CharSequence getHumanReadableValue() {
     if (getFunc() == SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS) {
       return getHumanReadableThermostatTemperature(

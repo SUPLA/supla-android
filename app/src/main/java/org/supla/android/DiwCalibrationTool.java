@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.core.content.res.ResourcesCompat;
 import org.supla.android.lib.SuplaConst;
+import timber.log.Timber;
 
 public class DiwCalibrationTool extends DimmerCalibrationTool
     implements SuplaRangeCalibrationWheel.OnChangeListener {
@@ -57,7 +58,7 @@ public class DiwCalibrationTool extends DimmerCalibrationTool
 
   @Override
   protected void onSuperuserOnAuthorizarionSuccess() {
-    Trace.d("calcfg", "onSuperuserOnAuthorizarionSuccess");
+    Timber.d("calcfg: %s", "onSuperuserOnAuthorizarionSuccess");
     calCfgRequest(DIW_CMD_ENTER_CFG_MODE);
   }
 

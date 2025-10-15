@@ -22,8 +22,7 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
-import org.supla.android.Trace
-import org.supla.android.extensions.TAG
+import timber.log.Timber
 import javax.inject.Inject
 
 private const val DATA_KEY_PROFILE_NAME = "profileName"
@@ -41,7 +40,7 @@ class NotificationMessagingService : FirebaseMessagingService() {
   lateinit var notificationsHelper: NotificationsHelper
 
   override fun onMessageReceived(message: RemoteMessage) {
-    Trace.d(TAG, "Got FCM message")
+    Timber.d("Got FCM message")
 
     message.data.let { data ->
       val title = data[DATA_KEY_TITLE_LOCALIZED]?.let {
@@ -52,7 +51,7 @@ class NotificationMessagingService : FirebaseMessagingService() {
       } ?: data[DATA_KEY_BODY]
 
       if (body != null) {
-        Trace.d(TAG, "Notification shown from data")
+        Timber.d("Notification shown from data")
         notificationsHelper.showNotification(baseContext, title, body, message.data[DATA_KEY_PROFILE_NAME])
         return
       }
@@ -72,7 +71,7 @@ class NotificationMessagingService : FirebaseMessagingService() {
       }
 
       if (text != null) {
-        Trace.d(TAG, "Notification shown from notification")
+        Timber.d("Notification shown from notification")
         notificationsHelper.showNotification(baseContext, title, text, message.data[DATA_KEY_PROFILE_NAME])
       }
     }

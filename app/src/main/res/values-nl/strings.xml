@@ -224,7 +224,7 @@
   <string name="associeted_with_scene_error">U kunt de functie van het kanaal dat gerelateerd is aan de scène niet wijzigen.</string>
   <string name="battery_health">Levensduur van de batterij</string>
   <string name="battery_level">Batterijniveau</string>
-  <string name="battery_powered">Batterijstroomvoorziening</string>
+  <string name="state_power_supply">Voeding</string>
   <string name="belongs_to_group_error">U kunt de functie van een kanaal dat bij een groep hoort niet veranderen.</string>
   <string name="bridge">Brug</string>
   <string name="bridge_node_online">Brugknooppunt - online</string>
@@ -252,7 +252,7 @@
   <string name="light_source_lifespan">Levensduur van de lichtbron</string>
   <string name="light_source_lifespan_hours">Levensduur lichtbron (uren)</string>
   <string name="light_source_operatingtime">Lichtbron werktijd</string>
-  <string name="lightsource_warning">De levensduur van de lichtbron is %1$s</string>
+  <string name="channel_lightsource_warning">De levensduur van de lichtbron is %1$.01f%%</string>
   <string name="mode_change_in_progress">De moduswijziging is aan de gang</string>
   <string name="no">Nee</string>
   <string name="reset_lightsource_usage_counter">Gebruiksteller lichtbron resetten</string>
@@ -264,8 +264,8 @@
   <string name="soft_ver">Software versie</string>
   <string name="time_exceeded">De tijd is om. Probeer het nog eens.</string>
   <string name="uptime">Werktijd</string>
-  <string name="uv_warning1">De levensduur van de uv-lamp is %1$s. Plan de vervanging ervan.</string>
-  <string name="uv_warning2">De levensduur van de uv-lamp is %1$s. Vervang de lamp.</string>
+  <string name="channel_uv_warning">De levensduur van de uv-lamp is %1$.01f%%. Plan de vervanging ervan.</string>
+  <string name="channel_uv_error">De levensduur van de uv-lamp is %1$.01f%%. Vervang de lamp.</string>
   <string name="valve_warning_manually_closed">De klep is handmatig of per radio gesloten. Voordat u het opent, moet u ervoor zorgen dat ze niet is gesloten vanwege wateroverlast. Om de waarschuwing uit te schakelen, opent u de klep handmatig. Weet u zeker dat u de klep vanuit de app wilt openen?!</string>
   <string name="valve_warning">De klep is handmatig of per radio gesloten. Voordat u ze opent, moet u ervoor zorgen dat het niet is gesloten vanwege wateroverlast. Om de waarschuwing uit te schakelen, opent u de klep handmatig.</string>
   <string name="vector_balance_days">Vector saldo - Dagen</string>
@@ -709,4 +709,15 @@
   <string name="wizard_state_finishing">Afronding…</string>
   <string name="add_wizard_password_instruction">Gebruik het wachtwoord dat is gebruikt voor toegang tot de lokale configuratie webpagina.\n\nWachtwoord vergeten? Je kunt het wijzigen op Supla Cloud of het apparaat terugzetten naar de fabrieksinstellingen.</string>
   <string name="add_wizard_manual_reconnect">De netwerkverbinding met het apparaat is handmatig tot stand gebracht. Zorg ervoor dat uw telefoon opnieuw verbinding heeft met internet en vervolg het proces.</string>
+  <string name="channel_state_battery_powered">batterij</string>
+  <string name="channel_state_main_powered">netstroom</string>
+  <string name="cfg_temperature_precision">Temperatuurnauwkeurigheid</string>
+  <string name="temperature_measured">Gemeten</string>
+  <string name="temperature_preset">Vooraf ingesteld</string>
+  <string name="thermostat_detail_antifreeze_active">Vorstbeveiliging actief</string>
+  <string name="thermostat_detail_overheat_active">Oververhittingsbeveiliging actief</string>
+  <string name="developer_option">Ontwikkelaarsopties</string>
+  <string name="developer_info_activated">Ontwikkelaarsmodus geactiveerd</string>
+  <string name="developer_info_screen_orientation">Schermrotatie ingeschakeld</string>
+  <string name="developer_info_settings">Experimentele instellingen</string>
 </resources>

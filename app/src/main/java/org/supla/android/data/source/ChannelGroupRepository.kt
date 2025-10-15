@@ -25,13 +25,14 @@ import org.supla.android.data.source.local.entity.ChannelGroupEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
 import org.supla.android.usecases.captionchange.CaptionChangeUseCase
 import org.supla.android.usecases.developerinfo.CountProvider
+import org.supla.android.usecases.profile.DeleteProfileUseCase
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class ChannelGroupRepository @Inject constructor(
   private val channelGroupDao: ChannelGroupDao
-) : CountProvider, CaptionChangeUseCase.Updater {
+) : CountProvider, CaptionChangeUseCase.Updater, DeleteProfileUseCase.ProfileRemover {
 
   fun findByRemoteId(remoteId: Int) = channelGroupDao.findByRemoteId(remoteId)
 
@@ -49,4 +50,6 @@ class ChannelGroupRepository @Inject constructor(
 
   override fun updateCaption(caption: String, remoteId: Int, profileId: Long): Completable =
     channelGroupDao.updateCaption(caption, remoteId, profileId)
+
+  override fun deleteByProfile(profileId: Long): Completable = channelGroupDao.deleteByProfile(profileId)
 }

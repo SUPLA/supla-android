@@ -24,9 +24,9 @@ import androidx.compose.ui.geometry.Size
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.supla.android.extensions.ifLet
 import org.supla.android.extensions.toPx
 import org.supla.android.features.details.thermostatdetail.schedule.ui.ScheduleDetailViewProxy
+import org.supla.core.shared.extensions.ifLet
 import kotlin.math.pow
 import kotlin.math.sqrt
 

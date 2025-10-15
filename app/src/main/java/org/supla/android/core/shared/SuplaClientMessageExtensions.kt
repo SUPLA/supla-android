@@ -17,12 +17,11 @@ package org.supla.android.core.shared
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.Trace
 import org.supla.android.data.source.remote.SuplaEventType
-import org.supla.android.extensions.TAG
 import org.supla.android.lib.SuplaEvent
 import org.supla.android.lib.SuplaOAuthToken
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
+import timber.log.Timber
 import java.net.URL
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -60,6 +59,6 @@ val SuplaClientMessage.OAuthToken.suplaToken: SuplaOAuthToken
     try {
       it.url = URL(url)
     } catch (exception: Exception) {
-      Trace.w(TAG, "Could not set url", exception)
+      Timber.w(exception, "Could not set url")
     }
   }

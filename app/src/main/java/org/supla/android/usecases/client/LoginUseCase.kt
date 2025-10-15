@@ -23,7 +23,7 @@ import io.reactivex.rxjava3.core.Single
 import org.supla.android.core.SuplaAppProvider
 import org.supla.android.core.infrastructure.ThreadHandler
 import org.supla.android.core.networking.suplaclient.SuplaClientMessageHandlerWrapper
-import org.supla.android.extensions.guardLet
+import org.supla.core.shared.extensions.guardLet
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessageHandler

@@ -21,19 +21,18 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.withTimeoutOrNull
 import okio.IOException
 import org.jsoup.nodes.Document
-import org.supla.android.Trace
 import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.data.source.remote.esp.EspConfigurationSession
 import org.supla.android.data.source.remote.esp.EspDeviceProtocol
 import org.supla.android.data.source.remote.esp.EspPostData
 import org.supla.android.data.source.remote.esp.EspService
-import org.supla.android.extensions.TAG
 import org.supla.android.extensions.isNotNull
 import org.supla.android.extensions.locationHeader
 import org.supla.android.features.addwizard.model.EspConfigResult
 import org.supla.android.features.addwizard.model.EspHtmlParser
 import retrofit2.HttpException
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.time.Duration.Companion.milliseconds
@@ -66,22 +65,22 @@ class ConfigureEspUseCase @Inject constructor(
     val getResult = performRequest(GET_RETRIES) { getRequest(fieldMap) }
     return when (getResult) {
       null -> {
-        Trace.w(TAG, "Could not connect to the ESP device")
+        Timber.w("Could not connect to the ESP device")
         Result.ConnectionError
       }
 
       is GetResult.CredentialsNeeded -> {
-        Trace.w(TAG, "Configuration broken, credentials needed")
+        Timber.w("Configuration broken, credentials needed")
         Result.CredentialsNeeded
       }
 
       is GetResult.SetupNeeded -> {
-        Trace.w(TAG, "Configuration broken, setup needed")
+        Timber.w("Configuration broken, setup needed")
         Result.SetupNeeded
       }
 
       is GetResult.TemporarilyLocked -> {
-        Trace.w(TAG, "Device temporarily locked")
+        Timber.w("Device temporarily locked")
         Result.TemporarilyLocked
       }
 
@@ -99,7 +98,7 @@ class ConfigureEspUseCase @Inject constructor(
 
     val espData = EspPostData(fieldMap)
     if (!espData.isCompatible || !result.isCompatible) {
-      Trace.w(TAG, "Got incompatible data")
+      Timber.w("Got incompatible data")
       return Result.Incompatible
     }
 
@@ -109,11 +108,11 @@ class ConfigureEspUseCase @Inject constructor(
     espData.email = profile.email
 
     if (espData.softwareUpdate.isNotNull) {
-      Trace.i(TAG, "Turning on software update")
+      Timber.i("Turning on software update")
       espData.softwareUpdate = true
     }
     if (espData.protocol.isNotNull) {
-      Trace.i(TAG, "Setting supla protocol")
+      Timber.i("Setting supla protocol")
       espData.protocol = EspDeviceProtocol.Supla
     }
 
@@ -136,7 +135,7 @@ class ConfigureEspUseCase @Inject constructor(
           return it
         }
       } catch (exception: Exception) {
-        Trace.e(TAG, "Could not perform request", exception)
+        Timber.e(exception, "Could not perform request")
       }
     }
 
@@ -151,11 +150,11 @@ class ConfigureEspUseCase @Inject constructor(
       return GetResult.Success(espHtmlParser.prepareResult(document, fieldMap))
     } catch (exception: HttpException) {
       val code = exception.code()
-      Trace.e(TAG, "Request failed (code: $code)", exception)
+      Timber.e(exception, "Request failed (code: $code)")
 
       if (code == 301) {
         if (exception.locationHeader?.startsWith("https://") == true) {
-          Trace.i(TAG, "Recognized secured connection, changing to https")
+          Timber.i("Recognized secured connection, changing to https")
           session.useSecureLayer = true
         }
       } else if (code == 303) {
@@ -169,19 +168,19 @@ class ConfigureEspUseCase @Inject constructor(
       }
       return null
     } catch (exception: Exception) {
-      Trace.e(TAG, "Request failed", exception)
+      Timber.e(exception, "Request failed")
       return null
     }
   }
 
   private suspend fun rebootRequest(espData: EspPostData) {
-    Trace.i(TAG, "Data saved, trying to reboot")
+    Timber.i("Data saved, trying to reboot")
     espData.reboot = true
     try {
       storeRequest(espData.fieldMap)
-      Trace.i(TAG, "Reboot accepted")
+      Timber.i("Reboot accepted")
     } catch (exception: IOException) {
-      Trace.w(TAG, "Reboot request failed", exception)
+      Timber.w(exception, "Reboot request failed")
     }
   }
 

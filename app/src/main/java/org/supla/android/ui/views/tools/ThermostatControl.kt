@@ -120,6 +120,7 @@ fun ThermostatControl(
   maxSetpoint: Float? = null,
   isOff: Boolean = false,
   isOffline: Boolean = false,
+  isDisabled: Boolean = false,
   isHeating: Boolean = false,
   isCooling: Boolean = false,
   currentPower: Float? = null,
@@ -183,32 +184,39 @@ fun ThermostatControl(
   val maxPointConfig = ControlPointConfig.build(maxSetpoint, maxPointColor, maxPointShadowColor, maxPointIcon) { lastMaxSetpoint = it }
 
   Canvas(
-    modifier = modifier.pointerInteropFilter {
-      when (it.action) {
-        MotionEvent.ACTION_DOWN -> {
-          initialTouchPoint = Offset(it.x, it.y)
-          currentTouchPoint = Offset(it.x, it.y)
+    modifier = modifier
+      .let {
+        if (isDisabled) {
+          it
+        } else {
+          it.pointerInteropFilter {
+            when (it.action) {
+              MotionEvent.ACTION_DOWN -> {
+                initialTouchPoint = Offset(it.x, it.y)
+                currentTouchPoint = Offset(it.x, it.y)
 
-          centerPointState?.let { center ->
-            outerRadiusState?.let { radius ->
-              val distance = center.distanceTo(initialTouchPoint)!!
-              if (distance > radius - touchPointRadius.toPx() && distance < radius) {
-                onPositionChangeStarted()
+                centerPointState?.let { center ->
+                  outerRadiusState?.let { radius ->
+                    val distance = center.distanceTo(initialTouchPoint)!!
+                    if (distance > radius - touchPointRadius.toPx() && distance < radius) {
+                      onPositionChangeStarted()
+                    }
+                  }
+                }
+              }
+
+              MotionEvent.ACTION_MOVE -> currentTouchPoint = Offset(it.x, it.y)
+              MotionEvent.ACTION_UP -> {
+                onPositionChangeEnded(lastMinSetpoint, lastMaxSetpoint)
+                initialTouchPoint = null
+                currentTouchPoint = null
               }
             }
+
+            true
           }
         }
-
-        MotionEvent.ACTION_MOVE -> currentTouchPoint = Offset(it.x, it.y)
-        MotionEvent.ACTION_UP -> {
-          onPositionChangeEnded(lastMinSetpoint, lastMaxSetpoint)
-          initialTouchPoint = null
-          currentTouchPoint = null
-        }
       }
-
-      true
-    }
   ) {
     val availableRadius = size.width.div(2).minus(paddings.toPx().times(2)) // half of width minus paddings
     val outerRadius = min(desiredRadius.toPx(), availableRadius)

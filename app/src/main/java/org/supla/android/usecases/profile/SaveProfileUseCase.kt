@@ -18,7 +18,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import io.reactivex.rxjava3.core.Completable
-import org.supla.android.Preferences
 import org.supla.android.db.AuthProfileItem
 import org.supla.android.profile.ProfileIdHolder
 import org.supla.android.profile.ProfileManager
@@ -28,15 +27,21 @@ import javax.inject.Singleton
 @Singleton
 class SaveProfileUseCase @Inject constructor(
   private val profileManager: ProfileManager,
-  private val preferences: Preferences,
   private val profileIdHolder: ProfileIdHolder
 ) {
 
   operator fun invoke(profile: AuthProfileItem): Completable =
     profileManager.getAllProfiles()
+      .firstOrError()
       .flatMapCompletable { validation(profile, it) }
       .andThen(save(profile))
-      .andThen(setAccountRegistered(profile))
+      .andThen(
+        Completable.fromRunnable {
+          if (profile.isActive) {
+            profileIdHolder.profileId = profile.id
+          }
+        }
+      )
 
   private fun save(profile: AuthProfileItem): Completable = if (profile.id == null) {
     profileManager.create(profile)
@@ -48,7 +53,7 @@ class SaveProfileUseCase @Inject constructor(
     profile: AuthProfileItem,
     allProfiles: List<AuthProfileItem>
   ): Completable = Completable.fromRunnable {
-    if (allProfiles.isNotEmpty() && profile.name.isEmpty() && preferences.isAnyAccountRegistered) {
+    if (allProfiles.isNotEmpty() && profile.name.isEmpty()) {
       throw SaveAccountException.EmptyName
     } else if (isNameDuplicated(profile, allProfiles)) {
       throw SaveAccountException.DuplicatedName
@@ -65,13 +70,6 @@ class SaveProfileUseCase @Inject constructor(
       .filter { it.id != profile.id }
       // New profile name is trimmed by creation. Old profile name may not be trimmed!
       .firstOrNull { it.name.trim() == profile.name } != null
-
-  private fun setAccountRegistered(profile: AuthProfileItem): Completable = Completable.fromRunnable {
-    if (preferences.isAnyAccountRegistered.not()) {
-      preferences.isAnyAccountRegistered = true
-      profileIdHolder.profileId = profile.id
-    }
-  }
 
   sealed class SaveAccountException : RuntimeException(null, null) {
     data object EmptyName : SaveAccountException() {

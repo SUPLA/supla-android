@@ -19,7 +19,6 @@ package org.supla.android.usecases.channelconfig
 
 import androidx.room.rxjava3.EmptyResultSetException
 import io.reactivex.rxjava3.core.Completable
-import org.supla.android.Trace
 import org.supla.android.data.source.ChannelConfigRepository
 import org.supla.android.data.source.GeneralPurposeMeterLogRepository
 import org.supla.android.data.source.RoomProfileRepository
@@ -32,9 +31,9 @@ import org.supla.android.data.source.remote.gpm.SuplaChannelGeneralPurposeMeterC
 import org.supla.android.data.source.remote.hvac.SuplaChannelHvacConfig
 import org.supla.android.data.source.remote.rollershutter.SuplaChannelFacadeBlindConfig
 import org.supla.android.events.DownloadEventsManager
-import org.supla.android.extensions.TAG
-import org.supla.android.extensions.ifLet
 import org.supla.core.shared.data.model.general.SuplaFunction
+import org.supla.core.shared.extensions.ifLet
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -53,36 +52,36 @@ class InsertChannelConfigUseCase @Inject constructor(
 
     ifLet(config as? SuplaChannelContainerConfig) { (config) ->
       return profileRepository.findActiveProfile().flatMapCompletable {
-        Trace.d(TAG, "Saving config (remoteId: `${config.remoteId}`, function: `${config.func}`) - container")
+        Timber.d("Saving config (remoteId: `${config.remoteId}`, function: `${config.func}`) - container")
         channelConfigRepository.insertOrUpdate(it.id!!, config)
       }
     }
     ifLet(config as? SuplaChannelHvacConfig) { (config) ->
       return profileRepository.findActiveProfile().flatMapCompletable {
-        Trace.d(TAG, "Saving config (remoteId: `${config.remoteId}`, function: `${config.func}`) - hvac")
+        Timber.d("Saving config (remoteId: `${config.remoteId}`, function: `${config.func}`) - hvac")
         channelConfigRepository.insertOrUpdate(it.id!!, config)
       }
     }
     ifLet(config as? SuplaChannelGeneralPurposeMeasurementConfig) { (config) ->
       return profileRepository.findActiveProfile().flatMapCompletable {
-        Trace.d(TAG, "Saving config (remoteId: `${config.remoteId}`, function: `${config.func}`) - measurement")
+        Timber.d("Saving config (remoteId: `${config.remoteId}`, function: `${config.func}`) - measurement")
         channelConfigRepository.insertOrUpdate(it.id!!, config)
       }
     }
     // Order is important as the SuplaChannelFacadeBlindConfig is child of SuplaChannelRollerShutterConfig
     ifLet(config as? SuplaChannelFacadeBlindConfig) { (config) ->
       return profileRepository.findActiveProfile().flatMapCompletable {
-        Trace.d(TAG, "Saving config (remoteId: `${config.remoteId}`, function: `${config.func}`) - facade blind")
+        Timber.d("Saving config (remoteId: `${config.remoteId}`, function: `${config.func}`) - facade blind")
         channelConfigRepository.insertOrUpdate(it.id!!, config)
       }
     }
     ifLet(config as? SuplaChannelGeneralPurposeMeterConfig) { (config) ->
       return profileRepository.findActiveProfile().flatMapCompletable { profile ->
-        Trace.d(TAG, "Saving config (remoteId: `${config.remoteId}`, function: `${config.func}`) - meter")
+        Timber.d("Saving config (remoteId: `${config.remoteId}`, function: `${config.func}`) - meter")
         channelConfigRepository.findChannelConfig(profile.id!!, config.remoteId, ChannelConfigType.GENERAL_PURPOSE_METER)
           .flatMapCompletable { oldConfig ->
             if (shouldCleanupHistory(oldConfig, config)) {
-              Trace.d(TAG, "Cleaning history (remoteId: `${config.remoteId}`, function: `${config.func}`)")
+              Timber.d("Cleaning history (remoteId: `${config.remoteId}`, function: `${config.func}`)")
               generalPurposeMeterLogRepository.delete(config.remoteId, profile.id)
                 .andThen(
                   Completable.fromRunnable {
@@ -105,13 +104,13 @@ class InsertChannelConfigUseCase @Inject constructor(
       }
     }
 
-    Trace.w(TAG, "Got config which cannot be stored (remoteId: `${config?.remoteId}`, function: `${config?.func}`)")
+    Timber.w("Got config which cannot be stored (remoteId: `${config?.remoteId}`, function: `${config?.func}`)")
 
     ifLet(config) { (config) ->
       // if could not store try to delete
       if (shouldHandle(config)) {
         return profileRepository.findActiveProfile().flatMapCompletable {
-          Trace.d(TAG, "Saving config (remoteId: `${config.remoteId}`, function: `${config.func}`)")
+          Timber.d("Saving config (remoteId: `${config.remoteId}`, function: `${config.func}`)")
           channelConfigRepository.delete(it.id!!, config.remoteId)
         }
       }

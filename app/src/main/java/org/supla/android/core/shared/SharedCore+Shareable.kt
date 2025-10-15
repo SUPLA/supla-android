@@ -19,6 +19,7 @@ package org.supla.android.core.shared
 
 import org.supla.android.data.model.general.ChannelDataBase
 import org.supla.android.data.source.local.entity.ChannelRelationEntity
+import org.supla.android.data.source.local.entity.ChannelStateEntity
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.ChannelGroupDataEntity
@@ -27,17 +28,21 @@ import org.supla.android.data.source.local.entity.complex.shareable
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.core.shared.data.model.channel.ChannelChild
 import org.supla.core.shared.data.model.channel.ChannelRelation
+import org.supla.core.shared.data.model.channel.ChannelState
 import org.supla.core.shared.data.model.general.BaseData
 import org.supla.core.shared.data.model.general.Channel
 import org.supla.core.shared.data.model.general.Group
+import org.supla.core.shared.extensions.ifTrue
 
 val ChannelDataBase.shareable: BaseData
   get() = when (this) {
     is ChannelDataEntity -> Channel(
       remoteId = remoteId,
       caption = caption,
+      altIcon = altIcon,
       function = function,
       batteryInfo = batteryInfo,
+      channelState = stateEntity?.shareable,
       status = status,
       value = channelValueEntity.getValueAsByteArray()
     )
@@ -69,4 +74,18 @@ val ChannelWithChildren.shareable: org.supla.core.shared.data.model.channel.Chan
   get() = org.supla.core.shared.data.model.channel.ChannelWithChildren(
     channel = channel.shareable,
     children = children.map { it.shareable }
+  )
+
+val ChannelStateEntity.shareable: ChannelState
+  get() = ChannelState(
+    lightSourceLifespan = lightSourceLifespan,
+    lightSourceLifespanLeft = lightSourceLifespanLeft,
+    lightSourceOperatingTimePercentLeft =
+    lightSourceOperatingTime
+      ?.let { lightSourceOperatingTime ->
+        lightSourceLifespan?.let { lightSourceLifespan ->
+          (lightSourceLifespan > 0).ifTrue { lightSourceOperatingTime / 36f / lightSourceLifespan }
+        }
+      }
+      ?.let { 100 - it }
   )

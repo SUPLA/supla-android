@@ -23,13 +23,14 @@ import org.supla.android.data.source.local.dao.LocationDao
 import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.usecases.captionchange.CaptionChangeUseCase
 import org.supla.android.usecases.developerinfo.CountProvider
+import org.supla.android.usecases.profile.DeleteProfileUseCase
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class LocationRepository @Inject constructor(
   private val locationDao: LocationDao
-) : CountProvider, CaptionChangeUseCase.Updater {
+) : CountProvider, CaptionChangeUseCase.Updater, DeleteProfileUseCase.ProfileRemover {
 
   fun findByRemoteId(remoteId: Int) = locationDao.findByRemoteId(remoteId)
 
@@ -39,4 +40,6 @@ class LocationRepository @Inject constructor(
 
   override fun updateCaption(caption: String, remoteId: Int, profileId: Long): Completable =
     locationDao.updateCaption(caption, remoteId, profileId)
+
+  override fun deleteByProfile(profileId: Long): Completable = locationDao.deleteByProfile(profileId)
 }

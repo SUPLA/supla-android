@@ -26,10 +26,10 @@ import androidx.annotation.NonNull;
 import java.nio.ByteBuffer;
 import org.supla.android.data.source.local.entity.ChannelValueEntity;
 import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus;
-import org.supla.android.lib.DigiglassValue;
 import org.supla.android.lib.RollerShutterValue;
 import org.supla.android.lib.SuplaConst;
 import org.supla.core.shared.data.model.function.container.ContainerValue;
+import org.supla.core.shared.data.model.function.digiglass.DigiglassValue;
 import org.supla.core.shared.data.model.function.thermostat.ThermostatValue;
 
 public class ChannelValue extends DbItem {
@@ -175,65 +175,6 @@ public class ChannelValue extends DbItem {
     return -1;
   }
 
-  public double getTemp(int func) {
-    if (Value != null) {
-
-      if (func == SuplaConst.SUPLA_CHANNELFNC_HUMIDITYANDTEMPERATURE) {
-
-        byte[] t = getChannelValue();
-
-        if (t.length >= 4) {
-
-          byte[] i = new byte[4];
-          i[0] = t[3];
-          i[1] = t[2];
-          i[2] = t[1];
-          i[3] = t[0];
-
-          return ByteBuffer.wrap(i).getInt() / 1000.00;
-        }
-
-      } else if (func == SuplaConst.SUPLA_CHANNELFNC_THERMOMETER) {
-
-        return getDouble(-275);
-      } else if (func == SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS) {
-
-        byte[] t = getChannelValue();
-        if (t.length >= 4) {
-          short x = (short) (t[3] & 0xFF);
-          x <<= 8;
-          x |= (short) (t[2] & 0xFF);
-
-          return x * 0.01;
-        }
-      }
-    }
-
-    return -273;
-  }
-
-  public double getMeasuredTemp(int func) {
-    return getTemp(func);
-  }
-
-  public double getPresetTemp(int func) {
-    if (Value != null) {
-      if (func == SuplaConst.SUPLA_CHANNELFNC_THERMOSTAT_HEATPOL_HOMEPLUS) {
-
-        byte[] t = getChannelValue();
-        if (t.length >= 6) {
-          short x = (short) (t[5] & 0xFF);
-          x <<= 8;
-          x |= (short) (t[4] & 0xFF);
-
-          return x * 0.01;
-        }
-      }
-    }
-
-    return -273;
-  }
-
   public double getDistance() {
     return getDouble(-1);
   }
@@ -309,28 +250,6 @@ public class ChannelValue extends DbItem {
     return result;
   }
 
-  public double getTotalForwardActiveEnergy(boolean subValue) {
-
-    byte[] t = subValue ? getChannelSubValue() : getChannelValue();
-
-    if (t.length >= 5) {
-
-      byte[] i = new byte[4];
-      i[0] = t[4];
-      i[1] = t[3];
-      i[2] = t[2];
-      i[3] = t[1];
-
-      return ByteBuffer.wrap(i).getInt() / 100.00;
-    }
-
-    return 0.00;
-  }
-
-  public double getTotalForwardActiveEnergy() {
-    return getTotalForwardActiveEnergy(false);
-  }
-
   public long getLong(boolean subValue) {
     byte[] t = subValue ? getChannelSubValue() : getChannelValue();
 
@@ -348,50 +267,16 @@ public class ChannelValue extends DbItem {
     return 0;
   }
 
-  public double getImpulseCounterCalculatedValue(boolean subValue) {
-    return getLong(subValue) / 1000.0;
-  }
-
-  public double getImpulseCounterCalculatedValue() {
-    return getImpulseCounterCalculatedValue(false);
-  }
-
-  public boolean isManuallyClosed() {
-    byte[] value = getChannelValue();
-
-    return value.length > 1 && (value[1] & SuplaConst.SUPLA_VALVE_FLAG_MANUALLY_CLOSED) > 0;
-  }
-
-  public boolean flooding() {
-    byte[] value = getChannelValue();
-
-    return value.length > 1 && (value[1] & SuplaConst.SUPLA_VALVE_FLAG_FLOODING) > 0;
-  }
-
   public DigiglassValue getDigiglassValue() {
-    return new DigiglassValue(getChannelValue());
+    return DigiglassValue.Companion.from(
+        getOnLine()
+            ? SuplaChannelAvailabilityStatus.ONLINE
+            : SuplaChannelAvailabilityStatus.OFFLINE,
+        getChannelValue());
   }
 
   public RollerShutterValue getRollerShutterValue() {
     return new RollerShutterValue(getChannelValue());
-  }
-
-  public boolean overcurrentRelayOff() {
-    byte[] value = getChannelValue();
-
-    return value.length > 1 && (value[1] & SuplaConst.SUPLA_RELAY_FLAG_OVERCURRENT_RELAY_OFF) > 0;
-  }
-
-  public boolean calibrationFailed() {
-    return (getRollerShutterValue().getFlags() & SuplaConst.RS_VALUE_FLAG_CALIBRATION_FAILED) > 0;
-  }
-
-  public boolean calibrationLost() {
-    return (getRollerShutterValue().getFlags() & SuplaConst.RS_VALUE_FLAG_CALIBRATION_LOST) > 0;
-  }
-
-  public boolean motorProblem() {
-    return (getRollerShutterValue().getFlags() & SuplaConst.RS_VALUE_FLAG_MOTOR_PROBLEM) > 0;
   }
 
   public ThermostatValue asThermostatValue() {

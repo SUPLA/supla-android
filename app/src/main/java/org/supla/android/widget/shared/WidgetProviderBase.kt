@@ -23,7 +23,7 @@ import android.content.Context
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
-import org.supla.android.Trace
+import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.extensions.getAllWidgetIds
 import org.supla.android.features.icons.LoadUserIconsIntoCacheWorker
 import org.supla.android.images.ImageCache
@@ -32,6 +32,8 @@ import org.supla.android.widget.INVALID_LONG
 import org.supla.android.widget.RemoveWidgetsWorker
 import org.supla.android.widget.WidgetConfiguration
 import org.supla.android.widget.WidgetPreferences
+import org.supla.core.shared.data.model.general.SuplaFunction
+import timber.log.Timber
 
 private const val WORK_ID_PREFIX = "ON_OF_WIDGET_"
 
@@ -44,7 +46,7 @@ abstract class WidgetProviderBase : AppWidgetProvider() {
     appWidgetManager: AppWidgetManager,
     appWidgetIds: IntArray
   ) {
-    Trace.i(TAG, "Updating widgets with ids: " + appWidgetIds.toReadableString())
+    Timber.i("Updating widgets with ids: %s", appWidgetIds.toReadableString())
 
     if (ImageCache.size() == 0) {
       // It seems that after some time when the application is in the background, the cache is destroyed.
@@ -64,7 +66,7 @@ abstract class WidgetProviderBase : AppWidgetProvider() {
     if (appWidgetIds == null) {
       return
     }
-    Trace.i(TAG, "Deleting widgets with ids: " + appWidgetIds.toReadableString())
+    Timber.i("Deleting widgets with ids: %s", appWidgetIds.toReadableString())
 
     val removeWidgetsWork = OneTimeWorkRequestBuilder<RemoveWidgetsWorker>()
       .setInputData(
@@ -81,9 +83,14 @@ abstract class WidgetProviderBase : AppWidgetProvider() {
     configuration: WidgetConfiguration?
   )
 
-  companion object {
-    private val TAG = WidgetProviderBase::class.simpleName
-  }
+  protected val ChannelEntity.isValueWidget: Boolean
+    get() = function == SuplaFunction.THERMOMETER ||
+      function == SuplaFunction.HUMIDITY_AND_TEMPERATURE ||
+      function == SuplaFunction.GENERAL_PURPOSE_METER ||
+      function == SuplaFunction.GENERAL_PURPOSE_MEASUREMENT ||
+      function == SuplaFunction.CONTAINER ||
+      function == SuplaFunction.WATER_TANK ||
+      function === SuplaFunction.SEPTIC_TANK
 }
 
 internal fun isWidgetValid(configuration: WidgetConfiguration) = configuration.visibility &&

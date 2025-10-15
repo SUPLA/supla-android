@@ -63,23 +63,14 @@ fun ChannelBase.isIconValueItem(): Boolean =
     function == SuplaFunction.IC_ELECTRICITY_METER ||
     function == SuplaFunction.FLOOD_SENSOR ||
     function == SuplaFunction.CONTAINER_LEVEL_SENSOR ||
-    function == SuplaFunction.WIND_SENSOR
+    function == SuplaFunction.WIND_SENSOR ||
+    function == SuplaFunction.DIGIGLASS_VERTICAL ||
+    function == SuplaFunction.DIGIGLASS_HORIZONTAL
 
 fun ChannelBase.isSwitch(): Boolean =
   function == SuplaFunction.LIGHTSWITCH ||
     function == SuplaFunction.POWER_SWITCH ||
     function == SuplaFunction.STAIRCASE_TIMER
-
-fun ChannelBase.isRgbw(): Boolean =
-  function == SuplaFunction.RGB_LIGHTING ||
-    function == SuplaFunction.DIMMER_AND_RGB_LIGHTING ||
-    function == SuplaFunction.DIMMER
-
-fun ChannelBase.isIconWithAction(): Boolean =
-  function == SuplaFunction.CONTROLLING_THE_GATE ||
-    function == SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK ||
-    function == SuplaFunction.CONTROLLING_THE_GARAGE_DOOR ||
-    function == SuplaFunction.CONTROLLING_THE_DOOR_LOCK
 
 fun ChannelBase.isGpm(): Boolean =
   function == SuplaFunction.GENERAL_PURPOSE_METER ||
@@ -103,12 +94,6 @@ fun ChannelBase.isImpulseCounter(): Boolean =
 fun ChannelBase.isThermometer() =
   function == SuplaFunction.THERMOMETER ||
     function == SuplaFunction.HUMIDITY_AND_TEMPERATURE
-
-fun ChannelBase.isFacadeBlind() =
-  function == SuplaFunction.CONTROLLING_THE_FACADE_BLIND
-
-fun ChannelBase.isVerticalBlind() =
-  function == SuplaFunction.VERTICAL_BLIND
 
 fun ChannelBase.isShadingSystem() =
   function == SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER ||

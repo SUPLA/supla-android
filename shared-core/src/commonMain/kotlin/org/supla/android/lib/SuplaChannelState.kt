@@ -61,8 +61,10 @@ data class SuplaChannelState(
   val batteryPowered: Boolean?
     get() = hasField(FIELD_BATTERYPOWERED).ifTrue { rawBatteryPowered > 0 }
 
-  val batterPoweredString: LocalizedString?
-    get() = batteryPowered?.let { localizedString(if (it) LocalizedStringId.GENERAL_YES else LocalizedStringId.GENERAL_NO) }
+  val batteryPoweredString: LocalizedString?
+    get() = batteryPowered?.let {
+      localizedString(if (it) LocalizedStringId.CHANNEL_STATE_BATTERY_POWERED else LocalizedStringId.CHANNEL_STATE_MAINS_POWERED)
+    }
 
   val wifiRssi: Int?
     get() = hasField(FIELD_WIFIRSSI).ifTrue { rawWifiRssi.toInt() }

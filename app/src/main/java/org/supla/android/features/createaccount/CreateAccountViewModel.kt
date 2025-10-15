@@ -20,17 +20,16 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.subscribeBy
-import org.supla.android.Preferences
-import org.supla.android.Trace
 import org.supla.android.core.ui.BaseViewModel
+import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.db.AuthProfileItem
-import org.supla.android.extensions.TAG
 import org.supla.android.features.deleteaccountweb.DeleteAccountWebFragment
 import org.supla.android.profile.ProfileManager
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.client.ReconnectUseCase
 import org.supla.android.usecases.profile.DeleteProfileUseCase
 import org.supla.android.usecases.profile.SaveProfileUseCase
+import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -45,20 +44,27 @@ while profile editing mode does not.
 @HiltViewModel
 class CreateAccountViewModel @Inject constructor(
   private val profileManager: ProfileManager,
-  private val preferences: Preferences,
-  schedulers: SuplaSchedulers,
   private val saveProfileUseCase: SaveProfileUseCase,
   private val deleteProfileUseCase: DeleteProfileUseCase,
-  private val reconnectUseCase: ReconnectUseCase
+  private val profileRepository: RoomProfileRepository,
+  private val reconnectUseCase: ReconnectUseCase,
+  schedulers: SuplaSchedulers
 ) : BaseViewModel<CreateAccountViewState, CreateAccountViewEvent>(CreateAccountViewState(), schedulers) {
 
   fun loadProfile(profileId: Long?) {
-    updateState {
-      it.copy(
-        profileNameVisible = preferences.isAnyAccountRegistered,
-        deleteButtonVisible = preferences.isAnyAccountRegistered && profileId != null
+    profileRepository.findAllProfiles()
+      .attach()
+      .subscribeBy(
+        onNext = { profiles ->
+          updateState {
+            it.copy(
+              profileNameVisible = profiles.isNotEmpty(),
+              deleteButtonVisible = profiles.isNotEmpty() && profileId != null
+            )
+          }
+        }
       )
-    }
+      .disposeBySelf()
 
     if (profileId != null) {
       profileManager.read(profileId)
@@ -66,7 +72,7 @@ class CreateAccountViewModel @Inject constructor(
         .subscribeBy(
           onSuccess = this::onProfileLoaded,
           onError = { throwable ->
-            Trace.e(TAG, "Could not find profile", throwable)
+            Timber.e(throwable, "Could not find profile")
           }
         )
         .disposeBySelf()
@@ -162,13 +168,18 @@ class CreateAccountViewModel @Inject constructor(
 
   private fun getSaveSingle(profileId: Long?, defaultName: String): Completable = profileId.let { id ->
     return@let if (id == null) {
-      Single.just(currentState().toProfileItem())
-        .map { it.also { it.isActive = preferences.isAnyAccountRegistered.not() } }
-        .flatMapCompletable { profile ->
-          if (preferences.isAnyAccountRegistered.not()) {
-            profile.name = defaultName
+      profileRepository.findAllProfiles()
+        .firstOrError()
+        .map { profiles ->
+          val firstProfile = profiles.isEmpty()
+          val item = currentState().toProfileItem()
+          item.isActive = firstProfile
+          if (firstProfile) {
+            item.name = defaultName
           }
-
+          item
+        }
+        .flatMapCompletable { profile ->
           saveProfileUseCase(profile).let { if (profile.isActive) it.andThen(reconnectUseCase()) else it }
         }
     } else {
@@ -227,7 +238,7 @@ class CreateAccountViewModel @Inject constructor(
         .attach()
         .subscribeBy(
           onSuccess = {
-            if (preferences.isAnyAccountRegistered.not()) {
+            if (it.noAccountsRegistered) {
               sendEvent(CreateAccountViewEvent.RestartFlow)
             } else {
               sendEvent(CreateAccountViewEvent.Close)
@@ -246,7 +257,7 @@ class CreateAccountViewModel @Inject constructor(
         .attach()
         .subscribeBy(
           onSuccess = {
-            val destination = if (preferences.isAnyAccountRegistered.not()) {
+            val destination = if (it.noAccountsRegistered) {
               DeleteAccountWebFragment.EndDestination.RESTART
             } else {
               DeleteAccountWebFragment.EndDestination.CLOSE
@@ -261,7 +272,9 @@ class CreateAccountViewModel @Inject constructor(
 
   private fun deleteAndGetReturnInfo(profile: AuthProfileItem): Single<RemovalBackInfo> =
     deleteProfileUseCase(profile.id)
-      .andThen(Single.just(RemovalBackInfo(profile.authInfo.serverAddress)))
+      .andThen(profileRepository.findAllProfiles())
+      .map { RemovalBackInfo(profile.authInfo.serverAddress, it.isEmpty()) }
+      .firstOrError()
 
   private fun Int.toAccessIdentifierString(): String = if (this == 0) {
     ""
@@ -270,6 +283,7 @@ class CreateAccountViewModel @Inject constructor(
   }
 
   private data class RemovalBackInfo(
-    val serverAddress: String?
+    val serverAddress: String?,
+    val noAccountsRegistered: Boolean
   )
 }

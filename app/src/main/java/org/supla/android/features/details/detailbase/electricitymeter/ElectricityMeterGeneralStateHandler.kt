@@ -34,14 +34,18 @@ import org.supla.android.data.source.remote.channel.hasForwardAndReverseEnergy
 import org.supla.android.data.source.remote.channel.suplaElectricityMeterMeasuredTypes
 import org.supla.android.data.source.remote.electricitymeter.getForwardEnergy
 import org.supla.android.data.source.remote.electricitymeter.getReverseEnergy
-import org.supla.android.extensions.guardLet
 import org.supla.android.lib.SuplaChannelElectricityMeterValue
 import org.supla.android.lib.SuplaChannelElectricityMeterValue.Measurement
 import org.supla.android.lib.SuplaChannelElectricityMeterValue.Summary
 import org.supla.android.usecases.channel.measurements.ElectricityMeasurements
-import org.supla.android.usecases.channel.valueformatter.ChannelValueFormatter
-import org.supla.android.usecases.channel.valueformatter.ListElectricityMeterValueFormatter
+import org.supla.core.shared.extensions.guardLet
 import org.supla.core.shared.extensions.ifTrue
+import org.supla.core.shared.usecase.channel.valueformatter.DefaultValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatSpecification
+import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.formatters.ElectricityMeterValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.types.ValueFormat
+import org.supla.core.shared.usecase.channel.valueformatter.types.customPrecision
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -50,6 +54,10 @@ class ElectricityMeterGeneralStateHandler @Inject constructor(
   private val noExtendedValueStateHandler: NoExtendedValueStateHandler,
   private val preferences: Preferences
 ) {
+
+  val defaultFormatter = DefaultValueFormatter
+  val emFormatter = ElectricityMeterValueFormatter(ValueFormatSpecification.ElectricityMeterForGeneral)
+
   fun updateState(
     state: ElectricityMeterState?,
     channelWithChildren: ChannelWithChildren,
@@ -65,24 +73,29 @@ class ElectricityMeterGeneralStateHandler @Inject constructor(
       .filter { channelWithChildren.flags and it.disabledFlag.rawValue == 0L }
       .size > 1
 
-    val formatter = ListElectricityMeterValueFormatter(useNoValue = false)
     val vectorBalancedValues = (moreThanOnePhase && allTypes.hasForwardAndReverseEnergy).ifTrue {
       mapOf(
-        FORWARD_ACTIVE_ENERGY_BALANCED to formatter.format(extendedValue.totalForwardActiveEnergyBalanced, withUnit = false),
-        REVERSE_ACTIVE_ENERGY_BALANCED to formatter.format(extendedValue.totalReverseActiveEnergyBalanced, withUnit = false)
+        FORWARD_ACTIVE_ENERGY_BALANCED to defaultFormatter.format(
+          extendedValue.totalForwardActiveEnergyBalanced,
+          format = ValueFormat.WithoutUnit
+        ),
+        REVERSE_ACTIVE_ENERGY_BALANCED to defaultFormatter.format(
+          extendedValue.totalReverseActiveEnergyBalanced,
+          format = ValueFormat.WithoutUnit
+        )
       )
     }
 
     return state.copyOrCreate(
       online = channelWithChildren.status.online,
-      totalForwardActiveEnergy = extendedValue.getForwardEnergy(formatter),
-      totalReversedActiveEnergy = extendedValue.getReverseEnergy(formatter),
-      currentMonthForwardActiveEnergy = measurements?.toForwardEnergy(formatter, extendedValue),
-      currentMonthReversedActiveEnergy = measurements?.toReverseEnergy(formatter, extendedValue),
+      totalForwardActiveEnergy = extendedValue.getForwardEnergy(emFormatter),
+      totalReversedActiveEnergy = extendedValue.getReverseEnergy(emFormatter),
+      currentMonthForwardActiveEnergy = measurements?.toForwardEnergy(emFormatter, extendedValue),
+      currentMonthReversedActiveEnergy = measurements?.toReverseEnergy(emFormatter, extendedValue),
       phaseMeasurementTypes = phaseTypes,
-      phaseMeasurementValues = getPhaseData(phaseTypes, channelWithChildren.flags, extendedValue, formatter),
+      phaseMeasurementValues = getPhaseData(phaseTypes, channelWithChildren.flags, extendedValue, defaultFormatter),
       vectorBalancedValues = vectorBalancedValues,
-      electricGridParameters = getGridParameters(channelWithChildren.flags, extendedValue, formatter),
+      electricGridParameters = getGridParameters(channelWithChildren.flags, extendedValue, defaultFormatter),
       showIntroduction = preferences.shouldShowEmGeneralIntroduction() && channelWithChildren.status.online && moreThanOnePhase
     )
   }
@@ -91,7 +104,7 @@ class ElectricityMeterGeneralStateHandler @Inject constructor(
     types: List<SuplaElectricityMeasurementType>,
     channelFlags: Long,
     extendedValue: SuplaChannelElectricityMeterValue,
-    formatter: ListElectricityMeterValueFormatter
+    formatter: ValueFormatter
   ): MutableList<PhaseWithMeasurements> {
     val phasesWithData =
       Phase.entries
@@ -110,7 +123,7 @@ class ElectricityMeterGeneralStateHandler @Inject constructor(
   private fun getGridParameters(
     channelFlags: Long,
     extendedValue: SuplaChannelElectricityMeterValue,
-    formatter: ListElectricityMeterValueFormatter
+    formatter: ValueFormatter
   ): Map<SuplaElectricityMeasurementType, String>? {
     val measuredValues = extendedValue.measuredValues.suplaElectricityMeterMeasuredTypes
     val result = mutableMapOf<SuplaElectricityMeasurementType, String>()
@@ -148,7 +161,7 @@ class ElectricityMeterGeneralStateHandler @Inject constructor(
 private fun PhaseWithMeasurements.Companion.allPhases(
   types: List<SuplaElectricityMeasurementType>,
   phasesWithData: List<PhaseWithData>,
-  formatter: ListElectricityMeterValueFormatter
+  formatter: ValueFormatter
 ): PhaseWithMeasurements {
   val values = types
     .associateWith { type -> phasesWithData.mapNotNull { type.provider?.invoke(it.measurement, it.summary) } }
@@ -161,15 +174,12 @@ private fun PhaseWithMeasurements.Companion.allPhases(
           formatter.custom(value.value, it.key.precision)
 
         is SuplaElectricityMeasurementType.Value.Double ->
-          "${formatter.custom(value.first, 0)}- ${formatter.custom(value.second, 0)}"
+          "${formatter.custom(value.first, 0)} - ${formatter.custom(value.second, 0)}"
       }
     }
 
   return PhaseWithMeasurements(R.string.em_chart_all_phases, values)
 }
-
-private fun ListElectricityMeterValueFormatter.custom(value: Float, precision: Int) =
-  format(value, withUnit = false, precision = ChannelValueFormatter.Custom(precision))
 
 private data class PhaseWithData(
   val phase: Phase,
@@ -178,7 +188,7 @@ private data class PhaseWithData(
 ) {
   fun toPhase(
     types: List<SuplaElectricityMeasurementType>,
-    formatter: ListElectricityMeterValueFormatter
+    formatter: ValueFormatter
   ): PhaseWithMeasurements {
     val values = types
       .associateWith { type -> type.provider?.invoke(measurement, summary)?.let { formatter.custom(it, type.precision) } }
@@ -188,3 +198,6 @@ private data class PhaseWithData(
     return PhaseWithMeasurements(phase.label, values)
   }
 }
+
+private fun ValueFormatter.custom(value: Float, precision: Int) =
+  format(value, format = customPrecision(precision))

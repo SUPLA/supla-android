@@ -49,7 +49,6 @@ import org.supla.android.data.source.remote.channel.suplaFlags
 import org.supla.android.data.source.remote.rest.SuplaCloudService
 import org.supla.android.events.DownloadEventsManager
 import org.supla.android.events.DownloadEventsManager.DataType
-import org.supla.android.extensions.guardLet
 import org.supla.android.features.details.detailbase.history.BaseHistoryDetailViewModel
 import org.supla.android.features.details.detailbase.history.HistoryDetailViewState
 import org.supla.android.features.details.detailbase.history.ui.ChartDataSelectionDialogState
@@ -70,6 +69,7 @@ import org.supla.core.shared.data.model.channel.ChannelRelationType
 import org.supla.core.shared.data.model.rest.channel.ChannelDto
 import org.supla.core.shared.data.model.rest.channel.ElectricityChannelDto
 import org.supla.core.shared.data.model.rest.channel.ElectricityMeterConfigDto
+import org.supla.core.shared.extensions.guardLet
 import org.supla.core.shared.extensions.ifTrue
 import javax.inject.Inject
 

@@ -20,25 +20,25 @@ package org.supla.android.db.room
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
-import org.supla.android.Trace
 import org.supla.android.db.DbHelper
+import timber.log.Timber
 
 interface SqlExecutor {
 
   fun getDatabaseNameForLog() = DbHelper.DATABASE_NAME
 
   fun execSQL(db: SupportSQLiteDatabase, sql: String) {
-    Trace.d("sql-statments/" + getDatabaseNameForLog(), sql)
+    Timber.d("sql-statements/%s: %s", getDatabaseNameForLog(), sql)
     db.execSQL(sql)
   }
 
   fun query(db: SupportSQLiteDatabase, sql: String): Cursor {
-    Trace.d("sql-statments/" + getDatabaseNameForLog(), sql)
+    Timber.d("sql-statements/%s: %s", getDatabaseNameForLog(), sql)
     return db.query(sql)
   }
 
   fun execSQL(db: SQLiteDatabase, sql: String) {
-    Trace.d("sql-statments/" + getDatabaseNameForLog(), sql)
+    Timber.d("sql-statements/%s: %s", getDatabaseNameForLog(), sql)
     db.execSQL(sql)
   }
 

@@ -19,12 +19,12 @@ package org.supla.android.features.details.thermostatdetail.ui
 
 import org.supla.android.R
 import org.supla.android.core.ui.StringProvider
-import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.data.source.remote.hvac.SuplaScheduleProgram
 import org.supla.android.data.source.remote.hvac.SuplaWeeklyScheduleProgram
 import org.supla.android.extensions.valuesFormatter
 import org.supla.core.shared.extensions.fromSuplaTemperature
+import org.supla.core.shared.usecase.channel.valueformatter.NO_VALUE_TEXT
 
 val SuplaWeeklyScheduleProgram.description: StringProvider
   get() = { context ->
@@ -42,7 +42,7 @@ val SuplaWeeklyScheduleProgram.description: StringProvider
         val maxTemperature = context.valuesFormatter.getTemperatureString(coolTemperature)
         "$minTemperature - $maxTemperature"
       }
-      else -> ValuesFormatter.NO_VALUE_TEXT
+      else -> NO_VALUE_TEXT
     }
   }
 

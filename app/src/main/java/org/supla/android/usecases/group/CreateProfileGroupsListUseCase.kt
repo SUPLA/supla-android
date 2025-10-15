@@ -30,7 +30,7 @@ class CreateProfileGroupsListUseCase @Inject constructor(
 
         location.let { locationEntity ->
           if (!locationEntity.isCollapsed(CollapsedFlag.GROUP)) {
-            groups.add(ListItem.ChannelItem(it, null, it.getLegacyGroup()))
+            groups.add(ListItem.ChannelItem(it, it.getLegacyGroup()))
           }
         }
       }

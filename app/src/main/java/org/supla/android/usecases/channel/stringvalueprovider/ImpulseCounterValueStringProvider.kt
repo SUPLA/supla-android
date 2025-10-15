@@ -17,16 +17,16 @@ package org.supla.android.usecases.channel.stringvalueprovider
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.data.ValuesFormatter.Companion.NO_VALUE_TEXT
 import org.supla.android.data.source.local.entity.complex.ImpulseCounter
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
-import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType
 import org.supla.android.usecases.channel.ChannelValueStringProvider
 import org.supla.android.usecases.channel.ValueType
-import org.supla.android.usecases.channel.valueformatter.ImpulseCounterValueFormatter
-import org.supla.android.usecases.channel.valueformatter.ListElectricityMeterValueFormatter
 import org.supla.android.usecases.channel.valueprovider.ImpulseCounterValueProvider
 import org.supla.core.shared.data.model.general.SuplaFunction
+import org.supla.core.shared.usecase.channel.valueformatter.formatters.ElectricityMeterValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.formatters.ImpulseCounterValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.types.ValueFormat
+import org.supla.core.shared.usecase.channel.valueformatter.types.withUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -36,7 +36,7 @@ class ImpulseCounterValueStringProvider @Inject constructor(
 ) : ChannelValueStringProvider {
 
   private val impulseCounterFormatter = ImpulseCounterValueFormatter()
-  private val electricityMeterFormatter = ListElectricityMeterValueFormatter()
+  private val electricityMeterFormatter = ElectricityMeterValueFormatter()
 
   override fun handle(channelWithChildren: ChannelWithChildren): Boolean =
     impulseCounterValueProvider.handle(channelWithChildren)
@@ -45,15 +45,13 @@ class ImpulseCounterValueStringProvider @Inject constructor(
     val channelData = channelWithChildren.channel
     val value = impulseCounterValueProvider.value(channelWithChildren, valueType)
 
-    if (value == ImpulseCounterValueProvider.UNKNOWN_VALUE) {
-      return NO_VALUE_TEXT
-    }
-
-    if (channelWithChildren.function == SuplaFunction.IC_ELECTRICITY_METER) {
-      return electricityMeterFormatter.format(value, withUnit, custom = SuplaElectricityMeasurementType.FORWARD_ACTIVE_ENERGY)
+    return if (channelWithChildren.function == SuplaFunction.IC_ELECTRICITY_METER) {
+      electricityMeterFormatter.format(value, ValueFormat(withUnit))
     } else {
-      val unit = channelData.ImpulseCounter.value?.unit?.let { ImpulseCounterValueFormatter.Data(it) }
-      return impulseCounterFormatter.format(value, withUnit, custom = unit)
+      impulseCounterFormatter.format(
+        value = value,
+        format = withUnit(withUnit = withUnit, unit = channelData.ImpulseCounter.value?.unit)
+      )
     }
   }
 }

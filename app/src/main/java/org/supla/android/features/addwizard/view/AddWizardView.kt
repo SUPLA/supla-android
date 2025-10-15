@@ -20,6 +20,7 @@ package org.supla.android.features.addwizard.view
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -34,8 +35,16 @@ import org.supla.android.features.addwizard.view.dialogs.SetPasswordScope
 import org.supla.android.features.addwizard.view.dialogs.WiFiListDialog
 import org.supla.android.features.addwizard.view.dialogs.WiFiListDialogScope
 import org.supla.android.ui.dialogs.AlertDialog
+import org.supla.android.ui.dialogs.Dialog
+import org.supla.android.ui.dialogs.DialogButtonsColumn
+import org.supla.android.ui.dialogs.DialogHeader
+import org.supla.android.ui.dialogs.DialogMessage
 import org.supla.android.ui.extensions.ifTrue
 import org.supla.android.ui.views.LoadingScrim
+import org.supla.android.ui.views.Separator
+import org.supla.android.ui.views.SeparatorStyle
+import org.supla.android.ui.views.buttons.Button
+import org.supla.android.ui.views.buttons.OutlinedButton
 
 interface AddWizardScope :
   AddWizardWelcomeScope,
@@ -86,14 +95,26 @@ fun AddWizardScope.View(modelState: AddWizardViewModelState) {
 
 @Composable
 private fun AddWizardScope.FollowupPopup() =
-  AlertDialog(
-    title = stringResource(R.string.add_device_needs_cloud_title),
-    message = stringResource(R.string.add_device_needs_cloud_message),
-    negativeButtonTitle = stringResource(R.string.add_device_needs_cloud_dismiss),
-    positiveButtonTitle = stringResource(R.string.add_device_needs_cloud_go),
-    onPositiveClick = { openCloud() },
-    onNegativeClick = { closeCloudDialog() }
-  )
+  Dialog(onDismiss = {}) {
+    DialogHeader(title = stringResource(R.string.add_device_needs_cloud_title))
+    Separator(style = SeparatorStyle.LIGHT)
+    DialogMessage(message = stringResource(R.string.add_device_needs_cloud_message))
+    Separator(style = SeparatorStyle.LIGHT)
+    DialogButtonsColumn {
+      OutlinedButton(
+        onClick = { closeCloudDialog() },
+        text = stringResource(R.string.add_device_needs_cloud_dismiss),
+        modifier = Modifier.fillMaxWidth(),
+        singleLine = true
+      )
+      Button(
+        onClick = { openCloud() },
+        text = stringResource(R.string.add_device_needs_cloud_go),
+        modifier = Modifier.fillMaxWidth(),
+        singleLine = true
+      )
+    }
+  }
 
 @Composable
 private fun AddWizardScope.ReconnectDialog() =

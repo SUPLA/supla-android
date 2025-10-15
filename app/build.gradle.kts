@@ -27,8 +27,8 @@ android {
     minSdk = libs.versions.minSdk.get().toInt()
     targetSdk = libs.versions.targetSdk.get().toInt()
     multiDexEnabled = true
-    versionCode = 297
-    versionName = "25.08"
+    versionCode = 304
+    versionName = "25.10"
 
     ndk {
       moduleName = "suplaclient"
@@ -180,6 +180,7 @@ dependencies {
   implementation(libs.guava)
   implementation(libs.reorderable)
   implementation(libs.google.barcode.scanner)
+  implementation(libs.timber)
 
   coreLibraryDesugaring(libs.android.tools.desugar)
 
@@ -230,9 +231,5 @@ spotless {
       )
     )
   }
-}
-
-composeCompiler {
-  featureFlags.add(ComposeFeatureFlag.StrongSkipping)
 }
 

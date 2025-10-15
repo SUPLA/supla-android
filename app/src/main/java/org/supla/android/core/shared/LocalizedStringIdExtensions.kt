@@ -139,6 +139,8 @@ val LocalizedStringId.resourceId: Int
     LocalizedStringId.ADD_WIZARD_STATE_FINISHING -> R.string.wizard_state_finishing
 
     LocalizedStringId.CHANNEL_STATE_UPTIME -> R.string.channel_state_uptime
+    LocalizedStringId.CHANNEL_STATE_BATTERY_POWERED -> R.string.channel_state_battery_powered
+    LocalizedStringId.CHANNEL_STATE_MAINS_POWERED -> R.string.channel_state_main_powered
     LocalizedStringId.LAST_CONNECTION_RESET_CAUSE_UNKNOWN -> R.string.lastconnectionresetcause_unknown
     LocalizedStringId.LAST_CONNECTION_RESET_CAUSE_ACTIVITY_TIMEOUT -> R.string.lastconnectionresetcause_activity_timeout
     LocalizedStringId.LAST_CONNECTION_RESET_CAUSE_WIFI_CONNECTION_LOST -> R.string.lastconnectionresetcause_wifi_connection_lost
@@ -154,4 +156,11 @@ val LocalizedStringId.resourceId: Int
     LocalizedStringId.RESULT_CODE_INCORRECT_EMAIL_OR_PASSWORD -> R.string.incorrect_email_or_password
     LocalizedStringId.RESULT_CODE_BAD_CREDENTIALS -> R.string.status_bad_credentials
     LocalizedStringId.RESULT_CODE_UNKNOWN_ERROR -> R.string.status_unknown_err
+
+    LocalizedStringId.LIFESPAN_WARNING_REPLACE -> R.string.channel_uv_error
+    LocalizedStringId.LIFESPAN_WARNING_SCHEDULE -> R.string.channel_uv_warning
+    LocalizedStringId.LIFESPAN_WARNING -> R.string.channel_lightsource_warning
+    LocalizedStringId.DIGIGLASS_PLANNED_REGENERATION -> R.string.dgf_planned_regeneration_in_progress
+    LocalizedStringId.DIGIGLASS_REGENERATION_AFTER_20H -> R.string.dgf_regeneration_after20h
+    LocalizedStringId.DIGIGLASS_TO_LONG_OPERATION -> R.string.dgf_too_long_operation_warning
   }

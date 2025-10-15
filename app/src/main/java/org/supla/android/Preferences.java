@@ -24,18 +24,14 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
-import org.supla.android.data.source.runtime.appsettings.TemperatureUnit;
+import timber.log.Timber;
 
 public class Preferences {
 
   private static final String TAG = Preferences.class.getSimpleName();
 
-  private static final String pref_wizard_save_password = "pref_wizard_save_password";
-  private static final String pref_wizard_password = "pref_wizard_password";
-  private static final String pref_wizard_selected_wifi = "pref_wizard_selected_wifi";
   private static final String pref_brightness_picker_type_slider =
       "pref_brightness_picker_type_slider";
-  private static final String pref_temperature_unit = "pref_temperature_unit";
   private static final String pref_button_autohide = "pref_button_autohide";
   public static final String pref_channel_height = "pref_channel_height_percent";
   private static final String pref_show_channel_info = "pref_show_channel_info";
@@ -43,9 +39,6 @@ public class Preferences {
   private static final String pref_show_bottom_menu = "pref_show_bottom_menu";
   private static final String pref_show_opening_percent = "pref_show_opening_percent";
 
-  private static final String pref_chart_type = "pref_ct%d_prof%d_%d";
-
-  private static final String pref_any_account_registered = "pref_any_account_registered";
   private static final String pref_new_gesture_info = "pref_new_gesture_info";
   private static final String pref_thermostat_schedule_info = "pref_thermostat_schedule_info";
   private static final String pref_notifications_asked = "pref_notifications_asked";
@@ -76,40 +69,10 @@ public class Preferences {
 
       id += "-" + Build.BOARD + "-" + Build.BRAND + "-" + Build.DEVICE + "-" + Build.HARDWARE;
     } catch (Exception e) {
-      Trace.e(TAG, "getDeviceID error", e);
+      Timber.e(e, "getDeviceID error");
     }
 
     return id == null ? "unknown" : id;
-  }
-
-  public boolean wizardSavePasswordEnabled(String SSID) {
-    return _prefs.getBoolean(pref_wizard_save_password + SSID, true);
-  }
-
-  public void wizardSetSavePasswordEnabled(String SSID, boolean enabled) {
-    SharedPreferences.Editor editor = _prefs.edit();
-    editor.putBoolean(pref_wizard_save_password + SSID, enabled);
-    editor.apply();
-  }
-
-  public String wizardGetPassword(String SSID) {
-    return _prefs.getString(pref_wizard_password + SSID, "");
-  }
-
-  public void wizardSetPassword(String SSID, String password) {
-    SharedPreferences.Editor editor = _prefs.edit();
-    editor.putString(pref_wizard_password + SSID, password);
-    editor.apply();
-  }
-
-  public String wizardGetSelectedWifi() {
-    return _prefs.getString(pref_wizard_selected_wifi, "");
-  }
-
-  public void wizardSetSelectedWifi(String SSID) {
-    SharedPreferences.Editor editor = _prefs.edit();
-    editor.putString(pref_wizard_selected_wifi, SSID);
-    editor.apply();
   }
 
   public void setBrightnessPickerTypeToSlider(boolean slider) {
@@ -123,24 +86,6 @@ public class Preferences {
       return _prefs.getBoolean(pref_brightness_picker_type_slider, false);
     }
     return null;
-  }
-
-  public TemperatureUnit getTemperatureUnit() {
-    String v = _prefs.getString(pref_temperature_unit, "C");
-    return v.charAt(0) == 'F' ? TemperatureUnit.FAHRENHEIT : TemperatureUnit.CELSIUS;
-  }
-
-  public void setTemperatureUnit(TemperatureUnit u) {
-    SharedPreferences.Editor ed = _prefs.edit();
-    switch (u) {
-      case FAHRENHEIT:
-        ed.putString(pref_temperature_unit, "F");
-        break;
-      case CELSIUS:
-        ed.putString(pref_temperature_unit, "C");
-        break;
-    }
-    ed.apply();
   }
 
   public boolean isButtonAutohide() {
@@ -205,14 +150,6 @@ public class Preferences {
     SharedPreferences.Editor ed = _prefs.edit();
     ed.putBoolean(pref_show_opening_percent, val);
     ed.apply();
-  }
-
-  public boolean isAnyAccountRegistered() {
-    return _prefs.getBoolean(pref_any_account_registered, false);
-  }
-
-  public void setAnyAccountRegistered(boolean isRegistered) {
-    _prefs.edit().putBoolean(pref_any_account_registered, isRegistered).apply();
   }
 
   public boolean isNewGestureInfoPresented() {

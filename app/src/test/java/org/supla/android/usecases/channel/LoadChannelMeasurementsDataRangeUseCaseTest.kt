@@ -28,8 +28,6 @@ import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.junit.MockitoJUnitRunner
 import org.supla.android.data.model.Optional
 import org.supla.android.data.model.chart.DateRange
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
@@ -37,7 +35,6 @@ import org.supla.android.events.DownloadEventsManager.DataType.DEFAULT_TYPE
 import org.supla.android.extensions.date
 import org.supla.core.shared.data.model.general.SuplaFunction
 
-@RunWith(MockitoJUnitRunner::class)
 class LoadChannelMeasurementsDataRangeUseCaseTest {
 
   @MockK
@@ -72,6 +69,9 @@ class LoadChannelMeasurementsDataRangeUseCaseTest {
 
   @MockK
   private lateinit var powerActiveDataRangeProvider: PowerActiveDataRangeProvider
+
+  @MockK
+  private lateinit var thermostatHeatpolDataRangeProvider: ThermostatHeatpolDataRangeProvider
 
   @InjectMockKs
   private lateinit var useCase: LoadChannelMeasurementsDataRangeUseCase
@@ -139,6 +139,7 @@ class LoadChannelMeasurementsDataRangeUseCaseTest {
     every { voltageDataRangeProvider.handle(channelWithChildren, DEFAULT_TYPE) } returns false
     every { currentDataRangeProvider.handle(channelWithChildren, DEFAULT_TYPE) } returns false
     every { powerActiveDataRangeProvider.handle(channelWithChildren, DEFAULT_TYPE) } returns false
+    every { thermostatHeatpolDataRangeProvider.handle(channelWithChildren, DEFAULT_TYPE) } returns false
 
     // when
     val testObserver = useCase.invoke(remoteId, profileId).test()
@@ -159,6 +160,7 @@ class LoadChannelMeasurementsDataRangeUseCaseTest {
       voltageDataRangeProvider.handle(channelWithChildren, DEFAULT_TYPE)
       currentDataRangeProvider.handle(channelWithChildren, DEFAULT_TYPE)
       powerActiveDataRangeProvider.handle(channelWithChildren, DEFAULT_TYPE)
+      thermostatHeatpolDataRangeProvider.handle(channelWithChildren, DEFAULT_TYPE)
     }
     confirmVerified(
       readChannelWithChildrenUseCase,
@@ -170,7 +172,8 @@ class LoadChannelMeasurementsDataRangeUseCaseTest {
       humidityDataRangeProvider,
       impulseCounterDataRangeProvider,
       voltageDataRangeProvider,
-      powerActiveDataRangeProvider
+      powerActiveDataRangeProvider,
+      thermostatHeatpolDataRangeProvider
     )
   }
 }

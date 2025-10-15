@@ -67,4 +67,8 @@ class SegmentedButton @JvmOverloads constructor(
     super.setSelected(sel)
     elevation = if (sel) segmentedButtonElevation else 0f
   }
+
+  fun setText(text: String) {
+    (getChildAt(0) as? TextView)?.text = text
+  }
 }

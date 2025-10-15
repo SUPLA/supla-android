@@ -19,12 +19,11 @@ package org.supla.android.usecases.client
 
 import androidx.annotation.StringRes
 import org.supla.android.R
-import org.supla.android.Trace
 import org.supla.android.core.infrastructure.ThreadHandler
-import org.supla.android.extensions.TAG
-import org.supla.android.extensions.ifLet
+import org.supla.core.shared.extensions.ifLet
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.localizedString
+import timber.log.Timber
 
 private const val WAIT_TIME_MS: Long = 1000
 
@@ -45,13 +44,13 @@ open class BaseCredentialsUseCase(private val threadHandler: ThreadHandler) {
         threadHandler.sleep(WAIT_TIME_MS)
       }
     } catch (exception: InterruptedException) {
-      Trace.e(TAG, "Awaiting for response failed", exception)
+      Timber.e(exception, "Awaiting for response failed")
       // Because of some reasons the process should stop so escape from the method
       return
     } catch (exception: AuthorizationException) {
       throw exception // just rethrow it
     } catch (exception: Exception) {
-      Trace.e(TAG, "Awaiting for response failed", exception)
+      Timber.e(exception, "Awaiting for response failed")
       throw AuthorizationException.WithResource(R.string.status_unknown_err)
     }
 

@@ -26,18 +26,16 @@ import android.view.View
 import android.widget.RemoteViews
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
-import org.supla.android.Trace
 import org.supla.android.core.infrastructure.WorkManagerProxy
 import org.supla.android.data.model.general.ChannelState
 import org.supla.android.data.source.local.entity.ChannelEntity
-import org.supla.android.data.source.local.entity.isGpm
-import org.supla.android.data.source.local.entity.isThermometer
 import org.supla.android.images.ImageCache
 import org.supla.android.lib.SuplaConst
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.widget.WidgetConfiguration
 import org.supla.android.widget.shared.WidgetProviderBase
 import org.supla.android.widget.shared.isWidgetValid
+import timber.log.Timber
 import javax.inject.Inject
 
 private const val ACTION_TURN_ON = "ACTION_TURN_ON"
@@ -85,7 +83,7 @@ class OnOffWidget : WidgetProviderBase() {
 
   override fun onReceive(context: Context, intent: Intent?) {
     super.onReceive(context, intent)
-    Trace.i(TAG, "[DoubleWidget] Got intent with action: " + intent?.action)
+    Timber.i("[DoubleWidget] Got intent with action: %s", intent?.action ?: "")
 
     val turnOnOff = when (intent?.action) {
       ACTION_TURN_ON -> true
@@ -112,7 +110,7 @@ class OnOffWidget : WidgetProviderBase() {
       profileId = configuration.profileId
     )
 
-    val iconViewId = if (channel.isThermometer() || channel.isGpm()) {
+    val iconViewId = if (channel.isValueWidget) {
       R.id.on_off_widget_value_icon
     } else {
       R.id.on_off_widget_turn_on_button
@@ -121,7 +119,7 @@ class OnOffWidget : WidgetProviderBase() {
     val activeIcon = getChannelIconUseCase.forState(channel, ChannelState.active(channel.function.value))
     ImageCache.loadBitmapForWidgetView(activeIcon, views, iconViewId, false)
 
-    val viewIdNightMode = if (channel.isThermometer() || channel.isGpm()) {
+    val viewIdNightMode = if (channel.isValueWidget) {
       R.id.on_off_widget_value_icon_night_mode
     } else {
       R.id.on_off_widget_turn_on_button_night_mode
@@ -131,7 +129,7 @@ class OnOffWidget : WidgetProviderBase() {
       ImageCache.loadBitmapForWidgetView(activeIcon, views, viewIdNightMode, true)
     }
 
-    if (channel.isThermometer() || channel.isGpm()) {
+    if (channel.isValueWidget) {
       views.setTextViewText(R.id.on_off_widget_value_text, configuration.value)
       views.setViewVisibility(R.id.on_off_widget_buttons, View.GONE)
       views.setViewVisibility(R.id.on_off_widget_value, View.VISIBLE)
@@ -186,7 +184,7 @@ fun intent(context: Context, intentAction: String, widgetId: Int): Intent =
   intent(context, intentAction, intArrayOf(widgetId))
 
 fun intent(context: Context, intentAction: String, widgetIds: IntArray): Intent {
-  Trace.d(OnOffWidget::javaClass.name, "Creating intent with action: $intentAction")
+  Timber.d("Creating intent with action: $intentAction")
   return Intent(context, OnOffWidget::class.java).apply {
     action = intentAction
     flags = Intent.FLAG_RECEIVER_FOREGROUND

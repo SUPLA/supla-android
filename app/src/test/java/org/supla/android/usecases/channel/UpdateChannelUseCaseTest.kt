@@ -17,6 +17,7 @@ package org.supla.android.usecases.channel
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import androidx.room.rxjava3.EmptyResultSetException
 import io.mockk.every
 import io.mockk.mockk
 import io.reactivex.rxjava3.core.Completable
@@ -160,7 +161,7 @@ class UpdateChannelUseCaseTest {
     whenever(channelRepository.findByRemoteId(channelRemoteId)).thenReturn(Maybe.empty())
     whenever(profileRepository.findActiveProfile()).thenReturn(Single.just(profileEntity))
     whenever(channelRepository.insert(any())).thenReturn(Completable.complete())
-    whenever(channelRepository.findChannelCountInLocation(locationRemoteId)).thenReturn(Single.just(5))
+    whenever(channelRepository.findMaxPositionInLocation(locationRemoteId)).thenReturn(Single.just(5))
     whenever(requestChannelConfigUseCase.invoke(suplaChannel)).thenReturn(Completable.complete())
 
     // when
@@ -173,7 +174,7 @@ class UpdateChannelUseCaseTest {
     verify(locationRepository).findByRemoteId(locationRemoteId)
     verify(channelRepository).findByRemoteId(channelRemoteId)
     verify(profileRepository).findActiveProfile()
-    verify(channelRepository).findChannelCountInLocation(locationRemoteId)
+    verify(channelRepository).findMaxPositionInLocation(locationRemoteId)
     verify(requestChannelConfigUseCase).invoke(suplaChannel)
 
     val captor = argumentCaptor<ChannelEntity>()
@@ -262,7 +263,7 @@ class UpdateChannelUseCaseTest {
     whenever(locationRepository.findByRemoteId(locationRemoteId)).thenReturn(Maybe.just(locationEntity))
     whenever(channelRepository.findByRemoteId(channelRemoteId)).thenReturn(Maybe.just(channelEntity))
     whenever(channelRepository.update(channelEntity)).thenReturn(Completable.complete())
-    whenever(channelRepository.findChannelCountInLocation(locationRemoteId)).thenReturn(Single.just(5))
+    whenever(channelRepository.findMaxPositionInLocation(locationRemoteId)).thenReturn(Single.just(5))
     whenever(requestChannelConfigUseCase.invoke(suplaChannel)).thenReturn(Completable.complete())
 
     // when
@@ -275,7 +276,7 @@ class UpdateChannelUseCaseTest {
     verify(locationRepository).findByRemoteId(locationRemoteId)
     verify(channelRepository).findByRemoteId(channelRemoteId)
     verify(channelRepository).update(channelEntity)
-    verify(channelRepository).findChannelCountInLocation(locationRemoteId)
+    verify(channelRepository).findMaxPositionInLocation(locationRemoteId)
     verify(requestChannelConfigUseCase).invoke(suplaChannel)
 
     io.mockk.verify {
@@ -336,6 +337,63 @@ class UpdateChannelUseCaseTest {
     io.mockk.verify {
       channelEntity.updatedBy(suplaChannel)
       channelEntity.copy(id = 444, remoteId = channelRemoteId, locationId = 333, position = 0)
+    }
+
+    verifyNoMoreInteractions(locationRepository, channelRepository, profileRepository, requestChannelConfigUseCase)
+  }
+
+  @Test
+  fun `should update channel when exist and set position to 0 when location sorting is user and no channel available`() {
+    // given
+    val locationRemoteId = 123
+    val channelRemoteId = 234
+
+    val suplaChannel = suplaChannel(locationRemoteId, channelRemoteId)
+    val locationEntity: LocationEntity = mockk {
+      every { sorting } returns Location.SortingType.USER_DEFINED
+      every { remoteId } returns locationRemoteId
+    }
+    val channelEntity: ChannelEntity = mockk {
+      every { remoteId } returns channelRemoteId
+      every { differsFrom(suplaChannel) } returns true
+      every { locationId } returns 333
+      every { updatedBy(suplaChannel) } returns this
+      every { position } returns 5
+      every {
+        copy(id = 444, remoteId = channelRemoteId, caption = "", function = SuplaFunction.NONE, locationId = 333, position = 1)
+      } returns this
+      every { id } returns 444
+      every { caption } returns ""
+      every { function } returns SuplaFunction.NONE
+      every { visible } returns 0
+      every { altIcon } returns 0
+      every { userIcon } returns 0
+      every { flags } returns 0
+      every { profileId } returns 0
+    }
+
+    whenever(locationRepository.findByRemoteId(locationRemoteId)).thenReturn(Maybe.just(locationEntity))
+    whenever(channelRepository.findByRemoteId(channelRemoteId)).thenReturn(Maybe.just(channelEntity))
+    whenever(channelRepository.update(channelEntity)).thenReturn(Completable.complete())
+    whenever(requestChannelConfigUseCase.invoke(suplaChannel)).thenReturn(Completable.complete())
+    whenever(channelRepository.findMaxPositionInLocation(locationRemoteId)).thenReturn(Single.error(EmptyResultSetException("")))
+
+    // when
+    val result = useCase.invoke(suplaChannel).test()
+
+    // then
+    result.assertComplete()
+    result.assertResult(EntityUpdateResult.UPDATED)
+
+    verify(locationRepository).findByRemoteId(locationRemoteId)
+    verify(channelRepository).findByRemoteId(channelRemoteId)
+    verify(channelRepository).update(channelEntity)
+    verify(channelRepository).findMaxPositionInLocation(locationRemoteId)
+    verify(requestChannelConfigUseCase).invoke(suplaChannel)
+
+    io.mockk.verify {
+      channelEntity.updatedBy(suplaChannel)
+      channelEntity.copy(id = 444, remoteId = channelRemoteId, locationId = 333, position = 1)
     }
 
     verifyNoMoreInteractions(locationRepository, channelRepository, profileRepository, requestChannelConfigUseCase)

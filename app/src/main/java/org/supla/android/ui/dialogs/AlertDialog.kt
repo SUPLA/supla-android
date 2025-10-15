@@ -54,14 +54,16 @@ fun AlertDialog(
         OutlinedButton(
           onClick = onNegativeClick,
           text = it,
-          modifier = Modifier.weight(1f)
+          modifier = Modifier.weight(1f),
+          singleLine = true
         )
       }
       positiveButtonTitle?.let {
         Button(
           onClick = onPositiveClick,
           text = it,
-          modifier = Modifier.weight(1f)
+          modifier = Modifier.weight(1f),
+          singleLine = true
         )
       }
     }
@@ -69,7 +71,7 @@ fun AlertDialog(
 }
 
 @Composable
-private fun DialogMessage(message: String) =
+fun DialogMessage(message: String) =
   Text(
     text = message,
     style = MaterialTheme.typography.bodyMedium,

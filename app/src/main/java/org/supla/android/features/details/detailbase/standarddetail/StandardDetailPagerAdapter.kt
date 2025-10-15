@@ -31,10 +31,12 @@ import org.supla.android.features.details.humiditydetail.history.HumidityHistory
 import org.supla.android.features.details.impulsecounter.counterphoto.CounterPhotoFragment
 import org.supla.android.features.details.impulsecounter.general.ImpulseCounterGeneralFragment
 import org.supla.android.features.details.impulsecounter.history.ImpulseCounterHistoryDetailFragment
+import org.supla.android.features.details.legacydetail.LegacyDetailFragment
 import org.supla.android.features.details.switchdetail.general.SwitchGeneralFragment
 import org.supla.android.features.details.switchdetail.timer.TimersDetailFragment
 import org.supla.android.features.details.thermometerdetail.history.ThermometerHistoryDetailFragment
 import org.supla.android.features.details.thermostatdetail.general.ThermostatGeneralFragment
+import org.supla.android.features.details.thermostatdetail.heatpolhistory.HeatpolHistoryDetailFragment
 import org.supla.android.features.details.thermostatdetail.history.ThermostatHistoryDetailFragment
 import org.supla.android.features.details.thermostatdetail.schedule.ScheduleDetailFragment
 import org.supla.android.features.details.thermostatdetail.slaves.ThermostatSlavesListFragment
@@ -48,6 +50,7 @@ import org.supla.android.features.details.windowdetail.rollershutter.RollerShutt
 import org.supla.android.features.details.windowdetail.roofwindow.RoofWindowFragment
 import org.supla.android.features.details.windowdetail.terraceawning.TerraceAwningFragment
 import org.supla.android.features.details.windowdetail.verticalblinds.VerticalBlindsFragment
+import org.supla.android.usecases.details.LegacyDetailType
 
 class StandardDetailPagerAdapter(
   private val pages: List<DetailPage>,
@@ -67,6 +70,12 @@ class StandardDetailPagerAdapter(
     DetailPage.THERMOSTAT_TIMER -> TimerDetailFragment().apply { arguments = TimerDetailFragment.bundle(itemBundle) }
     DetailPage.THERMOSTAT_HISTORY -> ThermostatHistoryDetailFragment().apply {
       arguments = ThermostatHistoryDetailFragment.bundle(itemBundle.remoteId)
+    }
+    DetailPage.THERMOSTAT_HEATPOL_GENERAL -> LegacyDetailFragment().apply {
+      arguments = LegacyDetailFragment.bundle(itemBundle.remoteId, LegacyDetailType.THERMOSTAT_HP, itemBundle.itemType)
+    }
+    DetailPage.THERMOSTAT_HEATPOL_HISTORY -> HeatpolHistoryDetailFragment().apply {
+      arguments = HeatpolHistoryDetailFragment.bundle(itemBundle.remoteId)
     }
 
     DetailPage.THERMOMETER_HISTORY -> ThermometerHistoryDetailFragment().apply {
@@ -119,6 +128,8 @@ enum class DetailPage(val item: DetailBottomItem) {
   SCHEDULE(DetailBottomItem.SCHEDULE),
   THERMOSTAT_HISTORY(DetailBottomItem.HISTORY),
   THERMOSTAT_TIMER(DetailBottomItem.TIMER),
+  THERMOSTAT_HEATPOL_GENERAL(DetailBottomItem.GENERAL),
+  THERMOSTAT_HEATPOL_HISTORY(DetailBottomItem.HISTORY),
 
   // Thermometers
   THERMOMETER_HISTORY(DetailBottomItem.HISTORY),

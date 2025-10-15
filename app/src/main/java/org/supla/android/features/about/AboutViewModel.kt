@@ -46,9 +46,7 @@ class AboutViewModel @Inject constructor(
   }
 
   fun onVersionClick() {
-    if (encryptedPreferences.devModeActive) {
-      sendEvent(AboutViewEvent.NavigateToDeveloperInfoScreen)
-    } else if (versionClickCount < 4) {
+    if (versionClickCount < 4) {
       versionClickCount++
     } else {
       sendEvent(AboutViewEvent.ShowDeveloperModeActivated)
@@ -58,7 +56,6 @@ class AboutViewModel @Inject constructor(
 }
 
 sealed class AboutViewEvent : ViewEvent {
-  data object NavigateToDeveloperInfoScreen : AboutViewEvent()
   data object ShowDeveloperModeActivated : AboutViewEvent()
 }
 

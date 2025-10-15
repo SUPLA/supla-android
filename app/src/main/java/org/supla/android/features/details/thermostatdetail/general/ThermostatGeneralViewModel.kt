@@ -20,9 +20,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.kotlin.subscribeBy
-import io.reactivex.rxjava3.subjects.PublishSubject
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 import org.supla.android.R
-import org.supla.android.Trace
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.networking.suplaclient.DelayableState
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
@@ -31,7 +30,6 @@ import org.supla.android.core.ui.BaseViewModel
 import org.supla.android.core.ui.StringProvider
 import org.supla.android.core.ui.ViewEvent
 import org.supla.android.core.ui.ViewState
-import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.model.temperature.TemperatureCorrection
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
@@ -43,13 +41,10 @@ import org.supla.android.data.source.remote.hvac.SuplaChannelWeeklyScheduleConfi
 import org.supla.android.data.source.remote.hvac.SuplaHvacMode
 import org.supla.android.data.source.remote.hvac.ThermostatSubfunction
 import org.supla.android.data.source.remote.hvac.filterRelationType
+import org.supla.android.di.FORMATTER_THERMOMETER
 import org.supla.android.events.ChannelConfigEventsManager
 import org.supla.android.events.DeviceConfigEventsManager
 import org.supla.android.events.LoadingTimeoutManager
-import org.supla.android.events.UpdateEventsManager
-import org.supla.android.extensions.TAG
-import org.supla.android.extensions.guardLet
-import org.supla.android.extensions.ifLet
 import org.supla.android.features.details.thermostatdetail.general.data.SensorIssue
 import org.supla.android.features.details.thermostatdetail.general.data.ThermostatProgramInfo
 import org.supla.android.features.details.thermostatdetail.general.data.build
@@ -60,6 +55,7 @@ import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.usecases.channel.GetChannelValueUseCase
 import org.supla.android.usecases.channel.ReadChannelWithChildrenTreeUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
+import org.supla.android.usecases.thermostat.CheckIsSlaveThermostatUseCase
 import org.supla.android.usecases.thermostat.CreateTemperaturesListUseCase
 import org.supla.android.usecases.thermostat.MeasurementValue
 import org.supla.core.shared.data.model.channel.ChannelRelationType
@@ -67,11 +63,16 @@ import org.supla.core.shared.data.model.function.thermostat.SuplaThermostatFlag
 import org.supla.core.shared.data.model.function.thermostat.ThermostatValue
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.data.model.lists.ChannelIssueItem
+import org.supla.core.shared.extensions.guardLet
+import org.supla.core.shared.extensions.ifLet
 import org.supla.core.shared.extensions.ifTrue
 import org.supla.core.shared.usecase.channel.issues.ThermostatIssuesProvider
+import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
+import timber.log.Timber
 import java.util.Date
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import javax.inject.Named
 import kotlin.math.roundToInt
 
 private const val REFRESH_DELAY_MS = 3000
@@ -79,69 +80,55 @@ private const val REFRESH_DELAY_MS = 3000
 @HiltViewModel
 class ThermostatGeneralViewModel @Inject constructor(
   private val readChannelWithChildrenTreeUseCase: ReadChannelWithChildrenTreeUseCase,
-  private val createTemperaturesListUseCase: CreateTemperaturesListUseCase,
-  private val getChannelValueUseCase: GetChannelValueUseCase,
-  private val getChannelIconUseCase: GetChannelIconUseCase,
-  private val valuesFormatter: ValuesFormatter,
   private val delayedThermostatActionSubject: DelayedThermostatActionSubject,
+  private val createTemperaturesListUseCase: CreateTemperaturesListUseCase,
+  private val checkIsSlaveThermostatUseCase: CheckIsSlaveThermostatUseCase,
   private val channelConfigEventsManager: ChannelConfigEventsManager,
   private val deviceConfigEventsManager: DeviceConfigEventsManager,
-  private val suplaClientProvider: SuplaClientProvider,
+  private val getChannelValueUseCase: GetChannelValueUseCase,
+  private val getChannelIconUseCase: GetChannelIconUseCase,
   private val loadingTimeoutManager: LoadingTimeoutManager,
-  private val dateProvider: DateProvider,
+  private val suplaClientProvider: SuplaClientProvider,
   private val schedulers: SuplaSchedulers,
-  private val updateEventsManager: UpdateEventsManager
+  private val dateProvider: DateProvider,
+  @Named(FORMATTER_THERMOMETER) private val thermometerValueFormatter: ValueFormatter
 ) : BaseViewModel<ThermostatGeneralViewState, ThermostatGeneralViewEvent>(ThermostatGeneralViewState(), schedulers),
   ThermostatGeneralViewProxy {
 
-  private val updateSubject: PublishSubject<Int> = PublishSubject.create()
-  private val channelSubject: PublishSubject<ChannelWithChildren> = PublishSubject.create()
+  private val updateSubject: BehaviorSubject<Int> = BehaviorSubject.createDefault(0)
   private val thermostatIssuesProvider = ThermostatIssuesProvider()
 
   override fun onViewCreated() {
     loadingTimeoutManager.watch({ currentState().loadingState }) {
       updateState { state ->
-        state.viewModelState?.remoteId?.let {
-          triggerDataLoad(it)
-        }
-
+        updateViewData()
         state.copy(loadingState = state.loadingState.changingLoading(false, dateProvider))
       }
     }.disposeBySelf()
   }
 
   fun observeData(remoteId: Int, deviceId: Int) {
-    updateEventsManager.observeChannelsUpdate()
-      .debounce(1, TimeUnit.SECONDS)
-      .subscribeBy(
-        onNext = { triggerDataLoad(remoteId) },
-        onError = defaultErrorHandler("observeData($remoteId)")
-      )
-      .disposeBySelf()
-
-    updateSubject.attachSilent()
-      .debounce(1, TimeUnit.SECONDS)
-      .subscribeBy(
-        onNext = { triggerDataLoad(remoteId) },
-        onError = defaultErrorHandler("observeData($remoteId)")
-      )
-      .disposeBySelf()
-
     Observable.combineLatest(
-      channelSubject,
+      readChannelWithChildrenTreeUseCase(remoteId),
       channelConfigEventsManager.observerConfig(remoteId)
         .filter { it.config is SuplaChannelHvacConfig && it.result == ConfigResult.RESULT_TRUE }
         .map { it.config as SuplaChannelHvacConfig },
       channelConfigEventsManager.observerConfig(remoteId)
         .filter { it.config is SuplaChannelWeeklyScheduleConfig },
-      deviceConfigEventsManager.observerConfig(deviceId)
-    ) { channelWithChildren, hvacConfig, weeklySchedule, deviceConfig ->
+      deviceConfigEventsManager.observerConfig(deviceId),
+      checkIsSlaveThermostatUseCase(remoteId).toObservable(),
+      Observable.merge(
+        Observable.just(0),
+        updateSubject.debounce(1, TimeUnit.SECONDS)
+      )
+    ) { channelWithChildren, hvacConfig, weeklySchedule, deviceConfig, isSlave, _ ->
       LoadedData(
         channelWithChildren = channelWithChildren,
         temperatures = createTemperaturesListUseCase(channelWithChildren),
         config = hvacConfig,
         weeklySchedule = weeklySchedule.config as SuplaChannelWeeklyScheduleConfig,
-        deviceConfig = deviceConfig.config
+        deviceConfig = deviceConfig.config,
+        isSlaveThermostat = isSlave
       )
     }
       .debounce(50, TimeUnit.MILLISECONDS, schedulers.computation)
@@ -157,28 +144,6 @@ class ThermostatGeneralViewModel @Inject constructor(
     suplaClientProvider.provide()?.getChannelConfig(remoteId, ChannelConfigType.DEFAULT)
     suplaClientProvider.provide()?.getChannelConfig(remoteId, ChannelConfigType.WEEKLY_SCHEDULE)
     suplaClientProvider.provide()?.getDeviceConfig(deviceId)
-
-    triggerDataLoad(remoteId)
-  }
-
-  fun triggerDataLoad(remoteId: Int) {
-    readChannelWithChildrenTreeUseCase(remoteId).firstElement()
-      .attachSilent()
-      .subscribeBy(
-        onSuccess = { channelSubject.onNext(it) },
-        onError = defaultErrorHandler("triggerDataLoad($remoteId)")
-      )
-      .disposeBySelf()
-  }
-
-  fun handleDataChangedEvent(remoteId: Int) {
-    val state = currentState()
-
-    state.viewModelState?.let { viewModelState ->
-      if (viewModelState.relatedRemoteIds.contains(remoteId) || remoteId == viewModelState.remoteId) {
-        triggerDataLoad(viewModelState.remoteId)
-      }
-    }
   }
 
   override fun heatingModeChanged() {
@@ -327,6 +292,13 @@ class ThermostatGeneralViewModel @Inject constructor(
     }
   }
 
+  /**
+   * Triggers [handleData] with last database state.
+   */
+  private fun updateViewData() {
+    updateSubject.onNext(0)
+  }
+
   private fun getTemperatureForPosition(percentagePosition: Float, viewModelState: ThermostatGeneralViewModelState) =
     viewModelState.configMinTemperature.plus(
       viewModelState.configMaxTemperature.minus(viewModelState.configMinTemperature).times(percentagePosition)
@@ -357,15 +329,15 @@ class ThermostatGeneralViewModel @Inject constructor(
 
     updateState {
       if (it.changing) {
-        Trace.d(TAG, "update skipped because of changing")
+        Timber.d("update skipped because of changing")
         return@updateState it // Do not change anything, when user makes manual operations
       }
-      if (it.lastInteractionTime != null && it.lastInteractionTime + REFRESH_DELAY_MS > System.currentTimeMillis()) {
-        Trace.d(TAG, "update skipped because of last interaction time")
+      if (it.lastInteractionTime != null && it.lastInteractionTime + REFRESH_DELAY_MS > dateProvider.currentTimestamp()) {
+        Timber.d("update skipped because of last interaction time")
         updateSubject.onNext(0)
         return@updateState it // Do not change anything during 3 secs after last user interaction
       }
-      Trace.d(TAG, "updating state with data")
+      Timber.d("updating state with data")
 
       it.copy(
         viewModelState = ThermostatGeneralViewModelState(
@@ -384,6 +356,7 @@ class ThermostatGeneralViewModel @Inject constructor(
 
         temperatures = data.temperatures,
 
+        buttonsDisabled = value.status.offline || data.isSlaveThermostat,
         isOffline = value.status.offline,
         isOff = isOff,
         currentPower = currentPower,
@@ -396,8 +369,8 @@ class ThermostatGeneralViewModel @Inject constructor(
         pumpSwitchIcon = online.ifTrue { pumpSwitchIcon(data.channelWithChildren) },
         heatOrColdSourceSwitchIcon = online.ifTrue { heatOrColdSourceSwitchIcon(data.channelWithChildren) },
 
-        configMinTemperatureString = valuesFormatter.getTemperatureString(configMinTemperature),
-        configMaxTemperatureString = valuesFormatter.getTemperatureString(configMaxTemperature),
+        configMinTemperatureString = thermometerValueFormatter.format(configMinTemperature),
+        configMaxTemperatureString = thermometerValueFormatter.format(configMaxTemperature),
 
         currentTemperaturePercentage = calculateCurrentTemperature(data, configMinTemperature, configMaxTemperature),
 
@@ -507,8 +480,8 @@ class ThermostatGeneralViewModel @Inject constructor(
   }
 
   private fun getOnlineTemperatureText(setpointMinTemperature: Float?, setpointMaxTemperature: Float?): String {
-    val setPointMinTemperatureString = setpointMinTemperature?.let { valuesFormatter.getTemperatureString(it.toDouble()) }
-    val setPointMaxTemperatureString = setpointMaxTemperature?.let { valuesFormatter.getTemperatureString(it.toDouble()) }
+    val setPointMinTemperatureString = setpointMinTemperature?.let { thermometerValueFormatter.format(it.toDouble()) }
+    val setPointMaxTemperatureString = setpointMaxTemperature?.let { thermometerValueFormatter.format(it.toDouble()) }
 
     return when {
       setPointMinTemperatureString != null && setPointMaxTemperatureString != null ->
@@ -677,7 +650,8 @@ class ThermostatGeneralViewModel @Inject constructor(
     val temperatures: List<MeasurementValue>,
     val config: SuplaChannelHvacConfig,
     val weeklySchedule: SuplaChannelWeeklyScheduleConfig,
-    val deviceConfig: SuplaDeviceConfig?
+    val deviceConfig: SuplaDeviceConfig?,
+    val isSlaveThermostat: Boolean
   )
 }
 
@@ -691,6 +665,7 @@ data class ThermostatGeneralViewState(
   val isOffline: Boolean = false,
   val isOff: Boolean = false,
   val currentPower: Float? = null,
+  val buttonsDisabled: Boolean = false,
 
   val isAutoFunction: Boolean = false,
   val heatingModeActive: Boolean = false,

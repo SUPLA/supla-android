@@ -353,7 +353,7 @@
   <string name="vl_dimmer_cfg_info_txt8">Więcej informacji na temat ściemniacza znajdziesz na</string>
   <string name="time_exceeded">Przekroczono czas. Spróbuj ponownie.</string>
   <string name="battery_level">Poziom baterii</string>
-  <string name="battery_powered">Zasilanie bateryjne</string>
+  <string name="state_power_supply">Zasilanie</string>
   <string name="wifi_rssi">Wi-Fi RSSI</string>
   <string name="wifi_signal_strength">Siła sygnału Wi-Fi</string>
   <string name="bridge_node_online">Węzeł mostu - online</string>
@@ -367,9 +367,9 @@
   <string name="chanel_lightsource_lifespan_settings">Zmień ustawienia żywotności źródła światła</string>
   <string name="light_source_lifespan_hours">Żywotność źródła światła (godziny)</string>
   <string name="reset_lightsource_usage_counter">Resetuj licznik zużycia źródła światła</string>
-  <string name="lightsource_warning">Żywotność źródła światła wynosi %1$s</string>
-  <string name="uv_warning1">Żywotność promiennika uv wynosi %1$s. Zaplanuj jego wymianę.</string>
-  <string name="uv_warning2">Żywotność promiennika uv wynosi %1$s. Wymień promiennik.</string>
+  <string name="channel_lightsource_warning">Żywotność źródła światła wynosi %1$.01f%%</string>
+  <string name="channel_uv_warning">Żywotność promiennika uv wynosi %1$.01f%%. Zaplanuj jego wymianę.</string>
+  <string name="channel_uv_error">Żywotność promiennika uv wynosi %1$.01f%%. Wymień promiennik.</string>
   <string name="add_wizard_step_2_message">Wprowadź nazwę oraz hasło Twojej domowej lub firmowej sieci Wi-Fi za pośrednictwem której urządzenie wykonawcze będzie mogło nawiązać połączenie z serwerem.</string>
   <string name="enabling_registration_timeout">Upłynął czas oczekiwania na włączenie rejestracji!</string>
   <string name="wifi_throttling">Z uwagi na limity skanowania sieci Wi-Fi narzucone przez system Android, należy odczekać czas prezentowany powyżej.</string>
@@ -731,7 +731,7 @@
   <string name="em_electric_grid_parameters">Parametry sieci elektrycznej</string>
   <string name="channel_caption_container">Zbiornik</string>
   <string name="developer_info_database_section">Baza danych</string>
-  <string name="developer_info_activated">Developer mode został aktywowany</string>
+  <string name="developer_info_activated">Tryb programisty aktywowany</string>
   <string name="developer_info_title">Dane aplikacji</string>
   <string name="counter_photo_photos">Historia zdjęć</string>
   <string name="counter_photo_loading_error">Nie udało się załadować zawartości.</string>
@@ -806,6 +806,16 @@
   <string name="wizard_state_finishing">Finalizacja…</string>
   <string name="add_wizard_password_instruction">Wprowadź hasło, które zabezpiecza urządzenie przed zmianami ustawień przez osoby nieuprawnione (Hasło do strony https://192.168.4.1).\n\nZapomniałeś hasła? Możesz je zmienić w Supla Cloud lub zresetować urządzenie do ustawień fabrycznych.</string>
   <string name="add_wizard_manual_reconnect">Połączenie sieciowe z urządzeniem zostało ustanowione manualnie. Upewnij się, że telefon przełączył się na sieć z internetem i kontynuuj proces.</string>
+  <string name="channel_state_battery_powered">bateryjne</string>
+  <string name="channel_state_main_powered">sieciowe</string>
+  <string name="cfg_temperature_precision">Precyzja temperatury</string>
+  <string name="temperature_measured">Zmierzona</string>
+  <string name="temperature_preset">Ustawiona</string>
+  <string name="thermostat_detail_antifreeze_active">Aktywna ochrona przeciwzamrożeniowa</string>
+  <string name="thermostat_detail_overheat_active">Aktywna ochrona przed przegrzaniem</string>
+  <string name="developer_option">Opcje programisty\t</string>
+  <string name="developer_info_screen_orientation">Obracanie ekranu</string>
+  <string name="developer_info_settings">Ustawienia eksperymentalne</string>
 
   <plurals name="details_timer_info_on" tools:ignore="MissingQuantity">
     <item quantity="one">włączone</item>

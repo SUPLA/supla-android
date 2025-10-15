@@ -19,6 +19,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import io.reactivex.rxjava3.core.Observable
 import org.supla.android.data.source.local.dao.ProfileDao
+import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.usecases.developerinfo.CountProvider
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -32,9 +33,13 @@ class RoomProfileRepository @Inject constructor(private val profileDao: ProfileD
 
   fun findAllProfiles() = profileDao.findAllProfiles()
 
+  suspend fun findAllProfilesKtx() = profileDao.findAllProfilesKtx()
+
   fun findProfile(id: Long) = profileDao.findProfile(id)
 
   fun activateProfile(id: Long) = profileDao.activateProfile(id)
+
+  fun deleteProfile(profileEntity: ProfileEntity) = profileDao.delete(profileEntity)
 
   override fun count(): Observable<Int> = profileDao.count()
 }

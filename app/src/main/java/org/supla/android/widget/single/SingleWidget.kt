@@ -26,13 +26,10 @@ import android.view.View
 import android.widget.RemoteViews
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
-import org.supla.android.Trace
 import org.supla.android.core.infrastructure.WorkManagerProxy
 import org.supla.android.data.model.general.ChannelState
 import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.Scene
-import org.supla.android.data.source.local.entity.isGpm
-import org.supla.android.data.source.local.entity.isThermometer
 import org.supla.android.images.ImageCache
 import org.supla.android.lib.SuplaConst
 import org.supla.android.lib.actions.ActionId
@@ -41,6 +38,7 @@ import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.widget.WidgetConfiguration
 import org.supla.android.widget.shared.WidgetProviderBase
 import org.supla.android.widget.shared.isWidgetValid
+import timber.log.Timber
 import javax.inject.Inject
 
 private const val ACTION_PRESSED = "ACTION_PRESSED"
@@ -94,6 +92,7 @@ class SingleWidget : WidgetProviderBase() {
 
       views.setViewVisibility(R.id.single_widget_removed_label, View.GONE)
     } else {
+      views.setViewVisibility(R.id.single_widget_text, View.GONE)
       views.setViewVisibility(R.id.single_widget_button, View.GONE)
       views.setViewVisibility(R.id.single_widget_button_night_mode, View.GONE)
       views.setViewVisibility(R.id.single_widget_removed_label, View.VISIBLE)
@@ -104,7 +103,7 @@ class SingleWidget : WidgetProviderBase() {
 
   override fun onReceive(context: Context, intent: Intent?) {
     super.onReceive(context, intent)
-    Trace.i(TAG, "[SingleWidget] Got intent with action: " + intent?.action)
+    Timber.i("[SingleWidget] Got intent with action: %s", intent?.action ?: "")
 
     if (intent?.action == ACTION_PRESSED) {
       val widgetIds = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS) ?: IntArray(0)
@@ -123,7 +122,7 @@ class SingleWidget : WidgetProviderBase() {
       profileId = configuration.profileId
     )
 
-    if (channel.isThermometer() || channel.isGpm()) {
+    if (channel.isValueWidget) {
       views.setTextViewText(R.id.single_widget_text, configuration.value)
       views.setViewVisibility(R.id.single_widget_button, View.GONE)
       views.setViewVisibility(R.id.single_widget_button_night_mode, View.GONE)
@@ -185,7 +184,7 @@ fun intent(context: Context, intentAction: String, widgetId: Int): Intent =
   intent(context, intentAction, intArrayOf(widgetId))
 
 fun intent(context: Context, intentAction: String, widgetIds: IntArray): Intent {
-  Trace.d(SingleWidget::javaClass.name, "Creating intent with action: $intentAction")
+  Timber.d("Creating intent with action: $intentAction")
   return Intent(context, SingleWidget::class.java).apply {
     action = intentAction
     flags = Intent.FLAG_RECEIVER_FOREGROUND

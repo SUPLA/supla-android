@@ -19,10 +19,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import org.supla.android.core.storage.UserStateHolder
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
+import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType
 import org.supla.android.usecases.channel.ChannelValueStringProvider
 import org.supla.android.usecases.channel.ValueType
-import org.supla.android.usecases.channel.valueformatter.ListElectricityMeterValueFormatter
 import org.supla.android.usecases.channel.valueprovider.ElectricityMeterValueProvider
+import org.supla.core.shared.usecase.channel.valueformatter.formatters.ElectricityMeterValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.types.ValueFormat
+import org.supla.core.shared.usecase.channel.valueformatter.types.withUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -32,7 +35,7 @@ class ElectricityMeterValueStringProvider @Inject constructor(
   private val userStateHolder: UserStateHolder
 ) : ChannelValueStringProvider {
 
-  private val formatter = ListElectricityMeterValueFormatter()
+  private val formatter = ElectricityMeterValueFormatter()
 
   override fun handle(channelWithChildren: ChannelWithChildren): Boolean =
     electricityMeterValueProvider.handle(channelWithChildren)
@@ -41,6 +44,18 @@ class ElectricityMeterValueStringProvider @Inject constructor(
     val channelData = channelWithChildren.channel
     val value = electricityMeterValueProvider.value(channelWithChildren, valueType)
     val type = userStateHolder.getElectricityMeterSettings(channelData.profileId, channelData.remoteId).showOnListSafe
-    return formatter.format(value, withUnit = withUnit, custom = type)
+
+    return if (type == SuplaElectricityMeasurementType.FORWARD_ACTIVE_ENERGY) {
+      formatter.format(value, withUnit(withUnit))
+    } else {
+      formatter.format(
+        value = value,
+        format = ValueFormat(
+          withUnit = withUnit,
+          customUnit = " ${type.unit}",
+          showNoValueText = false
+        )
+      )
+    }
   }
 }

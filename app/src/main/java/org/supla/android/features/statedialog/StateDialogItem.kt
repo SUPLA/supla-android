@@ -29,7 +29,7 @@ enum class StateDialogItem(val captionResource: Int) {
   IP_ADDRESS(R.string.IP),
   MAC_ADDRESS(R.string.MAC),
   BATTERY_LEVEL(R.string.battery_level),
-  BATTERY_POWERED(R.string.battery_powered),
+  POWER_SUPPLY(R.string.state_power_supply),
   WIFI_RSSI(R.string.wifi_rssi),
   WIFI_SIGNAL(R.string.wifi_signal_strength),
   BRIDGE_NODE(R.string.bridge_node_online),
@@ -48,7 +48,7 @@ enum class StateDialogItem(val captionResource: Int) {
       IP_ADDRESS -> { state -> state.ipV4?.let { LocalizedString.Constant(it) } }
       MAC_ADDRESS -> { state -> state.macAddress?.let { LocalizedString.Constant(it) } }
       BATTERY_LEVEL -> { state -> state.batteryLevelString?.let { LocalizedString.Constant(it) } }
-      BATTERY_POWERED -> { state -> state.batteryPowered?.localizedString }
+      POWER_SUPPLY -> { state -> state.batteryPoweredString }
 
       WIFI_RSSI -> { state -> state.wifiRssiString?.let { LocalizedString.Constant(it) } }
       WIFI_SIGNAL -> { state -> state.wifiSignalStrengthString?.let { LocalizedString.Constant(it) } }

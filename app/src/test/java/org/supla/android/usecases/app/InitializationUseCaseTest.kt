@@ -30,7 +30,6 @@ import io.reactivex.rxjava3.core.Single
 import org.assertj.core.api.Assertions
 import org.junit.Before
 import org.junit.Test
-import org.supla.android.Preferences
 import org.supla.android.core.infrastructure.BuildConfigProxy
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.infrastructure.ThreadHandler
@@ -39,7 +38,6 @@ import org.supla.android.core.networking.suplaclient.SuplaClientStateHolder
 import org.supla.android.core.storage.EncryptedPreferences
 import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.db.DbHelper
-import org.supla.android.db.MeasurementsDbHelper
 import org.supla.android.db.room.app.AppDatabase
 import org.supla.android.db.room.measurements.MeasurementsDatabase
 
@@ -53,9 +51,6 @@ class InitializationUseCaseTest {
 
   @MockK
   private lateinit var measurementsDatabase: MeasurementsDatabase
-
-  @MockK
-  private lateinit var preferences: Preferences
 
   @MockK
   private lateinit var profileRepository: RoomProfileRepository
@@ -100,7 +95,7 @@ class InitializationUseCaseTest {
       stateHolder.handleEvent(SuplaClientEvent.Lock)
       threadHandler.sleep(495)
     }
-    confirmVerified(stateHolder, threadHandler, preferences, context)
+    confirmVerified(stateHolder, threadHandler, context)
   }
 
   @Test
@@ -108,13 +103,12 @@ class InitializationUseCaseTest {
     // given
     val context: Context = mockk {
       every { deleteDatabase(DbHelper.DATABASE_NAME) } returns true
-      every { deleteDatabase(MeasurementsDbHelper.DATABASE_NAME) } returns true
+      every { deleteDatabase(MeasurementsDatabase.NAME) } returns true
     }
     every { dateProvider.currentTimestamp() } returnsMany listOf(5, 10)
     every { appDatabase.openHelper } returns mockk { every { readableDatabase } answers { throw SQLiteException() } }
     every { profileRepository.findActiveProfile() } returns Single.just(mockk { every { active } returns true })
     every { encryptedPreferences.lockScreenSettings } returns mockk { every { pinForAppRequired } returns false }
-    every { preferences.isAnyAccountRegistered = false } answers {}
     every { threadHandler.sleep(any()) } answers {}
     every { stateHolder.handleEvent(SuplaClientEvent.Initialized) } answers {}
     every { buildConfigProxy.debug } returns false
@@ -126,11 +120,10 @@ class InitializationUseCaseTest {
     verify {
       stateHolder.handleEvent(SuplaClientEvent.Initialized)
       threadHandler.sleep(495)
-      preferences.isAnyAccountRegistered = false
       context.deleteDatabase(DbHelper.DATABASE_NAME)
-      context.deleteDatabase(MeasurementsDbHelper.DATABASE_NAME)
+      context.deleteDatabase(MeasurementsDatabase.NAME)
     }
-    confirmVerified(stateHolder, threadHandler, preferences, context)
+    confirmVerified(stateHolder, threadHandler, context)
   }
 
   @Test
@@ -138,13 +131,12 @@ class InitializationUseCaseTest {
     // given
     val context: Context = mockk {
       every { deleteDatabase(DbHelper.DATABASE_NAME) } returns false
-      every { deleteDatabase(MeasurementsDbHelper.DATABASE_NAME) } returns true
+      every { deleteDatabase(MeasurementsDatabase.NAME) } returns true
     }
     every { dateProvider.currentTimestamp() } returnsMany listOf(5, 1010)
     every { appDatabase.openHelper } returns mockk { every { readableDatabase } answers { throw SQLiteException() } }
     every { profileRepository.findActiveProfile() } returns Single.error(NoSuchElementException())
     every { encryptedPreferences.lockScreenSettings } returns mockk { every { pinForAppRequired } returns false }
-    every { preferences.isAnyAccountRegistered = false } answers {}
     every { threadHandler.sleep(any()) } answers {}
     every { stateHolder.handleEvent(SuplaClientEvent.NoAccount) } answers {}
     every { buildConfigProxy.debug } returns false
@@ -156,9 +148,9 @@ class InitializationUseCaseTest {
     verify {
       stateHolder.handleEvent(SuplaClientEvent.NoAccount)
       context.deleteDatabase(DbHelper.DATABASE_NAME)
-      context.deleteDatabase(MeasurementsDbHelper.DATABASE_NAME)
+      context.deleteDatabase(MeasurementsDatabase.NAME)
     }
-    confirmVerified(stateHolder, threadHandler, preferences, context)
+    confirmVerified(stateHolder, threadHandler, context)
   }
 
   @Test
@@ -174,6 +166,6 @@ class InitializationUseCaseTest {
     Assertions.assertThatThrownBy { useCase.invoke(context) }.isSameAs(exception)
 
     // then
-    confirmVerified(stateHolder, threadHandler, preferences, context)
+    confirmVerified(stateHolder, threadHandler, context)
   }
 }

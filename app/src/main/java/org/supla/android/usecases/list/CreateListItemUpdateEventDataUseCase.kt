@@ -32,6 +32,7 @@ import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToGarageDoorUpdateEventMapper
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToGpmUpdateEventMapper
+import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToHeatpolThermostatUpdateEventMapper
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToIconValueItemUpdateEventMapper
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToProjectScreenUpdateEventMapper
 import org.supla.android.usecases.list.eventmappers.ChannelWithChildrenToShadingSystemUpdateEventMapper
@@ -61,7 +62,8 @@ class CreateListItemUpdateEventDataUseCase @Inject constructor(
   channelWithChildrenToProjectScreenUpdateEventMapper: ChannelWithChildrenToProjectScreenUpdateEventMapper,
   channelWithChildrenToGarageDoorUpdateEventMapper: ChannelWithChildrenToGarageDoorUpdateEventMapper,
   channelWithChildrenToSwitchUpdateEventMapper: ChannelWithChildrenToSwitchUpdateEventMapper,
-  channelWithChildrenToTemperatureHumidityUpdateEventMapper: ChannelWithChildrenToTemperatureHumidityUpdateEventMapper
+  channelWithChildrenToTemperatureHumidityUpdateEventMapper: ChannelWithChildrenToTemperatureHumidityUpdateEventMapper,
+  channelWithChildrenToHeatpolThermostatUpdateEventMapper: ChannelWithChildrenToHeatpolThermostatUpdateEventMapper
 ) {
 
   private val mappers: List<Mapper> = listOf(
@@ -72,7 +74,8 @@ class CreateListItemUpdateEventDataUseCase @Inject constructor(
     channelWithChildrenToProjectScreenUpdateEventMapper,
     channelWithChildrenToGarageDoorUpdateEventMapper,
     channelWithChildrenToSwitchUpdateEventMapper,
-    channelWithChildrenToTemperatureHumidityUpdateEventMapper
+    channelWithChildrenToTemperatureHumidityUpdateEventMapper,
+    channelWithChildrenToHeatpolThermostatUpdateEventMapper
   )
 
   operator fun invoke(itemType: ItemType, remoteId: Int): Observable<SlideableListItemData> {

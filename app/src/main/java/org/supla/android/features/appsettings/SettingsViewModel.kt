@@ -28,6 +28,7 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.Preferences
 import org.supla.android.R
+import org.supla.android.core.branding.Configuration
 import org.supla.android.core.permissions.PermissionsHelper
 import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.core.storage.EncryptedPreferences
@@ -37,9 +38,9 @@ import org.supla.android.core.ui.ViewState
 import org.supla.android.data.model.general.LockScreenScope
 import org.supla.android.data.model.general.NightModeSetting
 import org.supla.android.data.source.runtime.appsettings.ChannelHeight
-import org.supla.android.data.source.runtime.appsettings.TemperatureUnit
 import org.supla.android.features.lockscreen.UnlockAction
 import org.supla.android.tools.SuplaSchedulers
+import org.supla.core.shared.data.model.thermometer.TemperatureUnit
 import javax.inject.Inject
 
 @HiltViewModel
@@ -62,26 +63,50 @@ class SettingsViewModel @Inject constructor(
       .disposeBySelf()
   }
 
+  @Suppress("KotlinConstantConditions")
   private fun configObservable() = Observable.fromCallable {
-    return@fromCallable listOf(
-      SettingItem.HeaderItem(headerResource = R.string.menubar_appsettings),
-      SettingItem.ChannelHeightItem(height = getChannelHeight(), this::updateChannelHeight),
-      SettingItem.TemperatureUnitItem(unit = preferences.temperatureUnit, this::updateTemperatureUnit),
-      SettingItem.ButtonAutoHide(active = preferences.isButtonAutohide, this::updateButtonAutoHide),
-      SettingItem.InfoButton(visible = preferences.isShowChannelInfo, this::updateInfoButton),
-      SettingItem.BottomMenu(visible = preferences.isShowBottomMenu, this::updateBottomMenu),
-      SettingItem.BottomLabels(visible = preferences.isShowBottomLabel, enabled = true, this::updateBottomLabel),
-      SettingItem.RollerShutterOpenClose(showOpeningPercentage = preferences.isShowOpeningPercent, this::updateShowingOpeningPercentage),
-      SettingItem.NightMode(nightModeSetting = applicationPreferences.nightMode, this::updateNightMode),
-      SettingItem.LockScreen(lockScreenScope = encryptedPreferences.lockScreenSettings.scope, this::updateLockScreen),
-      SettingItem.BatteryWarningLevel(level = applicationPreferences.batteryWarningLevel, this::updateBatteryWarningLevel),
-      SettingItem.LocalizationOrdering { sendEvent(SettingsViewEvent.NavigateToLocalizationsOrdering) },
-      SettingItem.AndroidAuto { sendEvent(SettingsViewEvent.NavigateToAndroidAuto) },
+    return@fromCallable if (Configuration.ANDROID_AUTO_SUPPORT) {
+      listOf(
+        SettingItem.HeaderItem(headerResource = R.string.menubar_appsettings),
+        SettingItem.ChannelHeightItem(height = getChannelHeight(), this::updateChannelHeight),
+        SettingItem.TemperatureUnitItem(unit = applicationPreferences.temperatureUnit, this::updateTemperatureUnit),
+        SettingItem.TemperaturePrecisionItem(precision = applicationPreferences.temperaturePrecision, this::updateTemperaturePrecision),
+        SettingItem.ButtonAutoHide(active = preferences.isButtonAutohide, this::updateButtonAutoHide),
+        SettingItem.InfoButton(visible = preferences.isShowChannelInfo, this::updateInfoButton),
+        SettingItem.BottomMenu(visible = preferences.isShowBottomMenu, this::updateBottomMenu),
+        SettingItem.BottomLabels(visible = preferences.isShowBottomLabel, enabled = true, this::updateBottomLabel),
+        SettingItem.RollerShutterOpenClose(showOpeningPercentage = preferences.isShowOpeningPercent, this::updateShowingOpeningPercentage),
+        SettingItem.NightMode(nightModeSetting = applicationPreferences.nightMode, this::updateNightMode),
+        SettingItem.LockScreen(lockScreenScope = encryptedPreferences.lockScreenSettings.scope, this::updateLockScreen),
+        SettingItem.BatteryWarningLevel(level = applicationPreferences.batteryWarningLevel, this::updateBatteryWarningLevel),
+        SettingItem.LocalizationOrdering { sendEvent(SettingsViewEvent.NavigateToLocalizationsOrdering) },
+        SettingItem.AndroidAuto { sendEvent(SettingsViewEvent.NavigateToAndroidAuto) },
 
-      SettingItem.HeaderItem(headerResource = R.string.settings_permissions),
-      SettingItem.NotificationsItem(allowed = areNotificationsEnabled(), this::goToSettings),
-      SettingItem.LocalizationItem(allowed = isLocationPermissionGranted(), this::goToSettings)
-    )
+        SettingItem.HeaderItem(headerResource = R.string.settings_permissions),
+        SettingItem.NotificationsItem(allowed = areNotificationsEnabled(), this::goToSettings),
+        SettingItem.LocalizationItem(allowed = isLocationPermissionGranted(), this::goToSettings)
+      )
+    } else {
+      listOf(
+        SettingItem.HeaderItem(headerResource = R.string.menubar_appsettings),
+        SettingItem.ChannelHeightItem(height = getChannelHeight(), this::updateChannelHeight),
+        SettingItem.TemperatureUnitItem(unit = applicationPreferences.temperatureUnit, this::updateTemperatureUnit),
+        SettingItem.TemperaturePrecisionItem(precision = applicationPreferences.temperaturePrecision, this::updateTemperaturePrecision),
+        SettingItem.ButtonAutoHide(active = preferences.isButtonAutohide, this::updateButtonAutoHide),
+        SettingItem.InfoButton(visible = preferences.isShowChannelInfo, this::updateInfoButton),
+        SettingItem.BottomMenu(visible = preferences.isShowBottomMenu, this::updateBottomMenu),
+        SettingItem.BottomLabels(visible = preferences.isShowBottomLabel, enabled = true, this::updateBottomLabel),
+        SettingItem.RollerShutterOpenClose(showOpeningPercentage = preferences.isShowOpeningPercent, this::updateShowingOpeningPercentage),
+        SettingItem.NightMode(nightModeSetting = applicationPreferences.nightMode, this::updateNightMode),
+        SettingItem.LockScreen(lockScreenScope = encryptedPreferences.lockScreenSettings.scope, this::updateLockScreen),
+        SettingItem.BatteryWarningLevel(level = applicationPreferences.batteryWarningLevel, this::updateBatteryWarningLevel),
+        SettingItem.LocalizationOrdering { sendEvent(SettingsViewEvent.NavigateToLocalizationsOrdering) },
+
+        SettingItem.HeaderItem(headerResource = R.string.settings_permissions),
+        SettingItem.NotificationsItem(allowed = areNotificationsEnabled(), this::goToSettings),
+        SettingItem.LocalizationItem(allowed = isLocationPermissionGranted(), this::goToSettings)
+      )
+    }
   }
 
   private fun getChannelHeight() = ChannelHeight.entries
@@ -98,7 +123,11 @@ class SettingsViewModel @Inject constructor(
   }
 
   private fun updateTemperatureUnit(position: Int) {
-    preferences.temperatureUnit = TemperatureUnit.forPosition(position)
+    applicationPreferences.temperatureUnit = TemperatureUnit.forPosition(position)
+  }
+
+  private fun updateTemperaturePrecision(position: Int) {
+    applicationPreferences.temperaturePrecision = position + 1
   }
 
   private fun updateButtonAutoHide(value: Boolean) {

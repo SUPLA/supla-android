@@ -11,8 +11,8 @@ import org.supla.android.data.model.chart.ChartEntryType
 import org.supla.android.data.model.chart.ChartRange
 import org.supla.android.data.model.chart.DateRange
 import org.supla.android.data.model.chart.HistoryDataSet
-import org.supla.android.usecases.channel.valueformatter.HumidityValueFormatter
 import org.supla.core.shared.data.model.general.SuplaFunction
+import org.supla.core.shared.usecase.channel.valueformatter.formatters.HumidityValueFormatter
 import java.util.Date
 
 class LineChartDataTest {
@@ -104,7 +104,7 @@ class LineChartDataTest {
             HistoryDataSet(
               type = ChartEntryType.HUMIDITY_ONLY,
               label = HistoryDataSet.Label.Single(HistoryDataSet.LabelData(123)),
-              valueFormatter = HumidityValueFormatter(),
+              valueFormatter = HumidityValueFormatter,
               active = true,
               entities = listOf(
                 listOf(

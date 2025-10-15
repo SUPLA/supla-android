@@ -22,7 +22,6 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.R
-import org.supla.android.Trace
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.ui.ViewEvent
@@ -32,7 +31,6 @@ import org.supla.android.data.source.local.entity.complex.shareable
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.data.source.remote.channel.SuplaChannelFlag
 import org.supla.android.events.OnlineEventsManager
-import org.supla.android.extensions.guardLet
 import org.supla.android.lib.SuplaChannelState
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.dialogs.AuthorizationDialogState
@@ -42,16 +40,17 @@ import org.supla.android.ui.dialogs.authorize.BaseAuthorizationViewModel
 import org.supla.android.usecases.channel.ReadChannelWithChildrenTreeUseCase
 import org.supla.android.usecases.client.AuthorizeUseCase
 import org.supla.android.usecases.client.LoginUseCase
+import org.supla.core.shared.extensions.guardLet
 import org.supla.core.shared.extensions.ifTrue
 import org.supla.core.shared.infrastructure.LocalizedString
 import org.supla.core.shared.infrastructure.localizedString
 import org.supla.core.shared.usecase.GetCaptionUseCase
 import org.supla.core.shared.usecase.channel.GetChannelDefaultCaptionUseCase
+import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 private const val REFRESH_INTERVAL_MS = 4000
-private const val TAG = "StateDialogViewModel"
 
 @HiltViewModel
 class StateDialogViewModel @Inject constructor(
@@ -159,12 +158,12 @@ class StateDialogViewModel @Inject constructor(
 
   fun updateStateDialog(state: SuplaChannelState?) {
     val (channelState) = guardLet(state) { return }
-    Trace.i(TAG, "Handling channel state for ${channelState.channelId}")
+    Timber.i("Handling channel state for ${channelState.channelId}")
 
     if (currentChannel?.remoteId != channelState.channelId) {
       return
     }
-    Trace.i(TAG, "Updating channel state for ${channelState.channelId}")
+    Timber.i("Updating channel state for ${channelState.channelId}")
 
     updateState { viewState ->
       lightSourceLifespan = state?.lightSourceLifespan
@@ -263,7 +262,7 @@ class StateDialogViewModel @Inject constructor(
               lastRefreshTimestamp?.let {
                 val currentTimestamp = dateProvider.currentTimestamp()
                 if (it + REFRESH_INTERVAL_MS < currentTimestamp) {
-                  Trace.d(TAG, "Asking for channel state $id")
+                  Timber.d("Asking for channel state $id")
                   lastRefreshTimestamp = currentTimestamp
                   suplaClientProvider.provide()?.getChannelState(id)
                 }

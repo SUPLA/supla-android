@@ -147,7 +147,7 @@ private fun TemperatureSelector(state: TimerDetailViewState, viewProxy: TimerDet
     CaptionText(text = stringResource(id = R.string.details_timer_min_temp))
     Spacer(modifier = Modifier.weight(1f))
     Text(
-      text = LocalContext.current.valuesFormatter.getTemperatureString(state.currentTemperature),
+      text = state.currentTemperatureString ?: "",
       style = MaterialTheme.typography.labelLarge,
       color = MaterialTheme.colorScheme.onBackground
     )

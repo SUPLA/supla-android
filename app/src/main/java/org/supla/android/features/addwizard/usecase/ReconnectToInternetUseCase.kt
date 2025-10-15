@@ -24,10 +24,9 @@ import android.os.Build
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.withTimeoutOrNull
-import org.supla.android.Trace
-import org.supla.android.extensions.TAG
 import org.supla.android.features.addwizard.usecase.receiver.ConnectResult
 import org.supla.android.features.addwizard.usecase.receiver.LegacyNetworkBroadcastReceiver
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.time.Duration.Companion.seconds
@@ -76,7 +75,7 @@ class LegacyEnableWifiUseCase(
       context.unregisterReceiver(changeReceiver)
     }
 
-    Trace.d(TAG, "Finishing with result ${changeReceiver.result}")
+    Timber.d("Finishing with result ${changeReceiver.result}")
     return changeReceiver.result ?: ConnectResult.TIMEOUT
   }
 }

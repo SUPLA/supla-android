@@ -24,7 +24,6 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.R
-import org.supla.android.Trace
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.storage.UserStateHolder
 import org.supla.android.core.ui.BaseViewModel
@@ -54,11 +53,9 @@ import org.supla.android.data.model.general.SingleSelectionList
 import org.supla.android.data.source.local.calendar.Hour
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
 import org.supla.android.events.DownloadEventsManager
-import org.supla.android.extensions.TAG
 import org.supla.android.extensions.beginOfNextHour
 import org.supla.android.extensions.dayEnd
 import org.supla.android.extensions.dayStart
-import org.supla.android.extensions.guardLet
 import org.supla.android.extensions.hour
 import org.supla.android.extensions.monthEnd
 import org.supla.android.extensions.monthStart
@@ -85,6 +82,8 @@ import org.supla.android.usecases.channel.ReadChannelWithChildrenUseCase
 import org.supla.android.usecases.migration.GroupingStringMigrationUseCase
 import org.supla.core.shared.data.model.rest.channel.ChannelDto
 import org.supla.core.shared.data.model.rest.channel.DefaultChannelDto
+import org.supla.core.shared.extensions.guardLet
+import timber.log.Timber
 import java.util.Calendar
 import java.util.Date
 import java.util.TimeZone
@@ -418,7 +417,7 @@ abstract class BaseHistoryDetailViewModel(
       .subscribeBy(
         onSuccess = { handleData(it.first, it.third, it.second) },
         onError = { error ->
-          Trace.e(TAG, "Subscription failed! (${this::class.java.name}:triggerDataLoad)", error)
+          Timber.e(error, "Subscription failed! (${this::class.java.name}:triggerDataLoad)")
           updateState { it.copy(loading = false, downloadState = DownloadEventsManager.State.Failed) }
         }
       )

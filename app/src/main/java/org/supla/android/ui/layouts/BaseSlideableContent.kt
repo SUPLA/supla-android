@@ -25,14 +25,13 @@ import androidx.compose.runtime.setValue
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.R
-import org.supla.android.Trace
 import org.supla.android.data.source.runtime.ItemType
-import org.supla.android.extensions.TAG
-import org.supla.android.extensions.guardLet
 import org.supla.android.tools.SuplaSchedulers
 import org.supla.android.ui.lists.data.SlideableListItemData
 import org.supla.android.usecases.list.CreateListItemUpdateEventDataUseCase
 import org.supla.core.shared.data.model.lists.ListItemIssues
+import org.supla.core.shared.extensions.guardLet
+import timber.log.Timber
 
 abstract class BaseSlideableContent<T : SlideableListItemData> : BaseAbstractComposeView {
 
@@ -129,7 +128,7 @@ abstract class BaseSlideableContent<T : SlideableListItemData> : BaseAbstractCom
         .observeOn(schedulers.ui)
         .subscribeBy(
           onNext = this::updateData,
-          onError = { Trace.e(TAG, "Could not subscribe for list item update event", it) }
+          onError = { Timber.e(it, "Could not subscribe for list item update event") }
         )
   }
 

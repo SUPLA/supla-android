@@ -21,7 +21,6 @@ import com.google.gson.Gson
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import org.supla.android.core.shared.shareable
-import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.model.general.IconType
 import org.supla.android.data.source.ChannelRelationRepository
 import org.supla.android.data.source.RoomChannelRepository
@@ -29,22 +28,13 @@ import org.supla.android.data.source.local.entity.LocationEntity
 import org.supla.android.data.source.local.entity.complex.ChannelChildEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
 import org.supla.android.data.source.local.entity.complex.indicatorIcon
-import org.supla.android.data.source.local.entity.complex.isGpMeasurement
-import org.supla.android.data.source.local.entity.complex.isGpMeter
-import org.supla.android.data.source.local.entity.complex.isHvacThermostat
-import org.supla.android.data.source.local.entity.complex.isIconValueItem
-import org.supla.android.data.source.local.entity.complex.isShadingSystem
 import org.supla.android.data.source.local.entity.complex.onlineState
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
-import org.supla.android.data.source.local.entity.isGarageDoorRoller
-import org.supla.android.data.source.local.entity.isIconWithAction
-import org.supla.android.data.source.local.entity.isProjectorScreen
-import org.supla.android.data.source.local.entity.isRgbw
-import org.supla.android.data.source.local.entity.isSwitch
 import org.supla.android.data.source.remote.hvac.SuplaChannelHvacConfig
 import org.supla.android.data.source.remote.hvac.filterRelationType
 import org.supla.android.data.source.remote.thermostat.getIndicatorIcon
 import org.supla.android.data.source.remote.thermostat.getSetpointText
+import org.supla.android.di.FORMATTER_THERMOMETER
 import org.supla.android.di.GSON_FOR_REPO
 import org.supla.android.ui.lists.ListItem
 import org.supla.android.ui.lists.onlineState
@@ -53,6 +43,9 @@ import org.supla.android.usecases.location.CollapsedFlag
 import org.supla.core.shared.data.model.general.SuplaFunction
 import org.supla.core.shared.usecase.GetCaptionUseCase
 import org.supla.core.shared.usecase.channel.GetChannelIssuesForListUseCase
+import org.supla.core.shared.usecase.channel.valueformatter.NO_VALUE_TEXT
+import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.types.ValueFormat
 import java.util.LinkedList
 import javax.inject.Inject
 import javax.inject.Named
@@ -60,15 +53,15 @@ import javax.inject.Singleton
 
 @Singleton
 class CreateProfileChannelsListUseCase @Inject constructor(
-  private val channelRelationRepository: ChannelRelationRepository,
-  private val channelRepository: RoomChannelRepository,
-  private val getCaptionUseCase: GetCaptionUseCase,
-  private val getChannelIconUseCase: GetChannelIconUseCase,
-  private val getChannelValueStringUseCase: GetChannelValueStringUseCase,
-  private val valuesFormatter: ValuesFormatter,
   private val getChannelIssuesForListUseCase: GetChannelIssuesForListUseCase,
   private val getChannelChildrenTreeUseCase: GetChannelChildrenTreeUseCase,
-  @Named(GSON_FOR_REPO) private val gson: Gson
+  private val getChannelValueStringUseCase: GetChannelValueStringUseCase,
+  private val channelRelationRepository: ChannelRelationRepository,
+  private val getChannelIconUseCase: GetChannelIconUseCase,
+  private val channelRepository: RoomChannelRepository,
+  private val getCaptionUseCase: GetCaptionUseCase,
+  @Named(FORMATTER_THERMOMETER) private val thermometerValueFormatter: ValueFormatter,
+  @Named(GSON_FOR_REPO) private val gson: Gson,
 ) {
 
   operator fun invoke(): Observable<List<ListItem>> =
@@ -116,21 +109,77 @@ class CreateProfileChannelsListUseCase @Inject constructor(
       }.toObservable()
 
   private fun createChannelListItem(channelData: ChannelDataEntity, childrenMap: MutableMap<Int, List<ChannelChildEntity?>>) =
-    when {
-      channelData.isGpMeasurement() || channelData.isGpMeter() || channelData.isIconValueItem() ->
-        toIconValueItem(channelData, childrenMap)
+    when (channelData.function) {
+      SuplaFunction.CONTROLLING_THE_ROLLER_SHUTTER,
+      SuplaFunction.CONTROLLING_THE_ROOF_WINDOW,
+      SuplaFunction.CONTROLLING_THE_FACADE_BLIND,
+      SuplaFunction.TERRACE_AWNING,
+      SuplaFunction.CURTAIN,
+      SuplaFunction.VERTICAL_BLIND,
+      SuplaFunction.PROJECTOR_SCREEN,
+      SuplaFunction.ROLLER_GARAGE_DOOR,
+      SuplaFunction.LIGHTSWITCH,
+      SuplaFunction.POWER_SWITCH,
+      SuplaFunction.STAIRCASE_TIMER,
+      SuplaFunction.RGB_LIGHTING,
+      SuplaFunction.DIMMER_AND_RGB_LIGHTING,
+      SuplaFunction.DIMMER,
+      SuplaFunction.VALVE_OPEN_CLOSE,
+      SuplaFunction.VALVE_PERCENTAGE -> toIconWithButtonsItem(channelData, childrenMap)
 
-      channelData.isShadingSystem() ||
-        channelData.isProjectorScreen() ||
-        channelData.isGarageDoorRoller() ||
-        channelData.isSwitch() ||
-        channelData.isRgbw() ||
-        channelData.function == SuplaFunction.VALVE_OPEN_CLOSE -> toIconWithButtonsItem(channelData, childrenMap)
+      SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS -> toHeatpolThermostatItem(channelData, childrenMap)
 
-      channelData.isIconWithAction() -> toIconWithRightButtonItem(channelData, childrenMap)
-      channelData.isHvacThermostat() -> toThermostatItem(channelData, childrenMap)
-      channelData.function == SuplaFunction.HUMIDITY_AND_TEMPERATURE -> toDoubleValueItem(channelData, childrenMap)
-      else -> toChannelItem(channelData, childrenMap)
+      SuplaFunction.CONTROLLING_THE_GATE,
+      SuplaFunction.CONTROLLING_THE_GATEWAY_LOCK,
+      SuplaFunction.CONTROLLING_THE_GARAGE_DOOR,
+      SuplaFunction.CONTROLLING_THE_DOOR_LOCK -> toIconWithRightButtonItem(channelData, childrenMap)
+
+      SuplaFunction.HVAC_THERMOSTAT,
+      SuplaFunction.HVAC_DOMESTIC_HOT_WATER,
+      SuplaFunction.HVAC_THERMOSTAT_HEAT_COOL -> toThermostatItem(channelData, childrenMap)
+      SuplaFunction.HUMIDITY_AND_TEMPERATURE -> toDoubleValueItem(channelData, childrenMap)
+
+      SuplaFunction.UNKNOWN,
+      SuplaFunction.NONE,
+      SuplaFunction.ALARM_ARMAMENT_SENSOR,
+      SuplaFunction.HOTEL_CARD_SENSOR,
+      SuplaFunction.THERMOMETER,
+      SuplaFunction.DEPTH_SENSOR,
+      SuplaFunction.DISTANCE_SENSOR,
+      SuplaFunction.ELECTRICITY_METER,
+      SuplaFunction.HEAT_OR_COLD_SOURCE_SWITCH,
+      SuplaFunction.PUMP_SWITCH,
+      SuplaFunction.NO_LIQUID_SENSOR,
+      SuplaFunction.RAIN_SENSOR,
+      SuplaFunction.MAIL_SENSOR,
+      SuplaFunction.OPENING_SENSOR_WINDOW,
+      SuplaFunction.OPEN_SENSOR_DOOR,
+      SuplaFunction.OPEN_SENSOR_GATE,
+      SuplaFunction.OPEN_SENSOR_GATEWAY,
+      SuplaFunction.OPEN_SENSOR_GARAGE_DOOR,
+      SuplaFunction.OPEN_SENSOR_ROOF_WINDOW,
+      SuplaFunction.OPEN_SENSOR_ROLLER_SHUTTER,
+      SuplaFunction.PRESSURE_SENSOR,
+      SuplaFunction.WEIGHT_SENSOR,
+      SuplaFunction.HUMIDITY,
+      SuplaFunction.CONTAINER,
+      SuplaFunction.WATER_TANK,
+      SuplaFunction.SEPTIC_TANK,
+      SuplaFunction.IC_WATER_METER,
+      SuplaFunction.IC_GAS_METER,
+      SuplaFunction.IC_HEAT_METER,
+      SuplaFunction.IC_ELECTRICITY_METER,
+      SuplaFunction.FLOOD_SENSOR,
+      SuplaFunction.CONTAINER_LEVEL_SENSOR,
+      SuplaFunction.WIND_SENSOR,
+      SuplaFunction.DIGIGLASS_VERTICAL,
+      SuplaFunction.DIGIGLASS_HORIZONTAL,
+      SuplaFunction.GENERAL_PURPOSE_MEASUREMENT,
+      SuplaFunction.GENERAL_PURPOSE_METER,
+      SuplaFunction.RING,
+      SuplaFunction.ALARM,
+      SuplaFunction.NOTIFICATION,
+      SuplaFunction.WEATHER_STATION -> toIconValueItem(channelData, childrenMap)
     }
 
   private fun toIconValueItem(
@@ -166,12 +215,32 @@ class CreateProfileChannelsListUseCase @Inject constructor(
       onlineState,
       getCaptionUseCase(channelData.shareable),
       getChannelIconUseCase(channelData),
-      thermometerChild?.let { getChannelValueStringUseCase(it.withChildren) } ?: ValuesFormatter.NO_VALUE_TEXT,
+      thermometerChild?.let { getChannelValueStringUseCase(it.withChildren) } ?: NO_VALUE_TEXT,
       getChannelIssuesForListUseCase(channelWithChildren(channelData, childrenMap).shareable),
       channelData.channelExtendedValueEntity?.getSuplaValue()?.TimerStateValue?.countdownEndsAt,
-      thermostatValue.getSetpointText(valuesFormatter),
+      thermostatValue.getSetpointText(thermometerValueFormatter),
       indicatorIcon.resource,
     )
+  }
+
+  private fun toHeatpolThermostatItem(
+    channelData: ChannelDataEntity,
+    childrenMap: MutableMap<Int, List<ChannelChildEntity?>>
+  ): ListItem.HeatpolThermostatItem {
+    val value = channelData.channelValueEntity.asHeatpolThermostatValue()
+
+    return channelWithChildren(channelData, childrenMap).let { channelWithChildren ->
+      ListItem.HeatpolThermostatItem(
+        channelData,
+        channelData.locationEntity.caption,
+        channelData.channelValueEntity.status.onlineState,
+        getCaptionUseCase(channelData.shareable),
+        getChannelIconUseCase(channelData),
+        getChannelValueStringUseCase(channelWithChildren),
+        getChannelIssuesForListUseCase(channelWithChildren(channelData, childrenMap).shareable),
+        thermometerValueFormatter.format(value.presetTemperature, ValueFormat.WithUnit),
+      )
+    }
   }
 
   private fun toIconWithButtonsItem(
@@ -227,13 +296,6 @@ class CreateProfileChannelsListUseCase @Inject constructor(
         secondValue = getChannelValueStringUseCase.valueOrNull(it, ValueType.SECOND, withUnit = false)
       )
     }
-
-  private fun toChannelItem(channelData: ChannelDataEntity, childrenMap: MutableMap<Int, List<ChannelChildEntity?>>): ListItem.ChannelItem =
-    ListItem.ChannelItem(
-      channelData,
-      childrenMap[channelData.remoteId]?.filterNotNull(),
-      channelData.getLegacyChannel()
-    )
 
   private fun channelWithChildren(
     channelData: ChannelDataEntity,

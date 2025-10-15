@@ -79,18 +79,18 @@ import kotlinx.coroutines.launch
 import org.supla.android.R
 import org.supla.android.core.ui.theme.Distance
 import org.supla.android.core.ui.theme.SuplaTheme
-import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.remote.channel.SuplaElectricityMeasurementType
 import org.supla.android.extensions.toPx
 import org.supla.android.ui.views.ChannelOfflineView
 import org.supla.android.ui.views.buttons.IconButton
 import org.supla.android.ui.views.card.SummaryCardData
+import org.supla.core.shared.usecase.channel.valueformatter.NO_VALUE_TEXT
 
 @Composable
 fun ElectricityMeterMetricsView(
   state: ElectricityMeterState,
-  onIntroductionClose: () -> Unit = {},
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
+  onIntroductionClose: () -> Unit = {}
 ) {
   val horizontalScrollState = rememberScrollState()
   val verticalScrollState = rememberScrollState()
@@ -268,7 +268,7 @@ private fun PhaseDataSinglePhase(
             energyShown = true
           }
           PhaseValue(
-            text = phase.values[it] ?: ValuesFormatter.NO_VALUE_TEXT,
+            text = phase.values[it] ?: NO_VALUE_TEXT,
             selected = it == selectedLabel,
             onClick = onSelectedLabelChanged?.click(it)
           )
@@ -302,7 +302,7 @@ private fun OptionalSpace(
   measurements: List<SuplaElectricityMeasurementType>,
   selectedLabel: SuplaElectricityMeasurementType? = null,
   onSelectedLabelChanged: ((SuplaElectricityMeasurementType) -> Unit)? = null
-) =
+) {
   freeSpace?.let { space ->
     // For the single phase, when there is more space, we want that values are aligned to the right side of screen
     if (space > 0.dp) {
@@ -325,6 +325,7 @@ private fun OptionalSpace(
       }
     }
   }
+}
 
 @Composable
 private fun PhaseHeader(text: String = "", alignment: TextAlign = TextAlign.Start) =

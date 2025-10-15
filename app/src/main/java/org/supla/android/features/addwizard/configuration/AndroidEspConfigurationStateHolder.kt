@@ -17,8 +17,6 @@ package org.supla.android.features.addwizard.configuration
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.Trace
-import org.supla.android.extensions.TAG
 import org.supla.core.shared.data.model.addwizard.Canceled
 import org.supla.core.shared.data.model.addwizard.ConfigurationFailure
 import org.supla.core.shared.data.model.addwizard.EspConfigurationController
@@ -27,6 +25,7 @@ import org.supla.core.shared.data.model.addwizard.EspConfigurationState
 import org.supla.core.shared.data.model.addwizard.EspConfigurationStateHolder
 import org.supla.core.shared.data.model.addwizard.Finished
 import org.supla.core.shared.data.model.addwizard.Idle
+import timber.log.Timber
 
 class AndroidEspConfigurationStateHolder(private val espConfigurationController: EspConfigurationController) : EspConfigurationStateHolder {
 
@@ -40,13 +39,13 @@ class AndroidEspConfigurationStateHolder(private val espConfigurationController:
 
   fun handleEvent(event: EspConfigurationEvent) {
     synchronized(this) {
-      Trace.i(TAG, "Handling event `$event` by state `$state`")
+      Timber.i("Handling event `$event` by state `$state`")
       state.handle(event)
     }
   }
 
   override fun setState(state: EspConfigurationState) {
-    Trace.i(TAG, "State changed to `$state`")
+    Timber.i("State changed to `$state`")
     this.state = state
     espConfigurationController.updateProgress(state.progress, state.progressLabel)
   }

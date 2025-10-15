@@ -213,7 +213,7 @@
   <string name="associeted_with_scene_error">No se puede cambiar la función del canal que está asociado con la escena.</string>
   <string name="battery_health">Duración de la batería</string>
   <string name="battery_level">Nivel de batería</string>
-  <string name="battery_powered">Alimentación por batería</string>
+  <string name="state_power_supply">Alimentación</string>
   <string name="belongs_to_group_error">No se puede cambiar la función del canal que pertenece al grupo.</string>
   <string name="bridge">Puente</string>
   <string name="bridge_node_online">Nodo del puente – en línea</string>
@@ -241,7 +241,7 @@
   <string name="light_source_lifespan">Vida útil de la fuente de luz</string>
   <string name="light_source_lifespan_hours">Duración de la luz (horas)</string>
   <string name="light_source_operatingtime">Tiempo de trabajo de la fuente de luz</string>
-  <string name="lightsource_warning">Duración de la fuente de luz es %1$s</string>
+  <string name="channel_lightsource_warning">Duración de la fuente de luz es %1$.01f%%</string>
   <string name="mode_change_in_progress">Cambio de modo en curso</string>
   <string name="no">No</string>
   <string name="reset_lightsource_usage_counter">Resetear el contador de uso de la fuente de luz</string>
@@ -253,8 +253,8 @@
   <string name="soft_ver">Versión</string>
   <string name="time_exceeded">¡Se ha superado el tiempo! Inténtalo de nuevo.</string>
   <string name="uptime">Tiempo de trabajo</string>
-  <string name="uv_warning1">Duración de la lámpara ultravioleta es %1$s. Planee su reemplazo.</string>
-  <string name="uv_warning2">Duración de la lámpara ultravioleta es %1$s. Reemplácela.</string>
+  <string name="channel_uv_warning">Duración de la lámpara ultravioleta es %1$.01f%%. Planee su reemplazo.</string>
+  <string name="channel_uv_error">Duración de la lámpara ultravioleta es %1$.01f%%. Reemplácela.</string>
   <string name="valve_warning_manually_closed">La válvula se ha cerrado manualmente o por radio. Antes de abrirla, asegúrese de que no se haya cerrado debido a una inundación. Para desactivar la advertencia, abra la válvula manualmente. ¿Está seguro de que quiere abrir la válvula desde la aplicación?</string>
   <string name="valve_warning">La válvula se ha cerrado manualmente o por radio. Antes de abrirla, asegúrese de que no se haya cerrado debido a una inundación. Para desactivar la advertencia, abra la válvula manualmente.</string>
   <string name="vector_balance_days">Balance vectorial – Días</string>
@@ -696,4 +696,15 @@
   <string name="wizard_state_finishing">Finalización…</string>
   <string name="add_wizard_password_instruction">Por favor, use la contraseña utilizada para el acceso a la página web de configuración local.\n\n¿Olvidaste tu contraseña? Puedes cambiarla en Supla Cloud o restablecer el dispositivo a la configuración de fábrica.</string>
   <string name="add_wizard_manual_reconnect">La conexión de red al dispositivo se estableció manualmente. Asegúrese de que su teléfono se haya vuelto a conectar a Internet y continúe con el proceso.</string>
+  <string name="channel_state_battery_powered">a pilas</string>
+  <string name="channel_state_main_powered">de red</string>
+  <string name="cfg_temperature_precision">Precisión de temperatura</string>
+  <string name="temperature_measured">Medido</string>
+  <string name="temperature_preset">Preestablecido</string>
+  <string name="thermostat_detail_antifreeze_active">Protección anticongelante activa</string>
+  <string name="thermostat_detail_overheat_active">Protección contra sobrecalentamiento activa</string>
+  <string name="developer_option">Opciones de desarrollador</string>
+  <string name="developer_info_activated">Modo de desarrollador activado</string>
+  <string name="developer_info_screen_orientation">Rotación de pantalla activada</string>
+  <string name="developer_info_settings">Ajustes experimentales</string>
 </resources>

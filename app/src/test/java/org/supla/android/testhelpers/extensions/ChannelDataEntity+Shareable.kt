@@ -29,6 +29,7 @@ fun ChannelDataEntity.mockShareable(
   remoteId: Int = 1,
   caption: String = "",
   function: SuplaFunction = SuplaFunction.NONE,
+  altIcon: Int = 0,
   extendedValue: ChannelExtendedValueEntity? = null,
   status: SuplaChannelAvailabilityStatus = SuplaChannelAvailabilityStatus.ONLINE,
   value: ChannelValueEntity = mockk {
@@ -43,4 +44,6 @@ fun ChannelDataEntity.mockShareable(
   every { this@mockShareable.channelValueEntity } returns value
   every { this@mockShareable.stateEntity } returns null
   every { this@mockShareable.function } returns function
+  every { this@mockShareable.altIcon } returns altIcon
+  every { this@mockShareable.configEntity } returns null
 }

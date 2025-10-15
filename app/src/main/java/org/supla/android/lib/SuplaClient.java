@@ -40,7 +40,6 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.supla.android.BuildConfig;
 import org.supla.android.SuplaApp;
-import org.supla.android.Trace;
 import org.supla.android.core.networking.suplaclient.SuplaClientApi;
 import org.supla.android.core.networking.suplaclient.SuplaClientDependencies;
 import org.supla.android.core.networking.suplaclient.SuplaClientEvent;
@@ -92,6 +91,7 @@ import org.supla.android.usecases.channelstate.UpdateChannelStateUseCase;
 import org.supla.android.usecases.group.UpdateChannelGroupTotalValueUseCase;
 import org.supla.core.shared.data.model.suplaclient.SuplaResultCode;
 import org.supla.core.shared.infrastructure.messaging.SuplaClientMessage;
+import timber.log.Timber;
 
 @SuppressWarnings("unused")
 public class SuplaClient extends Thread implements SuplaClientApi {
@@ -518,7 +518,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
     long now = System.currentTimeMillis();
     if (now - lastTokenRequest <= 5000) {
-      Trace.d(log_tag, "Token already requested: " + (now - lastTokenRequest));
+      Timber.d("Token already requested: %d", (now - lastTokenRequest));
       return;
     }
 
@@ -864,13 +864,9 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   }
 
   private void onVersionError(SuplaVersionError versionError) {
-    Trace.d(
-        log_tag,
-        Integer.valueOf(versionError.Version).toString()
-            + ","
-            + Integer.valueOf(versionError.RemoteVersionMin).toString()
-            + ","
-            + Integer.valueOf(versionError.RemoteVersion).toString());
+    Timber.d(
+        "onVersionError: %d, %d, %d",
+        versionError.Version, versionError.RemoteVersionMin, versionError.RemoteVersion);
 
     regTryCounter = 0;
 
@@ -893,12 +889,12 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   }
 
   private void onConnecting() {
-    Trace.d(log_tag, "Connecting");
+    Timber.d("Connecting");
     suplaClientStateHolder.handleEvent(Connecting.INSTANCE);
   }
 
   private void onConnError(SuplaConnError connError) {
-    Trace.d(log_tag, connError.codeToString(_context));
+    Timber.d(connError.codeToString(_context));
 
     if (connError.Code == SuplaConst.SUPLA_RESULT_HOST_NOT_FOUND) {
       cancel();
@@ -908,22 +904,22 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   }
 
   private void onConnected() {
-    Trace.d(log_tag, "connected");
+    Timber.d("connected");
     DbH = DbHelper.getInstance(_context);
   }
 
   private void onDisconnected() {
-    Trace.d(log_tag, "disconnected");
+    Timber.d("disconnected");
   }
 
   private void onRegistering() {
-    Trace.d(log_tag, "Registering");
+    Timber.d("Registering");
     regTryCounter++;
   }
 
   private void onRegistered(SuplaRegisterResult registerResult) {
 
-    Trace.d(log_tag, "registered");
+    Timber.d("registered");
 
     regTryCounter = 0;
     AuthProfileItem profile = profileManager.getCurrentProfile().blockingGet();
@@ -948,9 +944,9 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
     _client_id = registerResult.ClientID;
 
-    Trace.d(log_tag, "Protocol Version=" + registerResult.Version);
-    Trace.d(log_tag, "registerResult.ChannelCount=" + registerResult.ChannelCount);
-    Trace.d(log_tag, "registerResult.ChannelGroupCount=" + registerResult.ChannelGroupCount);
+    Timber.d("Protocol Version=%d", registerResult.Version);
+    Timber.d("registerResult.ChannelCount=%d", registerResult.ChannelCount);
+    Timber.d("registerResult.ChannelGroupCount=%d", registerResult.ChannelGroupCount);
 
     if (registerResult.ChannelCount == 0 && DbH.setChannelsVisible(0, 2)) {
       updateEventsManager.emitChannelsUpdate();
@@ -977,7 +973,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   }
 
   private void onRegisterError(SuplaRegisterError registerError) {
-    Trace.d(log_tag, "onRegisterError: " + registerError.codeToString(_context));
+    Timber.d("onRegisterError: %s", registerError.codeToString(_context));
 
     regTryCounter = 0;
     synchronized (st_lck) {
@@ -993,27 +989,23 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   }
 
   private void onRegistrationEnabled(SuplaRegistrationEnabled registrationEnabled) {
-    Trace.d(log_tag, "onRegistrationEnabled");
+    Timber.d("onRegistrationEnabled");
     sendMessage(
         new SuplaClientMessage.RegistrationEnabled(
             registrationEnabled.ClientTimestamp, registrationEnabled.IODeviceTimestamp));
   }
 
   private void onMinVersionRequired(SuplaMinVersionRequired minVersionRequired) {
-
-    Trace.d(
-        log_tag,
-        "SuplaMinVersionRequired - CallType: "
-            + minVersionRequired.CallType
-            + " MinVersion: "
-            + minVersionRequired.MinVersion);
+    Timber.d(
+        "SuplaMinVersionRequired - CallType: %d MinVersion %d",
+        minVersionRequired.CallType, minVersionRequired.MinVersion);
   }
 
   private void locationUpdate(SuplaLocation location) {
-    Trace.d(log_tag, "Location " + location.Id + " " + location.Caption);
+    Timber.d("Location %d %s", location.Id, location.Caption);
 
     if (DbH.updateLocation(location)) {
-      Trace.d(log_tag, "Location updated");
+      Timber.d("Location updated");
     }
   }
 
@@ -1026,22 +1018,14 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
     boolean _DataChanged = false;
 
-    Trace.d(
-        log_tag,
-        "Channel Function"
-            + channel.Func
-            + "  channel ID: "
-            + channel.Id
-            + " channel Location ID: "
-            + channel.LocationID
-            + " status: "
-            + channel.getAvailabilityStatus()
-            + " AltIcon: "
-            + channel.AltIcon
-            + " UserIcon: "
-            + channel.UserIcon
-            + " Flags: "
-            + channel.Flags);
+    Timber.d(
+        "Channel Function %d channel ID: %d Location ID: %d AltIcon: %d UserIcon: %d Flags: %d",
+        channel.Func,
+        channel.Id,
+        channel.LocationID,
+        channel.AltIcon,
+        channel.UserIcon,
+        channel.Flags);
 
     // Update channel value before update the channel
     onlineEventsManager.emit(channel.Id, channel.getStatus().getOnline());
@@ -1061,7 +1045,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     }
 
     if (_DataChanged) {
-      Trace.d(log_tag, "Channel updated");
+      Timber.d("Channel updated");
       sendMessage(new SuplaClientMessage.ChannelDataChanged(channel.Id, false, false));
       updateEventsManager.emitChannelUpdate(channel.Id);
     }
@@ -1079,18 +1063,13 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
     boolean _DataChanged = false;
 
-    Trace.d(
-        log_tag,
-        "Channel Group Function "
-            + channel_group.Func
-            + "  group ID: "
-            + channel_group.Id
-            + " group Location ID: "
-            + channel_group.LocationID
-            + " AltIcon: "
-            + channel_group.AltIcon
-            + " UserIcon: "
-            + channel_group.UserIcon);
+    Timber.d(
+        "Channel Group Function %d group ID: %d Location ID: %d AltIcon: %d UserIcon: %d",
+        channel_group.Func,
+        channel_group.Id,
+        channel_group.LocationID,
+        channel_group.AltIcon,
+        channel_group.UserIcon);
 
     if (DbH.updateChannelGroup(channel_group)) {
       _DataChanged = true;
@@ -1106,14 +1085,14 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     }
 
     if (_DataChanged) {
-      Trace.d(log_tag, "Channel Group updated");
+      Timber.d("Channel Group updated");
       sendMessage(new SuplaClientMessage.GroupDataChanged(channel_group.Id));
       updateEventsManager.emitGroupUpdate(channel_group.Id);
     }
   }
 
   private void channelRelationUpdate(SuplaChannelRelation channel_relation) {
-    Trace.d(log_tag, "Channel Relation Update: " + channel_relation.toString());
+    Timber.d("Channel Relation Update: %s", channel_relation.toString());
 
     if (channel_relation.isSol()) {
       markChannelRelationsAsRemovableUseCase.invoke().blockingSubscribe();
@@ -1132,12 +1111,9 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
     boolean _DataChanged = false;
 
-    Trace.d(
-        log_tag,
-        "Channel Group Relation group ID: "
-            + channelgroup_relation.ChannelGroupID
-            + " channel ID: "
-            + channelgroup_relation.ChannelID);
+    Timber.d(
+        "Channel Group Relation group ID: %d channel ID: %d",
+        channelgroup_relation.ChannelGroupID, channelgroup_relation.ChannelID);
 
     if (DbH.updateChannelGroupRelation(channelgroup_relation)) {
       _DataChanged = true;
@@ -1152,7 +1128,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
     }
 
     if (_DataChanged) {
-      Trace.d(log_tag, "Channel Group Relation updated");
+      Timber.d("Channel Group Relation updated");
       sendMessage(new SuplaClientMessage.GroupDataChanged(channelgroup_relation.ChannelGroupID));
       updateEventsManager.emitGroupUpdate(channelgroup_relation.ChannelGroupID);
     }
@@ -1160,20 +1136,14 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
   private void sceneUpdate(SuplaScene scene) {
     boolean dataChanged = false;
-    Trace.d(
-        log_tag,
-        "Scene id:"
-            + scene.getId()
-            + " locationId: "
-            + scene.getLocationId()
-            + " altIcon:"
-            + scene.getAltIcon()
-            + " userIcon:"
-            + scene.getUserIcon()
-            + " caption: "
-            + scene.getCaption()
-            + " EOL: "
-            + scene.isEol());
+    Timber.d(
+        "Scene id: %d locationId: %d altIcon: %d userIcon: %d caption: %s EOL: %b",
+        scene.getId(),
+        scene.getLocationId(),
+        scene.getAltIcon(),
+        scene.getUserIcon(),
+        scene.getCaption(),
+        scene.isEol());
 
     SceneRepository sr = DbH.getSceneRepository();
     if (sr.updateSuplaScene(scene)) {
@@ -1190,37 +1160,19 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   private void sceneStateUpdate(SuplaSceneState state) {
     SceneRepository sr = DbH.getSceneRepository();
     if (sr.updateSuplaSceneState(state)) {
-      Trace.d(
-          log_tag,
-          "Scene State sceneId:"
-              + state.getSceneId()
-              + " startedAt: "
-              + state.getStartedAt()
-              + " estimatedEndDate: "
-              + state.getEstimatedEndDate()
-              + " isDuringExecution: "
-              + state.isDuringExecution()
-              + " initiatorId: "
-              + state.getInitiatorId()
-              + " initiatorName: "
-              + state.getInitiatorName()
-              + " EOL: "
-              + state.isEol());
+      Timber.d(
+          "Scene State sceneId: %d isDuringExecution: %b initiatorId: %d initiatorName: %s EOL: %b",
+          state.getSceneId(),
+          state.isDuringExecution(),
+          state.getInitiatorId(),
+          state.getInitiatorName(),
+          state.isEol());
       updateEventsManager.emitSceneUpdate(state.getSceneId());
     }
   }
 
   private void channelValueUpdate(SuplaChannelValueUpdate channelValueUpdate) {
-    Trace.d(
-        log_tag,
-        "Channel value id:"
-            + channelValueUpdate.Id
-            + " value: "
-            + channelValueUpdate.Value
-            + " status:"
-            + channelValueUpdate.AvailabilityStatus
-            + " EOL:"
-            + channelValueUpdate.EOL);
+    Timber.d("Channel value id: %d EOL: %b", channelValueUpdate.Id, channelValueUpdate.EOL);
 
     onlineEventsManager.emit(
         channelValueUpdate.Id, channelValueUpdate.AvailabilityStatus.getOnline());
@@ -1251,13 +1203,13 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   }
 
   private void onEvent(SuplaEvent event) {
-    Trace.d(log_tag, "Supla Event");
+    Timber.d("Supla Event");
     sendMessage(
         SuplaClientMessageExtensionsKt.from(SuplaClientMessage.Companion, event, _client_id));
   }
 
   private void onOAuthTokenRequestResult(SuplaOAuthToken token) {
-    Trace.d(log_tag, "OAuthToken" + (token == null ? " is null" : ""));
+    Timber.d("OAuthToken %s", (token == null ? " is null" : ""));
 
     if (token != null && token.getUrl() == null) {
       AuthInfo info = profileManager.getCurrentProfile().blockingGet().getAuthInfo();
@@ -1282,11 +1234,11 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   }
 
   private void onDeviceCalCfgDebugString(String str) {
-    Trace.d("CalCfgDebugString", str);
+    Timber.d("CalCfgDebugString %s", str);
   }
 
   private void onChannelState(SuplaChannelState state) {
-    Trace.d(log_tag, "onChannelState channelId: " + state.getChannelId());
+    Timber.d("onChannelState channelId: %d", state.getChannelId());
     updateChannelStateUseCase.invoke(state).blockingSubscribe();
     sendMessage(new SuplaClientMessage.ChannelState(state));
     updateEventsManager.emitChannelUpdate(state.getChannelId());
@@ -1311,30 +1263,19 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   }
 
   private void onChannelGroupCaptionSetResult(int ChannelGroupID, String Caption, int ResultCode) {
-    Trace.i(
-        log_tag,
-        "onChannelGroupCaptionSetResult("
-            + ChannelGroupID
-            + ", "
-            + Caption
-            + ", "
-            + ResultCode
-            + ")");
+    Timber.i("onChannelGroupCaptionSetResult(%d, %s, %d)", ChannelGroupID, Caption, ResultCode);
   }
 
   private void onLocationCaptionSetResult(int LocationID, String Caption, int ResultCode) {
-    Trace.i(
-        log_tag,
-        "onLocationCaptionSetResult(" + LocationID + ", " + Caption + ", " + ResultCode + ")");
+    Timber.i("onLocationCaptionSetResult(%d, %s, %d)", LocationID, Caption, ResultCode);
   }
 
   private void onSceneCaptionSetResult(int SceneID, String Caption, int ResultCode) {
-    Trace.i(
-        log_tag, "onSceneCaptionSetResult(" + SceneID + ", " + Caption + ", " + ResultCode + ")");
+    Timber.i("onSceneCaptionSetResult(%d, %s, %d)", SceneID, Caption, ResultCode);
   }
 
   private void onClientsReconnectResult(int ResultCode) {
-    Trace.i(log_tag, "onClientReconnectResult(" + ResultCode + ")");
+    Timber.i("onClientReconnectResult(%d)", ResultCode);
   }
 
   private void onSetRegistrationEnabledResult(int ResultCode) {
@@ -1402,7 +1343,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
       @Nullable SubjectType subjectType,
       int subjectId,
       int resultCode) {
-    Trace.w(log_tag, "Action exec result " + subjectId + " resultCode " + resultCode);
+    Timber.w("Action exec result %d resultCode %d", subjectId, resultCode);
   }
 
   public synchronized boolean canceled() {
@@ -1453,15 +1394,15 @@ public class SuplaClient extends Thread implements SuplaClientApi {
             result = jsonResult.getString("server");
           }
         } catch (JSONException e) {
-          Trace.e(log_tag, "Deserialization failed", e);
+          Timber.e(e, "Deserialization failed");
         }
 
       } catch (IOException e) {
-        Trace.e(log_tag, "Autodiscover failed", e);
+        Timber.e(e, "Autodiscover failed");
       }
 
     } catch (MalformedURLException e) {
-      Trace.e(log_tag, "Wrong url " + urlString, e);
+      Timber.e(e, "Wrong url %s", urlString);
     }
 
     return result;
@@ -1597,7 +1538,7 @@ public class SuplaClient extends Thread implements SuplaClientApi {
 
     SuplaApp.getApp().OnSuplaClientFinished(this);
     suplaClientStateHolder.handleEvent(new Finish());
-    Trace.d(log_tag, "SuplaClient Finished");
+    Timber.d("SuplaClient Finished");
   }
 
   private boolean isAccessIDAuthentication() {
@@ -1611,20 +1552,20 @@ public class SuplaClient extends Thread implements SuplaClientApi {
   public void startScene(int sceneId) {
     ActionParameters params = new ActionParameters(ActionId.EXECUTE, SubjectType.SCENE, sceneId);
     if (!executeAction(params)) {
-      Trace.w(log_tag, "Failed to start scene " + sceneId);
+      Timber.w("Failed to start scene %d", sceneId);
     }
   }
 
   public void stopScene(int sceneId) {
     ActionParameters params = new ActionParameters(ActionId.INTERRUPT, SubjectType.SCENE, sceneId);
     if (!executeAction(params)) {
-      Trace.w(log_tag, "Failed to interrupt scene " + sceneId);
+      Timber.w("Failed to interrupt scene %d", sceneId);
     }
   }
 
   public void renameScene(int sceneId, String newName) {
     if (!setSceneCaption(sceneId, newName)) {
-      Trace.w(log_tag, "Failed to rename scene " + sceneId);
+      Timber.w("Failed to rename scene %d", sceneId);
     }
   }
 }

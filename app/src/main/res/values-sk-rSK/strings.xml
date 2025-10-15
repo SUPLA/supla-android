@@ -225,7 +225,7 @@
   <string name="associeted_with_scene_error">Nedá sa zmeniť funkcia kanálu, ktorý je spojený so scénou.</string>
   <string name="battery_health">Životnosť batérií</string>
   <string name="battery_level">Úroveň batérie</string>
-  <string name="battery_powered">Napájanie batériou</string>
+  <string name="state_power_supply">Napájanie</string>
   <string name="belongs_to_group_error">Nedá sa zmeniť funkcia kanálu, ktorý patrí ku skupine.</string>
   <string name="bridge">Most</string>
   <string name="bridge_node_online">Uzol mosta – online</string>
@@ -253,7 +253,7 @@
   <string name="light_source_lifespan">Životnosť svetelného zdroja</string>
   <string name="light_source_lifespan_hours">Životnosť svetelného zdroja (hodiny)</string>
   <string name="light_source_operatingtime">Prevádzkový čas svetelného zdroja</string>
-  <string name="lightsource_warning">Životnosť svetelného zdroja je %1$s</string>
+  <string name="channel_lightsource_warning">Životnosť svetelného zdroja je %1$.01f%%</string>
   <string name="mode_change_in_progress">Prebieha zmena režimu</string>
   <string name="no">Nie</string>
   <string name="reset_lightsource_usage_counter">Reštartuj počítadlo spotreby svetelného zdroja</string>
@@ -265,8 +265,8 @@
   <string name="soft_ver">Verzia programu</string>
   <string name="time_exceeded">Došlo k prekročeniu lehoty. Skús znova.</string>
   <string name="uptime">Prevádzkový čas</string>
-  <string name="uv_warning1">Životnosť UV žiariča je %1$s. Naplánuj jeho výmenu.</string>
-  <string name="uv_warning2">Životnosť UV žiariča je %1$s. Vymeň žiarič.</string>
+  <string name="channel_uv_warning">Životnosť UV žiariča je %1$.01f%%. Naplánuj jeho výmenu.</string>
+  <string name="channel_uv_error">Životnosť UV žiariča je %1$.01f%%. Vymeň žiarič.</string>
   <string name="valve_warning_manually_closed">Ventil bol zatvorený manuálne alebo rádiovo. Kým ho otvoríš, uisti sa, že nebol zatvorený kvôli zaplaveniu. Pre vypnutie upozornenia zavri ventil manuálne. Naozaj chceš otvoriť ventil pomocou aplikácie?!</string>
   <string name="valve_warning">Ventil bol zatvorený manuálne alebo rádiovo. Kým ho otvoríš, uisti sa, že nebol zatvorený kvôli zaplaveniu. Pre vypnutie upozornenia zavri ventil manuálne.</string>
   <string name="vector_balance_days">Vektorová bilancia – dni</string>
@@ -709,4 +709,15 @@
   <string name="wizard_state_finishing">Dokončovanie…</string>
   <string name="add_wizard_password_instruction">Použite heslo, ktoré bolo použité pre prístup k webovej stránke lokálnej konfigurácie.\n\nZabudli ste heslo? Môžete ho zmeniť na Supla Cloud alebo resetovať zariadenie na výrobné nastavenia.</string>
   <string name="add_wizard_manual_reconnect">Sieťové pripojenie k zariadeniu bolo nadviazané manuálne. Uistite sa, že sa váš telefón znova pripojil na internet, a pokračujte v procese.</string>
+  <string name="channel_state_battery_powered">batériové</string>
+  <string name="channel_state_main_powered">sieťové</string>
+  <string name="cfg_temperature_precision">Presnosť teploty</string>
+  <string name="temperature_measured">Namerný</string>
+  <string name="temperature_preset">Prednastavený</string>
+  <string name="thermostat_detail_antifreeze_active">Aktívna protimrazová ochrana</string>
+  <string name="thermostat_detail_overheat_active">Aktívna ochrana proti prehriatiu</string>
+  <string name="developer_option">Možnosti pre vývojárov</string>
+  <string name="developer_info_activated">Režim pre vývojárov aktivovaný</string>
+  <string name="developer_info_screen_orientation">Otočenie obrazovky povolené</string>
+  <string name="developer_info_settings">Experimentálne nastavenia</string>
 </resources>

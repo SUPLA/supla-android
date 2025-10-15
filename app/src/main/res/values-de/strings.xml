@@ -228,7 +228,7 @@
   <string name="associeted_with_scene_error">Sie können die Funktion eines Kanals, der einer Szene zugewiesen ist, nicht ändern.</string>
   <string name="battery_health">Batterielaufzeit</string>
   <string name="battery_level">Batteriefüllstand</string>
-  <string name="battery_powered">Batteriebetrieb</string>
+  <string name="state_power_supply">Stromversorgung</string>
   <string name="belongs_to_group_error">Sie können die Funktion eines Kanals, der einer Gruppe zugewiesen ist, nicht ändern.</string>
   <string name="bridge">Brücke</string>
   <string name="bridge_node_online">Brückenknoten - Online</string>
@@ -256,7 +256,7 @@
   <string name="light_source_lifespan">Lebensdauer der Lichtquelle</string>
   <string name="light_source_lifespan_hours">Lebensdauer der Lichtquelle (Stunden)</string>
   <string name="light_source_operatingtime">Betriebszeit der Lichtquelle</string>
-  <string name="lightsource_warning">Lebensdauer der Lichtquelle beträgt %1$s</string>
+  <string name="channel_lightsource_warning">Lebensdauer der Lichtquelle beträgt %1$.01f%%</string>
   <string name="mode_change_in_progress">Modus wird geändert</string>
   <string name="no">Nein</string>
   <string name="reset_lightsource_usage_counter">Verbrauchszähler der Lichtquelle zurücksetzen</string>
@@ -268,8 +268,8 @@
   <string name="soft_ver">Softwareversion</string>
   <string name="time_exceeded">Die Zeit wurde überschritten. Versuchen Sie es noch einmal.</string>
   <string name="uptime">Betriebszeit</string>
-  <string name="uv_warning1">Lebensdauer des UV-Strahlers beträgt %1$s  Planen Sie den Austausch.</string>
-  <string name="uv_warning2">Lebensdauer des UV-Strahlers beträgt %1$s. Den Strahler austauschen.</string>
+  <string name="channel_uv_warning">Lebensdauer des UV-Strahlers beträgt %1$.01f%%.  Planen Sie den Austausch.</string>
+  <string name="channel_uv_error">Lebensdauer des UV-Strahlers beträgt %1$.01f%%. Den Strahler austauschen.</string>
   <string name="valve_warning_manually_closed">Das Ventil wurde manuell oder ferngesteuert geschlossen. Stellen Sie vor dem Öffnen sicher, dass es nicht wegen Überfluten geschlossen wurde. Öffnen Sie das Ventil manuell, um die Warnung zu deaktivieren. Sind Sie sicher, dass Sie das Ventil über die App öffnen möchten ?!</string>
   <string name="valve_warning">Das Ventil wurde manuell oder ferngesteuert geschlossen. Stellen Sie vor dem Öffnen sicher, dass es nicht wegen Ü Überfluten geschlossen wurde. Öffnen Sie das Ventil manuell, um die Warnung zu deaktivieren.</string>
   <string name="vector_balance_days">Vektorgleichgewicht - Tage</string>
@@ -722,7 +722,7 @@
   <string name="em_electric_grid_parameters">Stromnetzparameter</string>
   <string name="channel_caption_container">Behälter</string>
   <string name="developer_info_database_section">Datenbankdetails</string>
-  <string name="developer_info_activated">Developer mode wurde aktiviert</string>
+  <string name="developer_info_activated">Entwicklermodus aktiviert</string>
   <string name="developer_info_title">Anwendungsdaten</string>
   <string name="counter_photo_photos">Fotohistorie</string>
   <string name="counter_photo_loading_error">Das Laden ist fehlgeschlagen.</string>
@@ -797,4 +797,14 @@
   <string name="wizard_state_finishing">Abschluss…</string>
   <string name="add_wizard_password_instruction">Bitte verwenden Sie das Passwort, das für den Zugriff auf die lokale Konfigurationswebseite verwendet wurde.\n\nPasswort vergessen? Sie können es in der Supla Cloud ändern oder das Gerät auf die Werkseinstellungen zurücksetzen.</string>
   <string name="add_wizard_manual_reconnect">Die Netzwerkverbindung zum Gerät wurde manuell hergestellt. Stellen Sie sicher, dass Ihr Telefon wieder mit dem Internet verbunden ist, und fahren Sie mit dem Vorgang fort.</string>
+  <string name="channel_state_battery_powered">Batterie</string>
+  <string name="channel_state_main_powered">Netz</string>
+  <string name="cfg_temperature_precision">Temperaturpräzision</string>
+  <string name="temperature_measured">Gemessen</string>
+  <string name="temperature_preset">Voreingestellt</string>
+  <string name="thermostat_detail_antifreeze_active">Frostschutz aktiv</string>
+  <string name="thermostat_detail_overheat_active">Überhitzungsschutz aktiv</string>
+  <string name="developer_option">Entwickleroptionen</string>
+  <string name="developer_info_screen_orientation">Bildschirmdrehung aktiviert</string>
+  <string name="developer_info_settings">Experimentelle Einstellungen</string>
 </resources>

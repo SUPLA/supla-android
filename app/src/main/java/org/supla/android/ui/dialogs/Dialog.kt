@@ -91,6 +91,17 @@ fun DialogButtonsRow(content: @Composable RowScope.() -> Unit) =
   )
 
 @Composable
+fun DialogButtonsColumn(content: @Composable ColumnScope.() -> Unit) =
+  Column(
+    modifier = Modifier
+      .fillMaxWidth()
+      .padding(all = dimensionResource(id = R.dimen.distance_default)),
+    content = content,
+    verticalArrangement = Arrangement.spacedBy(16.dp),
+    horizontalAlignment = Alignment.CenterHorizontally
+  )
+
+@Composable
 fun DialogDoubleButtons(
   onNegativeClick: () -> Unit,
   onPositiveClick: () -> Unit,

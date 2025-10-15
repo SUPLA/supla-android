@@ -19,7 +19,7 @@ package org.supla.android.usecases.channel.measurementsprovider
 
 import com.google.gson.Gson
 import io.reactivex.rxjava3.core.Single
-import org.supla.android.Preferences
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.model.chart.AggregatedEntity
 import org.supla.android.data.model.chart.ChannelChartSets
 import org.supla.android.data.model.chart.ChartDataAggregation
@@ -30,27 +30,27 @@ import org.supla.android.data.model.chart.singleLabel
 import org.supla.android.data.model.general.IconType
 import org.supla.android.data.source.local.entity.complex.isImpulseCounter
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
-import org.supla.android.data.source.remote.gpm.SuplaChannelGeneralPurposeBaseConfig
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.channel.ValueType
 import org.supla.android.usecases.channel.measurementsprovider.ChannelMeasurementsProvider.Companion.AGGREGATING_MINUTES_DISTANCE_SEC
 import org.supla.android.usecases.channel.measurementsprovider.ChannelMeasurementsProvider.Companion.MAX_ALLOWED_DISTANCE_MULTIPLIER
-import org.supla.android.usecases.channel.valueformatter.ChannelValueFormatter
-import org.supla.android.usecases.channel.valueformatter.ChartAxisElectricityMeterValueFormatter
-import org.supla.android.usecases.channel.valueformatter.CurrentValueFormatter
-import org.supla.android.usecases.channel.valueformatter.GpmValueFormatter
-import org.supla.android.usecases.channel.valueformatter.HumidityValueFormatter
-import org.supla.android.usecases.channel.valueformatter.ImpulseCounterChartValueFormatter
-import org.supla.android.usecases.channel.valueformatter.PowerActiveValueFormatter
-import org.supla.android.usecases.channel.valueformatter.ThermometerValueFormatter
-import org.supla.android.usecases.channel.valueformatter.VoltageValueFormatter
+import org.supla.android.usecases.channel.valueformatter.staticFormatter
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.core.shared.data.model.channel.ChannelRelationType
+import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.formatters.CurrentValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.formatters.ElectricityMeterValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.formatters.GpmValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.formatters.HumidityValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.formatters.ImpulseCounterValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.formatters.PowerActiveValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.formatters.ThermometerValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.formatters.VoltageValueFormatter
 
 abstract class ChannelMeasurementsProvider(
   private val getChannelValueStringUseCase: GetChannelValueStringUseCase,
   private val getChannelIconUseCase: GetChannelIconUseCase,
-  preferences: Preferences,
+  preferences: ApplicationPreferences,
   gson: Gson // GSON_FOR_REPO
 ) : MeasurementsProvider(preferences, gson) {
 
@@ -67,7 +67,8 @@ abstract class ChannelMeasurementsProvider(
     type: ChartEntryType,
     color: Int,
     aggregation: ChartDataAggregation,
-    measurements: List<AggregatedEntity>
+    measurements: List<AggregatedEntity>,
+    valueFormatter: ValueFormatter = getValueFormatter(type, channelWithChildren)
   ): HistoryDataSet =
     HistoryDataSet(
       type = type,
@@ -82,7 +83,25 @@ abstract class ChannelMeasurementsProvider(
         },
         color = color,
       ),
-      valueFormatter = getValueFormatter(type, channelWithChildren),
+      valueFormatter = valueFormatter,
+      entities = divideSetToSubsets(
+        entities = measurements,
+        aggregation = aggregation
+      )
+    )
+
+  protected fun historyDataSet(
+    channelWithChildren: ChannelWithChildren,
+    type: ChartEntryType,
+    aggregation: ChartDataAggregation,
+    measurements: List<AggregatedEntity>,
+    label: HistoryDataSet.Label,
+    valueFormatter: ValueFormatter = getValueFormatter(type, channelWithChildren)
+  ): HistoryDataSet =
+    HistoryDataSet(
+      type = type,
+      label = label,
+      valueFormatter = valueFormatter,
       entities = divideSetToSubsets(
         entities = measurements,
         aggregation = aggregation
@@ -98,22 +117,24 @@ abstract class ChannelMeasurementsProvider(
 }
 
 open class MeasurementsProvider(
-  private val preferences: Preferences,
+  private val preferences: ApplicationPreferences,
   private val gson: Gson // GSON_FOR_REPO
 ) {
 
-  protected fun getValueFormatter(type: ChartEntryType, channelWithChildren: ChannelWithChildren): ChannelValueFormatter {
+  protected fun getValueFormatter(type: ChartEntryType, channelWithChildren: ChannelWithChildren): ValueFormatter {
     return when (type) {
       ChartEntryType.HUMIDITY,
-      ChartEntryType.HUMIDITY_ONLY -> HumidityValueFormatter()
+      ChartEntryType.HUMIDITY_ONLY -> HumidityValueFormatter
 
-      ChartEntryType.TEMPERATURE -> ThermometerValueFormatter(preferences)
+      ChartEntryType.TEMPERATURE,
+      ChartEntryType.PRESET_TEMPERATURE -> ThermometerValueFormatter(preferences)
+
       ChartEntryType.GENERAL_PURPOSE_MEASUREMENT,
       ChartEntryType.GENERAL_PURPOSE_METER ->
-        GpmValueFormatter(channelWithChildren.channel.configEntity?.toSuplaConfig(gson) as? SuplaChannelGeneralPurposeBaseConfig)
+        GpmValueFormatter.staticFormatter(channelWithChildren.channel.configEntity?.toSuplaConfig(gson))
 
-      ChartEntryType.ELECTRICITY -> ChartAxisElectricityMeterValueFormatter()
-      ChartEntryType.IMPULSE_COUNTER -> ImpulseCounterChartValueFormatter(unit = getImpulseCounterUnit(channelWithChildren))
+      ChartEntryType.ELECTRICITY -> ElectricityMeterValueFormatter()
+      ChartEntryType.IMPULSE_COUNTER -> ImpulseCounterValueFormatter.staticFormatter(channelWithChildren)
       ChartEntryType.VOLTAGE -> VoltageValueFormatter
       ChartEntryType.CURRENT -> CurrentValueFormatter
       ChartEntryType.POWER_ACTIVE -> PowerActiveValueFormatter

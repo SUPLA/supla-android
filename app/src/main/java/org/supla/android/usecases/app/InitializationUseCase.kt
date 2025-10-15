@@ -18,8 +18,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 import android.content.Context
-import org.supla.android.Preferences
-import org.supla.android.Trace
 import org.supla.android.core.infrastructure.BuildConfigProxy
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.infrastructure.ThreadHandler
@@ -28,10 +26,9 @@ import org.supla.android.core.networking.suplaclient.SuplaClientStateHolder
 import org.supla.android.core.storage.EncryptedPreferences
 import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.db.DbHelper
-import org.supla.android.db.MeasurementsDbHelper
 import org.supla.android.db.room.app.AppDatabase
 import org.supla.android.db.room.measurements.MeasurementsDatabase
-import org.supla.android.extensions.TAG
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -42,7 +39,6 @@ class InitializationUseCase @Inject constructor(
   private val stateHolder: SuplaClientStateHolder,
   private val appDatabase: AppDatabase,
   private val measurementsDatabase: MeasurementsDatabase,
-  private val preferences: Preferences,
   private val profileRepository: RoomProfileRepository,
   private val encryptedPreferences: EncryptedPreferences,
   private val dateProvider: DateProvider,
@@ -58,7 +54,7 @@ class InitializationUseCase @Inject constructor(
     // Check if there is an active profile
     val profileFound = try {
       profileRepository.findActiveProfile().blockingGet().active ?: false
-    } catch (ex: Exception) {
+    } catch (_: Exception) {
       // No active profile
       false
     }
@@ -67,7 +63,7 @@ class InitializationUseCase @Inject constructor(
     val pinRequired = try {
       encryptedPreferences.lockScreenSettings.pinForAppRequired
     } catch (exception: Exception) {
-      Trace.e(TAG, "Could not check lock screen settings!", exception)
+      Timber.e(exception, "Could not check lock screen settings!")
       false
     }
 
@@ -77,13 +73,13 @@ class InitializationUseCase @Inject constructor(
     if (initializationTime < INITIALIZATION_MIN_TIME_MS) {
       try {
         threadHandler.sleep(INITIALIZATION_MIN_TIME_MS - initializationTime)
-      } catch (ex: Exception) {
+      } catch (_: Exception) {
         // Nothing to do
       }
     }
 
     // Go to next state
-    Trace.d(TAG, "Active profile found: $profileFound, pin required: $pinRequired")
+    Timber.d("Active profile found: $profileFound, pin required: $pinRequired")
     if (pinRequired) {
       stateHolder.handleEvent(SuplaClientEvent.Lock)
     } else if (profileFound) {
@@ -102,14 +98,10 @@ class InitializationUseCase @Inject constructor(
         throw exception
       }
 
-      Trace.e(TAG, "Could not migrate database, trying to delete it", exception)
-      val result = context.deleteDatabase(DbHelper.DATABASE_NAME)
-      context.deleteDatabase(MeasurementsDbHelper.DATABASE_NAME)
-      Trace.e(TAG, "Database deletion finished with $result")
-
-      if (result) {
-        preferences.isAnyAccountRegistered = false
-      }
+      Timber.e(exception, "Could not migrate database, trying to delete it")
+      context.deleteDatabase(DbHelper.DATABASE_NAME)
+      context.deleteDatabase(MeasurementsDatabase.NAME)
+      Timber.e("Database deletion finished")
     }
   }
 }

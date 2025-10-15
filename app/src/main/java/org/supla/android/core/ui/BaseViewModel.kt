@@ -35,9 +35,8 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
-import org.supla.android.Trace
-import org.supla.android.extensions.TAG
 import org.supla.android.tools.SuplaSchedulers
+import timber.log.Timber
 
 interface BaseViewProxy<S : ViewState> {
   fun getViewState(): StateFlow<S>
@@ -77,12 +76,12 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
     compositeDisposable.clear()
   }
 
-  protected fun sendEvent(event: E) {
-    viewEvents.tryEmit(Event(event))
-  }
-
   protected fun updateState(updater: (S) -> S) {
     viewState.tryEmit(updater(viewState.value))
+  }
+
+  protected fun sendEvent(event: E) {
+    viewEvents.tryEmit(Event(event))
   }
 
   protected fun currentState(): S {
@@ -138,7 +137,7 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
 
     return subscribeOn(schedulers.io)
       .observeOn(schedulers.ui)
-      .doOnError { Trace.e(TAG, errorMessage("Maybe", calledAt, it.message), it) }
+      .doOnError { Timber.e(it, errorMessage("Maybe", calledAt, it.message)) }
   }
 
   fun Completable.attach(): Completable {
@@ -146,7 +145,7 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
 
     return subscribeOn(schedulers.io)
       .observeOn(schedulers.ui)
-      .doOnError { Trace.e(TAG, errorMessage("Completable", calledAt, it.message), it) }
+      .doOnError { Timber.e(it, errorMessage("Completable", calledAt, it.message)) }
       .doOnSubscribe { loadingState.tryEmit(true) }
       .doOnTerminate { loadingState.tryEmit(false) }
   }
@@ -156,7 +155,7 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
 
     return subscribeOn(schedulers.io)
       .observeOn(schedulers.ui)
-      .doOnError { Trace.e(TAG, errorMessage("Completable", calledAt, it.message), it) }
+      .doOnError { Timber.e(it, errorMessage("Completable", calledAt, it.message)) }
   }
 
   fun <T : Any> Single<T>.attach(): Single<T> {
@@ -164,7 +163,7 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
 
     return subscribeOn(schedulers.io)
       .observeOn(schedulers.ui)
-      .doOnError { Trace.e(TAG, errorMessage("Single", calledAt, it.message), it) }
+      .doOnError { Timber.e(it, errorMessage("Single", calledAt, it.message)) }
       .doOnSubscribe { loadingState.tryEmit(true) }
       .doOnTerminate { loadingState.tryEmit(false) }
   }
@@ -174,7 +173,7 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
 
     return subscribeOn(schedulers.io)
       .observeOn(schedulers.ui)
-      .doOnError { Trace.e(TAG, errorMessage("Maybe", calledAt, it.message), it) }
+      .doOnError { Timber.e(it, errorMessage("Maybe", calledAt, it.message)) }
   }
 
   fun <T : Any> Observable<T>.attach(): Observable<T> {
@@ -189,7 +188,7 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
 
     return subscribeOn(schedulers.io)
       .observeOn(schedulers.ui)
-      .doOnError { Trace.e(TAG, errorMessage("Observable", calledAt, it.message), it) }
+      .doOnError { Timber.e(it, errorMessage("Observable", calledAt, it.message)) }
   }
 
   fun <T : Any> Maybe<T>.attachLoadable(): Maybe<T> {
@@ -212,7 +211,7 @@ abstract class BaseViewModel<S : ViewState, E : ViewEvent>(
   }
 
   protected fun defaultErrorHandler(method: String): (Throwable) -> Unit = { throwable ->
-    Trace.e(TAG, "Subscription failed! (${this::class.java.name}:$method)", throwable)
+    Timber.e(throwable, "Subscription failed! (${this::class.java.name}:$method)")
   }
 
   private fun errorMessage(type: String, calledAt: String?, throwableMessage: String?) =

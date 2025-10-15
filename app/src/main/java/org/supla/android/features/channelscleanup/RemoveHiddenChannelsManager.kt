@@ -18,9 +18,8 @@ package org.supla.android.features.channelscleanup
  */
 
 import androidx.work.ExistingWorkPolicy
-import org.supla.android.Trace
 import org.supla.android.core.infrastructure.WorkManagerProxy
-import org.supla.android.extensions.TAG
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -29,7 +28,7 @@ class RemoveHiddenChannelsManager @Inject constructor(
   private val workManagerProxy: WorkManagerProxy
 ) {
   fun start() {
-    Trace.i(TAG, "Starting hidden channels removal manager")
+    Timber.i("Starting hidden channels removal manager")
     workManagerProxy.enqueueUniqueWork(
       RemoveHiddenChannelsWorker.WORK_ID,
       ExistingWorkPolicy.REPLACE,
@@ -38,7 +37,7 @@ class RemoveHiddenChannelsManager @Inject constructor(
   }
 
   fun kill() {
-    Trace.i(TAG, "Killing hidden channels removal manager")
+    Timber.i("Killing hidden channels removal manager")
     workManagerProxy.cancelByTag(RemoveHiddenChannelsWorker.TAG)
   }
 }

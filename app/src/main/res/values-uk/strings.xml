@@ -263,7 +263,7 @@
   <string name="vl_dimmer_cfg_info_txt8">Додаткову інформацію про регулятор освітлення можна знайти на</string>
   <string name="time_exceeded">Час вийшов. Спробуйте знову.</string>
   <string name="battery_level">Рівень заряду батареї</string>
-  <string name="battery_powered">Працює від батареї</string>
+  <string name="state_power_supply">Живлення</string>
   <string name="wifi_signal_strength">Потужність сигналу Wi-Fi</string>
   <string name="bridge_node_online">Мостовий вузол - онлайн</string>
   <string name="bridge_signal_strength">Мостовий вузол  - потужність сигналу</string>
@@ -274,9 +274,9 @@
   <string name="light_source_lifespan">Термін служби джерела світла</string>
   <string name="light_source_operatingtime">Час роботи джерела світла</string>
   <string name="chanel_lightsource_lifespan_settings">Змініть параметри ресурсу джерела світла</string>
-  <string name="lightsource_warning">Термін служби джерела світла %1$s</string>
-  <string name="uv_warning1">Термін служби УФ-випромінювача %1$s. Заплануйте його заміну.</string>
-  <string name="uv_warning2">Термін служби УФ-випромінювача %1$s. Замінити випромінювач.</string>
+  <string name="channel_lightsource_warning">Термін служби джерела світла %1$.01f%%</string>
+  <string name="channel_uv_warning">Термін служби УФ-випромінювача %1$.01f%%. Заплануйте його заміну.</string>
+  <string name="channel_uv_error">Термін служби УФ-випромінювача %1$.01f%%. Замінити випромінювач.</string>
   <string name="add_wizard_step_2_message">Введіть ім\'я та пароль вашої домашньої або корпоративної Wi-Fi мережі, через яку виконавчий пристрій зможе встановити з\'єднання з сервером.</string>
   <string name="enabling_registration_timeout">Час реєстрації минув!</string>
   <string name="wifi_throttling">Через обмеження сканування мереж Wi-Fi, встановлені системою Android, будь ласка, зачекайте вказаний вище час.</string>
@@ -682,4 +682,15 @@
   <string name="wizard_state_finishing">Завершення…</string>
   <string name="add_wizard_password_instruction">Будь ласка, використовуйте пароль, який використовувався для доступу до локальної веб-сторінки конфігурації.\n\nЗабули пароль? Ви можете змінити його в Supla Cloud або скинути пристрій до заводських налаштувань.</string>
   <string name="add_wizard_manual_reconnect">Мережеве з\'єднання з пристроєм було встановлено вручну. Переконайтеся, що ваш телефон знову підключився до Інтернету, і продовжуйте процес.</string>
+  <string name="channel_state_battery_powered">від батареї</string>
+  <string name="channel_state_main_powered">від мережі</string>
+  <string name="cfg_temperature_precision">Точність температури</string>
+  <string name="temperature_measured">Виміряна</string>
+  <string name="temperature_preset">Заданий</string>
+  <string name="thermostat_detail_antifreeze_active">Активний захист від замерзання</string>
+  <string name="thermostat_detail_overheat_active">Активний захист від перегріву</string>
+  <string name="developer_option">Параметри розробника</string>
+  <string name="developer_info_activated">Режим розробника активовано</string>
+  <string name="developer_info_screen_orientation">Обертання екрана ввімкнено</string>
+  <string name="developer_info_settings">Експериментальні налаштування</string>
 </resources>

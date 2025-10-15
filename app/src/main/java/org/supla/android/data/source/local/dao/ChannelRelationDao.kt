@@ -24,6 +24,7 @@ import androidx.room.Query
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 import org.supla.android.data.source.local.entity.ChannelConfigEntity
 import org.supla.android.data.source.local.entity.ChannelEntity
 import org.supla.android.data.source.local.entity.ChannelExtendedValueEntity
@@ -167,4 +168,22 @@ interface ChannelRelationDao {
 
   @Query("SELECT COUNT($COLUMN_CHANNEL_RELATION_TYPE) FROM $TABLE_NAME")
   fun count(): Observable<Int>
+
+  @Query("DELETE FROM $TABLE_NAME WHERE $COLUMN_PROFILE_ID = :profileId")
+  fun deleteByProfile(profileId: Long): Completable
+
+  @Query(
+    """
+    SELECT 
+      $COLUMN_PARENT_ID,
+      $COLUMN_CHANNEL_ID,
+      $COLUMN_CHANNEL_RELATION_TYPE,
+      ${ChannelRelationEntity.COLUMN_DELETE_FLAG},
+      $COLUMN_PROFILE_ID
+    FROM $TABLE_NAME
+    WHERE $COLUMN_CHANNEL_ID = :childId
+      AND $COLUMN_PROFILE_ID = ${ProfileEntity.SUBQUERY_ACTIVE}
+  """
+  )
+  fun findParentsOf(childId: Int): Single<List<ChannelRelationEntity>>
 }

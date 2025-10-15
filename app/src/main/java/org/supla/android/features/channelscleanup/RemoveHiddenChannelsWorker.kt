@@ -25,9 +25,8 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import org.supla.android.Trace
-import org.supla.android.extensions.TAG
 import org.supla.android.usecases.channel.RemoveHiddenChannelsUseCase
+import timber.log.Timber
 
 @HiltWorker
 class RemoveHiddenChannelsWorker @AssistedInject constructor(
@@ -41,7 +40,7 @@ class RemoveHiddenChannelsWorker @AssistedInject constructor(
       removeHiddenChannelsUseCase()
       Result.success()
     } catch (e: Throwable) {
-      Trace.e(TAG, "Removing hidden channels broken!", e)
+      Timber.e(e, "Removing hidden channels broken!")
       Result.failure()
     }
   }

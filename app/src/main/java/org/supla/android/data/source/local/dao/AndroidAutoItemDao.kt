@@ -163,6 +163,9 @@ abstract class AndroidAutoItemDao {
   @Query("UPDATE $TABLE_NAME SET $COLUMN_ORDER = :order WHERE $COLUMN_ID = :id")
   abstract fun setOrder(id: Long, order: Int)
 
+  @Query("DELETE FROM $TABLE_NAME WHERE $COLUMN_PROFILE_ID = :profileId")
+  abstract fun deleteByProfile(profileId: Long): Completable
+
   @Transaction
   open fun setOrder(orderedIds: List<Long>) {
     var orderNo = 1

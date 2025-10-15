@@ -21,23 +21,19 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase.CONFLICT_REPLACE
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import org.supla.android.Preferences
-import org.supla.android.Trace
 import org.supla.android.data.source.local.entity.LegacyScene
 import org.supla.android.data.source.local.entity.ProfileEntity
 import org.supla.android.data.source.local.entity.SceneEntity
 import org.supla.android.data.source.local.view.SceneView
 import org.supla.android.db.AuthProfileItem
 import org.supla.android.db.room.SqlExecutor
-import org.supla.android.extensions.TAG
 import org.supla.android.profile.AuthInfo
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class Migration26to27 @Inject constructor(
-  private val preferences: Preferences
-) : Migration(26, 27), SqlExecutor {
+class Migration26to27 @Inject constructor() : Migration(26, 27), SqlExecutor {
 
   override fun migrate(db: SupportSQLiteDatabase) {
     migrateUserProfiles(db)
@@ -54,11 +50,10 @@ class Migration26to27 @Inject constructor(
             val profile: AuthProfileItem = makeEmptyAuthItem()
             profile.AssignCursorData(cursor)
             if (profile.authInfo.isAuthDataComplete) {
-              preferences.isAnyAccountRegistered = true
               validAccountAvailable = true
             }
           } catch (ex: Exception) {
-            Trace.e(TAG, "Could not migrate profile", ex)
+            Timber.e(ex, "Could not migrate profile")
           }
         } while (cursor.moveToNext())
       }

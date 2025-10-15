@@ -225,7 +225,7 @@
   <string name="associeted_with_scene_error">Funkcije kanala, ki je povezan s sceno, ne morete spremeniti.</string>
   <string name="battery_health">Življenjska doba baterije</string>
   <string name="battery_level">Raven baterije</string>
-  <string name="battery_powered">Baterija</string>
+  <string name="state_power_supply">Napajanje</string>
   <string name="belongs_to_group_error">Funkcije kanala, ki je del skupine, ne morete spremeniti.</string>
   <string name="bridge">Most</string>
   <string name="bridge_node_online">Vozlišče mosta - online</string>
@@ -253,7 +253,7 @@
   <string name="light_source_lifespan">Življenjska doba svetlobnega vira</string>
   <string name="light_source_lifespan_hours">Življenjska doba svetlobnega vira (ure)</string>
   <string name="light_source_operatingtime">Delovni čas svetlobnega vira</string>
-  <string name="lightsource_warning">Življenjska doba svetlobnega vira znaša %1$s</string>
+  <string name="channel_lightsource_warning">Življenjska doba svetlobnega vira znaša %1$.01f%%</string>
   <string name="mode_change_in_progress">Spreminjanje načina poteka</string>
   <string name="no">Ne</string>
   <string name="reset_lightsource_usage_counter">Ponastavite števec porabe svetlobnega vira</string>
@@ -265,8 +265,8 @@
   <string name="soft_ver">Različica</string>
   <string name="time_exceeded">Časovna prekoračitev. Poskusite ponovno.</string>
   <string name="uptime">Čas delovanja</string>
-  <string name="uv_warning1">Življenjska doba infrardeče IR grelne žarnice znaša %1$s. Načrtujte njeno menjavo.</string>
-  <string name="uv_warning2">Življenjska doba infrardeče IR grelne žarnice znaša %1$s. Menjajte žarnico.</string>
+  <string name="channel_uv_warning">Življenjska doba infrardeče IR grelne žarnice znaša %1$.01f%%. Načrtujte njeno menjavo.</string>
+  <string name="channel_uv_error">Življenjska doba infrardeče IR grelne žarnice znaša %1$.01f%%. Menjajte žarnico.</string>
   <string name="valve_warning_manually_closed">Ventil je bil zaprt ročno ali na daljavo. Preden ga odprete, se prepričajte, da ni zaprt zaradi poplave. Če želite onemogočiti opozorilo, ročno odprite ventil. Ali ste prepričani, da želite odpreti ventil z aplikacijo?!</string>
   <string name="valve_warning">Ventil je bil zaprt ročno ali na daljavo. Preden ga odprete, se prepričajte, da ni bil zaprt zaradi poplave. Če želite onemogočiti opozorilo, odprite ventil ročno.</string>
   <string name="vector_balance_days">Vektorsko ravnotežje - Dnevi</string>
@@ -709,4 +709,15 @@
   <string name="wizard_state_finishing">Zaključevanje…</string>
   <string name="add_wizard_password_instruction">Prosimo, uporabite geslo, ki je bilo uporabljeno za dostop do spletne strani lokalne konfiguracije.\n\nSte pozabili geslo? Lahko ga spremenite na Supla Cloud ali ponastavite napravo na tovarniške nastavitve.</string>
   <string name="add_wizard_manual_reconnect">Omrežna povezava z napravo je bila vzpostavljena ročno. Prepričajte se, da je vaš telefon ponovno povezan z internetom, in nadaljujte postopek.</string>
+  <string name="channel_state_battery_powered">baterijsko</string>
+  <string name="channel_state_main_powered">omrežno</string>
+  <string name="cfg_temperature_precision">Natančnost temperature</string>
+  <string name="temperature_measured">Izmerjena</string>
+  <string name="temperature_preset">Prednastavljeno</string>
+  <string name="thermostat_detail_antifreeze_active">Aktivna zaščita pred zmrzaljo</string>
+  <string name="thermostat_detail_overheat_active">Aktivna zaščita pred pregrevanjem</string>
+  <string name="developer_option">Možnosti za razvijalce</string>
+  <string name="developer_info_activated">Razvijalski način aktiviran</string>
+  <string name="developer_info_screen_orientation">Omogočeno vrtenje zaslona</string>
+  <string name="developer_info_settings">Eksperimentalne nastavitve</string>
 </resources>

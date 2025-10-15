@@ -222,7 +222,7 @@
   <string name="associeted_with_scene_error">Δεν μπορείτε να αλλάξετε τη λειτουργία ενός καναλιού που σχετίζεται με μια σκηνή.</string>
   <string name="battery_health">Διάρκεια ζωής μπαταρίας</string>
   <string name="battery_level">Επίπεδο μπαταρίας</string>
-  <string name="battery_powered">Τροφοδοσία μπαταρίας</string>
+  <string name="state_power_supply">Τροφοδοσία</string>
   <string name="belongs_to_group_error">Δεν μπορείτε να αλλάξετε τις λειτουργίες ενός καναλιού που ανήκει σε μια ομάδα.</string>
   <string name="bridge">Γέφυρα</string>
   <string name="bridge_node_online">Κόμβος γέφυρας - online</string>
@@ -250,7 +250,7 @@
   <string name="light_source_lifespan">Διάρκεια ζωής της πηγής φωτός</string>
   <string name="light_source_lifespan_hours">Ζωή πηγής φωτός (ώρες)</string>
   <string name="light_source_operatingtime">Χρόνος εργασίας πηγής φωτός</string>
-  <string name="lightsource_warning">Η διάρκεια ζωής της πηγής φωτός είναι %1$s</string>
+  <string name="channel_lightsource_warning">Η διάρκεια ζωής της πηγής φωτός είναι %1$.01f%%</string>
   <string name="mode_change_in_progress">Αλλαγή λειτουργίας σε εξέλιξη</string>
   <string name="no">Όχι</string>
   <string name="reset_lightsource_usage_counter">Επαναφορά μετρητή χρήσης πηγής φωτός</string>
@@ -262,8 +262,8 @@
   <string name="soft_ver">Έκδοση λογισμικού</string>
   <string name="time_exceeded">Τέλος χρόνου. Προσπαθήστε ξανά.</string>
   <string name="uptime">Χρόνος εργασίας</string>
-  <string name="uv_warning1">Η διάρκεια ζωής της λυχνίας UV είναι %1$s. Προγραμματίστε την αντικατάστασή της.</string>
-  <string name="uv_warning2">Η διάρκεια ζωής της λυχνίας UV είναι %1$s. Αντικαταστήστε τη λυχνία.</string>
+  <string name="channel_uv_warning">Η διάρκεια ζωής της λυχνίας UV είναι %1$.01f%%. Προγραμματίστε την αντικατάστασή της.</string>
+  <string name="channel_uv_error">Η διάρκεια ζωής της λυχνίας UV είναι %1$.01f%%. Αντικαταστήστε τη λυχνία.</string>
   <string name="valve_warning_manually_closed">Η βαλβίδα έχει κλείσει χειροκίνητα ή μέσω ραδιοφώνου. Πριν την ανοίξετε, βεβαιωθείτε ότι δεν έχει κλείσει λόγω πλημμύρας. Για να απενεργοποιήσετε την προειδοποίηση, ανοίξτε τη βαλβίδα χειροκίνητα. Είστε βέβαιοι ότι θέλετε να ανοίξετε τη βαλβίδα μέσω της εφαρμογής;</string>
   <string name="valve_warning">Η βαλβίδα έχει κλείσει χειροκίνητα ή μέσω ραδιοφώνου. Πριν την ανοίξετε, βεβαιωθείτε ότι δεν έχει κλείσει λόγω πλημμύρας. Για να απενεργοποιήσετε την προειδοποίηση, ανοίξτε τη βαλβίδα χειροκίνητα.</string>
   <string name="vector_balance_days">Διανυσματικός ισολογισμός - Ημέρες</string>
@@ -705,4 +705,15 @@
   <string name="wizard_state_finishing">Ολοκλήρωση…</string>
   <string name="add_wizard_password_instruction">Παρακαλώ χρησιμοποιήστε τον κωδικό πρόσβασης που χρησιμοποιήθηκε για την πρόσβαση στην τοπική ιστοσελίδα διαμόρφωσης.\n\nΞεχάσατε τον κωδικό πρόσβασης; Μπορείτε να τον αλλάξετε στο Supla Cloud ή να επαναφέρετε τη συσκευή στις εργοστασιακές ρυθμίσεις.</string>
   <string name="add_wizard_manual_reconnect">Η σύνδεση δικτύου με τη συσκευή πραγματοποιήθηκε χειροκίνητα. Βεβαιωθείτε ότι το τηλέφωνό σας έχει συνδεθεί ξανά στο διαδίκτυο και συνεχίστε τη διαδικασία.</string>
+  <string name="channel_state_battery_powered">μπαταρίας</string>
+  <string name="channel_state_main_powered">ρεύματος</string>
+  <string name="cfg_temperature_precision">Ακρίβεια θερμοκρασίας</string>
+  <string name="temperature_measured">Μετρημένος</string>
+  <string name="temperature_preset">Προκαθορισμένος</string>
+  <string name="thermostat_detail_antifreeze_active">Ενεργή αντιπαγωτική προστασία</string>
+  <string name="thermostat_detail_overheat_active">Ενεργή προστασία από υπερθέρμανση</string>
+  <string name="developer_option">Επιλογές προγραμματιστή</string>
+  <string name="developer_info_activated">Λειτουργία προγραμματιστή ενεργοποιήθηκε</string>
+  <string name="developer_info_screen_orientation">Ενεργοποιήθηκε η περιστροφή οθόνης</string>
+  <string name="developer_info_settings">Πειραματικές ρυθμίσεις</string>
 </resources>

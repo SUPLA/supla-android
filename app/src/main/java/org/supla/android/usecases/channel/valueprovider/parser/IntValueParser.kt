@@ -28,7 +28,7 @@ interface IntValueParser {
           .wrap(it.slice(startPos..endPos).toByteArray())
           .order(ByteOrder.LITTLE_ENDIAN)
           .getInt()
-      } catch (exception: Exception) {
+      } catch (_: Exception) {
         null
       }
     }

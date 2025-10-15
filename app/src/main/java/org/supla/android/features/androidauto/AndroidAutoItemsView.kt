@@ -23,7 +23,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -54,9 +53,9 @@ import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.BACKGROUND_COLOR
 import org.supla.android.ui.views.EmptyListInfoView
 import org.supla.android.ui.views.Image
-import org.supla.android.ui.views.Switch
 import org.supla.android.ui.views.list.components.ListItemIcon
 import org.supla.android.ui.views.list.components.ListItemTitle
+import org.supla.android.ui.views.settings.SettingsListItem
 import sh.calvin.reorderable.ReorderableCollectionItemScope
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
@@ -126,18 +125,10 @@ fun AndroidAutoItemsViewScope.View(viewState: AndroidAutoItemsViewState) {
 
 @Composable
 private fun AndroidAutoItemsViewScope.Settings(viewState: AndroidAutoItemsViewState) {
-  Row(
-    verticalAlignment = Alignment.CenterVertically,
-    modifier = Modifier
-      .padding(bottom = 1.dp)
-      .background(MaterialTheme.colorScheme.surface)
-      .fillMaxWidth()
-      .padding(horizontal = Distance.default, vertical = Distance.small)
-  ) {
-    Text(stringResource(R.string.android_auto_play_messages), style = MaterialTheme.typography.bodyMedium)
-    Spacer(modifier = Modifier.weight(1f))
-    Switch(viewState.playMessages) { onPlayMessagesChange(it) }
-  }
+  SettingsListItem(
+    label = stringResource(R.string.android_auto_play_messages),
+    checked = viewState.playMessages
+  ) { onPlayMessagesChange(it) }
 }
 
 @Composable

@@ -40,6 +40,7 @@ sealed class EspConfigurationError(
   data object Scan : EspConfigurationError(message = localizedString(LocalizedStringId.ADD_WIZARD_SCAN_TIMEOUT))
   data object NotFound : EspConfigurationError(message = localizedString(LocalizedStringId.ADD_WIZARD_DEVICE_NOT_FOUND))
   data object Connect : EspConfigurationError(message = localizedString(LocalizedStringId.ADD_WIZARD_CONNECT_TIMEOUT))
+  data object InternalError : EspConfigurationError(messages = emptyList()) // iOS specific error
   data object ConfigureTimeout : EspConfigurationError(message = localizedString(LocalizedStringId.ADD_WIZARD_CONFIGURE_TIMEOUT))
   data object Wifi : EspConfigurationError(message = localizedString(LocalizedStringId.ADD_WIZARD_WIFI_ERROR))
   data object Compatibility : EspConfigurationError(message = localizedString(LocalizedStringId.ADD_WIZARD_RESULT_NOT_COMPATIBLE))

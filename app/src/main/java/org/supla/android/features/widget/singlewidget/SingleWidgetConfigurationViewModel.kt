@@ -24,14 +24,12 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.supla.android.core.infrastructure.WorkManagerProxy
-import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.model.spinner.ProfileItem
 import org.supla.android.data.model.spinner.SubjectItem
 import org.supla.android.data.model.spinner.SubjectItemConversionScope
 import org.supla.android.data.source.ChannelGroupRepository
 import org.supla.android.data.source.RoomChannelRepository
 import org.supla.android.data.source.RoomSceneRepository
-import org.supla.android.extensions.guardLet
 import org.supla.android.features.widget.shared.BaseWidgetViewModel
 import org.supla.android.features.widget.shared.WidgetConfigurationScope
 import org.supla.android.features.widget.shared.WidgetConfigurationViewEvent
@@ -39,6 +37,7 @@ import org.supla.android.features.widget.shared.subjectdetail.ActionDetail
 import org.supla.android.features.widget.shared.subjectdetail.SubjectDetail
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.icon.GetSceneIconUseCase
 import org.supla.android.usecases.profile.ReadAllProfilesUseCase
@@ -46,7 +45,9 @@ import org.supla.android.widget.WidgetConfiguration
 import org.supla.android.widget.WidgetPreferences
 import org.supla.android.widget.single.SingleWidgetCommandWorker
 import org.supla.core.shared.data.model.general.SuplaFunction
+import org.supla.core.shared.extensions.guardLet
 import org.supla.core.shared.usecase.GetCaptionUseCase
+import org.supla.core.shared.usecase.channel.valueformatter.NO_VALUE_TEXT
 import javax.inject.Inject
 
 @HiltViewModel
@@ -58,6 +59,7 @@ class SingleWidgetConfigurationViewModel @Inject constructor(
   override val getCaptionUseCase: GetCaptionUseCase,
   private val widgetPreferences: WidgetPreferences,
   private val workManagerProxy: WorkManagerProxy,
+  getChannelValueStringUseCase: GetChannelValueStringUseCase,
   channelGroupRepository: ChannelGroupRepository,
   channelRepository: RoomChannelRepository,
   sceneRepository: RoomSceneRepository,
@@ -67,6 +69,7 @@ class SingleWidgetConfigurationViewModel @Inject constructor(
   getChannelIconUseCase,
   getSceneIconUseCase,
   getCaptionUseCase,
+  getChannelValueStringUseCase,
   channelGroupRepository,
   channelRepository,
   sceneRepository,
@@ -249,7 +252,7 @@ class SingleWidgetConfigurationViewModel @Inject constructor(
       subjectType = currentState().viewState.subjectType,
       caption = caption,
       subjectFunction = subject.function ?: SuplaFunction.NONE,
-      value = ValuesFormatter.NO_VALUE_TEXT,
+      value = subject.value ?: NO_VALUE_TEXT,
       profileId = profileId,
       visibility = true,
       actionId = (currentState().viewState.subjectDetails?.selected as? ActionDetail)?.actionId,
@@ -258,7 +261,7 @@ class SingleWidgetConfigurationViewModel @Inject constructor(
     )
 
     widgetPreferences.setWidgetConfiguration(widgetId, configuration)
-    if (needsReload(subject.function)) {
+    if (isValueWidget(subject.function)) {
       SingleWidgetCommandWorker.enqueue(intArrayOf(widgetId), workManagerProxy)
     }
 

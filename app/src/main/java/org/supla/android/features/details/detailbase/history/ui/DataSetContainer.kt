@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -87,7 +88,7 @@ private fun DataSetItems(
     horizontalArrangement = Arrangement.spacedBy(8.dp),
     verticalAlignment = Alignment.CenterVertically,
     modifier = Modifier
-      .height(dimensionResource(id = R.dimen.button_small_height))
+      .defaultMinSize(minHeight = dimensionResource(id = R.dimen.button_small_height))
       .let {
         if (clickEnabled) {
           it.clickable(
@@ -136,6 +137,13 @@ private fun DataSetItem(value: HistoryDataSet.LabelData, showColor: Boolean, act
             }
           }
           .border(1.dp, colorResource(id = value.color), RoundedCornerShape(2.dp))
+      )
+    }
+    value.description?.let {
+      Text(
+        text = it(LocalContext.current),
+        style = MaterialTheme.typography.labelSmall,
+        modifier = Modifier.padding(top = 4.dp).padding(horizontal = Distance.tiny)
       )
     }
   }

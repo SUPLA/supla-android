@@ -24,6 +24,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import org.supla.android.data.source.remote.gpm.SuplaChannelGeneralPurposeBaseConfig
+import org.supla.core.shared.usecase.channel.valueformatter.formatters.GpmValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.types.ValueFormat
 
 @RunWith(MockitoJUnitRunner::class)
 class GpmValueFormatterTest {
@@ -32,10 +34,10 @@ class GpmValueFormatterTest {
   fun `should format value according to value`() {
     // given
     val config = mockConfig("$", true, "k", false, 2)
-    val formatter = GpmValueFormatter(config)
+    val formatter = GpmValueFormatter.staticFormatter(config)
 
     // when
-    val formatted = formatter.format(2.534, true)
+    val formatted = formatter.format(2.534, ValueFormat.WithUnit)
 
     // then
     assertThat(formatted).isEqualTo("$2.53 k")
@@ -45,23 +47,10 @@ class GpmValueFormatterTest {
   fun `should get no value when NaN`() {
     // given
     val config = mockConfig()
-    val formatter = GpmValueFormatter(config)
+    val formatter = GpmValueFormatter.staticFormatter(config)
 
     // when
-    val formatted = formatter.format(Double.NaN, true)
-
-    // then
-    assertThat(formatted).isEqualTo("---")
-  }
-
-  @Test
-  fun `should get no value when not double`() {
-    // given
-    val config = mockConfig()
-    val formatter = GpmValueFormatter(config)
-
-    // when
-    val formatted = formatter.format(123, true)
+    val formatted = formatter.format(Double.NaN, ValueFormat.WithUnit)
 
     // then
     assertThat(formatted).isEqualTo("---")
@@ -71,10 +60,10 @@ class GpmValueFormatterTest {
   fun `should format value according to precision`() {
     // given
     val config = mockConfig("$", false, "k", true, 4)
-    val formatter = GpmValueFormatter(config)
+    val formatter = GpmValueFormatter.staticFormatter(config)
 
     // when
-    val formatted = formatter.format(2.534, true)
+    val formatted = formatter.format(2.534, ValueFormat.WithUnit)
 
     // then
     assertThat(formatted).isEqualTo("$ 2.5340k")

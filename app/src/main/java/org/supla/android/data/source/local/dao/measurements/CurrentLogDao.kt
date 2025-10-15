@@ -67,6 +67,9 @@ interface CurrentLogDao : GroupingStringMigratorDao {
   @Query("DELETE FROM $TABLE_NAME WHERE $COLUMN_CHANNEL_ID = :channelId AND $COLUMN_PROFILE_ID = :profileId")
   fun delete(channelId: Int, profileId: Long): Completable
 
+  @Query("DELETE FROM $TABLE_NAME WHERE $COLUMN_PROFILE_ID = :profileId")
+  fun deleteByProfile(profileId: Long): Completable
+
   @Query(
     """
       SELECT $ALL_COLUMNS 

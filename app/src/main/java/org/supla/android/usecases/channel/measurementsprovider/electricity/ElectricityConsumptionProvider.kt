@@ -20,10 +20,10 @@ package org.supla.android.usecases.channel.measurementsprovider.electricity
 import com.google.gson.Gson
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
-import org.supla.android.Preferences
 import org.supla.android.R
 import org.supla.android.core.shared.provider
 import org.supla.android.core.shared.shareable
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.data.model.chart.AggregatedEntity
 import org.supla.android.data.model.chart.AggregatedValue
 import org.supla.android.data.model.chart.ChannelChartSets
@@ -44,9 +44,10 @@ import org.supla.android.images.ImageId
 import org.supla.android.ui.views.charts.marker.ElectricityMarkerCustomData
 import org.supla.android.usecases.channel.measurementsprovider.AggregationResult
 import org.supla.android.usecases.channel.measurementsprovider.MeasurementsProvider
-import org.supla.android.usecases.channel.valueformatter.ListElectricityMeterValueFormatter
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.core.shared.usecase.GetCaptionUseCase
+import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatSpecification
+import org.supla.core.shared.usecase.channel.valueformatter.formatters.ElectricityMeterValueFormatter
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -57,8 +58,10 @@ class ElectricityConsumptionProvider @Inject constructor(
   private val getChannelIconUseCase: GetChannelIconUseCase,
   private val getCaptionUseCase: GetCaptionUseCase,
   @Named(GSON_FOR_REPO) gson: Gson,
-  preferences: Preferences
+  preferences: ApplicationPreferences
 ) : MeasurementsProvider(preferences, gson) {
+
+  private val formatter = ElectricityMeterValueFormatter(ValueFormatSpecification.ElectricityMeterForChartSummary)
 
   operator fun invoke(
     channelWithChildren: ChannelWithChildren,
@@ -110,24 +113,22 @@ class ElectricityConsumptionProvider @Inject constructor(
     }
 
   private fun labels(spec: ChartDataSpec, icon: ImageId, result: AggregationResult): HistoryDataSet.Label {
-    val formatter = ListElectricityMeterValueFormatter(useNoValue = false)
-
     return when ((spec.customFilters as? ElectricityChartFilters)?.type) {
       ElectricityMeterChartType.BALANCE_VECTOR,
       ElectricityMeterChartType.BALANCE_ARITHMETIC,
       ElectricityMeterChartType.BALANCE_HOURLY -> HistoryDataSet.Label.Multiple(
         mutableListOf<HistoryDataSet.LabelData>().apply {
           add(HistoryDataSet.LabelData(icon, "", R.color.on_surface_variant, presentColor = false, useColor = false))
-          add(HistoryDataSet.LabelData.forwarded(formatter.format(result.nextSum(), withUnit = false)))
-          add(HistoryDataSet.LabelData.reversed(formatter.format(result.nextSum(), withUnit = false)))
+          add(HistoryDataSet.LabelData.forwarded(formatter.format(result.nextSum())))
+          add(HistoryDataSet.LabelData.reversed(formatter.format(result.nextSum())))
         }
       )
 
       ElectricityMeterChartType.BALANCE_CHART_AGGREGATED -> HistoryDataSet.Label.Multiple(
         mutableListOf<HistoryDataSet.LabelData>().apply {
           add(HistoryDataSet.LabelData(icon, "", R.color.on_surface_variant, presentColor = false))
-          add(HistoryDataSet.LabelData.forwarded(formatter.format(result.nextSum(), withUnit = false)))
-          add(HistoryDataSet.LabelData.reversed(formatter.format(result.nextSum(), withUnit = false)))
+          add(HistoryDataSet.LabelData.forwarded(formatter.format(result.nextSum())))
+          add(HistoryDataSet.LabelData.reversed(formatter.format(result.nextSum())))
           add(HistoryDataSet.LabelData(R.color.on_surface_variant))
         }
       )
@@ -138,7 +139,7 @@ class ElectricityConsumptionProvider @Inject constructor(
             add(
               HistoryDataSet.LabelData(
                 icon,
-                formatter.format(result.nextSum(), withUnit = false),
+                formatter.format(result.nextSum()),
                 R.color.phase1
               )
             )
@@ -147,7 +148,7 @@ class ElectricityConsumptionProvider @Inject constructor(
             add(
               HistoryDataSet.LabelData(
                 if (size == 0) icon else null,
-                formatter.format(result.nextSum(), withUnit = false),
+                formatter.format(result.nextSum()),
                 R.color.phase2
               )
             )
@@ -156,7 +157,7 @@ class ElectricityConsumptionProvider @Inject constructor(
             add(
               HistoryDataSet.LabelData(
                 if (size == 0) icon else null,
-                formatter.format(result.nextSum(), withUnit = false),
+                formatter.format(result.nextSum()),
                 R.color.phase3
               )
             )

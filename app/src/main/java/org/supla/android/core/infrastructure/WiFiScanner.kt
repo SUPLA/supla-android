@@ -29,10 +29,10 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withLock
-import org.supla.android.Trace
-import org.supla.android.extensions.TAG
 import org.supla.android.extensions.allGranted
 import org.supla.android.extensions.skipQuotation
+import timber.log.Timber
+import java.util.Collections
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -45,7 +45,7 @@ class WiFiScanner @Inject constructor(
   val cashedSsids: List<String>
     get() = ssids
 
-  private val ssids = mutableListOf<String>()
+  private val ssids = Collections.synchronizedList(mutableListOf<String>())
   private val semaphore = Semaphore(1, 1)
   private val mutex = Mutex()
 
@@ -53,7 +53,7 @@ class WiFiScanner @Inject constructor(
 
   private val broadcastReceiver = object : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
-      Trace.i(TAG, "Got intent: $intent")
+      Timber.i("Got intent: $intent")
       if (context?.allGranted(PERMISSIONS) == true) {
         handleResults()
       }
@@ -69,17 +69,17 @@ class WiFiScanner @Inject constructor(
 
   suspend fun scan(): Result {
     mutex.withLock {
-      Trace.i(TAG, "Scan started")
+      Timber.i("Scan started")
       processingRequest = true
       try {
         if (wifiManager.startScan()) {
-          Trace.d(TAG, "Scan allowed")
+          Timber.d("Scan allowed")
           semaphore.acquire()
-          Trace.d(TAG, "Scan finished")
-          return Result.Success(ssids)
+          Timber.d("Scan finished")
+          return Result.Success(ssids.toList())
         } else {
-          Trace.d(TAG, "Scan not allowed")
-          return Result.NotAllowed(ssids)
+          Timber.d("Scan not allowed")
+          return Result.NotAllowed(ssids.toList())
         }
       } finally {
         processingRequest = false
@@ -94,7 +94,7 @@ class WiFiScanner @Inject constructor(
         wifiManager.scanResults.filter { it.frequency < 2500 }.mapNotNull { it.wifiSsidAsString }.distinct().filter { it.isNotEmpty() }
       )
     } catch (ex: SecurityException) {
-      Trace.w(TAG, "Could not read WiFi scan results", ex)
+      Timber.w(ex, "Could not read WiFi scan results")
     }
   }
 

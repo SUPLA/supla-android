@@ -17,13 +17,14 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import org.supla.android.data.ValuesFormatter
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
-import org.supla.android.extensions.guardLet
 import org.supla.android.usecases.channel.ChannelValueStringProvider
 import org.supla.android.usecases.channel.ValueType
 import org.supla.android.usecases.channel.valueprovider.PressureSensorValueProvider
-import java.text.DecimalFormat
+import org.supla.core.shared.extensions.guardLet
+import org.supla.core.shared.usecase.channel.valueformatter.NO_VALUE_TEXT
+import org.supla.core.shared.usecase.channel.valueformatter.formatters.PressureValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.types.withUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -31,26 +32,15 @@ import javax.inject.Singleton
 class PressureSensorValueStringProvider @Inject constructor(
   private val pressureSensorValueProvider: PressureSensorValueProvider
 ) : ChannelValueStringProvider {
-  val formatter: DecimalFormat = DecimalFormat().apply {
-    minimumFractionDigits = 0
-    maximumFractionDigits = 0
-  }
+  val formatter = PressureValueFormatter
 
   override fun handle(channelWithChildren: ChannelWithChildren): Boolean =
     pressureSensorValueProvider.handle(channelWithChildren)
 
   override fun value(channelWithChildren: ChannelWithChildren, valueType: ValueType, withUnit: Boolean): String {
     val (doubleValue) = guardLet(pressureSensorValueProvider.value(channelWithChildren, valueType)) {
-      return ValuesFormatter.NO_VALUE_TEXT
+      return NO_VALUE_TEXT
     }
-    if (doubleValue <= PressureSensorValueProvider.UNKNOWN_VALUE) {
-      return ValuesFormatter.NO_VALUE_TEXT
-    }
-
-    return if (withUnit) {
-      "${formatter.format(doubleValue)} hPa"
-    } else {
-      formatter.format(doubleValue)
-    }
+    return formatter.format(doubleValue, format = withUnit(withUnit))
   }
 }

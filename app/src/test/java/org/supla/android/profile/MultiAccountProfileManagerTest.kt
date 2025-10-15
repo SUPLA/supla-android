@@ -8,15 +8,12 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.*
-import org.supla.android.core.SuplaAppProvider
-import org.supla.android.core.networking.suplacloud.SuplaCloudConfigHolder
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.verifyNoMoreInteractions
+import org.mockito.kotlin.whenever
 import org.supla.android.data.source.ProfileRepository
 import org.supla.android.db.AuthProfileItem
-import org.supla.android.events.UpdateEventsManager
-import org.supla.android.lib.singlecall.SingleCall
-import org.supla.android.usecases.icon.LoadUserIconsIntoCacheUseCase
-import org.supla.android.widget.WidgetManager
 
 @RunWith(MockitoJUnitRunner::class)
 class MultiAccountProfileManagerTest {
@@ -24,32 +21,11 @@ class MultiAccountProfileManagerTest {
   @Mock
   private lateinit var profileRepository: ProfileRepository
 
-  @Mock
-  private lateinit var widgetManager: WidgetManager
-
-  @Mock
-  private lateinit var updateEventsManager: UpdateEventsManager
-
-  @Mock
-  private lateinit var profileIdHolder: ProfileIdHolder
-
-  @Mock
-  private lateinit var suplaAppProvider: SuplaAppProvider
-
-  @Mock
-  private lateinit var singleCallProvider: SingleCall.Provider
-
-  @Mock
-  private lateinit var suplaCloudConfigHolder: SuplaCloudConfigHolder
-
-  @Mock
-  private lateinit var loadUserIconsIntoCacheUseCase: LoadUserIconsIntoCacheUseCase
-
   private lateinit var profileManager: MultiAccountProfileManager
 
   @Before
   fun setUp() {
-    profileManager = MultiAccountProfileManager(profileRepository, widgetManager, singleCallProvider)
+    profileManager = MultiAccountProfileManager(profileRepository)
   }
 
   @Test
@@ -156,23 +132,6 @@ class MultiAccountProfileManagerTest {
       profile.id
     }
     confirmVerified(profile)
-  }
-
-  @Test
-  fun `should delete profile`() {
-    // given
-    val profileId = 123L
-
-    // when
-    val testObserver = profileManager.delete(profileId).test()
-
-    // then
-    testObserver.assertComplete()
-
-    verify(profileRepository).deleteProfile(profileId)
-    verify(profileRepository).getProfile(profileId)
-    verify(widgetManager).onProfileRemoved(profileId)
-    verifyNoMoreInteractions(profileRepository, widgetManager)
   }
 
   @Test

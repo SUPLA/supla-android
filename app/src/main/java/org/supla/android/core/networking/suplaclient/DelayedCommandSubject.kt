@@ -21,9 +21,8 @@ import android.annotation.SuppressLint
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.PublishSubject
-import org.supla.android.Trace
-import org.supla.android.extensions.TAG
 import org.supla.android.tools.SuplaSchedulers
+import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 const val DELAYED_COMMAND_DELAY_S = 2L
@@ -39,7 +38,7 @@ abstract class DelayedCommandSubject<T : DelayableState>(schedulers: SuplaSchedu
       .flatMapCompletable { if (it.sent.not()) { execute(it) } else Completable.complete() }
       .subscribeOn(schedulers.io)
       .subscribeBy(
-        onError = { Trace.e(TAG, "Could not execute delayed request", it) }
+        onError = { Timber.e(it, "Could not execute delayed request") }
       )
   }
 

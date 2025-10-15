@@ -18,11 +18,11 @@ package org.supla.android.usecases.channel
  */
 
 import io.reactivex.rxjava3.core.Completable
-import org.supla.android.Trace
 import org.supla.android.data.source.CurrentLogRepository
 import org.supla.android.data.source.ElectricityMeterLogRepository
 import org.supla.android.data.source.GeneralPurposeMeasurementLogRepository
 import org.supla.android.data.source.GeneralPurposeMeterLogRepository
+import org.supla.android.data.source.HomePlusThermostatLogRepository
 import org.supla.android.data.source.HumidityLogRepository
 import org.supla.android.data.source.ImpulseCounterLogRepository
 import org.supla.android.data.source.PowerActiveLogRepository
@@ -31,6 +31,7 @@ import org.supla.android.data.source.TemperatureLogRepository
 import org.supla.android.data.source.VoltageLogRepository
 import org.supla.android.data.source.local.entity.isHvacThermostat
 import org.supla.core.shared.data.model.general.SuplaFunction
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -46,7 +47,8 @@ class DeleteChannelMeasurementsUseCase @Inject constructor(
   private val impulseCounterLogRepository: ImpulseCounterLogRepository,
   private val voltageLogRepository: VoltageLogRepository,
   private val currentLogRepository: CurrentLogRepository,
-  private val powerActiveLogRepository: PowerActiveLogRepository
+  private val powerActiveLogRepository: PowerActiveLogRepository,
+  private val homePlusThermostatLogRepository: HomePlusThermostatLogRepository
 ) {
 
   operator fun invoke(remoteId: Int): Completable =
@@ -69,6 +71,9 @@ class DeleteChannelMeasurementsUseCase @Inject constructor(
 
           channelWithChildren.function == SuplaFunction.HUMIDITY ->
             humidityLogRepository.delete(remoteId, profileId)
+
+          channelWithChildren.function == SuplaFunction.THERMOSTAT_HEATPOL_HOMEPLUS ->
+            homePlusThermostatLogRepository.delete(remoteId, profileId)
 
           channelWithChildren.isOrHasElectricityMeter ->
             Completable.merge(
@@ -101,6 +106,6 @@ class DeleteChannelMeasurementsUseCase @Inject constructor(
 
   private fun invalidFunctionCompletable(function: SuplaFunction) =
     Completable.fromRunnable {
-      Trace.e(DeleteChannelMeasurementsUseCase::class.simpleName, "Unsupported function while deleting $function")
+      Timber.e("Unsupported function while deleting $function")
     }
 }

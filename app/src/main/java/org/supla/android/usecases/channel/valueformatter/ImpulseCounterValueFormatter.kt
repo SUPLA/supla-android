@@ -17,49 +17,29 @@ package org.supla.android.usecases.channel.valueformatter
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.data.ValuesFormatter
-import org.supla.android.extensions.guardLet
-import org.supla.android.lib.SuplaConst
-import org.supla.android.usecases.channel.valueprovider.ImpulseCounterValueProvider
-import java.text.DecimalFormat
+import org.supla.android.data.source.local.entity.complex.isImpulseCounter
+import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
+import org.supla.core.shared.data.model.channel.ChannelRelationType
+import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatSpecification
+import org.supla.core.shared.usecase.channel.valueformatter.ValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.formatters.ImpulseCounterValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.types.ImpulseCounterPrecision
 
-class ImpulseCounterValueFormatter(private val showUnknownValue: Boolean = false) : ChannelValueFormatter {
-
-  val formatter: DecimalFormat = DecimalFormat()
-
-  override fun handle(function: Int): Boolean =
-    when (function) {
-      SuplaConst.SUPLA_CHANNELFNC_IC_HEAT_METER,
-      SuplaConst.SUPLA_CHANNELFNC_IC_ELECTRICITY_METER,
-      SuplaConst.SUPLA_CHANNELFNC_IC_WATER_METER,
-      SuplaConst.SUPLA_CHANNELFNC_IC_GAS_METER -> true
-
-      else -> false
-    }
-
-  override fun format(value: Any, withUnit: Boolean, precision: ChannelValueFormatter.Precision, custom: Any?): String {
-    val (doubleValue) = guardLet(value as? Double) { return ValuesFormatter.NO_VALUE_TEXT }
-    if (showUnknownValue && doubleValue == ImpulseCounterValueProvider.UNKNOWN_VALUE) {
-      return ValuesFormatter.NO_VALUE_TEXT
-    }
-
-    val unit = (custom as? Data)?.unit
-    val precisionValue = getPrecisionValue(precision)
-    formatter.minimumFractionDigits = precisionValue
-    formatter.maximumFractionDigits = precisionValue
-
-    return if (withUnit && unit != null) {
-      "${formatter.format(doubleValue)} $unit"
+fun ImpulseCounterValueFormatter.Companion.staticFormatter(channelWithChildren: ChannelWithChildren): ValueFormatter {
+  val unit =
+    if (channelWithChildren.channel.isImpulseCounter()) {
+      channelWithChildren.channel.channelExtendedValueEntity?.getSuplaValue()?.ImpulseCounterValue?.unit
     } else {
-      formatter.format(doubleValue)
-    }
-  }
-
-  private fun getPrecisionValue(precision: ChannelValueFormatter.Precision): Int =
-    when (precision) {
-      is ChannelValueFormatter.Default -> 3
-      is ChannelValueFormatter.Custom -> precision.value
+      channelWithChildren.children
+        .firstOrNull { it.relationType == ChannelRelationType.METER }
+        ?.channelDataEntity?.channelExtendedValueEntity?.getSuplaValue()?.ImpulseCounterValue?.unit
     }
 
-  data class Data(val unit: String)
+  return ImpulseCounterValueFormatter(
+    defaultFormatSpecification = ValueFormatSpecification(
+      precision = ImpulseCounterPrecision,
+      withUnit = true,
+      unit = " $unit"
+    )
+  )
 }

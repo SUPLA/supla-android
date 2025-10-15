@@ -20,12 +20,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
@@ -36,8 +36,10 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.net.toUri
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.children
+import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.customview.widget.Openable
 import androidx.navigation.NavDestination
@@ -53,12 +55,14 @@ import org.supla.android.core.branding.Configuration
 import org.supla.android.core.networking.suplaclient.SuplaClientState
 import org.supla.android.core.networking.suplaclient.SuplaClientStateHolder
 import org.supla.android.core.notifications.NotificationsHelper
+import org.supla.android.core.storage.ApplicationPreferences
+import org.supla.android.core.storage.EncryptedPreferences
 import org.supla.android.core.ui.BackHandleOwner
 import org.supla.android.extensions.MenuItemsAnimationType
-import org.supla.android.extensions.TAG
 import org.supla.android.extensions.getChannelIconUseCase
 import org.supla.android.extensions.hide
 import org.supla.android.extensions.setStatusBarColor
+import org.supla.android.extensions.setupOrientationLock
 import org.supla.android.extensions.show
 import org.supla.android.extensions.visibleIf
 import org.supla.android.features.lockscreen.LockScreenFragment
@@ -77,6 +81,7 @@ import org.supla.android.ui.ToolbarItemsController
 import org.supla.android.ui.ToolbarTitleController
 import org.supla.android.ui.ToolbarVisibilityController
 import org.supla.core.shared.extensions.ifTrue
+import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.Date
 import javax.inject.Inject
@@ -136,6 +141,9 @@ class MainActivity :
   lateinit var preferences: Preferences
 
   @Inject
+  lateinit var applicationPreferences: ApplicationPreferences
+
+  @Inject
   lateinit var notificationsHelper: NotificationsHelper
 
   @Inject
@@ -143,6 +151,9 @@ class MainActivity :
 
   @Inject
   lateinit var suplaSchedulers: SuplaSchedulers
+
+  @Inject
+  lateinit var encryptedPreferences: EncryptedPreferences
 
   @RequiresApi(Build.VERSION_CODES.O)
   val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
@@ -157,6 +168,7 @@ class MainActivity :
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+    setupOrientationLock(applicationPreferences)
 
     handleSplashScreen()
     legacySetup()
@@ -181,7 +193,7 @@ class MainActivity :
         .observeOn(suplaSchedulers.ui)
         .subscribeBy(
           onNext = {
-            Trace.d(TAG, "Got state $it")
+            Timber.d("Got state $it")
             when (it) {
               SuplaClientState.FirstProfileCreation -> navigator.navigateToNewProfile()
               is SuplaClientState.Connecting,
@@ -352,7 +364,7 @@ class MainActivity :
   }
 
   private fun runDownloadTask() {
-    Trace.d("RubDownloadTask", "RunDownloadTask")
+    Timber.d("RunDownloadTask")
     if (downloadUserIcons != null && !downloadUserIcons!!.isAlive(90)) {
       downloadUserIcons!!.cancel(true)
       downloadUserIcons = null
@@ -407,7 +419,7 @@ class MainActivity :
   }
 
   private fun showHideNotificationView(show: Boolean) {
-    if (!show && notificationView!!.visibility == View.GONE) return
+    if (!show && notificationView!!.isGone) return
     val height = resources.getDimension(R.dimen.channel_layout_height)
     notificationView!!.visibility = View.VISIBLE
     notificationView!!.bringToFront()
@@ -472,6 +484,8 @@ class MainActivity :
       menuLayout.setButtonsAvailable(buttons)
       menuLayout.y = (-menuLayout.btnAreaHeight).toFloat()
       menuLayout.visibility = View.VISIBLE
+      (menuLayout.findViewWithTag<View>(MenuItemsLayout.BTN_DEV_MODE)?.parent as? ViewGroup)?.visibility =
+        if (encryptedPreferences.devModeActive) View.VISIBLE else View.GONE
       animatingMenu = true
       menuLayout
         .show(animationType) {
@@ -522,12 +536,13 @@ class MainActivity :
       MenuItemsLayout.BTN_ABOUT -> navigator.navigateTo(R.id.about_fragment)
       MenuItemsLayout.BTN_ADD_DEVICE -> navigator.navigateToAddWizard()
       MenuItemsLayout.BTN_Z_WAVE -> SuperUserAuthorize(MenuItemsLayout.BTN_Z_WAVE)
-      MenuItemsLayout.BTN_HELP -> navigator.navigateToWeb(Uri.parse(resources.getString(R.string.forumpage_url)))
+      MenuItemsLayout.BTN_HELP -> navigator.navigateToWeb(resources.getString(R.string.forumpage_url).toUri())
       MenuItemsLayout.BTN_CLOUD -> navigator.navigateToCloudExternal()
       MenuItemsLayout.BTN_HOMEPAGE -> navigator.navigateToSuplaOrgExternal()
       MenuItemsLayout.BTN_PROFILE -> showProfile(this)
       MenuItemsLayout.BTN_NOTIFICATIONS -> navigator.navigateTo(R.id.notifications_log_fragment)
       MenuItemsLayout.BTN_DEVICE_CATALOG -> navigator.navigateTo(R.id.device_catalog_fragment)
+      MenuItemsLayout.BTN_DEV_MODE -> navigator.navigateTo(R.id.developer_info_fragment)
     }
   }
 

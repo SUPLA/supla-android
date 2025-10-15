@@ -20,20 +20,21 @@ package org.supla.android.widget.shared
 import android.content.Context
 import androidx.work.Worker
 import androidx.work.WorkerParameters
-import org.supla.android.Preferences
-import org.supla.android.data.ValuesFormatter
+import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.extensions.getSingleCallProvider
 import org.supla.android.extensions.getWidgetPreferences
 import org.supla.android.lib.singlecall.ChannelValue
 import org.supla.android.lib.singlecall.TemperatureAndHumidity
-import org.supla.android.usecases.channel.valueformatter.ThermometerAndHumidityValueFormatter
-import org.supla.android.usecases.channel.valueformatter.ThermometerValueFormatter
 import org.supla.android.usecases.channel.valueprovider.ThermometerValueProvider
 import org.supla.android.widget.WidgetConfiguration
 import org.supla.core.shared.data.model.general.SuplaFunction
+import org.supla.core.shared.usecase.channel.valueformatter.NO_VALUE_TEXT
+import org.supla.core.shared.usecase.channel.valueformatter.formatters.ThermometerAndHumidityValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.formatters.ThermometerValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.types.withUnit
 
 abstract class WidgetWorkerBase(
-  appPreferences: Preferences,
+  appPreferences: ApplicationPreferences,
   appContext: Context,
   workerParams: WorkerParameters
 ) : Worker(appContext, workerParams) {
@@ -56,9 +57,9 @@ abstract class WidgetWorkerBase(
     withUnit: Boolean
   ): (TemperatureAndHumidity?) -> String {
     return if (configuration.subjectFunction == SuplaFunction.THERMOMETER) {
-      { thermometerValueFormatter.format(it?.temperature ?: ThermometerValueProvider.UNKNOWN_VALUE, withUnit) }
+      { thermometerValueFormatter.format(it?.temperature ?: ThermometerValueProvider.UNKNOWN_VALUE, withUnit(withUnit)) }
     } else {
-      { value -> value?.let { thermometerAndHumidityValueFormatter.format(it, withUnit) } ?: ValuesFormatter.NO_VALUE_TEXT }
+      { value -> value?.let { thermometerAndHumidityValueFormatter.format(it, withUnit(withUnit)) } ?: NO_VALUE_TEXT }
     }
   }
 }

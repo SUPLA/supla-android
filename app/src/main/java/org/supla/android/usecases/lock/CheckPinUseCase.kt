@@ -18,7 +18,6 @@ package org.supla.android.usecases.lock
  */
 
 import io.reactivex.rxjava3.core.Single
-import org.supla.android.Trace
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.infrastructure.ShaHashHelper
 import org.supla.android.core.networking.suplaclient.SuplaClientEvent
@@ -27,8 +26,8 @@ import org.supla.android.core.storage.EncryptedPreferences
 import org.supla.android.data.model.general.LockScreenScope
 import org.supla.android.data.model.general.LockScreenSettings
 import org.supla.android.data.source.RoomProfileRepository
-import org.supla.android.extensions.TAG
 import org.supla.android.features.lockscreen.UnlockAction
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -57,7 +56,7 @@ class CheckPinUseCase @Inject constructor(
         onWrongPin(lockScreenSettings)
       }
     } catch (exception: Exception) {
-      Trace.e(TAG, "Could not check PIN!", exception)
+      Timber.e(exception, "Could not check PIN!")
       onWrongPin(lockScreenSettings)
     }
   }.flatMap { result ->

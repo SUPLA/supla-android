@@ -221,6 +221,7 @@ private fun TemperatureControlRow(
       isOff = viewState.isOff,
       currentPower = viewState.currentPower,
       isOffline = viewState.isOffline,
+      isDisabled = viewState.isOffline || viewState.buttonsDisabled,
       onPositionChangeStarted = { viewProxy.markChanging() },
       onPositionChangeEnded = { minPercentage, maxPercentage -> viewProxy.setpointTemperatureChanged(minPercentage, maxPercentage) }
     )
@@ -311,7 +312,7 @@ private fun ThermostatWheelControlButtons(
   viewState: ThermostatGeneralViewState,
   viewProxy: ThermostatGeneralViewProxy,
 ) {
-  if ((!viewState.isOff || viewState.programmedModeActive) && !viewState.isOffline) {
+  if ((!viewState.isOff || viewState.programmedModeActive) && !viewState.isOffline && !viewState.buttonsDisabled) {
     val color = if (viewState.viewModelState?.lastChangedHeat == false) {
       MaterialTheme.colorScheme.secondary
     } else {
@@ -415,12 +416,12 @@ private fun BottomButtonsRow(viewState: ThermostatGeneralViewState, viewProxy: T
   ) {
     PowerButton(
       isOff = viewState.isOff && viewState.programmedModeActive.not(),
-      disabled = viewState.isOffline
+      disabled = viewState.buttonsDisabled
     ) { viewProxy.turnOnOffClicked() }
     SuplaButton(
       text = stringResource(id = R.string.thermostat_detail_mode_manual),
       modifier = Modifier.weight(0.5f),
-      disabled = viewState.isOffline,
+      disabled = viewState.buttonsDisabled,
       pressed = viewState.manualModeActive
     ) {
       if (viewState.isOffline.not() && viewState.manualModeActive.not()) {
@@ -430,7 +431,7 @@ private fun BottomButtonsRow(viewState: ThermostatGeneralViewState, viewProxy: T
     SuplaButton(
       text = stringResource(id = R.string.thermostat_detail_mode_weekly_schedule),
       modifier = Modifier.weight(0.5f),
-      disabled = viewState.isOffline,
+      disabled = viewState.buttonsDisabled,
       pressed = viewState.programmedModeActive
     ) {
       if (viewState.isOffline.not() && (viewState.programmedModeActive.not() || viewState.temporaryChangeActive)) {

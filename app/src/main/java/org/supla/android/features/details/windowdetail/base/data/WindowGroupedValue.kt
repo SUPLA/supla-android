@@ -17,13 +17,13 @@ package org.supla.android.features.details.windowdetail.base.data
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import org.supla.android.extensions.ifLet
+import org.supla.core.shared.extensions.ifLet
 
 enum class WindowGroupedValueFormat {
   OPENING_PERCENTAGE, PERCENTAGE, DEGREE
 }
 
-sealed class WindowGroupedValue private constructor(open val value: Float) {
+sealed class WindowGroupedValue(open val value: Float) {
 
   open fun asString(format: WindowGroupedValueFormat, value0: Float? = null, value100: Float? = null): String = when (format) {
     WindowGroupedValueFormat.OPENING_PERCENTAGE -> String.format("%.0f%%", 100f - value)

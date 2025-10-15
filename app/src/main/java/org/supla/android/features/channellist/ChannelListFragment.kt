@@ -160,6 +160,5 @@ class ChannelListFragment : BaseFragment<ChannelListViewState, ChannelListViewEv
 
   override fun onSuplaMessage(message: SuplaClientMessage) {
     (message as? SuplaClientMessage.ChannelState)?.let { stateDialogViewModel.updateStateDialog(it.channelState) }
-    (message as? SuplaClientMessage.ChannelDataChanged)?.let { viewModel.updateChannel(message.channelId) }
   }
 }

@@ -223,7 +223,7 @@
   <string name="associeted_with_scene_error">Nu se poate schimba funcţia unui canal care este asociat cu o scenă</string>
   <string name="battery_health">Durata de viaţă a bateriei</string>
   <string name="battery_level">Nivelul bateriei</string>
-  <string name="battery_powered">Alimentare cu baterie</string>
+  <string name="state_power_supply">Alimentare</string>
   <string name="belongs_to_group_error">Nu se poate schimba funcţia unui canal care face parte dintr-un grup.</string>
   <string name="bridge">Podul</string>
   <string name="bridge_node_online">Nodul podului - online</string>
@@ -251,7 +251,7 @@
   <string name="light_source_lifespan">Durata de viaţă a sursei de lumină</string>
   <string name="light_source_lifespan_hours">Durata de viaţă a sursei de lumină (ore)</string>
   <string name="light_source_operatingtime">Timp de lucru al sursei de lumină</string>
-  <string name="lightsource_warning">Durata de viaţă a sursei de lumină este de %1$s</string>
+  <string name="channel_lightsource_warning">Durata de viaţă a sursei de lumină este de %1$.01f%%</string>
   <string name="mode_change_in_progress">Schimbarea modului este în desfăşurare</string>
   <string name="no">Nu</string>
   <string name="reset_lightsource_usage_counter">Resetaţi contorul de utilizare a sursei de lumină</string>
@@ -263,8 +263,8 @@
   <string name="soft_ver">Versiunea de operare</string>
   <string name="time_exceeded">Timpul a fost depăşit. Încercaţi din nou.</string>
   <string name="uptime">Timp de lucru</string>
-  <string name="uv_warning1">Durata de viaţă a lămpii UV este de %1$s. Programaşi înlocuirea acestuia.</string>
-  <string name="uv_warning2">Durata de viaţă a lămpii UV este de  %1$s.  Înlocuiţi lampa.</string>
+  <string name="channel_uv_warning">Durata de viaţă a lămpii UV este de %1$.01f%%. Programaşi înlocuirea acestuia.</string>
+  <string name="channel_uv_error">Durata de viaţă a lămpii UV este de %1$.01f%%.  Înlocuiţi lampa.</string>
   <string name="valve_warning_manually_closed">Robinetul a fost închis manual sau prin radio. Înainte de a-l deschide, asiguraţi-vă că nu a fost închis din cauza inundaţiei Pentru a dezactiva avertizarea, deschideți manual robinetul. Sigur doriți să deschideți robinetul din aplicație?!</string>
   <string name="valve_warning">Robinetul a fost închis manual sau prin radio. Înainte de a-l deschide, asiguraţi-vă că nu a fost închis din cauza inundaţiei. Pentru a dezactiva avertizarea, deschideți manual robinetul.</string>
   <string name="vector_balance_days">Bilanţ vectorial - Zile</string>
@@ -710,4 +710,15 @@
   <string name="wizard_state_finishing">Finalizare…</string>
   <string name="add_wizard_password_instruction">Vă rugăm să utilizați parola folosită pentru accesul la pagina web de configurare locală.\n\nAți uitat parola? O puteți schimba în Supla Cloud sau puteți reseta dispozitivul la setările din fabrică.</string>
   <string name="add_wizard_manual_reconnect">Conexiunea de rețea cu dispozitivul a fost stabilită manual. Asigurați-vă că telefonul dumneavoastră s-a reconectat la internet și continuați procesul.</string>
+  <string name="channel_state_battery_powered">cu baterii</string>
+  <string name="channel_state_main_powered">de la rețea</string>
+  <string name="cfg_temperature_precision">Precizie de temperatură</string>
+  <string name="temperature_measured">Măsurat</string>
+  <string name="temperature_preset">Predefinit</string>
+  <string name="thermostat_detail_antifreeze_active">Protecție anti-îngheț activă</string>
+  <string name="thermostat_detail_overheat_active">Protecție la supraîncălzire activă</string>
+  <string name="developer_option">Opțiuni pentru dezvoltatori</string>
+  <string name="developer_info_activated">Modul dezvoltator a fost activat</string>
+  <string name="developer_info_screen_orientation">Rotirea ecranului activată</string>
+  <string name="developer_info_settings">Setări experimentale</string>
 </resources>

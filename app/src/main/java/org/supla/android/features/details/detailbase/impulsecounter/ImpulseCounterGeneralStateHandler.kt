@@ -19,11 +19,12 @@ package org.supla.android.features.details.detailbase.impulsecounter
 
 import org.supla.android.data.source.local.entity.complex.ImpulseCounter
 import org.supla.android.data.source.local.entity.custom.ChannelWithChildren
-import org.supla.android.extensions.guardLet
 import org.supla.android.ui.views.card.SummaryCardData
 import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.channel.measurements.ImpulseCounterMeasurements
-import org.supla.android.usecases.channel.valueformatter.ImpulseCounterValueFormatter
+import org.supla.android.usecases.channel.valueformatter.staticFormatter
+import org.supla.core.shared.extensions.guardLet
+import org.supla.core.shared.usecase.channel.valueformatter.formatters.ImpulseCounterValueFormatter
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -31,8 +32,6 @@ import javax.inject.Singleton
 class ImpulseCounterGeneralStateHandler @Inject constructor(
   private val getChannelValueStringUseCase: GetChannelValueStringUseCase
 ) {
-
-  val formatter = ImpulseCounterValueFormatter()
 
   fun updateState(
     state: ImpulseCounterState?,
@@ -43,7 +42,7 @@ class ImpulseCounterGeneralStateHandler @Inject constructor(
       return state
     }
 
-    val unit = channelWithChildren.channel.ImpulseCounter.value?.unit?.let { ImpulseCounterValueFormatter.Data(it) }
+    val formatter = ImpulseCounterValueFormatter.staticFormatter(channelWithChildren)
     val (value) = guardLet(channelWithChildren.channel.ImpulseCounter.value) {
       return state.copyOrCreate(
         online = channelWithChildren.status.online,
@@ -52,10 +51,9 @@ class ImpulseCounterGeneralStateHandler @Inject constructor(
       )
     }
 
-    val formatterWithUnknownValue = ImpulseCounterValueFormatter(showUnknownValue = true)
     return state.copyOrCreate(
       online = channelWithChildren.status.online,
-      totalData = SummaryCardData(formatterWithUnknownValue, value.calculatedValue, value.pricePerUnit, value.currency, unit),
+      totalData = SummaryCardData(formatter, value.calculatedValue, value.pricePerUnit, value.currency),
       currentMonthData = measurements?.toSummaryCardData(formatter, value)
     )
   }

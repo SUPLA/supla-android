@@ -52,6 +52,7 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
   public static final int BTN_NOTIFICATIONS = 0x100;
   public static final int BTN_DEVICE_CATALOG = 0x200;
   public static final int BTN_PROFILE = 0x1000;
+  public static final int BTN_DEV_MODE = 0x2000;
   public static final int BTN_ALL = 0xFFFF;
   ArrayList<Button> buttons = new ArrayList<>();
   private LinearLayout mMainButtonsAreaLayout = null;
@@ -284,6 +285,7 @@ public class MenuItemsLayout extends LinearLayout implements View.OnClickListene
       addButton(BTN_HELP, R.drawable.ic_menu_help, R.string.help);
     }
     addButton(BTN_CLOUD, R.drawable.ic_menu_cloud, R.string.supla_cloud);
+    addButton(BTN_DEV_MODE, R.drawable.ic_dev_option, R.string.developer_option);
     addFooter();
   }
 

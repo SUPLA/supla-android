@@ -34,7 +34,6 @@ import org.supla.android.data.source.RoomChannelRepository
 import org.supla.android.data.source.RoomSceneRepository
 import org.supla.android.data.source.local.dao.WidgetConfigurationDao
 import org.supla.android.data.source.local.entity.WidgetConfigurationEntity
-import org.supla.android.extensions.guardLet
 import org.supla.android.features.widget.shared.BaseWidgetViewModel
 import org.supla.android.features.widget.shared.WidgetConfigurationScope
 import org.supla.android.features.widget.shared.WidgetConfigurationViewEvent
@@ -43,10 +42,12 @@ import org.supla.android.features.widget.shared.subjectdetail.SubjectDetail
 import org.supla.android.lib.actions.ActionId
 import org.supla.android.lib.actions.SubjectType
 import org.supla.android.tools.SuplaSchedulers
+import org.supla.android.usecases.channel.GetChannelValueStringUseCase
 import org.supla.android.usecases.icon.GetChannelIconUseCase
 import org.supla.android.usecases.icon.GetSceneIconUseCase
 import org.supla.android.usecases.profile.ReadAllProfilesUseCase
 import org.supla.core.shared.data.model.general.SuplaFunction
+import org.supla.core.shared.extensions.guardLet
 import org.supla.core.shared.infrastructure.localizedString
 import org.supla.core.shared.usecase.GetCaptionUseCase
 import javax.inject.Inject
@@ -59,6 +60,7 @@ class ExtendedValueWidgetConfigurationViewModel @Inject constructor(
   override val getChannelIconUseCase: GetChannelIconUseCase,
   override val getSceneIconUseCase: GetSceneIconUseCase,
   override val getCaptionUseCase: GetCaptionUseCase,
+  getChannelValueStringUseCase: GetChannelValueStringUseCase,
   channelGroupRepository: ChannelGroupRepository,
   channelRepository: RoomChannelRepository,
   sceneRepository: RoomSceneRepository,
@@ -68,6 +70,7 @@ class ExtendedValueWidgetConfigurationViewModel @Inject constructor(
   getChannelIconUseCase,
   getSceneIconUseCase,
   getCaptionUseCase,
+  getChannelValueStringUseCase,
   channelGroupRepository,
   channelRepository,
   sceneRepository,

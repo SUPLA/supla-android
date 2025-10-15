@@ -203,7 +203,7 @@
   <string name="associeted_with_scene_error">Negalima pakeisti kanalo, kuris susietas su scena, funkcijų.</string>
   <string name="battery_health">Baterijos eksploatavimo laikas</string>
   <string name="battery_level">Baterijos lygis</string>
-  <string name="battery_powered">Maitinimas baterija</string>
+  <string name="state_power_supply">Maitinimas</string>
   <string name="belongs_to_group_error">Negalima pakeisti kanalo, kuris priklauso grupei, funkcijų.</string>
   <string name="bridge">Tiltas</string>
   <string name="bridge_node_online">Tilto mazgas – online</string>
@@ -231,7 +231,7 @@
   <string name="light_source_lifespan">Šviesos šaltinio eksploatavimo laikas</string>
   <string name="light_source_lifespan_hours">Šviesos šaltinio eksploatavimo laikas (valandos)</string>
   <string name="light_source_operatingtime">Šviesos šaltinio veikimo laikas</string>
-  <string name="lightsource_warning">Šviesos šaltinio eksploatavimo laikas siekia %1$s</string>
+  <string name="channel_lightsource_warning">Šviesos šaltinio eksploatavimo laikas siekia %1$.01f%%</string>
   <string name="mode_change_in_progress">Keičiamas režimas</string>
   <string name="no">Ne</string>
   <string name="reset_lightsource_usage_counter">Atkurti šviesis šaltinio sunaudojimo skaitiklį</string>
@@ -243,8 +243,8 @@
   <string name="soft_ver">Programinės įrangos versija</string>
   <string name="time_exceeded">Laikas baigėsi. Pabandykite vėl.</string>
   <string name="uptime">Darbo laikas</string>
-  <string name="uv_warning1">UV spinduolio eksploatavimo laikas siekia %1$s. Suplanuokite jo keitimą.</string>
-  <string name="uv_warning2">UV spinduolio eksploatavimo laikas siekia %1$s. Pakeiskite spinduolį.</string>
+  <string name="channel_uv_warning">UV spinduolio eksploatavimo laikas siekia %1$.01f%%. Suplanuokite jo keitimą.</string>
+  <string name="channel_uv_error">UV spinduolio eksploatavimo laikas siekia %1$.01f%%. Pakeiskite spinduolį.</string>
   <string name="valve_warning_manually_closed">Vožtuvas uždarytas rankiniu būdu arba radijo ryšiu. Prieš jo atidarymą reikia įsitikinti, kad nebuvo uždarytas dėl užliejimo. Norėdami išjungti įspėjimą, vožtuvą atidarykite rankiniu būdu. Ar tikrai norite vožtuvą atidaryti programėlės pagalba?</string>
   <string name="valve_warning">Vožtuvas uždarytas rankiniu būdu arba radijo ryšiu. Prieš jo atidarymą reikia įsitikinti, kad nebuvo uždarytas dėl užliejimo. Norėdami išjungti įspėjimą, vožtuvą atidarykite rankiniu būdu.</string>
   <string name="vector_balance_days">Vektorinis balansas – Dienos</string>
@@ -686,4 +686,15 @@
   <string name="wizard_state_finishing">Baigimas…</string>
   <string name="add_wizard_password_instruction">Prašome naudoti slaptažodį, kuris buvo naudojamas vietinės konfigūracijos tinklalapio prieigai.\n\nPamiršote slaptažodį? Galite jį pakeisti Supla Cloud sistemoje arba atkurti gamyklinius įrenginio nustatymus.</string>
   <string name="add_wizard_manual_reconnect">Tinklo ryšys su įrenginiu buvo nustatytas rankiniu būdu. Įsitikinkite, kad jūsų telefonas vėl prisijungė prie interneto, ir tęskite procesą.</string>
+  <string name="channel_state_battery_powered">iš baterijų</string>
+  <string name="channel_state_main_powered">iš tinklo</string>
+  <string name="cfg_temperature_precision">Temperatūros tikslumas</string>
+  <string name="temperature_measured">Išmatuotas</string>
+  <string name="temperature_preset">Iš anksto nustatytas</string>
+  <string name="thermostat_detail_antifreeze_active">Aktyvi apsauga nuo užšalimo</string>
+  <string name="thermostat_detail_overheat_active">Aktyvi apsauga nuo perkaitimo</string>
+  <string name="developer_option">Kūrėjo parinktys</string>
+  <string name="developer_info_activated">Kūrėjo režimas aktyvuotas</string>
+  <string name="developer_info_screen_orientation">Ekrano pasukimas įjungtas</string>
+  <string name="developer_info_settings">Eksperimentiniai nustatymai</string>
 </resources>

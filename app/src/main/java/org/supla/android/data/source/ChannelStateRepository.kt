@@ -17,18 +17,20 @@ package org.supla.android.data.source
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import org.supla.android.data.source.local.dao.ChannelStateDao
 import org.supla.android.data.source.local.entity.ChannelStateEntity
 import org.supla.android.usecases.channel.RemoveHiddenChannelsUseCase
 import org.supla.android.usecases.developerinfo.CountProvider
+import org.supla.android.usecases.profile.DeleteProfileUseCase
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class ChannelStateRepository @Inject constructor(
   private val channelStateDao: ChannelStateDao
-) : CountProvider, RemoveHiddenChannelsUseCase.ChannelsDeletable {
+) : CountProvider, RemoveHiddenChannelsUseCase.ChannelsDeletable, DeleteProfileUseCase.ProfileRemover {
 
   fun getState(channelId: Int) = channelStateDao.getState(channelId)
 
@@ -37,4 +39,6 @@ class ChannelStateRepository @Inject constructor(
   override fun count(): Observable<Int> = channelStateDao.count()
 
   override suspend fun deleteChannelRelated(remoteId: Int, profileId: Long) = channelStateDao.deleteKtx(remoteId, profileId)
+
+  override fun deleteByProfile(profileId: Long): Completable = channelStateDao.deleteByProfile(profileId)
 }

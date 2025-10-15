@@ -28,12 +28,11 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import org.supla.android.Trace
 import org.supla.android.data.source.remote.rest.SuplaCloudService
 import org.supla.android.events.UpdateEventsManager
-import org.supla.android.extensions.TAG
-import org.supla.android.extensions.guardLet
+import org.supla.core.shared.extensions.guardLet
 import org.supla.core.shared.usecase.channel.StoreChannelOcrPhotoUseCase
+import timber.log.Timber
 
 @HiltWorker
 class DownloadPhotoWorker @AssistedInject constructor(
@@ -56,12 +55,12 @@ class DownloadPhotoWorker @AssistedInject constructor(
 
   override fun doWork(): Result {
     val (remoteId) = guardLet(remoteId) {
-      Trace.w(TAG, "OCR photo download not possible - missing remote id")
+      Timber.w("OCR photo download not possible - missing remote id")
       return Result.failure()
     }
 
     val (profileId) = guardLet(profileId) {
-      Trace.w(TAG, "OCR photo download not possible - missing profile id")
+      Timber.w("OCR photo download not possible - missing profile id")
       return Result.failure()
     }
 
@@ -74,8 +73,8 @@ class DownloadPhotoWorker @AssistedInject constructor(
       )
       updateEventsManager.emitChannelUpdate(remoteId)
       Result.success()
-    } catch (ex: Exception) {
-      Trace.e(TAG, "Could not download OCR photo")
+    } catch (_: Exception) {
+      Timber.e("Could not download OCR photo")
       Result.failure()
     }
   }

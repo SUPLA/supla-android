@@ -29,8 +29,9 @@ import org.supla.android.R
 import org.supla.android.data.formatting.DateFormatter
 import org.supla.android.data.model.chart.ChartDataAggregation
 import org.supla.android.data.model.chart.marker.ChartEntryDetails
-import org.supla.android.extensions.guardLet
-import org.supla.android.usecases.channel.valueformatter.ImpulseCounterValueFormatter
+import org.supla.core.shared.extensions.guardLet
+import org.supla.core.shared.usecase.channel.valueformatter.formatters.ImpulseCounterValueFormatter
+import org.supla.core.shared.usecase.channel.valueformatter.types.forChartMarker
 import javax.inject.Inject
 
 data class ImpulseCounterCustomData(
@@ -84,10 +85,9 @@ class ImpulseCounterMarkerView(context: Context) : BaseMarkerView(context) {
   }
 
   private fun showValueWithPrice(entry: Entry, customData: ImpulseCounterCustomData) {
-    val unit = customData.unit?.let { ImpulseCounterValueFormatter.Data(it) }
     firstRow.icon.setImageResource(R.drawable.ic_phase_point_color)
     firstRow.icon.imageTintList = ColorStateList.valueOf(ResourcesCompat.getColor(resources, R.color.chart_gpm, null))
-    firstRow.value.text = formatter.format(entry.y.toDouble(), custom = unit)
+    firstRow.value.text = formatter.format(entry.y.toDouble(), forChartMarker(customData.unit))
     firstRow.bold()
     firstRow.show(withLabel = false)
 
@@ -98,8 +98,6 @@ class ImpulseCounterMarkerView(context: Context) : BaseMarkerView(context) {
   }
 
   private fun showRank(pieEntry: PieEntry, aggregation: ChartDataAggregation, customData: ImpulseCounterCustomData, idx: Float?) {
-    val unit = customData.unit?.let { ImpulseCounterValueFormatter.Data(it) }
-
     idx?.let {
       aggregation.colors(context)?.get(idx.toInt())?.let { color ->
         firstRow.icon.setImageResource(R.drawable.ic_phase_point_color)
@@ -108,7 +106,7 @@ class ImpulseCounterMarkerView(context: Context) : BaseMarkerView(context) {
     }
     firstRow.icon.setImageResource(R.drawable.ic_phase_point_color)
     firstRow.icon.imageTintList = ColorStateList.valueOf(ResourcesCompat.getColor(resources, R.color.chart_gpm, null))
-    firstRow.value.text = formatter.format(pieEntry.y.toDouble(), custom = unit)
+    firstRow.value.text = formatter.format(pieEntry.y.toDouble(), forChartMarker(customData.unit))
     firstRow.bold()
     firstRow.show(withLabel = false)
 

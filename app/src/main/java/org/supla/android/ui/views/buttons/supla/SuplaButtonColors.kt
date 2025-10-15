@@ -34,15 +34,15 @@ class SuplaButtonColors(
 
   fun border(active: Boolean, disabled: Boolean) =
     when {
-      active -> borderPressed
       disabled -> borderDisabled
+      active -> borderPressed
       else -> border
     }
 
   fun content(active: Boolean, disabled: Boolean) =
     when {
-      active -> contentPressed
       disabled -> contentDisabled
+      active -> contentPressed
       else -> content
     }
 }

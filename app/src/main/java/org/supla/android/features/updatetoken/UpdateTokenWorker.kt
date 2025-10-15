@@ -31,16 +31,15 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import org.supla.android.Trace
 import org.supla.android.core.infrastructure.DateProvider
 import org.supla.android.core.notifications.NotificationsHelper.Companion.areNotificationsEnabled
 import org.supla.android.core.storage.EncryptedPreferences
 import org.supla.android.data.source.RoomChannelRepository
 import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.data.source.local.entity.ProfileEntity
-import org.supla.android.extensions.TAG
 import org.supla.android.lib.SuplaClient
 import org.supla.android.lib.singlecall.SingleCall
+import timber.log.Timber
 import java.util.Date
 import java.util.concurrent.TimeUnit
 
@@ -59,11 +58,11 @@ class UpdateTokenWorker @AssistedInject constructor(
 ) : Worker(appContext, workerParameters) {
 
   override fun doWork(): Result {
-    Trace.d(TAG, "Token update worker started")
+    Timber.d("Token update worker started")
 
     val token = inputData.getString(TOKEN_URI)
     if (token == null) {
-      Trace.w(TAG, "Token update worker canceled - token is null!")
+      Timber.w("Token update worker canceled - token is null!")
       return Result.failure()
     }
 
@@ -76,7 +75,7 @@ class UpdateTokenWorker @AssistedInject constructor(
       encryptedPreferences.fcmTokenLastUpdate = Date()
     }
 
-    Trace.i(TAG, "Token update worker finished (all profiles successfully updated: `$allProfilesUpdated`)")
+    Timber.i("Token update worker finished (all profiles successfully updated: `$allProfilesUpdated`)")
     return Result.success()
   }
 
@@ -92,29 +91,29 @@ class UpdateTokenWorker @AssistedInject constructor(
       val previousToken = encryptedPreferences.getFcmProfileToken(profile.id!!)
 
       if (token == previousToken && tokenUpdateNotNeeded() && notificationsEnabled == previousEnabled) {
-        Trace.d(TAG, "Profile `${profile.name}` has active token set - skipping")
+        Timber.d("Profile `${profile.name}` has active token set - skipping")
         return@forEach
       }
       if (profile.authInfo.emailAuth && profile.authInfo.serverForEmail.isEmpty()) {
-        Trace.w(TAG, "Profile `${profile.name}` has server address not set - skipping")
+        Timber.w("Profile `${profile.name}` has server address not set - skipping")
         return@forEach
       }
       if (!profile.authInfo.emailAuth && profile.authInfo.serverForAccessID.isEmpty()) {
-        Trace.w(TAG, "Profile `${profile.name}` has server address not set - skipping")
+        Timber.w("Profile `${profile.name}` has server address not set - skipping")
         return@forEach
       }
       if (channelRepository.findChannelsCount(profile.id).blockingGet() == 0) {
-        Trace.w(TAG, "Profile `${profile.name}` has no channels - skipping")
+        Timber.w("Profile `${profile.name}` has no channels - skipping")
         return@forEach
       }
 
-      Trace.i(TAG, "Updating token for profile `${profile.name}` (id: `${profile.id}`)")
+      Timber.i("Updating token for profile `${profile.name}` (id: `${profile.id}`)")
       try {
         val singleCall = singleCallProvider.provide(profile.id)
         singleCall.registerPushNotificationClientToken(SuplaClient.SUPLA_APP_ID, token, profile)
         encryptedPreferences.setFcmProfileToken(profile.id, token)
       } catch (ex: Exception) {
-        Trace.w(TAG, "Token update for profile `${profile.name}` (id: `${profile.id}`) failed!", ex)
+        Timber.w(ex, "Token update for profile `${profile.name}` (id: `${profile.id}`) failed!")
         allProfilesUpdated = false
       }
     }

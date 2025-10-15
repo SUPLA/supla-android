@@ -246,6 +246,12 @@ class ChangingNetwork(
         espConfigurationController.cancel()
       }
 
+      EspConfigurationEvent.NetworkConnectionInternalError -> {
+        val finalAction = AddWizardFinalAction.Error(EspConfigurationError.InternalError)
+        stateHolder.setState(Reconnecting(stateHolder, espConfigurationController, finalAction))
+        espConfigurationController.reconnect()
+      }
+
       else -> {
         val finalAction = AddWizardFinalAction.Error(EspConfigurationError.Connect)
         stateHolder.setState(Reconnecting(stateHolder, espConfigurationController, finalAction))

@@ -35,11 +35,9 @@ import com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions
 import com.google.mlkit.vision.codescanner.GmsBarcodeScanning
 import dagger.hilt.android.AndroidEntryPoint
 import org.supla.android.R
-import org.supla.android.Trace
 import org.supla.android.core.ui.BaseComposeFragment
 import org.supla.android.core.ui.UpHandler
 import org.supla.android.core.ui.theme.SuplaTheme
-import org.supla.android.extensions.TAG
 import org.supla.android.extensions.allGranted
 import org.supla.android.extensions.applicationName
 import org.supla.android.features.addwizard.view.View
@@ -47,6 +45,7 @@ import org.supla.android.navigator.MainNavigator
 import org.supla.android.navigator.NavigationSubcontroller
 import org.supla.android.ui.ToolbarVisibilityController
 import org.supla.android.ui.dialogs.AuthorizationDialog
+import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -107,11 +106,11 @@ class AddWizardFragment : BaseComposeFragment<AddWizardViewModelState, AddWizard
       AddWizardViewEvent.OpenScanner ->
         barCodeScanner.startScan()
           .addOnSuccessListener {
-            Trace.i(TAG, "Barcode scanner success: ${it.rawValue}")
+            Timber.i("Barcode scanner success: ${it.rawValue}")
             Toast.makeText(requireContext(), R.string.add_wizard_wrong_qr_code, Toast.LENGTH_LONG).show()
           }
-          .addOnCanceledListener { Trace.i(TAG, "Barcode scanner canceled") }
-          .addOnFailureListener { Trace.i(TAG, "Barcode scanner failure") }
+          .addOnCanceledListener { Timber.i("Barcode scanner canceled") }
+          .addOnFailureListener { Timber.i("Barcode scanner failure") }
 
       AddWizardViewEvent.CheckPermissions -> checkPermissions()
       AddWizardViewEvent.OpenCloud -> navigator.navigateToCloudExternal()

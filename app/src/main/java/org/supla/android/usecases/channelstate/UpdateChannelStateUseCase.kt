@@ -19,13 +19,12 @@ package org.supla.android.usecases.channelstate
 
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
-import org.supla.android.Trace
 import org.supla.android.data.source.ChannelStateRepository
 import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.data.source.local.entity.ChannelStateEntity
-import org.supla.android.extensions.TAG
 import org.supla.android.lib.SuplaChannelState
 import org.supla.android.lib.toEntity
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -42,7 +41,7 @@ class UpdateChannelStateUseCase @Inject constructor(
         .switchIfEmpty(create(state))
         .flatMapCompletable { channelStateRepository.insertOrUpdate(it) }
         .onErrorComplete {
-          Trace.e(TAG, "Could not stare channel state", it)
+          Timber.e(it, "Could not stare channel state")
           true
         }
     } else {

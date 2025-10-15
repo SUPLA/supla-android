@@ -23,7 +23,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import org.supla.android.core.infrastructure.CacheFileAccessProxy
+import org.supla.android.core.infrastructure.storage.CacheFileAccessProxy
 import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.core.storage.ApplicationPreferences
 import org.supla.android.lib.AndroidSuplaClientMessageHandler

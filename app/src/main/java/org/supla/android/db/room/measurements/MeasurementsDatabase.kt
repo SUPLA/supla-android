@@ -42,7 +42,6 @@ import org.supla.android.data.source.local.entity.measurements.PowerActiveHistor
 import org.supla.android.data.source.local.entity.measurements.TemperatureAndHumidityLogEntity
 import org.supla.android.data.source.local.entity.measurements.TemperatureLogEntity
 import org.supla.android.data.source.local.entity.measurements.VoltageHistoryLogEntity
-import org.supla.android.db.MeasurementsDbHelper
 
 @Database(
   entities = [
@@ -58,7 +57,7 @@ import org.supla.android.db.MeasurementsDbHelper
     HumidityLogEntity::class,
     PowerActiveHistoryLogEntity::class
   ],
-  version = MeasurementsDbHelper.DATABASE_VERSION,
+  version = 37,
   exportSchema = false,
 )
 @TypeConverters(MeasurementsDatabaseConverters::class)
@@ -84,4 +83,8 @@ abstract class MeasurementsDatabase : RoomDatabase() {
   abstract fun powerActiveLogDao(): PowerActiveLogDao
 
   abstract fun homePlusThermostatLogDao(): HomePlusThermostatLogDao
+
+  companion object {
+    const val NAME = "supla_measurements.db"
+  }
 }

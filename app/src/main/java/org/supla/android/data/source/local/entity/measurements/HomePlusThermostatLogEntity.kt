@@ -50,13 +50,16 @@ data class HomePlusThermostatLogEntity(
   @ColumnInfo(name = COLUMN_ID)
   val id: Long?,
   @ColumnInfo(name = COLUMN_CHANNEL_ID) val channelId: Int,
-  @ColumnInfo(name = COLUMN_TIMESTAMP) val date: Date,
+  @ColumnInfo(name = COLUMN_TIMESTAMP) override val date: Date,
   @ColumnInfo(name = COLUMN_IS_ON) val isOn: Boolean,
   @ColumnInfo(name = COLUMN_MEASURED_TEMPERATURE) val measuredTemperature: Float?,
   @ColumnInfo(name = COLUMN_PRESET_TEMPERATURE) val presetTemperature: Float?,
-  @ColumnInfo(name = COLUMN_GROUPING_STRING) val groupingString: String,
+  @ColumnInfo(name = COLUMN_GROUPING_STRING) override val groupingString: String,
   @ColumnInfo(name = COLUMN_PROFILE_ID) val profileId: Long
-) {
+) : BaseTemperatureEntity {
+
+  override val temperature: Float?
+    get() = measuredTemperature
 
   companion object {
     const val TABLE_NAME = "th_log"
@@ -87,5 +90,8 @@ data class HomePlusThermostatLogEntity(
       "CREATE INDEX ${TABLE_NAME}_${COLUMN_TIMESTAMP}_index ON $TABLE_NAME ($COLUMN_TIMESTAMP);",
       "CREATE UNIQUE INDEX ${TABLE_NAME}_unique_index ON $TABLE_NAME ($COLUMN_CHANNEL_ID, $COLUMN_TIMESTAMP, $COLUMN_PROFILE_ID);"
     )
+
+    const val ALL_COLUMNS = "$COLUMN_ID, $COLUMN_CHANNEL_ID, $COLUMN_TIMESTAMP, $COLUMN_IS_ON, " +
+      "$COLUMN_MEASURED_TEMPERATURE, $COLUMN_PRESET_TEMPERATURE, $COLUMN_GROUPING_STRING, $COLUMN_PROFILE_ID"
   }
 }

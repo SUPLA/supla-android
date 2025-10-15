@@ -24,7 +24,6 @@ import org.supla.android.core.networking.suplaclient.SuplaClientProvider
 import org.supla.android.data.source.RoomProfileRepository
 import org.supla.android.data.source.local.entity.ChannelGroupEntity
 import org.supla.android.data.source.local.entity.complex.ChannelDataEntity
-import org.supla.android.extensions.guardLet
 import org.supla.android.features.details.windowdetail.base.BaseWindowViewModel
 import org.supla.android.features.details.windowdetail.base.BaseWindowViewModelState
 import org.supla.android.features.details.windowdetail.base.data.TerraceAwningState
@@ -42,6 +41,7 @@ import org.supla.android.usecases.client.LoginUseCase
 import org.supla.android.usecases.group.GetGroupOnlineSummaryUseCase
 import org.supla.android.usecases.group.ReadChannelGroupByRemoteIdUseCase
 import org.supla.android.usecases.group.totalvalue.ShadingSystemGroupValue
+import org.supla.core.shared.extensions.guardLet
 import javax.inject.Inject
 
 @HiltViewModel

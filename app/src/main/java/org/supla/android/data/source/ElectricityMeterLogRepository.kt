@@ -28,6 +28,7 @@ import org.supla.android.data.source.remote.rest.channel.ElectricityMeasurement
 import org.supla.android.features.measurementsdownload.workers.BaseDownloadLogWorker
 import org.supla.android.usecases.channel.RemoveHiddenChannelsUseCase
 import org.supla.android.usecases.developerinfo.CountProvider
+import org.supla.android.usecases.profile.DeleteProfileUseCase
 import retrofit2.Response
 import java.util.Date
 import javax.inject.Inject
@@ -38,7 +39,8 @@ class ElectricityMeterLogRepository @Inject constructor(
   private val electricityMeterLogDao: ElectricityMeterLogDao
 ) : BaseMeasurementRepository<ElectricityMeasurement, ElectricityMeterLogEntity>(electricityMeterLogDao),
   CountProvider,
-  RemoveHiddenChannelsUseCase.ChannelsDeletable {
+  RemoveHiddenChannelsUseCase.ChannelsDeletable,
+  DeleteProfileUseCase.ProfileRemover {
 
   fun findMeasurements(remoteId: Int, profileId: Long, startDate: Date, endDate: Date) =
     electricityMeterLogDao.findMeasurements(remoteId, profileId, startDate.time, endDate.time)
@@ -99,4 +101,6 @@ class ElectricityMeterLogRepository @Inject constructor(
   override fun count(): Observable<Int> = electricityMeterLogDao.count()
 
   override suspend fun deleteChannelRelated(remoteId: Int, profileId: Long) = electricityMeterLogDao.deleteKtx(remoteId, profileId)
+
+  override fun deleteByProfile(profileId: Long): Completable = electricityMeterLogDao.deleteByProfile(profileId)
 }

@@ -24,8 +24,11 @@ import org.junit.runner.RunWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.*
-import org.supla.android.Preferences
+import org.mockito.kotlin.doAnswer
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.verifyNoMoreInteractions
+import org.mockito.kotlin.whenever
 import org.supla.android.db.AuthProfileItem
 import org.supla.android.profile.AuthInfo
 import org.supla.android.profile.ProfileIdHolder
@@ -35,9 +38,6 @@ import org.supla.android.profile.ProfileManager
 class SaveProfileUseCaseTest {
   @Mock
   private lateinit var profileManager: ProfileManager
-
-  @Mock
-  private lateinit var preferences: Preferences
 
   @Mock
   private lateinit var profileIdHolder: ProfileIdHolder
@@ -50,7 +50,6 @@ class SaveProfileUseCaseTest {
     // given
     val profile = profileWithEmailMock()
 
-    whenever(preferences.isAnyAccountRegistered).thenReturn(true)
     whenever(profileManager.create(profile)).thenReturn(Completable.complete())
     whenever(profileManager.getAllProfiles()).thenReturn(Observable.just(emptyList()))
 
@@ -70,6 +69,7 @@ class SaveProfileUseCaseTest {
   fun `should create new profile and put it to holder when it's first profile`() {
     // given
     val profile = profileWithEmailMock()
+    profile.isActive = true
 
     doAnswer {
       profile.id = 123L
@@ -96,7 +96,6 @@ class SaveProfileUseCaseTest {
     // given
     val profile = profileWithEmailMock().apply { id = 123L }
 
-    whenever(preferences.isAnyAccountRegistered).thenReturn(true)
     whenever(profileManager.update(profile)).thenReturn(Completable.complete())
     whenever(profileManager.getAllProfiles()).thenReturn(Observable.just(emptyList()))
 
@@ -117,7 +116,6 @@ class SaveProfileUseCaseTest {
     // given
     val profile = profileWithEmailMock().apply { name = "" }
 
-    whenever(preferences.isAnyAccountRegistered).thenReturn(true)
     whenever(profileManager.create(profile)).thenReturn(Completable.complete())
     whenever(profileManager.getAllProfiles()).thenReturn(Observable.just(listOf(profileWithEmailMock())))
 

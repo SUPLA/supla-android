@@ -19,6 +19,7 @@ package org.supla.core.shared.data.model.general
 
 import org.supla.android.data.source.remote.channel.SuplaChannelAvailabilityStatus
 import org.supla.core.shared.data.model.battery.BatteryInfo
+import org.supla.core.shared.data.model.channel.ChannelState
 
 sealed interface BaseData {
   val remoteId: Int
@@ -30,7 +31,9 @@ data class Channel(
   override val caption: String,
   val status: SuplaChannelAvailabilityStatus,
   val function: SuplaFunction,
+  val altIcon: Int,
   val batteryInfo: BatteryInfo?,
+  val channelState: ChannelState?,
   val value: ByteArray?
 ) : BaseData
 

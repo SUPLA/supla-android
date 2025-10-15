@@ -19,15 +19,15 @@ package org.supla.android.db.room.measurements.migrations/*
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import org.supla.android.data.source.local.entity.measurements.GeneralPurposeMeterEntity
-import org.supla.android.db.MeasurementsDbHelper
 import org.supla.android.db.room.SqlExecutor
+import org.supla.android.db.room.measurements.MeasurementsDatabase
 
 val MEASUREMENTS_DB_MIGRATION_32_33: Migration = object : Migration(32, 33), SqlExecutor {
 
-  override fun getDatabaseNameForLog(): String = MeasurementsDbHelper.DATABASE_NAME
+  override fun getDatabaseNameForLog(): String = MeasurementsDatabase.NAME
 
-  override fun migrate(database: SupportSQLiteDatabase) {
-    execSQL(database, "DROP TABLE ${GeneralPurposeMeterEntity.TABLE_NAME}")
-    execSQL(database, GeneralPurposeMeterEntity.SQL)
+  override fun migrate(db: SupportSQLiteDatabase) {
+    execSQL(db, "DROP TABLE ${GeneralPurposeMeterEntity.TABLE_NAME}")
+    execSQL(db, GeneralPurposeMeterEntity.SQL)
   }
 }
